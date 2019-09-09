@@ -14,10 +14,27 @@ Install latest Enonic XP according to docs for you platform
 `npm install`
 
 ## Starting Enonic XP locally in development mode
-`npm start`
+```
+npm start
+```
 
 ## Starting the build system
-`gulp`
+```
+gulp
+```
 
 ## Login
 Direct yout favorite browser to http://localhost:8080
+
+### How to start working on a feature
+```
+$ git checkout master
+$ git pull
+$ git checkout -b add-feature-x
+... do changes ...
+$ git commit -a -m "detailed commit message"
+$ git status
+... verify that correct files are included ...
+$ git push -u origin add-feature-x
+... create pull-request to master ...
+```
