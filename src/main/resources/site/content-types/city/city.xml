@@ -1,0 +1,18 @@
+<content-type xmlns="urn:enonic:xp:model:1.0">
+  <display-name>City</display-name>
+  <description>Place where many people live</description>
+  <super-type>base:structured</super-type>
+  <form>
+    <input type="GeoPoint" name="location">
+      <label>Location</label>
+      <occurrences minimum="1" maximum="1"/>
+    </input>
+    <input type="Long" name="population">
+      <label>Population</label>
+      <occurrences minimum="0" maximum="1"/>
+      <config>
+          <min>1</min>
+      </config>
+    </input>
+  </form>
+</content-type>
