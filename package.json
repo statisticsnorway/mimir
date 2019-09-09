@@ -1,0 +1,19 @@
+{
+  "name": "mimir",
+  "version": "1.0.0",
+  "description": "New cms for ssb.no",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/statisticsnorway/mimir.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/statisticsnorway/mimir/issues"
+  },
+  "homepage": "https://github.com/statisticsnorway/mimir#readme"
+}
