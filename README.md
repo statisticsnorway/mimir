@@ -13,8 +13,8 @@ Install latest Enonic XP according to docs for you platform
 *Must be done once after checking out, and again if new dependencies are added*
 `npm install`
 
-## Starting Enonic XP
-`enonic project deploy`
+## Starting Enonic XP locally in development mode
+`npm start`
 
 ## Starting the build system
 `gulp`
