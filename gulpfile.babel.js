@@ -11,6 +11,7 @@ const replace = require('gulp-replace');
 const plumber = require('gulp-plumber');
 const prefixer = require('gulp-autoprefixer');
 const sourcemaps = require('gulp-sourcemaps');
+const livereload = require('gulp-livereload');
 
 const path = {
   build: {
@@ -85,7 +86,8 @@ function frontend() {
     .pipe(babel({ presets: ['@babel/env'] }))
     .pipe(concat('main.js'))
     .pipe(plumber.stop())
-    .pipe(gulp.dest('dist'));
+    .pipe(gulp.dest('dist'))
+    .pipe(livereload());
 }
 
 // -----------------------------------------------------------------------------
@@ -108,17 +110,19 @@ function styles() {
     .pipe(plumber.stop())
     // .pipe(rename({suffix: '.min'}))
     .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest(path.build.styles))
+    // .pipe(gulp.dest(path.build.styles))
     .pipe(gulp.dest('build/resources/main/assets/css/'))
-    // .pipe(reload({stream: true}));
+    .pipe(livereload());
 }
 
 // -----------------------------------------------------------------------------
 // watch
 // -----------------------------------------------------------------------------
 function watch() {
+  livereload.listen()
   gulp.watch(['app/**/*.es'], gulp.series(frontend, libs));
   gulp.watch(['src/**/*.es'], backend);
+  gulp.watch(['src/**/*.html'], gulp.series(frontend, libs));
   gulp.watch(['styles/**/*.scss', 'src/**/*scss'], styles);
 }
 
