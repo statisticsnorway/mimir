@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content-type>
+  <display-name>Boksmeny</display-name>
+  <super-type>base:structured</super-type>
+  <form>
+    <item-set name="menu">
+      <occurrences minimum="0" maximum="99"/>
+      <label>Boks</label>
+      <items>
+        <input type="TextLine" name="title">
+          <label>Tittel</label>
+          <occurrences minimum="0" maximum="1"/>
+        </input>
+        <input type="TextLine" name="subtitle">
+          <label>Undertittel</label>
+          <occurrences minimum="0" maximum="1"/>
+        </input>
+        <input name="image" type="imageSelector">
+          <occurrences minimum="0" maximum="1"/>
+          <label>Bilde</label>
+          <config>
+            <allowPath>${site}</allowPath>
+          </config>
+        </input>
+        <input type="TextLine" name="link">
+          <label>Lenke</label>
+          <occurrences minimum="0" maximum="0"/>
+        </input>
+        <input name="content" type="ContentSelector">
+          <label>Innhold</label>
+          <occurrences minimum="0" maximum="0"/>
+          <config>
+            <allowPath>${site}</allowPath>
+            <allowType>page</allowType>
+          </config>
+        </input>
+      </items>
+    </item-set>
+  </form>
+</content-type>
