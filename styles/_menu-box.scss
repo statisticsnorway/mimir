@@ -1,0 +1,23 @@
+.menu {
+  .a-plain {
+    color: #212529;
+    &:hover {
+      text-decoration: none;
+    }
+    margin-bottom: 30px;
+  }
+  a div {
+    height: 70px;
+  }
+  h3 {
+    bottom: 0;
+    font-weight: 400;
+    font-size: 1.0em
+  }
+  @include media-breakpoint-down(md) {
+    h3 { font-size: 0.7em }
+    a div {
+      height: 50px;
+    }
+  }
+}

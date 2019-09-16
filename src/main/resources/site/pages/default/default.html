@@ -32,16 +32,13 @@
   </header>
 
   <!-- MAIN -->
-  <main class="container">
-    <section data-th-if="${mainRegion}" data-th-unless="${q}" class="clearfix">
-      <div data-portal-region="main" class="main-region">
-        <div data-th-each="component : ${mainRegion.components}" data-th-remove="tag">
-          <div data-portal-component="${component.path}" data-th-remove="tag"/>
-        </div>
+  <main data-portal-region="main" class="xp-region container" data-th-if="${!isFragment}">
+    <div data-th-if="${mainRegion}" data-th-remove="tag">
+      <div data-th-each="component : ${mainRegion.components}" data-th-remove="tag">
+        <div data-portal-component="${component.path}" data-th-remove="tag"></div>
       </div>
-    </section>
+    </div>
   </main>
-
 
 <!--
 
