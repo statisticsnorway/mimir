@@ -1,0 +1,58 @@
+<section class="xp-part row" data-th-if="${part.chart}">
+  <div class="col-11">
+    <figure th:fragment="graph" class="highcharts-figure">
+      <div data-th-id="highcharts- + ${part.chart._id}"
+        class="highcharts-canvas"
+        data-th-attr="data-contentkey=${part.chart.contentkey},
+                    data-type=${part.chart.type},
+                    data-zoomtype=${part.chart.zoomtype},
+                    data-creditsenabled=${part.chart.creditsenabled},
+                    data-creditshref=${part.chart.creditshref},
+                    data-creditstext=${part.chart.creditstext},
+                    data-switchrowsandcolumns=${part.chart.switchrowsandcolumns},
+                    data-combineinformation=${part.chart.combineinformation},
+                    data-tickinterval=${part.chart.tickinterval},
+                    data-legendenabled=${part.chart.legendenabled},
+                    data-plotoptionsseriesstacking=${part.chart.plotoptionsseriesstacking},
+                    data-subtitletext=${part.chart.subtitletext},
+                    data-title=${part.chart.title},
+                    data-xaxisallowdecimals=${part.chart.xaxisallowdecimals},
+                    data-xaxislabelsenabled=${part.chart.xaxislabelsenabled},
+                    data-xaxismax=${part.chart.xaxismax},
+                    data-xaxismin=${part.chart.xaxismin},
+                    data-xaxistitletext=${part.chart.xaxistitletext},
+                    data-xaxistype=${part.chart.xaxistype},
+                    data-yaxisallowdecimals=${part.chart.yaxisallowdecimals},
+                    data-yaxismax=${part.chart.yaxismax},
+                    data-yaxismin=${part.chart.yaxismin},
+                    data-yaxistitletext=${part.chart.yaxistitletext},
+                    data-yaxistype=${part.chart.yaxistype},
+                    data-yaxisstacklabelsenabled=${part.chart.yaxisstacklabelsenabled},
+                    data-title-center=${part.chart.titleCenter},
+                    data-numberdecimals=${part.chart.numberdecimals},
+                    data-chart-bottomspace=${part.chart.bottomSpace},
+                    data-pielegendunder=${part.chart.pieLegendUnder},
+                    data-legendalign=${part.chart.legendAlign}"
+    
+        data-langcontextbuttontitle="Last ned/skriv ut"
+        data-langdownloadjpeg="Last ned som JPEG"
+        data-langdownloadpdf="Last ned som PDF"
+        data-langdownloadpng="Last ned som PNG"
+        data-langdownloadsvg="Last ned som SVG"
+        data-langdownloadcsv="Last ned tala som CSV"
+        data-langdownloadxls="Last ned tala som XLS"
+        data-langdrilluptext="Tilbake til"
+        data-langloading="Tegner graf..."
+        data-langnodata="Ingen tilgjengelege tal"
+        data-langmillions="mill."
+        data-langbillions="mrd."
+        data-langprintchart="Skriv ut graf"
+        data-langresetzoom="Nullstill zoom"
+        data-langresetzoomtitle="Nullstill zoom"
+        data-langvisskjul="vis/skjul" >
+      </div>
+    </figure>
+    <div class="footnote" data-th-if="${part.chart.data.fotnoteTekst}" data-th-text="${part.chart.data.fotnoteTekst}"></div>
+    <div class="highcharts-table invisible" data-th-utext="${part.chart.tableData}"></div>
+  </div>
+</section>

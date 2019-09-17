@@ -7,7 +7,6 @@ import * as thymeleaf from '/lib/thymeleaf'
 const version = '%%VERSION%%'
 
 exports.get = function(req) {
-log.info('-- hello world --')
   const page = portal.getContent()
   const isFragment = page.type === 'portal:fragment'
   const mainRegion = isFragment ? null : page.page && page.page.regions && page.page.regions.main

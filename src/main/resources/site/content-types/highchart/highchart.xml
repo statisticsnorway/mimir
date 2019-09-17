@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<content-type>
+  <display-name>Highchart</display-name>
+  <super-type>base:structured</super-type>  <!-- The most common super-type. You rarely need to know anything else about this than to remember to add it. Read the docs for more info. -->
+  <form>
+    <input name="description" type="TextLine">
+      <label>Description</label>
+      <occurrences minimum="1" maximum="1"/>
+    </input>
+    <input name="undertittel" type="TextLine">
+      <label>Undertittel</label>
+    </input>
+    <input name="forklaring-datagrunnlag" type="htmlarea">
+      <label>Forklaring datagrunnlag for Screen-reader (brukes nå på alle sider)</label>
+      <occurrences minimum="0" maximum="1"/>
+    </input>
+    <input name="type" type="RadioButton">
+      <label>Graftype</label>
+      <occurrences minimum="0" maximum="0"/>
+
+      <config>
+        <option value="line">Linje</option>
+        <option value="pie">Kake</option>
+        <option value="column">Stolpe</option>
+        <option value="bar">Liggende stolpe</option>
+        <option value="area">Areal</option>
+      </config>
+      <default>line</default>
+    </input>
+    <input name="numberdecimals" type="RadioButton">
+      <label>Antall desimalplasser som vises</label>
+      <config>
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+      </config>
+      <default>0</default>
+      <help-text>Her velger du hvor mange desimalplasser du vil vise</help-text>
+    </input>
+    <input name="stabling" type="RadioButton">
+      <label>Stabling av verdier</label>
+      <config>
+        <option value="disabled">Ingen</option>
+        <option value="normal">Kumulativ</option>
+        <option value="percent">Prosentvis</option>
+      </config>
+      <default>disabled</default>
+      <help-text>Grupperte verdier kan vises hver for seg (ingen stabling) eller summeres i en felles søyle med stabling</help-text>
+    </input>
+
+    <!-- <input name="hoydeprosent" type="TextLine">
+      <label>Høyde i prosent av bredde</label>
+      <xpath>contentdata/hoydeprosent</xpath>
+      <default>75</default>
+      <help-text>Et heltall større enn 0. Anbefalt er 75 som gir 4:3-forhold. 100 er kvadrat (1:1), 62 er det gylne snitt liggende, 56 er kinolerret (16:9), 162 er det gylne snitt stående.</help-text>
+      <regexp>^[0-9]+$</regexp>
+    </input> -->
+    <input name="nolegend" type="CheckBox">
+      <label>Skjul tegnforklaringen</label>
+    </input>
+    <input name="legendAlign" type="RadioButton">
+      <label>Plassering av tegnforklaring</label>
+      <config>
+        <option value="right">Høyrestilt</option>
+        <option value="center">Midtstilt, under</option>
+      </config>
+      <default>center</default>
+    </input>
+    <input name="pie-legend" type="CheckBox">
+      <label>Tegnforklaring under (kun kakediagram)</label>
+      <help-text>Huk av denne dersom du ønsker tegnforklaring under diagrammet istede for rundt.</help-text>
+    </input>
+    <input name="tickinterval" type="TextLine">
+      <label>Tickinterval</label>
+      <size value="12" />
+      <regexp>^[0-9]*[,.]?[0-9]+$</regexp>
+      <help-text>Må være et heltall eller desimaltall. La feltet være blankt for automatisk justering.</help-text>
+    </input>
+    <input name="zoomtype" type="RadioButton">
+      <label>Zoom i graf</label>
+      <config>
+        <option value="null">Ingen zoom</option>
+        <option value="x">Bare i x-aksen</option>
+        <option value="y">Bare i y-aksen</option>
+        <option value="xy">Både x- og y-aksen</option>
+      </config>
+      <default>null</default>
+    </input>
+    <input name="titleCenter" type="CheckBox">
+      <label>Midtstille tittel</label>
+    </input>
+
+    <input name="htmltabell" type="HtmlArea">
+      <label>Kildetabell for Highcharts-figur</label>
+      <occurrences minimum="1" maximum="1"/>
+      <config>
+        <exclude>*</exclude>
+        <include>Table | RemoveFormat | Undo Redo</include>
+      </config>
+      <help-text>Lim inn (Ctrl-V) en tabell rett fra Excel. Tabeller bør være så enkle som mulig (Overskrifter i første rad/kolonne og ellers bare tall, ingen spesialformatering, manglende tall må være tomme celler)</help-text>
+    </input>
+    <input name="byttraderogkolonner" type="CheckBox">
+      <label>Bytt rader og kolonner</label>
+      <help-text>Bytt mellom å tolke tabelldataene horisontalt eller vertikalt før grafen tegnes, med hensyn til gruppering</help-text>
+    </input>
+    <input name="combineInfo" type="CheckBox">
+      <label>Kombinere forklaringer</label>
+      <help-text>Vise forklaringer til alle linjer i en mouseoverboksen</help-text>
+    </input>
+
+    <input name="fotnoteTekst" type="TextArea">
+      <label>Fotnote-tekst</label>
+      <help-text>Inntil 3 fotnoter. Skriv ALT-251 for fotnote 1, ALT-253 for fotnote 2, ALT-252 for fotnote 3 etter tektsten du vil henvise fotnoten til.</help-text>
+    </input>
+
+    <input name="kildetekst" type="TextArea">
+      <label>Kildetekst</label>
+      <default>Statistisk sentralbyrå.</default>
+    </input>
+    <input name="kildeurl" type="TextLine">
+      <label>Kilde-URL</label>
+      <default>https://www.ssb.no</default>
+    </input>
+
+    <input name="xAxisTitle" type="TextLine">
+      <label>X-akse Tittel</label>
+    </input>
+    <input name="xAxisType" type="RadioButton">
+      <label>X-skala</label>
+      <config>
+        <option value="category">Ingen (unike kategorier)</option>
+        <option value="linear">Lineær</option>
+        <option value="logarithmic">Logaritmisk</option>
+      </config>
+      <default>category</default>
+    </input>
+    <input name="xAxisMin" type="TextLine">
+      <label>X-akse Minste verdi</label>
+      <size value="12" />
+      <help-text>Må være et heltall eller desimaltall. La feltet være blankt for automatisk justering. Hvis aksen er unike kategorier, brukes heltall fra 0 og oppover.</help-text>
+      <regexp>^[0-9]*[,.]?[0-9]+$</regexp>
+    </input>
+    <input name="xAxisMax" type="TextLine">
+      <label>X-akse Største verdi</label>
+      <size value="12" />
+      <help-text>Må være et heltall eller desimaltall. La feltet være blankt for automatisk justering. Hvis aksen er unike kategorier, brukes heltall fra 0 og oppover.</help-text>
+      <regexp>^[0-9]*[,.]?[0-9]+$</regexp>
+    </input>
+    <input name="xAllowDecimal" type="checkbox">
+      <label>Tillat desimaler</label>
+      <help-text>Vanligvis avrundes akseverdiene til heltall, men ved små verdiendringer (f.eks prosent) kan man velge å tillate desimaler likevel.</help-text>
+    </input>
+    <input name="xEnableLabel" type="CheckBox">
+      <label>Skjul aksemarkører</label>
+      <help-text>Kan skrus på dersom det ikke ønskes markører langs X-aksen (f.eks dersom tegnforklaringen gir tilstrekkelig info)</help-text>
+    </input>
+
+    <input name="yAxisTitle" type="TextLine">
+      <label>Y-akse Tittel</label>
+    </input>
+    <input name="yAxisType" type="RadioButton">
+      <label>Y-skala</label>
+      <config>
+        <option value="category">Ingen (unike kategorier)</option>
+        <option value="linear">Lineær</option>
+        <option value="logarithmic">Logaritmisk</option>
+      </config>
+      <default>linear</default>
+    </input>
+    <input name="yAxisMin" type="TextLine">
+      <label>Y-akse Minste verdi</label>
+      <size value="12" />
+      <help-text>Må være et heltall eller desimaltall. La feltet være blankt for automatisk justering. Hvis aksen er unike kategorier, brukes heltall fra 0 og oppover.</help-text>
+      <regexp>^[0-9]*[,.]?[0-9]+$</regexp>
+    </input>
+    <input name="yAxisMax" type="TextLine">
+      <label>Y-akse Største verdi</label>
+      <size value="12" />
+      <help-text>Må være et heltall eller desimaltall. La feltet være blankt for automatisk justering. Hvis aksen er unike kategorier, brukes heltall fra 0 og oppover.</help-text>
+      <regexp>^[0-9]*[,.]?[0-9]+$</regexp>
+    </input>
+    <input name="yAxisAllowDecimal" type="CheckBox">
+      <label>Y-akse Tillat desimaler</label>
+      <help-text>Vanligvis avrundes akseverdiene til heltall, men ved små verdiendringer (f.eks prosent) kan man velge å tillate desimaler likevel.</help-text>
+    </input>
+    <input name="stabelsum" type="CheckBox">
+      <label>Vis stabelsum</label>
+      <help-text>Hvis stabling av verdier er skrudd på OG dette feltet er avkrysset, vises summen av alle verdiene fra en stabel som en etikett utenfor stabelen. Er avslått som standard, da etikettene kan få plassproblemer ved større datasett og/eller store verdier.</help-text>
+    </input>
+  </form>
+</content-type>
