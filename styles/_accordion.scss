@@ -1,0 +1,43 @@
+.part-accordion {
+  position: relative;
+  a {
+    color: #333333;
+    height: 42px;
+    display: block;
+  }
+  a i {
+    font-style: normal;
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    padding-right: 30px;
+    border-radius: 50%;
+    background-color: $green4;
+    content: " "
+  }
+  a.collapsed i {
+    background-color: $green3;
+  }
+  a i:before {
+    font-size: 24px;
+    top: -2px;
+    left: 13px;
+    position: absolute;
+    content: "-";
+    color: white;
+  }
+  a.collapsed i:before {
+    left: 11px;
+    content: "+";
+  }
+  a span {
+    font-size: 20px;
+    margin-top: 3px;
+    margin-left: 60px;
+    display: inline-block;
+  }
+  .collapse-container {
+    margin-top: 10px;
+    margin-left: 60px;
+  }
+}

@@ -1,0 +1,15 @@
+<content-type>
+  <display-name>Accordion</display-name>
+  <super-type>base:structured</super-type>
+  <allow-child-content>true</allow-child-content>
+  <form>
+    <input name="open" type="TextLine">
+      <label>Tekst til åpne-knapp</label>
+      <occurrences minimum="0" maximum="1"/>
+    </input>
+    <input name="body" type="HtmlArea">
+      <label>Innhold</label>
+      <occurrences minimum="0" maximum="1"/>
+    </input>
+  </form>
+</content-type>
