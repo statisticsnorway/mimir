@@ -15,7 +15,7 @@ exports.get = function(req) {
       menu.href = menu.link
     }
     else if (menu.content) {
-      menu.href = portal.pageUrl({ key: menu.content })
+      menu.href = portal.pageUrl({ id: menu.content })
     }
   })
 
