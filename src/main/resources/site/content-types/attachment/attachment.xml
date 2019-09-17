@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content-type>
+    <display-name>Vedlegg</display-name>
+    <super-type>base:structured</super-type>
+    <description>Opplastet vedlegg</description>
+    <form>
+        <input type="TextLine" name="label">
+            <label>Lenketekst innhold</label>
+            <occurrences minimum="0" maximum="1"/>
+        </input>
+        <input name="file" type="AttachmentUploader">
+            <label>Fil</label>
+        </input>
+    </form>
+</content-type>
