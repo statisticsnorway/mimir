@@ -1,0 +1,10 @@
+<section class="xp-part datasets">
+    <nav class="row" data-th-if="${datasets}">
+        <div class="col-6 col-md-3 pt-3 mr-2 pb-md-2 border border-dark" data-th-each="dataset : ${datasets.hits}">
+            <h3 data-th-text="${dataset.data.title}"></h3>
+            <div class="position-relative">
+                <p><a data-th-text="${dataset.data.subtitle}" data-th-href="${portal.pageUrl({'_path=' + dataset._path})}"/></p>
+            </div>
+        </div>
+    </nav>
+</section>
