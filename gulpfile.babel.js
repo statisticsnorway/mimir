@@ -75,7 +75,7 @@ function backend() {
 
 function assets() {
   return gulp.src(['node_modules/moment/min/moment-with-locales.js'])
-    .pipe(gulp.dest('build/resources/main/site/lib'));
+    .pipe(gulp.dest('build/resources/main/lib'));
 }
 // -----------------------------------------------------------------------------
 // frontend javascript
