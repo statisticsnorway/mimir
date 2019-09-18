@@ -1,0 +1,19 @@
+<layout>
+  <display-name>Kolonner</display-name>
+  <description></description>
+  <form>
+    <input name="size" type="RadioButton">
+      <label>Kolonnestørrelse</label>
+      <occurrences minimum="1" maximum="1"/> 
+      <config>
+        <option value="a">30/70</option> 
+        <option value="b">50/50</option>
+      </config>
+      <default>b</default> 
+    </input>
+  </form>
+  <regions>
+    <region name="left"/>
+    <region name="right"/>
+  </regions>
+</layout>
