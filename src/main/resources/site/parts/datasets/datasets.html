@@ -1,12 +1,15 @@
 <section class="xp-part datasets">
     <nav class="row" data-th-if="${datasets}">
-        <div class="col-6 col-md-3 pt-3 mr-2 pb-md-2 border border-dark" data-th-each="dataset : ${datasets}">
+        <div class="dataset col-6 col-md-3 pt-3 mr-2 pb-md-2 border border-dark" data-th-each="dataset : ${datasets}">
             <h3 data-th-text="${dataset.title}"></h3>
             <div class="position-relative">
                 <p><a data-th-text="${dataset.subtitle}" data-th-href="${dataset.path}"/></p>
             </div>
-            <div class="position-relative">
-                <p data-th-if="${dataset.excelPath}"><a data-th-text="'Variabelliste'" data-th-href="${dataset.excelPath}"/></p>
+            <div class="excellink position-relative">
+                <p>
+                    <a data-th-text="'Variabelliste'" data-th-href="${dataset.excelPath}"/>
+                    <span data-th-if="${dataset.excelModifiedDate}" data-th-text="'(per ' + ${dataset.excelModifiedDate} + ')'"></span>
+                </p>
             </div>
         </div>
     </nav>

@@ -2,6 +2,7 @@ const portal = require('/lib/xp/portal')
 const util = require('/lib/util')
 const contentLib = require('/lib/xp/content')
 const thymeleaf = require('/lib/thymeleaf')
+const moment = require('/lib/moment-with-locales')
 
 exports.get = function(req) {
 
@@ -29,16 +30,15 @@ exports.get = function(req) {
         start: 0,
         count: 1,
         sort: '_modifiedTime ASC',
-        query: "type ='media:spreadsheet'" //type": "media:spreadsheet"
+        query: "type ='media:spreadsheet'"
       })
 
+      moment.locale('nb')
       dataset.excelPath =  portal.attachmentUrl({id: excelFile.hits[0]._id});
-      dataset.excelModifiedDate = excelFile.hits[0].modifiedTime
+      dataset.excelModifiedDate = moment(excelFile.hits[0].modifiedTime).format('DD-MM-YYYY')
       datasets.push(dataset);
     }
   }
-
-
   const model = { content, datasets }
   const body = thymeleaf.render(view, model)
 
