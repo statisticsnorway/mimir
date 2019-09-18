@@ -1,9 +1,12 @@
 <section class="xp-part datasets">
     <nav class="row" data-th-if="${datasets}">
-        <div class="col-6 col-md-3 pt-3 mr-2 pb-md-2 border border-dark" data-th-each="dataset : ${datasets.hits}">
-            <h3 data-th-text="${dataset.data.title}"></h3>
+        <div class="col-6 col-md-3 pt-3 mr-2 pb-md-2 border border-dark" data-th-each="dataset : ${datasets}">
+            <h3 data-th-text="${dataset.title}"></h3>
             <div class="position-relative">
-                <p><a data-th-text="${dataset.data.subtitle}" data-th-href="${portal.pageUrl({'_path=' + dataset._path})}"/></p>
+                <p><a data-th-text="${dataset.subtitle}" data-th-href="${dataset.path}"/></p>
+            </div>
+            <div class="position-relative">
+                <p data-th-if="${dataset.excelPath}"><a data-th-text="'Variabelliste'" data-th-href="${dataset.excelPath}"/></p>
             </div>
         </div>
     </nav>
