@@ -2,3 +2,8 @@
 
 @import "./color";
 @import "./menu-box";
+@import "./accordion";
+
+section + section {
+  margin-top: 40px;
+}

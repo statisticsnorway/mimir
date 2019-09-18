@@ -1,0 +1,12 @@
+<section class="xp-part part-accordion">
+  <div>
+    <a class="collapsed" data-toggle="collapse" data-th-href="'#accordion-' + ${part.accordion._id}" role="button" aria-expanded="false" data-th-attr="aria-controls='accordion-' + ${part.accordion._id}">
+      <i></i>
+      <span data-th-text="${part.accordion.data.open}"></span>
+    </a>
+  </div>
+  <div class="collapse collapse-container" data-th-id="'accordion-' + ${part.accordion._id}">
+    <div class="" data-th-utext="${part.accordion.data.body}">
+    </div>
+  </div>
+</section>
