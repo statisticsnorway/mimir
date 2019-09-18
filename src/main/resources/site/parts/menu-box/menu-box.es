@@ -7,7 +7,7 @@ exports.get = function(req) {
   const part = portal.getComponent()
   const view = resolve('./menu-box.html')
 
-  part.menu = part.config && part.config.menu && content.get({ key: part.config.menu })
+  part.menu = part.config && part.config.menu && content.get({ key: part.config.menu }) || { data: {}}
   part.menu.data.menu = part.menu.data.menu && util.data.forceArray(part.menu.data.menu) || []
 
   part.menu.data.menu.map((menu) => {
