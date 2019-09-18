@@ -4,9 +4,6 @@
     &:hover {
       text-decoration: none;
     }
-    margin-bottom: 30px;
-  }
-  a div {
   }
   h3 {
     bottom: 0;
@@ -15,8 +12,5 @@
   }
   @include media-breakpoint-down(md) {
     h3 { font-size: 0.7em }
-    a div {
-      height: 50px;
-    }
   }
 }
