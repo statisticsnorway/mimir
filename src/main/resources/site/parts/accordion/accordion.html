@@ -1,12 +1,18 @@
 <section class="xp-part part-accordion">
-  <div>
-    <a class="collapsed" data-toggle="collapse" data-th-href="'#accordion-' + ${part.accordion._id}" role="button" aria-expanded="false" data-th-attr="aria-controls='accordion-' + ${part.accordion._id}">
-      <i></i>
-      <span data-th-text="${part.accordion.data.open}"></span>
+  <div data-th-each="accordion: ${accordions}">
+    <a class="collapsed d-block" data-toggle="collapse" data-th-href="'#accordion-' + ${accordion._id}" role="button" aria-expanded="false" data-th-attr="aria-controls='accordion-' + ${accordion._id}">
+      <i class="accordion-bullet"></i>
+      <span data-th-text="${accordion.data.open}"></span>
     </a>
-  </div>
-  <div class="collapse collapse-container" data-th-id="'accordion-' + ${part.accordion._id}">
-    <div class="" data-th-utext="${part.accordion.data.body}">
+    <div class="collapse collapse-container" data-th-id="'accordion-' + ${accordion._id}">
+      <div class="" data-th-utext="${accordion.data.body}"></div>
+      <div data-th-each="item, i : ${accordion.data.items}">
+        <a class="collapsed d-block" data-toggle="collapse" data-th-href="'#inner-' + ${accordion._id} + '-' + ${i.index}" role="button" aria-expanded="false" data-th-attr="aria-controls='inner-' + ${accordion._id} + '-' + ${i.index}">
+          <i class="accordion-bullet accordion-bullet-inverse"></i>
+          <span data-th-text="${item.title}"></span>
+        </a>
+        <div class="collapse collapse-container" data-th-id="'inner-' + ${accordion._id} + '-' + ${i.index}" data-th-utext="${item.body}"></div>
+      </div>
     </div>
   </div>
 </section>

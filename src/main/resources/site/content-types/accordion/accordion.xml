@@ -11,5 +11,19 @@
       <label>Innhold</label>
       <occurrences minimum="0" maximum="1"/>
     </input>
+    <item-set name="items">
+      <occurrences minimum="0" maximum="999"/>
+      <label>Underpunkt</label>
+      <items>
+        <input type="TextLine" name="title">
+          <label>Title</label>
+          <occurrences minimum="0" maximum="1"/>
+        </input>
+        <input type="HtmlArea" name="body">
+          <label>Tittel</label>
+          <occurrences minimum="0" maximum="1"/>
+        </input>
+      </items>
+    </item-set>
   </form>
 </content-type>

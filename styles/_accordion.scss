@@ -1,11 +1,14 @@
 .part-accordion {
   position: relative;
   a {
-    color: #333333;
     height: 42px;
     display: block;
+    color: $green4;
   }
-  a i {
+  a.collapsed {
+    color: #333333;
+  }
+  .accordion-bullet {
     font-style: normal;
     position: absolute;
     width: 35px;
@@ -15,10 +18,18 @@
     background-color: $green4;
     content: " "
   }
-  a.collapsed i {
+  a.collapsed .accordion-bullet {
     background-color: $green3;
+    color: $green4;
   }
-  a i:before {
+  .accordion-bullet-inverse {
+    background-color: white;
+  }
+  a.collapsed .accordion-bullet-inverse {
+    color: $green4;
+    background-color: white;
+  }
+  .accordion-bullet:before {
     font-size: 24px;
     top: -2px;
     left: 13px;
@@ -26,18 +37,27 @@
     content: "-";
     color: white;
   }
-  a.collapsed i:before {
+  a.collapsed .accordion-bullet:before {
     left: 11px;
     content: "+";
+  }
+  .accordion-bullet-inverse:before {
+    color: $green3;
   }
   a span {
     font-size: 20px;
     margin-top: 3px;
-    margin-left: 60px;
+    margin-left: 50px;
     display: inline-block;
   }
   .collapse-container {
     margin-top: 10px;
-    margin-left: 60px;
+    margin-left: 50px;
+    .collapse-container {
+      margin-left: 35px;
+    }
+    a span {
+      margin-left: 35px;
+    }
   }
 }

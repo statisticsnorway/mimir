@@ -3,7 +3,7 @@
   <form>
     <input name="accordion" type="ContentSelector">
       <label>Ekspanderer</label>
-      <occurrences minimum="1" maximum="1"/>
+      <occurrences minimum="1" maximum="99"/>
       <config>
         <allowPath>${site}</allowPath>
         <allowType>accordion</allowType>

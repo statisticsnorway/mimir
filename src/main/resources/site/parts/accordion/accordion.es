@@ -6,12 +6,19 @@ import * as thymeleaf from '/lib/thymeleaf'
 exports.get = function(req) {
   const part = portal.getComponent()
   const view = resolve('./accordion.html')
+  const accordions = []
 
-  part.accordion = part.config && part.config.accordion && content.get({ key: part.config.accordion })
+  part.config.accordion = part.config.accordion && util.data.forceArray(part.config.accordion) || []
+  part.config.accordion.map((key) => {
+    const accordion = content.get({ key })
+    accordion.data.items = accordion.data.items && util.data.forceArray(accordion.data.items) || []
+    accordions.push(accordion)
+ })
 
-log.info(JSON.stringify(part, null, ' '))
 
-  const model = { part }
+// log.info(JSON.stringify(part, null, ' '))
+
+  const model = { part, accordions }
   const body = thymeleaf.render(view, model)
 
   return { body, contentType: 'text/html' }
