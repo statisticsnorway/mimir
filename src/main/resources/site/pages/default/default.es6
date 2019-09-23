@@ -19,13 +19,10 @@ exports.get = function(req) {
   const config = {}
   const view = resolve('default.html')
 
-  const home = content.get({ key: '/ssb' })
-  home.isHome = home._id === page._id
-
   const breadcrumbs = [page]
   getBreadcrumbs(page, breadcrumbs)
 
-  const model = { version, ts, home, config, page, breadcrumbs, mainRegion }
+  const model = { version, ts, config, page, breadcrumbs, mainRegion }
   const body = thymeleaf.render(view, model)
 
   return { body }

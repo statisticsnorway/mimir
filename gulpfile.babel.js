@@ -124,7 +124,7 @@ function styles() {
 function watch() {
   livereload.listen()
   gulp.watch(['app/**/*.es6'], gulp.series(frontend, libs));
-  gulp.watch(['app/**/*.es6'], backend);
+  gulp.watch(['src/**/*.es6'], backend);
   gulp.watch(['src/**/*.html'], gulp.series(frontend, libs));
   gulp.watch(['styles/**/*.scss', 'src/**/*scss'], styles);
 }
