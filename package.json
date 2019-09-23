@@ -4,6 +4,8 @@
   "description": "New cms for ssb.no",
   "main": "index.js",
   "scripts": {
+    "gulp": "gulp build",
+    "build": "gulp build && ./gradlew build deploy",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "enonic project deploy --dev"
   },
