@@ -21,7 +21,6 @@ exports.get = function(req) {
 
   const home = content.get({ key: '/ssb' })
   home.isHome = home._id === page._id
-log.info(JSON.stringify(home, null, ' '))
 
   const breadcrumbs = [page]
   getBreadcrumbs(page, breadcrumbs)
