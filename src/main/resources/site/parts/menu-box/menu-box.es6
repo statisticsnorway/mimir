@@ -3,8 +3,6 @@ const util = require('/lib/util')
 const content = require('/lib/xp/content')
 const thymeleaf = require('/lib/thymeleaf')
 
-const moment = require('/lib/moment-with-locales')
-
 exports.get = function(req) {
   const part = portal.getComponent()
   const view = resolve('./menu-box.html')
