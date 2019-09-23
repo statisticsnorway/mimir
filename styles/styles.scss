@@ -1,8 +1,10 @@
 @import "../node_modules/bootstrap/scss/bootstrap";
 
 @import "./color";
+@import "./header";
 @import "./menu-box";
 @import "./accordion";
+@import "./button";
 
 section + section {
   margin-top: 40px;
