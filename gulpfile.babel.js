@@ -59,7 +59,7 @@ function libs() {
 // backend javascript
 // -----------------------------------------------------------------------------
 function backend() {
-  return gulp.src('src/main/resources/**/*.es')
+  return gulp.src('src/main/resources/**/*.es6')
     .pipe(plumber())
     .pipe(eslint({ configFile: 'eslint.config.json' }))
     .pipe(eslint.format())
@@ -81,7 +81,7 @@ function assets() {
 // frontend javascript
 // -----------------------------------------------------------------------------
 function frontend() {
-  return gulp.src(['app/main.es', 'app/**/*.es'])
+  return gulp.src(['app/main.es6', 'app/**/*.es6'])
     .pipe(plumber())
     .pipe(eslint({ configFile: 'eslint.config.json' }))
     .pipe(eslint.format())
@@ -123,8 +123,8 @@ function styles() {
 // -----------------------------------------------------------------------------
 function watch() {
   livereload.listen()
-  gulp.watch(['app/**/*.es'], gulp.series(frontend, libs));
-  gulp.watch(['src/**/*.es'], backend);
+  gulp.watch(['app/**/*.es6'], gulp.series(frontend, libs));
+  gulp.watch(['app/**/*.es6'], backend);
   gulp.watch(['src/**/*.html'], gulp.series(frontend, libs));
   gulp.watch(['styles/**/*.scss', 'src/**/*scss'], styles);
 }
