@@ -16,11 +16,11 @@
       <label>Underpunkt</label>
       <items>
         <input type="TextLine" name="title">
-          <label>Title</label>
+          <label>Tekst til åpneknapp</label>
           <occurrences minimum="0" maximum="1"/>
         </input>
         <input type="HtmlArea" name="body">
-          <label>Tittel</label>
+          <label>Brødtekst</label>
           <occurrences minimum="0" maximum="1"/>
         </input>
       </items>
