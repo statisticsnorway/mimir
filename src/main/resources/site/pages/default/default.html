@@ -67,6 +67,19 @@
 
   <!-- MAIN -->
   <main data-portal-region="main" class="xp-region container" data-th-if="${!isFragment}">
+    <!-- breadcrumbs -->
+    <nav class="row mt-2 mb-5">
+      <div class="col-12">
+        <a class="d-none d-md-inline a-plain" href="https://www.ssb.no"><u>Forsiden</u></a>
+        <div data-th-unless="${home.isHome}" data-th-each="crumb, i: ${breadcrumbs}" data-th-remove="tag">
+          <span class="mr-1 d-md-none" data-th-if="${i.count == #lists.size(breadcrumbs) - 1}">&lt;</span>
+          <span class="ml-1 mr-1 d-none d-md-inline">&gt;</span>
+          <a data-th-unless="${i.last}" data-th-href="${portal.pageUrl({'_path='+crumb._path})}" data-th-classappend="${ i.count != #lists.size(breadcrumbs) - 1 } ? 'd-none d-md-inline'"><u data-th-text="${crumb.displayName}"></u></a>
+          <span data-th-if="${i.last}" data-th-text="${crumb.displayName}" class="d-none d-md-inline"></span>
+        </div>
+      </div>
+    </nav>
+
     <div data-th-if="${mainRegion}" data-th-remove="tag">
       <div data-th-each="component : ${mainRegion.components}" data-th-remove="tag">
         <div data-portal-component="${component.path}" data-th-remove="tag"></div>
