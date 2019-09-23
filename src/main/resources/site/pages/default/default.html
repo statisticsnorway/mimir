@@ -80,6 +80,9 @@
       </div>
     </nav>
 
+    <!-- preview -->
+    <div data-th-if="${preview}" data-th-utext="${preview.body}"></div>
+
     <div data-th-if="${mainRegion}" data-th-remove="tag">
       <div data-th-each="component : ${mainRegion.components}" data-th-remove="tag">
         <div data-portal-component="${component.path}" data-th-remove="tag"></div>

@@ -19,10 +19,19 @@ exports.get = function(req) {
   const config = {}
   const view = resolve('default.html')
 
+  let preview
+
+  // Create preview
+  if (page.type === `${app.name}:accordion` || page.type === `${app.name}:menu-box`) {
+    const name = page.type.replace(/^.*:/, '')
+    const controller = require(`../../parts/${name}/${name}`)
+    preview = controller.get({ config: { [name]: [page._id] }})
+  }
+
   const breadcrumbs = [page]
   getBreadcrumbs(page, breadcrumbs)
 
-  const model = { version, ts, config, page, breadcrumbs, mainRegion }
+  const model = { version, ts, config, page, breadcrumbs, mainRegion, preview }
   const body = thymeleaf.render(view, model)
 
   return { body }
