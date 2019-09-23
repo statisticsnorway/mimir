@@ -29,8 +29,7 @@ exports.get = function(req) {
         key: contentChildren[i]._path,
         start: 0,
         count: 1,
-        sort: '_modifiedTime ASC',
-        query: "type ='media:spreadsheet'"
+        sort: '_modifiedTime ASC'
       })
 
       moment.locale('nb')
@@ -39,6 +38,7 @@ exports.get = function(req) {
       datasets.push(dataset);
     }
   }
+
   const model = { content, datasets }
   const body = thymeleaf.render(view, model)
 
