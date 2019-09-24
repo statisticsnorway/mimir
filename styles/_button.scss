@@ -13,3 +13,11 @@
     width: 32px;
   }
 }
+.btn-primary {
+  border-color: $green3;
+  background-color: $green3;
+}
+.btn-primary:hover {
+  border-color: $green4;
+  background-color: $green4;
+}
