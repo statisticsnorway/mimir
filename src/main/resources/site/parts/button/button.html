@@ -1,0 +1,5 @@
+<section class="xp-part part-button">
+  <div data-th-each="btn: ${buttons}">
+    <a class="btn btn-primary w-50" data-th-text="${btn.displayName}" data-th-href="${portal.pageUrl({'_id='+btn.data.link})}"></a>
+  </div>
+</section>
