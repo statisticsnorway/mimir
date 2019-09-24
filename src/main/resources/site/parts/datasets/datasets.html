@@ -6,10 +6,10 @@
                 <div data-th-if="${dataset.href}" class="position-relative">
                     <p><a data-th-text="${dataset.data.subtitle}" data-th-href="${dataset.href}"/></p>
                 </div>
-                <div data-th-if="${dataset.variabellisteHref}" class="excellink align-bottom">
+                <div data-th-if="${dataset.excelFileHref}" class="excellink align-bottom">
                     <p>
-                        <a data-th-text="'Variabelliste'" data-th-href="${dataset.variabellisteHref}"/>
-                        <span data-th-text="'(per ' + ${dataset.variabellisteModifiedDate} + ')'"></span>
+                        <a data-th-text="${dataset.excelFileHrefLabel}" data-th-href="${dataset.excelFileHref}"/>
+                        <span data-th-text="'(per ' + ${dataset.excelFileModifiedDate} + ')'"></span>
                     </p>
                 </div>
             </div>

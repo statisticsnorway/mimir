@@ -14,8 +14,9 @@ exports.get = function(req) {
     dataset.href = portal.pageUrl({id: dataset._id})
     const excelFiles = contentLib.query({count: 1, sort: 'modifiedTime DESC', query: `_path LIKE '/content${dataset._path}/*' AND _name LIKE '*.xlsx' `})
     if (excelFiles.hits.length > 0) {
-      dataset.variabellisteHref = portal.attachmentUrl({id: excelFiles.hits[0]._id});
-      dataset.variabellisteModifiedDate = moment(excelFiles.hits[0].modifiedTime).format('DD-MM-YYYY')
+      dataset.excelFileHref = portal.attachmentUrl({id: excelFiles.hits[0]._id})
+      dataset.excelFileHrefLabel = excelFiles.hits[0].displayName
+      dataset.excelFileModifiedDate = moment(excelFiles.hits[0].modifiedTime).format('DD-MM-YYYY')
     }
   })
 
