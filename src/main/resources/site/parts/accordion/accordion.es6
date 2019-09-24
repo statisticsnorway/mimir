@@ -4,7 +4,7 @@ import * as content from '/lib/xp/content'
 import * as thymeleaf from '/lib/thymeleaf'
 
 exports.get = function(req) {
-  const part = portal.getComponent()
+  const part = portal.getComponent() || req
   const view = resolve('./accordion.html')
   const accordions = []
 
@@ -15,8 +15,6 @@ exports.get = function(req) {
     accordions.push(accordion)
  })
 
-
-// log.info(JSON.stringify(part, null, ' '))
 
   const model = { part, accordions }
   const body = thymeleaf.render(view, model)
