@@ -1,15 +1,17 @@
 <section class="xp-part datasets">
-    <nav class="row" data-th-if="${datasets}">
-        <div class="dataset col-6 col-md-3 pt-3 mr-2 pb-md-2 border border-dark" data-th-each="dataset : ${datasets}">
-            <h3 data-th-text="${dataset.title}"></h3>
-            <div class="position-relative">
-                <p><a data-th-text="${dataset.subtitle}" data-th-href="${dataset.path}"/></p>
-            </div>
-            <div class="excellink position-relative">
-                <p>
-                    <a data-th-text="'Variabelliste'" data-th-href="${dataset.excelPath}"/>
-                    <span data-th-if="${dataset.excelModifiedDate}" data-th-text="'(per ' + ${dataset.excelModifiedDate} + ')'"></span>
-                </p>
+    <nav class="row" data-th-if="${datasets.hits}">
+        <div class="col-6 col-md-3 pb-3 pt-3" data-th-each="dataset : ${datasets.hits}">
+            <div class="dataset pt-3 p-2 border h-100">
+                <h3 data-th-text="${dataset.data.title}"></h3>
+                <div class="position-relative">
+                    <p><a data-th-text="${dataset.data.subtitle}" data-th-href="${dataset.href}"/></p>
+                </div>
+                <div data-th-if="${dataset.variabellisteHref}" class="excellink align-bottom">
+                    <p>
+                        <a data-th-text="'Variabelliste'" data-th-href="${dataset.variabellisteHref}"/>
+                        <span data-th-text="'(per ' + ${dataset.variabellisteModifiedDate} + ')'"></span>
+                    </p>
+                </div>
             </div>
         </div>
     </nav>

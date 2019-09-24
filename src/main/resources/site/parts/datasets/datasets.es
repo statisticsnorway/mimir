@@ -5,41 +5,27 @@ const thymeleaf = require('/lib/thymeleaf')
 const moment = require('/lib/moment-with-locales')
 
 exports.get = function(req) {
-
   const view = resolve('./datasets.html')
-  const content = portal.getContent()
-  const contentPath = portal.getContent()._path
+  const datasets = contentLib.getChildren({ key: portal.getContent()._path }) || { hits: {}}
+  datasets.hits = datasets.hits && util.data.forceArray(datasets.hits) || []
 
-  var contentChildren = contentLib.getChildren({
-    key: contentPath,
-    start: 0,
-    count: 99,
-    sort: '_modifiedTime ASC'
-  }).hits;
-
-  var datasets = [];
-  if (contentChildren.length > 0) {
-    for (var i = 0; i < contentChildren.length; i++) {
-      var dataset = {};
-      dataset.title = contentChildren[i].data.title;
-      dataset.subtitle = contentChildren[i].data.subtitle;
-      dataset.path = portal.pageUrl({id: contentChildren[i]._id});
-
-      var excelFile = contentLib.getChildren({
-        key: contentChildren[i]._path,
-        start: 0,
-        count: 1,
-        sort: '_modifiedTime ASC'
-      })
-
+  datasets.hits.map((dataset) => {
+    dataset.href = portal.pageUrl({id: dataset._id});
+    const datasetAttachment = contentLib.getChildren({key: dataset._path}) || { hits: {}}
+    datasetAttachment.hits = datasetAttachment.hits && util.data.forceArray(datasetAttachment.hits) || []
+    const variabelliste = datasetAttachment.hits.filter(function (content) {
+        return content.displayName.toLowerCase() == "variabelliste"
+    })
+    if(variabelliste.length > 0){
       moment.locale('nb')
-      dataset.excelPath =  portal.attachmentUrl({id: excelFile.hits[0]._id});
-      dataset.excelModifiedDate = moment(excelFile.hits[0].modifiedTime).format('DD-MM-YYYY')
-      datasets.push(dataset);
+      dataset.variabellisteHref =  portal.attachmentUrl({id: variabelliste[0]._id});
+      dataset.variabellisteModifiedDate = moment(variabelliste[0].modifiedTime).format('DD-MM-YYYY')
     }
-  }
+  })
 
-  const model = { content, datasets }
+  // log.info(JSON.stringify(datasets, null, ' '))
+
+  const model = { datasets }
   const body = thymeleaf.render(view, model)
 
   return { body, contentType: 'text/html' }
