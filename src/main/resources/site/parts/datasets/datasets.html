@@ -3,7 +3,7 @@
         <div class="col-6 col-md-3 pb-3 pt-3" data-th-each="dataset : ${datasets.hits}">
             <div class="dataset pt-3 p-2 border h-100">
                 <h3 data-th-text="${dataset.data.title}"></h3>
-                <div class="position-relative">
+                <div data-th-if="${dataset.href}" class="position-relative">
                     <p><a data-th-text="${dataset.data.subtitle}" data-th-href="${dataset.href}"/></p>
                 </div>
                 <div data-th-if="${dataset.variabellisteHref}" class="excellink align-bottom">
