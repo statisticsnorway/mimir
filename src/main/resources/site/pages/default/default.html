@@ -81,7 +81,7 @@
     </nav>
 
     <!-- preview -->
-    <div data-th-if="${preview}" data-th-utext="${preview.body}"></div>
+    <div data-th-if="${page.preview}" data-th-utext="${page.preview.body}"></div>
 
     <div data-th-if="${mainRegion}" data-th-remove="tag">
       <div data-th-each="component : ${mainRegion.components}" data-th-remove="tag">
