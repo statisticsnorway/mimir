@@ -83,10 +83,13 @@
           <h1 data-th-text="${page.data.title}"></h1>
           <h3 data-th-if="${page.data.subtitle}" data-th-text="${page.data.subtitle}"></h3>
       </div>
-      <div data-th-if="${mainRegion}" data-th-remove="tag">
-          <div data-th-each="component : ${mainRegion.components}" data-th-remove="tag">
-              <div data-portal-component="${component.path}" data-th-remove="tag"></div>
-          </div>
+
+    <!-- preview -->
+    <div data-th-if="${page.preview}" data-th-utext="${page.preview.body}"></div>
+
+    <div data-th-if="${mainRegion}" data-th-remove="tag">
+      <div data-th-each="component : ${mainRegion.components}" data-th-remove="tag">
+        <div data-portal-component="${component.path}" data-th-remove="tag"></div>
       </div>
   </main>
 
