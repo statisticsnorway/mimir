@@ -19,6 +19,13 @@ exports.get = function(req) {
   const config = {}
   const view = resolve('default.html')
 
+  // Create preview
+  if (page.type === `${app.name}:accordion` || page.type === `${app.name}:menu-box`) {
+    const name = page.type.replace(/^.*:/, '')
+    const controller = require(`../../parts/${name}/${name}`)
+    page.preview = controller.get({ config: { [name]: [page._id] }})
+  }
+
   const breadcrumbs = [page]
   getBreadcrumbs(page, breadcrumbs)
 

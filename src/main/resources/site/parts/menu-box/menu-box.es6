@@ -4,10 +4,11 @@ const content = require('/lib/xp/content')
 const thymeleaf = require('/lib/thymeleaf')
 
 exports.get = function(req) {
-  const part = portal.getComponent()
+  const part = portal.getComponent() || req
   const view = resolve('./menu-box.html')
 
-  part.menu = part.config && part.config.menu && content.get({ key: part.config.menu }) || { data: {}}
+  part.config.menu = part.config.menu || part.config['menu-box'] // Trick for preview
+  part.menu = part.config.menu && content.get({ key: part.config.menu }) || { data: {}}
   part.menu.data.menu = part.menu.data.menu && util.data.forceArray(part.menu.data.menu) || []
 
   part.menu.data.menu.map((menu) => {
