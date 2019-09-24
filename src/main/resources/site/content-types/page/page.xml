@@ -3,5 +3,13 @@
   <display-name>Side</display-name>
   <super-type>base:structured</super-type>
   <form>
+      <input type="TextLine" name="title">
+          <label>Tittel</label>
+          <occurrences minimum="0" maximum="1"/>
+      </input>
+      <input type="TextLine" name="subtitle">
+          <label>Undertittel</label>
+          <occurrences minimum="0" maximum="1"/>
+      </input>
   </form>
 </content-type>

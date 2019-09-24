@@ -29,56 +29,60 @@
 <body class="xp-page" data-th-classappend="${colorize}">
   <!-- HEADER -->
   <header>
-    <div class="container">
-      <section class="row">
-        <div class="col-md-8 my-4 position-relative">
-          <div data-th-replace="mimir:/site/includes/logo.html"></div>
-          <button class="button-search position-absolute rounded-0 border-0 p-0 d-md-none" type="button" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30">
-              <title>Søk</title>
-              <g id="object"><circle class="cls-1" cx="11" cy="11" r="10"/><line class="cls-2" x1="18" y1="18.24" x2="28.76" y2="29"/></g>
-            </svg>
-          </button>
-        </div>
-        <div id="search-collapse" class="col-md-4 collapse d-md-block">
-          <div class="contact text-right mt-md-2">
-            <a class="contact-link" href="https://www.ssb.no/omssb/kontakt-oss">Kontakt</a>
-          </div>
-          <form method="get" action="https://www.ssb.no/sok" autocomplete="off">
-            <div>
-              <div class="form-group position-relative">
-                <input type="text" class="js-q form-control rounded-0 border border-dark" name="sok"/>
-                <button class="button-search position-absolute rounded-0 border border-dark d-none d-md-inline">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30">
-                  <title>Søk</title>
-                    <g id="object"><circle class="cls-1" cx="11" cy="11" r="10"/><line class="cls-2" x1="18" y1="18.24" x2="28.76" y2="29"/></g>
-                  </svg>
-                </button>
+      <div class="container">
+          <section class="row">
+              <div class="col-md-8 my-4 position-relative">
+                  <div data-th-replace="mimir:/site/includes/logo.html"></div>
+                  <button class="button-search position-absolute rounded-0 border-0 p-0 d-md-none" type="button" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30">
+                          <title>Søk</title>
+                          <g id="object"><circle class="cls-1" cx="11" cy="11" r="10"/><line class="cls-2" x1="18" y1="18.24" x2="28.76" y2="29"/></g>
+                      </svg>
+                  </button>
               </div>
-            </div>
-          </form>
-        </div>
-        <div class="col-12">
-          <div class="border-bottom border-dark"></div>
-        </div>
-      </section>
-    </div>
+              <div id="search-collapse" class="col-md-4 collapse d-md-block">
+                  <div class="contact text-right mt-md-2">
+                      <a class="contact-link" href="https://www.ssb.no/omssb/kontakt-oss">Kontakt</a>
+                  </div>
+                  <form method="get" action="https://www.ssb.no/sok" autocomplete="off">
+                      <div>
+                          <div class="form-group position-relative">
+                              <input type="text" class="js-q form-control rounded-0 border border-dark" name="sok"/>
+                              <button class="button-search position-absolute rounded-0 border border-dark d-none d-md-inline">
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30">
+                                      <title>Søk</title>
+                                      <g id="object"><circle class="cls-1" cx="11" cy="11" r="10"/><line class="cls-2" x1="18" y1="18.24" x2="28.76" y2="29"/></g>
+                                  </svg>
+                              </button>
+                          </div>
+                      </div>
+                  </form>
+              </div>
+              <div class="col-12">
+                  <div class="border-bottom border-dark"></div>
+              </div>
+          </section>
+      </div>
   </header>
 
   <!-- MAIN -->
   <main data-portal-region="main" class="xp-region container" data-th-if="${!isFragment}">
-    <!-- breadcrumbs -->
-    <nav class="row mt-2 mb-5">
-      <div class="col-12">
-        <a class="d-none d-md-inline a-plain" href="https://www.ssb.no"><u>Forsiden</u></a>
-        <div data-th-each="crumb, i: ${breadcrumbs}" data-th-remove="tag">
-          <span class="mr-1 d-md-none" data-th-if="${i.count == #lists.size(breadcrumbs) - 1}">&lt;</span>
-          <span class="ml-1 mr-1 d-none d-md-inline">&gt;</span>
-          <a data-th-unless="${i.last}" data-th-href="${portal.pageUrl({'_path='+crumb._path})}" data-th-classappend="${ i.count != #lists.size(breadcrumbs) - 1 } ? 'd-none d-md-inline'"><u data-th-text="${crumb.displayName}"></u></a>
-          <span data-th-if="${i.last}" data-th-text="${crumb.displayName}" class="d-none d-md-inline"></span>
-        </div>
+      <!-- breadcrumbs -->
+      <nav class="row mt-2 mb-5">
+          <div class="col-12">
+              <a class="d-none d-md-inline a-plain" href="https://www.ssb.no"><u>Forsiden</u></a>
+              <div data-th-each="crumb, i: ${breadcrumbs}" data-th-remove="tag">
+                  <span class="mr-1 d-md-none" data-th-if="${i.count == #lists.size(breadcrumbs) - 1}">&lt;</span>
+                  <span class="ml-1 mr-1 d-none d-md-inline">&gt;</span>
+                  <a data-th-unless="${i.last}" data-th-href="${portal.pageUrl({'_path='+crumb._path})}" data-th-classappend="${ i.count != #lists.size(breadcrumbs) - 1 } ? 'd-none d-md-inline'"><u data-th-text="${crumb.displayName}"></u></a>
+                  <span data-th-if="${i.last}" data-th-text="${crumb.displayName}" class="d-none d-md-inline"></span>
+              </div>
+          </div>
+      </nav>
+      <div data-th-if="${page.data.title}">
+          <h1 data-th-text="${page.data.title}"></h1>
+          <h3 data-th-if="${page.data.subtitle}" data-th-text="${page.data.subtitle}"></h3>
       </div>
-    </nav>
 
     <!-- preview -->
     <div data-th-if="${page.preview}" data-th-utext="${page.preview.body}"></div>
@@ -87,7 +91,6 @@
       <div data-th-each="component : ${mainRegion.components}" data-th-remove="tag">
         <div data-portal-component="${component.path}" data-th-remove="tag"></div>
       </div>
-    </div>
   </main>
 
 <!--
