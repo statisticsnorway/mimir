@@ -20,7 +20,12 @@
   }
   a.collapsed .accordion-bullet {
     background-color: $green3;
-    color: $green4;
+  }
+  a.collapsed:hover .accordion-bullet {
+    background-color: $green4;
+  }
+  a.collapsed:hover .accordion-bullet-inverse {
+    background-color: white;
   }
   .accordion-bullet-inverse {
     background-color: white;
@@ -49,6 +54,9 @@
     margin-top: 3px;
     margin-left: 50px;
     display: inline-block;
+  }
+  a:hover span {
+    color: $green4;
   }
   .collapse-container {
     margin-top: 10px;
