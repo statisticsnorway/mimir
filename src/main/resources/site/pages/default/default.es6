@@ -20,7 +20,7 @@ exports.get = function(req) {
   const view = resolve('default.html')
 
   // Create preview
-  if (page.type === `${app.name}:accordion` || page.type === `${app.name}:menu-box`) {
+  if (page.type === `${app.name}:accordion` || page.type === `${app.name}:menu-box` || page.type === `${app.name}:button`) {
     const name = page.type.replace(/^.*:/, '')
     const controller = require(`../../parts/${name}/${name}`)
     page.preview = controller.get({ config: { [name]: [page._id] }})
