@@ -1,0 +1,15 @@
+.button-search {
+  cursor: pointer;
+  padding-top: 2px;
+  height: 50px;
+  width: 56px;
+  top: 0;
+  right: 0;
+  background-color: transparent;
+  svg {
+    .cls-1 {fill:#fff;}
+    .cls-1, .cls-2 {stroke:#274247;stroke-miterlimit:10;stroke-width:2px;}
+    .cls-2 {fill:none;stroke-linecap:round; }
+    width: 32px;
+  }
+}

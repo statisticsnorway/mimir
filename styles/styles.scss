@@ -1,13 +1,15 @@
 @import "../node_modules/bootstrap/scss/bootstrap";
 @import "./color";
+@import "./header";
 @import "./menu-box";
 @import "./accordion";
+@import "./button";
 @import "./datasets";
 
 section + section {
   margin-top: 40px;
 }
-a-plain {
+.a-plain {
   color: #212529;
   &:hover {
     text-decoration: none;

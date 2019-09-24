@@ -19,7 +19,7 @@ exports.get = function(req) {
     }
   })
 
-log.info(JSON.stringify(part, null, ' '))
+// log.info(JSON.stringify(part, null, ' '))
 
   const model = { part }
   const body = thymeleaf.render(view, model)

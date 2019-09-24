@@ -1,0 +1,23 @@
+header {
+  section .col-4 {
+    padding: 0
+  }
+  .logo svg {
+    width: 250px;
+    @include media-breakpoint-down(md) {
+      width: 180px;
+    }
+    path  {
+      fill: #274247;
+    }
+  }
+  .contact-link {
+    font-size: 14px;
+    color: #1a9d49;
+    text-decoration: underline;
+  }
+  input.form-control {
+    height: 50px;
+    border-width: 1px;
+  }
+}

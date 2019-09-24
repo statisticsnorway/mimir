@@ -1,5 +1,5 @@
 <content-type>
-  <display-name>Accordion</display-name>
+  <display-name>Trekkspill</display-name>
   <super-type>base:structured</super-type>
   <allow-child-content>true</allow-child-content>
   <form>
@@ -11,5 +11,19 @@
       <label>Innhold</label>
       <occurrences minimum="0" maximum="1"/>
     </input>
+    <item-set name="items">
+      <occurrences minimum="0" maximum="999"/>
+      <label>Underpunkt</label>
+      <items>
+        <input type="TextLine" name="title">
+          <label>Tekst til åpneknapp</label>
+          <occurrences minimum="0" maximum="1"/>
+        </input>
+        <input type="HtmlArea" name="body">
+          <label>Brødtekst</label>
+          <occurrences minimum="0" maximum="1"/>
+        </input>
+      </items>
+    </item-set>
   </form>
 </content-type>
