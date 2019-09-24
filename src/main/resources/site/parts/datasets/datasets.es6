@@ -13,12 +13,12 @@ exports.get = function(req) {
     dataset.href = portal.pageUrl({id: dataset._id});
     const datasetAttachment = contentLib.getChildren({key: dataset._path}) || { hits: {}}
     datasetAttachment.hits = datasetAttachment.hits && util.data.forceArray(datasetAttachment.hits) || []
-    const variabelliste = datasetAttachment.hits.filter(function (content) {
-        return content.displayName.toLowerCase() == "variabelliste"
+    const variabelliste = datasetAttachment.hits.filter(function(content) {
+        return content.displayName.toLowerCase() == 'variabelliste'
     })
-    if(variabelliste.length > 0){
+    if (variabelliste.length > 0) {
       moment.locale('nb')
-      dataset.variabellisteHref =  portal.attachmentUrl({id: variabelliste[0]._id});
+      dataset.variabellisteHref = portal.attachmentUrl({id: variabelliste[0]._id});
       dataset.variabellisteModifiedDate = moment(variabelliste[0].modifiedTime).format('DD-MM-YYYY')
     }
   })
