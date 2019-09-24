@@ -6,8 +6,8 @@
 @import "./button";
 @import "./datasets";
 
-section + section {
-  margin-top: 40px;
+.row + section, section + section {
+  margin-top: 20px;
 }
 .a-plain {
   color: #212529;
