@@ -1,4 +1,4 @@
-// const util = require('/lib/util')
+const util = require('/lib/util')
 const portal = require('/lib/xp/portal')
 const content = require('/lib/xp/content')
 const thymeleaf = require('/lib/thymeleaf')
@@ -46,17 +46,22 @@ function initHighchart(part) {
 }
 
 exports.get = function(req) {
-  const part = portal.getComponent()
+  const part = portal.getComponent() || req
   const view = resolve('./highchart.html')
+  const highcharts = []
 
-  if (part.config.graph) {
-    part.chart = content.get({ key: part.config.graph })
-    initHighchart(part)
-  }
+log.info(JSON.stringify(part, null, ' '))
+
+  part.config.highchart = part.config.highchart && util.data.forceArray(part.config.highchart) || []
+  part.config.highchart.map((key) => {
+    const highchart = { chart: content.get({ key }) }
+    highcharts.push(highchart)
+    initHighchart(highchart)
+  })
 
 // log.info(JSON.stringify(part, null, ' '))
 
-  const model = { part }
+  const model = { part, highcharts }
   const body = thymeleaf.render(view, model)
 
   return { body, contentType: 'text/html' }
