@@ -10,13 +10,8 @@ exports.get = function(req) {
   const component = portal.getComponent()
   const view = resolve('article.html')
 
-log.info('-- columns --')
-log.info(JSON.stringify(component, null, ' '))
-log.info(JSON.stringify(page, null, ' '))
-
   const published = page.publish && page.publish.from && moment(page.publish.from).format('DD. MMMM YYYY').toLowerCase()
   const publishedDatetime = page.publish && page.publish.from && moment(page.publish.from).format('YYYY-MM-DD HH:MM')
-log.info(published)
 
   const modified = moment(page.modifiedTime).format('DD. MMMM YYYY').toLowerCase()
   const modifiedDatetime = moment(page.modifiedTime).format('YYYY-MM-DD HH:MM')
