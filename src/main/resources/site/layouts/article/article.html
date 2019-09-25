@@ -11,7 +11,7 @@
   </div>
   <div data-portal-region="aside" class="xp-region" data-th-classappend="${rightSize}">
     <div data-th-each="component,i : ${aside.components}" data-th-remove="tag">
-      <div data-th-if="${i.index == 1}">
+      <div data-th-if="${i.index == 1}" class="mb-3">
         <a id="share-facebook" target="_blank" class="a-plain" rel="external" data-th-href="'https://www.facebook.com/sharer.php?u=' + ${page.url} + '&amp;t=' + ${page.displayNameURLencoded}">
            <img alt="Del på Facebook" data-th-src="${portal.assetUrl({'_path=social/share-fb.png'})}"/>
          </a>
