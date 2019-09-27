@@ -1,7 +1,7 @@
 <section class="xp-part menu-box">
   <nav class="row" data-th-if="${part.menu}">
-    <div class="col-6 col-md-3" data-th-each="menu, i: ${part.menu.data.menu}">
-      <a data-th-if="menu.content" data-th-href="${menu.href}" class="mb-3 pt-3 pt-md-4 pb-1 pb-md-2 px-2 border border-dark d-block a-plain h-100">
+    <div class="col-6 col-md-3 mb-3" data-th-each="menu, i: ${part.menu.data.menu}">
+      <a data-th-if="menu.content" data-th-href="${menu.href}" class="pt-3 pt-md-4 pb-1 pb-md-2 px-2 border border-dark d-block a-plain h-100">
         <h3 class="text-center" data-th-text="${menu.title}"></h3>
         <img data-th-if="${menu.image}" data-th-src="${portal.imageUrl({'_id=' + menu.image, '_scale=block(400,400)'})}" class="d-block ml-auto mr-auto w-50"></img>
         <div class="position-relative" data-th-text="${menu.subtitle}"></div>
