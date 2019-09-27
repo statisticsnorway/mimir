@@ -16,7 +16,7 @@ exports.get = function(req) {
     if (excelFiles.hits.length > 0) {
       dataset.excelFileHref = portal.attachmentUrl({id: excelFiles.hits[0]._id})
       dataset.excelFileHrefLabel = excelFiles.hits[0].displayName
-      dataset.excelFileModifiedDate = moment(excelFiles.hits[0].modifiedTime).format('DD-MM-YYYY')
+      dataset.excelFileModifiedDate = moment(excelFiles.hits[0].modifiedTime).format('DD.MM.YY')
     }
   })
 
