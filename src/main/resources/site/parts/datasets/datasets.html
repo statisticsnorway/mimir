@@ -9,7 +9,7 @@
         <div data-th-if="${dataset.excelFileHref}" class="excellink align-bottom">
           <p>
             <a data-th-href="${dataset.excelFileHref}">Variabelliste</a>
-            <span data-th-text="'(per ' + ${dataset.excelFileModifiedDate} + ')'"></span>
+            <time data-th-datetime="${dataset.excelFileDatetime}" data-th-text="'(per ' + ${dataset.excelFileModifiedDate} + ')'"></time>
           </p>
         </div>
       </div>
