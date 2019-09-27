@@ -19,7 +19,10 @@ exports.get = function(req) {
   const leftSize = 'col-md-4'
   const rightSize = 'col-md-8'
 
-  const model = { aside: component.regions.aside, leftSize, rightSize, published, publishedDatetime, modified, modifiedDatetime }
+  page.displayNameURLencoded = encodeURI(page.displayName)
+  page.url = encodeURI(portal.pageUrl({ type: 'absolute', id: page._id }))
+
+  const model = { page, aside: component.regions.aside, leftSize, rightSize, published, publishedDatetime, modified, modifiedDatetime }
   const body = thymeleaf.render(view, model)
 
   return { body }

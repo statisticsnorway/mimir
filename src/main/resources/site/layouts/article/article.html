@@ -10,7 +10,21 @@
     </div>
   </div>
   <div data-portal-region="aside" class="xp-region" data-th-classappend="${rightSize}">
-    <div data-th-each="component : ${aside.components}" data-th-remove="tag">
+    <div data-th-each="component,i : ${aside.components}" data-th-remove="tag">
+      <div data-th-if="${i.index == 1}" class="mb-3">
+        <a id="share-facebook" target="_blank" class="a-plain" rel="external" data-th-href="'https://www.facebook.com/sharer.php?u=' + ${page.url} + '&amp;t=' + ${page.displayNameURLencoded}">
+           <img alt="Del på Facebook" data-th-src="${portal.assetUrl({'_path=social/share-fb.png'})}"/>
+         </a>
+         <a id="share-twitter" class="ml-1 a-plain" target="_blank" rel="external" data-th-href="'https://twitter.com/intent/tweet?url=' + ${page.url} + '&amp;text=' + ${page.displayNameURLencoded}">
+           <img alt="Del på Twitter" data-th-src="${portal.assetUrl({'_path=social/share-twitter.png'})}"/>
+         </a>
+         <a id="share-email" class="ml-1 a-plain" data-th-href="'mailto:?subject=' + ${page.displayNameURLencoded} + '&amp;body=' + ${page.url}">
+           <img alt="Tips en venn" data-th-src="${portal.assetUrl({'_path=social/share-email.png'})}"/>
+         </a>
+         <a id="share-print" class="ml-1 a-plain" href="#print" title="Skriv ut">
+           <img alt="Skriv ut" data-th-src="${portal.assetUrl({'_path=social/share-print.png'})}"/>
+         </a>
+      </div>
       <div data-portal-component="${component.path}" data-th-remove="tag" />
     </div>
   </div>
