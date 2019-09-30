@@ -2,21 +2,14 @@
   a {
   }
   img {
-    width: 50%;
+    width: 45%;
     margin-bottom: 60px;
   }
-  .a-plain {
-    &:hover {
-      text-decoration: none;
-    }
-  }
   h3 {
-    font-weight: 400;
     font-size: 18px;
   }
   @include media-breakpoint-down(md) {
-    font-face: roboto-plain;
-    h3 { font-size: 0.7em }
+    h3 { font-size: 16px }
   }
   .position-absolute {
     font-size: 14px;
