@@ -2,7 +2,6 @@
   position: relative;
   a {
     height: 42px;
-    display: block;
     color: $green4;
   }
   a.collapsed {
@@ -53,7 +52,6 @@
     font-size: 20px;
     margin-top: 3px;
     margin-left: 50px;
-    display: inline-block;
   }
   a:hover span {
     color: $green4;
