@@ -1,15 +1,28 @@
 .menu-box {
+  a {
+  }
+  img {
+    width: 50%;
+    margin-bottom: 60px;
+  }
   .a-plain {
     &:hover {
       text-decoration: none;
     }
   }
   h3 {
-    bottom: 0;
     font-weight: 400;
-    font-size: 1.0em
+    font-size: 18px;
   }
   @include media-breakpoint-down(md) {
+    font-face: roboto-plain;
     h3 { font-size: 0.7em }
+  }
+  .position-absolute {
+    font-size: 14px;
+    padding: 20px;
+    left: 15px;
+    right: 15px;
+    bottom: 0;
   }
 }
