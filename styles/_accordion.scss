@@ -1,8 +1,12 @@
+$accordion-link-color: #0774d0;
+$accordion-hover-color: #a53d7c;
+$accordion-active-color: #a53d7c;
+
 .part-accordion {
   position: relative;
-  a {
+  a.d-block {
     height: 42px;
-    color: $green4;
+    color: $accordion-active-color;
   }
   a.collapsed {
     color: #333333;
@@ -14,14 +18,14 @@
     height: 35px;
     padding-right: 30px;
     border-radius: 50%;
-    background-color: $green4;
+    background-color: $accordion-active-color;
     content: " "
   }
   a.collapsed .accordion-bullet {
-    background-color: $green3;
+    background-color: $accordion-link-color;
   }
   a.collapsed:hover .accordion-bullet {
-    background-color: $green4;
+    background-color: $accordion-hover-color;
   }
   a.collapsed:hover .accordion-bullet-inverse {
     background-color: white;
@@ -30,7 +34,7 @@
     background-color: white;
   }
   a.collapsed .accordion-bullet-inverse {
-    color: $green4;
+    color: $accordion-hover-color;
     background-color: white;
   }
   .accordion-bullet:before {
@@ -42,11 +46,12 @@
     color: white;
   }
   a.collapsed .accordion-bullet:before {
+    top: -3px;
     left: 11px;
     content: "+";
   }
   .accordion-bullet-inverse:before {
-    color: $green3;
+    color: $accordion-link-color;
   }
   a span {
     font-size: 20px;
@@ -54,11 +59,20 @@
     margin-left: 50px;
   }
   a:hover span {
-    color: $green4;
+    color: $accordion-hover-color;
   }
   .collapse-container {
     margin-top: 10px;
     margin-left: 50px;
+    a.d-block .accordion-bullet-inverse:before {
+      color: $accordion-hover-color;
+    }
+    a.d-block.collapsed .accordion-bullet-inverse:before {
+      color: $accordion-link-color;
+    }
+    a.d-block:hover .accordion-bullet-inverse:before {
+      color: $accordion-hover-color;
+    }
     .collapse-container {
       margin-left: 35px;
     }
