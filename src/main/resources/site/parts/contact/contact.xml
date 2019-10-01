@@ -1,0 +1,14 @@
+<part>
+    <display-name>Kontakt</display-name>
+    <description>Part med én kontakt</description>
+    <form>
+        <input name="contact" type="ContentSelector">
+            <label>Kontakt</label>
+            <occurrences minimum="1" maximum="1"/>
+            <config>
+              <allowPath>${site}</allowPath>
+              <allowType>contact</allowType>
+            </config>
+          </input>
+        </form>
+</part>
