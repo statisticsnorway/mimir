@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script async data-th-if="${config.GA_TRACKING_ID}" data-th-src="|https://www.googletagmanager.com/gtag/js?id=${config.GA_TRACKING_ID}|"></script>
+  <script th:inline="javascript" data-th-if="${config.GA_TRACKING_ID}">
+    /*<![CDATA[*/
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', /*[[${config.GA_TRACKING_ID}]]*/);
+    /*]]>*/
+  </script>
+
+  <script src="http://localhost:35729/livereload.js?snipver=1" async="" defer=""></script>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="Cache-control" content="NO-CACHE">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta data-th-if="${page.data.metaDescription}" name="description" data-th-content="${page.data.metaDescription}"> 
+  <title data-th-text="${page.displayName} + ' - Statistisk sentralbyrå'"></title>
+  <!-- <link rel="shortcut icon" type="image/x-icon" data-th-href="${portal.assetUrl({'_path=img/favicon.ico'})}"/> -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto|Roboto+Condensed" rel="stylesheet"> 
+  <link rel="stylesheet" data-th-href="${portal.assetUrl({'_path=css/styles.css', 'ts=' + ts})}"/>
+  <!--
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+   -->
+</head>
+<body class="xp-page" data-th-classappend="${colorize}">
+  <!-- HEADER -->
+  <header>
+    <div class="container">
+      <section class="row">
+        <div class="col-md-8 my-4 position-relative">
+          <div data-th-replace="mimir:/site/includes/logo.html"></div>
+          <button class="button-search position-absolute rounded-0 border-0 p-0 d-md-none" type="button" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30">
+              <title>Søk</title>
+              <g id="object"><circle class="cls-1" cx="11" cy="11" r="10"/><line class="cls-2" x1="18" y1="18.24" x2="28.76" y2="29"/></g>
+            </svg>
+          </button>
+        </div>
+        <div id="search-collapse" class="col-md-4 collapse d-md-block">
+          <div class="contact text-right mt-md-2">
+            <a class="a-ssb" href="https://www.ssb.no/omssb/kontakt-oss">Kontakt</a>
+          </div>
+          <form method="get" action="https://www.ssb.no/sok" autocomplete="off">
+            <div>
+              <div class="form-group position-relative">
+                <input type="text" class="js-q form-control rounded-0 border border-dark" name="sok" role="search"/>
+                <button class="button-search position-absolute rounded-0 border border-dark d-none d-md-inline">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30">
+                    <title>Søk</title>
+                    <g id="object"><circle class="cls-1" cx="11" cy="11" r="10"/><line class="cls-2" x1="18" y1="18.24" x2="28.76" y2="29"/></g>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="col-12">
+          <div class="border-bottom border-dark"></div>
+        </div>
+      </section>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main data-portal-region="main" class="xp-region container" data-th-if="${!isFragment}">
+    <!-- breadcrumbs -->
+    <div data-th-replace="mimir:/site/includes/breadcrumbs.html"></div>
+
+    <div data-th-if="${page.data.title}" class="mb-5">
+      <h1 data-th-text="${page.data.title}"></h1>
+    </div>
+
+    <!-- preview -->
+    <div data-th-if="${page.preview}" data-th-utext="${page.preview.body}"></div>
+
+    <div data-th-if="${mainRegion}" class="row">
+      <div data-th-class="col-md-4">
+        <div data-th-if="${published}">
+          <div class="roboto-bold">PUBLISERT</div>
+          <div><time data-th-datetime="${publishedDatetime}" data-th-text="${published}"></time></div>
+        </div>
+        <div data-th-if="${published}" class="pt-3">
+          <div class="roboto-bold">ENDRET</div>
+          <div><time data-th-datetime="${modifiedDatetime}" data-th-text="${modified}"></time></div>
+        </div>
+      </div>
+      <div data-th-class="col-md-8">
+        <div data-th-if="${page.data.ingress}"><b data-th-utext="${page.data.ingress}"></b></div>
+        <div data-th-each="component : ${mainRegion.components}" data-th-remove="tag">
+          <div data-portal-component="${component.path}" data-th-remove="tag"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+  </footer>
+
+  <script type="text/javascript" data-th-src="${portal.assetUrl({'_path=js/libs.js', 'ts=' + ts})}"></script>
+</body>
+</html>
