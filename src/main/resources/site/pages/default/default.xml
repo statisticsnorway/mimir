@@ -1,7 +1,7 @@
 <page>
   <display-name>Standard side</display-name>
   <config>
-  </config>>
+  </config>
   <regions>
     <region name="main"/>
   </regions>
