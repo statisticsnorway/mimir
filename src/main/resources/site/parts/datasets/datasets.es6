@@ -12,7 +12,7 @@ exports.get = function(req) {
 
   datasets.hits.map((dataset) => {
     dataset.href = portal.pageUrl({id: dataset._id})
-    const excelFiles = contentLib.query({count: 1, sort: 'modifiedTime DESC', query: `_path LIKE '/content${dataset._path}/*' AND _name LIKE '*.xlsx' `})
+    const excelFiles = contentLib.query({ count: 1, sort: 'modifiedTime DESC', query: `_path LIKE '/content${dataset._path}/*' AND (_name LIKE '*.xlsx' OR _name LIKE '*.xlsm')` })
     if (excelFiles.hits.length > 0) {
       dataset.excelFileHref = portal.attachmentUrl({id: excelFiles.hits[0]._id})
       dataset.excelFileHrefLabel = excelFiles.hits[0].displayName
