@@ -1,4 +1,5 @@
 // import * as http from '/lib/http-client'
+import * as i18n from '/lib/xp/i18n'
 import * as content from '/lib/xp/content'
 import * as portal from '/lib/xp/portal'
 import * as thymeleaf from '/lib/thymeleaf'
@@ -19,6 +20,10 @@ exports.get = function(req) {
   const config = {}
   const view = resolve('default.html')
 
+  // Phrases
+  const phrases = i18n.getPhrases(page.language === 'en' && page.language || '', ['site/i18n/phrases'])
+log.info(JSON.stringify(phrases, null, ' '))
+
   // Create preview
   if (page.type === `${app.name}:accordion` || page.type === `${app.name}:menu-box` || page.type === `${app.name}:button` || page.type === `${app.name}:highchart`) {
     const name = page.type.replace(/^.*:/, '')
@@ -29,7 +34,7 @@ exports.get = function(req) {
   const breadcrumbs = [page]
   getBreadcrumbs(page, breadcrumbs)
 
-  const model = { version, ts, config, page, breadcrumbs, mainRegion }
+  const model = { version, ts, config, page, breadcrumbs, mainRegion, phrases }
   const body = thymeleaf.render(view, model)
 
   return { body }
