@@ -11,6 +11,7 @@ exports.get = function(req) {
   part.config.button = part.config.button && util.data.forceArray(part.config.button) || []
   part.config.button.map((key) => {
      const button = content.get({ key })
+     button.target = button.data.link && content.get({ key: button.data.link })
      buttons.push(button)
   })
 
