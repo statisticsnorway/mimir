@@ -19,4 +19,10 @@
     text-decoration: none;
   }
 }
-
+p a {
+  color: #003892;
+  text-decoration: underline;
+  &:hover {
+    color: #a53d7c;
+  }
+}
