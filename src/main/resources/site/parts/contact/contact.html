@@ -1,4 +1,10 @@
-<section class="xp-part contact-box">
-    <h1 data-th-text="${contact.data.name}">TESTNAVN</h1>
-  </section>
+<section class="xp-part contact">
+  <h3 data-th-text=${contact.data.name}>TESTNAVN</h3>
+  <p data-th-if="${contact.data.email}" >
+    <a href="mailto:${contact.data.email}" data-th-text="${contact.data.email}">epost</a>
+  </p>
+  <p data-th-if="${contact.data.phone}">
+    <a href="tel:${contact.data.phone}" data-th-text="${contact.data.phone}">telefonnummer</a>
+  </p>
   
+</section>

@@ -1,0 +1,10 @@
+<layout>
+  <display-name>Trippel-kolonner</display-name>
+  <description>Tre kolonner. Til f.eks kontakter.</description>
+  <config/>
+  <regions>
+    <region name="left"/>
+    <region name="center"/>
+    <region name="right"/>
+  </regions>
+</layout>
