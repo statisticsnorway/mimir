@@ -69,6 +69,7 @@
   <main data-portal-region="main" class="xp-region container" data-th-if="${!isFragment}">
     <!-- breadcrumbs -->
     <div data-th-replace="mimir:/site/includes/breadcrumbs.html"></div>
+
     <div data-th-if="${page.data.title}" class="mb-5">
       <h1 data-th-text="${page.data.title}"></h1>
     </div>
@@ -95,27 +96,6 @@
       </div>
     </div>
   </main>
-
-<!--
-
-  Code for Bootstrap training
-
-  <div class="container">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="bg-secondary border border-dark rounded p-2 pt-4 p-md-5 text-light">
-          Første kolonne
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="bg-primary border border-dark rounded p-2 xp-md-5 mt-3 mt-md-0 text-light">
-          Neste kolonne
-        </div>
-      </div>
-    </div>
-  </div>
-
--->
 
   <!-- FOOTER -->
   <footer>
