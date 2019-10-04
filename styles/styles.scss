@@ -7,27 +7,16 @@
 @import "./button";
 @import "./datasets";
 @import "./factbox";
-@import "./highchart";
 
 .row + section, section + section {
   margin-top: 20px;
 }
-a, .a-ssb {
-  color: #003892;
-  text-decoration: underline;
-  &:hover {
-    color: #a53d7c;
-  }
-}
 .a-plain {
   color: #212529;
   outline: none;
-  text-decoration: none;
   &:hover {
     color: #212529;
     text-decoration: none;
   }
 }
-a.btn {
-  text-decoration: none;
-}
+
