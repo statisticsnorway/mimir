@@ -1,0 +1,18 @@
+.highcharts-table {
+  display: none;
+}
+.hc-container {
+  .footnote {
+    font-size: 12px;
+    padding-left: 16px;
+  }
+  @include media-breakpoint-down(sm) {
+    .footnote {
+      position: absolute;
+      bottom: -30px;
+      font-size: 10px;
+      line-height: 14px;
+      z-index: 3;
+    }
+  }
+}
