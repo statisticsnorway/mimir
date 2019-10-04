@@ -26,8 +26,6 @@ exports.get = function (req) {
 
     const contacts = chunkArray(contactIdList, WIDTH)
 
-    // log.info(JSON.stringify(result, null, 2))
-
     const model = { contacts }
     const body = thymeleaf.render(view, model)
 
