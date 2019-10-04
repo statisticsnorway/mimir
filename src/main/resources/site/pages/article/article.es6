@@ -1,5 +1,6 @@
 const moment = require('/lib/moment-with-locales')
 
+import * as i18n from '/lib/xp/i18n'
 import * as content from '/lib/xp/content'
 import * as portal from '/lib/xp/portal'
 import * as thymeleaf from '/lib/thymeleaf'
@@ -22,6 +23,9 @@ exports.get = function(req) {
   const config = {}
   const view = resolve('article.html')
 
+  // Phrases
+  const phrases = i18n.getPhrases(page.language === 'en' && page.language || '', ['site/i18n/phrases'])
+
   // Create preview
   if (page.type === `${app.name}:accordion` || page.type === `${app.name}:menu-box` || page.type === `${app.name}:button` || page.type === `${app.name}:highchart`) {
     const name = page.type.replace(/^.*:/, '')
@@ -41,7 +45,7 @@ exports.get = function(req) {
   page.displayNameURLencoded = encodeURI(page.displayName)
   page.url = encodeURI(portal.pageUrl({ type: 'absolute', id: page._id }))
 
-  const model = { version, ts, config, page, breadcrumbs, mainRegion, published, publishedDatetime, modified, modifiedDatetime }
+  const model = { version, ts, config, page, breadcrumbs, mainRegion, published, publishedDatetime, modified, modifiedDatetime, phrases }
   const body = thymeleaf.render(view, model)
 
   return { body }

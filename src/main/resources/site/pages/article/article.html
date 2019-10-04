@@ -41,8 +41,10 @@
           </button>
         </div>
         <div id="search-collapse" class="col-md-4 collapse d-md-block">
-          <div class="contact text-right mt-md-2">
-            <a class="a-ssb" href="https://www.ssb.no/omssb/kontakt-oss">Kontakt</a>
+          <div class="contact text-right mt-md-2 small text-uppercase">
+            <a id="change-language" data-th-attr="data-not-available-header=${phrases.notAvailableHeader},data-not-available-body=${phrases.notAvailableBody},data-go-home=${phrases.goHome}" class="a-ssb language-tooltip-btn" href="#" data-th-text="${phrases.language}"></a>
+<div class="d-none language-tooltip">Tooltip</div>
+            <a class="a-ssb ml-1" href="https://www.ssb.no/omssb/kontakt-oss">Kontakt</a>
           </div>
           <form method="get" action="https://www.ssb.no/sok" autocomplete="off">
             <div>
@@ -80,11 +82,11 @@
     <div data-th-if="${mainRegion}" class="row">
       <div data-th-class="col-md-4">
         <div data-th-if="${published}">
-          <div class="roboto-bold">PUBLISERT</div>
+          <div class="roboto-bold text-uppercase" data-th-text="${phrases.published}">PUBLISERT</div>
           <div><time data-th-datetime="${publishedDatetime}" data-th-text="${published}"></time></div>
         </div>
         <div data-th-if="${published}" class="pt-3">
-          <div class="roboto-bold">ENDRET</div>
+          <div class="roboto-bold text-uppercase" data-th-text="${phrases.modified}">ENDRET</div>
           <div><time data-th-datetime="${modifiedDatetime}" data-th-text="${modified}"></time></div>
         </div>
       </div>
