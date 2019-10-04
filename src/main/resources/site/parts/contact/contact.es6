@@ -26,7 +26,7 @@ exports.get = function (req) {
 
     const contacts = chunkArray(contactIdList, WIDTH)
 
-    const model = { contacts }
+    const model = { contacts, part }
     const body = thymeleaf.render(view, model)
 
     return { body, contentType: 'text/html' }
