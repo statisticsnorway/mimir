@@ -3,7 +3,6 @@ import * as thymeleaf from '/lib/thymeleaf'
 
 exports.get = function (req) {
   const component = portal.getComponent()
-  const size = component.config.size
   const view = resolve('triple.html')
 
 
