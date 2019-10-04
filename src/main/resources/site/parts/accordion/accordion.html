@@ -1,5 +1,5 @@
 <section class="xp-part part-accordion">
-  <div data-th-each="accordion: ${accordions}">
+  <div data-th-each="accordion, i: ${accordions}" data-th-class="${i ? 'mt-3'}">
     <a class="collapsed d-block" data-toggle="collapse" data-th-href="'#accordion-' + ${accordion._id}" role="button" aria-expanded="false" data-th-attr="aria-controls='accordion-' + ${accordion._id}">
       <i class="accordion-bullet"></i>
       <span class="d-inline-block" data-th-text="${accordion.data.open}"></span>
