@@ -5,7 +5,6 @@ $accordion-active-color: #a53d7c;
 .part-accordion {
   position: relative;
   a.d-block {
-    height: 42px;
     color: $accordion-active-color;
   }
   a.collapsed {
