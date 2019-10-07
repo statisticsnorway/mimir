@@ -1,14 +1,14 @@
 <section class="xp-part container">
-  <H1 class="border-bottom border-dark pb-2 bt-4">Kontakter</H1>
+  <h2 class="border-bottom border-dark pb-2 bt-6">Kontakter</h2>
   <div data-th-each="contactGroup : ${contacts}" class="xp-layout row d-flex flex-wrap">
     <div data-th-each="contact : ${contactGroup}" class="xp-region col-8 col-md-4 pt-2 pb-1 contact">
       <div data-th-if="${contact}" class="b-1">
-        <h3 data-th-text=${contact.data.name}>TESTNAVN</h3>
+        <p class="lead text-break text-wrap" data-th-text=${contact.data.name}>TESTNAVN</p>
         <p data-th-if="${contact.data.email}" >
-          <a href="mailto:${contact.data.email}" data-th-text="${contact.data.email}">epost</a>
+          <a data-th-href="@{'mailto:' + ${contact.data.email}}" data-th-text="${contact.data.email}">epost</a>
         </p>
         <p data-th-if="${contact.data.phone}">
-          <a href="tel:${contact.data.phone}" data-th-text="${contact.data.phone}">telefonnummer</a>
+          <a data-th-href="@{'tel:' + ${contact.data.phone}}" data-th-text="${contact.data.phone}">telefonnummer</a>
         </p>
       </div>
     </div>
