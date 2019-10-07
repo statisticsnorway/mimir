@@ -5,6 +5,8 @@ import * as content from '/lib/xp/content'
 import * as portal from '/lib/xp/portal'
 import * as thymeleaf from '/lib/thymeleaf'
 
+import * as language from '/lib/language'
+
 const version = '%%VERSION%%'
 
 function getBreadcrumbs(c, a) {
@@ -23,8 +25,8 @@ exports.get = function(req) {
   const config = {}
   const view = resolve('article.html')
 
-  // Phrases
-  const phrases = i18n.getPhrases(page.language === 'en' && page.language || '', ['site/i18n/phrases'])
+  page.language = language.getLanguage(page)
+log.info(JSON.stringify(page.language, null, ' '))
 
   // Create preview
   if (page.type === `${app.name}:accordion` || page.type === `${app.name}:menu-box` || page.type === `${app.name}:button` || page.type === `${app.name}:highchart`) {
@@ -45,7 +47,7 @@ exports.get = function(req) {
   page.displayNameURLencoded = encodeURI(page.displayName)
   page.url = encodeURI(portal.pageUrl({ type: 'absolute', id: page._id }))
 
-  const model = { version, ts, config, page, breadcrumbs, mainRegion, published, publishedDatetime, modified, modifiedDatetime, phrases }
+  const model = { version, ts, config, page, breadcrumbs, mainRegion, published, publishedDatetime, modified, modifiedDatetime }
   const body = thymeleaf.render(view, model)
 
   return { body }

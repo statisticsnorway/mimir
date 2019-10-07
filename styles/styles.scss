@@ -7,6 +7,7 @@
 @import "./button";
 @import "./datasets";
 @import "./factbox";
+@import "./popper";
 
 .row + section, section + section {
   margin-top: 20px;
@@ -25,6 +26,13 @@ a, .a-ssb {
   &:hover {
     color: #212529;
     text-decoration: none;
+  }
+}
+.a-white {
+  color: white;
+  &:hover {
+    transition: all .2s;
+    color: #CCCCCC;
   }
 }
 a.btn {
