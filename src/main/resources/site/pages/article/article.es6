@@ -1,6 +1,5 @@
 const moment = require('/lib/moment-with-locales')
 
-import * as i18n from '/lib/xp/i18n'
 import * as content from '/lib/xp/content'
 import * as portal from '/lib/xp/portal'
 import * as thymeleaf from '/lib/thymeleaf'
@@ -26,7 +25,6 @@ exports.get = function(req) {
   const view = resolve('article.html')
 
   page.language = language.getLanguage(page)
-log.info(JSON.stringify(page.language, null, ' '))
 
   // Create preview
   if (page.type === `${app.name}:accordion` || page.type === `${app.name}:menu-box` || page.type === `${app.name}:button` || page.type === `${app.name}:highchart`) {

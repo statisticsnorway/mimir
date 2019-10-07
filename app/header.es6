@@ -1,3 +1,4 @@
+// Adds language tooltip to language switcher if page don't exist (provided by attribute data-exists)
 $(function() {
   // Bind popper to language switch menu item
   $('#change-language').each((i, el) => {
