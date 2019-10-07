@@ -1,9 +1,9 @@
-<section class="xp-part container">
-  <h2 class="border-bottom border-dark pb-2 bt-6">Kontakter</h2>
+<section class="xp-part container mt-md-5 pt-3">
+  <h2 class="border-bottom border-dark mb-md-4 pb-md-2 bt-6">Kontakter</h2>
   <div data-th-each="contactGroup : ${contacts}" class="xp-layout row d-flex flex-wrap">
     <div data-th-each="contact : ${contactGroup}" class="xp-region col-8 col-md-4 pt-2 pb-1 contact">
-      <div data-th-if="${contact}" class="b-1">
-        <p class="lead text-break text-wrap" data-th-text=${contact.data.name}>TESTNAVN</p>
+      <div data-th-if="${contact}">
+        <p class="lead mb-1 text-break text-wrap" data-th-text=${contact.data.name}>TESTNAVN</p>
         <p data-th-if="${contact.data.email}" >
           <a data-th-href="@{'mailto:' + ${contact.data.email}}" data-th-text="${contact.data.email}">epost</a>
         </p>
