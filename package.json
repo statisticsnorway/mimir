@@ -42,8 +42,7 @@
     "jsonstat": "^0.13.9",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
-    "popper.js": "^1.15.0",
-    "tooltip-js": "^3.0.0"
+    "popper.js": "^1.15.0"
   },
   "browserslist": [
     "last 2 version",
