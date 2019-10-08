@@ -16,7 +16,7 @@ exports.getLanguage = function(page) {
   moment.locale(page.language === 'en' ? 'en' : 'nb')
   const result = page.language === 'en' ? {
       code: 'en',
-      alternate: 'en',
+      alternate: 'nb',
       published: page.publish && page.publish.from && moment(page.publish.from).format('DD. MMMM YYYY'),
       modified: moment(page.modifiedTime).format('DD. MMMM YYYY'),
       path: page._path.replace(/^\/.*?\/en/, site._path),
