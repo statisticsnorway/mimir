@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html data-th-lang="${page.language.code}">
 <head>
   <script async data-th-if="${config.GA_TRACKING_ID}" data-th-src="|https://www.googletagmanager.com/gtag/js?id=${config.GA_TRACKING_ID}|"></script>
   <script th:inline="javascript" data-th-if="${config.GA_TRACKING_ID}">
@@ -22,48 +22,14 @@
   <!-- <link rel="shortcut icon" type="image/x-icon" data-th-href="${portal.assetUrl({'_path=img/favicon.ico'})}"/> -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto|Roboto+Condensed" rel="stylesheet"> 
   <link rel="stylesheet" data-th-href="${portal.assetUrl({'_path=css/styles.css', 'ts=' + ts})}"/>
+  <link rel="alternate" data-th-if="${page.language.exists}" data-th-href="${portal.pageUrl({'_path='+page.language.path})}" data-th-hreflang="${page.language.alternate}" />
   <!--
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
    -->
 </head>
 <body class="xp-page" data-th-classappend="${colorize}">
   <!-- HEADER -->
-  <header>
-      <div class="container">
-          <section class="row">
-              <div class="col-md-8 my-4 position-relative">
-                  <div data-th-replace="mimir:/site/includes/logo.html"></div>
-                  <button class="button-search position-absolute rounded-0 border-0 p-0 d-md-none" type="button" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30">
-                          <title>Søk</title>
-                          <g id="object"><circle class="cls-1" cx="11" cy="11" r="10"/><line class="cls-2" x1="18" y1="18.24" x2="28.76" y2="29"/></g>
-                      </svg>
-                  </button>
-              </div>
-              <div id="search-collapse" class="col-md-4 collapse d-md-block">
-                  <div class="contact text-right mt-md-2">
-                      <a class="a-ssb" href="https://www.ssb.no/omssb/kontakt-oss">Kontakt</a>
-                  </div>
-                  <form method="get" action="https://www.ssb.no/sok" autocomplete="off">
-                      <div>
-                          <div class="form-group position-relative">
-                              <input type="text" class="js-q form-control rounded-0 border border-dark" name="sok" role="search"/>
-                              <button class="button-search position-absolute rounded-0 border border-dark d-none d-md-inline">
-                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30">
-                                      <title>Søk</title>
-                                      <g id="object"><circle class="cls-1" cx="11" cy="11" r="10"/><line class="cls-2" x1="18" y1="18.24" x2="28.76" y2="29"/></g>
-                                  </svg>
-                              </button>
-                          </div>
-                      </div>
-                  </form>
-              </div>
-              <div class="col-12">
-                  <div class="border-bottom border-dark"></div>
-              </div>
-          </section>
-      </div>
-  </header>
+  <div data-th-replace="mimir:/site/includes/header.html"></div>
 
   <!-- MAIN -->
   <main data-portal-region="main" class="xp-region container" data-th-if="${!isFragment}">
@@ -82,27 +48,6 @@
         <div data-portal-component="${component.path}" data-th-remove="tag"></div>
       </div>
   </main>
-
-<!--
-
-  Code for Bootstrap training
-
-  <div class="container">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="bg-secondary border border-dark rounded p-2 pt-4 p-md-5 text-light">
-          Første kolonne
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="bg-primary border border-dark rounded p-2 xp-md-5 mt-3 mt-md-0 text-light">
-          Neste kolonne
-        </div>
-      </div>
-    </div>
-  </div>
-
--->
 
   <!-- FOOTER -->
   <footer>

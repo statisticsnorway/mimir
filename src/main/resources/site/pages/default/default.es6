@@ -3,6 +3,8 @@ import * as content from '/lib/xp/content'
 import * as portal from '/lib/xp/portal'
 import * as thymeleaf from '/lib/thymeleaf'
 
+import * as language from '/lib/language'
+
 const version = '%%VERSION%%'
 
 function getBreadcrumbs(c, a) {
@@ -18,6 +20,8 @@ exports.get = function(req) {
   const mainRegion = isFragment ? null : page.page && page.page.regions && page.page.regions.main
   const config = {}
   const view = resolve('default.html')
+
+  page.language = language.getLanguage(page)
 
   // Create preview
   if (page.type === `${app.name}:accordion` || page.type === `${app.name}:menu-box` || page.type === `${app.name}:button` || page.type === `${app.name}:highchart`) {
