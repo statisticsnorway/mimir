@@ -24,7 +24,7 @@
 .btn-primary:focus {
   box-shadow: 0 0 0 0.2rem $green4;
 }
-.btn-primary:not(:disabled):not(.disabled):active {
+.btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active {
   background-color: $green4;
   border-color: $green4;
 }
