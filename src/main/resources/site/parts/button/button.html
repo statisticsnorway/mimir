@@ -1,5 +1,5 @@
 <section class="xp-part part-button">
-  <div data-th-each="btn: ${buttons}" class="mt-3">
+  <div data-th-each="btn,i : ${buttons}" data-th-class="${i.index}  ? 'mt-3'">
     <a data-th-if="${btn.target and btn.target.type == 'mimir:page'}" class="btn btn-primary w-50" data-th-text="${btn.displayName}" data-th-href="${portal.pageUrl({'_id='+btn.data.link})}"></a>
     <a data-th-if="${btn.target}" data-th-unless="${btn.target.type == 'mimir:page'}" class="btn btn-primary w-50" data-th-text="${btn.displayName}" data-th-href="${portal.attachmentUrl({'_path='+btn.target._path})}"></a>
   </div>

@@ -12,6 +12,7 @@ exports.get = function(req) {
   part.config.accordion.map((key) => {
     const accordion = content.get({ key })
     accordion.data.items = accordion.data.items && util.data.forceArray(accordion.data.items) || []
+    accordion.data.body = portal.processHtml({ value: accordion.data.body })
     accordions.push(accordion)
  })
 
