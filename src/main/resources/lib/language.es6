@@ -11,8 +11,6 @@ const norwegian = i18n.getPhrases('', ['site/i18n/phrases'])
 
 exports.getLanguage = function(page) {
   const site = portal.getSite()
-  portal.pageUrl({ path: '/mimir/en' })
-
   moment.locale(page.language === 'en' ? 'en' : 'nb')
   const result = page.language === 'en' ? {
       code: 'en',
