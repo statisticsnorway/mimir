@@ -1,4 +1,6 @@
-// return language parameters for page
+// Returns language parameters for page
+
+const moment = require('/lib/moment-with-locales')
 
 import * as i18n from '/lib/xp/i18n'
 import * as portal from '/lib/xp/portal'
@@ -11,11 +13,20 @@ exports.getLanguage = function(page) {
   const site = portal.getSite()
   portal.pageUrl({ path: '/mimir/en' })
 
+  moment.locale(page.language === 'en' ? 'en' : 'nb')
   const result = page.language === 'en' ? {
+      code: 'en',
+      alternate: 'en',
+      published: page.publish && page.publish.from && moment(page.publish.from).format('DD. MMMM YYYY'),
+      modified: moment(page.modifiedTime).format('DD. MMMM YYYY'),
       path: page._path.replace(/^\/.*?\/en/, site._path),
       home: portal.pageUrl({ path: site._path }),
       phrases: english
     } : {
+      code: 'nb', // https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+      alternate: 'en',
+      published: page.publish && page.publish.from && moment(page.publish.from).format('DD. MMMM YYYY').toLowerCase(),
+      modified: moment(page.modifiedTime).format('DD. MMMM YYYY').toLowerCase(),
       path: page._path.replace(/^\/.*?\//, site._path + '/en/'),
       home: portal.pageUrl({ path: site._path + '/en' }),
       phrases: norwegian
