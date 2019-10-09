@@ -1,5 +1,19 @@
 {
-    "extends": ["google"],
+    "env": {
+        "browser": true,
+        "es6": true
+    },
+    "extends": [
+        "google"
+    ],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+    "parserOptions": {
+        "ecmaVersion": 2015,
+        "sourceType": "module"
+    },
     "rules": {
         "comma-dangle": ["error", {
             "arrays": "never",
@@ -33,9 +47,5 @@
         "semi": 0,
         "object-curly-spacing": 0,
         "no-irregular-whitespace": 0
-    },
-    "parserOptions": {
-        "ecmaVersion": 2015,
-        "sourceType": "module"
     }
 }

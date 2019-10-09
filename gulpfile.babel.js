@@ -43,7 +43,7 @@ const path = {
 // cleanup
 // -----------------------------------------------------------------------------
 function clean() {
-    rimraf(path.clean, cb);
+  rimraf(path.clean, cb);
 }
 
 // -----------------------------------------------------------------------------
@@ -61,7 +61,7 @@ function libs() {
 function backend() {
   return gulp.src('src/main/resources/**/*.es6')
     .pipe(plumber())
-    .pipe(eslint({ configFile: 'eslint.config.json' }))
+    .pipe(eslint({ configFile: '.eslintrc.json' }))
     .pipe(eslint.format())
     .pipe(replace('%%VERSION%%', config.version))
     .pipe(babel({ presets: ['@babel/env'] }))
@@ -83,7 +83,7 @@ function assets() {
 function frontend() {
   return gulp.src(['app/main.es6', 'app/**/*.es6'])
     .pipe(plumber())
-    .pipe(eslint({ configFile: 'eslint.config.json' }))
+    .pipe(eslint({ configFile: '.eslintrc.json' }))
     .pipe(eslint.format())
     .pipe(replace('%%VERSION%%', config.version))
     .pipe(babel({ presets: ['@babel/env'] }))
@@ -98,7 +98,7 @@ function frontend() {
 // -----------------------------------------------------------------------------
 function styles() {
   return gulp.src(path.src.style)
-    .pipe(plumber(function(error) {
+    .pipe(plumber(function (error) {
       log.error(error.message);
       this.emit('end');
     }))
