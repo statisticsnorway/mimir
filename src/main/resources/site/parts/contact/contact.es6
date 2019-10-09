@@ -3,7 +3,7 @@ import * as portal from '/lib/xp/portal'
 import * as content from '/lib/xp/content'
 import * as thymeleaf from '/lib/thymeleaf'
 
-exports.get = function (req) {
+exports.get = function(req) {
     const WIDTH = 3 // how many boxes in a row
     const part = portal.getComponent() || req
     const view = resolve('./contact.html')
@@ -16,10 +16,10 @@ exports.get = function (req) {
         contactIdList.push(contactSingle)
     })
 
-    function chunkArray(myArray, chunk_size) {
-        var results = [];
+    function chunkArray(myArray, chunkSize) {
+        const results = [];
         while (myArray.length) {
-            results.push(myArray.splice(0, chunk_size));
+            results.push(myArray.splice(0, chunkSize));
         }
         return results;
     }
