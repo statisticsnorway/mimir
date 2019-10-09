@@ -1,8 +1,9 @@
+bin
 dist
 build
+*.swp
 .gradle
 .vscode
+.settings
 .classpath
 node_modules
-*.swp
-bin
