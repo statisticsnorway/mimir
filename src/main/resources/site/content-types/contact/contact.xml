@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content-type>
+    <display-name>Kontakt</display-name>
+    <super-type>base:structured</super-type>
+    <description>Kontaktperson</description>
+    <form>
+        <input type="TextLine" name="name">
+            <label>Navn på kontakt</label>
+            <occurrences minimum="1" maximum="1"/>
+        </input>
+        <input type="TextLine" name="email">
+            <label>Epostadresse</label>
+            <occurrences minimum="0" maximum="1"/>
+        </input>
+        <input type="TextLine" name="phone">
+            <label>Telefonnummer</label>
+            <occurrences minimum="0" maximum="1"/>
+        </input>
+    </form>
+</content-type>
