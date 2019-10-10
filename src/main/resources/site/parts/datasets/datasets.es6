@@ -7,7 +7,7 @@ const moment = require('/lib/moment-with-locales')
 exports.get = function(req) {
   moment.locale('nb')
   const view = resolve('./datasets.html')
-  const datasets = contentLib.getChildren({ key: portal.getContent()._path }) || { hits: {}}
+  const datasets = contentLib.getChildren({ key: portal.getContent()._path, count: 9999 }) || { hits: {}}
   datasets.hits = datasets.hits && util.data.forceArray(datasets.hits) || []
 
   datasets.hits.map((dataset) => {
