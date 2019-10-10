@@ -20,6 +20,7 @@ exports.get = function(req) {
   }
 
   const model = {
+    size,
     leftRegion: component.regions.left,
     rightRegion: component.regions.right,
     leftSize,
