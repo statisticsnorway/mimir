@@ -6,8 +6,9 @@
       <label>Kolonnestørrelse</label>
       <occurrences minimum="1" maximum="1"/> 
       <config>
-        <option value="a">30/70</option> 
-        <option value="b">50/50</option>
+        <option value="a">4/8</option> 
+        <option value="b">6/6</option>
+        <option value="c">8/4</option>
       </config>
       <default>b</default> 
     </input>
