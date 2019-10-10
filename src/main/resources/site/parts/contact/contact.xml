@@ -4,7 +4,7 @@
   <form>
     <input name="label" type="TextLine">
       <label>Overskrift på kontaktområde</label>
-      <default>Kontakter</default>
+      <default>Kontakt</default>
       <config>
         <max-length>30</max-length>
       </config>
