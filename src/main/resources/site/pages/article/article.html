@@ -63,10 +63,12 @@
         </div>
       </div>
     </div>
-    <div data-portal-region="bottom" data-th-if="${bottomRegion}" class="row mt-3">
-      <div class="col-12">
-        <div data-th-each="component : ${bottomRegion.components}" data-th-remove="tag">
-          <div data-portal-component="${component.path}" data-th-remove="tag"></div>
+    <div data-portal-region="bottom" class="xp-region container" >
+      <div data-th-if="${bottomRegion}" class="row mt-3">
+        <div data-th-class="col-md-12">
+          <div data-th-each="component : ${bottomRegion.components}" data-th-remove="tag">
+            <div data-portal-component="${component.path}" data-th-remove="tag"></div>
+          </div>
         </div>
       </div>
     </div>
