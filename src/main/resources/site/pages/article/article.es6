@@ -19,6 +19,7 @@ exports.get = function(req) {
   const page = portal.getContent()
   const isFragment = page.type === 'portal:fragment'
   const mainRegion = isFragment ? null : page.page && page.page.regions && page.page.regions.main
+  const bottomRegion = isFragment ? null : page.page && page.page.regions && page.page.regions.bottom
   const config = {}
   const view = resolve('article.html')
 
@@ -40,7 +41,7 @@ exports.get = function(req) {
   page.displayNameURLencoded = encodeURI(page.displayName)
   page.url = encodeURI(portal.pageUrl({ type: 'absolute', id: page._id }))
 
-  const model = { version, ts, config, page, breadcrumbs, mainRegion, publishedDatetime, modifiedDatetime }
+  const model = { version, ts, config, page, breadcrumbs, mainRegion, bottomRegion, publishedDatetime, modifiedDatetime }
   const body = thymeleaf.render(view, model)
 
   return { body }
