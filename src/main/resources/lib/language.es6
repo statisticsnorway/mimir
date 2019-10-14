@@ -14,15 +14,17 @@ exports.getLanguage = function(page) {
   moment.locale(page.language === 'en' ? 'en' : 'nb')
   const result = page.language === 'en' ? {
       code: 'en',
-      alternate: 'nb',
+      alternate: 'nb', // alternate language code norsk bokmål
+      contact: 'https://www.ssb.no/en/omssb/kontakt-oss',
       published: page.publish && page.publish.from && moment(page.publish.from).format('DD. MMMM YYYY'),
       modified: moment(page.modifiedTime).format('DD. MMMM YYYY'),
       path: page._path.replace(/^\/.*?\/en/, site._path),
       home: portal.pageUrl({ path: site._path }),
       phrases: english
     } : {
-      code: 'nb', // https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-      alternate: 'en',
+      code: 'nb', // norsk bokmål, https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+      alternate: 'en', // alternate language code
+      contact: 'https://www.ssb.no/omssb/kontakt-oss',
       published: page.publish && page.publish.from && moment(page.publish.from).format('DD. MMMM YYYY').toLowerCase(),
       modified: moment(page.modifiedTime).format('DD. MMMM YYYY').toLowerCase(),
       path: page._path.replace(/^\/.*?\//, site._path + '/en/'),
