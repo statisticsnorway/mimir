@@ -11,14 +11,14 @@ $accordion-active-color: #a53d7c;
     color: #333333;
   }
   .accordion-bullet {
+    position: relative;
     font-style: normal;
     position: absolute;
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
     padding-right: 30px;
     border-radius: 50%;
     background-color: $accordion-active-color;
-    content: " "
   }
   a.collapsed .accordion-bullet {
     background-color: $accordion-link-color;
@@ -37,20 +37,32 @@ $accordion-active-color: #a53d7c;
     background-color: white;
   }
   .accordion-bullet:before {
-    font-size: 24px;
-    top: -2px;
-    left: 13px;
+    top: 14px;
+    left: 8px;
     position: absolute;
-    content: "-";
-    color: white;
+    content: "";
+    width: 14px;
+    border-bottom: 2px solid white;
+  }
+  .accordion-bullet:after {
+    top: 14px;
+    left: 8px;
+    position: absolute;
+    content: "";
+    width: 14px;
+    border-bottom: 2px solid white;
+    transform: rotate(0deg);
+    transition: all 0.3s;
+  }
+  a.collapsed .accordion-bullet:after {
+    border-bottom: 2px solid white;
   }
   a.collapsed .accordion-bullet:before {
-    top: -3px;
-    left: 11px;
-    content: "+";
+    transition: all 0.3s;
+    transform: rotate(90deg);
   }
   .accordion-bullet-inverse:before {
-    color: $accordion-link-color;
+    border-color: $accordion-link-color;
   }
   a span {
     font-size: 20px;
@@ -64,13 +76,22 @@ $accordion-active-color: #a53d7c;
     margin-top: 10px;
     margin-left: 50px;
     a.d-block .accordion-bullet-inverse:before {
-      color: $accordion-hover-color;
+      border-color: $accordion-hover-color;
+    }
+    a.d-block .accordion-bullet-inverse:after {
+      border-color: $accordion-link-color;
+    }
+    a.d-block .accordion-bullet-inverse:after {
+      border-color: $accordion-link-color;
     }
     a.d-block.collapsed .accordion-bullet-inverse:before {
-      color: $accordion-link-color;
+      border-color: $accordion-link-color;
     }
     a.d-block:hover .accordion-bullet-inverse:before {
-      color: $accordion-hover-color;
+      border-color: $accordion-hover-color;
+    }
+    a.d-block:hover .accordion-bullet-inverse:after {
+      border-color: $accordion-hover-color;
     }
     .collapse-container {
       margin-left: 35px;
