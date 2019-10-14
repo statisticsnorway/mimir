@@ -1,6 +1,6 @@
 <part>
   <display-name>Kontakt</display-name>
-  <description>Part med én kontakt</description>
+  <description>Viser tre kontaker per linje</description>
   <form>
     <input name="label" type="TextLine">
       <label>Overskrift på kontaktområde</label>
