@@ -1,0 +1,8 @@
+<section class="xp-part part-glossary">
+  <div data-th-each="word,i : ${glossary}" class="row" data-th-appendclass="${i.index}  ? 'mt-3'">
+    <div class="col-lg-8">
+      <h1 data-th-text="${word.displayName}"></h1>
+      <div data-th-utext="${word.data.ingress}"></div>
+    </div>
+  </div>
+</section>

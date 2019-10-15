@@ -5,6 +5,7 @@ $(function() {
     if ($(el).attr('data-exists') === 'false') {
       $(el).click((e) => {
         e.preventDefault()
+        e.stopPropagation()
         const tooltip = $('#language-tooltip')
         tooltip.find('.btn-close').click((e) => $('#language-tooltip').addClass('d-none'))
         if (tooltip.hasClass('d-none')) {

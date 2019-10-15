@@ -3,6 +3,7 @@ import * as content from '/lib/xp/content'
 import * as portal from '/lib/xp/portal'
 import * as thymeleaf from '/lib/thymeleaf'
 
+import * as glossary from '/lib/glossary'
 import * as language from '/lib/language'
 
 const version = '%%VERSION%%'
@@ -22,9 +23,13 @@ exports.get = function(req) {
   const view = resolve('default.html')
 
   page.language = language.getLanguage(page)
+  page.glossary = glossary.process(page)
+log.info('-- PROCESS DONE --')
+log.info(JSON.stringify(page.glossary, null, ' '))
 
   // Create preview
-  if (page.type === `${app.name}:accordion` || page.type === `${app.name}:menu-box` || page.type === `${app.name}:button` || page.type === `${app.name}:highchart`) {
+  if (page.type === `${app.name}:accordion` || page.type === `${app.name}:menu-box` || page.type === `${app.name}:button`
+    || page.type === `${app.name}:highchart` || page.type === `${app.name}:glossary`) {
     const name = page.type.replace(/^.*:/, '')
     const controller = require(`../../parts/${name}/${name}`)
     page.preview = controller.get({ config: { [name]: [page._id] }})
