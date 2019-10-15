@@ -8,7 +8,7 @@ import * as content from '/lib/xp/content'
 function parseText(text, glossary) {
   const m = text.match(/<a href="content:\/\/.*?">/g)
   m && m.forEach ((link) => {
-    const key = link.replace(/^..*content:\/\/(.*)".*>$/, '$1')
+    const key = link.replace(/^.*content:\/\/(.*)".*>$/, '$1') // Extract content key from href attribute (on the form href="content://enonic-xp-hash-key")
     const item = content.get({ key })
     if (item.type === 'mimir:glossary') {
       item.url = portal.pageUrl({ id: key })
