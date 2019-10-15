@@ -24,8 +24,6 @@ exports.get = function(req) {
 
   page.language = language.getLanguage(page)
   page.glossary = glossary.process(page)
-log.info('-- PROCESS DONE --')
-log.info(JSON.stringify(page.glossary, null, ' '))
 
   // Create preview
   if (page.type === `${app.name}:accordion` || page.type === `${app.name}:menu-box` || page.type === `${app.name}:button` ||
