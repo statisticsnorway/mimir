@@ -28,8 +28,8 @@ log.info('-- PROCESS DONE --')
 log.info(JSON.stringify(page.glossary, null, ' '))
 
   // Create preview
-  if (page.type === `${app.name}:accordion` || page.type === `${app.name}:menu-box` || page.type === `${app.name}:button`
-    || page.type === `${app.name}:highchart` || page.type === `${app.name}:glossary`) {
+  if (page.type === `${app.name}:accordion` || page.type === `${app.name}:menu-box` || page.type === `${app.name}:button` ||
+      page.type === `${app.name}:highchart` || page.type === `${app.name}:glossary`) {
     const name = page.type.replace(/^.*:/, '')
     const controller = require(`../../parts/${name}/${name}`)
     page.preview = controller.get({ config: { [name]: [page._id] }})
