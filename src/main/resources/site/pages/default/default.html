@@ -41,8 +41,8 @@
     <!-- preview -->
     <div data-th-if="${page.preview}" data-th-utext="${page.preview.body}"></div>
 
-    <div data-th-if="${page.data.ingress} and ${page.type == 'mimir:page'}" class="row">
-      <div class="mt-3 mt-md-0 col-lg-8"><b data-th-utext="${page.data.ingress}"></b></div>
+    <div data-th-if="${page.data.ingress} and ${page.type == 'mimir:page'}" class="row ingress">
+      <div class="mt-3 mt-md-0 col-lg-8" data-th-utext="${page.data.ingress}"></div>
     </div>
 
     <div data-th-if="${mainRegion}" data-th-remove="tag">
