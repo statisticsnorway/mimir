@@ -6,6 +6,15 @@ import * as thymeleaf from '/lib/thymeleaf'
 import * as glossary from '/lib/glossary'
 import * as language from '/lib/language'
 
+
+const test = resolve('/site/includes/ssb-menu.html')
+
+// const foo = Document.createDocumentFragment(test)
+// const hmm = foo.getElementById('header')
+
+log.info(test)
+
+
 const version = '%%VERSION%%'
 
 function getBreadcrumbs(c, a) {
@@ -37,7 +46,7 @@ exports.get = function(req) {
   const breadcrumbs = [page]
   getBreadcrumbs(page, breadcrumbs)
 
-  const model = { version, ts, config, page, breadcrumbs, mainRegion }
+  const model = {test, version, ts, config, page, breadcrumbs, mainRegion }
   const body = thymeleaf.render(view, model)
 
   return { body }
