@@ -6,7 +6,6 @@ import * as portal from '/lib/xp/portal'
 import * as content from '/lib/xp/content'
 
 function parseText(text, glossary) {
-log.info(text)
   const m = text.match(/<a href="content:\/\/.*?">/g)
   m && m.forEach ((link) => {
     const key = link.replace(/^..*content:\/\/(.*)".*>$/, '$1')
