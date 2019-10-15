@@ -20,8 +20,7 @@
   <meta data-th-if="${page.data.metaDescription}" name="description" data-th-content="${page.data.metaDescription}"> 
   <title data-th-text="${page.displayName} + ' - Statistisk sentralbyrå'"></title>
   <!-- <link rel="shortcut icon" type="image/x-icon" data-th-href="${portal.assetUrl({'_path=img/favicon.ico'})}"/> -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto|Roboto+Condensed" rel="stylesheet"> 
-  <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet"> 
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto+Condensed:700"> 
   <link rel="stylesheet" data-th-href="${portal.assetUrl({'_path=css/styles.css', 'ts=' + ts})}"/>
   <link rel="alternate" data-th-if="${page.language.exists}" data-th-href="${portal.pageUrl({'_path='+page.language.path})}" data-th-hreflang="${page.language.alternate}" />
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
