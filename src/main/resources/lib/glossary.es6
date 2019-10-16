@@ -38,8 +38,8 @@ exports.process= function(page) {
   const glossary = []
 
   // Process ingress
-  page.data.ingress = portal.processHtml({ value: page.data.ingress })
   parseText(page.data.ingress, glossary)
+  page.data.ingress = portal.processHtml({ value: page.data.ingress })
 
   // Reccursivly traverse all page regions and parse text components for glossary links
   traverseRegions(page.page.regions, glossary)
