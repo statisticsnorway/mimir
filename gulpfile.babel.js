@@ -70,11 +70,19 @@ function backend() {
 }
 
 // -----------------------------------------------------------------------------
+// design system
+// -----------------------------------------------------------------------------
+
+function designsystem() {
+  return gulp.src(['../design-system/src/**/*scss'])
+    .pipe(gulp.dest('styles/design-system'));
+}
+// -----------------------------------------------------------------------------
 // js backend assets
 // -----------------------------------------------------------------------------
 
 function assets() {
-  return gulp.src(['node_modules/moment/min/moment-with-locales.js'])
+  return gulp.src(['node_modules/moment/min/moment-with-locales.js', 'node_modules/jsonstat/export.js'])
     .pipe(gulp.dest('build/resources/main/lib'));
 }
 // -----------------------------------------------------------------------------
@@ -129,6 +137,7 @@ function watch() {
   gulp.watch(['styles/**/*.scss', 'src/**/*scss'], styles);
 }
 
+exports.designsystem = designsystem;
 exports.styles = styles;
 exports.backend = backend;
 exports.assets = assets;
