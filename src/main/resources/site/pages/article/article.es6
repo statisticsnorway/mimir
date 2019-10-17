@@ -28,8 +28,9 @@ exports.get = function(req) {
   page.glossary = glossary.process(page)
 
   // Create preview
-  if (page.type === `${app.name}:accordion` || page.type === `${app.name}:menu-box` || page.type === `${app.name}:button` || page.type === `${app.name}:highchart`) {
-    const name = page.type.replace(/^.*:/, '')
+  if (page.type === `${app.name}:accordion` || page.type === `${app.name}:menu-box` || page.type === `${app.name}:button` ||
+      page.type === `${app.name}:highchart` || page.type === `${app.name}:glossary` || page.type === `${app.name}:statistikkbanken` ||
+      page.type === `${app.name}:dashboard` || page.type === `${app.name}:key-figure`) {
     const controller = require(`../../parts/${name}/${name}`)
     page.preview = controller.get({ config: { [name]: [page._id] }})
   }
