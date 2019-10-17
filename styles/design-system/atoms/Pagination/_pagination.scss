@@ -1,0 +1,60 @@
+$direction-button-height: 30px;
+$direction-button-width: 80px;
+
+.pagination-wrapper {
+  align-items: center;
+  display: flex;
+
+  .nav-button-square {
+    align-items: center;
+    border-radius: 2px;
+    color: $ssb-green-4;
+    cursor: pointer;
+    display: flex;
+    height: 30px;
+    justify-content: center;
+    margin: 0 $global-padding-size;
+    width: 30px;
+
+    &.selected {
+      background: $ssb-green-4;
+      color: $ssb-white;
+      font-weight: bold;
+    }
+
+    &:hover {
+      border: 1px solid $ssb-green-4;
+      border-radius: 2px;
+      font-weight: bold;
+    }
+  }
+
+  .dotted-indicator {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin: 0 $global-padding-size;
+    width: 30px;
+  }
+
+  .direction-button {
+    align-items: center;
+    border: 1px solid transparent;
+    cursor: pointer;
+    display: flex;
+    height: $direction-button-height;
+    justify-content: center;
+    width: $direction-button-width;
+
+    .chevron-icon {
+      color: $ssb-green-4;
+    }
+
+    &:hover {
+      border: 1px solid $ssb-green-4;
+      border-radius: 2px;
+      color: $ssb-green-4;
+      font-weight: bold;
+    }
+  }
+}

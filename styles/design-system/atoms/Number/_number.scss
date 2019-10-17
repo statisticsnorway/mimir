@@ -1,0 +1,20 @@
+$large-number-size: 150px;
+$medium-number-size: 100px;
+$small-number-size: 50px;
+
+.number-component {
+  color: $ssb-dark-5;
+  font-weight: bold;
+
+  &.small {
+    font-size: $small-number-size;
+  }
+
+  &.medium {
+    font-size: $medium-number-size;
+  }
+
+  &.large {
+    font-size: $large-number-size;
+  }
+}

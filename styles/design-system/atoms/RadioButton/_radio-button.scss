@@ -1,0 +1,65 @@
+.radio-button-wrapper {
+  cursor: pointer;
+  display: block;
+  min-width: 200px;
+  outline: none;
+  padding: $global-padding-size $global-padding-size $global-padding-size ($global-padding-size + 35);
+  position: relative;
+  user-select: none;
+
+  &:hover, &:focus {
+    background: $ssb-green-1;
+
+    .radio-mark {
+      border: 2px solid $ssb-green-4;
+
+      &:after {
+        // Compensate for border pushing element
+        left: 2px;
+        top: 2px;
+      }
+    }
+  }
+
+  label {
+    cursor: pointer;
+  }
+
+  input {
+    cursor: pointer;
+    opacity: 0;
+    position: absolute;
+
+    &:checked ~ .radio-mark {
+      background: $ssb-white;
+    }
+
+    &:checked ~ .radio-mark:after {
+      display: block;
+    }
+  }
+
+  .radio-mark {
+    background-color: $ssb-white;
+    border: 1px solid $ssb-dark-5;
+    border-radius: 50%;
+    height: 20px;
+    left: $global-padding-size;
+    position: absolute;
+    top: $global-padding-size;
+    width: 20px;
+
+    &:after {
+      content: '';
+      display: none;
+      position: absolute;
+
+      top: 3px;
+      left: 3px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: $ssb-dark-5;
+    }
+  }
+}
