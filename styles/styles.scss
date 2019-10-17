@@ -10,6 +10,33 @@
 @import "./popper";
 @import "./highchart";
 
+body {
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 16px;
+  font-family: $font-open-sans;
+  line-height: 1.7;
+}
+.ingress {
+  font-size: 20px;
+  line-height: 1.7;
+}
+
+h1,h2,h3,h4,h5 {
+  font-family: "Roboto Condensed";
+  font-weight: 700;
+  font-style: normal;
+}
+h1 {
+  font-size: 56px;
+  line-height: 1.4;
+}
+h2 {
+  font-size: 28px;
+  line-height: 1.5;
+}
+.article h2 {
+  font-size: 20px;
+}
 .row + section, section + section {
   margin-top: 20px;
 }
@@ -38,4 +65,18 @@ a, .a-ssb {
 }
 a.btn {
   text-decoration: none;
+}
+.a-glossary {
+  text-decoration: none;
+  border-bottom: 1px dotted #003892;
+  &:after {
+    margin-left: 5px;
+    font-family: "Font Awesome 5 Free";
+    font-weight: 400;
+    content: "\f4ad"
+  }
+}
+.a-glossary:hover {
+  text-decoration: none;
+  border-bottom: 1px dotted #a53d7c;
 }
