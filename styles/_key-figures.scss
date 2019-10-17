@@ -1,0 +1,16 @@
+.key-figures {
+  .number-component {
+    line-height: 1.2em;
+  }
+  .icon-container {
+    &.small {
+      width: 140px;
+    }
+    &.medium {
+      width: 210px;
+    }
+    &.large {
+      width: 280px;
+    }
+  }
+}
