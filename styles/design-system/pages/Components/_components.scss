@@ -1,0 +1,14 @@
+.components {
+  display: grid;
+  flex-grow: 1;
+  grid-template-columns: minmax(200px, 10%) 1fr;
+  height: 100%;
+
+  > aside {
+    padding-top: 60px;
+  }
+
+  > section {
+    border-left: 1px solid $ssb-dark-5;
+  }
+}

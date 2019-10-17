@@ -1,0 +1,65 @@
+.word-explanation-wrap {
+  cursor: pointer;
+  position: relative;
+  text-decoration: dotted underline;
+  text-decoration-color: $ssb-green-4;
+
+  .animate-background {
+    background: $ssb-green-2;
+    bottom: 0;
+    height: 0;
+    left: 0;
+    position: absolute;
+    transition: height .2s;
+    width: 100%;
+    z-index: -1;
+  }
+
+  &:hover {
+    .animate-background {
+      height: 100%;
+    }
+  }
+
+  .info-box-wrapper {
+    width: 300px;
+    position: fixed;
+  }
+
+  .info-box {
+    background: $ssb-green-5;
+    color: $ssb-white;
+    padding: 18px 24px 18px 18px;
+
+    .close-button {
+      right: 10px;
+      position: absolute;
+      top: 4px;
+    }
+
+    .info-text {
+      color: $ssb-white;
+      font-size: 12px;
+    }
+  }
+
+  .arrow {
+    display: flex;
+    justify-content: center;
+    left: -50%;
+    position: absolute;
+    right: -50%;
+    top: -6px;
+
+    svg {
+      display: flex;
+      justify-content: center;
+      top: 26px;
+      transform: rotate(45deg);
+    }
+  }
+
+  rect {
+    fill: $ssb-green-5;
+  }
+}

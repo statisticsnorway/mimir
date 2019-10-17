@@ -1,0 +1,18 @@
+.text-wrapper {
+  color: $ssb-dark-6;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  font-stretch: normal;
+  font-style: normal;
+  font-weight: normal;
+  letter-spacing: normal;
+  line-height: 1.7;
+
+  &.small-text {
+    font-size: 14px;
+  }
+
+  &.negative {
+    color: $ssb-white;
+  }
+}

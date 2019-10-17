@@ -1,0 +1,50 @@
+body {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+
+.roboto {
+  font-family: 'Roboto', sans-serif;
+  font-stretch: normal;
+}
+
+.roboto-condensed {
+  font-family: 'Roboto Condensed', sans-serif;
+  font-stretch: condensed;
+}
+
+.button-text {
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: center;
+}
+
+p {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: $ssb-dark-6;
+}
+
+label {
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+}

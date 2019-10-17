@@ -1,0 +1,12 @@
+.checkbox-group-wrapper {
+  display: inline-block;
+
+  fieldset {
+    border: 0;
+  }
+
+  h5 {
+    margin-bottom: $global-padding-size;
+    padding-left: $global-padding-size;
+  }
+}

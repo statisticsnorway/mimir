@@ -1,0 +1,131 @@
+$profiled-font-size: 18px;
+$header-font-size: 18px;
+$icon-padding: 8px;
+
+// TODO: See if this could be more efficient: https://codepen.io/kristoffer-lund/pen/gOYyKYv
+
+.link {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+
+  .index {
+    z-index: 3;
+  }
+
+  .link-text {
+    z-index: 2;
+
+    svg {
+      z-index: 2;
+    }
+  }
+
+  a {
+    align-items: center;
+    display: flex;
+    transition-delay: .1s;
+
+    &.with-icon {
+      padding: 4px;
+      text-decoration: none;
+
+      .link-text {
+        padding-left: $icon-padding;
+      }
+    }
+  }
+
+  .profiled {
+    font-size: $profiled-font-size;
+    font-weight: bold;
+    transition-delay: .1s;
+  }
+
+  .header {
+    font-size: $header-font-size;
+    font-weight: bold;
+  }
+
+  .animate-background {
+    bottom: 0;
+    height: 0;
+    left: -2px;
+    position: absolute;
+    transition: height .2s;
+    width: calc(100% + 4px);
+  }
+
+  &:hover {
+    .animate-background {
+      height: 100%;
+    }
+
+    a {
+      color: $ssb-white;
+    }
+  }
+
+  &.standard {
+    a {
+      &.with-icon {
+        color: $ssb-dark-6;
+      }
+    }
+
+    .regular {
+      color: $ssb-green-4;
+    }
+
+    .profiled {
+      color: $ssb-green-4;
+    }
+
+    .header {
+      color: $ssb-dark-6;
+      text-decoration-color: $ssb-green-4;
+    }
+
+    .animate-background {
+      background: $ssb-green-4;
+    }
+
+    &:hover {
+      a {
+        color: $ssb-white;
+      }
+    }
+  }
+
+  &.negative {
+    a {
+      &.with-icon {
+        color: $ssb-white;
+      }
+    }
+
+    .regular {
+      color: $ssb-green-2;
+    }
+
+    .profiled {
+      color: $ssb-green-2;
+    }
+
+    .header {
+      color: $ssb-white;
+      text-decoration-color: $ssb-green-2;
+    }
+
+    .animate-background {
+      background: $ssb-green-2;
+    }
+
+    &:hover {
+      a {
+        color: $ssb-dark-5;
+      }
+    }
+  }
+
+}

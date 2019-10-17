@@ -1,0 +1,32 @@
+body {
+  margin: 0 auto;
+
+  .app {
+    display: grid;
+    grid-template-rows: 1fr;
+    min-height: 100vh;
+  }
+
+  .app-content {
+    display: grid;
+    grid-template-columns: minmax(320px, $max-content-size);
+    grid-template-rows: 182px 1fr;
+    justify-content: center;
+    margin: 0 $global-padding-size;
+    position: relative;
+
+    header {
+      display: grid;
+    }
+
+    footer {
+      width: 100%;
+    }
+  }
+
+  .page-wrapper {
+    > section {
+      padding: 60px 0;
+    }
+  }
+}
