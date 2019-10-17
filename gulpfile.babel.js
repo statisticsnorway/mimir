@@ -82,7 +82,7 @@ function designsystem() {
 // -----------------------------------------------------------------------------
 
 function assets() {
-  return gulp.src(['node_modules/moment/min/moment-with-locales.js', 'node_modules/jsonstat/export.js'])
+  return gulp.src(['node_modules/moment/min/moment-with-locales.js', 'node_modules/numeral/numeral.js', 'node_modules/jsonstat/export.js'])
     .pipe(gulp.dest('build/resources/main/lib'));
 }
 // -----------------------------------------------------------------------------
