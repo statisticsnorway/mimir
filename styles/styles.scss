@@ -9,6 +9,10 @@
 @import "./factbox";
 @import "./popper";
 @import "./highchart";
+@import "./key-figures";
+@import "./design-system/style/variables";
+@import "./design-system/molecules/KeyNumbers/key-numbers";
+@import "./design-system/atoms/Number/number";
 
 body {
   -moz-osx-font-smoothing: grayscale;

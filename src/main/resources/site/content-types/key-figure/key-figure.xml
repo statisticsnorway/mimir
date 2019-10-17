@@ -1,0 +1,49 @@
+<content-type>
+  <display-name>Nøkkeltall</display-name>
+  <super-type>base:structured</super-type>
+  <allow-child-content>true</allow-child-content>
+  <form>
+    <input name="icon" type="ImageSelector">
+      <label>Ikon</label>
+      <occurrences minimum="0" maximum="1"/>
+      <config>
+        <allowPath>${site}/</allowPath>
+      </config>
+    </input>
+    <input name="denomination" type="TextLine">
+      <label>Benevning</label>
+      <occurrences minimum="0" maximum="1"/>
+    </input>
+    <input name="default" type="TextLine">
+      <label>Standardverdi</label>
+      <default>0301</default>
+      <occurrences minimum="0" maximum="1"/>
+    </input>
+    <input name="size" type="ComboBox">
+      <label>Størrelse</label>
+      <occurrences minimum="0" maximum="1"/>
+      <config>
+        <option value="small">Liten</option>
+        <option value="medium">Medium</option>
+        <option value="large">Stor</option>
+      </config>
+      <default>one</default>
+    </input>
+    <input name="query" type="ContentSelector">
+      <label>Spørring Statistikkbanken</label>
+      <occurrences minimum="1" maximum="1"/>
+      <config>
+        <allowPath>${site}</allowPath>
+        <allowType>statistikkbanken</allowType>
+      </config>
+    </input>
+    <input name="glossary" type="ContentSelector">
+      <label>Forklaring til nøkkeltallet</label>
+      <occurrences minimum="0" maximum="1"/>
+      <config>
+        <allowPath>${site}</allowPath>
+        <allowType>glossary</allowType>
+      </config>
+    </input>
+  </form>
+</content-type>
