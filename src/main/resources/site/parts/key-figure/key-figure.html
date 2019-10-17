@@ -5,11 +5,15 @@
         <img class="w-100" data-th-if="${figure.data.icon}" data-th-src="${portal.imageUrl({'_id=' + figure.data.icon, '_scale=block(80,80)'})}"/>
       </div>
       <div>
-        <h4 data-th-text="${figure.displayName}" class="mb-0"></h4>
+        <h4 data-th-unless="${figure.data.glossary}" data-th-text="${figure.displayName}" class="mb-0"></h4>
+        <a data-th-if="${figure.data.glossary}" data-th-text="${figure.displayName}" class="a-glossary d-block" data-th-href="${portal.pageUrl({'_id='+figure.data.glossary})}"></a>
         <div data-th-text="${figure.time}">2018</div>
         <div class="number-component" data-th-classappend="${figure.data['size']} ? ${figure.data['size']}"><data data-th-value="${figure.value}" data-th-utext="${figure.valueHumanReadable}"></data></div>
         <h4 data-th-text="${figure.data.denomination}" class="number-description"></h4>
       </div>
     </div>
   </div>
+
+  <!-- GLOSSARY -->
+  <div data-th-replace="mimir:/site/includes/glossary.html"></div>
 </section>

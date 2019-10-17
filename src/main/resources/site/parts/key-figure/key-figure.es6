@@ -8,6 +8,7 @@ import * as sb from '/lib/statistikkbanken'
 const numeral = require('/lib/numeral')
 
 exports.get = function(req) {
+  const page = { glossary: [] }
   const part = portal.getComponent() || req
   const view = resolve('./key-figure.html')
 
@@ -17,6 +18,7 @@ exports.get = function(req) {
   part.config.figure = util.data.forceArray(part.config.figure || part.config['key-figure'] || [])
   part.config.figure.map((key) => {
     const item = content.get({ key })
+    item.data.glossary && page.glossary.push(content.get({ key: item.data.glossary }))
     if (item.data.query) {
       const selection = { filter: 'agg_single:KommNyeste', values: [item.data.default] }
       const query = content.get({ key: item.data.query })
@@ -29,7 +31,7 @@ exports.get = function(req) {
     (part.data || (part.data = [])).push(item)
   })
 
-  const model = { part }
+  const model = { page, part }
   const body = thymeleaf.render(view, model)
 
   return { body, contentType: 'text/html' }
