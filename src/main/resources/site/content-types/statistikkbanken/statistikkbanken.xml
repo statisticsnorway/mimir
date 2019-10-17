@@ -27,10 +27,5 @@
       <label>Spørring i JSON-format</label>
       <occurrences minimum="1" maximum="1"/>
     </input>
-    <input name="body" type="HtmlArea">
-      <label>Innhold</label>
-      <help-text>Sett inn {value} som plassholder for verdi.</help-text>
-      <occurrences minimum="0" maximum="1"/>
-    </input>
   </form>
 </content-type>
