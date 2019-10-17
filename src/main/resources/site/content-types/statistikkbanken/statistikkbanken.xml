@@ -1,0 +1,44 @@
+<content-type>
+  <display-name>Spørring Statistikkbanken</display-name>
+  <super-type>base:structured</super-type>
+  <allow-child-content>true</allow-child-content>
+  <form>
+    <input name="icon" type="ImageSelector">
+      <label>Ikon</label>
+      <occurrences minimum="0" maximum="1"/>
+      <config>
+        <allowPath>${site}/</allowPath>
+      </config>
+    </input>
+    <input name="table" type="TextLine">
+      <label>Tabell</label>
+      <occurrences minimum="0" maximum="1"/>
+    </input>
+    <input name="regiontype" type="ComboBox">
+      <label>Regionstype</label>
+      <occurrences minimum="0" maximum="1"/>
+      <config>
+        <option value="dynamisk-kommune">Dynamisk kommune</option>
+        <option value="dynamisk-fylke">Dynamisk fylke</option>
+      </config>
+      <default>one</default>
+    </input>
+    <input name="json" type="TextArea">
+      <label>Spørring i JSON-format</label>
+      <occurrences minimum="1" maximum="1"/>
+    </input>
+    <input name="body" type="HtmlArea">
+      <label>Innhold</label>
+      <help-text>Sett inn {value} som plassholder for verdi.</help-text>
+      <occurrences minimum="0" maximum="1"/>
+    </input>
+    <input name="denomination" type="TextLine">
+      <label>Benevning</label>
+      <occurrences minimum="0" maximum="1"/>
+    </input>
+    <input name="description" type="HtmlArea">
+      <label>Beskrivelse</label>
+      <occurrences minimum="0" maximum="1"/>
+    </input>
+  </form>
+</content-type>
