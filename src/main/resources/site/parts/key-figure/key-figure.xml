@@ -1,8 +1,8 @@
 <part>
   <display-name>Nøkkeltall</display-name>
   <form>
-    <input name="query" type="ContentSelector">
-      <label>Spørring Statistikkbanken</label>
+    <input name="figure" type="ContentSelector">
+      <label>Nøkkeltall</label>
       <occurrences minimum="0" maximum="0"/>
       <config>
         <allowPath>${site}</allowPath>
