@@ -6,10 +6,11 @@ import * as thymeleaf from '/lib/thymeleaf'
 import * as sb from '/lib/statistikkbanken'
 
 function getTable(data, table = []) {
-  for (const key in data.dimension.Region.category.label) {
-    if (data.dimension.Region.category.label.hasOwnProperty(key)) {
-       const i = data.dimension.Region.category.index[key]
-       table.push({ label: data.dimension.Region.category.label[key], value: data.value[i] })
+  const dimension = Object.keys(data.dimension)[0]
+  for (const key in data.dimension[dimension].category.label) {
+    if (data.dimension[dimension].category.label.hasOwnProperty(key)) {
+       const i = data.dimension[dimension].category.index[key]
+       table.push({ label: data.dimension[dimension].category.label[key], value: data.value[i] })
     }
   }
   return table
