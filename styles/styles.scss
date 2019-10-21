@@ -36,11 +36,23 @@ h1,h2,h3,h4,h5 {
   font-style: normal;
 }
 h1 {
-  font-size: 56px;
+  font-size: 50px;
   line-height: 1.4;
 }
 h2 {
+  font-size: 40px;
+  line-height: 1.5;
+}
+h3 {
   font-size: 28px;
+  line-height: 1.5;
+}
+h4 {
+  font-size: 20px;
+  line-height: 1.5;
+}
+h5 {
+  font-size: 18px;
   line-height: 1.5;
 }
 .article h2 {
