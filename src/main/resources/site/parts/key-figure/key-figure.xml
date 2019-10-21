@@ -1,6 +1,10 @@
 <part>
   <display-name>Nøkkeltall</display-name>
   <form>
+    <input type="TextLine" name="title">
+      <label>Tittel</label>
+      <occurrences minimum="0" maximum="1"/>
+    </input>
     <input name="figure" type="ContentSelector">
       <label>Nøkkeltall</label>
       <occurrences minimum="0" maximum="0"/>
