@@ -3,14 +3,17 @@
     line-height: 1.2em;
   }
   .icon-container {
+    padding-top: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
     &.small {
-      width: 140px;
+      width: 130px;
     }
     &.medium {
-      width: 210px;
+      width: 180px;
     }
     &.large {
-      width: 280px;
+      width: 230px;
     }
   }
 }

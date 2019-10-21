@@ -20,9 +20,9 @@ exports.get = function(req) {
     const item = content.get({ key })
     item.data.glossary && page.glossary.push(content.get({ key: item.data.glossary }))
     if (item.data.query) {
-      const selection = { filter: 'agg_single:KommNyeste', values: [item.data.default] }
+      const selection = { filter: 'item', values: [item.data.default] }
       const query = content.get({ key: item.data.query })
-      const result = sb.get(query.data.table, JSON.parse(query.data.json), selection)
+      const result = sb.get(query.data.table, JSON.parse(query.data.json), selection) || {}
       item.value = result.dataset.value[0]
       item.valueHumanReadable = result && numeral(item.value).format('0,0').replace(/,/, '&thinsp;')
       const time = result && Object.keys(result.dataset.dimension.Tid.category.index)[0]
