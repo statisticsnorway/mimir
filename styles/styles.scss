@@ -7,6 +7,7 @@
 @import "./button";
 @import "./datasets";
 @import "./factbox";
+@import "./layout";
 @import "./popper";
 @import "./highchart";
 @import "./key-figures";
@@ -19,6 +20,7 @@ body {
   font-size: 16px;
   font-family: $font-open-sans;
   line-height: 1.7;
+  counter-reset: section-counter; // Counter for content section on Kommunefakta (layout topic)
 }
 .ingress {
   font-size: 20px;

@@ -1,0 +1,21 @@
+.layout-topic {
+  border-top: 5px solid $green3;
+}
+.layout-topic+.layout-topic {
+  margin-top: 40px;
+}
+.section-number {
+  color: #b0b0b0;
+}
+.section-number::before {
+  content: "";
+  width: 10px;
+  height: 15px;
+  display: inline-block;
+  background-color: $green3;
+}
+.section-number::after {
+  margin-left: 6px;
+  counter-increment: section-counter;
+  content: "0" counter(section-counter) // Anticipate less than 10 sections ;-)
+}
