@@ -3,7 +3,6 @@ import * as thymeleaf from '/lib/thymeleaf'
 
 exports.get = function(req) {
   const component = portal.getComponent()
-log.info(JSON.stringify(component, null, ' '))
   const view = resolve('topic.html')
   const model = { config: component.config, mainRegion: component.regions.main }
   const body = thymeleaf.render(view, model)
