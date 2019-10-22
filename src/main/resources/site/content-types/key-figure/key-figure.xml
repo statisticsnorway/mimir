@@ -22,6 +22,7 @@
     <input name="size" type="RadioButton">
       <label>Størrelse</label>
       <occurrences minimum="0" maximum="1"/>
+      <default>small</default>
       <config>
         <option value="small">Liten</option>
         <option value="medium">Medium</option>
