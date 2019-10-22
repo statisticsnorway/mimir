@@ -1,9 +1,15 @@
 $font-roboto-plain: 'Roboto', sans-serif;
-$font-roboto-bold: 'Roboto Condensed', sans-serif;
+$font-roboto-bold: 'Roboto', sans-serif;
+$font-roboto-condensed-bold: 'Roboto Condensed', sans-serif;
 $font-open-sans: 'Open Sans', sans-serif;
 
 .roboto-bold {
   font-family: $font-roboto-bold;
+  font-weight: 700;
+}
+
+.roboto-condensed-bold {
+  font-family: $font-roboto-condensed-bold;
   font-weight: 700;
 }
 

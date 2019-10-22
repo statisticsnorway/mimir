@@ -1,11 +1,11 @@
 <div class="xp-layout row">
   <div data-th-class="${leftSize}">
     <div data-th-if="${published}">
-      <div class="roboto-bold">PUBLISERT</div>
+      <div class="roboto-condensed-bold">PUBLISERT</div>
       <div><time data-th-datetime="${publishedDatetime}" data-th-text="${published}"></time></div>
     </div>
     <div data-th-if="${published}" class="pt-3">
-      <div class="roboto-bold">ENDRET</div>
+      <div class="roboto-condensed-bold">ENDRET</div>
       <div><time data-th-datetime="${modifiedDatetime}" data-th-text="${modified}"></time></div>
     </div>
   </div>
