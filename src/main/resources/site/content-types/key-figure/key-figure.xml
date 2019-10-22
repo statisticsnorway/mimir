@@ -19,7 +19,7 @@
       <default>0301</default>
       <occurrences minimum="0" maximum="1"/>
     </input>
-    <input name="size" type="ComboBox">
+    <input name="size" type="RadioButton">
       <label>Størrelse</label>
       <occurrences minimum="0" maximum="1"/>
       <config>
