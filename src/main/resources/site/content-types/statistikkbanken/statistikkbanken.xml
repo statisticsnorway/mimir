@@ -4,7 +4,7 @@
   <allow-child-content>true</allow-child-content>
   <form>
     <input name="table" type="TextLine">
-      <label>Tabell</label>
+      <label>URL til API-tabell</label>
       <occurrences minimum="0" maximum="1"/>
     </input>
     <input name="regiontype" type="ComboBox">
