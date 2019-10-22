@@ -9,8 +9,12 @@ const headers = { 'Cache-Control': 'no-cache' }
 const contentType = 'application/json'
 
 exports.get = function(url, json, selection = { filter: 'all', values: ['*'] }) {
-  if (json.query && json.query[0] && json.query[0].selection && json.query[0].selection) {
-    json.query[0].selection = selection
+  if (json.query && json.query) {
+    for (const query of json.query) {
+      if (query.code === 'KOKkommuneregion0000') {
+        query.selection = selection
+      }
+    }
   }
   const result = http.request({ url, method, headers, connectionTimeout, readTimeout, body: JSON.stringify(json, null, ''), contentType })
   result.status !== 200 && log.error(`HTTP ${url} (${result.status} ${result.message})`)
