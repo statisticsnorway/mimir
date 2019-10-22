@@ -6,7 +6,7 @@ import * as thymeleaf from '/lib/thymeleaf'
 import * as sb from '/lib/statistikkbanken'
 
 function getTable(data, table = []) {
-  const dimension = 'KOKkommuneregion0000'
+  const dimension = data.dimension['KOKkommuneregion0000'] ?  'KOKkommuneregion0000' : Object.keys(data.dimension)[0]
   for (const key in data.dimension[dimension].category.label) {
     if (data.dimension[dimension].category.label.hasOwnProperty(key)) {
        const i = data.dimension[dimension].category.index[key]
