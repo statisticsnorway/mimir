@@ -70,10 +70,8 @@ function statistikkbanken() {
 }
 
 
-const task = cron.get({ name: 'myTask' })
-
 cron.schedule({
-  name: 'myTask',
+  name: 'statistikkbanken',
   cron: '0 8 * * *',
   times: 365 * 10,
   callback: statistikkbanken,
