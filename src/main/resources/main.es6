@@ -39,7 +39,7 @@ function statistikkbanken() {
               const name = `${row.name} (datasett) endret ${now}`
               const displayName = `${row.displayName} (datasett) endret ${now}`
               const update = content.modify({ key: record._id, editor: (r) => {
-                r.name =  name
+                r.name = name
                 r.displayName = displayName
                 r.data.table = row.data.table
                 r.data.json = JSON.stringify(data, null, ' ')
@@ -54,7 +54,7 @@ function statistikkbanken() {
             const name = `${row.name} (datasett) opprettet ${now}`
             const displayName = `${row.displayName} (datasett) opprettet ${now}`
             context.run(draft, () => {
-              const create = content.create({ displayName, name, parentPath: row._path, contentType: `${app.name}:dataset`, data: {
+              const create = content.create({ name, displayName, parentPath: row._path, contentType: `${app.name}:dataset`, data: {
                 table: row.data.table,
                 query: row._id,
                 json: JSON.stringify(data, null, ' ')
@@ -74,7 +74,7 @@ const task = cron.get({ name: 'myTask' })
 
 cron.schedule({
   name: 'myTask',
-  cron: '0, 10,20,30,40,50 * * * *',
+  cron: '0,10,20,30,40,50 * * * *',
   times: 10,
   callback: statistikkbanken,
   context: {
