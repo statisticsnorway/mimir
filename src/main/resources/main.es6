@@ -30,11 +30,11 @@ function statistikkbanken() {
       if (row.data.table.match(/^http/)) {
         const data = sb.get(row.data.table, JSON.parse(row.data.json))
         if (data) {
-          const dataset = content.query({ count: 1, contentTypes: [`${app.name}:dataset`], sort: '_id DESC', query: `data.query = '${row._id}'` })
-          const now = moment().format('DD.MM.YYYY HH:mm:ss')
-          if (dataset.count) {
-            // Update dataset
-            context.run(draft, () => {
+          context.run(draft, () => {
+            const dataset = content.query({ count: 1, contentTypes: [`${app.name}:dataset`], sort: '_id DESC', query: `data.query = '${row._id}'` })
+            const now = moment().format('DD.MM.YYYY HH:mm:ss')
+            if (dataset.count) {
+              // Update dataset
               const record = dataset.hits[0]
               const name = `${row.name} (datasett) endret ${now}`
               const displayName = `${row.displayName} (datasett) endret ${now}`
@@ -44,16 +44,14 @@ function statistikkbanken() {
                 r.data.table = row.data.table
                 r.data.json = JSON.stringify(data, null, ' ')
                 return r
-              }})
+             }})
               update || log.error(`UPDATE failed: ${record._path}`)
               update && log.debug(JSON.stringify(update, null, ' '))
-            })
-          }
-          else {
-            // Create dataset
-            const name = `${row.name} (datasett) opprettet ${now}`
-            const displayName = `${row.displayName} (datasett) opprettet ${now}`
-            context.run(draft, () => {
+            }
+            else {
+              // Create dataset
+              const name = `${row.name} (datasett) opprettet ${now}`
+              const displayName = `${row.displayName} (datasett) opprettet ${now}`
               const create = content.create({ name, displayName, parentPath: row._path, contentType: `${app.name}:dataset`, data: {
                 table: row.data.table,
                 query: row._id,
@@ -61,8 +59,8 @@ function statistikkbanken() {
               }})
               create || log.error(`CREATE failed: ${name} [${row._path}]`)
               create && log.debug(JSON.stringify(create, null, ' '))
-            })
-          }
+            }
+          })
         }
       }
     }
