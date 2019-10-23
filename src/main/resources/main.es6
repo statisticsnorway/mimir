@@ -31,13 +31,15 @@ function statistikkbanken() {
         const data = sb.get(row.data.table, JSON.parse(row.data.json))
         if (data) {
           const dataset = content.query({ count: 1, contentTypes: [`${app.name}:dataset`], sort: '_id DESC', query: `data.query = '${row._id}'` })
+          const now = moment().format('DD.MM.YYYY HH:mm:ss')
           if (dataset.count) {
             // Update dataset
             const record = dataset.hits[0]
             context.run(draft, () => {
-              const update = content.modify({ key: record._id, editor: (r) => {
-                const updated = moment().format('DD.MM.YYYY HH:mm:ss')
-                r.displayName = `${row.displayName} (datasett) oppdatert ${updated}`
+              const name = `${row.name} (datasett) endret ${now}`
+              const displayName = `${row.displayName} (datasett) endret ${now}`
+                r.name =  name
+                r.displayName = displayName
                 r.data.table =  row.data.table
                 r.data.json = JSON.stringify(data, null, ' ')
                 return r
@@ -48,10 +50,10 @@ function statistikkbanken() {
           }
           else {
             // Create dataset
-            const created = moment().format('DD.MM.YYYY HH:mm:ss')
-            const name = `${row.displayName} (datasett) opprettet ${created}`
+            const name = `${row.name} (datasett) opprettet ${now}`
+            const displayName = `${row.displayName} (datasett) opprettet ${now}`
             context.run(draft, () => {
-              const create = content.create({ name, parentPath: row._path, contentType: `${app.name}:dataset`, data: {
+              const create = content.create({ displayName, name, parentPath: row._path, contentType: `${app.name}:dataset`, data: {
                 table: row.data.table,
                 query: row._id,
                 json: JSON.stringify(data, null, ' ')
@@ -71,7 +73,7 @@ const task = cron.get({ name: 'myTask' })
 
 cron.schedule({
   name: 'myTask',
-  cron: '10,20,30,40,50 * * * *',
+  cron: '0, 10,20,30,40,50 * * * *',
   times: 10,
   callback: statistikkbanken,
   context: {
