@@ -36,7 +36,7 @@ function statistikkbanken() {
             if (dataset.count) {
               // Update dataset
               const record = dataset.hits[0]
-              const name = `${row.name} (datasett) endret ${now}`
+              const name = `${row._name} (datasett) endret ${now}`
               const displayName = `${row.displayName} (datasett) endret ${now}`
               const update = content.modify({ key: record._id, editor: (r) => {
                 r.name = name
@@ -50,7 +50,7 @@ function statistikkbanken() {
             }
             else {
               // Create dataset
-              const name = `${row.name} (datasett) opprettet ${now}`
+              const name = `${row._name} (datasett) opprettet ${now}`
               const displayName = `${row.displayName} (datasett) opprettet ${now}`
               const create = content.create({ name, displayName, parentPath: row._path, contentType: `${app.name}:dataset`, data: {
                 table: row.data.table,
@@ -70,7 +70,7 @@ function statistikkbanken() {
 
 cron.schedule({
   name: 'statistikkbanken',
-  cron: '0,30 8,14 * * *',
+  cron: '0,40 8,14 * * *',
   times: 365 * 10,
   callback: statistikkbanken,
   context: {
