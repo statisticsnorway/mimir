@@ -70,7 +70,7 @@ function statistikkbanken() {
 
 cron.schedule({
   name: 'statistikkbanken',
-  cron: '0 8 * * *',
+  cron: '0,30 8,14 * * *',
   times: 365 * 10,
   callback: statistikkbanken,
   context: {
