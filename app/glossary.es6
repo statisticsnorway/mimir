@@ -1,7 +1,7 @@
 // Adds Popper popups for glossary
 
 $(function() {
-  let elements = {}
+  const elements = {}
   $('body').click((e) => $('.popper').addClass('d-none'))
   $('.popper .btn-close').click((e) => $('.popper').addClass('d-none'))
   $('div[id^="glossary-"]').each((i, el) => {
