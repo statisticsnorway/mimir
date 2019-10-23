@@ -1,5 +1,3 @@
-const moment = require('/lib/moment-with-locales')
-
 // import * as http from '/lib/http-client'
 import * as content from '/lib/xp/content'
 import * as portal from '/lib/xp/portal'
@@ -7,8 +5,6 @@ import * as thymeleaf from '/lib/thymeleaf'
 
 import * as glossary from '/lib/glossary'
 import * as language from '/lib/language'
-
-import * as sb from '/lib/statistikkbanken'
 
 const version = '%%VERSION%%'
 
