@@ -22,14 +22,6 @@ exports.get = function(req) {
   const config = {}
   const view = resolve('default.html')
 
-if (req.params.del) {
-  const dataset = content.query({ count: 9999, contentTypes: [`${app.name}:dataset`], sort: '_id DESC' })
-  dataset.hits.map((set) => {
-    log.info(`-- delete dataset ${set._id} --`)
-    content.delete({ key: set._id })
-  })
-}
-
   page.language = language.getLanguage(page)
   page.glossary = glossary.process(page)
 
