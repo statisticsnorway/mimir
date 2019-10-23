@@ -29,11 +29,7 @@ exports.get = function(req) {
        api.table = getTable(api.result.dataset)
        api.time = api.result && Object.keys(api.result.dataset.dimension.Tid.category.index)[0]
        const contentsCode = api.result && Object.keys(api.result.dataset.dimension.ContentsCode.category.index)[0]
-log.info('-- code --')
-log.info(JSON.stringify(api.result.dataset.dimension.ContentsCode,null, ' '))
-log.info(contentsCode)
        api.label = contentsCode && api.result.dataset.dimension.ContentsCode.category.label[contentsCode]
-log.info(api.label)
      }
      statistikkbanken.push(api)
   })
