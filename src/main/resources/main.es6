@@ -34,13 +34,14 @@ function statistikkbanken() {
           const now = moment().format('DD.MM.YYYY HH:mm:ss')
           if (dataset.count) {
             // Update dataset
-            const record = dataset.hits[0]
             context.run(draft, () => {
+              const record = dataset.hits[0]
               const name = `${row.name} (datasett) endret ${now}`
               const displayName = `${row.displayName} (datasett) endret ${now}`
+              const update = content.modify({ key: record._id, editor: (r) => {
                 r.name =  name
                 r.displayName = displayName
-                r.data.table =  row.data.table
+                r.data.table = row.data.table
                 r.data.json = JSON.stringify(data, null, ' ')
                 return r
               }})
