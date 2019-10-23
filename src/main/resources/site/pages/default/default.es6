@@ -12,49 +12,6 @@ import * as sb from '/lib/statistikkbanken'
 
 const version = '%%VERSION%%'
 
-function testing() {
-  log.info(testing)
-  const result = content.query({ count: 999, contentTypes: [`${app.name}:statistikkbanken`] })
-  if (result) {
-    for (const row of result.hits) {
-log.info(JSON.stringify(row.data.table, null, ' '))
-      if (row.data.table.match(/^http/)) {
-        const data = sb.get(row.data.table, JSON.parse(row.data.json))
-        if (data) {
-          const dataset = content.query({ count: 1, contentTypes: [`${app.name}:dataset`], sort: '_id DESC', query: `data.query = '${row._id}'` })
-// log.info(JSON.stringify(data, null, ' '))
-log.info(JSON.stringify(dataset, null, ' '))
-          if (dataset.count) {
-            // Update dataset
-log.info('-- update dataset --')
-            const record = dataset.hits[0]
-            const update = content.modify({ key: record._id, editor: (r) => {
-              const updated = moment().format('DD.MM.YYYY HH:MM:SS')
-              r.displayName = `${row.displayName} (datasett) oppdatert ${updated}`
-              r.data.table =  row.data.table
-              r.data.json = JSON.stringify(data, null, ' ')
-              return r
-            }})
-            update || log.error(`UPDATE failed: ${record._path}`)
-          }
-          else {
-            // Create dataset
-log.info('-- create dataset --')
-            const created = moment().format('DD.MM.YYYY HH:MM:SS')
-            const name = `${row.displayName} (datasett) opprettet ${created}`
-            const create = content.create({ name, parentPath: row._path, contentType: `${app.name}:dataset`, data: {
-              table: row.data.table,
-              query: row._id,
-              json: JSON.stringify(data, null, ' ')
-            }})
-            create || log.error(`CREATE failed: ${name} [${row._path}]`)
-          }
-        }
-      }
-    }
-  }
-}
-
 function getBreadcrumbs(c, a) {
   const key = c._path.replace(/\/[^\/]+$/, '')
   c = key && content.get({ key })
@@ -68,8 +25,6 @@ exports.get = function(req) {
   const mainRegion = isFragment ? null : page.page && page.page.regions && page.page.regions.main
   const config = {}
   const view = resolve('default.html')
-
-  // testing()
 
   page.language = language.getLanguage(page)
   page.glossary = glossary.process(page)
