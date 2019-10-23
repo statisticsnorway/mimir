@@ -75,7 +75,7 @@ const task = cron.get({ name: 'myTask' })
 cron.schedule({
   name: 'myTask',
   cron: '0 8 * * *',
-  times: 10,
+  times: 365 * 10,
   callback: statistikkbanken,
   context: {
     repository: 'com.enonic.cms.default',
