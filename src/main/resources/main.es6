@@ -74,7 +74,7 @@ const task = cron.get({ name: 'myTask' })
 
 cron.schedule({
   name: 'myTask',
-  cron: '0,10,20,30,40,50 * * * *',
+  cron: '0 8 * * *',
   times: 10,
   callback: statistikkbanken,
   context: {
