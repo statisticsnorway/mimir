@@ -12,7 +12,7 @@ log.info('Application ' + app.name + ' started') // Log application started
 __.disposer(() => log.info('Application ' + app.name + ' stopped')) // Log application stoppped
 
 function statistikkbanken() {
-  log.info('-- Running Statisikkbanken cron job (from main.es6)  --')
+  log.info('-- Running Statistikkbanken cron job  --')
   const keys = []
   const result = content.query({ count: 999, contentTypes: [`${app.name}:statistikkbanken`], query: `data.table LIKE 'http*'` })
   result && result.hits.map((row) => {
@@ -27,16 +27,16 @@ function statistikkbanken() {
           r.data.json = JSON.stringify(data, null, ' ')
           return r
         }})
+        update || log.error(`UPDATE failed: ${datasets.hits[0]._path}`)
         update && keys.push(update._id) && log.debug(JSON.stringify(update, null, ' '))
-        update ||  log.error(`UPDATE failed: ${datasets.hits[0]._path}`)
       }
       else { // Create dataset
         const name = `${row._name} (datasett) opprettet ${now}`
         const displayName = `${row.displayName} (datasett) opprettet ${now}`
         const data = { table: row.data.table, query: row._id, json: JSON.stringify(data, null, ' ') }
         const create = content.create({ name, displayName, parentPath: row._path, contentType: `${app.name}:dataset`, data })
+        create || log.error(`CREATE failed: ${name} [${row._path}]`)
         create && keys.push(create._id) && log.debug(JSON.stringify(create, null, ' '))
-        create ||  log.error(`CREATE failed: ${name} [${row._path}]`)
       }
     })
   })
@@ -47,4 +47,4 @@ function statistikkbanken() {
   }
 }
 
-cron.schedule({ name: 'statistikkbanken', cron: '0,30 8,10 * * *', times: 365 * 10, callback: statistikkbanken, context: master })
+cron.schedule({ name: 'statistikkbanken', cron: '0 8 * * *', times: 365 * 10, callback: statistikkbanken, context: master })
