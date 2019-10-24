@@ -19,7 +19,7 @@ function statistikkbanken() {
     const data = sb.get(row.data.table, JSON.parse(row.data.json))
     data && context.run(draft, () => {
       const now = moment().format('DD.MM.YYYY HH:mm:ss')
-      const datasets = content.query({ count: 1, contentTypes: [`${app.name}:dataset`], sort: '_id DESC', query: `data.query = '${row._id}'` })
+      const datasets = content.query({ count: 1, contentTypes: [`${app.name}:dataset`], sort: 'createdTime DESC', query: `data.query = '${row._id}'` })
       if (datasets.count) { // Update dataset
         const update = content.modify({ key: datasets.hits[0]._id, editor: (r) => {
           r.displayName = `${row.displayName} (datasett) endret ${now}`
