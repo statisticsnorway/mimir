@@ -1,0 +1,12 @@
+.part-dashboard {
+  .dataset:before {
+    content: "\25CF";
+    margin-right: 5px;
+  }
+  .dataset-ok:before {
+    color: green;
+  }
+  .dataset-missing:before {
+    color: red;
+  }
+}

@@ -1,0 +1,27 @@
+<section class="xp-part part-dashboard">
+  <div data-th-each="item,i : ${dashboard}" class="row" data-th-appendclass="${i.index}  ? 'mt-3'">
+    <div class="col-lg-8">
+      <h1 data-th-text="${item.displayName} + ' (' + ${statistikkbank.count} +  ')'"></h1>
+      <table class="table  table-bordered table-striped">
+        <thead>
+          <tr>
+            <th class="roboto-bold">Datasett</th>
+            <th class="roboto-bold">Sist oppdatert</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-th-each="set : ${statistikkbank.hits}" class="small">
+            <td>
+              <div class="dataset" data-th-text="${set.displayName}" data-th-classappend="${set.class}"></div>
+            </td>
+            <td>
+              <div data-th-text="${set.updated}"></div>
+            </td>
+            <td>
+              <div data-th-text="${set.updatedHumanReadable}"></div>
+            </td>
+          </tr>
+      </table>
+    </div>
+  </div>
+</section>

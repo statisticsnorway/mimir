@@ -1,4 +1,3 @@
-
 $grid-breakpoints: (
   // Extra small screen / phone
   xs: 0,
@@ -19,13 +18,13 @@ $container-max-widths: (
   xl: 1200px
 );
 
-
 @import "../node_modules/bootstrap/scss/bootstrap";
 @import "./color";
 @import "./font";
 @import "./header";
 @import "./menu-box";
 @import "./accordion";
+@import "./dashboard";
 @import "./button";
 @import "./datasets";
 @import "./factbox";
@@ -126,4 +125,7 @@ a.btn {
 .a-glossary:hover {
   text-decoration: none;
   border-bottom: 1px dotted #a53d7c;
+}
+footer {
+  margin-top: 40px;
 }
