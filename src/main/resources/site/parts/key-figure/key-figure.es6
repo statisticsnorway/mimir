@@ -32,7 +32,7 @@ exports.get = function(req) {
     if (item.data.query) {
       const selection = { filter: 'item', values: [item.data.default] }
       const query = content.get({ key: item.data.query })
-      const dataset = content.query({ count: 1, contentTypes: [`${app.name}:dataset`], sort: '_id DESC', query: `data.query = '${query._id}'` })
+      const dataset = content.query({ count: 1, contentTypes: [`${app.name}:dataset`], sort: 'createdTime DESC', query: `data.query = '${query._id}'` })
       if (dataset && dataset.count) {
         // Use saved dataset
         const data = JSON.parse(dataset.hits[0].data.json)
