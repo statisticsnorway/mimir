@@ -1,8 +1,10 @@
 .part-banner {
   overflow: hidden;
   background-color: $green3;
-  padding: 50px 50px;
   color: white;
+  .inner-container {
+    padding: 50px 50px;
+  }
   h1 {
      line-height: 1.0;
   }
