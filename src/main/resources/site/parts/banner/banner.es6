@@ -10,8 +10,6 @@ exports.get = function(req) {
   const part = portal.getComponent()
   const view = resolve('./banner.html')
 
-log.info(JSON.stringify(part, null, ' '))
-
   const model = { part }
   const body = thymeleaf.render(view, model)
 
