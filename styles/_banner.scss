@@ -1,4 +1,5 @@
 .part-banner {
+  overflow: hidden;
   background-color: $green3;
   padding: 50px 50px;
   color: white;
@@ -6,7 +7,9 @@
      line-height: 1.0;
   }
   img {
-    right: 100px;
+    top: 0px;
+    left: 0px;
+    right: 0px;
     bottom: 0px;
   }
 }
