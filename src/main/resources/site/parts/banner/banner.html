@@ -1,5 +1,5 @@
 <section class="xp-part part-banner position-relative">
-  <img data-th-if="${part.config.image}" class="d-none d-lg-block position-absolute" data-th-src="${portal.imageUrl({'_id=' + part.config.image, '_scale=width(1400)'})}"/>
+  <img data-th-if="${part.config.image}" class="position-absolute w-100" data-th-src="${portal.imageUrl({'_id=' + part.config.image, '_scale=block(1400,400)'})}"/>
   <div class="subtitle roboto-bold position-relative">Fylke</div>
   <h1 class="mt-0 pt-0 position-relative">Navn på kommune</h1>
 </section>
