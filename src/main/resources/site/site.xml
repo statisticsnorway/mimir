@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-  <form/>
+  <form>
+    <input type="TextLine" name="municipality">
+      <label>URL til kommuner</label>
+      <occurrences minimum="1" maximum="1"/>
+      <default>http://data.ssb.no/api/klass/v1/classifications/131/codesAt?date=2019-01-01</default>
+    </input>
+    <input type="TextLine" name="county">
+      <label>URL til fylker</label>
+      <occurrences minimum="1" maximum="1"/>
+      <default>http://data.ssb.no/api/klass/v1/classifications/104/codesAt?date=2019-01-01</default>
+    </input>
+  </form>
   <mappings>
     <mapping controller="/site/pages/default/default.js">
       <pattern>/kommunefakta/.*</pattern>
