@@ -27,10 +27,10 @@ exports.get = function(req) {
     if (set.hasData) {
       set.updated = moment(dataset[set._id].modifiedTime).format('DD.MM.YYYY HH:mm:ss')
       set.updatedHumanReadable = moment(dataset[set._id].modifiedTime).fromNow()
-    } 
+    }
   })
-  
-log.info(JSON.stringify(dataset, null, ' '))
+
+// log.info(JSON.stringify(dataset, null, ' '))
 // log.info(JSON.stringify(statistikkbank, null, ' '))
 
   part.config.dashboard = part.config.dashboard && util.data.forceArray(part.config.dashboard) || []

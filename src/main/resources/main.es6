@@ -13,7 +13,6 @@ __.disposer(() => log.info('Application ' + app.name + ' stopped')) // Log appli
 
 function statistikkbanken() {
   log.info('-- Running Statistikkbanken cron job  --')
-  const keys = []
   const result = content.query({ count: 999, contentTypes: [`${app.name}:statistikkbanken`], query: `data.table LIKE 'http*'` })
   result && result.hits.map((row) => {
     const data = sb.get(row.data.table, JSON.parse(row.data.json))
@@ -28,23 +27,31 @@ function statistikkbanken() {
           return r
         }})
         update || log.error(`UPDATE failed: ${datasets.hits[0]._path}`)
-        update && keys.push(update._id) && log.debug(JSON.stringify(update, null, ' '))
+        if (update) {
+          log.debug(JSON.stringify(update, null, ' '))
+          const publish = content.publish({ keys: [update._id], sourceBranch: 'draft', targetBranch: 'master', includeDependencies: false })
+log.info('-- publish update --')
+log.info(JSON.stringify(publish, null, ' '))
+        }
       }
       else { // Create dataset
         const name = `${row._name} (datasett) opprettet ${now}`
         const displayName = `${row.displayName} (datasett) opprettet ${now}`
-        const data = { table: row.data.table, query: row._id, json: JSON.stringify(data, null, ' ') }
-        const create = content.create({ name, displayName, parentPath: row._path, contentType: `${app.name}:dataset`, data })
+        const create = content.create({ name, displayName, parentPath: row._path, contentType: `${app.name}:dataset`, data: {
+          table: row.data.table,
+          query: row._id,
+          json: JSON.stringify(data, null, ' ')
+        }})
         create || log.error(`CREATE failed: ${name} [${row._path}]`)
-        create && keys.push(create._id) && log.debug(JSON.stringify(create, null, ' '))
+        if (create) {
+          log.debug(JSON.stringify(create, null, ' '))
+          const publish = content.publish({ keys: [create._id], sourceBranch: 'draft', targetBranch: 'master', includeDependencies: false })
+        }
       }
     })
   })
-  if (keys.length) {
-     const publish = content.publish({ keys, sourceBranch: 'draft', targetBranch: 'master' })
-     publish || log.error('Publish keys ' + JSON.stringify(keys, null, '') + ' failed')
-     publish && log.info('Published keys ' + JSON.stringify(keys, null, ''))
-  }
 }
 
 cron.schedule({ name: 'statistikkbanken', cron: '0 8 * * *', times: 365 * 10, callback: statistikkbanken, context: master })
+
+exports.statistikkbanken = statistikkbanken

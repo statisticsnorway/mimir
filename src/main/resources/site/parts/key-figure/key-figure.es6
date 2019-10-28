@@ -28,6 +28,9 @@ exports.get = function(req) {
   part.config.figure = util.data.forceArray(part.config.figure || part.config['key-figure'] || [])
   part.config.figure.map((key) => {
     const item = content.get({ key })
+    if (!item) {
+      return
+    }
     item.data.glossary && page.glossary.push(content.get({ key: item.data.glossary }))
     if (item.data.query) {
       const selection = { filter: 'item', values: [item.data.default] }
