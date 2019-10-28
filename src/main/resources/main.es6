@@ -30,8 +30,6 @@ function statistikkbanken() {
         if (update) {
           log.debug(JSON.stringify(update, null, ' '))
           const publish = content.publish({ keys: [update._id], sourceBranch: 'draft', targetBranch: 'master', includeDependencies: false })
-log.info('-- publish update --')
-log.info(JSON.stringify(publish, null, ' '))
         }
       }
       else { // Create dataset
