@@ -1,0 +1,17 @@
+.part-banner {
+  overflow: hidden;
+  background-color: $green3;
+  color: white;
+  .inner-container {
+    padding: 50px 50px;
+  }
+  h1 {
+     line-height: 1.0;
+  }
+  img {
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+  }
+}

@@ -37,6 +37,7 @@
     "gulp-sass": "^4.0.2",
     "gulp-sourcemaps": "^2.6.5",
     "highcharts": "^7.2.0",
+    "imagesloaded": "^4.1.4",
     "jquery": "^3.4.1",
     "jquery-ui-dist": "^1.12.1",
     "jsonstat": "^0.13.11",
