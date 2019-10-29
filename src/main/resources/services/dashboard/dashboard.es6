@@ -3,8 +3,6 @@ import * as auth from '/lib/xp/auth'
 import * as context from '/lib/xp/context'
 import * as content from '/lib/xp/content'
 
-// const user = { login: 'su', userStore: 'system' }
-
 exports.get = function(req) {
   const _user = auth.getUser()
   const user = { login: _user.login, userStore: _user.idProvider }
