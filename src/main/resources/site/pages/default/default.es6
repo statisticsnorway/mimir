@@ -37,7 +37,7 @@ exports.get = function(req) {
   const breadcrumbs = [page]
   getBreadcrumbs(page, breadcrumbs)
 
-  const model = {version, ts, config, page, breadcrumbs, mainRegion }
+  const model = { version, ts, config, page, breadcrumbs, mainRegion }
   const body = thymeleaf.render(view, model)
 
   return { body }
