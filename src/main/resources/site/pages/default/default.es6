@@ -37,7 +37,7 @@ exports.get = function(req) {
   page.glossary = glossary.process(page)
 
   // Create preview if available
-  if (preview.indexOf(page.type) >= 0)
+  if (preview.indexOf(page.type) >= 0) {
     const name = page.type.replace(/^.*:/, '')
     const controller = require(`../../parts/${name}/${name}`)
     page.preview = controller.get({ config: { [name]: [page._id] }})
