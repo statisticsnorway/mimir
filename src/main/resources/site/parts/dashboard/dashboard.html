@@ -24,4 +24,28 @@
       </table>
     </div>
   </div>
+  <button data-th-attr="data-service=${portal.serviceUrl({'_service=dashboard'})}" class="btn btn-secondary mt-3 js-dashboard-delete pb-2">
+    Slett alle dataset
+    <span class="d-none ml-1 my-1 spinner-border spinner-border-sm" role="status">
+      <span class="sr-only">Sletter...</span>
+    </span>
+  </button>
+  <button data-th-attr="data-service=${portal.serviceUrl({'_service=dashboard'})}" class="btn btn-primary ml-2 mt-3 js-dashboard-update pb-2">
+    Oppdater alle dataset
+    <span class="d-none ml-1 my-1 spinner-border spinner-border-sm" role="status">
+      <span class="sr-only">Loading...</span>
+    </span>
+  </button>
+  <div class="d-none alert alert-success mt-3 update-success">
+    Oppdateringen var vellykket.
+  </div>
+  <div class="d-none alert alert-success mt-3 update-warning">
+    Oppdateringen var vellykket.
+  </div>
+  <div class="d-none alert alert-success mt-3 delete-success">
+    Slettingen var vellykket.
+  </div>
+  <div class="d-none alert alert-warning mt-3 delete-warning">
+    Det oppstod en feil under slettingen.
+  </div>
 </section>

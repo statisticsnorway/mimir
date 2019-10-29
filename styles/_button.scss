@@ -28,3 +28,7 @@
   background-color: $green4;
   border-color: $green4;
 }
+.btn-primary.disabled, .btn-primary:disabled {
+  border-color: $green2;
+  background-color: $green2;
+}
