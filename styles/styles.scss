@@ -36,6 +36,7 @@ $container-max-widths: (
 @import "./design-system/style/variables";
 @import "./design-system/molecules/KeyNumbers/key-numbers";
 @import "./design-system/atoms/Number/number";
+@import "./menu";
 
 body {
   -moz-osx-font-smoothing: grayscale;
