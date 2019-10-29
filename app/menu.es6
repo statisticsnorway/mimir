@@ -18,6 +18,7 @@ $(document).ready(function() {
             // Hvis alle megamenyer er lukket og denne skal åpnes
             if ($('#header').hasClass('menu-closed')) {
                 $('#header').removeClass('menu-closed');
+                $('#statistikker-hovedmeny').removeClass('d-none');
                 parent.addClass('open');
                 thisMegaMenu.slideDown('fast', function() {
                     thisMegaMenu.focus();
