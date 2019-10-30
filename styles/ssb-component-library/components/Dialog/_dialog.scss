@@ -1,0 +1,40 @@
+.ssb-dialog {
+  @include open-sans;
+  display: flex;
+  margin: 20px;
+  max-width: 880px;
+  min-height: 95px;
+
+  .icon-panel {
+    color: $ssb-white;
+    display: flex;
+    flex-shrink: 0;
+    justify-content: center;
+    padding-top: 20px;
+    width: 78px;
+  }
+
+  .dialog-content {
+    padding: 20px;
+
+    .dialog-title {
+      font-weight: bold;
+    }
+  }
+
+  &.warning {
+    border: 2px solid $ssb-red-4;
+
+    .icon-panel {
+      background: $ssb-red-4;
+    }
+  }
+
+  &.info {
+    border: 2px solid $ssb-blue-3;
+
+    .icon-panel {
+      background: $ssb-blue-3;
+    }
+  }
+}

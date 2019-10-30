@@ -1,0 +1,45 @@
+.ssb-nested-accordion {
+  display: grid;
+  min-width: 300px;
+  width: 100%;
+
+  .nested-accordion-header {
+    align-items: center;
+    cursor: pointer;
+    display: grid;
+    grid-column-gap: 10px;
+    grid-template-columns: 10px 1fr;
+
+    .expand-icon {
+      color: $ssb-green-3
+    }
+
+    &:hover {
+
+      .header-text {
+        color: $ssb-green-4;
+      }
+    }
+
+    &.open {
+
+      .header-text, .sub-header {
+        color: $ssb-green-4;
+      }
+
+      .expand-icon {
+        color: $ssb-green-4;
+      }
+    }
+  }
+
+  .nested-accordion-body {
+    font-size: 16px;
+    padding: 10px 10px 10px 20px;
+
+    &.closed {
+      display: none;
+      height: 0;
+    }
+  }
+}

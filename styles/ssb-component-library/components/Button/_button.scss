@@ -1,0 +1,55 @@
+.ssb-btn {
+  @include roboto;
+  align-items: center;
+  background: $ssb-white;
+  border: 1px solid $ssb-green-4;
+  border-radius: 2px;
+  color: $ssb-green-4;
+  display: flex;
+  font-size: 16px;
+  font-weight: bold;
+  height: fit-content;
+  margin-right: 20px;
+  padding: 10px 20px;
+  text-align: center;
+  transition: background .18s, color .18s;
+
+  &:hover, &:active {
+    cursor: pointer;
+  }
+
+  &:hover {
+    background: $ssb-green-4;
+    color: $ssb-white;
+  }
+
+  &:active {
+    background: $ssb-green-5;
+  }
+
+  &:disabled {
+    background: $ssb-white;
+    color: $ssb-dark-2;
+    cursor: not-allowed;
+  }
+
+  &.primary-btn {
+    background: $ssb-green-4;
+    border: none;
+    color: $ssb-white;
+
+    &:hover {
+      background: $ssb-green-5;
+    }
+
+    &:active {
+      background: $ssb-dark-5;
+    }
+
+    &:disabled {
+      background: $ssb-dark-2;
+      color: $ssb-white;
+      cursor: not-allowed;
+    }
+  }
+}

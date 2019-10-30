@@ -1,0 +1,62 @@
+.ssb-accordion {
+  display: grid;
+  width: 100%;
+
+  .accordion-header {
+    align-items: center;
+    cursor: pointer;
+    display: grid;
+    grid-column-gap: $global-padding-size;
+    grid-template-columns: 20px auto 1fr;
+
+    .expand-icon {
+      color: $ssb-white;
+      fill: $ssb-green-3
+    }
+
+    .sub-header {
+      color: $ssb-green-3;
+    }
+
+    &:hover {
+
+      .header-text, .sub-header {
+        color: $ssb-green-4;
+      }
+    }
+
+    &.open {
+
+      .header-text, .sub-header {
+        color: $ssb-green-4;
+      }
+
+      .expand-icon {
+        fill: $ssb-green-4;
+      }
+    }
+  }
+
+  &.with-sub-header {
+
+    .accordion-header {
+      grid-template-columns: 20px auto;
+
+      .header-text {
+        grid-column-start: 2;
+        grid-row-start: 2;
+      }
+    }
+  }
+
+  .accordion-body {
+    @include open-sans;
+    font-size: 16px;
+    padding: $global-padding-size $global-padding-size $global-padding-size 30px;
+
+    &.closed {
+      display: none;
+      height: 0;
+    }
+  }
+}

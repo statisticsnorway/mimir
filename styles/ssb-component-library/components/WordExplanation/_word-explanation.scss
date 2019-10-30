@@ -1,0 +1,74 @@
+.ssb-word-explanation {
+  cursor: pointer;
+  position: relative;
+  text-decoration: dotted underline;
+  text-decoration-color: $ssb-green-4;
+
+  .animate-background {
+    background: $ssb-green-2;
+    bottom: 0;
+    height: 0;
+    left: 0;
+    position: absolute;
+    transition: height .2s;
+    width: 100%;
+    z-index: -1;
+  }
+
+  &:hover {
+
+    .animate-background {
+      height: 100%;
+    }
+  }
+}
+
+.ssb-we-popup {
+  @include open-sans;
+  font-size: 14px;
+  position: absolute;
+  width: 270px;
+
+  .content-box {
+    background: $ssb-dark-5;
+    color: $ssb-white;
+    padding: 18px 24px 18px 18px;
+
+    .ssb-we-closing {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+      width: 100%;
+
+      span {
+        margin-left: 4px;
+      }
+    }
+
+    .info-text {
+      color: $ssb-white;
+      font-size: 14px;
+    }
+  }
+
+  .ssb-we-arrow {
+    display: flex;
+    justify-content: center;
+    left: -50%;
+    position: absolute;
+    right: -50%;
+    top: -6px;
+
+    svg {
+      display: flex;
+      justify-content: center;
+      top: 26px;
+      transform: rotate(45deg);
+    }
+  }
+
+  rect {
+    fill: $ssb-dark-5;
+  }
+}

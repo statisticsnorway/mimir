@@ -1,0 +1,45 @@
+.ssb-tabs {
+  @include roboto;
+  display: flex;
+  flex-direction: row;
+
+  .navigation-item {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    transition: background .2s;
+
+    &:hover {
+      background: $ssb-green-2;
+    }
+
+    &:focus {
+      outline: $ssb-green-4 auto 5px;
+      outline-offset: -2px;
+    }
+
+    &:before {
+      background: $ssb-green-3;
+      bottom: 0;
+      content: '';
+      display: block;
+      height: 0;
+      left: 0;
+      position: absolute;
+      transition: height .2s;
+      width: 100%;
+    }
+
+    &.active {
+
+      &:before {
+        height: 5px;
+      }
+    }
+  }
+}

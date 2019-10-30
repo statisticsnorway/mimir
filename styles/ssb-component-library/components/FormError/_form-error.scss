@@ -1,0 +1,9 @@
+.ssb-form-error {
+  color: $ssb-red-4;
+  font-size: 14px;
+  margin-top: 10px;
+
+  &.negative {
+    color: $negative-red;
+  }
+}

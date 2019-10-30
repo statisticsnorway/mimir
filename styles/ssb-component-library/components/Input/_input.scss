@@ -1,0 +1,137 @@
+.ssb-input {
+  @include roboto;
+  cursor: text;
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+  position: relative;
+
+  &:hover {
+
+    input {
+      border: 2px solid $ssb-green-4;
+
+      &:disabled {
+        border: 1px solid $ssb-dark-5;
+      }
+    }
+  }
+
+  .input-wrapper {
+    display: flex;
+  }
+
+  label {
+    color: $ssb-dark-6;
+    cursor: text;
+    font-size: 14px;
+    margin-bottom: 5px;
+    user-select: none;
+  }
+
+  input {
+    background: $ssb-white;
+    border: 1px solid $ssb-dark-5;
+    color: $ssb-dark-6;
+    font-size: 16px;
+    height: 36px;
+    padding: 4px 10px;
+    text-overflow: ellipsis;
+    width: 100%;
+
+    &.with-icon {
+      padding: 4px 36px 4px 10px;
+    }
+
+    &:disabled {
+      border: 1px solid $ssb-dark-5;
+      cursor: not-allowed;
+    }
+
+    &:focus {
+      border: 2px solid $ssb-green-4;
+      outline: none;
+    }
+  }
+
+  &.negative {
+
+    &:hover {
+
+      input {
+        border: 2px solid $ssb-green-2;
+
+        &:disabled {
+          border: 1px solid $ssb-white;
+        }
+      }
+    }
+
+    label {
+      color: $ssb-white;
+    }
+
+    input {
+      background: transparent;
+      border: 1px solid $ssb-white;
+      color: $ssb-white;
+
+      &:disabled {
+        border: 1px solid $ssb-white;
+      }
+
+      &:focus {
+        border: 2px solid $ssb-green-2;
+      }
+    }
+
+    .icon-wrapper {
+
+      & > * {
+        color: $ssb-green-2;
+      }
+    }
+
+    &.error {
+
+      input {
+        border: 2px solid $negative-red;
+      }
+
+      .icon-wrapper {
+
+        & > * {
+          color: $negative-red;
+        }
+      }
+    }
+  }
+
+  &.error {
+
+    input {
+      border: 2px solid $ssb-red-4;
+    }
+
+    .icon-wrapper {
+
+      & > * {
+        color: $ssb-red-4;
+      }
+    }
+  }
+
+  .icon-wrapper {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    height: 36px;
+    justify-content: center;
+    margin-left: -36px;
+    width: 36px;
+
+    & > * {
+      color: $ssb-green-4;
+    }
+  }
+}

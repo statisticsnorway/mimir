@@ -1,0 +1,16 @@
+.ssb-divider {
+  border-top: 1px solid;
+  display: block;
+  height: 2px;
+  margin: 0;
+  position: relative;
+  width: 100%;
+
+  &.type-dark {
+    border-top-color: $ssb-dark-5;
+  }
+
+  &.type-light {
+    border-top-color: $ssb-dark-2;
+  }
+}

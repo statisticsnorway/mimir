@@ -1,0 +1,114 @@
+.ssb-dropdown {
+  @include roboto;
+  display: flex;
+  flex-direction: column;
+  transition: all .25s ease-in-out;
+
+  label {
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+
+  .dropdown-interactive-area {
+    cursor: pointer;
+    position: relative;
+
+    .dd-icon {
+      color: $ssb-green-4;
+      height: 18px;
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      width: 18px;
+
+      & > * {
+        height: 100%;
+        width: 100%;
+      }
+    }
+
+    input {
+      background-color: $ssb-white;
+      border: 1px solid $ssb-dark-6;
+      cursor: pointer;
+      font-size: 16px;
+      height: 36px;
+      padding: 4px 34px 4px 10px;
+      width: 100%;
+
+      &::placeholder {
+        color: $ssb-dark-6;
+      }
+
+      &:hover {
+        border: 1px solid $ssb-green-4;
+      }
+
+      &:focus, &.focused {
+        border: 1px solid $ssb-green-4;
+        outline: $ssb-green-4 auto 1px;
+      }
+    }
+
+    .list-of-options {
+      @include roboto;
+      background: $ssb-white;
+      border: 1px solid $ssb-dark-6;
+      left: 0;
+      list-style: none;
+      margin: 0;
+      max-height: 235px;
+      overflow-y: auto;
+      padding-left: 0;
+      position: absolute;
+      scrollbar-color: $ssb-dark-3 $ssb-white;
+      scrollbar-width: thin;
+      top: 36px;
+      z-index: 9999;
+      width: 100%;
+
+      .option-list-element {
+        cursor: pointer;
+
+        option {
+          display: block;
+          overflow: hidden;
+          padding: 10px;
+          text-overflow: ellipsis;
+
+          &:hover {
+            background: $ssb-green-2;
+            border-left: 5px solid $ssb-green-4;
+            padding-left: 5px;
+
+          }
+        }
+
+        &.selected {
+          background: $ssb-green-4;
+          color: $ssb-white;
+        }
+      }
+
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: $ssb-white;
+      border-bottom: 1px solid $ssb-dark-6;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: $ssb-dark-3;
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: $ssb-dark-4;
+    }
+
+  }
+}

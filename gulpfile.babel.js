@@ -76,9 +76,10 @@ function backend() {
 // -----------------------------------------------------------------------------
 
 function designsystem() {
-  return gulp.src(['../design-system/src/**/*scss'])
-    .pipe(gulp.dest('styles/design-system'));
+  return gulp.src(['../ssb-component-library/src/**/*scss'])
+    .pipe(gulp.dest('styles/ssb-component-library'));
 }
+
 // -----------------------------------------------------------------------------
 // js backend assets
 // -----------------------------------------------------------------------------
@@ -87,6 +88,7 @@ function assets() {
   return gulp.src(['node_modules/moment/min/moment-with-locales.js', 'node_modules/numeral/numeral.js', 'node_modules/jsonstat/export.js'])
     .pipe(gulp.dest('build/resources/main/lib'));
 }
+
 // -----------------------------------------------------------------------------
 // frontend javascript
 // -----------------------------------------------------------------------------

@@ -1,0 +1,10 @@
+.ssb-lead-paragraph {
+  @include open-sans;
+  color: $ssb-dark-6;
+  font-size: 20px;
+  line-height: 1.7;
+
+  &.negative {
+    color: $ssb-white;
+  }
+}

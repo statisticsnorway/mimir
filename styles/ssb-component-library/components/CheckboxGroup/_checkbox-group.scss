@@ -1,0 +1,8 @@
+.ssb-checkbox-group {
+  @include roboto;
+  display: inline-block;
+
+  .checkbox-group-header {
+    padding-left: 10px;
+  }
+}

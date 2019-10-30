@@ -19,6 +19,7 @@ $container-max-widths: (
 );
 
 @import "../node_modules/bootstrap/scss/bootstrap";
+@import "./ssb-component-library/main.scss";
 @import "./color";
 @import "./font";
 @import "./header";
@@ -34,9 +35,6 @@ $container-max-widths: (
 @import "./highchart";
 @import "./key-figures";
 @import "./menu-dropdown";
-@import "./design-system/style/variables";
-@import "./design-system/molecules/KeyNumbers/key-numbers";
-@import "./design-system/atoms/Number/number";
 @import "./menu";
 
 body {
