@@ -1,0 +1,13 @@
+<part>
+  <display-name>Rullegardinmeny</display-name>
+  <form>
+    <input name="menu" type="ContentSelector">
+      <label>Meny</label>
+      <occurrences minimum="1" maximum="1"/>
+      <config>
+        <allowPath>${site}</allowPath>
+        <allowType>menu-dropdown</allowType>
+      </config>
+    </input>
+  </form>
+</part>

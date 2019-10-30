@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content-type>
+  <display-name>Rullegardinmeny</display-name>
+  <super-type>base:structured</super-type>
+  <form>
+    <input type="TextLine" name="source">
+      <label>Kilde (url)</label>
+      <occurrences minimum="0" maximum="0"/>
+    </input>
+  </form>
+</content-type>

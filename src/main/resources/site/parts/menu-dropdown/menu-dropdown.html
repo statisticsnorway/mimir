@@ -1,0 +1,35 @@
+<section class="xp-part part-menu-dropdown sticky-top">
+  <div class="row">
+    <div class="col-md-6 col-lg-8 roboto-bold">
+      <h2 class="mb-0 mt-1">Kommunefakta</h2>
+    </div>
+    <div class="col-md-6 col-lg-4" data-th-with="mcode='0501'">
+      <div data-th-each="menu : ${part.menu}">
+        <div data-th-if="${menu.municipalities}" class="position-relative">
+          <div class="dropdown show ssb-dropdown">
+            <div class="d-flex flex-row">
+              <div class="roboto-bold text-nowrap mr-2 mt-3">Bytt kommune:</div>
+              <div class="w-100 ssb-input">
+                <input id="dropdownMenuLink" class="w-100" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" autocomplete/>
+                <button class="button-search border-0 p-0 m-0 position-absolute">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30">
+                    <title>Søk</title>
+                    <g id="object"><circle class="cls-1" cx="11" cy="11" r="10"></circle><line class="cls-2" x1="18" y1="18.24" x2="28.76" y2="29"></line></g>
+                  </svg>
+                </button>
+                <!-- <a class="down-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a> -->
+                <div class="dropdown-menu w-100 list-of-options" aria-labelledby="dropdownMenuLink">
+                  <a class="dropdown-item a-plain option-list-element" data-th-each="municipality: ${menu.municipalities.codes}"
+                    data-th-href="${portal.pageUrl({'_id='+page._id})} + ${municipality.path}"
+                    data-th-text="${municipality.displayName}"
+                    data-th-attr="data-text=${municipality.code} + ' ' +  ${municipality.displayName}">Oslo
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
