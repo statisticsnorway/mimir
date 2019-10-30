@@ -1,0 +1,10 @@
+.part-menu-dropdown {
+  .dropdown {
+    left: 0;
+  }
+  .dropdown-menu {
+    left: 0;
+    overflow: auto;
+    max-height: 40vh;
+  }
+}
