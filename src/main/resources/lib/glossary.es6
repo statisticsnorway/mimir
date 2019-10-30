@@ -10,7 +10,7 @@ function parseText(text, glossary) {
   m && m.forEach((link) => {
     const key = link.replace(/^.*content:\/\/(.*)".*>$/, '$1') // Extract content key from href attribute (on the form href="content://enonic-xp-hash-key")
     const item = content.get({ key })
-    if (item.type === 'mimir:glossary') {
+    if (item && item.type === 'mimir:glossary') {
       glossary.push(item)
     }
   })
