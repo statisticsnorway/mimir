@@ -19,7 +19,7 @@ $container-max-widths: (
 );
 
 @import "../node_modules/bootstrap/scss/bootstrap";
-@import "./ssb-component-library/main.scss";
+@import "../node_modules/@statisticsnorway/ssb-component-library/src/main.scss";
 @import "./color";
 @import "./font";
 @import "./header";
