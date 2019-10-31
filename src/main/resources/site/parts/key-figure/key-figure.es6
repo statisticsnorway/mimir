@@ -33,7 +33,7 @@ exports.get = function(req) {
     }
     item.data.glossary && page.glossary.push(content.get({ key: item.data.glossary }))
     if (item.data.query) {
-      const selection = { filter: 'item', values: [item.data.default] }
+      const selection = { filter: 'item', values: [municipality && municipality.code || item.data.default] }
       const query = content.get({ key: item.data.query })
       const dataset = content.query({ count: 1, contentTypes: [`${app.name}:dataset`], sort: 'createdTime DESC', query: `data.query = '${query._id}'` })
       if (dataset && dataset.count) {

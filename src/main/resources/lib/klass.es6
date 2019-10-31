@@ -12,10 +12,8 @@ const contentType = 'application/json'
 
 exports.getMunicipality = function(req) {
   if (Object.keys(paths).length === 0) {
-    const map = {}
     const part = {}
     const page = portal.getContent()
-  log.info('-- get municipality -- ')
     const dropdown = content.query( { contentTypes: [`${app.name}:menu-dropdown`], count: 1, query: `_path LIKE '/content${page._path}/*'` })
     if (dropdown && dropdown.count) {
       const menu = dropdown.hits[0]
@@ -29,6 +27,7 @@ exports.getMunicipality = function(req) {
           }
         })
         if (part.values && part.values.length === 2) {
+          const map = {}
           const count = {}
           const municipalities = part.values[0] // inferred
           const counties = part.values[1] // inferred
@@ -49,7 +48,6 @@ exports.getMunicipality = function(req) {
     }
   }
   const name = req.path.replace(/^.*\//, '')
-log.info(name)
   return paths[name]
 }
 
