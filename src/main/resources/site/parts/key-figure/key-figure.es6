@@ -5,6 +5,7 @@ import * as portal from '/lib/xp/portal'
 import * as content from '/lib/xp/content'
 import * as thymeleaf from '/lib/thymeleaf'
 import * as sb from '/lib/statistikkbanken'
+import * as klass from '/lib/klass'
 
 function getTable(data, table = {}) {
   const dimension = data.dimension['KOKkommuneregion0000'] ? 'KOKkommuneregion0000' : Object.keys(data.dimension)[0]
@@ -22,8 +23,7 @@ exports.get = function(req) {
   const part = portal.getComponent() || req
   const view = resolve('./key-figure.html')
 
-  // TODO:
-  // const name = req.path.replace(/^.*\//, '') // Extract name from path
+  const municipality = klass.getMunicipality(req)
 
   part.config.figure = util.data.forceArray(part.config.figure || part.config['key-figure'] || [])
   part.config.figure.map((key) => {
@@ -40,7 +40,7 @@ exports.get = function(req) {
         // Use saved dataset
         const data = JSON.parse(dataset.hits[0].data.json)
         const table = getTable(data.dataset)
-        item.value = table[item.data.default].value
+        item.value = table[municipality && municipality.code || item.data.default].value
         const time = data && Object.keys(data.dataset.dimension.Tid.category.index)[0]
         item.time = time
       }
