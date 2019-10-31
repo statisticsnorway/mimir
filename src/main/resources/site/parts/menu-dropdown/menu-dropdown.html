@@ -23,7 +23,7 @@
                   <a class="dropdown-item a-plain option-list-element" data-th-each="municipality: ${menu.municipalities.codes}"
                     data-th-href="${portal.pageUrl({'_id='+page._id})} + ${municipality.path}"
                     data-th-text="${municipality.displayName}"
-                    data-th-attr="data-text=${municipality.code} + ' ' +  ${municipality.displayName} + ' ' + ${map[municipality.county].name} + ${municipality.displayName == 'Bergen' ? ' buekorps' : ''}">Oslo
+                    data-th-attr="data-text=${municipality.code} + ' ' +  ${municipality.displayName} + ' ' + ${map[municipality.county].name} + ${municipality.displayName == 'Bergen' ? ' buekorps' : ''} + ' ' + ${municipality.displayName == 'Trondheim' ? 'bart snus' : ''}">Oslo
                   </a>
                 </div>
               </div>
