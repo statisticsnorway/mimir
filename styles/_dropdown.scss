@@ -1,0 +1,15 @@
+// TODO: remove when styling from styling system hits correct tag
+.dropdown {
+  .dropdown-item {
+    display: block;
+    overflow: hidden;
+    padding: 10px;
+    text-overflow: ellipsis;
+
+    &:hover {
+      background: $ssb-green-2;
+      border-left: 5px solid $ssb-green-4;
+      padding-left: 5px;
+    }
+  }
+}

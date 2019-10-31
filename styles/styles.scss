@@ -32,6 +32,7 @@ $container-max-widths: (
 @import "./layout";
 @import "./banner";
 @import "./popper";
+@import "./dropdown"; // TODO: remove when implemented correctly from design system
 @import "./highchart";
 @import "./key-figures";
 @import "./menu-dropdown";
