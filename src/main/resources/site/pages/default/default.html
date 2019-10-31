@@ -31,23 +31,25 @@
   <!-- <div data-th-replace="mimir:/site/includes/header.html"></div> -->
 
   <!-- MAIN -->
-  <main data-portal-region="main" class="xp-region container" data-th-if="${!isFragment}">
+  <main data-portal-region="main" class="xp-region" data-th-if="${!isFragment}">
     <!-- breadcrumbs -->
     <div data-th-replace="mimir:/site/includes/breadcrumbs.html"></div>
 
-    <div data-th-if="${page.data.title}" class="mb-5">
+    <div data-th-if="${page.data.title}" class="container mb-5">
       <h1 data-th-text="${page.data.title}"></h1>
     </div>
 
     <!-- preview -->
     <div data-th-if="${page.preview}" data-th-utext="${page.preview.body}"></div>
 
-    <div data-th-if="${page.data.ingress} and ${page.type == 'mimir:page'}" class="row ingress">
-      <div class="mt-3 mt-md-0 col-lg-8" data-th-utext="${page.data.ingress}"></div>
+    <div data-th-if="${page.data.ingress} and ${page.type == 'mimir:page'}" class="container ingress">
+      <div class="row">
+        <div class="mt-3 mt-md-0 col-lg-8" data-th-utext="${page.data.ingress}"></div>
+      </div>
     </div>
 
     <div data-th-if="${mainRegion}" data-th-remove="tag">
-      <div data-th-each="component : ${mainRegion.components}" data-th-remove="tag" class="mt-3">
+      <div data-th-each="component : ${mainRegion.components}" class="mt-3" data-th-classappend="${component.descriptor} != 'mimir:banner' ? 'container'">
         <div data-portal-component="${component.path}" data-th-remove="tag"></div>
       </div>
   </main>

@@ -1,11 +1,13 @@
-<nav class="row mt-2 mb-5" role="navigation" aria-label="secondary">
-  <div class="col-12">
-    <a class="d-none d-md-inline a-ssb" href="https://www.ssb.no" data-th-text="${page.language.phrases.home}">Forsiden</a>
-    <div data-th-each="crumb, i: ${breadcrumbs}" data-th-remove="tag">
-    <span class="mr-1 d-md-none" data-th-if="${i.count == #lists.size(breadcrumbs) - 1}">&lt;</span>
-      <span class="ml-1 mr-1 d-none d-md-inline">&gt;</span>
-      <a class="a-ssb" data-th-unless="${i.last}" data-th-href="${portal.pageUrl({'_path='+crumb._path})}" data-th-classappend="${ i.count != #lists.size(breadcrumbs) - 1 } ? 'd-none d-md-inline'" data-th-text="${crumb.displayName}"></a>
-      <span data-th-if="${i.last}" data-th-text="${crumb.displayName}" class="d-none d-md-inline"></span>
+<div class="container">
+  <nav class="row mt-2 mb-5" role="navigation" aria-label="secondary">
+    <div class="col-12">
+      <a class="d-none d-md-inline a-ssb" href="https://www.ssb.no" data-th-text="${page.language.phrases.home}">Forsiden</a>
+      <div data-th-each="crumb, i: ${breadcrumbs}" data-th-remove="tag">
+      <span class="mr-1 d-md-none" data-th-if="${i.count == #lists.size(breadcrumbs) - 1}">&lt;</span>
+        <span class="ml-1 mr-1 d-none d-md-inline">&gt;</span>
+        <a class="a-ssb" data-th-unless="${i.last}" data-th-href="${portal.pageUrl({'_path='+crumb._path})}" data-th-classappend="${ i.count != #lists.size(breadcrumbs) - 1 } ? 'd-none d-md-inline'" data-th-text="${crumb.displayName}"></a>
+        <span data-th-if="${i.last}" data-th-text="${crumb.displayName}" class="d-none d-md-inline"></span>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
+</div>
