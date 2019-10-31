@@ -11,6 +11,7 @@ const headers = { 'Cache-Control': 'no-cache', Accept: 'application/json' }
 const contentType = 'application/json'
 
 exports.get = function(req) {
+  const map = {}
   const part = portal.getComponent() || req
   const page = portal.getContent()
   const view = resolve('./menu-dropdown.html')
@@ -27,7 +28,6 @@ exports.get = function(req) {
            (part.values || (part.values = [])).push(value)
          }
          if (part.values && part.values.length === 2) {
-           const map = {}
            const count = {}
            const municipalities = part.values[0] // inferred
            const counties = part.values[1] // inferred
@@ -40,8 +40,8 @@ exports.get = function(req) {
            municipalities.codes.map((municipality) => {
              municipality.count = count[municipality.name]
              municipality.county = municipality.code.replace(/^(\d\d).*$/, '$1')
-             municipality.path = '/' + (municipality.count === 1 ? municipality.name : municipality.name + '-' + map[municipality.county].name)
              municipality.displayName = municipality.count === 1 ? municipality.name : municipality.name + ' i ' + map[municipality.county].name
+             municipality.path = '/' + (municipality.count === 1 ? municipality.name : municipality.name + '-' + map[municipality.county].name)
              municipality.path = municipality.path.replace(/ /g, '-').replace(/-+/g, '-').toLowerCase()
              municipality.path = municipality.path.replace(/å/g, 'a').replace(/æ/g, 'ae').replace(/á/g, 'a').replace(/ø/g, 'o')
            })
@@ -54,7 +54,7 @@ exports.get = function(req) {
 
   // log.info(JSON.stringify(part, null, ' '))
 
-  const model = { page, part }
+  const model = { page, part, map }
   const body = thymeleaf.render(view, model)
 
   return { body, contentType: 'text/html' }
