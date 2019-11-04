@@ -3,7 +3,6 @@
   }
   img {
     width: 45%;
-    margin-bottom: 60px;
   }
   h3 {
     font-size: 18px;
@@ -11,11 +10,7 @@
   @include media-breakpoint-down(md) {
     h3 { font-size: 16px }
   }
-  .position-absolute {
+  .text-bottom {
     font-size: 14px;
-    padding: 20px;
-    left: 15px;
-    right: 15px;
-    bottom: 0;
   }
 }
