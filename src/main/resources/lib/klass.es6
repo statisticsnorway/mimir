@@ -7,7 +7,7 @@ const paths = {}
 const method = 'GET'
 const readTimeout = 5000
 const connectionTimeout = 20000
-const headers = { 'Cache-Control': 'no-cache', Accept: 'application/json' }
+const headers = { 'Cache-Control': 'no-cache', 'Accept': 'application/json' }
 const contentType = 'application/json'
 
 exports.getMunicipality = function(req) {
@@ -47,8 +47,8 @@ exports.getMunicipality = function(req) {
       }
     }
   }
-  const name = req.path.replace(/^.*\//, '')
-  return paths[name]
+  const name = req.path && req.path.replace(/^.*\//, '')
+  return paths[name] || paths['kongsvinger']
 }
 
 exports.get = function(url) {

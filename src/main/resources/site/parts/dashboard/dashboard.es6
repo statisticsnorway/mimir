@@ -4,7 +4,6 @@ import * as util from '/lib/util'
 import * as portal from '/lib/xp/portal'
 import * as content from '/lib/xp/content'
 import * as thymeleaf from '/lib/thymeleaf'
-import * as task from '/lib/xp/task'
 
 // import * as sb from '/lib/statistikkbanken'
 

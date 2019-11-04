@@ -1,4 +1,4 @@
-import { statistikkbanken }  from '/main'
+import { statistikkbanken } from '/main'
 import * as auth from '/lib/xp/auth'
 import * as context from '/lib/xp/context'
 import * as content from '/lib/xp/content'

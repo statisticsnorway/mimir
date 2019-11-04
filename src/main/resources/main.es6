@@ -30,6 +30,7 @@ function statistikkbanken() {
         if (update) {
           log.debug(JSON.stringify(update, null, ' '))
           const publish = content.publish({ keys: [update._id], sourceBranch: 'draft', targetBranch: 'master', includeDependencies: false })
+          publish || log.error(`PUBLISH failed: ${datasets.hits[0]._path}`)
         }
       }
       else { // Create dataset
@@ -44,6 +45,7 @@ function statistikkbanken() {
         if (create) {
           log.debug(JSON.stringify(create, null, ' '))
           const publish = content.publish({ keys: [create._id], sourceBranch: 'draft', targetBranch: 'master', includeDependencies: false })
+          publish || log.error(`PUBLISH failed: ${name} [${row._path}]`)
         }
       }
     })

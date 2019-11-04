@@ -1,7 +1,7 @@
 import * as portal from '/lib/xp/portal'
 import * as thymeleaf from '/lib/thymeleaf'
 
-import * as klass  from '/lib/klass'
+import * as klass from '/lib/klass'
 
 exports.get = function(req) {
   // TODO: get minicipality

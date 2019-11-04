@@ -7,7 +7,7 @@ const thymeleaf = require('/lib/thymeleaf')
 const method = 'GET'
 const readTimeout = 5000
 const connectionTimeout = 20000
-const headers = { 'Cache-Control': 'no-cache', Accept: 'application/json' }
+const headers = { 'Cache-Control': 'no-cache', 'Accept': 'application/json' }
 const contentType = 'application/json'
 
 exports.get = function(req) {
