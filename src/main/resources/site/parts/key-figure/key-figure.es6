@@ -51,7 +51,7 @@ exports.get = function(req) {
         const time = result && Object.keys(result.dataset.dimension.Tid.category.index)[0]
         item.time = time
       }
-      item.valueHumanReadable = item.value && (item.value > 999 ? numeral(item.value).format('0,0').replace(/,/, '&thinsp;') : item.value)
+      item.valueHumanReadable = item.value && (item.value > 999 ? numeral(item.value).format('0,0').replace(/,/, '&thinsp;') : item.value.toString().replace(/\./, ','))
     }
     (part.data || (part.data = [])).push(item)
   })
