@@ -6,7 +6,7 @@
         <div class="icon-container kf-icon" data-th-classappend="${figure.data['size']} ? ${figure.data['size']}">
           <img class="w-100" data-th-if="${figure.data.icon}" data-th-src="${portal.imageUrl({'_id=' + figure.data.icon, '_scale=block(80,80)'})}"/>
         </div>
-        <div class="d-flex flex-column">>
+        <div class="d-flex flex-column">
           <h4 data-th-unless="${figure.data.glossary}" data-th-text="${figure.displayName}" class="ssb-title kf-title mt-auto"></h4>
           <a data-th-if="${figure.data.glossary}" data-th-text="${figure.displayName}" class="a-glossary" data-th-href="${portal.pageUrl({'_id='+figure.data.glossary})}" data-th-aria-describedby="'glossary-' + ${figure.data.glossary}"></a>
           <div class="kf-time" data-th-text="${figure.time}">2018</div>
