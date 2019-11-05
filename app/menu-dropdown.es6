@@ -4,8 +4,8 @@ $(function() {
   $('.part-menu-dropdown').each((i, el) => {
     $(window).scroll((e) => {
       const { top } = el.getBoundingClientRect()
-      top > 0 && $(el).removeClass('border-bottom').find('.opacity-zero').removeClass('opacity-one')
-      top === 0 && $(el).addClass('border-bottom').find('.opacity-zero').addClass('opacity-one')
+      top > 0 && $(el).removeClass('border-bottom shadow-sm').find('.opacity-zero').removeClass('opacity-one')
+      top === 0 && $(el).addClass('border-bottom shadow-sm').find('.opacity-zero').addClass('opacity-one')
     })
   })
 })
