@@ -13,8 +13,8 @@ const contentType = 'application/json'
 
 exports.get = function(req) {
   const map = {}
-  const part = portal.getComponent() || req
   const page = portal.getContent()
+  const part = portal.getComponent() || req
   const view = resolve('./menu-dropdown.html')
 
   const municipality = klass.getMunicipality(req)

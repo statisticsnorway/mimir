@@ -3,8 +3,8 @@
   <div class="container">
     <div class="row inner-container">
       <div class="col-12">
-        <div class="subtitle roboto-bold position-relative" data-th-if="${municipality}" data-th-text="${municipality.county.name}">Fylke</div>
-        <h1 class="mt-0 pt-0 position-relative"data-th-if="${municipality}" data-th-text="${municipality.displayName}">Navn på kommune</h1>
+        <div class="subtitle roboto-bold position-relative" data-the-text="${page.displayName}">Kommunefakta</div>
+        <h1 class="mt-0 pt-0 position-relative"data-th-if="${municipality}" data-th-text="${municipality.displayName} +'(' + ${municipality.county.name} +')'">Navn på kommune</h1>
       </div>
     </div>
   </div>

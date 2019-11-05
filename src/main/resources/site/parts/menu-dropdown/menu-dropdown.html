@@ -3,7 +3,7 @@
     <div class="row pt-3 pb-3">
       <div class="col-md-6 col-lg-8">
         <div class="opacity-zero">
-          <div class="roboto subtitle">Kommunefakta</div>
+          <div class="roboto subtitle" data-th-text="${page.displayName}"></div>
           <div class="roboto-bold municipality">
             <div data-th-if="${municipality}" data-th-text="${municipality.displayName}" data-th-remove="tag">Kommune</div>
             <div data-th-if="${municipality}" data-th-text="'('+${municipality.county.name}+')'" data-th-remove="tag">Fylke</div>

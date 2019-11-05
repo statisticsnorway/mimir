@@ -8,5 +8,4 @@ $(function() {
       top === 0 && $(el).addClass('border-bottom').find('.opacity-zero').addClass('opacity-one')
     })
   })
-
 })
