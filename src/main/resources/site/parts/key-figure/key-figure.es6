@@ -40,7 +40,7 @@ exports.get = function(req) {
         // Use saved dataset
         const data = JSON.parse(dataset.hits[0].data.json)
         const table = getTable(data.dataset)
-        item.value = table[municipality && municipality.code || item.data.default].value
+        item.value = (table[municipality && municipality.code || item.data.default] || { value: '-'}).value
         const time = data && Object.keys(data.dataset.dimension.Tid.category.index)[0]
         item.time = time
       }
