@@ -14,7 +14,7 @@ exports.get = function(req) {
   const result = content.query({ count: 999, contentTypes: [`${app.name}:dataset`] })
 
   result && result.hits.map((set) => {
-    dataset[set.data.query] = set
+    dataset[set.data.dataquery] = set
   })
 
   const dataquery = content.query({ count: 999, contentTypes: [`${app.name}:dataquery`], sort: 'displayName' })
