@@ -11,7 +11,7 @@
         }
     }
 
-    #statistikker-hovedmeny{
+    #statistikker-hovedmeny, #main-menu-top {
         a {
             color: #212529;
             outline: none;
@@ -207,59 +207,59 @@
     }
 
 
-    #letter-size {
+    // #letter-size {
 
-        * {
-            font-size: 0.9em;
-        }
+    //     * {
+    //         font-size: 0.9em;
+    //     }
 
-        ul {
-            display: inline;
-        }
+    //     ul {
+    //         display: inline;
+    //     }
 
-        li:after {
-            content: '';
-        }
-    }
+    //     li:after {
+    //         content: '';
+    //     }
+    // }
 
 
-    #global-language > div {
-        display: inline; // fixes rendering bug in ICE mode
-    }
+    // #global-language > div {
+    //     display: inline; // fixes rendering bug in ICE mode
+    // }
 
-    #sprak-bytte {
-        text-transform: none;
+    // #sprak-bytte {
+    //     text-transform: none;
 
-        &.closed {
-            position: absolute;
-            left: -9999px;
-        }
+    //     &.closed {
+    //         position: absolute;
+    //         left: -9999px;
+    //     }
 
-        &.open {
-            left: -11.07em;
-        }
+    //     &.open {
+    //         left: -11.07em;
+    //     }
 
-        .dialog-content {
-            padding: 1.429em 2.143em;
-            width: 20.71em;
-        }
+    //     .dialog-content {
+    //         padding: 1.429em 2.143em;
+    //         width: 20.71em;
+    //     }
 
-        .dialog-heading {
-            font-size: 1.143em;
-        }
+    //     .dialog-heading {
+    //         font-size: 1.143em;
+    //     }
 
-        p {
-            font-size: 0.929em;
-        }
+    //     p {
+    //         font-size: 0.929em;
+    //     }
 
-        .more-link {
-            font-size: 1em;
-            text-decoration: underline;
+    //     .more-link {
+    //         font-size: 1em;
+    //         text-decoration: underline;
 
-            &:after {
-                content: '';
-            }
-        }
-    };
+    //         &:after {
+    //             content: '';
+    //         }
+    //     }
+    // };
 
 }
