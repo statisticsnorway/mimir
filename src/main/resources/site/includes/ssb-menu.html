@@ -1,17 +1,18 @@
 <div id="header" role="banner"  data-th-attr="style=${'background-image: url(' + portal.assetUrl({'_path=top-banner.png'}) + ')'}" >
    <div class="xp-region container sitewrapper"><a id="logo" href="https://i.utv.ssb.no/" title="Gå til forsiden" accesskey="1"><img src="placeholder" data-th-attr="src=${portal.assetUrl({'_path=SSB_logo.png'})}" alt="SSB logo (Gå til forsiden)"></a>
-      <div id="global-tools">
-         <ul class="nav">
+      <div id="global-tools" class="container pr-0 py-2">
+         <ul class="nav row justify-content-end">
             <li class="sr-only"><a href="#content" tabindex="1" accesskey="s">Hopp over meny</a></li>
-            <li id="global-language" class="bubble-dialog-origin" lang="en">
-               <span class="sr-only px-2" lang="en">Switch language</span>
+            <li id="global-language" class="bubble-dialog-origin col-auto" lang="en">
+               <span class="sr-only" lang="en">Switch language</span>
                <a id="change-language" class="text-uppercase a-ssb" data-th-attr="data-exists=${page.language.exists}" data-th-href="${portal.pageUrl({'_path='+page.language.path})}" data-th-text="${page.language.phrases.language}"></a>
             </li>
-            <!-- <li id="global-cookies" class="shortcut keywords"><a id="cookies" href="/omssb/personvern/">Cookies og personvern</a></li> -->
-            <li class="px-2 text-uppercase">
+            <li class="text-uppercase col-auto">
                <a href="/a-aa" title="Stikkord A-Å">Stikkord A-Å</a>
             </li>
-            <li id="global-contact" class="text-uppercase px-2 shortcut last"><a href="/omssb/kontakt-oss" accesskey="7">Kontakt oss</a></li>
+            <li id="global-contact" class="text-uppercase col-auto pr-0">
+               <a href="/omssb/kontakt-oss" accesskey="7">Kontakt oss</a>
+            </li>
          </ul>
       </div>
       <form class="float-right" id="search" action="/sok" method="get" role="search">
@@ -28,8 +29,8 @@
                <li class="col top-level statistikk selected "><a id="statistics-menu-toggle" class="h4 text-reset text-uppercase mega-menu-toggle" href="#statistikker-hovedmeny">Statistikk</a></li>
                <li class="col top-level forskning"><a id="forskning-menu-link" class="h4 text-reset text-uppercase " href="/forskning/forskning-i-ssb">Forskning</a></li>
                <li class="col top-level innrapportering"><a href="/innrapportering" class="h4 text-reset text-uppercase" title="Innrapportering">Innrapportering</a></li>
-               <li class="col-2 top-level omssb"><a class="h4 text-reset text-nowrap text-uppercase" href="/omssb/om-oss">Om SSB</a></li>
-               <li class="col-2 top-level mittssb"><a href="/mittssb/profil" class="h4 text-reset text-nowrap text-uppercase" title="Mitt SSB ">Mitt SSB </a></li>
+               <li class="col top-level omssb"><a class="h4 text-reset text-nowrap text-uppercase" href="/omssb/om-oss">Om SSB</a></li>
+               <li class="col top-level mittssb"><a href="/mittssb/profil" class="h4 text-reset text-nowrap text-uppercase" title="Mitt SSB ">Mitt SSB </a></li>
                <!-- </div> -->
             </ul>
             <div id="statistikker-hovedmeny" class="mt-4 mb-3 mega-menu hidden-by-default d-none row" tabindex="-1">
