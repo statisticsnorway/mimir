@@ -1,7 +1,7 @@
 <section class="xp-part part-dashboard">
   <div data-th-each="item,i : ${dashboard}" class="row" data-th-appendclass="${i.index}  ? 'mt-3'">
     <div class="col-lg-8">
-      <h1 data-th-text="${item.displayName} + ' (' + ${statistikkbank.count} +  ')'"></h1>
+      <h1 data-th-text="${item.displayName} + ' (' + ${dataquery.count} +  ')'"></h1>
       <table class="table  table-bordered table-striped">
         <thead>
           <tr>
@@ -10,7 +10,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr data-th-each="set : ${statistikkbank.hits}" class="small">
+          <tr data-th-each="set : ${dataquery.hits}" class="small">
             <td>
               <div class="dataset" data-th-text="${set.displayName}" data-th-classappend="${set.class}"></div>
             </td>
