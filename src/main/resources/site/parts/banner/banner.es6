@@ -4,13 +4,11 @@ import * as thymeleaf from '/lib/thymeleaf'
 import * as klass from '/lib/klass'
 
 exports.get = function(req) {
-  // TODO: get minicipality
-  // const site = content.getSite()
-
+  const page = portal.getContent()
   const part = portal.getComponent()
   const view = resolve('./banner.html')
   const municipality = klass.getMunicipality(req)
-  const model = { part, municipality }
+  const model = { page, part, municipality }
   const body = thymeleaf.render(view, model)
 
   return { body, contentType: 'text/html' }

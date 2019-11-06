@@ -1,5 +1,19 @@
 .part-menu-dropdown {
   background-color: white;
+  .opacity-zero {
+    opacity: 0;
+  }
+  .opacity-one {
+    opacity: 1;
+    transition: all .5s;
+  }
+  .municipality {
+    font-size: 20px;
+    line-height: normal;
+  }
+  .subtitle {
+    font-size: 14px;
+  }
   .button-search {
     color: $green3;
     top: 3px;
@@ -10,9 +24,6 @@
   }
   .button-search svg {
     width: 20px;
-  }
-  h2 {
-    font-size: 28px;
   }
   .dropdown {
     left: 0;

@@ -6,13 +6,13 @@
     padding-top: 10px;
     padding-right: 20px;
     &.small {
-      width: 130px;
+      min-width: 130px;
     }
     &.medium {
-      width: 180px;
+      min-width: 180px;
     }
     &.large {
-      width: 230px;
+      min-width: 230px;
     }
   }
 }

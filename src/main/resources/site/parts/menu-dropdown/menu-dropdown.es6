@@ -1,8 +1,9 @@
-const util = require('/lib/util')
-const http = require('/lib/http-client')
-const portal = require('/lib/xp/portal')
-const content = require('/lib/xp/content')
-const thymeleaf = require('/lib/thymeleaf')
+import * as klass from '/lib/klass'
+import * as util from '/lib/util'
+import * as http from '/lib/http-client'
+import * as portal from '/lib/xp/portal'
+import * as content from '/lib/xp/content'
+import * as thymeleaf from '/lib/thymeleaf'
 
 const method = 'GET'
 const readTimeout = 5000
@@ -12,9 +13,11 @@ const contentType = 'application/json'
 
 exports.get = function(req) {
   const map = {}
-  const part = portal.getComponent() || req
   const page = portal.getContent()
+  const part = portal.getComponent() || req
   const view = resolve('./menu-dropdown.html')
+
+  const municipality = klass.getMunicipality(req)
 
   part.config.menu = util.data.forceArray(part.config.menu || part.config['menu-dropdown'] || [])
   part.config.menu.map((key) => {
@@ -22,6 +25,7 @@ exports.get = function(req) {
      if (menu && menu.data.source) {
        menu.data.source = util.data.forceArray(menu.data.source)
        menu.data.source.map((url) => {
+         // TODO: Get data from saved dataset (todo)
          const result = http.request({ url, method, headers, connectionTimeout, readTimeout, contentType })
          if (result && result.status === 200) {
            const value = JSON.parse(result.body); // semicolon required
@@ -54,7 +58,7 @@ exports.get = function(req) {
 
   // log.info(JSON.stringify(part, null, ' '))
 
-  const model = { page, part, map }
+  const model = { page, municipality, part, map }
   const body = thymeleaf.render(view, model)
 
   return { body, contentType: 'text/html' }
