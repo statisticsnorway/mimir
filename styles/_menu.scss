@@ -4,7 +4,6 @@
         border-bottom: 1px solid #dfdfdf;
         margin-bottom: 1em;
         min-height: 166px;
-        // max-width: 960px;
 
         &.menu-closed {
             background-color: white;
@@ -24,16 +23,6 @@
           }
     }
 
-    #topic-link {
-        color: #212529;
-        outline: none !important;
-        text-decoration: none;
-        &:hover {
-          color: #212529;
-          text-decoration: underline;
-        }
-      }
-
     #logo {
         display: block;
         float: left;
@@ -44,29 +33,6 @@
             image-rendering: optimizeQuality;
         }
     }
-
-    // Overrides for zoom levels
-    body.large {
-
-        #header {
-            background: url('../images/top-banner.png') no-repeat scroll center -73px #eee;
-        }
-
-        #logo {
-            margin: 30px 0 36px;
-        }
-    }
-    body.extra-large {
-
-        #header {
-            background: url('../images/top-banner.png') no-repeat scroll center -14px #eee;
-        }
-
-        #logo {
-            margin: 40px 0 64px;
-        }
-    }
-
 
     #search {
         float: right;
@@ -95,148 +61,17 @@
             color: white;
             text-transform: uppercase;
             border: 0;
-            // font-size: 1.5em;
-            // padding: 0.1em 0.6em 0.2em 0.6em;
-            // margin-left: 0.2em;
             vertical-align: middle;
         }
     }
 
     #sok {
-        // font-size: 1.4em;
-        // width: 15em;
-        // padding: 0.4em 0.2em 0.5em 2.25em;
         border: 0;
         box-shadow: 0 0 2px #888 inset;
         background: url('../images/magnifying-glass-23-21.png') no-repeat scroll 0.5em center white;
         vertical-align: middle;
     }
 
-    #sok-404 {
-        // font-size: 1.3em;
-        height: 19px;
-        // width: 23.5em;
-        border: 1px solid #808080;
-        border-right: none;
-        vertical-align: middle;
-
-        label {
-            position: absolute;
-            left: -9999px;
-        }
-
-        input[type='submit'] {
-            vertical-align: bottom;
-            height: 23px;
-            // margin-top: 0.1em;
-            // padding: 1px 6px;
-            // font-size: 0.9em;
-            text-transform: uppercase;
-            border: 1px solid #808080;
-            background: transparent url('../images/button-shade.png') repeat-x left top;
-
-            &:hover,
-            &:focus {
-                cursor: pointer;
-                border-color: #505050;
-                background-image: url('../images/button-shade-hover.png');
-            }
-        }
-    }
-
-    #global-tools {
-        margin: 1.4em 0;
-        float: right;
-
-        form {
-            margin-right: 1em;
-        }
-    }
-
-
-    ul.nav {
-        list-style-type: none;
-
-        li a {
-            text-decoration: none;
-        }
-    }
-
-    .global-links {
-
-        &.nav {
-            text-transform: uppercase;
-            font-size: 1.4em;
-
-            li {
-                display: inline;
-            }
-
-            & > li {
-                display: block;
-                float: left;
-                line-height: 1.4;
-                border-bottom: 1px solid #aaa;
-                margin-left: 1em;
-
-                &.selected {
-                    border-bottom: 0;
-                }
-            }
-
-            &.below {
-                color: #000;
-                font-size: 1.0em;
-                float: none;
-                line-height: 2.2em;
-
-                li {
-
-                    a {
-                        color: #000;
-
-                        &.selected {
-                            font-weight: bold;
-                        }
-                    }
-
-                    img {
-                        vertical-align: sub;
-                        margin-right: 0.4em;
-                    }
-                }
-            }
-        }
-
-        &.content {
-            line-height: 1.9em;
-            margin-right: 0.2em;
-
-            a.selected {
-                font-weight: bold;
-            }
-        }
-
-
-    }
-
-
-    // Zoom functionality
-    #letter-size {
-
-        li {
-            margin-left: 0;
-            line-height: 1;
-        }
-
-        .size-l {
-            font-size: 1.2em;
-        }
-
-        .size-xl {
-            font-size: 1.4em;
-        }
-    }
 
 
     #topmenu {
