@@ -16,7 +16,8 @@ const preview = [ // Parts that has preview
   `${app.name}:dashboard`,
   `${app.name}:key-figure`,
   `${app.name}:menu-dropdown`,
-  `${app.name}:statistikkbanken`
+  `${app.name}:statistikkbanken`,
+  `${app.name}:dataquery`
 ]
 
 function getBreadcrumbs(c, a) {

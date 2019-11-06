@@ -4,7 +4,7 @@ import * as util from '/lib/util'
 import * as portal from '/lib/xp/portal'
 import * as content from '/lib/xp/content'
 import * as thymeleaf from '/lib/thymeleaf'
-import * as sb from '/lib/statistikkbanken'
+import * as dataquery from '/lib/dataquery'
 import * as klass from '/lib/klass'
 
 function getTable(data, table = {}) {
@@ -32,10 +32,10 @@ exports.get = function(req) {
       return
     }
     item.data.glossary && page.glossary.push(content.get({ key: item.data.glossary }))
-    if (item.data.query) {
+    if (item.data.dataquery) {
       const selection = { filter: 'item', values: [municipality && municipality.code || item.data.default] }
-      const query = content.get({ key: item.data.query })
-      const dataset = content.query({ count: 1, contentTypes: [`${app.name}:dataset`], sort: 'createdTime DESC', query: `data.query = '${query._id}'` })
+      const query = content.get({ key: item.data.dataquery })
+      const dataset = content.query({ count: 1, contentTypes: [`${app.name}:dataset`], sort: 'createdTime DESC', query: `data.dataquery = '${query._id}'` })
       if (dataset && dataset.count) {
         // Use saved dataset
         const data = JSON.parse(dataset.hits[0].data.json)
@@ -46,7 +46,7 @@ exports.get = function(req) {
       }
       else {
         // Use direct lookup
-        const result = sb.get(query.data.table, JSON.parse(query.data.json), selection)
+        const result = dataquery.get(query.data.table, JSON.parse(query.data.json), selection)
         item.value = result.dataset.value[0]
         const time = result && Object.keys(result.dataset.dimension.Tid.category.index)[0]
         item.time = time

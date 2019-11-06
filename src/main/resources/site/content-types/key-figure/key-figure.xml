@@ -38,6 +38,14 @@
         <allowType>statistikkbanken</allowType>
       </config>
     </input>
+    <input name="dataquery" type="ContentSelector">
+      <label>Data fra spørring</label>
+      <occurrences minimum="0" maximum="1"/>
+      <config>
+        <allowPath>${site}</allowPath>
+        <allowType>dataquery</allowType>
+      </config>
+    </input>
     <input name="glossary" type="ContentSelector">
       <label>Forklaring til nøkkeltallet</label>
       <occurrences minimum="0" maximum="1"/>
