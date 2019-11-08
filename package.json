@@ -41,7 +41,7 @@
     "imagesloaded": "^4.1.4",
     "jquery": "^3.4.1",
     "jquery-ui-dist": "^1.12.1",
-    "jsonstat": "^0.13.11",
+    "jsonstat": "^0.13.13",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "numeral": "^2.0.6",

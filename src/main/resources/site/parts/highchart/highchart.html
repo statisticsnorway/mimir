@@ -1,9 +1,15 @@
 <section class="xp-part row" data-th-each="part: ${highcharts}">
+  <script th:inline="javascript">
+    /*<![CDATA[*/
+      highchart.push(/*[[${json}]]*/);
+    /*]]>*/
+  </script>
   <div class="col-12">
     <figure th:fragment="graph" class="highcharts-figure">
       <div data-th-id="highcharts- + ${part.chart._id}"
         class="highcharts-canvas"
         data-th-attr="data-contentkey=${part.chart.contentkey},
+        data-municipality=${municipality.code},
         data-type=${part.chart.type},
         data-zoomtype=${part.chart.zoomtype},
         data-creditsenabled=${part.chart.creditsenabled},

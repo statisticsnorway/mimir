@@ -15,8 +15,20 @@ $(function() {
 
   // Initialisering av HighCharts-figurer fra tilhørende HTML-tabell
   $('.highcharts-canvas[id^="highcharts-"]').each(function(index, chart) {
-    const canvas = $(chart);
-console.log(canvas)
+    let series
+    const canvas = $(chart)
+    const municipality = $(chart).attr('data-municipality')
+
+    if (typeof highchart === 'object' && highchart.length) {
+      const json = highchart[index] // NOTE: This only works if all charts on the page is dynamic data
+      const labels = JSONstat(json).Dataset(0).Dimension(2).Category() // TODO: Need to check this, we might want a label field
+      // const labels = JSONstat(json).Dataset(0).Dimension('Landbakgrunn').Category() // Method to use if we add a label field
+      const values = JSONstat(json).Dataset(0).Slice({ Region: municipality })
+      for (let i=0; i<labels.length; i++) {
+        (series || (series = [])).push({ name: labels[i].label, data: [values.value[i]] })
+      }
+    }
+
     const highchartsContentKey = canvas.data('contentkey');
 
     // Bare kjør script hvis tabellen det skal hentes data fra, eksisterer på siden
@@ -87,7 +99,8 @@ console.log(canvas)
           style: { color: '#0645AD', cursor: 'pointer', fontSize: '12px' },
           text: canvas.data('creditstext')
         },
-        data: {
+        series,
+        data: !series && {
           switchRowsAndColumns: canvas.data('switchrowsandcolumns'),
           decimalPoint: ',',
           // THIS IS WHERE WE GET THE DATA

@@ -93,17 +93,28 @@
 
     <input name="htmltabell" type="HtmlArea">
       <label>Kildetabell for Highcharts-figur</label>
-      <occurrences minimum="1" maximum="1"/>
+      <occurrences minimum="0" maximum="1"/>
       <config>
         <exclude>*</exclude>
         <include>Table | RemoveFormat | Undo Redo</include>
       </config>
       <help-text>Lim inn (Ctrl-V) en tabell rett fra Excel. Tabeller bør være så enkle som mulig (Overskrifter i første rad/kolonne og ellers bare tall, ingen spesialformatering, manglende tall må være tomme celler)</help-text>
     </input>
+
+    <input name="dataquery" type="ContentSelector">
+      <label>Spørring mot Statistikkbanken</label>
+      <occurrences minimum="0" maximum="1"/>
+      <config>
+        <allowPath>${site}</allowPath>
+        <allowType>dataquery</allowType>
+      </config>
+    </input>
+
     <input name="byttraderogkolonner" type="CheckBox">
       <label>Bytt rader og kolonner</label>
       <help-text>Bytt mellom å tolke tabelldataene horisontalt eller vertikalt før grafen tegnes, med hensyn til gruppering</help-text>
     </input>
+
     <input name="combineInfo" type="CheckBox">
       <label>Kombinere forklaringer</label>
       <help-text>Vise forklaringer til alle linjer i en mouseoverboksen</help-text>

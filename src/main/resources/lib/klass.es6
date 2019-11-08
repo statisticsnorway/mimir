@@ -14,7 +14,8 @@ exports.getMunicipality = function(req) {
   if (Object.keys(paths).length === 0) {
     const part = {}
     const page = portal.getContent()
-    const dropdown = content.query( { contentTypes: [`${app.name}:menu-dropdown`], count: 1, query: `_path LIKE '/content${page._path}/*'` })
+    const site = page._path.replace(/\/.*/, '')
+    const dropdown = content.query( { contentTypes: [`${app.name}:menu-dropdown`], count: 1, query: `_path LIKE '${site}/*'` })
     if (dropdown && dropdown.count) {
       const menu = dropdown.hits[0]
       if (menu && menu.data.source) {
@@ -48,7 +49,7 @@ exports.getMunicipality = function(req) {
     }
   }
   const name = req.path && req.path.replace(/^.*\//, '')
-  return paths[name] || paths['kongsvinger']
+  return Object.keys(paths).length && paths[name] || paths['kongsvinger']
 }
 
 exports.get = function(url) {
