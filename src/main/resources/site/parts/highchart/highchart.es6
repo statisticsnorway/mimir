@@ -1,15 +1,16 @@
-const util = require('/lib/util')
-const portal = require('/lib/xp/portal')
-const content = require('/lib/xp/content')
-const thymeleaf = require('/lib/thymeleaf')
+import * as util from '/lib/util'
+import * as klass from '/lib/klass'
+import * as portal from '/lib/xp/portal'
+import * as content from '/lib/xp/content'
+import * as thymeleaf from '/lib/thymeleaf'
 
 function initHighchart(part) {
   const _content = part.chart
   const tableRegex = /<table[^>]*>/igm
   const nbspRegexp = /&nbsp;/igm
   const replace = '<table id="highcharts-datatable-' + _content._id + '">'
-  const resultWithId = _content.data.htmltabell.replace(tableRegex, replace)
-  const resultWithoutNbsp = resultWithId.replace(nbspRegexp, '')
+  const resultWithId = _content.data.htmltabell && _content.data.htmltabell.replace(tableRegex, replace)
+  const resultWithoutNbsp = resultWithId && resultWithId.replace(nbspRegexp, '')
 
   part.chart.tableData = resultWithoutNbsp
   part.chart.contentkey = _content._id
@@ -49,19 +50,28 @@ exports.get = function(req) {
   const part = portal.getComponent() || req
   const view = resolve('./highchart.html')
   const highcharts = []
+  let json
 
-log.info(JSON.stringify(part, null, ' '))
+// log.info(JSON.stringify(part, null, ' '))
+
+  const municipality = klass.getMunicipality(req)
 
   part.config.highchart = part.config.highchart && util.data.forceArray(part.config.highchart) || []
   part.config.highchart.map((key) => {
     const highchart = { chart: content.get({ key }) }
+    if (highchart && highchart.chart.data.dataquery) {
+      // We assume dataset is produced
+      const datasets = content.query({ contentTypes: [`${app.name}:dataset`], query: `data.dataquery = '${highchart.chart.data.dataquery}'` })
+      const dataset = datasets && datasets.total && datasets.hits[0]
+      json = dataset && JSON.parse(dataset.data.json)
+    }
     highcharts.push(highchart)
     initHighchart(highchart)
   })
 
 // log.info(JSON.stringify(part, null, ' '))
 
-  const model = { part, highcharts }
+  const model = { part, highcharts, json, municipality }
   const body = thymeleaf.render(view, model)
 
   return { body, contentType: 'text/html' }

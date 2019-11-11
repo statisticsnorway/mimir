@@ -30,14 +30,6 @@
       </config>
       <default>one</default>
     </input>
-    <input name="query" type="ContentSelector">
-      <label>Spørring Statistikkbanken</label>
-      <occurrences minimum="1" maximum="1"/>
-      <config>
-        <allowPath>${site}</allowPath>
-        <allowType>statistikkbanken</allowType>
-      </config>
-    </input>
     <input name="dataquery" type="ContentSelector">
       <label>Data fra spørring</label>
       <occurrences minimum="0" maximum="1"/>

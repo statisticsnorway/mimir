@@ -16,7 +16,7 @@ $(function() {
         e.preventDefault()
         e.stopPropagation()
         $(el).toggleClass('d-none')
-        const popper = new Popper(a, el, { placement: 'bottom' })
+        new Popper(a, el, { placement: 'bottom' })
       })
     })
   })
