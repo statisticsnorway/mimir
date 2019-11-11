@@ -1,0 +1,29 @@
+.layout-ingress {
+	position: relative;
+	background-color: $ssb-dark-5;
+	min-height: 220px;
+	width: 100%;
+	margin: 0;
+	color: $ssb-white;
+	@include roboto;
+	font-size: 22px;
+
+	&:after {
+		position: absolute;
+		content: "";
+		left: 0px;
+	    right: 0px;
+	    top: 220px;
+	    border-width: 33vw 49.6vw;
+	    border-style: solid;
+	    border-color: $ssb-dark-5 rgba(0,0,0,0) rgba(0,0,0,0) $ssb-dark-5;
+
+	}
+}
+
+.ingress-container {
+	max-width: 100vw;
+	padding: 0;
+	margin: 0;
+
+}

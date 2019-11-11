@@ -1,0 +1,9 @@
+<div class="xp-layout row layout-ingress">
+  <div data-portal-region="main" class="xp-region row justify-content-center col-12 pt-5">
+    <div class="ingress-inner col-6">
+      <div data-th-each="component : ${mainRegion.components}" data-th-remove="tag">
+        <div data-portal-component="${component.path}" data-th-remove="tag" />
+      </div>
+    </div>
+  </div>
+</div>

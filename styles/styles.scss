@@ -37,6 +37,7 @@ $container-max-widths: (
 @import "./key-figures";
 @import "./menu-dropdown";
 @import "./menu";
+@import "./ingress";
 
 body {
   -moz-osx-font-smoothing: grayscale;
@@ -130,4 +131,8 @@ a.btn {
 }
 footer {
   margin-top: 40px;
+}
+
+.bkg-grey {
+  background-color: $ssb-dark-1;
 }
