@@ -8,16 +8,16 @@
             <label i18n="messageMuniciap.type">Varseltype</label>
             <occurrences minimum="0" maximum="1"/>
             <config>
-                <option value="note">Notifikasjon</option>
-                <option value="alarm">Alarm</option>
+                <option value="info">Info alarms</option>
+                <option value="warning">Error alarm</option>
             </config>
-            <default>note</default>
+            <default>info</default>
         </input>
         <input type="HtmlArea" name="message">
             <label i18n="messageMuniciap.message">Melding</label>
             <occurrences minimum="0" maximum="1"/>
         </input>
-        <input type="CustomSelector" name="municipals">
+        <input type="CustomSelector" name="municipalCodes">
             <label i18n="messageMuniciap.municipals">Hvilken kommuner gjelder meldingen</label>
             <occurrences minimum="0" maximum="0"/>
             <config>

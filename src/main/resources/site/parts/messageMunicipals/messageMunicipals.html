@@ -1,0 +1,12 @@
+<section class="xp-part container mt-md-5 pt-3">
+    <h2>Beskjeder</h2>
+    <div data-th-each="warning : ${warnings}" class="ssb-dialog" data-th-classappend="${warning.messageType}">
+        <div class="icon-panel">
+            <Icon />
+        </div>
+        <div class="dialog-content">
+            <span class="dialog-title" data-th-utext="${warning.title}">Tittel på varselen</span>
+            <msg data-th-utext="${warning.message}" data-th-remove="tag">Varseltekst kommer her</msg>
+        </div>
+    </div>
+</section>

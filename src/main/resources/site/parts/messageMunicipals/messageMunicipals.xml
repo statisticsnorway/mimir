@@ -1,0 +1,14 @@
+<part>
+    <display-name i18n="messageMunicipals.title">Kommunevarsel</display-name>
+    <discription i18n="messageMunicipals.partDescription">Vis en eller flere varslinger for denne kommunen.</discription>
+    <form>
+        <input name="menu" type="ContentSelector">
+            <label i18n="">Meny</label>
+            <occurrences minimum="1" maximum="1"/>
+            <config>
+                <allowPath>${site}</allowPath>
+                <allowType>menu-dropdown</allowType>
+            </config>
+        </input>
+    </form>
+</part>
