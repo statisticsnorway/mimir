@@ -1,5 +1,5 @@
 <section class="xp-part row" data-th-each="part: ${highcharts}">
-  <script th:inline="javascript">
+  <script data-th-if="${json}" th:inline="javascript">
     /*<![CDATA[*/
       highchart.push(/*[[${json}]]*/);
     /*]]>*/
