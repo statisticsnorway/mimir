@@ -1,6 +1,8 @@
 const { getSiteConfig } = require('/lib/xp/portal')
 const { request } = require('/lib/http-client')
+const  { newCache } = require('/lib/cache');
 
+const cache = newCache({size: 100, expire: 1000})
 
 export const list = () => importMunicipals()
 
@@ -9,15 +11,18 @@ export const query = (queryString) => importMunicipals()
 
 function importMunicipals() {
     const municipalUrlAtSSBApi = getSiteConfig().municipality;
-    const result = request({
-        url: municipalUrlAtSSBApi,
-        method: 'GET',
-        headers: {
-            'Cache-Control': 'no-cache',
-            'Accept': 'application/json'
-        },
-        connectionTimeout: 20000,
-        readTimeout: 5000
+    return cache.get('municipalsFromAPI', () => {
+        const result = request({
+            url: municipalUrlAtSSBApi,
+            method: 'GET',
+            headers: {
+                'Cache-Control': 'no-cache',
+                'Accept': 'application/json'
+            },
+            connectionTimeout: 20000,
+            readTimeout: 5000
+        })
+
+        return result.status === 200 ? JSON.parse(result.body).codes : []
     })
-    return result.status === 200 ? JSON.parse(result.body).codes : []
 }
