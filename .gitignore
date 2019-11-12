@@ -7,3 +7,6 @@ build
 .settings
 .classpath
 node_modules
+.idea/
+.enonic
+.DS_Store
