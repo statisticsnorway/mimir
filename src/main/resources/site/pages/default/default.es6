@@ -5,6 +5,7 @@ import * as thymeleaf from '/lib/thymeleaf'
 
 import * as glossary from '/lib/glossary'
 import * as language from '/lib/language'
+import * as klass from '/lib/klass'
 
 const version = '%%VERSION%%'
 const preview = [ // Parts that has preview
@@ -46,6 +47,11 @@ exports.get = function(req) {
 
   const breadcrumbs = [page]
   getBreadcrumbs(page, breadcrumbs)
+
+  // Adds municipality to breadcrumbs
+  if (!page._path.endsWith(req.path.split('/').pop()) && req.mode != 'edit' ) {
+    breadcrumbs.push({ 'displayName': klass.getMunicipality(req).name })
+  }
 
   const model = { version, ts, config, page, breadcrumbs, mainRegion }
   const body = thymeleaf.render(view, model)
