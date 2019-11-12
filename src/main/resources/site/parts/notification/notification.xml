@@ -1,0 +1,5 @@
+<part>
+    <display-name i18n="notification.title">Kommunevarsel</display-name>
+    <discription i18n="notification.partDescription">Vis en eller flere varslinger for denne kommunen.</discription>
+    <form/>
+</part>

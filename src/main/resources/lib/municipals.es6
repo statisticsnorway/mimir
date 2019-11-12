@@ -1,8 +1,9 @@
 const { getSiteConfig } = require('/lib/xp/portal')
 const { request } = require('/lib/http-client')
-const  { newCache } = require('/lib/cache');
+const { newCache } = require('/lib/cache');
 
 const cache = newCache({size: 100, expire: 1000})
+
 
 export const list = () => importMunicipals()
 
