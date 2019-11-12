@@ -21,7 +21,8 @@ $(function() {
 
     if (typeof highchart === 'object' && highchart.length) {
       const json = highchart[index] // NOTE: This only works if all charts on the page is dynamic data
-      const labels = JSONstat(json).Dataset(0).Dimension(1).Category() // TODO: Need to check this, we might want a label field
+      const dimension = JSONstat(json).Dataset(0).Dimension(1).length == 1 ? 2 : 1 // I'm just guessing here
+      const labels = JSONstat(json).Dataset(0).Dimension(dimension).Category() // TODO: Need to check this, we might want a label field
       // const labels = JSONstat(json).Dataset(0).Dimension('Landbakgrunn').Category() // Method to use if we add a label field
       const values = JSONstat(json).Dataset(0).Slice({ Region: municipality })
       for (let i=0; i<labels.length; i++) {
