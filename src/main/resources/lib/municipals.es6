@@ -1,5 +1,5 @@
-const { getSiteConfig } = require('/lib/xp/portal')
-const { getChildren } = require('/lib/xp/content')
+import { getSiteConfig } from '/lib/xp/portal'
+import { getChildren } from '/lib/xp/content'
 
 /**
  * @return {array} Returns everything in the "code" node from ssb api

@@ -1,5 +1,5 @@
-const { getSiteConfig } = require('/lib/xp/portal')
-const { newCache } = require('/lib/cache');
+import { getSiteConfig } from'/lib/xp/portal'
+import { getChildren } from'/lib/xp/content'
 
 /**
  *

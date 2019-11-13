@@ -1,9 +1,9 @@
-const { getMunicipality } = require( '/lib/klass')
-const { getContent } = require('/lib/xp/portal')
-const { render } = require('/lib/thymeleaf')
-const { list: municipalityList, createPath } = require('/lib/municipals')
-const { list: countyList } = require('/lib/counties')
-const { newCache } = require('/lib/cache')
+import { getMunicipality } from  '/lib/klass'
+import { getContent } from '/lib/xp/portal'
+import { render } from '/lib/thymeleaf'
+import { list: municipalityList, createPath } from '/lib/municipals'
+import { list: countyList } from '/lib/counties'
+import { newCache } from '/lib/cache'
 
 const view = resolve('./menu-dropdown.html')
 const cache = newCache({ size: 100, expire: 3600 })
