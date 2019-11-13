@@ -8,6 +8,7 @@ import * as language from '/lib/language'
 
 const version = '%%VERSION%%'
 const preview = [ // Parts that has preview
+  `${app.name}:map`,
   `${app.name}:button`,
   `${app.name}:menu-box`,
   `${app.name}:glossary`,

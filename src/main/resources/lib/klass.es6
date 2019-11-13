@@ -4,6 +4,7 @@ import * as portal from '/lib/xp/portal'
 import * as content from '/lib/xp/content'
 
 const paths = {}
+const codes = {}
 const method = 'GET'
 const readTimeout = 5000
 const connectionTimeout = 20000
@@ -43,10 +44,14 @@ exports.getMunicipality = function(req) {
             municipality.path = municipality.path.replace(/ /g, '-').replace(/-+/g, '-').toLowerCase()
             municipality.path = municipality.path.replace(/å/g, 'a').replace(/æ/g, 'ae').replace(/á/g, 'a').replace(/ø/g, 'o')
             paths[municipality.path] = municipality
+            codes[municipality.code] = municipality
           })
         }
       }
     }
+  }
+  if (req.code) {
+    return codes[req.code]
   }
   const name = req.path && req.path.replace(/^.*\//, '')
   return Object.keys(paths).length && paths[name] || paths['kongsvinger']
