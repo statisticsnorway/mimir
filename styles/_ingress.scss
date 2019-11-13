@@ -1,7 +1,7 @@
 .layout-ingress {
 	position: relative;
 	background-color: $ssb-dark-5;
-	min-height: 220px;
+	height: 230px;
 	width: 100%;
 	margin: 0;
 	color: $ssb-white;
@@ -13,7 +13,7 @@
 		content: "";
 		left: 0px;
 	    right: 0px;
-	    top: 220px;
+	    top: 230px;
 	    border-width: 33vw 49.6vw;
 	    border-style: solid;
 	    border-color: $ssb-dark-5 rgba(0,0,0,0) rgba(0,0,0,0) $ssb-dark-5;
