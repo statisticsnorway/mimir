@@ -29,8 +29,24 @@ function getBreadcrumbs(c, a) {
 }
 
 exports.get = function(req) {
+  let child
+  // const same = content.get({ key: '49311aca-42f8-4b52-ae8b-d3857ee076df' }) // portal.getContent()
+  const same = content.get({ key: 'f1d2436a-65dc-4fa4-8890-936654f4b8d1' }) // portal.getContent()
+  const parent = portal.getContent()
+/*
+  if (parent.type == `${app.name}:page` && parent._path.replace(/^.*\//, '') != req.path.replace(/^.*\//, '')) {
+log.info('-- get page --')
+log.info(req.path.replace(/^.*\//, ''))
+    child = content.query({ contentTypes: [`${app.name}:page`], query: `_path LIKE '/content${parent._path}/*'` }).hits[0]
+  }
+*/
+
   const ts = new Date().getTime()
-  const page = portal.getContent()
+  const page = same || parent || child ||parent
+log.info('-- main --')
+log.info(JSON.stringify(page, null, ' '))
+log.info('-- same --')
+log.info(JSON.stringify(same, null, ' '))
   const isFragment = page.type === 'portal:fragment'
   const mainRegion = isFragment ? null : page.page && page.page.regions && page.page.regions.main
   const config = {}
