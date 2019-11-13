@@ -9,6 +9,7 @@ import * as klass from '/lib/klass'
 
 const version = '%%VERSION%%'
 const preview = [ // Parts that has preview
+  `${app.name}:map`,
   `${app.name}:button`,
   `${app.name}:menu-box`,
   `${app.name}:glossary`,
