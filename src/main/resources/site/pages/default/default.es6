@@ -2,6 +2,7 @@
 import * as content from '/lib/xp/content'
 import * as portal from '/lib/xp/portal'
 import * as thymeleaf from '/lib/thymeleaf'
+import * as klass from '/lib/klass'
 
 import * as glossary from '/lib/glossary'
 import * as language from '/lib/language'
@@ -59,6 +60,10 @@ log.info(req.path.replace(/^.*\//, ''))
 
   const breadcrumbs = [page]
   getBreadcrumbs(page, breadcrumbs)
+
+  if (!page._path.endsWith(req.path.split('/').pop()) && req.mode != 'edit' ) {
+    breadcrumbs.push({ 'displayName': klass.getMunicipality(req).name })
+  }
 
   const model = { version, ts, config, page, breadcrumbs, mainRegion }
   const body = thymeleaf.render(view, model)
