@@ -1,10 +1,6 @@
+// Related to map content type and map part
+// Draws a map with highchart on json files located in assets/mapdata - static files for map
 $(function() {
-  /* KOMMUNEPROFILEN */
-
-  // Vise kart
-  // $('#map').highcharts().reflow()
-  // $('html, body').animate({ scrollTop: 0 }, 1000)
-
   // Highmap kommunefakta
   $('#map').each((i, map) => {
     const path = $(map).attr('data-path')
