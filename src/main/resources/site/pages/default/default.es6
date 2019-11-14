@@ -34,6 +34,8 @@ exports.get = function(req) {
   // TODO: Make this work
   let child
   if (parent.type == `${app.name}:page` && parent._path.replace(/^.*\//, '') != req.path.replace(/^.*\//, '')) {
+log.info('-- get page --')
+log.info(req.path.replace(/^.*\//, ''))
     child = content.query({ contentTypes: [`${app.name}:page`], query: `_path LIKE '/content${parent._path}/*'` }).hits[0]
   }
 */
