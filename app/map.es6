@@ -19,7 +19,6 @@ $(function() {
         el.drilldown = el.properties.FYLKE
         el.value = i
       })
-console.log(data)
 
       // Instanciate the map
       Highcharts.mapChart('map', {
@@ -28,7 +27,6 @@ console.log(data)
           backgroundColor: '#f0f7f9',
           events: {
             drilldown: function(e) {
-console.log('-- drilldown --')
               if (!e.seriesOptions) {
                 var chart = this
                 var mapKey = 'no-fylke-' + e.point.drilldown
