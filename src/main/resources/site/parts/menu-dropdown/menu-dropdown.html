@@ -24,7 +24,7 @@
                   <a class="dropdown-item a-plain option-list-element" data-th-each="municipality: ${municipalities}"
                     data-th-href="${portal.pageUrl({'_id='+page._id})} + ${municipality.path}"
                     data-th-text="${municipality.displayName}"
-                    data-th-attr="data-text=${municipality.code} + ' ' +  ${municipality.displayName} + ' ' + ${municipality.county.name}">Oslo
+                    data-th-attr="data-text=${municipality.displayName} + ' ' +  ${municipality.code} + ' ' + ${municipality.county.name}">Oslo
                   </a>
                 </div>
               </div>
