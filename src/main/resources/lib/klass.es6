@@ -4,6 +4,7 @@ import * as portal from '/lib/xp/portal'
 import * as content from '/lib/xp/content'
 
 const paths = {}
+const codes = {}
 const method = 'GET'
 const readTimeout = 5000
 const connectionTimeout = 20000
@@ -20,7 +21,7 @@ exports.getMunicipality = function(req) {
       const menu = dropdown.hits[0]
       if (menu && menu.data.source) {
         menu.data.source = util.data.forceArray(menu.data.source)
-        menu.data.source.map((url) => {
+        menu.data.source.forEach((url) => {
           const result = http.request({ url, method, headers, connectionTimeout, readTimeout, contentType })
           if (result && result.status === 200) {
             const value = JSON.parse(result.body); // semicolon required
@@ -32,9 +33,9 @@ exports.getMunicipality = function(req) {
           const count = {}
           const municipalities = part.values[0] // inferred
           const counties = part.values[1] // inferred
-          counties.codes.map((county) => map[county.code] = county)
-          municipalities.codes.map((municipality) => count[municipality.name] = typeof count[municipality.name] === 'undefined' ? 1 : count[municipality.name] + 1)
-          municipalities.codes.map((municipality) => {
+          counties.codes.forEach((county) => map[county.code] = county)
+          municipalities.codes.forEach((municipality) => count[municipality.name] = typeof count[municipality.name] === 'undefined' ? 1 : count[municipality.name] + 1)
+          municipalities.codes.forEach((municipality) => {
             municipality.count = count[municipality.name]
             municipality.countyCode = municipality.code.replace(/^(\d\d).*$/, '$1')
             municipality.county = map[municipality.countyCode]
@@ -43,10 +44,14 @@ exports.getMunicipality = function(req) {
             municipality.path = municipality.path.replace(/ /g, '-').replace(/-+/g, '-').toLowerCase()
             municipality.path = municipality.path.replace(/å/g, 'a').replace(/æ/g, 'ae').replace(/á/g, 'a').replace(/ø/g, 'o')
             paths[municipality.path] = municipality
+            codes[municipality.code] = municipality
           })
         }
       }
     }
+  }
+  if (req.code) {
+    return codes[req.code]
   }
   const name = req.path && req.path.replace(/^.*\//, '')
   return Object.keys(paths).length && paths[name] || paths['kongsvinger']
