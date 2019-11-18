@@ -57,7 +57,40 @@ exports.getMunicipality = function(req) {
   return Object.keys(paths).length && paths[name] || paths['kongsvinger']
 }
 
-exports.get = function(url) {
-  // TODO: Cache result
-  return http.request({ url, method, headers, connectionTimeout, readTimeout, body: JSON.stringify(json, null, ''), contentType })
+
+exports.get = function(url, json = undefined, selection = { filter: 'all', values: ['*'] }) {
+  if (json && json.query) {
+    for (const query of json.query) {
+      if (query.code === 'Region') {
+        query.selection = selection
+      }
+    }
+  }
+  const method = json && json.query ? 'POST' : 'GET'
+  const result = http.request({ url, method, headers, connectionTimeout, readTimeout, body: JSON.stringify(json, null, ''), contentType })
+  result.status !== 200 && log.error(`HTTP ${url} (${result.status} ${result.message})`)
+  result.status !== 200 && log.info(JSON.stringify(json, null, ' '))
+  result.status !== 200 && log.info(JSON.stringify(result, null, ' '))
+  return result.status === 200 && JSON.parse(result.body)
+}
+
+
+
+/**
+ * Parse a dataset into this structure { 0213: { label: "toten", value: 13434 }}
+ * @param {*} data
+ * @param {*} table
+ * @return {object}
+ */
+exports.datasetToMunicipalityWithValues = function(data, table = {}) {
+  const labels = data.dimension[Object.keys(data.dimension)[0]].category.label
+  const categories = data.dimension[Object.keys(data.dimension)[0]].category
+
+  for (const key in labels) {
+    if (labels.hasOwnProperty(key)) {
+      const i = categories.index[key]
+      table[key] = { label: labels[key], value: data.value[i] }
+    }
+  }
+  return table
 }

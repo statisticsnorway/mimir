@@ -1,4 +1,3 @@
-// import * as http from '/lib/http-client'
 import * as content from '/lib/xp/content'
 import * as portal from '/lib/xp/portal'
 import * as thymeleaf from '/lib/thymeleaf'
@@ -31,16 +30,6 @@ function getBreadcrumbs(c, a) {
 exports.get = function(req) {
   const parent = portal.getContent()
 
-/*
-  // TODO: Make this work
-  let child
-  if (parent.type == `${app.name}:page` && parent._path.replace(/^.*\//, '') != req.path.replace(/^.*\//, '')) {
-log.info('-- get page --')
-log.info(req.path.replace(/^.*\//, ''))
-    child = content.query({ contentTypes: [`${app.name}:page`], query: `_path LIKE '/content${parent._path}/*'` }).hits[0]
-  }
-*/
-
   const ts = new Date().getTime()
   const page = parent // || TODO: add child
   const isFragment = page.type === 'portal:fragment'
@@ -49,7 +38,7 @@ log.info(req.path.replace(/^.*\//, ''))
   const view = resolve('default.html')
 
   page.language = language.getLanguage(page)
-  page.glossary = glossary.process(page)
+  const glossaryContent = glossary.process(page)
 
   // Create preview if available
   if (preview.indexOf(page.type) >= 0) {
@@ -65,7 +54,7 @@ log.info(req.path.replace(/^.*\//, ''))
     breadcrumbs.push({ 'displayName': klass.getMunicipality(req).name })
   }
 
-  const model = { version, ts, config, page, breadcrumbs, mainRegion }
+  const model = { version, ts, config, page, glossary: glossaryContent, breadcrumbs, mainRegion }
   const body = thymeleaf.render(view, model)
 
   return { body }

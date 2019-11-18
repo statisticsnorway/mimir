@@ -1,63 +1,52 @@
-const numeral = require('/lib/numeral')
+import { forceArray } from '/lib/util/data'
+import { getComponent } from '/lib/xp/portal'
+import { render } from '/lib/thymeleaf'
+import { getMunicipality } from '/lib/klass'
+import { get as getKeyFigure } from '/lib/mimir/key-figure'
+import { parseGlossaryContent } from '/lib/mimir/glossary'
+import { parseMunicipalityValues } from '/lib/municipals'
 
-import * as util from '/lib/util'
-import * as portal from '/lib/xp/portal'
-import * as content from '/lib/xp/content'
-import * as thymeleaf from '/lib/thymeleaf'
-import * as dataquery from '/lib/dataquery'
-import * as klass from '/lib/klass'
-
-function getTable(data, table = {}) {
-  const dimension = data.dimension['KOKkommuneregion0000'] ? 'KOKkommuneregion0000' : Object.keys(data.dimension)[0]
-  for (const key in data.dimension[dimension].category.label) {
-    if (data.dimension[dimension].category.label.hasOwnProperty(key)) {
-       const i = data.dimension[dimension].category.index[key]
-       table[key] = { label: data.dimension[dimension].category.label[key], value: data.value[i] }
-    }
-  }
-  return table
-}
+const view = resolve('./key-figure.html')
 
 exports.get = function(req) {
-  const page = { glossary: [] }
-  const part = portal.getComponent() || req
-  const view = resolve('./key-figure.html')
+  const municipality = getMunicipality(req)
+  const part = getComponent();
+  const keyFigureIds = part ? part.config.figure : req.config['key-figure']
 
-  const municipality = klass.getMunicipality(req)
+  if (keyFigureIds) {
+    const keyFigures = forceArray(keyFigureIds).reduce((accumulator, key) => {
+      return key ? accumulator.concat(getKeyFigure({key})) : accumulator
+    }, [])
 
-  part.config.figure = util.data.forceArray(part.config.figure || part.config['key-figure'] || [])
-  part.config.figure.map((key) => {
-    const item = content.get({ key })
-    if (!item) {
-      return
+    const parsedKeyFigureData = keyFigures.map((keyFigure) => {
+      const dataSet = keyFigure.data.dataquery ? parseMunicipalityValues(keyFigure.data.dataquery, municipality): {}
+      const glossaryId = keyFigure.data.glossary ? keyFigure.data.glossary : undefined
+      return {
+        displayName: keyFigure.displayName,
+        ...keyFigure.data,
+       ...dataSet,
+        glossaryId
+       }
+    });
+
+    const glossary = keyFigures.filter( (keyfigure) => keyfigure.data.glossary).map( (keyFigure) => parseGlossaryContent({key: keyFigure.data.glossary}) )
+
+    const model = {
+      title: part ? part.config.title : undefined,
+      source: part ? part.config.source : undefined,
+      data: parsedKeyFigureData,
+      glossary
     }
-    item.data.glossary && page.glossary.push(content.get({ key: item.data.glossary }))
-    if (item.data.dataquery) {
-      const selection = { filter: 'item', values: [municipality && municipality.code || item.data.default] }
-      const query = content.get({ key: item.data.dataquery })
-      const dataset = content.query({ count: 1, contentTypes: [`${app.name}:dataset`], sort: 'createdTime DESC', query: `data.dataquery = '${query._id}'` })
-      if (dataset && dataset.count) {
-        // Use saved dataset
-        const data = JSON.parse(dataset.hits[0].data.json)
-        const table = getTable(data.dataset)
-        item.value = (table[municipality && municipality.code || item.data.default] || { value: '-'}).value
-        const time = data && Object.keys(data.dataset.dimension.Tid.category.index)[0]
-        item.time = time
-      }
-      else {
-        // Use direct lookup
-        const result = dataquery.get(query.data.table, JSON.parse(query.data.json), selection)
-        item.value = result.dataset.value[0]
-        const time = result && Object.keys(result.dataset.dimension.Tid.category.index)[0]
-        item.time = time
-      }
-      item.valueHumanReadable = item.value && (item.value > 999 ? numeral(item.value).format('0,0').replace(/,/, '&thinsp;') : item.value.toString().replace(/\./, ','))
+
+    return {
+      body: render(view, model),
+      contentType: 'text/html'
     }
-    (part.data || (part.data = [])).push(item)
-  })
-
-  const model = { page, part }
-  const body = thymeleaf.render(view, model)
-
-  return { body, contentType: 'text/html' }
+  }
+  else {
+    return {
+      body: ''
+    }
+  }
 }
+

@@ -2,7 +2,7 @@ import * as util from '/lib/util'
 import * as portal from '/lib/xp/portal'
 import * as content from '/lib/xp/content'
 import * as thymeleaf from '/lib/thymeleaf'
-import * as dataquery from '/lib/dataquery'
+import * as klass from '/lib/klass'
 
 function getTable(data, table = []) {
   if (data) {
@@ -17,19 +17,17 @@ function getTable(data, table = []) {
   return table
 }
 
+const view = resolve('./dataquery.html')
+
 exports.get = function(req) {
   const part = portal.getComponent() || req
-  const view = resolve('./dataquery.html')
   const dataqueries = []
 
   part.config.dataquery = part.config.dataquery && util.data.forceArray(part.config.dataquery) || []
-log.info('-- dataquery preview --')
-log.info(JSON.stringify(part, null, ' '))
   part.config.dataquery.map((key) => {
      const api = content.get({ key })
      if (api.data.table) {
-       api.result = dataquery.get(api.data.table, api.data.json && JSON.parse(api.data.json))
-log.info(JSON.stringify(api, null, ' '))
+       api.result = klass.get(api.data.table, api.data.json && JSON.parse(api.data.json))
        api.table = getTable(api.result.dataset)
        api.time = api.result && api.result.dataset && Object.keys(api.result.dataset.dimension.Tid.category.index)[0]
        const contentsCode = api.result && api.result.dataset && Object.keys(api.result.dataset.dimension.ContentsCode.category.index)[0]

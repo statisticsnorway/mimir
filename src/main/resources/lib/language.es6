@@ -34,8 +34,48 @@ exports.getLanguage = function(page) {
 
   result.exists = content.exists({ key: result.path })
 
-// log.info(JSON.stringify(result, null, ' '))
-
   return result
 }
 
+/**
+ * Checks if the time is a year (four digits), if not parse it.
+ * @param {string} time
+ * @return {string}
+ */
+exports.localizeTimePeriod = (time) => {
+    return time.length === 4 ?  time : parseTimeInterval(time)
+}
+
+/**
+ * Parse date standard from statistikkbanken into localized human readable value
+ * The standard is documented here:
+ * https://www.scb.se/en/services/statistical-programs-for-px-files/px-web/px-web-med-sql-databas/
+ *
+ * @param time
+ * @return {string}
+ */
+function parseTimeInterval(time){
+    const splitYearLetterNumberIntoArray = new RegExp(/(\d{4})([HKMTU])(\d{1,2})/)
+    const interval = splitYearLetterNumberIntoArray.exec(time)
+
+    let parsedTime = ""
+    switch(interval[2]){
+        case 'H':
+            parsedTime = `${interval[1]} ${i18n.localize({key: 'interval.' + interval[2]})}`
+            break;
+        case 'K':
+            log.info(i18n.localize({key: 'interval.' + interval[2]}))
+            parsedTime = `${interval[1]} ${interval[3]}. ${i18n.localize({key: 'interval.' + interval[2]})}`
+            break;
+        case 'M':
+            parsedTime = `${interval[1]} ${i18n.localize({key: 'interval.M' + interval[2]})}`
+            break;
+        case 'T':
+            parsedTime = `${interval[1]} ${interval[3]}. ${i18n.localize({key: 'interval.' + interval[2]})}`
+            break;
+        case 'U':
+            parsedTime = `${interval[1]} ${interval[3]}`
+            break;
+    }
+    return parsedTime;
+}

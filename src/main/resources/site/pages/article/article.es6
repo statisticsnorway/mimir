@@ -25,7 +25,7 @@ exports.get = function(req) {
   const view = resolve('article.html')
 
   page.language = language.getLanguage(page)
-  page.glossary = glossary.process(page)
+  const glossaryContent = glossary.process(page)
 
   // Create preview
   if (page.type === `${app.name}:accordion` || page.type === `${app.name}:menu-box` || page.type === `${app.name}:button` ||
@@ -44,7 +44,7 @@ exports.get = function(req) {
   page.displayNameURLencoded = encodeURI(page.displayName)
   page.url = encodeURI(portal.pageUrl({ type: 'absolute', id: page._id }))
 
-  const model = { version, ts, config, page, breadcrumbs, mainRegion, bottomRegion, publishedDatetime, modifiedDatetime }
+  const model = { version, ts, config, page, glossary: glossaryContent, breadcrumbs, mainRegion, bottomRegion, publishedDatetime, modifiedDatetime }
   const body = thymeleaf.render(view, model)
 
   return { body }

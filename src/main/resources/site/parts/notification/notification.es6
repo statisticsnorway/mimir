@@ -1,6 +1,6 @@
-const { getMunicipality } = require( "/lib/klass")
-const { query } = require('/lib/xp/content')
-const { render } = require('/lib/thymeleaf')
+import { getMunicipality } from '/lib/klass'
+import { query } from '/lib/xp/content'
+import { render } from '/lib/thymeleaf'
 
 const view = resolve('notification.html')
 

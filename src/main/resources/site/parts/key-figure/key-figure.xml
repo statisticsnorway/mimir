@@ -7,7 +7,7 @@
     </input>
     <input name="figure" type="ContentSelector">
       <label>Nøkkeltall</label>
-      <occurrences minimum="0" maximum="0"/>
+      <occurrences minimum="0" maximum="1"/>
       <config>
         <allowPath>${site}</allowPath>
         <allowType>key-figure</allowType>

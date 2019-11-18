@@ -1,6 +1,6 @@
 import * as content from '/lib/xp/content'
 import * as context from '/lib/xp/context'
-import * as dataquery from '/lib/dataquery'
+import * as klass from '/lib/klass'
 
 const cron = require('/lib/cron')
 const user = { login: 'su', userStore: 'system' }
@@ -15,7 +15,7 @@ function job() {
   log.info('-- Running datquery cron job  --')
   const result = content.query({ count: 999, contentTypes: [`${app.name}:dataquery`], query: `data.table LIKE 'http*'` })
   result && result.hits.map((row) => {
-    const data = dataquery.get(row.data.table, row.data.json && JSON.parse(row.data.json))
+    const data = klass.get(row.data.table, row.data.json && JSON.parse(row.data.json))
     data && context.run(draft, () => {
       const now = moment().format('DD.MM.YYYY HH:mm:ss')
       const datasets = content.query({ count: 1, contentTypes: [`${app.name}:dataset`], sort: 'createdTime DESC', query: `data.dataquery = '${row._id}'` })
