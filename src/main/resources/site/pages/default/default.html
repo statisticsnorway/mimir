@@ -2,8 +2,14 @@
 <html data-th-lang="${page.language.code}">
 <head>
   <script async data-th-if="${config.GA_TRACKING_ID}" data-th-src="|https://www.googletagmanager.com/gtag/js?id=${config.GA_TRACKING_ID}|"></script>
+  <script th:inline="javascript">
+    /*<![CDATA[*/
+    var highchart = []
+    /*]]>*/
+  </script>
   <script th:inline="javascript" data-th-if="${config.GA_TRACKING_ID}">
     /*<![CDATA[*/
+    var highchart = {}
     <!-- Global site tag (gtag.js) - Google Analytics -->
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}

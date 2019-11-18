@@ -1,4 +1,5 @@
 // HIGHCHART
+let hdata
 $(function() {
   const w = { height: $(window).height().toFixed(0), width: $(window).width().toFixed(0) };
 
@@ -15,8 +16,25 @@ $(function() {
 
   // Initialisering av HighCharts-figurer fra tilhørende HTML-tabell
   $('.highcharts-canvas[id^="highcharts-"]').each(function(index, chart) {
-    const canvas = $(chart);
-console.log(canvas)
+    let series
+    let slices
+    const canvas = $(chart)
+    const municipality = $(chart).attr('data-municipality')
+
+    if (typeof highchart === 'object' && highchart.length) {
+      const json = highchart[index] // NOTE: This only works if all charts on the page is dynamic data
+
+      const dimension = JSONstat(json).Dataset(0).Dimension(1).length == 1 ? 2 : 1 // I'm just guessing here
+      const labels = JSONstat(json).Dataset(0).Dimension(dimension).Category() // TODO: Need to check this, we might want a label field
+      // const labels = JSONstat(json).Dataset(0).Dimension('Landbakgrunn').Category() // Method to use if we add a label field
+      const values = JSONstat(json).Dataset(0).Slice({ Region: municipality }) || JSONstat(json).Dataset(0).Slice({ KOKkommuneregion0000: municipality })
+      for (let i=0; i<labels.length; i++) {
+        (series || (series = [])).push({ name: labels[i].label, data: [values.value[i]] });
+        (slices || (slices = [])).push({ name: labels[i].label, y: values.value[i] });
+      }
+      series = canvas.data('type') == 'pie' || canvas.data('switchrowsandcolumns')?  [{ data: slices }] : series
+    }
+
     const highchartsContentKey = canvas.data('contentkey');
 
     // Bare kjør script hvis tabellen det skal hentes data fra, eksisterer på siden
@@ -87,7 +105,8 @@ console.log(canvas)
           style: { color: '#0645AD', cursor: 'pointer', fontSize: '12px' },
           text: canvas.data('creditstext')
         },
-        data: {
+        series,
+        data: !series && {
           switchRowsAndColumns: canvas.data('switchrowsandcolumns'),
           decimalPoint: ',',
           // THIS IS WHERE WE GET THE DATA
@@ -148,25 +167,25 @@ console.log(canvas)
             },
             showInLegend: (canvas.data('pielegendunder') == 'under') ? true : false
           },
-        series: {
-          events: {
-            // Keyboard-accessible legend labels
-            legendItemClick: function(e) {
-              // Possible bug: untested browser support for browserEvent (but works in IE8, chrome, FF...)
-              $(e.browserEvent.target).toggleClass('disabled');
-            }
-          },
-          marker: {
-            enabledThreshold: 15
-          },
-          stacking: canvas.data('plotoptionsseriesstacking'),
-          states: {
-            hover: {
-              // Since marker: enabled has been set to false, lineWidth needs to be thicker than the default 2 in order to improve accessibility
-              lineWidth: 4
-            }
-          }
-        }
+          series: {
+            events: {
+              // Keyboard-accessible legend labels
+              legendItemClick: function(e) {
+                // Possible bug: untested browser support for browserEvent (but works in IE8, chrome, FF...)
+                $(e.browserEvent.target).toggleClass('disabled');
+              }
+            },
+            marker: {
+              enabledThreshold: 15
+            },
+           stacking: canvas.data('plotoptionsseriesstacking'),
+           states: {
+             hover: {
+                // Since marker: enabled has been set to false, lineWidth needs to be thicker than the default 2 in order to improve accessibility
+               lineWidth: 4
+             }
+           }
+         }
       },
       subtitle: {
         align: canvas.data('title-center'),

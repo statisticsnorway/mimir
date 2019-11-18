@@ -30,14 +30,6 @@
       </config>
       <default>one</default>
     </input>
-    <input name="query" type="ContentSelector">
-      <label>Spørring Statistikkbanken</label>
-      <occurrences minimum="1" maximum="1"/>
-      <config>
-        <allowPath>${site}</allowPath>
-        <allowType>statistikkbanken</allowType>
-      </config>
-    </input>
     <input name="dataquery" type="ContentSelector">
       <label>Data fra spørring</label>
       <occurrences minimum="0" maximum="1"/>
@@ -54,5 +46,19 @@
         <allowType>glossary</allowType>
       </config>
     </input>
+    <item-set name="source">
+      <occurrences minimum="0" maximum="1"/>
+      <label>Kilde</label>
+      <items>
+        <input type="TextLine" name="title">
+          <label>Tittel</label>
+          <occurrences minimum="0" maximum="1"/>
+        </input>
+        <input type="TextLine" name="url">
+          <label>URL</label>
+          <occurrences minimum="0" maximum="1"/>
+        </input>
+      </items>
+    </item-set>
   </form>
 </content-type>

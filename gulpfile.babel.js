@@ -31,8 +31,11 @@ const path = {
       'node_modules/bootstrap/dist/js/bootstrap.min.js',
       'node_modules/axios/dist/axios.min.js', // Ajax as promise
       'node_modules/highcharts/highcharts.js',
+      'node_modules/highcharts/modules/map.js',
+      'node_modules/highcharts/modules/drilldown.js',
       'node_modules/highcharts/modules/exporting.js',
       'node_modules/highcharts/modules/data.js',
+      'node_modules/jsonstat/json-stat.js',
       'dist/main.js'
     ]
   },
