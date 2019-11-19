@@ -1,5 +1,5 @@
 <layout>
-  <display-name>Ingress mørk</display-name>
+  <display-name>Ingress</display-name>
   <description>Ingress med mørk og skrå bakgrunn</description>
   <form>
     <input type="TextLine" name="title">
