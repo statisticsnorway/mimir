@@ -1,6 +1,9 @@
 .border-top-green {
   padding-top: 20px;
   border-top: 5px solid $green3;
+  background: #ffffff;
+  box-shadow: 1px 1px 5px #c8c8c8;
+  margin-top: 30px;
 }
 .layout-topic+.layout-topic {
   margin-top: 40px;
