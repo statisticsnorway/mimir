@@ -21,8 +21,6 @@ exports.get = function(req) {
     }
   })
 
-  // log.info(JSON.stringify(datasets, null, ' '))
-
   const model = { datasets }
   const body = thymeleaf.render(view, model)
 
