@@ -4,17 +4,19 @@ import * as content from '/lib/xp/content'
 import * as thymeleaf from '/lib/thymeleaf'
 
 exports.get = function(req) {
+  const page = portal.getContent()
   const part = portal.getComponent() || req
   const view = resolve('./map.html')
   const maps = []
 
   part.config.map = part.config.map && util.data.forceArray(part.config.map) || []
   part.config.map.map((key) => {
-     const map = content.get({ key })
-     maps.push(map)
+    const map = content.get({ key })
+    maps.push(map)
   })
 
-  const model = { part, maps }
+  const mode = req.mode === 'edit' && 'edit' || page._path.endsWith(req.path.split('/').pop()) ? 'map' : 'municipality'
+  const model = { part, maps, mode }
   const body = thymeleaf.render(view, model)
 
   return { body, contentType: 'text/html' }

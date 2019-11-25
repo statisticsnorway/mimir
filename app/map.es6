@@ -24,9 +24,9 @@ $(function() {
           events: {
             drilldown: function(e) {
               if (!e.seriesOptions) {
-                var chart = this
-                var mapKey = 'no-fylke-' + e.point.drilldown
-                var fail = setTimeout(function() {
+                const chart = this
+                const mapKey = 'no-fylke-' + e.point.drilldown
+                const fail = setTimeout(function() {
                     if (!Highcharts.maps[mapKey]) {
                       chart.showLoading('<i class="icon-frown"></i> Failed loading ' + e.point.name);
                       fail = setTimeout(function() {
