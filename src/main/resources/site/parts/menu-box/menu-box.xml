@@ -1,5 +1,6 @@
 <part>
   <display-name>Boksmeny</display-name>
+  <description>En sticky-meny med Kommue, fylkenavn og en dropdown-meny med søk.</description>
   <form>
     <input name="menu" type="ContentSelector">
       <label>Boks</label>

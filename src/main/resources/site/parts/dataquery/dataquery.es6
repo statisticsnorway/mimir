@@ -23,13 +23,11 @@ exports.get = function(req) {
   const dataqueries = []
 
   part.config.dataquery = part.config.dataquery && util.data.forceArray(part.config.dataquery) || []
-log.info('-- dataquery preview --')
-log.info(JSON.stringify(part, null, ' '))
+
   part.config.dataquery.map((key) => {
      const api = content.get({ key })
      if (api.data.table) {
        api.result = dataquery.get(api.data.table, api.data.json && JSON.parse(api.data.json))
-log.info(JSON.stringify(api, null, ' '))
        api.table = getTable(api.result.dataset)
        api.time = api.result && api.result.dataset && Object.keys(api.result.dataset.dimension.Tid.category.index)[0]
        const contentsCode = api.result && api.result.dataset && Object.keys(api.result.dataset.dimension.ContentsCode.category.index)[0]
