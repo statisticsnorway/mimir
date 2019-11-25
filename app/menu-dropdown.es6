@@ -1,6 +1,13 @@
 // Belongs to part menu-dropdown
 // - adds visibility class for muncipality when on top of page (sticky part of page)
 $(function() {
+  const map = $('.js-part-map')
+  $('#js-show-map').click((e) => {
+console.log('-- you clicked me --')
+console.log(map)
+    e.preventDefault()
+    map.toggleClass('d-none').toggleClass('position-absolute')
+  })
   $('.part-menu-dropdown').each((i, el) => {
     $(window).scroll((e) => {
       const { top } = el.getBoundingClientRect()
