@@ -52,9 +52,7 @@ exports.get = function(req) {
   const highcharts = []
   let json
 
-// log.info(JSON.stringify(part, null, ' '))
-
-  const municipality = klass.getMunicipality(req)
+  const municipality = klass.getMunicipality(req) ? klass.getMunicipality(req) : {code:""}
 
   part.config.highchart = part.config.highchart && util.data.forceArray(part.config.highchart) || []
   part.config.highchart.map((key) => {
@@ -68,8 +66,6 @@ exports.get = function(req) {
     highcharts.push(highchart)
     initHighchart(highchart)
   })
-
-// log.info(JSON.stringify(part, null, ' '))
 
   const model = { part, highcharts, json, municipality }
   const body = thymeleaf.render(view, model)
