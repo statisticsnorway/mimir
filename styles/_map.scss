@@ -1,16 +1,18 @@
 #map {
-  height: calc(100vh - 80px - 80px);
+  background-color: #f0f8f9;
+  height: calc(80vh - 80px - 120px);
+  padding: 20px;
 }
 .part-map {
   z-index: 3;
   opacity: 1;
-  padding-top: 40px;
-  padding-bottom: 40px;
+  padding: 20px;
+  background-color: white;
 }
 .map-container {
+  height: calc(100vh);
   z-index: 3;
-  background-color: #f0f8f9; //rgba(88,88,88,0.5);
-  // opacity: 0.7;
+  background-color: rgba(39,66,71,0.7);
   >.container {
     padding-top: 80px;
   }
