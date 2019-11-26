@@ -57,7 +57,7 @@
 
     <div data-th-if="${mainRegion}" data-th-remove="tag">
       <div data-th-each="component : ${mainRegion.components}"
-        data-th-classappend="${component.descriptor != 'mimir:banner' and component.descriptor != 'mimir:menu-dropdown' ? 'container' : ''} + ' ' + ${component.descriptor == 'mimir:menu-dropdown' ? 'sticky-top' : ''} + ' ' + ${component.descriptor == 'mimir:preface' ? 'preface-container' : ''}"
+        data-th-classappend="${component.descriptor != 'mimir:banner' and component.descriptor != 'mimir:menu-dropdown' and component.descriptor != 'mimir:map' ? 'container' : ''} + ' ' + ${component.descriptor == 'mimir:menu-dropdown'? 'sticky-top' : ''} + ' ' + ${component.descriptor == 'mimir:preface' ? 'preface-container' : ''}"
         data-th-remove="${component.descriptor == 'mimir:banner'} ? tag">
         <div data-portal-component="${component.path}" data-th-remove="tag"></div>
       </div>
