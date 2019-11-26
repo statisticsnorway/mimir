@@ -43,7 +43,7 @@
         "comma-spacing": 1,
         "no-unused-vars": 1,
         "no-invalid-this": 1,
-        "indent": 2,
+        "indent": [1, 2],
         "semi": 0,
         "object-curly-spacing": 0,
         "no-irregular-whitespace": 0
