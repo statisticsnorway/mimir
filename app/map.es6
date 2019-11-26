@@ -103,7 +103,10 @@ $(function() {
             }
           }
         },
-        plotOptions: { map: { states: { hover: { color: '#00824d' } } } },
+        plotOptions: { map: {
+          borderColor: '#274247',
+          states: { hover: { color: '#00824d' }}
+        }},
         series: [{
           data: data,
           name: 'Norge',
