@@ -61,3 +61,24 @@ exports.get = function(url) {
   // TODO: Cache result
   return http.request({ url, method, headers, connectionTimeout, readTimeout, body: JSON.stringify(json, null, ''), contentType })
 }
+
+
+/**
+ * Parse a dataset into this structure { municipalCode: { label: "String", value: number }}
+ * For instance: { 0213: { label: "toten", value: 13434 }}
+ * @param {object} data
+ * @param {object} table
+ * @return {object}
+ */
+exports.datasetToMunicipalityWithValues = function(data, table = {}) {
+  const labels = data.dimension[Object.keys(data.dimension)[0]].category.label
+  const categories = data.dimension[Object.keys(data.dimension)[0]].category
+
+  for (const key in labels) {
+    if (labels.hasOwnProperty(key)) {
+      const i = categories.index[key]
+      table[key] = { label: labels[key], value: data.value[i] }
+    }
+  }
+  return table
+}
