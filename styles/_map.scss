@@ -1,9 +1,11 @@
 #map {
-  height: calc(100vh - 80px);
+  height: calc(100vh - 80px - 80px);
 }
 .part-map {
   z-index: 3;
   opacity: 1;
+  padding-top: 40px;
+  padding-bottom: 40px;
 }
 .map-container {
   z-index: 3;
