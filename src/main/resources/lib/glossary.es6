@@ -23,8 +23,7 @@ function traverseRegions(regions, glossary) {
         regions[key].components.forEach((component) => {
           if (component.type === 'layout' && component.regions) {
             traverseRegions(component.regions, glossary)
-          }
-          else if (component.type === 'text') {
+          } else if (component.type === 'text') {
             parseText(component.text, glossary)
           }
         })

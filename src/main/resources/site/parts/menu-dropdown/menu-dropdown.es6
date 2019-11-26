@@ -28,6 +28,8 @@ exports.get = function(req) {
     }
   }))
 
+  log.info()
+
   const page = getContent()
   const model = {
     page: {

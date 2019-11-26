@@ -12,7 +12,7 @@ export const list = () => getMunicipalsFromContent()
  * @return {array} a set of municipals containing the querystring in municiaplity code or name
  */
 export const query = (queryString) => getMunicipalsFromContent()
-    .filter( (municipal) => RegExp(queryString).test(`${municipal.code} ${municipal.name.toLowerCase()}` ))
+    .filter( (municipal) => RegExp(queryString.toLowerCase()).test(`${municipal.code} ${municipal.name.toLowerCase()}` ))
 
 
 function getMunicipalsFromContent() {

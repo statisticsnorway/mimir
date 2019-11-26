@@ -43,8 +43,7 @@ exports.get = function(req) {
         item.value = (table[municipality && municipality.code || item.data.default] || { value: '-'}).value
         const time = data && Object.keys(data.dataset.dimension.Tid.category.index)[0]
         item.time = time
-      }
-      else {
+      } else {
         // Use direct lookup
         const result = dataquery.get(query.data.table, JSON.parse(query.data.json), selection)
         item.value = result.dataset.value[0]
