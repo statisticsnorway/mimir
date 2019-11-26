@@ -3,11 +3,12 @@
     <div class="row pt-3 pb-3">
       <div class="col-md-6 col-lg-8">
         <div class="opacity-zero">
-          <div class="roboto-plain subtitle" data-th-text="${page.displayName}"></div>
-          <div class="roboto-bold municipality">
+          <div class="roboto-plain subtitle" data-th-if="${mode == 'municipality'}" data-th-text="${page.displayName}"></div>
+          <div class="roboto-bold municipality" data-th-if="${mode == 'municipality'}">
             <div data-th-if="${municipality}" data-th-text="${municipality.displayName}" data-th-remove="tag">Kommune</div>
             <div data-th-if="${municipality}" data-th-text="'('+${municipality.county.name}+')'" data-th-remove="tag">Fylke</div>
           </div>
+          <div class="roboto-bold municipality" data-th-unless="${mode == 'municipality'}" data-th-text="${page.displayName}"></div>
         </div>
       </div>
       <div class="col-md-6 col-lg-4" data-th-with="mcode='0501'">

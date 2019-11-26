@@ -5,6 +5,7 @@ import * as portal from '/lib/xp/portal'
 import * as content from '/lib/xp/content'
 import * as thymeleaf from '/lib/thymeleaf'
 
+const view = resolve('./menu-dropdown.html')
 const method = 'GET'
 const readTimeout = 5000
 const connectionTimeout = 20000
@@ -15,7 +16,7 @@ exports.get = function(req) {
   const map = {}
   const page = portal.getContent()
   const part = portal.getComponent() || req
-  const view = resolve('./menu-dropdown.html')
+  const mode = req.mode === 'edit' && 'edit' || page._path.endsWith(req.path.split('/').pop()) ? 'map' : 'municipality'
 
   const municipality = klass.getMunicipality(req)
 
@@ -58,7 +59,7 @@ exports.get = function(req) {
 
   // log.info(JSON.stringify(part, null, ' '))
 
-  const model = { page, municipality, part, map }
+  const model = { page, municipality, part, map, mode }
   const body = thymeleaf.render(view, model)
 
   return { body, contentType: 'text/html' }
