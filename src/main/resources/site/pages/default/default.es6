@@ -6,6 +6,7 @@ import * as klass from '/lib/klass'
 
 import * as glossary from '/lib/glossary'
 import * as language from '/lib/language'
+import * as municipals from '/lib/municipals'
 
 const version = '%%VERSION%%'
 const preview = [ // Parts that has preview
@@ -35,7 +36,7 @@ exports.get = function(req) {
   const mainRegion = isFragment ? null : page.page && page.page.regions && page.page.regions.main
   const config = {}
   const view = resolve('default.html')
-  const mode = req.mode === 'edit' && 'edit' || page._path.endsWith(req.path.split('/').pop()) ? 'map' : 'municipality'
+  const mode = municipals.mode(req, page)
 
   page.language = language.getLanguage(page)
   page.glossary = glossary.process(page)
