@@ -4,6 +4,10 @@
     <description>En varsel for hele siten eller for kommuner</description>
     <super-type>base:structured</super-type>
     <form>
+        <input type="HtmlArea" name="message">
+            <label>Tekst</label>
+            <occurrences minimum="1" maximum="1"/>
+        </input>
         <input name="messageType" type="ComboBox">
             <label>Type</label>
             <occurrences minimum="1" maximum="1"/>
@@ -12,10 +16,6 @@
                 <option value="warning">Error varsel</option>
             </config>
             <default>info</default>
-        </input>
-        <input type="HtmlArea" name="message">
-            <label>Tekst</label>
-            <occurrences minimum="1" maximum="1"/>
         </input>
         <input type="CustomSelector" name="municipalCodes">
             <label>Hvis varselen gjelder kommuner, velg hvilken kommuner her.</label>

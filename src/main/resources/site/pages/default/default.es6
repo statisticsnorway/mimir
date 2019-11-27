@@ -1,11 +1,10 @@
-// import * as http from '/lib/http-client'
 import * as content from '/lib/xp/content'
 import * as portal from '/lib/xp/portal'
 import * as thymeleaf from '/lib/thymeleaf'
 import * as klass from '/lib/klass'
-
 import * as glossary from '/lib/glossary'
 import * as language from '/lib/language'
+import { alertsForContext } from '/lib/mimir/alert'
 import * as municipals from '/lib/municipals'
 
 const version = '%%VERSION%%'
@@ -37,6 +36,7 @@ exports.get = function(req) {
   const config = {}
   const view = resolve('default.html')
   const mode = municipals.mode(req, page)
+  const municipality = klass.getMunicipality(req)
 
   page.language = language.getLanguage(page)
   page.glossary = glossary.process(page)
@@ -52,10 +52,22 @@ exports.get = function(req) {
   getBreadcrumbs(page, breadcrumbs)
 
   if (!page._path.endsWith(req.path.split('/').pop()) && req.mode != 'edit' ) {
-    breadcrumbs.push({ 'displayName': klass.getMunicipality(req).name })
+    breadcrumbs.push({ 'displayName': municipality.name })
   }
 
-  const model = { version, ts, config, page, breadcrumbs, mainRegion, mode }
+  const alerts = alertsForContext(municipality);
+
+  const model = {
+    version,
+    ts,
+    config,
+    page,
+    breadcrumbs,
+    mainRegion,
+    alerts,
+    mode
+  }
+
   const body = thymeleaf.render(view, model)
 
   return { body }
