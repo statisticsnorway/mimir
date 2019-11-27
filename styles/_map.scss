@@ -4,25 +4,24 @@
   .highcharts-container {
   }
   @include media-breakpoint-down(md) {
-    height: 100vh;
+    height: 80vh;
   }
 }
 .part-map {
   z-index: 3;
   opacity: 1;
   background-color: white;
-  height: calc(70vh);
+  height: 70vh;
 }
 .map-container {
   top: 80px;
   width: 100vw;
   position: fixed;
-  height: calc(100vh);
+  height: 100vh;
   z-index: 9999;
   margin-left: -10px;
   background-color: rgba(39,66,71,0.7);
   .part-map {
-    height: 70vh;
     @include media-breakpoint-down(md) {
       padding: 0px;
     }
