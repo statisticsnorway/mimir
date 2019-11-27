@@ -29,20 +29,8 @@ function getBreadcrumbs(c, a) {
 }
 
 exports.get = function(req) {
-  const parent = portal.getContent()
-
-/*
-  // TODO: Make this work
-  let child
-  if (parent.type == `${app.name}:page` && parent._path.replace(/^.*\//, '') != req.path.replace(/^.*\//, '')) {
-log.info('-- get page --')
-log.info(req.path.replace(/^.*\//, ''))
-    child = content.query({ contentTypes: [`${app.name}:page`], query: `_path LIKE '/content${parent._path}/*'` }).hits[0]
-  }
-*/
-
   const ts = new Date().getTime()
-  const page = parent // || TODO: add child
+  const page = portal.getContent()
   const isFragment = page.type === 'portal:fragment'
   const mainRegion = isFragment ? null : page.page && page.page.regions && page.page.regions.main
   const config = {}

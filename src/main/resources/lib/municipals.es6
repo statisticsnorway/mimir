@@ -14,7 +14,6 @@ export const list = () => getMunicipalsFromContent()
 export const query = (queryString) => getMunicipalsFromContent()
     .filter( (municipal) => RegExp(queryString.toLowerCase()).test(`${municipal.code} ${municipal.name.toLowerCase()}` ))
 
-
 function getMunicipalsFromContent() {
     const key = getSiteConfig().municipalDataContentId
     const content = key ? getChildren({key}).hits[0] : {data: {}}
@@ -36,4 +35,9 @@ export const createPath = (municipalName, countyName = undefined) => {
         .replace(/æ/g, 'ae')
         .replace(/á/g, 'a')
         .replace(/ø/g, 'o')
+}
+
+// Returns page mode for Kommunefakta page based on request mode or request path
+export const mode = function(req, page) {
+  return req.mode === 'edit' && 'edit' || page._path.endsWith(req.path.split('/').pop()) ? 'map' : 'municipality'
 }
