@@ -48,6 +48,7 @@ log.info(req.path.replace(/^.*\//, ''))
   const config = {}
   const view = resolve('default.html')
 
+
   page.language = language.getLanguage(page)
   page.glossary = glossary.process(page)
 

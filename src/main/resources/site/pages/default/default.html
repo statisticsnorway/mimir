@@ -31,7 +31,7 @@
   <link rel="alternate" data-th-if="${page.language.exists}" data-th-href="${portal.pageUrl({'_path='+page.language.path})}" data-th-hreflang="${page.language.alternate}" />
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 </head>
-<body class="xp-page bkg-grey" data-th-classappend="${colorize}">
+<body class="xp-page" data-th-classappend="${colorize} + ' ' +  ${page.page.config.bkg_color == 'grey' ? 'bkg-grey' : ''}">
   <!-- HEADER -->
   <div id="ssb-menu" data-th-include="mimir:/site/includes/ssb-menu.html"></div>
   <!-- <div data-th-replace="mimir:/site/includes/header.html"></div> -->
