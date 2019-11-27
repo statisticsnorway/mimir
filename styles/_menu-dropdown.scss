@@ -1,5 +1,8 @@
 .part-menu-dropdown {
   background-color: white;
+  .row {
+    height: 100px;
+  }
   .opacity-zero {
     opacity: 0;
   }
@@ -34,4 +37,21 @@
     overflow-x: hidden;
     max-height: 30vh;
   }
+  #input-query-municipality {
+    margin-left: 20px;
+    min-width: 260px;
+  }
+  .ssb-input {
+    border-color: $ssb-dark-6;
+    flex-direction: unset; // override design system
+  }
+  .show-map {
+    margin-left: 30px;
+    text-decoration: none;
+    color: #030303;
+    i {
+      color: $green4;
+    }
+  }
+  
 }

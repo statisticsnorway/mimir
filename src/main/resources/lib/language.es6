@@ -50,15 +50,15 @@ exports.localizeTimePeriod = (time) => {
  * The standard is documented here:
  * https://www.scb.se/en/services/statistical-programs-for-px-files/px-web/px-web-med-sql-databas/
  *
- * @param time
+ * @param {string} time
  * @return {string}
  */
-function parseTimeInterval(time){
+function parseTimeInterval(time) {
   const splitYearLetterNumberIntoArray = new RegExp(/(\d{4})([HKMTU])(\d{1,2})/)
   const interval = splitYearLetterNumberIntoArray.exec(time)
 
-  let parsedTime = ""
-  switch(interval[2]){
+  let parsedTime = ''
+  switch(interval[2]) {
     case 'H':
       parsedTime = `${i18n.localize({key: 'interval.' + interval[2]})} ${interval[1]} `
       break;
