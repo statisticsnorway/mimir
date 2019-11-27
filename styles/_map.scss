@@ -1,15 +1,17 @@
 #map {
   background-color: #f0f8f9;
-  height: calc(80vh - 80px - 120px);
-  padding: 20px;
+  height: 100%;
+  .highcharts-container {
+  }
   @include media-breakpoint-down(md) {
-    height: calc(100vh - 80px - 120px);
+    height: 100vh;
   }
 }
 .part-map {
   z-index: 3;
   opacity: 1;
   background-color: white;
+  height: calc(70vh);
 }
 .map-container {
   top: 80px;
@@ -17,13 +19,12 @@
   position: fixed;
   height: calc(100vh);
   z-index: 9999;
+  margin-left: -10px;
   background-color: rgba(39,66,71,0.7);
   .part-map {
-    padding: 20px;
+    height: 70vh;
     @include media-breakpoint-down(md) {
-      height: calc(100vh - 80px - 120px);
       padding: 0px;
-      margin-left: -15px;
     }
   }
 }

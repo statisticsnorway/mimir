@@ -5,6 +5,7 @@ $(function() {
   $('#map').each((i, map) => {
     const path = $(map).attr('data-path')
     const service = $(map).attr('data-service')
+    const borderWidth = $(map).hasClass('map-border') ? 20 : 0
 
     // Load the drilldown map
     $.getJSON(`${path}/norge-fylkesinndelt.geo.json`, function(geojson) {
@@ -20,6 +21,9 @@ $(function() {
       Highcharts.mapChart('map', {
         accessibility: { enabled: false },
         chart: {
+          margin: 40,
+          borderColor: '#FFFFFF',
+          borderWidth,
           backgroundColor: '#f0f7f9',
           events: {
             drilldown: function(e) {
@@ -68,7 +72,7 @@ $(function() {
 
                           axios.get(service, { params: { postalCode: kommnr }})
                             .then((result) => {
-                              window.location.href = window.location.href + '/' + result.data.municipality.path;
+                              window.location.href = window.location.href.replace(/kommunefakta.*$/, '') + 'kommunefakta/' + result.data.municipality.path;
                             })
                         }
                       }
@@ -118,7 +122,7 @@ $(function() {
           activeDataLabelStyle: { color: '#FFFFFF', textDecoration: 'none', textShadow: '0 0 3px #000000' },
           drillUpButton: {
             relativeTo: 'spacingBox',
-            position: { align: 'left', verticalAlign: 'top' },
+            position: { align: 'left', x: 40, y: 40 },
             theme: {
               fill: '#ffffff',
               stroke: '#00824d'
