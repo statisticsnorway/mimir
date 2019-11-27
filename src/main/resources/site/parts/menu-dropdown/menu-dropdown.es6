@@ -1,9 +1,10 @@
-import * as klass from '/lib/klass'
 import * as util from '/lib/util'
 import * as http from '/lib/http-client'
+import * as klass from '/lib/klass'
 import * as portal from '/lib/xp/portal'
 import * as content from '/lib/xp/content'
 import * as thymeleaf from '/lib/thymeleaf'
+import * as municipals from '/lib/municipals'
 
 const view = resolve('./menu-dropdown.html')
 const method = 'GET'
@@ -16,7 +17,7 @@ exports.get = function(req) {
   const map = {}
   const page = portal.getContent()
   const part = portal.getComponent() || req
-  const mode = req.mode === 'edit' && 'edit' || page._path.endsWith(req.path.split('/').pop()) ? 'map' : 'municipality'
+  const mode = municipals.mode(req, page)
 
   const municipality = klass.getMunicipality(req)
 

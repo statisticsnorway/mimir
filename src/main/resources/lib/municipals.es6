@@ -4,7 +4,6 @@ const { newCache } = require('/lib/cache');
 
 const cache = newCache({size: 100, expire: 1000})
 
-
 export const list = () => importMunicipals()
 
 export const query = (queryString) => importMunicipals()
@@ -26,4 +25,9 @@ function importMunicipals() {
 
         return result.status === 200 ? JSON.parse(result.body).codes : []
     })
+}
+
+// Returns page mode for Kommunefakta page based on request mode or request path
+export const mode = function(req, page) {
+  return req.mode === 'edit' && 'edit' || page._path.endsWith(req.path.split('/').pop()) ? 'map' : 'municipality'
 }
