@@ -1,10 +1,15 @@
 import { query } from '/lib/xp/content'
-import { getContent } from '/lib/xp/portal'
+import { getContent, processHtml } from '/lib/xp/portal'
 
 export const alertsForContext = (municipality) => {
-    const currentMunicipalityAlerts = municipality ? municipalAlerts( municipality.code ) : {hits: []}
-    const alerts = [...siteAlerts().hits, ...currentMunicipalityAlerts.hits]
-    return alerts.map( (alert) => ({...alert.data, title: alert.displayName}))
+  const currentMunicipalityAlerts = municipality ? municipalAlerts( municipality.code ) : {hits: []}
+  const alerts = [...siteAlerts().hits, ...currentMunicipalityAlerts.hits]
+  return alerts.map( (alert) => ({
+    title: alert.displayName,
+    messageType: alert.data.messageType,
+    municipalCodes: alert.data.municipalCodes,
+    message: processHtml({value: alert.data.message})
+  }))
 }
 
 export const siteAlerts = () => {
