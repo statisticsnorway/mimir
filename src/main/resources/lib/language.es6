@@ -1,5 +1,3 @@
-// Returns language parameters for page
-
 const moment = require('/lib/moment-with-locales')
 
 import * as i18n from '/lib/xp/i18n'
@@ -13,28 +11,26 @@ exports.getLanguage = function(page) {
   const site = portal.getSite()
   moment.locale(page.language === 'en' ? 'en' : 'nb')
   const result = page.language === 'en' ? {
-      code: 'en',
-      alternate: 'nb', // alternate language code norsk bokmål
-      contact: 'https://www.ssb.no/en/omssb/kontakt-oss',
-      published: page.publish && page.publish.from && moment(page.publish.from).format('DD. MMMM YYYY'),
-      modified: moment(page.modifiedTime).format('DD. MMMM YYYY'),
-      path: page._path.replace(/^\/.*?\/en/, site._path),
-      home: portal.pageUrl({ path: site._path }),
-      phrases: english
-    } : {
-      code: 'nb', // norsk bokmål, https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-      alternate: 'en', // alternate language code
-      contact: 'https://www.ssb.no/omssb/kontakt-oss',
-      published: page.publish && page.publish.from && moment(page.publish.from).format('DD. MMMM YYYY').toLowerCase(),
-      modified: moment(page.modifiedTime).format('DD. MMMM YYYY').toLowerCase(),
-      path: page._path.replace(/^\/.*?\//, site._path + '/en/'),
-      home: portal.pageUrl({ path: site._path + '/en' }),
-      phrases: norwegian
-    }
+    code: 'en',
+    alternate: 'nb', // alternate language code norsk bokmål
+    contact: 'https://www.ssb.no/en/omssb/kontakt-oss',
+    published: page.publish && page.publish.from && moment(page.publish.from).format('DD. MMMM YYYY'),
+    modified: moment(page.modifiedTime).format('DD. MMMM YYYY'),
+    path: page._path.replace(/^\/.*?\/en/, site._path),
+    home: portal.pageUrl({ path: site._path }),
+    phrases: english
+  } : {
+    code: 'nb', // norsk bokmål, https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+    alternate: 'en', // alternate language code
+    contact: 'https://www.ssb.no/omssb/kontakt-oss',
+    published: page.publish && page.publish.from && moment(page.publish.from).format('DD. MMMM YYYY').toLowerCase(),
+    modified: moment(page.modifiedTime).format('DD. MMMM YYYY').toLowerCase(),
+    path: page._path.replace(/^\/.*?\//, site._path + '/en/'),
+    home: portal.pageUrl({ path: site._path + '/en' }),
+    phrases: norwegian
+  }
 
   result.exists = content.exists({ key: result.path })
-
-// log.info(JSON.stringify(result, null, ' '))
 
   return result
 }
@@ -64,20 +60,19 @@ function parseTimeInterval(time) {
   let parsedTime = ''
   switch(interval[2]) {
     case 'H':
-      parsedTime = `${interval[1]} ${i18n.localize({key: 'interval.' + interval[2]})}`
+      parsedTime = `${i18n.localize({key: 'interval.' + interval[2]})} ${interval[1]} `
       break;
     case 'K':
-      log.info(i18n.localize({key: 'interval.' + interval[2]}))
-      parsedTime = `${interval[1]} ${interval[3]}. ${i18n.localize({key: 'interval.' + interval[2]})}`
+      parsedTime = `${interval[3]}. ${i18n.localize({key: 'interval.' + interval[2]})} ${interval[1]}`
       break;
     case 'M':
-      parsedTime = `${interval[1]} ${i18n.localize({key: 'interval.M' + interval[2]})}`
+      parsedTime = `${i18n.localize({key: 'interval.M' + interval[2]})} ${interval[1]}`
       break;
     case 'T':
-      parsedTime = `${interval[1]} ${interval[3]}. ${i18n.localize({key: 'interval.' + interval[2]})}`
+      parsedTime = `${interval[3]}. ${i18n.localize({key: 'interval.' + interval[2]})} ${interval[1]}`
       break;
     case 'U':
-      parsedTime = `${interval[1]} ${interval[3]}`
+      parsedTime = `${i18n.localize({key: 'interval.' + interval[2]})} ${interval[3]} ${interval[1]}`
       break;
   }
   return parsedTime;
