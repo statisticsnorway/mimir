@@ -54,7 +54,7 @@ exports.getMunicipality = function(req) {
     return codes[req.code]
   }
   const name = req.path && req.path.replace(/^.*\//, '')
-  return Object.keys(paths).length && paths[name] || paths['kongsvinger']
+  return Object.keys(paths).length && paths[name]
 }
 
 exports.get = function(url) {

@@ -1,5 +1,32 @@
 #map {
-  height: calc(100vh - 275px);
+  background-color: #f0f8f9;
+  height: 100%;
+  .highcharts-container {
+  }
+  @include media-breakpoint-down(md) {
+    height: 80vh;
+  }
 }
 .part-map {
+  z-index: 3;
+  opacity: 1;
+  background-color: white;
+  height: 70vh;
+}
+.map-container {
+  top: 80px;
+  width: 100vw;
+  position: fixed;
+  height: 100vh;
+  z-index: 9999;
+  margin-left: -10px;
+  background-color: rgba(39,66,71,0.7);
+  .part-map {
+    @include media-breakpoint-down(md) {
+      padding: 0px;
+    }
+  }
+}
+.overflow-y {
+  overflow-y: hidden;
 }

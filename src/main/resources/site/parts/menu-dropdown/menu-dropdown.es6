@@ -1,13 +1,13 @@
-import { getMunicipality } from  '/lib/klass'
+import { getMunicipality } from '/lib/klass'
 import { getContent } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
 import { list as municipalityList, createPath } from '/lib/municipals'
 import { list as countyList } from '/lib/counties'
 import { newCache } from '/lib/cache'
+import { mode } from '/lib/municipals'
 
 const view = resolve('./menu-dropdown.html')
 const cache = newCache({ size: 100, expire: 3600 })
-
 
 exports.get = function(req) {
   const counties = countyList();
@@ -30,6 +30,7 @@ exports.get = function(req) {
 
   const page = getContent()
   const model = {
+    mode: mode(req, page),
     page: {
       displayName: page.displayName,
       _id: page._id
@@ -37,5 +38,6 @@ exports.get = function(req) {
     currentMunicipality: getMunicipality(req),
     municipalities: parsedMunicipalities
   }
+
   return { body: render(view, model), contentType: 'text/html' }
 }

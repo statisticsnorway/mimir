@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <content-type>
-    <display-name i18n="notification.title">Varselmelding</display-name>
-    <description i18n="notification.description">Varsle til en eller flere kommuner om deres innhold i kommunefakta</description>
+    <display-name>Varselmelding</display-name>
+    <description>En varsel for hele siten eller for kommuner</description>
     <super-type>base:structured</super-type>
     <form>
         <input name="messageType" type="ComboBox">
-            <label i18n="notification.type">Varseltype</label>
+            <label>Type</label>
             <occurrences minimum="1" maximum="1"/>
             <config>
                 <option value="info">Info varsel</option>
@@ -14,12 +14,13 @@
             <default>info</default>
         </input>
         <input type="HtmlArea" name="message">
-            <label i18n="notification.message">Meldingen</label>
+            <label>Tekst</label>
             <occurrences minimum="1" maximum="1"/>
         </input>
         <input type="CustomSelector" name="municipalCodes">
-            <label i18n="notification.affectedMunicipals">Hvilken kommuner gjelder meldingen</label>
-            <occurrences minimum="1" maximum="0"/>
+            <label>Hvis varselen gjelder kommuner, velg hvilken kommuner her.</label>
+            <help-text >Om kommuner er valgt her, vil varselen bare synes under valgte kommuner på /kommunefakta.</help-text>
+            <occurrences minimum="0" maximum="0"/>
             <config>
                 <service>customSelectorMunicipals</service>
             </config>

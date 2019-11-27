@@ -3,11 +3,12 @@
     <div class="row pt-3 pb-3">
       <div class="col-md-6 col-lg-8">
         <div class="opacity-zero">
-          <div class="roboto-plain subtitle" data-th-text="${page.displayName}"></div>
-          <div class="roboto-bold municipality">
-            <div data-th-if="${currentMunicipality}" data-th-text="${currentMunicipality.displayName}" data-th-remove="tag">Kommune</div>
-            <div data-th-if="${currentMunicipality}" data-th-text="'('+${currentMunicipality.county.name}+')'" data-th-remove="tag">Fylke</div>
+          <div class="roboto-plain subtitle" data-th-if="${mode == 'municipality'}" data-th-text="${page.displayName}"></div>
+          <div class="roboto-bold municipality" data-th-if="${mode == 'municipality'}">
+            <div data-th-if="${municipality}" data-th-text="${municipality.displayName}" data-th-remove="tag">Kommune</div>
+            <div data-th-if="${municipality}" data-th-text="'('+${municipality.county.name}+')'" data-th-remove="tag">Fylke</div>
           </div>
+          <div class="roboto-bold municipality" data-th-unless="${mode == 'municipality'}" data-th-text="${page.displayName}"></div>
         </div>
       </div>
       <div class="col-md-6 col-lg-4" data-th-with="mcode='0501'">
@@ -27,6 +28,9 @@
                     data-th-attr="data-text=${municipality.displayName} + ' ' +  ${municipality.code} + ' ' + ${municipality.county.name}">Oslo
                   </a>
                 </div>
+                <a id="js-show-map" class="ml-2 text-nowrap" href="#">Velg i kart
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </a>
               </div>
             </div>
           </div>
