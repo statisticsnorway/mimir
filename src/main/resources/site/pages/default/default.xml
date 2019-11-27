@@ -1,7 +1,16 @@
 <page>
   <display-name>Standard side</display-name>
-  <config>
-  </config>
+  <form>
+  	<input name="bkg_color" type="RadioButton">
+  		<label>Velg bakgrunnsfarge</label>
+  		<occurrences minimum="1" maximum="1"/> 
+  		<config>
+    		<option value="white">Hvit</option> 
+    		<option value="grey">Grå</option>
+        </config>
+      <default>white</default> 
+    </input>
+  </form>
   <regions>
     <region name="main"/>
   </regions>
