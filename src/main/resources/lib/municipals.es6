@@ -12,12 +12,12 @@ export const list = () => getMunicipalsFromContent()
  * @return {array} a set of municipals containing the querystring in municiaplity code or name
  */
 export const query = (queryString) => getMunicipalsFromContent()
-    .filter( (municipal) => RegExp(queryString.toLowerCase()).test(`${municipal.code} ${municipal.name.toLowerCase()}` ))
+  .filter( (municipal) => RegExp(queryString.toLowerCase()).test(`${municipal.code} ${municipal.name.toLowerCase()}` ))
 
 function getMunicipalsFromContent() {
-    const key = getSiteConfig().municipalDataContentId
-    const content = key ? getChildren({key}).hits[0] : {data: {}}
-    return content.data.json ? JSON.parse(content.data.json).codes : []
+  const key = getSiteConfig().municipalDataContentId
+  const content = key ? getChildren({key}).hits[0] : {data: {}}
+  return content.data.json ? JSON.parse(content.data.json).codes : []
 }
 
 /**
@@ -27,14 +27,14 @@ function getMunicipalsFromContent() {
  * @return {string} create valid municipal path
  */
 export const createPath = (municipalName, countyName = undefined) => {
-    const path = countyName !== undefined ? `/${municipalName}-${countyName}` : `/${municipalName}`
-    return path.replace(/ /g, '-')
-        .replace(/-+/g, '-')
-        .toLowerCase()
-        .replace(/å/g, 'a')
-        .replace(/æ/g, 'ae')
-        .replace(/á/g, 'a')
-        .replace(/ø/g, 'o')
+  const path = countyName !== undefined ? `/${municipalName}-${countyName}` : `/${municipalName}`
+  return path.replace(/ /g, '-')
+    .replace(/-+/g, '-')
+    .toLowerCase()
+    .replace(/å/g, 'a')
+    .replace(/æ/g, 'ae')
+    .replace(/á/g, 'a')
+    .replace(/ø/g, 'o')
 }
 
 // Returns page mode for Kommunefakta page based on request mode or request path

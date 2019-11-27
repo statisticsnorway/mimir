@@ -12,6 +12,7 @@ const cache = newCache({ size: 100, expire: 3600 })
 exports.get = function(req) {
   const counties = countyList();
   const municipalities = municipalityList()
+
   // Caching this since it is a bit heavy
   const parsedMunicipalities = cache.get('parsedMunicipality', () => municipalities.map( (municipality) => {
     const getTwoFirstDigits = /^(\d\d).*$/
@@ -35,7 +36,7 @@ exports.get = function(req) {
       displayName: page.displayName,
       _id: page._id
     },
-    currentMunicipality: getMunicipality(req),
+    municipality: getMunicipality(req),
     municipalities: parsedMunicipalities
   }
 
