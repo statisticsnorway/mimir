@@ -36,7 +36,6 @@ exports.get = function(req) {
   const config = {}
   const view = resolve('default.html')
 
-
   page.language = language.getLanguage(page)
   page.glossary = glossary.process(page)
 
