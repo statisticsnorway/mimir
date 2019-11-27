@@ -35,6 +35,7 @@ exports.get = function(req) {
   const mainRegion = isFragment ? null : page.page && page.page.regions && page.page.regions.main
   const config = {}
   const view = resolve('default.html')
+  const mode = req.mode === 'edit' && 'edit' || page._path.endsWith(req.path.split('/').pop()) ? 'map' : 'municipality'
 
   page.language = language.getLanguage(page)
   page.glossary = glossary.process(page)
@@ -53,7 +54,7 @@ exports.get = function(req) {
     breadcrumbs.push({ 'displayName': klass.getMunicipality(req).name })
   }
 
-  const model = { version, ts, config, page, breadcrumbs, mainRegion }
+  const model = { version, ts, config, page, breadcrumbs, mainRegion, mode }
   const body = thymeleaf.render(view, model)
 
   return { body }
