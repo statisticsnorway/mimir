@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <content-type>
-  <display-name>Rullegardinmeny</display-name>
+  <display-name i18n="menuDropdown.title">Rullegardinmeny</display-name>
+  <description i18n="menuDropdown.description"></description>
   <super-type>base:structured</super-type>
   <form>
     <input type="TextLine" name="source">
-      <label>Kilde (url)</label>
+      <label i18n="menuDropdown.source">Kilde (url)</label>
       <occurrences minimum="0" maximum="0"/>
     </input>
   </form>

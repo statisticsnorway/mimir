@@ -6,6 +6,7 @@ import * as content from '/lib/xp/content'
 import * as thymeleaf from '/lib/thymeleaf'
 import * as dataquery from '/lib/dataquery'
 import * as klass from '/lib/klass'
+import * as language from '/lib/language'
 
 function getTable(data, table = {}) {
   const dimension = data.dimension['KOKkommuneregion0000'] ? 'KOKkommuneregion0000' : Object.keys(data.dimension)[0]
@@ -42,14 +43,13 @@ exports.get = function(req) {
         const table = getTable(data.dataset)
         item.value = (table[municipality && municipality.code || item.data.default] || { value: '-'}).value
         const time = data && Object.keys(data.dataset.dimension.Tid.category.index)[0]
-        item.time = time
-      }
-      else {
+        item.time = language.localizeTimePeriod(time)
+      } else {
         // Use direct lookup
         const result = dataquery.get(query.data.table, JSON.parse(query.data.json), selection)
         item.value = result.dataset.value[0]
         const time = result && Object.keys(result.dataset.dimension.Tid.category.index)[0]
-        item.time = time
+        item.time = language.localizeTimePeriod(time)
       }
       item.valueHumanReadable = item.value && (item.value > 999 ? numeral(item.value).format('0,0').replace(/,/, '&thinsp;') : item.value.toString().replace(/\./, ','))
     }

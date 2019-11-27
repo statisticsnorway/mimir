@@ -11,6 +11,26 @@
       <occurrences minimum="1" maximum="1"/>
       <default>http://data.ssb.no/api/klass/v1/classifications/104/codesAt?date=2019-01-01</default>
     </input>
+    <input name="municipalDataContentId" type="ContentSelector">
+      <label>Kommunedata innhold fra api</label>
+      <occurrences minimum="0" maximum="1"/>
+      <config>
+        <allowContentType>dataquery</allowContentType>
+        <treeMode>true</treeMode>
+        <showStatus>true</showStatus>
+        <hideToggleIcon>true</hideToggleIcon>
+      </config>
+    </input>
+    <input name="countyDataContentId" type="ContentSelector">
+      <label>Fylkedata innhold fra api</label>
+      <occurrences minimum="0" maximum="1"/>
+      <config>
+        <allowContentType>dataquery</allowContentType>
+        <treeMode>true</treeMode>
+        <showStatus>true</showStatus>
+        <hideToggleIcon>true</hideToggleIcon>
+      </config>
+    </input>
   </form>
   <mappings>
     <mapping controller="/site/pages/default/default.js">

@@ -1,30 +1,40 @@
-const { getSiteConfig } = require('/lib/xp/portal')
-const { request } = require('/lib/http-client')
-const { newCache } = require('/lib/cache');
+import { getSiteConfig } from '/lib/xp/portal'
+import { getChildren } from '/lib/xp/content'
 
-const cache = newCache({size: 100, expire: 1000})
+/**
+ * @return {array} Returns everything in the "code" node from ssb api
+ */
+export const list = () => getMunicipalsFromContent()
 
-export const list = () => importMunicipals()
+/**
+ *
+ * @param {string} queryString
+ * @return {array} a set of municipals containing the querystring in municiaplity code or name
+ */
+export const query = (queryString) => getMunicipalsFromContent()
+    .filter( (municipal) => RegExp(queryString.toLowerCase()).test(`${municipal.code} ${municipal.name.toLowerCase()}` ))
 
-export const query = (queryString) => importMunicipals()
-    .filter( (municipal) => RegExp(queryString).test(`${municipal.code} ${municipal.name.toLowerCase()}` ))
+function getMunicipalsFromContent() {
+    const key = getSiteConfig().municipalDataContentId
+    const content = key ? getChildren({key}).hits[0] : {data: {}}
+    return content.data.json ? JSON.parse(content.data.json).codes : []
+}
 
-function importMunicipals() {
-    const municipalUrlAtSSBApi = getSiteConfig().municipality;
-    return cache.get('municipalsFromAPI', () => {
-        const result = request({
-            url: municipalUrlAtSSBApi,
-            method: 'GET',
-            headers: {
-                'Cache-Control': 'no-cache',
-                'Accept': 'application/json'
-            },
-            connectionTimeout: 20000,
-            readTimeout: 5000
-        })
-
-        return result.status === 200 ? JSON.parse(result.body).codes : []
-    })
+/**
+ *
+ * @param {string} municipalName required
+ * @param {string} countyName optional, if set it will be added to the path
+ * @return {string} create valid municipal path
+ */
+export const createPath = (municipalName, countyName = undefined) => {
+    const path = countyName !== undefined ? `/${municipalName}-${countyName}` : `/${municipalName}`
+    return path.replace(/ /g, '-')
+        .replace(/-+/g, '-')
+        .toLowerCase()
+        .replace(/å/g, 'a')
+        .replace(/æ/g, 'ae')
+        .replace(/á/g, 'a')
+        .replace(/ø/g, 'o')
 }
 
 // Returns page mode for Kommunefakta page based on request mode or request path
