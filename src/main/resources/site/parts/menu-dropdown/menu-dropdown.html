@@ -15,7 +15,7 @@
         <div data-th-if="${municipalities}" class="position-relative h-100">
           <div class="dropdown show ssb-dropdown h-100">
             <div class=" d-flex flex-row align-items-center h-100">
-              <div class="roboto-bold text-nowrap">Bytt kommune:</div>
+              <div data-th-if="${mode == 'municipality'}" class="roboto-bold text-nowrap">Bytt kommune:</div>
               <div class="ssb-input">
                 <input id="input-query-municipality" class="d-block" placeholder="Søk på kommune" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" autocomplete/>
                 <button class="button-search border-0 p-0 m-0 position-absolute">
