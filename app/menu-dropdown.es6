@@ -11,6 +11,7 @@ $(function() {
     e.stopPropagation()
     const el = $('.part-menu-dropdown')[0]
     const { top } = el.getBoundingClientRect()
+    $(e.target).toggleClass('active')
     map.parent().click(() => {
       map.addClass('d-none').parent().removeClass('map-container')
     })
