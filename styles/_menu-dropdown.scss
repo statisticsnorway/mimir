@@ -1,6 +1,6 @@
 .part-menu-dropdown {
   background-color: white;
-  .row {
+  .container >div {
     height: 100px;
   }
   .opacity-zero {
@@ -39,9 +39,9 @@
   }
   #input-query-municipality {
     margin-left: 20px;
-    min-width: 260px;
   }
   .ssb-input {
+    width: 280px;
     border-color: $ssb-dark-6;
     flex-direction: unset; // override design system
   }
@@ -53,5 +53,9 @@
       color: $green4;
     }
   }
-  
+ .ssb-dropdown {
+   width: 100%; // Override design system
+   min-width: 100%; // Override design system
+   max-width: 100%; // Override design system
+ }
 }
