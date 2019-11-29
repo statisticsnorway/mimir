@@ -1,5 +1,10 @@
-import { getSiteConfig } from '/lib/xp/portal'
 import { getChildren } from '/lib/xp/content'
+import { getDataSetWithDataQueryId } from './mimir/dataset'
+import { datasetToMunicipalityWithValues, get as getKlass } from './klass'
+import { localizeTimePeriod } from './language'
+import { createHumanReadableFormat } from './utils'
+import { get as getDataquery } from '/lib/mimir/dataquery'
+import { getSiteConfig } from '/lib/xp/portal'
 
 /**
  * @return {array} Returns everything in the "code" node from ssb api
@@ -40,4 +45,49 @@ export const createPath = (municipalName, countyName = undefined) => {
 // Returns page mode for Kommunefakta page based on request mode or request path
 export const mode = function(req, page) {
   return req.mode === 'edit' && 'edit' || page._path.endsWith(req.path.split('/').pop()) ? 'map' : 'municipality'
+}
+
+/**
+ * Get a dataset with values from statistikkbanken
+ * @param {string} url
+ * @param {string} query
+ * @param {string} municipalityCode
+ * @return {object} dataset with values from statistikkbanken
+ */
+export const getValue = (url, query, municipalityCode) => {
+  const selection = { filter: 'item', values: municipalityCode }
+  return getKlass(url, query, selection)
+}
+
+/**
+ *
+ * @param {string} dataQueryId
+ * @param {object} municipality
+ * @return {object} An object with the properties: { value: int, time: string, valueHumanReadable: String}, from a municipality dataset
+ */
+export const parseMunicipalityValues = (dataQueryId, municipality) => {
+  const dataqueryContent = getDataquery({key: dataQueryId}) // hent key-figure sin dataquery
+  const dataset = getDataSetWithDataQueryId(dataQueryId)
+
+  if (dataset && dataset.count) {
+    // Use saved dataset
+    const data = JSON.parse(dataset.hits[0].data.json)
+    const table = datasetToMunicipalityWithValues(data.dataset)
+    const time = data && Object.keys(data.dataset.dimension.Tid.category.index)[0]
+    const value = (table[municipality && municipality.code || keyFigure.data.default] || { value: '-'}).value
+    return {
+      value: value,
+      time: localizeTimePeriod(time),
+      valueHumanReadable: value ? createHumanReadableFormat(value): undefined
+    }
+  } else { // Use direct lookup with http through /lib/dataquery (wrapper for http-client)
+    const selection = { filter: 'item', values: [municipality && municipality.code || keyFigure.data.default] }
+    const result = getKlass(dataqueryContent.data.table, JSON.parse(dataqueryContent.data.json), selection)
+    const time = result && Object.keys(result.dataset.dimension.Tid.category.index)[0]
+    return {
+      value: result.dataset.value[0],
+      time: localizeTimePeriod(time),
+      valueHumanReadable: result.dataset.value[0] ? createHumanReadableFormat(result.dataset.value[0]): undefined
+    }
+  }
 }
