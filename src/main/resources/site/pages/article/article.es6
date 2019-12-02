@@ -8,7 +8,7 @@ import * as thymeleaf from '/lib/thymeleaf'
 
 import * as glossary from '/lib/glossary'
 import * as language from '/lib/language'
-import { alertsForContext } from '../../../lib/mimir/alert';
+import { alertsForContext } from '../../../lib/mimir/operations-alert';
 
 const version = '%%VERSION%%'
 
