@@ -28,7 +28,7 @@ $(function() {
       // const labels = JSONstat(json).Dataset(0).Dimension('Landbakgrunn').Category() // Method to use if we add a label field
       const values = JSONstat(json).Dataset(0).Slice({ Region: municipality }) || JSONstat(json).Dataset(0).Slice({ KOKkommuneregion0000: municipality })
       for (let i=0; i<labels.length; i++) {
-        (series || (series = [])).push({ title: '1122', name: labels[i].label, data: [values.value[i]] });
+        (series || (series = [])).push({ name: labels[i].label, data: [values.value[i]] });
         (slices || (slices = [])).push({ name: labels[i].label, y: values.value[i] });
       }
       series = canvas.data('type') == 'pie' || canvas.data('switchrowsandcolumns')? { 'testing': { data: slices }, 'test2': { data: slices } } : series
