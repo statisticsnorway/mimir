@@ -1,16 +1,15 @@
 // HIGHCHART
-let hdata
 $(function() {
   const w = { height: $(window).height().toFixed(0), width: $(window).width().toFixed(0) };
 
-  function init() {
-    $('.hc-container').each(function(i, container) {
-      const height = $(container).height()
-      $(container).find('svg').attr('height', height)
-    })
-  }
+  $('.btn-highchart-export').click((e) => {
+    $(e.target).parent().find('.highcharts-button-box').first().trigger('click')
+  })
 
-  init();
+  $('.hc-container').each(function(i, container) {
+    const height = $(container).height()
+    $(container).find('svg').attr('height', height)
+  })
 
   const h1Size = w.width < 768 ? '14px' : '16px';
 
@@ -29,10 +28,10 @@ $(function() {
       // const labels = JSONstat(json).Dataset(0).Dimension('Landbakgrunn').Category() // Method to use if we add a label field
       const values = JSONstat(json).Dataset(0).Slice({ Region: municipality }) || JSONstat(json).Dataset(0).Slice({ KOKkommuneregion0000: municipality })
       for (let i=0; i<labels.length; i++) {
-        (series || (series = [])).push({ name: labels[i].label, data: [values.value[i]] });
+        (series || (series = [])).push({ title: '1122', name: labels[i].label, data: [values.value[i]] });
         (slices || (slices = [])).push({ name: labels[i].label, y: values.value[i] });
       }
-      series = canvas.data('type') == 'pie' || canvas.data('switchrowsandcolumns')?  [{ data: slices }] : series
+      series = canvas.data('type') == 'pie' || canvas.data('switchrowsandcolumns')? { 'testing': { data: slices }, 'test2': { data: slices } } : series
     }
 
     const highchartsContentKey = canvas.data('contentkey');
@@ -83,6 +82,7 @@ $(function() {
           zoomType: canvas.data('zoomtype'),
           // marginRight: (canvas.data('legend-align') == 'right') ? 120 : null,
           events: {
+/*
             load: function() {
               Highcharts.each(this.series, function(s) {
                 s.points[s.points.length - 1].update({
@@ -90,9 +90,9 @@ $(function() {
                 });
               });
             }
+*/
           }
         },
-
         // SSB color palette:
         // colors: ['#1a9d49', '#472f91', '#274247', '#d2bc2a', '#c4351c', '#6f9090', '#3396d2', '#00824d', '#9a7b1c', '#143f90', '#075745', '#4b7272', '#6d58a4', '#83c1e9', '#b59924'],
         colors: ['#1a9d49', '#274247', '#3396d2', '#f0e442', '#f26539', '#aee5c3', '#ed51c9', '#0094a3', '#e9b200', '#143f90', '#075745', '#4b7272', '#6d58a4', '#83c1e9', '#b59924'],
@@ -101,8 +101,8 @@ $(function() {
         credits: {
           enabled: canvas.data('creditsenabled'),
           href: canvas.data('creditshref'),
-          position: { align: 'left', x: 15, verticalAlign: 'bottom' },
-          style: { color: '#0645AD', cursor: 'pointer', fontSize: '12px' },
+          position: { align: 'left', y: -4, x: 15, verticalAlign: 'bottom' },
+          style: { color: '#00824d', cursor: 'pointer', fontSize: '16px', textDecoration: 'underline', fontFamily: 'Roboto', marginTop: '20px' },
           text: canvas.data('creditstext')
         },
         series,
@@ -115,13 +115,13 @@ $(function() {
 
           // En befolkningspyramide trenger negative verdier for det ene kjønnet
           parsed: function(columns) {
-            $.each(columns, function() {
-              if (canvas.data('type') == 'befolkningspyramide' && this[0] == 'Menn') {
-                const negatedValues = this.slice(1).map(function(num) {
+            $.each(columns, function(i, column) {
+              if (canvas.data('type') == 'befolkningspyramide' && column[0] == 'Menn') {
+                const negatedValues = column.slice(1).map(function(num) {
                   return Math.abs(num) * -1;
                 });
                 const args = [1, negatedValues.length].concat(negatedValues);
-                Array.prototype.splice.apply(this, args);
+                Array.prototype.splice.apply(column, args);
               }
             });
           }
@@ -150,7 +150,7 @@ $(function() {
           y: (canvas.data('legendalign') == 'right') ? 65 : 0,
           itemMarginBottom: (canvas.data('legendalign') == 'right') ? 25 : 0,
           itemWidth: (canvas.data('legendalign') == 'right') ? 95 : null,
-          itemStyle: { fontSize: '12px', fontWeight: 'normal' },
+          itemStyle: { color: '#21383a', fontSize: '12px', fontWeight: 'normal' },
           // Keyboard-accessible legend labels
           // labelFormatter: function () {
           // return '<button title="' + canvas.data('langvisskjul') + '">' + this.name + '</button>';
@@ -178,77 +178,90 @@ $(function() {
             marker: {
               enabledThreshold: 15
             },
-           stacking: canvas.data('plotoptionsseriesstacking'),
-           states: {
-             hover: {
+            label: { enabled: true },
+            stacking: canvas.data('plotoptionsseriesstacking'),
+            states: {
+              hover: {
                 // Since marker: enabled has been set to false, lineWidth needs to be thicker than the default 2 in order to improve accessibility
-               lineWidth: 4
-             }
-           }
-         }
-      },
-      subtitle: {
-        align: canvas.data('title-center'),
-        style: { color: '#333', fontSize: '14px' },
-        text: canvas.data('subtitletext'),
-        x: 0,
-        y: 48
-      },
-      title: {
-        align: canvas.data('title-center'),
-        style: { fontSize: h1Size, fontWeight: 'bold' },
-        margin: 40,
-        text: canvas.data('title'),
-        x: 0,
-        y: 18
-      },
-      xAxis: {
-        allowDecimals: canvas.data('xaxisallowdecimals'),
-        gridLineWidth: 1,
-        tickInterval: canvas.data('tickinterval'),
-        labels: {
-          enabled: canvas.data('xaxislabelsenabled'),
-          style: { color: '#333', fontSize: '13px', fontWeight: 'normal', fontFamily: '"Open Sans Regular", "Arial", "DejaVu Sans", sans-serif' }
+                lineWidth: 4
+              }
+            }
+          }
         },
-        max: canvas.data('xaxismax'),
-        min: canvas.data('xaxismin'),
-        // Confusing detail: when type=bar, X axis becomes Y and vice versa. In other words, include 'bar' in this if-test, instead of putting it in the yAxis config
-        tickmarkPlacement: (canvas.data('type') == 'column' || canvas.data('type') == 'bar') ? 'between' : 'on',
+        subtitle: {
+          align: canvas.data('title-center'),
+          style: { color: '#333', fontSize: '14px' },
+          text: canvas.data('subtitletext'),
+          x: 0,
+          y: 48
+        },
         title: {
-          style: { color: '#333', fontSize: '13px', fontWeight: 'normal' },
-          text: canvas.data('xaxistitletext')
+          align: canvas.data('title-center'),
+          style: { fontSize: h1Size, fontWeight: 'bold' },
+          margin: 40,
+          text: canvas.data('title'),
+          x: 0,
+          y: 18
         },
-        type: canvas.data('xaxistype'),
-        reversed: false
-      },
-      yAxis: {
-        allowDecimals: canvas.data('yaxisallowdecimals'),
-        labels: {
-          style: { color: '#333', fontSize: '13px', fontWeight: 'normal', fontFamily: '"Open Sans Regular", "Arial", "DejaVu Sans", sans-serif' },
-          format: '{value:,.0f}',
-          formatter: (canvas.data('type') == 'befolkningspyramide') ? () => Math.abs(this.value) : this.value
+        xAxis: {
+          allowDecimals: canvas.data('xaxisallowdecimals'),
+          gridLineWidth: 1,
+          lineColor: '#21383a',
+          tickInterval: canvas.data('tickinterval'),
+          labels: {
+            enabled: false, //canvas.data('xaxislabelsenabled'),
+            style: { color: '#21383a', fontSize: '13px', fontWeight: 'normal', fontFamily: '"Open Sans Regular", "Arial", "DejaVu Sans", sans-serif' }
+          },
+          max: canvas.data('xaxismax'),
+          min: canvas.data('xaxismin'),
+          // Confusing detail: when type=bar, X axis becomes Y and vice versa. In other words, include 'bar' in this if-test, instead of putting it in the yAxis config
+          tickmarkPlacement: (canvas.data('type') == 'column' || canvas.data('type') == 'bar') ? 'between' : 'on',
+          title: {
+            style: { color: '#21383a', fontSize: '13px', fontWeight: 'normal' },
+            text: canvas.data('xaxistitletext')
+          },
+          type: canvas.data('xaxistype'),
+          reversed: false,
+          tickWidth: 1,
+          tickColor: '#21383a'
         },
-        max: canvas.data('yaxismax'),
-        min: canvas.data('yaxismin'),
-        stackLabels: { enabled: canvas.data('yaxisstacklabelsenabled') },
-        title: {
-          style: { color: '#333', fontSize: '13px', fontWeight: 'normal' },
-          text: canvas.data('yaxistitletext'),
-          align: 'high',
-          offset: 0,
-          rotation: 0,
-          y: -10
+        yAxis: {
+          allowDecimals: canvas.data('yaxisallowdecimals'),
+          labels: {
+            style: { color: '#21383a', fontSize: '13px', fontWeight: 'normal', fontFamily: '"Open Sans Regular", "Arial", "DejaVu Sans", sans-serif' },
+            format: '{value:,.0f}',
+            formatter: (canvas.data('type') == 'befolkningspyramide') ? () => Math.abs(this.value) : this.value
+          },
+          max: canvas.data('yaxismax'),
+          min: canvas.data('yaxismin'),
+          stackLabels: { enabled: canvas.data('yaxisstacklabelsenabled') },
+          tickWidth: 1,
+          tickColor: '#21383a',
+          lineWidth: 1,
+          lineColor: '#21383a',
+          title: {
+            style: { color: '#21383a', fontSize: '13px', fontWeight: 'normal' },
+            text: canvas.data('yaxistitletext'),
+            align: 'high',
+            offset: 0,
+            rotation: 0,
+            y: -10
+          },
+          type: canvas.data('yaxistype')
         },
-        type: canvas.data('yaxistype')
-      },
-      tooltip: {
-        valueDecimals: canvas.data('numberdecimals'),
-        shared: canvas.data('combineinformation'),
-        formatter: (canvas.data('type') == 'befolkningspyramide') ? function() {
+        tooltip: {
+          crosshairs: canvas.data('type') == 'line' && { width: 1, color: '#9575ff', dashStyle: 'solid' },
+          shadow: false,
+          backgroundColor: 'white',
+          valueDecimals: canvas.data('numberdecimals'),
+          shared: canvas.data('combineinformation')
+/*
+          formatter: (canvas.data('type') == 'befolkningspyramide') ? function() {
             return '<b>' + this.series.name + ' ' + this.point.name +':</b> ' + Highcharts.numberFormat(Math.abs(this.point.y), 0);
-          } : ''
-      }
-    });
+          } : 'Hello, World'
+*/
+        }
+      })
     }
-  });
+  })
 })
