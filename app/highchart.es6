@@ -19,6 +19,7 @@ $(function() {
     let slices
     const canvas = $(chart)
     const municipality = $(chart).attr('data-municipality')
+    const municipalityName = $(chart).attr('data-municipality-name')
 
     if (typeof highchart === 'object' && highchart.length) {
       const json = highchart[index] // NOTE: This only works if all charts on the page is dynamic data
@@ -79,22 +80,10 @@ $(function() {
             fontSize: '14px'
           },
           type: (canvas.data('type') == 'befolkningspyramide') ? 'bar' : canvas.data('type'),
-          zoomType: canvas.data('zoomtype'),
+          zoomType: canvas.data('zoomtype')
           // marginRight: (canvas.data('legend-align') == 'right') ? 120 : null,
-          events: {
-/*
-            load: function() {
-              Highcharts.each(this.series, function(s) {
-                s.points[s.points.length - 1].update({
-                  marker: { enabled: true }
-                });
-              });
-            }
-*/
-          }
         },
         // SSB color palette:
-        // colors: ['#1a9d49', '#472f91', '#274247', '#d2bc2a', '#c4351c', '#6f9090', '#3396d2', '#00824d', '#9a7b1c', '#143f90', '#075745', '#4b7272', '#6d58a4', '#83c1e9', '#b59924'],
         colors: ['#1a9d49', '#274247', '#3396d2', '#f0e442', '#f26539', '#aee5c3', '#ed51c9', '#0094a3', '#e9b200', '#143f90', '#075745', '#4b7272', '#6d58a4', '#83c1e9', '#b59924'],
         // Improved palette for color blindness
         // colors: ['#009e73', '#cc79a7', '#0072b2', '#000000', '#f0e442', '#cccccc', '#56b4e9', '#e69f00', '#d55e00'],
@@ -209,7 +198,7 @@ $(function() {
           lineColor: '#21383a',
           tickInterval: canvas.data('tickinterval'),
           labels: {
-            enabled: false, //canvas.data('xaxislabelsenabled'),
+            enabled: false, // canvas.data('xaxislabelsenabled'),
             style: { color: '#21383a', fontSize: '13px', fontWeight: 'normal', fontFamily: '"Open Sans Regular", "Arial", "DejaVu Sans", sans-serif' }
           },
           max: canvas.data('xaxismax'),
@@ -218,7 +207,7 @@ $(function() {
           tickmarkPlacement: (canvas.data('type') == 'column' || canvas.data('type') == 'bar') ? 'between' : 'on',
           title: {
             style: { color: '#21383a', fontSize: '13px', fontWeight: 'normal' },
-            text: canvas.data('xaxistitletext')
+            text: canvas.data('xaxistitletext') || municipalityName
           },
           type: canvas.data('xaxistype'),
           reversed: false,
@@ -230,6 +219,7 @@ $(function() {
           labels: {
             style: { color: '#21383a', fontSize: '13px', fontWeight: 'normal', fontFamily: '"Open Sans Regular", "Arial", "DejaVu Sans", sans-serif' },
             format: '{value:,.0f}',
+            // TODO MIMIR-118: Fix eslint issue
             formatter: (canvas.data('type') == 'befolkningspyramide') ? () => Math.abs(this.value) : this.value
           },
           max: canvas.data('yaxismax'),
@@ -255,11 +245,12 @@ $(function() {
           backgroundColor: 'white',
           valueDecimals: canvas.data('numberdecimals'),
           shared: canvas.data('combineinformation')
-/*
-          formatter: (canvas.data('type') == 'befolkningspyramide') ? function() {
-            return '<b>' + this.series.name + ' ' + this.point.name +':</b> ' + Highcharts.numberFormat(Math.abs(this.point.y), 0);
-          } : 'Hello, World'
-*/
+          /*
+            TODO: MIMIR-118
+            formatter: (canvas.data('type') == 'befolkningspyramide') ? function() {
+              return '<b>' + this.series.name + ' ' + this.point.name +':</b> ' + Highcharts.numberFormat(Math.abs(this.point.y), 0);
+            } : ''
+          */
         }
       })
     }

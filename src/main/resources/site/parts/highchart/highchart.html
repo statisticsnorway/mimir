@@ -9,6 +9,7 @@
       <div data-th-id="highcharts- + ${part.chart._id}"
         class="highcharts-canvas"
         data-th-attr="data-contentkey=${part.chart.contentkey},
+        data-municipality-name=${municipality.displayName},
         data-municipality=${municipality.code},
         data-type=${part.chart.type},
         data-zoomtype=${part.chart.zoomtype},
