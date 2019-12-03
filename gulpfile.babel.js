@@ -35,7 +35,8 @@ const path = {
       'node_modules/highcharts/modules/drilldown.js',
       'node_modules/highcharts/modules/exporting.js',
       'node_modules/highcharts/modules/data.js',
-      'node_modules/jsonstat/json-stat.js',
+      'node_modules/jsonstat-toolkit/iife.js',
+      // 'node_modules/jsonstat/json-stat.js',
       'dist/main.js'
     ]
   },
