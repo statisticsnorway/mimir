@@ -1,11 +1,10 @@
 import * as content from '/lib/xp/content'
-import * as portal from '/lib/xp/portal'
+import { getContent, getSiteConfig } from '/lib/xp/portal'
 import * as thymeleaf from '/lib/thymeleaf'
-import * as klass from '/lib/klass'
 import * as glossary from '/lib/glossary'
 import * as language from '/lib/language'
-import { alertsForContext } from '/lib/utils'
-import * as municipals from '/lib/municipals'
+import { alertsForContext, pageMode } from '/lib/ssb/utils'
+import { getMunicipality } from '/lib/klass/municipalities'
 
 const version = '%%VERSION%%'
 const preview = [ // Parts that has preview
@@ -32,13 +31,12 @@ const view = resolve('default.html')
 
 exports.get = function(req) {
   const ts = new Date().getTime()
-  const page = portal.getContent()
+  const page = getContent()
   const isFragment = page.type === 'portal:fragment'
   const mainRegion = isFragment ? null : page.page && page.page.regions && page.page.regions.main
   const config = {}
 
-  const mode = municipals.mode(req, page)
-  const municipality = klass.getMunicipality(req)
+  const mode = pageMode(req, page)
 
   page.language = language.getLanguage(page)
   page.glossary = glossary.process(page)
@@ -55,8 +53,9 @@ exports.get = function(req) {
   const breadcrumbs = [page]
   getBreadcrumbs(page, breadcrumbs)
 
+  const municipality = getMunicipality({code: getSiteConfig().defaultMunicipality})
   if (!page._path.endsWith(req.path.split('/').pop()) && req.mode != 'edit' ) {
-    breadcrumbs.push({ 'displayName': municipality.name })
+    breadcrumbs.push({ 'displayName': municipality.displayName })
   }
 
   const alerts = alertsForContext(municipality);
