@@ -1,6 +1,6 @@
 import * as portal from '/lib/xp/portal'
 import * as thymeleaf from '/lib/thymeleaf'
-import * as municipals from '/lib/municipals'
+import * as municipals from '/lib/klass/municipalities'
 
 const view = resolve('./map.html')
 

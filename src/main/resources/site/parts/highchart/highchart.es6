@@ -1,5 +1,5 @@
 import * as util from '/lib/util'
-import * as klass from '/lib/klass'
+import { getMunicipality } from '/lib/klass/municipalities';
 import * as portal from '/lib/xp/portal'
 import * as content from '/lib/xp/content'
 import * as thymeleaf from '/lib/thymeleaf'
@@ -16,7 +16,7 @@ exports.preview = (req, id) => renderPart(req, [id])
 
 function renderPart(req, highchartIds) {
   const highcharts = []
-  const municipality = klass.getMunicipality(req) ? klass.getMunicipality(req) : { code: '' }
+  const municipality = getMunicipality(req) ? getMunicipality(req) : { code: '' }
 
   highchartIds.forEach((key) => {
     const highchart = content.get({ key });
