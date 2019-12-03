@@ -16,23 +16,38 @@ $(function() {
   // Initialisering av HighCharts-figurer fra tilhørende HTML-tabell
   $('.highcharts-canvas[id^="highcharts-"]').each(function(index, chart) {
     let series
-    let slices
+    let xAxis
+    const lineColor = '#21383a'
     const canvas = $(chart)
-    const municipality = $(chart).attr('data-municipality')
+    const municipality = $(chart).attr('data-municipality') || '0501'
     const municipalityName = $(chart).attr('data-municipality-name')
+    const style = { color: '#21383a', fontSize: '13px', fontWeight: 'normal', fontFamily: '"Open Sans Regular", "Arial", "DejaVu Sans", sans-serif' }
 
     if (typeof highchart === 'object' && highchart.length) {
       const json = highchart[index] // NOTE: This only works if all charts on the page is dynamic data
-
-      const dimension = JSONstat(json).Dataset(0).Dimension(1).length == 1 ? 2 : 1 // I'm just guessing here
-      const labels = JSONstat(json).Dataset(0).Dimension(dimension).Category() // TODO: Need to check this, we might want a label field
-      // const labels = JSONstat(json).Dataset(0).Dimension('Landbakgrunn').Category() // Method to use if we add a label field
-      const values = JSONstat(json).Dataset(0).Slice({ Region: municipality }) || JSONstat(json).Dataset(0).Slice({ KOKkommuneregion0000: municipality })
-      for (let i=0; i<labels.length; i++) {
-        (series || (series = [])).push({ name: labels[i].label, data: [values.value[i]] });
-        (slices || (slices = [])).push({ name: labels[i].label, y: values.value[i] });
+      const copy = _.cloneDeep(json)
+      if (canvas.data('type') === 'bar-negative') {
+        const region = JSONstat(copy).Dataset(0).Slice({ Region: municipality })
+        const male = region.toTable({ type: 'arrobj' }, (a) => a.Kjonn === 'Menn' && -a.value || undefined )
+        const female = region.toTable({ type: 'arrobj' }, (a) => a.Kjonn === 'Kvinner' && a.value || undefined )
+        const categories = region.toTable({ type: 'arrobj' }, (a) => a.Kjonn === 'Menn' && a.Alder || undefined )
+        series = [{ name: 'Menn', data: male }, { name: 'Kvinner', data: female }]
+        xAxis = [
+          { lineColor, categories, reversed: false, labels: { style, step: 1 }, accessibility: { description: 'Alder (Menn)' }},
+          { lineColor, opposite: true, reversed: false, categories, linkedTo: 0, labels: { style, step: 1 }, accessibility: { description: 'Alder (kvinner)' } }
+        ]
       }
-      series = canvas.data('type') == 'pie' || canvas.data('switchrowsandcolumns')? { 'testing': { data: slices }, 'test2': { data: slices } } : series
+      else {
+        let slices
+        const dimension = JSONstat(json).Dataset(0).Dimension(1).length == 1 ? 2 : 1 // I'm just guessing here
+        const labels = JSONstat(json).Dataset(0).Dimension(dimension).Category() // TODO: Need to check this, we might want a label field
+        const values = JSONstat(json).Dataset(0).Slice({ Region: municipality }) // JSONstat(json).Dataset(0).Slice({ Region: municipality }) || JSONstat(json).Dataset(0).Slice({ KOKkommuneregion0000: municipality })
+        for (let i=0; i<labels.length; i++) {
+          (series || (series = [])).push({ name: labels[i].label, data: [values.value[i]] });
+          (slices || (slices = [])).push({ name: labels[i].label, y: values.value[i] });
+        }
+        series = canvas.data('type') == 'pie' || canvas.data('switchrowsandcolumns')? { data: slices } : series
+      }
     }
 
     const highchartsContentKey = canvas.data('contentkey');
@@ -79,7 +94,7 @@ $(function() {
             fontFamily: '"Open Sans Regular", "Arial", "DejaVu Sans", sans-serif',
             fontSize: '14px'
           },
-          type: (canvas.data('type') == 'befolkningspyramide') ? 'bar' : canvas.data('type'),
+          type: (canvas.data('type') == 'bar-negative') ? 'bar' : canvas.data('type'),
           zoomType: canvas.data('zoomtype')
           // marginRight: (canvas.data('legend-align') == 'right') ? 120 : null,
         },
@@ -192,13 +207,13 @@ $(function() {
           x: 0,
           y: 18
         },
-        xAxis: {
+        xAxis: xAxis || {
           allowDecimals: canvas.data('xaxisallowdecimals'),
           gridLineWidth: 1,
           lineColor: '#21383a',
           tickInterval: canvas.data('tickinterval'),
           labels: {
-            enabled: false, // canvas.data('xaxislabelsenabled'),
+            enabled: canvas.data('xaxislabelsenabled'),
             style: { color: '#21383a', fontSize: '13px', fontWeight: 'normal', fontFamily: '"Open Sans Regular", "Arial", "DejaVu Sans", sans-serif' }
           },
           max: canvas.data('xaxismax'),
@@ -244,13 +259,11 @@ $(function() {
           shadow: false,
           backgroundColor: 'white',
           valueDecimals: canvas.data('numberdecimals'),
-          shared: canvas.data('combineinformation')
-          /*
-            TODO: MIMIR-118
-            formatter: (canvas.data('type') == 'befolkningspyramide') ? function() {
-              return '<b>' + this.series.name + ' ' + this.point.name +':</b> ' + Highcharts.numberFormat(Math.abs(this.point.y), 0);
-            } : ''
-          */
+          shared: canvas.data('combineinformation'),
+          formatter: (canvas.data('type') === 'bar-negative') ? function() {
+console.log(this)
+              return '<b>' + this.series.name + ' ' + this.point.category +':</b> ' + Highcharts.numberFormat(Math.abs(this.point.y), 0);
+          } : ''
         }
       })
     }
