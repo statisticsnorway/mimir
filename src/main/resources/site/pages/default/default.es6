@@ -4,7 +4,7 @@ import * as thymeleaf from '/lib/thymeleaf'
 import * as klass from '/lib/klass'
 import * as glossary from '/lib/glossary'
 import * as language from '/lib/language'
-import { alertsForContext } from '/lib/mimir/alert'
+import { alertsForContext } from '/lib/utils'
 import * as municipals from '/lib/municipals'
 
 const version = '%%VERSION%%'
@@ -28,13 +28,15 @@ function getBreadcrumbs(c, a) {
   c && c.type.match(/:page$/) && a.unshift(c) && getBreadcrumbs(c, a)
 }
 
+const view = resolve('default.html')
+
 exports.get = function(req) {
   const ts = new Date().getTime()
   const page = portal.getContent()
   const isFragment = page.type === 'portal:fragment'
   const mainRegion = isFragment ? null : page.page && page.page.regions && page.page.regions.main
   const config = {}
-  const view = resolve('default.html')
+
   const mode = municipals.mode(req, page)
   const municipality = klass.getMunicipality(req)
 
