@@ -31,13 +31,13 @@ $(function() {
                 const chart = this
                 const mapKey = 'no-fylke-' + e.point.drilldown
                 const fail = setTimeout(function() {
-                    if (!Highcharts.maps[mapKey]) {
-                      chart.showLoading('<i class="icon-frown"></i> Failed loading ' + e.point.name);
-                      fail = setTimeout(function() {
-                        chart.hideLoading();
-                      }, 1000);
-                    }
-                  }, 3000);
+                  if (!Highcharts.maps[mapKey]) {
+                    chart.showLoading('<i class="icon-frown"></i> Failed loading ' + e.point.name);
+                    fail = setTimeout(function() {
+                      chart.hideLoading();
+                    }, 1000);
+                  }
+                }, 3000);
 
                 // Show the spinner
                 chart.showLoading('<i class="icon-spinner icon-spin icon-3x"></i>'); // Font Awesome spinner

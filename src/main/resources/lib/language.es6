@@ -42,7 +42,7 @@ exports.getLanguage = function(page) {
  * @return {string}
  */
 exports.localizeTimePeriod = (time) => {
-  return time.length === 4 ?  time : parseTimeInterval(time)
+  return time.length === 4 ? time : parseTimeInterval(time)
 }
 
 /**
@@ -58,22 +58,22 @@ function parseTimeInterval(time) {
   const interval = splitYearLetterNumberIntoArray.exec(time)
 
   let parsedTime = ''
-  switch(interval[2]) {
-    case 'H':
-      parsedTime = `${i18n.localize({key: 'interval.' + interval[2]})} ${interval[1]} `
-      break;
-    case 'K':
-      parsedTime = `${interval[3]}. ${i18n.localize({key: 'interval.' + interval[2]})} ${interval[1]}`
-      break;
-    case 'M':
-      parsedTime = `${i18n.localize({key: 'interval.M' + interval[2]})} ${interval[1]}`
-      break;
-    case 'T':
-      parsedTime = `${interval[3]}. ${i18n.localize({key: 'interval.' + interval[2]})} ${interval[1]}`
-      break;
-    case 'U':
-      parsedTime = `${i18n.localize({key: 'interval.' + interval[2]})} ${interval[3]} ${interval[1]}`
-      break;
+  switch (interval[2]) {
+  case 'H':
+    parsedTime = `${i18n.localize({key: 'interval.' + interval[2]})} ${interval[1]} `
+    break;
+  case 'K':
+    parsedTime = `${interval[3]}. ${i18n.localize({key: 'interval.' + interval[2]})} ${interval[1]}`
+    break;
+  case 'M':
+    parsedTime = `${i18n.localize({key: 'interval.M' + interval[2]})} ${interval[1]}`
+    break;
+  case 'T':
+    parsedTime = `${interval[3]}. ${i18n.localize({key: 'interval.' + interval[2]})} ${interval[1]}`
+    break;
+  case 'U':
+    parsedTime = `${i18n.localize({key: 'interval.' + interval[2]})} ${interval[3]} ${interval[1]}`
+    break;
   }
   return parsedTime;
 }

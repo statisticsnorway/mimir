@@ -16,17 +16,15 @@ $(function() {
       map.addClass('d-none').parent().removeClass('map-container')
     })
     if (map.hasClass('d-none')) {
-      if(top > 1) {
+      if (top > 1) {
         const pos = $(el).offset()
         $('html').stop().animate({ scrollTop: pos.top }, 400, 'swing', () => {
           map.toggleClass('d-none').parent().toggleClass('map-container')
         })
+      } else {
+        map.toggleClass('d-none').parent().toggleClass('map-container')
       }
-      else {
-         map.toggleClass('d-none').parent().toggleClass('map-container')
-      }
-    }
-    else {
+    } else {
       map.toggleClass('d-none').parent().toggleClass('map-container')
     }
   })

@@ -4,14 +4,14 @@ import * as context from '/lib/xp/context'
 import * as content from '/lib/xp/content'
 
 function temporary(draft, master) {
-log.info('-- running temporary --');
+  log.info('-- running temporary --');
   // Temporary code to remove old content type statistikkbanken
   context.run(draft, () => {
     const dataquery = content.query({ count: 999, contentTypes: [`${app.name}:dataquery`] })
     const statistikkbanken = content.query({ count: 999, contentTypes: [`${app.name}:statistikkbanken`] })
     if (dataquery && dataquery.total === 0 && statistikkbanken && statistikkbanken.total) {
       statistikkbanken.hits.map((data) => {
-log.info(JSON.stringify(data, null, ' '))
+        log.info(JSON.stringify(data, null, ' '))
         const create = content.create({ name: data.name, parentPath: '/mimir/temporary', displayName: data.displayName, contentType: `${app.name}:dataquery`, data: {
           table: data.data.table,
           json: data.data.json,
@@ -19,7 +19,7 @@ log.info(JSON.stringify(data, null, ' '))
         }})
         if (create) {
           const keyFigure = content.query({ count: 999, contentTypes: [`${app.name}:key-figure`], query: `data.query = '${data._id}'` })
-log.info(JSON.stringify(data, null, ' '))
+          log.info(JSON.stringify(data, null, ' '))
           if (keyFigure && keyFigure.total) {
             keyFigure.hits.forEach((figure) => {
               content.modify({ key: figure._id, editor: (r) => {
@@ -49,8 +49,7 @@ exports.get = function(req) {
       datasets && datasets.hits.map((dataset) => content.delete({ key: dataset._id }))
     })
     return { body: { success: true }, contentType: 'application/json', status: 200 }
-  }
-  else {
+  } else {
     temporary(draft, master)
     // return { body: { success: true }, contentType: 'application/json', status: 200 }
   }

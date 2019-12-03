@@ -27,12 +27,12 @@ exports.get = function(req) {
     }
   })
 
-// log.info(JSON.stringify(dataset, null, ' '))
+  // log.info(JSON.stringify(dataset, null, ' '))
 
   part.config.dashboard = part.config.dashboard && util.data.forceArray(part.config.dashboard) || []
   part.config.dashboard.map((key) => {
-     const item = content.get({ key })
-     dashboard.push(item)
+    const item = content.get({ key })
+    dashboard.push(item)
   })
 
   const model = { part, dashboard, dataquery }

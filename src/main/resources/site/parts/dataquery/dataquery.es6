@@ -9,8 +9,8 @@ function getTable(data, table = []) {
     const dimension = data.dimension['KOKkommuneregion0000'] ? 'KOKkommuneregion0000' : Object.keys(data.dimension)[0]
     for (const key in data.dimension[dimension].category.label) {
       if (data.dimension[dimension].category.label.hasOwnProperty(key)) {
-         const i = data.dimension[dimension].category.index[key]
-         table.push({ label: data.dimension[dimension].category.label[key], value: data.value[i] })
+        const i = data.dimension[dimension].category.index[key]
+        table.push({ label: data.dimension[dimension].category.label[key], value: data.value[i] })
       }
     }
   }
@@ -25,15 +25,15 @@ exports.get = function(req) {
   part.config.dataquery = part.config.dataquery && util.data.forceArray(part.config.dataquery) || []
 
   part.config.dataquery.map((key) => {
-     const api = content.get({ key })
-     if (api.data.table) {
-       api.result = dataquery.get(api.data.table, api.data.json && JSON.parse(api.data.json))
-       api.table = getTable(api.result.dataset)
-       api.time = api.result && api.result.dataset && Object.keys(api.result.dataset.dimension.Tid.category.index)[0]
-       const contentsCode = api.result && api.result.dataset && Object.keys(api.result.dataset.dimension.ContentsCode.category.index)[0]
-       api.label = contentsCode && api.result.dataset.dimension.ContentsCode.category.label[contentsCode]
-     }
-     dataqueries.push(api)
+    const api = content.get({ key })
+    if (api.data.table) {
+      api.result = dataquery.get(api.data.table, api.data.json && JSON.parse(api.data.json))
+      api.table = getTable(api.result.dataset)
+      api.time = api.result && api.result.dataset && Object.keys(api.result.dataset.dimension.Tid.category.index)[0]
+      const contentsCode = api.result && api.result.dataset && Object.keys(api.result.dataset.dimension.ContentsCode.category.index)[0]
+      api.label = contentsCode && api.result.dataset.dimension.ContentsCode.category.label[contentsCode]
+    }
+    dataqueries.push(api)
   })
 
   const model = { part, dataqueries }

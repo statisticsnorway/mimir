@@ -52,7 +52,7 @@ exports.get = function(req) {
   const highcharts = []
   let json
 
-  const municipality = klass.getMunicipality(req) ? klass.getMunicipality(req) : {code:""}
+  const municipality = klass.getMunicipality(req) ? klass.getMunicipality(req) : {code: ''}
 
   part.config.highchart = part.config.highchart && util.data.forceArray(part.config.highchart) || []
   part.config.highchart.map((key) => {
