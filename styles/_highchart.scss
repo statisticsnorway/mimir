@@ -1,3 +1,18 @@
+.part-highchart {
+  .highcharts-exporting-group {
+    display: none;
+  }
+}
+.btn-highchart-export {
+  z-index: 200;
+  top: 10px;
+  right: 10px;
+  background-color: transparent;
+  i {
+    color: $ssb-green-4;
+  }
+  font-size: 14px;
+}
 .hc-container {
   .footnote {
     font-size: 12px;
