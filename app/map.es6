@@ -72,7 +72,7 @@ $(function() {
 
                           axios.get(service, { params: { postalCode: kommnr }})
                             .then((result) => {
-                              window.location.href = window.location.href.replace(/kommunefakta.*$/, '') + 'kommunefakta/' + result.data.municipality.path;
+                              window.location.href = window.location.href.replace(/(arealplanlegging|kommunefakta)\/.*$/, '') + 'kommunefakta/' + result.data.municipality.path;
                             })
                         }
                       }
