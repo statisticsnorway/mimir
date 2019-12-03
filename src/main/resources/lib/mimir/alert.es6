@@ -13,18 +13,18 @@ export const alertsForContext = (municipality) => {
 }
 
 export const siteAlerts = () => {
-    return query({
-        contentTypes: [`${app.name}:alert`],
-        query: `language = '${getContent().language}'`,
-        filters: {
-            notExists: {
-                field: 'data.municipalCodes'
-            }
-        }
-    })
+  return query({
+    contentTypes: [`${app.name}:alert`],
+    query: `language = '${getContent().language}'`,
+    filters: {
+      notExists: {
+        field: 'data.municipalCodes'
+      }
+    }
+  })
 }
 
 export const municipalAlerts = (municipalCode) => query({
-    query: `data.municipalCodes IN ('${municipalCode}')`,
-    contentType: `${app.name}:alert`
+  query: `data.municipalCodes IN ('${municipalCode}')`,
+  contentType: `${app.name}:alert`
 })
