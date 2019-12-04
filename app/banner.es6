@@ -14,9 +14,7 @@ $(function() {
     })
   }
 
-  $('.part-banner').imagesLoaded().done((a) => {
-console.log('-- loaded --')
-console.log(a)
+  $('.part-banner').imagesLoaded().done(() => {
     $('.part-banner').addClass('opacity-1')
   })
 
