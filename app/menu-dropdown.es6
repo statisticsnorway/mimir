@@ -38,7 +38,7 @@ $(function() {
       const { top } = el.getBoundingClientRect()
       top > 0 && $(el).removeClass('border-bottom shadow-sm').find('.opacity-zero').removeClass('opacity-one')
       top === 0 && $(el).addClass('border-bottom shadow-sm').find('.opacity-zero').addClass('opacity-one')
-      top > 0 && !animate && map.addClass('d-none').parent().removeClass('map-container') && $('#js-show-map').removeClass('active')
+      top > 0 && !animate && $('.map-container').length && map.addClass('d-none').parent().removeClass('map-container') && $('#js-show-map').removeClass('active')
     })
   })
 })

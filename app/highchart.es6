@@ -33,10 +33,7 @@ $(function() {
         const female = region.toTable({ type: 'arrobj' }, (a) => a.Kjonn === 'Kvinner' && a.value || undefined )
         const categories = region.toTable({ type: 'arrobj' }, (a) => a.Kjonn === 'Menn' && a.Alder || undefined )
         series = [{ name: 'Menn', data: male }, { name: 'Kvinner', data: female }]
-        xAxis = [
-          { lineColor, categories, reversed: false, labels: { style, step: 1 }, accessibility: { description: 'Alder (Menn)' }}
-          // { lineColor, opposite: true, reversed: false, categories, linkedTo: 0, labels: { style, step: 1 }, accessibility: { description: 'Alder (kvinner)' } }
-        ]
+        xAxis = [{ lineColor, categories, reversed: false, labels: { style, step: 1 }, accessibility: { description: 'Alder' }}]
       } else {
         let slices
         const dimension = JSONstat(json).Dataset(0).Dimension(1).length == 1 ? 2 : 1 // I'm just guessing here
@@ -101,6 +98,7 @@ $(function() {
         },
         // SSB color palette:
         colors: ['#1a9d49', '#274247', '#3396d2', '#f0e442', '#f26539', '#aee5c3', '#ed51c9', '#0094a3', '#e9b200', '#143f90', '#075745', '#4b7272', '#6d58a4', '#83c1e9', '#b59924'],
+        // TODO: This shoud be here on print?
         // Improved palette for color blindness
         // colors: ['#009e73', '#cc79a7', '#0072b2', '#000000', '#f0e442', '#cccccc', '#56b4e9', '#e69f00', '#d55e00'],
         // credits: {
