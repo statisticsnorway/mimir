@@ -15,8 +15,9 @@ $(function() {
 
   // Initialisering av HighCharts-figurer fra tilhørende HTML-tabell
   $('.highcharts-canvas[id^="highcharts-"]').each(function(index, chart) {
-    let series
     let xAxis
+    let series
+    let categories
     const lineColor = '#21383a'
     const canvas = $(chart)
     const municipality = $(chart).attr('data-municipality') || '0501'
@@ -41,7 +42,8 @@ $(function() {
         let slices
         const dimension = JSONstat(json).Dataset(0).Dimension(1).length == 1 ? 2 : 1 // I'm just guessing here
         const labels = JSONstat(json).Dataset(0).Dimension(dimension).Category() // TODO: Need to check this, we might want a label field
-        const values = JSONstat(json).Dataset(0).Slice({ Region: municipality }) // JSONstat(json).Dataset(0).Slice({ Region: municipality }) || JSONstat(json).Dataset(0).Slice({ KOKkommuneregion0000: municipality })
+        const values = JSONstat(json).Dataset(0).Slice({ Region: municipality }) || JSONstat(json).Dataset(0).Slice({ KOKkommuneregion0000: municipality })
+        categories = [values.label.replace(/\d+: /, '')]
         for (let i=0; i<labels.length; i++) {
           (series || (series = [])).push({ name: labels[i].label, data: [values.value[i]] });
           (slices || (slices = [])).push({ name: labels[i].label, y: values.value[i] });
@@ -208,22 +210,17 @@ $(function() {
           y: 18
         },
         xAxis: xAxis || {
+          categories,
           allowDecimals: canvas.data('xaxisallowdecimals'),
           gridLineWidth: 1,
-          lineColor: '#21383a',
+          lineColor,
           tickInterval: canvas.data('tickinterval'),
-          labels: {
-            enabled: canvas.data('xaxislabelsenabled'),
-            style: { color: '#21383a', fontSize: '13px', fontWeight: 'normal', fontFamily: '"Open Sans Regular", "Arial", "DejaVu Sans", sans-serif' }
-          },
+          labels: { enabled: canvas.data('xaxislabelsenabled'), style },
           max: canvas.data('xaxismax'),
           min: canvas.data('xaxismin'),
           // Confusing detail: when type=bar, X axis becomes Y and vice versa. In other words, include 'bar' in this if-test, instead of putting it in the yAxis config
           tickmarkPlacement: (canvas.data('type') == 'column' || canvas.data('type') == 'bar') ? 'between' : 'on',
-          title: {
-            style: { color: '#21383a', fontSize: '13px', fontWeight: 'normal' },
-            text: canvas.data('xaxistitletext') || municipalityName
-          },
+          title: { style, text: canvas.data('xaxistitletext') || municipalityName },
           type: canvas.data('xaxistype'),
           reversed: false,
           tickWidth: 1,
@@ -232,10 +229,12 @@ $(function() {
         yAxis: {
           allowDecimals: canvas.data('yaxisallowdecimals'),
           labels: {
-            style: { color: '#21383a', fontSize: '13px', fontWeight: 'normal', fontFamily: '"Open Sans Regular", "Arial", "DejaVu Sans", sans-serif' },
+            style,
             format: '{value:,.0f}',
             // TODO MIMIR-118: Fix eslint issue
-            formatter: (canvas.data('type') == 'befolkningspyramide') ? () => Math.abs(this.value) : this.value
+            formatter: (canvas.data('type') == 'bar-negative') ? function() {
+              return Math.abs(this.value)
+            } : this.value
           },
           max: canvas.data('yaxismax'),
           min: canvas.data('yaxismin'),
@@ -243,15 +242,8 @@ $(function() {
           tickWidth: 1,
           tickColor: '#21383a',
           lineWidth: 1,
-          lineColor: '#21383a',
-          title: {
-            style: { color: '#21383a', fontSize: '13px', fontWeight: 'normal' },
-            text: canvas.data('yaxistitletext'),
-            align: 'high',
-            offset: 0,
-            rotation: 0,
-            y: -10
-          },
+          lineColor,
+          title: { style, text: canvas.data('yaxistitletext'), align: 'high', offset: 0, rotation: 0, y: -10 },
           type: canvas.data('yaxistype')
         },
         tooltip: {
@@ -261,8 +253,7 @@ $(function() {
           valueDecimals: canvas.data('numberdecimals'),
           shared: canvas.data('combineinformation'),
           formatter: (canvas.data('type') === 'bar-negative') ? function() {
-console.log(this)
-              return '<b>' + this.series.name + ' ' + this.point.category +':</b> ' + Highcharts.numberFormat(Math.abs(this.point.y), 0);
+            return `<b>${this.series.name} ${this.point.category}:</b> ` + Highcharts.numberFormat(Math.abs(this.point.y), 0)
           } : ''
         }
       })
