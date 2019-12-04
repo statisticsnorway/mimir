@@ -14,6 +14,12 @@ $(function() {
     })
   }
 
+  $('.part-banner').imagesLoaded().done((a) => {
+console.log('-- loaded --')
+console.log(a)
+    $('.part-banner').addClass('opacity-1')
+  })
+
   resizeImages()
   $(window).resize((e) => resizeImages())
 })
