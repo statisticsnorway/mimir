@@ -2,7 +2,6 @@ import { query } from '/lib/xp/content'
 
 const contentTypeName = `${app.name}:municipality-alert`
 
-
 export const get = (key) => {
   const content = query({
     contentTypes: [contentTypeName],
@@ -12,7 +11,10 @@ export const get = (key) => {
 }
 
 
-export const list = ( municipalCode ) => query({
-  query: `data.municipalCodes IN ('${municipalCode}')`,
-  contentType: `contentTypeName`
-})
+export const list = ( municipalCode ) => {
+  const now = new Date();
+  return query({
+    query: `data.municipalCodes IN ('${municipalCode}') AND publish.to > '${now.toISOString()}'`,
+    contentType: `contentTypeName`
+  })
+}
