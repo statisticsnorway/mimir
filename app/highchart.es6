@@ -20,7 +20,7 @@ $(function() {
     let categories
     const lineColor = '#21383a'
     const canvas = $(chart)
-    const municipality = $(chart).attr('data-municipality') || '0501'
+    const municipality = $(chart).attr('data-municipality') || '0501' // Defaults to municipality 0501
     const municipalityName = $(chart).attr('data-municipality-name')
     const style = { color: '#21383a', fontSize: '13px', fontWeight: 'normal', fontFamily: '"Open Sans Regular", "Arial", "DejaVu Sans", sans-serif' }
 
