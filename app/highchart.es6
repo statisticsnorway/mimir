@@ -34,8 +34,8 @@ $(function() {
         const categories = region.toTable({ type: 'arrobj' }, (a) => a.Kjonn === 'Menn' && a.Alder || undefined )
         series = [{ name: 'Menn', data: male }, { name: 'Kvinner', data: female }]
         xAxis = [
-          { lineColor, categories, reversed: false, labels: { style, step: 1 }, accessibility: { description: 'Alder (Menn)' }},
-          { lineColor, opposite: true, reversed: false, categories, linkedTo: 0, labels: { style, step: 1 }, accessibility: { description: 'Alder (kvinner)' } }
+          { lineColor, categories, reversed: false, labels: { style, step: 1 }, accessibility: { description: 'Alder (Menn)' }}
+          // { lineColor, opposite: true, reversed: false, categories, linkedTo: 0, labels: { style, step: 1 }, accessibility: { description: 'Alder (kvinner)' } }
         ]
       }
       else {
@@ -48,7 +48,8 @@ $(function() {
           (series || (series = [])).push({ name: labels[i].label, data: [values.value[i]] });
           (slices || (slices = [])).push({ name: labels[i].label, y: values.value[i] });
         }
-        series = canvas.data('type') == 'pie' || canvas.data('switchrowsandcolumns')? { data: slices } : series
+        series = canvas.data('type') == 'pie' || canvas.data('switchrowsandcolumns') ? [{ data: slices }] : series
+console.log(series)
       }
     }
 
@@ -85,7 +86,7 @@ $(function() {
         accessibility: { enabled: false },
         chart: {
           // Hvis inne i en "slider" (galleri), sett fast høyde og bredde basert på dimensjonene til container-elementet.
-          height: canvas.closest('.hc-container').height() || undefined,
+          height: canvas.data('type') == 'bar-negative' ? 550 : undefined,
           width: canvas.closest('.highcharts-graph').width() || undefined,
           // Kommentert ut koden over, for det virker som om highcharts gjør denne jobben bedre selv, men sletter det ikke enda, tilfelle det skaper problemer.
           // TODO: slette utkommentert kode over, dersom ingenting har tatt skade av at det ble fjernet til å begynne med.
