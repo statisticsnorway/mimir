@@ -14,7 +14,7 @@ exports.get = function(req) {
     accordion.data.items = accordion.data.items && util.data.forceArray(accordion.data.items) || []
     accordion.data.body = portal.processHtml({ value: accordion.data.body })
     accordions.push(accordion)
- })
+  })
 
 
   const model = { part, accordions }

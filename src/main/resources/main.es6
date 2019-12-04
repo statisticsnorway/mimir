@@ -32,8 +32,7 @@ function job() {
           const publish = content.publish({ keys: [update._id], sourceBranch: 'draft', targetBranch: 'master', includeDependencies: false })
           publish || log.error(`PUBLISH failed: ${datasets.hits[0]._path}`)
         }
-      }
-      else { // Create dataset
+      } else { // Create dataset
         const name = `${row._name} (datasett) opprettet ${now}`
         const displayName = `${row.displayName} (datasett) opprettet ${now}`
         const create = content.create({ name, displayName, parentPath: row._path, contentType: `${app.name}:dataset`, data: {

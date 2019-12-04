@@ -1,5 +1,4 @@
 import { query } from '/lib/xp/content'
-import { NOT_FOUND } from './error';
 
 const contentTypeName = `${app.name}:key-figure`
 
