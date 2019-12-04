@@ -5,7 +5,7 @@
     /*]]>*/
   </script>
   <div class="col-12">
-    <figure th:fragment="graph" class="highcharts-figure">
+    <figure th:fragment="graph" class="highcharts-figure mb-0">
       <div data-th-id="highcharts- + ${part.chart._id}"
         class="highcharts-canvas"
         data-th-attr="data-contentkey=${part.chart.contentkey},
@@ -67,4 +67,8 @@
     </i>
     Last ned som … 
   </button>
+  <div data-th-if="${part.chart.creditsenabled}" class="col-12">
+    <h5 class="mb-0">Kilde:</h5>
+    <a class="ssb-link" data-th-href="${part.chart.creditshref}" data-th-text="${part.chart.creditstext}"></a>
+  </div>
 </section>

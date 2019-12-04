@@ -104,13 +104,14 @@ $(function() {
         colors: ['#1a9d49', '#274247', '#3396d2', '#f0e442', '#f26539', '#aee5c3', '#ed51c9', '#0094a3', '#e9b200', '#143f90', '#075745', '#4b7272', '#6d58a4', '#83c1e9', '#b59924'],
         // Improved palette for color blindness
         // colors: ['#009e73', '#cc79a7', '#0072b2', '#000000', '#f0e442', '#cccccc', '#56b4e9', '#e69f00', '#d55e00'],
-        credits: {
-          enabled: canvas.data('creditsenabled'),
-          href: canvas.data('creditshref'),
-          position: { align: 'left', y: -4, x: 15, verticalAlign: 'bottom' },
-          style: { color: '#00824d', cursor: 'pointer', fontSize: '16px', textDecoration: 'underline', fontFamily: 'Roboto', marginTop: '20px' },
-          text: canvas.data('creditstext')
-        },
+        // credits: {
+        //  enabled: canvas.data('creditsenabled'),
+        //   href: canvas.data('creditshref'),
+        //  position: { align: 'left', y: -4, x: 15, verticalAlign: 'bottom' },
+        //  style: { color: '#00824d', cursor: 'pointer', fontSize: '16px', textDecoration: 'underline', fontFamily: 'Roboto', marginTop: '20px' },
+        //   text: canvas.data('creditstext')
+        // },
+        credits: { enabled: false },
         series,
         data: !series && {
           switchRowsAndColumns: canvas.data('switchrowsandcolumns'),
