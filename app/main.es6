@@ -1,3 +1,3 @@
 (function() {
-    console.log(`We're using iffe`)
+  console.log(`We're using iffe`)
 })()

@@ -4,11 +4,11 @@ import { NOT_FOUND } from './error';
 const contentTypeName = `${app.name}:dataset`
 
 export const get = (key) => {
-    const content = query({
-        contentTypes: [contentTypeName],
-        query: `_id = '${key.key}'`
-    });
-    return content.count === 1 ? {...content.hits[0], status: 200} : NOT_FOUND
+  const content = query({
+    contentTypes: [contentTypeName],
+    query: `_id = '${key.key}'`
+  });
+  return content.count === 1 ? {...content.hits[0], status: 200} : NOT_FOUND
 }
 
 /**
@@ -17,8 +17,8 @@ export const get = (key) => {
  * @return {object}
  */
 export const getDataSetWithDataQueryId = (dataQueryContentId) => query({
-        count: 1,
-        contentTypes: [contentTypeName],
-        sort: 'createdTime DESC',
-        query: `data.dataquery = '${dataQueryContentId}'`
-    })
+  count: 1,
+  contentTypes: [contentTypeName],
+  sort: 'createdTime DESC',
+  query: `data.dataquery = '${dataQueryContentId}'`
+})

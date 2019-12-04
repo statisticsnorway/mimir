@@ -12,8 +12,7 @@ $(function() {
           popper = new Popper(document.getElementById('change-language'), document.getElementById('language-tooltip'), {
             placement: 'bottom'
           })
-        }
-        else {
+        } else {
           tooltip.addClass('d-none')
         }
       })

@@ -1,16 +1,15 @@
 import { query } from '/lib/xp/content'
-import { NOT_FOUND } from './error';
 
 const contentTypeName = `${app.name}:glossary`;
 
 export const get = (key) => {
-    const queryString = `_id = '${key.key}'`;
-    const content = query({
-        contentTypes: [contentTypeName],
-        query: queryString
-    });
-    return content.count === 1 ? {...content.hits[0], status: 200} :
-      {status: 404, message: `Could not find ${contentTypeName} with id ${key.key}`}
+  const queryString = `_id = '${key.key}'`;
+  const content = query({
+    contentTypes: [contentTypeName],
+    query: queryString
+  });
+  return content.count === 1 ? {...content.hits[0], status: 200} :
+    {status: 404, message: `Could not find ${contentTypeName} with id ${key.key}`}
 }
 
 export const parseGlossaryContent = (key) => {

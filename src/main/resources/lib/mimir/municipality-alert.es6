@@ -4,15 +4,15 @@ const contentTypeName = `${app.name}:municipality-alert`
 
 
 export const get = (key) => {
-    const content = query({
-        contentTypes: [contentTypeName],
-        query: `_id = '${key.key}'`
-    });
-    return content.count === 1 ? content.hits[0] : { error: `Could not find ${contentTypeName} with id ${key.key}` }
+  const content = query({
+    contentTypes: [contentTypeName],
+    query: `_id = '${key.key}'`
+  });
+  return content.count === 1 ? content.hits[0] : { error: `Could not find ${contentTypeName} with id ${key.key}` }
 }
 
 
 export const list = ( municipalCode ) => query({
-    query: `data.municipalCodes IN ('${municipalCode}')`,
-    contentType: `contentTypeName`
+  query: `data.municipalCodes IN ('${municipalCode}')`,
+  contentType: `contentTypeName`
 })

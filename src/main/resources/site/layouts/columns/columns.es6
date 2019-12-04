@@ -13,8 +13,7 @@ exports.get = function(req) {
   if (size === 'a') {
     leftSize = 'col-md-4'
     rightSize = 'col-md-8'
-  }
-  else if (size === 'c') {
+  } else if (size === 'c') {
     leftSize = 'col-md-8'
     rightSize = 'col-md-4'
   }

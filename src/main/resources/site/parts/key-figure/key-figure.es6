@@ -1,7 +1,6 @@
 import { get as getKeyFigure } from '/lib/mimir/key-figure'
 import { get as getGlossary } from '/lib/mimir/glossary'
 import { parseMunicipalityValues } from '/lib/municipals'
-import { renderError } from '/lib/mimir/error'
 import { getComponent } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
 import { getMunicipality } from '/lib/klass'

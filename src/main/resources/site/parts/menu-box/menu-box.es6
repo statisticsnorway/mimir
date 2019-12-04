@@ -14,13 +14,12 @@ exports.get = function(req) {
   part.menu.data.menu.map((menu) => {
     if (menu.link) {
       menu.href = menu.link
-    }
-    else if (menu.content) {
+    } else if (menu.content) {
       menu.href = portal.pageUrl({ id: menu.content })
     }
   })
 
-// log.info(JSON.stringify(part, null, ' '))
+  // log.info(JSON.stringify(part, null, ' '))
 
   const model = { part }
   const body = thymeleaf.render(view, model)

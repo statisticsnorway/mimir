@@ -42,7 +42,7 @@
         "quote-props": 1,
         "comma-spacing": 1,
         "no-unused-vars": 1,
-        "no-invalid-this": 1,
+        "no-invalid-this": 0,
         "indent": [1, 2],
         "semi": 0,
         "object-curly-spacing": 0,
