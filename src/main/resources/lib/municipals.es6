@@ -82,7 +82,6 @@ export const parseMunicipalityValues = (dataQueryId, municipality, defaultMunici
     const table = datasetToMunicipalityWithValues(data.dataset)
     const time = data && Object.keys(data.dataset.dimension.Tid.category.index)[0]
     const value = (table[municipality && municipality.code || defaultMunicipalityCode] || { value: '-'}).value
-
     return municipalityObject(value, time)
   } else { // Use direct lookup with http through /lib/dataquery (wrapper for http-client)
     const selection = { filter: 'item', values: [municipality && municipality.code || defaultMunicipalityCode] }
@@ -92,11 +91,17 @@ export const parseMunicipalityValues = (dataQueryId, municipality, defaultMunici
   }
 }
 
-const notFoundValues = ['.', '..', '...', ':', '-']
-
+/**
+ *
+ * @param {String} value
+ * @param {String} time
+ * @return {{valueNotFound: String, valueHumanReadable: (String), time: String, value: (Number|null)}}
+ */
 const municipalityObject = (value, time) => ({
   value: notFoundValues.indexOf(value) < 0 ? value : null,
   valueNotFound: localize({key: 'value.notFound'}),
   time: localizeTimePeriod(time),
   valueHumanReadable: value ? createHumanReadableFormat(value): undefined
 })
+
+const notFoundValues = ['.', '..', '...', ':', '-']

@@ -40,12 +40,16 @@ function renderKeyFigure(keyFigures, part, municipality) {
     }
   })
 
+  const keyFiguresWithNonZeroValue = parsedKeyFigures.filter( (keyFigure) => {
+    return keyFigure.value !== null && keyFigure.value !== 0
+  })
+
   const model = {
     source: {
       title: part ? part.config.title : undefined,
       url: part ? part.config.source : undefined
     },
-    data: parsedKeyFigures,
+    data: keyFiguresWithNonZeroValue,
     page: { glossary }
   }
 
