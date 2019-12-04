@@ -1,3 +1,3 @@
 (function() {
-    console.log(`We're using iffe`)
+  // Nothing todo
 })()

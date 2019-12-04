@@ -37,8 +37,7 @@ $(function() {
           { lineColor, categories, reversed: false, labels: { style, step: 1 }, accessibility: { description: 'Alder (Menn)' }}
           // { lineColor, opposite: true, reversed: false, categories, linkedTo: 0, labels: { style, step: 1 }, accessibility: { description: 'Alder (kvinner)' } }
         ]
-      }
-      else {
+      } else {
         let slices
         const dimension = JSONstat(json).Dataset(0).Dimension(1).length == 1 ? 2 : 1 // I'm just guessing here
         const labels = JSONstat(json).Dataset(0).Dimension(dimension).Category() // TODO: Need to check this, we might want a label field
@@ -49,7 +48,6 @@ $(function() {
           (slices || (slices = [])).push({ name: labels[i].label, y: values.value[i] });
         }
         series = canvas.data('type') == 'pie' || canvas.data('switchrowsandcolumns') ? [{ data: slices }] : series
-console.log(series)
       }
     }
 
@@ -233,10 +231,9 @@ console.log(series)
           labels: {
             style,
             format: '{value:,.0f}',
-            // TODO MIMIR-118: Fix eslint issue
-            formatter: (canvas.data('type') == 'bar-negative') ? function() {
-              return Math.abs(this.value)
-            } : this.value
+            formatter: function(a) {
+              return (canvas.data('type') == 'bar-negative') ? Math.abs(a.value) : a.value
+            }
           },
           max: canvas.data('yaxismax'),
           min: canvas.data('yaxismin'),

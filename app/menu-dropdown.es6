@@ -17,7 +17,7 @@ $(function() {
       map.addClass('d-none').parent().removeClass('map-container')
     })
     if (map.hasClass('d-none')) {
-      if(top > 1) {
+      if (top > 1) {
         animate = true
         const pos = $(el).offset()
         $('html').stop().animate({ scrollTop: pos.top }, 400, 'swing', () => {
@@ -26,12 +26,10 @@ $(function() {
             map.removeClass('d-none').parent().addClass('map-container')
           }, 50)
         })
-      }
-      else {
+      } else {
         map.toggleClass('d-none').parent().toggleClass('map-container')
       }
-    }
-    else {
+    } else {
       map.toggleClass('d-none').parent().toggleClass('map-container')
     }
   })
