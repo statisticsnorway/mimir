@@ -9,6 +9,10 @@
   >* {
     margin-left: 100px;
     margin-right: 100px;
+    @include media-breakpoint-down(md) {
+      margin-left: 0;
+      margin-right: 0;
+    }
   }
 }
 .layout-topic+.layout-topic {
