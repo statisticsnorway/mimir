@@ -39,7 +39,7 @@ $(function() {
         const dimension = JSONstat(json).Dataset(0).Dimension(1).length == 1 ? 2 : 1 // I'm just guessing here
         const labels = JSONstat(json).Dataset(0).Dimension(dimension).Category() // TODO: Need to check this, we might want a label field
         const values = JSONstat(json).Dataset(0).Slice({ Region: municipality }) || JSONstat(json).Dataset(0).Slice({ KOKkommuneregion0000: municipality })
-        categories = [values.label.replace(/\d+: /, '')]
+        categories = [canvas.data('title')]
         for (let i=0; i<labels.length; i++) {
           (series || (series = [])).push({ name: labels[i].label, data: [values.value[i]] });
           (slices || (slices = [])).push({ name: labels[i].label, y: values.value[i] });
@@ -93,6 +93,7 @@ $(function() {
             fontSize: '14px'
           },
           type: (canvas.data('type') == 'bar-negative') ? 'bar' : canvas.data('type'),
+          spacing: [0, 0, 0, 0],
           zoomType: canvas.data('zoomtype')
           // marginRight: (canvas.data('legend-align') == 'right') ? 120 : null,
         },
@@ -213,6 +214,7 @@ $(function() {
           gridLineWidth: 1,
           lineColor,
           tickInterval: canvas.data('tickinterval'),
+          // labels: { enabled: false },
           labels: { enabled: canvas.data('xaxislabelsenabled'), style },
           max: canvas.data('xaxismax'),
           min: canvas.data('xaxismin'),

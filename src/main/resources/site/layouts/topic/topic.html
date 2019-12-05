@@ -1,7 +1,6 @@
 <div class="xp-layout row layout-topic" data-th-classappend="${mode} == 'map' ? 'd-none'">
   <div class="xp-region col-12">
     <div class="border-top-green px-4">
-      <div class="section-number" data-th-text="${i}"></div>
       <h2 data-th-text="${config.title}"></h2>
       <div data-portal-region="main">
         <div data-th-each="component, i : ${mainRegion.components}" data-th-remove="tag">
