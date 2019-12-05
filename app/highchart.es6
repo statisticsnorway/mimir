@@ -93,7 +93,7 @@ $(function() {
             fontSize: '14px'
           },
           type: (canvas.data('type') == 'bar-negative') ? 'bar' : canvas.data('type'),
-          spacing: [0, 0, 0, 0],
+          spacing: [0, 10, 0, 0],
           zoomType: canvas.data('zoomtype')
           // marginRight: (canvas.data('legend-align') == 'right') ? 120 : null,
         },
