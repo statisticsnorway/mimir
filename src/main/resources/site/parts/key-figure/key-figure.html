@@ -25,10 +25,10 @@
             </div>
           </div>
         </div>
-      </div>
-      <div data-th-if="${figure.source}" data-th-unless="${source.title}" class="col-12">
-        <h4 class="pt-3 mb-0">Kilde:</h4>
-        <a class="ssb-link" data-th-href="${figure.source.url}" data-th-text="${figure.source.title}"></a>
+        <div data-th-if="${figure.source}" data-th-unless="${source.title}" class="col-12">
+          <h4 class="pt-3 mb-0">Kilde:</h4>
+          <a class="ssb-link" data-th-href="${figure.source.url}" data-th-text="${figure.source.title}"></a>
+        </div>
       </div>
     </div>
   </div>
