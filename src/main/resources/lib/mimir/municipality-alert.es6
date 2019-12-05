@@ -10,11 +10,10 @@ export const get = (key) => {
   return content.count === 1 ? content.hits[0] : { error: `Could not find ${contentTypeName} with id ${key.key}` }
 }
 
-
 export const list = ( municipalCode ) => {
   const now = new Date();
   return query({
-    query: `data.municipalCodes IN ('${municipalCode}') AND publish.to > '${now.toISOString()}'`,
-    contentType: `contentTypeName`
+    query: `data.municipalCodes IN ('${municipalCode}') AND (publish.to NOT LIKE '*' OR publish.to > '${now.toISOString()}')`,
+    contentType: contentTypeName
   })
 }

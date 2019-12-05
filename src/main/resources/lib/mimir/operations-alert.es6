@@ -7,7 +7,7 @@ export const list = () => {
   const now = new Date()
   return query({
     contentTypes: [contentTypeName],
-    query: `language = '${getContent().language}' AND publish.to > '${now.toISOString()}'`,
+    query: `language = '${getContent().language}' AND (publish.to NOT LIKE '*' OR publish.to > '${now.toISOString()}')`,
     filters: {
       notExists: {
         field: 'data.municipalCodes'
