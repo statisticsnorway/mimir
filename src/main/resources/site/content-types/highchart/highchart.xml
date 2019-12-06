@@ -24,6 +24,7 @@
         <option value="column">Stolpe</option>
         <option value="bar">Liggende stolpe</option>
         <option value="area">Areal</option>
+        <option value="bar-negative">Befolkningspyramide</option>
       </config>
       <default>line</default>
     </input>

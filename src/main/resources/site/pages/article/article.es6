@@ -1,3 +1,5 @@
+import * as klass from '../../../lib/klass';
+
 const moment = require('/lib/moment-with-locales')
 
 import * as content from '/lib/xp/content'
@@ -6,6 +8,7 @@ import * as thymeleaf from '/lib/thymeleaf'
 
 import * as glossary from '/lib/glossary'
 import * as language from '/lib/language'
+import { alertsForContext } from '/lib/utils'
 
 const version = '%%VERSION%%'
 
@@ -15,6 +18,8 @@ function getBreadcrumbs(c, a) {
   c && c.type.match(/:page$/) && a.unshift(c) && getBreadcrumbs(c, a)
 }
 
+const view = resolve('article.html')
+
 exports.get = function(req) {
   const ts = new Date().getTime()
   const page = portal.getContent()
@@ -22,7 +27,7 @@ exports.get = function(req) {
   const mainRegion = isFragment ? null : page.page && page.page.regions && page.page.regions.main
   const bottomRegion = isFragment ? null : page.page && page.page.regions && page.page.regions.bottom
   const config = {}
-  const view = resolve('article.html')
+  const municipality = klass.getMunicipality(req)
 
   page.language = language.getLanguage(page)
   page.glossary = glossary.process(page)
@@ -44,7 +49,20 @@ exports.get = function(req) {
   page.displayNameURLencoded = encodeURI(page.displayName)
   page.url = encodeURI(portal.pageUrl({ type: 'absolute', id: page._id }))
 
-  const model = { version, ts, config, page, breadcrumbs, mainRegion, bottomRegion, publishedDatetime, modifiedDatetime }
+  const alerts = alertsForContext(municipality);
+
+  const model = {
+    version,
+    ts,
+    config,
+    page,
+    breadcrumbs,
+    mainRegion,
+    bottomRegion,
+    publishedDatetime,
+    modifiedDatetime,
+    alerts
+  }
   const body = thymeleaf.render(view, model)
 
   return { body }

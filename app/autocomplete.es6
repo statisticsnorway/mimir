@@ -7,7 +7,9 @@ $('input[autocomplete]').each((i, el) => {
   const elements = dropdown.find('a')
   dropdown.css('max-width', $(el).outerWidth()) && $(window).resize(() => dropdown.css('max-width', $(el).outerWidth()))
   $(el).keyup((e) => { // Using classList here because it is faster than jQuery
-    const re = new RegExp('^' + $(el).val(), 'i')
+    const val = $(el).val()
+    const startOfLine = val && val.match(/\D/) ? '^' : ''
+    const re = new RegExp(startOfLine + val, 'i')
     elements.each((j, a) => a.classList.add('d-none') || a.getAttribute('data-text').match(re) && a.classList.remove('d-none'))
     dropdown.toggleClass('show', dropdown.find('a:not(.d-none)').length > 0) // remove dropdown on zero hits
   })

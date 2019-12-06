@@ -1,11 +1,10 @@
-// import * as http from '/lib/http-client'
 import * as content from '/lib/xp/content'
 import * as portal from '/lib/xp/portal'
 import * as thymeleaf from '/lib/thymeleaf'
 import * as klass from '/lib/klass'
-
 import * as glossary from '/lib/glossary'
 import * as language from '/lib/language'
+import { alertsForContext } from '/lib/utils'
 import * as municipals from '/lib/municipals'
 
 const version = '%%VERSION%%'
@@ -29,14 +28,17 @@ function getBreadcrumbs(c, a) {
   c && c.type.match(/:page$/) && a.unshift(c) && getBreadcrumbs(c, a)
 }
 
+const view = resolve('default.html')
+
 exports.get = function(req) {
   const ts = new Date().getTime()
   const page = portal.getContent()
   const isFragment = page.type === 'portal:fragment'
   const mainRegion = isFragment ? null : page.page && page.page.regions && page.page.regions.main
   const config = {}
-  const view = resolve('default.html')
+
   const mode = municipals.mode(req, page)
+  const municipality = klass.getMunicipality(req)
 
   page.language = language.getLanguage(page)
   page.glossary = glossary.process(page)
@@ -45,17 +47,30 @@ exports.get = function(req) {
   if (preview.indexOf(page.type) >= 0) {
     const name = page.type.replace(/^.*:/, '')
     const controller = require(`../../parts/${name}/${name}`)
-    page.preview = controller.get({ config: { [name]: [page._id] }})
+    req.config =  { [name]: [page._id] }
+    page.preview = controller.get(req)
   }
 
   const breadcrumbs = [page]
   getBreadcrumbs(page, breadcrumbs)
 
   if (!page._path.endsWith(req.path.split('/').pop()) && req.mode != 'edit' ) {
-    breadcrumbs.push({ 'displayName': klass.getMunicipality(req).name })
+    breadcrumbs.push({ 'displayName': municipality.name })
   }
 
-  const model = { version, ts, config, page, breadcrumbs, mainRegion, mode }
+  const alerts = alertsForContext(municipality);
+
+  const model = {
+    version,
+    ts,
+    config,
+    page,
+    breadcrumbs,
+    mainRegion,
+    alerts,
+    mode
+  }
+
   const body = thymeleaf.render(view, model)
 
   return { body }

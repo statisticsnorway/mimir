@@ -1,7 +1,7 @@
 .part-menu-dropdown {
   background-color: white;
-  .row {
-    height: 100px;
+  .container >div {
+    height: 92px;
   }
   .opacity-zero {
     opacity: 0;
@@ -17,17 +17,6 @@
   .subtitle {
     font-size: 14px;
   }
-  .button-search {
-    color: $green3;
-    top: 3px;
-    right: 10px;
-    height: 20px;
-    width: 20px;
-    
-  }
-  .button-search svg {
-    width: 20px;
-  }
   .dropdown {
     left: 0;
   }
@@ -37,11 +26,8 @@
     overflow-x: hidden;
     max-height: 30vh;
   }
-  #input-query-municipality {
-    margin-left: 20px;
-    min-width: 260px;
-  }
   .ssb-input {
+    width: 280px;
     border-color: $ssb-dark-6;
     flex-direction: unset; // override design system
   }
@@ -52,6 +38,18 @@
     i {
       color: $green4;
     }
+    i svg {
+      transform: rotate(0deg);
+      transition: all .5s;
+    }
+    &.active i svg {
+      transform: rotate(-180deg);
+      transition: all .5s;
+    }
   }
-  
+ .ssb-dropdown {
+   width: 100%; // Override design system
+   min-width: 100%; // Override design system
+   max-width: 100%; // Override design system
+ }
 }

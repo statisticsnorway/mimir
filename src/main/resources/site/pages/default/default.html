@@ -23,10 +23,10 @@
   <meta charset="UTF-8">
   <meta http-equiv="Cache-control" content="NO-CACHE">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta data-th-if="${page.data.metaDescription}" name="description" data-th-content="${page.data.metaDescription}"> 
+  <meta data-th-if="${page.data.metaDescription}" name="description" data-th-content="${page.data.metaDescription}">
   <title data-th-text="${page.displayName} + ' - Statistisk sentralbyrå'"></title>
   <!-- <link rel="shortcut icon" type="image/x-icon" data-th-href="${portal.assetUrl({'_path=img/favicon.ico'})}"/> -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|Open+Sans:700|Roboto:700|Roboto+Condensed:700"> 
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|Open+Sans:700|Roboto:700|Roboto+Condensed:700">
   <link rel="stylesheet" data-th-href="${portal.assetUrl({'_path=css/styles.css', 'ts=' + ts})}"/>
   <link rel="alternate" data-th-if="${page.language.exists}" data-th-href="${portal.pageUrl({'_path='+page.language.path})}" data-th-hreflang="${page.language.alternate}" />
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
@@ -41,12 +41,15 @@
     <!-- breadcrumbs -->
     <div data-th-replace="mimir:/site/includes/breadcrumbs.html"></div>
 
+    <!-- Alerts Info and error -->
+    <div data-th-replace="mimir:/site/includes/alerts.html"></div>
+
     <div data-th-if="${page.data.title}" class="container mb-5">
       <h1 data-th-text="${page.data.title}"></h1>
     </div>
 
     <!-- preview -->
-    <div class="container" data-th-if="${page.preview}" data-th-utext="${page.preview.body}">
+    <div class="container pt-5" data-th-if="${page.preview}" data-th-utext="${page.preview.body}">
     </div>
 
     <div data-th-if="${page.data.ingress} and ${page.type == 'mimir:page'}" class="container ingress">
@@ -57,7 +60,7 @@
 
     <div data-th-if="${mainRegion}" data-th-remove="tag">
       <div data-th-each="component : ${mainRegion.components}"
-        data-th-classappend="${component.descriptor != 'mimir:banner' and component.descriptor != 'mimir:menu-dropdown' and component.descriptor != 'mimir:map' ? 'container' : ''} + ' ' + ${component.descriptor == 'mimir:menu-dropdown'? 'sticky-top' : ''} + ' ' + ${component.descriptor == 'mimir:preface' ? 'preface-container' : ''}"
+        data-th-classappend="${component.descriptor != 'mimir:banner' and component.descriptor != 'mimir:menu-dropdown' and component.descriptor != 'mimir:map' ? 'container' : ''} + ' ' + ${component.descriptor == 'mimir:menu-dropdown' and mode == 'municipality' ? 'sticky-top' : ''} + ' ' + ${component.descriptor == 'mimir:preface' ? 'preface-container' : ''}"
         data-th-remove="${component.descriptor == 'mimir:banner'} ? tag">
         <div data-portal-component="${component.path}" data-th-remove="tag"></div>
       </div>

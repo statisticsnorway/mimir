@@ -10,8 +10,8 @@ exports.get = function(req) {
 
   part.config.glossary = part.config.glossary && util.data.forceArray(part.config.glossary) || []
   part.config.glossary.map((key) => {
-     const item = content.get({ key })
-     glossary.push(item)
+    const item = content.get({ key })
+    glossary.push(item)
   })
 
   const model = { part, glossary }

@@ -1,33 +1,41 @@
 <section class="xp-part key-figures">
-  <h3 data-th-if="${part.config.title}" data-th-text="${part.config.title}"></h3>
+  <h3 data-th-if="${displayName}" data-th-text="${displayName}"></h3>
   <div class="row">
-    <div data-th-each="figure, i: ${part.data}" data-th-remove="tag">
+    <div data-th-each="figure, i: ${data}" data-th-remove="tag">
       <div class="d-md-none border-bottom mt-5 mb-5 col-12" data-th-if="${i.index}"></div>
       <div class="d-none d-md-block border-bottom mt-5 mb-5 col-12" data-th-if="${i.index && i.index % 2 == 0}"></div>
-      <div data-th-class="${figure.data['size'] == 'large'} ? 'col-md-12' : 'col-md-6'">
-        <div class="ssb-key-figures">
-          <div class="icon-container kf-icon" data-th-classappend="${figure.data['size']} ? ${figure.data['size']}">
-            <img class="w-100" data-th-if="${figure.data.icon}" data-th-src="${portal.imageUrl({'_id=' + figure.data.icon, '_scale=block(80,80)'})}"/>
+      <div data-th-class="${figure['size'] == 'large'} ? 'col-md-12' : 'col-md-6'">
+        <div class="ssb-key-figures" data-th-classappend="${figure['size']} ? ${figure['size']}">
+          <div class="kf-icon" data-th-classappend="${figure['size']} ? ${figure['size']}">
+            <img class="w-100" data-th-if="${figure.icon}" data-th-src="${portal.imageUrl({'_id=' + figure.icon, '_scale=block(80,80)'})}"/>
           </div>
           <div class="d-flex flex-column">
-            <h4 data-th-unless="${figure.data.glossary}" data-th-text="${figure.displayName}" class="ssb-title kf-title"></h4>
-            <a data-th-if="${figure.data.glossary}" data-th-text="${figure.displayName}" class="a-glossary" data-th-href="${portal.pageUrl({'_id='+figure.data.glossary})}" data-th-aria-describedby="'glossary-' + ${figure.data.glossary}"></a>
+            <h4 data-th-unless="${figure.glossary}" data-th-text="${figure.displayName}" class="ssb-title kf-title"></h4>
+            <h4 data-th-if="${figure.glossary}">
+              <a data-th-if="${figure.glossary}" data-th-text="${figure.displayName}" class="a-glossar ssb-glossary" data-th-href="${portal.pageUrl({'_id='+figure.glossary})}" data-th-aria-describedby="'glossary-' + ${figure.glossary}"></a>
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-book-open"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+            </h4>
             <div class="kf-time" data-th-text="${figure.time}">2018</div>
-            <div class="ssb-number mt-auto" data-th-classappend="${figure.data['size']} ? ${figure.data['size']}"><data data-th-value="${figure.value}" data-th-utext="${figure.valueHumanReadable}"></data></div>
-            <h4 data-th-text="${figure.data.denomination}" class="ssb-title kf-title"></h4>
+            <div class="number-section">
+              <div class="ssb-number pr-1" data-th-classappend="${figure['size']} ? ${figure['size']}">
+                <data data-th-if="${figure.value}" data-th-value="${figure.value}" data-th-utext="${figure.valueHumanReadable}"></data>
+              </div>
+              <span data-th-unless="${figure.value}" data-th-text="${figure.valueNotFound}" class="kf-title subtitle"></span>
+              <span data-th-if="${figure.value}" data-th-text="${figure.denomination}" class="kf-title subtitle"></span>
+            </div>
           </div>
         </div>
-        <div data-th-if="${figure.data.source}" data-th-unless="${part.config.source}">
+        <div data-th-if="${figure.source}" data-th-unless="${source.title}" class="col-12">
           <h4 class="pt-3 mb-0">Kilde:</h4>
-          <a class="ssb-link" data-th-href="${figure.data.source.url}" data-th-text="${figure.data.source.title}"></a>
+          <a class="ssb-link" data-th-href="${figure.source.url}" data-th-text="${figure.source.title}"></a>
         </div>
       </div>
     </div>
   </div>
-  <div class="row" data-th-if="${part.config.source}">
+  <div class="row" data-th-if="${source.title}">
     <div class="col-12">
       <h4 class="pt-3 mb-0">Kilde:</h4>
-      <a class="ssb-link" data-th-href="${part.config.source.url}" data-th-text="${part.config.source.title}"></a>
+      <a class="ssb-link" data-th-href="${source.url}" data-th-text="${source.title}"></a>
     </div>
   </div>
 </section>

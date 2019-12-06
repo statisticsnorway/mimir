@@ -1,6 +1,8 @@
-<div class="container js-part-map" data-th-classappend="${mode} == 'municipality' ? 'd-none'">
-  <section class="xp-part part-map">
-    <div id="map" data-th-class="${mode} == 'municipality' ? 'map-border'" data-th-attr="data-path=${portal.assetUrl({'_path=/mapdata'})},data-service=${portal.serviceUrl({'_service=municipality'})}">
-    </div>
-  </section>
+<div data-th-class="${mode} != 'municipality' ? 'border-top border-map'">
+  <div class="container js-part-map" data-th-classappend="${mode} == 'municipality' ? 'd-none' : 'pt-4'">
+    <section class="xp-part part-map">
+      <div id="map" data-th-class="${mode} == 'municipality' ? 'map-border'" data-th-attr="data-path=${portal.assetUrl({'_path=/mapdata'})},data-service=${portal.serviceUrl({'_service=municipality'})}">
+      </div>
+    </section>
+  </div>
 </div>

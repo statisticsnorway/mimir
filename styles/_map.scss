@@ -13,7 +13,7 @@
   height: 70vh;
 }
 .map-container {
-  top: 100px;
+  top: 92px;
   width: 100vw;
   position: fixed;
   height: 100vh;
@@ -28,4 +28,7 @@
 }
 .overflow-y {
   overflow-y: hidden;
+}
+.border-map {
+  border-color: #c3dcdc;
 }

@@ -1,24 +1,24 @@
 <section class="xp-part part-menu-dropdown">
   <div class="container">
-    <div class="row">
-      <div class="col-md-6 d-flex align-items-center">
-        <div class="opacity-zero">
+    <div class="d-flex flex-row">
+      <div class="d-flex align-items-center mr-auto">
+        <div data-th-class="${mode} == 'municipality' ? 'opacity-zero'">
           <div class="roboto-plain subtitle" data-th-if="${mode == 'municipality'}" data-th-text="${page.displayName}"></div>
           <div class="roboto-bold municipality" data-th-if="${mode == 'municipality'}">
             <div data-th-if="${municipality}" data-th-text="${municipality.displayName}" data-th-remove="tag">Kommune</div>
             <div data-th-if="${municipality}" data-th-text="'('+${municipality.county.name}+')'" data-th-remove="tag">Fylke</div>
           </div>
-          <div class="roboto-bold municipality" data-th-unless="${mode == 'municipality'}" data-th-text="${page.displayName}"></div>
+          <div class="roboto-bold municipality" data-th-unless="${mode == 'municipality'}">Velg kommune i kart</div>
         </div>
       </div>
-      <div class="col-md-6 h-100" data-th-with="mcode='0501'">
+      <div class="h-100" data-th-with="mcode='0501'">
         <div data-th-if="${municipalities}" class="position-relative h-100">
           <div class="dropdown show ssb-dropdown h-100">
             <div class=" d-flex flex-row align-items-center h-100">
-              <div class="roboto-bold text-nowrap">Bytt kommune:</div>
-              <div class="w-100 ssb-input">
-                <input id="input-query-municipality" class="w-100" placeholder="Søk på kommune" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" autocomplete/>
-                <button class="button-search border-0 p-0 m-0 position-absolute">
+              <div data-th-if="${mode == 'municipality'}" class="roboto-bold text-nowrap pr-4">Bytt kommune:</div>
+              <div class="ssb-input">
+                <input id="input-query-municipality" class="d-block" placeholder="Søk på kommune" role="button" data-display="static" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" autocomplete/>
+                <button class="icon-wrapper search-icon">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 </button>
                 <div class="dropdown-menu w-100 list-of-options" aria-labelledby="input-query-municipality">
@@ -29,7 +29,7 @@
                   </a>
                 </div>
               </div>
-              <a id="js-show-map" class="show-map text-nowrap" href="#">Velg i kart
+              <a data-th-if="${mode == 'municipality'}" id="js-show-map" class="show-map text-nowrap" href="#">Velg i kart
                 <i><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg></i>
               </a>
             </div>

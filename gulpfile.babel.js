@@ -35,7 +35,7 @@ const path = {
       'node_modules/highcharts/modules/drilldown.js',
       'node_modules/highcharts/modules/exporting.js',
       'node_modules/highcharts/modules/data.js',
-      'node_modules/jsonstat/json-stat.js',
+      'node_modules/jsonstat-toolkit/iife.js',
       'dist/main.js'
     ]
   },
@@ -88,7 +88,7 @@ function designsystem() {
 // -----------------------------------------------------------------------------
 
 function assets() {
-  return gulp.src(['node_modules/moment/min/moment-with-locales.js', 'node_modules/numeral/numeral.js', 'node_modules/jsonstat/export.js'])
+  return gulp.src(['node_modules/moment/min/moment-with-locales.js', 'node_modules/numeral/numeral.js'])
     .pipe(gulp.dest('build/resources/main/lib'));
 }
 
@@ -96,7 +96,7 @@ function assets() {
 // frontend javascript
 // -----------------------------------------------------------------------------
 function frontend() {
-  return gulp.src(['app/main.es6', 'app/**/*.es6'])
+  return gulp.src(['app/**/*.es6'])
     .pipe(plumber())
     .pipe(eslint({ configFile: '.eslintrc.json' }))
     .pipe(eslint.format())
