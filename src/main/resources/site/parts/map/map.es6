@@ -9,9 +9,9 @@ exports.get = function(req) {
   const part = portal.getComponent() || req
   const view = resolve('./map.html')
   part.config.map = part.config.map && util.data.forceArray(part.config.map) || []
-  const maps = part.config.map.map((key) => (key) => content.get({ key }))
+  const maps = part.config.map.map((key) => content.get({ key }))
   const mode = municipals.mode(req, page)
-  const model = { part, maps, mode }
+  const model = { page, part, maps, mode }
   const body = thymeleaf.render(view, model)
 
   return { body, contentType: 'text/html' }

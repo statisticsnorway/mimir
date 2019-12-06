@@ -39,12 +39,15 @@ $(function() {
         const dimension = JSONstat(json).Dataset(0).Dimension(1).length == 1 ? 2 : 1 // I'm just guessing here
         const labels = JSONstat(json).Dataset(0).Dimension(dimension).Category() // TODO: Need to check this, we might want a label field
         const values = JSONstat(json).Dataset(0).Slice({ Region: municipality }) || JSONstat(json).Dataset(0).Slice({ KOKkommuneregion0000: municipality })
-        categories = [values.label.replace(/\d+: /, '')]
+        categories = [canvas.data('title')]
         for (let i=0; i<labels.length; i++) {
           (series || (series = [])).push({ name: labels[i].label, data: [values.value[i]] });
           (slices || (slices = [])).push({ name: labels[i].label, y: values.value[i] });
         }
-        series = canvas.data('type') == 'pie' || canvas.data('switchrowsandcolumns') ? [{ data: slices }] : series
+        series = canvas.data('type') == 'pie' || canvas.data('switchrowsandcolumns') ? [{ name: 'Antall', data: slices }] : series
+        if (canvas.data('switchrowsandcolumns')) {
+          categories = slices.map((n) => n.name)
+        }
       }
     }
 
@@ -93,6 +96,7 @@ $(function() {
             fontSize: '14px'
           },
           type: (canvas.data('type') == 'bar-negative') ? 'bar' : canvas.data('type'),
+          spacing: [0, 10, 0, 0],
           zoomType: canvas.data('zoomtype')
           // marginRight: (canvas.data('legend-align') == 'right') ? 120 : null,
         },
@@ -213,7 +217,7 @@ $(function() {
           gridLineWidth: 1,
           lineColor,
           tickInterval: canvas.data('tickinterval'),
-          labels: { enabled: canvas.data('xaxislabelsenabled'), style },
+          labels: { enabled: canvas.data('switchrowsandcolumns'), style },
           max: canvas.data('xaxismax'),
           min: canvas.data('xaxismin'),
           // Confusing detail: when type=bar, X axis becomes Y and vice versa. In other words, include 'bar' in this if-test, instead of putting it in the yAxis config

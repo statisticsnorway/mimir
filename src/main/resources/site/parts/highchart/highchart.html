@@ -1,74 +1,76 @@
-<section class="xp-part part-highchart row position-relative" data-th-each="part: ${highcharts}">
+<section class="xp-part part-highchart" data-th-each="part: ${highcharts}">
   <script data-th-if="${json}" th:inline="javascript">
     /*<![CDATA[*/
       highchart.push(/*[[${json}]]*/);
     /*]]>*/
   </script>
-  <div class="col-12">
-    <figure th:fragment="graph" class="highcharts-figure mb-0">
-      <div data-th-id="highcharts- + ${part.chart._id}"
-        class="highcharts-canvas"
-        data-th-attr="data-contentkey=${part.chart.contentkey},
-        data-municipality-name=${municipality.displayName},
-        data-municipality=${municipality.code},
-        data-type=${part.chart.type},
-        data-zoomtype=${part.chart.zoomtype},
-        data-creditsenabled=${part.chart.creditsenabled},
-        data-creditshref=${part.chart.creditshref},
-        data-creditstext=${part.chart.creditstext},
-        data-switchrowsandcolumns=${part.chart.switchrowsandcolumns},
-        data-combineinformation=${part.chart.combineinformation},
-        data-tickinterval=${part.chart.tickinterval},
-        data-legendenabled=${part.chart.legendenabled},
-        data-plotoptionsseriesstacking=${part.chart.plotoptionsseriesstacking},
-        data-subtitletext=${part.chart.subtitletext},
-        data-title=${part.chart.title},
-        data-xaxisallowdecimals=${part.chart.xaxisallowdecimals},
-        data-xaxislabelsenabled=${part.chart.xaxislabelsenabled},
-        data-xaxismax=${part.chart.xaxismax},
-        data-xaxismin=${part.chart.xaxismin},
-        data-xaxistitletext=${part.chart.xaxistitletext},
-        data-xaxistype=${part.chart.xaxistype},
-        data-yaxisallowdecimals=${part.chart.yaxisallowdecimals},
-        data-yaxismax=${part.chart.yaxismax},
-        data-yaxismin=${part.chart.yaxismin},
-        data-yaxistitletext=${part.chart.yaxistitletext},
-        data-yaxistype=${part.chart.yaxistype},
-        data-yaxisstacklabelsenabled=${part.chart.yaxisstacklabelsenabled},
-        data-title-center=${part.chart.titleCenter},
-        data-numberdecimals=${part.chart.numberdecimals},
-        data-chart-bottomspace=${part.chart.bottomSpace},
-        data-pielegendunder=${part.chart.pieLegendUnder},
-        data-legendalign=${part.chart.legendAlign}"
-        data-langcontextbuttontitle="Last ned/skriv ut"
-        data-langdownloadjpeg="Last ned som JPEG"
-        data-langdownloadpdf="Last ned som PDF"
-        data-langdownloadpng="Last ned som PNG"
-        data-langdownloadsvg="Last ned som SVG"
-        data-langdownloadcsv="Last ned tala som CSV"
-        data-langdownloadxls="Last ned tala som XLS"
-        data-langdrilluptext="Tilbake til"
-        data-langloading="Tegner graf..."
-        data-langnodata="Ingen tilgjengelege tal"
-        data-langmillions="mill."
-        data-langbillions="mrd."
-        data-langprintchart="Skriv ut graf"
-        data-langresetzoom="Nullstill zoom"
-        data-langresetzoomtitle="Nullstill zoom"
-        data-langvisskjul="vis/skjul" >
-      </div>
-    </figure>
-    <div class="footnote" data-th-if="${part.chart.data.fotnoteTekst}" data-th-text="${part.chart.data.fotnoteTekst}"></div>
-    <div class="d-none highcharts-table invisible" data-th-utext="${part.chart.tableData}"></div>
-  </div>
-  <button class="btn-highchart-export border-0 position-absolute font-roboto-plain">
-    <i>
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-    </i>
-    Last ned som … 
-  </button>
-  <div data-th-if="${part.chart.creditsenabled}" class="col-12">
-    <h5 class="mb-0">Kilde:</h5>
-    <a class="ssb-link" data-th-href="${part.chart.creditshref}" data-th-text="${part.chart.creditstext}"></a>
+  <div class="row position-relative">
+    <div class="col-12">
+      <figure th:fragment="graph" class="highcharts-figure mb-0">
+        <div data-th-id="highcharts- + ${part.chart._id}"
+          class="highcharts-canvas"
+          data-th-attr="data-contentkey=${part.chart.contentkey},
+          data-municipality-name=${municipality.displayName},
+          data-municipality=${municipality.code},
+          data-type=${part.chart.type},
+          data-zoomtype=${part.chart.zoomtype},
+          data-creditsenabled=${part.chart.creditsenabled},
+          data-creditshref=${part.chart.creditshref},
+          data-creditstext=${part.chart.creditstext},
+          data-switchrowsandcolumns=${part.chart.switchrowsandcolumns},
+          data-combineinformation=${part.chart.combineinformation},
+          data-tickinterval=${part.chart.tickinterval},
+          data-legendenabled=${part.chart.legendenabled},
+          data-plotoptionsseriesstacking=${part.chart.plotoptionsseriesstacking},
+          data-subtitletext=${part.chart.subtitletext},
+          data-title=${part.chart.title},
+          data-xaxisallowdecimals=${part.chart.xaxisallowdecimals},
+          data-xaxislabelsenabled=${part.chart.xaxislabelsenabled},
+          data-xaxismax=${part.chart.xaxismax},
+          data-xaxismin=${part.chart.xaxismin},
+          data-xaxistitletext=${part.chart.xaxistitletext},
+          data-xaxistype=${part.chart.xaxistype},
+          data-yaxisallowdecimals=${part.chart.yaxisallowdecimals},
+          data-yaxismax=${part.chart.yaxismax},
+          data-yaxismin=${part.chart.yaxismin},
+          data-yaxistitletext=${part.chart.yaxistitletext},
+          data-yaxistype=${part.chart.yaxistype},
+          data-yaxisstacklabelsenabled=${part.chart.yaxisstacklabelsenabled},
+          data-title-center=${part.chart.titleCenter},
+          data-numberdecimals=${part.chart.numberdecimals},
+          data-chart-bottomspace=${part.chart.bottomSpace},
+          data-pielegendunder=${part.chart.pieLegendUnder},
+          data-legendalign=${part.chart.legendAlign}"
+          data-langcontextbuttontitle="Last ned/skriv ut"
+          data-langdownloadjpeg="Last ned som JPEG"
+          data-langdownloadpdf="Last ned som PDF"
+          data-langdownloadpng="Last ned som PNG"
+          data-langdownloadsvg="Last ned som SVG"
+          data-langdownloadcsv="Last ned tala som CSV"
+          data-langdownloadxls="Last ned tala som XLS"
+          data-langdrilluptext="Tilbake til"
+          data-langloading="Tegner graf..."
+          data-langnodata="Ingen tilgjengelege tal"
+          data-langmillions="mill."
+          data-langbillions="mrd."
+          data-langprintchart="Skriv ut graf"
+          data-langresetzoom="Nullstill zoom"
+          data-langresetzoomtitle="Nullstill zoom"
+          data-langvisskjul="vis/skjul" >
+        </div>
+      </figure>
+      <div class="footnote" data-th-if="${part.chart.data.fotnoteTekst}" data-th-text="${part.chart.data.fotnoteTekst}"></div>
+      <div class="d-none highcharts-table invisible" data-th-utext="${part.chart.tableData}"></div>
+    </div>
+    <button type="button" class="btn-highchart-export border-0 position-absolute font-roboto-plain">
+      <i>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+      </i>
+      Last ned som … 
+    </button>
+    <div data-th-if="${part.chart.creditsenabled}" class="col-12">
+      <h5 class="mb-0">Kilde:</h5>
+      <a class="ssb-link" data-th-href="${part.chart.creditshref}" data-th-text="${part.chart.creditstext}"></a>
+    </div>
   </div>
 </section>
