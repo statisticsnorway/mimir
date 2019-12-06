@@ -12,12 +12,12 @@
           <div class="d-flex flex-column">
             <h4 data-th-unless="${figure.glossary}" data-th-text="${figure.displayName}" class="ssb-title kf-title"></h4>
             <h4 data-th-if="${figure.glossary}">
-              <a data-th-if="${figure.glossary}" data-th-text="${figure.displayName}" class="a-glossary" data-th-href="${portal.pageUrl({'_id='+figure.glossary})}" data-th-aria-describedby="'glossary-' + ${figure.glossary}"></a>
+              <a data-th-if="${figure.glossary}" data-th-text="${figure.displayName}" class="a-glossar ssb-glossary" data-th-href="${portal.pageUrl({'_id='+figure.glossary})}" data-th-aria-describedby="'glossary-' + ${figure.glossary}"></a>
               <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-book-open"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
             </h4>
             <div class="kf-time" data-th-text="${figure.time}">2018</div>
             <div class="number-section">
-              <div class="ssb-number" data-th-classappend="${figure['size']} ? ${figure['size']}">
+              <div class="ssb-number pr-1" data-th-classappend="${figure['size']} ? ${figure['size']}">
                 <data data-th-if="${figure.value}" data-th-value="${figure.value}" data-th-utext="${figure.valueHumanReadable}"></data>
               </div>
               <span data-th-unless="${figure.value}" data-th-text="${figure.valueNotFound}" class="kf-title subtitle"></span>

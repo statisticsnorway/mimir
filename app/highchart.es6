@@ -44,7 +44,10 @@ $(function() {
           (series || (series = [])).push({ name: labels[i].label, data: [values.value[i]] });
           (slices || (slices = [])).push({ name: labels[i].label, y: values.value[i] });
         }
-        series = canvas.data('type') == 'pie' || canvas.data('switchrowsandcolumns') ? [{ data: slices }] : series
+        series = canvas.data('type') == 'pie' || canvas.data('switchrowsandcolumns') ? [{ name: 'Antall', data: slices }] : series
+        if (canvas.data('switchrowsandcolumns')) {
+          categories = slices.map((n) => n.name)
+        }
       }
     }
 
@@ -214,8 +217,7 @@ $(function() {
           gridLineWidth: 1,
           lineColor,
           tickInterval: canvas.data('tickinterval'),
-          // labels: { enabled: false },
-          labels: { enabled: canvas.data('xaxislabelsenabled'), style },
+          labels: { enabled: canvas.data('switchrowsandcolumns'), style },
           max: canvas.data('xaxismax'),
           min: canvas.data('xaxismin'),
           // Confusing detail: when type=bar, X axis becomes Y and vice versa. In other words, include 'bar' in this if-test, instead of putting it in the yAxis config
