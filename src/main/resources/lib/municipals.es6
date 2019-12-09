@@ -45,7 +45,7 @@ export const createPath = (municipalName, countyName = undefined) => {
 
 // Returns page mode for Kommunefakta page based on request mode or request path
 export const mode = function(req, page) {
-  return req.mode === 'edit' && 'edit' || page._path.endsWith(req.path.split('/').pop()) ? 'map' : 'municipality'
+  return req.mode === 'inline' && 'edit' || (page._path.endsWith(req.path.split('/').pop()) ? 'map' : 'municipality')
 }
 
 /**
