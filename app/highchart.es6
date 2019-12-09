@@ -83,11 +83,6 @@ $(function() {
       canvas.highcharts({
         accessibility: { enabled: false },
         chart: {
-          // Hvis inne i en "slider" (galleri), sett fast høyde og bredde basert på dimensjonene til container-elementet.
-          height: canvas.data('type') == 'bar-negative' ? 550 : undefined,
-          width: canvas.closest('.highcharts-graph').width() || undefined,
-          // Kommentert ut koden over, for det virker som om highcharts gjør denne jobben bedre selv, men sletter det ikke enda, tilfelle det skaper problemer.
-          // TODO: slette utkommentert kode over, dersom ingenting har tatt skade av at det ble fjernet til å begynne med.
           plotBorderColor: '#e6e6e6',
           spacingBottom: 18,
           plotBorderWidth: 0,
