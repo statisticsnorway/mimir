@@ -4,27 +4,19 @@ import * as content from '/lib/xp/content'
 import * as thymeleaf from '/lib/thymeleaf'
 import * as dataquery from '/lib/dataquery'
 
-function getTable(data, table = []) {
-  if (data) {
-    const dimension = data.dimension['KOKkommuneregion0000'] ? 'KOKkommuneregion0000' : Object.keys(data.dimension)[0]
-    for (const key in data.dimension[dimension].category.label) {
-      if (data.dimension[dimension].category.label.hasOwnProperty(key)) {
-        const i = data.dimension[dimension].category.index[key]
-        table.push({ label: data.dimension[dimension].category.label[key], value: data.value[i] })
-      }
-    }
-  }
-  return table
-}
+const view = resolve('./dataquery.html')
 
 exports.get = function(req) {
-  const part = portal.getComponent() || req
-  const view = resolve('./dataquery.html')
+  const part = portal.getComponent()
+  const dataQueryIds = part.config.dataquery && util.data.forceArray(part.config.dataquery) || []
+  return renderPart(req, dataQueryIds);
+}
+
+exports.preview = (req, id) => renderPart(req, [id])
+
+function renderPart(req, dataQueryIds) {
   const dataqueries = []
-
-  part.config.dataquery = part.config.dataquery && util.data.forceArray(part.config.dataquery) || []
-
-  part.config.dataquery.map((key) => {
+  dataQueryIds.forEach((key) => {
     const api = content.get({ key })
     if (api.data.table) {
       api.result = dataquery.get(api.data.table, api.data.json && JSON.parse(api.data.json))
@@ -36,8 +28,21 @@ exports.get = function(req) {
     dataqueries.push(api)
   })
 
-  const model = { part, dataqueries }
+  const model = { dataqueries }
   const body = thymeleaf.render(view, model)
 
   return { body, contentType: 'text/html' }
+}
+
+function getTable(data, table = []) {
+  if (data) {
+    const dimension = data.dimension['KOKkommuneregion0000'] ? 'KOKkommuneregion0000' : Object.keys(data.dimension)[0]
+    for (const key in data.dimension[dimension].category.label) {
+      if (data.dimension[dimension].category.label.hasOwnProperty(key)) {
+        const i = data.dimension[dimension].category.index[key]
+        table.push({ label: data.dimension[dimension].category.label[key], value: data.value[i] })
+      }
+    }
+  }
+  return table
 }
