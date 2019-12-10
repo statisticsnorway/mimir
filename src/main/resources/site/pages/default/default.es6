@@ -47,8 +47,9 @@ exports.get = function(req) {
   if (preview.indexOf(page.type) >= 0) {
     const name = page.type.replace(/^.*:/, '')
     const controller = require(`../../parts/${name}/${name}`)
-    req.config =  { [name]: [page._id] }
-    page.preview = controller.get(req)
+    if (controller.preview) {
+      page.preview = controller.preview(req, page._id)
+    }
   }
 
   const breadcrumbs = [page]
