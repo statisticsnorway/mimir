@@ -5,24 +5,20 @@ import * as thymeleaf from '/lib/thymeleaf'
 
 import * as sb from '/lib/statistikkbanken'
 
-function getTable(data, table = []) {
-  const dimension = data.dimension['KOKkommuneregion0000'] ? 'KOKkommuneregion0000' : Object.keys(data.dimension)[0]
-  for (const key in data.dimension[dimension].category.label) {
-    if (data.dimension[dimension].category.label.hasOwnProperty(key)) {
-      const i = data.dimension[dimension].category.index[key]
-      table.push({ label: data.dimension[dimension].category.label[key], value: data.value[i] })
-    }
-  }
-  return table
-}
+const view = resolve('./statistikkbanken.html')
 
 exports.get = function(req) {
-  const part = portal.getComponent() || req
-  const view = resolve('./statistikkbanken.html')
+  const part = portal.getComponent();
+  const statistikkbankenIds = part.config.statistikkbanken ? util.data.forceArray(part.config.statistikkbanken) : []
+  return renderPart(req, statistikkbankenIds);
+}
+
+exports.preview = (req, id) => renderPart(req, [id])
+
+function renderPart(req, statistikkbankenIds) {
   const statistikkbanken = []
 
-  part.config.statistikkbanken = part.config.statistikkbanken && util.data.forceArray(part.config.statistikkbanken) || []
-  part.config.statistikkbanken.map((key) => {
+  statistikkbankenIds.forEach((key) => {
     const api = content.get({ key })
     if (api.data.table && api.data.json) {
       api.result = sb.get(api.data.table, JSON.parse(api.data.json))
@@ -38,4 +34,15 @@ exports.get = function(req) {
   const body = thymeleaf.render(view, model)
 
   return { body, contentType: 'text/html' }
+}
+
+function getTable(data, table = []) {
+  const dimension = data.dimension['KOKkommuneregion0000'] ? 'KOKkommuneregion0000' : Object.keys(data.dimension)[0]
+  for (const key in data.dimension[dimension].category.label) {
+    if (data.dimension[dimension].category.label.hasOwnProperty(key)) {
+      const i = data.dimension[dimension].category.index[key]
+      table.push({ label: data.dimension[dimension].category.label[key], value: data.value[i] })
+    }
+  }
+  return table
 }
