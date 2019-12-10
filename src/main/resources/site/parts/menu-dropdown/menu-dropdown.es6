@@ -9,7 +9,11 @@ import { mode } from '/lib/municipals'
 const view = resolve('./menu-dropdown.html')
 const cache = newCache({ size: 100, expire: 3600 })
 
-exports.get = function(req) {
+exports.get = (req) => renderPart(req)
+
+exports.preview = (req, id) => renderPart(req)
+
+function renderPart(req) {
   const counties = countyList();
   const municipalities = municipalityList()
 
