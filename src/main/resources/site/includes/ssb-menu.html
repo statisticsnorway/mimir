@@ -8,10 +8,10 @@
                <a id="change-language" class="text-uppercase a-ssb" data-th-attr="data-exists=${page.language.exists}" data-th-href="${portal.pageUrl({'_path='+page.language.path})}" data-th-text="${page.language.phrases.language}"></a>
             </li>
             <li class="text-uppercase col-auto">
-               <a href="/a-aa" title="Stikkord A-Å">Stikkord A-Å</a>
+               <a href="/a-aa" title="Stikkord A-Å" data-th-text="${page.language.phrases.menuKeywords}">Stikkord A-Å</a>
             </li>
             <li id="global-contact" class="text-uppercase col-auto pr-0">
-               <a href="/omssb/kontakt-oss" accesskey="7">Kontakt oss</a>
+               <a data-th-href="${portal.pageUrl({page.language.contact})}" data-th-text="${page.language.phrases.menuContactUs}" accesskey="7">Kontakt oss</a>
             </li>
          </ul>
       </div>
@@ -25,44 +25,43 @@
       </form>
       <nav id="main-menu">
          <ul id="main-menu-top" class="nav pt-2 px-0 container border-top border-dark">
-            <li class="col-2 px-0 top-level"><a class="h4 text-uppercase mega-menu-toggle" id="statistics-menu-toggle" href="#statistikker-hovedmeny">Statistikk</a></li>
-            <li class="col text-center"><a class="h4 text-uppercase" href="/forskning/forskning-i-ssb">Forskning</a></li>
-            <li class="col text-center"><a class="h4 text-uppercase" href="/innrapportering" title="Innrapportering">Innrapportering</a></li>
-            <li class="col text-center"><a class="h4 text-uppercase" href="/omssb/om-oss" title="Mitt SSB ">Om SSB</a></li>
-            <li class="col-2 px-0 text-right"><a class="h4 text-uppercase" href="/mittssb/profil" title="Mitt SSB">Mitt SSB </a></li>
+            <li class="col-2 px-0 top-level"><a class="h4 text-uppercase mega-menu-toggle" id="statistics-menu-toggle" href="#statistikker-hovedmeny" data-th-text="${page.language.phrases.menuStatistics}">Statistikk</a></li>
+            <li class="col text-center"><a class="h4 text-uppercase" href="/forskning/forskning-i-ssb" data-th-text="${page.language.phrases.menuResearch}">Forskning</a></li>
+            <li class="col text-center"><a class="h4 text-uppercase" href="/innrapportering" data-th-text="${page.language.phrases.menuDataCollection}">Innrapportering</a></li>
+            <li class="col text-center"><a class="h4 text-uppercase" href="/omssb/om-oss" data-th-text="${page.language.phrases.menuAbout}">Om SSB</a></li>
+            <li class="col-2 px-0 text-right"><a class="h4 text-uppercase" href="/mittssb/profil" data-th-text="${page.language.phrases.menuMyPage}">Mitt SSB </a></li>
          </ul>
          <div id="statistikker-hovedmeny" class="mt-5 mb-3 mega-menu hidden-by-default d-none row" tabindex="-1">
             <p class="sr-only">Liste 1 av 3</p>
             <ul class="list-unstyled col-md-4">
-               <li class="topic"><i class="mr-1 fa-fw fas fa-money-bill-wave"></i><a class="text-reset" href="/arbeid-og-lonn">Arbeid og lønn</a></li>
-               <li class="topic"><i class="mr-1 fa-fw fas fa-coins"></i><a class="text-reset" href="/bank-og-finansmarked">Bank og finansmarked</a></li>
-               <li class="topic"><i class="mr-1 fa-fw fas fa-users"></i><a class="text-reset" href="/befolkning">Befolkning</a></li>
-               <li class="topic"><i class="mr-1 fa-fw fas fa-home"></i><a class="text-reset" href="/bygg-bolig-og-eiendom">Bygg, bolig og eiendom</a></li>
-               <li class="topic"><i class="mr-1 fa-fw fas fa-industry"></i><a class="text-reset" href="/energi-og-industri">Energi og industri</a></li>
-               <li class="topic"><i class="mr-1 fa-fw fas fa-plus-square"></i><a class="text-reset" href="/helse">Helse</a></li>
-               <li class="topic"><i class="mr-1 fa-fw fas fa-credit-card"></i><a class="text-reset" href="/inntekt-og-forbruk">Inntekt og forbruk</a></li>
-               <li class="topic"><i class="mr-1 fa-fw fas fa-passport"></i><a class="text-reset" href="/innvandring-og-innvandrere">Innvandring og innvandrere</a></li>
+               <li class="topic"><i class="mr-1 fa-fw fas fa-money-bill-wave"></i><a class="text-reset" href="/arbeid-og-lonn" data-th-text="${page.language.phrases.menuStatisticsLabour}">Arbeid og lønn</a></li>
+               <li class="topic"><i class="mr-1 fa-fw fas fa-coins"></i><a class="text-reset" href="/bank-og-finansmarked" data-th-text="${page.language.phrases.menuStatisticsBanking}">Bank og finansmarked</a></li>
+               <li class="topic"><i class="mr-1 fa-fw fas fa-users"></i><a class="text-reset" href="/befolkning" data-th-text="${page.language.phrases.menuStatisticsPopulation}">Befolkning</a></li>
+               <li class="topic"><i class="mr-1 fa-fw fas fa-home"></i><a class="text-reset" href="/bygg-bolig-og-eiendom" data-th-text="${page.language.phrases.menuStatisticsConstruction}">Bygg, bolig og eiendom</a></li>
+               <li class="topic"><i class="mr-1 fa-fw fas fa-industry"></i><a class="text-reset" href="/energi-og-industri" data-th-text="${page.language.phrases.menuStatisticsEnergy}">Energi og industri</a></li>
+               <li class="topic"><i class="mr-1 fa-fw fas fa-plus-square"></i><a class="text-reset" href="/helse" data-th-text="${page.language.phrases.menuStatisticsHealth}">Helse</a></li>
+               <li class="topic"><i class="mr-1 fa-fw fas fa-credit-card"></i><a class="text-reset" href="/inntekt-og-forbruk" data-th-text="${page.language.phrases.menuStatisticsIncome}">Inntekt og forbruk</a></li>
+               <li class="topic"><i class="mr-1 fa-fw fas fa-passport"></i><a class="text-reset" href="/innvandring-og-innvandrere" data-th-text="${page.language.phrases.menuStatisticsImmigration}">Innvandring og innvandrere</a></li>
             </ul>
             <p class="sr-only">Liste 2 av 3</p>
             <ul class="list-unstyled col-md-4">
-               <li class="topic"><i class="mr-1 fa-fw fas fa-tractor"></i><a class="text-reset" href="/jord-skog-jakt-og-fiskeri">Jord, skog, jakt og fiskeri</a></li>
-               <li class="topic"><i class="mr-1 fa-fw fas fa-sun"></i><a class="text-reset" href="/kultur-og-fritid">Kultur og fritid</a></li>
-               <li class="topic"><i class="mr-1 fa-fw fas fa-chart-bar"></i><a class="text-reset" href="/nasjonalregnskap-og-konjunkturer">Nasjonalregnskap og konjunkturer</a></li>
-               <li class="topic"><i class="mr-1 fa-fw fas fa-leaf"></i><a class="text-reset" href="/natur-og-miljo">Natur og miljø</a></li>
-               <li class="topic"><i class="mr-1 fa-fw fas fa-id-badge"></i><a class="text-reset" href="/offentlig-sektor">Offentlig sektor</a></li>
-               <li class="topic"><i class="mr-1 fa-fw fas fa-tag"></i><a class="text-reset" href="/priser-og-prisindekser">Priser og prisindekser</a></li>
-               <li class="topic"><i class="mr-1 fa-fw fas fa-gavel"></i><a class="text-reset" href="/sosiale-forhold-og-kriminalitet">Sosiale forhold og kriminalitet</a></li>
-               <li class="topic"><i class="mr-1 fa-fw fas fa-snowplow"></i><a class="text-reset" href="/svalbard">Svalbard</a></li>
+               <li class="topic"><i class="mr-1 fa-fw fas fa-sun"></i><a class="text-reset" href="/kultur-og-fritid" data-th-text="${page.language.phrases.menuStatisticsCulture}">Kultur og fritid</a></li>
+               <li class="topic"><i class="mr-1 fa-fw fas fa-chart-bar"></i><a class="text-reset" href="/nasjonalregnskap-og-konjunkturer" data-th-text="${page.language.phrases.menuStatisticsNational}">Nasjonalregnskap og konjunkturer</a></li>
+               <li class="topic"><i class="mr-1 fa-fw fas fa-leaf"></i><a class="text-reset" href="/natur-og-miljo" data-th-text="${page.language.phrases.menuStatisticsNature}">Natur og miljø</a></li>
+               <li class="topic"><i class="mr-1 fa-fw fas fa-id-badge"></i><a class="text-reset" href="/offentlig-sektor" data-th-text="${page.language.phrases.menuStatisticsPublic}">Offentlig sektor</a></li>
+               <li class="topic"><i class="mr-1 fa-fw fas fa-tag"></i><a class="text-reset" href="/priser-og-prisindekser" data-th-text="${page.language.phrases.menuStatisticsPrices}">Priser og prisindekser</a></li>
+               <li class="topic"><i class="mr-1 fa-fw fas fa-gavel"></i><a class="text-reset" href="/sosiale-forhold-og-kriminalitet" data-th-text="${page.language.phrases.menuStatisticsSocial}">Sosiale forhold og kriminalitet</a></li>
+               <li class="topic"><i class="mr-1 fa-fw fas fa-snowplow"></i><a class="text-reset" href="/svalbard" data-th-text="${page.language.phrases.menuStatisticsSvalbard}">Svalbard</a></li>
             </ul>
             <p class="sr-only">Liste 3 av 3</p>
             <ul class="list-unstyled col-md-4 last">
-               <li class="topic"><i class="mr-1 fa-fw fas fa-lightbulb"></i><a class="text-reset" href="/teknologi-og-innovasjon">Teknologi og innovasjon</a></li>
-               <li class="topic"><i class="mr-1 fa-fw fas fa-suitcase"></i><a class="text-reset" href="/transport-og-reiseliv">Transport og reiseliv</a></li>
-               <li class="topic"><i class="mr-1 fa-fw fas fa-apple-alt"></i><a class="text-reset" href="/utdanning">Utdanning</a></li>
-               <li class="topic"><i class="mr-1 fa-fw fas fa-globe"></i><a class="text-reset" href="/utenriksokonomi">Utenriksøkonomi</a></li>
-               <li class="topic"><i class="mr-1 fa-fw fas fa-vote-yea"></i><a class="text-reset" href="/valg">Valg</a></li>
-               <li class="topic"><i class="mr-1 fa-fw fas fa-shopping-basket"></i><a class="text-reset" href="/varehandel-og-tjenesteyting">Varehandel og tjenesteyting</a></li>
-               <li class="topic"><i class="mr-1 fa-fw fas fa-book"></i><a class="text-reset" href="/virksomheter-foretak-og-regnskap">Virksomheter, foretak og regnskap</a></li>
+               <li class="topic"><i class="mr-1 fa-fw fas fa-lightbulb"></i><a class="text-reset" href="/teknologi-og-innovasjon" data-th-text="${page.language.phrases.menuStatisticsTechnology}">Teknologi og innovasjon</a></li>
+               <li class="topic"><i class="mr-1 fa-fw fas fa-suitcase"></i><a class="text-reset" href="/transport-og-reiseliv" data-th-text="${page.language.phrases.menuStatisticsTransport}">Transport og reiseliv</a></li>
+               <li class="topic"><i class="mr-1 fa-fw fas fa-apple-alt"></i><a class="text-reset" href="/utdanning" data-th-text="${page.language.phrases.menuStatisticsEducation}">Utdanning</a></li>
+               <li class="topic"><i class="mr-1 fa-fw fas fa-globe"></i><a class="text-reset" href="/utenriksokonomi" data-th-text="${page.language.phrases.menuStatisticsExternal}">Utenriksøkonomi</a></li>
+               <li class="topic"><i class="mr-1 fa-fw fas fa-vote-yea"></i><a class="text-reset" href="/valg" data-th-text="${page.language.phrases.menuStatisticsElections}">Valg</a></li>
+               <li class="topic"><i class="mr-1 fa-fw fas fa-shopping-basket"></i><a class="text-reset" href="/varehandel-og-tjenesteyting" data-th-text="${page.language.phrases.menuStatisticsWholesale}">Varehandel og tjenesteyting</a></li>
+               <li class="topic"><i class="mr-1 fa-fw fas fa-book"></i><a class="text-reset" href="/virksomheter-foretak-og-regnskap" data-th-text="${page.language.phrases.menuStatisticsEstablishments}">Virksomheter, foretak og regnskap</a></li>
             </ul>
          </div>
       </nav>
