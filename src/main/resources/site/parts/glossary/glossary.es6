@@ -3,18 +3,30 @@ import * as portal from '/lib/xp/portal'
 import * as content from '/lib/xp/content'
 import * as thymeleaf from '/lib/thymeleaf'
 
-exports.get = function(req) {
-  const part = portal.getComponent() || req
-  const view = resolve('./glossary.html')
-  const glossary = []
+const view = resolve('./glossary.html')
 
-  part.config.glossary = part.config.glossary && util.data.forceArray(part.config.glossary) || []
-  part.config.glossary.map((key) => {
-    const item = content.get({ key })
-    glossary.push(item)
+exports.get = function(req) {
+  const part = portal.getComponent();
+  const glossaryIds = part.config.glossary ? util.data.forceArray(part.config.glossary) : []
+  return renderPart(req, glossaryIds);
+}
+
+exports.preview = (req, id) => renderPart(req, [id])
+
+function renderPart(req, glossaryIds) {
+  const glossaries = []
+
+  glossaryIds.forEach((key) => {
+    const glossary = content.get({ key })
+    if (glossary) {
+      glossaries.push({
+        displayName: glossary.displayName,
+        ingress: glossary.data.ingress
+      })
+    }
   })
 
-  const model = { part, glossary }
+  const model = { glossaries }
   const body = thymeleaf.render(view, model)
 
   return { body, contentType: 'text/html' }
