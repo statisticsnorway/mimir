@@ -8,17 +8,17 @@
                <a id="change-language" class="text-uppercase a-ssb" data-th-attr="data-exists=${page.language.exists}" data-th-href="${portal.pageUrl({'_path='+page.language.path})}" data-th-text="${page.language.phrases.language}"></a>
             </li>
             <li class="text-uppercase col-auto">
-               <a href="/a-aa" title="Stikkord A-Å" data-th-text="${page.language.phrases.menuKeywords}">Stikkord A-Å</a>
+               <a  data-th-href="/a-aa" data-th-text="${page.language.phrases.menuKeywords}">Stikkord A-Å</a>
             </li>
             <li id="global-contact" class="text-uppercase col-auto pr-0">
-               <a data-th-href="${portal.pageUrl({page.language.contact})}" data-th-text="${page.language.phrases.menuContactUs}" accesskey="7">Kontakt oss</a>
+               <a href="/omssb/kontakt-oss" data-th-text="${page.language.phrases.menuContactUs}" accesskey="7">Kontakt oss</a>
             </li>
          </ul>
       </div>
       <form class="float-right" id="search" action="/sok" method="get" role="search">
          <fieldset>
             <legend class="sr-only">Nettstedsøk</legend>
-            <label for="sok" class="sr-only">Søk</label>
+            <label for="sok" class="sr-only" data-th-text="${page.language.phrases.menuSearch}">Søk</label>
             <input id="sok" name="sok" type="text" value="" accesskey="4" tabindex="5">
             <input type="submit" value="Søk" class="submit" tabindex="6">
          </fieldset>
