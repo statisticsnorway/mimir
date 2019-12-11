@@ -18,9 +18,9 @@
       <form class="float-right" id="search" action="/sok" method="get" role="search">
          <fieldset>
             <legend class="sr-only">Nettstedsøk</legend>
-            <label for="sok" class="sr-only" data-th-text="${page.language.phrases.menuSearch}">Søk</label>
+            <label for="sok" class="sr-only">Søk</label>
             <input id="sok" name="sok" type="text" value="" accesskey="4" tabindex="5">
-            <input type="submit" value="Søk" class="submit" tabindex="6">
+            <input type="submit" data-th-value="${page.language.phrases.menuSearch}" class="submit" tabindex="6">
          </fieldset>
       </form>
       <nav id="main-menu">
