@@ -1,6 +1,4 @@
-// Does a query on requested url
-
-import * as http from '/lib/http-client'
+const http = __non_webpack_require__( '/lib/http-client')
 
 const readTimeout = 5000
 const connectionTimeout = 20000

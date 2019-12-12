@@ -1,4 +1,4 @@
-import * as klass from '/lib/klass'
+const klass = __non_webpack_require__( '/lib/klass')
 
 const contentType = 'application/json'
 

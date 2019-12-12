@@ -2,8 +2,8 @@
 // which is rendered on bottom of page, see includes/glossary.html
 // In combination with app/glossary.es6 to provide popup for words (Popper.js)
 
-import * as portal from '/lib/xp/portal'
-import * as content from '/lib/xp/content'
+const portal = __non_webpack_require__( '/lib/xp/portal')
+const content = __non_webpack_require__( '/lib/xp/content')
 
 function parseText(text, glossary) {
   const m = text.match(/<a href="content:\/\/.*?">/g)

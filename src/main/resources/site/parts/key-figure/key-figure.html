@@ -5,7 +5,9 @@
       <div class="d-md-none border-bottom mt-5 mb-5 col-12" data-th-if="${i.index}"></div>
       <div class="d-none d-md-block border-bottom mt-5 mb-5 col-12" data-th-if="${i.index && i.index % 2 == 0}"></div>
       <div data-th-class="${figure['size'] == 'large'} ? 'col-md-12' : 'col-md-6'">
-        <div class="ssb-key-figures" data-th-classappend="${figure['size']} ? ${figure['size']}">
+
+        <!-- Key figures pewpew -->
+        <!--div class="ssb-key-figures" data-th-classappend="${figure['size']} ? ${figure['size']}">
           <div class="kf-icon" data-th-classappend="${figure['size']} ? ${figure['size']}">
             <img class="w-100" data-th-if="${figure.icon}" data-th-src="${portal.imageUrl({'_id=' + figure.icon, '_scale=block(80,80)'})}"/>
           </div>
@@ -24,20 +26,25 @@
               <span data-th-if="${figure.value}" data-th-text="${figure.denomination}" class="kf-title subtitle"></span>
             </div>
           </div>
-        </div>
-        <div data-th-if="${figure.source}" data-th-unless="${source.title}" class="col-12">
+        </div-->
+        <div data-th-id="${'kf-' + figure.id}"/>
+
+        <!-- Figure sources = links -->
+        <!--div data-th-if="${figure.source}" data-th-unless="${source.title}" class="col-12">
           <h4 class="pt-3 mb-0">Kilde:</h4>
           <a class="ssb-link" data-th-href="${figure.source.url}" data-th-text="${figure.source.title}"></a>
-        </div>
+        </div-->
+        <div data-th-id="${'kf-link' + figure.id}" />
+
       </div>
     </div>
   </div>
-  <div class="row" data-th-if="${source.title}">
+  <!--div class="row" data-th-if="${source.title}">
     <div class="col-12">
       <h4 class="pt-3 mb-0">Kilde:</h4>
       <a class="ssb-link" data-th-href="${source.url}" data-th-text="${source.title}"></a>
     </div>
-  </div>
+  </div-->
 </section>
 
 <!-- GLOSSARY -->

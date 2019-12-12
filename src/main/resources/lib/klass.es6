@@ -1,7 +1,7 @@
-import * as util from '/lib/util'
-import * as http from '/lib/http-client'
-import * as portal from '/lib/xp/portal'
-import * as content from '/lib/xp/content'
+const util = __non_webpack_require__( '/lib/util')
+const http = __non_webpack_require__( '/lib/http-client')
+const portal = __non_webpack_require__( '/lib/xp/portal')
+const content = __non_webpack_require__( '/lib/xp/content')
 
 const paths = {}
 const codes = {}

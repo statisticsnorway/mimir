@@ -1,10 +1,13 @@
-import { get as getKeyFigure } from '/lib/mimir/key-figure'
-import { get as getGlossary } from '/lib/mimir/glossary'
-import { parseMunicipalityValues } from '/lib/municipals'
-import { getComponent } from '/lib/xp/portal'
-import { render } from '/lib/thymeleaf'
-import { getMunicipality } from '/lib/klass'
-import { data } from '/lib/util'
+const React4xp = require('/lib/enonic/react4xp');
+
+const { get: getKeyFigure } = __non_webpack_require__( '/lib/mimir/key-figure')
+const { get: getGlossary } = __non_webpack_require__( '/lib/mimir/glossary')
+const { parseMunicipalityValues } = __non_webpack_require__( '/lib/municipals')
+const { getComponent } = __non_webpack_require__( '/lib/xp/portal')
+const { render: renderThymeleaf } = __non_webpack_require__( '/lib/thymeleaf')
+const { getMunicipality } = __non_webpack_require__( '/lib/klass')
+const { data } = __non_webpack_require__( '/lib/util')
+const { render : renderReact} = __non_webpack_require__('/lib/enonic/react4xp');
 
 const view = resolve('./key-figure.html')
 
@@ -16,11 +19,12 @@ exports.get = function(req) {
 
 exports.preview = (req, id) => renderPart(req, [id])
 
+
 function renderPart(req, keyFigureIds) {
   const part = getComponent()
   const municipality = getMunicipality(req)
   const keyFigures = keyFigureIds.map( (keyFigureId) => getKeyFigure({key: keyFigureId}))
-  return keyFigures.length ? renderKeyFigure(keyFigures, part, municipality) : ''
+  return keyFigures.length ? renderKeyFigure(keyFigures, part, municipality, req) : ''
 }
 
 /**
@@ -28,9 +32,10 @@ function renderPart(req, keyFigureIds) {
  * @param {array} keyFigures
  * @param {object} part
  * @param {object} municipality
+ * @param {object} req
  * @return {{body: string, contentType: string}}
  */
-function renderKeyFigure(keyFigures, part, municipality) {
+function renderKeyFigure(keyFigures, part, municipality, req) {
   const glossary = keyFigures.reduce( (result, keyFigure) => {
     return keyFigure.data.glossary ? result.concat(getGlossary({ key: keyFigure.data.glossary })) : result
   }, [])
@@ -39,6 +44,7 @@ function renderKeyFigure(keyFigures, part, municipality) {
     const dataset = parseMunicipalityValues(keyFigure.data.dataquery, municipality, keyFigure.data.default)
 
     return {
+      id: keyFigure._id,
       displayName: keyFigure.displayName,
       ...keyFigure.data,
       ...dataset,
@@ -50,6 +56,7 @@ function renderKeyFigure(keyFigures, part, municipality) {
     return keyFigure.value !== null && keyFigure.value !== 0
   })
 
+  /*** Render thymeleaf **/
   const model = {
     source: {
       title: part ? part.config.title : undefined,
@@ -59,9 +66,42 @@ function renderKeyFigure(keyFigures, part, municipality) {
     page: { glossary }
   }
 
+  const thymeleafRender = renderThymeleaf(view, model)
+
+  /** Render react **/
+  const component = getComponent()
+
+  const reactObjs = model.data.map( (keyfigure) => {
+    const reactProps = {
+      number: keyfigure.value,
+      title: keyfigure.displayName,
+      numberDescription: keyfigure.denomination,
+      time: keyfigure.time,
+      size: keyfigure.size
+      //icon: '{<Home size="240" />}'
+    };
+
+    const fig = new React4xp('KeyFigure');
+    return fig.setId(keyfigure.id).setProps(reactProps)
+  })
+
+  const reactBody = reactObjs.reduce((reactRender, reactObj) => {
+    return reactObj.renderBody(reactRender)
+  }, thymeleafRender)
+
+
+  const reactContributions = reactObjs.reduce((reactRender, reactObj) => {
+    return reactObj.renderPageContributions(reactRender)
+  })
+
+  const clientRender = (req.mode !== 'edit' && req.mode !== 'inline');
+
   return {
-    body: render(view, model),
-    contentType: 'text/html'
+    body: reactBody,
+    pageContributions: clientRender ?
+      reactContributions :
+      undefined
   }
+
 }
 

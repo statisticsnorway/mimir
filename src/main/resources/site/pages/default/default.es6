@@ -1,11 +1,11 @@
-import * as content from '/lib/xp/content'
-import * as portal from '/lib/xp/portal'
-import * as thymeleaf from '/lib/thymeleaf'
-import * as klass from '/lib/klass'
-import * as glossary from '/lib/glossary'
-import * as language from '/lib/language'
-import { alertsForContext } from '/lib/utils'
-import * as municipals from '/lib/municipals'
+const content     = __non_webpack_require__( '/lib/xp/content')
+const portal      = __non_webpack_require__( '/lib/xp/portal')
+const thymeleaf   = __non_webpack_require__( '/lib/thymeleaf')
+const klass       = __non_webpack_require__( '/lib/klass')
+const glossary    = __non_webpack_require__( '/lib/glossary')
+const language    = __non_webpack_require__( '/lib/language')
+const { alertsForContext } = __non_webpack_require__( '/lib/utils')
+const municipals  = __non_webpack_require__( '/lib/municipals')
 
 const version = '%%VERSION%%'
 const preview = [ // Parts that has preview
@@ -46,7 +46,7 @@ exports.get = function(req) {
   // Create preview if available
   if (preview.indexOf(page.type) >= 0) {
     const name = page.type.replace(/^.*:/, '')
-    const controller = require(`../../parts/${name}/${name}`)
+    const controller = __non_webpack_require__(`../../parts/${name}/${name}`)
     if (controller.preview) {
       page.preview = controller.preview(req, page._id)
     }

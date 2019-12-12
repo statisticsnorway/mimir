@@ -1,9 +1,7 @@
-import * as portal from '/lib/xp/portal'
-import * as thymeleaf from '/lib/thymeleaf'
-import * as municipals from '/lib/municipals'
-
-import * as klass from '/lib/klass'
-
+const portal = __non_webpack_require__( '/lib/xp/portal')
+const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
+const municipals = __non_webpack_require__( '/lib/municipals')
+const klass = __non_webpack_require__( '/lib/klass')
 const view = resolve('./banner.html')
 
 exports.get = function(req) {

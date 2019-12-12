@@ -1,6 +1,6 @@
-import * as portal from '/lib/xp/portal'
-import * as thymeleaf from '/lib/thymeleaf'
-import * as municipals from '/lib/municipals'
+const portal = __non_webpack_require__( '/lib/xp/portal')
+const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
+const municipals = __non_webpack_require__( '/lib/municipals')
 
 const view = resolve('./map.html')
 

@@ -1,8 +1,8 @@
-import * as util from '/lib/util'
-import * as portal from '/lib/xp/portal'
-import * as content from '/lib/xp/content'
-import * as thymeleaf from '/lib/thymeleaf'
-import * as dataquery from '/lib/dataquery'
+const util = __non_webpack_require__( '/lib/util')
+const portal = __non_webpack_require__( '/lib/xp/portal')
+const content = __non_webpack_require__( '/lib/xp/content')
+const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
+const dataquery = __non_webpack_require__( '/lib/dataquery')
 
 const view = resolve('./dataquery.html')
 

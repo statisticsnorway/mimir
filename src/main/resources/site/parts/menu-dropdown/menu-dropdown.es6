@@ -1,10 +1,10 @@
-import { getMunicipality } from '/lib/klass'
-import { getContent } from '/lib/xp/portal'
-import { render } from '/lib/thymeleaf'
-import { list as municipalityList, createPath } from '/lib/municipals'
-import { list as countyList } from '/lib/counties'
-import { newCache } from '/lib/cache'
-import { mode } from '/lib/municipals'
+const { getMunicipality } = __non_webpack_require__( '/lib/klass')
+const { getContent } = __non_webpack_require__( '/lib/xp/portal')
+const { render } = __non_webpack_require__( '/lib/thymeleaf')
+const { list : municipalityList, createPath } = __non_webpack_require__( '/lib/municipals')
+const { list : countyList } = __non_webpack_require__( '/lib/counties')
+const { newCache } = __non_webpack_require__( '/lib/cache')
+const { mode } = __non_webpack_require__( '/lib/municipals')
 
 const view = resolve('./menu-dropdown.html')
 const cache = newCache({ size: 100, expire: 3600 })

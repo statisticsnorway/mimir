@@ -1,8 +1,7 @@
-import { list as listOperationsAlerts } from './mimir/operations-alert';
-import { list as listMunicipalityAlerts } from './mimir/municipality-alert'
-import { processHtml } from '/lib/xp/portal'
-
-const numeral = require('/lib/numeral')
+const { list : listOperationsAlerts } = __non_webpack_require__( './mimir/operations-alert')
+const { list : listMunicipalityAlerts } = __non_webpack_require__( './mimir/municipality-alert')
+const { processHtml } = __non_webpack_require__( '/lib/xp/portal')
+const numeral = require('numeral')
 
 exports.createHumanReadableFormat = (value) => {
   return value > 999 ? numeral(value).format('0,0').replace(/,/, '&thinsp;') : value.toString().replace(/\./, ',')

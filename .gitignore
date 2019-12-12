@@ -10,3 +10,5 @@ node_modules
 .idea/
 .enonic
 .DS_Store
+
+src/main/resources/react4xp/

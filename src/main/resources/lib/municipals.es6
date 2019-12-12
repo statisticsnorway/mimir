@@ -1,11 +1,11 @@
-import { getChildren } from '/lib/xp/content'
-import { getDataSetWithDataQueryId } from './mimir/dataset'
-import { datasetToMunicipalityWithValues, get as getKlass } from './klass'
-import { localizeTimePeriod } from './language'
-import { localize } from '/lib/xp/i18n'
-import { createHumanReadableFormat } from './utils'
-import { get as getDataquery } from '/lib/mimir/dataquery'
-import { getSiteConfig } from '/lib/xp/portal'
+const { getChildren } = __non_webpack_require__( '/lib/xp/content')
+const { getDataSetWithDataQueryId } = __non_webpack_require__( './mimir/dataset')
+const { datasetToMunicipalityWithValues, get: getKlass } = __non_webpack_require__( './klass')
+const { localizeTimePeriod } = __non_webpack_require__( './language')
+const { localize } = __non_webpack_require__( '/lib/xp/i18n')
+const { createHumanReadableFormat } = __non_webpack_require__( './utils')
+const { get: getDataquery } = __non_webpack_require__( '/lib/mimir/dataquery')
+const { getSiteConfig } = __non_webpack_require__( '/lib/xp/portal')
 
 /**
  * @return {array} Returns everything in the "code" node from ssb api
