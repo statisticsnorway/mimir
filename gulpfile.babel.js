@@ -11,7 +11,6 @@ const replace = require('gulp-replace');
 const plumber = require('gulp-plumber');
 const prefixer = require('gulp-autoprefixer');
 const sourcemaps = require('gulp-sourcemaps');
-const livereload = require('gulp-livereload');
 
 const path = {
   build: {
@@ -105,7 +104,6 @@ function frontend() {
     .pipe(concat('main.js'))
     .pipe(plumber.stop())
     .pipe(gulp.dest('dist'))
-    .pipe(livereload());
 }
 
 // -----------------------------------------------------------------------------
@@ -113,7 +111,7 @@ function frontend() {
 // -----------------------------------------------------------------------------
 function styles() {
   return gulp.src(path.src.style)
-    .pipe(plumber(function (error) {
+    .pipe(plumber(function(error) {
       log.error(error.message);
       this.emit('end');
     }))
@@ -130,14 +128,12 @@ function styles() {
     .pipe(sourcemaps.write('.'))
     // .pipe(gulp.dest(path.build.styles))
     .pipe(gulp.dest('build/resources/main/assets/css/'))
-    .pipe(livereload());
 }
 
 // -----------------------------------------------------------------------------
 // watch
 // -----------------------------------------------------------------------------
 function watch() {
-  livereload.listen()
   gulp.watch(['app/**/*.es6'], gulp.series(frontend, libs));
   gulp.watch(['src/**/*.es6'], backend);
   gulp.watch(['src/**/*.html'], gulp.series(frontend, libs));
