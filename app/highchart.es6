@@ -81,7 +81,12 @@ $(function() {
 
       // Render chart
       canvas.highcharts({
-        accessibility: { enabled: false },
+        accessibility: {
+          enabled: true,
+          keyboardNavigation: {
+            order: ['chartMenu']
+          }
+        },
         chart: {
           plotBorderColor: '#e6e6e6',
           spacingBottom: 18,
