@@ -27,9 +27,8 @@ exports.getLanguage = function(page) {
     link: (siteConfig.norwegian.link == null) ? '' : siteConfig.norwegian.link,
     published: page.publish && page.publish.from && moment(page.publish.from).format('DD. MMMM YYYY').toLowerCase(),
     modified: moment(page.modifiedTime).format('DD. MMMM YYYY').toLowerCase(),
-    path: page._path.replace(/^\/.*?\//, site._path + '/en/'),
-    pageUrl: null,
-    home: portal.pageUrl({ path: site._path + '/en' }),
+    path: page._path.replace(/^\/.*?\//, site._path + siteConfig.english.link + '/'),
+    home: portal.pageUrl({ path: site._path + siteConfig.english.link }),
     phrases: (siteConfig.norwegian.phrases == 'english') ? english : norwegian
   }
 

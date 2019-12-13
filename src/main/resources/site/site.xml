@@ -37,7 +37,7 @@
       <default>0101</default>
     </input>
     <item-set name="norwegian">
-      <label>Norsk</label>
+      <label>Norsk (Bokmål)</label>
       <occurrences minimum="1" maximum="1"/>
       <items>
         <input name="code" type="TextLine">
@@ -56,11 +56,11 @@
           <default></default>
         </input>
         <input name="phrases" type="RadioButton">
-          <label>Språk fraser</label>
+          <label>Språk tekst/fraser</label>
           <occurrences minimum="1" maximum="1"/>
           <config>
-            <option value="norwegian">norsk</option>
-            <option value="english">engelsk</option>
+            <option value="norwegian">phrases/phrases_no</option>
+            <option value="english">phrases_en</option>
           </config>
           <default>norwegian</default>
         </input>
@@ -86,11 +86,11 @@
           <default>/en</default>
         </input>
         <input name="phrases" type="RadioButton">
-          <label>Språk fraser</label>
+          <label>Språk tekst/fraser</label>
           <occurrences minimum="1" maximum="1"/>
           <config>
-            <option value="norwegian">norsk</option>
-            <option value="english">engelsk</option>
+            <option value="norwegian">phrases/phrases_no</option>
+            <option value="english">phrases_en</option>
           </config>
           <default>engelsk</default>
         </input>
