@@ -36,13 +36,10 @@
       <occurrences minimum="1" maximum="1"/>
       <default>0101</default>
     </input>
-    <item-set name="language">
+    <item-set name="norwegian">
+      <label>Norsk</label>
+      <occurrences minimum="1" maximum="1"/>
       <items>
-        <input name="label" type="TextLine">
-          <label>Språk</label>
-          <occurrences minimum="1" maximum="1"/>
-          <default>Norsk</default>
-        </input>
         <input name="code" type="TextLine">
           <label>Språkkode</label>
           <occurrences minimum="1" maximum="1"/>
@@ -62,13 +59,42 @@
           <label>Språk fraser</label>
           <occurrences minimum="1" maximum="1"/>
           <config>
-            <option value="norwegian">norwegian</option>
+            <option value="norwegian">norsk</option>
             <option value="english">engelsk</option>
           </config>
           <default>norwegian</default>
         </input>
       </items>
-      <occurrences minimum="1" maximum="2"/>
+    </item-set>
+    <item-set name="english">
+      <label>Engelsk</label>
+      <occurrences minimum="1" maximum="1"/>
+      <items>
+        <input name="code" type="TextLine">
+          <label>Språkkode</label>
+          <occurrences minimum="1" maximum="1"/>
+          <default>en</default>
+        </input>
+        <input name="alternate" type="TextLine">
+          <label>Språk alternativ</label>
+          <occurrences minimum="1" maximum="1"/>
+          <default>nb</default>
+        </input>
+        <input name="link" type="TextLine">
+          <label>Språk lenke</label>
+          <occurrences minimum="0" maximum="1"/>
+          <default>/en</default>
+        </input>
+        <input name="phrases" type="RadioButton">
+          <label>Språk fraser</label>
+          <occurrences minimum="1" maximum="1"/>
+          <config>
+            <option value="norwegian">norsk</option>
+            <option value="english">engelsk</option>
+          </config>
+          <default>engelsk</default>
+        </input>
+      </items>
     </item-set>
   </form>
   <mappings>
