@@ -51,10 +51,7 @@ function renderKeyFigure(keyFigures, part, municipality) {
   })
 
   const model = {
-    source: {
-      title: part ? part.config.title : undefined,
-      url: part ? part.config.source : undefined
-    },
+    part,
     data: keyFiguresWithNonZeroValue,
     page: { glossary }
   }
