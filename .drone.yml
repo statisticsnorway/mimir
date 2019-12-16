@@ -4,9 +4,10 @@ name: default
 
 steps:
   - name: Build App
-    image: enonic/enonic-ci:7.1
+    image: enonic/enonic-ci:7.1-drone
     commands:
-      - enonic project build
+      - npm install
+      - npm run build
   - name: Deploy App
     image: enonic/enonic-ci:7.1
     environment:
