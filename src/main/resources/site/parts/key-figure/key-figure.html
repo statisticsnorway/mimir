@@ -32,10 +32,10 @@
       </div>
     </div>
   </div>
-  <div class="row" data-th-if="${part.source}">
+  <div class="row" data-th-if="${part.config.source}">
     <div class="col-12">
       <h4 class="pt-3 mb-0">Kilde:</h4>
-      <a class="ssb-link" data-th-href="${part.source.url}" data-th-text="${part.source.title}"></a>
+      <a class="ssb-link" data-th-href="${part.config.source.url}" data-th-text="${part.config.source.title}"></a>
     </div>
   </div>
 </section>
