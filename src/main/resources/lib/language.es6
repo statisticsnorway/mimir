@@ -13,23 +13,23 @@ exports.getLanguage = function(page) {
   moment.locale(page.language === 'en' ? 'en' : 'nb')
 
   const result = page.language === 'en' ? {
-    code: siteConfig.english.code,
-    alternate: siteConfig.english.alternate, // alternate language code norsk bokmål
-    link: (siteConfig.english.link == null) ? '' : siteConfig.english.link,
+    code: siteConfig.language[1].code,
+    alternate: siteConfig.language[1].alternate, // alternate language code norsk bokmål
+    link: (siteConfig.language[1].link == null) ? '' : siteConfig.language[1].link,
     published: page.publish && page.publish.from && moment(page.publish.from).format('DD. MMMM YYYY'),
     modified: moment(page.modifiedTime).format('DD. MMMM YYYY'),
     path: page._path.replace(/^\/.*?\/en/, site._path),
     home: portal.pageUrl({ path: site._path }),
-    phrases: (siteConfig.english.phrases == 'english') ? english : norwegian
+    phrases: (siteConfig.language[1].phrases == 'english') ? english : norwegian
   } : {
-    code: siteConfig.norwegian.code, // norsk bokmål, https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-    alternate:  siteConfig.norwegian.alternate, // alternate language code
-    link: (siteConfig.norwegian.link == null) ? '' : siteConfig.norwegian.link,
+    code: siteConfig.language[0].code, // norsk bokmål, https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+    alternate:  siteConfig.language[0].alternate, // alternate language code
+    link: (siteConfig.language[0].link == null) ? '' : siteConfig.language[0].link,
     published: page.publish && page.publish.from && moment(page.publish.from).format('DD. MMMM YYYY').toLowerCase(),
     modified: moment(page.modifiedTime).format('DD. MMMM YYYY').toLowerCase(),
-    path: page._path.replace(/^\/.*?\//, site._path + siteConfig.english.link + '/'),
-    home: portal.pageUrl({ path: site._path + siteConfig.english.link }),
-    phrases: (siteConfig.norwegian.phrases == 'english') ? english : norwegian
+    path: page._path.replace(/^\/.*?\//, site._path + siteConfig.language[1].link + '/'),
+    home: portal.pageUrl({ path: site._path + siteConfig.language[1].link }),
+    phrases: (siteConfig.language[0].phrases == 'norwegian') ? norwegian : english
   }
 
   result.pageUrl = portal.pageUrl({

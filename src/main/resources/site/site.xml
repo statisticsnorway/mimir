@@ -36,10 +36,15 @@
       <occurrences minimum="1" maximum="1"/>
       <default>0101</default>
     </input>
-    <item-set name="norwegian">
-      <label>Norsk (Bokmål)</label>
-      <occurrences minimum="1" maximum="1"/>
+    <item-set name="language">
+      <label>Språk instillinger</label>
+      <occurrences minimum="1" maximum="2"/>
       <items>
+        <input name="label" type="TextLine">
+          <label>Språk</label>
+          <occurrences minimum="1" maximum="1"/>
+          <default>Norsk (Bokmål)</default>
+        </input>
         <input name="code" type="TextLine">
           <label>Språkkode</label>
           <occurrences minimum="1" maximum="1"/>
@@ -63,36 +68,6 @@
             <option value="english">phrases_en</option>
           </config>
           <default>norwegian</default>
-        </input>
-      </items>
-    </item-set>
-    <item-set name="english">
-      <label>Engelsk</label>
-      <occurrences minimum="1" maximum="1"/>
-      <items>
-        <input name="code" type="TextLine">
-          <label>Språkkode</label>
-          <occurrences minimum="1" maximum="1"/>
-          <default>en</default>
-        </input>
-        <input name="alternate" type="TextLine">
-          <label>Språk alternativ</label>
-          <occurrences minimum="1" maximum="1"/>
-          <default>nb</default>
-        </input>
-        <input name="link" type="TextLine">
-          <label>Språk lenke</label>
-          <occurrences minimum="0" maximum="1"/>
-          <default>/en</default>
-        </input>
-        <input name="phrases" type="RadioButton">
-          <label>Språk tekst/fraser</label>
-          <occurrences minimum="1" maximum="1"/>
-          <config>
-            <option value="norwegian">phrases/phrases_no</option>
-            <option value="english">phrases_en</option>
-          </config>
-          <default>engelsk</default>
         </input>
       </items>
     </item-set>
