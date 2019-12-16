@@ -1,5 +1,5 @@
 <section class="xp-part key-figures">
-  <h3 data-th-if="${displayName}" data-th-text="${displayName}"></h3>
+  <h3 data-th-if="${source.title}" data-th-text="${source.title}"></h3>
   <div class="row">
     <div data-th-each="figure, i: ${data}" data-th-remove="tag">
       <div class="d-md-none border-bottom mt-5 mb-5 col-12" data-th-if="${i.index}"></div>
