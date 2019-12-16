@@ -1,5 +1,5 @@
 <section class="xp-part key-figures">
-  <h3 data-th-if="${displayName}" data-th-text="${displayName}"></h3>
+  <h3 data-th-if="${part.config.title}" data-th-text="${part.config.title}"></h3>
   <div class="row">
     <div data-th-each="figure, i: ${data}" data-th-remove="tag">
       <div class="d-md-none border-bottom mt-5 mb-5 col-12" data-th-if="${i.index}"></div>
@@ -25,17 +25,17 @@
             </div>
           </div>
         </div>
-        <div data-th-if="${figure.source}" data-th-unless="${source.title}" class="col-12">
+        <div data-th-if="${figure.source}" data-th-unless="${part.source}" class="col-12">
           <h4 class="pt-3 mb-0">Kilde:</h4>
           <a class="ssb-link" data-th-href="${figure.source.url}" data-th-text="${figure.source.title}"></a>
         </div>
       </div>
     </div>
   </div>
-  <div class="row" data-th-if="${source.title}">
+  <div class="row" data-th-if="${part.source}">
     <div class="col-12">
       <h4 class="pt-3 mb-0">Kilde:</h4>
-      <a class="ssb-link" data-th-href="${source.url}" data-th-text="${source.title}"></a>
+      <a class="ssb-link" data-th-href="${part.source.url}" data-th-text="${part.source.title}"></a>
     </div>
   </div>
 </section>
