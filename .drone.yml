@@ -7,9 +7,10 @@ steps:
     image: enonic/enonic-ci:7.1-node
     commands:
       - npm install
-      - npm run build
+      - npm run gulp
+      - enonic project build
   - name: Deploy App
-    image: enonic/enonic-ci:7.1
+    image: enonic/enonic-ci:7.1-node
     environment:
       ENONIC_CLI_REMOTE_URL:
         from_secret: ENONIC_CLI_REMOTE_URL
