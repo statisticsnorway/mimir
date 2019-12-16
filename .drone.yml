@@ -1,0 +1,20 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+  - name: Build App
+    image: enonic/enonic-ci:7.1
+    commands:
+      - enonic project build
+  - name: Deploy App
+    image: enonic/enonic-ci:7.1
+    environment:
+      ENONIC_CLI_REMOTE_URL:
+        from_secret: ENONIC_CLI_REMOTE_URL
+      ENONIC_CLI_REMOTE_USER:
+        from_secret: ENONIC_CLI_REMOTE_USER
+      ENONIC_CLI_REMOTE_PASS:
+        from_secret: ENONIC_CLI_REMOTE_PASS
+    commands:
+      - enonic app install --file build/libs/*.jar
