@@ -8,7 +8,7 @@ steps:
     commands:
       - npm install
       - npm run gulp
-      - enonic project build
+      - enonic project build builder
   - name: Deploy App
     image: enonic/enonic-ci:7.1-node
     environment:
