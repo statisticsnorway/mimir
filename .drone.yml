@@ -6,17 +6,18 @@ steps:
   - name: Build App
     image: enonic/enonic-ci:7.1-node
     commands:
+      - /setup_sandbox.sh
       - npm install
       - npm run gulp
-      - enonic project build builder
+      - enonic project build
   - name: Deploy App
     image: enonic/enonic-ci:7.1-node
     environment:
       ENONIC_CLI_REMOTE_URL:
-        from_secret: ENONIC_CLI_REMOTE_URL
+        from_secret: ssb-xp7t-url
       ENONIC_CLI_REMOTE_USER:
-        from_secret: ENONIC_CLI_REMOTE_USER
+        from_secret: ssb-xp7t-user
       ENONIC_CLI_REMOTE_PASS:
-        from_secret: ENONIC_CLI_REMOTE_PASS
+        from_secret: ssb-xp7t-pass
     commands:
       - enonic app install --file build/libs/*.jar
