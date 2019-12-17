@@ -48,6 +48,7 @@
     border-color: $ssb-dark-6;
     flex-direction: unset; // override design system
     @include media-breakpoint-down(lg) {
+      max-width: 100%;
       width: 100%;
     }
   }
