@@ -12,7 +12,10 @@ $(function() {
     e.stopPropagation()
     const el = $('.part-menu-dropdown')[0]
     const { top } = el.getBoundingClientRect()
-    $(e.target).toggleClass('active')
+    $('#municipality-list').removeClass('show')
+    $(e.currentTarget).toggleClass('active')
+    $('.show-search').attr('aria-expanded', 'false')
+    $('#search-container').removeClass('show')
     map.parent().click(() => {
       map.addClass('d-none').parent().removeClass('map-container')
     })
@@ -41,4 +44,16 @@ $(function() {
       top > 0 && !animate && $('.map-container').length && map.addClass('d-none').parent().removeClass('map-container') && $('#js-show-map').removeClass('active')
     })
   })
+
+  $('#input-query-municipality').focus((e) => {
+    $('.js-part-map').addClass('d-none').parent().removeClass('map-container') // Remove map when municipality search field active
+  })
+  $('.show-search').click((e) => {
+    $('#js-show-map').removeClass('active')
+    $('.js-part-map').addClass('d-none').parent().removeClass('map-container') // Remove map when municipality search button clicked
+  })
+  const w = window.innerWidth
+  if (w >= 960) { // Bootstrap lg grid
+    $('#search-container').addClass('show')
+  }
 })
