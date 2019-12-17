@@ -36,12 +36,13 @@
 
   <!-- MAIN -->
   <main data-portal-region="main" class="xp-region" data-th-if="${!isFragment}">
-    <!-- breadcrumbs -->
-    <div data-th-replace="mimir:/site/includes/breadcrumbs.html"></div>
+      <!-- breadcrumbs -->
+    <div class="bg-white mw-100 p-2">
+      <div data-th-replace="mimir:/site/includes/breadcrumbs.html"></div>
 
-    <!-- Alerts Info and error -->
-    <div data-th-replace="mimir:/site/includes/alerts.html"></div>
-
+      <!-- Alerts Info and error -->
+      <div data-th-replace="mimir:/site/includes/alerts.html"></div>
+    </div>
     <div data-th-if="${page.data.title}" class="container mb-5">
       <h1 data-th-text="${page.data.title}"></h1>
     </div>
@@ -58,7 +59,11 @@
 
     <div data-th-if="${mainRegion}" data-th-remove="tag">
       <div data-th-each="component : ${mainRegion.components}"
-        data-th-classappend="${component.descriptor != 'mimir:banner' and component.descriptor != 'mimir:menu-dropdown' and component.descriptor != 'mimir:map' ? 'container' : ''} + ' ' + ${component.descriptor == 'mimir:menu-dropdown' and mode == 'municipality' ? 'sticky-top' : ''} + ' ' + ${component.descriptor == 'mimir:preface' ? 'preface-container' : ''}"
+        data-th-classappend="${component.descriptor != 'mimir:banner'
+                            and component.descriptor != 'mimir:menu-dropdown'
+                            and component.descriptor != 'mimir:map' ? 'container' : ''} + ' '
+                            + ${component.descriptor == 'mimir:menu-dropdown' and mode == 'municipality' ? 'sticky-top' : ''}
+                            + ' ' + ${component.descriptor == 'mimir:preface' ? 'preface-container' : ''}"
         data-th-remove="${component.descriptor == 'mimir:banner'} ? tag">
         <div data-portal-component="${component.path}" data-th-remove="tag"></div>
       </div>
