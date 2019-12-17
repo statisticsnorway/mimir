@@ -1,11 +1,9 @@
 <!DOCTYPE html>
-<html data-th-lang="${page.language.code}">
+<html data-th-lang="${language.code}">
 <head>
   <script async data-th-if="${config.GA_TRACKING_ID}" data-th-src="|https://www.googletagmanager.com/gtag/js?id=${config.GA_TRACKING_ID}|"></script>
   <script th:inline="javascript">
-    /*<![CDATA[*/
     var highchart = []
-    /*]]>*/
   </script>
   <script th:inline="javascript" data-th-if="${config.GA_TRACKING_ID}">
     /*<![CDATA[*/
@@ -24,8 +22,8 @@
   <meta data-th-if="${page.data.metaDescription}" name="description" data-th-content="${page.data.metaDescription}">
   <title data-th-text="${page.displayName} + ' - Statistisk sentralbyrå'"></title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|Open+Sans:700|Roboto:700|Roboto+Condensed:700">
-  <link rel="stylesheet" data-th-href="${portal.assetUrl({'_path=css/styles.css', 'ts=' + ts})}"/>
-  <link rel="alternate" data-th-if="${page.language.exists}" data-th-href="${portal.pageUrl({'_path='+page.language.path})}" data-th-hreflang="${page.language.alternate}" />
+  <link rel="stylesheet" data-th-href="${stylesUrl}"/>
+  <link rel="alternate" data-th-if="${alternateLanguageVersionUrl}" data-th-href="${alternateLanguageVersionUrl}" data-th-hreflang="${language.alternate}" />
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 </head>
 <body class="xp-page" data-th-classappend="${colorize} + ' ' +  ${mode != 'map' and page.page.config and page.page.config.bkg_color == 'grey' ? 'bkg-grey' : ''}">
@@ -45,7 +43,7 @@
     </div>
 
     <!-- preview -->
-    <div class="container pt-5" data-th-if="${page.preview}" data-th-utext="${page.preview.body}">
+    <div class="container pt-5" data-th-if="${preview}" data-th-utext="${preview.body}">
     </div>
 
     <div data-th-if="${page.data.ingress} and ${page.type == 'mimir:page'}" class="container ingress">
@@ -69,6 +67,6 @@
   <footer>
   </footer>
 
-  <script type="text/javascript" data-th-src="${portal.assetUrl({'_path=js/libs.js', 'ts=' + ts})}"></script>
+  <script type="text/javascript" data-th-src="${jsLibsUrl}"></script>
 </body>
 </html>

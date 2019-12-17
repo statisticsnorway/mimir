@@ -3,12 +3,12 @@ import * as portal from '/lib/xp/portal'
 import * as thymeleaf from '/lib/thymeleaf'
 import * as klass from '/lib/klass'
 import * as glossary from '/lib/glossary'
-import * as language from '/lib/language'
+import * as languageLib from '/lib/language'
 import { alertsForContext } from '/lib/utils'
 import * as municipals from '/lib/municipals'
 
 const version = '%%VERSION%%'
-const preview = [ // Parts that has preview
+const partsWithPreview = [ // Parts that has preview
   `${app.name}:map`,
   `${app.name}:button`,
   `${app.name}:menu-box`,
@@ -40,15 +40,15 @@ exports.get = function(req) {
   const mode = municipals.mode(req, page)
   const municipality = klass.getMunicipality(req)
 
-  page.language = language.getLanguage(page)
   page.glossary = glossary.process(page)
 
   // Create preview if available
-  if (preview.indexOf(page.type) >= 0) {
+  let preview
+  if (partsWithPreview.indexOf(page.type) >= 0) {
     const name = page.type.replace(/^.*:/, '')
     const controller = require(`../../parts/${name}/${name}`)
     if (controller.preview) {
-      page.preview = controller.preview(req, page._id)
+      preview = controller.preview(req, page._id)
     }
   }
 
@@ -59,17 +59,43 @@ exports.get = function(req) {
     breadcrumbs.push({ 'displayName': municipality.name })
   }
 
-  const alerts = alertsForContext(municipality);
+  const alerts = alertsForContext(municipality)
+
+  const stylesUrl = portal.assetUrl({
+    path: 'css/styles.css',
+    params: {
+      ts
+    }
+  })
+
+  const jsLibsUrl = portal.assetUrl({
+    path: 'js/libs.js',
+    params: {
+      ts
+    }
+  })
+
+  const language = languageLib.getLanguage(page)
+  let alternateLanguageVersionUrl;
+  if (language.exists) {
+    alternateLanguageVersionUrl = portal.pageUrl({
+      path: language.path
+    })
+  }
 
   const model = {
     version,
-    ts,
     config,
     page,
     breadcrumbs,
     mainRegion,
     alerts,
-    mode
+    mode,
+    preview,
+    stylesUrl,
+    jsLibsUrl,
+    language,
+    alternateLanguageVersionUrl
   }
 
   const body = thymeleaf.render(view, model)
