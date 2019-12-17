@@ -35,12 +35,16 @@ exports.get = function(req) {
   const page = portal.getContent()
   const isFragment = page.type === 'portal:fragment'
   const mainRegion = isFragment ? null : page.page && page.page.regions && page.page.regions.main
-  const config = {}
 
   const mode = municipals.mode(req, page)
+  const mainRegionComponents = mapComponents(mainRegion, mode)
+  const config = {}
+
   const municipality = klass.getMunicipality(req)
 
   page.glossary = glossary.process(page)
+
+  const showIngress = page.data.ingress && page.type === 'mimir:page'
 
   // Create preview if available
   let preview
@@ -61,6 +65,11 @@ exports.get = function(req) {
 
   const alerts = alertsForContext(municipality)
 
+  const bodyClasses = []
+  if (mode !== 'map' && page.page.config && page.page.config.bkg_color === 'grey') {
+    bodyClasses.push('bkg-grey')
+  }
+
   const stylesUrl = portal.assetUrl({
     path: 'css/styles.css',
     params: {
@@ -76,7 +85,7 @@ exports.get = function(req) {
   })
 
   const language = languageLib.getLanguage(page)
-  let alternateLanguageVersionUrl;
+  let alternateLanguageVersionUrl
   if (language.exists) {
     alternateLanguageVersionUrl = portal.pageUrl({
       path: language.path
@@ -87,11 +96,14 @@ exports.get = function(req) {
     version,
     config,
     page,
-    breadcrumbs,
     mainRegion,
-    alerts,
+    mainRegionComponents,
     mode,
+    showIngress,
     preview,
+    breadcrumbs,
+    alerts,
+    bodyClasses: bodyClasses.join(' '),
     stylesUrl,
     jsLibsUrl,
     language,
@@ -101,4 +113,28 @@ exports.get = function(req) {
   const body = thymeleaf.render(view, model)
 
   return { body }
+}
+
+function mapComponents(mainRegion, mode) {
+  if (mainRegion && mainRegion.components) {
+    return mainRegion.components.map((component) => {
+      const descriptor = component.descriptor
+      const classes = []
+      if (descriptor !== 'mimir:banner' && descriptor !== 'mimir:menu-dropdown' && descriptor !== 'mimir:map' ) {
+        classes.push('container')
+      }
+      if (descriptor === 'mimir:menu-dropdown' && mode === 'municipality') {
+        classes.push('sticky-top')
+      }
+      if (descriptor === 'mimir:preface') {
+        classes.push('preface-container')
+      }
+      return {
+        path: component.path,
+        removeWrapDiv: descriptor === 'mimir:banner',
+        classes: classes.join(' ')
+      }
+    })
+  }
+  return []
 }

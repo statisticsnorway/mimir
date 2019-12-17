@@ -26,7 +26,7 @@
   <link rel="alternate" data-th-if="${alternateLanguageVersionUrl}" data-th-href="${alternateLanguageVersionUrl}" data-th-hreflang="${language.alternate}" />
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 </head>
-<body class="xp-page" data-th-classappend="${colorize} + ' ' +  ${mode != 'map' and page.page.config and page.page.config.bkg_color == 'grey' ? 'bkg-grey' : ''}">
+<body class="xp-page" data-th-classappend="${bodyClasses}">
   <!-- HEADER -->
   <div id="ssb-menu" data-th-include="mimir:/site/includes/ssb-menu.html"></div>
 
@@ -46,16 +46,16 @@
     <div class="container pt-5" data-th-if="${preview}" data-th-utext="${preview.body}">
     </div>
 
-    <div data-th-if="${page.data.ingress} and ${page.type == 'mimir:page'}" class="container ingress">
+    <div data-th-if="${showIngress}" class="container ingress">
       <div class="row">
         <div class="mt-3 mt-md-0 col-lg-8" data-th-utext="${page.data.ingress}"></div>
       </div>
     </div>
 
     <div data-th-if="${mainRegion}" data-th-remove="tag">
-      <div data-th-each="component : ${mainRegion.components}"
-        data-th-classappend="${component.descriptor != 'mimir:banner' and component.descriptor != 'mimir:menu-dropdown' and component.descriptor != 'mimir:map' ? 'container' : ''} + ' ' + ${component.descriptor == 'mimir:menu-dropdown' and mode == 'municipality' ? 'sticky-top' : ''} + ' ' + ${component.descriptor == 'mimir:preface' ? 'preface-container' : ''}"
-        data-th-remove="${component.descriptor == 'mimir:banner'} ? tag">
+      <div data-th-each="component : ${mainRegionComponents}"
+        data-th-classappend="${component.classes}"
+        data-th-remove="${component.removeWrapDiv} ? tag">
         <div data-portal-component="${component.path}" data-th-remove="tag"></div>
       </div>
   </main>
