@@ -11,6 +11,16 @@ import * as language from '/lib/language'
 import { alertsForContext } from '/lib/utils'
 
 const version = '%%VERSION%%'
+const preview = [
+  `${app.name}:accordion`,
+  `${app.name}:menu-box`,
+  `${app.name}:button`,
+  `${app.name}:highchart`,
+  `${app.name}:glossary`,
+  `${app.name}:statistikkbanken`,
+  `${app.name}:dashboard`,
+  `${app.name}:key-figure`
+]
 
 function getBreadcrumbs(c, a) {
   const key = c._path.replace(/\/[^\/]+$/, '')
@@ -33,11 +43,12 @@ exports.get = function(req) {
   page.glossary = glossary.process(page)
 
   // Create preview
-  if (page.type === `${app.name}:accordion` || page.type === `${app.name}:menu-box` || page.type === `${app.name}:button` ||
-      page.type === `${app.name}:highchart` || page.type === `${app.name}:glossary` || page.type === `${app.name}:statistikkbanken` ||
-      page.type === `${app.name}:dashboard` || page.type === `${app.name}:key-figure`) {
+  if (preview.indexOf(page.type) >= 0) {
+    const name = page.type.replace(/^.*:/, '')
     const controller = require(`../../parts/${name}/${name}`)
-    page.preview = controller.get({ config: { [name]: [page._id] }})
+    if (controller.preview) {
+      page.preview = controller.preview(req, page._id)
+    }
   }
 
   const breadcrumbs = [page]

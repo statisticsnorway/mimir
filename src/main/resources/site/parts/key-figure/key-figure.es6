@@ -9,10 +9,16 @@ import { data } from '/lib/util'
 const view = resolve('./key-figure.html')
 
 exports.get = function(req) {
-  const part = getComponent() || req
-  const municipality = getMunicipality(req)
-
+  const part = getComponent()
   const keyFigureIds = data.forceArray(part.config.figure || part.config['key-figure'] || '')
+  return renderPart(req, keyFigureIds);
+}
+
+exports.preview = (req, id) => renderPart(req, [id])
+
+function renderPart(req, keyFigureIds) {
+  const part = getComponent()
+  const municipality = getMunicipality(req)
   const keyFigures = keyFigureIds.map( (keyFigureId) => getKeyFigure({key: keyFigureId}))
   return keyFigures.length ? renderKeyFigure(keyFigures, part, municipality) : ''
 }
@@ -45,10 +51,7 @@ function renderKeyFigure(keyFigures, part, municipality) {
   })
 
   const model = {
-    source: {
-      title: part ? part.config.title : undefined,
-      url: part ? part.config.source : undefined
-    },
+    part,
     data: keyFiguresWithNonZeroValue,
     page: { glossary }
   }

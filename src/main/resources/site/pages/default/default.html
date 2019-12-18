@@ -18,14 +18,11 @@
     /*]]>*/
   </script>
 
-  <script src="http://localhost:35729/livereload.js?snipver=1" async="" defer=""></script>
-
   <meta charset="UTF-8">
   <meta http-equiv="Cache-control" content="NO-CACHE">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta data-th-if="${page.data.metaDescription}" name="description" data-th-content="${page.data.metaDescription}">
   <title data-th-text="${page.displayName} + ' - Statistisk sentralbyrå'"></title>
-  <!-- <link rel="shortcut icon" type="image/x-icon" data-th-href="${portal.assetUrl({'_path=img/favicon.ico'})}"/> -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|Open+Sans:700|Roboto:700|Roboto+Condensed:700">
   <link rel="stylesheet" data-th-href="${portal.assetUrl({'_path=css/styles.css', 'ts=' + ts})}"/>
   <link rel="alternate" data-th-if="${page.language.exists}" data-th-href="${portal.pageUrl({'_path='+page.language.path})}" data-th-hreflang="${page.language.alternate}" />
@@ -34,7 +31,6 @@
 <body class="xp-page" data-th-classappend="${colorize} + ' ' +  ${mode != 'map' and page.page.config and page.page.config.bkg_color == 'grey' ? 'bkg-grey' : ''}">
   <!-- HEADER -->
   <div id="ssb-menu" data-th-include="mimir:/site/includes/ssb-menu.html"></div>
-  <!-- <div data-th-replace="mimir:/site/includes/header.html"></div> -->
 
   <!-- MAIN -->
   <main data-portal-region="main" class="xp-region" data-th-if="${!isFragment}">

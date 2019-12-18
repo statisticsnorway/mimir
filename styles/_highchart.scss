@@ -28,3 +28,9 @@
     }
   }
 }
+.highcharts-figure >div {
+  height: 50vh;
+  @include media-breakpoint-down(sm) {
+    height: calc(100vh - 50px - 50px - 92px);
+  }
+}

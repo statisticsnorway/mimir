@@ -13,7 +13,7 @@ exports.getLanguage = function(page) {
   const result = page.language === 'en' ? {
     code: 'en',
     alternate: 'nb', // alternate language code norsk bokmål
-    contact: 'https://www.ssb.no/en/omssb/kontakt-oss',
+    link: '/en',
     published: page.publish && page.publish.from && moment(page.publish.from).format('DD. MMMM YYYY'),
     modified: moment(page.modifiedTime).format('DD. MMMM YYYY'),
     path: page._path.replace(/^\/.*?\/en/, site._path),
@@ -22,7 +22,7 @@ exports.getLanguage = function(page) {
   } : {
     code: 'nb', // norsk bokmål, https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
     alternate: 'en', // alternate language code
-    contact: 'https://www.ssb.no/omssb/kontakt-oss',
+    link: '',
     published: page.publish && page.publish.from && moment(page.publish.from).format('DD. MMMM YYYY').toLowerCase(),
     modified: moment(page.modifiedTime).format('DD. MMMM YYYY').toLowerCase(),
     path: page._path.replace(/^\/.*?\//, site._path + '/en/'),
