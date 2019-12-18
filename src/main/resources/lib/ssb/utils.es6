@@ -8,7 +8,7 @@ exports.createHumanReadableFormat = (value) => {
   return value > 999 ? numeral(value).format('0,0').replace(/,/, '&thinsp;') : value.toString().replace(/\./, ',')
 }
 
-export const walertsForContext = (municipality) => {
+export const alertsForContext = (municipality) => {
   const currentMunicipalityAlerts = municipality ? listMunicipalityAlerts( municipality.code ) : {hits: []}
   const alerts = [...listOperationsAlerts().hits, ...currentMunicipalityAlerts.hits]
   return alerts.map( (alert) => ({
