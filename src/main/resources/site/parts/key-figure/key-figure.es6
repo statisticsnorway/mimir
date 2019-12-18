@@ -52,10 +52,10 @@ function renderKeyFigure(keyFigures, part, municipality) {
     return keyFigure.value !== null && keyFigure.value !== 0
   })
 
-  const source = part && part.config && part.config.source ? part.config.source : undefined
+  const source = part && part.config && part.config.source || undefined
 
   const model = {
-    displayName: part ? part.displayName : undefined,
+    displayName: part ? part.config.title : undefined,
     data: keyFiguresWithNonZeroValue,
     page: { glossary },
     source
