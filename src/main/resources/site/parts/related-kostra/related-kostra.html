@@ -5,8 +5,8 @@
       <div class="col-12 border-top-green">
         <div class="subtitle roboto-bold position-relative" data-th-text="${page.displayName}">Kommunefakta</div>
         <h2 class="mt-0 pt-0 position-relative" data-th-if="${municipality}" data-th-text="${municipality.displayName} +' (' + ${municipality.county.name} +')'">vil du vite mer om din kommune?</h2>
-        <p></p>
-        <input type="button" name="">
+        <p>body teksten kommer her</p>
+        <input type="button" name="" value="Se flere nøkkeltall">
       </div>
       <div class="col-12" data-th-unless="${mode == 'municipality'}">
         <h1 class="mt-0 position-relative" data-th-text="${page.displayName}">Kommunefakta</h1>
