@@ -2,7 +2,7 @@ import * as content from '/lib/xp/content'
 import * as portal from '/lib/xp/portal'
 import * as thymeleaf from '/lib/thymeleaf'
 import * as klass from '/lib/klass'
-import * as glossary from '/lib/glossary'
+import * as glossaryLib from '/lib/glossary'
 import * as languageLib from '/lib/language'
 import { alertsForContext } from '/lib/utils'
 import * as municipals from '/lib/municipals'
@@ -40,11 +40,10 @@ exports.get = function(req) {
   const mainRegionComponents = mapComponents(mainRegion, mode)
   const config = {}
 
-  const municipality = klass.getMunicipality(req)
+  const glossary = glossaryLib.process(page.data.ingress, page.page.regions)
+  const ingress = portal.processHtml({ value: page.data.ingress })
+  const showIngress = ingress && page.type === 'mimir:page'
 
-  page.glossary = glossary.process(page)
-
-  const showIngress = page.data.ingress && page.type === 'mimir:page'
 
   // Create preview if available
   let preview
@@ -58,6 +57,7 @@ exports.get = function(req) {
 
   const breadcrumbs = [page]
   getBreadcrumbs(page, breadcrumbs)
+  const municipality = klass.getMunicipality(req)
 
   if (!page._path.endsWith(req.path.split('/').pop()) && req.mode != 'edit' ) {
     breadcrumbs.push({ 'displayName': municipality.name })
@@ -106,6 +106,8 @@ exports.get = function(req) {
     page,
     mainRegion,
     mainRegionComponents,
+    glossary,
+    ingress,
     mode,
     showIngress,
     preview,

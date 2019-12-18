@@ -1,5 +1,5 @@
 import { get as getKeyFigure } from '/lib/mimir/key-figure'
-import { get as getGlossary } from '/lib/mimir/glossary'
+import { parseGlossaryContent } from '/lib/mimir/glossary'
 import { parseMunicipalityValues } from '/lib/municipals'
 import { getComponent } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
@@ -32,7 +32,11 @@ function renderPart(req, keyFigureIds) {
  */
 function renderKeyFigure(keyFigures, part, municipality) {
   const glossary = keyFigures.reduce( (result, keyFigure) => {
-    return keyFigure.data.glossary ? result.concat(getGlossary({ key: keyFigure.data.glossary })) : result
+    const parsedGlossary = parseGlossaryContent( keyFigure.data.glossary );
+    if (parsedGlossary) {
+      result.push(parsedGlossary)
+    }
+    return result
   }, [])
 
   const parsedKeyFigures = keyFigures.map( (keyFigure) => {
@@ -53,7 +57,7 @@ function renderKeyFigure(keyFigures, part, municipality) {
   const model = {
     part,
     data: keyFiguresWithNonZeroValue,
-    page: { glossary }
+    glossary
   }
 
   return {

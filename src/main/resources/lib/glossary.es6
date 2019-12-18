@@ -2,15 +2,14 @@
 // which is rendered on bottom of page, see includes/glossary.html
 // In combination with app/glossary.es6 to provide popup for words (Popper.js)
 
-import * as portal from '/lib/xp/portal'
-import * as content from '/lib/xp/content'
+import { parseGlossaryContent } from '/lib/mimir/glossary'
 
 function parseText(text, glossary) {
   const m = text.match(/<a href="content:\/\/.*?">/g)
   m && m.forEach((link) => {
     const key = link.replace(/^.*content:\/\/(.*)".*>$/, '$1') // Extract content key from href attribute (on the form href="content://enonic-xp-hash-key")
-    const item = content.get({ key })
-    if (item && item.type === 'mimir:glossary') {
+    const item = parseGlossaryContent(key)
+    if (item) {
       glossary.push(item)
     }
   })
@@ -32,14 +31,15 @@ function traverseRegions(regions, glossary) {
   }
 }
 
-exports.process= function(page) {
+exports.process = function(text, regions) {
   const glossary = []
 
   // Process ingress
-  page.data.ingress && parseText(page.data.ingress, glossary)
-  page.data.ingress = page.data.ingress && portal.processHtml({ value: page.data.ingress })
+  if (text) {
+    parseText(text, glossary)
+  }
 
   // Reccursivly traverse all page regions and parse text components for glossary links
-  traverseRegions(page.page.regions, glossary)
+  traverseRegions(regions, glossary)
   return glossary
 }
