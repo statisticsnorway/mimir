@@ -21,3 +21,8 @@ steps:
         from_secret: ssb-xp7t-pass
     commands:
       - enonic app install --file build/libs/*.jar
+    when:
+      branch:
+        - master
+    depends_on:
+      - build
