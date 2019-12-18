@@ -5,8 +5,6 @@ name: Mimir App Pipeline
 steps:
   - name: build
     when:
-      branch:
-        - master
       event:
         - pull_request
     image: enonic/enonic-ci:7.1-node
