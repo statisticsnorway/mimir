@@ -1,11 +1,11 @@
-<div id="header" role="banner"  data-th-attr="style=${'background-image: url(' + portal.assetUrl({'_path=top-banner.png'}) + ')'}" >
-   <div class="xp-region container sitewrapper"><a id="logo" data-th-href="'https://i.utv.ssb.no'+${language.link}" title="Gå til forsiden" accesskey="1"><img src="placeholder" data-th-attr="src=${portal.assetUrl({'_path=SSB_logo.png'})}" alt="SSB logo (Gå til forsiden)"></a>
+<div id="header" role="banner"  data-th-attr="style=${'background-image: url(' + bannerUrl + ')'}" >
+   <div class="xp-region container sitewrapper"><a id="logo" data-th-href="'https://i.utv.ssb.no'+${language.link}" title="Gå til forsiden" accesskey="1"><img src="placeholder" data-th-attr="src=${logoUrl}" alt="SSB logo (Gå til forsiden)"></a>
       <div id="global-tools" class="container pr-0 py-2">
          <ul class="nav row justify-content-end">
             <li class="sr-only"><a href="#content" tabindex="1" accesskey="s">Hopp over meny</a></li>
             <li id="global-language" class="bubble-dialog-origin col-auto" lang="en">
                <span class="sr-only" lang="en">Switch language</span>
-               <a id="change-language" class="text-uppercase a-ssb" data-th-attr="data-exists=${language.exists}" data-th-href="${portal.pageUrl({'_path='+language.path})}" data-th-text="${language.phrases.language}"></a>
+               <a id="change-language" class="text-uppercase a-ssb" data-th-attr="data-exists=${language.exists}" data-th-href="${language.pageUrl}" data-th-text="${language.phrases.language}"></a>
             </li>
             <li class="text-uppercase col-auto">
                <a  data-th-href="${language.link}+'/a-aa'" data-th-text="${language.phrases.menuKeywords}">Stikkord A-Å</a>

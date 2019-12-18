@@ -84,6 +84,14 @@ exports.get = function(req) {
     }
   })
 
+  const bannerUrl = portal.assetUrl({
+    path: 'top-banner.png'
+  })
+
+  const logoUrl = portal.assetUrl({
+    path: 'SSB_logo.png'
+  })
+
   const language = languageLib.getLanguage(page)
   let alternateLanguageVersionUrl
   if (language.exists) {
@@ -106,6 +114,8 @@ exports.get = function(req) {
     bodyClasses: bodyClasses.join(' '),
     stylesUrl,
     jsLibsUrl,
+    bannerUrl,
+    logoUrl,
     language,
     alternateLanguageVersionUrl
   }
