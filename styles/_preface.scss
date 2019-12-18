@@ -46,6 +46,9 @@
     &:after {
       visibility: hidden;
     }
+  }
 
+  @media print {
+    height: 80px;
   }
 }

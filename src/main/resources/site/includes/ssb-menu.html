@@ -1,7 +1,7 @@
-<div id="header" role="banner"  data-th-attr="style=${'background-image: url(' + portal.assetUrl({'_path=top-banner.png'}) + ')'}" >
+<div id="header" role="banner"  data-th-attr="style=${'background-image: url(' + portal.assetUrl({'_path=top-banner.png'}) + ')'}">
    <div class="xp-region container sitewrapper"><a id="logo" data-th-href="'https://i.utv.ssb.no'+${page.language.link}" title="Gå til forsiden" accesskey="1"><img src="placeholder" data-th-attr="src=${portal.assetUrl({'_path=SSB_logo.png'})}" alt="SSB logo (Gå til forsiden)"></a>
       <div id="global-tools" class="container pr-0 py-2">
-         <ul class="nav row justify-content-end">
+         <ul class="nav row justify-content-end d-print-none">
             <li class="sr-only"><a href="#content" tabindex="1" accesskey="s">Hopp over meny</a></li>
             <li id="global-language" class="bubble-dialog-origin col-auto" lang="en">
                <span class="sr-only" lang="en">Switch language</span>
@@ -15,7 +15,7 @@
             </li>
          </ul>
       </div>
-      <form class="float-right" id="search" action="/sok" method="get" role="search">
+      <form class="float-right d-print-none" id="search" action="/sok" method="get" role="search">
          <fieldset>
             <legend class="sr-only">Nettstedsøk</legend>
             <label for="sok" class="sr-only">Søk</label>
@@ -23,7 +23,7 @@
             <input type="submit" data-th-value="${page.language.phrases.menuSearch}" class="submit" tabindex="6">
          </fieldset>
       </form>
-      <nav id="main-menu">
+      <nav id="main-menu" class="d-print-none">
          <ul id="main-menu-top" class="nav pt-2 px-0 container border-top border-dark">
             <li class="col-2 px-0 top-level"><a class="h4 text-uppercase mega-menu-toggle" id="statistics-menu-toggle" href="#statistikker-hovedmeny" data-th-text="${page.language.phrases.menuStatistics}">Statistikk</a></li>
             <li class="col text-center"><a class="h4 text-uppercase" data-th-href="${page.language.link}+'/forskning/forskning-i-ssb'" data-th-text="${page.language.phrases.menuResearch}">Forskning</a></li>
