@@ -1,16 +1,23 @@
 kind: pipeline
 type: docker
-name: default
+name: Mimir App Pipeline
 
 steps:
-  - name: Build App
+  - name: build
+    when:
+      branch:
+        - master
+      event:
+        - pull_request
     image: enonic/enonic-ci:7.1-node
     commands:
       - /setup_sandbox.sh
       - npm install
       - npm run gulp
       - enonic project build
-  - name: Deploy App
+  - name: Deploy to test
+    depends_on:
+      - build
     image: enonic/enonic-ci:7.1-node
     environment:
       ENONIC_CLI_REMOTE_URL:
@@ -21,3 +28,6 @@ steps:
         from_secret: ssb-xp7t-pass
     commands:
       - enonic app install --file build/libs/*.jar
+    when:
+      branch:
+        - master
