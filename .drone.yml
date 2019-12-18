@@ -14,8 +14,6 @@ steps:
       - npm run gulp
       - enonic project build
   - name: Deploy to test
-    depends_on:
-      - build
     image: enonic/enonic-ci:7.1-node
     environment:
       ENONIC_CLI_REMOTE_URL:
