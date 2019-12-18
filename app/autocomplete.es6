@@ -5,12 +5,79 @@
 $('input[autocomplete]').each((i, el) => {
   const dropdown = $(el).parent().find('.dropdown-menu')
   const elements = dropdown.find('a')
+  const submit = el.nextElementSibling
+
   dropdown.css('max-width', $(el).outerWidth()) && $(window).resize(() => dropdown.css('max-width', $(el).outerWidth()))
-  $(el).keyup((e) => { // Using classList here because it is faster than jQuery
+
+  function toggleDropdown() {
+    if (dropdown.find('a').length > 0) {
+      $(el).dropdown('toggle')
+    }
+  }
+
+  // toggle dropdown from chevron
+  if (submit && submit.nodeName === 'BUTTON') {
+    submit.addEventListener('click', () => {
+      toggleDropdown();
+    })
+  }
+
+  // handle keyboard navigation on elements in dropdown list
+  elements.each((i, elem) => {
+    const a = $(elem)
+    a.keydown((e) => {
+      if (e.which === 9) {
+        e.preventDefault()
+        el.focus()
+      } else if (e.which === 40) {
+        e.preventDefault()
+        const next = elem.nextElementSibling
+        if (next) {
+          next.focus()
+        }
+      } else if (e.which === 38) {
+        e.preventDefault()
+        const prev = elem.previousElementSibling
+        if (prev) {
+          prev.focus()
+        }
+      }
+    })
+  })
+
+  function filter(el) {
     const val = $(el).val()
     const startOfLine = val && val.match(/\D/) ? '^' : ''
     const re = new RegExp(startOfLine + val, 'i')
-    elements.each((j, a) => a.classList.add('d-none') || a.getAttribute('data-text').match(re) && a.classList.remove('d-none'))
-    dropdown.toggleClass('show', dropdown.find('a:not(.d-none)').length > 0) // remove dropdown on zero hits
+    elements.each((j, a) => {
+      if (a.getAttribute('data-text').match(re)) {
+        dropdown.append(a);
+      } else {
+        a.remove();
+      }
+    })
+
+    const hasLinks = dropdown.find('a').length > 0;
+    const isExpanded = el.getAttribute('aria-expanded') === 'true'
+    if ((!hasLinks && isExpanded) || (hasLinks && !isExpanded)) {
+      $(el).dropdown('toggle')
+    }
+  }
+
+  // filter list on keyup, and handle keyboard navigation with down arrow
+  $(el).keyup((e) => { // Using classList here because it is faster than jQuery
+    if (e.which === 40) {
+      const first = dropdown.find('a:not(.d-none)')[0]
+      if (first) {
+        first.focus();
+      }
+      return
+    }
+    filter(el)
   })
+
+  // filter on load if there is any value in the input-field
+  if (el.value) {
+    filter(el)
+  }
 })

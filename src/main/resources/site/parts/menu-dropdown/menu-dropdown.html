@@ -17,15 +17,28 @@
             <div class=" d-flex flex-row align-items-center h-100">
               <div data-th-if="${mode == 'municipality'}" class="roboto-bold text-nowrap pr-4">Bytt kommune:</div>
               <div class="ssb-input">
-                <input id="input-query-municipality" class="d-block" placeholder="Søk på kommune" role="button" data-display="static" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" autocomplete/>
+                <input 
+                  id="input-query-municipality" 
+                  class="d-block" 
+                  placeholder="Søk på kommune" 
+                  role="button" 
+                  data-display="static" 
+                  data-toggle="dropdown" 
+                  aria-haspopup="true" 
+                  aria-expanded="false" 
+                  autocomplete
+                />
                 <button class="icon-wrapper search-icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="expand-icon"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </button>
                 <div class="dropdown-menu w-100 list-of-options" aria-labelledby="input-query-municipality">
-                  <a class="dropdown-item a-plain option-list-element" data-th-each="municipality: ${municipalities}"
+                  <a 
+                    class="dropdown-item a-plain option-list-element" 
+                    tabindex="-1"
+                    data-th-each="municipality: ${municipalities}"
                     data-th-href="${portal.pageUrl({'_id='+page._id})} + ${municipality.path}"
                     data-th-text="${municipality.displayName}"
-                    data-th-attr="data-text=${municipality.displayName} + ' ' +  ${municipality.code} + ' ' + ${municipality.county.name}">Oslo
+                    data-th-attr="data-text=${municipality.displayName} + ' ' +  ${municipality.code} + ' ' + ${municipality.county.name}">
                   </a>
                 </div>
               </div>

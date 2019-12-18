@@ -81,7 +81,12 @@ $(function() {
 
       // Render chart
       canvas.highcharts({
-        accessibility: { enabled: false },
+        accessibility: {
+          enabled: true,
+          keyboardNavigation: {
+            order: ['chartMenu']
+          }
+        },
         chart: {
           plotBorderColor: '#e6e6e6',
           spacingBottom: 18,
@@ -212,7 +217,7 @@ $(function() {
           gridLineWidth: 1,
           lineColor,
           tickInterval: canvas.data('tickinterval'),
-          labels: { enabled: canvas.data('switchrowsandcolumns'), style },
+          labels: { enabled: canvas.data('type') === 'line' || canvas.data('switchrowsandcolumns'), style },
           max: canvas.data('xaxismax'),
           min: canvas.data('xaxismin'),
           // Confusing detail: when type=bar, X axis becomes Y and vice versa. In other words, include 'bar' in this if-test, instead of putting it in the yAxis config
