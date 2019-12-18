@@ -4,9 +4,6 @@ name: Mimir App Pipeline
 
 steps:
   - name: build
-    when:
-      event:
-        - pull_request
     image: enonic/enonic-ci:7.1-node
     commands:
       - /setup_sandbox.sh
@@ -27,3 +24,5 @@ steps:
     when:
       branch:
         - master
+    depends_on:
+      - build
