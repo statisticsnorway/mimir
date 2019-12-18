@@ -3,7 +3,7 @@ type: docker
 name: Mimir App Pipeline
 
 steps:
-  - name: build
+  - name: Build app
     image: enonic/enonic-ci:7.1-node
     commands:
       - /setup_sandbox.sh
@@ -21,8 +21,3 @@ steps:
         from_secret: ssb-xp7t-pass
     commands:
       - enonic app install --file build/libs/*.jar
-#    when:
-#      branch:
-#        - master
-#    depends_on:
-#      - build
