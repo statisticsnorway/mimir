@@ -53,10 +53,14 @@ exports.get = function(req) {
   const breadcrumbs = [page]
   getBreadcrumbs(page, breadcrumbs)
 
-  const municipality = getMunicipality({code: getSiteConfig().defaultMunicipality})
+  const municipality = getMunicipality(req)
+log.info('-- municipality --')
+log.info(JSON.stringify(municipality, null, ' '))
+/*/
   if (!page._path.endsWith(req.path.split('/').pop()) && req.mode != 'edit' ) {
     breadcrumbs.push({ 'displayName': municipality.displayName })
   }
+*/
 
   const alerts = alertsForContext(municipality);
 
