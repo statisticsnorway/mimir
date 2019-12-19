@@ -1,7 +1,24 @@
 .part-menu-dropdown {
   background-color: white;
   .container >div {
-    height: 92px;
+    min-height: 92px;
+    @include media-breakpoint-down(md) {
+      flex-direction: column !important; // Override d-flex
+    }
+  }
+  .title-container {
+    min-height: 92px;
+    @include media-breakpoint-down(md) {
+      margin-left: 10px;
+    }
+    @include media-breakpoint-down(sm) {
+      .municipality {
+        max-width: 70vw;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
   }
   .opacity-zero {
     opacity: 0;
@@ -25,11 +42,16 @@
     overflow-y: auto;
     overflow-x: hidden;
     max-height: 30vh;
+    min-width: 100%;
   }
   .ssb-input {
     width: 280px;
     border-color: $ssb-dark-6;
     flex-direction: unset; // override design system
+    @include media-breakpoint-down(lg) {
+      max-width: 100%;
+      width: 100%;
+    }
   }
   .show-map {
     margin-left: 30px;
@@ -38,18 +60,70 @@
     i {
       color: $green4;
     }
-    i svg {
+    i.map {
+      padding: 3px 5px 5px 5px;
+    }
+    i.chevron svg {
       transform: rotate(0deg);
       transition: all .5s;
     }
-    &.active i svg {
+    &.active i.chevron svg {
       transform: rotate(-180deg);
       transition: all .5s;
     }
+    @include media-breakpoint-down(md) {
+      position: absolute;
+      top: 30px;
+      right: 50px;
+    }
   }
- .ssb-dropdown {
-   width: 100%; // Override design system
-   min-width: 100%; // Override design system
-   max-width: 100%; // Override design system
- }
+  .show-search[aria-expanded="true"] {
+    color: white;
+    background-color: $ssb-green-4;
+  }
+  .show-map.active i.map {
+    color: white;
+    background-color: $ssb-green-4;
+  }
+  .ssb-dropdown {
+    width: 100%; // Override design system
+    min-width: 100%; // Override design system
+    max-width: 100%; // Override design system
+  }
+  .show-search {
+    padding: 3px 5px 5px 5px;
+    color: $ssb-green-4;
+    right: 60px;
+    top: 30px;
+  }
+  .card {
+    @include media-breakpoint-up(lg) {
+      display: flex;
+      flex-direction: row;
+    }
+    align-items: center;
+    border: none;
+  }
+  @include media-breakpoint-down(md) {
+    .title-comtainer {
+      margin-left: 10px;
+    }
+    .card {
+      border-radius: 0;
+      padding: 20px 40px;
+      align-items: normal;
+    }
+    #search-container {
+      border-top: 1px solid #aaaaaa;
+      width: 100%;
+      top: 92px;
+      position: absolute;
+      border-bottom: 1px solid #aaaaaa;
+    }
+  }
+  @include media-breakpoint-down(sm) {
+    .card {
+      padding: 20px 10px;
+    }
+  }
 }
