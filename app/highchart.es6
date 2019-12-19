@@ -112,7 +112,13 @@ $(function() {
         //  style: { color: '#00824d', cursor: 'pointer', fontSize: '16px', textDecoration: 'underline', fontFamily: 'Roboto', marginTop: '20px' },
         //   text: canvas.data('creditstext')
         // },
-        credits: { enabled: false },
+        credits: {
+          position: { align: 'left', x: 10 },
+          text: canvas.data('creditstext'),
+          href: canvas.data('creditshref'),
+          style: { color: '#00824d', fontSize: '16px' },
+          enabled: canvas.data('creditsenabled')
+        },
         series,
         data: !series && {
           switchRowsAndColumns: canvas.data('switchrowsandcolumns'),
