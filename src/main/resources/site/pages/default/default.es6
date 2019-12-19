@@ -119,7 +119,8 @@ exports.get = function(req) {
     bannerUrl,
     logoUrl,
     language,
-    alternateLanguageVersionUrl
+    alternateLanguageVersionUrl,
+    GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null
   }
 
   const body = thymeleaf.render(view, model)
