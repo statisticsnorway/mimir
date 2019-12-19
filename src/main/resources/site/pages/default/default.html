@@ -36,12 +36,12 @@
 
   <!-- MAIN -->
   <main data-portal-region="main" class="xp-region" data-th-if="${!isFragment}">
-    <div class="bg-white p-2">
+    <div class="container-fluid bg-white pt-2 pb-4">
       <!-- breadcrumbs -->
       <div data-th-replace="mimir:/site/includes/breadcrumbs.html"></div>
 
       <!-- Alerts Info and error -->
-      <div data-th-replace="mimir:/site/includes/alerts.html" class="md-2"></div>
+      <div data-th-replace="mimir:/site/includes/alerts.html"></div>
     </div>
 
     <div data-th-if="${page.data.title}" class="container mb-5">
