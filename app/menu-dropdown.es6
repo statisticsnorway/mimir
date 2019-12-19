@@ -15,7 +15,7 @@ $(function() {
     $('#municipality-list').removeClass('show')
     $(e.currentTarget).toggleClass('active')
     $('.show-search').attr('aria-expanded', 'false')
-    window.innerWidth < 960 && ('#search-container').removeClass('show')
+    window.innerWidth < 960 && $('#search-container').removeClass('show')
     map.parent().click(() => {
       map.addClass('d-none').parent().removeClass('map-container')
     })
