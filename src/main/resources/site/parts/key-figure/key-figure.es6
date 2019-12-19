@@ -1,26 +1,29 @@
-import { get as getKeyFigure } from '/lib/mimir/key-figure'
+import { get as getKeyFigure } from '/lib/ssb/key-figure'
 import { parseGlossaryContent } from '/lib/mimir/glossary'
-import { parseMunicipalityValues } from '/lib/municipals'
-import { getComponent } from '/lib/xp/portal'
+import { parseMunicipalityValues, getMunicipality } from '/lib/klass/municipalities'
+import { getComponent, getSiteConfig } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
-import { getMunicipality } from '/lib/klass'
 import { data } from '/lib/util'
 
 const view = resolve('./key-figure.html')
 
 exports.get = function(req) {
   const part = getComponent()
-  const keyFigureIds = data.forceArray(part.config.figure || part.config['key-figure'] || '')
-  return renderPart(req, keyFigureIds);
+  const keyFigureIds = data.forceArray(part.config.figure)
+  const municiaplity = getMunicipality(req)
+  return renderPart(municiaplity, keyFigureIds);
 }
 
-exports.preview = (req, id) => renderPart(req, [id])
+exports.preview = (req, id) => {
+  const defaultMuniciaplity = getSiteConfig().defaultMunicipality;
+  const municiaplity = getMunicipality({code: defaultMuniciaplity})
+  return renderPart(municiaplity, [id])
+}
 
-function renderPart(req, keyFigureIds) {
+const renderPart = (municipality, keyFigureIds) => {
   const part = getComponent()
-  const municipality = getMunicipality(req)
   const keyFigures = keyFigureIds.map( (keyFigureId) => getKeyFigure({key: keyFigureId}))
-  return keyFigures.length ? renderKeyFigure(keyFigures, part, municipality) : ''
+  return keyFigures.length && municipality !== undefined ? renderKeyFigure(keyFigures, part, municipality) : ''
 }
 
 /**
@@ -41,7 +44,6 @@ function renderKeyFigure(keyFigures, part, municipality) {
 
   const parsedKeyFigures = keyFigures.map( (keyFigure) => {
     const dataset = parseMunicipalityValues(keyFigure.data.dataquery, municipality, keyFigure.data.default)
-
     return {
       displayName: keyFigure.displayName,
       ...keyFigure.data,
@@ -54,10 +56,13 @@ function renderKeyFigure(keyFigures, part, municipality) {
     return keyFigure.value !== null && keyFigure.value !== 0
   })
 
+  const source = part && part.config && part.config.source || undefined
+
   const model = {
-    part,
+    displayName: part ? part.config.title : undefined,
     data: keyFiguresWithNonZeroValue,
-    glossary
+    glossary,
+    source
   }
 
   return {

@@ -1,5 +1,5 @@
 <section class="xp-part part-banner position-relative clearfix opacity-0">
-  <img data-th-if="${part.config.image}" class="position-absolute w-100 h-100" data-th-attr="data-url=${portal.imageUrl({'_id=' + part.config.image, '_scale=block-1400-400'})}"/>
+  <img data-th-if="${part.config.image}" class="position-absolute w-100 h-100 d-print-none" data-th-attr="data-url=${portal.imageUrl({'_id=' + part.config.image, '_scale=block-1400-400'})}"/>
   <div class="container h-100 d-flex align-items-center">
     <div class="row">
       <div class="col-12" data-th-if="${mode == 'municipality'}">
@@ -8,6 +8,7 @@
       </div>
       <div class="col-12" data-th-unless="${mode == 'municipality'}">
         <h1 class="mt-0 position-relative" data-th-text="${page.displayName}">Kommunefakta</h1>
+      </div>
     </div>
   </div>
 </section>

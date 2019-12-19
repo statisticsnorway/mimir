@@ -1,11 +1,10 @@
 import * as content from '/lib/xp/content'
-import * as portal from '/lib/xp/portal'
+import { getContent, getSiteConfig } from '/lib/xp/portal'
 import * as thymeleaf from '/lib/thymeleaf'
-import * as klass from '/lib/klass'
 import * as glossaryLib from '/lib/glossary'
 import * as languageLib from '/lib/language'
-import { alertsForContext } from '/lib/utils'
-import * as municipals from '/lib/municipals'
+import { alertsForContext, pageMode } from '/lib/ssb/utils'
+import { getMunicipality } from '/lib/klass/municipalities'
 
 const version = '%%VERSION%%'
 const partsWithPreview = [ // Parts that has preview
@@ -32,7 +31,7 @@ const view = resolve('default.html')
 
 exports.get = function(req) {
   const ts = new Date().getTime()
-  const page = portal.getContent()
+  const page = getContent()
   const isFragment = page.type === 'portal:fragment'
   let regions = null
   if (isFragment) {
@@ -42,7 +41,7 @@ exports.get = function(req) {
   }
   const mainRegion = isFragment ? regions && regions.main : regions && regions.main
 
-  const mode = municipals.mode(req, page)
+  const mode = pageMode(req, page)
   const mainRegionComponents = mapComponents(mainRegion, mode)
 
   const glossary = glossaryLib.process(page.data.ingress, regions)
@@ -62,10 +61,10 @@ exports.get = function(req) {
 
   const breadcrumbs = [page]
   getBreadcrumbs(page, breadcrumbs)
-  const municipality = klass.getMunicipality(req)
 
+  const municipality = getMunicipality({ code: getSiteConfig().defaultMunicipality })
   if (!page._path.endsWith(req.path.split('/').pop()) && req.mode != 'edit' ) {
-    breadcrumbs.push({ displayName: municipality.name })
+    breadcrumbs.push({ displayName: municipality.displayName })
   }
 
   const alerts = alertsForContext(municipality)

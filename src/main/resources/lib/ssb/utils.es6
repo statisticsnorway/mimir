@@ -1,5 +1,5 @@
-import { list as listOperationsAlerts } from './mimir/operations-alert';
-import { list as listMunicipalityAlerts } from './mimir/municipality-alert'
+import { list as listOperationsAlerts } from '/lib/ssb/operations-alert';
+import { list as listMunicipalityAlerts } from '/lib/ssb/municipality-alert'
 import { processHtml } from '/lib/xp/portal'
 
 const numeral = require('/lib/numeral')
@@ -17,4 +17,9 @@ export const alertsForContext = (municipality) => {
     municipalCodes: alert.data.municipalCodes,
     message: processHtml({value: alert.data.message})
   }))
+}
+
+// Returns page mode for Kommunefakta page based on request mode or request path
+export const pageMode = (req, page) => {
+  return req.mode === 'edit' && 'edit' || page._path.endsWith(req.path.split('/').pop()) ? 'map' : 'municipality'
 }

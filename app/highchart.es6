@@ -112,7 +112,13 @@ $(function() {
         //  style: { color: '#00824d', cursor: 'pointer', fontSize: '16px', textDecoration: 'underline', fontFamily: 'Roboto', marginTop: '20px' },
         //   text: canvas.data('creditstext')
         // },
-        credits: { enabled: false },
+        credits: {
+          position: { align: 'left', x: 10 },
+          text: canvas.data('creditstext'),
+          href: canvas.data('creditshref'),
+          style: { color: '#00824d', fontSize: '16px' },
+          enabled: canvas.data('creditsenabled')
+        },
         series,
         data: !series && {
           switchRowsAndColumns: canvas.data('switchrowsandcolumns'),
@@ -214,10 +220,10 @@ $(function() {
         xAxis: xAxis || {
           categories,
           allowDecimals: canvas.data('xaxisallowdecimals'),
-          gridLineWidth: 1,
+          gridLineWidth: canvas.data('type') === 'line' ? 0 : 1,
           lineColor,
           tickInterval: canvas.data('tickinterval'),
-          labels: { enabled: canvas.data('switchrowsandcolumns'), style },
+          labels: { enabled: canvas.data('type') === 'line' || canvas.data('type') === 'area' || canvas.data('switchrowsandcolumns'), style },
           max: canvas.data('xaxismax'),
           min: canvas.data('xaxismin'),
           // Confusing detail: when type=bar, X axis becomes Y and vice versa. In other words, include 'bar' in this if-test, instead of putting it in the yAxis config

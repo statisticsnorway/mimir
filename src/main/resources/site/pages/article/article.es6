@@ -1,4 +1,4 @@
-import * as klass from '../../../lib/klass';
+import * as klass from '../../../lib/klass/klass';
 
 const moment = require('/lib/moment-with-locales')
 
@@ -8,7 +8,7 @@ import * as thymeleaf from '/lib/thymeleaf'
 
 import * as glossary from '/lib/glossary'
 import * as language from '/lib/language'
-import { alertsForContext } from '/lib/utils'
+import { alertsForContext } from '/lib/ssb/utils'
 
 const version = '%%VERSION%%'
 const preview = [

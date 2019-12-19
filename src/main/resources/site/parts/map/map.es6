@@ -1,6 +1,6 @@
+import { pageMode } from '/lib/ssb/utils'
 import * as portal from '/lib/xp/portal'
 import * as thymeleaf from '/lib/thymeleaf'
-import * as municipals from '/lib/municipals'
 
 const view = resolve('./map.html')
 
@@ -14,7 +14,7 @@ exports.preview = function(req, id) {
 
 function renderPart(req) {
   const page = portal.getContent()
-  const mode = municipals.mode(req, page)
+  const mode = pageMode(req, page)
   const dataPathAssetUrl = portal.assetUrl( {
     path: '/mapdata'
   })

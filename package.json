@@ -7,7 +7,8 @@
     "gulp": "gulp build",
     "build": "gulp build && ./gradlew build deploy",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "enonic project deploy --dev"
+    "start": "enonic project deploy --dev",
+    "lintbuild": "eslint --fix . --ext .es6  && gulp build && enonic project deploy"
   },
   "repository": {
     "type": "git",
@@ -44,7 +45,8 @@
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "numeral": "^2.0.6",
-    "popper.js": "^1.16.0"
+    "popper.js": "^1.16.0",
+    "ramda": "^0.26.1"
   },
   "browserslist": [
     "last 2 version",

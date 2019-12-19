@@ -2,6 +2,7 @@ import * as content from '/lib/xp/content'
 import * as context from '/lib/xp/context'
 import * as dataquery from '/lib/dataquery'
 
+
 const cron = require('/lib/cron')
 const user = { login: 'su', userStore: 'system' }
 const draft = { repository: 'com.enonic.cms.default', branch: 'draft', principals: ['role:system.admin'], user } // Draft context (XP)
@@ -54,3 +55,4 @@ function job() {
 cron.schedule({ name: 'dataquery', cron: '0 8 * * *', times: 365 * 10, callback: job, context: master })
 
 exports.job = job
+
