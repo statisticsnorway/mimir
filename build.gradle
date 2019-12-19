@@ -24,6 +24,7 @@ dependencies {
     include "com.enonic.lib:lib-cron:1.0.0"
     include "com.enonic.xp:lib-context:${xpVersion}"
     include 'com.enonic.lib:lib-cache:1.1.0'
+    compile 'org.webjars.npm:ramda:0.26.1'
     //include "com.enonic.xp:lib-io:${xpVersion}"
     //include "com.enonic.xp:lib-mail:${xpVersion}"
     //include "com.enonic.xp:lib-repo:${xpVersion}"
