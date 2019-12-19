@@ -34,13 +34,18 @@ exports.get = function(req) {
   const ts = new Date().getTime()
   const page = portal.getContent()
   const isFragment = page.type === 'portal:fragment'
-  const mainRegion = isFragment ? null : page.page && page.page.regions && page.page.regions.main
+  let regions = null
+  if (isFragment) {
+    regions = page.fragment && page.fragment.regions ? page.fragment.regions : null
+  } else {
+    regions = page.page && page.page.regions ? page.page.regions : null
+  }
+  const mainRegion = isFragment ? regions && regions.main : regions && regions.main
 
   const mode = municipals.mode(req, page)
   const mainRegionComponents = mapComponents(mainRegion, mode)
-  const config = {}
 
-  const glossary = glossaryLib.process(page.data.ingress, page.page.regions)
+  const glossary = glossaryLib.process(page.data.ingress, regions)
   const ingress = portal.processHtml({ value: page.data.ingress })
   const showIngress = ingress && page.type === 'mimir:page'
 
@@ -60,13 +65,20 @@ exports.get = function(req) {
   const municipality = klass.getMunicipality(req)
 
   if (!page._path.endsWith(req.path.split('/').pop()) && req.mode != 'edit' ) {
-    breadcrumbs.push({ 'displayName': municipality.name })
+    breadcrumbs.push({ displayName: municipality.name })
   }
 
   const alerts = alertsForContext(municipality)
 
+  let config;
+  if (!isFragment && page.page.config) {
+    config = page.page.config
+  } else if (isFragment && page.fragment.config) {
+    config = page.fragment.config
+  }
+
   const bodyClasses = []
-  if (mode !== 'map' && page.page.config && page.page.config.bkg_color === 'grey') {
+  if (mode !== 'map' && config && config.bkg_color === 'grey') {
     bodyClasses.push('bkg-grey')
   }
 

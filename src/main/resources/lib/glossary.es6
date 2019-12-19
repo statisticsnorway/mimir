@@ -40,6 +40,8 @@ exports.process = function(text, regions) {
   }
 
   // Reccursivly traverse all page regions and parse text components for glossary links
-  traverseRegions(regions, glossary)
+  if (regions) {
+    traverseRegions(regions, glossary)
+  }
   return glossary
 }
