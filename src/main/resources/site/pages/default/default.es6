@@ -1,5 +1,5 @@
 import * as content from '/lib/xp/content'
-import { getContent, getSiteConfig } from '/lib/xp/portal'
+import { getContent, getSiteConfig, processHtml, assetUrl, pageUrl } from '/lib/xp/portal'
 import * as thymeleaf from '/lib/thymeleaf'
 import * as glossaryLib from '/lib/glossary'
 import * as languageLib from '/lib/language'
@@ -45,7 +45,7 @@ exports.get = function(req) {
   const mainRegionComponents = mapComponents(mainRegion, mode)
 
   const glossary = glossaryLib.process(page.data.ingress, regions)
-  const ingress = portal.processHtml({ value: page.data.ingress })
+  const ingress = processHtml({ value: page.data.ingress })
   const showIngress = ingress && page.type === 'mimir:page'
 
 
@@ -81,32 +81,32 @@ exports.get = function(req) {
     bodyClasses.push('bkg-grey')
   }
 
-  const stylesUrl = portal.assetUrl({
+  const stylesUrl = assetUrl({
     path: 'css/styles.css',
     params: {
       ts
     }
   })
 
-  const jsLibsUrl = portal.assetUrl({
+  const jsLibsUrl = assetUrl({
     path: 'js/libs.js',
     params: {
       ts
     }
   })
 
-  const bannerUrl = portal.assetUrl({
+  const bannerUrl = assetUrl({
     path: 'top-banner.png'
   })
 
-  const logoUrl = portal.assetUrl({
+  const logoUrl = assetUrl({
     path: 'SSB_logo.png'
   })
 
   const language = languageLib.getLanguage(page)
   let alternateLanguageVersionUrl
   if (language.exists) {
-    alternateLanguageVersionUrl = portal.pageUrl({
+    alternateLanguageVersionUrl = pageUrl({
       path: language.path
     })
   }
