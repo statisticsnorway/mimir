@@ -19,6 +19,13 @@
     opacity: 1;
     transition: all .2s;
   }
+  @media print {
+    min-height: 80px;
+    color: #333;
+    .container {
+       min-height: 80px;
+    }
+  }
   @include media-breakpoint-down(sm) {
     .container {
       padding-right: 10px;
