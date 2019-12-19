@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html data-th-lang="${language.code}">
 <head>
-  <script async data-th-if="${config.GA_TRACKING_ID}" data-th-src="|https://www.googletagmanager.com/gtag/js?id=${config.GA_TRACKING_ID}|"></script>
+  <script async data-th-if="${app.config.GA_TRACKING_ID}" data-th-src="|https://www.googletagmanager.com/gtag/js?id=${app.config.GA_TRACKING_ID}|"></script>
   <script th:inline="javascript">
     var highchart = []
   </script>
-  <script th:inline="javascript" data-th-if="${config.GA_TRACKING_ID}">
+  <script th:inline="javascript" data-th-if="${app.config.GA_TRACKING_ID}">
     /*<![CDATA[*/
     <!-- Global site tag (gtag.js) - Google Analytics -->
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', /*[[${config.GA_TRACKING_ID}]]*/);
+    gtag('config', /*[[${app.config.GA_TRACKING_ID}]]*/);
     /*]]>*/
   </script>
 
