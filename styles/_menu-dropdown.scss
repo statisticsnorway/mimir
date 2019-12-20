@@ -1,5 +1,8 @@
 .part-menu-dropdown {
   background-color: white;
+  .container {
+    z-index: 3;
+  }
   .container >div {
     min-height: 92px;
     @include media-breakpoint-down(md) {
@@ -74,7 +77,7 @@
     @include media-breakpoint-down(md) {
       position: absolute;
       top: 30px;
-      right: 50px;
+      right: 70px;
     }
   }
   .show-search[aria-expanded="true"] {
@@ -93,7 +96,7 @@
   .show-search {
     padding: 3px 5px 5px 5px;
     color: $ssb-green-4;
-    right: 60px;
+    right: 0px;
     top: 30px;
   }
   .card {
