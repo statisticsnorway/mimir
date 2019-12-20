@@ -9,7 +9,6 @@ $(function() {
   })
   $('#js-show-map').click((e) => {
     e.preventDefault()
-console.log('-- show map --')
     e.stopPropagation()
     const el = $('.part-menu-dropdown')[0]
     const { top } = el.getBoundingClientRect()
