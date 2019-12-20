@@ -1,0 +1,83 @@
+kind: pipeline
+type: docker
+name: "Test Environment"
+# Deploy to test on pushes to master branch
+trigger:
+  branch:
+    - master
+  event:
+    include:
+      - push
+steps:
+  - name: build & test
+    image: enonic/enonic-ci:7.1-node
+    commands:
+      - /setup_sandbox.sh
+      - npm install
+      - npm run gulp
+      - enonic project build
+  - name: deploy
+    image: enonic/enonic-ci:7.1-node
+    environment:
+      ENONIC_CLI_REMOTE_URL:
+        from_secret: ssb-xp7t-url
+      ENONIC_CLI_REMOTE_USER:
+        from_secret: ssb-xp7t-user
+      ENONIC_CLI_REMOTE_PASS:
+        from_secret: ssb-xp7t-pass
+    commands:
+      - enonic app install --file build/libs/*.jar
+---
+kind: pipeline
+type: docker
+name: "QA Environment"
+# Deploy to qa on promoted builds
+trigger:
+  target:
+    - qa
+steps:
+  - name: build & test
+    image: enonic/enonic-ci:7.1-node
+    commands:
+      - /setup_sandbox.sh
+      - npm install
+      - npm run gulp
+      - enonic project build
+  - name: deploy
+    image: enonic/enonic-ci:7.1-node
+    environment:
+      ENONIC_CLI_REMOTE_URL:
+        from_secret: ssb-xp7q-url
+      ENONIC_CLI_REMOTE_USER:
+        from_secret: ssb-xp7q-user
+      ENONIC_CLI_REMOTE_PASS:
+        from_secret: ssb-xp7q-pass
+    commands:
+      - enonic app install --file build/libs/*.jar
+---
+kind: pipeline
+type: docker
+name: "Production Environment"
+# Deploy to prod on promoted builds
+trigger:
+  target:
+    - prod
+steps:
+  - name: build & test
+    image: enonic/enonic-ci:7.1-node
+    commands:
+      - /setup_sandbox.sh
+      - npm install
+      - npm run gulp
+      - enonic project build
+  - name: deploy
+    image: enonic/enonic-ci:7.1-node
+    environment:
+      ENONIC_CLI_REMOTE_URL:
+        from_secret: ssb-xp7p-url
+      ENONIC_CLI_REMOTE_USER:
+        from_secret: ssb-xp7p-user
+      ENONIC_CLI_REMOTE_PASS:
+        from_secret: ssb-xp7p-pass
+    commands:
+      - enonic app install --file build/libs/*.jar

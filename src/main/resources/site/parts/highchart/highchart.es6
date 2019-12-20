@@ -1,74 +1,92 @@
 import * as util from '/lib/util'
-import * as klass from '/lib/klass'
+import { getMunicipality } from '/lib/klass/municipalities';
 import * as portal from '/lib/xp/portal'
 import * as content from '/lib/xp/content'
 import * as thymeleaf from '/lib/thymeleaf'
 
-function initHighchart(part) {
-  const _content = part.chart
-  const tableRegex = /<table[^>]*>/igm
-  const nbspRegexp = /&nbsp;/igm
-  const replace = '<table id="highcharts-datatable-' + _content._id + '">'
-  const resultWithId = _content.data.htmltabell && _content.data.htmltabell.replace(tableRegex, replace)
-  const resultWithoutNbsp = resultWithId && resultWithId.replace(nbspRegexp, '')
-
-  part.chart.tableData = resultWithoutNbsp
-  part.chart.contentkey = _content._id
-  part.chart.type = _content.data.type
-  part.chart.zoomtype = _content.data.zoomtype ? _content.data.zoomtype : null
-  part.chart.creditsenabled = (_content.data.kildeurl || _content.data.kildetekst) ? true : false
-  part.chart.creditshref = _content.data.kildeurl
-  part.chart.creditstext = _content.data.kildetekst
-  part.chart.switchrowsandcolumns = _content.data.byttraderogkolonner
-  part.chart.combineinformation = _content.data.combineInfo ? true : false
-  part.chart.tickinterval = _content.data.tickinterval ? _content.data.tickinterval.replace(/,/g, '.') : null
-  part.chart.legendenabled = _content.data.nolegend ? false : true
-  part.chart.plotoptionsseriesstacking = (_content.data.stabling == 'normal' || _content.data.stabling == 'percent') ? _content.data.stabling : null
-  part.chart.subtitletext = _content.data.undertittel
-  part.chart.title = _content.displayName
-  part.chart.xaxisallowdecimals = _content.data.xAllowDecimal ? true : false
-  part.chart.xaxislabelsenabled = _content.data.xEnableLabel ? false : true
-  part.chart.xaxismax = _content.data.xAxisMax ? _content.data.xAxisMax.replace(/,/g, '.') : null
-  part.chart.xaxismin = _content.data.xAxisMin ? _content.data.xAxisMin.replace(/,/g, '.') : null
-  part.chart.xaxistitletext = _content.data.xAxisTitle
-  part.chart.xaxistype = _content.data.xAxisType ? _content.data.xAxisType : 'categories'
-  part.chart.yaxisallowdecimals = _content.data.yAxisAllowDecimal ? true : false
-  part.chart.yaxismax = _content.data.yAxisMax ? _content.data.yAxisMax.replace(/,/g, '.') : null
-  part.chart.yaxismin = _content.data.yAxisMin ? _content.data.yAxisMin.replace(/,/g, '.') : null
-  part.chart.yaxistitletext = _content.data.yAxisTitle
-  part.chart.yaxistype = _content.data.yAxisType ? _content.data.yAxisType : 'linear'
-  part.chart.yaxisstacklabelsenabled = _content.data.stabelsum ? true : false
-  part.chart.titleCenter = _content.data.titleCenter ? 'center' : 'left'
-  part.chart.numberdecimals = _content.data.numberdecimals
-  part.chart.bottomSpace = _content.data.fotnoteTekst ? '122' : '22'
-  part.chart.pieLegendUnder = _content.data['pie-legend'] ? 'under' : false
-  part.chart.fotnoteTekst = _content.data.fotnoteTekst,
-  part.chart.legendAlign = (_content.data.legendAlign=='right') ? 'right' : 'center'
-}
+const view = resolve('./highchart.html')
 
 exports.get = function(req) {
-  const part = portal.getComponent() || req
-  const view = resolve('./highchart.html')
+  const part = portal.getComponent()
+  const highchartIds = part.config.highchart ? util.data.forceArray(part.config.highchart) : []
+  return renderPart(req, highchartIds)
+}
+
+exports.preview = (req, id) => renderPart(req, [id])
+
+function renderPart(req, highchartIds) {
   const highcharts = []
-  let json
+  const municipality = getMunicipality(req) ? getMunicipality(req) : { code: '' }
 
-  const municipality = klass.getMunicipality(req) ? klass.getMunicipality(req) : {code: ''}
-
-  part.config.highchart = part.config.highchart && util.data.forceArray(part.config.highchart) || []
-  part.config.highchart.map((key) => {
-    const highchart = { chart: content.get({ key }) }
-    if (highchart && highchart.chart.data.dataquery) {
+  highchartIds.forEach((key) => {
+    const highchart = content.get({ key });
+    let json;
+    if (highchart && highchart.data.dataquery) {
       // We assume dataset is produced
-      const datasets = content.query({ contentTypes: [`${app.name}:dataset`], query: `data.dataquery = '${highchart.chart.data.dataquery}'` })
-      const dataset = datasets && datasets.total && datasets.hits[0]
-      json = dataset && JSON.parse(dataset.data.json)
+      const dataset = content.query({
+        contentTypes: [`${app.name}:dataset`],
+        query: `data.dataquery = '${highchart.data.dataquery}'`
+      }).hits[0]
+      // try to parse json from dataset
+      if (dataset && dataset.data && dataset.data.json) {
+        try {
+          json = JSON.parse(dataset.data.json)
+        } catch (e) {
+          log.error('Could not parse json from dataset');
+          log.error(e);
+        }
+      }
     }
-    highcharts.push(highchart)
-    initHighchart(highchart)
+    const highchartItem = initHighchart(highchart, json)
+    highcharts.push(highchartItem)
   })
 
-  const model = { part, highcharts, json, municipality }
+  const model = { highcharts, municipality }
   const body = thymeleaf.render(view, model)
 
   return { body, contentType: 'text/html' }
+}
+
+function initHighchart(highchart, json) {
+  const tableRegex = /<table[^>]*>/igm
+  const nbspRegexp = /&nbsp;/igm
+  const replace = '<table id="highcharts-datatable-' + highchart._id + '">'
+  const resultWithId = highchart.data.htmltabell && highchart.data.htmltabell.replace(tableRegex, replace)
+  const resultWithoutNbsp = resultWithId && resultWithId.replace(nbspRegexp, '')
+
+  return {
+    json,
+    tableData: resultWithoutNbsp,
+    contentkey: highchart._id,
+    type: highchart.data.type,
+    zoomtype: highchart.data.zoomtype ? highchart.data.zoomtype : null,
+    creditsenabled: (highchart.data.kildeurl || highchart.data.kildetekst) ? true : false,
+    creditshref: highchart.data.kildeurl,
+    creditstext: highchart.data.kildetekst,
+    switchrowsandcolumns: highchart.data.byttraderogkolonner,
+    combineinformation: highchart.data.combineInfo ? true : false,
+    tickinterval: highchart.data.tickinterval ? highchart.data.tickinterval.replace(/,/g, '.') : null,
+    legendenabled: highchart.data.nolegend ? false : true,
+    plotoptionsseriesstacking: (highchart.data.stabling == 'normal' || highchart.data.stabling == 'percent') ? highchart.data.stabling : null,
+    subtitletext: highchart.data.undertittel,
+    title: highchart.displayName,
+    xaxisallowdecimals: highchart.data.xAllowDecimal ? true : false,
+    xaxislabelsenabled: highchart.data.xEnableLabel ? false : true,
+    xaxismax: highchart.data.xAxisMax ? highchart.data.xAxisMax.replace(/,/g, '.') : null,
+    xaxismin: highchart.data.xAxisMin ? highchart.data.xAxisMin.replace(/,/g, '.') : null,
+    xaxistitletext: highchart.data.xAxisTitle,
+    xaxistype: highchart.data.xAxisType ? highchart.data.xAxisType : 'categories',
+    yaxisallowdecimals: highchart.data.yAxisAllowDecimal ? true : false,
+    yaxismax: highchart.data.yAxisMax ? highchart.data.yAxisMax.replace(/,/g, '.') : null,
+    yaxismin: highchart.data.yAxisMin ? highchart.data.yAxisMin.replace(/,/g, '.') : null,
+    yaxistitletext: highchart.data.yAxisTitle,
+    yaxistype: highchart.data.yAxisType ? highchart.data.yAxisType : 'linear',
+    yaxisstacklabelsenabled: highchart.data.stabelsum ? true : false,
+    titleCenter: highchart.data.titleCenter ? 'center' : 'left',
+    numberdecimals: highchart.data.numberdecimals,
+    bottomSpace: highchart.data.fotnoteTekst ? '122' : '22',
+    pieLegendUnder: highchart.data['pie-legend'] ? 'under' : false,
+    fotnoteTekst: highchart.data.fotnoteTekst,
+    legendAlign: (highchart.data.legendAlign === 'right') ? 'right' : 'center'
+  }
 }

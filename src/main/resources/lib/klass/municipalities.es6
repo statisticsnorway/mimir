@@ -1,11 +1,14 @@
 import { getChildren } from '/lib/xp/content'
-import { getDataSetWithDataQueryId } from './mimir/dataset'
-import { datasetToMunicipalityWithValues, get as getKlass } from './klass'
-import { localizeTimePeriod } from './language'
+import { getDataSetWithDataQueryId, getValueWithIndex, getTime, getDataSetFromDataQuery } from '../ssb/dataset'
+import { get as getKlass } from './klass'
+import { localizeTimePeriod } from '../language'
 import { localize } from '/lib/xp/i18n'
-import { createHumanReadableFormat } from './utils'
-import { get as getDataquery } from '/lib/mimir/dataquery'
+import { createHumanReadableFormat } from '../ssb/utils'
+import { get as getDataquery } from '/lib/ssb/dataquery'
 import { getSiteConfig } from '/lib/xp/portal'
+import { list as countyList } from './counties';
+import { newCache } from '/lib/cache'
+
 
 /**
  * @return {array} Returns everything in the "code" node from ssb api
@@ -19,6 +22,7 @@ export const list = () => getMunicipalsFromContent()
  */
 export const query = (queryString) => getMunicipalsFromContent()
   .filter( (municipal) => RegExp(queryString.toLowerCase()).test(`${municipal.code} ${municipal.name.toLowerCase()}` ))
+
 
 function getMunicipalsFromContent() {
   const key = getSiteConfig().municipalDataContentId
@@ -43,10 +47,6 @@ export const createPath = (municipalName, countyName = undefined) => {
     .replace(/ø/g, 'o')
 }
 
-// Returns page mode for Kommunefakta page based on request mode or request path
-export const mode = function(req, page) {
-  return req.mode === 'inline' && 'edit' || (page._path.endsWith(req.path.split('/').pop()) ? 'map' : 'municipality')
-}
 
 /**
  * Get a dataset with values from statistikkbanken
@@ -73,22 +73,12 @@ export const getValue = (url, query, municipalityCode) => {
  * @return {object} Parsed object
  */
 export const parseMunicipalityValues = (dataQueryId, municipality, defaultMunicipalityCode) => {
-  const dataqueryContent = getDataquery({key: dataQueryId}) // hent key-figure sin dataquery
-  const dataset = getDataSetWithDataQueryId(dataQueryId)
+  const datasetContent = getDataSetWithDataQueryId(dataQueryId)
+  const data = datasetContent.count ? JSON.parse(datasetContent.hits[0].data.json) : getDataSetFromDataQuery( getDataquery({key: dataQueryId}))
+  const value = getValueWithIndex(data.dataset, municipality.code || defaultMunicipalityCode);
+  const time = getTime(data.dataset);
 
-  if (dataset && dataset.count) {
-    // Use saved dataset
-    const data = JSON.parse(dataset.hits[0].data.json)
-    const table = datasetToMunicipalityWithValues(data.dataset)
-    const time = data && Object.keys(data.dataset.dimension.Tid.category.index)[0]
-    const value = (table[municipality && municipality.code || defaultMunicipalityCode] || { value: '-'}).value
-    return municipalityObject(value, time)
-  } else { // Use direct lookup with http through /lib/dataquery (wrapper for http-client)
-    const selection = { filter: 'item', values: [municipality && municipality.code || defaultMunicipalityCode] }
-    const result = getKlass(dataqueryContent.data.table, JSON.parse(dataqueryContent.data.json), selection)
-    const time = result && Object.keys(result.dataset.dimension.Tid.category.index)[0]
-    return municipalityObject(result.dataset.value[0], time)
-  }
+  return municipalityObject(value, time)
 }
 
 /**
@@ -105,3 +95,38 @@ const municipalityObject = (value, time) => ({
 })
 
 const notFoundValues = ['.', '..', '...', ':', '-']
+
+const cache = newCache({ size: 100, expire: 3600 })
+
+export const municipalsWithCounties = () => {
+  const counties = countyList();
+  const municipalities = list()
+  // Caching this since it is a bit heavy
+  return cache.get('parsedMunicipality', () => municipalities.map( (municipality) => {
+    const getTwoFirstDigits = /^(\d\d).*$/
+    const currentCounty = counties.filter( (county) => county.code === municipality.code.replace(getTwoFirstDigits, '$1'))[0]
+    const numMunicipalsWithSameName = municipalities.filter( (mun) => mun.name === municipality.name).length
+
+    return {
+      code: municipality.code,
+      displayName: numMunicipalsWithSameName === 1 ? municipality.name : `${municipality.name} i ${currentCounty.name}`,
+      county: {
+        name: currentCounty.name
+      },
+      path: numMunicipalsWithSameName === 1 ? createPath(municipality.name) : createPath(municipality.name, currentCounty.name)
+    }
+  }))
+}
+
+export const getMunicipality = (req) => {
+  const municipalities = municipalsWithCounties();
+
+  if (req.path) {
+    const municipalityName = req.path.replace(/^.*\//, '')
+    return municipalities.filter( (municipality) => municipality.displayName.toLowerCase() === municipalityName.toLowerCase())[0]
+  } else if (req.code) {
+    return municipalities.filter( (municipality) => municipality.code === req.code )[0]
+  } else {
+    return undefined
+  }
+}

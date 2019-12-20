@@ -1,46 +1,46 @@
-<section class="xp-part part-highchart" data-th-each="part: ${highcharts}">
-  <script data-th-if="${json}" th:inline="javascript">
+<section class="xp-part part-highchart" data-th-each="highchart: ${highcharts}">
+  <script data-th-if="${highchart.json}" th:inline="javascript">
     /*<![CDATA[*/
-      highchart.push(/*[[${json}]]*/);
+      highchart.push(/*[[${highchart.json}]]*/);
     /*]]>*/
   </script>
   <div class="row position-relative">
     <div class="col-12">
       <figure th:fragment="graph" class="highcharts-figure mb-0">
-        <div data-th-id="highcharts- + ${part.chart._id}"
+        <div data-th-id="highcharts- + ${highchart.contentkey}"
           class="highcharts-canvas"
-          data-th-attr="data-contentkey=${part.chart.contentkey},
+          data-th-attr="data-contentkey=${highchart.contentkey},
           data-municipality-name=${municipality.displayName},
           data-municipality=${municipality.code},
-          data-type=${part.chart.type},
-          data-zoomtype=${part.chart.zoomtype},
-          data-creditsenabled=${part.chart.creditsenabled},
-          data-creditshref=${part.chart.creditshref},
-          data-creditstext=${part.chart.creditstext},
-          data-switchrowsandcolumns=${part.chart.switchrowsandcolumns},
-          data-combineinformation=${part.chart.combineinformation},
-          data-tickinterval=${part.chart.tickinterval},
-          data-legendenabled=${part.chart.legendenabled},
-          data-plotoptionsseriesstacking=${part.chart.plotoptionsseriesstacking},
-          data-subtitletext=${part.chart.subtitletext},
-          data-title=${part.chart.title},
-          data-xaxisallowdecimals=${part.chart.xaxisallowdecimals},
-          data-xaxislabelsenabled=${part.chart.xaxislabelsenabled},
-          data-xaxismax=${part.chart.xaxismax},
-          data-xaxismin=${part.chart.xaxismin},
-          data-xaxistitletext=${part.chart.xaxistitletext},
-          data-xaxistype=${part.chart.xaxistype},
-          data-yaxisallowdecimals=${part.chart.yaxisallowdecimals},
-          data-yaxismax=${part.chart.yaxismax},
-          data-yaxismin=${part.chart.yaxismin},
-          data-yaxistitletext=${part.chart.yaxistitletext},
-          data-yaxistype=${part.chart.yaxistype},
-          data-yaxisstacklabelsenabled=${part.chart.yaxisstacklabelsenabled},
-          data-title-center=${part.chart.titleCenter},
-          data-numberdecimals=${part.chart.numberdecimals},
-          data-chart-bottomspace=${part.chart.bottomSpace},
-          data-pielegendunder=${part.chart.pieLegendUnder},
-          data-legendalign=${part.chart.legendAlign}"
+          data-type=${highchart.type},
+          data-zoomtype=${highchart.zoomtype},
+          data-creditsenabled=${highchart.creditsenabled},
+          data-creditshref=${highchart.creditshref},
+          data-creditstext=${highchart.creditstext},
+          data-switchrowsandcolumns=${highchart.switchrowsandcolumns},
+          data-combineinformation=${highchart.combineinformation},
+          data-tickinterval=${highchart.tickinterval},
+          data-legendenabled=${highchart.legendenabled},
+          data-plotoptionsseriesstacking=${highchart.plotoptionsseriesstacking},
+          data-subtitletext=${highchart.subtitletext},
+          data-title=${highchart.title},
+          data-xaxisallowdecimals=${highchart.xaxisallowdecimals},
+          data-xaxislabelsenabled=${highchart.xaxislabelsenabled},
+          data-xaxismax=${highchart.xaxismax},
+          data-xaxismin=${highchart.xaxismin},
+          data-xaxistitletext=${highchart.xaxistitletext},
+          data-xaxistype=${highchart.xaxistype},
+          data-yaxisallowdecimals=${highchart.yaxisallowdecimals},
+          data-yaxismax=${highchart.yaxismax},
+          data-yaxismin=${highchart.yaxismin},
+          data-yaxistitletext=${highchart.yaxistitletext},
+          data-yaxistype=${highchart.yaxistype},
+          data-yaxisstacklabelsenabled=${highchart.yaxisstacklabelsenabled},
+          data-title-center=${highchart.titleCenter},
+          data-numberdecimals=${highchart.numberdecimals},
+          data-chart-bottomspace=${highchart.bottomSpace},
+          data-pielegendunder=${highchart.pieLegendUnder},
+          data-legendalign=${highchart.legendAlign}"
           data-langcontextbuttontitle="Last ned/skriv ut"
           data-langdownloadjpeg="Last ned som JPEG"
           data-langdownloadpdf="Last ned som PDF"
@@ -59,8 +59,8 @@
           data-langvisskjul="vis/skjul" >
         </div>
       </figure>
-      <div class="footnote" data-th-if="${part.chart.data.fotnoteTekst}" data-th-text="${part.chart.data.fotnoteTekst}"></div>
-      <div class="d-none highcharts-table invisible" data-th-utext="${part.chart.tableData}"></div>
+      <div class="footnote" data-th-if="${highchart.fotnoteTekst}" data-th-text="${highchart.fotnoteTekst}"></div>
+      <div class="d-none highcharts-table invisible" data-th-utext="${highchart.tableData}"></div>
     </div>
     <button type="button" class="btn-highchart-export border-0 position-absolute font-roboto-plain">
       <i>
@@ -68,9 +68,9 @@
       </i>
       Last ned som … 
     </button>
-    <div data-th-if="${part.chart.creditsenabled}" class="col-12">
+    <div data-th-if="${highchart.creditsenabled}" class="col-12">
       <h5 class="mb-0">Kilde:</h5>
-      <a class="ssb-link" data-th-href="${part.chart.creditshref}" data-th-text="${part.chart.creditstext}"></a>
+      <a class="ssb-link" data-th-href="${highchart.creditshref}" data-th-text="${highchart.creditstext}"></a>
     </div>
   </div>
 </section>

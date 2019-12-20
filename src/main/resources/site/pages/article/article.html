@@ -12,8 +12,6 @@
     /*]]>*/
   </script>
   
-  <script src="http://localhost:35729/livereload.js?snipver=1" async="" defer=""></script>
-  
   <meta charset="UTF-8">
   <meta http-equiv="Cache-control" content="NO-CACHE">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -32,10 +30,10 @@
   
   <!-- MAIN -->
   <main>
+    <!-- breadcrumbs -->
+    <div data-th-replace="mimir:/site/includes/breadcrumbs.html"></div>
+
     <div data-portal-region="main" class="xp-region container" data-th-if="${!isFragment}">
-      <!-- breadcrumbs -->
-      <div data-th-replace="mimir:/site/includes/breadcrumbs.html"></div>
-      
       <div data-th-if="${page.data.title}" class="mb-5">
         <h1 data-th-text="${page.data.title}"></h1>
       </div>
