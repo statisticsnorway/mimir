@@ -53,7 +53,6 @@ $(function() {
   })
   $('.show-search').click((e) => {
     const mode = $(e.currentTarget).data('mode')
-console.log(mode)
     if (mode == 'municipality') {
       $('#js-show-map').removeClass('active')
       $('.js-part-map').addClass('d-none').parent().removeClass('map-container') // Remove map when municipality search button clicked
