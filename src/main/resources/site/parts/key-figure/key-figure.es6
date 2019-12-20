@@ -1,5 +1,5 @@
 import { get as getKeyFigure } from '/lib/ssb/key-figure'
-import { parseGlossaryContent } from '/lib/mimir/glossary'
+import { parseGlossaryContent } from '/lib/ssb/glossary'
 import { parseMunicipalityValues, getMunicipality } from '/lib/klass/municipalities'
 import { getComponent, getSiteConfig } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'

@@ -122,8 +122,8 @@ export const getMunicipality = (req) => {
   const municipalities = municipalsWithCounties();
 
   if (req.path) {
-    const municipalityName = req.path.replace(/^.*\//, '')
-    return municipalities.filter( (municipality) => municipality.displayName.toLowerCase() === municipalityName.toLowerCase())[0]
+    const municipalityName = req.path.replace(/^.*\//, '/').toLowerCase()
+    return municipalities.filter( (municipality) => municipality.path === municipalityName)[0]
   } else if (req.code) {
     return municipalities.filter( (municipality) => municipality.code === req.code )[0]
   } else {

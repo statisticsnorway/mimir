@@ -1,5 +1,5 @@
 import * as content from '/lib/xp/content'
-import { getContent, getSiteConfig, processHtml, assetUrl, pageUrl } from '/lib/xp/portal'
+import { getContent, processHtml, assetUrl, pageUrl } from '/lib/xp/portal'
 import * as thymeleaf from '/lib/thymeleaf'
 import * as glossaryLib from '/lib/glossary'
 import * as languageLib from '/lib/language'
@@ -62,7 +62,7 @@ exports.get = function(req) {
   const breadcrumbs = [page]
   getBreadcrumbs(page, breadcrumbs)
 
-  const municipality = getMunicipality({ code: getSiteConfig().defaultMunicipality })
+  const municipality = getMunicipality(req)
   if (!page._path.endsWith(req.path.split('/').pop()) && req.mode != 'edit' ) {
     breadcrumbs.push({ displayName: municipality.displayName })
   }

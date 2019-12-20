@@ -47,8 +47,7 @@ $('input[autocomplete]').each((i, el) => {
 
   function filter(el) {
     const val = $(el).val()
-    const startOfLine = val && val.match(/\D/) ? '^' : ''
-    const re = new RegExp(startOfLine + val, 'i')
+    const re = new RegExp(' ' + val, 'i') // Searching for start of word (data-text starts with space)
     elements.each((j, a) => {
       if (a.getAttribute('data-text').match(re)) {
         dropdown.append(a);
