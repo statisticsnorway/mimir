@@ -30,10 +30,10 @@
   
   <!-- MAIN -->
   <main>
+    <!-- breadcrumbs -->
+    <div data-th-replace="mimir:/site/includes/breadcrumbs.html"></div>
+
     <div data-portal-region="main" class="xp-region container" data-th-if="${!isFragment}">
-      <!-- breadcrumbs -->
-      <div data-th-replace="mimir:/site/includes/breadcrumbs.html"></div>
-      
       <div data-th-if="${page.data.title}" class="mb-5">
         <h1 data-th-text="${page.data.title}"></h1>
       </div>
