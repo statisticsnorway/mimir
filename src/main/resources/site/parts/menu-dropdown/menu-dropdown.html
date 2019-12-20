@@ -22,7 +22,7 @@
             <div id="municipality-list" class="dropdown-menu w-100 list-of-options" aria-labelledby="input-query-municipality">
               <a class="dropdown-item a-plain option-list-element" data-th-each="municipality: ${municipalities}"
                 data-th-href="${portal.pageUrl({'_id='+page._id})} + ${municipality.path}"
-                data-th-text="${municipality.displayName}"
+                data-th-text="' ' + ${municipality.displayName}"
                 data-th-attr="data-text=${municipality.displayName} + ' ' +  ${municipality.code} + ' ' + ${municipality.county.name}">Oslo
               </a>
             </div>
