@@ -48,7 +48,7 @@ $(function() {
   $('#input-query-municipality').focus((e) => {
     const mode = $('.show-search').data('mode')
     if (mode === 'municipality') {
-      window.innerWidth < 960 && $('.js-part-map').addClass('d-none').parent().removeClass('map-container') // Remove map when municipality search field active on smaller than md
+      $('.js-part-map').addClass('d-none').parent().removeClass('map-container') // Remove map when municipality search field active on smaller than md
     }
   })
   $('.show-search').click((e) => {
