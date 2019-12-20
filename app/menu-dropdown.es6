@@ -46,11 +46,17 @@ $(function() {
   })
 
   $('#input-query-municipality').focus((e) => {
-    $('.js-part-map').addClass('d-none').parent().removeClass('map-container') // Remove map when municipality search field active
+    const mode = $('.show-search').data('mode')
+    if (mode === 'municipality') {
+      $('.js-part-map').addClass('d-none').parent().removeClass('map-container') // Remove map when municipality search field active on smaller than md
+    }
   })
   $('.show-search').click((e) => {
-    $('#js-show-map').removeClass('active')
-    $('.js-part-map').addClass('d-none').parent().removeClass('map-container') // Remove map when municipality search button clicked
+    const mode = $(e.currentTarget).data('mode')
+    if (mode == 'municipality') {
+      $('#js-show-map').removeClass('active')
+      $('.js-part-map').addClass('d-none').parent().removeClass('map-container') // Remove map when municipality search button clicked
+    }
   })
   const w = window.innerWidth
   if (w >= 960) { // Bootstrap lg grid
