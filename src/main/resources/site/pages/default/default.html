@@ -34,6 +34,19 @@
 
   <!-- MAIN -->
   <main data-portal-region="main" class="xp-region" data-th-if="${!isFragment}">
+
+    <!-- Metainfo to make the page searchable -->
+    <div class="metainfo" style="display:none">
+      <div class="id" data-th-text="${page._id}">199391</div>
+      <div class="gruppering" data-th-text="${page._id}">199391</div>
+      <div class="undertittel" data-th-text="${page.data.subtitle}">Auke i byggjekostnadene</div>
+      <div class="innholdstype">artikkel</div>
+      <div class="publiseringsdato" data-th-text="${page.createdTime}">2077-05-12T10:00:00.000Z</div>
+      <div class="hovedemner">Test av mimir</div>
+      <div class="sprak" data-th-text="${page.language.code == 'en'}? 'en' : 'no'">nb</div>
+      <div class="stikkord">mimirprosjekt</div>
+    </div>
+
     <div class="container-fluid bg-white pt-2 pb-4">
       <!-- breadcrumbs -->
       <div data-th-replace="mimir:/site/includes/breadcrumbs.html"></div>
@@ -52,7 +65,7 @@
 
     <div data-th-if="${page.data.ingress} and ${page.type == 'mimir:page'}" class="container ingress">
       <div class="row">
-        <div class="mt-3 mt-md-0 col-lg-8" data-th-utext="${page.data.ingress}"></div>
+        <div class="mt-3 mt-md-0 col-lg-8 searchabletext" data-th-utext="${page.data.ingress}"></div>
       </div>
     </div>
 
