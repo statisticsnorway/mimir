@@ -4,7 +4,10 @@
       <h2 data-th-text="${config.title}"></h2>
       <div data-portal-region="main">
         <div data-th-each="component, i : ${mainRegion.components}" data-th-remove="tag">
-          <div data-portal-component="${component.path}" data-th-remove="tag" />
+          <div data-portal-component="${component.path}"
+               data-th-remove="${component.type=='text'}? 'none' : 'tag'"
+               class="searchabletext">
+          </div>
         </div>
       </div>
     </div>

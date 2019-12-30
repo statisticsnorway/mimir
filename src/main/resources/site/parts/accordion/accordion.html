@@ -1,11 +1,11 @@
-<section class="xp-part part-accordion">
+<section class="xp-part part-accordion searchabletext">
   <div data-th-each="accordion, i: ${accordions}" data-th-class="${i.index}  ? 'mt-3'">
-    <a 
-      class="collapsed d-block" 
-      data-toggle="collapse" 
-      data-th-href="'#accordion-' + ${accordion.id}" 
-      role="button" 
-      aria-expanded="false" 
+    <a
+      class="collapsed d-block"
+      data-toggle="collapse"
+      data-th-href="'#accordion-' + ${accordion.id}"
+      role="button"
+      aria-expanded="false"
       data-th-attr="aria-controls='accordion-' + ${accordion.id}"
     >
       <i class="accordion-bullet"></i>
@@ -14,20 +14,20 @@
     <div class="collapse collapse-container" data-th-id="'accordion-' + ${accordion.id}">
       <div class="" data-th-utext="${accordion.body}"></div>
       <div data-th-each="item, i : ${accordion.items}">
-        <a 
-          class="collapsed d-block" 
-          data-toggle="collapse" 
-          data-th-href="'#inner-' + ${accordion.id} + '-' + ${i.index}" 
-          role="button" 
-          aria-expanded="false" 
+        <a
+          class="collapsed d-block"
+          data-toggle="collapse"
+          data-th-href="'#inner-' + ${accordion.id} + '-' + ${i.index}"
+          role="button"
+          aria-expanded="false"
           data-th-attr="aria-controls='inner-' + ${accordion.id} + '-' + ${i.index}"
         >
           <i class="accordion-bullet accordion-bullet-inverse"></i>
           <span class="d-inline-block" data-th-text="${item.title}"></span>
         </a>
-        <div 
-          class="collapse collapse-container" 
-          data-th-id="'inner-' + ${accordion.id} + '-' + ${i.index}" 
+        <div
+          class="collapse collapse-container"
+          data-th-id="'inner-' + ${accordion.id} + '-' + ${i.index}"
           data-th-utext="${item.body}"
         />
       </div>

@@ -1,5 +1,5 @@
 import * as content from '/lib/xp/content'
-import { getContent, getSiteConfig } from '/lib/xp/portal'
+import { getContent } from '/lib/xp/portal'
 import * as thymeleaf from '/lib/thymeleaf'
 import * as glossary from '/lib/glossary'
 import * as language from '/lib/language'
