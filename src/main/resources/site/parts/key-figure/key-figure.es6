@@ -1,22 +1,29 @@
 import { get as getKeyFigure } from '/lib/ssb/key-figure'
 import { parseGlossaryContent } from '/lib/ssb/glossary'
 import { parseMunicipalityValues, getMunicipality } from '/lib/klass/municipalities'
-import { getComponent, getSiteConfig } from '/lib/xp/portal'
+import { getComponent, getSiteConfig, getContent } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
 import { data } from '/lib/util'
+import { pageMode } from '/lib/ssb/utils'
 
 const view = resolve('./key-figure.html')
 
 exports.get = function(req) {
   const part = getComponent()
   const keyFigureIds = data.forceArray(part.config.figure)
-  const municiaplity = getMunicipality(req)
+  let municiaplity = getMunicipality(req)
+  const page = getContent()
+  const mode = pageMode(req, page)
+  if (!municiaplity && mode === 'edit') {
+    const defaultMuniciaplity = getSiteConfig().defaultMunicipality;
+    municiaplity = getMunicipality({ code: defaultMuniciaplity })
+  }
   return renderPart(municiaplity, keyFigureIds);
 }
 
 exports.preview = (req, id) => {
   const defaultMuniciaplity = getSiteConfig().defaultMunicipality;
-  const municiaplity = getMunicipality({code: defaultMuniciaplity})
+  const municiaplity = getMunicipality({ code: defaultMuniciaplity })
   return renderPart(municiaplity, [id])
 }
 

@@ -21,5 +21,8 @@ export const alertsForContext = (municipality) => {
 
 // Returns page mode for Kommunefakta page based on request mode or request path
 export const pageMode = (req, page) => {
-  return req.mode === 'edit' && 'edit' || page._path.endsWith(req.path.split('/').pop()) ? 'map' : 'municipality'
+  if (req.mode === 'edit') {
+    return 'edit'
+  }
+  return page._path.endsWith(req.path.split('/').pop()) ? 'map' : 'municipality'
 }
