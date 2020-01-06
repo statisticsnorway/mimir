@@ -31,10 +31,18 @@
         <hideToggleIcon>true</hideToggleIcon>
       </config>
     </input>
+    <input type="TextLine" name="defaultMunicipality">
+      <label>Standard kommune for å vise i "preview" mode</label>
+      <occurrences minimum="1" maximum="1"/>
+      <default>0101</default>
+    </input>
   </form>
   <mappings>
     <mapping controller="/site/pages/default/default.js">
       <pattern>/kommunefakta/.*</pattern>
+    </mapping>
+    <mapping controller="/site/pages/default/default.js">
+      <match>type:'portal:fragment'</match> 
     </mapping>
   </mappings>
 </site>

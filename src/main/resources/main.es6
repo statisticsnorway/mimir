@@ -54,3 +54,4 @@ function job() {
 cron.schedule({ name: 'dataquery', cron: '0 8 * * *', times: 365 * 10, callback: job, context: master })
 
 exports.job = job
+

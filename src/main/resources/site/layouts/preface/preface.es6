@@ -1,12 +1,13 @@
 const portal = __non_webpack_require__( '/lib/xp/portal')
 const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
+const { pageMode } = __non_webpack_require__( '/lib/ssb/utils')
 
 exports.get = function(req) {
   const page = portal.getContent()
   const component = portal.getComponent()
   const view = resolve('preface.html')
 
-  const mode = req.mode === 'edit' && 'edit' || page._path.endsWith(req.path.split('/').pop()) ? 'map' : 'municipality'
+  const mode = pageMode(req, page)
   const model = { config: component.config, mainRegion: component.regions.main, mode }
   const body = thymeleaf.render(view, model)
 

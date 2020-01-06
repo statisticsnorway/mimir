@@ -1,5 +1,5 @@
 const util = __non_webpack_require__( '/lib/util')
-const klass = __non_webpack_require__( '/lib/klass')
+const { getMunicipality } = __non_webpack_require__( '/lib/klass/municipalities')
 const portal = __non_webpack_require__( '/lib/xp/portal')
 const content = __non_webpack_require__( '/lib/xp/content')
 const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
@@ -16,7 +16,7 @@ exports.preview = (req, id) => renderPart(req, [id])
 
 function renderPart(req, highchartIds) {
   const highcharts = []
-  const municipality = klass.getMunicipality(req) ? klass.getMunicipality(req) : { code: '' }
+  const municipality = getMunicipality(req) ? getMunicipality(req) : { code: '' }
 
   highchartIds.forEach((key) => {
     const highchart = content.get({ key });

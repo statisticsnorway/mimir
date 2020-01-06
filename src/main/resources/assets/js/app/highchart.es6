@@ -19,7 +19,7 @@ Exporting(Highcharts);
 // HIGHCHART
 export function init() {
   $(function() {
-    const w = {height: $(window).height().toFixed(0), width: $(window).width().toFixed(0)};
+    const w = { height: $(window).height().toFixed(0), width: $(window).width().toFixed(0) };
 
     $('.btn-highchart-export').click((e) => {
       $(e.target).parent().find('.highcharts-button-box').first().trigger('click')
@@ -41,29 +41,29 @@ export function init() {
       const canvas = $(chart)
       const municipality = $(chart).attr('data-municipality') || '0501' // Defaults to municipality 0501
       const municipalityName = $(chart).attr('data-municipality-name')
-      const style = {color: '#21383a', fontSize: '13px', fontWeight: 'normal', fontFamily: '"Open Sans Regular", "Arial", "DejaVu Sans", sans-serif'}
+      const style = { color: '#21383a', fontSize: '13px', fontWeight: 'normal', fontFamily: '"Open Sans Regular", "Arial", "DejaVu Sans", sans-serif' }
 
       if (typeof highchart === 'object' && highchart.length) {
         const json = highchart[index] // NOTE: This only works if all charts on the page is dynamic data
         const copy = _.cloneDeep(json)
         if (canvas.data('type') === 'bar-negative') {
-          const region = JSONstat(copy).Dataset(0).Slice({Region: municipality})
-          const male = region.toTable({type: 'arrobj'}, (a) => a.Kjonn === 'Menn' && -a.value || undefined)
-          const female = region.toTable({type: 'arrobj'}, (a) => a.Kjonn === 'Kvinner' && a.value || undefined)
-          const categories = region.toTable({type: 'arrobj'}, (a) => a.Kjonn === 'Menn' && a.Alder || undefined)
-          series = [{name: 'Menn', data: male}, {name: 'Kvinner', data: female}]
-          xAxis = [{lineColor, categories, reversed: false, labels: {style, step: 1}, accessibility: {description: 'Alder'}}]
+          const region = JSONstat(copy).Dataset(0).Slice({ Region: municipality })
+          const male = region.toTable({ type: 'arrobj' }, (a) => a.Kjonn === 'Menn' && -a.value || undefined )
+          const female = region.toTable({ type: 'arrobj' }, (a) => a.Kjonn === 'Kvinner' && a.value || undefined )
+          const categories = region.toTable({ type: 'arrobj' }, (a) => a.Kjonn === 'Menn' && a.Alder || undefined )
+          series = [{ name: 'Menn', data: male }, { name: 'Kvinner', data: female }]
+          xAxis = [{ lineColor, categories, reversed: false, labels: { style, step: 1 }, accessibility: { description: 'Alder' }}]
         } else {
           let slices
           const dimension = JSONstat(json).Dataset(0).Dimension(1).length == 1 ? 2 : 1 // I'm just guessing here
           const labels = JSONstat(json).Dataset(0).Dimension(dimension).Category() // TODO: Need to check this, we might want a label field
-          const values = JSONstat(json).Dataset(0).Slice({Region: municipality}) || JSONstat(json).Dataset(0).Slice({KOKkommuneregion0000: municipality})
+          const values = JSONstat(json).Dataset(0).Slice({ Region: municipality }) || JSONstat(json).Dataset(0).Slice({ KOKkommuneregion0000: municipality })
           categories = [canvas.data('title')]
-          for (let i = 0; i < labels.length; i++) {
-            (series || (series = [])).push({name: labels[i].label, data: [values.value[i]]});
-            (slices || (slices = [])).push({name: labels[i].label, y: values.value[i]});
+          for (let i=0; i<labels.length; i++) {
+            (series || (series = [])).push({ name: labels[i].label, data: [values.value[i]] });
+            (slices || (slices = [])).push({ name: labels[i].label, y: values.value[i] });
           }
-          series = canvas.data('type') == 'pie' || canvas.data('switchrowsandcolumns') ? [{name: 'Antall', data: slices}] : series
+          series = canvas.data('type') == 'pie' || canvas.data('switchrowsandcolumns') ? [{ name: 'Antall', data: slices }] : series
           if (canvas.data('switchrowsandcolumns')) {
             categories = slices.map((n) => n.name)
           }
@@ -98,9 +98,14 @@ export function init() {
           });
         }
 
-        // Render chart
-        Highcharts.chart(chart, {
-          accessibility: {enabled: false},
+        // Render chart : canvas.highcharts(
+        Highcharts.chart(chart,{
+          accessibility: {
+            enabled: true,
+            keyboardNavigation: {
+              order: ['chartMenu']
+            }
+          },
           chart: {
             plotBorderColor: '#e6e6e6',
             spacingBottom: 18,
@@ -126,7 +131,13 @@ export function init() {
           //  style: { color: '#00824d', cursor: 'pointer', fontSize: '16px', textDecoration: 'underline', fontFamily: 'Roboto', marginTop: '20px' },
           //   text: canvas.data('creditstext')
           // },
-          credits: {enabled: false},
+          credits: {
+            position: { align: 'left', x: 10 },
+            text: canvas.data('creditstext'),
+            href: canvas.data('creditshref'),
+            style: { color: '#00824d', fontSize: '16px' },
+            enabled: canvas.data('creditsenabled')
+          },
           series,
           data: !series && {
             switchRowsAndColumns: canvas.data('switchrowsandcolumns'),
@@ -154,12 +165,12 @@ export function init() {
                 height: 26,
                 symbolX: 14.5,
                 symbolY: 12.5,
-                theme: {'fill': '#fff', 'r': 3, 'stroke-width': 1, 'stroke': '#bbb'},
+                theme: { 'fill': '#fff', 'r': 3, 'stroke-width': 1, 'stroke': '#bbb' },
                 x: 8,
                 width: 28
               }
             },
-            csv: {itemDelimiter: ';'},
+            csv: { itemDelimiter: ';' },
             // Sett denne til false når man vil erstatte hamburgermeny med egen
             enabled: true
           },
@@ -172,7 +183,7 @@ export function init() {
             y: (canvas.data('legendalign') == 'right') ? 65 : 0,
             itemMarginBottom: (canvas.data('legendalign') == 'right') ? 25 : 0,
             itemWidth: (canvas.data('legendalign') == 'right') ? 95 : null,
-            itemStyle: {color: '#21383a', fontSize: '12px', fontWeight: 'normal'},
+            itemStyle: { color: '#21383a', fontSize: '12px', fontWeight: 'normal' },
             // Keyboard-accessible legend labels
             // labelFormatter: function () {
             // return '<button title="' + canvas.data('langvisskjul') + '">' + this.name + '</button>';
@@ -185,7 +196,7 @@ export function init() {
               minSize: 250,
               dataLabels: {
                 enabled: (canvas.data('pielegendunder') == 'under') ? false : true,
-                style: {width: '150px'}
+                style: { width: '150px' }
               },
               showInLegend: (canvas.data('pielegendunder') == 'under') ? true : false
             },
@@ -200,7 +211,7 @@ export function init() {
               marker: {
                 enabledThreshold: 15
               },
-              label: {enabled: true},
+              label: { enabled: true },
               stacking: canvas.data('plotoptionsseriesstacking'),
               states: {
                 hover: {
@@ -212,14 +223,14 @@ export function init() {
           },
           subtitle: {
             align: canvas.data('title-center'),
-            style: {color: '#333', fontSize: '14px'},
+            style: { color: '#333', fontSize: '14px' },
             text: canvas.data('subtitletext'),
             x: 0,
             y: 48
           },
           title: {
             align: canvas.data('title-center'),
-            style: {fontSize: h1Size, fontWeight: 'bold'},
+            style: { fontSize: h1Size, fontWeight: 'bold' },
             margin: 40,
             text: canvas.data('title'),
             x: 0,
@@ -228,15 +239,15 @@ export function init() {
           xAxis: xAxis || {
             categories,
             allowDecimals: canvas.data('xaxisallowdecimals'),
-            gridLineWidth: 1,
+            gridLineWidth: canvas.data('type') === 'line' ? 0 : 1,
             lineColor,
             tickInterval: canvas.data('tickinterval'),
-            labels: {enabled: canvas.data('switchrowsandcolumns'), style},
+            labels: { enabled: canvas.data('type') === 'line' || canvas.data('type') === 'area' || canvas.data('switchrowsandcolumns'), style },
             max: canvas.data('xaxismax'),
             min: canvas.data('xaxismin'),
             // Confusing detail: when type=bar, X axis becomes Y and vice versa. In other words, include 'bar' in this if-test, instead of putting it in the yAxis config
             tickmarkPlacement: (canvas.data('type') == 'column' || canvas.data('type') == 'bar') ? 'between' : 'on',
-            title: {style, text: canvas.data('xaxistitletext') || municipalityName},
+            title: { style, text: canvas.data('xaxistitletext') || municipalityName },
             type: canvas.data('xaxistype'),
             reversed: false,
             tickWidth: 1,
@@ -253,16 +264,16 @@ export function init() {
             },
             max: canvas.data('yaxismax'),
             min: canvas.data('yaxismin'),
-            stackLabels: {enabled: canvas.data('yaxisstacklabelsenabled')},
+            stackLabels: { enabled: canvas.data('yaxisstacklabelsenabled') },
             tickWidth: 1,
             tickColor: '#21383a',
             lineWidth: 1,
             lineColor,
-            title: {style, text: canvas.data('yaxistitletext'), align: 'high', offset: 0, rotation: 0, y: -10},
+            title: { style, text: canvas.data('yaxistitletext'), align: 'high', offset: 0, rotation: 0, y: -10 },
             type: canvas.data('yaxistype')
           },
           tooltip: {
-            crosshairs: canvas.data('type') == 'line' && {width: 1, color: '#9575ff', dashStyle: 'solid'},
+            crosshairs: canvas.data('type') == 'line' && { width: 1, color: '#9575ff', dashStyle: 'solid' },
             shadow: false,
             backgroundColor: 'white',
             valueDecimals: canvas.data('numberdecimals'),

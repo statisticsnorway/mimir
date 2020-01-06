@@ -33,7 +33,7 @@ export function init() {
 
         // Instanciate the map
         Highcharts.mapChart('map', {
-          accessibility: {enabled: false},
+          accessibility: { enabled: false },
           chart: {
             margin: 40,
             borderColor: '#FFFFFF',
@@ -44,7 +44,7 @@ export function init() {
                 if (!e.seriesOptions) {
                   const chart = this
                   const mapKey = 'no-fylke-' + e.point.drilldown
-                  let fail = setTimeout(function() {
+                  const fail = setTimeout(function() {
                     if (!Highcharts.maps[mapKey]) {
                       chart.showLoading('<i class="icon-frown"></i> Failed loading ' + e.point.name);
                       fail = setTimeout(function() {
@@ -74,18 +74,19 @@ export function init() {
                       data: data,
                       id: '{point.id}',
                       cursor: 'pointer',
-                      dataLabels: {enabled: true, format: '{point.properties.NAVN}'},
+                      dataLabels: { enabled: true, format: '{point.properties.NAVN}' },
                       point: {
                         events: {
                           click: function() {
-                            let kommnr = this.properties.KOMMUNENR;
+                            kommnr = this.properties.KOMMUNENR;
                             if (kommnr.length == 3) {
                               kommnr = '0' + kommnr;
                             }
+                            url = $('#finn-kommune-resultater').find('ul li a[id = '+ kommnr +']').attr('href');
 
-                            axios.get(service, {params: {postalCode: kommnr}})
+                            axios.get(service, { params: { postalCode: kommnr }})
                               .then((result) => {
-                                window.location.href = window.location.href.replace(/(arealplanlegging|kommunefakta)\/.*$/, '$1') + '/' + result.data.municipality.path;
+                                window.location.href = window.location.href.replace(/(arealplanlegging|kommunefakta)\/.*$/, '$1') + result.data.municipality.path;
                               })
                           }
                         }
@@ -95,20 +96,20 @@ export function init() {
                 }
 
 
-                this.setTitle(null, {text: e.point.name});
+                this.setTitle(null, { text: e.point.name });
               },
               drillup: function() {
-                this.setTitle(null, {text: ''});
+                this.setTitle(null, { text: '' });
               }
             }
           },
-          tooltip: {headerFormat: '{point.key}', pointFormat: '{point.properties.NAVN}'},
-          lang: {drillUpText: 'Se hele landet'},
-          exporting: {enabled: false},
-          title: {text: ''},
-          credits: {enabled: false},
-          legend: {enabled: false},
-          colorAxis: {min: 0, minColor: '#FFFFFF', maxColor: '#FFFFFF'},
+          tooltip: { headerFormat: '{point.key}', pointFormat: '{point.properties.NAVN}' },
+          lang: { drillUpText: 'Se hele landet' },
+          exporting: { enabled: false },
+          title: { text: '' },
+          credits: { enabled: false },
+          legend: { enabled: false },
+          colorAxis: { min: 0, minColor: '#FFFFFF', maxColor: '#FFFFFF' },
           mapNavigation: {
             enabled: true,
             buttonOptions: {
@@ -120,24 +121,22 @@ export function init() {
               }
             }
           },
-          plotOptions: {
-            map: {
+          plotOptions: { map: {
               borderColor: '#274247',
-              states: {hover: {color: '#00824d'}}
-            }
-          },
+              states: { hover: { color: '#00824d' }}
+            }},
           series: [{
             data: data,
             name: 'Norge',
-            dataLabels: {enabled: false, format: ''},
-            tooltip: {headerFormat: '{point.key}', pointFormat: '{point.properties.NAVN}'}
+            dataLabels: { enabled: false, format: '' },
+            tooltip: { headerFormat: '{point.key}', pointFormat: '{point.properties.NAVN}' }
           }],
 
           drilldown: {
-            activeDataLabelStyle: {color: '#FFFFFF', textDecoration: 'none', textShadow: '0 0 3px #000000'},
+            activeDataLabelStyle: { color: '#FFFFFF', textDecoration: 'none', textShadow: '0 0 3px #000000' },
             drillUpButton: {
               relativeTo: 'spacingBox',
-              position: {align: 'left', x: 40, y: 40},
+              position: { align: 'left', x: 40, y: 40 },
               theme: {
                 fill: '#ffffff',
                 stroke: '#00824d'
@@ -149,4 +148,5 @@ export function init() {
       })
     })
   })
+
 }

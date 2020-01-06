@@ -9,6 +9,7 @@ const norwegian = i18n.getPhrases('', ['site/i18n/phrases'])
 exports.getLanguage = function(page) {
   const site = portal.getSite()
   moment.locale(page.language === 'en' ? 'en' : 'nb')
+
   const result = page.language === 'en' ? {
     code: 'en',
     alternate: 'nb', // alternate language code norsk bokmål
@@ -25,10 +26,14 @@ exports.getLanguage = function(page) {
     published: page.publish && page.publish.from && moment(page.publish.from).format('DD. MMMM YYYY').toLowerCase(),
     modified: moment(page.modifiedTime).format('DD. MMMM YYYY').toLowerCase(),
     path: page._path.replace(/^\/.*?\//, site._path + '/en/'),
+    pageUrl: null,
     home: portal.pageUrl({ path: site._path + '/en' }),
     phrases: norwegian
   }
 
+  result.pageUrl = portal.pageUrl({
+    path: result.path
+  })
   result.exists = content.exists({ key: result.path })
 
   return result

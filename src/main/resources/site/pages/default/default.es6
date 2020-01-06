@@ -1,14 +1,13 @@
-const content     = __non_webpack_require__( '/lib/xp/content')
-const portal      = __non_webpack_require__( '/lib/xp/portal')
-const thymeleaf   = __non_webpack_require__( '/lib/thymeleaf')
-const klass       = __non_webpack_require__( '/lib/klass')
-const glossary    = __non_webpack_require__( '/lib/glossary')
-const language    = __non_webpack_require__( '/lib/language')
-const { alertsForContext } = __non_webpack_require__( '/lib/utils')
-const municipals  = __non_webpack_require__( '/lib/municipals')
+const content = __non_webpack_require__( '/lib/xp/content')
+const { getContent, processHtml, assetUrl, pageUrl } = __non_webpack_require__( '/lib/xp/portal')
+const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
+const glossaryLib = __non_webpack_require__( '/lib/glossary')
+const languageLib = __non_webpack_require__( '/lib/language')
+const { alertsForContext, pageMode } = __non_webpack_require__( '/lib/ssb/utils')
+const { getMunicipality } = __non_webpack_require__( '/lib/klass/municipalities')
 
 const version = '%%VERSION%%'
-const preview = [ // Parts that has preview
+const partsWithPreview = [ // Parts that has preview
   `${app.name}:map`,
   `${app.name}:button`,
   `${app.name}:menu-box`,
@@ -32,47 +31,134 @@ const view = resolve('default.html')
 
 exports.get = function(req) {
   const ts = new Date().getTime()
-  const page = portal.getContent()
+  const page = getContent()
   const isFragment = page.type === 'portal:fragment'
-  const mainRegion = isFragment ? null : page.page && page.page.regions && page.page.regions.main
-  const config = {}
+  let regions = null
+  if (isFragment) {
+    regions = page.fragment && page.fragment.regions ? page.fragment.regions : null
+  } else {
+    regions = page.page && page.page.regions ? page.page.regions : null
+  }
+  const mainRegion = isFragment ? regions && regions.main : regions && regions.main
 
-  const mode = municipals.mode(req, page)
-  const municipality = klass.getMunicipality(req)
+  const mode = pageMode(req, page)
+  const mainRegionComponents = mapComponents(mainRegion, mode)
 
-  page.language = language.getLanguage(page)
-  page.glossary = glossary.process(page)
+  const glossary = glossaryLib.process(page.data.ingress, regions)
+  const ingress = processHtml({ value: page.data.ingress })
+  const showIngress = ingress && page.type === 'mimir:page'
+
 
   // Create preview if available
-  if (preview.indexOf(page.type) >= 0) {
+  let preview
+  if (partsWithPreview.indexOf(page.type) >= 0) {
     const name = page.type.replace(/^.*:/, '')
     const controller = __non_webpack_require__(`../../parts/${name}/${name}`)
     if (controller.preview) {
-      page.preview = controller.preview(req, page._id)
+      preview = controller.preview(req, page._id)
     }
   }
 
   const breadcrumbs = [page]
   getBreadcrumbs(page, breadcrumbs)
 
+  const municipality = getMunicipality(req)
   if (!page._path.endsWith(req.path.split('/').pop()) && req.mode != 'edit' ) {
-    breadcrumbs.push({ 'displayName': municipality.name })
+    breadcrumbs.push({ displayName: municipality.displayName })
   }
 
-  const alerts = alertsForContext(municipality);
+  const alerts = alertsForContext(municipality)
+
+  let config;
+  if (!isFragment && page.page.config) {
+    config = page.page.config
+  } else if (isFragment && page.fragment.config) {
+    config = page.fragment.config
+  }
+
+  const bodyClasses = []
+  if (mode !== 'map' && config && config.bkg_color === 'grey') {
+    bodyClasses.push('bkg-grey')
+  }
+
+  const stylesUrl = assetUrl({
+    path: 'styles/bundle.css',
+    params: {
+      ts
+    }
+  })
+
+  const jsLibsUrl = assetUrl({
+    path: 'js/bundle.js',
+    params: {
+      ts
+    }
+  })
+
+  const bannerUrl = assetUrl({
+    path: 'top-banner.png'
+  })
+
+  const logoUrl = assetUrl({
+    path: 'SSB_logo.png'
+  })
+
+  const language = languageLib.getLanguage(page)
+  let alternateLanguageVersionUrl
+  if (language.exists) {
+    alternateLanguageVersionUrl = pageUrl({
+      path: language.path
+    })
+  }
 
   const model = {
     version,
-    ts,
     config,
     page,
-    breadcrumbs,
     mainRegion,
+    mainRegionComponents,
+    glossary,
+    ingress,
+    mode,
+    showIngress,
+    preview,
+    breadcrumbs,
     alerts,
-    mode
+    bodyClasses: bodyClasses.join(' '),
+    stylesUrl,
+    jsLibsUrl,
+    bannerUrl,
+    logoUrl,
+    language,
+    alternateLanguageVersionUrl,
+    GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null
   }
 
   const body = thymeleaf.render(view, model)
 
   return { body }
+}
+
+function mapComponents(mainRegion, mode) {
+  if (mainRegion && mainRegion.components) {
+    return mainRegion.components.map((component) => {
+      const descriptor = component.descriptor
+      const classes = []
+      if (descriptor !== 'mimir:banner' && descriptor !== 'mimir:menu-dropdown' && descriptor !== 'mimir:map' ) {
+        classes.push('container')
+      }
+      if (descriptor === 'mimir:menu-dropdown' && mode === 'municipality') {
+        classes.push('sticky-top')
+      }
+      if (descriptor === 'mimir:preface') {
+        classes.push('preface-container')
+      }
+      return {
+        path: component.path,
+        removeWrapDiv: descriptor === 'mimir:banner',
+        classes: classes.join(' ')
+      }
+    })
+  }
+  return []
 }

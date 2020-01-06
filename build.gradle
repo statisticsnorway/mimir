@@ -25,7 +25,7 @@ dependencies {
     include "com.enonic.lib:lib-cron:1.0.0"
     include "com.enonic.xp:lib-context:${xpVersion}"
     include 'com.enonic.lib:lib-cache:1.1.0'
-
+    compile 'org.webjars.npm:ramda:0.26.1'
     include 'com.enonic.lib:lib-react4xp:0.3.11'
 }
 

@@ -1,30 +1,36 @@
-const React4xp = require('/lib/enonic/react4xp');
-
-const { get: getKeyFigure } = __non_webpack_require__( '/lib/mimir/key-figure')
-const { get: getGlossary } = __non_webpack_require__( '/lib/mimir/glossary')
-const { parseMunicipalityValues } = __non_webpack_require__( '/lib/municipals')
-const { getComponent } = __non_webpack_require__( '/lib/xp/portal')
-const { render: renderThymeleaf } = __non_webpack_require__( '/lib/thymeleaf')
-const { getMunicipality } = __non_webpack_require__( '/lib/klass')
+const { get : getKeyFigure } = __non_webpack_require__(  '/lib/ssb/key-figure')
+const { parseGlossaryContent } = __non_webpack_require__(  '/lib/ssb/glossary')
+const { parseMunicipalityValues, getMunicipality } = __non_webpack_require__(  '/lib/klass/municipalities')
+const { getComponent, getSiteConfig, getContent } = __non_webpack_require__(  '/lib/xp/portal')
+const { render } = __non_webpack_require__( '/lib/thymeleaf')
 const { data } = __non_webpack_require__( '/lib/util')
-const { render : renderReact} = __non_webpack_require__('/lib/enonic/react4xp');
+const { pageMode } = __non_webpack_require__( '/lib/ssb/utils')
 
 const view = resolve('./key-figure.html')
 
 exports.get = function(req) {
   const part = getComponent()
-  const keyFigureIds = data.forceArray(part.config.figure || part.config['key-figure'] || '')
-  return renderPart(req, keyFigureIds);
+  const keyFigureIds = data.forceArray(part.config.figure)
+  let municiaplity = getMunicipality(req)
+  const page = getContent()
+  const mode = pageMode(req, page)
+  if (!municiaplity && mode === 'edit') {
+    const defaultMuniciaplity = getSiteConfig().defaultMunicipality;
+    municiaplity = getMunicipality({ code: defaultMuniciaplity })
+  }
+  return renderPart(municiaplity, keyFigureIds);
 }
 
-exports.preview = (req, id) => renderPart(req, [id])
+exports.preview = (req, id) => {
+  const defaultMuniciaplity = getSiteConfig().defaultMunicipality;
+  const municiaplity = getMunicipality({ code: defaultMuniciaplity })
+  return renderPart(municiaplity, [id])
+}
 
-
-function renderPart(req, keyFigureIds) {
+const renderPart = (municipality, keyFigureIds) => {
   const part = getComponent()
-  const municipality = getMunicipality(req)
   const keyFigures = keyFigureIds.map( (keyFigureId) => getKeyFigure({key: keyFigureId}))
-  return keyFigures.length ? renderKeyFigure(keyFigures, part, municipality, req) : ''
+  return keyFigures.length && municipality !== undefined ? renderKeyFigure(keyFigures, part, municipality) : ''
 }
 
 /**
@@ -32,19 +38,20 @@ function renderPart(req, keyFigureIds) {
  * @param {array} keyFigures
  * @param {object} part
  * @param {object} municipality
- * @param {object} req
  * @return {{body: string, contentType: string}}
  */
-function renderKeyFigure(keyFigures, part, municipality, req) {
+function renderKeyFigure(keyFigures, part, municipality) {
   const glossary = keyFigures.reduce( (result, keyFigure) => {
-    return keyFigure.data.glossary ? result.concat(getGlossary({ key: keyFigure.data.glossary })) : result
+    const parsedGlossary = parseGlossaryContent( keyFigure.data.glossary );
+    if (parsedGlossary) {
+      result.push(parsedGlossary)
+    }
+    return result
   }, [])
 
   const parsedKeyFigures = keyFigures.map( (keyFigure) => {
     const dataset = parseMunicipalityValues(keyFigure.data.dataquery, municipality, keyFigure.data.default)
-
     return {
-      id: keyFigure._id,
       displayName: keyFigure.displayName,
       ...keyFigure.data,
       ...dataset,
@@ -56,52 +63,18 @@ function renderKeyFigure(keyFigures, part, municipality, req) {
     return keyFigure.value !== null && keyFigure.value !== 0
   })
 
-  /*** Render thymeleaf **/
+  const source = part && part.config && part.config.source || undefined
+
   const model = {
-    source: {
-      title: part ? part.config.title : undefined,
-      url: part ? part.config.source : undefined
-    },
+    displayName: part ? part.config.title : undefined,
     data: keyFiguresWithNonZeroValue,
-    page: { glossary }
+    glossary,
+    source
   }
-
-  const thymeleafRender = renderThymeleaf(view, model)
-
-  /** Render react **/
-  const component = getComponent()
-
-  const reactObjs = model.data.map( (keyfigure) => {
-    const reactProps = {
-      number: keyfigure.value,
-      title: keyfigure.displayName,
-      numberDescription: keyfigure.denomination,
-      time: keyfigure.time,
-      size: keyfigure.size
-      //icon: '{<Home size="240" />}'
-    };
-
-    const fig = new React4xp('KeyFigure');
-    return fig.setId(keyfigure.id).setProps(reactProps)
-  })
-
-  const reactBody = reactObjs.reduce((reactRender, reactObj) => {
-    return reactObj.renderBody(reactRender)
-  }, thymeleafRender)
-
-
-  const reactContributions = reactObjs.reduce((reactRender, reactObj) => {
-    return reactObj.renderPageContributions(reactRender)
-  })
-
-  const clientRender = (req.mode !== 'edit' && req.mode !== 'inline');
 
   return {
-    body: reactBody,
-    pageContributions: clientRender ?
-      reactContributions :
-      undefined
+    body: render(view, model),
+    contentType: 'text/html'
   }
-
 }
 
