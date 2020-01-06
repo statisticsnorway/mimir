@@ -215,7 +215,8 @@ $(function() {
           margin: 40,
           text: canvas.data('title'),
           x: 0,
-          y: 18
+          y: 18,
+          widthAdjust: -150 - (canvas.data('title-center') == 'center' ? 90 : 0)
         },
         xAxis: xAxis || {
           categories,
