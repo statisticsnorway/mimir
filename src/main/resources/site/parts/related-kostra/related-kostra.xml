@@ -1,13 +1,15 @@
 <part>
-  <display-name>Banner</display-name>
-  <description>Grønn banner med tittel og undertittel samt bilde</description>
+  <display-name>Relatert innhold (KOSTRA)</display-name>
+  <description></description>
   <form>
-    <input name="image" type="ImageSelector">
-      <label>Bakgrunnsbilde</label>
+    <input type="TextLine" name="title">
+      <label>Overskrft</label>
       <occurrences minimum="0" maximum="1"/>
-      <config>
-        <allowPath>${site}</allowPath>
-      </config>
+      <default>Vil du vite mer om din kommune?</default>
+    </input>
+    <input type="HtmlArea" name="description">
+      <label>Beskrivelse</label>
+      <default>Teksten kommer her</default>
     </input>
   </form>
 </part>

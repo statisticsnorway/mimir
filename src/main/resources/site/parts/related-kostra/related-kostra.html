@@ -1,15 +1,14 @@
-<section class="xp-part part-banner position-relative clearfix opacity-0">
+<section class="xp-part position-relative clearfix opacity-0 opacity-1">
   <!-- TODO: tilpasse relatert kostra boks -->
-  <div class="container h-100 d-flex align-items-center">
-    <div class="row">
-      <div class="col-12 border-top-green">
-        <div class="subtitle roboto-bold position-relative" data-th-text="${page.displayName}">Kommunefakta</div>
-        <h2 class="mt-0 pt-0 position-relative" data-th-if="${municipality}" data-th-text="${municipality.displayName} +' (' + ${municipality.county.name} +')'">vil du vite mer om din kommune?</h2>
-        <p>body teksten kommer her</p>
-        <input type="button" name="" value="Se flere nøkkeltall">
-      </div>
-      <div class="col-12" data-th-unless="${mode == 'municipality'}">
-        <h1 class="mt-0 position-relative" data-th-text="${page.displayName}">Kommunefakta</h1>
+  <div class="container h-100 d-flex align-items-center text-center">
+    <div class="col-12 border-top-green">
+     <h3 class="subtitle roboto-bold" data-th-text="${config.title}"></h3>
+      <div data-th-if="${config.description}" class="p-3" data-th-utext="${config.description}"/>
+        <div align="center">
+            <form data-th-action="'https://www.ssb.no/kommunefakta/kostra/' + ${municipality  == null ? '' : municipality}" method="get">
+                <button class="ssb-btn primary-btn">Se flere nøkkeltall</button>
+            </form>
+        </div>
     </div>
   </div>
 </section>
