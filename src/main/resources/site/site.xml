@@ -41,5 +41,8 @@
     <mapping controller="/site/pages/default/default.js">
       <pattern>/kommunefakta/.*</pattern>
     </mapping>
+    <mapping controller="/site/pages/default/default.js">
+      <match>type:'portal:fragment'</match> 
+    </mapping>
   </mappings>
 </site>

@@ -1,5 +1,5 @@
 import { get as getKeyFigure } from '/lib/ssb/key-figure'
-import { get as getGlossary } from '/lib/ssb/glossary'
+import { parseGlossaryContent } from '/lib/ssb/glossary'
 import { parseMunicipalityValues, getMunicipality } from '/lib/klass/municipalities'
 import { getComponent, getSiteConfig } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
@@ -35,7 +35,11 @@ const renderPart = (municipality, keyFigureIds) => {
  */
 function renderKeyFigure(keyFigures, part, municipality) {
   const glossary = keyFigures.reduce( (result, keyFigure) => {
-    return keyFigure.data.glossary ? result.concat(getGlossary({ key: keyFigure.data.glossary })) : result
+    const parsedGlossary = parseGlossaryContent( keyFigure.data.glossary );
+    if (parsedGlossary) {
+      result.push(parsedGlossary)
+    }
+    return result
   }, [])
 
   const parsedKeyFigures = keyFigures.map( (keyFigure) => {
@@ -57,7 +61,7 @@ function renderKeyFigure(keyFigures, part, municipality) {
   const model = {
     displayName: part ? part.config.title : undefined,
     data: keyFiguresWithNonZeroValue,
-    page: { glossary },
+    glossary,
     source
   }
 
