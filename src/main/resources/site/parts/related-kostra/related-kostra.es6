@@ -12,7 +12,7 @@ exports.get = function(req) {
 
   const config = part.config
   const desc = config.description
-  config.description = desc.replace('<a ', '<a class="ssb-link"')
+  config.description = desc.replace('<a href=', '<a class="ssb-link" href=')
 
   const municipality = klass.getMunicipality(req)
   const mode = municipals.mode(req, page)

@@ -1,11 +1,11 @@
-<section class="xp-part">
-  <div class="container d-flex align-items-center row" align="center">
-    <div class="col-12 border-top-green">
-     <h3 class="roboto-condensed position-relative" data-th-text="${config.title}"/>
-      <div class="pt-3" data-th-utext="${config.description}"/>
-        <a data-th-href="${config.btnLink + (municipality  == null ? '' : municipality)}" style="text-decoration: none;">
-            <button class="ssb-btn primary-btn" data-th-text="${config.btnTxt}"></button>
-        </a>
+<section class="xp-part container">
+    <div class="row">
+        <div class="col-12 border-top-green" align="center">
+         <h3 class="roboto-condensed position-relative" data-th-text="${config.title}"/>
+          <div class="pt-3" data-th-utext="${config.description}"/>
+            <a data-th-href="${config.btnLink + (municipality  == null ? '' : municipality)}" style="text-decoration: none;">
+                <button class="ssb-btn primary-btn" data-th-text="${config.btnTxt}"></button>
+            </a>
+        </div>
     </div>
-  </div>
 </section>
