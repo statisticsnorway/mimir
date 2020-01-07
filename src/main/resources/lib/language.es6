@@ -1,8 +1,7 @@
-const moment = require('/lib/moment-with-locales')
-
-import * as i18n from '/lib/xp/i18n'
-import * as portal from '/lib/xp/portal'
-import * as content from '/lib/xp/content'
+const moment = require('moment/min/moment-with-locales')
+const i18n = __non_webpack_require__( '/lib/xp/i18n')
+const portal = __non_webpack_require__( '/lib/xp/portal')
+const content = __non_webpack_require__( '/lib/xp/content')
 
 const english = i18n.getPhrases('en', ['site/i18n/phrases'])
 const norwegian = i18n.getPhrases('', ['site/i18n/phrases'])

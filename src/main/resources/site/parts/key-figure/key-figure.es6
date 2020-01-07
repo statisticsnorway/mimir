@@ -1,10 +1,10 @@
-import { get as getKeyFigure } from '/lib/ssb/key-figure'
-import { parseGlossaryContent } from '/lib/ssb/glossary'
-import { parseMunicipalityValues, getMunicipality } from '/lib/klass/municipalities'
-import { getComponent, getSiteConfig, getContent } from '/lib/xp/portal'
-import { render } from '/lib/thymeleaf'
-import { data } from '/lib/util'
-import { pageMode } from '/lib/ssb/utils'
+const { get : getKeyFigure } = __non_webpack_require__(  '/lib/ssb/key-figure')
+const { parseGlossaryContent } = __non_webpack_require__(  '/lib/ssb/glossary')
+const { parseMunicipalityValues, getMunicipality } = __non_webpack_require__(  '/lib/klass/municipalities')
+const { getComponent, getSiteConfig, getContent } = __non_webpack_require__(  '/lib/xp/portal')
+const { render } = __non_webpack_require__( '/lib/thymeleaf')
+const { data } = __non_webpack_require__( '/lib/util')
+const { pageMode } = __non_webpack_require__( '/lib/ssb/utils')
 
 const view = resolve('./key-figure.html')
 

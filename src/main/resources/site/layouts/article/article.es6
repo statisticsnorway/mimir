@@ -1,7 +1,6 @@
-const moment = require('/lib/moment-with-locales')
-
-import * as portal from '/lib/xp/portal'
-import * as thymeleaf from '/lib/thymeleaf'
+const moment = require('moment/min/moment-with-locales')
+const portal = __non_webpack_require__( '/lib/xp/portal')
+const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
 
 moment.locale('nb')
 

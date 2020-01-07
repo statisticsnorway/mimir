@@ -1,6 +1,6 @@
-import { query } from '/lib/xp/content'
-import { NOT_FOUND } from './error'
-import { getWithSelection } from '/lib/klass/klass'
+const { query } = __non_webpack_require__( '/lib/xp/content')
+const { NOT_FOUND } = __non_webpack_require__( './error')
+const { getWithSelection } = __non_webpack_require__( '/lib/klass/klass')
 
 
 const contentTypeName = `${app.name}:dataset`

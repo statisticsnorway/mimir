@@ -1,6 +1,6 @@
-import * as portal from '/lib/xp/portal'
-import * as thymeleaf from '/lib/thymeleaf'
-import { pageMode } from '/lib/ssb/utils'
+const portal = __non_webpack_require__( '/lib/xp/portal')
+const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
+const { pageMode } = __non_webpack_require__( '/lib/ssb/utils')
 
 exports.get = function(req) {
   const page = portal.getContent()
