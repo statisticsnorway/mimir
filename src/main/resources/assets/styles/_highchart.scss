@@ -1,0 +1,39 @@
+.part-highchart {
+  .highcharts-credits {
+    display: none;
+  }
+  .highcharts-exporting-group {
+    display: none;
+  }
+}
+.btn-highchart-export {
+  z-index: 200;
+  top: 0px;
+  right: 10px;
+  background-color: transparent;
+  i {
+    color: $ssb-green-4;
+  }
+  font-size: 14px;
+}
+.hc-container {
+  .footnote {
+    font-size: 12px;
+    padding-left: 16px;
+  }
+  @include media-breakpoint-down(sm) {
+    .footnote {
+      position: absolute;
+      bottom: -30px;
+      font-size: 10px;
+      line-height: 14px;
+      z-index: 3;
+    }
+  }
+}
+.highcharts-figure >div {
+  height: 50vh;
+  @include media-breakpoint-down(sm) {
+    height: calc(100vh - 50px - 50px - 92px);
+  }
+}

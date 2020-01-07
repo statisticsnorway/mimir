@@ -1,8 +1,8 @@
-const portal = require('/lib/xp/portal')
-const util = require('/lib/util')
-const contentLib = require('/lib/xp/content')
-const thymeleaf = require('/lib/thymeleaf')
-const moment = require('/lib/moment-with-locales')
+const portal = __non_webpack_require__('/lib/xp/portal')
+const util = __non_webpack_require__('/lib/util')
+const contentLib = __non_webpack_require__('/lib/xp/content')
+const thymeleaf = __non_webpack_require__('/lib/thymeleaf')
+const moment = require('moment/min/moment-with-locales')
 
 const view = resolve('./datasets.html')
 

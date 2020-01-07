@@ -1,26 +1,36 @@
-import { get as getKeyFigure } from '/lib/mimir/key-figure'
-import { get as getGlossary } from '/lib/mimir/glossary'
-import { parseMunicipalityValues } from '/lib/municipals'
-import { getComponent } from '/lib/xp/portal'
-import { render } from '/lib/thymeleaf'
-import { getMunicipality } from '/lib/klass'
-import { data } from '/lib/util'
+const { get : getKeyFigure } = __non_webpack_require__(  '/lib/ssb/key-figure')
+const { parseGlossaryContent } = __non_webpack_require__(  '/lib/ssb/glossary')
+const { parseMunicipalityValues, getMunicipality } = __non_webpack_require__(  '/lib/klass/municipalities')
+const { getComponent, getSiteConfig, getContent } = __non_webpack_require__(  '/lib/xp/portal')
+const { render } = __non_webpack_require__( '/lib/thymeleaf')
+const { data } = __non_webpack_require__( '/lib/util')
+const { pageMode } = __non_webpack_require__( '/lib/ssb/utils')
 
 const view = resolve('./key-figure.html')
 
 exports.get = function(req) {
   const part = getComponent()
-  const keyFigureIds = data.forceArray(part.config.figure || part.config['key-figure'] || '')
-  return renderPart(req, keyFigureIds);
+  const keyFigureIds = data.forceArray(part.config.figure)
+  let municiaplity = getMunicipality(req)
+  const page = getContent()
+  const mode = pageMode(req, page)
+  if (!municiaplity && mode === 'edit') {
+    const defaultMuniciaplity = getSiteConfig().defaultMunicipality;
+    municiaplity = getMunicipality({ code: defaultMuniciaplity })
+  }
+  return renderPart(municiaplity, keyFigureIds);
 }
 
-exports.preview = (req, id) => renderPart(req, [id])
+exports.preview = (req, id) => {
+  const defaultMuniciaplity = getSiteConfig().defaultMunicipality;
+  const municiaplity = getMunicipality({ code: defaultMuniciaplity })
+  return renderPart(municiaplity, [id])
+}
 
-function renderPart(req, keyFigureIds) {
+const renderPart = (municipality, keyFigureIds) => {
   const part = getComponent()
-  const municipality = getMunicipality(req)
   const keyFigures = keyFigureIds.map( (keyFigureId) => getKeyFigure({key: keyFigureId}))
-  return keyFigures.length ? renderKeyFigure(keyFigures, part, municipality) : ''
+  return keyFigures.length && municipality !== undefined ? renderKeyFigure(keyFigures, part, municipality) : ''
 }
 
 /**
@@ -32,12 +42,15 @@ function renderPart(req, keyFigureIds) {
  */
 function renderKeyFigure(keyFigures, part, municipality) {
   const glossary = keyFigures.reduce( (result, keyFigure) => {
-    return keyFigure.data.glossary ? result.concat(getGlossary({ key: keyFigure.data.glossary })) : result
+    const parsedGlossary = parseGlossaryContent( keyFigure.data.glossary );
+    if (parsedGlossary) {
+      result.push(parsedGlossary)
+    }
+    return result
   }, [])
 
   const parsedKeyFigures = keyFigures.map( (keyFigure) => {
     const dataset = parseMunicipalityValues(keyFigure.data.dataquery, municipality, keyFigure.data.default)
-
     return {
       displayName: keyFigure.displayName,
       ...keyFigure.data,
@@ -50,10 +63,13 @@ function renderKeyFigure(keyFigures, part, municipality) {
     return keyFigure.value !== null && keyFigure.value !== 0
   })
 
+  const source = part && part.config && part.config.source || undefined
+
   const model = {
-    part,
+    displayName: part ? part.config.title : undefined,
     data: keyFiguresWithNonZeroValue,
-    page: { glossary }
+    glossary,
+    source
   }
 
   return {
