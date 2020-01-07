@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import 'bootstrap/js/dist/dropdown';
 // Typeahead for input fields with autocomplete attribute: <input ... autocomplete>
 // Markup according to Bootstrap 4 dropdown element - see https://getbootstrap.com/docs/4.0/components/dropdowns/
 // Text to match on data-text attribute, i.e. <a data-text="5001 bergen vestlandet hordaland syv fjeld sjøforsvaret verdensarven bjørgvin buekorps" href="...">Bergen</a>
@@ -49,7 +50,7 @@ export function init() {
 
     function filter(el) {
       const val = $(el).val()
-      const re = new RegExp(' ' + val, 'i') // Searching for start of word (data-text starts with space)
+      const re = new RegExp('(^|\\s)' + val, 'i') // search for val in text from start of string or from any space
       elements.each((j, a) => {
         if (a.getAttribute('data-text').match(re)) {
           dropdown.append(a);
