@@ -16,6 +16,7 @@ const { get: getDataquery } = __non_webpack_require__( '/lib/ssb/dataquery')
 const { getSiteConfig }: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
 const { list: countyList }: CountiesLib = __non_webpack_require__( './counties')
 const { newCache }: CacheLib = __non_webpack_require__( '/lib/cache')
+const { request : httpRequest } = __non_webpack_require__(  '/lib/http-client')
 
 /**
  * @return {array} Returns everything in the "code" node from ssb api
@@ -147,14 +148,66 @@ export function getMunicipality(req: RequestWithCode): MunicipalityWithCounty|un
   const municipalities: Array<MunicipalityWithCounty> = municipalsWithCounties()
 
   if (req.path) {
-    const municipalityName: string = req.path.replace(/^.*\//, '/').toLowerCase()
-    return municipalities.filter( (municipality) => municipality.path === municipalityName)[0]
+    const municipalityName = req.path.replace(/^.*\//, '').toLowerCase()
+
+    return cache.get(`municipality_${municipalityName}`, () => {
+      const changes = changesWithMunicipalityName(municipalityName)
+      return {
+        ...municipalities.filter((municipality) => municipality.path === `/${municipalityName}`)[0],
+        changes
+      }
+    })
   } else if (req.code) {
-    return municipalities.filter( (municipality) => municipality.code === req.code )[0]
+    return cache.get(`municipality_${req.code}`, () => {
+      const changes = changesWithMunicipalityCode(req.code)
+      return {
+        ...municipalities.filter( (municipality) => municipality.code === req.code )[0],
+        changes
+      }
+    })
   } else {
     return undefined
   }
 }
+
+
+const changesWithMunicipalityName = (municipalityName) => {
+  const changeList = getMunicipalityChanges().codeChanges;
+  return changeList.filter( (change) => {
+    return [change.oldName.toLowerCase(), change.newName.toLowerCase()].indexOf(municipalityName) >= 0 &&
+        change.oldCode !== change.newCode
+  })
+}
+
+const changesWithMunicipalityCode = (municipalityCode) => {
+  const changeList = getMunicipalityChanges().codeChanges;
+  return changeList.filter( (change) => {
+    return (change.oldCode === municipalityCode || change.newCode === municipalityCode) &&
+        change.oldName === change.newName
+  })
+}
+
+const getMunicipalityChanges = (from = '2016-01-01', to = '2020-01-01') => {
+  const baseUrl = 'https://data.ssb.no/api/klass/v1/'
+  const readTimeout = 5000
+  const connectionTimeout = 20000
+  const headers = { 'Cache-Control': 'no-cache', 'Accept': 'application/json' }
+  const contentType = 'application/json'
+
+  const url = `classifications/131/changes?from=${from}&to=${to}`
+  const result = cache.get( 'municipalityChanges', () => {
+    return httpRequest({
+      url: `${baseUrl}${url}`,
+      method: 'GET',
+      headers,
+      connectionTimeout,
+      readTimeout,
+      contentType
+    })
+  })
+  return JSON.parse(result.body);
+}
+
 
 export interface MunicipalitiesLib {
   list: () => Array<MunicipalCode>;
