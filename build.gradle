@@ -194,7 +194,7 @@ task webpack_react4xp(type: NodeTask) {
 
     // 1 MANDATORY STEP: react4xp-build-components compiles the components added in this project into runnable/renderable components. See react4xp-build-components docs.
     script = file('node_modules/webpack/bin/webpack.js')
-    args = ['--config', 'node_modules/react4xp-build-components/webpack.config.js', '--color', '--env.VERBOSE=' + react4xp.verbose, '--env.ENTRY_DIRS=./_entries']
+    args = ['--config', 'webpack.config.react4xpbuildcomponents.js', '--color', '--env.VERBOSE=' + react4xp.verbose, '--env.ENTRY_DIRS=./_entries']
     if (react4xp.overrideComponentWebpack != null) {
         args += '--env.OVERRIDE_COMPONENT_WEBPACK=' + react4xp.overrideComponentWebpack
     }

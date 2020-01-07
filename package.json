@@ -32,13 +32,13 @@
     "babel-loader": "^8.0.6",
     "eslint": "^6.7.1",
     "eslint-config-google": "^0.14.0",
+    "react4xp-build-components": "git+https://git@github.com/itemodahl/react4xp-build-components.git",
     "react4xp-buildconstants": "^0.8.0",
     "react4xp-runtime-externals": "^0.3.5",
     "react4xp-runtime-nashornpolyfills": "^0.3.6",
     "react4xp-templates": "^0.2.0",
     "webpack": "^4.41.3",
-    "webpack-cli": "^3.3.10",
-    "react4xp-build-components": "file:/Users/oyvinddahl/enonic/apps/react4xp-build-components"
+    "webpack-cli": "^3.3.10"
   },
   "dependencies": {
     "@statisticsnorway/ssb-component-library": "^1.1.33",
