@@ -1,14 +1,12 @@
 <section class="xp-part position-relative clearfix opacity-0 opacity-1">
   <!-- TODO: tilpasse relatert kostra boks -->
-  <div class="container h-100 d-flex align-items-center text-center">
+  <div class="container h-100 d-flex align-items-center" align="center">
     <div class="col-12 border-top-green">
      <h3 class="subtitle roboto-bold" data-th-text="${config.title}"></h3>
-      <div data-th-if="${config.description}" class="p-3" data-th-utext="${config.description}"/>
-        <div align="center">
-            <form data-th-action="'https://www.ssb.no/kommunefakta/kostra/' + ${municipality  == null ? '' : municipality}" method="get">
-                <button class="ssb-btn primary-btn">Se flere nøkkeltall</button>
-            </form>
-        </div>
+      <div data-th-if="${config.description}" class="pt-3" data-th-utext="${config.description}"/>
+        <a data-th-href="'https://www.ssb.no/kommunefakta/kostra/' + ${municipality  == null ? '' : municipality}" style="text-decoration: none;">
+            <button class="ssb-btn primary-btn">Se flere nøkkeltall</button>
+        </a>
     </div>
   </div>
 </section>
