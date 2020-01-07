@@ -10,7 +10,9 @@
     <input type="HtmlArea" name="description">
       <label>Beskrivelse</label>
       <occurrences minimum="1" maximum="1"/>
-      <default>Teksten kommer her</default>
+      <default><p>KOSTRA står for Kommune-Stat-Rapportering. Her finner du statistikk om offentlige tjenester, finanser og ressursbruk i kommuner, bydeler og fylkeskommuner. Du kan sammenligne din kommune med andre kommuner, hele landet eller regionale inndelinger.
+        <br />
+        I tillegg til KOSTRA har vi mange <a href="https://www.ssb.no/offentlig-sektor/kommunetall">andre statistikker med tall på kommunenivå.</a></p></default>
     </input>
     <input type="TextLine" name="btnTxt">
       <label>Knapp</label>

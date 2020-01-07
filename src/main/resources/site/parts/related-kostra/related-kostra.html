@@ -1,8 +1,7 @@
-<section class="xp-part position-relative clearfix opacity-0 opacity-1">
-  <!-- TODO: tilpasse relatert kostra boks -->
-  <div class="container h-100 d-flex align-items-center" align="center">
+<section class="xp-part">
+  <div class="container d-flex align-items-center row" align="center">
     <div class="col-12 border-top-green">
-     <h3 class="subtitle roboto-bold" data-th-text="${config.title}"/>
+     <h3 class="roboto-condensed position-relative" data-th-text="${config.title}"/>
       <div class="pt-3" data-th-utext="${config.description}"/>
         <a data-th-href="'https://www.ssb.no/kommunefakta/kostra/' + ${municipality  == null ? '' : municipality}" style="text-decoration: none;">
             <button class="ssb-btn primary-btn" data-th-text="${config.btnTxt}"></button>
