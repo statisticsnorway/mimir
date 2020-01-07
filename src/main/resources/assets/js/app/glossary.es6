@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import Popper from 'popper.js'
 
 export function init() {
   $(function() {
