@@ -48,7 +48,7 @@ function renderPart(req, dashboardIds) {
         displayName: set.displayName,
         updated,
         updatedHumanReadable,
-        class: set.hasData ? 'dataset-ok' : 'dataset-missing'
+        class: hasData ? 'dataset-ok' : 'dataset-missing'
       });
     })
   }
