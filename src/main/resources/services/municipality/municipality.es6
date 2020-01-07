@@ -1,4 +1,4 @@
-import { getMunicipality } from '/lib/klass/municipalities'
+const { getMunicipality } = __non_webpack_require__( '/lib/klass/municipalities')
 
 const contentType = 'application/json'
 

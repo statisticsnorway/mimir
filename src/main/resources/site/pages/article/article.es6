@@ -1,13 +1,13 @@
-const moment = require('/lib/moment-with-locales')
+const moment = require('moment/min/moment-with-locales')
 
-import { getMunicipality } from '/lib/klass/municipalities'
-import * as content from '/lib/xp/content'
-import { getContent, assetUrl, pageUrl } from '/lib/xp/portal'
-import * as thymeleaf from '/lib/thymeleaf'
+const { getMunicipality } = __non_webpack_require__( '/lib/klass/municipalities')
+const content = __non_webpack_require__( '/lib/xp/content')
+const { getContent, assetUrl, pageUrl } = __non_webpack_require__( '/lib/xp/portal')
+const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
 
-import * as glossaryLib from '/lib/glossary'
-import * as languageLib from '/lib/language'
-import { alertsForContext } from '/lib/ssb/utils'
+const glossaryLib = __non_webpack_require__( '/lib/glossary')
+const languageLib = __non_webpack_require__( '/lib/language')
+const { alertsForContext } = __non_webpack_require__( '/lib/ssb/utils')
 
 const version = '%%VERSION%%'
 const preview = [
@@ -74,14 +74,14 @@ exports.get = function(req) {
   const alerts = alertsForContext(municipality);
 
   const stylesUrl = assetUrl({
-    path: 'css/styles.css',
+    path: 'styles/bundle.css',
     params: {
       ts
     }
   })
 
   const jsLibsUrl = assetUrl({
-    path: 'js/libs.js',
+    path: 'js/bundle.js',
     params: {
       ts
     }

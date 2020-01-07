@@ -1,9 +1,9 @@
-import { data } from '/lib/util'
-import { parseJsonStatToLabelValue } from '/lib/ssb/dataset'
-import { getComponent } from '/lib/xp/portal'
-import { render } from '/lib/thymeleaf'
-import * as dataquery from '/lib/dataquery'
-import { get as getDataQuery } from '/lib/ssb/dataquery'
+const { data } = __non_webpack_require__( '/lib/util')
+const { parseJsonStatToLabelValue } = __non_webpack_require__( '/lib/ssb/dataset')
+const { getComponent } = __non_webpack_require__( '/lib/xp/portal')
+const { render } = __non_webpack_require__( '/lib/thymeleaf')
+const dataquery = __non_webpack_require__( '/lib/dataquery')
+const { get : getDataQuery } = __non_webpack_require__( '/lib/ssb/dataquery')
 
 const view = resolve('./dataquery.html')
 

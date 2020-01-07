@@ -1,4 +1,4 @@
-import * as http from '/lib/http-client'
+const http = __non_webpack_require__(  '/lib/http-client')
 
 
 exports.get = function(url) {

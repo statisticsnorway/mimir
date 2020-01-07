@@ -1,10 +1,10 @@
-import * as content from '/lib/xp/content'
-import { getContent, processHtml, assetUrl, pageUrl } from '/lib/xp/portal'
-import * as thymeleaf from '/lib/thymeleaf'
-import * as glossaryLib from '/lib/glossary'
-import * as languageLib from '/lib/language'
-import { alertsForContext, pageMode } from '/lib/ssb/utils'
-import { getMunicipality } from '/lib/klass/municipalities'
+const content = __non_webpack_require__( '/lib/xp/content')
+const { getContent, processHtml, assetUrl, pageUrl } = __non_webpack_require__( '/lib/xp/portal')
+const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
+const glossaryLib = __non_webpack_require__( '/lib/glossary')
+const languageLib = __non_webpack_require__( '/lib/language')
+const { alertsForContext, pageMode } = __non_webpack_require__( '/lib/ssb/utils')
+const { getMunicipality } = __non_webpack_require__( '/lib/klass/municipalities')
 
 const version = '%%VERSION%%'
 const partsWithPreview = [ // Parts that has preview
@@ -30,6 +30,7 @@ function getBreadcrumbs(c, a) {
 const view = resolve('default.html')
 
 exports.get = function(req) {
+
   const ts = new Date().getTime()
   const page = getContent()
   const isFragment = page.type === 'portal:fragment'
@@ -53,7 +54,7 @@ exports.get = function(req) {
   let preview
   if (partsWithPreview.indexOf(page.type) >= 0) {
     const name = page.type.replace(/^.*:/, '')
-    const controller = require(`../../parts/${name}/${name}`)
+    const controller = __non_webpack_require__(`../../parts/${name}/${name}`)
     if (controller.preview) {
       preview = controller.preview(req, page._id)
     }
@@ -82,14 +83,14 @@ exports.get = function(req) {
   }
 
   const stylesUrl = assetUrl({
-    path: 'css/styles.css',
+    path: 'styles/bundle.css',
     params: {
       ts
     }
   })
 
   const jsLibsUrl = assetUrl({
-    path: 'js/libs.js',
+    path: 'js/bundle.js',
     params: {
       ts
     }
@@ -110,6 +111,7 @@ exports.get = function(req) {
       path: language.path
     })
   }
+
 
   const model = {
     version,

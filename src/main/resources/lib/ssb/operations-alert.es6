@@ -1,5 +1,5 @@
-import { query } from '/lib/xp/content'
-import { getContent } from '/lib/xp/portal'
+const { query } = __non_webpack_require__( '/lib/xp/content')
+const { getContent } = __non_webpack_require__( '/lib/xp/portal')
 
 const contentTypeName = `${app.name}:operations-alert`
 
