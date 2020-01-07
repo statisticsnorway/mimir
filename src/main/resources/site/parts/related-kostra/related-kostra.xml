@@ -4,12 +4,18 @@
   <form>
     <input type="TextLine" name="title">
       <label>Overskrft</label>
-      <occurrences minimum="0" maximum="1"/>
+      <occurrences minimum="1" maximum="1"/>
       <default>Vil du vite mer om din kommune?</default>
     </input>
     <input type="HtmlArea" name="description">
       <label>Beskrivelse</label>
+      <occurrences minimum="1" maximum="1"/>
       <default>Teksten kommer her</default>
+    </input>
+    <input type="TextLine" name="btnTxt">
+      <label>Knapp</label>
+      <occurrences minimum="1" maximum="1"/>
+      <default>Se flere nøkkeltall</default>
     </input>
   </form>
 </part>
