@@ -6,15 +6,15 @@ import Highcharts from 'highcharts'
 // Load the exporting module.
 import Data from 'highcharts/modules/data';
 import A11y from 'highcharts/modules/accessibility';
-import Exporting from  'highcharts/modules/exporting';
+import Exporting from 'highcharts/modules/exporting';
 
 // Initialize exporting module.
 Data(Highcharts);
 A11y(Highcharts)
 Exporting(Highcharts);
 
-//import 'highcharts/modules/map'
-//import 'highcharts/modules/drilldown'
+// import 'highcharts/modules/map'
+// import 'highcharts/modules/drilldown'
 
 // HIGHCHART
 export function init() {
@@ -99,7 +99,7 @@ export function init() {
         }
 
         // Render chart : canvas.highcharts(
-        Highcharts.chart(chart,{
+        Highcharts.chart(chart, {
           accessibility: {
             enabled: true,
             keyboardNavigation: {
@@ -234,7 +234,8 @@ export function init() {
             margin: 40,
             text: canvas.data('title'),
             x: 0,
-            y: 18
+            y: 18,
+            widthAdjust: -150 - (canvas.data('title-center') == 'center' ? 90 : 0)
           },
           xAxis: xAxis || {
             categories,
