@@ -1,7 +1,7 @@
-import { getContent } from '/lib/xp/portal'
-import { render } from '/lib/thymeleaf'
-import { municipalsWithCounties, getMunicipality } from '/lib/klass/municipalities'
-import { pageMode } from '/lib/ssb/utils'
+const { getContent } = __non_webpack_require__( '/lib/xp/portal')
+const { render } = __non_webpack_require__( '/lib/thymeleaf')
+const { municipalsWithCounties, getMunicipality } = __non_webpack_require__( '/lib/klass/municipalities')
+const { pageMode } = __non_webpack_require__( '/lib/ssb/utils')
 
 const view = resolve('./menu-dropdown.html')
 

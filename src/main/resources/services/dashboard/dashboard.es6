@@ -1,7 +1,7 @@
-import { job } from '/main'
-import * as auth from '/lib/xp/auth'
-import * as context from '/lib/xp/context'
-import * as content from '/lib/xp/content'
+const { job } = __non_webpack_require__( '/main')
+const auth = __non_webpack_require__( '/lib/xp/auth')
+const context = __non_webpack_require__( '/lib/xp/context')
+const content = __non_webpack_require__( '/lib/xp/content')
 
 function temporary(draft, master) {
   log.info('-- running temporary --');

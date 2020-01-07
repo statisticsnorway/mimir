@@ -1,5 +1,5 @@
-import { getSiteConfig } from '/lib/xp/portal'
-import { getChildren } from '/lib/xp/content'
+const { getSiteConfig } = __non_webpack_require__( '/lib/xp/portal')
+const { getChildren } = __non_webpack_require__( '/lib/xp/content')
 
 /**
  *
