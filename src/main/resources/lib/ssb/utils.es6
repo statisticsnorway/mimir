@@ -1,11 +1,11 @@
-import { list as listOperationsAlerts } from '/lib/ssb/operations-alert';
-import { list as listMunicipalityAlerts } from '/lib/ssb/municipality-alert'
-import { processHtml } from '/lib/xp/portal'
-
-const numeral = require('/lib/numeral')
+const { list: listOperationsAlerts } = __non_webpack_require__( '/lib/ssb/operations-alert')
+const { list: listMunicipalityAlerts } = __non_webpack_require__( '/lib/ssb/municipality-alert')
+const { processHtml } = __non_webpack_require__( '/lib/xp/portal')
+//const numeral = require('numeral')
 
 exports.createHumanReadableFormat = (value) => {
-  return value > 999 ? numeral(value).format('0,0').replace(/,/, '&thinsp;') : value.toString().replace(/\./, ',')
+  return value
+  //return value > 999 ? numeral(value).format('0,0').replace(/,/, '&thinsp;') : value.toString().replace(/\./, ',')
 }
 
 export const alertsForContext = (municipality) => {
