@@ -15,8 +15,14 @@ exports.preview = function(req, id) {
 function renderPart(req) {
   const page = portal.getContent()
   const mode = pageMode(req, page)
+  let mapFolder = '/mapdata'
+
+  if (page.data.folder) {
+    mapFolder = page.data.folder
+  }
+
   const dataPathAssetUrl = portal.assetUrl( {
-    path: '/mapdata'
+    path: mapFolder
   })
   const dataServiceUrl = portal.serviceUrl({
     service: 'municipality'
