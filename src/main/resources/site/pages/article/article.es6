@@ -21,7 +21,7 @@ const preview = [
   `${app.name}:key-figure`
 ]
 
-function getBreadcrumbs(c, a) {
+function getBreadcrumbs (c, a) {
   const key = c._path.replace(/\/[^\/]+$/, '')
   c = key && content.get({ key })
   c && c.type.match(/:page$/) && a.unshift(c) && getBreadcrumbs(c, a)
@@ -29,7 +29,7 @@ function getBreadcrumbs(c, a) {
 
 const view = resolve('article.html')
 
-exports.get = function(req) {
+exports.get = function (req) {
   const ts = new Date().getTime()
   const page = getContent()
   const isFragment = page.type === 'portal:fragment'
@@ -71,7 +71,7 @@ exports.get = function(req) {
   page.displayNameURLencoded = encodeURI(page.displayName)
   page.url = encodeURI(pageUrl({ type: 'absolute', id: page._id }))
 
-  const alerts = alertsForContext(municipality);
+  const alerts = alertsForContext(municipality)
 
   const stylesUrl = assetUrl({
     path: 'styles/bundle.css',
