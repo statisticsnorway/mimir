@@ -1,58 +1,77 @@
-const util = __non_webpack_require__( '/lib/util')
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Request, Response } from 'enonic-types/lib/controller'
+import { Component, PortalLibrary } from 'enonic-types/lib/portal'
+import { ContentLibrary, Content } from 'enonic-types/lib/content'
+import { ThymeleafLibrary, ResourceKey } from 'enonic-types/lib/thymeleaf'
+import { HighchartPartConfig } from './highchart-part-config'
+import { Highchart } from '../../content-types/highchart/highchart'
+import { Dataset } from '../../content-types/dataset/dataset'
+const util: any = __non_webpack_require__( '/lib/util')
 const { getMunicipality } = __non_webpack_require__( '/lib/klass/municipalities')
-const portal = __non_webpack_require__( '/lib/xp/portal')
-const content = __non_webpack_require__( '/lib/xp/content')
-const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
+const portal: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
+const content: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
+const thymeleaf: ThymeleafLibrary = __non_webpack_require__( '/lib/thymeleaf')
 
-const view = resolve('./highchart.html')
+const view: ResourceKey = resolve('./highchart.html')
 
-exports.get = function(req) {
-  const part = portal.getComponent()
-  const highchartIds = part.config.highchart ? util.data.forceArray(part.config.highchart) : []
+
+export function get (req: Request): Response {
+  const part: Component<HighchartPartConfig> | null = portal.getComponent()
+  let highchartIds: Array<string> = []
+  if (part) {
+    highchartIds = part.config.highchart ? util.data.forceArray(part.config.highchart) : []
+  }
   return renderPart(req, highchartIds)
 }
 
-exports.preview = (req, id) => renderPart(req, [id])
+export function preview (req: Request, id: string): Response {
+  return renderPart(req, [id])
+}
 
-function renderPart(req, highchartIds) {
-  const highcharts = []
-  const municipality = getMunicipality(req) ? getMunicipality(req) : { code: '' }
+function renderPart (req: Request, highchartIds: Array<string>): Response {
+  const highcharts: Array<any> = []
+  const municipality: any = getMunicipality(req) ? getMunicipality(req) : { code: '' }
 
   highchartIds.forEach((key) => {
-    const highchart = content.get({ key });
-    let json;
+    const highchart: Content<Highchart> | null = content.get({ key })
+    let json: string | null = null
     if (highchart && highchart.data.dataquery) {
       // We assume dataset is produced
-      const dataset = content.query({
+      const dataset: Content<Dataset> = content.query({
+        count: 1,
         contentTypes: [`${app.name}:dataset`],
         query: `data.dataquery = '${highchart.data.dataquery}'`
-      }).hits[0]
+      }).hits[0] as Content<Dataset>
       // try to parse json from dataset
       if (dataset && dataset.data && dataset.data.json) {
         try {
           json = JSON.parse(dataset.data.json)
         } catch (e) {
-          log.error('Could not parse json from dataset');
-          log.error(e);
+          log.error('Could not parse json from dataset')
+          log.error(e)
         }
       }
     }
-    const highchartItem = initHighchart(highchart, json)
+    const highchartItem: any = initHighchart(highchart, json)
     highcharts.push(highchartItem)
   })
 
-  const model = { highcharts, municipality }
-  const body = thymeleaf.render(view, model)
+  const model: any = { highcharts, municipality }
+  const body: string = thymeleaf.render(view, model)
 
-  return { body, contentType: 'text/html' }
+  return {
+    status: 200,
+    body,
+    contentType: 'text/html'
+  }
 }
 
-function initHighchart(highchart, json) {
-  const tableRegex = /<table[^>]*>/igm
-  const nbspRegexp = /&nbsp;/igm
-  const replace = '<table id="highcharts-datatable-' + highchart._id + '">'
-  const resultWithId = highchart.data.htmltabell && highchart.data.htmltabell.replace(tableRegex, replace)
-  const resultWithoutNbsp = resultWithId && resultWithId.replace(nbspRegexp, '')
+function initHighchart (highchart: any, json: string | null): any {
+  const tableRegex: RegExp = /<table[^>]*>/igm
+  const nbspRegexp: RegExp = /&nbsp;/igm
+  const replace: string = '<table id="highcharts-datatable-' + highchart._id + '">'
+  const resultWithId: string = highchart.data.htmltabell && highchart.data.htmltabell.replace(tableRegex, replace)
+  const resultWithoutNbsp: string = resultWithId && resultWithId.replace(nbspRegexp, '')
 
   return {
     json,

@@ -1,0 +1,38 @@
+{
+  "rules": {
+    "comma-dangle": ["error", {
+        "arrays": "never",
+        "objects": "never",
+        "imports": "never",
+        "exports": "never",
+        "functions": "ignore"
+    }],
+    "quotes": ["error", "single", {
+        "avoidEscape": true,
+        "allowTemplateLiterals": true
+      } 
+    ],
+    "max-len": ["error", 160],
+    "linebreak-style": "off",
+    "brace-style": ["error", "1tbs"],
+    "camelcase": "warn",
+    "no-var": "error",
+    "require-jsdoc": "off",
+    "block-spacing": ["warn", "always"],
+    "space-before-function-paren": [ "warn", "always"],
+    "eol-last": ["warn", "always"],
+    "no-multi-spaces": "warn",
+    "spaced-comment": ["warn" ,"always"],
+    "func-call-spacing": ["warn", "never"],
+    "keyword-spacing": "warn",
+    "key-spacing": "warn",
+    "quote-props": "warn",
+    "comma-spacing": "warn",
+    "no-unused-vars": "warn",
+    "no-invalid-this": "off",
+    "indent": ["warn", 2],
+    "semi": ["warn", "never"],
+    "object-curly-spacing": ["warn", "always"],
+    "space-infix-ops": "warn"
+  }
+}
