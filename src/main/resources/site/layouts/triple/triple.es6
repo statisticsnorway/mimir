@@ -1,7 +1,7 @@
 const portal = __non_webpack_require__( '/lib/xp/portal')
 const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
 
-exports.get = function(req) {
+exports.get = function (req) {
   const component = portal.getComponent()
   const view = resolve('triple.html')
 

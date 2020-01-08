@@ -4,7 +4,7 @@ const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
 
 moment.locale('nb')
 
-exports.get = function(req) {
+exports.get = function (req) {
   const page = portal.getContent()
   const component = portal.getComponent()
   const view = resolve('article.html')
