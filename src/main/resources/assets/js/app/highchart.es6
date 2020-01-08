@@ -4,36 +4,36 @@ import JSONstat from 'jsonstat-toolkit'
 
 import Highcharts from 'highcharts'
 // Load the exporting module.
-import Data from 'highcharts/modules/data';
-import A11y from 'highcharts/modules/accessibility';
-import Exporting from 'highcharts/modules/exporting';
+import Data from 'highcharts/modules/data'
+import A11y from 'highcharts/modules/accessibility'
+import Exporting from 'highcharts/modules/exporting'
 
 // Initialize exporting module.
-Data(Highcharts);
+Data(Highcharts)
 A11y(Highcharts)
-Exporting(Highcharts);
+Exporting(Highcharts)
 
 // import 'highcharts/modules/map'
 // import 'highcharts/modules/drilldown'
 
 // HIGHCHART
-export function init() {
-  $(function() {
-    const w = { height: $(window).height().toFixed(0), width: $(window).width().toFixed(0) };
+export function init () {
+  $(function () {
+    const w = { height: $(window).height().toFixed(0), width: $(window).width().toFixed(0) }
 
     $('.btn-highchart-export').click((e) => {
       $(e.target).parent().find('.highcharts-button-box').first().trigger('click')
     })
 
-    $('.hc-container').each(function(i, container) {
+    $('.hc-container').each(function (i, container) {
       const height = $(container).height()
       $(container).find('svg').attr('height', height)
     })
 
-    const h1Size = w.width < 768 ? '14px' : '16px';
+    const h1Size = w.width < 768 ? '14px' : '16px'
 
     // Initialisering av HighCharts-figurer fra tilhørende HTML-tabell
-    $('.highcharts-canvas[id^="highcharts-"]').each(function(index, chart) {
+    $('.highcharts-canvas[id^="highcharts-"]').each(function (index, chart) {
       let xAxis
       let series
       let categories
@@ -52,16 +52,16 @@ export function init() {
           const female = region.toTable({ type: 'arrobj' }, (a) => a.Kjonn === 'Kvinner' && a.value || undefined )
           const categories = region.toTable({ type: 'arrobj' }, (a) => a.Kjonn === 'Menn' && a.Alder || undefined )
           series = [{ name: 'Menn', data: male }, { name: 'Kvinner', data: female }]
-          xAxis = [{ lineColor, categories, reversed: false, labels: { style, step: 1 }, accessibility: { description: 'Alder' }}]
+          xAxis = [{ lineColor, categories, reversed: false, labels: { style, step: 1 }, accessibility: { description: 'Alder' } }]
         } else {
           let slices
           const dimension = JSONstat(json).Dataset(0).Dimension(1).length == 1 ? 2 : 1 // I'm just guessing here
           const labels = JSONstat(json).Dataset(0).Dimension(dimension).Category() // TODO: Need to check this, we might want a label field
           const values = JSONstat(json).Dataset(0).Slice({ Region: municipality }) || JSONstat(json).Dataset(0).Slice({ KOKkommuneregion0000: municipality })
           categories = [canvas.data('title')]
-          for (let i=0; i<labels.length; i++) {
+          for (let i = 0; i < labels.length; i++) {
             (series || (series = [])).push({ name: labels[i].label, data: [values.value[i]] });
-            (slices || (slices = [])).push({ name: labels[i].label, y: values.value[i] });
+            (slices || (slices = [])).push({ name: labels[i].label, y: values.value[i] })
           }
           series = canvas.data('type') == 'pie' || canvas.data('switchrowsandcolumns') ? [{ name: 'Antall', data: slices }] : series
           if (canvas.data('switchrowsandcolumns')) {
@@ -70,7 +70,7 @@ export function init() {
         }
       }
 
-      const highchartsContentKey = canvas.data('contentkey');
+      const highchartsContentKey = canvas.data('contentkey')
 
       // Bare kjør script hvis tabellen det skal hentes data fra, eksisterer på siden
       if ($('table#highcharts-datatable-' + highchartsContentKey)) {
@@ -95,7 +95,7 @@ export function init() {
               resetZoomTitle: canvas.data('langresetzoomtitle'),
               thousandsSep: ' '
             }
-          });
+          })
         }
 
         // Render chart : canvas.highcharts(
@@ -120,7 +120,23 @@ export function init() {
             // marginRight: (canvas.data('legend-align') == 'right') ? 120 : null,
           },
           // SSB color palette:
-          colors: ['#1a9d49', '#274247', '#3396d2', '#f0e442', '#f26539', '#aee5c3', '#ed51c9', '#0094a3', '#e9b200', '#143f90', '#075745', '#4b7272', '#6d58a4', '#83c1e9', '#b59924'],
+          colors: [
+            '#1a9d49',
+            '#274247',
+            '#3396d2',
+            '#f0e442',
+            '#f26539',
+            '#aee5c3',
+            '#ed51c9',
+            '#0094a3',
+            '#e9b200',
+            '#143f90',
+            '#075745',
+            '#4b7272',
+            '#6d58a4',
+            '#83c1e9',
+            '#b59924'
+          ],
           // TODO: This shoud be here on print?
           // Improved palette for color blindness
           // colors: ['#009e73', '#cc79a7', '#0072b2', '#000000', '#f0e442', '#cccccc', '#56b4e9', '#e69f00', '#d55e00'],
@@ -147,16 +163,16 @@ export function init() {
             table: 'highcharts-datatable-' + highchartsContentKey,
 
             // En befolkningspyramide trenger negative verdier for det ene kjønnet
-            parsed: function(columns) {
-              $.each(columns, function(i, column) {
+            parsed: function (columns) {
+              $.each(columns, function (i, column) {
                 if (canvas.data('type') == 'befolkningspyramide' && column[0] == 'Menn') {
-                  const negatedValues = column.slice(1).map(function(num) {
-                    return Math.abs(num) * -1;
-                  });
-                  const args = [1, negatedValues.length].concat(negatedValues);
-                  Array.prototype.splice.apply(column, args);
+                  const negatedValues = column.slice(1).map(function (num) {
+                    return Math.abs(num) * -1
+                  })
+                  const args = [1, negatedValues.length].concat(negatedValues)
+                  Array.prototype.splice.apply(column, args)
                 }
-              });
+              })
             }
           },
           exporting: {
@@ -203,9 +219,9 @@ export function init() {
             series: {
               events: {
                 // Keyboard-accessible legend labels
-                legendItemClick: function(e) {
+                legendItemClick: function (e) {
                   // Possible bug: untested browser support for browserEvent (but works in IE8, chrome, FF...)
-                  $(e.browserEvent.target).toggleClass('disabled');
+                  $(e.browserEvent.target).toggleClass('disabled')
                 }
               },
               marker: {
@@ -243,12 +259,13 @@ export function init() {
             gridLineWidth: canvas.data('type') === 'line' ? 0 : 1,
             lineColor,
             tickInterval: canvas.data('tickinterval'),
-            labels: { enabled: canvas.data('type') === 'line' || canvas.data('type') === 'area' || canvas.data('switchrowsandcolumns'), style },
+            labels: { enabled: canvas.data('type') === 'line' || canvas.data('type') === 'area' || canvas.data('switchrowsandcolumns'), style },
             max: canvas.data('xaxismax'),
             min: canvas.data('xaxismin'),
-            // Confusing detail: when type=bar, X axis becomes Y and vice versa. In other words, include 'bar' in this if-test, instead of putting it in the yAxis config
+            // Confusing detail: when type=bar, X axis becomes Y and vice versa.
+            // In other words, include 'bar' in this if-test, instead of putting it in the yAxis config
             tickmarkPlacement: (canvas.data('type') == 'column' || canvas.data('type') == 'bar') ? 'between' : 'on',
-            title: { style, text: canvas.data('xaxistitletext') || municipalityName },
+            title: { style, text: canvas.data('xaxistitletext') || municipalityName },
             type: canvas.data('xaxistype'),
             reversed: false,
             tickWidth: 1,
@@ -259,7 +276,7 @@ export function init() {
             labels: {
               style,
               format: '{value:,.0f}',
-              formatter: function(a) {
+              formatter: function (a) {
                 return (canvas.data('type') == 'bar-negative') ? Math.abs(a.value) : a.value
               }
             },
@@ -279,7 +296,7 @@ export function init() {
             backgroundColor: 'white',
             valueDecimals: canvas.data('numberdecimals'),
             shared: canvas.data('combineinformation'),
-            formatter: (canvas.data('type') === 'bar-negative') ? function() {
+            formatter: (canvas.data('type') === 'bar-negative') ? function () {
               return `<b>${this.series.name} ${this.point.category}:</b> ` + Highcharts.numberFormat(Math.abs(this.point.y), 0)
             } : ''
           }

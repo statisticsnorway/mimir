@@ -1,10 +1,11 @@
-import $ from 'jquery';
-import 'bootstrap/js/dist/dropdown';
+import $ from 'jquery'
+import 'bootstrap/js/dist/dropdown'
 // Typeahead for input fields with autocomplete attribute: <input ... autocomplete>
 // Markup according to Bootstrap 4 dropdown element - see https://getbootstrap.com/docs/4.0/components/dropdowns/
-// Text to match on data-text attribute, i.e. <a data-text="5001 bergen vestlandet hordaland syv fjeld sjøforsvaret verdensarven bjørgvin buekorps" href="...">Bergen</a>
+// Text to match on data-text attribute,
+// i.e. <a data-text="5001 bergen vestlandet hordaland syv fjeld sjøforsvaret verdensarven bjørgvin buekorps" href="...">Bergen</a>
 // Dependencies: jQuery and Bootstrap
-export function init() {
+export function init () {
   $('input[autocomplete]').each((i, el) => {
     const dropdown = $(el).parent().find('.dropdown-menu')
     const elements = dropdown.find('a')
@@ -12,7 +13,7 @@ export function init() {
 
     dropdown.css('max-width', $(el).outerWidth()) && $(window).resize(() => dropdown.css('max-width', $(el).outerWidth()))
 
-    function toggleDropdown() {
+    function toggleDropdown () {
       if (dropdown.find('a').length > 0) {
         $(el).dropdown('toggle')
       }
@@ -21,7 +22,7 @@ export function init() {
     // toggle dropdown from chevron
     if (submit && submit.nodeName === 'BUTTON') {
       submit.addEventListener('click', () => {
-        toggleDropdown();
+        toggleDropdown()
       })
     }
 
@@ -48,18 +49,18 @@ export function init() {
       })
     })
 
-    function filter(el) {
+    function filter (el) {
       const val = $(el).val()
       const re = new RegExp('(^|\\s)' + val, 'i') // search for val in text from start of string or from any space
       elements.each((j, a) => {
         if (a.getAttribute('data-text').match(re)) {
-          dropdown.append(a);
+          dropdown.append(a)
         } else {
-          a.remove();
+          a.remove()
         }
       })
 
-      const hasLinks = dropdown.find('a').length > 0;
+      const hasLinks = dropdown.find('a').length > 0
       const isExpanded = el.getAttribute('aria-expanded') === 'true'
       if ((!hasLinks && isExpanded) || (hasLinks && !isExpanded)) {
         $(el).dropdown('toggle')
@@ -71,7 +72,7 @@ export function init() {
       if (e.which === 40) {
         const first = dropdown.find('a:not(.d-none)')[0]
         if (first) {
-          first.focus();
+          first.focus()
         }
         return
       }

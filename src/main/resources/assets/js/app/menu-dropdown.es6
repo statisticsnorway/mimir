@@ -2,8 +2,8 @@ import $ from 'jquery'
 
 // Belongs to part menu-dropdown
 // - adds visibility class for muncipality when on top of page (sticky part of page)
-export function init() {
-  $(function() {
+export function init () {
+  $(function () {
     let animate
     const map = $('.js-part-map')
     map.click((e) => {
@@ -66,5 +66,4 @@ export function init() {
       $('#search-container').addClass('show')
     }
   })
-
 }
