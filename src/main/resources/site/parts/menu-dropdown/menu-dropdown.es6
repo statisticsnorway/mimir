@@ -9,7 +9,7 @@ exports.get = (req) => renderPart(req)
 
 exports.preview = (req, id) => renderPart(req)
 
-function renderPart(req) {
+function renderPart (req) {
   // Caching this since it is a bit heavy
   const parsedMunicipalities = municipalsWithCounties()
 

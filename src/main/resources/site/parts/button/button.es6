@@ -5,17 +5,17 @@ const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
 
 const view = resolve('./button.html')
 
-exports.get = function(req) {
+exports.get = function (req) {
   const part = portal.getComponent()
-  const buttonsIds = part.config.button ? util.data.forceArray(part.config.button) : []
-  return renderPart(req, buttonsIds);
+  const buttonsIds = part.config.button ? util.data.forceArray(part.config.button) : []
+  return renderPart(req, buttonsIds)
 }
 
-exports.preview = function(req, id) {
-  return renderPart(req, [id]);
+exports.preview = function (req, id) {
+  return renderPart(req, [id])
 }
 
-function renderPart(req, buttonIds) {
+function renderPart (req, buttonIds) {
   const buttons = []
   buttonIds.forEach((key) => {
     const button = content.get({ key })
@@ -41,7 +41,7 @@ function renderPart(req, buttonIds) {
  * @param {object} target content
  * @return {string}
  */
-function getHref(target) {
+function getHref (target) {
   if (target.type === `${app.name}:page`) {
     return portal.pageUrl({
       id: target._id

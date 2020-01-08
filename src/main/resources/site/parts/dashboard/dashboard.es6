@@ -6,15 +6,15 @@ const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
 
 const view = resolve('./dashboard.html')
 
-exports.get = function(req) {
+exports.get = function (req) {
   const part = portal.getComponent()
-  const dashboardIds = part.config.dashboard ? util.data.forceArray(part.config.dashboard) : []
-  return renderPart(req, dashboardIds);
+  const dashboardIds = part.config.dashboard ? util.data.forceArray(part.config.dashboard) : []
+  return renderPart(req, dashboardIds)
 }
 
 exports.preview = (req, id) => renderPart(req, [id])
 
-function renderPart(req, dashboardIds) {
+function renderPart (req, dashboardIds) {
   const dashboards = []
   const dataset = {}
 
@@ -29,7 +29,7 @@ function renderPart(req, dashboardIds) {
     })
   }
 
-  const dataQueries = [];
+  const dataQueries = []
   const dataQueryResult = content.query({
     count: 999,
     contentTypes: [`${app.name}:dataquery`],
@@ -37,9 +37,9 @@ function renderPart(req, dashboardIds) {
   })
   if (dataQueryResult && dataQueryResult.hits.length > 0) {
     dataQueryResult.hits.forEach((set) => {
-      let updated;
-      let updatedHumanReadable;
-      const hasData= dataset[set._id] ? true : false
+      let updated
+      let updatedHumanReadable
+      const hasData = dataset[set._id] ? true : false
       if (hasData) {
         updated = moment(dataset[set._id].modifiedTime).format('DD.MM.YYYY HH:mm:ss')
         updatedHumanReadable = moment(dataset[set._id].modifiedTime).fromNow()
@@ -49,7 +49,7 @@ function renderPart(req, dashboardIds) {
         updated,
         updatedHumanReadable,
         class: hasData ? 'dataset-ok' : 'dataset-missing'
-      });
+      })
     })
   }
 
@@ -64,7 +64,7 @@ function renderPart(req, dashboardIds) {
 
   const dashboardService = portal.serviceUrl({
     service: 'dashboard'
-  });
+  })
   const model = { dashboards, dataQueries, dashboardService }
   const body = thymeleaf.render(view, model)
 

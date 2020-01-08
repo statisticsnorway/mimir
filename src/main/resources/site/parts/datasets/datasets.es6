@@ -6,16 +6,20 @@ const moment = require('moment/min/moment-with-locales')
 
 const view = resolve('./datasets.html')
 
-exports.get = function(req) {
+exports.get = function (req) {
   moment.locale('nb')
-  const datasets = contentLib.getChildren({ key: portal.getContent()._path, count: 9999 }) || { hits: {}}
+  const datasets = contentLib.getChildren({ key: portal.getContent()._path, count: 9999 }) || { hits: {} }
   datasets.hits = datasets.hits && util.data.forceArray(datasets.hits) || []
 
   datasets.hits.map((dataset) => {
-    dataset.href = portal.pageUrl({id: dataset._id})
-    const excelFiles = contentLib.query({ count: 1, sort: 'modifiedTime DESC', query: `_path LIKE '/content${dataset._path}/*' AND (_name LIKE '*.xlsx' OR _name LIKE '*.xlsm')` })
+    dataset.href = portal.pageUrl({ id: dataset._id })
+    const excelFiles = contentLib.query({
+      count: 1,
+      sort: 'modifiedTime DESC',
+      query: `_path LIKE '/content${dataset._path}/*' AND (_name LIKE '*.xlsx' OR _name LIKE '*.xlsm')`
+    })
     if (excelFiles.hits.length > 0) {
-      dataset.excelFileHref = portal.attachmentUrl({id: excelFiles.hits[0]._id})
+      dataset.excelFileHref = portal.attachmentUrl({ id: excelFiles.hits[0]._id })
       dataset.excelFileHrefLabel = excelFiles.hits[0].displayName
       dataset.excelFileModifiedDate = moment(excelFiles.hits[0].modifiedTime).format('DD.MM.YY')
       dataset.excelFileDatetime = moment(excelFiles.hits[0].modifiedTime).format('YYYY-MM-DD')

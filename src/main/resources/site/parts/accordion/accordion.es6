@@ -5,16 +5,16 @@ const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
 
 const view = resolve('./accordion.html')
 
-exports.get = function(req) {
+exports.get = function (req) {
   const part = portal.getComponent()
-  const accordionIds = part.config.accordion ? util.data.forceArray(part.config.accordion) : []
+  const accordionIds = part.config.accordion ? util.data.forceArray(part.config.accordion) : []
   return renderPart(req, accordionIds)
 }
 
 exports.preview = (req, id) => renderPart(req, [id])
 
-function renderPart(req, accordionIds) {
-  const accordions = [];
+function renderPart (req, accordionIds) {
+  const accordions = []
   accordionIds.forEach((key) => {
     const accordion = content.get({ key })
     if (accordion) {

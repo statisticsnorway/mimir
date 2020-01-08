@@ -5,22 +5,22 @@ const thymeleaf = __non_webpack_require__('/lib/thymeleaf')
 
 const view = resolve('./menu-box.html')
 
-exports.get = function(req) {
+exports.get = function (req) {
   const part = portal.getComponent()
   return renderPart(req, part.config.menu)
 }
 
-exports.preview = function(req, id) {
+exports.preview = function (req, id) {
   return renderPart(req, id)
 }
 
-function renderPart(req, menuBoxId) {
-  let menus;
+function renderPart (req, menuBoxId) {
+  let menus
   if (menuBoxId) {
     const menuBox = content.get({ key: menuBoxId })
     if (menuBox && menuBox.data.menu) {
       const menuConfigs = menuBox.data.menu ? util.data.forceArray(menuBox.data.menu) : []
-      menus = buildMenu(menuConfigs);
+      menus = buildMenu(menuConfigs)
     }
   }
   const model = { menus }
@@ -34,10 +34,10 @@ function renderPart(req, menuBoxId) {
  * @param {array<object>} menuConfigs
  * @return {array<object>}
  */
-function buildMenu(menuConfigs) {
+function buildMenu (menuConfigs) {
   const menus = []
   menuConfigs.forEach((menuConfig) => {
-    let imageSrc = '';
+    let imageSrc = ''
     if (menuConfig.image) {
       imageSrc = portal.imageUrl({
         id: menuConfig.image,
@@ -53,7 +53,7 @@ function buildMenu(menuConfigs) {
       imageSrc
     })
   })
-  return menus;
+  return menus
 }
 
 /**
@@ -61,11 +61,11 @@ function buildMenu(menuConfigs) {
  * @param {object} menuConfig
  * @return {string}
  */
-function getHref(menuConfig) {
+function getHref (menuConfig) {
   if (menuConfig.link) {
     return menuConfig.link
   } else if (menuConfig.content) {
     return portal.pageUrl({ id: menuConfig.content })
   }
-  return '';
+  return ''
 }

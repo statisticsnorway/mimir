@@ -3,15 +3,15 @@ const { parseJsonStatToLabelValue } = __non_webpack_require__( '/lib/ssb/dataset
 const { getComponent } = __non_webpack_require__( '/lib/xp/portal')
 const { render } = __non_webpack_require__( '/lib/thymeleaf')
 const dataquery = __non_webpack_require__( '/lib/dataquery')
-const { get : getDataQuery } = __non_webpack_require__( '/lib/ssb/dataquery')
+const { get: getDataQuery } = __non_webpack_require__( '/lib/ssb/dataquery')
 
 const view = resolve('./dataquery.html')
 
 
-exports.get = function(req) {
+exports.get = function (req) {
   const part = getComponent()
-  const dataQueryIds = part.config.dataquery && data.forceArray(part.config.dataquery) || []
-  return renderPart(req, dataQueryIds);
+  const dataQueryIds = part.config.dataquery && data.forceArray(part.config.dataquery) || []
+  return renderPart(req, dataQueryIds)
 }
 exports.preview = (req, id) => renderPart(req, [id])
 
@@ -30,7 +30,7 @@ const renderPart = (req, dataQueryIds) => {
   })
 
   return {
-    body: render(view, {dataqueries: parsedDataQueries}),
+    body: render(view, { dataqueries: parsedDataQueries }),
     contentType: 'text/html'
   }
 }
