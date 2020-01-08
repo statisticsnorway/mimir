@@ -24,11 +24,11 @@ export const query = (queryString) => getMunicipalsFromContent()
   .filter( (municipal) => RegExp(queryString.toLowerCase()).test(`${municipal.code} ${municipal.name.toLowerCase()}` ))
 
 
-function getMunicipalsFromContent() {
+function getMunicipalsFromContent () {
   const key = getSiteConfig().municipalDataContentId
-  const children = getChildren({key}).hits
+  const children = getChildren({ key }).hits
   if (children.length > 0) {
-    const content = key ? children[0] : {data: {}}
+    const content = key ? children[0] : { data: {} }
     return content.data.json ? JSON.parse(content.data.json).codes : []
   }
   return []
@@ -78,9 +78,9 @@ export const getValue = (url, query, municipalityCode) => {
  */
 export const parseMunicipalityValues = (dataQueryId, municipality, defaultMunicipalityCode) => {
   const datasetContent = getDataSetWithDataQueryId(dataQueryId)
-  const data = datasetContent.count ? JSON.parse(datasetContent.hits[0].data.json) : getDataSetFromDataQuery( getDataquery({key: dataQueryId}))
-  const value = getValueWithIndex(data.dataset, municipality.code || defaultMunicipalityCode);
-  const time = getTime(data.dataset);
+  const data = datasetContent.count ? JSON.parse(datasetContent.hits[0].data.json) : getDataSetFromDataQuery( getDataquery({ key: dataQueryId }))
+  const value = getValueWithIndex(data.dataset, municipality.code || defaultMunicipalityCode)
+  const time = getTime(data.dataset)
 
   return municipalityObject(value, time)
 }
@@ -93,9 +93,9 @@ export const parseMunicipalityValues = (dataQueryId, municipality, defaultMunici
  */
 const municipalityObject = (value, time) => ({
   value: notFoundValues.indexOf(value) < 0 ? value : null,
-  valueNotFound: localize({key: 'value.notFound'}),
+  valueNotFound: localize({ key: 'value.notFound' }),
   time: localizeTimePeriod(time),
-  valueHumanReadable: value ? createHumanReadableFormat(value): undefined
+  valueHumanReadable: value ? createHumanReadableFormat(value) : undefined
 })
 
 const notFoundValues = ['.', '..', '...', ':', '-']
@@ -103,7 +103,7 @@ const notFoundValues = ['.', '..', '...', ':', '-']
 const cache = newCache({ size: 100, expire: 3600 })
 
 export const municipalsWithCounties = () => {
-  const counties = countyList();
+  const counties = countyList()
   const municipalities = list()
   // Caching this since it is a bit heavy
   return cache.get('parsedMunicipality', () => municipalities.map( (municipality) => {
@@ -123,7 +123,7 @@ export const municipalsWithCounties = () => {
 }
 
 export const getMunicipality = (req) => {
-  const municipalities = municipalsWithCounties();
+  const municipalities = municipalsWithCounties()
 
   if (req.path) {
     const municipalityName = req.path.replace(/^.*\//, '/').toLowerCase()
