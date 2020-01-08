@@ -4,7 +4,7 @@
 
 const { parseGlossaryContent } = __non_webpack_require__( '/lib/ssb/glossary')
 
-function parseText(text, glossary) {
+function parseText (text, glossary) {
   const m = text.match(/<a href="content:\/\/.*?">/g)
   m && m.forEach((link) => {
     const key = link.replace(/^.*content:\/\/(.*)".*>$/, '$1') // Extract content key from href attribute (on the form href="content://enonic-xp-hash-key")
@@ -15,7 +15,7 @@ function parseText(text, glossary) {
   })
 }
 
-function traverseRegions(regions, glossary) {
+function traverseRegions (regions, glossary) {
   for (const key in regions) {
     if (regions.hasOwnProperty(key)) {
       if (regions[key].components) {
@@ -31,7 +31,7 @@ function traverseRegions(regions, glossary) {
   }
 }
 
-exports.process = function(text, regions) {
+exports.process = function (text, regions) {
   const glossary = []
 
   // Process ingress

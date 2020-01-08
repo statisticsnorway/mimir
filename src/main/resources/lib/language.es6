@@ -6,12 +6,12 @@ const content = __non_webpack_require__( '/lib/xp/content')
 const english = i18n.getPhrases('en', ['site/i18n/phrases'])
 const norwegian = i18n.getPhrases('', ['site/i18n/phrases'])
 
-exports.getLanguage = function(page) {
+exports.getLanguage = function (page) {
   const site = portal.getSite()
   const siteConfig = portal.getSiteConfig()
 
-  const nb = siteConfig.language[0]; // properties for norsk (bokmål)
-  const en = siteConfig.language[1]; // properties for english
+  const nb = siteConfig.language[0] // properties for norsk (bokmål)
+  const en = siteConfig.language[1] // properties for english
 
   moment.locale(page.language === 'en' ? 'en' : 'nb')
 
@@ -26,7 +26,7 @@ exports.getLanguage = function(page) {
     phrases: (en.phrases == 'english') ? english : norwegian
   } : {
     code: nb.code, // norsk bokmål, https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-    alternate:  nb.alternate, // alternate language code
+    alternate: nb.alternate, // alternate language code
     link: (nb.link == null) ? '' : nb.link,
     published: page.publish && page.publish.from && moment(page.publish.from).format('DD. MMMM YYYY').toLowerCase(),
     modified: moment(page.modifiedTime).format('DD. MMMM YYYY').toLowerCase(),
@@ -60,29 +60,29 @@ exports.localizeTimePeriod = (time) => {
  * @param {string} time
  * @return {string}
  */
-function parseTimeInterval(time) {
+function parseTimeInterval (time) {
   const splitYearLetterNumberIntoArray = new RegExp(/(\d{4})([HKMTU])(\d{1,2})/)
   const interval = splitYearLetterNumberIntoArray.exec(time)
 
   let parsedTime = ''
   switch (interval[2]) {
   case 'H':
-    parsedTime = `${i18n.localize({key: 'interval.' + interval[2]})} ${interval[1]} `
-    break;
+    parsedTime = `${i18n.localize({ key: 'interval.' + interval[2] })} ${interval[1]} `
+    break
   case 'K':
-    parsedTime = `${interval[3]}. ${i18n.localize({key: 'interval.' + interval[2]})} ${interval[1]}`
-    break;
+    parsedTime = `${interval[3]}. ${i18n.localize({ key: 'interval.' + interval[2] })} ${interval[1]}`
+    break
   case 'M':
-    parsedTime = `${i18n.localize({key: 'interval.M' + interval[2]})} ${interval[1]}`
-    break;
+    parsedTime = `${i18n.localize({ key: 'interval.M' + interval[2] })} ${interval[1]}`
+    break
   case 'T':
-    parsedTime = `${interval[3]}. ${i18n.localize({key: 'interval.' + interval[2]})} ${interval[1]}`
-    break;
+    parsedTime = `${interval[3]}. ${i18n.localize({ key: 'interval.' + interval[2] })} ${interval[1]}`
+    break
   case 'U':
-    parsedTime = `${i18n.localize({key: 'interval.' + interval[2]})} ${interval[3]} ${interval[1]}`
-    break;
+    parsedTime = `${i18n.localize({ key: 'interval.' + interval[2] })} ${interval[3]} ${interval[1]}`
+    break
   }
-  return parsedTime;
+  return parsedTime
 }
 
 
