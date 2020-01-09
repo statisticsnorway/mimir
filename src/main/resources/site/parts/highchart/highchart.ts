@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'enonic-types/lib/controller'
 import { Component, PortalLibrary } from 'enonic-types/lib/portal'
 import { ContentLibrary, Content } from 'enonic-types/lib/content'
@@ -6,8 +5,10 @@ import { ThymeleafLibrary, ResourceKey } from 'enonic-types/lib/thymeleaf'
 import { HighchartPartConfig } from './highchart-part-config'
 import { Highchart } from '../../content-types/highchart/highchart'
 import { Dataset } from '../../content-types/dataset/dataset'
-const util: any = __non_webpack_require__( '/lib/util')
-const { getMunicipality } = __non_webpack_require__( '/lib/klass/municipalities')
+import { UtilLibrary } from '../../../lib/types/util'
+import { MunicipalitiesLib, MunicipalityWithCounty } from '../../../lib/klass/municipalities'
+const util: UtilLibrary = __non_webpack_require__( '/lib/util')
+const { getMunicipality }: MunicipalitiesLib = __non_webpack_require__( '/lib/klass/municipalities')
 const portal: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
 const content: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
 const thymeleaf: ThymeleafLibrary = __non_webpack_require__( '/lib/thymeleaf')
@@ -19,7 +20,7 @@ export function get (req: Request): Response {
   const part: Component<HighchartPartConfig> | null = portal.getComponent()
   let highchartIds: Array<string> = []
   if (part) {
-    highchartIds = part.config.highchart ? util.data.forceArray(part.config.highchart) : []
+    highchartIds = part.config.highchart ? util.data.forceArray(part.config.highchart) as Array<string> : []
   }
   return renderPart(req, highchartIds)
 }
@@ -29,8 +30,8 @@ export function preview (req: Request, id: string): Response {
 }
 
 function renderPart (req: Request, highchartIds: Array<string>): Response {
-  const highcharts: Array<any> = []
-  const municipality: any = getMunicipality(req) ? getMunicipality(req) : { code: '' }
+  const highcharts: Array<HighchartOptions> = []
+  const municipality: MunicipalityWithCounty | undefined = getMunicipality(req) ? getMunicipality(req) : { code: '' } as MunicipalityWithCounty
 
   highchartIds.forEach((key) => {
     const highchart: Content<Highchart> | null = content.get({ key })
@@ -51,12 +52,12 @@ function renderPart (req: Request, highchartIds: Array<string>): Response {
           log.error(e)
         }
       }
+      const highchartItem: HighchartOptions = initHighchart(highchart, json)
+      highcharts.push(highchartItem)
     }
-    const highchartItem: any = initHighchart(highchart, json)
-    highcharts.push(highchartItem)
   })
 
-  const model: any = { highcharts, municipality }
+  const model: HighchartsViewModel = { highcharts, municipality }
   const body: string = thymeleaf.render(view, model)
 
   return {
@@ -66,12 +67,12 @@ function renderPart (req: Request, highchartIds: Array<string>): Response {
   }
 }
 
-function initHighchart (highchart: any, json: string | null): any {
+function initHighchart (highchart: Content<Highchart>, json: string | null): HighchartOptions {
   const tableRegex: RegExp = /<table[^>]*>/igm
   const nbspRegexp: RegExp = /&nbsp;/igm
   const replace: string = '<table id="highcharts-datatable-' + highchart._id + '">'
-  const resultWithId: string = highchart.data.htmltabell && highchart.data.htmltabell.replace(tableRegex, replace)
-  const resultWithoutNbsp: string = resultWithId && resultWithId.replace(nbspRegexp, '')
+  const resultWithId: string | undefined = highchart.data.htmltabell && highchart.data.htmltabell.replace(tableRegex, replace)
+  const resultWithoutNbsp: string | undefined = resultWithId && resultWithId.replace(nbspRegexp, '')
 
   return {
     json,
@@ -108,4 +109,45 @@ function initHighchart (highchart: any, json: string | null): any {
     fotnoteTekst: highchart.data.fotnoteTekst,
     legendAlign: (highchart.data.legendAlign === 'right') ? 'right' : 'center'
   }
+}
+
+interface HighchartsViewModel {
+  highcharts: Array<HighchartOptions>;
+  municipality: MunicipalityWithCounty | undefined;
+}
+
+interface HighchartOptions {
+  json: string | null;
+  tableData?: string;
+  contentkey: string;
+  type?: string;
+  zoomtype: string | null;
+  creditsenabled: boolean;
+  creditshref?: string;
+  creditstext?: string;
+  switchrowsandcolumns: boolean;
+  combineinformation: boolean;
+  tickinterval: string | null;
+  legendenabled: boolean;
+  plotoptionsseriesstacking: string | null;
+  subtitletext?: string;
+  title: string;
+  xaxisallowdecimals: boolean;
+  xaxislabelsenabled: boolean;
+  xaxismax: string | null;
+  xaxismin: string | null;
+  xaxistitletext?: string;
+  xaxistype: string;
+  yaxisallowdecimals: boolean;
+  yaxismax: string | null;
+  yaxismin: string | null;
+  yaxistitletext?: string;
+  yaxistype: string;
+  yaxisstacklabelsenabled: boolean;
+  titleCenter: string;
+  numberdecimals?: string;
+  bottomSpace: string;
+  pieLegendUnder: string | boolean;
+  fotnoteTekst?: string;
+  legendAlign: string;
 }
