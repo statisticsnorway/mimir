@@ -1,13 +1,12 @@
-import * as content from '/lib/xp/content'
-import * as context from '/lib/xp/context'
-import * as dataquery from '/lib/dataquery'
+const content = __non_webpack_require__( '/lib/xp/content')
+const context = __non_webpack_require__( '/lib/xp/context')
+const dataquery = __non_webpack_require__( '/lib/dataquery')
+const moment = require('moment/min/moment-with-locales')
 
-
-const cron = require('/lib/cron')
+const cron = __non_webpack_require__('/lib/cron')
 const user = { login: 'su', userStore: 'system' }
 const draft = { repository: 'com.enonic.cms.default', branch: 'draft', principals: ['role:system.admin'], user } // Draft context (XP)
 const master = { repository: 'com.enonic.cms.default', branch: 'master', principals: ['role:system.admin'], user } // Master context (XP)
-const moment = require('/lib/moment-with-locales')
 
 log.info('Application ' + app.name + ' started') // Log application started
 __.disposer(() => log.info('Application ' + app.name + ' stopped')) // Log application stoppped

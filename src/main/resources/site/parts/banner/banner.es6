@@ -1,7 +1,7 @@
-import * as portal from '/lib/xp/portal'
-import * as thymeleaf from '/lib/thymeleaf'
-import { getMunicipality } from '/lib/klass/municipalities'
-import { pageMode } from '/lib/ssb/utils'
+const portal = __non_webpack_require__( '/lib/xp/portal')
+const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
+const { getMunicipality } = __non_webpack_require__( '/lib/klass/municipalities')
+const { pageMode } = __non_webpack_require__( '/lib/ssb/utils')
 
 const view = resolve('./banner.html')
 

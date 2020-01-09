@@ -1,13 +1,13 @@
-import { getChildren } from '/lib/xp/content'
-import { getDataSetWithDataQueryId, getValueWithIndex, getTime, getDataSetFromDataQuery } from '../ssb/dataset'
-import { get as getKlass } from './klass'
-import { localizeTimePeriod } from '../language'
-import { localize } from '/lib/xp/i18n'
-import { createHumanReadableFormat } from '../ssb/utils'
-import { get as getDataquery } from '/lib/ssb/dataquery'
-import { getSiteConfig } from '/lib/xp/portal'
-import { list as countyList } from './counties';
-import { newCache } from '/lib/cache'
+const { getChildren } = __non_webpack_require__( '/lib/xp/content')
+const { getDataSetWithDataQueryId, getValueWithIndex, getTime, getDataSetFromDataQuery } = __non_webpack_require__( '../ssb/dataset')
+const { get: getKlass } = __non_webpack_require__( './klass')
+const { localizeTimePeriod } = __non_webpack_require__( '../language')
+const { localize } = __non_webpack_require__( '/lib/xp/i18n')
+const { createHumanReadableFormat } = __non_webpack_require__( '../ssb/utils')
+const { get: getDataquery } = __non_webpack_require__( '/lib/ssb/dataquery')
+const { getSiteConfig } = __non_webpack_require__( '/lib/xp/portal')
+const { list: countyList } = __non_webpack_require__( './counties')
+const { newCache } = __non_webpack_require__( '/lib/cache')
 
 
 /**
@@ -26,8 +26,12 @@ export const query = (queryString) => getMunicipalsFromContent()
 
 function getMunicipalsFromContent() {
   const key = getSiteConfig().municipalDataContentId
-  const content = key ? getChildren({key}).hits[0] : {data: {}}
-  return content.data.json ? JSON.parse(content.data.json).codes : []
+  const children = getChildren({key}).hits
+  if (children.length > 0) {
+    const content = key ? children[0] : {data: {}}
+    return content.data.json ? JSON.parse(content.data.json).codes : []
+  }
+  return []
 }
 
 /**

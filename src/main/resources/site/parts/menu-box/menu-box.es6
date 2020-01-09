@@ -1,7 +1,7 @@
-const portal = require('/lib/xp/portal')
-const util = require('/lib/util')
-const content = require('/lib/xp/content')
-const thymeleaf = require('/lib/thymeleaf')
+const portal = __non_webpack_require__('/lib/xp/portal')
+const util = __non_webpack_require__('/lib/util')
+const content = __non_webpack_require__('/lib/xp/content')
+const thymeleaf = __non_webpack_require__('/lib/thymeleaf')
 
 const view = resolve('./menu-box.html')
 

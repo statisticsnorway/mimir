@@ -1,11 +1,11 @@
-<div data-th-if="${page.glossary != null}"
+<div data-th-if="${glossary != null}"
      class="d-none popper popper-wide"
-     data-th-each="word: ${page.glossary}"
-     data-th-id="'glossary-' + ${word._id}"
-     data-th-attr="data-href=${portal.pageUrl({'_id=' + word._id})}">
+     data-th-each="word: ${glossary}"
+     data-th-id="'glossary-' + ${word.id}"
+     data-th-attr="data-href=${word.href}">
 
   <div class="mr-4" data-th-text="${word.displayName}"></div>
-  <div class="small" data-th-utext="${word.data.ingress}"></div>
+  <div class="small" data-th-utext="${word.ingress}"></div>
   <button type="button" class="btn btn-close">x</button>
   <div class="popper__arrow" x-arrow="" style="left: 115px;"></div>
 </div>

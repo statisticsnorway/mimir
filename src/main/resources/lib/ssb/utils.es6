@@ -1,11 +1,11 @@
-import { list as listOperationsAlerts } from '/lib/ssb/operations-alert';
-import { list as listMunicipalityAlerts } from '/lib/ssb/municipality-alert'
-import { processHtml } from '/lib/xp/portal'
-
-const numeral = require('/lib/numeral')
+const { list: listOperationsAlerts } = __non_webpack_require__( '/lib/ssb/operations-alert')
+const { list: listMunicipalityAlerts } = __non_webpack_require__( '/lib/ssb/municipality-alert')
+const { processHtml } = __non_webpack_require__( '/lib/xp/portal')
+//const numeral = require('numeral')
 
 exports.createHumanReadableFormat = (value) => {
-  return value > 999 ? numeral(value).format('0,0').replace(/,/, '&thinsp;') : value.toString().replace(/\./, ',')
+  return value
+  //return value > 999 ? numeral(value).format('0,0').replace(/,/, '&thinsp;') : value.toString().replace(/\./, ',')
 }
 
 export const alertsForContext = (municipality) => {
@@ -21,5 +21,8 @@ export const alertsForContext = (municipality) => {
 
 // Returns page mode for Kommunefakta page based on request mode or request path
 export const pageMode = (req, page) => {
-  return req.mode === 'edit' && 'edit' || page._path.endsWith(req.path.split('/').pop()) ? 'map' : 'municipality'
+  if (req.mode === 'edit') {
+    return 'edit'
+  }
+  return page._path.endsWith(req.path.split('/').pop()) ? 'map' : 'municipality'
 }
