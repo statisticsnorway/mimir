@@ -7,10 +7,12 @@ import Map from 'highcharts/modules/map'
 import DrillDown from 'highcharts/modules/drilldown'
 
 // Initialize exporting module.
-A11y(Highcharts)
-Map(Highcharts)
-DrillDown(Highcharts)
+A11y(Highcharts) // eslint-disable-line new-cap
+Map(Highcharts) // eslint-disable-line new-cap
+DrillDown(Highcharts) // eslint-disable-line new-cap
 
+const Test = '123'
+console.log(Test)
 // Related to map content type and map part
 // Draws a map with highchart on json files located in assets/mapdata - static files for map
 export function init () {
@@ -86,7 +88,8 @@ export function init () {
 
                             axios.get(service, { params: { postalCode: kommnr } })
                               .then((result) => {
-                                window.location.href = window.location.href.replace(/(arealplanlegging|kommunefakta)\/.*$/, '$1') + result.data.municipality.path
+                                window.location.href =
+                                  window.location.href.replace(/(arealplanlegging|kommunefakta)\/.*$/, '$1') + result.data.municipality.path
                               })
                           }
                         }

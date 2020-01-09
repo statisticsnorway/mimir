@@ -16,7 +16,9 @@ export function init () {
       if (thisMegaMenu.length) {
         e.preventDefault()
         // Finn nærmeste hovedmenypunkt (med to hardkodede unntak for lenke i brødsmulesti på forskning og omssb)
-        const parent = (thisHref == '#forskning-hovedmeny') ? $('.top-level.forskning') : ((thisHref == '#omssb-hovedmeny') ? $('.top-level.omssb') : $(this).closest('.top-level'))
+        const parent = (thisHref == '#forskning-hovedmeny') ?
+          $('.top-level.forskning') : ((thisHref == '#omssb-hovedmeny') ?
+            $('.top-level.omssb') : $(this).closest('.top-level'))
 
         // Hvis alle megamenyer er lukket og denne skal åpnes
         if ($('#header').hasClass('menu-closed')) {

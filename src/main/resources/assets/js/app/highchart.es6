@@ -1,3 +1,5 @@
+/* eslint-disable new-cap */
+// disable new-cap for entire file because of HighCharts and JSONStat naming conventions
 import $ from 'jquery'
 import _ from 'lodash'
 import JSONstat from 'jsonstat-toolkit'
@@ -60,10 +62,10 @@ export function init () {
           const values = JSONstat(json).Dataset(0).Slice({ Region: municipality }) || JSONstat(json).Dataset(0).Slice({ KOKkommuneregion0000: municipality })
           categories = [canvas.data('title')]
           for (let i = 0; i < labels.length; i++) {
-            (series || (series = [])).push({ name: labels[i].label, data: [values.value[i]] });
-            (slices || (slices = [])).push({ name: labels[i].label, y: values.value[i] })
+            (series || (series = [])).push({ name: labels[i].label, data: [values.value[i]] });
+            (slices || (slices = [])).push({ name: labels[i].label, y: values.value[i] })
           }
-          series = canvas.data('type') == 'pie' || canvas.data('switchrowsandcolumns') ? [{ name: 'Antall', data: slices }] : series
+          series = canvas.data('type') == 'pie' || canvas.data('switchrowsandcolumns') ? [{ name: 'Antall', data: slices }] : series
           if (canvas.data('switchrowsandcolumns')) {
             categories = slices.map((n) => n.name)
           }
