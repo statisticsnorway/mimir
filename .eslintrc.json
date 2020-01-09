@@ -64,7 +64,10 @@
           "google",
           "plugin:react/recommended",
           "./common.eslintrc.json"
-        ]
+        ],
+        "rules": {
+          "react/display-name": "off"
+        }
       }
     ]
 }
