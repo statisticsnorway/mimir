@@ -143,7 +143,7 @@ export function municipalsWithCounties (): Array<MunicipalityWithCounty> {
   }))
 }
 
-export function getMunicipality (req: Request): MunicipalityWithCounty|undefined {
+export function getMunicipality (req: RequestWithCode): MunicipalityWithCounty|undefined {
   const municipalities: Array<MunicipalityWithCounty> = municipalsWithCounties()
 
   if (req.path) {
@@ -164,6 +164,10 @@ export interface MunicipalitiesLib {
   parseMunicipalityValues (dataQueryId: string, municipality: MunicipalityWithCounty, defaultMunicipalityCode: string): Municipality;
   municipalsWithCounties (): Array<MunicipalityWithCounty>;
   getMunicipality (req: Request): MunicipalityWithCounty|undefined;
+}
+
+interface RequestWithCode extends Request {
+  code: string;
 }
 
 export interface MunicipalCode {
