@@ -30,6 +30,7 @@ function getBreadcrumbs(c, a) {
 const view = resolve('default.html')
 
 exports.get = function(req) {
+
   const ts = new Date().getTime()
   const page = getContent()
   const isFragment = page.type === 'portal:fragment'
@@ -110,6 +111,7 @@ exports.get = function(req) {
       path: language.path
     })
   }
+
 
   const model = {
     version,
