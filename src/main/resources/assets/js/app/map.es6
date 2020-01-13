@@ -82,7 +82,6 @@ export function init() {
                             if (kommnr.length == 3) {
                               kommnr = '0' + kommnr;
                             }
-                            url = $('#finn-kommune-resultater').find('ul li a[id = '+ kommnr +']').attr('href');
 
                             axios.get(service, { params: { postalCode: kommnr }})
                               .then((result) => {
