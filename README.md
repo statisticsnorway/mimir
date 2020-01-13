@@ -5,8 +5,6 @@
 Download and install Node and NPM from https://nodejs.org/en/
 Make sure to get the LTS version, not the Current or Latest.
 
-Install Gulp globally with `npm install --global gulp`
-
 Install latest Enonic XP according to docs for you platform
 
 ## Installing dependencies
@@ -15,12 +13,15 @@ Install latest Enonic XP according to docs for you platform
 
 ## Starting Enonic XP locally in development mode
 ```
-npm start
+enonic project deploy
 ```
-
-## Starting the build system
+or
 ```
-gulp
+enonic project build
+```
+or for a continous build and deploy (needs $XP_HOME and $JAVA_HOME env variables set)
+```
+./gradlew deploy -t
 ```
 
 ## Login
