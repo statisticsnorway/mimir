@@ -26,7 +26,3 @@ exports.get = function(req) {
 
   return { body, contentType: 'text/html' }
 }
-
-function getButtonLink() {
-
-}
