@@ -34,7 +34,6 @@ function getHref(mode, municipality, btnLink) {
   if(mode === 'municipality') {
     return btnLink += (municipality.path == null ? '' : municipality.path)
   }
-
   return btnLink
 }
 
