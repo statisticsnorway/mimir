@@ -15,10 +15,11 @@ exports.preview = function(req, id) {
 function renderPart(req) {
   const page = portal.getContent()
   const mode = pageMode(req, page)
+  const siteConfig = portal.getSiteConfig();
   let mapFolder = '/mapdata'
 
-  if (page.data.folder) {
-    mapFolder = page.data.folder
+  if (typeof siteConfig.kommunefakta !=='undefined' && siteConfig.kommunefakta.mapfolder) {
+    mapFolder = siteConfig.kommunefakta.mapfolder
   }
 
   const dataPathAssetUrl = portal.assetUrl( {
