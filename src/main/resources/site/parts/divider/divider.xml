@@ -1,0 +1,15 @@
+<part>
+    <display-name>Divider</display-name>
+    <description></description>
+    <form>
+        <input type="RadioButton" name="dividerColor">
+            <label>Farge</label>
+            <occurences minimum="1" maximum="0"/>
+            <config>
+                <option value="dark">Mørk</option>
+                <option value="light">Lys</option>
+            </config>
+            <default>dark</default>
+        </input>
+    </form>
+</part>
