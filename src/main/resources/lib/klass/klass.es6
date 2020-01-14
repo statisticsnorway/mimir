@@ -1,7 +1,7 @@
 const http = __non_webpack_require__( '/lib/http-client')
 
 
-exports.get = function (url) {
+exports.get = function(url) {
   // TODO: Cache result
   return http.request({ url, method, headers, connectionTimeout, readTimeout, body: JSON.stringify(json, null, ''), contentType })
 }
@@ -12,7 +12,7 @@ const connectionTimeout = 20000
 const headers = { 'Cache-Control': 'no-cache', 'Accept': 'application/json' }
 const contentType = 'application/json'
 
-exports.getWithSelection = function (url, json, selection = { filter: 'all', values: ['*'] }) {
+exports.getWithSelection = function(url, json, selection = { filter: 'all', values: ['*'] }) {
   if (json && json.query) {
     for (const query of json.query) {
       if (query.code === 'KOKkommuneregion0000' || query.code === 'Region') {

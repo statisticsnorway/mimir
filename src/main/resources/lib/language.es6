@@ -6,7 +6,7 @@ const content = __non_webpack_require__( '/lib/xp/content')
 const english = i18n.getPhrases('en', ['site/i18n/phrases'])
 const norwegian = i18n.getPhrases('', ['site/i18n/phrases'])
 
-exports.getLanguage = function (page) {
+exports.getLanguage = function(page) {
   const site = portal.getSite()
   const siteConfig = portal.getSiteConfig()
 
@@ -60,7 +60,7 @@ exports.localizeTimePeriod = (time) => {
  * @param {string} time
  * @return {string}
  */
-function parseTimeInterval (time) {
+function parseTimeInterval(time) {
   const splitYearLetterNumberIntoArray = new RegExp(/(\d{4})([HKMTU])(\d{1,2})/)
   const interval = splitYearLetterNumberIntoArray.exec(time)
 

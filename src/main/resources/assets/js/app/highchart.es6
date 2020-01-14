@@ -19,15 +19,15 @@ Exporting(Highcharts)
 // import 'highcharts/modules/drilldown'
 
 // HIGHCHART
-export function init () {
-  $(function () {
+export function init() {
+  $(function() {
     const w = { height: $(window).height().toFixed(0), width: $(window).width().toFixed(0) }
 
     $('.btn-highchart-export').click((e) => {
       $(e.target).parent().find('.highcharts-button-box').first().trigger('click')
     })
 
-    $('.hc-container').each(function (i, container) {
+    $('.hc-container').each(function(i, container) {
       const height = $(container).height()
       $(container).find('svg').attr('height', height)
     })
@@ -35,7 +35,7 @@ export function init () {
     const h1Size = w.width < 768 ? '14px' : '16px'
 
     // Initialisering av HighCharts-figurer fra tilhørende HTML-tabell
-    $('.highcharts-canvas[id^="highcharts-"]').each(function (index, chart) {
+    $('.highcharts-canvas[id^="highcharts-"]').each(function(index, chart) {
       let xAxis
       let series
       let categories
@@ -165,10 +165,10 @@ export function init () {
             table: 'highcharts-datatable-' + highchartsContentKey,
 
             // En befolkningspyramide trenger negative verdier for det ene kjønnet
-            parsed: function (columns) {
-              $.each(columns, function (i, column) {
+            parsed: function(columns) {
+              $.each(columns, function(i, column) {
                 if (canvas.data('type') == 'befolkningspyramide' && column[0] == 'Menn') {
-                  const negatedValues = column.slice(1).map(function (num) {
+                  const negatedValues = column.slice(1).map(function(num) {
                     return Math.abs(num) * -1
                   })
                   const args = [1, negatedValues.length].concat(negatedValues)
@@ -221,7 +221,7 @@ export function init () {
             series: {
               events: {
                 // Keyboard-accessible legend labels
-                legendItemClick: function (e) {
+                legendItemClick: function(e) {
                   // Possible bug: untested browser support for browserEvent (but works in IE8, chrome, FF...)
                   $(e.browserEvent.target).toggleClass('disabled')
                 }
@@ -278,7 +278,7 @@ export function init () {
             labels: {
               style,
               format: '{value:,.0f}',
-              formatter: function (a) {
+              formatter: function(a) {
                 return (canvas.data('type') == 'bar-negative') ? Math.abs(a.value) : a.value
               }
             },
@@ -298,7 +298,7 @@ export function init () {
             backgroundColor: 'white',
             valueDecimals: canvas.data('numberdecimals'),
             shared: canvas.data('combineinformation'),
-            formatter: (canvas.data('type') === 'bar-negative') ? function () {
+            formatter: (canvas.data('type') === 'bar-negative') ? function() {
               return `<b>${this.series.name} ${this.point.category}:</b> ` + Highcharts.numberFormat(Math.abs(this.point.y), 0)
             } : ''
           }

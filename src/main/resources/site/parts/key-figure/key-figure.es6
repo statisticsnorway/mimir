@@ -8,7 +8,7 @@ const { pageMode } = __non_webpack_require__( '/lib/ssb/utils')
 
 const view = resolve('./key-figure.html')
 
-exports.get = function (req) {
+exports.get = function(req) {
   const part = getComponent()
   const keyFigureIds = data.forceArray(part.config.figure)
   let municiaplity = getMunicipality(req)
@@ -40,7 +40,7 @@ const renderPart = (municipality, keyFigureIds) => {
  * @param {object} municipality
  * @return {{body: string, contentType: string}}
  */
-function renderKeyFigure (keyFigures, part, municipality) {
+function renderKeyFigure(keyFigures, part, municipality) {
   const glossary = keyFigures.reduce( (result, keyFigure) => {
     const parsedGlossary = parseGlossaryContent( keyFigure.data.glossary )
     if (parsedGlossary) {

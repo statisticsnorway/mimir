@@ -21,7 +21,7 @@ const partsWithPreview = [ // Parts that has preview
   `${app.name}:dataquery`
 ]
 
-function getBreadcrumbs (c, a) {
+function getBreadcrumbs(c, a) {
   const key = c._path.replace(/\/[^\/]+$/, '')
   c = key && content.get({ key })
   c && c.type.match(/:page$/) && a.unshift(c) && getBreadcrumbs(c, a)
@@ -29,7 +29,7 @@ function getBreadcrumbs (c, a) {
 
 const view = resolve('default.html')
 
-exports.get = function (req) {
+exports.get = function(req) {
   const ts = new Date().getTime()
   const page = getContent()
   const isFragment = page.type === 'portal:fragment'
@@ -140,7 +140,7 @@ exports.get = function (req) {
   return { body }
 }
 
-function mapComponents (mainRegion, mode) {
+function mapComponents(mainRegion, mode) {
   if (mainRegion && mainRegion.components) {
     return mainRegion.components.map((component) => {
       const descriptor = component.descriptor

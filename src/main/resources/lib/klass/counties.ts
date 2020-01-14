@@ -12,7 +12,7 @@ const { getChildren }: ContentLibrary = __non_webpack_require__( '/lib/xp/conten
 export const list: () => Array<County> = () => getCountiesFromContent()
 
 
-function getCountiesFromContent (): Array<County> {
+function getCountiesFromContent(): Array<County> {
   const siteConfig: SiteConfig = getSiteConfig()
   const key: string | undefined = siteConfig.countyDataContentId
   if (key) {

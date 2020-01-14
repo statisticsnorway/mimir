@@ -31,7 +31,7 @@ export const query: (queryString: string) => Array<MunicipalCode> = (queryString
   .filter( (municipal) => RegExp(queryString.toLowerCase()).test(`${municipal.code} ${municipal.name.toLowerCase()}` ))
 
 
-function getMunicipalsFromContent (): Array<MunicipalCode> {
+function getMunicipalsFromContent(): Array<MunicipalCode> {
   const siteConfig: SiteConfig = getSiteConfig()
   const key: string | undefined = siteConfig.municipalDataContentId
   if (key) {
@@ -52,7 +52,7 @@ function getMunicipalsFromContent (): Array<MunicipalCode> {
  * @param {string} countyName optional, if set it will be added to the path
  * @return {string} create valid municipal path
  */
-export function createPath (municipalName: string, countyName?: string): string {
+export function createPath(municipalName: string, countyName?: string): string {
   const path: string = countyName !== undefined ? `/${municipalName}-${countyName}` : `/${municipalName}`
   return path.replace(/ /g, '-')
     .replace(/-+/g, '-')
@@ -71,7 +71,7 @@ export function createPath (municipalName: string, countyName?: string): string 
  * @param {string} municipalityCode
  * @return {object} dataset with values from statistikkbanken
  */
-export function getValue (url: string, query: string, municipalityCode: string): object {
+export function getValue(url: string, query: string, municipalityCode: string): object {
   // change from object type to interface in klass lib
   const selection: object = { filter: 'item', values: municipalityCode }
   return getKlass(url, query, selection)
@@ -89,7 +89,7 @@ export function getValue (url: string, query: string, municipalityCode: string):
  * @param {string} defaultMunicipalityCode
  * @return {object} Parsed object
  */
-export function parseMunicipalityValues (dataQueryId: string, municipality: MunicipalityWithCounty, defaultMunicipalityCode: string): Municipality {
+export function parseMunicipalityValues(dataQueryId: string, municipality: MunicipalityWithCounty, defaultMunicipalityCode: string): Municipality {
   const datasetContent: QueryResponse<Dataset> = getDataSetWithDataQueryId(dataQueryId)
   let data: DatasetJSONData
   if (datasetContent.count) {
@@ -111,7 +111,7 @@ const notFoundValues: Array<string> = ['.', '..', '...', ':', '-']
  * @param {String} time
  * @return {Municipality}
  */
-function municipalityObject (value: string, time: string): Municipality {
+function municipalityObject(value: string, time: string): Municipality {
   return {
     value: notFoundValues.indexOf(value) < 0 ? value : null,
     valueNotFound: localize({ key: 'value.notFound' }),
@@ -123,7 +123,7 @@ function municipalityObject (value: string, time: string): Municipality {
 
 const cache: Cache = newCache({ size: 100, expire: 3600 })
 
-export function municipalsWithCounties (): Array<MunicipalityWithCounty> {
+export function municipalsWithCounties(): Array<MunicipalityWithCounty> {
   const counties: Array<County> = countyList()
   const municipalities: Array<MunicipalCode> = list()
   // Caching this since it is a bit heavy
@@ -143,7 +143,7 @@ export function municipalsWithCounties (): Array<MunicipalityWithCounty> {
   }))
 }
 
-export function getMunicipality (req: RequestWithCode): MunicipalityWithCounty|undefined {
+export function getMunicipality(req: RequestWithCode): MunicipalityWithCounty|undefined {
   const municipalities: Array<MunicipalityWithCounty> = municipalsWithCounties()
 
   if (req.path) {

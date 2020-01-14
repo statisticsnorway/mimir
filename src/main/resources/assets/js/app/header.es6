@@ -2,8 +2,8 @@ import $ from 'jquery'
 import Popper from 'popper.js'
 
 // Adds language tooltip to language switcher if page don't exist (provided by attribute data-exists)
-export function init () {
-  $(function () {
+export function init() {
+  $(function() {
     // Bind popper to language switch menu item
     $('#change-language').each((i, el) => {
       if ($(el).attr('data-exists') === 'false') {

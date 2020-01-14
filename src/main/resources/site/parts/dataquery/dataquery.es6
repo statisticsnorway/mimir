@@ -8,7 +8,7 @@ const { get: getDataQuery } = __non_webpack_require__( '/lib/ssb/dataquery')
 const view = resolve('./dataquery.html')
 
 
-exports.get = function (req) {
+exports.get = function(req) {
   const part = getComponent()
   const dataQueryIds = part.config.dataquery && data.forceArray(part.config.dataquery) || []
   return renderPart(req, dataQueryIds)

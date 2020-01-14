@@ -6,7 +6,7 @@ const moment = require('moment/min/moment-with-locales')
 
 const view = resolve('./datasets.html')
 
-exports.get = function (req) {
+exports.get = function(req) {
   moment.locale('nb')
   const datasets = contentLib.getChildren({ key: portal.getContent()._path, count: 9999 }) || { hits: {} }
   datasets.hits = datasets.hits && util.data.forceArray(datasets.hits) || []

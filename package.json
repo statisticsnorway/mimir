@@ -12,7 +12,8 @@
     "dist": "run-p -c dist:*",
     "start": "enonic project deploy --dev",
     "install:dev": "nsi",
-    "install:prod": "npm install"
+    "install:prod": "npm install",
+    "lint": "eslint ./src --ext .es6 --ext .ts --ext .jsx"
   },
   "repository": {
     "type": "git",

@@ -16,7 +16,7 @@ const thymeleaf: ThymeleafLibrary = __non_webpack_require__( '/lib/thymeleaf')
 const view: ResourceKey = resolve('./highchart.html')
 
 
-export function get (req: Request): Response {
+export function get(req: Request): Response {
   const part: Component<HighchartPartConfig> | null = portal.getComponent()
   let highchartIds: Array<string> = []
   if (part) {
@@ -25,11 +25,11 @@ export function get (req: Request): Response {
   return renderPart(req, highchartIds)
 }
 
-export function preview (req: Request, id: string): Response {
+export function preview(req: Request, id: string): Response {
   return renderPart(req, [id])
 }
 
-function renderPart (req: Request, highchartIds: Array<string>): Response {
+function renderPart(req: Request, highchartIds: Array<string>): Response {
   const highcharts: Array<HighchartOptions> = []
   const municipality: MunicipalityWithCounty | undefined = getMunicipality(req) ? getMunicipality(req) : { code: '' } as MunicipalityWithCounty
 
@@ -67,7 +67,7 @@ function renderPart (req: Request, highchartIds: Array<string>): Response {
   }
 }
 
-function initHighchart (highchart: Content<Highchart>, json: string | null): HighchartOptions {
+function initHighchart(highchart: Content<Highchart>, json: string | null): HighchartOptions {
   const tableRegex: RegExp = /<table[^>]*>/igm
   const nbspRegexp: RegExp = /&nbsp;/igm
   const replace: string = '<table id="highcharts-datatable-' + highchart._id + '">'

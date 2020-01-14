@@ -3,7 +3,7 @@ const auth = __non_webpack_require__( '/lib/xp/auth')
 const context = __non_webpack_require__( '/lib/xp/context')
 const content = __non_webpack_require__( '/lib/xp/content')
 
-function temporary (draft, master) {
+function temporary(draft, master) {
   log.info('-- running temporary --')
   // Temporary code to remove old content type statistikkbanken
   context.run(draft, () => {
@@ -40,7 +40,7 @@ function temporary (draft, master) {
   })
 }
 
-exports.get = function (req) {
+exports.get = function(req) {
   const _user = auth.getUser()
   const user = { login: _user.login, userStore: _user.idProvider }
   const draft = { repository: 'com.enonic.cms.default', branch: 'draft', principals: ['role:system.admin'], user } // Draft context (XP)

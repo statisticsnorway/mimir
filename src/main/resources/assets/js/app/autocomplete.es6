@@ -5,7 +5,7 @@ import 'bootstrap/js/dist/dropdown'
 // Text to match on data-text attribute,
 // i.e. <a data-text="5001 bergen vestlandet hordaland syv fjeld sjøforsvaret verdensarven bjørgvin buekorps" href="...">Bergen</a>
 // Dependencies: jQuery and Bootstrap
-export function init () {
+export function init() {
   $('input[autocomplete]').each((i, el) => {
     const dropdown = $(el).parent().find('.dropdown-menu')
     const elements = dropdown.find('a')
@@ -13,7 +13,7 @@ export function init () {
 
     dropdown.css('max-width', $(el).outerWidth()) && $(window).resize(() => dropdown.css('max-width', $(el).outerWidth()))
 
-    function toggleDropdown () {
+    function toggleDropdown() {
       if (dropdown.find('a').length > 0) {
         $(el).dropdown('toggle')
       }
@@ -49,7 +49,7 @@ export function init () {
       })
     })
 
-    function filter (el) {
+    function filter(el) {
       const val = $(el).val()
       const re = new RegExp('(^|\\s)' + val, 'i') // search for val in text from start of string or from any space
       elements.each((j, a) => {

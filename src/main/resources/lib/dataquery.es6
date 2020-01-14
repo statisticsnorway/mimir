@@ -5,7 +5,7 @@ const connectionTimeout = 20000
 const headers = { 'Cache-Control': 'no-cache', 'Accept': 'application/json' }
 const contentType = 'application/json'
 
-exports.get = function (url, json, selection = { filter: 'all', values: ['*'] }) {
+exports.get = function(url, json, selection = { filter: 'all', values: ['*'] }) {
   if (json && json.query) {
     for (const query of json.query) {
       if (query.code === 'KOKkommuneregion0000' || query.code === 'Region') {

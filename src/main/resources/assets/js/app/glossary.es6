@@ -1,8 +1,8 @@
 import $ from 'jquery'
 import Popper from 'popper.js'
 
-export function init () {
-  $(function () {
+export function init() {
+  $(function() {
     const elements = {}
     $('body').click((e) => $('.popper').addClass('d-none'))
     $('.popper .btn-close').click((e) => $('.popper').addClass('d-none'))

@@ -5,7 +5,7 @@ const { pageMode } = __non_webpack_require__( '/lib/ssb/utils')
 
 const view = resolve('./banner.html')
 
-exports.get = function (req) {
+exports.get = function(req) {
   const page = portal.getContent()
   const part = portal.getComponent()
   const municipality = getMunicipality(req)

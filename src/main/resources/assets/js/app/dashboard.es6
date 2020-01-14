@@ -1,8 +1,8 @@
 import $ from 'jquery'
 import axios from 'axios'
 
-export function init () {
-  $(function () {
+export function init() {
+  $(function() {
     const updateButton = $('.js-dashboard-update')
     const deleteButton = $('.js-dashboard-delete')
     deleteButton.click((e) => {

@@ -11,7 +11,7 @@ const master = { repository: 'com.enonic.cms.default', branch: 'master', princip
 log.info('Application ' + app.name + ' started') // Log application started
 __.disposer(() => log.info('Application ' + app.name + ' stopped')) // Log application stoppped
 
-function job () {
+function job() {
   log.info('-- Running datquery cron job  --')
   const result = content.query({ count: 999, contentTypes: [`${app.name}:dataquery`], query: `data.table LIKE 'http*'` })
   result && result.hits.map((row) => {

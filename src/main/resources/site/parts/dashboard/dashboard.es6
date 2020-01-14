@@ -6,7 +6,7 @@ const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
 
 const view = resolve('./dashboard.html')
 
-exports.get = function (req) {
+exports.get = function(req) {
   const part = portal.getComponent()
   const dashboardIds = part.config.dashboard ? util.data.forceArray(part.config.dashboard) : []
   return renderPart(req, dashboardIds)
@@ -14,7 +14,7 @@ exports.get = function (req) {
 
 exports.preview = (req, id) => renderPart(req, [id])
 
-function renderPart (req, dashboardIds) {
+function renderPart(req, dashboardIds) {
   const dashboards = []
   const dataset = {}
 

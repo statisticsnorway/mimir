@@ -19,7 +19,7 @@
     "no-var": "error",
     "require-jsdoc": "off",
     "block-spacing": ["warn", "always"],
-    "space-before-function-paren": [ "warn", "always"],
+    "space-before-function-paren": [ "warn", "never"],
     "eol-last": ["warn", "always"],
     "no-multi-spaces": "warn",
     "spaced-comment": ["warn" ,"always"],
