@@ -22,18 +22,18 @@ function renderPart(req) {
   const model = {
     title: part.config.title,
     description: part.config.description,
-    btnTxt: part.config.btnTxt,
-    btnLink: getHref(mode, municipality, part.config.btnLink)}
+    kostraLinkText: part.config.kostraLinkText,
+    kostraLink: getHref(mode, municipality, part.config.kostraLink)}
 
   const body = thymeleaf.render(view, model)
 
   return { body, contentType: 'text/html' }
 }
 
-function getHref(mode, municipality, btnLink) {
+function getHref(mode, municipality, kostraLink) {
   if(mode === 'municipality') {
-    return btnLink += (municipality.path == null ? '' : municipality.path)
+    return kostraLink += (municipality.path == null ? '' : municipality.path)
   }
-  return btnLink
+  return kostraLink
 }
 

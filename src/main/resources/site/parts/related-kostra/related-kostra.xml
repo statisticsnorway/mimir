@@ -14,15 +14,15 @@
         <br />
         I tillegg til KOSTRA har vi mange <a href="https://www.ssb.no/offentlig-sektor/kommunetall">andre statistikker med tall på kommunenivå.</a></p></default>
     </input>
-    <input type="TextLine" name="btnTxt">
-      <label>Knapp</label>
+    <input type="TextLine" name="kostraLinkText">
+      <label>KOSTRA lenke tekst</label>
       <occurrences minimum="1" maximum="1"/>
       <default>Se flere nøkkeltall</default>
     </input>
-    <input type="TextLine" name="btnLink">
-      <label>Knapplenke</label>
+    <input type="TextLine" name="kostraLink">
+      <label>KOSTRA lenke</label>
       <occurrences minimum="1" maximum="1"/>
-      <default>https://www.ssb.no/kommunefakta/kostra/</default>
+      <default>https://www.ssb.no/kommunefakta/kostra</default>
     </input>
   </form>
 </part>
