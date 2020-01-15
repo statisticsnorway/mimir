@@ -33,6 +33,9 @@ or for a continous build and deploy (needs $XP_HOME and $JAVA_HOME env variables
 ./gradlew deploy -t
 ```
 
+#### Typescript interfaces Code-Gen
+We're using the `enonic-ts-codegen` library. This reads through all .xml config files and automatically creates interface files for all parts, layouts, pages, site-config, and content-types. This is a part of the gradle.build pipeline. So they will be regenerated and overwritten on every build. To change the interface you'll have to change the .xml, not the .ts interface files.
+
 #### [Common Errors](./docs/CommonErrors.md)
 #### [Eslint](./docs/Eslint.md)
 
