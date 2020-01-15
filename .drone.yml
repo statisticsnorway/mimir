@@ -13,8 +13,6 @@ steps:
     image: enonic/enonic-ci:7.1-node
     commands:
       - /setup_sandbox.sh
-      - npm install
-      - npm run gulp
       - enonic project build
   - name: deploy
     image: enonic/enonic-ci:7.1-node
@@ -40,8 +38,6 @@ steps:
     image: enonic/enonic-ci:7.1-node
     commands:
       - /setup_sandbox.sh
-      - npm install
-      - npm run gulp
       - enonic project build
   - name: deploy
     image: enonic/enonic-ci:7.1-node
@@ -67,8 +63,6 @@ steps:
     image: enonic/enonic-ci:7.1-node
     commands:
       - /setup_sandbox.sh
-      - npm install
-      - npm run gulp
       - enonic project build
   - name: deploy
     image: enonic/enonic-ci:7.1-node
