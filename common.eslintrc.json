@@ -34,8 +34,8 @@
     "semi": ["warn", "never"],
     "object-curly-spacing": ["warn", "always"],
     "space-infix-ops": "warn",
-    "max-depth": ["error", { "max": 8 }],
-    "max-nested-callbacks": ["error", { "max": 3 }],
+    "max-depth": ["warn", { "max": 8 }],
+    "max-nested-callbacks": ["warn", { "max": 3 }],
     "object-property-newline": ["warn", { "allowAllPropertiesOnSameLine": false }],
     "newline-per-chained-call": ["warn", { "ignoreChainWithDepth": 3 }],
     "object-curly-newline": ["warn", {
