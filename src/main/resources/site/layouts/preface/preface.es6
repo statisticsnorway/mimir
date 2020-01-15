@@ -1,14 +1,13 @@
-import * as portal from '/lib/xp/portal'
-import * as thymeleaf from '/lib/thymeleaf'
-
-import * as municipals from '/lib/municipals'
+const portal = __non_webpack_require__( '/lib/xp/portal')
+const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
+const { pageMode } = __non_webpack_require__( '/lib/ssb/utils')
 
 exports.get = function(req) {
   const page = portal.getContent()
   const component = portal.getComponent()
   const view = resolve('preface.html')
-  const mode = municipals.mode(req, page)
 
+  const mode = pageMode(req, page)
   const model = { config: component.config, mainRegion: component.regions.main, mode }
   const body = thymeleaf.render(view, model)
 

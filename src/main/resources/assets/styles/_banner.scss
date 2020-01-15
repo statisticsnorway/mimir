@@ -1,0 +1,38 @@
+.part-banner {
+  min-height: 272px;
+  overflow: hidden;
+  color: white;
+  .container {
+    min-height: 272px;
+  }
+  .subtitle {
+    text-shadow: 0 0 4px rgba(0,0,0,0.4);
+  }
+  h1 {
+    line-height: 1.0;
+    text-shadow: 0 0 4px rgba(0,0,0,0.4);
+  }
+  &.opacity-0 {
+    opacity: 0;
+  }
+  &.opacity-1 {
+    opacity: 1;
+    transition: all .2s;
+  }
+  @media print {
+    min-height: 80px;
+    color: #333;
+    .container {
+       min-height: 80px;
+    }
+  }
+  @include media-breakpoint-down(sm) {
+    .container {
+      padding-right: 10px;
+      padding-left: 10px;
+      h1 {
+        font-size: 24px;
+      }
+    }
+  }
+}

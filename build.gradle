@@ -1,4 +1,5 @@
 plugins {
+    id 'com.moowork.node' version '1.3.1'
     id 'com.enonic.xp.app' version '2.0.0'
 }
 
@@ -24,10 +25,8 @@ dependencies {
     include "com.enonic.lib:lib-cron:1.0.0"
     include "com.enonic.xp:lib-context:${xpVersion}"
     include 'com.enonic.lib:lib-cache:1.1.0'
-    //include "com.enonic.xp:lib-io:${xpVersion}"
-    //include "com.enonic.xp:lib-mail:${xpVersion}"
-    //include "com.enonic.xp:lib-repo:${xpVersion}"
-    //include "com.enonic.xp:lib-websocket:${xpVersion}"
+    compile 'org.webjars.npm:ramda:0.26.1'
+    include 'com.enonic.lib:lib-react4xp:0.3.11'
 }
 
 repositories {
@@ -35,3 +34,213 @@ repositories {
     jcenter()
     xp.enonicRepo()
 }
+
+node {
+    download = true
+    version '10.16.0'
+}
+
+
+task npmInstallForce( type: NpmTask ) {
+    description = 'Update all project node dependencies'
+    args = ['install', '--force']
+}
+
+task cleanNode( type: org.gradle.api.tasks.Delete ) {
+    delete 'node_modules'
+}
+
+task clientWebpack( type: NodeTask, dependsOn: npmInstall ) {
+    environment = [ 'NODE_ENV': nodeEnvironment() ]
+    args = [ '--config', 'webpack.client.config.js', '--color', '--hide-modules' ]
+    description = 'Build UI resources (js, css, etc).'
+    inputs.dir 'src/main'
+    outputs.dir "${buildDir}/resources/main"
+    script = file( 'node_modules/webpack-cli/bin/cli.js' )
+}
+
+task serverWebpack( type: NodeTask, dependsOn: npmInstall ) {
+    environment = [ 'NODE_ENV': nodeEnvironment() ]
+    args = [ '--config', 'webpack.server.config.js', '--color', '--hide-modules' ]
+    description = 'Build server JS.'
+    inputs.dir 'src/main'
+    outputs.dir "${buildDir}/resources/main"
+    script = file( 'node_modules/webpack-cli/bin/cli.js' )
+}
+
+processResources {
+    include '**/*'
+    exclude '**/.gitkeep'
+    exclude '**/tsconfig.*.json'
+    exclude '**/*.es'
+    exclude '**/*.es6'
+    exclude '**/*.ts'
+    exclude 'assets/js/**/*.js'
+    include 'assets/js/bundle.js'
+    exclude 'assets/styles/**/*.less'
+    exclude 'assets/styles/**/*.sass'
+    exclude 'assets/styles/**/*.scss'
+    includeEmptyDirs false
+}
+
+jar {
+    exclude 'assets/styles/**/*.less'
+    exclude 'assets/styles/**/*.sass'
+    exclude 'assets/styles/**/*.scss'
+    exclude 'assets/styles/**/*.js'
+
+    serverWebpack.dependsOn += 'webpack_react4xp'
+    clientWebpack.dependsOn += 'webpack_react4xp'
+
+    dependsOn += clientWebpack
+    dependsOn += serverWebpack
+    //dependsOn += 'babelXP'
+
+}
+
+jar.outputs.dir "${buildDir}/resources/main"
+
+def nodeEnvironment() {
+    def environments = [ prod : 'production', dev: 'development' ]
+    def nodeEnv = environments[hasProperty( 'env' ) ? env : 'prod']
+    return nodeEnv != null ? nodeEnv : 'production'
+}
+
+
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+
+// Resolves the project folder root
+def ROOT = project.projectDir.toString()
+
+def react4xp = {}
+file("react4xp.properties").withReader { reader ->
+    react4xp = new Properties()
+    react4xp.load(reader)
+}
+
+react4xp.outputFileName = ROOT + '/' + react4xp.masterConfigFileName
+if(react4xp.nashornPolyfillsSource != null) {
+    react4xp.NASHORNPOLYFILLS_SOURCE = react4xp.nashornPolyfillsSource
+}
+if(react4xp.buildEnv != null) {
+    react4xp.BUILD_ENV = react4xp.buildEnv
+}
+if (react4xp.buildEnv == 'development') {
+    task npmInstall(type: NpmTask, overwrite: true) {
+        println "react4xp.properties#buildEnv is set to '" + react4xp.buildEnv + "':\nOVERRIDING VANILLA npmInstall IN FAVOR OF node-safe-install (nsi)." // Because nsi retains 'npm link' symlinks!
+        args = ['run', 'install:dev']
+    }
+}
+
+//npmInstall.inputs.file("package.json")
+//npmInstall.inputs.file("package-lock.json")
+//npmInstall.outputs.dir('node_modules')
+
+
+react4xp.masterConfigFileName = react4xp.masterConfigFileName != null ? react4xp.masterConfigFileName : "build/react4xp_constants.json"
+react4xp.outputFileName = ROOT + '/' + react4xp.masterConfigFileName
+
+react4xp.verbose = react4xp.verbose != null && react4xp.verbose.toBoolean()
+react4xp.buildRuntimeClient = react4xp.buildRuntimeClient != null && react4xp.buildRuntimeClient.toBoolean()
+react4xp.buildExternals = react4xp.buildExternals != null && react4xp.buildExternals.toBoolean()
+react4xp.overwriteConstantsFile = react4xp.overwriteConstantsFile != null && react4xp.overwriteConstantsFile.toBoolean()
+
+
+// Build the master config JSON file and the copy:
+task config_react4xp(type: NodeTask) {
+    group 'React4xp'
+    description 'Build the master config JSON file and its copy'
+
+    script = file('node_modules/react4xp-buildconstants/bin/cli.js')
+    args = [ ROOT, JsonOutput.toJson(JsonOutput.toJson(react4xp)) ]
+}
+config_react4xp.inputs.file("react4xp.properties")
+config_react4xp.outputs.file(react4xp.masterConfigFileName)
+
+//config_react4xp.dependsOn += 'npmInstall'
+config_react4xp.dependsOn += 'processResources'
+
+
+// Necessary placeholder, will be filled during build
+def CONFIG = {}
+task config_tasks {
+    // After the above script has run and created the config file, use the constructed values from the script to update the configuration of the next task(s):
+    doLast {
+        // Read the file content into an object
+        def configFile = new File(react4xp.masterConfigFileName)
+        CONFIG = new JsonSlurper().parseText(configFile.text)
+
+        tasks['webpack_react4xp'].configure {
+            inputs.dir(CONFIG.SRC_SITE)
+            inputs.dir(CONFIG.SRC_R4X)
+            outputs.dir(CONFIG.BUILD_R4X)
+        }
+
+        tasks['babelXP'].configure {
+            args = ["src/main/resources", "--out-dir", CONFIG.BUILD_MAIN, "--ignore", "**/*.jsx"]  // <-- Still ignoring JSX in the XP structure
+            outputs.dir(CONFIG.BUILD_MAIN)
+        }
+    }
+}
+config_tasks.dependsOn += 'config_react4xp'
+
+
+
+// Compile:
+task webpack_react4xp(type: NodeTask) {
+    group 'React4xp'
+    description 'Run the imported react4xp webpack scripts that compile the components and externals (as well as client and nashorn polyfills if needed)'
+
+    // 1 MANDATORY STEP: react4xp-build-components compiles the components added in this project into runnable/renderable components. See react4xp-build-components docs.
+    script = file('node_modules/webpack/bin/webpack.js')
+    args = ['--config', 'webpack.config.react4xpbuildcomponents.js', '--color', '--env.VERBOSE=' + react4xp.verbose, '--env.ENTRY_DIRS=./_entries']
+    if (react4xp.overrideComponentWebpack != null) {
+        args += '--env.OVERRIDE_COMPONENT_WEBPACK=' + react4xp.overrideComponentWebpack
+    }
+
+    // 3 OPTIONAL STEPS. SEE SETTINGS AND (DE)ACTIVATION IN react4xp.properties:
+    if (react4xp.buildExternals) {
+        args += ['--config', 'node_modules/react4xp-runtime-externals/webpack.config.js']
+    }
+    if (react4xp.buildRuntimeClient) {
+        args += ['--config', 'node_modules/react4xp-runtime-client/webpack.config.js']
+    }
+    if (react4xp.nashornPolyfillsSource != null) {
+        args += ['--config', 'node_modules/react4xp-runtime-nashornpolyfills/webpack.config.js']
+    }
+
+    // Pretty if chatty
+    if (react4xp.verbose) {
+        args += '--progress'
+    }
+
+    // Finally, and mandatorily: tells all of the webpack steps here where to find the react4xp master config file that was built during the config_react4xp task
+    args += '--env.REACT4XP_CONFIG_FILE=' + react4xp.masterConfigFileName
+
+    if (react4xp.verbose) {
+        println "webpack_react4xp task - args:"
+        println args
+    }
+
+    inputs.file(react4xp.masterConfigFileName)
+    inputs.file("package.json")
+    inputs.file("package-lock.json")
+}
+webpack_react4xp.dependsOn += 'config_tasks'
+
+
+task babelXP(type: NodeTask) {
+    group 'React4xp'
+    description 'Compile XP components from ES6, ignoring JSX components'
+
+    script = file('node_modules/babel-cli/bin/babel.js')
+    args = ["src/main/resources", "--out-dir", "build/resources/main", "--ignore", "**/*.jsx"]      // <-- Ignoring JSX in the XP structure is important!
+
+    inputs.dir 'src/main/resources'
+    outputs.dir("build/resources/main")
+}
+babelXP.dependsOn += 'config_tasks'
+
+//jar.dependsOn += 'webpack_react4xp'
+//jar.dependsOn += 'babelXP'
