@@ -3,7 +3,7 @@ const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
 const { getMunicipality } = __non_webpack_require__( '/lib/klass/municipalities')
 const { pageMode } = __non_webpack_require__( '/lib/ssb/utils')
 
-const view = resolve('./related-kostra.html')
+const view = resolve('./relatedKostra.html')
 
 exports.get = function(req) {
   return renderPart(req)

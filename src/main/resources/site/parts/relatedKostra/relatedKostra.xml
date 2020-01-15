@@ -10,7 +10,7 @@
     <input type="HtmlArea" name="description">
       <label>Beskrivelse</label>
       <occurrences minimum="1" maximum="1"/>
-      <default>Innhold her.</default>
+      <default><p>Innhold kommer her.</p></default>
     </input>
     <input type="TextLine" name="kostraLinkText">
       <label>KOSTRA lenke tekst</label>
