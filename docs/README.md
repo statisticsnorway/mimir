@@ -9,3 +9,5 @@ Documentation for Mimir
    1. [Checklist](./CodeReview.md#checklist)
 4. [Common Errors](./CommonErrors.md)
 5. [Eslint](./Eslint.md)
+   1. [Setup](./Eslint.md#setup)
+   2. [Config](./Eslint.md#config)
