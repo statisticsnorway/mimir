@@ -34,6 +34,7 @@ or for a continous build and deploy (needs $XP_HOME and $JAVA_HOME env variables
 ```
 
 #### [Common Errors](./docs/CommonErrors.md)
+#### [Eslint](./docs/Eslint.md)
 
 ## Login
 Direct yout favorite browser to http://localhost:8080

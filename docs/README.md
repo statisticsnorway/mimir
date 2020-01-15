@@ -8,3 +8,4 @@ Documentation for Mimir
 3. [Code Review](./CodeReview.md)
    1. [Checklist](./CodeReview.md#checklist)
 4. [Common Errors](./CommonErrors.md)
+5. [Eslint](./Eslint.md)
