@@ -33,3 +33,12 @@ Update VSCode workspace- or userconfig:
 If you don't want it to automaticly lint the current file on save, omit the `codeActionsOnSave` config
 ### IntelliJ
 TODO
+
+## Config
+Eslint is setup to lint .es6, .ts, and .jsx files. Each of these share one [common config](/common.eslintrc.json), with overrides in [.eslintrc.json](/.eslintrc.json)
+
+[Eslint rules documentation](https://eslint.org/docs/rules/)<br>
+[Typescript rules documentation](https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#supported-rules)<br>
+[React rules documentation](https://github.com/yannickcr/eslint-plugin-react/#list-of-supported-rules)<br>
+
+If you want to add specific rules to either .es6, .ts or .jsx, then you'll have to do this inside [.eslintrc.json](/.eslintrc.json). For .es6, add `"rules": { /*my rules */ }` to the root object. For .ts or .jsx, add it to the respective overrides.rules objects.
