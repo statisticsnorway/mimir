@@ -23,7 +23,8 @@ function renderPart(req) {
     title: part.config.title,
     description: part.config.description,
     kostraLinkText: part.config.kostraLinkText,
-    kostraLink: getHref(mode, municipality, part.config.kostraLink)}
+    kostraLink: getHref(mode, municipality, part.config.kostraLink)
+  }
 
   const body = thymeleaf.render(view, model)
 
@@ -32,7 +33,7 @@ function renderPart(req) {
 
 function getHref(mode, municipality, kostraLink) {
   if(mode === 'municipality') {
-    return kostraLink += (municipality.path == null ? '' : municipality.path)
+    return kostraLink + (municipality.path == null ? '' : municipality.path)
   }
   return kostraLink
 }
