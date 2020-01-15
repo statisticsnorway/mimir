@@ -44,9 +44,10 @@ function renderPart(req) {
   }
 }
 
-/**
- * Documentation
- */
 function setColor(dividerColor, divider) {
-  return (dividerColor === 'dark') ? divider.setProps({ dark: true, light: false }) : divider.setProps({ dark: false, light: true })
+  if(dividerColor === 'dark') {
+    return divider.setProps({ dark: true, light: false })
+  } else {
+    return divider.setProps({ dark: false, light: true })
+  }
 }
