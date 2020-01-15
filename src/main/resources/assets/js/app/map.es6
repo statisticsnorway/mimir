@@ -3,8 +3,8 @@ import * as axios from 'axios'
 
 import Highcharts from 'highcharts'
 import A11y from 'highcharts/modules/accessibility';
-import Map from  'highcharts/modules/map';
-import DrillDown  from 'highcharts/modules/drilldown';
+import Map from 'highcharts/modules/map';
+import DrillDown from 'highcharts/modules/drilldown';
 
 // Initialize exporting module.
 A11y(Highcharts)
@@ -78,11 +78,10 @@ export function init() {
                       point: {
                         events: {
                           click: function() {
-                            kommnr = this.properties.KOMMUNENR;
+                            let kommnr = this.properties.KOMMUNENR.toString();
                             if (kommnr.length == 3) {
                               kommnr = '0' + kommnr;
                             }
-                            url = $('#finn-kommune-resultater').find('ul li a[id = '+ kommnr +']').attr('href');
 
                             axios.get(service, { params: { postalCode: kommnr }})
                               .then((result) => {
@@ -122,9 +121,9 @@ export function init() {
             }
           },
           plotOptions: { map: {
-              borderColor: '#274247',
-              states: { hover: { color: '#00824d' }}
-            }},
+            borderColor: '#274247',
+            states: { hover: { color: '#00824d' }}
+          }},
           series: [{
             data: data,
             name: 'Norge',
