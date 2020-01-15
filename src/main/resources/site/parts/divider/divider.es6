@@ -25,23 +25,12 @@ function renderPart(req) {
 
   const preRenderedBody = thymeleaf.render(view, model)
 
-  const preExistingPageContributions = {
-    bodyEnd: `<script>
-                log.info('Rendered ' + JSON.stringify(${divider.props}))
-              </script>`
-  }
-
   return {
     body: divider.renderBody({
       body: preRenderedBody
-    }),
-
-    pageContributions: (req.mode === 'live' || req.mode === 'preview') ?
-      divider.renderPageContributions({
-          pageContributions: preExistingPageContributions
-        }) :
-      undefined
+    })
   }
+
 }
 
 function setColor(dividerColor, divider) {
