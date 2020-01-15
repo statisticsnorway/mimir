@@ -25,6 +25,16 @@ export interface SiteConfig {
   defaultMunicipality: string;
 
   /**
+   * Kommunefakta instillinger
+   */
+  kommunefakta?: Array<{
+    /**
+     * Mappe kartfiler
+     */
+    mapfolder?: string;
+  }>;
+
+  /**
    * Språk instillinger
    */
   language: Array<{
