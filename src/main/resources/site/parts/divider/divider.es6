@@ -1,20 +1,52 @@
-const portal = __non_webpack_require__( '/lib/xp/portal')
-const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
+const portal = __non_webpack_require__('/lib/xp/portal')
+const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+const thymeleaf = __non_webpack_require__('/lib/thymeleaf')
 
 const view = resolve('./divider.html')
 
 exports.get = function(req) {
-  const part = portal.getComponent()
-  const dividerColorConfig = part.config.dividerColor
-  return renderPart(req, dividerColorConfig)
+  return renderPart(req)
 }
 
 exports.preview = function(req) {
   return renderPart(req)
 }
 
-function renderPart(req, dividerColorConfig) {
-  const dividerColor = (dividerColorConfig === 'dark') ? 'ssb-divider type-dark' : 'ssb-divider type-light'
-  const body = thymeleaf.render(view, { dividerColor })
-  return { body, contentType: 'text/html' }
+function renderPart(req) {
+  const component = portal.getComponent()
+  const dividerColor = component.config.dividerColor
+  const divider = new React4xp('Divider')
+
+  setColor(dividerColor, divider)
+
+  const model = {
+    dividerId: divider.react4xpId
+  }
+
+  const preRenderedBody = thymeleaf.render(view, model)
+
+  const preExistingPageContributions = {
+    bodyEnd: `<script>
+                log.info('Rendered ' + JSON.stringify(${divider.props}))
+              </script>`
+  }
+
+  return {
+    body: divider.renderBody({
+      body: preRenderedBody
+    }),
+
+    pageContributions: (req.mode === 'live' || req.mode === 'preview') ?
+      divider.renderPageContributions({
+          pageContributions: preExistingPageContributions
+        }) :
+      undefined
+  }
+}
+
+/**
+ * Documentation
+ */
+function setColor(dividerColor, divider) {
+  return (dividerColor === 'dark') ? divider.setProps({ dark: true, light: false }) : divider.setProps({ dark: false, light: true })
 }
