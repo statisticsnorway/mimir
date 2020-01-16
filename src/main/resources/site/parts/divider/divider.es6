@@ -19,11 +19,7 @@ function renderPart() {
 
   setColor(dividerColor, divider)
 
-  const model = {
-    dividerId: divider.react4xpId
-  }
-
-  const preRenderedBody = thymeleaf.render(view, model)
+  const preRenderedBody = thymeleaf.render(view, { divider })
 
   return {
     body: divider.renderBody({
