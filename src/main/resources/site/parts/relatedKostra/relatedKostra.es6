@@ -6,20 +6,20 @@ const { pageMode } = __non_webpack_require__( '/lib/ssb/utils')
 const view = resolve('./relatedKostra.html')
 
 exports.get = function(req) {
-  let municiaplity = getMunicipality(req)
+  let municipality = getMunicipality(req)
   const page = getContent()
   const mode = pageMode(req, page)
-  if (!municiaplity && mode === 'edit') {
-    const defaultMuniciaplity = getSiteConfig().defaultMunicipality;
-    municiaplity = getMunicipality({ code: defaultMuniciaplity })
+  if (!municipality && mode === 'edit') {
+    const defaultMunicipality = getSiteConfig().defaultMunicipality
+    municipality = getMunicipality({ code: defaultMunicipality })
   }
-  return renderPart(req, municiaplity);
+  return renderPart(req, municipality);
 }
 
 exports.preview = function(req) {
-  const defaultMuniciaplity = getSiteConfig().defaultMunicipality;
-  const municiaplity = getMunicipality({ code: defaultMuniciaplity })
-  return renderPart(req, municiaplity)
+  const defaultMunicipality = getSiteConfig().defaultMunicipality
+  const municipality = getMunicipality({ code: defaultMunicipality })
+  return renderPart(req, municipality)
 }
 
 function renderPart(req, municipality) {
