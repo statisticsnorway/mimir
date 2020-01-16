@@ -31,8 +31,8 @@ function renderPart() {
 
 function setColor(dividerColor, divider) {
   if(dividerColor === 'dark') {
-    return divider.setProps({ dark: true, light: false })
+    return divider.setProps({ dark: true })
   } else {
-    return divider.setProps({ dark: false, light: true })
+    return divider.setProps({ light: true })
   }
 }
