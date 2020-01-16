@@ -26,7 +26,6 @@ function renderPart() {
       body: preRenderedBody
     })
   }
-
 }
 
 function setColor(dividerColor, divider) {
