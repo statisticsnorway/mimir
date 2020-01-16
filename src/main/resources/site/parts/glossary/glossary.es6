@@ -6,9 +6,9 @@ const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
 const view = resolve('./glossary.html')
 
 exports.get = function(req) {
-  const part = portal.getComponent();
-  const glossaryIds = part.config.glossary ? util.data.forceArray(part.config.glossary) : []
-  return renderPart(req, glossaryIds);
+  const part = portal.getComponent()
+  const glossaryIds = part.config.glossary ? util.data.forceArray(part.config.glossary) : []
+  return renderPart(req, glossaryIds)
 }
 
 exports.preview = (req, id) => renderPart(req, [id])

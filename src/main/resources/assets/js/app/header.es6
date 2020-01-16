@@ -1,4 +1,4 @@
-import $ from 'jquery';
+import $ from 'jquery'
 import Popper from 'popper.js'
 
 // Adds language tooltip to language switcher if page don't exist (provided by attribute data-exists)

@@ -1,6 +1,6 @@
-const { pageMode } =__non_webpack_require__ ('/lib/ssb/utils')
-const portal = __non_webpack_require__ ('/lib/xp/portal')
-const thymeleaf = __non_webpack_require__ ('/lib/thymeleaf')
+const { pageMode } = __non_webpack_require__('/lib/ssb/utils')
+const portal = __non_webpack_require__('/lib/xp/portal')
+const thymeleaf = __non_webpack_require__('/lib/thymeleaf')
 
 const view = resolve('./map.html')
 
