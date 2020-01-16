@@ -4,15 +4,15 @@ const thymeleaf = __non_webpack_require__('/lib/thymeleaf')
 
 const view = resolve('./divider.html')
 
-exports.get = function(req) {
-  return renderPart(req)
+exports.get = function() {
+  return renderPart()
 }
 
-exports.preview = function(req) {
-  return renderPart(req)
+exports.preview = function() {
+  return renderPart()
 }
 
-function renderPart(req) {
+function renderPart() {
   const component = portal.getComponent()
   const dividerColor = component.config.dividerColor
   const divider = new React4xp('Divider')
