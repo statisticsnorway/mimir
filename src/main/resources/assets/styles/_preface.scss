@@ -29,6 +29,14 @@
 
   }
 
+  &.noPrefaceContent {
+    height: 100px;
+
+    &:after {
+      top: 100px;
+    }
+  }
+
   @include media-breakpoint-down(lg) {
     .preface-inner {
       flex: 0 0 75%;

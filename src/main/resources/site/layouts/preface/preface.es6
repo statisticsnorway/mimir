@@ -8,7 +8,13 @@ exports.get = function(req) {
   const view = resolve('preface.html')
 
   const mode = pageMode(req, page)
-  const model = { config: component.config, mainRegion: component.regions.main, mode }
+  const model = {
+    config: component.config,
+    mainRegion: component.regions.main,
+    hasContent: component.regions.main.components,
+    mode
+  }
+
   const body = thymeleaf.render(view, model)
 
   return { body }
