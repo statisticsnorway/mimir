@@ -55,4 +55,24 @@ $ git push -u origin add-feature-x
 ... create pull-request to master ...
 ```
 
+## Deploying builds to environments
+### Setup
+Upon creating a pull request, Drone builds and tests your branch.  
+This build must pass in order for you to merge your pull request.   
+Upon build success, it will not run again on subsequent commits to the same branch.
+
+Upon merging a branch to Master, Drone builds and deploys to Test automatically. 
+
+In order to deploy to QA and PROD, we need to use the drone CLI.   
+[Install instructions can be found here.](https://docs.drone.io/cli/install/)
+
+### Execution
+Replace (build-number) with the build number you want to deploy
+Deploying to QA:   
+`drone build promote statisticsnorway/mimir (build-number) qa` 
+
+Deploing to PROD:   
+`drone build promote statisticsnorway/mimir (build-number) prod`
+
+
 ## [Documentation](./docs/README.md)

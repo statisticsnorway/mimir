@@ -1,5 +1,22 @@
 kind: pipeline
 type: docker
+name: "Pull Request Tests"
+# Only builds (and hopefully tests) on pull request.
+trigger:
+  branch:
+    - master
+  event:
+    include:
+      - pull_request
+steps:
+  - name: build & test
+    image: enonic/enonic-ci:7.1-node
+    commands:
+      - /setup_sandbox.sh
+      - enonic project build
+---
+kind: pipeline
+type: docker
 name: "Test Environment"
 # Deploy to test on pushes to master branch
 trigger:
@@ -13,8 +30,6 @@ steps:
     image: enonic/enonic-ci:7.1-node
     commands:
       - /setup_sandbox.sh
-      - npm install
-      - npm run gulp
       - enonic project build
   - name: deploy
     image: enonic/enonic-ci:7.1-node
@@ -40,8 +55,6 @@ steps:
     image: enonic/enonic-ci:7.1-node
     commands:
       - /setup_sandbox.sh
-      - npm install
-      - npm run gulp
       - enonic project build
   - name: deploy
     image: enonic/enonic-ci:7.1-node
@@ -67,8 +80,6 @@ steps:
     image: enonic/enonic-ci:7.1-node
     commands:
       - /setup_sandbox.sh
-      - npm install
-      - npm run gulp
       - enonic project build
   - name: deploy
     image: enonic/enonic-ci:7.1-node
