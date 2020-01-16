@@ -20,7 +20,7 @@
     <input type="TextLine" name="kostraLink">
       <label>KOSTRA lenke</label>
       <occurrences minimum="1" maximum="1"/>
-      <default>https://www.ssb.no/kommunefakta/kostra</default>
+      <default>/kommunefakta/kostra</default>
     </input>
   </form>
 </part>
