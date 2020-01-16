@@ -1,5 +1,5 @@
-import $ from 'jquery';
-import axios from 'axios';
+import $ from 'jquery'
+import axios from 'axios'
 
 export function init() {
   $(function() {
@@ -12,7 +12,7 @@ export function init() {
       const warning = $('.part-dashboard .delete-warning')
       $('.part-dashboard .alert').addClass('d-none')
       deleteButton.find('.spinner-border').toggleClass('d-none')
-      axios.get(service, {params: {delete: true}}).then((result) => success.toggleClass('d-none'))
+      axios.get(service, { params: { delete: true } }).then((result) => success.toggleClass('d-none'))
         .catch((error) => warning.toggleClass('d-none'))
         .finally(() => deleteButton.prop('disabled', false).find('.spinner-border').toggleClass('d-none'))
     })

@@ -30,7 +30,6 @@ function getBreadcrumbs(c, a) {
 const view = resolve('default.html')
 
 exports.get = function(req) {
-
   const ts = new Date().getTime()
   const page = getContent()
   const isFragment = page.type === 'portal:fragment'
@@ -70,7 +69,7 @@ exports.get = function(req) {
 
   const alerts = alertsForContext(municipality)
 
-  let config;
+  let config
   if (!isFragment && page.page.config) {
     config = page.page.config
   } else if (isFragment && page.fragment.config) {

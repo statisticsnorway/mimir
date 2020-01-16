@@ -25,7 +25,7 @@ function job() {
           r.data.table = row.data.table
           r.data.json = JSON.stringify(data, null, ' ')
           return r
-        }})
+        } })
         update || log.error(`UPDATE failed: ${datasets.hits[0]._path}`)
         if (update) {
           log.debug(JSON.stringify(update, null, ' '))
@@ -39,12 +39,12 @@ function job() {
           table: row.data.table,
           dataquery: row._id,
           json: JSON.stringify(data, null, ' ')
-        }})
-        create || log.error(`CREATE failed: ${name} [${row._path}]`)
+        } })
+        create || log.error(`CREATE failed: ${name} [${row._path}]`)
         if (create) {
           log.debug(JSON.stringify(create, null, ' '))
           const publish = content.publish({ keys: [create._id], sourceBranch: 'draft', targetBranch: 'master', includeDependencies: false })
-          publish || log.error(`PUBLISH failed: ${name} [${row._path}]`)
+          publish || log.error(`PUBLISH failed: ${name} [${row._path}]`)
         }
       }
     })

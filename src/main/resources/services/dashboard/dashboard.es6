@@ -4,7 +4,7 @@ const context = __non_webpack_require__( '/lib/xp/context')
 const content = __non_webpack_require__( '/lib/xp/content')
 
 function temporary(draft, master) {
-  log.info('-- running temporary --');
+  log.info('-- running temporary --')
   // Temporary code to remove old content type statistikkbanken
   context.run(draft, () => {
     const dataquery = content.query({ count: 999, contentTypes: [`${app.name}:dataquery`] })
@@ -12,11 +12,17 @@ function temporary(draft, master) {
     if (dataquery && dataquery.total === 0 && statistikkbanken && statistikkbanken.total) {
       statistikkbanken.hits.map((data) => {
         log.info(JSON.stringify(data, null, ' '))
-        const create = content.create({ name: data.name, parentPath: '/mimir/temporary', displayName: data.displayName, contentType: `${app.name}:dataquery`, data: {
-          table: data.data.table,
-          json: data.data.json,
-          regiontype: data.data.regiontype
-        }})
+        const create = content.create({
+          name: data.name,
+          parentPath: '/mimir/temporary',
+          displayName: data.displayName,
+          contentType: `${app.name}:dataquery`,
+          data: {
+            table: data.data.table,
+            json: data.data.json,
+            regiontype: data.data.regiontype
+          }
+        })
         if (create) {
           const keyFigure = content.query({ count: 999, contentTypes: [`${app.name}:key-figure`], query: `data.query = '${data._id}'` })
           log.info(JSON.stringify(data, null, ' '))
@@ -25,7 +31,7 @@ function temporary(draft, master) {
               content.modify({ key: figure._id, editor: (r) => {
                 r.data.dataquery = create._id
                 return r
-              }})
+              } })
             })
           }
         }

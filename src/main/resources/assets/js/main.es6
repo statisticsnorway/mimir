@@ -1,6 +1,6 @@
-import '../styles/main.scss';
+import '../styles/main.scss'
 
-import { init as initAutocomplete } from './app/autocomplete.es6';
+import { init as initAutocomplete } from './app/autocomplete.es6'
 import { init as initBanner } from './app/banner.es6'
 import { init as initDashboard } from './app/dashboard.es6'
 import { init as initGloassary } from './app/glossary.es6'
