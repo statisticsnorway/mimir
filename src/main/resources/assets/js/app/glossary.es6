@@ -1,4 +1,4 @@
-import $ from 'jquery';
+import $ from 'jquery'
 import Popper from 'popper.js'
 
 export function init() {
@@ -18,7 +18,7 @@ export function init() {
           e.preventDefault()
           e.stopPropagation()
           $(el).toggleClass('d-none')
-          new Popper(a, el, {placement: 'bottom'})
+          new Popper(a, el, { placement: 'bottom' })
         })
       })
     })

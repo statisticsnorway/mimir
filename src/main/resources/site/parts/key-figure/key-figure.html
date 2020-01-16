@@ -2,8 +2,8 @@
   <h3 data-th-if="${displayName}" data-th-text="${displayName}"></h3>
   <div class="row">
     <div data-th-each="figure, i: ${data}" data-th-remove="tag">
-      <div class="d-md-none border-bottom mt-5 mb-5 col-12" data-th-if="${i.index}"></div>
-      <div class="d-none d-md-block border-bottom mt-5 mb-5 col-12" data-th-if="${i.index && i.index % 2 == 0}"></div>
+      <div class="d-md-none mt-5 col-12" data-th-if="${i.index}"></div>
+      <div class="d-none d-md-block mt-5 col-12" data-th-if="${i.index && i.index % 2 == 0}"></div>
       <div data-th-class="${figure['size'] == 'large'} ? 'col-md-12' : 'col-md-6'">
         <div class="ssb-key-figures" data-th-classappend="${figure['size']} ? ${figure['size']}">
           <div class="kf-icon" data-th-classappend="${figure['size']} ? ${figure['size']}">

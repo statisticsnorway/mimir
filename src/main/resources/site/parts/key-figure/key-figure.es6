@@ -1,7 +1,7 @@
-const { get : getKeyFigure } = __non_webpack_require__(  '/lib/ssb/key-figure')
-const { parseGlossaryContent } = __non_webpack_require__(  '/lib/ssb/glossary')
-const { parseMunicipalityValues, getMunicipality } = __non_webpack_require__(  '/lib/klass/municipalities')
-const { getComponent, getSiteConfig, getContent } = __non_webpack_require__(  '/lib/xp/portal')
+const { get: getKeyFigure } = __non_webpack_require__( '/lib/ssb/key-figure')
+const { parseGlossaryContent } = __non_webpack_require__( '/lib/ssb/glossary')
+const { parseMunicipalityValues, getMunicipality } = __non_webpack_require__( '/lib/klass/municipalities')
+const { getComponent, getSiteConfig, getContent } = __non_webpack_require__( '/lib/xp/portal')
 const { render } = __non_webpack_require__( '/lib/thymeleaf')
 const { data } = __non_webpack_require__( '/lib/util')
 const { pageMode } = __non_webpack_require__( '/lib/ssb/utils')
@@ -15,21 +15,21 @@ exports.get = function(req) {
   const page = getContent()
   const mode = pageMode(req, page)
   if (!municiaplity && mode === 'edit') {
-    const defaultMuniciaplity = getSiteConfig().defaultMunicipality;
+    const defaultMuniciaplity = getSiteConfig().defaultMunicipality
     municiaplity = getMunicipality({ code: defaultMuniciaplity })
   }
-  return renderPart(municiaplity, keyFigureIds);
+  return renderPart(municiaplity, keyFigureIds)
 }
 
 exports.preview = (req, id) => {
-  const defaultMuniciaplity = getSiteConfig().defaultMunicipality;
+  const defaultMuniciaplity = getSiteConfig().defaultMunicipality
   const municiaplity = getMunicipality({ code: defaultMuniciaplity })
   return renderPart(municiaplity, [id])
 }
 
 const renderPart = (municipality, keyFigureIds) => {
   const part = getComponent()
-  const keyFigures = keyFigureIds.map( (keyFigureId) => getKeyFigure({key: keyFigureId}))
+  const keyFigures = keyFigureIds.map( (keyFigureId) => getKeyFigure({ key: keyFigureId }))
   return keyFigures.length && municipality !== undefined ? renderKeyFigure(keyFigures, part, municipality) : ''
 }
 
@@ -42,7 +42,7 @@ const renderPart = (municipality, keyFigureIds) => {
  */
 function renderKeyFigure(keyFigures, part, municipality) {
   const glossary = keyFigures.reduce( (result, keyFigure) => {
-    const parsedGlossary = parseGlossaryContent( keyFigure.data.glossary );
+    const parsedGlossary = parseGlossaryContent( keyFigure.data.glossary )
     if (parsedGlossary) {
       result.push(parsedGlossary)
     }

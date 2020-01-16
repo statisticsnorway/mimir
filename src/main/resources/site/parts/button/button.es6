@@ -7,12 +7,12 @@ const view = resolve('./button.html')
 
 exports.get = function(req) {
   const part = portal.getComponent()
-  const buttonsIds = part.config.button ? util.data.forceArray(part.config.button) : []
-  return renderPart(req, buttonsIds);
+  const buttonsIds = part.config.button ? util.data.forceArray(part.config.button) : []
+  return renderPart(req, buttonsIds)
 }
 
 exports.preview = function(req, id) {
-  return renderPart(req, [id]);
+  return renderPart(req, [id])
 }
 
 function renderPart(req, buttonIds) {
