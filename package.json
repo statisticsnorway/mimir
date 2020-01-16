@@ -12,7 +12,9 @@
     "dist": "run-p -c dist:*",
     "start": "enonic project deploy --dev",
     "install:dev": "nsi",
-    "install:prod": "npm install"
+    "install:prod": "npm install",
+    "lint": "eslint --fix ./src --ext .es6 --ext .ts --ext .jsx",
+    "lint-dry": "eslint ./src --ext .es6 --ext .ts --ext .jsx"
   },
   "repository": {
     "type": "git",
@@ -29,9 +31,14 @@
     "@babel/preset-env": "^7.7.6",
     "@babel/preset-react": "^7.7.4",
     "@babel/preset-stage-0": "^7.0.0",
+    "@typescript-eslint/eslint-plugin": "^2.11.0",
+    "@typescript-eslint/parser": "^2.11.0",
     "babel-loader": "^8.0.6",
+    "enonic-ts-codegen": "0.0.5",
+    "enonic-types": "0.0.14",
     "eslint": "^6.7.1",
     "eslint-config-google": "^0.14.0",
+    "eslint-plugin-react": "^7.17.0",
     "react4xp-build-components": "git+https://git@github.com/itemodahl/react4xp-build-components.git",
     "react4xp-buildconstants": "^0.8.0",
     "react4xp-runtime-externals": "^0.3.5",
@@ -41,7 +48,8 @@
     "webpack-cli": "^3.3.10"
   },
   "dependencies": {
-    "@statisticsnorway/ssb-component-library": "^1.1.33",
+    "@types/react": "^16.9.17",
+    "@statisticsnorway/ssb-component-library": "^1.1.43",
     "autoprefixer": "^9.7.3",
     "awesome-typescript-loader": "^5.2.1",
     "axios": "^0.19.0",

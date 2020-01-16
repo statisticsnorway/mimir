@@ -1,4 +1,4 @@
-const http = __non_webpack_require__(  '/lib/http-client')
+const http = __non_webpack_require__( '/lib/http-client')
 
 
 exports.get = function(url) {
@@ -15,7 +15,7 @@ const contentType = 'application/json'
 exports.getWithSelection = function(url, json, selection = { filter: 'all', values: ['*'] }) {
   if (json && json.query) {
     for (const query of json.query) {
-      if (query.code === 'KOKkommuneregion0000' || query.code === 'Region') {
+      if (query.code === 'KOKkommuneregion0000' || query.code === 'Region') {
         query.selection = selection
       }
     }

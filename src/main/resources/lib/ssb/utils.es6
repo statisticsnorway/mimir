@@ -8,13 +8,13 @@ exports.createHumanReadableFormat = (value) => {
 }
 
 export const alertsForContext = (municipality) => {
-  const currentMunicipalityAlerts = municipality ? listMunicipalityAlerts( municipality.code ) : {hits: []}
+  const currentMunicipalityAlerts = municipality ? listMunicipalityAlerts( municipality.code ) : { hits: [] }
   const alerts = [...listOperationsAlerts().hits, ...currentMunicipalityAlerts.hits]
   return alerts.map( (alert) => ({
     title: alert.displayName,
     messageType: alert.type === `${app.name}:operations-alert` ? 'warning' : 'info',
     municipalCodes: alert.data.municipalCodes,
-    message: processHtml({value: alert.data.message})
+    message: processHtml({ value: alert.data.message })
   }))
 }
 

@@ -71,7 +71,7 @@ exports.get = function(req) {
   page.displayNameURLencoded = encodeURI(page.displayName)
   page.url = encodeURI(pageUrl({ type: 'absolute', id: page._id }))
 
-  const alerts = alertsForContext(municipality);
+  const alerts = alertsForContext(municipality)
 
   const stylesUrl = assetUrl({
     path: 'styles/bundle.css',

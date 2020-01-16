@@ -15,12 +15,12 @@ exports.preview = function(req, id) {
 }
 
 function renderPart(req, menuBoxId) {
-  let menus;
+  let menus
   if (menuBoxId) {
     const menuBox = content.get({ key: menuBoxId })
     if (menuBox && menuBox.data.menu) {
       const menuConfigs = menuBox.data.menu ? util.data.forceArray(menuBox.data.menu) : []
-      menus = buildMenu(menuConfigs);
+      menus = buildMenu(menuConfigs)
     }
   }
   const model = { menus }
@@ -37,7 +37,7 @@ function renderPart(req, menuBoxId) {
 function buildMenu(menuConfigs) {
   const menus = []
   menuConfigs.forEach((menuConfig) => {
-    let imageSrc = '';
+    let imageSrc = ''
     if (menuConfig.image) {
       imageSrc = portal.imageUrl({
         id: menuConfig.image,
@@ -53,7 +53,7 @@ function buildMenu(menuConfigs) {
       imageSrc
     })
   })
-  return menus;
+  return menus
 }
 
 /**
@@ -67,5 +67,5 @@ function getHref(menuConfig) {
   } else if (menuConfig.content) {
     return portal.pageUrl({ id: menuConfig.content })
   }
-  return '';
+  return ''
 }
