@@ -11,7 +11,6 @@ import { init as initMenu } from './app/menu.es6'
 import { init as initMenuDropDown } from './app/menu-dropdown.es6'
 import { init as initPrint } from './app/print.es6'
 
-
 document.addEventListener('DOMContentLoaded', () => {
   initAutocomplete()
   initBanner()
