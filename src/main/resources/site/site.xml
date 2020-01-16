@@ -36,6 +36,17 @@
       <occurrences minimum="1" maximum="1"/>
       <default>0101</default>
     </input>
+    <item-set name="kommunefakta">
+      <label>Kommunefakta instillinger</label>
+      <occurrences minimum="0" maximum="1"/>
+      <items>
+          <input type="TextLine" name="mapfolder">
+              <label>Mappe kartfiler</label>
+              <occurrences minimum="0" maximum="1"/>
+              <default>/mapdata</default>
+          </input>
+      </items>
+    </item-set>
     <item-set name="language">
       <label>Språk instillinger</label>
       <occurrences minimum="1" maximum="2"/>
