@@ -25,7 +25,6 @@ function temporary(draft, master) {
         })
         if (create) {
           const keyFigure = content.query({ count: 999, contentTypes: [`${app.name}:key-figure`], query: `data.query = '${data._id}'` })
-          log.info(JSON.stringify(data, null, ' '))
           if (keyFigure && keyFigure.total) {
             keyFigure.hits.forEach((figure) => {
               content.modify({ key: figure._id, editor: (r) => {

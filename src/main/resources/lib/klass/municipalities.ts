@@ -3,19 +3,43 @@ import { ContentLibrary, Content, QueryResponse } from 'enonic-types/lib/content
 import { Dataset } from '../../site/content-types/dataset/dataset'
 import { Request } from 'enonic-types/lib/controller'
 import { CacheLib, Cache } from '../types/cache'
+import { HttpResponse } from 'enonic-types/lib/http'
 import { PortalLibrary } from 'enonic-types/lib/portal'
 import { County, CountiesLib } from './counties'
 
-const { getChildren }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
-const { getDataSetWithDataQueryId, getValueWithIndex, getTime, getDataSetFromDataQuery } = __non_webpack_require__( '../ssb/dataset')
-const { get: getKlass } = __non_webpack_require__( './klass')
-const { localizeTimePeriod } = __non_webpack_require__( '../language')
-const { localize } = __non_webpack_require__( '/lib/xp/i18n')
-const { createHumanReadableFormat } = __non_webpack_require__( '../ssb/utils')
-const { get: getDataquery } = __non_webpack_require__( '/lib/ssb/dataquery')
-const { getSiteConfig }: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
-const { list: countyList }: CountiesLib = __non_webpack_require__( './counties')
-const { newCache }: CacheLib = __non_webpack_require__( '/lib/cache')
+const {
+  getChildren
+}: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
+const {
+  getDataSetWithDataQueryId, getValueWithIndex, getTime, getDataSetFromDataQuery
+} = __non_webpack_require__( '../ssb/dataset')
+const {
+  get: getKlass
+} = __non_webpack_require__( './klass')
+const {
+  localizeTimePeriod
+} = __non_webpack_require__( '../language')
+const {
+  localize
+} = __non_webpack_require__( '/lib/xp/i18n')
+const {
+  createHumanReadableFormat
+} = __non_webpack_require__( '../ssb/utils')
+const {
+  get: getDataquery
+} = __non_webpack_require__( '/lib/ssb/dataquery')
+const {
+  getSiteConfig
+}: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
+const {
+  list: countyList
+}: CountiesLib = __non_webpack_require__( './counties')
+const {
+  newCache
+}: CacheLib = __non_webpack_require__( '/lib/cache')
+const {
+  request: httpRequest
+} = __non_webpack_require__( '/lib/http-client')
 
 /**
  * @return {array} Returns everything in the "code" node from ssb api
@@ -73,7 +97,10 @@ export function createPath(municipalName: string, countyName?: string): string {
  */
 export function getValue(url: string, query: string, municipalityCode: string): object {
   // change from object type to interface in klass lib
-  const selection: object = { filter: 'item', values: municipalityCode }
+  const selection: object = {
+    filter: 'item',
+    values: municipalityCode
+  }
   return getKlass(url, query, selection)
 }
 
@@ -95,7 +122,9 @@ export function parseMunicipalityValues(dataQueryId: string, municipality: Munic
   if (datasetContent.count) {
     data = JSON.parse(datasetContent.hits[0].data.json)
   } else {
-    data = getDataSetFromDataQuery( getDataquery({ key: dataQueryId }))
+    data = getDataSetFromDataQuery( getDataquery({
+      key: dataQueryId
+    }))
   }
   const value: string = getValueWithIndex(data.dataset, municipality.code || defaultMunicipalityCode)
   const time: string = getTime(data.dataset)
@@ -103,7 +132,6 @@ export function parseMunicipalityValues(dataQueryId: string, municipality: Munic
   return municipalityObject(value, time)
 }
 
-const notFoundValues: Array<string> = ['.', '..', '...', ':', '-']
 
 /**
  *
@@ -111,17 +139,23 @@ const notFoundValues: Array<string> = ['.', '..', '...', ':', '-']
  * @param {String} time
  * @return {Municipality}
  */
+const notFoundValues: Array<string> = ['.', '..', '...', ':', '-']
 function municipalityObject(value: string, time: string): Municipality {
   return {
     value: notFoundValues.indexOf(value) < 0 ? value : null,
-    valueNotFound: localize({ key: 'value.notFound' }),
+    valueNotFound: localize({
+      key: 'value.notFound'
+    }),
     time: localizeTimePeriod(time),
     valueHumanReadable: value ? createHumanReadableFormat(value) : undefined
   }
 }
 
 
-const cache: Cache = newCache({ size: 100, expire: 3600 })
+const cache: Cache = newCache({
+  size: 1000,
+  expire: 3600
+})
 
 export function municipalsWithCounties(): Array<MunicipalityWithCounty> {
   const counties: Array<County> = countyList()
@@ -146,14 +180,117 @@ export function municipalsWithCounties(): Array<MunicipalityWithCounty> {
 export function getMunicipality(req: RequestWithCode): MunicipalityWithCounty|undefined {
   const municipalities: Array<MunicipalityWithCounty> = municipalsWithCounties()
 
+  let municipality: MunicipalityWithCounty | undefined
   if (req.path) {
-    const municipalityName: string = req.path.replace(/^.*\//, '/').toLowerCase()
-    return municipalities.filter( (municipality) => municipality.path === municipalityName)[0]
+    const municipalityName: string = req.path.replace(/^.*\//, '').toLowerCase()
+    municipality = getMunicipalityByName(municipalities, municipalityName)
   } else if (req.code) {
-    return municipalities.filter( (municipality) => municipality.code === req.code )[0]
-  } else {
-    return undefined
+    municipality = getMunicipalityByCode(municipalities, req.code)
   }
+
+  if (!municipality && (req.mode === 'edit' || req.mode === 'preview')) {
+    const siteConfig: SiteConfig = getSiteConfig()
+    const defaultMunicipality: string = siteConfig.defaultMunicipality
+    municipality = getMunicipalityByCode(municipalities, defaultMunicipality)
+  }
+
+  return municipality
+}
+
+/**
+ *
+ * @param {array} municipalities
+ * @param {number} municipalityCode
+ * @return {*}
+ */
+function getMunicipalityByCode(municipalities: Array<MunicipalityWithCounty>, municipalityCode: string): MunicipalityWithCounty|undefined {
+  return cache.get(`municipality_${municipalityCode}`, () => {
+    const changes: Array<MunicipalityChange> | undefined = changesWithMunicipalityCode(municipalityCode)
+    const municipality: Array<MunicipalityWithCounty> = municipalities.filter((municipality) => municipality.code === municipalityCode)
+    return municipality.length > 0 ? {
+      ...municipality[0],
+      changes
+    } : undefined
+  })
+}
+
+
+/**
+ *
+ * @param {array} municipalities
+ * @param {string} municipalityName
+ * @return {*}
+ */
+function getMunicipalityByName(municipalities: Array<MunicipalityWithCounty>, municipalityName: string): MunicipalityWithCounty|undefined {
+  return cache.get(`municipality_${municipalityName}`, () => {
+    const changes: Array<MunicipalityChange> | undefined = changesWithMunicipalityName(municipalityName)
+    const municipality: Array<MunicipalityWithCounty> = municipalities.filter((municipality) => municipality.path === `/${municipalityName}`)
+    return municipality.length > 0 ? {
+      ...municipality[0],
+      changes
+    } : undefined
+  })
+}
+
+
+function changesWithMunicipalityName(municipalityName: string): Array<MunicipalityChange>|undefined {
+  const changeList: Array<MunicipalityChange> = getMunicipalityChanges().codeChanges
+  const changes: Array<MunicipalityChange> = changeList.filter( (change) => {
+    return [change.oldName.toLowerCase(), change.newName.toLowerCase()].indexOf(municipalityName) >= 0 &&
+        change.oldCode !== change.newCode
+  })
+  return changes.length ? changes : undefined
+}
+
+function changesWithMunicipalityCode(municipalityCode: string): Array<MunicipalityChange>|undefined {
+  const changeList: Array<MunicipalityChange> = getMunicipalityChanges().codeChanges
+  const changes: Array<MunicipalityChange> = changeList.filter( (change) => {
+    return (change.oldCode === municipalityCode || change.newCode === municipalityCode) &&
+        change.oldName === change.newName
+  })
+  return changes.length ? changes : undefined
+}
+
+
+function getMunicipalityChanges(from?: string, to?: string): MunicipalityChangeList {
+  if(!from) from = '2016-01-01'
+  if(!to) to = '2020-01-01'
+  const baseUrl: string = 'https://data.ssb.no/api/klass/v1/'
+  const readTimeout: number = 5000
+  const connectionTimeout: number = 20000
+  const headers: Record<string, any> = {
+    'Cache-Control': 'no-cache',
+    'Accept': 'application/json'
+  }
+  const contentType: string = 'application/json'
+
+  const url: string = `classifications/131/changes?from=${from}&to=${to}`
+  const result: HttpResponse = cache.get( 'municipalityChanges', () => {
+    return httpRequest({
+      url: `${baseUrl}${url}`,
+      method: 'GET',
+      headers,
+      connectionTimeout,
+      readTimeout,
+      contentType
+    })
+  })
+  const body: string = result.body || ''
+  return JSON.parse(body)
+}
+
+export interface MunicipalityChangeList {
+  codeChanges: Array<MunicipalityChange>;
+}
+
+export interface MunicipalityChange {
+  oldCode: string;
+  oldName: string;
+  oldShortName?: string;
+  newCode: string;
+  newName: string;
+  newShortName?: string;
+  changeOccurred: string;
 }
 
 export interface MunicipalitiesLib {
@@ -186,6 +323,7 @@ export interface MunicipalityWithCounty {
     name: string;
   };
   path: string;
+  changes?: Array<MunicipalityChange>;
 }
 
 export interface Municipality {
