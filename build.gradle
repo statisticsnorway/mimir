@@ -68,6 +68,13 @@ task serverWebpack( type: NodeTask, dependsOn: npmInstall ) {
     script = file( 'node_modules/webpack-cli/bin/cli.js' )
 }
 
+task generateTypeScriptInterfaces( type: NodeTask, dependsOn: npmInstall ) {
+    description = 'Generate TypeScript interfaces'
+    environment = [ 'NODE_ENV': nodeEnvironment() ]
+    args = [ '--project', '.', '--write-to-file' ]
+    script = file( 'node_modules/enonic-ts-codegen/bin/index.js' )
+}
+
 processResources {
     include '**/*'
     exclude '**/.gitkeep'
@@ -94,6 +101,7 @@ jar {
 
     dependsOn += clientWebpack
     dependsOn += serverWebpack
+    dependsOn += generateTypeScriptInterfaces
     //dependsOn += 'babelXP'
 
 }

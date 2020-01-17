@@ -17,11 +17,11 @@ exports.get = function(req) {
   })
 
   function chunkArray(myArray, chunkSize) {
-    const results = [];
+    const results = []
     while (myArray.length) {
-      results.push(myArray.splice(0, chunkSize));
+      results.push(myArray.splice(0, chunkSize))
     }
-    return results;
+    return results
   }
 
   const contacts = chunkArray(contactIdList, WIDTH)

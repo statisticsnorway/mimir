@@ -4,7 +4,8 @@
         "es6": true
     },
     "extends": [
-        "google"
+        "google",
+        "./common.eslintrc.json"
     ],
     "globals": {
         "Atomics": "readonly",
@@ -14,38 +15,59 @@
         "ecmaVersion": 2018,
         "sourceType": "module"
     },
-    "rules": {
-        "comma-dangle": ["error", {
-            "arrays": "never",
-            "objects": "never",
-            "imports": "never",
-            "exports": "never",
-            "functions": "ignore"
-        }],
-        "no-extend-native": 0,
-        "quotes": 1,
-        "max-len": [2, 250],
-        "linebreak-style": 0,
-        "brace-style": [1],
-        "camelcase": 1,
-        "no-var": 1,
-        "require-jsdoc": 0,
-        "block-spacing": 1,
-        "space-before-function-paren": 1,
-        "eol-last": 1,
-        "no-multi-spaces": 1,
-        "spaced-comment": 1,
-        "func-call-spacing": 1,
-        "new-cap": 0,
-        "keyword-spacing": 1,
-        "key-spacing": 1,
-        "quote-props": 1,
-        "comma-spacing": 1,
-        "no-unused-vars": 1,
-        "no-invalid-this": 0,
-        "indent": [1, 2],
-        "semi": 0,
-        "object-curly-spacing": 0,
-        "no-irregular-whitespace": 0
-    }
+    "overrides": [
+      {
+        "parser": "@typescript-eslint/parser",
+        "files": "*.ts",
+        "plugins": [
+          "@typescript-eslint"
+        ],
+        "extends": [
+          "google",
+          "plugin:@typescript-eslint/recommended",
+          "plugin:@typescript-eslint/recommended-requiring-type-checking",
+          "./common.eslintrc.json"
+        ],
+        "parserOptions": {
+          "ecmaVersion": 2018,
+          "sourceType": "module",
+          "project": "./tsconfig.json"
+        },
+        "rules": {
+          "@typescript-eslint/no-inferrable-types": "off",
+          "@typescript-eslint/typedef": [
+            "error",
+            {
+              "arrowParameter": false,
+              "variableDeclaration": true
+            }
+          ],
+          "@typescript-eslint/no-use-before-define": [
+            "error", 
+            {
+            "functions": false
+            }
+          ]
+        }
+      },
+      {
+        "plugins":[
+          "react"
+        ],
+        "files": "*.jsx",
+        "parserOptions": {
+          "ecmaFeatures": {
+            "jsx": true
+          }
+        },
+        "extends": [
+          "google",
+          "plugin:react/recommended",
+          "./common.eslintrc.json"
+        ],
+        "rules": {
+          "react/display-name": "off"
+        }
+      }
+    ]
 }

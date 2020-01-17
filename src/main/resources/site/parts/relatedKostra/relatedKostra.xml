@@ -1,0 +1,26 @@
+<part>
+  <display-name>Relatert innhold (KOSTRA)</display-name>
+  <description></description>
+  <form>
+    <input type="TextLine" name="title">
+      <label>Overskrft</label>
+      <occurrences minimum="1" maximum="1"/>
+      <default>Vil du vite mer om din kommune?</default>
+    </input>
+    <input type="HtmlArea" name="description">
+      <label>Beskrivelse</label>
+      <occurrences minimum="1" maximum="1"/>
+      <default><p>Innhold kommer her.</p></default>
+    </input>
+    <input type="TextLine" name="kostraLinkText">
+      <label>KOSTRA lenke tekst</label>
+      <occurrences minimum="1" maximum="1"/>
+      <default>Se flere nøkkeltall</default>
+    </input>
+    <input type="TextLine" name="kostraLink">
+      <label>KOSTRA lenke</label>
+      <occurrences minimum="1" maximum="1"/>
+      <default>/kommunefakta/kostra</default>
+    </input>
+  </form>
+</part>
