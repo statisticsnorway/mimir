@@ -55,6 +55,7 @@ export function init() {
     // Initialisering av HighCharts-figurer fra tilhørende HTML-tabell
     $('.highcharts-canvas[id^="highcharts-"]').each(function(index, chart) {
       const config = window['highchart' + $(chart).data('contentkey')]
+
       const canvas = $(chart)
       const highchartsContentKey = canvas.data('contentkey');
 

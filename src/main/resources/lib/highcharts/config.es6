@@ -105,7 +105,6 @@ export const createConfig = (highchartData, displayName) => ({
     labels: {
       style,
       format: '{value:,.0f}'
-
     },
     max: highchartData.yAxisMax ? highchartData.yAxisMax.replace(/,/g, '.') : null,
     min: highchartData.yAxisMin ? highchartData.yAxisMin.replace(/,/g, '.') : null,

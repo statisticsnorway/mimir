@@ -7,32 +7,27 @@ export interface Highchart {
   /**
    * Undertittel
    */
-  undertittel?: string;
+  subtitle?: string;
 
   /**
-   * Forklaring datagrunnlag for Screen-reader (brukes nå på alle sider)
+   * Forklaring datagrunnlag for Screen-reader (ps. ikke i bruk)
    */
-  'forklaring-datagrunnlag'?: string;
-
-  /**
-   * Graftype
-   */
-  type?: string;
+  datasetExplanation?: string;
 
   /**
    * Antall desimalplasser som vises
    */
-  numberdecimals?: string;
+  numberDecimals?: string;
 
   /**
    * Stabling av verdier
    */
-  stabling?: string;
+  stacking?: string;
 
   /**
    * Skjul tegnforklaringen
    */
-  nolegend: boolean;
+  noLegend: boolean;
 
   /**
    * Plassering av tegnforklaring
@@ -42,17 +37,17 @@ export interface Highchart {
   /**
    * Tegnforklaring under (kun kakediagram)
    */
-  'pie-legend': boolean;
+  pieLegend: boolean;
 
   /**
    * Tickinterval
    */
-  tickinterval?: string;
+  tickInterval?: string;
 
   /**
    * Zoom i graf
    */
-  zoomtype?: string;
+  zoomType?: string;
 
   /**
    * Midtstille tittel
@@ -62,17 +57,12 @@ export interface Highchart {
   /**
    * Kildetabell for Highcharts-figur
    */
-  htmltabell?: string;
-
-  /**
-   * Spørring mot Statistikkbanken
-   */
-  dataquery?: string;
+  htmlTable?: string;
 
   /**
    * Bytt rader og kolonner
    */
-  byttraderogkolonner: boolean;
+  switchRowsAndColumns: boolean;
 
   /**
    * Kombinere forklaringer
@@ -82,17 +72,17 @@ export interface Highchart {
   /**
    * Fotnote-tekst
    */
-  fotnoteTekst?: string;
+  footnoteText?: string;
 
   /**
    * Kildetekst
    */
-  kildetekst?: string;
+  creditsText?: string;
 
   /**
    * Kilde-URL
    */
-  kildeurl?: string;
+  creditsHref?: string;
 
   /**
    * X-akse Tittel
@@ -150,7 +140,7 @@ export interface Highchart {
   yAxisAllowDecimal: boolean;
 
   /**
-   * Vis stabelsum
+   * Spørring mot Statistikkbanken
    */
-  stabelsum: boolean;
+  dataquery?: string;
 }

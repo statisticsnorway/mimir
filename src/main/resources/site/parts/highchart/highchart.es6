@@ -1,11 +1,11 @@
 const util = __non_webpack_require__( '/lib/util')
 const { getMunicipality } = __non_webpack_require__( '/lib/klass/municipalities')
 const { getDataSetWithDataQueryId } = __non_webpack_require__( '/lib/ssb/dataset')
-const { getComponent, getSiteConfig } = __non_webpack_require__( '/lib/xp/portal')
+const { getComponent } = __non_webpack_require__( '/lib/xp/portal')
 const content = __non_webpack_require__( '/lib/xp/content')
 const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
 import JsonStat from 'jsonstat-toolkit'
-const { createSetOptions, createConfig, lineColor, style } = __non_webpack_require__('/lib/highcharts/config')
+const { createConfig, lineColor, style } = __non_webpack_require__('/lib/highcharts/config')
 const { parseDataWithMunicipality, barNegativeFormat, defaultFormat } = __non_webpack_require__('/lib/highcharts/highcharts')
 
 const view = resolve('./highchart.html')
@@ -61,7 +61,7 @@ function renderPart(req, highchartIds) {
       if (graphType._selected === 'barNegative') {
         const barNegativData = barNegativeFormat(dataset, dimensionFilter, graphType.barNegative.xAxisLabel, graphType.barNegative.yAxisLabel)
         config.series = barNegativData.series
-        config.xAxis = [{
+        config.xAxis = {
           title: {
             style,
             text: xAxisTitle
@@ -74,7 +74,7 @@ function renderPart(req, highchartIds) {
           },
           lineColor,
           accessibility: { description: graphType.barNegative.xAxisLabel }
-        }];
+        };
       } else {
         const graphData = defaultFormat(dataset, dimensionFilter, graphType[graphType._selected].xAxisLabel)
         config.series = graphData.series

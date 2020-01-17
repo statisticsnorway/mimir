@@ -33,9 +33,9 @@ const config = {
     extensions: [],
   },
   optimization: {
-    minimizer: [
+    /*minimizer: [
       new TerserPlugin(),
-    ],
+    ],*/
     splitChunks: {
       minSize: 30000,
     },
