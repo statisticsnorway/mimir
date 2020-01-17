@@ -1,7 +1,8 @@
 const { query } = __non_webpack_require__( '/lib/xp/content')
 const { NOT_FOUND } = __non_webpack_require__( './error')
 const { getWithSelection } = __non_webpack_require__( '/lib/klass/klass')
-
+const content = __non_webpack_require__( '/lib/xp/content')
+import JsonStat from 'jsonstat-toolkit'
 
 const contentTypeName = `${app.name}:dataset`
 
@@ -62,11 +63,42 @@ export const parseJsonStatToLabelValue = (data) => {
  */
 export const getValueWithIndex = (data, index) => {
   const dataKey = data.dimension.id[0]
-  const valueIndex = data.dimension[dataKey].category.index
-  return data.value[valueIndex[index]]
+  const valueIndexes = data.dimension[dataKey].category.index
+  return data.value[valueIndexes[index]]
 }
 
 
 export const getDataSetFromDataQuery = (dataqueryContent) => {
   return getWithSelection(dataqueryContent.data.table, JSON.parse(dataqueryContent.data.json))
+}
+
+/**
+ *
+ * @param {} datasetId
+ * @param {} municipality
+ * @return {*}
+ */
+export const getDataFromCurrentOrOldMunicipalityCode = (dataset, municipality) => {
+  if (dataset && dataset.data && dataset.data.json) {
+    try {
+      const json = JSON.parse(dataset.data.json)
+      const ds = JsonStat(json).Dataset(0)
+
+      const region = ds.Dimension(0).Category(municipality.code)
+      const categories = ds.Dimension(1).Category()
+
+      return categories.map( (category, i) => {
+        const data = ds.Data([region.index, i, 0, 0], false) // [0,i,0,0]
+        return {
+          name: category.label,
+          data: [data],
+          y: [data]
+        }
+      })
+    } catch (e) {
+      log.error('Could not parse json from dataset');
+      log.error(e);
+    }
+  }
+  return []
 }

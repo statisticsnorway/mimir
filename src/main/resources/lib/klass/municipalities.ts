@@ -104,7 +104,6 @@ export function parseMunicipalityValues(dataQueryId: string, municipality: Munic
   return municipalityObject(value, time)
 }
 
-const notFoundValues: Array<string> = ['.', '..', '...', ':', '-']
 
 /**
  *
@@ -112,6 +111,7 @@ const notFoundValues: Array<string> = ['.', '..', '...', ':', '-']
  * @param {String} time
  * @return {Municipality}
  */
+const notFoundValues: Array<string> = ['.', '..', '...', ':', '-']
 function municipalityObject(value: string, time: string): Municipality {
   return {
     value: notFoundValues.indexOf(value) < 0 ? value : null,
@@ -147,39 +147,101 @@ export function municipalsWithCounties(): Array<MunicipalityWithCounty> {
 export function getMunicipality(req: RequestWithCode): MunicipalityWithCounty|undefined {
   const municipalities: Array<MunicipalityWithCounty> = municipalsWithCounties()
 
+  let municipality;
   if (req.path) {
     const municipalityName = req.path.replace(/^.*\//, '').toLowerCase()
-
-    return cache.get(`municipality_${municipalityName}`, () => {
+    municipality = getMunicipalityByName(municipalities, municipalityName)
+    /*return cache.get(`municipality_${municipalityName}`, () => {
       const changes = changesWithMunicipalityName(municipalityName)
+
       return {
         ...municipalities.filter((municipality) => municipality.path === `/${municipalityName}`)[0],
         changes
       }
-    })
+    })*/
   } else if (req.code) {
-    return cache.get(`municipality_${req.code}`, () => {
+    municipality = getMunicipalityByCode(municipalities, req.code)
+
+    /*return cache.get(`municipality_${req.code}`, () => {
       const changes = changesWithMunicipalityCode(req.code)
       return {
         ...municipalities.filter( (municipality) => municipality.code === req.code )[0],
         changes
       }
-    })
-  } else {
-    return undefined
+    })*/
   }
+
+  if (!municipality && (req.mode === 'edit' || req.mode === 'preview')) {
+    const defaultMunicipality = getSiteConfig().defaultMunicipality;
+    municipality = getMunicipalityByCode(municipalities, defaultMunicipality)
+  }
+
+  return municipality
+
+}
+
+/**
+ *
+ * @param {array} municipalities
+ * @param {number} municipalityCode
+ * @return {*}
+ */
+function getMunicipalityByCode(municipalities, municipalityCode) {
+  return cache.get(`municipality_${municipalityCode}`, () => {
+    const changes = oldMunicipalityCode(municipalityCode)
+    const municipality = municipalities.filter((municipality) => {
+      return municipality.code === municipalityCode
+    })
+    return municipality.length > 0 ? {
+      ...municipality[0],
+      changes
+    } : undefined
+  })
+}
+
+
+/**
+ *
+ * @param {array} municipalities
+ * @param {string} municipalityName
+ * @return {*}
+ */
+function getMunicipalityByName(municipalities, municipalityName) {
+  return cache.get(`municipality_${municipalityName}`, () => {
+    const changes = changesWithMunicipalityName(municipalityName)
+    const municipality = municipalities.filter((municipality) => municipality.path === `/${municipalityName}`)
+    return municipality.length > 0 ? {
+      ...municipality[0],
+      changes
+    } : undefined
+  })
 }
 
 
 const changesWithMunicipalityName = (municipalityName) => {
   const changeList = getMunicipalityChanges().codeChanges;
-  return changeList.filter( (change) => {
+  const changes = changeList.filter( (change) => {
     return [change.oldName.toLowerCase(), change.newName.toLowerCase()].indexOf(municipalityName) >= 0 &&
         change.oldCode !== change.newCode
   })
+  return changes.length ? changes : undefined
 }
 
 const changesWithMunicipalityCode = (municipalityCode) => {
+  const changeList = getMunicipalityChanges().codeChanges;
+  return changeList.filter( (change) => {
+    return (change.oldCode === municipalityCode || change.newCode === municipalityCode) &&
+        change.oldName === change.newName
+  })
+}
+
+
+/**
+ *  Get changes for municipality if the municipality code has changed
+ * @param {Number} municipalityCode
+ * @return {*}
+ */
+const oldMunicipalityCode = (municipalityCode) => {
   const changeList = getMunicipalityChanges().codeChanges;
   return changeList.filter( (change) => {
     return (change.oldCode === municipalityCode || change.newCode === municipalityCode) &&

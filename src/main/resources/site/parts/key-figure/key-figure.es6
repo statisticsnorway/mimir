@@ -50,7 +50,7 @@ function renderKeyFigure(keyFigures, part, municipality) {
   }, [])
 
   const parsedKeyFigures = keyFigures.map( (keyFigure) => {
-    const dataset = parseMunicipalityValues(keyFigure.data.dataquery, municipality, keyFigure.data.default)
+    const dataset = parseMunicipalityValues(keyFigure.data.dataquery, municipality.code, keyFigure.data.default)
     return {
       displayName: keyFigure.displayName,
       ...keyFigure.data,
@@ -77,4 +77,3 @@ function renderKeyFigure(keyFigures, part, municipality) {
     contentType: 'text/html'
   }
 }
-
