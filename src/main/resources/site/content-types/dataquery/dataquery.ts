@@ -18,4 +18,14 @@ export interface Dataquery {
    * Oppdateres
    */
   update?: string;
+
+  /**
+   * Dataset Format
+   */
+  datasetFormat: {
+    /**
+     * Formatet på resultatet etter spørring
+     */
+    datasetFormat: string;
+  };
 }

@@ -13,4 +13,14 @@ export interface Dataset {
    * Resultat fra spørring i JSON-format
    */
   json: string;
+
+  /**
+   * Dataset Format
+   */
+  datasetFormat: {
+    /**
+     * Formatet på resultatet etter spørring
+     */
+    datasetFormat: string;
+  };
 }
