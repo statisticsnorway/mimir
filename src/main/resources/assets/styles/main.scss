@@ -40,6 +40,7 @@ $container-max-widths: (
 @import "./menu-dropdown";
 @import "./menu";
 @import "./preface";
+@import "./global-styles";
 
 body {
   -moz-osx-font-smoothing: grayscale;
@@ -57,41 +58,16 @@ body {
   }
 }
 
-h1,h2,h3,h4,h5 {
-  font-family: "Roboto Condensed";
-  font-weight: 700;
-  font-style: normal;
-}
-h1 {
-  font-size: 50px;
-  line-height: 1.4;
-}
-h2 {
-  font-size: 40px;
-  line-height: 1.5;
-}
-h3 {
-  font-size: 28px;
-  line-height: 1.5;
-}
-h4 {
-  font-size: 20px;
-  line-height: 1.5;
-}
-h5 {
-  font-size: 18px;
-  line-height: 1.5;
-}
-h6 {
-  font-size: 16px;
-  line-height: 1.5;
-}
 .article h2 {
   font-size: 20px;
 }
+
+
 .row + section, section + section {
   margin-top: 20px;
 }
+
+
 a, .a-ssb {
   color: #003892;
   text-decoration: underline;
@@ -108,6 +84,7 @@ a, .a-ssb {
     text-decoration: none;
   }
 }
+
 .a-white {
   color: white;
   &:hover {
@@ -115,20 +92,16 @@ a, .a-ssb {
     color: #CCCCCC;
   }
 }
+
 a.btn {
   text-decoration: none;
 }
-.a-glossary {
-  text-decoration: none;
-  border-bottom: 1px dotted #003892;
-}
-.a-glossary:hover {
-  text-decoration: none;
-  border-bottom: 1px dotted #a53d7c;
-}
+
 footer {
   margin-top: 40px;
 }
+
+
 
 .bkg-grey {
   background-color: $ssb-dark-1;

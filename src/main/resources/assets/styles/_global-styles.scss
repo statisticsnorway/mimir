@@ -1,0 +1,220 @@
+
+/* -- Headings -- */
+
+h1,h2 {
+  @include roboto-condenced;
+  font-weight: bold;
+  margin-top: 0;
+}
+h3,h4,h5,h6 {
+  @include roboto;
+  font-weight: bold;
+  color: $ssb-dark-6;
+  margin-top: 0;
+}
+h1 {
+  font-size: 56px;
+  line-height: 80px;
+}
+h2 {
+  font-size: 28px;
+  line-height: 40px;
+}
+h3 {
+  font-size: 20px;
+  line-height: 32px;
+}
+h4 {
+  font-size: 16px;
+  line-height: 28px;
+}
+h5 {
+  font-size: 18px;
+  line-height: 1.7;
+}
+h6 {
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+@media #{$mobile} {
+  h1 {
+    font-size: 44px;
+    line-height: 56px;
+  }
+  h2 {
+    font-size: 28px;
+    line-height: 36px;
+  }
+}
+/* -- End headings -- */
+
+
+/* -- Text -- */
+
+body {
+  @include open-sans;
+  color: $ssb-dark-6;
+}
+
+p {
+  @include open-sans;
+  color: $ssb-dark-6;
+  font-size: 16px;
+  font-style: normal;
+  letter-spacing: normal;
+  line-height: 1.7;
+  max-width: $max-readable-width;
+
+  &.small-text {
+    font-size: 14px;
+  }
+
+  &.negative {
+    color: $ssb-white;
+  }
+}
+/* -- End text -- */
+
+
+/* -- Links -- */
+
+$default-font-size: 16px;
+$profiled-font-size: 18px;
+$header-font-size: 20px;
+$icon-padding: 8px;
+
+a {
+  @include open-sans;
+  align-items: center;
+  background-image: linear-gradient(120deg, $ssb-green-4 0%, $ssb-green-4 100%);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 0;
+  border-bottom: 1px solid $ssb-green-4;
+  color: $ssb-green-4;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: $default-font-size;
+  line-height: 1.25;
+  margin-top: -3px;
+  margin-bottom: -2px;
+  padding: 0 1px 2px 1px;
+  position: relative;
+  text-decoration: none;
+  transition: background-size .2s ease-in, color .1s;
+
+  .icon-wrapper {
+    display: flex;
+    margin-right: 4px;
+  }
+
+  &.header {
+    @include roboto;
+    border-bottom-width: 2px;
+    font-size: $header-font-size;
+    font-weight: bold;
+
+    .link-text, span {
+      color: $ssb-dark-6;
+    }
+  }
+
+  &:hover, &:focus {
+    background-size: 100% 100%;
+    color: $ssb-white;
+    outline: 0;
+    text-decoration: none;
+
+    .link-text, span {
+      color: $ssb-white;
+    }
+  }
+
+  &.negative {
+    background-image: linear-gradient(120deg, $ssb-green-2 0%, $ssb-green-2 100%);
+    border-bottom: 1px solid $ssb-green-2;
+    color: $ssb-green-2;
+
+    .link-text, span {
+      color: $ssb-green-2;
+    }
+
+    &.header {
+      border-bottom-width: 2px;
+
+      .link-text, span {
+        color: $ssb-white;
+      }
+    }
+
+    &.with-icon {
+      padding: 2px 2px 0;
+      border-bottom: none;
+
+      i {
+        font-size: 20px;
+      }
+
+      .link-text, span {
+        color: $ssb-white;
+      }
+
+      &:hover, &:focus {
+        color: $ssb-dark-5;
+
+        .link-text, span {
+          color: $ssb-dark-5;
+        }
+      }
+
+    }
+
+    &:hover, &:focus {
+      color: $ssb-dark-5;
+      outline: 0;
+
+      .link-text, span {
+        color: $ssb-dark-5;
+      }
+    }
+  }
+
+  &.profiled {
+    border-bottom-width: 2px;
+    font-size: $profiled-font-size;
+    font-weight: bold;
+  }
+
+  &.with-icon {
+    padding: 2px 2px 0;
+    border-bottom: none;
+
+    i {
+      font-size: 16px;
+    }
+
+    .link-text, span {
+      color: $ssb-dark-6;
+    }
+
+    &:hover, &:focus {
+      color: $ssb-white;
+
+      .link-text, span {
+        color: $ssb-white;
+      }
+    }
+  }
+
+  .link-text, span {
+    color: $ssb-green-4;
+    transition: color .1s;
+
+    &:hover, &:focus {
+      color: $ssb-white;
+      outline: 0;
+    }
+  }
+}
+/* -- End links -- */
