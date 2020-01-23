@@ -74,7 +74,6 @@ function renderKeyFigure(keyFigures, part, municipality) {
     source
   }
 
-
   /** Render react **/
   const reactObjs = model.data.map( (keyfigure) => {
     let iconSrc = ''
@@ -98,14 +97,14 @@ function renderKeyFigure(keyFigures, part, municipality) {
     return keyfigureReact.setId(keyfigure.id).setProps(reactProps)
   })
 
-  const preRenderedBody = thymeleaf.render(view, model);
+  let body = thymeleaf.render(view, {});
 
-  const reactBody = reactObjs.reduce((reactRender, reactObj) => {
-    return reactObj.renderBody(reactRender)
-  }, preRenderedBody)
+  reactObjs.forEach((keyfigureReact) => {
+    body = keyfigureReact.renderBody({body});
+  });
 
   return {
-    body: reactBody,
+    body: body,
     contentType: 'text/html'
   }
 }
