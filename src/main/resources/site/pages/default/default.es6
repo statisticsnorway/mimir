@@ -67,11 +67,11 @@ exports.get = function(req) {
   }
 
   const language = getLanguage(page)
+
+  // a quickfix for article pagecontroller that will soon be removed
   let alternateLanguageVersionUrl
-  if (language.exists) {
-    alternateLanguageVersionUrl = pageUrl({
-      path: language.path
-    })
+  if (language.alternativeLanguages > 0) {
+    alternateLanguageVersionUrl = language.alternativeLanguages[0].linkSrc
   }
 
   let municipality

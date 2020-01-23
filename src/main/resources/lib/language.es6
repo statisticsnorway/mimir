@@ -10,41 +10,37 @@ exports.getLanguage = function(page) {
   const site = portal.getSite()
   const siteConfig = portal.getSiteConfig()
 
-  const nb = siteConfig.language[0] // properties for norsk (bokmål)
-  const en = siteConfig.language[1] // properties for english
+  moment.locale(page.language ? page.language : 'nb')
 
-  moment.locale(page.language === 'en' ? 'en' : 'nb')
+  const currentLanguageConfig = siteConfig.language.filter( (language) => language.code === page.language)[0]
+  const alternativeLanguagesConfig = siteConfig.language.filter( (language) => language.code !== page.language)
+  const currentLangPath = currentLanguageConfig.link? currentLanguageConfig.link : ''
+  const pagePathAfterSiteName = page._path.replace(`${site._path}${currentLangPath}`, '')
 
-  const result = page.language === 'en' ? {
-    code: en.code,
-    alternate: en.alternate, // alternate language code norsk bokmål
-    link: (en.link == null) ? '' : en.link,
-    published: page.publish && page.publish.from && moment(page.publish.from).format('DD. MMMM YYYY'),
-    modified: moment(page.modifiedTime).format('DD. MMMM YYYY'),
-    path: page._path.replace(/^\/.*?\/en/, site._path),
-    home: portal.pageUrl({
-      path: site._path
-    }),
-    phrases: (en.phrases == 'english') ? english : norwegian
-  } : {
-    code: nb.code, // norsk bokmål, https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-    alternate: nb.alternate, // alternate language code
-    link: (nb.link == null) ? '' : nb.link,
-    published: page.publish && page.publish.from && moment(page.publish.from).format('DD. MMMM YYYY').toLowerCase(),
-    modified: moment(page.modifiedTime).format('DD. MMMM YYYY').toLowerCase(),
-    path: page._path.replace(/^\/.*?\//, site._path + en.link + '/'),
-    home: portal.pageUrl({
-      path: site._path + en.link
-    }),
-    phrases: (nb.phrases == 'norwegian') ? norwegian : english
+  const alternativeLanguages = alternativeLanguagesConfig.map( (altLanguage) => {
+    const altVersionPath = altLanguage.link ? altLanguage.link : ''
+    const altVersionUri = `${site._path}${altVersionPath}${pagePathAfterSiteName}`
+    const altVersionExists = content.exists({key: altVersionUri })
+    return {
+      code: altLanguage.code,
+      linkTitle: altLanguage.label,
+      linkSrc: altVersionExists ? portal.pageUrl({path: altVersionUri}) : portal.pageUrl({path: altLanguage.link}),
+      altVersionExists: altVersionExists,
+      homePage: altLanguage.homePageId ? portal.pageUrl({
+        id: altLanguage.homePageId
+      }) : portal.pageUrl({ path: altVersionPath})
+    }
+  })
+
+  const result = {
+    code: currentLanguageConfig.code,
+    alternate: currentLanguageConfig.alternate,
+    link: (currentLanguageConfig.link !== null) ? currentLanguageConfig.link : '',
+    phrases: {
+      ...(i18n.getPhrases(page.language === 'nb' ? '': page.language, ['site/i18n/phrases']))
+    },
+    alternativeLanguages
   }
-
-  result.pageUrl = portal.pageUrl({
-    path: result.path
-  })
-  result.exists = content.exists({
-    key: result.path
-  })
 
   return result
 }
