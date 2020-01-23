@@ -32,7 +32,7 @@ function job() {
 
 cron.schedule({
   name: 'dataquery',
-  cron: '0 8 * * *',
+  cron: '0 9 * * *',
   times: 365 * 10,
   callback: job,
   context: master
