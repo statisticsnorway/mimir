@@ -52,6 +52,9 @@ const renderPart = (req, dataQueryIds) => {
     } else if (datasetFormat._selected === 'tbml') {
       const dataResult = getTbmlData(dq.data.table)
       headers = dataResult.tbml.presentation.table.thead.tr.th
+      if (!Array.isArray(headers)) {
+        headers = [headers]
+      }
       headers.unshift('')
       table = dataResult.tbml.presentation.table.tbody.tr.map((tr) => {
         return {

@@ -35,6 +35,6 @@ interface Table {
 }
 
 interface TableRow {
-  th: string;
-  td: Array<number>;
+  th: Array<string> | number;
+  td: Array<number> | string;
 }

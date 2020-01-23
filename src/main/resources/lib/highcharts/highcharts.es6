@@ -43,6 +43,33 @@ export const barNegativeFormat = (ds, dimensionFilter, xAxis, yAxis) => {
   }
 }
 
+export const defaultTbmlFormat = (data) => {
+  const rows = data.tbml.presentation.table.tbody.tr
+  let headers = data.tbml.presentation.table.thead.tr.th
+  const categories = []
+  if (!Array.isArray(headers)) {
+    headers = [headers]
+  }
+  const series = headers.map((name) => ({
+    name,
+    data: []
+  }))
+  rows.forEach((row) => {
+    categories.push(row.th)
+    series.forEach((serie, index) => {
+      if (!Array.isArray(row.td)) {
+        serie.data.push(row.td)
+      } else {
+        serie.data.push(row.td[index])
+      }
+    })
+  })
+  return {
+    categories,
+    series
+  }
+}
+
 export const parseDataWithMunicipality = (dataset, filterTarget, municipality, xAxis) => {
   let code = municipality.code
   let hasData = hasFilterData(dataset, filterTarget, code, xAxis )

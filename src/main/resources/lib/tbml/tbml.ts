@@ -22,8 +22,8 @@ export function fetch(url: string): string {
   return result
 }
 
-export function getTbmlData(tbmlId: string): TbmlData {
-  return xmlToJson(fetch(tbmlId))
+export function getTbmlData(url: string): TbmlData {
+  return xmlToJson(fetch(url))
 }
 
 function xmlToJson(xml: string): TbmlData {

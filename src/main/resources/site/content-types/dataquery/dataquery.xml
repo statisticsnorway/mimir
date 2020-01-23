@@ -50,6 +50,9 @@
         <option name="tbml">
           <label>tbml</label>
         </option>
+        <option name="klass">
+          <label>klass</label>
+        </option>
       </options>
     </option-set>
 

@@ -54,6 +54,7 @@ exports.get = function(req) {
               hasData: true
             })
           } else {
+            success = false
             message = `Failed to get data for dataquery: ${dataquery._id}`
             status = 500
           }

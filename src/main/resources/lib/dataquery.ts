@@ -4,6 +4,7 @@ import { Dataquery } from '../site/content-types/dataquery/dataquery'
 import { Content, ContentLibrary, QueryResponse, PublishResponse } from 'enonic-types/lib/content'
 import { Dataset } from '../site/content-types/dataset/dataset'
 import * as moment from 'moment'
+import { getTbmlData } from './tbml/tbml'
 const http: HttpLibrary = __non_webpack_require__('/lib/http-client')
 const context: ContextLibrary = __non_webpack_require__('/lib/xp/context')
 const content: ContentLibrary = __non_webpack_require__('/lib/xp/content')
@@ -23,7 +24,7 @@ const draft: RunContext = { // Draft context (XP)
   user
 }
 
-export function get(url: string, json: DataqueryRequestData, selection: SelectionFilter = defaultSelectionFilter): object | null {
+export function get(url: string, json: DataqueryRequestData | undefined, selection: SelectionFilter = defaultSelectionFilter): object | null {
   if (json && json.query) {
     for (const query of json.query) {
       if (query.code === 'KOKkommuneregion0000' || query.code === 'Region') {
@@ -42,7 +43,7 @@ export function get(url: string, json: DataqueryRequestData, selection: Selectio
     },
     connectionTimeout: 20000,
     readTimeout: 5000,
-    body: JSON.stringify(json)
+    body: json ? JSON.stringify(json) : undefined
   })
   if (result.status !== 200) {
     log.error(`HTTP ${url} (${result.status} ${result.message})`)
@@ -57,17 +58,22 @@ export function refreshDataset(dataquery: Content<Dataquery>): Content<Dataset> 
   if (dataquery.data.table) {
     // TODO option-set is not parsed correctly by enonic-ts-codegen, update lib later and remove PlaceholderData interface
     const datasetFormat: PlaceholderData['datasetFormat'] = (dataquery.data as PlaceholderData).datasetFormat
-    if ((!datasetFormat || datasetFormat._selected === 'jsonStat') && dataquery.data.json) {
-      try {
-        const data: object | null = get(dataquery.data.table, JSON.parse(dataquery.data.json))
-        if (data) {
-          return updateDataset(JSON.stringify(data), dataquery)
-        } else {
-          log.error(`No data found for dataquery: ${dataquery._id}`)
-        }
-      } catch (e) {
-        log.error(`Failed to fetch data for dataquery: ${dataquery._id} (${e})`)
+    let data: object | null = null
+    try {
+      if ((!datasetFormat || datasetFormat._selected === 'jsonStat')) {
+        data = get(dataquery.data.table, dataquery.data.json && JSON.parse(dataquery.data.json))
+      } else if (datasetFormat && datasetFormat._selected === 'klass') {
+        data = get(dataquery.data.table, undefined)
+      } else if (datasetFormat && datasetFormat._selected === 'tbml') {
+        data = getTbmlData(dataquery.data.table)
       }
+    } catch (e) {
+      log.error(`Failed to fetch data for dataquery: ${dataquery._id} (${e})`)
+    }
+    if (data) {
+      return updateDataset(JSON.stringify(data), dataquery)
+    } else {
+      log.error(`No data found for dataquery: ${dataquery._id}`)
     }
   }
   return
@@ -97,7 +103,9 @@ function updateDataset(data: string, dataquery: Content<Dataquery>): Content<Dat
         log.error(`Failed to update dataset: ${dataset._id}`)
       } else {
         publishDatasets([dataset._id])
-        return dataset
+        return content.get({
+          key: dataset._id
+        }) as Content<Dataset>
       }
     } else { // create dataset
       const name: string = `${dataquery._name} (datasett) opprettet ${now}`
@@ -115,7 +123,9 @@ function updateDataset(data: string, dataquery: Content<Dataquery>): Content<Dat
           }
         }) as Content<Dataset>
         publishDatasets([dataset._id])
-        return dataset
+        return content.get({
+          key: dataset._id
+        }) as Content<Dataset>
       } catch (e) {
         log.error(`Failed to create dataset: ${e.code} ${e.message}`)
       }
