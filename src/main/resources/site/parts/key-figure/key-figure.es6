@@ -1,10 +1,11 @@
+const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const { get: getKeyFigure } = __non_webpack_require__( '/lib/ssb/key-figure')
 const { parseGlossaryContent } = __non_webpack_require__( '/lib/ssb/glossary')
 const { parseMunicipalityValues, getMunicipality } = __non_webpack_require__( '/lib/klass/municipalities')
-const { getComponent, getSiteConfig, getContent } = __non_webpack_require__( '/lib/xp/portal')
-const { render } = __non_webpack_require__( '/lib/thymeleaf')
+const { getComponent, getSiteConfig, getContent, imageUrl } = __non_webpack_require__( '/lib/xp/portal')
+const thymeleaf = __non_webpack_require__('/lib/thymeleaf')
 const { data } = __non_webpack_require__( '/lib/util')
-const { pageMode } = __non_webpack_require__( '/lib/ssb/utils')
+const { pageMode, createHumanReadableFormat } = __non_webpack_require__( '/lib/ssb/utils')
 
 const view = resolve('./key-figure.html')
 
@@ -72,9 +73,36 @@ function renderKeyFigure(keyFigures, part, municipality) {
     source
   }
 
+
+  /** Render react **/
+  const reactObjs = model.data.map( (keyfigure) => {
+    let iconSrc = ''
+    if (keyfigure.icon) {
+      iconSrc = imageUrl({
+        id: keyfigure.icon,
+        scale: 'block(100,100)'
+      })
+    }
+
+    const reactProps = {
+      number: createHumanReadableFormat(keyfigure.value),
+      title: keyfigure.displayName,
+      numberDescription: keyfigure.denomination,
+      time: keyfigure.time,
+      size: keyfigure.size,
+      iconUrl : iconSrc
+    };
+
+    const keyfigureReact = new React4xp('KeyFigure');
+    return keyfigureReact.setId(keyfigure.id).setProps(reactProps)
+  })
+
+  const reactBody = reactObjs.reduce((reactRender, reactObj) => {
+    return reactObj.renderBody(reactRender)
+  }, thymeleaf.render(view, model))
+
   return {
-    body: render(view, model),
+    body: reactBody,
     contentType: 'text/html'
   }
 }
-
