@@ -1,0 +1,63 @@
+<part>
+    <display-name>Emneblokk</display-name>
+    <description>Relatert innhold i emneblokk eks. artikkler</description>
+    <form>
+        <input name="image" type="ImageSelector">
+            <label>Bilde</label>
+            <occurences minimum="1" maximum="1" />
+            <config>
+                <allowPath>${site}</allowPath>
+            </config>
+        </input>
+        <input name="content" type="TextLine">
+            <label>Innhold</label>
+            <occurences minimum="1" maximum="1" />
+            <default></default>
+        </input>
+        <input name="date" type="Date">
+            <label>Dato</label>
+            <occurences minimum="1" maximum="1" />
+            <default>now</default>
+        </input>
+        <input name="title" type="TextLine">
+            <label>Tittel</label>
+            <occurences minimum="1" maximum="1" />
+        </input>
+        <input name="preamble" type="TextArea">
+            <label>Ingress</label>
+            <occurences minimum="1" maximum="1" />
+            <default>Artikkel</default>
+        </input>
+        <option-set name="urlContentSelector">
+            <label>Lenke</label>
+            <expanded>false</expanded>
+            <occurrences minimum="1" maximum="1"/>
+
+            <options minimum="1" maximum="1">
+                <option name="optionLink">
+                    <label>URL</label>
+                    <items>
+                        <input name="link" type="TextLine">
+                            <label>Lenke</label>
+                            <occurences minimum="0" maximum="1" />
+                            <default></default>
+                        </input>
+                    </items>
+                </option>
+
+                <option name="optionXPContent">
+                    <label>XP-innhold</label>
+                    <items>
+                        <input name="xpContent" type="ContentSelector">
+                            <label>Innhold i XP</label>
+                            <occurences minimum="0" maximum="1" />
+                            <config>
+                                <allowPath>${site}</allowPath>
+                            </config>
+                        </input>
+                    </items>
+                </option>
+            </options>
+        </option-set>
+    </form>
+</part>
