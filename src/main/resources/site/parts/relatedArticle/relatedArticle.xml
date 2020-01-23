@@ -22,11 +22,12 @@
         <input name="title" type="TextLine">
             <label>Tittel</label>
             <occurences minimum="1" maximum="1" />
+            <default>Her kommer tittelen</default>
         </input>
         <input name="preamble" type="TextArea">
             <label>Ingress</label>
             <occurences minimum="1" maximum="1" />
-            <default>Artikkel</default>
+            <default>Her kommer ingress</default>
         </input>
         <option-set name="urlContentSelector">
             <label>Lenke</label>
@@ -40,7 +41,7 @@
                         <input name="link" type="TextLine">
                             <label>Lenke</label>
                             <occurences minimum="0" maximum="1" />
-                            <default></default>
+                            <default>/</default>
                         </input>
                     </items>
                 </option>
