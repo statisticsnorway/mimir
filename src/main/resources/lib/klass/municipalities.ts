@@ -59,7 +59,9 @@ function getMunicipalsFromContent(): Array<MunicipalCode> {
   const siteConfig: SiteConfig = getSiteConfig()
   const key: string | undefined = siteConfig.municipalDataContentId
   if (key) {
-    const children: Array<Content<Dataset>> = getChildren({ key }).hits as Array<Content<Dataset>>
+    const children: Array<Content<Dataset>> = getChildren({
+      key
+    }).hits as Array<Content<Dataset>>
     if (children.length > 0) {
       const content: Content<Dataset> = children[0]
       if (content.data.json) {
@@ -188,7 +190,7 @@ export function getMunicipality(req: RequestWithCode): MunicipalityWithCounty|un
     municipality = getMunicipalityByCode(municipalities, req.code)
   }
 
-  if (!municipality && (req.mode === 'edit' || req.mode === 'preview')) {
+  if (!municipality && (req.mode === 'edit' || req.mode === 'preview' || req.mode === 'inline')) {
     const siteConfig: SiteConfig = getSiteConfig()
     const defaultMunicipality: string = siteConfig.defaultMunicipality
     municipality = getMunicipalityByCode(municipalities, defaultMunicipality)
@@ -253,8 +255,8 @@ function changesWithMunicipalityCode(municipalityCode: string): Array<Municipali
 
 
 function getMunicipalityChanges(from?: string, to?: string): MunicipalityChangeList {
-  if(!from) from = '2016-01-01'
-  if(!to) to = '2020-01-01'
+  if (!from) from = '2016-01-01'
+  if (!to) to = '2020-01-01'
   const baseUrl: string = 'https://data.ssb.no/api/klass/v1/'
   const readTimeout: number = 5000
   const connectionTimeout: number = 20000
