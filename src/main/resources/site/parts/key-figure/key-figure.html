@@ -5,7 +5,7 @@
             <div class="d-md-none mt-5 col-12" data-th-if="${i.index}"></div>
             <div class="d-none d-md-block mt-5 col-12" data-th-if="${i.index && i.index % 2 == 0}"></div>
             <div data-th-class="${figure['size'] == 'large'} ? 'col-md-12' : 'col-md-6'">
-                <div data-th-id="${'kf-' + figure.id}"/>
+                <div data-th-id="${figure.id}"/>
             </div>
             <div data-th-if="${figure.source && figure.source.url}" data-th-unless="${source}" class="col-12">
                 <h4 class="pt-3 mb-0">Kilde:</h4>

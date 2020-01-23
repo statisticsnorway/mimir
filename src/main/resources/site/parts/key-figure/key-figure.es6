@@ -53,6 +53,7 @@ function renderKeyFigure(keyFigures, part, municipality) {
   const parsedKeyFigures = keyFigures.map( (keyFigure) => {
     const dataset = parseMunicipalityValues(keyFigure.data.dataquery, municipality, keyFigure.data.default)
     return {
+      id: keyFigure._id,
       displayName: keyFigure.displayName,
       ...keyFigure.data,
       ...dataset,
@@ -93,13 +94,15 @@ function renderKeyFigure(keyFigures, part, municipality) {
       iconUrl : iconSrc
     };
 
-    const keyfigureReact = new React4xp('KeyFigure');
+    const keyfigureReact = new React4xp('KeyFigure')
     return keyfigureReact.setId(keyfigure.id).setProps(reactProps)
   })
 
+  const preRenderedBody = thymeleaf.render(view, model);
+
   const reactBody = reactObjs.reduce((reactRender, reactObj) => {
     return reactObj.renderBody(reactRender)
-  }, thymeleaf.render(view, model))
+  }, preRenderedBody)
 
   return {
     body: reactBody,
