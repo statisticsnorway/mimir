@@ -1,7 +1,13 @@
-const { query } = __non_webpack_require__( '/lib/xp/content')
-const { NOT_FOUND } = __non_webpack_require__( './error')
-const { getWithSelection } = __non_webpack_require__( '/lib/klass/klass')
-const content = __non_webpack_require__( '/lib/xp/content')
+const {
+  query
+} = __non_webpack_require__( '/lib/xp/content')
+const {
+  NOT_FOUND
+} = __non_webpack_require__( './error')
+const {
+  getWithSelection
+} = __non_webpack_require__( '/lib/klass/klass')
+const moment = require('moment/min/moment-with-locales')
 import JsonStat from 'jsonstat-toolkit'
 
 const contentTypeName = `${app.name}:dataset`
@@ -11,7 +17,10 @@ export const get = (key) => {
     contentTypes: [contentTypeName],
     query: `_id = '${key.key}'`
   })
-  return content.count === 1 ? { ...content.hits[0], status: 200 } : NOT_FOUND
+  return content.count === 1 ? {
+    ...content.hits[0],
+    status: 200
+  } : NOT_FOUND
 }
 
 /**
@@ -36,23 +45,6 @@ export const getDataSetWithDataQueryId = (dataQueryContentId) => {
 export const getTime = (dataset) => {
   const timeKey = dataset.dimension.role.time[0]
   return Object.keys(dataset.dimension[timeKey].category.label)[0]
-}
-
-
-/**
- * Parse the multidementional json-stat structure to a simple object with label and value.
- * @param {Object} data
- * @return {{label: String, value: String}[]}
- */
-export const parseJsonStatToLabelValue = (data) => {
-  const dataKey = data.dimension.id[0]
-  const valueIndex = data.dimension[dataKey].category.index
-  const labels = data.dimension[dataKey].category.label
-
-  return Object.keys(labels).map( (key) => ({
-    label: labels[key],
-    value: data.value[valueIndex[key]]
-  }))
 }
 
 /**
@@ -96,9 +88,12 @@ export const getDataFromCurrentOrOldMunicipalityCode = (dataset, municipality) =
         }
       })
     } catch (e) {
-      log.error('Could not parse json from dataset');
-      log.error(e);
+      log.error('Could not parse json from dataset')
+      log.error(e)
     }
   }
   return []
 }
+
+export const getUpdated = (ds) => moment(ds.modifiedTime).format('DD.MM.YYYY HH:mm:ss')
+export const getUpdatedReadable = (ds) => moment(ds.modifiedTime).fromNow()

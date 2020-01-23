@@ -1,3 +1,4 @@
+/* eslint-disable new-cap */
 
 export const defaultFormat = (ds, dimensionFilter, xAxis) => {
   const xAxisIndex = ds.id.indexOf(xAxis)
@@ -13,7 +14,10 @@ export const defaultFormat = (ds, dimensionFilter, xAxis) => {
     }
   })
 
-  return {series, categories: xCategories.map((category) => category.label)}
+  return {
+    series,
+    categories: xCategories.map((category) => category.label)
+  }
 }
 
 export const barNegativeFormat = (ds, dimensionFilter, xAxis, yAxis) => {
@@ -33,7 +37,10 @@ export const barNegativeFormat = (ds, dimensionFilter, xAxis, yAxis) => {
     })
   }))
 
-  return {series, categories: xCategories.map((category) => category.label)}
+  return {
+    series,
+    categories: xCategories.map((category) => category.label)
+  }
 }
 
 export const parseDataWithMunicipality = (dataset, filterTarget, municipality, xAxis) => {
@@ -47,7 +54,7 @@ export const parseDataWithMunicipality = (dataset, filterTarget, municipality, x
       hasData = hasFilterData(dataset, filterTarget, code, xAxis)
     }
   }
-  if(hasData){
+  if (hasData) {
     return dataset.Dimension(filterTarget).Category(code).index
   }
   return -1
@@ -59,7 +66,7 @@ const hasFilterData = (dataset, filterTarget, filter, xAxis) => {
   const xAxisIndex = dataset.id.indexOf(xAxis)
   const xCategories = dataset.Dimension(xAxis).Category()
   return xCategories.reduce((hasData, xCategory) => {
-    if(hasData) {
+    if (hasData) {
       return hasData
     }
     const dimension = dataset.id.map(() => 0) // creates [5061,0,0,0]

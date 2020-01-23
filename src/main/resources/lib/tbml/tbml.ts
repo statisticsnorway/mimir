@@ -3,8 +3,7 @@ import { TbmlData, XmlParser } from '../types/xmlParser'
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 const http: HttpLibrary = __non_webpack_require__( '/lib/http-client')
 
-export function fetch(tbmlId: string): string {
-  const url: string = `https://i.utv.ssb.no/tbprocessor/process/tbmldata/${tbmlId}`
+export function fetch(url: string): string {
   let result: string = '<tbml></tbml>'
 
   try {

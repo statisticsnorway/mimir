@@ -1,9 +1,19 @@
-const { data } = __non_webpack_require__( '/lib/util')
-const { parseJsonStatToLabelValue, getDataSetWithDataQueryId } = __non_webpack_require__( '/lib/ssb/dataset')
-const { getComponent } = __non_webpack_require__( '/lib/xp/portal')
-const { render } = __non_webpack_require__( '/lib/thymeleaf')
+/* eslint-disable new-cap */
+const {
+  data
+} = __non_webpack_require__( '/lib/util')
+const {
+  getTbmlData
+} = __non_webpack_require__( '/lib/tbml/tbml')
+const {
+  getComponent
+} = __non_webpack_require__( '/lib/xp/portal')
+const {
+  render
+} = __non_webpack_require__( '/lib/thymeleaf')
 const dataquery = __non_webpack_require__( '/lib/dataquery')
-const { get: getDataQuery } = __non_webpack_require__( '/lib/ssb/dataquery')
+const content = __non_webpack_require__('/lib/xp/content')
+import JsonStat from 'jsonstat-toolkit'
 
 const view = resolve('./dataquery.html')
 
@@ -16,30 +26,52 @@ exports.get = function(req) {
 exports.preview = (req, id) => renderPart(req, [id])
 
 const renderPart = (req, dataQueryIds) => {
-  const dataQueries = dataQueryIds.map((key) => getDataQuery({ key }))
-  const parsedDataQueries = dataQueries.filter((dq) => dq.data.table).map( (dq) => {
+  const dataQueries = dataQueryIds.map((key) => content.get({
+    key
+  }))
+  const parsedDataQueries = dataQueries.filter((dq) => dq.data.table).map((dq) => {
+    let table = []
+    let headers = []
 
-    /*let dataResult = {}
-    if(dq.hasChildren){
-      dataResult = getDataSetWithDataQueryId(dq._id)
-    } else {
-
-    }*/
-
-    const dataResult = dataquery.get(dq.data.table, dq.data.json && JSON.parse(dq.data.json))
-
-    const contentsCode = dataResult && dataResult.dataset && Object.keys(dataResult.dataset.dimension.ContentsCode.category.index)[0]
+    const datasetFormat = dq.data.datasetFormat
+    if ((!datasetFormat || datasetFormat._selected === 'jsonStat')) {
+      const dataResult = dataquery.get(dq.data.table, dq.data.json && JSON.parse(dq.data.json))
+      const ds = JsonStat(dataResult).Dataset(0)
+      const dimensions = ds.id.map(() => 0)
+      const categories = ds.Dimension(0).Category()
+      table = categories.map((category) => {
+        dimensions[0] = category.index
+        return {
+          label: category.label,
+          columns: [ds.Data(dimensions, false)]
+        }
+      })
+      const timeLabel = ds.Dimension('Tid').Category(0).label
+      const contentsCodeLabel = ds.Dimension('ContentsCode').Category(0).label
+      headers = [contentsCodeLabel, timeLabel]
+    } else if (datasetFormat._selected === 'tbml') {
+      const dataResult = getTbmlData(dq.data.table)
+      headers = dataResult.tbml.presentation.table.thead.tr.th
+      headers.unshift('')
+      table = dataResult.tbml.presentation.table.tbody.tr.map((tr) => {
+        return {
+          label: tr.th,
+          columns: tr.td
+        }
+      })
+    }
 
     return {
-      result: dataResult,
-      table: parseJsonStatToLabelValue(dataResult.dataset),
-      time: dataResult && dataResult.dataset && Object.keys(dataResult.dataset.dimension.Tid.category.index)[0],
-      label: contentsCode && dataResult.dataset.dimension.ContentsCode.category.label[contentsCode]
+      displayName: dq.displayName,
+      table,
+      headers
     }
   })
 
   return {
-    body: render(view, { dataqueries: parsedDataQueries }),
+    body: render(view, {
+      dataqueries: parsedDataQueries
+    }),
     contentType: 'text/html'
   }
 }

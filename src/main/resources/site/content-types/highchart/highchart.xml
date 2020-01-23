@@ -15,77 +15,19 @@
       <occurrences minimum="0" maximum="1"/>
     </input>
 
-    <option-set name="graphType">
+    <input name="graphType" type="RadioButton">
       <label>Graftype</label>
-      <expanded>false</expanded>
       <occurrences minimum="1" maximum="1"/>
-      <options minimum="1" maximum="1">
-        <option name="line">
-          <label>Linje</label>
-          <items>
-            <input type="TextLine" name="xAxisLabel" >
-              <label>Navn på x-akse dimensjon</label>
-              <occurrences minimum="1" maximum="1" />
-            </input>
-          </items>
-        </option>
-
-        <option name="pie">
-          <label>Kake</label>
-          <items>
-            <input type="TextLine" name="xAxisLabel" >
-              <label>Navn på x-akse dimensjon</label>
-              <occurrences minimum="1" maximum="1" />
-            </input>
-          </items>
-        </option>
-
-        <option name="column">
-          <label>Stolpe</label>
-          <items>
-            <input type="TextLine" name="xAxisLabel" >
-              <label>Navn på x-akse dimensjon</label>
-              <occurrences minimum="1" maximum="1" />
-            </input>
-          </items>
-        </option>
-
-        <option name="bar">
-          <label>Liggende stolpe</label>
-          <items>
-            <input type="TextLine" name="xAxisLabel" >
-              <label>Navn på x-akse dimensjon</label>
-              <occurrences minimum="1" maximum="1" />
-            </input>
-          </items>
-        </option>
-
-        <option name="area">
-          <label>Areal</label>
-          <items>
-            <input type="TextLine" name="xAxisLabel" >
-              <label>Navn på x-akse dimensjon</label>
-              <occurrences minimum="1" maximum="1" />
-            </input>
-          </items>
-        </option>
-
-        <option name="barNegative">
-          <label>Pyramide</label>
-          <help-text>Hvis grafen skal vises filtrert på kommunenummer</help-text>
-          <items>
-            <input name="yAxisLabel" type="TextLine">
-              <label>Navn på y-akse dimensjon</label>
-              <occurrences minimum="1" maximum="1"/>
-            </input>
-            <input name="xAxisLabel" type="TextLine">
-              <label>Navn på x-akse dimensjon</label>
-              <occurrences minimum="1" maximum="1"/>
-            </input>
-          </items>
-        </option>
-      </options>
-    </option-set>
+      <config>
+        <option value="line">Linje</option>
+        <option value="pie">Kake</option>
+        <option value="column">Stolpe</option>
+        <option value="bar">Liggende stolpe</option>
+        <option value="area">Areal</option>
+        <option value="barNegative">Pyramide</option>
+      </config>
+      <default>line</default>
+    </input>
 
     <input name="numberDecimals" type="RadioButton">
       <label>Antall desimalplasser som vises</label>
@@ -166,28 +108,8 @@
             <allowType>dataquery</allowType>
           </config>
         </input>
-
-        <option-set name="datasetFilterOptions">
-          <label>filtrering på dataset</label>
-          <expanded>false</expanded>
-          <occurrences minimum="0" maximum="1"/>
-          <options minimum="0" maximum="1">
-            <option name="municipalityFilter">
-              <label>Filtrer på kommune</label>
-              <help-text>Hvis grafen skal vises filtrert på kommunenummer</help-text>
-              <items>
-                <input type="TextLine" name="municipalityDimension" >
-                  <label>Hvilken dimensjon skal filtreres på kommunenummer</label>
-                  <occurrences minimum="1" maximum="1" />
-                </input>
-              </items>
-            </option>
-          </options>
-
-        </option-set>
       </items>
     </field-set>
-
 
     <input name="switchRowsAndColumns" type="CheckBox">
       <label>Bytt rader og kolonner</label>

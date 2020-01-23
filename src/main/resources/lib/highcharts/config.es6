@@ -1,5 +1,10 @@
 
-export const style = { color: '#21383a', fontSize: '13px', fontWeight: 'normal', fontFamily: '"Open Sans Regular", "Arial", "DejaVu Sans", sans-serif' }
+export const style = {
+  color: '#21383a',
+  fontSize: '13px',
+  fontWeight: 'normal',
+  fontFamily: '"Open Sans Regular", "Arial", "DejaVu Sans", sans-serif'
+}
 export const lineColor = '#21383a'
 
 
@@ -18,17 +23,25 @@ export const createConfig = (highchartData, displayName) => ({
       fontFamily: '"Open Sans Regular", "Arial", "DejaVu Sans", sans-serif',
       fontSize: '14px'
     },
-    type: (highchartData.graphType._selected == 'barNegative') ? 'bar' : highchartData.graphType._selected,
+    type: (highchartData.graphType == 'barNegative') ? 'bar' : highchartData.graphType,
     spacing: [0, 10, 0, 0],
     zoomType: highchartData.zoomType
   },
   // SSB color palette:
-  colors: ['#1a9d49', '#274247', '#3396d2', '#f0e442', '#f26539', '#aee5c3', '#ed51c9', '#0094a3', '#e9b200', '#143f90', '#075745', '#4b7272', '#6d58a4', '#83c1e9', '#b59924'],
+  colors: [
+    '#1a9d49', '#274247', '#3396d2', '#f0e442', '#f26539', '#aee5c3', '#ed51c9', '#0094a3',
+    '#e9b200', '#143f90', '#075745', '#4b7272', '#6d58a4', '#83c1e9', '#b59924'],
   credits: {
-    position: { align: 'left', x: 10 },
+    position: {
+      align: 'left',
+      x: 10
+    },
     text: highchartData.creditsText,
     href: highchartData.creditsHref,
-    style: { color: '#00824d', fontSize: '16px' },
+    style: {
+      color: '#00824d',
+      fontSize: '16px'
+    },
     enabled: ( highchartData.creditsText || highchartData.creditsHref )
   },
   exporting: {
@@ -37,12 +50,19 @@ export const createConfig = (highchartData, displayName) => ({
         height: 26,
         symbolX: 14.5,
         symbolY: 12.5,
-        theme: { 'fill': '#fff', 'r': 3, 'stroke-width': 1, 'stroke': '#bbb' },
+        theme: {
+          'fill': '#fff',
+          'r': 3,
+          'stroke-width': 1,
+          'stroke': '#bbb'
+        },
         x: 8,
         width: 28
       }
     },
-    csv: { itemDelimiter: ';' },
+    csv: {
+      itemDelimiter: ';'
+    },
     // Sett denne til false når man vil erstatte hamburgermeny med egen
     enabled: true
   },
@@ -55,7 +75,11 @@ export const createConfig = (highchartData, displayName) => ({
     y: (highchartData.legendAlign == 'right') ? 65 : 0,
     itemMarginBottom: (highchartData.legendAlign == 'right') ? 25 : 0,
     itemWidth: (highchartData.legendAlign == 'right') ? 95 : null,
-    itemStyle: { color: '#21383a', fontSize: '12px', fontWeight: 'normal' },
+    itemStyle: {
+      color: '#21383a',
+      fontSize: '12px',
+      fontWeight: 'normal'
+    },
     useHTML: true
   },
   plotOptions: {
@@ -64,7 +88,9 @@ export const createConfig = (highchartData, displayName) => ({
       minSize: 250,
       dataLabels: {
         enabled: !highchartData.pieLegend,
-        style: { width: '150px' }
+        style: {
+          width: '150px'
+        }
       },
       showInLegend: highchartData.pieLegend
     },
@@ -72,7 +98,9 @@ export const createConfig = (highchartData, displayName) => ({
       marker: {
         enabledThreshold: 15
       },
-      label: { enabled: true },
+      label: {
+        enabled: true
+      },
       stacking: (highchartData.stacking == 'normal' || highchartData.stacking == 'percent') ? highchartData.stacking : null,
       states: {
         hover: {
@@ -83,15 +111,21 @@ export const createConfig = (highchartData, displayName) => ({
     }
   },
   subtitle: {
-    align: highchartData.titleCenter ? 'center': 'left',
-    style: { color: '#333', fontSize: '14px' },
+    align: highchartData.titleCenter ? 'center' : 'left',
+    style: {
+      color: '#333',
+      fontSize: '14px'
+    },
     text: highchartData.subtitle,
     x: 0,
     y: 48
   },
   title: {
-    align: highchartData.titleCenter ? 'center': 'left',
-    style: { fontSize: '16px', fontWeight: 'bold' },
+    align: highchartData.titleCenter ? 'center' : 'left',
+    style: {
+      fontSize: '16px',
+      fontWeight: 'bold'
+    },
     margin: 40,
     text: displayName,
     x: 0,
@@ -108,7 +142,9 @@ export const createConfig = (highchartData, displayName) => ({
     },
     max: highchartData.yAxisMax ? highchartData.yAxisMax.replace(/,/g, '.') : null,
     min: highchartData.yAxisMin ? highchartData.yAxisMin.replace(/,/g, '.') : null,
-    stackLabels: { enabled: highchartData.stablesum },
+    stackLabels: {
+      enabled: highchartData.stablesum
+    },
     tickWidth: 1,
     tickColor: '#21383a',
     lineWidth: 1,
@@ -124,7 +160,11 @@ export const createConfig = (highchartData, displayName) => ({
     type: highchartData.yAxisType || 'linear'
   },
   tooltip: {
-    crosshairs: highchartData.graphType._selected == 'line' && { width: 1, color: '#9575ff', dashStyle: 'solid' },
+    crosshairs: highchartData.graphType == 'line' && {
+      width: 1,
+      color: '#9575ff',
+      dashStyle: 'solid'
+    },
     shadow: false,
     backgroundColor: 'white',
     valueDecimals: highchartData.numberDecimals,

@@ -15,6 +15,11 @@ export interface Highchart {
   datasetExplanation?: string;
 
   /**
+   * Graftype
+   */
+  graphType: string;
+
+  /**
    * Antall desimalplasser som vises
    */
   numberDecimals?: string;

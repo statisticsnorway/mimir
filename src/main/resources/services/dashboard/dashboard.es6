@@ -1,63 +1,163 @@
-const { job } = __non_webpack_require__( '/main')
 const auth = __non_webpack_require__( '/lib/xp/auth')
 const context = __non_webpack_require__( '/lib/xp/context')
 const content = __non_webpack_require__( '/lib/xp/content')
+const {
+  refreshDataset
+} = __non_webpack_require__('/lib/dataquery')
+const {
+  getDataSetWithDataQueryId,
+  getUpdated,
+  getUpdatedReadable
+} = __non_webpack_require__( '/lib/ssb/dataset')
 
-function temporary(draft, master) {
-  log.info('-- running temporary --')
-  // Temporary code to remove old content type statistikkbanken
-  context.run(draft, () => {
-    const dataquery = content.query({ count: 999, contentTypes: [`${app.name}:dataquery`] })
-    const statistikkbanken = content.query({ count: 999, contentTypes: [`${app.name}:statistikkbanken`] })
-    if (dataquery && dataquery.total === 0 && statistikkbanken && statistikkbanken.total) {
-      statistikkbanken.hits.map((data) => {
-        log.info(JSON.stringify(data, null, ' '))
-        const create = content.create({
-          name: data.name,
-          parentPath: '/mimir/temporary',
-          displayName: data.displayName,
-          contentType: `${app.name}:dataquery`,
-          data: {
-            table: data.data.table,
-            json: data.data.json,
-            regiontype: data.data.regiontype
-          }
-        })
-        if (create) {
-          const keyFigure = content.query({ count: 999, contentTypes: [`${app.name}:key-figure`], query: `data.query = '${data._id}'` })
-          if (keyFigure && keyFigure.total) {
-            keyFigure.hits.forEach((figure) => {
-              content.modify({ key: figure._id, editor: (r) => {
-                r.data.dataquery = create._id
-                return r
-              } })
+exports.get = function(req) {
+  let status = 200
+  let message = ''
+  let success = true
+  const datasetInfo = []
+  const params = req.params
+
+  if (params && params.id) {
+    if (params.id === '*') { // update/create all
+      context.run(createContextOption('master'), () => {
+        const dataqueries = content.query({
+          count: 999,
+          contentTypes: [`${app.name}:dataquery`],
+          query: `data.table LIKE 'http*'`
+        }).hits
+        dataqueries.map((dataquery) => {
+          const dataset = refreshDataset(dataquery)
+          if (dataset) {
+            datasetInfo.push({
+              id: dataset.data.dataquery,
+              lastUpdated: getUpdated(dataset),
+              lastUpdatedReadable: getUpdatedReadable(dataset),
+              hasData: true
             })
           }
+        })
+        message = `Successfully updated/created ${datasetInfo.length} of ${dataqueries.length} datasets`
+      })
+    } else { // update/create one
+      context.run(createContextOption('master'), () => {
+        const dataquery = content.get({
+          key: req.params.id
+        })
+        if (dataquery) {
+          const dataset = refreshDataset(dataquery)
+          if (dataset) {
+            message = `Successfully updated/created dataset for dataquery`
+            datasetInfo.push({
+              id: dataset.data.dataquery,
+              lastUpdated: getUpdated(dataset),
+              lastUpdatedReadable: getUpdatedReadable(dataset),
+              hasData: true
+            })
+          } else {
+            message = `Failed to get data for dataquery: ${dataquery._id}`
+            status = 500
+          }
+        } else {
+          success = false
+          message = `No dataquery found with id: ${req.params.id}`
+          status = 404
         }
       })
     }
-  })
+  } else {
+    success = false
+    message = `Missing parameter "id"`
+    status = 400
+  }
+
+  return {
+    body: {
+      success,
+      message,
+      updates: datasetInfo
+    },
+    contentType: 'application/json',
+    status
+  }
 }
 
-exports.get = function(req) {
-  const _user = auth.getUser()
-  const user = { login: _user.login, userStore: _user.idProvider }
-  const draft = { repository: 'com.enonic.cms.default', branch: 'draft', principals: ['role:system.admin'], user } // Draft context (XP)
-  const master = { repository: 'com.enonic.cms.default', branch: 'master', principals: ['role:system.admin'], user } // Master context (XP)
-  if (req.params.delete) {
-    context.run(master, () => {
-      const datasets = content.query({ count: 999, contentTypes: [`${app.name}:dataset`] })
-      datasets && datasets.hits.map((dataset) => content.delete({ key: dataset._id }))
+exports.delete = (req) => {
+  let status = 200
+  let message = ''
+  let success = true
+  const datasetInfo = []
+  const params = req.params
+
+  if (params && params.id) {
+    context.run(createContextOption('draft'), () => {
+      let datasets = []
+      if (params.id === '*') { // delete all
+        datasets = content.query({
+          start: 0,
+          count: 999,
+          contentTypes: [`${app.name}:dataset`]
+        }).hits
+      } else { // delete one
+        datasets = getDataSetWithDataQueryId(params.id).hits
+      }
+      if (datasets.length > 0) {
+        const datasetsToPublish = []
+        datasets.forEach((dataset) => {
+          const isDeleted = content.delete({
+            key: dataset._id
+          })
+          if (isDeleted) {
+            datasetInfo.push({
+              id: dataset.data.dataquery,
+              lastUpdated: '',
+              lastUpdatedReadable: '',
+              hasData: false
+            })
+            datasetsToPublish.push(dataset._id)
+          }
+        })
+        content.publish({
+          keys: datasetsToPublish,
+          sourceBranch: 'draft',
+          targetBranch: 'master'
+        })
+        message = `Successfully deleted ${datasetInfo.length} of ${datasets.length} datasets`
+      } else {
+        success = false
+        message = `No dataset found for dataquery with id ${params.id}`
+        status = 404
+      }
     })
-    context.run(draft, () => {
-      const datasets = content.query({ count: 999, contentTypes: [`${app.name}:dataset`] })
-      datasets && datasets.hits.map((dataset) => content.delete({ key: dataset._id }))
-    })
-    return { body: { success: true }, contentType: 'application/json', status: 200 }
   } else {
-    temporary(draft, master)
-    // return { body: { success: true }, contentType: 'application/json', status: 200 }
+    success = false
+    message = `Missing parameter "id"`
+    status = 400
   }
-  context.run(master, () => job())
-  return { body: { success: true }, contentType: 'application/json', status: 200 }
+
+  return {
+    body: {
+      success,
+      message,
+      updates: datasetInfo
+    },
+    contentType: 'application/json',
+    status
+  }
+}
+
+const createContextOption = (branch) => {
+  const _user = auth.getUser()
+  const user = {
+    login: _user.login,
+    userStore: _user.idProvider
+  }
+
+  const contextOption = {
+    repository: 'com.enonic.cms.default',
+    principals: ['role:system.admin'],
+    branch,
+    user
+  }
+
+  return contextOption
 }

@@ -5,11 +5,6 @@ export interface Dataquery {
   table?: string;
 
   /**
-   * Regionstype (ikke i bruk - evaluere behov)
-   */
-  regiontype?: string;
-
-  /**
    * Spørring i JSON-format
    */
   json?: string;
@@ -18,14 +13,4 @@ export interface Dataquery {
    * Oppdateres
    */
   update?: string;
-
-  /**
-   * Dataset Format
-   */
-  datasetFormat: {
-    /**
-     * Formatet på resultatet etter spørring
-     */
-    datasetFormat: string;
-  };
 }
