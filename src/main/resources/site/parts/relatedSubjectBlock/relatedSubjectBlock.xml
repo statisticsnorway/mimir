@@ -1,6 +1,6 @@
 <part>
-    <display-name>Emneblokk</display-name>
-    <description>Relatert innhold i emneblokk eks. artikkler</description>
+    <display-name>Relatert innhold emneblokk</display-name>
+    <description>Emneblokk for artikler i faktasidene</description>
     <form>
         <input name="image" type="ImageSelector">
             <label>Bilde</label>
