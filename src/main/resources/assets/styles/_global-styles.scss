@@ -64,7 +64,7 @@ p {
   font-style: normal;
   letter-spacing: normal;
   line-height: 1.7;
-  max-width: $max-readable-width;
+  //max-width: $max-readable-width; <-- this is screwing with center alignment of text, TODO: maybe find a fix? (not critical)
 
   &.small-text {
     font-size: 14px;
