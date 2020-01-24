@@ -9,5 +9,27 @@
         <allowPath>${site}</allowPath>
       </config>
     </input>
+
+    <option-set name="pageType">
+      <label>Hvor skal banneren brukes?</label>
+      <expanded>true</expanded>
+      <occurrences minimum="1" maximum="1"/>
+      <help-text>You can select up to 2 options</help-text>
+      <options minimum="1" maximum="2">
+        <option name="kommunefakta">
+          <label>Kommunefakta</label>
+          <help-text>Skal banner ligge på kommunefakta trenger du ikke fylle ut mer.</help-text>
+        </option>
+        <option name="faktaside">
+          <label>Faktaside</label>
+          <help-text>Skal banner ligge på faktaside må du fylle ut litt tekst.</help-text>
+          <items>
+            <input name="title" type="TextLine">
+              <label>Tittel på faktaside</label>
+            </input>
+          </items>
+        </option>
+      </options>
+    </option-set>
   </form>
 </part>
