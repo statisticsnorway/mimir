@@ -12,7 +12,7 @@
         <input name="content" type="TextLine">
             <label>Innhold</label>
             <occurences minimum="1" maximum="1" />
-            <default></default>
+            <default>Artikkel</default>
         </input>
         <input name="date" type="Date">
             <label>Dato</label>
@@ -37,6 +37,7 @@
             <options minimum="1" maximum="1">
                 <option name="optionLink">
                     <label>URL</label>
+                    <default>true</default>
                     <items>
                         <input name="link" type="TextLine">
                             <label>Lenke</label>

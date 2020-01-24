@@ -1,6 +1,8 @@
-const moment = require('moment/min/moment-with-locales')
 const { getComponent, pageUrl, imageUrl } = __non_webpack_require__('/lib/xp/portal')
+const content = __non_webpack_require__('/lib/xp/content')
+const moment = require('moment/min/moment-with-locales')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+const util = __non_webpack_require__('/lib/util')
 
 moment.locale('nb')
 
@@ -8,13 +10,11 @@ exports.get = function(req) {
   return renderPart(req)
 }
 
-exports.preview = function(req) {
-  return renderPart(req)
-}
+exports.preview = (req) => renderPart(req)
 
 function renderPart(request) {
   const part = getComponent()
-  const xpContent = pageUrl({ id: part.config.xpContent })
+  const urlContentSelector = part.config.urlContentSelector
 
   const props = {
     imgUrl: imageUrl({
@@ -22,7 +22,7 @@ function renderPart(request) {
       scale: 'block(315, 215)'
     }),
     imagePlacement: 'left', // TODO: desktop. remove after component has been updated to be more responsive
-    openLink: getLink(part.config.link, xpContent), // TODO: get this to work
+    href: getLink(urlContentSelector),
     content: part.config.content + ' / ' + moment(part.config.date).format('DD. MMMM YYYY').toLowerCase(),
     preambleText: part.config.preamble,
     small: true,
@@ -30,19 +30,16 @@ function renderPart(request) {
     linkType: 'header'
   }
 
-  log.info(part.config.link)
-  log.info(xpContent)
-
   return React4xp.render(part, props, request)
 }
 
-function getLink(link, xpContent) {
-  if(link != null) {
-    return link
-  } else {
-    if(xpContent != null) {
-        return xpContent
-      }
+function getLink(urlContentSelector) {
+  if(urlContentSelector._selected == 'optionLink') {
+    return urlContentSelector.optionLink.link
+  }
+
+  if(urlContentSelector._selected == 'optionXPContent') {
+    return pageUrl({ id: urlContentSelector.optionXPContent.xpContent })
   }
   return ''
 }
