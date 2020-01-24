@@ -1,14 +1,8 @@
 import JsonStat from 'jsonstat-toolkit'
 const util = __non_webpack_require__( '/lib/util')
-const {
-  getMunicipality
-} = __non_webpack_require__( '/lib/klass/municipalities')
-const {
-  getDataSetWithDataQueryId
-} = __non_webpack_require__( '/lib/ssb/dataset')
-const {
-  getComponent
-} = __non_webpack_require__( '/lib/xp/portal')
+const { getMunicipality } = __non_webpack_require__( '/lib/klass/municipalities')
+const { getDataSetWithDataQueryId } = __non_webpack_require__( '/lib/ssb/dataset')
+const { getComponent } = __non_webpack_require__( '/lib/xp/portal')
 const content = __non_webpack_require__( '/lib/xp/content')
 const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
 const {
@@ -17,12 +11,12 @@ const {
   style
 } = __non_webpack_require__('/lib/highcharts/config')
 const {
-  parseDataWithMunicipality,
   barNegativeFormat,
   defaultFormat,
   defaultTbmlFormat
 } = __non_webpack_require__('/lib/highcharts/highcharts')
 
+const { parseDataWithMunicipality } = __non_webpack_require__('/lib/ssb/dataset')
 const view = resolve('./highchart.html')
 
 exports.get = function(req) {

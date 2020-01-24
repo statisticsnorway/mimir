@@ -57,7 +57,7 @@ export function get(url: string, json: DataqueryRequestData | undefined, selecti
 export function refreshDataset(dataquery: Content<Dataquery>): Content<Dataset> | undefined {
   if (dataquery.data.table) {
     // TODO option-set is not parsed correctly by enonic-ts-codegen, update lib later and remove PlaceholderData interface
-    const datasetFormat: PlaceholderData['datasetFormat'] = (dataquery.data as PlaceholderData).datasetFormat
+    const datasetFormat: Dataquery['datasetFormat'] = dataquery.data.datasetFormat
     let data: object | null = null
     try {
       if ((!datasetFormat || datasetFormat._selected === 'jsonStat')) {
@@ -165,13 +165,9 @@ export interface Dimension {
   selection: SelectionFilter;
 }
 
+
 // TODO create issue for enonic-types where read-only is blocking modify
-interface ModifyContent<A> extends Content<A> {
+interface ModifyContent<A extends object> extends Content<A> {
   displayName: string;
 }
 
-interface PlaceholderData {
-  datasetFormat: {
-    _selected: string;
-  };
-}

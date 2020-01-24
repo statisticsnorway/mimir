@@ -5,6 +5,7 @@ const { getComponent, getSiteConfig, getContent } = __non_webpack_require__( '/l
 const { render } = __non_webpack_require__( '/lib/thymeleaf')
 const { data } = __non_webpack_require__( '/lib/util')
 const { pageMode } = __non_webpack_require__( '/lib/ssb/utils')
+const { renderError } = __non_webpack_require__( '/lib/error/error')
 
 const view = resolve('./key-figure.html')
 
@@ -28,9 +29,13 @@ exports.preview = (req, id) => {
 }
 
 const renderPart = (municipality, keyFigureIds) => {
-  const part = getComponent()
-  const keyFigures = keyFigureIds.map( (keyFigureId) => getKeyFigure({ key: keyFigureId }))
-  return keyFigures.length && municipality !== undefined ? renderKeyFigure(keyFigures, part, municipality) : ''
+  try {
+    const part = getComponent()
+    const keyFigures = keyFigureIds.map((keyFigureId) => getKeyFigure({key: keyFigureId}))
+    return keyFigures.length && municipality !== undefined ? renderKeyFigure(keyFigures, part, municipality) : {body: '', contentType: 'text/html'}
+  } catch (e) {
+    return renderError('Feil i part', e)
+  }
 }
 
 /**
@@ -50,7 +55,8 @@ function renderKeyFigure(keyFigures, part, municipality) {
   }, [])
 
   const parsedKeyFigures = keyFigures.map( (keyFigure) => {
-    const dataset = parseMunicipalityValues(keyFigure.data.dataquery, municipality.code, keyFigure.data.default)
+    const dataset = parseMunicipalityValues(keyFigure.data.dataquery, municipality, keyFigure.data.default)
+
     return {
       displayName: keyFigure.displayName,
       ...keyFigure.data,

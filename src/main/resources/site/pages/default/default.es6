@@ -1,7 +1,7 @@
 const content = __non_webpack_require__( '/lib/xp/content')
 const { getContent, processHtml, assetUrl, pageUrl } = __non_webpack_require__( '/lib/xp/portal')
 const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
-const glossaryLib = __non_webpack_require__( '/lib/glossary')
+const glossaryLib  = __non_webpack_require__('/lib/glossary')
 const languageLib = __non_webpack_require__( '/lib/language')
 const { alertsForContext, pageMode } = __non_webpack_require__( '/lib/ssb/utils')
 const { getMunicipality } = __non_webpack_require__( '/lib/klass/municipalities')

@@ -1,12 +1,6 @@
-const {
-  query
-} = __non_webpack_require__( '/lib/xp/content')
-const {
-  NOT_FOUND
-} = __non_webpack_require__( './error')
-const {
-  getWithSelection
-} = __non_webpack_require__( '/lib/klass/klass')
+const { query } = __non_webpack_require__( '/lib/xp/content')
+const { NOT_FOUND } = __non_webpack_require__( './error')
+const { getWithSelection } = __non_webpack_require__( '/lib/klass/klass')
 const moment = require('moment/min/moment-with-locales')
 import JsonStat from 'jsonstat-toolkit'
 
@@ -50,10 +44,11 @@ export const getTime = (dataset) => {
 /**
  * Get value from dataset with index
  * @param {Object} data: JSON-STAT object
- * @param {String} index
+ * @param {string} index
  * @return {{label: {String}, value: {String}}}
  */
-export const getValueWithIndex = (data, index) => {
+export const getValueWithIndex = (data, filterTarget, filter) => {
+  const ds = JsonStat(data).Dimension(0)
   const dataKey = data.dimension.id[0]
   const valueIndexes = data.dimension[dataKey].category.index
   return data.value[valueIndexes[index]]
@@ -97,3 +92,37 @@ export const getDataFromCurrentOrOldMunicipalityCode = (dataset, municipality) =
 
 export const getUpdated = (ds) => moment(ds.modifiedTime).format('DD.MM.YYYY HH:mm:ss')
 export const getUpdatedReadable = (ds) => moment(ds.modifiedTime).fromNow()
+
+
+export const parseDataWithMunicipality = (dataset, filterTarget, municipality, xAxis) => {
+  let code = municipality.code
+  let hasData = hasFilterData(dataset, filterTarget, code, xAxis )
+
+  if ( !hasData ) {
+    const getDataFromOldMunicipalityCode = municipality.changes.length > 0
+    if (getDataFromOldMunicipalityCode) {
+      code = municipality.changes[0].oldCode
+      hasData = hasFilterData(dataset, filterTarget, code, xAxis)
+    }
+  }
+  if (hasData) {
+    return dataset.Dimension(filterTarget).Category(code).index
+  }
+  return -1
+}
+
+const hasFilterData = (dataset, filterTarget, filter, xAxis) => {
+  const filterIndex = dataset.id.indexOf(filterTarget)
+  const filterTargetCategoryIndex = dataset.Dimension(filterTarget).Category(filter).index
+  const xAxisIndex = dataset.id.indexOf(xAxis)
+  const xCategories = dataset.Dimension(xAxis).Category()
+  return xCategories.reduce((hasData, xCategory) => {
+    if (hasData) {
+      return hasData
+    }
+    const dimension = dataset.id.map(() => 0) // creates [5061,0,0,0]
+    dimension[filterIndex] = filterTargetCategoryIndex
+    dimension[xAxisIndex] = xCategory.index
+    return !!dataset.Data(dimension, false)
+  }, false)
+}

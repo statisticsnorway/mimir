@@ -17,17 +17,17 @@ export interface Highchart {
   /**
    * Graftype
    */
-  graphType: string;
+  graphType: "line" | "pie" | "column" | "bar" | "area" | "barNegative";
 
   /**
    * Antall desimalplasser som vises
    */
-  numberDecimals?: string;
+  numberDecimals?: "0" | "1" | "2" | "3";
 
   /**
    * Stabling av verdier
    */
-  stacking?: string;
+  stacking?: "disabled" | "normal" | "percent";
 
   /**
    * Skjul tegnforklaringen
@@ -37,7 +37,7 @@ export interface Highchart {
   /**
    * Plassering av tegnforklaring
    */
-  legendAlign?: string;
+  legendAlign?: "right" | "center";
 
   /**
    * Tegnforklaring under (kun kakediagram)
@@ -52,7 +52,7 @@ export interface Highchart {
   /**
    * Zoom i graf
    */
-  zoomType?: string;
+  zoomType?: "null" | "x" | "y" | "xy";
 
   /**
    * Midtstille tittel
@@ -97,7 +97,7 @@ export interface Highchart {
   /**
    * X-skala
    */
-  xAxisType?: string;
+  xAxisType?: "category" | "linear" | "logarithmic";
 
   /**
    * X-akse Minste verdi
@@ -112,7 +112,7 @@ export interface Highchart {
   /**
    * Tillat desimaler
    */
-  xAllowDecimal?: string;
+  xAllowDecimal: boolean;
 
   /**
    * Skjul aksemarkører
@@ -127,7 +127,7 @@ export interface Highchart {
   /**
    * Y-skala
    */
-  yAxisType?: string;
+  yAxisType?: "category" | "linear" | "logarithmic";
 
   /**
    * Y-akse Minste verdi

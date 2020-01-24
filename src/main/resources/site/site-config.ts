@@ -10,6 +10,11 @@ export interface SiteConfig {
   countyDataContentId?: string;
 
   /**
+   * Endringslister fra api
+   */
+  municipalChangeListContentId?: string;
+
+  /**
    * Standard kommune for å vise i "preview" mode
    */
   defaultMunicipality: string;
