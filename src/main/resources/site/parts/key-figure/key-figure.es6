@@ -85,7 +85,7 @@ function renderKeyFigure(keyFigures, part, municipality) {
     }
 
     const reactProps = {
-      number: createHumanReadableFormat(keyfigure.value),
+      number: keyfigure.valueHumanReadable,
       title: keyfigure.displayName,
       numberDescription: keyfigure.denomination,
       time: keyfigure.time,
