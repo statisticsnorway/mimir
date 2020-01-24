@@ -97,7 +97,7 @@ function renderKeyFigure(keyFigures, part, municipality) {
     return keyfigureReact.setId(keyfigure.id).setProps(reactProps)
   })
 
-  let body = thymeleaf.render(view, {});
+  let body = thymeleaf.render(view, model);
 
   reactObjs.forEach((keyfigureReact) => {
     body = keyfigureReact.renderBody({body});
