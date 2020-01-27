@@ -1,0 +1,11 @@
+<section class="xp-part part-banner position-relative clearfix opacity-0">
+  <div class="container h-100 d-flex align-items-center">
+    <div class="row">
+      <div class="col-12" data-th-if="${part.config.image}">
+        <h2 class="mt-0 position-relative" data-th-text=""></h2>
+        <img data-th-if="${part.config.image}" class="position-absolute w-100 h-100 d-print-none" data-th-attr="data-url=${portal.imageUrl({'_id=' + part.config.image, '_scale=block-1400-400'})}"/>
+        
+      </div>
+    </div>
+  </div>
+</section>
