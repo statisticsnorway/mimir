@@ -85,12 +85,13 @@ function renderKeyFigure(keyFigures, part, municipality) {
     }
 
     const reactProps = {
+      iconUrl : iconSrc,
       number: keyfigure.valueHumanReadable,
-      title: keyfigure.displayName,
       numberDescription: keyfigure.denomination,
-      time: keyfigure.time,
+      noNumberText: keyfigure.valueNotFound,
       size: keyfigure.size,
-      iconUrl : iconSrc
+      title: keyfigure.displayName,
+      time: keyfigure.time
     };
 
     const keyfigureReact = new React4xp('KeyFigure')
