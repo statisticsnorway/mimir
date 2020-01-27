@@ -33,7 +33,7 @@
   <main data-portal-region="main" class="xp-region" data-th-if="${!isFragment}">
     <div class="container-fluid bg-white pt-2 pb-4">
       <!-- breadcrumbs -->
-      <div data-th-replace="mimir:/site/includes/breadcrumbs.html"></div>
+      <div data-th-id="${breadcrumbId}"></div>
 
       <!-- Alerts Info and error -->
       <div data-th-replace="mimir:/site/includes/alerts.html"></div>
