@@ -1,8 +1,6 @@
 const { getComponent, pageUrl, imageUrl } = __non_webpack_require__('/lib/xp/portal')
-const content = __non_webpack_require__('/lib/xp/content')
 const moment = require('moment/min/moment-with-locales')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const util = __non_webpack_require__('/lib/util')
 
 moment.locale('nb')
 
