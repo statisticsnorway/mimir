@@ -1,5 +1,6 @@
 const portal = __non_webpack_require__( '/lib/xp/portal')
 const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
+const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 const { getMunicipality } = __non_webpack_require__( '/lib/klass/municipalities')
 const { pageMode } = __non_webpack_require__( '/lib/ssb/utils')
 
@@ -10,7 +11,10 @@ exports.get = function(req) {
   const part = portal.getComponent()
   const municipality = getMunicipality(req)
   const mode = pageMode(req, page)
-  const model = { page, part, municipality, mode }
+  const pageType = part.config.pageType
+  const factsAbout = i18nLib.localize({key: 'factsAbout'});
+
+  const model = { page, part, municipality, pageType, factsAbout, mode }
   const body = thymeleaf.render(view, model)
 
   return { body, contentType: 'text/html' }

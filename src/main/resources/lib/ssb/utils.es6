@@ -13,6 +13,11 @@ const {
 } = __non_webpack_require__( '/lib/xp/portal')
 const content = __non_webpack_require__( '/lib/xp/content')
 const numeral = require('numeral')
+const {
+  render
+} = __non_webpack_require__( '/lib/thymeleaf')
+const errorView = resolve('../error/error.html')
+
 
 exports.createHumanReadableFormat = (value) => {
   return value > 999 ? numeral(value).format('0,0').replace( /,/, '\u00a0' ) : value.toString().replace(/\./, ',')
@@ -76,4 +81,27 @@ export const getBreadcrumbs = (page, municipality) => {
     delete breadcrumbs[breadcrumbs.length - 1].link
   }
   return breadcrumbs
+}
+
+export function safeRender(view, model) {
+  let response
+  try {
+    response = {
+      body: render(view, model),
+      status: 200,
+      contentType: 'text/html'
+    }
+  } catch (e) {
+    const errorModel = {
+      errorTitle: 'Noe gikk galt',
+      errorBody: e
+    }
+    response = {
+      body: render(errorView, errorModel),
+      status: 400,
+      contentType: 'text/html'
+    }
+  }
+
+  return response
 }

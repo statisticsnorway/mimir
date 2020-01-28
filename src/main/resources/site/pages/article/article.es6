@@ -57,7 +57,7 @@ exports.get = function(req) {
   // Create preview
   if (preview.indexOf(page.type) >= 0) {
     const name = page.type.replace(/^.*:/, '')
-    const controller = require(`../../parts/${name}/${name}`)
+    const controller = __non_webpack_require__(`../../parts/${name}/${name}`)
     if (controller.preview) {
       page.preview = controller.preview(req, page._id)
     }
