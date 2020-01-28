@@ -30,7 +30,7 @@
   <div id="ssb-menu" data-th-include="mimir:/site/includes/ssb-menu.html"></div>
 
   <!-- MAIN -->
-  <main data-portal-region="main" class="xp-region" data-th-if="${!isFragment}">
+  <main class="xp-region" data-th-if="${!isFragment}">
     <div class="container-fluid bg-white pt-2 pb-4">
       <!-- breadcrumbs -->
       <div data-th-replace="mimir:/site/includes/breadcrumbs.html"></div>
@@ -53,12 +53,13 @@
       </div>
     </div>
 
-    <div data-th-if="${mainRegion}" data-th-remove="tag">
-      <div data-th-each="component : ${mainRegionComponents}"
-        data-th-classappend="${component.classes}"
-        data-th-remove="${component.removeWrapDiv} ? tag">
-        <div data-portal-component="${component.path}" data-th-remove="tag"></div>
+    <div data-th-if="${!mainRegionComponents.empty}" data-th-remove="tag">
+      <div data-portal-region="main">
+        <div data-th-each="component : ${mainRegionComponents}" data-th-remove="tag">
+          <div data-portal-component="${component.path}" data-th-remove="tag" />
+        </div>
       </div>
+    </div>
   </main>
 
   <!-- GLOSSARY -->

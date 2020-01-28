@@ -1,12 +1,13 @@
 <div data-th-class="${!isMunicipality} ? 'border-top border-map'">
   <div class="container js-part-map" data-th-classappend="${isMunicipality} ? 'd-none' : 'pt-4'">
     <section class="xp-part part-map">
-      <div 
-        id="map" 
-        data-th-class="${isMunicipality} ? 'map-border'" 
-        data-th-data-path="${dataPathAssetUrl}" 
+      <div
+        id="map"
+        data-th-class="${isMunicipality} ? 'map-border'"
+        data-th-data-path="${dataPathAssetUrl}"
         data-th-data-service="${dataServiceUrl}">
       </div>
     </section>
   </div>
 </div>
+
