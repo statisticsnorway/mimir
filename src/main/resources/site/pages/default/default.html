@@ -15,15 +15,15 @@
     /*]]>*/
   </script>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="Cache-control" content="NO-CACHE">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta data-th-if="${page.data.metaDescription}" name="description" data-th-content="${page.data.metaDescription}">
+  <meta charset="UTF-8" />
+  <meta http-equiv="Cache-control" content="NO-CACHE" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta data-th-if="${page.data.metaDescription}" name="description" data-th-content="${page.data.metaDescription}" />
   <title data-th-text="${page.displayName} + ' - Statistisk sentralbyrå'"></title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|Open+Sans:700|Roboto:700|Roboto+Condensed:700">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|Open+Sans:700|Roboto:700|Roboto+Condensed:700" />
   <link rel="stylesheet" data-th-href="${stylesUrl}"/>
   <link rel="alternate" data-th-if="${alternateLanguageVersionUrl}" data-th-href="${alternateLanguageVersionUrl}" data-th-hreflang="${language.alternate}" />
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous" />
 </head>
 <body class="xp-page" data-th-classappend="${bodyClasses}">
   <!-- HEADER -->
@@ -33,7 +33,7 @@
   <main data-portal-region="main" class="xp-region" data-th-if="${!isFragment}">
     <div class="container-fluid bg-white pt-2 pb-4">
       <!-- breadcrumbs -->
-      <div data-th-id="${breadcrumbId}"></div>
+      <div id="breadcrumbs" class="container d-print-none"></div>
 
       <!-- Alerts Info and error -->
       <div data-th-replace="mimir:/site/includes/alerts.html"></div>

@@ -1,4 +1,3 @@
-const content = __non_webpack_require__( '/lib/xp/content')
 const {
   getContent,
   processHtml,
@@ -7,9 +6,13 @@ const {
 } = __non_webpack_require__( '/lib/xp/portal')
 const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
 const glossaryLib = __non_webpack_require__( '/lib/glossary')
-const languageLib = __non_webpack_require__( '/lib/language')
 const {
-  alertsForContext, pageMode
+  getLanguage
+} = __non_webpack_require__( '/lib/language')
+const {
+  alertsForContext,
+  pageMode,
+  getBreadcrumbs
 } = __non_webpack_require__( '/lib/ssb/utils')
 const {
   getMunicipality
@@ -65,7 +68,7 @@ exports.get = function(req) {
     }
   }
 
-  const language = languageLib.getLanguage(page)
+  const language = getLanguage(page)
   let alternateLanguageVersionUrl
   if (language.exists) {
     alternateLanguageVersionUrl = pageUrl({
@@ -73,16 +76,9 @@ exports.get = function(req) {
     })
   }
 
-  const breadcrumbs = getBreadcrumbs(page, language)
-
   let municipality
   if (mode === 'municipality') {
     municipality = getMunicipality(req)
-    if (municipality) {
-      breadcrumbs.push({
-        text: municipality.displayName
-      })
-    }
   }
 
   const alerts = alertsForContext(municipality)
@@ -121,12 +117,6 @@ exports.get = function(req) {
     path: 'SSB_logo.png'
   })
 
-  const breadcrumbComponent = new React4xp('Breadcrumb')
-    .setProps({
-      items: breadcrumbs
-    })
-    .setId('breadcrumbs')
-    .uniqueId()
   const model = {
     version,
     config,
@@ -138,7 +128,6 @@ exports.get = function(req) {
     mode,
     showIngress,
     preview,
-    breadcrumbId: breadcrumbComponent.react4xpId,
     alerts,
     bodyClasses: bodyClasses.join(' '),
     stylesUrl,
@@ -151,12 +140,19 @@ exports.get = function(req) {
   }
 
   let body = thymeleaf.render(view, model)
-  body = breadcrumbComponent.renderSSRIntoContainer(body)
-  const pageContributions = breadcrumbComponent.renderPageContributions()
+
+  const breadcrumbs = getBreadcrumbs(page, municipality)
+  const breadcrumbComponent = new React4xp('Breadcrumb')
+    .setProps({
+      items: breadcrumbs
+    })
+    .setId('breadcrumbs')
+  body = breadcrumbComponent.renderBody({
+    body
+  })
 
   return {
-    body,
-    pageContributions
+    body
   }
 }
 
@@ -182,28 +178,4 @@ function mapComponents(mainRegion, mode) {
     })
   }
   return []
-}
-
-function getBreadcrumbs(page, language, breadcrumbs = []) {
-  if (page.type === 'portal:site') {
-    breadcrumbs.unshift({
-      text: language.phrases.home,
-      link: 'http://ssb.no'
-    })
-  } else {
-    breadcrumbs.unshift({
-      text: page.displayName,
-      link: pageUrl({
-        path: page._path
-      })
-    })
-    const parent = content.get({
-      key: page._path.substring(0, page._path.lastIndexOf('/'))
-    })
-
-    if (parent) {
-      return getBreadcrumbs(parent, language, breadcrumbs)
-    }
-  }
-  return breadcrumbs
 }
