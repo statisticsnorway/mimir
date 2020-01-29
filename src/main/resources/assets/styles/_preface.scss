@@ -13,10 +13,12 @@
   height: 230px;
   width: 100%;
   margin: 0;
-  color: $ssb-white;
   @include roboto;
-  font-size: 22px;
 
+  p {
+    color: $ssb-white;
+    font-size: 22px;
+  }
   &:after {
     position: absolute;
     content: "";
@@ -27,6 +29,14 @@
       border-style: solid;
       border-color: $ssb-dark-5 rgba(0,0,0,0) rgba(0,0,0,0) $ssb-dark-5;
 
+  }
+
+  &.noPrefaceContent {
+    height: 100px;
+
+    &:after {
+      top: 100px;
+    }
   }
 
   @include media-breakpoint-down(lg) {

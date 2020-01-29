@@ -19,6 +19,9 @@
     opacity: 1;
     transition: all .2s;
   }
+  &.factpage-banner {
+    background-color: $ssb-green-3;
+  }
   @media print {
     min-height: 80px;
     color: #333;
