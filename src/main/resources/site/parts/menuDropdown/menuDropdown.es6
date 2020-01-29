@@ -2,9 +2,6 @@ const {
   getContent
 } = __non_webpack_require__( '/lib/xp/portal')
 const {
-  render
-} = __non_webpack_require__( '/lib/thymeleaf')
-const {
   municipalsWithCounties, getMunicipality
 } = __non_webpack_require__( '/lib/klass/municipalities')
 const {
@@ -15,6 +12,7 @@ const {
 } = __non_webpack_require__( '/lib/error/error')
 
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
 const view = resolve('./menuDropdown.html')
 
 exports.get = (req) => {
@@ -36,13 +34,10 @@ function renderPart(req) {
   // Input field react object for sticky menu
   const inputStickyMenu = new React4xp('Input')
     .setProps({
-      inputId: 'input-query-municipality',
-      htmlFor: inputId,
-      inputLabel: (pageMode(req, page) == 'municipality') ? 'Bytt kommune: ' : '',
+      id: 'input-query-municipality',
       ariaLabel: 'Søk på kommune',
       searchField: true,
       placeholder: 'Søk på kommune',
-      chooseMap: 'Velg i kart'
     })
     .setId('inputStickyMenu')
     .uniqueId()
@@ -58,23 +53,12 @@ function renderPart(req) {
     municipalities: parsedMunicipalities
   }
 
-  const preRenderedBody = render(view, model)
-
-  const preExistingPageContributions = {
-    bodyEnd: `<script>
-        console.log('Rendered object: ${inputStickyMenu.props.inputId}')
-            </script>`
-  }
+  const preRenderedBody = thymeleaf.render(view, model)
 
   return {
     body: inputStickyMenu.renderBody({
       body: preRenderedBody
     }),
-    contentType: 'text/html',
-    pageContributions: (req.mode === 'live' || req.mode === 'preview') ?
-      inputStickyMenu.renderPageContributions({
-          pageContributions: preExistingPageContributions
-        }) :
-      undefined
+    contentType: 'text/html'
   }
 }

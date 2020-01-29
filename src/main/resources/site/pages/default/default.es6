@@ -1,10 +1,16 @@
 const content = __non_webpack_require__( '/lib/xp/content')
-const { getContent, processHtml, assetUrl, pageUrl } = __non_webpack_require__( '/lib/xp/portal')
+const {
+  getContent, processHtml, assetUrl, pageUrl
+} = __non_webpack_require__( '/lib/xp/portal')
 const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
 const glossaryLib = __non_webpack_require__( '/lib/glossary')
 const languageLib = __non_webpack_require__( '/lib/language')
-const { alertsForContext, pageMode } = __non_webpack_require__( '/lib/ssb/utils')
-const { getMunicipality } = __non_webpack_require__( '/lib/klass/municipalities')
+const {
+  alertsForContext, pageMode
+} = __non_webpack_require__( '/lib/ssb/utils')
+const {
+  getMunicipality
+} = __non_webpack_require__( '/lib/klass/municipalities')
 
 const version = '%%VERSION%%'
 const partsWithPreview = [ // Parts that has preview
@@ -16,14 +22,16 @@ const partsWithPreview = [ // Parts that has preview
   `${app.name}:highchart`,
   `${app.name}:dashboard`,
   `${app.name}:key-figure`,
-  `${app.name}:menu-dropdown`,
+  `${app.name}:menuDropdown`,
   `${app.name}:statistikkbanken`,
   `${app.name}:dataquery`
 ]
 
 function getBreadcrumbs(c, a) {
   const key = c._path.replace(/\/[^\/]+$/, '')
-  c = key && content.get({ key })
+  c = key && content.get({
+    key
+  })
   c && c.type.match(/:page$/) && a.unshift(c) && getBreadcrumbs(c, a)
 }
 
@@ -45,7 +53,9 @@ exports.get = function(req) {
   const mainRegionComponents = mapComponents(mainRegion, mode)
 
   const glossary = glossaryLib.process(page.data.ingress, regions)
-  const ingress = processHtml({ value: page.data.ingress })
+  const ingress = processHtml({
+    value: page.data.ingress
+  })
   const showIngress = ingress && page.type === 'mimir:page'
 
 
@@ -64,7 +74,9 @@ exports.get = function(req) {
 
   const municipality = getMunicipality(req)
   if (!page._path.endsWith(req.path.split('/').pop()) && req.mode != 'edit' ) {
-    breadcrumbs.push({ displayName: municipality.displayName })
+    breadcrumbs.push({
+      displayName: municipality.displayName
+    })
   }
 
   const alerts = alertsForContext(municipality)
@@ -137,7 +149,9 @@ exports.get = function(req) {
 
   const body = thymeleaf.render(view, model)
 
-  return { body }
+  return {
+    body
+  }
 }
 
 function mapComponents(mainRegion, mode) {
@@ -145,10 +159,10 @@ function mapComponents(mainRegion, mode) {
     return mainRegion.components.map((component) => {
       const descriptor = component.descriptor
       const classes = []
-      if (descriptor !== 'mimir:banner' && descriptor !== 'mimir:menu-dropdown' && descriptor !== 'mimir:map' ) {
+      if (descriptor !== 'mimir:banner' && descriptor !== 'mimir:menuDropdown' && descriptor !== 'mimir:map' ) {
         classes.push('container')
       }
-      if (descriptor === 'mimir:menu-dropdown' && mode === 'municipality') {
+      if (descriptor === 'mimir:menuDropdown' && mode === 'municipality') {
         classes.push('sticky-top')
       }
       if (descriptor === 'mimir:preface') {
