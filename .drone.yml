@@ -18,7 +18,7 @@ steps:
 kind: pipeline
 type: docker
 name: "Test Environment"
-# Deploy to test on pushes to master branch
+# Deploy to test on pushes to master branch and merged pull requests
 trigger:
   branch:
     - master
