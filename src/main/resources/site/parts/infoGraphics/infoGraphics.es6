@@ -8,7 +8,8 @@ exports.get = function(req) {
   const page = portal.getContent()
   const part = portal.getComponent()
   const mode = pageMode(req, page)
-  const model = { page, part, mode }
+  const selectedSource = part.config.checkOptionSet
+  const model = { page, part, mode, selectedSource }
   const body = thymeleaf.render(view, model)
 
   return { body, contentType: 'text/html' }

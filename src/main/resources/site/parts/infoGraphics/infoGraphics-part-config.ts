@@ -12,7 +12,7 @@ export interface InfoGraphicsPartConfig {
   /**
    * Fotnoe til bilde
    */
-  footNote: string;
+  footNote?: string;
 
   /**
    * Alternativ tekst til bilde
