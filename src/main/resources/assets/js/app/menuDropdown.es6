@@ -79,5 +79,9 @@ export function init() {
     if (w >= 960) { // Bootstrap lg grid
       $('#search-container').addClass('show')
     }
+
+    // Removes global styling on the Choose map option
+    $('.part-menu-dropdown a').css('all', 'unset')
+    $('.choose-map-a').find('span').css('all', 'unset')
   })
 }
