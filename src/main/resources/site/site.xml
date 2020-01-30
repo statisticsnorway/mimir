@@ -1,87 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
   <form>
-    <input type="TextLine" name="municipality">
-      <label>URL til kommuner</label>
-      <occurrences minimum="1" maximum="1"/>
-      <default>http://data.ssb.no/api/klass/v1/classifications/131/codesAt?date=2019-01-01</default>
-    </input>
-    <input type="TextLine" name="county">
-      <label>URL til fylker</label>
-      <occurrences minimum="1" maximum="1"/>
-      <default>http://data.ssb.no/api/klass/v1/classifications/104/codesAt?date=2019-01-01</default>
-    </input>
-    <input name="municipalDataContentId" type="ContentSelector">
-      <label>Kommunedata innhold fra api</label>
-      <occurrences minimum="0" maximum="1"/>
-      <config>
-        <allowContentType>dataquery</allowContentType>
-        <treeMode>true</treeMode>
-        <showStatus>true</showStatus>
-        <hideToggleIcon>true</hideToggleIcon>
-      </config>
-    </input>
-    <input name="countyDataContentId" type="ContentSelector">
-      <label>Fylkedata innhold fra api</label>
-      <occurrences minimum="0" maximum="1"/>
-      <config>
-        <allowContentType>dataquery</allowContentType>
-        <treeMode>true</treeMode>
-        <showStatus>true</showStatus>
-        <hideToggleIcon>true</hideToggleIcon>
-      </config>
-    </input>
-    <input type="TextLine" name="defaultMunicipality">
-      <label>Standard kommune for å vise i "preview" mode</label>
-      <occurrences minimum="1" maximum="1"/>
-      <default>0101</default>
-    </input>
-    <item-set name="kommunefakta">
-      <label>Kommunefakta instillinger</label>
-      <occurrences minimum="0" maximum="1"/>
+    <field-set>
+      <label>Kommunefakta</label>
       <items>
-          <input type="TextLine" name="mapfolder">
-              <label>Mappe kartfiler</label>
-              <occurrences minimum="0" maximum="1"/>
-              <default>/mapdata</default>
-          </input>
-      </items>
-    </item-set>
-    <item-set name="language">
-      <label>Språk instillinger</label>
-      <occurrences minimum="1" maximum="2"/>
-      <items>
-        <input name="label" type="TextLine">
-          <label>Språk</label>
-          <occurrences minimum="1" maximum="1"/>
-          <default>Norsk (Bokmål)</default>
-        </input>
-        <input name="code" type="TextLine">
-          <label>Språkkode</label>
-          <occurrences minimum="1" maximum="1"/>
-          <default>nb</default>
-        </input>
-        <input name="alternate" type="TextLine">
-          <label>Språk alternativ</label>
-          <occurrences minimum="1" maximum="1"/>
-          <default>en</default>
-        </input>
-        <input name="link" type="TextLine">
-          <label>Språk lenke</label>
+        <input name="municipalDataContentId" type="ContentSelector">
+          <label>Kommunedata innhold fra api</label>
           <occurrences minimum="0" maximum="1"/>
-          <default></default>
-        </input>
-        <input name="phrases" type="RadioButton">
-          <label>Språk tekst/fraser</label>
-          <occurrences minimum="1" maximum="1"/>
           <config>
-            <option value="norwegian">phrases/phrases_no</option>
-            <option value="english">phrases_en</option>
+            <allowContentType>dataquery</allowContentType>
+            <treeMode>true</treeMode>
+            <showStatus>true</showStatus>
+            <hideToggleIcon>true</hideToggleIcon>
           </config>
-          <default>norwegian</default>
         </input>
+        <input name="countyDataContentId" type="ContentSelector">
+          <label>Fylkedata innhold fra api</label>
+          <occurrences minimum="0" maximum="1"/>
+          <config>
+            <allowContentType>dataquery</allowContentType>
+            <treeMode>true</treeMode>
+            <showStatus>true</showStatus>
+            <hideToggleIcon>true</hideToggleIcon>
+          </config>
+        </input>
+        <input name="municipalChangeListContentId" type="ContentSelector">
+          <label>Endringslister fra api</label>
+          <occurrences minimum="0" maximum="1"/>
+          <config>
+            <allowContentType>dataquery</allowContentType>
+            <treeMode>true</treeMode>
+            <showStatus>true</showStatus>
+            <hideToggleIcon>true</hideToggleIcon>
+          </config>
+        </input>
+        <input type="TextLine" name="defaultMunicipality">
+          <label>Standard kommune for å vise i "preview" mode</label>
+          <occurrences minimum="1" maximum="1"/>
+          <default>0101</default>
+        </input>
+      <item-set name="kommunefakta">
+          <label>Kommunefakta instillinger</label>
+          <occurrences minimum="0" maximum="1"/>
+          <items>
+              <input type="TextLine" name="mapfolder">
+                  <label>Mappe kartfiler</label>
+                  <occurrences minimum="0" maximum="1"/>
+                  <default>/mapdata</default>
+              </input>
+          </items>
+      </item-set>
       </items>
-    </item-set>
+    </field-set>
+    <field-set>
+      <label>Språk</label>
+      <items>
+        <item-set name="language">
+          <label>Språk instillinger</label>
+          <occurrences minimum="1" maximum="2"/>
+          <items>
+            <input name="label" type="TextLine">
+              <label>Språk</label>
+              <occurrences minimum="1" maximum="1"/>
+              <default>Norsk (Bokmål)</default>
+            </input>
+            <input name="code" type="TextLine">
+              <label>Språkkode</label>
+              <occurrences minimum="1" maximum="1"/>
+              <default>nb</default>
+            </input>
+            <input name="alternate" type="TextLine">
+              <label>Språk alternativ</label>
+              <occurrences minimum="1" maximum="1"/>
+              <default>en</default>
+            </input>
+            <input name="link" type="TextLine">
+              <label>Språk lenke</label>
+              <occurrences minimum="0" maximum="1"/>
+              <default></default>
+            </input>
+            <input name="phrases" type="RadioButton">
+              <label>Språk tekst/fraser</label>
+              <occurrences minimum="1" maximum="1"/>
+              <config>
+                <option value="norwegian">phrases/phrases_no</option>
+                <option value="english">phrases_en</option>
+              </config>
+              <default>norwegian</default>
+            </input>
+          </items>
+        </item-set>
+      </items>
+    </field-set>
   </form>
   <mappings>
     <mapping controller="/site/pages/default/default.js">

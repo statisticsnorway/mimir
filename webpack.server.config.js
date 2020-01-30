@@ -33,12 +33,13 @@ const config = {
     extensions: [],
   },
   optimization: {
-    minimizer: [
+    minimize: false
+    /*minimizer: [
       new TerserPlugin(),
     ],
     splitChunks: {
       minSize: 30000,
-    },
+    },*/
   },
   plugins: [
     /*new CopyWebpackPlugin([
@@ -98,7 +99,7 @@ function addTypeScriptSupport(cfg) {
 // BABEL
 function addBabelSupport(cfg) {
   const rule = {
-    test: /\.(es6?|js)$/,
+    test: /\.(es6?|js|mjs)$/,
     exclude: /node_modules/,
     loader: 'babel-loader',
     options: {
@@ -127,7 +128,7 @@ function addBabelSupport(cfg) {
   return R.pipe(
     setEntriesForPath(entries),
     addRule(rule),
-    prependExtensions(['.js', '.es', '.es6', '.json'])
+    prependExtensions(['.js', '.es', '.es6', '.json', 'mjs'])
   )(cfg);
 }
 
