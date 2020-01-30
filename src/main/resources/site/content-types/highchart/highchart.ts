@@ -7,52 +7,52 @@ export interface Highchart {
   /**
    * Undertittel
    */
-  undertittel?: string;
+  subtitle?: string;
 
   /**
-   * Forklaring datagrunnlag for Screen-reader (brukes nå på alle sider)
+   * Forklaring datagrunnlag for Screen-reader (ps. ikke i bruk)
    */
-  'forklaring-datagrunnlag'?: string;
+  datasetExplanation?: string;
 
   /**
    * Graftype
    */
-  type?: string;
+  graphType: "line" | "pie" | "column" | "bar" | "area" | "barNegative";
 
   /**
    * Antall desimalplasser som vises
    */
-  numberdecimals?: string;
+  numberDecimals?: "0" | "1" | "2" | "3";
 
   /**
    * Stabling av verdier
    */
-  stabling?: string;
+  stacking?: "disabled" | "normal" | "percent";
 
   /**
    * Skjul tegnforklaringen
    */
-  nolegend: boolean;
+  noLegend: boolean;
 
   /**
    * Plassering av tegnforklaring
    */
-  legendAlign?: string;
+  legendAlign?: "right" | "center";
 
   /**
    * Tegnforklaring under (kun kakediagram)
    */
-  'pie-legend': boolean;
+  pieLegend: boolean;
 
   /**
    * Tickinterval
    */
-  tickinterval?: string;
+  tickInterval?: string;
 
   /**
    * Zoom i graf
    */
-  zoomtype?: string;
+  zoomType?: "null" | "x" | "y" | "xy";
 
   /**
    * Midtstille tittel
@@ -62,17 +62,12 @@ export interface Highchart {
   /**
    * Kildetabell for Highcharts-figur
    */
-  htmltabell?: string;
-
-  /**
-   * Spørring mot Statistikkbanken
-   */
-  dataquery?: string;
+  htmlTable?: string;
 
   /**
    * Bytt rader og kolonner
    */
-  byttraderogkolonner: boolean;
+  switchRowsAndColumns: boolean;
 
   /**
    * Kombinere forklaringer
@@ -82,17 +77,17 @@ export interface Highchart {
   /**
    * Fotnote-tekst
    */
-  fotnoteTekst?: string;
+  footnoteText?: string;
 
   /**
    * Kildetekst
    */
-  kildetekst?: string;
+  creditsText?: string;
 
   /**
    * Kilde-URL
    */
-  kildeurl?: string;
+  creditsHref?: string;
 
   /**
    * X-akse Tittel
@@ -102,7 +97,7 @@ export interface Highchart {
   /**
    * X-skala
    */
-  xAxisType?: string;
+  xAxisType?: "category" | "linear" | "logarithmic";
 
   /**
    * X-akse Minste verdi
@@ -117,7 +112,7 @@ export interface Highchart {
   /**
    * Tillat desimaler
    */
-  xAllowDecimal?: string;
+  xAllowDecimal: boolean;
 
   /**
    * Skjul aksemarkører
@@ -132,7 +127,7 @@ export interface Highchart {
   /**
    * Y-skala
    */
-  yAxisType?: string;
+  yAxisType?: "category" | "linear" | "logarithmic";
 
   /**
    * Y-akse Minste verdi
@@ -150,7 +145,7 @@ export interface Highchart {
   yAxisAllowDecimal: boolean;
 
   /**
-   * Vis stabelsum
+   * Spørring mot Statistikkbanken
    */
-  stabelsum: boolean;
+  dataquery?: string;
 }

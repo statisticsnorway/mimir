@@ -10,4 +10,4 @@ node_modules
 .idea/
 .enonic
 .DS_Store
-
+.project
