@@ -6,7 +6,7 @@ import 'bootstrap/js/dist/dropdown'
 // i.e. <a data-text="5001 bergen vestlandet hordaland syv fjeld sjøforsvaret verdensarven bjørgvin buekorps" href="...">Bergen</a>
 // Dependencies: jQuery and Bootstrap
 export function init() {
-  $('input[autocomplete]').each((i, el) => {
+  $('.sticky-menu-search input[autocomplete]').each((i, el) => {
     const dropdown = $(el).parent().find('.dropdown-menu')
     const elements = dropdown.find('a')
     const submit = el.nextElementSibling
