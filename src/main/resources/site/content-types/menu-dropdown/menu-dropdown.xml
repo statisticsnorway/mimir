@@ -4,9 +4,9 @@
   <description i18n="menuDropdown.description"></description>
   <super-type>base:structured</super-type>
   <form>
-    <input type="TextLine" name="source">
+    <!--input type="TextLine" name="source">
       <label i18n="menuDropdown.source">Kilde (url)</label>
       <occurrences minimum="0" maximum="0"/>
-    </input>
+    </input-->
   </form>
 </content-type>
