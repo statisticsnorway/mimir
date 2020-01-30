@@ -46,10 +46,8 @@ exports.get = function(req) {
   } else {
     regions = page.page && page.page.regions ? page.page.regions : null
   }
-  const mainRegion = isFragment ? regions && regions.main : regions && regions.main
 
-  const mode = pageMode(req, page)
-  const mainRegionComponents = mapComponents(mainRegion, mode)
+  const mainRegionComponents = regions && regions.main ? regions.main.components : []
 
   const glossary = glossaryLib.process(page.data.ingress, regions)
   const ingress = processHtml({
@@ -89,6 +87,7 @@ exports.get = function(req) {
   }
 
   const bodyClasses = []
+  const mode = pageMode(req, page)
   if (mode !== 'map' && config && config.bkg_color === 'grey') {
     bodyClasses.push('bkg-grey')
   }
@@ -119,11 +118,9 @@ exports.get = function(req) {
     version,
     config,
     page,
-    mainRegion,
     mainRegionComponents,
     glossary,
     ingress,
-    mode,
     showIngress,
     preview,
     bodyClasses: bodyClasses.join(' '),
@@ -170,28 +167,4 @@ exports.get = function(req) {
     body,
     pageContributions
   }
-}
-
-function mapComponents(mainRegion, mode) {
-  if (mainRegion && mainRegion.components) {
-    return mainRegion.components.map((component) => {
-      const descriptor = component.descriptor
-      const classes = []
-      if (descriptor !== 'mimir:banner' && descriptor !== 'mimir:menu-dropdown' && descriptor !== 'mimir:map' ) {
-        classes.push('container')
-      }
-      if (descriptor === 'mimir:menu-dropdown' && mode === 'municipality') {
-        classes.push('sticky-top')
-      }
-      if (descriptor === 'mimir:preface') {
-        classes.push('preface-container')
-      }
-      return {
-        path: component.path,
-        removeWrapDiv: descriptor === 'mimir:banner',
-        classes: classes.join(' ')
-      }
-    })
-  }
-  return []
 }

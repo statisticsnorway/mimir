@@ -1,10 +1,12 @@
-<div class="xp-layout row layout-topic" data-th-if="${mode != 'map'}" data-th-attr="data-mode=${mode}">
-  <div class="xp-region col-12">
-    <div class="border-top-green">
-      <h2 data-th-text="${config.title}"></h2>
-      <div data-portal-region="main">
-        <div data-th-each="component, i : ${mainRegion.components}" data-th-remove="tag">
-          <div data-portal-component="${component.path}" data-th-remove="tag" />
+<div class="container">
+  <div class="xp-layout row layout-topic" data-th-if="${mode != 'map'}" data-th-attr="data-mode=${mode}">
+    <div class="xp-region col-12">
+      <div class="border-top-green">
+        <h2 data-th-text="${config.title}"></h2>
+        <div data-portal-region="main">
+          <div data-th-each="component, i : ${mainRegion.components}" data-th-remove="tag">
+            <div data-portal-component="${component.path}" data-th-remove="tag" />
+          </div>
         </div>
       </div>
     </div>
