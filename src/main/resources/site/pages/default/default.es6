@@ -1,10 +1,23 @@
-const content = __non_webpack_require__( '/lib/xp/content')
-const { getContent, processHtml, assetUrl, pageUrl } = __non_webpack_require__( '/lib/xp/portal')
+const {
+  getContent,
+  processHtml,
+  assetUrl,
+  pageUrl
+} = __non_webpack_require__( '/lib/xp/portal')
 const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
-const glossaryLib  = __non_webpack_require__('/lib/glossary')
-const languageLib = __non_webpack_require__( '/lib/language')
-const { alertsForContext, pageMode } = __non_webpack_require__( '/lib/ssb/utils')
-const { getMunicipality } = __non_webpack_require__( '/lib/klass/municipalities')
+const {
+  getLanguage
+} = __non_webpack_require__( '/lib/language')
+const {
+  alertsForContext,
+  pageMode,
+  getBreadcrumbs
+} = __non_webpack_require__( '/lib/ssb/utils')
+const glossaryLib = __non_webpack_require__( '/lib/glossary')
+const {
+  getMunicipality
+} = __non_webpack_require__( '/lib/klass/municipalities')
+const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 const version = '%%VERSION%%'
 const partsWithPreview = [ // Parts that has preview
@@ -20,12 +33,6 @@ const partsWithPreview = [ // Parts that has preview
   `${app.name}:statistikkbanken`,
   `${app.name}:dataquery`
 ]
-
-function getBreadcrumbs(c, a) {
-  const key = c._path.replace(/\/[^\/]+$/, '')
-  c = key && content.get({ key })
-  c && c.type.match(/:page$/) && a.unshift(c) && getBreadcrumbs(c, a)
-}
 
 const view = resolve('default.html')
 
@@ -45,7 +52,9 @@ exports.get = function(req) {
   const mainRegionComponents = mapComponents(mainRegion, mode)
 
   const glossary = glossaryLib.process(page.data.ingress, regions)
-  const ingress = processHtml({ value: page.data.ingress })
+  const ingress = processHtml({
+    value: page.data.ingress
+  })
   const showIngress = ingress && page.type === 'mimir:page'
 
 
@@ -59,15 +68,18 @@ exports.get = function(req) {
     }
   }
 
-  const breadcrumbs = [page]
-  getBreadcrumbs(page, breadcrumbs)
-
-  const municipality = getMunicipality(req)
-  if (!page._path.endsWith(req.path.split('/').pop()) && req.mode != 'edit' ) {
-    breadcrumbs.push({ displayName: municipality.displayName })
+  const language = getLanguage(page)
+  let alternateLanguageVersionUrl
+  if (language.exists) {
+    alternateLanguageVersionUrl = pageUrl({
+      path: language.path
+    })
   }
 
-  const alerts = alertsForContext(municipality)
+  let municipality
+  if (mode === 'municipality') {
+    municipality = getMunicipality(req)
+  }
 
   let config
   if (!isFragment && page.page.config) {
@@ -103,15 +115,6 @@ exports.get = function(req) {
     path: 'SSB_logo.png'
   })
 
-  const language = languageLib.getLanguage(page)
-  let alternateLanguageVersionUrl
-  if (language.exists) {
-    alternateLanguageVersionUrl = pageUrl({
-      path: language.path
-    })
-  }
-
-
   const model = {
     version,
     config,
@@ -123,8 +126,6 @@ exports.get = function(req) {
     mode,
     showIngress,
     preview,
-    breadcrumbs,
-    alerts,
     bodyClasses: bodyClasses.join(' '),
     stylesUrl,
     jsLibsUrl,
@@ -135,9 +136,40 @@ exports.get = function(req) {
     GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null
   }
 
-  const body = thymeleaf.render(view, model)
+  let body = thymeleaf.render(view, model)
 
-  return { body }
+  const breadcrumbs = getBreadcrumbs(page, municipality)
+  const breadcrumbComponent = new React4xp('Breadcrumb')
+    .setProps({
+      items: breadcrumbs
+    })
+    .setId('breadcrumbs')
+  body = breadcrumbComponent.renderBody({
+    body
+  })
+
+  let pageContributions
+  const alerts = alertsForContext(municipality)
+  if (alerts.length > 0) {
+    const alertComponent = new React4xp('Alerts')
+      .setProps({
+        alerts
+      })
+      .setId('alerts')
+    body = alertComponent.renderBody({
+      body,
+      clientRender: true
+    })
+    pageContributions = alertComponent.renderPageContributions({
+      pageContributions,
+      clientRender: true
+    })
+  }
+
+  return {
+    body,
+    pageContributions
+  }
 }
 
 function mapComponents(mainRegion, mode) {

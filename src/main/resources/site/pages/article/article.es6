@@ -1,13 +1,20 @@
 const moment = require('moment/min/moment-with-locales')
 
-const { getMunicipality } = __non_webpack_require__( '/lib/klass/municipalities')
-const content = __non_webpack_require__( '/lib/xp/content')
-const { getContent, assetUrl, pageUrl } = __non_webpack_require__( '/lib/xp/portal')
+const {
+  getMunicipality
+} = __non_webpack_require__( '/lib/klass/municipalities')
+const {
+  getContent,
+  assetUrl,
+  pageUrl
+} = __non_webpack_require__( '/lib/xp/portal')
 const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
 
 const glossaryLib = __non_webpack_require__( '/lib/glossary')
 const languageLib = __non_webpack_require__( '/lib/language')
-const { alertsForContext } = __non_webpack_require__( '/lib/ssb/utils')
+const {
+  alertsForContext
+} = __non_webpack_require__( '/lib/ssb/utils')
 
 const version = '%%VERSION%%'
 const preview = [
@@ -20,12 +27,6 @@ const preview = [
   `${app.name}:dashboard`,
   `${app.name}:key-figure`
 ]
-
-function getBreadcrumbs(c, a) {
-  const key = c._path.replace(/\/[^\/]+$/, '')
-  c = key && content.get({ key })
-  c && c.type.match(/:page$/) && a.unshift(c) && getBreadcrumbs(c, a)
-}
 
 const view = resolve('article.html')
 
@@ -62,14 +63,14 @@ exports.get = function(req) {
     }
   }
 
-  const breadcrumbs = [page]
-  getBreadcrumbs(page, breadcrumbs)
-
   const publishedDatetime = page.publish && page.publish.from && moment(page.publish.from).format('YYYY-MM-DD HH:MM')
   const modifiedDatetime = moment(page.modifiedTime).format('YYYY-MM-DD HH:MM')
 
   page.displayNameURLencoded = encodeURI(page.displayName)
-  page.url = encodeURI(pageUrl({ type: 'absolute', id: page._id }))
+  page.url = encodeURI(pageUrl({
+    type: 'absolute',
+    id: page._id
+  }))
 
   const alerts = alertsForContext(municipality)
 
@@ -100,7 +101,6 @@ exports.get = function(req) {
     ts,
     config,
     page,
-    breadcrumbs,
     mainRegion,
     bottomRegion,
     publishedDatetime,
@@ -116,5 +116,7 @@ exports.get = function(req) {
   }
   const body = thymeleaf.render(view, model)
 
-  return { body }
+  return {
+    body
+  }
 }
