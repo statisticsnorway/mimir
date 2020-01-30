@@ -2,5 +2,5 @@ export interface ColumnsConfig {
   /**
    * Kolonnestørrelse
    */
-  size: string;
+  size: "a" | "b" | "c";
 }
