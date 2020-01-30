@@ -81,7 +81,7 @@ export function init() {
     }
 
     // Removes global styling on the Choose map option
-    $('.part-menu-dropdown a').css('all', 'unset')
+    $('.part-menu-dropdown a').not('.dropdown-item').css('all', 'unset')
     $('.choose-map-a').find('span').css('all', 'unset')
   })
 }
