@@ -22,7 +22,9 @@ exports.getLanguage = function(page) {
     published: page.publish && page.publish.from && moment(page.publish.from).format('DD. MMMM YYYY'),
     modified: moment(page.modifiedTime).format('DD. MMMM YYYY'),
     path: page._path.replace(/^\/.*?\/en/, site._path),
-    home: portal.pageUrl({ path: site._path }),
+    home: portal.pageUrl({
+      path: site._path
+    }),
     phrases: (en.phrases == 'english') ? english : norwegian
   } : {
     code: nb.code, // norsk bokmål, https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
@@ -31,16 +33,24 @@ exports.getLanguage = function(page) {
     published: page.publish && page.publish.from && moment(page.publish.from).format('DD. MMMM YYYY').toLowerCase(),
     modified: moment(page.modifiedTime).format('DD. MMMM YYYY').toLowerCase(),
     path: page._path.replace(/^\/.*?\//, site._path + en.link + '/'),
-    home: portal.pageUrl({ path: site._path + en.link }),
+    home: portal.pageUrl({
+      path: site._path + en.link
+    }),
     phrases: (nb.phrases == 'norwegian') ? norwegian : english
   }
 
   result.pageUrl = portal.pageUrl({
     path: result.path
   })
-  result.exists = content.exists({ key: result.path })
+  result.exists = content.exists({
+    key: result.path
+  })
 
   return result
+}
+
+exports.getPhrases = (page) => {
+  return page.language && page.language === 'en' ? english : norwegian
 }
 
 /**
@@ -67,19 +77,29 @@ function parseTimeInterval(time) {
   let parsedTime = ''
   switch (interval[2]) {
   case 'H':
-    parsedTime = `${i18n.localize({ key: 'interval.' + interval[2] })} ${interval[1]} `
+    parsedTime = `${i18n.localize({
+      key: 'interval.' + interval[2]
+    })} ${interval[1]} `
     break
   case 'K':
-    parsedTime = `${interval[3]}. ${i18n.localize({ key: 'interval.' + interval[2] })} ${interval[1]}`
+    parsedTime = `${interval[3]}. ${i18n.localize({
+      key: 'interval.' + interval[2]
+    })} ${interval[1]}`
     break
   case 'M':
-    parsedTime = `${i18n.localize({ key: 'interval.M' + interval[2] })} ${interval[1]}`
+    parsedTime = `${i18n.localize({
+      key: 'interval.M' + interval[2]
+    })} ${interval[1]}`
     break
   case 'T':
-    parsedTime = `${interval[3]}. ${i18n.localize({ key: 'interval.' + interval[2] })} ${interval[1]}`
+    parsedTime = `${interval[3]}. ${i18n.localize({
+      key: 'interval.' + interval[2]
+    })} ${interval[1]}`
     break
   case 'U':
-    parsedTime = `${i18n.localize({ key: 'interval.' + interval[2] })} ${interval[3]} ${interval[1]}`
+    parsedTime = `${i18n.localize({
+      key: 'interval.' + interval[2]
+    })} ${interval[3]} ${interval[1]}`
     break
   }
   return parsedTime
