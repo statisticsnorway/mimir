@@ -1,10 +1,17 @@
 const content = __non_webpack_require__( '/lib/xp/content')
-const { getContent, processHtml, assetUrl, pageUrl } = __non_webpack_require__( '/lib/xp/portal')
+const {
+  getContent, processHtml, assetUrl, pageUrl
+} = __non_webpack_require__( '/lib/xp/portal')
 const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
 const glossaryLib = __non_webpack_require__( '/lib/glossary')
 const languageLib = __non_webpack_require__( '/lib/language')
-const { alertsForContext, pageMode } = __non_webpack_require__( '/lib/ssb/utils')
-const { getMunicipality } = __non_webpack_require__( '/lib/klass/municipalities')
+const {
+  alertsForContext, pageMode
+} = __non_webpack_require__( '/lib/ssb/utils')
+const {
+  getMunicipality
+} = __non_webpack_require__( '/lib/klass/municipalities')
+const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 const version = '%%VERSION%%'
 const partsWithPreview = [ // Parts that has preview
@@ -23,7 +30,9 @@ const partsWithPreview = [ // Parts that has preview
 
 function getBreadcrumbs(c, a) {
   const key = c._path.replace(/\/[^\/]+$/, '')
-  c = key && content.get({ key })
+  c = key && content.get({
+    key
+  })
   c && c.type.match(/:page$/) && a.unshift(c) && getBreadcrumbs(c, a)
 }
 
@@ -45,7 +54,9 @@ exports.get = function(req) {
   const mainRegionComponents = mapComponents(mainRegion, mode)
 
   const glossary = glossaryLib.process(page.data.ingress, regions)
-  const ingress = processHtml({ value: page.data.ingress })
+  const ingress = processHtml({
+    value: page.data.ingress
+  })
   const showIngress = ingress && page.type === 'mimir:page'
 
 
@@ -64,10 +75,10 @@ exports.get = function(req) {
 
   const municipality = getMunicipality(req)
   if (!page._path.endsWith(req.path.split('/').pop()) && req.mode != 'edit' ) {
-    breadcrumbs.push({ displayName: municipality.displayName })
+    breadcrumbs.push({
+      displayName: municipality.displayName
+    })
   }
-
-  const alerts = alertsForContext(municipality)
 
   let config
   if (!isFragment && page.page.config) {
@@ -124,7 +135,6 @@ exports.get = function(req) {
     showIngress,
     preview,
     breadcrumbs,
-    alerts,
     bodyClasses: bodyClasses.join(' '),
     stylesUrl,
     jsLibsUrl,
@@ -135,9 +145,29 @@ exports.get = function(req) {
     GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null
   }
 
-  const body = thymeleaf.render(view, model)
+  let body = thymeleaf.render(view, model)
+  let pageContributions
+  const alerts = alertsForContext(municipality)
+  if (alerts.length > 0) {
+    const alertComponent = new React4xp('Alerts')
+      .setProps({
+        alerts
+      })
+      .setId('alerts')
+    body = alertComponent.renderBody({
+      body,
+      clientRender: true
+    })
+    pageContributions = alertComponent.renderPageContributions({
+      pageContributions,
+      clientRender: true
+    })
+  }
 
-  return { body }
+  return {
+    body,
+    pageContributions
+  }
 }
 
 function mapComponents(mainRegion, mode) {
