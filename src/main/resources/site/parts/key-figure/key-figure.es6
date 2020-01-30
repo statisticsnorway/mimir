@@ -1,10 +1,11 @@
+const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const { get: getKeyFigure } = __non_webpack_require__( '/lib/ssb/key-figure')
 const { parseGlossaryContent } = __non_webpack_require__( '/lib/ssb/glossary')
 const { parseMunicipalityValues, getMunicipality } = __non_webpack_require__( '/lib/klass/municipalities')
-const { getComponent, getSiteConfig, getContent } = __non_webpack_require__( '/lib/xp/portal')
-const { render } = __non_webpack_require__( '/lib/thymeleaf')
+const { getComponent, getSiteConfig, getContent, imageUrl } = __non_webpack_require__( '/lib/xp/portal')
+const thymeleaf = __non_webpack_require__('/lib/thymeleaf')
 const { data } = __non_webpack_require__( '/lib/util')
-const { pageMode } = __non_webpack_require__( '/lib/ssb/utils')
+const { pageMode, createHumanReadableFormat } = __non_webpack_require__( '/lib/ssb/utils')
 const { renderError } = __non_webpack_require__( '/lib/error/error')
 
 const view = resolve('./key-figure.html')
@@ -56,8 +57,8 @@ function renderKeyFigure(keyFigures, part, municipality) {
 
   const parsedKeyFigures = keyFigures.map( (keyFigure) => {
     const dataset = parseMunicipalityValues(keyFigure.data.dataquery, municipality, keyFigure.data.default)
-
     return {
+      id: keyFigure._id,
       displayName: keyFigure.displayName,
       ...keyFigure.data,
       ...dataset,
@@ -78,8 +79,39 @@ function renderKeyFigure(keyFigures, part, municipality) {
     source
   }
 
+  /** Render react **/
+  const reactObjs = model.data.map( (keyfigure) => {
+    let iconSrc = ''
+    if (keyfigure.icon) {
+      iconSrc = imageUrl({
+        id: keyfigure.icon,
+        scale: 'block(100,100)'
+      })
+    }
+
+    const reactProps = {
+      iconUrl : iconSrc,
+      number: keyfigure.valueHumanReadable,
+      numberDescription: keyfigure.denomination,
+      noNumberText: keyfigure.valueNotFound,
+      size: keyfigure.size,
+      title: keyfigure.displayName,
+      time: keyfigure.time
+    };
+
+    const keyfigureReact = new React4xp('KeyFigure')
+    return keyfigureReact.setId(keyfigure.id).setProps(reactProps)
+  })
+
+  let body = thymeleaf.render(view, model);
+
+  reactObjs.forEach((keyfigureReact) => {
+    body = keyfigureReact.renderBody({body});
+  });
+
   return {
-    body: render(view, model),
+    body,
     contentType: 'text/html'
   }
 }
+

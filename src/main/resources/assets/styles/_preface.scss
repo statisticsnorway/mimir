@@ -13,10 +13,12 @@
   height: 230px;
   width: 100%;
   margin: 0;
-  color: $ssb-white;
   @include roboto;
-  font-size: 22px;
 
+  p {
+    color: $ssb-white;
+    font-size: 22px;
+  }
   &:after {
     position: absolute;
     content: "";
