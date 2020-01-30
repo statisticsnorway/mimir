@@ -99,3 +99,15 @@ footer {
 .bkg-grey {
   background-color: $ssb-dark-1;
 }
+
+// class used to hide elements from sighted users and still allowing it to be picked up by screen readers
+.screen-reader-only {
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  height: 1px;
+  width: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+}

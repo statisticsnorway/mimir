@@ -1,10 +1,14 @@
 .part-infoGraphic {
 
   h2 {
-      margin-bottom: 20px;
+      margin-bottom: 40px;
   }
   .infoGraphic-wrapper {
       width: 100%;
+
+    img {
+      max-width: 100%;
+    }
   }
   .container {
       min-height: 400px;
@@ -14,7 +18,7 @@
   }
   .footnote {
       list-style-type: none;
-      margin-top: 20px;
+      margin-top: 40px;
       padding-left: 0;
 
     li {
@@ -22,9 +26,21 @@
     }
   }
   .source-title {
-      margin-bottom: 10px;
+      display: block;
+      margin-top: 40px;
+      margin-bottom: 0px;
+
   }
   .sources {
-      margin-top: 5px;
+      margin-top: 0px;
+  }
+
+  @include media-breakpoint-down(md) {
+    .border-top-green {
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
   }
 }
