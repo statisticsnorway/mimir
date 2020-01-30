@@ -6,7 +6,6 @@ exports.get = function(url) {
   return http.request({ url, method, headers, connectionTimeout, readTimeout, body: JSON.stringify(json, null, ''), contentType })
 }
 
-const baseUrl = 'https://data.ssb.no/api/klass/v1/'
 const readTimeout = 5000
 const connectionTimeout = 20000
 const headers = { 'Cache-Control': 'no-cache', 'Accept': 'application/json' }
