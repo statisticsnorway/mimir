@@ -1,8 +1,10 @@
-const moment = require('moment/min/moment-with-locales')
 const util = __non_webpack_require__( '/lib/util')
 const portal = __non_webpack_require__( '/lib/xp/portal')
 const content = __non_webpack_require__( '/lib/xp/content')
 const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
+const {
+  getUpdated, getUpdatedReadable
+} = __non_webpack_require__('/lib/ssb/dataset')
 
 const view = resolve('./dashboard.html')
 
@@ -16,7 +18,7 @@ exports.preview = (req, id) => renderPart(req, [id])
 
 function renderPart(req, dashboardIds) {
   const dashboards = []
-  const dataset = {}
+  const datasetMap = {}
 
   const result = content.query({
     count: 999,
@@ -25,7 +27,7 @@ function renderPart(req, dashboardIds) {
 
   if (result && result.hits.length > 0) {
     result.hits.forEach((set) => {
-      dataset[set.data.dataquery] = set
+      datasetMap[set.data.dataquery] = set
     })
   }
 
@@ -36,16 +38,18 @@ function renderPart(req, dashboardIds) {
     sort: 'displayName'
   })
   if (dataQueryResult && dataQueryResult.hits.length > 0) {
-    dataQueryResult.hits.forEach((set) => {
+    dataQueryResult.hits.forEach((dataquery) => {
       let updated
       let updatedHumanReadable
-      const hasData = dataset[set._id] ? true : false
+      const dataset = datasetMap[dataquery._id]
+      const hasData = !!dataset
       if (hasData) {
-        updated = moment(dataset[set._id].modifiedTime).format('DD.MM.YYYY HH:mm:ss')
-        updatedHumanReadable = moment(dataset[set._id].modifiedTime).fromNow()
+        updated = getUpdated(dataset)
+        updatedHumanReadable = getUpdatedReadable(dataset)
       }
       dataQueries.push({
-        displayName: set.displayName,
+        id: dataquery._id,
+        displayName: dataquery.displayName,
         updated,
         updatedHumanReadable,
         class: hasData ? 'dataset-ok' : 'dataset-missing'
@@ -54,7 +58,9 @@ function renderPart(req, dashboardIds) {
   }
 
   dashboardIds.forEach((key) => {
-    const item = content.get({ key })
+    const item = content.get({
+      key
+    })
     if (item) {
       dashboards.push({
         displayName: item.displayName
@@ -65,8 +71,15 @@ function renderPart(req, dashboardIds) {
   const dashboardService = portal.serviceUrl({
     service: 'dashboard'
   })
-  const model = { dashboards, dataQueries, dashboardService }
+  const model = {
+    dashboards,
+    dataQueries,
+    dashboardService
+  }
   const body = thymeleaf.render(view, model)
 
-  return { body, contentType: 'text/html' }
+  return {
+    body,
+    contentType: 'text/html'
+  }
 }

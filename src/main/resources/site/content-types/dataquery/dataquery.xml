@@ -7,19 +7,55 @@
       <label>URL til tabell</label>
       <occurrences minimum="0" maximum="1"/>
     </input>
-    <input name="regiontype" type="RadioButton">
-      <label>Regionstype (ikke i bruk - evaluere behov)</label>
-      <occurrences minimum="0" maximum="1"/>
-      <config>
-        <option value="dynamisk-kommune">Dynamisk kommune</option>
-        <option value="dynamisk-fylke">Dynamisk fylke</option>
-      </config>
-      <default>one</default>
-    </input>
     <input name="json" type="TextArea">
       <label>Spørring i JSON-format</label>
       <occurrences minimum="0" maximum="1"/>
     </input>
+
+    <option-set name="datasetFormat">
+      <occurrences minimum="1" maximum="1"/>
+      <label>Formatet på resultatet etter spørring</label>
+      <expanded>false</expanded>
+      <options minimum="1" maximum="1">
+        <option name="jsonStat">
+          <label>json-stat</label>
+          <items>
+            <input name="xAxisLabel" type="TextLine">
+              <label>Navn på x-akse dimensjon</label>
+              <occurrences minimum="0" maximum="1"/>
+            </input>
+            <input name="yAxisLabel" type="TextLine">
+              <label>Navn på y-akse dimensjon</label>
+              <occurrences minimum="0" maximum="1"/>
+            </input>
+            <option-set name="datasetFilterOptions">
+              <label>filtrering på dataset</label>
+              <expanded>true</expanded>
+              <occurrences minimum="0" maximum="1"/>
+              <options minimum="0" maximum="1">
+                <option name="municipalityFilter">
+                  <label>Filtrer på kommune</label>
+                  <help-text>Hvis grafen skal vises filtrert på kommunenummer</help-text>
+                  <items>
+                    <input type="TextLine" name="municipalityDimension" >
+                      <label>Hvilken dimensjon skal filtreres på kommunenummer</label>
+                      <occurrences minimum="1" maximum="1" />
+                    </input>
+                  </items>
+                </option>
+              </options>
+            </option-set>
+          </items>
+        </option>
+        <option name="tbml">
+          <label>tbml</label>
+        </option>
+        <option name="klass">
+          <label>klass</label>
+        </option>
+      </options>
+    </option-set>
+
     <input name="update" type="RadioButton">
       <label>Oppdateres</label>
       <occurrences minimum="0" maximum="1"/>
