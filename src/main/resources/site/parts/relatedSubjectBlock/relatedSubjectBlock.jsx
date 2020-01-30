@@ -1,13 +1,6 @@
 import React from 'react'
-import { Card } from '@statisticsnorway/ssb-component-library'
-import { Text } from '@statisticsnorway/ssb-component-library'
-import { Link } from '@statisticsnorway/ssb-component-library'
-import { Paragraph } from '@statisticsnorway/ssb-component-library'
+import { Card, Paragraph } from '@statisticsnorway/ssb-component-library'
 
-export default (props) => <Card {...props} image={<img src={props.imgUrl} alt="" />} onClick={() => { }}>
-  <Text {...props}>{props.content}</Text>
-  <div className="pt-2 pb-3">
-    <Link href={props.openLink} {...props}>{props.headerLink}</Link>
-  </div>
+export default (props) => <Card {...props} href={props.openLink} image={<img src={props.imgUrl} alt="" />} onClick={() => { }}>
   <Paragraph {...props}>{props.preambleText}</Paragraph>
 </Card>

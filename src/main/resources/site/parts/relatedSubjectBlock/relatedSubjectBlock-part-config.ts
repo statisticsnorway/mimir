@@ -23,4 +23,34 @@ export interface RelatedSubjectBlockPartConfig {
    * Ingress
    */
   preamble?: string;
+
+  /**
+   * Lenke
+   */
+  urlContentSelector: {
+    /**
+     * Selected
+     */
+    _selected: string;
+
+    /**
+     * URL
+     */
+    optionLink?: {
+      /**
+       * Lenke
+       */
+      link?: string;
+    };
+
+    /**
+     * XP-innhold
+     */
+    optionXPContent?: {
+      /**
+       * Innhold i XP
+       */
+      xpContent?: Array<string>;
+    };
+  };
 }

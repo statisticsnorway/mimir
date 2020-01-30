@@ -21,10 +21,9 @@ function renderPart(request) {
     }),
     imagePlacement: 'left', // TODO: desktop. remove after component has been updated to be more responsive
     href: getLink(urlContentSelector),
-    content: part.config.content + ' / ' + moment(part.config.date).format('DD. MMMM YYYY').toLowerCase(),
+    subTitle: part.config.content + ' / ' + moment(part.config.date).format('DD. MMMM YYYY').toLowerCase(),
+    title: part.config.title,
     preambleText: part.config.preamble,
-    small: true,
-    headerLink: part.config.title,
     linkType: 'header'
   }
 
