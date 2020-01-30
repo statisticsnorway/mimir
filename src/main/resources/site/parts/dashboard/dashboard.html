@@ -1,28 +1,45 @@
 <section class="xp-part part-dashboard">
   <div data-th-each="item,i : ${dashboards}" class="row" data-th-appendclass="${i.index}  ? 'mt-3'">
-    <div class="col-lg-8">
+    <div class="col-lg-12">
       <h1 data-th-text="${item.displayName} + ' (' + ${dataQueries.size} +  ')'"></h1>
       <table class="table  table-bordered table-striped">
         <thead>
           <tr>
             <th class="roboto-bold">Datasett</th>
             <th class="roboto-bold">Sist oppdatert</th>
+            <th></th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
-          <tr data-th-each="set : ${dataQueries}" class="small">
-            <td>
-              <div 
-                class="dataset" 
-                data-th-text="${set.displayName}" 
-                data-th-classappend="${set.class}"
-              />
+          <tr 
+              data-th-each="set : ${dataQueries}" 
+              data-th-data-query="${set.id}" 
+              class="small"
+            >
+            <td 
+              class="dataset" 
+              data-th-text="${set.displayName}" 
+              data-th-classappend="${set.class}"
+            >
+            </td>
+            <td data-th-text="${set.updated}">
+            </td>
+            <td data-th-text="${set.updatedHumanReadable}">
             </td>
             <td>
-              <div data-th-text="${set.updated}"></div>
-            </td>
-            <td>
-              <div data-th-text="${set.updatedHumanReadable}"></div>
+              <button 
+                class="btn btn-secondary btn-sm" 
+                data-action="delete"
+              >
+                <i class="fas fa-trash-alt"></i>
+              </button>
+              <button 
+                class="btn btn-primary btn-sm"
+                data-action="refresh"
+              >
+                <i class="fas fa-sync"></i>
+              </button>
             </td>
           </tr>
       </table>
@@ -46,16 +63,16 @@
       <span class="sr-only">Loading...</span>
     </span>
   </button>
-  <div class="d-none alert alert-success mt-3 update-success">
-    Oppdateringen var vellykket.
+  <div class="alert alert-danger alert-dismissible fade show d-none" role="alert">
+    <p>Error message</p>
+    <button type="button" class="close" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
   </div>
-  <div class="d-none alert alert-success mt-3 update-warning">
-    Oppdateringen var vellykket.
-  </div>
-  <div class="d-none alert alert-success mt-3 delete-success">
-    Slettingen var vellykket.
-  </div>
-  <div class="d-none alert alert-warning mt-3 delete-warning">
-    Det oppstod en feil under slettingen.
+  <div class="alert alert-success alert-dismissible fade show d-none" role="alert">
+    <p>Success message</p>
+    <button type="button" class="close" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
   </div>
 </section>
