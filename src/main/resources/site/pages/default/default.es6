@@ -5,7 +5,6 @@ const {
   pageUrl
 } = __non_webpack_require__( '/lib/xp/portal')
 const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
-const glossaryLib = __non_webpack_require__( '/lib/glossary')
 const {
   getLanguage
 } = __non_webpack_require__( '/lib/language')
@@ -14,6 +13,7 @@ const {
   pageMode,
   getBreadcrumbs
 } = __non_webpack_require__( '/lib/ssb/utils')
+const glossaryLib = __non_webpack_require__( '/lib/glossary')
 const {
   getMunicipality
 } = __non_webpack_require__( '/lib/klass/municipalities')
@@ -81,8 +81,6 @@ exports.get = function(req) {
     municipality = getMunicipality(req)
   }
 
-  const alerts = alertsForContext(municipality)
-
   let config
   if (!isFragment && page.page.config) {
     config = page.page.config
@@ -128,7 +126,6 @@ exports.get = function(req) {
     mode,
     showIngress,
     preview,
-    alerts,
     bodyClasses: bodyClasses.join(' '),
     stylesUrl,
     jsLibsUrl,
@@ -151,8 +148,27 @@ exports.get = function(req) {
     body
   })
 
+  let pageContributions
+  const alerts = alertsForContext(municipality)
+  if (alerts.length > 0) {
+    const alertComponent = new React4xp('Alerts')
+      .setProps({
+        alerts
+      })
+      .setId('alerts')
+    body = alertComponent.renderBody({
+      body,
+      clientRender: true
+    })
+    pageContributions = alertComponent.renderPageContributions({
+      pageContributions,
+      clientRender: true
+    })
+  }
+
   return {
-    body
+    body,
+    pageContributions
   }
 }
 
