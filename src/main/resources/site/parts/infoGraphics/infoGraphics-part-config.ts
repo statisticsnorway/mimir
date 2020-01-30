@@ -5,12 +5,12 @@ export interface InfoGraphicsPartConfig {
   title: string;
 
   /**
-   * Infografikk eller visualinsering
+   * Infografikk eller visualisering
    */
   image: string;
 
   /**
-   * Fotnoe til bilde
+   * Fotnote til bilde
    */
   footNote?: string;
 
@@ -20,7 +20,7 @@ export interface InfoGraphicsPartConfig {
   altText: string;
 
   /**
-   * Long descrition hjelpetekst
+   * Beskrivende hjelpetekst for blinde
    */
   longDesc?: string;
 }

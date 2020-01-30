@@ -8,7 +8,7 @@
     </input>
 
     <input name="image" type="ImageSelector">
-      <label>Infografikk eller visualinsering</label>
+      <label>Infografikk eller visualisering</label>
       <occurrences minimum="1" maximum="1"/>
       <config>
         <allowPath>${site}</allowPath>
@@ -16,9 +16,9 @@
     </input>
 
     <option-set name="checkOptionSet">
-      <label>Hva skal kilden lenke til?</label>
+      <label>Kildelenke</label>
       <expanded>true</expanded>
-      <occurrences minimum="1" maximum="2"/>
+      <occurrences minimum="0" maximum="2"/>
       <options minimum="1" maximum="1">
         <option name="urlSource">
           <label>Url lenke</label>
@@ -54,7 +54,7 @@
     </option-set>
 
     <input name="footNote" type="TextLine">
-      <label>Fotnoe til bilde</label>
+      <label>Fotnote til bilde</label>
       <occurrences minimum="0" maximum="2" />
     </input>
 
@@ -64,8 +64,8 @@
     </input>
 
     <input name="longDesc" type="TextArea">
-      <label>Long descrition hjelpetekst</label>
-      <default>Her skriver man utfyllende hjelpetekst til hjelp for blinde</default>
+      <label>Beskrivende hjelpetekst for blinde</label>
+      <default></default>
       <config>
         <max-length>600</max-length>
       </config>
