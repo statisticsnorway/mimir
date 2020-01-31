@@ -1,0 +1,26 @@
+<section class="xp-part part-infoGraphic clearfix opacity-0">
+  <div class="container xp-region col-12 d-flex align-items-center">
+    <div class="row border-top-green">
+      <div class="infoGraphic-wrapper" data-th-if="${part.config.image}">
+
+        <h2 class="mt-0" data-th-text="${part.config.title}"></h2>
+
+        <div class="d-flex justify-content-center">
+          <img data-th-if="${part.config.image}" class="" data-th-alt="${part.config.altText}" data-th-src="${portal.imageUrl({'_id=' + part.config.image, '_scale=square-850'})}"/>
+          <a data-th-href="${longDesc}" class="screen-reader-only" data-th-text="${descriptionInfographics}"></a>
+        </div>
+
+        <ul class="footnote">
+            <li data-th-each="footNote, iterStat : ${part.config.footNote}"><sup data-th-text="${iterStat.count}"> </sup> <span data-th-text="${footNote}"></span></li>
+        </ul>
+
+        <span class="source-title"><strong data-th-text="${source}"></strong></span>
+        <div class="sources" data-th-each="source : ${selectedSource}">
+          <a data-th-if="${source._selected} == 'urlSource'" data-th-href="${source.urlSource.url}" data-th-text="${source.urlSource.urlText}"></a>
+          <a data-th-if="${source._selected} == 'relatedSource'" data-th-href="${portal.pageUrl({'_id=' + source.relatedSource.sourceSelector})}" data-th-text="${source.relatedSource.urlText}"></a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
