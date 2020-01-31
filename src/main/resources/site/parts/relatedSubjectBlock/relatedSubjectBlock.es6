@@ -19,7 +19,7 @@ function renderPart(request) {
       id: part.config.image,
       scale: 'block(315, 215)'
     }),
-    imagePlacement: 'left', // TODO: desktop. remove after component has been updated to be more responsive
+    imagePlacement: 'left',
     href: getLink(urlContentSelector),
     subTitle: part.config.content + ' / ' + moment(part.config.date).format('DD. MMMM YYYY').toLowerCase(),
     title: part.config.title,
