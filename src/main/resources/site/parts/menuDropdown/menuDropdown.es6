@@ -37,7 +37,7 @@ function renderPart(req) {
       id: 'input-query-municipality',
       ariaLabel: 'Søk på kommune',
       searchField: true,
-      placeholder: ariaLabel,
+      placeholder: 'Søk på kommune',
       className: 'sticky-menu-search'
     })
     .setId('inputStickyMenu')
