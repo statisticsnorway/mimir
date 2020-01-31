@@ -1,11 +1,23 @@
-const { getComponent, pageUrl, imageUrl } = __non_webpack_require__('/lib/xp/portal')
+const {
+  getComponent,
+  pageUrl,
+  imageUrl
+} = __non_webpack_require__('/lib/xp/portal')
+const {
+  renderError
+} = __non_webpack_require__('/lib/error/error')
+
 const moment = require('moment/min/moment-with-locales')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 moment.locale('nb')
 
 exports.get = function(req) {
-  return renderPart(req)
+  try {
+    return renderPart(req)
+  } catch (e) {
+    return renderError('Error in part: ', e)
+  }
 }
 
 exports.preview = (req) => renderPart(req)
