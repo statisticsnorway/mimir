@@ -18,6 +18,10 @@
   .feather {
     stroke: $ssb-green-3;
   }
+  h3 {
+    @include roboto-condenced;
+    font-size: 28px;
+  }
 }
 .key-figures + .key-figures, .popper + .key-figures {
   margin-top: 40px;
