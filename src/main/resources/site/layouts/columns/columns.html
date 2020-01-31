@@ -1,12 +1,14 @@
-<div class="xp-layout row" data-th-attr="data-size=${size}">
-  <div data-portal-region="left" class="xp-region" data-th-classappend="${leftSize}">
-    <div data-th-each="component : ${leftRegion.components}" data-th-remove="tag">
-      <div data-portal-component="${component.path}" data-th-remove="tag" />
+<div class="container">
+  <div class="xp-layout row" data-th-attr="data-size=${size}">
+    <div data-portal-region="left" class="xp-region" data-th-classappend="${leftSize}">
+      <div data-th-each="component : ${leftRegion.components}" data-th-remove="tag">
+        <div data-portal-component="${component.path}" data-th-remove="tag" />
+      </div>
     </div>
-  </div>
-  <div data-portal-region="right" class="xp-region mt-3 mt-md-0" data-th-classappend="${rightSize}">
-    <div data-th-each="component : ${rightRegion.components}" data-th-remove="tag">
-      <div data-portal-component="${component.path}" data-th-remove="tag" />
+    <div data-portal-region="right" class="xp-region mt-3 mt-md-0" data-th-classappend="${rightSize}">
+      <div data-th-each="component : ${rightRegion.components}" data-th-remove="tag">
+        <div data-portal-component="${component.path}" data-th-remove="tag" />
+      </div>
     </div>
   </div>
 </div>
