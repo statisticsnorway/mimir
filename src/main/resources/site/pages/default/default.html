@@ -56,11 +56,9 @@
       </div>
     </div>
 
-    <div data-th-if="${!mainRegionComponents.empty}" data-th-remove="tag">
-      <div data-portal-region="main" class="searchabletext">
-        <div data-th-each="component : ${mainRegionComponents}" data-th-remove="tag">
-          <div data-portal-component="${component.path}" data-th-remove="tag" />
-        </div>
+    <div data-portal-region="main" class="searchabletext">
+      <div data-th-each="component : ${mainRegionComponents}" data-th-remove="tag">
+        <div data-portal-component="${component.path}" data-th-remove="tag" />
       </div>
     </div>
   </main>
