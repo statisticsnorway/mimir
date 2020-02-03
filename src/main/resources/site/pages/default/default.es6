@@ -39,6 +39,7 @@ const view = resolve('default.html')
 exports.get = function(req) {
   const ts = new Date().getTime()
   const page = getContent()
+  const mode = pageMode(req, page)
   const isFragment = page.type === 'portal:fragment'
   let regions = null
   if (isFragment) {
@@ -87,7 +88,6 @@ exports.get = function(req) {
   }
 
   const bodyClasses = []
-  const mode = pageMode(req, page)
   if (mode !== 'map' && config && config.bkg_color === 'grey') {
     bodyClasses.push('bkg-grey')
   }
