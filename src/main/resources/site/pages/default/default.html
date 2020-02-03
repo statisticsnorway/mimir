@@ -30,16 +30,7 @@
   <div id="ssb-menu" data-th-include="mimir:/site/includes/ssb-menu.html"></div>
 
   <!-- Metainfo to make the page searchable -->
-  <div class="metainfo" style="display:none">
-    <div class="id" data-th-text="${page._id}">199391</div>
-    <div class="gruppering" data-th-text="${page._id}">199391</div>
-    <div data-th-if=${page.data.subtitle} class="undertittel" data-th-text="${page.data.subtitle}">Eksempel på undertittel</div>
-    <div class="innholdstype">mimirside</div>
-    <div class="publiseringsdato" data-th-text="${page.createdTime}">2077-05-12T10:00:00.000Z</div>
-    <div class="hovedemner">Test av mimir</div>
-    <div class="sprak" data-th-text="${language.code == 'en'}? 'en' : 'no'">nb</div>
-    <div class="stikkord">mimirprosjekt</div>
-  </div>
+  <div id="metainfo-container" data-th-include="mimir:/site/includes/metainfo-search.html" data-th-remove="tag"></div>
 
   <!-- MAIN -->
   <main class="xp-region" data-th-if="${!isFragment}">
