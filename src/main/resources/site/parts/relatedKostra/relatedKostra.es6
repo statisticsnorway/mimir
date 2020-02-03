@@ -14,16 +14,17 @@ const { renderError } = __non_webpack_require__('/lib/error/error')
 const view = resolve('./relatedKostra.html')
 
 exports.get = function(req) {
-  let municipality = getMunicipality(req)
-  const page = getContent()
-  const mode = pageMode(req, page)
-  if (!municipality && mode === 'edit') {
-    const defaultMunicipality = getSiteConfig().defaultMunicipality
-    municipality = getMunicipality({ code: defaultMunicipality })
-  }
-
   try {
-    return renderPart(req, municipality)
+    let municipality = getMunicipality(req)
+    const page = getContent()
+    const mode = pageMode(req, page)
+    if (!municipality && mode === 'edit') {
+      const defaultMunicipality = getSiteConfig().defaultMunicipality
+      municipality = getMunicipality({
+        code: defaultMunicipality
+      })
+    }
+    return renderPart(req, municipality, mode)
   } catch (e) {
     return renderError('Error in part: ', e)
   }
@@ -31,29 +32,34 @@ exports.get = function(req) {
 
 exports.preview = function(req) {
   const defaultMunicipality = getSiteConfig().defaultMunicipality
-  const municipality = getMunicipality({ code: defaultMunicipality })
+  const municipality = getMunicipality({
+    code: defaultMunicipality
+  })
+
   return renderPart(req, municipality)
 }
 
-function renderPart(req, municipality) {
-  const part = getComponent()
-  const kostraLink = new React4xp('Link')
-    .setProps({
-      href: getHref(municipality, part.config.kostraLink),
-      children: part.config.kostraLinkText
-    })
-    .setId('kostraLink')
-    .uniqueId()
+function renderPart(req, municipality, mode) {
+  if(mode != 'map') {
+    const part = getComponent()
 
-  const model = {
-    kostraLinkId: kostraLink.react4xpId,
-    title: part.config.title,
-    description: part.config.description,
+    const kostraLink = new React4xp('Link')
+      .setProps({
+        href: getHref(municipality, part.config.kostraLink),
+        children: part.config.kostraLinkText,
+        linkType: 'profiled'
+      })
+      .setId('kostraLink')
+
+    const model = {
+      title: part.config.title,
+      description: part.config.description
+    }
+
+    const preRenderedBody = thymeleaf.render(view, model)
+
+    return municipality !== undefined ? { body: kostraLink.renderBody({ body: preRenderedBody }), contentType: 'text/html' } : ''
   }
-
-  const preRenderedBody = thymeleaf.render(view, model)
-
-  return municipality !== undefined ? { body: kostraLink.renderBody({ body: preRenderedBody }), contentType: 'text/html' } : ''
 }
 
 function getHref(municipality, kostraLink) {
