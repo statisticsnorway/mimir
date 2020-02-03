@@ -29,6 +29,18 @@
   <!-- HEADER -->
   <div id="ssb-menu" data-th-include="mimir:/site/includes/ssb-menu.html"></div>
 
+  <!-- Metainfo to make the page searchable -->
+  <div class="metainfo" style="display:none">
+    <div class="id" data-th-text="${page._id}">199391</div>
+    <div class="gruppering" data-th-text="${page._id}">199391</div>
+    <div data-th-if=${page.data.subtitle} class="undertittel" data-th-text="${page.data.subtitle}">Eksempel på undertittel</div>
+    <div class="innholdstype">mimirside</div>
+    <div class="publiseringsdato" data-th-text="${page.createdTime}">2077-05-12T10:00:00.000Z</div>
+    <div class="hovedemner">Test av mimir</div>
+    <div class="sprak" data-th-text="${language.code == 'en'}? 'en' : 'no'">nb</div>
+    <div class="stikkord">mimirprosjekt</div>
+  </div>
+
   <!-- MAIN -->
   <main class="xp-region" data-th-if="${!isFragment}">
     <div class="container-fluid bg-white pt-2 pb-4">
@@ -54,7 +66,7 @@
     </div>
 
     <div data-th-if="${!mainRegionComponents.empty}" data-th-remove="tag">
-      <div data-portal-region="main">
+      <div data-portal-region="main" class="searchabletext">
         <div data-th-each="component : ${mainRegionComponents}" data-th-remove="tag">
           <div data-portal-component="${component.path}" data-th-remove="tag" />
         </div>
