@@ -1,9 +1,11 @@
-<section class="xp-layout container">
-    <div class="row d-flex align-items-center">
-        <div class="col-12 border-top-green text-center">
-          <h3 class="roboto-condensed position-relative" data-th-text="${title}" />
-          <div class="pt-3 position-relative" data-th-utext="${description}" />
-          <div data-th="${kostraLink}" />
+<section class="container"> <!-- TODO: Fix width -->
+    <div class="xp-part row layout-topic" data-th-if="${mode != 'map'}">
+        <div class="xp-region col-12">
+            <div class="border-top-green text-center">
+              <h3 class="roboto-condensed position-relative" data-th-text="${title}" />
+              <div class="pt-3 position-relative" data-th-utext="${description}" />
+              <div data-th-id="${kostraLinkId}"  />
+            </div>
         </div>
     </div>
 </section>
