@@ -29,22 +29,17 @@ export interface SiteConfig {
    */
   language: Array<{
     /**
-     * Språk
+     * Språktittel (brukt til lenke i header)
      */
     label: string;
 
     /**
-     * Språkkode
+     * Språkkode (f.eks. "en", "no")
      */
     code: string;
 
     /**
-     * Språk alternativ
-     */
-    alternate: string;
-
-    /**
-     * Språk lenke
+     * Språklenke: url-stien til språkets "hjemmeside"
      */
     link?: string;
 
@@ -54,7 +49,7 @@ export interface SiteConfig {
     phrases: "norwegian" | "english";
 
     /**
-     * Dette spåkets "Hjem"-side
+     * Språkets "Hjem"-side
      */
     homePageId?: string;
   }>;

@@ -34,7 +34,6 @@ exports.getLanguage = function(page) {
 
   const result = {
     code: currentLanguageConfig.code,
-    alternate: currentLanguageConfig.alternate,
     link: (currentLanguageConfig.link !== null) ? currentLanguageConfig.link : '',
     phrases: {
       ...(i18n.getPhrases(page.language === 'nb' ? '': page.language, ['site/i18n/phrases']))
