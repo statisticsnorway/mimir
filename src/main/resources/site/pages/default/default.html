@@ -36,6 +36,9 @@
   <!-- HEADER -->
   <div id="ssb-menu" data-th-include="mimir:/site/includes/ssb-menu.html"></div>
 
+  <!-- Metainfo to make the page searchable -->
+  <div id="metainfo-container" data-th-include="mimir:/site/includes/metainfo-search.html" data-th-remove="tag"></div>
+
   <!-- MAIN -->
   <main class="xp-region" data-th-if="${!isFragment}">
     <div class="container-fluid bg-white pt-2 pb-4">
@@ -60,11 +63,9 @@
       </div>
     </div>
 
-    <div data-th-if="${!mainRegionComponents.empty}" data-th-remove="tag">
-      <div data-portal-region="main">
-        <div data-th-each="component : ${mainRegionComponents}" data-th-remove="tag">
-          <div data-portal-component="${component.path}" data-th-remove="tag" />
-        </div>
+    <div data-portal-region="main" class="searchabletext">
+      <div data-th-each="component : ${mainRegionComponents}" data-th-remove="tag">
+        <div data-portal-component="${component.path}" data-th-remove="tag" />
       </div>
     </div>
   </main>
