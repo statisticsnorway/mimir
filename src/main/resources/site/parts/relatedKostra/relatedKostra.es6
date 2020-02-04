@@ -24,7 +24,7 @@ exports.get = function(req) {
         code: defaultMunicipality
       })
     }
-    return renderPart(req, municipality, mode)
+    return renderPart(req, municipality)
   } catch (e) {
     return renderError('Error in part: ', e)
   }
@@ -35,17 +35,16 @@ exports.preview = function(req) {
   const municipality = getMunicipality({
     code: defaultMunicipality
   })
-
   return renderPart(req, municipality)
 }
 
-function renderPart(req, municipality, mode) {
-  if(mode != 'map') {
+function renderPart(req, municipality) {
+  if(municipality) {
     const part = getComponent()
 
     const kostraLink = new React4xp('Link')
       .setProps({
-        href: getHref(municipality, part.config.kostraLink),
+        href: part.config.kostraLink + (municipality.path == null ? '' : municipality.path),
         children: part.config.kostraLinkText,
         linkType: 'profiled'
       })
@@ -53,19 +52,16 @@ function renderPart(req, municipality, mode) {
 
     const model = {
       title: part.config.title,
-      description: part.config.description
+      description: part.config.description.split('.&nbsp;').join('')
     }
 
-    const preRenderedBody = thymeleaf.render(view, model)
+    const body = kostraLink.renderBody({
+      body: thymeleaf.render(view, model)
+    })
 
-    return municipality !== undefined ? { body: kostraLink.renderBody({ body: preRenderedBody }), contentType: 'text/html' } : ''
+    return {
+      body,
+      contentType: 'text/html'
+    }
   }
 }
-
-function getHref(municipality, kostraLink) {
-  if(municipality !== undefined) {
-    return kostraLink + (municipality.path == null ? '' : municipality.path)
-  }
-  return kostraLink
-}
-
