@@ -52,7 +52,7 @@ function renderPart(req, municipality) {
 
     const model = {
       title: part.config.title,
-      description: part.config.description.split('.&nbsp;').join('')
+      description: part.config.description.replace(/.&nbsp;/g, '')
     }
 
     const body = kostraLink.renderBody({
