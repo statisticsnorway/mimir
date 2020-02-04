@@ -30,6 +30,16 @@ export interface KeyFigure {
   glossary?: string;
 
   /**
+   * Endringstall
+   */
+  changes?: Array<{
+    /**
+     * Benevning på endringstall
+     */
+    denomination?: string;
+  }>;
+
+  /**
    * Kilde
    */
   source?: Array<{

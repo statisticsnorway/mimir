@@ -10,6 +10,7 @@ import { Dataquery } from '../../site/content-types/dataquery/dataquery'
 import { MunicipalityWithCounty } from '../klass/municipalities'
 import { TbmlData, TableRow } from '../types/xmlParser'
 import { Dataset as JSDataset, Dimension, Category } from '../types/jsonstat-toolkit'
+import { UtilLibrary } from '../types/util'
 const {
   query
 }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
@@ -31,6 +32,7 @@ const {
 const {
   createHumanReadableFormat
 } = __non_webpack_require__( '/lib/ssb/utils')
+const util: UtilLibrary = __non_webpack_require__( '/lib/util')
 
 const contentTypeName: string = `${app.name}:key-figure`
 
@@ -101,35 +103,40 @@ export function parseKeyFigure(keyFigure: Content<KeyFigure>, municipality?: Mun
       }
     } else if (datasetFormat._selected === 'tbml') {
       const tbmlData: TbmlData = data as TbmlData
-      const bodyRows: Array<TableRow> = tbmlData.tbml.presentation.table.tbody.tr
+      const bodyRows: Array<TableRow> = util.data.forceArray(tbmlData.tbml.presentation.table.tbody.tr) as Array<TableRow>
       const head: TableRow = tbmlData.tbml.presentation.table.thead.tr
       const [row1, row2] = bodyRows
       if (row1) {
-        if (Array.isArray(row1.td)) {
-          keyFigureViewData.number = parseValue(row1.td[0])
-        } else {
-          keyFigureViewData.number = parseValue(row1.td)
-        }
+        keyFigureViewData.number = parseValue(util.data.forceArray(row1.td)[0] as number)
       }
-      if (row2) {
-        const change: number = (Array.isArray(row2.td) ? row2.td[0] : row2.td) as number
-        let direction: KeyFigureChanges['changeDirection'] = 'same'
+      if (row2 && keyFigure.data.changes) {
+        const change: number = (util.data.forceArray(row2.td)[0]) as number
+        let changeText: undefined | string = parseValue(change)
+        // add denomination if there is any change
+        if (changeText && keyFigure.data.changes) {
+          const denomination: string | undefined = (keyFigure.data.changes as { denomination?: string }).denomination
+          if (denomination) {
+            changeText += ` ${denomination}`
+          }
+        }
+        // set arrow direction based on change
+        let changeDirection: KeyFigureChanges['changeDirection'] = 'same'
         if (change > 0) {
-          direction = 'up'
+          changeDirection = 'up'
         } else if (change < 0) {
-          direction = 'down'
+          changeDirection = 'down'
+        } else {
+          changeText = localize({
+            key: 'keyFigure.noChange'
+          })
         }
         keyFigureViewData.changes = {
-          changeDirection: direction,
-          changeText: parseValue(change),
+          changeDirection,
+          changeText,
           changePeriod: row2.th.toString()
         }
       }
-      if (Array.isArray(head.th)) {
-        keyFigureViewData.time = head.th[0]
-      } else {
-        keyFigureViewData.time = head.th.toString()
-      }
+      keyFigureViewData.time = (util.data.forceArray(head.th)[0] as number | string).toString()
     }
   }
   return keyFigureViewData
