@@ -85,6 +85,12 @@ export function init() {
     $('.choose-map-a').find('span').css('all', 'unset')
 
     // Adds attributes into the component input field
-    $('#input-query-municipality').prop('autocomplete', 'on')
+    $('#input-query-municipality').attr({
+      'data-display': 'static',
+      'data-toggle': 'dropdown',
+      'aria-haspopup': 'true',
+      'aria-expanded': 'false',
+      'autocomplete': ''
+    })
   })
 }

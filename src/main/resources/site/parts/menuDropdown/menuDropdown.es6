@@ -2,7 +2,8 @@ const {
   getContent
 } = __non_webpack_require__( '/lib/xp/portal')
 const {
-  municipalsWithCounties, getMunicipality
+  municipalsWithCounties,
+  getMunicipality
 } = __non_webpack_require__( '/lib/klass/municipalities')
 const {
   pageMode
@@ -42,7 +43,6 @@ function renderPart(req) {
     .setId('inputStickyMenu')
 
   const model = {
-    inputStickyMenuId: inputStickyMenu.react4xpId,
     mode: pageMode(req, page),
     page: {
       displayName: page.displayName,
