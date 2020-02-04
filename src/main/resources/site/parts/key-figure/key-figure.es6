@@ -1,7 +1,7 @@
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   get: getKeyFigure
-} = __non_webpack_require__( '/lib/ssb/key-figure')
+} = __non_webpack_require__( '/lib/ssb/keyFigure')
 const {
   parseGlossaryContent
 } = __non_webpack_require__( '/lib/ssb/glossary')
