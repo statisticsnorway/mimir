@@ -12,16 +12,21 @@ const {
   pageUrl
 } = __non_webpack_require__( '/lib/xp/portal')
 const content = __non_webpack_require__( '/lib/xp/content')
-const numeral = require('numeral')
 const {
   render
 } = __non_webpack_require__( '/lib/thymeleaf')
 const errorView = resolve('../error/error.html')
 
-
-exports.createHumanReadableFormat = (value) => {
-  return value > 999 ? numeral(value).format('0,0').replace( /,/, '\u00a0' ) : value.toString().replace(/\./, ',')
+const numberWithSpaces = (x) => {
+  const parts = x.toString().split('.')
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0')
+  return parts.join('.')
 }
+
+export const createHumanReadableFormat = (value) => {
+  return value > 999 ? numberWithSpaces(value) : value.toString().replace(/\./, ',')
+}
+
 
 export const alertsForContext = (municipality) => {
   const currentMunicipalityAlerts = municipality ? listMunicipalityAlerts( municipality.code ) : {

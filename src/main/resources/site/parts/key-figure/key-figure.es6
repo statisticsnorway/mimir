@@ -1,12 +1,26 @@
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const { get: getKeyFigure } = __non_webpack_require__( '/lib/ssb/key-figure')
-const { parseGlossaryContent } = __non_webpack_require__( '/lib/ssb/glossary')
-const { parseMunicipalityValues, getMunicipality } = __non_webpack_require__( '/lib/klass/municipalities')
-const { getComponent, getSiteConfig, getContent, imageUrl } = __non_webpack_require__( '/lib/xp/portal')
+const {
+  get: getKeyFigure
+} = __non_webpack_require__( '/lib/ssb/key-figure')
+const {
+  parseGlossaryContent
+} = __non_webpack_require__( '/lib/ssb/glossary')
+const {
+  parseMunicipalityValues, getMunicipality
+} = __non_webpack_require__( '/lib/klass/municipalities')
+const {
+  getComponent, getSiteConfig, getContent, imageUrl
+} = __non_webpack_require__( '/lib/xp/portal')
 const thymeleaf = __non_webpack_require__('/lib/thymeleaf')
-const { data } = __non_webpack_require__( '/lib/util')
-const { pageMode, createHumanReadableFormat } = __non_webpack_require__( '/lib/ssb/utils')
-const { renderError } = __non_webpack_require__( '/lib/error/error')
+const {
+  data
+} = __non_webpack_require__( '/lib/util')
+const {
+  pageMode
+} = __non_webpack_require__( '/lib/ssb/utils')
+const {
+  renderError
+} = __non_webpack_require__( '/lib/error/error')
 
 const view = resolve('./key-figure.html')
 
@@ -18,23 +32,34 @@ exports.get = function(req) {
   const mode = pageMode(req, page)
   if (!municiaplity && mode === 'edit') {
     const defaultMuniciaplity = getSiteConfig().defaultMunicipality
-    municiaplity = getMunicipality({ code: defaultMuniciaplity })
+    municiaplity = getMunicipality({
+      code: defaultMuniciaplity
+    })
   }
   return renderPart(municiaplity, keyFigureIds)
 }
 
 exports.preview = (req, id) => {
   const defaultMuniciaplity = getSiteConfig().defaultMunicipality
-  const municiaplity = getMunicipality({ code: defaultMuniciaplity })
+  const municiaplity = getMunicipality({
+    code: defaultMuniciaplity
+  })
   return renderPart(municiaplity, [id])
 }
 
 const renderPart = (municipality, keyFigureIds) => {
   try {
     const part = getComponent()
-    const keyFigures = keyFigureIds.map((keyFigureId) => getKeyFigure({key: keyFigureId}))
-    return keyFigures.length && municipality !== undefined ? renderKeyFigure(keyFigures, part, municipality) : {body: '', contentType: 'text/html'}
+    const keyFigures = keyFigureIds.map((keyFigureId) => getKeyFigure({
+      key: keyFigureId
+    }))
+    return keyFigures.length && municipality !== undefined ? renderKeyFigure(keyFigures, part, municipality) : {
+      body: '',
+      contentType: 'text/html'
+    }
   } catch (e) {
+    log.info(e)
+    log.info(e.message)
     return renderError('Feil i part', e)
   }
 }
@@ -56,7 +81,7 @@ function renderKeyFigure(keyFigures, part, municipality) {
   }, [])
 
   const parsedKeyFigures = keyFigures.map( (keyFigure) => {
-    const dataset = parseMunicipalityValues(keyFigure.data.dataquery, municipality, keyFigure.data.default)
+    const dataset = parseMunicipalityValues(keyFigure.data.dataquery, municipality)
     return {
       id: keyFigure._id,
       displayName: keyFigure.displayName,
@@ -90,24 +115,27 @@ function renderKeyFigure(keyFigures, part, municipality) {
     }
 
     const reactProps = {
-      iconUrl : iconSrc,
+      iconUrl: iconSrc,
       number: keyfigure.valueHumanReadable,
       numberDescription: keyfigure.denomination,
       noNumberText: keyfigure.valueNotFound,
       size: keyfigure.size,
       title: keyfigure.displayName,
-      time: keyfigure.time
-    };
+      time: keyfigure.time,
+      changes: keyfigure.changes
+    }
 
     const keyfigureReact = new React4xp('KeyFigure')
     return keyfigureReact.setId(keyfigure.id).setProps(reactProps)
   })
 
-  let body = thymeleaf.render(view, model);
+  let body = thymeleaf.render(view, model)
 
   reactObjs.forEach((keyfigureReact) => {
-    body = keyfigureReact.renderBody({body});
-  });
+    body = keyfigureReact.renderBody({
+      body
+    })
+  })
 
   return {
     body,
