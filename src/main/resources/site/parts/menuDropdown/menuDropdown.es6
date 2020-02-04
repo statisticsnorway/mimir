@@ -37,14 +37,12 @@ function renderPart(req) {
       id: 'input-query-municipality',
       ariaLabel: 'Søk på kommune',
       searchField: true,
-      placeholder: 'Søk på kommune',
-      className: 'sticky-menu-search'
+      placeholder: 'Søk på kommune'
     })
     .setId('inputStickyMenu')
-    .uniqueId()
 
   const model = {
-    inputStickMenuId: inputStickyMenu.react4xpId,
+    inputStickyMenuId: inputStickyMenu.react4xpId,
     mode: pageMode(req, page),
     page: {
       displayName: page.displayName,
@@ -54,12 +52,12 @@ function renderPart(req) {
     municipalities: parsedMunicipalities
   }
 
-  const preRenderedBody = thymeleaf.render(view, model)
+  const body = inputStickyMenu.renderBody({
+    body: thymeleaf.render(view, model)
+  })
 
   return {
-    body: inputStickyMenu.renderBody({
-      body: preRenderedBody
-    }),
+    body,
     contentType: 'text/html'
   }
 }

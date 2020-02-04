@@ -14,7 +14,7 @@
       <div data-th-if="${mode == 'municipality'}" class="roboto-bold text-nowrap pr-4">Bytt kommune:</div>
       <div id="search-container" data-th-if="${municipalities}" class="collapse">
         <div class="card ssb-dropdown">
-          <div data-th-id="${inputStickMenuId}" data-display="static" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"/>
+          <div data-th-id="${inputStickyMenuId}" data-display="static" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" />
           <div id="municipality-list" class="dropdown-menu w-100 list-of-options" aria-labelledby="input-query-municipality">
               <a class="dropdown-item a-plain option-list-element" data-th-each="municipality: ${municipalities}"
                 data-th-href="${portal.pageUrl({'_id='+page._id})} + ${municipality.path}"

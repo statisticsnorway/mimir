@@ -83,5 +83,8 @@ export function init() {
     // Removes global styling on the Choose map option
     $('.part-menu-dropdown a').not('.dropdown-item').css('all', 'unset')
     $('.choose-map-a').find('span').css('all', 'unset')
+
+    // Adds attributes into the component input field
+    $('#input-query-municipality').prop('autocomplete', 'on')
   })
 }
