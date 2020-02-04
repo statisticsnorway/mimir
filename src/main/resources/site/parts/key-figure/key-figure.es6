@@ -1,15 +1,16 @@
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
-  get: getKeyFigure
+  get: getKeyFigure,
+  parseKeyFigure
 } = __non_webpack_require__( '/lib/ssb/keyFigure')
 const {
   parseGlossaryContent
 } = __non_webpack_require__( '/lib/ssb/glossary')
 const {
-  parseMunicipalityValues, getMunicipality
+  getMunicipality
 } = __non_webpack_require__( '/lib/klass/municipalities')
 const {
-  getComponent, getSiteConfig, getContent, imageUrl
+  getComponent, getSiteConfig, getContent
 } = __non_webpack_require__( '/lib/xp/portal')
 const thymeleaf = __non_webpack_require__('/lib/thymeleaf')
 const {
@@ -50,10 +51,17 @@ exports.preview = (req, id) => {
 const renderPart = (municipality, keyFigureIds) => {
   try {
     const part = getComponent()
-    const keyFigures = keyFigureIds.map((keyFigureId) => getKeyFigure({
-      key: keyFigureId
-    }))
-    return keyFigures.length && municipality !== undefined ? renderKeyFigure(keyFigures, part, municipality) : {
+    // get all keyFigures and filter out non-existing keyFigures
+    const keyFigures = keyFigureIds.reduce((list, keyFigureId) => {
+      const keyFigure = getKeyFigure(keyFigureId)
+      if (keyFigure) {
+        list.push(keyFigure)
+      }
+      return list
+    }, [])
+
+    // continue if we have any keyFigures
+    return keyFigures.length ? renderKeyFigure(keyFigures, part, municipality) : {
       body: '',
       contentType: 'text/html'
     }
@@ -81,52 +89,38 @@ function renderKeyFigure(keyFigures, part, municipality) {
   }, [])
 
   const parsedKeyFigures = keyFigures.map( (keyFigure) => {
-    const dataset = parseMunicipalityValues(keyFigure.data.dataquery, municipality)
+    const keyFigureData = parseKeyFigure(keyFigure, municipality)
     return {
       id: keyFigure._id,
-      displayName: keyFigure.displayName,
-      ...keyFigure.data,
-      ...dataset,
-      glossary: keyFigure.data.glossary
+      ...keyFigureData,
+      source: keyFigure.data.source
     }
-  })
-
-  const keyFiguresWithNonZeroValue = parsedKeyFigures.filter( (keyFigure) => {
-    return keyFigure.value !== null && keyFigure.value !== 0
   })
 
   const source = part && part.config && part.config.source || undefined
 
   const model = {
     displayName: part ? part.config.title : undefined,
-    data: keyFiguresWithNonZeroValue,
+    keyFigures: parsedKeyFigures,
     glossary,
     source
   }
 
   /** Render react **/
-  const reactObjs = model.data.map( (keyfigure) => {
-    let iconSrc = ''
-    if (keyfigure.icon) {
-      iconSrc = imageUrl({
-        id: keyfigure.icon,
-        scale: 'block(100,100)'
-      })
-    }
-
+  const reactObjs = parsedKeyFigures.map((keyFigure) => {
     const reactProps = {
-      iconUrl: iconSrc,
-      number: keyfigure.valueHumanReadable,
-      numberDescription: keyfigure.denomination,
-      noNumberText: keyfigure.valueNotFound,
-      size: keyfigure.size,
-      title: keyfigure.displayName,
-      time: keyfigure.time,
-      changes: keyfigure.changes
+      iconUrl: keyFigure.iconUrl,
+      number: keyFigure.number,
+      numberDescription: keyFigure.numberDescription,
+      noNumberText: keyFigure.noNumberText,
+      size: keyFigure.size,
+      title: keyFigure.title,
+      time: keyFigure.time,
+      changes: keyFigure.changes
     }
 
-    const keyfigureReact = new React4xp('KeyFigure')
-    return keyfigureReact.setId(keyfigure.id).setProps(reactProps)
+    const keyFigureReact = new React4xp('KeyFigure')
+    return keyFigureReact.setId(keyFigure.id).setProps(reactProps)
   })
 
   let body = thymeleaf.render(view, model)

@@ -1,4 +1,3 @@
-/* eslint-disable new-cap */
 import { SiteConfig } from '../../site/site-config'
 import { ContentLibrary, Content, QueryResponse } from 'enonic-types/lib/content'
 import { Dataset } from '../../site/content-types/dataset/dataset'
@@ -6,15 +5,6 @@ import { Request } from 'enonic-types/lib/controller'
 import { CacheLib, Cache } from '../types/cache'
 import { PortalLibrary } from 'enonic-types/lib/portal'
 import { County, CountiesLib } from './counties'
-import { Dataquery } from '../../site/content-types/dataquery/dataquery'
-import { Dataset as JSDataset,
-  Dimension,
-  Category } from '../types/jsonstat-toolkit'
-import { TbmlData, TableRow } from '../types/xmlParser'
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
-import JSONstat from 'jsonstat-toolkit/import.mjs'
 
 const {
   getChildren
@@ -25,18 +15,6 @@ const {
 const {
   get: getKlass
 } = __non_webpack_require__( '/lib/klass/klass')
-const {
-  localizeTimePeriod
-} = __non_webpack_require__( '/lib/language')
-const {
-  localize
-} = __non_webpack_require__( '/lib/xp/i18n')
-const {
-  createHumanReadableFormat
-} = __non_webpack_require__( '/lib/ssb/utils')
-const {
-  get: getDataquery
-} = __non_webpack_require__( '/lib/ssb/dataquery')
 const {
   getSiteConfig
 }: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
@@ -113,136 +91,6 @@ export function getValue(url: string, query: string, municipalityCode: string): 
 }
 
 
-type JsonStatFormat = Dataquery['datasetFormat']['jsonStat'];
-type DatasetOption = NonNullable<JsonStatFormat>['datasetFilterOptions']
-
-export function parseMunicipalityValues(dataQueryId: string, municipality: MunicipalityWithCounty): MunicipalityDataFromDataset {
-  // get dataset
-  const dataQueryContent: Content<Dataquery> = getDataquery({
-    key: dataQueryId
-  })
-  const datasetContent: QueryResponse<Dataset> = getDataSetWithDataQueryId(dataQueryId)
-  const datasetFormat: Dataquery['datasetFormat'] = dataQueryContent.data.datasetFormat
-
-  // prepare jsonstat
-  const data: DatasetJSONData | TbmlData = JSON.parse(datasetContent.hits[0].data.json)
-  let valueToReturn: Array<MunicipalityDataFromDataset> = []
-
-  if (datasetFormat._selected === 'jsonStat') {
-    const ds: JSDataset | Array<JSDataset> | null = JSONstat(data).Dataset(0)
-    const jsonStatConfig: JsonStatFormat | undefined = datasetFormat[datasetFormat._selected]
-    const xAxisLabel: string | undefined = jsonStatConfig ? jsonStatConfig.xAxisLabel : undefined
-    const yAxisLabel: string | undefined = jsonStatConfig ? jsonStatConfig.yAxisLabel : undefined
-
-    // if filter get data with filter
-    if (jsonStatConfig && jsonStatConfig.datasetFilterOptions && jsonStatConfig.datasetFilterOptions._selected) {
-      const filterOptions: DatasetOption = jsonStatConfig.datasetFilterOptions
-
-      if (yAxisLabel && ds && !(ds instanceof Array)) {
-        if (filterOptions && filterOptions.municipalityFilter && filterOptions._selected === 'municipalityFilter') {
-          const filterTarget: string = filterOptions.municipalityFilter.municipalityDimension
-          valueToReturn = getDataFromMunicipalityCode(ds, municipality.code, yAxisLabel, filterTarget)
-          if ( (!valueToReturn.length || valueToReturn[0].value === null) && municipality.changes) {
-            valueToReturn = getDataFromMunicipalityCode(ds, municipality.changes[0].oldCode, yAxisLabel, filterTarget)
-          }
-        }
-      }
-    } else if (xAxisLabel && ds && !(ds instanceof Array)) {
-      // get all data without filter
-    }
-  } else if (datasetFormat._selected === 'tbml') {
-    const tbmlData: TbmlData = data as TbmlData
-    const bodyRows: Array<TableRow> = tbmlData.tbml.presentation.table.tbody.tr
-    const head: TableRow = tbmlData.tbml.presentation.table.thead.tr
-    let value: number | null = null
-    let label: string = ''
-    let changes: KeyFigureChanges | undefined
-    const [row1, row2] = bodyRows
-    if (row1) {
-      if (Array.isArray(row1.td)) {
-        value = row1.td[0]
-      } else {
-        value = row1.td as number
-      }
-    }
-    if (row2) {
-      const change: number = (Array.isArray(row2.td) ? row2.td[0] : row2.td) as number
-      let direction: KeyFigureChanges['changeDirection'] = 'same'
-      if (change > 0) {
-        direction = 'up'
-      } else if (change < 0) {
-        direction = 'down'
-      }
-      changes = {
-        changeDirection: direction,
-        changeText: change.toString(),
-        changePeriod: row2.th as string
-      }
-    }
-    if (Array.isArray(head.th)) {
-      label = head.th[0]
-    } else {
-      label = head.th as string
-    }
-    valueToReturn.push(municipalityObject(value, label, false, changes))
-  }
-
-  return valueToReturn[0]
-}
-
-
-function getDataFromMunicipalityCode(ds: JSDataset, municipalityCode: string, yAxisLabel: string, filterTarget: string): Array<MunicipalityDataFromDataset> {
-  const filterTargetIndex: number = ds.id.indexOf(filterTarget)
-  const filterDimension: Dimension | null = ds.Dimension(filterTarget) as Dimension | null
-  if ( !filterDimension ) {
-    return []
-  }
-  const filterCategory: Category | null = filterDimension.Category(municipalityCode) as Category | null
-  const filterCategoryIndex: number | undefined = filterCategory ? filterCategory.index : undefined
-  const dimensionFilter: Array<number|string> = ds.id.map( () => 0 )
-
-  if (filterCategoryIndex !== undefined && filterCategoryIndex >= 0) {
-    dimensionFilter[filterTargetIndex] = filterCategoryIndex
-  } else {
-    return []
-  }
-
-  const yAxisIndex: number = ds.id.indexOf(yAxisLabel)
-  const yDimension: Dimension | Array<Dimension> | null = ds.Dimension(yAxisLabel)
-  const yCategories: Category | Array<Category> | null = yDimension && !(yDimension instanceof Array) ? yDimension.Category() : null
-  return yCategories && (yCategories instanceof Array) ?
-    yCategories.map( (yCategory: Category) => {
-      dimensionFilter[yAxisIndex] = yCategory.index
-      const d: number | null = ds.Data(dimensionFilter, false) as number | null
-      return municipalityObject(d, yCategory.label, true)
-    }) : []
-}
-
-/**
- *
- * @param {String} value
- * @param {String} time
- * @return {MunicipalityDataFromDataset}
- */
-const notFoundValues: Array<string> = ['.', '..', '...', ':', '-']
-function municipalityObject(
-  value: number | null,
-  label: string,
-  localizeNumberDescription: boolean = false,
-  changes?: KeyFigureChanges
-): MunicipalityDataFromDataset {
-  return {
-    value: value && notFoundValues.indexOf(value.toString()) < 0 ? value.toString() : null,
-    valueNotFound: localize({
-      key: 'value.notFound'
-    }),
-    numberDescription: localizeNumberDescription ? localizeTimePeriod(label) : label,
-    valueHumanReadable: value ? createHumanReadableFormat(value) : undefined,
-    changes
-  }
-}
-
-
 const cache: Cache = newCache({
   size: 1000,
   expire: 3600
@@ -304,7 +152,6 @@ function getMunicipalityByCode(municipalities: Array<MunicipalityWithCounty>, mu
   })
 }
 
-
 /**
  *
  * @param {array} municipalities
@@ -321,7 +168,6 @@ function getMunicipalityByName(municipalities: Array<MunicipalityWithCounty>, mu
     } : undefined
   })
 }
-
 
 function changesWithMunicipalityName(municipalityName: string): Array<MunicipalityChange>|undefined {
   const changeList: Array<MunicipalityChange> = getMunicipalityChanges().codeChanges
@@ -371,7 +217,6 @@ export interface MunicipalitiesLib {
   query: (queryString: string) => Array<MunicipalCode>;
   createPath (municipalName: string, countyName?: string): string;
   getValue (url: string, query: string, municipalityCode: string): object;
-  parseMunicipalityValues (dataQueryId: string, municipality: MunicipalityWithCounty, defaultMunicipalityCode: string): MunicipalityDataFromDataset;
   municipalsWithCounties (): Array<MunicipalityWithCounty>;
   getMunicipality (req: Request): MunicipalityWithCounty|undefined;
 }
@@ -397,30 +242,4 @@ export interface MunicipalityWithCounty {
   };
   path: string;
   changes?: Array<MunicipalityChange>;
-}
-
-export interface MunicipalityDataFromDataset {
-  value: string | null;
-  valueNotFound: string;
-  numberDescription: string;
-  valueHumanReadable: string;
-  changes?: KeyFigureChanges;
-}
-
-export interface KeyFigureChanges {
-  changeDirection: 'up' | 'down' | 'same';
-  changeText: string;
-  changePeriod: string;
-}
-
-// NOTE extend as needed
-export interface DatasetJSONData {
-  dataset: {
-    status: object;
-    dimension: object;
-    label: string;
-    source: string;
-    updated: string;
-    value: Array<number>;
-  };
 }
