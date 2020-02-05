@@ -4,7 +4,7 @@
       <div class="d-flex flex-row align-items-center">
         <div class="d-flex align-items-center mr-auto title-container">
           <div data-th-class="${mode} == 'municipality' ? 'opacity-zero'">
-            <div class="roboto-plain subtitle d-none d-md-block" data-th-if="${mode == 'municipality'}" data-th-text="${page.displayName}"></div>
+            <div class="roboto-plain subtitle d-none d-md-block" data-th-if="${mode == 'municipality'}" data-th-text="${displayName}"></div>
             <div class="roboto-bold municipality" data-th-if="${mode == 'municipality'}">
               <div data-th-if="${municipality}" data-th-text="${municipality.displayName}" data-th-remove="tag">Kommune</div>
               <div data-th-if="${municipality}" data-th-text="'('+${municipality.county.name}+')'" data-th-remove="tag">Fylke</div>
@@ -22,7 +22,7 @@
               </button>
               <div id="municipality-list" class="dropdown-menu w-100 list-of-options" aria-labelledby="input-query-municipality">
                 <a class="dropdown-item a-plain option-list-element" data-th-each="municipality: ${municipalities}"
-                  data-th-href="${portal.pageUrl({'_id='+page._id})} + ${municipality.path}"
+                  data-th-href="${baseUrl} + ${municipality.path}"
                   data-th-text="' ' + ${municipality.displayName}"
                   data-th-attr="data-text=${municipality.displayName} + ' ' +  ${municipality.code}">Oslo
                 </a>

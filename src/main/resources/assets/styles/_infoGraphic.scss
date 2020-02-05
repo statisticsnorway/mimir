@@ -1,5 +1,8 @@
 .part-infoGraphic {
-
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  
   h2 {
       margin-bottom: 40px;
   }
@@ -15,6 +18,8 @@
   }
   .border-top-green {
       width: 100%;
+      margin-left: auto;
+      margin-right: auto;
   }
   .footnote {
       list-style-type: none;
