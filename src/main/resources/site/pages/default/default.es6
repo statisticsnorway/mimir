@@ -52,7 +52,7 @@ exports.get = function(req) {
 
   const glossary = glossaryLib.process(page.data.ingress, regions)
   const ingress = processHtml({
-    value: page.data.ingress.replace(/&nbsp;/g, ' ')
+    value: page.data.ingress ? page.data.ingress.replace(/&nbsp;/g, ' ') : undefined
   })
   const showIngress = ingress && page.type === 'mimir:page'
 
