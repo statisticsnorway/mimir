@@ -39,6 +39,7 @@ const view = resolve('default.html')
 exports.get = function(req) {
   const ts = new Date().getTime()
   const page = getContent()
+  const mode = pageMode(req, page)
   const isFragment = page.type === 'portal:fragment'
   let regions = null
   if (isFragment) {
@@ -53,7 +54,7 @@ exports.get = function(req) {
 
   const glossary = glossaryLib.process(page.data.ingress, regions)
   const ingress = processHtml({
-    value: page.data.ingress
+    value: page.data.ingress ? page.data.ingress.replace(/&nbsp;/g, ' ') : undefined
   })
   const showIngress = ingress && page.type === 'mimir:page'
 
@@ -69,12 +70,6 @@ exports.get = function(req) {
   }
 
   const language = getLanguage(page)
-  let alternateLanguageVersionUrl
-  if (language.exists) {
-    alternateLanguageVersionUrl = pageUrl({
-      path: language.path
-    })
-  }
 
   let municipality
   if (mode === 'municipality') {
@@ -132,7 +127,6 @@ exports.get = function(req) {
     bannerUrl,
     logoUrl,
     language,
-    alternateLanguageVersionUrl,
     GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null
   }
 
