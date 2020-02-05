@@ -1,7 +1,8 @@
 const {
   getContent,
   getComponent,
-  getSiteConfig
+  getSiteConfig,
+  processHtml
 } = __non_webpack_require__( '/lib/xp/portal')
 
 const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
@@ -52,7 +53,9 @@ function renderPart(req, municipality) {
 
     const model = {
       title: part.config.title,
-      description: part.config.description.replace(/.&nbsp;/g, '')
+      description: processHtml({
+        value: part.config.description ? part.config.description.replace(/.&nbsp;/g, ' ') : undefined
+      })
     }
 
     const body = kostraLink.renderBody({
