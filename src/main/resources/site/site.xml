@@ -92,13 +92,48 @@
         </item-set>
       </items>
     </field-set>
+    <field-set>
+      <label>Språk</label>
+      <items>
+        <item-set name="router">
+          <label>Nettsted ruting (Mappings)</label>
+          <occurrences minimum="0" maximum="0"/>
+          <items>
+            <input name="from" type="ContentSelector">
+              <label>Fra - alt under dette innholdet vil bruke valgt konstroller under.</label>
+              <occurrences minimum="0" maximum="1"/>
+              <config>
+                <treeMode>true</treeMode>
+                <showStatus>true</showStatus>
+                <hideToggleIcon>false</hideToggleIcon>
+              </config>
+            </input>
+            <input name="to" type="ContentSelector">
+              <label>Til - hvilket innhold skal brukes som mål.</label>
+              <occurrences minimum="0" maximum="1"/>
+              <config>
+                <treeMode>true</treeMode>
+                <showStatus>true</showStatus>
+                <hideToggleIcon>false</hideToggleIcon>
+              </config>
+            </input>
+          </items>
+        </item-set>
+      </items>
+    </field-set>
   </form>
   <mappings>
-    <mapping controller="/site/pages/default/default.js">
+    <mapping controller="/site/router.js">
+      <pattern>/.*</pattern>
+    </mapping>
+    <!--mapping controller="/site/pages/default/default.js">
       <pattern>/kommunefakta/.*</pattern>
     </mapping>
     <mapping controller="/site/pages/default/default.js">
       <match>type:'portal:fragment'</match>
     </mapping>
+    <mapping controller="/site/pages/default/default.js">
+      <pattern>/pewpew/.*</pattern>
+    </mapping-->
   </mappings>
 </site>

@@ -18,6 +18,7 @@ const {
   getMunicipality
 } = __non_webpack_require__( '/lib/klass/municipalities')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+const router = __non_webpack_require__('/lib/router')()
 
 const version = '%%VERSION%%'
 const partsWithPreview = [ // Parts that has preview
@@ -35,6 +36,10 @@ const partsWithPreview = [ // Parts that has preview
 ]
 
 const view = resolve('default.html')
+
+exports.get = function(req) {
+  return router.dispatch(req);
+}
 
 exports.get = function(req) {
   const ts = new Date().getTime()
