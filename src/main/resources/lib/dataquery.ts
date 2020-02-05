@@ -5,9 +5,14 @@ import { Content, ContentLibrary, QueryResponse, PublishResponse } from 'enonic-
 import { Dataset } from '../site/content-types/dataset/dataset'
 import * as moment from 'moment'
 import { getTbmlData } from './tbml/tbml'
+import { CommonLibrary } from './types/common'
 const http: HttpLibrary = __non_webpack_require__('/lib/http-client')
 const context: ContextLibrary = __non_webpack_require__('/lib/xp/context')
 const content: ContentLibrary = __non_webpack_require__('/lib/xp/content')
+const {
+  sanitize
+}: CommonLibrary =
+ __non_webpack_require__('/lib/xp/common')
 const defaultSelectionFilter: SelectionFilter = {
   filter: 'all',
   values: ['*']
@@ -108,7 +113,7 @@ function updateDataset(data: string, dataquery: Content<Dataquery>): Content<Dat
         }) as Content<Dataset>
       }
     } else { // create dataset
-      const name: string = `${dataquery._name} (datasett) opprettet ${now}`
+      const name: string = sanitize(`${dataquery._name} (datasett) opprettet ${now}`)
       const displayName: string = `${dataquery.displayName} (datasett) opprettet ${now}`
       try {
         const dataset: Content<Dataset> = content.create({
