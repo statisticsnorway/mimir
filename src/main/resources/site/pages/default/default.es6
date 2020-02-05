@@ -68,12 +68,6 @@ exports.get = function(req) {
   }
 
   const language = getLanguage(page)
-  let alternateLanguageVersionUrl
-  if (language.exists) {
-    alternateLanguageVersionUrl = pageUrl({
-      path: language.path
-    })
-  }
 
   let municipality
   if (mode === 'municipality') {
@@ -129,7 +123,6 @@ exports.get = function(req) {
     bannerUrl,
     logoUrl,
     language,
-    alternateLanguageVersionUrl,
     GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null
   }
 
