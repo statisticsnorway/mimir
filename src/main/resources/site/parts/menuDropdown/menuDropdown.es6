@@ -36,7 +36,7 @@ function renderPart(req) {
   const inputStickyMenu = new React4xp('Input')
     .setProps({
       id: 'input-query-municipality',
-      ariaLabel: 'Søk på kommune',
+      ariaLabel: 'Søk på kommune', /* TODO: legg til i phrases og hent det derfra istedet */
       searchField: true,
       placeholder: 'Søk på kommune'
     })

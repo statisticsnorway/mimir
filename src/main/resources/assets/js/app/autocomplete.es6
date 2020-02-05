@@ -6,10 +6,13 @@ import 'bootstrap/js/dist/dropdown'
 // i.e. <a data-text="5001 bergen vestlandet hordaland syv fjeld sjøforsvaret verdensarven bjørgvin buekorps" href="...">Bergen</a>
 // Dependencies: jQuery and Bootstrap
 export function init() {
-  $('input[autocomplete]').each((i, el) => {
-    const dropdown = $(el).parent().find('.dropdown-menu')
+  $('#input-query-municipality').each((i, el) => {
+    //const dropdown = $(el).parent().find('.dropdown-menu')
+    const dropdown = $('#municipality-list')
     const elements = dropdown.find('a')
     const submit = el.nextElementSibling
+
+    console.log(dropdown, elements, submit)
 
     dropdown.css('max-width', $(el).outerWidth()) && $(window).resize(() => dropdown.css('max-width', $(el).outerWidth()))
 
