@@ -13,6 +13,7 @@ const {
 } = __non_webpack_require__( '/lib/thymeleaf')
 const dataquery = __non_webpack_require__( '/lib/dataquery')
 const content = __non_webpack_require__('/lib/xp/content')
+const util = __non_webpack_require__( '/lib/util')
 import JsonStat from 'jsonstat-toolkit'
 
 const view = resolve('./dataquery.html')
@@ -51,12 +52,9 @@ const renderPart = (req, dataQueryIds) => {
       headers = [contentsCodeLabel, timeLabel]
     } else if (datasetFormat._selected === 'tbml') {
       const dataResult = getTbmlData(dq.data.table)
-      headers = dataResult.tbml.presentation.table.thead.tr.th
-      if (!Array.isArray(headers)) {
-        headers = [headers]
-      }
+      headers = util.data.forceArray(dataResult.tbml.presentation.table.thead.tr.th)
       headers.unshift('')
-      table = dataResult.tbml.presentation.table.tbody.tr.map((tr) => {
+      table = util.data.forceArray(dataResult.tbml.presentation.table.tbody.tr).map((tr) => {
         return {
           label: tr.th,
           columns: tr.td
