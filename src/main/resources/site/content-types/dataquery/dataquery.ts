@@ -5,7 +5,7 @@ export interface Dataquery {
   table?: string;
 
   /**
-   * Spørring i JSON-format
+   * API-spørring mot statistikkbanken (JSON-format)
    */
   json?: string;
 
@@ -24,7 +24,7 @@ export interface Dataquery {
     _selected: string;
 
     /**
-     * json-stat
+     * API-spørring mot statistikkbanken (json-stat-format)
      */
     jsonStat?: {
       /**
@@ -59,14 +59,14 @@ export interface Dataquery {
     };
 
     /**
-     * tbml
+     * Tall fra tabellbygger (tbml-format)
      */
     tbml?: {
 
     };
 
     /**
-     * klass
+     * API-spørring mot KLASS
      */
     klass?: {
 
