@@ -115,7 +115,8 @@ function renderKeyFigure(keyFigures, part, municipality) {
       size: keyFigure.size,
       title: keyFigure.title,
       time: keyFigure.time,
-      changes: keyFigure.changes
+      changes: keyFigure.changes,
+      greenBox: keyFigure.greenBox
     }
 
     const keyFigureReact = new React4xp('KeyFigure')
