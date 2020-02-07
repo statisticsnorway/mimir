@@ -47,7 +47,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   font-size: 16px;
   font-family: $font-open-sans;
-  line-height: 1.7;
+  line-height: normal; // override bootstrap global line-height style
   overflow-x: hidden; // removes horisontal scroll bar created by part preface
 }
 
