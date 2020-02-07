@@ -1,19 +1,18 @@
 const {
-  getContent
+  getContent, pageUrl
 } = __non_webpack_require__( '/lib/xp/portal')
 const {
-  municipalsWithCounties,
-  getMunicipality
+  render
+} = __non_webpack_require__( '/lib/thymeleaf')
+const {
+  municipalsWithCounties, getMunicipality
 } = __non_webpack_require__( '/lib/klass/municipalities')
 const {
   pageMode
 } = __non_webpack_require__( '/lib/ssb/utils')
-const {
-  renderError
-} = __non_webpack_require__( '/lib/error/error')
 
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
+
 const view = resolve('./menuDropdown.html')
 
 exports.get = (req) => {
@@ -31,6 +30,9 @@ function renderPart(req) {
   const parsedMunicipalities = municipalsWithCounties()
 
   const page = getContent()
+  const baseUrl = pageUrl({
+    id: page._id
+  })
 
   // Input field react object for sticky menu
   const inputStickyMenu = new React4xp('Input')
@@ -44,16 +46,14 @@ function renderPart(req) {
 
   const model = {
     mode: pageMode(req, page),
-    page: {
-      displayName: page.displayName,
-      _id: page._id
-    },
+    displayName: page.displayName,
+    baseUrl,
     municipality: getMunicipality(req),
     municipalities: parsedMunicipalities
   }
 
   const body = inputStickyMenu.renderBody({
-    body: thymeleaf.render(view, model)
+    body: render(view, model)
   })
 
   return {
