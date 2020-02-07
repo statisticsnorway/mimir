@@ -31,9 +31,9 @@ function renderPart(request) {
       id: part.config.image,
       scale: 'block(315, 215)'
     }),
-    imagePlacement: 'left',
+    imagePlacement: (part.config.cardOrientation == 'horizontal') ? 'left' : 'top',
     href: getLink(urlContentSelector),
-    subTitle: part.config.content + ' / ' + moment(part.config.date).format('DD. MMMM YYYY').toLowerCase(),
+    subTitle: getSubtitle(part.config.content, part.config.date),
     title: part.config.title,
     preambleText: part.config.preamble,
     linkType: 'header'
@@ -41,6 +41,12 @@ function renderPart(request) {
 
   return React4xp.render(part, props, request)
 }
+
+/**
+ * get external/internal link from config
+ * @param {Object} urlContentSelector
+ * @return {string}
+ */
 
 function getLink(urlContentSelector) {
   if(urlContentSelector._selected == 'optionLink') {
@@ -51,4 +57,23 @@ function getLink(urlContentSelector) {
     return pageUrl({ id: urlContentSelector.optionXPContent.xpContent })
   }
   return ''
+}
+
+/**
+ * get subtitle situated on top of card (content / date)
+ * @param {string} content
+ * @param {string} date
+ * @return {string}
+ */
+
+function getSubtitle(content, date) {
+  if (content && date) {
+    return content + ' / ' + moment(date).format('DD. MMMM YYYY').toLowerCase()
+  } else if (content) {
+    return content
+  } else if (date) {
+    return moment(date).format('DD. MMMM YYYY').toLowerCase()
+  } else {
+    return ''
+  }
 }

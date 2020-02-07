@@ -1,4 +1,9 @@
-export interface RelatedSubjectBlockPartConfig {
+export interface ProfiledBoxPartConfig {
+  /**
+   * Orientering
+   */
+  cardOrientation?: "horizontal" | "vertical";
+
   /**
    * Bilde
    */
@@ -27,7 +32,7 @@ export interface RelatedSubjectBlockPartConfig {
   /**
    * Lenke
    */
-  urlContentSelector: {
+  TesturlContentSelector: {
     /**
      * Selected
      */
