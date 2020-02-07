@@ -1,7 +1,5 @@
 const {
-  getComponent,
-  pageUrl,
-  imageUrl
+  getComponent, pageUrl, imageUrl
 } = __non_webpack_require__('/lib/xp/portal')
 const {
   renderError
@@ -38,7 +36,6 @@ function renderPart(request) {
     preambleText: part.config.preamble,
     linkType: 'header'
   }
-
   return React4xp.render(part, props, request)
 }
 
@@ -49,12 +46,14 @@ function renderPart(request) {
  */
 
 function getLink(urlContentSelector) {
-  if(urlContentSelector._selected == 'optionLink') {
+  if (urlContentSelector._selected == 'optionLink') {
     return urlContentSelector.optionLink.link
   }
 
-  if(urlContentSelector._selected == 'optionXPContent') {
-    return pageUrl({ id: urlContentSelector.optionXPContent.xpContent })
+  if (urlContentSelector._selected == 'optionXPContent') {
+    return pageUrl({
+      id: urlContentSelector.optionXPContent.xpContent
+    })
   }
   return ''
 }

@@ -3,8 +3,8 @@
     <description>Emneblokk for artikler i faktasidene</description>
     <form>
         <input name="cardOrientation" type="RadioButton">
-            <label>Orientering</label>
-            <occurences minimum="0" maximum="1" />
+            <label>Retning</label>
+            <occurrences minimum="1" maximum="1"/>
             <config>
                 <option value="horizontal">Horisontal</option>
                 <option value="vertical">Vertikal</option>
@@ -13,29 +13,29 @@
         </input>
         <input name="image" type="ImageSelector">
             <label>Bilde</label>
-            <occurences minimum="1" maximum="1" />
+            <occurrences minimum="1" maximum="1"/>
             <config>
                 <allowPath>${site}</allowPath>
             </config>
         </input>
         <input name="content" type="TextLine">
             <label>Innhold</label>
-            <occurences minimum="0" maximum="1" />
+            <occurrences minimum="0" maximum="1"/>
             <default>Artikkel</default>
         </input>
         <input name="date" type="Date">
             <label>Dato</label>
-            <occurences minimum="0" maximum="1" />
+            <occurrences minimum="0" maximum="1"/>
             <default>now</default>
         </input>
         <input name="title" type="TextLine">
             <label>Tittel</label>
-            <occurences minimum="1" maximum="1" />
+            <occurrences minimum="1" maximum="1"/>
             <default>Her kommer tittelen</default>
         </input>
         <input name="preamble" type="TextArea">
             <label>Ingress</label>
-            <occurences minimum="1" maximum="1" />
+            <occurrences minimum="1" maximum="1"/>
             <default>Her kommer ingress</default>
         </input>
 
@@ -51,7 +51,7 @@
                     <items>
                         <input name="link" type="TextLine">
                             <label>Lenke</label>
-                            <occurences minimum="0" maximum="1" />
+                            <occurrences minimum="0" maximum="1"/>
                             <default>/</default>
                         </input>
                     </items>
@@ -62,7 +62,7 @@
                     <items>
                         <input name="xpContent" type="ContentSelector">
                             <label>Innhold i XP</label>
-                            <occurences minimum="0" maximum="1" />
+                            <occurrences minimum="0" maximum="1"/>
                             <config>
                                 <allowPath>${site}</allowPath>
                             </config>

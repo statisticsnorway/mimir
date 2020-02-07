@@ -1,13 +1,13 @@
 export interface ProfiledBoxPartConfig {
   /**
-   * Orientering
+   * Retning
    */
-  cardOrientation?: "horizontal" | "vertical";
+  cardOrientation: "horizontal" | "vertical";
 
   /**
    * Bilde
    */
-  image?: string;
+  image: string;
 
   /**
    * Innhold
@@ -22,12 +22,12 @@ export interface ProfiledBoxPartConfig {
   /**
    * Tittel
    */
-  title?: string;
+  title: string;
 
   /**
    * Ingress
    */
-  preamble?: string;
+  preamble: string;
 
   /**
    * Lenke
@@ -55,7 +55,7 @@ export interface ProfiledBoxPartConfig {
       /**
        * Innhold i XP
        */
-      xpContent?: Array<string>;
+      xpContent?: string;
     };
   };
 }

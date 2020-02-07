@@ -54,16 +54,17 @@ export function init() {
     })
 
     // Vis/skjul expand-lenke for å vise delemner i megamenyen
-    $('#main-menu').find('.topic').not('.active').hover(
-      function() {
-        $(this).addClass('hover')
-        $(this).find('.subtopics-toggle').css('position', 'static')
-      },
-      function() {
-        $(this).removeClass('hover')
-        $(this).find('.subtopics-toggle').css('position', 'absolute')
-      }
-    )
+    $('#main-menu').find('.topic').not('.active')
+      .hover(
+        function() {
+          $(this).addClass('hover')
+          $(this).find('.subtopics-toggle').css('position', 'static')
+        },
+        function() {
+          $(this).removeClass('hover')
+          $(this).find('.subtopics-toggle').css('position', 'absolute')
+        }
+      )
 
     // Vis/skjul megameny-delemner ved klikk på expand-lenken
     $('#main-menu').find('.subtopics-toggle').click(function(e) {
