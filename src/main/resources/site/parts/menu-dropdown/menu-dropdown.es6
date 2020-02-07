@@ -1,7 +1,15 @@
-const { getContent } = __non_webpack_require__( '/lib/xp/portal')
-const { render } = __non_webpack_require__( '/lib/thymeleaf')
-const { municipalsWithCounties, getMunicipality } = __non_webpack_require__( '/lib/klass/municipalities')
-const { pageMode } = __non_webpack_require__( '/lib/ssb/utils')
+const {
+  getContent, pageUrl
+} = __non_webpack_require__( '/lib/xp/portal')
+const {
+  render
+} = __non_webpack_require__( '/lib/thymeleaf')
+const {
+  municipalsWithCounties, getMunicipality
+} = __non_webpack_require__( '/lib/klass/municipalities')
+const {
+  pageMode
+} = __non_webpack_require__( '/lib/ssb/utils')
 
 const view = resolve('./menu-dropdown.html')
 
@@ -14,15 +22,19 @@ function renderPart(req) {
   const parsedMunicipalities = municipalsWithCounties()
 
   const page = getContent()
+  const baseUrl = pageUrl({
+    id: page._id
+  })
   const model = {
     mode: pageMode(req, page),
-    page: {
-      displayName: page.displayName,
-      _id: page._id
-    },
+    displayName: page.displayName,
+    baseUrl,
     municipality: getMunicipality(req),
     municipalities: parsedMunicipalities
   }
 
-  return { body: render(view, model), contentType: 'text/html' }
+  return {
+    body: render(view, model),
+    contentType: 'text/html'
+  }
 }

@@ -13,9 +13,11 @@ export function init() {
           const tooltip = $('#language-tooltip')
           if (tooltip.hasClass('d-none')) {
             tooltip.removeClass('d-none')
-            popper = new Popper(document.getElementById('change-language'), document.getElementById('language-tooltip'), {
-              placement: 'bottom'
-            })
+            const popper = new Popper(document.getElementById('change-language'),
+              document.getElementById('language-tooltip'),
+              {
+                placement: 'bottom'
+              })
           } else {
             tooltip.addClass('d-none')
           }

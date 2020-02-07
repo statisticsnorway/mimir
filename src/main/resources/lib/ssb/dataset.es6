@@ -113,7 +113,11 @@ export const parseDataWithMunicipality = (dataset, filterTarget, municipality, x
 
 const hasFilterData = (dataset, filterTarget, filter, xAxis) => {
   const filterIndex = dataset.id.indexOf(filterTarget)
-  const filterTargetCategoryIndex = dataset.Dimension(filterTarget).Category(filter).index
+  const filterTargetCategory = dataset.Dimension(filterTarget).Category(filter)
+  if(!filterTargetCategory){
+    return false
+  }
+  const filterTargetCategoryIndex = filterTargetCategory.index
   const xAxisIndex = dataset.id.indexOf(xAxis)
   const xCategories = dataset.Dimension(xAxis).Category()
   return xCategories.reduce((hasData, xCategory) => {

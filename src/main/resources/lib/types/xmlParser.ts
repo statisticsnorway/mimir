@@ -34,7 +34,7 @@ interface Table {
   class: string;
 }
 
-interface TableRow {
-  th: Array<string> | number;
-  td: Array<number> | string;
+export interface TableRow {
+  th: Array<string> | number | string;
+  td: Array<number> | number | string ;
 }

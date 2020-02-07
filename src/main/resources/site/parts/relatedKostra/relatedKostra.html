@@ -1,16 +1,11 @@
-<section class="xp-part container-fluid">
-    <div class="row d-flex align-items-center">
-        <div class="col-12 border-top-green text-center">
-          <h3 class="roboto-condensed position-relative" data-th-text="${title}" />
-          <div class="pt-3 position-relative" data-th-utext="${description}" />
-          <a class="mt-3 ssb-link profiled with-icon position-relative" data-th-href="${kostraLink}">
-               <div class="icon-wrapper">
-                  <i>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                  </i>
-               </div>
-               <span class="link-text" data-th-text="${kostraLinkText}" />
-           </a>
+<section class="container part-related-kostra">
+    <div class="xp-part row">
+        <div class="xp-region col-12">
+            <div class="border-top-green text-center">
+                <h2 class="roboto-condensed position-relative" data-th-text="${title}" />
+                <div class="pt-1 pb-2 position-relative" data-th-utext="${description}" />
+                <div id="kostraLink"></div>
+            </div>
         </div>
     </div>
 </section>
