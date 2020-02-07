@@ -60,6 +60,11 @@ export interface Highchart {
   titleCenter: boolean;
 
   /**
+   * Skjul tittel
+   */
+  hideTitle: boolean;
+
+  /**
    * Kildetabell for Highcharts-figur
    */
   htmlTable?: string;

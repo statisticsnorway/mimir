@@ -25,6 +25,11 @@ export interface KeyFigure {
   dataquery?: string;
 
   /**
+   * Vis som grønn boks
+   */
+  greenBox: boolean;
+
+  /**
    * Forklaring til nøkkeltallet
    */
   glossary?: string;

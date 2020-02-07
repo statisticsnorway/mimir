@@ -86,7 +86,9 @@
     <input name="titleCenter" type="CheckBox">
       <label>Midtstille tittel</label>
     </input>
-
+    <input name="hideTitle" type="CheckBox">
+      <label>Skjul tittel</label>
+    </input>
     <input name="htmlTable" type="HtmlArea">
       <label>Kildetabell for Highcharts-figur</label>
       <occurrences minimum="0" maximum="1"/>

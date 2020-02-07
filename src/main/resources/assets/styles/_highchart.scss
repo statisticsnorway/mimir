@@ -37,3 +37,6 @@
     height: calc(100vh - 50px - 50px - 92px);
   }
 }
+.highcharts-figure.hide-title .highcharts-title>tspan {
+  fill: transparent;
+}

@@ -48,6 +48,9 @@
         </input>
       </items>
     </item-set>
+    <input name="greenBox" type="CheckBox">
+      <label>Vis som grønn boks</label>
+    </input>
     <input name="glossary" type="ContentSelector">
       <label>Forklaring til nøkkeltallet</label>
       <occurrences minimum="0" maximum="1"/>
