@@ -126,14 +126,12 @@
     <mapping filter="/site/filters/router.js" order="10">
       <pattern>/.*</pattern>
     </mapping>
-    <mapping controller="/site/pages/default/default.js">
+    <!--mapping controller="/site/pages/default/default.js">
       <pattern>/kommunefakta/.*</pattern>
-    </mapping>
+    </mapping-->
     <mapping controller="/site/pages/default/default.js">
       <match>type:'portal:fragment'</match>
     </mapping>
-    <mapping controller="/site/pages/default/default.js">
-      <pattern>/pewpew/.*</pattern>
-    </mapping>
+
   </mappings>
 </site>
