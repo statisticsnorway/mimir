@@ -52,7 +52,7 @@
                         <input name="link" type="TextLine">
                             <label>Lenke</label>
                             <occurences minimum="0" maximum="1" />
-                            <default></default>
+                            <default>/</default>
                         </input>
                     </items>
                 </option>

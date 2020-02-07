@@ -32,7 +32,7 @@ export interface ProfiledBoxPartConfig {
   /**
    * Lenke
    */
-  TesturlContentSelector: {
+  urlContentSelector: {
     /**
      * Selected
      */
