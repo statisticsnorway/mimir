@@ -17,8 +17,6 @@ exports.filter = function(req, next) {
     .filter( (router) => isPathInRouterConfigSetup(currentPath, router.source))
     .filter( () => !get({key: currentPath}))
 
-  log.info('%s', JSON.stringify(routerConfig, null, 2))
-
   // check if any content exists
   if(routerConfig.length > 0 && req.mode === 'preview') {
     delete req.headers['Accept-Encoding']
