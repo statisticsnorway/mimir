@@ -5,7 +5,7 @@
   </script>
   <div class="row position-relative">
     <div class="col-12">
-      <figure data-th-fragment="graph" class="highcharts-figure mb-0">
+      <figure data-th-fragment="graph" class="highcharts-figure mb-0" data-th-classappend="${highchart.hideTitle == true ? 'hide-title' : ''}">
         <div data-th-id="highcharts- + ${highchart.contentKey}"
           class="highcharts-canvas"
           data-th-attr="data-contentkey=${highchart.contentKey},

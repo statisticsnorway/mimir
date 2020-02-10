@@ -18,4 +18,39 @@ export interface SiteConfig {
    * Standard kommune for å vise i "preview" mode
    */
   defaultMunicipality: string;
+
+  /**
+   * Velg hvilken kommuner det gjelder her.
+   */
+  defaultMunicipality2?: string;
+
+  /**
+   * Språk instillinger
+   */
+  language: Array<{
+    /**
+     * Språktittel (brukt til lenke i header)
+     */
+    label: string;
+
+    /**
+     * Språkkode (f.eks. "en", "no")
+     */
+    code: string;
+
+    /**
+     * Språklenke: url-stien til språkets "hjemmeside"
+     */
+    link?: string;
+
+    /**
+     * Språk tekst/fraser
+     */
+    phrases: "norwegian" | "english";
+
+    /**
+     * Språkets "Hjem"-side
+     */
+    homePageId?: string;
+  }>;
 }
