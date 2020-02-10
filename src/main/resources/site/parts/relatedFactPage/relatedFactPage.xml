@@ -1,0 +1,19 @@
+<part>
+  <display-name>Relatert bildeboks</display-name>
+  <form>
+    <input type="TextLine" name="title">
+      <label>Tittel</label>
+      <occurrences minimum="0" maximum="1"/>
+    </input>
+    <input name="itemList" type="ContentSelector">
+      <label>Innholdsliste</label>
+      <occurrences minimum="0" maximum="0"/>
+      <config>
+        <allowPath>${site}</allowPath>
+        <allowType>folder</allowType>
+        <treeMode>true</treeMode>
+        <description>Henter alt innhold i mappen og lager lenker av de.</description>
+      </config>
+    </input>
+  </form>
+</part>
