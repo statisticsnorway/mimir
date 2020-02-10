@@ -109,11 +109,13 @@ export function init() {
     $('#input-query-municipality').attr({
       'data-display': 'static',
       'data-toggle': 'dropdown',
+      'role': 'button',
       'aria-haspopup': 'true',
       'aria-expanded': 'false',
       'autocomplete': ''
     })
 
+    // Moves municipality-list inside the same wrapper than the input field is in
     $('#municipality-list').appendTo('.input-wrapper')
   })
 }

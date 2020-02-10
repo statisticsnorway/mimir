@@ -11,8 +11,6 @@ export function init() {
     const elements = dropdown.find('a')
     const submit = el.nextElementSibling
 
-    console.log(dropdown)
-
     dropdown.css('max-width', $(el).outerWidth()) && $(window).resize(() => dropdown.css('max-width', $(el).outerWidth()))
 
     function toggleDropdown() {
