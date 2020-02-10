@@ -34,13 +34,15 @@ function renderPart(req) {
     id: page._id
   })
 
+  const searchBarText = 'Søk på kommune'
+
   // Input field react object for sticky menu
   const inputStickyMenu = new React4xp('Input')
     .setProps({
       id: 'input-query-municipality',
-      ariaLabel: 'Søk på kommune', /* TODO: legg til i phrases og hent det derfra istedet */
+      ariaLabel: searchBarText,
       searchField: true,
-      placeholder: 'Søk på kommune'
+      placeholder: searchBarText
     })
     .setId('inputStickyMenu')
 

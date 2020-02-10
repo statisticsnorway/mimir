@@ -7,12 +7,11 @@ import 'bootstrap/js/dist/dropdown'
 // Dependencies: jQuery and Bootstrap
 export function init() {
   $('#input-query-municipality').each((i, el) => {
-    //const dropdown = $(el).parent().find('.dropdown-menu')
     const dropdown = $('#municipality-list')
     const elements = dropdown.find('a')
     const submit = el.nextElementSibling
 
-    console.log(dropdown, elements, submit)
+    console.log(dropdown)
 
     dropdown.css('max-width', $(el).outerWidth()) && $(window).resize(() => dropdown.css('max-width', $(el).outerWidth()))
 
