@@ -7,11 +7,61 @@
   		<config>
     		<option value="white">Hvit</option> 
     		<option value="grey">Grå</option>
-        </config>
+      </config>
       <default>white</default> 
     </input>
+    <item-set name="regions">
+      <label>Region</label> 
+      <occurrences minimum="1" maximum="15"/> 
+      <items>
+        <input name="regionDisplayType" type="RadioButton">
+          <label>Visningstype</label>
+          <occurrences minimum="1" maximum="1"/> 
+          <config>
+            <option value="full">Full bredde</option> 
+            <option value="card">Kort</option>
+          </config>
+        </input>
+        <input name="region" type="ComboBox">
+          <label>Region</label>
+          <occurrences minimum="1" maximum="1"/>
+          <config>
+            <option value="row1">Rad 1</option> 
+            <option value="row2">Rad 2</option> 
+            <option value="row3">Rad 3</option> 
+            <option value="row4">Rad 4</option> 
+            <option value="row5">Rad 5</option> 
+            <option value="row6">Rad 6</option> 
+            <option value="row7">Rad 7</option> 
+            <option value="row8">Rad 8</option> 
+            <option value="row9">Rad 9</option> 
+            <option value="row10">Rad 10</option> 
+            <option value="row11">Rad 11</option> 
+            <option value="row12">Rad 12</option> 
+            <option value="row13">Rad 13</option> 
+            <option value="row14">Rad 14</option> 
+            <option value="row15">Rad 15</option> 
+          </config>
+        </input>
+      </items>
+    </item-set>
   </form>
   <regions>
+    <region name="row1"/>
+    <region name="row2"/>
+    <region name="row3"/>
+    <region name="row4"/>
+    <region name="row5"/>
+    <region name="row6"/>
+    <region name="row7"/>
+    <region name="row8"/>
+    <region name="row9"/>
+    <region name="row10"/>
+    <region name="row11"/>
+    <region name="row12"/>
+    <region name="row13"/>
+    <region name="row14"/>
+    <region name="row15"/>
     <region name="main"/>
   </regions>
 </page>

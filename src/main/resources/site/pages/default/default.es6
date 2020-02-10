@@ -1,8 +1,7 @@
 const {
   getContent,
   processHtml,
-  assetUrl,
-  pageUrl
+  assetUrl
 } = __non_webpack_require__( '/lib/xp/portal')
 const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
 const {
@@ -18,6 +17,7 @@ const {
   getMunicipality
 } = __non_webpack_require__( '/lib/klass/municipalities')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+const util = __non_webpack_require__( '/lib/util')
 
 const version = '%%VERSION%%'
 const partsWithPreview = [ // Parts that has preview
@@ -41,12 +41,17 @@ exports.get = function(req) {
   const page = getContent()
   const mode = pageMode(req, page)
   const isFragment = page.type === 'portal:fragment'
-  let regions = null
+  let regions = {}
+  let configRegions = []
   if (isFragment) {
-    regions = page.fragment && page.fragment.regions ? page.fragment.regions : null
+    regions = page.fragment && page.fragment.regions ? page.fragment.regions : {}
   } else {
-    regions = page.page && page.page.regions ? page.page.regions : null
+    regions = page.page && page.page.regions ? page.page.regions : {}
+    configRegions = page.page && page.page.config && page.page.config.regions ? util.data.forceArray(page.page.config.regions) : []
   }
+  configRegions.forEach((configRegion) => {
+    configRegion.components = regions[configRegion.region].components
+  })
 
   const mainRegionComponents = regions && regions.main ? regions.main.components : []
 
@@ -113,6 +118,7 @@ exports.get = function(req) {
     config,
     page,
     mainRegionComponents,
+    configRegions,
     glossary,
     ingress,
     showIngress,
