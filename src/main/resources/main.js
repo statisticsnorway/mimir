@@ -3,7 +3,7 @@ const {
 } = __non_webpack_require__('/lib/dataquery')
 const content = __non_webpack_require__( '/lib/xp/content')
 const cron = __non_webpack_require__('/lib/cron')
-const router = __non_webpack_require__('/lib/router')()
+const { request } = __non_webpack_require__('/lib/http-client')
 
 const user = {
   login: 'su',
@@ -38,34 +38,13 @@ cron.schedule({
   callback: job,
   context: master
 })
-log.info('%s', JSON.stringify(exports, null, 3))
 
-exports.all = function(req){
-  log.info('== In main all blupp ==')
-  return router.dispatch(req);
-}
+log.info('Pinging instance to fire up react initiation')
+const result = request({
+  url: 'http://localhost:8080/site/default/master/mimir',
+  method: 'get'
+})
 
-router.get('/{.+}', function(req) {
-  log.info('testing router in main')
-  return {
-    body: "Test test",
-    contentType: "text/plain"
-  }
-})
-router.get('/test', function(req) {
-  log.info('testing router in main')
-  return {
-    body: "Test test",
-    contentType: "text/plain"
-  }
-})
-router.get('/mimir/test', function(req) {
-  log.info('testing router in main')
-  return {
-    body: "Test test",
-    contentType: "text/plain"
-  }
-})
 
 
 

@@ -29,5 +29,15 @@ export interface BannerPartConfig {
        */
       title?: string;
     };
+
+    /**
+     * Annet
+     */
+    general?: {
+      /**
+       * Tittel
+       */
+      generalTitle?: string;
+    };
   };
 }

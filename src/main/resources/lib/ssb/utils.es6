@@ -70,6 +70,7 @@ const addBreadcrumbs = (page, visitedPage, breadcrumbs = []) => {
 export const getBreadcrumbs = (page, municipality) => {
   const breadcrumbs = addBreadcrumbs(page, page)
   if (municipality) {
+    breadcrumbs.pop()
     breadcrumbs.push({
       text: municipality.displayName
     })

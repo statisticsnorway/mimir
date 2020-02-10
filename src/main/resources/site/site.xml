@@ -93,29 +93,34 @@
       </items>
     </field-set>
     <field-set>
-      <label>Språk</label>
+      <label>Nettsted routing (mappings)</label>
       <items>
         <item-set name="router">
-          <label>Nettsted ruting (Mappings)</label>
+          <label>Fra -> Til</label>
           <occurrences minimum="0" maximum="0"/>
           <items>
-            <input name="from" type="ContentSelector">
+            <input name="source" type="ContentSelector">
               <label>Fra - alt under dette innholdet vil bruke valgt konstroller under.</label>
-              <occurrences minimum="0" maximum="1"/>
+              <occurrences minimum="1" maximum="1"/>
               <config>
                 <treeMode>true</treeMode>
                 <showStatus>true</showStatus>
                 <hideToggleIcon>false</hideToggleIcon>
               </config>
             </input>
-            <input name="to" type="ContentSelector">
+            <input name="target" type="ContentSelector">
               <label>Til - hvilket innhold skal brukes som mål.</label>
-              <occurrences minimum="0" maximum="1"/>
+              <occurrences minimum="1" maximum="1"/>
               <config>
                 <treeMode>true</treeMode>
                 <showStatus>true</showStatus>
                 <hideToggleIcon>false</hideToggleIcon>
               </config>
+            </input>
+            <input name="pageTitle" type="TextLine">
+              <label>Sidetittel på rutede sider</label>
+              <occurrences minimum="0" maximum="1"/>
+              <default></default>
             </input>
           </items>
         </item-set>

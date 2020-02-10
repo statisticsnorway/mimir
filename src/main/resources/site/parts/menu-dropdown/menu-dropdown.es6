@@ -1,4 +1,4 @@
-const { getContent } = __non_webpack_require__( '/lib/xp/portal')
+const { getContent, getComponent, pageUrl, serviceUrl, assetUrl, getSiteConfig } = __non_webpack_require__( '/lib/xp/portal')
 const { render } = __non_webpack_require__( '/lib/thymeleaf')
 const { municipalsWithCounties, getMunicipality } = __non_webpack_require__( '/lib/klass/municipalities')
 const { pageMode } = __non_webpack_require__( '/lib/ssb/utils')
@@ -10,16 +10,34 @@ exports.get = (req) => renderPart(req)
 exports.preview = (req, id) => renderPart(req)
 
 function renderPart(req) {
-  // Caching this since it is a bit heavy
   const parsedMunicipalities = municipalsWithCounties()
+  const component = getComponent()
+  const siteConfig = getSiteConfig();
+  let mapFolder = '/mapdata'
+
+  if (typeof siteConfig.kommunefakta !=='undefined' && siteConfig.kommunefakta.mapfolder) {
+    mapFolder = siteConfig.kommunefakta.mapfolder
+  }
+
+  const dataPathAssetUrl = assetUrl( {
+    path: mapFolder
+  })
+
+  const dataServiceUrl = serviceUrl({
+    service: 'municipality'
+  })
 
   const page = getContent()
   const model = {
     mode: pageMode(req, page),
+    showMapLink: component.config.showMapLink,
+    dataPathAssetUrl,
+    dataServiceUrl,
     page: {
       displayName: page.displayName,
       _id: page._id
     },
+    basePage: component.config.basePage ? pageUrl({id: component.config.basePage }) : pageUrl({id: page._id}),
     municipality: getMunicipality(req),
     municipalities: parsedMunicipalities
   }

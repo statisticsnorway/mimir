@@ -10,5 +10,19 @@
         <allowType>menu-dropdown</allowType>
       </config>
     </input>
+    <input name="basePage" type="ContentSelector">
+      <label>Hovedside</label>
+      <occurrences minimum="1" maximum="1"/>
+      <config>
+        <allowPath>${site}</allowPath>
+      </config>
+    </input>
+    <input name="showMapLink" type="CheckBox">
+      <label>Vis lenke til kart</label>
+      <default>checked</default>
+      <config>
+        <alignment>right</alignment>
+      </config>
+    </input>
   </form>
 </part>

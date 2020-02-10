@@ -28,6 +28,14 @@
             </input>
           </items>
         </option>
+        <option name="general">
+          <label>Annet</label>
+          <items>
+            <input name="generalTitle" type="TextLine">
+              <label>Tittel</label>
+            </input>
+          </items>
+        </option>
       </options>
     </option-set>
   </form>
