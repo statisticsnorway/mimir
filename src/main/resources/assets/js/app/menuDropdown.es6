@@ -100,18 +100,5 @@ export function init() {
     if (w >= 960) { // Bootstrap lg grid
       $('#search-container').addClass('show')
     }
-
-    /* TODO: Make an own React component for this specific input field */
-    // Adds attributes into the component input field
-    $('#input-query-municipality').attr({
-      'data-display': 'static',
-      'data-toggle': 'dropdown',
-      'role': 'button',
-      'aria-haspopup': 'true',
-      'aria-expanded': 'false'
-    })
-
-    // Moves municipality-list inside the same wrapper as the input field
-    $('#municipality-list').appendTo('.input-wrapper')
   })
 }

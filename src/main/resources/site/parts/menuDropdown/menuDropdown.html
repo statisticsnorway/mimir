@@ -16,13 +16,6 @@
         <div id="search-container" data-th-if="${municipalities}" class="collapse">
           <div class="card ssb-dropdown">
             <div id="inputStickyMenu" />
-            <div id="municipality-list" class="dropdown-menu w-100 list-of-options" aria-labelledby="input-query-municipality">
-              <a class="dropdown-item a-plain option-list-element" data-th-each="municipality: ${municipalities}"
-                 data-th-href="${baseUrl} + ${municipality.path}"
-                 data-th-text="' ' + ${municipality.displayName}"
-                 data-th-attr="data-text=${municipality.displayName} + ' ' +  ${municipality.code}">Oslo
-              </a>
-          </div>
           </div>
         </div>
         <a data-th-if="${mode == 'municipality'}" id="js-show-map" class="show-map text-nowrap choose-map-a pl-3" href="#">
