@@ -42,7 +42,7 @@ function renderPart(req) {
   })
 
   // Input field react object for sticky menu
-  const inputStickyMenu = new React4xp('MenuDropdown')
+  const inputStickyMenu = new React4xp('Input')
     .setProps({
       id: 'input-query-municipality',
       ariaLabel: searchBarText,
