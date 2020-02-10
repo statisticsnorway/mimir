@@ -115,7 +115,7 @@ export function init() {
       'autocomplete': ''
     })
 
-    // Moves municipality-list inside the same wrapper than the input field is in
+    // Moves municipality-list inside the same wrapper as the input field
     $('#municipality-list').appendTo('.input-wrapper')
   })
 }

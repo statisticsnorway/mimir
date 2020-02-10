@@ -29,7 +29,7 @@ const partsWithPreview = [ // Parts that has preview
   `${app.name}:highchart`,
   `${app.name}:dashboard`,
   `${app.name}:key-figure`,
-  `${app.name}:menu-dropdown`,
+  `${app.name}:menuDropdown`,
   `${app.name}:statistikkbanken`,
   `${app.name}:dataquery`
 ]
@@ -39,7 +39,6 @@ const view = resolve('default.html')
 exports.get = function(req) {
   const ts = new Date().getTime()
   const page = getContent()
-  const mode = pageMode(req, page)
   const isFragment = page.type === 'portal:fragment'
   let regions = null
   if (isFragment) {
