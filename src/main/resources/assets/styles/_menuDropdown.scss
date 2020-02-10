@@ -98,8 +98,14 @@
     align-items: center;
     border: none;
   }
+  .choose-map-a {
+    all: unset;
+    span {
+      all: unset;
+    }
+  }
   @include media-breakpoint-down(md) {
-    .title-comtainer {
+    .title-container {
       margin-left: 10px;
     }
     .card {

@@ -101,18 +101,14 @@ export function init() {
       $('#search-container').addClass('show')
     }
 
-    // Removes global styling on the Choose map option
-    $('.part-menu-dropdown a').not('.dropdown-item').css('all', 'unset')
-    $('.choose-map-a').find('span').css('all', 'unset')
-
+    /* TODO: Make an own React component for this specific input field */
     // Adds attributes into the component input field
     $('#input-query-municipality').attr({
       'data-display': 'static',
       'data-toggle': 'dropdown',
       'role': 'button',
       'aria-haspopup': 'true',
-      'aria-expanded': 'false',
-      'autocomplete': ''
+      'aria-expanded': 'false'
     })
 
     // Moves municipality-list inside the same wrapper as the input field
