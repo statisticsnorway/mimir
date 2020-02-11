@@ -21,7 +21,7 @@ function renderPart(req, glossaryIds) {
     if (glossary) {
       glossaries.push({
         displayName: glossary.displayName,
-        ingress: glossary.data.ingress
+        text: glossary.data.text
       })
     }
   })

@@ -8,10 +8,10 @@ export const parseGlossaryContent = (key) => {
     const glossary = get({ key })
     if (glossary && glossary.type === contentTypeName) {
       return {
-        id: `glossary-${glossary._id}`,
+        id: glossary._id,
         href: portal.pageUrl({ id: glossary._id }),
         displayName: glossary.displayName,
-        ingress: glossary.data.ingress
+        text: glossary.data.text
       }
     }
     return null

@@ -7,6 +7,7 @@ import { PortalLibrary } from 'enonic-types/lib/portal'
 import { KeyFigure } from '../../site/content-types/key-figure/key-figure'
 import { Dataset } from '../../site/content-types/dataset/dataset'
 import { Dataquery } from '../../site/content-types/dataquery/dataquery'
+import { Glossary } from '../../site/content-types/glossary/glossary'
 import { MunicipalityWithCounty } from '../klass/municipalities'
 import { TbmlData, TableRow } from '../types/xmlParser'
 import { Dataset as JSDataset, Dimension, Category } from '../types/jsonstat-toolkit'
@@ -23,6 +24,9 @@ const {
 const {
   getDataSetWithDataQueryId
 } = __non_webpack_require__( '../ssb/dataset')
+const {
+    parseGlossaryContent
+} = __non_webpack_require__( '/lib/ssb/glossary')
 const {
   localizeTimePeriod
 } = __non_webpack_require__( '/lib/language')
@@ -60,7 +64,8 @@ export function parseKeyFigure(keyFigure: Content<KeyFigure>, municipality?: Mun
     time: undefined,
     size: keyFigure.data.size,
     title: keyFigure.displayName,
-    changes: undefined
+    changes: undefined,
+    glossary: parseGlossaryContent( keyFigure.data.glossary )
   }
 
   const dataQueryId: string | undefined = keyFigure.data.dataquery
@@ -88,7 +93,7 @@ export function parseKeyFigure(keyFigure: Content<KeyFigure>, municipality?: Mun
             // get value and label from json-stat data, filtering on municipality
             let municipalData: MunicipalData | null = getDataFromMunicipalityCode(ds, municipality.code, yAxisLabel, filterTarget)
             // not all municipals have data, so if its missing, try the old one
-            if ((!municipalData || (municipalData.value === null ||municipalData.value === 0)) && municipality.changes) {
+            if ((!municipalData || (municipalData.value === null || municipalData.value === 0)) && municipality.changes) {
               municipalData = getDataFromMunicipalityCode(ds, municipality.changes[0].oldCode, yAxisLabel, filterTarget)
             }
             if (municipalData && municipalData.value !== null) {
@@ -209,6 +214,7 @@ export interface KeyFigureView {
   title: string;
   time?: string;
   changes?: KeyFigureChanges;
+  glossary?: Glossary;
 }
 
 export interface KeyFigureChanges {

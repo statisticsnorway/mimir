@@ -107,6 +107,11 @@ function renderKeyFigure(keyFigures, part, municipality) {
 
   /** Render react **/
   const reactObjs = parsedKeyFigures.map((keyFigure) => {
+    let glossary = undefined
+    if(keyFigure.glossary != null) {
+      glossary = keyFigure.glossary.text
+    }
+
     const reactProps = {
       iconUrl: keyFigure.iconUrl,
       number: keyFigure.number,
@@ -115,7 +120,8 @@ function renderKeyFigure(keyFigures, part, municipality) {
       size: keyFigure.size,
       title: keyFigure.title,
       time: keyFigure.time,
-      changes: keyFigure.changes
+      changes: keyFigure.changes,
+      glossary: glossary
     }
 
     const keyFigureReact = new React4xp('KeyFigure')
@@ -123,15 +129,20 @@ function renderKeyFigure(keyFigures, part, municipality) {
   })
 
   let body = thymeleaf.render(view, model)
+  let pageContributions
 
   reactObjs.forEach((keyfigureReact) => {
     body = keyfigureReact.renderBody({
       body
     })
+    pageContributions = keyfigureReact.renderPageContributions({
+      pageContributions
+    })
   })
 
   return {
     body,
+    pageContributions,
     contentType: 'text/html'
   }
 }
