@@ -14,7 +14,9 @@
     "install:dev": "nsi",
     "install:prod": "npm install",
     "lint": "eslint --fix ./src --ext .es6 --ext .ts --ext .jsx",
-    "lint-dry": "eslint ./src --ext .es6 --ext .ts --ext .jsx"
+    "lint-dry": "eslint ./src --ext .es6 --ext .ts --ext .jsx",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run"
   },
   "repository": {
     "type": "git",
@@ -34,6 +36,7 @@
     "@typescript-eslint/eslint-plugin": "^2.11.0",
     "@typescript-eslint/parser": "^2.11.0",
     "babel-loader": "^8.0.6",
+    "cypress": "^4.0.1",
     "enonic-ts-codegen": "0.0.9",
     "enonic-types": "0.0.25",
     "eslint": "^6.7.1",

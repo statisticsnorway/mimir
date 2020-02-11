@@ -11,3 +11,4 @@ node_modules
 .enonic
 .DS_Store
 .project
+cypress/screenshots

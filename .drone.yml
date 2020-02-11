@@ -45,6 +45,40 @@ steps:
 ---
 kind: pipeline
 type: docker
+name: "Test Environment"
+# Deploy to test on pushes to master branch and merged pull requests
+trigger:
+  branch:
+    - test2
+  event:
+    include:
+      - push
+steps:
+  - name: build & test
+    image: enonic/enonic-ci:7.1-node
+    commands:
+      - /setup_sandbox.sh
+      - enonic project build
+  - name: deploy
+    image: enonic/enonic-ci:7.1-node
+    environment:
+      ENONIC_CLI_REMOTE_URL:
+        from_secret: ssb-xp7t-url
+      ENONIC_CLI_REMOTE_USER:
+        from_secret: ssb-xp7t-user
+      ENONIC_CLI_REMOTE_PASS:
+        from_secret: ssb-xp7t-pass
+    commands:
+      - enonic app install --file build/libs/*.jar
+  - name: test
+    image: cypress/base:7.1
+    depends_on:
+      - deploy
+    commands:
+      - npm run test:ci
+---
+kind: pipeline
+type: docker
 name: "QA Environment"
 # Deploy to qa on promoted builds
 trigger:
