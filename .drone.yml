@@ -45,7 +45,7 @@ steps:
 ---
 kind: pipeline
 type: docker
-name: "Test Environment"
+name: "Cypress Fun Activites"
 # Deploy to test on pushes to master branch and merged pull requests
 trigger:
   branch:
