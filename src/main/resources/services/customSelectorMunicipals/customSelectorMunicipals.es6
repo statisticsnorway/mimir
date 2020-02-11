@@ -1,4 +1,6 @@
-const { list, query } = __non_webpack_require__('/lib/klass/municipalities')
+const {
+  list, query
+} = __non_webpack_require__('/lib/klass/municipalities')
 
 exports.get = (req) => {
   const municipals = req.params.query ? query(req.params.query) : list(req.params.count)
