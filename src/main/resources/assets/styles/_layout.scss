@@ -18,8 +18,35 @@
 .layout-topic+.layout-topic {
   margin-top: 40px;
 }
-.preface-container + .container {
+.grey-triangle {
+  position: relative;
+  background-color: $ssb-dark-5;
+  height: 100px;
+  width: 100%;
+  margin: 0;
+
+  &:after{
+    top: 100px;
+    position: absolute;
+    content: "";
+    left: 0px;
+    right: 0px;
+    border-width: 33vw 49.6vw;
+    border-style: solid;
+    border-color: $ssb-dark-5 rgba(0,0,0,0) rgba(0,0,0,0) $ssb-dark-5;
+  }
+
+  @include media-breakpoint-down(md) {
+    min-height: 230px;
+
+    &:after {
+      visibility: hidden;
+    }
+  }
+}
+.grey-triangle + .container {
   margin-top: -50px;
+  position: relative;
 }
 .layout-topic {
   h2 {

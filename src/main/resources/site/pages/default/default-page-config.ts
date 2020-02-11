@@ -11,11 +11,16 @@ export interface DefaultPageConfig {
     /**
      * Visningstype
      */
-    regionDisplayType: "full" | "card";
+    view: "full" | "card";
 
     /**
      * Region
      */
-    region: "row1" | "row2" | "row3" | "row4" | "row5" | "row6" | "row7" | "row8" | "row9" | "row10" | "row11" | "row12" | "row13" | "row14" | "row15";
+    region: "Rad_A" | "Rad_B" | "Rad_C" | "Rad_D" | "Rad_E" | "Rad_F" | "Rad_G" | "Rad_H" | "Rad_I" | "Rad_J" | "Rad_K" | "Rad_L" | "Rad_M" | "Rad_N" | "Rad_O";
+
+    /**
+     * Med mørk og skrå bakgrunn
+     */
+    showGreyTriangle: boolean;
   }>;
 }

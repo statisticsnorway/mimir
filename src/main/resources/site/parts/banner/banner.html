@@ -1,8 +1,8 @@
-<section class="xp-part part-banner position-relative clearfix opacity-0" data-th-classappend="${pageType._selected} == 'faktaside' ? 'factpage-banner' : ''">
+<section class="xp-part part-banner position-relative clearfix opacity-0 col-12" data-th-classappend="${pageType._selected} == 'faktaside' ? 'factpage-banner' : ''">
   <img data-th-if="${part.config.image}" class="position-absolute w-100 h-100 d-print-none" data-th-attr="data-url=${portal.imageUrl({'_id=' + part.config.image, '_scale=block-1400-400'})}"/>
   <div class="container h-100 d-flex align-items-center">
     <div class="row">
-      <div class="col-12" data-th-if="${mode == 'municipality'}">
+      <div class="col-12" data-th-if="${pageType._selected == 'kommunefakta'}">
         <div class="subtitle roboto-bold position-relative" data-th-text="${page.displayName}">Kommunefakta</div>
         <h1 class="mt-0 pt-0 position-relative" data-th-if="${municipality}" data-th-text="${municipality.displayName} +' (' + ${municipality.county.name} +')'">Navn på kommune</h1>
       </div>

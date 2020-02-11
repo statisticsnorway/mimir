@@ -46,11 +46,14 @@ exports.get = function(req) {
   if (isFragment) {
     regions = page.fragment && page.fragment.regions ? page.fragment.regions : {}
   } else {
-    regions = page.page && page.page.regions ? page.page.regions : {}
-    configRegions = page.page && page.page.config && page.page.config.regions ? util.data.forceArray(page.page.config.regions) : []
+    const pageData = page.page
+    if (pageData) {
+      regions = pageData.regions ? pageData.regions : {}
+      configRegions = pageData.config && pageData.config.regions ? util.data.forceArray(pageData.config.regions) : []
+    }
   }
   configRegions.forEach((configRegion) => {
-    configRegion.components = regions[configRegion.region].components
+    configRegion.components = regions[configRegion.region] ? util.data.forceArray(regions[configRegion.region].components) : []
   })
 
   const mainRegionComponents = regions && regions.main ? regions.main.components : []
