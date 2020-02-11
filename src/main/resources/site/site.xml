@@ -100,14 +100,18 @@
       </items>
     </item-set>
     <field-set>
-      <label>Nettsted routing (mappings)</label>
+      <label>Nettstedrouting (mappings)</label>
       <items>
         <item-set name="router">
-          <label>Fra -> Til</label>
+          <label>Routing</label>
           <occurrences minimum="0" maximum="0"/>
           <items>
             <input name="source" type="ContentSelector">
-              <label>Fra - alt under dette innholdet vil bruke valgt konstroller under.</label>
+              <label>Fra</label>
+              <help-text>
+                Alle spørringer etter denne kontrolleren vil bli sendt til valgt kontroller under.
+                Så fremt det ikke finnes et eskisterende innhold.
+              </help-text>
               <occurrences minimum="1" maximum="1"/>
               <config>
                   <treeMode>true</treeMode>
@@ -116,7 +120,8 @@
               </config>
             </input>
             <input name="target" type="ContentSelector">
-              <label>Til - hvilket innhold skal brukes som mål.</label>
+              <label>Til</label>
+              <help-text>Hvor spørringene skal lande.</help-text>
               <occurrences minimum="1" maximum="1"/>
               <config>
                   <treeMode>true</treeMode>

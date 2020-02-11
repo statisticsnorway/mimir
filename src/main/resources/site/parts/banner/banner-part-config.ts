@@ -5,7 +5,7 @@ export interface BannerPartConfig {
   image?: string;
 
   /**
-   * Hvor skal banneren brukes?
+   * Hvor skal banneret brukes?
    */
   pageType: {
     /**
