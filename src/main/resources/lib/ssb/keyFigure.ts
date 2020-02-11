@@ -7,7 +7,6 @@ import { PortalLibrary } from 'enonic-types/lib/portal'
 import { KeyFigure } from '../../site/content-types/key-figure/key-figure'
 import { Dataset } from '../../site/content-types/dataset/dataset'
 import { Dataquery } from '../../site/content-types/dataquery/dataquery'
-import { Glossary } from '../../site/content-types/glossary/glossary'
 import { MunicipalityWithCounty } from '../klass/municipalities'
 import { TbmlData, TableRow } from '../types/xmlParser'
 import { Dataset as JSDataset, Dimension, Category } from '../types/jsonstat-toolkit'
@@ -24,9 +23,6 @@ const {
 const {
   getDataSetWithDataQueryId
 } = __non_webpack_require__( '../ssb/dataset')
-const {
-    parseGlossaryContent
-} = __non_webpack_require__( '/lib/ssb/glossary')
 const {
   localizeTimePeriod
 } = __non_webpack_require__( '/lib/language')
@@ -65,7 +61,7 @@ export function parseKeyFigure(keyFigure: Content<KeyFigure>, municipality?: Mun
     size: keyFigure.data.size,
     title: keyFigure.displayName,
     changes: undefined,
-    glossary: parseGlossaryContent( keyFigure.data.glossary )
+    glossary: keyFigure.data.glossary
   }
 
   const dataQueryId: string | undefined = keyFigure.data.dataquery
@@ -214,7 +210,7 @@ export interface KeyFigureView {
   title: string;
   time?: string;
   changes?: KeyFigureChanges;
-  glossary?: Glossary;
+  glossary?: string;
 }
 
 export interface KeyFigureChanges {

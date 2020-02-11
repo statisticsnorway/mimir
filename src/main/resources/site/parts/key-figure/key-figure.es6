@@ -12,6 +12,9 @@ const {
 const {
   getComponent, getSiteConfig, getContent
 } = __non_webpack_require__( '/lib/xp/portal')
+const {
+  get
+} = __non_webpack_require__( '/lib/xp/content')
 const thymeleaf = __non_webpack_require__('/lib/thymeleaf')
 const {
   data
@@ -107,9 +110,9 @@ function renderKeyFigure(keyFigures, part, municipality) {
 
   /** Render react **/
   const reactObjs = parsedKeyFigures.map((keyFigure) => {
-    let glossary = undefined
+    let glossaryText = ''
     if(keyFigure.glossary != null) {
-      glossary = keyFigure.glossary.text
+      glossaryText = get({key: keyFigure.glossary}).data.text
     }
 
     const reactProps = {
@@ -121,7 +124,7 @@ function renderKeyFigure(keyFigures, part, municipality) {
       title: keyFigure.title,
       time: keyFigure.time,
       changes: keyFigure.changes,
-      glossary: glossary
+      glossary: glossaryText
     }
 
     const keyFigureReact = new React4xp('KeyFigure')
