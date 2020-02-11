@@ -10,7 +10,7 @@ export interface MenuDropdownPartConfig {
   basePage: string;
 
   /**
-   * Vis lenke til kart
+   * Kommunefakta versjon
    */
-  showMapLink: boolean;
+  modeMunicipality: boolean;
 }

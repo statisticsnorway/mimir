@@ -17,9 +17,8 @@
         <allowPath>${site}</allowPath>
       </config>
     </input>
-    <input name="showMapLink" type="CheckBox">
-      <label>Vis lenke til kart</label>
-      <default>checked</default>
+    <input name="modeMunicipality" type="CheckBox">
+      <label>Kommunefakta versjon</label>
       <config>
         <alignment>right</alignment>
       </config>

@@ -50,7 +50,7 @@ function renderPart(req) {
 
   const model = {
     mode: pageMode(req, page),
-    showMapLink: component.config.showMapLink,
+    modeMunicipality: component.config.modeMunicipality,
     displayName: page.displayName,
     baseUrl,
     dataPathAssetUrl,
@@ -62,7 +62,7 @@ function renderPart(req) {
     municipality: getMunicipality(req),
     municipalities: parsedMunicipalities
   }
-
+  
   return {
     body: render(view, model),
     contentType: 'text/html'

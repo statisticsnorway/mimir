@@ -3,18 +3,20 @@
     <div class="container position-relative">
       <div class="d-flex flex-row align-items-center">
         <div class="d-flex align-items-center mr-auto title-container">
-          <div data-th-class="${mode} == 'municipality' ? 'opacity-zero'">
-            <div class="roboto-plain subtitle d-none d-md-block" data-th-if="${mode == 'municipality'}" data-th-text="${displayName}"></div>
-            <div class="roboto-bold municipality" data-th-if="${mode == 'municipality'}">
+          <div data-th-class="${modeMunicipality} ? 'opacity-zero'">
+            <div class="roboto-plain subtitle d-none d-md-block"
+                 data-th-if="${modeMunicipality}" data-th-text="${displayName}">
+            </div>
+            <div class="roboto-bold municipality" data-th-if="${modeMunicipality}">
               <div data-th-if="${municipality}" data-th-text="${municipality.displayName}" data-th-remove="tag">Kommune</div>
               <div data-th-if="${municipality}" data-th-text="'('+${municipality.county.name}+')'" data-th-remove="tag">Fylke</div>
             </div>
-            <div class="roboto-bold municipality" data-th-unless="${mode == 'municipality'}">Velg kommune i kart</div>
+            <div class="roboto-bold municipality" data-th-unless="${modeMunicipality}">Velg kommune i kart</div>
           </div>
         </div>
         <div id="search-container" data-th-if="${municipalities}" class="collapse">
           <div class="card ssb-dropdown">
-            <div data-th-if="${mode == 'municipality'}" class="roboto-bold text-nowrap pr-4">Bytt kommune:</div>
+            <div data-th-if="${modeMunicipality}" class="roboto-bold text-nowrap pr-4">Bytt kommune:</div>
             <div class="ssb-input">
               <input id="input-query-municipality"
                      class="d-block"
@@ -50,7 +52,7 @@
             </div>
           </div>
         </div>
-        <a data-th-if="${showMapLink}"
+        <a data-th-if="${modeMunicipality}"
            id="js-show-map"
            class="show-map text-nowrap"
            href="#">
@@ -114,7 +116,7 @@
     </div>
   </section>
 </div>
-<div data-th-if="${showMapLink}">
+<div data-th-if="${modeMunicipality}">
   <div class="container js-part-map d-none">
     <section class="xp-part part-map">
       <div id="map"
