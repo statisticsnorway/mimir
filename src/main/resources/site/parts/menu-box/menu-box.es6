@@ -17,16 +17,23 @@ exports.preview = function(req, id) {
 function renderPart(req, menuBoxId) {
   let menus
   if (menuBoxId) {
-    const menuBox = content.get({ key: menuBoxId })
+    const menuBox = content.get({
+      key: menuBoxId
+    })
     if (menuBox && menuBox.data.menu) {
       const menuConfigs = menuBox.data.menu ? util.data.forceArray(menuBox.data.menu) : []
       menus = buildMenu(menuConfigs)
     }
   }
-  const model = { menus }
+  const model = {
+    menus
+  }
   const body = thymeleaf.render(view, model)
 
-  return { body, contentType: 'text/html' }
+  return {
+    body,
+    contentType: 'text/html'
+  }
 }
 
 /**
@@ -65,7 +72,9 @@ function getHref(menuConfig) {
   if (menuConfig.link) {
     return menuConfig.link
   } else if (menuConfig.content) {
-    return portal.pageUrl({ id: menuConfig.content })
+    return portal.pageUrl({
+      id: menuConfig.content
+    })
   }
   return ''
 }

@@ -28,5 +28,7 @@ exports.get = function(req) {
 
   const body = thymeleaf.render(view, model)
 
-  return { body }
+  return {
+    body
+  }
 }

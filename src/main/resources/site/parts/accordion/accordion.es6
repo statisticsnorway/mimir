@@ -16,20 +16,29 @@ exports.preview = (req, id) => renderPart(req, [id])
 function renderPart(req, accordionIds) {
   const accordions = []
   accordionIds.forEach((key) => {
-    const accordion = content.get({ key })
+    const accordion = content.get({
+      key
+    })
     if (accordion) {
       const items = accordion.data.items ? util.data.forceArray(accordion.data.items) : []
       accordions.push({
         id: accordion._id,
-        body: portal.processHtml({ value: accordion.data.body }),
+        body: portal.processHtml({
+          value: accordion.data.body
+        }),
         open: accordion.data.open,
         items
       })
     }
   })
 
-  const model = { accordions }
+  const model = {
+    accordions
+  }
   const body = thymeleaf.render(view, model)
 
-  return { body, contentType: 'text/html' }
+  return {
+    body,
+    contentType: 'text/html'
+  }
 }

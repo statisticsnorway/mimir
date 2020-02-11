@@ -10,7 +10,12 @@ export function init() {
 
     function resizeImages() {
       $('.part-banner img').each(function(i, image) {
-        const view = { height: $(image).parent().height().toFixed(0), width: $(image).parent().width().toFixed(0) }
+        const view = {
+          height: $(image).parent().height()
+            .toFixed(0),
+          width: $(image).parent().width()
+            .toFixed(0)
+        }
         resize(image, view.width, view.height)
       })
 
