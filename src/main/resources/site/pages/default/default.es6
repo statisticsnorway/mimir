@@ -56,7 +56,7 @@ exports.get = function(req) {
     configRegion.components = regions[configRegion.region] ? util.data.forceArray(regions[configRegion.region].components) : []
   })
 
-  const mainRegionComponents = regions && regions.main ? regions.main.components : []
+  const mainRegionComponents = regions && regions.main && regions.main.components.length > 0 ? regions.main.components : undefined
 
   const glossary = glossaryLib.process(page.data.ingress, regions)
   const ingress = processHtml({
