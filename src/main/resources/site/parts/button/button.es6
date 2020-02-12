@@ -18,9 +18,13 @@ exports.preview = function(req, id) {
 function renderPart(req, buttonIds) {
   const buttons = []
   buttonIds.forEach((key) => {
-    const button = content.get({ key })
+    const button = content.get({
+      key
+    })
     if (button && button.data.link) {
-      const target = content.get({ key: button.data.link })
+      const target = content.get({
+        key: button.data.link
+      })
       if (target) {
         const href = getHref(target)
         buttons.push({
@@ -31,9 +35,14 @@ function renderPart(req, buttonIds) {
     }
   })
 
-  const model = { buttons }
+  const model = {
+    buttons
+  }
   const body = thymeleaf.render(view, model)
-  return { body, contentType: 'text/html' }
+  return {
+    body,
+    contentType: 'text/html'
+  }
 }
 
 /**

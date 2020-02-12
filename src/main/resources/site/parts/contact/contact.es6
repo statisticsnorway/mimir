@@ -12,7 +12,9 @@ exports.get = function(req) {
   part.config.contacts = part.config.contacts && util.data.forceArray(part.config.contacts) || []
 
   part.config.contacts.map((key) => {
-    const contactSingle = content.get({ key })
+    const contactSingle = content.get({
+      key
+    })
     contactIdList.push(contactSingle)
   })
 
@@ -26,8 +28,14 @@ exports.get = function(req) {
 
   const contacts = chunkArray(contactIdList, WIDTH)
 
-  const model = { contacts, part }
+  const model = {
+    contacts,
+    part
+  }
   const body = thymeleaf.render(view, model)
 
-  return { body, contentType: 'text/html' }
+  return {
+    body,
+    contentType: 'text/html'
+  }
 }

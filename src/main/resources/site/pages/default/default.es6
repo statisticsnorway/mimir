@@ -29,7 +29,7 @@ const partsWithPreview = [ // Parts that has preview
   `${app.name}:highchart`,
   `${app.name}:dashboard`,
   `${app.name}:key-figure`,
-  `${app.name}:menu-dropdown`,
+  `${app.name}:menuDropdown`,
   `${app.name}:statistikkbanken`,
   `${app.name}:dataquery`
 ]
@@ -124,6 +124,7 @@ exports.get = function(req) {
     configRegions,
     glossary,
     ingress,
+    mode,
     showIngress,
     preview,
     bodyClasses: bodyClasses.join(' '),
