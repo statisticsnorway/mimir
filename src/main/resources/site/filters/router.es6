@@ -21,7 +21,7 @@ exports.filter = function(req, next) {
 
   // Check if current path is in any siteconfigs router configuration
   const routerConfig = routerConfigs
-    .filter( (router) => isPathInRouterConfigSetup(currentPath, router.source))
+    .filter( (router) => router !== undefined && isPathInRouterConfigSetup(currentPath, router.source))
     .filter( () => !get({
       key: currentPath
     }))
