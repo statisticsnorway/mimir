@@ -39,7 +39,6 @@ export function init() {
           animate = true
 
           const pos = $(el).offset()
-
           $('html').stop().animate({
             scrollTop: pos.top
           }, 400, 'swing', () => {
@@ -75,6 +74,19 @@ export function init() {
         map.addClass('d-none').parent().removeClass('map-container') &&
 
         $('#js-show-map').removeClass('active')
+
+        const stickyMenu = document.getElementById('sticky-menu')
+        if (stickyMenu) {
+          const boundingRect = stickyMenu.getBoundingClientRect()
+          const stickyTop = boundingRect.top
+          if (stickyTop < 0) {
+            stickyMenu.style.height = `${boundingRect.height}px`
+            $(el).addClass('fixed-top')
+          } else if (stickyTop > 0) {
+            stickyMenu.style.height = null
+            $(el).removeClass('fixed-top')
+          }
+        }
       })
     })
 
@@ -102,7 +114,7 @@ export function init() {
     }
 
     // Adds attributes into the component input field
-  $('#input-query-municipality').attr({
+    $('#input-query-municipality').attr({
       'data-display': 'static',
       'data-toggle': 'dropdown',
       'role': 'button',

@@ -1,8 +1,7 @@
 const {
   getContent,
   processHtml,
-  assetUrl,
-  pageUrl
+  assetUrl
 } = __non_webpack_require__( '/lib/xp/portal')
 const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
 const {
@@ -18,6 +17,7 @@ const {
   getMunicipality
 } = __non_webpack_require__( '/lib/klass/municipalities')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+const util = __non_webpack_require__( '/lib/util')
 
 const version = '%%VERSION%%'
 const partsWithPreview = [ // Parts that has preview
@@ -39,17 +39,24 @@ const view = resolve('default.html')
 exports.get = function(req) {
   const ts = new Date().getTime()
   const page = getContent()
-  const isFragment = page.type === 'portal:fragment'
-  let regions = null
-  if (isFragment) {
-    regions = page.fragment && page.fragment.regions ? page.fragment.regions : null
-  } else {
-    regions = page.page && page.page.regions ? page.page.regions : null
-  }
-  const mainRegion = isFragment ? regions && regions.main : regions && regions.main
-
   const mode = pageMode(req, page)
-  const mainRegionComponents = mapComponents(mainRegion, mode)
+  const isFragment = page.type === 'portal:fragment'
+  let regions = {}
+  let configRegions = []
+  if (isFragment) {
+    regions = page.fragment && page.fragment.regions ? page.fragment.regions : {}
+  } else {
+    const pageData = page.page
+    if (pageData) {
+      regions = pageData.regions ? pageData.regions : {}
+      configRegions = pageData.config && pageData.config.regions ? util.data.forceArray(pageData.config.regions) : []
+    }
+  }
+  configRegions.forEach((configRegion) => {
+    configRegion.components = regions[configRegion.region] ? util.data.forceArray(regions[configRegion.region].components) : []
+  })
+
+  const mainRegionComponents = regions && regions.main && regions.main.components.length > 0 ? regions.main.components : undefined
 
   const glossary = glossaryLib.process(page.data.ingress, regions)
   const ingress = processHtml({
@@ -113,8 +120,8 @@ exports.get = function(req) {
     version,
     config,
     page,
-    mainRegion,
     mainRegionComponents,
+    configRegions,
     glossary,
     ingress,
     mode,
@@ -164,28 +171,4 @@ exports.get = function(req) {
     body,
     pageContributions
   }
-}
-
-function mapComponents(mainRegion, mode) {
-  if (mainRegion && mainRegion.components) {
-    return mainRegion.components.map((component) => {
-      const descriptor = component.descriptor
-      const classes = []
-      if (descriptor !== 'mimir:banner' && descriptor !== 'mimir:menuDropdown' && descriptor !== 'mimir:map' ) {
-        classes.push('container')
-      }
-      if (descriptor === 'mimir:menuDropdown' && mode === 'municipality') {
-        classes.push('sticky-top')
-      }
-      if (descriptor === 'mimir:preface') {
-        classes.push('preface-container')
-      }
-      return {
-        path: component.path,
-        removeWrapDiv: descriptor === 'mimir:banner',
-        classes: classes.join(' ')
-      }
-    })
-  }
-  return []
 }
