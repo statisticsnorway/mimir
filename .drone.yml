@@ -58,7 +58,7 @@ steps:
     image: enonic/enonic-ci:7.1-node
     commands:
       - /setup_sandbox.sh
-      - enonic project build
+      - enonic project build --scan
   - name: deploy
     image: enonic/enonic-ci:7.1-node
     environment:
