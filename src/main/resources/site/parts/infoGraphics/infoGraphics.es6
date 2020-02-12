@@ -2,7 +2,7 @@ const {
   data
 } = __non_webpack_require__( '/lib/util')
 const {
-  getComponent, imageUrl
+  getComponent, imageUrl, pageUrl
 } = __non_webpack_require__( '/lib/xp/portal')
 const {
   render
@@ -19,7 +19,7 @@ const view = resolve('./infoGraphics.html')
 
 exports.get = function(req) {
   try {
-    return renderPart()
+    return renderPart(req)
   } catch (e) {
     return renderError('Error in part', e)
   }
@@ -27,9 +27,9 @@ exports.get = function(req) {
 
 exports.preview = (req) => renderPart(req)
 
-function renderPart() {
+function renderPart(req) {
   const part = getComponent()
-  const selectedSource = data.forceArray(part.config.checkOptionSet)
+  const sourceConfig = data.forceArray(part.config.checkOptionSet)
 
   const source = i18nLib.localize({
     key: 'source'
@@ -48,13 +48,16 @@ function renderPart() {
     scale: 'max(850)'
   })
 
+  // Retrieves the array where the sources are stored
+  const sources = getSources(sourceConfig)
+
   const model = {
     title: part.config.title,
     altText: part.config.altText,
     image: part.config.image,
     imageSrc: imageSrc,
     footnote: part.config.footNote,
-    selectedSource,
+    sources,
     longDesc,
     source,
     descriptionInfographics
@@ -66,4 +69,37 @@ function renderPart() {
     body,
     contentType: 'text/html'
   }
+}
+
+/**
+ *
+ * @param {Object} sourceConfig
+ * @return {array} a list of sources, text and url
+ */
+function getSources(sourceConfig) {
+  const sources = []
+
+  sourceConfig.forEach((selectedSource) => {
+    let sourceText
+    let sourceUrl
+
+    if (selectedSource._selected == 'urlSource') {
+      sourceText = selectedSource.urlSource.urlText
+      sourceUrl = selectedSource.urlSource.url
+    }
+
+    if (selectedSource._selected == 'relatedSource') {
+      sourceText = selectedSource.relatedSource.urlText
+      sourceUrl = pageUrl({
+        id: selectedSource.relatedSource.sourceSelector
+      })
+    }
+
+    sources.push({
+      urlText: sourceText,
+      url: sourceUrl
+    })
+  })
+
+  return sources
 }

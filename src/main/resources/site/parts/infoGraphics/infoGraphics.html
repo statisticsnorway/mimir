@@ -3,21 +3,26 @@
     <div class="xp-region col-12">
       <div class="border-top-green">
 
-        <h2 class="mt-0" data-th-text="${title}"></h2>
+        <h2 class="mt-0" data-th-text="${title}" />
 
         <div class="d-flex justify-content-center">
-          <img data-th-if="${image}" class="" data-th-alt="${altText}" data-th-src="${imageSrc}"/>
-          <a data-th-href="${longDesc}" class="screen-reader-only" data-th-text="${descriptionInfographics}"></a>
+          <img data-th-if="${image}" data-th-alt="${altText}" data-th-src="${imageSrc}" />
+          <a data-th-href="${longDesc}" class="screen-reader-only" data-th-text="${descriptionInfographics}" />
         </div>
 
         <ul class="footnote">
-            <li data-th-each="footNote, iterStat : ${footnote}"><sup data-th-text="${iterStat.count}"> </sup> <span data-th-text="${footNote}"></span></li>
+            <li data-th-each="footNote, iterStat : ${footnote}">
+              <sup data-th-text="${iterStat.count}" />
+              <span data-th-text="${footNote}" />
+            </li>
         </ul>
 
-        <span class="source-title"><strong data-th-text="${source}"></strong></span>
-        <div class="sources" data-th-each="source : ${selectedSource}">
-          <a data-th-if="${source._selected} == 'urlSource'" data-th-href="${source.urlSource.url}" data-th-text="${source.urlSource.urlText}"></a>
-          <a data-th-if="${source._selected} == 'relatedSource'" data-th-href="${portal.pageUrl({'_id=' + source.relatedSource.sourceSelector})}" data-th-text="${source.relatedSource.urlText}"></a>
+        <span class="source-title">
+          <strong data-th-text="${source}" />
+        </span>
+
+        <div class="sources" data-th-each="source : ${sources}">
+          <a class="mb-1" data-th-href="${source.url}" data-th-text="${source.urlText}" />
         </div>
 
       </div>
