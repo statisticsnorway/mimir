@@ -71,7 +71,7 @@ steps:
     commands:
       - enonic app install --file build/libs/*.jar
   - name: test
-    image: cypress/base:7.1
+    image: cypress/included:4.0.1
     depends_on:
       - deploy
     commands:
