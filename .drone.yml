@@ -56,6 +56,7 @@ trigger:
 steps:
   - name: build & test
     image: enonic/enonic-ci:7.1-node
+    image: cypress/base:10.16.0
     commands:
       - /setup_sandbox.sh
       - enonic project build
