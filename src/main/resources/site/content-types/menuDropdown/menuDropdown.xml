@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <content-type>
-  <display-name i18n="menuDropdown.title">Rullegardinmeny</display-name>
+  <display-name i18n="menuDropdown.title">Sticky-meny</display-name>
   <description i18n="menuDropdown.description"></description>
   <super-type>base:structured</super-type>
   <form>

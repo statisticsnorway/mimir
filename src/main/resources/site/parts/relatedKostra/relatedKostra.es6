@@ -8,9 +8,15 @@ const {
 const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-const { getMunicipality } = __non_webpack_require__( '/lib/klass/municipalities')
-const { pageMode } = __non_webpack_require__( '/lib/ssb/utils')
-const { renderError } = __non_webpack_require__('/lib/error/error')
+const {
+  getMunicipality
+} = __non_webpack_require__( '/lib/klass/municipalities')
+const {
+  pageMode
+} = __non_webpack_require__( '/lib/ssb/utils')
+const {
+  renderError
+} = __non_webpack_require__('/lib/error/error')
 
 const view = resolve('./relatedKostra.html')
 
@@ -40,7 +46,7 @@ exports.preview = function(req) {
 }
 
 function renderPart(req, municipality) {
-  if(municipality) {
+  if (municipality) {
     const part = getComponent()
 
     const kostraLink = new React4xp('Link')

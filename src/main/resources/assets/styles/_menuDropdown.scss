@@ -47,15 +47,6 @@
     max-height: 30vh;
     min-width: 100%;
   }
-  .ssb-input {
-    width: 280px;
-    border-color: $ssb-dark-6;
-    flex-direction: unset; // override design system
-    @include media-breakpoint-down(lg) {
-      max-width: 100%;
-      width: 100%;
-    }
-  }
   .show-map {
     margin-left: 30px;
     text-decoration: none;
@@ -107,8 +98,14 @@
     align-items: center;
     border: none;
   }
+  .choose-map-a {
+    all: unset;
+    span {
+      all: unset;
+    }
+  }
   @include media-breakpoint-down(md) {
-    .title-comtainer {
+    .title-container {
       margin-left: 10px;
     }
     .card {
