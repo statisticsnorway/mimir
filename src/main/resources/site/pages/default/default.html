@@ -19,7 +19,7 @@
   <meta http-equiv="Cache-control" content="NO-CACHE" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta data-th-if="${page.data.metaDescription}" name="description" data-th-content="${page.data.metaDescription}" />
-  <title data-th-text="${page.displayName} + ' - Statistisk sentralbyrå'"></title>
+  <title data-th-text="${pageTitle}"></title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|Open+Sans:700|Roboto:700|Roboto+Condensed:700" />
   <link rel="stylesheet" data-th-href="${stylesUrl}" />
   <link rel="alternate" data-th-if="${alternateLanguageVersionUrl}" data-th-href="${alternateLanguageVersionUrl}" data-th-hreflang="${language.alternate}" />
@@ -56,9 +56,28 @@
       </div>
     </div>
 
-    <div data-portal-region="main" class="searchabletext">
+    <div
+      data-th-each="region : ${configRegions}"
+      data-th-remove="tag"
+    >
+      <div data-th-if="${region.showGreyTriangle}" class="grey-triangle"/>
+      <div
+        class="searchabletext"
+        data-th-classappend="${region.view} == 'card' ? 'layout-topic border-top-green container' : 'container-fluid p-0'"
+      >
+        <div 
+          class="row"
+          data-th-data-portal-region="${region.region}"
+        >
+          <div data-th-each="component : ${region.components}" data-th-remove="tag">
+            <div data-portal-component="${component.path}" data-th-remove="tag"/>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div data-th-if="${mainRegionComponents}" data-portal-region="main" class="searchabletext">
       <div data-th-each="component : ${mainRegionComponents}" data-th-remove="tag">
-        <div data-portal-component="${component.path}" data-th-remove="tag" />
+        <div data-portal-component="${component.path}" data-th-remove="tag" ></div>
       </div>
     </div>
   </main>

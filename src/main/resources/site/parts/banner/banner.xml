@@ -11,7 +11,7 @@
     </input>
 
     <option-set name="pageType">
-      <label>Hvor skal banneren brukes?</label>
+      <label>Hvor skal banneret brukes?</label>
       <expanded>true</expanded>
       <occurrences minimum="1" maximum="1"/>
       <options minimum="1" maximum="1">
@@ -25,6 +25,14 @@
           <items>
             <input name="title" type="TextLine">
               <label>Tittel på faktaside</label>
+            </input>
+          </items>
+        </option>
+        <option name="general">
+          <label>Annet</label>
+          <items>
+            <input name="generalTitle" type="TextLine">
+              <label>Tittel</label>
             </input>
           </items>
         </option>

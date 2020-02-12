@@ -120,7 +120,9 @@ export function getMunicipality(req: RequestWithCode): MunicipalityWithCounty|un
   const municipalities: Array<MunicipalityWithCounty> = municipalsWithCounties()
 
   let municipality: MunicipalityWithCounty | undefined
-  if (req.path) {
+  if( req.params && req.params.selfRequest && req.params.pathname) {
+    municipality = getMunicipalityByName(municipalities, req.params.pathname as string)
+  } else if (req.path) {
     const municipalityName: string = req.path.replace(/^.*\//, '').toLowerCase()
     municipality = getMunicipalityByName(municipalities, municipalityName)
   } else if (req.code) {
