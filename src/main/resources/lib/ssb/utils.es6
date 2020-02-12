@@ -1,3 +1,5 @@
+import {Image} from 'enonic-types/lib/content';
+
 const {
   getPhrases
 } = __non_webpack_require__( '/lib/language')
@@ -107,4 +109,10 @@ export function safeRender(view, model) {
   }
 
   return response
+}
+
+
+export function getImageCaption(keyFigureId) {
+  const imageContent = content.get({key: keyFigureId})
+  return imageContent !== undefined ? imageContent.data.caption : ''
 }

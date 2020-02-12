@@ -2,7 +2,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
-import { ContentLibrary, QueryResponse, Content } from 'enonic-types/lib/content'
+import { ContentLibrary, QueryResponse, Content, Image } from 'enonic-types/lib/content'
 import { PortalLibrary } from 'enonic-types/lib/portal'
 import { KeyFigure } from '../../site/content-types/key-figure/key-figure'
 import { Dataset } from '../../site/content-types/dataset/dataset'
@@ -12,6 +12,7 @@ import { TbmlData, TableRow } from '../types/xmlParser'
 import { Dataset as JSDataset, Dimension, Category } from '../types/jsonstat-toolkit'
 import { UtilLibrary } from '../types/util'
 const {
+  get : getContent,
   query
 }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
 const {
@@ -30,7 +31,8 @@ const {
   localize
 } = __non_webpack_require__( '/lib/xp/i18n')
 const {
-  createHumanReadableFormat
+  createHumanReadableFormat,
+  getImageCaption
 } = __non_webpack_require__( '/lib/ssb/utils')
 const util: UtilLibrary = __non_webpack_require__( '/lib/util')
 
@@ -52,6 +54,7 @@ type DatasetOption = NonNullable<JsonStatFormat>['datasetFilterOptions']
 export function parseKeyFigure(keyFigure: Content<KeyFigure>, municipality?: MunicipalityWithCounty): KeyFigureView {
   const keyFigureViewData: KeyFigureView = {
     iconUrl: getIconUrl(keyFigure),
+    iconAltText: getImageCaption(keyFigure.data.icon),
     number: undefined,
     numberDescription: keyFigure.data.denomination,
     noNumberText: localize({
@@ -203,6 +206,7 @@ interface MunicipalData {
 
 export interface KeyFigureView {
   iconUrl?: string;
+  iconAltText?: string;
   number?: string;
   numberDescription?: string;
   noNumberText: string;
