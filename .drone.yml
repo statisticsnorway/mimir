@@ -45,7 +45,7 @@ steps:
 ---
 kind: pipeline
 type: docker
-name: "Cypress Fun Activites"
+name: "Cypress Test Activites - Test environment"
 # Deploy to test on pushes to master branch and merged pull requests
 trigger:
   branch:
@@ -56,7 +56,6 @@ trigger:
 steps:
   - name: build & test
     image: enonic/enonic-ci:7.1-node
-    image: cypress/base:10.16.0
     commands:
       - /setup_sandbox.sh
       - enonic project build
@@ -71,12 +70,6 @@ steps:
         from_secret: ssb-xp7t-pass
     commands:
       - enonic app install --file build/libs/*.jar
-  - name: test
-    image: cypress/base:10.16.0
-    depends_on:
-      - deploy
-    commands:
-      - npm run test:ci
 ---
 kind: pipeline
 type: docker
