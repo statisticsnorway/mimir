@@ -58,7 +58,7 @@ steps:
     image: enonic/enonic-ci:7.1-node
     commands:
       - /setup_sandbox.sh
-      - enonic project build --scan
+      - enonic project build
   - name: deploy
     image: enonic/enonic-ci:7.1-node
     environment:
@@ -71,7 +71,7 @@ steps:
     commands:
       - enonic app install --file build/libs/*.jar
   - name: test
-    image: cypress/included:4.0.1
+    image: cypress/base:10.16.0
     depends_on:
       - deploy
     commands:
