@@ -44,11 +44,8 @@ export const alertsForContext = (municipality) => {
 }
 
 // Returns page mode for Kommunefakta page based on request mode or request path
-export const pageMode = (req, page) => {
-  if (req.mode === 'edit') {
-    return 'edit'
-  }
-  return page._path.endsWith(req.path.split('/').pop()) ? 'map' : 'municipality'
+export const pageMode = (req) => {
+  return req.params.municipality ? 'municipality' : 'map'
 }
 
 const addBreadcrumbs = (page, visitedPage, breadcrumbs = []) => {
@@ -78,6 +75,7 @@ const addBreadcrumbs = (page, visitedPage, breadcrumbs = []) => {
 export const getBreadcrumbs = (page, municipality) => {
   const breadcrumbs = addBreadcrumbs(page, page)
   if (municipality) {
+    breadcrumbs.pop()
     breadcrumbs.push({
       text: municipality.displayName
     })

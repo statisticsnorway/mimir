@@ -71,7 +71,7 @@ exports.get = function(req) {
   const language = getLanguage(page)
 
   let municipality
-  if (mode === 'municipality') {
+  if (req.params.selfRequest) {
     municipality = getMunicipality(req)
   }
 
@@ -83,7 +83,7 @@ exports.get = function(req) {
   }
 
   const bodyClasses = []
-  if (mode !== 'map' && config && config.bkg_color === 'grey') {
+  if (config && config.bkg_color === 'grey') {
     bodyClasses.push('bkg-grey')
   }
 
@@ -108,7 +108,7 @@ exports.get = function(req) {
   const logoUrl = assetUrl({
     path: 'SSB_logo.png'
   })
-
+  const pageTitle = req.params.selfRequest? page.displayName : req.params.pageTitle
   const model = {
     version,
     config,
@@ -120,6 +120,7 @@ exports.get = function(req) {
     mode,
     showIngress,
     preview,
+    pageTitle: `${pageTitle} - Statistisk sentralbyrå`,
     bodyClasses: bodyClasses.join(' '),
     stylesUrl,
     jsLibsUrl,

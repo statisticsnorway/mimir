@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
   <form>
-      <field-set>
+    <field-set>
       <label>Kommunefakta</label>
       <items>
     <input name="municipalDataContentId" type="ContentSelector">
@@ -59,7 +59,7 @@
       </items>
     </item-set>
       </items>
-  </field-set>
+    </field-set>
     <item-set name="language">
       <label>Språk instillinger</label>
       <occurrences minimum="1" maximum="2"/>
@@ -76,34 +76,72 @@
         </input>
         <input name="link" type="TextLine">
           <label>Språklenke: url-stien til språkets "hjemmeside"</label>
-          <occurrences minimum="0" maximum="1"/>
           <help-text>Typisk "/en" for engelsk. La feltet stå tomt om den skal peke til norsk utgaven. </help-text>
-          <default></default>
+          <occurrences minimum="0" maximum="1"/>
         </input>
-        <input name="phrases" type="RadioButton">
+          <input name="phrases" type="RadioButton">
           <label>Språk tekst/fraser</label>
           <occurrences minimum="1" maximum="1"/>
           <config>
-            <option value="norwegian">phrases/phrases_no</option>
-            <option value="english">phrases_en</option>
+          <option value="norwegian">phrases/phrases_no</option>
+          <option value="english">phrases_en</option>
           </config>
           <default>norwegian</default>
         </input>
-          <input name="homePageId" type="ContentSelector">
-              <label>Språkets "Hjem"-side</label>
-              <occurrences minimum="0" maximum="1"/>
+        <input name="homePageId" type="ContentSelector">
+          <label>Språkets "Hjem"-side</label>
+          <occurrences minimum="0" maximum="1"/>
+          <config>
+            <treeMode>false</treeMode>
+            <showStatus>true</showStatus>
+            <hideToggleIcon>false</hideToggleIcon>
+          </config>
+        </input>
+      </items>
+    </item-set>
+    <field-set>
+      <label>Nettstedrouting (mappings)</label>
+      <items>
+        <item-set name="router">
+          <label>Routing</label>
+          <occurrences minimum="0" maximum="0"/>
+          <items>
+            <input name="source" type="ContentSelector">
+              <label>Fra</label>
+              <help-text>
+                Alle spørringer etter denne kontrolleren vil bli sendt til valgt kontroller under.
+                Så fremt det ikke finnes et eskisterende innhold.
+              </help-text>
+              <occurrences minimum="1" maximum="1"/>
               <config>
-                  <treeMode>false</treeMode>
+                  <treeMode>true</treeMode>
                   <showStatus>true</showStatus>
                   <hideToggleIcon>false</hideToggleIcon>
               </config>
-          </input>
+            </input>
+            <input name="target" type="ContentSelector">
+              <label>Til</label>
+              <help-text>Hvor spørringene skal lande.</help-text>
+              <occurrences minimum="1" maximum="1"/>
+              <config>
+                  <treeMode>true</treeMode>
+                  <showStatus>true</showStatus>
+                  <hideToggleIcon>false</hideToggleIcon>
+              </config>
+            </input>
+            <input name="pageTitle" type="TextLine">
+              <label>Sidetittel på rutede sider</label>
+              <occurrences minimum="0" maximum="1"/>
+              <default></default>
+            </input>
+          </items>
+        </item-set>
       </items>
-    </item-set>
+    </field-set>
   </form>
   <mappings>
-    <mapping controller="/site/pages/default/default.js">
-      <pattern>/kommunefakta/.*</pattern>
+    <mapping filter="/site/filters/router.js" order="10">
+      <pattern>/.*</pattern>
     </mapping>
     <mapping controller="/site/pages/default/default.js">
       <match>type:'portal:fragment'</match>
