@@ -54,6 +54,10 @@ trigger:
     include:
       - push
 steps:
+  - name: install-deps
+    image: cypress/base:10.16.0
+    commands:
+      - npm ci      
   - name: build & test
     image: enonic/enonic-ci:7.1-node
     commands:
