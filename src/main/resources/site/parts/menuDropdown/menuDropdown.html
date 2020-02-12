@@ -61,7 +61,8 @@
             </svg>
           </i>
         </a>
-        <a class="show-search d-lg-none position-absolute"
+        <a data-th-if="${modeMunicipality}"
+           class="show-search d-lg-none position-absolute"
            href="#search-container"
            data-toggle="collapse"
            role="button"
@@ -91,7 +92,7 @@
     <div class="container js-part-map d-none">
       <section class="xp-part part-map">
         <div id="map"
-             class="map-border'"
+             class="map-border"
              data-th-data-path="${dataPathAssetUrl}"
              data-th-data-service="${dataServiceUrl}">
         </div>
