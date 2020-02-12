@@ -4,9 +4,6 @@ const {
   parseKeyFigure
 } = __non_webpack_require__( '/lib/ssb/keyFigure')
 const {
-  parseGlossaryContent
-} = __non_webpack_require__( '/lib/ssb/glossary')
-const {
   getMunicipality
 } = __non_webpack_require__( '/lib/klass/municipalities')
 const {
@@ -82,14 +79,6 @@ const renderPart = (municipality, keyFigureIds) => {
  * @return {{body: string, contentType: string}}
  */
 function renderKeyFigure(keyFigures, part, municipality) {
-  const glossary = keyFigures.reduce( (result, keyFigure) => {
-    const parsedGlossary = parseGlossaryContent( keyFigure.data.glossary )
-    if (parsedGlossary) {
-      result.push(parsedGlossary)
-    }
-    return result
-  }, [])
-
   const parsedKeyFigures = keyFigures.map( (keyFigure) => {
     const keyFigureData = parseKeyFigure(keyFigure, municipality)
     return {
@@ -104,17 +93,11 @@ function renderKeyFigure(keyFigures, part, municipality) {
   const model = {
     displayName: part ? part.config.title : undefined,
     keyFigures: parsedKeyFigures,
-    glossary,
     source
   }
 
   /** Render react **/
   const reactObjs = parsedKeyFigures.map((keyFigure) => {
-    let glossaryText = ''
-    if(keyFigure.glossary != null) {
-      glossaryText = get({key: keyFigure.glossary}).data.text
-    }
-
     const reactProps = {
       iconUrl: keyFigure.iconUrl,
       number: keyFigure.number,
@@ -124,7 +107,7 @@ function renderKeyFigure(keyFigures, part, municipality) {
       title: keyFigure.title,
       time: keyFigure.time,
       changes: keyFigure.changes,
-      glossary: glossaryText
+      glossary: keyFigure.glossaryText
     }
 
     const keyFigureReact = new React4xp('KeyFigure')
@@ -132,7 +115,7 @@ function renderKeyFigure(keyFigures, part, municipality) {
   })
 
   let body = thymeleaf.render(view, model)
-  let pageContributions
+  let pageContributions = undefined
 
   reactObjs.forEach((keyfigureReact) => {
     body = keyfigureReact.renderBody({
