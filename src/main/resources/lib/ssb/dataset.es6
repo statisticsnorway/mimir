@@ -1,6 +1,12 @@
-const { query } = __non_webpack_require__( '/lib/xp/content')
-const { NOT_FOUND } = __non_webpack_require__( './error')
-const { getWithSelection } = __non_webpack_require__( '/lib/klass/klass')
+const {
+  query
+} = __non_webpack_require__( '/lib/xp/content')
+const {
+  NOT_FOUND
+} = __non_webpack_require__( './error')
+const {
+  getWithSelection
+} = __non_webpack_require__( '/lib/klass/klass')
 const moment = require('moment/min/moment-with-locales')
 import JsonStat from 'jsonstat-toolkit'
 
@@ -113,7 +119,11 @@ export const parseDataWithMunicipality = (dataset, filterTarget, municipality, x
 
 const hasFilterData = (dataset, filterTarget, filter, xAxis) => {
   const filterIndex = dataset.id.indexOf(filterTarget)
-  const filterTargetCategoryIndex = dataset.Dimension(filterTarget).Category(filter).index
+  const filterTargetCategory = dataset.Dimension(filterTarget).Category(filter)
+  if (!filterTargetCategory) {
+    return false
+  }
+  const filterTargetCategoryIndex = filterTargetCategory.index
   const xAxisIndex = dataset.id.indexOf(xAxis)
   const xCategories = dataset.Dimension(xAxis).Category()
   return xCategories.reduce((hasData, xCategory) => {

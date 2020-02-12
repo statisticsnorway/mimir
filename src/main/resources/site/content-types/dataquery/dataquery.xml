@@ -8,7 +8,7 @@
       <occurrences minimum="0" maximum="1"/>
     </input>
     <input name="json" type="TextArea">
-      <label>Spørring i JSON-format</label>
+      <label>API-spørring mot statistikkbanken (JSON-format)</label>
       <occurrences minimum="0" maximum="1"/>
     </input>
 
@@ -18,7 +18,7 @@
       <expanded>false</expanded>
       <options minimum="1" maximum="1">
         <option name="jsonStat">
-          <label>json-stat</label>
+          <label>API-spørring mot statistikkbanken (json-stat-format)</label>
           <items>
             <input name="xAxisLabel" type="TextLine">
               <label>Navn på x-akse dimensjon</label>
@@ -48,10 +48,11 @@
           </items>
         </option>
         <option name="tbml">
-          <label>tbml</label>
+          <label>Tall fra tabellbygger (tbml-format)</label>
+          <default>true</default>
         </option>
         <option name="klass">
-          <label>klass</label>
+          <label>API-spørring mot KLASS</label>
         </option>
       </options>
     </option-set>

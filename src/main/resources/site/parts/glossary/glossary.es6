@@ -17,7 +17,9 @@ function renderPart(req, glossaryIds) {
   const glossaries = []
 
   glossaryIds.forEach((key) => {
-    const glossary = content.get({ key })
+    const glossary = content.get({
+      key
+    })
     if (glossary) {
       glossaries.push({
         displayName: glossary.displayName,
@@ -26,8 +28,13 @@ function renderPart(req, glossaryIds) {
     }
   })
 
-  const model = { glossaries }
+  const model = {
+    glossaries
+  }
   const body = thymeleaf.render(view, model)
 
-  return { body, contentType: 'text/html' }
+  return {
+    body,
+    contentType: 'text/html'
+  }
 }

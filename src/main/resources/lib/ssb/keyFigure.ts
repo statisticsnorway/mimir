@@ -61,6 +61,7 @@ export function parseKeyFigure(keyFigure: Content<KeyFigure>, municipality?: Mun
     size: keyFigure.data.size,
     title: keyFigure.displayName,
     changes: undefined,
+    greenBox: keyFigure.data.greenBox,
     glossaryText: keyFigure.data.glossaryText
   }
 
@@ -210,6 +211,7 @@ export interface KeyFigureView {
   title: string;
   time?: string;
   changes?: KeyFigureChanges;
+  greenBox: boolean;
   glossaryText?: string;
 }
 
