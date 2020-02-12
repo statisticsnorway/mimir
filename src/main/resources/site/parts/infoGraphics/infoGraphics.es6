@@ -50,7 +50,6 @@ function renderPart(req) {
 
   // Retrieves the array where the sources are stored
   const sources = getSources(sourceConfig)
-  log.info(JSON.stringify(sources)) /** TODO: don't forget to remove */
 
   const model = {
     title: part.config.title,
