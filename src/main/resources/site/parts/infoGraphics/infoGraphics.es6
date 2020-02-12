@@ -78,9 +78,7 @@ function renderPart(req) {
  * @return {array} a list of sources, text and url
  */
 function getSources(sourceConfig) {
-  const sources = []
-
-  sourceConfig.forEach((selectedSource) => {
+  return sourceConfig.map((selectedSource) => {
     let sourceText
     let sourceUrl
 
@@ -95,12 +93,9 @@ function getSources(sourceConfig) {
         id: selectedSource.relatedSource.sourceSelector
       })
     }
-
-    sources.push({
+    return {
       urlText: sourceText,
       url: sourceUrl
-    })
+    }
   })
-
-  return sources
 }
