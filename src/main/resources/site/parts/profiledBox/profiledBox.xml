@@ -1,0 +1,76 @@
+<part>
+    <display-name>Profileringsboks</display-name>
+    <description>Emneblokk for artikler i faktasidene</description>
+    <form>
+        <input name="cardOrientation" type="RadioButton">
+            <label>Retning</label>
+            <occurrences minimum="1" maximum="1"/>
+            <config>
+                <option value="horizontal">Horisontal</option>
+                <option value="vertical">Vertikal</option>
+            </config>
+            <default>horizontal</default>
+        </input>
+        <input name="image" type="ImageSelector">
+            <label>Bilde</label>
+            <occurrences minimum="1" maximum="1"/>
+            <config>
+                <allowPath>${site}</allowPath>
+            </config>
+        </input>
+        <input name="content" type="TextLine">
+            <label>Innhold</label>
+            <occurrences minimum="0" maximum="1"/>
+            <default>Artikkel</default>
+        </input>
+        <input name="date" type="Date">
+            <label>Dato</label>
+            <occurrences minimum="0" maximum="1"/>
+            <default>now</default>
+        </input>
+        <input name="title" type="TextLine">
+            <label>Tittel</label>
+            <occurrences minimum="1" maximum="1"/>
+            <default>Her kommer tittelen</default>
+        </input>
+        <input name="preamble" type="TextArea">
+            <label>Ingress</label>
+            <occurrences minimum="1" maximum="1"/>
+            <default>Her kommer ingress</default>
+        </input>
+
+        <option-set name="urlContentSelector">
+            <label>Lenke</label>
+            <expanded>false</expanded>
+            <occurrences minimum="1" maximum="1"/>
+
+            <options minimum="1" maximum="1">
+                <option name="optionLink">
+                    <label>URL</label>
+                    <default>true</default>
+                    <items>
+                        <input name="link" type="TextLine">
+                            <label>Lenke</label>
+                            <occurrences minimum="0" maximum="1"/>
+                            <default>/</default>
+                        </input>
+                    </items>
+                </option>
+
+                <option name="optionXPContent">
+                    <label>XP-innhold</label>
+                    <items>
+                        <input name="xpContent" type="ContentSelector">
+                            <label>Innhold i XP</label>
+                            <occurrences minimum="0" maximum="1"/>
+                            <config>
+                                <allowPath>${site}</allowPath>
+                            </config>
+                        </input>
+                    </items>
+                </option>
+            </options>
+        </option-set>
+
+    </form>
+</part>

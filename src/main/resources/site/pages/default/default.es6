@@ -30,7 +30,7 @@ const partsWithPreview = [ // Parts that has preview
   `${app.name}:highchart`,
   `${app.name}:dashboard`,
   `${app.name}:key-figure`,
-  `${app.name}:menu-dropdown`,
+  `${app.name}:menuDropdown`,
   `${app.name}:statistikkbanken`,
   `${app.name}:dataquery`
 ]
@@ -51,8 +51,10 @@ exports.get = function(req) {
   } else {
     regions = page.page && page.page.regions ? page.page.regions : null
   }
+  const mainRegion = isFragment ? regions && regions.main : regions && regions.main
 
-  const mainRegionComponents = regions && regions.main ? regions.main.components : []
+  const mode = pageMode(req, page)
+  const mainRegionComponents = mapComponents(mainRegion, mode)
 
   const glossary = glossaryLib.process(page.data.ingress, regions)
   const ingress = processHtml({
@@ -116,9 +118,11 @@ exports.get = function(req) {
     version,
     config,
     page,
+    mainRegion,
     mainRegionComponents,
     glossary,
     ingress,
+    mode,
     showIngress,
     preview,
     pageTitle: `${pageTitle} - Statistisk sentralbyrå`,
@@ -165,4 +169,28 @@ exports.get = function(req) {
     body,
     pageContributions
   }
+}
+
+function mapComponents(mainRegion, mode) {
+  if (mainRegion && mainRegion.components) {
+    return mainRegion.components.map((component) => {
+      const descriptor = component.descriptor
+      const classes = []
+      if (descriptor !== 'mimir:banner' && descriptor !== 'mimir:menuDropdown' && descriptor !== 'mimir:map' ) {
+        classes.push('container')
+      }
+      if (descriptor === 'mimir:menuDropdown' && mode === 'municipality') {
+        classes.push('sticky-top')
+      }
+      if (descriptor === 'mimir:preface') {
+        classes.push('preface-container')
+      }
+      return {
+        path: component.path,
+        removeWrapDiv: descriptor === 'mimir:banner',
+        classes: classes.join(' ')
+      }
+    })
+  }
+  return []
 }

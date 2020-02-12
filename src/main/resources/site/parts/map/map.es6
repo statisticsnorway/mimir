@@ -15,7 +15,7 @@ function renderPart(req) {
   const siteConfig = portal.getSiteConfig();
   let mapFolder = '/mapdata'
 
-  if (typeof siteConfig.kommunefakta !=='undefined' && siteConfig.kommunefakta.mapfolder) {
+  if (typeof siteConfig.kommunefakta !== 'undefined' && siteConfig.kommunefakta.mapfolder) {
     mapFolder = siteConfig.kommunefakta.mapfolder
   }
 
@@ -29,5 +29,8 @@ function renderPart(req) {
     dataPathAssetUrl,
     dataServiceUrl,
   })
-  return { body, contentType: 'text/html' }
+  return {
+    body,
+    contentType: 'text/html'
+  }
 }

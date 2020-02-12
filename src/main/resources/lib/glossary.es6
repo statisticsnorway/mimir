@@ -2,7 +2,9 @@
 // which is rendered on bottom of page, see includes/glossary.html
 // In combination with app/glossary.es6 to provide popup for words (Popper.js)
 
-const { parseGlossaryContent } = __non_webpack_require__( '/lib/ssb/glossary')
+const {
+  parseGlossaryContent
+} = __non_webpack_require__( '/lib/ssb/glossary')
 
 function parseText(text, glossary) {
   const m = text.match(/<a href="content:\/\/.*?">/g)
