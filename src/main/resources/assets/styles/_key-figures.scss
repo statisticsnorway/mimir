@@ -26,3 +26,16 @@
 .key-figures + .key-figures, .popper + .key-figures {
   margin-top: 40px;
 }
+.divider {
+
+  @include media-breakpoint-down (md) {
+    border-bottom: 1px solid #cccccc;
+    padding-bottom: 50px;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 90%;
+
+  }
+}

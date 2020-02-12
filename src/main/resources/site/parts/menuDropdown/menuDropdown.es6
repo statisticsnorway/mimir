@@ -1,5 +1,10 @@
 const {
-  getContent, pageUrl
+  assetUrl,
+  getContent,
+  getComponent,
+  pageUrl,
+  getSiteConfig,
+  serviceUrl
 } = __non_webpack_require__( '/lib/xp/portal')
 const {
   municipalsWithCounties, getMunicipality
@@ -29,13 +34,30 @@ exports.get = (req) => {
 exports.preview = (req) => renderPart(req)
 
 function renderPart(req) {
-  // Caching this since it is a bit heavy
   const parsedMunicipalities = municipalsWithCounties()
+  const component = getComponent()
+  const siteConfig = getSiteConfig()
+  let mapFolder = '/mapdata'
+
+  if (typeof siteConfig.kommunefakta !=='undefined' && siteConfig.kommunefakta.mapfolder) {
+    mapFolder = siteConfig.kommunefakta.mapfolder
+  }
+
+  const dataPathAssetUrl = assetUrl( {
+    path: mapFolder
+  })
+
+  const dataServiceUrl = serviceUrl({
+    service: 'municipality'
+  })
 
   const page = getContent()
-  const baseUrl = pageUrl({
-    id: page._id
-  })
+  const baseUrl = component.config.basePage ?
+    pageUrl({
+      id: component.config.basePage }) :
+    pageUrl({
+      id: page._id
+    })
 
   const searchBarText = i18nLib.localize({
     key: 'menuDropdown.searchBarText'
@@ -54,9 +76,11 @@ function renderPart(req) {
     .setId('inputStickyMenu')
 
   const model = {
-    mode: pageMode(req, page),
+    modeMunicipality: component.config.modeMunicipality,
     displayName: page.displayName,
     baseUrl,
+    dataPathAssetUrl,
+    dataServiceUrl,
     municipality: getMunicipality(req),
     municipalities: parsedMunicipalities
   }
