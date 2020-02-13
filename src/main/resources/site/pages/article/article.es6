@@ -19,7 +19,7 @@ const {
 const version = '%%VERSION%%'
 const preview = [
   `${app.name}:accordion`,
-  `${app.name}:menu-box`,
+  `${app.name}:menuBox`,
   `${app.name}:button`,
   `${app.name}:highchart`,
   `${app.name}:glossary`,

@@ -23,7 +23,7 @@ const version = '%%VERSION%%'
 const partsWithPreview = [ // Parts that has preview
   `${app.name}:map`,
   `${app.name}:button`,
-  `${app.name}:menu-box`,
+  `${app.name}:menuBox`,
   `${app.name}:glossary`,
   `${app.name}:accordion`,
   `${app.name}:highchart`,
