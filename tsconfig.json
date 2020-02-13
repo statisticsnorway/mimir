@@ -14,6 +14,6 @@
     "cypress"
   ],
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",    
   ]
 }

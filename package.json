@@ -16,6 +16,8 @@
     "lint": "eslint --fix ./src --ext .es6 --ext .ts --ext .jsx",
     "lint-dry": "eslint ./src --ext .es6 --ext .ts --ext .jsx",
     "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "cy:run:e2e": "cypress run --spec cypress/integration/e2e/**/*",
     "cy:run:local": "cypress run --spec cypress/integration/localhost/**/*",
     "test:ci": "start-server-and-test start http-get://localhost:8080/xp/kommunefakta cy:run"
   },
