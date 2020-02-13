@@ -77,6 +77,7 @@ steps:
   - name: run test
     image: cypress/base:10.16.0
     commands:
+      - npm ci
       - npm run cy:run:local
 ---
 kind: pipeline
