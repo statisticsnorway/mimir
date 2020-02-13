@@ -25,7 +25,8 @@ const preview = [
   `${app.name}:glossary`,
   `${app.name}:statistikkbanken`,
   `${app.name}:dashboard`,
-  `${app.name}:key-figure`
+  `${app.name}:key-figure`,
+  `${app.name}:keyFigure`
 ]
 
 const view = resolve('article.html')

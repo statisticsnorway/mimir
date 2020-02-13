@@ -29,6 +29,7 @@ const partsWithPreview = [ // Parts that has preview
   `${app.name}:highchart`,
   `${app.name}:dashboard`,
   `${app.name}:key-figure`,
+  `${app.name}:keyFigure`,
   `${app.name}:menuDropdown`,
   `${app.name}:statistikkbanken`,
   `${app.name}:dataquery`
@@ -115,7 +116,7 @@ exports.get = function(req) {
   const logoUrl = assetUrl({
     path: 'SSB_logo.png'
   })
-  const pageTitle = req.params.selfRequest? page.displayName : req.params.pageTitle
+  const pageTitle = req.params.selfRequest ? page.displayName : req.params.pageTitle
   const model = {
     version,
     config,
