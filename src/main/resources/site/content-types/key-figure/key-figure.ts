@@ -17,7 +17,7 @@ export interface KeyFigure {
   /**
    * Størrelse
    */
-  size?: 'small' | 'medium' | 'large';
+  size?: "small" | "medium" | "large";
 
   /**
    * Data fra spørring
