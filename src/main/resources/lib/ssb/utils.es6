@@ -6,7 +6,7 @@ const {
 } = __non_webpack_require__( '/lib/ssb/operations-alert')
 const {
   list: listMunicipalityAlerts
-} = __non_webpack_require__( '/lib/ssb/municipality-alert')
+} = __non_webpack_require__( '/lib/ssb/municipalityAlert')
 const {
   processHtml,
   pageUrl
