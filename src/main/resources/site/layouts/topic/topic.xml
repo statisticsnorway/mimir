@@ -1,6 +1,6 @@
 <layout>
-  <display-name>Innholdsseksjon</display-name>
-  <description>Seksjon med grønn stripe over seksjonen</description>
+  <display-name>1 Kolonne</display-name>
+  <description></description>
   <form>
     <input type="TextLine" name="title">
       <label>Tittel</label>
