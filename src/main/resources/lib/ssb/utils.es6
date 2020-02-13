@@ -3,7 +3,7 @@ const {
 } = __non_webpack_require__( '/lib/language')
 const {
   list: listOperationsAlerts
-} = __non_webpack_require__( '/lib/ssb/operations-alert')
+} = __non_webpack_require__( '/lib/ssb/operationsAlert')
 const {
   list: listMunicipalityAlerts
 } = __non_webpack_require__( '/lib/ssb/municipalityAlert')
@@ -35,7 +35,7 @@ export const alertsForContext = (municipality) => {
   const alerts = [...listOperationsAlerts().hits, ...currentMunicipalityAlerts.hits]
   return alerts.map( (alert) => ({
     title: alert.displayName,
-    messageType: alert.type === `${app.name}:operations-alert` ? 'warning' : 'info',
+    messageType: alert.type === `${app.name}:operationsAlert` ? 'warning' : 'info',
     municipalCodes: alert.data.municipalCodes,
     message: processHtml({
       value: alert.data.message
