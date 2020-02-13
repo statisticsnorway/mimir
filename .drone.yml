@@ -54,10 +54,6 @@ trigger:
     include:
       - push
 steps:
-  - name: install-deps
-    image: cypress/base:10.16.0
-    commands:
-      - npm ci     
   - name: build & test
     image: enonic/enonic-ci:7.1-node
     commands:
@@ -74,10 +70,7 @@ steps:
         from_secret: ssb-xp7t-pass
     commands:
       - enonic app install --file build/libs/*.jar
-  - name: run test
-    image: cypress/base:10.16.0
-    commands:      
-      - npm run cy:run:local
+
 ---
 kind: pipeline
 type: docker
