@@ -69,7 +69,8 @@ steps:
       ENONIC_CLI_REMOTE_PASS:
         from_secret: ssb-xp7t-pass
     commands:
-      - enonic app install --file build/libs/*.jar      
+      - enonic app install --file build/libs/*.jar
+      - cypress install     
       - npm run cy:run:e2e
 
 ---
