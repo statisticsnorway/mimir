@@ -74,7 +74,7 @@ steps:
         from_secret: ssb-xp7t-pass
     commands:
       - enonic app install --file build/libs/*.jar
-      - npm run test:ci
+      - npm run cy:run:local
 ---
 kind: pipeline
 type: docker
