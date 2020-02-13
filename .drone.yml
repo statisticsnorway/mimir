@@ -70,7 +70,7 @@ steps:
         from_secret: ssb-xp7t-pass
     commands:
       - enonic app install --file build/libs/*.jar
-      - npm cypress install     
+      - npm install cypress     
       - npm run cy:run:e2e
 
 ---
