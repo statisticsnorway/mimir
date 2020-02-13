@@ -15,8 +15,8 @@ exports.filter = function(req, next) {
   if (req.params.selfRequest) return next(req)
 
   const content = getContent()
-  const pathElements = req.path.split(content._path)
-  const currentPath = `${content._path}${pathElements[1]}`
+  const pathElements = req.rawPath.split(content._path)
+  const currentPath = `${content._path}${pathElements[pathElements.length - 1]}`
   const routerConfigs = data.forceArray(getSiteConfig().router)
 
   // Check if current path is in any siteconfigs router configuration
@@ -26,13 +26,11 @@ exports.filter = function(req, next) {
       key: currentPath
     }))
 
-  // check if any content exists
-  if (routerConfig.length > 0 && req.mode === 'preview') {
+  if (routerConfig.length > 0) {
     delete req.headers['Accept-Encoding']
-    const targetContent = get({
-      key: routerConfig[0].target
-    })
-    const targetUrl = targetContent ? `${pathElements[0]}${targetContent._path}` : '/'
+    const targetUrl = routerConfig[0].target ? pageUrl({
+      id: routerConfig[0].target
+    }) : '/'
     const targetResponse = request({
       url: `http://localhost:8080${targetUrl}`,
       headers: req.headers,
