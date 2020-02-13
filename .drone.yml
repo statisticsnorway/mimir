@@ -76,8 +76,7 @@ steps:
       - enonic app install --file build/libs/*.jar
   - name: run test
     image: cypress/base:10.16.0
-    commands:
-      - npm ci
+    commands:      
       - npm run cy:run:local
 ---
 kind: pipeline
