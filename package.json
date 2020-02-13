@@ -17,7 +17,7 @@
     "lint-dry": "eslint ./src --ext .es6 --ext .ts --ext .jsx",
     "cy:open": "cypress open",
     "cy:run": "cypress run",
-    "cy:run:e2e": "cross-env CYPRESS_baseUrl=https://www.test.ssb.no cy:run --spec cypress/integration/e2e/**/*",
+    "cy:run:e2e": "CYPRESS_baseUrl=https://www.test.ssb.no cy:run --spec cypress/integration/e2e/**/*",
     "cy:run:local": "cy:run --spec cypress/integration/localhost/**/*",
     "test:ci": "start-server-and-test start http-get://localhost:8080/xp/kommunefakta cy:run"
   },
