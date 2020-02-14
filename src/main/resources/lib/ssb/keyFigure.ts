@@ -61,7 +61,8 @@ export function parseKeyFigure(keyFigure: Content<KeyFigure>, municipality?: Mun
     size: keyFigure.data.size,
     title: keyFigure.displayName,
     changes: undefined,
-    greenBox: keyFigure.data.greenBox
+    greenBox: keyFigure.data.greenBox,
+    glossaryText: keyFigure.data.glossaryText
   }
 
   const dataQueryId: string | undefined = keyFigure.data.dataquery
@@ -89,7 +90,7 @@ export function parseKeyFigure(keyFigure: Content<KeyFigure>, municipality?: Mun
             // get value and label from json-stat data, filtering on municipality
             let municipalData: MunicipalData | null = getDataFromMunicipalityCode(ds, municipality.code, yAxisLabel, filterTarget)
             // not all municipals have data, so if its missing, try the old one
-            if ((!municipalData || (municipalData.value === null ||municipalData.value === 0)) && municipality.changes) {
+            if ((!municipalData || (municipalData.value === null || municipalData.value === 0)) && municipality.changes) {
               municipalData = getDataFromMunicipalityCode(ds, municipality.changes[0].oldCode, yAxisLabel, filterTarget)
             }
             if (municipalData && municipalData.value !== null) {
@@ -211,6 +212,7 @@ export interface KeyFigureView {
   time?: string;
   changes?: KeyFigureChanges;
   greenBox: boolean;
+  glossaryText?: string;
 }
 
 export interface KeyFigureChanges {
