@@ -90,7 +90,7 @@
       right: 65px;
     }
   }
-  .show-search.active{
+  .show-search[aria-expanded="true"]{
     color: white;
     background-color: $ssb-green-4;
   }

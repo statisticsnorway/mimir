@@ -16,10 +16,12 @@
         </div>
         <button data-th-if="${modeMunicipality}"
                 class="show-search d-lg-none position-absolute btn-drawer-toggler"
+                data-target="#search-container"
+                data-toggle="collapse"
                 type="button"
-                data-toggle="drawer"
-                data-th-attr="data-mode=${mode}"
-                data-target="#search-container"> <!-- TODO: put in a wrapper that the drawer can toggle on upon click on search icon -->
+                aria-expanded="false"
+                aria-controls="search-container"
+                data-th-attr="data-mode=${mode}">
           <i>
             <svg xmlns="http://www.w3.org/2000/svg"
                  width="24"
@@ -36,7 +38,7 @@
             </svg>
           </i>
         </button>
-        <div id="search-container" data-th-if="${municipalities}" class="collapse"> <!-- TODO: hide when mobile version -->
+        <div id="search-container" data-th-if="${municipalities}" class="collapse">
           <div class="card ssb-dropdown">
             <div data-th-if="${modeMunicipality}" class="roboto-bold text-nowrap pr-4">Bytt kommune:</div>
             <div id="inputStickyMenu"></div>
