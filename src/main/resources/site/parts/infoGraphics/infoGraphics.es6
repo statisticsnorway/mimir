@@ -30,7 +30,7 @@ exports.preview = (req) => renderPart(req)
 
 function renderPart(req) {
   const part = getComponent()
-  const sourceConfig = data.forceArray(part.config.checkOptionSet)
+  const sourceConfig = part.config.checkOptionSet ? data.forceArray(part.config.checkOptionSet) : []
 
   const source = i18nLib.localize({
     key: 'source'
