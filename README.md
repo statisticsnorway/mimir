@@ -74,5 +74,17 @@ Deploying to QA:
 Deploing to PROD:   
 `drone build promote statisticsnorway/mimir (build-number) prod`
 
-
+### Running Cypress tests
+Cypress is set up in mimir project to run tests in localhost and in Test Environment, respectively.
+To run tests localhost simply run the script:
+```
+npm run cy:run:local 
+```
+to run in Test environment:
+```
+npm run cy:run:e2e
+```
+The scripts are set up so that you don't need to have an instance of the server up and running in the background. 
+It will automatically start the server and stop when the tests are finished. 
+[For more info on guides, how to use Cypress and API, see docs](https://docs.cypress.io/)
 ## [Documentation](./docs/README.md)

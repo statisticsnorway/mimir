@@ -19,8 +19,8 @@
     "cy:run": "cypress run",
     "cy:run:test": "cypress run --spec cypress/integration/localhost/**/*",
     "cy:run:ci": "cypress run --spec cypress/integration/e2e/**/*",
-    "cy:run:e2e": "CYPRESS_baseUrl=https://www.start.ssb.no start-server-and-test start https-get://www.test.ssb.no cy:run:ci",
-    "cy:run:local": "start-server-and-test start http-get://localhost:8080/xp/kommunefakta cy:run:test"    
+    "cy:run:e2e": "cross-env CYPRESS_baseUrl=https://www.test.ssb.no start-server-and-test start https-get://www.test.ssb.no cy:run:ci",
+    "cy:run:local": "start-server-and-test start http-get://localhost:8080/xp cy:run:test"
   },
   "repository": {
     "type": "git",
