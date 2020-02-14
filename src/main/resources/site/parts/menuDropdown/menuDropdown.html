@@ -14,9 +14,32 @@
             <div class="roboto-bold municipality" data-th-unless="${modeMunicipality}">Velg kommune i kart</div>
           </div>
         </div>
-        <div data-th-if="${modeMunicipality}" class="roboto-bold text-nowrap pr-4">Bytt kommune:</div>
+        <!-- TODO: Search icon before map icon -->
+        <button data-th-if="${modeMunicipality}"
+                class="show-search d-lg-none position-absolute btn-drawer-toggler"
+                type="button"
+                data-toggle="drawer"
+                data-th-attr="data-mode=${mode}"
+                data-target="#search-container"> <!-- TODO: put in a wrapper that the drawer can toggle on upon click on search icon -->
+          <i class="search">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 class="feather feather-search">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </i>
+        </button>
         <div id="search-container" data-th-if="${municipalities}" class="collapse"> <!-- TODO: hide when mobile version -->
           <div class="card ssb-dropdown">
+            <div data-th-if="${modeMunicipality}" class="roboto-bold text-nowrap pr-4">Bytt kommune:</div>
             <div id="inputStickyMenu" ></div>
             <div id="municipality-list" class="dropdown-menu w-100 list-of-options" aria-labelledby="input-query-municipality">
               <a class="dropdown-item a-plain option-list-element"
@@ -31,7 +54,7 @@
         <button data-th-if="${modeMunicipality}"
                 id="js-show-map"
                 type="button"
-                class="show-map text-nowrap choose-map-a pl-3"
+                class="show-map text-nowrap btn-drawer-toggler"
                 data-toggle="drawer"
                 data-target="#map">
           <span class="d-none d-lg-inline-block">Velg i kart</span>
@@ -66,37 +89,6 @@
             </svg>
           </i>
         </button>
-        <!--<a data-th-if="${modeMunicipality}"
-           class="show-search d-lg-none position-absolute"
-           href="#search-container"
-           data-toggle="collapse"
-           role="button"
-           aria-expanded="false"
-           aria-controls="search-container"
-           data-th-attr="data-mode=${mode}">-->
-        <button data-th-if="${modeMunicipality}"
-                class="show-search d-lg-none position-absolute"
-                type="button"
-                data-toggle="drawer"
-                data-th-attr="data-mode=${mode}"
-                data-target="#search-container"> <!-- TODO: put in a wrapper that the drawer can toggle on upon click on search icon -->
-          <i>
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 width="24"
-                 height="24"
-                 viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="2"
-                 stroke-linecap="round"
-                 stroke-linejoin="round"
-                 class="feather feather-search">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-          </i>
-        </button>
-        <!--</a>-->
       </div>
     </div>
   </section>

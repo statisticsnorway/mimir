@@ -71,7 +71,7 @@
       right: 70px;
     }
   }
-  .show-search[aria-expanded="true"] {
+  .show-search.active i.search {
     color: white;
     background-color: $ssb-green-4;
   }
@@ -90,6 +90,13 @@
     right: 0px;
     top: 30px;
   }
+  .btn-drawer-toggler {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    outline: inherit;
+  }
   .card {
     @include media-breakpoint-up(lg) {
       display: flex;
@@ -97,12 +104,6 @@
     }
     align-items: center;
     border: none;
-  }
-  .choose-map-a {
-    all: unset;
-    span {
-      all: unset;
-    }
   }
   @include media-breakpoint-down(md) {
     .title-container {
