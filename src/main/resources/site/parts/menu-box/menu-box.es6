@@ -1,5 +1,7 @@
 const {
-  getComponent
+  getComponent,
+  imageUrl,
+  pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
 const {
   render
@@ -56,19 +58,19 @@ function buildMenu(menuConfigs) {
   return menuConfigs.map((menuConfig) => {
     let imageSrc = ''
     if (menuConfig.image) {
-      imageSrc = portal.imageUrl({
+      imageSrc = imageUrl({
         id: menuConfig.image,
         scale: 'block(400,400)'
       })
     }
 
-    menus.push({
+     return {
       title: menuConfig.title,
       subtitle: menuConfig.subtitle,
       href: getHref(menuConfig),
       hasImage: !!imageSrc,
       imageSrc
-    })
+    }
   })
 }
 
@@ -81,7 +83,7 @@ function getHref(menuConfig) {
   if (menuConfig.link) {
     return menuConfig.link
   } else if (menuConfig.content) {
-    return portal.pageUrl({
+    return pageUrl({
       id: menuConfig.content
     })
   }
