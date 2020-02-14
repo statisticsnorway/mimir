@@ -9,8 +9,9 @@ const {
 const {
   getComponent
 } = __non_webpack_require__( '/lib/xp/portal')
-const content = __non_webpack_require__( '/lib/xp/content')
-const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
+const {
+  render
+} = __non_webpack_require__( '/lib/thymeleaf')
 const {
   createConfig,
   lineColor,
@@ -21,16 +22,25 @@ const {
   defaultFormat,
   defaultTbmlFormat
 } = __non_webpack_require__('/lib/highcharts/highcharts')
-
 const {
   parseDataWithMunicipality
 } = __non_webpack_require__('/lib/ssb/dataset')
+const {
+  renderError
+} = __non_webpack_require__('/lib/error/error')
+
+const content = __non_webpack_require__( '/lib/xp/content')
 const view = resolve('./highchart.html')
 
 exports.get = function(req) {
-  const part = getComponent()
-  const highchartIds = part.config.highchart ? util.data.forceArray(part.config.highchart) : []
-  return renderPart(req, highchartIds)
+  try {
+    const part = getComponent()
+    const highchartIds = part.config.highchart ? util.data.forceArray(part.config.highchart) : []
+    return renderPart(req, highchartIds)
+  } catch (e) {
+    log.error(e)
+    return renderError('Error in part', e)
+  }
 }
 
 exports.preview = (req, id) => renderPart(req, [id])
@@ -175,7 +185,7 @@ function renderPart(req, highchartIds) {
   })
 
   return {
-    body: thymeleaf.render(view, {
+    body: render(view, {
       highcharts
     }),
     contentType: 'text/html'

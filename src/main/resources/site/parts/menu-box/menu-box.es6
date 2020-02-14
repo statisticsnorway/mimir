@@ -1,13 +1,25 @@
-const portal = __non_webpack_require__('/lib/xp/portal')
-const util = __non_webpack_require__('/lib/util')
-const content = __non_webpack_require__('/lib/xp/content')
-const thymeleaf = __non_webpack_require__('/lib/thymeleaf')
+const {
+  getComponent
+} = __non_webpack_require__('/lib/xp/portal')
+const {
+  render
+} = __non_webpack_require__('/lib/thymeleaf')
+const {
+  renderError
+} = __non_webpack_require__('/lib/error/error')
 
+const content = __non_webpack_require__('/lib/xp/content')
+const util = __non_webpack_require__('/lib/util')
 const view = resolve('./menu-box.html')
 
 exports.get = function(req) {
-  const part = portal.getComponent()
-  return renderPart(req, part.config.menu)
+  try {
+    const part = getComponent()
+    return renderPart(req, part.config.menu)
+  } catch (e) {
+    log.error(e)
+    return renderError('Error in part', e)
+  }
 }
 
 exports.preview = function(req, id) {
@@ -25,10 +37,9 @@ function renderPart(req, menuBoxId) {
       menus = buildMenu(menuConfigs)
     }
   }
-  const model = {
+  const body = render(view, {
     menus
-  }
-  const body = thymeleaf.render(view, model)
+  })
 
   return {
     body,
@@ -42,8 +53,7 @@ function renderPart(req, menuBoxId) {
  * @return {array<object>}
  */
 function buildMenu(menuConfigs) {
-  const menus = []
-  menuConfigs.forEach((menuConfig) => {
+  return menuConfigs.map((menuConfig) => {
     let imageSrc = ''
     if (menuConfig.image) {
       imageSrc = portal.imageUrl({
@@ -60,7 +70,6 @@ function buildMenu(menuConfigs) {
       imageSrc
     })
   })
-  return menus
 }
 
 /**

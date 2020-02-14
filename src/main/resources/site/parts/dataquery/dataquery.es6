@@ -11,25 +11,35 @@ const {
 const {
   render
 } = __non_webpack_require__( '/lib/thymeleaf')
-const dataquery = __non_webpack_require__( '/lib/dataquery')
-const content = __non_webpack_require__('/lib/xp/content')
-const util = __non_webpack_require__( '/lib/util')
-import JsonStat from 'jsonstat-toolkit'
+const {
+  renderError
+} = __non_webpack_require__('/lib/error/error')
 
+const content = __non_webpack_require__('/lib/xp/content')
+const dataquery = __non_webpack_require__( '/lib/dataquery')
+const util = __non_webpack_require__( '/lib/util')
+
+import JsonStat from 'jsonstat-toolkit'
 const view = resolve('./dataquery.html')
 
-
 exports.get = function(req) {
-  const part = getComponent()
-  const dataQueryIds = part.config.dataquery && data.forceArray(part.config.dataquery) || []
-  return renderPart(req, dataQueryIds)
+  try {
+    const part = getComponent()
+    const dataQueryIds = part.config.dataquery && data.forceArray(part.config.dataquery) || []
+    return renderPart(req, dataQueryIds)
+  } catch (e) {
+    log.error(e)
+    return renderError('Error in part', e)
+  }
 }
+
 exports.preview = (req, id) => renderPart(req, [id])
 
 const renderPart = (req, dataQueryIds) => {
   const dataQueries = dataQueryIds.map((key) => content.get({
     key
   }))
+
   const parsedDataQueries = dataQueries.filter((dq) => dq.data.table).map((dq) => {
     let table = []
     let headers = []
