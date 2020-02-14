@@ -12,7 +12,6 @@ const {
   pageMode,
   getBreadcrumbs
 } = __non_webpack_require__( '/lib/ssb/utils')
-const glossaryLib = __non_webpack_require__( '/lib/glossary')
 const {
   getMunicipality
 } = __non_webpack_require__( '/lib/klass/municipalities')
@@ -24,7 +23,6 @@ const partsWithPreview = [ // Parts that has preview
   `${app.name}:map`,
   `${app.name}:button`,
   `${app.name}:menu-box`,
-  `${app.name}:glossary`,
   `${app.name}:accordion`,
   `${app.name}:highchart`,
   `${app.name}:dashboard`,
@@ -57,8 +55,6 @@ exports.get = function(req) {
   })
 
   const mainRegionComponents = regions && regions.main && regions.main.components.length > 0 ? regions.main.components : undefined
-
-  const glossary = glossaryLib.process(page.data.ingress, regions)
   const ingress = processHtml({
     value: page.data.ingress ? page.data.ingress.replace(/&nbsp;/g, ' ') : undefined
   })
@@ -115,14 +111,13 @@ exports.get = function(req) {
   const logoUrl = assetUrl({
     path: 'SSB_logo.png'
   })
-  const pageTitle = req.params.selfRequest? page.displayName : req.params.pageTitle
+  const pageTitle = req.params.selfRequest ? page.displayName : req.params.pageTitle
   const model = {
     version,
     config,
     page,
     mainRegionComponents,
     configRegions,
-    glossary,
     ingress,
     mode,
     showIngress,
