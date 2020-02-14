@@ -14,14 +14,13 @@
             <div class="roboto-bold municipality" data-th-unless="${modeMunicipality}">Velg kommune i kart</div>
           </div>
         </div>
-        <!-- TODO: Search icon before map icon -->
         <button data-th-if="${modeMunicipality}"
                 class="show-search d-lg-none position-absolute btn-drawer-toggler"
                 type="button"
                 data-toggle="drawer"
                 data-th-attr="data-mode=${mode}"
                 data-target="#search-container"> <!-- TODO: put in a wrapper that the drawer can toggle on upon click on search icon -->
-          <i class="search">
+          <i>
             <svg xmlns="http://www.w3.org/2000/svg"
                  width="24"
                  height="24"
@@ -40,7 +39,7 @@
         <div id="search-container" data-th-if="${municipalities}" class="collapse"> <!-- TODO: hide when mobile version -->
           <div class="card ssb-dropdown">
             <div data-th-if="${modeMunicipality}" class="roboto-bold text-nowrap pr-4">Bytt kommune:</div>
-            <div id="inputStickyMenu" ></div>
+            <div id="inputStickyMenu"></div>
             <div id="municipality-list" class="dropdown-menu w-100 list-of-options" aria-labelledby="input-query-municipality">
               <a class="dropdown-item a-plain option-list-element"
                  data-th-each="municipality: ${municipalities}"

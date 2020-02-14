@@ -71,10 +71,6 @@
       right: 70px;
     }
   }
-  .show-search.active i.search {
-    color: white;
-    background-color: $ssb-green-4;
-  }
   .show-map.active i.map {
     color: white;
     background-color: $ssb-green-4;
@@ -88,7 +84,15 @@
     padding: 3px 5px 5px 5px;
     color: $ssb-green-4;
     right: 0px;
-    top: 30px;
+    @include media-breakpoint-down(md) {
+      position: absolute;
+      top: 33px;
+      right: 80px;
+    }
+  }
+  .show-search.active{
+    color: white;
+    background-color: $ssb-green-4;
   }
   .btn-drawer-toggler {
     background: none;
