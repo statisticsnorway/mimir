@@ -34,23 +34,6 @@ describe('Municipality fact page', () => {
           expect(response.body).to.not.be.null          
       })      
   })
-  /*
-    it('Use search filter', () => {           
-      cy.get('[data-display=static]')
-      .type('Våler i Østfold')
-      cy.get('a[href*=valer]')
-      .should('have.attr', 'href', '/xp/kommunefakta/valer-ostfold')
-      .click().url()
-      .should('eq', 'http://localhost:8080/xp/kommunefakta/valer-ostfold')
-    })
-    */
-    /*
-    it('Open map within page', () => {
-      cy.get('a[id=js-show-map]').dblclick()
-      .should('equal', '<a#js-show-map.show-map.text-nowrap>')      
-    })
-    */
-
     it('Seksjonstitler på kommunefakta', () => {                 
         cy.get('h2')
         .should('contain', 'Befolkning')
