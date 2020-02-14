@@ -51,13 +51,9 @@
     <input name="greenBox" type="CheckBox">
       <label>Vis som grønn boks</label>
     </input>
-    <input name="glossary" type="ContentSelector">
+    <input type="TextArea" name="glossaryText">
       <label>Forklaring til nøkkeltallet</label>
       <occurrences minimum="0" maximum="1"/>
-      <config>
-        <allowPath>${site}</allowPath>
-        <allowType>glossary</allowType>
-      </config>
     </input>
     <item-set name="source">
       <occurrences minimum="0" maximum="1"/>
