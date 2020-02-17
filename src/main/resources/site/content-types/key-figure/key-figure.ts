@@ -32,7 +32,7 @@ export interface KeyFigure {
   /**
    * Forklaring til nøkkeltallet
    */
-  glossary?: string;
+  glossaryText?: string;
 
   /**
    * Endringstall
