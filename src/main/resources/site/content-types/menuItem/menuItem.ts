@@ -5,14 +5,14 @@ export interface MenuItem {
   icon?: string;
 
   /**
-   * Tittel
+   * Kortnavn
    */
-  title: string;
+  shortName?: string;
 
   /**
-   * Lenkemål
+   * Menymål
    */
-  checkOptionSet?: {
+  urlSrc?: {
     /**
      * Selected
      */
@@ -21,7 +21,7 @@ export interface MenuItem {
     /**
      * Url lenke
      */
-    urlSource?: {
+    manual?: {
       /**
        * Kildelenke
        */
@@ -31,7 +31,7 @@ export interface MenuItem {
     /**
      * Lenke til internt innhold
      */
-    relatedSource?: {
+    content?: {
       /**
        * Relatert innhold
        */

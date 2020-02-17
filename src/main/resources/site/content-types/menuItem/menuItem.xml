@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <content-type>
     <display-name i18n="menuItem.title">Menypunkt</display-name>
-    <display-name-expression>${title}</display-name-expression>
     <description i18n="menuItem.description">Alt du trenger for å lage en meny</description>
     <super-type>base:structured</super-type>
     <form>
@@ -14,13 +13,13 @@
             </config>
         </input>
 
-        <input name="title" type="TextLine">
-            <label>Tittel</label>
-            <occurrences minimum="1" maximum="1" />
+        <input name="shortName" type="TextLine">
+            <label>Kortnavn</label>
+            <occurrences minimum="0" maximum="1" />
         </input>
 
         <option-set name="urlSrc">
-            <label>Lenkemål</label>
+            <label>Menymål</label>
             <expanded>true</expanded>
             <occurrences minimum="0" maximum="1"/>
             <options minimum="1" maximum="1">
@@ -32,7 +31,6 @@
                         <input name="url" type="TextLine">
                             <label>Kildelenke</label>
                             <occurrences minimum="0" maximum="1" />
-                            <default>https://</default>
                         </input>
                     </items>
                 </option>
