@@ -9,7 +9,7 @@ pipeline {
     ENONIC_CLI_REMOTE_URL  = credentials('jenkins-enonic-url-utv')
     ENONIC_CLI_REMOTE_USER = credentials('jenkins-enonic-user-utv')
     ENONIC_CLI_REMOTE_PASS = credentials('jenkins-enonic-pass-utv')
-    HOME=/home/ssb
+    HOME='/home/ssb'
   }
   stages {
     stage('Build and Test App') {
