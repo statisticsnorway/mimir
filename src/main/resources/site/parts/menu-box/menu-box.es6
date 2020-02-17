@@ -19,7 +19,6 @@ exports.get = function(req) {
     const part = getComponent()
     return renderPart(req, part.config.menu)
   } catch (e) {
-    log.error(e)
     return renderError('Error in part', e)
   }
 }

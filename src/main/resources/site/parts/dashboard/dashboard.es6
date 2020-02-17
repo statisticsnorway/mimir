@@ -23,7 +23,6 @@ exports.get = function(req) {
     const dashboardIds = part.config.dashboard ? util.data.forceArray(part.config.dashboard) : []
     return renderPart(req, dashboardIds)
   } catch (e) {
-    log.error(e)
     return renderError('Error in part', e)
   }
 }

@@ -19,7 +19,6 @@ exports.get = function(req) {
     const accordionIds = part.config.accordion ? util.data.forceArray(part.config.accordion) : []
     return renderPart(req, accordionIds)
   } catch (e) {
-    log.error(e)
     return renderError('Error in part', e)
   }
 }
