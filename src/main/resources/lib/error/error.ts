@@ -27,13 +27,6 @@ export function renderError(req: Request, title: string, exception: string): Res
     }
   } else {
     return {
-      body: `
-        <html>
-              <body>
-                  "${log.error(exception)}"
-               </body>
-            </html>
-      `,
       contentType: 'text/html',
       status: 400
     }
