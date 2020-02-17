@@ -5,7 +5,7 @@ export interface BannerPartConfig {
   image?: string;
 
   /**
-   * Hvor skal banneren brukes?
+   * Hvor skal banneret brukes?
    */
   pageType: {
     /**
@@ -28,6 +28,16 @@ export interface BannerPartConfig {
        * Tittel på faktaside
        */
       title?: string;
+    };
+
+    /**
+     * Annet
+     */
+    general?: {
+      /**
+       * Tittel
+       */
+      generalTitle?: string;
     };
   };
 }

@@ -19,7 +19,9 @@ function renderPart() {
 
   setColor(dividerColor, divider)
 
-  const preRenderedBody = thymeleaf.render(view, { divider })
+  const preRenderedBody = thymeleaf.render(view, {
+    divider
+  })
 
   return {
     body: divider.renderBody({
@@ -29,9 +31,13 @@ function renderPart() {
 }
 
 function setColor(dividerColor, divider) {
-  if(dividerColor === 'dark') {
-    return divider.setProps({ dark: true })
+  if (dividerColor === 'dark') {
+    return divider.setProps({
+      dark: true
+    })
   } else {
-    return divider.setProps({ light: true })
+    return divider.setProps({
+      light: true
+    })
   }
 }

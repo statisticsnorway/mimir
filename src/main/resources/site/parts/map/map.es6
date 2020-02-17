@@ -1,4 +1,3 @@
-const { pageMode } = __non_webpack_require__('/lib/ssb/utils')
 const portal = __non_webpack_require__('/lib/xp/portal')
 const thymeleaf = __non_webpack_require__('/lib/thymeleaf')
 
@@ -13,12 +12,10 @@ exports.preview = function(req, id) {
 }
 
 function renderPart(req) {
-  const page = portal.getContent()
-  const mode = pageMode(req, page)
   const siteConfig = portal.getSiteConfig();
   let mapFolder = '/mapdata'
 
-  if (typeof siteConfig.kommunefakta !=='undefined' && siteConfig.kommunefakta.mapfolder) {
+  if (typeof siteConfig.kommunefakta !== 'undefined' && siteConfig.kommunefakta.mapfolder) {
     mapFolder = siteConfig.kommunefakta.mapfolder
   }
 
@@ -31,7 +28,9 @@ function renderPart(req) {
   const body = thymeleaf.render(view, {
     dataPathAssetUrl,
     dataServiceUrl,
-    isMunicipality: mode === 'municipality'
   })
-  return { body, contentType: 'text/html' }
+  return {
+    body,
+    contentType: 'text/html'
+  }
 }

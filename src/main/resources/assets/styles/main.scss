@@ -37,11 +37,12 @@ $container-max-widths: (
 @import "./dropdown"; // TODO: remove when implemented correctly from design system
 @import "./highchart";
 @import "./key-figures";
-@import "./menu-dropdown";
+@import "./menuDropdown";
 @import "./menu";
 @import "./preface";
 @import "./global-styles";
 @import "./infoGraphic";
+@import "./_profiledBox";
 
 body {
   -moz-osx-font-smoothing: grayscale;

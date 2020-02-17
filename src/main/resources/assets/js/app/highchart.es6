@@ -4,14 +4,14 @@ import JSONstat from 'jsonstat-toolkit'
 
 import Highcharts from 'highcharts'
 // Load the exporting module.
-import Data from 'highcharts/modules/data';
-import A11y from 'highcharts/modules/accessibility';
-import Exporting from 'highcharts/modules/exporting';
+import Data from 'highcharts/modules/data'
+import A11y from 'highcharts/modules/accessibility'
+import Exporting from 'highcharts/modules/exporting'
 
 // Initialize exporting module.
-Data(Highcharts);
+Data(Highcharts)
 A11y(Highcharts)
-Exporting(Highcharts);
+Exporting(Highcharts)
 
 const createSetOptions = {
   lang: {
@@ -36,13 +36,18 @@ const createSetOptions = {
 
 // HIGHCHART
 export function init() {
-  Highcharts.setOptions(createSetOptions);
+  Highcharts.setOptions(createSetOptions)
 
   $(function() {
-    const w = { height: $(window).height().toFixed(0), width: $(window).width().toFixed(0) };
+    const w = {
+      height: $(window).height().toFixed(0),
+      width: $(window).width().toFixed(0)
+    }
 
     $('.btn-highchart-export').click((e) => {
-      $(e.target).parent().find('.highcharts-button-box').first().trigger('click')
+      $(e.target).parent().find('.highcharts-button-box')
+        .first()
+        .trigger('click')
     })
 
     $('.hc-container').each(function(i, container) {
@@ -50,14 +55,14 @@ export function init() {
       $(container).find('svg').attr('height', height)
     })
 
-    const h1Size = w.width < 768 ? '14px' : '16px';
+    const h1Size = w.width < 768 ? '14px' : '16px'
 
     // Initialisering av HighCharts-figurer fra tilhørende HTML-tabell
     $('.highcharts-canvas[id^="highcharts-"]').each(function(index, chart) {
       const config = window['highchart' + $(chart).data('contentkey')]
 
       const canvas = $(chart)
-      const highchartsContentKey = canvas.data('contentkey');
+      const highchartsContentKey = canvas.data('contentkey')
 
       // Bare kjør script hvis tabellen det skal hentes data fra, eksisterer på siden
       if ($('table#highcharts-datatable-' + highchartsContentKey)) {
@@ -73,7 +78,7 @@ export function init() {
         config.plotOptions.series.events = {
           legendItemClick: function(e) {
             // Possible bug: untested browser support for browserEvent (but works in IE8, chrome, FF...)
-            $(e.browserEvent.target).toggleClass('disabled');
+            $(e.browserEvent.target).toggleClass('disabled')
           }
         }
         Highcharts.chart(chart, config)
