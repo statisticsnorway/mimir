@@ -1,5 +1,15 @@
 export interface SiteConfig {
   /**
+   * Søkeresultat side
+   */
+  searchResultPageId?: string;
+
+  /**
+   * Meny
+   */
+  menuItemId?: string;
+
+  /**
    * Kommunedata innhold fra api
    */
   municipalDataContentId?: string;
