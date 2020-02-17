@@ -26,7 +26,8 @@ export function init() {
 
       $(e.currentTarget).toggleClass('active')
 
-      $('.show-search').attr('aria-expanded', 'false')
+      $('.show-search').attr('aria-expanded', 'false') /* TODO: find out why aria-expanded isn't toggled upon click (applies for show-map button too) */
+      $('.show-search').removeClass('active')
 
       window.innerWidth < 960 && $('#search-container').removeClass('show')
 
@@ -99,18 +100,27 @@ export function init() {
     })
 
     $('.show-search').click((e) => {
+      $(e.currentTarget).toggleClass('active')
+
       const mode = $(e.currentTarget).data('mode')
       if (mode == 'municipality') {
         $('#js-show-map').removeClass('active')
         $('.js-part-map').addClass('d-none').parent()
           .removeClass('map-container') // Remove map when municipality search button clicked
       }
+
+      /* TODO: revisit; 'toggling' is manually manipulated */
+      if($('#search-container').hasClass('show')) {
+        $('#search-container').removeClass('show')
+      } else {
+        $('#search-container').addClass('show')
+      }
     })
 
-    const w = window.innerWidth
-
-    if (w >= 960) { // Bootstrap lg grid
+    if (window.innerWidth >= 960) { // Bootstrap lg grid
       $('#search-container').addClass('show')
+    } else {
+      $('#search-container').removeClass('show')
     }
 
     // Adds attributes into the component input field
