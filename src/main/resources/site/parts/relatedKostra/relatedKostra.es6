@@ -33,7 +33,7 @@ exports.get = function(req) {
     }
     return renderPart(req, municipality)
   } catch (e) {
-    return renderError('Error in part: ', e)
+    return renderError(req, 'Error in part: ', e)
   }
 }
 

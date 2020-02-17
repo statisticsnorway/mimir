@@ -19,16 +19,11 @@ export function renderError(req: Request, title: string, exception: string): Res
     errorLog: log.error(exception)
   }
 
-  if (req.mode === 'edit' || req.mode === 'preview' || req.mode === 'inline') {
-    return {
-      body: render(errorView, model),
-      contentType: 'text/html',
-      status: 400
-    }
-  } else {
-    return {
-      contentType: 'text/html',
-      status: 400
-    }
+  const body: string = (req.mode === 'edit' || req.mode === 'preview' || req.mode === 'inline') ? render(errorView, model) : undefined
+
+  return {
+    body,
+    contentType: 'text/html',
+    status: 400
   }
 }

@@ -18,7 +18,7 @@ exports.get = function(req) {
     const glossaryIds = part.config.glossary ? util.data.forceArray(part.config.glossary) : []
     return renderPart(req, glossaryIds)
   } catch (e) {
-    return renderError('Error in part', e)
+    return renderError(req, 'Error in part', e)
   }
 }
 

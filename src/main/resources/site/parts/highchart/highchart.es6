@@ -38,7 +38,7 @@ exports.get = function(req) {
     const highchartIds = part.config.highchart ? util.data.forceArray(part.config.highchart) : []
     return renderPart(req, highchartIds)
   } catch (e) {
-    return renderError('Error in part', e)
+    return renderError(req, 'Error in part', e)
   }
 }
 

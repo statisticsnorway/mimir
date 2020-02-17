@@ -20,7 +20,7 @@ exports.get = function(req) {
     const buttonsIds = part.config.button ? util.data.forceArray(part.config.button) : []
     return renderPart(req, buttonsIds)
   } catch (e) {
-    return renderError('Error in part', e)
+    return renderError(req, 'Error in part', e)
   }
 }
 

@@ -65,7 +65,7 @@ const renderPart = (municipality, keyFigureIds) => {
       contentType: 'text/html'
     }
   } catch (e) {
-    return renderError('Feil i part', e)
+    return renderError(req, 'Feil i part', e)
   }
 }
 

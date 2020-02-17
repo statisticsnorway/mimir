@@ -21,7 +21,7 @@ exports.get = function(req) {
   try {
     return renderPart(req)
   } catch (e) {
-    return renderError('Error in part', e)
+    return renderError(req, 'Error in part', e)
   }
 }
 

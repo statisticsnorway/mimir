@@ -19,7 +19,7 @@ exports.get = function(req) {
     const accordionIds = part.config.accordion ? util.data.forceArray(part.config.accordion) : []
     return renderPart(req, accordionIds)
   } catch (e) {
-    return renderError('Error in part', e)
+    return renderError(req, 'Error in part', e)
   }
 }
 
@@ -37,7 +37,7 @@ function renderPart(req, accordionIds) {
       const items = accordion.data.items ? util.data.forceArray(accordion.data.items) : []
       accordions.push({
         id: accordion._id,
-        body: processHtml({
+        body: portal.processHtml({
           value: accordion.data.body
         }),
         open: accordion.data.open,

@@ -28,7 +28,7 @@ exports.get = function(req) {
     const dataQueryIds = part.config.dataquery && data.forceArray(part.config.dataquery) || []
     return renderPart(req, dataQueryIds)
   } catch (e) {
-    return renderError('Error in part', e)
+    return renderError(req, 'Error in part', e)
   }
 }
 
