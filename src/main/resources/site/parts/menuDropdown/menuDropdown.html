@@ -29,14 +29,14 @@
           </div>
         </div>
         <button data-th-if="${modeMunicipality}"
-                class="show-search d-lg-none position-absolute btn-drawer-toggler"
+                class="show-search d-inline-block d-lg-none position-absolute btn-drawer-toggler"
                 data-target="#search-container"
                 data-toggle="collapse"
                 type="button"
                 aria-expanded="false"
                 aria-controls="search-container"
                 data-th-attr="data-mode=${mode}">
-          <i>
+          <i class="search">
             <svg xmlns="http://www.w3.org/2000/svg"
                  width="24"
                  height="24"
@@ -57,7 +57,9 @@
                 class="show-map text-nowrap btn-drawer-toggler"
                 data-target="#map"
                 data-toggle="drawer"
-                type="button">
+                type="button"
+                aria-expanded="false"
+                aria-controls="map">
           <span class="d-none d-lg-inline-block">Velg i kart</span>
           <i class="d-none d-lg-inline-block chevron">
             <svg xmlns="http://www.w3.org/2000/svg"
