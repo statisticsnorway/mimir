@@ -10,13 +10,16 @@ const {
 const {
   alertsForContext,
   pageMode,
-  getBreadcrumbs
+  getBreadcrumbs,
 } = __non_webpack_require__( '/lib/ssb/utils')
 const {
   getMunicipality
 } = __non_webpack_require__( '/lib/klass/municipalities')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const util = __non_webpack_require__( '/lib/util')
+const {
+  getMenu
+} = __non_webpack_require__( '/lib/ssb/menu')
 
 const version = '%%VERSION%%'
 const partsWithPreview = [ // Parts that has preview
@@ -38,6 +41,7 @@ exports.get = function(req) {
   const ts = new Date().getTime()
   const page = getContent()
   const mode = pageMode(req, page)
+  const menu = getMenu()
   const isFragment = page.type === 'portal:fragment'
   let regions = {}
   let configRegions = []
