@@ -1,20 +1,30 @@
 import $ from 'jquery'
-
+import 'bootstrap/js/dist/collapse'
+// Markup according to Bootstrap 4 collapse element - see https://getbootstrap.com/docs/4.3/components/collapse/
+// Dependencies: jQuery and Bootstrap
 // Belongs to part menu-dropdown
 // - adds visibility class for muncipality when on top of page (sticky part of page)
 export function init() {
   $(function() {
     let animate
-    const map = $('.js-part-map')
+    const map = $('#js-show-map')
 
-    map.click((e) => {
+    map.on('show.bs.collapse', (e) => {
       e.preventDefault()
       e.stopPropagation()
-    })
 
-    $('#js-show-map').click((e) => {
-      e.preventDefault()
-      e.stopPropagation()
+      $('#municipality-list').removeClass('show')
+
+      $('.show-map').toggleClass('active')
+
+      $('.show-search').attr('aria-expanded', 'false')
+      $('.show-search').removeClass('active')
+
+      window.innerWidth < 960 && $('#search-container').removeClass('show')
+
+      $('.show-search').parent().click(() => {
+        map.collapse('hide')
+      })
 
       const el = $('.part-menu-dropdown')[0]
 
@@ -22,42 +32,32 @@ export function init() {
         top
       } = el.getBoundingClientRect()
 
-      $('#municipality-list').removeClass('show')
+      if (top > 1) {
+        animate = true
 
-      $(e.currentTarget).toggleClass('active')
-
-      $('.show-search').attr('aria-expanded', 'false') /* TODO: find out why aria-expanded isn't toggled upon click (applies for show-map button too) */
-      $('.show-search').removeClass('active')
-
-      window.innerWidth < 960 && $('#search-container').removeClass('show')
-
-      map.parent().click(() => {
-        map.addClass('d-none').parent().removeClass('map-container')
-      })
-
-      if (map.hasClass('d-none')) {
-        if (top > 1) {
-          animate = true
-
-          const pos = $(el).offset()
-          $('html').stop().animate({
-            scrollTop: pos.top
-          }, 400, 'swing', () => {
-            animate = false
-            setTimeout(() => {
-              map.removeClass('d-none').parent().addClass('map-container')
-            }, 50)
-          })
-        } else {
-          map.toggleClass('d-none').parent().toggleClass('map-container')
-        }
-      } else {
-        map.toggleClass('d-none').parent().toggleClass('map-container')
+        const pos = $(el).offset()
+        $('html').stop().animate({
+          scrollTop: pos.top
+        }, 400, 'swing', () => {
+          animate = false
+          setTimeout(() => {
+            map.collapse('show') /* TODO: look at the original code and check functionality*/
+          }, 50)
+        })
       }
     })
 
+    map.on('hide.bs.collapse', () => {
+      $('.show-map').removeClass('active')
+    })
+
     $('.part-menu-dropdown').each((i, el) => {
-      $(window).scroll((e) => {
+      const mode = $('.show-search').data('mode')
+      if (mode !== 'municipality') {
+        /* TODO: remove search-container md borders if not in municipality page */
+      }
+
+      $(window).scroll(() => {
         const {
           top
         } = el.getBoundingClientRect()
@@ -70,10 +70,8 @@ export function init() {
 
         top > 0 &&
         !animate &&
-
-        $('.map-container').length &&
-        map.addClass('d-none').parent().removeClass('map-container') &&
-
+        $('#js-show-map').length &&
+        $('#js-show-map').collapse('hide') &&
         $('#js-show-map').removeClass('active')
 
         const stickyMenu = document.getElementById('sticky-menu')
@@ -91,11 +89,10 @@ export function init() {
       })
     })
 
-    $('#input-query-municipality').focus((e) => {
+    $('#input-query-municipality').focus(() => {
       const mode = $('.show-search').data('mode')
       if (mode === 'municipality') {
-        $('.js-part-map').addClass('d-none').parent()
-          .removeClass('map-container') // Remove map when municipality search field active on smaller than md
+        $('#js-show-map').collapse('hide') // Hide map when municipality search field active on smaller than md
       }
     })
 
@@ -104,16 +101,8 @@ export function init() {
 
       const mode = $(e.currentTarget).data('mode')
       if (mode == 'municipality') {
-        $('#js-show-map').removeClass('active')
-        $('.js-part-map').addClass('d-none').parent()
-          .removeClass('map-container') // Remove map when municipality search button clicked
-      }
-
-      /* TODO: revisit; 'toggling' is manually manipulated */
-      if($('#search-container').hasClass('show')) {
-        $('#search-container').removeClass('show')
-      } else {
-        $('#search-container').addClass('show')
+        $('.show-map').removeClass('active')
+        $('#js-show-map').collapse('hide')// Hide map when municipality search button clicked
       }
     })
 

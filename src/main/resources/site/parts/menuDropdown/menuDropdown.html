@@ -53,13 +53,12 @@
           </i>
         </button>
         <button data-th-if="${modeMunicipality}"
-                id="js-show-map"
                 class="show-map text-nowrap btn-drawer-toggler"
-                data-target="#map"
-                data-toggle="drawer"
+                data-target="#js-show-map"
+                data-toggle="collapse"
                 type="button"
                 aria-expanded="false"
-                aria-controls="map">
+                aria-controls="js-show-map">
           <span class="d-none d-lg-inline-block">Velg i kart</span>
           <i class="d-none d-lg-inline-block chevron">
             <svg xmlns="http://www.w3.org/2000/svg"
@@ -96,7 +95,7 @@
     </div>
   </section>
   <div data-th-if="${modeMunicipality}">
-    <div class="container js-part-map d-none">
+    <div id="js-show-map" class="container collapse">
       <section class="xp-part part-map">
         <div id="map"
              class="map-border"
