@@ -9,7 +9,7 @@ export function init() {
     let animate
     const map = $('#js-show-map')
 
-    map.on('show.bs.collapse', (e) => {
+    map.on('shown.bs.collapse', (e) => {
       e.preventDefault()
       e.stopPropagation()
 
@@ -47,7 +47,7 @@ export function init() {
       }
     })
 
-    map.on('hide.bs.collapse', () => {
+    map.on('hidden.bs.collapse', () => {
       $('.show-map').removeClass('active')
     })
 
@@ -72,7 +72,7 @@ export function init() {
         !animate &&
         $('#js-show-map').length &&
         $('#js-show-map').collapse('hide') &&
-        $('#js-show-map').removeClass('active')
+        $('#js-show-map').removeClass('active') /* TODO: potential cause to map lying behind container when scrolled/offset? */
 
         const stickyMenu = document.getElementById('sticky-menu')
         if (stickyMenu) {
