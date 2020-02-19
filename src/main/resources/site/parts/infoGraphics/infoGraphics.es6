@@ -21,8 +21,7 @@ exports.get = function(req) {
   try {
     return renderPart(req)
   } catch (e) {
-    log.error(e)
-    return renderError('Error in part', e)
+    return renderError(req, 'Error in part', e)
   }
 }
 
@@ -30,7 +29,7 @@ exports.preview = (req) => renderPart(req)
 
 function renderPart(req) {
   const part = getComponent()
-  const sourceConfig = data.forceArray(part.config.checkOptionSet)
+  const sourceConfig = part.config.checkOptionSet ? data.forceArray(part.config.checkOptionSet) : []
 
   const source = i18nLib.localize({
     key: 'source'
