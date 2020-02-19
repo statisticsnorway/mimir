@@ -10,9 +10,8 @@ const {
   getComponent, getSiteConfig, getContent
 } = __non_webpack_require__( '/lib/xp/portal')
 const {
-  get
-} = __non_webpack_require__( '/lib/xp/content')
-const thymeleaf = __non_webpack_require__('/lib/thymeleaf')
+  render
+} = __non_webpack_require__('/lib/thymeleaf')
 const {
   data
 } = __non_webpack_require__( '/lib/util')
@@ -66,8 +65,7 @@ const renderPart = (municipality, keyFigureIds) => {
       contentType: 'text/html'
     }
   } catch (e) {
-    log.error(e)
-    return renderError('Feil i part', e)
+    return renderError(req, 'Feil i part', e)
   }
 }
 
@@ -115,7 +113,7 @@ function renderKeyFigure(keyFigures, part, municipality) {
     return keyFigureReact.setId(keyFigure.id).setProps(reactProps)
   })
 
-  let body = thymeleaf.render(view, model)
+  let body = render(view, model)
   let pageContributions = undefined
 
   reactObjs.forEach((keyfigureReact) => {
