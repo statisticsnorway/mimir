@@ -12,7 +12,7 @@ const {
 
 const content = __non_webpack_require__('/lib/xp/content')
 const util = __non_webpack_require__('/lib/util')
-const view = resolve('./menu-box.html')
+const view = resolve('./menuBox.html')
 
 exports.get = function(req) {
   try {
@@ -63,7 +63,7 @@ function buildMenu(menuConfigs) {
       })
     }
 
-     return {
+    return {
       title: menuConfig.title,
       subtitle: menuConfig.subtitle,
       href: getHref(menuConfig),
