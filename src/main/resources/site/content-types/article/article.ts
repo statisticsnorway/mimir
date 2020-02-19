@@ -2,7 +2,7 @@ export interface Article {
   /**
    * Forfatter
    */
-  contactSelector?: Array<string>;
+  author?: Array<string>;
 
   /**
    * Vis publiseringsdato

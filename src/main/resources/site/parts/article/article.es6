@@ -2,6 +2,7 @@ const portal = __non_webpack_require__('/lib/xp/portal')
 const thymeleaf = __non_webpack_require__('/lib/thymeleaf')
 const moment = require('moment/min/moment-with-locales')
 const languageLib = __non_webpack_require__( '/lib/language')
+const contentLib = __non_webpack_require__( '/lib/xp/content')
 
 const view = resolve('./article.html')
 
@@ -20,6 +21,12 @@ exports.get = function() {
       modifiedDate = moment(page.data.showModifiedDate.dateOption.modifiedDate).format('DD. MMMM YYYY h:mm')
     }
   }
+  let author
+  if (page.data.author) {
+    author = contentLib.get({
+      key: page.data.author
+    })
+  }
 
   const model = {
     title: page.displayName,
@@ -28,7 +35,8 @@ exports.get = function() {
     bodyText,
     showPubDate: page.data.showPublishDate,
     pubDate,
-    modifiedDate
+    modifiedDate,
+    author
   }
   const body = thymeleaf.render(view, model)
 

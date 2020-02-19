@@ -3,7 +3,7 @@
     <display-name>Artikkel</display-name>
     <super-type>base:structured</super-type>
     <form>
-        <input name="contactSelector" type="ContentSelector">
+        <input name="author" type="ContentSelector">
             <label>Forfatter</label>
             <occurrences minimum="0" maximum="0"/>
             <config>
