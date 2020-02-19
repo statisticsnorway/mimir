@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content-type>
+    <display-name>innholdsliste</display-name>
+    <super-type>base:structured</super-type>
+    <description>liste med innhold</description>
+    <form>
+        <input name="contentList" type="ContentSelector">
+            <label>innhold</label>
+            <occurrences minimum="0" maximum="0"/>
+            <config>
+                <allowContentType>${app}:*</allowContentType>
+                <treeMode>true</treeMode>
+            </config>
+        </input>
+    </form>
+</content-type>
