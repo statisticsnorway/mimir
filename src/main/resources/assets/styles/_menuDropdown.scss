@@ -126,6 +126,10 @@
       top: 92px;
       position: absolute;
       border-bottom: 1px solid #aaaaaa;
+
+      &.remove-border {
+        border-style: none;
+      }
     }
   }
   @include media-breakpoint-down(sm) {

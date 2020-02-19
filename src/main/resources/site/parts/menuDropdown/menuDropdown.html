@@ -14,7 +14,7 @@
             <div class="roboto-bold municipality" data-th-unless="${modeMunicipality}">Velg kommune i kart</div>
           </div>
         </div>
-        <div id="search-container" data-th-if="${municipalities}" class="collapse">
+        <div id="search-container" data-th-if="${municipalities}" class="collapse" data-th-class="${!modeMunicipality} ? 'remove-border'">
           <div class="card ssb-dropdown">
             <div data-th-if="${modeMunicipality}" class="roboto-bold text-nowrap pr-4">Bytt kommune:</div>
             <div id="inputStickyMenu"></div>
@@ -35,7 +35,7 @@
                 type="button"
                 aria-expanded="false"
                 aria-controls="search-container"
-                data-th-attr="data-mode=${mode}">
+                data-th-attr="data-mode=${modeMunicipality}">
           <i class="search">
             <svg xmlns="http://www.w3.org/2000/svg"
                  width="24"
@@ -94,7 +94,7 @@
       </div>
     </div>
   </section>
-  <div data-th-if="${modeMunicipality}">
+  <div data-th-if="${modeMunicipality}" class="map-wrapper">
     <div id="js-show-map" class="container collapse">
       <section class="xp-part part-map">
         <div id="map"
