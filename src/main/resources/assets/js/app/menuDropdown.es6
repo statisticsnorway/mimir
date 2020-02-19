@@ -9,7 +9,7 @@ export function init() {
     let animate
     const map = $('#js-show-map')
 
-    map.on('shown.bs.collapse', () => {
+    map.on('show.bs.collapse', () => {
       map.parent().addClass('map-container')
 
       if (window.innerWidth <= 720) { // Bootstrap md width
