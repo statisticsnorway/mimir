@@ -14,7 +14,7 @@
             <div class="roboto-bold municipality" data-th-unless="${modeMunicipality}">Velg kommune i kart</div>
           </div>
         </div>
-        <div id="search-container" data-th-if="${municipalities}" class="collapse" data-th-class="${!modeMunicipality} ? 'remove-border'">
+        <div id="search-container" class="collapse" data-th-class="${!modeMunicipality} ? 'remove-border'">
           <div class="card ssb-dropdown">
             <div data-th-if="${modeMunicipality}" class="roboto-bold text-nowrap pr-4">Bytt kommune:</div>
             <div id="inputStickyMenu"></div>
@@ -94,7 +94,7 @@
       </div>
     </div>
   </section>
-  <div data-th-if="${modeMunicipality}" class="map-wrapper">
+  <div data-th-if="${modeMunicipality}">
     <div id="js-show-map" class="container collapse">
       <section class="xp-part part-map">
         <div id="map"

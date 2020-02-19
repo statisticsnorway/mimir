@@ -9,17 +9,12 @@ export function init() {
     let animate
     const map = $('#js-show-map')
 
-    map.on('show.bs.collapse', (e) => {
-      $('.map-wrapper').addClass('map-container')
-      $('.show-map').toggleClass('active') // Styles map icon when map is shown
+    map.on('shown.bs.collapse', () => {
+      map.parent().addClass('map-container')
 
-      if (window.innerWidth <= 768) {
+      if (window.innerWidth <= 720) { // Bootstrap md width
         $('#search-container').collapse('hide')
       }
-
-      $('.show-search').removeClass('active')
-
-      window.innerWidth < 960 && $('#search-container').removeClass('show')
 
       $('.show-search').parent().click(() => {
         map.collapse('hide')
@@ -47,12 +42,10 @@ export function init() {
     })
 
     map.on('hidden.bs.collapse', () => {
-      $('.show-map').removeClass('active')
-      $('.map-wrapper').removeClass('map-container')
+      map.parent().removeClass('map-container')
     })
 
     $('.part-menu-dropdown').each((i, el) => {
-      /* TODO: map when scrolling must be fixed */
       $(window).scroll(() => {
         const {
           top
@@ -67,8 +60,7 @@ export function init() {
         top > 0 &&
         !animate &&
         map.length &&
-        map.collapse('hide') &&
-        map.removeClass('active')
+        map.collapse('hide')
 
         const stickyMenu = document.getElementById('sticky-menu')
         if (stickyMenu) {
@@ -86,29 +78,25 @@ export function init() {
     })
 
     $('#input-query-municipality').focus(() => {
-      const mode = $('.show-search').data('modeMunicipality')
+      const mode = $('.show-search').data('mode')
       if (mode) {
         map.collapse('hide') // Hide map when municipality search field active on smaller than md
       }
     })
 
-    $('.show-search').click((e) => {
-      $(e.currentTarget).toggleClass('active') // Styles search icon after button is pressed
-
-      const mode = $(e.currentTarget).data('modeMunicipality')
+    $('#search-container').on('shown.bs.collapse', (e) => {
+      const mode = $(e.currentTarget).data('mode')
       if (mode) {
-        $('.show-map').removeClass('active')
         map.collapse('hide')// Hide map when municipality search button clicked
       }
     })
 
     if (window.innerWidth >= 960) { // Bootstrap lg grid
-      $('#search-container').addClass('show')
+      $('#search-container').collapse('show')
     } else {
-      $('#search-container').removeClass('show')
+      $('#search-container').collapse('hide') /* TODO: hides from Kommunefakta (municipality not selected) also */
     }
 
-    // Adds attributes into the component input field
     $('#input-query-municipality').attr({
       'data-display': 'static',
       'data-toggle': 'dropdown',
@@ -117,7 +105,6 @@ export function init() {
       'aria-expanded': 'false'
     })
 
-    // Moves municipality-list inside the same wrapper as the input field
     $('#municipality-list').appendTo('.input-wrapper')
   })
 }
