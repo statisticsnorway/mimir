@@ -61,7 +61,8 @@ export function parseKeyFigure(keyFigure: Content<KeyFigure>, municipality?: Mun
     size: keyFigure.data.size,
     title: keyFigure.displayName,
     changes: undefined,
-    greenBox: keyFigure.data.greenBox
+    greenBox: keyFigure.data.greenBox,
+    glossaryText: keyFigure.data.glossaryText
   }
 
   const dataQueryId: string | undefined = keyFigure.data.dataquery
@@ -211,6 +212,7 @@ export interface KeyFigureView {
   time?: string;
   changes?: KeyFigureChanges;
   greenBox: boolean;
+  glossaryText?: string;
 }
 
 export interface KeyFigureChanges {

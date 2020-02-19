@@ -1,6 +1,6 @@
 export interface Glossary {
   /**
-   * Ingress
+   * Ordforklaring
    */
-  ingress?: string;
+  text?: string;
 }

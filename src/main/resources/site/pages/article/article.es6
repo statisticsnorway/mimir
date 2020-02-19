@@ -9,8 +9,6 @@ const {
   pageUrl
 } = __non_webpack_require__( '/lib/xp/portal')
 const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
-
-const glossaryLib = __non_webpack_require__( '/lib/glossary')
 const languageLib = __non_webpack_require__( '/lib/language')
 const {
   alertsForContext
@@ -22,7 +20,6 @@ const preview = [
   `${app.name}:menuBox`,
   `${app.name}:button`,
   `${app.name}:highchart`,
-  `${app.name}:glossary`,
   `${app.name}:statistikkbanken`,
   `${app.name}:dashboard`,
   `${app.name}:key-figure`,
@@ -45,8 +42,6 @@ exports.get = function(req) {
   const bottomRegion = isFragment ? null : page.page && page.page.regions && page.page.regions.bottom
   const config = {}
   const municipality = getMunicipality(req)
-
-  const glossary = glossaryLib.process(page.data.ingress, regions)
   const language = languageLib.getLanguage(page)
   let alternateLanguageVersionUrl
   if (language.exists) {
@@ -107,7 +102,6 @@ exports.get = function(req) {
     publishedDatetime,
     modifiedDatetime,
     alerts,
-    glossary,
     language,
     alternateLanguageVersionUrl,
     stylesUrl,

@@ -1,14 +1,25 @@
-const util = __non_webpack_require__( '/lib/util')
-const portal = __non_webpack_require__( '/lib/xp/portal')
-const content = __non_webpack_require__( '/lib/xp/content')
-const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
+const {
+  getComponent
+} = __non_webpack_require__( '/lib/xp/portal')
+const {
+  render
+} = __non_webpack_require__( '/lib/thymeleaf')
+const {
+  renderError
+} = __non_webpack_require__('/lib/error/error')
 
+const content = __non_webpack_require__( '/lib/xp/content')
+const util = __non_webpack_require__( '/lib/util')
 const view = resolve('./glossary.html')
 
 exports.get = function(req) {
-  const part = portal.getComponent()
-  const glossaryIds = part.config.glossary ? util.data.forceArray(part.config.glossary) : []
-  return renderPart(req, glossaryIds)
+  try {
+    const part = getComponent()
+    const glossaryIds = part.config.glossary ? util.data.forceArray(part.config.glossary) : []
+    return renderPart(req, glossaryIds)
+  } catch (e) {
+    return renderError(req, 'Error in part', e)
+  }
 }
 
 exports.preview = (req, id) => renderPart(req, [id])
@@ -23,15 +34,14 @@ function renderPart(req, glossaryIds) {
     if (glossary) {
       glossaries.push({
         displayName: glossary.displayName,
-        ingress: glossary.data.ingress
+        text: glossary.data.text
       })
     }
   })
 
-  const model = {
+  const body = render(view, {
     glossaries
-  }
-  const body = thymeleaf.render(view, model)
+  })
 
   return {
     body,
