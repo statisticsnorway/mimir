@@ -4,13 +4,19 @@ const {
   pageMode
 } = __non_webpack_require__( '/lib/ssb/utils')
 
+const view = resolve('topic.html')
+
 exports.get = function(req) {
   const page = portal.getContent()
   const component = portal.getComponent()
-  const view = resolve('topic.html')
   const mode = pageMode(req, page)
+  const {
+    title,
+    hideTitle
+  } = component.config
   const model = {
-    config: component.config,
+    title,
+    hideTitle,
     mainRegion: component.regions.main,
     mode
   }

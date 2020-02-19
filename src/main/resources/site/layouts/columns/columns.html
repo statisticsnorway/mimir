@@ -1,4 +1,6 @@
 <div class="container">
+  <h3 data-th-if="${hideTitle && title}" class="sr-only sr-only-focusable" data-th-text="${title}"></h3>
+  <h3 data-th-if="${!hideTitle && title}" data-th-text="${title}"></h3>
   <div class="xp-layout row" data-th-attr="data-size=${size}">
     <div data-portal-region="left" class="xp-region" data-th-classappend="${leftSize}">
       <div data-th-each="component : ${leftRegion.components}" data-th-remove="tag">

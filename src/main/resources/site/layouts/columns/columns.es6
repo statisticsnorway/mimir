@@ -1,10 +1,15 @@
 const portal = __non_webpack_require__( '/lib/xp/portal')
 const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
 
+const view = resolve('columns.html')
+
 exports.get = function(req) {
   const component = portal.getComponent()
-  const size = component.config.size
-  const view = resolve('columns.html')
+  const {
+    size,
+    title,
+    hideTitle
+  } = component.config
 
   // Default 50/50
   let leftSize = 'col-md-6'
@@ -18,10 +23,16 @@ exports.get = function(req) {
     rightSize = 'col-md-4'
   }
 
+  const leftRegion = component.regions.left
+  const rightRegion = component.regions.right
+
+
   const model = {
+    title,
+    hideTitle,
     size,
-    leftRegion: component.regions.left,
-    rightRegion: component.regions.right,
+    leftRegion,
+    rightRegion,
     leftSize,
     rightSize
   }

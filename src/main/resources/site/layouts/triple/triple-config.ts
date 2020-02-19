@@ -1,4 +1,4 @@
-export interface TopicConfig {
+export interface TripleConfig {
   /**
    * Tittel
    */
