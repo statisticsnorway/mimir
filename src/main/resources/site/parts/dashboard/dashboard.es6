@@ -1,17 +1,30 @@
-const util = __non_webpack_require__( '/lib/util')
-const portal = __non_webpack_require__( '/lib/xp/portal')
-const content = __non_webpack_require__( '/lib/xp/content')
-const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
 const {
-  getUpdated, getUpdatedReadable
+  getComponent,
+  serviceUrl
+} = __non_webpack_require__( '/lib/xp/portal')
+const {
+  getUpdated,
+  getUpdatedReadable
 } = __non_webpack_require__('/lib/ssb/dataset')
+const {
+  render
+} = __non_webpack_require__( '/lib/thymeleaf')
+const {
+  renderError
+} = __non_webpack_require__('/lib/error/error')
 
+const content = __non_webpack_require__( '/lib/xp/content')
+const util = __non_webpack_require__( '/lib/util')
 const view = resolve('./dashboard.html')
 
 exports.get = function(req) {
-  const part = portal.getComponent()
-  const dashboardIds = part.config.dashboard ? util.data.forceArray(part.config.dashboard) : []
-  return renderPart(req, dashboardIds)
+  try {
+    const part = getComponent()
+    const dashboardIds = part.config.dashboard ? util.data.forceArray(part.config.dashboard) : []
+    return renderPart(req, dashboardIds)
+  } catch (e) {
+    return renderError(req, 'Error in part', e)
+  }
 }
 
 exports.preview = (req, id) => renderPart(req, [id])
@@ -68,7 +81,7 @@ function renderPart(req, dashboardIds) {
     }
   })
 
-  const dashboardService = portal.serviceUrl({
+  const dashboardService = serviceUrl({
     service: 'dashboard'
   })
   const model = {
@@ -76,7 +89,7 @@ function renderPart(req, dashboardIds) {
     dataQueries,
     dashboardService
   }
-  const body = thymeleaf.render(view, model)
+  const body = render(view, model)
 
   return {
     body,
