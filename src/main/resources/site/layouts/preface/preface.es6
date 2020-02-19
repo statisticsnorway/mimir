@@ -1,6 +1,8 @@
 const portal = __non_webpack_require__( '/lib/xp/portal')
 const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
-const { pageMode } = __non_webpack_require__( '/lib/ssb/utils')
+const {
+  pageMode
+} = __non_webpack_require__( '/lib/ssb/utils')
 
 exports.get = function(req) {
   const page = portal.getContent()
@@ -17,5 +19,7 @@ exports.get = function(req) {
 
   const body = thymeleaf.render(view, model)
 
-  return { body }
+  return {
+    body
+  }
 }

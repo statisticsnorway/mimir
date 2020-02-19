@@ -14,21 +14,29 @@ exports.getLanguage = function(page) {
 
   const currentLanguageConfig = siteConfig.language.filter( (language) => language.code === page.language)[0]
   const alternativeLanguagesConfig = siteConfig.language.filter( (language) => language.code !== page.language)
-  const currentLangPath = currentLanguageConfig.link? currentLanguageConfig.link : ''
+  const currentLangPath = currentLanguageConfig.link ? currentLanguageConfig.link : ''
   const pagePathAfterSiteName = page._path.replace(`${site._path}${currentLangPath}`, '')
 
   const alternativeLanguages = alternativeLanguagesConfig.map( (altLanguage) => {
     const altVersionPath = altLanguage.link ? altLanguage.link : ''
     const altVersionUri = `${site._path}${altVersionPath}${pagePathAfterSiteName}`
-    const altVersionExists = content.exists({key: altVersionUri })
+    const altVersionExists = content.exists({
+      key: altVersionUri
+    })
     return {
       code: altLanguage.code,
       linkTitle: altLanguage.label,
-      linkSrc: altVersionExists ? portal.pageUrl({path: altVersionUri}) : portal.pageUrl({path: altLanguage.link}),
+      linkSrc: altVersionExists ? portal.pageUrl({
+        path: altVersionUri
+      }) : portal.pageUrl({
+        path: altLanguage.link
+      }),
       altVersionExists: altVersionExists,
       homePage: altLanguage.homePageId ? portal.pageUrl({
         id: altLanguage.homePageId
-      }) : portal.pageUrl({ path: altVersionPath})
+      }) : portal.pageUrl({
+        path: altVersionPath
+      })
     }
   })
 
@@ -36,7 +44,7 @@ exports.getLanguage = function(page) {
     code: currentLanguageConfig.code,
     link: (currentLanguageConfig.link !== null) ? currentLanguageConfig.link : '',
     phrases: {
-      ...(i18n.getPhrases(page.language === 'nb' ? '': page.language, ['site/i18n/phrases']))
+      ...(i18n.getPhrases(page.language === 'nb' ? '' : page.language, ['site/i18n/phrases']))
     },
     alternativeLanguages
   }

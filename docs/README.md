@@ -13,4 +13,5 @@ Documentation for Mimir
    1. [Setup](./Eslint.md#setup)
    1. [Config](./Eslint.md#config)
 1. [Error Handling](./ErrorHandling.md)
+1. [Routing](./Routing.md)
 

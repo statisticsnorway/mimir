@@ -1,26 +1,44 @@
-const util = __non_webpack_require__( '/lib/util')
-const portal = __non_webpack_require__( '/lib/xp/portal')
-const content = __non_webpack_require__( '/lib/xp/content')
-const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
+const {
+  attachmentUrl,
+  getComponent,
+  pageUrl
+} = __non_webpack_require__( '/lib/xp/portal')
+const {
+  render
+} = __non_webpack_require__( '/lib/thymeleaf')
+const {
+  renderError
+} = __non_webpack_require__('/lib/error/error')
 
+const content = __non_webpack_require__( '/lib/xp/content')
+const util = __non_webpack_require__( '/lib/util')
 const view = resolve('./button.html')
 
 exports.get = function(req) {
-  const part = portal.getComponent()
-  const buttonsIds = part.config.button ? util.data.forceArray(part.config.button) : []
-  return renderPart(req, buttonsIds)
+  try {
+    const part = getComponent()
+    const buttonsIds = part.config.button ? util.data.forceArray(part.config.button) : []
+    return renderPart(req, buttonsIds)
+  } catch (e) {
+    return renderError(req, 'Error in part', e)
+  }
 }
 
-exports.preview = function(req, id) {
-  return renderPart(req, [id])
-}
+exports.preview = (req, id) => renderPart(req, [id])
 
 function renderPart(req, buttonIds) {
   const buttons = []
-  buttonIds.forEach((key) => {
-    const button = content.get({ key })
+
+  buttonIds.map((key) => {
+    const button = content.get({
+      key
+    })
+
     if (button && button.data.link) {
-      const target = content.get({ key: button.data.link })
+      const target = content.get({
+        key: button.data.link
+      })
+
       if (target) {
         const href = getHref(target)
         buttons.push({
@@ -31,9 +49,14 @@ function renderPart(req, buttonIds) {
     }
   })
 
-  const model = { buttons }
-  const body = thymeleaf.render(view, model)
-  return { body, contentType: 'text/html' }
+  const body = render(view, {
+    buttons
+  })
+
+  return {
+    body,
+    contentType: 'text/html'
+  }
 }
 
 /**
@@ -43,11 +66,11 @@ function renderPart(req, buttonIds) {
  */
 function getHref(target) {
   if (target.type === `${app.name}:page`) {
-    return portal.pageUrl({
+    return pageUrl({
       id: target._id
     })
   } else {
-    return portal.attachmentUrl({
+    return attachmentUrl({
       id: target._id
     })
   }

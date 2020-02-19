@@ -1,14 +1,14 @@
 <layout>
-  <display-name>Kolonner</display-name>
+  <display-name>2 Kolonner</display-name>
   <description></description>
   <form>
     <input name="size" type="RadioButton">
       <label>Kolonnestørrelse</label>
       <occurrences minimum="1" maximum="1"/> 
       <config>
-        <option value="a">4/8</option> 
-        <option value="b">6/6</option>
-        <option value="c">8/4</option>
+        <option value="a">33/66</option> 
+        <option value="b">50/50</option>
+        <option value="c">66/33</option>
       </config>
       <default>b</default> 
     </input>

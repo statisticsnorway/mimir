@@ -1,0 +1,27 @@
+<part>
+  <display-name i18n="menuDropdown.title">Sticky-meny</display-name>
+  <description i18n="menuDropdown.partDescription"></description>
+  <form>
+    <input name="menu" type="ContentSelector">
+      <label i18n="menuDropdown.menu">Meny</label>
+      <occurrences minimum="1" maximum="1"/>
+      <config>
+        <allowPath>${site}</allowPath>
+        <allowType>menuDropdown</allowType>
+      </config>
+    </input>
+    <input name="basePage" type="ContentSelector">
+      <label>Hovedside</label>
+      <occurrences minimum="1" maximum="1"/>
+      <config>
+        <allowPath>${site}</allowPath>
+      </config>
+    </input>
+    <input name="modeMunicipality" type="CheckBox">
+      <label>Kommunefakta versjon</label>
+      <config>
+        <alignment>right</alignment>
+      </config>
+    </input>
+  </form>
+</part>

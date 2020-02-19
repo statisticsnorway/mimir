@@ -4,14 +4,20 @@ const {
   getSiteConfig,
   processHtml
 } = __non_webpack_require__( '/lib/xp/portal')
+const {
+  getMunicipality
+} = __non_webpack_require__( '/lib/klass/municipalities')
+const {
+  pageMode
+} = __non_webpack_require__( '/lib/ssb/utils')
+const {
+  render
+} = __non_webpack_require__( '/lib/thymeleaf')
+const {
+  renderError
+} = __non_webpack_require__('/lib/error/error')
 
-const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-
-const { getMunicipality } = __non_webpack_require__( '/lib/klass/municipalities')
-const { pageMode } = __non_webpack_require__( '/lib/ssb/utils')
-const { renderError } = __non_webpack_require__('/lib/error/error')
-
 const view = resolve('./relatedKostra.html')
 
 exports.get = function(req) {
@@ -27,7 +33,7 @@ exports.get = function(req) {
     }
     return renderPart(req, municipality)
   } catch (e) {
-    return renderError('Error in part: ', e)
+    return renderError(req, 'Error in part: ', e)
   }
 }
 
@@ -40,7 +46,7 @@ exports.preview = function(req) {
 }
 
 function renderPart(req, municipality) {
-  if(municipality) {
+  if (municipality) {
     const part = getComponent()
 
     const kostraLink = new React4xp('Link')
@@ -59,7 +65,7 @@ function renderPart(req, municipality) {
     }
 
     const body = kostraLink.renderBody({
-      body: thymeleaf.render(view, model)
+      body: render(view, model)
     })
 
     return {

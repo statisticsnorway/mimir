@@ -1,8 +1,7 @@
 const {
   getContent,
   processHtml,
-  assetUrl,
-  pageUrl
+  assetUrl
 } = __non_webpack_require__( '/lib/xp/portal')
 const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
 const {
@@ -13,23 +12,22 @@ const {
   pageMode,
   getBreadcrumbs
 } = __non_webpack_require__( '/lib/ssb/utils')
-const glossaryLib = __non_webpack_require__( '/lib/glossary')
 const {
   getMunicipality
 } = __non_webpack_require__( '/lib/klass/municipalities')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+const util = __non_webpack_require__( '/lib/util')
 
 const version = '%%VERSION%%'
 const partsWithPreview = [ // Parts that has preview
   `${app.name}:map`,
   `${app.name}:button`,
   `${app.name}:menu-box`,
-  `${app.name}:glossary`,
   `${app.name}:accordion`,
   `${app.name}:highchart`,
   `${app.name}:dashboard`,
   `${app.name}:key-figure`,
-  `${app.name}:menu-dropdown`,
+  `${app.name}:menuDropdown`,
   `${app.name}:statistikkbanken`,
   `${app.name}:dataquery`
 ]
@@ -41,16 +39,22 @@ exports.get = function(req) {
   const page = getContent()
   const mode = pageMode(req, page)
   const isFragment = page.type === 'portal:fragment'
-  let regions = null
+  let regions = {}
+  let configRegions = []
   if (isFragment) {
-    regions = page.fragment && page.fragment.regions ? page.fragment.regions : null
+    regions = page.fragment && page.fragment.regions ? page.fragment.regions : {}
   } else {
-    regions = page.page && page.page.regions ? page.page.regions : null
+    const pageData = page.page
+    if (pageData) {
+      regions = pageData.regions ? pageData.regions : {}
+      configRegions = pageData.config && pageData.config.regions ? util.data.forceArray(pageData.config.regions) : []
+    }
   }
+  configRegions.forEach((configRegion) => {
+    configRegion.components = regions[configRegion.region] ? util.data.forceArray(regions[configRegion.region].components) : []
+  })
 
-  const mainRegionComponents = regions && regions.main ? regions.main.components : []
-
-  const glossary = glossaryLib.process(page.data.ingress, regions)
+  const mainRegionComponents = regions && regions.main && regions.main.components.length > 0 ? regions.main.components : undefined
   const ingress = processHtml({
     value: page.data.ingress ? page.data.ingress.replace(/&nbsp;/g, ' ') : undefined
   })
@@ -70,7 +74,7 @@ exports.get = function(req) {
   const language = getLanguage(page)
 
   let municipality
-  if (mode === 'municipality') {
+  if (req.params.selfRequest) {
     municipality = getMunicipality(req)
   }
 
@@ -82,7 +86,7 @@ exports.get = function(req) {
   }
 
   const bodyClasses = []
-  if (mode !== 'map' && config && config.bkg_color === 'grey') {
+  if (config && config.bkg_color === 'grey') {
     bodyClasses.push('bkg-grey')
   }
 
@@ -107,16 +111,18 @@ exports.get = function(req) {
   const logoUrl = assetUrl({
     path: 'SSB_logo.png'
   })
-
+  const pageTitle = req.params.selfRequest ? page.displayName : req.params.pageTitle
   const model = {
     version,
     config,
     page,
     mainRegionComponents,
-    glossary,
+    configRegions,
     ingress,
+    mode,
     showIngress,
     preview,
+    pageTitle: `${pageTitle} - Statistisk sentralbyrå`,
     bodyClasses: bodyClasses.join(' '),
     stylesUrl,
     jsLibsUrl,
