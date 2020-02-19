@@ -10,14 +10,9 @@ export function init() {
     const map = $('#js-show-map')
 
     map.on('shown.bs.collapse', (e) => {
-      e.preventDefault()
-      e.stopPropagation()
+      $('.show-map').toggleClass('active') // Styles map icon when map is shown
 
-      $('#municipality-list').removeClass('show')
-
-      $('.show-map').toggleClass('active')
-
-      $('.show-search').attr('aria-expanded', 'false')
+      $('#search-container').collapse('hide')
       $('.show-search').removeClass('active')
 
       window.innerWidth < 960 && $('#search-container').removeClass('show')
@@ -32,6 +27,7 @@ export function init() {
         top
       } = el.getBoundingClientRect()
 
+      /* TODO: look at the original code and check functionality (previously nested in if-test if map has class d-none) */
       if (top > 1) {
         animate = true
 
@@ -41,7 +37,7 @@ export function init() {
         }, 400, 'swing', () => {
           animate = false
           setTimeout(() => {
-            map.collapse('show') /* TODO: look at the original code and check functionality*/
+            map.collapse('show')
           }, 50)
         })
       }
@@ -52,9 +48,14 @@ export function init() {
     })
 
     $('.part-menu-dropdown').each((i, el) => {
+      /* TODO: Kommunefakta search-container styling not working (show-search has a data-th-if=modeMunicipality ?) */
       const mode = $('.show-search').data('mode')
-      if (mode !== 'municipality') {
-        /* TODO: remove search-container md borders if not in municipality page */
+      if (mode === 'municipality') {
+        if (window.innerWidth <= 768) { // Bootstrap md grid
+          $('#search-container').css({
+            'border-style': 'hidden'
+          })
+        }
       }
 
       $(window).scroll(() => {
@@ -68,11 +69,12 @@ export function init() {
         top === 0 && $(el).addClass('border-bottom shadow-sm').find('.opacity-zero')
           .addClass('opacity-one')
 
-        top > 0 &&
+        /* TODO: look into */
+        /*top > 0 &&
         !animate &&
         $('#js-show-map').length &&
         $('#js-show-map').collapse('hide') &&
-        $('#js-show-map').removeClass('active') /* TODO: potential cause to map lying behind container when scrolled/offset? */
+        $('#js-show-map').removeClass('active')*/
 
         const stickyMenu = document.getElementById('sticky-menu')
         if (stickyMenu) {
@@ -97,7 +99,7 @@ export function init() {
     })
 
     $('.show-search').click((e) => {
-      $(e.currentTarget).toggleClass('active')
+      $(e.currentTarget).toggleClass('active') // Styles search icon after button is pressed
 
       const mode = $(e.currentTarget).data('mode')
       if (mode == 'municipality') {
