@@ -1,20 +1,13 @@
-import {SiteConfig} from '../../site/site-config';
-import {ContentLibrary, Content, ContentType, QueryResponse} from "enonic-types/lib/content";
+import {Content, ContentLibrary, QueryResponse} from "enonic-types/lib/content";
 import {PortalLibrary} from 'enonic-types/lib/portal';
 import {MenuItem} from '../../site/content-types/menuItem/menuItem';
-const { getSiteConfig, imageUrl, pageUrl }: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
+import {SiteConfig} from '../../site/site-config';
+
+const { getContent, imageUrl, pageUrl }: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
 const { get, getChildren }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
 
-export function getMenu(): Header {
-  const siteConfig: SiteConfig = getSiteConfig();
-  return {
-    searchPageUrl: siteConfig.searchResultPageId ?  pageUrl({id: siteConfig.searchResultPageId}): undefined,
-    menu: siteConfig.menuItemId? createMenuTree(siteConfig.menuItemId) : [],
-    topLinks: parseTopLinks()
-  }
-}
 
-function createMenuTree(menuItemId: string): Array<Array<MenuItemParsed>> {
+export function createMenuTree(menuItemId: string): Array<MenuItemParsed> {
   const menuContent: Content<MenuItem> | null = get({key: menuItemId})
 
   if(menuContent !== null) {
@@ -25,23 +18,35 @@ function createMenuTree(menuItemId: string): Array<Array<MenuItemParsed>> {
   return []
 }
 
-function createMenuBranch(menuItem: Content<MenuItem>): Array<MenuItemParsed> {
-  const url: string | undefined = menuItem.data.urlSrc ? parseUrl(menuItem.data.urlSrc): ''
+function createMenuBranch(menuItem: Content<MenuItem>): MenuItemParsed {
+  //const content: Content<object> | null = getContent()
+  const path: string | undefined = menuItem.data.urlSrc ? parseUrl(menuItem.data.urlSrc): '-'
   const children: QueryResponse<MenuItem> = getChildren({key: menuItem._id})
-  return [{
+/*
+  const isActive: boolean = children.total > 0 ? children.hits.reduce( (accumilated: boolean, child: ) => {
+    if( child.data.urlSrc && child.data.urlSrc._selected === 'content' &&
+        child.data.urlSrc.content && child.data.urlSrc.content.contentId === content._id) {
+      return true
+    }
+  }) : (children.data.urlSrc && children.data.urlSrc._selected === 'content' &&
+        children.data.urlSrc.content && children.data.urlSrc.content.contentId === content._id )
+*/
+  return {
     title: menuItem.displayName,
     shortName: menuItem.data.shortName ? menuItem.data.shortName : undefined,
-    url,
-    icon: menuItem.data.icon ? imageUrl({id: menuItem.data.icon, scale: 'block(100,100)'}) : undefined,
+    path,
+    //isActive,
+    icon: menuItem.data.icon ? imageUrl({id: menuItem.data.icon, scale: 'block(12px,12px)'}) : undefined,
     menuItems: children.total > 0 ? children.hits.map((childMenuItem) => createMenuBranch(childMenuItem)) : undefined
-  }]
+  }
 }
 
-function parseTopLinks(): Array<Link> {
-  return [{
-    title: '',
-    url: ''
-  }]
+type TopLinks = SiteConfig['topLinks']
+export function parseTopLinks(topLinks: TopLinks): Array<Link> | undefined {
+  return topLinks ? topLinks.map((link) => ({
+    title: link.linkTitle,
+    path: parseUrl(link.urlSrc)
+  })) : undefined
 }
 
 function parseUrl(urlSrc: MenuItem['urlSrc']): string | undefined {
@@ -65,19 +70,14 @@ interface UrlContent {
   url?: string;
 }
 
-export interface Header{
-  searchPageUrl?: string | undefined;
-  menu?: Array<Array<MenuItem>>;
-  topLinks?: Array<Link>;
-}
-
 export interface MenuItemParsed extends MenuItem {
   title: string;
-  url?: string;
-  menuItems?: Array<Array<MenuItem>> | undefined;
+  path?: string;
+  //isActive: boolean;
+  menuItems?: Array<MenuItem> | undefined;
 }
 
 export interface Link {
   title: string;
-  url?: string;
+  path?: string;
 }

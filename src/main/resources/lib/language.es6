@@ -23,24 +23,31 @@ exports.getLanguage = function(page) {
     const altVersionExists = content.exists({
       key: altVersionUri
     })
-    return {
-      code: altLanguage.code,
-      linkTitle: altLanguage.label,
-      linkSrc: altVersionExists ? portal.pageUrl({
+    let path = '';
+    if(altVersionExists) {
+      path = portal.pageUrl({
         path: altVersionUri
-      }) : portal.pageUrl({
-        path: altLanguage.link
-      }),
-      altVersionExists: altVersionExists,
-      homePage: altLanguage.homePageId ? portal.pageUrl({
+      })
+    } else if(altLanguage.homePageId) {
+      path = portal.pageUrl({
         id: altLanguage.homePageId
-      }) : portal.pageUrl({
+      })
+    } else {
+      path = portal.pageUrl({
         path: altVersionPath
       })
+    }
+
+    return {
+      code: altLanguage.code,
+      title: altLanguage.label,
+      altVersionExists,
+      path
     }
   })
 
   const result = {
+    menuContentId: currentLanguageConfig.menuContentId,
     code: currentLanguageConfig.code,
     link: (currentLanguageConfig.link !== null) ? currentLanguageConfig.link : '',
     phrases: {
@@ -51,6 +58,7 @@ exports.getLanguage = function(page) {
 
   return result
 }
+
 
 exports.getPhrases = (page) => {
   return page.language && page.language === 'en' ? english : norwegian

@@ -16,19 +16,9 @@
           </config>
         </input>
 
-        <input name="menuItemId" type="ContentSelector">
-          <label>Meny</label>
-          <occurrences minimum="0" maximum="1"/>
-          <config>
-            <allowContentType>menuItem</allowContentType>
-            <treeMode>true</treeMode>
-            <showStatus>true</showStatus>
-            <hideToggleIcon>true</hideToggleIcon>
-          </config>
-        </input>
-
         <item-set name="topLinks">
           <label>Topp lenker</label>
+          <expanded>false</expanded>
           <occurrences minimum="0" maximum="0"/>
           <items>
 
@@ -39,7 +29,7 @@
 
             <option-set name="urlSrc">
               <label>Lenkemål</label>
-              <expanded>true</expanded>
+              <expanded>false</expanded>
               <occurrences minimum="0" maximum="1"/>
               <options minimum="1" maximum="1">
                 <option name="manual">
@@ -131,6 +121,7 @@
     </field-set>
     <item-set name="language">
       <label>Språk instillinger</label>
+      <expanded>false</expanded>
       <occurrences minimum="1" maximum="2"/>
       <items>
         <input name="label" type="TextLine">
@@ -167,6 +158,16 @@
             <hideToggleIcon>false</hideToggleIcon>
           </config>
         </input>
+        <input name="menuContentId" type="ContentSelector">
+          <label>Meny</label>
+          <occurrences minimum="1" maximum="1"/>
+          <config>
+            <allowContentType>menuitem</allowContentType>
+            <treeMode>false</treeMode>
+            <showStatus>true</showStatus>
+            <hideToggleIcon>false</hideToggleIcon>
+          </config>
+        </input>
       </items>
     </item-set>
     <field-set>
@@ -174,6 +175,7 @@
       <items>
         <item-set name="router">
           <label>Routing</label>
+          <expanded>false</expanded>
           <occurrences minimum="0" maximum="0"/>
           <items>
             <input name="source" type="ContentSelector">
