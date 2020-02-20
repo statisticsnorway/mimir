@@ -5,7 +5,7 @@ const {
   getContent
 } = __non_webpack_require__( '/lib/xp/portal')
 
-const contentTypeName = `${app.name}:operations-alert`
+const contentTypeName = `${app.name}:operationsAlert`
 
 export const list = () => {
   const now = new Date()

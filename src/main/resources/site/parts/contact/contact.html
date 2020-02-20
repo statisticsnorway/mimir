@@ -1,5 +1,5 @@
 <section class="xp-part container mt-md-5 pt-3">
-  <h2 data-th-text="${part.config.label}?: 'Kontakt'" class="roboto-condensed-bold border-bottom border-dark mb-md-4 pb-md-2 bt-6"></h2>
+  <h2 data-th-text="${label}?: 'Kontakt'" class="roboto-condensed-bold border-bottom border-dark mb-md-4 pb-md-2 bt-6"></h2>
   <div data-th-each="contactGroup : ${contacts}" class="row d-flex flex-wrap">
     <div data-th-each="contact : ${contactGroup}" class="col-8 col-md-4 pt-2 pb-1 contact">
       <div data-th-if="${contact}">
@@ -12,5 +12,5 @@
         </p>
       </div>
     </div>
-  </div>  
+  </div>
 </section>

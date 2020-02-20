@@ -1,5 +1,5 @@
 <part>
-  <display-name>Nøkkeltall(IKKE BRUK)</display-name>
+  <display-name>Nøkkeltall</display-name>
   <form>
     <input type="TextLine" name="title">
       <label>Tittel</label>
@@ -10,7 +10,7 @@
       <occurrences minimum="0" maximum="0"/>
       <config>
         <allowPath>${site}</allowPath>
-        <allowType>key-figure</allowType>
+        <allowType>keyFigure</allowType>
       </config>
     </input>
     <item-set name="source">
