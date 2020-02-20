@@ -1,23 +1,63 @@
 header {
-  section .col-4 {
-    padding: 0
-  }
-  .logo svg {
-    width: 250px;
-    @include media-breakpoint-down(md) {
-      width: 180px;
+  &.ssb-header-wrapper{
+    padding: 0;
+
+    nav {
+      .ssb-link {
+        margin-left: 20px;
+      }
     }
-    path  {
-      fill: #274247;
+
+    .ssb-tabs {
+      justify-content: space-between;
     }
   }
-  .contact-link {
-    font-size: 14px;
-    color: #1a9d49;
-    text-decoration: underline;
-  }
-  input.form-control {
-    height: 50px;
-    border-width: 1px;
+  .tabItem {
+    margin-bottom: 40px;
+    flex-grow: 1;
+    overflow: hidden;
+
+    .subMenu {
+      color: #2d6975;
+      height: 0;
+      overflow: hidden;
+
+      &.visible {
+        height: auto
+      }
+    }
+
+    ol {
+      list-style: none;
+      padding: 0;
+
+      li {
+        margin: 20px 0;
+
+        a.ssb-link.with-icon {
+          .link-text {
+            color: #2d6975;
+          }
+        }
+
+        img {
+          width: 12px;
+        }
+      }
+    }
+
+    &:hover {
+      ol {
+        li {
+          a.ssb-link.with-icon {
+            .link-text {
+              color: black;
+            }
+          }
+
+        }
+      }
+    }
+
   }
 }
