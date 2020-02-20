@@ -1,5 +1,10 @@
 export interface ColumnsConfig {
   /**
+   * Vis som grid
+   */
+  isGrid: boolean;
+
+  /**
    * Kolonnestørrelse
    */
   size: "a" | "b" | "c";

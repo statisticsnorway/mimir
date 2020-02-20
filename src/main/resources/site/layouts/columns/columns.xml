@@ -3,6 +3,9 @@
   <description></description>
   <form>
     <mixin name="title"/>
+    <input name="isGrid" type="CheckBox">
+      <label>Vis som grid</label>
+    </input>
     <input name="size" type="RadioButton">
       <label>Kolonnestørrelse</label>
       <occurrences minimum="1" maximum="1"/> 
