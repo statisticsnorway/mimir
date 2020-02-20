@@ -13,7 +13,7 @@ export default (props) =>
       <Accordion key={accordion.id} header={accordion.open}>
         <div dangerouslySetInnerHTML={createMarkup(accordion.body)}/>
         {accordion.items.map((item, i) =>
-          <NestedAccordion key={accordion.key + i} header={item.title}>
+          <NestedAccordion key={i.toString()} header={item.title}>
             <div dangerouslySetInnerHTML={createMarkup(item.body)}/>
           </NestedAccordion>)}
       </Accordion>

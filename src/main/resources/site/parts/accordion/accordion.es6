@@ -8,11 +8,7 @@ const {
 
 const content = __non_webpack_require__( '/lib/xp/content')
 const util = __non_webpack_require__( '/lib/util')
-
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-
-// const view = resolve('./accordion.html')
-
 
 exports.get = function(req) {
   try {
@@ -47,6 +43,15 @@ function renderPart(req) {
       })
     }
   })
+
+  if ( accordions.length === 0 ) {
+    accordions.push({
+      id: 1,
+      body: 'Feil i lasting av innhold, innhold mangler eller kunne ikke hentes.',
+      open: 'Sett inn innhold!',
+      items: []
+    })
+  }
 
   const props = {
     accordions: accordions
