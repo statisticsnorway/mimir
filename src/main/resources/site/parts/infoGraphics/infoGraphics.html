@@ -1,11 +1,9 @@
-<section class="part-infoGraphic">
+<section class="part-infoGraphic w-100">
     <div class="col-12">
         <h2 data-th-text="${title}" />
 
-        <div class="rounded mx-auto d-block">
-          <img data-th-if="${image}" data-th-alt="${altText}" data-th-src="${imageSrc}" />
-          <a data-th-href="${longDesc}" class="screen-reader-only" data-th-text="${descriptionInfographics}" />
-        </div>
+        <img data-th-if="${image}" data-th-alt="${altText}" data-th-src="${imageSrc}" class="mx-auto d-block"/>
+        <a data-th-href="${longDesc}" class="screen-reader-only" data-th-text="${descriptionInfographics}" />
 
         <ul class="footnote">
             <li data-th-each="footNote, iterStat : ${footnote}">
