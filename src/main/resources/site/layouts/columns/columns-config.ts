@@ -12,15 +12,10 @@ export interface ColumnsConfig {
   /**
    * Tittel
    */
-  title: {
-    /**
-     * Tittel
-     */
-    title?: string;
+  title?: string;
 
-    /**
-     * Skjul tittel
-     */
-    hideTitle: boolean;
-  };
+  /**
+   * Skjul tittel
+   */
+  hideTitle: boolean;
 }

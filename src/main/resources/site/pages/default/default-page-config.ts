@@ -22,5 +22,15 @@ export interface DefaultPageConfig {
      * Med mørk og skrå bakgrunn
      */
     showGreyTriangle: boolean;
+
+    /**
+     * Tittel
+     */
+    title?: string;
+
+    /**
+     * Skjul tittel
+     */
+    hideTitle: boolean;
   }>;
 }

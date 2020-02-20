@@ -10,13 +10,16 @@ const {
 const {
   alertsForContext,
   pageMode,
-  getBreadcrumbs
+  getBreadcrumbs,
 } = __non_webpack_require__( '/lib/ssb/utils')
 const {
   getMunicipality
 } = __non_webpack_require__( '/lib/klass/municipalities')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const util = __non_webpack_require__( '/lib/util')
+const {
+  getHeaderContent
+} = __non_webpack_require__( '/lib/ssb/header')
 
 const version = '%%VERSION%%'
 const partsWithPreview = [ // Parts that has preview
@@ -39,6 +42,7 @@ exports.get = function(req) {
   const ts = new Date().getTime()
   const page = getContent()
   const mode = pageMode(req, page)
+
   const isFragment = page.type === 'portal:fragment'
   let regions = {}
   let configRegions = []
@@ -73,7 +77,6 @@ exports.get = function(req) {
   }
 
   const language = getLanguage(page)
-
   let municipality
   if (req.params.selfRequest) {
     municipality = getMunicipality(req)
@@ -109,10 +112,7 @@ exports.get = function(req) {
     path: 'top-banner.png'
   })
 
-  const logoUrl = assetUrl({
-    path: 'SSB_logo.png'
-  })
-  const pageTitle = req.params.selfRequest ? page.displayName : req.params.pageTitle
+  const pageTitle = req.params.selfRequest ? req.params.pageTitle : page.displayName
   const model = {
     version,
     config,
@@ -128,12 +128,23 @@ exports.get = function(req) {
     stylesUrl,
     jsLibsUrl,
     bannerUrl,
-    logoUrl,
     language,
     GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null
   }
 
   let body = thymeleaf.render(view, model)
+  let pageContributions
+
+  const headerContent = getHeaderContent(language)
+  const headerComponent = new React4xp('Header')
+    .setProps({...headerContent})
+    .setId('header')
+  body = headerComponent.renderBody({
+    body
+  })
+  pageContributions = headerComponent.renderPageContributions({
+    pageContributions,
+  })
 
   const breadcrumbs = getBreadcrumbs(page, municipality)
   const breadcrumbComponent = new React4xp('Breadcrumb')
@@ -145,7 +156,6 @@ exports.get = function(req) {
     body
   })
 
-  let pageContributions
   const alerts = alertsForContext(municipality)
   if (alerts.length > 0) {
     const alertComponent = new React4xp('Alerts')
