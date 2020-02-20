@@ -1,9 +1,14 @@
-<section class="part-infoGraphic w-100">
-    <div class="col-12">
-        <h2 data-th-text="${title}" />
+<section class="container part-infoGraphic">
+  <div class="xp-part row">
+    <div class="xp-region col-12">
+      <div class="border-top-green">
 
-        <img data-th-if="${image}" data-th-alt="${altText}" data-th-src="${imageSrc}" class="mx-auto d-block"/>
-        <a data-th-href="${longDesc}" class="screen-reader-only" data-th-text="${descriptionInfographics}" />
+        <h2 class="mt-0" data-th-text="${title}" />
+
+        <div class="d-flex justify-content-center">
+          <img data-th-if="${image}" data-th-alt="${altText}" data-th-src="${imageSrc}" />
+          <a data-th-href="${longDesc}" class="screen-reader-only" data-th-text="${descriptionInfographics}" />
+        </div>
 
         <ul class="footnote">
             <li data-th-each="footNote, iterStat : ${footnote}">
@@ -19,6 +24,8 @@
         <div class="sources" data-th-each="source : ${sources}">
           <a class="mb-1" data-th-href="${source.url}" data-th-text="${source.urlText}" />
         </div>
-    </div>
-</section>
 
+      </div>
+    </div>
+  </div>
+</section>
