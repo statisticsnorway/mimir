@@ -1,0 +1,12 @@
+<mixin>
+  <display-name>Tittel</display-name>
+  <form>
+    <input type="TextLine" name="title">
+      <label>Tittel</label>
+      <occurrences minimum="0" maximum="1"/>
+    </input>
+    <input name="hideTitle" type="CheckBox">
+      <label>Skjul tittel</label>
+    </input>
+  </form>
+</mixin>
