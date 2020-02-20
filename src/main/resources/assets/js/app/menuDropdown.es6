@@ -19,7 +19,10 @@ export function init() {
       $('.show-search').parent().click(() => {
         map.collapse('hide')
       })
+    })
 
+    /* TODO: look into: animation for feather-icon down not animating + background when element is being 'pulled back' is not transparent */
+    map.on('shown.bs.collapse', () => {
       const el = $('.part-menu-dropdown')[0]
 
       const {
@@ -41,7 +44,7 @@ export function init() {
       }
     })
 
-    map.on('hidden.bs.collapse', () => {
+    map.on('hide.bs.collapse', () => {
       map.parent().removeClass('map-container')
     })
 
