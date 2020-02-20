@@ -1,5 +1,50 @@
 export interface SiteConfig {
   /**
+   * Søkeresultat side
+   */
+  searchResultPageId?: string;
+
+  /**
+   * Topp lenker
+   */
+  topLinks?: Array<{
+    /**
+     * Lenketittel
+     */
+    linkTitle: string;
+
+    /**
+     * Lenkemål
+     */
+    urlSrc?: {
+      /**
+       * Selected
+       */
+      _selected: string;
+
+      /**
+       * Url lenke
+       */
+      manual?: {
+        /**
+         * Kildelenke
+         */
+        url?: string;
+      };
+
+      /**
+       * Lenke til internt innhold
+       */
+      content?: {
+        /**
+         * Relatert innhold
+         */
+        contentId?: string;
+      };
+    };
+  }>;
+
+  /**
    * Kommunedata innhold fra api
    */
   municipalDataContentId?: string;
@@ -23,6 +68,36 @@ export interface SiteConfig {
    * Velg hvilken kommuner det gjelder her.
    */
   defaultMunicipality2?: string;
+
+  /**
+   * Kommunefakta instillinger
+   */
+  kommunefakta?: Array<{
+    /**
+     * Mappe kartfiler
+     */
+    mapfolder?: string;
+  }>;
+
+  /**
+   * Routing
+   */
+  router?: Array<{
+    /**
+     * Fra
+     */
+    source: string;
+
+    /**
+     * Til
+     */
+    target: string;
+
+    /**
+     * Sidetittel på rutede sider
+     */
+    pageTitle?: string;
+  }>;
 
   /**
    * Språk instillinger
@@ -52,5 +127,10 @@ export interface SiteConfig {
      * Språkets "Hjem"-side
      */
     homePageId?: string;
+
+    /**
+     * Meny
+     */
+    menuContentId: string;
   }>;
 }
