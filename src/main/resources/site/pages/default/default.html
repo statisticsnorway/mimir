@@ -27,7 +27,13 @@
 </head>
 <body class="xp-page" data-th-classappend="${bodyClasses}">
   <!-- HEADER -->
-  <div id="ssb-menu" data-th-include="mimir:/site/includes/ssbMenu.html"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <div id="header"></div>
+      </div>
+    </div>
+  </div>
 
   <!-- Metainfo to make the page searchable -->
   <div id="metainfo-container" data-th-include="mimir:/site/includes/metainfoSearch.html" data-th-remove="tag"></div>
@@ -65,7 +71,7 @@
         class="searchabletext"
         data-th-classappend="${region.view} == 'card' ? 'layout-topic border-top-green container' : 'container-fluid p-0'"
       >
-        <div 
+        <div
           class="row"
           data-th-data-portal-region="${region.region}"
         >
