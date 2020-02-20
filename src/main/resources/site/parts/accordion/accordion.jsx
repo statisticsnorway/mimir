@@ -8,7 +8,7 @@ function createMarkup(html) {
 }
 
 export default (props) =>
-  <div>
+  <section className="xp-part part-accordion container">
     {props.accordions.map((accordion) =>
       <Accordion key={accordion.id} header={accordion.open}>
         <div dangerouslySetInnerHTML={createMarkup(accordion.body)}/>
@@ -18,4 +18,4 @@ export default (props) =>
           </NestedAccordion>)}
       </Accordion>
     )}
-  </div>
+  </section>
