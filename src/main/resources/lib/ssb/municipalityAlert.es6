@@ -2,7 +2,7 @@ const {
   query
 } = __non_webpack_require__( '/lib/xp/content')
 
-const contentTypeName = `${app.name}:municipality-alert`
+const contentTypeName = `${app.name}:municipalityAlert`
 
 export const get = (key) => {
   const content = query({

@@ -22,7 +22,7 @@ const {
   renderError
 } = __non_webpack_require__( '/lib/error/error')
 
-const view = resolve('./key-figure.html')
+const view = resolve('./keyFigure.html')
 
 exports.get = function(req) {
   try {

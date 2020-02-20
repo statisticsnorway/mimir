@@ -27,10 +27,10 @@
 </head>
 <body class="xp-page" data-th-classappend="${bodyClasses}">
   <!-- HEADER -->
-  <div id="ssb-menu" data-th-include="mimir:/site/includes/ssb-menu.html"></div>
+  <div id="ssb-menu" data-th-include="mimir:/site/includes/ssbMenu.html"></div>
 
   <!-- Metainfo to make the page searchable -->
-  <div id="metainfo-container" data-th-include="mimir:/site/includes/metainfo-search.html" data-th-remove="tag"></div>
+  <div id="metainfo-container" data-th-include="mimir:/site/includes/metainfoSearch.html" data-th-remove="tag"></div>
 
   <!-- MAIN -->
   <main class="xp-region" data-th-if="${!isFragment}">

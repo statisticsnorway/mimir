@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content-type>
+    <display-name>Artikkel</display-name>
+    <super-type>base:structured</super-type>
+    <form>
+        <input name="author" type="ContentSelector">
+            <label>Forfatter</label>
+            <occurrences minimum="0" maximum="0"/>
+            <config>
+                <allowContentType>mimir:contact</allowContentType>
+                <treeMode>true</treeMode>
+            </config>
+        </input>
+        <input name="showPublishDate" type="CheckBox">
+            <label>Vis publiseringsdato</label>
+            <default>checked</default>
+        </input>
+        <option-set name="showModifiedDate">
+            <label>Vis tidspunkt for sist redigering</label>
+            <expanded>false</expanded>
+            <occurrences minimum="0" maximum="1"/>
+            <help-text>You can select up to 2 options</help-text>
+            <options minimum="1" maximum="2">
+                <option name="dateOption">
+                    <label>Skal det vises dato?</label>
+                    <help-text>Hjelpetekst, den nyttigste</help-text>
+                    <items>
+                        <input name="showModifiedTime" type="CheckBox">
+                            <label>Vis klokkeslett for publisering</label>
+                            <default>unchecked</default>
+                        </input>
+                        <input name="modifiedDate" type="DateTime">
+                            <label>Tidspunkt for endring</label>
+                        </input>
+                    </items>
+                </option>
+            </options>
+        </option-set>
+
+        <input name="ingress" type="TextArea">
+            <occurrences minimum="1" maximum="1" />
+            <label>Ingress</label>
+        </input>
+
+        <input name="articleText" type="HtmlArea">
+            <label>Artikkeltekst</label>
+            <config>
+                <include>*</include>
+                <allowHeadings>h3 h4 h5</allowHeadings>
+            </config>
+        </input>
+    </form>
+</content-type>

@@ -37,7 +37,7 @@ function renderPart(req, accordionIds) {
       const items = accordion.data.items ? util.data.forceArray(accordion.data.items) : []
       accordions.push({
         id: accordion._id,
-        body: portal.processHtml({
+        body: processHtml({
           value: accordion.data.body
         }),
         open: accordion.data.open,
