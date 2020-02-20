@@ -1,6 +1,6 @@
 export interface AccordionPartConfig {
   /**
-   * Ekspanderer
+   * Trekkspill-innhold
    */
   accordion: Array<string>;
 }
