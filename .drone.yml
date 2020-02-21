@@ -42,18 +42,18 @@ steps:
         from_secret: ssb-xp7t-pass
     commands:
       - enonic app install --file build/libs/*.jar
-#---
-# kind: pipeline
-# type: docker
-# name: "Cypress Test Activites - Test environment"
-#
-#trigger:
-#  branch:
-#    - test2
-#  event:
-#    include:
-#      - push
-#steps:
+---
+ kind: pipeline
+ type: docker
+ name: "Cypress Test Activites - Test environment"
+
+trigger:
+  branch:
+    - test2
+  event:
+    include:
+      - push
+steps:
 #  - name: build & test
 #    image: enonic/enonic-ci:7.1-node
 #    commands:
@@ -70,11 +70,11 @@ steps:
 #        from_secret: ssb-xp7t-pass
 #    commands:
 #      - enonic app install --file build/libs/*.jar
-#  - name: run tests
-#    image: cypress/base:10.16.0
-#    commands:
-#      - npm install cypress
-#      - npm run cy:run:e2e
+  - name: run tests
+    image: cypress/base:10.16.0
+    commands:
+      - npm install
+      - npm run cy:run:e2e
 
 ---
 kind: pipeline
