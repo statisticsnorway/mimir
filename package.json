@@ -20,7 +20,7 @@
     "cy:run:test": "cypress run --spec cypress/integration/localhost/**/*",
     "cy:run:ci": "cypress run --spec cypress/integration/e2e/**/*",
     "cy:run:e2e": "cross-env CYPRESS_baseUrl=https://www.test.ssb.no start-server-and-test start https-get://www.test.ssb.no cy:run:ci",
-    "cy:run:local": "start-server-and-test start http-get://localhost:8080/xp cy:run:test"
+    "cy:run:local": "start-server-and-test start http-get://localhost:8080 cy:run:test"
   },
   "repository": {
     "type": "git",
@@ -40,6 +40,7 @@
     "@typescript-eslint/eslint-plugin": "^2.11.0",
     "@typescript-eslint/parser": "^2.11.0",
     "babel-loader": "^8.0.6",
+    "cross-env": "^5.2.1",
     "cypress": "^4.0.2",
     "enonic-ts-codegen": "0.0.12",
     "enonic-types": "0.0.25",

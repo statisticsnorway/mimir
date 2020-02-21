@@ -1,5 +1,5 @@
 {
-    "baseUrl": "http://localhost:8080/xp",
+    "baseUrl": "http://localhost:8080",
     "video": false,
     "responseTimeout": 180000
 }
