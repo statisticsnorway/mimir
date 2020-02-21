@@ -119,6 +119,10 @@
       top: 92px;
       position: absolute;
       border-bottom: 1px solid #aaaaaa;
+
+      &.no-border {
+        border: 0 none;
+      }
     }
   }
   @include media-breakpoint-down(sm) {
