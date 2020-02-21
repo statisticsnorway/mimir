@@ -1,5 +1,5 @@
 <section class="xp-part key-figures">
-    <h3 class="mb-5" data-th-if="${displayName}" data-th-text="${displayName}"></h3>
+    <h4 class="mb-5" data-th-if="${displayName}" data-th-text="${displayName}"></h4>
     <div class="row">
         <div data-th-each="figure, i: ${keyFigures}" data-th-remove="tag">
             <div class="d-md-none mt-5 col-12" data-th-if="${i.index}"></div>
@@ -8,7 +8,7 @@
                 <div data-th-id="${figure.id}"/>
                 <!-- Todo: Use react component Reference -->
                 <div data-th-if="${figure.source && figure.source.url}" data-th-unless="${source}">
-                    <h4 class="pt-3 mb-0">Kilde:</h4>
+                    <h5 class="pt-3 mb-0">Kilde:</h5>
                     <a class="ssb-link" data-th-href="${figure.source.url}" data-th-text="${figure.source.title}"></a>
                 </div>
             </div>
@@ -17,7 +17,7 @@
     </div>
     <div class="row" data-th-if="${source}">
         <div class="col-12">
-            <h4 class="pt-3 mb-0">Kilde:</h4>
+            <h5 class="pt-3 mb-0">Kilde:</h5>
             <a class="ssb-link" data-th-href="${source.url}" data-th-text="${source.title}"></a>
         </div>
     </div>
