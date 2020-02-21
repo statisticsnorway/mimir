@@ -73,7 +73,7 @@ steps:
   - name: run tests
     image: cypress/base:10.16.0
     commands:
-      - npm install
+      - npm install cypress
       - npm run cy:run:e2e
 
 ---
