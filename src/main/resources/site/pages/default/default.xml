@@ -14,6 +14,7 @@
       <label>Region</label> 
       <occurrences minimum="1" maximum="15"/> 
       <items>
+        <mixin name="title"/>
         <input name="view" type="RadioButton">
           <label>Visningstype</label>
           <occurrences minimum="1" maximum="1"/> 
