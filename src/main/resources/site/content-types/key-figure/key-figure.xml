@@ -1,5 +1,5 @@
 <content-type>
-  <display-name>Nøkkeltall</display-name>
+  <display-name>Nøkkeltall(IKKE BRUK)</display-name>
   <super-type>base:structured</super-type>
   <allow-child-content>true</allow-child-content>
   <form>

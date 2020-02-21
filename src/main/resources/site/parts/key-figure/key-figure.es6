@@ -10,9 +10,8 @@ const {
   getComponent, getSiteConfig, getContent
 } = __non_webpack_require__( '/lib/xp/portal')
 const {
-  get
-} = __non_webpack_require__( '/lib/xp/content')
-const thymeleaf = __non_webpack_require__('/lib/thymeleaf')
+  render
+} = __non_webpack_require__('/lib/thymeleaf')
 const {
   data
 } = __non_webpack_require__( '/lib/util')
@@ -26,18 +25,22 @@ const {
 const view = resolve('./key-figure.html')
 
 exports.get = function(req) {
-  const part = getComponent()
-  const keyFigureIds = data.forceArray(part.config.figure)
-  let municiaplity = getMunicipality(req)
-  const page = getContent()
-  const mode = pageMode(req, page)
-  if (!municiaplity && mode === 'edit') {
-    const defaultMuniciaplity = getSiteConfig().defaultMunicipality
-    municiaplity = getMunicipality({
-      code: defaultMuniciaplity
-    })
+  try {
+    const part = getComponent()
+    const keyFigureIds = data.forceArray(part.config.figure)
+    let municiaplity = getMunicipality(req)
+    const page = getContent()
+    const mode = pageMode(req, page)
+    if (!municiaplity && mode === 'edit') {
+      const defaultMuniciaplity = getSiteConfig().defaultMunicipality
+      municiaplity = getMunicipality({
+        code: defaultMuniciaplity
+      })
+    }
+    return renderPart(municiaplity, keyFigureIds)
+  } catch (e) {
+    return renderError(req, 'Error in part', e)
   }
-  return renderPart(municiaplity, keyFigureIds)
 }
 
 exports.preview = (req, id) => {
@@ -49,25 +52,20 @@ exports.preview = (req, id) => {
 }
 
 const renderPart = (municipality, keyFigureIds) => {
-  try {
-    const part = getComponent()
-    // get all keyFigures and filter out non-existing keyFigures
-    const keyFigures = keyFigureIds.reduce((list, keyFigureId) => {
-      const keyFigure = getKeyFigure(keyFigureId)
-      if (keyFigure) {
-        list.push(keyFigure)
-      }
-      return list
-    }, [])
-
-    // continue if we have any keyFigures
-    return keyFigures.length ? renderKeyFigure(keyFigures, part, municipality) : {
-      body: '',
-      contentType: 'text/html'
+  const part = getComponent()
+  // get all keyFigures and filter out non-existing keyFigures
+  const keyFigures = keyFigureIds.reduce((list, keyFigureId) => {
+    const keyFigure = getKeyFigure(keyFigureId)
+    if (keyFigure) {
+      list.push(keyFigure)
     }
-  } catch (e) {
-    log.error(e)
-    return renderError('Feil i part', e)
+    return list
+  }, [])
+
+  // continue if we have any keyFigures
+  return keyFigures.length ? renderKeyFigure(keyFigures, part, municipality) : {
+    body: '',
+    contentType: 'text/html'
   }
 }
 
@@ -115,7 +113,7 @@ function renderKeyFigure(keyFigures, part, municipality) {
     return keyFigureReact.setId(keyFigure.id).setProps(reactProps)
   })
 
-  let body = thymeleaf.render(view, model)
+  let body = render(view, model)
   let pageContributions = undefined
 
   reactObjs.forEach((keyfigureReact) => {

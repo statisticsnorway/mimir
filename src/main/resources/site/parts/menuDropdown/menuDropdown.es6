@@ -7,11 +7,9 @@ const {
   serviceUrl
 } = __non_webpack_require__( '/lib/xp/portal')
 const {
-  municipalsWithCounties, getMunicipality
+  municipalsWithCounties,
+  getMunicipality
 } = __non_webpack_require__( '/lib/klass/municipalities')
-const {
-  pageMode
-} = __non_webpack_require__( '/lib/ssb/utils')
 const {
   render
 } = __non_webpack_require__( '/lib/thymeleaf')
@@ -27,7 +25,7 @@ exports.get = (req) => {
   try {
     return renderPart(req)
   } catch (e) {
-    return renderError('Error in part', e)
+    return renderError(req, 'Error in part', e)
   }
 }
 

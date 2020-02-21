@@ -25,8 +25,7 @@ $container-max-widths: (
 @import "./color";
 @import "./font";
 @import "./header";
-@import "./menu-box";
-@import "./accordion";
+@import "./menuBox";
 @import "./dashboard";
 @import "./button";
 @import "./datasets";
@@ -36,11 +35,11 @@ $container-max-widths: (
 @import "./popper";
 @import "./dropdown"; // TODO: remove when implemented correctly from design system
 @import "./highchart";
-@import "./key-figures";
+@import "./keyFigures";
 @import "./menuDropdown";
 @import "./menu";
 @import "./preface";
-@import "./global-styles";
+@import "./globalStyles";
 @import "./infoGraphic";
 @import "./_profiledBox";
 
