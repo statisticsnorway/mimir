@@ -57,8 +57,8 @@ steps:
   - name: run tests
     image: cypress/base:10.16.0
     commands:
-      - npm install cypress
-      - npm run cy:run:e2e
+      - npm install
+      - npm run cy:run:ci
 #  - name: build & test
 #    image: enonic/enonic-ci:7.1-node
 #    commands:
