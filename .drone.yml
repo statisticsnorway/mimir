@@ -43,38 +43,38 @@ steps:
     commands:
       - enonic app install --file build/libs/*.jar
 ---
-kind: pipeline
-type: docker
-name: "Cypress Test Activites - Test environment"
-# Deploy to test on pushes to test2 
-trigger:
-  branch:
-    - test2
-  event:
-    include:
-      - push
-steps:
-  - name: build & test
-    image: enonic/enonic-ci:7.1-node
-    commands:
-      - /setup_sandbox.sh
-      - enonic project build
-  - name: deploy
-    image: enonic/enonic-ci:7.1-node
-    environment:
-      ENONIC_CLI_REMOTE_URL:
-        from_secret: ssb-xp7t-url
-      ENONIC_CLI_REMOTE_USER:
-        from_secret: ssb-xp7t-user
-      ENONIC_CLI_REMOTE_PASS:
-        from_secret: ssb-xp7t-pass
-    commands:
-      - enonic app install --file build/libs/*.jar
-  - name: run tests
-    image: cypress/base:10.16.0
-    commands:
-      - npm install cypress     
-      - npm run cy:run:e2e
+# kind: pipeline
+# type: docker
+# name: "Cypress Test Activites - Test environment"
+
+#trigger:
+#  branch:
+#    - test2
+#  event:
+#    include:
+#      - push
+#steps:
+#  - name: build & test
+#    image: enonic/enonic-ci:7.1-node
+#    commands:
+#      - /setup_sandbox.sh
+#      - enonic project build
+#  - name: deploy
+#    image: enonic/enonic-ci:7.1-node
+#    environment:
+#      ENONIC_CLI_REMOTE_URL:
+#        from_secret: ssb-xp7t-url
+#      ENONIC_CLI_REMOTE_USER:
+#        from_secret: ssb-xp7t-user
+#      ENONIC_CLI_REMOTE_PASS:
+#        from_secret: ssb-xp7t-pass
+#    commands:
+#      - enonic app install --file build/libs/*.jar
+#  - name: run tests
+#    image: cypress/base:10.16.0
+#    commands:
+#      - npm install cypress     
+#      - npm run cy:run:e2e
 
 ---
 kind: pipeline

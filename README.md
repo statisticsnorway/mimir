@@ -76,6 +76,8 @@ Deploing to PROD:
 
 ### Running Cypress tests
 Cypress is set up in mimir project to run tests in localhost and in Test Environment, respectively.
+The tests are in [cypress/integration](cypress/integration) folder.
+
 To run tests localhost simply run the script:
 ```
 npm run cy:run:local 
