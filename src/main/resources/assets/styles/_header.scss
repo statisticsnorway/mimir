@@ -1,3 +1,7 @@
+.header-wrapper {
+  background: white;
+}
+
 header {
   &.ssb-header-wrapper{
     padding: 0;
@@ -10,6 +14,9 @@ header {
 
     .ssb-tabs {
       justify-content: space-between;
+
+
+
     }
   }
   .tabItem {
@@ -17,20 +24,37 @@ header {
     flex-grow: 1;
     overflow: hidden;
 
+    .navigation-item {
+      height: 62.5px;
+      width: 100%;
+      padding: 0 45px 15px 0;
+      text-align: left;
+      align-items: end;
+
+      span {
+        font-size: 16px;
+        width: 100%;
+      }
+    }
+
+    @include media-breakpoint-down(md) {
+      .navigation-item {
+        padding: 0 30px 15px 0;
+      }
+    }
+
+
     .subMenu {
       color: #2d6975;
       height: 0;
       overflow: hidden;
+      list-style: none;
+      padding: 0;
+      max-width: 180px;
 
       &.visible {
         height: auto
       }
-    }
-
-    ol {
-      list-style: none;
-      padding: 0;
-      max-width: 180px;
 
       li {
         margin: 20px 0;
@@ -48,11 +72,15 @@ header {
     }
 
     &:hover {
-      ol {
+      .subMenu {
         li {
           a.ssb-link.with-icon {
             .link-text {
               color: black;
+              &:hover {
+                color: white;
+              }
+
             }
           }
 
