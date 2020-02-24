@@ -1,0 +1,53 @@
+const {
+  getComponent,
+  processHtml
+} = __non_webpack_require__( '/lib/xp/portal')
+const {
+  render
+} = __non_webpack_require__('/lib/thymeleaf')
+const {
+  renderError
+} = __non_webpack_require__('/lib/error/error')
+const React4xp = require('/lib/enonic/react4xp')
+const content = __non_webpack_require__( '/lib/xp/content')
+
+const view = resolve('./factBox.html')
+
+exports.get = function(req) {
+  try {
+    const part = getComponent()
+    return renderPart(req, part.config.factBox)
+  } catch (e) {
+    return renderError(req, 'Error in part', e)
+  }
+}
+
+exports.preview = (req, id) => renderPart(req, id)
+
+function renderPart(req, factBoxId) {
+  if (!factBoxId) throw new Error(`FactBox: missing id`)
+  const factBoxContent = content.get({
+    key: factBoxId
+  })
+  if (!factBoxContent) throw new Error(`FactBox with id ${factBoxId} doesn't exist`)
+  const text = processHtml({
+    value: factBoxContent.data.text
+  })
+  const factBox = new React4xp('FactBox')
+    .setProps({
+      header: factBoxContent.displayName,
+      text
+    })
+    .setId('fact-box')
+    .uniqueId()
+
+  const body = render(view, {
+    factBoxId: factBox.react4xpId
+  })
+  return {
+    body: factBox.renderBody({
+      body
+    }),
+    pageContributions: factBox.renderPageContributions()
+  }
+}
