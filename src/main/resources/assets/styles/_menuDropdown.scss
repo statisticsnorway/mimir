@@ -116,8 +116,8 @@
     border: none;
   }
   @include media-breakpoint-down(md) {
-    .title-container .title-choose-municipality {
-      margin-left: 20px;
+    .title-choose-municipality {
+      padding-left: 20px;
       font-size: 28px;
     }
     .card {
@@ -130,21 +130,24 @@
       top: 92px;
       position: absolute;
       border-bottom: 1px solid #aaaaaa;
-      padding-left: 20px;
       background-color: #ffffff;
+      padding: 20px;
 
-      &.remove-border {
+      &.choose-municipality-search {
         border: none;
+        padding: 20px 20px 20px 40px;
       }
-
       &.hide-search {
         display: none;
       }
     }
   }
   @include media-breakpoint-down(sm) {
-    .card {
-      padding: 20px 10px;
+    .title-container {
+      margin-left: 20px;
+    }
+    #search-container {
+      padding: 20px;
     }
   }
 }

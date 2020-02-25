@@ -9,7 +9,10 @@ export function init() {
     let animate
     const map = $('#js-show-map')
 
-    $('.show-map').click(() => {
+    $('.show-map').click((e) => {
+      e.preventDefault()
+      e.stopPropagation()
+
       const el = $('.part-menu-dropdown')[0]
 
       const {
@@ -28,11 +31,14 @@ export function init() {
             map.collapse('show')
           }, 50)
         })
+      } else {
+        map.collapse('toggle')
       }
     })
 
     map.on('show.bs.collapse', () => {
       map.parent().addClass('map-container')
+      $('.show-map').attr('aria-expanded', 'true')
 
       if (window.innerWidth <= 720) { // Bootstrap md width
         $('#search-container').collapse('hide')
@@ -44,11 +50,9 @@ export function init() {
     })
 
     map.on('hide.bs.collapse', () => {
-      map.css({
-        '-webkit-transition': 'none',
-        'transition': 'none'
-      })
       map.parent().removeClass('map-container')
+      $('.show-map').attr('aria-expanded', 'false')
+      map.css('transition', 'none')
     })
 
     $('.part-menu-dropdown').each((i, el) => {
@@ -83,34 +87,12 @@ export function init() {
       })
     })
 
-    $('#input-query-municipality').focus(() => {
-      const mode = $('.show-search').data('mode')
-      if (mode) {
-        map.collapse('hide') // Hide map when municipality search field active on smaller than md
-      }
+    $('#search-container').on('show.bs.collapse', () => {
+      $('#search-container').removeClass('hide-search')
+
+      map.collapse('hide')
+      $('.show-map').attr('aria-expanded', 'false')
     })
-
-    $('#search-container').on('shown.bs.collapse', (e) => {
-      if($('#search-container').hasClass('.hide-search')) {
-        $('#search-container').removeClass('.hide-search')
-      }
-
-      const mode = $(e.currentTarget).data('mode')
-      if (mode) {
-        map.collapse('hide')// Hide map when municipality search button clicked
-      }
-    })
-
-    $('#search-container').on('hide.bs.collapse', (e) => {
-      $('#search-container').addClass('.hide-search')
-    })
-
-    /* TODO: hide search-container on Kommunefakta (only when municipality not selected) */
-    /*if (window.innerWidth >= 960) { // Bootstrap lg grid
-      $('#search-container').collapse('show')
-    } else {
-      $('#search-container').collapse('hide')
-    }*/
 
     $('#input-query-municipality').attr({
       'data-display': 'static',
