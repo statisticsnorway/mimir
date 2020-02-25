@@ -129,7 +129,7 @@ function renderPart(req, highchartIds) {
         }
       } else {
         let useGraphDataCategories = false
-        if (highchart.data.switchRowsAndColumns || (!usingJsonStat && (graphType === 'line' || graphType === 'column'))) {
+        if (highchart.data.switchRowsAndColumns || (!usingJsonStat && (graphType === 'line' || graphType === 'column' || graphType === 'area'))) {
           useGraphDataCategories = true
         }
         let showLabels = false
