@@ -19,23 +19,21 @@ export function createMenuTree(menuItemId: string): Array<MenuItemParsed> {
 }
 
 function createMenuBranch(menuItem: Content<MenuItem>): MenuItemParsed {
-  //const content: Content<object> | null = getContent()
   const path: string | undefined = menuItem.data.urlSrc ? parseUrl(menuItem.data.urlSrc): '-'
   const children: QueryResponse<MenuItem> = getChildren({key: menuItem._id})
-/*
-  const isActive: boolean = children.total > 0 ? children.hits.reduce( (accumilated: boolean, child: ) => {
+  const content: Content | null = getContent();
+  const isActive: boolean = children.total > 0 && content ? children.hits.reduce( (hasActiveChildren: boolean, child: Content<MenuItem>) => {
     if( child.data.urlSrc && child.data.urlSrc._selected === 'content' &&
         child.data.urlSrc.content && child.data.urlSrc.content.contentId === content._id) {
-      return true
+      hasActiveChildren = true
     }
-  }) : (children.data.urlSrc && children.data.urlSrc._selected === 'content' &&
-        children.data.urlSrc.content && children.data.urlSrc.content.contentId === content._id )
-*/
+    return hasActiveChildren
+  }, false) : false
   return {
     title: menuItem.displayName,
     shortName: menuItem.data.shortName ? menuItem.data.shortName : undefined,
     path,
-    //isActive,
+    isActive,
     icon: menuItem.data.icon ? imageUrl({id: menuItem.data.icon, scale: 'block(12px,12px)'}) : undefined,
     menuItems: children.total > 0 ? children.hits.map((childMenuItem) => createMenuBranch(childMenuItem)) : undefined
   }
@@ -73,7 +71,7 @@ interface UrlContent {
 export interface MenuItemParsed extends MenuItem {
   title: string;
   path?: string;
-  //isActive: boolean;
+  isActive: boolean;
   menuItems?: Array<MenuItem> | undefined;
 }
 

@@ -31,7 +31,7 @@
     <div class="container">
       <div class="row">
         <div class="col">
-          <nav id="header"></nav>
+          <div id="header"></div>
         </div>
       </div>
     </div>
@@ -75,7 +75,7 @@
       >
       <h2 data-th-if="${region.hideTitle && region.title}" class="sr-only sr-only-focusable" data-th-text="${region.title}"></h2>
       <h2 data-th-if="${!region.hideTitle && region.title}" data-th-text="${region.title}"></h2>
-        <div 
+        <div
           class="row"
           data-th-data-portal-region="${region.region}"
         >

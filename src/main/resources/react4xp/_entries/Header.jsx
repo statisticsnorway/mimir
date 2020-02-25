@@ -41,10 +41,10 @@ class Header extends React.Component {
           </div>
         </div>
         <div className="header-content" style={{marginBottom: '20px', marginTop: '14px'}}>
-          <div id="mainMenu" className="ssb-tabs">
+          <nav id="mainMenu" className="ssb-tabs">
             {mainNavigation.map((topMenuItem, menuIndex) => (
               <div key={menuIndex} className="tabItem">
-                <button className="navigation-item" onClick={() => this.toggleSubMenu()}>
+                <button className={topMenuItem.isActive? 'active navigation-item' : 'navigation-item'} onClick={() => this.toggleSubMenu()}>
                   <span>{topMenuItem.title}</span>
                 </button>
                 <Divider/>
@@ -59,7 +59,7 @@ class Header extends React.Component {
                 </ol>
               </div>
             ))}
-          </div>
+          </nav>
         </div>
       </header>
     )
@@ -80,6 +80,7 @@ Header.propTypes = {
       title: PropTypes.string,
       path: PropTypes.string,
       icon: PropTypes.string,
+      isActive: PropTypes.boolean,
       menuItems: PropTypes.arrayOf(
         PropTypes.shape({
           title: PropTypes.string,
