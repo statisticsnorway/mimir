@@ -9,20 +9,7 @@ export function init() {
     let animate
     const map = $('#js-show-map')
 
-    map.on('show.bs.collapse', () => {
-      map.parent().addClass('map-container')
-
-      if (window.innerWidth <= 720) { // Bootstrap md width
-        $('#search-container').collapse('hide')
-      }
-
-      $('.show-search').parent().click(() => {
-        map.collapse('hide')
-      })
-    })
-
-    /* TODO: look into: animation for feather-icon down not animating + background when element is being 'pulled back' is not transparent */
-    map.on('shown.bs.collapse', () => {
+    $('.show-map').click(() => {
       const el = $('.part-menu-dropdown')[0]
 
       const {
@@ -44,7 +31,23 @@ export function init() {
       }
     })
 
+    map.on('show.bs.collapse', () => {
+      map.parent().addClass('map-container')
+
+      if (window.innerWidth <= 720) { // Bootstrap md width
+        $('#search-container').collapse('hide')
+      }
+
+      $('.show-search').parent().click(() => {
+        map.collapse('hide')
+      })
+    })
+
     map.on('hide.bs.collapse', () => {
+      map.css({
+        '-webkit-transition': 'none',
+        'transition': 'none'
+      })
       map.parent().removeClass('map-container')
     })
 
@@ -94,11 +97,12 @@ export function init() {
       }
     })
 
-    if (window.innerWidth >= 960) { // Bootstrap lg grid
+    /* TODO: hide search-container on Kommunefakta (only when municipality not selected) */
+    /*if (window.innerWidth >= 960) { // Bootstrap lg grid
       $('#search-container').collapse('show')
     } else {
-      $('#search-container').collapse('hide') /* TODO: hides from Kommunefakta (municipality not selected) also */
-    }
+      $('#search-container').collapse('hide')
+    }*/
 
     $('#input-query-municipality').attr({
       'data-display': 'static',

@@ -11,7 +11,7 @@
               <div data-th-if="${municipality}" data-th-text="${municipality.displayName}" data-th-remove="tag">Kommune</div>
               <div data-th-if="${municipality}" data-th-text="'('+${municipality.county.name}+')'" data-th-remove="tag">Fylke</div>
             </div>
-            <div class="roboto-bold municipality" data-th-unless="${modeMunicipality}">Velg kommune i kart</div>
+            <div class="roboto-bold title-choose-municipality municipality" data-th-unless="${modeMunicipality}">Velg kommune i kart</div>
           </div>
         </div>
         <div id="search-container" class="collapse" data-th-class="${!modeMunicipality} ? 'remove-border'">
