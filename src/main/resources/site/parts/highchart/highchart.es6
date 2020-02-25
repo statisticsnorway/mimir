@@ -106,7 +106,7 @@ function renderPart(req, highchartIds) {
           graphData = defaultFormat(dataset, dimensionFilter, xAxisLabel)
         }
       } else {
-        graphData = defaultTbmlFormat(json)
+        graphData = defaultTbmlFormat(json, graphType)
       }
 
       if (graphType === 'barNegative') {
@@ -172,7 +172,7 @@ function renderPart(req, highchartIds) {
 
       if (graphType === 'pie' || highchart.data.switchRowsAndColumns) {
         config.series = [{
-          name: 'Antall',
+          name: graphData.categories[0] && !usingJsonStat ? graphData.categories[0] : 'Antall',
           data: config.series.map((serie) => ({
             y: serie.y,
             name: serie.name
