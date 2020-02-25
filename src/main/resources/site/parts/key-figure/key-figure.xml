@@ -1,5 +1,5 @@
 <part>
-  <display-name>Nøkkeltall</display-name>
+  <display-name>Nøkkeltall(IKKE BRUK)</display-name>
   <form>
     <input type="TextLine" name="title">
       <label>Tittel</label>
