@@ -1,0 +1,16 @@
+footer {
+  ol {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .footer-links {
+    display: grid;
+    grid-gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 175px));
+
+    .footer-link {
+      width: 100%;
+    }
+  }
+}

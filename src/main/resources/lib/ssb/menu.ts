@@ -10,6 +10,7 @@ const { get, getChildren }: ContentLibrary = __non_webpack_require__( '/lib/xp/c
 export function createMenuTree(menuItemId: string): Array<MenuItemParsed> {
   const menuContent: Content<MenuItem> | null = get({key: menuItemId})
 
+
   if(menuContent !== null) {
     const menuContentChildren: QueryResponse<MenuItem> = getChildren({key: menuContent._id})
     return menuContentChildren.hits.map( (menuItem) => createMenuBranch(menuItem))

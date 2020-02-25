@@ -48,6 +48,7 @@ exports.getLanguage = function(page) {
 
   const result = {
     menuContentId: currentLanguageConfig.menuContentId,
+    footerContentId: currentLanguageConfig.footerContentId,
     code: currentLanguageConfig.code,
     link: (currentLanguageConfig.link !== null) ? currentLanguageConfig.link : '',
     phrases: {

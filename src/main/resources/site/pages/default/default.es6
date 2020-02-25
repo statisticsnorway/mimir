@@ -10,7 +10,7 @@ const {
 const {
   alertsForContext,
   pageMode,
-  getBreadcrumbs,
+  getBreadcrumbs
 } = __non_webpack_require__( '/lib/ssb/utils')
 const {
   getMunicipality
@@ -20,6 +20,9 @@ const util = __non_webpack_require__( '/lib/util')
 const {
   getHeaderContent
 } = __non_webpack_require__( '/lib/ssb/header')
+const {
+  getFooterContent
+} = __non_webpack_require__( '/lib/ssb/footer')
 
 const version = '%%VERSION%%'
 const partsWithPreview = [ // Parts that has preview
@@ -137,13 +140,28 @@ exports.get = function(req) {
 
   const headerContent = getHeaderContent(language)
   const headerComponent = new React4xp('Header')
-    .setProps({...headerContent})
+    .setProps({
+      ...headerContent
+    })
     .setId('header')
   body = headerComponent.renderBody({
     body
   })
   pageContributions = headerComponent.renderPageContributions({
-    pageContributions,
+    pageContributions
+  })
+
+  const footerContent = getFooterContent(language)
+  const footerComponent = new React4xp('Footer')
+      .setProps({
+        ...footerContent
+      })
+      .setId('footer')
+  body = footerComponent.renderBody({
+    body
+  })
+  pageContributions = footerComponent.renderPageContributions({
+    pageContributions
   })
 
   const breadcrumbs = getBreadcrumbs(page, municipality)
