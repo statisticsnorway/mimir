@@ -90,7 +90,7 @@ export function parseKeyFigure(keyFigure: Content<KeyFigure>, municipality?: Mun
             // get value and label from json-stat data, filtering on municipality
             let municipalData: MunicipalData | null = getDataFromMunicipalityCode(ds, municipality.code, yAxisLabel, filterTarget)
             // not all municipals have data, so if its missing, try the old one
-            if ((!municipalData || (municipalData.value === null || municipalData.value === 0)) && municipality.changes) {
+            if ((!municipalData || (municipalData.value === null || municipalData.value === 0)) && municipality.changes && municipality.changes.length > 0) {
               municipalData = getDataFromMunicipalityCode(ds, municipality.changes[0].oldCode, yAxisLabel, filterTarget)
             }
             if (municipalData && municipalData.value !== null) {

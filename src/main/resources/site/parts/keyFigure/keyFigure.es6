@@ -84,7 +84,7 @@ function renderKeyFigure(keyFigures, part, municipality) {
       ...keyFigureData,
       source: keyFigure.data.source
     }
-  })
+  }).filter((keyFigure) => keyFigure.number)
 
   const source = part && part.config && part.config.source || undefined
 
