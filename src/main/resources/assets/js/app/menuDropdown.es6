@@ -91,10 +91,18 @@ export function init() {
     })
 
     $('#search-container').on('shown.bs.collapse', (e) => {
+      if($('#search-container').hasClass('.hide-search')) {
+        $('#search-container').removeClass('.hide-search')
+      }
+
       const mode = $(e.currentTarget).data('mode')
       if (mode) {
         map.collapse('hide')// Hide map when municipality search button clicked
       }
+    })
+
+    $('#search-container').on('hide.bs.collapse', (e) => {
+      $('#search-container').addClass('.hide-search')
     })
 
     /* TODO: hide search-container on Kommunefakta (only when municipality not selected) */

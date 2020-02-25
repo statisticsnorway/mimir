@@ -14,7 +14,7 @@
             <div class="roboto-bold title-choose-municipality municipality" data-th-unless="${modeMunicipality}">Velg kommune i kart</div>
           </div>
         </div>
-        <div id="search-container" class="collapse" data-th-class="${!modeMunicipality} ? 'remove-border'">
+        <div id="search-container" class="collapse" data-th-class="${!modeMunicipality} ? 'remove-border' : 'hide-search' ">
           <div class="card ssb-dropdown">
             <div data-th-if="${modeMunicipality}" class="roboto-bold text-nowrap pr-4">Bytt kommune:</div>
             <div id="inputStickyMenu"></div>

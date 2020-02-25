@@ -136,6 +136,10 @@
       &.remove-border {
         border: none;
       }
+
+      &.hide-search {
+        display: none;
+      }
     }
   }
   @include media-breakpoint-down(sm) {
