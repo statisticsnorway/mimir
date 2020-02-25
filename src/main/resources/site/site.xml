@@ -168,6 +168,16 @@
             <hideToggleIcon>false</hideToggleIcon>
           </config>
         </input>
+        <input name="footerContentId" type="ContentSelector">
+          <label>Footer</label>
+          <occurrences minimum="0" maximum="1"/>
+          <config>
+            <allowContentType>menuitem</allowContentType>
+            <treeMode>false</treeMode>
+            <showStatus>true</showStatus>
+            <hideToggleIcon>false</hideToggleIcon>
+          </config>
+        </input>
       </items>
     </item-set>
     <field-set>
