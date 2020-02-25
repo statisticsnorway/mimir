@@ -10,7 +10,7 @@ const {
 const {
   alertsForContext,
   pageMode,
-  getBreadcrumbs,
+  getBreadcrumbs
 } = __non_webpack_require__( '/lib/ssb/utils')
 const {
   getMunicipality
@@ -33,7 +33,8 @@ const partsWithPreview = [ // Parts that has preview
   `${app.name}:keyFigure`,
   `${app.name}:menuDropdown`,
   `${app.name}:statistikkbanken`,
-  `${app.name}:dataquery`
+  `${app.name}:dataquery`,
+  `${app.name}:factBox`
 ]
 
 const view = resolve('default.html')
@@ -134,16 +135,21 @@ exports.get = function(req) {
 
   let body = thymeleaf.render(view, model)
   let pageContributions
+  if (preview && preview.pageContributions) {
+    pageContributions = preview.pageContributions
+  }
 
   const headerContent = getHeaderContent(language)
   const headerComponent = new React4xp('Header')
-    .setProps({...headerContent})
+    .setProps({
+      ...headerContent
+    })
     .setId('header')
   body = headerComponent.renderBody({
     body
   })
   pageContributions = headerComponent.renderPageContributions({
-    pageContributions,
+    pageContributions
   })
 
   const breadcrumbs = getBreadcrumbs(page, municipality)
