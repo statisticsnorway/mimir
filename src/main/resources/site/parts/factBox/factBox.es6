@@ -25,7 +25,16 @@ exports.get = function(req) {
 exports.preview = (req, id) => renderPart(req, id)
 
 function renderPart(req, factBoxId) {
-  if (!factBoxId) throw new Error(`FactBox: missing id`)
+  // throw an error if there is no selected factbox, or an empty section for edit mode
+  if (!factBoxId) {
+    if (req.mode === 'edit') {
+      return {
+        body: render(view)
+      }
+    } else {
+      throw new Error('Factbox - Missing Id')
+    }
+  }
   const factBoxContent = content.get({
     key: factBoxId
   })

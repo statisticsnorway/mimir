@@ -10,11 +10,15 @@ export interface Error {
     errorLog: void;
 }
 
+export interface Exception {
+  message: string;
+}
+
 const errorView: ResourceKey = resolve('./error.html')
 
-export function renderError(req: Request, title: string, exception: string): Response {
+export function renderError(req: Request, title: string, exception: Exception): Response {
   const model: Error = {
-    errorBody: exception,
+    errorBody: exception.message,
     errorTitle: title,
     errorLog: log.error(exception)
   }
