@@ -129,11 +129,14 @@ function renderPart(req, highchartIds) {
         }
       } else {
         let useGraphDataCategories = false
-        if (highchart.data.switchRowsAndColumns || (!usingJsonStat && (graphType === 'line' || graphType === 'column'))) {
+        if (highchart.data.switchRowsAndColumns || (!usingJsonStat && (graphType === 'line' || graphType === 'column' || graphType === 'bar'))) {
           useGraphDataCategories = true
         }
         let showLabels = false
-        if (graphType === 'line' || graphType === 'area' || highchart.data.switchRowsAndColumns || (!usingJsonStat && (graphType === 'column'))) {
+        if (graphType === 'line' ||
+            graphType === 'area' ||
+            highchart.data.switchRowsAndColumns ||
+            (!usingJsonStat && (graphType === 'column' || graphType === 'bar'))) {
           showLabels = true
         }
         config.series = graphData.series
