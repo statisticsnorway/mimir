@@ -6,6 +6,9 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
+const {
+  getImageCaption
+} = __non_webpack_require__('/lib/ssb/utils')
 
 const moment = require('moment/min/moment-with-locales')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
