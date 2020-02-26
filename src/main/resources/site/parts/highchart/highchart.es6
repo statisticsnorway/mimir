@@ -9,8 +9,9 @@ const {
 const {
   getComponent
 } = __non_webpack_require__( '/lib/xp/portal')
-const content = __non_webpack_require__( '/lib/xp/content')
-const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
+const {
+  render
+} = __non_webpack_require__( '/lib/thymeleaf')
 const {
   createConfig,
   lineColor,
@@ -21,16 +22,24 @@ const {
   defaultFormat,
   defaultTbmlFormat
 } = __non_webpack_require__('/lib/highcharts/highcharts')
-
 const {
   parseDataWithMunicipality
 } = __non_webpack_require__('/lib/ssb/dataset')
+const {
+  renderError
+} = __non_webpack_require__('/lib/error/error')
+
+const content = __non_webpack_require__( '/lib/xp/content')
 const view = resolve('./highchart.html')
 
 exports.get = function(req) {
-  const part = getComponent()
-  const highchartIds = part.config.highchart ? util.data.forceArray(part.config.highchart) : []
-  return renderPart(req, highchartIds)
+  try {
+    const part = getComponent()
+    const highchartIds = part.config.highchart ? util.data.forceArray(part.config.highchart) : []
+    return renderPart(req, highchartIds)
+  } catch (e) {
+    return renderError(req, 'Error in part', e)
+  }
 }
 
 exports.preview = (req, id) => renderPart(req, [id])
@@ -97,7 +106,7 @@ function renderPart(req, highchartIds) {
           graphData = defaultFormat(dataset, dimensionFilter, xAxisLabel)
         }
       } else {
-        graphData = defaultTbmlFormat(json)
+        graphData = defaultTbmlFormat(json, graphType)
       }
 
       if (graphType === 'barNegative') {
@@ -120,11 +129,14 @@ function renderPart(req, highchartIds) {
         }
       } else {
         let useGraphDataCategories = false
-        if (highchart.data.switchRowsAndColumns || (!usingJsonStat && (graphType === 'line' || graphType === 'column'))) {
+        if (highchart.data.switchRowsAndColumns || (!usingJsonStat && (graphType === 'line' || graphType === 'column' || graphType === 'bar'))) {
           useGraphDataCategories = true
         }
         let showLabels = false
-        if (graphType === 'line' || graphType === 'area' || highchart.data.switchRowsAndColumns || (!usingJsonStat && (graphType === 'column'))) {
+        if (graphType === 'line' ||
+            graphType === 'area' ||
+            highchart.data.switchRowsAndColumns ||
+            (!usingJsonStat && (graphType === 'column' || graphType === 'bar'))) {
           showLabels = true
         }
         config.series = graphData.series
@@ -163,7 +175,7 @@ function renderPart(req, highchartIds) {
 
       if (graphType === 'pie' || highchart.data.switchRowsAndColumns) {
         config.series = [{
-          name: 'Antall',
+          name: graphData.categories[0] && !usingJsonStat ? graphData.categories[0] : 'Antall',
           data: config.series.map((serie) => ({
             y: serie.y,
             name: serie.name
@@ -175,7 +187,7 @@ function renderPart(req, highchartIds) {
   })
 
   return {
-    body: thymeleaf.render(view, {
+    body: render(view, {
       highcharts
     }),
     contentType: 'text/html'

@@ -1,0 +1,31 @@
+<part>
+  <display-name>Nøkkeltall</display-name>
+  <form>
+    <input type="TextLine" name="title">
+      <label>Tittel</label>
+      <occurrences minimum="0" maximum="1"/>
+    </input>
+    <input name="figure" type="ContentSelector">
+      <label>Nøkkeltall</label>
+      <occurrences minimum="0" maximum="0"/>
+      <config>
+        <allowPath>${site}</allowPath>
+        <allowType>keyFigure</allowType>
+      </config>
+    </input>
+    <item-set name="source">
+      <occurrences minimum="0" maximum="1"/>
+      <label>Kilde</label>
+      <items>
+        <input type="TextLine" name="title">
+          <label>Tittel</label>
+          <occurrences minimum="0" maximum="1"/>
+        </input>
+        <input type="TextLine" name="url">
+          <label>URL</label>
+          <occurrences minimum="0" maximum="1"/>
+        </input>
+      </items>
+    </item-set>
+  </form>
+</part>

@@ -1,8 +1,7 @@
 const {
   getContent,
   processHtml,
-  assetUrl,
-  pageUrl
+  assetUrl
 } = __non_webpack_require__( '/lib/xp/portal')
 const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
 const {
@@ -13,50 +12,55 @@ const {
   pageMode,
   getBreadcrumbs
 } = __non_webpack_require__( '/lib/ssb/utils')
-const glossaryLib = __non_webpack_require__( '/lib/glossary')
 const {
   getMunicipality
 } = __non_webpack_require__( '/lib/klass/municipalities')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const router = __non_webpack_require__('/lib/router')()
+const util = __non_webpack_require__( '/lib/util')
+const {
+  getHeaderContent
+} = __non_webpack_require__( '/lib/ssb/header')
 
 const version = '%%VERSION%%'
 const partsWithPreview = [ // Parts that has preview
   `${app.name}:map`,
   `${app.name}:button`,
-  `${app.name}:menu-box`,
-  `${app.name}:glossary`,
+  `${app.name}:menuBox`,
   `${app.name}:accordion`,
   `${app.name}:highchart`,
   `${app.name}:dashboard`,
   `${app.name}:key-figure`,
+  `${app.name}:keyFigure`,
   `${app.name}:menuDropdown`,
   `${app.name}:statistikkbanken`,
-  `${app.name}:dataquery`
+  `${app.name}:dataquery`,
+  `${app.name}:factBox`
 ]
 
 const view = resolve('default.html')
 
 exports.get = function(req) {
-  return router.dispatch(req);
-}
-
-exports.get = function(req) {
   const ts = new Date().getTime()
   const page = getContent()
-  const isFragment = page.type === 'portal:fragment'
-  let regions = null
-  if (isFragment) {
-    regions = page.fragment && page.fragment.regions ? page.fragment.regions : null
-  } else {
-    regions = page.page && page.page.regions ? page.page.regions : null
-  }
-  const mainRegion = isFragment ? regions && regions.main : regions && regions.main
-
   const mode = pageMode(req, page)
-  const mainRegionComponents = mapComponents(mainRegion, mode)
 
-  const glossary = glossaryLib.process(page.data.ingress, regions)
+  const isFragment = page.type === 'portal:fragment'
+  let regions = {}
+  let configRegions = []
+  if (isFragment) {
+    regions = page.fragment && page.fragment.regions ? page.fragment.regions : {}
+  } else {
+    const pageData = page.page
+    if (pageData) {
+      regions = pageData.regions ? pageData.regions : {}
+      configRegions = pageData.config && pageData.config.regions ? util.data.forceArray(pageData.config.regions) : []
+    }
+  }
+  configRegions.forEach((configRegion) => {
+    configRegion.components = regions[configRegion.region] ? util.data.forceArray(regions[configRegion.region].components) : []
+  })
+
+  const mainRegionComponents = regions && regions.main && regions.main.components.length > 0 ? regions.main.components : undefined
   const ingress = processHtml({
     value: page.data.ingress ? page.data.ingress.replace(/&nbsp;/g, ' ') : undefined
   })
@@ -74,7 +78,6 @@ exports.get = function(req) {
   }
 
   const language = getLanguage(page)
-
   let municipality
   if (req.params.selfRequest) {
     municipality = getMunicipality(req)
@@ -110,17 +113,13 @@ exports.get = function(req) {
     path: 'top-banner.png'
   })
 
-  const logoUrl = assetUrl({
-    path: 'SSB_logo.png'
-  })
-  const pageTitle = req.params.selfRequest? page.displayName : req.params.pageTitle
+  const pageTitle = req.params.selfRequest ? req.params.pageTitle : page.displayName
   const model = {
     version,
     config,
     page,
-    mainRegion,
     mainRegionComponents,
-    glossary,
+    configRegions,
     ingress,
     mode,
     showIngress,
@@ -130,12 +129,28 @@ exports.get = function(req) {
     stylesUrl,
     jsLibsUrl,
     bannerUrl,
-    logoUrl,
     language,
     GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null
   }
 
   let body = thymeleaf.render(view, model)
+  let pageContributions
+  if (preview && preview.pageContributions) {
+    pageContributions = preview.pageContributions
+  }
+
+  const headerContent = getHeaderContent(language)
+  const headerComponent = new React4xp('Header')
+    .setProps({
+      ...headerContent
+    })
+    .setId('header')
+  body = headerComponent.renderBody({
+    body
+  })
+  pageContributions = headerComponent.renderPageContributions({
+    pageContributions
+  })
 
   const breadcrumbs = getBreadcrumbs(page, municipality)
   const breadcrumbComponent = new React4xp('Breadcrumb')
@@ -147,7 +162,6 @@ exports.get = function(req) {
     body
   })
 
-  let pageContributions
   const alerts = alertsForContext(municipality)
   if (alerts.length > 0) {
     const alertComponent = new React4xp('Alerts')
@@ -169,28 +183,4 @@ exports.get = function(req) {
     body,
     pageContributions
   }
-}
-
-function mapComponents(mainRegion, mode) {
-  if (mainRegion && mainRegion.components) {
-    return mainRegion.components.map((component) => {
-      const descriptor = component.descriptor
-      const classes = []
-      if (descriptor !== 'mimir:banner' && descriptor !== 'mimir:menuDropdown' && descriptor !== 'mimir:map' ) {
-        classes.push('container')
-      }
-      if (descriptor === 'mimir:menuDropdown' && mode === 'municipality') {
-        classes.push('sticky-top')
-      }
-      if (descriptor === 'mimir:preface') {
-        classes.push('preface-container')
-      }
-      return {
-        path: component.path,
-        removeWrapDiv: descriptor === 'mimir:banner',
-        classes: classes.join(' ')
-      }
-    })
-  }
-  return []
 }

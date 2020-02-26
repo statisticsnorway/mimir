@@ -1,14 +1,9 @@
 <div class="container">
-  <div class="xp-layout row layout-topic" data-th-attr="data-mode=${mode}">
-    <div class="xp-region col-12">
-      <div class="border-top-green">
-        <h2 data-th-text="${config.title}"></h2>
-        <div data-portal-region="main">
-          <div data-th-each="component, i : ${mainRegion.components}" data-th-remove="tag">
-            <div data-portal-component="${component.path}" data-th-remove="tag" />
-          </div>
-        </div>
-      </div>
+  <h3 data-th-if="${hideTitle && title}" class="sr-only sr-only-focusable" data-th-text="${title}"></h3>
+  <h3 data-th-if="${!hideTitle && title}" data-th-text="${title}"></h3>
+  <div data-portal-region="main">
+    <div data-th-each="component, i : ${mainRegion.components}" data-th-remove="tag">
+      <div data-portal-component="${component.path}" data-th-remove="tag" />
     </div>
   </div>
 </div>

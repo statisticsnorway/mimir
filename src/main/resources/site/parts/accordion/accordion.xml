@@ -1,8 +1,9 @@
 <part>
-  <display-name>Ekspanderer</display-name>
+  <display-name>Trekkspill</display-name>
+  <description>Trekkspillboks med tekst</description>
   <form>
     <input name="accordion" type="ContentSelector">
-      <label>Ekspanderer</label>
+      <label>Trekkspill-innhold</label>
       <occurrences minimum="1" maximum="99"/>
       <config>
         <allowPath>${site}</allowPath>

@@ -26,7 +26,9 @@ export function init() {
     }
 
     imagesLoaded($('.part-banner'), function() {
-      $('.part-banner').addClass('opacity-1')
+      $('.part-banner')
+        .removeClass('opacity-0')
+        .addClass('opacity-1')
     })
 
     resizeImages()

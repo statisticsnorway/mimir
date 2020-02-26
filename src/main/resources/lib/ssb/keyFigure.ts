@@ -4,7 +4,7 @@
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { ContentLibrary, QueryResponse, Content, Image } from 'enonic-types/lib/content'
 import { PortalLibrary } from 'enonic-types/lib/portal'
-import { KeyFigure } from '../../site/content-types/key-figure/key-figure'
+import { KeyFigure } from '../../site/content-types/keyFigure/keyFigure'
 import { Dataset } from '../../site/content-types/dataset/dataset'
 import { Dataquery } from '../../site/content-types/dataquery/dataquery'
 import { MunicipalityWithCounty } from '../klass/municipalities'
@@ -36,11 +36,11 @@ const {
 } = __non_webpack_require__( '/lib/ssb/utils')
 const util: UtilLibrary = __non_webpack_require__( '/lib/util')
 
-const contentTypeName: string = `${app.name}:key-figure`
+const contentTypeName: string = `${app.name}:keyFigure`
 
 export function get(key: string): Content<KeyFigure> | null {
   const content: QueryResponse<KeyFigure> = query({
-    contentTypes: [contentTypeName],
+    contentTypes: [contentTypeName, `${app.name}:key-figure`], // TODO remove key-figure
     query: `_id = '${key}'`,
     count: 1,
     start: 0
@@ -64,7 +64,8 @@ export function parseKeyFigure(keyFigure: Content<KeyFigure>, municipality?: Mun
     size: keyFigure.data.size,
     title: keyFigure.displayName,
     changes: undefined,
-    greenBox: keyFigure.data.greenBox
+    greenBox: keyFigure.data.greenBox,
+    glossaryText: keyFigure.data.glossaryText
   }
 
   const dataQueryId: string | undefined = keyFigure.data.dataquery
@@ -92,7 +93,7 @@ export function parseKeyFigure(keyFigure: Content<KeyFigure>, municipality?: Mun
             // get value and label from json-stat data, filtering on municipality
             let municipalData: MunicipalData | null = getDataFromMunicipalityCode(ds, municipality.code, yAxisLabel, filterTarget)
             // not all municipals have data, so if its missing, try the old one
-            if ((!municipalData || (municipalData.value === null ||municipalData.value === 0)) && municipality.changes) {
+            if ((!municipalData || (municipalData.value === null || municipalData.value === 0)) && municipality.changes) {
               municipalData = getDataFromMunicipalityCode(ds, municipality.changes[0].oldCode, yAxisLabel, filterTarget)
             }
             if (municipalData && municipalData.value !== null) {
@@ -215,6 +216,7 @@ export interface KeyFigureView {
   time?: string;
   changes?: KeyFigureChanges;
   greenBox: boolean;
+  glossaryText?: string;
 }
 
 export interface KeyFigureChanges {

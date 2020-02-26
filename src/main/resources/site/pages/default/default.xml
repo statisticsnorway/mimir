@@ -7,11 +7,75 @@
   		<config>
     		<option value="white">Hvit</option> 
     		<option value="grey">Grå</option>
-        </config>
+      </config>
       <default>white</default> 
     </input>
+    <item-set name="regions">
+      <label>Region</label> 
+      <occurrences minimum="1" maximum="15"/> 
+      <items>
+        <mixin name="title"/>
+        <input name="view" type="RadioButton">
+          <label>Visningstype</label>
+          <occurrences minimum="1" maximum="1"/> 
+          <config>
+            <option value="full">Full bredde</option> 
+            <option value="card">Seksjon med grønn stripe</option>
+          </config>
+        </input>
+        <input name="region" type="ComboBox">
+          <label>Region</label>
+          <occurrences minimum="1" maximum="1"/>
+          <config>
+            <option value="Rad_A">Rad A</option> 
+            <option value="Rad_B">Rad B</option> 
+            <option value="Rad_C">Rad C</option> 
+            <option value="Rad_D">Rad D</option> 
+            <option value="Rad_E">Rad E</option> 
+            <option value="Rad_F">Rad F</option> 
+            <option value="Rad_G">Rad G</option> 
+            <option value="Rad_H">Rad H</option> 
+            <option value="Rad_I">Rad I</option> 
+            <option value="Rad_J">Rad J</option> 
+            <option value="Rad_K">Rad K</option> 
+            <option value="Rad_L">Rad L</option> 
+            <option value="Rad_M">Rad M</option> 
+            <option value="Rad_N">Rad N</option> 
+            <option value="Rad_O">Rad O</option> 
+            <option value="Rad_P">Rad P</option> 
+            <option value="Rad_Q">Rad Q</option> 
+            <option value="Rad_R">Rad R</option> 
+            <option value="Rad_S">Rad S</option> 
+            <option value="Rad_T">Rad T</option> 
+          </config>
+        </input>
+        <input name="showGreyTriangle" type="CheckBox">
+          <label>Med mørk og skrå bakgrunn</label>
+        </input>
+      </items>
+    </item-set>
   </form>
   <regions>
+    <region name="Rad_A"/>
+    <region name="Rad_B"/>
+    <region name="Rad_C"/>
+    <region name="Rad_D"/>
+    <region name="Rad_E"/>
+    <region name="Rad_F"/>
+    <region name="Rad_G"/>
+    <region name="Rad_H"/>
+    <region name="Rad_I"/>
+    <region name="Rad_J"/>
+    <region name="Rad_K"/>
+    <region name="Rad_L"/>
+    <region name="Rad_M"/>
+    <region name="Rad_N"/>
+    <region name="Rad_O"/>
+    <region name="Rad_P"/>
+    <region name="Rad_Q"/>
+    <region name="Rad_R"/>
+    <region name="Rad_S"/>
+    <region name="Rad_T"/>
     <region name="main"/>
   </regions>
 </page>

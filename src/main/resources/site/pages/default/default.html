@@ -27,10 +27,16 @@
 </head>
 <body class="xp-page" data-th-classappend="${bodyClasses}">
   <!-- HEADER -->
-  <div id="ssb-menu" data-th-include="mimir:/site/includes/ssb-menu.html"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <div id="header"></div>
+      </div>
+    </div>
+  </div>
 
   <!-- Metainfo to make the page searchable -->
-  <div id="metainfo-container" data-th-include="mimir:/site/includes/metainfo-search.html" data-th-remove="tag"></div>
+  <div id="metainfo-container" data-th-include="mimir:/site/includes/metainfoSearch.html" data-th-remove="tag"></div>
 
   <!-- MAIN -->
   <main class="xp-region" data-th-if="${!isFragment}">
@@ -56,15 +62,33 @@
       </div>
     </div>
 
-    <div data-portal-region="main" class="searchabletext">
+    <div
+      data-th-each="region : ${configRegions}"
+      data-th-remove="tag"
+    >
+      <div data-th-if="${region.showGreyTriangle}" class="grey-triangle"/>
+      <div
+        class="searchabletext"
+        data-th-classappend="${region.view} == 'card' ? 'layout-topic border-top-green container' : 'container-fluid p-0'"
+      >
+      <h2 data-th-if="${region.hideTitle && region.title}" class="sr-only sr-only-focusable" data-th-text="${region.title}"></h2>
+      <h2 data-th-if="${!region.hideTitle && region.title}" data-th-text="${region.title}"></h2>
+        <div 
+          class="row"
+          data-th-data-portal-region="${region.region}"
+        >
+          <div data-th-each="component : ${region.components}" data-th-remove="tag">
+            <div data-portal-component="${component.path}" data-th-remove="tag"/>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div data-th-if="${mainRegionComponents}" data-portal-region="main" class="searchabletext">
       <div data-th-each="component : ${mainRegionComponents}" data-th-remove="tag">
         <div data-portal-component="${component.path}" data-th-remove="tag" ></div>
       </div>
     </div>
   </main>
-
-  <!-- GLOSSARY -->
-  <div data-th-replace="mimir:/site/includes/glossary.html"></div>
 
   <!-- FOOTER -->
   <footer>
