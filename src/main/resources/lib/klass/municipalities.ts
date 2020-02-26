@@ -69,11 +69,14 @@ export function createPath(municipalName: string, countyName?: string): string {
     .toLowerCase()
     .replace(/å/g, 'a')
     .replace(/æ/g, 'ae')
+    .replace(/ø/g, 'o')
     .replace(/á/g, 'a')
     .replace(/č/g, 'c')
     .replace(/đ/g, 'd')
+    .replace(/ŋ/g, 'n')
     .replace(/š/g, 's')
-    .replace(/ø/g, 'o')
+    .replace(/ŧ/g, 't')
+    .replace(/ž/g, 'z')
 }
 
 
