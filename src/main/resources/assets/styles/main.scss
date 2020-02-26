@@ -64,9 +64,26 @@ body {
   font-size: 20px;
 }
 
-
 .row + section, section + section {
-  margin-top: 20px;
+  margin-top: $spacer * 3;
+}
+
+.part-divider {
+  &:not(:first-child) {
+    margin-top: $spacer * 3;
+  }
+  &:not(:last-child) {
+    margin-bottom: $spacer * 3;
+  }
+}
+
+[data-portal-component-type='text'] {
+  &:not(:first-child) {
+    margin-top: $spacer * 3;
+  }
+  &:not(:last-child) {
+    margin-bottom: $spacer * 3;
+  }
 }
 
 .a-plain {
