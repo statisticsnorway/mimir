@@ -24,12 +24,12 @@ exports.preview = (req) => renderPart(req)
 function renderPart(req) {
   const component = getComponent()
   const dividerColor = component.config.dividerColor
-  const divider = new React4xp('Divider')
+  const divider = new React4xp('Divider').uniqueId()
 
   setColor(dividerColor, divider)
 
   const preRenderedBody = render(view, {
-    divider
+    dividerId: divider.react4xpId
   })
 
   return {
