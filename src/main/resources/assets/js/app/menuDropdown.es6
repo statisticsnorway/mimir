@@ -38,20 +38,22 @@ export function init() {
 
     map.on('show.bs.collapse', () => {
       map.parent().addClass('map-container')
-      $('.show-map').attr('aria-expanded', 'true')
+      $('.show-map').attr('aria-expanded', 'true').addClass('active')
 
       if (window.innerWidth <= 720) { // Bootstrap md width
         $('#search-container').collapse('hide')
+        $('.show-search').removeClass('active')
       }
 
       $('.show-search').parent().click(() => {
         map.collapse('hide')
+        $('.show-map').removeClass('active')
       })
     })
 
     map.on('hide.bs.collapse', () => {
       map.parent().removeClass('map-container')
-      $('.show-map').attr('aria-expanded', 'false')
+      $('.show-map').attr('aria-expanded', 'false').removeClass('active')
       map.css('transition', 'none')
     })
 
@@ -89,9 +91,14 @@ export function init() {
 
     $('#search-container').on('show.bs.collapse', () => {
       $('#search-container').removeClass('hide-search')
+      $('.show-search').addClass('active')
 
       map.collapse('hide')
-      $('.show-map').attr('aria-expanded', 'false')
+      $('.show-map').attr('aria-expanded', 'false').removeClass('active')
+    })
+
+    $('#search-container').on('hide.bs.collapse', () => {
+      $('.show-search').removeClass('active')
     })
 
     $('#input-query-municipality').attr({
