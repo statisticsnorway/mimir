@@ -56,7 +56,7 @@
 
     <input name="footNote" type="TextLine">
       <label>Fotnote til bilde</label>
-      <occurrences minimum="0" maximum="2" />
+      <occurrences minimum="0" maximum="0" />
     </input>
 
     <input name="altText" type="TextLine">
