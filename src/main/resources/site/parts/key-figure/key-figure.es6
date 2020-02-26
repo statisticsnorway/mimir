@@ -98,6 +98,7 @@ function renderKeyFigure(keyFigures, part, municipality) {
   const reactObjs = parsedKeyFigures.map((keyFigure) => {
     const reactProps = {
       iconUrl: keyFigure.iconUrl,
+      iconAltText: keyFigure.iconAltText,
       number: keyFigure.number,
       numberDescription: keyFigure.numberDescription,
       noNumberText: keyFigure.noNumberText,
