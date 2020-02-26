@@ -6,31 +6,28 @@ header {
   &.ssb-header-wrapper{
     padding: 0;
 
-    nav {
-      .ssb-link {
-        margin-left: 20px;
-      }
-    }
-
     .ssb-tabs {
       justify-content: space-between;
-
-
-
     }
   }
+  .global-links {
+    .ssb-links {
+      margin-left: 20px;
+    }
+  }
+  .header-content {
+    margin-top: 14px;
+  }
   .tabItem {
-    margin-bottom: 40px;
     flex-grow: 1;
     overflow: hidden;
 
     .navigation-item {
       height: 62.5px;
-      width: 100%;
-      padding: 0 45px 15px 0;
+      padding: 0 0 15px 0;
       text-align: left;
       align-items: end;
-
+      margin-right: 40px;
       span {
         font-size: 16px;
         width: 100%;
@@ -43,7 +40,6 @@ header {
       }
     }
 
-
     .subMenu {
       color: #2d6975;
       height: 0;
@@ -51,6 +47,7 @@ header {
       list-style: none;
       padding: 0;
       max-width: 180px;
+      margin-bottom: 0;
 
       &.visible {
         height: auto
@@ -58,8 +55,14 @@ header {
 
       li {
         margin: 20px 0;
-
+        padding-right: 8px;
         a.ssb-link.with-icon {
+          word-wrap: break-word;
+
+          .icon-wrapper {
+            margin: 4px 9px 0 0;
+            align-self: start;
+          }
           .link-text {
             color: #2d6975;
           }
@@ -77,10 +80,11 @@ header {
           a.ssb-link.with-icon {
             .link-text {
               color: black;
-              &:hover {
+            }
+            &:hover {
+              .link-text{
                 color: white;
               }
-
             }
           }
 

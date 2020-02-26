@@ -1,4 +1,4 @@
-import {Content, ContentLibrary, QueryResponse} from "enonic-types/lib/content";
+import {Content, ContentLibrary, QueryResponse} from 'enonic-types/lib/content';
 import {PortalLibrary} from 'enonic-types/lib/portal';
 import {MenuItem} from '../../site/content-types/menuItem/menuItem';
 import {SiteConfig} from '../../site/site-config';

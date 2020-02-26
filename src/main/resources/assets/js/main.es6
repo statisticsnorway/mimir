@@ -6,7 +6,7 @@ import { init as initDashboard } from './app/dashboard.es6'
 import { init as initHeader } from './app/header.es6'
 import { init as initHighcharts } from './app/highchart.es6'
 import { init as initMap } from './app/map.es6'
-import { init as initMenu } from './app/menu.es6'
+//import { init as initMenu } from './app/menu.es6'
 import { init as initMenuDropDown } from './app/menuDropdown.es6'
 import { init as initPrint } from './app/print.es6'
 import { init as initRelatedKostra } from './app/relatedKostra.es6'
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initHeader()
   initHighcharts()
   initMap()
-  initMenu()
+  //initMenu()
   initMenuDropDown()
   initPrint()
   initRelatedKostra()
