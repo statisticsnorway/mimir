@@ -35,7 +35,7 @@ const view = resolve('./highchart.html')
 exports.get = function(req) {
   try {
     const part = getComponent()
-    const highchartIds = part.config.highchart ? util.data.forceArray(part.config.highchart) : []
+    const highchartIds = part.config.highchart ? util.data.forceArray(part.config.highchart) : []
     return renderPart(req, highchartIds)
   } catch (e) {
     return renderError(req, 'Error in part', e)
@@ -106,7 +106,7 @@ function renderPart(req, highchartIds) {
           graphData = defaultFormat(dataset, dimensionFilter, xAxisLabel)
         }
       } else {
-        graphData = defaultTbmlFormat(json)
+        graphData = defaultTbmlFormat(json, graphType)
       }
 
       if (graphType === 'barNegative') {
@@ -129,11 +129,20 @@ function renderPart(req, highchartIds) {
         }
       } else {
         let useGraphDataCategories = false
-        if (highchart.data.switchRowsAndColumns || (!usingJsonStat && (graphType === 'line' || graphType === 'column' || graphType === 'area'))) {
+        if (highchart.data.switchRowsAndColumns ||
+            (!usingJsonStat && (
+              graphType === 'line' ||
+              graphType === 'column' ||
+              graphType === 'area' ||
+              graphType === 'bar'
+            ))) {
           useGraphDataCategories = true
         }
         let showLabels = false
-        if (graphType === 'line' || graphType === 'area' || highchart.data.switchRowsAndColumns || (!usingJsonStat && (graphType === 'column'))) {
+        if (graphType === 'line' ||
+            graphType === 'area' ||
+            highchart.data.switchRowsAndColumns ||
+            (!usingJsonStat && (graphType === 'column' || graphType === 'bar'))) {
           showLabels = true
         }
         config.series = graphData.series
@@ -172,7 +181,7 @@ function renderPart(req, highchartIds) {
 
       if (graphType === 'pie' || highchart.data.switchRowsAndColumns) {
         config.series = [{
-          name: 'Antall',
+          name: graphData.categories[0] && !usingJsonStat ? graphData.categories[0] : 'Antall',
           data: config.series.map((serie) => ({
             y: serie.y,
             name: serie.name
