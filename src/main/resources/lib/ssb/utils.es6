@@ -1,5 +1,3 @@
-import {Image} from 'enonic-types/lib/content';
-
 const {
   getPhrases
 } = __non_webpack_require__( '/lib/language')
@@ -109,6 +107,22 @@ export function safeRender(view, model) {
   }
 
   return response
+}
+
+export function pathFromStringOrContent(urlSrc) {
+  if(urlSrc !== undefined) {
+    if(urlSrc._selected === 'content') {
+      const selected = urlSrc[urlSrc._selected]
+      return selected && selected.contentId ? pageUrl({id: selected.contentId}) : undefined
+    }
+
+    if(urlSrc._selected === 'manual') {
+      const selected = urlSrc[urlSrc._selected]
+      return selected && selected.url ? selected.url : undefined
+    }
+  }
+
+  return undefined
 }
 
 
