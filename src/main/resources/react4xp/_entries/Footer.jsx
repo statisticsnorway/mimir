@@ -1,14 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, Divider, Input, Link, Tabs } from '@statisticsnorway/ssb-component-library'
-import { ArrowRight, Facebook, Twitter, Rss, Linkedin } from 'react-feather'
+import { Button, Link, Title } from '@statisticsnorway/ssb-component-library'
+import { ArrowRight, ArrowUp, Facebook, Twitter, Rss, Linkedin } from 'react-feather'
 
 class Footer extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
-      showSubMenu: false
-    }
   }
 
   render() {
@@ -17,29 +14,25 @@ class Footer extends React.Component {
     } = this.props
     return (
       <footer className="ssb-footer-wrapper">
-        <div className="top-row flex-row justify-space-between flex-wrap">
-          <img src={logoUrl} alt="ssb-logo" style={{
-            width: '248px'
-          }}/>
+        <div className="top-row flex-row justify-space-between flex-wrap container">
+          <img src={logoUrl} alt="ssb-logo"/>
           <Button negative onClick={()=> window.scroll({
             top: 0,
             behavior: 'smooth'
-          })}> Til Toppen
+          })}><ArrowUp size="18" className="mr-2" />Til Toppen
           </Button>
         </div>
 
-        <div className="footer-content">
+        <div className="footer-content container">
           <div id="footerMenu" className="footer-links">
             {mainNavigation.map((topMenuItem, menuIndex) => (
               <div key={menuIndex} className="footer-link">
-                <span>{topMenuItem.title}</span>
-                <ol className={this.state.showSubMenu ? 'visible subMenu' : 'subMenu' }>
+                <Title size={4} negative>{topMenuItem.title}</Title>
+                <ol>
                   {topMenuItem.menuItems && topMenuItem.menuItems.map((menuItem, itemIndex) => {
                     return (
                       <li key={itemIndex}>
-                        {/* <Link clasName="subMenuItem" href={menuItem.path} >{menuItem.title}</Link>*/}
                         <Link negative href={menuItem.path} icon={<ArrowRight size="20" />}>{menuItem.title}</Link>
-
                       </li>)
                   })
                   }
@@ -49,7 +42,7 @@ class Footer extends React.Component {
           </div>
         </div>
 
-        <div className="bottom-row flex-row justify-space-between flex-wrap">
+        <div className="bottom-row flex-row justify-space-between flex-wrap container">
           <div className="global-links">
             <Link href="https://www.ssb.no/" isExternal negative>Statistisk sentralbyrå © 2019</Link>
             <Link href="https://www.ssb.no/a-aa" isExternal negative>A-Å</Link>
