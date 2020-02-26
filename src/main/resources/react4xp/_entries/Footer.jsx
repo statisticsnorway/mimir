@@ -14,7 +14,7 @@ class Footer extends React.Component {
     } = this.props
     return (
       <footer className="ssb-footer-wrapper">
-        <div className="top-row flex-row justify-space-between flex-wrap container">
+        <div className="footer-top-row container">
           <img src={logoUrl} alt="ssb-logo"/>
           <Button negative onClick={()=> window.scroll({
             top: 0,
@@ -42,7 +42,7 @@ class Footer extends React.Component {
           </div>
         </div>
 
-        <div className="bottom-row flex-row justify-space-between flex-wrap container">
+        <div className="footer-bottom-row container">
           <div className="global-links">
             <Link href="https://www.ssb.no/" isExternal negative>Statistisk sentralbyrå © 2019</Link>
             <Link href="https://www.ssb.no/a-aa" isExternal negative>A-Å</Link>
