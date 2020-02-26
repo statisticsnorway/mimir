@@ -24,5 +24,9 @@ export function init() {
         })
       }
     })
+
+    $('header input').keyup(function(e){
+      e.which === 13 ? $('header .input-wrapper button').click() : ''
+    })
   })
 }

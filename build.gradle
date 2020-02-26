@@ -98,13 +98,11 @@ jar {
     exclude 'assets/styles/**/*.js'
 
     serverWebpack.dependsOn += 'webpack_react4xp'
+    serverWebpack.dependsOn += generateTypeScriptInterfaces
     clientWebpack.dependsOn += 'webpack_react4xp'
 
     dependsOn += clientWebpack
     dependsOn += serverWebpack
-    dependsOn += generateTypeScriptInterfaces
-    //dependsOn += 'babelXP'
-
 }
 
 jar.outputs.dir "${buildDir}/resources/main"
@@ -236,6 +234,8 @@ task webpack_react4xp(type: NodeTask) {
     inputs.file("package.json")
     inputs.file("package-lock.json")
 }
+
+
 webpack_react4xp.dependsOn += 'config_tasks'
 
 
