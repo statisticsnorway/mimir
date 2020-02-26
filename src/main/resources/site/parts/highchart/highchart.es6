@@ -35,7 +35,7 @@ const view = resolve('./highchart.html')
 exports.get = function(req) {
   try {
     const part = getComponent()
-    const highchartIds = part.config.highchart ? util.data.forceArray(part.config.highchart) : []
+    const highchartIds = part.config.highchart ? util.data.forceArray(part.config.highchart) : []
     return renderPart(req, highchartIds)
   } catch (e) {
     return renderError(req, 'Error in part', e)
@@ -129,7 +129,13 @@ function renderPart(req, highchartIds) {
         }
       } else {
         let useGraphDataCategories = false
-        if (highchart.data.switchRowsAndColumns || (!usingJsonStat && (graphType === 'line' || graphType === 'column' || graphType === 'bar'))) {
+        if (highchart.data.switchRowsAndColumns ||
+            (!usingJsonStat && (
+              graphType === 'line' ||
+              graphType === 'column' ||
+              graphType === 'area' ||
+              graphType === 'bar'
+            ))) {
           useGraphDataCategories = true
         }
         let showLabels = false
