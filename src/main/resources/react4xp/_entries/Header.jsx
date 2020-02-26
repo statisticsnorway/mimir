@@ -9,12 +9,13 @@ class Header extends React.Component {
     super(props)
     this.state = {
       showSubMenu: false,
-      currentFocusedElement: undefined
+      currentFocusedElement: undefined,
+      searchFieldInput: ''
     }
   }
 
-  goToSearchResultPage() {
-    window.location = this.props.searchResultPageUrl
+  goToSearchResultPage(value) {
+    window.location = `${this.props.searchResultPageUrl}?sok=${value}`
   }
 
   toggleSubMenu(element) {
@@ -22,7 +23,7 @@ class Header extends React.Component {
   }
 
   render() {
-    const {topLinks, language, searchInputPlaceholder, searchResultPageUrl, logoUrl, mainNavigation } = this.props
+    const {topLinks, language, searchInputPlaceholder, logoUrl, mainNavigation } = this.props
     return (
       <header className="ssb-header-wrapper">
         <nav className="global-links" style={{float: 'right', marginBottom: '12px', marginTop: '10px'}}>
@@ -34,9 +35,13 @@ class Header extends React.Component {
             })}
         </nav>
         <div className="top-row flex-row justify-space-between flex-wrap" style={{width: '100%'}}>
-          <img src={logoUrl} alt="" style={{width: '248px', height: '50px'}} alt=""/>
+          <a className="plain" href="/"><img src={logoUrl} alt="" style={{width: '248px', height: '50px'}} /></a>
           <div className="searchfield" style={{width: '285px', alignSelf: 'flex-end'}}>
-            <Input ariaLabel={searchInputPlaceholder} searchField placeholder={searchInputPlaceholder} onKeyPress={() => this.goToSearchResultPage()}/>
+            <Input
+              ariaLabel={searchInputPlaceholder}
+              searchField
+              submitCallback={(value) => this.goToSearchResultPage(value)}
+              placeholder={searchInputPlaceholder} />
           </div>
         </div>
         <div className="header-content">
@@ -51,7 +56,7 @@ class Header extends React.Component {
                   {topMenuItem.menuItems && topMenuItem.menuItems.map((menuItem, itemIndex) => {
                     return (
                       <li key={itemIndex}>
-                        <Link tabindex="-1" clasName="subMenuItem" href={menuItem.path} icon={<img src={menuItem.icon}></img>}>{menuItem.title}</Link>
+                        <Link tabindex="-1" href={menuItem.path} icon={<img src={menuItem.icon}></img>}>{menuItem.title}</Link>
                       </li>)
                   })
                   }
