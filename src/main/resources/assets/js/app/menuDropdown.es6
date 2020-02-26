@@ -123,6 +123,6 @@ export function init() {
     })
 
     // Moves municipality-list inside the same wrapper as the input field
-    $('#municipality-list').appendTo('.input-wrapper')
+    $('#municipality-list').appendTo('.municipality-search .input-wrapper')
   })
 }

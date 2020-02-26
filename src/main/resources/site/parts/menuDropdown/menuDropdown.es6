@@ -69,7 +69,8 @@ function renderPart(req) {
       searchField: true,
       placeholder: searchBarText,
       baseUrl: baseUrl,
-      municipalities: parsedMunicipalities
+      municipalities: parsedMunicipalities,
+      className: 'municipality-search'
     })
     .setId('inputStickyMenu')
 
