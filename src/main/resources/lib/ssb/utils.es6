@@ -1,5 +1,3 @@
-import {MenuItem} from '../../site/content-types/menuItem/menuItem';
-
 const {
   getPhrases
 } = __non_webpack_require__( '/lib/language')
@@ -125,4 +123,10 @@ export function pathFromStringOrContent(urlSrc) {
   }
 
   return undefined
+}
+
+
+export function getImageCaption(keyFigureId) {
+  const imageContent = content.get({key: keyFigureId})
+  return imageContent !== undefined ? imageContent.data.caption : ''
 }

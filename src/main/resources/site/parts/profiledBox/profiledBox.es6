@@ -31,6 +31,7 @@ function renderPart(request) {
       id: part.config.image,
       scale: 'block(315, 215)'
     }),
+    imageAltText: part.config.image ? getImageCaption(part.config.image) : '',
     imagePlacement: (part.config.cardOrientation == 'horizontal') ? 'left' : 'top',
     href: getLink(urlContentSelector),
     subTitle: getSubtitle(part.config.content, part.config.date),
