@@ -12,6 +12,9 @@ const {
 const {
   createMenuTree, parseBottomLinks
 } = __non_webpack_require__( '/lib/ssb/menu')
+const {
+  localize
+} = __non_webpack_require__( '/lib/xp/i18n')
 
 export function getFooterContent(language: Language): Footer {
   const siteConfig: SiteConfig = getSiteConfig()
@@ -20,12 +23,17 @@ export function getFooterContent(language: Language): Footer {
       path: 'SSB_logo_white.svg'
     }),
     bottomLinks: siteConfig.bottomLinks && siteConfig.bottomLinks.length > 0 ? parseBottomLinks(siteConfig.bottomLinks, language.code) : undefined,
-    mainNavigation: language.footerContentId ? createMenuTree(language.footerContentId) : []
+    footerNavigation: language.footerContentId ? createMenuTree(language.footerContentId) : [],
+    topButtonText: localize({
+      key: 'toTheTop',
+      locale: language.code
+    })
   }
 }
 
 export interface Footer{
     logoUrl: string;
     bottomLinks?: Array<Link>;
-    mainNavigation?: Array<MenuItem>;
+    footerNavigation?: Array<MenuItem>;
+    topButtonText?: string;
 }

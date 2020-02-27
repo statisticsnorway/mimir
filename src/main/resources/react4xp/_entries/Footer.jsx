@@ -10,7 +10,7 @@ class Footer extends React.Component {
 
   render() {
     const {
-      logoUrl, bottomLinks, mainNavigation
+      logoUrl, bottomLinks, footerNavigation, topButtonText
     } = this.props
     return (
       <footer className="ssb-footer-wrapper">
@@ -19,13 +19,15 @@ class Footer extends React.Component {
           <Button negative onClick={()=> window.scroll({
             top: 0,
             behavior: 'smooth'
-          })}><ArrowUp size="18" className="mr-2" />Til Toppen
+          })}>
+            <ArrowUp size="18" className="mr-2" />
+            {topButtonText}
           </Button>
         </div>
 
         <div className="footer-content container">
           <div id="footerMenu" className="footer-links">
-            {mainNavigation.map((topMenuItem, menuIndex) => (
+            {footerNavigation.map((topMenuItem, menuIndex) => (
               <div key={menuIndex} className="footer-link">
                 <Title size={4} negative>{topMenuItem.title}</Title>
                 <ol>
@@ -67,7 +69,7 @@ Footer.propTypes = {
       path: PropTypes.string
     })
   ),
-  mainNavigation: PropTypes.arrayOf(
+  footerNavigation: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string,
       path: PropTypes.string,
@@ -81,7 +83,8 @@ Footer.propTypes = {
       )
     })
   ),
-  logoUrl: PropTypes.string
+  logoUrl: PropTypes.string,
+  topButtonText: PropTypes.string
 }
 
 export default (props) => <Footer {...props} />
