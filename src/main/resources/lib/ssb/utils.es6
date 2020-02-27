@@ -108,3 +108,25 @@ export function safeRender(view, model) {
 
   return response
 }
+
+export function pathFromStringOrContent(urlSrc) {
+  if(urlSrc !== undefined) {
+    if(urlSrc._selected === 'content') {
+      const selected = urlSrc[urlSrc._selected]
+      return selected && selected.contentId ? pageUrl({id: selected.contentId}) : undefined
+    }
+
+    if(urlSrc._selected === 'manual') {
+      const selected = urlSrc[urlSrc._selected]
+      return selected && selected.url ? selected.url : undefined
+    }
+  }
+
+  return undefined
+}
+
+
+export function getImageCaption(keyFigureId) {
+  const imageContent = content.get({key: keyFigureId})
+  return imageContent !== undefined ? imageContent.data.caption : ''
+}

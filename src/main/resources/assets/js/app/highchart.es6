@@ -68,8 +68,10 @@ export function init() {
       if ($('table#highcharts-datatable-' + highchartsContentKey)) {
         config.title.style.fontSize = h1Size
 
-        config.yAxis.labels.formatter = function(a) {
-          return (canvas.data('type') == 'barNegative') ? Math.abs(a.value) : a.value
+        if (canvas.data('type') === 'barNegative') {
+          config.yAxis.labels.formatter = function(a) {
+            return Math.abs(a.value)
+          }
         }
         config.tooltip.formatter = (canvas.data('type') === 'barNegative') ? function() {
           return `<b>${this.series.name} ${this.point.category}:</b> ` + Highcharts.numberFormat(Math.abs(this.point.y), 0)
