@@ -10,7 +10,7 @@ class Footer extends React.Component {
 
   render() {
     const {
-      logoUrl, mainNavigation
+      logoUrl, bottomLinks, mainNavigation
     } = this.props
     return (
       <footer className="ssb-footer-wrapper">
@@ -44,9 +44,9 @@ class Footer extends React.Component {
 
         <div className="footer-bottom-row container">
           <div className="global-links">
-            <Link href="https://www.ssb.no/" isExternal negative>Statistisk sentralbyrå © 2019</Link>
-            <Link href="https://www.ssb.no/a-aa" isExternal negative>A-Å</Link>
-            <Link href="https://www.ssb.no/nettstedskart" isExternal negative>Nettstedskart</Link>
+            {bottomLinks.map((bottomLink, index) => {
+              return (<Link key={'link_' + index} href={bottomLink.path} negative>{bottomLink.title}</Link>)
+            })}
           </div>
           <div className="social-links">
             <Link href="https://www.facebook.com/statistisksentralbyra/" isExternal negative icon={<Facebook size={24} />} />
@@ -61,6 +61,12 @@ class Footer extends React.Component {
 }
 
 Footer.propTypes = {
+  bottomLinks: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string,
+      path: PropTypes.string
+    })
+  ),
   mainNavigation: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string,

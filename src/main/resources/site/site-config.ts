@@ -45,6 +45,81 @@ export interface SiteConfig {
   }>;
 
   /**
+   * Bunn lenker
+   */
+  bottomLinks?: Array<{
+    /**
+     * Lenketittel
+     */
+    linkTitle: string;
+
+    /**
+     * Lenketittel Engelsk
+     */
+    linkTitleEN: string;
+
+    /**
+     * Lenkemål
+     */
+    urlSrc?: {
+      /**
+       * Selected
+       */
+      _selected: string;
+
+      /**
+       * Url lenke
+       */
+      manual?: {
+        /**
+         * Kildelenke
+         */
+        url?: string;
+      };
+
+      /**
+       * Lenke til internt innhold
+       */
+      content?: {
+        /**
+         * Relatert innhold
+         */
+        contentId?: string;
+      };
+    };
+
+    /**
+     * Lenkemål Engelsk
+     */
+    urlSrcEN?: {
+      /**
+       * Selected
+       */
+      _selected: string;
+
+      /**
+       * Url lenke
+       */
+      manual?: {
+        /**
+         * Kildelenke
+         */
+        url?: string;
+      };
+
+      /**
+       * Lenke til internt innhold
+       */
+      content?: {
+        /**
+         * Relatert innhold
+         */
+        contentId?: string;
+      };
+    };
+  }>;
+
+  /**
    * Kommunedata innhold fra api
    */
   municipalDataContentId?: string;

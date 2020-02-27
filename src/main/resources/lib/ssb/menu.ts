@@ -50,6 +50,14 @@ export function parseTopLinks(topLinks: TopLinks): Array<Link> | undefined {
   })) : undefined
 }
 
+type BottomLinks = SiteConfig['bottomLinks']
+export function parseBottomLinks(bottomLinks: BottomLinks, language: string | undefined  ): Array<Link> | undefined {
+  return bottomLinks ? bottomLinks.map((link) => ({
+    title: language == 'en' ? link.linkTitleEN : link.linkTitle,
+    path: language == 'en' ? parseUrl(link.urlSrcEN) : parseUrl(link.urlSrc)
+  })) : undefined
+}
+
 function parseUrl(urlSrc: MenuItem['urlSrc']): string | undefined {
   if(urlSrc !== undefined) {
     if(urlSrc._selected === 'content') {
