@@ -10,7 +10,7 @@ class Footer extends React.Component {
 
   render() {
     const {
-      logoUrl, bottomLinks, footerNavigation, topButtonText, facebookUrl, twitterUrl, linkedinUrl
+      logoUrl, bottomLinks, footerNavigation, topButtonText, facebookUrl, twitterUrl, linkedinUrl, rssUrl
     } = this.props
     return (
       <footer className="ssb-footer-wrapper">
@@ -55,7 +55,7 @@ class Footer extends React.Component {
             <Link href={facebookUrl} isExternal negative icon={<Facebook size={24} />} />
             <Link href={twitterUrl} isExternal negative icon={<Twitter size={24} />} />
             <Link href={linkedinUrl} isExternal negative icon={<Linkedin size={24} />} />
-            <Link href="https://www.ssb.no/informasjon/rss" isExternal negative icon={<Rss size={24} />} />
+            <Link href={rssUrl}  isExternal negative icon={<Rss size={24} />} />
           </div>
         </div>
 		</div>
@@ -89,6 +89,7 @@ Footer.propTypes = {
   facebookUrl: PropTypes.string,
   twitterUrl: PropTypes.string,
   linkedinUrl: PropTypes.string,
+  rssUrl: PropTypes.string,
   topButtonText: PropTypes.string
 }
 

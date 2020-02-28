@@ -60,6 +60,11 @@ export interface SiteConfig {
   linkedinUrl: string;
 
   /**
+   * Lenke RSS
+   */
+  rssUrl: string;
+
+  /**
    * Bunn lenker
    */
   bottomLinks?: Array<{

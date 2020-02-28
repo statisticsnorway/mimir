@@ -25,6 +25,7 @@ export function getFooterContent(language: Language): Footer {
 	facebookUrl: siteConfig.facebookUrl,
 	twitterUrl: siteConfig.twitterUrl,
 	linkedinUrl: siteConfig.linkedinUrl,
+	rssUrl: siteConfig.rssUrl,
     bottomLinks: siteConfig.bottomLinks && siteConfig.bottomLinks.length > 0 ? parseBottomLinks(siteConfig.bottomLinks, language.code) : undefined,
     footerNavigation: language.footerContentId ? createMenuTree(language.footerContentId) : [],
     topButtonText: localize({
@@ -39,6 +40,7 @@ export interface Footer{
 	facebookUrl: string;
 	twitterUrl: string;
 	linkedinUrl: string;
+	rssUrl: string;
     bottomLinks?: Array<Link>;
     footerNavigation?: Array<MenuItem>;
     topButtonText?: string;

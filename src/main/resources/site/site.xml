@@ -160,34 +160,11 @@
 			<default>https://www.linkedin.com/company/statistics-norway/</default>
 		</input>
 
-		<option-set name="rssUrlSrc">
+		<input name="rssUrl" type="TextLine" >
 			<label>Lenke RSS</label>
-			<expanded>false</expanded>
-			<occurrences minimum="0" maximum="1"/>
-			<options minimum="1" maximum="1">
-			<option name="manual">
-				<label>Url lenke</label>
-				<default>https://www.ssb.no/informasjon/rss</default>
-				<items>
-				<input name="url" type="TextLine">
-					<label>Kildelenke</label>
-					<occurrences minimum="0" maximum="1"/>
-				</input>
-				</items>
-			</option>
-
-			<option name="content">
-				<label>Lenke til internt innhold</label>
-				<items>
-				<input name="contentId" type="ContentSelector">
-					<label>Relatert innhold</label>
-					<occurrences minimum="0" maximum="1"/>
-					<config/>
-				</input>
-				</items>
-			</option>
-			</options>
-		</option-set>
+			<occurrences minimum="1" maximum="1"/>
+			<default>https://www.ssb.no/informasjon/rss</default>
+		</input>
 		
       </items>
     </field-set>
