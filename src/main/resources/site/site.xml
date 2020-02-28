@@ -141,6 +141,54 @@
             </option-set>
           </items>
         </item-set>
+
+		<input name="facebookUrl" type="TextLine" >
+			<label>Lenke Facebook</label>
+			<occurrences minimum="1" maximum="1"/>
+			<default>https://www.facebook.com/statistisksentralbyra/</default>
+		</input>
+
+		<input name="twitterUrl" type="TextLine" >
+			<label>Lenke Twitter</label>
+			<occurrences minimum="1" maximum="1"/>
+			<default>https://twitter.com/ssbnytt</default>
+		</input>
+
+		<input name="linkedinUrl" type="TextLine" >
+			<label>Lenke Linkedin</label>
+			<occurrences minimum="1" maximum="1"/>
+			<default>https://www.linkedin.com/company/statistics-norway/</default>
+		</input>
+
+		<option-set name="rssUrlSrc">
+			<label>Lenke RSS</label>
+			<expanded>false</expanded>
+			<occurrences minimum="0" maximum="1"/>
+			<options minimum="1" maximum="1">
+			<option name="manual">
+				<label>Url lenke</label>
+				<default>https://www.ssb.no/informasjon/rss</default>
+				<items>
+				<input name="url" type="TextLine">
+					<label>Kildelenke</label>
+					<occurrences minimum="0" maximum="1"/>
+				</input>
+				</items>
+			</option>
+
+			<option name="content">
+				<label>Lenke til internt innhold</label>
+				<items>
+				<input name="contentId" type="ContentSelector">
+					<label>Relatert innhold</label>
+					<occurrences minimum="0" maximum="1"/>
+					<config/>
+				</input>
+				</items>
+			</option>
+			</options>
+		</option-set>
+		
       </items>
     </field-set>
 

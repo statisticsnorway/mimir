@@ -5,11 +5,11 @@ footer {
     border-bottom: 1px solid white;
     display: flex;
     justify-content: space-between;
-    margin-bottom: 36px;
+    margin-bottom: 50px;
 
     > * {
       margin-bottom: 36px;
-    }
+    } 
 
     img {
       width: 248px;
@@ -36,9 +36,10 @@ footer {
       }
     }
 
-    .footer-links {
+    .footer-menu {
       display: grid;
-      grid-template-columns: repeat(5, auto);
+	  grid-auto-columns: 1fr;
+      grid-auto-flow: column;
 
       .footer-link {
         display: flex;

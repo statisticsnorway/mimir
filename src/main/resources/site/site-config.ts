@@ -45,6 +45,21 @@ export interface SiteConfig {
   }>;
 
   /**
+   * Lenke Facebook
+   */
+  facebookUrl: string;
+
+  /**
+   * Lenke Twitter
+   */
+  twitterUrl: string;
+
+  /**
+   * Lenke Linkedin
+   */
+  linkedinUrl: string;
+
+  /**
    * Bunn lenker
    */
   bottomLinks?: Array<{

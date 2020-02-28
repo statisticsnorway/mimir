@@ -21,7 +21,10 @@ export function getFooterContent(language: Language): Footer {
   return {
     logoUrl: assetUrl({
       path: 'SSB_logo_white.svg'
-    }),
+	}),
+	facebookUrl: siteConfig.facebookUrl,
+	twitterUrl: siteConfig.twitterUrl,
+	linkedinUrl: siteConfig.linkedinUrl,
     bottomLinks: siteConfig.bottomLinks && siteConfig.bottomLinks.length > 0 ? parseBottomLinks(siteConfig.bottomLinks, language.code) : undefined,
     footerNavigation: language.footerContentId ? createMenuTree(language.footerContentId) : [],
     topButtonText: localize({
@@ -32,7 +35,10 @@ export function getFooterContent(language: Language): Footer {
 }
 
 export interface Footer{
-    logoUrl: string;
+	logoUrl: string;
+	facebookUrl: string;
+	twitterUrl: string;
+	linkedinUrl: string;
     bottomLinks?: Array<Link>;
     footerNavigation?: Array<MenuItem>;
     topButtonText?: string;

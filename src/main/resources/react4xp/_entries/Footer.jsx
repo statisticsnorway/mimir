@@ -10,23 +10,24 @@ class Footer extends React.Component {
 
   render() {
     const {
-      logoUrl, bottomLinks, footerNavigation, topButtonText
+      logoUrl, bottomLinks, footerNavigation, topButtonText, facebookUrl, twitterUrl, linkedinUrl
     } = this.props
     return (
       <footer className="ssb-footer-wrapper">
-        <div className="footer-top-row container">
+		  <div className="container">
+        <div className="footer-top-row">
           <img src={logoUrl} alt="ssb-logo"/>
           <Button negative onClick={()=> window.scroll({
             top: 0,
             behavior: 'smooth'
           })}>
-            <ArrowUp size="18" className="mr-2" />
+            <ArrowUp size="22" className="mr-2" />
             {topButtonText}
           </Button>
         </div>
 
-        <div className="footer-content container">
-          <div id="footerMenu" className="footer-links">
+        <div className="footer-content">
+          <div className="footer-menu">
             {footerNavigation.map((topMenuItem, menuIndex) => (
               <div key={menuIndex} className="footer-link">
                 <Title size={4} negative>{topMenuItem.title}</Title>
@@ -44,19 +45,20 @@ class Footer extends React.Component {
           </div>
         </div>
 
-        <div className="footer-bottom-row container">
+        <div className="footer-bottom-row">
           <div className="global-links">
             {bottomLinks.map((bottomLink, index) => {
               return (<Link key={'link_' + index} href={bottomLink.path} negative>{bottomLink.title}</Link>)
             })}
           </div>
           <div className="social-links">
-            <Link href="https://www.facebook.com/statistisksentralbyra/" isExternal negative icon={<Facebook size={24} />} />
-            <Link href="https://twitter.com/ssbnytt" isExternal negative icon={<Twitter size={24} />} />
-            <Link href="https://www.linkedin.com/company/statistics-norway/" isExternal negative icon={<Linkedin size={24} />} />
+            <Link href={facebookUrl} isExternal negative icon={<Facebook size={24} />} />
+            <Link href={twitterUrl} isExternal negative icon={<Twitter size={24} />} />
+            <Link href={linkedinUrl} isExternal negative icon={<Linkedin size={24} />} />
             <Link href="https://www.ssb.no/informasjon/rss" isExternal negative icon={<Rss size={24} />} />
           </div>
         </div>
+		</div>
       </footer>
     )
   }
@@ -84,6 +86,9 @@ Footer.propTypes = {
     })
   ),
   logoUrl: PropTypes.string,
+  facebookUrl: PropTypes.string,
+  twitterUrl: PropTypes.string,
+  linkedinUrl: PropTypes.string,
   topButtonText: PropTypes.string
 }
 
