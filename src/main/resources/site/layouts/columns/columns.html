@@ -8,7 +8,7 @@
           <div data-portal-component="${component.path}" data-th-remove="tag" />
         </div>
       </div>
-      <div data-th-if="${!#lists.isEmpty(rightRegion)}" class="d-md-none w-100 border-bottom pt-5 mb-4 mx-3"></div>
+      <div id="divider" data-th-if="${!#lists.isEmpty(rightRegion)}" class="d-md-none w-100 pt-5 pb-4 mx-3"></div>
       <div data-portal-region="right" class="xp-region mt-3 mt-md-0" data-th-classappend="${rightSize}">
         <div data-th-each="component : ${rightRegion}" data-th-remove="tag">
           <div data-portal-component="${component.path}" data-th-remove="tag" />
@@ -16,7 +16,7 @@
       </div>
     </div>
     <div data-th-if="${isGrid}" data-th-remove="tag" data-th-each="component, i: ${gridComponents}">
-      <div data-th-if="${component.regionSide == 'right' && component.order % 2 != 0}" class="d-md-none w-100 border-bottom pt-5 mb-5 mx-3 grid-divider"></div>
+      <div data-th-id="${dividerId}" data-th-if="${component.regionSide == 'right' && component.order % 2 != 0}" class="d-md-none w-100 py-5 mx-3 grid-divider"></div>
       <div data-th-classappend="${component.classes}">
         <div data-portal-component="${component.path}" data-th-remove="tag" />
       </div>
