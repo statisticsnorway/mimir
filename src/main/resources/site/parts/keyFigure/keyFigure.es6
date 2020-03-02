@@ -54,16 +54,26 @@ exports.preview = (req, id) => {
 const renderPart = (municipality, keyFigureIds) => {
   const part = getComponent()
   // get all keyFigures and filter out non-existing keyFigures
-  const keyFigures = keyFigureIds.reduce((list, keyFigureId) => {
-    const keyFigure = getKeyFigure(keyFigureId)
-    if (keyFigure) {
-      list.push(keyFigure)
-    }
-    return list
-  }, [])
+  const keyFigures = keyFigureIds
+    .reduce((list, keyFigureId) => {
+      const keyFigure = getKeyFigure(keyFigureId)
+      if (keyFigure) {
+        list.push(keyFigure)
+      }
+      return list
+    }, [])
+    .map((keyFigure) => {
+      const keyFigureData = parseKeyFigure(keyFigure, municipality)
+      return {
+        id: keyFigure._id,
+        ...keyFigureData,
+        source: keyFigure.data.source
+      }
+    })
+    .filter((keyFigure) => keyFigure.number)
 
   // continue if we have any keyFigures
-  return keyFigures.length ? renderKeyFigure(keyFigures, part, municipality) : {
+  return keyFigures.length ? renderKeyFigure(keyFigures, part) : {
     body: '',
     contentType: 'text/html'
   }
@@ -71,21 +81,11 @@ const renderPart = (municipality, keyFigureIds) => {
 
 /**
  *
- * @param {array} keyFigures
+ * @param {array} parsedKeyFigures
  * @param {object} part
- * @param {object} municipality
  * @return {{body: string, contentType: string}}
  */
-function renderKeyFigure(keyFigures, part, municipality) {
-  const parsedKeyFigures = keyFigures.map( (keyFigure) => {
-    const keyFigureData = parseKeyFigure(keyFigure, municipality)
-    return {
-      id: keyFigure._id,
-      ...keyFigureData,
-      source: keyFigure.data.source
-    }
-  })
-
+function renderKeyFigure(parsedKeyFigures, part) {
   const source = part && part.config && part.config.source || undefined
 
   const model = {
@@ -98,6 +98,7 @@ function renderKeyFigure(keyFigures, part, municipality) {
   const reactObjs = parsedKeyFigures.map((keyFigure) => {
     const reactProps = {
       iconUrl: keyFigure.iconUrl,
+      iconAltText: keyFigure.iconAltText,
       number: keyFigure.number,
       numberDescription: keyFigure.numberDescription,
       noNumberText: keyFigure.noNumberText,

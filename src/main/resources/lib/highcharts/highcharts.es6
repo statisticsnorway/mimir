@@ -43,27 +43,38 @@ export const barNegativeFormat = (ds, dimensionFilter, xAxis, yAxis) => {
   }
 }
 
-export const defaultTbmlFormat = (data) => {
+export const defaultTbmlFormat = (data, graphType) => {
   const rows = data.tbml.presentation.table.tbody.tr
   let headers = data.tbml.presentation.table.thead.tr.th
-  const categories = []
+  let categories = []
   if (!Array.isArray(headers)) {
     headers = [headers]
   }
-  const series = headers.map((name) => ({
-    name,
-    data: []
-  }))
-  rows.forEach((row) => {
-    categories.push(row.th)
-    series.forEach((serie, index) => {
-      if (!Array.isArray(row.td)) {
-        serie.data.push(row.td)
-      } else {
-        serie.data.push(row.td[index])
+  let series = []
+  if (graphType === 'pie') {
+    categories = headers
+    series = rows.map((row) => {
+      return {
+        name: row.th,
+        y: row.td
       }
     })
-  })
+  } else {
+    series = headers.map((name) => ({
+      name,
+      data: []
+    }))
+    rows.forEach((row) => {
+      categories.push(row.th)
+      series.forEach((serie, index) => {
+        if (!Array.isArray(row.td)) {
+          serie.data.push(row.td)
+        } else {
+          serie.data.push(row.td[index])
+        }
+      })
+    })
+  }
   return {
     categories,
     series

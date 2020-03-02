@@ -8,43 +8,47 @@ class Header extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      showSubMenu: false
+      showSubMenu: false,
+      currentFocusedElement: undefined,
+      searchFieldInput: ''
     }
   }
 
-  goToSearchResultPage() {
-    window.location = this.props.searchResultPageUrl
+  goToSearchResultPage(value) {
+    window.location = `${this.props.searchResultPageUrl}?sok=${value}`
   }
 
-  toggleSubMenu() {
+  toggleSubMenu(element) {
     this.setState({showSubMenu: !this.state.showSubMenu})
   }
 
   render() {
-    const {topLinks, language, searchInputPlaceholder, searchResultPageUrl, logoUrl, mainNavigation } = this.props
+    const {topLinks, language, searchInputPlaceholder, logoUrl, mainNavigation } = this.props
     return (
       <header className="ssb-header-wrapper">
-        <div className="global-links" style={{float: 'right', marginBottom: '12px', marginTop: '10px'}}>
-          <nav>
+        <nav className="global-links" style={{float: 'right', marginBottom: '12px', marginTop: '10px'}}>
             {topLinks.map((topLink, index) => {
               return (<Link key={'link_' + index} href={topLink.path} style={{marginLeft: '20px'}}>{topLink.title}</Link>)
             })}
             {language.alternativeLanguages.map((altLanguage, index) => {
               return (<Link key={'link_' + index} href={altLanguage.path} style={{marginLeft: '20px'}}>{altLanguage.title}</Link>)
             })}
-          </nav>
-        </div>
+        </nav>
         <div className="top-row flex-row justify-space-between flex-wrap" style={{width: '100%'}}>
-          <img src={logoUrl} alt="" style={{width: '248px'}}/>
+          <a className="plain" href="/"><img src={logoUrl} alt="" style={{width: '248px', height: '50px'}} /></a>
           <div className="searchfield" style={{width: '285px', alignSelf: 'flex-end'}}>
-            <Input ariaLabel="Input field Search" searchField placeholder={searchInputPlaceholder} onKeyPress={() => this.goToSearchResultPage()}/>
+            <Input
+              ariaLabel={searchInputPlaceholder}
+              searchField
+              submitCallback={(value) => this.goToSearchResultPage(value)}
+              placeholder={searchInputPlaceholder} />
           </div>
         </div>
-        <div className="header-content" style={{marginBottom: '20px', marginTop: '14px'}}>
-          <div id="mainMenu" className="ssb-tabs">
+        <div className="header-content">
+          <nav id="mainMenu" className="ssb-tabs">
             {mainNavigation.map((topMenuItem, menuIndex) => (
               <div key={menuIndex} className="tabItem">
-                <button className="navigation-item" onClick={() => this.toggleSubMenu()}>
+                <button className={topMenuItem.isActive? 'active navigation-item' : 'navigation-item'} onClick={() => this.toggleSubMenu()}>
                   <span>{topMenuItem.title}</span>
                 </button>
                 <Divider/>
@@ -52,14 +56,14 @@ class Header extends React.Component {
                   {topMenuItem.menuItems && topMenuItem.menuItems.map((menuItem, itemIndex) => {
                     return (
                       <li key={itemIndex}>
-                        <Link clasName="subMenuItem" href={menuItem.path} icon={<img src={menuItem.icon}></img>}>{menuItem.title}</Link>
+                        <Link tabindex="-1" href={menuItem.path} icon={<img src={menuItem.icon}></img>}>{menuItem.title}</Link>
                       </li>)
                   })
                   }
                 </ol>
               </div>
             ))}
-          </div>
+          </nav>
         </div>
       </header>
     )
@@ -80,6 +84,7 @@ Header.propTypes = {
       title: PropTypes.string,
       path: PropTypes.string,
       icon: PropTypes.string,
+      isActive: PropTypes.boolean,
       menuItems: PropTypes.arrayOf(
         PropTypes.shape({
           title: PropTypes.string,

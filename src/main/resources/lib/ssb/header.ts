@@ -5,13 +5,14 @@ import {MenuItem} from '../../site/content-types/menuItem/menuItem';
 import {Language} from '../types/language';
 const { assetUrl, getSiteConfig, pageUrl }: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
 const { createMenuTree, parseTopLinks } = __non_webpack_require__( '/lib/ssb/menu')
+const { pathFromStringOrContent } = __non_webpack_require__( '/lib/ssb/utils')
 const { localize } = __non_webpack_require__( '/lib/xp/i18n')
 
 export function getHeaderContent(language: Language): Header {
     const siteConfig: SiteConfig = getSiteConfig();
     return {
         logoUrl: assetUrl({path: 'SSB_logo.png'}),
-        searchResultPageUrl: siteConfig.searchResultPageId ?  pageUrl({id: siteConfig.searchResultPageId}): undefined,
+        searchResultPageUrl: siteConfig.searchResultPage ?  pathFromStringOrContent(siteConfig.searchResultPage): undefined,
         searchInputPlaceholder: localize({
             key: 'menuSearch',
             locale: language.code
