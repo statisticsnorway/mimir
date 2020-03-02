@@ -6,6 +6,9 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
+const {
+  getImageCaption
+} = __non_webpack_require__('/lib/ssb/utils')
 
 const moment = require('moment/min/moment-with-locales')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
@@ -31,6 +34,7 @@ function renderPart(request) {
       id: part.config.image,
       scale: 'block(315, 215)'
     }),
+    imageAltText: part.config.image ? getImageCaption(part.config.image) : '',
     imagePlacement: (part.config.cardOrientation == 'horizontal') ? 'left' : 'top',
     href: getLink(urlContentSelector),
     subTitle: getSubtitle(part.config.content, part.config.date),

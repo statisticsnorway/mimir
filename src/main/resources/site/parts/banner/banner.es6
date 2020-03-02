@@ -10,6 +10,9 @@ const {
   getMunicipality
 } = __non_webpack_require__( '/lib/klass/municipalities')
 const {
+  getImageCaption
+} = __non_webpack_require__( '/lib/ssb/utils')
+const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
 
@@ -36,6 +39,7 @@ function renderPart(req) {
 
   const model = {
     pageDisplayName: page.displayName,
+    bannerImageAltText: getImageCaption(part.config.image),
     bannerImage: part.config.image ? imageUrl({
       id: part.config.image,
       scale: 'block(1400,400)'

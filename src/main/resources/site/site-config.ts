@@ -1,11 +1,6 @@
 export interface SiteConfig {
   /**
-   * Søkeresultat side
-   */
-  searchResultPageId?: string;
-
-  /**
-   * Topp lenker
+   * Topp lenker i meny
    */
   topLinks?: Array<{
     /**
@@ -138,4 +133,34 @@ export interface SiteConfig {
      */
     footerId?: string;
   }>;
+
+  /**
+   * Landingsside for søk
+   */
+  searchResultPage?: {
+    /**
+     * Selected
+     */
+    _selected: string;
+
+    /**
+     * Url lenke
+     */
+    manual?: {
+      /**
+       * Kildelenke
+       */
+      url?: string;
+    };
+
+    /**
+     * Lenke til internt innhold
+     */
+    content?: {
+      /**
+       * Relatert innhold
+       */
+      contentId?: string;
+    };
+  };
 }

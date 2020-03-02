@@ -24,6 +24,9 @@
       padding: 0px;
     }
   }
+  @include media-breakpoint-down(md) {
+    width: 100%;
+  }
 }
 .overflow-y {
   overflow-y: hidden;
