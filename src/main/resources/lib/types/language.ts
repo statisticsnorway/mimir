@@ -4,7 +4,7 @@ export interface Language {
   phrases: object;
   alternativeLanguages: Array<AlternativeLanguages>;
   menuContentId: string;
-  footerContentId: string;
+  footerId: string;
 }
 
 interface AlternativeLanguages {

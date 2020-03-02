@@ -23,12 +23,12 @@ exports.getLanguage = function(page) {
     const altVersionExists = content.exists({
       key: altVersionUri
     })
-    let path = '';
-    if(altVersionExists) {
+    let path = ''
+    if (altVersionExists) {
       path = portal.pageUrl({
         path: altVersionUri
       })
-    } else if(altLanguage.homePageId) {
+    } else if (altLanguage.homePageId) {
       path = portal.pageUrl({
         id: altLanguage.homePageId
       })
@@ -48,7 +48,7 @@ exports.getLanguage = function(page) {
 
   const result = {
     menuContentId: currentLanguageConfig.menuContentId,
-    footerContentId: currentLanguageConfig.footerContentId,
+    footerId: currentLanguageConfig.footerId,
     code: currentLanguageConfig.code,
     link: (currentLanguageConfig.link !== null) ? currentLanguageConfig.link : '',
     phrases: {

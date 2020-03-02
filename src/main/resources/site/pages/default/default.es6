@@ -152,17 +152,19 @@ exports.get = function(req) {
   })
 
   const footerContent = getFooterContent(language)
-  const footerComponent = new React4xp('Footer')
+  if (footerContent) {
+    const footerComponent = new React4xp('Footer')
       .setProps({
         ...footerContent
       })
       .setId('footer')
-  body = footerComponent.renderBody({
-    body
-  })
-  pageContributions = footerComponent.renderPageContributions({
-    pageContributions
-  })
+    body = footerComponent.renderBody({
+      body
+    })
+    pageContributions = footerComponent.renderPageContributions({
+      pageContributions
+    })
+  }
 
   const breadcrumbs = getBreadcrumbs(page, municipality)
   const breadcrumbComponent = new React4xp('Breadcrumb')
