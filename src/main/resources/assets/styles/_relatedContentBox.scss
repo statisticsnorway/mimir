@@ -1,0 +1,24 @@
+.part-imageLink {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: space-between;
+  width: 100%;
+
+  .ssb-image-link {
+    background-image: none;
+    border: none;
+    margin-bottom: 40px;
+
+    span {
+      color: white;
+      width: 100%;
+    }
+
+    &:hover {
+      background-size: 0;
+      border: none;
+    }
+  }
+}

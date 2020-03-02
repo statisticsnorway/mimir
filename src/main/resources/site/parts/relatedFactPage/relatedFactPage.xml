@@ -7,12 +7,12 @@
     </input>
     <input name="itemList" type="ContentSelector">
       <label>Innholdsliste</label>
-      <occurrences minimum="0" maximum="0"/>
+      <occurrences minimum="1" maximum="1"/>
       <config>
         <allowPath>${site}</allowPath>
-        <allowType>folder</allowType>
-        <treeMode>true</treeMode>
-        <description>Henter alt innhold i mappen og lager lenker av de.</description>
+        <allowType>contentList</allowType>
+        <treeMode>false</treeMode>
+        <description>Henter alt innhold i listen og lager lenker av de.</description>
       </config>
     </input>
   </form>
