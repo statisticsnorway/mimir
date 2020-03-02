@@ -5,7 +5,6 @@ const {
   render
 } = __non_webpack_require__( '/lib/thymeleaf')
 
-const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view = resolve('columns.html')
 
 exports.get = function(req) {
@@ -16,12 +15,6 @@ exports.get = function(req) {
     hideTitle
   } = component.config
   const isGrid = component.config.isGrid && req.mode !== 'edit'
-
-  const divider = new React4xp('Divider')
-    .setProps({
-      light: true
-    })
-    .uniqueId()
 
   // Default 50/50
   let leftSize = 'col-12 '
@@ -60,7 +53,7 @@ exports.get = function(req) {
         gridComponents.push({
           path: left.path,
           classes: `order-0 ${leftSize}${(!prevRight && i !== 0) ? ` ${leftOffset}` : ''}`,
-          number: left.path.slice(-1), // Get the last char of the path
+          order: left.path.slice(-1), // Get the last char of the path (path i.e. /Rad_H/1/left/1)
           regionSide: 'left'
         })
       }
@@ -68,7 +61,7 @@ exports.get = function(req) {
         gridComponents.push({
           path: right.path,
           classes: `order-1 order-md-0 ${rightSize}${!left ? ` ${rightOffset}` : ''}`,
-          number: right.path.slice(-1), // Get the last char of the path
+          order: right.path.slice(-1),
           regionSide: 'right'
         })
       }
@@ -76,7 +69,6 @@ exports.get = function(req) {
   }
 
   const model = {
-    dividerId: divider.react4xpId,
     title,
     hideTitle,
     leftRegion,
@@ -87,9 +79,7 @@ exports.get = function(req) {
     gridComponents
   }
 
-  const body = divider.renderBody({
-    body: render(view, model)
-  })
+  const body = render(view, model)
 
   return {
     body
