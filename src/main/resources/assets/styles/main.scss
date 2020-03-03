@@ -54,80 +54,74 @@ body {
   overflow-x: hidden; // removes horisontal scroll bar created by part preface
 }
 
-.ingress {
-  font-size: 20px;
-  line-height: 1.7;
-  p:last-child {
-    margin-bottom: 40px
-  }
+section { 
+  width: 100%;
 }
 
-.article h2 {
-  font-size: 20px;
-}
+// .ingress {
+//   font-size: 20px;
+//   line-height: 1.7;
+//   p:last-child {
+//     margin-bottom: 40px
+//   }
+// }
 
-.row + section, section + section {
+// .article h2 {
+//   font-size: 20px;
+// }
+
+section + section, .xp-layout + .xp-layout {
   margin-top: $spacer * 3;
 }
 
-.part-divider {
-  &:not(:first-child) {
-    margin-top: $spacer * 3;
-  }
-  &:not(:last-child) {
-    margin-bottom: $spacer * 3;
-  }
+// .part-divider {
+//   &:not(:first-child) {
+//     margin-top: $spacer * 3;
+//   }
+//   &:not(:last-child) {
+//     margin-bottom: $spacer * 3;
+//   }
+// }
+
+// [data-portal-component-type='text'] {
+//   &:not(:first-child) {
+//     margin-top: $spacer * 3;
+//   }
+//   &:not(:last-child) {
+//     margin-bottom: $spacer * 3;
+//   }
+// }
+
+// .a-plain {
+//   color: #212529;
+//   outline: none;
+//   text-decoration: none;
+//   &:hover {
+//     color: #212529;
+//     text-decoration: none;
+//   }
+// }
+
+// .a-white {
+//   color: white;
+//   &:hover {
+//     transition: all .2s;
+//     color: #CCCCCC;
+//   }
+// }
+
+// a.btn {
+//   text-decoration: none;
+// }
+
+// footer {
+//   margin-top: 40px;
+// }
+
+.part-error {
+  background-color: $ssb-red-3;
 }
-
-[data-portal-component-type='text'] {
-  &:not(:first-child) {
-    margin-top: $spacer * 3;
-  }
-  &:not(:last-child) {
-    margin-bottom: $spacer * 3;
-  }
-}
-
-.a-plain {
-  color: #212529;
-  outline: none;
-  text-decoration: none;
-  &:hover {
-    color: #212529;
-    text-decoration: none;
-  }
-}
-
-.a-white {
-  color: white;
-  &:hover {
-    transition: all .2s;
-    color: #CCCCCC;
-  }
-}
-
-a.btn {
-  text-decoration: none;
-}
-
-footer {
-  margin-top: 40px;
-}
-
-
 
 .bkg-grey {
   background-color: $ssb-dark-1;
-}
-
-// class used to hide elements from sighted users and still allowing it to be picked up by screen readers
-.screen-reader-only {
-  clip: rect(1px, 1px, 1px, 1px);
-  clip-path: inset(50%);
-  height: 1px;
-  width: 1px;
-  margin: -1px;
-  overflow: hidden;
-  padding: 0;
-  position: absolute;
 }
