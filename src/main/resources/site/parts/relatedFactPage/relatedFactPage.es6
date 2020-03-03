@@ -35,7 +35,7 @@ function renderPart(req) {
       relatedContentLists.push({
         link: pageUrl ({ id: relatedRelatedContent._id }),
         image: imageUrl ({ id: relatedRelatedContent.x['com-enonic-app-metafields']['meta-data'].seoImage, scale: 'block(380, 400)' }),
-        type: relatedRelatedContent.x['com-enonic-app-metafields']['meta-data'].seoTitle,
+        type: part.config.type,
         title: relatedRelatedContent.displayName,
         items
       })
@@ -44,7 +44,6 @@ function renderPart(req) {
 
   const props = {
     relatedContentLists: relatedContentLists
-    //listLength: relatedContentLists.length
   }
 
   return React4xp.render(part, props, req)
