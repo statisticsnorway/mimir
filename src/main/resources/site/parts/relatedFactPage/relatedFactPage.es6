@@ -43,7 +43,8 @@ function renderPart(req) {
   })
 
   const props = {
-    relatedContentLists: relatedContentLists
+    relatedContentLists: relatedContentLists,
+    mainTitle: part.config.title
   }
 
   return React4xp.render(part, props, req)

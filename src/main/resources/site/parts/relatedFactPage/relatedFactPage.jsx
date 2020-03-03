@@ -1,14 +1,15 @@
 import React from 'react'
 import { ImageLink, Button } from '@statisticsnorway/ssb-component-library'
 
-state = { isHidden: true }
-const { isHidden } = this.state;
-toggleBox = () => {
-    this.setState(prevState => ({ isHidden: !prevState.isHidden }))
-}
+//state = { isHidden: true }
+//const { isHidden } = this.state;
+//toggleBox = () => {
+//    this.setState(prevState => ({ isHidden: !prevState.isHidden }))
+//}
 
 export default (props) =>
     <section className="xp-part part-imageLink container col-12">
+        <h2>{props.mainTitle}</h2>
         <div className="imageBoxWrapper pt-5">
             {props.relatedContentLists.map((relatedRelatedContent, index) =>
                 <ImageLink
