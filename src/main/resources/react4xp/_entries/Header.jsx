@@ -11,7 +11,8 @@ class Header extends React.Component {
       showSubMenu: false,
       showMainMenuOnMobile: false,
       searchFieldInput: '',
-      mainMenu: props.mainNavigation.map( () => false )
+      mainMenu: props.mainNavigation.map( () => false ),
+      indexForCurrentActiveMenuItem: undefined
     }
 
     this.goToSearchResultPage = this.goToSearchResultPage.bind(this)
@@ -33,11 +34,14 @@ class Header extends React.Component {
   }
 
   toggleSubMenu(index) {
+    const activeIndex = this.state.indexForCurrentActiveMenuItem === index? undefined : index
     const mainMenu = [...this.state.mainMenu]
     mainMenu[index] = !mainMenu[index]
+
     this.setState({
-      showSubMenu: !this.state.showSubMenu,
-      mainMenu: mainMenu
+      showSubMenu: !this.state.showSubMenu || activeIndex !== undefined,
+      mainMenu: mainMenu,
+      indexForCurrentActiveMenuItem: activeIndex
     })
   }
 
@@ -104,7 +108,7 @@ class Header extends React.Component {
               return (
                 <div key={index} className={this.state.mainMenu[index] ? 'mobileActive tabItem' : 'tabItem'}>
                   <button onClick={menuItemClick} >
-                    <span  className="navigation-item">
+                    <span  className={this.state.indexForCurrentActiveMenuItem === index ? 'active navigation-item' : 'navigation-item'} >
                       <span>{topMenuItem.title}</span>
                       {this.state.mainMenu[index]? <ChevronUp/>: <ChevronDown/>}
                     </span>
