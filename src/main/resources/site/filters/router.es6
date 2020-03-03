@@ -1,3 +1,5 @@
+import {Cache, CacheLib} from '../../lib/types/cache';
+
 const {
   getSiteConfig, getContent, pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
@@ -10,6 +12,15 @@ const {
 const {
   request
 } = __non_webpack_require__( '/lib/http-client')
+const {
+  newCache
+} = __non_webpack_require__( '/lib/cache')
+
+
+const filterCache = newCache({
+  size: 1000,
+  expire: 300
+})
 
 exports.filter = function(req, next) {
   if (req.params.selfRequest) return next(req)
@@ -31,17 +42,21 @@ exports.filter = function(req, next) {
     const targetUrl = routerConfig[0].target ? pageUrl({
       id: routerConfig[0].target
     }) : '/'
-    const targetResponse = request({
-      url: `http://localhost:8080${targetUrl}`,
-      headers: req.headers,
-      cookies: req.cookies,
-      params: {
-        selfRequest: true,
-        pathname: req.path.split('/').pop(),
-        pageTitle: routerConfig[0].pageTitle ? routerConfig[0].pageTitle : ''
-      },
-      connectionTimeout: 5000,
-      readTimeout: 20000
+
+
+    const targetResponse = filterCache.get(`filter_${req.path}`, () => {
+       return request({
+        url: `http://localhost:8080${targetUrl}`,
+        headers: req.headers,
+        cookies: req.cookies,
+        params: {
+          selfRequest: true,
+          pathname: req.path.split('/').pop(),
+          pageTitle: routerConfig[0].pageTitle ? routerConfig[0].pageTitle : ''
+        },
+        connectionTimeout: 5000,
+        readTimeout: 20000
+      })
     })
 
     return {

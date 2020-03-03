@@ -45,3 +45,14 @@
   margin-top: -50px;
   position: relative;
 }
+
+.container {
+  @include media-breakpoint-down(md) {
+    padding-left: 0;
+    padding-right: 0;
+
+    .grid-divider:last-child {
+      display: none;
+    }
+  }
+}
