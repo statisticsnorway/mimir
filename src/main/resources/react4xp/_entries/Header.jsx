@@ -105,10 +105,11 @@ class Header extends React.Component {
           <nav id="mainMenu" className="ssb-tabs">
             {mainNavigation.map((topMenuItem, index) => {
               const menuItemClick = this.toggleSubMenu.bind(this, index)
+              const activeMenuItem = this.state.indexForCurrentActiveMenuItem === index || topMenuItem.isActive
               return (
                 <div key={index} className={this.state.mainMenu[index] ? 'mobileActive tabItem' : 'tabItem'}>
                   <button onClick={menuItemClick} >
-                    <span  className={this.state.indexForCurrentActiveMenuItem === index ? 'active navigation-item' : 'navigation-item'} >
+                    <span className={ activeMenuItem ? 'active navigation-item' : 'navigation-item'} >
                       <span>{topMenuItem.title}</span>
                       {this.state.mainMenu[index]? <ChevronUp/>: <ChevronDown/>}
                     </span>
