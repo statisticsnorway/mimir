@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { Divider, Input, Link } from '@statisticsnorway/ssb-component-library'
 import { ChevronDown, ChevronUp, Menu, X } from 'react-feather';
 
-// const Header = (props) => {
 class Header extends React.Component {
   constructor(props) {
     super(props)
