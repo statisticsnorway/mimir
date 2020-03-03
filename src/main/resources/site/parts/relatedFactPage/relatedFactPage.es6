@@ -44,6 +44,7 @@ function renderPart(req) {
 
   const props = {
     relatedContentLists: relatedContentLists
+    //listLength: relatedContentLists.length
   }
 
   return React4xp.render(part, props, req)
