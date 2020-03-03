@@ -1,10 +1,14 @@
-const portal = __non_webpack_require__( '/lib/xp/portal')
-const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
+const {
+  getComponent
+} = __non_webpack_require__( '/lib/xp/portal')
+const {
+  render
+} = __non_webpack_require__( '/lib/thymeleaf')
 
 const view = resolve('columns.html')
 
 exports.get = function(req) {
-  const component = portal.getComponent()
+  const component = getComponent()
   const {
     size,
     title,
@@ -48,13 +52,17 @@ exports.get = function(req) {
       if (left) {
         gridComponents.push({
           path: left.path,
-          classes: `order-0 ${leftSize}${(!prevRight && i !== 0) ? ` ${leftOffset}` : ''}`
+          classes: `order-0 ${leftSize}${(!prevRight && i !== 0) ? ` ${leftOffset}` : ''}`,
+          order: left.path.slice(-1), // Get the last char of the path (path i.e. /Rad_H/1/left/1)
+          regionSide: 'left'
         })
       }
       if (right) {
         gridComponents.push({
           path: right.path,
-          classes: `order-1 order-md-0 ${rightSize}${!left ? ` ${rightOffset}` : ''}`
+          classes: `order-1 order-md-0 ${rightSize}${!left ? ` ${rightOffset}` : ''}`,
+          order: right.path.slice(-1),
+          regionSide: 'right'
         })
       }
     }
@@ -71,7 +79,7 @@ exports.get = function(req) {
     gridComponents
   }
 
-  const body = thymeleaf.render(view, model)
+  const body = render(view, model)
 
   return {
     body
