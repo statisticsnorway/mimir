@@ -2,6 +2,7 @@ import {Content, ContentLibrary, QueryResponse} from 'enonic-types/lib/content';
 import {PortalLibrary} from 'enonic-types/lib/portal';
 import {MenuItem} from '../../site/content-types/menuItem/menuItem';
 import {SiteConfig} from '../../site/site-config';
+import { Footer } from '../../site/content-types/footer/footer'
 
 const { getContent, imageUrl, pageUrl }: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
 const { get, getChildren }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
@@ -42,6 +43,13 @@ function createMenuBranch(menuItem: Content<MenuItem>): MenuItemParsed {
 type TopLinks = SiteConfig['topLinks']
 export function parseTopLinks(topLinks: TopLinks): Array<Link> | undefined {
   return topLinks ? topLinks.map((link) => ({
+    title: link.linkTitle,
+    path: parseUrl(link.urlSrc)
+  })) : undefined
+}
+
+export function parseGlobalLinks(footerContent: Content<Footer>): Array<Link> | undefined {
+  return footerContent.data.globalLinks ? footerContent.data.globalLinks.map((link) => ({
     title: link.linkTitle,
     path: parseUrl(link.urlSrc)
   })) : undefined

@@ -25,6 +25,7 @@ $container-max-widths: (
 @import "./color";
 @import "./font";
 @import "./header";
+@import "./footer";
 @import "./menuBox";
 @import "./dashboard";
 @import "./button";
@@ -107,12 +108,6 @@ body {
 a.btn {
   text-decoration: none;
 }
-
-footer {
-  margin-top: 40px;
-}
-
-
 
 .bkg-grey {
   background-color: $ssb-dark-1;
