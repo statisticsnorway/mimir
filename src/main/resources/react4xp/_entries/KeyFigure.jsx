@@ -5,44 +5,27 @@ import PropTypes from 'prop-types'
 class KeyFigures extends React.Component {
   createRows() {
     const {
-      keyFigures
+      keyFigures,
+      columns
     } = this.props
-    const rows = []
-    keyFigures.forEach((keyFigure, index) => {
-      const row = rows[rows.length - 1]
-      const prev = keyFigures[index - 1]
-      if (!row || keyFigure.size === 'large' || keyFigure.greenBox || (prev && (prev.size === 'large' || prev.greenBox)) || row.keyFigures.length === 2) {
-        rows.push({
-          keyFigures: [keyFigure],
-          classes: `${keyFigure.size !== 'large' && !keyFigure.greenBox ? 'row-cols-md-2' : ''}`
-        })
-      } else {
-        row.keyFigures.push(keyFigure)
-      }
-    })
 
-    return rows.map((row, i) => {
+    let isRight = true
+    return keyFigures.map((keyFigure, i) => {
+      isRight = (!columns || (columns && !isRight) || keyFigure.size === 'large')
       return (
-        <div key={`row-${i}`} className={`row row-cols-1 ${row.classes}`}>
-          {row.keyFigures.map((keyFigure, j) => {
-            return (
-              <React.Fragment key={`figure-${j}`}>
-                <div className="col">
-                  <SSBKeyFigures {...keyFigure} icon={keyFigure.iconUrl && <img src={keyFigure.iconUrl} alt={keyFigure.iconAltText}></img>}/>
-                  {this.addKeyFigureSource(keyFigure)}
-                </div>
-                {(j < row.keyFigures.length - 1) ? (<Divider className="w-100 d-block d-md-none" light />) : null}
-              </React.Fragment>
-            )
-          })}
-          {(i < rows.length - 1) ? (<Divider className="w-100 d-none d-md-block" light />) : null}
-        </div>
+        <React.Fragment key={`figure-${i}`}>
+          <div className={`col-12 ${columns && keyFigure.size !== 'large' ? 'col-md-6' : ''}`}>
+            <SSBKeyFigures {...keyFigure} icon={keyFigure.iconUrl && <img src={keyFigure.iconUrl} alt={keyFigure.iconAltText}></img>}/>
+            {this.addKeyFigureSource(keyFigure)}
+          </div>
+          {i < keyFigures.length - 1 ? <Divider className={`my-5 d-block ${!isRight ? 'd-md-none' : ''}`} light /> : null}
+        </React.Fragment>
       )
     })
   }
 
   addKeyFigureSource(keyFigure) {
-    if ((!this.props.source || !this.props.source.url) && keyFigure.source) {
+    if ((!this.props.source || !this.props.source.url) && keyFigure.source && keyFigure.source.url) {
       return (
         <References title="Kilde" referenceList={[{
           href: keyFigure.source.url,
@@ -56,12 +39,10 @@ class KeyFigures extends React.Component {
   addSource() {
     if (this.props.source && this.props.source.url) {
       return (
-        <div className="row row-cols-1">
-          <References title="Kilde" referenceList={[{
-            href: this.props.source.url,
-            label: this.props.source.title
-          }]}/>
-        </div>
+        <References className="col-12" title="Kilde" referenceList={[{
+          href: this.props.source.url,
+          label: this.props.source.title
+        }]}/>
       )
     }
     return
@@ -79,8 +60,10 @@ class KeyFigures extends React.Component {
   render() {
     return <div className="container">
       {this.addHeader()}
-      {this.createRows()}
-      {this.addSource()}
+      <div className="row">
+        {this.createRows()}
+        {this.addSource()}
+      </div>
     </div>
   }
 }
@@ -113,7 +96,8 @@ KeyFigures.propTypes = {
   source: PropTypes.shape({
     url: PropTypes.string,
     title: PropTypes.title
-  })
+  }),
+  columns: PropTypes.bool
 }
 
 export default (props) => <KeyFigures {...props}/>

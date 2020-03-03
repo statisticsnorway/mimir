@@ -105,7 +105,8 @@ function renderKeyFigure(parsedKeyFigures, part) {
           source: keyFigure.source
         }
       }),
-      source: part && part.config && part.config.source || undefined
+      source: part && part.config && part.config.source || undefined,
+      columns: part && part.config && part.config.columns
     })
     .uniqueId()
 

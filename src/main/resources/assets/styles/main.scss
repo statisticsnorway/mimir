@@ -4,7 +4,7 @@ $grid-breakpoints: (
   // Extra small screen / phone
   xs: 0,
   // Small screen / phone
-  sm: 576px,
+  sm: 768px,
   // Medium screen / tablet
   md: 768px,
   // Large screen / desktop
@@ -61,6 +61,10 @@ section {
 
 section + section, .xp-layout + .xp-layout {
   margin-top: $spacer * 3;
+}
+
+.part-error {
+  background-color: $ssb-red-3;
 }
 
 .bkg-grey {

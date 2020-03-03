@@ -1,4 +1,9 @@
 .key-figures {
+  // TODO fix pass-through of className in component system on KeyFigure so we can use .w-100
+  .ssb-key-figures {
+    width: 100%;
+  }
+
   & .divider:not(:last-child) {
     @include media-breakpoint-down (md) {
       border-bottom: 1px solid #cccccc;
