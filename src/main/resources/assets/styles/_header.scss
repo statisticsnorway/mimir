@@ -65,7 +65,7 @@ header.ssb-header-wrapper {
 
       &.showOnMobile {
         height: auto;
-        max-height: 800px;
+        max-height: 1800px;
         transition: max-height 0.3s ease-in;
       }
     }
@@ -175,10 +175,6 @@ header.ssb-header-wrapper {
       padding: 0;
       &:focus {
         outline: 0 none;
-        .navigation-item span {
-          background: $ssb-green-4;
-          color: white
-        }
       }
 
       @include media-breakpoint-down(md) {
@@ -225,7 +221,8 @@ header.ssb-header-wrapper {
 
     .subMenu {
       color: #2d6975;
-      height: 0;
+      max-height: 0px;
+      transition: max-height 0.3s ease-out;
       overflow: hidden;
       list-style: none;
       padding: 0;
@@ -234,12 +231,14 @@ header.ssb-header-wrapper {
 
       @include media-breakpoint-up(md) {
         &.visible {
-          height: auto
+          height: auto;
+          max-height: 800px;
+          transition: max-height 0.3s ease-in;
         }
       }
 
       @include media-breakpoint-down(md) {
-
+        max-height: initial;
         max-width: none;
         height: auto
 
@@ -253,11 +252,14 @@ header.ssb-header-wrapper {
         }
         a.ssb-link.with-icon {
           word-wrap: break-word;
+          display: flex;
+          align-items: flex-start;
 
           .icon-wrapper {
             margin: 4px 9px 0 0;
-            align-self: start;
+            display: grid;
           }
+
           .link-text {
             color: #2d6975;
           }

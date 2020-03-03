@@ -103,8 +103,8 @@ class Header extends React.Component {
               const menuItemClick = this.toggleSubMenu.bind(this, index)
               return (
                 <div key={index} className={this.state.mainMenu[index] ? 'mobileActive tabItem' : 'tabItem'}>
-                  <button onClick={menuItemClick}>
-                    <span className={topMenuItem.isActive? 'active navigation-item':'navigation-item'} >
+                  <button onClick={menuItemClick} >
+                    <span  className="navigation-item">
                       <span>{topMenuItem.title}</span>
                       {this.state.mainMenu[index]? <ChevronUp/>: <ChevronDown/>}
                     </span>
