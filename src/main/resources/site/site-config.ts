@@ -127,6 +127,11 @@ export interface SiteConfig {
      * Meny
      */
     menuContentId: string;
+
+    /**
+     * Footer
+     */
+    footerId?: string;
   }>;
 
   /**
