@@ -2,99 +2,294 @@
   background: white;
 }
 
-header {
-  &.ssb-header-wrapper{
-    padding: 0;
+header.ssb-header-wrapper {
+  padding: 0;
 
-    .ssb-tabs {
-      justify-content: space-between;
-    }
+  @include media-breakpoint-down(md){
+    padding-top: 20px;
   }
+
+  .ssb-tabs {
+    justify-content: space-between;
+  }
+
   .global-links {
+    float: right;
+    margin-bottom: 12px;
+    margin-top: 10px;
+
+    @include media-breakpoint-down(md) {
+      display: none;
+    }
     .ssb-links {
       margin-left: 20px;
     }
   }
-  .plain {
+
+  .plainLink {
     background: none;
     border-bottom: none;
+    @include media-breakpoint-down(md){
+      margin: 0
+    }
   }
+
+  .misc {
+    width: 100%;
+    padding: 0;
+    @include media-breakpoint-down(md){
+      align-items: center;
+    }
+    @include media-breakpoint-down(sm) {
+      padding: 0 20px;
+
+    }
+  }
+
+  .mobileMenuDivider{
+    color: $ssb-dark-2;
+    @include media-breakpoint-up(lg){
+      display: none;
+    }
+  }
+
   .header-content {
     margin-top: 14px;
+
+
+    @include media-breakpoint-down(md){
+      margin-top: 0;
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.3s ease-out;
+
+      &.showOnMobile {
+        height: auto;
+        max-height: 1800px;
+        transition: max-height 0.3s ease-in;
+      }
+    }
   }
+
+  .logo {
+    width: 248px;
+    height: 50px;
+    @include media-breakpoint-down(md) {
+      width: 197px;
+      height: auto;
+    }
+  }
+
+  .hamburger {
+    display: none;
+    padding: 0;
+    border: 0 none;
+    background: transparent;
+    height: 24px;
+    font-family: Roboto;
+    font-size: 20px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: right;
+
+    @include media-breakpoint-down(md) {
+      display: block;
+    }
+
+    span svg {
+      margin-bottom: 2px;
+      stroke: $ssb-green-4;
+    }
+  }
+
+  .searchfield {
+    width: 285px;
+    align-self: flex-end;
+
+    @include media-breakpoint-down(md) {
+      max-height: 0;
+      margin: 20px 0 0;
+      width: 100%;
+      transition: all 0.2s ease-out;
+      overflow: hidden;
+
+      &.show {
+        margin: 20px 0;
+        max-height: 200px;
+        transition: all 0.2s ease-in;
+      }
+      .ssb-input {
+        max-width: none;
+      }
+    }
+  }
+
+  #mainMenu {
+    @include media-breakpoint-down(md){
+      flex-direction: column;
+    }
+  }
+
   .tabItem {
     flex-grow: 1;
     overflow: hidden;
 
-    .navigation-item {
-      height: 62.5px;
-      padding: 0 0 15px 0;
-      text-align: left;
-      align-items: end;
-      margin-right: 40px;
-      span {
-        font-size: 16px;
+    &:hover {
+      .subMenu li a.ssb-link.with-icon {
+        .link-text {
+          color: black;
+        }
+        &:hover {
+          .link-text{
+            color: white;
+          }
+        }
+      }
+    }
+
+    @include media-breakpoint-down(md){
+      border-bottom: 1px solid $ssb-dark-2;
+      padding: 0 20px;
+      transition: max-height 0.3s ease-in;
+      max-height: 70px;
+
+      .ssb-divider {
+        display: none;
+      }
+
+      ol {
+        height: auto;
+      }
+
+      &.mobileActive{
+        max-height: 300px;
+      }
+    }
+
+    button {
+      background: transparent;
+      border: 0 none;
+      padding: 0;
+      &:focus {
+        outline: 0 none;
+      }
+
+      @include media-breakpoint-down(md) {
         width: 100%;
       }
     }
 
-    @include media-breakpoint-down(md) {
-      .navigation-item {
-        padding: 0 30px 15px 0;
+    button .navigation-item {
+      display: flex;
+      height: 62.5px;
+      padding: 0 0 15px 0;
+      text-align: left;
+      align-items: flex-end;
+      margin-right: 40px;
+      cursor: pointer;
+      svg {
+        display: none;
+      }
+
+      @include media-breakpoint-down(md) {
+        padding: 0 0 15px 0;
+        margin: 0;
+        width: 100%;
+        &:hover::before,
+        &.active::before {
+          height: 0;
+        }
+
+        svg {
+          display: inline;
+          color: $ssb-green-3;
+        }
+
+      }
+
+      span {
+        font-size: 16px;
+        width: 100%;
+        @include media-breakpoint-down(md) {
+          font-size: 20px;
+        }
       }
     }
 
     .subMenu {
       color: #2d6975;
-      height: 0;
+      max-height: 0px;
+      transition: max-height 0.3s ease-out;
       overflow: hidden;
       list-style: none;
       padding: 0;
       max-width: 180px;
       margin-bottom: 0;
 
-      &.visible {
+      @include media-breakpoint-up(md) {
+        &.visible {
+          height: auto;
+          max-height: 800px;
+          transition: max-height 0.3s ease-in;
+        }
+      }
+
+      @include media-breakpoint-down(md) {
+        max-height: initial;
+        max-width: none;
         height: auto
+
       }
 
       li {
         margin: 20px 0;
         padding-right: 8px;
+        @include media-breakpoint-down(md) {
+          margin: 5px 0 20px;
+        }
         a.ssb-link.with-icon {
           word-wrap: break-word;
+          display: flex;
+          align-items: flex-start;
 
           .icon-wrapper {
             margin: 4px 9px 0 0;
-            align-self: start;
+            display: grid;
           }
+
           .link-text {
             color: #2d6975;
           }
         }
-
         img {
           width: 12px;
         }
       }
     }
+  }
+  .global-bottom-links {
+    display: none;
 
-    &:hover {
-      .subMenu {
-        li {
-          a.ssb-link.with-icon {
-            .link-text {
-              color: black;
-            }
-            &:hover {
-              .link-text{
-                color: white;
-              }
-            }
-          }
+    @include media-breakpoint-down(md) {
 
-        }
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin: 20px 4px;
+      max-height: 0;
+      transition: max-height 0.4s ease-in;
+
+      &.active {
+        height: auto;
+        max-height: 300px;
+        transition: max-height 0.4s ease-out;
+      }
+      .ssb-link {
+        margin: 12px 20px;
       }
     }
-
   }
 }
