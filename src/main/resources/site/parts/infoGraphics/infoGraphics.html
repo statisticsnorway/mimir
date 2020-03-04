@@ -3,11 +3,11 @@
     <div class="xp-region col-12">
       <div class="border-top-green">
 
-        <h2 class="mt-0" data-th-text="${title}" />
+        <h2 data-th-if="${title}" class="mt-0" data-th-text="${title}" />
 
         <div class="d-flex justify-content-center">
           <img data-th-if="${image}" data-th-alt="${altText}" data-th-src="${imageSrc}" />
-          <a data-th-href="${longDesc}" class="screen-reader-only" data-th-text="${descriptionInfographics}" />
+          <a data-th-href="${longDesc}" class="sr-only" data-th-text="${descriptionInfographics}" />
         </div>
 
         <ul class="footnote">
