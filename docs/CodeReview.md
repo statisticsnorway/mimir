@@ -5,4 +5,4 @@
 - [ ] `npm run lint-dry` to check for linting warnings/errors
 - [ ] ?
 - [ ] ?
-- [ ] ?
+- [ ] Check code in [w3's validator](https://validator.w3.org)
