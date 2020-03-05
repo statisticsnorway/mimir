@@ -65,7 +65,7 @@ const renderPart = (req, dataQueryIds) => {
       headers.unshift('')
       table = util.data.forceArray(dataResult.tbml.presentation.table.tbody.tr).map((tr) => {
         let value = tr.td
-        if (typeof value === 'object' && !Number.isNaN(value.content)) {
+        if (typeof value === 'object' && value.content != undefined) {
           value = value.content
         }
         return {
