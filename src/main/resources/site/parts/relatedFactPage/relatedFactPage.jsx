@@ -21,7 +21,7 @@ class RelatedBoxes extends React.Component {
                 <div className="imageBoxWrapper pt-5">
                     {relatedContentLists.map((relatedRelatedContent, index) =>
                         <ImageLink
-                            orientation={index > 2 && this.state.isHidden ? 'hidden' : ''} //hack for å legge til klasse gjennom orientation prop, TODO: fikses etter endring i DS
+                            orientation={index > 2 && this.state.isHidden ? 'd-none' : ''} //hack for å legge til klasse gjennom orientation prop, TODO: fikses etter endring i DS
                             image={<img src={relatedRelatedContent.image} alt={relatedRelatedContent.title} />}
                             link={relatedRelatedContent.link}
                             type={relatedRelatedContent.type}
@@ -29,8 +29,8 @@ class RelatedBoxes extends React.Component {
                         />
                     )}
                 </div>
-                <div className="col-6 pb-5">
-                    <Button className={relatedContentLists.length < 4 ? 'hidden' : ''} onClick={this.toggleBox}>vis flere</Button>
+                <div className="col-8 pb-5 hide-show-btn">
+                    <Button className={relatedContentLists.length < 4 ? 'd-none' : ''} onClick={this.toggleBox}>vis flere</Button>
                 </div>
             </section>
         )

@@ -1,6 +1,10 @@
 .part-imageLink {
   background-color: white;
 
+  .hide-show-btn {
+    margin-left: auto;
+    margin-right: auto;
+  }
   .imageBoxWrapper {
     display: flex;
     flex-direction: row;
