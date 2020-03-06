@@ -84,11 +84,13 @@ function renderPart(req, dashboardIds) {
   const dashboardService = serviceUrl({
     service: 'dashboard'
   })
+
   const model = {
     dashboards,
     dataQueries,
     dashboardService
   }
+
   const body = render(view, model)
 
   return {

@@ -82,6 +82,8 @@
     "prop-types": "^15.7.2",
     "ramda": "^0.26.1",
     "react": "^16.12.0",
+    "react-bootstrap": "^1.0.0-beta.17",
+    "react-bootstrap-easy-dialog": "^0.3.3",
     "react-dom": "^16.12.0",
     "react-feather": "^2.0.3",
     "sass-loader": "^7.1.0",
