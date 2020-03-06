@@ -2,6 +2,17 @@ const {
   list, query
 } = __non_webpack_require__('/lib/klass/municipalities')
 
+/**
+ * @param {req} Enonics request object
+ * @return {{body:
+ *  {hits: {
+ *    id: string,
+ *    displayName: string,
+ *    description: string },
+ *  total: number,
+ *  count: number}
+ * }}
+ */
 exports.get = (req) => {
   const municipals = req.params.query ? query(req.params.query) : list(req.params.count)
 

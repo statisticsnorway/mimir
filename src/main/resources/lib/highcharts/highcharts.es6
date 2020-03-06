@@ -67,11 +67,16 @@ export const defaultTbmlFormat = (data, graphType) => {
     rows.forEach((row) => {
       categories.push(row.th)
       series.forEach((serie, index) => {
+        let value
         if (!Array.isArray(row.td)) {
-          serie.data.push(row.td)
+          value = row.td
         } else {
-          serie.data.push(row.td[index])
+          value = row.td[index]
         }
+        if (typeof value === 'object' && value.content != undefined) {
+          value = value.content
+        }
+        serie.data.push(value)
       })
     })
   }
