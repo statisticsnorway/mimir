@@ -1,18 +1,15 @@
 import $ from 'jquery'
-
+import 'bootstrap/js/dist/collapse'
+// Markup according to Bootstrap 4 collapse element - see https://getbootstrap.com/docs/4.3/components/collapse/
+// Dependencies: jQuery and Bootstrap
 // Belongs to part menu-dropdown
 // - adds visibility class for muncipality when on top of page (sticky part of page)
 export function init() {
   $(function() {
     let animate
-    const map = $('.js-part-map')
+    const map = $('#js-show-map')
 
-    map.click((e) => {
-      e.preventDefault()
-      e.stopPropagation()
-    })
-
-    $('#js-show-map').click((e) => {
+    $('.show-map').click((e) => {
       e.preventDefault()
       e.stopPropagation()
 
@@ -22,41 +19,46 @@ export function init() {
         top
       } = el.getBoundingClientRect()
 
-      $('#municipality-list').removeClass('show')
+      if (top > 1) {
+        animate = true
 
-      $(e.currentTarget).toggleClass('active')
-
-      $('.show-search').attr('aria-expanded', 'false')
-
-      window.innerWidth < 960 && $('#search-container').removeClass('show')
-
-      map.parent().click(() => {
-        map.addClass('d-none').parent().removeClass('map-container')
-      })
-
-      if (map.hasClass('d-none')) {
-        if (top > 1) {
-          animate = true
-
-          const pos = $(el).offset()
-          $('html').stop().animate({
-            scrollTop: pos.top
-          }, 400, 'swing', () => {
-            animate = false
-            setTimeout(() => {
-              map.removeClass('d-none').parent().addClass('map-container')
-            }, 50)
-          })
-        } else {
-          map.toggleClass('d-none').parent().toggleClass('map-container')
-        }
+        const pos = $(el).offset()
+        $('html').stop().animate({
+          scrollTop: pos.top
+        }, 400, 'swing', () => {
+          animate = false
+          setTimeout(() => {
+            map.collapse('show')
+          }, 50)
+        })
       } else {
-        map.toggleClass('d-none').parent().toggleClass('map-container')
+        map.collapse('toggle')
       }
     })
 
+    map.on('show.bs.collapse', () => {
+      map.parent().addClass('map-container')
+      $('.show-map').attr('aria-expanded', 'true').addClass('active')
+
+      if (window.innerWidth <= 720) { // Bootstrap md width
+        $('#search-container').collapse('hide')
+        $('.show-search').removeClass('active')
+      }
+
+      $('.show-search').parent().click(() => {
+        map.collapse('hide')
+        $('.show-map').removeClass('active')
+      })
+    })
+
+    map.on('hide.bs.collapse', () => {
+      map.parent().removeClass('map-container')
+      $('.show-map').attr('aria-expanded', 'false').removeClass('active')
+      map.css('transition', 'none')
+    })
+
     $('.part-menu-dropdown').each((i, el) => {
-      $(window).scroll((e) => {
+      $(window).scroll(() => {
         const {
           top
         } = el.getBoundingClientRect()
@@ -69,11 +71,8 @@ export function init() {
 
         top > 0 &&
         !animate &&
-
-        $('.map-container').length &&
-        map.addClass('d-none').parent().removeClass('map-container') &&
-
-        $('#js-show-map').removeClass('active')
+        map.length &&
+        map.collapse('hide')
 
         const stickyMenu = document.getElementById('sticky-menu')
         if (stickyMenu) {
@@ -90,30 +89,18 @@ export function init() {
       })
     })
 
-    $('#input-query-municipality').focus((e) => {
-      const mode = $('.show-search').data('mode')
-      if (mode === 'municipality') {
-        $('.js-part-map').addClass('d-none').parent()
-          .removeClass('map-container') // Remove map when municipality search field active on smaller than md
-      }
+    $('#search-container').on('show.bs.collapse', () => {
+      $('#search-container').removeClass('hide-search')
+      $('.show-search').addClass('active')
+
+      map.collapse('hide')
+      $('.show-map').attr('aria-expanded', 'false').removeClass('active')
     })
 
-    $('.show-search').click((e) => {
-      const mode = $(e.currentTarget).data('mode')
-      if (mode == 'municipality') {
-        $('#js-show-map').removeClass('active')
-        $('.js-part-map').addClass('d-none').parent()
-          .removeClass('map-container') // Remove map when municipality search button clicked
-      }
+    $('#search-container').on('hide.bs.collapse', () => {
+      $('.show-search').removeClass('active')
     })
 
-    const w = window.innerWidth
-
-    if (w >= 960) { // Bootstrap lg grid
-      $('#search-container').addClass('show')
-    }
-
-    // Adds attributes into the component input field
     $('#input-query-municipality').attr({
       'data-display': 'static',
       'data-toggle': 'dropdown',
@@ -122,7 +109,6 @@ export function init() {
       'aria-expanded': 'false'
     })
 
-    // Moves municipality-list inside the same wrapper as the input field
-    $('#municipality-list').appendTo('.municipality-search .input-wrapper')
+    $('#municipality-list').appendTo('.input-wrapper')
   })
 }

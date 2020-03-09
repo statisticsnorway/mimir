@@ -3,8 +3,8 @@ Documentation for Mimir
 
 ## Table of Contents
 1. [Kommunefakta](./Kommunefakta.md)
-   1. [Test](./Kommunefakta.md#test)
 1. [Highcharts](./Highcharts.md)
+1. [KeyFigure](./KeyFigure.md)
 1. [i18n](./i18n.md)
 1. [Code Review](./CodeReview.md)
    1. [Checklist](./CodeReview.md#checklist)
@@ -14,4 +14,15 @@ Documentation for Mimir
    1. [Config](./Eslint.md#config)
 1. [Error Handling](./ErrorHandling.md)
 1. [Routing](./Routing.md)
-
+1. [Services](./Services.md)
+   1. [Municipality](./Services.md#municipality)
+   1. [Dashboard](./Services.md#dashboard)
+   1. [Custom Selector Municipals](./Services.md#custom-selector-municipals)
+1. [React4xp](./React4xp.md)
+1. [DataFeeds](./DataFeeds.md)
+   1. [KLASS](./DataFeeds.md#klass)
+   1. [TBML](./DataFeeds.md#tbml)
+   1. [JSONStat](./DataFeeds.md#jsonstat)
+1. [Testing](./Testing.md)
+1. [SiteConfig](./SiteConfig.md)
+1. [Map](./Map.md)

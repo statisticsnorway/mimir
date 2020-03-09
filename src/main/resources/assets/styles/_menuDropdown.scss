@@ -61,23 +61,21 @@
       transform: rotate(0deg);
       transition: all .5s;
     }
-    &.active i.chevron svg {
-      transform: rotate(-180deg);
-      transition: all .5s;
+    &[aria-expanded="true"]{
+      i.map {
+        color: white;
+        background-color: $ssb-green-4;
+      }
+      i.chevron svg {
+          transform: rotate(-180deg);
+          transition: all .5s;
+        }
     }
     @include media-breakpoint-down(md) {
       position: absolute;
       top: 30px;
-      right: 70px;
+      right: 55px;
     }
-  }
-  .show-search[aria-expanded="true"] {
-    color: white;
-    background-color: $ssb-green-4;
-  }
-  .show-map.active i.map {
-    color: white;
-    background-color: $ssb-green-4;
   }
   .ssb-dropdown {
     width: 100%; // Override design system
@@ -85,10 +83,29 @@
     max-width: 100%; // Override design system
   }
   .show-search {
-    padding: 3px 5px 5px 5px;
     color: $ssb-green-4;
     right: 0px;
-    top: 30px;
+    i.search {
+      padding: 3px 5px 5px 5px;
+    }
+    &[aria-expanded="true"] {
+      i.search {
+        color: white;
+        background-color: $ssb-green-4;
+      }
+    }
+    @include media-breakpoint-down(md) {
+      position: absolute;
+      top: 33px;
+      right: 65px;
+    }
+  }
+  .btn-drawer-toggler {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    outline: inherit;
   }
   .card {
     @include media-breakpoint-up(lg) {
@@ -98,36 +115,39 @@
     align-items: center;
     border: none;
   }
-  .choose-map-a {
-    all: unset;
-    span {
-      all: unset;
-    }
-  }
   @include media-breakpoint-down(md) {
-    .title-container {
-      margin-left: 10px;
+    .title-choose-municipality {
+      padding-left: 20px;
+      font-size: 28px;
     }
     .card {
       border-radius: 0;
-      padding: 20px 40px;
       align-items: normal;
     }
     #search-container {
-      border-top: 1px solid #aaaaaa;
+      border-top: 1px solid $ssb-green-2;
       width: 100%;
       top: 92px;
       position: absolute;
       border-bottom: 1px solid #aaaaaa;
+      background-color: #ffffff;
+      padding: 20px;
 
-      &.no-border {
-        border: 0 none;
+      &.choose-municipality-search {
+        border: none;
+        padding: 20px 20px 20px 40px;
+      }
+      &.hide-search {
+        display: none;
       }
     }
   }
   @include media-breakpoint-down(sm) {
-    .card {
-      padding: 20px 10px;
+    .title-container {
+      margin-left: 20px;
+    }
+    #search-container {
+      padding: 20px;
     }
   }
 }
