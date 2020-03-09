@@ -10,6 +10,11 @@ export interface KeyFigurePartConfig {
   figure?: Array<string>;
 
   /**
+   * Vis i kolonner
+   */
+  columns: boolean;
+
+  /**
    * Kilde
    */
   source?: Array<{
