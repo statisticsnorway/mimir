@@ -1,3 +1,5 @@
+$grid-gutter-width: 20px;
+
 $grid-breakpoints: (
   // Extra small screen / phone
   xs: 0,
@@ -8,14 +10,14 @@ $grid-breakpoints: (
   // Large screen / desktop
   lg: 992px,
   // Extra large screen / wide desktop
-  xl: 1280px
+  xl: 1260px
 );
 
 $container-max-widths: (
   sm: 540px,
   md: 720px,
   lg: 960px,
-  xl: 1200px
+  xl: 1180px
 );
 
 @import "bootstrap";
@@ -30,7 +32,6 @@ $container-max-widths: (
 @import "./dashboard";
 @import "./button";
 @import "./datasets";
-@import "./factbox";
 @import "./layout";
 @import "./banner";
 @import "./popper";
@@ -44,6 +45,7 @@ $container-max-widths: (
 @import "./infoGraphic";
 @import "./_profiledBox";
 @import "./_article";
+@import "./_macros";
 
 body {
   -moz-osx-font-smoothing: grayscale;
@@ -53,74 +55,18 @@ body {
   overflow-x: hidden; // removes horisontal scroll bar created by part preface
 }
 
-.ingress {
-  font-size: 20px;
-  line-height: 1.7;
-  p:last-child {
-    margin-bottom: 40px
-  }
+section { 
+  width: 100%;
 }
 
-.article h2 {
-  font-size: 20px;
-}
-
-.row + section, section + section {
+section + section, .xp-layout + .xp-layout {
   margin-top: $spacer * 3;
 }
 
-.part-divider {
-  &:not(:first-child) {
-    margin-top: $spacer * 3;
-  }
-  &:not(:last-child) {
-    margin-bottom: $spacer * 3;
-  }
-}
-
-[data-portal-component-type='text'] {
-  &:not(:first-child) {
-    margin-top: $spacer * 3;
-  }
-  &:not(:last-child) {
-    margin-bottom: $spacer * 3;
-  }
-}
-
-.a-plain {
-  color: #212529;
-  outline: none;
-  text-decoration: none;
-  &:hover {
-    color: #212529;
-    text-decoration: none;
-  }
-}
-
-.a-white {
-  color: white;
-  &:hover {
-    transition: all .2s;
-    color: #CCCCCC;
-  }
-}
-
-a.btn {
-  text-decoration: none;
+.part-error {
+  background-color: $ssb-red-3;
 }
 
 .bkg-grey {
   background-color: $ssb-dark-1;
-}
-
-// class used to hide elements from sighted users and still allowing it to be picked up by screen readers
-.screen-reader-only {
-  clip: rect(1px, 1px, 1px, 1px);
-  clip-path: inset(50%);
-  height: 1px;
-  width: 1px;
-  margin: -1px;
-  overflow: hidden;
-  padding: 0;
-  position: absolute;
 }
