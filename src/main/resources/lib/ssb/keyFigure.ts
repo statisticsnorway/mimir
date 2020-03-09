@@ -8,11 +8,11 @@ import { KeyFigure } from '../../site/content-types/keyFigure/keyFigure'
 import { Dataset } from '../../site/content-types/dataset/dataset'
 import { Dataquery } from '../../site/content-types/dataquery/dataquery'
 import { MunicipalityWithCounty } from '../klass/municipalities'
-import { TbmlData, TableRow } from '../types/xmlParser'
+import { TbmlData, TableRow, PreliminaryData } from '../types/xmlParser'
 import { Dataset as JSDataset, Dimension, Category } from '../types/jsonstat-toolkit'
 import { UtilLibrary } from '../types/util'
 const {
-  get : getContent,
+  get: getContent,
   query
 }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
 const {
@@ -54,7 +54,7 @@ type DatasetOption = NonNullable<JsonStatFormat>['datasetFilterOptions']
 export function parseKeyFigure(keyFigure: Content<KeyFigure>, municipality?: MunicipalityWithCounty): KeyFigureView {
   const keyFigureViewData: KeyFigureView = {
     iconUrl: getIconUrl(keyFigure),
-    iconAltText: keyFigure.data.icon ? getImageCaption(keyFigure.data.icon): '',
+    iconAltText: keyFigure.data.icon ? getImageCaption(keyFigure.data.icon) : '',
     number: undefined,
     numberDescription: keyFigure.data.denomination,
     noNumberText: localize({
@@ -112,10 +112,23 @@ export function parseKeyFigure(keyFigure: Content<KeyFigure>, municipality?: Mun
       const head: TableRow = tbmlData.tbml.presentation.table.thead.tr
       const [row1, row2] = bodyRows
       if (row1) {
-        keyFigureViewData.number = parseValue(util.data.forceArray(row1.td)[0] as number)
+        let value: number
+        const td: number | PreliminaryData = util.data.forceArray(row1.td)[0] as number | PreliminaryData
+        if (typeof td === 'object' && td.content != undefined) {
+          value = td.content
+        } else {
+          value = td as number
+        }
+        keyFigureViewData.number = parseValue(value)
       }
       if (row2 && keyFigure.data.changes) {
-        const change: number = (util.data.forceArray(row2.td)[0]) as number
+        let change: number
+        const td: number | PreliminaryData = util.data.forceArray(row2.td)[0] as number | PreliminaryData
+        if (typeof td === 'object' && td.content != undefined) {
+          change = td.content
+        } else {
+          change = td as number
+        }
         let changeText: undefined | string = parseValue(change)
         // add denomination if there is any change
         if (changeText && keyFigure.data.changes) {

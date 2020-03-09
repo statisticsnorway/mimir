@@ -1,0 +1,14 @@
+<macro>
+    <display-name>Ordforklaring</display-name>
+    <description></description>
+    <form>
+        <input name="text" type="TextLine">
+            <label>Ord</label>
+            <occurrences minimum="1" maximum="1"/>
+        </input>
+        <input name="explanation" type="TextArea">
+            <label>Forklaring til ordet</label>
+            <occurrences minimum="1" maximum="1"/>
+        </input>
+    </form>
+</macro>
