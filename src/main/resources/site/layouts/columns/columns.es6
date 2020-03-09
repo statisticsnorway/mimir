@@ -87,7 +87,7 @@ exports.get = function(req) {
     gridComponents
   }
 
-  const body = divider.renderBody({
+  const body = rightRegion.length == 0 ? render(view, model) : divider.renderBody({
     body: render(view, model)
   })
 
