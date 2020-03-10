@@ -40,7 +40,7 @@ const contentTypeName: string = `${app.name}:keyFigure`
 
 export function get(key: string): Content<KeyFigure> | null {
   const content: QueryResponse<KeyFigure> = query({
-    contentTypes: [contentTypeName, `${app.name}:key-figure`], // TODO remove key-figure
+    contentTypes: [contentTypeName],
     query: `_id = '${key}'`,
     count: 1,
     start: 0
