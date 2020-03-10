@@ -30,7 +30,6 @@ const partsWithPreview = [ // Parts that has preview
   `${app.name}:accordion`,
   `${app.name}:highchart`,
   `${app.name}:dashboard`,
-  `${app.name}:key-figure`,
   `${app.name}:keyFigure`,
   `${app.name}:menuDropdown`,
   `${app.name}:statistikkbanken`,

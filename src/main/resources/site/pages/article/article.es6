@@ -22,7 +22,6 @@ const preview = [
   `${app.name}:highchart`,
   `${app.name}:statistikkbanken`,
   `${app.name}:dashboard`,
-  `${app.name}:key-figure`,
   `${app.name}:keyFigure`
 ]
 
