@@ -1,16 +1,73 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, Link, Title } from '@statisticsnorway/ssb-component-library'
-import { ArrowRight, ArrowUp, Facebook, Twitter, Rss, Linkedin } from 'react-feather'
+import { Accordion, Button, Divider, Link, Title } from '@statisticsnorway/ssb-component-library'
+import { ArrowRight, ArrowUp, Facebook, Twitter, Rss, Linkedin, ChevronUp, ChevronDown } from 'react-feather'
 
 class Footer extends React.Component {
   constructor(props) {
     super(props)
   }
 
+  renderFooterMenuDesktop(footerNavigation) {
+    return footerNavigation.map((topMenuItem, index) => {
+      return (
+        <div key={index} className="footer-link">
+          <Title size={4} negative>{topMenuItem.title}</Title>
+          <ol>
+            {this.renderFooterLinkMenu(topMenuItem)}
+          </ol>
+        </div>)
+    })
+  }
+
+  renderFooterMenuMobile(footerNavigation) {
+    return footerNavigation.map((topMenuItem, index) => {
+      return (
+        <Accordion key={index} header={topMenuItem.title}>
+          <ol>
+            {this.renderFooterLinkMenu(topMenuItem)}
+          </ol>
+        </Accordion>)
+    })
+  }
+
+  renderFooterLinkMenu(topMenuItem) {
+    return topMenuItem.menuItems && topMenuItem.menuItems.map((menuItem, itemIndex) => {
+      return (
+        <li key={itemIndex}>
+          <Link negative href={menuItem.path} icon={<ArrowRight size="20" />}>{menuItem.title}</Link>
+        </li>)
+    })
+  }
+
+  renderSocialLinks() {
+    const {
+      facebookUrl, twitterUrl, linkedinUrl, rssUrl
+    } = this.props
+    return (
+      <div className="social-links">
+        <Link href={facebookUrl} isExternal negative icon={<Facebook size={24} />} />
+        <Link href={twitterUrl} isExternal negative icon={<Twitter size={24} />} />
+        <Link href={linkedinUrl} isExternal negative icon={<Linkedin size={24} />} />
+        <Link href={rssUrl} negative icon={<Rss size={24} />} />
+      </div>)
+  }
+
+  renderGlobalLinks() {
+    const {
+      globalLinks
+    } = this.props
+    return (
+      <div className="global-links">
+        {globalLinks.map((globalLink, index) => {
+          return (<Link key={'link_' + index} href={globalLink.path} negative>{globalLink.title}</Link>)
+        })}
+      </div>)
+  }
+
   render() {
     const {
-      logoUrl, globalLinks, footerNavigation, topButtonText, facebookUrl, twitterUrl, linkedinUrl, rssUrl
+      logoUrl, footerNavigation, topButtonText
     } = this.props
     return (
       <footer className="ssb-footer-wrapper">
@@ -26,35 +83,22 @@ class Footer extends React.Component {
             </Button>
           </div>
           <div className="footer-content">
-            <div className="footer-menu">
-              {footerNavigation.map((topMenuItem, menuIndex) => (
-                <div key={menuIndex} className="footer-link">
-                  <Title size={4} negative>{topMenuItem.title}</Title>
-                  <ol>
-                    {topMenuItem.menuItems && topMenuItem.menuItems.map((menuItem, itemIndex) => {
-                      return (
-                        <li key={itemIndex}>
-                          <Link negative href={menuItem.path} icon={<ArrowRight size="20" />}>{menuItem.title}</Link>
-                        </li>)
-                    })
-                    }
-                  </ol>
-                </div>
-              ))}
-            </div>
+            <nav id="footerMenu">
+              <div className="footer-menu">
+                {this.renderFooterMenuDesktop(footerNavigation)}
+              </div>
+              <div className="showOnMobile footer-menu">
+                {this.renderFooterMenuMobile(footerNavigation)}
+              </div>
+            </nav>
           </div>
           <div className="footer-bottom-row">
-            <div className="global-links">
-              {globalLinks.map((globalLink, index) => {
-                return (<Link key={'link_' + index} href={globalLink.path} negative>{globalLink.title}</Link>)
-              })}
-            </div>
-            <div className="social-links">
-              <Link href={facebookUrl} isExternal negative icon={<Facebook size={24} />} />
-              <Link href={twitterUrl} isExternal negative icon={<Twitter size={24} />} />
-              <Link href={linkedinUrl} isExternal negative icon={<Linkedin size={24} />} />
-              <Link href={rssUrl} negative icon={<Rss size={24} />} />
-            </div>
+            {this.renderGlobalLinks()}
+            {this.renderSocialLinks()}
+          </div>
+          <div className="showOnMobile footer-bottom-row">
+            {this.renderSocialLinks()}
+            {this.renderGlobalLinks()}
           </div>
         </div>
       </footer>
