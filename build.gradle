@@ -26,29 +26,14 @@ dependencies {
     include "com.enonic.lib:lib-cron:1.0.0"
     include "com.enonic.xp:lib-context:${xpVersion}"
     include 'com.enonic.lib:lib-cache:1.1.0'
-    compile 'org.webjars.npm:ramda:0.26.1'
-    include 'com.enonic.lib:lib-react4xp:0.3.11'
+    // compile 'org.webjars.npm:ramda:0.26.1'
+    include 'com.enonic.lib:lib-react4xp:0.8.0'
 }
 
 repositories {
     mavenLocal()
     jcenter()
     xp.enonicRepo()
-}
-
-node {
-    download = true
-    version '10.16.0'
-}
-
-
-task npmInstallForce( type: NpmTask ) {
-    description = 'Update all project node dependencies'
-    args = ['install', '--force']
-}
-
-task cleanNode( type: org.gradle.api.tasks.Delete ) {
-    delete 'node_modules'
 }
 
 task clientWebpack( type: NodeTask, dependsOn: npmInstall ) {
@@ -113,7 +98,6 @@ def nodeEnvironment() {
     return nodeEnv != null ? nodeEnv : 'production'
 }
 
-
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 
@@ -126,7 +110,6 @@ file("react4xp.properties").withReader { reader ->
     react4xp.load(reader)
 }
 
-react4xp.outputFileName = ROOT + '/' + react4xp.masterConfigFileName
 if(react4xp.nashornPolyfillsSource != null) {
     react4xp.NASHORNPOLYFILLS_SOURCE = react4xp.nashornPolyfillsSource
 }
@@ -139,11 +122,8 @@ if (react4xp.buildEnv == 'development') {
         args = ['run', 'install:dev']
     }
 }
-
-//npmInstall.inputs.file("package.json")
-//npmInstall.inputs.file("package-lock.json")
-//npmInstall.outputs.dir('node_modules')
-
+npmInstall.inputs.file("package.json")
+npmInstall.outputs.dir('node_modules')
 
 react4xp.masterConfigFileName = react4xp.masterConfigFileName != null ? react4xp.masterConfigFileName : "build/react4xp_constants.json"
 react4xp.outputFileName = ROOT + '/' + react4xp.masterConfigFileName
@@ -165,7 +145,7 @@ task config_react4xp(type: NodeTask) {
 config_react4xp.inputs.file("react4xp.properties")
 config_react4xp.outputs.file(react4xp.masterConfigFileName)
 
-//config_react4xp.dependsOn += 'npmInstall'
+config_react4xp.dependsOn += 'npmInstall'
 config_react4xp.dependsOn += 'processResources'
 
 
@@ -184,15 +164,13 @@ task config_tasks {
             outputs.dir(CONFIG.BUILD_R4X)
         }
 
-        tasks['babelXP'].configure {
+        tasks['compileXP'].configure {
             args = ["src/main/resources", "--out-dir", CONFIG.BUILD_MAIN, "--ignore", "**/*.jsx"]  // <-- Still ignoring JSX in the XP structure
             outputs.dir(CONFIG.BUILD_MAIN)
         }
     }
 }
 config_tasks.dependsOn += 'config_react4xp'
-
-
 
 // Compile:
 task webpack_react4xp(type: NodeTask) {
@@ -201,7 +179,13 @@ task webpack_react4xp(type: NodeTask) {
 
     // 1 MANDATORY STEP: react4xp-build-components compiles the components added in this project into runnable/renderable components. See react4xp-build-components docs.
     script = file('node_modules/webpack/bin/webpack.js')
-    args = ['--config', 'webpack.config.react4xpbuildcomponents.js', '--color', '--env.VERBOSE=' + react4xp.verbose, '--env.ENTRY_DIRS=./_entries']
+    args = [
+            '--config', 'node_modules/react4xp-build-components/webpack.config.js',
+            '--color',
+            '--env.VERBOSE=' + react4xp.verbose,
+            '--env.ENTRY_DIRS=' + react4xp.entryDirs,
+            '--env.CHUNK_DIRS=' + react4xp.chunkDirs,
+    ]
     if (react4xp.overrideComponentWebpack != null) {
         args += '--env.OVERRIDE_COMPONENT_WEBPACK=' + react4xp.overrideComponentWebpack
     }
@@ -230,26 +214,24 @@ task webpack_react4xp(type: NodeTask) {
         println args
     }
 
-    inputs.file(react4xp.masterConfigFileName)
+    inputs.file(react4xp.outputFileName)
     inputs.file("package.json")
     inputs.file("package-lock.json")
 }
-
-
 webpack_react4xp.dependsOn += 'config_tasks'
 
 
-task babelXP(type: NodeTask) {
+task compileXP(type: NodeTask) {
     group 'React4xp'
-    description 'Compile XP components from ES6, ignoring JSX components'
+    description 'Compile all things non-react4xp: XP components from ES6, ignoring JSX components'
 
-    script = file('node_modules/babel-cli/bin/babel.js')
+    script = file('node_modules/@babel/cli/bin/babel.js')
     args = ["src/main/resources", "--out-dir", "build/resources/main", "--ignore", "**/*.jsx"]      // <-- Ignoring JSX in the XP structure is important!
 
     inputs.dir 'src/main/resources'
     outputs.dir("build/resources/main")
 }
-babelXP.dependsOn += 'config_tasks'
+compileXP.dependsOn += 'config_tasks'
 
-//jar.dependsOn += 'webpack_react4xp'
-//jar.dependsOn += 'babelXP'
+// jar.dependsOn += 'webpack_react4xp'
+// jar.dependsOn += 'compileXP'
