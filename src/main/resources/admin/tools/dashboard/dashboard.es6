@@ -26,8 +26,6 @@ exports.get = function(req) {
   }
 }
 
-exports.preview = (req) => renderPart()
-
 function renderPart() {
   const datasetMap = {}
 
@@ -68,14 +66,8 @@ function renderPart() {
     })
   }
 
-  log.info('%s', JSON.stringify(dataQueries, null, 2))
-  const ts = new Date().getTime()
-
   const jsLibsUrl = assetUrl({
-    path: 'js/bundle.js',
-    params: {
-      ts
-    }
+    path: 'js/bundle.js'
   })
 
   const dashboardService = serviceUrl({
@@ -83,10 +75,7 @@ function renderPart() {
   })
 
   const stylesUrl = assetUrl({
-    path: 'styles/bundle.css',
-    params: {
-      ts
-    }
+    path: 'styles/bundle.css'
   })
 
   const logoUrl = assetUrl({path: 'SSB_logo.png'});
