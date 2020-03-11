@@ -32,6 +32,11 @@ or for a continous build and deploy (needs $XP_HOME and $JAVA_HOME env variables
 ```
 ./gradlew deploy -t
 ```
+Integration tests are run when you build or deploy with Enonic CLI.  
+To build and deploy your application locally without running tests, run Gradle directly and skip them
+```
+./gradlew deploy -x test
+```
 
 #### Typescript interfaces Code-Gen
 We're using the `enonic-ts-codegen` library. This reads through all .xml config files and automatically creates interface files for all parts, layouts, pages, site-config, and content-types. This is a part of the gradle.build pipeline. So they will be regenerated and overwritten on every build. To change the interface you'll have to change the .xml, not the .ts interface files.
