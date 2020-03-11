@@ -2,10 +2,10 @@ footer {
   margin-top: 40px;
 
   .ssb-footer-wrapper {
-    padding: 36px 112px 58px;
+    padding: 32px 112px 58px;
 
     @include media-breakpoint-down(md) {
-      padding: 36px 5px 40px;
+      padding: 32px 0 40px;
     }
   }
 
@@ -13,10 +13,10 @@ footer {
     border-bottom: 1px solid white;
     display: flex;
     justify-content: space-between;
-    margin-bottom: 50px;
+    margin-bottom: 45px;
 
     > * {
-      margin-bottom: 36px;
+      margin-bottom: 31px;
     }
 
     img {
@@ -42,7 +42,7 @@ footer {
   .footer-content {
 
     .ssb-title {
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
 
     ol {
@@ -151,10 +151,15 @@ footer {
       }
 
       @include media-breakpoint-down(md) {
-        display: flex;
+        display: grid;
+        grid-auto-flow: column;
+        grid-column-gap: 20px;
         justify-content: center;
         margin-bottom: 30px;
-        width: 100%;
+
+        > * {
+          margin-right: 0;
+        }
       }
     }
 
@@ -169,8 +174,16 @@ footer {
       }
 
       @include media-breakpoint-down(md) {
+        display: grid;
+        grid-auto-flow: column;
+        grid-column-gap: 15px;
+        justify-content: center;
         margin-bottom: 30px;
-        width: 100%;
+
+        > * {
+          margin-left: 0;
+        }
+
       }
     }
 

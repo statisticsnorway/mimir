@@ -1,5 +1,5 @@
 import React from 'react'
-import PropTypes, {bool} from 'prop-types'
+import PropTypes from 'prop-types'
 import { Accordion, Button, Link, Title } from '@statisticsnorway/ssb-component-library'
 import { ArrowRight, ArrowUp, Facebook, Twitter, Rss, Linkedin } from 'react-feather'
 
