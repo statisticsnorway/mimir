@@ -30,8 +30,8 @@ exports.get = function(req) {
           if (dataset) {
             datasetInfo.push({
               id: dataset.data.dataquery,
-              lastUpdated: getUpdated(dataset),
-              lastUpdatedReadable: getUpdatedReadable(dataset),
+              updated: getUpdated(dataset),
+              updatedHumanReadable: getUpdatedReadable(dataset),
               hasData: true
             })
           }
@@ -49,8 +49,8 @@ exports.get = function(req) {
             message = `Successfully updated/created dataset for dataquery`
             datasetInfo.push({
               id: dataset.data.dataquery,
-              lastUpdated: getUpdated(dataset),
-              lastUpdatedReadable: getUpdatedReadable(dataset),
+              updated: getUpdated(dataset),
+              updatedHumanReadable: getUpdatedReadable(dataset),
               hasData: true
             })
           } else {
@@ -110,8 +110,8 @@ exports.delete = (req) => {
           if (isDeleted) {
             datasetInfo.push({
               id: dataset.data.dataquery,
-              lastUpdated: '',
-              lastUpdatedReadable: '',
+              updated: '',
+              updatedHumanReadable: '',
               hasData: false
             })
             datasetsToPublish.push(dataset._id)

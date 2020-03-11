@@ -91,7 +91,7 @@ function renderPart(req, dashboardIds) {
     dashboardService
   }
 
-  const body = render(view, model)
+  const body = 'Dette dashbordet har blitt flyttet til admin panelet på høyre side.'
 
   return {
     body,

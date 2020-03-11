@@ -49,6 +49,17 @@
     }
   }
 
+  .accordion-body {
+    padding: 20px 0;
+  }
+
+  .alert {
+    position: fixed;
+    top: 20%;
+    left: 20%;
+    right: 20%;
+  }
+
   nav.footerNavigation {
     display: flex;
     justify-content: end;
@@ -62,5 +73,14 @@
       display: flex;
       justify-content: space-around;
     }
+  }
+  .errorMsg {
+    display: block;
+  }
+  .ok:before {
+    color: $ssb-green-4
+  }
+  .error:before {
+    color: $ssb-red-3
   }
 }
