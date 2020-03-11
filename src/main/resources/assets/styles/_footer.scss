@@ -123,6 +123,7 @@ footer {
 
     &.showOnMobile {
       display: grid;
+      justify-content: center;
 
       @include media-breakpoint-up(lg){
         display: none;
@@ -135,6 +136,14 @@ footer {
       }
     }
 
+    .copyright {
+      margin-right: 20px;
+
+      @include media-breakpoint-down(md) {
+        margin-right: 0;
+      }
+    }
+
     .global-links {
 
       > * {
@@ -142,8 +151,15 @@ footer {
       }
 
       @include media-breakpoint-down(md) {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 30px;
         width: 100%;
       }
+    }
+
+    .links-left {
+      display: flex;
     }
 
     .social-links {
@@ -153,6 +169,7 @@ footer {
       }
 
       @include media-breakpoint-down(md) {
+        margin-bottom: 30px;
         width: 100%;
       }
     }

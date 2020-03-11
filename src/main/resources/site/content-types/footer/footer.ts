@@ -5,6 +5,11 @@ export interface Footer {
   footerContentId?: string;
 
   /**
+   * Lenke Copyright
+   */
+  copyrightUrl: string;
+
+  /**
    * Bunn lenker
    */
   globalLinks?: Array<{

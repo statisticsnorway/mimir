@@ -1,7 +1,7 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import { Accordion, Button, Divider, Link, Title } from '@statisticsnorway/ssb-component-library'
-import { ArrowRight, ArrowUp, Facebook, Twitter, Rss, Linkedin, ChevronUp, ChevronDown } from 'react-feather'
+import PropTypes, {bool} from 'prop-types'
+import { Accordion, Button, Link, Title } from '@statisticsnorway/ssb-component-library'
+import { ArrowRight, ArrowUp, Facebook, Twitter, Rss, Linkedin } from 'react-feather'
 
 class Footer extends React.Component {
   constructor(props) {
@@ -65,6 +65,18 @@ class Footer extends React.Component {
       </div>)
   }
 
+  renderCopyRight() {
+    const year = new Date().getFullYear()
+    const {
+      copyrightUrl, copyrightText
+    } = this.props
+    const test = copyrightText + ', ' + year
+    return (
+      <div className="copyright">
+        <Link href={copyrightUrl} isExternal negative >{test}</Link>
+      </div>)
+  }
+
   render() {
     const {
       logoUrl, footerNavigation, topButtonText
@@ -93,12 +105,16 @@ class Footer extends React.Component {
             </nav>
           </div>
           <div className="footer-bottom-row">
-            {this.renderGlobalLinks()}
+            <div className="links-left">
+              {this.renderCopyRight()}
+              {this.renderGlobalLinks()}
+            </div>
             {this.renderSocialLinks()}
           </div>
           <div className="showOnMobile footer-bottom-row">
             {this.renderSocialLinks()}
             {this.renderGlobalLinks()}
+            {this.renderCopyRight()}
           </div>
         </div>
       </footer>
@@ -128,6 +144,8 @@ Footer.propTypes = {
     })
   ),
   logoUrl: PropTypes.string,
+  copyrightUrl: PropTypes.string,
+  copyrightText: PropTypes.string,
   facebookUrl: PropTypes.string,
   twitterUrl: PropTypes.string,
   linkedinUrl: PropTypes.string,
