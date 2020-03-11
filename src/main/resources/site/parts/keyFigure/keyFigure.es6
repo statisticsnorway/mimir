@@ -70,7 +70,6 @@ const renderPart = (municipality, keyFigureIds) => {
         source: keyFigure.data.source
       }
     })
-    .filter((keyFigure) => keyFigure.number)
 
   // continue if we have any keyFigures
   return keyFigures.length ? renderKeyFigure(keyFigures, part) : {
