@@ -28,6 +28,11 @@ export function getFooterContent(language: Language): FooterContent | null {
         logoUrl: assetUrl({
           path: 'SSB_logo_white.svg'
         }),
+        copyrightUrl: footerContent.data.copyrightUrl,
+        copyrightText: localize({
+          key: 'copyrightStatisticsNorway',
+          locale: language.code
+        }),
         facebookUrl: footerContent.data.facebookUrl,
         twitterUrl: footerContent.data.twitterUrl,
         linkedinUrl: footerContent.data.linkedinUrl,
@@ -47,6 +52,8 @@ export function getFooterContent(language: Language): FooterContent | null {
 
 export interface FooterContent{
     logoUrl: string;
+    copyrightUrl: string;
+    copyrightText: string;
     facebookUrl: string;
     twitterUrl: string;
     linkedinUrl: string;
