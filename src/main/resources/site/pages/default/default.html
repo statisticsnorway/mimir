@@ -70,7 +70,6 @@
     >
       <div data-th-if="${region.showGreyTriangle}" class="grey-triangle"/>
       <div
-        class="searchabletext"
         data-th-classappend="${region.view == 'full' ? 'container-fluid p-0' : region.view == 'card' ? 'border-top-green container' : 'container'}"
       >
         <h2 data-th-if="${region.hideTitle && region.title}" class="sr-only sr-only-focusable mb-5" data-th-text="${region.title}"></h2>
@@ -85,7 +84,7 @@
         </div>
       </div>
     </div>
-    <div data-th-if="${mainRegionComponents}" data-portal-region="main" class="searchabletext">
+    <div data-th-if="${mainRegionComponents}" data-portal-region="main">
       <div data-th-each="component : ${mainRegionComponents}" data-th-remove="tag">
         <div data-portal-component="${component.path}" data-th-remove="tag" ></div>
       </div>

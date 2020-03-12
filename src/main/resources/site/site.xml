@@ -246,4 +246,7 @@
       <match>type:'portal:fragment'</match>
     </mapping>
   </mappings>
+  <processors>
+    <response-processor name="searchableText" order="10"/>  
+  </processors>
 </site>
