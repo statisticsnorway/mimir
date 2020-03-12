@@ -61,7 +61,8 @@ exports.filter = function(req, next) {
       body: targetResponse.body
     }
   }
-  if (content._path.endsWith(currentPath)) {
+
+  if (req.mode === 'edit' || content._path.endsWith(currentPath)) {
     return next(req)
   }
   return {
