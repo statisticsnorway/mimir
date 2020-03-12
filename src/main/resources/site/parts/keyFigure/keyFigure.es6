@@ -54,16 +54,25 @@ exports.preview = (req, id) => {
 const renderPart = (municipality, keyFigureIds) => {
   const part = getComponent()
   // get all keyFigures and filter out non-existing keyFigures
-  const keyFigures = keyFigureIds.reduce((list, keyFigureId) => {
-    const keyFigure = getKeyFigure(keyFigureId)
-    if (keyFigure) {
-      list.push(keyFigure)
-    }
-    return list
-  }, [])
+  const keyFigures = keyFigureIds
+    .reduce((list, keyFigureId) => {
+      const keyFigure = getKeyFigure(keyFigureId)
+      if (keyFigure) {
+        list.push(keyFigure)
+      }
+      return list
+    }, [])
+    .map((keyFigure) => {
+      const keyFigureData = parseKeyFigure(keyFigure, municipality)
+      return {
+        id: keyFigure._id,
+        ...keyFigureData,
+        source: keyFigure.data.source
+      }
+    })
 
   // continue if we have any keyFigures
-  return keyFigures.length ? renderKeyFigure(keyFigures, part, municipality) : {
+  return keyFigures.length ? renderKeyFigure(keyFigures, part) : {
     body: '',
     contentType: 'text/html'
   }
@@ -71,63 +80,44 @@ const renderPart = (municipality, keyFigureIds) => {
 
 /**
  *
- * @param {array} keyFigures
+ * @param {array} parsedKeyFigures
  * @param {object} part
- * @param {object} municipality
  * @return {{body: string, contentType: string}}
  */
-function renderKeyFigure(keyFigures, part, municipality) {
-  const parsedKeyFigures = keyFigures.map( (keyFigure) => {
-    const keyFigureData = parseKeyFigure(keyFigure, municipality)
-    return {
-      id: keyFigure._id,
-      ...keyFigureData,
-      source: keyFigure.data.source
-    }
-  })
-
-  const source = part && part.config && part.config.source || undefined
-
-  const model = {
-    displayName: part ? part.config.title : undefined,
-    keyFigures: parsedKeyFigures,
-    source
-  }
-
-  /** Render react **/
-  const reactObjs = parsedKeyFigures.map((keyFigure) => {
-    const reactProps = {
-      iconUrl: keyFigure.iconUrl,
-      number: keyFigure.number,
-      numberDescription: keyFigure.numberDescription,
-      noNumberText: keyFigure.noNumberText,
-      size: keyFigure.size,
-      title: keyFigure.title,
-      time: keyFigure.time,
-      changes: keyFigure.changes,
-      glossary: keyFigure.glossaryText,
-      greenBox: keyFigure.greenBox
-    }
-
-    const keyFigureReact = new React4xp('KeyFigure')
-    return keyFigureReact.setId(keyFigure.id).setProps(reactProps)
-  })
-
-  let body = render(view, model)
-  let pageContributions = undefined
-
-  reactObjs.forEach((keyfigureReact) => {
-    body = keyfigureReact.renderBody({
-      body
+function renderKeyFigure(parsedKeyFigures, part) {
+  const keyFigureReact = new React4xp('KeyFigure')
+    .setProps({
+      displayName: part ? part.config.title : undefined,
+      keyFigures: parsedKeyFigures.map((keyFigure) => {
+        return {
+          iconUrl: keyFigure.iconUrl,
+          iconAltText: keyFigure.iconAltText,
+          number: keyFigure.number,
+          numberDescription: keyFigure.numberDescription,
+          noNumberText: keyFigure.noNumberText,
+          size: keyFigure.size,
+          title: keyFigure.title,
+          time: keyFigure.time,
+          changes: keyFigure.changes,
+          glossary: keyFigure.glossaryText,
+          greenBox: keyFigure.greenBox,
+          source: keyFigure.source
+        }
+      }),
+      source: part && part.config && part.config.source || undefined,
+      columns: part && part.config && part.config.columns
     })
-    pageContributions = keyfigureReact.renderPageContributions({
-      pageContributions
-    })
+    .uniqueId()
+
+  const body = render(view, {
+    keyFiguresId: keyFigureReact.react4xpId
   })
 
   return {
-    body,
-    pageContributions,
+    body: keyFigureReact.renderBody({
+      body
+    }),
+    pageContributions: keyFigureReact.renderPageContributions(),
     contentType: 'text/html'
   }
 }

@@ -64,9 +64,13 @@ const renderPart = (req, dataQueryIds) => {
       headers = util.data.forceArray(dataResult.tbml.presentation.table.thead.tr.th)
       headers.unshift('')
       table = util.data.forceArray(dataResult.tbml.presentation.table.tbody.tr).map((tr) => {
+        let value = tr.td
+        if (typeof value === 'object' && value.content != undefined) {
+          value = value.content
+        }
         return {
           label: tr.th,
-          columns: tr.td
+          columns: value
         }
       })
     }

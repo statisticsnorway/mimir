@@ -1,0 +1,5 @@
+# KeyFigure
+[Designsystem - Key-figures](https://statisticsnorway.github.io/design-system/#/components/key-figures)  
+[Usage examples - Zepplin](https://app.zeplin.io/) (you'll need access to the SSB Digital designsystem project)
+
+Most of the dataparsing for KeyFigures are done in the [keyFigure.ts library](../src/main/resources/lib/ssb/keyFigure.ts). Where it fills in some default data, and some easily translatable data directly from the content-type, before it parses in the numbers and changes (if selected in the content-type, and it's a tbml dataset with changes). It will automatically parse from [TBML](DataFeeds.md#tbml) or [JSONStat](DataFeeds.md#jsonstat) (only uses JSONStat for kommunefakta), see respective documentation for more info, or look at the code in [KeyFigure.ts](../src/main/resources/lib/ssb/keyFigure.ts).

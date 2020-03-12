@@ -4,20 +4,8 @@
     <field-set>
       <label>Header og meny</label>
       <items>
-
-        <input name="searchResultPageId" type="ContentSelector">
-          <label>Søkeresultat side</label>
-          <occurrences minimum="0" maximum="1"/>
-          <config>
-            <allowContentType>page</allowContentType>
-            <treeMode>true</treeMode>
-            <showStatus>true</showStatus>
-            <hideToggleIcon>true</hideToggleIcon>
-          </config>
-        </input>
-
         <item-set name="topLinks">
-          <label>Topp lenker</label>
+          <label>Topp lenker i meny</label>
           <expanded>false</expanded>
           <occurrences minimum="0" maximum="0"/>
           <items>
@@ -60,6 +48,35 @@
         </item-set>
       </items>
     </field-set>
+    <option-set name="searchResultPage">
+      <label>Landingsside for søk</label>
+      <expanded>false</expanded>
+      <occurrences minimum="0" maximum="1"/>
+      <options minimum="1" maximum="1">
+        <option name="manual">
+          <label>Url lenke</label>
+          <default>true</default>
+          <help-text>Fri url felt. Legges inn som dette eks. "http://www.ssb.no"</help-text>
+          <items>
+            <input name="url" type="TextLine">
+              <label>Kildelenke</label>
+              <occurrences minimum="0" maximum="1"/>
+            </input>
+          </items>
+        </option>
+
+        <option name="content">
+          <label>Lenke til internt innhold</label>
+          <items>
+            <input name="contentId" type="ContentSelector">
+              <label>Relatert innhold</label>
+              <occurrences minimum="0" maximum="1"/>
+              <config/>
+            </input>
+          </items>
+        </option>
+      </options>
+    </option-set>
     <field-set>
       <label>Kommunefakta</label>
       <items>
@@ -163,6 +180,16 @@
           <occurrences minimum="1" maximum="1"/>
           <config>
             <allowContentType>menuitem</allowContentType>
+            <treeMode>false</treeMode>
+            <showStatus>true</showStatus>
+            <hideToggleIcon>false</hideToggleIcon>
+          </config>
+        </input>
+        <input name="footerId" type="ContentSelector">
+          <label>Footer</label>
+          <occurrences minimum="0" maximum="1"/>
+          <config>
+            <allowContentType>footer</allowContentType>
             <treeMode>false</treeMode>
             <showStatus>true</showStatus>
             <hideToggleIcon>false</hideToggleIcon>

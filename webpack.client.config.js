@@ -73,7 +73,7 @@ function addTypeScriptSupport(cfg) {
 // BABEL
 function addBabelSupport(cfg) {
   const rule = {
-    test: /\.jsx?$/,
+    test: /\.js?$/,
     exclude: /node_modules/,
     loader: 'babel-loader',
     options: {

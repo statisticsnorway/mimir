@@ -21,6 +21,7 @@
           <config>
             <option value="full">Full bredde</option> 
             <option value="card">Seksjon med grønn stripe</option>
+            <option value="plainSection">Seksjon</option>
           </config>
         </input>
         <input name="region" type="ComboBox">

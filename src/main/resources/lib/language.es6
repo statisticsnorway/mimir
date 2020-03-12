@@ -3,8 +3,15 @@ const i18n = __non_webpack_require__( '/lib/xp/i18n')
 const portal = __non_webpack_require__( '/lib/xp/portal')
 const content = __non_webpack_require__( '/lib/xp/content')
 
-const english = i18n.getPhrases('en', ['site/i18n/phrases'])
-const norwegian = i18n.getPhrases('', ['site/i18n/phrases'])
+let english
+let norwegian
+
+try {
+  english = i18n.getPhrases('en', ['site/i18n/phrases'])
+  norwegian = i18n.getPhrases('', ['site/i18n/phrases'])
+} catch (e) {
+  e.toString()
+}
 
 exports.getLanguage = function(page) {
   const site = portal.getSite()
@@ -23,12 +30,12 @@ exports.getLanguage = function(page) {
     const altVersionExists = content.exists({
       key: altVersionUri
     })
-    let path = '';
-    if(altVersionExists) {
+    let path = ''
+    if (altVersionExists) {
       path = portal.pageUrl({
         path: altVersionUri
       })
-    } else if(altLanguage.homePageId) {
+    } else if (altLanguage.homePageId) {
       path = portal.pageUrl({
         id: altLanguage.homePageId
       })
@@ -48,6 +55,7 @@ exports.getLanguage = function(page) {
 
   const result = {
     menuContentId: currentLanguageConfig.menuContentId,
+    footerId: currentLanguageConfig.footerId,
     code: currentLanguageConfig.code,
     link: (currentLanguageConfig.link !== null) ? currentLanguageConfig.link : '',
     phrases: {

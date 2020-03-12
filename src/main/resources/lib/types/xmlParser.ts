@@ -36,5 +36,10 @@ interface Table {
 
 export interface TableRow {
   th: Array<string> | number | string;
-  td: Array<number> | number | string ;
+  td: Array<number> | number | string | PreliminaryData;
+}
+
+export interface PreliminaryData {
+  class: string;
+  content: number;
 }

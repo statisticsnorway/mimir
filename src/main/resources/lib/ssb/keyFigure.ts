@@ -2,16 +2,17 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
-import { ContentLibrary, QueryResponse, Content } from 'enonic-types/lib/content'
+import { ContentLibrary, QueryResponse, Content, Image } from 'enonic-types/lib/content'
 import { PortalLibrary } from 'enonic-types/lib/portal'
 import { KeyFigure } from '../../site/content-types/keyFigure/keyFigure'
 import { Dataset } from '../../site/content-types/dataset/dataset'
 import { Dataquery } from '../../site/content-types/dataquery/dataquery'
 import { MunicipalityWithCounty } from '../klass/municipalities'
-import { TbmlData, TableRow } from '../types/xmlParser'
+import { TbmlData, TableRow, PreliminaryData } from '../types/xmlParser'
 import { Dataset as JSDataset, Dimension, Category } from '../types/jsonstat-toolkit'
 import { UtilLibrary } from '../types/util'
 const {
+  get: getContent,
   query
 }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
 const {
@@ -30,7 +31,8 @@ const {
   localize
 } = __non_webpack_require__( '/lib/xp/i18n')
 const {
-  createHumanReadableFormat
+  createHumanReadableFormat,
+  getImageCaption
 } = __non_webpack_require__( '/lib/ssb/utils')
 const util: UtilLibrary = __non_webpack_require__( '/lib/util')
 
@@ -38,7 +40,7 @@ const contentTypeName: string = `${app.name}:keyFigure`
 
 export function get(key: string): Content<KeyFigure> | null {
   const content: QueryResponse<KeyFigure> = query({
-    contentTypes: [contentTypeName, `${app.name}:key-figure`], // TODO remove key-figure
+    contentTypes: [contentTypeName],
     query: `_id = '${key}'`,
     count: 1,
     start: 0
@@ -52,6 +54,7 @@ type DatasetOption = NonNullable<JsonStatFormat>['datasetFilterOptions']
 export function parseKeyFigure(keyFigure: Content<KeyFigure>, municipality?: MunicipalityWithCounty): KeyFigureView {
   const keyFigureViewData: KeyFigureView = {
     iconUrl: getIconUrl(keyFigure),
+    iconAltText: keyFigure.data.icon ? getImageCaption(keyFigure.data.icon) : '',
     number: undefined,
     numberDescription: keyFigure.data.denomination,
     noNumberText: localize({
@@ -90,7 +93,7 @@ export function parseKeyFigure(keyFigure: Content<KeyFigure>, municipality?: Mun
             // get value and label from json-stat data, filtering on municipality
             let municipalData: MunicipalData | null = getDataFromMunicipalityCode(ds, municipality.code, yAxisLabel, filterTarget)
             // not all municipals have data, so if its missing, try the old one
-            if ((!municipalData || (municipalData.value === null || municipalData.value === 0)) && municipality.changes) {
+            if ((!municipalData || (municipalData.value === null || municipalData.value === 0)) && municipality.changes && municipality.changes.length > 0) {
               municipalData = getDataFromMunicipalityCode(ds, municipality.changes[0].oldCode, yAxisLabel, filterTarget)
             }
             if (municipalData && municipalData.value !== null) {
@@ -109,10 +112,23 @@ export function parseKeyFigure(keyFigure: Content<KeyFigure>, municipality?: Mun
       const head: TableRow = tbmlData.tbml.presentation.table.thead.tr
       const [row1, row2] = bodyRows
       if (row1) {
-        keyFigureViewData.number = parseValue(util.data.forceArray(row1.td)[0] as number)
+        let value: number
+        const td: number | PreliminaryData = util.data.forceArray(row1.td)[0] as number | PreliminaryData
+        if (typeof td === 'object' && td.content != undefined) {
+          value = td.content
+        } else {
+          value = td as number
+        }
+        keyFigureViewData.number = parseValue(value)
       }
       if (row2 && keyFigure.data.changes) {
-        const change: number = (util.data.forceArray(row2.td)[0]) as number
+        let change: number
+        const td: number | PreliminaryData = util.data.forceArray(row2.td)[0] as number | PreliminaryData
+        if (typeof td === 'object' && td.content != undefined) {
+          change = td.content
+        } else {
+          change = td as number
+        }
         let changeText: undefined | string = parseValue(change)
         // add denomination if there is any change
         if (changeText && keyFigure.data.changes) {
@@ -204,6 +220,7 @@ interface MunicipalData {
 
 export interface KeyFigureView {
   iconUrl?: string;
+  iconAltText?: string;
   number?: string;
   numberDescription?: string;
   noNumberText: string;

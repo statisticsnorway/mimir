@@ -1,7 +1,8 @@
-import {Content, ContentLibrary, QueryResponse} from "enonic-types/lib/content";
+import {Content, ContentLibrary, QueryResponse} from 'enonic-types/lib/content';
 import {PortalLibrary} from 'enonic-types/lib/portal';
 import {MenuItem} from '../../site/content-types/menuItem/menuItem';
 import {SiteConfig} from '../../site/site-config';
+import { Footer } from '../../site/content-types/footer/footer'
 
 const { getContent, imageUrl, pageUrl }: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
 const { get, getChildren }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
@@ -19,23 +20,21 @@ export function createMenuTree(menuItemId: string): Array<MenuItemParsed> {
 }
 
 function createMenuBranch(menuItem: Content<MenuItem>): MenuItemParsed {
-  //const content: Content<object> | null = getContent()
   const path: string | undefined = menuItem.data.urlSrc ? parseUrl(menuItem.data.urlSrc): '-'
   const children: QueryResponse<MenuItem> = getChildren({key: menuItem._id})
-/*
-  const isActive: boolean = children.total > 0 ? children.hits.reduce( (accumilated: boolean, child: ) => {
+  const content: Content | null = getContent();
+  const isActive: boolean = children.total > 0 && content ? children.hits.reduce( (hasActiveChildren: boolean, child: Content<MenuItem>) => {
     if( child.data.urlSrc && child.data.urlSrc._selected === 'content' &&
         child.data.urlSrc.content && child.data.urlSrc.content.contentId === content._id) {
-      return true
+      hasActiveChildren = true
     }
-  }) : (children.data.urlSrc && children.data.urlSrc._selected === 'content' &&
-        children.data.urlSrc.content && children.data.urlSrc.content.contentId === content._id )
-*/
+    return hasActiveChildren
+  }, false) : false
   return {
     title: menuItem.displayName,
     shortName: menuItem.data.shortName ? menuItem.data.shortName : undefined,
     path,
-    //isActive,
+    isActive,
     icon: menuItem.data.icon ? imageUrl({id: menuItem.data.icon, scale: 'block(12px,12px)'}) : undefined,
     menuItems: children.total > 0 ? children.hits.map((childMenuItem) => createMenuBranch(childMenuItem)) : undefined
   }
@@ -44,6 +43,13 @@ function createMenuBranch(menuItem: Content<MenuItem>): MenuItemParsed {
 type TopLinks = SiteConfig['topLinks']
 export function parseTopLinks(topLinks: TopLinks): Array<Link> | undefined {
   return topLinks ? topLinks.map((link) => ({
+    title: link.linkTitle,
+    path: parseUrl(link.urlSrc)
+  })) : undefined
+}
+
+export function parseGlobalLinks(footerContent: Content<Footer>): Array<Link> | undefined {
+  return footerContent.data.globalLinks ? footerContent.data.globalLinks.map((link) => ({
     title: link.linkTitle,
     path: parseUrl(link.urlSrc)
   })) : undefined
@@ -73,7 +79,7 @@ interface UrlContent {
 export interface MenuItemParsed extends MenuItem {
   title: string;
   path?: string;
-  //isActive: boolean;
+  isActive: boolean;
   menuItems?: Array<MenuItem> | undefined;
 }
 

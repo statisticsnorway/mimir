@@ -6,11 +6,17 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
-
+const {
+  getImageCaption
+} = __non_webpack_require__('/lib/ssb/utils')
+const {
+  render
+} = __non_webpack_require__('/lib/thymeleaf')
 const moment = require('moment/min/moment-with-locales')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 moment.locale('nb')
+const view = resolve('./profiledBox.html')
 
 exports.get = function(req) {
   try {
@@ -31,6 +37,7 @@ function renderPart(request) {
       id: part.config.image,
       scale: 'block(315, 215)'
     }),
+    imageAltText: part.config.image ? getImageCaption(part.config.image) : '',
     imagePlacement: (part.config.cardOrientation == 'horizontal') ? 'left' : 'top',
     href: getLink(urlContentSelector),
     subTitle: getSubtitle(part.config.content, part.config.date),
@@ -38,7 +45,22 @@ function renderPart(request) {
     preambleText: part.config.preamble,
     linkType: 'header'
   }
-  return React4xp.render(part, props, request)
+
+  const profiledBox = new React4xp('site/parts/profiledBox/profiledBox')
+    .setProps(props)
+    .setId('profiled-box')
+    .uniqueId()
+
+  const body = render(view, {
+    profiledBoxId: profiledBox.react4xpId
+  })
+
+  return {
+    body: profiledBox.renderBody({
+      body
+    }),
+    pageContributions: profiledBox.renderPageContributions()
+  }
 }
 
 /**
