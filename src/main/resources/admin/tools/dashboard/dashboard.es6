@@ -1,5 +1,5 @@
 const {
-  getComponent,
+  assetUrl,
   serviceUrl
 } = __non_webpack_require__( '/lib/xp/portal')
 const {
@@ -14,23 +14,19 @@ const {
 } = __non_webpack_require__('/lib/error/error')
 
 const content = __non_webpack_require__( '/lib/xp/content')
-const util = __non_webpack_require__( '/lib/util')
+const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const view = resolve('./dashboard.html')
 
 exports.get = function(req) {
   try {
-    const part = getComponent()
-    const dashboardIds = part.config.dashboard ? util.data.forceArray(part.config.dashboard) : []
-    return renderPart(req, dashboardIds)
+    return renderPart()
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-exports.preview = (req, id) => renderPart(req, [id])
-
-function renderPart(req, dashboardIds) {
-  const dashboards = []
+function renderPart() {
   const datasetMap = {}
 
   const result = content.query({
@@ -65,36 +61,54 @@ function renderPart(req, dashboardIds) {
         displayName: dataquery.displayName,
         updated,
         updatedHumanReadable,
-        class: hasData ? 'dataset-ok' : 'dataset-missing'
+        hasData
       })
     })
   }
 
-  dashboardIds.forEach((key) => {
-    const item = content.get({
-      key
-    })
-    if (item) {
-      dashboards.push({
-        displayName: item.displayName
-      })
-    }
+  const jsLibsUrl = assetUrl({
+    path: 'js/bundle.js'
   })
 
   const dashboardService = serviceUrl({
     service: 'dashboard'
   })
 
+  const stylesUrl = assetUrl({
+    path: 'styles/bundle.css'
+  })
+
+  const logoUrl = assetUrl({path: 'SSB_logo.png'});
+
+  const dashboardDataset = new React4xp('Dashboard/Dashboard')
+    .setProps({
+      header: 'Alle spørringer',
+      dataQueries,
+      dashboardService,
+    })
+    .setId('dataset')
+
+  const pageContributions = dashboardDataset.renderPageContributions({
+    clientRender: true
+  })
+
   const model = {
-    dashboards,
     dataQueries,
-    dashboardService
+    dashboardService,
+    stylesUrl,
+    jsLibsUrl,
+    logoUrl,
+    pageContributions
   }
 
-  const body = 'Dette dashbordet har blitt flyttet til admin panelet på høyre side.'
+  let body = render(view, model)
+
+  body = dashboardDataset.renderBody({
+    body
+  })
 
   return {
     body,
-    contentType: 'text/html'
+    pageContributions
   }
 }

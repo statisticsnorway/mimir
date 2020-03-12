@@ -28,6 +28,7 @@ dependencies {
     include 'com.enonic.lib:lib-cache:1.1.0'
     // compile 'org.webjars.npm:ramda:0.26.1'
     include 'com.enonic.lib:lib-react4xp:0.8.0'
+    testCompile "com.enonic.xp:testing:${xpVersion}"
 }
 
 repositories {
@@ -80,6 +81,13 @@ task serverWebpack( type: NodeTask, dependsOn: npmInstall ) {
     script = file( 'node_modules/webpack-cli/bin/cli.js' )
 }
 
+task testWebpack( type: NodeTask, dependsOn: npmInstall ) {
+    environment = [ 'NODE_ENV': nodeEnvironment() ]
+    args = [ '--config', 'webpack.test.config.js', '--color', '--hide-modules' ]
+    description = 'Build test JS.'
+    script = file( 'node_modules/webpack-cli/bin/cli.js' )
+}
+
 task generateTypeScriptInterfaces( type: NodeTask, dependsOn: npmInstall ) {
     description = 'Generate TypeScript interfaces'
     environment = [ 'NODE_ENV': nodeEnvironment() ]
@@ -115,6 +123,7 @@ jar {
     dependsOn += clientTsWebpack
     dependsOn += stylesWebpack
     dependsOn += serverWebpack
+    dependsOn += testWebpack
 }
 
 def nodeEnvironment() {

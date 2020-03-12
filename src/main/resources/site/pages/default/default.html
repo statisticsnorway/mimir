@@ -23,7 +23,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|Open+Sans:700|Roboto:700|Roboto+Condensed:700" />
   <link rel="stylesheet" data-th-href="${stylesUrl}" />
   <link rel="alternate" data-th-if="${alternateLanguageVersionUrl}" data-th-href="${alternateLanguageVersionUrl}" data-th-hreflang="${language.alternate}" />
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous" />
+
 </head>
 <body class="xp-page" data-th-classappend="${bodyClasses}">
   <!-- HEADER -->
@@ -70,7 +70,6 @@
     >
       <div data-th-if="${region.showGreyTriangle}" class="grey-triangle"/>
       <div
-        class="searchabletext"
         data-th-classappend="${region.view == 'full' ? 'container-fluid p-0' : region.view == 'card' ? 'border-top-green container' : 'container'}"
       >
         <h2 data-th-if="${region.hideTitle && region.title}" class="sr-only sr-only-focusable mb-5" data-th-text="${region.title}"></h2>
@@ -85,7 +84,7 @@
         </div>
       </div>
     </div>
-    <div data-th-if="${mainRegionComponents}" data-portal-region="main" class="searchabletext">
+    <div data-th-if="${mainRegionComponents}" data-portal-region="main">
       <div data-th-each="component : ${mainRegionComponents}" data-th-remove="tag">
         <div data-portal-component="${component.path}" data-th-remove="tag" ></div>
       </div>

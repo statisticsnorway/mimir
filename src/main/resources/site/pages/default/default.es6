@@ -9,7 +9,6 @@ const {
 } = __non_webpack_require__( '/lib/language')
 const {
   alertsForContext,
-  pageMode,
   getBreadcrumbs
 } = __non_webpack_require__( '/lib/ssb/utils')
 const {
@@ -24,7 +23,6 @@ const {
   getFooterContent
 } = __non_webpack_require__( '/lib/ssb/footer')
 
-const version = '%%VERSION%%'
 const partsWithPreview = [ // Parts that has preview
   `${app.name}:map`,
   `${app.name}:button`,
@@ -32,7 +30,6 @@ const partsWithPreview = [ // Parts that has preview
   `${app.name}:accordion`,
   `${app.name}:highchart`,
   `${app.name}:dashboard`,
-  `${app.name}:key-figure`,
   `${app.name}:keyFigure`,
   `${app.name}:menuDropdown`,
   `${app.name}:statistikkbanken`,
@@ -43,9 +40,7 @@ const partsWithPreview = [ // Parts that has preview
 const view = resolve('default.html')
 
 exports.get = function(req) {
-  const ts = new Date().getTime()
   const page = getContent()
-  const mode = pageMode(req, page)
 
   const isFragment = page.type === 'portal:fragment'
   let regions = {}
@@ -99,39 +94,24 @@ exports.get = function(req) {
   }
 
   const stylesUrl = assetUrl({
-    path: 'styles/bundle.css',
-    params: {
-      ts
-    }
+    path: 'styles/bundle.css'
   })
 
   const jsLibsUrl = assetUrl({
-    path: 'js/bundle.js',
-    params: {
-      ts
-    }
+    path: 'js/bundle.js'
   })
 
-  const bannerUrl = assetUrl({
-    path: 'top-banner.png'
-  })
-
-  const pageTitle = req.params.selfRequest ? req.params.pageTitle : page.displayName
   const model = {
-    version,
-    config,
+    pageTitle: 'SSB', // not really used on normal pages because of SEO app (404 still uses this)
     page,
     mainRegionComponents,
     configRegions,
     ingress,
-    mode,
     showIngress,
     preview,
-    pageTitle: `${pageTitle} - Statistisk sentralbyrå`,
     bodyClasses: bodyClasses.join(' '),
     stylesUrl,
     jsLibsUrl,
-    bannerUrl,
     language,
     GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null
   }
