@@ -1,5 +1,3 @@
-import {Cache, CacheLib} from '../../lib/types/cache';
-
 const {
   getSiteConfig, getContent, pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
@@ -45,7 +43,7 @@ exports.filter = function(req, next) {
 
 
     const targetResponse = filterCache.get(`filter_${req.path}`, () => {
-       return request({
+      return request({
         url: `http://localhost:8080${targetUrl}`,
         headers: req.headers,
         cookies: req.cookies,
@@ -63,8 +61,12 @@ exports.filter = function(req, next) {
       body: targetResponse.body
     }
   }
-
-  return next(req)
+  if (content._path.endsWith(currentPath)) {
+    return next(req)
+  }
+  return {
+    status: 404
+  }
 }
 
 function isPathInRouterConfigSetup(currentPath, sourceContentId) {
