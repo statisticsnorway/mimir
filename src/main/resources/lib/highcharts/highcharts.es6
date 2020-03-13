@@ -1,3 +1,4 @@
+const util = __non_webpack_require__('/lib/util')
 /* eslint-disable new-cap */
 
 export const defaultFormat = (ds, dimensionFilter, xAxis) => {
@@ -43,7 +44,14 @@ export const barNegativeFormat = (ds, dimensionFilter, xAxis, yAxis) => {
   }
 }
 
-export const defaultTbmlFormat = (data, graphType) => {
+const getRowValue = (value) => {
+  if (typeof value === 'object' && value.content != undefined) {
+    return value.content
+  }
+  return value
+}
+
+export const defaultTbmlFormat = (data, graphType, xAxisType) => {
   const rows = data.tbml.presentation.table.tbody.tr
   let headers = data.tbml.presentation.table.thead.tr.th
   let categories = []
@@ -56,7 +64,20 @@ export const defaultTbmlFormat = (data, graphType) => {
     series = rows.map((row) => {
       return {
         name: row.th,
-        y: row.td
+        y: getRowValue(row.td)
+      }
+    })
+  } else if ((graphType === 'area' || graphType === 'line') && xAxisType === 'linear') {
+    categories = headers
+    series = categories.map((cat, index) => {
+      return {
+        name: cat,
+        data: rows.map((row) => {
+          return [
+            row.th,
+            getRowValue(util.data.forceArray(row.td)[index])
+          ]
+        })
       }
     })
   } else {
@@ -67,16 +88,7 @@ export const defaultTbmlFormat = (data, graphType) => {
     rows.forEach((row) => {
       categories.push(row.th)
       series.forEach((serie, index) => {
-        let value
-        if (!Array.isArray(row.td)) {
-          value = row.td
-        } else {
-          value = row.td[index]
-        }
-        if (typeof value === 'object' && value.content != undefined) {
-          value = value.content
-        }
-        serie.data.push(value)
+        serie.data.push(getRowValue(util.data.forceArray(row.td)[index]))
       })
     })
   }
