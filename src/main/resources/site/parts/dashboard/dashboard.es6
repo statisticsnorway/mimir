@@ -84,12 +84,14 @@ function renderPart(req, dashboardIds) {
   const dashboardService = serviceUrl({
     service: 'dashboard'
   })
+
   const model = {
     dashboards,
     dataQueries,
     dashboardService
   }
-  const body = render(view, model)
+
+  const body = 'Dette dashbordet har blitt flyttet til admin panelet på høyre side.'
 
   return {
     body,

@@ -12,14 +12,14 @@
           </tr>
         </thead>
         <tbody>
-          <tr 
-              data-th-each="set : ${dataQueries}" 
-              data-th-data-query="${set.id}" 
+          <tr
+              data-th-each="set : ${dataQueries}"
+              data-th-data-query="${set.id}"
               class="small"
             >
-            <td 
-              class="dataset" 
-              data-th-text="${set.displayName}" 
+            <td
+              class="dataset"
+              data-th-text="${set.displayName}"
               data-th-classappend="${set.class}"
             >
             </td>
@@ -28,13 +28,13 @@
             <td data-th-text="${set.updatedHumanReadable}">
             </td>
             <td>
-              <button 
-                class="btn btn-secondary btn-sm" 
+              <button
+                class="btn btn-secondary btn-sm"
                 data-action="delete"
               >
                 <i class="fas fa-trash-alt"></i>
               </button>
-              <button 
+              <button
                 class="btn btn-primary btn-sm"
                 data-action="refresh"
               >
@@ -42,11 +42,12 @@
               </button>
             </td>
           </tr>
+        </tbody>
       </table>
     </div>
   </div>
-  <button 
-    data-th-data-service="${dashboardService}" 
+  <button
+    data-th-data-service="${dashboardService}"
     class="btn btn-secondary mt-3 js-dashboard-delete pb-2"
   >
     Slett alle dataset
@@ -54,8 +55,8 @@
       <span class="sr-only">Sletter...</span>
     </span>
   </button>
-  <button 
-    data-th-data-service="${dashboardService}" 
+  <button
+    data-th-data-service="${dashboardService}"
     class="btn btn-primary ml-2 mt-3 js-dashboard-update pb-2"
   >
     Oppdater alle dataset

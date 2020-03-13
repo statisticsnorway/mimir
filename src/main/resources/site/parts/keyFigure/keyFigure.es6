@@ -70,7 +70,6 @@ const renderPart = (municipality, keyFigureIds) => {
         source: keyFigure.data.source
       }
     })
-    .filter((keyFigure) => keyFigure.number)
 
   // continue if we have any keyFigures
   return keyFigures.length ? renderKeyFigure(keyFigures, part) : {
@@ -86,49 +85,39 @@ const renderPart = (municipality, keyFigureIds) => {
  * @return {{body: string, contentType: string}}
  */
 function renderKeyFigure(parsedKeyFigures, part) {
-  const source = part && part.config && part.config.source || undefined
-
-  const model = {
-    displayName: part ? part.config.title : undefined,
-    keyFigures: parsedKeyFigures,
-    source
-  }
-
-  /** Render react **/
-  const reactObjs = parsedKeyFigures.map((keyFigure) => {
-    const reactProps = {
-      iconUrl: keyFigure.iconUrl,
-      iconAltText: keyFigure.iconAltText,
-      number: keyFigure.number,
-      numberDescription: keyFigure.numberDescription,
-      noNumberText: keyFigure.noNumberText,
-      size: keyFigure.size,
-      title: keyFigure.title,
-      time: keyFigure.time,
-      changes: keyFigure.changes,
-      glossary: keyFigure.glossaryText,
-      greenBox: keyFigure.greenBox
-    }
-
-    const keyFigureReact = new React4xp('KeyFigure')
-    return keyFigureReact.setId(keyFigure.id).setProps(reactProps)
-  })
-
-  let body = render(view, model)
-  let pageContributions = undefined
-
-  reactObjs.forEach((keyfigureReact) => {
-    body = keyfigureReact.renderBody({
-      body
+  const keyFigureReact = new React4xp('KeyFigure')
+    .setProps({
+      displayName: part ? part.config.title : undefined,
+      keyFigures: parsedKeyFigures.map((keyFigure) => {
+        return {
+          iconUrl: keyFigure.iconUrl,
+          iconAltText: keyFigure.iconAltText,
+          number: keyFigure.number,
+          numberDescription: keyFigure.numberDescription,
+          noNumberText: keyFigure.noNumberText,
+          size: keyFigure.size,
+          title: keyFigure.title,
+          time: keyFigure.time,
+          changes: keyFigure.changes,
+          glossary: keyFigure.glossaryText,
+          greenBox: keyFigure.greenBox,
+          source: keyFigure.source
+        }
+      }),
+      source: part && part.config && part.config.source || undefined,
+      columns: part && part.config && part.config.columns
     })
-    pageContributions = keyfigureReact.renderPageContributions({
-      pageContributions
-    })
+    .uniqueId()
+
+  const body = render(view, {
+    keyFiguresId: keyFigureReact.react4xpId
   })
 
   return {
-    body,
-    pageContributions,
+    body: keyFigureReact.renderBody({
+      body
+    }),
+    pageContributions: keyFigureReact.renderPageContributions(),
     contentType: 'text/html'
   }
 }
