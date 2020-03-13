@@ -67,7 +67,7 @@ export const defaultTbmlFormat = (data, graphType, xAxisType) => {
         y: getRowValue(row.td)
       }
     })
-  } else if (graphType === 'area' && xAxisType === 'linear') {
+  } else if ((graphType === 'area' || graphType === 'line') && xAxisType === 'linear') {
     categories = headers
     series = categories.map((cat, index) => {
       return {
