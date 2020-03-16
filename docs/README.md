@@ -26,3 +26,4 @@ Documentation for Mimir
 1. [Testing](./Testing.md)
 1. [SiteConfig](./SiteConfig.md)
 1. [Map](./Map.md)
+1. [Build Pipeline](./BuildPipeLine.md)
