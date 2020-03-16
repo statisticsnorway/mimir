@@ -106,7 +106,7 @@ function renderPart(req, highchartIds) {
           graphData = defaultFormat(dataset, dimensionFilter, xAxisLabel)
         }
       } else {
-        graphData = defaultTbmlFormat(json, graphType)
+        graphData = defaultTbmlFormat(json, graphType, highchart.data.xAxisType)
       }
 
       if (graphType === 'barNegative') {
