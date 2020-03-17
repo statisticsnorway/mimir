@@ -75,9 +75,13 @@ task serverWebpack( type: NodeTask, dependsOn: npmInstall ) {
     inputs.dir 'src/main/resources/lib'
     inputs.dir 'src/main/resources/services'
     inputs.dir 'src/main/resources/site'
+    inputs.dir 'src/main/resources/admin'
+    inputs.file 'src/main/resources/main.js'
     outputs.dir "${buildDir}/resources/main/lib"
     outputs.dir "${buildDir}/resources/main/services"
     outputs.dir "${buildDir}/resources/main/site"
+    outputs.dir "${buildDir}/resources/main/admin"
+    outputs.file "${buildDir}/resources/main/main.js"
     script = file( 'node_modules/webpack-cli/bin/cli.js' )
 }
 
