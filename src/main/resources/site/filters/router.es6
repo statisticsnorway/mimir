@@ -11,14 +11,9 @@ const {
   request
 } = __non_webpack_require__( '/lib/http-client')
 const {
-  newCache
-} = __non_webpack_require__( '/lib/cache')
+  fromFilterCache
+} = __non_webpack_require__('/lib/ssb/cache')
 
-
-const filterCache = newCache({
-  size: 1000,
-  expire: 300
-})
 
 exports.filter = function(req, next) {
   if (req.params.selfRequest) return next(req)
@@ -41,8 +36,7 @@ exports.filter = function(req, next) {
       id: routerConfig[0].target
     }) : '/'
 
-
-    const targetResponse = filterCache.get(`filter_${req.path}`, () => {
+    const targetResponse = fromFilterCache(req, routerConfig[0].target, req.path, () => {
       return request({
         url: `http://localhost:8080${targetUrl}`,
         headers: req.headers,
@@ -53,7 +47,7 @@ exports.filter = function(req, next) {
           pageTitle: routerConfig[0].pageTitle ? routerConfig[0].pageTitle : ''
         },
         connectionTimeout: 5000,
-        readTimeout: 20000
+        readTimeout: 60000
       })
     })
 

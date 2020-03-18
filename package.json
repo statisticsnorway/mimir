@@ -35,7 +35,7 @@
     "@typescript-eslint/parser": "^2.11.0",
     "babel-loader": "^8.0.6",
     "enonic-ts-codegen": "0.0.12",
-    "enonic-types": "0.0.25",
+    "enonic-types": "0.0.42",
     "eslint": "^6.7.1",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-react": "^7.17.0",

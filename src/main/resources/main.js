@@ -3,8 +3,7 @@ const {
 } = __non_webpack_require__('/lib/dataquery')
 const content = __non_webpack_require__( '/lib/xp/content')
 const cron = __non_webpack_require__('/lib/cron')
-const { request } = __non_webpack_require__('/lib/http-client')
-
+const cache = __non_webpack_require__('/lib/ssb/cache')
 const user = {
   login: 'su',
   userStore: 'system'
@@ -39,12 +38,4 @@ cron.schedule({
   context: master
 })
 
-log.info('Pinging instance to fire up react initiation')
-const result = request({
-  url: 'http://localhost:8080/site/default/master/mimir',
-  method: 'get'
-})
-
-
-
-
+cache.setup()
