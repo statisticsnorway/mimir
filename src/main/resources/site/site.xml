@@ -247,6 +247,7 @@
     </mapping>
   </mappings>
   <processors>
-    <response-processor name="searchableText" order="10"/>  
+    <response-processor name="searchableText" order="10"/>
+    <response-processor name="react4xpAssetSource" order="11"/>
   </processors>
 </site>
