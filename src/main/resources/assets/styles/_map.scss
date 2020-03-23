@@ -3,7 +3,8 @@
   .highcharts-container {
   }
   @include media-breakpoint-down(md) {
-    height: 80vh;
+    //height: 80vh;
+    display: none;
   }
 }
 .part-map {

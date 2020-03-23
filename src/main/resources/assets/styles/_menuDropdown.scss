@@ -72,9 +72,10 @@
         }
     }
     @include media-breakpoint-down(md) {
-      position: absolute;
-      top: 30px;
-      right: 55px;
+      //position: absolute;
+      //top: 30px;
+      //right: 55px;
+      display: none;
     }
   }
   .ssb-dropdown {
@@ -97,7 +98,7 @@
     @include media-breakpoint-down(md) {
       position: absolute;
       top: 33px;
-      right: 65px;
+      right: 30px;
     }
   }
   .btn-drawer-toggler {
