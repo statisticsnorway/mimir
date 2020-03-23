@@ -200,7 +200,7 @@ function getMunicipalityChanges(): MunicipalityChangeList {
 }
 
 export function removeCountyFromMunicipalityName(municiaplityName: string): string {
-	return municiaplityName.split('(')[0].trim()
+  return municiaplityName.split('(')[0].trim()
 }
 
 export interface MunicipalityChangeList {

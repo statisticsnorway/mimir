@@ -46,7 +46,7 @@ function renderPart(req) {
       id: part.config.image,
       scale: 'block(1400,400)'
     }) : undefined,
-	municipalityTitle : municipality ? municipalityName + ' (' + municipality.county.name+')' : undefined,
+    municipalityTitle: municipality ? municipalityName + ' (' + municipality.county.name + ')' : undefined,
     pageType,
     factsAbout
   }
