@@ -1,12 +1,11 @@
 import {Content, ContentLibrary, QueryResponse} from 'enonic-types/lib/content';
 import {PortalLibrary} from 'enonic-types/lib/portal';
 import {MenuItem} from '../../site/content-types/menuItem/menuItem';
-import {SiteConfig} from '../../site/site-config';
 import { Footer } from '../../site/content-types/footer/footer'
+import {Header} from '../../site/content-types/header/header';
 
 const { getContent, imageUrl, pageUrl }: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
 const { get, getChildren }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
-
 
 export function createMenuTree(menuItemId: string): Array<MenuItemParsed> {
   const menuContent: Content<MenuItem> | null = get({key: menuItemId})
@@ -40,7 +39,7 @@ function createMenuBranch(menuItem: Content<MenuItem>): MenuItemParsed {
   }
 }
 
-type TopLinks = SiteConfig['topLinks']
+type TopLinks = Header['globalLinks']
 export function parseTopLinks(topLinks: TopLinks): Array<Link> | undefined {
   return topLinks ? topLinks.map((link) => ({
     title: link.linkTitle,
