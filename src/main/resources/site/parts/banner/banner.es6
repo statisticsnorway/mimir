@@ -7,7 +7,7 @@ const {
   render
 } = __non_webpack_require__( '/lib/thymeleaf')
 const {
-  getMunicipality
+  getMunicipality, removeCountyFromMunicipalityName
 } = __non_webpack_require__( '/lib/klass/municipalities')
 const {
   getImageCaption
@@ -36,6 +36,8 @@ function renderPart(req) {
   const factsAbout = i18nLib.localize({
     key: 'factsAbout'
   })
+  const municipality = pageType._selected === 'kommunefakta' ? getMunicipality(req) : undefined
+  const municipalityName = municipality ? removeCountyFromMunicipalityName(municipality.displayName) : undefined
 
   const model = {
     pageDisplayName: page.displayName,
@@ -44,7 +46,7 @@ function renderPart(req) {
       id: part.config.image,
       scale: 'block(1400,400)'
     }) : undefined,
-    municipality: pageType._selected === 'kommunefakta' ? getMunicipality(req) : undefined,
+    municipalityTitle: municipality ? municipalityName + ' (' + municipality.county.name + ')' : undefined,
     pageType,
     factsAbout
   }

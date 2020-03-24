@@ -13,8 +13,8 @@
       <div data-th-if="${pageType._selected == 'kommunefakta'}" class="col-12">
         <div class="subtitle roboto-bold position-relative" data-th-text="${pageDisplayName}">Kommunefakta</div>
         <h1 class="mt-0 pt-0 position-relative"
-            data-th-if="${municipality}"
-            data-th-text="${municipality.displayName} +' (' + ${municipality.county.name} +')'">Navn på kommune</h1>
+            data-th-if="${municipalityTitle}"
+            data-th-text="${municipalityTitle}">Navn på kommune</h1>
       </div>
 
       <div data-th-if="${pageType._selected == 'faktaside'}" class="col-12">
