@@ -40,7 +40,7 @@ export function getFooterContent(language: Language): FooterContent | undefined 
       twitterUrl: footerContent.data.twitterUrl,
       linkedinUrl: footerContent.data.linkedinUrl,
       rssUrl: footerContent.data.rssUrl,
-      globalLinks: footerContent.data.globalLinks && footerContent.data.globalLinks.length > 0 ? parseGlobalLinks(footerContent) : [],
+      globalLinks: footerContent.data.globalLinks && footerContent.data.globalLinks.length > 0 ? parseGlobalLinks(footerContent.data.globalLinks) : [],
       footerNavigation: footerContent.data.footerContentId ? createMenuTree(footerContent.data.footerContentId) : [],
       topButtonText: localize({
         key: 'toTheTop',
