@@ -184,7 +184,7 @@ function changesWithMunicipalityCode(municipalityCode: string): Array<Municipali
   const changeList: Array<MunicipalityChange> = getMunicipalityChanges().codeChanges
   const changes: Array<MunicipalityChange> = changeList.filter( (change) => {
     return (change.oldCode === municipalityCode || change.newCode === municipalityCode) &&
-        change.oldName === removeCountyFromMunicipalityName(change.newName)
+        removeCountyFromMunicipalityName(change.oldName) === removeCountyFromMunicipalityName(change.newName)
   })
   return changes
 }
