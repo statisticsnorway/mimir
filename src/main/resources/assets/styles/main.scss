@@ -70,3 +70,9 @@ section + section, .xp-layout + .xp-layout {
 .bkg-grey {
   background-color: $ssb-dark-1;
 }
+
+.row {
+  @include media-breakpoint-down(md) {
+         margin-right: 0;
+  }
+}
