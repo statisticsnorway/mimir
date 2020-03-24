@@ -30,12 +30,14 @@ function createMenuBranch(menuItem: Content<MenuItem>): MenuItemParsed {
     }
     return hasActiveChildren
   }, false) : false
+  const iconPath: string | undefined = menuItem.data.icon ? imageUrl({id: menuItem.data.icon, scale: 'block(12px,12px)'}) : undefined
+
   return {
     title: menuItem.displayName,
     shortName: menuItem.data.shortName ? menuItem.data.shortName : undefined,
     path,
     isActive,
-    icon: menuItem.data.icon ? imageUrl({id: menuItem.data.icon, scale: 'block(12px,12px)'}) : undefined,
+    icon: iconPath && iconPath.search('error') === -1 ? iconPath : undefined,
     menuItems: children.total > 0 ? children.hits.map((childMenuItem) => createMenuBranch(childMenuItem)) : undefined
   }
 }
