@@ -182,13 +182,19 @@ function renderPart(req, highchartIds) {
       if (graphType === 'pie' || highchart.data.switchRowsAndColumns) {
         config.series = [{
           name: graphData.categories[0] && !usingJsonStat ? graphData.categories[0] : 'Antall',
-          data: config.series.map((serie) => ({
-            y: serie.y,
-            name: serie.name
-          }))
+          data: config.series.reduce((data, serie) => {
+            if (serie.y != null) {
+              data.push({
+                y: serie.y,
+                name: serie.name
+              })
+            }
+            return data
+          }, [])
         }]
       }
     }
+
     return initHighchart(highchart, config)
   })
 
@@ -201,7 +207,7 @@ function renderPart(req, highchartIds) {
 }
 
 
-function initHighchart(highchart, config, municipalityName) {
+function initHighchart(highchart, config) {
   const tableRegex = /<table[^>]*>/igm
   const nbspRegexp = /&nbsp;/igm
   const replace = '<table id="highcharts-datatable-' + highchart._id + '">'

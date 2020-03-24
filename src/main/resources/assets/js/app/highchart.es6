@@ -1,17 +1,17 @@
 import $ from 'jquery'
-import _ from 'lodash'
-import JSONstat from 'jsonstat-toolkit'
 
 import Highcharts from 'highcharts'
 // Load the exporting module.
-import Data from 'highcharts/modules/data'
-import A11y from 'highcharts/modules/accessibility'
-import Exporting from 'highcharts/modules/exporting'
+import highchartsModuleData from 'highcharts/modules/data'
+import highchartsModuleAccessibility from 'highcharts/modules/accessibility'
+import highchartsModuleExporting from 'highcharts/modules/exporting'
+import highchartsModuleNoDataToDisplay from 'highcharts/modules/no-data-to-display'
 
 // Initialize exporting module.
-Data(Highcharts)
-A11y(Highcharts)
-Exporting(Highcharts)
+highchartsModuleData(Highcharts)
+highchartsModuleAccessibility(Highcharts)
+highchartsModuleExporting(Highcharts)
+highchartsModuleNoDataToDisplay(Highcharts)
 
 const createSetOptions = {
   lang: {
@@ -25,7 +25,7 @@ const createSetOptions = {
     downloadXLS: 'Last ned tala som XLS',
     drillUpText: 'Tilbake til',
     loading: 'Tegner graf...',
-    noData: 'Ingen tilgjengelege tal',
+    noData: 'Tall ikke tilgjengelig',
     numericSymbols: [null, ' mill.', ' mrd.'],
     printChart: 'Skriv ut graf',
     resetZoom: 'Nullstill zoom',
