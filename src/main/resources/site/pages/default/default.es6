@@ -22,6 +22,9 @@ const {
 const {
   getFooterContent
 } = __non_webpack_require__( '/lib/ssb/footer')
+const {
+  fromMenuCache
+} = __non_webpack_require__('/lib/ssb/cache')
 
 const partsWithPreview = [ // Parts that has preview
   `${app.name}:map`,
@@ -122,7 +125,7 @@ exports.get = function(req) {
     pageContributions = preview.pageContributions
   }
 
-  const headerContent = getHeaderContent(language)
+  const headerContent = fromMenuCache(req, 'header', () => getHeaderContent(language))
   const headerComponent = new React4xp('Header')
     .setProps({
       ...headerContent
@@ -135,7 +138,7 @@ exports.get = function(req) {
     pageContributions
   })
 
-  const footerContent = getFooterContent(language)
+  const footerContent = fromMenuCache(req, 'footer', () => getFooterContent(language))
   if (footerContent) {
     const footerComponent = new React4xp('Footer')
       .setProps({

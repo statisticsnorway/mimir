@@ -3,6 +3,8 @@ import { Request, Response } from 'enonic-types/lib/controller'
 import { EventLibrary, EnonicEvent, EnonicEventData } from 'enonic-types/lib/event'
 import { ContextLibrary } from 'enonic-types/lib/context'
 import { ContentLibrary, QueryResponse, Content } from 'enonic-types/lib/content'
+import { Header } from './header'
+import { FooterContent } from './footer'
 
 const {
   newCache
@@ -19,6 +21,14 @@ const {
 
 const masterFilterCaches: Map<string, Cache> = new Map()
 const draftFilterCaches: Map<string, Cache> = new Map()
+const masterMenuCache: Cache = newCache({
+  expire: 3600,
+  size: 2
+})
+const draftMenuCache: Cache = newCache({
+  expire: 3600,
+  size: 2
+})
 
 export function setup(): void {
   log.info('initializing cache node listener')
@@ -112,6 +122,18 @@ export function fromFilterCache(req: Request, filterKey: string, key: string, fa
     const filterCache: Cache = getFilterCache(branch, filterKey)
     return filterCache.get(key, () => {
       log.info(`added ${key} to ${filterKey} filter cache (${branch})`)
+      return fallback()
+    })
+  }
+  return fallback()
+}
+
+export function fromMenuCache(req: Request, key: string, fallback: () => Header | FooterContent | undefined): Header | FooterContent | undefined {
+  if (req.mode === 'live' || req.mode === 'preview') {
+    const branch: string = req.mode === 'live' ? 'master' : 'draft'
+    const menuCache: Cache = branch === 'master' ? masterMenuCache : draftMenuCache
+    return menuCache.get(key, () => {
+      log.info(`added ${key} to menu cache (${branch})`)
       return fallback()
     })
   }
