@@ -50,8 +50,9 @@ export function parseTopLinks(topLinks: TopLinks): Array<Link> | undefined {
   })) : undefined
 }
 
-export function parseGlobalLinks(footerContent: Content<Footer>): Array<Link> | undefined {
-  return footerContent.data.globalLinks ? footerContent.data.globalLinks.map((link) => ({
+type GlobalLinks = Footer['globalLinks']
+export function parseGlobalLinks(globalLinks: GlobalLinks): Array<Link> | undefined {
+  return globalLinks ? globalLinks.map((link) => ({
     title: link.linkTitle,
     path: parseUrl(link.urlSrc)
   })) : undefined
