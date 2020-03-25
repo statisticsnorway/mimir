@@ -27,7 +27,7 @@ class KeyFigures extends React.Component {
   addKeyFigureSource(keyFigure) {
     if ((!this.props.source || !this.props.source.url) && keyFigure.source && keyFigure.source.url) {
       return (
-        <References title="Kilde" referenceList={[{
+        <References className={`${keyFigure.size !== 'large' ? 'mt-3' : ''}`} title="Kilde" referenceList={[{
           href: keyFigure.source.url,
           label: keyFigure.source.title
         }]}/>
@@ -39,7 +39,7 @@ class KeyFigures extends React.Component {
   addSource() {
     if (this.props.source && this.props.source.url) {
       return (
-        <References className="col-12" title="Kilde" referenceList={[{
+        <References className="col-12 mt-3" title="Kilde" referenceList={[{
           href: this.props.source.url,
           label: this.props.source.title
         }]}/>
