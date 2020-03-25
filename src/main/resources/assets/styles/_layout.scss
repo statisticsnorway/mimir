@@ -46,7 +46,7 @@
   }
 
   @include media-breakpoint-down(md) {
-    min-height: 230px;
+    min-height: 100px;
 
     &:after {
       visibility: hidden;

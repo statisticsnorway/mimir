@@ -59,8 +59,8 @@ class Header extends React.Component {
   renderSubMenu(topMenuItem) {
     return topMenuItem.menuItems && topMenuItem.menuItems.map((menuItem, itemIndex) => {
       return (
-        <li key={itemIndex}>
-          <Link tabindex="-1" href={menuItem.path} icon={<img src={menuItem.icon}></img>}>{menuItem.title}</Link>
+        <li key={'listItemLink_' + itemIndex}>
+          <Link href={menuItem.path} icon={ menuItem.icon? <img src={menuItem.icon}></img>: undefined }>{menuItem.title}</Link>
         </li>)
       })
   }

@@ -8,7 +8,8 @@ const {
 } = __non_webpack_require__( '/lib/xp/portal')
 const {
   municipalsWithCounties,
-  getMunicipality
+  getMunicipality,
+  removeCountyFromMunicipalityName
 } = __non_webpack_require__( '/lib/klass/municipalities')
 const {
   render
@@ -33,6 +34,7 @@ exports.preview = (req) => renderPart(req)
 
 function renderPart(req) {
   const parsedMunicipalities = municipalsWithCounties()
+  const municipality = getMunicipality(req)
   const component = getComponent()
   const siteConfig = getSiteConfig()
   let mapFolder = '/mapdata'
@@ -74,14 +76,17 @@ function renderPart(req) {
     })
     .setId('inputStickyMenu')
 
+  const municipalityName = municipality ? removeCountyFromMunicipalityName(municipality.displayName) : undefined
+
   const model = {
     modeMunicipality: component.config.modeMunicipality,
     displayName: page.displayName,
     baseUrl,
     dataPathAssetUrl,
     dataServiceUrl,
-    municipality: getMunicipality(req),
-    municipalities: parsedMunicipalities
+    municipality: municipality,
+    municipalities: parsedMunicipalities,
+    municipalityName : municipalityName
   }
 
   const body = inputStickyMenu.renderBody({

@@ -30,12 +30,14 @@ function createMenuBranch(menuItem: Content<MenuItem>): MenuItemParsed {
     }
     return hasActiveChildren
   }, false) : false
+  const iconPath: string | undefined = menuItem.data.icon ? imageUrl({id: menuItem.data.icon, scale: 'block(12px,12px)'}) : undefined
+
   return {
     title: menuItem.displayName,
     shortName: menuItem.data.shortName ? menuItem.data.shortName : undefined,
     path,
     isActive,
-    icon: menuItem.data.icon ? imageUrl({id: menuItem.data.icon, scale: 'block(12px,12px)'}) : undefined,
+    icon: iconPath && iconPath.search('error') === -1 ? iconPath : undefined,
     menuItems: children.total > 0 ? children.hits.map((childMenuItem) => createMenuBranch(childMenuItem)) : undefined
   }
 }
@@ -48,8 +50,9 @@ export function parseTopLinks(topLinks: TopLinks): Array<Link> | undefined {
   })) : undefined
 }
 
-export function parseGlobalLinks(footerContent: Content<Footer>): Array<Link> | undefined {
-  return footerContent.data.globalLinks ? footerContent.data.globalLinks.map((link) => ({
+type GlobalLinks = Footer['globalLinks']
+export function parseGlobalLinks(globalLinks: GlobalLinks): Array<Link> | undefined {
+  return globalLinks ? globalLinks.map((link) => ({
     title: link.linkTitle,
     path: parseUrl(link.urlSrc)
   })) : undefined
