@@ -1,7 +1,8 @@
 .key-figures {
-  // TODO fix pass-through of className in component system on KeyFigure so we can use .w-100
-  .ssb-key-figures {
-    width: 100%;
+  h3 {
+    @include roboto-condenced;
+    font-weight: bold;
+    font-size: 28px;
   }
 
   & .divider:not(:last-child) {
