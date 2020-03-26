@@ -19,11 +19,12 @@ const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view = resolve('./dashboard.html')
 
 exports.get = function(req) {
-  try {
+  return renderPart()
+  /*try {
     return renderPart()
   } catch (e) {
     return renderError(req, 'Error in part', e)
-  }
+  }*/
 }
 
 function renderPart() {
@@ -84,13 +85,13 @@ function renderPart() {
     .setProps({
       header: 'Alle spørringer',
       dataQueries,
-      dashboardService,
+      dashboardService
     })
     .setId('dataset')
 
-  const pageContributions = dashboardDataset.renderPageContributions({
+  const pageContributions = parseContributions(dashboardDataset.renderPageContributions({
     clientRender: true
-  })
+  }))
 
   const model = {
     dataQueries,
@@ -111,4 +112,9 @@ function renderPart() {
     body,
     pageContributions
   }
+}
+
+function parseContributions(contributions) {
+  contributions.bodyEnd = contributions.bodyEnd.map((script) => script.replace(' defer>', ' defer="">'))
+  return contributions
 }
