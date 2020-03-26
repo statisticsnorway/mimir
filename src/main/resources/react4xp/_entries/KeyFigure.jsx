@@ -51,7 +51,7 @@ class KeyFigures extends React.Component {
   addHeader() {
     if (this.props.displayName) {
       return (
-        <h4 className="mb-5">{this.props.displayName}</h4>
+        <h3 className="mb-5">{this.props.displayName}</h3>
       )
     }
     return
