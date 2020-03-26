@@ -15,9 +15,6 @@ const {
   getDataSetWithDataQueryId
 } = __non_webpack_require__( '../ssb/dataset')
 const {
-  get: getKlass
-} = __non_webpack_require__( '/lib/klass/klass')
-const {
   getSiteConfig
 }: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
 const {
@@ -67,23 +64,6 @@ function getMunicipalsFromContent(): Array<MunicipalCode> {
 export function createPath(municipalName: string, countyName?: string): string {
   const path: string = countyName !== undefined ? `${municipalName}-${countyName}` : `${municipalName}`
   return `/${sanitize(path)}`
-}
-
-
-/**
- * Get a dataset with values from statistikkbanken
- * @param {string} url
- * @param {string} query
- * @param {string} municipalityCode
- * @return {object} dataset with values from statistikkbanken
- */
-export function getValue(url: string, query: string, municipalityCode: string): object {
-  // change from object type to interface in klass lib
-  const selection: object = {
-    filter: 'item',
-    values: municipalityCode
-  }
-  return getKlass(url, query, selection)
 }
 
 const parsedMunicipalityCache: Cache = newCache({
@@ -221,7 +201,6 @@ export interface MunicipalitiesLib {
   list: () => Array<MunicipalCode>;
   query: (queryString: string) => Array<MunicipalCode>;
   createPath (municipalName: string, countyName?: string): string;
-  getValue (url: string, query: string, municipalityCode: string): object;
   municipalsWithCounties (): Array<MunicipalityWithCounty>;
   getMunicipality (req: Request): MunicipalityWithCounty|undefined;
 }

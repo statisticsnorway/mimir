@@ -5,7 +5,6 @@ const http: HttpLibrary = __non_webpack_require__( '/lib/http-client')
 
 export function fetch(url: string): string {
   let result: string = '<tbml></tbml>'
-
   const response: HttpResponse = http.request({
     url
   })
