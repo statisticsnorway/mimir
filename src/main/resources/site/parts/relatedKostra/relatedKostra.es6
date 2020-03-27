@@ -53,7 +53,9 @@ function renderPart(req, municipality) {
       .setProps({
         href: part.config.kostraLink + (municipality.path == null ? '' : municipality.path),
         children: part.config.kostraLinkText,
-        linkType: 'profiled'
+        linkType: 'profiled',
+        hasIcon: true,
+        iconType: 'arrowRight'
       })
       .setId('kostraLink')
 
