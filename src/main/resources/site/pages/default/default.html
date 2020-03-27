@@ -31,7 +31,7 @@
     <div class="container">
       <div class="row">
         <div class="col">
-          <div id="header"></div>
+          <div data-th-if="${headerBody}" id="header" data-th-utext="${headerBody}" data-th-remove="tag"></div>
         </div>
       </div>
     </div>
@@ -92,7 +92,7 @@
   </main>
 
   <!-- FOOTER -->
-  <footer id="footer" >
+  <footer data-th-if="${footerBody}" id="footer" data-th-utext="${footerBody}" data-th-remove="tag">
   </footer>
 
   <script type="text/javascript" data-th-src="${jsLibsUrl}"></script>
