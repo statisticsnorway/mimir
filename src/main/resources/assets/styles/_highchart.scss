@@ -31,10 +31,13 @@
     }
   }
 }
-.highcharts-figure >div {
-  height: 50vh;
+.highcharts-canvas {
+  height: auto;
+  width: 100%;
+
   @include media-breakpoint-down(sm) {
-    height: calc(100vh - 50px - 50px - 92px);
+    width: 100%;
+    height: auto;
   }
 }
 .highcharts-figure.hide-title .highcharts-title>tspan {
