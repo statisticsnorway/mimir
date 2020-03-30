@@ -1,20 +1,3 @@
 <part>
     <display-name>Relaterte andre nettsider</display-name>
-    <description></description>
-    <form>
-        <item-set name="relatedExternalLinkItemSet">
-            <Label></Label>
-            <occurrences minimum="0" maximum="0"/>
-            <items>
-                <input type="TextLine" name="urlText">
-                    <label>Lenketekst</label>
-                    <occurrences minimum="1" maximum="1" />
-                </input>
-                <input type="TextLine" name="url">
-                    <label>URL</label>
-                    <occurrences minimum="1" maximum="1" />
-                </input>
-            </items>
-        </item-set>
-    </form>
 </part>
