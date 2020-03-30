@@ -24,7 +24,7 @@ const numberWithSpaces = (x) => {
 }
 
 export const createHumanReadableFormat = (value) => {
-  return value > 999 ? numberWithSpaces(value) : value.toString().replace(/\./, ',')
+  return value > 999 ? numberWithSpaces(value).toString().replace(/\./, ',') : value.toString().replace(/\./, ',')
 }
 
 
