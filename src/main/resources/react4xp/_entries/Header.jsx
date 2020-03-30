@@ -106,7 +106,7 @@ class Header extends React.Component {
               const menuItemClick = this.toggleSubMenu.bind(this, index)
               const activeMenuItem = this.state.indexForCurrentActiveMenuItem === index || topMenuItem.isActive
               return (
-                <div key={index} className={this.state.mainMenu[index] ? 'mobileActive tabItem' : 'tabItem'}>
+                <div key={index} className={`tabItem${activeMenuItem ? ' activeTab' : ''}`}>
                   <button onClick={menuItemClick} >
                     <span className={ activeMenuItem ? 'active navigation-item' : 'navigation-item'} >
                       <span>{topMenuItem.title}</span>
