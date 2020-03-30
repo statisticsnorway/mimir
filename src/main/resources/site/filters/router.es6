@@ -11,7 +11,8 @@ const {
   fromFilterCache
 } = __non_webpack_require__('/lib/ssb/cache')
 const {
-  getMunicipality
+  getMunicipalityByName,
+  municipalsWithCounties
 } = __non_webpack_require__('/lib/klass/municipalities')
 
 
@@ -20,12 +21,8 @@ exports.filter = function(req, next) {
   delete req.headers['Accept-Encoding']
   let pageTitle = ''
   const region = req.path.split('/').pop()
-  if (!getMunicipality({
-    params: {
-      selfRequest: true,
-      pathname: region
-    }
-  }) && region !== 'kommune') {
+  const municipality = getMunicipalityByName(municipalsWithCounties(), region)
+  if (!municipality && region !== 'kommune') {
     return next(req)
   }
 
@@ -52,7 +49,7 @@ exports.filter = function(req, next) {
       cookies: req.cookies,
       params: {
         selfRequest: true,
-        pathname: region,
+        municipality: JSON.stringify(municipality),
         pageTitle
       },
       connectionTimeout: 5000,
