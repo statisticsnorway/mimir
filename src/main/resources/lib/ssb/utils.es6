@@ -24,7 +24,7 @@ const numberWithSpaces = (x) => {
 }
 
 export const createHumanReadableFormat = (value) => {
-  return value > 999 ? numberWithSpaces(value) : value.toString().replace(/\./, ',')
+  return value > 999 ? numberWithSpaces(value).toString().replace(/\./, ',') : value.toString().replace(/\./, ',')
 }
 
 
@@ -110,13 +110,15 @@ export function safeRender(view, model) {
 }
 
 export function pathFromStringOrContent(urlSrc) {
-  if(urlSrc !== undefined) {
-    if(urlSrc._selected === 'content') {
+  if (urlSrc !== undefined) {
+    if (urlSrc._selected === 'content') {
       const selected = urlSrc[urlSrc._selected]
-      return selected && selected.contentId ? pageUrl({id: selected.contentId}) : undefined
+      return selected && selected.contentId ? pageUrl({
+        id: selected.contentId
+      }) : undefined
     }
 
-    if(urlSrc._selected === 'manual') {
+    if (urlSrc._selected === 'manual') {
       const selected = urlSrc[urlSrc._selected]
       return selected && selected.url ? selected.url : undefined
     }
@@ -127,6 +129,8 @@ export function pathFromStringOrContent(urlSrc) {
 
 
 export function getImageCaption(keyFigureId) {
-  const imageContent = content.get({key: keyFigureId})
+  const imageContent = content.get({
+    key: keyFigureId
+  })
   return imageContent !== undefined ? imageContent.data.caption : ''
 }

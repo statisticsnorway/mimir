@@ -3,8 +3,9 @@ import { Request, Response } from 'enonic-types/lib/controller'
 import { EventLibrary, EnonicEvent, EnonicEventData } from 'enonic-types/lib/event'
 import { ContextLibrary } from 'enonic-types/lib/context'
 import { ContentLibrary, QueryResponse, Content } from 'enonic-types/lib/content'
-import { Header } from './header'
-import { FooterContent } from './footer'
+import { Dataset as JSDataset } from '../types/jsonstat-toolkit'
+import { TbmlData } from '../types/xmlParser'
+import { Dataquery } from '../../site/content-types/dataquery/dataquery'
 
 const {
   newCache
@@ -29,6 +30,14 @@ const masterMenuCache: Cache = newCache({
 const draftMenuCache: Cache = newCache({
   expire: 3600,
   size: 2
+})
+const masterDatasetCache: Cache = newCache({
+  expire: 3600,
+  size: 300
+})
+const draftDatasetCache: Cache = newCache({
+  expire: 3600,
+  size: 300
 })
 
 export function setup(): void {
@@ -122,6 +131,12 @@ function clearCache(content: Content, branch: string, cleared: Array<string>): A
     menuCache.clear()
   }
 
+  if (content.type === `${app.name}:dataquery`) {
+    log.info(`clear ${content._id} from dataset cache ${branch}`)
+    const datasetCache: Cache = branch === 'master' ? masterDatasetCache : draftDatasetCache
+    datasetCache.clear()
+  }
+
   const references: Array<Content> = getReferences(content._id)
   references.forEach((ref) => {
     log.info(`try to clear reference ${ref._id} to ${content}(${branch})`)
@@ -166,4 +181,21 @@ export function fromMenuCache(req: Request, key: string, fallback: () => unknown
     })
   }
   return fallback()
+}
+
+export function fromDatasetCache(req: Request, key: string, fallback: () => DatasetCache): DatasetCache {
+  if (req.mode === 'live' || req.mode === 'preview') {
+    const branch: string = req.mode === 'live' ? 'master' : 'draft'
+    const datasetCache: Cache = branch === 'master' ? masterDatasetCache : draftDatasetCache
+    return datasetCache.get(key, () => {
+      log.info(`added ${key} to dataset cache (${branch})`)
+      return fallback()
+    })
+  }
+  return fallback()
+}
+
+export interface DatasetCache {
+  data: JSDataset | Array<JSDataset> | null | TbmlData | TbmlData;
+  format: Dataquery['datasetFormat'];
 }

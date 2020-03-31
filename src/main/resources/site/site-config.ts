@@ -75,26 +75,6 @@ export interface SiteConfig {
   }>;
 
   /**
-   * Routing
-   */
-  router?: Array<{
-    /**
-     * Fra
-     */
-    source: string;
-
-    /**
-     * Til
-     */
-    target: string;
-
-    /**
-     * Sidetittel på rutede sider
-     */
-    pageTitle?: string;
-  }>;
-
-  /**
    * Språk instillinger
    */
   language: Array<{
