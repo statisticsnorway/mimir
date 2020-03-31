@@ -16,7 +16,12 @@
   padding: 60px 100px;
 
   @include media-breakpoint-down(md) {
-    padding: 20px 10px;
+    padding: 20px 20px;
+
+    .col , .col-12 {
+      padding-right: 0;
+      padding-left: 0;
+    }
   }
 
   & > h2 {

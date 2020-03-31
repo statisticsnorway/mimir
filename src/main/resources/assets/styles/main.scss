@@ -73,6 +73,7 @@ section + section, .xp-layout + .xp-layout {
 
 .row {
   @include media-breakpoint-down(md) {
-         margin-right: 0;
+    margin-right: 0;
+    margin-left: 0;
   }
 }
