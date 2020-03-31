@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 
 const Links = (props) => {
   return (
-    <div>
+    <React.Fragment>
       {props.links.map((link, index) => {
         return (
           <Link
@@ -24,9 +24,8 @@ const Links = (props) => {
             />
           </Link>
         )
-      })
-      }
-    </div>
+      })}
+    </React.Fragment>
   )
 }
 

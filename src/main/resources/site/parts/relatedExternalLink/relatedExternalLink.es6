@@ -60,7 +60,8 @@ function renderExternalLinks(externalLinkConfig) {
   return {
     body: link.renderBody({
       body
-    })
+    }),
+    pageContributions: link.renderPageContributions()
   }
 }
 
