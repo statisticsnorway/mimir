@@ -3,12 +3,6 @@ import { Link } from '@statisticsnorway/ssb-component-library'
 import { ArrowRight, ExternalLink } from 'react-feather'
 import PropTypes from 'prop-types'
 
-function createMarkup(html) {
-  return {
-    __html: html
-  }
-}
-
 const Links = (props) => {
   return (
     <div>
@@ -22,9 +16,12 @@ const Links = (props) => {
             isExternal={link.isExternal}
             linkType={link.linkType}
             negative={link.negative}
-            {...props}
           >
-            <div dangerouslySetInnerHTML={createMarkup(link.children)}/>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: link.children
+              }}
+            />
           </Link>
         )
       })
