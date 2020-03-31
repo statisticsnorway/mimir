@@ -3,23 +3,33 @@ import { Link } from '@statisticsnorway/ssb-component-library'
 import { ArrowRight, ExternalLink } from 'react-feather'
 import PropTypes from 'prop-types'
 
+function createMarkup(html) {
+  return {
+    __html: html
+  }
+}
+
 const Links = (props) => {
   return (
-    <React.Fragment>
-      {props.links.map((link, index) =>
-        <Link
-          key={`link-${index}`}
-          className={link.className}
-          href={link.href}
-          icon={link.hasIcon ? (link.iconType == 'arrowRight' ? <ArrowRight size="20" /> : <ExternalLink size="15" />) : undefined}
-          isExternal={link.isExternal}
-          linkType={link.linkType}
-          negative={link.negative}
-        >
-          {link.children}
-        </Link>
-      )}
-    </React.Fragment>
+    <div>
+      {props.links.map((link, index) => {
+        return (
+          <Link
+            key={`link-${index}`}
+            className={link.className}
+            href={link.href}
+            icon={link.hasIcon ? (link.iconType == 'arrowRight' ? <ArrowRight size="20"/> : <ExternalLink size="15"/>) : undefined}
+            isExternal={link.isExternal}
+            linkType={link.linkType}
+            negative={link.negative}
+            {...props}
+          >
+            <div dangerouslySetInnerHTML={createMarkup(link.children)}/>
+          </Link>
+        )
+      })
+      }
+    </div>
   )
 }
 

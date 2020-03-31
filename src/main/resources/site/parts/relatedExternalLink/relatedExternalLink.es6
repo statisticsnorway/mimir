@@ -2,7 +2,7 @@ const {
   data
 } = __non_webpack_require__( '/lib/util')
 const {
-  getComponent, getContent
+  getContent
 } = __non_webpack_require__('/lib/xp/portal')
 const {
   render
@@ -25,11 +25,8 @@ exports.get = function(req) {
 exports.preview = (req) => renderPart(req)
 
 function renderPart(req) {
-  const part = getComponent()
-  const externalLinkConfig = part.config.relatedExternalLinkItemSet ? data.forceArray(part.config.relatedExternalLinkItemSet) : []
-
-  /* TODO: get information from config  */
   const page = getContent()
+  const externalLinkConfig = page.data.relatedExternalLinkItemSet ? data.forceArray(page.data.relatedExternalLinkItemSet) : []
 
   return externalLinkConfig.length ? renderExternalLinks(externalLinkConfig) : {
     body: ''
@@ -39,20 +36,22 @@ function renderPart(req) {
 /**
  *
  * @param {array} externalLinkConfig
- * @param {object} part
  * @return {{body: string}}
  */
 function renderExternalLinks(externalLinkConfig) {
-  const link = new React4xp('Link')
-  externalLinkConfig.map((links) => {
-    link.setProps({
-      href: links.url,
-      children: links.urlText,
-      hasIcon: true,
-      iconType: 'externalLink'
+  const link = new React4xp('Links')
+    .setProps({
+      links: externalLinkConfig.map((links) => {
+        return {
+          href: links.url,
+          children: links.urlText,
+          hasIcon: true,
+          iconType: 'externalLink',
+          isExternal: true
+        }
+      })
     })
-     .uniqueId()
-  })
+    .uniqueId()
 
   const body = render(view, {
     externalLinksId: link.react4xpId
