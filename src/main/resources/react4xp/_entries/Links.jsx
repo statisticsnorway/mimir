@@ -12,7 +12,7 @@ const Links = (props) => {
             key={`link-${index}`}
             className={link.className}
             href={link.href}
-            icon={link.hasIcon ? (link.iconType == 'arrowRight' ? <ArrowRight size="20"/> : <ExternalLink size="15"/>) : undefined}
+            icon={link.hasIcon ? (link.iconType == 'arrowRight' ? <ArrowRight size="20"/> : <ExternalLink size="18"/>) : undefined}
             isExternal={link.isExternal}
             linkType={link.linkType}
             negative={link.negative}
