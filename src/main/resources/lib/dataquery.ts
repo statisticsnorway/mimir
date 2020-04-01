@@ -12,7 +12,7 @@ const content: ContentLibrary = __non_webpack_require__('/lib/xp/content')
 const {
   sanitize
 }: CommonLibrary =
- __non_webpack_require__('/lib/xp/common')
+    __non_webpack_require__('/lib/xp/common')
 const defaultSelectionFilter: SelectionFilter = {
   filter: 'all',
   values: ['*']
@@ -60,6 +60,25 @@ export function get(url: string, json: DataqueryRequestData | undefined, selecti
 }
 
 export function refreshDataset(dataquery: Content<Dataquery>): Content<Dataset> | undefined {
+  const data: object | null = getData(dataquery)
+  if (data) {
+    return updateDataset(JSON.stringify(data), dataquery)
+  } else {
+    log.error(`No data found for dataquery: ${dataquery._id}`)
+    return
+  }
+}
+
+export function refreshDatasetWithData(data: string, dataquery: Content<Dataquery>): Content<Dataset> | undefined {
+  if (data) {
+    return updateDataset(JSON.stringify(data), dataquery)
+  } else {
+    log.error(`No data found for dataquery: ${dataquery._id}`)
+    return
+  }
+}
+
+export function getData(dataquery: Content<Dataquery>): object | null {
   if (dataquery.data.table) {
     // TODO option-set is not parsed correctly by enonic-ts-codegen, update lib later and remove PlaceholderData interface
     const datasetFormat: Dataquery['datasetFormat'] = dataquery.data.datasetFormat
@@ -75,13 +94,25 @@ export function refreshDataset(dataquery: Content<Dataquery>): Content<Dataset> 
     } catch (e) {
       log.error(`Failed to fetch data for dataquery: ${dataquery._id} (${e})`)
     }
-    if (data) {
-      return updateDataset(JSON.stringify(data), dataquery)
-    } else {
-      log.error(`No data found for dataquery: ${dataquery._id}`)
-    }
+    return data
   }
-  return
+  return null
+}
+
+export function isDataNew(data: string, dataquery: Content<Dataquery>): boolean {
+  const datasets: QueryResponse<Dataset> = content.query({
+    count: 1,
+    contentTypes: [`${app.name}:dataset`],
+    sort: 'createdTime DESC',
+    query: `data.dataquery = '${dataquery._id}'`
+  })
+
+  if (data && datasets.count > 0) {
+    const dataset: Content<Dataset> = datasets.hits[0]
+    return dataset.data.json !== JSON.stringify(data)
+  }
+
+  return false
 }
 
 function updateDataset(data: string, dataquery: Content<Dataquery>): Content<Dataset> |undefined {
