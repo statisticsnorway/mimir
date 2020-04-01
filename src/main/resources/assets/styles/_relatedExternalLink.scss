@@ -5,7 +5,7 @@
     grid-row-gap: 15px;
 
     &.grid-3 {
-      grid-template-columns: repeat(3, auto)
+      grid-template-columns: repeat(3, 1fr)
     }
   }
 }

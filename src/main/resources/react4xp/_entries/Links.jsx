@@ -8,21 +8,22 @@ const Links = (props) => {
     <React.Fragment>
       {props.links.map((link, index) => {
         return (
-          <Link
-            key={`link-${index}`}
-            className={link.className}
-            href={link.href}
-            icon={link.hasIcon ? (link.iconType == 'arrowRight' ? <ArrowRight size="20"/> : <ExternalLink size="18"/>) : undefined}
-            isExternal={link.isExternal}
-            linkType={link.linkType}
-            negative={link.negative}
-          >
-            <div
-              dangerouslySetInnerHTML={{
-                __html: link.children
-              }}
-            />
-          </Link>
+          <div key={`link-${index}`}>
+            <Link
+              className={link.className}
+              href={link.href}
+              icon={link.hasIcon ? (link.iconType == 'arrowRight' ? <ArrowRight size="20"/> : <ExternalLink size="18"/>) : undefined}
+              isExternal={link.isExternal}
+              linkType={link.linkType}
+              negative={link.negative}
+            >
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: link.children
+                }}
+              />
+            </Link>
+          </div>
         )
       })}
     </React.Fragment>
