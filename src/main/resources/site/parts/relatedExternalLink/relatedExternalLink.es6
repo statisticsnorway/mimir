@@ -44,7 +44,6 @@ function renderExternalLinks(externalLinkConfig) {
       links: externalLinkConfig.map((links) => {
         return {
           href: links.url,
-          className: 'col-md-4',
           children: links.urlText,
           hasIcon: true,
           iconType: 'externalLink',
