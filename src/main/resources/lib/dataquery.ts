@@ -61,20 +61,15 @@ export function get(url: string, json: DataqueryRequestData | undefined, selecti
 
 export function refreshDataset(dataquery: Content<Dataquery>): Content<Dataset> | undefined {
   const data: object | null = getData(dataquery)
-  if (data) {
-    return updateDataset(JSON.stringify(data), dataquery)
-  } else {
-    log.error(`No data found for dataquery: ${dataquery._id}`)
-    return
-  }
+  return data ? refreshDatasetWithData(JSON.stringify(data), dataquery) : undefined
 }
 
 export function refreshDatasetWithData(data: string, dataquery: Content<Dataquery>): Content<Dataset> | undefined {
-  if (data) {
-    return updateDataset(JSON.stringify(data), dataquery)
+  const dataset: Content<Dataset>| undefined = getDataset(dataquery)
+  if (dataset) {
+    return isDataNew(data, dataset) ? updateDataset(data, dataset, dataquery) : undefined
   } else {
-    log.error(`No data found for dataquery: ${dataquery._id}`)
-    return
+    return createDataset(data, dataquery)
   }
 }
 
@@ -99,7 +94,67 @@ export function getData(dataquery: Content<Dataquery>): object | null {
   return null
 }
 
-export function isDataNew(data: string, dataquery: Content<Dataquery>): boolean {
+export function isDataNew(data: string, dataset: Content<Dataset>): boolean {
+  if (data && dataset) {
+    return dataset.data.json !== data
+  }
+  return false
+}
+
+function updateDataset(data: string, dataset: Content<Dataset>, dataquery: Content<Dataquery>): Content<Dataset> |undefined {
+  return context.run(draft, () => {
+    const now: string = moment().format('DD.MM.YYYY HH:mm:ss')
+
+    const update: Content<Dataset> = content.modify({
+      key: dataset._id,
+      editor: (r: ModifyContent<Dataset>): ModifyContent<Dataset> => {
+        r.displayName = `${dataquery.displayName} (datasett) endret ${now}`
+        r.data.table = dataquery.data.table
+        r.data.json = data
+        return r
+      }
+    })
+    if (!update) {
+      log.error(`Failed to update dataset: ${dataset._id}`)
+    } else {
+      publishDatasets([dataset._id])
+      return content.get({
+        key: dataset._id
+      }) as Content<Dataset>
+    }
+    return
+  })
+}
+
+function createDataset(data: string, dataquery: Content<Dataquery>): Content<Dataset> |undefined {
+  return context.run(draft, () => {
+    const now: string = moment().format('DD.MM.YYYY HH:mm:ss')
+    const name: string = sanitize(`${dataquery._name} (datasett) opprettet ${now}`)
+    const displayName: string = `${dataquery.displayName} (datasett) opprettet ${now}`
+    try {
+      const dataset: Content<Dataset> = content.create({
+        name,
+        displayName,
+        parentPath: dataquery._path,
+        contentType: `${app.name}:dataset`,
+        data: {
+          table: dataquery.data.table,
+          dataquery: dataquery._id,
+          json: data
+        }
+      }) as Content<Dataset>
+      publishDatasets([dataset._id])
+      return content.get({
+        key: dataset._id
+      }) as Content<Dataset>
+    } catch (e) {
+      log.error(`Failed to create dataset: ${e.code} ${e.message}`)
+    }
+    return
+  })
+}
+
+export function getDataset(dataquery: Content<Dataquery>): Content<Dataset> | undefined {
   const datasets: QueryResponse<Dataset> = content.query({
     count: 1,
     contentTypes: [`${app.name}:dataset`],
@@ -107,67 +162,10 @@ export function isDataNew(data: string, dataquery: Content<Dataquery>): boolean 
     query: `data.dataquery = '${dataquery._id}'`
   })
 
-  if (data && datasets.count > 0) {
-    const dataset: Content<Dataset> = datasets.hits[0]
-    return dataset.data.json !== JSON.stringify(data)
+  if (datasets.count > 0) {
+    return datasets.hits[0]
   }
-
-  return false
-}
-
-function updateDataset(data: string, dataquery: Content<Dataquery>): Content<Dataset> |undefined {
-  return context.run(draft, () => {
-    const now: string = moment().format('DD.MM.YYYY HH:mm:ss')
-    const datasets: QueryResponse<Dataset> = content.query({
-      count: 1,
-      contentTypes: [`${app.name}:dataset`],
-      sort: 'createdTime DESC',
-      query: `data.dataquery = '${dataquery._id}'`
-    })
-    if (datasets.count > 0) { // update dataset
-      const dataset: Content<Dataset> = datasets.hits[0]
-      const update: Content<Dataset> = content.modify({
-        key: dataset._id,
-        editor: (r: ModifyContent<Dataset>): ModifyContent<Dataset> => {
-          r.displayName = `${dataquery.displayName} (datasett) endret ${now}`
-          r.data.table = dataquery.data.table
-          r.data.json = data
-          return r
-        }
-      })
-      if (!update) {
-        log.error(`Failed to update dataset: ${dataset._id}`)
-      } else {
-        publishDatasets([dataset._id])
-        return content.get({
-          key: dataset._id
-        }) as Content<Dataset>
-      }
-    } else { // create dataset
-      const name: string = sanitize(`${dataquery._name} (datasett) opprettet ${now}`)
-      const displayName: string = `${dataquery.displayName} (datasett) opprettet ${now}`
-      try {
-        const dataset: Content<Dataset> = content.create({
-          name,
-          displayName,
-          parentPath: dataquery._path,
-          contentType: `${app.name}:dataset`,
-          data: {
-            table: dataquery.data.table,
-            dataquery: dataquery._id,
-            json: data
-          }
-        }) as Content<Dataset>
-        publishDatasets([dataset._id])
-        return content.get({
-          key: dataset._id
-        }) as Content<Dataset>
-      } catch (e) {
-        log.error(`Failed to create dataset: ${e.code} ${e.message}`)
-      }
-    }
-    return
-  })
+  return
 }
 
 function publishDatasets(datasets: Array<string>): void {

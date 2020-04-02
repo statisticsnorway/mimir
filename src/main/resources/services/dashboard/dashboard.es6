@@ -1,8 +1,11 @@
+import {Content} from "enonic-types/lib/content";
+import {Dataset} from "../../site/content-types/dataset/dataset";
+
 const auth = __non_webpack_require__( '/lib/xp/auth')
 const context = __non_webpack_require__( '/lib/xp/context')
 const content = __non_webpack_require__( '/lib/xp/content')
 const {
-  getData, isDataNew, refreshDatasetWithData
+  getData, getDataset, isDataNew, refreshDatasetWithData
 } = __non_webpack_require__('/lib/dataquery')
 const {
   getDataSetWithDataQueryId,
@@ -29,8 +32,9 @@ exports.get = function(req) {
         }).hits
         dataqueries.map((dataquery) => {
           const data = getData(dataquery)
+          const dataset = getDataset(dataquery)
           if (data) {
-            const datasetHasNewData = isDataNew(data, dataquery)
+            const datasetHasNewData = isDataNew(JSON.stringify(data), dataset)
             if (datasetHasNewData) {
               const dataset = refreshDatasetWithData(data, dataquery)
               if (dataset) {
@@ -66,7 +70,8 @@ exports.get = function(req) {
         })
         if (dataquery) {
           const data = getData(dataquery)
-          const datasetHasNewData = isDataNew(data, dataquery)
+          const dataset = getDataset(dataquery)
+          const datasetHasNewData = isDataNew(data, dataset)
 
           if (datasetHasNewData) {
             const dataset = refreshDatasetWithData(data, dataquery)
