@@ -3,14 +3,20 @@
     <display-name>Artikkel</display-name>
     <super-type>base:structured</super-type>
     <form>
-        <input name="author" type="ContentSelector">
+        <item-set name="authorItemSet">
             <label>Forfatter</label>
             <occurrences minimum="0" maximum="0"/>
-            <config>
-                <allowContentType>mimir:contact</allowContentType>
-                <treeMode>true</treeMode>
-            </config>
-        </input>
+            <items>
+                <input name="name" type="TextLine">
+                    <label>Navn</label>
+                    <occurrences minimum="0" maximum="1"/>
+                </input>
+                <input name="email" type="TextLine">
+                    <label>E-post</label>
+                    <occurrences minimum="0" maximum="1"/>
+                </input>
+            </items>
+        </item-set>
         <input name="showPublishDate" type="CheckBox">
             <label>Vis publiseringsdato</label>
             <default>checked</default>
