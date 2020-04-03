@@ -16,17 +16,19 @@ let lightBody
 
 exports.get = function(req) {
   try {
-    return renderPart(req)
+    const component = getComponent()
+    return renderPart(req, component.config)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-exports.preview = (req) => renderPart(req)
+exports.preview = (req) => renderPart(req, {
+  dark: false
+})
 
-function renderPart(req) {
-  const component = getComponent()
-  const dividerColor = component.config.dividerColor
+function renderPart(req, config) {
+  const dividerColor = config.dividerColor
   let body
   if (dividerColor === 'dark' && darkBody) {
     body = darkBody

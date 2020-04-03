@@ -1,28 +1,29 @@
-<section class="xp-part article">
-
-    <div class="col-10 p-0" >
-        <h1 data-th-text="${title}" />
-        <p data-th-text="${ingress}" />
-        <div class="d-flex" data-th-if="${showPubDate}">
-            <p class="font-weight-bold mr-1" data-th-text="(${language.phrases.published} + ':')" />
-            <p data-th-text="${pubDate}" />
+<section class="xp-part article container-fluid">
+    <div class="row">
+        <div class="col-12 col-md-8 offset-md-1 p-0" >
+            <h1 data-th-text="${title}"></h1>
+            <p data-th-text="${ingress}"></p>
+            <div class="d-flex" data-th-if="${showPubDate}">
+                <p class="font-weight-bold mr-1" data-th-text="(${language.phrases.published} + ':')"></p>
+                <p data-th-text="${pubDate}"></p>
+            </div>
+            <div class="d-flex" data-th-if="${modifiedDate}">
+                <p class="font-weight-bold mr-1" data-th-text="(${language.phrases.modified} + ':')"></p>
+                <p data-th-text="${modifiedDate}"></p>
+            </div>
+            <div class="d-flex" data-th-if="${authors}">
+                <p class="font-weight-bold mr-1" data-th-text="(${language.phrases.author} + ':')" />
+                <div data-th-each="author, i : ${authors}">
+                    <p data-th-if="${author.name}" >
+                        <a data-th-href="@{'mailto:' + ${author.email}}" data-th-text="!${i.last} ? ${author.name} + ',&nbsp;' : ${author.name}" />
+                    </p>
+                </div>
+            </div>
         </div>
-        <div class="d-flex" data-th-if="${modifiedDate}">
-            <p class="font-weight-bold mr-1" data-th-text="(${language.phrases.modified} + ':')" />
-            <p data-th-text="${modifiedDate}" />
-        </div>
-        <div class="d-flex" data-th-if="${authors}">
-            <p class="font-weight-bold mr-1" data-th-text="(${language.phrases.author} + ':')" />
-            <div data-th-each="author, i : ${authors}">
-                <p data-th-if="${author.email}" >
-                    <a data-th-href="@{'mailto:' + ${author.email}}">
-                        <span data-th-text="!${i.last} ? ${author.name} + ',&nbsp;' : ${author.name}" />
-                    </a>
-                </p>
+        <div class="col-12 p-0">
+            <div class="container-fluid">
+                <div class="article-body row" data-th-utext="${bodyText}"></div>
             </div>
         </div>
     </div>
-
-    <div class="col-8 p-0" data-th-utext="${bodyText}"></div>
-
 </section>
