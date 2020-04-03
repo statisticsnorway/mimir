@@ -11,7 +11,7 @@ import { MunicipalityWithCounty } from '../klass/municipalities'
 import { TbmlData, TableRow, PreliminaryData } from '../types/xmlParser'
 import { Dataset as JSDataset, Dimension, Category } from '../types/jsonstat-toolkit'
 import { UtilLibrary } from '../types/util'
-import { fromDatasetCache, DatasetCache } from './cache'
+import { DatasetCache, SSBCacheLibrary } from './cache'
 import { Request } from 'enonic-types/lib/controller'
 const {
   query
@@ -24,7 +24,7 @@ const {
 } = __non_webpack_require__( '/lib/ssb/dataquery')
 const {
   getDataSetWithDataQueryId
-} = __non_webpack_require__( '../ssb/dataset')
+} = __non_webpack_require__( '/lib/ssb/dataset')
 const {
   localizeTimePeriod
 } = __non_webpack_require__( '/lib/language')
@@ -35,6 +35,9 @@ const {
   createHumanReadableFormat,
   getImageCaption
 } = __non_webpack_require__( '/lib/ssb/utils')
+const {
+  fromDatasetCache
+}: SSBCacheLibrary = __non_webpack_require__( '/lib/ssb/cache')
 const util: UtilLibrary = __non_webpack_require__( '/lib/util')
 
 const contentTypeName: string = `${app.name}:keyFigure`

@@ -1,5 +1,5 @@
 exports.responseProcessor = function(req, res) {
-  if (res.status === 200 && res.body) {
+  if (res.status === 200 && res.pageContributions && res.pageContributions.bodyEnd && res.pageContributions.bodyEnd.length) {
     const exp = new RegExp('src\s*=\s*"(.+?)"')
     res.pageContributions.bodyEnd = res.pageContributions.bodyEnd.map((script) => {
       const match = exp.exec(script)
