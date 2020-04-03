@@ -15,8 +15,7 @@
                 <p class="font-weight-bold mr-1" data-th-text="(${language.phrases.author} + ':')" />
                 <div data-th-each="author, i : ${authors}">
                     <p data-th-if="${author.name}">
-                        <a data-th-href="@{'mailto:' + ${author.email}}" data-th-text="${author.name}"></a>
-                        <span data-th-text="!${i.last} ? ',&nbsp;' : ''"></span>
+                        <a data-th-href="@{'mailto:' + ${author.email}}" data-th-text="${author.name}"></a><span data-th-text="!${i.last} ? ',&nbsp;' : ''"></span>
                     </p>
                 </div>
             </div>
