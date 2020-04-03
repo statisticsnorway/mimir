@@ -66,7 +66,9 @@ export function refreshDataset(dataquery: Content<Dataquery>): Content<Dataset> 
 
 export function refreshDatasetWithData(data: string, dataquery: Content<Dataquery>): Content<Dataset> | undefined {
   const dataset: Content<Dataset>| undefined = getDataset(dataquery)
+
   if (dataset) {
+    // const datasetHasNewData: boolean = isDataNew(data, dataset)
     return isDataNew(data, dataset) ? updateDataset(data, dataset, dataquery) : undefined
   } else {
     return createDataset(data, dataquery)

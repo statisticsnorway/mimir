@@ -1,11 +1,8 @@
-import {Content} from "enonic-types/lib/content";
-import {Dataset} from "../../site/content-types/dataset/dataset";
-
 const auth = __non_webpack_require__( '/lib/xp/auth')
 const context = __non_webpack_require__( '/lib/xp/context')
 const content = __non_webpack_require__( '/lib/xp/content')
 const {
-  getData, getDataset, isDataNew, refreshDatasetWithData
+  getData, refreshDatasetWithData
 } = __non_webpack_require__('/lib/dataquery')
 const {
   getDataSetWithDataQueryId,
@@ -32,23 +29,15 @@ exports.get = function(req) {
         }).hits
         dataqueries.map((dataquery) => {
           const data = getData(dataquery)
-          const dataset = getDataset(dataquery)
           if (data) {
-            const datasetHasNewData = isDataNew(JSON.stringify(data), dataset)
-            if (datasetHasNewData) {
-              const dataset = refreshDatasetWithData(data, dataquery)
-              if (dataset) {
-                datasetInfo.push({
-                  id: dataset.data.dataquery,
-                  updated: getUpdated(dataset),
-                  updatedHumanReadable: getUpdatedReadable(dataset),
-                  hasData: true
-                })
-              } else {
-                datasetFails.push({
-                  id: dataquery._id
-                })
-              }
+            const dataset = refreshDatasetWithData(JSON.stringify(data), dataquery)
+            if (dataset) {
+              datasetInfo.push({
+                id: dataset.data.dataquery,
+                updated: getUpdated(dataset),
+                updatedHumanReadable: getUpdatedReadable(dataset),
+                hasData: true
+              })
             } else {
               datasetIgnored.push({
                 id: dataquery._id
@@ -70,11 +59,8 @@ exports.get = function(req) {
         })
         if (dataquery) {
           const data = getData(dataquery)
-          const dataset = getDataset(dataquery)
-          const datasetHasNewData = isDataNew(data, dataset)
-
-          if (datasetHasNewData) {
-            const dataset = refreshDatasetWithData(data, dataquery)
+          if (data) {
+            const dataset = refreshDatasetWithData(JSON.stringify(data), dataquery)
             if (dataset) {
               message = `Successfully updated/created dataset for dataquery`
               datasetInfo.push({
@@ -84,14 +70,14 @@ exports.get = function(req) {
                 hasData: true
               })
             } else {
-              success = false
-              message = `Failed to get data for dataquery: ${dataquery._id}`
-              status = 500
+              success = true
+              message = `No new data for dataquery`
+              status = 200
             }
           } else {
-            success = true
-            message = `No new data for dataquery: ${dataquery._id}`
-            status = 200
+            success = false
+            message = `Failed to get data for dataquery: ${dataquery._id}`
+            status = 500
           }
         } else {
           success = false
