@@ -68,7 +68,6 @@ export function refreshDatasetWithData(data: string, dataquery: Content<Dataquer
   const dataset: Content<Dataset>| undefined = getDataset(dataquery)
 
   if (dataset) {
-    // const datasetHasNewData: boolean = isDataNew(data, dataset)
     return isDataNew(data, dataset) ? updateDataset(data, dataset, dataquery) : undefined
   } else {
     return createDataset(data, dataquery)
@@ -96,7 +95,7 @@ export function getData(dataquery: Content<Dataquery>): object | null {
   return null
 }
 
-export function isDataNew(data: string, dataset: Content<Dataset>): boolean {
+function isDataNew(data: string, dataset: Content<Dataset>): boolean {
   if (data && dataset) {
     return dataset.data.json !== data
   }
