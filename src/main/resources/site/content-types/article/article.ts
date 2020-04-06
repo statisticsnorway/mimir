@@ -14,6 +14,18 @@ export interface Article {
    */
   articleText?: string;
 
+  relatedExternalLinkItemSet?: Array<{
+    /**
+     * Lenketekst
+     */
+    urlText: string;
+
+    /**
+     * URL
+     */
+    url: string;
+  }>;
+
   /**
    * Forfatter
    */
