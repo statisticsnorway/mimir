@@ -2,6 +2,26 @@
     <display-name>Datasettliste</display-name>
     <description>Part med ett liste over datasett</description>
     <form>
-        <!-- TODO: Place any number of input types inside here ... or not =) Up to you -->
+        <item-set name="datasetItemSet">
+            <label>Datasett</label>
+            <occurrences minimum="0" maximum="0"/>
+            <items>
+                <input name="title" type="TextLine">
+                    <label>Tittel</label>
+                    <occurrences minimum="0" maximum="1"/>
+                </input>
+                <input name="description" type="TextArea">
+                    <label>Bokstekst</label>
+                    <occurrences minimum="0" maximum="1"/>
+                </input>
+                <input name="icon" type="ImageSelector">
+                    <label>Ikon</label>
+                    <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <allowPath>${site}/</allowPath>
+                    </config>
+                </input>
+            </items>
+        </item-set>
     </form>
 </part>

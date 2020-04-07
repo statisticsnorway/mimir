@@ -1,20 +1,11 @@
-.datasets {
-  .dataset {
-    border: 1px solid $green3;
-    border-top: 5px solid $green3;
-  }
-  h3 {
-    font-size: 16px;
-  }
-  a {
-    font-size: 14px;
-    text-decoration: underline;
-  }
-  .a-excel {
-    border-top: 1px solid $green3;
-    font-size: 14px;
-  }
-  i {
-    color: $green3;
+.part-datasets {
+  .grid-column {
+    display: grid;
+    grid-column-gap: 20px;
+    grid-row-gap: 15px;
+
+    &.grid-4 {
+      grid-template-columns: repeat(4, 1fr)
+    }
   }
 }

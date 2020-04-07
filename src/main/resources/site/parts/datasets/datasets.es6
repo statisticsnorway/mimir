@@ -1,8 +1,17 @@
 const {
+  data
+} = __non_webpack_require__('/lib/util')
+const {
   attachmentUrl,
+  getComponent,
+  imageUrl,
   getContent,
-  pageUrl
+  pageUrl,
+  processHtml
 } = __non_webpack_require__('/lib/xp/portal')
+const {
+  getImageCaption
+} = __non_webpack_require__( '/lib/ssb/utils')
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
@@ -11,8 +20,11 @@ const {
 } = __non_webpack_require__('/lib/error/error')
 
 const contentLib = __non_webpack_require__('/lib/xp/content')
-const util = __non_webpack_require__('/lib/util')
+const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 const moment = require('moment/min/moment-with-locales')
+
+const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const view = resolve('./datasets.html')
 
 exports.get = function(req) {
@@ -27,39 +39,59 @@ exports.preview = (req) => renderPart(req)
 
 function renderPart(req) {
   moment.locale('nb')
-  const datasets = contentLib.getChildren({
-    key: getContent()._path,
-    count: 9999
-  }) || {
-    hits: {}
-  }
-  datasets.hits = datasets.hits && util.data.forceArray(datasets.hits) || []
 
-  datasets.hits.map((dataset) => {
-    dataset.href = pageUrl({
-      id: dataset._id
-    })
-    const excelFiles = contentLib.query({
-      count: 1,
-      sort: 'modifiedTime DESC',
-      query: `_path LIKE '/content${dataset._path}/*' AND (_name LIKE '*.xlsx' OR _name LIKE '*.xlsm')`
-    })
-    if (excelFiles.hits.length > 0) {
-      dataset.excelFileHref = attachmentUrl({
-        id: excelFiles.hits[0]._id
-      })
-      dataset.excelFileHrefLabel = excelFiles.hits[0].displayName
-      dataset.excelFileModifiedDate = moment(excelFiles.hits[0].modifiedTime).format('DD.MM.YY')
-      dataset.excelFileDatetime = moment(excelFiles.hits[0].modifiedTime).format('YYYY-MM-DD')
-    }
+  const part = getComponent()
+  const datasetConfig = part.config.datasetItemSet ? data.forceArray(part.config.datasetItemSet) : []
+
+  return datasetConfig.length ? renderDatasets(datasetConfig) : {
+    body: '',
+    contentType: 'text/html'
+  }
+}
+
+function renderDatasets(datasetConfig) {
+  const download = i18nLib.localize({
+    key: 'download'
   })
 
+  const modified = i18nLib.localize({
+    key: 'modified'
+  })
+
+  const datasets = new React4xp('Datasets')
+    .setProps({
+      dataset: datasetConfig.map((dataset) => {
+        return {
+          className: 'd-flex flex-column',
+          title: dataset.title,
+          description: processHtml({
+            value: dataset.description
+          }),
+          fileLocation: './not a file', /* TODO: Replace later; retrieve document from Content Studio */
+          downloadText: download + ' (' + modified + ' )', /* TODO: Replace later; retrieve date from Content Studio */
+          iconUrl: dataset.icon ? imageUrl({
+            id: dataset.icon,
+            scale: 'block(100,100)'
+          }) : undefined,
+          iconAltText: dataset.icon ? getImageCaption(dataset.icon) : undefined,
+          href: 'https://notalink', /* TODO: Replace later; retrieve link from Content Studio */
+          profiled: true
+        }
+      })
+    })
+    .uniqueId()
+
   const body = render(view, {
-    datasets
+    datasetsId: datasets.react4xpId
   })
 
   return {
-    body,
-    contentType: 'text/html'
+    body: datasets.renderBody({
+      body,
+      clientRender: true
+    }),
+    pageContributions: datasets.renderPageContributions({
+      clientRender: true
+    })
   }
 }
