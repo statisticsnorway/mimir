@@ -1,4 +1,5 @@
 import React from 'react';
+import { Card, Text } from '@statisticsnorway/ssb-component-library';
 import { variableType } from './types';
 
 const VariableCard = ({ variable }) => {
@@ -17,3 +18,5 @@ const VariableCard = ({ variable }) => {
 VariableCard.propTypes = {
     variable: variableType,
 };
+
+export default VariableCard;

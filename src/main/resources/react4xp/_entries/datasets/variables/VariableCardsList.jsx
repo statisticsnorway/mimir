@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import VariableCard from './VariableCard.jsx';
 import { variableType } from './types';
 
-const VariablesCards = ({ variables }) =>
+const VariableCardsList = ({ variables }) =>
     variables.map(variable => <VariableCard variable={variable} />);
 
-VariablesCards.propTypes = {
+VariableCardsList.propTypes = {
     variables: PropTypes.arrayOf(variableType),
 };
 
-export default VariablesCards;
+export default VariableCardsList;

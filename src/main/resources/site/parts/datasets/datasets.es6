@@ -69,7 +69,7 @@ function renderDatasets(datasetConfig) {
           }),
           fileLocation: './not a file', /* TODO: Replace later; retrieve document from Content Studio */
           downloadText: download + ' (' + modified + ' )', /* TODO: Replace later; retrieve date from Content Studio */
-          iconUrl: dataset.icon ? imageUrl({
+          icon: dataset.icon ? imageUrl({
             id: dataset.icon,
             scale: 'block(100,100)'
           }) : undefined,

@@ -1,29 +1,11 @@
 import React from 'react'
-import { Card, Text } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
+import Variables from './datasets/variables/Variables.jsx';
 
-const Datasets = (props) => {
+const Datasets = ({ dataset }) => {
   return (
     <React.Fragment>
-      {props.dataset.map((dataset, i) =>
-        <Card
-          key={`dataset-${i}`}
-          className={dataset.className}
-          title={dataset.title}
-          fileLocation={dataset.fileLocation}
-          downloadText={dataset.downloadText}
-          href={dataset.href}
-          icon={dataset.iconUrl ? <img src={dataset.iconUrl} alt={dataset.imageAltText} /> : undefined}
-          profiled={dataset.profiled}
-        >
-          <Text
-            dangerouslySetInnerHTML={{
-              ___html: dataset.description
-            }}
-          >
-          </Text>
-        </Card>
-      )}
+        <Variables variables={dataset} />
     </React.Fragment>
   )
 }
