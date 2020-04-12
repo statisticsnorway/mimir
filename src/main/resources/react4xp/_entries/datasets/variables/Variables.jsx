@@ -1,0 +1,28 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Text } from '@statisticsnorway/ssb-component-library';
+import VariablesCards from './datasets/variables/VariablesCards.jsx'
+import { variableType } from './datasets/variables/types';
+
+export const DISPLAY_TYPE_CARDS = 'CARDS';
+export const DISPLAY_TYPE_TABLE = 'TABLE';
+
+const Variables = ({ variables, display }) => {
+    console.log('Will be displaying ', variables, display);
+    if (display === DISPLAY_TYPE_CARDS) {
+        return <VariablesCards variables={variables}/>;
+    }
+
+    return <Text>TBD : Variables as table</Text>
+};
+
+Variables.defaultProps = {
+    display: DISPLAY_TYPE_CARDS,
+};
+
+Variables.propTypes = {
+    variables: PropTypes.arrayOf(variableType),
+    display: PropTypes.oneOf([ DISPLAY_TYPE_CARDS, DISPLAY_TYPE_TABLE ]),
+};
+
+export default Variables;
