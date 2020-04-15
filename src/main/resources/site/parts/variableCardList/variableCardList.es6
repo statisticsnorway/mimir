@@ -60,13 +60,11 @@ function renderVariableCardList(variableCardListHits) {
     .setProps({
       dataset: variableCardListHits.map((variableCardList) => {
         return {
-          className: 'd-flex flex-column',
           title: variableCardList.title,
           description: variableCardList.description,
           fileLocation: variableCardList.excelFileHref,
           downloadText: download + ' (' + 'per ' + variableCardList.excelFileModifiedDate + ')',
-          href: variableCardList.href,
-          profiled: true
+          href: variableCardList.href
         }
       })
     })
