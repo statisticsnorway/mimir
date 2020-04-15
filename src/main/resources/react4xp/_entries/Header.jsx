@@ -74,13 +74,13 @@ class Header extends React.Component {
 
   render() {
     const {
-      searchInputPlaceholder, logoUrl, mainNavigation
+      searchInputPlaceholder, logoUrl, mainNavigation, skipToContentText
     } = this.props
     return (
       <header className="ssb-header-wrapper">
         <nav className="global-links">
           <a id="skip-to-content" className="ssb-link" href="#content" tabIndex="1" accessKey="s">
-            <span className="link-text">Hopp over meny</span>
+            <span className="link-text">{skipToContentText}</span>
           </a>
           {this.topLinks()}
           {this.languageLinks()}
@@ -169,7 +169,8 @@ Header.propTypes = {
         code: PropTypes.string
       })
     )
-  })
+  }),
+  skipToContentText: PropTypes.string
 }
 
 export default (props) => <Header {...props} />
