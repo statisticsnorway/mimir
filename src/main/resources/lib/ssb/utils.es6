@@ -55,12 +55,14 @@ const addBreadcrumbs = (page, visitedPage, breadcrumbs = []) => {
       link: '/'
     })
   } else {
-    breadcrumbs.unshift({
-      text: page.displayName,
-      link: pageUrl({
-        path: page._path
+    if (page.type !== 'base:folder') {
+      breadcrumbs.unshift({
+        text: page.displayName,
+        link: pageUrl({
+          path: page._path
+        })
       })
-    })
+    }
     const parent = content.get({
       key: page._path.substring(0, page._path.lastIndexOf('/'))
     })
