@@ -16,11 +16,12 @@ const Datasets = (props) => {
           icon={dataset.iconUrl ? <img src={dataset.iconUrl} alt={dataset.imageAltText} /> : undefined}
           profiled={dataset.profiled}
         >
-          <Text
-            dangerouslySetInnerHTML={{
-              ___html: dataset.description
-            }}
-          >
+          <Text>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: dataset.description
+              }}>
+            </div>
           </Text>
         </Card>
       )}

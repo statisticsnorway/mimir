@@ -1,0 +1,11 @@
+.part-variableCardList {
+  .grid-column {
+    display: grid;
+    grid-column-gap: 20px;
+    grid-row-gap: $spacer * 2;
+
+    &.grid-4 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+}
