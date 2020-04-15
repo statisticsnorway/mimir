@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Divider, Input, Link } from '@statisticsnorway/ssb-component-library'
-import { ChevronDown, ChevronUp, Menu, X } from 'react-feather';
+import { ChevronDown, ChevronUp, Menu, X } from 'react-feather'
 
 class Header extends React.Component {
   constructor(props) {
@@ -33,7 +33,7 @@ class Header extends React.Component {
   }
 
   toggleSubMenu(index) {
-    const activeIndex = this.state.indexForCurrentActiveMenuItem === index? undefined : index
+    const activeIndex = this.state.indexForCurrentActiveMenuItem === index ? undefined : index
     const mainMenu = [...this.state.mainMenu]
     mainMenu[index] = !mainMenu[index]
 
@@ -45,7 +45,7 @@ class Header extends React.Component {
   }
 
   menuButtonStatus() {
-    if(this.state.showMainMenuOnMobile) {
+    if (this.state.showMainMenuOnMobile) {
       return (<span>Lukk <X /></span> )
     } else {
       return (<span>Meny <Menu/></span>)
@@ -60,9 +60,9 @@ class Header extends React.Component {
     return topMenuItem.menuItems && topMenuItem.menuItems.map((menuItem, itemIndex) => {
       return (
         <li key={'listItemLink_' + itemIndex}>
-          <Link href={menuItem.path} icon={ menuItem.icon? <img src={menuItem.icon}></img>: undefined }>{menuItem.title}</Link>
+          <Link href={menuItem.path} icon={ menuItem.icon ? <img src={menuItem.icon}></img> : undefined }>{menuItem.title}</Link>
         </li>)
-      })
+    })
   }
 
   topLinks() {
@@ -79,6 +79,9 @@ class Header extends React.Component {
     return (
       <header className="ssb-header-wrapper">
         <nav className="global-links">
+          <a id="skip-to-content" className="ssb-link" href="#content" tabIndex="1" accessKey="s">
+            <span className="link-text">Hopp over meny</span>
+          </a>
           {this.topLinks()}
           {this.languageLinks()}
         </nav>
@@ -110,7 +113,7 @@ class Header extends React.Component {
                   <button onClick={menuItemClick} >
                     <span className={ activeMenuItem ? 'active navigation-item' : 'navigation-item'} >
                       <span>{topMenuItem.title}</span>
-                      {this.state.mainMenu[index]? <ChevronUp/>: <ChevronDown/>}
+                      {this.state.mainMenu[index] ? <ChevronUp/> : <ChevronDown/>}
                     </span>
                   </button>
                   <Divider/>
@@ -121,7 +124,7 @@ class Header extends React.Component {
               )
             })}
           </nav>
-          <nav className={this.state.showMainMenuOnMobile ? 'active global-bottom-links':'global-bottom-links'}>
+          <nav className={this.state.showMainMenuOnMobile ? 'active global-bottom-links' : 'global-bottom-links'}>
             {this.topLinks()}
             {this.languageLinks()}
           </nav>
