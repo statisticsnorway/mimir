@@ -79,9 +79,7 @@ class Header extends React.Component {
     return (
       <header className="ssb-header-wrapper">
         <nav className="global-links">
-          <a id="skip-to-content" className="ssb-link" href="#content" tabIndex="1" accessKey="s">
-            <span className="link-text">{skipToContentText}</span>
-          </a>
+          <Link className="skip-to-content" href="#content">{skipToContentText}</Link>
           {this.topLinks()}
           {this.languageLinks()}
         </nav>
