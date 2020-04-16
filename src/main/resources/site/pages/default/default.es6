@@ -84,6 +84,7 @@ exports.get = function(req) {
     municipality = getMunicipality(req)
   }
 
+  let metainfoSearchTitle = page.displayName
   let metainfoSearchContentType = page._name
   let metainfoSearchGroup = page._id
   let metainfoSearchKeywords = ''
@@ -93,6 +94,7 @@ exports.get = function(req) {
   }
 
   if (municipality) {
+    metainfoSearchTitle = 'Kommunefakta ' + municipality.displayName
     metainfoSearchContentType = 'kommunefakta'
     metainfoSearchGroup = metainfoSearchGroup + '_' + municipality.code
     metainfoSearchKeywords = municipality.displayName + ' kommune'
@@ -186,6 +188,7 @@ exports.get = function(req) {
     GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null,
     headerBody: header ? header.body : undefined,
     footerBody: footer ? footer.body : undefined,
+    metainfoSearchTitle,
     metainfoSearchGroup,
     metainfoSearchContentType,
     metainfoSearchKeywords
