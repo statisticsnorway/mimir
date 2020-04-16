@@ -39,24 +39,29 @@ function renderPart(req) {
     key: getContent()._path,
     count: 9999
   })
-  children.hits = children.hits && data.forceArray(children.hits) || []
+  const content = children.hits ? data.forceArray(children.hits) : []
 
-  const content = getVariableListContent(children)
+  const variableListContent = getVariableListContent(content)
 
-  return content.length ? renderVariableCardList(content) : {
+  return variableListContent.length ? renderVariableCardList(variableListContent) : {
     body: '',
     contentType: 'text/html'
   }
 }
 
-function renderVariableCardList(content) {
+/**
+ *
+ * @param {Array} variableListContent
+ * @return {{body: string, pageContributions: string, contentType: string}}
+ */
+function renderVariableCardList(variableListContent) {
   const download = i18nLib.localize({
     key: 'variableCardList.download'
   })
 
   const variableCardsList = new React4xp('Datasets')
     .setProps({
-      dataset: content.map((variableCardList) => {
+      dataset: variableListContent.map((variableCardList) => {
         return {
           title: variableCardList.title,
           description: variableCardList.description,
@@ -81,8 +86,13 @@ function renderVariableCardList(content) {
   }
 }
 
-function getVariableListContent(children) {
-  return children.hits.map((variableCardList) => {
+/**
+ *
+ * @param {Array} content
+ * @return {array}
+ */
+function getVariableListContent(content) {
+  return content.map((variableCardList) => {
     const excelFiles = contentLib.query({
       count: 1,
       sort: 'modifiedTime DESC',
