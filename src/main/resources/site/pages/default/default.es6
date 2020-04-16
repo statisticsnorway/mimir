@@ -84,6 +84,21 @@ exports.get = function(req) {
     municipality = getMunicipality(req)
   }
 
+  let metainfoSearchContentType = page._name
+  let metainfoSearchGroup = page._id
+  let metainfoSearchKeywords = ''
+
+  if (page._name === 'kommunefakta') {
+    metainfoSearchKeywords = 'kommune, kommuneprofil'
+  }
+
+  if (municipality) {
+    metainfoSearchContentType = 'kommunefakta'
+    metainfoSearchGroup = metainfoSearchGroup + '_' + municipality.code
+    metainfoSearchKeywords = municipality.displayName + ' kommune'
+  }
+
+
   let config
   if (!isFragment && page.page.config) {
     config = page.page.config
@@ -170,7 +185,10 @@ exports.get = function(req) {
     language,
     GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null,
     headerBody: header ? header.body : undefined,
-    footerBody: footer ? footer.body : undefined
+    footerBody: footer ? footer.body : undefined,
+    metainfoSearchGroup,
+    metainfoSearchContentType,
+    metainfoSearchKeywords
   }
 
   let body = thymeleaf.render(view, model)
