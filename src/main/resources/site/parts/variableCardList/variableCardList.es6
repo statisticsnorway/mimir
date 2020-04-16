@@ -35,30 +35,28 @@ exports.preview = (req) => renderPart(req)
 function renderPart(req) {
   moment.locale('nb')
 
-  const variableCardListContent = contentLib.getChildren({
+  const children = contentLib.getChildren({
     key: getContent()._path,
     count: 9999
-  }) || {
-    hits: {}
-  }
-  variableCardListContent.hits = variableCardListContent.hits && data.forceArray(variableCardListContent.hits) || []
+  })
+  children.hits = children.hits && data.forceArray(children.hits) || []
 
-  const variableCardListHits = getVariableListContent(variableCardListContent)
+  const content = getVariableListContent(children)
 
-  return variableCardListHits.length ? renderVariableCardList(variableCardListHits) : {
+  return content.length ? renderVariableCardList(content) : {
     body: '',
     contentType: 'text/html'
   }
 }
 
-function renderVariableCardList(variableCardListHits) {
+function renderVariableCardList(content) {
   const download = i18nLib.localize({
     key: 'variableCardList.download'
   })
 
   const variableCardsList = new React4xp('Datasets')
     .setProps({
-      dataset: variableCardListHits.map((variableCardList) => {
+      dataset: content.map((variableCardList) => {
         return {
           title: variableCardList.title,
           description: variableCardList.description,
@@ -83,23 +81,22 @@ function renderVariableCardList(variableCardListHits) {
   }
 }
 
-function getVariableListContent(variableCardListContent) {
-  return variableCardListContent.hits.map((variableCardList) => {
-    variableCardList.href = pageUrl({
-      id: variableCardList._id
-    })
-
+function getVariableListContent(children) {
+  return children.hits.map((variableCardList) => {
     const excelFiles = contentLib.query({
       count: 1,
       sort: 'modifiedTime DESC',
       query: `_path LIKE '/content${variableCardList._path}/*' AND (_name LIKE '*.xlsx' OR _name LIKE '*.xlsm')`
     })
 
+    let excelFileHref
+    let excelFileModifiedDate
+
     if (excelFiles.hits.length > 0) {
-      variableCardList.excelFileHref = attachmentUrl({
+      excelFileHref = attachmentUrl({
         id: excelFiles.hits[0]._id
       })
-      variableCardList.excelFileModifiedDate = moment(excelFiles.hits[0].modifiedTime).format('DD.MM.YY')
+      excelFileModifiedDate = moment(excelFiles.hits[0].modifiedTime).format('DD.MM.YY')
     }
 
     return {
@@ -107,9 +104,11 @@ function getVariableListContent(variableCardListContent) {
       description: processHtml({
         value: variableCardList.data.ingress
       }),
-      href: variableCardList.href,
-      excelFileHref: variableCardList.excelFileHref,
-      excelFileModifiedDate: variableCardList.excelFileModifiedDate
+      href: pageUrl({
+        id: variableCardList._id
+      }),
+      excelFileHref: excelFileHref,
+      excelFileModifiedDate: excelFileModifiedDate
     }
   })
 }
