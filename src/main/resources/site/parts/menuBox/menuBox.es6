@@ -9,10 +9,13 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
+const {
+  getImageCaption
+} = __non_webpack_require__( '/lib/ssb/utils')
 
 const content = __non_webpack_require__('/lib/xp/content')
-const util = __non_webpack_require__('/lib/util')
 const view = resolve('./menuBox.html')
+const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 exports.get = function(req) {
   try {
@@ -28,49 +31,67 @@ exports.preview = function(req, id) {
 }
 
 function renderPart(req, menuBoxId) {
-  let menus
-  if (menuBoxId) {
-    const menuBox = content.get({
-      key: menuBoxId
-    })
-    if (menuBox && menuBox.data.menu) {
-      const menuConfigs = menuBox.data.menu ? util.data.forceArray(menuBox.data.menu) : []
-      menus = buildMenu(menuConfigs)
+  if (!menuBoxId) {
+    if (req.mode === 'edit') {
+      return {
+        body: render(view)
+      }
+    } else {
+      throw new Error('MenuBox - Missing Id')
     }
   }
-  const body = render(view, {
-    menus
+  const menuBoxContent = content.get({
+    key: menuBoxId
   })
+  if (!menuBoxContent) throw new Error(`MenuBox with id ${menuBoxId} doesn't exist`)
 
+  const boxes = buildMenu(menuBoxContent)
+  const menuBox = new React4xp('MenuBox')
+    .setProps({
+      boxes
+    })
+    .setId('menu-box')
+    .uniqueId()
+
+  const body = render(view, {
+    menuBoxId: menuBox.react4xpId
+  })
   return {
-    body,
-    contentType: 'text/html'
+    body: menuBox.renderBody({
+      body
+    })
+    // pageContributions: menuBox.renderPageContributions()
   }
 }
 
 /**
  * builds the menu items based on menu-box menu data
- * @param {array<object>} menuConfigs
+ * @param {object} menuBoxContent
  * @return {array<object>}
  */
-function buildMenu(menuConfigs) {
-  return menuConfigs.map((menuConfig) => {
-    let imageSrc = ''
-    if (menuConfig.image) {
-      imageSrc = imageUrl({
-        id: menuConfig.image,
-        scale: 'block(400,400)'
-      })
-    }
-
+function buildMenu(menuBoxContent) {
+  return menuBoxContent.data.menu.map((box) => {
     return {
-      title: menuConfig.title,
-      subtitle: menuConfig.subtitle,
-      href: getHref(menuConfig),
-      hasImage: !!imageSrc,
-      imageSrc
+      title: box.title,
+      subtitle: box.subtitle,
+      icon: getIcon(box.image),
+      href: getHref(box)
     }
   })
+}
+
+function getIcon(iconId) {
+  if (iconId) {
+    return {
+      src: imageUrl({
+        id: iconId,
+        scale: 'block(100,100)'
+      }),
+      alt: getImageCaption(iconId)
+    }
+  } else {
+    return undefined
+  }
 }
 
 /**
@@ -79,11 +100,11 @@ function buildMenu(menuConfigs) {
  * @return {string}
  */
 function getHref(menuConfig) {
-  if (menuConfig.link) {
-    return menuConfig.link
-  } else if (menuConfig.content) {
+  if (menuConfig.urlSrc && menuConfig.urlSrc._selected === 'manual') {
+    return menuConfig.urlSrc.manual.url
+  } else if (menuConfig.urlSrc && menuConfig.urlSrc.content) {
     return pageUrl({
-      id: menuConfig.content
+      id: menuConfig.urlSrc.content.contentId
     })
   }
   return ''
