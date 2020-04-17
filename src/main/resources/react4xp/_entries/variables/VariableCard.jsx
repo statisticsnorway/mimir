@@ -3,12 +3,11 @@ import { Card, Text } from '@statisticsnorway/ssb-component-library';
 import { variableType } from './types';
 
 const VariableCard = ({ variable }) => {
-    const { title, description, icon } = variable;
-
+    const { icon, description, ...rest} = variable;
     return (
         <Card
-            title={title}
-            icon={<img src={icon} alt={title} />}
+            {...rest}
+            icon={icon ? <img src={icon} alt={variable.title} /> : null}
         >
             <Text>{description}</Text>
         </Card>

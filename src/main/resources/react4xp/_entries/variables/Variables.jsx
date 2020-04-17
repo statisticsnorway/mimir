@@ -7,17 +7,13 @@ import { variableType } from './types';
 export const DISPLAY_TYPE_CARDS = 'CARDS';
 export const DISPLAY_TYPE_TABLE = 'TABLE';
 
-const Variables = ({ variables, display }) => {
+const Variables = ({ variables, display = DISPLAY_TYPE_CARDS }) => {
     console.log('Will be displaying ', variables, display);
     if (display === DISPLAY_TYPE_CARDS) {
         return <VariableCardsList variables={variables}/>;
     }
 
     return <Text>TBD : Variables as table</Text>
-};
-
-Variables.defaultProps = {
-    display: DISPLAY_TYPE_CARDS,
 };
 
 Variables.propTypes = {
