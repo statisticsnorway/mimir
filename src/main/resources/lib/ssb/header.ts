@@ -31,6 +31,10 @@ export function getHeaderContent(language: Language): Header {
       key: 'menuSearch',
       locale: language.code
     }),
+    skipToContentText: localize({
+      key: 'skipToContent',
+      locale: language.code
+    }),
     mainNavigation: language.menuContentId ? createMenuTree(language.menuContentId) : [],
     topLinks: siteConfig.topLinks && siteConfig.topLinks.length > 0 ? parseTopLinks(siteConfig.topLinks) : undefined,
     language
@@ -45,4 +49,5 @@ export interface Header{
     mainNavigation?: Array<MenuItem>;
     topLinks?: Array<Link>;
     language: Language;
+    skipToContentText: string;
 }

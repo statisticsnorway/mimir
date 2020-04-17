@@ -24,6 +24,22 @@ header.ssb-header-wrapper {
     .ssb-links {
       margin-left: 20px;
     }
+
+    .skip-to-content {
+      position:absolute;
+      left:-10000px;
+      top:auto;
+      width:1px;
+      height:1px;
+      overflow:hidden;
+
+      &:focus,
+      &:active {
+        position:static;
+        width:auto;
+        height:auto;
+      }
+    }
   }
 
   .plainLink {
