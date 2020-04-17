@@ -4,7 +4,7 @@ import VariableCard from './VariableCard.jsx';
 import { variableType } from './types';
 
 const VariableCardsList = ({ variables }) =>
-    variables.map(variable => <VariableCard variable={variable} />);
+    variables.map((variable, idx) => <VariableCard key={idx} variable={variable} />);
 
 VariableCardsList.propTypes = {
     variables: PropTypes.arrayOf(variableType),
