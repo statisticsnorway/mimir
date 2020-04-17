@@ -84,27 +84,27 @@ exports.get = function(req) {
     municipality = getMunicipality(req)
   }
 
-  let addMetaInfoSeach = true
-  let metainfoSearchId = page._id
-  let metainfoSearchTitle = page.displayName
-  let metainfoSearchContentType = page._name
-  let metainfoSearchGroup = page._id
-  let metainfoSearchKeywords = ''
-  let metainfoDescription = ''
+  let addMetaInfoSearch = true
+  let metaInfoSearchId = page._id
+  let metaInfoSearchTitle = page.displayName
+  let metaInfoSearchContentType = page._name
+  let metaInfoSearchGroup = page._id
+  let metaInfoSearchKeywords = ''
+  let metaInfoDescription = ''
 
   if (page._name === 'kommunefakta') {
-    metainfoSearchKeywords = 'kommune, kommuneprofil',
-    metainfoDescription = page.x['com-enonic-app-metafields']['meta-data'].seoDescription
+    metaInfoSearchKeywords = 'kommune, kommuneprofil',
+    metaInfoDescription = page.x['com-enonic-app-metafields']['meta-data'].seoDescription
   }
 
   if (municipality) {
     // TODO: Deaktiverer at kommunesidene er søkbare til vi finner en løsning med kommunenavn i tittel MIMIR-549
-    addMetaInfoSeach = false
-    metainfoSearchId = metainfoSearchId + '_' + municipality.code
-    metainfoSearchTitle = 'Kommunefakta ' + municipality.displayName
-    metainfoSearchContentType = 'kommunefakta'
-    metainfoSearchGroup = metainfoSearchGroup + '_' + municipality.code
-    metainfoSearchKeywords = municipality.displayName + ' kommune'
+    addMetaInfoSearch = false
+    metaInfoSearchId = metaInfoSearchId + '_' + municipality.code
+    metaInfoSearchTitle = 'Kommunefakta ' + municipality.displayName
+    metaInfoSearchContentType = 'kommunefakta'
+    metaInfoSearchGroup = metaInfoSearchGroup + '_' + municipality.code
+    metaInfoSearchKeywords = municipality.displayName + ' kommune'
   }
 
   let config
@@ -194,13 +194,13 @@ exports.get = function(req) {
     GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null,
     headerBody: header ? header.body : undefined,
     footerBody: footer ? footer.body : undefined,
-    addMetaInfoSeach,
-    metainfoSearchId,
-    metainfoSearchTitle,
-    metainfoSearchGroup,
-    metainfoSearchContentType,
-    metainfoSearchKeywords,
-    metainfoDescription
+    addMetaInfoSearch,
+    metaInfoSearchId,
+    metaInfoSearchTitle,
+    metaInfoSearchGroup,
+    metaInfoSearchContentType,
+    metaInfoSearchKeywords,
+    metaInfoDescription
   }
 
   let body = thymeleaf.render(view, model)
