@@ -20,7 +20,11 @@ export function getHeaderContent(language: Language): Header {
   const siteConfig: SiteConfig = getSiteConfig()
   return {
     logoUrl: assetUrl({
-      path: 'SSB_logo.png'
+      path: 'SSB_logo_black.svg'
+    }),
+    logoAltText: localize({
+      key: 'logoAltText',
+      locale: language.code
     }),
     searchResultPageUrl: siteConfig.searchResultPage ? pathFromStringOrContent(siteConfig.searchResultPage) : undefined,
     searchInputPlaceholder: localize({
@@ -39,6 +43,7 @@ export function getHeaderContent(language: Language): Header {
 
 export interface Header{
     logoUrl: string;
+    logoAltText: string;
     searchResultPageUrl?: string;
     searchInputPlaceholder: string;
     mainNavigation?: Array<MenuItem>;

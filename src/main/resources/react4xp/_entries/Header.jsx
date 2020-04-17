@@ -74,7 +74,7 @@ class Header extends React.Component {
 
   render() {
     const {
-      searchInputPlaceholder, logoUrl, mainNavigation, skipToContentText
+      searchInputPlaceholder, logoUrl, logoAltText, mainNavigation, skipToContentText
     } = this.props
     return (
       <header className="ssb-header-wrapper">
@@ -85,7 +85,7 @@ class Header extends React.Component {
         </nav>
         <div className="misc top-row flex-row justify-space-between flex-wrap">
           <a className="plainLink" href="/">
-            <img src={logoUrl} alt="" className="logo" />
+            <img src={logoUrl} alt={logoAltText} className="logo" />
           </a>
 
           <button className="hamburger" onClick={this.toggleMainMenu}>
@@ -157,6 +157,7 @@ Header.propTypes = {
     })
   ),
   logoUrl: PropTypes.string,
+  logoAltText: PropTypes.string,
   language: PropTypes.shape({
     menuContentId: PropTypes.string,
     code: PropTypes.string,
