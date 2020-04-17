@@ -37,7 +37,7 @@ function renderPart(req, menuBoxId) {
         body: render(view)
       }
     } else {
-      throw new Error('Factbox - Missing Id')
+      throw new Error('MenuBox - Missing Id')
     }
   }
   const menuBoxContent = content.get({
