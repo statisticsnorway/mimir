@@ -38,7 +38,7 @@
   </div>
 
   <!-- Metainfo to make the page searchable -->
-  <div id="metainfo-container" data-th-include="mimir:/site/includes/metainfoSearch.html" data-th-remove="tag"></div>
+  <div id="metainfo-container" data-th-if="${addMetaInfoSeach}" data-th-include="mimir:/site/includes/metainfoSearch.html" data-th-remove="tag"></div>
 
   <!-- MAIN -->
   <main class="xp-region" data-th-if="${!isFragment}">

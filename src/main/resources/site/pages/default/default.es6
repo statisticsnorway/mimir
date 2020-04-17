@@ -84,22 +84,25 @@ exports.get = function(req) {
     municipality = getMunicipality(req)
   }
 
+  let addMetaInfoSeach = true
   let metainfoSearchTitle = page.displayName
   let metainfoSearchContentType = page._name
   let metainfoSearchGroup = page._id
   let metainfoSearchKeywords = ''
+  let metainfoDescription = ''
 
   if (page._name === 'kommunefakta') {
-    metainfoSearchKeywords = 'kommune, kommuneprofil'
+    metainfoSearchKeywords = 'kommune, kommuneprofil',
+    metainfoDescription = page.x['com-enonic-app-metafields']['meta-data'].seoDescription
   }
 
   if (municipality) {
+    addMetaInfoSeach = false
     metainfoSearchTitle = 'Kommunefakta ' + municipality.displayName
     metainfoSearchContentType = 'kommunefakta'
     metainfoSearchGroup = metainfoSearchGroup + '_' + municipality.code
     metainfoSearchKeywords = municipality.displayName + ' kommune'
   }
-
 
   let config
   if (!isFragment && page.page.config) {
@@ -188,10 +191,12 @@ exports.get = function(req) {
     GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null,
     headerBody: header ? header.body : undefined,
     footerBody: footer ? footer.body : undefined,
+    addMetaInfoSeach,
     metainfoSearchTitle,
     metainfoSearchGroup,
     metainfoSearchContentType,
-    metainfoSearchKeywords
+    metainfoSearchKeywords,
+    metainfoDescription
   }
 
   let body = thymeleaf.render(view, model)
