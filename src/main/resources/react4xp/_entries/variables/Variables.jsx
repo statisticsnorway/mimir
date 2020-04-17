@@ -8,7 +8,6 @@ export const DISPLAY_TYPE_CARDS = 'CARDS';
 export const DISPLAY_TYPE_TABLE = 'TABLE';
 
 const Variables = ({ variables, display = DISPLAY_TYPE_CARDS }) => {
-    console.log('Will be displaying ', variables, display);
     if (display === DISPLAY_TYPE_CARDS) {
         return <VariableCardsList variables={variables}/>;
     }
