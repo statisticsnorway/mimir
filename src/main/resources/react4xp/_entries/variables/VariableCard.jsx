@@ -1,4 +1,5 @@
 import React from 'react';
+import Interweave from 'interweave';
 import { Card, Text } from '@statisticsnorway/ssb-component-library';
 import { variableType } from './types';
 
@@ -9,7 +10,7 @@ const VariableCard = ({ variable }) => {
             {...rest}
             icon={icon ? <img src={icon} alt={variable.title} /> : null}
         >
-            <Text>{description}</Text>
+            <Text><Interweave content={description} /></Text>
         </Card>
     );
 };
