@@ -20,7 +20,7 @@ const moment = require('moment/min/moment-with-locales')
 
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-const view = resolve('./variableCardList.html')
+const view = resolve('./variableCardsList.html')
 
 exports.get = function(req) {
   try {
@@ -52,22 +52,22 @@ function renderPart(req) {
 /**
  *
  * @param {Array} variableListContent
- * @return {{body: string, pageContributions: string, contentType: string}}
+ * @return { body: string, pageContributions: string, contentType: string }
  */
-function renderVariableCardList(variableListContent) {
+const renderVariableCardList = (variableListContent) => {
   const download = i18nLib.localize({
     key: 'variableCardList.download'
   })
 
-  const variableCardsList = new React4xp('Datasets')
+  const variableCardsList = new React4xp('variables/Variables')
     .setProps({
-      dataset: variableListContent.map((variableCardList) => {
+      variables: variableListContent.map(({ title, description, excelFileHref, excelFileModifiedDate, href }) => {
         return {
-          title: variableCardList.title,
-          description: variableCardList.description,
-          fileLocation: variableCardList.excelFileHref,
-          downloadText: download + ' (' + 'per ' + variableCardList.excelFileModifiedDate + ')',
-          href: variableCardList.href
+          title,
+          description,
+          fileLocation: excelFileHref,
+          downloadText: download + ' (' + 'per ' + excelFileModifiedDate + ')',
+          href
         }
       })
     })
@@ -91,7 +91,7 @@ function renderVariableCardList(variableListContent) {
  * @param {Array} content
  * @return {array}
  */
-function getVariableListContent(content) {
+const getVariableListContent = (content) => {
   return content.map((variableCardList) => {
     const excelFiles = contentLib.query({
       count: 1,
@@ -99,15 +99,12 @@ function getVariableListContent(content) {
       query: `_path LIKE '/content${variableCardList._path}/*' AND (_name LIKE '*.xlsx' OR _name LIKE '*.xlsm')`
     })
 
-    let excelFileHref
-    let excelFileModifiedDate
-
-    if (excelFiles.hits.length > 0) {
-      excelFileHref = attachmentUrl({
+    const excelInfo = (excelFiles.hits.length > 0) ? {
+      excelFileHref: attachmentUrl({
         id: excelFiles.hits[0]._id
-      })
-      excelFileModifiedDate = moment(excelFiles.hits[0].modifiedTime).format('DD.MM.YY')
-    }
+      }),
+      excelFileModifiedDate: moment(excelFiles.hits[0].modifiedTime).format('DD.MM.YY'),
+    } : {};
 
     return {
       title: variableCardList.displayName,
@@ -117,8 +114,7 @@ function getVariableListContent(content) {
       href: pageUrl({
         id: variableCardList._id
       }),
-      excelFileHref: excelFileHref,
-      excelFileModifiedDate: excelFileModifiedDate
+        ...excelInfo,
     }
   })
 }
