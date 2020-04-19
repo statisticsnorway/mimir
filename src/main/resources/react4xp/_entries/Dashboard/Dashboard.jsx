@@ -1,10 +1,11 @@
 import React from 'react'
-import { Accordion, Button as SSBButton } from '@statisticsnorway/ssb-component-library'
+import { Accordion, Button } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
-import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import Row from 'react-bootstrap/Row'
 import Table from 'react-bootstrap/Table'
 import DashboardDataQuery from './DashboardDataQuery'
+import axios from 'axios'
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -21,6 +22,143 @@ class Dashboard extends React.Component {
       showSuccessAlert: false
     }
   }
+
+  showSuccess(msg) {
+    this.setState({
+      successMsg: msg,
+      showSuccessAlert: true
+    })
+  }
+
+  showError(msg) {
+    this.setState({
+      errorMsg: msg,
+      showErrorAlert: true
+    })
+  }
+
+  deleteDataset(dataQueryId) {
+    this.setState({
+      dataQueries: this.state.dataQueries.map( (query) => {
+        if (query.id === dataQueryId) {
+          query.deleting = true
+        }
+        return query
+      })
+    })
+    this.deleteRequest(dataQueryId)
+  }
+
+  getDataset(dataQueryId) {
+    this.setState({
+      dataQueries: this.state.dataQueries.map( (query) => {
+        if (query.id === dataQueryId) {
+          query.loading = true
+        }
+        return query
+      })
+    })
+    this.getRequest(dataQueryId)
+  }
+
+  stopLoadingIndicators(dataQueryId) {
+    this.setState({
+      dataQueries: this.state.dataQueries.map( (query) => {
+        if (query.id === dataQueryId) {
+          query.loading = false,
+            query.deleting = false
+        }
+        return query
+      })
+    })
+  }
+
+  handleHideDeleteAllDialog(deleteIsPushed) {
+    if (deleteIsPushed) {
+      this.setState({
+        deletingAll: true
+      })
+      this.deleteRequest('*')
+    }
+    this.setState({
+      showDeleteAllDialog: false
+    })
+  }
+
+  handleHideDownloadAllDialog(downloadIsPushed) {
+    if (downloadIsPushed) {
+      this.setState({
+        downloadingAll: true
+      })
+      this.getRequest('*')
+    }
+    this.setState({
+      showDownloadAllDialog: false
+    })
+  }
+
+  getRequest(id) {
+    const request = axios.get(this.props.dashboardService, {
+      params: {
+        id: id
+      }
+    })
+    return this.resultHandler(request, id)
+  }
+
+  deleteRequest(id) {
+    const request = axios.delete(this.props.dashboardService, {
+      params: {
+        id: id
+      }
+    })
+    return this.resultHandler(request, id)
+  }
+
+  resultHandler(p, id) {
+    return p.then((response) => {
+      if (response.data.success) {
+        this.updateDataQueries(response.data.updates)
+        this.showSuccess(response.data.message)
+      } else {
+        this.showError(response.data.message)
+      }
+    })
+      .catch((e) => {
+        this.showError(e.response.data.message)
+      })
+      .finally(() => {
+        if(id !== '*') {
+          this.stopLoadingIndicators(id)
+        } else {
+          this.setState({
+            downloadingAll: false,
+            deletingAll: false
+          })
+        }
+      })
+  }
+
+  updateDataQueries(updatedDataQueries) {
+    const updatedSet = this.state.dataQueries.map((dataQuery) => {
+      const updated = updatedDataQueries.filter( (updatedQuery) => updatedQuery.id === dataQuery.id)
+        .map((updatedQuery) => ({
+          ...dataQuery,
+          ...updatedQuery,
+          loading: false,
+          deleting: false
+        }))
+      if (updated.length > 0) {
+        return updated[0]
+      } else {
+        return dataQuery
+      }
+    })
+    this.setState({
+      dataQueries: updatedSet
+    })
+  }
+
 
   renderDataQueries() {
     return this.state.dataQueries.map( (query) => {
@@ -86,7 +224,50 @@ class Dashboard extends React.Component {
             </div>
           </Col>
         </Row>
+        {this.renderFooter()}
       </section>
+    )
+  }
+
+
+
+  renderDeleteAllButtonAndDialog() {
+    return (
+        <Button className="js-dashboard-delete pb-2" >
+          Slett alle dataset
+        </Button>
+    )
+  }
+  /*renderDownloadAllButtonAndDialog() {
+    return (
+      <>
+        <SSBButton
+          primary
+          className="ml-2 js-dashboard-update pb-2"
+          onClick={() => this.setState({
+            showDownloadAllDialog: true
+          })}>
+          {this.state.downloadingAll ?  <span className="spinner-border spinner-border-sm mr-2"></span>: ''}
+          Oppdater alle dataset
+        </SSBButton>
+        {this.renderDialogBox({
+          stateProperty: 'showDownloadAllDialog',
+          onHide: (status) => this.handleHideDownloadAllDialog(status),
+          title: 'Vil du laste ned alle datasettene på nytt?',
+          body: 'Alle datasett vil bli lastet ned på nytt.',
+          cancelTitle: 'Lukk',
+          submitTitle: 'Last ned'
+        })}
+      </>
+    )
+  }*/
+
+  renderFooter() {
+    return (
+      <nav className="footerNavigation my-4">
+        {this.renderDeleteAllButtonAndDialog()}
+
+      </nav>
     )
   }
 
