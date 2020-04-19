@@ -112,12 +112,16 @@ export function municipalsWithCounties(): Array<MunicipalityWithCounty> {
 }
 
 export function getMunicipality(req: RequestWithCode): MunicipalityWithCounty|undefined {
-  const municipalities: Array<MunicipalityWithCounty> = municipalsWithCounties()
-
   let municipality: MunicipalityWithCounty | undefined
-  if ( req.params && req.params.selfRequest && req.params.pathname) {
-    municipality = getMunicipalityByName(municipalities, req.params.pathname as string)
-  } else if (req.path) {
+  if (req.params && req.params.selfRequest && req.params.municipality) {
+    municipality = JSON.parse(req.params.municipality as string) as MunicipalityWithCounty
+    if (municipality) {
+      return municipality
+    }
+  }
+
+  const municipalities: Array<MunicipalityWithCounty> = municipalsWithCounties()
+  if (req.path) {
     const municipalityName: string = req.path.replace(/^.*\//, '').toLowerCase()
     municipality = getMunicipalityByName(municipalities, municipalityName)
   } else if (req.code) {
@@ -165,7 +169,7 @@ const municipalityWithNameCache: Cache = newCache({
   size: 1000,
   expire: 3600
 })
-function getMunicipalityByName(municipalities: Array<MunicipalityWithCounty>, municipalityName: string): MunicipalityWithCounty|undefined {
+export function getMunicipalityByName(municipalities: Array<MunicipalityWithCounty>, municipalityName: string): MunicipalityWithCounty|undefined {
   return municipalityWithNameCache.get(`municipality_${municipalityName}`, () => {
     const municipality: Array<MunicipalityWithCounty> = municipalities.filter((municipality) => municipality.path === `/${municipalityName}`)
 

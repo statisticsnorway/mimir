@@ -1,10 +1,5 @@
 export interface Article {
   /**
-   * Forfatter
-   */
-  author?: Array<string>;
-
-  /**
    * Vis publiseringsdato
    */
   showPublishDate: boolean;
@@ -18,6 +13,33 @@ export interface Article {
    * Artikkeltekst
    */
   articleText?: string;
+
+  relatedExternalLinkItemSet?: Array<{
+    /**
+     * Lenketekst
+     */
+    urlText: string;
+
+    /**
+     * URL
+     */
+    url: string;
+  }>;
+
+  /**
+   * Forfatter
+   */
+  authorItemSet?: Array<{
+    /**
+     * Navn
+     */
+    name?: string;
+
+    /**
+     * E-post
+     */
+    email?: string;
+  }>;
 
   /**
    * Vis tidspunkt for sist redigering

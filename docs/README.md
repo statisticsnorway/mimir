@@ -23,6 +23,7 @@ Documentation for Mimir
    1. [KLASS](./DataFeeds.md#klass)
    1. [TBML](./DataFeeds.md#tbml)
    1. [JSONStat](./DataFeeds.md#jsonstat)
+   1. [Dataquery](./Dataquery.md)
 1. [Testing](./Testing.md)
 1. [SiteConfig](./SiteConfig.md)
 1. [Map](./Map.md)

@@ -1,16 +1,19 @@
 .menu-box {
-  a {
-  }
-  img {
-    width: 45%;
-  }
-  h3 {
-    font-size: 18px;
-  }
-  @include media-breakpoint-down(md) {
-    h3 { font-size: 16px }
-  }
-  .text-bottom {
-    font-size: 14px;
+  & > div {
+    @include make-row();
+    
+    & > .ssb-card {
+      @include make-col-ready();
+      @include make-col(4);
+      margin-bottom: $spacer * 3;
+
+      @include media-breakpoint-down(md) {
+        @include make-col(12);
+      }
+
+      & > a {
+        width: 100%;
+      }
+    }
   }
 }

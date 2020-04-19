@@ -2,7 +2,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
-import { ContentLibrary, QueryResponse, Content, Image } from 'enonic-types/lib/content'
+import { ContentLibrary, QueryResponse, Content } from 'enonic-types/lib/content'
 import { PortalLibrary } from 'enonic-types/lib/portal'
 import { KeyFigure } from '../../site/content-types/keyFigure/keyFigure'
 import { Dataset } from '../../site/content-types/dataset/dataset'
@@ -11,8 +11,9 @@ import { MunicipalityWithCounty } from '../klass/municipalities'
 import { TbmlData, TableRow, PreliminaryData } from '../types/xmlParser'
 import { Dataset as JSDataset, Dimension, Category } from '../types/jsonstat-toolkit'
 import { UtilLibrary } from '../types/util'
+import { DatasetCache, SSBCacheLibrary } from './cache'
+import { Request } from 'enonic-types/lib/controller'
 const {
-  get: getContent,
   query
 }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
 const {
@@ -23,7 +24,7 @@ const {
 } = __non_webpack_require__( '/lib/ssb/dataquery')
 const {
   getDataSetWithDataQueryId
-} = __non_webpack_require__( '../ssb/dataset')
+} = __non_webpack_require__( '/lib/ssb/dataset')
 const {
   localizeTimePeriod
 } = __non_webpack_require__( '/lib/language')
@@ -34,24 +35,40 @@ const {
   createHumanReadableFormat,
   getImageCaption
 } = __non_webpack_require__( '/lib/ssb/utils')
+const {
+  fromDatasetCache
+}: SSBCacheLibrary = __non_webpack_require__( '/lib/ssb/cache')
 const util: UtilLibrary = __non_webpack_require__( '/lib/util')
 
 const contentTypeName: string = `${app.name}:keyFigure`
 
-export function get(key: string): Content<KeyFigure> | null {
+export function get(keys: string | Array<string>): Array<Content<KeyFigure>> {
+  keys = util.data.forceArray(keys) as Array<string>
   const content: QueryResponse<KeyFigure> = query({
     contentTypes: [contentTypeName],
-    query: `_id = '${key}'`,
-    count: 1,
-    start: 0
+    query: ``,
+    count: keys.length,
+    start: 0,
+    filters: {
+      ids: {
+        values: keys
+      }
+    }
   })
-  return content.count === 1 ? content.hits[0] : null
+  const hits: Array<Content<KeyFigure>> = keys.reduce((keyfigures: Array<Content<KeyFigure>>, id: string) => {
+    const found: Array<Content<KeyFigure>> = content.hits.filter((keyFigure) => keyFigure._id === id)
+    if (found.length === 1) {
+      keyfigures.push(found[0])
+    }
+    return keyfigures
+  }, [])
+  return hits
 }
 
 type JsonStatFormat = Dataquery['datasetFormat']['jsonStat'];
 type DatasetOption = NonNullable<JsonStatFormat>['datasetFilterOptions']
 
-export function parseKeyFigure(keyFigure: Content<KeyFigure>, municipality?: MunicipalityWithCounty): KeyFigureView {
+export function parseKeyFigure(req: Request, keyFigure: Content<KeyFigure>, municipality?: MunicipalityWithCounty): KeyFigureView {
   const keyFigureViewData: KeyFigureView = {
     iconUrl: getIconUrl(keyFigure),
     iconAltText: keyFigure.data.icon ? getImageCaption(keyFigure.data.icon) : '',
@@ -70,15 +87,26 @@ export function parseKeyFigure(keyFigure: Content<KeyFigure>, municipality?: Mun
 
   const dataQueryId: string | undefined = keyFigure.data.dataquery
   if (dataQueryId) {
-    const dataQueryContent: Content<Dataquery> = getDataquery({
-      key: dataQueryId
+    const cachedQuery: DatasetCache = fromDatasetCache(req, dataQueryId, () => {
+      const dataQueryContent: Content<Dataquery> = getDataquery({
+        key: dataQueryId
+      })
+      const datasetContent: Content<Dataset> = getDataSetWithDataQueryId(dataQueryId).hits[0]
+      let parsedData: JSDataset | Array<JSDataset> | null | TbmlData | TbmlData = JSON.parse(datasetContent.data.json)
+      if (dataQueryContent.data.datasetFormat._selected === 'jsonStat') {
+        parsedData = JSONstat(parsedData).Dataset(0)
+      }
+      return {
+        data: parsedData,
+        format: dataQueryContent.data.datasetFormat
+      }
     })
-    const datasetContent: QueryResponse<Dataset> = getDataSetWithDataQueryId(dataQueryId)
-    const datasetFormat: Dataquery['datasetFormat'] = dataQueryContent.data.datasetFormat
-    const data: object | TbmlData = JSON.parse(datasetContent.hits[0].data.json)
+    const data: JSDataset | Array<JSDataset> | null | TbmlData = cachedQuery.data
+    const datasetFormat: Dataquery['datasetFormat'] = cachedQuery.format
+
     if (datasetFormat._selected === 'jsonStat') {
       // prepare jsonstat
-      const ds: JSDataset | Array<JSDataset> | null = JSONstat(data).Dataset(0)
+      const ds: JSDataset | Array<JSDataset> | null = data as JSDataset | Array<JSDataset> | null
       const jsonStatConfig: JsonStatFormat | undefined = datasetFormat[datasetFormat._selected]
       const xAxisLabel: string | undefined = jsonStatConfig ? jsonStatConfig.xAxisLabel : undefined
       const yAxisLabel: string | undefined = jsonStatConfig ? jsonStatConfig.yAxisLabel : undefined

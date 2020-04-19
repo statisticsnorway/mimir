@@ -46,6 +46,7 @@ $container-max-widths: (
 @import "./_profiledBox";
 @import "./_article";
 @import "./relatedContentBox";
+@import "./relatedExternalLink";
 
 body {
   -moz-osx-font-smoothing: grayscale;
@@ -55,7 +56,7 @@ body {
   overflow-x: hidden; // removes horisontal scroll bar created by part preface
 }
 
-section { 
+section {
   width: 100%;
 }
 
@@ -73,6 +74,7 @@ section + section, .xp-layout + .xp-layout {
 
 .row {
   @include media-breakpoint-down(md) {
-         margin-right: 0;
+    margin-right: 0;
+    margin-left: 0;
   }
 }
