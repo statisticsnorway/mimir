@@ -84,6 +84,29 @@ exports.get = function(req) {
     municipality = getMunicipality(req)
   }
 
+  let addMetaInfoSearch = true
+  let metaInfoSearchId = page._id
+  let metaInfoSearchTitle = page.displayName
+  let metaInfoSearchContentType = page._name
+  let metaInfoSearchGroup = page._id
+  let metaInfoSearchKeywords = ''
+  let metaInfoDescription = ''
+
+  if (page._name === 'kommunefakta') {
+    metaInfoSearchKeywords = 'kommune, kommuneprofil',
+    metaInfoDescription = page.x['com-enonic-app-metafields']['meta-data'].seoDescription
+  }
+
+  if (municipality) {
+    // TODO: Deaktiverer at kommunesidene er søkbare til vi finner en løsning med kommunenavn i tittel MIMIR-549
+    addMetaInfoSearch = false
+    metaInfoSearchId = metaInfoSearchId + '_' + municipality.code
+    metaInfoSearchTitle = 'Kommunefakta ' + municipality.displayName
+    metaInfoSearchContentType = 'kommunefakta'
+    metaInfoSearchGroup = metaInfoSearchGroup + '_' + municipality.code
+    metaInfoSearchKeywords = municipality.displayName + ' kommune'
+  }
+
   let config
   if (!isFragment && page.page.config) {
     config = page.page.config
@@ -170,7 +193,14 @@ exports.get = function(req) {
     language,
     GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null,
     headerBody: header ? header.body : undefined,
-    footerBody: footer ? footer.body : undefined
+    footerBody: footer ? footer.body : undefined,
+    addMetaInfoSearch,
+    metaInfoSearchId,
+    metaInfoSearchTitle,
+    metaInfoSearchGroup,
+    metaInfoSearchContentType,
+    metaInfoSearchKeywords,
+    metaInfoDescription
   }
 
   let body = thymeleaf.render(view, model)
