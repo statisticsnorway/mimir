@@ -92,13 +92,6 @@ const renderVariables = (variables) => {
   return NO_VARIABLES_FOUND
 }
 
-const DOWNLOAD_FORMATS = ['*.xlsx', '*.xlsm']
-const DOWNLOAD_FORMAT_CRITERIA = DOWNLOAD_FORMATS.reduce((acc, fmt) => {
-  const criterium = `_name LIKE '${fmt}'`
-  return acc === '' ? criterium : `OR ${criterium}`
-}, '')
-
-
 /**
  *
  * @param {Array} content
