@@ -2,7 +2,7 @@ const auth = __non_webpack_require__( '/lib/xp/auth')
 const context = __non_webpack_require__( '/lib/xp/context')
 const content = __non_webpack_require__( '/lib/xp/content')
 const {
-  refreshDataset
+  getData, refreshDatasetWithData
 } = __non_webpack_require__('/lib/dataquery')
 const {
   getDataSetWithDataQueryId,
@@ -15,6 +15,8 @@ exports.get = function(req) {
   let message = ''
   let success = true
   const datasetInfo = []
+  const datasetFails = []
+  const datasetIgnored = []
   const params = req.params
 
   if (params && params.id) {
@@ -26,17 +28,29 @@ exports.get = function(req) {
           query: `data.table LIKE 'http*'`
         }).hits
         dataqueries.map((dataquery) => {
-          const dataset = refreshDataset(dataquery)
-          if (dataset) {
-            datasetInfo.push({
-              id: dataset.data.dataquery,
-              updated: getUpdated(dataset),
-              updatedHumanReadable: getUpdatedReadable(dataset),
-              hasData: true
+          const data = getData(dataquery)
+          if (data) {
+            const dataset = refreshDatasetWithData(JSON.stringify(data), dataquery)
+            if (dataset) {
+              datasetInfo.push({
+                id: dataset.data.dataquery,
+                updated: getUpdated(dataset),
+                updatedHumanReadable: getUpdatedReadable(dataset),
+                hasData: true
+              })
+            } else {
+              datasetIgnored.push({
+                id: dataquery._id
+              })
+            }
+          } else {
+            datasetFails.push({
+              id: dataquery._id
             })
           }
         })
-        message = `Successfully updated/created ${datasetInfo.length} of ${dataqueries.length} datasets`
+        message = `Successfully Updated/created: ${datasetInfo.length}, 
+        Ignored : ${datasetIgnored.length} , Failed:  ${datasetFails.length} , Total: ${dataqueries.length}`
       })
     } else { // update/create one
       context.run(createContextOption('master'), () => {
@@ -44,15 +58,22 @@ exports.get = function(req) {
           key: req.params.id
         })
         if (dataquery) {
-          const dataset = refreshDataset(dataquery)
-          if (dataset) {
-            message = `Successfully updated/created dataset for dataquery`
-            datasetInfo.push({
-              id: dataset.data.dataquery,
-              updated: getUpdated(dataset),
-              updatedHumanReadable: getUpdatedReadable(dataset),
-              hasData: true
-            })
+          const data = getData(dataquery)
+          if (data) {
+            const dataset = refreshDatasetWithData(JSON.stringify(data), dataquery)
+            if (dataset) {
+              message = `Successfully updated/created dataset for dataquery`
+              datasetInfo.push({
+                id: dataset.data.dataquery,
+                updated: getUpdated(dataset),
+                updatedHumanReadable: getUpdatedReadable(dataset),
+                hasData: true
+              })
+            } else {
+              success = true
+              message = `No new data for dataquery`
+              status = 200
+            }
           } else {
             success = false
             message = `Failed to get data for dataquery: ${dataquery._id}`

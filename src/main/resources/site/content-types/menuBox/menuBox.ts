@@ -19,13 +19,33 @@ export interface MenuBox {
     image?: string;
 
     /**
-     * Lenke
+     * Lenkemål
      */
-    link?: string;
+    urlSrc: {
+      /**
+       * Selected
+       */
+      _selected: string;
 
-    /**
-     * Innhold
-     */
-    content?: Array<string>;
+      /**
+       * Url lenke
+       */
+      manual?: {
+        /**
+         * Kildelenke
+         */
+        url: string;
+      };
+
+      /**
+       * Lenke til internt innhold
+       */
+      content?: {
+        /**
+         * Relatert innhold
+         */
+        contentId: string;
+      };
+    };
   }>;
 }

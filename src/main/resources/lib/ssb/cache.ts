@@ -6,6 +6,7 @@ import { ContentLibrary, QueryResponse, Content } from 'enonic-types/lib/content
 import { Dataset as JSDataset } from '../types/jsonstat-toolkit'
 import { TbmlData } from '../types/xmlParser'
 import { Dataquery } from '../../site/content-types/dataquery/dataquery'
+import { Dataset } from '../../site/content-types/dataset/dataset'
 
 const {
   newCache
@@ -111,7 +112,7 @@ function getReferences(id: string): Array<Content> {
 
 function clearCache(content: Content, branch: string, cleared: Array<string>): Array<string> {
   if (cleared.filter((c) => content._id === c).length > 0) { // already cleared
-    log.info(`already cleared ${content}(${branch})`)
+    log.info(`already cleared ${content._id}(${branch})`)
     return cleared
   }
   cleared.push(content._id)
@@ -120,26 +121,39 @@ function clearCache(content: Content, branch: string, cleared: Array<string>): A
   const cacheMap: Map<string, Cache> = branch === 'master' ? masterFilterCaches : draftFilterCaches
   const filterCache: Cache | undefined = cacheMap.get(content._id)
   if (filterCache) {
-    log.info(`clear ${content} filter cache(${branch})`)
+    log.info(`clear ${content._id} filter cache(${branch})`)
     filterCache.clear()
   }
 
   // clear menu cache
   if (content.type === `${app.name}:menuItem`) {
-    log.info(`clear header/footer cache ${branch}`)
+    log.info(`clear header/footer cache (${branch})`)
     const menuCache: Cache = branch === 'master' ? masterMenuCache : draftMenuCache
     menuCache.clear()
   }
 
+  // clear dataset cache based on dataquery id
   if (content.type === `${app.name}:dataquery`) {
-    log.info(`clear ${content._id} from dataset cache ${branch}`)
+    log.info(`clear ${content._id} from dataset cache (${branch})`)
     const datasetCache: Cache = branch === 'master' ? masterDatasetCache : draftDatasetCache
-    datasetCache.clear()
+    datasetCache.remove(content._id)
   }
 
+  // find dataquery based on dataset
   const references: Array<Content> = getReferences(content._id)
+  if (content.type === `${app.name}:dataset`) {
+    const dataset: Content<Dataset> = content as Content<Dataset>
+    if (dataset.data.dataquery) {
+      const dataquery: Content | null = get({
+        key: dataset.data.dataquery
+      })
+      if (dataquery) {
+        references.push(dataquery)
+      }
+    }
+  }
   references.forEach((ref) => {
-    log.info(`try to clear reference ${ref._id} to ${content}(${branch})`)
+    log.info(`try to clear reference ${ref._id} to ${content._id}(${branch})`)
     clearCache(ref, branch, cleared)
   })
 
@@ -198,4 +212,11 @@ export function fromDatasetCache(req: Request, key: string, fallback: () => Data
 export interface DatasetCache {
   data: JSDataset | Array<JSDataset> | null | TbmlData | TbmlData;
   format: Dataquery['datasetFormat'];
+}
+
+export interface SSBCacheLibrary {
+  setup: () => void;
+  fromFilterCache: (req: Request, filterKey: string, key: string, fallback: () => Response) => Response;
+  fromMenuCache: (req: Request, key: string, fallback: () => unknown) => unknown;
+  fromDatasetCache: (req: Request, key: string, fallback: () => DatasetCache) => DatasetCache;
 }

@@ -78,7 +78,7 @@ function renderPart() {
     path: 'styles/bundle.css'
   })
 
-  const logoUrl = assetUrl({path: 'SSB_logo.png'});
+  const logoUrl = assetUrl({path: 'SSB_logo_black.svg'});
 
   const dashboardDataset = new React4xp('Dashboard/Dashboard')
     .setProps({
