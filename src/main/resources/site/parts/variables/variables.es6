@@ -38,7 +38,7 @@ const NO_VARIABLES_FOUND = {
   contentType: 'text/html'
 }
 
-function renderPart(req) {
+const renderPart = (req) => {
   moment.locale('nb')
 
   const children = contentLib.getChildren({
@@ -102,7 +102,12 @@ const contentArrayToVariables = (content) => {
     const excelFiles = contentLib.query({
       count: 1,
       sort: 'modifiedTime DESC',
-      query: `_path LIKE '/content${variable._path}/*' AND (_name LIKE '*.xlsx' OR _name LIKE '*.xlsm')`
+      query: `_path LIKE '/content${variable._path}/*' `,
+      contentTypes: [
+        'media:spreadsheet',
+        'media:document',
+        'media:unknown'
+      ]
     })
 
     const excelInfo = (excelFiles.hits.length > 0) ? {
