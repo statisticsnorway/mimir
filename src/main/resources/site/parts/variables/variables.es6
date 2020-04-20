@@ -63,13 +63,13 @@ const renderVariables = (variables) => {
     const variablesXP = new React4xp('variables/Variables')
       .setProps({
         variables: variables.map(({
-          title, description, excelFileHref, excelFileModifiedDate, href
+          title, description, fileHref, fileModifiedDate, href
         }) => {
           return {
             title,
             description,
-            fileLocation: excelFileHref,
-            downloadText: download + ' (' + 'per ' + excelFileModifiedDate + ')',
+            fileLocation: fileHref,
+            downloadText: download + ' (' + 'per ' + fileModifiedDate + ')',
             href
           }
         })
@@ -99,7 +99,7 @@ const renderVariables = (variables) => {
  */
 const contentArrayToVariables = (content) => {
   return content.map((variable) => {
-    const excelFiles = contentLib.query({
+    const files = contentLib.query({
       count: 1,
       sort: 'modifiedTime DESC',
       query: `_path LIKE '/content${variable._path}/*' `,
@@ -110,11 +110,11 @@ const contentArrayToVariables = (content) => {
       ]
     })
 
-    const excelInfo = (excelFiles.hits.length > 0) ? {
-      excelFileHref: attachmentUrl({
-        id: excelFiles.hits[0]._id
+    const fileInfo = (files.hits.length > 0) ? {
+      fileHref: attachmentUrl({
+        id: files.hits[0]._id
       }),
-      excelFileModifiedDate: moment(excelFiles.hits[0].modifiedTime).format('DD.MM.YY')
+      fileModifiedDate: moment(files.hits[0].modifiedTime).format('DD.MM.YY')
     } : {}
 
     return {
@@ -125,7 +125,7 @@ const contentArrayToVariables = (content) => {
       href: pageUrl({
         id: variable._id
       }),
-      ...excelInfo
+      ...fileInfo
     }
   })
 }
