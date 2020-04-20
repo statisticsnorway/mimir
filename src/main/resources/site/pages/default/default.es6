@@ -66,6 +66,7 @@ exports.get = function(req) {
     value: page.data.ingress ? page.data.ingress.replace(/&nbsp;/g, ' ') : undefined
   })
   const showIngress = ingress && page.type === 'mimir:page'
+  const pageType = page.page.config.pageType ? page.page.config.pageType : 'default'
 
 
   // Create preview if available
@@ -89,13 +90,18 @@ exports.get = function(req) {
   let metaInfoSearchTitle = page.displayName
   let metaInfoSearchContentType = page._name
   let metaInfoSearchGroup = page._id
-  let metaInfoSearchKeywords = ''
-  let metaInfoDescription = ''
+  let metaInfoSearchKeywords
+  let metaInfoDescription
 
-  if (page._name === 'kommunefakta') {
+  if (pageType === 'municipality') {
     metaInfoSearchKeywords = 'kommune, kommuneprofil',
     metaInfoDescription = page.x['com-enonic-app-metafields']['meta-data'].seoDescription
   }
+
+  if (pageType === 'factPage') {
+    metaInfoSearchContentType = 'faktaside'
+  }
+
 
   if (municipality) {
     // TODO: Deaktiverer at kommunesidene er søkbare til vi finner en løsning med kommunenavn i tittel MIMIR-549
