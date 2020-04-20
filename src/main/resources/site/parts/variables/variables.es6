@@ -32,27 +32,27 @@ exports.get = function(req) {
 
 exports.preview = (req) => renderPart(req)
 
-const MAX_VARIABLES = 9999;
+const MAX_VARIABLES = 9999
 const NO_VARIABLES_FOUND = {
   body: '',
   contentType: 'text/html'
-};
+}
 
 function renderPart(req) {
   moment.locale('nb')
 
   const children = contentLib.getChildren({
     key: getContent()._path,
-    count: MAX_VARIABLES,
+    count: MAX_VARIABLES
   })
 
-  return renderVariables(contentArrayToVariables(children.hits ? data.forceArray(children.hits) : []));
+  return renderVariables(contentArrayToVariables(children.hits ? data.forceArray(children.hits) : []))
 }
 
 /**
  *
  * @param {Array} variables
- * @return { body: string, pageContributions: string, contentType: string }
+ * @return {{ body: string, pageContributions: string, contentType: string }}
  */
 const renderVariables = (variables) => {
   if (variables && variables.length) {
@@ -61,18 +61,20 @@ const renderVariables = (variables) => {
     })
 
     const variablesXP = new React4xp('variables/Variables')
-        .setProps({
-          variables: variables.map(({title, description, excelFileHref, excelFileModifiedDate, href}) => {
-            return {
-              title,
-              description,
-              fileLocation: excelFileHref,
-              downloadText: download + ' (' + 'per ' + excelFileModifiedDate + ')',
-              href
-            }
-          })
+      .setProps({
+        variables: variables.map(({
+          title, description, excelFileHref, excelFileModifiedDate, href
+        }) => {
+          return {
+            title,
+            description,
+            fileLocation: excelFileHref,
+            downloadText: download + ' (' + 'per ' + excelFileModifiedDate + ')',
+            href
+          }
         })
-        .uniqueId()
+      })
+      .uniqueId()
 
     const body = render(view, {
       variablesListId: variablesXP.react4xpId
@@ -87,14 +89,14 @@ const renderVariables = (variables) => {
     }
   }
 
-  return NO_VARIABLES_FOUND;
+  return NO_VARIABLES_FOUND
 }
 
-const DOWNLOAD_FORMATS = ['*.xlsx', '*.xlsm'];
+const DOWNLOAD_FORMATS = ['*.xlsx', '*.xlsm']
 const DOWNLOAD_FORMAT_CRITERIA = DOWNLOAD_FORMATS.reduce((acc, fmt) => {
-  const criterium = `_name LIKE '${fmt}'`;
-  return acc === '' ? criterium :`OR ${criterium}`;
-}, '');
+  const criterium = `_name LIKE '${fmt}'`
+  return acc === '' ? criterium : `OR ${criterium}`
+}, '')
 
 
 /**
@@ -114,8 +116,8 @@ const contentArrayToVariables = (content) => {
       excelFileHref: attachmentUrl({
         id: excelFiles.hits[0]._id
       }),
-      excelFileModifiedDate: moment(excelFiles.hits[0].modifiedTime).format('DD.MM.YY'),
-    } : {};
+      excelFileModifiedDate: moment(excelFiles.hits[0].modifiedTime).format('DD.MM.YY')
+    } : {}
 
     return {
       title: variable.displayName,
@@ -125,7 +127,7 @@ const contentArrayToVariables = (content) => {
       href: pageUrl({
         id: variable._id
       }),
-        ...excelInfo,
+      ...excelInfo
     }
   })
 }
