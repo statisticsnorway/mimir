@@ -84,3 +84,29 @@
     color: $ssb-red-3
   }
 }
+
+.detail {
+  padding: 3px 5px;
+  border-radius: 3px;
+  margin: 0 5px;
+  text-transform: uppercase;
+}
+.tbml {
+  background: #af00ff57;
+}
+
+.jsonStat {
+  background: #90cc93;
+}
+
+.klass {
+  background: skyblue;
+}
+.published_true {
+  background: #8dbb2b;
+}
+
+.published_false {
+  background: indianred;
+  color: white;
+}

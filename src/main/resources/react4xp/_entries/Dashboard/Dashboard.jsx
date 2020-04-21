@@ -8,6 +8,11 @@ import Row from 'react-bootstrap/Row'
 import Table from 'react-bootstrap/Table'
 import DashboardDataQuery from './DashboardDataQuery'
 import axios from 'axios'
+import { groupBy } from 'ramda'
+
+const byType = groupBy((dataQuery) => {
+  return dataQuery.parentType
+})
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -162,12 +167,14 @@ class Dashboard extends React.Component {
   }
 
 
-  renderDataQueries() {
-    return this.state.dataQueries.map( (query) => {
+  renderDataQueries(queries) {
+    return queries.map( (query) => {
       return (
         <DashboardDataQuery key={query.id}
                             id={query.id}
                             displayName={query.displayName}
+                            format={query.format}
+                            isPublished={query.isPublished}
                             updated={query.updated}
                             updatedHumanReadable={query.updatedHumanReadable}
                             hasData={query.hasData}
@@ -181,7 +188,7 @@ class Dashboard extends React.Component {
     })
   }
 
-  renderTable() {
+  renderTable(queries) {
     return (
       <Table bordered striped>
         <thead>
@@ -193,27 +200,25 @@ class Dashboard extends React.Component {
         </tr>
         </thead>
         <tbody>
-        {this.renderDataQueries()}
+        {this.renderDataQueries(queries)}
         </tbody>
       </Table>
     )
   }
 
-  renderAccordians() {
-    const {
-      header
-    } = this.props
+  renderAccordians(header, queries) {
     return (
       <Accordion header={header}
-                 className="mx-0 mt-4"
+                 className="mx-0"
                  openByDefault
       >
-        {this.renderTable()}
+        {this.renderTable(queries)}
       </Accordion>
     )
   }
 
   render() {
+    const groupedQueries = byType(this.state.dataQueries)
     return (
       <section className="xp-part part-dashboard">
         <Row>
@@ -222,7 +227,20 @@ class Dashboard extends React.Component {
               <h2 className="mb-3">
                 {`Spørringer mot statistikkbank og tabellbygger (${this.state.dataQueries ? this.state.dataQueries.length : '0'} stk)`}
               </h2>
-              {this.renderAccordians()}
+              {
+                groupedQueries.factPage &&
+                this.renderAccordians(`Spørringer fra Faktasider (${groupedQueries.factPage.length})`, groupedQueries.factPage)
+              }
+
+              {
+                groupedQueries.municipality &&
+                this.renderAccordians(`Spørringer fra Kommunefakta (${groupedQueries.municipality.length})`, groupedQueries.municipality)
+              }
+
+              {
+                groupedQueries.default &&
+                this.renderAccordians(`Andre (${groupedQueries.default.length})`, groupedQueries.default)
+              }
             </div>
           </Col>
         </Row>
@@ -329,19 +347,28 @@ Dashboard.propTypes = {
   header: PropTypes.string,
   dashboardService: PropTypes.string,
   dataQueries: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      displayName: PropTypes.string,
-      class: PropTypes.string,
-      updated: PropTypes.string,
-      updatedHumanReadable: PropTypes.string,
-      hasData: PropTypes.boolean,
-      showSuccess: PropTypes.boolean,
-      showError: PropTypes.boolean,
-      successMessage: PropTypes.string,
-      errorMessage: PropTypes.string
-    })
-  )
+    PropTypes.shape(dataqueryShape)
+  ),
+  groupedQueries: PropTypes.shape({
+    default: PropTypes.arrayOf(PropTypes.shape(dataqueryShape)),
+    factPage: PropTypes.arrayOf(PropTypes.shape(dataqueryShape)),
+    municipality: PropTypes.arrayOf(PropTypes.shape(dataqueryShape))
+  })
 }
+
+const dataqueryShape = PropTypes.shape({
+  id: PropTypes.string,
+  displayName: PropTypes.string,
+  path: PropTypes.string,
+  parentType: PropTypes.string,
+  format: PropTypes.string,
+  updated: PropTypes.string,
+  updatedHumanReadable: PropTypes.string,
+  hasData: PropTypes.boolean,
+  showSuccess: PropTypes.boolean,
+  showError: PropTypes.boolean,
+  successMessage: PropTypes.string,
+  errorMessage: PropTypes.string
+})
 
 export default (props) => <Dashboard {...props} />

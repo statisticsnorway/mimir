@@ -12,7 +12,9 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
-
+const {
+  isPublished
+} = __non_webpack_require__('/lib/ssb/utils')
 const content = __non_webpack_require__( '/lib/xp/content')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
@@ -27,45 +29,10 @@ exports.get = function(req) {
   }
 }
 
+
 function renderPart() {
-  const datasetMap = {}
-
-  const result = content.query({
-    count: 999,
-    contentTypes: [`${app.name}:dataset`]
-  })
-
-  if (result && result.hits.length > 0) {
-    result.hits.forEach((set) => {
-      datasetMap[set.data.dataquery] = set
-    })
-  }
-
-  const dataQueries = []
-  const dataQueryResult = content.query({
-    count: 999,
-    contentTypes: [`${app.name}:dataquery`],
-    sort: 'displayName'
-  })
-  if (dataQueryResult && dataQueryResult.hits.length > 0) {
-    dataQueryResult.hits.forEach((dataquery) => {
-      let updated
-      let updatedHumanReadable
-      const dataset = datasetMap[dataquery._id]
-      const hasData = !!dataset
-      if (hasData) {
-        updated = getUpdated(dataset)
-        updatedHumanReadable = getUpdatedReadable(dataset)
-      }
-      dataQueries.push({
-        id: dataquery._id,
-        displayName: dataquery.displayName,
-        updated,
-        updatedHumanReadable,
-        hasData
-      })
-    })
-  }
+  const datasetMap = getDataset()
+  const dataQueries = getDataQueries(datasetMap)
 
   const jsLibsUrl = assetUrl({
     path: 'js/bundle.js'
@@ -118,4 +85,74 @@ function renderPart() {
 function parseContributions(contributions) {
   contributions.bodyEnd = contributions.bodyEnd.map((script) => script.replace(' defer>', ' defer="">'))
   return contributions
+}
+
+function getDataset() {
+  const datasetMap = {}
+  const result = content.query({
+    count: 9999,
+    contentTypes: [`${app.name}:dataset`]
+  })
+
+  if (result && result.hits.length > 0) {
+    result.hits.forEach((set) => {
+      datasetMap[set.data.dataquery] = set
+    })
+  }
+  return datasetMap
+}
+
+function getDataQueries(datasetMap) {
+  let dataQueries = []
+  const dataQueryResult = content.query({
+    count: 999,
+    contentTypes: [`${app.name}:dataquery`],
+    sort: 'displayName'
+  })
+  if (dataQueryResult && dataQueryResult.hits.length > 0) {
+    dataQueries = dataQueryResult.hits.map((dataquery) => {
+      let updated
+      let updatedHumanReadable
+      const dataset = datasetMap[dataquery._id]
+      const hasData = !!dataset
+      if (hasData) {
+        updated = getUpdated(dataset)
+        updatedHumanReadable = getUpdatedReadable(dataset)
+      }
+      return {
+        id: dataquery._id,
+        displayName: dataquery.displayName,
+        path: dataquery._path,
+        parentType: getParentType(dataquery._path),
+        format: dataquery.data.datasetFormat? dataquery.data.datasetFormat._selected : undefined,
+        updated,
+        updatedHumanReadable,
+        hasData,
+        isPublished: isPublished(dataquery)
+      }
+    })
+  }
+  return dataQueries
+}
+
+function getParentType(path) {
+  const parentPath = getParentPath(path)
+  const parentContent = content.get({key: parentPath})
+
+  if(parentContent) {
+    if(parentContent.page.config || parentContent.type === 'portal:site') {
+      return parentContent.page.config.pageType ? parentContent.page.config.pageType : 'default'
+    } else {
+      return getParentType(parentPath)
+    }
+  } else {
+    log.error(`Cound not find content from path ${path}`)
+    return undefined
+  }
+}
+
+function getParentPath(path) {
+  const pathElements = path.split('/')
+  pathElements.pop()
+  return pathElements.join('/')
 }
