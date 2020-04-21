@@ -20,11 +20,11 @@ const view = resolve('./dashboard.html')
 
 exports.get = function(req) {
   return renderPart()
-  /*try {
+  try {
     return renderPart()
   } catch (e) {
     return renderError(req, 'Error in part', e)
-  }*/
+  }
 }
 
 function renderPart() {
@@ -105,7 +105,8 @@ function renderPart() {
   let body = render(view, model)
 
   body = dashboardDataset.renderBody({
-    body
+    body,
+    clientRender: true
   })
 
   return {

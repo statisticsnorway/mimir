@@ -1,7 +1,9 @@
 import React from 'react'
-import { Accordion, Button } from '@statisticsnorway/ssb-component-library'
+import { Accordion, Button as SSBButton } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
+import Alert from 'react-bootstrap/Alert'
 import Col from 'react-bootstrap/Col'
+import Modal from 'react-bootstrap/Modal'
 import Row from 'react-bootstrap/Row'
 import Table from 'react-bootstrap/Table'
 import DashboardDataQuery from './DashboardDataQuery'
@@ -225,20 +227,68 @@ class Dashboard extends React.Component {
           </Col>
         </Row>
         {this.renderFooter()}
+        <Alert variant="danger"
+               show={this.state.showErrorAlert}
+               onClose={() => this.setState({showErrorAlert: false})}
+               dismissible
+               role="alert">
+          <p>{this.state.errorMsg}</p>
+        </Alert>
+
+        <Alert variant="success"
+               show={this.state.showSuccessAlert}
+               onClose={() => this.setState({showSuccessAlert: false})}
+               dismissible
+               role="alert">
+          <p>{this.state.successMsg}</p>
+        </Alert>
       </section>
     )
   }
 
-
+  renderDialogBox(data) {
+    return (
+      <Modal show={this.state[data.stateProperty]} onHide={() => data.onHide(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>{data.title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{data.body}</Modal.Body>
+        <Modal.Footer>
+          <SSBButton secondary onClick={() => data.onHide(false)}>
+            {data.cancelTitle}
+          </SSBButton>
+          <SSBButton primary onClick={() => data.onHide(true)}>
+            {data.submitTitle}
+          </SSBButton>
+        </Modal.Footer>
+      </Modal>
+    )
+  }
 
   renderDeleteAllButtonAndDialog() {
     return (
-        <Button className="js-dashboard-delete pb-2" >
+      <>
+        <SSBButton
+          secondary
+          className="js-dashboard-delete pb-2"
+          onClick={() => this.setState({
+            showDeleteAllDialog: true
+          })}>
+          {this.state.deletingAll ?  <span className="spinner-border spinner-border-sm mr-2"></span> : ''}
           Slett alle dataset
-        </Button>
+        </SSBButton>
+        {this.renderDialogBox({
+          stateProperty: 'showDeleteAllDialog',
+          onHide: (status) => this.handleHideDeleteAllDialog(status),
+          title: 'Vil du slette alle dataset?',
+          body: 'Alle dataset vil bli slettet',
+          cancelTitle: 'Avbryt',
+          submitTitle: 'Slett'
+        })}
+      </>
     )
   }
-  /*renderDownloadAllButtonAndDialog() {
+  renderDownloadAllButtonAndDialog() {
     return (
       <>
         <SSBButton
@@ -260,12 +310,13 @@ class Dashboard extends React.Component {
         })}
       </>
     )
-  }*/
+  }
 
   renderFooter() {
     return (
       <nav className="footerNavigation my-4">
         {this.renderDeleteAllButtonAndDialog()}
+        {this.renderDownloadAllButtonAndDialog()}
 
       </nav>
     )
