@@ -102,7 +102,6 @@ exports.get = function(req) {
     metaInfoSearchContentType = 'faktaside'
   }
 
-
   if (municipality) {
     // TODO: Deaktiverer at kommunesidene er søkbare til vi finner en løsning med kommunenavn i tittel MIMIR-549
     addMetaInfoSearch = false
