@@ -13,6 +13,7 @@ const {
 
 const moment = require('moment/min/moment-with-locales')
 const languageLib = __non_webpack_require__( '/lib/language')
+const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 const view = resolve('./article.html')
 
@@ -50,6 +51,8 @@ function renderPart(req) {
     }
   })
 
+  const externalLinkConfig = page.data.relatedExternalLinkItemSet ? data.forceArray(page.data.relatedExternalLinkItemSet) : []
+
   const model = {
     title: page.displayName,
     language: languageLib.getLanguage(page),
@@ -58,13 +61,38 @@ function renderPart(req) {
     showPubDate: page.data.showPublishDate,
     pubDate,
     modifiedDate,
-    authors
+    authors,
+    externalLinkConfig
   }
 
-  const body = render(view, model)
+  let body = render(view, model)
+  let pageContributions
+
+  if (externalLinkConfig) {
+    const externalLinksComponent = new React4xp('Links')
+      .setProps({
+        links: externalLinkConfig.map((links) => {
+          return {
+            href: links.url,
+            children: links.urlText,
+            hasIcon: true,
+            iconType: 'externalLink',
+            isExternal: true
+          }
+        })
+      })
+      .setId('externalLinksId')
+
+    body = externalLinksComponent.renderBody({
+      body
+    })
+
+    pageContributions = externalLinksComponent.renderPageContributions()
+  }
 
   return {
     body,
+    pageContributions,
     contentType: 'text/html'
   }
 }
