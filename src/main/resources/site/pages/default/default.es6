@@ -94,22 +94,22 @@ exports.get = function(req) {
   let metaInfoDescription
 
   if (pageType === 'municipality') {
+    metaInfoSearchContentType = 'kommunefakta'
     metaInfoSearchKeywords = 'kommune, kommuneprofil',
     metaInfoDescription = page.x['com-enonic-app-metafields']['meta-data'].seoDescription
   }
 
-  if (pageType === 'factPage') {
-    metaInfoSearchContentType = 'faktaside'
-  }
-
-  if (municipality) {
+  if (pageType === 'municipality' && municipality) {
     // TODO: Deaktiverer at kommunesidene er søkbare til vi finner en løsning med kommunenavn i tittel MIMIR-549
     addMetaInfoSearch = false
     metaInfoSearchId = metaInfoSearchId + '_' + municipality.code
     metaInfoSearchTitle = 'Kommunefakta ' + municipality.displayName
-    metaInfoSearchContentType = 'kommunefakta'
     metaInfoSearchGroup = metaInfoSearchGroup + '_' + municipality.code
     metaInfoSearchKeywords = municipality.displayName + ' kommune'
+  }
+
+  if (pageType === 'factPage') {
+    metaInfoSearchContentType = 'faktaside'
   }
 
   let config
