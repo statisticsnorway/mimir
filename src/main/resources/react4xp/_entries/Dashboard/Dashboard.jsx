@@ -1,16 +1,19 @@
 import React from 'react'
 import { Accordion, Button as SSBButton } from '@statisticsnorway/ssb-component-library'
-import { Trash, Download } from 'react-feather'
-import DashboardDataQuery from './DashboardDataQuery'
 import PropTypes from 'prop-types'
-import { Alert, Button, Col, Modal, Row, Table } from 'react-bootstrap'
+import Alert from 'react-bootstrap/Alert'
+import Col from 'react-bootstrap/Col'
+import Modal from 'react-bootstrap/Modal'
+import Row from 'react-bootstrap/Row'
+import Table from 'react-bootstrap/Table'
+import DashboardDataQuery from './DashboardDataQuery'
 import axios from 'axios'
 
 class Dashboard extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      dataQueries: this.props.dataQueries,
+      dataQueries: props.dataQueries,
       showDeleteAllDialog: false,
       showDownloadAllDialog: false,
       downloadingAll: false,
@@ -65,7 +68,7 @@ class Dashboard extends React.Component {
       dataQueries: this.state.dataQueries.map( (query) => {
         if (query.id === dataQueryId) {
           query.loading = false,
-          query.deleting = false
+            query.deleting = false
         }
         return query
       })
@@ -123,19 +126,19 @@ class Dashboard extends React.Component {
         this.showError(response.data.message)
       }
     })
-    .catch((e) => {
-      this.showError(e.response.data.message)
-    })
-    .finally(() => {
-      if(id !== '*') {
-        this.stopLoadingIndicators(id)
-      } else {
-        this.setState({
-          downloadingAll: false,
-          deletingAll: false
-        })
-      }
-    })
+      .catch((e) => {
+        this.showError(e.response.data.message)
+      })
+      .finally(() => {
+        if(id !== '*') {
+          this.stopLoadingIndicators(id)
+        } else {
+          this.setState({
+            downloadingAll: false,
+            deletingAll: false
+          })
+        }
+      })
   }
 
   updateDataQueries(updatedDataQueries) {
@@ -157,6 +160,7 @@ class Dashboard extends React.Component {
       dataQueries: updatedSet
     })
   }
+
 
   renderDataQueries() {
     return this.state.dataQueries.map( (query) => {
@@ -201,8 +205,8 @@ class Dashboard extends React.Component {
     } = this.props
     return (
       <Accordion header={header}
-        className="mx-0 mt-4"
-        openByDefault
+                 className="mx-0 mt-4"
+                 openByDefault
       >
         {this.renderTable()}
       </Accordion>
@@ -212,23 +216,22 @@ class Dashboard extends React.Component {
   render() {
     return (
       <section className="xp-part part-dashboard">
-        <Row className="mt-3">
-          <Col className="col-lg-12">
+        <Row>
+          <Col>
             <div className="p-4 tables-wrapper">
               <h2 className="mb-3">
-                {`Spørringer mot statistikkbank og tabellbygger (${this.props.dataQueries.length} stk)`}
+                {`Spørringer mot statistikkbank og tabellbygger (${this.state.dataQueries ? this.state.dataQueries.length : '0'} stk)`}
               </h2>
               {this.renderAccordians()}
             </div>
           </Col>
         </Row>
         {this.renderFooter()}
-
         <Alert variant="danger"
-          show={this.state.showErrorAlert}
-          onClose={() => this.setState({showErrorAlert: false})}
-          dismissible
-          role="alert">
+               show={this.state.showErrorAlert}
+               onClose={() => this.setState({showErrorAlert: false})}
+               dismissible
+               role="alert">
           <p>{this.state.errorMsg}</p>
         </Alert>
 
@@ -239,7 +242,6 @@ class Dashboard extends React.Component {
                role="alert">
           <p>{this.state.successMsg}</p>
         </Alert>
-
       </section>
     )
   }
@@ -280,13 +282,12 @@ class Dashboard extends React.Component {
           onHide: (status) => this.handleHideDeleteAllDialog(status),
           title: 'Vil du slette alle dataset?',
           body: 'Alle dataset vil bli slettet',
-          cancelTitle: 'Lukk',
+          cancelTitle: 'Avbryt',
           submitTitle: 'Slett'
         })}
       </>
     )
   }
-
   renderDownloadAllButtonAndDialog() {
     return (
       <>
@@ -316,9 +317,11 @@ class Dashboard extends React.Component {
       <nav className="footerNavigation my-4">
         {this.renderDeleteAllButtonAndDialog()}
         {this.renderDownloadAllButtonAndDialog()}
+
       </nav>
     )
   }
+
 }
 
 
