@@ -60,7 +60,7 @@
             <label>Relaterte sider</label>
             <items>
                 <item-set name="relatedExternalLinkItemSet">
-                    <Label>Relaterte eksterne lenker</Label>
+                    <label>Relaterte eksterne lenker</label>
                     <occurrences minimum="0" maximum="0"/>
                     <items>
                         <input type="TextLine" name="urlText">
