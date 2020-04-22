@@ -75,7 +75,6 @@ function renderPart(req) {
           return {
             href: links.url,
             children: links.urlText,
-            hasIcon: true,
             iconType: 'externalLink',
             isExternal: true
           }

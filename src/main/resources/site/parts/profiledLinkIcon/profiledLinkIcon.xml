@@ -1,8 +1,8 @@
 <part>
-    <display-name>Profilerte lenker</display-name>
+    <display-name>Profilerte lenker med ikoner</display-name>
     <form>
         <item-set name="profiledLinkItemSet">
-            <label>Profilerte lenker</label>
+            <label>Lenker</label>
             <occurrences minimum="0" maximum="0"/>
             <items>
                 <input name="text" type="TextLine">

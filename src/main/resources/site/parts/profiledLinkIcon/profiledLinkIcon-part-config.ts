@@ -1,6 +1,6 @@
-export interface ProfiledLinkPartConfig {
+export interface ProfiledLinkIconPartConfig {
   /**
-   * Profilerte lenker
+   * Lenker
    */
   profiledLinkItemSet?: Array<{
     /**
