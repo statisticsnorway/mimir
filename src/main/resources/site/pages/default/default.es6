@@ -66,6 +66,7 @@ exports.get = function(req) {
     value: page.data.ingress ? page.data.ingress.replace(/&nbsp;/g, ' ') : undefined
   })
   const showIngress = ingress && page.type === 'mimir:page'
+  const pageType = page.page.config.pageType ? page.page.config.pageType : 'default'
 
 
   // Create preview if available
@@ -82,6 +83,33 @@ exports.get = function(req) {
   let municipality
   if (req.params.selfRequest) {
     municipality = getMunicipality(req)
+  }
+
+  let addMetaInfoSearch = true
+  let metaInfoSearchId = page._id
+  let metaInfoSearchTitle = page.displayName
+  let metaInfoSearchContentType = page._name
+  let metaInfoSearchGroup = page._id
+  let metaInfoSearchKeywords
+  let metaInfoDescription
+
+  if (pageType === 'municipality') {
+    metaInfoSearchContentType = 'kommunefakta'
+    metaInfoSearchKeywords = 'kommune, kommuneprofil',
+    metaInfoDescription = page.x['com-enonic-app-metafields']['meta-data'].seoDescription
+  }
+
+  if (pageType === 'municipality' && municipality) {
+    // TODO: Deaktiverer at kommunesidene er søkbare til vi finner en løsning med kommunenavn i tittel MIMIR-549
+    addMetaInfoSearch = false
+    metaInfoSearchId = metaInfoSearchId + '_' + municipality.code
+    metaInfoSearchTitle = 'Kommunefakta ' + municipality.displayName
+    metaInfoSearchGroup = metaInfoSearchGroup + '_' + municipality.code
+    metaInfoSearchKeywords = municipality.displayName + ' kommune'
+  }
+
+  if (pageType === 'factPage') {
+    metaInfoSearchContentType = 'faktaside'
   }
 
   let config
@@ -170,7 +198,14 @@ exports.get = function(req) {
     language,
     GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null,
     headerBody: header ? header.body : undefined,
-    footerBody: footer ? footer.body : undefined
+    footerBody: footer ? footer.body : undefined,
+    addMetaInfoSearch,
+    metaInfoSearchId,
+    metaInfoSearchTitle,
+    metaInfoSearchGroup,
+    metaInfoSearchContentType,
+    metaInfoSearchKeywords,
+    metaInfoDescription
   }
 
   let body = thymeleaf.render(view, model)

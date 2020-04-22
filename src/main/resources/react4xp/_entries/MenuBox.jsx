@@ -1,0 +1,39 @@
+import React from 'react'
+import PropTypes from 'prop-types'
+import { Card, Text } from '@statisticsnorway/ssb-component-library'
+
+const MenuBox = (props) => {
+  return (
+    <div>
+      {
+        props.boxes.map((box, index) => {
+          return (
+            <Card
+              key={ `box_${index}` }
+              title={ box.title }
+              href={ box.href }
+              icon={ box.icon ? <img src={box.icon.src} alt={box.icon.alt}></img> : undefined }
+              profiled >
+              { box.subtitle ? <Text>{ box.subtitle }</Text> : undefined }
+            </Card>
+          )
+        })
+      }
+    </div>
+  )
+}
+
+MenuBox.propTypes = {
+  boxes: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string,
+      subtitle: PropTypes.string,
+      icon: PropTypes.shape({
+        src: PropTypes.string.isRequired,
+        alt: PropTypes.string.isRequired
+      }),
+      href: PropTypes.string.isRequired
+    }))
+}
+
+export default (props) => <MenuBox {...props} />

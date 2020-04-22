@@ -84,7 +84,7 @@ $profiled-font-size: 18px;
 $header-font-size: 20px;
 $icon-padding: 8px;
 
-a {
+p > a {
   @include open-sans;
   align-items: center;
   background-image: linear-gradient(120deg, $ssb-green-4 0%, $ssb-green-4 100%);
