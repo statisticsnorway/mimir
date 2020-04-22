@@ -13,7 +13,7 @@ class RelatedBoxes extends React.Component {
     };
 
     render() {
-        const { relatedContentLists, mainTitle, showAll } = this.props
+        const { relatedContentLists, mainTitle, showAll, showLess } = this.props
         return (
             <section className="xp-part part-imageLink container col-12 mt-5">
                 <h2 className={"ml-auto mr-auto pt-4"} >{mainTitle || 'Mangler tittel'}</h2>
@@ -30,7 +30,7 @@ class RelatedBoxes extends React.Component {
                         )}
                     </div>
                 <div className="col-8 pb-5 hide-show-btn">
-                    <Button className={relatedContentLists.length < 4 ? 'd-none' : ''} onClick={this.toggleBox}>{showAll}</Button>
+                    <Button className={relatedContentLists.length < 4 ? 'd-none' : ''} onClick={this.toggleBox}>{this.state.isHidden ? showAll : showLess}</Button>
                 </div>
             </section>
         )
