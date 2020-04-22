@@ -1,5 +1,10 @@
 export interface DefaultPageConfig {
   /**
+   * Sidetype
+   */
+  pageType: "default" | "municipality" | "factPage";
+
+  /**
    * Velg bakgrunnsfarge
    */
   bkg_color: "white" | "grey";
