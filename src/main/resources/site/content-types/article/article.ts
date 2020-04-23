@@ -14,6 +14,9 @@ export interface Article {
    */
   articleText?: string;
 
+  /**
+   * Relaterte eksterne lenker
+   */
   relatedExternalLinkItemSet?: Array<{
     /**
      * Lenketekst

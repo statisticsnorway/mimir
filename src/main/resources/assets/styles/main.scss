@@ -43,9 +43,10 @@ $container-max-widths: (
 @import "./preface";
 @import "./globalStyles";
 @import "./infoGraphic";
-@import "./_profiledBox";
-@import "./_article";
+@import "./profiledBox";
+@import "./article";
 @import "./relatedContentBox";
+@import "./profiledLinkIcon";
 
 body {
   -moz-osx-font-smoothing: grayscale;

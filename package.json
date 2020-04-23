@@ -36,7 +36,7 @@
     "babel-loader": "^8.0.6",
     "enonic-ts-codegen": "0.0.12",
     "enonic-types": "0.0.42",
-    "eslint": "^6.7.1",
+    "eslint": "^6.8.0",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-react": "^7.17.0",
     "webpack": "^4.41.3",
