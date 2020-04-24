@@ -4,11 +4,14 @@
 
   display: flex;
   justify-content: center;
-  margin-bottom: $spacer * 2;
 
-  .download-icon {
-    color: $ssb-white;
-    margin-right: 5px;
+   > * {
+    margin-bottom: $spacer * 1;
+
+    .download-icon {
+      color: $ssb-white;
+      margin-right: 5px;
+    }
   }
 }
 

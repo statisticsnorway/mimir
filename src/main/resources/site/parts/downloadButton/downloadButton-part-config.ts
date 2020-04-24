@@ -1,11 +1,16 @@
 export interface DownloadButtonPartConfig {
   /**
-   * Knapptekst
+   * Knapper
    */
-  text?: string;
+  downloadButtonItemSet?: Array<{
+    /**
+     * Knapptekst
+     */
+    text?: string;
 
-  /**
-   * Innhold
-   */
-  file?: string;
+    /**
+     * Innhold
+     */
+    file?: string;
+  }>;
 }

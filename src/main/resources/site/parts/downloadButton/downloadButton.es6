@@ -1,4 +1,7 @@
 const {
+  data
+} = __non_webpack_require__('/lib/util')
+const {
   getComponent,
   attachmentUrl
 } = __non_webpack_require__( '/lib/xp/portal')
@@ -22,26 +25,44 @@ exports.get = function(req) {
 
 exports.preview = (req) => renderPart(req)
 
+const NO_BUTTONS_FOUND = {
+  body: ''
+}
+
 const renderPart = (req) => {
   const part = getComponent()
+  const config = part.config.downloadButtonItemSet ? data.forceArray(part.config.downloadButtonItemSet) : []
 
-  const downloadButtonXP = new React4xp('DownloadButton')
-    .setProps({
-      fileLocation: attachmentUrl({
-        id: part.config.file
-      }),
-      downloadText: part.config.text
+  return renderDownloadButton(config)
+}
+
+const renderDownloadButton = (config) => {
+  if (config && config.length) {
+    const downloadButtonXP = new React4xp('buttons/DownloadButtons')
+      .setProps({
+        buttons: config.map(({
+          file, text
+        }) => {
+          return {
+            fileLocation: attachmentUrl({
+              id: file
+            }),
+            downloadText: text
+          }
+        })
+      })
+      .uniqueId()
+
+    const body = render(view, {
+      downloadButtonId: downloadButtonXP.react4xpId
     })
-    .uniqueId()
 
-  const body = render(view, {
-    downloadButtonId: downloadButtonXP.react4xpId
-  })
-
-  return {
-    body: downloadButtonXP.renderBody({
-      body
-    }),
-    pageContributions: downloadButtonXP.renderPageContributions()
+    return {
+      body: downloadButtonXP.renderBody({
+        body
+      }),
+      pageContributions: downloadButtonXP.renderPageContributions()
+    }
   }
+  return NO_BUTTONS_FOUND
 }
