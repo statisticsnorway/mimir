@@ -43,7 +43,7 @@
     "webpack-cli": "^3.3.10"
   },
   "dependencies": {
-    "@statisticsnorway/ssb-component-library": "^2.0.12",
+    "@statisticsnorway/ssb-component-library": "^2.0.14",
     "@types/react": "^16.9.17",
     "autoprefixer": "^9.7.3",
     "awesome-typescript-loader": "^5.2.1",
