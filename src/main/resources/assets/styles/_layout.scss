@@ -30,6 +30,12 @@
     border-left: 4px solid $ssb-green-3;
     line-height: 80px;
   }
+
+  h3.layout-title {
+    @include roboto-condenced;
+    font-weight: bold;
+    font-size: 28px;
+  }
 }
 
 .grey-triangle {
