@@ -1,0 +1,17 @@
+<part>
+    <display-name>Nedlastningsknapper</display-name>
+    <description>Nedlastningsknapper for data til forskning</description>
+    <form>
+        <input name="text" type="TextLine">
+            <label>Knapptekst</label>
+            <occurrences minimum="0" maximum="1"/>
+        </input>
+        <input name="file" type="ContentSelector">
+            <label>Innhold</label>
+            <occurrences minimum="0" maximum="1"/>
+            <config>
+                <allowPath>${site}</allowPath>
+            </config>
+        </input>
+    </form>
+</part>

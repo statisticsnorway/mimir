@@ -1,0 +1,16 @@
+.part-downloadButton {
+  @include make-col-ready();
+  @include make-col(12);
+
+  display: flex;
+  justify-content: center;
+  margin-bottom: $spacer * 2;
+
+  .download-icon {
+    color: $ssb-white;
+    margin-right: 5px;
+  }
+}
+
+
+
