@@ -31,16 +31,16 @@ const NO_BUTTONS_FOUND = {
 
 const renderPart = (req) => {
   const part = getComponent()
-  const config = part.config.downloadButtonItemSet ? data.forceArray(part.config.downloadButtonItemSet) : []
+  const buttons = part.config.downloadButtonItemSet ? data.forceArray(part.config.downloadButtonItemSet) : []
 
-  return renderDownloadButton(config)
+  return renderDownloadButton(buttons)
 }
 
-const renderDownloadButton = (config) => {
-  if (config && config.length) {
-    const downloadButtonXP = new React4xp('buttons/DownloadButtons')
+const renderDownloadButton = (buttons) => {
+  if (buttons && buttons.length) {
+    const downloadButtonXP = new React4xp('download-buttons/DownloadButtons')
       .setProps({
-        buttons: config.map(({
+        buttons: buttons.map(({
           file, text
         }) => {
           return {

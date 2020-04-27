@@ -9,10 +9,12 @@ const DownloadButtonComponent = ({
     fileLocation, downloadText
   } = button
   return (
-    <a download href={fileLocation} className="ssb-btn primary-btn">
-      <Download className="download-icon" size={18} />
-      {downloadText}
-    </a>
+    <div className="download-btn-wrapper">
+      <a download href={fileLocation} className="ssb-btn primary-btn">
+        <Download className="download-icon" size={18} />
+        {downloadText}
+      </a>
+    </div>
   )
 }
 

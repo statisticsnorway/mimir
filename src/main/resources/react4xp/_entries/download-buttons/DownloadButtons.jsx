@@ -14,7 +14,7 @@ const DownloadButton = ({
     return <DownloadButtonsList buttons={buttons}/>
   }
 
-  return <Text>TBD : Buttons as list</Text>
+  return <Text>TBD : List of buttons</Text>
 }
 
 DownloadButton.propTypes = {
