@@ -88,7 +88,7 @@ class Header extends React.Component {
           {this.languageLinks()}
         </nav>
         <div className="misc top-row flex-row justify-space-between flex-wrap">
-          <a className="plainLink" href="/">
+          <a id="header-logo" className="plainLink" href="/">
             <img src={logoUrl} alt={logoAltText} className="logo" />
           </a>
 
@@ -101,7 +101,8 @@ class Header extends React.Component {
               ariaLabel={searchInputPlaceholder}
               searchField
               submitCallback={this.goToSearchResultPage}
-              placeholder={searchInputPlaceholder} />
+              placeholder={searchInputPlaceholder}
+            />
           </div>
         </div>
         <Divider className="mobileMenuDivider" />

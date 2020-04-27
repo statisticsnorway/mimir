@@ -77,6 +77,16 @@ class Footer extends React.Component {
       </div>)
   }
 
+  goToTop() {
+    window.scroll({
+      top: 0,
+      behavior: 'smooth'
+    })
+    document.getElementById('header-logo').focus({
+      preventScroll: true
+    })
+  }
+
   render() {
     const {
       logoUrl, footerNavigation, topButtonText
@@ -86,10 +96,8 @@ class Footer extends React.Component {
         <div className="container">
           <div className="footer-top-row">
             <img src={logoUrl} alt="ssb-logo"/>
-            <Button negative onClick={()=> window.scroll({
-              top: 0,
-              behavior: 'smooth'
-            })}>
+            <Button negative onClick={()=> this.goToTop()
+            }>
               <ArrowUp size="22" className="mr-2" />
               {topButtonText}
             </Button>
