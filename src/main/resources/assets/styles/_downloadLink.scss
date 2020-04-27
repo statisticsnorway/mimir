@@ -1,4 +1,4 @@
-.part-download-btn {
+.part-download-link {
   @include make-row();
 
   > * {
@@ -12,6 +12,13 @@
     .download-icon {
       color: $ssb-white;
       margin-right: 5px;
+    }
+
+    @include media-breakpoint-down(md) {
+      & > .ssb-btn {
+        white-space: normal;
+        width: 100%;
+      }
     }
   }
 }
