@@ -11,8 +11,7 @@ const context: ContextLibrary = __non_webpack_require__('/lib/xp/context')
 const content: ContentLibrary = __non_webpack_require__('/lib/xp/content')
 const {
   sanitize
-}: CommonLibrary =
-    __non_webpack_require__('/lib/xp/common')
+}: CommonLibrary =  __non_webpack_require__('/lib/xp/common')
 const defaultSelectionFilter: SelectionFilter = {
   filter: 'all',
   values: ['*']

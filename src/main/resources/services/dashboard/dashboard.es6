@@ -5,103 +5,117 @@ const {
   getData, refreshDatasetWithData
 } = __non_webpack_require__('/lib/dataquery')
 const {
+  getAllOrOneDataQuery
+} = __non_webpack_require__('/lib/ssb/dataquery')
+const {
   getDataSetWithDataQueryId,
   getUpdated,
   getUpdatedReadable
 } = __non_webpack_require__( '/lib/ssb/dataset')
+const {
+  createJob, finishJobWithResult
+} = __non_webpack_require__('/lib/repo/job')
+
 
 exports.get = function(req) {
-  let status = 200
-  let message = ''
-  let success = true
-  const datasetInfo = []
-  const datasetFails = []
-  const datasetIgnored = []
   const params = req.params
 
+  let updateResult
+  let jobLog
   if (params && params.id) {
-    if (params.id === '*') { // update/create all
-      context.run(createContextOption('master'), () => {
-        const dataqueries = content.query({
-          count: 999,
-          contentTypes: [`${app.name}:dataquery`],
-          query: `data.table LIKE 'http*'`
-        }).hits
-        dataqueries.map((dataquery) => {
-          const data = getData(dataquery)
-          if (data) {
-            const dataset = refreshDatasetWithData(JSON.stringify(data), dataquery)
-            if (dataset) {
-              datasetInfo.push({
-                id: dataset.data.dataquery,
-                updated: getUpdated(dataset),
-                updatedHumanReadable: getUpdatedReadable(dataset),
-                hasData: true
-              })
-            } else {
-              datasetIgnored.push({
-                id: dataquery._id
-              })
-            }
-          } else {
-            datasetFails.push({
-              id: dataquery._id
-            })
-          }
-        })
-        message = `Successfully Updated/created: ${datasetInfo.length}, 
-        Ignored : ${datasetIgnored.length} , Failed:  ${datasetFails.length} , Total: ${dataqueries.length}`
-      })
-    } else { // update/create one
-      context.run(createContextOption('master'), () => {
-        const dataquery = content.get({
-          key: req.params.id
-        })
-        if (dataquery) {
-          const data = getData(dataquery)
-          if (data) {
-            const dataset = refreshDatasetWithData(JSON.stringify(data), dataquery)
-            if (dataset) {
-              message = `Successfully updated/created dataset for dataquery`
-              datasetInfo.push({
-                id: dataset.data.dataquery,
-                updated: getUpdated(dataset),
-                updatedHumanReadable: getUpdatedReadable(dataset),
-                hasData: true
-              })
-            } else {
-              success = true
-              message = `No new data for dataquery`
-              status = 200
-            }
-          } else {
-            success = false
-            message = `Failed to get data for dataquery: ${dataquery._id}`
-            status = 500
-          }
-        } else {
-          success = false
-          message = `No dataquery found with id: ${req.params.id}`
-          status = 404
-        }
-      })
-    }
+    updateResult = context.run(createContextOption('master'), () => {
+      const dataqueries = getAllOrOneDataQuery(param.id)
+      const allDataQueryIds = dataqueries.map( (dataquery) => dataquery._id)
+      jobLog = createJob(allDataQueryIds)
+      return dataqueries.map((dataquery) => updateDataQuery(dataquery))
+    })
   } else {
-    success = false
-    message = `Missing parameter "id"`
-    status = 400
+    updateResult = [{
+      success: false,
+      message: `Missing parameter "id"`,
+      status: 400
+    }]
   }
 
+  const messageObject = createFeedback(updateResult)
+  const finishJobResult = finishJobWithResult(jobLog._id, messageObject.success, messageObject.message, messageObject.status)
   return {
     body: {
-      success,
-      message,
-      updates: datasetInfo
+      updates: updateResult,
+      message: messageObject.message,
+      status: messageObject.status,
+      success: messageObject.success
     },
     contentType: 'application/json',
-    status
+    status: messageObject.status
   }
 }
+
+function createFeedback(updateResult) {
+  if (updateResult.length === 1) {
+    return {
+      message: updateResult[0].message,
+      status: updateResult[0].status,
+      success: updateResult[0].success
+    }
+  } else {
+    return {
+      message: `Successfully Updated/created: ${
+        updateResult.filter( (result) => result.status === 201).length
+      }, Ignored : ${
+        updateResult.filter( (result) => result.status === 204).length
+      } , Failed:  ${
+        updateResult.filter( (result) => result.status === 500).length
+      } , Total: ${
+        updateResult.length
+      }`,
+      success: true,
+      status: 201
+    }
+  }
+}
+
+function updateDataQuery(dataquery, jobLog) {
+  const returnObj = {
+    message: '',
+    success: false,
+    status: 0,
+    datasetInfo: []
+  }
+
+  if (dataquery) {
+    const data = getData(dataquery)
+    if (data) {
+      const dataset = refreshDatasetWithData(JSON.stringify(data), dataquery)
+      if (dataset) {
+        returnObj.message = `Successfully updated/created dataset for dataquery`
+        returnObj.success = true
+        returnObj.status = 201
+
+        returnObj.datasetInfo.push({
+          id: dataset.data.dataquery,
+          updated: getUpdated(dataset),
+          updatedHumanReadable: getUpdatedReadable(dataset),
+          hasData: true
+        })
+      } else {
+        returnObj.success = true
+        returnObj.message = `No new data for dataquery`
+        returnObj.status = 204 // 204: no content
+      }
+    } else {
+      returnObj.success = false
+      returnObj.message = `Failed to get data for dataquery: ${dataquery._id}`
+      returnObj.status = 500
+    }
+  } else {
+    returnObj.success = false
+    returnObj.message = `No dataquery found with id: ${req.params.id}`
+    returnObj.status = 404
+  }
+  return returnObj
+}
+
 
 exports.delete = (req) => {
   let status = 200

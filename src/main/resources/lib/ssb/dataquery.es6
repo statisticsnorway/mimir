@@ -18,3 +18,17 @@ export const get = (key) => {
     status: 200
   } : NOT_FOUND
 }
+
+export const getAllOrOneDataQuery = (selector) => {
+  if (params.id === '*') {
+    return content.query({
+      count: 999,
+      contentTypes: [`${app.name}:dataquery`],
+      query: `data.table LIKE 'http*'`
+    }).hits
+  } else {
+    return util.data.forceArray(content.get({
+      key: req.params.id
+    }))
+  }
+}
