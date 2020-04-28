@@ -24,7 +24,7 @@ exports.get = function(req) {
   let jobLog
   if (params && params.id) {
     updateResult = context.run(createContextOption('master'), () => {
-      const dataqueries = getAllOrOneDataQuery(param.id)
+      const dataqueries = getAllOrOneDataQuery(params.id)
       const allDataQueryIds = dataqueries.map( (dataquery) => dataquery._id)
       jobLog = createJob(allDataQueryIds)
       return dataqueries.map((dataquery) => updateDataQuery(dataquery))
