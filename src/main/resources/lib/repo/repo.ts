@@ -18,7 +18,7 @@ function getRepoInContext(repoId: string, branchName: string): RepositoryConfig 
   })
 }
 
-export function repoExisits(repoId: string, branchName: string): boolean {
+export function repoExists(repoId: string, branchName: string): boolean {
   const repoContent: RepositoryConfig | null = getRepoInContext(repoId, branchName)
   return !!repoContent
 }
