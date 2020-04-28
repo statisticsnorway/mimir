@@ -15,9 +15,9 @@ export interface InfoGraphicsPartConfig {
   footNote?: string;
 
   /**
-   * Alternativ tekst til bilde
+   * Alternativ tekst til bilde *NB - IKKE LENGER I BRUK* (bruk alt tekst på valgt bilde)
    */
-  altText: string;
+  altText?: string;
 
   /**
    * Beskrivende hjelpetekst for blinde
