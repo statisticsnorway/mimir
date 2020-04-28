@@ -15,7 +15,7 @@ export interface InfoGraphicsPartConfig {
   footNote?: string;
 
   /**
-   * Alternativ tekst til bilde *NB - IKKE LENGER I BRUK* (bruk alt tekst på valgt bilde)
+   * *IKKE LENGER I BRUK* (bruk alt tekst på valgt bilde)
    */
   altText?: string;
 
