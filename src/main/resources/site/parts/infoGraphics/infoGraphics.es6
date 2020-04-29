@@ -50,7 +50,7 @@ function renderPart(req) {
   })
 
   // Retrieves image as content to get image meta data
-  const imageData = content.get ({
+  const imageData = content.get({
     key: part.config.image
   })
 
