@@ -46,10 +46,10 @@ class Footer extends React.Component {
     } = this.props
     return (
       <div className="social-links">
-        <Link href={facebookUrl} isExternal negative icon={<Facebook size={24} />} />
-        <Link href={twitterUrl} isExternal negative icon={<Twitter size={24} />} />
-        <Link href={linkedinUrl} isExternal negative icon={<Linkedin size={24} />} />
-        <Link href={rssUrl} negative icon={<Rss size={24} />} />
+        <Link ariaLabel='Facebook' href={facebookUrl} isExternal negative icon={<Facebook size={24} />} />
+        <Link ariaLabel='Twitter' href={twitterUrl} isExternal negative icon={<Twitter size={24} />} />
+        <Link ariaLabel='Linkedin' href={linkedinUrl} isExternal negative icon={<Linkedin size={24} />} />
+        <Link ariaLabel='Rss' href={rssUrl} negative icon={<Rss size={24} />} />
       </div>)
   }
 
