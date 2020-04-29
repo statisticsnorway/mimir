@@ -1,44 +1,22 @@
-import { ContextLibrary } from 'enonic-types/lib/context'
 import { RepoLibrary, RepositoryConfig } from 'enonic-types/lib/repo'
+import { withUserContext } from './common';
 
-const context: ContextLibrary = __non_webpack_require__('/lib/xp/context')
 const repo: RepoLibrary = __non_webpack_require__('/lib/xp/repo')
 
-
-function getRepoInContext(repoId: string, branchName: string): RepositoryConfig | null{
-  return context.run({
-    repository: repoId,
-    branch: branchName,
-    user: {
-      login: 'su',
-      idProvider: 'system'
-    }
-  }, function() {
+export function getRepo(repoId: string, branch: string): RepositoryConfig | null {
+  return withUserContext<RepositoryConfig | null>(repoId, branch, () => {
     return repo.get(repoId)
   })
-}
+};
 
-export function repoExists(repoId: string, branchName: string): boolean {
-  const repoContent: RepositoryConfig | null = getRepoInContext(repoId, branchName)
-  return !!repoContent
-}
+export function repoExists(repoId: string, branch: string): boolean {
+  return !!getRepo(repoId, branch)
+};
 
-function createRepoInContext(repoId: string, branchName: string): RepositoryConfig {
-  return context.run({
-    repository: repoId,
-    branch: branchName,
-    user: {
-      login: 'su',
-      idProvider: 'system'
-    }
-  }, function() {
+export function createRepo(repoId: string, branch: string): RepositoryConfig {
+  return withUserContext<RepositoryConfig>(repoId, branch, () => {
     return repo.create({
       id: repoId
     })
   })
-}
-
-export function createRepo(repoId: string, branchName: string): RepositoryConfig {
-    const createRepoResult: RepositoryConfig | null = createRepoInContext(repoId, branchName)
-    return createRepoResult
 }

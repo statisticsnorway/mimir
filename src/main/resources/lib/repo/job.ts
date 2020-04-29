@@ -1,36 +1,28 @@
-import {RepoConnection, RepoNode} from 'enonic-types/lib/node';
-import {LogNodeResponse} from './node';
+import { RepoNode } from 'enonic-types/lib/node';
+import { createEventLog, updateEventLog } from './eventLog';
 
-const {createConnectionInContext, createNodeInContext} = __non_webpack_require__('/lib/repo/node');
-
-export function createJob(dataqueries: Array<string>): object {
-  const jobObject: object = {
-    _parentPath: '/jobs',
-    queryIds: dataqueries,
-    status: 'started',
-    user: '...'
-  }
-  return createNodeInContext(jobObject)
+enum JobStatus {
+  STARTED = 'Started',
+  COMPLETE = 'Completed',
 }
 
-export function finishJobWithResult(jobId: string, success: boolean, message: string, status: number): LogJobNode {
-  const connection: RepoConnection = createConnectionInContext()
-  return connection.modify({
-    key: jobId,
-    editor: function(node: LogJobNode) {
-      node.status = 'finished'
-      node.response = {
-        success,
-        message,
-        status
-      }
-      return node
-    }
+export interface JobInfo extends RepoNode {
+  status: JobStatus;
+  success: boolean;
+  message: string;
+  httpStatusCode: number;
+}
+
+export function createJobNode(queryIds: Array<string>) {
+  return createEventLog({
+    _parentPath: '/jobs',
+    queryIds,
+    status: JobStatus.STARTED,
+    user: '...'
   })
 }
 
-
-export interface LogJobNode extends RepoNode{
-  status: string;
-  response: LogNodeResponse;
+export function updateJob(jobId: string, jobInfo: JobInfo): JobInfo {
+  return updateEventLog(jobId, jobInfo) as JobInfo
 }
+
