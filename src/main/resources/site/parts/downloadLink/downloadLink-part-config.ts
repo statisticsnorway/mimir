@@ -1,6 +1,6 @@
 export interface DownloadLinkPartConfig {
   /**
-   * Knapptekst
+   * Tekst
    */
   text?: string;
 

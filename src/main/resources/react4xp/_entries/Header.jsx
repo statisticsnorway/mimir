@@ -78,7 +78,7 @@ class Header extends React.Component {
 
   render() {
     const {
-      searchInputPlaceholder, logoUrl, logoAltText, mainNavigation, skipToContentText
+      searchText, logoUrl, logoAltText, mainNavigation, skipToContentText
     } = this.props
     return (
       <header className="ssb-header-wrapper">
@@ -98,10 +98,12 @@ class Header extends React.Component {
 
           <div className={this.state.showMainMenuOnMobile ? 'show searchfield' : 'searchfield'}>
             <Input
-              ariaLabel={searchInputPlaceholder}
+              ariaLabel={searchText}
               searchField
               submitCallback={this.goToSearchResultPage}
-              placeholder={searchInputPlaceholder} />
+              placeholder={searchText}
+              ariaLabelSearchButton={searchText}
+            />
           </div>
         </div>
         <Divider className="mobileMenuDivider" />
@@ -137,7 +139,7 @@ class Header extends React.Component {
 }
 
 Header.propTypes = {
-  searchInputPlaceholder: PropTypes.string,
+  searchText: PropTypes.string,
   searchResultPageUrl: PropTypes.string,
   topLinks: PropTypes.arrayOf(
     PropTypes.shape({
