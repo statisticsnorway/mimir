@@ -155,7 +155,7 @@ export const createConfig = (highchartData, displayName) => ({
       align: 'high',
       offset: 0,
       rotation: 0,
-      y: -10
+      y: 30
     },
     type: highchartData.yAxisType || 'linear'
   },
