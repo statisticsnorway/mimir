@@ -37,6 +37,20 @@ export function createNodeInContext(content: object) {
   })
 }
 
+export function getNodeInContext(nodeId: string): object{
+  const connection: RepoConnection = createConnectionInContext()
+  return context.run({
+      repository: LOG_REPO_ID,
+      branch: LOG_BRANCH_NAME,
+      user: {
+        login: 'su',
+        idProvider: 'system'
+      }
+  },
+function() {
+    return connection.get(nodeId);
+  })
+}
 
 export interface LogNodeResponse {
   success: boolean;

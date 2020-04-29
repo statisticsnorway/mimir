@@ -15,7 +15,7 @@ const {
 const {
   createJob, finishJobWithResult
 } = __non_webpack_require__('/lib/repo/job')
-
+const {addJobToQuery} = __non_webpack_require__('/lib/repo/query')
 
 const QUERY_UPDATED = 1
 const QUERY_IGNORED = 2
@@ -31,7 +31,7 @@ exports.get = function(req) {
       const dataqueries = getAllOrOneDataQuery(params.id)
       const allDataQueryIds = dataqueries.map( (dataquery) => dataquery._id)
       jobLog = createJob(allDataQueryIds)
-      return dataqueries.map((dataquery) => updateDataQuery(dataquery, jobLog._id))
+      return dataqueries.map((dataquery) => updateDataQuery(dataquery, jobLog))
     })
   } else {
     updateResult = [{
@@ -81,16 +81,16 @@ function createFeedback(updateResult) {
   }
 }
 
-function updateDataQuery(dataquery, jobLogId) {
+function updateDataQuery(dataquery, jobLog) {
   const returnObj = {
     message: '',
     success: false,
     status: 0,
     datasetInfo: []
   }
-
+  const queryLog = addJobToQuery(dataquery, jobLog)
   if (dataquery) {
-    const data = getData(dataquery, jobLogId)
+    const data = getData(dataquery, jobLog._id)
     if (data) {
       const dataset = refreshDatasetWithData(JSON.stringify(data), dataquery)
       if (dataset) {

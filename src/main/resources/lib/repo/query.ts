@@ -2,19 +2,24 @@ import { Content } from 'enonic-types/lib/content'
 import { Dataquery } from '../../site/content-types/dataquery/dataquery'
 import { NodeQueryHit, NodeQueryResponse, RepoConnection, RepoNode } from 'enonic-types/lib/node'
 import { UtilLibrary } from '../types/util'
-import { LogJobNode } from './job';
+import { LogJobNode } from './job'
+import { getNodeInContext } from './node'
 
-const { createConnectionInContext, createNodeInContext } = __non_webpack_require__('./node')
+const {
+  createConnectionInContext, createNodeInContext
+} = __non_webpack_require__('./node')
 const util: UtilLibrary = __non_webpack_require__( '/lib/util')
 
 export function createLogQuery(dataquery: Content<Dataquery>, job: LogJobNode): object {
   return createNodeInContext({
     _parentPath: '/queries',
-    queryId: dataquery._id,
-    jobs: [{
-      id: job._id,
-      response: job.data.response
-    }]
+    data: {
+      queryId: dataquery._id,
+      jobs: [{
+        id: job._id,
+        response: job.data.response
+      }]
+    }
   })
 }
 
@@ -23,8 +28,8 @@ export function updateLogQueryWithJob(dataqueryId: string, job: LogJobNode): Log
   return connection.modify({
     key: dataqueryId,
     editor: function(node: LogQueryNode) {
-      node.jobs = util.data.forceArray(node.jobs) as Array<LogJobSummaryNode>
-      node.jobs.push({
+      node.data.jobs = util.data.forceArray(node.data.jobs) as Array<LogJobSummaryNode>
+      node.data.jobs.push({
         id: job._id,
         response: job.data.response
       })
@@ -37,7 +42,7 @@ export function addJobToQuery(dataquery: Content<Dataquery>, job: LogJobNode): v
   const connection: RepoConnection = createConnectionInContext()
   const queryResult: NodeQueryResponse = connection.query({
     count: 1,
-    query: `queryId = '${dataquery._id}'`
+    query: `data.queryId = '${dataquery._id}'`
   })
   if (queryResult.total === 1) {
     const queryLog: NodeQueryHit = queryResult.hits[0]
@@ -47,9 +52,25 @@ export function addJobToQuery(dataquery: Content<Dataquery>, job: LogJobNode): v
   }
 }
 
+export function getQueryLog(queryId: string): object | undefined {
+  const connection: RepoConnection = createConnectionInContext()
+  const queryResult: NodeQueryResponse = connection.query({
+    count: 1,
+    query: `_parentPath = '/queries' AND data.queryId = '${queryId}'`
+  })
+  const query: NodeQueryHit | undefined = queryResult.total > 0 ? queryResult.hits[0] : undefined
+  if (query) {
+    return getNodeInContext(query.id)
+  } else {
+    return undefined
+  }
+}
+
 export interface LogQueryNode extends RepoNode {
-  queryId: string;
-  jobs: Array<LogJobSummaryNode>;
+  data: {
+    queryId: string;
+    jobs: Array<LogJobSummaryNode>;
+  };
 }
 
 export interface LogJobSummaryNode {

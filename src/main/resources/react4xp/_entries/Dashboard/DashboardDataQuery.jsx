@@ -20,6 +20,7 @@ class DashboardDataQuery extends React.Component {
         </td>
         <td>{this.props.updated ? this.props.updated : ''}</td>
         <td>{this.props.updatedHumanReadable ? this.props.updatedHumanReadable : ''}</td>
+        <td></td>
         <td className="actions">
           <Button variant="secondary"
             size="sm"

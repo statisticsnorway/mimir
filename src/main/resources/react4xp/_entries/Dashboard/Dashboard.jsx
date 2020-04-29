@@ -124,23 +124,17 @@ class Dashboard extends React.Component {
 
   resultHandler(p, id) {
     return p.then((response) => {
-      console.log(response)
       if (response.data.success) {
-        console.log('SUCESSS')
         this.updateDataQueries(response.data.updates)
         this.showSuccess(response.data.message)
       } else {
-        console.log('ERRORR')
         this.showError(response.data.message)
       }
     })
       .catch((e) => {
-        console.log('CATCHY CATCHY')
-        console.log(e)
         this.showError(e.response.data.message)
       })
       .finally(() => {
-        console.log('FANALLYYY')
         if(id !== '*') {
           this.stopLoadingIndicators(id)
         } else {
@@ -202,6 +196,7 @@ class Dashboard extends React.Component {
           <th className="roboto-bold">Spørring</th>
           <th className="roboto-bold">Sist oppdatert</th>
           <th></th>
+          <th className="roboto-bold">Siste spørring</th>
           <th></th>
         </tr>
         </thead>

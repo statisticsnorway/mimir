@@ -17,7 +17,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/utils')
 const content = __non_webpack_require__( '/lib/xp/content')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-
+const { getQueryLog } = __non_webpack_require__('/lib/repo/query')
 const view = resolve('./dashboard.html')
 
 exports.get = function(req) {
@@ -128,11 +128,18 @@ function getDataQueries(datasetMap) {
         updated,
         updatedHumanReadable,
         hasData,
-        isPublished: isPublished(dataquery)
+        isPublished: isPublished(dataquery),
+        logData: getLogData(dataquery._id)
       }
     })
   }
   return dataQueries
+}
+
+function getLogData(dataQueryId) {
+  const logData = getQueryLog(dataQueryId)
+  log.info('%s', JSON.stringify(logData, null, 2))
+  return logData ? logData.data : undefined
 }
 
 function getParentType(path) {
