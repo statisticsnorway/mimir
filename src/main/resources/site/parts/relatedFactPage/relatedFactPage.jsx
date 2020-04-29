@@ -29,7 +29,7 @@ class RelatedBoxes extends React.Component {
                             />
                         )}
                     </div>
-                <div className="col-8 pb-5 hide-show-btn">
+                <div className="pb-5 hide-show-btn">
                     <Button className={relatedContentLists.length < 5 ? 'd-none' : ''} onClick={this.toggleBox}>{this.state.isHidden ? showAll : showLess}</Button>
                 </div>
             </section>

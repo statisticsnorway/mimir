@@ -34,7 +34,11 @@ export function init() {
         if (e.which === 9) {
           e.preventDefault()
           // not the best solution, but it fixes keyboard trap. TODO: rewrite dropdown
-          $('.show-map').focus()
+          if ($('.show-map').length) {
+            $('.show-map').focus()
+          } else {
+            $('.footer-top-row .ssb-btn').focus()
+          }
         }
         // 40 = arrow down key
         else if (e.which === 40) {
