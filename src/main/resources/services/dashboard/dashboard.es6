@@ -17,6 +17,10 @@ const {
 } = __non_webpack_require__('/lib/repo/job')
 
 
+const QUERY_UPDATED = 1
+const QUERY_IGNORED = 2
+const QUERY_FAILED = 3
+
 exports.get = function(req) {
   const params = req.params
 
@@ -27,7 +31,7 @@ exports.get = function(req) {
       const dataqueries = getAllOrOneDataQuery(params.id)
       const allDataQueryIds = dataqueries.map( (dataquery) => dataquery._id)
       jobLog = createJob(allDataQueryIds)
-      return dataqueries.map((dataquery) => updateDataQuery(dataquery))
+      return dataqueries.map((dataquery) => updateDataQuery(dataquery, jobLog._id))
     })
   } else {
     updateResult = [{
@@ -39,7 +43,8 @@ exports.get = function(req) {
 
   const messageObject = createFeedback(updateResult)
   const finishJobResult = finishJobWithResult(jobLog._id, messageObject.success, messageObject.message, messageObject.status)
-  return {
+
+  const returnObj = {
     body: {
       updates: updateResult,
       message: messageObject.message,
@@ -49,6 +54,7 @@ exports.get = function(req) {
     contentType: 'application/json',
     status: messageObject.status
   }
+  return returnObj
 }
 
 function createFeedback(updateResult) {
@@ -61,21 +67,21 @@ function createFeedback(updateResult) {
   } else {
     return {
       message: `Successfully Updated/created: ${
-        updateResult.filter( (result) => result.status === 201).length
+        updateResult.filter( (result) => result.queryStatus === QUERY_UPDATED).length
       }, Ignored : ${
-        updateResult.filter( (result) => result.status === 204).length
+        updateResult.filter( (result) => result.queryStatus === QUERY_IGNORED).length
       } , Failed:  ${
-        updateResult.filter( (result) => result.status === 500).length
+        updateResult.filter( (result) => result.queryStatus === QUERY_FAILED).length
       } , Total: ${
         updateResult.length
       }`,
       success: true,
-      status: 201
+      status: 200
     }
   }
 }
 
-function updateDataQuery(dataquery, jobLog) {
+function updateDataQuery(dataquery, jobLogId) {
   const returnObj = {
     message: '',
     success: false,
@@ -84,11 +90,12 @@ function updateDataQuery(dataquery, jobLog) {
   }
 
   if (dataquery) {
-    const data = getData(dataquery)
+    const data = getData(dataquery, jobLogId)
     if (data) {
       const dataset = refreshDatasetWithData(JSON.stringify(data), dataquery)
       if (dataset) {
         returnObj.message = `Successfully updated/created dataset for dataquery`
+        returnObj.queryStatus = QUERY_UPDATED
         returnObj.success = true
         returnObj.status = 201
 
@@ -101,16 +108,19 @@ function updateDataQuery(dataquery, jobLog) {
       } else {
         returnObj.success = true
         returnObj.message = `No new data for dataquery`
-        returnObj.status = 204 // 204: no content
+        returnObj.queryStatus = QUERY_IGNORED
+        returnObj.status = 200
       }
     } else {
       returnObj.success = false
       returnObj.message = `Failed to get data for dataquery: ${dataquery._id}`
+      returnObj.queryStatus = QUERY_FAILED
       returnObj.status = 500
     }
   } else {
     returnObj.success = false
     returnObj.message = `No dataquery found with id: ${req.params.id}`
+    returnObj.queryStatus = QUERY_FAILED
     returnObj.status = 404
   }
   return returnObj

@@ -13,7 +13,7 @@ export function createLogQuery(dataquery: Content<Dataquery>, job: LogJobNode): 
     queryId: dataquery._id,
     jobs: [{
       id: job._id,
-      response: job.response
+      response: job.data.response
     }]
   })
 }
@@ -26,7 +26,7 @@ export function updateLogQueryWithJob(dataqueryId: string, job: LogJobNode): Log
       node.jobs = util.data.forceArray(node.jobs) as Array<LogJobSummaryNode>
       node.jobs.push({
         id: job._id,
-        response: job.response
+        response: job.data.response
       })
       return node
     }

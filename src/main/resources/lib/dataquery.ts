@@ -1,4 +1,4 @@
-import { HttpResponse, HttpLibrary } from 'enonic-types/lib/http'
+import {HttpResponse, HttpLibrary, HttpRequestParams} from 'enonic-types/lib/http'
 import { ContextLibrary, RunContext } from 'enonic-types/lib/context'
 import { Dataquery } from '../site/content-types/dataquery/dataquery'
 import { Content, ContentLibrary, QueryResponse, PublishResponse } from 'enonic-types/lib/content'
@@ -6,12 +6,16 @@ import { Dataset } from '../site/content-types/dataset/dataset'
 import * as moment from 'moment'
 import { getTbmlData } from './tbml/tbml'
 import { CommonLibrary } from './types/common'
+import {createRequestLog} from './repo/request';
+
 const http: HttpLibrary = __non_webpack_require__('/lib/http-client')
 const context: ContextLibrary = __non_webpack_require__('/lib/xp/context')
 const content: ContentLibrary = __non_webpack_require__('/lib/xp/content')
 const {
   sanitize
 }: CommonLibrary =  __non_webpack_require__('/lib/xp/common')
+const { addRequestDataToJobLog, addResponseDataToJobLog } = __non_webpack_require__('/lib/repo/job')
+
 const defaultSelectionFilter: SelectionFilter = {
   filter: 'all',
   values: ['*']
@@ -28,7 +32,8 @@ const draft: RunContext = { // Draft context (XP)
   user
 }
 
-export function get(url: string, json: DataqueryRequestData | undefined, selection: SelectionFilter = defaultSelectionFilter): object | null {
+export function get(url: string, json: DataqueryRequestData | undefined,
+  selection: SelectionFilter = defaultSelectionFilter, jobLogId?: string, queryId?: string ): object | null {
   if (json && json.query) {
     for (const query of json.query) {
       if (query.code === 'KOKkommuneregion0000' || query.code === 'Region') {
@@ -37,7 +42,7 @@ export function get(url: string, json: DataqueryRequestData | undefined, selecti
     }
   }
   const method: string = json && json.query ? 'POST' : 'GET'
-  const result: HttpResponse = http.request({
+  const requestParams: HttpRequestParams = {
     url,
     method,
     contentType: 'application/json',
@@ -47,8 +52,13 @@ export function get(url: string, json: DataqueryRequestData | undefined, selecti
     },
     connectionTimeout: 20000,
     readTimeout: 5000,
-    body: json ? JSON.stringify(json) : undefined
-  })
+    body: json ? JSON.stringify(json) : ''
+  }
+
+  const result: HttpResponse = http.request(requestParams)
+  log.info(`${jobLogId} <-> ${queryId}`)
+  if(jobLogId && queryId) createRequestLog(jobLogId, queryId, requestParams, result)
+
   if (result.status !== 200) {
     log.error(`HTTP ${url} (${result.status} ${result.message})`)
   }
@@ -63,7 +73,7 @@ export function refreshDataset(dataquery: Content<Dataquery>): Content<Dataset> 
   return data ? refreshDatasetWithData(JSON.stringify(data), dataquery) : undefined
 }
 
-export function refreshDatasetWithData(data: string, dataquery: Content<Dataquery>): Content<Dataset> | undefined {
+export function refreshDatasetWithData(data: string, dataquery: Content<Dataquery>, jobLogId?: string): Content<Dataset> | undefined {
   const dataset: Content<Dataset>| undefined = getDataset(dataquery)
 
   if (dataset) {
@@ -73,16 +83,16 @@ export function refreshDatasetWithData(data: string, dataquery: Content<Dataquer
   }
 }
 
-export function getData(dataquery: Content<Dataquery>): object | null {
+export function getData(dataquery: Content<Dataquery>, jobLogId?: string): object | null {
   if (dataquery.data.table) {
     // TODO option-set is not parsed correctly by enonic-ts-codegen, update lib later and remove PlaceholderData interface
     const datasetFormat: Dataquery['datasetFormat'] = dataquery.data.datasetFormat
     let data: object | null = null
     try {
       if ((!datasetFormat || datasetFormat._selected === 'jsonStat')) {
-        data = get(dataquery.data.table, dataquery.data.json && JSON.parse(dataquery.data.json))
+        data = get(dataquery.data.table, dataquery.data.json && JSON.parse(dataquery.data.json), undefined, jobLogId, dataquery._id)
       } else if (datasetFormat && datasetFormat._selected === 'klass') {
-        data = get(dataquery.data.table, undefined)
+        data = get(dataquery.data.table, undefined, undefined, jobLogId)
       } else if (datasetFormat && datasetFormat._selected === 'tbml') {
         data = getTbmlData(dataquery.data.table)
       }

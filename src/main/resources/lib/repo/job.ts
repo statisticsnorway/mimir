@@ -1,25 +1,58 @@
 import {RepoConnection, RepoNode} from 'enonic-types/lib/node';
 import {LogNodeResponse} from './node';
+import {HttpRequestParams, HttpResponse} from 'enonic-types/lib/http';
+import {User} from 'enonic-types/lib/auth';
 
 const {createConnectionInContext, createNodeInContext} = __non_webpack_require__('/lib/repo/node');
 
-export function createJob(dataqueries: Array<string>): object {
+export function createJob(dataqueries: Array<string>, user?: User): object {
+  const now: Date = new Date()
   const jobObject: object = {
     _parentPath: '/jobs',
-    queryIds: dataqueries,
-    status: 'started',
-    user: '...'
+    data: {
+      queryIds: dataqueries,
+      jobStarted: now.toISOString(),
+      status: 'Started',
+      user
+    }
   }
   return createNodeInContext(jobObject)
 }
 
-export function finishJobWithResult(jobId: string, success: boolean, message: string, status: number): LogJobNode {
+export function addRequestDataToJobLog(jobLogId: string, requestParams: HttpRequestParams): object{
   const connection: RepoConnection = createConnectionInContext()
   return connection.modify({
-    key: jobId,
+    key: jobLogId,
     editor: function(node: LogJobNode) {
-      node.status = 'finished'
-      node.response = {
+      node.data.status = 'Requesting'
+      node.data.request = requestParams
+      return node
+    }
+  })
+}
+
+
+export function addResponseDataToJobLog(jobLogId: string, response: HttpResponse): object {
+  const connection: RepoConnection = createConnectionInContext()
+  return connection.modify({
+    key: jobLogId,
+    editor: function(node: LogJobNode) {
+      node.data.status = 'Recieved response'
+      node.data.httpResponse = response
+      return node
+    }
+  })
+}
+
+export function finishJobWithResult(jobLogId: string, success: boolean, message: string, status: number): LogJobNode {
+  const connection: RepoConnection = createConnectionInContext()
+  const now: Date = new Date()
+  return connection.modify({
+    key: jobLogId,
+    editor: function(node: LogJobNode) {
+      node.data.jobEnded = now.toISOString()
+      node.data.status = 'Finished'
+      node.data.response = {
         success,
         message,
         status
@@ -31,6 +64,12 @@ export function finishJobWithResult(jobId: string, success: boolean, message: st
 
 
 export interface LogJobNode extends RepoNode{
-  status: string;
-  response: LogNodeResponse;
+  data: {
+    jobStarted: string;
+    jobEnded: string;
+    status: string;
+    request: HttpRequestParams;
+    httpResponse: HttpResponse;
+    response: LogNodeResponse;
+  };
 }
