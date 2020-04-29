@@ -3,7 +3,7 @@ const content = __non_webpack_require__( '/lib/xp/content')
 const cron = __non_webpack_require__('/lib/cron')
 const cache = __non_webpack_require__('/lib/ssb/cache')
 const {
-  createRepo, repoExisits
+  createRepo, repoExists
 } = __non_webpack_require__('/lib/repo/repo')
 const {
   createNodeInContext
@@ -53,7 +53,7 @@ cache.setup()
 /**
  * Check if repo for data requests logging exists, else create repo.
  */
-if (!repoExisits(LOG_REPO_ID, LOG_BRANCH_NAME)) {
+if (!repoExists(LOG_REPO_ID, LOG_BRANCH_NAME)) {
   log.info(`Repo ${LOG_REPO_ID} was not found. Creating repo now`)
   const createRepoResult = createRepo(LOG_REPO_ID, LOG_BRANCH_NAME)
 
