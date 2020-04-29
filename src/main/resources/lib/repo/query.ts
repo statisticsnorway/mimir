@@ -4,7 +4,7 @@ import { NodeQueryResponse, RepoNode } from 'enonic-types/lib/node'
 import { JobInfo } from './job'
 import { withConnection } from './common'
 import { UtilLibrary } from '../types/util'
-import { LOG_BRANCH_NAME, LOG_REPO_ID, createEventLog } from './eventLog'
+import { EVENT_LOG_BRANCH, EVENT_LOG_REPO, createEventLog } from './eventLog'
 
 const util: UtilLibrary = __non_webpack_require__( '/lib/util')
 
@@ -25,7 +25,7 @@ export function createQueryNode(dataquery: Content<Dataquery>, job: JobInfo): ob
 }
 
 export function updateQuery(dataqueryId: string, job: JobInfo): QueryInfo {
-  return withConnection<QueryInfo>(LOG_REPO_ID, LOG_BRANCH_NAME, (conn) => {
+  return withConnection<QueryInfo>(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (conn) => {
     return conn.modify({
       key: dataqueryId,
       editor: (node: QueryInfo) => {
@@ -43,7 +43,7 @@ export function updateQuery(dataqueryId: string, job: JobInfo): QueryInfo {
 }
 
 export function startQuery(dataQuery: Content<Dataquery>, job: JobInfo): void {
-  withConnection(LOG_REPO_ID, LOG_BRANCH_NAME, (conn) => {
+  withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (conn) => {
     const queryResult: NodeQueryResponse = conn.query({
       count: 1,
       query: `queryId = '${dataQuery._id}`
