@@ -1,13 +1,16 @@
-import { createNode, withConnection } from './common';
-import { JobInfo } from './job';
+import { createNode, withUserContext, withConnection } from './common';
 import { RepoNode } from 'enonic-types/lib/node';
-import { repoExists } from './repo';
+import { repoExists, createRepo } from './repo';
 
 export const EVENT_LOG_REPO: string = 'no.ssb.eventlog'
 export const EVENT_LOG_BRANCH: string = 'master'
 
 export function eventLogExists(): boolean {
   return repoExists(EVENT_LOG_REPO, EVENT_LOG_BRANCH);
+}
+
+export function createEventLogRepo() {
+  createRepo(EVENT_LOG_REPO, EVENT_LOG_BRANCH);
 }
 
 export function createEventLog(content: object) {

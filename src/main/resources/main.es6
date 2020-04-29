@@ -1,10 +1,9 @@
-import { createEventLog } from './lib/repo/eventLog'
+import { eventLogExists, createEventLogRepo, createEventLog } from './lib/repo/eventLog'
 
 const dataquery = __non_webpack_require__('/lib/dataquery')
 const content = __non_webpack_require__( '/lib/xp/content')
 const cron = __non_webpack_require__('/lib/cron')
 const cache = __non_webpack_require__('/lib/ssb/cache')
-const { eventLogExists } = __non_webpack_require__('/lib/repo/eventLog');
 
 const user = {
   login: 'su',
@@ -45,6 +44,7 @@ cache.setup()
 
 if (! eventLogExists()) {
   log.info(`Setting up EventLog ...`);
+  createEventLogRepo();
   createEventLog({ _path: 'jobs', _name: 'jobs' });
   createEventLog({ _path: 'queries', name: 'queries' });
   log.info(`EventLog Repo for jobs and queries initialized.`);
