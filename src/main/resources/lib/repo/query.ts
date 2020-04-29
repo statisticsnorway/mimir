@@ -29,13 +29,12 @@ export function updateQuery(dataqueryId: string, job: JobInfo): QueryInfo {
     return conn.modify({
       key: dataqueryId,
       editor: (node: QueryInfo) => {
-        const jobs: Array<JobInfo> = [
-          ...(util.data.forceArray(node.jobs) as Array<JobInfo>),
-          job
-        ]
         return {
           ...node,
-          jobs
+          jobs: [
+            ...(util.data.forceArray(node.jobs) as Array<JobInfo>),
+            job
+          ]
         }
       }
     })
