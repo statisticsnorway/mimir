@@ -1,5 +1,5 @@
 import { ContextLibrary } from 'enonic-types/lib/context'
-import { NodeLibrary, RepoConnection } from 'enonic-types/lib/node'
+import {NodeCreateParams, NodeLibrary, RepoConnection, RepoNode} from 'enonic-types/lib/node'
 import { RepositoryConfig, RepoLibrary } from 'enonic-types/lib/repo'
 
 const context: ContextLibrary = __non_webpack_require__('/lib/xp/context')
@@ -40,8 +40,8 @@ export function withConnection<T>(repository: string, branch: string, callback: 
   return callback(getConnection(repository, branch))
 }
 
-export function createNode(repository: string, branch: string, content: object): object {
-  return withConnection<object>(repository, branch, (conn) => {
+export function createNode<T>(repository: string, branch: string, content: T & NodeCreateParams): T & RepoNode {
+  return withConnection(repository, branch, (conn) => {
     return conn.create(content)
   })
 }
@@ -53,3 +53,4 @@ export function createRepo(repository: string, branch: string): RepositoryConfig
     })
   })
 }
+

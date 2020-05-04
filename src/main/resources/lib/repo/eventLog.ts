@@ -1,9 +1,11 @@
-import { createNode, withUserContext, withConnection } from './common'
-import { RepoNode } from 'enonic-types/lib/node'
+import { createNode, withConnection } from './common'
+import {NodeCreateParams, RepoNode} from 'enonic-types/lib/node'
 import { repoExists, createRepo } from './repo'
 
 export const EVENT_LOG_REPO: string = 'no.ssb.eventlog'
 export const EVENT_LOG_BRANCH: string = 'master'
+
+export type EditorCallback<T> = (node: T & RepoNode) => T & RepoNode;
 
 export function eventLogExists(): boolean {
   return repoExists(EVENT_LOG_REPO, EVENT_LOG_BRANCH)
@@ -13,7 +15,7 @@ export function createEventLogRepo() {
   createRepo(EVENT_LOG_REPO, EVENT_LOG_BRANCH)
 }
 
-export function createEventLog(content: object, createRepoIfNotFound: boolean = true) {
+export function createEventLog<T>(content: T & NodeCreateParams, createRepoIfNotFound: boolean = true): T & RepoNode {
   if (! eventLogExists() && createRepoIfNotFound) {
     createEventLogRepo()
   }
@@ -21,11 +23,11 @@ export function createEventLog(content: object, createRepoIfNotFound: boolean = 
   return createNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, content)
 }
 
-export function updateEventLog(key: string, newContent: RepoNode): RepoNode {
-  return withConnection<RepoNode>(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (conn) => {
+export function updateEventLog<T>(key: string, editor: EditorCallback<T> ): T & RepoNode {
+  return withConnection<T & RepoNode>(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (conn) => {
     return conn.modify({
       key,
-      editor: () => newContent
+      editor
     })
   })
 }

@@ -138,7 +138,6 @@ function getDataQueries(datasetMap) {
 
 function getLogData(dataQueryId) {
   const logData = getQueryLog(dataQueryId)
-  log.info('%s', JSON.stringify(logData, null, 2))
   return logData ? logData.data : undefined
 }
 

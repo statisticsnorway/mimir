@@ -13,9 +13,9 @@ const {
   getUpdatedReadable
 } = __non_webpack_require__( '/lib/ssb/dataset')
 const {
-  createJob, finishJobWithResult
+  createJobNode, completeJob
 } = __non_webpack_require__('/lib/repo/job')
-const {addJobToQuery} = __non_webpack_require__('/lib/repo/query')
+const {startQuery, setQueryLogStatus, UpdateResult} = __non_webpack_require__('/lib/repo/query')
 
 const QUERY_UPDATED = 1
 const QUERY_IGNORED = 2
@@ -30,9 +30,10 @@ exports.get = function(req) {
     updateResult = context.run(createContextOption('master'), () => {
       const dataqueries = getAllOrOneDataQuery(params.id)
       const allDataQueryIds = dataqueries.map( (dataquery) => dataquery._id)
-      jobLog = createJob(allDataQueryIds)
+      jobLog = createJobNode(allDataQueryIds)
       return dataqueries.map((dataquery) => updateDataQuery(dataquery, jobLog))
     })
+
   } else {
     updateResult = [{
       success: false,
@@ -42,7 +43,7 @@ exports.get = function(req) {
   }
 
   const messageObject = createFeedback(updateResult)
-  const finishJobResult = finishJobWithResult(jobLog._id, messageObject.success, messageObject.message, messageObject.status)
+  if(jobLog) completeJob(jobLog._id, messageObject.success, messageObject.message, messageObject.status)
 
   const returnObj = {
     body: {
@@ -88,7 +89,7 @@ function updateDataQuery(dataquery, jobLog) {
     status: 0,
     datasetInfo: []
   }
-  const queryLog = addJobToQuery(dataquery, jobLog)
+  const queryLog = startQuery(dataquery, jobLog)
   if (dataquery) {
     const data = getData(dataquery, jobLog._id)
     if (data) {
@@ -97,7 +98,7 @@ function updateDataQuery(dataquery, jobLog) {
         returnObj.message = `Successfully updated/created dataset for dataquery`
         returnObj.queryStatus = QUERY_UPDATED
         returnObj.success = true
-        returnObj.status = 201
+        returnObj.status = 200
 
         returnObj.datasetInfo.push({
           id: dataset.data.dataquery,
@@ -105,23 +106,27 @@ function updateDataQuery(dataquery, jobLog) {
           updatedHumanReadable: getUpdatedReadable(dataset),
           hasData: true
         })
+        setQueryLogStatus(queryLog._id, UpdateResult.COMPLETE)
       } else {
         returnObj.success = true
         returnObj.message = `No new data for dataquery`
         returnObj.queryStatus = QUERY_IGNORED
         returnObj.status = 200
+        setQueryLogStatus(queryLog._id, UpdateResult.NO_NEW_DATA)
       }
     } else {
       returnObj.success = false
       returnObj.message = `Failed to get data for dataquery: ${dataquery._id}`
       returnObj.queryStatus = QUERY_FAILED
       returnObj.status = 500
+      setQueryLogStatus(queryLog._id, UpdateResult.FAILED)
     }
   } else {
     returnObj.success = false
     returnObj.message = `No dataquery found with id: ${req.params.id}`
     returnObj.queryStatus = QUERY_FAILED
     returnObj.status = 404
+    setQueryLogStatus(queryLog._id, UpdateResult.FAILED)
   }
   return returnObj
 }

@@ -1,20 +1,10 @@
-import { createNodeInContext } from './node'
-import {HttpRequestParams, HttpResponse} from 'enonic-types/lib/http';
-import {RepoNode} from 'enonic-types/lib/node';
+import { HttpRequestParams, HttpResponse } from 'enonic-types/lib/http'
+import { createEventLog } from './eventLog'
+import { RepoNode } from 'enonic-types/lib/node'
 
-export function createRequestLog(jobLogId: string, queryId: string, request: HttpRequestParams, response: HttpResponse): object {
-  return createNodeInContext({
-    _parentPath: `/jobs/${jobLogId}`,
-    data: {
-      requestedBy: jobLogId,
-      queryId: queryId,
-      request,
-      response
-    }
-  })
-}
+export type RequestLogNode = RequestLog & RepoNode
 
-export interface RequestLog extends RepoNode{
+export interface RequestLog {
   data: {
     requestedBy: string;
     queryId: string;
@@ -22,3 +12,16 @@ export interface RequestLog extends RepoNode{
     response: HttpResponse;
   };
 }
+
+export function createRequestLog(jobLogId: string, queryId: string, request: HttpRequestParams, response: HttpResponse): RequestLogNode {
+  return createEventLog({
+    _parentPath: `/jobs/${jobLogId}`,
+    data: {
+      requestedBy: jobLogId,
+      queryId,
+      request,
+      response
+    }
+  })
+}
+
