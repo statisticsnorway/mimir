@@ -56,9 +56,7 @@ export function get(url: string, json: DataqueryRequestData | undefined,
   }
 
   const result: HttpResponse = http.request(requestParams)
-  if(jobLogId && queryId) {
-    createRequestLog(jobLogId, queryId, requestParams, result)
-  }
+  if(jobLogId && queryId) createRequestLog(jobLogId, queryId, requestParams, result)
 
   if (result.status !== 200) {
     log.error(`HTTP ${url} (${result.status} ${result.message})`)

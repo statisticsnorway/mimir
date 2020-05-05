@@ -1,3 +1,5 @@
+import { I18nLibrary } from 'enonic-types/lib/i18n'
+
 const {
   assetUrl,
   serviceUrl
@@ -13,11 +15,14 @@ const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
 const {
-  isPublished
+  isPublished, dateToFormat, dateToReadable
 } = __non_webpack_require__('/lib/ssb/utils')
 const content = __non_webpack_require__( '/lib/xp/content')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const { getQueryLog } = __non_webpack_require__('/lib/repo/query')
+const {
+  getQueryLogWithQueryId
+} = __non_webpack_require__('/lib/repo/query')
+const i18n = __non_webpack_require__('/lib/xp/i18n')
 const view = resolve('./dashboard.html')
 
 exports.get = function(req) {
@@ -46,7 +51,9 @@ function renderPart() {
     path: 'styles/bundle.css'
   })
 
-  const logoUrl = assetUrl({path: 'SSB_logo_black.svg'});
+  const logoUrl = assetUrl({
+    path: 'SSB_logo_black.svg'
+  })
 
   const dashboardDataset = new React4xp('Dashboard/Dashboard')
     .setProps({
@@ -124,7 +131,7 @@ function getDataQueries(datasetMap) {
         displayName: dataquery.displayName,
         path: dataquery._path,
         parentType: getParentType(dataquery._path),
-        format: dataquery.data.datasetFormat? dataquery.data.datasetFormat._selected : undefined,
+        format: dataquery.data.datasetFormat ? dataquery.data.datasetFormat._selected : undefined,
         updated,
         updatedHumanReadable,
         hasData,
@@ -137,16 +144,29 @@ function getDataQueries(datasetMap) {
 }
 
 function getLogData(dataQueryId) {
-  const logData = getQueryLog(dataQueryId)
-  return logData ? logData.data : undefined
+  const logData = getQueryLogWithQueryId(dataQueryId)
+  return logData ? parseLogData(logData.data) : undefined
+}
+
+function parseLogData(data) {
+  return {
+    ...data,
+    lastUpdated: data && data.lastUpdated ? dateToFormat(data.lastUpdated) : undefined,
+    lastUpdatedHumanReadable: data && data.lastUpdated ? dateToReadable(data.lastUpdated) : undefined,
+    lastUpdateResult: data.lastUpdateResult ? i18n.localize({
+      key: data.lastUpdateResult
+    }) : undefined
+  }
 }
 
 function getParentType(path) {
   const parentPath = getParentPath(path)
-  const parentContent = content.get({key: parentPath})
+  const parentContent = content.get({
+    key: parentPath
+  })
 
-  if(parentContent) {
-    if(parentContent.page.config || parentContent.type === 'portal:site') {
+  if (parentContent) {
+    if (parentContent.page.config || parentContent.type === 'portal:site') {
       return parentContent.page.config.pageType ? parentContent.page.config.pageType : 'default'
     } else {
       return getParentType(parentPath)

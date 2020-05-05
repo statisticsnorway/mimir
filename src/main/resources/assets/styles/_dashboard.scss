@@ -72,6 +72,8 @@
     .actions {
       display: flex;
       justify-content: space-around;
+      border-bottom: 0 none;
+      border-top: 0 none;
     }
   }
   .errorMsg {
@@ -102,11 +104,8 @@
 .klass {
   background: skyblue;
 }
-.published_true {
-  background: #8dbb2b;
-}
 
-.published_false {
+.unpublished {
   background: indianred;
   color: white;
 }

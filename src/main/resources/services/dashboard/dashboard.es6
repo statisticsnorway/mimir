@@ -16,10 +16,7 @@ const {
   createJobNode, completeJob
 } = __non_webpack_require__('/lib/repo/job')
 const {startQuery, setQueryLogStatus, UpdateResult} = __non_webpack_require__('/lib/repo/query')
-
-const QUERY_UPDATED = 1
-const QUERY_IGNORED = 2
-const QUERY_FAILED = 3
+const i18n = __non_webpack_require__('/lib/xp/i18n')
 
 exports.get = function(req) {
   const params = req.params
@@ -31,9 +28,18 @@ exports.get = function(req) {
       const dataqueries = getAllOrOneDataQuery(params.id)
       const allDataQueryIds = dataqueries.map( (dataquery) => dataquery._id)
       jobLog = createJobNode(allDataQueryIds)
-      return dataqueries.map((dataquery) => updateDataQuery(dataquery, jobLog))
+      return dataqueries.map((dataquery) => {
+        const ts = new Date()
+        const updatedQueryNode = updateDataQuery(dataquery, jobLog, ts)
+        return {
+          id: dataquery._id,
+          ...updatedQueryNode.data,
+          lastUpdated: ts.toISOString(),
+          updateMessage: i18n.localize({key:updatedQueryNode.data.lastUpdateResult}),
+          updatedHumanReadable: getUpdatedReadable(ts.toISOString())
+        }
+      })
     })
-
   } else {
     updateResult = [{
       success: false,
@@ -55,80 +61,47 @@ exports.get = function(req) {
     contentType: 'application/json',
     status: messageObject.status
   }
+  log.info('%s', JSON.stringify(returnObj, null, 2))
   return returnObj
 }
 
 function createFeedback(updateResult) {
-  if (updateResult.length === 1) {
+  if(updateResult.length === 1){
     return {
-      message: updateResult[0].message,
-      status: updateResult[0].status,
-      success: updateResult[0].success
-    }
-  } else {
-    return {
-      message: `Successfully Updated/created: ${
-        updateResult.filter( (result) => result.queryStatus === QUERY_UPDATED).length
-      }, Ignored : ${
-        updateResult.filter( (result) => result.queryStatus === QUERY_IGNORED).length
-      } , Failed:  ${
-        updateResult.filter( (result) => result.queryStatus === QUERY_FAILED).length
-      } , Total: ${
-        updateResult.length
-      }`,
-      success: true,
+      message: i18n.localize({key: updateResult[0].lastUpdateResult}),
       status: 200
     }
   }
+  return {
+    message: `Successfully Updated/created: ${
+      updateResult.filter( (result) => result.lastUpdateResult === UpdateResult.COMPLETE).length
+    } No new data : ${
+      updateResult.filter( (result) => result.lastUpdateResult === UpdateResult.NO_NEW_DATA).length
+    } Failed:  ${
+      updateResult.filter( (result) => result.lastUpdateResult === UpdateResult.FAILED_TO_FIND_DATAQUERY ||
+        result.lastUpdateResult === UpdateResult.FAILED_TO_GET_DATA
+      ).length
+    } Total: ${
+      updateResult.length
+    }`,
+    success: true,
+    status: 200
+  }
 }
 
-function updateDataQuery(dataquery, jobLog) {
-  const returnObj = {
-    message: '',
-    success: false,
-    status: 0,
-    datasetInfo: []
-  }
-  const queryLog = startQuery(dataquery, jobLog)
-  if (dataquery) {
-    const data = getData(dataquery, jobLog._id)
-    if (data) {
-      const dataset = refreshDatasetWithData(JSON.stringify(data), dataquery)
-      if (dataset) {
-        returnObj.message = `Successfully updated/created dataset for dataquery`
-        returnObj.queryStatus = QUERY_UPDATED
-        returnObj.success = true
-        returnObj.status = 200
+function updateDataQuery(dataquery, jobLog, ts) {
+  const queryLog = startQuery(dataquery, jobLog, ts)
+  if (!dataquery) return setQueryLogStatus(queryLog._id, UpdateResult.FAILED_TO_FIND_DATAQUERY)
 
-        returnObj.datasetInfo.push({
-          id: dataset.data.dataquery,
-          updated: getUpdated(dataset),
-          updatedHumanReadable: getUpdatedReadable(dataset),
-          hasData: true
-        })
-        setQueryLogStatus(queryLog._id, UpdateResult.COMPLETE)
-      } else {
-        returnObj.success = true
-        returnObj.message = `No new data for dataquery`
-        returnObj.queryStatus = QUERY_IGNORED
-        returnObj.status = 200
-        setQueryLogStatus(queryLog._id, UpdateResult.NO_NEW_DATA)
-      }
-    } else {
-      returnObj.success = false
-      returnObj.message = `Failed to get data for dataquery: ${dataquery._id}`
-      returnObj.queryStatus = QUERY_FAILED
-      returnObj.status = 500
-      setQueryLogStatus(queryLog._id, UpdateResult.FAILED)
-    }
+  const data = getData(dataquery, jobLog._id)
+  if (!data) return setQueryLogStatus(queryLog._id, UpdateResult.FAILED_TO_GET_DATA)
+
+  const dataset = refreshDatasetWithData(JSON.stringify(data), dataquery)
+  if (dataset) {
+    return setQueryLogStatus(queryLog._id, UpdateResult.COMPLETE)
   } else {
-    returnObj.success = false
-    returnObj.message = `No dataquery found with id: ${req.params.id}`
-    returnObj.queryStatus = QUERY_FAILED
-    returnObj.status = 404
-    setQueryLogStatus(queryLog._id, UpdateResult.FAILED)
+    return setQueryLogStatus(queryLog._id, UpdateResult.NO_NEW_DATA)
   }
-  return returnObj
 }
 
 

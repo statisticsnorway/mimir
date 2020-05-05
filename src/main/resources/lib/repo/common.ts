@@ -1,6 +1,8 @@
 import { ContextLibrary } from 'enonic-types/lib/context'
 import {NodeCreateParams, NodeLibrary, RepoConnection, RepoNode} from 'enonic-types/lib/node'
 import { RepositoryConfig, RepoLibrary } from 'enonic-types/lib/repo'
+import {EVENT_LOG_BRANCH, EVENT_LOG_REPO} from "./eventLog";
+import {QueryInfoNode} from "./query";
 
 const context: ContextLibrary = __non_webpack_require__('/lib/xp/context')
 const node: NodeLibrary = __non_webpack_require__('/lib/xp/node')
@@ -54,3 +56,8 @@ export function createRepo(repository: string, branch: string): RepositoryConfig
   })
 }
 
+export function getNode<T>(queryLogId: string): ReadonlyArray<T & RepoNode> {
+  return withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (conn) => {
+    return conn.get(queryLogId)
+  })
+}

@@ -73,7 +73,7 @@ class Dashboard extends React.Component {
       dataQueries: this.state.dataQueries.map( (query) => {
         if (query.id === dataQueryId) {
           query.loading = false,
-            query.deleting = false
+          query.deleting = false
         }
         return query
       })
@@ -124,7 +124,8 @@ class Dashboard extends React.Component {
 
   resultHandler(p, id) {
     return p.then((response) => {
-      if (response.data.success) {
+
+      if (response.data.status === 200) {
         this.updateDataQueries(response.data.updates)
         this.showSuccess(response.data.message)
       } else {
@@ -132,10 +133,11 @@ class Dashboard extends React.Component {
       }
     })
       .catch((e) => {
+        this.updateDataQueries(e.response.data.updates)
         this.showError(e.response.data.message)
       })
       .finally(() => {
-        if(id !== '*') {
+        if (id !== '*') {
           this.stopLoadingIndicators(id)
         } else {
           this.setState({
@@ -149,12 +151,16 @@ class Dashboard extends React.Component {
   updateDataQueries(updatedDataQueries) {
     const updatedSet = this.state.dataQueries.map((dataQuery) => {
       const updated = updatedDataQueries.filter( (updatedQuery) => updatedQuery.id === dataQuery.id)
-        .map((updatedQuery) => ({
-          ...dataQuery,
-          ...updatedQuery,
-          loading: false,
-          deleting: false
-        }))
+        .map((updatedQuery) => {
+          return {
+            ...dataQuery,
+            logData: {
+              lastUpdateResult: updatedQuery.updateMessage,
+              lastUpdated: updatedQuery.lastUpdated,
+              lastUpdatedHumanReadable: updatedQuery.updatedHumanReadable
+            }
+          }
+        })
       if (updated.length > 0) {
         return updated[0]
       } else {
@@ -171,18 +177,21 @@ class Dashboard extends React.Component {
     return queries.map( (query) => {
       return (
         <DashboardDataQuery key={query.id}
-                            id={query.id}
-                            displayName={query.displayName}
-                            format={query.format}
-                            isPublished={query.isPublished}
-                            updated={query.updated}
-                            updatedHumanReadable={query.updatedHumanReadable}
-                            hasData={query.hasData}
-                            dashboardService={this.props.dashboardService}
-                            deleteDataset={(id) => this.deleteDataset(id)}
-                            getDataset={(id) => this.getDataset(id)}
-                            loading={query.loading}
-                            deleting={query.deleting}
+          id={query.id}
+          displayName={query.displayName}
+          format={query.format}
+          isPublished={query.isPublished? query.isPublished : undefined}
+          updated={query.updated}
+          updatedHumanReadable={query.updatedHumanReadable}
+          hasData={query.hasData}
+          dashboardService={this.props.dashboardService}
+          deleteDataset={(id) => this.deleteDataset(id)}
+          getDataset={(id) => this.getDataset(id)}
+          loading={query.loading}
+          deleting={query.deleting}
+          lastUpdated={query.logData && query.logData.lastUpdated ? query.logData.lastUpdated : undefined}
+          lastUpdatedHumanReadable={query.logData && query.logData.lastUpdatedHumanReadable ? query.logData.lastUpdatedHumanReadable : undefined}
+          lastUpdateResult={query.logData && query.logData.lastUpdateResult ? query.logData.lastUpdateResult : undefined}
         />
       )
     })
@@ -192,16 +201,15 @@ class Dashboard extends React.Component {
     return (
       <Table bordered striped>
         <thead>
-        <tr>
-          <th className="roboto-bold">Spørring</th>
-          <th className="roboto-bold">Sist oppdatert</th>
-          <th></th>
-          <th className="roboto-bold">Siste spørring</th>
-          <th></th>
-        </tr>
+          <tr>
+            <th className="roboto-bold">Spørring</th>
+            <th className="roboto-bold">Sist oppdatert</th>
+            <th className="roboto-bold">Siste spørring</th>
+            <th></th>
+          </tr>
         </thead>
         <tbody>
-        {this.renderDataQueries(queries)}
+          {this.renderDataQueries(queries)}
         </tbody>
       </Table>
     )
@@ -210,8 +218,8 @@ class Dashboard extends React.Component {
   renderAccordians(header, queries) {
     return (
       <Accordion header={header}
-                 className="mx-0"
-                 openByDefault
+        className="mx-0"
+        openByDefault
       >
         {this.renderTable(queries)}
       </Accordion>
@@ -247,18 +255,22 @@ class Dashboard extends React.Component {
         </Row>
         {this.renderFooter()}
         <Alert variant="danger"
-               show={this.state.showErrorAlert}
-               onClose={() => this.setState({showErrorAlert: false})}
-               dismissible
-               role="alert">
+          show={this.state.showErrorAlert}
+          onClose={() => this.setState({
+            showErrorAlert: false
+          })}
+          dismissible
+          role="alert">
           <p>{this.state.errorMsg}</p>
         </Alert>
 
         <Alert variant="success"
-               show={this.state.showSuccessAlert}
-               onClose={() => this.setState({showSuccessAlert: false})}
-               dismissible
-               role="alert">
+          show={this.state.showSuccessAlert}
+          onClose={() => this.setState({
+            showSuccessAlert: false
+          })}
+          dismissible
+          role="alert">
           <p>{this.state.successMsg}</p>
         </Alert>
       </section>
@@ -293,7 +305,7 @@ class Dashboard extends React.Component {
           onClick={() => this.setState({
             showDeleteAllDialog: true
           })}>
-          {this.state.deletingAll ?  <span className="spinner-border spinner-border-sm mr-2"></span> : ''}
+          {this.state.deletingAll ? <span className="spinner-border spinner-border-sm mr-2"></span> : ''}
           Slett alle dataset
         </SSBButton>
         {this.renderDialogBox({
@@ -316,7 +328,7 @@ class Dashboard extends React.Component {
           onClick={() => this.setState({
             showDownloadAllDialog: true
           })}>
-          {this.state.downloadingAll ?  <span className="spinner-border spinner-border-sm mr-2"></span>: ''}
+          {this.state.downloadingAll ? <span className="spinner-border spinner-border-sm mr-2"></span> : ''}
           Oppdater alle dataset
         </SSBButton>
         {this.renderDialogBox({
@@ -340,7 +352,6 @@ class Dashboard extends React.Component {
       </nav>
     )
   }
-
 }
 
 
@@ -369,7 +380,10 @@ const dataqueryShape = PropTypes.shape({
   showSuccess: PropTypes.boolean,
   showError: PropTypes.boolean,
   successMessage: PropTypes.string,
-  errorMessage: PropTypes.string
+  errorMessage: PropTypes.string,
+  logData: {
+    lastUpdateResult: PropTypes.string
+  }
 })
 
 export default (props) => <Dashboard {...props} />
