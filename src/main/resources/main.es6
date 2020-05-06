@@ -1,10 +1,10 @@
-const {
-  refreshDataset
-} = __non_webpack_require__('/lib/dataquery')
-const { fetchContactNames } = __non_webpack_require__('/lib/statreg/contacts');
+import { eventLogExists, createEventLog } from './lib/repo/eventLog'
+
+const dataquery = __non_webpack_require__('/lib/dataquery')
 const content = __non_webpack_require__( '/lib/xp/content')
 const cron = __non_webpack_require__('/lib/cron')
 const cache = __non_webpack_require__('/lib/ssb/cache')
+
 const user = {
   login: 'su',
   userStore: 'system'
@@ -27,7 +27,8 @@ function job() {
     query: `data.table LIKE 'http*'`
   })
   result && result.hits.map((row) => {
-    refreshDataset(row)
+    //logging
+    dataquery.refreshDataset(row)
   })
 }
 
@@ -39,7 +40,13 @@ cron.schedule({
   context: master
 })
 
-log.info('%%%%% fetching contacts ... [start]');
-const contacts = fetchContactNames();
-log.info(`******* >> ${contacts ? contacts.length : 0} contacts fetched`);
 cache.setup()
+
+if (! eventLogExists()) {
+  log.info(`Setting up EventLog ...`);
+  createEventLog({ _path: 'jobs', _name: 'jobs' });
+  createEventLog({ _path: 'queries', _name: 'queries' });
+  log.info(`EventLog Repo for jobs and queries initialized.`);
+} else {
+  log.info(`EventLog Repo found.`)
+}

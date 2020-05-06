@@ -136,3 +136,12 @@ export function getImageCaption(keyFigureId) {
   })
   return imageContent !== undefined ? imageContent.data.caption : ''
 }
+
+export function isPublished(content) {
+  const now = new Date()
+  if(content.publish.from) {
+    const from = new Date(content.publish.from)
+    return from < now
+  }
+  return false
+}
