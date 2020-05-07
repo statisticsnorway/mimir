@@ -1,8 +1,8 @@
 import { ContextLibrary } from 'enonic-types/lib/context'
-import {NodeCreateParams, NodeLibrary, RepoConnection, RepoNode} from 'enonic-types/lib/node'
+import { NodeCreateParams, NodeLibrary, RepoConnection, RepoNode } from 'enonic-types/lib/node'
 import { RepositoryConfig, RepoLibrary } from 'enonic-types/lib/repo'
-import {EVENT_LOG_BRANCH, EVENT_LOG_REPO} from "./eventLog";
-import {QueryInfoNode} from "./query";
+import {EVENT_LOG_BRANCH, EVENT_LOG_REPO} from './eventLog';
+import { EditorCallback } from './eventLog'
 
 const context: ContextLibrary = __non_webpack_require__('/lib/xp/context')
 const node: NodeLibrary = __non_webpack_require__('/lib/xp/node')
@@ -61,3 +61,24 @@ export function getNode<T>(key: string): ReadonlyArray<T & RepoNode> {
     return conn.get(key)
   })
 }
+/*export function getNode(repository: string, branch: string, key: string): readonly RepoNode[] {
+  return withConnection(repository, branch, (conn) => {
+    return conn.get(key)
+  })
+}*/
+
+export function deleteNode(repository: string, branch: string, key: string): boolean {
+  return withConnection(repository, branch, (conn) => {
+    return conn.delete(key)
+  })
+}
+
+export function modifyNode<T>(repository: string, branch: string, key: string, editor: EditorCallback<T>): T {
+  return withConnection(repository, branch, (conn) => {
+    return conn.modify({
+      key,
+      editor
+    })
+  })
+}
+
