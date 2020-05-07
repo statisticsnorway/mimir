@@ -19,7 +19,7 @@ const i18n = __non_webpack_require__('/lib/xp/i18n')
 const {
   dateToFormat, dateToReadable
 } = __non_webpack_require__( '/lib/ssb/utils')
-
+const { EVENT_LOG_BRANCH, EVENT_LOG_REPO } = __non_webpack_require__( '/lib/repo/eventLog')
 
 /**
  *
@@ -39,13 +39,14 @@ exports.get = function(req) {
   })
 
   const parsedResult = updateResult.map( (result) => {
-    const queryLogNode = getNode(`/queries/${result.dataquery._id}`)
+    const queryLogNode = getNode(EVENT_LOG_BRANCH, EVENT_LOG_REPO,`/queries/${result.dataquery._id}`)
     return {
       id: result.dataquery._id,
       message: i18n.localize({key: result.message}),
       status: result.message,
       logData: {
         ...queryLogNode.data,
+        message: i18n.localize({key: result.message}),
         modified: dateToFormat(queryLogNode.modified),
         modifiedReadable: dateToReadable(queryLogNode.modified)
       }
@@ -132,12 +133,12 @@ function createMessage(updateResult) {
   }
 
   return `Updated/created: ${
-    updateResult.filter( (result) => result.status === UpdateResult.COMPLETE).length
+    updateResult.filter( (result) => result.status === Events.COMPLETE).length
   } - Ignored: ${
-    updateResult.filter( (result) => result.status === UpdateResult.NO_NEW_DATA).length
+    updateResult.filter( (result) => result.status === Events.NO_NEW_DATA).length
   } - Failed:  ${
-    updateResult.filter( (result) => result.status === UpdateResult.FAILED_TO_FIND_DATAQUERY ||
-        result.status === UpdateResult.FAILED_TO_GET_DATA
+    updateResult.filter( (result) => result.status === Events.FAILED_TO_FIND_DATAQUERY ||
+        result.status === Events.FAILED_TO_GET_DATA
     ).length
   } - Total: ${
     updateResult.length
@@ -154,7 +155,7 @@ function updateDataQuery(dataquery, user) {
   if (!dataquery) {
     return {
       dataquery,
-      message: UpdateResult.FAILED_TO_FIND_DATAQUERY
+      message: Events.FAILED_TO_FIND_DATAQUERY
     }
   }
 
@@ -163,7 +164,7 @@ function updateDataQuery(dataquery, user) {
     logDataQueryEvent(dataquery._id, user, {message:Events.FAILED_TO_GET_DATA} )
     return {
       dataquery,
-      message: UpdateResult.FAILED_TO_GET_DATA
+      message: Events.FAILED_TO_GET_DATA
     }
   }
 
@@ -178,7 +179,7 @@ function updateDataQuery(dataquery, user) {
     logDataQueryEvent(dataquery._id, user, {message:Events.COMPLETE})
     return {
       refreshResult,
-      message: UpdateResult.COMPLETE
+      message: Events.COMPLETE
     }
   }
 }

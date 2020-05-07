@@ -20,6 +20,8 @@ const {
 const content = __non_webpack_require__( '/lib/xp/content')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const i18n = __non_webpack_require__('/lib/xp/i18n')
+const { EVENT_LOG_BRANCH, EVENT_LOG_REPO } = __non_webpack_require__( '/lib/repo/eventLog')
+
 const view = resolve('./dashboard.html')
 
 exports.get = function(req) {
@@ -128,7 +130,7 @@ function getDataQueries(datasetMap) {
 
     const dataset = datasetMap[dataquery._id]
     const hasData = !!dataset
-    const queryLogNode = getNode(`/queries/${dataquery._id}`)
+    const queryLogNode = getNode(EVENT_LOG_BRANCH, EVENT_LOG_REPO, `/queries/${dataquery._id}`)
 
     return {
       id: dataquery._id,
