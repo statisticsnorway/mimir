@@ -75,5 +75,25 @@
                 </item-set>
             </items>
         </field-set>
+
+        <field-set>
+            <label>Kontakter</label>
+            <items>
+                <item-set name="contacts">
+                    <label>Kontakter</label>
+                    <occurrences minimum="0" maximum="1"/>
+                    <items>
+                        <input name="contact" type="ContentSelector">
+                            <label>Kontakt</label>
+                            <occurrences minimum="0" maximum="0"/>
+                            <config>
+                                <allowPath>${site}</allowPath>
+                                <allowType>contact</allowType>
+                            </config>
+                        </input>
+                    </items>
+                </item-set>
+            </items>
+        </field-set>
     </form>
 </content-type>

@@ -30,6 +30,16 @@ export interface Article {
   }>;
 
   /**
+   * Kontakter
+   */
+  contacts?: Array<{
+    /**
+     * Kontakt
+     */
+    contact?: Array<string>;
+  }>;
+
+  /**
    * Forfatter
    */
   authorItemSet?: Array<{

@@ -1,5 +1,5 @@
 const {
-  getComponent
+  getContent, getComponent
 } = __non_webpack_require__( '/lib/xp/portal')
 const {
   render
@@ -25,11 +25,13 @@ exports.preview = (req) => renderPart(req)
 function renderPart(req) {
   const WIDTH = 3 // how many boxes in a row
   const part = getComponent() || req
+  const page = getContent()
   const contactIdList = []
 
-  part.config.contacts = part.config.contacts && util.data.forceArray(part.config.contacts) || []
+  //checks page content for contacts first, then part for contacts and creates array
+  const contactsList = page.data.contacts.contact ? util.data.forceArray(page.data.contacts.contact) : part.config.contacts ? util.data.forceArray(part.config.contacts) : []
 
-  part.config.contacts.map((key) => {
+  contactsList.map((key) => {
     const contactSingle = content.get({
       key
     })
