@@ -44,7 +44,6 @@ cache.setup()
 
 if (! eventLogExists()) {
   log.info(`Setting up EventLog ...`);
-  createEventLog({ _path: 'jobs', _name: 'jobs' });
   createEventLog({ _path: 'queries', _name: 'queries' });
   log.info(`EventLog Repo for jobs and queries initialized.`);
 } else {

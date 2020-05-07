@@ -124,8 +124,7 @@ class Dashboard extends React.Component {
 
   resultHandler(p, id) {
     return p.then((response) => {
-
-      if (response.data.status === 200) {
+      if (response.status === 200) {
         this.updateDataQueries(response.data.updates)
         this.showSuccess(response.data.message)
       } else {
@@ -154,11 +153,7 @@ class Dashboard extends React.Component {
         .map((updatedQuery) => {
           return {
             ...dataQuery,
-            logData: {
-              lastUpdateResult: updatedQuery.updateMessage,
-              lastUpdated: updatedQuery.lastUpdated,
-              lastUpdatedHumanReadable: updatedQuery.updatedHumanReadable
-            }
+            ...updatedQuery
           }
         })
       if (updated.length > 0) {
@@ -180,7 +175,7 @@ class Dashboard extends React.Component {
           id={query.id}
           displayName={query.displayName}
           format={query.format}
-          isPublished={query.isPublished? query.isPublished : undefined}
+          isPublished={query.isPublished ? query.isPublished : undefined}
           updated={query.updated}
           updatedHumanReadable={query.updatedHumanReadable}
           hasData={query.hasData}
@@ -189,9 +184,10 @@ class Dashboard extends React.Component {
           getDataset={(id) => this.getDataset(id)}
           loading={query.loading}
           deleting={query.deleting}
-          lastUpdated={query.logData && query.logData.lastUpdated ? query.logData.lastUpdated : undefined}
-          lastUpdatedHumanReadable={query.logData && query.logData.lastUpdatedHumanReadable ? query.logData.lastUpdatedHumanReadable : undefined}
-          lastUpdateResult={query.logData && query.logData.lastUpdateResult ? query.logData.lastUpdateResult : undefined}
+          modified={query.logData && query.logData.modified ? query.logData.modified : undefined}
+          modifiedReadable={query.logData && query.logData.modifiedReadable ? query.logData.modifiedReadable : undefined}
+          message={query.logData && query.logData.message ? query.logData.message : undefined}
+          by={query.logData && query.logData.by.login? query.logData.by.login : undefined }
         />
       )
     })
@@ -204,7 +200,7 @@ class Dashboard extends React.Component {
           <tr>
             <th className="roboto-bold">Spørring</th>
             <th className="roboto-bold">Sist oppdatert</th>
-            <th className="roboto-bold">Siste spørring</th>
+            <th className="roboto-bold">Siste aktivitet</th>
             <th></th>
           </tr>
         </thead>
@@ -382,7 +378,10 @@ const dataqueryShape = PropTypes.shape({
   successMessage: PropTypes.string,
   errorMessage: PropTypes.string,
   logData: {
-    lastUpdateResult: PropTypes.string
+    lastUpdateResult: PropTypes.string,
+    by: PropTypes.object,
+    lastUpdated: PropTypes.string,
+    lastUpdatedHumanReadable: PropTypes.string
   }
 })
 

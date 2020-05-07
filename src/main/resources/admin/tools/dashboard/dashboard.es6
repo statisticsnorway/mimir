@@ -1,4 +1,4 @@
-import { I18nLibrary } from 'enonic-types/lib/i18n'
+const {getNode} = __non_webpack_require__( '../../../lib/repo/common');
 
 const {
   assetUrl,
@@ -19,9 +19,6 @@ const {
 } = __non_webpack_require__('/lib/ssb/utils')
 const content = __non_webpack_require__( '/lib/xp/content')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const {
-  getQueryLogWithQueryId
-} = __non_webpack_require__('/lib/repo/query')
 const i18n = __non_webpack_require__('/lib/xp/i18n')
 const view = resolve('./dashboard.html')
 
@@ -34,32 +31,21 @@ exports.get = function(req) {
   }
 }
 
-
+/**
+ *
+ * @return {{pageContributions: *, body: *}}
+ */
 function renderPart() {
   const datasetMap = getDataset()
   const dataQueries = getDataQueries(datasetMap)
 
-  const jsLibsUrl = assetUrl({
-    path: 'js/bundle.js'
-  })
-
-  const dashboardService = serviceUrl({
-    service: 'dashboard'
-  })
-
-  const stylesUrl = assetUrl({
-    path: 'styles/bundle.css'
-  })
-
-  const logoUrl = assetUrl({
-    path: 'SSB_logo_black.svg'
-  })
+  const assets = getAssets()
 
   const dashboardDataset = new React4xp('Dashboard/Dashboard')
     .setProps({
       header: 'Alle spørringer',
       dataQueries,
-      dashboardService
+      dashboardService: assets.dashboardService
     })
     .setId('dataset')
 
@@ -68,11 +54,8 @@ function renderPart() {
   }))
 
   const model = {
+    ...assets,
     dataQueries,
-    dashboardService,
-    stylesUrl,
-    jsLibsUrl,
-    logoUrl,
     pageContributions
   }
 
@@ -86,6 +69,27 @@ function renderPart() {
   return {
     body,
     pageContributions
+  }
+}
+
+/**
+ *
+ * @return {{dashboardService: *, stylesUrl: *, jsLibsUrl: *, logoUrl: *}}
+ */
+function getAssets() {
+  return {
+    jsLibsUrl: assetUrl({
+      path: 'js/bundle.js'
+    }),
+    dashboardService: serviceUrl({
+      service: 'dashboard'
+    }),
+    stylesUrl: assetUrl({
+      path: 'styles/bundle.css'
+    }),
+    logoUrl: assetUrl({
+      path: 'SSB_logo_black.svg'
+    })
   }
 }
 
@@ -110,42 +114,42 @@ function getDataset() {
 }
 
 function getDataQueries(datasetMap) {
-  let dataQueries = []
   const dataQueryResult = content.query({
     count: 999,
     contentTypes: [`${app.name}:dataquery`],
     sort: 'displayName'
   })
-  if (dataQueryResult && dataQueryResult.hits.length > 0) {
-    dataQueries = dataQueryResult.hits.map((dataquery) => {
-      let updated
-      let updatedHumanReadable
-      const dataset = datasetMap[dataquery._id]
-      const hasData = !!dataset
-      if (hasData) {
-        updated = getUpdated(dataset)
-        updatedHumanReadable = getUpdatedReadable(dataset)
-      }
-      return {
-        id: dataquery._id,
-        displayName: dataquery.displayName,
-        path: dataquery._path,
-        parentType: getParentType(dataquery._path),
-        format: dataquery.data.datasetFormat ? dataquery.data.datasetFormat._selected : undefined,
-        updated,
-        updatedHumanReadable,
-        hasData,
-        isPublished: isPublished(dataquery),
-        logData: getLogData(dataquery._id)
-      }
-    })
-  }
-  return dataQueries
-}
 
-function getLogData(dataQueryId) {
-  const logData = getQueryLogWithQueryId(dataQueryId)
-  return logData ? parseLogData(logData.data) : undefined
+  if (!dataQueryResult || !dataQueryResult.hits.length > 0) {
+    return []
+  }
+
+  return dataQueryResult.hits.map((dataquery) => {
+
+    const dataset = datasetMap[dataquery._id]
+    const hasData = !!dataset
+    const queryLogNode = getNode(`/queries/${dataquery._id}`)
+
+    return {
+      id: dataquery._id,
+      displayName: dataquery.displayName,
+      path: dataquery._path,
+      parentType: getParentType(dataquery._path),
+      format: dataquery.data.datasetFormat ? dataquery.data.datasetFormat._selected : undefined,
+      updated: hasData ? getUpdated(dataset) : undefined,
+      updatedHumanReadable: hasData ? getUpdatedReadable(dataset) : undefined,
+      hasData,
+      isPublished: isPublished(dataquery),
+      logData: queryLogNode? {
+        ...queryLogNode.data,
+        message: i18n.localize({key: queryLogNode.data.modifiedResult}),
+        modified: queryLogNode.data.modified,
+        modifiedReadable: dateToReadable(queryLogNode.data.modifiedTs)
+      }: undefined
+    }
+  })
+
+
 }
 
 function parseLogData(data) {

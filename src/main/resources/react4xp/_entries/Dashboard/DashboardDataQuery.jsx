@@ -1,5 +1,5 @@
 import Button from 'react-bootstrap/Button'
-import { Download, Loader, Trash } from 'react-feather'
+import { Download, Trash } from 'react-feather'
 import { Link } from '@statisticsnorway/ssb-component-library'
 import React from 'react'
 import PropTypes from 'prop-types'
@@ -24,9 +24,10 @@ class DashboardDataQuery extends React.Component {
           {this.props.updated ? this.props.updated : ''}
         </td>
         <td>
-          {this.props.lastUpdatedHumanReadable ? this.props.lastUpdatedHumanReadable : ''}<br/>
-          {this.props.lastUpdated ? this.props.lastUpdated : ''}<br/>
-          {this.props.lastUpdateResult ? this.props.lastUpdateResult : ''}
+          {this.props.message ? this.props.message : ''}<br/>
+          {this.props.modifiedReadable ? this.props.modifiedReadable: ''}<br/>
+          {this.props.modified ? this.props.modified : ''}<br/>
+          {this.props.by ? `av ${this.props.by}` : '' }
         </td>
         <td className="actions">
           <Button variant="secondary"
@@ -64,9 +65,10 @@ DashboardDataQuery.propTypes = {
   deleteDataset: PropTypes.func,
   getDataset: PropTypes.func,
   status: PropTypes.string,
-  lastUpdatedHumanReadable: PropTypes.string,
-  lastUpdated: PropTypes.string,
-  lastUpdateResult: PropTypes.string
+  modifiedReadable: PropTypes.string,
+  modified: PropTypes.string,
+  message: PropTypes.string,
+  by: PropTypes.string
 }
 
 export default (props) => <DashboardDataQuery {...props} />

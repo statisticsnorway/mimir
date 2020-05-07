@@ -109,3 +109,18 @@
   background: indianred;
   color: white;
 }
+
+.table-bordered {
+  tr {
+    border-top: 1px solid #dee2e6;
+    border-bottom: 1px solid #dee2e6;
+    border-right: 0 none;
+    border-left: 0 none;
+  }
+  td {
+    border-top: 0 none;
+    border-bottom: 0 none;
+    border-right: 1px solid #dee2e6;
+    border-left: 1px solid #dee2e6;
+  }
+}
