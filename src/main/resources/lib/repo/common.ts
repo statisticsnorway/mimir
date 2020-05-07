@@ -56,16 +56,11 @@ export function createRepo(repository: string, branch: string): RepositoryConfig
   })
 }
 
-export function getNode<T>(key: string): ReadonlyArray<T & RepoNode> {
+export function getNode<T>(repository: string, branch: string, key: string): ReadonlyArray<T & RepoNode> {
   return withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (conn) => {
     return conn.get(key)
   })
 }
-/*export function getNode(repository: string, branch: string, key: string): readonly RepoNode[] {
-  return withConnection(repository, branch, (conn) => {
-    return conn.get(key)
-  })
-}*/
 
 export function deleteNode(repository: string, branch: string, key: string): boolean {
   return withConnection(repository, branch, (conn) => {
