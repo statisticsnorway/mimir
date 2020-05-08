@@ -7,7 +7,7 @@ import { STATREG_REPO_CONTACTS_KEY, fetchContacts } from './statreg/contacts'
 export const STATREG_REPO: string = 'no.ssb.statreg'
 export const STATREG_BRANCH: string = 'master'
 
-export interface StatRegFetcher {
+export interface StatRegNodeConfig {
     key: string;
     fetcher: () => any;
 }
@@ -41,7 +41,7 @@ export function modifyStatRegNode(key: string, content: StatRegContent): StatReg
   })
 }
 
-function setupNodes(fetchers: Array<StatRegFetcher>) {
+function setupNodes(fetchers: Array<StatRegNodeConfig>) {
   ensureArray(fetchers)
     .forEach((statRegFetcher) => {
       log.info(`Setting up StatReg Node: '/${statRegFetcher.key}' ...`)
@@ -56,18 +56,18 @@ function setupNodes(fetchers: Array<StatRegFetcher>) {
     })
 }
 
-export function makeFetcher(key: string, fetcher: (filters: QueryFilters) => any): StatRegFetcher {
+export function configureNode(key: string, fetcher: (filters: QueryFilters) => any): StatRegNodeConfig {
   return {
     key,
     fetcher
-  } as StatRegFetcher
+  } as StatRegNodeConfig
 }
 
-const STATREG_FETCHERS: Array<StatRegFetcher> = [
-  makeFetcher(STATREG_REPO_CONTACTS_KEY, fetchContacts)
+const STATREG_NODES: Array<StatRegNodeConfig> = [
+  configureNode(STATREG_REPO_CONTACTS_KEY, fetchContacts)
 ]
 
-export function setupStatRegRepo(statRegFetchers: Array<StatRegFetcher> = STATREG_FETCHERS) {
+export function setupStatRegRepo(nodeConfig: Array<StatRegNodeConfig> = STATREG_NODES) {
   if (!repoExists(STATREG_REPO, STATREG_BRANCH)) {
     log.info(`Creating Repo: '${STATREG_REPO}' ...`)
     createRepo(STATREG_REPO, STATREG_BRANCH)
@@ -75,7 +75,7 @@ export function setupStatRegRepo(statRegFetchers: Array<StatRegFetcher> = STATRE
     log.info('StatReg Repo found.')
   }
 
-  setupNodes(statRegFetchers)
+  setupNodes(nodeConfig)
   log.info('StatReg Repo setup complete.')
 }
 
