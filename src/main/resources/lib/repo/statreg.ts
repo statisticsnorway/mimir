@@ -63,11 +63,11 @@ export function makeFetcher(key: string, fetcher: (filters: QueryFilters) => any
   } as StatRegFetcher
 }
 
-const STATREG_NODES: Array<StatRegFetcher> = [
+const STATREG_FETCHERS: Array<StatRegFetcher> = [
   makeFetcher(STATREG_REPO_CONTACTS_KEY, fetchContacts)
 ]
 
-export function setupStatRegRepo(statRegNodes: Array<StatRegFetcher> = STATREG_NODES) {
+export function setupStatRegRepo(statRegFetchers: Array<StatRegFetcher> = STATREG_FETCHERS) {
   if (!repoExists(STATREG_REPO, STATREG_BRANCH)) {
     log.info(`Creating Repo: '${STATREG_REPO}' ...`)
     createRepo(STATREG_REPO, STATREG_BRANCH)
@@ -75,7 +75,7 @@ export function setupStatRegRepo(statRegNodes: Array<StatRegFetcher> = STATREG_N
     log.info('StatReg Repo found.')
   }
 
-  setupNodes(statRegNodes)
+  setupNodes(statRegFetchers)
   log.info('StatReg Repo setup complete.')
 }
 
