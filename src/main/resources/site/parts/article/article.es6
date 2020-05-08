@@ -68,7 +68,7 @@ function renderPart(req) {
   let body = render(view, model)
   let pageContributions
 
-  if (externalLinkConfig) {
+  if (externalLinkConfig && externalLinkConfig.length) {
     const externalLinksComponent = new React4xp('Links')
       .setProps({
         links: externalLinkConfig.map((links) => {
