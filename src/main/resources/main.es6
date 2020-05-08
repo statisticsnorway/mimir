@@ -1,7 +1,5 @@
 import { eventLogExists, createEventLog } from './lib/repo/eventLog'
-import { makeFetcher, setupStatRegRepo } from './lib/repo/statreg'
-import { STATREG_REPO_CONTACTS_KEY } from './lib/repo/statreg/contacts'
-import { fetchContacts } from './lib/ssb/statreg/contacts'
+import { setupStatRegRepo } from './lib/repo/statreg'
 
 const dataquery = __non_webpack_require__('/lib/dataquery')
 const content = __non_webpack_require__( '/lib/xp/content')

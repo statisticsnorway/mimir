@@ -69,10 +69,10 @@ const STATREG_NODES: Array<StatRegFetcher> = [
 
 export function setupStatRegRepo(statRegNodes: Array<StatRegFetcher> = STATREG_NODES) {
   if (!repoExists(STATREG_REPO, STATREG_BRANCH)) {
-      log.info(`Creating Repo: '${STATREG_REPO}' ...`);
+    log.info(`Creating Repo: '${STATREG_REPO}' ...`)
     createRepo(STATREG_REPO, STATREG_BRANCH)
   } else {
-      log.info('StatReg Repo found.');
+    log.info('StatReg Repo found.')
   }
 
   setupNodes(statRegNodes)
