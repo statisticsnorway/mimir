@@ -10,6 +10,10 @@ const repo: RepoLibrary = __non_webpack_require__('/lib/xp/repo')
 export type ContextCallback<T> = () => T;
 export type ConnectionCallback<T> = (conn: RepoConnection) => T;
 
+export type QueryFilters = {
+  [key: string]: string;
+} | null;
+
 export interface SuperUser {
     login: string;
     idProvider: string;
