@@ -31,7 +31,7 @@ $container-max-widths: (
 @import "./menuBox";
 @import "./dashboard";
 @import "./button";
-@import "./datasets";
+@import "./variableCardsList";
 @import "./layout";
 @import "./banner";
 @import "./popper";
@@ -43,8 +43,11 @@ $container-max-widths: (
 @import "./preface";
 @import "./globalStyles";
 @import "./infoGraphic";
-@import "./_profiledBox";
-@import "./_article";
+@import "./profiledBox";
+@import "./article";
+@import "./relatedContentBox";
+@import "./profiledLinkIcon";
+@import "./downloadLink";
 
 body {
   -moz-osx-font-smoothing: grayscale;
@@ -54,7 +57,7 @@ body {
   overflow-x: hidden; // removes horisontal scroll bar created by part preface
 }
 
-section { 
+section {
   width: 100%;
 }
 
@@ -68,4 +71,11 @@ section + section, .xp-layout + .xp-layout {
 
 .bkg-grey {
   background-color: $ssb-dark-1;
+}
+
+.row {
+  @include media-breakpoint-down(md) {
+    margin-right: 0;
+    margin-left: 0;
+  }
 }

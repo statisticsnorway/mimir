@@ -155,7 +155,7 @@ export const createConfig = (highchartData, displayName) => ({
       align: 'high',
       offset: 0,
       rotation: 0,
-      y: -10
+      y: 30
     },
     type: highchartData.yAxisType || 'linear'
   },
@@ -169,5 +169,14 @@ export const createConfig = (highchartData, displayName) => ({
     backgroundColor: 'white',
     valueDecimals: highchartData.numberDecimals,
     shared: highchartData.combineInfo
+  },
+  noData: {
+    style: {
+      fontFamily: 'Roboto,sans-serif !important',
+      fontStretch: 'normal',
+      color: '#62919a',
+      fontSize: '20px',
+      fontWeight: '700'
+    }
   }
 })

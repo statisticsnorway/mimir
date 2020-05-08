@@ -8,7 +8,7 @@
                  data-th-if="${modeMunicipality}" data-th-text="${displayName}">
             </div>
             <div class="roboto-bold municipality" data-th-if="${modeMunicipality}">
-              <div data-th-if="${municipality}" data-th-text="${municipality.displayName}" data-th-remove="tag">Kommune</div>
+              <div data-th-if="${municipality}" data-th-text="${municipalityName}" data-th-remove="tag">Kommune</div>
               <div data-th-if="${municipality}" data-th-text="'('+${municipality.county.name}+')'" data-th-remove="tag">Fylke</div>
             </div>
             <div class="roboto-bold title-choose-municipality municipality" data-th-unless="${modeMunicipality}">Velg kommune i kart</div>
@@ -34,7 +34,8 @@
                 data-toggle="collapse"
                 type="button"
                 aria-expanded="false"
-                aria-controls="search-container">
+                aria-controls="search-container"
+                aria-label="search">
           <i class="search">
             <svg xmlns="http://www.w3.org/2000/svg"
                  width="24"

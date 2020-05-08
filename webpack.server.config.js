@@ -1,18 +1,18 @@
-const path = require('path');
-const glob = require('glob');
-const R = require('ramda');
-const TerserPlugin = require('terser-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const { CheckerPlugin } = require('awesome-typescript-loader');
+const path = require('path')
+const glob = require('glob')
+const R = require('ramda')
+const {
+  CheckerPlugin
+} = require('awesome-typescript-loader')
 const {
   setEntriesForPath,
   addRule,
   addPlugin,
-  prependExtensions,
-} = require('./util/compose');
-const env = require('./util/env');
+  prependExtensions
+} = require('./util/compose')
+const env = require('./util/env')
 
-const RESOURCES_PATH = 'src/main/resources';
+const RESOURCES_PATH = 'src/main/resources'
 
 // ----------------------------------------------------------------------------
 // Base config
@@ -30,30 +30,18 @@ const config = {
     libraryTarget: 'commonjs'
   },
   resolve: {
-    extensions: [],
+    extensions: []
   },
   optimization: {
     minimize: false
-    /*minimizer: [
-      new TerserPlugin(),
-    ],
-    splitChunks: {
-      minSize: 30000,
-    },*/
   },
-  plugins: [
-    /*new CopyWebpackPlugin([
-      // { from: 'babel-standalone/', to: 'assets/babel-standalone/' },
-    ], {
-      context: path.resolve(__dirname, 'node_modules')
-    })*/
-  ],
+  plugins: [],
   externals: [
     /\/lib\/(enonic|xp)\/.+/
   ],
   mode: env.type,
   // Source maps are not usable in server scripts
-  devtool: false,
+  devtool: false
 }
 
 // ----------------------------------------------------------------------------
@@ -61,13 +49,28 @@ const config = {
 // ----------------------------------------------------------------------------
 
 function listEntries(extensions, ignoreList) {
-  const CLIENT_FILES = glob.sync(`${RESOURCES_PATH}/assets/**/*.${extensions}`);
+  const CLIENT_FILES = glob.sync(`${RESOURCES_PATH}/assets/**/*.${extensions}`)
+  const CONTENT_TYPE_CONFIGS = glob.sync(`${RESOURCES_PATH}/site/content-types/**/*.ts`)
+  const TYPES = glob.sync(`${RESOURCES_PATH}/lib/types/*.ts`)
+  const PART_CONFIGS = glob.sync(`${RESOURCES_PATH}/site/parts/**/*-part-config.ts`)
+  const LAYOUT_CONFIGS = glob.sync(`${RESOURCES_PATH}/site/layouts/**/*-config.ts`)
+  const PAGE_CONFIGS = glob.sync(`${RESOURCES_PATH}/site/pages/**/*-page-config.ts`)
+  const MACRO_CONFIGS = glob.sync(`${RESOURCES_PATH}/site/macros/**/*-config.ts`)
   const IGNORED_FILES = R.pipe(
-    R.map(entry => path.join(RESOURCES_PATH, entry)),
-    R.concat(CLIENT_FILES)
-  )(ignoreList);
-  const SERVER_FILES = glob.sync(`${RESOURCES_PATH}/**/*.${extensions}`, { absolute: false, ignore: IGNORED_FILES });
-  return SERVER_FILES.map(entry => path.relative(RESOURCES_PATH, entry));
+    R.map((entry) => path.join(RESOURCES_PATH, entry)),
+    R.concat(CLIENT_FILES),
+    R.concat(CONTENT_TYPE_CONFIGS),
+    R.concat(TYPES),
+    R.concat(PART_CONFIGS),
+    R.concat(LAYOUT_CONFIGS),
+    R.concat(PAGE_CONFIGS),
+    R.concat(MACRO_CONFIGS),
+  )(ignoreList)
+  const SERVER_FILES = glob.sync(`${RESOURCES_PATH}/**/*.${extensions}`, {
+    absolute: false,
+    ignore: IGNORED_FILES
+  })
+  return SERVER_FILES.map((entry) => path.relative(RESOURCES_PATH, entry))
 }
 
 // TYPESCRIPT
@@ -77,23 +80,23 @@ function addTypeScriptSupport(cfg) {
     exclude: /node_modules/,
     loader: 'awesome-typescript-loader',
     options: {
-      configFile: 'src/main/resources/tsconfig.server.json',
+      configFile: 'src/main/resources/tsconfig.server.json'
     }
-  };
+  }
 
   const entries = listEntries('ts', [
     // Add additional files to the ignore list.
     // The following path will be transformed to 'src/main/resources/lib/observe/observe.ts:
     'types.ts',
     '*.jsx'
-  ]);
+  ])
 
   return R.pipe(
     setEntriesForPath(entries),
     addRule(rule),
     addPlugin(new CheckerPlugin()),
     prependExtensions(['.ts', '.json'])
-  )(cfg);
+  )(cfg)
 }
 
 // BABEL
@@ -113,23 +116,23 @@ function addBabelSupport(cfg) {
             targets: 'node 0.10',
             // Polyfills are not required in runtime
             useBuiltIns: false
-          },
-        ],
+          }
+        ]
       ]
     }
-  };
+  }
 
   const entries = listEntries('{js,es,es6}', [
     // Add additional files to the ignore list.
     // The following path will be transformed to 'src/main/resources/lib/observe/observe.es6':
     'lib/observe/observe.es6'
-  ]);
+  ])
 
   return R.pipe(
     setEntriesForPath(entries),
     addRule(rule),
     prependExtensions(['.js', '.es', '.es6', '.json', 'mjs'])
-  )(cfg);
+  )(cfg)
 }
 
 // ----------------------------------------------------------------------------
@@ -139,4 +142,4 @@ function addBabelSupport(cfg) {
 module.exports = R.pipe(
   addBabelSupport,
   addTypeScriptSupport
-)(config);
+)(config)

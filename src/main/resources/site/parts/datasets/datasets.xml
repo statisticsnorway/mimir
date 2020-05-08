@@ -1,7 +1,0 @@
-<part>
-    <display-name>Datasettliste</display-name>
-    <description>Part med ett liste over datasett</description>
-    <form>
-        <!-- TODO: Place any number of input types inside here ... or not =) Up to you -->
-    </form>
-</part>

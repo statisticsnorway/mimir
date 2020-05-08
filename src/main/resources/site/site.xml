@@ -197,53 +197,17 @@
         </input>
       </items>
     </item-set>
-    <field-set>
-      <label>Nettstedrouting (mappings)</label>
-      <items>
-        <item-set name="router">
-          <label>Routing</label>
-          <expanded>false</expanded>
-          <occurrences minimum="0" maximum="0"/>
-          <items>
-            <input name="source" type="ContentSelector">
-              <label>Fra</label>
-              <help-text>
-                Alle spørringer etter denne kontrolleren vil bli sendt til valgt kontroller under.
-                Så fremt det ikke finnes et eskisterende innhold.
-              </help-text>
-              <occurrences minimum="1" maximum="1"/>
-              <config>
-                <treeMode>true</treeMode>
-                <showStatus>true</showStatus>
-                <hideToggleIcon>false</hideToggleIcon>
-              </config>
-            </input>
-            <input name="target" type="ContentSelector">
-              <label>Til</label>
-              <help-text>Hvor spørringene skal lande.</help-text>
-              <occurrences minimum="1" maximum="1"/>
-              <config>
-                <treeMode>true</treeMode>
-                <showStatus>true</showStatus>
-                <hideToggleIcon>false</hideToggleIcon>
-              </config>
-            </input>
-            <input name="pageTitle" type="TextLine">
-              <label>Sidetittel på rutede sider</label>
-              <occurrences minimum="0" maximum="1"/>
-              <default></default>
-            </input>
-          </items>
-        </item-set>
-      </items>
-    </field-set>
   </form>
   <mappings>
     <mapping filter="/site/filters/router.js" order="10">
-      <pattern>/.*</pattern>
+      <pattern>/kommunefakta/?[^/]+$</pattern>
     </mapping>
     <mapping controller="/site/pages/default/default.js">
       <match>type:'portal:fragment'</match>
     </mapping>
   </mappings>
+  <processors>
+    <response-processor name="searchableText" order="10"/>
+    <response-processor name="react4xpAssetSource" order="11"/>
+  </processors>
 </site>

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<tool xmlns="urn:enonic:xp:model:1.0">
+  <display-name>SSB dataspørringer</display-name>
+  <description>Administrer dataspørringer mot statbank, tbml og klass</description>
+  <allow>
+    <principal>role:system.admin</principal>
+  </allow>
+</tool>

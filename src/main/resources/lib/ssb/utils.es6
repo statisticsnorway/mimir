@@ -24,7 +24,7 @@ const numberWithSpaces = (x) => {
 }
 
 export const createHumanReadableFormat = (value) => {
-  return value > 999 ? numberWithSpaces(value) : value.toString().replace(/\./, ',')
+  return value > 999 ? numberWithSpaces(value).toString().replace(/\./, ',') : value.toString().replace(/\./, ',')
 }
 
 
@@ -55,12 +55,14 @@ const addBreadcrumbs = (page, visitedPage, breadcrumbs = []) => {
       link: '/'
     })
   } else {
-    breadcrumbs.unshift({
-      text: page.displayName,
-      link: pageUrl({
-        path: page._path
+    if (page.type !== 'base:folder') {
+      breadcrumbs.unshift({
+        text: page.displayName,
+        link: pageUrl({
+          path: page._path
+        })
       })
-    })
+    }
     const parent = content.get({
       key: page._path.substring(0, page._path.lastIndexOf('/'))
     })
@@ -110,13 +112,15 @@ export function safeRender(view, model) {
 }
 
 export function pathFromStringOrContent(urlSrc) {
-  if(urlSrc !== undefined) {
-    if(urlSrc._selected === 'content') {
+  if (urlSrc !== undefined) {
+    if (urlSrc._selected === 'content') {
       const selected = urlSrc[urlSrc._selected]
-      return selected && selected.contentId ? pageUrl({id: selected.contentId}) : undefined
+      return selected && selected.contentId ? pageUrl({
+        id: selected.contentId
+      }) : undefined
     }
 
-    if(urlSrc._selected === 'manual') {
+    if (urlSrc._selected === 'manual') {
       const selected = urlSrc[urlSrc._selected]
       return selected && selected.url ? selected.url : undefined
     }
@@ -127,6 +131,8 @@ export function pathFromStringOrContent(urlSrc) {
 
 
 export function getImageCaption(keyFigureId) {
-  const imageContent = content.get({key: keyFigureId})
+  const imageContent = content.get({
+    key: keyFigureId
+  })
   return imageContent !== undefined ? imageContent.data.caption : ''
 }

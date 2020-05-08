@@ -4,9 +4,7 @@ const {
 const {
   NOT_FOUND
 } = __non_webpack_require__( './error')
-const {
-  getWithSelection
-} = __non_webpack_require__( '/lib/klass/klass')
+
 const moment = require('moment/min/moment-with-locales')
 import JsonStat from 'jsonstat-toolkit'
 
@@ -58,11 +56,6 @@ export const getValueWithIndex = (data, filterTarget, filter) => {
   const dataKey = data.dimension.id[0]
   const valueIndexes = data.dimension[dataKey].category.index
   return data.value[valueIndexes[index]]
-}
-
-
-export const getDataSetFromDataQuery = (dataqueryContent) => {
-  return getWithSelection(dataqueryContent.data.table, JSON.parse(dataqueryContent.data.json))
 }
 
 /**

@@ -7,6 +7,9 @@ const {
   getDataSetWithDataQueryId
 } = __non_webpack_require__( '/lib/ssb/dataset')
 const {
+  fromDatasetCache
+} = __non_webpack_require__( '/lib/ssb/cache')
+const {
   getComponent
 } = __non_webpack_require__( '/lib/xp/portal')
 const {
@@ -28,6 +31,9 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
+const {
+  get: getDataquery
+} = __non_webpack_require__( '/lib/ssb/dataquery')
 
 const content = __non_webpack_require__( '/lib/xp/content')
 const view = resolve('./highchart.html')
@@ -57,28 +63,33 @@ function renderPart(req, highchartIds) {
 
     let config
     if (highchart && highchart.data.dataquery) {
-      const datasetContent = getDataSetWithDataQueryId(highchart.data.dataquery).hits[0]
+      const cachedQuery = fromDatasetCache(req, highchart.data.dataquery, () => {
+        const dataQueryContent = getDataquery({
+          key: highchart.data.dataquery
+        })
+        const datasetContent = getDataSetWithDataQueryId(highchart.data.dataquery).hits[0]
+        let parsedData = JSON.parse(datasetContent.data.json)
+        if (dataQueryContent.data.datasetFormat._selected === 'jsonStat') {
+        // eslint-disable-next-line new-cap
+          parsedData = JsonStat(parsedData).Dataset(0)
+        }
+        return {
+          data: parsedData,
+          format: dataQueryContent.data.datasetFormat
+        }
+      })
+      const data = cachedQuery.data
+      const datasetFormat = cachedQuery.format
       let filterOptions
       let xAxisLabel
       let yAxisLabel
-      const dataqueryContent = content.get({
-        key: highchart.data.dataquery
-      })
       let usingJsonStat = false
-      if (dataqueryContent.data.datasetFormat && dataqueryContent.data.datasetFormat._selected === 'jsonStat') {
-        const jsonStatConfig = dataqueryContent.data.datasetFormat.jsonStat
+      if (datasetFormat._selected === 'jsonStat') {
+        const jsonStatConfig = datasetFormat.jsonStat
         filterOptions = jsonStatConfig.datasetFilterOptions
         xAxisLabel = jsonStatConfig.xAxisLabel
         yAxisLabel = jsonStatConfig.yAxisLabel
         usingJsonStat = true
-      }
-
-      let json
-      try {
-        json = JSON.parse(datasetContent.data.json)
-      } catch (e) {
-        log.error('Could not parse json ')
-        log.error(e)
       }
 
       const graphType = highchart.data.graphType
@@ -89,7 +100,7 @@ function renderPart(req, highchartIds) {
 
       if (usingJsonStat) {
         // eslint-disable-next-line new-cap
-        const dataset = JsonStat(json).Dataset(0)
+        const dataset = data
         const dimensionFilter = dataset.id.map( () => 0 )
 
         if (filterOnMunicipalities) {
@@ -106,7 +117,7 @@ function renderPart(req, highchartIds) {
           graphData = defaultFormat(dataset, dimensionFilter, xAxisLabel)
         }
       } else {
-        graphData = defaultTbmlFormat(json, graphType)
+        graphData = defaultTbmlFormat(data, graphType, highchart.data.xAxisType)
       }
 
       if (graphType === 'barNegative') {
@@ -182,13 +193,27 @@ function renderPart(req, highchartIds) {
       if (graphType === 'pie' || highchart.data.switchRowsAndColumns) {
         config.series = [{
           name: graphData.categories[0] && !usingJsonStat ? graphData.categories[0] : 'Antall',
-          data: config.series.map((serie) => ({
-            y: serie.y,
-            name: serie.name
-          }))
+          data: config.series.reduce((data, serie) => {
+            if (serie.y != null) {
+              data.push({
+                y: serie.y,
+                name: serie.name
+              })
+            }
+            return data
+          }, [])
         }]
       }
+    } else if (highchart && highchart.data.htmlTable) {
+      config = {
+        ...createConfig(highchart.data, highchart.displayName),
+        data: {
+          table: 'highcharts-datatable-' + highchart._id,
+          decimalPoint: ',',
+        },
+      };
     }
+
     return initHighchart(highchart, config)
   })
 
@@ -201,7 +226,7 @@ function renderPart(req, highchartIds) {
 }
 
 
-function initHighchart(highchart, config, municipalityName) {
+function initHighchart(highchart, config) {
   const tableRegex = /<table[^>]*>/igm
   const nbspRegexp = /&nbsp;/igm
   const replace = '<table id="highcharts-datatable-' + highchart._id + '">'

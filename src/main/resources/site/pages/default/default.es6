@@ -9,7 +9,6 @@ const {
 } = __non_webpack_require__( '/lib/language')
 const {
   alertsForContext,
-  pageMode,
   getBreadcrumbs
 } = __non_webpack_require__( '/lib/ssb/utils')
 const {
@@ -23,8 +22,10 @@ const {
 const {
   getFooterContent
 } = __non_webpack_require__( '/lib/ssb/footer')
+const {
+  fromMenuCache
+} = __non_webpack_require__('/lib/ssb/cache')
 
-const version = '%%VERSION%%'
 const partsWithPreview = [ // Parts that has preview
   `${app.name}:map`,
   `${app.name}:button`,
@@ -32,7 +33,6 @@ const partsWithPreview = [ // Parts that has preview
   `${app.name}:accordion`,
   `${app.name}:highchart`,
   `${app.name}:dashboard`,
-  `${app.name}:key-figure`,
   `${app.name}:keyFigure`,
   `${app.name}:menuDropdown`,
   `${app.name}:statistikkbanken`,
@@ -43,9 +43,7 @@ const partsWithPreview = [ // Parts that has preview
 const view = resolve('default.html')
 
 exports.get = function(req) {
-  const ts = new Date().getTime()
   const page = getContent()
-  const mode = pageMode(req, page)
 
   const isFragment = page.type === 'portal:fragment'
   let regions = {}
@@ -68,6 +66,7 @@ exports.get = function(req) {
     value: page.data.ingress ? page.data.ingress.replace(/&nbsp;/g, ' ') : undefined
   })
   const showIngress = ingress && page.type === 'mimir:page'
+  const pageType = page.page.config.pageType ? page.page.config.pageType : 'default'
 
 
   // Create preview if available
@@ -86,6 +85,33 @@ exports.get = function(req) {
     municipality = getMunicipality(req)
   }
 
+  let addMetaInfoSearch = true
+  let metaInfoSearchId = page._id
+  let metaInfoSearchTitle = page.displayName
+  let metaInfoSearchContentType = page._name
+  let metaInfoSearchGroup = page._id
+  let metaInfoSearchKeywords
+  let metaInfoDescription
+
+  if (pageType === 'municipality') {
+    metaInfoSearchContentType = 'kommunefakta'
+    metaInfoSearchKeywords = 'kommune, kommuneprofil',
+    metaInfoDescription = page.x['com-enonic-app-metafields']['meta-data'].seoDescription
+  }
+
+  if (pageType === 'municipality' && municipality) {
+    // TODO: Deaktiverer at kommunesidene er søkbare til vi finner en løsning med kommunenavn i tittel MIMIR-549
+    addMetaInfoSearch = false
+    metaInfoSearchId = metaInfoSearchId + '_' + municipality.code
+    metaInfoSearchTitle = 'Kommunefakta ' + municipality.displayName
+    metaInfoSearchGroup = metaInfoSearchGroup + '_' + municipality.code
+    metaInfoSearchKeywords = municipality.displayName + ' kommune'
+  }
+
+  if (pageType === 'factPage') {
+    metaInfoSearchContentType = 'faktaside'
+  }
+
   let config
   if (!isFragment && page.page.config) {
     config = page.page.config
@@ -99,76 +125,90 @@ exports.get = function(req) {
   }
 
   const stylesUrl = assetUrl({
-    path: 'styles/bundle.css',
-    params: {
-      ts
-    }
+    path: 'styles/bundle.css'
   })
 
   const jsLibsUrl = assetUrl({
-    path: 'js/bundle.js',
-    params: {
-      ts
-    }
+    path: 'js/bundle.js'
   })
 
-  const bannerUrl = assetUrl({
-    path: 'top-banner.png'
-  })
-
-  const pageTitle = req.params.selfRequest ? req.params.pageTitle : page.displayName
-  const model = {
-    version,
-    config,
-    page,
-    mainRegionComponents,
-    configRegions,
-    ingress,
-    mode,
-    showIngress,
-    preview,
-    pageTitle: `${pageTitle} - Statistisk sentralbyrå`,
-    bodyClasses: bodyClasses.join(' '),
-    stylesUrl,
-    jsLibsUrl,
-    bannerUrl,
-    language,
-    GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null
-  }
-
-  let body = thymeleaf.render(view, model)
   let pageContributions
   if (preview && preview.pageContributions) {
     pageContributions = preview.pageContributions
   }
 
-  const headerContent = getHeaderContent(language)
-  const headerComponent = new React4xp('Header')
-    .setProps({
-      ...headerContent
-    })
-    .setId('header')
-  body = headerComponent.renderBody({
-    body
+  const header = fromMenuCache(req, 'header', () => {
+    const headerContent = getHeaderContent(language)
+    if (headerContent) {
+      const headerComponent = new React4xp('Header')
+        .setProps({
+          ...headerContent
+        })
+        .setId('header')
+      return {
+        body: headerComponent.renderBody({
+          body: '<div id="header"></div>'
+        }),
+        component: headerComponent
+      }
+    }
+    return undefined
   })
-  pageContributions = headerComponent.renderPageContributions({
-    pageContributions
-  })
-
-  const footerContent = getFooterContent(language)
-  if (footerContent) {
-    const footerComponent = new React4xp('Footer')
-      .setProps({
-        ...footerContent
-      })
-      .setId('footer')
-    body = footerComponent.renderBody({
-      body
-    })
-    pageContributions = footerComponent.renderPageContributions({
+  if (header && header.component) {
+    pageContributions = header.component.renderPageContributions({
       pageContributions
     })
   }
+
+  const footer = fromMenuCache(req, 'footer', () => {
+    const footerContent = getFooterContent(language)
+    if (footerContent) {
+      const footerComponent = new React4xp('Footer')
+        .setProps({
+          ...footerContent
+        })
+        .setId('footer')
+      return {
+        body: footerComponent.renderBody({
+          body: '<footer id="footer"></footer>'
+        }),
+        component: footerComponent
+      }
+    }
+    return undefined
+  })
+
+  if (footer && footer.component) {
+    pageContributions = footer.component.renderPageContributions({
+      pageContributions
+    })
+  }
+
+  const model = {
+    pageTitle: 'SSB', // not really used on normal pages because of SEO app (404 still uses this)
+    page,
+    mainRegionComponents,
+    configRegions,
+    ingress,
+    showIngress,
+    preview,
+    bodyClasses: bodyClasses.join(' '),
+    stylesUrl,
+    jsLibsUrl,
+    language,
+    GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null,
+    headerBody: header ? header.body : undefined,
+    footerBody: footer ? footer.body : undefined,
+    addMetaInfoSearch,
+    metaInfoSearchId,
+    metaInfoSearchTitle,
+    metaInfoSearchGroup,
+    metaInfoSearchContentType,
+    metaInfoSearchKeywords,
+    metaInfoDescription
+  }
+
+  let body = thymeleaf.render(view, model)
 
   const breadcrumbs = getBreadcrumbs(page, municipality)
   const breadcrumbComponent = new React4xp('Breadcrumb')
