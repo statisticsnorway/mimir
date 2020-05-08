@@ -1,12 +1,9 @@
 import { ContextLibrary } from 'enonic-types/lib/context'
 import { NodeCreateParams, NodeLibrary, RepoConnection, RepoNode } from 'enonic-types/lib/node'
-import { RepositoryConfig, RepoLibrary } from 'enonic-types/lib/repo'
-import {EVENT_LOG_BRANCH, EVENT_LOG_REPO} from './eventLog';
 import { EditorCallback } from './eventLog'
 
 const context: ContextLibrary = __non_webpack_require__('/lib/xp/context')
 const node: NodeLibrary = __non_webpack_require__('/lib/xp/node')
-const repo: RepoLibrary = __non_webpack_require__('/lib/xp/repo')
 
 export type ContextCallback<T> = () => T;
 export type ConnectionCallback<T> = (conn: RepoConnection) => T;
@@ -48,16 +45,8 @@ export function createNode<T>(repository: string, branch: string, content: T & N
   })
 }
 
-export function createRepo(repository: string, branch: string): RepositoryConfig {
-  return withUserContext<RepositoryConfig>(repository, branch, () => {
-    return repo.create({
-      id: repository
-    })
-  })
-}
-
 export function getNode<T>(repository: string, branch: string, key: string): ReadonlyArray<T & RepoNode> {
-  return withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (conn) => {
+  return withConnection(repository, branch, (conn) => {
     return conn.get(key)
   })
 }
