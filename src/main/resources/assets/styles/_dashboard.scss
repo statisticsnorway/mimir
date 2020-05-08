@@ -72,6 +72,8 @@
     .actions {
       display: flex;
       justify-content: space-around;
+      border-bottom: 0 none;
+      border-top: 0 none;
     }
   }
   .errorMsg {
@@ -102,11 +104,23 @@
 .klass {
   background: skyblue;
 }
-.published_true {
-  background: #8dbb2b;
-}
 
-.published_false {
+.unpublished {
   background: indianred;
   color: white;
+}
+
+.table-bordered {
+  tr {
+    border-top: 1px solid #dee2e6;
+    border-bottom: 1px solid #dee2e6;
+    border-right: 0 none;
+    border-left: 0 none;
+  }
+  td {
+    border-top: 0 none;
+    border-bottom: 0 none;
+    border-right: 1px solid #dee2e6;
+    border-left: 1px solid #dee2e6;
+  }
 }

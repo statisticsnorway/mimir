@@ -31,8 +31,9 @@ export const getAllOrOneDataQuery = (selector) => {
       query: `data.table LIKE 'http*'`
     }).hits
   } else {
-    return util.data.forceArray(getDataQuery({
+    const result = getDataQuery({
       key: selector
-    }))
+    })
+    return result? util.data.forceArray(result): []
   }
 }

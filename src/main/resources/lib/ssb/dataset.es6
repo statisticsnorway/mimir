@@ -21,6 +21,19 @@ export const get = (key) => {
   } : NOT_FOUND
 }
 
+export const getAllOrOneDataSet = (selector) => {
+  if (selector === '*') {
+    return content.query({
+      start: 0,
+      count: 999,
+      contentTypes: [`${app.name}:dataset`]
+    }).hits
+
+  } else {
+    return getDataSetWithDataQueryId(selector).hits
+  }
+}
+
 /**
  * Get the last created dataset with its parent dataQuery content id
  * @param {string} dataQueryContentId

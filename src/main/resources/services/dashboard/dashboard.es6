@@ -1,3 +1,5 @@
+import {getNode} from '../../lib/repo/common';
+
 const auth = __non_webpack_require__( '/lib/xp/auth')
 const context = __non_webpack_require__( '/lib/xp/context')
 const content = __non_webpack_require__( '/lib/xp/content')
@@ -8,193 +10,180 @@ const {
   getAllOrOneDataQuery
 } = __non_webpack_require__('/lib/ssb/dataquery')
 const {
-  getDataSetWithDataQueryId,
-  getUpdated,
-  getUpdatedReadable
+  getAllOrOneDataSet,
 } = __non_webpack_require__( '/lib/ssb/dataset')
 const {
-  createJobNode, completeJob
-} = __non_webpack_require__('/lib/repo/job')
-const {startQuery, setQueryLogStatus, UpdateResult} = __non_webpack_require__('/lib/repo/query')
+  Events, logDataQueryEvent
+} = __non_webpack_require__('/lib/repo/query')
+const i18n = __non_webpack_require__('/lib/xp/i18n')
+const {
+  dateToFormat, dateToReadable
+} = __non_webpack_require__( '/lib/ssb/utils')
+const { EVENT_LOG_BRANCH, EVENT_LOG_REPO } = __non_webpack_require__( '/lib/repo/eventLog')
 
-const QUERY_UPDATED = 1
-const QUERY_IGNORED = 2
-const QUERY_FAILED = 3
-
+/**
+ *
+ * @param {object} req
+ * @return {{body: {success: boolean, message: string}, contentType: string, status: number}|
+ * {body: {publishResult: *, updates: *, message: *}, contentType: string, status: number}}
+ */
 exports.get = function(req) {
-  const params = req.params
-
-  let updateResult
-  let jobLog
-  if (params && params.id) {
-    updateResult = context.run(createContextOption('master'), () => {
-      const dataqueries = getAllOrOneDataQuery(params.id)
-      const allDataQueryIds = dataqueries.map( (dataquery) => dataquery._id)
-      jobLog = createJobNode(allDataQueryIds)
-      return dataqueries.map((dataquery) => updateDataQuery(dataquery, jobLog))
-    })
-
-  } else {
-    updateResult = [{
-      success: false,
-      message: `Missing parameter "id"`,
-      status: 400
-    }]
+  if (!req.params || !req.params.id) {
+    return missingParameterResponse()
   }
+  const user = auth.getUser()
+  logDataQueryEvent(req.params.id, user, {message:Events.STARTED })
 
-  const messageObject = createFeedback(updateResult)
-  if(jobLog) completeJob(jobLog._id, messageObject.success, messageObject.message, messageObject.status)
+  const updateResult = context.run(createContextOption('master'), () => {
+    return getAllOrOneDataQuery(req.params.id).map((dataquery) => updateDataQuery(dataquery, user) )
+  })
 
-  const returnObj = {
-    body: {
-      updates: updateResult,
-      message: messageObject.message,
-      status: messageObject.status,
-      success: messageObject.success
-    },
-    contentType: 'application/json',
-    status: messageObject.status
-  }
-  return returnObj
-}
-
-function createFeedback(updateResult) {
-  if (updateResult.length === 1) {
+  const parsedResult = updateResult.map( (result) => {
+    const queryLogNode = getNode(EVENT_LOG_BRANCH, EVENT_LOG_REPO,`/queries/${result.dataquery._id}`)
     return {
-      message: updateResult[0].message,
-      status: updateResult[0].status,
-      success: updateResult[0].success
-    }
-  } else {
-    return {
-      message: `Successfully Updated/created: ${
-        updateResult.filter( (result) => result.queryStatus === QUERY_UPDATED).length
-      }, Ignored : ${
-        updateResult.filter( (result) => result.queryStatus === QUERY_IGNORED).length
-      } , Failed:  ${
-        updateResult.filter( (result) => result.queryStatus === QUERY_FAILED).length
-      } , Total: ${
-        updateResult.length
-      }`,
-      success: true,
-      status: 200
-    }
-  }
-}
-
-function updateDataQuery(dataquery, jobLog) {
-  const returnObj = {
-    message: '',
-    success: false,
-    status: 0,
-    datasetInfo: []
-  }
-  const queryLog = startQuery(dataquery, jobLog)
-  if (dataquery) {
-    const data = getData(dataquery, jobLog._id)
-    if (data) {
-      const dataset = refreshDatasetWithData(JSON.stringify(data), dataquery)
-      if (dataset) {
-        returnObj.message = `Successfully updated/created dataset for dataquery`
-        returnObj.queryStatus = QUERY_UPDATED
-        returnObj.success = true
-        returnObj.status = 200
-
-        returnObj.datasetInfo.push({
-          id: dataset.data.dataquery,
-          updated: getUpdated(dataset),
-          updatedHumanReadable: getUpdatedReadable(dataset),
-          hasData: true
-        })
-        setQueryLogStatus(queryLog._id, UpdateResult.COMPLETE)
-      } else {
-        returnObj.success = true
-        returnObj.message = `No new data for dataquery`
-        returnObj.queryStatus = QUERY_IGNORED
-        returnObj.status = 200
-        setQueryLogStatus(queryLog._id, UpdateResult.NO_NEW_DATA)
+      id: result.dataquery._id,
+      message: i18n.localize({key: result.message}),
+      status: result.message,
+      logData: {
+        ...queryLogNode.data,
+        message: i18n.localize({key: result.message}),
+        modified: dateToFormat(queryLogNode.modified),
+        modifiedReadable: dateToReadable(queryLogNode.modified)
       }
-    } else {
-      returnObj.success = false
-      returnObj.message = `Failed to get data for dataquery: ${dataquery._id}`
-      returnObj.queryStatus = QUERY_FAILED
-      returnObj.status = 500
-      setQueryLogStatus(queryLog._id, UpdateResult.FAILED)
     }
-  } else {
-    returnObj.success = false
-    returnObj.message = `No dataquery found with id: ${req.params.id}`
-    returnObj.queryStatus = QUERY_FAILED
-    returnObj.status = 404
-    setQueryLogStatus(queryLog._id, UpdateResult.FAILED)
-  }
-  return returnObj
+  })
+
+  return successResponse(parsedResult, undefined)
 }
 
-
+/**
+ *
+ * @param {object} req
+ * @return {{body: {success: boolean, message: string}, contentType: string, status: number}|
+ * {body: {publishResult: *, updates: *, message: *}, contentType: string, status: number}}
+ */
 exports.delete = (req) => {
-  let status = 200
-  let message = ''
-  let success = true
-  const datasetInfo = []
-  const params = req.params
-
-  if (params && params.id) {
-    context.run(createContextOption('draft'), () => {
-      let datasets = []
-      if (params.id === '*') { // delete all
-        datasets = content.query({
-          start: 0,
-          count: 999,
-          contentTypes: [`${app.name}:dataset`]
-        }).hits
-      } else { // delete one
-        datasets = getDataSetWithDataQueryId(params.id).hits
-      }
-      if (datasets.length > 0) {
-        const datasetsToPublish = []
-        datasets.forEach((dataset) => {
-          const isDeleted = content.delete({
-            key: dataset._id
-          })
-          if (isDeleted) {
-            datasetInfo.push({
-              id: dataset.data.dataquery,
-              updated: '',
-              updatedHumanReadable: '',
-              hasData: false
-            })
-            datasetsToPublish.push(dataset._id)
-          }
-        })
-        content.publish({
-          keys: datasetsToPublish,
-          sourceBranch: 'draft',
-          targetBranch: 'master'
-        })
-        message = `Successfully deleted ${datasetInfo.length} of ${datasets.length} datasets`
-      } else {
-        success = false
-        message = `No dataset found for dataquery with id ${params.id}`
-        status = 404
-      }
-    })
-  } else {
-    success = false
-    message = `Missing parameter "id"`
-    status = 400
+  if (!req.params || !req.params.id) {
+    return missingParameterResponse()
   }
 
+  const deleteResult = context.run(createContextOption('draft'), () => {
+    return getAllOrOneDataSet(req.params.id).map((dataquery) => {
+      return {
+        dataquery,
+        deleted: content.delete({
+          key: getDataSetWithDataQueryId(dataquery._id)._id
+        })
+      }
+    })
+  })
+
+  const publishResult = content.publish({
+    keys: deleteResult.map((dataset) => dataset.datasetId),
+    sourceBranch: 'draft',
+    targetBranch: 'master'
+  })
+
+  return successResponse(updateResult, publishResult)
+}
+
+/**
+ *
+ * @param {object} updateResult
+ * @param {object} publishResult
+ * @return {{body: {publishResult: *, updates: *, message: *}, contentType: string, status: number}}
+ */
+function successResponse(updateResult, publishResult) {
   return {
     body: {
-      success,
-      message,
-      updates: datasetInfo
+      updates: updateResult,
+      message: createMessage(updateResult),
+      publishResult
     },
     contentType: 'application/json',
-    status
+    status: 200
   }
 }
+
+/**
+ *
+ * @return {{body: {success: boolean, message: string}, contentType: string, status: number}}
+ */
+function missingParameterResponse() {
+  return {
+    body: {
+      success: false,
+      message: `Missing parameter "id"`
+    },
+    contentType: 'application/json',
+    status: 400
+  }
+}
+
+/**
+ *
+ * @param {object }updateResult
+ * @return {string|string|"NOT_TRANSLATED"}
+ */
+function createMessage(updateResult) {
+  if (updateResult.length === 1) {
+    return i18n.localize({
+      key: updateResult[0].status
+    })
+  }
+
+  return `Updated/created: ${
+    updateResult.filter( (result) => result.status === Events.COMPLETE).length
+  } - Ignored: ${
+    updateResult.filter( (result) => result.status === Events.NO_NEW_DATA).length
+  } - Failed:  ${
+    updateResult.filter( (result) => result.status === Events.FAILED_TO_FIND_DATAQUERY ||
+        result.status === Events.FAILED_TO_GET_DATA
+    ).length
+  } - Total: ${
+    updateResult.length
+  }`
+}
+
+/**
+ *
+ * @param {object } dataquery
+ * @param {object } user
+ * @return {{dataquery: *, message: *}|{refreshResult: *, message: *}}
+ */
+function updateDataQuery(dataquery, user) {
+  if (!dataquery) {
+    return {
+      dataquery,
+      message: Events.FAILED_TO_FIND_DATAQUERY
+    }
+  }
+
+  const data = getData(dataquery)
+  if (!data) {
+    logDataQueryEvent(dataquery._id, user, {message:Events.FAILED_TO_GET_DATA} )
+    return {
+      dataquery,
+      message: Events.FAILED_TO_GET_DATA
+    }
+  }
+
+  const refreshResult = refreshDatasetWithData(JSON.stringify(data), dataquery) // returns a string or updated obejct
+  if (typeof(refreshResult) === 'string') {
+    logDataQueryEvent(dataquery._id, user, {message:Events.NO_NEW_DATA})
+    return {
+      dataquery,
+      message: refreshResult // can be failed to fetch data or failed to
+    }
+  } else {
+    logDataQueryEvent(dataquery._id, user, {message:Events.COMPLETE})
+    return {
+      refreshResult,
+      message: Events.COMPLETE
+    }
+  }
+}
+
 
 const createContextOption = (branch) => {
   const _user = auth.getUser()

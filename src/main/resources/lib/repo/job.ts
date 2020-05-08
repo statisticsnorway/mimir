@@ -20,12 +20,13 @@ export interface JobInfo {
   };
 }
 
-export function createJobNode(queryIds: Array<string>, user?: User): object {
+export function createJobNode(queryIds: Array<string>, user?: User, task?: string): object {
   const now: Date = new Date()
   return createEventLog({
     _parentPath: '/jobs',
     data: {
       queryIds,
+      task: task,
       jobStarted: now.toISOString(),
       status: JobStatus.STARTED,
       user

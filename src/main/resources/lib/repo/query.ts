@@ -1,101 +1,110 @@
-import { Content } from 'enonic-types/lib/content'
-import { Dataquery } from '../../site/content-types/dataquery/dataquery'
-import { NodeQueryResponse, RepoNode } from 'enonic-types/lib/node'
-import { JobInfoNode } from './job'
-import { withConnection } from './common'
-import { UtilLibrary } from '../types/util'
+import { RepoNode } from 'enonic-types/lib/node'
+import { getNode, withConnection } from './common'
 import { EVENT_LOG_BRANCH, EVENT_LOG_REPO, createEventLog, EditorCallback, updateEventLog } from './eventLog'
-const util: UtilLibrary = __non_webpack_require__( '/lib/util')
+import { User } from 'enonic-types/lib/auth'
+import { HttpRequestParams, HttpResponse } from 'enonic-types/lib/http'
+const { dateToFormat, dateToReadable} = __non_webpack_require__('/lib/ssb/utils')
 
 export type QueryInfoNode = QueryInfo & RepoNode
 
-export enum UpdateResult {
-  STARTED = 'started',
-  NO_NEW_DATA = 'no new data',
-  COMPLETE = 'complete',
-  FAILED = 'update failed'
-}
-
 export interface QueryInfo {
+  _name: string;
   data: {
     queryId: string;
-    lastUpdated?: string;
-    lastUpdateResult?: UpdateResult;
-    jobs: Array<string>;
+    modified?: string;
+    modifiedTs?: string;
+    modifiedResult?: string;
+    by: User;
   };
 }
 
-
-export function startQuery(dataQuery: Content<Dataquery>, job: JobInfoNode): QueryInfoNode {
-  return withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (conn) => {
-    const queryResult: NodeQueryResponse = conn.query({
-      count: 1,
-      query: `data.queryId = '${dataQuery._id}'`
-    })
-    if (queryResult.total === 1) {
-      return addJobToQueryNode(queryResult.hits[0].id, job)
-    } else {
-      return createQueryNode(dataQuery, job)
-    }
-  })
+export interface QueryStatus {
+  message: string;
+  response?: HttpResponse;
+  request?: HttpRequestParams;
 }
 
-export function createQueryNode(dataquery: Content<Dataquery>, job: JobInfoNode): QueryInfoNode {
-  return createEventLog<QueryInfo> ({
-    _parentPath: '/queries',
+export interface EventInfo {
+  data: {
+    ts: string;
+    status: QueryStatus;
+    by: User;
+  };
+}
+
+export enum Events {
+  STARTED = 'STARTED',
+  NO_NEW_DATA = 'NO_NEW_DATA',
+  COMPLETE = 'COMPLETE',
+  REQUESTING_DATA = 'REQUESTING_DATA',
+  DELETE_UNPUBLISHED = 'DELETE_UNPUBLISH',
+  DELETE_PUBLISHED = 'DELETE_PUBLISHED',
+  FAILED_TO_GET_DATA = 'FAILED_TO_GET_DATA',
+  FAILED_TO_FIND_DATAQUERY = 'FAILED_TO_FIND_DATAQUERY',
+}
+export const EVENTS: object = {
+  fetchData: {}
+}
+
+export function logDataQueryEvent(queryId: string, user: User, status: QueryStatus): QueryInfoNode {
+  startQuery(queryId, user, status)
+  addEventToQueryLog(queryId, user, status)
+  const aaa: QueryInfoNode = updateQueryLogStatus(queryId, user, status)
+  return aaa
+}
+
+function addEventToQueryLog(queryId: string, user: User, status: QueryStatus): EventInfo & RepoNode {
+  const ts: Date = new Date()
+  return createEventLog<EventInfo>({
+    _parentPath: `/queries/${queryId}`,
     data: {
-      queryId: dataquery._id,
-      jobs: [job._id]
+      status,
+      ts: dateToFormat(ts.toISOString()),
+      by: user
     }
   })
 }
 
-export function updateQuery<T>(queryId: string, editor: EditorCallback<QueryInfoNode>): QueryInfoNode {
-  return updateEventLog(queryId, editor)
-}
-
-export function addJobToQueryNode(queryId: string, job: JobInfoNode): QueryInfoNode {
-  return updateQuery(queryId, function(node: QueryInfoNode): QueryInfoNode {
-    node.data = {
-      ...node.data,
-      jobs: [
-        ...(util.data.forceArray(node.data.jobs)),
-        job._id
-      ] as Array<string>
-    }
-    return node
-  })
-}
-
-export function setQueryLogStatus(queryId: string, status: UpdateResult): QueryInfoNode {
-  return updateQuery(queryId, function(node: QueryInfoNode): QueryInfoNode {
-    node.data = {
-      ...node.data,
-      lastUpdateResult: status
-    }
-    return node
-  })
-}
-
-export function getQueryLog(queryId: string): object | undefined {
+export function startQuery(queryId: string, user: User, status: QueryStatus): QueryInfoNode {
   return withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (conn) => {
-    const queryResult: NodeQueryResponse = conn.query({
-      count: 1,
-      query: `_parentPath = '/queries' AND data.queryId = '${queryId}'`
-    })
-    return queryResult.total > 0 ? queryResult.hits[0] : undefined
+    const queryLogNode: ReadonlyArray<QueryInfoNode> = getNode<QueryInfo>(EVENT_LOG_BRANCH, EVENT_LOG_REPO,`/queries/${queryId}`)
+    if (queryLogNode !== null) {
+      return queryLogNode[0]
+    } else {
+      return createQueryNode(queryId, user, status)
+    }
   })
 }
 
-
-export interface LogQueryNode extends RepoNode {
-  data: {
-    queryId: string;
-    jobs: Array<LogJobSummaryNode>;
-  };
+export function createQueryNode(queryId: string, user: User, status: QueryStatus): QueryInfoNode {
+  const ts: Date = new Date()
+  return createEventLog<QueryInfo>({
+    _parentPath: '/queries',
+    _name: queryId,
+    data: {
+      queryId: queryId,
+      modified: dateToFormat(ts.toISOString()),
+      modifiedResult: status.message,
+      by: user
+    }
+  })
 }
 
-export interface LogJobSummaryNode {
-  id: string;
-  response: object;
+export function updateQuery<T>(key: string, editor: EditorCallback<QueryInfoNode>): QueryInfoNode {
+  return updateEventLog(key, editor)
+}
+
+export function updateQueryLogStatus(queryId: string, user: User, status: QueryStatus): QueryInfoNode {
+  const ts: Date = new Date()
+
+  return updateQuery(`/queries/${queryId}`, function(node: QueryInfoNode): QueryInfoNode {
+    node.data = {
+      ...node.data,
+      by: user,
+      modifiedTs: ts.toISOString(),
+      modified: dateToFormat(ts.toISOString()),
+      modifiedResult: status.message
+    }
+    return node
+  })
 }

@@ -6,7 +6,8 @@ import { Dataset } from '../site/content-types/dataset/dataset'
 import * as moment from 'moment'
 import { getTbmlData } from './tbml/tbml'
 import { CommonLibrary } from './types/common'
-import {createRequestLog} from './repo/request';
+import {Events, logDataQueryEvent } from './repo/query';
+import {User} from 'enonic-types/lib/auth';
 
 const http: HttpLibrary = __non_webpack_require__('/lib/http-client')
 const context: ContextLibrary = __non_webpack_require__('/lib/xp/context')
@@ -33,7 +34,7 @@ const draft: RunContext = { // Draft context (XP)
 }
 
 export function get(url: string, json: DataqueryRequestData | undefined,
-  selection: SelectionFilter = defaultSelectionFilter, jobLogId?: string, queryId?: string ): object | null {
+  selection: SelectionFilter = defaultSelectionFilter, queryId?: string, user?: User ): object | null {
   if (json && json.query) {
     for (const query of json.query) {
       if (query.code === 'KOKkommuneregion0000' || query.code === 'Region') {
@@ -56,9 +57,7 @@ export function get(url: string, json: DataqueryRequestData | undefined,
   }
 
   const result: HttpResponse = http.request(requestParams)
-  if(jobLogId && queryId) {
-    createRequestLog(jobLogId, queryId, requestParams, result)
-  }
+  if(queryId && user) logDataQueryEvent(queryId, user, {message: Events.REQUESTING_DATA, response: result, request: requestParams })
 
   if (result.status !== 200) {
     log.error(`HTTP ${url} (${result.status} ${result.message})`)
@@ -69,31 +68,30 @@ export function get(url: string, json: DataqueryRequestData | undefined,
   return null
 }
 
-export function refreshDataset(dataquery: Content<Dataquery>): Content<Dataset> | undefined {
+export function refreshDataset(dataquery: Content<Dataquery>): Content<Dataset> | string {
   const data: object | null = getData(dataquery)
-  return data ? refreshDatasetWithData(JSON.stringify(data), dataquery) : undefined
+  return data ? refreshDatasetWithData(JSON.stringify(data), dataquery) : 'FAILED_TO_REFRESH_DATASET'
 }
 
-export function refreshDatasetWithData(data: string, dataquery: Content<Dataquery>, jobLogId?: string): Content<Dataset> | undefined {
+export function refreshDatasetWithData(data: string, dataquery: Content<Dataquery>): Content<Dataset> | string {
   const dataset: Content<Dataset>| undefined = getDataset(dataquery)
-
   if (dataset) {
-    return isDataNew(data, dataset) ? updateDataset(data, dataset, dataquery) : undefined
+    return isDataNew(data, dataset) ? updateDataset(data, dataset, dataquery) : Events.NO_NEW_DATA
   } else {
     return createDataset(data, dataquery)
   }
 }
 
-export function getData(dataquery: Content<Dataquery>, jobLogId?: string): object | null {
+export function getData(dataquery: Content<Dataquery>, user?: User): object | null {
   if (dataquery.data.table) {
     // TODO option-set is not parsed correctly by enonic-ts-codegen, update lib later and remove PlaceholderData interface
     const datasetFormat: Dataquery['datasetFormat'] = dataquery.data.datasetFormat
     let data: object | null = null
     try {
       if ((!datasetFormat || datasetFormat._selected === 'jsonStat')) {
-        data = get(dataquery.data.table, dataquery.data.json && JSON.parse(dataquery.data.json), undefined, jobLogId, dataquery._id)
+        data = get(dataquery.data.table, dataquery.data.json && JSON.parse(dataquery.data.json), undefined, dataquery._id)
       } else if (datasetFormat && datasetFormat._selected === 'klass') {
-        data = get(dataquery.data.table, undefined, undefined, jobLogId)
+        data = get(dataquery.data.table, undefined, undefined, dataquery._id)
       } else if (datasetFormat && datasetFormat._selected === 'tbml') {
         data = getTbmlData(dataquery.data.table)
       }
@@ -112,7 +110,7 @@ function isDataNew(data: string, dataset: Content<Dataset>): boolean {
   return false
 }
 
-function updateDataset(data: string, dataset: Content<Dataset>, dataquery: Content<Dataquery>): Content<Dataset> |undefined {
+function updateDataset(data: string, dataset: Content<Dataset>, dataquery: Content<Dataquery>): Content<Dataset> | string {
   return context.run(draft, () => {
     const now: string = moment().format('DD.MM.YYYY HH:mm:ss')
 
@@ -133,11 +131,11 @@ function updateDataset(data: string, dataset: Content<Dataset>, dataquery: Conte
         key: dataset._id
       }) as Content<Dataset>
     }
-    return
+    return 'FAILED_TO_UPDATE_DATASET'
   })
 }
 
-function createDataset(data: string, dataquery: Content<Dataquery>): Content<Dataset> |undefined {
+function createDataset(data: string, dataquery: Content<Dataquery>): Content<Dataset> | string {
   return context.run(draft, () => {
     const now: string = moment().format('DD.MM.YYYY HH:mm:ss')
     const name: string = sanitize(`${dataquery._name} (datasett) opprettet ${now}`)
@@ -161,7 +159,7 @@ function createDataset(data: string, dataquery: Content<Dataquery>): Content<Dat
     } catch (e) {
       log.error(`Failed to create dataset: ${e.code} ${e.message}`)
     }
-    return
+    return 'FAILED_TO_CREATE_DATASET'
   })
 }
 
