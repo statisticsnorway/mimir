@@ -40,7 +40,7 @@ exports.get = function(req) {
   })
 
   const parsedResult = updateResult.map( (result) => { // refreshResult
-    const queryLogNode = getNode(EVENT_LOG_BRANCH, EVENT_LOG_REPO,`/queries/${result.dataquery._id}`)
+    const queryLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH,`/queries/${result.dataquery._id}`)
     return {
       id: result.dataquery._id,
       message: i18n.localize({key: result.status}),
@@ -106,7 +106,7 @@ exports.delete = (req) => {
   })
 
   const updateResult = deleteResult.map( (result) => { // refreshResult
-    const queryLogNode = getNode(EVENT_LOG_BRANCH, EVENT_LOG_REPO,`/queries/${result.dataset.data.dataquery}`)
+    const queryLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH,`/queries/${result.dataset.data.dataquery}`)
     return {
       id: result.dataset.data.dataquery,
       message: queryLogNode.data.modifiedResult ? i18n.localize({key: queryLogNode.data.modifiedResult}): undefined,

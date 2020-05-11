@@ -129,7 +129,7 @@ function getDataQueries(datasetMap) {
   return dataQueryResult.hits.map((dataquery) => {
     const dataset = datasetMap[dataquery._id]
     const hasData = !!dataset
-    const queryLogNode = getNode(EVENT_LOG_BRANCH, EVENT_LOG_REPO, `/queries/${dataquery._id}`)
+    const queryLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataquery._id}`)
 
     return {
       id: dataquery._id,

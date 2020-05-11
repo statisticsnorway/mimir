@@ -193,7 +193,7 @@ function createDataset(data: string, dataquery: Content<Dataquery>): RefreshData
         }
       }) as Content<Dataset>
 
-      publishDatasets([dataset._id])
+      const publishResult: PublishResponse = publishDatasets([dataset._id])
 
       return {
         dataqueryId: dataquery._id,
@@ -226,7 +226,7 @@ export function getDataset(dataquery: Content<Dataquery>): Content<Dataset> | un
   return
 }
 
-function publishDatasets(datasets: Array<string>): void {
+function publishDatasets(datasets: Array<string>): PublishResponse {
   const published: PublishResponse = content.publish({
     keys: datasets,
     sourceBranch: 'draft',
@@ -238,6 +238,7 @@ function publishDatasets(datasets: Array<string>): void {
   } else {
     // success, logging?
   }
+  return published
 }
 
 export interface SelectionFilter {
