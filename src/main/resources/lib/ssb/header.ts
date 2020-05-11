@@ -4,7 +4,7 @@ import { PortalLibrary } from 'enonic-types/lib/portal'
 import { MenuItem } from '../../site/content-types/menuItem/menuItem'
 import { Language } from '../types/language'
 const {
-  assetUrl, getSiteConfig, pageUrl
+  assetUrl, getSiteConfig
 }: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
 const {
   createMenuTree, parseTopLinks

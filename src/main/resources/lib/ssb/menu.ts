@@ -1,18 +1,29 @@
-import {Content, ContentLibrary, QueryResponse} from 'enonic-types/lib/content';
-import {PortalLibrary} from 'enonic-types/lib/portal';
-import {MenuItem} from '../../site/content-types/menuItem/menuItem';
-import {SiteConfig} from '../../site/site-config';
+import { Content, ContentLibrary, QueryResponse } from 'enonic-types/lib/content'
+import { PortalLibrary } from 'enonic-types/lib/portal'
+import { MenuItem } from '../../site/content-types/menuItem/menuItem'
+import { SiteConfig } from '../../site/site-config'
 import { Footer } from '../../site/content-types/footer/footer'
 
-const { getContent, imageUrl, pageUrl }: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
-const { get, getChildren }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
+const {
+  getContent, imageUrl, pageUrl
+}: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
+const {
+  get, getChildren
+}: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
+const {
+  getImageCaption
+} = __non_webpack_require__('/lib/ssb/utils')
 
 
 export function createMenuTree(menuItemId: string): Array<MenuItemParsed> {
-  const menuContent: Content<MenuItem> | null = get({key: menuItemId})
+  const menuContent: Content<MenuItem> | null = get({
+    key: menuItemId
+  })
 
-  if(menuContent !== null) {
-    const menuContentChildren: QueryResponse<MenuItem> = getChildren({key: menuContent._id})
+  if (menuContent !== null) {
+    const menuContentChildren: QueryResponse<MenuItem> = getChildren({
+      key: menuContent._id
+    })
     return menuContentChildren.hits.map( (menuItem) => createMenuBranch(menuItem))
   }
 
@@ -20,17 +31,23 @@ export function createMenuTree(menuItemId: string): Array<MenuItemParsed> {
 }
 
 function createMenuBranch(menuItem: Content<MenuItem>): MenuItemParsed {
-  const path: string | undefined = menuItem.data.urlSrc ? parseUrl(menuItem.data.urlSrc): '-'
-  const children: QueryResponse<MenuItem> = getChildren({key: menuItem._id})
-  const content: Content | null = getContent();
+  const path: string | undefined = menuItem.data.urlSrc ? parseUrl(menuItem.data.urlSrc) : '-'
+  const children: QueryResponse<MenuItem> = getChildren({
+    key: menuItem._id
+  })
+  const content: Content | null = getContent()
   const isActive: boolean = children.total > 0 && content ? children.hits.reduce( (hasActiveChildren: boolean, child: Content<MenuItem>) => {
-    if( child.data.urlSrc && child.data.urlSrc._selected === 'content' &&
+    if ( child.data.urlSrc && child.data.urlSrc._selected === 'content' &&
         child.data.urlSrc.content && child.data.urlSrc.content.contentId === content._id) {
       hasActiveChildren = true
     }
     return hasActiveChildren
   }, false) : false
-  const iconPath: string | undefined = menuItem.data.icon ? imageUrl({id: menuItem.data.icon, scale: 'block(12px,12px)'}) : undefined
+  const iconPath: string | undefined = menuItem.data.icon ? imageUrl({
+    id: menuItem.data.icon,
+    scale: 'block(12px,12px)'
+  }) : undefined
+  const iconAltText: string | undefined = menuItem.data.icon ? getImageCaption(menuItem.data.icon) : undefined
 
   return {
     title: menuItem.displayName,
@@ -38,6 +55,7 @@ function createMenuBranch(menuItem: Content<MenuItem>): MenuItemParsed {
     path,
     isActive,
     icon: iconPath && iconPath.search('error') === -1 ? iconPath : undefined,
+    iconAltText,
     menuItems: children.total > 0 ? children.hits.map((childMenuItem) => createMenuBranch(childMenuItem)) : undefined
   }
 }
@@ -59,13 +77,15 @@ export function parseGlobalLinks(globalLinks: GlobalLinks): Array<Link> | undefi
 }
 
 function parseUrl(urlSrc: MenuItem['urlSrc']): string | undefined {
-  if(urlSrc !== undefined) {
-    if(urlSrc._selected === 'content') {
+  if (urlSrc !== undefined) {
+    if (urlSrc._selected === 'content') {
       const selected: UrlContent | undefined = urlSrc[urlSrc._selected]
-      return selected && selected.contentId ? pageUrl({id: selected.contentId}) : undefined
+      return selected && selected.contentId ? pageUrl({
+        id: selected.contentId
+      }) : undefined
     }
 
-    if(urlSrc._selected === 'manual') {
+    if (urlSrc._selected === 'manual') {
       const selected: UrlContent | undefined = urlSrc[urlSrc._selected]
       return selected && selected.url ? selected.url : undefined
     }
@@ -83,6 +103,7 @@ export interface MenuItemParsed extends MenuItem {
   title: string;
   path?: string;
   isActive: boolean;
+  iconAltText?: string;
   menuItems?: Array<MenuItem> | undefined;
 }
 
