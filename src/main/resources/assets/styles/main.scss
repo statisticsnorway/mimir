@@ -31,7 +31,7 @@ $container-max-widths: (
 @import "./menuBox";
 @import "./dashboard";
 @import "./button";
-@import "./datasets";
+@import "./variableCardsList";
 @import "./layout";
 @import "./banner";
 @import "./popper";
@@ -43,10 +43,11 @@ $container-max-widths: (
 @import "./preface";
 @import "./globalStyles";
 @import "./infoGraphic";
-@import "./_profiledBox";
-@import "./_article";
+@import "./profiledBox";
+@import "./article";
 @import "./relatedContentBox";
-@import "./relatedExternalLink";
+@import "./profiledLinkIcon";
+@import "./downloadLink";
 
 body {
   -moz-osx-font-smoothing: grayscale;

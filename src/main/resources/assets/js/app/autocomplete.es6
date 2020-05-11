@@ -30,15 +30,24 @@ export function init() {
     elements.each((i, elem) => {
       const a = $(elem)
       a.keydown((e) => {
+        // 9 = tab
         if (e.which === 9) {
           e.preventDefault()
-          el.focus()
-        } else if (e.which === 40) {
+          // not the best solution, but it fixes keyboard trap. TODO: rewrite dropdown
+          if ($('.show-map').length) {
+            $('.show-map').focus()
+          } else {
+            $('.footer-top-row .ssb-btn').focus()
+          }
+        }
+        // 40 = arrow down key
+        else if (e.which === 40) {
           e.preventDefault()
           const next = elem.nextElementSibling
           if (next) {
             next.focus()
           }
+          //38 = arrow up key
         } else if (e.which === 38) {
           e.preventDefault()
           const prev = elem.previousElementSibling

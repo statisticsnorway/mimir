@@ -10,6 +10,7 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
+const content = __non_webpack_require__( '/lib/xp/content')
 
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 
@@ -48,12 +49,17 @@ function renderPart(req) {
     scale: 'max(850)'
   })
 
+  // Retrieves image as content to get image meta data
+  const imageData = content.get({
+    key: part.config.image
+  })
+
   // Retrieves the array where the sources are stored
   const sources = getSources(sourceConfig)
 
   const model = {
     title: part.config.title,
-    altText: part.config.altText,
+    altText: imageData.data.altText,
     image: part.config.image,
     imageSrc: imageSrc,
     footnote: part.config.footNote,

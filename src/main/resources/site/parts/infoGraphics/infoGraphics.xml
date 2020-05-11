@@ -58,10 +58,10 @@
       <label>Fotnote til bilde</label>
       <occurrences minimum="0" maximum="0" />
     </input>
-
+    <!-- TODO: remove altText when all content has been mended to use alt text on image instead -->
     <input name="altText" type="TextLine">
-      <label>Alternativ tekst til bilde</label>
-      <occurrences minimum="1" maximum="1" />
+      <label>*IKKE LENGER I BRUK* (bruk alt tekst på valgt bilde)</label>
+      <occurrences minimum="0" maximum="1" />
     </input>
 
     <input name="longDesc" type="TextArea">

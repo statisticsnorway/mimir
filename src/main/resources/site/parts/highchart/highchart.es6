@@ -204,6 +204,14 @@ function renderPart(req, highchartIds) {
           }, [])
         }]
       }
+    } else if (highchart && highchart.data.htmlTable) {
+      config = {
+        ...createConfig(highchart.data, highchart.displayName),
+        data: {
+          table: 'highcharts-datatable-' + highchart._id,
+          decimalPoint: ',',
+        },
+      };
     }
 
     return initHighchart(highchart, config)
