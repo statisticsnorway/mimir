@@ -1,5 +1,4 @@
 import { HttpLibrary, HttpResponse } from 'enonic-types/lib/http'
-import { CONTACT_REG_SERVER } from '../../server-config'
 import { XmlParser } from '../../types/xmlParser'
 import { QueryFilters } from '../../repo/common'
 import { extractContacts, Contact } from './types'
@@ -7,7 +6,8 @@ import { extractContacts, Contact } from './types'
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 const http: HttpLibrary = __non_webpack_require__('/lib/http-client')
 
-const STAT_REG: string = `${CONTACT_REG_SERVER}/statistikkregisteret`
+const STAT_REG_SVC_PROP: string = 'ssb.statreg.baseUrl'
+const STAT_REG: string = `${app.config && app.config[STAT_REG_SVC_PROP]}`
 const CONTACTS_URL: string = `${STAT_REG}/kontakt/listSomXml`
 const CONTACT_NAMES_URL: string = `${STAT_REG}/kontakt/hentNavn`
 
