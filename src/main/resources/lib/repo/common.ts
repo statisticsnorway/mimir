@@ -11,6 +11,7 @@ const ENONIC_CMS_DEFAULT_REPO: string = 'com.enonic.cms.default';
 const SYSADMIN_ROLE: string = 'role:system.admin'
 
 export type ContextCallback<T> = () => T;
+export type UserContextCallback<T> = (user: User | null) => T;
 export type ConnectionCallback<T> = (conn: RepoConnection) => T;
 
 export type QueryFilters = {
@@ -35,7 +36,7 @@ export function withSuperUserContext<T>(repository: string, branch: string, call
   }, callback)
 }
 
-export function withLoggedInUserContext<T>(branch: string, callback: ContextCallback<T>): T {
+export function withLoggedInUserContext<T>(branch: string, callback: UserContextCallback<T>): T {
   const user: User | null = auth.getUser();
   const loggedInUser: LoggedInUser = {
     login: user ? user.login : '',
@@ -46,7 +47,7 @@ export function withLoggedInUserContext<T>(branch: string, callback: ContextCall
     branch,
     user: loggedInUser,
     principals: [SYSADMIN_ROLE]
-  }, callback)
+  }, () => callback(user))
 }
 
 export function getConnection(repository: string, branch: string): RepoConnection {
