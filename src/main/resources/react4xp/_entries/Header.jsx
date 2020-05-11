@@ -56,11 +56,15 @@ class Header extends React.Component {
       return (<Link key={'link_' + index} href={altLanguage.path}>{altLanguage.title}</Link>)
     })
   }
-  renderSubMenu(topMenuItem) {
+  renderSubMenu(topMenuItem, activeMenuItem) {
     return topMenuItem.menuItems && topMenuItem.menuItems.map((menuItem, itemIndex) => {
       return (
         <li key={'listItemLink_' + itemIndex}>
-          <Link href={menuItem.path} icon={ menuItem.icon ? <img src={menuItem.icon}></img> : undefined }>{menuItem.title}</Link>
+          <Link
+            tabIndex={activeMenuItem ? 0 : -1 }
+            href={menuItem.path}
+            icon={ menuItem.icon ? <img src={menuItem.icon}></img> : undefined }>{menuItem.title}
+          </Link>
         </li>)
     })
   }
@@ -74,7 +78,7 @@ class Header extends React.Component {
 
   render() {
     const {
-      searchInputPlaceholder, logoUrl, logoAltText, mainNavigation, skipToContentText
+      searchText, logoUrl, logoAltText, mainNavigation, skipToContentText
     } = this.props
     return (
       <header className="ssb-header-wrapper">
@@ -84,7 +88,7 @@ class Header extends React.Component {
           {this.languageLinks()}
         </nav>
         <div className="misc top-row flex-row justify-space-between flex-wrap">
-          <a className="plainLink" href="/">
+          <a id="header-logo" className="plainLink" href="/">
             <img src={logoUrl} alt={logoAltText} className="logo" />
           </a>
 
@@ -94,10 +98,12 @@ class Header extends React.Component {
 
           <div className={this.state.showMainMenuOnMobile ? 'show searchfield' : 'searchfield'}>
             <Input
-              ariaLabel={searchInputPlaceholder}
+              ariaLabel={searchText}
               searchField
               submitCallback={this.goToSearchResultPage}
-              placeholder={searchInputPlaceholder} />
+              placeholder={searchText}
+              ariaLabelSearchButton={searchText}
+            />
           </div>
         </div>
         <Divider className="mobileMenuDivider" />
@@ -116,7 +122,7 @@ class Header extends React.Component {
                   </button>
                   <Divider/>
                   <ol className={this.state.showSubMenu ? 'visible subMenu' : 'subMenu' }>
-                    {this.renderSubMenu(topMenuItem)}
+                    {this.renderSubMenu(topMenuItem, activeMenuItem)}
                   </ol>
                 </div>
               )
@@ -133,7 +139,7 @@ class Header extends React.Component {
 }
 
 Header.propTypes = {
-  searchInputPlaceholder: PropTypes.string,
+  searchText: PropTypes.string,
   searchResultPageUrl: PropTypes.string,
   topLinks: PropTypes.arrayOf(
     PropTypes.shape({

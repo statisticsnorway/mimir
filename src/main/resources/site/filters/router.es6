@@ -31,7 +31,7 @@ exports.filter = function(req, next) {
     targetId = get({
       key: '/ssb/kommunefakta/kommune'
     })._id
-    pageTitle = `Kommunefakta ${pageTitle}`
+    pageTitle = `Kommunefakta ${region}`
   }
 
   if (!targetId) {

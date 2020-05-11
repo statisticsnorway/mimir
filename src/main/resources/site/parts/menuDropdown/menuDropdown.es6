@@ -39,7 +39,7 @@ function renderPart(req) {
   const siteConfig = getSiteConfig()
   let mapFolder = '/mapdata'
 
-  if (typeof siteConfig.kommunefakta !=='undefined' && siteConfig.kommunefakta.mapfolder) {
+  if (typeof siteConfig.kommunefakta !== 'undefined' && siteConfig.kommunefakta.mapfolder) {
     mapFolder = siteConfig.kommunefakta.mapfolder
   }
 
@@ -54,13 +54,18 @@ function renderPart(req) {
   const page = getContent()
   const baseUrl = component.config.basePage ?
     pageUrl({
-      id: component.config.basePage }) :
+      id: component.config.basePage
+    }) :
     pageUrl({
       id: page._id
     })
 
   const searchBarText = i18nLib.localize({
     key: 'menuDropdown.searchBarText'
+  })
+
+  const searchText = i18nLib.localize({
+    key: 'menuSearch'
   })
 
   // Input field react object for sticky menu
@@ -72,7 +77,8 @@ function renderPart(req) {
       placeholder: searchBarText,
       baseUrl: baseUrl,
       municipalities: parsedMunicipalities,
-      className: 'municipality-search'
+      className: 'municipality-search',
+      ariaLabelSearchButton: searchText
     })
     .setId('inputStickyMenu')
 
@@ -86,7 +92,7 @@ function renderPart(req) {
     dataServiceUrl,
     municipality: municipality,
     municipalities: parsedMunicipalities,
-    municipalityName : municipalityName
+    municipalityName: municipalityName
   }
 
   const body = inputStickyMenu.renderBody({

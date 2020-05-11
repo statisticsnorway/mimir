@@ -196,6 +196,17 @@ header.ssb-header-wrapper {
       @include media-breakpoint-down(md) {
         width: 100%;
       }
+
+      &:focus {
+
+        .navigation-item:before {
+          height: 4px;
+
+          @include media-breakpoint-down(md) {
+            height: 0;
+          }
+        }
+      }
     }
 
     button .navigation-item {

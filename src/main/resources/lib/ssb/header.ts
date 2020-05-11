@@ -27,7 +27,7 @@ export function getHeaderContent(language: Language): Header {
       locale: language.code
     }),
     searchResultPageUrl: siteConfig.searchResultPage ? pathFromStringOrContent(siteConfig.searchResultPage) : undefined,
-    searchInputPlaceholder: localize({
+    searchText: localize({
       key: 'menuSearch',
       locale: language.code
     }),
@@ -45,7 +45,7 @@ export interface Header{
     logoUrl: string;
     logoAltText: string;
     searchResultPageUrl?: string;
-    searchInputPlaceholder: string;
+    searchText: string;
     mainNavigation?: Array<MenuItem>;
     topLinks?: Array<Link>;
     language: Language;
