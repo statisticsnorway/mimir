@@ -3,7 +3,9 @@ import { getNode, withConnection } from './common'
 import { EVENT_LOG_BRANCH, EVENT_LOG_REPO, createEventLog, EditorCallback, updateEventLog } from './eventLog'
 import { User } from 'enonic-types/lib/auth'
 import { HttpRequestParams, HttpResponse } from 'enonic-types/lib/http'
-const { dateToFormat, dateToReadable} = __non_webpack_require__('/lib/ssb/utils')
+const {
+  dateToFormat
+} = __non_webpack_require__('/lib/ssb/utils')
 
 export type QueryInfoNode = QueryInfo & RepoNode
 
@@ -37,10 +39,19 @@ export enum Events {
   NO_NEW_DATA = 'NO_NEW_DATA',
   COMPLETE = 'COMPLETE',
   REQUESTING_DATA = 'REQUESTING_DATA',
-  DELETE_UNPUBLISHED = 'DELETE_UNPUBLISH',
-  DELETE_PUBLISHED = 'DELETE_PUBLISHED',
+  START_DELETE = 'START_DELETE',
+  DATASET_CREATED = 'DATASET_CREATED',
+  DATASET_PUBLISHED = 'DATASET_PUBLISHED',
+  DATASET_UPDATED = 'DATASET_UPDATED',
+  DELETE_FAILED = 'DELETE_FAILED',
+  DELETE_OK = 'DELETE_OK',
+  DELETE_OK_PUBLISHED = 'DELETE_OK_PUBLISHED',
+  DELETE_FAILED_PUBLISHED = 'DELETE_FAILED_PUBLISHED',
   FAILED_TO_GET_DATA = 'FAILED_TO_GET_DATA',
   FAILED_TO_FIND_DATAQUERY = 'FAILED_TO_FIND_DATAQUERY',
+  FAILED_TO_FIND_DATASET = 'FAILED_TO_FIND_DATASET',
+  FAILED_TO_CREATE_DATASET = 'FAILED_TO_CREATE_DATASET',
+  FAILED_TO_REFRESH_DATASET = 'FAILED_TO_REFRESH_DATASET'
 }
 export const EVENTS: object = {
   fetchData: {}
@@ -67,7 +78,7 @@ function addEventToQueryLog(queryId: string, user: User, status: QueryStatus): E
 
 export function startQuery(queryId: string, user: User, status: QueryStatus): QueryInfoNode {
   return withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (conn) => {
-    const queryLogNode: ReadonlyArray<QueryInfoNode> = getNode<QueryInfo>(EVENT_LOG_BRANCH, EVENT_LOG_REPO,`/queries/${queryId}`)
+    const queryLogNode: ReadonlyArray<QueryInfoNode> = getNode<QueryInfo>(EVENT_LOG_BRANCH, EVENT_LOG_REPO, `/queries/${queryId}`)
     if (queryLogNode !== null) {
       return queryLogNode[0]
     } else {

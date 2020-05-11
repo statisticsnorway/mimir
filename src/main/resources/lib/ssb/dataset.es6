@@ -61,7 +61,8 @@ export const getTime = (dataset) => {
 /**
  * Get value from dataset with index
  * @param {Object} data: JSON-STAT object
- * @param {string} index
+ * @param {string} filterTarget
+ * @param {string} filter
  * @return {{label: {String}, value: {String}}}
  */
 export const getValueWithIndex = (data, filterTarget, filter) => {

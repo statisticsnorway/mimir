@@ -1,4 +1,4 @@
-import {HttpResponse, HttpLibrary, HttpRequestParams} from 'enonic-types/lib/http'
+import { HttpResponse, HttpLibrary, HttpRequestParams } from 'enonic-types/lib/http'
 import { ContextLibrary, RunContext } from 'enonic-types/lib/context'
 import { Dataquery } from '../site/content-types/dataquery/dataquery'
 import { Content, ContentLibrary, QueryResponse, PublishResponse } from 'enonic-types/lib/content'
@@ -6,16 +6,15 @@ import { Dataset } from '../site/content-types/dataset/dataset'
 import * as moment from 'moment'
 import { getTbmlData } from './tbml/tbml'
 import { CommonLibrary } from './types/common'
-import {Events, logDataQueryEvent } from './repo/query';
-import {User} from 'enonic-types/lib/auth';
+import { Events, logDataQueryEvent } from './repo/query'
+import { User } from 'enonic-types/lib/auth'
 
 const http: HttpLibrary = __non_webpack_require__('/lib/http-client')
 const context: ContextLibrary = __non_webpack_require__('/lib/xp/context')
 const content: ContentLibrary = __non_webpack_require__('/lib/xp/content')
 const {
   sanitize
-}: CommonLibrary =  __non_webpack_require__('/lib/xp/common')
-const { addRequestDataToJobLog, addResponseDataToJobLog } = __non_webpack_require__('/lib/repo/job')
+}: CommonLibrary = __non_webpack_require__('/lib/xp/common')
 
 const defaultSelectionFilter: SelectionFilter = {
   filter: 'all',
@@ -57,7 +56,13 @@ export function get(url: string, json: DataqueryRequestData | undefined,
   }
 
   const result: HttpResponse = http.request(requestParams)
-  if(queryId && user) logDataQueryEvent(queryId, user, {message: Events.REQUESTING_DATA, response: result, request: requestParams })
+  if (queryId && user) {
+    logDataQueryEvent(queryId, user, {
+      message: Events.REQUESTING_DATA,
+      response: result,
+      request: requestParams
+    })
+  }
 
   if (result.status !== 200) {
     log.error(`HTTP ${url} (${result.status} ${result.message})`)
@@ -68,17 +73,43 @@ export function get(url: string, json: DataqueryRequestData | undefined,
   return null
 }
 
-export function refreshDataset(dataquery: Content<Dataquery>): Content<Dataset> | string {
-  const data: object | null = getData(dataquery)
-  return data ? refreshDatasetWithData(JSON.stringify(data), dataquery) : 'FAILED_TO_REFRESH_DATASET'
+export interface RefreshDatasetResult {
+  dataqueryId: string;
+  dataset?: Content<Dataset>;
+  status: string;
+  message?: string;
 }
 
-export function refreshDatasetWithData(data: string, dataquery: Content<Dataquery>): Content<Dataset> | string {
-  const dataset: Content<Dataset>| undefined = getDataset(dataquery)
-  if (dataset) {
-    return isDataNew(data, dataset) ? updateDataset(data, dataset, dataquery) : Events.NO_NEW_DATA
+export function refreshDataset(dataquery: Content<Dataquery>): Content<Dataset> | RefreshDatasetResult {
+  const rawData: object | null = getData(dataquery)
+  if ( rawData) {
+    return refreshDatasetWithData(JSON.stringify(rawData), dataquery)
   } else {
-    return createDataset(data, dataquery)
+    return {
+      dataqueryId: dataquery._id,
+      status: Events.FAILED_TO_REFRESH_DATASET
+    }
+  }
+}
+
+export function refreshDatasetWithData(rawData: string, dataquery: Content<Dataquery>): RefreshDatasetResult {
+  const dataset: Content<Dataset>| undefined = getDataset(dataquery)
+  if (!dataset) {
+    return createDataset(rawData, dataquery)
+  }
+  if (isDataNew(rawData, dataset)) {
+    updateDataset(rawData, dataset, dataquery)
+    return {
+      dataqueryId: dataquery._id,
+      dataset,
+      status: Events.COMPLETE
+    }
+  } else {
+    return {
+      dataqueryId: dataquery._id,
+      dataset,
+      status: Events.NO_NEW_DATA
+    }
   }
 }
 
@@ -110,7 +141,7 @@ function isDataNew(data: string, dataset: Content<Dataset>): boolean {
   return false
 }
 
-function updateDataset(data: string, dataset: Content<Dataset>, dataquery: Content<Dataquery>): Content<Dataset> | string {
+function updateDataset(data: string, dataset: Content<Dataset>, dataquery: Content<Dataquery>): RefreshDatasetResult {
   return context.run(draft, () => {
     const now: string = moment().format('DD.MM.YYYY HH:mm:ss')
 
@@ -123,19 +154,28 @@ function updateDataset(data: string, dataset: Content<Dataset>, dataquery: Conte
         return r
       }
     })
+
     if (!update) {
-      log.error(`Failed to update dataset: ${dataset._id}`)
+      const message: string = `Failed to update dataset: ${dataset._id}`
+      log.error(message)
+      return {
+        dataqueryId: dataquery._id,
+        status: Events.FAILED_TO_REFRESH_DATASET,
+        dataset,
+        message
+      }
     } else {
       publishDatasets([dataset._id])
-      return content.get({
-        key: dataset._id
-      }) as Content<Dataset>
+      return {
+        dataqueryId: dataquery._id,
+        status: Events.DATASET_UPDATED,
+        dataset
+      }
     }
-    return 'FAILED_TO_UPDATE_DATASET'
   })
 }
 
-function createDataset(data: string, dataquery: Content<Dataquery>): Content<Dataset> | string {
+function createDataset(data: string, dataquery: Content<Dataquery>): RefreshDatasetResult {
   return context.run(draft, () => {
     const now: string = moment().format('DD.MM.YYYY HH:mm:ss')
     const name: string = sanitize(`${dataquery._name} (datasett) opprettet ${now}`)
@@ -152,14 +192,23 @@ function createDataset(data: string, dataquery: Content<Dataquery>): Content<Dat
           json: data
         }
       }) as Content<Dataset>
+
       publishDatasets([dataset._id])
-      return content.get({
-        key: dataset._id
-      }) as Content<Dataset>
+
+      return {
+        dataqueryId: dataquery._id,
+        dataset,
+        status: Events.DATASET_PUBLISHED
+      }
     } catch (e) {
-      log.error(`Failed to create dataset: ${e.code} ${e.message}`)
+      const message: string = `Failed to create dataset: ${e.code} ${e.message}`
+      log.error(message)
+      return {
+        dataqueryId: dataquery._id,
+        status: Events.FAILED_TO_CREATE_DATASET,
+        message
+      }
     }
-    return 'FAILED_TO_CREATE_DATASET'
   })
 }
 
