@@ -127,7 +127,6 @@ function getDataQueries(datasetMap) {
   }
 
   return dataQueryResult.hits.map((dataquery) => {
-
     const dataset = datasetMap[dataquery._id]
     const hasData = !!dataset
     const queryLogNode = getNode(EVENT_LOG_BRANCH, EVENT_LOG_REPO, `/queries/${dataquery._id}`)
@@ -138,8 +137,10 @@ function getDataQueries(datasetMap) {
       path: dataquery._path,
       parentType: getParentType(dataquery._path),
       format: dataquery.data.datasetFormat ? dataquery.data.datasetFormat._selected : undefined,
-      updated: hasData ? getUpdated(dataset) : undefined,
-      updatedHumanReadable: hasData ? getUpdatedReadable(dataset) : undefined,
+      dataset: {
+        modified: hasData ? getUpdated(dataset) : undefined,
+        modifiedReadable: hasData ? getUpdatedReadable(dataset) : undefined,
+      },
       hasData,
       isPublished: isPublished(dataquery),
       logData: queryLogNode? {
@@ -150,20 +151,8 @@ function getDataQueries(datasetMap) {
       }: undefined
     }
   })
-
-
 }
 
-function parseLogData(data) {
-  return {
-    ...data,
-    lastUpdated: data && data.lastUpdated ? dateToFormat(data.lastUpdated) : undefined,
-    lastUpdatedHumanReadable: data && data.lastUpdated ? dateToReadable(data.lastUpdated) : undefined,
-    lastUpdateResult: data.lastUpdateResult ? i18n.localize({
-      key: data.lastUpdateResult
-    }) : undefined
-  }
-}
 
 function getParentType(path) {
   const parentPath = getParentPath(path)

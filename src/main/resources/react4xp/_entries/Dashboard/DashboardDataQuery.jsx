@@ -20,8 +20,8 @@ class DashboardDataQuery extends React.Component {
         </td>
 
         <td>
-          {this.props.updatedHumanReadable ? this.props.updatedHumanReadable : ''}<br/>
-          {this.props.updated ? this.props.updated : ''}
+          {this.props.datasetModifiedReadable ? this.props.datasetModifiedReadable : ''}<br/>
+          {this.props.datasetModified ? this.props.datasetModified : ''}
         </td>
         <td>
           {this.props.message ? this.props.message : ''}<br/>
@@ -53,8 +53,8 @@ DashboardDataQuery.propTypes = {
   format: PropTypes.string,
   isPublished: PropTypes.bool,
   class: PropTypes.string,
-  updated: PropTypes.string,
-  updatedHumanReadable: PropTypes.string,
+  datasetModified: PropTypes.string,
+  datasetModifiedReadable: PropTypes.string,
   showError: PropTypes.bool,
   showSuccess: PropTypes.bool,
   errorMsg: PropTypes.string,

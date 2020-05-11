@@ -176,8 +176,8 @@ class Dashboard extends React.Component {
           displayName={query.displayName}
           format={query.format}
           isPublished={query.isPublished ? query.isPublished : undefined}
-          updated={query.updated}
-          updatedHumanReadable={query.updatedHumanReadable}
+          datasetModified={query.dataset.modified}
+          datasetModifiedReadable={query.dataset.modifiedReadable}
           hasData={query.hasData}
           dashboardService={this.props.dashboardService}
           deleteDataset={(id) => this.deleteDataset(id)}
