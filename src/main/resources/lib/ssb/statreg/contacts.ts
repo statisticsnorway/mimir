@@ -1,7 +1,7 @@
 import { HttpLibrary, HttpResponse } from 'enonic-types/lib/http'
 import { CONTACT_REG_SERVER } from '../../server-config'
 import { XmlParser } from '../../types/xmlParser'
-import { QueryFilters } from '../../repo/common';
+import { QueryFilters } from '../../repo/common'
 import { extractContacts, Contact } from './types'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
@@ -35,8 +35,9 @@ export function fetchContactNames(filters: QueryFilters): Array<string> {
     return JSON.parse(result.body).kontakt
   }
 
-  log.error(`HTTP ${CONTACT_NAMES_URL} (${result.status} ${result.message}`)
-  return ['oi']
+  const errMsg: string = `Unexpected response from server: ${result.status}: ${JSON.stringify(result.message)}. Payload: ${JSON.stringify(result.body)}`
+  log.error(errMsg)
+  throw new Error(errMsg)
 }
 
 export function fetchContacts(filters: QueryFilters) {
