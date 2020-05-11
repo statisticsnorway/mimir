@@ -1,24 +1,33 @@
 import { ContextLibrary } from 'enonic-types/lib/context'
+import { AuthLibrary, User } from 'enonic-types/lib/auth';
 import { NodeCreateParams, NodeLibrary, RepoConnection, RepoNode } from 'enonic-types/lib/node'
 import { EditorCallback } from './eventLog'
 
+const auth: AuthLibrary = __non_webpack_require__( '/lib/xp/auth')
 const context: ContextLibrary = __non_webpack_require__('/lib/xp/context')
 const node: NodeLibrary = __non_webpack_require__('/lib/xp/node')
+
+const ENONIC_CMS_DEFAULT_REPO: string = 'com.enonic.cms.default';
+const SYSADMIN_ROLE: string = 'role:system.admin'
 
 export type ContextCallback<T> = () => T;
 export type ConnectionCallback<T> = (conn: RepoConnection) => T;
 
-export interface SuperUser {
-    login: string;
-    idProvider: string;
-}
+export type QueryFilters = {
+  [key: string]: string;
+} | null;
 
-export const SUPER_USER: SuperUser = {
+export const SUPER_USER: User = {
   login: 'su',
   idProvider: 'system'
+} as User;
+
+export interface LoggedInUser {
+  readonly login: string;
+  readonly idProvider?: string | undefined;
 }
 
-export function withUserContext<T>(repository: string, branch: string, callback: ContextCallback<T>): T {
+export function withSuperUserContext<T>(repository: string, branch: string, callback: ContextCallback<T>): T {
   return context.run({
     repository,
     branch,
@@ -26,8 +35,22 @@ export function withUserContext<T>(repository: string, branch: string, callback:
   }, callback)
 }
 
+export function withLoggedInUserContext<T>(branch: string, callback: ContextCallback<T>): T {
+  const user: User | null = auth.getUser();
+  const loggedInUser: LoggedInUser = {
+    login: user ? user.login : '',
+    idProvider: user?.idProvider,
+  }
+  return context.run({
+    repository: ENONIC_CMS_DEFAULT_REPO,
+    branch,
+    user: loggedInUser,
+    principals: [SYSADMIN_ROLE]
+  }, callback)
+}
+
 export function getConnection(repository: string, branch: string): RepoConnection {
-  return withUserContext<RepoConnection>(repository, branch, () => {
+  return withSuperUserContext<RepoConnection>(repository, branch, () => {
     return node.connect({
       repoId: repository,
       branch
