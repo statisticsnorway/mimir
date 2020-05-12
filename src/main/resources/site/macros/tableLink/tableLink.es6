@@ -25,7 +25,7 @@ const renderMacro = (context) => {
 
   if (!context.params.title) throw new Error('Missing param title')
   if (!linkSrc) throw new Error('Missing param Url or relatedContent')
-  if (!context.params.hrefText) throw new Error('Missing param hrefText')
+  if (!context.params.description) throw new Error('Missing param description')
 
   const tableLink = new React4xp('site/macros/tableLink/tableLink')
     .setProps({
