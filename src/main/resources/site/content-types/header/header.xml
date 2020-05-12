@@ -2,13 +2,6 @@
   <display-name>Header konfigurasjon</display-name>
   <super-type>base:structured</super-type>
   <form>
-    <input name="logo" type="ImageSelector">
-      <label>Logo</label>
-      <occurrences minimum="1" maximum="1"/>
-      <config>
-        <allowPath>${site}/</allowPath>
-      </config>
-    </input>
     <input name="menuContentId" type="ContentSelector">
       <label>Meny</label>
       <occurrences minimum="1" maximum="1"/>

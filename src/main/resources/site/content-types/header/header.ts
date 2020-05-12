@@ -1,10 +1,5 @@
 export interface Header {
   /**
-   * Logo
-   */
-  logo: string;
-
-  /**
    * Meny
    */
   menuContentId: string;
