@@ -9,6 +9,7 @@ import { CommonLibrary } from './types/common'
 import { Events, logDataQueryEvent } from './repo/query'
 import { User } from 'enonic-types/lib/auth'
 
+const {getDataSetWithDataQueryId} = __non_webpack_require__('/lib/ssb/dataset')
 const http: HttpLibrary = __non_webpack_require__('/lib/http-client')
 const context: ContextLibrary = __non_webpack_require__('/lib/xp/context')
 const content: ContentLibrary = __non_webpack_require__('/lib/xp/content')
@@ -93,21 +94,21 @@ export function refreshDataset(dataquery: Content<Dataquery>): Content<Dataset> 
 }
 
 export function refreshDatasetWithData(rawData: string, dataquery: Content<Dataquery>): RefreshDatasetResult {
-  const dataset: Content<Dataset>| undefined = getDataset(dataquery)
-  if (!dataset) {
+  const dataset: QueryResponse<Dataset> | undefined = getDataSetWithDataQueryId(dataquery._id)
+  if (!dataset ||  (dataset && dataset.total === 0) ) {
     return createDataset(rawData, dataquery)
   }
-  if (isDataNew(rawData, dataset)) {
-    updateDataset(rawData, dataset, dataquery)
+  if (dataset && isDataNew(rawData, dataset.hits[0])) {
+    updateDataset(rawData, dataset.hits[0], dataquery)
     return {
       dataqueryId: dataquery._id,
-      dataset,
+      dataset: dataset.hits[0],
       status: Events.COMPLETE
     }
   } else {
     return {
       dataqueryId: dataquery._id,
-      dataset,
+      dataset:dataset.hits[0],
       status: Events.NO_NEW_DATA
     }
   }
@@ -192,9 +193,8 @@ function createDataset(data: string, dataquery: Content<Dataquery>): RefreshData
           json: data
         }
       }) as Content<Dataset>
-
       const publishResult: PublishResponse = publishDatasets([dataset._id])
-
+      log.info('%s', JSON.stringify(publishResult, null, 2))
       return {
         dataqueryId: dataquery._id,
         dataset,

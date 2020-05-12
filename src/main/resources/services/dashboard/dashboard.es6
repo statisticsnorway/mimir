@@ -33,7 +33,7 @@ exports.get = function(req) {
     return missingParameterResponse()
   }
   const user = auth.getUser()
-  logDataQueryEvent(req.params.id, user, {message:Events.STARTED })
+  logDataQueryEvent(req.params.id, user, {message:Events.STARTED})
 
   const updateResult = context.run(createContextOption('master'), () => {
     return getAllOrOneDataQuery(req.params.id).map((dataquery) => updateDataQuery(dataquery, user) )
