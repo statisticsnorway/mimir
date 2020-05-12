@@ -39,3 +39,4 @@ cron.schedule({
 })
 
 cache.setup()
+log.info('Startup script complete')
