@@ -19,6 +19,7 @@ const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view = resolve('./dashboard.html')
 
 exports.get = function(req) {
+  return renderPart()
   try {
     return renderPart()
   } catch (e) {
@@ -78,19 +79,19 @@ function renderPart() {
     path: 'styles/bundle.css'
   })
 
-  const logoUrl = assetUrl({path: 'SSB_logo.png'});
+  const logoUrl = assetUrl({path: 'SSB_logo_black.svg'});
 
   const dashboardDataset = new React4xp('Dashboard/Dashboard')
     .setProps({
       header: 'Alle spørringer',
       dataQueries,
-      dashboardService,
+      dashboardService
     })
     .setId('dataset')
 
-  const pageContributions = dashboardDataset.renderPageContributions({
+  const pageContributions = parseContributions(dashboardDataset.renderPageContributions({
     clientRender: true
-  })
+  }))
 
   const model = {
     dataQueries,
@@ -104,11 +105,17 @@ function renderPart() {
   let body = render(view, model)
 
   body = dashboardDataset.renderBody({
-    body
+    body,
+    clientRender: true
   })
 
   return {
     body,
     pageContributions
   }
+}
+
+function parseContributions(contributions) {
+  contributions.bodyEnd = contributions.bodyEnd.map((script) => script.replace(' defer>', ' defer="">'))
+  return contributions
 }

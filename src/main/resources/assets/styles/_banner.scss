@@ -30,11 +30,15 @@
     }
   }
   @include media-breakpoint-down(sm) {
+    min-height: 182px;
+    padding: 0;
+
     .container {
+      min-height: 182px;
       padding-right: 10px;
       padding-left: 10px;
       h1 {
-        font-size: 24px;
+        font-size: 36px;
       }
     }
   }

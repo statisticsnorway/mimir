@@ -1,17 +1,38 @@
-const portal = __non_webpack_require__('/lib/xp/portal')
-const thymeleaf = __non_webpack_require__('/lib/thymeleaf')
+const {
+  getContent, processHtml
+} = __non_webpack_require__('/lib/xp/portal')
+const {
+  data
+} = __non_webpack_require__('/lib/util')
+const {
+  render
+} = __non_webpack_require__('/lib/thymeleaf')
+const {
+  renderError
+} = __non_webpack_require__('/lib/error/error')
+
 const moment = require('moment/min/moment-with-locales')
 const languageLib = __non_webpack_require__( '/lib/language')
-const contentLib = __non_webpack_require__( '/lib/xp/content')
+const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 const view = resolve('./article.html')
 
-exports.get = function() {
-  const page = portal.getContent()
+exports.get = (req) => {
+  try {
+    return renderPart(req)
+  } catch (e) {
+    return renderError(req, 'Error in part: ', e)
+  }
+}
+
+function renderPart(req) {
+  const page = getContent()
   moment.locale(page.language ? page.language : 'nb')
-  const bodyText = portal.processHtml({
+
+  const bodyText = processHtml({
     value: page.data.articleText
   })
+
   const pubDate = moment(page.publish.from).format('DD. MMMM YYYY')
   const showModifiedDate = page.data.showModifiedDate
   let modifiedDate
@@ -21,12 +42,16 @@ exports.get = function() {
       modifiedDate = moment(page.data.showModifiedDate.dateOption.modifiedDate).format('DD. MMMM YYYY h:mm')
     }
   }
-  let author
-  if (page.data.author) {
-    author = contentLib.get({
-      key: page.data.author
-    })
-  }
+
+  const authorConfig = page.data.authorItemSet ? data.forceArray(page.data.authorItemSet) : []
+  const authors = authorConfig.map((author) => {
+    return {
+      name: author.name,
+      email: author.email
+    }
+  })
+
+  const externalLinkConfig = page.data.relatedExternalLinkItemSet ? data.forceArray(page.data.relatedExternalLinkItemSet) : []
 
   const model = {
     title: page.displayName,
@@ -36,12 +61,37 @@ exports.get = function() {
     showPubDate: page.data.showPublishDate,
     pubDate,
     modifiedDate,
-    author
+    authors,
+    externalLinkConfig
   }
-  const body = thymeleaf.render(view, model)
+
+  let body = render(view, model)
+  let pageContributions
+
+  if (externalLinkConfig && externalLinkConfig.length) {
+    const externalLinksComponent = new React4xp('Links')
+      .setProps({
+        links: externalLinkConfig.map((links) => {
+          return {
+            href: links.url,
+            children: links.urlText,
+            iconType: 'externalLink',
+            isExternal: true
+          }
+        })
+      })
+      .setId('externalLinksId')
+
+    body = externalLinksComponent.renderBody({
+      body
+    })
+
+    pageContributions = externalLinksComponent.renderPageContributions()
+  }
 
   return {
     body,
+    pageContributions,
     contentType: 'text/html'
   }
 }

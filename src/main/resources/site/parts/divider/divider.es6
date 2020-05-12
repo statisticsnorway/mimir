@@ -11,42 +11,66 @@ const {
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view = resolve('./divider.html')
 
+let darkBody
+let lightBody
+
 exports.get = function(req) {
   try {
-    return renderPart(req)
+    const component = getComponent()
+    return renderPart(req, component.config)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-exports.preview = (req) => renderPart(req)
+exports.preview = (req) => renderPart(req, {
+  dark: false
+})
 
-function renderPart(req) {
-  const component = getComponent()
-  const dividerColor = component.config.dividerColor
-  const divider = new React4xp('Divider').uniqueId()
+const renderPart = (req, config) => {
+  const dividerColor = config.dividerColor
 
-  setColor(dividerColor, divider)
+  let body
+  if (dividerColor === 'dark' && darkBody) {
+    body = darkBody
+  } else if (dividerColor !== 'dark' && lightBody) {
+    body = lightBody
+  } else {
+    const divider = new React4xp('Divider')
+      .setProps(
+        setColor(dividerColor)
+      )
+      .uniqueId()
 
-  const preRenderedBody = render(view, {
-    dividerId: divider.react4xpId
-  })
+    const preRenderedBody = render(view, {
+      dividerId: divider.react4xpId
+    })
 
-  return {
-    body: divider.renderBody({
+    body = divider.renderBody({
       body: preRenderedBody
     })
+
+    if (dividerColor === 'dark') {
+      darkBody = body
+    } else {
+      lightBody = body
+    }
+  }
+
+  return {
+    body
   }
 }
 
-function setColor(dividerColor, divider) {
+const setColor = (dividerColor) => {
   if (dividerColor === 'dark') {
-    return divider.setProps({
+    return {
       dark: true
-    })
+    }
   } else {
-    return divider.setProps({
+    return {
       light: true
-    })
+    }
   }
 }
+

@@ -51,6 +51,9 @@
     margin-left: 30px;
     text-decoration: none;
     color: #030303;
+    &:focus {
+      border: $ssb-green-4 1px solid;
+    }
     i {
       color: $green4;
     }

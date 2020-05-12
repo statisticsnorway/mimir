@@ -24,6 +24,22 @@ header.ssb-header-wrapper {
     .ssb-links {
       margin-left: 20px;
     }
+
+    .skip-to-content {
+      position:absolute;
+      left:-10000px;
+      top:auto;
+      width:1px;
+      height:1px;
+      overflow:hidden;
+
+      &:focus,
+      &:active {
+        position:static;
+        width:auto;
+        height:auto;
+      }
+    }
   }
 
   .plainLink {
@@ -137,14 +153,14 @@ header.ssb-header-wrapper {
     flex-grow: 1;
     overflow: hidden;
 
-    &:hover {
+    &.activeTab {
       .subMenu li a.ssb-link.with-icon {
         .link-text {
-          color: black;
-        }
-        &:hover {
-          .link-text{
-            color: white;
+          color: $ssb-dark-6;
+          font-weight: bold;
+
+          @include media-breakpoint-down(md) {
+            font-weight: normal;
           }
         }
       }
@@ -164,7 +180,7 @@ header.ssb-header-wrapper {
         height: auto;
       }
 
-      &.mobileActive{
+      &.activeTab{
         max-height: 300px;
       }
     }
@@ -179,6 +195,17 @@ header.ssb-header-wrapper {
 
       @include media-breakpoint-down(md) {
         width: 100%;
+      }
+
+      &:focus {
+
+        .navigation-item:before {
+          height: 4px;
+
+          @include media-breakpoint-down(md) {
+            height: 0;
+          }
+        }
       }
     }
 
@@ -261,8 +288,14 @@ header.ssb-header-wrapper {
           }
 
           .link-text {
-            color: #2d6975;
+            color: $ssb-dark-4;
           }
+
+          &:hover {
+             .link-text{
+               color: white;
+             }
+           }
         }
         img {
           width: 12px;

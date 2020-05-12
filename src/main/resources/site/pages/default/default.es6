@@ -22,6 +22,9 @@ const {
 const {
   getFooterContent
 } = __non_webpack_require__( '/lib/ssb/footer')
+const {
+  fromMenuCache
+} = __non_webpack_require__('/lib/ssb/cache')
 
 const partsWithPreview = [ // Parts that has preview
   `${app.name}:map`,
@@ -63,6 +66,7 @@ exports.get = function(req) {
     value: page.data.ingress ? page.data.ingress.replace(/&nbsp;/g, ' ') : undefined
   })
   const showIngress = ingress && page.type === 'mimir:page'
+  const pageType = page.page.config.pageType ? page.page.config.pageType : 'default'
 
 
   // Create preview if available
@@ -79,6 +83,33 @@ exports.get = function(req) {
   let municipality
   if (req.params.selfRequest) {
     municipality = getMunicipality(req)
+  }
+
+  let addMetaInfoSearch = true
+  let metaInfoSearchId = page._id
+  let metaInfoSearchTitle = page.displayName
+  let metaInfoSearchContentType = page._name
+  let metaInfoSearchGroup = page._id
+  let metaInfoSearchKeywords
+  let metaInfoDescription
+
+  if (pageType === 'municipality') {
+    metaInfoSearchContentType = 'kommunefakta'
+    metaInfoSearchKeywords = 'kommune, kommuneprofil',
+    metaInfoDescription = page.x['com-enonic-app-metafields']['meta-data'].seoDescription
+  }
+
+  if (pageType === 'municipality' && municipality) {
+    // TODO: Deaktiverer at kommunesidene er søkbare til vi finner en løsning med kommunenavn i tittel MIMIR-549
+    addMetaInfoSearch = false
+    metaInfoSearchId = metaInfoSearchId + '_' + municipality.code
+    metaInfoSearchTitle = 'Kommunefakta ' + municipality.displayName
+    metaInfoSearchGroup = metaInfoSearchGroup + '_' + municipality.code
+    metaInfoSearchKeywords = municipality.displayName + ' kommune'
+  }
+
+  if (pageType === 'factPage') {
+    metaInfoSearchContentType = 'faktaside'
   }
 
   let config
@@ -101,6 +132,58 @@ exports.get = function(req) {
     path: 'js/bundle.js'
   })
 
+  let pageContributions
+  if (preview && preview.pageContributions) {
+    pageContributions = preview.pageContributions
+  }
+
+  const header = fromMenuCache(req, 'header', () => {
+    const headerContent = getHeaderContent(language)
+    if (headerContent) {
+      const headerComponent = new React4xp('Header')
+        .setProps({
+          ...headerContent
+        })
+        .setId('header')
+      return {
+        body: headerComponent.renderBody({
+          body: '<div id="header"></div>'
+        }),
+        component: headerComponent
+      }
+    }
+    return undefined
+  })
+  if (header && header.component) {
+    pageContributions = header.component.renderPageContributions({
+      pageContributions
+    })
+  }
+
+  const footer = fromMenuCache(req, 'footer', () => {
+    const footerContent = getFooterContent(language)
+    if (footerContent) {
+      const footerComponent = new React4xp('Footer')
+        .setProps({
+          ...footerContent
+        })
+        .setId('footer')
+      return {
+        body: footerComponent.renderBody({
+          body: '<footer id="footer"></footer>'
+        }),
+        component: footerComponent
+      }
+    }
+    return undefined
+  })
+
+  if (footer && footer.component) {
+    pageContributions = footer.component.renderPageContributions({
+      pageContributions
+    })
+  }
+
   const model = {
     pageTitle: 'SSB', // not really used on normal pages because of SEO app (404 still uses this)
     page,
@@ -113,42 +196,19 @@ exports.get = function(req) {
     stylesUrl,
     jsLibsUrl,
     language,
-    GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null
+    GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null,
+    headerBody: header ? header.body : undefined,
+    footerBody: footer ? footer.body : undefined,
+    addMetaInfoSearch,
+    metaInfoSearchId,
+    metaInfoSearchTitle,
+    metaInfoSearchGroup,
+    metaInfoSearchContentType,
+    metaInfoSearchKeywords,
+    metaInfoDescription
   }
 
   let body = thymeleaf.render(view, model)
-  let pageContributions
-  if (preview && preview.pageContributions) {
-    pageContributions = preview.pageContributions
-  }
-
-  const headerContent = getHeaderContent(language)
-  const headerComponent = new React4xp('Header')
-    .setProps({
-      ...headerContent
-    })
-    .setId('header')
-  body = headerComponent.renderBody({
-    body
-  })
-  pageContributions = headerComponent.renderPageContributions({
-    pageContributions
-  })
-
-  const footerContent = getFooterContent(language)
-  if (footerContent) {
-    const footerComponent = new React4xp('Footer')
-      .setProps({
-        ...footerContent
-      })
-      .setId('footer')
-    body = footerComponent.renderBody({
-      body
-    })
-    pageContributions = footerComponent.renderPageContributions({
-      pageContributions
-    })
-  }
 
   const breadcrumbs = getBreadcrumbs(page, municipality)
   const breadcrumbComponent = new React4xp('Breadcrumb')

@@ -15,9 +15,6 @@ const {
   getDataSetWithDataQueryId
 } = __non_webpack_require__( '../ssb/dataset')
 const {
-  get: getKlass
-} = __non_webpack_require__( '/lib/klass/klass')
-const {
   getSiteConfig
 }: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
 const {
@@ -69,23 +66,6 @@ export function createPath(municipalName: string, countyName?: string): string {
   return `/${sanitize(path)}`
 }
 
-
-/**
- * Get a dataset with values from statistikkbanken
- * @param {string} url
- * @param {string} query
- * @param {string} municipalityCode
- * @return {object} dataset with values from statistikkbanken
- */
-export function getValue(url: string, query: string, municipalityCode: string): object {
-  // change from object type to interface in klass lib
-  const selection: object = {
-    filter: 'item',
-    values: municipalityCode
-  }
-  return getKlass(url, query, selection)
-}
-
 const parsedMunicipalityCache: Cache = newCache({
   size: 1000,
   expire: 3600
@@ -112,12 +92,16 @@ export function municipalsWithCounties(): Array<MunicipalityWithCounty> {
 }
 
 export function getMunicipality(req: RequestWithCode): MunicipalityWithCounty|undefined {
-  const municipalities: Array<MunicipalityWithCounty> = municipalsWithCounties()
-
   let municipality: MunicipalityWithCounty | undefined
-  if ( req.params && req.params.selfRequest && req.params.pathname) {
-    municipality = getMunicipalityByName(municipalities, req.params.pathname as string)
-  } else if (req.path) {
+  if (req.params && req.params.selfRequest && req.params.municipality) {
+    municipality = JSON.parse(req.params.municipality as string) as MunicipalityWithCounty
+    if (municipality) {
+      return municipality
+    }
+  }
+
+  const municipalities: Array<MunicipalityWithCounty> = municipalsWithCounties()
+  if (req.path) {
     const municipalityName: string = req.path.replace(/^.*\//, '').toLowerCase()
     municipality = getMunicipalityByName(municipalities, municipalityName)
   } else if (req.code) {
@@ -165,7 +149,7 @@ const municipalityWithNameCache: Cache = newCache({
   size: 1000,
   expire: 3600
 })
-function getMunicipalityByName(municipalities: Array<MunicipalityWithCounty>, municipalityName: string): MunicipalityWithCounty|undefined {
+export function getMunicipalityByName(municipalities: Array<MunicipalityWithCounty>, municipalityName: string): MunicipalityWithCounty|undefined {
   return municipalityWithNameCache.get(`municipality_${municipalityName}`, () => {
     const municipality: Array<MunicipalityWithCounty> = municipalities.filter((municipality) => municipality.path === `/${municipalityName}`)
 
@@ -184,7 +168,7 @@ function changesWithMunicipalityCode(municipalityCode: string): Array<Municipali
   const changeList: Array<MunicipalityChange> = getMunicipalityChanges().codeChanges
   const changes: Array<MunicipalityChange> = changeList.filter( (change) => {
     return (change.oldCode === municipalityCode || change.newCode === municipalityCode) &&
-        change.oldName === change.newName
+        removeCountyFromMunicipalityName(change.oldName) === removeCountyFromMunicipalityName(change.newName)
   })
   return changes
 }
@@ -197,6 +181,10 @@ function getMunicipalityChanges(): MunicipalityChangeList {
   return body ? JSON.parse(body) : {
     codes: []
   }
+}
+
+export function removeCountyFromMunicipalityName(municiaplityName: string): string {
+  return municiaplityName.split('(')[0].trim()
 }
 
 export interface MunicipalityChangeList {
@@ -217,7 +205,6 @@ export interface MunicipalitiesLib {
   list: () => Array<MunicipalCode>;
   query: (queryString: string) => Array<MunicipalCode>;
   createPath (municipalName: string, countyName?: string): string;
-  getValue (url: string, query: string, municipalityCode: string): object;
   municipalsWithCounties (): Array<MunicipalityWithCounty>;
   getMunicipality (req: Request): MunicipalityWithCounty|undefined;
 }

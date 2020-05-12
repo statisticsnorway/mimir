@@ -1,28 +1,21 @@
 <!DOCTYPE html>
 <html data-th-lang="${language.code}">
 <head>
-  <script async data-th-if="${GA_TRACKING_ID}" data-th-src="|https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}|"></script>
-  <script th:inline="javascript">
-    var highchart = []
-  </script>
+  <script async="true" data-th-if="${GA_TRACKING_ID}" data-th-src="|https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}|"></script>
   <script th:inline="javascript" data-th-if="${GA_TRACKING_ID}">
-    /*<![CDATA[*/
-    <!-- Global site tag (gtag.js) - Google Analytics -->
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', /*[[${GA_TRACKING_ID}]]*/);
-    /*]]>*/
   </script>
 
-  <meta charset="UTF-8" />
-  <meta http-equiv="Cache-control" content="NO-CACHE" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta data-th-if="${page.data.metaDescription}" name="description" data-th-content="${page.data.metaDescription}" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta data-th-if="${page.data.metaDescription}" name="description" data-th-content="${page.data.metaDescription}">
   <title data-th-text="${pageTitle}"></title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|Open+Sans:700|Roboto:700|Roboto+Condensed:700" />
-  <link rel="stylesheet" data-th-href="${stylesUrl}" />
-  <link rel="alternate" data-th-if="${alternateLanguageVersionUrl}" data-th-href="${alternateLanguageVersionUrl}" data-th-hreflang="${language.alternate}" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans%7COpen+Sans:700%7CRoboto:700%7CRoboto+Condensed:700">
+  <link rel="stylesheet" data-th-href="${stylesUrl}">
+  <link rel="alternate" data-th-if="${alternateLanguageVersionUrl}" data-th-href="${alternateLanguageVersionUrl}" data-th-hreflang="${language.alternate}">
 
 </head>
 <body class="xp-page" data-th-classappend="${bodyClasses}">
@@ -31,17 +24,17 @@
     <div class="container">
       <div class="row">
         <div class="col">
-          <div id="header"></div>
+          <div data-th-if="${headerBody}" id="header" data-th-utext="${headerBody}" data-th-remove="tag"></div>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Metainfo to make the page searchable -->
-  <div id="metainfo-container" data-th-include="mimir:/site/includes/metainfoSearch.html" data-th-remove="tag"></div>
+  <div id="metainfo-container" data-th-if="${addMetaInfoSearch}" data-th-include="mimir:/site/includes/metainfoSearch.html" data-th-remove="tag"></div>
 
   <!-- MAIN -->
-  <main class="xp-region" data-th-if="${!isFragment}">
+  <main class="xp-region"  id="content" data-th-if="${!isFragment}">
     <div class="container-fluid bg-white pt-2 pb-4">
       <!-- breadcrumbs -->
       <div id="breadcrumbs" class="container d-print-none"></div>
@@ -68,7 +61,7 @@
       data-th-each="region : ${configRegions}"
       data-th-remove="tag"
     >
-      <div data-th-if="${region.showGreyTriangle}" class="grey-triangle"/>
+      <div data-th-if="${region.showGreyTriangle}" class="grey-triangle"></div>
       <div
         data-th-classappend="${region.view == 'full' ? 'container-fluid p-0' : region.view == 'card' ? 'border-top-green container' : 'container'}"
       >
@@ -92,9 +85,9 @@
   </main>
 
   <!-- FOOTER -->
-  <footer id="footer" >
+  <footer data-th-if="${footerBody}" id="footer" data-th-utext="${footerBody}" data-th-remove="tag">
   </footer>
 
-  <script type="text/javascript" data-th-src="${jsLibsUrl}"></script>
+  <script data-th-src="${jsLibsUrl}"></script>
 </body>
 </html>

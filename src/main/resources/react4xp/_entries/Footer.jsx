@@ -46,10 +46,10 @@ class Footer extends React.Component {
     } = this.props
     return (
       <div className="social-links">
-        <Link href={facebookUrl} isExternal negative icon={<Facebook size={24} />} />
-        <Link href={twitterUrl} isExternal negative icon={<Twitter size={24} />} />
-        <Link href={linkedinUrl} isExternal negative icon={<Linkedin size={24} />} />
-        <Link href={rssUrl} negative icon={<Rss size={24} />} />
+        <Link ariaLabel='Facebook' href={facebookUrl} isExternal negative icon={<Facebook size={24} />} />
+        <Link ariaLabel='Twitter' href={twitterUrl} isExternal negative icon={<Twitter size={24} />} />
+        <Link ariaLabel='Linkedin' href={linkedinUrl} isExternal negative icon={<Linkedin size={24} />} />
+        <Link ariaLabel='Rss' href={rssUrl} negative icon={<Rss size={24} />} />
       </div>)
   }
 
@@ -77,19 +77,27 @@ class Footer extends React.Component {
       </div>)
   }
 
+  goToTop() {
+    window.scroll({
+      top: 0,
+      behavior: 'smooth'
+    })
+    document.getElementById('header-logo').focus({
+      preventScroll: true
+    })
+  }
+
   render() {
     const {
       logoUrl, footerNavigation, topButtonText
     } = this.props
     return (
-      <footer className="ssb-footer-wrapper">
+      <div className="ssb-footer-wrapper">
         <div className="container">
           <div className="footer-top-row">
             <img src={logoUrl} alt="ssb-logo"/>
-            <Button negative onClick={()=> window.scroll({
-              top: 0,
-              behavior: 'smooth'
-            })}>
+            <Button negative onClick={()=> this.goToTop()
+            }>
               <ArrowUp size="22" className="mr-2" />
               {topButtonText}
             </Button>
@@ -117,7 +125,7 @@ class Footer extends React.Component {
             {this.renderCopyRight()}
           </div>
         </div>
-      </footer>
+      </div>
     )
   }
 }

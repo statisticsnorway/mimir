@@ -1,4 +1,3 @@
-import { SiteConfig } from '../../site/site-config'
 import { PortalLibrary } from 'enonic-types/lib/portal'
 import { Language } from '../types/language'
 import { Content, ContentLibrary } from 'enonic-types/lib/content'
@@ -9,7 +8,7 @@ const {
   get
 }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
 const {
-  getSiteConfig, imageUrl, pageUrl
+  assetUrl
 }: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
 const {
   createMenuTree, parseTopLinks
@@ -32,13 +31,20 @@ export function getHeaderContent(language: Language): HeaderContent | undefined 
     if (!headerContent) throw new Error(`Could not get header content with id ${language.headerId}`)
 
     return {
-      logoUrl: headerContent.data.logo ? imageUrl({
-        id: headerContent.data.logo,
-        scale: 'width(248)'
-      }) : 'Image not set in header content',
+      logoUrl: assetUrl({
+        path: 'SSB_logo_black.svg'
+      }),
+      logoAltText: localize({
+        key: 'logoAltText',
+        locale: language.code
+      }),
       searchResultPageUrl: headerContent.data.searchResultPage ? pathFromStringOrContent(headerContent.data.searchResultPage) : undefined,
-      searchInputPlaceholder: localize({
+      searchText: localize({
         key: 'menuSearch',
+        locale: language.code
+      }),
+      skipToContentText: localize({
+        key: 'skipToContent',
         locale: language.code
       }),
       mainNavigation: headerContent.data.menuContentId ? createMenuTree(headerContent.data.menuContentId) : [],
@@ -48,13 +54,14 @@ export function getHeaderContent(language: Language): HeaderContent | undefined 
   }
 }
 
-
 export interface HeaderContent {
     logoUrl: string;
+    logoAltText: string;
     searchResultPageUrl?: string;
-    searchInputPlaceholder: string;
+    searchText: string;
     mainNavigation?: Array<MenuItem>;
     topLinks?: Array<Link>;
     language: Language;
+    skipToContentText: string;
 }
 

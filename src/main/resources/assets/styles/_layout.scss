@@ -16,7 +16,12 @@
   padding: 60px 100px;
 
   @include media-breakpoint-down(md) {
-    padding: 20px 40px;
+    padding: 20px 20px;
+
+    .col , .col-12 {
+      padding-right: 0;
+      padding-left: 0;
+    }
   }
 
   & > h2 {
@@ -24,6 +29,12 @@
     padding-left: 15px;
     border-left: 4px solid $ssb-green-3;
     line-height: 80px;
+  }
+
+  h3.layout-title {
+    @include roboto-condenced;
+    font-weight: bold;
+    font-size: 28px;
   }
 }
 
@@ -46,7 +57,7 @@
   }
 
   @include media-breakpoint-down(md) {
-    min-height: 230px;
+    visibility: hidden;
 
     &:after {
       visibility: hidden;

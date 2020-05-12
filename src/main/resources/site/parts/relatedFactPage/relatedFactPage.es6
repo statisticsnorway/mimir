@@ -38,6 +38,9 @@ function renderPart(req, relatedId) {
   const showAll = i18nLib.localize({
     key: 'showAll'
   })
+  const showLess = i18nLib.localize({
+    key: 'showLess'
+  })
   const relatedContentList = relatedContent.data.contentList
   const relatedContentIds = relatedContentList ? util.data.forceArray(relatedContentList) : []
   const mainTitle = part.config.title
@@ -76,7 +79,8 @@ function renderPart(req, relatedId) {
   const props = {
     relatedContentLists: relatedContentLists,
     mainTitle: mainTitle,
-    showAll: showAll
+    showAll: showAll,
+    showLess: showLess
   }
 
   const relatedFactPage = new React4xp('site/parts/relatedFactPage/relatedFactPage')

@@ -1,6 +1,16 @@
 <page>
   <display-name>Standard side</display-name>
   <form>
+    <input name="pageType" type="RadioButton">
+      <label>Sidetype</label>
+      <occurrences minimum="1" maximum="1"/>
+      <config>
+        <option value="default">Standard</option>
+        <option value="municipality">Kommunefakta</option>
+        <option value="factPage">Faktaside</option>
+      </config>
+      <default>default</default>
+    </input>
   	<input name="bkg_color" type="RadioButton">
   		<label>Velg bakgrunnsfarge</label>
   		<occurrences minimum="1" maximum="1"/> 

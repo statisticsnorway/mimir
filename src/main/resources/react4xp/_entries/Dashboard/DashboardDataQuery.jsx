@@ -1,8 +1,7 @@
-import {Alert, Button} from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
 import {Download, Loader, Trash} from 'react-feather';
 import React from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 
 class DashboardDataQuery extends React.Component {
   constructor(props) {
@@ -13,11 +12,11 @@ class DashboardDataQuery extends React.Component {
     return (
       <tr className="small" >
         <td className={`${this.props.hasData ? 'ok' : 'error'} dataset`}>
-          {this.props.displayName}
+          {this.props.displayName ? this.props.displayName : ''}
           {this.props.errorMsg ? <span className="errorMsg">{this.props.errorMsg}</span> : ''}
         </td>
-        <td>{this.props.updated}</td>
-        <td>{this.props.updatedHumanReadable}</td>
+        <td>{this.props.updated ? this.props.updated : ''}</td>
+        <td>{this.props.updatedHumanReadable ? this.props.updatedHumanReadable : ''}</td>
         <td className="actions">
           <Button variant="secondary"
             size="sm"
