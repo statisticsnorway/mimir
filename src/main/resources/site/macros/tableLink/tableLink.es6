@@ -31,8 +31,7 @@ const renderMacro = (context) => {
     .setProps({
       title: context.params.title,
       href: linkSrc,
-      hrefText: context.params.hrefText,
-      isExternal: 'true'
+      description: context.params.description
     })
     .setId('tableLink')
     .uniqueId()

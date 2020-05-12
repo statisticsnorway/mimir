@@ -7,7 +7,7 @@ export interface TableLinkConfig {
   /**
    * Lenketekst
    */
-  hrefText: string;
+  description: string;
 
   /**
    * Url
