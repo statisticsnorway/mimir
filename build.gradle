@@ -77,7 +77,7 @@ task serverWebpack( type: NodeTask, dependsOn: npmInstall ) {
     inputs.dir 'src/main/resources/services'
     inputs.dir 'src/main/resources/site'
     inputs.dir 'src/main/resources/admin'
-    inputs.file 'src/main/resources/main.js'
+    inputs.file 'src/main/resources/main.es6'
     outputs.dir "${buildDir}/resources/main/lib"
     outputs.dir "${buildDir}/resources/main/services"
     outputs.dir "${buildDir}/resources/main/site"
