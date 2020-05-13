@@ -3,26 +3,34 @@
         <div class="col-12 col-md-8 offset-md-1 p-0" >
             <h1 data-th-text="${title}" />
             <p data-th-text="${ingress}" />
-            <div class="d-flex" data-th-if="${showPubDate}">
-                <p class="font-weight-bold mr-1" data-th-text="(${language.phrases.published} + ':')" />
-                <p data-th-text="${pubDate}" />
-            </div>
-            <div class="d-flex" data-th-if="${modifiedDate}">
-                <p class="font-weight-bold mr-1" data-th-text="(${language.phrases.modified} + ':')" />
-                <p data-th-text="${modifiedDate}" />
-            </div>
-            <div class="d-flex" data-th-if="${authors}">
-                <p class="font-weight-bold mr-1" data-th-text="(${language.phrases.author} + ':')" />
-                <div data-th-each="author, i : ${authors}">
-                    <p data-th-if="${author.name}">
-                        <a data-th-href="@{'mailto:' + ${author.email}}" data-th-text="${author.name}" /><span data-th-text="!${i.last} ? ',&nbsp;' : ''" />
-                    </p>
+            <div class="container-fluid snr-dates-wrapper">
+                <div data-th-if="${showPubDate}">
+                    <span class="font-weight-bold mr-1" data-th-text="(${language.phrases.published} + ':')" />
+                    <span data-th-text="${pubDate}" />
+                </div>
+                <div data-th-if="${modifiedDate}">
+                    <span class="font-weight-bold mr-1" data-th-text="(${language.phrases.modified} + ':')" />
+                    <span data-th-text="${modifiedDate}" />
                 </div>
             </div>
         </div>
         <div class="col-12 p-0">
             <div class="container-fluid">
-                <div class="article-body row" data-th-utext="${bodyText}" />
+                <div class="article-body">
+                    <div class="author-wrapper" data-th-if="${authors}">
+                        <span class="font-weight-bold mr-1" data-th-text="(${language.phrases.author} + ':')" />
+                        <div data-th-each="author, i : ${authors}">
+                            <p data-th-if="${author.name}">
+                                <a data-th-href="@{'mailto:' + ${author.email}}" data-th-text="${author.name}" /><span data-th-text="!${i.last} ? ',&nbsp;' : ''" />
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-12" data-th-utext="${bodyText}" />
+                </div>
+            </div>
+        </div>
+        <div class="col-12 p-0">
+            <div class="container-fluid">
                 <div data-th-if="${#lists.size(externalLinkConfig)}">
                     <h4>Andre nettsteder</h4>
                     <div id="externalLinksId" class="external-links-component"></div>
