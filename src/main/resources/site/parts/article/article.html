@@ -17,8 +17,8 @@
         <div class="col-12 p-0">
             <div class="container-fluid">
                 <div class="article-body">
-                    <div class="author-wrapper" data-th-if="${authors}">
-                        <span class="font-weight-bold mr-1" data-th-text="(${language.phrases.author} + ':')" />
+                    <div class="author-wrapper" data-th-if="${#lists.size(authors) >= 1}">
+                        <p class="font-weight-bold mr-1" data-th-text="(${language.phrases.author} + ':')" />
                         <div data-th-each="author, i : ${authors}">
                             <p data-th-if="${author.name}">
                                 <a data-th-href="@{'mailto:' + ${author.email}}" data-th-text="${author.name}" /><span data-th-text="!${i.last} ? ',&nbsp;' : ''" />
