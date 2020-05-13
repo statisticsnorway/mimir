@@ -1,12 +1,12 @@
 import { RepoNode } from 'enonic-types/lib/node'
 import { getNode, withConnection } from './common'
 import { EVENT_LOG_BRANCH, EVENT_LOG_REPO, createEventLog, EditorCallback, updateEventLog } from './eventLog'
-import { User } from 'enonic-types/lib/auth'
+import { AuthLibrary, User } from 'enonic-types/lib/auth'
 import { HttpRequestParams, HttpResponse } from 'enonic-types/lib/http'
 const {
   dateToFormat
 } = __non_webpack_require__('/lib/ssb/utils')
-
+const auth: AuthLibrary = __non_webpack_require__( '/lib/xp/auth')
 export type QueryInfoNode = QueryInfo & RepoNode
 
 export interface QueryInfo {
@@ -57,11 +57,14 @@ export const EVENTS: object = {
   fetchData: {}
 }
 
-export function logDataQueryEvent(queryId: string, user: User, status: QueryStatus): QueryInfoNode {
+export function logDataQueryEvent(queryId: string, status: QueryStatus): QueryInfoNode | undefined {
+  const user: User | null = auth.getUser()
+  if (!user) {
+    return undefined
+  }
   startQuery(queryId, user, status)
   addEventToQueryLog(queryId, user, status)
-  const aaa: QueryInfoNode = updateQueryLogStatus(queryId, user, status)
-  return aaa
+  return updateQueryLogStatus(queryId, user, status)
 }
 
 function addEventToQueryLog(queryId: string, user: User, status: QueryStatus): EventInfo & RepoNode {

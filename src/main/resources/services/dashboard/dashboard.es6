@@ -32,11 +32,10 @@ exports.get = function(req) {
   if (!req.params || !req.params.id) {
     return missingParameterResponse()
   }
-  const user = auth.getUser()
-  logDataQueryEvent(req.params.id, user, {message:Events.STARTED})
+  logDataQueryEvent(req.params.id, {message:Events.STARTED})
 
   const updateResult = context.run(createContextOption('master'), () => {
-    return getAllOrOneDataQuery(req.params.id).map((dataquery) => updateDataQuery(dataquery, user) )
+    return getAllOrOneDataQuery(req.params.id).map((dataquery) => updateDataQuery(dataquery) )
   })
 
   const parsedResult = updateResult.map( (result) => { // refreshResult
@@ -45,15 +44,16 @@ exports.get = function(req) {
       id: result.dataquery._id,
       message: i18n.localize({key: result.status}),
       status: result.status,
-      dataset: {
-        modified: dateToFormat(result.modified),
-        modifiedReadable: dateToReadable(result.modified)
-      },
+      dataset: result.dataset ? {
+        newDatasetData: result.newDatasetData ? result.newDatasetData : false,
+        modified: dateToFormat(result.dataset.modifiedTime),
+        modifiedReadable: dateToReadable(result.dataset.modifiedTime)
+      } : {},
       logData: {
         ...queryLogNode.data,
-        message: i18n.localize({key: result.status}),
-        modified: dateToFormat(queryLogNode.modified),
-        modifiedReadable: dateToReadable(queryLogNode.modified)
+        message: i18n.localize({key: queryLogNode.data.modifiedResult}),
+        modified: queryLogNode.data.modified,
+        modifiedReadable: dateToReadable(queryLogNode.data.modifiedTs)
       }
     }
   })
@@ -71,9 +71,8 @@ exports.delete = (req) => {
   if (!req.params || !req.params.id) {
     return missingParameterResponse()
   }
-  const user = auth.getUser()
   const deleteResult = context.run(createContextOption('draft'), () => {
-    logDataQueryEvent(req.params.id, user, {message:Events.START_DELETE })
+    logDataQueryEvent(req.params.id, {message:Events.START_DELETE })
     return getAllOrOneDataSet(req.params.id).map((dataset) => {
       return {
         dataset,
@@ -85,11 +84,11 @@ exports.delete = (req) => {
   })
 
   if(deleteResult.length === 0) {
-    logDataQueryEvent(req.params.id, user, {message: Events.DELETE_FAILED, deleteResult})
+    logDataQueryEvent(req.params.id, {message: Events.DELETE_FAILED, deleteResult})
     return successResponse(deleteResult, undefined)
   }
 
-  logDataQueryEvent(req.params.id, user, {message:Events.DELETE_OK, deleteResult })
+  logDataQueryEvent(req.params.id, {message:Events.DELETE_OK, deleteResult })
 
   const publishResult = content.publish({
     keys: deleteResult.map((result) => result.dataset._id),
@@ -98,11 +97,11 @@ exports.delete = (req) => {
   })
 
   publishResult.deletedContents.forEach((id) => {
-    logDataQueryEvent(id, user, {message:Events.DELETE_OK_PUBLISHED, deleteResult })
+    logDataQueryEvent(id, {message:Events.DELETE_OK_PUBLISHED, deleteResult })
   })
 
   publishResult.failedContents.forEach((id) => {
-    logDataQueryEvent(id, user, {message:Events.DELETE_FAILED_PUBLISHED, deleteResult })
+    logDataQueryEvent(id, {message:Events.DELETE_FAILED_PUBLISHED, deleteResult })
   })
 
   const updateResult = deleteResult.map( (result) => { // refreshResult
@@ -112,7 +111,7 @@ exports.delete = (req) => {
       message: queryLogNode.data.modifiedResult ? i18n.localize({key: queryLogNode.data.modifiedResult}): undefined,
       status: queryLogNode.data.modifiedResult,
       dataset: {
-        isDeleted: true,
+        newDatasetData: true,
         modified: '',
         modifiedReadable: ''
       },
@@ -189,10 +188,9 @@ function createMessage(updateResult) {
 /**
  *
  * @param {object } dataquery
- * @param {object } user
  * @return {{dataquery: *, message: *}|{refreshResult: *, message: *}}
  */
-function updateDataQuery(dataquery, user) {
+function updateDataQuery(dataquery) {
   if (!dataquery) {
     return {
       dataquery,
@@ -202,7 +200,7 @@ function updateDataQuery(dataquery, user) {
 
   const data = getData(dataquery)
   if (!data) {
-    logDataQueryEvent(dataquery._id, user, {message:Events.FAILED_TO_GET_DATA} )
+    logDataQueryEvent(dataquery._id, {message:Events.FAILED_TO_GET_DATA} )
     return {
       dataquery,
       status: Events.FAILED_TO_GET_DATA
@@ -210,9 +208,11 @@ function updateDataQuery(dataquery, user) {
   }
 
   const refreshDatasetResult = refreshDatasetWithData(JSON.stringify(data), dataquery) // returns a dataset and status
-  logDataQueryEvent(dataquery._id, user, {message: refreshDatasetResult.status})
+  logDataQueryEvent(dataquery._id, {message: refreshDatasetResult.status})
   return {
     dataquery,
+    dataset: refreshDatasetResult.dataset,
+    newDatasetData: refreshDatasetResult.newDatasetData? refreshDatasetResult.newDatasetData : false,
     status: refreshDatasetResult.status // can be failed to fetch data or failed to
   }
 }

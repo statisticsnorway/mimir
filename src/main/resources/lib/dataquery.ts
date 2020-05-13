@@ -58,7 +58,7 @@ export function get(url: string, json: DataqueryRequestData | undefined,
 
   const result: HttpResponse = http.request(requestParams)
   if (queryId && user) {
-    logDataQueryEvent(queryId, user, {
+    logDataQueryEvent(queryId, {
       message: Events.REQUESTING_DATA,
       response: result,
       request: requestParams
@@ -79,6 +79,7 @@ export interface RefreshDatasetResult {
   dataset?: Content<Dataset>;
   status: string;
   message?: string;
+  newDatasetData?: boolean;
 }
 
 export function refreshDataset(dataquery: Content<Dataquery>): Content<Dataset> | RefreshDatasetResult {
@@ -97,15 +98,19 @@ export function refreshDatasetWithData(rawData: string, dataquery: Content<Dataq
   const dataset: QueryResponse<Dataset> | undefined = getDataSetWithDataQueryId(dataquery._id)
   if (!dataset ||  (dataset && dataset.total === 0) ) {
     return createDataset(rawData, dataquery)
+
   }
   if (dataset && isDataNew(rawData, dataset.hits[0])) {
     updateDataset(rawData, dataset.hits[0], dataquery)
+    log.info('Returning with newdataset true')
     return {
+      newDatasetData: true,
       dataqueryId: dataquery._id,
       dataset: dataset.hits[0],
       status: Events.COMPLETE
     }
   } else {
+    log.info('DATASET IS NOT NEW')
     return {
       dataqueryId: dataquery._id,
       dataset:dataset.hits[0],
@@ -194,8 +199,9 @@ function createDataset(data: string, dataquery: Content<Dataquery>): RefreshData
         }
       }) as Content<Dataset>
       const publishResult: PublishResponse = publishDatasets([dataset._id])
-      log.info('%s', JSON.stringify(publishResult, null, 2))
+
       return {
+        newDatasetData: true,
         dataqueryId: dataquery._id,
         dataset,
         status: Events.DATASET_PUBLISHED

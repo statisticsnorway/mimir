@@ -53,6 +53,7 @@ DashboardDataQuery.propTypes = {
   format: PropTypes.string,
   isPublished: PropTypes.bool,
   class: PropTypes.string,
+  newDatasetData: PropTypes.bool,
   datasetModified: PropTypes.string,
   datasetModifiedReadable: PropTypes.string,
   showError: PropTypes.bool,
