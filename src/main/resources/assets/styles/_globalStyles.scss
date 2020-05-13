@@ -218,3 +218,18 @@ p > a {
   }
 }
 /* -- End links -- */
+
+/* -- Blockquote -- */
+blockquote > p {
+  @include open-sans;
+  background-image: linear-gradient(120deg, $ssb-green-1 0%, $ssb-green-1 100%);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 50%;
+  display: inline;
+  font-size: 20px;
+  font-style: normal;
+  letter-spacing: normal;
+  line-height: 1.6;
+}
+/* -- End Blockquote -- */

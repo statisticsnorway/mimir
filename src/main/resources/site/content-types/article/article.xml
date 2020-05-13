@@ -51,7 +51,7 @@
         <input name="articleText" type="HtmlArea">
             <label>Artikkeltekst</label>
             <config>
-                <include>*</include>
+                <include>Blockquote</include>
                 <allowHeadings>h3 h4 h5</allowHeadings>
             </config>
         </input>
