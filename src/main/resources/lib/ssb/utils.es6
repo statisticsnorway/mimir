@@ -130,9 +130,9 @@ export function pathFromStringOrContent(urlSrc) {
 }
 
 
-export function getImageCaption(keyFigureId) {
+export function getImageCaption(imageId) {
   const imageContent = content.get({
-    key: keyFigureId
+    key: imageId
   })
   return imageContent !== undefined ? imageContent.data.caption : ''
 }
