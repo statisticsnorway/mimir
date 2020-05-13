@@ -108,6 +108,14 @@
                                     <label>Tittel</label>
                                     <occurrences minimum="1" maximum="1"/>
                                 </input>
+                                <input name="type" type="TextLine">
+                                    <label>Type</label>
+                                    <occurrences minimum="0" maximum="1"/>
+                                </input>
+                                <input name="date" type="Date">
+                                    <label>Dato</label>
+                                    <occurrences minimum="0" maximum="1"/>
+                                </input>
                                 <input name="preface" type="TextArea">
                                     <label>Ingress</label>
                                     <occurrences minimum="1" maximum="1"/>

@@ -104,10 +104,18 @@ function renderPart(req, relatedArticles) {
         scale: 'block(320, 180)' // 16:9
       })
       const imageAlt = getImageCaption(article.externalArticle.image)
+      let subTitle = ''
+      if (article.externalArticle.type) {
+        subTitle = article.externalArticle.type
+      }
+      if (article.externalArticle.date) {
+        const prettyDate = moment(article.externalArticle.date).format('DD. MMMM YYYY')
+        subTitle += `${subTitle ? ' / ' : ''}${prettyDate}`
+      }
 
       return {
         title: article.externalArticle.title,
-        subTitle: article.externalArticle.subTitle || '',
+        subTitle,
         preface: article.externalArticle.preface,
         href: article.externalArticle.url,
         imageSrc,
