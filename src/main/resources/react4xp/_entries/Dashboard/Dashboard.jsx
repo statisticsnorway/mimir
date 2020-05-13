@@ -256,7 +256,7 @@ class Dashboard extends React.Component {
             </div>
           </Col>
         </Row>
-        {this.renderFooter()}
+
         <Alert variant="danger"
           show={this.state.showErrorAlert}
           onClose={() => this.setState({
