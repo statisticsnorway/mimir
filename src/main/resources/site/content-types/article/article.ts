@@ -30,6 +30,21 @@ export interface Article {
   }>;
 
   /**
+   * Relaterte faktasider
+   */
+  relatedFactPagesItemSet?: Array<{
+    /**
+     * Seksjons tittel
+     */
+    title?: string;
+
+    /**
+     * Faktaside liste
+     */
+    itemList?: string;
+  }>;
+
+  /**
    * Forfatter
    */
   authorItemSet?: Array<{
