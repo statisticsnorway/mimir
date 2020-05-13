@@ -1,6 +1,10 @@
-import { eventLogExists, createEventLog } from './lib/repo/eventLog'
-
-const dataquery = __non_webpack_require__('/lib/dataquery')
+const {
+  eventLogExists,
+  createEventLog
+} = __non_webpack_require__('./lib/repo/eventLog')
+const {
+  refreshDataset
+} = __non_webpack_require__('/lib/dataquery')
 const content = __non_webpack_require__( '/lib/xp/content')
 const cron = __non_webpack_require__('/lib/cron')
 const cache = __non_webpack_require__('/lib/ssb/cache')
@@ -27,8 +31,7 @@ function job() {
     query: `data.table LIKE 'http*'`
   })
   result && result.hits.map((row) => {
-    //logging
-    dataquery.refreshDataset(row)
+    refreshDataset(row)
   })
 }
 
@@ -49,3 +52,5 @@ if (! eventLogExists()) {
 } else {
   log.info(`EventLog Repo found.`)
 }
+
+log.info('Startup script complete')

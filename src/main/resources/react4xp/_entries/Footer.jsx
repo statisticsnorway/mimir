@@ -92,7 +92,7 @@ class Footer extends React.Component {
       logoUrl, footerNavigation, topButtonText
     } = this.props
     return (
-      <footer className="ssb-footer-wrapper">
+      <div className="ssb-footer-wrapper">
         <div className="container">
           <div className="footer-top-row">
             <img src={logoUrl} alt="ssb-logo"/>
@@ -125,7 +125,7 @@ class Footer extends React.Component {
             {this.renderCopyRight()}
           </div>
         </div>
-      </footer>
+      </div>
     )
   }
 }
