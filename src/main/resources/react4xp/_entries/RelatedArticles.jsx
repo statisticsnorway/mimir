@@ -60,10 +60,12 @@ class RelatedArticles extends React.Component {
 
   render() {
     const {
-      relatedArticles
+      relatedArticles,
+      heading
     } = this.props
     return (
       <div className="container">
+        <h3>{heading}</h3>
         <div className="row">
           {relatedArticles.map((article, index) => {
             return (
@@ -102,7 +104,8 @@ RelatedArticles.propTypes = {
     })
   ).isRequired,
   showAll: PropTypes.string.isRequired,
-  showLess: PropTypes.string.isRequired
+  showLess: PropTypes.string.isRequired,
+  heading: PropTypes.string.isRequired
 }
 
 export default (props) => <RelatedArticles {...props} />

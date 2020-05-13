@@ -121,7 +121,8 @@ function renderPart(req, relatedArticles) {
     .setProps({
       relatedArticles,
       showAll: phrases.showAll,
-      showLess: phrases.showLess
+      showLess: phrases.showLess,
+      heading: phrases.relatedArticlesHeading
     })
     .setId('related-articles')
     .uniqueId()
