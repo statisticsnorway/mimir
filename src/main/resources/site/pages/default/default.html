@@ -9,13 +9,13 @@
     gtag('config', /*[[${GA_TRACKING_ID}]]*/);
   </script>
 
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta data-th-if="${page.data.metaDescription}" name="description" data-th-content="${page.data.metaDescription}">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta data-th-if="${page.data.metaDescription}" name="description" data-th-content="${page.data.metaDescription}"/>
   <title data-th-text="${pageTitle}"></title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans%7COpen+Sans:700%7CRoboto:700%7CRoboto+Condensed:700">
-  <link rel="stylesheet" data-th-href="${stylesUrl}">
-  <link rel="alternate" data-th-if="${alternateLanguageVersionUrl}" data-th-href="${alternateLanguageVersionUrl}" data-th-hreflang="${language.alternate}">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans%7COpen+Sans:700%7CRoboto:700%7CRoboto+Condensed:700"/>
+  <link rel="stylesheet" data-th-href="${stylesUrl}"/>
+  <link rel="alternate" data-th-if="${alternateLanguageVersionUrl}" data-th-href="${alternateLanguageVersionUrl}" data-th-hreflang="${language.alternate}"/>
 
 </head>
 <body class="xp-page" data-th-classappend="${bodyClasses}">
