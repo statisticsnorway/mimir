@@ -98,6 +98,7 @@ class Header extends React.Component {
 
           <div className={this.state.showMainMenuOnMobile ? 'show searchfield' : 'searchfield'}>
             <Input
+              id='search_ssb'
               ariaLabel={searchText}
               searchField
               submitCallback={this.goToSearchResultPage}
