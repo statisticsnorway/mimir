@@ -3,6 +3,7 @@ import { getNode, withConnection } from './common'
 import { EVENT_LOG_BRANCH, EVENT_LOG_REPO, createEventLog, EditorCallback, updateEventLog } from './eventLog'
 import { AuthLibrary, User } from 'enonic-types/lib/auth'
 import { HttpRequestParams, HttpResponse } from 'enonic-types/lib/http'
+import {TbmlData} from '../types/xmlParser';
 const {
   dateToFormat
 } = __non_webpack_require__('/lib/ssb/utils')
@@ -24,6 +25,7 @@ export interface QueryStatus {
   message: string;
   response?: HttpResponse;
   request?: HttpRequestParams;
+  xmlResult?: TbmlData;
 }
 
 export interface EventInfo {
@@ -35,12 +37,12 @@ export interface EventInfo {
 }
 
 export enum Events {
-  STARTED = 'STARTED',
+  GET_DATA_STARTED = 'GET_DATA_STARTED',
   NO_NEW_DATA = 'NO_NEW_DATA',
-  COMPLETE = 'COMPLETE',
+  FOUND_DATAQUERY = 'FOUND_DATAQUERY ',
+  GET_DATA_COMPLETE = 'GET_DATA_COMPLETE',
   REQUESTING_DATA = 'REQUESTING_DATA',
   START_DELETE = 'START_DELETE',
-  DATASET_CREATED = 'DATASET_CREATED',
   DATASET_PUBLISHED = 'DATASET_PUBLISHED',
   DATASET_UPDATED = 'DATASET_UPDATED',
   DELETE_FAILED = 'DELETE_FAILED',
@@ -49,12 +51,9 @@ export enum Events {
   DELETE_FAILED_PUBLISHED = 'DELETE_FAILED_PUBLISHED',
   FAILED_TO_GET_DATA = 'FAILED_TO_GET_DATA',
   FAILED_TO_FIND_DATAQUERY = 'FAILED_TO_FIND_DATAQUERY',
-  FAILED_TO_FIND_DATASET = 'FAILED_TO_FIND_DATASET',
   FAILED_TO_CREATE_DATASET = 'FAILED_TO_CREATE_DATASET',
-  FAILED_TO_REFRESH_DATASET = 'FAILED_TO_REFRESH_DATASET'
-}
-export const EVENTS: object = {
-  fetchData: {}
+  FAILED_TO_REFRESH_DATASET = 'FAILED_TO_REFRESH_DATASET',
+  XML_TO_JSON = 'XML_TO_JSON'
 }
 
 export function logDataQueryEvent(queryId: string, status: QueryStatus): QueryInfoNode | undefined {

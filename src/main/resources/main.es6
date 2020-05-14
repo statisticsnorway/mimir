@@ -1,11 +1,19 @@
 const {
   eventLogExists,
   createEventLog
-} = __non_webpack_require__('./lib/repo/eventLog')
+} = __non_webpack_require__('/lib/repo/eventLog')
+const {
+  completeJobLog,
+  startJobLog,
+  updateJobLog,
+  JobStatus
+} = __non_webpack_require__('/lib/repo/job')
+
 const {
   refreshDataset
 } = __non_webpack_require__('/lib/dataquery')
 const content = __non_webpack_require__( '/lib/xp/content')
+const context = __non_webpack_require__('/lib/xp/context')
 const cron = __non_webpack_require__('/lib/cron')
 const cache = __non_webpack_require__('/lib/ssb/cache')
 
@@ -24,20 +32,31 @@ log.info('Application ' + app.name + ' started') // Log application started
 __.disposer(() => log.info('Application ' + app.name + ' stopped')) // Log application stoppped
 
 function job() {
-  log.info('-- Running dataquery cron job  --')
-  const result = content.query({
+  log.info('-- Running dataquery cron job --')
+  const jobLogNode = startJobLog('-- Running dataquery cron job --')
+  const allHttpQueries = content.query({
     count: 999,
     contentTypes: [`${app.name}:dataquery`],
     query: `data.table LIKE 'http*'`
   })
-  result && result.hits.map((row) => {
+  updateJobLog(jobLogNode._id, (node) => {
+    return {
+      data: {
+        ...node.data,
+        queryIds: allHttpQueries.hits.map(( httpQuery) => httpQuery._id)
+      }
+    }
+  })
+  const refreshDataResult = allHttpQueries && allHttpQueries.hits.map((row) => {
     refreshDataset(row)
   })
+  completeJobLog(jobLogNode._id, JobStatus.COMPLETE, refreshDataResult)
+  log.info('-- Completed dataquery cron job --')
 }
 
 cron.schedule({
   name: 'dataquery',
-  cron: '0 9 * * *',
+  cron: '0 8 * * *',
   times: 365 * 10,
   callback: job,
   context: master
@@ -48,9 +67,11 @@ cache.setup()
 if (! eventLogExists()) {
   log.info(`Setting up EventLog ...`);
   createEventLog({ _path: 'queries', _name: 'queries' });
+  createEventLog({ _path: 'jobs', _name: 'jobs' });
   log.info(`EventLog Repo for jobs and queries initialized.`);
 } else {
   log.info(`EventLog Repo found.`)
 }
 
 log.info('Startup script complete')
+

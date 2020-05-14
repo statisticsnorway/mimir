@@ -1,5 +1,4 @@
 import {getNode} from '../../lib/repo/common';
-import {RefreshDatasetResult} from '../../lib/dataquery';
 
 const auth = __non_webpack_require__( '/lib/xp/auth')
 const context = __non_webpack_require__( '/lib/xp/context')
@@ -32,33 +31,33 @@ exports.get = function(req) {
   if (!req.params || !req.params.id) {
     return missingParameterResponse()
   }
-  logDataQueryEvent(req.params.id, {message:Events.STARTED})
-
+  logDataQueryEvent(req.params.id, {message:Events.GET_DATA_STARTED})
   const updateResult = context.run(createContextOption('master'), () => {
     return getAllOrOneDataQuery(req.params.id).map((dataquery) => updateDataQuery(dataquery) )
   })
 
-  const parsedResult = updateResult.map( (result) => { // refreshResult
-    const queryLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH,`/queries/${result.dataquery._id}`)
-    return {
-      id: result.dataquery._id,
-      message: i18n.localize({key: result.status}),
-      status: result.status,
-      dataset: result.dataset ? {
-        newDatasetData: result.newDatasetData ? result.newDatasetData : false,
-        modified: dateToFormat(result.dataset.modifiedTime),
-        modifiedReadable: dateToReadable(result.dataset.modifiedTime)
-      } : {},
-      logData: {
-        ...queryLogNode.data,
-        message: i18n.localize({key: queryLogNode.data.modifiedResult}),
-        modified: queryLogNode.data.modified,
-        modifiedReadable: dateToReadable(queryLogNode.data.modifiedTs)
-      }
-    }
-  })
-
+  const parsedResult = updateResult.map(fontEndObject)
   return successResponse(parsedResult, undefined)
+}
+
+function fontEndObject(result) {
+  const queryLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH,`/queries/${result.dataquery._id}`)
+  return {
+    id: result.dataquery._id,
+    message: i18n.localize({key: result.status}),
+    status: result.status,
+    dataset: result.dataset ? {
+      newDatasetData: result.newDatasetData ? result.newDatasetData : false,
+      modified: dateToFormat(result.dataset.modifiedTime),
+      modifiedReadable: dateToReadable(result.dataset.modifiedTime)
+    } : {},
+    logData: {
+      ...queryLogNode.data,
+      message: i18n.localize({key: queryLogNode.data.modifiedResult}),
+      modified: queryLogNode.data.modified,
+      modifiedReadable: dateToReadable(queryLogNode.data.modifiedTs)
+    }
+  }
 }
 
 /**
@@ -166,6 +165,10 @@ function missingParameterResponse() {
  * @return {string|string|"NOT_TRANSLATED"}
  */
 function createMessage(updateResult) {
+  if ( updateResult.length === 0) {
+    return 'Error'
+  }
+
   if (updateResult.length === 1) {
     return i18n.localize({
       key: updateResult[0].status
@@ -173,7 +176,7 @@ function createMessage(updateResult) {
   }
 
   return `Updated/created: ${
-    updateResult.filter( (result) => result.status === Events.COMPLETE).length
+    updateResult.filter( (result) => result.status === Events.GET_DATA_COMPLETE).length
   } - Ignored: ${
     updateResult.filter( (result) => result.status === Events.NO_NEW_DATA).length
   } - Failed:  ${
@@ -191,7 +194,7 @@ function createMessage(updateResult) {
  * @return {{dataquery: *, message: *}|{refreshResult: *, message: *}}
  */
 function updateDataQuery(dataquery) {
-  if (!dataquery) {
+  if (!dataquery || dataquery.message === Events.FAILED_TO_FIND_DATAQUERY) {
     return {
       dataquery,
       status: Events.FAILED_TO_FIND_DATAQUERY

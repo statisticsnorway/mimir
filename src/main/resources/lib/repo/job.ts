@@ -1,10 +1,14 @@
 import { RepoNode} from 'enonic-types/lib/node';
 import {createEventLog, EditorCallback, updateEventLog} from './eventLog';
-import {User} from 'enonic-types/lib/auth';
+import {AuthLibrary, User} from 'enonic-types/lib/auth';
+const { modifyNode } = __non_webpack_require__( '/lib/repo/common');
 
-enum JobStatus {
-  STARTED = 'Started',
-  COMPLETE = 'Completed',
+const {EVENT_LOG_REPO, EVENT_LOG_BRANCH} = __non_webpack_require__('/lib/repo/eventLog')
+const auth: AuthLibrary = __non_webpack_require__( '/lib/xp/auth')
+
+export enum JobStatus {
+  STARTED = 'STARTED',
+  COMPLETE = 'COMPLETE',
 }
 
 export type JobInfoNode = RepoNode & JobInfo
@@ -12,7 +16,7 @@ export type JobInfoNode = RepoNode & JobInfo
 export interface JobInfo {
   data: {
     status: JobStatus;
-    success: boolean;
+    refreshDataResult: object;
     message: string;
     httpStatusCode?: number;
     startTime: string;
@@ -20,12 +24,12 @@ export interface JobInfo {
   };
 }
 
-export function createJobNode(queryIds: Array<string>, user?: User, task?: string): object {
+export function startJobLog(task?: string): object {
+  const user: User|null = auth.getUser()
   const now: Date = new Date()
   return createEventLog({
     _parentPath: '/jobs',
     data: {
-      queryIds,
       task: task,
       jobStarted: now.toISOString(),
       status: JobStatus.STARTED,
@@ -34,20 +38,20 @@ export function createJobNode(queryIds: Array<string>, user?: User, task?: strin
   })
 }
 
-export function updateJob<T>(jobId: string, editor: EditorCallback<JobInfoNode>): JobInfoNode {
-  return updateEventLog(jobId, editor)
+export function updateJobLog<T>(jobId: string, editor: EditorCallback<JobInfoNode>): JobInfoNode {
+  return modifyNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, jobId, editor)
 }
 
 
-export function completeJob(jobLogId: string, success: boolean, message: string ): JobInfoNode {
+export function completeJobLog(jobLogId: string, message: string, refreshDataResult: object ): JobInfoNode {
   const now: Date = new Date();
-  return updateJob<JobInfoNode>(jobLogId, function(node: JobInfoNode): JobInfoNode {
+  return updateJobLog<JobInfoNode>(jobLogId, function(node: JobInfoNode): JobInfoNode {
     node.data = {
       ...node.data,
       completionTime: now.toISOString(),
       status: JobStatus.COMPLETE,
-      success,
-      message
+      message,
+      refreshDataResult
     }
     return node
   })

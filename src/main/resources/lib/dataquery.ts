@@ -34,7 +34,7 @@ const draft: RunContext = { // Draft context (XP)
 }
 
 export function get(url: string, json: DataqueryRequestData | undefined,
-  selection: SelectionFilter = defaultSelectionFilter, queryId?: string, user?: User ): object | null {
+  selection: SelectionFilter = defaultSelectionFilter, queryId?: string ): object | null {
   if (json && json.query) {
     for (const query of json.query) {
       if (query.code === 'KOKkommuneregion0000' || query.code === 'Region') {
@@ -57,7 +57,7 @@ export function get(url: string, json: DataqueryRequestData | undefined,
   }
 
   const result: HttpResponse = http.request(requestParams)
-  if (queryId && user) {
+  if (queryId) {
     logDataQueryEvent(queryId, {
       message: Events.REQUESTING_DATA,
       response: result,
@@ -83,14 +83,19 @@ export interface RefreshDatasetResult {
 }
 
 export function refreshDataset(dataquery: Content<Dataquery>): Content<Dataset> | RefreshDatasetResult {
+  logDataQueryEvent(dataquery._id, {message: Events.GET_DATA_STARTED})
   const rawData: object | null = getData(dataquery)
-  if ( rawData) {
-    return refreshDatasetWithData(JSON.stringify(rawData), dataquery)
+  if (rawData) {
+    const refreshDatasetResult: RefreshDatasetResult = refreshDatasetWithData(JSON.stringify(rawData), dataquery)
+    logDataQueryEvent(dataquery._id, {message: refreshDatasetResult.status})
+    return refreshDatasetResult
   } else {
-    return {
+    const refreshDatasetResult: RefreshDatasetResult = {
       dataqueryId: dataquery._id,
       status: Events.FAILED_TO_REFRESH_DATASET
     }
+    logDataQueryEvent(dataquery._id, {message: refreshDatasetResult.status})
+    return refreshDatasetResult
   }
 }
 
@@ -98,19 +103,16 @@ export function refreshDatasetWithData(rawData: string, dataquery: Content<Dataq
   const dataset: QueryResponse<Dataset> | undefined = getDataSetWithDataQueryId(dataquery._id)
   if (!dataset ||  (dataset && dataset.total === 0) ) {
     return createDataset(rawData, dataquery)
-
   }
   if (dataset && isDataNew(rawData, dataset.hits[0])) {
     updateDataset(rawData, dataset.hits[0], dataquery)
-    log.info('Returning with newdataset true')
     return {
       newDatasetData: true,
       dataqueryId: dataquery._id,
       dataset: dataset.hits[0],
-      status: Events.COMPLETE
+      status: Events.GET_DATA_COMPLETE
     }
   } else {
-    log.info('DATASET IS NOT NEW')
     return {
       dataqueryId: dataquery._id,
       dataset:dataset.hits[0],
@@ -119,7 +121,7 @@ export function refreshDatasetWithData(rawData: string, dataquery: Content<Dataq
   }
 }
 
-export function getData(dataquery: Content<Dataquery>, user?: User): object | null {
+export function getData(dataquery: Content<Dataquery>): object | null {
   if (dataquery.data.table) {
     // TODO option-set is not parsed correctly by enonic-ts-codegen, update lib later and remove PlaceholderData interface
     const datasetFormat: Dataquery['datasetFormat'] = dataquery.data.datasetFormat
@@ -137,6 +139,7 @@ export function getData(dataquery: Content<Dataquery>, user?: User): object | nu
     }
     return data
   }
+  log.error(`Failed to find data table from dataquery`)
   return null
 }
 
