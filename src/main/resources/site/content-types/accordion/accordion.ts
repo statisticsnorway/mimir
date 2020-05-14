@@ -1,26 +1,31 @@
 export interface Accordion {
   /**
-   * Tekst til åpne-knapp
+   * Trekkspill
    */
-  open?: string;
-
-  /**
-   * Innhold
-   */
-  body?: string;
-
-  /**
-   * Underpunkt
-   */
-  items?: Array<{
+  accordions: Array<{
     /**
-     * Tekst til åpneknapp
+     * Tekst til åpne-knapp
      */
-    title?: string;
+    open?: string;
 
     /**
-     * Brødtekst
+     * Innhold
      */
     body?: string;
+
+    /**
+     * Underpunkt
+     */
+    items?: Array<{
+      /**
+       * Tekst til åpneknapp
+       */
+      title?: string;
+
+      /**
+       * Brødtekst
+       */
+      body?: string;
+    }>;
   }>;
 }
