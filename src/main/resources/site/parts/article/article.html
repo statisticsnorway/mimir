@@ -4,14 +4,15 @@
             <h1 data-th-text="${title}" />
             <p data-th-text="${ingress}" />
             <div class="container-fluid snr-dates-wrapper">
-                <div data-th-if="${showPubDate}">
+                <p class="font-weight-bold mr-3" data-th-if="${serialNumber}" data-th-text="${serialNumber}" />
+                <p data-th-if="${showPubDate}">
                     <span class="font-weight-bold mr-1" data-th-text="(${language.phrases.published} + ':')" />
                     <span data-th-text="${pubDate}" />
-                </div>
-                <div data-th-if="${modifiedDate}">
+                </p>
+                <p data-th-if="${modifiedDate}">
                     <span class="font-weight-bold mr-1" data-th-text="(${language.phrases.modified} + ':')" />
                     <span data-th-text="${modifiedDate}" />
-                </div>
+                </p>
             </div>
         </div>
         <div class="col-12 p-0">

@@ -30,6 +30,11 @@ export interface Article {
   }>;
 
   /**
+   * Løpenummer
+   */
+  serialNumber?: string;
+
+  /**
    * Forfatter
    */
   authorItemSet?: Array<{
