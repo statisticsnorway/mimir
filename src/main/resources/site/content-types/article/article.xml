@@ -75,5 +75,15 @@
                 </item-set>
             </items>
         </field-set>
+
+        <field-set>
+            <label>Løpenummer</label>
+            <items>
+                <input name="serialNumber" type="TextLine">
+                    <label>Løpenummer</label>
+                    <occurrences minimum="0" maximum="1"/>
+                </input>
+            </items>
+        </field-set>
     </form>
 </content-type>
