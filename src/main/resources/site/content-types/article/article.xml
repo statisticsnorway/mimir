@@ -85,5 +85,15 @@
                 </input>
             </items>
         </field-set>
+
+        <field-set>
+            <label>Stikktittel</label>
+            <items>
+                <input name="introTitle" type="TextLine">
+                    <label>Stikktittel</label>
+                    <occurrences minimum="0" maximum="1"/>
+                </input>
+            </items>
+        </field-set>
     </form>
 </content-type>

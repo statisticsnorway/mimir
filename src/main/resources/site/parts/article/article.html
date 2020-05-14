@@ -1,8 +1,9 @@
 <section class="xp-part article container-fluid">
     <div class="row">
-        <div class="col-12 col-md-8 offset-md-1 p-0" >
-            <h1 data-th-text="${title}" />
-            <p data-th-text="${ingress}" />
+        <div class="col-12 offset-md-1 p-0" >
+            <p class="introTitle" data-th-if="${introTitle}" data-th-text="${introTitle}"/>
+            <h1 class="title" data-th-text="${title}" />
+            <p class="ingress col-12 col-md-8 p-0" data-th-text="${ingress}" />
             <div class="d-flex">
                 <p class="font-weight-bold mr-3" data-th-if="${serialNumber}" data-th-text="${serialNumber}" />
                 <div class="d-flex" data-th-if="${showPubDate}">

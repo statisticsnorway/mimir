@@ -35,6 +35,11 @@ export interface Article {
   serialNumber?: string;
 
   /**
+   * Stikktittel
+   */
+  introTitle?: string;
+
+  /**
    * Forfatter
    */
   authorItemSet?: Array<{

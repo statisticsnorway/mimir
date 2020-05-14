@@ -40,4 +40,11 @@
   blockquote  {
     padding-left: 40px !important;
   }
+
+  .introTitle {
+    @include roboto;
+    font-size: 20px;
+    line-height: 1.6;
+    margin-bottom: 4px;
+  }
 }
