@@ -8,12 +8,12 @@ const {
   updateJobLog,
   JobStatus
 } = __non_webpack_require__('/lib/repo/job')
+import { setupStatRegRepo } from './lib/repo/statreg'
 
 const {
   refreshDataset
 } = __non_webpack_require__('/lib/dataquery')
 const content = __non_webpack_require__( '/lib/xp/content')
-const context = __non_webpack_require__('/lib/xp/context')
 const cron = __non_webpack_require__('/lib/cron')
 const cache = __non_webpack_require__('/lib/ssb/cache')
 
@@ -72,6 +72,8 @@ if (! eventLogExists()) {
 } else {
   log.info(`EventLog Repo found.`)
 }
+
+setupStatRegRepo()
 
 log.info('Startup script complete')
 
