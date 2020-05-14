@@ -27,17 +27,20 @@ exports.preview = (req) => renderPart(req, {
   dark: false
 })
 
-function renderPart(req, config) {
+const renderPart = (req, config) => {
   const dividerColor = config.dividerColor
+
   let body
   if (dividerColor === 'dark' && darkBody) {
     body = darkBody
   } else if (dividerColor !== 'dark' && lightBody) {
     body = lightBody
   } else {
-    const divider = new React4xp('Divider').uniqueId()
-
-    setColor(dividerColor, divider)
+    const divider = new React4xp('Divider')
+      .setProps(
+        setColor(dividerColor)
+      )
+      .uniqueId()
 
     const preRenderedBody = render(view, {
       dividerId: divider.react4xpId
@@ -59,14 +62,15 @@ function renderPart(req, config) {
   }
 }
 
-function setColor(dividerColor, divider) {
+const setColor = (dividerColor) => {
   if (dividerColor === 'dark') {
-    return divider.setProps({
+    return {
       dark: true
-    })
+    }
   } else {
-    return divider.setProps({
+    return {
       light: true
-    })
+    }
   }
 }
+

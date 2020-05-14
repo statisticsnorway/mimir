@@ -9,14 +9,13 @@
     gtag('config', /*[[${GA_TRACKING_ID}]]*/);
   </script>
 
-  <meta charset="UTF-8" />
-  <meta http-equiv="Cache-control" content="NO-CACHE" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta data-th-if="${page.data.metaDescription}" name="description" data-th-content="${page.data.metaDescription}" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta data-th-if="${page.data.metaDescription}" name="description" data-th-content="${page.data.metaDescription}"/>
   <title data-th-text="${pageTitle}"></title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|Open+Sans:700|Roboto:700|Roboto+Condensed:700" />
-  <link rel="stylesheet" data-th-href="${stylesUrl}" />
-  <link rel="alternate" data-th-if="${alternateLanguageVersionUrl}" data-th-href="${alternateLanguageVersionUrl}" data-th-hreflang="${language.alternate}" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans%7COpen+Sans:700%7CRoboto:700%7CRoboto+Condensed:700"/>
+  <link rel="stylesheet" data-th-href="${stylesUrl}"/>
+  <link rel="alternate" data-th-if="${alternateLanguageVersionUrl}" data-th-href="${alternateLanguageVersionUrl}" data-th-hreflang="${language.alternate}"/>
 
 </head>
 <body class="xp-page" data-th-classappend="${bodyClasses}">
@@ -62,7 +61,7 @@
       data-th-each="region : ${configRegions}"
       data-th-remove="tag"
     >
-      <div data-th-if="${region.showGreyTriangle}" class="grey-triangle"/>
+      <div data-th-if="${region.showGreyTriangle}" class="grey-triangle"></div>
       <div
         data-th-classappend="${region.view == 'full' ? 'container-fluid p-0' : region.view == 'card' ? 'border-top-green container' : 'container'}"
       >
@@ -89,6 +88,6 @@
   <footer data-th-if="${footerBody}" id="footer" data-th-utext="${footerBody}" data-th-remove="tag">
   </footer>
 
-  <script type="text/javascript" data-th-src="${jsLibsUrl}"></script>
+  <script data-th-src="${jsLibsUrl}"></script>
 </body>
 </html>

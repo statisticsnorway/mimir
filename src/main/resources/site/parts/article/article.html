@@ -3,15 +3,18 @@
         <div class="col-12 col-md-8 offset-md-1 p-0" >
             <h1 data-th-text="${title}" />
             <p data-th-text="${ingress}" />
-            <div class="d-flex" data-th-if="${showPubDate}">
-                <p class="font-weight-bold mr-1" data-th-text="(${language.phrases.published} + ':')" />
-                <p data-th-text="${pubDate}" />
+            <div class="d-flex">
+                <p class="font-weight-bold mr-3" data-th-if="${serialNumber}" data-th-text="${serialNumber}" />
+                <div class="d-flex" data-th-if="${showPubDate}">
+                    <p class="font-weight-bold mr-1" data-th-text="(${language.phrases.published} + ':')" />
+                    <p data-th-text="${pubDate}" />
+                </div>
+                <div class="d-flex ml-3" data-th-if="${modifiedDate}">
+                    <p class="font-weight-bold mr-1" data-th-text="(${language.phrases.modified} + ':')" />
+                    <p data-th-text="${modifiedDate}" />
+                </div>
             </div>
-            <div class="d-flex" data-th-if="${modifiedDate}">
-                <p class="font-weight-bold mr-1" data-th-text="(${language.phrases.modified} + ':')" />
-                <p data-th-text="${modifiedDate}" />
-            </div>
-            <div class="d-flex" data-th-if="${authors}">
+            <div class="d-flex" data-th-if="${#lists.size(authors) >= 1}">
                 <p class="font-weight-bold mr-1" data-th-text="(${language.phrases.author} + ':')" />
                 <div data-th-each="author, i : ${authors}">
                     <p data-th-if="${author.name}">
