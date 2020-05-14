@@ -124,6 +124,7 @@ jar {
     serverWebpack.dependsOn += 'webpack_react4xp'
     serverWebpack.dependsOn += generateTypeScriptInterfaces
 
+    dependsOn += npmInstall
     dependsOn += clientJsWebpack
     dependsOn += clientTsWebpack
     dependsOn += stylesWebpack
