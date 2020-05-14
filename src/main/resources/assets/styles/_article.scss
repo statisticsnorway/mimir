@@ -21,6 +21,10 @@
         @include make-col-offset(1);
       }
     }
+
+    .mr-3 {
+      margin-bottom: 0;
+    }
   }
 
   .author-wrapper {
