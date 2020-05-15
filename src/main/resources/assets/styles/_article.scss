@@ -11,6 +11,7 @@
 
     h1 {
       margin-bottom: 20px;
+      padding: 0;
     }
 
     .ingress {
@@ -21,6 +22,7 @@
 
   .snr-dates-wrapper {
     @include make-row;
+    margin-bottom: 8px;
 
     & > * {
       @include make-col-ready();
