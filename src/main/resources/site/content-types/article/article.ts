@@ -43,7 +43,7 @@ export interface Article {
      */
     itemList?: string;
   }>;
-  
+
   /**
    * Løpenummer
    */
