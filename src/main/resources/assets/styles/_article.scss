@@ -7,6 +7,14 @@
     @include media-breakpoint-down(md) {
       padding: 0;
     }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .ingress {
+      font-size: 20px;
+    }
   }
 
   .snr-dates-wrapper {
@@ -22,8 +30,9 @@
       }
     }
 
-    .mr-3 {
+    p {
       margin-bottom: 0;
+      margin-right: 20px;
     }
   }
 
@@ -88,6 +97,10 @@
 
   blockquote  {
     padding-left: 40px !important;
+
+    @include media-breakpoint-down(md) {
+      padding-left: 0 !important;
+    }
   }
 
   .introTitle {
