@@ -75,7 +75,7 @@
                 </item-set>
             </items>
         </field-set>
-
+      
         <field-set>
             <label>Løpenummer</label>
             <items>
@@ -83,6 +83,32 @@
                     <label>Løpenummer</label>
                     <occurrences minimum="0" maximum="1"/>
                 </input>
+            </items>
+        </field-set>
+      
+        <field-set>
+            <label>Relaterte Faktasider</label>
+            <items>
+                <item-set name="relatedFactPagesItemSet">
+                    <label>Relaterte faktasider</label>
+                    <occurrences minimum="0" maximum="0"/>
+                    <items>
+                        <input type="TextLine" name="title">
+                            <label>Seksjons tittel</label>
+                            <occurrences minimum="0" maximum="1"/>
+                        </input>
+                        <input name="itemList" type="ContentSelector">
+                            <label>Faktaside liste</label>
+                            <occurrences minimum="0" maximum="1"/>
+                            <config>
+                                <allowPath>${site}</allowPath>
+                                <allowType>contentList</allowType>
+                                <treeMode>false</treeMode>
+                                <description>Henter alt innhold i listen og lager lenker av de.</description>
+                            </config>
+                        </input>
+                    </items>
+                </item-set>
             </items>
         </field-set>
     </form>
