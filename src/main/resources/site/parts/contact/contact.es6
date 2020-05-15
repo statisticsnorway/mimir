@@ -28,8 +28,9 @@ function renderPart(req) {
   const page = getContent()
   const contactIdList = []
 
-  //checks page content for contacts first, then part for contacts and creates array
-  const contactsList = page.data.contacts.contact ? util.data.forceArray(page.data.contacts.contact) : part.config.contacts ? util.data.forceArray(part.config.contacts) : []
+  // checks page content for contacts first, then part for contacts and creates array
+  const contactSource = page.data.contacts || part.config.contacts
+  const contactsList = contactSource ? util.data.forceArray(contactSource) : []
 
   contactsList.map((key) => {
     const contactSingle = content.get({
