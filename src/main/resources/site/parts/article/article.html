@@ -1,36 +1,44 @@
 <section class="xp-part article container-fluid">
     <div class="row">
-        <div class="col-12 offset-md-1 p-0" >
-            <p class="introTitle" data-th-if="${introTitle}" data-th-text="${introTitle}"/>
-            <h1 class="title" data-th-text="${title}" />
-            <p class="ingress col-12 col-md-8 p-0" data-th-text="${ingress}" />
-            <div class="d-flex">
-                <p class="font-weight-bold mr-3" data-th-if="${serialNumber}" data-th-text="${serialNumber}" />
-                <div class="d-flex" data-th-if="${showPubDate}">
-                    <p class="font-weight-bold mr-1" data-th-text="(${language.phrases.published} + ':')" />
-                    <p data-th-text="${pubDate}" />
-                </div>
-                <div class="d-flex ml-3" data-th-if="${modifiedDate}">
-                    <p class="font-weight-bold mr-1" data-th-text="(${language.phrases.modified} + ':')" />
-                    <p data-th-text="${modifiedDate}" />
+        <div class="col-12 col-md-8 offset-md-1 p-0">
+            <div class="title-ingress-wrapper">
+                <p class="introTitle" data-th-if="${introTitle}" data-th-text="${introTitle}"/>
+                <h1 data-th-text="${title}" />
+                <p data-th-text="${ingress}" />
+            </div>
+        </div>
+        <div class="col-12 p-0">
+            <div class="snr-dates-wrapper">
+                <div class="row p-0">
+                    <p class="font-weight-bold mr-3" data-th-if="${serialNumber}" data-th-text="${serialNumber}" />
+                    <p data-th-if="${showPubDate}" class="mr-3">
+                        <span class="font-weight-bold mr-1" data-th-text="(${language.phrases.published} + ':')" />
+                        <span data-th-text="${pubDate}" />
+                    </p>
+                    <p data-th-if="${modifiedDate}" class="mr-3">
+                        <span class="font-weight-bold mr-1" data-th-text="(${language.phrases.modified} + ':')" />
+                        <span data-th-text="${modifiedDate}" />
+                    </p>
                 </div>
             </div>
-            <div class="d-flex" data-th-if="${#lists.size(authors) >= 1}">
-                <p class="font-weight-bold mr-1" data-th-text="(${language.phrases.author} + ':')" />
-                <div data-th-each="author, i : ${authors}">
-                    <p data-th-if="${author.name}">
-                        <a data-th-href="@{'mailto:' + ${author.email}}" data-th-text="${author.name}" /><span data-th-text="!${i.last} ? ',&nbsp;' : ''" />
-                    </p>
+            <div class="author-wrapper">
+                <div class="row p-0" data-th-if="${#lists.size(authors) >= 1}">
+                    <p class="font-weight-bold mr-1" data-th-text="(${language.phrases.author} + ':')" />
+                    <div data-th-each="author, i : ${authors}">
+                        <p data-th-if="${author.name}">
+                            <a data-th-href="@{'mailto:' + ${author.email}}" data-th-text="${author.name}" /><span data-th-text="!${i.last} ? ',&nbsp;' : ''" />
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="col-12 p-0">
-            <div class="container-fluid">
-                <div class="article-body row" data-th-utext="${bodyText}" />
-                <div data-th-if="${#lists.size(externalLinkConfig)}">
-                    <h4>Andre nettsteder</h4>
-                    <div id="externalLinksId" class="external-links-component"></div>
-                </div>
+            <div class="article-body" data-th-utext="${bodyText}" />
+        </div>
+        <div class="col-12 p-0">
+            <div data-th-if="${#lists.size(externalLinkConfig)}">
+                <h4>Andre nettsteder</h4>
+                <div id="externalLinksId" class="external-links-component"></div>
             </div>
         </div>
     </div>
