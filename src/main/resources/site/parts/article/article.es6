@@ -63,7 +63,8 @@ function renderPart(req) {
     modifiedDate,
     authors,
     externalLinkConfig,
-    serialNumber: page.data.serialNumber
+    serialNumber: page.data.serialNumber,
+    introTitle: page.data.introTitle
   }
 
   let body = render(view, model)
