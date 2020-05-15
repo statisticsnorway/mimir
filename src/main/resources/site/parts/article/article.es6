@@ -69,6 +69,13 @@ function renderPart(req) {
   let body = render(view, model)
   let pageContributions
 
+  const divider = new React4xp('Divider').setId('dividerId')
+
+  body = divider.renderBody({
+    body
+  })
+  pageContributions = divider.renderPageContributions()
+
   if (externalLinkConfig && externalLinkConfig.length) {
     const externalLinksComponent = new React4xp('Links')
       .setProps({
@@ -86,7 +93,6 @@ function renderPart(req) {
     body = externalLinksComponent.renderBody({
       body
     })
-
     pageContributions = externalLinksComponent.renderPageContributions()
   }
 

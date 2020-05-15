@@ -72,6 +72,12 @@
     }
   }
 
+  .divider-wrapper {
+    & > * {
+      margin: 44px 0 60px 0;
+    }
+  }
+
   .external-links-component {
     @include make-row;
 
