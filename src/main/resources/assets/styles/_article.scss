@@ -2,10 +2,20 @@
   .title-ingress-wrapper {
     @include make-row;
 
+    display: block;
     margin-bottom: $spacer * 1;
 
     @include media-breakpoint-down(md) {
       padding: 0;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .ingress {
+      font-size: 20px;
+      padding-left: 0;
     }
   }
 
@@ -22,8 +32,9 @@
       }
     }
 
-    .mr-3 {
+    p {
       margin-bottom: 0;
+      margin-right: 20px;
     }
   }
 
@@ -88,5 +99,16 @@
 
   blockquote  {
     padding-left: 40px !important;
+
+    @include media-breakpoint-down(md) {
+      padding-left: 0 !important;
+    }
+  }
+
+  .introTitle {
+    @include roboto;
+    font-size: 20px;
+    line-height: 1.6;
+    margin-bottom: 4px;
   }
 }

@@ -43,11 +43,16 @@ export interface Article {
      */
     itemList?: string;
   }>;
-  
+
   /**
    * Løpenummer
    */
   serialNumber?: string;
+
+  /**
+   * Stikktittel
+   */
+  introTitle?: string;
 
   /**
    * Forfatter
