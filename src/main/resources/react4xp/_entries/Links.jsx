@@ -17,11 +17,7 @@ const Links = (props) => {
               linkType={link.linkType}
               negative={link.negative}
             >
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: link.children
-                }}
-              />
+              {link.children}
             </Link>
           </div>
         )
