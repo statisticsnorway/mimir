@@ -75,7 +75,7 @@ function renderPart(req) {
   // TODO: Change conditional statement when the 'Related Statistics' portion is implemented
   body = externalLinkConfig && externalLinkConfig.length ? divider.renderBody({
     body
-  }) : []
+  }) : body
   pageContributions = divider.renderPageContributions()
 
   if (externalLinkConfig && externalLinkConfig.length) {
