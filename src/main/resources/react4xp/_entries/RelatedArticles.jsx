@@ -23,16 +23,14 @@ class RelatedArticles extends React.Component {
     const {
       relatedArticles
     } = this.props
-    if (relatedArticles.length > 3) {
-      return 'd-flex'
-    }
-    if (relatedArticles.length > 4) {
-      return 'd-lg-flex'
-    }
     if (relatedArticles.length > 6) {
-      return 'd-xl-flex'
+      return '' // always display if it's more than 6
+    } else if (relatedArticles.length > 4) {
+      return 'd-xl-none'
+    } else if (relatedArticles.length > 3) {
+      return 'd-lg-none'
     }
-    return ''
+    return 'd-none' // always hide if there is less than 3
   }
 
   renderShowMoreButton() {
@@ -41,7 +39,7 @@ class RelatedArticles extends React.Component {
       showLess
     } = this.props
     return (
-      <div className={`row hide-show-btn d-none justify-content-center justify-content-lg-start ${this.getButtonBreakpoints()}`}>
+      <div className={`row hide-show-btn justify-content-center justify-content-lg-start ${this.getButtonBreakpoints()}`}>
         <Button className="col-auto" onClick={this.toggleBox}>{this.state.isHidden ? showAll : showLess}</Button>
       </div>
     )
