@@ -1,4 +1,4 @@
-import {getNode} from '../../lib/repo/common';
+import { getNode } from '../../lib/repo/common'
 
 const auth = __non_webpack_require__( '/lib/xp/auth')
 const context = __non_webpack_require__( '/lib/xp/context')
@@ -19,7 +19,9 @@ const i18n = __non_webpack_require__('/lib/xp/i18n')
 const {
   dateToFormat, dateToReadable
 } = __non_webpack_require__( '/lib/ssb/utils')
-const { EVENT_LOG_BRANCH, EVENT_LOG_REPO } = __non_webpack_require__( '/lib/repo/eventLog')
+const {
+  EVENT_LOG_BRANCH, EVENT_LOG_REPO
+} = __non_webpack_require__( '/lib/repo/eventLog')
 
 /**
  *
@@ -31,7 +33,9 @@ exports.get = function(req) {
   if (!req.params || !req.params.id) {
     return missingParameterResponse()
   }
-  logDataQueryEvent(req.params.id, {message:Events.GET_DATA_STARTED})
+  logDataQueryEvent(req.params.id, {
+    message: Events.GET_DATA_STARTED
+  })
   const updateResult = context.run(createContextOption('master'), () => {
     return getAllOrOneDataQuery(req.params.id).map((dataquery) => updateDataQuery(dataquery) )
   })
@@ -41,10 +45,12 @@ exports.get = function(req) {
 }
 
 function fontEndObject(result) {
-  const queryLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH,`/queries/${result.dataquery._id}`)
+  const queryLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${result.dataquery._id}`)
   return {
     id: result.dataquery._id,
-    message: i18n.localize({key: result.status}),
+    message: i18n.localize({
+      key: result.status
+    }),
     status: result.status,
     dataset: result.dataset ? {
       newDatasetData: result.newDatasetData ? result.newDatasetData : false,
@@ -53,7 +59,9 @@ function fontEndObject(result) {
     } : {},
     logData: {
       ...queryLogNode.data,
-      message: i18n.localize({key: queryLogNode.data.modifiedResult}),
+      message: i18n.localize({
+        key: queryLogNode.data.modifiedResult
+      }),
       modified: queryLogNode.data.modified,
       modifiedReadable: dateToReadable(queryLogNode.data.modifiedTs)
     }
@@ -71,7 +79,9 @@ exports.delete = (req) => {
     return missingParameterResponse()
   }
   const deleteResult = context.run(createContextOption('draft'), () => {
-    logDataQueryEvent(req.params.id, {message:Events.START_DELETE })
+    logDataQueryEvent(req.params.id, {
+      message: Events.START_DELETE
+    })
     return getAllOrOneDataSet(req.params.id).map((dataset) => {
       return {
         dataset,
@@ -82,12 +92,18 @@ exports.delete = (req) => {
     })
   })
 
-  if(deleteResult.length === 0) {
-    logDataQueryEvent(req.params.id, {message: Events.DELETE_FAILED, deleteResult})
+  if (deleteResult.length === 0) {
+    logDataQueryEvent(req.params.id, {
+      message: Events.DELETE_FAILED,
+      deleteResult
+    })
     return successResponse(deleteResult, undefined)
   }
 
-  logDataQueryEvent(req.params.id, {message:Events.DELETE_OK, deleteResult })
+  logDataQueryEvent(req.params.id, {
+    message: Events.DELETE_OK,
+    deleteResult
+  })
 
   const publishResult = content.publish({
     keys: deleteResult.map((result) => result.dataset._id),
@@ -96,18 +112,26 @@ exports.delete = (req) => {
   })
 
   publishResult.deletedContents.forEach((id) => {
-    logDataQueryEvent(id, {message:Events.DELETE_OK_PUBLISHED, deleteResult })
+    logDataQueryEvent(id, {
+      message: Events.DELETE_OK_PUBLISHED,
+      deleteResult
+    })
   })
 
   publishResult.failedContents.forEach((id) => {
-    logDataQueryEvent(id, {message:Events.DELETE_FAILED_PUBLISHED, deleteResult })
+    logDataQueryEvent(id, {
+      message: Events.DELETE_FAILED_PUBLISHED,
+      deleteResult
+    })
   })
 
   const updateResult = deleteResult.map( (result) => { // refreshResult
-    const queryLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH,`/queries/${result.dataset.data.dataquery}`)
+    const queryLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${result.dataset.data.dataquery}`)
     return {
       id: result.dataset.data.dataquery,
-      message: queryLogNode.data.modifiedResult ? i18n.localize({key: queryLogNode.data.modifiedResult}): undefined,
+      message: queryLogNode.data.modifiedResult ? i18n.localize({
+        key: queryLogNode.data.modifiedResult
+      }) : undefined,
       status: queryLogNode.data.modifiedResult,
       dataset: {
         newDatasetData: true,
@@ -116,7 +140,9 @@ exports.delete = (req) => {
       },
       logData: {
         ...queryLogNode.data,
-        message: i18n.localize({key: queryLogNode.data.modifiedResult}),
+        message: i18n.localize({
+          key: queryLogNode.data.modifiedResult
+        }),
         modified: dateToFormat(queryLogNode.modified),
         modifiedReadable: dateToReadable(queryLogNode.modified)
       }
@@ -203,7 +229,9 @@ function updateDataQuery(dataquery) {
 
   const data = getData(dataquery)
   if (!data) {
-    logDataQueryEvent(dataquery._id, {message:Events.FAILED_TO_GET_DATA} )
+    logDataQueryEvent(dataquery._id, {
+      message: Events.FAILED_TO_GET_DATA
+    } )
     return {
       dataquery,
       status: Events.FAILED_TO_GET_DATA
@@ -211,11 +239,13 @@ function updateDataQuery(dataquery) {
   }
 
   const refreshDatasetResult = refreshDatasetWithData(JSON.stringify(data), dataquery) // returns a dataset and status
-  logDataQueryEvent(dataquery._id, {message: refreshDatasetResult.status})
+  logDataQueryEvent(dataquery._id, {
+    message: refreshDatasetResult.status
+  })
   return {
     dataquery,
     dataset: refreshDatasetResult.dataset,
-    newDatasetData: refreshDatasetResult.newDatasetData? refreshDatasetResult.newDatasetData : false,
+    newDatasetData: refreshDatasetResult.newDatasetData ? refreshDatasetResult.newDatasetData : false,
     status: refreshDatasetResult.status // can be failed to fetch data or failed to
   }
 }

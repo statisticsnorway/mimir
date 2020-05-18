@@ -1,4 +1,6 @@
-const {getNode} = __non_webpack_require__( '../../../lib/repo/common');
+const {
+  getNode
+} = __non_webpack_require__( '../../../lib/repo/common')
 
 const {
   assetUrl,
@@ -20,7 +22,9 @@ const {
 const content = __non_webpack_require__( '/lib/xp/content')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const i18n = __non_webpack_require__('/lib/xp/i18n')
-const { EVENT_LOG_BRANCH, EVENT_LOG_REPO } = __non_webpack_require__( '/lib/repo/eventLog')
+const {
+  EVENT_LOG_BRANCH, EVENT_LOG_REPO
+} = __non_webpack_require__( '/lib/repo/eventLog')
 
 const view = resolve('./dashboard.html')
 
@@ -139,16 +143,18 @@ function getDataQueries(datasetMap) {
       format: dataquery.data.datasetFormat ? dataquery.data.datasetFormat._selected : undefined,
       dataset: {
         modified: hasData ? getUpdated(dataset) : undefined,
-        modifiedReadable: hasData ? getUpdatedReadable(dataset) : undefined,
+        modifiedReadable: hasData ? getUpdatedReadable(dataset) : undefined
       },
       hasData,
       isPublished: isPublished(dataquery),
-      logData: queryLogNode? {
+      logData: queryLogNode ? {
         ...queryLogNode.data,
-        message: i18n.localize({key: queryLogNode.data.modifiedResult}),
+        message: i18n.localize({
+          key: queryLogNode.data.modifiedResult
+        }),
         modified: queryLogNode.data.modified,
         modifiedReadable: dateToReadable(queryLogNode.data.modifiedTs)
-      }: undefined
+      } : undefined
     }
   })
 }

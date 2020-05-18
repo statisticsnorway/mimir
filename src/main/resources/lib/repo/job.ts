@@ -1,9 +1,13 @@
-import { RepoNode} from 'enonic-types/lib/node';
-import {createEventLog, EditorCallback, updateEventLog} from './eventLog';
-import {AuthLibrary, User} from 'enonic-types/lib/auth';
-const { modifyNode } = __non_webpack_require__( '/lib/repo/common');
+import { RepoNode } from 'enonic-types/lib/node'
+import { createEventLog, EditorCallback, updateEventLog } from './eventLog'
+import { AuthLibrary, User } from 'enonic-types/lib/auth'
+const {
+  modifyNode
+} = __non_webpack_require__( '/lib/repo/common')
 
-const {EVENT_LOG_REPO, EVENT_LOG_BRANCH} = __non_webpack_require__('/lib/repo/eventLog')
+const {
+  EVENT_LOG_REPO, EVENT_LOG_BRANCH
+} = __non_webpack_require__('/lib/repo/eventLog')
 const auth: AuthLibrary = __non_webpack_require__( '/lib/xp/auth')
 
 export enum JobStatus {
@@ -44,7 +48,7 @@ export function updateJobLog<T>(jobId: string, editor: EditorCallback<JobInfoNod
 
 
 export function completeJobLog(jobLogId: string, message: string, refreshDataResult: object ): JobInfoNode {
-  const now: Date = new Date();
+  const now: Date = new Date()
   return updateJobLog<JobInfoNode>(jobLogId, function(node: JobInfoNode): JobInfoNode {
     node.data = {
       ...node.data,

@@ -3,7 +3,7 @@ import { getNode, withConnection } from './common'
 import { EVENT_LOG_BRANCH, EVENT_LOG_REPO, createEventLog, EditorCallback, updateEventLog } from './eventLog'
 import { AuthLibrary, User } from 'enonic-types/lib/auth'
 import { HttpRequestParams, HttpResponse } from 'enonic-types/lib/http'
-import {TbmlData} from '../types/xmlParser';
+import { TbmlData } from '../types/xmlParser'
 const {
   dateToFormat
 } = __non_webpack_require__('/lib/ssb/utils')

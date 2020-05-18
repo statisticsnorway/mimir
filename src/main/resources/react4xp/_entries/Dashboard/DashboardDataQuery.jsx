@@ -25,7 +25,7 @@ class DashboardDataQuery extends React.Component {
         </td>
         <td>
           {this.props.message ? this.props.message : ''}<br/>
-          {this.props.modifiedReadable ? this.props.modifiedReadable: ''}<br/>
+          {this.props.modifiedReadable ? this.props.modifiedReadable : ''}<br/>
           {this.props.modified ? this.props.modified : ''}<br/>
           {this.props.by ? `av ${this.props.by}` : '' }
         </td>

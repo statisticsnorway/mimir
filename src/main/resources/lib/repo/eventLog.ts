@@ -1,5 +1,5 @@
 import { createNode, withConnection } from './common'
-import {NodeCreateParams, RepoNode} from 'enonic-types/lib/node'
+import { NodeCreateParams, RepoNode } from 'enonic-types/lib/node'
 import { repoExists, createRepo } from './repo'
 
 export const EVENT_LOG_REPO: string = 'no.ssb.eventlog'
