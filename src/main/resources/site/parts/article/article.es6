@@ -72,9 +72,10 @@ function renderPart(req) {
 
   const divider = new React4xp('Divider').setId('dividerId')
 
-  body = divider.renderBody({
+  // TODO: Change conditional statement when the 'Related Statistics' portion is implemented
+  body = externalLinkConfig && externalLinkConfig.length ? divider.renderBody({
     body
-  })
+  }) : []
   pageContributions = divider.renderPageContributions()
 
   if (externalLinkConfig && externalLinkConfig.length) {

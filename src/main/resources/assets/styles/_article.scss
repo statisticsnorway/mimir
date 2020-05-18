@@ -86,6 +86,8 @@
   }
 
   .divider-wrapper {
+    @include make-row;
+
     & > * {
       margin: 44px 0 60px 0;
     }
