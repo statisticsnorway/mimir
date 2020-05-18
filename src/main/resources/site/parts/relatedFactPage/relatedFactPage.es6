@@ -1,6 +1,12 @@
-const { getComponent, imageUrl, pageUrl } = __non_webpack_require__( '/lib/xp/portal')
-const { renderError } = __non_webpack_require__('/lib/error/error')
-const { render } = __non_webpack_require__('/lib/thymeleaf')
+const {
+  getComponent, getContent, imageUrl, pageUrl
+} = __non_webpack_require__( '/lib/xp/portal')
+const {
+  renderError
+} = __non_webpack_require__('/lib/error/error')
+const {
+  render
+} = __non_webpack_require__('/lib/thymeleaf')
 
 const content = __non_webpack_require__( '/lib/xp/content')
 const util = __non_webpack_require__( '/lib/util')
@@ -11,10 +17,11 @@ const view = resolve('./relatedFactPage.html')
 
 exports.get = function(req, portal) {
   try {
+    const page = getContent()
     const part = getComponent()
-    return renderPart(req, part.config.itemList)
+    return renderPart(req, part.config.itemList || page.data.relatedFactPagesItemSet.itemList)
   } catch (e) {
-   return renderError(req, 'd e no fejil i parten sjø', e)
+    return renderError(req, 'd e no fejil i parten sjø', e)
   }
 }
 
@@ -31,9 +38,10 @@ function renderPart(req, relatedId) {
     }
   }
 
+  const page = getContent()
   const part = getComponent()
   const relatedContent = content.get({
-        key: relatedId
+    key: relatedId
   })
   const showAll = i18nLib.localize({
     key: 'showAll'
@@ -43,7 +51,7 @@ function renderPart(req, relatedId) {
   })
   const relatedContentList = relatedContent.data.contentList
   const relatedContentIds = relatedContentList ? util.data.forceArray(relatedContentList) : []
-  const mainTitle = part.config.title
+  const mainTitle = part.config.title || page.data.relatedFactPagesItemSet.title
   const relatedContentLists = []
 
 
@@ -56,8 +64,13 @@ function renderPart(req, relatedId) {
       if (relatedRelatedContent) {
         const items = relatedRelatedContent.data.items ? util.data.forceArray(relatedRelatedContent.data.items) : []
         relatedContentLists.push({
-          link: pageUrl ({ id: relatedRelatedContent._id }),
-          image: imageUrl ({ id: relatedRelatedContent.x['com-enonic-app-metafields']['meta-data'].seoImage, scale: 'block(380, 400)' }),
+          link: pageUrl({
+            id: relatedRelatedContent._id
+          }),
+          image: imageUrl({
+            id: relatedRelatedContent.x['com-enonic-app-metafields']['meta-data'].seoImage,
+            scale: 'block(380, 400)'
+          }),
           type: part.config.type,
           title: relatedRelatedContent.displayName,
           items
@@ -84,9 +97,9 @@ function renderPart(req, relatedId) {
   }
 
   const relatedFactPage = new React4xp('site/parts/relatedFactPage/relatedFactPage')
-      .setProps(props)
-      .setId('relatedFactPage')
-      .uniqueId()
+    .setProps(props)
+    .setId('relatedFactPage')
+    .uniqueId()
 
   const body = render(view, {
     relatedId: relatedFactPage.react4xpId
@@ -98,6 +111,5 @@ function renderPart(req, relatedId) {
     }),
     pageContributions: relatedFactPage.renderPageContributions()
   }
-
 }
 

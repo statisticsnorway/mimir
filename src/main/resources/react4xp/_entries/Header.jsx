@@ -63,7 +63,7 @@ class Header extends React.Component {
           <Link
             tabIndex={activeMenuItem ? 0 : -1 }
             href={menuItem.path}
-            icon={ menuItem.icon ? <img src={menuItem.icon}></img> : undefined }>{menuItem.title}
+            icon={ menuItem.icon ? <img src={menuItem.icon} alt={menuItem.iconAltText}/> : undefined }>{menuItem.title}
           </Link>
         </li>)
     })
@@ -98,6 +98,7 @@ class Header extends React.Component {
 
           <div className={this.state.showMainMenuOnMobile ? 'show searchfield' : 'searchfield'}>
             <Input
+              id='search_ssb'
               ariaLabel={searchText}
               searchField
               submitCallback={this.goToSearchResultPage}

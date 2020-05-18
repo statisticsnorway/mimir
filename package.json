@@ -14,7 +14,8 @@
     "install:dev": "nsi",
     "install:prod": "npm install",
     "lint": "eslint --fix ./src --ext .es6 --ext .ts --ext .jsx",
-    "lint-dry": "eslint ./src --ext .es6 --ext .ts --ext .jsx"
+    "lint-dry": "eslint ./src --ext .es6 --ext .ts --ext .jsx",
+    "gradlew-dev-mode": "./gradlew clientJsWebpack clientTsWebpack stylesWebpack serverWebpack -t"
   },
   "repository": {
     "type": "git",
@@ -43,7 +44,7 @@
     "webpack-cli": "^3.3.10"
   },
   "dependencies": {
-    "@statisticsnorway/ssb-component-library": "^2.0.16",
+    "@statisticsnorway/ssb-component-library": "^2.0.21",
     "@types/react": "^16.9.17",
     "autoprefixer": "^9.7.3",
     "awesome-typescript-loader": "^5.2.1",

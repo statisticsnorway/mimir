@@ -1,45 +1,5 @@
 export interface SiteConfig {
   /**
-   * Topp lenker i meny
-   */
-  topLinks?: Array<{
-    /**
-     * Lenketittel
-     */
-    linkTitle: string;
-
-    /**
-     * Lenkemål
-     */
-    urlSrc?: {
-      /**
-       * Selected
-       */
-      _selected: string;
-
-      /**
-       * Url lenke
-       */
-      manual?: {
-        /**
-         * Kildelenke
-         */
-        url?: string;
-      };
-
-      /**
-       * Lenke til internt innhold
-       */
-      content?: {
-        /**
-         * Relatert innhold
-         */
-        contentId?: string;
-      };
-    };
-  }>;
-
-  /**
    * Kommunedata innhold fra api
    */
   municipalDataContentId?: string;
@@ -58,11 +18,6 @@ export interface SiteConfig {
    * Standard kommune for å vise i "preview" mode
    */
   defaultMunicipality: string;
-
-  /**
-   * Velg hvilken kommuner det gjelder her.
-   */
-  defaultMunicipality2?: string;
 
   /**
    * Kommunefakta instillinger
@@ -104,43 +59,13 @@ export interface SiteConfig {
     homePageId?: string;
 
     /**
-     * Meny
+     * Header
      */
-    menuContentId: string;
+    headerId?: string;
 
     /**
      * Footer
      */
     footerId?: string;
   }>;
-
-  /**
-   * Landingsside for søk
-   */
-  searchResultPage?: {
-    /**
-     * Selected
-     */
-    _selected: string;
-
-    /**
-     * Url lenke
-     */
-    manual?: {
-      /**
-       * Kildelenke
-       */
-      url?: string;
-    };
-
-    /**
-     * Lenke til internt innhold
-     */
-    content?: {
-      /**
-       * Relatert innhold
-       */
-      contentId?: string;
-    };
-  };
 }
