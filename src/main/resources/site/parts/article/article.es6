@@ -39,7 +39,7 @@ function renderPart(req) {
   if (showModifiedDate) {
     modifiedDate = moment(showModifiedDate.dateOption.modifiedDate).format('DD. MMMM YYYY')
     if (showModifiedDate.dateOption.showModifiedTime) {
-      modifiedDate = moment(page.data.showModifiedDate.dateOption.modifiedDate).format('DD. MMMM YYYY h:mm')
+      modifiedDate = moment(page.data.showModifiedDate.dateOption.modifiedDate).format('DD. MMMM YYYY hh:mm')
     }
   }
 
