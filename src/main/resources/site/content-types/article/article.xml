@@ -52,7 +52,7 @@
             <label>Artikkeltekst</label>
             <config>
                 <include>Blockquote</include>
-                <allowHeadings>h3 h4 h5</allowHeadings>
+                <allowHeadings>h2 h3 h4 h5</allowHeadings>
             </config>
         </input>
 
