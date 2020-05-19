@@ -3,6 +3,7 @@ import { PortalLibrary } from 'enonic-types/lib/portal'
 import { MenuItem } from '../../site/content-types/menuItem/menuItem'
 import { SiteConfig } from '../../site/site-config'
 import { Footer } from '../../site/content-types/footer/footer'
+import { Header } from '../../site/content-types/header/header';
 
 const {
   getContent, imageUrl, pageUrl
@@ -13,7 +14,6 @@ const {
 const {
   getImageCaption
 } = __non_webpack_require__('/lib/ssb/utils')
-
 
 export function createMenuTree(menuItemId: string): Array<MenuItemParsed> {
   const menuContent: Content<MenuItem> | null = get({
@@ -60,7 +60,7 @@ function createMenuBranch(menuItem: Content<MenuItem>): MenuItemParsed {
   }
 }
 
-type TopLinks = SiteConfig['topLinks']
+type TopLinks = Header['globalLinks']
 export function parseTopLinks(topLinks: TopLinks): Array<Link> | undefined {
   return topLinks ? topLinks.map((link) => ({
     title: link.linkTitle,

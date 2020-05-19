@@ -50,6 +50,16 @@ export interface Article {
   }>;
 
   /**
+   * Løpenummer
+   */
+  serialNumber?: string;
+
+  /**
+   * Stikktittel
+   */
+  introTitle?: string;
+
+  /**
    * Forfatter
    */
   authorItemSet?: Array<{

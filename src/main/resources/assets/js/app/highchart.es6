@@ -6,12 +6,14 @@ import highchartsModuleData from 'highcharts/modules/data'
 import highchartsModuleAccessibility from 'highcharts/modules/accessibility'
 import highchartsModuleExporting from 'highcharts/modules/exporting'
 import highchartsModuleNoDataToDisplay from 'highcharts/modules/no-data-to-display'
+import highchartsModuleExportData from 'highcharts/modules/export-data'
 
 // Initialize exporting module.
 highchartsModuleData(Highcharts)
 highchartsModuleAccessibility(Highcharts)
 highchartsModuleExporting(Highcharts)
 highchartsModuleNoDataToDisplay(Highcharts)
+highchartsModuleExportData(Highcharts)
 
 const createSetOptions = {
   lang: {
