@@ -31,10 +31,10 @@ function renderPart(req) {
   const part = getComponent() || req
   const page = getContent()
 
-  const statRegContacts = getContactsFromRepo();
+  const statRegContacts = getContactsFromRepo()
 
   // checks page content for contacts first, then part for contacts and creates array
-  const contactIds = ensureArray(part.config.contacts || page.data.contacts)
+  const contactIds = ensureArray(page.data.contacts || part.config.contacts)
   const selectedContacts = contactIds.reduce((acc, contactId) => {
     const found = find((contact) => `${contact.id}` === `${contactId}`)(statRegContacts)
     return found ? acc.concat(found) : acc

@@ -5,7 +5,7 @@ export interface ContactPartConfig {
   label?: string;
 
   /**
-   * Kontakt
+   * Kontakter
    */
-  contacts: Array<string>;
+  contacts?: string;
 }

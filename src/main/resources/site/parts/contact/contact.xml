@@ -9,13 +9,12 @@
         <max-length>30</max-length>
       </config>
     </input>
-    <input name="contacts" type="ContentSelector">
-      <label>Kontakt</label>
-      <occurrences minimum="1" maximum="0"/>
-      <config>
-        <allowPath>${site}</allowPath>
-        <allowType>contact</allowType>
-      </config>
+    <input name="contacts" type="CustomSelector">
+        <occurrences minimum="0" maximum="0" />
+        <label>Kontakter</label>
+        <config>
+          <service>contacts</service>
+        </config>
     </input>
   </form>
 </part>
