@@ -30,7 +30,7 @@ function renderPart(req) {
   moment.locale(page.language ? page.language : 'nb')
 
   const bodyText = processHtml({
-    value: page.data.articleText
+    value: page.data.articleText ? page.data.articleText.replace(/.&nbsp;/g, ' ') : undefined
   })
 
   const pubDate = moment(page.publish.from).format('DD. MMMM YYYY')
@@ -72,11 +72,9 @@ function renderPart(req) {
 
   const divider = new React4xp('Divider').setId('dividerId')
 
-  // TODO: Change conditional statement when the 'Related Statistics' portion is implemented
-  body = externalLinkConfig && externalLinkConfig.length ? divider.renderBody({
+  body = divider.renderBody({
     body
-  }) : body
-  pageContributions = divider.renderPageContributions()
+  })
 
   if (externalLinkConfig && externalLinkConfig.length) {
     const externalLinksComponent = new React4xp('Links')

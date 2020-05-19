@@ -97,20 +97,24 @@
     @include make-row;
 
     & > * {
-      margin: 44px 0 60px 0;
+      margin: 44px;
     }
   }
 
-  .external-links-component {
-    @include make-row;
+  .external-links-wrapper {
+    margin-top: 40px;
 
-    & > * {
-      @include make-col-ready();
-      @include make-col(4);
-      margin-bottom: $spacer * 1;
+    .external-links-component {
+      @include make-row;
 
-      @include media-breakpoint-down(md) {
-        @include make-col(12);
+      & > * {
+        @include make-col-ready();
+        @include make-col(4);
+        margin-bottom: $spacer * 1;
+
+        @include media-breakpoint-down(md) {
+          @include make-col(12);
+        }
       }
     }
   }
