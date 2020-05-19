@@ -30,9 +30,17 @@ Update one:
 Returns:
 ```javascript
 {
-    success: true || false,
+    status: 200,
     message: 'success or failure info',
-    updates: [ 'list', 'of', 'updated', 'dataquery', 'ids' ]
+    updates: [{
+      id: dataqueryId,
+      status: STATUS_MESSAGE,
+      message: 'human readable message',
+      modified: timestamp, 
+      modifiedHumanReadable: '02 mai 2020 12:13', 
+      dataset: { ... datasetinfo ... },
+      logInfo: { ... loginfo ... }     
+    }]
 }
 ```
 
@@ -52,9 +60,17 @@ Delete one dataset:
 Returns:
 ```javascript
 {
-    success: true || false,
-    message: 'success or failure info',
-    updates: [ 'list', 'of', 'dataquery', 'ids', 'with', 'deleted', 'datasets' ]
+    status: 200,
+        message: 'success or failure info',
+        updates: [{
+          id: dataqueryId,
+          status: STATUS_MESSAGE,
+          message: 'human readable message',
+          modified: timestamp, 
+          modifiedHumanReadable: '02 mai 2020 12:13', 
+          dataset: { ... datasetinfo ... },
+          logInfo: { ... loginfo ... }     
+        }]
 }
 ```
  

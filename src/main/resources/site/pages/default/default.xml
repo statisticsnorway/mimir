@@ -13,23 +13,23 @@
     </input>
   	<input name="bkg_color" type="RadioButton">
   		<label>Velg bakgrunnsfarge</label>
-  		<occurrences minimum="1" maximum="1"/> 
+  		<occurrences minimum="1" maximum="1"/>
   		<config>
-    		<option value="white">Hvit</option> 
+    		<option value="white">Hvit</option>
     		<option value="grey">Grå</option>
       </config>
-      <default>white</default> 
+      <default>white</default>
     </input>
     <item-set name="regions">
-      <label>Region</label> 
-      <occurrences minimum="1" maximum="15"/> 
+      <label>Region</label>
+      <occurrences minimum="1" maximum="15"/>
       <items>
         <mixin name="title"/>
         <input name="view" type="RadioButton">
           <label>Visningstype</label>
-          <occurrences minimum="1" maximum="1"/> 
+          <occurrences minimum="1" maximum="1"/>
           <config>
-            <option value="full">Full bredde</option> 
+            <option value="full">Full bredde</option>
             <option value="card">Seksjon med grønn stripe</option>
             <option value="plainSection">Seksjon</option>
           </config>
@@ -38,26 +38,26 @@
           <label>Region</label>
           <occurrences minimum="1" maximum="1"/>
           <config>
-            <option value="Rad_A">Rad A</option> 
-            <option value="Rad_B">Rad B</option> 
-            <option value="Rad_C">Rad C</option> 
-            <option value="Rad_D">Rad D</option> 
-            <option value="Rad_E">Rad E</option> 
-            <option value="Rad_F">Rad F</option> 
-            <option value="Rad_G">Rad G</option> 
-            <option value="Rad_H">Rad H</option> 
-            <option value="Rad_I">Rad I</option> 
-            <option value="Rad_J">Rad J</option> 
-            <option value="Rad_K">Rad K</option> 
-            <option value="Rad_L">Rad L</option> 
-            <option value="Rad_M">Rad M</option> 
-            <option value="Rad_N">Rad N</option> 
-            <option value="Rad_O">Rad O</option> 
-            <option value="Rad_P">Rad P</option> 
-            <option value="Rad_Q">Rad Q</option> 
-            <option value="Rad_R">Rad R</option> 
-            <option value="Rad_S">Rad S</option> 
-            <option value="Rad_T">Rad T</option> 
+            <option value="Rad_A">Rad A</option>
+            <option value="Rad_B">Rad B</option>
+            <option value="Rad_C">Rad C</option>
+            <option value="Rad_D">Rad D</option>
+            <option value="Rad_E">Rad E</option>
+            <option value="Rad_F">Rad F</option>
+            <option value="Rad_G">Rad G</option>
+            <option value="Rad_H">Rad H</option>
+            <option value="Rad_I">Rad I</option>
+            <option value="Rad_J">Rad J</option>
+            <option value="Rad_K">Rad K</option>
+            <option value="Rad_L">Rad L</option>
+            <option value="Rad_M">Rad M</option>
+            <option value="Rad_N">Rad N</option>
+            <option value="Rad_O">Rad O</option>
+            <option value="Rad_P">Rad P</option>
+            <option value="Rad_Q">Rad Q</option>
+            <option value="Rad_R">Rad R</option>
+            <option value="Rad_S">Rad S</option>
+            <option value="Rad_T">Rad T</option>
           </config>
         </input>
         <input name="showGreyTriangle" type="CheckBox">
