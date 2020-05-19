@@ -191,7 +191,7 @@ function missingParameterResponse() {
  * @return {string|string|"NOT_TRANSLATED"}
  */
 function createMessage(updateResult) {
-  if ( updateResult.length === 0) {
+  if ( Array.isArray(updateResult) && (updateResult.length === 0)) {
     return 'Error'
   }
 
