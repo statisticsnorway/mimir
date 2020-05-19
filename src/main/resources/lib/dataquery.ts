@@ -9,6 +9,7 @@ import { CommonLibrary } from './types/common'
 import { Events, logDataQueryEvent } from './repo/query'
 import { User } from 'enonic-types/lib/auth'
 
+const {getDataSetWithDataQueryId} = __non_webpack_require__('/lib/ssb/dataset')
 const http: HttpLibrary = __non_webpack_require__('/lib/http-client')
 const context: ContextLibrary = __non_webpack_require__('/lib/xp/context')
 const content: ContentLibrary = __non_webpack_require__('/lib/xp/content')
@@ -33,7 +34,7 @@ const draft: RunContext = { // Draft context (XP)
 }
 
 export function get(url: string, json: DataqueryRequestData | undefined,
-  selection: SelectionFilter = defaultSelectionFilter, queryId?: string, user?: User ): object | null {
+  selection: SelectionFilter = defaultSelectionFilter, queryId?: string ): object | null {
   if (json && json.query) {
     for (const query of json.query) {
       if (query.code === 'KOKkommuneregion0000' || query.code === 'Region') {
@@ -56,8 +57,8 @@ export function get(url: string, json: DataqueryRequestData | undefined,
   }
 
   const result: HttpResponse = http.request(requestParams)
-  if (queryId && user) {
-    logDataQueryEvent(queryId, user, {
+  if (queryId) {
+    logDataQueryEvent(queryId, {
       message: Events.REQUESTING_DATA,
       response: result,
       request: requestParams
@@ -78,42 +79,49 @@ export interface RefreshDatasetResult {
   dataset?: Content<Dataset>;
   status: string;
   message?: string;
+  newDatasetData?: boolean;
 }
 
 export function refreshDataset(dataquery: Content<Dataquery>): Content<Dataset> | RefreshDatasetResult {
+  logDataQueryEvent(dataquery._id, {message: Events.GET_DATA_STARTED})
   const rawData: object | null = getData(dataquery)
-  if ( rawData) {
-    return refreshDatasetWithData(JSON.stringify(rawData), dataquery)
+  if (rawData) {
+    const refreshDatasetResult: RefreshDatasetResult = refreshDatasetWithData(JSON.stringify(rawData), dataquery)
+    logDataQueryEvent(dataquery._id, {message: refreshDatasetResult.status})
+    return refreshDatasetResult
   } else {
-    return {
+    const refreshDatasetResult: RefreshDatasetResult = {
       dataqueryId: dataquery._id,
       status: Events.FAILED_TO_REFRESH_DATASET
     }
+    logDataQueryEvent(dataquery._id, {message: refreshDatasetResult.status})
+    return refreshDatasetResult
   }
 }
 
 export function refreshDatasetWithData(rawData: string, dataquery: Content<Dataquery>): RefreshDatasetResult {
-  const dataset: Content<Dataset>| undefined = getDataset(dataquery)
-  if (!dataset) {
+  const dataset: QueryResponse<Dataset> | undefined = getDataSetWithDataQueryId(dataquery._id)
+  if (!dataset ||  (dataset && dataset.total === 0) ) {
     return createDataset(rawData, dataquery)
   }
-  if (isDataNew(rawData, dataset)) {
-    updateDataset(rawData, dataset, dataquery)
+  if (dataset && isDataNew(rawData, dataset.hits[0])) {
+    updateDataset(rawData, dataset.hits[0], dataquery)
     return {
+      newDatasetData: true,
       dataqueryId: dataquery._id,
-      dataset,
-      status: Events.COMPLETE
+      dataset: dataset.hits[0],
+      status: Events.GET_DATA_COMPLETE
     }
   } else {
     return {
       dataqueryId: dataquery._id,
-      dataset,
+      dataset:dataset.hits[0],
       status: Events.NO_NEW_DATA
     }
   }
 }
 
-export function getData(dataquery: Content<Dataquery>, user?: User): object | null {
+export function getData(dataquery: Content<Dataquery>): object | null {
   if (dataquery.data.table) {
     // TODO option-set is not parsed correctly by enonic-ts-codegen, update lib later and remove PlaceholderData interface
     const datasetFormat: Dataquery['datasetFormat'] = dataquery.data.datasetFormat
@@ -131,6 +139,7 @@ export function getData(dataquery: Content<Dataquery>, user?: User): object | nu
     }
     return data
   }
+  log.error(`Failed to find data table from dataquery`)
   return null
 }
 
@@ -192,10 +201,10 @@ function createDataset(data: string, dataquery: Content<Dataquery>): RefreshData
           json: data
         }
       }) as Content<Dataset>
-
       const publishResult: PublishResponse = publishDatasets([dataset._id])
 
       return {
+        newDatasetData: true,
         dataqueryId: dataquery._id,
         dataset,
         status: Events.DATASET_PUBLISHED

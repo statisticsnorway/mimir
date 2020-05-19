@@ -38,6 +38,7 @@ exports.get = function(req) {
     logDataQueryEvent(req.params.id, user, {
       message: Events.STARTED
     })
+    
     return getAllOrOneDataQuery(req.params.id.map((dataquery) =>
       updateDataQuery(dataquery, user)))
   })
@@ -66,7 +67,32 @@ exports.get = function(req) {
     }
   })
 
+  const parsedResult = updateResult.map(fontEndObject)
   return successResponse(parsedResult, undefined)
+}
+
+function fontEndObject(result) {
+  const queryLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${result.dataquery._id}`)
+  return {
+    id: result.dataquery._id,
+    message: i18n.localize({
+      key: result.status
+    }),
+    status: result.status,
+    dataset: result.dataset ? {
+      newDatasetData: result.newDatasetData ? result.newDatasetData : false,
+      modified: dateToFormat(result.dataset.modifiedTime),
+      modifiedReadable: dateToReadable(result.dataset.modifiedTime)
+    } : {},
+    logData: {
+      ...queryLogNode.data,
+      message: i18n.localize({
+        key: queryLogNode.data.modifiedResult
+      }),
+      modified: queryLogNode.data.modified,
+      modifiedReadable: dateToReadable(queryLogNode.data.modifiedTs)
+    }
+  }
 }
 
 /**
@@ -79,7 +105,6 @@ exports.delete = (req) => {
   if (!req.params || !req.params.id) {
     return missingParameterResponse()
   }
-  const user = auth.getUser()
   const deleteResult = context.run(createContextOption('draft'), () => {
     logDataQueryEvent(req.params.id, user, {
       message: Events.START_DELETE
@@ -136,7 +161,7 @@ exports.delete = (req) => {
       }) : undefined,
       status: queryLogNode.data.modifiedResult,
       dataset: {
-        isDeleted: true,
+        newDatasetData: true,
         modified: '',
         modifiedReadable: ''
       },
@@ -193,6 +218,10 @@ function missingParameterResponse() {
  * @return {string|string|"NOT_TRANSLATED"}
  */
 function createMessage(updateResult) {
+  if ( Array.isArray(updateResult) && (updateResult.length === 0)) {
+    return 'Error'
+  }
+
   if (updateResult.length === 1) {
     return i18n.localize({
       key: updateResult[0].status
@@ -200,7 +229,7 @@ function createMessage(updateResult) {
   }
 
   return `Updated/created: ${
-    updateResult.filter( (result) => result.status === Events.COMPLETE).length
+    updateResult.filter( (result) => result.status === Events.GET_DATA_COMPLETE).length
   } - Ignored: ${
     updateResult.filter( (result) => result.status === Events.NO_NEW_DATA).length
   } - Failed:  ${
@@ -215,11 +244,10 @@ function createMessage(updateResult) {
 /**
  *
  * @param {object } dataquery
- * @param {object } user
  * @return {{dataquery: *, message: *}|{refreshResult: *, message: *}}
  */
-function updateDataQuery(dataquery, user) {
-  if (!dataquery) {
+function updateDataQuery(dataquery) {
+  if (!dataquery || dataquery.message === Events.FAILED_TO_FIND_DATAQUERY) {
     return {
       dataquery,
       status: Events.FAILED_TO_FIND_DATAQUERY
@@ -243,6 +271,8 @@ function updateDataQuery(dataquery, user) {
   })
   return {
     dataquery,
+    dataset: refreshDatasetResult.dataset,
+    newDatasetData: refreshDatasetResult.newDatasetData ? refreshDatasetResult.newDatasetData : false,
     status: refreshDatasetResult.status // can be failed to fetch data or failed to
   }
 }

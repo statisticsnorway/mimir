@@ -132,6 +132,7 @@ class Dashboard extends React.Component {
       }
     })
       .catch((e) => {
+        console.log(e)
         this.updateDataQueries(e.response.data.updates)
         this.showError(e.response.data.message)
       })
@@ -153,7 +154,13 @@ class Dashboard extends React.Component {
         .map((updatedQuery) => {
           return {
             ...dataQuery,
-            ...updatedQuery
+            ...updatedQuery,
+            dataset: {
+              modifiedReadable: updatedQuery.dataset.newDatasetData ? updatedQuery.dataset.modifiedReadable :
+                dataQuery.dataset.modifiedReadable,
+              modified: updatedQuery.dataset.newDatasetData ? updatedQuery.dataset.modified :
+                dataQuery.dataset.modified
+            }
           }
         })
       if (updated.length > 0) {
@@ -187,7 +194,7 @@ class Dashboard extends React.Component {
           modified={query.logData && query.logData.modified ? query.logData.modified : undefined}
           modifiedReadable={query.logData && query.logData.modifiedReadable ? query.logData.modifiedReadable : undefined}
           message={query.logData && query.logData.message ? query.logData.message : undefined}
-          by={query.logData && query.logData.by.login? query.logData.by.login : undefined }
+          by={query.logData && query.logData.by.login ? query.logData.by.login : undefined }
         />
       )
     })
@@ -249,7 +256,7 @@ class Dashboard extends React.Component {
             </div>
           </Col>
         </Row>
-        {this.renderFooter()}
+
         <Alert variant="danger"
           show={this.state.showErrorAlert}
           onClose={() => this.setState({
