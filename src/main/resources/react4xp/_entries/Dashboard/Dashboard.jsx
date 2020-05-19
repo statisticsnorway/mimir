@@ -8,6 +8,11 @@ import Row from 'react-bootstrap/Row'
 import Table from 'react-bootstrap/Table'
 import DashboardDataQuery from './DashboardDataQuery'
 import axios from 'axios'
+import { groupBy } from 'ramda'
+
+const byType = groupBy((dataQuery) => {
+  return dataQuery.parentType
+})
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -68,7 +73,7 @@ class Dashboard extends React.Component {
       dataQueries: this.state.dataQueries.map( (query) => {
         if (query.id === dataQueryId) {
           query.loading = false,
-            query.deleting = false
+          query.deleting = false
         }
         return query
       })
@@ -119,7 +124,7 @@ class Dashboard extends React.Component {
 
   resultHandler(p, id) {
     return p.then((response) => {
-      if (response.data.success) {
+      if (response.status === 200) {
         this.updateDataQueries(response.data.updates)
         this.showSuccess(response.data.message)
       } else {
@@ -127,10 +132,12 @@ class Dashboard extends React.Component {
       }
     })
       .catch((e) => {
+        console.log(e)
+        this.updateDataQueries(e.response.data.updates)
         this.showError(e.response.data.message)
       })
       .finally(() => {
-        if(id !== '*') {
+        if (id !== '*') {
           this.stopLoadingIndicators(id)
         } else {
           this.setState({
@@ -144,12 +151,18 @@ class Dashboard extends React.Component {
   updateDataQueries(updatedDataQueries) {
     const updatedSet = this.state.dataQueries.map((dataQuery) => {
       const updated = updatedDataQueries.filter( (updatedQuery) => updatedQuery.id === dataQuery.id)
-        .map((updatedQuery) => ({
-          ...dataQuery,
-          ...updatedQuery,
-          loading: false,
-          deleting: false
-        }))
+        .map((updatedQuery) => {
+          return {
+            ...dataQuery,
+            ...updatedQuery,
+            dataset: {
+              modifiedReadable: updatedQuery.dataset.newDatasetData ? updatedQuery.dataset.modifiedReadable :
+                dataQuery.dataset.modifiedReadable,
+              modified: updatedQuery.dataset.newDatasetData ? updatedQuery.dataset.modified :
+                dataQuery.dataset.modified
+            }
+          }
+        })
       if (updated.length > 0) {
         return updated[0]
       } else {
@@ -162,58 +175,62 @@ class Dashboard extends React.Component {
   }
 
 
-  renderDataQueries() {
-    return this.state.dataQueries.map( (query) => {
+  renderDataQueries(queries) {
+    return queries.map( (query) => {
       return (
         <DashboardDataQuery key={query.id}
-                            id={query.id}
-                            displayName={query.displayName}
-                            updated={query.updated}
-                            updatedHumanReadable={query.updatedHumanReadable}
-                            hasData={query.hasData}
-                            dashboardService={this.props.dashboardService}
-                            deleteDataset={(id) => this.deleteDataset(id)}
-                            getDataset={(id) => this.getDataset(id)}
-                            loading={query.loading}
-                            deleting={query.deleting}
+          id={query.id}
+          displayName={query.displayName}
+          format={query.format}
+          isPublished={query.isPublished ? query.isPublished : undefined}
+          datasetModified={query.dataset.modified}
+          datasetModifiedReadable={query.dataset.modifiedReadable}
+          hasData={query.hasData}
+          dashboardService={this.props.dashboardService}
+          deleteDataset={(id) => this.deleteDataset(id)}
+          getDataset={(id) => this.getDataset(id)}
+          loading={query.loading}
+          deleting={query.deleting}
+          modified={query.logData && query.logData.modified ? query.logData.modified : undefined}
+          modifiedReadable={query.logData && query.logData.modifiedReadable ? query.logData.modifiedReadable : undefined}
+          message={query.logData && query.logData.message ? query.logData.message : undefined}
+          by={query.logData && query.logData.by.login ? query.logData.by.login : undefined }
         />
       )
     })
   }
 
-  renderTable() {
+  renderTable(queries) {
     return (
       <Table bordered striped>
         <thead>
-        <tr>
-          <th className="roboto-bold">Spørring</th>
-          <th className="roboto-bold">Sist oppdatert</th>
-          <th></th>
-          <th></th>
-        </tr>
+          <tr>
+            <th className="roboto-bold">Spørring</th>
+            <th className="roboto-bold">Sist oppdatert</th>
+            <th className="roboto-bold">Siste aktivitet</th>
+            <th></th>
+          </tr>
         </thead>
         <tbody>
-        {this.renderDataQueries()}
+          {this.renderDataQueries(queries)}
         </tbody>
       </Table>
     )
   }
 
-  renderAccordians() {
-    const {
-      header
-    } = this.props
+  renderAccordians(header, queries) {
     return (
       <Accordion header={header}
-                 className="mx-0 mt-4"
-                 openByDefault
+        className="mx-0"
+        openByDefault
       >
-        {this.renderTable()}
+        {this.renderTable(queries)}
       </Accordion>
     )
   }
 
   render() {
+    const groupedQueries = byType(this.state.dataQueries)
     return (
       <section className="xp-part part-dashboard">
         <Row>
@@ -222,24 +239,41 @@ class Dashboard extends React.Component {
               <h2 className="mb-3">
                 {`Spørringer mot statistikkbank og tabellbygger (${this.state.dataQueries ? this.state.dataQueries.length : '0'} stk)`}
               </h2>
-              {this.renderAccordians()}
+              {
+                groupedQueries.factPage &&
+                this.renderAccordians(`Spørringer fra Faktasider (${groupedQueries.factPage.length})`, groupedQueries.factPage)
+              }
+
+              {
+                groupedQueries.municipality &&
+                this.renderAccordians(`Spørringer fra Kommunefakta (${groupedQueries.municipality.length})`, groupedQueries.municipality)
+              }
+
+              {
+                groupedQueries.default &&
+                this.renderAccordians(`Andre (${groupedQueries.default.length})`, groupedQueries.default)
+              }
             </div>
           </Col>
         </Row>
-        {this.renderFooter()}
+
         <Alert variant="danger"
-               show={this.state.showErrorAlert}
-               onClose={() => this.setState({showErrorAlert: false})}
-               dismissible
-               role="alert">
+          show={this.state.showErrorAlert}
+          onClose={() => this.setState({
+            showErrorAlert: false
+          })}
+          dismissible
+          role="alert">
           <p>{this.state.errorMsg}</p>
         </Alert>
 
         <Alert variant="success"
-               show={this.state.showSuccessAlert}
-               onClose={() => this.setState({showSuccessAlert: false})}
-               dismissible
-               role="alert">
+          show={this.state.showSuccessAlert}
+          onClose={() => this.setState({
+            showSuccessAlert: false
+          })}
+          dismissible
+          role="alert">
           <p>{this.state.successMsg}</p>
         </Alert>
       </section>
@@ -274,7 +308,7 @@ class Dashboard extends React.Component {
           onClick={() => this.setState({
             showDeleteAllDialog: true
           })}>
-          {this.state.deletingAll ?  <span className="spinner-border spinner-border-sm mr-2"></span> : ''}
+          {this.state.deletingAll ? <span className="spinner-border spinner-border-sm mr-2"></span> : ''}
           Slett alle dataset
         </SSBButton>
         {this.renderDialogBox({
@@ -297,7 +331,7 @@ class Dashboard extends React.Component {
           onClick={() => this.setState({
             showDownloadAllDialog: true
           })}>
-          {this.state.downloadingAll ?  <span className="spinner-border spinner-border-sm mr-2"></span>: ''}
+          {this.state.downloadingAll ? <span className="spinner-border spinner-border-sm mr-2"></span> : ''}
           Oppdater alle dataset
         </SSBButton>
         {this.renderDialogBox({
@@ -321,7 +355,6 @@ class Dashboard extends React.Component {
       </nav>
     )
   }
-
 }
 
 
@@ -329,19 +362,34 @@ Dashboard.propTypes = {
   header: PropTypes.string,
   dashboardService: PropTypes.string,
   dataQueries: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      displayName: PropTypes.string,
-      class: PropTypes.string,
-      updated: PropTypes.string,
-      updatedHumanReadable: PropTypes.string,
-      hasData: PropTypes.boolean,
-      showSuccess: PropTypes.boolean,
-      showError: PropTypes.boolean,
-      successMessage: PropTypes.string,
-      errorMessage: PropTypes.string
-    })
-  )
+    PropTypes.shape(dataqueryShape)
+  ),
+  groupedQueries: PropTypes.shape({
+    default: PropTypes.arrayOf(PropTypes.shape(dataqueryShape)),
+    factPage: PropTypes.arrayOf(PropTypes.shape(dataqueryShape)),
+    municipality: PropTypes.arrayOf(PropTypes.shape(dataqueryShape))
+  })
 }
+
+const dataqueryShape = PropTypes.shape({
+  id: PropTypes.string,
+  displayName: PropTypes.string,
+  path: PropTypes.string,
+  parentType: PropTypes.string,
+  format: PropTypes.string,
+  updated: PropTypes.string,
+  updatedHumanReadable: PropTypes.string,
+  hasData: PropTypes.boolean,
+  showSuccess: PropTypes.boolean,
+  showError: PropTypes.boolean,
+  successMessage: PropTypes.string,
+  errorMessage: PropTypes.string,
+  logData: {
+    lastUpdateResult: PropTypes.string,
+    by: PropTypes.object,
+    lastUpdated: PropTypes.string,
+    lastUpdatedHumanReadable: PropTypes.string
+  }
+})
 
 export default (props) => <Dashboard {...props} />
