@@ -30,6 +30,11 @@ export interface Article {
   }>;
 
   /**
+   * Løpenummer
+   */
+  serialNumber?: string;
+
+  /**
    * Relaterte faktasider
    */
   relatedFactPagesItemSet?: Array<{
@@ -39,15 +44,10 @@ export interface Article {
     title?: string;
 
     /**
-     * Faktaside liste
+     * Faktasider
      */
-    itemList?: string;
+    itemList?: Array<string>;
   }>;
-  
-  /**
-   * Løpenummer
-   */
-  serialNumber?: string;
 
   /**
    * Forfatter

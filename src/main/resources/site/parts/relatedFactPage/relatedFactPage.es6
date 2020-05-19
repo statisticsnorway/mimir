@@ -19,9 +19,9 @@ exports.get = function(req, portal) {
   try {
     const page = getContent()
     const part = getComponent()
-    return renderPart(req, part.config.itemList || page.data.relatedFactPagesItemSet.itemList)
+    return renderPart(req, part.config.itemList || page.data.relatedFactPagesItemSet.itemList[1])
   } catch (e) {
-    return renderError(req, 'd e no fejil i parten sjø', e)
+    return renderError(req, 'Error in part', e)
   }
 }
 
@@ -49,13 +49,12 @@ function renderPart(req, relatedId) {
   const showLess = i18nLib.localize({
     key: 'showLess'
   })
-  const relatedContentList = relatedContent.data.contentList
-  const relatedContentIds = relatedContentList ? util.data.forceArray(relatedContentList) : []
+  const relatedContentList = page.data.relatedFactPagesItemSet.itemList || relatedContent.data.contentList
+  const relatedContentIds = util.data.forceArray(relatedContentList)
   const mainTitle = part.config.title || page.data.relatedFactPagesItemSet.title
   const relatedContentLists = []
 
-
-  if (relatedContent) {
+  if (relatedContent || page.data.relatedFactPagesItemSet.itemList) {
     relatedContentIds.map((key) => {
       const relatedRelatedContent = content.get({
         key
