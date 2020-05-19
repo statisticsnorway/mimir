@@ -7,6 +7,10 @@ const {
 const {
   renderError
 } = __non_webpack_require__( '/lib/error/error')
+const { getContactsFromRepo } = __non_webpack_require__('/lib/repo/statreg/contacts')
+const { ensureArray } = __non_webpack_require__('/lib/polyfills/xp-util')
+const { chunkArray } = __non_webpack_require__('/lib/arrayUtils')
+import { find } from 'ramda'
 
 const content = __non_webpack_require__( '/lib/xp/content')
 const util = __non_webpack_require__( '/lib/util')
@@ -26,20 +30,17 @@ function renderPart(req) {
   const WIDTH = 3 // how many boxes in a row
   const part = getComponent() || req
   const page = getContent()
-  const contactIdList = []
+
+  const statRegContacts = getContactsFromRepo();
 
   // checks page content for contacts first, then part for contacts and creates array
-  const contactSource = page.data.contacts || part.config.contacts
-  const contactsList = contactSource ? util.data.forceArray(contactSource) : []
+  const contactIds = ensureArray(part.config.contacts || page.data.contacts)
+  const selectedContacts = contactIds.reduce((acc, contactId) => {
+    const found = find((contact) => `${contact.id}` === `${contactId}`)(statRegContacts)
+    return found ? acc.concat(found) : acc
+  }, [])
 
-  contactsList.map((key) => {
-    const contactSingle = content.get({
-      key
-    })
-    contactIdList.push(contactSingle)
-  })
-
-  const contacts = chunkArray(contactIdList, WIDTH)
+  const contacts = chunkArray(selectedContacts, WIDTH)
 
   const model = {
     label: part.config.label,
@@ -51,13 +52,5 @@ function renderPart(req) {
     body,
     contentType: 'text/html'
   }
-}
-
-function chunkArray(myArray, chunkSize) {
-  const results = []
-  while (myArray.length) {
-    results.push(myArray.splice(0, chunkSize))
-  }
-  return results
 }
 

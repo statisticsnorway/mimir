@@ -125,20 +125,13 @@
         <field-set>
             <label>Kontakter</label>
             <items>
-                <item-set name="contacts">
+                <input name="contacts" type="CustomSelector">
+                    <occurrences minimum="1" maximum="0" />
                     <label>Kontakter</label>
-                    <occurrences minimum="0" maximum="1"/>
-                    <items>
-                        <input name="contact" type="ContentSelector">
-                            <label>Kontakt</label>
-                            <occurrences minimum="0" maximum="0"/>
-                            <config>
-                                <allowPath>${site}</allowPath>
-                                <allowType>contact</allowType>
-                            </config>
-                        </input>
-                    </items>
-                </item-set>
+                    <config>
+                        <service>contacts</service>
+                    </config>
+                </input>
             </items>
         </field-set>
     </form>

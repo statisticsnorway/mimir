@@ -57,12 +57,7 @@ export interface Article {
   /**
    * Kontakter
    */
-  contactsIds?: Array<{
-    /**
-     * Kontakt
-     */
-    contactId?: Array<string>;
-  }>;
+  contacts: string;
 
   /**
    * Forfatter
