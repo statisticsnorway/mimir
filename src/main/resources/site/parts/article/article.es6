@@ -39,7 +39,7 @@ function renderPart(req) {
   if (showModifiedDate) {
     modifiedDate = moment(showModifiedDate.dateOption.modifiedDate).format('DD. MMMM YYYY')
     if (showModifiedDate.dateOption.showModifiedTime) {
-      modifiedDate = moment(page.data.showModifiedDate.dateOption.modifiedDate).format('DD. MMMM YYYY h:mm')
+      modifiedDate = moment(page.data.showModifiedDate.dateOption.modifiedDate).format('DD. MMMM YYYY hh:mm')
     }
   }
 
@@ -63,7 +63,8 @@ function renderPart(req) {
     modifiedDate,
     authors,
     externalLinkConfig,
-    serialNumber: page.data.serialNumber
+    serialNumber: page.data.serialNumber,
+    introTitle: page.data.introTitle
   }
 
   let body = render(view, model)
