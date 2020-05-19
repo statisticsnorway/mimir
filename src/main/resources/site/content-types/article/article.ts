@@ -30,13 +30,38 @@ export interface Article {
   }>;
 
   /**
+   * Relaterte faktasider
+   */
+  relatedFactPagesItemSet?: Array<{
+    /**
+     * Seksjons tittel
+     */
+    title?: string;
+
+    /**
+     * Faktaside liste
+     */
+    itemList?: string;
+  }>;
+
+  /**
+   * Løpenummer
+   */
+  serialNumber?: string;
+
+  /**
+   * Stikktittel
+   */
+  introTitle?: string;
+
+  /**
    * Kontakter
    */
-  contacts?: Array<{
+  contactsIds?: Array<{
     /**
      * Kontakt
      */
-    contact?: Array<string>;
+    contactId?: Array<string>;
   }>;
 
   /**

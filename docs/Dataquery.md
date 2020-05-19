@@ -8,7 +8,7 @@ Content with result of dataquery
 ## Update/create
 
 ### Cronjob
-main.js define a cronjob scheduled to 09:00, uses function refreshDataset() in main/resources/lib/dataquery.ts
+main.es6 define a cronjob scheduled to 09:00, uses function refreshDataset() in main/resources/lib/dataquery.ts
 ```javascript
 function job() {
   log.info('-- Running dataquery cron job  --')
