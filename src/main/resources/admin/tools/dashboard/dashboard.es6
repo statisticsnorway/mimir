@@ -29,9 +29,8 @@ const {
 const view = resolve('./dashboard.html')
 
 exports.get = function(req) {
-  return renderPart()
   try {
-    return renderPart()
+    return renderPart(req)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
@@ -41,7 +40,7 @@ exports.get = function(req) {
  *
  * @return {{pageContributions: *, body: *}}
  */
-function renderPart() {
+function renderPart(req) {
   const datasetMap = getDataset()
   const dataQueries = getDataQueries(datasetMap)
 
@@ -51,7 +50,10 @@ function renderPart() {
     .setProps({
       header: 'Alle spørringer',
       dataQueries,
-      dashboardService: assets.dashboardService
+      dashboardService: assets.dashboardService,
+      featureToggling: {
+        updateList: req.params.updateList ? true : false
+      }
     })
     .setId('dataset')
 
@@ -154,7 +156,9 @@ function getDataQueries(datasetMap) {
         }),
         modified: queryLogNode.data.modified,
         modifiedReadable: dateToReadable(queryLogNode.data.modifiedTs)
-      } : undefined
+      } : undefined,
+      loading: false,
+      deleting: false
     }
   })
 }

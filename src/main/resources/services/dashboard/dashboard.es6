@@ -36,6 +36,7 @@ exports.get = function(req) {
   logDataQueryEvent(req.params.id, {
     message: Events.GET_DATA_STARTED
   })
+
   const updateResult = context.run(createContextOption('master'), () => {
     return getAllOrOneDataQuery(req.params.id).map((dataquery) => updateDataQuery(dataquery) )
   })
