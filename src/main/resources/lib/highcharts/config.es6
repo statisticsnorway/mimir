@@ -57,7 +57,18 @@ export const createConfig = (highchartData, displayName) => ({
           'stroke': '#bbb'
         },
         x: 8,
-        width: 28
+        width: 28,
+        menuItems: [
+          'printChart',
+          'separator',
+          'downloadPNG',
+          'downloadJPEG',
+          'downloadPDF',
+          'downloadSVG',
+          'separator',
+          'downloadCSV',
+          'downloadXLS'
+        ]
       }
     },
     csv: {
