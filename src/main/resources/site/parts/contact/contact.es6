@@ -8,12 +8,9 @@ const {
   renderError
 } = __non_webpack_require__( '/lib/error/error')
 const { getContactsFromRepo } = __non_webpack_require__('/lib/repo/statreg/contacts')
-const { ensureArray } = __non_webpack_require__('/lib/polyfills/xp-util')
-const { chunkArray } = __non_webpack_require__('/lib/arrayUtils')
+const { ensureArray, chunkArray } = __non_webpack_require__('/lib/ssb/arrayUtils')
 import { find } from 'ramda'
 
-const content = __non_webpack_require__( '/lib/xp/content')
-const util = __non_webpack_require__( '/lib/util')
 const view = resolve('./contact.html')
 
 exports.get = function(req) {
@@ -42,10 +39,23 @@ function renderPart(req) {
 
   const contacts = chunkArray(selectedContacts, WIDTH)
 
+  if (!contacts || (contacts.length < 1)) {
+    if (req.mode === 'edit' || req.mode === 'preview') {
+      return {
+        body: render(view)
+      }
+    } else {
+      return {
+        body: null
+      }
+    }
+  }
+
   const model = {
     label: part.config.label,
     contacts
   }
+
   const body = render(view, model)
 
   return {

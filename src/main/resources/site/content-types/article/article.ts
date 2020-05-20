@@ -112,7 +112,7 @@ export interface Article {
   /**
    * Kontakter
    */
-  contacts: string;
+  contacts?: string;
 
   /**
    * Forfatter

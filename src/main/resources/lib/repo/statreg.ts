@@ -1,7 +1,7 @@
 import { RepoNode } from 'enonic-types/lib/node'
 import { repoExists, createRepo } from './repo'
 import { QueryFilters, createNode, getNode, modifyNode } from './common'
-import { ensureArray } from '../polyfills/xp-util'
+import { ensureArray } from '../ssb/arrayUtils'
 import { STATREG_REPO_CONTACTS_KEY, fetchContacts } from './statreg/contacts'
 
 export const STATREG_REPO: string = 'no.ssb.statreg'

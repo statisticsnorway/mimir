@@ -185,7 +185,7 @@
             <label>Kontakter</label>
             <items>
                 <input name="contacts" type="CustomSelector">
-                    <occurrences minimum="1" maximum="0" />
+                    <occurrences minimum="0" maximum="0" />
                     <label>Kontakter</label>
                     <config>
                         <service>contacts</service>
