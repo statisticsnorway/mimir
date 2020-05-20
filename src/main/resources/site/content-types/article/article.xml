@@ -140,20 +140,20 @@
             <items>
                 <item-set name="relatedFactPagesItemSet">
                     <label>Relaterte faktasider</label>
-                    <occurrences minimum="0" maximum="0"/>
+                    <occurrences minimum="0" maximum="1"/>
                     <items>
                         <input type="TextLine" name="title">
                             <label>Seksjons tittel</label>
                             <occurrences minimum="0" maximum="1"/>
                         </input>
                         <input name="itemList" type="ContentSelector">
-                            <label>Faktaside liste</label>
-                            <occurrences minimum="0" maximum="1"/>
+                            <label>Faktasider</label>
+                            <occurrences minimum="0" maximum="0"/>
                             <config>
                                 <allowPath>${site}</allowPath>
-                                <allowType>contentList</allowType>
+                                <allowType>page</allowType>
                                 <treeMode>false</treeMode>
-                                <description>Henter alt innhold i listen og lager lenker av de.</description>
+                                <description>Legg til faktasider</description>
                             </config>
                         </input>
                     </items>

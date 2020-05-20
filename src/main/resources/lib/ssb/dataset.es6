@@ -21,6 +21,19 @@ export const get = (key) => {
   } : NOT_FOUND
 }
 
+export const getAllOrOneDataSet = (selector) => {
+  if (selector === '*') {
+    return content.query({
+      start: 0,
+      count: 999,
+      contentTypes: [`${app.name}:dataset`]
+    }).hits
+
+  } else {
+    return getDataSetWithDataQueryId(selector).hits
+  }
+}
+
 /**
  * Get the last created dataset with its parent dataQuery content id
  * @param {string} dataQueryContentId
@@ -48,7 +61,8 @@ export const getTime = (dataset) => {
 /**
  * Get value from dataset with index
  * @param {Object} data: JSON-STAT object
- * @param {string} index
+ * @param {string} filterTarget
+ * @param {string} filter
  * @return {{label: {String}, value: {String}}}
  */
 export const getValueWithIndex = (data, filterTarget, filter) => {
