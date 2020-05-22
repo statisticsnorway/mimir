@@ -95,9 +95,15 @@
 
   .divider-wrapper {
     @include make-row;
+    margin-top: 44px;
 
-    & > * {
-      margin: 44px;
+    &:last-child {
+      display: none;
+    }
+
+    @include media-breakpoint-up(lg) {
+      margin-left: inherit;
+      margin-right: inherit;
     }
   }
 
