@@ -104,15 +104,15 @@ function getSubtitle(content, date) {
 }
 
 function getTitleSize(title) {
-  const titleLenght = title.length
+  const titleLength = title.length
   let titleSize = 'sm'
-  if (titleLenght > 25) {
+  if (titleLength > 25) {
     titleSize = 'md'
   }
-  if (titleLenght > 50) {
+  if (titleLength > 50) {
     titleSize = 'lg'
   }
-  if (titleLenght > 75) {
+  if (titleLength > 75) {
     titleSize = 'xl'
   }
   return titleSize
