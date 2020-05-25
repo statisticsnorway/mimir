@@ -31,8 +31,7 @@ exports.preview = (req) => renderPart(req)
 function renderPart(request) {
   const part = getComponent()
   const urlContentSelector = part.config.urlContentSelector
-  const subTitle = getSubtitle(part.config.content, part.config.date)
-  const titleSize = getTitleSize(part.config.title, subTitle)
+  const titleSize = getTitleSize(part.config.title)
 
   const props = {
     imgUrl: imageUrl({
@@ -104,7 +103,7 @@ function getSubtitle(content, date) {
   }
 }
 
-function getTitleSize(title, subTitle) {
+function getTitleSize(title) {
   const titleLenght = title.length
   let titleSize = 'sm'
   if (titleLenght > 25) {
