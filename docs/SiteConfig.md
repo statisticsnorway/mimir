@@ -1,5 +1,5 @@
 # Site Config
-The site.xml file is the descriptor that will let Enonic XP know that this app can be added to a site. 
+The [site.xml](/src/main/resources/site/site.xml) file is the descriptor that will let Enonic XP know that this app can be added to a site. 
 Response filters and controller mappings can be set up in the site descriptor as well as application configurations.
 
 ## MunicipalData
@@ -20,8 +20,8 @@ Config used on Kommunefakta
 * Content Footer configuration
 
 # Mapping
-* Filter: /site/filters/router.js (Used for Kommunefakta)
-* Controller: /site/pages/default/default.js
+* Filter: [router.js](/src/main/resources/site/filters/router.es6) (Used for Kommunefakta)
+* Controller: [default.es6](/src/main/resources/site/pages/default/default.es6) 
 
 # Processors
 * response-processor searchableText
