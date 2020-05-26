@@ -1,5 +1,8 @@
 # Data Feeds
 ## KLASS
+Data is imported as JSON from https://data.ssb.no/api/klass/v1, (documented here: https://data.ssb.no/api/klass/v1/api-guide.html).
+For municipal facts we use KLASS as a source for counties and municipalities. 
+The output for counties is typed up [here](/src/main/resources/lib/klass/counties.ts) and municipalities [here](/src/main/resources/lib/klass/municipalities.ts)
 ## TBML
 Data is imported from the tbprocessor service as xml, then sendt through [XmlParser](/src/main/java/no/ssb/xp/xmlparser/XmlParser.java).  
 The output is typed up [here](/src/main/resources/lib/types/xmlParser.ts) as the `TbmlData` interface
