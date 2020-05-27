@@ -110,6 +110,11 @@ export interface Article {
   introTitle?: string;
 
   /**
+   * Kontakter
+   */
+  contacts?: string;
+
+  /**
    * Forfatter
    */
   authorItemSet?: Array<{
