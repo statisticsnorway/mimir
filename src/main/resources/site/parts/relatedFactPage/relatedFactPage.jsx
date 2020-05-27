@@ -1,5 +1,6 @@
 import React from 'react'
 import { PictureCard, Button } from '@statisticsnorway/ssb-component-library'
+import PropTypes from 'prop-types'
 
 class RelatedBoxes extends React.Component {
   constructor(props) {
@@ -43,5 +44,18 @@ class RelatedBoxes extends React.Component {
   }
 }
 
+RelatedBoxes.propTypes = {
+  relatedContentLists: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      link: PropTypes.string.isRequired,
+      type: PropTypes.string.isRequired,
+      image: PropTypes.string.isRequired
+    })
+  ).isRequired,
+  showAll: PropTypes.string.isRequired,
+  showLess: PropTypes.string.isRequired,
+  mainTitle: PropTypes.string.isRequired
+}
 
 export default (props) => <RelatedBoxes {...props} />
