@@ -166,7 +166,13 @@ export const createConfig = (highchartData, displayName) => ({
       align: 'high',
       offset: 0,
       rotation: 0,
-      y: 30
+      y: -15
+    },
+    xAxis: {
+      text: highchartData.xAxisTitle || '',
+      align: 'high',
+      offset: 0,
+      x: -5
     },
     type: highchartData.yAxisType || 'linear'
   },
