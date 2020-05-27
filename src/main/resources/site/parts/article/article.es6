@@ -30,7 +30,7 @@ function renderPart(req) {
   moment.locale(page.language ? page.language : 'nb')
 
   const bodyText = processHtml({
-    value: page.data.articleText ? page.data.articleText.replace(/.&nbsp;/g, ' ') : undefined
+    value: page.data.articleText ? page.data.articleText.replace(/&nbsp;/g, ' ') : undefined
   })
 
   const pubDate = moment(page.publish.from).format('DD. MMMM YYYY')
