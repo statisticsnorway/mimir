@@ -87,14 +87,14 @@
                         <allowHeadings>h3</allowHeadings>
                     </config>
                 </input>
-                <input name="EqualTreatmentUsers" type="HtmlArea">
+                <input name="equalTreatmentUsers" type="HtmlArea">
                     <occurrences minimum="0" maximum="1" />
                     <label>Likebehandling av brukere</label>
                     <config>
                         <allowHeadings>h3</allowHeadings>
                     </config>
                 </input>
-                <input name="RelationOtherStatistics" type="HtmlArea">
+                <input name="relationOtherStatistics" type="HtmlArea">
                     <occurrences minimum="0" maximum="1" />
                     <label>Sammenheng med annen statistikk</label>
                     <config>
@@ -108,7 +108,7 @@
                         <allowHeadings>h3</allowHeadings>
                     </config>
                 </input>
-                <input name="EeaReference" type="HtmlArea">
+                <input name="eeaReference" type="HtmlArea">
                     <occurrences minimum="0" maximum="1" />
                     <label>EØS-referanse</label>
                     <config>
@@ -136,7 +136,7 @@
                         <allowHeadings>h3</allowHeadings>
                     </config>
                 </input>
-                <input name="DataCollectionEditingAndCalculations" type="HtmlArea">
+                <input name="dataCollectionEditingAndCalculations" type="HtmlArea">
                     <occurrences minimum="0" maximum="1" />
                     <label>Datainnsamling, editering og beregninger</label>
                     <config>

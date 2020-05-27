@@ -96,12 +96,12 @@ export interface OmStatistikken {
     /**
      * Likebehandling av brukere
      */
-    EqualTreatmentUsers?: string;
+    equalTreatmentUsers?: string;
 
     /**
      * Sammenheng med annen statistikk
      */
-    RelationOtherStatistics?: string;
+    relationOtherStatistics?: string;
 
     /**
      * Lovhjemmel
@@ -111,7 +111,7 @@ export interface OmStatistikken {
     /**
      * EØS-referanse
      */
-    EeaReference?: string;
+    eeaReference?: string;
   }>;
 
   /**
@@ -131,7 +131,7 @@ export interface OmStatistikken {
     /**
      * Datainnsamling, editering og beregninger
      */
-    DataCollectionEditingAndCalculations?: string;
+    dataCollectionEditingAndCalculations?: string;
 
     /**
      * Sesongjustering
