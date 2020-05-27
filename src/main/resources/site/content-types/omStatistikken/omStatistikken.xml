@@ -1,7 +1,7 @@
 <content-type>
     <display-name>Om statistikken</display-name>
+    <description>Innhold Om statistikken</description>
     <super-type>base:structured</super-type>
-    <allow-child-content>false</allow-child-content>
     <form>
         <field-set>
             <label>Ingress</label>
