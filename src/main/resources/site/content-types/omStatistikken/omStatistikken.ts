@@ -2,7 +2,7 @@ export interface OmStatistikken {
   /**
    * Ingress
    */
-  ingress?: string;
+  ingress: string;
 
   /**
    * Dokumentasjon
