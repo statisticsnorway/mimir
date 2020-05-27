@@ -3,10 +3,21 @@ import { Download, Trash } from 'react-feather'
 import { Link } from '@statisticsnorway/ssb-component-library'
 import React from 'react'
 import PropTypes from 'prop-types'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Popover from 'react-bootstrap/Popover'
 
 class DashboardDataQuery extends React.Component {
   constructor(props) {
     super(props)
+  }
+
+  renderLogNode(i, logNode) {
+    return (
+      <p key={i}>
+        <span>{logNode.modifiedTs}</span> - <span>{logNode.by}</span><br/>
+        <span> &gt; {logNode.result}</span>
+      </p>
+    )
   }
 
   render() {
@@ -24,7 +35,24 @@ class DashboardDataQuery extends React.Component {
           {this.props.datasetModified ? this.props.datasetModified : ''}
         </td>
         <td>
-          {this.props.message ? this.props.message : ''}<br/>
+          {this.props.eventLogNodes &&
+            <OverlayTrigger
+              trigger="click"
+              key={this.props.id}
+              placement="bottom"
+              overlay={
+                <Popover id={`popover-positioned-${this.props.id}`}>
+                  <Popover.Title as="h3">Logg detaljer</Popover.Title>
+                  <Popover.Content className="ssbPopoverBody">
+                    {this.props.eventLogNodes.map((logNode, index) => this.renderLogNode(index, logNode))}
+                  </Popover.Content>
+                </Popover>
+              }
+            >
+              <span className="haveList">{this.props.message ? this.props.message : ''}</span>
+            </OverlayTrigger>
+          }<br/>
+          {!this.props.eventLogNodes && this.props.message && <span>{this.props.message}</span>}
           {this.props.modifiedReadable ? this.props.modifiedReadable : ''}<br/>
           {this.props.modified ? this.props.modified : ''}<br/>
           {this.props.by ? `av ${this.props.by}` : '' }
@@ -69,7 +97,11 @@ DashboardDataQuery.propTypes = {
   modifiedReadable: PropTypes.string,
   modified: PropTypes.string,
   message: PropTypes.string,
-  by: PropTypes.string
+  by: PropTypes.string,
+  eventLogNodes: PropTypes.arrayOf(PropTypes.shape({
+    message: PropTypes.string,
+    modifiedTs: PropTypes.string
+  }))
 }
 
 export default (props) => <DashboardDataQuery {...props} />

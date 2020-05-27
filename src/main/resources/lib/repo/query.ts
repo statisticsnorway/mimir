@@ -26,6 +26,7 @@ export interface QueryStatus {
   response?: HttpResponse;
   request?: HttpRequestParams;
   xmlResult?: TbmlData;
+  info?: string;
 }
 
 export interface EventInfo {
@@ -51,6 +52,7 @@ export enum Events {
   DELETE_FAILED_PUBLISHED = 'DELETE_FAILED_PUBLISHED',
   FAILED_TO_GET_DATA = 'FAILED_TO_GET_DATA',
   FAILED_TO_FIND_DATAQUERY = 'FAILED_TO_FIND_DATAQUERY',
+  FAILED_TO_REQUEST_DATASET = 'FAILED_TO_REQUEST_DATASET',
   FAILED_TO_CREATE_DATASET = 'FAILED_TO_CREATE_DATASET',
   FAILED_TO_REFRESH_DATASET = 'FAILED_TO_REFRESH_DATASET',
   XML_TO_JSON = 'XML_TO_JSON'
@@ -81,8 +83,8 @@ function addEventToQueryLog(queryId: string, user: User, status: QueryStatus): E
 export function startQuery(queryId: string, user: User, status: QueryStatus): QueryInfoNode {
   return withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (conn) => {
     const queryLogNode: ReadonlyArray<QueryInfoNode> = getNode<QueryInfo>(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${queryId}`)
-    if (queryLogNode !== null) {
-      return queryLogNode[0]
+    if (queryLogNode !== undefined || queryLogNode !== null) {
+      return Array.isArray(queryLogNode) ? queryLogNode[0] : queryLogNode
     } else {
       return createQueryNode(queryId, user, status)
     }
@@ -121,3 +123,5 @@ export function updateQueryLogStatus(queryId: string, user: User, status: QueryS
     return node
   })
 }
+
+

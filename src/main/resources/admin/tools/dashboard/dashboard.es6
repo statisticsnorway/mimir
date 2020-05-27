@@ -1,6 +1,6 @@
 const {
   getNode
-} = __non_webpack_require__( '../../../lib/repo/common')
+} = __non_webpack_require__( '/lib/repo/common')
 
 const {
   assetUrl,
@@ -17,13 +17,15 @@ const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
 const {
-  isPublished, dateToFormat, dateToReadable
+  isPublished, dateToReadable
 } = __non_webpack_require__('/lib/ssb/utils')
 const content = __non_webpack_require__( '/lib/xp/content')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const i18n = __non_webpack_require__('/lib/xp/i18n')
 const {
-  EVENT_LOG_BRANCH, EVENT_LOG_REPO
+  EVENT_LOG_BRANCH,
+  EVENT_LOG_REPO,
+  getQueryChildNodesStatus
 } = __non_webpack_require__( '/lib/repo/eventLog')
 
 const view = resolve('./dashboard.html')
@@ -134,7 +136,7 @@ function getDataQueries(datasetMap) {
     const dataset = datasetMap[dataquery._id]
     const hasData = !!dataset
     const queryLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataquery._id}`)
-
+    const eventLogNodes = getQueryChildNodesStatus(`/queries/${dataquery._id}`)
     return {
       id: dataquery._id,
       displayName: dataquery.displayName,
@@ -153,7 +155,8 @@ function getDataQueries(datasetMap) {
           key: queryLogNode.data.modifiedResult
         }),
         modified: queryLogNode.data.modified,
-        modifiedReadable: dateToReadable(queryLogNode.data.modifiedTs)
+        modifiedReadable: dateToReadable(queryLogNode.data.modifiedTs),
+        eventLogNodes
       } : undefined
     }
   })

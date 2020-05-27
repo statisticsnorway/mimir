@@ -195,6 +195,7 @@ class Dashboard extends React.Component {
           modifiedReadable={query.logData && query.logData.modifiedReadable ? query.logData.modifiedReadable : undefined}
           message={query.logData && query.logData.message ? query.logData.message : undefined}
           by={query.logData && query.logData.by.login ? query.logData.by.login : undefined }
+          eventLogNodes={query.logData && query.logData.eventLogNodes ? query.logData.eventLogNodes : undefined }
         />
       )
     })
@@ -388,7 +389,11 @@ const dataqueryShape = PropTypes.shape({
     lastUpdateResult: PropTypes.string,
     by: PropTypes.object,
     lastUpdated: PropTypes.string,
-    lastUpdatedHumanReadable: PropTypes.string
+    lastUpdatedHumanReadable: PropTypes.string,
+    eventLogNodes: PropTypes.arrayOf(PropTypes.shape({
+      message: PropTypes.string,
+      modifiedTs: PropTypes.string
+    }))
   }
 })
 
