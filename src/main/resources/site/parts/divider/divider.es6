@@ -7,6 +7,9 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
+const {
+  v4: uuidv4
+} = require('uuid')
 
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view = resolve('./divider.html')
@@ -40,7 +43,7 @@ const renderPart = (req, config) => {
       .setProps(
         setColor(dividerColor)
       )
-      .uniqueId()
+      .setId('dividerPartId')
 
     const preRenderedBody = render(view, {
       dividerId: divider.react4xpId
@@ -56,6 +59,9 @@ const renderPart = (req, config) => {
       lightBody = body
     }
   }
+
+  // UD: Replaces the generic id with a unique one to prevent duplicates
+  body = body.replace(/id=\"dividerPartId\"/, 'id="' + uuidv4() + '"')
 
   return {
     body
