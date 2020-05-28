@@ -38,7 +38,7 @@ repositories {
     xp.enonicRepo()
 }
 
-task clientJsWebpack( type: NodeTask ) {
+task clientJsWebpack( type: NodeTask, dependsOn: npmInstall ) {
     environment = [ 'NODE_ENV': nodeEnvironment() ]
     args = [ '--config', 'webpack.clientjs.config.js', '--color', '--hide-modules' ]
     description = 'Build client-side js.'
@@ -48,7 +48,7 @@ task clientJsWebpack( type: NodeTask ) {
     script = file( 'node_modules/webpack-cli/bin/cli.js' )
 }
 
-task clientTsWebpack( type: NodeTask ) {
+task clientTsWebpack( type: NodeTask, dependsOn: npmInstall ) {
     environment = [ 'NODE_ENV': nodeEnvironment() ]
     args = [ '--config', 'webpack.clientts.config.js', '--color', '--hide-modules' ]
     description = 'Build client-side ts.'
@@ -58,7 +58,7 @@ task clientTsWebpack( type: NodeTask ) {
     script = file( 'node_modules/webpack-cli/bin/cli.js' )
 }
 
-task stylesWebpack( type: NodeTask ) {
+task stylesWebpack( type: NodeTask, dependsOn: npmInstall ) {
     environment = [ 'NODE_ENV': nodeEnvironment() ]
     args = [ '--config', 'webpack.styles.config.js', '--color', '--hide-modules' ]
     description = 'Build client-side css.'
@@ -68,7 +68,7 @@ task stylesWebpack( type: NodeTask ) {
     script = file( 'node_modules/webpack-cli/bin/cli.js' )
 }
 
-task serverWebpack( type: NodeTask ) {
+task serverWebpack( type: NodeTask, dependsOn: npmInstall ) {
     environment = [ 'NODE_ENV': nodeEnvironment() ]
     args = [ '--config', 'webpack.server.config.js', '--color', '--hide-modules' ]
     description = 'Build server JS.'
@@ -86,14 +86,14 @@ task serverWebpack( type: NodeTask ) {
     script = file( 'node_modules/webpack-cli/bin/cli.js' )
 }
 
-task testWebpack( type: NodeTask) {
+task testWebpack( type: NodeTask, dependsOn: npmInstall) {
     environment = [ 'NODE_ENV': nodeEnvironment() ]
     args = [ '--config', 'webpack.test.config.js', '--color', '--hide-modules' ]
     description = 'Build test JS.'
     script = file( 'node_modules/webpack-cli/bin/cli.js' )
 }
 
-task generateTypeScriptInterfaces( type: NodeTask ) {
+task generateTypeScriptInterfaces( type: NodeTask, dependsOn: npmInstall ) {
     description = 'Generate TypeScript interfaces'
     environment = [ 'NODE_ENV': nodeEnvironment() ]
     args = [ '--project', '.', '--write-to-file' ]

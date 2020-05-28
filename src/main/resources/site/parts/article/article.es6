@@ -30,7 +30,7 @@ function renderPart(req) {
   moment.locale(page.language ? page.language : 'nb')
 
   const bodyText = processHtml({
-    value: page.data.articleText
+    value: page.data.articleText ? page.data.articleText.replace(/&nbsp;/g, ' ') : undefined
   })
 
   const pubDate = moment(page.publish.from).format('DD. MMMM YYYY')
@@ -70,6 +70,12 @@ function renderPart(req) {
   let body = render(view, model)
   let pageContributions
 
+  const divider = new React4xp('Divider').setId('dividerId')
+
+  body = divider.renderBody({
+    body
+  })
+
   if (externalLinkConfig && externalLinkConfig.length) {
     const externalLinksComponent = new React4xp('Links')
       .setProps({
@@ -87,7 +93,6 @@ function renderPart(req) {
     body = externalLinksComponent.renderBody({
       body
     })
-
     pageContributions = externalLinksComponent.renderPageContributions()
   }
 

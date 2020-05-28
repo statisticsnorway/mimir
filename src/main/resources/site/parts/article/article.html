@@ -36,9 +36,10 @@
             <div class="article-body" data-th-utext="${bodyText}" />
         </div>
         <div class="col-12 p-0">
-            <div data-th-if="${#lists.size(externalLinkConfig)}">
+            <div class="divider-wrapper" id="dividerId" />
+            <div class="external-links-wrapper" data-th-if="${#lists.size(externalLinkConfig)}">
                 <h4>Andre nettsteder</h4>
-                <div id="externalLinksId" class="external-links-component"></div>
+                <div id="externalLinksId" class="external-links-component" />
             </div>
         </div>
     </div>
