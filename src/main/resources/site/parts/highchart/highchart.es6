@@ -122,6 +122,7 @@ function renderPart(req, highchartIds) {
       }
 
       if (graphType === 'barNegative') {
+        // axes get flipped so interchange title positions
         config.series = graphData.series
         config.xAxis = {
           title: {
@@ -180,9 +181,8 @@ function renderPart(req, highchartIds) {
           // In other words, include 'bar' in this if-test, instead of putting it in the yAxis config
           tickmarkPlacement: (graphType == 'column' || graphType == 'bar') ? 'between' : 'on',
           title: {
-            style,
-            text: xAxisTitle,
-            align: 'high'
+            ...config.xAxis.title,
+            text: xAxisTitle
           },
           type: highchart.data.xAxisType || 'categories',
           tickWidth: 1,

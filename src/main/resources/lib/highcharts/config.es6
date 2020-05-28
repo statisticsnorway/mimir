@@ -179,11 +179,14 @@ export const createConfig = (highchartData, displayName) => ({
       text: highchartData.yAxisTitle || '',
       ...Y_AXIS_TITLE_POSITION
     },
-    xAxis: {
+    type: highchartData.yAxisType || 'linear'
+  },
+  xAxis: {
+    title: {
+      style,
       text: highchartData.xAxisTitle || '',
       ...X_AXIS_TITLE_POSITION
-    },
-    type: highchartData.yAxisType || 'linear'
+    }
   },
   tooltip: {
     crosshairs: highchartData.graphType == 'line' && {
