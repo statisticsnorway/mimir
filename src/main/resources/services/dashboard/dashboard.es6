@@ -34,42 +34,16 @@ exports.get = function(req) {
     return missingParameterResponse()
   }
 
-  const updateResult = withLoggedInUserContext('master', (user) => {
-    logDataQueryEvent(req.params.id, user, {
-      message: Events.STARTED
-    })
-    
-    return getAllOrOneDataQuery(req.params.id.map((dataquery) =>
-      updateDataQuery(dataquery, user)))
+  logDataQueryEvent(req.params.id, {
+    message: Events.STARTED
   })
 
-
-  const parsedResult = updateResult.map( (result) => { // refreshResult
-    const queryLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${result.dataquery._id}`)
-    return {
-      id: result.dataquery._id,
-      message: i18n.localize({
-        key: result.status
-      }),
-      status: result.status,
-      dataset: {
-        modified: dateToFormat(result.modified),
-        modifiedReadable: dateToReadable(result.modified)
-      },
-      logData: {
-        ...queryLogNode.data,
-        message: i18n.localize({
-          key: result.status
-        }),
-        modified: dateToFormat(queryLogNode.modified),
-        modifiedReadable: dateToReadable(queryLogNode.modified)
-      }
-    }
-  })
+  const updateResult = getAllOrOneDataQuery(req.params.id).map((dataquery) => updateDataQuery(dataquery))
 
   const parsedResult = updateResult.map(fontEndObject)
   return successResponse(parsedResult, undefined)
 }
+
 
 function fontEndObject(result) {
   const queryLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${result.dataquery._id}`)
@@ -105,8 +79,8 @@ exports.delete = (req) => {
   if (!req.params || !req.params.id) {
     return missingParameterResponse()
   }
-  const deleteResult = context.run(createContextOption('draft'), () => {
-    logDataQueryEvent(req.params.id, user, {
+  const deleteResult = withLoggedInUserContext('draft', () => {
+    logDataQueryEvent(req.params.id, {
       message: Events.START_DELETE
     })
     return getAllOrOneDataSet(req.params.id).map((dataset) => {
@@ -120,14 +94,14 @@ exports.delete = (req) => {
   })
 
   if (deleteResult.length === 0) {
-    logDataQueryEvent(req.params.id, user, {
+    logDataQueryEvent(req.params.id, {
       message: Events.DELETE_FAILED,
       deleteResult
     })
     return successResponse(deleteResult, undefined)
   }
 
-  logDataQueryEvent(req.params.id, user, {
+  logDataQueryEvent(req.params.id, {
     message: Events.DELETE_OK,
     deleteResult
   })
@@ -139,14 +113,14 @@ exports.delete = (req) => {
   })
 
   publishResult.deletedContents.forEach((id) => {
-    logDataQueryEvent(id, user, {
+    logDataQueryEvent(id, {
       message: Events.DELETE_OK_PUBLISHED,
       deleteResult
     })
   })
 
   publishResult.failedContents.forEach((id) => {
-    logDataQueryEvent(id, user, {
+    logDataQueryEvent(id, {
       message: Events.DELETE_FAILED_PUBLISHED,
       deleteResult
     })
@@ -256,7 +230,7 @@ function updateDataQuery(dataquery) {
 
   const data = getData(dataquery)
   if (!data) {
-    logDataQueryEvent(dataquery._id, user, {
+    logDataQueryEvent(dataquery._id, {
       message: Events.FAILED_TO_GET_DATA
     } )
     return {
@@ -266,7 +240,7 @@ function updateDataQuery(dataquery) {
   }
 
   const refreshDatasetResult = refreshDatasetWithData(JSON.stringify(data), dataquery) // returns a dataset and status
-  logDataQueryEvent(dataquery._id, user, {
+  logDataQueryEvent(dataquery._id, {
     message: refreshDatasetResult.status
   })
   return {
@@ -275,22 +249,4 @@ function updateDataQuery(dataquery) {
     newDatasetData: refreshDatasetResult.newDatasetData ? refreshDatasetResult.newDatasetData : false,
     status: refreshDatasetResult.status // can be failed to fetch data or failed to
   }
-}
-
-
-const createContextOption = (branch) => {
-  const _user = auth.getUser()
-  const user = {
-    login: _user.login,
-    userStore: _user.idProvider
-  }
-
-  const contextOption = {
-    repository: 'com.enonic.cms.default',
-    principals: ['role:system.admin'],
-    branch,
-    user
-  }
-
-  return contextOption
 }

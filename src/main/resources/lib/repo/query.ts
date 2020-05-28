@@ -1,13 +1,12 @@
 import { RepoNode } from 'enonic-types/lib/node'
-import { getNode, withConnection } from './common'
+import { getNode, withConnection, withLoggedInUserContext } from './common'
 import { EVENT_LOG_BRANCH, EVENT_LOG_REPO, createEventLog, EditorCallback, updateEventLog } from './eventLog'
-import { AuthLibrary, User } from 'enonic-types/lib/auth'
+import { User } from 'enonic-types/lib/auth'
 import { HttpRequestParams, HttpResponse } from 'enonic-types/lib/http'
 import { TbmlData } from '../types/xmlParser'
 const {
   dateToFormat
 } = __non_webpack_require__('/lib/ssb/utils')
-const auth: AuthLibrary = __non_webpack_require__( '/lib/xp/auth')
 export type QueryInfoNode = QueryInfo & RepoNode
 
 export interface QueryInfo {
@@ -57,13 +56,15 @@ export enum Events {
 }
 
 export function logDataQueryEvent(queryId: string, status: QueryStatus): QueryInfoNode | undefined {
-  const user: User | null = auth.getUser()
-  if (!user) {
-    return undefined
-  }
-  startQuery(queryId, user, status)
-  addEventToQueryLog(queryId, user, status)
-  return updateQueryLogStatus(queryId, user, status)
+  return withLoggedInUserContext('master', (user) => {
+    if (user) {
+      startQuery(queryId, user, status)
+      addEventToQueryLog(queryId, user, status)
+      return updateQueryLogStatus(queryId, user, status)
+    } else {
+      return undefined
+    }
+  })
 }
 
 function addEventToQueryLog(queryId: string, user: User, status: QueryStatus): EventInfo & RepoNode {
