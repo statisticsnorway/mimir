@@ -125,7 +125,8 @@ function renderPart(req, highchartIds) {
         config.xAxis = {
           title: {
             style,
-            text: xAxisTitle
+            text: xAxisTitle,
+            align: 'high'
           },
           categories: graphData.categories,
           reversed: false,
@@ -174,7 +175,8 @@ function renderPart(req, highchartIds) {
           tickmarkPlacement: (graphType == 'column' || graphType == 'bar') ? 'between' : 'on',
           title: {
             style,
-            text: xAxisTitle
+            text: xAxisTitle,
+            align: 'high'
           },
           type: highchart.data.xAxisType || 'categories',
           tickWidth: 1,

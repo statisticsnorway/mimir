@@ -171,8 +171,7 @@ export const createConfig = (highchartData, displayName) => ({
     xAxis: {
       text: highchartData.xAxisTitle || '',
       align: 'high',
-      offset: 0,
-      x: -5
+      offset: 0
     },
     type: highchartData.yAxisType || 'linear'
   },
