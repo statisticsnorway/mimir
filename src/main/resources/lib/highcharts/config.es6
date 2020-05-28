@@ -7,6 +7,20 @@ export const style = {
 }
 export const lineColor = '#21383a'
 
+// retain the offset, but move it outs of the labels-zone
+export const Y_AXIS_TITLE_POSITION = {
+  align: 'high',
+  offset: 0,
+  rotation: 0,
+  y: -15
+}
+
+// keep the title at the end, but leave it to HC to compute offset & y-position
+export const X_AXIS_TITLE_POSITION = {
+  align: 'high',
+  offset: undefined,
+  y: undefined
+}
 
 export const createConfig = (highchartData, displayName) => ({
   accessibility: {
@@ -163,15 +177,11 @@ export const createConfig = (highchartData, displayName) => ({
     title: {
       style,
       text: highchartData.yAxisTitle || '',
-      align: 'high',
-      offset: 0,
-      rotation: 0,
-      y: -15
+      ...Y_AXIS_TITLE_POSITION
     },
     xAxis: {
       text: highchartData.xAxisTitle || '',
-      align: 'high',
-      offset: 0
+      ...X_AXIS_TITLE_POSITION
     },
     type: highchartData.yAxisType || 'linear'
   },

@@ -1,4 +1,5 @@
 import JsonStat from 'jsonstat-toolkit'
+import { X_AXIS_TITLE_POSITION, Y_AXIS_TITLE_POSITION } from '../../../lib/highcharts/config'
 const util = __non_webpack_require__( '/lib/util')
 const {
   getMunicipality
@@ -126,10 +127,7 @@ function renderPart(req, highchartIds) {
           title: {
             style,
             text: xAxisTitle,
-            align: 'high',
-            rotation: 0,
-            offset: 0,
-            y: -15
+            ...Y_AXIS_TITLE_POSITION
           },
           categories: graphData.categories,
           reversed: false,
@@ -142,13 +140,9 @@ function renderPart(req, highchartIds) {
             description: xAxisLabel
           }
         }
-        config.yAxis = {
-          ...config.yAxis,
-          title: {
-            ...config.yAxis.title,
-            offset: undefined,
-            y: undefined
-          }
+        config.yAxis.title = {
+          ...config.yAxis.title,
+          ...X_AXIS_TITLE_POSITION
         }
       } else {
         let useGraphDataCategories = false
@@ -196,23 +190,15 @@ function renderPart(req, highchartIds) {
         }
 
         if (graphType === 'bar') {
-          config.yAxis = {
-            ...config.yAxis,
-            title: {
-              ...config.yAxis.title,
-              offset: undefined,
-              y: undefined
-            }
+          // the axes get flipped, so interchange the title positions
+          config.yAxis.title = {
+            ...config.yAxis.title,
+            ...X_AXIS_TITLE_POSITION
           }
 
-          config.xAxis = {
-            ...config.xAxis,
-            title: {
-              ...config.xAxis.title,
-              rotation: 0,
-              offset: 0,
-              y: -15
-            }
+          config.xAxis.title = {
+            ...config.xAxis.title,
+            ...Y_AXIS_TITLE_POSITION
           }
         }
       }
