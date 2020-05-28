@@ -126,8 +126,7 @@ function renderPart(req, highchartIds) {
         config.series = graphData.series
         config.xAxis = {
           title: {
-            style,
-            text: xAxisTitle,
+            ...config.xAxis.title,
             ...Y_AXIS_TITLE_POSITION
           },
           categories: graphData.categories,
