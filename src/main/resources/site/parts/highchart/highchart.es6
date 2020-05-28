@@ -126,7 +126,10 @@ function renderPart(req, highchartIds) {
           title: {
             style,
             text: xAxisTitle,
-            align: 'high'
+            align: 'high',
+            rotation: 0,
+            offset: 0,
+            y: -15
           },
           categories: graphData.categories,
           reversed: false,
@@ -137,6 +140,14 @@ function renderPart(req, highchartIds) {
           lineColor,
           accessibility: {
             description: xAxisLabel
+          }
+        }
+        config.yAxis = {
+          ...config.yAxis,
+          title: {
+            ...config.yAxis.title,
+            offset: undefined,
+            y: undefined
           }
         }
       } else {
@@ -158,6 +169,7 @@ function renderPart(req, highchartIds) {
           showLabels = true
         }
         config.series = graphData.series
+
         config.xAxis = {
           categories: useGraphDataCategories ? graphData.categories : [highchart.displayName],
           allowDecimals: !!highchart.data.xAllowDecimal,
@@ -181,6 +193,27 @@ function renderPart(req, highchartIds) {
           type: highchart.data.xAxisType || 'categories',
           tickWidth: 1,
           tickColor: '#21383a'
+        }
+
+        if (graphType === 'bar') {
+          config.yAxis = {
+            ...config.yAxis,
+            title: {
+              ...config.yAxis.title,
+              offset: undefined,
+              y: undefined
+            }
+          }
+
+          config.xAxis = {
+            ...config.xAxis,
+            title: {
+              ...config.xAxis.title,
+              rotation: 0,
+              offset: 0,
+              y: -15
+            }
+          }
         }
       }
 
@@ -211,9 +244,9 @@ function renderPart(req, highchartIds) {
         ...createConfig(highchart.data, highchart.displayName),
         data: {
           table: 'highcharts-datatable-' + highchart._id,
-          decimalPoint: ',',
-        },
-      };
+          decimalPoint: ','
+        }
+      }
     }
 
     return initHighchart(highchart, config)
