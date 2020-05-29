@@ -43,16 +43,13 @@ const renderPart = (req, config) => {
       .setProps(
         setColor(dividerColor)
       )
-      .setId('dividerPartId')
-
-    const preRenderedBody = render(view, {
-      dividerId: divider.react4xpId
-    })
+      .setId('dividerId')
 
     body = divider.renderBody({
-      body: preRenderedBody
+      body: render(view)
     })
 
+    // Cache dividers
     if (dividerColor === 'dark') {
       darkBody = body
     } else {
@@ -61,7 +58,7 @@ const renderPart = (req, config) => {
   }
 
   // UD: Replaces the generic id with a unique one to prevent duplicates
-  body = body.replace(/id=\"dividerPartId\"/, 'id="' + uuidv4() + '"')
+  body = body.replace(/id=\"dividerId\"/, 'id="' + uuidv4() + '"')
 
   return {
     body
