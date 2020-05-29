@@ -38,7 +38,7 @@ exports.get = function(req, portal) {
   }
 }
 
-exports.preview = (req, id) => renderPart(req, id)
+exports.preview = (req, id) => renderPart(req, [id])
 
 function renderPart(req, itemList) {
   if (itemList.length === 0) {
@@ -53,13 +53,14 @@ function renderPart(req, itemList) {
     }
   }
 
-  const page = getContent()
   const part = getComponent()
+  const type = part && part.config && part.config.type ? part.config.type : undefined
+  const page = getContent()
   const phrases = getPhrases(page)
 
   const showAll = phrases.showAll
   const showLess = phrases.showLess
-  const mainTitle = part.config.title || phrases.relatedFactPagesHeading
+  const mainTitle = part && part.config && part.config.title ? part.config.title : phrases.relatedFactPagesHeading
   const relatedContentLists = []
 
   itemList.forEach((key) => {
@@ -76,11 +77,11 @@ function renderPart(req, itemList) {
             key: c
           })
           if (contentListItem) {
-            relatedContentLists.push(parseRelatedContent(contentListItem))
+            relatedContentLists.push(parseRelatedContent(contentListItem, type))
           }
         })
       } else { // handles content selector from content-types (articles, statistics etc)
-        relatedContentLists.push(parseRelatedContent(relatedContent))
+        relatedContentLists.push(parseRelatedContent(relatedContent, type))
       }
     }
   })
@@ -121,9 +122,7 @@ function renderPart(req, itemList) {
   }
 }
 
-const parseRelatedContent = (relatedContent) => {
-  const part = getComponent()
-
+const parseRelatedContent = (relatedContent, type) => {
   let imageId
   if (relatedContent.x &&
     relatedContent.x['com-enonic-app-metafields'] &&
@@ -152,7 +151,7 @@ const parseRelatedContent = (relatedContent) => {
     }),
     image,
     imageAlt,
-    type: part.config.type || undefined,
+    type,
     title: relatedContent.displayName
   }
 }

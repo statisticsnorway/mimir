@@ -37,9 +37,13 @@ const partsWithPreview = [ // Parts that has preview
   `${app.name}:menuDropdown`,
   `${app.name}:statistikkbanken`,
   `${app.name}:dataquery`,
-  `${app.name}:factBox`
+  `${app.name}:factBox`,
+  `${app.name}:contentList`
 ]
 
+const previewOverride = {
+  'contentList': 'relatedFactPage'
+}
 const view = resolve('default.html')
 
 exports.get = function(req) {
@@ -72,7 +76,10 @@ exports.get = function(req) {
   // Create preview if available
   let preview
   if (partsWithPreview.indexOf(page.type) >= 0) {
-    const name = page.type.replace(/^.*:/, '')
+    let name = page.type.replace(/^.*:/, '')
+    if (previewOverride[name]) {
+      name = previewOverride[name]
+    }
     const controller = __non_webpack_require__(`../../parts/${name}/${name}`)
     if (controller.preview) {
       preview = controller.preview(req, page._id)
