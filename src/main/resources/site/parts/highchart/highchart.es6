@@ -1,4 +1,5 @@
 import JsonStat from 'jsonstat-toolkit'
+import { X_AXIS_TITLE_POSITION, Y_AXIS_TITLE_POSITION } from '../../../lib/highcharts/config'
 const util = __non_webpack_require__( '/lib/util')
 const {
   getMunicipality
@@ -121,11 +122,12 @@ function renderPart(req, highchartIds) {
       }
 
       if (graphType === 'barNegative') {
+        // axes get flipped so interchange title positions
         config.series = graphData.series
         config.xAxis = {
           title: {
-            style,
-            text: xAxisTitle
+            ...config.xAxis.title,
+            ...Y_AXIS_TITLE_POSITION
           },
           categories: graphData.categories,
           reversed: false,
@@ -137,6 +139,10 @@ function renderPart(req, highchartIds) {
           accessibility: {
             description: xAxisLabel
           }
+        }
+        config.yAxis.title = {
+          ...config.yAxis.title,
+          ...X_AXIS_TITLE_POSITION
         }
       } else {
         let useGraphDataCategories = false
@@ -157,6 +163,7 @@ function renderPart(req, highchartIds) {
           showLabels = true
         }
         config.series = graphData.series
+
         config.xAxis = {
           categories: useGraphDataCategories ? graphData.categories : [highchart.displayName],
           allowDecimals: !!highchart.data.xAllowDecimal,
@@ -173,12 +180,25 @@ function renderPart(req, highchartIds) {
           // In other words, include 'bar' in this if-test, instead of putting it in the yAxis config
           tickmarkPlacement: (graphType == 'column' || graphType == 'bar') ? 'between' : 'on',
           title: {
-            style,
+            ...config.xAxis.title,
             text: xAxisTitle
           },
           type: highchart.data.xAxisType || 'categories',
           tickWidth: 1,
           tickColor: '#21383a'
+        }
+
+        if (graphType === 'bar') {
+          // the axes get flipped, so interchange the title positions
+          config.yAxis.title = {
+            ...config.yAxis.title,
+            ...X_AXIS_TITLE_POSITION
+          }
+
+          config.xAxis.title = {
+            ...config.xAxis.title,
+            ...Y_AXIS_TITLE_POSITION
+          }
         }
       }
 
@@ -209,9 +229,9 @@ function renderPart(req, highchartIds) {
         ...createConfig(highchart.data, highchart.displayName),
         data: {
           table: 'highcharts-datatable-' + highchart._id,
-          decimalPoint: ',',
-        },
-      };
+          decimalPoint: ','
+        }
+      }
     }
 
     return initHighchart(highchart, config)
