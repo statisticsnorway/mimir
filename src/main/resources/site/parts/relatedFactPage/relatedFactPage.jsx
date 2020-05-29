@@ -22,15 +22,15 @@ class RelatedBoxes extends React.Component {
       relatedContentLists, mainTitle, showAll, showLess
     } = this.props
     return (
-      <section className="xp-part part-imageLink container col-12 mt-5">
-        <h2 className={'ml-auto mr-auto pt-4'} >{mainTitle || 'Mangler tittel'}</h2>
-        <div className="imageBoxWrapper pt-5">
+      <section className="xp-part part-image-link container col-12 mt-5">
+        <h2 className={'ml-auto mr-auto pt-4'} >{mainTitle}</h2>
+        <div className="image-box-wrapper pt-5">
           {relatedContentLists.map((relatedRelatedContent, index) =>
             <PictureCard
               className={index > 3 && this.state.isHidden ? 'd-none' : ''}
-              image={<img src={relatedRelatedContent.image} alt={relatedRelatedContent.title}/>}
+              image={<img src={relatedRelatedContent.image} alt={relatedRelatedContent.imageAlt}/>}
               link={relatedRelatedContent.link}
-              type={relatedRelatedContent.type}
+              type={relatedRelatedContent.type ? relatedRelatedContent.type : undefined}
               title={relatedRelatedContent.title}
               key={index}
             />
@@ -49,8 +49,9 @@ RelatedBoxes.propTypes = {
     PropTypes.shape({
       title: PropTypes.string.isRequired,
       link: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      image: PropTypes.string.isRequired
+      type: PropTypes.string,
+      image: PropTypes.string.isRequired,
+      imageAlt: PropTypes.string.isRequired
     })
   ).isRequired,
   showAll: PropTypes.string.isRequired,
