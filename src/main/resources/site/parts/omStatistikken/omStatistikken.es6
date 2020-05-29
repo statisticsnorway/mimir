@@ -26,35 +26,12 @@ exports.preview = function(req) {
 function renderPart(req) {
   const page = getContent()
 
-  const definition = {
-    body: '',
-    open: i18nLib.localize({
-      key: 'definitions'
-    }),
-    items: getOmStatistikkenItems(page.data.definition)
-  }
-
-  const administrativeInformation = {
-    body: '',
-    open: i18nLib.localize({
-      key: 'administrativeInformation'
-    }),
-    items: getOmStatistikkenItems(page.data.administrativeInformation)
-  }
-
-  const background = {
-    body: '',
-    open: i18nLib.localize({
-      key: 'background'
-    }),
-    items: getOmStatistikkenItems(page.data.background)
-  }
-
-
   const accordions = []
-  accordions.push(definition)
-  accordions.push(administrativeInformation)
-  accordions.push(background)
+  page.data.definition ? accordions.push(getAccordion('definitions', page.data.definition)) : undefined
+  page.data.administrativeInformation ? accordions.push(getAccordion('administrativeInformation', page.data.administrativeInformation)) : undefined
+  page.data.background ? accordions.push(getAccordion('background', page.data.background)) : undefined
+  page.data.production ? accordions.push(getAccordion('production', page.data.production)) : undefined
+  page.data.accuracyAndReliability ? accordions.push(getAccordion('accuracyAndReliability', page.data.accuracyAndReliability)) : undefined
 
   if (accordions.length === 0) {
     accordions.push({
@@ -79,7 +56,19 @@ function renderPart(req) {
     pageContributions: omStatistikken.renderPageContributions()
   }
 
-  function getOmStatistikkenItems(category) {
+  function getAccordion(categoryText, category) {
+    const accordion = {
+      body: '',
+      open: i18nLib.localize({
+        key: categoryText
+      }),
+      items: getItems(category)
+    }
+
+    return accordion
+  }
+
+  function getItems(category) {
     const items = []
     if (category) {
       Object.keys(category).forEach((key) => {
@@ -87,7 +76,9 @@ function renderPart(req) {
           title: i18nLib.localize({
             key: key
           }),
-          body: category[key] ? category[key] : 'Ikke relevant'
+          body: category[key] ? category[key] : i18nLib.localize({
+            key: 'notRelevant'
+          })
         }
         items.push(item)
       })
