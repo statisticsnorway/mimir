@@ -1,7 +1,8 @@
 .part-related-external-links {
   .external-links-wrapper {
-    margin-top: 40px;
     @include make-container;
+    margin-top: 40px;
+    padding: 0;
   
     .external-links-component {
       @include make-row;
