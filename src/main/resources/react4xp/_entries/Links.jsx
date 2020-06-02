@@ -17,11 +17,10 @@ const Links = (props) => {
               linkType={link.linkType}
               negative={link.negative}
             >
-              <div
+              <span
                 dangerouslySetInnerHTML={{
-                  __html: link.children
-                }}
-              />
+                  _html: link.children
+                }} />
             </Link>
           </div>
         )

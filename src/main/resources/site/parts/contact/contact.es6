@@ -23,6 +23,7 @@ exports.get = function(req) {
 
 exports.preview = (req) => renderPart(req)
 
+// split 8-digit phone numbers into groups of 2 digits each dvs. "12345678" => "12 34 56 78"
 const treatPhoneNumber = (phone) => phone ? `${phone}`.match(/..?/g).join(' ') : ''
 
 const transformContact = (contact) => ({
@@ -33,7 +34,6 @@ const transformContact = (contact) => ({
 
 function renderPart(req) {
   const WIDTH = 4 // how many boxes in a row
-  const part = getComponent() || req
   const page = getContent()
 
   const statRegContacts = getContactsFromRepo()

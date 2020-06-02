@@ -1,5 +1,6 @@
 const {
-  pageUrl
+  pageUrl,
+  getSite
 } = __non_webpack_require__('/lib/xp/portal')
 const {
   get
@@ -31,7 +32,7 @@ exports.filter = function(req, next) {
     targetId = get({
       key: '/ssb/kommunefakta/kommune'
     })._id
-    pageTitle = `Kommunefakta ${region}`
+    pageTitle = `Kommunefakta ${region.charAt(0).toUpperCase() + region.slice(1)}`
   }
 
   if (!targetId) {
@@ -56,6 +57,11 @@ exports.filter = function(req, next) {
       readTimeout: 60000
     })
   })
+
+  if (pageTitle) {
+    const site = getSite()
+    targetResponse.body = targetResponse.body.replace(/(<title>)(.*?)(<\/title>)/i, `<title>${pageTitle} - ${site.displayName}</title>`)
+  }
 
   return {
     body: targetResponse.body
