@@ -33,7 +33,7 @@ exports.preview = (req, id) => renderPart(req, [id])
 
 function renderPart(req, externalLinks) {
   if (!externalLinks || externalLinks.length === 0) {
-    if (req.mode === 'edit' || req.mode === 'preview') {
+    if (req.mode === 'edit') {
       return {
         body: render(view)
       }
