@@ -195,6 +195,7 @@ class Dashboard extends React.Component {
           modifiedReadable={query.logData && query.logData.modifiedReadable ? query.logData.modifiedReadable : undefined}
           message={query.logData && query.logData.message ? query.logData.message : undefined}
           by={query.logData && query.logData.by.login ? query.logData.by.login : undefined }
+          baseUrl={this.props.baseUrl}
         />
       )
     })
@@ -368,7 +369,8 @@ Dashboard.propTypes = {
     default: PropTypes.arrayOf(PropTypes.shape(dataqueryShape)),
     factPage: PropTypes.arrayOf(PropTypes.shape(dataqueryShape)),
     municipality: PropTypes.arrayOf(PropTypes.shape(dataqueryShape))
-  })
+  }),
+  baseUrl: PropTypes.string
 }
 
 const dataqueryShape = PropTypes.shape({

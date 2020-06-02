@@ -27,7 +27,7 @@ const {
 } = __non_webpack_require__( '/lib/repo/eventLog')
 
 const view = resolve('./dashboard.html')
-
+const DEFAULT_CONTENTSTUDIO_URL = '/admin/tool/com.enonic.app.contentstudio'
 exports.get = function(req) {
   return renderPart()
   try {
@@ -46,23 +46,24 @@ function renderPart() {
   const dataQueries = getDataQueries(datasetMap)
 
   const assets = getAssets()
+  const baseUrl = app.config && app.config['ssb.contentStudio.baseUrl'] ? app.config['ssb.contentStudio.baseUrl'] : DEFAULT_CONTENTSTUDIO_URL
 
   const dashboardDataset = new React4xp('Dashboard/Dashboard')
     .setProps({
       header: 'Alle spørringer',
       dataQueries,
-      dashboardService: assets.dashboardService
+      dashboardService: assets.dashboardService,
+      baseUrl
     })
     .setId('dataset')
 
   const pageContributions = parseContributions(dashboardDataset.renderPageContributions({
     clientRender: true
   }))
-
   const model = {
     ...assets,
     dataQueries,
-    pageContributions
+    pageContributions,
   }
 
   let body = render(view, model)

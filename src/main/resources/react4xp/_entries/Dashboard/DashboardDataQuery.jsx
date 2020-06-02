@@ -13,7 +13,11 @@ class DashboardDataQuery extends React.Component {
     return (
       <tr className="small" >
         <td className={`${this.props.hasData ? 'ok' : 'error'} dataset`}>
-          {this.props.displayName ? <Link href={'/admin/tool/com.enonic.app.contentstudio/main#/edit/' + this.props.id}>{this.props.displayName}</Link> : ''}
+          {
+            this.props.displayName ? <Link href={this.props.baseUrl + '/main#/edit/' + this.props.id}>
+                {this.props.displayName}
+              </Link> : ''
+          }
           <span className={'float-right detail ' + this.props.format}>{this.props.format}</span>
           {!this.props.isPublished ? <span className={'float-right detail unpublished'}>Ikke publisert</span> : ''}
           {this.props.errorMsg ? <span className="errorMsg">{this.props.errorMsg}</span> : ''}
@@ -69,7 +73,8 @@ DashboardDataQuery.propTypes = {
   modifiedReadable: PropTypes.string,
   modified: PropTypes.string,
   message: PropTypes.string,
-  by: PropTypes.string
+  by: PropTypes.string,
+  baseUrl: PropTypes.string
 }
 
 export default (props) => <DashboardDataQuery {...props} />
