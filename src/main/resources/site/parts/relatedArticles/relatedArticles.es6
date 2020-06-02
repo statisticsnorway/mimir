@@ -42,10 +42,15 @@ exports.get = function(req) {
 exports.preview = (req, id) => renderPart(req, [id])
 
 function renderPart(req, relatedArticles) {
+  const page = getContent()
+  const phrases = getPhrases(page)
+
   if (!relatedArticles || relatedArticles.length === 0) {
-    if (req.mode === 'edit' || req.mode === 'preview') {
+    if (req.mode === 'edit') {
       return {
-        body: render(view)
+        body: render(view, {
+          heading: phrases.relatedArticlesHeading
+        })
       }
     }
     return {
@@ -53,9 +58,7 @@ function renderPart(req, relatedArticles) {
     }
   }
 
-  const page = getContent()
   moment.locale(page.language ? page.language : 'nb')
-  const phrases = getPhrases(page)
 
   relatedArticles = relatedArticles.map((article) => {
     if (article._selected === 'article') {
@@ -136,7 +139,8 @@ function renderPart(req, relatedArticles) {
     .uniqueId()
 
   const body = render(view, {
-    relatedArticlesId: relatedArticlesComponent.react4xpId
+    relatedArticlesId: relatedArticlesComponent.react4xpId,
+    heading: phrases.relatedArticlesHeading
   })
   return {
     body: relatedArticlesComponent.renderBody({

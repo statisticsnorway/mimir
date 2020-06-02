@@ -63,7 +63,7 @@ class RelatedArticles extends React.Component {
     } = this.props
     return (
       <div className="container">
-        <h3>{heading}</h3>
+        <h2>{heading}</h2>
         <div className="row">
           {relatedArticles.map((article, index) => {
             return (
