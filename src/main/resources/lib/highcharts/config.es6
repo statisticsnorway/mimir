@@ -22,6 +22,11 @@ export const X_AXIS_TITLE_POSITION = {
   y: undefined
 }
 
+const shouldShowStackingTotal = (highchartData) =>
+  (highchartData.graphType !== 'pie') &&
+  (highchartData.stacking === 'normal') &&
+  highchartData.showStackedTotal
+
 export const createConfig = (highchartData, displayName) => ({
   accessibility: {
     enabled: true,
@@ -168,7 +173,10 @@ export const createConfig = (highchartData, displayName) => ({
     max: highchartData.yAxisMax ? highchartData.yAxisMax.replace(/,/g, '.') : null,
     min: highchartData.yAxisMin ? highchartData.yAxisMin.replace(/,/g, '.') : null,
     stackLabels: {
-      enabled: highchartData.stablesum
+      enabled: shouldShowStackingTotal(highchartData),
+      // HC sets x or y := 0 by default, leaving no breathing space between the bar and the label
+      x: ((highchartData.graphType === 'bar') || (highchartData.graphType === 'barNegative')) ? 5 : 0,
+      y: ((highchartData.graphType === 'line') || (highchartData.graphType === 'area')) ? -5 : 0
     },
     tickWidth: 1,
     tickColor: '#21383a',

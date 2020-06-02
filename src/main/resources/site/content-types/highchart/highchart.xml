@@ -51,6 +51,14 @@
       <help-text>Grupperte verdier kan vises hver for seg (ingen stabling) eller summeres i en felles søyle med stabling</help-text>
     </input>
 
+    <input name="showStackedTotal" type="Checkbox">
+      <label>Vis stabelsum</label>
+      <help-text>
+        Hvis stabling av verdier er skrudd på OG dette feltet er avkrysset,
+        vises summen av alle verdiene fra en stabel som en etikett utenfor stabelen.
+        Er avslått som standard, da etikettene kan få plassproblemer ved større datasett og/eller store verdier.
+      </help-text>
+    </input>
 
     <input name="noLegend" type="CheckBox">
       <label>Skjul tegnforklaringen</label>
