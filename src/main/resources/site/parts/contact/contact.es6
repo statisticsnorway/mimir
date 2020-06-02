@@ -23,18 +23,25 @@ exports.get = function(req) {
 
 exports.preview = (req) => renderPart(req)
 
+const treatPhoneNumber = (phone) => phone ? `${phone}`.match(/..?/g).join(' ') : ''
+
+const transformContact = (contact) => ({
+  ...contact,
+  telephone: treatPhoneNumber(contact.telephone)
+})
+
+
 function renderPart(req) {
-  const WIDTH = 3 // how many boxes in a row
+  const WIDTH = 4 // how many boxes in a row
   const part = getComponent() || req
   const page = getContent()
 
   const statRegContacts = getContactsFromRepo()
 
-  // checks page content for contacts first, then part for contacts and creates array
-  const contactIds = ensureArray(page.data.contacts || part.config.contacts)
+  const contactIds = ensureArray(page.data.contacts)
   const selectedContacts = contactIds.reduce((acc, contactId) => {
     const found = find((contact) => `${contact.id}` === `${contactId}`)(statRegContacts)
-    return found ? acc.concat(found) : acc
+    return found ? acc.concat(transformContact(found)) : acc
   }, [])
 
   const contacts = chunkArray(selectedContacts, WIDTH)
