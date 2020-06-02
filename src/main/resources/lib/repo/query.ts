@@ -55,14 +55,12 @@ export enum Events {
   XML_TO_JSON = 'XML_TO_JSON'
 }
 
-export function logDataQueryEvent(queryId: string, status: QueryStatus): QueryInfoNode | undefined {
-  return withLoggedInUserContext('master', (user) => {
+export function logDataQueryEvent(queryId: string, status: QueryStatus): void {
+  withLoggedInUserContext('master', (user) => {
     if (user) {
       startQuery(queryId, user, status)
       addEventToQueryLog(queryId, user, status)
-      return updateQueryLogStatus(queryId, user, status)
-    } else {
-      return undefined
+      updateQueryLogStatus(queryId, user, status)
     }
   })
 }
