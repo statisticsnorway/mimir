@@ -3,7 +3,7 @@ const {
 } = __non_webpack_require__('/lib/klass/municipalities')
 
 /**
- * @param {req} Enonics request object
+ * @param {obejct} req: Enonics request object
  * @return {{body:
  *  {hits: {
  *    id: string,
