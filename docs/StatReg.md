@@ -1,7 +1,10 @@
 # Saving data from Statistikkregisteret in Content Studio
 
-## Goal
+### Goal
 To fetch data from statistikkregisteret and saving it in Content Studio. Uses [MIMIR XP Repo](MimirXPRepo.md).
+
+### Config
+- Requires `ssb.statreg.baseUrl` (picked up from mimir-config) - which points to the URL of the statreg API. 
 
 ### StatReg Repo
 - Uses repo `no.ssb.statreg` in `master` branch.
