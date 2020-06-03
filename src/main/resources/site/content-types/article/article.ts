@@ -110,11 +110,6 @@ export interface Article {
   introTitle?: string;
 
   /**
-   * Kontakter
-   */
-  contacts?: string;
-
-  /**
    * Forfatter
    */
   authorItemSet?: Array<{
@@ -153,4 +148,9 @@ export interface Article {
       modifiedDate?: string;
     };
   };
+
+  /**
+   * Kontakter
+   */
+  contacts?: string;
 }
