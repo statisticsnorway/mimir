@@ -25,13 +25,23 @@ exports.preview = function(req) {
 
 function renderPart(req) {
   const page = getContent()
+  const definitionsItems = ['conceptsAndVariables', 'standardRatings']
+  const administrativeInformationItems = ['regionalLevel', 'frequency', 'internationalReporting', 'storageAndUse']
+  const backgroundItems = ['purposeAndHistory', 'usersAndUse', 'equalTreatmentUsers', 'relationOtherStatistics', 'legalAuthority', 'eeaReference']
+  const productionItems = ['scope', 'dataSourcesAndSamples', 'dataCollectionEditingAndCalculations', 'seasonalAdjustment', 'confidentiality', 'comparability']
+  const accuracyAndReliabilityItems = ['errorSources', 'revision']
 
   const accordions = []
-  page.data.definition ? accordions.push(getAccordion('definitions', page.data.definition)) : undefined
-  page.data.administrativeInformation ? accordions.push(getAccordion('administrativeInformation', page.data.administrativeInformation)) : undefined
-  page.data.background ? accordions.push(getAccordion('background', page.data.background)) : undefined
-  page.data.production ? accordions.push(getAccordion('production', page.data.production)) : undefined
-  page.data.accuracyAndReliability ? accordions.push(getAccordion('accuracyAndReliability', page.data.accuracyAndReliability)) : undefined
+  page.data.definition ? accordions.push(
+    getAccordion('definitions', page.data.definition, definitionsItems)) : undefined
+  page.data.administrativeInformation ? accordions.push(
+    getAccordion('administrativeInformation', page.data.administrativeInformation, administrativeInformationItems)) : undefined
+  page.data.background ? accordions.push(
+    getAccordion('background', page.data.background, backgroundItems)) : undefined
+  page.data.production ? accordions.push(
+    getAccordion('production', page.data.production, productionItems)) : undefined
+  page.data.accuracyAndReliability ? accordions.push(
+    getAccordion('accuracyAndReliability', page.data.accuracyAndReliability, accuracyAndReliabilityItems)) : undefined
 
   if (accordions.length === 0) {
     accordions.push({
@@ -56,32 +66,34 @@ function renderPart(req) {
     pageContributions: omStatistikken.renderPageContributions()
   }
 
-  function getAccordion(categoryText, category) {
+  function getAccordion(categoryText, category, items) {
     const accordion = {
       body: '',
       open: i18nLib.localize({
         key: categoryText
       }),
-      items: getItems(category)
+      items: getItems(category, items)
     }
 
     return accordion
   }
 
-  function getItems(category) {
+  function getItems(category, variables) {
     const items = []
+
     if (category) {
-      Object.keys(category).forEach((key) => {
+      variables.forEach((variable) => {
         const item = {
           title: i18nLib.localize({
-            key: key
+            key: variable
           }),
-          body: category[key] ? category[key] : i18nLib.localize({
+          body: category[variable] ? category[variable] : i18nLib.localize({
             key: 'notRelevant'
           })
         }
         items.push(item)
-      })
+      }
+      )
     }
     return items
   }
