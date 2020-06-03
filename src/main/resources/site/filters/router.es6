@@ -32,7 +32,7 @@ exports.filter = function(req, next) {
     targetId = get({
       key: '/ssb/kommunefakta/kommune'
     })._id
-    pageTitle = `Kommunefakta ${region.charAt(0).toUpperCase() + region.slice(1)}`
+    pageTitle = `Kommunefakta ${municipality.displayName}`
   }
 
   if (!targetId) {
