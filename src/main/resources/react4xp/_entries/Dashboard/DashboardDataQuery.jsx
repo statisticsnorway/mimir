@@ -3,7 +3,7 @@ import { RefreshCw, Trash } from 'react-feather'
 import { Link } from '@statisticsnorway/ssb-component-library'
 import React from 'react'
 import PropTypes from 'prop-types'
-import {DataQuery} from './Dashboard';
+import { DataQuery } from './Dashboard'
 
 class DashboardDataQuery extends React.Component {
   constructor(props) {

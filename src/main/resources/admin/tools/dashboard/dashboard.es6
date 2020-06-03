@@ -17,7 +17,7 @@ const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
 const {
-  isPublished, dateToFormat, dateToReadable
+  isPublished, dateToReadable
 } = __non_webpack_require__('/lib/ssb/utils')
 const content = __non_webpack_require__( '/lib/xp/content')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
@@ -37,7 +37,7 @@ exports.get = function(req) {
 }
 
 /**
- *
+ * @param {object} req
  * @return {{pageContributions: *, body: *}}
  */
 function renderPart(req) {

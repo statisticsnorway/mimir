@@ -1,5 +1,5 @@
 import React from 'react'
-import { Accordion, Button as SSBButton } from '@statisticsnorway/ssb-component-library'
+import { Accordion } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import Alert from 'react-bootstrap/Alert'
 import Col from 'react-bootstrap/Col'
@@ -59,7 +59,7 @@ class Dashboard extends React.Component {
   setLoading(id, value) {
     this.setState({
       dataQueries: this.state.dataQueries.map((query) => {
-        if(query.id === id) {
+        if (query.id === id) {
           return {
             ...query,
             loading: value
@@ -136,7 +136,7 @@ class Dashboard extends React.Component {
     return (
       <Accordion header={header}
         className="mx-0"
-        >
+      >
         { this.props.featureToggling.updateList &&
           <DashboardButtons
             dataQueries={queries}
