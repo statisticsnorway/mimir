@@ -25,9 +25,11 @@ const i18n = __non_webpack_require__('/lib/xp/i18n')
 const {
   EVENT_LOG_BRANCH, EVENT_LOG_REPO
 } = __non_webpack_require__( '/lib/repo/eventLog')
+const { getToolUrl } = __non_webpack_require__('/lib/xp/admin');
 
 const view = resolve('./dashboard.html')
-const DEFAULT_CONTENTSTUDIO_URL = '/admin/tool/com.enonic.app.contentstudio'
+const DEFAULT_CONTENTSTUDIO_URL = getToolUrl('com.enonic.app.contentstudio', 'main')
+
 exports.get = function(req) {
   return renderPart()
   try {
@@ -46,14 +48,13 @@ function renderPart() {
   const dataQueries = getDataQueries(datasetMap)
 
   const assets = getAssets()
-  const baseUrl = app.config && app.config['ssb.contentStudio.baseUrl'] ? app.config['ssb.contentStudio.baseUrl'] : DEFAULT_CONTENTSTUDIO_URL
 
   const dashboardDataset = new React4xp('Dashboard/Dashboard')
     .setProps({
       header: 'Alle spørringer',
       dataQueries,
       dashboardService: assets.dashboardService,
-      baseUrl
+      contentStudioBaseUrl: `${DEFAULT_CONTENTSTUDIO_URL}#/edit/`
     })
     .setId('dataset')
 

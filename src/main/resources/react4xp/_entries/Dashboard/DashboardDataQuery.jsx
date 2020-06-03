@@ -14,7 +14,7 @@ class DashboardDataQuery extends React.Component {
       <tr className="small" >
         <td className={`${this.props.hasData ? 'ok' : 'error'} dataset`}>
           {
-            this.props.displayName ? <Link href={this.props.baseUrl + '/main#/edit/' + this.props.id}>
+            this.props.displayName ? <Link href={this.props.contentStudioBaseUrl + this.props.id}>
                 {this.props.displayName}
               </Link> : ''
           }
@@ -74,7 +74,7 @@ DashboardDataQuery.propTypes = {
   modified: PropTypes.string,
   message: PropTypes.string,
   by: PropTypes.string,
-  baseUrl: PropTypes.string
+  contentStudioBaseUrl: PropTypes.string
 }
 
 export default (props) => <DashboardDataQuery {...props} />
