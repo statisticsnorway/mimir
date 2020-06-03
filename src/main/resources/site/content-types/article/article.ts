@@ -30,9 +30,59 @@ export interface Article {
   }>;
 
   /**
-   * Løpenummer
+   * Relatert artikkel
    */
-  serialNumber?: string;
+  relatedArticles?: {
+    /**
+     * Selected
+     */
+    _selected: string;
+
+    /**
+     * Artikkel
+     */
+    article?: {
+      /**
+       * Artikkel
+       */
+      article: string;
+    };
+
+    /**
+     * Artikkel fra CMS
+     */
+    externalArticle?: {
+      /**
+       * URL
+       */
+      url: string;
+
+      /**
+       * Tittel
+       */
+      title: string;
+
+      /**
+       * Type
+       */
+      type?: string;
+
+      /**
+       * Dato
+       */
+      date?: string;
+
+      /**
+       * Ingress
+       */
+      preface: string;
+
+      /**
+       * Bilde
+       */
+      image: string;
+    };
+  };
 
   /**
    * Relaterte faktasider
@@ -58,6 +108,11 @@ export interface Article {
    * Stikktittel
    */
   introTitle?: string;
+
+  /**
+   * Kontakter
+   */
+  contacts?: string;
 
   /**
    * Forfatter

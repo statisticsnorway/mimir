@@ -19,37 +19,44 @@ const toSelectOptions = (contacts) =>
       mobile,
       telephone
     })) :
-    [NO_CONTACTS_FOUND]
+    []
 
 exports.get = (req) => {
-  const allOptions = toSelectOptions(getContactsFromRepo())
+  try {
+    const allContacts = getContactsFromRepo()
+    if (!allContacts) {
+      const error = `Contacts StatReg node does not seem to be configured correctly. Unable to retrieve contacts`
+      return {
+        body: { error },
+        status: 500
+      }
+    }
 
-  const options = req.params.query ?
-    allOptions.filter((opt) =>
-      opt.displayName.toLowerCase().includes(req.params.query.toLowerCase())) :
-    allOptions
+    const allOptions = toSelectOptions(allContacts)
 
-  log.info(`Results filtered on '${req.params.query}': ${JSON.stringify(options)} `)
+    const filtered = req.params.query ?
+      allOptions.filter((opt) =>
+        opt.displayName.toLowerCase()
+          .includes(req.params.query.toLowerCase())) :
+      allOptions
 
-  if (!options) {
+    log.info(`Results filtered on '${req.params.query}': ${filtered ? filtered.length : 0} `)
+
     return {
       contentType,
       body: {
-        hits: [NO_CONTACTS_FOUND],
-        count: 1,
-        total: 1
+        hits: filtered,
+        count: filtered.length,
+        total: filtered.length
       },
-      status: 404
+      status: 200
     }
-  }
-
-  return {
-    contentType,
-    body: {
-      hits: options,
-      count: options.length,
-      total: options.length
-    },
-    status: 200
+  } catch (exc) {
+    log.error(`Error while fetching contacts: ${JSON.stringify(exc)}`)
+    return {
+      contentType,
+      body: exc,
+      status: 500
+    }
   }
 }
