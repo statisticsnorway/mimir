@@ -58,7 +58,7 @@ const renderPart = (req, config) => {
   }
 
   // UD: Replaces the generic id with a unique one to prevent duplicates
-  body = body.replace(/id=\"dividerId\"/, 'id="' + uuidv4() + '"')
+  body = body.replace(/dividerId/, uuidv4())
 
   return {
     body
