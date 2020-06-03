@@ -31,6 +31,7 @@ exports.preview = (req) => renderPart(req)
 function renderPart(request) {
   const part = getComponent()
   const urlContentSelector = part.config.urlContentSelector
+  const titleSize = getTitleSize(part.config.title)
 
   const props = {
     imgUrl: imageUrl({
@@ -43,7 +44,8 @@ function renderPart(request) {
     subTitle: getSubtitle(part.config.content, part.config.date),
     title: part.config.title,
     preambleText: part.config.preamble,
-    linkType: 'header'
+    linkType: 'header',
+    titleSize: titleSize
   }
 
   const profiledBox = new React4xp('site/parts/profiledBox/profiledBox')
@@ -99,4 +101,19 @@ function getSubtitle(content, date) {
   } else {
     return ''
   }
+}
+
+function getTitleSize(title) {
+  const titleLength = title.length
+  let titleSize = 'sm'
+  if (titleLength > 25) {
+    titleSize = 'md'
+  }
+  if (titleLength > 50) {
+    titleSize = 'lg'
+  }
+  if (titleLength > 75) {
+    titleSize = 'xl'
+  }
+  return titleSize
 }
