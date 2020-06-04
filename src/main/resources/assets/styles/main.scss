@@ -83,8 +83,7 @@ section + section, .xp-layout + .xp-layout {
 
 .xp-region {
   @include media-breakpoint-down(md) {
-    margin-right: auto;
-    margin-left: auto;
+    margin: 0 auto;
     width: 95%;
   }
 }
