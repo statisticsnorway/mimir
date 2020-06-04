@@ -7,6 +7,7 @@ import Row from 'react-bootstrap/Row'
 import Table from 'react-bootstrap/Table'
 import DashboardDataQuery from './DashboardDataQuery'
 import DashboardButtons from './DashboardButtons'
+import ClearCacheButton from './ClearCacheButton'
 import axios from 'axios'
 import { groupBy } from 'ramda'
 
@@ -153,7 +154,7 @@ class Dashboard extends React.Component {
   render() {
     const groupedQueries = byType(this.state.dataQueries)
     return (
-      <section className="xp-part part-dashboard">
+      <section className="xp-part part-dashboard container">
         <Row>
           <Col>
             <div className="p-4 tables-wrapper">
@@ -175,6 +176,16 @@ class Dashboard extends React.Component {
                 this.renderAccordians(`Andre (${groupedQueries.default.length})`, groupedQueries.default)
               }
             </div>
+          </Col>
+        </Row>
+
+        <Row className="my-3">
+          <Col className="p-4">
+            <ClearCacheButton
+              onSuccess={(message) => this.showSuccess(message)}
+              onError={(message) => this.showError(message)}
+              clearCacheServiceUrl={this.props.clearCacheServiceUrl}
+            />
           </Col>
         </Row>
 
@@ -206,6 +217,7 @@ class Dashboard extends React.Component {
 Dashboard.propTypes = {
   header: PropTypes.string,
   dashboardService: PropTypes.string,
+  clearCacheServiceUrl: PropTypes.string,
   dataQueries: PropTypes.arrayOf(
     PropTypes.shape(DataQuery)
   ),
