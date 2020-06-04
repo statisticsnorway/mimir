@@ -48,6 +48,11 @@ export function setup(): void {
     localOnly: true,
     callback: onNodeChange
   })
+
+  listener({
+    type: 'custom.clearCache',
+    callback: (e: EnonicEvent<CompletelyClearCacheOptions>) => completelyClearCache(e.data)
+  })
 }
 
 function onNodeChange(event: EnonicEvent<EnonicEventData>): void {
@@ -127,9 +132,7 @@ function clearCache(content: Content, branch: string, cleared: Array<string>): A
 
   // clear menu cache
   if (content.type === `${app.name}:menuItem`) {
-    log.info(`clear header/footer cache (${branch})`)
-    const menuCache: Cache = branch === 'master' ? masterMenuCache : draftMenuCache
-    menuCache.clear()
+    completelyClearMenuCache(branch)
   }
 
   // clear dataset cache based on dataquery id
@@ -209,9 +212,53 @@ export function fromDatasetCache(req: Request, key: string, fallback: () => Data
   return fallback()
 }
 
+function completelyClearFilterCache(branch: string): void {
+  const cacheMap: Map<string, Cache> = branch === 'master' ? masterFilterCaches : draftFilterCaches
+  cacheMap.forEach((cache: Cache, filterKey: string) => {
+    log.info(`clear ${filterKey} filter cache(${branch})`)
+    cache.clear()
+    cacheMap.delete(filterKey)
+  })
+}
+
+function completelyClearMenuCache(branch: string): void {
+  log.info(`clear header/footer cache (${branch})`)
+  const menuCache: Cache = branch === 'master' ? masterMenuCache : draftMenuCache
+  menuCache.clear()
+}
+
+function completelyClearDatasetCache(branch: string): void {
+  log.info(`clear dataset cache (${branch})`)
+  const datasetCache: Cache = branch === 'master' ? masterDatasetCache : draftDatasetCache
+  datasetCache.clear()
+}
+
+export function completelyClearCache(options: CompletelyClearCacheOptions): void {
+  if (options.clearFilterCache) {
+    completelyClearFilterCache('master')
+    completelyClearFilterCache('draft')
+  }
+
+  if (options.clearMenuCache) {
+    completelyClearMenuCache('master')
+    completelyClearMenuCache('draft')
+  }
+
+  if (options.clearDatasetCache) {
+    completelyClearDatasetCache('master')
+    completelyClearDatasetCache('draft')
+  }
+}
+
 export interface DatasetCache {
   data: JSDataset | Array<JSDataset> | null | TbmlData | TbmlData;
   format: Dataquery['datasetFormat'];
+}
+
+export interface CompletelyClearCacheOptions {
+  clearFilterCache: boolean;
+  clearMenuCache: boolean;
+  clearDatasetCache: boolean;
 }
 
 export interface SSBCacheLibrary {
