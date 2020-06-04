@@ -59,7 +59,7 @@ function renderPart(req) {
   }
 
   const model = {
-    label: part.config.label,
+    label: getComponent().config.label,
     contacts
   }
 
