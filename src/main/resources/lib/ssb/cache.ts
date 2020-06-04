@@ -233,7 +233,7 @@ function completelyClearDatasetCache(branch: string): void {
   datasetCache.clear()
 }
 
-export function completelyClearCache(options: CompletelyClearCacheOptions): void {
+function completelyClearCache(options: CompletelyClearCacheOptions): void {
   if (options.clearFilterCache) {
     completelyClearFilterCache('master')
     completelyClearFilterCache('draft')
