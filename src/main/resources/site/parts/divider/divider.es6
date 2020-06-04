@@ -7,9 +7,6 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
-const {
-  v4: uuidv4
-} = require('uuid')
 
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view = resolve('./divider.html')
@@ -57,8 +54,8 @@ const renderPart = (req, config) => {
     }
   }
 
-  // UD: Replaces the generic id with a unique one to prevent duplicates
-  body = body.replace(/dividerId/, uuidv4())
+  // UD: Removes the dividerId to prevent the duplicate ids errors
+  body = body.replace(/id="dividerId"/, '')
 
   return {
     body
