@@ -25,7 +25,6 @@ class ClearCacheButton extends React.Component {
 
       axios.get(clearCacheServiceUrl)
         .then((response) => {
-          console.log(response)
           if (onSuccess) {
             onSuccess(response.data.message)
           }
