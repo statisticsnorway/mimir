@@ -24,7 +24,9 @@ class Accordion extends React.Component {
   }
 
   render() {
-    const anchor = window.location.hash.substr(1);
+    const location = window.location
+    const anchor = location && location.hash !== '' ? location.hash.substr(1) : undefined
+
     const {
       accordions
     } = this.props
@@ -36,10 +38,11 @@ class Accordion extends React.Component {
               id={accordion.id}
               key={index}
               header={accordion.open}
-              openByDefault={accordion.id && accordion.id === anchor}
+              openByDefault={anchor && accordion.id && accordion.id === anchor}
             >
               <div dangerouslySetInnerHTML={this.createMarkup(accordion.body)}></div>
               {this.renderNestenAccordions(accordion.items)}
+              {console.log(anchor && accordion.id && accordion.id === anchor)}
             </AccordionComponent>
           )}
       </section>
