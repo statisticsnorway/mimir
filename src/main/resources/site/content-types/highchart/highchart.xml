@@ -52,7 +52,7 @@
     </input>
 
     <input name="showStackedTotal" type="Checkbox">
-      <label>Vis stabelsum</label>
+      <label>Vis samlet sum for stolpe</label>
       <help-text>
         Hvis stabling av verdier er skrudd på OG dette feltet er avkrysset,
         vises summen av alle verdiene fra en stabel som en etikett utenfor stabelen.
