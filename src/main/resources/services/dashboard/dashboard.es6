@@ -35,7 +35,7 @@ exports.get = function(req) {
   }
 
   logDataQueryEvent(req.params.id, {
-    message: Events.STARTED
+    message: Events.GET_DATA_STARTED
   })
 
   const updateResult = getAllOrOneDataQuery(req.params.id).map((dataquery) => updateDataQuery(dataquery))
@@ -43,7 +43,6 @@ exports.get = function(req) {
   const parsedResult = updateResult.map(transfromQueryResult)
   return successResponse(parsedResult, undefined)
 }
-
 
 function transfromQueryResult(result) {
   const queryLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${result.dataquery._id}`)
