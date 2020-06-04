@@ -24,6 +24,7 @@ class Accordion extends React.Component {
   }
 
   render() {
+    const anchor = window.location.hash.substr(1);
     const {
       accordions
     } = this.props
@@ -31,8 +32,13 @@ class Accordion extends React.Component {
       <section className="xp-part part-accordion container">
         {
           accordions.map((accordion, index) =>
-            <AccordionComponent key={index} header={accordion.open}>
-              <div dangerouslySetInnerHTML={this.createMarkup(accordion.body)}/>
+            <AccordionComponent
+              id={accordion.id}
+              key={index}
+              header={accordion.open}
+              openByDefault={accordion.id && accordion.id === anchor}
+            >
+              <div dangerouslySetInnerHTML={this.createMarkup(accordion.body)}></div>
               {this.renderNestenAccordions(accordion.items)}
             </AccordionComponent>
           )}
@@ -44,6 +50,7 @@ class Accordion extends React.Component {
 Accordion.propTypes = {
   accordions: PropTypes.arrayOf(
     PropTypes.shape({
+      id: PropTypes.string,
       open: PropTypes.string.isRequired,
       body: PropTypes.string.isRequired,
       items: PropTypes.arrayOf(
