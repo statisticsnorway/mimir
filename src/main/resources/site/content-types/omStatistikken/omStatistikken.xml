@@ -24,14 +24,14 @@
                             <occurrences minimum="0" maximum="1" />
                             <label>Definisjoner av viktige begrep og variabler</label>
                             <config>
-                                <allowHeadings>h3</allowHeadings>
+                                <allowHeadings>h3 h4</allowHeadings>
                             </config>
                         </input>
                         <input name="standardRatings" type="HtmlArea">
                             <occurrences minimum="0" maximum="1" />
                             <label>Standard klassifikasjoner</label>
                             <config>
-                                <allowHeadings>h3</allowHeadings>
+                                <allowHeadings>h3 h4</allowHeadings>
                             </config>
                         </input>
                     </items>
@@ -50,28 +50,28 @@
                             <occurrences minimum="0" maximum="1" />
                             <label>Regionalt nivå</label>
                             <config>
-                                <allowHeadings>h3</allowHeadings>
+                                <allowHeadings>h3 h4</allowHeadings>
                             </config>
                         </input>
                         <input name="frequency" type="HtmlArea">
                             <occurrences minimum="0" maximum="1" />
                             <label>Hyppighet og aktualitet</label>
                             <config>
-                                <allowHeadings>h3</allowHeadings>
+                                <allowHeadings>h3 h4</allowHeadings>
                             </config>
                         </input>
                         <input name="internationalReporting" type="HtmlArea">
                             <occurrences minimum="0" maximum="1" />
                             <label>Internasjonal rapportering</label>
                             <config>
-                                <allowHeadings>h3</allowHeadings>
+                                <allowHeadings>h3 h4</allowHeadings>
                             </config>
                         </input>
                         <input name="storageAndUse" type="HtmlArea">
                             <occurrences minimum="0" maximum="1" />
                             <label>Lagring og anvendelse av grunnlagsmaterialet</label>
                             <config>
-                                <allowHeadings>h3</allowHeadings>
+                                <allowHeadings>h3 h4</allowHeadings>
                             </config>
                         </input>
                     </items>
@@ -90,42 +90,42 @@
                             <occurrences minimum="0" maximum="1" />
                             <label>Formål og historie</label>
                             <config>
-                                <allowHeadings>h3</allowHeadings>
+                                <allowHeadings>h3 h4</allowHeadings>
                             </config>
                         </input>
                         <input name="usersAndUse" type="HtmlArea">
                             <occurrences minimum="0" maximum="1" />
                             <label>Brukere og bruksområder</label>
                             <config>
-                                <allowHeadings>h3</allowHeadings>
+                                <allowHeadings>h3 h4</allowHeadings>
                             </config>
                         </input>
                         <input name="equalTreatmentUsers" type="HtmlArea">
                             <occurrences minimum="0" maximum="1" />
                             <label>Likebehandling av brukere</label>
                             <config>
-                                <allowHeadings>h3</allowHeadings>
+                                <allowHeadings>h3 h4</allowHeadings>
                             </config>
                         </input>
                         <input name="relationOtherStatistics" type="HtmlArea">
                             <occurrences minimum="0" maximum="1" />
                             <label>Sammenheng med annen statistikk</label>
                             <config>
-                                <allowHeadings>h3</allowHeadings>
+                                <allowHeadings>h3 h4</allowHeadings>
                             </config>
                         </input>
                         <input name="legalAuthority" type="HtmlArea">
                             <occurrences minimum="0" maximum="1" />
                             <label>Lovhjemmel</label>
                             <config>
-                                <allowHeadings>h3</allowHeadings>
+                                <allowHeadings>h3 h4</allowHeadings>
                             </config>
                         </input>
                         <input name="eeaReference" type="HtmlArea">
                             <occurrences minimum="0" maximum="1" />
                             <label>EØS-referanse</label>
                             <config>
-                                <allowHeadings>h3</allowHeadings>
+                                <allowHeadings>h3 h4</allowHeadings>
                             </config>
                         </input>
                     </items>
@@ -144,42 +144,42 @@
                             <occurrences minimum="0" maximum="1" />
                             <label>Omfang</label>
                             <config>
-                                <allowHeadings>h3</allowHeadings>
+                                <allowHeadings>h3 h4</allowHeadings>
                             </config>
                         </input>
                         <input name="dataSourcesAndSamples" type="HtmlArea">
                             <occurrences minimum="0" maximum="1" />
                             <label>Datakilder og utvalg</label>
                             <config>
-                                <allowHeadings>h3</allowHeadings>
+                                <allowHeadings>h3 h4</allowHeadings>
                             </config>
                         </input>
                         <input name="dataCollectionEditingAndCalculations" type="HtmlArea">
                             <occurrences minimum="0" maximum="1" />
                             <label>Datainnsamling, editering og beregninger</label>
                             <config>
-                                <allowHeadings>h3</allowHeadings>
+                                <allowHeadings>h3 h4</allowHeadings>
                             </config>
                         </input>
                         <input name="seasonalAdjustment" type="HtmlArea">
                             <occurrences minimum="0" maximum="1" />
                             <label>Sesongjustering</label>
                             <config>
-                                <allowHeadings>h3</allowHeadings>
+                                <allowHeadings>h3 h4</allowHeadings>
                             </config>
                         </input>
                         <input name="confidentiality" type="HtmlArea">
                             <occurrences minimum="0" maximum="1" />
                             <label>Konfidensialitet</label>
                             <config>
-                                <allowHeadings>h3</allowHeadings>
+                                <allowHeadings>h3 h4</allowHeadings>
                             </config>
                         </input>
                         <input name="comparability" type="HtmlArea">
                             <occurrences minimum="0" maximum="1" />
                             <label>Sammenlignbarhet over tid og sted</label>
                             <config>
-                                <allowHeadings>h3</allowHeadings>
+                                <allowHeadings>h3 h4</allowHeadings>
                             </config>
                         </input>
                     </items>
@@ -198,14 +198,14 @@
                             <occurrences minimum="0" maximum="1" />
                             <label>Feilkilder og usikkerhet</label>
                             <config>
-                                <allowHeadings>h3</allowHeadings>
+                                <allowHeadings>h3 h4</allowHeadings>
                             </config>
                         </input>
                         <input name="revision" type="HtmlArea">
                             <occurrences minimum="0" maximum="1" />
                             <label>Revisjon</label>
                             <config>
-                                <allowHeadings>h3</allowHeadings>
+                                <allowHeadings>h3 h4</allowHeadings>
                             </config>
                         </input>
                     </items>
@@ -241,49 +241,49 @@
                             <occurrences minimum="0" maximum="1" />
                             <label>Hvorfor sesongjusteres denne statistikken?</label>
                             <config>
-                                <allowHeadings>h3</allowHeadings>
+                                <allowHeadings>h3 h4</allowHeadings>
                             </config>
                         </input>
                         <input name="preTreatment" type="HtmlArea">
                             <occurrences minimum="0" maximum="1" />
                             <label>Prekorrigering</label>
                             <config>
-                                <allowHeadings>h3</allowHeadings>
+                                <allowHeadings>h3 h4</allowHeadings>
                             </config>
                         </input>
                         <input name="seasonalAdjustment" type="HtmlArea">
                             <occurrences minimum="0" maximum="1" />
                             <label>Sesongjustering</label>
                             <config>
-                                <allowHeadings>h3</allowHeadings>
+                                <allowHeadings>h3 h4</allowHeadings>
                             </config>
                         </input>
                         <input name="auditProcedures" type="HtmlArea">
                             <occurrences minimum="0" maximum="1" />
                             <label>Revisjonsrutiner</label>
                             <config>
-                                <allowHeadings>h3</allowHeadings>
+                                <allowHeadings>h3 h4</allowHeadings>
                             </config>
                         </input>
                         <input name="qualityOfSeasonalAdjustment" type="HtmlArea">
                             <occurrences minimum="0" maximum="1" />
                             <label>Kvalitet på sesongjustering</label>
                             <config>
-                                <allowHeadings>h3</allowHeadings>
+                                <allowHeadings>h3 h4</allowHeadings>
                             </config>
                         </input>
                         <input name="specialCases" type="HtmlArea">
                             <occurrences minimum="0" maximum="1" />
                             <label>Spesielle tilfeller</label>
                             <config>
-                                <allowHeadings>h3</allowHeadings>
+                                <allowHeadings>h3 h4</allowHeadings>
                             </config>
                         </input>
                         <input name="postingProcedures" type="HtmlArea">
                             <occurrences minimum="0" maximum="1" />
                             <label>Publiseringsrutiner</label>
                             <config>
-                                <allowHeadings>h3</allowHeadings>
+                                <allowHeadings>h3 h4</allowHeadings>
                             </config>
                         </input>
                         <input name="relevantDocumentation" type="HtmlArea">
