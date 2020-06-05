@@ -25,8 +25,10 @@ const i18n = __non_webpack_require__('/lib/xp/i18n')
 const {
   EVENT_LOG_BRANCH, EVENT_LOG_REPO
 } = __non_webpack_require__( '/lib/repo/eventLog')
+const { getToolUrl } = __non_webpack_require__('/lib/xp/admin');
 
 const view = resolve('./dashboard.html')
+const DEFAULT_CONTENTSTUDIO_URL = getToolUrl('com.enonic.app.contentstudio', 'main')
 
 exports.get = function(req) {
   try {
@@ -53,7 +55,8 @@ function renderPart(req) {
       dashboardService: assets.dashboardService,
       featureToggling: {
         updateList: req.params.updateList ? true : false
-      }
+      },
+      contentStudioBaseUrl: `${DEFAULT_CONTENTSTUDIO_URL}#/edit/`
     })
     .setId('dataset')
 
@@ -64,7 +67,7 @@ function renderPart(req) {
   const model = {
     ...assets,
     dataQueries,
-    pageContributions
+    pageContributions,
   }
 
   let body = render(view, model)

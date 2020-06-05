@@ -109,6 +109,7 @@ class Dashboard extends React.Component {
           deleteRequest={(id) => this.deleteRequest(id)}
           refreshRow={(id) => this.refreshRow(id)}
           setLoading={(id, value) => this.setLoading(id, value)}
+          contentStudioBaseUrl={this.props.contentStudioBaseUrl}
         />
       )
     })
@@ -216,7 +217,8 @@ Dashboard.propTypes = {
   }),
   featureToggling: PropTypes.shape({
     updateList: PropTypes.bool
-  })
+  }),
+  contentStudioBaseUrl: PropTypes.string
 }
 
 export const DataQuery = PropTypes.shape({
