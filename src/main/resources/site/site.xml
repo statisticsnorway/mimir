@@ -119,7 +119,7 @@
   </form>
   <mappings>
     <mapping filter="/site/filters/router.js" order="10">
-      <pattern>/kommunefakta/?[^/]+$</pattern>
+      <pattern>/(kommuneareal|kommunefakta)/?[^/]+$</pattern>
     </mapping>
     <mapping controller="/site/pages/default/default.js">
       <match>type:'portal:fragment'</match>
