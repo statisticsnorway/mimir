@@ -70,7 +70,7 @@ class DashboardDataQuery extends React.Component {
 
         <td className={`${dataQuery.hasData ? 'ok' : 'error'} dataset`}>
           {dataQuery.displayName ?
-            <Link href={'/admin/tool/com.enonic.app.contentstudio/main#/edit/' + dataQuery.id}>
+            <Link href={this.props.contentStudioBaseUrl + dataQuery.id}>
               {dataQuery.displayName}
             </Link> : ''}
           <span className={'float-right detail ' + dataQuery.format}>{dataQuery.format}</span>
@@ -111,7 +111,8 @@ DashboardDataQuery.propTypes = {
   refreshRow: PropTypes.func,
   getRequest: PropTypes.func,
   deleteRequest: PropTypes.func,
-  setLoading: PropTypes.func
+  setLoading: PropTypes.func,
+  contentStudioBaseUrl: PropTypes.string
 }
 
 export default (props) => <DashboardDataQuery {...props} />

@@ -40,7 +40,9 @@ class RelatedArticles extends React.Component {
     } = this.props
     return (
       <div className={`row hide-show-btn justify-content-center justify-content-lg-start ${this.getButtonBreakpoints()}`}>
-        <Button className="col-auto" onClick={this.toggleBox}>{this.state.isHidden ? showAll : showLess}</Button>
+        <div className="col-auto">
+          <Button onClick={this.toggleBox}>{this.state.isHidden ? showAll : showLess}</Button>
+        </div>
       </div>
     )
   }
@@ -63,7 +65,7 @@ class RelatedArticles extends React.Component {
     } = this.props
     return (
       <div className="container">
-        <h3>{heading}</h3>
+        <h2>{heading}</h2>
         <div className="row">
           {relatedArticles.map((article, index) => {
             return (

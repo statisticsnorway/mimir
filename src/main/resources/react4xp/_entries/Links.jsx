@@ -19,7 +19,7 @@ const Links = (props) => {
             >
               <span
                 dangerouslySetInnerHTML={{
-                  _html: link.children
+                  __html: link.children
                 }} />
             </Link>
           </div>

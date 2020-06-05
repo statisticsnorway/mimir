@@ -50,6 +50,7 @@ $container-max-widths: (
 @import "./profiledLinkIcon";
 @import "./downloadLink";
 @import "./relatedArticles";
+@import "./relatedExternalLinks";
 
 body {
   -moz-osx-font-smoothing: grayscale;
@@ -79,5 +80,12 @@ section + section, .xp-layout + .xp-layout {
   @include media-breakpoint-down(md) {
     margin-right: 0;
     margin-left: 0;
+  }
+}
+
+.xp-region {
+  @include media-breakpoint-down(md) {
+    margin: 0 auto;
+    width: 95%;
   }
 }

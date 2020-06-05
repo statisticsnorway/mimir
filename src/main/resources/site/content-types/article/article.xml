@@ -85,10 +85,6 @@
                     <label>Relaterte faktasider</label>
                     <occurrences minimum="0" maximum="1"/>
                     <items>
-                        <input type="TextLine" name="title">
-                            <label>Seksjons tittel</label>
-                            <occurrences minimum="0" maximum="1"/>
-                        </input>
                         <input name="itemList" type="ContentSelector">
                             <label>Faktasider</label>
                             <occurrences minimum="0" maximum="0"/>
