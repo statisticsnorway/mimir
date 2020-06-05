@@ -30,18 +30,22 @@ function renderPart(req) {
   const backgroundItems = ['purposeAndHistory', 'usersAndUse', 'equalTreatmentUsers', 'relationOtherStatistics', 'legalAuthority', 'eeaReference']
   const productionItems = ['scope', 'dataSourcesAndSamples', 'dataCollectionEditingAndCalculations', 'seasonalAdjustment', 'confidentiality', 'comparability']
   const accuracyAndReliabilityItems = ['errorSources', 'revision']
+  const aboutSeasonalAdjustmentItems = ['generalInformation', 'whySeasonallyAdjustStatistic', 'preTreatment', 'seasonalAdjustment',
+    'auditProcedures', 'qualityOfSeasonalAdjustment', 'specialCases', 'postingProcedures']
 
   const accordions = []
-  page.data.definition ? accordions.push(
+  page.data.definition && !isEmpty(page.data.definition) ? accordions.push(
     getAccordion('definitions', page.data.definition, definitionsItems)) : undefined
-  page.data.administrativeInformation ? accordions.push(
+  page.data.administrativeInformation && !isEmpty(page.data.administrativeInformation) ? accordions.push(
     getAccordion('administrativeInformation', page.data.administrativeInformation, administrativeInformationItems)) : undefined
-  page.data.background ? accordions.push(
+  page.data.background && !isEmpty(page.data.background) ? accordions.push(
     getAccordion('background', page.data.background, backgroundItems)) : undefined
-  page.data.production ? accordions.push(
+  page.data.production && !isEmpty(page.data.production) ? accordions.push(
     getAccordion('production', page.data.production, productionItems)) : undefined
-  page.data.accuracyAndReliability ? accordions.push(
+  page.data.accuracyAndReliability && !isEmpty(page.data.accuracyAndReliability) ? accordions.push(
     getAccordion('accuracyAndReliability', page.data.accuracyAndReliability, accuracyAndReliabilityItems)) : undefined
+  page.data.aboutSeasonalAdjustment && !isEmpty(page.data.aboutSeasonalAdjustment) ? accordions.push(
+    getAccordion('aboutSeasonalAdjustment', page.data.aboutSeasonalAdjustment, aboutSeasonalAdjustmentItems)) : undefined
 
   if (accordions.length === 0) {
     accordions.push({
@@ -96,5 +100,9 @@ function renderPart(req) {
       )
     }
     return items
+  }
+
+  function isEmpty(obj) {
+    return Object.keys(obj).length === 0
   }
 }
