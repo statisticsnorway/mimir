@@ -55,7 +55,7 @@ function renderPart(req) {
       dashboardService: assets.dashboardService,
       featureToggling: {
         updateList: req.params.updateList ? true : false
-      }
+      },
       contentStudioBaseUrl: `${DEFAULT_CONTENTSTUDIO_URL}#/edit/`
     })
     .setId('dataset')
