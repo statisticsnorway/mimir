@@ -135,27 +135,7 @@
             </items>
         </field-set>
 
-        <field-set>
-            <label>Relaterte Faktasider</label>
-            <items>
-                <item-set name="relatedFactPagesItemSet">
-                    <label>Relaterte faktasider</label>
-                    <occurrences minimum="0" maximum="1"/>
-                    <items>
-                        <input name="itemList" type="ContentSelector">
-                            <label>Faktasider</label>
-                            <occurrences minimum="0" maximum="0"/>
-                            <config>
-                                <allowPath>${site}</allowPath>
-                                <allowType>page</allowType>
-                                <treeMode>false</treeMode>
-                                <description>Legg til faktasider</description>
-                            </config>
-                        </input>
-                    </items>
-                </item-set>
-            </items>
-        </field-set>
+        <mixin name="relatedFactPage" />
 
         <field-set>
             <label>Løpenummer</label>
