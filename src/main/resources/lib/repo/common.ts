@@ -1,6 +1,6 @@
 import { ContextLibrary } from 'enonic-types/lib/context'
 import { AuthLibrary, User } from 'enonic-types/lib/auth';
-import { NodeCreateParams, NodeLibrary, RepoConnection, RepoNode } from 'enonic-types/lib/node'
+import { NodeCreateParams, NodeLibrary, NodeQueryResponse, RepoConnection, RepoNode } from 'enonic-types/lib/node'
 import { EditorCallback } from './eventLog'
 
 const auth: AuthLibrary = __non_webpack_require__( '/lib/xp/auth')
@@ -64,7 +64,7 @@ export function withConnection<T>(repository: string, branch: string, callback: 
 }
 
 export function createNode<T>(repository: string, branch: string, content: T & NodeCreateParams): T & RepoNode {
-  return withConnection(repository, branch, (conn) => {
+  return withConnection(repository, branch, (conn: RepoConnection) => {
     return conn.create(content)
   })
 }
@@ -90,3 +90,14 @@ export function modifyNode<T>(repository: string, branch: string, key: string, e
   })
 }
 
+export function getChildNodes(repository: string, branch: string, key: string): NodeQueryResponse {
+  return withConnection(repository, branch, (conn) => {
+    return conn.findChildren({parentKey: key})
+  })
+}
+
+export function nodeExists(repository: string, branch: string, key: string) {
+  return withConnection(repository, branch, (conn) => {
+    return conn.exists(key)
+  })
+}

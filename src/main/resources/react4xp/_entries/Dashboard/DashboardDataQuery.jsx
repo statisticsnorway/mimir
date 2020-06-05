@@ -4,6 +4,8 @@ import { Link } from '@statisticsnorway/ssb-component-library'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { DataQuery } from './Dashboard'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Popover from 'react-bootstrap/Popover'
 
 class DashboardDataQuery extends React.Component {
   constructor(props) {
@@ -52,14 +54,41 @@ class DashboardDataQuery extends React.Component {
   }
 
   renderLogData() {
+    const dataQueryId = this.props.dataquery.id
     const logData = this.props.dataquery.logData
     return (
       <td>
-        { logData.message ? logData.message : '' }<br/>
-        { logData.modifiedReadable ? logData.modifiedReadable : '' }<br/>
-        { logData.modified ? logData.modified : '' }<br/>
-        { logData.by.displayName ? `av ${logData.by.displayName}` : '' }
+        {logData.eventLogNodes &&
+        <OverlayTrigger
+          trigger="click"
+          key={dataQueryId}
+          placement="bottom"
+          overlay={
+            <Popover id={`popover-positioned-${dataQueryId}`}>
+              <Popover.Title as="h3">Logg detaljer</Popover.Title>
+              <Popover.Content className="ssbPopoverBody">
+                {logData.eventLogNodes.map((logNode, index) => this.renderLogNode(index, logNode))}
+              </Popover.Content>
+            </Popover>
+          }
+        >
+          <span className="haveList">{logData.message ? logData.message : ''}</span>
+        </OverlayTrigger>
+        }<br/>
+        {!logData.eventLogNodes && logData.message && <span>{logData.message}</span>}
+        {logData.modifiedReadable ? logData.modifiedReadable : ''}<br/>
+        {logData.modified ? logData.modified : ''}<br/>
+        {logData.by.displayName ? `av ${logData.by.displayName}` : '' }
       </td>
+    )
+  }
+
+  renderLogNode(i, logNode) {
+    return (
+      <p key={i}>
+        <span>{logNode.modifiedTs}</span> - <span>{logNode.by}</span><br/>
+        <span> &gt; {logNode.result}</span>
+      </p>
     )
   }
 
@@ -82,7 +111,7 @@ class DashboardDataQuery extends React.Component {
           { dataQuery.dataset.modified ? dataQuery.dataset.modified : ''}
         </td>
 
-        { dataQuery.logData ? this.renderLogData() : <td></td> }
+        {dataQuery.logData ? this.renderLogData(): <td></td>}
 
         <td className="actions">
           <Button variant="secondary"

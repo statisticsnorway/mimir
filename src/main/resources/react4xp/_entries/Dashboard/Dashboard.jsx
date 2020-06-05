@@ -110,6 +110,7 @@ class Dashboard extends React.Component {
           refreshRow={(id) => this.refreshRow(id)}
           setLoading={(id, value) => this.setLoading(id, value)}
           contentStudioBaseUrl={this.props.contentStudioBaseUrl}
+          eventLogNodes={dataquery.logData && dataquery.logData.eventLogNodes ? dataquery.logData.eventLogNodes : undefined }
         />
       )
     })
@@ -245,7 +246,11 @@ export const DataQuery = PropTypes.shape({
     by: PropTypes.shape({
       login: PropTypes.string,
       displayName: PropTypes.string
-    })
+    }),
+    eventLogNodes: PropTypes.arrayOf(PropTypes.shape({
+      message: PropTypes.string,
+      modifiedTs: PropTypes.string
+    }))
   })
 })
 
