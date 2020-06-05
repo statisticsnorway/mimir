@@ -216,39 +216,10 @@
         <field-set>
             <label>Relevant dokumentasjon</label>
             <items>
-                <option-set name="relevantDocumentation">
+                <input name="relevantDocumentation" type="HtmlArea">
+                    <occurrences minimum="0" maximum="1" />
                     <label>Relevant dokumentasjon</label>
-                    <expanded>false</expanded>
-                    <occurrences minimum="0" maximum="0"/>
-                    <options minimum="1" maximum="1">
-                        <option name="content">
-                            <label>Innhold XP</label>
-                            <default>true</default>
-                            <items>
-                                <input name="article" type="ContentSelector">
-                                    <label>Artikkel</label>
-                                    <occurrences minimum="1" maximum="1"/>
-                                    <config>
-                                        <allowContentType>${app}:article</allowContentType>
-                                    </config>
-                                </input>
-                            </items>
-                        </option>
-                        <option name="externalLink">
-                            <label>Lenke til innhold</label>
-                            <items>
-                                <input name="url" type="TextLine">
-                                    <label>URL</label>
-                                    <occurrences minimum="1" maximum="1"/>
-                                </input>
-                                <input name="title" type="TextLine">
-                                    <label>Tittel</label>
-                                    <occurrences minimum="1" maximum="1"/>
-                                </input>
-                            </items>
-                        </option>
-                    </options>
-                </option-set>
+                </input>
             </items>
         </field-set>
 
@@ -315,39 +286,10 @@
                                 <allowHeadings>h3</allowHeadings>
                             </config>
                         </input>
-                        <option-set name="relevantDocumentation">
-                            <label>Relevant dokumentasjon sesongjustering</label>
-                            <expanded>false</expanded>
-                            <occurrences minimum="0" maximum="0"/>
-                            <options minimum="1" maximum="1">
-                                <option name="content">
-                                    <label>Innhold XP</label>
-                                    <default>true</default>
-                                    <items>
-                                        <input name="article" type="ContentSelector">
-                                            <label>Artikkel</label>
-                                            <occurrences minimum="1" maximum="1"/>
-                                            <config>
-                                                <allowContentType>${app}:article</allowContentType>
-                                            </config>
-                                        </input>
-                                    </items>
-                                </option>
-                                <option name="externalLink">
-                                    <label>Lenke til innhold</label>
-                                    <items>
-                                        <input name="url" type="TextLine">
-                                            <label>URL</label>
-                                            <occurrences minimum="1" maximum="1"/>
-                                        </input>
-                                        <input name="title" type="TextLine">
-                                            <label>Tittel</label>
-                                            <occurrences minimum="1" maximum="1"/>
-                                        </input>
-                                    </items>
-                                </option>
-                            </options>
-                        </option-set>
+                        <input name="relevantDocumentation" type="HtmlArea">
+                            <occurrences minimum="0" maximum="1" />
+                            <label>Relevant dokumentasjon</label>
+                        </input>
                     </items>
                 </item-set>
             </items>

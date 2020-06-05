@@ -132,37 +132,7 @@ export interface OmStatistikken {
   /**
    * Relevant dokumentasjon
    */
-  relevantDocumentation?: {
-    /**
-     * Selected
-     */
-    _selected: string;
-
-    /**
-     * Innhold XP
-     */
-    content?: {
-      /**
-       * Artikkel
-       */
-      article: string;
-    };
-
-    /**
-     * Lenke til innhold
-     */
-    externalLink?: {
-      /**
-       * URL
-       */
-      url: string;
-
-      /**
-       * Tittel
-       */
-      title: string;
-    };
-  };
+  relevantDocumentation?: string;
 
   /**
    * Om sesongjustering
@@ -209,38 +179,8 @@ export interface OmStatistikken {
     postingProcedures?: string;
 
     /**
-     * Relevant dokumentasjon sesongjustering
+     * Relevant dokumentasjon
      */
-    relevantDocumentation?: {
-      /**
-       * Selected
-       */
-      _selected: string;
-
-      /**
-       * Innhold XP
-       */
-      content?: {
-        /**
-         * Artikkel
-         */
-        article: string;
-      };
-
-      /**
-       * Lenke til innhold
-       */
-      externalLink?: {
-        /**
-         * URL
-         */
-        url: string;
-
-        /**
-         * Tittel
-         */
-        title: string;
-      };
-    };
+    relevantDocumentation?: string;
   }>;
 }
