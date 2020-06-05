@@ -33,6 +33,11 @@ exports.filter = function(req, next) {
       key: '/ssb/kommunefakta/kommune'
     })._id
     pageTitle = `Kommunefakta ${municipality.displayName}`
+  } else if (req.path.indexOf('/kommuneareal/') > -1) {
+    targetId = get({
+      key: '/ssb/kommuneareal/kommune'
+    })._id
+    pageTitle = `Kommuneareal ${municipality.displayName}`
   }
 
   if (!targetId) {
