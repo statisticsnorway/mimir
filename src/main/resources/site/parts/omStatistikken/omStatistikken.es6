@@ -31,7 +31,7 @@ function renderPart(req) {
   const productionItems = ['scope', 'dataSourcesAndSamples', 'dataCollectionEditingAndCalculations', 'seasonalAdjustment', 'confidentiality', 'comparability']
   const accuracyAndReliabilityItems = ['errorSources', 'revision']
   const aboutSeasonalAdjustmentItems = ['generalInformation', 'whySeasonallyAdjustStatistic', 'preTreatment', 'seasonalAdjustment',
-    'auditProcedures', 'qualityOfSeasonalAdjustment', 'specialCases', 'postingProcedures']
+    'auditProcedures', 'qualityOfSeasonalAdjustment', 'specialCases', 'postingProcedures', 'relevantDocumentation']
 
   const accordions = []
   page.data.definition && !isEmpty(page.data.definition) ? accordions.push(
@@ -44,6 +44,19 @@ function renderPart(req) {
     getAccordion('production', page.data.production, productionItems)) : undefined
   page.data.accuracyAndReliability && !isEmpty(page.data.accuracyAndReliability) ? accordions.push(
     getAccordion('accuracyAndReliability', page.data.accuracyAndReliability, accuracyAndReliabilityItems)) : undefined
+
+  const relevantDocumentation = {
+    body: page.data.relevantDocumentation,
+    open: i18nLib.localize({
+      key: 'relevantDocumentation'
+    }),
+    items: []
+  }
+
+  if (page.data.relevantDocumentation) {
+    accordions.push(relevantDocumentation)
+  }
+
   page.data.aboutSeasonalAdjustment && !isEmpty(page.data.aboutSeasonalAdjustment) ? accordions.push(
     getAccordion('aboutSeasonalAdjustment', page.data.aboutSeasonalAdjustment, aboutSeasonalAdjustmentItems)) : undefined
 
