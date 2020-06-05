@@ -1,4 +1,4 @@
-import { getNode } from '../../lib/repo/common'
+import { getNode, withLoggedInUserContext } from '../../lib/repo/common'
 
 const auth = __non_webpack_require__( '/lib/xp/auth')
 const context = __non_webpack_require__( '/lib/xp/context')
@@ -33,18 +33,18 @@ exports.get = function(req) {
   if (!req.params || !req.params.id) {
     return missingParameterResponse()
   }
+
   logDataQueryEvent(req.params.id, {
     message: Events.GET_DATA_STARTED
   })
-  const updateResult = context.run(createContextOption('master'), () => {
-    return getAllOrOneDataQuery(req.params.id).map((dataquery) => updateDataQuery(dataquery) )
-  })
 
-  const parsedResult = updateResult.map(fontEndObject)
+  const updateResult = getAllOrOneDataQuery(req.params.id).map((dataquery) => updateDataQuery(dataquery))
+
+  const parsedResult = updateResult.map(transfromQueryResult)
   return successResponse(parsedResult, undefined)
 }
 
-function fontEndObject(result) {
+function transfromQueryResult(result) {
   const queryLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${result.dataquery._id}`)
   return {
     id: result.dataquery._id,
@@ -78,7 +78,7 @@ exports.delete = (req) => {
   if (!req.params || !req.params.id) {
     return missingParameterResponse()
   }
-  const deleteResult = context.run(createContextOption('draft'), () => {
+  const deleteResult = withLoggedInUserContext('draft', () => {
     logDataQueryEvent(req.params.id, {
       message: Events.START_DELETE
     })
@@ -248,22 +248,4 @@ function updateDataQuery(dataquery) {
     newDatasetData: refreshDatasetResult.newDatasetData ? refreshDatasetResult.newDatasetData : false,
     status: refreshDatasetResult.status // can be failed to fetch data or failed to
   }
-}
-
-
-const createContextOption = (branch) => {
-  const _user = auth.getUser()
-  const user = {
-    login: _user.login,
-    userStore: _user.idProvider
-  }
-
-  const contextOption = {
-    repository: 'com.enonic.cms.default',
-    principals: ['role:system.admin'],
-    branch,
-    user
-  }
-
-  return contextOption
 }

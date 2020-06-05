@@ -17,7 +17,7 @@ const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
 const {
-  isPublished, dateToFormat, dateToReadable
+  isPublished, dateToReadable
 } = __non_webpack_require__('/lib/ssb/utils')
 const content = __non_webpack_require__( '/lib/xp/content')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
@@ -31,19 +31,18 @@ const view = resolve('./dashboard.html')
 const DEFAULT_CONTENTSTUDIO_URL = getToolUrl('com.enonic.app.contentstudio', 'main')
 
 exports.get = function(req) {
-  return renderPart()
   try {
-    return renderPart()
+    return renderPart(req)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
 /**
- *
+ * @param {object} req
  * @return {{pageContributions: *, body: *}}
  */
-function renderPart() {
+function renderPart(req) {
   const datasetMap = getDataset()
   const dataQueries = getDataQueries(datasetMap)
 
@@ -54,6 +53,9 @@ function renderPart() {
       header: 'Alle spørringer',
       dataQueries,
       dashboardService: assets.dashboardService,
+      featureToggling: {
+        updateList: req.params.updateList ? true : false
+      }
       contentStudioBaseUrl: `${DEFAULT_CONTENTSTUDIO_URL}#/edit/`
     })
     .setId('dataset')
@@ -61,6 +63,7 @@ function renderPart() {
   const pageContributions = parseContributions(dashboardDataset.renderPageContributions({
     clientRender: true
   }))
+
   const model = {
     ...assets,
     dataQueries,
@@ -156,7 +159,9 @@ function getDataQueries(datasetMap) {
         }),
         modified: queryLogNode.data.modified,
         modifiedReadable: dateToReadable(queryLogNode.data.modifiedTs)
-      } : undefined
+      } : undefined,
+      loading: false,
+      deleting: false
     }
   })
 }

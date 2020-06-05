@@ -1,13 +1,12 @@
 import { RepoNode } from 'enonic-types/lib/node'
-import { getNode, withConnection } from './common'
+import { getNode, withConnection, withLoggedInUserContext } from './common'
 import { EVENT_LOG_BRANCH, EVENT_LOG_REPO, createEventLog, EditorCallback, updateEventLog } from './eventLog'
-import { AuthLibrary, User } from 'enonic-types/lib/auth'
+import { User } from 'enonic-types/lib/auth'
 import { HttpRequestParams, HttpResponse } from 'enonic-types/lib/http'
 import { TbmlData } from '../types/xmlParser'
 const {
   dateToFormat
 } = __non_webpack_require__('/lib/ssb/utils')
-const auth: AuthLibrary = __non_webpack_require__( '/lib/xp/auth')
 export type QueryInfoNode = QueryInfo & RepoNode
 
 export interface QueryInfo {
@@ -56,14 +55,14 @@ export enum Events {
   XML_TO_JSON = 'XML_TO_JSON'
 }
 
-export function logDataQueryEvent(queryId: string, status: QueryStatus): QueryInfoNode | undefined {
-  const user: User | null = auth.getUser()
-  if (!user) {
-    return undefined
-  }
-  startQuery(queryId, user, status)
-  addEventToQueryLog(queryId, user, status)
-  return updateQueryLogStatus(queryId, user, status)
+export function logDataQueryEvent(queryId: string, status: QueryStatus): void {
+  withLoggedInUserContext('master', (user) => {
+    if (user) {
+      startQuery(queryId, user, status)
+      addEventToQueryLog(queryId, user, status)
+      updateQueryLogStatus(queryId, user, status)
+    }
+  })
 }
 
 function addEventToQueryLog(queryId: string, user: User, status: QueryStatus): EventInfo & RepoNode {
@@ -79,7 +78,7 @@ function addEventToQueryLog(queryId: string, user: User, status: QueryStatus): E
 }
 
 export function startQuery(queryId: string, user: User, status: QueryStatus): QueryInfoNode {
-  return withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (conn) => {
+  return withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, () => {
     const queryLogNode: ReadonlyArray<QueryInfoNode> = getNode<QueryInfo>(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${queryId}`)
     if (queryLogNode !== null) {
       return queryLogNode[0]

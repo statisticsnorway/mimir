@@ -1,19 +1,18 @@
-<section class="xp-part container mt-md-5 pt-3" data-th-if="${contacts}">
-  <h2 data-th-text="${label}?: 'Kontakt'" class="roboto-condensed-bold border-bottom border-dark mb-md-4 pb-md-2 bt-6"></h2>
-  <div data-th-each="contactGroup : ${contacts}" class="row d-flex flex-wrap">
-    <div data-th-each="contact : ${contactGroup}" class="col-8 col-md-4 pt-2 pb-1 contact">
+<section class="xp-part part-contacts container mt-md-5 pt-3" data-th-if="${contacts}">
+  <h2 data-th-text="${label}?: 'Kontakt'" class="roboto-condensed-bold mb-md-4 pb-md-2 bt-6"></h2>
+  <div data-th-each="contactGroup : ${contacts}" class="row d-flex flex-wrap part-contact">
+    <div data-th-each="contact : ${contactGroup}" class="col-8 col-md-3 contact">
       <div data-th-if="${contact}">
-        <p class="roboto-plain lead mb-1 text-break text-wrap" data-th-text=${contact.name}>TESTNAVN</p>
-        <p data-th-if="${contact.email}" >
+        <p class="roboto-plain lead mb-1 text-break text-wrap part-contact--name" data-th-text=${contact.name}>
+          TESTNAVN
+        </p>
+        <p data-th-if="${contact.email}" class="part-contact-email">
           <a class="roboto-plain" data-th-href="@{'mailto:' + ${contact.email}}" data-th-text="${contact.email}">
             epost
           </a>
         </p>
-        <p data-th-if="${contact.phone}">
-          <a class="roboto-plain text-decoration-none"
-             data-th-href="@{'tel:' + ${contact.phone}}" data-th-text="${contact.phone}">
-            telefonnummer
-          </a>
+        <p data-th-if="${contact.telephone}" data-th-text="${contact.telephone}" class="part-contact--telephone">
+          phone
         </p>
       </div>
     </div>
