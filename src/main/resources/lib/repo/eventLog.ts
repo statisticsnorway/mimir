@@ -14,7 +14,7 @@ export function eventLogExists(): boolean {
   return repoExists(EVENT_LOG_REPO, EVENT_LOG_BRANCH)
 }
 
-export function createEventLogRepo() {
+export function createEventLogRepo(): void {
   createRepo(EVENT_LOG_REPO, EVENT_LOG_BRANCH)
 }
 

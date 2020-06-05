@@ -1,20 +1,12 @@
 <part>
   <display-name>Kontakt</display-name>
-  <description>Viser tre kontaker per linje</description>
+  <description>Viser fire kontaker per linje</description>
   <form>
     <input name="label" type="TextLine">
       <label>Overskrift på kontaktområde</label>
       <default>Kontakt</default>
       <config>
         <max-length>30</max-length>
-      </config>
-    </input>
-    <input name="contacts" type="ContentSelector">
-      <label>Kontakt</label>
-      <occurrences minimum="1" maximum="0"/>
-      <config>
-        <allowPath>${site}</allowPath>
-        <allowType>contact</allowType>
       </config>
     </input>
   </form>

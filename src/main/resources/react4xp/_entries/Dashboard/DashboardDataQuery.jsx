@@ -1,14 +1,68 @@
 import Button from 'react-bootstrap/Button'
-import { Download, Trash } from 'react-feather'
+import { RefreshCw, Trash } from 'react-feather'
 import { Link } from '@statisticsnorway/ssb-component-library'
 import React from 'react'
 import PropTypes from 'prop-types'
+import { DataQuery } from './Dashboard'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Popover from 'react-bootstrap/Popover'
 
 class DashboardDataQuery extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      deleting: false
+    }
+  }
+
+  getDataset(dataQueryId) {
+    this.setLoading(true)
+    this.resultHandler(this.props.getRequest(dataQueryId))
+  }
+
+  deleteDataset(dataQueryId) {
+    this.setState({
+      deleting: true
+    })
+    return this.resultHandler(this.props.deleteRequest(dataQueryId))
+  }
+
+  resultHandler(p) {
+    return p.then((response) => {
+      if (response.status === 200) {
+        this.props.refreshRow(response.data.updates)
+        this.props.showSuccess(response.data.message)
+      } else {
+        this.props.showError(response.data.message)
+      }
+    })
+      .catch((e) => {
+        console.log(e)
+        this.props.refreshRow(e.response.data.updates)
+        this.props.showError(e.response.data.message)
+      })
+      .finally(() => {
+        this.setState({
+          deleting: false
+        })
+        this.setLoading(false)
+      })
+  }
+
+  setLoading(value) {
+    this.props.setLoading(this.props.dataquery.id, value)
+  }
+
+  renderLogData() {
+    const logData = this.props.dataquery.logData
+    return (
+      <td>
+        { logData.message ? logData.message : '' }<br/>
+        { logData.modifiedReadable ? logData.modifiedReadable : '' }<br/>
+        { logData.modified ? logData.modified : '' }<br/>
+        { logData.by.displayName ? `av ${logData.by.displayName}` : '' }
+      </td>
+    )
   }
 
   renderLogNode(i, logNode) {
@@ -21,54 +75,58 @@ class DashboardDataQuery extends React.Component {
   }
 
   render() {
+    const dataQuery = this.props.dataquery
     return (
       <tr className="small" >
-        <td className={`${this.props.hasData ? 'ok' : 'error'} dataset`}>
-          {this.props.displayName ? <Link href={'/admin/tool/com.enonic.app.contentstudio/main#/edit/' + this.props.id}>{this.props.displayName}</Link> : ''}
-          <span className={'float-right detail ' + this.props.format}>{this.props.format}</span>
-          {!this.props.isPublished ? <span className={'float-right detail unpublished'}>Ikke publisert</span> : ''}
-          {this.props.errorMsg ? <span className="errorMsg">{this.props.errorMsg}</span> : ''}
+
+        <td className={`${dataQuery.hasData ? 'ok' : 'error'} dataset`}>
+          {dataQuery.displayName ?
+            <Link href={this.props.contentStudioBaseUrl + dataQuery.id}>
+              {dataQuery.displayName}
+            </Link> : ''}
+          <span className={'float-right detail ' + dataQuery.format}>{dataQuery.format}</span>
+          {!dataQuery.isPublished ? <span className={'float-right detail unpublished'}>Ikke publisert</span> : ''}
         </td>
 
         <td>
-          {this.props.datasetModifiedReadable ? this.props.datasetModifiedReadable : ''}<br/>
-          {this.props.datasetModified ? this.props.datasetModified : ''}
+          { dataQuery.dataset.modifiedReadable ? dataQuery.dataset.modifiedReadable : ''}<br/>
+          { dataQuery.dataset.modified ? dataQuery.dataset.modified : ''}
         </td>
-        <td>
-          {this.props.eventLogNodes &&
-            <OverlayTrigger
-              trigger="click"
-              key={this.props.id}
-              placement="bottom"
-              overlay={
-                <Popover id={`popover-positioned-${this.props.id}`}>
-                  <Popover.Title as="h3">Logg detaljer</Popover.Title>
-                  <Popover.Content className="ssbPopoverBody">
-                    {this.props.eventLogNodes.map((logNode, index) => this.renderLogNode(index, logNode))}
-                  </Popover.Content>
-                </Popover>
-              }
-            >
-              <span className="haveList">{this.props.message ? this.props.message : ''}</span>
-            </OverlayTrigger>
-          }<br/>
-          {!this.props.eventLogNodes && this.props.message && <span>{this.props.message}</span>}
-          {this.props.modifiedReadable ? this.props.modifiedReadable : ''}<br/>
-          {this.props.modified ? this.props.modified : ''}<br/>
-          {this.props.by ? `av ${this.props.by}` : '' }
-        </td>
+        {dataQuery.eventLogNodes &&
+        <OverlayTrigger
+          trigger="click"
+          key={dataQuery.id}
+          placement="bottom"
+          overlay={
+            <Popover id={`popover-positioned-${dataQuery.id}`}>
+              <Popover.Title as="h3">Logg detaljer</Popover.Title>
+              <Popover.Content className="ssbPopoverBody">
+                {dataQuery.eventLogNodes.map((logNode, index) => this.renderLogNode(index, logNode))}
+              </Popover.Content>
+            </Popover>
+          }
+        >
+          <span className="haveList">{this.props.message ? this.props.message : ''}</span>
+        </OverlayTrigger>
+        }<br/>
+
+
+        { dataQuery.logData ? this.renderLogData() : <td></td> }
+
         <td className="actions">
           <Button variant="secondary"
             size="sm"
-            onClick={() => this.props.deleteDataset(this.props.id)}
+            className="mx-1"
+            onClick={() => this.deleteDataset(dataQuery.id)}
           >
-            { this.props.deleting ? <span className="spinner-border spinner-border-sm" /> : <Trash size={16}/> }
+            { this.state.deleting ? <span className="spinner-border spinner-border-sm" /> : <Trash size={16}/> }
           </Button>
           <Button varitant="primary"
             size="sm"
-            onClick={() => this.props.getDataset(this.props.id)}
+            className="mx-1"
+            onClick={() => this.getDataset(dataQuery.id)}
           >
-            { this.props.loading ? <span className="spinner-border spinner-border-sm" /> : <Download size={16}/> }
+            { this.props.dataquery.loading ? <span className="spinner-border spinner-border-sm" /> : <RefreshCw size={16}/> }
           </Button>
         </td>
       </tr>)
@@ -76,32 +134,14 @@ class DashboardDataQuery extends React.Component {
 }
 
 DashboardDataQuery.propTypes = {
-  id: PropTypes.string,
-  displayName: PropTypes.string,
-  format: PropTypes.string,
-  isPublished: PropTypes.bool,
-  class: PropTypes.string,
-  newDatasetData: PropTypes.bool,
-  datasetModified: PropTypes.string,
-  datasetModifiedReadable: PropTypes.string,
-  showError: PropTypes.bool,
-  showSuccess: PropTypes.bool,
-  errorMsg: PropTypes.string,
-  hasData: PropTypes.bool,
-  loading: PropTypes.bool,
-  deleting: PropTypes.bool,
-  dashboardService: PropTypes.string,
-  deleteDataset: PropTypes.func,
-  getDataset: PropTypes.func,
-  status: PropTypes.string,
-  modifiedReadable: PropTypes.string,
-  modified: PropTypes.string,
-  message: PropTypes.string,
-  by: PropTypes.string,
-  eventLogNodes: PropTypes.arrayOf(PropTypes.shape({
-    message: PropTypes.string,
-    modifiedTs: PropTypes.string
-  }))
+  dataquery: PropTypes.shape(DataQuery),
+  showError: PropTypes.func,
+  showSuccess: PropTypes.func,
+  refreshRow: PropTypes.func,
+  getRequest: PropTypes.func,
+  deleteRequest: PropTypes.func,
+  setLoading: PropTypes.func,
+  contentStudioBaseUrl: PropTypes.string
 }
 
 export default (props) => <DashboardDataQuery {...props} />

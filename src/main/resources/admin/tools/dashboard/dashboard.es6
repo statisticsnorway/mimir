@@ -27,23 +27,24 @@ const {
   EVENT_LOG_REPO,
   getQueryChildNodesStatus
 } = __non_webpack_require__( '/lib/repo/eventLog')
+const { getToolUrl } = __non_webpack_require__('/lib/xp/admin');
 
 const view = resolve('./dashboard.html')
+const DEFAULT_CONTENTSTUDIO_URL = getToolUrl('com.enonic.app.contentstudio', 'main')
 
 exports.get = function(req) {
-  return renderPart()
   try {
-    return renderPart()
+    return renderPart(req)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
 /**
- *
+ * @param {object} req
  * @return {{pageContributions: *, body: *}}
  */
-function renderPart() {
+function renderPart(req) {
   const datasetMap = getDataset()
   const dataQueries = getDataQueries(datasetMap)
 
@@ -53,7 +54,11 @@ function renderPart() {
     .setProps({
       header: 'Alle spørringer',
       dataQueries,
-      dashboardService: assets.dashboardService
+      dashboardService: assets.dashboardService,
+      featureToggling: {
+        updateList: req.params.updateList ? true : false
+      },
+      contentStudioBaseUrl: `${DEFAULT_CONTENTSTUDIO_URL}#/edit/`
     })
     .setId('dataset')
 
@@ -157,7 +162,9 @@ function getDataQueries(datasetMap) {
         modified: queryLogNode.data.modified,
         modifiedReadable: dateToReadable(queryLogNode.data.modifiedTs),
         eventLogNodes
-      } : undefined
+      } : undefined,
+      loading: false,
+      deleting: false
     }
   })
 }

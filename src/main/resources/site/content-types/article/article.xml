@@ -134,7 +134,7 @@
                 </option-set>
             </items>
         </field-set>
-      
+
         <field-set>
             <label>Relaterte Faktasider</label>
             <items>
@@ -142,10 +142,6 @@
                     <label>Relaterte faktasider</label>
                     <occurrences minimum="0" maximum="1"/>
                     <items>
-                        <input type="TextLine" name="title">
-                            <label>Seksjons tittel</label>
-                            <occurrences minimum="0" maximum="1"/>
-                        </input>
                         <input name="itemList" type="ContentSelector">
                             <label>Faktasider</label>
                             <occurrences minimum="0" maximum="0"/>
@@ -177,6 +173,19 @@
                 <input name="introTitle" type="TextLine">
                     <label>Stikktittel</label>
                     <occurrences minimum="0" maximum="1"/>
+                </input>
+            </items>
+        </field-set>
+
+        <field-set>
+            <label>Kontakter</label>
+            <items>
+                <input name="contacts" type="CustomSelector">
+                    <occurrences minimum="0" maximum="0" />
+                    <label>Kontakter</label>
+                    <config>
+                        <service>contacts</service>
+                    </config>
                 </input>
             </items>
         </field-set>

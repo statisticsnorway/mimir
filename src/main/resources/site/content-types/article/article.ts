@@ -89,11 +89,6 @@ export interface Article {
    */
   relatedFactPagesItemSet?: Array<{
     /**
-     * Seksjons tittel
-     */
-    title?: string;
-
-    /**
      * Faktasider
      */
     itemList?: Array<string>;
@@ -108,6 +103,11 @@ export interface Article {
    * Stikktittel
    */
   introTitle?: string;
+
+  /**
+   * Kontakter
+   */
+  contacts?: string;
 
   /**
    * Forfatter

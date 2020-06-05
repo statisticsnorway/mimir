@@ -148,5 +148,5 @@ export function isPublished(content) {
   return false
 }
 
-export const dateToFormat = (ds) => moment(ds).format('DD.MM.YYYY HH:mm:ss')
+export const dateToFormat = (ds) => moment(ds).format('DD.MM.YYYY HH:mm')
 export const dateToReadable = (ds) => moment(ds).fromNow()
