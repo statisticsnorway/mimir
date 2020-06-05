@@ -1,4 +1,4 @@
-export interface Statistics {
+export interface RelatedArticles {
   /**
    * Relatert artikkel
    */
@@ -53,14 +53,4 @@ export interface Statistics {
       image: string;
     };
   };
-
-  /**
-   * Relaterte faktasider
-   */
-  relatedFactPagesItemSet?: Array<{
-    /**
-     * Faktasider
-     */
-    itemList?: Array<string>;
-  }>;
 }

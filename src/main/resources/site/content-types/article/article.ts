@@ -30,61 +30,6 @@ export interface Article {
   }>;
 
   /**
-   * Relatert artikkel
-   */
-  relatedArticles?: {
-    /**
-     * Selected
-     */
-    _selected: string;
-
-    /**
-     * Artikkel
-     */
-    article?: {
-      /**
-       * Artikkel
-       */
-      article: string;
-    };
-
-    /**
-     * Artikkel fra CMS
-     */
-    externalArticle?: {
-      /**
-       * URL
-       */
-      url: string;
-
-      /**
-       * Tittel
-       */
-      title: string;
-
-      /**
-       * Type
-       */
-      type?: string;
-
-      /**
-       * Dato
-       */
-      date?: string;
-
-      /**
-       * Ingress
-       */
-      preface: string;
-
-      /**
-       * Bilde
-       */
-      image: string;
-    };
-  };
-
-  /**
    * Løpenummer
    */
   serialNumber?: string;
@@ -136,6 +81,61 @@ export interface Article {
        * Tidspunkt for endring
        */
       modifiedDate?: string;
+    };
+  };
+
+  /**
+   * Relatert artikkel
+   */
+  relatedArticles?: {
+    /**
+     * Selected
+     */
+    _selected: string;
+
+    /**
+     * Artikkel
+     */
+    article?: {
+      /**
+       * Artikkel
+       */
+      article: string;
+    };
+
+    /**
+     * Artikkel fra CMS
+     */
+    externalArticle?: {
+      /**
+       * URL
+       */
+      url: string;
+
+      /**
+       * Tittel
+       */
+      title: string;
+
+      /**
+       * Type
+       */
+      type?: string;
+
+      /**
+       * Dato
+       */
+      date?: string;
+
+      /**
+       * Ingress
+       */
+      preface: string;
+
+      /**
+       * Bilde
+       */
+      image: string;
     };
   };
 
