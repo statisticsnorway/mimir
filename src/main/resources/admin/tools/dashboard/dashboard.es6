@@ -55,6 +55,7 @@ function renderPart(req) {
       header: 'Alle spørringer',
       dataQueries,
       dashboardService: assets.dashboardService,
+      clearCacheServiceUrl: assets.clearCacheServiceUrl,
       featureToggling: {
         updateList: req.params.updateList ? true : false
       },
@@ -102,6 +103,9 @@ function getAssets() {
     }),
     logoUrl: assetUrl({
       path: 'SSB_logo_black.svg'
+    }),
+    clearCacheServiceUrl: serviceUrl({
+      service: 'clearCache'
     })
   }
 }
