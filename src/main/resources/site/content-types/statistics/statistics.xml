@@ -2,4 +2,7 @@
 <content-type>
     <display-name>Statistikk</display-name>
     <super-type>base:structured</super-type>
+    <form>
+        <mixin name="relatedArticles" />
+    </form>
 </content-type>
