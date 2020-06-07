@@ -120,6 +120,11 @@ export interface Highchart {
   xAllowDecimal: boolean;
 
   /**
+   * Antall desimalplasser som vises
+   */
+  xAxisDecimalPlaces?: "0" | "1" | "2";
+
+  /**
    * Skjul aksemarkører
    */
   xEnableLabel: boolean;
@@ -148,6 +153,11 @@ export interface Highchart {
    * Y-akse Tillat desimaler
    */
   yAxisAllowDecimal: boolean;
+
+  /**
+   * Antall desimalplasser som vises
+   */
+  yAxisDecimalPlaces?: "0" | "1" | "2";
 
   /**
    * Spørring mot Statistikkbanken
