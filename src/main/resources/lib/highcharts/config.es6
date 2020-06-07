@@ -163,7 +163,7 @@ export const createConfig = (highchartData, displayName) => ({
     allowDecimals: highchartData.yAxisAllowDecimal,
     labels: {
       style,
-      format: '{value:,.0f}'
+      format: `{value:,.${highchartData.numberDecimals || 0}f}`
     },
     max: highchartData.yAxisMax ? highchartData.yAxisMax.replace(/,/g, '.') : null,
     min: highchartData.yAxisMin ? highchartData.yAxisMin.replace(/,/g, '.') : null,
@@ -182,10 +182,15 @@ export const createConfig = (highchartData, displayName) => ({
     type: highchartData.yAxisType || 'linear'
   },
   xAxis: {
+    allowDecimals: highchartData.xAllowDecimal,
     title: {
       style,
       text: highchartData.xAxisTitle || '',
       ...X_AXIS_TITLE_POSITION
+    },
+    labels: {
+      style,
+      format: `{value:,.${highchartData.numberDecimals || 0}f}`
     }
   },
   tooltip: {
