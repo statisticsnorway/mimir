@@ -50,11 +50,6 @@ export interface Article {
   introTitle?: string;
 
   /**
-   * Kontakter
-   */
-  contacts?: string;
-
-  /**
    * Forfatter
    */
   authorItemSet?: Array<{
@@ -148,4 +143,9 @@ export interface Article {
       image: string;
     };
   };
+
+  /**
+   * Kontakter
+   */
+  contacts?: string;
 }

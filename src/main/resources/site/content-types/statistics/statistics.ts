@@ -53,4 +53,9 @@ export interface Statistics {
       image: string;
     };
   };
+
+  /**
+   * Kontakter
+   */
+  contacts?: string;
 }

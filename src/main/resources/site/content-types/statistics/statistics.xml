@@ -4,5 +4,7 @@
     <super-type>base:structured</super-type>
     <form>
         <mixin name="relatedArticles" />
+
+        <mixin name="contacts" />
     </form>
 </content-type>
