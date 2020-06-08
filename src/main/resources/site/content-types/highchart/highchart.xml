@@ -161,20 +161,6 @@
       <help-text>Må være et heltall eller desimaltall. La feltet være blankt for automatisk justering. Hvis aksen er unike kategorier, brukes heltall fra 0 og oppover.</help-text>
       <regexp>^[0-9]*[,.]?[0-9]+$</regexp>
     </input>
-    <input name="xAllowDecimal" type="checkbox">
-      <label>Vis desimaler på X-akseverdiene</label>
-      <help-text>Vanligvis avrundes akseverdiene til heltall, men ved små verdiendringer (f.eks prosent) kan man velge å tillate desimaler likevel.</help-text>
-    </input>
-    <input name="xAxisDecimalPlaces" type="RadioButton">
-      <label>Antall desimalplasser på X-akse</label>
-      <config>
-        <option value="0">0</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-      </config>
-      <default>0</default>
-      <help-text>Her velger du hvor mange desimalplasser du vil vise i x-akse</help-text>
-    </input>
     <input name="xEnableLabel" type="CheckBox">
       <label>Skjul aksemarkører</label>
       <help-text>Kan skrus på dersom det ikke ønskes markører langs X-aksen (f.eks dersom tegnforklaringen gir tilstrekkelig info)</help-text>

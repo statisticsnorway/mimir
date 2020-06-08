@@ -182,7 +182,6 @@ export const createConfig = (highchartData, displayName) => ({
     type: highchartData.yAxisType || 'linear'
   },
   xAxis: {
-    allowDecimals: highchartData.xAllowDecimal,
     title: {
       style,
       text: highchartData.xAxisTitle || '',
@@ -190,7 +189,6 @@ export const createConfig = (highchartData, displayName) => ({
     },
     labels: {
       style,
-      format: `{value:,.${highchartData.xAxisDecimalPlaces || 0}f}`
     }
   },
   tooltip: {
