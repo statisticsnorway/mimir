@@ -20,7 +20,7 @@ export interface Highchart {
   graphType: "line" | "pie" | "column" | "bar" | "area" | "barNegative";
 
   /**
-   * Antall desimalplasser som vises
+   * Vis desimaler for avlesingspunktene i diagrammet, antall:
    */
   numberDecimals?: "0" | "1" | "2" | "3";
 
@@ -115,16 +115,6 @@ export interface Highchart {
   xAxisMax?: string;
 
   /**
-   * Tillat desimaler
-   */
-  xAllowDecimal: boolean;
-
-  /**
-   * Antall desimalplasser som vises
-   */
-  xAxisDecimalPlaces?: "0" | "1" | "2";
-
-  /**
    * Skjul aksemarkører
    */
   xEnableLabel: boolean;
@@ -150,12 +140,7 @@ export interface Highchart {
   yAxisMax?: string;
 
   /**
-   * Y-akse Tillat desimaler
-   */
-  yAxisAllowDecimal: boolean;
-
-  /**
-   * Antall desimalplasser som vises
+   * Vis desimaler på Y-akseverdiene, antall:
    */
   yAxisDecimalPlaces?: "0" | "1" | "2";
 

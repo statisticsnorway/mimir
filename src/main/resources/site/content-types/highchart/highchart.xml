@@ -191,7 +191,7 @@
       <regexp>^[0-9]*[,.]?[0-9]+$</regexp>
     </input>
     <input name="yAxisDecimalPlaces" type="RadioButton">
-      <label>Antall desimalplasser på Y-akse</label>
+      <label>Vis desimaler på Y-akseverdiene, antall:</label>
       <config>
         <option value="0">0</option>
         <option value="1">1</option>
