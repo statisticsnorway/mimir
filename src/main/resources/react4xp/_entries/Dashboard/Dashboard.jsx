@@ -1,12 +1,13 @@
 import React from 'react'
-import { Accordion, Button as SSBButton } from '@statisticsnorway/ssb-component-library'
+import { Accordion } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import Alert from 'react-bootstrap/Alert'
 import Col from 'react-bootstrap/Col'
-import Modal from 'react-bootstrap/Modal'
 import Row from 'react-bootstrap/Row'
 import Table from 'react-bootstrap/Table'
 import DashboardDataQuery from './DashboardDataQuery'
+import DashboardButtons from './DashboardButtons'
+import ClearCacheButton from './ClearCacheButton'
 import axios from 'axios'
 import { groupBy } from 'ramda'
 
@@ -19,10 +20,6 @@ class Dashboard extends React.Component {
     super(props)
     this.state = {
       dataQueries: props.dataQueries,
-      showDeleteAllDialog: false,
-      showDownloadAllDialog: false,
-      downloadingAll: false,
-      deletingAll: false,
       errorMsg: '',
       successMsg: '',
       showErrorAlert: false,
@@ -44,111 +41,37 @@ class Dashboard extends React.Component {
     })
   }
 
-  deleteDataset(dataQueryId) {
-    this.setState({
-      dataQueries: this.state.dataQueries.map( (query) => {
-        if (query.id === dataQueryId) {
-          query.deleting = true
-        }
-        return query
-      })
-    })
-    this.deleteRequest(dataQueryId)
-  }
-
-  getDataset(dataQueryId) {
-    this.setState({
-      dataQueries: this.state.dataQueries.map( (query) => {
-        if (query.id === dataQueryId) {
-          query.loading = true
-        }
-        return query
-      })
-    })
-    this.getRequest(dataQueryId)
-  }
-
-  stopLoadingIndicators(dataQueryId) {
-    this.setState({
-      dataQueries: this.state.dataQueries.map( (query) => {
-        if (query.id === dataQueryId) {
-          query.loading = false,
-          query.deleting = false
-        }
-        return query
-      })
-    })
-  }
-
-  handleHideDeleteAllDialog(deleteIsPushed) {
-    if (deleteIsPushed) {
-      this.setState({
-        deletingAll: true
-      })
-      this.deleteRequest('*')
-    }
-    this.setState({
-      showDeleteAllDialog: false
-    })
-  }
-
-  handleHideDownloadAllDialog(downloadIsPushed) {
-    if (downloadIsPushed) {
-      this.setState({
-        downloadingAll: true
-      })
-      this.getRequest('*')
-    }
-    this.setState({
-      showDownloadAllDialog: false
-    })
-  }
-
   getRequest(id) {
-    const request = axios.get(this.props.dashboardService, {
+    return axios.get(this.props.dashboardService, {
       params: {
         id: id
       }
     })
-    return this.resultHandler(request, id)
   }
 
   deleteRequest(id) {
-    const request = axios.delete(this.props.dashboardService, {
+    return axios.delete(this.props.dashboardService, {
       params: {
         id: id
       }
     })
-    return this.resultHandler(request, id)
   }
 
-  resultHandler(p, id) {
-    return p.then((response) => {
-      if (response.status === 200) {
-        this.updateDataQueries(response.data.updates)
-        this.showSuccess(response.data.message)
-      } else {
-        this.showError(response.data.message)
-      }
-    })
-      .catch((e) => {
-        console.log(e)
-        this.updateDataQueries(e.response.data.updates)
-        this.showError(e.response.data.message)
-      })
-      .finally(() => {
-        if (id !== '*') {
-          this.stopLoadingIndicators(id)
-        } else {
-          this.setState({
-            downloadingAll: false,
-            deletingAll: false
-          })
+  setLoading(id, value) {
+    this.setState({
+      dataQueries: this.state.dataQueries.map((query) => {
+        if (query.id === id) {
+          return {
+            ...query,
+            loading: value
+          }
         }
+        return query
       })
+    })
   }
 
-  updateDataQueries(updatedDataQueries) {
+  refreshRow(updatedDataQueries) {
     const updatedSet = this.state.dataQueries.map((dataQuery) => {
       const updated = updatedDataQueries.filter( (updatedQuery) => updatedQuery.id === dataQuery.id)
         .map((updatedQuery) => {
@@ -176,25 +99,19 @@ class Dashboard extends React.Component {
 
 
   renderDataQueries(queries) {
-    return queries.map( (query) => {
+    return queries.map( (dataquery) => {
       return (
-        <DashboardDataQuery key={query.id}
-          id={query.id}
-          displayName={query.displayName}
-          format={query.format}
-          isPublished={query.isPublished ? query.isPublished : undefined}
-          datasetModified={query.dataset.modified}
-          datasetModifiedReadable={query.dataset.modifiedReadable}
-          hasData={query.hasData}
-          dashboardService={this.props.dashboardService}
-          deleteDataset={(id) => this.deleteDataset(id)}
-          getDataset={(id) => this.getDataset(id)}
-          loading={query.loading}
-          deleting={query.deleting}
-          modified={query.logData && query.logData.modified ? query.logData.modified : undefined}
-          modifiedReadable={query.logData && query.logData.modifiedReadable ? query.logData.modifiedReadable : undefined}
-          message={query.logData && query.logData.message ? query.logData.message : undefined}
-          by={query.logData && query.logData.by.login ? query.logData.by.login : undefined }
+        <DashboardDataQuery key={dataquery.id}
+          id={dataquery.id}
+          dataquery={dataquery}
+          showSuccess={(msg) => this.showSuccess(msg)}
+          showError={(msg) => this.showError(msg)}
+          getRequest={(id) => this.getRequest(id)}
+          deleteRequest={(id) => this.deleteRequest(id)}
+          refreshRow={(id) => this.refreshRow(id)}
+          setLoading={(id, value) => this.setLoading(id, value)}
+          contentStudioBaseUrl={this.props.contentStudioBaseUrl}
+          eventLogNodes={dataquery.logData && dataquery.logData.eventLogNodes ? dataquery.logData.eventLogNodes : undefined }
         />
       )
     })
@@ -222,8 +139,15 @@ class Dashboard extends React.Component {
     return (
       <Accordion header={header}
         className="mx-0"
-        openByDefault
       >
+        { this.props.featureToggling.updateList &&
+          <DashboardButtons
+            dataQueries={queries}
+            refreshRow={(queries) => this.refreshRow(queries)}
+            getRequest={(id) => this.getRequest(id)}
+            setLoading={(id, value ) => this.setLoading(id, value)}
+          />
+        }
         {this.renderTable(queries)}
       </Accordion>
     )
@@ -232,7 +156,7 @@ class Dashboard extends React.Component {
   render() {
     const groupedQueries = byType(this.state.dataQueries)
     return (
-      <section className="xp-part part-dashboard">
+      <section className="xp-part part-dashboard container">
         <Row>
           <Col>
             <div className="p-4 tables-wrapper">
@@ -254,6 +178,16 @@ class Dashboard extends React.Component {
                 this.renderAccordians(`Andre (${groupedQueries.default.length})`, groupedQueries.default)
               }
             </div>
+          </Col>
+        </Row>
+
+        <Row className="my-3">
+          <Col className="p-4">
+            <ClearCacheButton
+              onSuccess={(message) => this.showSuccess(message)}
+              onError={(message) => this.showError(message)}
+              clearCacheServiceUrl={this.props.clearCacheServiceUrl}
+            />
           </Col>
         </Row>
 
@@ -279,117 +213,57 @@ class Dashboard extends React.Component {
       </section>
     )
   }
-
-  renderDialogBox(data) {
-    return (
-      <Modal show={this.state[data.stateProperty]} onHide={() => data.onHide(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>{data.title}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>{data.body}</Modal.Body>
-        <Modal.Footer>
-          <SSBButton secondary onClick={() => data.onHide(false)}>
-            {data.cancelTitle}
-          </SSBButton>
-          <SSBButton primary onClick={() => data.onHide(true)}>
-            {data.submitTitle}
-          </SSBButton>
-        </Modal.Footer>
-      </Modal>
-    )
-  }
-
-  renderDeleteAllButtonAndDialog() {
-    return (
-      <>
-        <SSBButton
-          secondary
-          className="js-dashboard-delete pb-2"
-          onClick={() => this.setState({
-            showDeleteAllDialog: true
-          })}>
-          {this.state.deletingAll ? <span className="spinner-border spinner-border-sm mr-2"></span> : ''}
-          Slett alle dataset
-        </SSBButton>
-        {this.renderDialogBox({
-          stateProperty: 'showDeleteAllDialog',
-          onHide: (status) => this.handleHideDeleteAllDialog(status),
-          title: 'Vil du slette alle dataset?',
-          body: 'Alle dataset vil bli slettet',
-          cancelTitle: 'Avbryt',
-          submitTitle: 'Slett'
-        })}
-      </>
-    )
-  }
-  renderDownloadAllButtonAndDialog() {
-    return (
-      <>
-        <SSBButton
-          primary
-          className="ml-2 js-dashboard-update pb-2"
-          onClick={() => this.setState({
-            showDownloadAllDialog: true
-          })}>
-          {this.state.downloadingAll ? <span className="spinner-border spinner-border-sm mr-2"></span> : ''}
-          Oppdater alle dataset
-        </SSBButton>
-        {this.renderDialogBox({
-          stateProperty: 'showDownloadAllDialog',
-          onHide: (status) => this.handleHideDownloadAllDialog(status),
-          title: 'Vil du laste ned alle datasettene på nytt?',
-          body: 'Alle datasett vil bli lastet ned på nytt.',
-          cancelTitle: 'Lukk',
-          submitTitle: 'Last ned'
-        })}
-      </>
-    )
-  }
-
-  renderFooter() {
-    return (
-      <nav className="footerNavigation my-4">
-        {this.renderDeleteAllButtonAndDialog()}
-        {this.renderDownloadAllButtonAndDialog()}
-
-      </nav>
-    )
-  }
 }
 
 
 Dashboard.propTypes = {
   header: PropTypes.string,
   dashboardService: PropTypes.string,
+  clearCacheServiceUrl: PropTypes.string,
   dataQueries: PropTypes.arrayOf(
-    PropTypes.shape(dataqueryShape)
+    PropTypes.shape(DataQuery)
   ),
   groupedQueries: PropTypes.shape({
-    default: PropTypes.arrayOf(PropTypes.shape(dataqueryShape)),
-    factPage: PropTypes.arrayOf(PropTypes.shape(dataqueryShape)),
-    municipality: PropTypes.arrayOf(PropTypes.shape(dataqueryShape))
-  })
+    default: PropTypes.arrayOf(PropTypes.shape(DataQuery)),
+    factPage: PropTypes.arrayOf(PropTypes.shape(DataQuery)),
+    municipality: PropTypes.arrayOf(PropTypes.shape(DataQuery))
+  }),
+  featureToggling: PropTypes.shape({
+    updateList: PropTypes.bool
+  }),
+  contentStudioBaseUrl: PropTypes.string
 }
 
-const dataqueryShape = PropTypes.shape({
+export const DataQuery = PropTypes.shape({
   id: PropTypes.string,
   displayName: PropTypes.string,
   path: PropTypes.string,
   parentType: PropTypes.string,
   format: PropTypes.string,
-  updated: PropTypes.string,
-  updatedHumanReadable: PropTypes.string,
-  hasData: PropTypes.boolean,
-  showSuccess: PropTypes.boolean,
-  showError: PropTypes.boolean,
-  successMessage: PropTypes.string,
-  errorMessage: PropTypes.string,
-  logData: {
-    lastUpdateResult: PropTypes.string,
-    by: PropTypes.object,
-    lastUpdated: PropTypes.string,
-    lastUpdatedHumanReadable: PropTypes.string
-  }
+  isPublished: PropTypes.bool,
+  hasData: PropTypes.bool,
+  loading: PropTypes.bool,
+  deleting: PropTypes.bool,
+  dataset: PropTypes.shape({
+    modified: PropTypes.string,
+    modifiedReadable: PropTypes.string
+  }),
+  logData: PropTypes.shape({
+    queryId: PropTypes.string,
+    modifiedReadable: PropTypes.string,
+    modifiedResult: PropTypes.string,
+    modified: PropTypes.string,
+    modifiedTs: PropTypes.string,
+    message: PropTypes.string,
+    by: PropTypes.shape({
+      login: PropTypes.string,
+      displayName: PropTypes.string
+    }),
+    eventLogNodes: PropTypes.arrayOf(PropTypes.shape({
+      message: PropTypes.string,
+      modifiedTs: PropTypes.string
+    }))
+  })
 })
 
 export default (props) => <Dashboard {...props} />

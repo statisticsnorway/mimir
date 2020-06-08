@@ -16,5 +16,9 @@
                 </input>
             </items>
         </field-set>
+
+        <mixin name="relatedArticles" />
+
+        <mixin name="contacts" />
     </form>
 </content-type>

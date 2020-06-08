@@ -1,15 +1,12 @@
 const {
   getNode
-} = __non_webpack_require__( '../../../lib/repo/common')
+} = __non_webpack_require__( '/lib/repo/common')
 
 const {
   assetUrl,
   serviceUrl
 } = __non_webpack_require__( '/lib/xp/portal')
-const {
-  getUpdated,
-  getUpdatedReadable
-} = __non_webpack_require__('/lib/ssb/dataset')
+
 const {
   render
 } = __non_webpack_require__( '/lib/thymeleaf')
@@ -23,25 +20,28 @@ const content = __non_webpack_require__( '/lib/xp/content')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const i18n = __non_webpack_require__('/lib/xp/i18n')
 const {
-  EVENT_LOG_BRANCH, EVENT_LOG_REPO
+  EVENT_LOG_BRANCH,
+  EVENT_LOG_REPO,
+  getQueryChildNodesStatus
 } = __non_webpack_require__( '/lib/repo/eventLog')
+const { getToolUrl } = __non_webpack_require__('/lib/xp/admin');
 
 const view = resolve('./dashboard.html')
+const DEFAULT_CONTENTSTUDIO_URL = getToolUrl('com.enonic.app.contentstudio', 'main')
 
 exports.get = function(req) {
-  return renderPart()
   try {
-    return renderPart()
+    return renderPart(req)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
 /**
- *
+ * @param {object} req
  * @return {{pageContributions: *, body: *}}
  */
-function renderPart() {
+function renderPart(req) {
   const datasetMap = getDataset()
   const dataQueries = getDataQueries(datasetMap)
 
@@ -51,7 +51,12 @@ function renderPart() {
     .setProps({
       header: 'Alle spørringer',
       dataQueries,
-      dashboardService: assets.dashboardService
+      dashboardService: assets.dashboardService,
+      clearCacheServiceUrl: assets.clearCacheServiceUrl,
+      featureToggling: {
+        updateList: req.params.updateList ? true : false
+      },
+      contentStudioBaseUrl: `${DEFAULT_CONTENTSTUDIO_URL}#/edit/`
     })
     .setId('dataset')
 
@@ -95,6 +100,9 @@ function getAssets() {
     }),
     logoUrl: assetUrl({
       path: 'SSB_logo_black.svg'
+    }),
+    clearCacheServiceUrl: serviceUrl({
+      service: 'clearCache'
     })
   }
 }
@@ -134,7 +142,7 @@ function getDataQueries(datasetMap) {
     const dataset = datasetMap[dataquery._id]
     const hasData = !!dataset
     const queryLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataquery._id}`)
-
+    const eventLogNodes = getQueryChildNodesStatus(`/queries/${dataquery._id}`)
     return {
       id: dataquery._id,
       displayName: dataquery.displayName,
@@ -142,8 +150,8 @@ function getDataQueries(datasetMap) {
       parentType: getParentType(dataquery._path),
       format: dataquery.data.datasetFormat ? dataquery.data.datasetFormat._selected : undefined,
       dataset: {
-        modified: hasData ? getUpdated(dataset) : undefined,
-        modifiedReadable: hasData ? getUpdatedReadable(dataset) : undefined
+        modified: hasData ? dateToFormat(dataset.modifiedTime) : undefined,
+        modifiedReadable: hasData ? dateToReadable(dataset.modifiedTime) : undefined
       },
       hasData,
       isPublished: isPublished(dataquery),
@@ -153,8 +161,11 @@ function getDataQueries(datasetMap) {
           key: queryLogNode.data.modifiedResult
         }),
         modified: queryLogNode.data.modified,
-        modifiedReadable: dateToReadable(queryLogNode.data.modifiedTs)
-      } : undefined
+        modifiedReadable: dateToReadable(queryLogNode.data.modifiedTs),
+        eventLogNodes
+      } : undefined,
+      loading: false,
+      deleting: false
     }
   })
 }

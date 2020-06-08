@@ -1,9 +1,4 @@
-export interface Statistics {
-  /**
-   * Om Statistikken
-   */
-  aboutTheStatistics?: string;
-
+export interface RelatedArticles {
   /**
    * Relatert artikkel
    */
@@ -58,9 +53,4 @@ export interface Statistics {
       image: string;
     };
   };
-
-  /**
-   * Kontakter
-   */
-  contacts?: string;
 }

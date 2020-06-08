@@ -30,6 +30,66 @@ export interface Article {
   }>;
 
   /**
+   * Relaterte faktasider
+   */
+  relatedFactPagesItemSet?: Array<{
+    /**
+     * Faktasider
+     */
+    itemList?: Array<string>;
+  }>;
+
+  /**
+   * Løpenummer
+   */
+  serialNumber?: string;
+
+  /**
+   * Stikktittel
+   */
+  introTitle?: string;
+
+  /**
+   * Forfatter
+   */
+  authorItemSet?: Array<{
+    /**
+     * Navn
+     */
+    name?: string;
+
+    /**
+     * E-post
+     */
+    email?: string;
+  }>;
+
+  /**
+   * Vis tidspunkt for sist redigering
+   */
+  showModifiedDate?: {
+    /**
+     * Selected
+     */
+    _selected: string | Array<string>;
+
+    /**
+     * Skal det vises dato?
+     */
+    dateOption?: {
+      /**
+       * Vis klokkeslett for publisering
+       */
+      showModifiedTime: boolean;
+
+      /**
+       * Tidspunkt for endring
+       */
+      modifiedDate?: string;
+    };
+  };
+
+  /**
    * Relatert artikkel
    */
   relatedArticles?: {
@@ -85,72 +145,7 @@ export interface Article {
   };
 
   /**
-   * Relaterte faktasider
-   */
-  relatedFactPagesItemSet?: Array<{
-    /**
-     * Seksjons tittel
-     */
-    title?: string;
-
-    /**
-     * Faktasider
-     */
-    itemList?: Array<string>;
-  }>;
-
-  /**
-   * Løpenummer
-   */
-  serialNumber?: string;
-
-  /**
-   * Stikktittel
-   */
-  introTitle?: string;
-
-  /**
    * Kontakter
    */
   contacts?: string;
-
-  /**
-   * Forfatter
-   */
-  authorItemSet?: Array<{
-    /**
-     * Navn
-     */
-    name?: string;
-
-    /**
-     * E-post
-     */
-    email?: string;
-  }>;
-
-  /**
-   * Vis tidspunkt for sist redigering
-   */
-  showModifiedDate?: {
-    /**
-     * Selected
-     */
-    _selected: string | Array<string>;
-
-    /**
-     * Skal det vises dato?
-     */
-    dateOption?: {
-      /**
-       * Vis klokkeslett for publisering
-       */
-      showModifiedTime: boolean;
-
-      /**
-       * Tidspunkt for endring
-       */
-      modifiedDate?: string;
-    };
-  };
 }

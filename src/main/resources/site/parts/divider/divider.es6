@@ -40,22 +40,22 @@ const renderPart = (req, config) => {
       .setProps(
         setColor(dividerColor)
       )
-      .uniqueId()
-
-    const preRenderedBody = render(view, {
-      dividerId: divider.react4xpId
-    })
+      .setId('dividerId')
 
     body = divider.renderBody({
-      body: preRenderedBody
+      body: render(view)
     })
 
+    // Cache dividers
     if (dividerColor === 'dark') {
       darkBody = body
     } else {
       lightBody = body
     }
   }
+
+  // UD: Removes the dividerId to prevent the duplicate ids errors
+  body = body.replace(/id="dividerId"/, '')
 
   return {
     body
