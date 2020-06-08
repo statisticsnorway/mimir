@@ -1,4 +1,7 @@
 const {
+  get
+} = __non_webpack_require__( '/lib/xp/content')
+const {
   getContent
 } = __non_webpack_require__( '/lib/xp/portal')
 const {
@@ -13,18 +16,26 @@ const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 exports.get = function(req) {
   try {
-    return renderPart(req)
+    const aboutTheStatisticsId = getContent().data.aboutTheStatistics
+    return renderPart(req, aboutTheStatisticsId)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-exports.preview = function(req) {
-  return renderPart(req)
-}
+exports.preview = (req, id) => renderPart(req, [id])
 
-function renderPart(req) {
-  const page = getContent()
+function renderPart(req, aboutTheStatisticsId) {
+  if (!aboutTheStatisticsId) {
+    return {
+      body: null
+    }
+  }
+
+  const aboutTheStatisticsContent = get({
+    key: aboutTheStatisticsId
+  })
+
   const definitionsItems = ['conceptsAndVariables', 'standardRatings']
   const administrativeInformationItems = ['regionalLevel', 'frequency', 'internationalReporting', 'storageAndUse']
   const backgroundItems = ['purposeAndHistory', 'usersAndUse', 'equalTreatmentUsers', 'relationOtherStatistics', 'legalAuthority', 'eeaReference']
@@ -34,31 +45,31 @@ function renderPart(req) {
     'auditProcedures', 'qualityOfSeasonalAdjustment', 'specialCases', 'postingProcedures', 'relevantDocumentation']
 
   const accordions = []
-  page.data.definition && !isEmpty(page.data.definition) ? accordions.push(
-    getAccordion('definitions', page.data.definition, definitionsItems)) : undefined
-  page.data.administrativeInformation && !isEmpty(page.data.administrativeInformation) ? accordions.push(
-    getAccordion('administrativeInformation', page.data.administrativeInformation, administrativeInformationItems)) : undefined
-  page.data.background && !isEmpty(page.data.background) ? accordions.push(
-    getAccordion('background', page.data.background, backgroundItems)) : undefined
-  page.data.production && !isEmpty(page.data.production) ? accordions.push(
-    getAccordion('production', page.data.production, productionItems)) : undefined
-  page.data.accuracyAndReliability && !isEmpty(page.data.accuracyAndReliability) ? accordions.push(
-    getAccordion('accuracyAndReliability', page.data.accuracyAndReliability, accuracyAndReliabilityItems)) : undefined
+  aboutTheStatisticsContent.data.definition && !isEmpty(aboutTheStatisticsContent.data.definition) ? accordions.push(
+    getAccordion('definitions', aboutTheStatisticsContent.data.definition, definitionsItems)) : undefined
+  aboutTheStatisticsContent.data.administrativeInformation && !isEmpty(aboutTheStatisticsContent.data.administrativeInformation) ? accordions.push(
+    getAccordion('administrativeInformation', aboutTheStatisticsContent.data.administrativeInformation, administrativeInformationItems)) : undefined
+  aboutTheStatisticsContent.data.background && !isEmpty(aboutTheStatisticsContent.data.background) ? accordions.push(
+    getAccordion('background', aboutTheStatisticsContent.data.background, backgroundItems)) : undefined
+  aboutTheStatisticsContent.data.production && !isEmpty(aboutTheStatisticsContent.data.production) ? accordions.push(
+    getAccordion('production', aboutTheStatisticsContent.data.production, productionItems)) : undefined
+  aboutTheStatisticsContent.data.accuracyAndReliability && !isEmpty(aboutTheStatisticsContent.data.accuracyAndReliability) ? accordions.push(
+    getAccordion('accuracyAndReliability', aboutTheStatisticsContent.data.accuracyAndReliability, accuracyAndReliabilityItems)) : undefined
 
   const relevantDocumentation = {
-    body: page.data.relevantDocumentation,
+    body: aboutTheStatisticsContent.data.relevantDocumentation,
     open: i18nLib.localize({
       key: 'relevantDocumentation'
     }),
     items: []
   }
 
-  if (page.data.relevantDocumentation) {
+  if (aboutTheStatisticsContent.data.relevantDocumentation) {
     accordions.push(relevantDocumentation)
   }
 
-  page.data.aboutSeasonalAdjustment && !isEmpty(page.data.aboutSeasonalAdjustment) ? accordions.push(
-    getAccordion('aboutSeasonalAdjustment', page.data.aboutSeasonalAdjustment, aboutSeasonalAdjustmentItems)) : undefined
+  aboutTheStatisticsContent.data.aboutSeasonalAdjustment && !isEmpty(aboutTheStatisticsContent.data.aboutSeasonalAdjustment) ? accordions.push(
+    getAccordion('aboutSeasonalAdjustment', aboutTheStatisticsContent.data.aboutSeasonalAdjustment, aboutSeasonalAdjustmentItems)) : undefined
 
   if (accordions.length === 0) {
     accordions.push({
@@ -73,9 +84,17 @@ function renderPart(req) {
   }
   const omStatistikken = new React4xp('site/parts/accordion/accordion').setProps(props).setId('omStatistikken')
     .uniqueId()
-  const body = render(view, {
-    omStatistikkenId: omStatistikken.react4xpId
-  })
+
+  const model = {
+    omStatistikkenId: omStatistikken.react4xpId,
+    label: i18nLib.localize({
+      key: 'aboutTheStatistics'
+    }),
+    ingress: aboutTheStatisticsContent.data.ingress
+  }
+
+  const body = render(view, model)
+
   return {
     body: omStatistikken.renderBody({
       body: body

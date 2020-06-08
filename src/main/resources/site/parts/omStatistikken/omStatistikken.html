@@ -1,1 +1,6 @@
-<section class="xp-part part-om-statistikken container" data-th-id="${omStatistikkenId}"></section>
+<section class="xp-part part-om-statistikken container">
+    <h2 data-th-text="${label}?: 'Om statistikken'" class="roboto-condensed-bold mb-md-4 pb-md-2 bt-6"></h2>
+    <p class="ingress-wrapper" data-th-if="${ingress}" data-th-text="${ingress}"></p>
+    <div data-th-id="${omStatistikkenId}"></div>
+</section>
+
