@@ -190,10 +190,6 @@
       <help-text>Må være et heltall eller desimaltall. La feltet være blankt for automatisk justering. Hvis aksen er unike kategorier, brukes heltall fra 0 og oppover.</help-text>
       <regexp>^[0-9]*[,.]?[0-9]+$</regexp>
     </input>
-    <input name="yAxisAllowDecimal" type="CheckBox">
-      <label>Vis desimaler på Y-akseverdiene</label>
-      <help-text>Vanligvis avrundes akseverdiene til heltall, men ved små verdiendringer (f.eks prosent) kan man velge å tillate desimaler likevel.</help-text>
-    </input>
     <input name="yAxisDecimalPlaces" type="RadioButton">
       <label>Antall desimalplasser på Y-akse</label>
       <config>

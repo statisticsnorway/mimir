@@ -160,7 +160,7 @@ export const createConfig = (highchartData, displayName) => ({
 
   yAxis: {
     reversed: false,
-    allowDecimals: highchartData.yAxisAllowDecimal,
+    allowDecimals: highchartData.yAxisDecimalPlaces > 0,
     labels: {
       style,
       format: `{value:,.${highchartData.yAxisDecimalPlaces || 0}f}`
