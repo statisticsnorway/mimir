@@ -6,10 +6,7 @@ const {
   assetUrl,
   serviceUrl
 } = __non_webpack_require__( '/lib/xp/portal')
-const {
-  getUpdated,
-  getUpdatedReadable
-} = __non_webpack_require__('/lib/ssb/dataset')
+
 const {
   render
 } = __non_webpack_require__( '/lib/thymeleaf')
@@ -17,7 +14,7 @@ const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
 const {
-  isPublished, dateToReadable
+  isPublished, dateToFormat, dateToReadable
 } = __non_webpack_require__('/lib/ssb/utils')
 const content = __non_webpack_require__( '/lib/xp/content')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
@@ -153,8 +150,8 @@ function getDataQueries(datasetMap) {
       parentType: getParentType(dataquery._path),
       format: dataquery.data.datasetFormat ? dataquery.data.datasetFormat._selected : undefined,
       dataset: {
-        modified: hasData ? getUpdated(dataset) : undefined,
-        modifiedReadable: hasData ? getUpdatedReadable(dataset) : undefined
+        modified: hasData ? dateToFormat(dataset.modifiedTime) : undefined,
+        modifiedReadable: hasData ? dateToReadable(dataset.modifiedTime) : undefined
       },
       hasData,
       isPublished: isPublished(dataquery),
