@@ -1,5 +1,12 @@
 import { find } from 'ramda'
 
+// XML response types (Common)
+
+export interface ListMeta {
+    antall: number;
+    dato: string;
+}
+
 // XML response types for Contacts from StatReg ----------------------------------
 
 export interface KontaktNavn {
@@ -15,9 +22,7 @@ export interface Kontakt {
     navn: Array<KontaktNavn>;
 }
 
-export interface KontaktListe {
-    antall: number;
-    dato: string;
+export interface KontaktListe extends ListMeta {
     kontakt: Array<Kontakt>;
 }
 
@@ -37,7 +42,7 @@ export interface Contact {
 
 type KontaktNavnType = KontaktNavn | '' | undefined;
 
-export function transform(kontakt: Kontakt): Contact {
+export function transformContact(kontakt: Kontakt): Contact {
   const {
     id, telefon: telephone, mobil: mobile, epost: email, navn
   } = kontakt
@@ -58,5 +63,49 @@ export function transform(kontakt: Kontakt): Contact {
 
 export function extractContacts(kontaktXML: KontaktXML): Array<Contact> {
   const kontakter: Array<Kontakt> = kontaktXML.kontakter.kontakt
-  return kontakter.map((k) => transform(k))
+  return kontakter.map((k) => transformContact(k))
+}
+
+// XML response types for Statistics from StatReg ----------------------------------
+
+export interface Statistikk {
+    id: string;
+    kortnavn: string;
+    status: string;
+    deskFlyt: string;
+    dirFlyt: string;
+    endret: string;
+}
+
+export interface StatistikkListe extends ListMeta {
+    statistikk: Array<Statistikk>;
+}
+
+export interface StatistikkXML {
+    statistikker: StatistikkListe;
+}
+
+export interface Statistic {
+    id: string;
+    shortName: string;
+    status: string;
+    modifiedTime: string;
+}
+
+export function transformStat(stat: Statistikk): Statistic {
+  const {
+    id, kortnavn: shortName, status, endret: modifiedTime
+  } = stat
+
+  return {
+    id,
+    shortName,
+    status,
+    modifiedTime
+  }
+}
+
+export function extractStatistics(statXML: StatistikkXML): Array<Statistic> {
+  const statistikk: Array<Statistikk> = statXML.statistikker.statistikk
+  return statistikk.map((stat) => transformStat(stat))
 }

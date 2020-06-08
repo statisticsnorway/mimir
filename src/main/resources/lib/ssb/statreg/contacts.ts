@@ -2,14 +2,12 @@ import { HttpLibrary, HttpResponse } from 'enonic-types/lib/http'
 import { XmlParser } from '../../types/xmlParser'
 import { QueryFilters } from '../../repo/common'
 import { extractContacts, Contact } from './types'
+import { CONTACTS_URL, CONTACT_NAMES_URL } from './config'
+
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 const http: HttpLibrary = __non_webpack_require__('/lib/http-client')
 
-const STAT_REG_SVC_PROP: string = 'ssb.statreg.baseUrl'
-const STAT_REG: string = `${app.config && app.config[STAT_REG_SVC_PROP]}`
-const CONTACTS_URL: string = `${STAT_REG}/kontakt/listSomXml`
-const CONTACT_NAMES_URL: string = `${STAT_REG}/kontakt/hentNavn`
 
 function filtersToQuery(filters: QueryFilters): string {
   return filters ? Object.keys(filters)
