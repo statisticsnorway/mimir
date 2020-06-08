@@ -1,5 +1,5 @@
 import { RepoNode } from 'enonic-types/lib/node'
-import { getNode, withConnection, withLoggedInUserContext } from './common'
+import {getNode, withConnection, withLoggedInUserContext, withSuperUserContext} from './common'
 import { EVENT_LOG_BRANCH, EVENT_LOG_REPO, createEventLog, EditorCallback, updateEventLog } from './eventLog'
 import { User } from 'enonic-types/lib/auth'
 import { HttpRequestParams, HttpResponse } from 'enonic-types/lib/http'
@@ -58,11 +58,13 @@ export enum Events {
 }
 
 export function logDataQueryEvent(queryId: string, status: QueryStatus): void {
-  withLoggedInUserContext('master', (user) => {
+  withLoggedInUserContext(EVENT_LOG_BRANCH, (user) => {
     if (user) {
-      startQuery(queryId, user, status)
-      addEventToQueryLog(queryId, user, status)
-      updateQueryLogStatus(queryId, user, status)
+      withSuperUserContext(EVENT_LOG_REPO, EVENT_LOG_BRANCH,() => {
+        startQuery(queryId, user, status)
+        addEventToQueryLog(queryId, user, status)
+        updateQueryLogStatus(queryId, user, status)
+      })
     }
   })
 }
@@ -82,7 +84,7 @@ function addEventToQueryLog(queryId: string, user: User, status: QueryStatus): E
 export function startQuery(queryId: string, user: User, status: QueryStatus): QueryInfoNode {
   return withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, () => {
     const queryLogNode: ReadonlyArray<QueryInfoNode> = getNode<QueryInfo>(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${queryId}`)
-    if (queryLogNode !== undefined || queryLogNode !== null) {
+    if (queryLogNode !== undefined && queryLogNode !== null) {
       return Array.isArray(queryLogNode) ? queryLogNode[0] : queryLogNode
     } else {
       return createQueryNode(queryId, user, status)

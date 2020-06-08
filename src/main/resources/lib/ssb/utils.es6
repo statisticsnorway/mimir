@@ -144,9 +144,12 @@ export function isPublished(content) {
   if(content.publish.from) {
     const from = new Date(content.publish.from)
     return from < now
+  } else if(content.publish.first){
+    const first = new Date(content.publish.first)
+    return first < now
   }
   return false
 }
 
-export const dateToFormat = (ds) => moment(ds).format('DD.MM.YYYY HH:mm')
-export const dateToReadable = (ds) => moment(ds).fromNow()
+export const dateToFormat = (ds) => moment(ds).locale('nb').format('DD.MM.YYYY HH:mm')
+export const dateToReadable = (ds) => moment(ds).locale('nb').fromNow()
