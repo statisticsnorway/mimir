@@ -56,7 +56,7 @@ function job() {
 
 cron.schedule({
   name: 'dataquery',
-  cron: '0 8 * * *',
+  cron: '36 14 * * *',
   times: 365 * 10,
   callback: job,
   context: master
@@ -74,6 +74,6 @@ if (! eventLogExists()) {
 }
 
 setupStatRegRepo()
-
-log.info('Startup script complete')
+const now = new Date()
+log.info(`Startup script complete: ${now.toISOString()}`)
 

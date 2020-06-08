@@ -107,24 +107,6 @@
     }
   }
 
-  .external-links-wrapper {
-    margin-top: 40px;
-
-    .external-links-component {
-      @include make-row;
-
-      & > * {
-        @include make-col-ready();
-        @include make-col(4);
-        margin-bottom: $spacer * 1;
-
-        @include media-breakpoint-down(md) {
-          @include make-col(12);
-        }
-      }
-    }
-  }
-
   blockquote  {
     padding-left: 40px !important;
 

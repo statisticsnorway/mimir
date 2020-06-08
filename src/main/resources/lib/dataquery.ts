@@ -1,13 +1,12 @@
 import { HttpResponse, HttpLibrary, HttpRequestParams } from 'enonic-types/lib/http'
 import { ContextLibrary, RunContext } from 'enonic-types/lib/context'
 import { Dataquery } from '../site/content-types/dataquery/dataquery'
-import { Content, ContentLibrary, QueryResponse, PublishResponse } from 'enonic-types/lib/content'
+import { Content, ContentLibrary, ModifyContentParams, QueryResponse, PublishResponse } from 'enonic-types/lib/content'
 import { Dataset } from '../site/content-types/dataset/dataset'
 import * as moment from 'moment'
 import { getTbmlData } from './tbml/tbml'
 import { CommonLibrary } from './types/common'
 import { Events, logDataQueryEvent } from './repo/query'
-import { User } from 'enonic-types/lib/auth'
 
 const {getDataSetWithDataQueryId} = __non_webpack_require__('/lib/ssb/dataset')
 const http: HttpLibrary = __non_webpack_require__('/lib/http-client')
@@ -90,6 +89,11 @@ export function refreshDataset(dataquery: Content<Dataquery>): Content<Dataset> 
     logDataQueryEvent(dataquery._id, {message: refreshDatasetResult.status})
     return refreshDatasetResult
   } else {
+    log.info('RefreshDataset')
+    log.info('rawData is nothing')
+    log.info('%s', JSON.stringify(rawData, null, 2))
+    log.info('---')
+
     const refreshDatasetResult: RefreshDatasetResult = {
       dataqueryId: dataquery._id,
       status: Events.FAILED_TO_REFRESH_DATASET
@@ -132,10 +136,12 @@ export function getData(dataquery: Content<Dataquery>): object | null {
       } else if (datasetFormat && datasetFormat._selected === 'klass') {
         data = get(dataquery.data.table, undefined, undefined, dataquery._id)
       } else if (datasetFormat && datasetFormat._selected === 'tbml') {
-        data = getTbmlData(dataquery.data.table)
+        data = getTbmlData(dataquery.data.table, dataquery._id)
       }
     } catch (e) {
-      log.error(`Failed to fetch data for dataquery: ${dataquery._id} (${e})`)
+      const message = `Failed to fetch data for dataquery: ${dataquery._id} (${e})`
+      logDataQueryEvent(dataquery._id, { message: Events.FAILED_TO_REQUEST_DATASET,  info: message})
+      log.error(message)
     }
     return data
   }
@@ -156,13 +162,25 @@ function updateDataset(data: string, dataset: Content<Dataset>, dataquery: Conte
 
     const update: Content<Dataset> = content.modify({
       key: dataset._id,
-      editor: (r: ModifyContent<Dataset>): ModifyContent<Dataset> => {
-        r.displayName = `${dataquery.displayName} (datasett) endret ${now}`
-        r.data.table = dataquery.data.table
-        r.data.json = data
-        return r
+      editor: (r: Content<Dataset>): Content<Dataset> => {
+        return {
+          ...r,
+          displayName:`${dataquery.displayName} (datasett) endret ${now}`,
+          data:{
+            dataquery: dataquery._id,
+            table: dataquery.data.table,
+            json: data
+          }
+        }
       }
     })
+    log.info('UpdateDataset')
+    log.info('Dataquery: ' + dataquery._id)
+    log.info('%s', JSON.stringify(update, null, 2))
+    log.info('  ---- -----')
+    log.info('  ')
+    log.info('  ')
+    log.info('  ')
 
     if (!update) {
       const message: string = `Failed to update dataset: ${dataset._id}`
@@ -269,7 +287,7 @@ export interface Dimension {
 
 
 // TODO create issue for enonic-types where read-only is blocking modify
-interface ModifyContent<A extends object> extends Content<A> {
+/*interface ModifyContent<A extends object> extends Content<A> {
   displayName: string;
-}
+}*/
 

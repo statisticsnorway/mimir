@@ -1,4 +1,4 @@
-export interface Statistics {
+export interface RelatedArticles {
   /**
    * Relatert artikkel
    */
@@ -53,9 +53,4 @@ export interface Statistics {
       image: string;
     };
   };
-
-  /**
-   * Kontakter
-   */
-  contacts?: string;
 }

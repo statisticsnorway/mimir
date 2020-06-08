@@ -1,6 +1,6 @@
 <part>
   <display-name>Kontakt</display-name>
-  <description>Viser tre kontaker per linje</description>
+  <description>Viser fire kontaker per linje</description>
   <form>
     <input name="label" type="TextLine">
       <label>Overskrift på kontaktområde</label>
@@ -8,13 +8,6 @@
       <config>
         <max-length>30</max-length>
       </config>
-    </input>
-    <input name="contacts" type="CustomSelector">
-        <occurrences minimum="0" maximum="0" />
-        <label>Kontakter</label>
-        <config>
-          <service>contacts</service>
-        </config>
     </input>
   </form>
 </part>

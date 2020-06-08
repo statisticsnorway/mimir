@@ -1,5 +1,5 @@
 import { RepoNode } from 'enonic-types/lib/node'
-import { createEventLog, EditorCallback, updateEventLog } from './eventLog'
+import { createEventLog, EditorCallback } from './eventLog'
 import { AuthLibrary, User } from 'enonic-types/lib/auth'
 const {
   modifyNode
