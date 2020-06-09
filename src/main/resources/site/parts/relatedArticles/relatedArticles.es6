@@ -16,7 +16,8 @@ const {
 } = __non_webpack_require__( '/lib/xp/content')
 const util = __non_webpack_require__('/lib/util')
 const {
-  getImageCaption
+  getImageCaption,
+  getImageAlt
 } = __non_webpack_require__('/lib/ssb/utils')
 const {
   getPhrases
@@ -106,7 +107,7 @@ function renderPart(req, relatedArticles) {
         id: article.externalArticle.image,
         scale: 'block(320, 180)' // 16:9
       })
-      const imageAlt = getImageCaption(article.externalArticle.image)
+      const imageAlt = getImageAlt(article.externalArticle.image)
       let subTitle = ''
       if (article.externalArticle.type) {
         subTitle = article.externalArticle.type

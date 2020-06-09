@@ -10,7 +10,8 @@ const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
 const {
-  getImageCaption
+  getImageCaption,
+  getImageAlt
 } = __non_webpack_require__( '/lib/ssb/utils')
 
 const content = __non_webpack_require__('/lib/xp/content')
@@ -87,7 +88,7 @@ function getIcon(iconId) {
         id: iconId,
         scale: 'block(100,100)'
       }),
-      alt: getImageCaption(iconId)
+      alt: getImageAlt(iconId)
     }
   } else {
     return undefined
