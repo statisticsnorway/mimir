@@ -46,17 +46,20 @@ function renderPart(req, aboutTheStatisticsId) {
 
   const accordions = []
   aboutTheStatisticsContent.data.definition && !isEmpty(aboutTheStatisticsContent.data.definition) ? accordions.push(
-    getAccordion('definitions', aboutTheStatisticsContent.data.definition, definitionsItems)) : undefined
+    getAccordion('om-statistikken-definisjoner', 'definitions', aboutTheStatisticsContent.data.definition, definitionsItems)) : undefined
   aboutTheStatisticsContent.data.administrativeInformation && !isEmpty(aboutTheStatisticsContent.data.administrativeInformation) ? accordions.push(
-    getAccordion('administrativeInformation', aboutTheStatisticsContent.data.administrativeInformation, administrativeInformationItems)) : undefined
+    getAccordion('om-statistikken-administrative_opplysninger', 'administrativeInformation',
+      aboutTheStatisticsContent.data.administrativeInformation, administrativeInformationItems)) : undefined
   aboutTheStatisticsContent.data.background && !isEmpty(aboutTheStatisticsContent.data.background) ? accordions.push(
-    getAccordion('background', aboutTheStatisticsContent.data.background, backgroundItems)) : undefined
+    getAccordion('om-statistikken-bakgrunn', 'background', aboutTheStatisticsContent.data.background, backgroundItems)) : undefined
   aboutTheStatisticsContent.data.production && !isEmpty(aboutTheStatisticsContent.data.production) ? accordions.push(
-    getAccordion('production', aboutTheStatisticsContent.data.production, productionItems)) : undefined
+    getAccordion('om-statistikken-produksjon', 'production', aboutTheStatisticsContent.data.production, productionItems)) : undefined
   aboutTheStatisticsContent.data.accuracyAndReliability && !isEmpty(aboutTheStatisticsContent.data.accuracyAndReliability) ? accordions.push(
-    getAccordion('accuracyAndReliability', aboutTheStatisticsContent.data.accuracyAndReliability, accuracyAndReliabilityItems)) : undefined
+    getAccordion('om-statistikken-feilkilder', 'accuracyAndReliability', aboutTheStatisticsContent.data.accuracyAndReliability,
+      accuracyAndReliabilityItems)) : undefined
 
   const relevantDocumentation = {
+    id: 'om-statistikken-relevant-dokumentasjon',
     body: aboutTheStatisticsContent.data.relevantDocumentation,
     open: i18nLib.localize({
       key: 'relevantDocumentation'
@@ -69,7 +72,8 @@ function renderPart(req, aboutTheStatisticsId) {
   }
 
   aboutTheStatisticsContent.data.aboutSeasonalAdjustment && !isEmpty(aboutTheStatisticsContent.data.aboutSeasonalAdjustment) ? accordions.push(
-    getAccordion('aboutSeasonalAdjustment', aboutTheStatisticsContent.data.aboutSeasonalAdjustment, aboutSeasonalAdjustmentItems)) : undefined
+    getAccordion('om-sesongjustering', 'aboutSeasonalAdjustment', aboutTheStatisticsContent.data.aboutSeasonalAdjustment,
+      aboutSeasonalAdjustmentItems)) : undefined
 
   if (accordions.length === 0) {
     accordions.push({
@@ -82,6 +86,7 @@ function renderPart(req, aboutTheStatisticsId) {
   const props = {
     accordions: accordions
   }
+
   const omStatistikken = new React4xp('site/parts/accordion/accordion').setProps(props).setId('omStatistikken')
     .uniqueId()
 
@@ -102,8 +107,9 @@ function renderPart(req, aboutTheStatisticsId) {
     pageContributions: omStatistikken.renderPageContributions()
   }
 
-  function getAccordion(categoryText, category, items) {
+  function getAccordion(id, categoryText, category, items) {
     const accordion = {
+      id: id,
       body: '',
       open: i18nLib.localize({
         key: categoryText
