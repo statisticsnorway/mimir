@@ -109,3 +109,48 @@ export function extractStatistics(statXML: StatistikkXML): Array<Statistic> {
   const statistikk: Array<Statistikk> = statXML.statistikker.statistikk
   return statistikk.map((stat) => transformStat(stat))
 }
+
+// XML response types from StatReg for Publications --------------------------------
+
+export interface Publisering {
+    id: string;
+    variant: string;
+    deskFlyt: string;
+    endret: string;
+    statistikkKortNavn: string;
+}
+
+export interface PubliseringsListe extends ListMeta {
+    publisering: Array<Publisering>;
+}
+
+export interface PubliseringXML {
+    publiseringer: PubliseringsListe;
+}
+
+export interface Publication {
+    id: string;
+    variant: string;
+    statisticsKey: string;
+    status: string;
+    modifiedTime: string;
+}
+
+export function transformPubllication(pub: Publisering): Publication {
+  const {
+    id, variant, statistikkKortNavn, deskFlyt, endret
+  } = pub
+
+  return {
+    id,
+    variant,
+    statisticsKey: statistikkKortNavn,
+    status: deskFlyt,
+    modifiedTime: endret
+  }
+}
+
+export function extractPublications(pubXML: PubliseringXML): Array<Publication> {
+  const publisering: Array<Publisering> = pubXML.publiseringer.publisering
+  return publisering.map((pub) => transformPubllication(pub))
+}

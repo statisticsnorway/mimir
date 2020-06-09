@@ -1,5 +1,5 @@
 import { getStatRegNode, StatRegNode } from '../statreg'
-import { fetchContacts as fetchContactsSvc } from '../../ssb/statreg/contacts'
+import { fetchContacts as fetchContactsSvc } from '../../ssb/statreg'
 
 export const STATREG_REPO_CONTACTS_KEY: string = 'contacts'
 

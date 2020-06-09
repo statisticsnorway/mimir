@@ -18,7 +18,7 @@ To fetch data from statistikkregisteret and saving it in Content Studio. Uses [M
   - TODO: periodic fetching of contacts ([MIMIR-601](https://jira.ssb.no/browse/MIMIR-601))   
 
 ### Contacts Service
-- `fetchContacts` (also `/lib/ssb/statreg/contacts.ts::fetchContacts`)
+- `fetchContacts` (also `/lib/ssb/statreg::fetchContacts`)
   - Fetch contacts from the statreg HTTP service
   - Used by `setupStatRegNodes`, the result is under 
   `master:no.ssb.statreg`/`contacts` node

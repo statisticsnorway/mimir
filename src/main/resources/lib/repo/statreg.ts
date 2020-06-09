@@ -3,6 +3,8 @@ import { repoExists, createRepo } from './repo'
 import { QueryFilters, createNode, getNode, modifyNode } from './common'
 import { ensureArray } from '../ssb/arrayUtils'
 import { STATREG_REPO_CONTACTS_KEY, fetchContacts } from './statreg/contacts'
+import { STATREG_REPO_STATISTICS_KEY, fetchStatistics } from './statreg/statistics'
+import { STATREG_REPO_PUBLICATIONS_KEY, fetchPublications } from './statreg/publications'
 
 export const STATREG_REPO: string = 'no.ssb.statreg'
 export const STATREG_BRANCH: string = 'master'
@@ -64,7 +66,9 @@ export function configureNode(key: string, fetcher: (filters: QueryFilters) => a
 }
 
 const STATREG_NODES: Array<StatRegNodeConfig> = [
-  configureNode(STATREG_REPO_CONTACTS_KEY, fetchContacts)
+  configureNode(STATREG_REPO_CONTACTS_KEY, fetchContacts),
+  configureNode(STATREG_REPO_STATISTICS_KEY, fetchStatistics),
+  configureNode(STATREG_REPO_PUBLICATIONS_KEY, fetchPublications)
 ]
 
 export function setupStatRegRepo(nodeConfig: Array<StatRegNodeConfig> = STATREG_NODES) {
