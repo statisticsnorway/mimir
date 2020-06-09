@@ -1,0 +1,9 @@
+.part-relatedStatistics {
+  @include media-breakpoint-down(md) {
+    padding: 0;
+  }
+
+  a {
+    width: 100%;
+  }
+}

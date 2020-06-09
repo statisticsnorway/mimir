@@ -3,6 +3,8 @@
     <display-name>Statistikk</display-name>
     <super-type>base:structured</super-type>
     <form>
+        <mixin name="relatedStatistics"/>
+
         <mixin name="relatedArticles" />
     </form>
 </content-type>

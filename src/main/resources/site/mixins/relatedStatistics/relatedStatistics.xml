@@ -1,0 +1,17 @@
+<mixin>
+    <display-name>Relaterte statistikker</display-name>
+    <form>
+        <field-set>
+        <label>Relaterte statistikker</label>
+        <items>
+            <input name="relatedStatistics" type="ContentSelector">
+                <label>Relaterte statistikker</label>
+                <occurrences minimum="0" maximum="0" />
+                <config>
+                    <allowContentType>statistics</allowContentType>
+                </config>
+            </input>
+        </items>
+        </field-set>
+    </form>
+</mixin>

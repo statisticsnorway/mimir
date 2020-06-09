@@ -1,5 +1,10 @@
 export interface Statistics {
   /**
+   * Relaterte statistikker
+   */
+  relatedStatistics?: Array<string>;
+
+  /**
    * Relatert artikkel
    */
   relatedArticles?: {
