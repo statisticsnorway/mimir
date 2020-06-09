@@ -1,5 +1,5 @@
 import { RepoNode } from 'enonic-types/lib/node'
-import {getNode, withConnection, withLoggedInUserContext, withSuperUserContext} from './common'
+import { getNode, SUPER_USER, withConnection, withLoggedInUserContext, withSuperUserContext } from './common'
 import { EVENT_LOG_BRANCH, EVENT_LOG_REPO, createEventLog, EditorCallback, updateEventLog } from './eventLog'
 import { User } from 'enonic-types/lib/auth'
 import { HttpRequestParams, HttpResponse } from 'enonic-types/lib/http'
@@ -60,7 +60,7 @@ export enum Events {
 export function logDataQueryEvent(queryId: string, status: QueryStatus): void {
   withLoggedInUserContext(EVENT_LOG_BRANCH, (user) => {
     if (user) {
-      withSuperUserContext(EVENT_LOG_REPO, EVENT_LOG_BRANCH,() => {
+      withSuperUserContext(EVENT_LOG_REPO, EVENT_LOG_BRANCH, () => {
         startQuery(queryId, user, status)
         addEventToQueryLog(queryId, user, status)
         updateQueryLogStatus(queryId, user, status)
@@ -68,6 +68,15 @@ export function logDataQueryEvent(queryId: string, status: QueryStatus): void {
     }
   })
 }
+
+export function logDataQueryEventWithSU(queryId: string, status: QueryStatus): void {
+  withSuperUserContext(EVENT_LOG_REPO, EVENT_LOG_BRANCH, () => {
+    startQuery(queryId, SUPER_USER, status)
+    addEventToQueryLog(queryId, SUPER_USER, status)
+    updateQueryLogStatus(queryId, SUPER_USER, status)
+  })
+}
+
 
 function addEventToQueryLog(queryId: string, user: User, status: QueryStatus): EventInfo & RepoNode {
   const ts: Date = new Date()

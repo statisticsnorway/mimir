@@ -1,3 +1,5 @@
+import {setupEventLog} from './lib/repo/eventLog';
+
 const {
   eventLogExists,
   createEventLog
@@ -10,9 +12,7 @@ const {
 } = __non_webpack_require__('/lib/repo/job')
 import { setupStatRegRepo } from './lib/repo/statreg'
 
-const {
-  refreshDataset
-} = __non_webpack_require__('/lib/dataquery')
+const { asynchronusRefreshRows } = __non_webpack_require__('/lib/task')
 const content = __non_webpack_require__( '/lib/xp/content')
 const cron = __non_webpack_require__('/lib/cron')
 const cache = __non_webpack_require__('/lib/ssb/cache')
@@ -47,16 +47,14 @@ function job() {
       }
     }
   })
-  const refreshDataResult = allHttpQueries && allHttpQueries.hits.map((row) => {
-    refreshDataset(row)
-  })
+  const refreshDataResult = allHttpQueries && asynchronusRefreshRows(allHttpQueries)
   completeJobLog(jobLogNode._id, JobStatus.COMPLETE, refreshDataResult)
   log.info('-- Completed dataquery cron job --')
 }
 
 cron.schedule({
   name: 'dataquery',
-  cron: '36 14 * * *',
+  cron: '0 6 * * *',
   times: 365 * 10,
   callback: job,
   context: master
@@ -64,16 +62,10 @@ cron.schedule({
 
 cache.setup()
 
-if (! eventLogExists()) {
-  log.info(`Setting up EventLog ...`);
-  createEventLog({ _path: 'queries', _name: 'queries' });
-  createEventLog({ _path: 'jobs', _name: 'jobs' });
-  log.info(`EventLog Repo for jobs and queries initialized.`);
-} else {
-  log.info(`EventLog Repo found.`)
-}
 
+setupEventLog()
 setupStatRegRepo()
+
 const now = new Date()
 log.info(`Startup script complete: ${now.toISOString()}`)
 

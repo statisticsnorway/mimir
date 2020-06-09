@@ -6,7 +6,7 @@ import { Dataset } from '../site/content-types/dataset/dataset'
 import * as moment from 'moment'
 import { getTbmlData } from './tbml/tbml'
 import { CommonLibrary } from './types/common'
-import { Events, logDataQueryEvent } from './repo/query'
+import {Events, logDataQueryEvent, logDataQueryEventWithSU} from './repo/query'
 
 const {getDataSetWithDataQueryId} = __non_webpack_require__('/lib/ssb/dataset')
 const http: HttpLibrary = __non_webpack_require__('/lib/http-client')
@@ -82,23 +82,19 @@ export interface RefreshDatasetResult {
 }
 
 export function refreshDataset(dataquery: Content<Dataquery>): Content<Dataset> | RefreshDatasetResult {
-  logDataQueryEvent(dataquery._id, {message: Events.GET_DATA_STARTED})
+  logDataQueryEventWithSU(dataquery._id, {message: Events.GET_DATA_STARTED})
+
   const rawData: object | null = getData(dataquery)
   if (rawData) {
     const refreshDatasetResult: RefreshDatasetResult = refreshDatasetWithData(JSON.stringify(rawData), dataquery)
-    logDataQueryEvent(dataquery._id, {message: refreshDatasetResult.status})
+    logDataQueryEventWithSU(dataquery._id, {message: refreshDatasetResult.status})
     return refreshDatasetResult
   } else {
-    log.info('RefreshDataset')
-    log.info('rawData is nothing')
-    log.info('%s', JSON.stringify(rawData, null, 2))
-    log.info('---')
-
     const refreshDatasetResult: RefreshDatasetResult = {
       dataqueryId: dataquery._id,
       status: Events.FAILED_TO_REFRESH_DATASET
     }
-    logDataQueryEvent(dataquery._id, {message: refreshDatasetResult.status})
+    logDataQueryEventWithSU(dataquery._id, {message: refreshDatasetResult.status})
     return refreshDatasetResult
   }
 }

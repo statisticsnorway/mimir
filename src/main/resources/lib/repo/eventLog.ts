@@ -10,6 +10,18 @@ export const EVENT_LOG_BRANCH: string = 'master'
 
 export type EditorCallback<T> = (node: T & RepoNode) => T & RepoNode;
 
+export function setupEventLog(){
+  if (! eventLogExists()) {
+    log.info(`Setting up EventLog ...`);
+    createEventLog({ _path: 'queries', _name: 'queries' });
+    createEventLog({ _path: 'jobs', _name: 'jobs' });
+    log.info(`EventLog Repo for jobs and queries initialized.`);
+  } else {
+    log.info(`EventLog Repo found.`)
+  }
+
+}
+
 export function eventLogExists(): boolean {
   return repoExists(EVENT_LOG_REPO, EVENT_LOG_BRANCH)
 }
