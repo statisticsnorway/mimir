@@ -30,16 +30,6 @@ export interface Article {
   }>;
 
   /**
-   * Relaterte faktasider
-   */
-  relatedFactPagesItemSet?: Array<{
-    /**
-     * Faktasider
-     */
-    itemList?: Array<string>;
-  }>;
-
-  /**
    * Løpenummer
    */
   serialNumber?: string;
@@ -144,8 +134,18 @@ export interface Article {
     };
   };
 
-  /**
-   * Kontakter
+ /**   
+  * Kontakter
    */
   contacts?: string;
+
+ /**
+   * Relaterte faktasider
+   */
+  relatedFactPagesItemSet?: Array<{
+    /**
+     * Faktasider
+     */
+    itemList?: Array<string>;
+  }>;
 }

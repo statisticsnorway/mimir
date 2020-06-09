@@ -54,8 +54,18 @@ export interface Statistics {
     };
   };
 
-  /**
-   * Kontakter
+   /**   
+  * Kontakter
    */
   contacts?: string;
+
+ /**
+   * Relaterte faktasider
+   */
+  relatedFactPagesItemSet?: Array<{
+    /**
+     * Faktasider
+     */
+    itemList?: Array<string>;
+  }>;
 }
