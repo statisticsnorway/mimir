@@ -5,6 +5,10 @@ To fetch data from statistikkregisteret and saving it in Content Studio. Uses [M
 
 ### Config
 - Requires `ssb.statreg.baseUrl` (picked up from mimir-config) - which points to the URL of the statreg API. 
+- For dev/utv you can use 
+  ```
+  ssb.statreg.baseUrl = https://i.utv.ssb.no/statistikkregisteret
+  ```
 
 ### StatReg Repo
 - Uses repo `no.ssb.statreg` in `master` branch.
