@@ -74,8 +74,9 @@ class DashboardDataQuery extends React.Component {
         >
           <span className="haveList">{logData.message ? logData.message : ''}</span>
         </OverlayTrigger>
-        }<br/>
+        }
         {!logData.eventLogNodes && logData.message && <span>{logData.message}</span>}
+        <br/>
         {logData.modifiedReadable ? logData.modifiedReadable : ''}<br/>
         {logData.modified ? logData.modified : ''}<br/>
         {logData.by.displayName ? `av ${logData.by.displayName}` : '' }

@@ -6,5 +6,7 @@
         <mixin name="relatedArticles" />
 
         <mixin name="relatedFactPage" />
+      
+        <mixin name="contacts" />
     </form>
 </content-type>

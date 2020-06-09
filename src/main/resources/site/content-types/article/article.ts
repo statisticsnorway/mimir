@@ -40,11 +40,6 @@ export interface Article {
   introTitle?: string;
 
   /**
-   * Kontakter
-   */
-  contacts?: string;
-
-  /**
    * Forfatter
    */
   authorItemSet?: Array<{
@@ -139,7 +134,12 @@ export interface Article {
     };
   };
 
-  /**
+ /**   
+  * Kontakter
+   */
+  contacts?: string;
+
+ /**
    * Relaterte faktasider
    */
   relatedFactPagesItemSet?: Array<{

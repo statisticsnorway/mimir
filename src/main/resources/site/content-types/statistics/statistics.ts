@@ -54,7 +54,12 @@ export interface Statistics {
     };
   };
 
-  /**
+   /**   
+  * Kontakter
+   */
+  contacts?: string;
+
+ /**
    * Relaterte faktasider
    */
   relatedFactPagesItemSet?: Array<{
