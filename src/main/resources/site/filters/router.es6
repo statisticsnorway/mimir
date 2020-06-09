@@ -32,12 +32,12 @@ exports.filter = function(req, next) {
     targetId = get({
       key: '/ssb/kommunefakta/kommune'
     })._id
-    pageTitle = `Kommunefakta ${municipality.displayName}`
+    pageTitle = `Kommunefakta ${municipality ? municipality.displayName : ''}`
   } else if (req.path.indexOf('/kommuneareal/') > -1) {
     targetId = get({
       key: '/ssb/kommuneareal/kommune'
     })._id
-    pageTitle = `Kommuneareal ${municipality.displayName}`
+    pageTitle = `Kommuneareal ${municipality ? municipality.displayName : ''}`
   }
 
   if (!targetId) {
