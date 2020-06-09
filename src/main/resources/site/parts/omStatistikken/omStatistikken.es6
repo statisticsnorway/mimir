@@ -36,6 +36,14 @@ function renderPart(req, aboutTheStatisticsId) {
     key: aboutTheStatisticsId
   })
 
+  const definitionsContent = aboutTheStatisticsContent.data.definition
+  const administrativeInformationContent = aboutTheStatisticsContent.data.administrativeInformation
+  const backgroundContent = aboutTheStatisticsContent.data.background
+  const productionContent = aboutTheStatisticsContent.data.production
+  const accuracyAndReliabilityContent = aboutTheStatisticsContent.data.accuracyAndReliability
+  const relevantDocumentationContent = aboutTheStatisticsContent.data.relevantDocumentation
+  const aboutSeasonalAdjustmentContent = aboutTheStatisticsContent.data.aboutSeasonalAdjustment
+
   const definitionsItems = ['conceptsAndVariables', 'standardRatings']
   const administrativeInformationItems = ['regionalLevel', 'frequency', 'internationalReporting', 'storageAndUse']
   const backgroundItems = ['purposeAndHistory', 'usersAndUse', 'equalTreatmentUsers', 'relationOtherStatistics', 'legalAuthority', 'eeaReference']
@@ -45,34 +53,33 @@ function renderPart(req, aboutTheStatisticsId) {
     'auditProcedures', 'qualityOfSeasonalAdjustment', 'specialCases', 'postingProcedures', 'relevantDocumentation']
 
   const accordions = []
-  aboutTheStatisticsContent.data.definition && !isEmpty(aboutTheStatisticsContent.data.definition) ? accordions.push(
-    getAccordion('om-statistikken-definisjoner', 'definitions', aboutTheStatisticsContent.data.definition, definitionsItems)) : undefined
-  aboutTheStatisticsContent.data.administrativeInformation && !isEmpty(aboutTheStatisticsContent.data.administrativeInformation) ? accordions.push(
+  isNotEmpty(definitionsContent) ? accordions.push(
+    getAccordion('om-statistikken-definisjoner', 'definitions', definitionsContent, definitionsItems)) : undefined
+  isNotEmpty(administrativeInformationContent) ? accordions.push(
     getAccordion('om-statistikken-administrative_opplysninger', 'administrativeInformation',
-      aboutTheStatisticsContent.data.administrativeInformation, administrativeInformationItems)) : undefined
-  aboutTheStatisticsContent.data.background && !isEmpty(aboutTheStatisticsContent.data.background) ? accordions.push(
-    getAccordion('om-statistikken-bakgrunn', 'background', aboutTheStatisticsContent.data.background, backgroundItems)) : undefined
-  aboutTheStatisticsContent.data.production && !isEmpty(aboutTheStatisticsContent.data.production) ? accordions.push(
-    getAccordion('om-statistikken-produksjon', 'production', aboutTheStatisticsContent.data.production, productionItems)) : undefined
-  aboutTheStatisticsContent.data.accuracyAndReliability && !isEmpty(aboutTheStatisticsContent.data.accuracyAndReliability) ? accordions.push(
-    getAccordion('om-statistikken-feilkilder', 'accuracyAndReliability', aboutTheStatisticsContent.data.accuracyAndReliability,
-      accuracyAndReliabilityItems)) : undefined
+      administrativeInformationContent, administrativeInformationItems)) : undefined
+  isNotEmpty(backgroundContent) ? accordions.push(
+    getAccordion('om-statistikken-bakgrunn', 'background', backgroundContent, backgroundItems)) : undefined
+  isNotEmpty(productionContent) ? accordions.push(
+    getAccordion('om-statistikken-produksjon', 'production', productionContent, productionItems)) : undefined
+  isNotEmpty(accuracyAndReliabilityContent) ? accordions.push(
+    getAccordion('om-statistikken-feilkilder', 'accuracyAndReliability', accuracyAndReliabilityContent, accuracyAndReliabilityItems)) : undefined
 
   const relevantDocumentation = {
     id: 'om-statistikken-relevant-dokumentasjon',
-    body: aboutTheStatisticsContent.data.relevantDocumentation,
+    body: relevantDocumentationContent,
     open: i18nLib.localize({
       key: 'relevantDocumentation'
     }),
     items: []
   }
 
-  if (aboutTheStatisticsContent.data.relevantDocumentation) {
+  if (relevantDocumentationContent) {
     accordions.push(relevantDocumentation)
   }
 
-  aboutTheStatisticsContent.data.aboutSeasonalAdjustment && !isEmpty(aboutTheStatisticsContent.data.aboutSeasonalAdjustment) ? accordions.push(
-    getAccordion('om-sesongjustering', 'aboutSeasonalAdjustment', aboutTheStatisticsContent.data.aboutSeasonalAdjustment,
+  isNotEmpty(aboutSeasonalAdjustmentContent) ? accordions.push(
+    getAccordion('om-sesongjustering', 'aboutSeasonalAdjustment', aboutSeasonalAdjustmentContent,
       aboutSeasonalAdjustmentItems)) : undefined
 
   if (accordions.length === 0) {
@@ -140,7 +147,10 @@ function renderPart(req, aboutTheStatisticsId) {
     return items
   }
 
-  function isEmpty(obj) {
-    return Object.keys(obj).length === 0
+  function isNotEmpty(obj) {
+    if (obj) {
+      return Object.keys(obj).length > 0
+    }
+    return false
   }
 }
