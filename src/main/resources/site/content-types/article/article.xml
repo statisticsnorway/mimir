@@ -56,25 +56,7 @@
             </config>
         </input>
 
-        <field-set>
-            <label>Relaterte sider</label>
-            <items>
-                <item-set name="relatedExternalLinkItemSet">
-                    <label>Relaterte eksterne lenker</label>
-                    <occurrences minimum="0" maximum="0"/>
-                    <items>
-                        <input type="TextLine" name="urlText">
-                            <label>Lenketekst</label>
-                            <occurrences minimum="1" maximum="1" />
-                        </input>
-                        <input type="TextLine" name="url">
-                            <label>URL</label>
-                            <occurrences minimum="1" maximum="1" />
-                        </input>
-                    </items>
-                </item-set>
-            </items>
-        </field-set>
+        <mixin name="relatedExternalLinks" />
 
         <mixin name="relatedArticles" />
 
