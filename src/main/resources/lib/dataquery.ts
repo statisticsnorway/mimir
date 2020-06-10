@@ -6,9 +6,11 @@ import { Dataset } from '../site/content-types/dataset/dataset'
 import * as moment from 'moment'
 import { getTbmlData } from './tbml/tbml'
 import { CommonLibrary } from './types/common'
-import {Events, logDataQueryEvent, logDataQueryEventWithSU} from './repo/query'
+import { Events, logUserDataQuery, logAdminDataQuery } from './repo/query'
 
-const {getDataSetWithDataQueryId} = __non_webpack_require__('/lib/ssb/dataset')
+const {
+  getDataSetWithDataQueryId
+} = __non_webpack_require__('/lib/ssb/dataset')
 const http: HttpLibrary = __non_webpack_require__('/lib/http-client')
 const context: ContextLibrary = __non_webpack_require__('/lib/xp/context')
 const content: ContentLibrary = __non_webpack_require__('/lib/xp/content')
@@ -57,7 +59,7 @@ export function get(url: string, json: DataqueryRequestData | undefined,
 
   const result: HttpResponse = http.request(requestParams)
   if (queryId) {
-    logDataQueryEvent(queryId, {
+    logUserDataQuery(queryId, {
       message: Events.REQUESTING_DATA,
       response: result,
       request: requestParams
@@ -81,27 +83,33 @@ export interface RefreshDatasetResult {
   newDatasetData?: boolean;
 }
 
-export function refreshDataset(dataquery: Content<Dataquery>): Content<Dataset> | RefreshDatasetResult {
-  logDataQueryEventWithSU(dataquery._id, {message: Events.GET_DATA_STARTED})
+export function refreshQuery(dataquery: Content<Dataquery>): Content<Dataset> | RefreshDatasetResult {
+  logAdminDataQuery(dataquery._id, {
+    message: Events.GET_DATA_STARTED
+  })
 
   const rawData: object | null = getData(dataquery)
   if (rawData) {
     const refreshDatasetResult: RefreshDatasetResult = refreshDatasetWithData(JSON.stringify(rawData), dataquery)
-    logDataQueryEventWithSU(dataquery._id, {message: refreshDatasetResult.status})
+    logAdminDataQuery(dataquery._id, {
+      message: refreshDatasetResult.status
+    })
     return refreshDatasetResult
   } else {
     const refreshDatasetResult: RefreshDatasetResult = {
       dataqueryId: dataquery._id,
       status: Events.FAILED_TO_REFRESH_DATASET
     }
-    logDataQueryEventWithSU(dataquery._id, {message: refreshDatasetResult.status})
+    logAdminDataQuery(dataquery._id, {
+      message: refreshDatasetResult.status
+    })
     return refreshDatasetResult
   }
 }
 
 export function refreshDatasetWithData(rawData: string, dataquery: Content<Dataquery>): RefreshDatasetResult {
   const dataset: QueryResponse<Dataset> | undefined = getDataSetWithDataQueryId(dataquery._id)
-  if (!dataset ||  (dataset && dataset.total === 0) ) {
+  if (!dataset || (dataset && dataset.total === 0) ) {
     return createDataset(rawData, dataquery)
   }
   if (dataset && isDataNew(rawData, dataset.hits[0])) {
@@ -115,7 +123,7 @@ export function refreshDatasetWithData(rawData: string, dataquery: Content<Dataq
   } else {
     return {
       dataqueryId: dataquery._id,
-      dataset:dataset.hits[0],
+      dataset: dataset.hits[0],
       status: Events.NO_NEW_DATA
     }
   }
@@ -135,8 +143,11 @@ export function getData(dataquery: Content<Dataquery>): object | null {
         data = getTbmlData(dataquery.data.table, dataquery._id)
       }
     } catch (e) {
-      const message = `Failed to fetch data for dataquery: ${dataquery._id} (${e})`
-      logDataQueryEvent(dataquery._id, { message: Events.FAILED_TO_REQUEST_DATASET,  info: message})
+      const message: string = `Failed to fetch data for dataquery: ${dataquery._id} (${e})`
+      logUserDataQuery(dataquery._id, {
+        message: Events.FAILED_TO_REQUEST_DATASET,
+        info: message
+      })
       log.error(message)
     }
     return data
@@ -161,8 +172,8 @@ function updateDataset(data: string, dataset: Content<Dataset>, dataquery: Conte
       editor: (r: Content<Dataset>): Content<Dataset> => {
         return {
           ...r,
-          displayName:`${dataquery.displayName} (datasett) endret ${now}`,
-          data:{
+          displayName: `${dataquery.displayName} (datasett) endret ${now}`,
+          data: {
             dataquery: dataquery._id,
             table: dataquery.data.table,
             json: data
@@ -283,7 +294,7 @@ export interface Dimension {
 
 
 // TODO create issue for enonic-types where read-only is blocking modify
-/*interface ModifyContent<A extends object> extends Content<A> {
+/* interface ModifyContent<A extends object> extends Content<A> {
   displayName: string;
 }*/
 

@@ -57,26 +57,23 @@ export enum Events {
   XML_TO_JSON = 'XML_TO_JSON'
 }
 
-export function logDataQueryEvent(queryId: string, status: QueryStatus): void {
-  withLoggedInUserContext(EVENT_LOG_BRANCH, (user) => {
-    if (user) {
-      withSuperUserContext(EVENT_LOG_REPO, EVENT_LOG_BRANCH, () => {
-        startQuery(queryId, user, status)
-        addEventToQueryLog(queryId, user, status)
-        updateQueryLogStatus(queryId, user, status)
-      })
-    }
-  })
-}
-
-export function logDataQueryEventWithSU(queryId: string, status: QueryStatus): void {
+export function logDataQueryEvent(queryId: string, status: QueryStatus, user: User): void {
   withSuperUserContext(EVENT_LOG_REPO, EVENT_LOG_BRANCH, () => {
-    startQuery(queryId, SUPER_USER, status)
-    addEventToQueryLog(queryId, SUPER_USER, status)
-    updateQueryLogStatus(queryId, SUPER_USER, status)
+    startQuery(queryId, user, status)
+    addEventToQueryLog(queryId, user, status)
+    updateQueryLogStatus(queryId, user, status)
   })
 }
 
+export function logUserDataQuery(queryId: string, status: QueryStatus): void {
+  withLoggedInUserContext(EVENT_LOG_BRANCH, (user: User) => {
+    logDataQueryEvent(queryId, status, user)
+  })
+}
+
+export function logAdminDataQuery(queryId: string, status: QueryStatus): void {
+  logDataQueryEvent(queryId, status, SUPER_USER)
+}
 
 function addEventToQueryLog(queryId: string, user: User, status: QueryStatus): EventInfo & RepoNode {
   const ts: Date = new Date()

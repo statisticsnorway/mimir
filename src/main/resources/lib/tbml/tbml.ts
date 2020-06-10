@@ -1,6 +1,6 @@
 import { HttpLibrary, HttpResponse } from 'enonic-types/lib/http'
 import { TbmlData, XmlParser } from '../types/xmlParser'
-import { Events, logDataQueryEvent } from '../repo/query'
+import { Events, logUserDataQuery } from '../repo/query'
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 const http: HttpLibrary = __non_webpack_require__( '/lib/http-client')
 
@@ -21,7 +21,7 @@ export function fetch(url: string, queryId?: string): string {
   }
 
   if (queryId) {
-    logDataQueryEvent(queryId, {
+    logUserDataQuery(queryId, {
       message: Events.REQUESTING_DATA,
       response: response,
       request: {
@@ -39,7 +39,7 @@ export function getTbmlData(url: string, queryId?: string): TbmlData {
 function xmlToJson(xml: string, queryId?: string): TbmlData {
   const result: TbmlData = __.toNativeObject(xmlParser.parse(xml))
   if (queryId) {
-    logDataQueryEvent(queryId, {
+    logUserDataQuery(queryId, {
       message: Events.XML_TO_JSON,
       xmlResult: result
     })

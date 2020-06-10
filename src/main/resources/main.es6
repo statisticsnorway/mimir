@@ -1,4 +1,4 @@
-import {setupEventLog} from './lib/repo/eventLog';
+import { setupEventLog } from './lib/repo/eventLog'
 
 const {
   eventLogExists,
@@ -12,7 +12,9 @@ const {
 } = __non_webpack_require__('/lib/repo/job')
 import { setupStatRegRepo } from './lib/repo/statreg'
 
-const { asynchronusRefreshRows } = __non_webpack_require__('/lib/task')
+const {
+  refreshQueriesAsync
+} = __non_webpack_require__('/lib/task')
 const content = __non_webpack_require__( '/lib/xp/content')
 const cron = __non_webpack_require__('/lib/cron')
 const cache = __non_webpack_require__('/lib/ssb/cache')
@@ -47,7 +49,7 @@ function job() {
       }
     }
   })
-  const refreshDataResult = allHttpQueries && asynchronusRefreshRows(allHttpQueries)
+  const refreshDataResult = allHttpQueries && refreshQueriesAsync(allHttpQueries)
   completeJobLog(jobLogNode._id, JobStatus.COMPLETE, refreshDataResult)
   log.info('-- Completed dataquery cron job --')
 }
@@ -68,4 +70,3 @@ setupStatRegRepo()
 
 const now = new Date()
 log.info(`Startup script complete: ${now.toISOString()}`)
-
