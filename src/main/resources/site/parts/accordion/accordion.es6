@@ -2,6 +2,7 @@ const {
   getComponent,
   processHtml
 } = __non_webpack_require__( '/lib/xp/portal')
+const {sanitize} = __non_webpack_require__( '/lib/xp/common')
 const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
@@ -35,6 +36,7 @@ function renderPart(req, accordionIds) {
       accordionContents.forEach((accordion) => {
         const items = accordion.items ? util.data.forceArray(accordion.items) : []
         accordions.push({
+          id: sanitize(accordion.open),
           body: processHtml({
             value: accordion.body
           }),
