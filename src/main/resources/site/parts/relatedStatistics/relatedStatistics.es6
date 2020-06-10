@@ -32,13 +32,6 @@ exports.get = (req) => {
 
 exports.preview = (req) => renderPart(req)
 
-const NO_RELATED_STATISTICS_FOUND_EDIT_MODE = {
-  body: render(view)
-}
-const NO_RELATED_STATISTICS_FOUND = {
-  body: ''
-}
-
 const renderPart = (req) => {
   const page = getContent()
   const relatedStatistics = page.data.relatedStatistics
@@ -48,13 +41,21 @@ const renderPart = (req) => {
 
   if (!relatedStatistics || relatedStatistics.length === 0) {
     if (req.mode === 'edit') {
-      return NO_RELATED_STATISTICS_FOUND_EDIT_MODE
+      return {
+        body: render(view)
+      }
     }
   }
 
-  return renderRelatedStatistics(getRelatedContent(relatedStatistics ? data.forceArray(relatedStatistics) : []), phrases)
+  return renderRelatedStatistics(parseRelatedContent(relatedStatistics ? data.forceArray(relatedStatistics) : []), phrases)
 }
 
+/**
+ *
+ * @param {Array} relatedStatisticsContent
+ * @param {Object} phrases
+ * @return {{ body: string, pageContributions: string }}
+ */
 const renderRelatedStatistics = (relatedStatisticsContent, phrases) => {
   if (relatedStatisticsContent && relatedStatisticsContent.length) {
     const relatedStatisticsXP = new React4xp('RelatedStatistics')
@@ -84,10 +85,18 @@ const renderRelatedStatistics = (relatedStatisticsContent, phrases) => {
       pageContributions: relatedStatisticsXP.renderPageContributions()
     }
   }
-  return NO_RELATED_STATISTICS_FOUND
+  return {
+    body: null,
+    pageContributions: null
+  }
 }
 
-const getRelatedContent = (relatedStatistics) => {
+/**
+ *
+ * @param {Array} relatedStatistics
+ * @return {Object} Returns title, preamble, and href
+ */
+const parseRelatedContent = (relatedStatistics) => {
   return relatedStatistics.map((relatedContent) => {
     const relatedStatisticsContent = get({
       key: relatedContent
