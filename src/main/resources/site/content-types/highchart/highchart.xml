@@ -29,6 +29,15 @@
       <default>line</default>
     </input>
 
+    <input name="heightAspectRatio" type="TextLine">
+      <label>Høyde i prosent av bredde</label>
+      <default>75</default>
+      <help-text>
+        Et heltall større enn 0. Anbefalt er 75 som gir 4:3-forhold. 100 er kvadrat (1:1),
+        62 er det gylne snitt liggende, 56 er kinolerret (16:9), 162 er det gylne snitt stående.
+      </help-text>
+    </input>
+
     <input name="numberDecimals" type="RadioButton">
       <label>Antall desimalplasser som vises</label>
       <config>
