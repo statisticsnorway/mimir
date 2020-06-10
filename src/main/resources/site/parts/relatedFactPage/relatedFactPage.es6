@@ -28,7 +28,9 @@ exports.get = function(req, portal) {
     if (part.config.itemList) {
       itemList = itemList.concat(util.data.forceArray(part.config.itemList))
     }
-    if (page.data.relatedFactPagesItemSet && page.data.relatedFactPagesItemSet.itemList) {
+    if (page.data.relatedFactPages) {
+      itemList = itemList.concat(util.data.forceArray(page.data.relatedFactPages))
+    } else if (page.data.relatedFactPagesItemSet && page.data.relatedFactPagesItemSet.itemList) { // fallback to old, delete in a while
       itemList = itemList.concat(util.data.forceArray(page.data.relatedFactPagesItemSet.itemList))
     }
 

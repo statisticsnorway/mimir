@@ -30,14 +30,9 @@ export interface Article {
   }>;
 
   /**
-   * Relaterte faktasider
+   * Faktasider
    */
-  relatedFactPagesItemSet?: Array<{
-    /**
-     * Faktasider
-     */
-    itemList?: Array<string>;
-  }>;
+  relatedFactPages?: Array<string>;
 
   /**
    * Løpenummer
