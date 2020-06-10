@@ -3,8 +3,8 @@ const {
 } = __non_webpack_require__('/lib/ssb/arrayUtils')
 const contentType = 'application/json'
 
-const IDENTITY_FN = (o) => o
-const DEFAULT_FILTER_FN = (o, f) => o
+export const IDENTITY_FN = (o) => o
+export const DEFAULT_FILTER_FN = (o, f) => o
 
 const toOptions = (content, transform) =>
   content.map((item) => transform(item))
@@ -26,8 +26,12 @@ export const handleRepoGet = (
       }
     }
 
+    log.info(`~~~~~> content ${JSON.stringify(content)}`);
+
     const filtered = applyFilters(ensureArray(content), req.params)
-    const options = toOptions(filtered)
+    log.info(`~~~~~> filtered ${JSON.stringify(filtered)}`);
+    const options = toOptions(filtered, optionTransform)
+    log.info(`~~~~~> options ${JSON.stringify(options)}`);
 
     log.info(`Results filtered on ${req.params.query} : ${filtered.length}`)
     return {

@@ -16,7 +16,7 @@ export function fetchStatRegData<T, XmlType>(
   dataKey: string,
   serviceUrl: string,
   filters: QueryFilters,
-  extractor: (xml: XmlType) => Array<T>) {
+  extractor: (xml: XmlType) => Array<T>): Array<T> {
   const result: HttpResponse = http.request({
     url: `${serviceUrl}/${filtersToQuery(filters)}`,
     method: 'GET',

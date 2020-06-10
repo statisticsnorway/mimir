@@ -45,7 +45,7 @@ export function modifyStatRegNode(key: string, content: StatRegContent): StatReg
 
 function setupNodes(fetchers: Array<StatRegNodeConfig>) {
   ensureArray(fetchers)
-    .forEach((statRegFetcher) => {
+    .forEach((statRegFetcher: StatRegNodeConfig ) => {
       log.info(`Setting up StatReg Node: '/${statRegFetcher.key}' ...`)
       const node: StatRegNode | null = getStatRegNode(statRegFetcher.key)
       const content: StatRegContent = {

@@ -1,18 +1,30 @@
-import { getStatisticsFromRepo } from '../../lib/repo/statreg/statistics'
+require('../../lib/polyfills/nashorn')
+
+import { getAllStatisticsFromRepo } from '../../lib/repo/statreg/statistics'
 import { handleRepoGet } from '../repoUtils'
 
-const toOption = ({ id, name }) => ({
-  id,
-  displayName: name,
-  name
+const toOption = (stat) => ({
+  ...stat,
+  displayName: stat.shortName
 })
 
-const filterByName = (stat, filters) =>
-  stat.name.toLowerCase().includes(filters.query)
+const filterByShortName = (stats, filters) => {
+  log.info(`searching ${filters.query} in ${stats.length} stats`)
+  return stats.filter((s) => s.shortName.toLowerCase().includes(filters.query.toLowerCase()))
+}
+
+const filterByIds = (stats, filters) => {
+  return filters.ids && filters.ids.split(',')
+    .reduce((acc, id) => {
+      const found = stats.find((s) => `${s.id}` === id)
+      return found ? acc.concat(found) : acc
+    }, [])
+}
 
 exports.get = (req) => {
   return handleRepoGet(
     req,
-    'Statistics', getStatisticsFromRepo,
-    toOption, filterByName)
+    'Statistics', getAllStatisticsFromRepo,
+    toOption,
+    req.params.ids ? filterByIds : filterByShortName)
 }
