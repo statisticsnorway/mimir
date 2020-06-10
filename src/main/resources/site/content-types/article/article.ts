@@ -15,31 +15,6 @@ export interface Article {
   articleText?: string;
 
   /**
-   * Relaterte eksterne lenker
-   */
-  relatedExternalLinkItemSet?: Array<{
-    /**
-     * Lenketekst
-     */
-    urlText: string;
-
-    /**
-     * URL
-     */
-    url: string;
-  }>;
-
-  /**
-   * Relaterte faktasider
-   */
-  relatedFactPagesItemSet?: Array<{
-    /**
-     * Faktasider
-     */
-    itemList?: Array<string>;
-  }>;
-
-  /**
    * Løpenummer
    */
   serialNumber?: string;
@@ -48,11 +23,6 @@ export interface Article {
    * Stikktittel
    */
   introTitle?: string;
-
-  /**
-   * Kontakter
-   */
-  contacts?: string;
 
   /**
    * Forfatter
@@ -93,6 +63,21 @@ export interface Article {
       modifiedDate?: string;
     };
   };
+
+  /**
+   * Relaterte eksterne lenker
+   */
+  relatedExternalLinkItemSet?: Array<{
+    /**
+     * Lenketekst
+     */
+    urlText: string;
+
+    /**
+     * URL
+     */
+    url: string;
+  }>;
 
   /**
    * Relatert artikkel
@@ -148,4 +133,19 @@ export interface Article {
       image: string;
     };
   };
+
+  /**
+   * Relaterte faktasider
+   */
+  relatedFactPagesItemSet?: Array<{
+    /**
+     * Faktasider
+     */
+    itemList?: Array<string>;
+  }>;
+
+  /**
+   * Kontakter
+   */
+  contacts?: string;
 }

@@ -30,6 +30,7 @@ export const createConfig = (highchartData, displayName) => ({
     }
   },
   chart: {
+    height: (highchartData.heightAspectRatio > 0) ? `${highchartData.heightAspectRatio}%` : null,
     plotBorderColor: '#e6e6e6',
     spacingBottom: 18,
     plotBorderWidth: 0,

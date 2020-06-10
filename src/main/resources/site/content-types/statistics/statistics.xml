@@ -3,6 +3,12 @@
     <display-name>Statistikk</display-name>
     <super-type>base:structured</super-type>
     <form>
+        <mixin name="relatedExternalLinks" />
+
         <mixin name="relatedArticles" />
+
+        <mixin name="relatedFactPage" />
+      
+        <mixin name="contacts" />
     </form>
 </content-type>

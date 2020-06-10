@@ -1,5 +1,20 @@
 export interface Statistics {
   /**
+   * Relaterte eksterne lenker
+   */
+  relatedExternalLinkItemSet?: Array<{
+    /**
+     * Lenketekst
+     */
+    urlText: string;
+
+    /**
+     * URL
+     */
+    url: string;
+  }>;
+
+  /**
    * Relatert artikkel
    */
   relatedArticles?: {
@@ -53,4 +68,19 @@ export interface Statistics {
       image: string;
     };
   };
+
+  /**
+   * Relaterte faktasider
+   */
+  relatedFactPagesItemSet?: Array<{
+    /**
+     * Faktasider
+     */
+    itemList?: Array<string>;
+  }>;
+
+  /**
+   * Kontakter
+   */
+  contacts?: string;
 }
