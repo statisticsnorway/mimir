@@ -40,7 +40,11 @@ const NO_RELATED_STATISTICS_FOUND = {
 }
 
 const renderPart = (req) => {
-  const relatedStatistics = getContent().data.relatedStatistics
+  const page = getContent()
+  const relatedStatistics = page.data.relatedStatistics
+
+  moment.locale(page.language ? page.language : 'nb')
+  const phrases = getPhrases(page)
 
   if (!relatedStatistics || relatedStatistics.length === 0) {
     if (req.mode === 'edit') {
@@ -48,13 +52,10 @@ const renderPart = (req) => {
     }
   }
 
-  return renderRelatedStatistics(req, getRelatedContent(relatedStatistics ? data.forceArray(relatedStatistics) : []))
+  return renderRelatedStatistics(getRelatedContent(relatedStatistics ? data.forceArray(relatedStatistics) : []), phrases)
 }
 
-const renderRelatedStatistics = (req, relatedStatisticsContent) => {
-  moment.locale(getContent().language ? getContent().language : 'nb')
-  const phrases = getPhrases(getContent())
-
+const renderRelatedStatistics = (relatedStatisticsContent, phrases) => {
   if (relatedStatisticsContent && relatedStatisticsContent.length) {
     const relatedStatisticsXP = new React4xp('RelatedStatistics')
       .setProps({

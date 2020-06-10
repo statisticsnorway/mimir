@@ -65,13 +65,13 @@ class RelatedStatistics extends React.Component {
     } = this.props
     return (
       <div className="container">
-        <h2 className="ml-auto mr-auto pt-4">Statistikk</h2>
+        <h2 className="pt-4">Statistikk</h2>
         <div className="row mt-5">
           {relatedStatistics.map((relatedStatistics, index) => {
             return (
               <Card
                 key={index}
-                className={`mb-3 col-auto ${this.state.isHidden ? 'd-none' : ''} ${this.getBreakpoints(index)}`}
+                className={`mb-3 col-12 col-lg-4 ${this.state.isHidden ? 'd-none' : ''} ${this.getBreakpoints(index)}`}
                 href={relatedStatistics.href}
                 title={relatedStatistics.title}>
                 <Text>
@@ -91,7 +91,7 @@ RelatedStatistics.propTypes = {
   relatedStatistics: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string.isRequired,
-      preamble: PropTypes.string.isRequired,
+      preamble: PropTypes.string,
       href: PropTypes.string.isRequired
     })
   ).isRequired,

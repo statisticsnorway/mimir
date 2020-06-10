@@ -1,9 +1,11 @@
-.part-relatedStatistics {
-  @include media-breakpoint-down(md) {
-    padding: 0;
-  }
+.part-related-statistics {
+  .ssb-card {
+    a {
+      width: 100%;
+    }
 
-  a {
-    width: 100%;
+    @include media-breakpoint-down(md) {
+      padding: 0;
+    }
   }
 }
