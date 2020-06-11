@@ -1,3 +1,4 @@
+import { find } from 'ramda'
 import { getStatRegNode, StatRegNode } from '../statreg'
 import { fetchStatistics as fetchStatisticsSvc } from '../../ssb/statreg'
 import { Statistic } from '../../ssb/statreg/types'
@@ -15,11 +16,11 @@ export function getAllStatisticsFromRepo(): Array<Statistic> | null {
 }
 
 export function getStatisticByIdFromRepo(statId: string): Statistic | undefined {
-  return (getAllStatisticsFromRepo() || [])
-    .find((stat) => `${stat.id}` === statId)
+  const allStats: Array<Statistic> = ensureArray(getAllStatisticsFromRepo())
+  return find((stat: Statistic) => `${stat.id}` === statId)(allStats)
 }
 
 export function getStatisticByShortNameFromRepo(shortName: string): Statistic | undefined {
-  return ensureArray(getAllStatisticsFromRepo())
-    .find((stat: Statistic) => stat.shortName === shortName)
+  const allStats: Array<Statistic> = ensureArray(getAllStatisticsFromRepo())
+  return find((stat: Statistic) => stat.shortName === shortName)(allStats)
 }

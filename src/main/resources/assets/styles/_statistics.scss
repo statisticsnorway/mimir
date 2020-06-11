@@ -1,0 +1,29 @@
+.statistic {
+  display: flex;
+
+  span {
+    margin-right: 1rem;
+  }
+
+  .shortName {
+    font-weight: bold;
+  }
+}
+
+.publicationsTable {
+  display: flex;
+  flex-direction: column;
+  margin: 1rem 0;
+}
+
+.publication {
+  display: flex;
+
+  span {
+    padding: 0.25rem;
+  }
+
+  &.header span {
+    font-weight: bold;
+  }
+}
