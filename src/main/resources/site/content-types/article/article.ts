@@ -65,6 +65,11 @@ export interface Article {
   };
 
   /**
+   * Statistikk
+   */
+  statistic?: string;
+
+  /**
    * Relaterte eksterne lenker
    */
   relatedExternalLinkItemSet?: Array<{

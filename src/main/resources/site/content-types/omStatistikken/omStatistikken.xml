@@ -3,6 +3,7 @@
     <description>Innhold Om statistikken</description>
     <super-type>base:structured</super-type>
     <form>
+        <mixin name="statistic" />
         <field-set>
             <label>Ingress</label>
             <items>

@@ -5,7 +5,8 @@ import { handleRepoGet } from '../repoUtils'
 
 const toOption = (stat) => ({
   ...stat,
-  displayName: stat.shortName
+  displayName: stat.shortName,
+  description: stat.name
 })
 
 const filterByShortName = (stats, filters) => {

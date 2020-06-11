@@ -26,14 +26,9 @@ export const handleRepoGet = (
       }
     }
 
-    log.info(`~~~~~> content ${JSON.stringify(content)}`);
-
     const filtered = applyFilters(ensureArray(content), req.params)
-    log.info(`~~~~~> filtered ${JSON.stringify(filtered)}`);
     const options = toOptions(filtered, optionTransform)
-    log.info(`~~~~~> options ${JSON.stringify(options)}`);
 
-    log.info(`Results filtered on ${req.params.query} : ${filtered.length}`)
     return {
       contentType,
       body: {

@@ -183,4 +183,9 @@ export interface OmStatistikken {
      */
     relevantDocumentation?: string;
   }>;
+
+  /**
+   * Statistikk
+   */
+  statistic?: string;
 }

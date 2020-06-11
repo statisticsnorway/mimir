@@ -71,6 +71,7 @@ export function extractContacts(kontaktXML: KontaktXML): Array<Contact> {
 export interface Statistikk {
     id: string;
     kortnavn: string;
+    navn: string;
     status: string;
     deskFlyt: string;
     dirFlyt: string;
@@ -88,18 +89,20 @@ export interface StatistikkXML {
 export interface Statistic {
     id: string;
     shortName: string;
+    name: string;
     status: string;
     modifiedTime: string;
 }
 
 export function transformStat(stat: Statistikk): Statistic {
   const {
-    id, kortnavn: shortName, status, endret: modifiedTime
+    id, kortnavn: shortName, navn: name, status, endret: modifiedTime
   } = stat
 
   return {
     id,
     shortName,
+    name,
     status,
     modifiedTime
   }
@@ -117,7 +120,7 @@ export interface Publisering {
     variant: string;
     deskFlyt: string;
     endret: string;
-    statistikkKortNavn: string;
+    statistikkKortnavn: string;
 }
 
 export interface PubliseringsListe extends ListMeta {
@@ -138,13 +141,13 @@ export interface Publication {
 
 export function transformPubllication(pub: Publisering): Publication {
   const {
-    id, variant, statistikkKortNavn, deskFlyt, endret
+    id, variant, statistikkKortnavn, deskFlyt, endret
   } = pub
 
   return {
     id,
     variant,
-    statisticsKey: statistikkKortNavn,
+    statisticsKey: statistikkKortnavn,
     status: deskFlyt,
     modifiedTime: endret
   }
