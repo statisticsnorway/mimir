@@ -3,8 +3,27 @@
     <display-name>Statistikk</display-name>
     <super-type>base:structured</super-type>
     <form>
+
+        <field-set>
+            <label>Om Statistikken</label>
+            <items>
+                <input name="aboutTheStatistics" type="ContentSelector">
+                    <label>Om Statistikken</label>
+                    <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <allowType>omStatistikken</allowType>
+                        <description>Legg til Om Statistikken</description>
+                    </config>
+                </input>
+            </items>
+        </field-set>
+
+        <mixin name="relatedExternalLinks" />
+
         <mixin name="relatedArticles" />
 
+        <mixin name="relatedFactPage" />
+      
         <mixin name="contacts" />
     </form>
 </content-type>

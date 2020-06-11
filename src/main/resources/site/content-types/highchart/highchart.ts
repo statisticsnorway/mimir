@@ -20,7 +20,12 @@ export interface Highchart {
   graphType: "line" | "pie" | "column" | "bar" | "area" | "barNegative";
 
   /**
-   * Antall desimalplasser som vises
+   * Høyde i prosent av bredde
+   */
+  heightAspectRatio?: string;
+  
+  /**
+   * Vis desimaler for avlesingspunktene i diagrammet, antall:
    */
   numberDecimals?: "0" | "1" | "2" | "3";
 
@@ -28,6 +33,11 @@ export interface Highchart {
    * Stabling av verdier
    */
   stacking?: "disabled" | "normal" | "percent";
+
+  /**
+   * Vis stabelsum
+   */
+  showStackedTotal: boolean;
 
   /**
    * Skjul tegnforklaringen
@@ -115,11 +125,6 @@ export interface Highchart {
   xAxisMax?: string;
 
   /**
-   * Tillat desimaler
-   */
-  xAllowDecimal: boolean;
-
-  /**
    * Skjul aksemarkører
    */
   xEnableLabel: boolean;
@@ -145,9 +150,9 @@ export interface Highchart {
   yAxisMax?: string;
 
   /**
-   * Y-akse Tillat desimaler
+   * Vis desimaler på Y-akseverdiene, antall:
    */
-  yAxisAllowDecimal: boolean;
+  yAxisDecimalPlaces?: "0" | "1" | "2";
 
   /**
    * Spørring mot Statistikkbanken

@@ -166,7 +166,6 @@ function renderPart(req, highchartIds) {
 
         config.xAxis = {
           categories: useGraphDataCategories ? graphData.categories : [highchart.displayName],
-          allowDecimals: !!highchart.data.xAllowDecimal,
           gridLineWidth: graphType === 'line' ? 0 : 1,
           lineColor,
           tickInterval: highchart.data.tickInterval ? highchart.data.tickInterval.replace(/,/g, '.') : null,
