@@ -1,5 +1,10 @@
 export interface Statistics {
   /**
+   * Om Statistikken
+   */
+  aboutTheStatistics?: string;
+
+  /**
    * Relaterte eksterne lenker
    */
   relatedExternalLinkItemSet?: Array<{
