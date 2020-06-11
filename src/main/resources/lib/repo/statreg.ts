@@ -6,7 +6,6 @@ import { STATREG_REPO_CONTACTS_KEY, fetchContacts } from './statreg/contacts'
 import { STATREG_REPO_STATISTICS_KEY, fetchStatistics } from './statreg/statistics'
 import { STATREG_REPO_PUBLICATIONS_KEY, fetchPublications } from './statreg/publications'
 import { createEventLog, EVENT_LOG_BRANCH, EVENT_LOG_REPO, updateEventLog } from './eventLog'
-import { now } from 'moment'
 import { StatRegFetchInfo, StatRegFetchJobNode, StatRegFetchStatus } from './statreg/eventLog'
 
 export const STATREG_REPO: string = 'no.ssb.statreg'
