@@ -42,7 +42,6 @@ class Accordion extends React.Component {
             >
               <div dangerouslySetInnerHTML={this.createMarkup(accordion.body)}></div>
               {this.renderNestenAccordions(accordion.items)}
-              {console.log(anchor && accordion.id && accordion.id === anchor)}
             </AccordionComponent>
           )}
       </section>

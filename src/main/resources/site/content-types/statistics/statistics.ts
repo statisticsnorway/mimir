@@ -1,5 +1,10 @@
 export interface Statistics {
   /**
+   * Om Statistikken
+   */
+  aboutTheStatistics?: string;
+
+  /**
    * Relaterte statistikker
    */
   relatedStatistics?: Array<string>;
