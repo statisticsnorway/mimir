@@ -15,21 +15,6 @@ export interface Article {
   articleText?: string;
 
   /**
-   * Relaterte eksterne lenker
-   */
-  relatedExternalLinkItemSet?: Array<{
-    /**
-     * Lenketekst
-     */
-    urlText: string;
-
-    /**
-     * URL
-     */
-    url: string;
-  }>;
-
-  /**
    * Løpenummer
    */
   serialNumber?: string;
@@ -78,6 +63,21 @@ export interface Article {
       modifiedDate?: string;
     };
   };
+
+  /**
+   * Relaterte eksterne lenker
+   */
+  relatedExternalLinkItemSet?: Array<{
+    /**
+     * Lenketekst
+     */
+    urlText: string;
+
+    /**
+     * URL
+     */
+    url: string;
+  }>;
 
   /**
    * Relatert artikkel
@@ -134,12 +134,7 @@ export interface Article {
     };
   };
 
- /**   
-  * Kontakter
-   */
-  contacts?: string;
-
- /**
+  /**
    * Relaterte faktasider
    */
   relatedFactPagesItemSet?: Array<{
@@ -148,4 +143,9 @@ export interface Article {
      */
     itemList?: Array<string>;
   }>;
+
+  /**
+   * Kontakter
+   */
+  contacts?: string;
 }

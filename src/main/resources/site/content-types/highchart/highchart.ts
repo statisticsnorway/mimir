@@ -20,6 +20,11 @@ export interface Highchart {
   graphType: "line" | "pie" | "column" | "bar" | "area" | "barNegative";
 
   /**
+   * Høyde i prosent av bredde
+   */
+  heightAspectRatio?: string;
+
+  /**
    * Antall desimalplasser som vises
    */
   numberDecimals?: "0" | "1" | "2" | "3";
