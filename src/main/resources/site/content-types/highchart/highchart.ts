@@ -20,6 +20,11 @@ export interface Highchart {
   graphType: "line" | "pie" | "column" | "bar" | "area" | "barNegative";
 
   /**
+   * Høyde i prosent av bredde
+   */
+  heightAspectRatio?: string;
+  
+  /**
    * Vis desimaler for avlesingspunktene i diagrammet, antall:
    */
   numberDecimals?: "0" | "1" | "2" | "3";
@@ -28,6 +33,11 @@ export interface Highchart {
    * Stabling av verdier
    */
   stacking?: "disabled" | "normal" | "percent";
+
+  /**
+   * Vis stabelsum
+   */
+  showStackedTotal: boolean;
 
   /**
    * Skjul tegnforklaringen

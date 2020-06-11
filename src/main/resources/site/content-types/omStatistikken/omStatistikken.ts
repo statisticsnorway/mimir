@@ -5,41 +5,6 @@ export interface OmStatistikken {
   ingress: string;
 
   /**
-   * Dokumentasjon
-   */
-  relevantDocumentation?: {
-    /**
-     * Selected
-     */
-    _selected: string;
-
-    /**
-     * Innhold XP
-     */
-    content?: {
-      /**
-       * Artikkel
-       */
-      article: string;
-    };
-
-    /**
-     * Lenke til innhold
-     */
-    externalLink?: {
-      /**
-       * URL
-       */
-      url: string;
-
-      /**
-       * Tittel
-       */
-      title: string;
-    };
-  };
-
-  /**
    * Definisjoner
    */
   definition?: Array<{
@@ -162,5 +127,60 @@ export interface OmStatistikken {
      * Revisjon
      */
     revision?: string;
+  }>;
+
+  /**
+   * Relevant dokumentasjon
+   */
+  relevantDocumentation?: string;
+
+  /**
+   * Om sesongjustering
+   */
+  aboutSeasonalAdjustment?: Array<{
+    /**
+     * Generelt om sesongjustering
+     */
+    generalInformation?: string;
+
+    /**
+     * Hvorfor sesongjusteres denne statistikken?
+     */
+    whySeasonallyAdjustStatistic?: string;
+
+    /**
+     * Prekorrigering
+     */
+    preTreatment?: string;
+
+    /**
+     * Sesongjustering
+     */
+    seasonalAdjustment?: string;
+
+    /**
+     * Revisjonsrutiner
+     */
+    auditProcedures?: string;
+
+    /**
+     * Kvalitet på sesongjustering
+     */
+    qualityOfSeasonalAdjustment?: string;
+
+    /**
+     * Spesielle tilfeller
+     */
+    specialCases?: string;
+
+    /**
+     * Publiseringsrutiner
+     */
+    postingProcedures?: string;
+
+    /**
+     * Relevant dokumentasjon
+     */
+    relevantDocumentation?: string;
   }>;
 }

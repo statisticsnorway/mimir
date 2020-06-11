@@ -14,64 +14,109 @@ This service returns name, path, county and code for given municipality code.
 `Used to update, create or delete datasets based on dataqueries`
 
 **GET** (should maybe be PUT?)  
+
 Update all:
-```javascript
+```JSON
 {
-    id: '*'
+    "id": "*"
 }
 ```
+
 Update one:
-```javascript
+```JSON
 {
-    id: 'some-dataquery-id'
+    "id": "some-dataquery-id"
 }
 ```
 
 Returns:
-```javascript
+```JSON
 {
-    status: 200,
-    message: 'success or failure info',
-    updates: [{
-      id: dataqueryId,
-      status: STATUS_MESSAGE,
-      message: 'human readable message',
-      modified: timestamp, 
-      modifiedHumanReadable: '02 mai 2020 12:13', 
-      dataset: { ... datasetinfo ... },
-      logInfo: { ... loginfo ... }     
+    "message": "Ingen ny data",
+    "updates": [{
+      "id": "1234134-sadf324afsd-2324saf324-324",
+      "status": NO_NEW_DATA,
+      "message": "Ingen ny data",
+      "dataset": [{
+        "newDatasetData": false,
+        "modified": "26.05.2020 15:09:56",
+        "modifiedReadable": "8 days ago"
+      }],
+      "logData": [{
+        "queryId": "475e7964-6e28-48d8-9948-a20f44ecab5f",
+        "modified": "03.06.2020 10:36:42",
+        "by": {
+            "type": "user",
+            "key": "user:system:harry",
+            "displayName": "Harry Potter",
+            "disabled": false,
+            "email": "harry.potter@ssb.no",
+            "login": "harry",
+            "idProvider": "system"
+        },
+        "modifiedTs": "2020-06-03T08:36:42.689Z",
+        "modifiedResult": "NO_NEW_DATA",
+        "message": "Ingen ny data",
+        "modifiedReadable": "a few seconds ago"
+      }]
     }]
 }
 ```
 
 **DELETE**  
 Delete datasets for all dataqueries
-```javascript
+
+Delete all dataset:
+```JSON
 {
-    id: '*'
+    "id": "*"
 }
 ```
+
 Delete one dataset:
-```javascript
+```JSON
 {
-    id: 'some-dataquery-id'
+    "id": "some-dataquery-id"
 }
 ```
 Returns:
-```javascript
+```JSON
 {
-    status: 200,
-        message: 'success or failure info',
-        updates: [{
-          id: dataqueryId,
-          status: STATUS_MESSAGE,
-          message: 'human readable message',
-          modified: timestamp, 
-          modifiedHumanReadable: '02 mai 2020 12:13', 
-          dataset: { ... datasetinfo ... },
-          logInfo: { ... loginfo ... }     
-        }]
+   "updates": [{
+      "id": "475e7964-6e28-48d8-9948-a20f44ecab5f",
+      "message": "Sletting gjennomført",
+      "status": "DELETE_OK",
+      "dataset": {
+        "newDatasetData": true,
+        "modified": "",
+        "modifiedReadable": ""
+      },
+      "logData": {
+      "queryId": "475e7964-6e28-48d8-9948-a20f44ecab5f",
+      "modified": "03.06.2020 10:48:35",
+      "by": {
+        "type": "user",
+        "key": "user:system:harry",
+        "displayName": "Harry Potter",
+        "disabled": false,
+        "email": "harry.potter@ssb.no",
+        "login": "harry",
+        "idProvider": "system"
+      },
+      "modifiedTs": "2020-06-03T08:48:35.250Z",
+      "modifiedResult": "DELETE_OK",
+      "message": "Sletting gjennomført",
+      "modifiedReadable": "a few seconds ago"
+      }
+    }],
+    "message": "Sletting gjennomført",
+    "publishResult": {
+      "pushedContents": [],
+      "deletedContents": ["d3742abc-8436-42fa-abf6-23891608fd5e"],
+      "failedContents": []
+    }
 }
+
 ```
  
 #### `createContextOption(branch)` (private)

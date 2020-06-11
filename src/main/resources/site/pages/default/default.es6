@@ -38,7 +38,8 @@ const partsWithPreview = [ // Parts that has preview
   `${app.name}:statistikkbanken`,
   `${app.name}:dataquery`,
   `${app.name}:factBox`,
-  `${app.name}:contentList`
+  `${app.name}:contentList`,
+  `${app.name}:omStatistikken`
 ]
 
 const previewOverride = {
