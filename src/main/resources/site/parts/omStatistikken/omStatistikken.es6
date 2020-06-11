@@ -32,55 +32,61 @@ function renderPart(req, aboutTheStatisticsId) {
     }
   }
 
-  const aboutTheStatisticsContent = get({
+  const aboutTheStatistics = get({
     key: aboutTheStatisticsId
   })
 
-  const definitionsContent = aboutTheStatisticsContent.data.definition
-  const administrativeInformationContent = aboutTheStatisticsContent.data.administrativeInformation
-  const backgroundContent = aboutTheStatisticsContent.data.background
-  const productionContent = aboutTheStatisticsContent.data.production
-  const accuracyAndReliabilityContent = aboutTheStatisticsContent.data.accuracyAndReliability
-  const relevantDocumentationContent = aboutTheStatisticsContent.data.relevantDocumentation
-  const aboutSeasonalAdjustmentContent = aboutTheStatisticsContent.data.aboutSeasonalAdjustment
+  const data = aboutTheStatistics.data
 
-  const definitionsItems = ['conceptsAndVariables', 'standardRatings']
-  const administrativeInformationItems = ['regionalLevel', 'frequency', 'internationalReporting', 'storageAndUse']
-  const backgroundItems = ['purposeAndHistory', 'usersAndUse', 'equalTreatmentUsers', 'relationOtherStatistics', 'legalAuthority', 'eeaReference']
-  const productionItems = ['scope', 'dataSourcesAndSamples', 'dataCollectionEditingAndCalculations', 'seasonalAdjustment', 'confidentiality', 'comparability']
-  const accuracyAndReliabilityItems = ['errorSources', 'revision']
-  const aboutSeasonalAdjustmentItems = ['generalInformation', 'whySeasonallyAdjustStatistic', 'preTreatment', 'seasonalAdjustment',
-    'auditProcedures', 'qualityOfSeasonalAdjustment', 'specialCases', 'postingProcedures', 'relevantDocumentation']
+  const content = {
+    definition: data.definition,
+    administrativeInformation: data.administrativeInformation,
+    background: data.background,
+    production: data.production,
+    accuracyAndReliability: data.accuracyAndReliability,
+    relevantDocumentation: data.relevantDocumentation,
+    aboutSeasonalAdjustment: data.aboutSeasonalAdjustment
+  }
+
+  const items = {
+    definition: ['conceptsAndVariables', 'standardRatings'],
+    administrativeInformation: ['regionalLevel', 'frequency', 'internationalReporting', 'storageAndUse'],
+    background: ['purposeAndHistory', 'usersAndUse', 'equalTreatmentUsers', 'relationOtherStatistics', 'legalAuthority', 'eeaReference'],
+    production: ['scope', 'dataSourcesAndSamples', 'dataCollectionEditingAndCalculations', 'seasonalAdjustment', 'confidentiality', 'comparability'],
+    accuracyAndReliability: ['errorSources', 'revision'],
+    aboutSeasonalAdjustment: ['generalInformation', 'whySeasonallyAdjustStatistic', 'preTreatment', 'seasonalAdjustment',
+      'auditProcedures', 'qualityOfSeasonalAdjustment', 'specialCases', 'postingProcedures', 'relevantDocumentation']
+  }
 
   const accordions = []
-  isNotEmpty(definitionsContent) ? accordions.push(
-    getAccordion('om-statistikken-definisjoner', 'definitions', definitionsContent, definitionsItems)) : undefined
-  isNotEmpty(administrativeInformationContent) ? accordions.push(
+  isNotEmpty(content.definition) ? accordions.push(
+    getAccordion('om-statistikken-definisjoner', 'definitions', content.definition, items.definition)) : undefined
+  isNotEmpty(content.administrativeInformation) ? accordions.push(
     getAccordion('om-statistikken-administrative_opplysninger', 'administrativeInformation',
-      administrativeInformationContent, administrativeInformationItems)) : undefined
-  isNotEmpty(backgroundContent) ? accordions.push(
-    getAccordion('om-statistikken-bakgrunn', 'background', backgroundContent, backgroundItems)) : undefined
-  isNotEmpty(productionContent) ? accordions.push(
-    getAccordion('om-statistikken-produksjon', 'production', productionContent, productionItems)) : undefined
-  isNotEmpty(accuracyAndReliabilityContent) ? accordions.push(
-    getAccordion('om-statistikken-feilkilder', 'accuracyAndReliability', accuracyAndReliabilityContent, accuracyAndReliabilityItems)) : undefined
+      content.administrativeInformation, items.administrativeInformation)) : undefined
+  isNotEmpty(content.background) ? accordions.push(
+    getAccordion('om-statistikken-bakgrunn', 'background', content.background, items.background)) : undefined
+  isNotEmpty(content.production) ? accordions.push(
+    getAccordion('om-statistikken-produksjon', 'production', content.production, items.production)) : undefined
+  isNotEmpty(content.accuracyAndReliability) ? accordions.push(
+    getAccordion('om-statistikken-feilkilder', 'accuracyAndReliability', content.accuracyAndReliability, items.accuracyAndReliability)) : undefined
 
   const relevantDocumentation = {
     id: 'om-statistikken-relevant-dokumentasjon',
-    body: relevantDocumentationContent,
+    body: content.relevantDocumentation,
     open: i18nLib.localize({
       key: 'relevantDocumentation'
     }),
     items: []
   }
 
-  if (relevantDocumentationContent) {
+  if (content.relevantDocumentation) {
     accordions.push(relevantDocumentation)
   }
 
-  isNotEmpty(aboutSeasonalAdjustmentContent) ? accordions.push(
-    getAccordion('om-sesongjustering', 'aboutSeasonalAdjustment', aboutSeasonalAdjustmentContent,
-      aboutSeasonalAdjustmentItems)) : undefined
+  isNotEmpty(content.aboutSeasonalAdjustment) ? accordions.push(
+    getAccordion('om-sesongjustering', 'aboutSeasonalAdjustment', content.aboutSeasonalAdjustment,
+      items.aboutSeasonalAdjustment)) : undefined
 
   if (accordions.length === 0) {
     accordions.push({
@@ -102,7 +108,7 @@ function renderPart(req, aboutTheStatisticsId) {
     label: i18nLib.localize({
       key: 'aboutTheStatistics'
     }),
-    ingress: aboutTheStatisticsContent.data.ingress
+    ingress: data.ingress
   }
 
   const body = render(view, model)
