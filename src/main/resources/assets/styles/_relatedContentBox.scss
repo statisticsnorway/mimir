@@ -1,6 +1,10 @@
 .part-picture-card {
   background-color: white;
 
+  & .row:first-of-type {
+    margin-top: $spacer * 1.5;
+  }
+
   h2 {
     max-width: 1200px;
   }

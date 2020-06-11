@@ -28,7 +28,9 @@ exports.get = function(req, portal) {
     if (part.config.itemList) {
       itemList = itemList.concat(util.data.forceArray(part.config.itemList))
     }
-    if (page.data.relatedFactPagesItemSet && page.data.relatedFactPagesItemSet.itemList) {
+    if (page.data.relatedFactPages) {
+      itemList = itemList.concat(util.data.forceArray(page.data.relatedFactPages))
+    } else if (page.data.relatedFactPagesItemSet && page.data.relatedFactPagesItemSet.itemList) { // fallback to old, delete in a while
       itemList = itemList.concat(util.data.forceArray(page.data.relatedFactPagesItemSet.itemList))
     }
 
@@ -41,10 +43,17 @@ exports.get = function(req, portal) {
 exports.preview = (req, id) => renderPart(req, [id])
 
 function renderPart(req, itemList) {
+  const page = getContent()
+  const phrases = getPhrases(page)
+  const part = getComponent()
+  const mainTitle = part && part.config && part.config.title ? part.config.title : phrases.relatedFactPagesHeading
+
   if (itemList.length === 0) {
-    if (req.mode === 'edit') {
+    if (req.mode === 'edit' && page.type !== `${app.name}:article` && page.type !== `${app.name}:statistics`) {
       return {
-        body: render(view)
+        body: render(view, {
+          mainTitle
+        })
       }
     } else {
       return {
@@ -53,14 +62,9 @@ function renderPart(req, itemList) {
     }
   }
 
-  const part = getComponent()
   const type = part && part.config && part.config.type ? part.config.type : undefined
-  const page = getContent()
-  const phrases = getPhrases(page)
-
   const showAll = phrases.showAll
   const showLess = phrases.showLess
-  const mainTitle = part && part.config && part.config.title ? part.config.title : phrases.relatedFactPagesHeading
   const relatedContentLists = []
 
   itemList.forEach((key) => {

@@ -80,14 +80,9 @@ export interface Statistics {
   };
 
   /**
-   * Relaterte faktasider
+   * Faktasider
    */
-  relatedFactPagesItemSet?: Array<{
-    /**
-     * Faktasider
-     */
-    itemList?: Array<string>;
-  }>;
+  relatedFactPages?: Array<string>;
 
   /**
    * Kontakter

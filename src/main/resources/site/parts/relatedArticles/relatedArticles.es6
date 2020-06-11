@@ -46,7 +46,7 @@ function renderPart(req, relatedArticles) {
   const phrases = getPhrases(page)
 
   if (!relatedArticles || relatedArticles.length === 0) {
-    if (req.mode === 'edit') {
+    if (req.mode === 'edit' && page.type !== `${app.name}:article` && page.type !== `${app.name}:statistics`) {
       return {
         body: render(view, {
           heading: phrases.relatedArticlesHeading

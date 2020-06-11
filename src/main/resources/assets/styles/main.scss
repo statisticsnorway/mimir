@@ -69,6 +69,10 @@ section + section, .xp-layout + .xp-layout {
   margin-top: $spacer * 3;
 }
 
+section.part-divider + section.part-divider {
+  display: none;
+}
+
 .part-error {
   background-color: $ssb-red-3;
 }
