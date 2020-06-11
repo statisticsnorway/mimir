@@ -91,7 +91,7 @@ RelatedStatistics.propTypes = {
   relatedStatistics: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string.isRequired,
-      preamble: PropTypes.string,
+      preamble: PropTypes.string.isRequired,
       href: PropTypes.string.isRequired
     })
   ).isRequired,

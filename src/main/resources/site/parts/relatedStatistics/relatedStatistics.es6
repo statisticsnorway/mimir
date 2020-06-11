@@ -1,3 +1,4 @@
+import { hasPath } from 'ramda'
 const {
   data
 } = __non_webpack_require__('/lib/util')
@@ -103,10 +104,7 @@ const parseRelatedContent = (relatedStatistics) => {
     })
 
     let preamble
-    if (relatedStatisticsContent.x &&
-        relatedStatisticsContent.x['com-enonic-app-metafields'] &&
-        relatedStatisticsContent.x['com-enonic-app-metafields']['meta-data'] &&
-        relatedStatisticsContent.x['com-enonic-app-metafields']['meta-data'].seoDescription) {
+    if (hasPath(['x', 'com-enonic-app-metafields', 'meta-data', 'seoDescription'], relatedStatisticsContent)) {
       preamble = relatedStatisticsContent.x['com-enonic-app-metafields']['meta-data'].seoDescription
     }
 
