@@ -16,7 +16,6 @@ const {
 } = __non_webpack_require__( '/lib/xp/content')
 const util = __non_webpack_require__('/lib/util')
 const {
-  getImageCaption,
   getImageAlt
 } = __non_webpack_require__('/lib/ssb/utils')
 const {
@@ -88,7 +87,7 @@ function renderPart(req, relatedArticles) {
           id: image,
           scale: 'block(320, 180)' // 16:9
         })
-        imageAlt = getImageCaption(image)
+        imageAlt = getImageAlt(image)
       }
 
 

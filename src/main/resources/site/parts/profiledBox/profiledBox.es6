@@ -7,7 +7,6 @@ const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
 const {
-  getImageCaption,
   getImageAlt
 } = __non_webpack_require__('/lib/ssb/utils')
 const {

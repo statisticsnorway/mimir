@@ -10,7 +10,6 @@ const {
   getMunicipality, removeCountyFromMunicipalityName
 } = __non_webpack_require__( '/lib/klass/municipalities')
 const {
-  getImageCaption,
   getImageAlt
 } = __non_webpack_require__( '/lib/ssb/utils')
 const {
