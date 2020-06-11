@@ -36,17 +36,7 @@ function renderPart(req, aboutTheStatisticsId) {
     key: aboutTheStatisticsId
   })
 
-  const data = aboutTheStatistics.data
-
-  const content = {
-    definition: data.definition,
-    administrativeInformation: data.administrativeInformation,
-    background: data.background,
-    production: data.production,
-    accuracyAndReliability: data.accuracyAndReliability,
-    relevantDocumentation: data.relevantDocumentation,
-    aboutSeasonalAdjustment: data.aboutSeasonalAdjustment
-  }
+  const content = aboutTheStatistics.data
 
   const items = {
     definition: ['conceptsAndVariables', 'standardRatings'],
@@ -108,7 +98,7 @@ function renderPart(req, aboutTheStatisticsId) {
     label: i18nLib.localize({
       key: 'aboutTheStatistics'
     }),
-    ingress: data.ingress
+    ingress: content.ingress
   }
 
   const body = render(view, model)
