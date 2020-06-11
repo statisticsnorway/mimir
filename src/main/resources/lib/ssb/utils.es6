@@ -148,7 +148,7 @@ export function getImageAlt(imageId) {
 
 export function isPublished(content) {
   const now = new Date()
-  if(content.publish.from) {
+  if (content.publish.from) {
     const from = new Date(content.publish.from)
     return from < now
   }
