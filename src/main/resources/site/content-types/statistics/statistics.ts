@@ -5,6 +5,11 @@ export interface Statistics {
   aboutTheStatistics?: string;
 
   /**
+   * Relaterte statistikker
+   */
+  relatedStatistics?: Array<string>;
+
+  /**
    * Relaterte eksterne lenker
    */
   relatedExternalLinkItemSet?: Array<{

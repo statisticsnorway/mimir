@@ -23,7 +23,7 @@ export interface Highchart {
    * Høyde i prosent av bredde
    */
   heightAspectRatio?: string;
-  
+
   /**
    * Vis desimaler for avlesingspunktene i diagrammet, antall:
    */
@@ -35,7 +35,7 @@ export interface Highchart {
   stacking?: "disabled" | "normal" | "percent";
 
   /**
-   * Vis stabelsum
+   * Vis samlet sum for stolpe
    */
   showStackedTotal: boolean;
 
