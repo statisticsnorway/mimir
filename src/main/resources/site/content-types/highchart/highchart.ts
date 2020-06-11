@@ -35,6 +35,11 @@ export interface Highchart {
   stacking?: "disabled" | "normal" | "percent";
 
   /**
+   * Vis stabelsum
+   */
+  showStackedTotal: boolean;
+
+  /**
    * Skjul tegnforklaringen
    */
   noLegend: boolean;
