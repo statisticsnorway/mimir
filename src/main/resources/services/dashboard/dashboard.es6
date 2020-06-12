@@ -1,7 +1,5 @@
 import { getNode, withLoggedInUserContext } from '../../lib/repo/common'
 
-const auth = __non_webpack_require__( '/lib/xp/auth')
-const context = __non_webpack_require__( '/lib/xp/context')
 const content = __non_webpack_require__( '/lib/xp/content')
 const {
   getData, refreshDatasetWithData
@@ -13,7 +11,7 @@ const {
   getAllOrOneDataSet
 } = __non_webpack_require__( '/lib/ssb/dataset')
 const {
-  Events, logDataQueryEvent
+  Events, logUserDataQuery
 } = __non_webpack_require__('/lib/repo/query')
 const i18n = __non_webpack_require__('/lib/xp/i18n')
 const {
@@ -34,7 +32,7 @@ exports.get = function(req) {
     return missingParameterResponse()
   }
 
-  logDataQueryEvent(req.params.id, {
+  logUserDataQuery(req.params.id, {
     message: Events.GET_DATA_STARTED
   })
 
@@ -79,7 +77,7 @@ exports.delete = (req) => {
     return missingParameterResponse()
   }
   const deleteResult = withLoggedInUserContext('draft', () => {
-    logDataQueryEvent(req.params.id, {
+    logUserDataQuery(req.params.id, {
       message: Events.START_DELETE
     })
     return getAllOrOneDataSet(req.params.id).map((dataset) => {
@@ -93,14 +91,14 @@ exports.delete = (req) => {
   })
 
   if (deleteResult.length === 0) {
-    logDataQueryEvent(req.params.id, {
+    logUserDataQuery(req.params.id, {
       message: Events.DELETE_FAILED,
       deleteResult
     })
     return successResponse(deleteResult, undefined)
   }
 
-  logDataQueryEvent(req.params.id, {
+  logUserDataQuery(req.params.id, {
     message: Events.DELETE_OK,
     deleteResult
   })
@@ -112,14 +110,14 @@ exports.delete = (req) => {
   })
 
   publishResult.deletedContents.forEach((id) => {
-    logDataQueryEvent(id, {
+    logUserDataQuery(id, {
       message: Events.DELETE_OK_PUBLISHED,
       deleteResult
     })
   })
 
   publishResult.failedContents.forEach((id) => {
-    logDataQueryEvent(id, {
+    logUserDataQuery(id, {
       message: Events.DELETE_FAILED_PUBLISHED,
       deleteResult
     })
@@ -229,7 +227,7 @@ function updateDataQuery(dataquery) {
 
   const data = getData(dataquery)
   if (!data) {
-    logDataQueryEvent(dataquery._id, {
+    logUserDataQuery(dataquery._id, {
       message: Events.FAILED_TO_GET_DATA
     } )
     return {
@@ -239,7 +237,7 @@ function updateDataQuery(dataquery) {
   }
 
   const refreshDatasetResult = refreshDatasetWithData(JSON.stringify(data), dataquery) // returns a dataset and status
-  logDataQueryEvent(dataquery._id, {
+  logUserDataQuery(dataquery._id, {
     message: refreshDatasetResult.status
   })
   return {
