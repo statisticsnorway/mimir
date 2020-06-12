@@ -8,14 +8,19 @@ export enum StatRegFetchStatus {
 }
 
 export interface StatRegFetchInfo {
-    data: {
-        status: StatRegFetchStatus;
-        result?: object;
-        message: string;
-        httpStatusCode?: number;
-        startTime: string;
-        completionTime?: string;
-    };
+    status: StatRegFetchStatus;
+    result?: object;
+    message?: string;
+    httpStatusCode?: number;
+    startTime?: string;
+    completionTime?: string;
 }
 
-export type StatRegFetchJobNode = RepoNode & StatRegFetchInfo
+export type StatRegFetchJobNode = RepoNode & { data: StatRegFetchInfo }
+
+export interface StatRegLatestFetchInfo {
+    latestEvent: string;
+    latestEventInfo: StatRegFetchInfo;
+}
+
+export type StatRegLatestFetchInfoNode = RepoNode & { data: StatRegLatestFetchInfo }
