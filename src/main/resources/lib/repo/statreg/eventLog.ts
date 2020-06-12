@@ -11,7 +11,6 @@ export interface StatRegFetchInfo {
     status: StatRegFetchStatus;
     result?: object;
     message?: string;
-    httpStatusCode?: number;
     startTime?: string;
     completionTime?: string;
 }

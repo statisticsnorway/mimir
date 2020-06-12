@@ -24,6 +24,9 @@ const {
   EVENT_LOG_REPO,
   getQueryChildNodesStatus
 } = __non_webpack_require__( '/lib/repo/eventLog')
+const { STATREG_REPO_CONTACTS_KEY } = __non_webpack_require__('/lib/repo/statreg/contacts')
+const { STATREG_REPO_STATISTICS_KEY } = __non_webpack_require__('/lib/repo/statreg/statistics')
+const { STATREG_REPO_PUBLICATIONS_KEY } = __non_webpack_require__('/lib/repo/statreg/publications')
 const { getToolUrl } = __non_webpack_require__('/lib/xp/admin');
 
 const view = resolve('./dashboard.html')
@@ -44,6 +47,7 @@ exports.get = function(req) {
 function renderPart(req) {
   const datasetMap = getDataset()
   const dataQueries = getDataQueries(datasetMap)
+  const statRegFetchStatuses = getStatRegFetchStatuses()
 
   const assets = getAssets()
 
@@ -56,7 +60,8 @@ function renderPart(req) {
       featureToggling: {
         updateList: req.params.updateList ? true : false
       },
-      contentStudioBaseUrl: `${DEFAULT_CONTENTSTUDIO_URL}#/edit/`
+      contentStudioBaseUrl: `${DEFAULT_CONTENTSTUDIO_URL}#/edit/`,
+      statRegFetchStatuses
     })
     .setId('dataset')
 
@@ -64,10 +69,12 @@ function renderPart(req) {
     clientRender: true
   }))
 
+  log.info(`Sending statuses ${JSON.stringify(statRegFetchStatuses)}`)
+
   const model = {
     ...assets,
     dataQueries,
-    pageContributions
+    pageContributions,
   }
 
   let body = render(view, model)
@@ -193,4 +200,19 @@ function getParentPath(path) {
   const pathElements = path.split('/')
   pathElements.pop()
   return pathElements.join('/')
+}
+
+const getStatRegFetchStatuses = () => {
+  return [
+    STATREG_REPO_CONTACTS_KEY,
+    STATREG_REPO_STATISTICS_KEY,
+    STATREG_REPO_PUBLICATIONS_KEY
+  ].reduce((acc, key) => {
+    const eventLogKey = `/statreg/${key}`
+    const eventLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, eventLogKey)
+    return {
+      ...acc,
+      [key]: eventLogNode.data.latestEventInfo
+    }
+  }, {})
 }

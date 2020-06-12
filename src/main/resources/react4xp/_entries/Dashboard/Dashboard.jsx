@@ -8,8 +8,10 @@ import Table from 'react-bootstrap/Table'
 import DashboardDataQuery from './DashboardDataQuery'
 import DashboardButtons from './DashboardButtons'
 import ClearCacheButton from './ClearCacheButton'
+import StatRegDashboard from './StatRegDashboard'
 import axios from 'axios'
 import { groupBy } from 'ramda'
+import { StatRegFetchInfo } from './types'
 
 const byType = groupBy((dataQuery) => {
   return dataQuery.parentType
@@ -97,7 +99,6 @@ class Dashboard extends React.Component {
     })
   }
 
-
   renderDataQueries(queries) {
     return queries.map( (dataquery) => {
       return (
@@ -153,7 +154,17 @@ class Dashboard extends React.Component {
     )
   }
 
+  renderAccordianForStatRegFetches () {
+    console.log('Accordion StatReg statuses', this.props.statRegFetchStatuses)
+    return (
+      <Accordion header="Data fra Statistikkregisteret" className="mx-0">
+        <StatRegDashboard currStatus={this.props.statRegFetchStatuses} />
+      </Accordion>
+    )
+  }
+
   render() {
+    console.log('Received StatReg statuses', this.props.statRegFetchStatuses)
     const groupedQueries = byType(this.state.dataQueries)
     return (
       <section className="xp-part part-dashboard container">
@@ -177,6 +188,7 @@ class Dashboard extends React.Component {
                 groupedQueries.default &&
                 this.renderAccordians(`Andre (${groupedQueries.default.length})`, groupedQueries.default)
               }
+              {this.renderAccordianForStatRegFetches()}
             </div>
           </Col>
         </Row>
@@ -231,7 +243,8 @@ Dashboard.propTypes = {
   featureToggling: PropTypes.shape({
     updateList: PropTypes.bool
   }),
-  contentStudioBaseUrl: PropTypes.string
+  contentStudioBaseUrl: PropTypes.string,
+  statRegFetchStatuses: PropTypes.arrayOf(StatRegFetchInfo)
 }
 
 export const DataQuery = PropTypes.shape({

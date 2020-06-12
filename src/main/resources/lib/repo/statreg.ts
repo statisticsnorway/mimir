@@ -62,18 +62,26 @@ function getEventRoot(eventType: string): StatRegLatestFetchInfoNode {
 // write to
 function logToEventLogAndUpdateLatestInfo(key: string, fetchEvent: StatRegFetchJobNode, evtData: StatRegFetchInfo) {
   const eventRoot: StatRegLatestFetchInfoNode = getEventRoot(key)
+  const now: Date = new Date()
   updateEventLog<StatRegLatestFetchInfoNode>(eventRoot._id, (node) => {
+    const {
+      status, message
+    } = evtData
     return {
       ...node,
       data: {
         latestEvent: fetchEvent._id,
-        latestEventInfo: fetchEvent.data
+        latestEventInfo: {
+          ...fetchEvent.data,
+          status,
+          message,
+          completionTime: now.toISOString()
+        }
       }
     }
   })
 
   return updateEventLog<StatRegFetchJobNode>(fetchEvent._id, (node) => {
-    const now: Date = new Date()
     const preamble: string = eventLogPreamble(key, now, evtData.status)
     return {
       ...node,
@@ -81,11 +89,19 @@ function logToEventLogAndUpdateLatestInfo(key: string, fetchEvent: StatRegFetchJ
       data: {
         ...node.data,
         ...evtData,
-        message: preamble,
         completionTime: now.toISOString()
       }
     }
   })
+}
+
+function toDisplayString(key: string): string {
+  switch (key) {
+  case STATREG_REPO_CONTACTS_KEY: return 'kontakter'
+  case STATREG_REPO_STATISTICS_KEY: return 'statistikk'
+  case STATREG_REPO_PUBLICATIONS_KEY: return 'publiseringer'
+  default: return 'ukjent data'
+  }
 }
 
 function setupStatRegFetcher(statRegFetcher: StatRegNodeConfig) {
@@ -101,13 +117,20 @@ function setupStatRegFetcher(statRegFetcher: StatRegNodeConfig) {
       modifyStatRegNode(node._id, content) :
       createStatRegNode(statRegFetcher.key, content)
 
+    const message: string = content && Array.isArray(content.content) ?
+      `Hentet ${(content.content as Array<object>).length} ${toDisplayString(statRegFetcher.key)}` :
+      '--'
+
     return logToEventLogAndUpdateLatestInfo(statRegFetcher.key, fetchEventNode, {
       result: content,
+      message,
       status: StatRegFetchStatus.COMPLETE_SUCCESS
     })
   } catch (err) {
+    log.error(`Could not fetch ${statRegFetcher.key}... ${JSON.stringify(err)}`)
     return logToEventLogAndUpdateLatestInfo(statRegFetcher.key, fetchEventNode, {
-      status: StatRegFetchStatus.COMPLETE_ERROR
+      status: StatRegFetchStatus.COMPLETE_ERROR,
+      message: `Noe gikk galt: ${err}`
     })
   }
 }
