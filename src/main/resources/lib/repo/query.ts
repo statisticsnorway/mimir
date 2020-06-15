@@ -1,5 +1,5 @@
 import { RepoNode } from 'enonic-types/lib/node'
-import {getNode, withConnection, withLoggedInUserContext, withSuperUserContext} from './common'
+import { getNode, SUPER_USER, withConnection, withLoggedInUserContext, withSuperUserContext } from './common'
 import { EVENT_LOG_BRANCH, EVENT_LOG_REPO, createEventLog, EditorCallback, updateEventLog } from './eventLog'
 import { User } from 'enonic-types/lib/auth'
 import { HttpRequestParams, HttpResponse } from 'enonic-types/lib/http'
@@ -57,16 +57,22 @@ export enum Events {
   XML_TO_JSON = 'XML_TO_JSON'
 }
 
-export function logDataQueryEvent(queryId: string, status: QueryStatus): void {
-  withLoggedInUserContext(EVENT_LOG_BRANCH, (user) => {
-    if (user) {
-      withSuperUserContext(EVENT_LOG_REPO, EVENT_LOG_BRANCH,() => {
-        startQuery(queryId, user, status)
-        addEventToQueryLog(queryId, user, status)
-        updateQueryLogStatus(queryId, user, status)
-      })
-    }
+export function logDataQueryEvent(queryId: string, status: QueryStatus, user: User): void {
+  withSuperUserContext(EVENT_LOG_REPO, EVENT_LOG_BRANCH, () => {
+    startQuery(queryId, user, status)
+    addEventToQueryLog(queryId, user, status)
+    updateQueryLogStatus(queryId, user, status)
   })
+}
+
+export function logUserDataQuery(queryId: string, status: QueryStatus): void {
+  withLoggedInUserContext(EVENT_LOG_BRANCH, (user: User) => {
+    logDataQueryEvent(queryId, status, user)
+  })
+}
+
+export function logAdminDataQuery(queryId: string, status: QueryStatus): void {
+  logDataQueryEvent(queryId, status, SUPER_USER)
 }
 
 function addEventToQueryLog(queryId: string, user: User, status: QueryStatus): EventInfo & RepoNode {

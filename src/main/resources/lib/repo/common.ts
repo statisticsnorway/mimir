@@ -20,6 +20,7 @@ export type QueryFilters = {
 
 export const SUPER_USER: User = {
   login: 'su',
+  displayName: 'su',
   idProvider: 'system'
 } as User;
 

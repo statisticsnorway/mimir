@@ -52,6 +52,7 @@ $container-max-widths: (
 @import "./relatedArticles";
 @import "./relatedExternalLinks";
 @import "./_statistics.scss";
+@import "./relatedStatistics";
 
 body {
   -moz-osx-font-smoothing: grayscale;
@@ -67,6 +68,10 @@ section {
 
 section + section, .xp-layout + .xp-layout {
   margin-top: $spacer * 3;
+}
+
+section.part-divider + section.part-divider {
+  display: none;
 }
 
 .part-error {

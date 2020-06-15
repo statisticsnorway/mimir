@@ -10,6 +10,23 @@ export const EVENT_LOG_BRANCH: string = 'master'
 
 export type EditorCallback<T> = (node: T & RepoNode) => T & RepoNode;
 
+export function setupEventLog() {
+  if (! eventLogExists()) {
+    log.info(`Setting up EventLog ...`)
+    createEventLog({
+      _path: 'queries',
+      _name: 'queries'
+    })
+    createEventLog({
+      _path: 'jobs',
+      _name: 'jobs'
+    })
+    log.info(`EventLog Repo for jobs and queries initialized.`)
+  } else {
+    log.info(`EventLog Repo found.`)
+  }
+}
+
 export function eventLogExists(): boolean {
   return repoExists(EVENT_LOG_REPO, EVENT_LOG_BRANCH)
 }
@@ -38,7 +55,7 @@ export function updateEventLog<T>(key: string, editor: EditorCallback<T> ): T & 
 export function getQueryChildNodesStatus<T>(queryId: string): ReadonlyArray<LogSummary> | undefined {
   if (nodeExists(EVENT_LOG_REPO, EVENT_LOG_BRANCH, queryId)) {
     const childNodeIds: NodeQueryResponse = getChildNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, queryId)
-    const aaa: ReadonlyArray<LogSummary> = childNodeIds.hits.map((hit: NodeQueryHit) => {
+    return childNodeIds.hits.map((hit: NodeQueryHit) => {
       const nodes: ReadonlyArray<QueryInfo> = getNode<QueryInfo>(EVENT_LOG_REPO, EVENT_LOG_BRANCH, hit.id)
       return Array.isArray(nodes) ? nodes[0] : nodes
     }).map( (node: EventInfo) => ({
@@ -46,9 +63,8 @@ export function getQueryChildNodesStatus<T>(queryId: string): ReadonlyArray<LogS
         key: node.data.status.message
       }),
       modifiedTs: node.data.ts,
-      by: node.data.by.displayName
+      by: node.data.by && node.data.by.displayName ? node.data.by.displayName : ''
     }))
-    return aaa
   } else {
     return undefined
   }
