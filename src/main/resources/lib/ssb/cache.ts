@@ -44,6 +44,10 @@ const draftDatasetCache: Cache = newCache({
   expire: 3600,
   size: 300
 })
+const dividerCache: Cache = newCache({
+  expire: 3600,
+  size: 2
+})
 
 let changeQueue: EnonicEventData['nodes'] = []
 let clearTaskId: string | undefined
@@ -256,6 +260,13 @@ export function fromDatasetCache(req: Request, key: string, fallback: () => Data
   return fallback()
 }
 
+export function fromDividerCache(dividerColor: string, fallback: () => string): string {
+  return dividerCache.get(dividerColor, () => {
+    log.info(`added ${dividerColor} to divider cache`)
+    return fallback()
+  })
+}
+
 function completelyClearFilterCache(branch: string): void {
   const cacheMap: Map<string, Cache> = branch === 'master' ? masterFilterCaches : draftFilterCaches
   cacheMap.forEach((cache: Cache, filterKey: string) => {
@@ -310,4 +321,5 @@ export interface SSBCacheLibrary {
   fromFilterCache: (req: Request, filterKey: string, key: string, fallback: () => Response) => Response;
   fromMenuCache: (req: Request, key: string, fallback: () => unknown) => unknown;
   fromDatasetCache: (req: Request, key: string, fallback: () => DatasetCache) => DatasetCache;
+  fromDividerCache: (dividerColor: string, fallback: () => string) => string;
 }
