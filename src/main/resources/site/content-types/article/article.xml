@@ -56,8 +56,6 @@
             </config>
         </input>
 
-        <mixin name="statistic" />
-
         <mixin name="relatedExternalLinks" />
 
         <mixin name="relatedArticles" />
