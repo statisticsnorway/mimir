@@ -288,6 +288,11 @@ function completelyClearDatasetCache(branch: string): void {
   datasetCache.clear()
 }
 
+function completelyClearDividerCache(): void {
+  log.info(`clear divider cache`)
+  dividerCache.clear()
+}
+
 function completelyClearCache(options: CompletelyClearCacheOptions): void {
   if (options.clearFilterCache) {
     completelyClearFilterCache('master')
@@ -303,6 +308,10 @@ function completelyClearCache(options: CompletelyClearCacheOptions): void {
     completelyClearDatasetCache('master')
     completelyClearDatasetCache('draft')
   }
+
+  if (options.clearDividerCache) {
+    completelyClearDividerCache()
+  }
 }
 
 export interface DatasetCache {
@@ -314,6 +323,7 @@ export interface CompletelyClearCacheOptions {
   clearFilterCache: boolean;
   clearMenuCache: boolean;
   clearDatasetCache: boolean;
+  clearDividerCache: boolean;
 }
 
 export interface SSBCacheLibrary {
