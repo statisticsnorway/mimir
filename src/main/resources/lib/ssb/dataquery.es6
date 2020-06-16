@@ -1,4 +1,6 @@
-import {logDataQueryEvent} from '../repo/query';
+const {
+  logUserDataQuery
+} = __non_webpack_require__( '../repo/query')
 
 const {
   get: getDataQuery,
@@ -8,7 +10,9 @@ const {
   NOT_FOUND
 } = __non_webpack_require__( './error')
 const util = __non_webpack_require__( '/lib/util')
-const { Events } = __non_webpack_require__('/lib/repo/query')
+const {
+  Events
+} = __non_webpack_require__('/lib/repo/query')
 
 const contentTypeName = `${app.name}:dataquery`
 
@@ -35,11 +39,15 @@ export const getAllOrOneDataQuery = (selector) => {
     const result = getDataQuery({
       key: selector
     })
-    if(result) {
-      logDataQueryEvent(selector, {message: Events.FOUND_DATAQUERY})
+    if (result) {
+      logUserDataQuery(selector, {
+        message: Events.FOUND_DATAQUERY
+      })
       return util.data.forceArray(result)
     } else {
-      logDataQueryEvent(selector, {message: Events.FAILED_TO_FIND_DATAQUERY})
+      logUserDataQuery(selector, {
+        message: Events.FAILED_TO_FIND_DATAQUERY
+      })
       return [{
         _id: selector,
         message: Events.FAILED_TO_FIND_DATAQUERY

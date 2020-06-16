@@ -22,12 +22,12 @@ class RelatedBoxes extends React.Component {
       relatedContentLists, mainTitle, showAll, showLess
     } = this.props
     return (
-      <section className="xp-part part-image-link container col-12 mt-5">
-        <h2 className={'ml-auto mr-auto pt-4'} >{mainTitle}</h2>
-        <div className="image-box-wrapper pt-5">
+      <div className="container">
+        <h2>{mainTitle}</h2>
+        <div className="row image-box-wrapper">
           {relatedContentLists.map((relatedRelatedContent, index) =>
             <PictureCard
-              className={index > 3 && this.state.isHidden ? 'd-none' : ''}
+              className={`mb-3 ${index > 3 && this.state.isHidden ? 'd-none' : ''}`}
               image={<img src={relatedRelatedContent.image} alt={relatedRelatedContent.imageAlt}/>}
               link={relatedRelatedContent.link}
               type={relatedRelatedContent.type ? relatedRelatedContent.type : undefined}
@@ -36,10 +36,12 @@ class RelatedBoxes extends React.Component {
             />
           )}
         </div>
-        <div className="pb-5 hide-show-btn">
-          <Button className={relatedContentLists.length < 5 ? 'd-none' : ''} onClick={this.toggleBox}>{this.state.isHidden ? showAll : showLess}</Button>
+        <div className={`row hide-show-btn ${relatedContentLists.length < 5 ? 'd-none' : ''}`}>
+          <div className="col-auto">
+            <Button onClick={this.toggleBox}>{this.state.isHidden ? showAll : showLess}</Button>
+          </div>
         </div>
-      </section>
+      </div>
     )
   }
 }

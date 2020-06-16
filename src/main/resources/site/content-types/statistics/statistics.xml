@@ -3,7 +3,6 @@
     <display-name>Statistikk</display-name>
     <super-type>base:structured</super-type>
     <form>
-
         <field-set>
             <label>Om Statistikken</label>
             <items>
@@ -18,12 +17,14 @@
             </items>
         </field-set>
 
+        <mixin name="relatedStatistics"/>
+
         <mixin name="relatedExternalLinks" />
 
         <mixin name="relatedArticles" />
 
         <mixin name="relatedFactPage" />
-      
+
         <mixin name="contacts" />
     </form>
 </content-type>

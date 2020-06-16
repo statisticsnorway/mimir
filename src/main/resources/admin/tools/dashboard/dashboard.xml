@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <tool xmlns="urn:enonic:xp:model:1.0">
-  <display-name>Statistisk Sentralboard</display-name>
-  <description>Administrer dataspørringer mot statbank, tbml og klass</description>
+  <display-name>Dashboard Desk</display-name>
+  <description>Administrer dataspørringer mot statbank, tbml og klass, og caching</description>
   <allow>
     <principal>role:system.admin</principal>
   </allow>

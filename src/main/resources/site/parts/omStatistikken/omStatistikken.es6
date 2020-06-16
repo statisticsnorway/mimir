@@ -2,7 +2,7 @@ const {
   get
 } = __non_webpack_require__( '/lib/xp/content')
 const {
-  getContent
+  getContent, processHtml
 } = __non_webpack_require__( '/lib/xp/portal')
 const {
   renderError
@@ -63,7 +63,9 @@ function renderPart(req, aboutTheStatisticsId) {
 
   const relevantDocumentation = {
     id: 'om-statistikken-relevant-dokumentasjon',
-    body: content.relevantDocumentation,
+    body: processHtml({
+      value: content.relevantDocumentation
+    }),
     open: i18nLib.localize({
       key: 'relevantDocumentation'
     }),
@@ -132,7 +134,9 @@ function renderPart(req, aboutTheStatisticsId) {
           title: i18nLib.localize({
             key: variable
           }),
-          body: category[variable] ? category[variable] : i18nLib.localize({
+          body: category[variable] ? processHtml({
+            value: category[variable]
+          }) : i18nLib.localize({
             key: 'notRelevant'
           })
         }
