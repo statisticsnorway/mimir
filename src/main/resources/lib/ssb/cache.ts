@@ -1,3 +1,4 @@
+import { TaskLib } from '../types/task'
 import { CacheLib, Cache } from '../types/cache'
 import { Request, Response } from 'enonic-types/lib/controller'
 import { EventLibrary, EnonicEvent, EnonicEventData } from 'enonic-types/lib/event'
@@ -17,6 +18,9 @@ const {
 const {
   run
 }: ContextLibrary = __non_webpack_require__('/lib/xp/context')
+const {
+  submit, sleep
+}: TaskLib = __non_webpack_require__('/lib/xp/task')
 const {
   query,
   get
@@ -41,12 +45,15 @@ const draftDatasetCache: Cache = newCache({
   size: 300
 })
 
+let changeQueue: EnonicEventData['nodes'] = []
+let clearTaskId: string | undefined
+
 export function setup(): void {
   log.info('initializing cache node listener')
   listener({
     type: 'node.*',
     localOnly: true,
-    callback: onNodeChange
+    callback: addToChangeQueue
   })
 
   listener({
@@ -55,47 +62,84 @@ export function setup(): void {
   })
 }
 
-function onNodeChange(event: EnonicEvent<EnonicEventData>): void {
+function addToChangeQueue(event: EnonicEvent<EnonicEventData>): void {
   const validNodes: EnonicEventData['nodes'] = event.data.nodes.filter((n) => n.repo === 'com.enonic.cms.default')
   if (validNodes.length > 0) {
-    const draftCleared: Array<string> = []
-    const masterCleared: Array<string> = []
-    validNodes.forEach((n) => {
-      // need to run in correct context for getReferences to work
-      run({
-        repository: n.repo,
-        branch: n.branch,
-        user: {
-          login: 'su',
-          idProvider: 'system'
-        },
-        principals: ['role:system.admin']
-      },
-      () => {
-        // clear id and all references to id from cache
-        log.info(`try to clear ${n.id}(${n.branch})`)
-        const content: Content | null = get({
-          key: n.id
-        })
-        if (content) {
-          clearCache(content, n.branch, n.branch === 'master' ? masterCleared : draftCleared)
-        } else {
-          // the element is deleted, so lets try to clear it only based on id, and its parent
-          clearCache({
-            _id: n.id
-          } as Content, n.branch, n.branch === 'master' ? masterCleared : draftCleared)
-          // the path on these nodes are not site, but repo relative, so we need to strip out the /content at the start
-          const parentPath: string = n.path.substring('/content'.length, n.path.lastIndexOf('/'))
-          const parent: Content | null = get({
-            key: parentPath
-          })
-          if (parent) {
-            clearCache(parent, n.branch, n.branch === 'master' ? masterCleared : draftCleared)
-          }
-        }
-      })
-    })
+    changeQueue = changeQueue.concat(validNodes)
+    addClearTask()
   }
+}
+
+function addClearTask(): void {
+  if (clearTaskId) {
+    return
+  }
+  const changeQueueLength: number = changeQueue.length
+  clearTaskId = submit({
+    description: 'check cache clearing in mimir',
+    task: () => {
+      sleep(250)
+      if (changeQueueLength === changeQueue.length) {
+        const changedNodes: EnonicEventData['nodes'] = changeQueue
+        changeQueue = [] // reset queue
+        onNodeChange(changedNodes)
+        clearTaskId = undefined
+      } else {
+        clearTaskId = undefined
+        addClearTask()
+      }
+    }
+  })
+}
+
+function onNodeChange(validNodes: EnonicEventData['nodes']): void {
+  const draftNodes: EnonicEventData['nodes'] = validNodes.filter((n) => n.branch === 'draft')
+  if (draftNodes.length > 0) {
+    clearForBranch(draftNodes, 'draft')
+  }
+  const masterNodes: EnonicEventData['nodes'] = validNodes.filter((n) => n.branch === 'master')
+  if (masterNodes.length > 0) {
+    clearForBranch(masterNodes, 'master')
+  }
+}
+
+function clearForBranch(nodes: EnonicEventData['nodes'], branch: string): void {
+  // need to run in correct context for getReferences to work
+  run({
+    repository: 'com.enonic.cms.default',
+    branch: branch,
+    user: {
+      login: 'su',
+      idProvider: 'system'
+    },
+    principals: ['role:system.admin']
+  },
+  () => {
+    const cleared: Array<string> = []
+    nodes.forEach((n) => {
+      // clear id and all references to id from cache
+      log.info(`try to clear ${n.id}(${branch})`)
+      const content: Content | null = get({
+        key: n.id
+      })
+      if (content) {
+        clearCache(content, branch, cleared)
+      } else {
+        // the element is deleted, so lets try to clear it only based on id, and its parent
+        clearCache({
+          _id: n.id
+        } as Content, branch, cleared )
+        // the path on these nodes are not site, but repo relative, so we need to strip out the /content at the start
+        const parentPath: string = n.path.substring('/content'.length, n.path.lastIndexOf('/'))
+        const parent: Content | null = get({
+          key: parentPath
+        })
+        if (parent) {
+          clearCache(parent, branch, cleared)
+        }
+      }
+    })
+  })
 }
 
 function getReferences(id: string): Array<Content> {
