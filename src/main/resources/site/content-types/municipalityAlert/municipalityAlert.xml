@@ -15,5 +15,9 @@
                 <service>customSelectorMunicipals</service>
             </config>
         </input>
+        <input name="selectAllMunicipals" type="CheckBox">
+            <label>Velg for å gjelde alle kommuner</label>
+            <default>unchecked</default>
+        </input>
     </form>
 </content-type>
