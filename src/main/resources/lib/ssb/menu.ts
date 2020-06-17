@@ -1,9 +1,10 @@
-import { Content, ContentLibrary, QueryResponse } from 'enonic-types/lib/content'
+import {Attachment, ByteSource, Content, ContentLibrary, QueryResponse} from 'enonic-types/lib/content'
 import { PortalLibrary } from 'enonic-types/lib/portal'
 import { MenuItem } from '../../site/content-types/menuItem/menuItem'
 import { SiteConfig } from '../../site/site-config'
 import { Footer } from '../../site/content-types/footer/footer'
 import { Header } from '../../site/content-types/header/header';
+const { readLines } = __non_webpack_require__('/lib/xp/io');
 
 const {
   getContent, imageUrl, pageUrl
@@ -12,7 +13,7 @@ const {
   get, getChildren
 }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
 const {
-  getImageCaption
+  getAttachmentContent, getImageCaption
 } = __non_webpack_require__('/lib/ssb/utils')
 
 export function createMenuTree(menuItemId: string): Array<MenuItemParsed> {
@@ -48,6 +49,8 @@ function createMenuBranch(menuItem: Content<MenuItem>): MenuItemParsed {
     scale: 'block(12px,12px)'
   }) : undefined
   const iconAltText: string | undefined = menuItem.data.icon ? getImageCaption(menuItem.data.icon) : undefined
+  const iconSvgTag: string | undefined =  menuItem.data.icon ? getAttachmentContent( menuItem.data.icon) : undefined
+
 
   return {
     title: menuItem.displayName,
@@ -56,6 +59,7 @@ function createMenuBranch(menuItem: Content<MenuItem>): MenuItemParsed {
     isActive,
     icon: iconPath && iconPath.search('error') === -1 ? iconPath : undefined,
     iconAltText,
+    iconSvgTag,
     menuItems: children.total > 0 ? children.hits.map((childMenuItem) => createMenuBranch(childMenuItem)) : undefined
   }
 }
@@ -104,6 +108,7 @@ export interface MenuItemParsed extends MenuItem {
   path?: string;
   isActive: boolean;
   iconAltText?: string;
+  iconSvgTag?: string;
   menuItems?: Array<MenuItem> | undefined;
 }
 

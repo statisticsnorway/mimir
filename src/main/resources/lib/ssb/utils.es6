@@ -15,6 +15,7 @@ const content = __non_webpack_require__( '/lib/xp/content')
 const {
   render
 } = __non_webpack_require__( '/lib/thymeleaf')
+const { readLines } = __non_webpack_require__('/lib/xp/io');
 const moment = require('moment/min/moment-with-locales')
 
 const errorView = resolve('../error/error.html')
@@ -160,3 +161,21 @@ export function isPublished(content) {
 
 export const dateToFormat = (ds) => moment(ds).locale('nb').format('DD.MM.YYYY HH:mm')
 export const dateToReadable = (ds) => moment(ds).locale('nb').fromNow()
+
+export const getAttachmentContent = (contentId) => {
+  if(!contentId) return undefined
+
+  const attachmentContent = content.get({key: contentId})
+
+  if(!attachmentContent) return undefined
+
+  const stream = content.getAttachmentStream({
+    key: attachmentContent._id,
+    name: attachmentContent._name
+  })
+
+  if(!stream) return underfined
+
+  const lines = readLines(stream);
+  return lines[0]
+}

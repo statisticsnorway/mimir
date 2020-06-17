@@ -285,6 +285,7 @@ header.ssb-header-wrapper {
           .icon-wrapper {
             margin: 4px 9px 0 0;
             display: grid;
+            width: 13px;
           }
 
           .link-text {
@@ -294,6 +295,12 @@ header.ssb-header-wrapper {
           &:hover {
              .link-text{
                color: white;
+             }
+
+             svg {
+              .cls-1, .cls-2 {
+                stroke: white;
+              }
              }
            }
         }

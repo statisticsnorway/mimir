@@ -59,12 +59,11 @@ class Header extends React.Component {
   renderSubMenu(topMenuItem, activeMenuItem) {
     return topMenuItem.menuItems && topMenuItem.menuItems.map((menuItem, itemIndex) => {
       return (
-        <li key={'listItemLink_' + itemIndex}>
-          <Link
-            tabIndex={activeMenuItem ? 0 : -1 }
-            href={menuItem.path}
-            icon={ menuItem.icon ? <img src={menuItem.icon} alt={menuItem.iconAltText}/> : undefined }>{menuItem.title}
-          </Link>
+        <li key={'listItemLink_' + itemIndex} tabIndex={activeMenuItem ? 0 : -1 }>
+          <a className="ssb-link with-icon" href={menuItem.path} target="" rel="" >
+            <div className="icon-wrapper" dangerouslySetInnerHTML={{__html: menuItem.iconSvgTag}}></div>
+            <span className="link-text">{menuItem.title}</span>
+          </a>
         </li>)
     })
   }
@@ -158,7 +157,8 @@ Header.propTypes = {
         PropTypes.shape({
           title: PropTypes.string,
           path: PropTypes.string,
-          icon: PropTypes.string
+          icon: PropTypes.string,
+          iconSvgTag: PropTypes.string
         })
       )
     })
