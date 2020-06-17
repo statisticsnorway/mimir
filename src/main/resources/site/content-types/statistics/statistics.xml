@@ -3,6 +3,10 @@
     <display-name>Statistikk</display-name>
     <super-type>base:structured</super-type>
     <form>
+        <input name="shortName" type="TextLine">
+            <occurrences minimum="0" maximum="1" />
+            <label>Kortnavn</label>
+        </input>
         <field-set>
             <label>Om Statistikken</label>
             <items>
