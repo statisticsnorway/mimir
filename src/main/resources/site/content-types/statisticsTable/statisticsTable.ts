@@ -1,23 +1,18 @@
-export interface InfoGraphicsPartConfig {
+export interface StatisticsTable {
   /**
-   * Tittel på visualinseringen
+   * Tittel
    */
-  title: string;
+  title?: string;
 
   /**
-   * Infografikk eller visualisering
+   * Lime inn ID
    */
-  image: string;
+  tableId: string;
 
   /**
-   * *IKKE LENGER I BRUK* (bruk alt tekst på valgt bilde)
+   * Fotnote-tekst
    */
-  altText?: string;
-
-  /**
-   * Beskrivende hjelpetekst for blinde
-   */
-  longDesc?: string;
+  footNote?: string;
 
   /**
    * Kildelenke
@@ -58,9 +53,4 @@ export interface InfoGraphicsPartConfig {
       sourceSelector?: string;
     };
   };
-
-  /**
-   * Fotnote-tekst
-   */
-  footNote?: string;
 }
