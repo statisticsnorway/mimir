@@ -10,6 +10,7 @@ const {
 } = __non_webpack_require__('/lib/thymeleaf')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 const view = resolve('./statbankBox.html')
+const STATBANKWEB_URL = app.config && app.config['ssb.statbankweb.baseUrl'] ? app.config['ssb.statbankweb.baseUrl'] : 'https://www.ssb.no/statbank'
 
 exports.get = function(req) {
   try {
@@ -24,11 +25,6 @@ exports.preview = (req) => renderPart(req)
 function renderPart(req) {
   const page = getContent()
   const shortName = page.data.shortName ? page.data.shortName : undefined
-  let statbankHref = 'https://www.ssb.no/statbank'
-  if (shortName) {
-    statbankHref = statbankHref + '/list/' + shortName
-  }
-
   const title = i18nLib.localize({
     key: 'statbankBox.title'
   })
@@ -38,7 +34,7 @@ function renderPart(req) {
       path: 'icon-statbank.svg'
     }),
     title: title,
-    href: statbankHref
+    href: shortName ? `${STATBANKWEB_URL}/list/${shortName}` : STATBANKWEB_URL
   }
 
   const body = render(view, model)
