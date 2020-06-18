@@ -1,8 +1,24 @@
 .part-statbank-box {
 
   .statbank-link {
+    display: block;
     text-decoration: none;
     width: 100%;
+
+    &:focus {
+      outline: $ssb-purple-3 solid 2px;
+      outline-offset: 1px;
+    }
+
+    &:hover {
+
+      .title {
+        background-color: $ssb-green-4;
+        border-bottom: none;
+        color: $ssb-white;
+        margin-bottom: 10px;
+      }
+    }
   }
 
   .content {
@@ -10,33 +26,32 @@
     border: 1px solid $ssb-dark-2;
     border-top: 5px solid $ssb-green-3;
     display: flex;
-    padding: 15px 40px;
+    padding: 15px 30px;
+    height: 130px;
     width: 100%;
   }
 
-  .title {
-    display: table;
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 8px;
-    color: black;
-    border-bottom: 2px solid $ssb-green-4;
-    padding-top: 30px;
-    margin-left: 20px;
-
-    @include media-breakpoint-down (md) {
-      padding-top: 10px;
-    }
-
-  }
-
-  .icon-wrapper {
+  .icon-wrapper img {
     width: 100px;
     height: 100px;
+  }
 
-    @include media-breakpoint-down (md) {
-      width: 50%;
-      height: 50%;
+  .title-wrapper {
+    display: -webkit-box;
+    align-items: center;
+    margin-left: 30px;
+
+    .title {
+      display: inline;
+      font-size: 20px;
+      font-weight: bold;
+      color: black;
+      border-bottom: 2px solid $ssb-green-4;
+      line-height: 1.5;
     }
   }
+
+
+
+
 }
