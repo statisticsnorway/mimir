@@ -17,7 +17,9 @@ export const get = (key) => {
 export const list = ( municipalCode ) => {
   const now = new Date()
   return query({
-    query: `data.selectAllMunicipals = 'true' OR data.municipalCodes IN ('${municipalCode}') AND publish.from LIKE '*' AND (publish.to NOT LIKE '*' OR publish.to > '${now.toISOString()}')`,
+    query: `data.selectAllMunicipals = 'true' OR 
+    data.municipalCodes IN ('${municipalCode}') AND 
+    publish.from LIKE '*' AND (publish.to NOT LIKE '*' OR publish.to > '${now.toISOString()}')`,
     contentType: contentTypeName
   })
 }
