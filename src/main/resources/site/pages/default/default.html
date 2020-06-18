@@ -43,8 +43,13 @@
       <section class="xp-part container pt-2" id="alerts"></section>
     </div>
 
-    <div data-th-if="${page.data.title}" class="container mb-5">
-      <h1 data-th-text="${page.data.title}"></h1>
+    <!-- Page Title -->
+    <div data-th-if="${page.data.title}" class="container-fluid">
+      <div class="container mb-5">
+        <div class="row">
+          <h1 class="col" data-th-text="${page.data.title}"></h1>
+        </div>
+      </div>
     </div>
 
     <!-- preview -->
