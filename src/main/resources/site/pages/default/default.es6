@@ -145,7 +145,7 @@ exports.get = function(req) {
     pageContributions = preview.pageContributions
   }
 
-  const header = fromMenuCache(req, 'header', () => {
+  const header = fromMenuCache(req, `header_${req.path}`, () => {
     const headerContent = getHeaderContent(language)
     if (headerContent) {
       const headerComponent = new React4xp('Header')

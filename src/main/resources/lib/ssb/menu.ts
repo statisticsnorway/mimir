@@ -5,11 +5,12 @@ import { SiteConfig } from '../../site/site-config'
 import { Footer } from '../../site/content-types/footer/footer'
 import { Header } from '../../site/content-types/header/header';
 
+const { hasPath } = require('ramda')
 const {
   getContent, imageUrl, pageUrl
 }: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
 const {
-  get, getChildren
+  get, getChildren, query
 }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
 const {
   getImageCaption
@@ -24,31 +25,25 @@ export function createMenuTree(menuItemId: string): Array<MenuItemParsed> {
     const menuContentChildren: QueryResponse<MenuItem> = getChildren({
       key: menuContent._id
     })
-    return menuContentChildren.hits.map( (menuItem) => createMenuBranch(menuItem))
+    return menuContentChildren.hits.map( (menuItem) => createMenuBranch(menuItem) )
   }
-
   return []
 }
 
 function createMenuBranch(menuItem: Content<MenuItem>): MenuItemParsed {
   const path: string | undefined = menuItem.data.urlSrc ? parseUrl(menuItem.data.urlSrc) : '-'
-  const children: QueryResponse<MenuItem> = getChildren({
-    key: menuItem._id
+  const children: QueryResponse<MenuItem> = query({
+    contentTypes: [`${app.name}:menuItem`],
+    query: `_parentPath = '/content${menuItem._path}'`,
+    count: 99
   })
   const content: Content | null = getContent()
-  const isActive: boolean = children.total > 0 && content ? children.hits.reduce( (hasActiveChildren: boolean, child: Content<MenuItem>) => {
-    if ( child.data.urlSrc && child.data.urlSrc._selected === 'content' &&
-        child.data.urlSrc.content && child.data.urlSrc.content.contentId === content._id) {
-      hasActiveChildren = true
-    }
-    return hasActiveChildren
-  }, false) : false
+  const isActive: boolean = isMenuItemActive(children, content)
   const iconPath: string | undefined = menuItem.data.icon ? imageUrl({
     id: menuItem.data.icon,
     scale: 'block(12px,12px)'
   }) : undefined
   const iconAltText: string | undefined = menuItem.data.icon ? getImageCaption(menuItem.data.icon) : undefined
-
   return {
     title: menuItem.displayName,
     shortName: menuItem.data.shortName ? menuItem.data.shortName : undefined,
@@ -58,6 +53,17 @@ function createMenuBranch(menuItem: Content<MenuItem>): MenuItemParsed {
     iconAltText,
     menuItems: children.total > 0 ? children.hits.map((childMenuItem) => createMenuBranch(childMenuItem)) : undefined
   }
+}
+
+function isMenuItemActive(children: QueryResponse<MenuItem>, content: Content | null): boolean {
+  return children.total > 0 && content && content._path? children.hits.reduce( (hasActiveChildren: boolean, child: Content<MenuItem>) => {
+    if ( hasPath(['data', 'urlSrc', 'content', 'contentId'], child) && child.data.urlSrc!.content!.contentId === content._id) {
+      hasActiveChildren = true
+    } else if(hasPath(['data', 'urlSrc', 'manual', 'url'], child) && content._path.indexOf(child.data.urlSrc!.manual!.url!) > 0) {
+      hasActiveChildren = true
+    }
+    return hasActiveChildren
+  }, false) : false
 }
 
 type TopLinks = Header['globalLinks']
