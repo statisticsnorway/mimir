@@ -26,32 +26,34 @@
     border: 1px solid $ssb-dark-2;
     border-top: 5px solid $ssb-green-3;
     display: flex;
-    padding: 15px 30px;
-    height: 130px;
+    padding: 20px 10px 25px 40px;
     width: 100%;
+
+    @include media-breakpoint-down(sm) {
+      padding-left: 20px;
+    }
   }
 
-  .icon-wrapper img {
-    width: 100px;
-    height: 100px;
+  .icon-wrapper {
+    img {
+      width: 70px;
+      height: 70px;
+    }
   }
 
   .title-wrapper {
     display: -webkit-box;
     align-items: center;
-    margin-left: 30px;
+    margin-left: 40px;
 
     .title {
       display: inline;
-      font-size: 20px;
-      font-weight: bold;
-      color: black;
       border-bottom: 2px solid $ssb-green-4;
-      line-height: 1.5;
+    }
+
+    @include media-breakpoint-down(sm) {
+      margin-left: 20px;
     }
   }
-
-
-
 
 }

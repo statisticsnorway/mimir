@@ -31,7 +31,7 @@ function renderPart(req) {
 
   const model = {
     statbankIcon: assetUrl({
-      path: 'icon-statbank.svg'
+      path: 'SSB_ikon_statbank.svg'
     }),
     title: title,
     href: shortName ? `${STATBANKWEB_URL}/list/${shortName}` : STATBANKWEB_URL
