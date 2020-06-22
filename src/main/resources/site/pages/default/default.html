@@ -68,7 +68,8 @@
       <div
         data-th-classappend="${region.view == 'full' ? 'container-fluid p-0' : region.view == 'card' ? 'border-top-green container' : 'container'}"
       >
-        <div class="col xp-layout">
+        <!-- Title for content in default pages -->
+        <div data-th-if="${region.view != 'card'}" class="col xp-layout">
           <div class="row row-cols-1">
             <div class="container">
               <div class="row">
@@ -78,6 +79,10 @@
             </div>
           </div>
         </div>
+
+        <!-- Title for content in border-top-green containers -->
+        <h2 data-th-if="${region.view == 'card' && region.hideTitle && region.title}" class="sr-only sr-only-focusable mb-5" data-th-text="${region.title}"></h2>
+        <h2 data-th-if="${region.view == 'card' && !region.hideTitle && region.title}" class="mb-5" data-th-text="${region.title}"></h2>
 
         <div
           class="row row-cols-1"
