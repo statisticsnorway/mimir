@@ -3,8 +3,8 @@
         <div class="col-12">
             <h1 data-th-if="${title}" data-th-text="${title}" />
             <div data-th-if="${statistic}" class="statistic">
-                <span class="shortName" data-th-text="${statistic.shortName}" />
-                <span class="name" data-th-text="${statistic.name}" />
+                <span data-th-if="${statistic.shortName}" class="shortName" data-th-text="${statistic.shortName}" />
+                <span data-th-if="${statistic.name}" class="name" data-th-text="${statistic.name}" />
             </div>
             <div data-th-if="${publications}" class="publicationsTable">
                 <h4>Publikasjoner</h4>
