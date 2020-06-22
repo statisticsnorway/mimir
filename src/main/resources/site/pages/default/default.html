@@ -68,8 +68,17 @@
       <div
         data-th-classappend="${region.view == 'full' ? 'container-fluid p-0' : region.view == 'card' ? 'border-top-green container' : 'container'}"
       >
-        <h2 data-th-if="${region.hideTitle && region.title}" class="sr-only sr-only-focusable mb-5" data-th-text="${region.title}"></h2>
-        <h2 data-th-if="${!region.hideTitle && region.title}" class="mb-5" data-th-text="${region.title}"></h2>
+        <div class="col xp-layout">
+          <div class="row row-cols-1">
+            <div class="container">
+              <div class="row">
+                <h2 data-th-if="${region.hideTitle && region.title}" class="sr-only col sr-only-focusable mb-5" data-th-text="${region.title}"></h2>
+                <h2 data-th-if="${!region.hideTitle && region.title}" class="col mb-5" data-th-text="${region.title}"></h2>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div
           class="row row-cols-1"
           data-th-data-portal-region="${region.region}"
