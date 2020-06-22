@@ -36,8 +36,7 @@
   <!-- MAIN -->
   <main class="xp-region"  id="content" data-th-if="${!isFragment}">
     <div class="container">
-      <div class="col xp-layout">
-        <div class="row row-cols-1">
+      <div class="row col">
           <div class="container bg-white pt-2 pb-4">
             <!-- breadcrumbs -->
             <div id="breadcrumbs" class="d-print-none"></div>
@@ -53,7 +52,6 @@
             </div>
           </div>
         </div>
-      </div>
     </div>
 
     <!-- preview -->
@@ -68,19 +66,17 @@
       <div
         data-th-classappend="${region.view == 'full' ? 'container-fluid p-0' : region.view == 'card' ? 'border-top-green container' : 'container'}"
       >
-        <!-- Title for content in default pages -->
-        <div data-th-if="${region.view != 'card'}" class="col xp-layout">
-          <div class="row row-cols-1">
-            <div class="container">
-              <div class="row">
-                <h2 data-th-if="${region.hideTitle && region.title}" class="sr-only col sr-only-focusable mb-5" data-th-text="${region.title}"></h2>
-                <h2 data-th-if="${!region.hideTitle && region.title}" class="col mb-5" data-th-text="${region.title}"></h2>
-              </div>
+        <!-- Subtitle for content in default pages -->
+        <div data-th-if="${region.view != 'card'}" class="col row">
+          <div class="container">
+            <div class="row">
+              <h2 data-th-if="${region.hideTitle && region.title}" class="sr-only col sr-only-focusable mb-5" data-th-text="${region.title}"></h2>
+              <h2 data-th-if="${!region.hideTitle && region.title}" class="col mb-5" data-th-text="${region.title}"></h2>
             </div>
           </div>
         </div>
 
-        <!-- Title for content in border-top-green containers -->
+        <!-- Subtitle for content in border-top-green containers -->
         <h2 data-th-if="${region.view == 'card' && region.hideTitle && region.title}" class="sr-only sr-only-focusable mb-5" data-th-text="${region.title}"></h2>
         <h2 data-th-if="${region.view == 'card' && !region.hideTitle && region.title}" class="mb-5" data-th-text="${region.title}"></h2>
 
