@@ -1,8 +1,10 @@
 <div class="col xp-layout">
   <div class="container">
     <div class="row">
-      <h3 data-th-if="${hideTitle && title}" class="sr-only sr-only-focusable col" data-th-text="${title}"></h3>
-      <h3 data-th-if="${!hideTitle && title}" class="layout-title col" data-th-text="${title}"></h3>
+      <div class="col">
+        <h3 data-th-if="${hideTitle && title}" class="sr-only sr-only-focusable" data-th-text="${title}"></h3>
+        <h3 data-th-if="${!hideTitle && title}" class="layout-title" data-th-text="${title}"></h3>
+      </div>
     </div>
   </div>
   <div class="row row-cols-1">

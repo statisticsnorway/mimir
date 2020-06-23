@@ -36,7 +36,8 @@
   <!-- MAIN -->
   <main class="xp-region"  id="content" data-th-if="${!isFragment}">
     <div class="container">
-      <div class="row col">
+      <div class="row">
+        <div class="col">
           <div class="container bg-white pt-2 pb-4">
             <!-- breadcrumbs -->
             <div id="breadcrumbs" class="d-print-none"></div>
@@ -48,10 +49,13 @@
           <!-- Page Title -->
           <div data-th-if="${page.data.title}" class="container mb-5">
             <div class="row">
-              <h1 class="col" data-th-text="${page.data.title}"></h1>
+              <div class="col">
+                <h1 data-th-text="${page.data.title}"></h1>
+              </div>
             </div>
           </div>
         </div>
+      </div>
     </div>
 
     <!-- preview -->
@@ -67,11 +71,15 @@
         data-th-classappend="${region.view == 'full' ? 'container-fluid p-0' : region.view == 'card' ? 'border-top-green container' : 'container'}"
       >
         <!-- Subtitle for content in default pages -->
-        <div data-th-if="${region.view != 'card'}" class="col row">
-          <div class="container">
-            <div class="row">
-              <h2 data-th-if="${region.hideTitle && region.title}" class="sr-only col sr-only-focusable mb-5" data-th-text="${region.title}"></h2>
-              <h2 data-th-if="${!region.hideTitle && region.title}" class="col mb-5" data-th-text="${region.title}"></h2>
+        <div data-th-if="${region.view != 'card'}" class="row">
+          <div class="col">
+            <div class="container">
+              <div class="row">
+                <div class="col">
+                  <h2 data-th-if="${region.hideTitle && region.title}" class="sr-only sr-only-focusable mb-5" data-th-text="${region.title}"></h2>
+                  <h2 data-th-if="${!region.hideTitle && region.title}" class="mb-5" data-th-text="${region.title}"></h2>
+                </div>
+              </div>
             </div>
           </div>
         </div>
