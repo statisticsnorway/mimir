@@ -99,6 +99,16 @@ function addClearTask(): void {
     task: () => {
       sleep(250)
       if (changeQueueLength === changeQueue.length) {
+        if (changeQueueLength >= 200) { // just clear everything if there is too many changes
+          return completelyClearCache({
+            clearFilterCache: true,
+            clearMenuCache: true,
+            clearDatasetCache: true,
+            clearDividerCache: true,
+            clearRelatedArticlesCache: true,
+            clearRelatedFactPageCache: true
+          })
+        }
         const changedNodes: EnonicEventData['nodes'] = changeQueue
         changeQueue = [] // reset queue
         onNodeChange(changedNodes)
