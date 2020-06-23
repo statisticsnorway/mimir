@@ -9,5 +9,5 @@ export function fetchContacts() {
 
 export function getContactsFromRepo() {
   const node: StatRegNode | null = getStatRegNode(STATREG_REPO_CONTACTS_KEY)
-  return node ? (node.content) : null
+  return node ? node.content : null
 }
