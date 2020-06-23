@@ -10,6 +10,10 @@ const toOption = (stat) => ({
 })
 
 const filterByShortName = (stats, filters) => {
+  if (!filters.query) {
+    return stats
+  }
+
   log.info(`searching ${filters.query} in ${stats.length} stats`)
   return stats.filter((s) => s.shortName.toLowerCase().includes(filters.query.toLowerCase()))
 }

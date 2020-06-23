@@ -39,7 +39,7 @@ export const handleRepoGet = (
       status: 200
     }
   } catch (err) {
-    log.error(`Error while fetching contacts: ${JSON.stringify(err)}`)
+    log.error(`Error while fetching ${repoName}: ${JSON.stringify(err)}`)
     return {
       contentType,
       body: err,

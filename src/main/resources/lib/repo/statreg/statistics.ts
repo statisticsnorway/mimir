@@ -16,11 +16,17 @@ export function getAllStatisticsFromRepo(): Array<Statistic> | null {
 }
 
 export function getStatisticByIdFromRepo(statId: string): Statistic | undefined {
+  if (!statId) {
+    return undefined
+  }
   const allStats: Array<Statistic> = ensureArray(getAllStatisticsFromRepo())
   return find((stat: Statistic) => `${stat.id}` === statId)(allStats)
 }
 
 export function getStatisticByShortNameFromRepo(shortName: string): Statistic | undefined {
+  if (!shortName) {
+    return undefined
+  }
   const allStats: Array<Statistic> = ensureArray(getAllStatisticsFromRepo())
   return find((stat: Statistic) => stat.shortName === shortName)(allStats)
 }
