@@ -38,17 +38,32 @@ const draftMenuCache: Cache = newCache({
 })
 const masterDatasetCache: Cache = newCache({
   expire: 3600,
-  size: 300
+  size: 1500
 })
 const draftDatasetCache: Cache = newCache({
   expire: 3600,
-  size: 300
+  size: 1500
 })
 const dividerCache: Cache = newCache({
   expire: 3600,
   size: 2
 })
-
+const draftRelatedArticlesCache: Cache = newCache({
+  expire: 3600,
+  size: 200
+})
+const masterRelatedArticlesCache: Cache = newCache({
+  expire: 3600,
+  size: 200
+})
+const draftRelatedFactPageCache: Cache = newCache({
+  expire: 3600,
+  size: 200
+})
+const masterRelatedFactPageCache: Cache = newCache({
+  expire: 3600,
+  size: 200
+})
 let changeQueue: EnonicEventData['nodes'] = []
 let clearTaskId: string | undefined
 
@@ -178,6 +193,20 @@ function clearCache(content: Content, branch: string, cleared: Array<string>): A
     filterCache.clear()
   }
 
+  // clear related article cache
+  if (content.type === `${app.name}:article`) {
+    const relatedArticlesCache: Cache = branch === 'master' ? masterRelatedArticlesCache : draftRelatedArticlesCache
+    log.info(`clear ${content._id} from related articles cache (${branch})`)
+    relatedArticlesCache.remove(content._id)
+  }
+
+  // clear related fact page cache
+  if (content.type === `${app.name}:contentList` || content.type === `${app.name}:page`) {
+    const relatedFactPageCache: Cache = branch === 'master' ? masterRelatedFactPageCache : draftRelatedFactPageCache
+    log.info(`clear ${content._id} from related fact page cache (${branch})`)
+    relatedFactPageCache.remove(content._id)
+  }
+
   // clear menu cache
   if (content.type === `${app.name}:menuItem`) {
     completelyClearMenuCache(branch)
@@ -267,6 +296,30 @@ export function fromDividerCache(dividerColor: string, fallback: () => string): 
   })
 }
 
+export function fromRelatedArticlesCache(req: Request, key: string, fallback: () => unknown): unknown {
+  if (req.mode === 'live' || req.mode === 'preview') {
+    const branch: string = req.mode === 'live' ? 'master' : 'draft'
+    const relatedArticlesCache: Cache = branch === 'master' ? masterRelatedArticlesCache : draftRelatedArticlesCache
+    return relatedArticlesCache.get(key, () => {
+      log.info(`added ${key} to related articles cache (${branch})`)
+      return fallback()
+    })
+  }
+  return fallback()
+}
+
+export function fromRelatedFactPageCache(req: Request, key: string, fallback: () => unknown): unknown {
+  if (req.mode === 'live' || req.mode === 'preview') {
+    const branch: string = req.mode === 'live' ? 'master' : 'draft'
+    const relatedFactPageCache: Cache = branch === 'master' ? masterRelatedFactPageCache : draftRelatedFactPageCache
+    return relatedFactPageCache.get(key, () => {
+      log.info(`added ${key} to related fact page cache (${branch})`)
+      return fallback()
+    })
+  }
+  return fallback()
+}
+
 function completelyClearFilterCache(branch: string): void {
   const cacheMap: Map<string, Cache> = branch === 'master' ? masterFilterCaches : draftFilterCaches
   cacheMap.forEach((cache: Cache, filterKey: string) => {
@@ -293,6 +346,18 @@ function completelyClearDividerCache(): void {
   dividerCache.clear()
 }
 
+function completelyClearRelatedArticleCache(branch: string): void {
+  log.info(`clear related article cache (${branch})`)
+  const relatedArticlesCache: Cache = branch === 'master' ? masterRelatedArticlesCache : draftRelatedArticlesCache
+  relatedArticlesCache.clear()
+}
+
+function completelyClearRelatedFactPageCache(branch: string): void {
+  log.info(`clear related fact page cache (${branch})`)
+  const relatedFactPageCache: Cache = branch === 'master' ? masterRelatedFactPageCache : draftRelatedFactPageCache
+  relatedFactPageCache.clear()
+}
+
 function completelyClearCache(options: CompletelyClearCacheOptions): void {
   if (options.clearFilterCache) {
     completelyClearFilterCache('master')
@@ -312,6 +377,16 @@ function completelyClearCache(options: CompletelyClearCacheOptions): void {
   if (options.clearDividerCache) {
     completelyClearDividerCache()
   }
+
+  if (options.clearRelatedArticlesCache) {
+    completelyClearRelatedArticleCache('master')
+    completelyClearRelatedArticleCache('draft')
+  }
+
+  if (options.clearRelatedFactPageCache) {
+    completelyClearRelatedFactPageCache('master')
+    completelyClearRelatedFactPageCache('draft')
+  }
 }
 
 export interface DatasetCache {
@@ -324,6 +399,8 @@ export interface CompletelyClearCacheOptions {
   clearMenuCache: boolean;
   clearDatasetCache: boolean;
   clearDividerCache: boolean;
+  clearRelatedArticlesCache: boolean;
+  clearRelatedFactPageCache: boolean;
 }
 
 export interface SSBCacheLibrary {
@@ -332,4 +409,6 @@ export interface SSBCacheLibrary {
   fromMenuCache: (req: Request, key: string, fallback: () => unknown) => unknown;
   fromDatasetCache: (req: Request, key: string, fallback: () => DatasetCache) => DatasetCache;
   fromDividerCache: (dividerColor: string, fallback: () => string) => string;
+  fromRelatedArticlesCache: (req: Request, key: string, fallback: () => unknown) => unknown;
+  fromRelatedFactPageCache: (req: Request, key: string, fallback: () => unknown) => unknown;
 }

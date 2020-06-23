@@ -21,6 +21,9 @@ const {
 const {
   getPhrases
 } = __non_webpack_require__( '/lib/language')
+const {
+  fromRelatedArticlesCache
+} = __non_webpack_require__('/lib/ssb/cache')
 const moment = require('moment/min/moment-with-locales')
 
 const view = resolve('./relatedArticles.html')
@@ -62,45 +65,47 @@ function renderPart(req, relatedArticles) {
 
   relatedArticles = relatedArticles.map((article) => {
     if (article._selected === 'article') {
-      const articleContent = get({
-        key: article.article.article
+      return fromRelatedArticlesCache(req, article.article.article, () => {
+        const articleContent = get({
+          key: article.article.article
+        })
+
+        if (!articleContent) {
+          return null
+        }
+
+        let imageSrc
+        let imageAlt = ''
+
+        if (!articleContent.x ||
+            !articleContent.x['com-enonic-app-metafields'] ||
+            !articleContent.x['com-enonic-app-metafields']['meta-data'] ||
+            !articleContent.x['com-enonic-app-metafields']['meta-data'].seoImage) {
+          imageSrc = imagePlaceholder({
+            width: 320,
+            height: 180
+          })
+        } else { // use placeholder if there is no seo image on the article
+          const image = articleContent.x['com-enonic-app-metafields']['meta-data'].seoImage
+          imageSrc = imageUrl({
+            id: image,
+            scale: 'block(320, 180)' // 16:9
+          })
+          imageAlt = getImageAlt(image)
+        }
+
+
+        return {
+          title: articleContent.displayName,
+          subTitle: getSubTitle(articleContent, phrases),
+          preface: articleContent.data.ingress,
+          href: pageUrl({
+            id: articleContent._id
+          }),
+          imageSrc,
+          imageAlt
+        }
       })
-
-      if (!articleContent) {
-        return null
-      }
-
-      let imageSrc
-      let imageAlt = ''
-
-      if (!articleContent.x ||
-          !articleContent.x['com-enonic-app-metafields'] ||
-          !articleContent.x['com-enonic-app-metafields']['meta-data'] ||
-          !articleContent.x['com-enonic-app-metafields']['meta-data'].seoImage) {
-        imageSrc = imagePlaceholder({
-          width: 320,
-          height: 180
-        })
-      } else { // use placeholder if there is no seo image on the article
-        const image = articleContent.x['com-enonic-app-metafields']['meta-data'].seoImage
-        imageSrc = imageUrl({
-          id: image,
-          scale: 'block(320, 180)' // 16:9
-        })
-        imageAlt = getImageAlt(image)
-      }
-
-
-      return {
-        title: articleContent.displayName,
-        subTitle: getSubTitle(articleContent, phrases),
-        preface: articleContent.data.ingress,
-        href: pageUrl({
-          id: articleContent._id
-        }),
-        imageSrc,
-        imageAlt
-      }
     } else if (article._selected === 'externalArticle') {
       const imageSrc = imageUrl({
         id: article.externalArticle.image,
