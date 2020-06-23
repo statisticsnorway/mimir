@@ -1,0 +1,9 @@
+<mixin>
+    <display-name>Fotnote</display-name>
+    <form>
+        <input name="footNote" type="TextLine">
+            <label>Fotnote-tekst</label>
+            <occurrences minimum="0" maximum="0" />
+        </input>
+    </form>
+</mixin>
