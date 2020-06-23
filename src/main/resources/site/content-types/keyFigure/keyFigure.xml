@@ -38,9 +38,9 @@
         <allowType>dataquery</allowType>
       </config>
     </input>
-    <item-set name="changes"> 
-      <label>Endringstall</label> 
-      <occurrences minimum="0" maximum="1"/> 
+    <item-set name="changes">
+      <label>Endringstall</label>
+      <occurrences minimum="0" maximum="1"/>
       <items>
         <input name="denomination" type="TextLine">
           <label>Benevning på endringstall</label>
@@ -69,5 +69,6 @@
         </input>
       </items>
     </item-set>
+    <mixin name="dataSource"/>
   </form>
 </content-type>

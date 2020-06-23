@@ -1,0 +1,102 @@
+<mixin>
+  <display-name>Datakilde</display-name>
+  <form>
+    <option-set name="dataSource">
+      <label>Datakilde</label>
+      <expanded>false</expanded>
+      <occurrences minimum="0" maximum="1"/>
+      <help-text>You can select up to 2 options</help-text>
+      <options minimum="1" maximum="1">
+        <option name="statbankApi">
+          <label>Api-spørring mot statbanken</label>
+          <items>
+            <input name="urlOrId" type="TextLine">
+              <label>URL eller tabell-id</label>
+              <occurrences minimum="0" maximum="1"/>
+            </input>
+            <input name="format" type="ComboBox">
+              <label>Format</label>
+              <occurrences minimum="1" maximum="1"/>
+              <config>
+                <option value="json">JSON</option>
+                <option value="xml">XML</option>
+              </config>
+              <default>json</default>
+            </input>
+            <input name="xAxisLabel" type="TextLine">
+              <label>Navn på x-akse dimensjon</label>
+              <occurrences minimum="0" maximum="1"/>
+            </input>
+            <input name="yAxisLabel" type="TextLine">
+              <label>Navn på y-akse dimensjon</label>
+              <occurrences minimum="0" maximum="1"/>
+            </input>
+            <option-set name="datasetFilterOptions">
+              <label>Filtrering på dataset</label>
+              <expanded>false</expanded>
+              <occurrences minimum="0" maximum="1"/>
+              <options minimum="0" maximum="1">
+                <option name="municipalityFilter">
+                  <label>Filtrer på kommune</label>
+                  <help-text>Hvis grafen skal vises filtrert på kommunenummer</help-text>
+                  <items>
+                    <input type="TextLine" name="municipalityDimension" >
+                      <label>Hvilken dimensjon skal filtreres på kommunenummer</label>
+                      <occurrences minimum="1" maximum="1" />
+                    </input>
+                  </items>
+                </option>
+              </options>
+            </option-set>
+          </items>
+        </option>
+        <option name="tallbygger">
+          <label>Tall fra tallbygger</label>
+          <items>
+            <input name="urlOrId" type="TextLine">
+              <label>URL eller TBML-id</label>
+              <occurrences minimum="0" maximum="1"/>
+            </input>
+          </items>
+        </option>
+        <option name="statbankSaved">
+          <label>Lagrede spørringer mot statistikkbanken</label>
+          <items>
+            <input name="url" type="TextLine">
+              <label>URL</label>
+              <occurrences minimum="0" maximum="1"/>
+            </input>
+          </items>
+        </option>
+        <option name="dataset">
+          <label>Ferdige dataset</label>
+          <items>
+            <input name="id" type="TextLine">
+              <label>ID</label>
+              <occurrences minimum="0" maximum="1"/>
+            </input>
+            <input name="format" type="ComboBox">
+              <label>Format</label>
+              <occurrences minimum="1" maximum="1"/>
+              <config>
+                <option value="json">JSON</option>
+                <option value="csv">CSV</option>
+              </config>
+              <default>json</default>
+            </input>
+          </items>
+        </option>
+        <option name="klass">
+          <label>Klass</label>
+          <items>
+            <input name="url" type="TextLine">
+              <label>URL</label>
+              <occurrences minimum="0" maximum="1"/>
+            </input>
+          </items>
+        </option>
+
+      </options>
+    </option-set>
+  </form>
+</mixin>
