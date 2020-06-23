@@ -56,14 +56,20 @@ class Header extends React.Component {
       return (<Link key={'link_' + index} href={altLanguage.path}>{altLanguage.title}</Link>)
     })
   }
+
+  renderIcon(icon) {
+    return <span dangerouslySetInnerHTML={{__html:icon}}></span>
+  }
+
   renderSubMenu(topMenuItem, activeMenuItem) {
     return topMenuItem.menuItems && topMenuItem.menuItems.map((menuItem, itemIndex) => {
       return (
         <li key={'listItemLink_' + itemIndex} tabIndex={activeMenuItem ? 0 : -1 }>
-          <a className="ssb-link with-icon" href={menuItem.path} target="" rel="" >
-            <div className="icon-wrapper" dangerouslySetInnerHTML={{__html: menuItem.iconSvgTag}}></div>
-            <span className="link-text">{menuItem.title}</span>
-          </a>
+          <Link
+            tabIndex={activeMenuItem ? 0 : -1 }
+            href={menuItem.path}
+            icon={ menuItem.iconSvgTag ? this.renderIcon(menuItem.iconSvgTag) : undefined }>{menuItem.title}
+          </Link>
         </li>)
     })
   }

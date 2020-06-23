@@ -164,18 +164,15 @@ export const dateToReadable = (ds) => moment(ds).locale('nb').fromNow()
 
 export const getAttachmentContent = (contentId) => {
   if(!contentId) return undefined
-
   const attachmentContent = content.get({key: contentId})
 
   if(!attachmentContent) return undefined
-
   const stream = content.getAttachmentStream({
     key: attachmentContent._id,
     name: attachmentContent._name
   })
 
-  if(!stream) return underfined
-
+  if(!stream) return undefined
   const lines = readLines(stream);
   return lines[0]
 }
