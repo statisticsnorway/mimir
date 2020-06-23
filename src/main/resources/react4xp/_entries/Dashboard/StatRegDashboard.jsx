@@ -42,7 +42,7 @@ const StatRegDashboard = (props) => {
           </td>
           <td>{formatDate(contacts.completionTime)}</td>
           <td>{contacts.message}</td>
-          <td>{makeRefreshButton(() => {})}</td>
+          <td style={{ textAlign: 'center' }}>{makeRefreshButton(() => {})}</td>
         </tr>
         <tr>
           <td className={`${statusIcon(statistics)} dataset`}>
@@ -50,7 +50,7 @@ const StatRegDashboard = (props) => {
           </td>
           <td>{formatDate(statistics.completionTime)}</td>
           <td>{statistics.message}</td>
-          <td>{makeRefreshButton(() => {})}</td>
+          <td style={{ textAlign: 'center' }}>{makeRefreshButton(() => {})}</td>
         </tr>
         <tr>
           <td className={`${statusIcon(publications)} dataset`}>
@@ -58,7 +58,7 @@ const StatRegDashboard = (props) => {
           </td>
           <td>{formatDate(publications.completionTime)}</td>
           <td>{publications.message}</td>
-          <td>
+          <td style={{ textAlign: 'center' }}>
             {makeRefreshButton(() => {})}
           </td>
         </tr>

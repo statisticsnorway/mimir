@@ -154,10 +154,10 @@ class Dashboard extends React.Component {
     )
   }
 
-  renderAccordianForStatRegFetches () {
+  renderAccordionForStatRegFetches () {
     console.log('Accordion StatReg statuses', this.props.statRegFetchStatuses)
     return (
-      <Accordion header="Data fra Statistikkregisteret" className="mx-0">
+      <Accordion header="Status" className="mx-0" openByDefault={true}>
         <StatRegDashboard currStatus={this.props.statRegFetchStatuses} />
       </Accordion>
     )
@@ -188,10 +188,20 @@ class Dashboard extends React.Component {
                 groupedQueries.default &&
                 this.renderAccordians(`Andre (${groupedQueries.default.length})`, groupedQueries.default)
               }
-              {this.renderAccordianForStatRegFetches()}
             </div>
           </Col>
         </Row>
+
+        <section className="xp-part part-dashboard container">
+          <Row>
+            <Col>
+              <div className="p-4 tables-wrapper">
+                <h2>Data fra Statistikkregisteret</h2>
+                {this.renderAccordionForStatRegFetches()}
+              </div>
+            </Col>
+          </Row>
+        </section>
 
         <Row className="my-3">
           <Col className="p-4">
