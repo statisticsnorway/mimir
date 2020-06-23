@@ -99,8 +99,10 @@ function addClearTask(): void {
     task: () => {
       sleep(250)
       if (changeQueueLength === changeQueue.length) {
+        const changedNodes: EnonicEventData['nodes'] = changeQueue
+        changeQueue = [] // reset queue
         if (changeQueueLength >= 200) { // just clear everything if there is too many changes
-          return completelyClearCache({
+          completelyClearCache({
             clearFilterCache: true,
             clearMenuCache: true,
             clearDatasetCache: true,
@@ -108,10 +110,9 @@ function addClearTask(): void {
             clearRelatedArticlesCache: true,
             clearRelatedFactPageCache: true
           })
+        } else {
+          onNodeChange(changedNodes)
         }
-        const changedNodes: EnonicEventData['nodes'] = changeQueue
-        changeQueue = [] // reset queue
-        onNodeChange(changedNodes)
         clearTaskId = undefined
       } else {
         clearTaskId = undefined
