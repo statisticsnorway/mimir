@@ -1,3 +1,6 @@
+import { getPublicationsForStatistic } from '../../../lib/repo/statreg/publications'
+import { getStatisticByIdFromRepo } from '../../../lib/repo/statreg/statistics'
+
 const {
   getContent
 } = __non_webpack_require__('/lib/xp/portal')
@@ -22,9 +25,13 @@ exports.preview = (req) => renderPart(req)
 
 const renderPart = (req) => {
   const page = getContent()
+  const statistic = page.data.statistic && getStatisticByIdFromRepo(page.data.statistic)
+  const publications = statistic && getPublicationsForStatistic(statistic.shortName)
 
   const model = {
-    title: page.displayName
+    title: page.displayName,
+    statistic,
+    publications
   }
 
   const body = render(view, model)

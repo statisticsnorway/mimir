@@ -64,9 +64,20 @@ cron.schedule({
 
 cache.setup()
 
-
 setupEventLog()
 setupStatRegRepo()
+
+// and setup a cron for periodic executions in the future
+const STATREG_CRON_CONFIG = {
+  name: 'StatReg Periodic Refresh',
+  cron: '30 14 * * *',
+  times: 365 * 10,
+  callback: setupStatRegRepo,
+  context: master
+}
+
+cron.schedule(STATREG_CRON_CONFIG)
+// StatReg Repo --------------------------------------------------------------
 
 const now = new Date()
 log.info(`Startup script complete: ${now.toISOString()}`)

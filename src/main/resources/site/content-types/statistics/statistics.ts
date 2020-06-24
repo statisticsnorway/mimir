@@ -1,13 +1,13 @@
 export interface Statistics {
   /**
-   * Kortnavn
-   */
-  shortName?: string;
-
-  /**
    * Om Statistikken
    */
   aboutTheStatistics?: string;
+
+  /**
+   * Statistikk
+   */
+  statistic?: string;
 
   /**
    * Relaterte statistikker
