@@ -9,7 +9,7 @@ export interface DataSource {
     _selected: string;
 
     /**
-     * Api-spørring mot statbanken
+     * Api-spørring mot statistikkbanken
      */
     statbankApi?: {
       /**
@@ -64,7 +64,7 @@ export interface DataSource {
     };
 
     /**
-     * Lagrede spørringer mot statistikkbanken
+     * (Ikke i bruk) Lagrede spørringer mot statistikkbanken
      */
     statbankSaved?: {
       /**
@@ -74,7 +74,7 @@ export interface DataSource {
     };
 
     /**
-     * Ferdige dataset
+     * (Ikke i bruk) Ferdige dataset
      */
     dataset?: {
       /**

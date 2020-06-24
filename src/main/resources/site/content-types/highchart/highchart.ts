@@ -169,7 +169,7 @@ export interface Highchart {
     _selected: string;
 
     /**
-     * Api-spørring mot statbanken
+     * Api-spørring mot statistikkbanken
      */
     statbankApi?: {
       /**
@@ -224,7 +224,7 @@ export interface Highchart {
     };
 
     /**
-     * Lagrede spørringer mot statistikkbanken
+     * (Ikke i bruk) Lagrede spørringer mot statistikkbanken
      */
     statbankSaved?: {
       /**
@@ -234,7 +234,7 @@ export interface Highchart {
     };
 
     /**
-     * Ferdige dataset
+     * (Ikke i bruk) Ferdige dataset
      */
     dataset?: {
       /**
