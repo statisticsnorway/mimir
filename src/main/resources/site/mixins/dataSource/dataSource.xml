@@ -8,7 +8,7 @@
       <help-text>You can select up to 2 options</help-text>
       <options minimum="1" maximum="1">
         <option name="statbankApi">
-          <label>Api-spørring mot statbanken</label>
+          <label>Api-spørring mot statbanken (PXWeb)</label>
           <items>
             <input name="urlOrId" type="TextLine">
               <label>URL eller tabell-id</label>
@@ -60,7 +60,7 @@
           </items>
         </option>
         <option name="statbankSaved">
-          <label>Lagrede spørringer mot statistikkbanken</label>
+          <label>(Kommer) Lagrede spørringer mot statistikkbanken</label>
           <items>
             <input name="url" type="TextLine">
               <label>URL</label>
@@ -69,7 +69,7 @@
           </items>
         </option>
         <option name="dataset">
-          <label>Ferdige dataset</label>
+          <label>(Kommer) Ferdige dataset</label>
           <items>
             <input name="id" type="TextLine">
               <label>ID</label>
