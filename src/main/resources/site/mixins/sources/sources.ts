@@ -1,24 +1,4 @@
-export interface InfoGraphicsPartConfig {
-  /**
-   * Tittel på visualinseringen
-   */
-  title: string;
-
-  /**
-   * Infografikk eller visualisering
-   */
-  image: string;
-
-  /**
-   * *IKKE LENGER I BRUK* (bruk alt tekst på valgt bilde)
-   */
-  altText?: string;
-
-  /**
-   * Beskrivende hjelpetekst for blinde
-   */
-  longDesc?: string;
-
+export interface Sources {
   /**
    * Kildelenke
    */
@@ -58,9 +38,4 @@ export interface InfoGraphicsPartConfig {
       sourceSelector?: string;
     };
   };
-
-  /**
-   * Fotnote-tekst
-   */
-  footNote?: string;
 }
