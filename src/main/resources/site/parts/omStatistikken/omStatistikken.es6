@@ -26,9 +26,23 @@ exports.get = function(req) {
 exports.preview = (req, id) => renderPart(req, [id])
 
 function renderPart(req, aboutTheStatisticsId) {
+  const aboutStatisticLabel = i18nLib.localize({
+    key: 'aboutTheStatistics'
+  })
+
+  const page = getContent()
+
   if (!aboutTheStatisticsId) {
-    return {
-      body: null
+    if (req.mode === 'edit' && page.type !== `${app.name}:statistics`) {
+      return {
+        body: render(view, {
+          aboutStatisticLabel
+        })
+      }
+    } else {
+      return {
+        body: null
+      }
     }
   }
 
@@ -97,9 +111,7 @@ function renderPart(req, aboutTheStatisticsId) {
 
   const model = {
     omStatistikkenId: omStatistikken.react4xpId,
-    label: i18nLib.localize({
-      key: 'aboutTheStatistics'
-    }),
+    label: aboutStatisticLabel,
     ingress: content.ingress
   }
 
