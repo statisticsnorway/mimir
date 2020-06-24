@@ -1,3 +1,5 @@
+import { getStatisticByIdFromRepo } from '../../../lib/repo/statreg/statistics'
+
 const {
   getContent,
   assetUrl
@@ -24,7 +26,8 @@ exports.preview = (req) => renderPart(req)
 
 function renderPart(req) {
   const page = getContent()
-  const shortName = page.data.shortName ? page.data.shortName : undefined
+  const statistic = page.data.statistic && getStatisticByIdFromRepo(page.data.statistic)
+  const shortName = statistic && statistic.shortName ? statistic.shortName : undefined
   const title = i18nLib.localize({
     key: 'statbankBox.title'
   })

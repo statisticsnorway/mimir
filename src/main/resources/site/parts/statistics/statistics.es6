@@ -25,12 +25,8 @@ exports.preview = (req) => renderPart(req)
 
 const renderPart = (req) => {
   const page = getContent()
-
-  log.info(`page info ${JSON.stringify(page.data)}`)
   const statistic = page.data.statistic && getStatisticByIdFromRepo(page.data.statistic)
   const publications = statistic && getPublicationsForStatistic(statistic.shortName)
-
-  log.info(`Found ${statistic.shortName}: ${publications.length} publications`)
 
   const model = {
     title: page.displayName,
