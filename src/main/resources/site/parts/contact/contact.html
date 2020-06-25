@@ -2,15 +2,15 @@
   <h2 data-th-text="${label}?: 'Kontakt'" class="roboto-condensed-bold mb-md-4 pb-md-3 bt-6"></h2>
   <div data-th-each="contactGroup : ${contacts}" class="row d-flex flex-wrap">
     <div data-th-if="${contact}" data-th-each="contact : ${contactGroup}" class="col-8 col-md-3 contacts">
-      <p class="roboto-plain lead mb-1 text-break text-wrap part-contact--name" data-th-text=${contact.name}>
+      <p class="roboto-plain lead mb-1 text-break text-wrap part-contact-name" data-th-text=${contact.name}>
         TESTNAVN
       </p>
-      <p data-th-if="${contact.email}" class="part-contact--email mb-1">
+      <p data-th-if="${contact.email}" class="part-contact-email mb-1">
         <a class="roboto-plain" data-th-href="@{'mailto:' + ${contact.email}}" data-th-text="${contact.email}">
           epost
         </a>
       </p>
-      <p data-th-if="${contact.telephone}" data-th-text="${contact.telephone}" class="part-contact--telephone">
+      <p data-th-if="${contact.telephone}" data-th-text="${contact.telephone}" class="part-contact-telephone">
         phone
       </p>
     </div>
