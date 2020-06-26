@@ -1,5 +1,5 @@
 import { ContextLibrary } from 'enonic-types/lib/context'
-import { AuthLibrary, User } from 'enonic-types/lib/auth';
+import { AuthLibrary, User } from 'enonic-types/lib/auth'
 import { NodeCreateParams, NodeLibrary, NodeQueryResponse, RepoConnection, RepoNode } from 'enonic-types/lib/node'
 import { EditorCallback } from './eventLog'
 
@@ -7,7 +7,7 @@ const auth: AuthLibrary = __non_webpack_require__( '/lib/xp/auth')
 const context: ContextLibrary = __non_webpack_require__('/lib/xp/context')
 const node: NodeLibrary = __non_webpack_require__('/lib/xp/node')
 
-const ENONIC_CMS_DEFAULT_REPO: string = 'com.enonic.cms.default';
+const ENONIC_CMS_DEFAULT_REPO: string = 'com.enonic.cms.default'
 const SYSADMIN_ROLE: string = 'role:system.admin'
 
 export type ContextCallback<T> = () => T;
@@ -22,7 +22,7 @@ export const SUPER_USER: User = {
   login: 'su',
   displayName: 'su',
   idProvider: 'system'
-} as User;
+} as User
 
 export interface LoggedInUser {
   readonly login: string;
@@ -38,10 +38,10 @@ export function withSuperUserContext<T>(repository: string, branch: string, call
 }
 
 export function withLoggedInUserContext<T>(branch: string, callback: UserContextCallback<T>): T {
-  const user: User | null = auth.getUser();
+  const user: User | null = auth.getUser()
   const loggedInUser: LoggedInUser = {
     login: user ? user.login : '',
-    idProvider: user?.idProvider,
+    idProvider: user?.idProvider
   }
   return context.run({
     repository: ENONIC_CMS_DEFAULT_REPO,
@@ -78,7 +78,7 @@ export function getNode<T>(repository: string, branch: string, key: string): Rea
 
 export function deleteNode(repository: string, branch: string, key: string): boolean {
   return withConnection(repository, branch, (conn) => {
-    return conn.delete(key)
+    return conn.delete(key).length === 1
   })
 }
 
@@ -93,12 +93,14 @@ export function modifyNode<T>(repository: string, branch: string, key: string, e
 
 export function getChildNodes(repository: string, branch: string, key: string): NodeQueryResponse {
   return withConnection(repository, branch, (conn) => {
-    return conn.findChildren({parentKey: key})
+    return conn.findChildren({
+      parentKey: key
+    })
   })
 }
 
-export function nodeExists(repository: string, branch: string, key: string) {
+export function nodeExists(repository: string, branch: string, key: string): boolean {
   return withConnection(repository, branch, (conn) => {
-    return conn.exists(key)
+    return conn.exists(key).length === 1
   })
 }
