@@ -9,12 +9,6 @@
         <max-length>30</max-length>
       </config>
     </input>
-    <input name="contacts" type="CustomSelector">
-      <occurrences minimum="0" maximum="0" />
-      <label>Kontakter</label>
-      <config>
-        <service>contacts</service>
-      </config>
-    </input>
+    <mixin name="contacts" />
   </form>
 </part>
