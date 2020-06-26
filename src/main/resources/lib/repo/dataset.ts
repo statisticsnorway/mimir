@@ -1,4 +1,4 @@
-import { RepoCommonLib, deleteNode } from './common'
+import { RepoCommonLib } from './common'
 import { RepoNode } from 'enonic-types/lib/node'
 
 const {
@@ -9,7 +9,8 @@ const {
   nodeExists,
   createNode,
   getNode,
-  modifyNode
+  modifyNode,
+  deleteNode
 }: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
 
 export const DATASET_REPO: string = 'no.ssb.dataset'
