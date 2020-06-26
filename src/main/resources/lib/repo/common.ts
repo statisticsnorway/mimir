@@ -101,7 +101,7 @@ export function getChildNodes(repository: string, branch: string, key: string): 
 
 export function nodeExists(repository: string, branch: string, key: string): boolean {
   return withConnection(repository, branch, (conn) => {
-    return conn.exists(key).length === 1
+    return !!conn.exists(key)
   })
 }
 
@@ -115,5 +115,5 @@ export interface RepoCommonLib {
   deleteNode: (repository: string, branch: string, key: string) => boolean;
   modifyNode: <T>(repository: string, branch: string, key: string, editor: EditorCallback<T>) => T;
   getChildNodes: (repository: string, branch: string, key: string) => NodeQueryResponse;
-  nodeExists: (repository: string, branch: string, key: string) => unknown; // TODO fix return type
+  nodeExists: (repository: string, branch: string, key: string) => boolean;
 }

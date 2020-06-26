@@ -11,6 +11,9 @@ const {
   setupStatRegRepo
 } = __non_webpack_require__( '/lib/repo/statreg')
 const {
+  setupDatasetRepo
+} = __non_webpack_require__( '/lib/repo/dataset')
+const {
   refreshQueriesAsync
 } = __non_webpack_require__('/lib/task')
 const content = __non_webpack_require__( '/lib/xp/content')
@@ -63,6 +66,7 @@ cron.schedule({
 cache.setup()
 
 setupEventLog()
+setupDatasetRepo()
 setupStatRegRepo()
 
 // and setup a cron for periodic executions in the future

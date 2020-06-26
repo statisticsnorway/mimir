@@ -40,29 +40,45 @@ function datasetRepoExists(): boolean {
 
 function createSourceNode(dataSource: string): void {
   if (!nodeExists(DATASET_REPO, DATASET_BRANCH, `/${dataSource}`)) {
-    createNode(DATASET_REPO, DATASET_BRANCH, `/${dataSource}`)
+    createNode(DATASET_REPO, DATASET_BRANCH, {
+      _parentPath: `/`,
+      _name: dataSource
+    })
   }
 }
 
-export function getDataset<T>(dataSourceType: string, id: string): DatasetRepoNode<T> | undefined {
-  return getNode(DATASET_REPO, DATASET_BRANCH, `/${dataSourceType}/${id}`)[0]
+export function getDataset<T>(dataSourceType: string, key: string): DatasetRepoNode<T> | undefined {
+  return getNode(DATASET_REPO, DATASET_BRANCH, `/${dataSourceType}/${key}`)[0]
 }
 
-export function createOrUpdateDataset<T>(dataSourceType: string, id: string, data: T): DatasetRepoNode<T> {
-  if (!nodeExists(DATASET_REPO, DATASET_BRANCH, `/${dataSourceType}/${id}`)) {
-    return createNode(DATASET_REPO, DATASET_BRANCH, data)
+export function createOrUpdateDataset<T>(dataSourceType: string, key: string, data: T): DatasetRepoNode<T> {
+  if (!nodeExists(DATASET_REPO, DATASET_BRANCH, `/${dataSourceType}/${key}`)) {
+    return createNode(DATASET_REPO, DATASET_BRANCH, {
+      _name: key,
+      _parentPath: `/${dataSourceType}`,
+      data: data
+    })
   } else {
-    return modifyNode(DATASET_REPO, DATASET_BRANCH, `/${dataSourceType}/${id}`, (dataset) => {
+    return modifyNode(DATASET_REPO, DATASET_BRANCH, `/${dataSourceType}/${key}`, (dataset) => {
       dataset.data = data
       return dataset
     })
   }
 }
 
-export function deleteDataset(dataSourceType: string, id: string): boolean {
-  return deleteNode(DATASET_REPO, DATASET_BRANCH, `/${dataSourceType}/${id}`)
+export function deleteDataset(dataSourceType: string, key: string): boolean {
+  return deleteNode(DATASET_REPO, DATASET_BRANCH, `/${dataSourceType}/${key}`)
 }
 
 export interface DatasetRepoNode<T> extends RepoNode {
   data?: T;
+}
+
+export interface RepoDatasetLib {
+  DATASET_REPO: string;
+  DATASET_BRANCH: string;
+  setupDatasetRepo: () => void;
+  getDataset: <T>(dataSourceType: string, key: string) => DatasetRepoNode<T> | undefined;
+  createOrUpdateDataset: <T>(dataSourceType: string, key: string, data: T) => DatasetRepoNode<T>;
+  deleteDataset: (dataSourceType: string, key: string) => boolean;
 }
