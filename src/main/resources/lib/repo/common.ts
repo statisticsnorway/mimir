@@ -78,7 +78,7 @@ export function getNode<T>(repository: string, branch: string, key: string): Rea
 
 export function deleteNode(repository: string, branch: string, key: string): boolean {
   return withConnection(repository, branch, (conn) => {
-    return conn.delete(key)
+    return conn.delete(key).length === 1
   })
 }
 
@@ -99,9 +99,9 @@ export function getChildNodes(repository: string, branch: string, key: string): 
   })
 }
 
-export function nodeExists(repository: string, branch: string, key: string) {
+export function nodeExists(repository: string, branch: string, key: string): boolean {
   return withConnection(repository, branch, (conn) => {
-    return conn.exists(key)
+    return conn.exists(key).length === 1
   })
 }
 
