@@ -15,6 +15,8 @@
       <occurrences minimum="0" maximum="1"/>
     </input>
 
+    <mixin name="dataSource"/>
+
     <input name="graphType" type="RadioButton">
       <label>Graftype</label>
       <occurrences minimum="1" maximum="1"/>

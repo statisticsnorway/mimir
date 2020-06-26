@@ -35,26 +35,31 @@
 
   <!-- MAIN -->
   <main class="xp-region"  id="content" data-th-if="${!isFragment}">
-    <div class="container-fluid bg-white pt-2 pb-4">
-      <!-- breadcrumbs -->
-      <div id="breadcrumbs" class="container d-print-none"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <div class="container bg-white pt-2 pb-4">
+            <!-- breadcrumbs -->
+            <div id="breadcrumbs" class="d-print-none"></div>
 
-      <!-- Alerts Info and error -->
-      <section class="xp-part container pt-2" id="alerts"></section>
-    </div>
+            <!-- Alerts Info and error -->
+            <section class="xp-part pt-2" id="alerts"></section>
+          </div>
 
-    <div data-th-if="${page.data.title}" class="container mb-5">
-      <h1 data-th-text="${page.data.title}"></h1>
+          <!-- Page Title -->
+          <div data-th-if="${page.data.title}" class="container mb-5">
+            <div class="row">
+              <div class="col">
+                <h1 data-th-text="${page.data.title}"></h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- preview -->
     <div class="container pt-5" data-th-if="${preview}" data-th-utext="${preview.body}">
-    </div>
-
-    <div data-th-if="${showIngress}" class="container ingress">
-      <div class="row">
-        <div class="mt-3 mt-md-0 col-lg-8" data-th-utext="${ingress}"></div>
-      </div>
     </div>
 
     <div
@@ -65,8 +70,24 @@
       <div
         data-th-classappend="${region.view == 'full' ? 'container-fluid p-0' : region.view == 'card' ? 'border-top-green container' : 'container'}"
       >
-        <h2 data-th-if="${region.hideTitle && region.title}" class="sr-only sr-only-focusable mb-5" data-th-text="${region.title}"></h2>
-        <h2 data-th-if="${!region.hideTitle && region.title}" class="mb-5" data-th-text="${region.title}"></h2>
+        <!-- Subtitle for content in default pages -->
+        <div data-th-if="${region.view != 'card'}" class="row">
+          <div class="col">
+            <div class="container">
+              <div class="row">
+                <div class="col">
+                  <h2 data-th-if="${region.hideTitle && region.title}" class="sr-only sr-only-focusable mb-5" data-th-text="${region.title}"></h2>
+                  <h2 data-th-if="${!region.hideTitle && region.title}" class="mb-5" data-th-text="${region.title}"></h2>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Subtitle for content in border-top-green containers -->
+        <h2 data-th-if="${region.view == 'card' && region.hideTitle && region.title}" class="sr-only sr-only-focusable mb-5" data-th-text="${region.title}"></h2>
+        <h2 data-th-if="${region.view == 'card' && !region.hideTitle && region.title}" class="mb-5" data-th-text="${region.title}"></h2>
+
         <div
           class="row row-cols-1"
           data-th-data-portal-region="${region.region}"
