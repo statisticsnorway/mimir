@@ -233,3 +233,17 @@ blockquote > p {
   line-height: 1.6;
 }
 /* -- End Blockquote -- */
+
+/* -- Table -- */
+
+table {
+  border-collapse: collapse;
+
+  td, th {
+    border: 1px solid black;
+    padding: 5px;
+  }
+
+}
+
+/* -- End Table -- */
