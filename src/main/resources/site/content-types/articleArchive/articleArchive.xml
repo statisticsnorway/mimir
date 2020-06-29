@@ -10,7 +10,7 @@
             <label>Ingress</label>
             <occurrences minimum="0" maximum="1" />
         </input>
-        <input name="bilde" type="ImageSelector">
+        <input name="image" type="ImageSelector">
             <label>Bilde</label>
             <occurrences minimum="0" maximum="1" />
         </input>
