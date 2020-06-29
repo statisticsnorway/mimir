@@ -1,3 +1,7 @@
+// import { Measurement } from '../../../lib/ssb/perf'
+const {
+  createMeasurement
+} = __non_webpack_require__('/lib/ssb/perf')
 const {
   getNode
 } = __non_webpack_require__( '/lib/repo/common')
@@ -46,9 +50,15 @@ exports.get = function(req) {
  * @return {{pageContributions: *, body: *}}
  */
 function renderPart(req) {
+  const perf = createMeasurement('XP SSR perf')
+
+  perf.mark('start')
   const datasetMap = getDataset()
+  perf.mark('getContent()::dataset')
   const dataQueries = getDataQueries(datasetMap)
+  perf.mark('getContent()::dataQueries')
   const statRegFetchStatuses = getStatRegFetchStatuses()
+  perf.mark('getRepoContent()::statreg')
 
   const assets = getAssets()
 
@@ -84,6 +94,18 @@ function renderPart(req) {
     body,
     clientRender: true
   })
+
+  perf.mark('renderBody()')
+
+  perf.measure('INIT', undefined, 'start')
+  perf.measure('XP Content', 'start', 'getContent()::dataQueries')
+  perf.measure('XP Repo Content', 'getContent()::dataQueries', 'getRepoContent()::statreg')
+  perf.measure('1st render', 'getRepoContent()::statreg', 'renderBody()')
+
+  log.info(JSON.stringify(perf.getMeasurements()))
+
+  perf.clearMarks()
+  perf.clearMeasures()
 
   return {
     body,
