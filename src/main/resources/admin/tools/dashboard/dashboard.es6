@@ -212,7 +212,7 @@ const getStatRegFetchStatuses = () => {
     const eventLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, eventLogKey)
     return {
       ...acc,
-      [key]: eventLogNode.data.latestEventInfo
+      [key]: eventLogNode.data && eventLogNode.data.latestEventInfo ? eventLogNode.data.latestEventInfo: undefined
     }
   }, {})
 }

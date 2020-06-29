@@ -34,8 +34,10 @@ const draft: RunContext = { // Draft context (XP)
   user
 }
 
-export function get(url: string, json: DataqueryRequestData | undefined,
-  selection: SelectionFilter = defaultSelectionFilter, queryId?: string ): object | null {
+export function get(url: string,
+  json: DataqueryRequestData | undefined,
+  selection: SelectionFilter = defaultSelectionFilter,
+  queryId?: string ): object | null {
   if (json && json.query) {
     for (const query of json.query) {
       if (query.code === 'KOKkommuneregion0000' || query.code === 'Region') {
@@ -101,7 +103,8 @@ export function refreshQuery(dataquery: Content<Dataquery>): Content<Dataset> | 
       status: Events.FAILED_TO_REFRESH_DATASET
     }
     logAdminDataQuery(dataquery._id, {
-      message: refreshDatasetResult.status
+      message: refreshDatasetResult.status,
+      info: rawData ? rawData : 'rawData is null'
     })
     return refreshDatasetResult
   }
@@ -133,6 +136,13 @@ export function getData(dataquery: Content<Dataquery>): object | null {
   if (dataquery.data.table) {
     // TODO option-set is not parsed correctly by enonic-ts-codegen, update lib later and remove PlaceholderData interface
     const datasetFormat: Dataquery['datasetFormat'] = dataquery.data.datasetFormat
+    logUserDataQuery(dataquery._id, {
+      message: 'Request with dataset',
+      info: {
+        table: dataquery.data.table,
+        datasetFormat
+      }
+    })
     let data: object | null = null
     try {
       if ((!datasetFormat || datasetFormat._selected === 'jsonStat')) {
@@ -146,7 +156,10 @@ export function getData(dataquery: Content<Dataquery>): object | null {
       const message: string = `Failed to fetch data for dataquery: ${dataquery._id} (${e})`
       logUserDataQuery(dataquery._id, {
         message: Events.FAILED_TO_REQUEST_DATASET,
-        info: message
+        info: {
+          table: dataquery.data.table,
+          message
+        }
       })
       log.error(message)
     }
@@ -181,13 +194,6 @@ function updateDataset(data: string, dataset: Content<Dataset>, dataquery: Conte
         }
       }
     })
-    log.info('UpdateDataset')
-    log.info('Dataquery: ' + dataquery._id)
-    log.info('%s', JSON.stringify(update, null, 2))
-    log.info('  ---- -----')
-    log.info('  ')
-    log.info('  ')
-    log.info('  ')
 
     if (!update) {
       const message: string = `Failed to update dataset: ${dataset._id}`
@@ -291,10 +297,4 @@ export interface Dimension {
   code: string;
   selection: SelectionFilter;
 }
-
-
-// TODO create issue for enonic-types where read-only is blocking modify
-/* interface ModifyContent<A extends object> extends Content<A> {
-  displayName: string;
-}*/
 

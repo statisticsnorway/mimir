@@ -25,7 +25,7 @@ export interface QueryStatus {
   response?: HttpResponse;
   request?: HttpRequestParams;
   xmlResult?: TbmlData;
-  info?: string;
+  info?: string|object;
 }
 
 export interface EventInfo {
