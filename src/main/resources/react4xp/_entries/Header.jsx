@@ -112,7 +112,8 @@ class Header extends React.Component {
           <nav id="mainMenu" className="ssb-tabs">
             {mainNavigation.map((topMenuItem, index) => {
               const menuItemClick = this.toggleSubMenu.bind(this, index)
-              const activeMenuItem = this.state.indexForCurrentActiveMenuItem === index || topMenuItem.isActive
+              const activeMenuItem = this.state.indexForCurrentActiveMenuItem === index ||
+                (topMenuItem.isActive && this.state.indexForCurrentActiveMenuItem === undefined)
               return (
                 <div key={index} className={`tabItem${activeMenuItem ? ' activeTab' : ''}`}>
                   <button onClick={menuItemClick} >
