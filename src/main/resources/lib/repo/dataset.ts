@@ -18,7 +18,7 @@ export const DATASET_BRANCH: string = 'master'
 
 export enum DataSource {
   STATBANK_API = 'statbank-api',
-  TALLBYGGER = 'tallbygger',
+  TBPROCESSOR = 'tbprocessor',
   STATBANK_SAVED = 'statbank-saved',
   DATASET = 'dataset',
   KLASS = 'klass',
@@ -29,7 +29,7 @@ export function setupDatasetRepo(): void {
     createRepo(DATASET_REPO, DATASET_BRANCH)
   }
   createSourceNode(DataSource.STATBANK_API)
-  createSourceNode(DataSource.TALLBYGGER)
+  createSourceNode(DataSource.TBPROCESSOR)
   createSourceNode(DataSource.STATBANK_SAVED)
   createSourceNode(DataSource.DATASET)
   createSourceNode(DataSource.KLASS)

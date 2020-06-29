@@ -54,9 +54,9 @@ export interface DataSource {
     };
 
     /**
-     * Tall fra tallbygger
+     * Tall fra tabellbygger
      */
-    tallbygger?: {
+    tbprocessor?: {
       /**
        * URL eller TBML-id
        */

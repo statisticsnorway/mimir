@@ -50,8 +50,8 @@
             </option-set>
           </items>
         </option>
-        <option name="tallbygger">
-          <label>Tall fra tallbygger</label>
+        <option name="tbprocessor">
+          <label>Tall fra tabellbygger</label>
           <items>
             <input name="urlOrId" type="TextLine">
               <label>URL eller TBML-id</label>
