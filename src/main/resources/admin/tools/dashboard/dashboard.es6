@@ -24,6 +24,7 @@ const {
   EVENT_LOG_REPO,
   getQueryChildNodesStatus
 } = __non_webpack_require__( '/lib/repo/eventLog')
+const { Events } = __non_webpack_require__('/lib/repo/query')
 const { STATREG_REPO_CONTACTS_KEY } = __non_webpack_require__('/lib/repo/statreg/contacts')
 const { STATREG_REPO_STATISTICS_KEY } = __non_webpack_require__('/lib/repo/statreg/statistics')
 const { STATREG_REPO_PUBLICATIONS_KEY } = __non_webpack_require__('/lib/repo/statreg/publications')
@@ -60,7 +61,7 @@ function renderPart(req) {
       featureToggling: {
         updateList: req.params.updateList ? true : false
       },
-      contentStudioBaseUrl: `${DEFAULT_CONTENTSTUDIO_URL}#/edit/`,
+      contentStudioBaseUrl: `${DEFAULT_CONTENTSTUDIO_URL}#/default/edit/`,
       statRegFetchStatuses
     })
     .setId('dataset')
@@ -164,6 +165,7 @@ function getDataQueries(datasetMap) {
       isPublished: isPublished(dataquery),
       logData: queryLogNode ? {
         ...queryLogNode.data,
+        showWarningIcon: showWarningIcon(queryLogNode.data.modifiedResult),
         message: i18n.localize({
           key: queryLogNode.data.modifiedResult
         }),
@@ -177,6 +179,14 @@ function getDataQueries(datasetMap) {
   })
 }
 
+function showWarningIcon(result) {
+  return [
+    Events.FAILED_TO_GET_DATA,
+    Events.FAILED_TO_REQUEST_DATASET,
+    Events.FAILED_TO_CREATE_DATASET,
+    Events.FAILED_TO_REFRESH_DATASET
+  ].indexOf(result) >= 0
+}
 
 function getParentType(path) {
   const parentPath = getParentPath(path)
