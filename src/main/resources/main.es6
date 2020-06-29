@@ -57,7 +57,7 @@ function job() {
 
 cron.schedule({
   name: 'dataquery',
-  cron: '0 6 * * *',
+  cron: '15 7 * * *',
   times: 365 * 10,
   callback: job,
   context: master
@@ -80,6 +80,10 @@ const STATREG_CRON_CONFIG = {
 
 cron.schedule(STATREG_CRON_CONFIG)
 // StatReg Repo --------------------------------------------------------------
+
+const allJobs = cron.list();
+log.info('Registered cron jobs:')
+log.info('%s', JSON.stringify(allJobs, null, 2))
 
 const now = new Date()
 log.info(`Startup script complete: ${now.toISOString()}`)

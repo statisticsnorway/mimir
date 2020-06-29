@@ -45,6 +45,7 @@ exports.get = function(req) {
  * @param {object} req
  * @return {{pageContributions: *, body: *}}
  */
+
 function renderPart(req) {
   const datasetMap = getDataset()
   const dataQueries = getDataQueries(datasetMap)
@@ -150,7 +151,7 @@ function getDataQueries(datasetMap) {
     const dataset = datasetMap[dataquery._id]
     const hasData = !!dataset
     const queryLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataquery._id}`)
-    const eventLogNodes = getQueryChildNodesStatus(`/queries/${dataquery._id}`)
+    const eventLogNodes = [] // getQueryChildNodesStatus(`/queries/${dataquery._id}`)
     return {
       id: dataquery._id,
       displayName: dataquery.displayName,
@@ -222,7 +223,7 @@ const getStatRegFetchStatuses = () => {
     const eventLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, eventLogKey)
     return {
       ...acc,
-      [key]: eventLogNode.data && eventLogNode.data.latestEventInfo ? eventLogNode.data.latestEventInfo: undefined
+      [key]: eventLogNode.data && (eventLogNode.data.latestEventInfo || undefined)
     }
   }, {})
 }

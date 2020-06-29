@@ -1,13 +1,17 @@
 import { HttpResponse, HttpLibrary, HttpRequestParams } from 'enonic-types/lib/http'
 import { ContextLibrary, RunContext } from 'enonic-types/lib/context'
 import { Dataquery } from '../site/content-types/dataquery/dataquery'
-import { Content, ContentLibrary, ModifyContentParams, QueryResponse, PublishResponse } from 'enonic-types/lib/content'
+import { Content, ContentLibrary, QueryResponse, PublishResponse } from 'enonic-types/lib/content'
 import { Dataset } from '../site/content-types/dataset/dataset'
 import * as moment from 'moment'
-import { getTbmlData } from './tbml/tbml'
 import { CommonLibrary } from './types/common'
-import { Events, logUserDataQuery, logAdminDataQuery } from './repo/query'
 
+const {
+  getTbmlData
+} = __non_webpack_require__('/lib/tbml/tbml')
+const {
+  Events, logUserDataQuery, logAdminDataQuery
+} = __non_webpack_require__('/lib/repo/query')
 const {
   getDataSetWithDataQueryId
 } = __non_webpack_require__('/lib/ssb/dataset')
@@ -100,11 +104,11 @@ export function refreshQuery(dataquery: Content<Dataquery>): Content<Dataset> | 
   } else {
     const refreshDatasetResult: RefreshDatasetResult = {
       dataqueryId: dataquery._id,
-      status: Events.FAILED_TO_REFRESH_DATASET
+      status: 'Raw data is null'
     }
     logAdminDataQuery(dataquery._id, {
       message: refreshDatasetResult.status,
-      info: rawData ? rawData : 'rawData is null'
+      info: rawData || 'rawData is null'
     })
     return refreshDatasetResult
   }

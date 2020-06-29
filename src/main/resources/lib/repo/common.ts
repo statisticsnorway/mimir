@@ -91,10 +91,11 @@ export function modifyNode<T>(repository: string, branch: string, key: string, e
   })
 }
 
-export function getChildNodes(repository: string, branch: string, key: string): NodeQueryResponse {
+export function getChildNodes(repository: string, branch: string, key: string, count: number = 10): NodeQueryResponse {
   return withConnection(repository, branch, (conn) => {
     return conn.findChildren({
-      parentKey: key
+      parentKey: key,
+      count
     })
   })
 }
