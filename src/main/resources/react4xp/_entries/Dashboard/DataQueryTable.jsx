@@ -65,7 +65,7 @@ const DataQueryTable = ({
     setCurrOrder(order)
   }
 
-  const makeSortIcons = (field) => {
+  const makeSortIcon = (field) => {
     if (field === currSort) {
       return currOrder === SortOrder.ASCENDING ?
         <ChevronUp
@@ -96,19 +96,19 @@ const DataQueryTable = ({
           <th className="roboto-bold sortable-column">
             <div className="sortable-column-header">
               <span>Spørring</span>
-              {makeSortIcons(SortFields.TITLE)}
+              {makeSortIcon(SortFields.TITLE)}
             </div>
           </th>
           <th className="roboto-bold sortable-column">
             <div className="sortable-column-header">
               <span>Sist oppdatert</span>
-              {makeSortIcons(SortFields.LAST_UPDATED)}
+              {makeSortIcon(SortFields.LAST_UPDATED)}
             </div>
           </th>
           <th className="roboto-bold sortable-column">
             <div className="sortable-column-header">
               <span>Siste aktivitet</span>
-              {makeSortIcons(SortFields.LAST_ACTIVITY)}
+              {makeSortIcon(SortFields.LAST_ACTIVITY)}
             </div>
           </th>
           <th></th>
