@@ -33,3 +33,4 @@ Documentation for Mimir
     1. [Queries](./DashboardLogging.md#queries)
     1. [Jobs](./DashboardLogging.md#jobs)
 1. [Repo and node](./RepoAndNode.md)
+   1. [Dataset](./RepoAndNode.md#dataset)
