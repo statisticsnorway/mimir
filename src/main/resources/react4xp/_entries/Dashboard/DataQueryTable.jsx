@@ -65,6 +65,30 @@ const DataQueryTable = ({
     setCurrOrder(order)
   }
 
+  const makeSortIcons = (field) => {
+    if (field === currSort) {
+      return currOrder === SortOrder.ASCENDING ?
+        <ChevronUp
+          className="sort-icon active"
+          onClick={() => {
+            sortQueries(field, SortOrder.DESCENDING)
+          }}/> :
+        <ChevronDown
+          className="sort-icon active"
+          onClick={() => {
+            sortQueries(field, SortOrder.ASCENDING)
+          }}/>
+    } else {
+      return (
+        <ChevronDown
+          className="sort-icon inactive"
+          onClick={() => {
+            sortQueries(field, SortOrder.ASCENDING)
+          }} />
+      )
+    }
+  }
+
   return (
     <Table bordered striped>
       <thead>
@@ -72,40 +96,19 @@ const DataQueryTable = ({
           <th className="roboto-bold sortable-column">
             <div className="sortable-column-header">
               <span>Spørring</span>
-              {currOrder === SortOrder.ASCENDING ?
-                <ChevronUp onClick={() => {
-                  sortQueries(SortFields.TITLE, SortOrder.DESCENDING)
-                }} /> :
-                <ChevronDown onClick={() => {
-                  sortQueries(SortFields.TITLE, SortOrder.ASCENDING)
-                }} />
-              }
+              {makeSortIcons(SortFields.TITLE)}
             </div>
           </th>
           <th className="roboto-bold sortable-column">
             <div className="sortable-column-header">
               <span>Sist oppdatert</span>
-              {currOrder === SortOrder.ASCENDING ?
-                <ChevronUp onClick={() => {
-                  sortQueries(SortFields.LAST_UPDATED, SortOrder.DESCENDING)
-                }} /> :
-                <ChevronDown onClick={() => {
-                  sortQueries(SortFields.LAST_UPDATED, SortOrder.ASCENDING)
-                }} />
-              }
+              {makeSortIcons(SortFields.LAST_UPDATED)}
             </div>
           </th>
           <th className="roboto-bold sortable-column">
             <div className="sortable-column-header">
               <span>Siste aktivitet</span>
-              {currOrder === SortOrder.ASCENDING ?
-                <ChevronUp onClick={() => {
-                  sortQueries(SortFields.LAST_ACTIVITY, SortOrder.DESCENDING)
-                }} /> :
-                <ChevronDown onClick={() => {
-                  sortQueries(SortFields.LAST_ACTIVITY, SortOrder.ASCENDING)
-                }} />
-              }
+              {makeSortIcons(SortFields.LAST_ACTIVITY)}
             </div>
           </th>
           <th></th>

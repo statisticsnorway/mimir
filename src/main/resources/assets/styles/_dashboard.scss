@@ -129,10 +129,20 @@
   th.sortable-column {
     .sortable-column-header {
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
+      white-space: nowrap;
+      vertical-align: middle;
 
       span {
         margin-right: 1rem;
+      }
+
+      .sort-icon.active {
+        color: #1a9d49;
+      }
+
+      .sort-icon.inactive {
+        color: #c3dcdc;
       }
     }
   }
