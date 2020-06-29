@@ -7,8 +7,12 @@ const {
 const {
   renderError
 } = __non_webpack_require__( '/lib/error/error')
-const { getContactsFromRepo } = __non_webpack_require__('/lib/repo/statreg/contacts')
-const { ensureArray, chunkArray } = __non_webpack_require__('/lib/ssb/arrayUtils')
+const {
+  getContactsFromRepo
+} = __non_webpack_require__('/lib/repo/statreg/contacts')
+const {
+  ensureArray, chunkArray
+} = __non_webpack_require__('/lib/ssb/arrayUtils')
 import { find } from 'ramda'
 
 const view = resolve('./contact.html')
@@ -35,10 +39,17 @@ const transformContact = (contact) => ({
 function renderPart(req) {
   const WIDTH = 4 // how many boxes in a row
   const page = getContent()
-
+  const part = getComponent()
   const statRegContacts = getContactsFromRepo()
+  let contactIds = []
 
-  const contactIds = ensureArray(page.data.contacts)
+  if (part.config.contacts) {
+    contactIds = contactIds.concat(ensureArray(part.config.contacts))
+  }
+  if (page.data.contacts) {
+    contactIds = contactIds.concat(ensureArray(page.data.contacts))
+  }
+
   const selectedContacts = contactIds.reduce((acc, contactId) => {
     const found = find((contact) => `${contact.id}` === `${contactId}`)(statRegContacts)
     return found ? acc.concat(transformContact(found)) : acc
