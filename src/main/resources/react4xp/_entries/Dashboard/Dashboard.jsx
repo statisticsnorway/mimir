@@ -28,6 +28,8 @@ class Dashboard extends React.Component {
       showErrorAlert: false,
       showSuccessAlert: false
     }
+
+    this.renderDataQueries = this.renderDataQueries.bind(this)
   }
 
   showSuccess(msg) {
@@ -257,7 +259,7 @@ export const DataQuery = PropTypes.shape({
   loading: PropTypes.bool,
   deleting: PropTypes.bool,
   dataset: PropTypes.shape({
-    modified: PropTypes.string,
+    modified: PropTypes.instanceOf(Date),
     modifiedReadable: PropTypes.string
   }),
   logData: PropTypes.shape({

@@ -158,7 +158,7 @@ function getDataQueries(datasetMap) {
       parentType: getParentType(dataquery._path),
       format: dataquery.data.datasetFormat ? dataquery.data.datasetFormat._selected : undefined,
       dataset: {
-        modified: hasData ? dateToFormat(dataset.modifiedTime) : undefined,
+        modified: hasData ? dataset.modifiedTime : undefined,
         modifiedReadable: hasData ? dateToReadable(dataset.modifiedTime) : undefined
       },
       hasData,

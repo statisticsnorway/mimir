@@ -125,6 +125,17 @@
     border-right: 1px solid #dee2e6;
     border-left: 1px solid #dee2e6;
   }
+
+  th.sortable-column {
+    .sortable-column-header {
+      display: flex;
+      justify-content: flex-end;
+
+      span {
+        margin-right: 1rem;
+      }
+    }
+  }
 }
 .ssbPopoverBody p {
   font-size: 12px;
