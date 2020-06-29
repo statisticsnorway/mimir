@@ -10,6 +10,11 @@ export interface StatisticsTable {
   tableId: string;
 
   /**
+   * Rettemelding
+   */
+  correctionNotice?: string;
+
+  /**
    * Fotnote-tekst
    */
   footNote?: string;

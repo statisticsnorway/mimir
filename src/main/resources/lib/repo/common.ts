@@ -101,6 +101,19 @@ export function getChildNodes(repository: string, branch: string, key: string): 
 
 export function nodeExists(repository: string, branch: string, key: string): boolean {
   return withConnection(repository, branch, (conn) => {
-    return conn.exists(key).length === 1
+    return !!conn.exists(key)
   })
+}
+
+export interface RepoCommonLib {
+  withSuperUserContext: <T>(repository: string, branch: string, callback: ContextCallback<T>) => T;
+  withLoggedInUserContext: <T>(branch: string, callback: UserContextCallback<T>) => T;
+  getConnection: (repository: string, branch: string) => RepoConnection;
+  withConnection: <T>(repository: string, branch: string, callback: ConnectionCallback<T>) => T;
+  createNode: <T>(repository: string, branch: string, content: T & NodeCreateParams) => T & RepoNode;
+  getNode: <T>(repository: string, branch: string, key: string) => ReadonlyArray<T & RepoNode>;
+  deleteNode: (repository: string, branch: string, key: string) => boolean;
+  modifyNode: <T>(repository: string, branch: string, key: string, editor: EditorCallback<T>) => T;
+  getChildNodes: (repository: string, branch: string, key: string) => NodeQueryResponse;
+  nodeExists: (repository: string, branch: string, key: string) => boolean;
 }

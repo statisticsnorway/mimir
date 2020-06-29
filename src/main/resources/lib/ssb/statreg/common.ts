@@ -31,7 +31,7 @@ export function fetchStatRegData<T, XmlType>(
 
   if ((result.status === 200) && result.body) {
     const data: Array<T> = extractor(__.toNativeObject(xmlParser.parse(result.body)))
-    log.info(`Fetched ${data ? data.length : 0} dataKey`)
+    log.info(`Fetched ${data ? data.length : 0} ${dataKey}`)
     return data
   }
 
