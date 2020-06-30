@@ -19,3 +19,9 @@ export function createRepo(repoId: string, branch: string): RepositoryConfig {
     })
   })
 }
+
+export interface RepoLib {
+  getRepo: (repoId: string, branch: string) => RepositoryConfig | null;
+  repoExists: (repoId: string, branch: string) => boolean;
+  createRepo: (repoId: string, branch: string) => RepositoryConfig;
+}
