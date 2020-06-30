@@ -26,7 +26,7 @@ export interface StatRegContent {
 
 export type StatRegNode = RepoNode & StatRegContent;
 
-export function createStatRegNode(name: string, content: StatRegContent) {
+export function createStatRegNode(name: string, content: StatRegContent): void{
   createNode(STATREG_REPO, STATREG_BRANCH, {
     _path: name,
     _name: name,
@@ -50,7 +50,7 @@ export function modifyStatRegNode(key: string, content: StatRegContent): StatReg
 }
 
 function getEventRoot(eventType: string): StatRegLatestFetchInfoNode {
-  const nodes: ReadonlyArray<StatRegLatestFetchInfoNode> =
+  const nodes: ReadonlyArray<StatRegLatestFetchInfoNode> | StatRegLatestFetchInfoNode | null =
         getNode<StatRegLatestFetchInfoNode>(
           EVENT_LOG_REPO, EVENT_LOG_BRANCH,
           `/statreg/${eventType.toLowerCase()}`
