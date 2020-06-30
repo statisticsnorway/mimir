@@ -43,7 +43,9 @@ const eventLogPerf = createMeasurement('Time spent on eventlog entries')
 const MEASUREMENT_MARKS = {
   XP_DATASET: 'XP Dataset Fetch (content)',
   XP_DATAQUERIES: 'XP Dataqueries Fetch (content)',
-  REPO_STATREG_FETCH: 'StatReg Fetch (repo)'
+  XP_CONTENT_TOTAL: 'XP Content (Total)',
+  REPO_STATREG_FETCH: 'StatReg Fetch (repo)',
+  XP_RENDER: 'XP Render Part'
 };
 
 exports.get = function(req) {
@@ -62,11 +64,11 @@ function renderPart(req) {
 
   perf.mark('start')
   const datasetMap = getDataset()
-  perf.mark('getContent()::dataset')
+  perf.mark(MEASUREMENT_MARKS.XP_DATASET)
   const dataQueries = getDataQueries(datasetMap)
-  perf.mark('getContent()::dataQueries')
+  perf.mark(MEASUREMENT_MARKS.XP_DATAQUERIES)
   const statRegFetchStatuses = getStatRegFetchStatuses()
-  perf.mark('getRepoContent()::statreg')
+  perf.mark(MEASUREMENT_MARKS.REPO_STATREG_FETCH)
 
   const assets = getAssets()
 
@@ -104,11 +106,11 @@ function renderPart(req) {
   perf.mark('renderBody()')
 
   perf.measure('INIT', undefined, 'start')
-  perf.measure('XP Content (Dataset)', 'start', 'getContent()::dataset')
-  perf.measure('XP Content (Dataqueries)', 'getContent()::dataset', 'getContent()::dataQueries')
-  perf.measure('XP Content (Total)', 'start', 'getContent()::dataQueries')
-  perf.measure('XP Repo Content', 'getContent()::dataQueries', 'getRepoContent()::statreg')
-  perf.measure('1st render', 'getRepoContent()::statreg', 'renderBody()')
+  perf.measure(MEASUREMENT_MARKS.XP_DATASET, 'start', MEASUREMENT_MARKS.XP_DATASET)
+  perf.measure(MEASUREMENT_MARKS.XP_DATAQUERIES, MEASUREMENT_MARKS.XP_DATASET, MEASUREMENT_MARKS.XP_DATAQUERIES)
+  perf.measure(MEASUREMENT_MARKS.XP_CONTENT_TOTAL, 'start', MEASUREMENT_MARKS.XP_DATAQUERIES)
+  perf.measure(MEASUREMENT_MARKS.REPO_STATREG_FETCH, MEASUREMENT_MARKS.XP_DATAQUERIES, MEASUREMENT_MARKS.REPO_STATREG_FETCH)
+  perf.measure(MEASUREMENT_MARKS.XP_RENDER, MEASUREMENT_MARKS.REPO_STATREG_FETCH, MEASUREMENT_MARKS.XP_RENDER)
 
   log.info(JSON.stringify(perf.getMeasurements()))
   log.info(`(of which eventLog fetches took ${eventLogPerf.getMeasurementAggregate()} ms)`)
