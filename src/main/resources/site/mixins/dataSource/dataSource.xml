@@ -14,14 +14,9 @@
               <label>URL eller tabell-id</label>
               <occurrences minimum="0" maximum="1"/>
             </input>
-            <input name="format" type="ComboBox">
-              <label>Format</label>
-              <occurrences minimum="1" maximum="1"/>
-              <config>
-                <option value="json">JSON</option>
-                <option value="xml">XML</option>
-              </config>
-              <default>json</default>
+            <input name="json" type="TextArea">
+              <label>API-spørring mot statistikkbanken (JSON-format)</label>
+              <occurrences minimum="0" maximum="1"/>
             </input>
             <input name="xAxisLabel" type="TextLine">
               <label>Navn på x-akse dimensjon</label>

@@ -78,9 +78,9 @@ export interface KeyFigure {
       urlOrId?: string;
 
       /**
-       * Format
+       * API-spørring mot statistikkbanken (JSON-format)
        */
-      format: "json" | "xml";
+      json?: string;
 
       /**
        * Navn på x-akse dimensjon
