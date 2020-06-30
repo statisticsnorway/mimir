@@ -1,6 +1,6 @@
 // import { Measurement } from '../../../lib/ssb/perf'
 const {
-  createMeasurement
+  createMeasurement,
 } = __non_webpack_require__('/lib/ssb/perf')
 const {
   getNode
@@ -37,6 +37,15 @@ const { getToolUrl } = __non_webpack_require__('/lib/xp/admin');
 const view = resolve('./dashboard.html')
 const DEFAULT_CONTENTSTUDIO_URL = getToolUrl('com.enonic.app.contentstudio', 'main')
 
+const perf = createMeasurement('XP SSR perf')
+const eventLogPerf = createMeasurement('Time spent on eventlog entries')
+
+const MEASUREMENT_MARKS = {
+  XP_DATASET: 'XP Dataset Fetch (content)',
+  XP_DATAQUERIES: 'XP Dataqueries Fetch (content)',
+  REPO_STATREG_FETCH: 'StatReg Fetch (repo)'
+};
+
 exports.get = function(req) {
   try {
     return renderPart(req)
@@ -50,7 +59,6 @@ exports.get = function(req) {
  * @return {{pageContributions: *, body: *}}
  */
 function renderPart(req) {
-  const perf = createMeasurement('XP SSR perf')
 
   perf.mark('start')
   const datasetMap = getDataset()
@@ -80,8 +88,6 @@ function renderPart(req) {
     clientRender: true
   }))
 
-  log.info(`Sending statuses ${JSON.stringify(statRegFetchStatuses)}`)
-
   const model = {
     ...assets,
     dataQueries,
@@ -98,11 +104,14 @@ function renderPart(req) {
   perf.mark('renderBody()')
 
   perf.measure('INIT', undefined, 'start')
-  perf.measure('XP Content', 'start', 'getContent()::dataQueries')
+  perf.measure('XP Content (Dataset)', 'start', 'getContent()::dataset')
+  perf.measure('XP Content (Dataqueries)', 'getContent()::dataset', 'getContent()::dataQueries')
+  perf.measure('XP Content (Total)', 'start', 'getContent()::dataQueries')
   perf.measure('XP Repo Content', 'getContent()::dataQueries', 'getRepoContent()::statreg')
   perf.measure('1st render', 'getRepoContent()::statreg', 'renderBody()')
 
   log.info(JSON.stringify(perf.getMeasurements()))
+  log.info(`(of which eventLog fetches took ${eventLogPerf.getMeasurementAggregate()} ms)`)
 
   perf.clearMarks()
   perf.clearMeasures()
@@ -172,7 +181,16 @@ function getDataQueries(datasetMap) {
     const dataset = datasetMap[dataquery._id]
     const hasData = !!dataset
     const queryLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataquery._id}`)
-    const eventLogNodes = getQueryChildNodesStatus(`/queries/${dataquery._id}`)
+
+    // const eventLogMarkerStart = `${dataquery._id}-start`
+    // const eventLogMarkerEnd = `${dataquery._id}-end`
+
+    // eventLogPerf.mark(eventLogMarkerStart)
+    const eventLogNodes = [] // getQueryChildNodesStatus(`/queries/${dataquery._id}`)
+    // eventLogPerf.mark(eventLogMarkerEnd)
+
+    // eventLogPerf.measure(dataquery._id, eventLogMarkerStart, eventLogMarkerEnd)
+
     return {
       id: dataquery._id,
       displayName: dataquery.displayName,

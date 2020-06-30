@@ -14,13 +14,15 @@ export type Measures = {
 export class Measurement {
     private readonly _name: string;
     private readonly _metricStart: number;
+    private _allowMarkReset: boolean;
 
     private _marks: Array<Mark> = [];
     private _measures: Measures = {};
 
-    constructor(name: string) {
+    constructor(name: string, allowMarkReset: boolean = true) {
       this._name = name
       this._metricStart = Date.now()
+        this._allowMarkReset = allowMarkReset
       this._measures['metricsStart'] = this._metricStart
       log.info(`Measurement ${this._name} Initializting ...`)
     }
@@ -36,9 +38,13 @@ export class Measurement {
       return find((mark: Mark) => mark.key === key)(this._marks)
     }
 
+    markExists(key: string): boolean {
+      return !!this.findMark(key)
+    }
+
     mark(key: string) {
       const exists: MarkType = this.findMark(key)
-      if (exists) {
+      if (exists && !this._allowMarkReset) {
         throw new Error(`A mark with key '${key}' already exists in measurement '${this._name}'`)
       } else {
         this._marks.push({
@@ -56,6 +62,14 @@ export class Measurement {
       const endTime: number = end ? end.at : Date.now()
 
       this._measures[label] = endTime - startTime
+    }
+
+    getMeasurementAggregate(): number {
+      const {
+        metricsStart, ...rest
+      } = this._measures
+      return Object.keys(rest)
+        .reduce((acc, key) => (acc + this._measures[key]), 0)
     }
 
     getMeasurements() {
