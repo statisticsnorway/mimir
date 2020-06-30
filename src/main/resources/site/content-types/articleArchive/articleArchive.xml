@@ -1,0 +1,27 @@
+<content-type>
+    <display-name>Artikkel- og publikasjonsarkiv</display-name>
+    <super-type>base:structured</super-type>
+    <form>
+        <input name="title" type="TextLine">
+            <label>Tittel på artikkelarkivet/samlesiden</label>
+            <occurrences minimum="0" maximum="1" />
+        </input>
+        <input name="premable" type="TextArea">
+            <label>Ingress</label>
+            <occurrences minimum="0" maximum="1" />
+        </input>
+        <input name="image" type="ImageSelector">
+            <label>Bilde</label>
+            <occurrences minimum="0" maximum="1" />
+        </input>
+
+        <input name="issnNumber" type="TextLine">
+            <label>ISSN-nummer</label>
+            <occurrences minimum="0" maximum="1" />
+        </input>
+        <input name="url" type="TextLine">
+            <label>URL</label>
+            <occurrences minimum="0" maximum="1" />
+        </input>
+    </form>
+</content-type>
