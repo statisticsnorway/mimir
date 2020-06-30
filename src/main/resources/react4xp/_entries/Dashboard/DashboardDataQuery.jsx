@@ -1,5 +1,5 @@
 import Button from 'react-bootstrap/Button'
-import { RefreshCw, Trash } from 'react-feather'
+import { AlertTriangle, RefreshCw, Trash } from 'react-feather'
 import { Link } from '@statisticsnorway/ssb-component-library'
 import React from 'react'
 import PropTypes from 'prop-types'
@@ -76,7 +76,7 @@ class DashboardDataQuery extends React.Component {
         </OverlayTrigger>
         }
         {!logData.eventLogNodes && logData.message && <span>{logData.message}</span>}
-        <br/>
+        {logData.showWarningIcon && <span className="warningIcon"><AlertTriangle size="12" color="#FF4500"/></span>}<br/>
         {logData.modifiedReadable ? logData.modifiedReadable : ''}<br/>
         {logData.modified ? logData.modified : ''}<br/>
         {logData.by.displayName ? `av ${logData.by.displayName}` : '' }

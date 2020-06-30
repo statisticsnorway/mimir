@@ -24,6 +24,10 @@ const {
   EVENT_LOG_REPO,
   getQueryChildNodesStatus
 } = __non_webpack_require__( '/lib/repo/eventLog')
+const { Events } = __non_webpack_require__('/lib/repo/query')
+const { STATREG_REPO_CONTACTS_KEY } = __non_webpack_require__('/lib/repo/statreg/contacts')
+const { STATREG_REPO_STATISTICS_KEY } = __non_webpack_require__('/lib/repo/statreg/statistics')
+const { STATREG_REPO_PUBLICATIONS_KEY } = __non_webpack_require__('/lib/repo/statreg/publications')
 const { getToolUrl } = __non_webpack_require__('/lib/xp/admin');
 
 const view = resolve('./dashboard.html')
@@ -44,6 +48,7 @@ exports.get = function(req) {
 function renderPart(req) {
   const datasetMap = getDataset()
   const dataQueries = getDataQueries(datasetMap)
+  const statRegFetchStatuses = getStatRegFetchStatuses()
 
   const assets = getAssets()
 
@@ -56,7 +61,8 @@ function renderPart(req) {
       featureToggling: {
         updateList: req.params.updateList ? true : false
       },
-      contentStudioBaseUrl: `${DEFAULT_CONTENTSTUDIO_URL}#/edit/`
+      contentStudioBaseUrl: `${DEFAULT_CONTENTSTUDIO_URL}#/default/edit/`,
+      statRegFetchStatuses
     })
     .setId('dataset')
 
@@ -64,10 +70,12 @@ function renderPart(req) {
     clientRender: true
   }))
 
+  log.info(`Sending statuses ${JSON.stringify(statRegFetchStatuses)}`)
+
   const model = {
     ...assets,
     dataQueries,
-    pageContributions
+    pageContributions,
   }
 
   let body = render(view, model)
@@ -157,6 +165,7 @@ function getDataQueries(datasetMap) {
       isPublished: isPublished(dataquery),
       logData: queryLogNode ? {
         ...queryLogNode.data,
+        showWarningIcon: showWarningIcon(queryLogNode.data.modifiedResult),
         message: i18n.localize({
           key: queryLogNode.data.modifiedResult
         }),
@@ -170,6 +179,14 @@ function getDataQueries(datasetMap) {
   })
 }
 
+function showWarningIcon(result) {
+  return [
+    Events.FAILED_TO_GET_DATA,
+    Events.FAILED_TO_REQUEST_DATASET,
+    Events.FAILED_TO_CREATE_DATASET,
+    Events.FAILED_TO_REFRESH_DATASET
+  ].indexOf(result) >= 0
+}
 
 function getParentType(path) {
   const parentPath = getParentPath(path)
@@ -193,4 +210,19 @@ function getParentPath(path) {
   const pathElements = path.split('/')
   pathElements.pop()
   return pathElements.join('/')
+}
+
+const getStatRegFetchStatuses = () => {
+  return [
+    STATREG_REPO_CONTACTS_KEY,
+    STATREG_REPO_STATISTICS_KEY,
+    STATREG_REPO_PUBLICATIONS_KEY
+  ].reduce((acc, key) => {
+    const eventLogKey = `/statreg/${key}`
+    const eventLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, eventLogKey)
+    return {
+      ...acc,
+      [key]: eventLogNode.data.latestEventInfo
+    }
+  }, {})
 }

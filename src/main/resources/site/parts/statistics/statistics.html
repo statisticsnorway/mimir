@@ -2,6 +2,25 @@
     <div class="row">
         <div class="col-12">
             <h1 data-th-if="${title}" data-th-text="${title}" />
+            <div data-th-if="${statistic}" class="statistic">
+                <span data-th-if="${statistic.shortName}" class="shortName" data-th-text="${statistic.shortName}" />
+                <span data-th-if="${statistic.name}" class="name" data-th-text="${statistic.name}" />
+            </div>
+            <div data-th-if="${publications}" class="publicationsTable">
+                <h4>Publikasjoner</h4>
+                <div class="publication header">
+                    <span data-th-text="ID">ID</span>
+                    <span data-th-text="Variant">Variant</span>
+                    <span data-th-text="Status">Status</span>
+                    <span data-th-text="Endret">Modified</span>
+                </div>
+                <div data-th-each="pub: ${publications}" class="publication">
+                    <span data-th-text="${pub.id}">ID</span>
+                    <span data-th-text="${pub.variant}">VARIANT</span>
+                    <span data-th-text="${pub.status}">STATUS</span>
+                    <span data-th-text="${pub.modifiedTime}">MODIFIED TIME</span>
+                </div>
+            </div>
         </div>
     </div>
 </section>

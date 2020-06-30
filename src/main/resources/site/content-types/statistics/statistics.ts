@@ -5,6 +5,11 @@ export interface Statistics {
   aboutTheStatistics?: string;
 
   /**
+   * Statistikk
+   */
+  statistic?: string;
+
+  /**
    * Relaterte statistikker
    */
   relatedStatistics?: Array<string>;

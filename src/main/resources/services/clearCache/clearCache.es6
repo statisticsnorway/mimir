@@ -9,7 +9,10 @@ exports.get = (req) => {
     data: {
       clearFilterCache: true,
       clearMenuCache: true,
-      clearDatasetCache: true
+      clearDatasetCache: true,
+      clearDividerCache: true,
+      clearRelatedArticlesCache: true,
+      clearRelatedFactPageCache: true
     }
   })
   return {

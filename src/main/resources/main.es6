@@ -1,17 +1,18 @@
-import { setupEventLog } from './lib/repo/eventLog'
-
 const {
-  eventLogExists,
-  createEventLog
-} = __non_webpack_require__('/lib/repo/eventLog')
+  setupEventLog
+} = __non_webpack_require__( '/lib/repo/eventLog')
 const {
   completeJobLog,
   startJobLog,
   updateJobLog,
   JobStatus
 } = __non_webpack_require__('/lib/repo/job')
-import { setupStatRegRepo } from './lib/repo/statreg'
-
+const {
+  setupStatRegRepo
+} = __non_webpack_require__( '/lib/repo/statreg')
+const {
+  setupDatasetRepo
+} = __non_webpack_require__( '/lib/repo/dataset')
 const {
   refreshQueriesAsync
 } = __non_webpack_require__('/lib/task')
@@ -64,9 +65,21 @@ cron.schedule({
 
 cache.setup()
 
-
 setupEventLog()
+setupDatasetRepo()
 setupStatRegRepo()
+
+// and setup a cron for periodic executions in the future
+const STATREG_CRON_CONFIG = {
+  name: 'StatReg Periodic Refresh',
+  cron: '30 14 * * *',
+  times: 365 * 10,
+  callback: setupStatRegRepo,
+  context: master
+}
+
+cron.schedule(STATREG_CRON_CONFIG)
+// StatReg Repo --------------------------------------------------------------
 
 const now = new Date()
 log.info(`Startup script complete: ${now.toISOString()}`)
