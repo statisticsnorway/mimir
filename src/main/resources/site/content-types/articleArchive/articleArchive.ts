@@ -1,6 +1,6 @@
 export interface ArticleArchive {
   /**
-   * Tittel
+   * Tittel på artikkelarkivet/samlesiden
    */
   title?: string;
 
@@ -12,7 +12,7 @@ export interface ArticleArchive {
   /**
    * Bilde
    */
-  bilde?: string;
+  image?: string;
 
   /**
    * ISSN-nummer

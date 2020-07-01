@@ -1,25 +1,24 @@
 <section class="xp-part statistics container-fluid">
     <div class="row">
-        <div class="col-12">
-            <h1 data-th-if="${title}" data-th-text="${title}" />
-            <div data-th-if="${statistic}" class="statistic">
-                <span data-th-if="${statistic.shortName}" class="shortName" data-th-text="${statistic.shortName}" />
-                <span data-th-if="${statistic.name}" class="name" data-th-text="${statistic.name}" />
-            </div>
-            <div data-th-if="${publications}" class="publicationsTable">
-                <h4>Publikasjoner</h4>
-                <div class="publication header">
-                    <span data-th-text="ID">ID</span>
-                    <span data-th-text="Variant">Variant</span>
-                    <span data-th-text="Status">Status</span>
-                    <span data-th-text="Endret">Modified</span>
+        <div class="col-12 col-lg-6 p-0">
+            <div class="titles-dates-wrapper">
+                <div data-th-if="${statistic}">
+                    <h1 data-th-if="${statistic.name}" data-th-text="${statistic.name}" />
                 </div>
-                <div data-th-each="pub: ${publications}" class="publication">
-                    <span data-th-text="${pub.id}">ID</span>
-                    <span data-th-text="${pub.variant}">VARIANT</span>
-                    <span data-th-text="${pub.status}">STATUS</span>
-                    <span data-th-text="${pub.modifiedTime}">MODIFIED TIME</span>
+                <div data-th-if="!${statistic}">
+                    <h1 data-th-if="${title}" data-th-text="${title}" />
                 </div>
+
+                <!-- TODO: Add conditional statement -->
+                <p>
+                    <span class="font-weight-bold">Oppdatert: </span>
+                    <!-- TODO: Replace with data from statreg -->
+                </p>
+                <p>
+                    <span class="font-weight-bold">Neste oppdatering: </span>
+                    <!-- TODO: Add conditional statement -->
+                    <span>Foreløpig ikke fastsatt</span>
+                </p>
             </div>
         </div>
     </div>
