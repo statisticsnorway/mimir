@@ -51,11 +51,22 @@ function createSourceNode(dataSource: string): void {
 
 export function getDataset<T>(dataSourceType: string, key: string): DatasetRepoNode<T> | null {
   const res: readonly DatasetRepoNode<T>[] | DatasetRepoNode<T> | null = getNode(DATASET_REPO, DATASET_BRANCH, `/${dataSourceType}/${key}`)
+  let dataset: DatasetRepoNode<T> | null = null
   if (Array.isArray(res)) {
-    return res[0]
+    dataset = res[0]
   } else {
-    return res as DatasetRepoNode<T> | null
+    dataset = res as DatasetRepoNode<T> | null
   }
+
+  if (dataset && dataset.data && typeof(dataset.data) === 'string') {
+    try {
+      dataset.data = JSON.parse(dataset.data)
+    } catch (e) {
+      // not json-string in data, so let's ignore it
+    }
+  }
+
+  return dataset
 }
 
 export function createOrUpdateDataset<T>(dataSourceType: string, key: string, data: T): DatasetRepoNode<T> {
@@ -63,11 +74,11 @@ export function createOrUpdateDataset<T>(dataSourceType: string, key: string, da
     return createNode(DATASET_REPO, DATASET_BRANCH, {
       _name: key,
       _parentPath: `/${dataSourceType}`,
-      data: data
+      data: JSON.stringify(data, null, 0)
     })
   } else {
     return modifyNode(DATASET_REPO, DATASET_BRANCH, `/${dataSourceType}/${key}`, (dataset) => {
-      dataset.data = data
+      dataset.data = JSON.stringify(data, null, 0)
       return dataset
     })
   }
@@ -78,7 +89,7 @@ export function deleteDataset(dataSourceType: string, key: string): boolean {
 }
 
 export interface DatasetRepoNode<T> extends RepoNode {
-  data?: T;
+  data?: string | T;
 }
 
 export interface RepoDatasetLib {

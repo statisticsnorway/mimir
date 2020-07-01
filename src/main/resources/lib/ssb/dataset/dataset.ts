@@ -50,15 +50,15 @@ export function refreshDataset(content: Content<DataSource>): CreateOrUpdateStat
     }
   } else {
     let dataset: DatasetRepoNode<JSONstat> | null = getDataset(content)
-    const newData: boolean = isDataNew(data, dataset)
-    if (!dataset || newData) {
+    const hasNewData: boolean = isDataNew(data, dataset)
+    if (!dataset || hasNewData) {
       dataset = createOrUpdateDataset(content.data.dataSource?._selected, key, data)
     }
 
     return {
       dataquery: content,
-      status: !newData ? Events.NO_NEW_DATA : Events.GET_DATA_COMPLETE,
-      newDatasetData: newData,
+      status: !hasNewData ? Events.NO_NEW_DATA : Events.GET_DATA_COMPLETE,
+      newDatasetData: hasNewData,
       dataset
     }
   }
@@ -85,7 +85,7 @@ function isDataNew(data: JSONstat, dataset: DatasetRepoNode<JSONstat> | null): b
   if (!dataset) {
     return true
   } else if (data && dataset) {
-    return dataset.data !== data
+    return JSON.stringify(dataset.data, null, 0) !== JSON.stringify(data, null, 0)
   }
   return false
 }
