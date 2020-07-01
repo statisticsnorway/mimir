@@ -35,6 +35,9 @@ class Header extends React.Component {
   toggleSubMenu(index) {
     const activeIndex = this.state.indexForCurrentActiveMenuItem === index ? undefined : index
     const mainMenu = [...this.state.mainMenu]
+    if(index && mainMenu[index] && document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur()
+    }
     mainMenu[index] = !mainMenu[index]
 
     this.setState({
