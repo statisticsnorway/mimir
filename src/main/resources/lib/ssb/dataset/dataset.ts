@@ -3,8 +3,11 @@ import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { DataSource as DataSourceType, DatasetRepoNode, RepoDatasetLib } from '../../repo/dataset'
 import { StatbankApiLib } from './statbankApi'
 import { JSONstat } from '../../types/jsonstat-toolkit'
-import { logUserDataQuery, Events } from '../../repo/query'
+import { RepoQueryLib } from '../../repo/query'
 
+const {
+  logUserDataQuery, Events
+}: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
 const {
   query
 }: ContentLibrary = __non_webpack_require__('/lib/xp/content')
