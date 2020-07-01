@@ -51,3 +51,8 @@ function xmlToJson(xml: string, queryId?: string): TbmlData {
   }
   return result
 }
+
+export interface TbmlLib {
+  fetch: (url: string, queryId?: string) => string;
+  getTbmlData: (url: string, queryId?: string) => TbmlData;
+}
