@@ -164,7 +164,7 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    console.log('Received StatReg statuses', this.props.statRegFetchStatuses)
+    console.log('data queries', this.state.dataQueries)
     const groupedQueries = byType(this.state.dataQueries)
     return (
       <section className="xp-part part-dashboard container">

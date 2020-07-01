@@ -288,7 +288,7 @@ export function fromMenuCache(req: Request, key: string, fallback: () => unknown
   return fallback()
 }
 
-export function fromDatasetCache(req: Request, key: string, fallback: () => DatasetCache): DatasetCache {
+export function fromDatasetCache<T>(req: Request, key: string, fallback: () => DatasetCache | T): DatasetCache | T {
   if (req.mode === 'live' || req.mode === 'preview') {
     const branch: string = req.mode === 'live' ? 'master' : 'draft'
     const datasetCache: Cache = branch === 'master' ? masterDatasetCache : draftDatasetCache

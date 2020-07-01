@@ -1,4 +1,6 @@
 // import { Measurement } from '../../../lib/ssb/perf'
+import { fromDatasetCache } from '../../../lib/ssb/cache'
+
 const {
   createMeasurement,
 } = __non_webpack_require__('/lib/ssb/perf')
@@ -63,11 +65,13 @@ exports.get = function(req) {
 function renderPart(req) {
 
   perf.mark('start')
-  const datasetMap = getDataset()
+  const datasetMap = fromDatasetCache(req, 'dashboard-datasets', getDataset)
   perf.mark(MEASUREMENT_MARKS.XP_DATASET)
-  const dataQueries = getDataQueries(datasetMap)
+  const dataQueries = fromDatasetCache(req, 'dashboard-dataqueries', () => {
+    return getDataQueries(datasetMap)
+  })
   perf.mark(MEASUREMENT_MARKS.XP_DATAQUERIES)
-  const statRegFetchStatuses = getStatRegFetchStatuses()
+  const statRegFetchStatuses = fromDatasetCache(req, 'dashboard-statregfetch', getStatRegFetchStatuses)
   perf.mark(MEASUREMENT_MARKS.REPO_STATREG_FETCH)
 
   const assets = getAssets()
