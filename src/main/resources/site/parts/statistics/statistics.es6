@@ -1,9 +1,9 @@
-import { getPublicationsForStatistic } from '../../../lib/repo/statreg/publications'
-import { getStatisticByIdFromRepo } from '../../../lib/repo/statreg/statistics'
-
 const {
   getContent
 } = __non_webpack_require__('/lib/xp/portal')
+const {
+  getStatisticByIdFromRepo
+} = __non_webpack_require__('/lib/repo/statreg/statistics')
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
@@ -26,12 +26,10 @@ exports.preview = (req) => renderPart(req)
 const renderPart = (req) => {
   const page = getContent()
   const statistic = page.data.statistic && getStatisticByIdFromRepo(page.data.statistic)
-  const publications = statistic && getPublicationsForStatistic(statistic.shortName)
 
   const model = {
     title: page.displayName,
-    statistic,
-    publications
+    statistic
   }
 
   const body = render(view, model)
