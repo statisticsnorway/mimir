@@ -47,7 +47,7 @@ const renderPart = (req) => {
     }
 
     if (statistic.variants.nextRelease && statistic.variants.nextRelease !== '') {
-      nextRelease =moment(statistic.variants.nextRelease).format('DD. MMMM YYYY')
+      nextRelease = moment(statistic.variants.nextRelease).format('DD. MMMM YYYY')
     }
   }
 
