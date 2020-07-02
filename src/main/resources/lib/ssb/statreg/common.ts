@@ -16,21 +16,22 @@ export function fetchStatRegData<T, XmlType>(
   dataKey: string,
   serviceUrl: string,
   filters: QueryFilters,
-  extractor: (xml: XmlType) => Array<T>): Array<T> {
+  extractor: (payload: string) => Array<T>): Array<T> {
+
   const result: HttpResponse = http.request({
-    url: `${serviceUrl}/${filtersToQuery(filters)}`,
+    url: `${serviceUrl}${filtersToQuery(filters)}`,
     method: 'GET',
     contentType: 'application/json',
     headers: {
       'Cache-Control': 'no-cache',
       'Accept': 'application/json'
     },
-    connectionTimeout: 20000,
-    readTimeout: 5000
+    connectionTimeout: 500000000,
+    readTimeout: 500000000
   })
 
   if ((result.status === 200) && result.body) {
-    const data: Array<T> = extractor(__.toNativeObject(xmlParser.parse(result.body)))
+    const data: Array<T> = extractor(result.body)
     log.info(`Fetched ${data ? data.length : 0} ${dataKey}`)
     return data
   }
