@@ -5,12 +5,16 @@ const {
   getStatisticByIdFromRepo
 } = __non_webpack_require__('/lib/repo/statreg/statistics')
 const {
+  getPhrases
+} = __non_webpack_require__( '/lib/language')
+const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
 const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
 
+const moment = require('moment/min/moment-with-locales')
 const view = resolve('./statistics.html')
 
 exports.get = (req) => {
@@ -25,11 +29,30 @@ exports.preview = (req) => renderPart(req)
 
 const renderPart = (req) => {
   const page = getContent()
+  const phrases = getPhrases(page)
+  moment.locale(page.language ? page.language : 'nb')
   const statistic = page.data.statistic && getStatisticByIdFromRepo(page.data.statistic)
 
+  let title = page.displayName
+  let previousRelease = phrases.notAvailable
+  const nextRelease = phrases.notYetDetermined
+
+  if (statistic) {
+    title = statistic.name
+
+    if (statistic.variants.previousRelease && statistic.variants.previousRelease !== '') {
+      previousRelease = moment(statistic.variants.previousRelease).format('DD. MMMM YYYY')
+    }
+
+    if (statistic.variants.nextRelease && statistic.variants.nextRelease !== '') {
+      moment(statistic.variants.nextRelease).format('DD. MMMM YYYY')
+    }
+  }
+
   const model = {
-    title: page.displayName,
-    statistic
+    title,
+    previousRelease,
+    nextRelease
   }
 
   const body = render(view, model)

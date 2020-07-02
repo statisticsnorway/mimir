@@ -2,24 +2,15 @@
     <div class="row">
         <div class="col-12 col-lg-6 p-0">
             <div class="titles-dates-wrapper">
-                <!-- Show default display name if there is no selected statistics page-->
-                <div data-th-if="!${statistic}">
-                    <h1 data-th-if="${title}" data-th-text="${title}" />
-                </div>
-
-                <div data-th-if="${statistic}">
-                    <h1 data-th-if="${statistic.name}" data-th-text="${statistic.name}" />
-                    <p>
-                        <span class="font-weight-bold">Oppdatert: </span>
-                        <span data-th-if="!${statistic.variants.nextRelease}">Ikke tilgjengelig</span>
-                        <span data-th-if="${statistic.variants.previousRelease}" data-th-text="${statistic.variants.previousRelease}" />
-                    </p>
-                    <p>
-                        <span class="font-weight-bold">Neste oppdatering: </span>
-                        <span data-th-if="!${statistic.variants.nextRelease}">Foreløpig ikke fastsatt</span>
-                        <span data-th-if="${statistic.variants.nextRelease}" data-th-text="${statistic.variants.nextRelease}" />
-                    </p>
-                </div>
+                <h1 data-th-text="${title}" />
+                <p>
+                    <span class="font-weight-bold">Oppdatert: </span>
+                    <span data-th-text="${previousRelease}" />
+                </p>
+                <p>
+                    <span class="font-weight-bold">Neste oppdatering: </span>
+                    <span data-th-text="${nextRelease}" />
+                </p>
             </div>
         </div>
     </div>
