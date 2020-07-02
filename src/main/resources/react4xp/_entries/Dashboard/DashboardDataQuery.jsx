@@ -1,11 +1,15 @@
+import React from 'react'
+import PropTypes from 'prop-types'
 import Button from 'react-bootstrap/Button'
 import { AlertTriangle, RefreshCw, Trash } from 'react-feather'
 import { Link } from '@statisticsnorway/ssb-component-library'
-import React from 'react'
-import PropTypes from 'prop-types'
 import { DataQuery } from './Dashboard'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Popover from 'react-bootstrap/Popover'
+import moment from 'moment'
+
+const simpleDateFormat = (ds) =>
+  moment(ds).locale('nb').format('DD.MM.YYYY HH:mm')
 
 class DashboardDataQuery extends React.Component {
   constructor(props) {
@@ -109,7 +113,7 @@ class DashboardDataQuery extends React.Component {
 
         <td>
           { dataQuery.dataset.modifiedReadable ? dataQuery.dataset.modifiedReadable : ''}<br/>
-          { dataQuery.dataset.modified ? dataQuery.dataset.modified : ''}
+          { dataQuery.dataset.modified ? simpleDateFormat(dataQuery.dataset.modified) : ''}
         </td>
 
         {dataQuery.logData ? this.renderLogData(): <td></td>}

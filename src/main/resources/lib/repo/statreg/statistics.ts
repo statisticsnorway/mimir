@@ -1,7 +1,7 @@
 import { find } from 'ramda'
 import { getStatRegNode, StatRegNode } from '../statreg'
 import { fetchStatistics as fetchStatisticsSvc } from '../../ssb/statreg'
-import { Statistic } from '../../ssb/statreg/types'
+import { StatisticInListing as Statistic } from '../../ssb/statreg/types'
 import { ensureArray } from '../../ssb/arrayUtils'
 
 export const STATREG_REPO_STATISTICS_KEY: string = 'statistics'
