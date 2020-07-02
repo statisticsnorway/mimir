@@ -3,7 +3,7 @@ const {
 } = __non_webpack_require__( '../repo/query')
 
 const {
-  get: getDataQuery,
+  get: getContent,
   query
 } = __non_webpack_require__( '/lib/xp/content')
 const {
@@ -28,30 +28,22 @@ export const get = (key) => {
   } : NOT_FOUND
 }
 
-export const getAllOrOneDataQuery = (selector) => {
-  if (selector === '*') {
-    return query({
-      count: 999,
-      contentTypes: [`${app.name}:dataquery`],
-      query: `data.table LIKE 'http*'`
-    }).hits
-  } else {
-    const result = getDataQuery({
-      key: selector
+export const getAllOrOneDataQuery = (id) => {
+  const result = getContent({
+    key: id
+  })
+  if (result) {
+    logUserDataQuery(id, {
+      message: Events.FOUND_DATAQUERY
     })
-    if (result) {
-      logUserDataQuery(selector, {
-        message: Events.FOUND_DATAQUERY
-      })
-      return util.data.forceArray(result)
-    } else {
-      logUserDataQuery(selector, {
-        message: Events.FAILED_TO_FIND_DATAQUERY
-      })
-      return [{
-        _id: selector,
-        message: Events.FAILED_TO_FIND_DATAQUERY
-      }]
-    }
+    return util.data.forceArray(result)
+  } else {
+    logUserDataQuery(id, {
+      message: Events.FAILED_TO_FIND_DATAQUERY
+    })
+    return [{
+      _id: id,
+      message: Events.FAILED_TO_FIND_DATAQUERY
+    }]
   }
 }

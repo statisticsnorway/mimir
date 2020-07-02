@@ -1,7 +1,7 @@
 import { createNode, nodeExists, getChildNodes, getNode, withConnection } from './common'
 import { NodeCreateParams, NodeQueryHit, NodeQueryResponse, RepoNode } from 'enonic-types/lib/node'
 import { repoExists, createRepo } from './repo'
-import {EventInfo, QueryInfo} from './query'
+import { EventInfo, QueryInfo } from './query'
 import { I18nLibrary } from 'enonic-types/lib/i18n'
 const i18n: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
 
@@ -10,7 +10,7 @@ export const EVENT_LOG_BRANCH: string = 'master'
 
 export type EditorCallback<T> = (node: T & RepoNode) => T & RepoNode;
 
-export function setupEventLog() {
+export function setupEventLog(): void {
   if (! eventLogExists()) {
     log.info(`Setting up EventLog ...`)
     createEventLog({
@@ -56,7 +56,7 @@ export function getQueryChildNodesStatus<T>(queryId: string): ReadonlyArray<LogS
   if (nodeExists(EVENT_LOG_REPO, EVENT_LOG_BRANCH, queryId)) {
     const childNodeIds: NodeQueryResponse = getChildNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, queryId)
     return childNodeIds.hits.map((hit: NodeQueryHit) => {
-      const nodes: ReadonlyArray<QueryInfo> = getNode<QueryInfo>(EVENT_LOG_REPO, EVENT_LOG_BRANCH, hit.id)
+      const nodes: ReadonlyArray<QueryInfo> | QueryInfo | null = getNode<QueryInfo>(EVENT_LOG_REPO, EVENT_LOG_BRANCH, hit.id)
       return Array.isArray(nodes) ? nodes[0] : nodes
     }).map( (node: EventInfo) => ({
       result: i18n.localize({

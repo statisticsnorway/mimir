@@ -11,6 +11,9 @@ const {
   getAllOrOneDataSet
 } = __non_webpack_require__( '/lib/ssb/dataset')
 const {
+  refreshDataset
+} = __non_webpack_require__( '/lib/ssb/dataset/dataset')
+const {
   Events, logUserDataQuery
 } = __non_webpack_require__('/lib/repo/query')
 const i18n = __non_webpack_require__('/lib/xp/i18n')
@@ -225,25 +228,33 @@ function updateDataQuery(dataquery) {
     }
   }
 
-  const data = getData(dataquery)
-  if (!data) {
+  if (dataquery.type === `${app.name}:dataquery`) { // OLD
+    const data = getData(dataquery)
+    if (!data) {
+      logUserDataQuery(dataquery._id, {
+        message: Events.FAILED_TO_GET_DATA
+      } )
+      return {
+        dataquery,
+        status: Events.FAILED_TO_GET_DATA
+      }
+    }
+
+    const refreshDatasetResult = refreshDatasetWithData(JSON.stringify(data), dataquery) // returns a dataset and status
     logUserDataQuery(dataquery._id, {
-      message: Events.FAILED_TO_GET_DATA
-    } )
+      message: refreshDatasetResult.status
+    })
     return {
       dataquery,
-      status: Events.FAILED_TO_GET_DATA
+      dataset: refreshDatasetResult.dataset,
+      newDatasetData: refreshDatasetResult.newDatasetData ? refreshDatasetResult.newDatasetData : false,
+      status: refreshDatasetResult.status // can be failed to fetch data or failed to
     }
-  }
-
-  const refreshDatasetResult = refreshDatasetWithData(JSON.stringify(data), dataquery) // returns a dataset and status
-  logUserDataQuery(dataquery._id, {
-    message: refreshDatasetResult.status
-  })
-  return {
-    dataquery,
-    dataset: refreshDatasetResult.dataset,
-    newDatasetData: refreshDatasetResult.newDatasetData ? refreshDatasetResult.newDatasetData : false,
-    status: refreshDatasetResult.status // can be failed to fetch data or failed to
+  } else { // NEW
+    const refreshDatasetResult = refreshDataset(dataquery)
+    logUserDataQuery(dataquery._id, {
+      message: refreshDatasetResult.status
+    })
+    return refreshDatasetResult
   }
 }

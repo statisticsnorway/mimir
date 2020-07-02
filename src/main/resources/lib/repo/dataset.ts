@@ -1,10 +1,11 @@
 import { RepoCommonLib } from './common'
 import { RepoNode } from 'enonic-types/lib/node'
+import { RepoLib } from './repo'
 
 const {
   repoExists,
   createRepo
-} = __non_webpack_require__('/lib/repo/repo')
+}: RepoLib = __non_webpack_require__('/lib/repo/repo')
 const {
   nodeExists,
   createNode,
@@ -17,9 +18,9 @@ export const DATASET_REPO: string = 'no.ssb.dataset'
 export const DATASET_BRANCH: string = 'master'
 
 export enum DataSource {
-  STATBANK_API = 'statbank-api',
-  TALLBYGGER = 'tallbygger',
-  STATBANK_SAVED = 'statbank-saved',
+  STATBANK_API = 'statbankApi',
+  TBPROCESSOR = 'tbprocessor',
+  STATBANK_SAVED = 'statbankSaved',
   DATASET = 'dataset',
   KLASS = 'klass',
 }
@@ -29,7 +30,7 @@ export function setupDatasetRepo(): void {
     createRepo(DATASET_REPO, DATASET_BRANCH)
   }
   createSourceNode(DataSource.STATBANK_API)
-  createSourceNode(DataSource.TALLBYGGER)
+  createSourceNode(DataSource.TBPROCESSOR)
   createSourceNode(DataSource.STATBANK_SAVED)
   createSourceNode(DataSource.DATASET)
   createSourceNode(DataSource.KLASS)
@@ -48,8 +49,24 @@ function createSourceNode(dataSource: string): void {
   }
 }
 
-export function getDataset<T>(dataSourceType: string, key: string): DatasetRepoNode<T> | undefined {
-  return getNode(DATASET_REPO, DATASET_BRANCH, `/${dataSourceType}/${key}`)[0]
+export function getDataset<T>(dataSourceType: string, key: string): DatasetRepoNode<T> | null {
+  const res: readonly DatasetRepoNode<T>[] | DatasetRepoNode<T> | null = getNode(DATASET_REPO, DATASET_BRANCH, `/${dataSourceType}/${key}`)
+  let dataset: DatasetRepoNode<T> | null = null
+  if (Array.isArray(res)) {
+    dataset = res[0]
+  } else {
+    dataset = res as DatasetRepoNode<T> | null
+  }
+
+  if (dataset && dataset.data && typeof(dataset.data) === 'string') {
+    try {
+      dataset.data = JSON.parse(dataset.data)
+    } catch (e) {
+      // not json-string in data, so let's ignore it
+    }
+  }
+
+  return dataset
 }
 
 export function createOrUpdateDataset<T>(dataSourceType: string, key: string, data: T): DatasetRepoNode<T> {
@@ -57,11 +74,11 @@ export function createOrUpdateDataset<T>(dataSourceType: string, key: string, da
     return createNode(DATASET_REPO, DATASET_BRANCH, {
       _name: key,
       _parentPath: `/${dataSourceType}`,
-      data: data
+      data: JSON.stringify(data, null, 0)
     })
   } else {
     return modifyNode(DATASET_REPO, DATASET_BRANCH, `/${dataSourceType}/${key}`, (dataset) => {
-      dataset.data = data
+      dataset.data = JSON.stringify(data, null, 0)
       return dataset
     })
   }
@@ -72,14 +89,14 @@ export function deleteDataset(dataSourceType: string, key: string): boolean {
 }
 
 export interface DatasetRepoNode<T> extends RepoNode {
-  data?: T;
+  data?: string | T;
 }
 
 export interface RepoDatasetLib {
   DATASET_REPO: string;
   DATASET_BRANCH: string;
   setupDatasetRepo: () => void;
-  getDataset: <T>(dataSourceType: string, key: string) => DatasetRepoNode<T> | undefined;
+  getDataset: <T>(dataSourceType: string, key: string) => DatasetRepoNode<T> | null;
   createOrUpdateDataset: <T>(dataSourceType: string, key: string, data: T) => DatasetRepoNode<T>;
   deleteDataset: (dataSourceType: string, key: string) => boolean;
 }
