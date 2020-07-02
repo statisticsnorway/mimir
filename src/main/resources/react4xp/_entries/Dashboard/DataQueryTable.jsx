@@ -47,7 +47,7 @@ const DataQueryTable = ({
   queries, renderDataQueries
 }) => {
   const [currSort, setCurrSort] = useState(SortFields.LAST_UPDATED)
-  const [currOrder, setCurrOrder] = useState(SortOrder.ASCENDING)
+  const [currOrder, setCurrOrder] = useState(SortOrder.DESCENDING)
   const [sorted, setSorted] = useState(
     sort((SortFunctions[SortFields.LAST_UPDATED])(SortOrder.ASCENDING), queries)
   )
