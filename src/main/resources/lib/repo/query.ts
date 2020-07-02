@@ -131,4 +131,13 @@ export function updateQueryLogStatus(queryId: string, user: User, status: QueryS
   })
 }
 
-
+export interface RepoQueryLib {
+  logDataQueryEvent: (queryId: string, status: QueryStatus, user: User) => void;
+  logUserDataQuery: (queryId: string, status: QueryStatus) => void;
+  logAdminDataQuery: (queryId: string, status: QueryStatus) => void;
+  startQuery: (queryId: string, user: User, status: QueryStatus) => QueryInfoNode;
+  createQueryNode: (queryId: string, user: User, status: QueryStatus) => QueryInfoNode;
+  updateQuery: <T>(key: string, editor: EditorCallback<QueryInfoNode>) => QueryInfoNode;
+  updateQueryLogStatus: (queryId: string, user: User, status: QueryStatus) => QueryInfoNode;
+  Events: typeof Events;
+}

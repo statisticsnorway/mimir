@@ -2,7 +2,7 @@ import { DatasetRepoNode, RepoDatasetLib } from '../../repo/dataset'
 import { Content } from 'enonic-types/lib/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { JSONstat } from '../../types/jsonstat-toolkit'
-// import {  } from '../../repo/query'
+import { RepoQueryLib } from '../../repo/query'
 
 const {
   getDataset
@@ -13,7 +13,7 @@ const {
 const {
   logUserDataQuery,
   Events
-} = __non_webpack_require__('/lib/repo/query')
+}: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
 
 export function getStatbankApi(content: Content<DataSource>): DatasetRepoNode<JSONstat> | null {
   if (content.data.dataSource && content.data.dataSource._selected) {
