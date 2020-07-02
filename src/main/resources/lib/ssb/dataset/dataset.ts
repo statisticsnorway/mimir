@@ -3,8 +3,13 @@ import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { DataSource as DataSourceType, DatasetRepoNode, RepoDatasetLib } from '../../repo/dataset'
 import { StatbankApiLib } from './statbankApi'
 import { JSONstat } from '../../types/jsonstat-toolkit'
-import { logUserDataQuery, Events } from '../../repo/query'
+import { RepoQueryLib } from '../../repo/query'
+import { TbmlData } from '../../types/xmlParser'
+import { TbprocessorLib } from './tbprocessor'
 
+const {
+  logUserDataQuery, Events
+}: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
 const {
   query
 }: ContentLibrary = __non_webpack_require__('/lib/xp/content')
@@ -14,13 +19,21 @@ const {
   getStatbankApiKey
 }: StatbankApiLib = __non_webpack_require__('/lib/ssb/dataset/statbankApi')
 const {
+  getTbprocessor,
+  getTbprocessorKey,
+  fetchTbprocessorData
+}: TbprocessorLib = __non_webpack_require__('/lib/ssb/dataset/tbprocessor')
+const {
   createOrUpdateDataset
 }: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
 
-export function getDataset(content: Content<DataSource>): DatasetRepoNode<JSONstat> | null {
+export function getDataset(content: Content<DataSource>): DatasetRepoNode<JSONstat | TbmlData> | null {
   switch (content.data.dataSource?._selected) {
   case DataSourceType.STATBANK_API: {
     return getStatbankApi(content)
+  }
+  case DataSourceType.TBPROCESSOR: {
+    return getTbprocessor(content)
   }
   default: {
     return null
@@ -29,12 +42,16 @@ export function getDataset(content: Content<DataSource>): DatasetRepoNode<JSONst
 }
 
 export function refreshDataset(content: Content<DataSource>): CreateOrUpdateStatus {
-  let data: JSONstat | null = null
+  let data: JSONstat | TbmlData | null = null
   let key: string | undefined
   switch (content.data.dataSource?._selected) {
   case DataSourceType.STATBANK_API: {
     key = getStatbankApiKey(content)
     data = fetchStatbankApiData(content)
+  }
+  case DataSourceType.TBPROCESSOR: {
+    key = getTbprocessorKey(content)
+    data = fetchTbprocessorData(content)
   }
   }
 
@@ -49,7 +66,7 @@ export function refreshDataset(content: Content<DataSource>): CreateOrUpdateStat
       newDatasetData: false
     }
   } else {
-    let dataset: DatasetRepoNode<JSONstat> | null = getDataset(content)
+    let dataset: DatasetRepoNode<JSONstat | TbmlData> | null = getDataset(content)
     const hasNewData: boolean = isDataNew(data, dataset)
     if (!dataset || hasNewData) {
       dataset = createOrUpdateDataset(content.data.dataSource?._selected, key, data)
@@ -81,7 +98,7 @@ export function getContentWithDataSource(): Array<Content<DataSource>> {
   return hits
 }
 
-function isDataNew(data: JSONstat, dataset: DatasetRepoNode<JSONstat> | null): boolean {
+function isDataNew(data: JSONstat | TbmlData, dataset: DatasetRepoNode<JSONstat | TbmlData> | null): boolean {
   if (!dataset) {
     return true
   } else if (data && dataset) {
@@ -92,7 +109,7 @@ function isDataNew(data: JSONstat, dataset: DatasetRepoNode<JSONstat> | null): b
 
 export interface CreateOrUpdateStatus {
   dataquery: Content<DataSource>;
-  dataset: DatasetRepoNode<JSONstat> | null;
+  dataset: DatasetRepoNode<JSONstat | TbmlData> | null;
   newDatasetData: boolean;
   status: string;
 }
