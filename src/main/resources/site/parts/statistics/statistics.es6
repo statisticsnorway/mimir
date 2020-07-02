@@ -34,6 +34,8 @@ const renderPart = (req) => {
   const statistic = page.data.statistic && getStatisticByIdFromRepo(page.data.statistic)
 
   let title = page.displayName
+  const updated = phrases.updated + ': '
+  const nextUpdate = phrases.nextUpdate + ': '
   let previousRelease = phrases.notAvailable
   const nextRelease = phrases.notYetDetermined
 
@@ -51,6 +53,8 @@ const renderPart = (req) => {
 
   const model = {
     title,
+    updated,
+    nextUpdate,
     previousRelease,
     nextRelease
   }

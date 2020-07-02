@@ -4,11 +4,11 @@
             <div class="titles-dates-wrapper">
                 <h1 data-th-text="${title}" />
                 <p>
-                    <span class="font-weight-bold">Oppdatert: </span>
+                    <span class="font-weight-bold" data-th-utext="${updated}" />
                     <span data-th-text="${previousRelease}" />
                 </p>
                 <p>
-                    <span class="font-weight-bold">Neste oppdatering: </span>
+                    <span class="font-weight-bold" data-th-utext="${nextUpdate}" />
                     <span data-th-text="${nextRelease}" />
                 </p>
             </div>
