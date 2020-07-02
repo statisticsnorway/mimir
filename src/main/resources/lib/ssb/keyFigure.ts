@@ -13,6 +13,7 @@ import { Dataset as JSDataset, Dimension, Category } from '../types/jsonstat-too
 import { UtilLibrary } from '../types/util'
 import { DatasetCache, SSBCacheLibrary } from './cache'
 import { Request } from 'enonic-types/lib/controller'
+import { DatasetRepoNode } from '../repo/dataset'
 const {
   query
 }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
@@ -39,6 +40,9 @@ const {
   fromDatasetCache
 }: SSBCacheLibrary = __non_webpack_require__( '/lib/ssb/cache')
 const util: UtilLibrary = __non_webpack_require__( '/lib/util')
+const {
+  getDataset
+} = __non_webpack_require__( '/lib/ssb/dataset/dataset')
 
 const contentTypeName: string = `${app.name}:keyFigure`
 
@@ -86,7 +90,49 @@ export function parseKeyFigure(req: Request, keyFigure: Content<KeyFigure>, muni
   }
 
   const dataQueryId: string | undefined = keyFigure.data.dataquery
-  if (dataQueryId) {
+  const datasetRepo: DatasetRepoNode<JSONstat> | null = getDataset(keyFigure)
+
+  if (datasetRepo) {
+    const data: JSDataset | Array<JSDataset> | null | TbmlData = JSONstat(datasetRepo.data).Dataset(0)
+    const datasetFormat: KeyFigure['dataSource'] | undefined = keyFigure.data.dataSource
+
+    if (datasetFormat && datasetFormat._selected === 'statbankApi') {
+      // prepare jsonstat
+      const ds: JSDataset | Array<JSDataset> | null = data as JSDataset | Array<JSDataset> | null
+
+      const xAxisLabel: string | undefined = datasetFormat.statbankApi ? datasetFormat.statbankApi.xAxisLabel : undefined
+      const yAxisLabel: string | undefined = datasetFormat.statbankApi ? datasetFormat.statbankApi.yAxisLabel : undefined
+
+      // if filter get data with filter
+      if (datasetFormat.statbankApi && datasetFormat.statbankApi.datasetFilterOptions && datasetFormat.statbankApi.datasetFilterOptions._selected) {
+        const filterOptions: DatasetOption = datasetFormat.statbankApi.datasetFilterOptions
+
+        if (yAxisLabel && ds && !(ds instanceof Array)) {
+          if (filterOptions && filterOptions.municipalityFilter && filterOptions._selected === 'municipalityFilter' && municipality) {
+            const filterTarget: string = filterOptions.municipalityFilter.municipalityDimension
+            // get value and label from json-stat data, filtering on municipality
+            let municipalData: MunicipalData | null = getDataFromMunicipalityCode(ds, municipality.code, yAxisLabel, filterTarget)
+            // not all municipals have data, so if its missing, try the old one
+            if ((!municipalData || (municipalData.value === null || municipalData.value === 0)) && municipality.changes && municipality.changes.length > 0) {
+              municipalData = getDataFromMunicipalityCode(ds, municipality.changes[0].oldCode, yAxisLabel, filterTarget)
+            }
+            if (municipalData && municipalData.value !== null) {
+              // add data to key figure view
+              keyFigureViewData.number = parseValue(municipalData.value)
+              keyFigureViewData.time = localizeTimePeriod(municipalData.label)
+            }
+          }
+        }
+      } else if (xAxisLabel && ds && !(ds instanceof Array)) {
+        // get all data without filter
+      }
+    }
+    return keyFigureViewData
+  }
+
+  // TODO: Fjerne koden nedenfor når vi har fjernet dataQuery fra innholdstypen Keyfigures
+
+  if (dataQueryId && !datasetRepo) {
     const cachedQuery: DatasetCache = fromDatasetCache(req, dataQueryId, () => {
       const dataQueryContent: Content<Dataquery> = getDataquery({
         key: dataQueryId
