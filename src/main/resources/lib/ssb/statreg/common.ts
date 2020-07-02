@@ -26,8 +26,8 @@ export function fetchStatRegData<T, XmlType>(
       'Cache-Control': 'no-cache',
       'Accept': 'application/json'
     },
-    connectionTimeout: 500000000,
-    readTimeout: 500000000
+    connectionTimeout: 30000,
+    readTimeout: 30000
   })
 
   if ((result.status === 200) && result.body) {
