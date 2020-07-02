@@ -37,7 +37,7 @@ const renderPart = (req) => {
   const updated = phrases.updated + ': '
   const nextUpdate = phrases.nextUpdate + ': '
   let previousRelease = phrases.notAvailable
-  const nextRelease = phrases.notYetDetermined
+  let nextRelease = phrases.notYetDetermined
 
   if (statistic) {
     title = statistic.name
@@ -47,7 +47,7 @@ const renderPart = (req) => {
     }
 
     if (statistic.variants.nextRelease && statistic.variants.nextRelease !== '') {
-      moment(statistic.variants.nextRelease).format('DD. MMMM YYYY')
+      nextRelease =moment(statistic.variants.nextRelease).format('DD. MMMM YYYY')
     }
   }
 
