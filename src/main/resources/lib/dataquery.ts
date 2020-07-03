@@ -1,13 +1,16 @@
 import { HttpResponse, HttpLibrary, HttpRequestParams } from 'enonic-types/lib/http'
 import { ContextLibrary, RunContext } from 'enonic-types/lib/context'
 import { Dataquery } from '../site/content-types/dataquery/dataquery'
-import { Content, ContentLibrary, ModifyContentParams, QueryResponse, PublishResponse } from 'enonic-types/lib/content'
+import { Content, ContentLibrary, QueryResponse, PublishResponse } from 'enonic-types/lib/content'
 import { Dataset } from '../site/content-types/dataset/dataset'
 import * as moment from 'moment'
 import { getTbmlData } from './tbml/tbml'
 import { CommonLibrary } from './types/common'
-import { Events, logUserDataQuery, logAdminDataQuery } from './repo/query'
+import { RepoQueryLib } from './repo/query'
 
+const {
+  logUserDataQuery, logAdminDataQuery, Events
+}: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
 const {
   getDataSetWithDataQueryId
 } = __non_webpack_require__('/lib/ssb/dataset')

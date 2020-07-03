@@ -1,4 +1,6 @@
 import { find } from 'ramda'
+import { XmlParser } from '../../types/xmlParser'
+const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
 // XML response types (Common)
 
@@ -61,56 +63,42 @@ export function transformContact(kontakt: Kontakt): Contact {
   } as Contact
 }
 
-export function extractContacts(kontaktXML: KontaktXML): Array<Contact> {
+export function extractContacts(payload: string): Array<Contact> {
+  const kontaktXML: KontaktXML = __.toNativeObject(xmlParser.parse(payload))
   const kontakter: Array<Kontakt> = kontaktXML.kontakter.kontakt
   return kontakter.map((k) => transformContact(k))
 }
 
 // XML response types for Statistics from StatReg ----------------------------------
 
-export interface Statistikk {
-    id: string;
-    kortnavn: string;
-    navn: string;
-    status: string;
-    deskFlyt: string;
-    dirFlyt: string;
-    endret: string;
+/**
+ * NOTE:
+ * The following '.*Listing' types are only the basic information that comes with the
+ * GET /statistics listing endpoint. This has to be extended
+ * (and named properly as Variant & Statistic) when we start using the
+ * GET /statistics/{shortName} endpoint
+ */
+export interface VariantInListing {
+    frekvens: string;
+    previousRelease: string;
+    nextRelease: string;
 }
 
-export interface StatistikkListe extends ListMeta {
-    statistikk: Array<Statistikk>;
-}
-
-export interface StatistikkXML {
-    statistikker: StatistikkListe;
-}
-
-export interface Statistic {
+export interface StatisticInListing {
     id: string;
     shortName: string;
     name: string;
     status: string;
     modifiedTime: string;
+    variants: Array<VariantInListing>;
 }
 
-export function transformStat(stat: Statistikk): Statistic {
-  const {
-    id, kortnavn: shortName, navn: name, status, endret: modifiedTime
-  } = stat
-
-  return {
-    id,
-    shortName,
-    name,
-    status,
-    modifiedTime
-  }
+export interface Statistics {
+    statistics: Array<StatisticInListing>;
 }
 
-export function extractStatistics(statXML: StatistikkXML): Array<Statistic> {
-  const statistikk: Array<Statistikk> = statXML.statistikker.statistikk
-  return statistikk.map((stat) => transformStat(stat))
+export function extractStatistics(payload: string): Array<StatisticInListing> {
+  return JSON.parse(payload).statistics
 }
 
 // XML response types from StatReg for Publications --------------------------------
@@ -153,7 +141,8 @@ export function transformPubllication(pub: Publisering): Publication {
   }
 }
 
-export function extractPublications(pubXML: PubliseringXML): Array<Publication> {
+export function extractPublications(payload: string): Array<Publication> {
+  const pubXML: PubliseringXML = __.toNativeObject(xmlParser.parse(payload))
   const publisering: Array<Publisering> = pubXML.publiseringer.publisering
   return publisering.map((pub) => transformPubllication(pub))
 }
