@@ -35,7 +35,7 @@ const SortFunctions = {
   [SortFields.TITLE]: (order) => (q1, q2) =>
     order * `${q1.displayName}`.localeCompare(`${q2.displayName}`),
   [SortFields.LAST_ACTIVITY]: (order) => (q1, q2) =>
-    compareDates(q1, q2, (dq) => dq.logData && dq.logData.modifiedTs, order)
+    order * `${q1.logData.message}`.localeCompare(`${q2.logData.message}`)
 }
 
 const SortOrder = {
