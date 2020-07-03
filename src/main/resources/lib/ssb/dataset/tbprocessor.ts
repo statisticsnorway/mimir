@@ -33,7 +33,11 @@ export function fetchTbprocessorData(content: Content<DataSource>): TbmlData | n
     try {
       const dataSource: DataSource['dataSource'] = content.data.dataSource
       if (dataSource._selected && dataSource.tbprocessor && dataSource.tbprocessor.urlOrId) {
-        data = getTbmlData(`${baseUrl}/process/tbmldata/${getTbprocessorKey(content)}`, content._id)
+        let url: string = `${baseUrl}/process/tbmldata/${getTbprocessorKey(content)}`
+        if (isUrl(dataSource.tbprocessor.urlOrId)) {
+          url = dataSource.tbprocessor.urlOrId
+        }
+        data = getTbmlData(url, content._id)
       }
     } catch (e) {
       const message: string = `Failed to fetch data from tbprocessor: ${content._id} (${e})`
@@ -47,10 +51,18 @@ export function fetchTbprocessorData(content: Content<DataSource>): TbmlData | n
   return data
 }
 
+function isUrl(urlOrId: string): boolean {
+  // eslint-disable-next-line @typescript-eslint/prefer-includes
+  if (urlOrId.indexOf('http') > -1) {
+    return true
+  }
+  return false
+}
+
 export function getTbprocessorKey(content: Content<DataSource>): string {
   if (content.data.dataSource && content.data.dataSource.tbprocessor && content.data.dataSource.tbprocessor.urlOrId) {
     let key: string = content.data.dataSource.tbprocessor.urlOrId
-    if (key.indexOf('http') > 0) {
+    if (isUrl(key)) {
       key = key.replace(/\/$/, '')
       const split: Array<string> = key.split('/')
       key = split[split.length - 1]
