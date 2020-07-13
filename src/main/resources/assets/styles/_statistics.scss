@@ -1,29 +1,18 @@
-.statistic {
-  display: flex;
+.statistics {
+  .titles-dates-wrapper {
+    @include make-row;
 
-  span {
-    margin-right: 1rem;
-  }
+    > * {
+      @include make-col-ready();
+      @include make-col(12);
 
-  .shortName {
-    font-weight: bold;
-  }
-}
+      h1 {
+        padding: 0;
+      }
 
-.publicationsTable {
-  display: flex;
-  flex-direction: column;
-  margin: 1rem 0;
-}
-
-.publication {
-  display: flex;
-
-  span {
-    padding: 0.25rem;
-  }
-
-  &.header span {
-    font-weight: bold;
+      @include media-breakpoint-down(md) {
+        padding: 0;
+      }
+    }
   }
 }

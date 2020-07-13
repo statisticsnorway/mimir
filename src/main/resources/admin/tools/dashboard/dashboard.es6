@@ -30,11 +30,25 @@ const {
   EVENT_LOG_REPO,
   getQueryChildNodesStatus
 } = __non_webpack_require__( '/lib/repo/eventLog')
-const { Events } = __non_webpack_require__('/lib/repo/query')
-const { STATREG_REPO_CONTACTS_KEY } = __non_webpack_require__('/lib/repo/statreg/contacts')
-const { STATREG_REPO_STATISTICS_KEY } = __non_webpack_require__('/lib/repo/statreg/statistics')
-const { STATREG_REPO_PUBLICATIONS_KEY } = __non_webpack_require__('/lib/repo/statreg/publications')
-const { getToolUrl } = __non_webpack_require__('/lib/xp/admin');
+const {
+  Events
+} = __non_webpack_require__('/lib/repo/query')
+const {
+  STATREG_REPO_CONTACTS_KEY
+} = __non_webpack_require__('/lib/repo/statreg/contacts')
+const {
+  STATREG_REPO_STATISTICS_KEY
+} = __non_webpack_require__('/lib/repo/statreg/statistics')
+const {
+  STATREG_REPO_PUBLICATIONS_KEY
+} = __non_webpack_require__('/lib/repo/statreg/publications')
+const {
+  getToolUrl
+} = __non_webpack_require__('/lib/xp/admin')
+const {
+  getContentWithDataSource,
+  getDataset
+} = __non_webpack_require__('/lib/ssb/dataset/dataset')
 
 const view = resolve('./dashboard.html')
 const DEFAULT_CONTENTSTUDIO_URL = getToolUrl('com.enonic.app.contentstudio', 'main')
@@ -63,23 +77,22 @@ exports.get = function(req) {
  * @return {{pageContributions: *, body: *}}
  */
 function renderPart(req) {
-
   perf.mark('start')
-  const datasetMap = fromDatasetCache(req, 'dashboard-datasets', getDataset)
+  const datasetMap = oldGetDataset()
   perf.mark(MEASUREMENT_MARKS.XP_DATASET)
-  const dataQueries = fromDatasetCache(req, 'dashboard-dataqueries', () => {
-    return getDataQueries(datasetMap)
-  })
+  const dataQueries = oldGetDataQueries(datasetMap)
   perf.mark(MEASUREMENT_MARKS.XP_DATAQUERIES)
-  const statRegFetchStatuses = fromDatasetCache(req, 'dashboard-statregfetch', getStatRegFetchStatuses)
+  const statRegFetchStatuses = getStatRegFetchStatuses()
   perf.mark(MEASUREMENT_MARKS.REPO_STATREG_FETCH)
+
+  const contentWithDataSource = prepDataSources(getContentWithDataSource())
 
   const assets = getAssets()
 
   const dashboardDataset = new React4xp('Dashboard/Dashboard')
     .setProps({
       header: 'Alle spørringer',
-      dataQueries,
+      dataQueries: [...contentWithDataSource],
       dashboardService: assets.dashboardService,
       clearCacheServiceUrl: assets.clearCacheServiceUrl,
       featureToggling: {
@@ -97,7 +110,7 @@ function renderPart(req) {
   const model = {
     ...assets,
     dataQueries,
-    pageContributions,
+    pageContributions
   }
 
   let body = render(view, model)
@@ -157,7 +170,7 @@ function parseContributions(contributions) {
   return contributions
 }
 
-function getDataset() {
+function oldGetDataset() {
   const datasetMap = {}
   const result = content.query({
     count: 9999,
@@ -172,7 +185,7 @@ function getDataset() {
   return datasetMap
 }
 
-function getDataQueries(datasetMap) {
+function oldGetDataQueries(datasetMap) {
   const dataQueryResult = content.query({
     count: 999,
     contentTypes: [`${app.name}:dataquery`],
@@ -204,11 +217,45 @@ function getDataQueries(datasetMap) {
       parentType: getParentType(dataquery._path),
       format: dataquery.data.datasetFormat ? dataquery.data.datasetFormat._selected : undefined,
       dataset: {
-        modified: hasData ? dateToFormat(dataset.modifiedTime) : undefined,
+        modified: hasData ? dataset.modifiedTime : undefined,
         modifiedReadable: hasData ? dateToReadable(dataset.modifiedTime) : undefined
       },
       hasData,
       isPublished: isPublished(dataquery),
+      logData: queryLogNode ? {
+        ...queryLogNode.data,
+        showWarningIcon: showWarningIcon(queryLogNode.data.modifiedResult),
+        message: i18n.localize({
+          key: queryLogNode.data.modifiedResult
+        }),
+        modified: queryLogNode.data.modified,
+        modifiedReadable: dateToReadable(queryLogNode.data.modifiedTs),
+        eventLogNodes
+      } : undefined,
+      loading: false,
+      deleting: false
+    }
+  })
+}
+
+function prepDataSources(dataSources) {
+  return dataSources.map((dataSource) => {
+    const dataset = getDataset(dataSource)
+    const hasData = !!dataset
+    const queryLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataSource._id}`)
+    const eventLogNodes = getQueryChildNodesStatus(`/queries/${dataSource._id}`)
+    return {
+      id: dataSource._id,
+      displayName: dataSource.displayName,
+      path: dataSource._path,
+      parentType: getParentType(dataSource._path),
+      format: dataSource.data.dataSource._selected,
+      dataset: {
+        modified: hasData ? dateToFormat(dataset._ts) : undefined,
+        modifiedReadable: hasData ? dateToReadable(dataset._ts) : undefined
+      },
+      hasData,
+      isPublished: isPublished(dataSource),
       logData: queryLogNode ? {
         ...queryLogNode.data,
         showWarningIcon: showWarningIcon(queryLogNode.data.modifiedResult),
