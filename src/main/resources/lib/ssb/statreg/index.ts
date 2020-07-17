@@ -1,5 +1,5 @@
 import { QueryFilters } from '../../repo/common'
-import { STATISTICS_URL, CONTACTS_URL, PUBLICATIONS_URL } from './config'
+import {STATISTICS_URL, CONTACTS_URL, PUBLICATIONS_URL, ALL_DATA_URL} from './config'
 import { extractStatistics, extractContacts, extractPublications } from './types'
 import { fetchStatRegData } from './common'
 
@@ -14,4 +14,8 @@ export function fetchContacts(filters: QueryFilters) {
 // TODO: this function has to be extended to fetch all publications (the URL used only pulls the 'upcoming' items!
 export function fetchPublications(filters: QueryFilters) {
   return fetchStatRegData('Publications', PUBLICATIONS_URL, filters, extractPublications)
+}
+
+export function fetchAllItems(filters: QueryFilters) {
+  return fetchStatRegData('*', ALL_DATA_URL, filters, extractAllData)
 }

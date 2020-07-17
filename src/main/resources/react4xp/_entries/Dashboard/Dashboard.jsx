@@ -9,6 +9,7 @@ import DashboardDataQuery from './DashboardDataQuery'
 import DashboardButtons from './DashboardButtons'
 import ClearCacheButton from './ClearCacheButton'
 import StatRegDashboard from './StatRegDashboard'
+import RefreshDataButton from "./RefreshDataButton";
 import axios from 'axios'
 import { groupBy } from 'ramda'
 import { StatRegFetchInfo } from './types'
@@ -196,7 +197,14 @@ class Dashboard extends React.Component {
           <Row>
             <Col>
               <div className="p-4 tables-wrapper">
-                <h2>Data fra Statistikkregisteret</h2>
+                <h2 class="d-inline-block w-75">Data fra Statistikkregisteret</h2>
+                <div class="d-inline-block float-right">
+                  <RefreshDataButton
+                      onSuccess={(message) => this.showSuccess(message)}
+                      onError={(message) => this.showError(message)}
+                      refreshDataServiceUrl={this.props.refreshDataServiceUrl}
+                  />
+                </div>
                 {this.renderAccordionForStatRegFetches()}
               </div>
             </Col>
