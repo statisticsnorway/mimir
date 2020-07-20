@@ -19,8 +19,8 @@
             <label>ISSN-nummer</label>
             <occurrences minimum="0" maximum="1" />
         </input>
-        <input name="url" type="TextLine">
-            <label>URL</label>
+        <input name="infoText" type="HtmlArea">
+            <label>Informasjonstekst</label>
             <occurrences minimum="0" maximum="1" />
         </input>
     </form>

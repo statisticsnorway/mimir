@@ -20,7 +20,7 @@ export interface ArticleArchive {
   issnNumber?: string;
 
   /**
-   * URL
+   * Informasjonstekst
    */
-  url?: string;
+  infoText?: string;
 }
