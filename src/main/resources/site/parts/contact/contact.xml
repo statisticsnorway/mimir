@@ -9,5 +9,6 @@
         <max-length>30</max-length>
       </config>
     </input>
+    <mixin name="contacts" />
   </form>
 </part>

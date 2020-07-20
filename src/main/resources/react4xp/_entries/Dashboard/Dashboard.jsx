@@ -13,6 +13,7 @@ import RefreshDataButton from "./RefreshDataButton";
 import axios from 'axios'
 import { groupBy } from 'ramda'
 import { StatRegFetchInfo } from './types'
+import DataQueryTable from './DataQueryTable'
 
 const byType = groupBy((dataQuery) => {
   return dataQuery.parentType
@@ -28,6 +29,8 @@ class Dashboard extends React.Component {
       showErrorAlert: false,
       showSuccessAlert: false
     }
+
+    this.renderDataQueries = this.renderDataQueries.bind(this)
   }
 
   showSuccess(msg) {
@@ -121,19 +124,7 @@ class Dashboard extends React.Component {
 
   renderTable(queries) {
     return (
-      <Table bordered striped>
-        <thead>
-          <tr>
-            <th className="roboto-bold">Spørring</th>
-            <th className="roboto-bold">Sist oppdatert</th>
-            <th className="roboto-bold">Siste aktivitet</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {this.renderDataQueries(queries)}
-        </tbody>
-      </Table>
+      <DataQueryTable queries={queries} renderDataQueries={this.renderDataQueries} />
     )
   }
 
@@ -276,7 +267,7 @@ export const DataQuery = PropTypes.shape({
   loading: PropTypes.bool,
   deleting: PropTypes.bool,
   dataset: PropTypes.shape({
-    modified: PropTypes.string,
+    modified: PropTypes.instanceOf(Date),
     modifiedReadable: PropTypes.string
   }),
   logData: PropTypes.shape({

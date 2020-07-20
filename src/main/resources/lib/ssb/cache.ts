@@ -1,3 +1,4 @@
+import { TaskLib } from '../types/task'
 import { CacheLib, Cache } from '../types/cache'
 import { Request, Response } from 'enonic-types/lib/controller'
 import { EventLibrary, EnonicEvent, EnonicEventData } from 'enonic-types/lib/event'
@@ -18,6 +19,9 @@ const {
   run
 }: ContextLibrary = __non_webpack_require__('/lib/xp/context')
 const {
+  submit, sleep
+}: TaskLib = __non_webpack_require__('/lib/xp/task')
+const {
   query,
   get
 }: ContentLibrary = __non_webpack_require__('/lib/xp/content')
@@ -34,19 +38,41 @@ const draftMenuCache: Cache = newCache({
 })
 const masterDatasetCache: Cache = newCache({
   expire: 3600,
-  size: 300
+  size: 1500
 })
 const draftDatasetCache: Cache = newCache({
   expire: 3600,
-  size: 300
+  size: 1500
 })
+const dividerCache: Cache = newCache({
+  expire: 3600,
+  size: 2
+})
+const draftRelatedArticlesCache: Cache = newCache({
+  expire: 3600,
+  size: 200
+})
+const masterRelatedArticlesCache: Cache = newCache({
+  expire: 3600,
+  size: 200
+})
+const draftRelatedFactPageCache: Cache = newCache({
+  expire: 3600,
+  size: 200
+})
+const masterRelatedFactPageCache: Cache = newCache({
+  expire: 3600,
+  size: 200
+})
+let changeQueue: EnonicEventData['nodes'] = []
+let clearTaskId: string | undefined
 
 export function setup(): void {
   log.info('initializing cache node listener')
   listener({
     type: 'node.*',
     localOnly: true,
-    callback: onNodeChange
+    callback: addToChangeQueue
   })
 
   listener({
@@ -55,47 +81,95 @@ export function setup(): void {
   })
 }
 
-function onNodeChange(event: EnonicEvent<EnonicEventData>): void {
+function addToChangeQueue(event: EnonicEvent<EnonicEventData>): void {
   const validNodes: EnonicEventData['nodes'] = event.data.nodes.filter((n) => n.repo === 'com.enonic.cms.default')
   if (validNodes.length > 0) {
-    const draftCleared: Array<string> = []
-    const masterCleared: Array<string> = []
-    validNodes.forEach((n) => {
-      // need to run in correct context for getReferences to work
-      run({
-        repository: n.repo,
-        branch: n.branch,
-        user: {
-          login: 'su',
-          idProvider: 'system'
-        },
-        principals: ['role:system.admin']
-      },
-      () => {
-        // clear id and all references to id from cache
-        log.info(`try to clear ${n.id}(${n.branch})`)
-        const content: Content | null = get({
-          key: n.id
-        })
-        if (content) {
-          clearCache(content, n.branch, n.branch === 'master' ? masterCleared : draftCleared)
-        } else {
-          // the element is deleted, so lets try to clear it only based on id, and its parent
-          clearCache({
-            _id: n.id
-          } as Content, n.branch, n.branch === 'master' ? masterCleared : draftCleared)
-          // the path on these nodes are not site, but repo relative, so we need to strip out the /content at the start
-          const parentPath: string = n.path.substring('/content'.length, n.path.lastIndexOf('/'))
-          const parent: Content | null = get({
-            key: parentPath
-          })
-          if (parent) {
-            clearCache(parent, n.branch, n.branch === 'master' ? masterCleared : draftCleared)
-          }
-        }
-      })
-    })
+    changeQueue = changeQueue.concat(validNodes)
+    addClearTask()
   }
+}
+
+function addClearTask(): void {
+  if (clearTaskId) {
+    return
+  }
+  const changeQueueLength: number = changeQueue.length
+  clearTaskId = submit({
+    description: 'check cache clearing in mimir',
+    task: () => {
+      sleep(250)
+      if (changeQueueLength === changeQueue.length) {
+        const changedNodes: EnonicEventData['nodes'] = changeQueue
+        changeQueue = [] // reset queue
+        if (changeQueueLength >= 200) { // just clear everything if there is too many changes
+          completelyClearCache({
+            clearFilterCache: true,
+            clearMenuCache: true,
+            clearDatasetCache: true,
+            clearDividerCache: true,
+            clearRelatedArticlesCache: true,
+            clearRelatedFactPageCache: true
+          })
+        } else {
+          onNodeChange(changedNodes)
+        }
+        clearTaskId = undefined
+      } else {
+        clearTaskId = undefined
+        addClearTask()
+      }
+    }
+  })
+}
+
+function onNodeChange(validNodes: EnonicEventData['nodes']): void {
+  const draftNodes: EnonicEventData['nodes'] = validNodes.filter((n) => n.branch === 'draft')
+  if (draftNodes.length > 0) {
+    clearForBranch(draftNodes, 'draft')
+  }
+  const masterNodes: EnonicEventData['nodes'] = validNodes.filter((n) => n.branch === 'master')
+  if (masterNodes.length > 0) {
+    clearForBranch(masterNodes, 'master')
+  }
+}
+
+function clearForBranch(nodes: EnonicEventData['nodes'], branch: string): void {
+  // need to run in correct context for getReferences to work
+  run({
+    repository: 'com.enonic.cms.default',
+    branch: branch,
+    user: {
+      login: 'su',
+      idProvider: 'system'
+    },
+    principals: ['role:system.admin']
+  },
+  () => {
+    const cleared: Array<string> = []
+    nodes.forEach((n) => {
+      // clear id and all references to id from cache
+      log.info(`try to clear ${n.id}(${branch})`)
+      const content: Content | null = get({
+        key: n.id
+      })
+      if (content) {
+        clearCache(content, branch, cleared)
+      } else {
+        // the element is deleted, so lets try to clear it only based on id, and its parent
+        clearCache({
+          _id: n.id
+        } as Content, branch, cleared )
+        // the path on these nodes are not site, but repo relative, so we need to strip out the /content at the start
+        const parentPath: string = n.path.substring('/content'.length, n.path.lastIndexOf('/'))
+        const parent: Content | null = get({
+          key: parentPath
+        })
+        if (parent) {
+          clearCache(parent, branch, cleared)
+        }
+      }
+    })
+  })
 }
 
 function getReferences(id: string): Array<Content> {
@@ -128,6 +202,20 @@ function clearCache(content: Content, branch: string, cleared: Array<string>): A
   if (filterCache) {
     log.info(`clear ${content._id} filter cache(${branch})`)
     filterCache.clear()
+  }
+
+  // clear related article cache
+  if (content.type === `${app.name}:article`) {
+    const relatedArticlesCache: Cache = branch === 'master' ? masterRelatedArticlesCache : draftRelatedArticlesCache
+    log.info(`clear ${content._id} from related articles cache (${branch})`)
+    relatedArticlesCache.remove(content._id)
+  }
+
+  // clear related fact page cache
+  if (content.type === `${app.name}:contentList` || content.type === `${app.name}:page`) {
+    const relatedFactPageCache: Cache = branch === 'master' ? masterRelatedFactPageCache : draftRelatedFactPageCache
+    log.info(`clear ${content._id} from related fact page cache (${branch})`)
+    relatedFactPageCache.remove(content._id)
   }
 
   // clear menu cache
@@ -212,6 +300,37 @@ export function fromDatasetCache(req: Request, key: string, fallback: () => Data
   return fallback()
 }
 
+export function fromDividerCache(dividerColor: string, fallback: () => string): string {
+  return dividerCache.get(dividerColor, () => {
+    log.info(`added ${dividerColor} to divider cache`)
+    return fallback()
+  })
+}
+
+export function fromRelatedArticlesCache(req: Request, key: string, fallback: () => unknown): unknown {
+  if (req.mode === 'live' || req.mode === 'preview') {
+    const branch: string = req.mode === 'live' ? 'master' : 'draft'
+    const relatedArticlesCache: Cache = branch === 'master' ? masterRelatedArticlesCache : draftRelatedArticlesCache
+    return relatedArticlesCache.get(key, () => {
+      log.info(`added ${key} to related articles cache (${branch})`)
+      return fallback()
+    })
+  }
+  return fallback()
+}
+
+export function fromRelatedFactPageCache(req: Request, key: string, fallback: () => unknown): unknown {
+  if (req.mode === 'live' || req.mode === 'preview') {
+    const branch: string = req.mode === 'live' ? 'master' : 'draft'
+    const relatedFactPageCache: Cache = branch === 'master' ? masterRelatedFactPageCache : draftRelatedFactPageCache
+    return relatedFactPageCache.get(key, () => {
+      log.info(`added ${key} to related fact page cache (${branch})`)
+      return fallback()
+    })
+  }
+  return fallback()
+}
+
 function completelyClearFilterCache(branch: string): void {
   const cacheMap: Map<string, Cache> = branch === 'master' ? masterFilterCaches : draftFilterCaches
   cacheMap.forEach((cache: Cache, filterKey: string) => {
@@ -233,6 +352,23 @@ function completelyClearDatasetCache(branch: string): void {
   datasetCache.clear()
 }
 
+function completelyClearDividerCache(): void {
+  log.info(`clear divider cache`)
+  dividerCache.clear()
+}
+
+function completelyClearRelatedArticleCache(branch: string): void {
+  log.info(`clear related article cache (${branch})`)
+  const relatedArticlesCache: Cache = branch === 'master' ? masterRelatedArticlesCache : draftRelatedArticlesCache
+  relatedArticlesCache.clear()
+}
+
+function completelyClearRelatedFactPageCache(branch: string): void {
+  log.info(`clear related fact page cache (${branch})`)
+  const relatedFactPageCache: Cache = branch === 'master' ? masterRelatedFactPageCache : draftRelatedFactPageCache
+  relatedFactPageCache.clear()
+}
+
 function completelyClearCache(options: CompletelyClearCacheOptions): void {
   if (options.clearFilterCache) {
     completelyClearFilterCache('master')
@@ -248,6 +384,20 @@ function completelyClearCache(options: CompletelyClearCacheOptions): void {
     completelyClearDatasetCache('master')
     completelyClearDatasetCache('draft')
   }
+
+  if (options.clearDividerCache) {
+    completelyClearDividerCache()
+  }
+
+  if (options.clearRelatedArticlesCache) {
+    completelyClearRelatedArticleCache('master')
+    completelyClearRelatedArticleCache('draft')
+  }
+
+  if (options.clearRelatedFactPageCache) {
+    completelyClearRelatedFactPageCache('master')
+    completelyClearRelatedFactPageCache('draft')
+  }
 }
 
 export interface DatasetCache {
@@ -259,6 +409,9 @@ export interface CompletelyClearCacheOptions {
   clearFilterCache: boolean;
   clearMenuCache: boolean;
   clearDatasetCache: boolean;
+  clearDividerCache: boolean;
+  clearRelatedArticlesCache: boolean;
+  clearRelatedFactPageCache: boolean;
 }
 
 export interface SSBCacheLibrary {
@@ -266,4 +419,7 @@ export interface SSBCacheLibrary {
   fromFilterCache: (req: Request, filterKey: string, key: string, fallback: () => Response) => Response;
   fromMenuCache: (req: Request, key: string, fallback: () => unknown) => unknown;
   fromDatasetCache: (req: Request, key: string, fallback: () => DatasetCache) => DatasetCache;
+  fromDividerCache: (dividerColor: string, fallback: () => string) => string;
+  fromRelatedArticlesCache: (req: Request, key: string, fallback: () => unknown) => unknown;
+  fromRelatedFactPageCache: (req: Request, key: string, fallback: () => unknown) => unknown;
 }

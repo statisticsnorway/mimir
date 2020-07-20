@@ -14,6 +14,9 @@ const {
 const {
   getImageCaption
 } = __non_webpack_require__('/lib/ssb/utils')
+const {
+  fromRelatedFactPageCache
+} = __non_webpack_require__('/lib/ssb/cache')
 const content = __non_webpack_require__( '/lib/xp/content')
 const util = __non_webpack_require__( '/lib/util')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
@@ -65,30 +68,37 @@ function renderPart(req, itemList) {
   const type = part && part.config && part.config.type ? part.config.type : undefined
   const showAll = phrases.showAll
   const showLess = phrases.showLess
-  const relatedContentLists = []
+  let relatedContentLists = []
 
   itemList.forEach((key) => {
-    const relatedContent = content.get({
-      key
+    const relatedPage = fromRelatedFactPageCache(req, key, () => {
+      const relatedContent = content.get({
+        key
+      })
+
+      if (relatedContent) {
+        if (relatedContent.type === `${app.name}:contentList` && relatedContent.data.contentList) {
+          // handles content list for part-config
+          const contentList = util.data.forceArray(relatedContent.data.contentList)
+          return contentList.map((c) => {
+            const contentListItem = content.get({
+              key: c
+            })
+            return parseRelatedContent(contentListItem, type)
+          })
+        } else { // handles content selector from content-types (articles, statistics etc)
+          return parseRelatedContent(relatedContent, type)
+        }
+      }
     })
 
-    if (relatedContent) {
-      if (relatedContent.type === `${app.name}:contentList` && relatedContent.data.contentList) {
-        // handles content list for part-config
-        const contentList = util.data.forceArray(relatedContent.data.contentList)
-        contentList.forEach((c) => {
-          const contentListItem = content.get({
-            key: c
-          })
-          if (contentListItem) {
-            relatedContentLists.push(parseRelatedContent(contentListItem, type))
-          }
-        })
-      } else { // handles content selector from content-types (articles, statistics etc)
-        relatedContentLists.push(parseRelatedContent(relatedContent, type))
-      }
+    if (Array.isArray(relatedPage)) { // might get an array from contentList
+      relatedContentLists = relatedContentLists.concat(relatedPage)
+    } else {
+      relatedContentLists.push(relatedPage)
     }
   })
+  relatedContentLists = relatedContentLists.filter((r) => !!r)
 
   if (relatedContentLists.length === 0) {
     if (req.mode === 'edit') {

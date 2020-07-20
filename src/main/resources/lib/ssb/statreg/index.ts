@@ -3,6 +3,7 @@ import {STATISTICS_URL, CONTACTS_URL, PUBLICATIONS_URL, ALL_DATA_URL} from './co
 import { extractStatistics, extractContacts, extractPublications } from './types'
 import { fetchStatRegData } from './common'
 
+
 export function fetchStatistics(filters: QueryFilters) {
   return fetchStatRegData('Statistics', STATISTICS_URL, filters, extractStatistics)
 }

@@ -35,6 +35,7 @@ class Header extends React.Component {
   toggleSubMenu(index) {
     const activeIndex = this.state.indexForCurrentActiveMenuItem === index ? undefined : index
     const mainMenu = [...this.state.mainMenu]
+    if(document.activeElement instanceof HTMLElement) document.activeElement.blur()
     mainMenu[index] = !mainMenu[index]
 
     this.setState({
@@ -112,7 +113,8 @@ class Header extends React.Component {
           <nav id="mainMenu" className="ssb-tabs">
             {mainNavigation.map((topMenuItem, index) => {
               const menuItemClick = this.toggleSubMenu.bind(this, index)
-              const activeMenuItem = this.state.indexForCurrentActiveMenuItem === index || topMenuItem.isActive
+              const activeMenuItem = this.state.indexForCurrentActiveMenuItem === index ||
+                (topMenuItem.isActive && this.state.indexForCurrentActiveMenuItem === undefined)
               return (
                 <div key={index} className={`tabItem${activeMenuItem ? ' activeTab' : ''}`}>
                   <button onClick={menuItemClick} >

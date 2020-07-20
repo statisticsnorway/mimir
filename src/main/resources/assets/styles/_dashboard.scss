@@ -95,11 +95,11 @@
   margin: 0 5px;
   text-transform: uppercase;
 }
-.tbml {
+.tbml, .tbprocessor {
   background: #af00ff57;
 }
 
-.jsonStat {
+.jsonStat, .statbankApi{
   background: #90cc93;
 }
 
@@ -125,6 +125,27 @@
     border-right: 1px solid #dee2e6;
     border-left: 1px solid #dee2e6;
   }
+
+  th.sortable-column {
+    .sortable-column-header {
+      display: flex;
+      justify-content: space-between;
+      white-space: nowrap;
+      vertical-align: middle;
+
+      span {
+        margin-right: 1rem;
+      }
+
+      .sort-icon.active {
+        color: #1a9d49;
+      }
+
+      .sort-icon.inactive {
+        color: #c3dcdc;
+      }
+    }
+  }
 }
 .ssbPopoverBody p {
   font-size: 12px;
@@ -132,4 +153,11 @@
 
 .haveList {
   cursor: pointer;
+}
+
+.warningIcon {
+  margin: 0 0 0 4px;
+  svg {
+    margin-bottom: 2px
+  }
 }

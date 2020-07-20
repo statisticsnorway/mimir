@@ -78,9 +78,9 @@ export interface KeyFigure {
       urlOrId?: string;
 
       /**
-       * Format
+       * API-spørring mot statistikkbanken (JSON-format)
        */
-      format: "json" | "xml";
+      json?: string;
 
       /**
        * Navn på x-akse dimensjon
@@ -114,9 +114,9 @@ export interface KeyFigure {
     };
 
     /**
-     * Tall fra tallbygger
+     * Tall fra tabellbygger
      */
-    tallbygger?: {
+    tbprocessor?: {
       /**
        * URL eller TBML-id
        */
