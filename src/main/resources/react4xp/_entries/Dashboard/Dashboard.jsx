@@ -9,7 +9,7 @@ import DashboardDataQuery from './DashboardDataQuery'
 import DashboardButtons from './DashboardButtons'
 import ClearCacheButton from './ClearCacheButton'
 import StatRegDashboard from './StatRegDashboard'
-import RefreshDataButton from "./RefreshDataButton";
+import RefreshDataButton from './RefreshDataButton'
 import axios from 'axios'
 import { groupBy } from 'ramda'
 import { StatRegFetchInfo } from './types'
@@ -24,6 +24,7 @@ class Dashboard extends React.Component {
     super(props)
     this.state = {
       dataQueries: props.dataQueries,
+      statRegData: props.statRegFetchStatuses,
       errorMsg: '',
       successMsg: '',
       showErrorAlert: false,
@@ -146,17 +147,17 @@ class Dashboard extends React.Component {
     )
   }
 
-  renderAccordionForStatRegFetches () {
-    console.log('Accordion StatReg statuses', this.props.statRegFetchStatuses)
+  renderAccordionForStatRegFetches() {
+    console.log('Accordion StatReg statuses', this.state.statRegData)
     return (
       <Accordion header="Status" className="mx-0" openByDefault={true}>
-        <StatRegDashboard currStatus={this.props.statRegFetchStatuses} />
+        <StatRegDashboard currStatus={this.state.statRegData} />
       </Accordion>
     )
   }
 
   render() {
-    console.log('Received StatReg statuses', this.props.statRegFetchStatuses)
+    console.log('Received StatReg statuses', this.state.statRegData)
     const groupedQueries = byType(this.state.dataQueries)
     return (
       <section className="xp-part part-dashboard container">
@@ -188,12 +189,12 @@ class Dashboard extends React.Component {
           <Row>
             <Col>
               <div className="p-4 tables-wrapper">
-                <h2 class="d-inline-block w-75">Data fra Statistikkregisteret</h2>
-                <div class="d-inline-block float-right">
+                <h2 className="d-inline-block w-75">Data fra Statistikkregisteret</h2>
+                <div className="d-inline-block float-right">
                   <RefreshDataButton
-                      onSuccess={(message) => this.showSuccess(message)}
-                      onError={(message) => this.showError(message)}
-                      refreshDataServiceUrl={this.props.refreshDataServiceUrl}
+                    onSuccess={(message) => this.showSuccess(message)}
+                    onError={(message) => this.showError(message)}
+                    refreshDataServiceUrl={this.props.statregRefreshUrl}
                   />
                 </div>
                 {this.renderAccordionForStatRegFetches()}
@@ -253,7 +254,8 @@ Dashboard.propTypes = {
     updateList: PropTypes.bool
   }),
   contentStudioBaseUrl: PropTypes.string,
-  statRegFetchStatuses: PropTypes.arrayOf(StatRegFetchInfo)
+  statRegFetchStatuses: PropTypes.arrayOf(StatRegFetchInfo),
+  statregRefreshUrl: PropTypes.string
 }
 
 export const DataQuery = PropTypes.shape({
