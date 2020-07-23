@@ -72,9 +72,9 @@
   }
 
   .article-body {
-    @include make-row;
+    @include make-row();
 
-    & > * {
+    .body-text {
       @include make-col-ready();
       @include make-col(12);
 
@@ -118,5 +118,4 @@
       padding-left: 0 !important;
     }
   }
-
 }

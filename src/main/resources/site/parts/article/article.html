@@ -33,7 +33,21 @@
             </div>
         </div>
         <div class="col-12 p-0">
-            <div class="article-body" data-th-utext="${bodyText}" />
+            <div class="article-body">
+                <div class="body-text" data-th-utext="${bodyText}" />
+                <div data-th-if="${#lists.size(appurtenantStatistics) >= 1}" class="col p-0 offset-lg-1">
+                    <div class="row">
+                        <div class="col-12 p-0">
+                            <h3>Tallene er hentet fra</h3>
+                            <div data-th-each="appurtenantStatistic : ${appurtenantStatistics}">
+                                <p data-th-if="${appurtenantStatistic.name}">
+                                    <a data-th-href="${appurtenantStatistic.href}" data-th-text="${appurtenantStatistic.name}" />
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>

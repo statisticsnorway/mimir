@@ -1,9 +1,12 @@
 const {
-  getContent, processHtml
-} = __non_webpack_require__('/lib/xp/portal')
-const {
   data
 } = __non_webpack_require__('/lib/util')
+const {
+  get
+} = __non_webpack_require__( '/lib/xp/content')
+const {
+  getContent, pageUrl, processHtml
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
@@ -50,6 +53,35 @@ function renderPart(req) {
     }
   })
 
+  const appurtenantStatistics = []
+
+  const appurtenantStatisticsXP = page.data.appurtenantStatisticsXP ? data.forceArray(page.data.appurtenantStatisticsXP) : []
+  appurtenantStatisticsXP.map((appurtenantStatisticsXPContent) => {
+    if (appurtenantStatisticsXPContent) {
+      const appurtenantStatisticsXPInfo = get({
+        key: appurtenantStatisticsXPContent
+      })
+
+      appurtenantStatistics.push({
+        name: appurtenantStatisticsXPInfo.displayName,
+        href: pageUrl({
+          id: appurtenantStatisticsXPContent
+        })
+      })
+    }
+  })
+
+  const appurtenantStatisticsCMS = page.data.appurtenantStatisticsCMS ? data.forceArray(page.data.appurtenantStatisticsCMS) : []
+  appurtenantStatisticsCMS.map((appurtenantStatisticsCMSItems) => {
+    if (appurtenantStatisticsCMSItems) {
+      appurtenantStatistics.push({
+        ...appurtenantStatisticsCMSItems
+      })
+    }
+  })
+
+  appurtenantStatistics.sort((a, b) => a.name.localeCompare(b.name))
+
   const model = {
     title: page.displayName,
     language: languageLib.getLanguage(page),
@@ -59,6 +91,7 @@ function renderPart(req) {
     pubDate,
     modifiedDate,
     authors,
+    appurtenantStatistics,
     serialNumber: page.data.serialNumber,
     introTitle: page.data.introTitle
   }

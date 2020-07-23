@@ -15,6 +15,11 @@ export interface Article {
   articleText?: string;
 
   /**
+   * Lenke til tilhørende statistikk (XP)
+   */
+  appurtenantStatisticsXP?: Array<string>;
+
+  /**
    * Løpenummer
    */
   serialNumber?: string;
@@ -37,6 +42,21 @@ export interface Article {
      * E-post
      */
     email?: string;
+  }>;
+
+  /**
+   * Lenke til tilhørende statistikk (4.7.)
+   */
+  appurtenantStatisticsCMS?: Array<{
+    /**
+     * Navn
+     */
+    name?: string;
+
+    /**
+     * URL
+     */
+    href?: string;
   }>;
 
   /**

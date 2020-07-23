@@ -56,6 +56,29 @@
             </config>
         </input>
 
+        <input name="appurtenantStatisticsXP" type="ContentSelector">
+            <label>Lenke til tilhørende statistikk (XP)</label>
+            <occurrences minimum="0" maximum="0" />
+            <config>
+                <allowContentType>statistics</allowContentType>
+            </config>
+        </input>
+
+        <item-set name="appurtenantStatisticsCMS">
+            <label>Lenke til tilhørende statistikk (4.7.)</label>
+            <occurrences minimum="0" maximum="0" />
+            <items>
+                <input name="name" type="TextLine">
+                    <label>Navn</label>
+                    <occurrences minimum="0" maximum="1" />
+                </input>
+                <input name="href" type="TextLine">
+                    <label>URL</label>
+                    <occurrences minimum="0" maximum="1" />
+                </input>
+            </items>
+        </item-set>
+
         <mixin name="relatedExternalLinks" />
 
         <mixin name="relatedArticles" />
