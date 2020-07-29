@@ -12,5 +12,5 @@ export interface RelatedFactPagePartConfig {
   /**
    * Innholdsliste
    */
-  itemList: string;
+  itemList?: string;
 }

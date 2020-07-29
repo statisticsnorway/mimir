@@ -7,6 +7,25 @@ export const style = {
 }
 export const lineColor = '#21383a'
 
+// retain the offset, but move it outs of the labels-zone
+export const Y_AXIS_TITLE_POSITION = {
+  align: 'high',
+  offset: 0,
+  rotation: 0,
+  y: -15
+}
+
+// keep the title at the end, but leave it to HC to compute offset & y-position
+export const X_AXIS_TITLE_POSITION = {
+  align: 'high',
+  offset: undefined,
+  y: undefined
+}
+
+const shouldShowStackingTotal = (highchartData) =>
+  (highchartData.graphType !== 'pie') &&
+  (highchartData.stacking === 'normal') &&
+  highchartData.showStackedTotal
 
 export const createConfig = (highchartData, displayName) => ({
   accessibility: {
@@ -16,6 +35,7 @@ export const createConfig = (highchartData, displayName) => ({
     }
   },
   chart: {
+    height: (highchartData.heightAspectRatio > 0) ? `${highchartData.heightAspectRatio}%` : null,
     plotBorderColor: '#e6e6e6',
     spacingBottom: 18,
     plotBorderWidth: 0,
@@ -57,7 +77,18 @@ export const createConfig = (highchartData, displayName) => ({
           'stroke': '#bbb'
         },
         x: 8,
-        width: 28
+        width: 28,
+        menuItems: [
+          'printChart',
+          'separator',
+          'downloadPNG',
+          'downloadJPEG',
+          'downloadPDF',
+          'downloadSVG',
+          'separator',
+          'downloadCSV',
+          'downloadXLS'
+        ]
       }
     },
     csv: {
@@ -135,15 +166,18 @@ export const createConfig = (highchartData, displayName) => ({
 
   yAxis: {
     reversed: false,
-    allowDecimals: highchartData.yAxisAllowDecimal,
+    allowDecimals: highchartData.yAxisDecimalPlaces > 0,
     labels: {
       style,
-      format: '{value:,.0f}'
+      format: `{value:,.${highchartData.yAxisDecimalPlaces || 0}f}`
     },
     max: highchartData.yAxisMax ? highchartData.yAxisMax.replace(/,/g, '.') : null,
     min: highchartData.yAxisMin ? highchartData.yAxisMin.replace(/,/g, '.') : null,
     stackLabels: {
-      enabled: highchartData.stablesum
+      enabled: shouldShowStackingTotal(highchartData),
+      // HC sets x or y := 0 by default, leaving no breathing space between the bar and the label
+      x: ((highchartData.graphType === 'bar') || (highchartData.graphType === 'barNegative')) ? 5 : 0,
+      y: ((highchartData.graphType === 'line') || (highchartData.graphType === 'area')) ? -5 : 0
     },
     tickWidth: 1,
     tickColor: '#21383a',
@@ -152,12 +186,19 @@ export const createConfig = (highchartData, displayName) => ({
     title: {
       style,
       text: highchartData.yAxisTitle || '',
-      align: 'high',
-      offset: 0,
-      rotation: 0,
-      y: 30
+      ...Y_AXIS_TITLE_POSITION
     },
     type: highchartData.yAxisType || 'linear'
+  },
+  xAxis: {
+    title: {
+      style,
+      text: highchartData.xAxisTitle || '',
+      ...X_AXIS_TITLE_POSITION
+    },
+    labels: {
+      style,
+    }
   },
   tooltip: {
     crosshairs: highchartData.graphType == 'line' && {

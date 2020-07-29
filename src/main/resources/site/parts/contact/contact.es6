@@ -1,5 +1,5 @@
 const {
-  getComponent
+  getContent, getComponent
 } = __non_webpack_require__( '/lib/xp/portal')
 const {
   render
@@ -7,9 +7,14 @@ const {
 const {
   renderError
 } = __non_webpack_require__( '/lib/error/error')
+const {
+  getContactsFromRepo
+} = __non_webpack_require__('/lib/repo/statreg/contacts')
+const {
+  ensureArray, chunkArray
+} = __non_webpack_require__('/lib/ssb/arrayUtils')
+import { find } from 'ramda'
 
-const content = __non_webpack_require__( '/lib/xp/content')
-const util = __non_webpack_require__( '/lib/util')
 const view = resolve('./contact.html')
 
 exports.get = function(req) {
@@ -22,39 +27,58 @@ exports.get = function(req) {
 
 exports.preview = (req) => renderPart(req)
 
+// split 8-digit phone numbers into groups of 2 digits each dvs. "12345678" => "12 34 56 78"
+const treatPhoneNumber = (phone) => phone ? `${phone}`.match(/..?/g).join(' ') : ''
+
+const transformContact = (contact) => ({
+  ...contact,
+  telephone: treatPhoneNumber(contact.telephone)
+})
+
+
 function renderPart(req) {
-  const WIDTH = 3 // how many boxes in a row
-  const part = getComponent() || req
-  const contactIdList = []
+  const WIDTH = 4 // how many boxes in a row
+  const page = getContent()
+  const part = getComponent()
+  const statRegContacts = getContactsFromRepo()
+  let contactIds = []
 
-  part.config.contacts = part.config.contacts && util.data.forceArray(part.config.contacts) || []
+  if (part.config.contacts) {
+    contactIds = contactIds.concat(ensureArray(part.config.contacts))
+  }
+  if (page.data.contacts) {
+    contactIds = contactIds.concat(ensureArray(page.data.contacts))
+  }
 
-  part.config.contacts.map((key) => {
-    const contactSingle = content.get({
-      key
-    })
-    contactIdList.push(contactSingle)
-  })
+  const selectedContacts = contactIds.reduce((acc, contactId) => {
+    const found = find((contact) => `${contact.id}` === `${contactId}`)(statRegContacts)
+    return found ? acc.concat(transformContact(found)) : acc
+  }, [])
 
-  const contacts = chunkArray(contactIdList, WIDTH)
+  const contacts = chunkArray(selectedContacts, WIDTH)
+
+  if (!contacts || (contacts.length < 1)) {
+    if (req.mode === 'edit' || req.mode === 'preview') {
+      return {
+        body: render(view)
+      }
+    } else {
+      return {
+        body: null
+      }
+    }
+  }
 
   const model = {
-    label: part.config.label,
+    label: getComponent().config.label,
     contacts
   }
+
   const body = render(view, model)
 
   return {
     body,
     contentType: 'text/html'
   }
-}
-
-function chunkArray(myArray, chunkSize) {
-  const results = []
-  while (myArray.length) {
-    results.push(myArray.splice(0, chunkSize))
-  }
-  return results
 }
 

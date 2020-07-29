@@ -35,6 +35,7 @@ class Header extends React.Component {
   toggleSubMenu(index) {
     const activeIndex = this.state.indexForCurrentActiveMenuItem === index ? undefined : index
     const mainMenu = [...this.state.mainMenu]
+    if(document.activeElement instanceof HTMLElement) document.activeElement.blur()
     mainMenu[index] = !mainMenu[index]
 
     this.setState({
@@ -63,7 +64,7 @@ class Header extends React.Component {
           <Link
             tabIndex={activeMenuItem ? 0 : -1 }
             href={menuItem.path}
-            icon={ menuItem.icon ? <img src={menuItem.icon}></img> : undefined }>{menuItem.title}
+            icon={ menuItem.icon ? <img src={menuItem.icon} alt={menuItem.iconAltText}/> : undefined }>{menuItem.title}
           </Link>
         </li>)
     })
@@ -98,6 +99,7 @@ class Header extends React.Component {
 
           <div className={this.state.showMainMenuOnMobile ? 'show searchfield' : 'searchfield'}>
             <Input
+              id='search_ssb'
               ariaLabel={searchText}
               searchField
               submitCallback={this.goToSearchResultPage}
@@ -111,7 +113,8 @@ class Header extends React.Component {
           <nav id="mainMenu" className="ssb-tabs">
             {mainNavigation.map((topMenuItem, index) => {
               const menuItemClick = this.toggleSubMenu.bind(this, index)
-              const activeMenuItem = this.state.indexForCurrentActiveMenuItem === index || topMenuItem.isActive
+              const activeMenuItem = this.state.indexForCurrentActiveMenuItem === index ||
+                (topMenuItem.isActive && this.state.indexForCurrentActiveMenuItem === undefined)
               return (
                 <div key={index} className={`tabItem${activeMenuItem ? ' activeTab' : ''}`}>
                   <button onClick={menuItemClick} >

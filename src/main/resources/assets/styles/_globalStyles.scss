@@ -84,7 +84,7 @@ $profiled-font-size: 18px;
 $header-font-size: 20px;
 $icon-padding: 8px;
 
-p > a {
+p > a, ul > li > a, ol > li > a, table a {
   @include open-sans;
   align-items: center;
   background-image: linear-gradient(120deg, $ssb-green-4 0%, $ssb-green-4 100%);
@@ -94,9 +94,9 @@ p > a {
   border-bottom: 1px solid $ssb-green-4;
   color: $ssb-green-4;
   cursor: pointer;
-  display: inline-flex;
+  display: inline;
   font-size: $default-font-size;
-  line-height: 1.25;
+  line-height: 1.7;
   margin-top: -3px;
   margin-bottom: -2px;
   padding: 0 1px 2px 1px;
@@ -151,6 +151,8 @@ p > a {
     &.with-icon {
       padding: 2px 2px 0;
       border-bottom: none;
+      display: inline-flex;
+      align-items: flex-start;
 
       i {
         font-size: 20px;
@@ -189,6 +191,8 @@ p > a {
   &.with-icon {
     padding: 2px 2px 0;
     border-bottom: none;
+    display: inline-flex;
+    align-items: flex-start;
 
     i {
       font-size: 16px;
@@ -218,3 +222,32 @@ p > a {
   }
 }
 /* -- End links -- */
+
+/* -- Blockquote -- */
+blockquote > p {
+  @include open-sans;
+  background-image: linear-gradient(120deg, $ssb-green-1 0%, $ssb-green-1 100%);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 50%;
+  display: inline;
+  font-size: 20px;
+  font-style: normal;
+  letter-spacing: normal;
+  line-height: 1.6;
+}
+/* -- End Blockquote -- */
+
+/* -- Table -- */
+
+table {
+  border-collapse: collapse;
+
+  td, th {
+    border: 1px solid black;
+    padding: 5px;
+  }
+
+}
+
+/* -- End Table -- */

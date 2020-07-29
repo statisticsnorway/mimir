@@ -1,9 +1,79 @@
 .article {
+  .title-ingress-wrapper {
+    @include make-row;
+
+    display: block;
+    margin-bottom: $spacer * 1;
+    margin-top: 50px;
+
+    @include media-breakpoint-down(md) {
+      padding: 0;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      padding: 0;
+    }
+
+    .ingress {
+      font-size: 20px;
+      padding-left: 0;
+    }
+
+    .introTitle {
+      @include roboto;
+      font-size: 20px;
+      line-height: 1.6;
+      margin-bottom: 4px;
+    }
+  }
+
+  .snr-dates-wrapper {
+    @include make-row;
+    margin-bottom: 8px;
+
+    & > * {
+      @include make-col-ready();
+      @include make-col(12);
+
+      @include media-breakpoint-up(lg) {
+        @include make-col(8);
+        @include make-col-offset(1);
+      }
+    }
+
+    p {
+      margin-bottom: 0;
+      margin-right: 20px;
+    }
+  }
+
+  .author-wrapper {
+    @include make-row;
+    margin-bottom: $spacer * 2;
+
+    & > * {
+      @include make-col-ready();
+      @include make-col(12);
+
+      @include media-breakpoint-up(lg) {
+        @include make-col(6);
+        @include make-col-offset(1);
+      }
+    }
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+
   .part-fact-box {
     padding: 0;
   }
 
   .article-body {
+    @include make-row;
+
     & > * {
       @include make-col-ready();
       @include make-col(12);
@@ -21,19 +91,32 @@
     & > * + section.part-divider, section.part-divider + * {
       margin-top: $spacer * 3;
     }
-  }
 
-  .external-links-component {
-    @include make-row;
-
-    & > * {
-      @include make-col-ready();
-      @include make-col(4);
-      margin-bottom: $spacer * 1;
-
-      @include media-breakpoint-down(md) {
-        @include make-col(12);
-      }
+    ul, ol {
+      padding-left: 1em;
     }
   }
+
+  .divider-wrapper {
+    @include make-row;
+    margin-top: 44px;
+
+    &:last-child {
+      display: none;
+    }
+
+    @include media-breakpoint-up(lg) {
+      margin-left: inherit;
+      margin-right: inherit;
+    }
+  }
+
+  blockquote  {
+    padding-left: 40px !important;
+
+    @include media-breakpoint-down(md) {
+      padding-left: 0 !important;
+    }
+  }
+
 }

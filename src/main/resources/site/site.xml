@@ -2,82 +2,6 @@
 <site>
   <form>
     <field-set>
-      <label>Header og meny</label>
-      <items>
-        <item-set name="topLinks">
-          <label>Topp lenker i meny</label>
-          <expanded>false</expanded>
-          <occurrences minimum="0" maximum="0"/>
-          <items>
-
-            <input type="TextLine" name="linkTitle">
-              <label>Lenketittel</label>
-              <occurrences minimum="1" maximum="1"/>
-            </input>
-
-            <option-set name="urlSrc">
-              <label>Lenkemål</label>
-              <expanded>false</expanded>
-              <occurrences minimum="0" maximum="1"/>
-              <options minimum="1" maximum="1">
-                <option name="manual">
-                  <label>Url lenke</label>
-                  <default>true</default>
-                  <help-text>Fri url felt. Legges inn som dette eks. "http://www.ssb.no"</help-text>
-                  <items>
-                    <input name="url" type="TextLine">
-                      <label>Kildelenke</label>
-                      <occurrences minimum="0" maximum="1"/>
-                    </input>
-                  </items>
-                </option>
-
-                <option name="content">
-                  <label>Lenke til internt innhold</label>
-                  <items>
-                    <input name="contentId" type="ContentSelector">
-                      <label>Relatert innhold</label>
-                      <occurrences minimum="0" maximum="1"/>
-                      <config/>
-                    </input>
-                  </items>
-                </option>
-              </options>
-            </option-set>
-          </items>
-        </item-set>
-      </items>
-    </field-set>
-    <option-set name="searchResultPage">
-      <label>Landingsside for søk</label>
-      <expanded>false</expanded>
-      <occurrences minimum="0" maximum="1"/>
-      <options minimum="1" maximum="1">
-        <option name="manual">
-          <label>Url lenke</label>
-          <default>true</default>
-          <help-text>Fri url felt. Legges inn som dette eks. "http://www.ssb.no"</help-text>
-          <items>
-            <input name="url" type="TextLine">
-              <label>Kildelenke</label>
-              <occurrences minimum="0" maximum="1"/>
-            </input>
-          </items>
-        </option>
-
-        <option name="content">
-          <label>Lenke til internt innhold</label>
-          <items>
-            <input name="contentId" type="ContentSelector">
-              <label>Relatert innhold</label>
-              <occurrences minimum="0" maximum="1"/>
-              <config/>
-            </input>
-          </items>
-        </option>
-      </options>
-    </option-set>
-    <field-set>
       <label>Kommunefakta</label>
       <items>
         <input name="municipalDataContentId" type="ContentSelector">
@@ -110,15 +34,10 @@
             <hideToggleIcon>false</hideToggleIcon>
           </config>
         </input>
-        <input type="TextLine" name="defaultMunicipality">
+        <input type="CustomSelector" name="defaultMunicipality">
           <label>Standard kommune for å vise i "preview" mode</label>
           <occurrences minimum="1" maximum="1"/>
-          <default>0101</default>
-        </input>
-        <input type="CustomSelector" name="defaultMunicipality2">
-          <label>Velg hvilken kommuner det gjelder her.</label>
-          <help-text>Varselet vil bare synes på valgte kommuner under /kommunefakta.</help-text>
-          <occurrences minimum="0" maximum="1"/>
+          <default>0301</default>
           <config>
             <service>customSelectorMunicipals</service>
           </config>
@@ -175,11 +94,11 @@
             <hideToggleIcon>false</hideToggleIcon>
           </config>
         </input>
-        <input name="menuContentId" type="ContentSelector">
-          <label>Meny</label>
-          <occurrences minimum="1" maximum="1"/>
+        <input name="headerId" type="ContentSelector">
+          <label>Header</label>
+          <occurrences minimum="0" maximum="1"/>
           <config>
-            <allowContentType>menuitem</allowContentType>
+            <allowContentType>header</allowContentType>
             <treeMode>false</treeMode>
             <showStatus>true</showStatus>
             <hideToggleIcon>false</hideToggleIcon>
@@ -200,7 +119,7 @@
   </form>
   <mappings>
     <mapping filter="/site/filters/router.js" order="10">
-      <pattern>/kommunefakta/?[^/]+$</pattern>
+      <pattern>/(kommuneareal|kommunefakta)/?[^/]+$</pattern>
     </mapping>
     <mapping controller="/site/pages/default/default.js">
       <match>type:'portal:fragment'</match>

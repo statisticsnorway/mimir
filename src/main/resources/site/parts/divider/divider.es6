@@ -7,12 +7,12 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
+const {
+  fromDividerCache
+} = __non_webpack_require__('/lib/ssb/cache')
 
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view = resolve('./divider.html')
-
-let darkBody
-let lightBody
 
 exports.get = function(req) {
   try {
@@ -27,46 +27,38 @@ exports.preview = (req) => renderPart(req, {
   dark: false
 })
 
-function renderPart(req, config) {
-  const dividerColor = config.dividerColor
-  let body
-  if (dividerColor === 'dark' && darkBody) {
-    body = darkBody
-  } else if (dividerColor !== 'dark' && lightBody) {
-    body = lightBody
-  } else {
-    const divider = new React4xp('Divider').uniqueId()
+const renderPart = (req, config) => {
+  const dividerColor = config.dividerColor || 'light'
 
-    setColor(dividerColor, divider)
+  const body = fromDividerCache(dividerColor, () => {
+    const divider = new React4xp('Divider')
+      .setProps(
+        setColor(dividerColor)
+      )
+      .setId('dividerId')
 
-    const preRenderedBody = render(view, {
-      dividerId: divider.react4xpId
+    const dividerBody = divider.renderBody({
+      body: render(view)
     })
 
-    body = divider.renderBody({
-      body: preRenderedBody
-    })
-
-    if (dividerColor === 'dark') {
-      darkBody = body
-    } else {
-      lightBody = body
-    }
-  }
+    // UD: Removes the dividerId to prevent the duplicate ids errors
+    return dividerBody.replace(/id="dividerId"/, '')
+  })
 
   return {
     body
   }
 }
 
-function setColor(dividerColor, divider) {
+const setColor = (dividerColor) => {
   if (dividerColor === 'dark') {
-    return divider.setProps({
+    return {
       dark: true
-    })
+    }
   } else {
-    return divider.setProps({
+    return {
       light: true
-    })
+    }
   }
 }
+

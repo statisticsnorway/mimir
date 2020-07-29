@@ -1,5 +1,6 @@
 const {
-  pageUrl
+  pageUrl,
+  getSite
 } = __non_webpack_require__('/lib/xp/portal')
 const {
   get
@@ -31,7 +32,12 @@ exports.filter = function(req, next) {
     targetId = get({
       key: '/ssb/kommunefakta/kommune'
     })._id
-    pageTitle = `Kommunefakta ${region}`
+    pageTitle = `Kommunefakta ${municipality ? municipality.displayName : ''}`
+  } else if (req.path.indexOf('/kommuneareal/') > -1) {
+    targetId = get({
+      key: '/ssb/kommuneareal/kommune'
+    })._id
+    pageTitle = `Kommuneareal ${municipality ? municipality.displayName : ''}`
   }
 
   if (!targetId) {
@@ -56,6 +62,11 @@ exports.filter = function(req, next) {
       readTimeout: 60000
     })
   })
+
+  if (pageTitle) {
+    const site = getSite()
+    targetResponse.body = targetResponse.body.replace(/(<title>)(.*?)(<\/title>)/i, `<title>${pageTitle} - ${site.displayName}</title>`)
+  }
 
   return {
     body: targetResponse.body

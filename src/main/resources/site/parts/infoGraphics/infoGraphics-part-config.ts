@@ -10,11 +10,6 @@ export interface InfoGraphicsPartConfig {
   image: string;
 
   /**
-   * Fotnote til bilde
-   */
-  footNote?: string;
-
-  /**
    * *IKKE LENGER I BRUK* (bruk alt tekst på valgt bilde)
    */
   altText?: string;
@@ -63,4 +58,9 @@ export interface InfoGraphicsPartConfig {
       sourceSelector?: string;
     };
   };
+
+  /**
+   * Fotnote-tekst
+   */
+  footNote?: string;
 }

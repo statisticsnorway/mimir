@@ -51,29 +51,37 @@
         <input name="articleText" type="HtmlArea">
             <label>Artikkeltekst</label>
             <config>
-                <include>*</include>
-                <allowHeadings>h3 h4 h5</allowHeadings>
+                <include>Blockquote</include>
+                <allowHeadings>h2 h3 h4 h5</allowHeadings>
             </config>
         </input>
 
+        <mixin name="relatedExternalLinks" />
+
+        <mixin name="relatedArticles" />
+
+        <mixin name="relatedFactPage" />
+
         <field-set>
-            <label>Relaterte sider</label>
+            <label>Løpenummer</label>
             <items>
-                <item-set name="relatedExternalLinkItemSet">
-                    <label>Relaterte eksterne lenker</label>
-                    <occurrences minimum="0" maximum="0"/>
-                    <items>
-                        <input type="TextLine" name="urlText">
-                            <label>Lenketekst</label>
-                            <occurrences minimum="1" maximum="1" />
-                        </input>
-                        <input type="TextLine" name="url">
-                            <label>URL</label>
-                            <occurrences minimum="1" maximum="1" />
-                        </input>
-                    </items>
-                </item-set>
+                <input name="serialNumber" type="TextLine">
+                    <label>Løpenummer</label>
+                    <occurrences minimum="0" maximum="1"/>
+                </input>
             </items>
         </field-set>
+
+        <field-set>
+            <label>Stikktittel</label>
+            <items>
+                <input name="introTitle" type="TextLine">
+                    <label>Stikktittel</label>
+                    <occurrences minimum="0" maximum="1"/>
+                </input>
+            </items>
+        </field-set>
+
+        <mixin name="contacts" />
     </form>
 </content-type>

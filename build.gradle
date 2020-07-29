@@ -21,13 +21,15 @@ dependencies {
     include "com.enonic.lib:lib-util:2.2.1"
     include "com.enonic.xp:lib-task:${xpVersion}"
     include "com.enonic.xp:lib-auth:${xpVersion}"
+    include "com.enonic.xp:lib-admin:${xpVersion}"
     include "com.enonic.lib:lib-http-client:2.0.0"
     include "com.enonic.xp:lib-i18n:${xpVersion}"
     include "com.enonic.lib:lib-cron:1.0.0"
     include "com.enonic.xp:lib-context:${xpVersion}"
     include 'com.enonic.lib:lib-cache:1.1.0'
     include "com.enonic.xp:lib-event:${xpVersion}"
-    // compile 'org.webjars.npm:ramda:0.26.1'
+    include "com.enonic.xp:lib-node:${xpVersion}"
+    include "com.enonic.xp:lib-repo:${xpVersion}"
     include 'com.enonic.lib:lib-react4xp:0.8.0'
     testCompile "com.enonic.xp:testing:${xpVersion}"
 }
@@ -77,7 +79,7 @@ task serverWebpack( type: NodeTask, dependsOn: npmInstall ) {
     inputs.dir 'src/main/resources/services'
     inputs.dir 'src/main/resources/site'
     inputs.dir 'src/main/resources/admin'
-    inputs.file 'src/main/resources/main.js'
+    inputs.file 'src/main/resources/main.es6'
     outputs.dir "${buildDir}/resources/main/lib"
     outputs.dir "${buildDir}/resources/main/services"
     outputs.dir "${buildDir}/resources/main/site"
@@ -86,7 +88,7 @@ task serverWebpack( type: NodeTask, dependsOn: npmInstall ) {
     script = file( 'node_modules/webpack-cli/bin/cli.js' )
 }
 
-task testWebpack( type: NodeTask, dependsOn: npmInstall ) {
+task testWebpack( type: NodeTask, dependsOn: npmInstall) {
     environment = [ 'NODE_ENV': nodeEnvironment() ]
     args = [ '--config', 'webpack.test.config.js', '--color', '--hide-modules' ]
     description = 'Build test JS.'
@@ -124,6 +126,7 @@ jar {
     serverWebpack.dependsOn += 'webpack_react4xp'
     serverWebpack.dependsOn += generateTypeScriptInterfaces
 
+    dependsOn += npmInstall
     dependsOn += clientJsWebpack
     dependsOn += clientTsWebpack
     dependsOn += stylesWebpack

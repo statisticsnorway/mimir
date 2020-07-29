@@ -1,4 +1,6 @@
 .part-dashboard {
+  margin: 20px 0 50px;
+
   .dataset:before {
     content: "\25CF";
     margin-right: 5px;
@@ -72,6 +74,8 @@
     .actions {
       display: flex;
       justify-content: space-around;
+      border-bottom: 0 none;
+      border-top: 0 none;
     }
   }
   .errorMsg {
@@ -82,5 +86,78 @@
   }
   .error:before {
     color: $ssb-red-3
+  }
+}
+
+.detail {
+  padding: 3px 5px;
+  border-radius: 3px;
+  margin: 0 5px;
+  text-transform: uppercase;
+}
+.tbml, .tbprocessor {
+  background: #af00ff57;
+}
+
+.jsonStat, .statbankApi{
+  background: #90cc93;
+}
+
+.klass {
+  background: skyblue;
+}
+
+.unpublished {
+  background: indianred;
+  color: white;
+}
+
+.table-bordered {
+  tr {
+    border-top: 1px solid #dee2e6;
+    border-bottom: 1px solid #dee2e6;
+    border-right: 0 none;
+    border-left: 0 none;
+  }
+  td {
+    border-top: 0 none;
+    border-bottom: 0 none;
+    border-right: 1px solid #dee2e6;
+    border-left: 1px solid #dee2e6;
+  }
+
+  th.sortable-column {
+    .sortable-column-header {
+      display: flex;
+      justify-content: space-between;
+      white-space: nowrap;
+      vertical-align: middle;
+
+      span {
+        margin-right: 1rem;
+      }
+
+      .sort-icon.active {
+        color: #1a9d49;
+      }
+
+      .sort-icon.inactive {
+        color: #c3dcdc;
+      }
+    }
+  }
+}
+.ssbPopoverBody p {
+  font-size: 12px;
+}
+
+.haveList {
+  cursor: pointer;
+}
+
+.warningIcon {
+  margin: 0 0 0 4px;
+  svg {
+    margin-bottom: 2px
   }
 }

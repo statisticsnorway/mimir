@@ -10,7 +10,7 @@ const {
   getMunicipality, removeCountyFromMunicipalityName
 } = __non_webpack_require__( '/lib/klass/municipalities')
 const {
-  getImageCaption
+  getImageAlt
 } = __non_webpack_require__( '/lib/ssb/utils')
 const {
   renderError
@@ -41,7 +41,7 @@ function renderPart(req) {
 
   const model = {
     pageDisplayName: page.displayName,
-    bannerImageAltText: getImageCaption(part.config.image),
+    bannerImageAltText: getImageAlt(part.config.image),
     bannerImage: part.config.image ? imageUrl({
       id: part.config.image,
       scale: 'block(1400,400)'

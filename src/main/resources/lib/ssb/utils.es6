@@ -15,6 +15,8 @@ const content = __non_webpack_require__( '/lib/xp/content')
 const {
   render
 } = __non_webpack_require__( '/lib/thymeleaf')
+const moment = require('moment/min/moment-with-locales')
+
 const errorView = resolve('../error/error.html')
 
 const numberWithSpaces = (x) => {
@@ -130,9 +132,31 @@ export function pathFromStringOrContent(urlSrc) {
 }
 
 
-export function getImageCaption(keyFigureId) {
+export function getImageCaption(imageId) {
   const imageContent = content.get({
-    key: keyFigureId
+    key: imageId
   })
   return imageContent !== undefined ? imageContent.data.caption : ''
 }
+
+export function getImageAlt(imageId) {
+  const imageContent = content.get({
+    key: imageId
+  })
+  return imageContent !== undefined ? imageContent.data.altText : ''
+}
+
+export function isPublished(content) {
+  const now = new Date()
+  if (content.publish.from) {
+    const from = new Date(content.publish.from)
+    return from < now
+  } else if(content.publish.first){
+    const first = new Date(content.publish.first)
+    return first < now
+  }
+  return false
+}
+
+export const dateToFormat = (ds) => moment(ds).locale('nb').format('DD.MM.YYYY HH:mm')
+export const dateToReadable = (ds) => moment(ds).locale('nb').fromNow()

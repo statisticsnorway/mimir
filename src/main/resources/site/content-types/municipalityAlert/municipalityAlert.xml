@@ -10,10 +10,14 @@
         <input type="CustomSelector" name="municipalCodes">
             <label>Velg hvilken kommuner det gjelder her.</label>
             <help-text >Varselet vil bare synes på valgte kommuner under /kommunefakta.</help-text>
-            <occurrences minimum="0" maximum="1"/>
+            <occurrences minimum="0" maximum="0"/>
             <config>
                 <service>customSelectorMunicipals</service>
             </config>
+        </input>
+        <input name="selectAllMunicipals" type="CheckBox">
+            <label>Velg for å gjelde alle kommuner</label>
+            <default>unchecked</default>
         </input>
     </form>
 </content-type>

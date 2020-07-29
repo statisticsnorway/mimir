@@ -2,6 +2,7 @@ const {
   getComponent,
   processHtml
 } = __non_webpack_require__( '/lib/xp/portal')
+const {sanitize} = __non_webpack_require__( '/lib/xp/common')
 const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
@@ -12,18 +13,17 @@ const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 exports.get = function(req) {
   try {
-    return renderPart(req)
+    const part = getComponent()
+    const accordionIds = part.config.accordion ? util.data.forceArray(part.config.accordion) : []
+    return renderPart(req, accordionIds)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-exports.preview = (req) => renderPart(req)
+exports.preview = (req, id) => renderPart(req, [id])
 
-function renderPart(req) {
-  const part = getComponent()
-  const accordionIds = part.config.accordion ? util.data.forceArray(part.config.accordion) : []
-
+function renderPart(req, accordionIds) {
   const accordions = []
 
   accordionIds.map((key) => {
@@ -32,21 +32,23 @@ function renderPart(req) {
     })
 
     if (accordion) {
-      const items = accordion.data.items ? util.data.forceArray(accordion.data.items) : []
-      accordions.push({
-        id: accordion._id,
-        body: processHtml({
-          value: accordion.data.body
-        }),
-        open: accordion.data.open,
-        items
+      const accordionContents = accordion.data.accordions ? util.data.forceArray(accordion.data.accordions) : []
+      accordionContents.forEach((accordion) => {
+        const items = accordion.items ? util.data.forceArray(accordion.items) : []
+        accordions.push({
+          id: sanitize(accordion.open),
+          body: processHtml({
+            value: accordion.body
+          }),
+          open: accordion.open,
+          items
+        })
       })
     }
   })
 
   if ( accordions.length === 0 ) {
     accordions.push({
-      id: 1,
       body: 'Feil i lasting av innhold, innhold mangler eller kunne ikke hentes.',
       open: 'Sett inn innhold!',
       items: []
@@ -56,5 +58,6 @@ function renderPart(req) {
   const props = {
     accordions: accordions
   }
-  return React4xp.render(part, props, req)
+
+  return React4xp.render('site/parts/accordion/accordion', props, req)
 }

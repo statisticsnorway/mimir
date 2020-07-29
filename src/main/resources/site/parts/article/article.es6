@@ -13,7 +13,6 @@ const {
 
 const moment = require('moment/min/moment-with-locales')
 const languageLib = __non_webpack_require__( '/lib/language')
-const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 const view = resolve('./article.html')
 
@@ -30,7 +29,7 @@ function renderPart(req) {
   moment.locale(page.language ? page.language : 'nb')
 
   const bodyText = processHtml({
-    value: page.data.articleText
+    value: page.data.articleText ? page.data.articleText.replace(/&nbsp;/g, ' ') : undefined
   })
 
   const pubDate = moment(page.publish.from).format('DD. MMMM YYYY')
@@ -39,7 +38,7 @@ function renderPart(req) {
   if (showModifiedDate) {
     modifiedDate = moment(showModifiedDate.dateOption.modifiedDate).format('DD. MMMM YYYY')
     if (showModifiedDate.dateOption.showModifiedTime) {
-      modifiedDate = moment(page.data.showModifiedDate.dateOption.modifiedDate).format('DD. MMMM YYYY h:mm')
+      modifiedDate = moment(page.data.showModifiedDate.dateOption.modifiedDate).format('DD. MMMM YYYY hh:mm')
     }
   }
 
@@ -51,8 +50,6 @@ function renderPart(req) {
     }
   })
 
-  const externalLinkConfig = page.data.relatedExternalLinkItemSet ? data.forceArray(page.data.relatedExternalLinkItemSet) : []
-
   const model = {
     title: page.displayName,
     language: languageLib.getLanguage(page),
@@ -62,36 +59,14 @@ function renderPart(req) {
     pubDate,
     modifiedDate,
     authors,
-    externalLinkConfig
+    serialNumber: page.data.serialNumber,
+    introTitle: page.data.introTitle
   }
 
-  let body = render(view, model)
-  let pageContributions
-
-  if (externalLinkConfig && externalLinkConfig.length) {
-    const externalLinksComponent = new React4xp('Links')
-      .setProps({
-        links: externalLinkConfig.map((links) => {
-          return {
-            href: links.url,
-            children: links.urlText,
-            iconType: 'externalLink',
-            isExternal: true
-          }
-        })
-      })
-      .setId('externalLinksId')
-
-    body = externalLinksComponent.renderBody({
-      body
-    })
-
-    pageContributions = externalLinksComponent.renderPageContributions()
-  }
+  const body = render(view, model)
 
   return {
     body,
-    pageContributions,
     contentType: 'text/html'
   }
 }

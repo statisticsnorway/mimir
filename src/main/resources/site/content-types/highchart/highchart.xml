@@ -15,6 +15,8 @@
       <occurrences minimum="0" maximum="1"/>
     </input>
 
+    <mixin name="dataSource"/>
+
     <input name="graphType" type="RadioButton">
       <label>Graftype</label>
       <occurrences minimum="1" maximum="1"/>
@@ -29,8 +31,17 @@
       <default>line</default>
     </input>
 
+    <input name="heightAspectRatio" type="TextLine">
+      <label>Høyde i prosent av bredde</label>
+      <default>75</default>
+      <help-text>
+        Et heltall større enn 0. Anbefalt er 75 som gir 4:3-forhold. 100 er kvadrat (1:1),
+        62 er det gylne snitt liggende, 56 er kinolerret (16:9), 162 er det gylne snitt stående.
+      </help-text>
+    </input>
+
     <input name="numberDecimals" type="RadioButton">
-      <label>Antall desimalplasser som vises</label>
+      <label>Vis desimaler for avlesingspunktene i diagrammet, antall:</label>
       <config>
         <option value="0">0</option>
         <option value="1">1</option>
@@ -51,6 +62,14 @@
       <help-text>Grupperte verdier kan vises hver for seg (ingen stabling) eller summeres i en felles søyle med stabling</help-text>
     </input>
 
+    <input name="showStackedTotal" type="Checkbox">
+      <label>Vis samlet sum for stolpe</label>
+      <help-text>
+        Hvis stabling av verdier er skrudd på OG dette feltet er avkrysset,
+        vises summen av alle verdiene fra en stabel som en etikett utenfor stabelen.
+        Er avslått som standard, da etikettene kan få plassproblemer ved større datasett og/eller store verdier.
+      </help-text>
+    </input>
 
     <input name="noLegend" type="CheckBox">
       <label>Skjul tegnforklaringen</label>
@@ -161,10 +180,6 @@
       <help-text>Må være et heltall eller desimaltall. La feltet være blankt for automatisk justering. Hvis aksen er unike kategorier, brukes heltall fra 0 og oppover.</help-text>
       <regexp>^[0-9]*[,.]?[0-9]+$</regexp>
     </input>
-    <input name="xAllowDecimal" type="checkbox">
-      <label>Tillat desimaler</label>
-      <help-text>Vanligvis avrundes akseverdiene til heltall, men ved små verdiendringer (f.eks prosent) kan man velge å tillate desimaler likevel.</help-text>
-    </input>
     <input name="xEnableLabel" type="CheckBox">
       <label>Skjul aksemarkører</label>
       <help-text>Kan skrus på dersom det ikke ønskes markører langs X-aksen (f.eks dersom tegnforklaringen gir tilstrekkelig info)</help-text>
@@ -194,9 +209,15 @@
       <help-text>Må være et heltall eller desimaltall. La feltet være blankt for automatisk justering. Hvis aksen er unike kategorier, brukes heltall fra 0 og oppover.</help-text>
       <regexp>^[0-9]*[,.]?[0-9]+$</regexp>
     </input>
-    <input name="yAxisAllowDecimal" type="CheckBox">
-      <label>Y-akse Tillat desimaler</label>
-      <help-text>Vanligvis avrundes akseverdiene til heltall, men ved små verdiendringer (f.eks prosent) kan man velge å tillate desimaler likevel.</help-text>
+    <input name="yAxisDecimalPlaces" type="RadioButton">
+      <label>Vis desimaler på Y-akseverdiene, antall:</label>
+      <config>
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+      </config>
+      <default>0</default>
+      <help-text>Her velger du hvor mange desimalplasser du vil vise i y-akse</help-text>
     </input>
   </form>
 </content-type>
