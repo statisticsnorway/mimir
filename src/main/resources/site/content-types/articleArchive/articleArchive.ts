@@ -15,12 +15,12 @@ export interface ArticleArchive {
   image?: string;
 
   /**
+   * Fritekst
+   */
+  freeText?: string;
+
+  /**
    * ISSN-nummer
    */
   issnNumber?: string;
-
-  /**
-   * Informasjonstekst
-   */
-  infoText?: string;
 }

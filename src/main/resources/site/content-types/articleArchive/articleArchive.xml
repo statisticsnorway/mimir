@@ -15,12 +15,13 @@
             <occurrences minimum="0" maximum="1" />
         </input>
 
-        <input name="issnNumber" type="TextLine">
-            <label>ISSN-nummer</label>
+        <input name="freeText" type="HtmlArea">
+            <label>Fritekst</label>
             <occurrences minimum="0" maximum="1" />
         </input>
-        <input name="infoText" type="HtmlArea">
-            <label>Informasjonstekst</label>
+
+        <input name="issnNumber" type="TextLine">
+            <label>ISSN-nummer</label>
             <occurrences minimum="0" maximum="1" />
         </input>
     </form>
