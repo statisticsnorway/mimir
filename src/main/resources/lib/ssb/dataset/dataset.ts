@@ -24,7 +24,8 @@ const {
   fetchTbprocessorData
 }: TbprocessorLib = __non_webpack_require__('/lib/ssb/dataset/tbprocessor')
 const {
-  createOrUpdateDataset
+  createOrUpdateDataset,
+  deleteDataset: deleteDatasetFromRepo
 }: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
 
 export function getDataset(content: Content<DataSource>): DatasetRepoNode<JSONstat | TbmlData> | null {
@@ -83,6 +84,25 @@ export function refreshDataset(content: Content<DataSource>): CreateOrUpdateStat
   }
 }
 
+export function deleteDataset(content: Content<DataSource>): boolean {
+  let key: string | undefined
+  switch (content.data.dataSource?._selected) {
+  case DataSourceType.STATBANK_API: {
+    key = getStatbankApiKey(content)
+    break
+  }
+  case DataSourceType.TBPROCESSOR: {
+    key = getTbprocessorKey(content)
+    break
+  }
+  }
+  if (content.data.dataSource && content.data.dataSource._selected && key) {
+    return deleteDatasetFromRepo(content.data.dataSource._selected, key)
+  } else {
+    return false
+  }
+}
+
 export function getContentWithDataSource(): Array<Content<DataSource>> {
   let start: number = 0
   let count: number = 100
@@ -114,4 +134,12 @@ export interface CreateOrUpdateStatus {
   dataset: DatasetRepoNode<JSONstat | TbmlData> | null;
   newDatasetData: boolean;
   status: string;
+}
+
+export interface DatasetLib {
+  getDataset: (content: Content<DataSource>) => DatasetRepoNode<JSONstat | TbmlData> | null;
+  refreshDataset: (content: Content<DataSource>) => CreateOrUpdateStatus;
+  deleteDataset: (content: Content<DataSource>) => boolean;
+  getContentWithDataSource: () => Array<Content<DataSource>>;
+  isDataNew: (data: JSONstat | TbmlData, dataset: DatasetRepoNode<JSONstat | TbmlData> | null) => boolean;
 }
