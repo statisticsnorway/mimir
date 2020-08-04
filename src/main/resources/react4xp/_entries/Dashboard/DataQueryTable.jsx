@@ -35,7 +35,7 @@ const SortFunctions = {
   [SortFields.TITLE]: (order) => (q1, q2) =>
     order * `${q1.displayName}`.localeCompare(`${q2.displayName}`),
   [SortFields.LAST_ACTIVITY]: (order) => (q1, q2) =>
-    compareDates(q1, q2, (dq) => dq.logData && dq.logData.modifiedTs, order)
+    order * `${q1.logData.message}`.localeCompare(`${q2.logData.message}`)
 }
 
 const SortOrder = {
@@ -47,7 +47,7 @@ const DataQueryTable = ({
   queries, renderDataQueries
 }) => {
   const [currSort, setCurrSort] = useState(SortFields.LAST_UPDATED)
-  const [currOrder, setCurrOrder] = useState(SortOrder.ASCENDING)
+  const [currOrder, setCurrOrder] = useState(SortOrder.DESCENDING)
   const [sorted, setSorted] = useState(
     sort((SortFunctions[SortFields.LAST_UPDATED])(SortOrder.ASCENDING), queries)
   )
