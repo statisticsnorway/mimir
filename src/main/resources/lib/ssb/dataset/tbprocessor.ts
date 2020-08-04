@@ -15,6 +15,9 @@ const {
   logUserDataQuery,
   Events
 }: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
+const {
+  isUrl
+} = __non_webpack_require__('/lib//ssb/utils')
 
 export function getTbprocessor(content: Content<DataSource>): DatasetRepoNode<TbmlData> | null {
   if (content.data.dataSource && content.data.dataSource._selected) {
@@ -49,14 +52,6 @@ export function fetchTbprocessorData(content: Content<DataSource>): TbmlData | n
     }
   }
   return data
-}
-
-function isUrl(urlOrId: string): boolean {
-  // eslint-disable-next-line @typescript-eslint/prefer-includes
-  if (urlOrId.indexOf('http') > -1) {
-    return true
-  }
-  return false
 }
 
 export function getTbprocessorKey(content: Content<DataSource>): string {
