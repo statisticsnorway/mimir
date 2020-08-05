@@ -151,7 +151,7 @@ export function isPublished(content) {
   if (content.publish.from) {
     const from = new Date(content.publish.from)
     return from < now
-  } else if(content.publish.first){
+  } else if (content.publish.first) {
     const first = new Date(content.publish.first)
     return first < now
   }
