@@ -42,7 +42,7 @@ export function getDataset(content: Content<DataSource>): DatasetRepoNode<JSONst
   }
 }
 
-export function refreshDataset(content: Content<DataSource>): CreateOrUpdateStatus {
+export function refreshDataset(content: Content<DataSource>, asUser: boolean = true): CreateOrUpdateStatus {
   let data: JSONstat | TbmlData | null = null
   let key: string | undefined
   switch (content.data.dataSource?._selected) {
@@ -59,9 +59,11 @@ export function refreshDataset(content: Content<DataSource>): CreateOrUpdateStat
   }
 
   if (!data || !content.data.dataSource || !content.data.dataSource._selected || !key) {
-    logUserDataQuery(content._id, {
-      message: Events.FAILED_TO_GET_DATA
-    })
+    if (asUser) {
+      logUserDataQuery(content._id, {
+        message: Events.FAILED_TO_GET_DATA
+      })
+    }
     return {
       dataquery: content,
       status: Events.FAILED_TO_GET_DATA,
@@ -138,7 +140,7 @@ export interface CreateOrUpdateStatus {
 
 export interface DatasetLib {
   getDataset: (content: Content<DataSource>) => DatasetRepoNode<JSONstat | TbmlData> | null;
-  refreshDataset: (content: Content<DataSource>) => CreateOrUpdateStatus;
+  refreshDataset: (content: Content<DataSource>, asUser: boolean) => CreateOrUpdateStatus;
   deleteDataset: (content: Content<DataSource>) => boolean;
   getContentWithDataSource: () => Array<Content<DataSource>>;
   isDataNew: (data: JSONstat | TbmlData, dataset: DatasetRepoNode<JSONstat | TbmlData> | null) => boolean;
