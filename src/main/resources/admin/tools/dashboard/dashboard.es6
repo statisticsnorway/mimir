@@ -1,13 +1,12 @@
-// import { Measurement } from '../../../lib/ssb/perf'
-import { fromDatasetCache } from '../../../lib/ssb/cache'
-
 const {
   createMeasurement,
 } = __non_webpack_require__('/lib/ssb/perf')
 const {
   getNode
 } = __non_webpack_require__( '/lib/repo/common')
-
+const {
+  fromDatasetCache
+} = __non_webpack_require__( '/lib/ssb/cache')
 const {
   assetUrl,
   serviceUrl
@@ -61,6 +60,7 @@ const MEASUREMENT_MARKS = {
   XP_DATAQUERIES: 'XP Dataqueries Fetch (content)',
   XP_CONTENT_TOTAL: 'XP Content (Total)',
   REPO_STATREG_FETCH: 'StatReg Fetch (repo)',
+  REPO_DATASOURCES: 'Fetch Datasources (from Repo)',
   XP_RENDER: 'XP Render Part'
 };
 
@@ -80,12 +80,13 @@ function renderPart(req) {
   perf.mark('start')
   const datasetMap = oldGetDataset()
   perf.mark(MEASUREMENT_MARKS.XP_DATASET)
-  const dataQueries = oldGetDataQueries(datasetMap)
+  const dataQueries = [] // oldGetDataQueries(datasetMap)
   perf.mark(MEASUREMENT_MARKS.XP_DATAQUERIES)
   const statRegFetchStatuses = getStatRegFetchStatuses()
   perf.mark(MEASUREMENT_MARKS.REPO_STATREG_FETCH)
 
-  const contentWithDataSource = prepDataSources(getContentWithDataSource())
+  const contentWithDataSource = prepDataSources(req, getContentWithDataSource())
+  perf.mark(MEASUREMENT_MARKS.REPO_DATASOURCES)
 
   const assets = getAssets()
 
@@ -238,12 +239,12 @@ function oldGetDataQueries(datasetMap) {
   })
 }
 
-function prepDataSources(dataSources) {
+function prepDataSources(req, dataSources) {
   return dataSources.map((dataSource) => {
-    const dataset = getDataset(dataSource)
+    const dataset = fromDatasetCache(req, dataSource._id, () => getDataset(dataSource))
     const hasData = !!dataset
     const queryLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataSource._id}`)
-    const eventLogNodes = getQueryChildNodesStatus(`/queries/${dataSource._id}`)
+    const eventLogNodes = [] // getQueryChildNodesStatus(`/queries/${dataSource._id}`)
     return {
       id: dataSource._id,
       displayName: dataSource.displayName,
