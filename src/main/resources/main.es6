@@ -55,9 +55,10 @@ function job() {
   log.info('-- Completed dataquery cron job --')
 }
 
+const dataqueryCron = app.config && app.config['ssb.cron.dataquery'] ? app.config['ssb.cron.dataquery'] : '0 15 * * *'
 cron.schedule({
   name: 'dataquery',
-  cron: '0 6 * * *',
+  cron: dataqueryCron,
   times: 365 * 10,
   callback: job,
   context: master
@@ -70,9 +71,10 @@ setupDatasetRepo()
 setupStatRegRepo()
 
 // and setup a cron for periodic executions in the future
+const statregCron = app.config && app.config['ssb.cron.statreg'] ? app.config['ssb.cron.statreg'] : '30 14 * * *'
 const STATREG_CRON_CONFIG = {
   name: 'StatReg Periodic Refresh',
-  cron: '30 14 * * *',
+  cron: statregCron,
   times: 365 * 10,
   callback: setupStatRegRepo,
   context: master
