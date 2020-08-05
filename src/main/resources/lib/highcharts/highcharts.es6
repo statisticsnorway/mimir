@@ -52,12 +52,9 @@ const getRowValue = (value) => {
 }
 
 export const defaultTbmlFormat = (data, graphType, xAxisType) => {
-  const rows = data.tbml.presentation.table.tbody.tr
-  let headers = data.tbml.presentation.table.thead.tr.th
+  const rows = util.data.forceArray(data.tbml.presentation.table.tbody.tr)
+  const headers = util.data.forceArray(data.tbml.presentation.table.thead.tr.th)
   let categories = []
-  if (!Array.isArray(headers)) {
-    headers = [headers]
-  }
   let series = []
   if (graphType === 'pie') {
     categories = headers

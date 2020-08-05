@@ -30,7 +30,7 @@ dependencies {
     include "com.enonic.xp:lib-event:${xpVersion}"
     include "com.enonic.xp:lib-node:${xpVersion}"
     include "com.enonic.xp:lib-repo:${xpVersion}"
-    include 'com.enonic.lib:lib-react4xp:0.8.0'
+    include "com.enonic.lib:lib-react4xp:0.8.0"
     testCompile "com.enonic.xp:testing:${xpVersion}"
 }
 
