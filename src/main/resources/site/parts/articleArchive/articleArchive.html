@@ -1,0 +1,17 @@
+<section class="xp-part article-archive container-fluid">
+    <div class="row">
+        <div class="col-12 col-lg-10 offset-lg-1 p-0">
+            <h1 data-th-text="${title}" />
+            <p data-th-text="${preamble}" />
+        </div>
+        <div class="col-12 p-0">
+            <img data-th-src="${image}" data-th-alt="${imageAltText}"/>
+        </div>
+        <div class="col-12 col-lg-10 offset-lg-1 p-0">
+            <p data-th-utext="${freeText}" />
+            <p class="d-flex justify-content-center">
+                <span>ISSN&nbsp;</span><span data-th-text="${issnNumber}" />
+            </p>
+        </div>
+    </div>
+</section>
