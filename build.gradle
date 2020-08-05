@@ -11,6 +11,8 @@ app {
     systemVersion = "${xpVersion}"
 }
 
+apply from: "react4xp.gradle"
+
 dependencies {
     include "com.enonic.lib:lib-thymeleaf:2.0.0"
     compile "com.enonic.xp:core-api:${xpVersion}"
@@ -30,7 +32,6 @@ dependencies {
     include "com.enonic.xp:lib-event:${xpVersion}"
     include "com.enonic.xp:lib-node:${xpVersion}"
     include "com.enonic.xp:lib-repo:${xpVersion}"
-    include "com.enonic.lib:lib-react4xp:0.8.0"
     testCompile "com.enonic.xp:testing:${xpVersion}"
 }
 
@@ -123,7 +124,7 @@ jar {
     exclude 'assets/styles/**/*.scss'
     exclude 'assets/styles/**/*.js'
 
-    serverWebpack.dependsOn += 'webpack_react4xp'
+    serverWebpack.dependsOn += 'config_tasks' // 'webpack_react4xp'
     serverWebpack.dependsOn += generateTypeScriptInterfaces
 
     dependsOn += npmInstall
@@ -140,121 +141,3 @@ def nodeEnvironment() {
     return nodeEnv != null ? nodeEnv : 'production'
 }
 
-import groovy.json.JsonOutput
-import groovy.json.JsonSlurper
-
-// Resolves the project folder root
-def ROOT = project.projectDir.toString()
-
-def react4xp = {}
-file("react4xp.properties").withReader { reader ->
-    react4xp = new Properties()
-    react4xp.load(reader)
-}
-
-if(react4xp.nashornPolyfillsSource != null) {
-    react4xp.NASHORNPOLYFILLS_SOURCE = react4xp.nashornPolyfillsSource
-}
-if(react4xp.buildEnv != null) {
-    react4xp.BUILD_ENV = react4xp.buildEnv
-}
-if (react4xp.buildEnv == 'development') {
-    // task npmInstall(type: NpmTask, overwrite: true) {
-    //     println "react4xp.properties#buildEnv is set to '" + react4xp.buildEnv + "':\nOVERRIDING VANILLA npmInstall IN FAVOR OF node-safe-install (nsi)." // Because nsi retains 'npm link' symlinks!
-    //     args = ['run', 'install:dev']
-
-    // }
-    npmInstall.outputs.cacheIf { true }
-    npmInstall.inputs.files("package.json", "package-lock.json").withPropertyName('configFiles').withPathSensitivity(PathSensitivity.RELATIVE)
-    npmInstall.outputs.dir('node_modules').withPropertyName('modules')
-}
-
-react4xp.masterConfigFileName = react4xp.masterConfigFileName != null ? react4xp.masterConfigFileName : "build/react4xp_constants.json"
-react4xp.outputFileName = ROOT + '/' + react4xp.masterConfigFileName
-
-react4xp.verbose = react4xp.verbose != null && react4xp.verbose.toBoolean()
-react4xp.buildRuntimeClient = react4xp.buildRuntimeClient != null && react4xp.buildRuntimeClient.toBoolean()
-react4xp.buildExternals = react4xp.buildExternals != null && react4xp.buildExternals.toBoolean()
-react4xp.overwriteConstantsFile = react4xp.overwriteConstantsFile != null && react4xp.overwriteConstantsFile.toBoolean()
-
-
-// Build the master config JSON file and the copy:
-task config_react4xp(type: NodeTask) {
-    group 'React4xp'
-    description 'Build the master config JSON file and its copy'
-
-    script = file('node_modules/react4xp-buildconstants/bin/cli.js')
-    args = [ ROOT, JsonOutput.toJson(JsonOutput.toJson(react4xp)) ]
-}
-config_react4xp.inputs.file("react4xp.properties")
-config_react4xp.outputs.file(react4xp.masterConfigFileName)
-
-config_react4xp.dependsOn += 'npmInstall'
-config_react4xp.dependsOn += 'processResources'
-
-
-// Necessary placeholder, will be filled during build
-def CONFIG = {}
-task config_tasks {
-    // After the above script has run and created the config file, use the constructed values from the script to update the configuration of the next task(s):
-    doLast {
-        // Read the file content into an object
-        def configFile = new File(react4xp.masterConfigFileName)
-        CONFIG = new JsonSlurper().parseText(configFile.text)
-
-        tasks['webpack_react4xp'].configure {
-            inputs.dir(CONFIG.SRC_SITE)
-            inputs.dir(CONFIG.SRC_R4X)
-            outputs.dir(CONFIG.BUILD_R4X)
-        }
-    }
-}
-config_tasks.dependsOn += 'config_react4xp'
-
-// Compile:
-task webpack_react4xp(type: NodeTask) {
-    group 'React4xp'
-    description 'Run the imported react4xp webpack scripts that compile the components and externals (as well as client and nashorn polyfills if needed)'
-
-    // 1 MANDATORY STEP: react4xp-build-components compiles the components added in this project into runnable/renderable components. See react4xp-build-components docs.
-    script = file('node_modules/webpack/bin/webpack.js')
-    args = [
-            '--config', 'node_modules/react4xp-build-components/webpack.config.js',
-            '--color',
-            '--env.VERBOSE=' + react4xp.verbose,
-            '--env.ENTRY_DIRS=' + react4xp.entryDirs,
-            '--env.CHUNK_DIRS=' + react4xp.chunkDirs,
-    ]
-    if (react4xp.overrideComponentWebpack != null) {
-        args += '--env.OVERRIDE_COMPONENT_WEBPACK=' + react4xp.overrideComponentWebpack
-    }
-
-    // 3 OPTIONAL STEPS. SEE SETTINGS AND (DE)ACTIVATION IN react4xp.properties:
-    if (react4xp.buildExternals) {
-        args += ['--config', 'node_modules/react4xp-runtime-externals/webpack.config.js']
-    }
-    if (react4xp.buildRuntimeClient) {
-        args += ['--config', 'node_modules/react4xp-runtime-client/webpack.config.js']
-    }
-    if (react4xp.nashornPolyfillsSource != null) {
-        args += ['--config', 'node_modules/react4xp-runtime-nashornpolyfills/webpack.config.js']
-    }
-
-    // Pretty if chatty
-    if (react4xp.verbose) {
-        args += '--progress'
-    }
-
-    // Finally, and mandatorily: tells all of the webpack steps here where to find the react4xp master config file that was built during the config_react4xp task
-    args += '--env.REACT4XP_CONFIG_FILE=' + react4xp.masterConfigFileName
-
-    if (react4xp.verbose) {
-        println "webpack_react4xp task - args:"
-        println args
-    }
-
-    inputs.file(react4xp.outputFileName)
-    inputs.file("package.json")
-    inputs.file("package-lock.json")
-}
-webpack_react4xp.dependsOn += 'config_tasks'
