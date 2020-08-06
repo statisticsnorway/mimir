@@ -67,6 +67,16 @@ steps:
         from_secret: ssb-xp7q-pass
     commands:
       - enonic app install --file build/libs/*.jar
+  - name: mabl end-to-end test
+    image: enonic/enonic-ci:7.1-node
+    environment:
+      MABL_API_KEY:
+        from_secret: mabl-api-key
+      MABL_APP_ID:
+        from_secret: mabl-application-id
+    commands:
+      - npm install -g @mablhq/mabl-cli
+      - mabl deployments create --api-key $MABL_API_KEY --application-id $MABL_APP_ID  --labels MIMIR --await-completion
 ---
 kind: pipeline
 type: docker
