@@ -93,19 +93,23 @@ export function parseKeyFigure(req: Request, keyFigure: Content<KeyFigure>, muni
   const datasetRepo: DatasetRepoNode<JSONstat> | null = getDataset(keyFigure)
 
   if (datasetRepo) {
-    const data: JSDataset | Array<JSDataset> | null | TbmlData = JSONstat(datasetRepo.data).Dataset(0)
-    const datasetFormat: KeyFigure['dataSource'] | undefined = keyFigure.data.dataSource
+    const dataSource: KeyFigure['dataSource'] | undefined = keyFigure.data.dataSource
 
-    if (datasetFormat && datasetFormat._selected === 'statbankApi') {
+    let data: JSDataset | Array<JSDataset> | null | TbmlData = datasetRepo.data
+    if (dataSource && dataSource._selected === 'statbankApi') {
+      data = JSONstat(data).Dataset(0)
+    }
+
+    if (dataSource && dataSource._selected === 'statbankApi') {
       // prepare jsonstat
       const ds: JSDataset | Array<JSDataset> | null = data as JSDataset | Array<JSDataset> | null
 
-      const xAxisLabel: string | undefined = datasetFormat.statbankApi ? datasetFormat.statbankApi.xAxisLabel : undefined
-      const yAxisLabel: string | undefined = datasetFormat.statbankApi ? datasetFormat.statbankApi.yAxisLabel : undefined
+      const xAxisLabel: string | undefined = dataSource.statbankApi ? dataSource.statbankApi.xAxisLabel : undefined
+      const yAxisLabel: string | undefined = dataSource.statbankApi ? dataSource.statbankApi.yAxisLabel : undefined
 
       // if filter get data with filter
-      if (datasetFormat.statbankApi && datasetFormat.statbankApi.datasetFilterOptions && datasetFormat.statbankApi.datasetFilterOptions._selected) {
-        const filterOptions: DatasetOption = datasetFormat.statbankApi.datasetFilterOptions
+      if (dataSource.statbankApi && dataSource.statbankApi.datasetFilterOptions && dataSource.statbankApi.datasetFilterOptions._selected) {
+        const filterOptions: DatasetOption = dataSource.statbankApi.datasetFilterOptions
 
         if (yAxisLabel && ds && !(ds instanceof Array)) {
           if (filterOptions && filterOptions.municipalityFilter && filterOptions._selected === 'municipalityFilter' && municipality) {
@@ -126,6 +130,55 @@ export function parseKeyFigure(req: Request, keyFigure: Content<KeyFigure>, muni
       } else if (xAxisLabel && ds && !(ds instanceof Array)) {
         // get all data without filter
       }
+    } else if (dataSource && dataSource._selected === 'tbprocessor') {
+      const tbmlData: TbmlData = data as TbmlData
+      const bodyRows: Array<TableRow> = util.data.forceArray(tbmlData.tbml.presentation.table.tbody.tr) as Array<TableRow>
+      const head: TableRow = tbmlData.tbml.presentation.table.thead.tr
+      const [row1, row2] = bodyRows
+      if (row1) {
+        let value: number
+        const td: number | PreliminaryData = util.data.forceArray(row1.td)[0] as number | PreliminaryData
+        if (typeof td === 'object' && td.content != undefined) {
+          value = td.content
+        } else {
+          value = td as number
+        }
+        keyFigureViewData.number = parseValue(value)
+      }
+      if (row2 && keyFigure.data.changes) {
+        let change: number
+        const td: number | PreliminaryData = util.data.forceArray(row2.td)[0] as number | PreliminaryData
+        if (typeof td === 'object' && td.content != undefined) {
+          change = td.content
+        } else {
+          change = td as number
+        }
+        let changeText: undefined | string = parseValue(change)
+        // add denomination if there is any change
+        if (changeText && keyFigure.data.changes) {
+          const denomination: string | undefined = (keyFigure.data.changes as { denomination?: string }).denomination
+          if (denomination) {
+            changeText += ` ${denomination}`
+          }
+        }
+        // set arrow direction based on change
+        let changeDirection: KeyFigureChanges['changeDirection'] = 'same'
+        if (change > 0) {
+          changeDirection = 'up'
+        } else if (change < 0) {
+          changeDirection = 'down'
+        } else {
+          changeText = localize({
+            key: 'keyFigure.noChange'
+          })
+        }
+        keyFigureViewData.changes = {
+          changeDirection,
+          changeText,
+          changePeriod: row2.th.toString()
+        }
+      }
+      keyFigureViewData.time = (util.data.forceArray(head.th)[0] as number | string).toString()
     }
     return keyFigureViewData
   }
