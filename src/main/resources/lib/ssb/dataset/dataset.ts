@@ -48,11 +48,11 @@ export function refreshDataset(content: Content<DataSource>): CreateOrUpdateStat
   case DataSourceType.STATBANK_API: {
     key = getStatbankApiKey(content)
     data = fetchStatbankApiData(content)
-  }
+  } break
   case DataSourceType.TBPROCESSOR: {
     key = getTbprocessorKey(content)
     data = fetchTbprocessorData(content)
-  }
+  } break
   }
 
   if (!data || !content.data.dataSource || !content.data.dataSource._selected || !key) {
