@@ -48,6 +48,7 @@ function job() {
   const dataSourceQueries = getContentWithDataSource()
   allHttpQueries.hits = allHttpQueries.hits.concat(dataSourceQueries)
   allHttpQueries.count = allHttpQueries.hits.length
+  allHttpQueries.total = allHttpQueries.hits.length
   updateJobLog(jobLogNode._id, (node) => {
     return {
       data: {
