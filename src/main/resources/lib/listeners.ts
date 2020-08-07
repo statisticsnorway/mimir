@@ -1,8 +1,15 @@
-import {Content, QueryResponse} from 'enonic-types/lib/content'
+import { Content, QueryResponse } from 'enonic-types/lib/content'
 import { HighchartConfig } from '../site/macros/highchart/highchart-config'
 import { KeyFigure } from '../site/content-types/keyFigure/keyFigure'
-import {EnonicEvent} from 'enonic-types/lib/event'
+import { EnonicEvent } from 'enonic-types/lib/event'
+import {DatasetRepoNode} from "./repo/dataset";
+import {JSONstat} from "./types/jsonstat-toolkit";
+import {TbmlData} from "./types/xmlParser";
+import {CreateOrUpdateStatus} from "./ssb/dataset/dataset";
 
+const {
+  getDataset
+} = __non_webpack_require__( './ssb/dataset/dataset')
 const {
   listener
 } = __non_webpack_require__('/lib/xp/event')
@@ -31,8 +38,16 @@ export function setupFetchDataOnCreateListener() {
           }
         }
       })
+      log.info('WHAT DID YOU FIND? what? ...WHAT?')
       log.info('%s', JSON.stringify(contentWithDataSource, null, 2))
-      contentWithDataSource.hits.forEach((content: Content<HighchartConfig | KeyFigure>) => refreshDataset(content))
+      contentWithDataSource.hits.forEach((content: Content<HighchartConfig | KeyFigure>) => {
+        log.info('this content have this in repo:::\n\n')
+        const repoData: DatasetRepoNode<JSONstat | TbmlData> | null = getDataset(content)
+        log.info('%s', JSON.stringify(repoData, null, 2))
+        log.info('refresh data')
+        const refreshresult: CreateOrUpdateStatus = refreshDataset(content)
+        log.info('%s', JSON.stringify(refreshresult, null, 2))
+      })
     }
   })
 }
