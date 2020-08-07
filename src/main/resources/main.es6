@@ -94,6 +94,5 @@ const STATREG_CRON_CONFIG = {
 cron.schedule(STATREG_CRON_CONFIG)
 // StatReg Repo --------------------------------------------------------------
 
-
 const now = new Date()
 log.info(`Startup script complete: ${now.toISOString()}`)
