@@ -95,11 +95,10 @@ export function parseKeyFigure(req: Request, keyFigure: Content<KeyFigure>, muni
 
   if (datasetRepo) {
     const dataSource: KeyFigure['dataSource'] | undefined = keyFigure.data.dataSource
-    let data: JSDataset | Array<JSDataset> | null | TbmlData = datasetRepo.data
+    const data: JSDataset | Array<JSDataset> | null | TbmlData = datasetRepo.data
 
     if (dataSource && dataSource._selected === DataSourceType.STATBANK_API) {
-      data = JSONstat(data).Dataset(0)
-      const ds: JSDataset | Array<JSDataset> | null = data as JSDataset | Array<JSDataset> | null
+      const ds: JSDataset | Array<JSDataset> | null = JSONstat(data).Dataset(0) as JSDataset | Array<JSDataset> | null
       const xAxisLabel: string | undefined = dataSource.statbankApi ? dataSource.statbankApi.xAxisLabel : undefined
       const yAxisLabel: string | undefined = dataSource.statbankApi ? dataSource.statbankApi.yAxisLabel : undefined
 
