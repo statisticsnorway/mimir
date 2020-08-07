@@ -14,6 +14,9 @@ const {
   setupDatasetRepo
 } = __non_webpack_require__( '/lib/repo/dataset')
 const {
+  getContentWithDataSource
+} = __non_webpack_require__( '/lib/ssb/dataset/dataset')
+const {
   refreshQueriesAsync
 } = __non_webpack_require__('/lib/task')
 const content = __non_webpack_require__( '/lib/xp/content')
@@ -45,6 +48,10 @@ function job() {
     contentTypes: [`${app.name}:dataquery`],
     query: `data.table LIKE 'http*'`
   })
+  const dataSourceQueries = getContentWithDataSource()
+  allHttpQueries.hits = allHttpQueries.hits.concat(dataSourceQueries)
+  allHttpQueries.count = allHttpQueries.hits.length
+  allHttpQueries.total = allHttpQueries.hits.length
   updateJobLog(jobLogNode._id, (node) => {
     return {
       data: {

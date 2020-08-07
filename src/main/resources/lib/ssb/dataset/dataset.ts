@@ -24,7 +24,8 @@ const {
   fetchTbprocessorData
 }: TbprocessorLib = __non_webpack_require__('/lib/ssb/dataset/tbprocessor')
 const {
-  createOrUpdateDataset
+  createOrUpdateDataset,
+  deleteDataset: deleteDatasetFromRepo
 }: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
 
 export function getDataset(content: Content<DataSource>): DatasetRepoNode<JSONstat | TbmlData> | null {
@@ -41,24 +42,28 @@ export function getDataset(content: Content<DataSource>): DatasetRepoNode<JSONst
   }
 }
 
-export function refreshDataset(content: Content<DataSource>): CreateOrUpdateStatus {
+export function refreshDataset(content: Content<DataSource>, asUser: boolean = true): CreateOrUpdateStatus {
   let data: JSONstat | TbmlData | null = null
   let key: string | undefined
   switch (content.data.dataSource?._selected) {
   case DataSourceType.STATBANK_API: {
     key = getStatbankApiKey(content)
     data = fetchStatbankApiData(content)
+    break
   }
   case DataSourceType.TBPROCESSOR: {
     key = getTbprocessorKey(content)
     data = fetchTbprocessorData(content)
+    break
   }
   }
 
   if (!data || !content.data.dataSource || !content.data.dataSource._selected || !key) {
-    logUserDataQuery(content._id, {
-      message: Events.FAILED_TO_GET_DATA
-    } )
+    if (asUser) {
+      logUserDataQuery(content._id, {
+        message: Events.FAILED_TO_GET_DATA
+      })
+    }
     return {
       dataquery: content,
       status: Events.FAILED_TO_GET_DATA,
@@ -78,6 +83,25 @@ export function refreshDataset(content: Content<DataSource>): CreateOrUpdateStat
       newDatasetData: hasNewData,
       dataset
     }
+  }
+}
+
+export function deleteDataset(content: Content<DataSource>): boolean {
+  let key: string | undefined
+  switch (content.data.dataSource?._selected) {
+  case DataSourceType.STATBANK_API: {
+    key = getStatbankApiKey(content)
+    break
+  }
+  case DataSourceType.TBPROCESSOR: {
+    key = getTbprocessorKey(content)
+    break
+  }
+  }
+  if (content.data.dataSource && content.data.dataSource._selected && key) {
+    return deleteDatasetFromRepo(content.data.dataSource._selected, key)
+  } else {
+    return false
   }
 }
 
@@ -112,4 +136,12 @@ export interface CreateOrUpdateStatus {
   dataset: DatasetRepoNode<JSONstat | TbmlData> | null;
   newDatasetData: boolean;
   status: string;
+}
+
+export interface DatasetLib {
+  getDataset: (content: Content<DataSource>) => DatasetRepoNode<JSONstat | TbmlData> | null;
+  refreshDataset: (content: Content<DataSource>, asUser: boolean) => CreateOrUpdateStatus;
+  deleteDataset: (content: Content<DataSource>) => boolean;
+  getContentWithDataSource: () => Array<Content<DataSource>>;
+  isDataNew: (data: JSONstat | TbmlData, dataset: DatasetRepoNode<JSONstat | TbmlData> | null) => boolean;
 }
