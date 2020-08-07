@@ -13,6 +13,8 @@ import { Dataset as JSDataset, Dimension, Category } from '../types/jsonstat-too
 import { UtilLibrary } from '../types/util'
 import { DatasetCache, SSBCacheLibrary } from './cache'
 import { Request } from 'enonic-types/lib/controller'
+import { DatasetRepoNode } from '../repo/dataset'
+import { DataSource as DataSourceType } from '../repo/dataset'
 const {
   query
 }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
@@ -39,6 +41,9 @@ const {
   fromDatasetCache
 }: SSBCacheLibrary = __non_webpack_require__( '/lib/ssb/cache')
 const util: UtilLibrary = __non_webpack_require__( '/lib/util')
+const {
+  getDataset
+} = __non_webpack_require__( '/lib/ssb/dataset/dataset')
 
 const contentTypeName: string = `${app.name}:keyFigure`
 
@@ -86,7 +91,33 @@ export function parseKeyFigure(req: Request, keyFigure: Content<KeyFigure>, muni
   }
 
   const dataQueryId: string | undefined = keyFigure.data.dataquery
-  if (dataQueryId) {
+  const datasetRepo: DatasetRepoNode<JSONstat> | null = getDataset(keyFigure)
+
+  if (datasetRepo) {
+    const dataSource: KeyFigure['dataSource'] | undefined = keyFigure.data.dataSource
+    const data: JSDataset | Array<JSDataset> | null | TbmlData = datasetRepo.data
+
+    if (dataSource && dataSource._selected === DataSourceType.STATBANK_API) {
+      const ds: JSDataset | Array<JSDataset> | null = JSONstat(data).Dataset(0) as JSDataset | Array<JSDataset> | null
+      const xAxisLabel: string | undefined = dataSource.statbankApi ? dataSource.statbankApi.xAxisLabel : undefined
+      const yAxisLabel: string | undefined = dataSource.statbankApi ? dataSource.statbankApi.yAxisLabel : undefined
+
+      // if filter get data with filter
+      if (dataSource.statbankApi && dataSource.statbankApi.datasetFilterOptions && dataSource.statbankApi.datasetFilterOptions._selected) {
+        const filterOptions: DatasetOption = dataSource.statbankApi.datasetFilterOptions
+        getDataWithFilterStatbankApi(keyFigureViewData, municipality, filterOptions, ds, xAxisLabel, yAxisLabel)
+      } else if (xAxisLabel && ds && !(ds instanceof Array)) {
+        // get all data without filter
+      }
+    } else if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
+      getDataTbProcessor(keyFigureViewData, data, keyFigure)
+    }
+    return keyFigureViewData
+  }
+
+  // TODO: Fjerne koden nedenfor når vi har fjernet dataQuery fra innholdstypen Keyfigures
+
+  if (dataQueryId && !datasetRepo) {
     const cachedQuery: DatasetCache = fromDatasetCache(req, dataQueryId, () => {
       const dataQueryContent: Content<Dataquery> = getDataquery({
         key: dataQueryId
@@ -114,77 +145,100 @@ export function parseKeyFigure(req: Request, keyFigure: Content<KeyFigure>, muni
       // if filter get data with filter
       if (jsonStatConfig && jsonStatConfig.datasetFilterOptions && jsonStatConfig.datasetFilterOptions._selected) {
         const filterOptions: DatasetOption = jsonStatConfig.datasetFilterOptions
-
-        if (yAxisLabel && ds && !(ds instanceof Array)) {
-          if (filterOptions && filterOptions.municipalityFilter && filterOptions._selected === 'municipalityFilter' && municipality) {
-            const filterTarget: string = filterOptions.municipalityFilter.municipalityDimension
-            // get value and label from json-stat data, filtering on municipality
-            let municipalData: MunicipalData | null = getDataFromMunicipalityCode(ds, municipality.code, yAxisLabel, filterTarget)
-            // not all municipals have data, so if its missing, try the old one
-            if ((!municipalData || (municipalData.value === null || municipalData.value === 0)) && municipality.changes && municipality.changes.length > 0) {
-              municipalData = getDataFromMunicipalityCode(ds, municipality.changes[0].oldCode, yAxisLabel, filterTarget)
-            }
-            if (municipalData && municipalData.value !== null) {
-              // add data to key figure view
-              keyFigureViewData.number = parseValue(municipalData.value)
-              keyFigureViewData.time = localizeTimePeriod(municipalData.label)
-            }
-          }
-        }
+        getDataWithFilterStatbankApi(keyFigureViewData, municipality, filterOptions, ds, xAxisLabel, yAxisLabel)
       } else if (xAxisLabel && ds && !(ds instanceof Array)) {
       // get all data without filter
       }
     } else if (datasetFormat._selected === 'tbml') {
-      const tbmlData: TbmlData = data as TbmlData
-      const bodyRows: Array<TableRow> = util.data.forceArray(tbmlData.tbml.presentation.table.tbody.tr) as Array<TableRow>
-      const head: TableRow = tbmlData.tbml.presentation.table.thead.tr
-      const [row1, row2] = bodyRows
-      if (row1) {
-        let value: number
-        const td: number | PreliminaryData = util.data.forceArray(row1.td)[0] as number | PreliminaryData
-        if (typeof td === 'object' && td.content != undefined) {
-          value = td.content
-        } else {
-          value = td as number
-        }
-        keyFigureViewData.number = parseValue(value)
-      }
-      if (row2 && keyFigure.data.changes) {
-        let change: number
-        const td: number | PreliminaryData = util.data.forceArray(row2.td)[0] as number | PreliminaryData
-        if (typeof td === 'object' && td.content != undefined) {
-          change = td.content
-        } else {
-          change = td as number
-        }
-        let changeText: undefined | string = parseValue(change)
-        // add denomination if there is any change
-        if (changeText && keyFigure.data.changes) {
-          const denomination: string | undefined = (keyFigure.data.changes as { denomination?: string }).denomination
-          if (denomination) {
-            changeText += ` ${denomination}`
-          }
-        }
-        // set arrow direction based on change
-        let changeDirection: KeyFigureChanges['changeDirection'] = 'same'
-        if (change > 0) {
-          changeDirection = 'up'
-        } else if (change < 0) {
-          changeDirection = 'down'
-        } else {
-          changeText = localize({
-            key: 'keyFigure.noChange'
-          })
-        }
-        keyFigureViewData.changes = {
-          changeDirection,
-          changeText,
-          changePeriod: row2.th.toString()
-        }
-      }
-      keyFigureViewData.time = (util.data.forceArray(head.th)[0] as number | string).toString()
+      getDataTbProcessor(keyFigureViewData, data, keyFigure)
     }
   }
+  return keyFigureViewData
+}
+
+function getDataTbProcessor(
+  keyFigureViewData: KeyFigureView,
+  data: JSDataset | Array<JSDataset> | null | TbmlData,
+  keyFigure: Content<KeyFigure>
+): KeyFigureView {
+  const tbmlData: TbmlData = data as TbmlData
+  const bodyRows: Array<TableRow> = util.data.forceArray(tbmlData.tbml.presentation.table.tbody.tr) as Array<TableRow>
+  const head: TableRow = tbmlData.tbml.presentation.table.thead.tr
+  const [row1, row2] = bodyRows
+
+  if (row1) {
+    let value: number
+    const td: number | PreliminaryData = util.data.forceArray(row1.td)[0] as number | PreliminaryData
+    if (typeof td === 'object' && td.content != undefined) {
+      value = td.content
+    } else {
+      value = td as number
+    }
+    keyFigureViewData.number = parseValue(value)
+  }
+  if (row2 && keyFigure.data.changes) {
+    let change: number
+    const td: number | PreliminaryData = util.data.forceArray(row2.td)[0] as number | PreliminaryData
+    if (typeof td === 'object' && td.content != undefined) {
+      change = td.content
+    } else {
+      change = td as number
+    }
+    let changeText: undefined | string = parseValue(change)
+    // add denomination if there is any change
+    if (changeText && keyFigure.data.changes) {
+      const denomination: string | undefined = (keyFigure.data.changes as { denomination?: string }).denomination
+      if (denomination) {
+        changeText += ` ${denomination}`
+      }
+    }
+    // set arrow direction based on change
+    let changeDirection: KeyFigureChanges['changeDirection'] = 'same'
+    if (change > 0) {
+      changeDirection = 'up'
+    } else if (change < 0) {
+      changeDirection = 'down'
+    } else {
+      changeText = localize({
+        key: 'keyFigure.noChange'
+      })
+    }
+    keyFigureViewData.changes = {
+      changeDirection,
+      changeText,
+      changePeriod: row2.th.toString()
+    }
+  }
+  keyFigureViewData.time = (util.data.forceArray(head.th)[0] as number | string).toString()
+
+  return keyFigureViewData
+}
+
+function getDataWithFilterStatbankApi(
+  keyFigureViewData: KeyFigureView,
+  municipality: MunicipalityWithCounty | undefined,
+  filterOptions: DatasetOption,
+  ds: JSDataset | Array<JSDataset>| null,
+  xAxisLabel: string | undefined,
+  yAxisLabel: string | undefined
+): KeyFigureView {
+  if (yAxisLabel && ds && !(ds instanceof Array)) {
+    if (filterOptions && filterOptions.municipalityFilter && filterOptions._selected === 'municipalityFilter' && municipality) {
+      const filterTarget: string = filterOptions.municipalityFilter.municipalityDimension
+      // get value and label from json-stat data, filtering on municipality
+      let municipalData: MunicipalData | null = getDataFromMunicipalityCode(ds, municipality.code, yAxisLabel, filterTarget)
+      // not all municipals have data, so if its missing, try the old one
+      if ((!municipalData || (municipalData.value === null || municipalData.value === 0)) && municipality.changes && municipality.changes.length > 0) {
+        municipalData = getDataFromMunicipalityCode(ds, municipality.changes[0].oldCode, yAxisLabel, filterTarget)
+      }
+      if (municipalData && municipalData.value !== null) {
+        // add data to key figure view
+        keyFigureViewData.number = parseValue(municipalData.value)
+        keyFigureViewData.time = localizeTimePeriod(municipalData.label)
+      }
+    }
+  }
+
   return keyFigureViewData
 }
 
