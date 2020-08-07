@@ -89,7 +89,8 @@ steps:
         {{else}}
           build {{build.number}} failed. {{build.author}} triggered the build. Maybe do a fix? Here's the failed build: {{build.link}}
         {{/success}}
-    when: status [success, failure]
+    when:
+      status: [success, failure]
 ---
 kind: pipeline
 type: docker
