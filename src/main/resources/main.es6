@@ -19,6 +19,9 @@ const {
 const content = __non_webpack_require__( '/lib/xp/content')
 const cron = __non_webpack_require__('/lib/cron')
 const cache = __non_webpack_require__('/lib/ssb/cache')
+const {
+  setupFetchDataOnCreateListener
+} = __non_webpack_require__('/lib/listeners')
 
 const user = {
   login: 'su',
@@ -69,6 +72,7 @@ cache.setup()
 setupEventLog()
 setupDatasetRepo()
 setupStatRegRepo()
+setupFetchDataOnCreateListener()
 
 // and setup a cron for periodic executions in the future
 const statregCron = app.config && app.config['ssb.cron.statreg'] ? app.config['ssb.cron.statreg'] : '30 14 * * *'
@@ -82,6 +86,7 @@ const STATREG_CRON_CONFIG = {
 
 cron.schedule(STATREG_CRON_CONFIG)
 // StatReg Repo --------------------------------------------------------------
+
 
 const now = new Date()
 log.info(`Startup script complete: ${now.toISOString()}`)
