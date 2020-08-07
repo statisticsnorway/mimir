@@ -14,6 +14,7 @@ const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
 
+const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view = resolve('./articleArchive.html')
 
 exports.get = (req) => {
@@ -31,8 +32,12 @@ const renderPart = (req) => {
 
   const title = page.displayName ? page.displayName : undefined
 
-  /* TODO: Use the LeadParagraph react component from the ssb component library */
-  const preamble = page.data.preamble ? page.data.preamble : undefined
+  const preambleText = page.data.preamble ? page.data.preamble : undefined
+  const preambleObj = new React4xp('LeadParagraph')
+    .setProps({
+      children: preambleText
+    })
+    .setId('preamble')
 
   /* TODO: Image needs to rescale dynamically */
   const image = page.data.image ? imageUrl({
@@ -49,17 +54,29 @@ const renderPart = (req) => {
 
   const model = {
     title,
-    preamble,
     image,
     imageAltText,
     freeText,
     issnNumber
   }
 
-  const body = render(view, model)
+  const isOutsideContentStudio = (
+    req.mode === 'live' ||
+      req.mode === 'preview'
+  )
+
+  const body = preambleObj.renderBody({
+    body: render(view, model),
+    clientRender: isOutsideContentStudio
+  })
+  const pageContributions = preambleObj.renderPageContributions({
+    pageContributions: {},
+    clientRender: isOutsideContentStudio
+  })
 
   return {
     body,
+    pageContributions,
     contentType: 'text/html'
   }
 }

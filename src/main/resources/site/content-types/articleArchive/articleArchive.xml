@@ -10,7 +10,7 @@
             <label>Bilde</label>
             <occurrences minimum="0" maximum="1" />
         </input>
-
+        <!-- TODO: Add Content Selector for list of articles -->
         <input name="freeText" type="HtmlArea">
             <label>Fritekst</label>
             <occurrences minimum="0" maximum="1" />
