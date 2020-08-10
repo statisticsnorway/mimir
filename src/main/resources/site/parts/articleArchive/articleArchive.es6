@@ -1,12 +1,12 @@
 const {
-  data
-} = __non_webpack_require__('/lib/util')
-const {
-  getContent, imageUrl, processHtml
+  getContent, imageUrl, pageUrl, processHtml
 } = __non_webpack_require__('/lib/xp/portal')
 const {
   getImageAlt
 } = __non_webpack_require__('/lib/ssb/utils')
+const {
+  getPhrases
+} = __non_webpack_require__( '/lib/language')
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
@@ -14,6 +14,8 @@ const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
 
+const contentLib = __non_webpack_require__('/lib/xp/content')
+const moment = require('moment/min/moment-with-locales')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view = resolve('./articleArchive.html')
 
@@ -30,6 +32,9 @@ exports.preview = (req) => renderPart(req)
 const renderPart = (req) => {
   const page = getContent()
 
+  moment.locale(page.language ? page.language : 'nb')
+  const phrases = getPhrases(page)
+
   const title = page.displayName ? page.displayName : undefined
 
   const preambleText = page.data.preamble ? page.data.preamble : undefined
@@ -39,15 +44,30 @@ const renderPart = (req) => {
     })
     .setId('preamble')
 
-  /* TODO: Image needs to rescale dynamically */
+  /* TODO: Image needs to rescale dynamically in mobile version */
   const image = page.data.image ? imageUrl({
     id: page.data.image,
     scale: 'block(1200, 275)'
   }) : undefined
   const imageAltText = page.data.image ? getImageAlt(page.data.image) : ''
 
+  const articleArchiveId = page._id
+  const listOfArticles = parseArticleData(articleArchiveId, phrases)
+  const listOfArticlesObj = new React4xp('ListOfArticles')
+    .setProps({
+      listOfArticleTitle: phrases.articleAnalysisPublications,
+      articles: listOfArticles.map((article) => {
+        return {
+          ...article
+        }
+      }),
+      showAll: phrases.showAll,
+      showLess: phrases.showLess
+    })
+    .setId('listOfArticles')
+
   const freeText = page.data.freeText ? processHtml({
-    value: removeNonBreakingSpaceFor(page.data.freeText)
+    value: page.data.freeText.replace(/&nbsp;/g, ' ')
   }) : undefined
 
   const issnNumber = page.data.issnNumber ? page.data.issnNumber : undefined
@@ -65,12 +85,20 @@ const renderPart = (req) => {
       req.mode === 'preview'
   )
 
-  const body = preambleObj.renderBody({
-    body: render(view, model),
+  let body = render(view, model)
+  let pageContributions
+
+  body = preambleObj.renderBody({
+    body
+  })
+  pageContributions = preambleObj.renderPageContributions()
+
+  body = listOfArticlesObj.renderBody({
+    body,
     clientRender: isOutsideContentStudio
   })
-  const pageContributions = preambleObj.renderPageContributions({
-    pageContributions: {},
+  pageContributions = listOfArticlesObj.renderPageContributions({
+    pageContributions,
     clientRender: isOutsideContentStudio
   })
 
@@ -81,6 +109,51 @@ const renderPart = (req) => {
   }
 }
 
-const removeNonBreakingSpaceFor = (htmlText) => {
-  return htmlText.replace(/&nbsp;/g, ' ')
+const parseArticleData = (articleArchiveId, phrases) => {
+  const articlesWithArticleArchivesSelected = contentLib.query({
+    count: 9999,
+    sort: 'publish.from DESC',
+    query: `data.articleArchive = "${articleArchiveId}"`,
+    contentTypes: [
+      `${app.name}:article`
+    ]
+  })
+
+  if (!articlesWithArticleArchivesSelected || !articlesWithArticleArchivesSelected.hits.length > 0) {
+    return []
+  }
+
+  return articlesWithArticleArchivesSelected.hits.map((articleContent) => {
+    return {
+      year: getYear(articleContent.publish, articleContent.createdTime),
+      subtitle: getSubTitle(articleContent, phrases),
+      href: pageUrl({
+        id: articleContent._id
+      }),
+      title: articleContent.displayName,
+      preamble: articleContent.data.ingress
+    }
+  })
 }
+
+const getYear = (publish, createdTime) => {
+  return publish && createdTime ? moment(publish.from).format('YYYY') : moment(createdTime).format('YYYY')
+}
+
+const getSubTitle = (articleContent, phrases) => {
+  let type = ''
+  if (articleContent.type === `${app.name}:article`) {
+    type = phrases.articleName
+  }
+
+  let prettyDate = ''
+  if (articleContent.publish && articleContent.publish.from) {
+    prettyDate = moment(articleContent.publish.from).format('DD. MMMM YYYY')
+  } else {
+    prettyDate = moment(articleContent.createdTime).format('DD. MMMM YYYY')
+  }
+
+  return `${type ? `${type} / ` : ''}${prettyDate}`
+}
+
+
