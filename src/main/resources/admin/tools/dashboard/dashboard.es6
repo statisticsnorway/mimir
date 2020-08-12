@@ -72,6 +72,10 @@ exports.get = function(req) {
   }
 }
 
+const preferContentWithDataSource = (contentWithDataSource, dataQueries) => {
+  const dsMap = contentWithDataSource.reduce((acc, content) => {content.})
+}
+
 /**
  * @param {object} req
  * @return {{pageContributions: *, body: *}}
@@ -93,7 +97,7 @@ function renderPart(req) {
   const dashboardDataset = new React4xp('Dashboard/Dashboard')
     .setProps({
       header: 'Alle spørringer',
-      dataQueries: [...contentWithDataSource],
+      dataQueries: preferContentWithDataSource(contentWithDataSource, dataQueries),
       dashboardService: assets.dashboardService,
       clearCacheServiceUrl: assets.clearCacheServiceUrl,
       featureToggling: {
