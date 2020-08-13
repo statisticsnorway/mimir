@@ -21,6 +21,9 @@ const content: ContentLibrary = __non_webpack_require__('/lib/xp/content')
 const {
   sanitize
 }: CommonLibrary = __non_webpack_require__('/lib/xp/common')
+const {
+  sleep
+} = __non_webpack_require__('/lib/xp/task')
 
 const defaultSelectionFilter: SelectionFilter = {
   filter: 'all',
@@ -73,6 +76,11 @@ export function get(url: string, json: DataqueryRequestData | undefined,
   if (result.status !== 200) {
     log.error(`HTTP ${url} (${result.status} ${result.message})`)
   }
+
+  if (result.status === 429) { // 429 = too many requests
+    sleep(30 * 1000)
+  }
+
   if (result.status === 200 && result.body) {
     return JSON.parse(result.body)
   }
@@ -185,13 +193,6 @@ function updateDataset(data: string, dataset: Content<Dataset>, dataquery: Conte
         }
       }
     })
-    log.info('UpdateDataset')
-    log.info('Dataquery: ' + dataquery._id)
-    log.info('%s', JSON.stringify(update, null, 2))
-    log.info('  ---- -----')
-    log.info('  ')
-    log.info('  ')
-    log.info('  ')
 
     if (!update) {
       const message: string = `Failed to update dataset: ${dataset._id}`
