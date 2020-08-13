@@ -7,6 +7,9 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
+const {
+  getDataset
+} = __non_webpack_require__( '/lib/ssb/dataset/dataset')
 
 const view = resolve('./table.html')
 
@@ -20,9 +23,22 @@ exports.get = (req) => {
 
 function renderPart(req) {
   const page = getContent()
+  const dataSource = page.data.dataSource
+  const datasetRepo = getDataset(page)
+  let tableTitle
+
+  if (dataSource && dataSource._selected === 'tbprocessor') {
+    if (datasetRepo) {
+      tableTitle = datasetRepo.data.tbml.metadata.title.content
+    } else {
+      tableTitle = 'Ingen tabell knyttet til innhold'
+    }
+  }
+
 
   const model = {
-    title: page.displayName
+    title: page.displayName,
+    tableTitle
   }
 
   const body = render(view, model)
