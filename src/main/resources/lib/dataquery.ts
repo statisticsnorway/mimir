@@ -193,13 +193,6 @@ function updateDataset(data: string, dataset: Content<Dataset>, dataquery: Conte
         }
       }
     })
-    log.info('UpdateDataset')
-    log.info('Dataquery: ' + dataquery._id)
-    log.info('%s', JSON.stringify(update, null, 2))
-    log.info('  ---- -----')
-    log.info('  ')
-    log.info('  ')
-    log.info('  ')
 
     if (!update) {
       const message: string = `Failed to update dataset: ${dataset._id}`
