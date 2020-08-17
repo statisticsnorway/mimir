@@ -1,3 +1,10 @@
+const {areaConfig} = __non_webpack_require__( '/lib/highcharts/graphAreaConfig')
+const {pieConfig} = __non_webpack_require__( '/lib/highcharts/graphPieConfig')
+const {barNegativeConfig} = __non_webpack_require__( '/lib/highcharts/graphBarNegative')
+const {columnConfig} = __non_webpack_require__( '/lib/highcharts/graphColumnConfig')
+const {lineConfig} = __non_webpack_require__( '/lib/highcharts/graphLineConfig')
+const {defaultConfig} = __non_webpack_require__( '/lib/highcharts/graphDefault')
+
 const { X_AXIS_TITLE_POSITION, Y_AXIS_TITLE_POSITION } = __non_webpack_require__( './config')
 
 const {
@@ -11,6 +18,7 @@ const {
   defaultFormat,
   defaultTbmlFormat
 } = __non_webpack_require__('/lib/highcharts/highcharts')
+
 const {
   parseDataWithMunicipality
 } = __non_webpack_require__('/lib/ssb/dataset')
@@ -22,10 +30,17 @@ const {
 
 
 export function prepareHighchartsGraphConfig(highchartContent, highchartData, isJsonStat, datasetFormat) {
-  const config = createConfig(highchartContent.data, highchartContent.displayName)
-  const graphType = highchartContent.data.graphType
 
-  const axisConfig = {
+  const options = {
+    isJsonStat,
+    xAxisLabel: isJsonStat ? (datasetFormat.jsonStat || datasetFormat[DataSourceType.STATBANK_API]).xAxisLabel : undefined
+    /*showLabels: determineShowLabels(graphType, highchartContent.data.switchRowsAndColumns, isJsonStat),
+    useGraphDataCategories: determineUseGraphsDataCategories(graphType, highchartContent.data.switchRowsAndColumns, isJsonStat)*/
+  }
+  log.info('%s', JSON.stringify(highchartData, null, 2))
+  const graphConfig = getGraphConfig(highchartContent, highchartData.data, options)
+
+  /*const axisConfig = {
     graphType,
     highchartContent,
     config,
@@ -33,13 +48,31 @@ export function prepareHighchartsGraphConfig(highchartContent, highchartData, is
     xAxisLabel: isJsonStat ? (datasetFormat.jsonStat || datasetFormat[DataSourceType.STATBANK_API]).xAxisLabel : undefined,
     showLabels: determineShowLabels(graphType, highchartContent.data.switchRowsAndColumns, isJsonStat),
     useGraphDataCategories: determineUseGraphsDataCategories(graphType, highchartContent.data.switchRowsAndColumns, isJsonStat)
+  }*/
+
+  graphConfig.series = highchartData.series
+ // config.xAxis = prepareXAxis(axisConfig)
+
+  return graphConfig
+}
+
+function getGraphConfig(highchartContent, categories, options) {
+  switch(highchartContent.data.graphType) {
+    case 'area':
+      return areaConfig(highchartContent,categories, options)
+    case 'bar':
+      return pieConfig(highchartContent,categories, options)
+    case 'barNegative':
+      return barNegativeConfig(highchartContent, categories)
+    case 'column':
+      return columnConfig(highchartContent, categories, options)
+    case 'line':
+      return lineConfig(highchartContent, categories, options)
+    case 'pie':
+      return pieConfig(highchartContent, categories, options)
+    default:
+      return defaultConfig(highchartContent, categories, options)
   }
-
-  config.series = highchartData.series
-  config.xAxis = prepareXAxis(axisConfig)
-  if (graphType === 'barNegative' || graphType === 'bar') config.yAxis = prepareYAxis(axisConfig)
-
-  return config
 }
 
 function determineUseGraphsDataCategories(graphType, switchRowsAndColumns, isJsonStat) {
@@ -57,15 +90,6 @@ function determineShowLabels(graphType, switchRowsAndColumns, isJsonStat) {
           graphType === 'area' ||
           switchRowsAndColumns ||
           (!isJsonStat && (graphType === 'column' || graphType === 'bar')))
-}
-
-function prepareYAxis(axisConfig) {
-  return {
-    title: {
-      ...axisConfig.config.yAxis.title,
-      ...X_AXIS_TITLE_POSITION
-    }
-  }
 }
 
 
@@ -91,7 +115,7 @@ function prepareXAxis(xAxisConfig) {
     const highchartContent = xAxisConfig.highchartContent
     return {
       categories: xAxisConfig.useGraphDataCategories ? xAxisConfig.categories : [highchartContent.displayName],
-      gridLineWidth: xAxisConfig.graphType === 'line' ? 0 : 1,
+      gridLineWidth: 1,
       lineColor,
       tickInterval: highchartContent.data.tickInterval ? highchartContent.data.tickInterval.replace(/,/g, '.') : null,
       labels: {
@@ -102,7 +126,7 @@ function prepareXAxis(xAxisConfig) {
       min: highchartContent.data.xAxisMin ? highchartContent.data.xAxisMin.replace(/,/g, '.') : null,
       // Confusing detail: when type=bar, X axis becomes Y and vice versa.
       // In other words, include 'bar' in this if-test, instead of putting it in the yAxis config
-      tickmarkPlacement: (xAxisConfig.graphType == 'column' || xAxisConfig.graphType == 'bar') ? 'between' : 'on',
+      tickmarkPlacement: 'on',
       title: xAxisConfig.graphType === 'bar' ? {
         ...xAxisConfig.config.xAxis.title,
         ...Y_AXIS_TITLE_POSITION

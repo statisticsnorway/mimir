@@ -1,0 +1,43 @@
+const {
+  X_AXIS_TITLE_POSITION,
+  Y_AXIS_TITLE_POSITION,
+  createDefaultConfig
+} = __non_webpack_require__('/lib/highcharts/config')
+
+export function barNegativeConfig(highchartContent, categories, options) {
+  const defaultConfig = createDefaultConfig(highchartContent.data, highchartContent.displayName)
+  return {
+    ...defaultConfig,
+    chart: {
+      type: 'bar'
+    },
+    yAxis: {
+      title: {
+        ...defaultConfig.yAxis.title,
+        ...X_AXIS_TITLE_POSITION
+      },
+      stackLabels: {
+        enabled: highchartContent.stacking === 'normal' && highchartContent.showStackedTotal,
+        x: 5,
+        y: 0
+      }
+    },
+    xAxis: {
+      title: {
+        ...defaultConfig.xAxis.title,
+        ...Y_AXIS_TITLE_POSITION
+      },
+      categories: categories,
+      reversed: false,
+      labels: {
+        enable: highchartContent.data.switchRowsAndColumns,
+        step: 1,
+        style
+      },
+      lineColor,
+      accessibility: {
+        description: options.xAxisLabel
+      }
+    }
+  }
+}
