@@ -18,7 +18,8 @@ export const list = ( municipalCode ) => {
   const now = new Date()
   return query({
     query: `data.selectAllMunicipals = 'true' OR 
-    data.municipalCodes IN ('${municipalCode}') AND 
+    data.municipalCodes IN ('${municipalCode}') AND _path CONTAINS ('${data.municipalPageType}') 
+    OR data.municipalPageType = 'showOnAll' AND
     publish.from LIKE '*' AND (publish.to NOT LIKE '*' OR publish.to > '${now.toISOString()}')`,
     contentType: contentTypeName
   })
