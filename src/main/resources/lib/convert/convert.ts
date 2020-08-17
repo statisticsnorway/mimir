@@ -28,7 +28,17 @@ export function setupHandlers(socket: Socket): void {
       }).hits as Array<Content<KeyFigure>>
 
       keyFigures.forEach((keyFigure, index) => {
-        convertKeyFigure(keyFigure)
+        try {
+          convertKeyFigure(keyFigure)
+        } catch (err) {
+          socket.emit('convert-error', {
+            id: keyFigure._id,
+            type: keyFigure.type,
+            path: keyFigure._path,
+            displayName: keyFigure.displayName,
+            error: err.toString()
+          })
+        }
         socket.emit('convert-key-figure-update', {
           key: 'convert-key-figure',
           current: index + 1
@@ -55,7 +65,7 @@ export function setupHandlers(socket: Socket): void {
             id: highchart._id,
             type: highchart.type,
             path: highchart._path,
-            name: highchart._name,
+            displayName: highchart.displayName,
             error: err.toString()
           })
         }
@@ -81,6 +91,50 @@ function convert(element: Content<DataSource>, queryId: string): void {
         if (dataSource) {
           c.data.dataSource = dataSource
         }
+
+        // remove old attributes from highchart
+        if (c.type === `${app.name}:highchart`) {
+          if (c.data.hasOwnProperty('xAllowDecimal')) {
+            delete (c.data as unknown as OldHighchartData).xAllowDecimal
+          }
+          if (c.data.hasOwnProperty('yAxisAllowDecimal')) {
+            delete (c.data as unknown as OldHighchartData).yAxisAllowDecimal
+          }
+          if (c.data.hasOwnProperty('type')) {
+            delete (c.data as unknown as OldHighchartData).type
+          }
+          if (c.data.hasOwnProperty('numberdecimals')) {
+            delete (c.data as unknown as OldHighchartData).numberdecimals
+          }
+          if (c.data.hasOwnProperty('stabling')) {
+            delete (c.data as unknown as OldHighchartData).stabling
+          }
+          if (c.data.hasOwnProperty('zoomtype')) {
+            delete (c.data as unknown as OldHighchartData).zoomtype
+          }
+          if (c.data.hasOwnProperty('kildetekst')) {
+            delete (c.data as unknown as OldHighchartData).kildetekst
+          }
+          if (c.data.hasOwnProperty('kildeurl')) {
+            delete (c.data as unknown as OldHighchartData).kildeurl
+          }
+          if (c.data.hasOwnProperty('forklaring-datagrunnlag')) {
+            delete (c.data as unknown as OldHighchartData)['forklaring-datagrunnlag']
+          }
+          if (c.data.hasOwnProperty('nolegend')) {
+            delete (c.data as unknown as OldHighchartData).nolegend
+          }
+          if (c.data.hasOwnProperty('pie-legend')) {
+            delete (c.data as unknown as OldHighchartData)['pie-legend']
+          }
+          if (c.data.hasOwnProperty('byttraderogkolonner')) {
+            delete (c.data as unknown as OldHighchartData).byttraderogkolonner
+          }
+          if (c.data.hasOwnProperty('stabelsum')) {
+            delete (c.data as unknown as OldHighchartData).stabelsum
+          }
+        }
+
         return c
       }
     })
@@ -93,6 +147,8 @@ function convert(element: Content<DataSource>, queryId: string): void {
       targetBranch: 'master',
       includeDependencies: true
     })
+  } else {
+    throw new Error(`Query with id ${queryId} doesn't exist`)
   }
 }
 
@@ -100,6 +156,8 @@ function convertHighchart(highchart: Content<Highchart>): void {
   const queryId: string | undefined = highchart.data.dataquery
   if (queryId) {
     convert(highchart, queryId)
+  } else {
+    throw new Error('No queryId')
   }
 }
 
@@ -152,4 +210,20 @@ function dataqueryToDataSource(dataquery: Content<Dataquery>): DataSource['dataS
 export interface Socket {
   on: (event: string, handler: () => void) => void;
   emit: (event: string, data: string | object) => void;
+}
+
+interface OldHighchartData extends DataSource{
+  xAllowDecimal: boolean;
+  yAxisAllowDecimal: boolean;
+  type: string;
+  numberdecimals: number;
+  stabling: string;
+  zoomtype: string;
+  kildetekst: string;
+  kildeurl: string;
+  'forklaring-datagrunnlag': string;
+  nolegend: boolean;
+  'pie-legend': boolean;
+  byttraderogkolonner: boolean;
+  stabelsum: boolean;
 }

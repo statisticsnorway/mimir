@@ -17,6 +17,7 @@ class Convert extends React.Component {
       loadingJobs: true,
       errorMessage: ``,
       jobs: [],
+      jobErrors: [],
       wsConnection: new ExpWS(),
       io: null,
       isConnected: false
@@ -58,11 +59,13 @@ class Convert extends React.Component {
   }
 
   componentDidMount() {
+    // fetch jobs from the server
     Axios.get(this.props.convertServiceUrl).then((res) => {
       const {
         wsConnection
       } = this.state
 
+      // listen to open and close ws connection, so we can tell the user they have disconnected
       wsConnection.setEventHandler('close', (event) => {
         this.onConnectionClose(event)
       })
@@ -77,15 +80,24 @@ class Convert extends React.Component {
         io: new wsConnection.Io()
       })
 
+      // keep-alive for socket (or it will timeout and stop working after 5 minutes)
       setInterval(() => {
         this.state.io.emit('keep-alive', 'ping')
       }, 1000 * 60 * 3)
 
+      // listen for convert error jobs
+      this.state.io.on(`convert-error`, (errorInfo) => {
+        this.setState({
+          errors: (this.state.jobErrors.push(errorInfo))
+        })
+      })
+
+      // setup listeners for each job
       this.state.jobs.forEach((job) => {
         this.setupWSListener(job.key)
       })
     }).catch((err) => {
-      console.log(err)
+      console.error(err)
       this.setState({
         errorMessage: `Feilet å hente jobber, prøv igjen eller kontakt utvikler`,
         loadingJobs: false
@@ -133,6 +145,18 @@ class Convert extends React.Component {
     }
   }
 
+  renderJobErrors() {
+    return this.state.jobErrors.map((jobError) => {
+      return (
+        <Row key={jobError.id} className="convert-error mb-1">
+          <Col className="col-3">{jobError.displayName}</Col>
+          <Col className="col-4">{jobError.path}</Col>
+          <Col className="col-5">{jobError.error}</Col>
+        </Row>
+      )
+    })
+  }
+
   render() {
     return (
       <Container className="dashboard-convert">
@@ -146,6 +170,7 @@ class Convert extends React.Component {
           </Col>
         </Row>
         {this.renderJobs()}
+        {this.renderJobErrors()}
       </Container>
     )
   }
