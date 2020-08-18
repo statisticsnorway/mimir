@@ -10,11 +10,6 @@ export interface Article {
   ingress: string;
 
   /**
-   * Arkiv
-   */
-  articleArchive?: Array<string>;
-
-  /**
    * Artikkeltekst
    */
   articleText?: string;

@@ -48,15 +48,6 @@
             <label>Ingress</label>
         </input>
 
-        <!-- TODO: Added for testing purposes, supposed to be added in MIMIR-538 -->
-        <input name="articleArchive" type="ContentSelector">
-            <label>Arkiv</label>
-            <occurrences minimum="0" maximum="0" />
-            <config>
-                <allowContentType>articleArchive</allowContentType>
-            </config>
-        </input>
-
         <input name="articleText" type="HtmlArea">
             <label>Artikkeltekst</label>
             <config>

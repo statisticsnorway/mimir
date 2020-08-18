@@ -38,13 +38,21 @@ class ListOfArticles extends React.Component {
 
   getButtonText() {
     const {
-      showAll, showLess, articles
+      articles, showAll, showLess
     } = this.props
 
     if (this.state.isHidden) {
-      return <span><ChevronDown size="18" className="mr-2" />{showAll + ' 10/' + articles.length}</span>
+      return (
+        <span>
+          <ChevronDown size="18" className="chevron-icons" />{showAll + ' 10/' + articles.length}
+        </span>
+      )
     }
-    return <span><ChevronUp size="18" className="mr-2" />{showLess + ' ' + articles.length + '/' + articles.length}</span>
+    return (
+      <span>
+        <ChevronUp size="18" className="chevron-icons" />{showLess + ' ' + articles.length + '/' + articles.length}
+      </span>
+    )
   }
 
   renderShowMoreButton() {
@@ -69,9 +77,9 @@ class ListOfArticles extends React.Component {
   addArticle(articles) {
     return articles.map((article, index) => {
       return (
-        <div key={`article-${index}`} className={`col-12 mt-1 mb-3 ${this.state.isHidden ? 'd-none' : ''} ${this.getBreakpoints(index)}`}>
+        <div key={`article-${index}`} className={`article-container col-12 ${this.state.isHidden ? 'd-none' : ''} ${this.getBreakpoints(index)}`}>
           <Text small>{article.subtitle}</Text>
-          <p className="my-2"><Link href={article.href} linkType='header'>{article.title}</Link></p>
+          <p><Link href={article.href} linkType='header'>{article.title}</Link></p>
           <Paragraph>{article.preamble}</Paragraph>
         </div>
       )
@@ -88,11 +96,11 @@ class ListOfArticles extends React.Component {
     } = this.props
     const groupedArticles = groupArticlesByYear(articles)
 
-    return Object.entries(groupedArticles).map(([year, articles]) => {
+    return Object.entries(groupedArticles).map(([year, articles], index) => {
       return (
-        <React.Fragment key={`groupedArticles-${year.id}`}>
-          <Divider light className="mb-3" />
-          <div className="row mb-3">
+        <React.Fragment key={`groupedArticles-${index}`}>
+          <Divider light />
+          <div className="articles-container row">
             <div className="col-12 col-lg-1">
               {this.addYear(year)}
             </div>
@@ -108,12 +116,19 @@ class ListOfArticles extends React.Component {
   }
 
   addTitle() {
-    return <Title size={2} className="mb-4">{this.props.listOfArticleTitle}</Title>
+    const {
+      articles, listOfArticlesSectionTitle
+    } = this.props
+
+    if (articles.length > 0) {
+      return <Title size={2} className="list-of-articles-title">{listOfArticlesSectionTitle}</Title>
+    }
+    return ''
   }
 
   render() {
     return (
-      <div className="col-12 mt-5">
+      <div className="list-of-articles-container col-12">
         {this.addTitle()}
         {this.addArticles()}
         {this.renderShowMoreButton()}
@@ -123,7 +138,7 @@ class ListOfArticles extends React.Component {
 }
 
 ListOfArticles.propTypes = {
-  listOfArticleTitle: PropTypes.string,
+  listOfArticlesSectionTitle: PropTypes.string,
   articles: PropTypes.arrayOf(
     PropTypes.shape({
       year: PropTypes.string,

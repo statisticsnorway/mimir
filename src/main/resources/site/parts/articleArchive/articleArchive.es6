@@ -47,15 +47,14 @@ const renderPart = (req) => {
   /* TODO: Image needs to rescale dynamically in mobile version */
   const image = page.data.image ? imageUrl({
     id: page.data.image,
-    scale: 'block(1200, 275)'
+    scale: 'block(1180, 275)'
   }) : undefined
   const imageAltText = page.data.image ? getImageAlt(page.data.image) : ''
 
-  const articleArchiveId = page._id
-  const listOfArticles = parseArticleData(articleArchiveId, phrases)
+  const listOfArticles = parseArticleData(page._id, phrases)
   const listOfArticlesObj = new React4xp('ListOfArticles')
     .setProps({
-      listOfArticleTitle: phrases.articleAnalysisPublications,
+      listOfArticlesSectionTitle: phrases.articleAnalysisPublications,
       articles: listOfArticles.map((article) => {
         return {
           ...article
@@ -70,7 +69,7 @@ const renderPart = (req) => {
     value: page.data.freeText.replace(/&nbsp;/g, ' ')
   }) : undefined
 
-  const issnNumber = page.data.issnNumber ? page.data.issnNumber : undefined
+  const issnNumber = page.data.issnNumber ? 'ISSN ' + page.data.issnNumber : undefined
 
   const model = {
     title,
@@ -81,39 +80,35 @@ const renderPart = (req) => {
   }
 
   const isOutsideContentStudio = (
-    req.mode === 'live' ||
-      req.mode === 'preview'
+    req.mode === 'live' || req.mode === 'preview'
   )
 
-  let body = render(view, model)
-  let pageContributions
-
-  body = preambleObj.renderBody({
-    body
+  const preambleBody = preambleObj.renderBody({
+    body: render(view, model)
   })
-  pageContributions = preambleObj.renderPageContributions()
+  const preamblePageContributions = preambleObj.renderPageContributions()
 
-  body = listOfArticlesObj.renderBody({
-    body,
+  const finalBody = listOfArticlesObj.renderBody({
+    body: preambleBody,
     clientRender: isOutsideContentStudio
   })
-  pageContributions = listOfArticlesObj.renderPageContributions({
-    pageContributions,
+  const finalPagePageContributions = listOfArticlesObj.renderPageContributions({
+    pageContributions: preamblePageContributions,
     clientRender: isOutsideContentStudio
   })
 
   return {
-    body,
-    pageContributions,
+    body: finalBody,
+    pageContributions: finalPagePageContributions,
     contentType: 'text/html'
   }
 }
 
-const parseArticleData = (articleArchiveId, phrases) => {
+const parseArticleData = (pageId, phrases) => {
   const articlesWithArticleArchivesSelected = contentLib.query({
     count: 9999,
     sort: 'publish.from DESC',
-    query: `data.articleArchive = "${articleArchiveId}"`,
+    query: `data.articleArchive = "${pageId}"`,
     contentTypes: [
       `${app.name}:article`
     ]
