@@ -56,6 +56,14 @@
             </config>
         </input>
 
+        <input name="articleArchive" type="ContentSelector">
+            <label>Arkiv</label>
+            <occurrences minimum="0" maximum="0" />
+            <config>
+                <allowContentType>articleArchive</allowContentType>
+            </config>
+        </input>
+
         <mixin name="relatedExternalLinks" />
 
         <mixin name="relatedArticles" />
