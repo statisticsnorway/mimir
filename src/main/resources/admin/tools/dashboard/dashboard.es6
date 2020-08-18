@@ -43,6 +43,7 @@ const {
   getContentWithDataSource,
   getDataset
 } = __non_webpack_require__('/lib/ssb/dataset/dataset')
+const util = __non_webpack_require__( '/lib/util')
 
 const view = resolve('./dashboard.html')
 const DEFAULT_CONTENTSTUDIO_URL = getToolUrl('com.enonic.app.contentstudio', 'main')
@@ -280,7 +281,7 @@ const getStatRegFetchStatuses = () => {
     const eventLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, eventLogKey)
     return {
       ...acc,
-      [key]: eventLogNode.data.latestEventInfo
+      [key]:  eventLogNode.data.latestEventInfo
     }
   }, {})
 }
