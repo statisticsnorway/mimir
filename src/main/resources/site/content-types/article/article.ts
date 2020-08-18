@@ -20,6 +20,11 @@ export interface Article {
   articleText?: string;
 
   /**
+   * Arkiv
+   */
+  articleArchive?: Array<string>;
+
+  /**
    * Løpenummer
    */
   serialNumber?: string;
