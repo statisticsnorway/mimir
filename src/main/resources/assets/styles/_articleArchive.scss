@@ -29,19 +29,19 @@
     .articles-container {
       margin-bottom: $spacer * 1.5;
 
-      & * > {
-        .article-container {
-          margin-top: $spacer * 0.25;
-          margin-bottom: $spacer * 1.75;
+      & > * {
+        @include media-breakpoint-down(md) {
+          padding: 0;
+        }
+      }
 
-          p {
-            margin-top: $spacer * 0.5;
-            margin-bottom: $spacer * 0.5;
-          }
+      .article-container {
+        margin-top: $spacer * 0.25;
+        margin-bottom: $spacer * 1.75;
 
-          @include media-breakpoint-down(md) {
-            padding: 0;
-          }
+        p {
+          margin-top: $spacer * 0.5;
+          margin-bottom: $spacer * 0.5;
         }
 
         @include media-breakpoint-down(md) {
