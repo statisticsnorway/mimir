@@ -14,6 +14,9 @@ const {
   logUserDataQuery,
   Events
 }: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
+const {
+  isUrl
+} = __non_webpack_require__('/lib/ssb/utils')
 
 export function getStatbankApi(content: Content<DataSource>): DatasetRepoNode<JSONstat> | null {
   if (content.data.dataSource && content.data.dataSource._selected) {
@@ -26,12 +29,17 @@ export function getStatbankApi(content: Content<DataSource>): DatasetRepoNode<JS
 }
 
 export function fetchStatbankApiData(content: Content<DataSource>): JSONstat | null {
+  const baseUrl: string = app.config && app.config['ssb.pxwebapi.baseUrl'] ? app.config['ssb.pxwebapi.baseUrl'] : 'https://data.ssb.no/api/v0/no'
   let data: JSONstat | null = null
   if (content.data.dataSource) {
     try {
       const dataSource: DataSource['dataSource'] = content.data.dataSource
       if (dataSource._selected && dataSource.statbankApi && dataSource.statbankApi.json) {
-        data = fetchData(dataSource.statbankApi.urlOrId, dataSource.statbankApi.json && JSON.parse(dataSource.statbankApi.json), undefined, content._id)
+        let url: string = `${baseUrl}/table/${dataSource.statbankApi.urlOrId}`
+        if (isUrl(dataSource.statbankApi.urlOrId)) {
+          url = dataSource.statbankApi.urlOrId as string
+        }
+        data = fetchData(url, dataSource.statbankApi.json && JSON.parse(dataSource.statbankApi.json), undefined, content._id)
       }
     } catch (e) {
       const message: string = `Failed to fetch data from statregApi: ${content._id} (${e})`

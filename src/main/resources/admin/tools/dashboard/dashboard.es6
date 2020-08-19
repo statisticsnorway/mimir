@@ -113,6 +113,7 @@ function renderPart(req) {
       dataQueries: preferContentWithDataSource(contentWithDataSource, dataQueries),
       dashboardService: assets.dashboardService,
       clearCacheServiceUrl: assets.clearCacheServiceUrl,
+      convertServiceUrl: assets.convertServiceUrl,
       featureToggling: {
         updateList: req.params.updateList ? true : false
       },
@@ -179,6 +180,12 @@ function getAssets() {
     }),
     clearCacheServiceUrl: serviceUrl({
       service: 'clearCache'
+    }),
+    wsServiceUrl: serviceUrl({
+      service: 'websocket'
+    }),
+    convertServiceUrl: serviceUrl({
+      service: 'convert'
     })
   }
 }
