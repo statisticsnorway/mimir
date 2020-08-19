@@ -1,11 +1,14 @@
 const {
+  mergeDeepRight
+} = require('ramda')
+
+const {
   createDefaultConfig
 } = __non_webpack_require__('/lib/highcharts/config')
 
 export function columnConfig(highchartContent, categories, options){
-
-  const config = {
-    ...createDefaultConfig(highchartContent.data, highchartContent.displayName),
+  const defaultConfig = createDefaultConfig(highchartContent.data, highchartContent.displayName)
+  const customConfig = {
     chart: {
       type: 'column'
     },
@@ -26,5 +29,5 @@ export function columnConfig(highchartContent, categories, options){
     }
   }
 
-  return config
+  return mergeDeepRight(defaultConfig, customConfig)
 }

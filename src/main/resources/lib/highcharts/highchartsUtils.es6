@@ -30,6 +30,7 @@ const {
 
 
 export function prepareHighchartsGraphConfig(highchartContent, highchartData, isJsonStat, datasetFormat) {
+  log.info('%s', JSON.stringify(datasetFormat, null, 2))
 
   const options = {
     isJsonStat,
@@ -37,7 +38,7 @@ export function prepareHighchartsGraphConfig(highchartContent, highchartData, is
     /*showLabels: determineShowLabels(graphType, highchartContent.data.switchRowsAndColumns, isJsonStat),
     useGraphDataCategories: determineUseGraphsDataCategories(graphType, highchartContent.data.switchRowsAndColumns, isJsonStat)*/
   }
-  log.info('%s', JSON.stringify(highchartData, null, 2))
+
   const graphConfig = getGraphConfig(highchartContent, highchartData.data, options)
 
   /*const axisConfig = {
@@ -63,7 +64,7 @@ function getGraphConfig(highchartContent, categories, options) {
     case 'bar':
       return pieConfig(highchartContent,categories, options)
     case 'barNegative':
-      return barNegativeConfig(highchartContent, categories)
+      return barNegativeConfig(highchartContent, categories, options)
     case 'column':
       return columnConfig(highchartContent, categories, options)
     case 'line':

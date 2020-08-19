@@ -109,6 +109,8 @@ function renderPart(req, highchartIds) {
 function createHighchartData(req, highchartContent, data, datasetFormat) {
 
   const isJsonStat = datasetFormat._selected === 'jsonStat' || datasetFormat._selected === DataSourceType.STATBANK_API
+  log.info('%s', JSON.stringify(datasetFormat, null, 2))
+  log.info('is jsonstat %s', JSON.stringify(isJsonStat, null, 2))
   const highchartsData = prepareHighchartsData(req, highchartContent, data, datasetFormat)
   const highchartsGraphConfig = prepareHighchartsGraphConfig(highchartContent, highchartsData, isJsonStat, datasetFormat)
 

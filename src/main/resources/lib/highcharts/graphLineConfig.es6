@@ -1,10 +1,14 @@
 const {
+  mergeDeepRight
+} = require('ramda')
+
+const {
   createDefaultConfig
 } = __non_webpack_require__('/lib/highcharts/config')
 
 export function lineConfig(highchartsContent, categories, options) {
-  return {
-    ...createDefaultConfig(highchartsContent.data, highchartsContent.displayName),
+  const defaultConfig = createDefaultConfig(highchartsContent.data, highchartsContent.displayName)
+  const customConfig = {
     chart: {
       type: 'line'
     },
@@ -30,4 +34,5 @@ export function lineConfig(highchartsContent, categories, options) {
       gridLineWidth: 0,
     }
   }
+  return mergeDeepRight(defaultConfig, customConfig)
 }

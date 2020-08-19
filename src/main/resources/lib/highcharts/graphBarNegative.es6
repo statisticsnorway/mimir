@@ -1,13 +1,17 @@
 const {
+  mergeDeepRight
+} = require('ramda')
+const {
   X_AXIS_TITLE_POSITION,
   Y_AXIS_TITLE_POSITION,
-  createDefaultConfig
+  createDefaultConfig,
+  lineColor,
+  style
 } = __non_webpack_require__('/lib/highcharts/config')
 
 export function barNegativeConfig(highchartContent, categories, options) {
   const defaultConfig = createDefaultConfig(highchartContent.data, highchartContent.displayName)
-  return {
-    ...defaultConfig,
+  const customConfig = {
     chart: {
       type: 'bar'
     },
@@ -36,8 +40,9 @@ export function barNegativeConfig(highchartContent, categories, options) {
       },
       lineColor,
       accessibility: {
-        description: options.xAxisLabel
+        description: options.xAxisLabel ? options.xAxisLabel : undefined
       }
     }
   }
+  return mergeDeepRight(defaultConfig, customConfig)
 }

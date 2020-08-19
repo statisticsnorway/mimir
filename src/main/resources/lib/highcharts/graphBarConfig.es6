@@ -1,10 +1,13 @@
 const {
+  mergeDeepRight
+} = require('ramda')
+const {
   createDefaultConfig
 } = __non_webpack_require__('/lib/highcharts/config')
 
 export function barConfig(highchartContent, categories, options) {
   const defaultConfig = createDefaultConfig(highchartContent.data, highchartContent.displayName)
-  return {
+  const customConfig = {
     ...defaultConfig(highchartContent.data, highchartContent.displayName),
     chart: {
       type: 'column'
@@ -29,4 +32,5 @@ export function barConfig(highchartContent, categories, options) {
       tickmarkPlacement: 'between',
     }
   }
+  return mergeDeepRight(defaultConfig, customConfig)
 }
