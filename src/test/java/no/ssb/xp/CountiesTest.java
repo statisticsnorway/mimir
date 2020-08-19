@@ -6,6 +6,6 @@ public class CountiesTest extends ScriptRunnerSupport {
     @Override
     public String getScriptTestFile()
     {
-        return "/lib/ssb/klass/counties-test.es6";
+        return "/lib/klass/counties-test.es6";
     }
 }
