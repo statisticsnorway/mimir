@@ -48,7 +48,7 @@ const {
   getContentWithDataSource,
   getDataset
 } = __non_webpack_require__('/lib/ssb/dataset/dataset')
-import { find, includes } from 'ramda'
+import { filter, includes } from 'ramda'
 
 const view = resolve('./dashboard.html')
 const DEFAULT_CONTENTSTUDIO_URL = getToolUrl('com.enonic.app.contentstudio', 'main')
@@ -78,7 +78,7 @@ exports.get = function(req) {
 //       if we cannot afford to pick just the intersection, return a join of both input arrays
 const preferContentWithDataSource = (contentWithDataSource, dataQueries) => {
   const dsIds = contentWithDataSource.map((ds) => ds.id)
-  const exclQueries = find((dq) => !includes(dq.id, dsIds), dataQueries) || []
+  const exclQueries = filter((dq) => !includes(dq.id, dsIds), dataQueries) || []
   return [...contentWithDataSource, ...exclQueries]
 }
 
@@ -103,8 +103,8 @@ function renderPart(req) {
   log.info(`Content with DataSource: ${contentWithDataSource.length}`)
   log.info(`Content DQ ${dataQueries.length}`)
 
-  const dsIds = contentWithDataSource.map((ds) => ds.id)
-  const int = find((dq) => includes(dq.id, dsIds), dataQueries)
+  const dsIds = contentWithDataSource.map((ds) => ds.id);
+  const int = filter((dq) => !!includes(dq.id, dsIds), dataQueries)
   log.info(`Content intersect ${int && Array.isArray(int) && int.map((i) => i.id)}`)
 
   const dashboardDataset = new React4xp('Dashboard/Dashboard')
