@@ -33,6 +33,10 @@ function getCountiesFromContent(): Array<County> {
   return []
 }
 
+export function testingCgn(): string {
+  return 'Hei Carina'
+}
+
 export interface CountiesLib {
   list: () => Array<County>;
 }
