@@ -3,32 +3,32 @@ const {
 } = __non_webpack_require__('/lib/ssb/perf')
 const {
   getNode
-} = __non_webpack_require__( '/lib/repo/common')
+} = __non_webpack_require__('/lib/repo/common')
 const {
   fromDatasetCache
-} = __non_webpack_require__( '/lib/ssb/cache')
+} = __non_webpack_require__('/lib/ssb/cache')
 const {
   assetUrl,
   serviceUrl
-} = __non_webpack_require__( '/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 
 const {
   render
-} = __non_webpack_require__( '/lib/thymeleaf')
+} = __non_webpack_require__('/lib/thymeleaf')
 const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
 const {
   isPublished, dateToFormat, dateToReadable
 } = __non_webpack_require__('/lib/ssb/utils')
-const content = __non_webpack_require__( '/lib/xp/content')
+const content = __non_webpack_require__('/lib/xp/content')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const i18n = __non_webpack_require__('/lib/xp/i18n')
 const {
   EVENT_LOG_BRANCH,
   EVENT_LOG_REPO,
   getQueryChildNodesStatus
-} = __non_webpack_require__( '/lib/repo/eventLog')
+} = __non_webpack_require__('/lib/repo/eventLog')
 const {
   Events
 } = __non_webpack_require__('/lib/repo/query')
@@ -48,6 +48,7 @@ const {
   getContentWithDataSource,
   getDataset
 } = __non_webpack_require__('/lib/ssb/dataset/dataset')
+import { find, includes } from 'ramda'
 
 const view = resolve('./dashboard.html')
 const DEFAULT_CONTENTSTUDIO_URL = getToolUrl('com.enonic.app.contentstudio', 'main')
@@ -62,7 +63,7 @@ const MEASUREMENT_MARKS = {
   REPO_STATREG_FETCH: 'StatReg Fetch (repo)',
   REPO_DATASOURCES: 'Fetch Datasources (from Repo)',
   XP_RENDER: 'XP Render Part'
-};
+}
 
 exports.get = function(req) {
   try {
@@ -72,8 +73,13 @@ exports.get = function(req) {
   }
 }
 
+// If there exists content with datasource and the old dataquery, prefer the one with datasource
+// TODO: verify if this is correct.
+//       if we cannot afford to pick just the intersection, return a join of both input arrays
 const preferContentWithDataSource = (contentWithDataSource, dataQueries) => {
-  const dsMap = contentWithDataSource.reduce((acc, content) => {content.})
+  const dsIds = contentWithDataSource.map((ds) => ds.id)
+  const exclQueries = find((dq) => !includes(dq.id, dsIds), dataQueries) || []
+  return [...contentWithDataSource, ...exclQueries]
 }
 
 /**
@@ -84,7 +90,7 @@ function renderPart(req) {
   perf.mark('start')
   const datasetMap = oldGetDataset()
   perf.mark(MEASUREMENT_MARKS.XP_DATASET)
-  const dataQueries = [] // oldGetDataQueries(datasetMap)
+  const dataQueries = oldGetDataQueries(datasetMap)
   perf.mark(MEASUREMENT_MARKS.XP_DATAQUERIES)
   const statRegFetchStatuses = getStatRegFetchStatuses()
   perf.mark(MEASUREMENT_MARKS.REPO_STATREG_FETCH)
@@ -93,6 +99,13 @@ function renderPart(req) {
   perf.mark(MEASUREMENT_MARKS.REPO_DATASOURCES)
 
   const assets = getAssets()
+
+  log.info(`Content with DataSource: ${contentWithDataSource.length}`)
+  log.info(`Content DQ ${dataQueries.length}`)
+
+  const dsIds = contentWithDataSource.map((ds) => ds.id)
+  const int = find((dq) => includes(dq.id, dsIds), dataQueries)
+  log.info(`Content intersect ${int && Array.isArray(int) && int.map((i) => i.id)}`)
 
   const dashboardDataset = new React4xp('Dashboard/Dashboard')
     .setProps({
