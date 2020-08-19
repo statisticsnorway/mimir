@@ -4,9 +4,9 @@ const {barNegativeConfig} = __non_webpack_require__( '/lib/highcharts/graphBarNe
 const {columnConfig} = __non_webpack_require__( '/lib/highcharts/graphColumnConfig')
 const {lineConfig} = __non_webpack_require__( '/lib/highcharts/graphLineConfig')
 const {defaultConfig} = __non_webpack_require__( '/lib/highcharts/graphDefault')
-
-const { X_AXIS_TITLE_POSITION, Y_AXIS_TITLE_POSITION } = __non_webpack_require__( './config')
-
+const {
+  mergeDeepRight
+} = require('ramda')
 const {
   DataSource: DataSourceType
 } = __non_webpack_require__( '../repo/dataset')
@@ -22,39 +22,15 @@ const {
 const {
   parseDataWithMunicipality
 } = __non_webpack_require__('/lib/ssb/dataset')
-const {
-  createConfig,
-  lineColor,
-  style
-} = __non_webpack_require__('/lib/highcharts/config')
-
 
 export function prepareHighchartsGraphConfig(highchartContent, highchartData, isJsonStat, datasetFormat) {
-  log.info('%s', JSON.stringify(datasetFormat, null, 2))
 
   const options = {
     isJsonStat,
     xAxisLabel: isJsonStat ? (datasetFormat.jsonStat || datasetFormat[DataSourceType.STATBANK_API]).xAxisLabel : undefined
-    /*showLabels: determineShowLabels(graphType, highchartContent.data.switchRowsAndColumns, isJsonStat),
-    useGraphDataCategories: determineUseGraphsDataCategories(graphType, highchartContent.data.switchRowsAndColumns, isJsonStat)*/
   }
-
   const graphConfig = getGraphConfig(highchartContent, highchartData.data, options)
-
-  /*const axisConfig = {
-    graphType,
-    highchartContent,
-    config,
-    categories: highchartData.data,
-    xAxisLabel: isJsonStat ? (datasetFormat.jsonStat || datasetFormat[DataSourceType.STATBANK_API]).xAxisLabel : undefined,
-    showLabels: determineShowLabels(graphType, highchartContent.data.switchRowsAndColumns, isJsonStat),
-    useGraphDataCategories: determineUseGraphsDataCategories(graphType, highchartContent.data.switchRowsAndColumns, isJsonStat)
-  }*/
-
-  graphConfig.series = highchartData.series
- // config.xAxis = prepareXAxis(axisConfig)
-
-  return graphConfig
+  return mergeDeepRight(graphConfig, highchartData.series)
 }
 
 function getGraphConfig(highchartContent, categories, options) {
@@ -75,74 +51,6 @@ function getGraphConfig(highchartContent, categories, options) {
       return defaultConfig(highchartContent, categories, options)
   }
 }
-
-function determineUseGraphsDataCategories(graphType, switchRowsAndColumns, isJsonStat) {
-  return (switchRowsAndColumns ||
-          (!isJsonStat && (
-            graphType === 'line' ||
-            graphType === 'column' ||
-            graphType === 'area' ||
-            graphType === 'bar'
-          )))
-}
-
-function determineShowLabels(graphType, switchRowsAndColumns, isJsonStat) {
-  return (graphType === 'line' ||
-          graphType === 'area' ||
-          switchRowsAndColumns ||
-          (!isJsonStat && (graphType === 'column' || graphType === 'bar')))
-}
-
-
-function prepareXAxis(xAxisConfig) {
-  if (xAxisConfig.graphType === 'barNegative') {
-    return {
-      title: {
-        ...xAxisConfig.config.xAxis.title,
-        ...Y_AXIS_TITLE_POSITION
-      },
-      categories: xAxisConfig.categories,
-      reversed: false,
-      labels: {
-        step: 1,
-        style
-      },
-      lineColor,
-      accessibility: {
-        description: xAxisConfig.xAxisLabel
-      }
-    }
-  } else {
-    const highchartContent = xAxisConfig.highchartContent
-    return {
-      categories: xAxisConfig.useGraphDataCategories ? xAxisConfig.categories : [highchartContent.displayName],
-      gridLineWidth: 1,
-      lineColor,
-      tickInterval: highchartContent.data.tickInterval ? highchartContent.data.tickInterval.replace(/,/g, '.') : null,
-      labels: {
-        enabled: xAxisConfig.showLabels,
-        style
-      },
-      max: highchartContent.data.xAxisMax ? highchartContent.data.xAxisMax.replace(/,/g, '.') : null,
-      min: highchartContent.data.xAxisMin ? highchartContent.data.xAxisMin.replace(/,/g, '.') : null,
-      // Confusing detail: when type=bar, X axis becomes Y and vice versa.
-      // In other words, include 'bar' in this if-test, instead of putting it in the yAxis config
-      tickmarkPlacement: 'on',
-      title: xAxisConfig.graphType === 'bar' ? {
-        ...xAxisConfig.config.xAxis.title,
-        ...Y_AXIS_TITLE_POSITION
-      } : {
-        ...xAxisConfig.config.xAxis.title,
-        text: highchartContent.data.xAxisTitle // if municipality xAxisTitle = municipality.displayName
-      },
-      type: highchartContent.data.xAxisType || 'categories',
-      tickWidth: 1,
-      tickColor: '#21383a'
-
-    }
-  }
-}
-
 
 export function prepareHighchartsData(req, highchartContent, dataset, datasetFormat) {
   const isJsonStat = datasetFormat._selected === 'jsonStat' || datasetFormat._selected === DataSourceType.STATBANK_API

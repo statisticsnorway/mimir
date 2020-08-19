@@ -1,5 +1,4 @@
 import JsonStat from 'jsonstat-toolkit'
-import { X_AXIS_TITLE_POSITION, Y_AXIS_TITLE_POSITION } from '../../../lib/highcharts/config'
 import { DataSource as DataSourceType } from '../../../lib/repo/dataset'
 const util = __non_webpack_require__( '/lib/util')
 const {
@@ -16,8 +15,6 @@ const {
 } = __non_webpack_require__( '/lib/thymeleaf')
 const {
   createConfig,
-  lineColor,
-  style
 } = __non_webpack_require__('/lib/highcharts/config')
 const {
   prepareHighchartsData,
