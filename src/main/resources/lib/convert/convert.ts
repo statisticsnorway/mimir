@@ -165,6 +165,8 @@ function convertKeyFigure(keyFigure: Content<KeyFigure>): void {
   const queryId: string | undefined = keyFigure.data.dataquery
   if (queryId) {
     convert(keyFigure, queryId)
+  } else {
+    throw new Error('no queryId')
   }
 }
 
