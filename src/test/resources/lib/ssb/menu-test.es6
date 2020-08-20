@@ -203,6 +203,6 @@ exports.testParseGlobalLinks = function() {
       'title': 'Nettstedskart',
       'path': 'https://www.ssb.no/nettstedskart'
     }
-  ], result, 'Checking top links')
+  ], result, 'Checking global links')
 }
 
