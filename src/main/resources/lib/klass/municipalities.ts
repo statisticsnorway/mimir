@@ -94,7 +94,9 @@ export function municipalsWithCounties(): Array<MunicipalityWithCounty> {
 export function getMunicipality(req: RequestWithCode): MunicipalityWithCounty|undefined {
   let municipality: MunicipalityWithCounty | undefined
   if (req.params && req.params.selfRequest && req.params.municipality) {
-    municipality = JSON.parse(req.params.municipality as string) as MunicipalityWithCounty
+    // TODO: Figure out why municipality is duplicated in params!
+    if (Array.isArray(req.params.municipality)) municipality = JSON.parse(req.params.municipality[0]) as MunicipalityWithCounty
+    else municipality = JSON.parse(req.params.municipality as string) as MunicipalityWithCounty
     if (municipality) {
       return municipality
     }
