@@ -29,7 +29,8 @@ function renderPart(req) {
 
   if (dataSource && dataSource._selected === 'tbprocessor') {
     if (datasetRepo) {
-      tableTitle = datasetRepo.data.tbml.metadata.title.content
+      const metadata = datasetRepo.data.tbml.metadata
+      tableTitle = metadata.title.content ? metadata.title.content : metadata.title
     } else {
       tableTitle = 'Ingen tabell knyttet til innhold'
     }

@@ -265,7 +265,11 @@ Dashboard.propTypes = {
     updateList: PropTypes.bool
   }),
   contentStudioBaseUrl: PropTypes.string,
-  statRegFetchStatuses: PropTypes.arrayOf(StatRegFetchInfo)
+  statRegFetchStatuses: PropTypes.shape({
+    contacts: StatRegFetchInfo,
+    statistics: StatRegFetchInfo,
+    publications: StatRegFetchInfo
+  })
 }
 
 export const DataQuery = PropTypes.shape({
