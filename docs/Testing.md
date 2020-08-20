@@ -4,7 +4,7 @@
 Unit tests are placed under `src/test/resources/`  
 Each unit test es6 file must be called by java code in a corresponding class. This is [documented by Enonic here](https://developer.enonic.com/guides/writing-unit-tests)
 
-Mocking unit tests is a little tricky - the mocking must be completed before including the library you want to test. So if you want to mock the "content" library that is used in the "utils" helper library, you must first mock "contnt" and then import "utils." An example of this can be seen in `src/test/resources/lib/ssb/utils-test.es6`
+Mocking unit tests is a little tricky - the mocking must be completed before including the library you want to test. So if you want to mock the "content" library that is used in the "utils" helper library, you must first mock "content" and then import "utils." An example of this can be seen in `src/test/resources/lib/ssb/utils-test.es6`
 
 ### Running unit tests
 All unit tests are ran when building the project with `enonic project build`.   
