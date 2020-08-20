@@ -12,4 +12,8 @@ socketEmitter.connect(connectionCallback)
 function connectionCallback(socket) {
   log.info(JSON.stringify(socket, null, 2))
   convert.setupHandlers(socket)
+
+  socket.on('keep-alive', () => {
+    socket.emit('keep-alive', 'pong')
+  })
 }
