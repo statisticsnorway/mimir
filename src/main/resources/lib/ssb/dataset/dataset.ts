@@ -42,23 +42,45 @@ export function getDataset(content: Content<DataSource>): DatasetRepoNode<JSONst
   }
 }
 
-export function refreshDataset(content: Content<DataSource>, asUser: boolean = true): CreateOrUpdateStatus {
-  let data: JSONstat | TbmlData | null = null
-  let key: string | undefined
+function extractKey(content: Content<DataSource>) {
   switch (content.data.dataSource?._selected) {
-  case DataSourceType.STATBANK_API: {
-    key = getStatbankApiKey(content)
-    data = fetchStatbankApiData(content)
-    break
+  case DataSourceType.STATBANK_API:
+    return getStatbankApiKey(content)
+  case DataSourceType.TBPROCESSOR:
+    return getTbprocessorKey(content)
+  default:
+    return null
   }
-  case DataSourceType.TBPROCESSOR: {
-    key = getTbprocessorKey(content)
-    data = fetchTbprocessorData(content)
-    break
-  }
-  }
+}
 
-  if (!data || !content.data.dataSource || !content.data.dataSource._selected || !key) {
+function extractData(content: Content<DataSource>) {
+  switch (content.data.dataSource?._selected) {
+  case DataSourceType.STATBANK_API:
+    return fetchStatbankApiData(content)
+  case DataSourceType.TBPROCESSOR:
+    return fetchTbprocessorData(content)
+  default:
+    return null
+  }
+}
+
+export function refreshDataset(content: Content<DataSource>, asUser: boolean = true): CreateOrUpdateStatus {
+  const data: JSONstat | TbmlData | null = extractData(content)
+  const key: string | null = extractKey(content)
+
+  if (data && content.data.dataSource && content.data.dataSource._selected && key) {
+    let dataset: DatasetRepoNode<JSONstat | TbmlData> | null = getDataset(content)
+    const hasNewData: boolean = isDataNew(data, dataset)
+    if (!dataset || hasNewData) {
+      dataset = createOrUpdateDataset(content.data.dataSource?._selected, key, data)
+    }
+    return {
+      dataquery: content,
+      status: !hasNewData ? Events.NO_NEW_DATA : Events.GET_DATA_COMPLETE,
+      newDatasetData: hasNewData,
+      dataset
+    }
+  } else {
     if (asUser) {
       logUserDataQuery(content._id, {
         message: Events.FAILED_TO_GET_DATA
@@ -69,19 +91,6 @@ export function refreshDataset(content: Content<DataSource>, asUser: boolean = t
       status: Events.FAILED_TO_GET_DATA,
       dataset: null,
       newDatasetData: false
-    }
-  } else {
-    let dataset: DatasetRepoNode<JSONstat | TbmlData> | null = getDataset(content)
-    const hasNewData: boolean = isDataNew(data, dataset)
-    if (!dataset || hasNewData) {
-      dataset = createOrUpdateDataset(content.data.dataSource?._selected, key, data)
-    }
-
-    return {
-      dataquery: content,
-      status: !hasNewData ? Events.NO_NEW_DATA : Events.GET_DATA_COMPLETE,
-      newDatasetData: hasNewData,
-      dataset
     }
   }
 }
