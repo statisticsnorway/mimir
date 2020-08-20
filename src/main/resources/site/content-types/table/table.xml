@@ -4,5 +4,14 @@
     <allow-child-content>true</allow-child-content>
     <form>
         <mixin name="dataSource"/>
+
+        <mixin name="footnote" />
+
+        <mixin name="sources" />
+
+        <input type="TextLine" name="correctionNotice">
+            <label>Rettemelding</label>
+            <occurrences minimum="0" maximum="1" />
+        </input>
     </form>
 </content-type>

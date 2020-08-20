@@ -1,13 +1,8 @@
 export interface ArticleArchive {
   /**
-   * Tittel på artikkelarkivet/samlesiden
-   */
-  title?: string;
-
-  /**
    * Ingress
    */
-  premable?: string;
+  preamble?: string;
 
   /**
    * Bilde

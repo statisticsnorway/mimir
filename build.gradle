@@ -130,7 +130,7 @@ jar {
     exclude 'assets/styles/**/*.scss'
     exclude 'assets/styles/**/*.js'
 
-    serverWebpack.dependsOn += 'config_tasks' // 'webpack_react4xp'
+    serverWebpack.dependsOn += 'react4xp_components' // 'webpack_react4xp'
     serverWebpack.dependsOn += generateTypeScriptInterfaces
 
     dependsOn += npmInstall
