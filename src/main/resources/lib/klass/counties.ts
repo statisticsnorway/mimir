@@ -33,8 +33,13 @@ function getCountiesFromContent(): Array<County> {
   return []
 }
 
-export function testingCgn(): string {
-  return 'Hei Carina'
+export function getKeyFromSiteConfig(siteConfig: SiteConfig): string {
+  const key: string | undefined = siteConfig.countyDataContentId
+  if (key) {
+    return key
+  } else {
+    return 'Ingen nøkkel'
+  }
 }
 
 export interface CountiesLib {
