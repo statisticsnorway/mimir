@@ -233,3 +233,4 @@ export interface MunicipalityWithCounty {
   path: string;
   changes?: Array<MunicipalityChange>;
 }
+

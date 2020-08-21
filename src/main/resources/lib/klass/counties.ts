@@ -33,15 +33,6 @@ function getCountiesFromContent(): Array<County> {
   return []
 }
 
-export function getKeyFromSiteConfig(siteConfig: SiteConfig): string {
-  const key: string | undefined = siteConfig.countyDataContentId
-  if (key) {
-    return key
-  } else {
-    return 'Ingen nøkkel'
-  }
-}
-
 export interface CountiesLib {
   list: () => Array<County>;
 }
