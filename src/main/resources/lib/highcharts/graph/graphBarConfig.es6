@@ -2,15 +2,16 @@ const {
   mergeDeepRight
 } = require('ramda')
 const {
+  X_AXIS_TITLE_POSITION,
   createDefaultConfig
-} = __non_webpack_require__('/lib/highcharts/config')
+} = __non_webpack_require__('/lib/highcharts/graph/config')
 
-export function barConfig(highchartContent, categories, options) {
+export function barConfig(highchartContent, options) {
   const defaultConfig = createDefaultConfig(highchartContent.data, highchartContent.displayName)
   const customConfig = {
-    ...defaultConfig(highchartContent.data, highchartContent.displayName),
+    ...defaultConfig,
     chart: {
-      type: 'column'
+      type: 'bar'
     },
     yAxis: {
       title: {
@@ -25,11 +26,12 @@ export function barConfig(highchartContent, categories, options) {
       }
     },
     xAxis: {
+      reversed: false,
       labels: {
         enable: highchartContent.data.switchRowsAndColumns || !options.isJsonStat
       },
-      categories: highchartContent.data.switchRowsAndColumns || !options.isJsonStat ? categories : [highchartContent.displayName],
-      tickmarkPlacement: 'between',
+      categories: highchartContent.data.switchRowsAndColumns || !options.isJsonStat ? options.categories : [highchartContent.displayName],
+      tickmarkPlacement: 'between'
     }
   }
   return mergeDeepRight(defaultConfig, customConfig)

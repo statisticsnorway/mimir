@@ -7,9 +7,9 @@ const {
   createDefaultConfig,
   lineColor,
   style
-} = __non_webpack_require__('/lib/highcharts/config')
+} = __non_webpack_require__('/lib/highcharts/graph/config')
 
-export function barNegativeConfig(highchartContent, categories, options) {
+export function barNegativeConfig(highchartContent, options) {
   const defaultConfig = createDefaultConfig(highchartContent.data, highchartContent.displayName)
   const customConfig = {
     chart: {
@@ -31,7 +31,7 @@ export function barNegativeConfig(highchartContent, categories, options) {
         ...defaultConfig.xAxis.title,
         ...Y_AXIS_TITLE_POSITION
       },
-      categories: categories,
+      categories: options.categories,
       reversed: false,
       labels: {
         enable: highchartContent.data.switchRowsAndColumns,

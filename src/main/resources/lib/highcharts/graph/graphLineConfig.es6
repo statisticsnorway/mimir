@@ -4,9 +4,9 @@ const {
 
 const {
   createDefaultConfig
-} = __non_webpack_require__('/lib/highcharts/config')
+} = __non_webpack_require__('/lib/highcharts/graph/config')
 
-export function lineConfig(highchartsContent, categories, options) {
+export function lineConfig(highchartsContent, options) {
   const defaultConfig = createDefaultConfig(highchartsContent.data, highchartsContent.displayName)
   const customConfig = {
     chart: {
@@ -30,8 +30,8 @@ export function lineConfig(highchartsContent, categories, options) {
       labels: {
         enabled: true
       },
-      categories: highchartsContent.data.switchRowsAndColumns || !options.isJsonStat ? categories : [highchartsContent.displayName],
-      gridLineWidth: 0,
+      categories: highchartsContent.data.switchRowsAndColumns || !options.isJsonStat ? options.categories : [highchartsContent.displayName],
+      gridLineWidth: 0
     }
   }
   return mergeDeepRight(defaultConfig, customConfig)

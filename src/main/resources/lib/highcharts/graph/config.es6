@@ -161,7 +161,7 @@ export const createConfig = (highchartData, displayName) => ({
   },
 
   yAxis: {
-    reversed: false,
+    reversed: true,
     allowDecimals: highchartData.yAxisDecimalPlaces > 0,
     labels: {
       style,
@@ -384,7 +384,7 @@ export const createDefaultConfig = (highchartData, displayName) => ({
       ...X_AXIS_TITLE_POSITION
     },
     lineColor,
-    tickInterval: highchartData.tickInterval ? highchartData.tickInterval.replace(/,/g, '.') : null,
+    tickInterval: highchartData.tickInterval ? parseFloat(highchartData.tickInterval.replace(/,/g, '.')) : '',
     labels: {
       enabled: highchartData.showLabels,
       style

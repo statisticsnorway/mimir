@@ -4,11 +4,11 @@ const {
 
 const {
   createDefaultConfig
-} = __non_webpack_require__('/lib/highcharts/config')
+} = __non_webpack_require__('/lib/highcharts/graph/config')
 
-export function pieConfig(highchartsContent, categories, options) {
+export function pieConfig(highchartsContent, options) {
   const defaultConfig = createDefaultConfig(highchartsContent.data, highchartsContent.displayName)
-  const customConfig =  {
+  const customConfig = {
     chart: {
       type: 'pie'
     },
