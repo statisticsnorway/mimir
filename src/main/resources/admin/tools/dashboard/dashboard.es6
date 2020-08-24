@@ -43,6 +43,7 @@ const {
   getContentWithDataSource,
   getDataset
 } = __non_webpack_require__('/lib/ssb/dataset/dataset')
+const util = __non_webpack_require__( '/lib/util')
 
 const view = resolve('./dashboard.html')
 const DEFAULT_CONTENTSTUDIO_URL = getToolUrl('com.enonic.app.contentstudio', 'main')
@@ -74,6 +75,7 @@ function renderPart(req) {
       dataQueries: [...dataQueries, ...contentWithDataSource],
       dashboardService: assets.dashboardService,
       clearCacheServiceUrl: assets.clearCacheServiceUrl,
+      convertServiceUrl: assets.convertServiceUrl,
       featureToggling: {
         updateList: req.params.updateList ? true : false
       },
@@ -127,6 +129,12 @@ function getAssets() {
     }),
     clearCacheServiceUrl: serviceUrl({
       service: 'clearCache'
+    }),
+    wsServiceUrl: serviceUrl({
+      service: 'websocket'
+    }),
+    convertServiceUrl: serviceUrl({
+      service: 'convert'
     })
   }
 }
@@ -166,7 +174,8 @@ function oldGetDataQueries(datasetMap) {
     const dataset = datasetMap[dataquery._id]
     const hasData = !!dataset
     const queryLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataquery._id}`)
-    const eventLogNodes = getQueryChildNodesStatus(`/queries/${dataquery._id}`)
+    // commented out because it takes too much time. We are discussing how to show logs.
+    const eventLogNodes = [] // getQueryChildNodesStatus(`/queries/${dataquery._id}`)
     return {
       id: dataquery._id,
       displayName: dataquery.displayName,
@@ -272,7 +281,7 @@ const getStatRegFetchStatuses = () => {
     const eventLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, eventLogKey)
     return {
       ...acc,
-      [key]: eventLogNode.data.latestEventInfo
+      [key]:  eventLogNode.data.latestEventInfo
     }
   }, {})
 }
