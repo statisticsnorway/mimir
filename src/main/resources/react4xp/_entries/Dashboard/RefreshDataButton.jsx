@@ -14,17 +14,17 @@ class RefreshDataButton extends React.Component {
 
   refreshData() {
     const {
-      refreshDataServiceUrl,
+      statregDashboardServiceUrl,
       onSuccess,
       onError
     } = this.props
-    if (refreshDataServiceUrl) {
+    if (statregDashboardServiceUrl) {
       this.setState({
         loading: true
       })
 
-      console.log('trying to reach', refreshDataServiceUrl);
-      axios.get(refreshDataServiceUrl)
+      console.log('trying to reach', statregDashboardServiceUrl);
+      axios.get(statregDashboardServiceUrl)
         .then((response) => {
           if (onSuccess) {
             onSuccess(response.data.message)
@@ -46,7 +46,7 @@ class RefreshDataButton extends React.Component {
           })
         })
     } else {
-      console.log('refreshDataServiceUrl is null')
+      console.log('statregDashboardServiceUrl is null')
     }
   }
 
@@ -71,7 +71,7 @@ class RefreshDataButton extends React.Component {
 }
 
 RefreshDataButton.propTypes = {
-  refreshDataServiceUrl: PropTypes.string,
+  statregDashboardServiceUrl: PropTypes.string,
   onSuccess: PropTypes.func,
   onError: PropTypes.func
 }

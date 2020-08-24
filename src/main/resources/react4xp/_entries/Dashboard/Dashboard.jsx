@@ -1,5 +1,5 @@
 import React from 'react'
-import { Accordion } from '@statisticsnorway/ssb-component-library'
+import { Accordion, Button } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import Alert from 'react-bootstrap/Alert'
 import Col from 'react-bootstrap/Col'
@@ -192,9 +192,7 @@ class Dashboard extends React.Component {
                 <h2 className="d-inline-block w-75">Data fra Statistikkregisteret</h2>
                 <div className="d-inline-block float-right">
                   <RefreshDataButton
-                    onSuccess={(message) => this.showSuccess(message)}
-                    onError={(message) => this.showError(message)}
-                    refreshDataServiceUrl={this.props.statregRefreshUrl}
+                      statregDashboardServiceUrl={this.props.statregDashboardServiceUrlUrl}
                   />
                 </div>
                 {this.renderAccordionForStatRegFetches()}
@@ -255,7 +253,8 @@ Dashboard.propTypes = {
   }),
   contentStudioBaseUrl: PropTypes.string,
   statRegFetchStatuses: PropTypes.arrayOf(StatRegFetchInfo),
-  statregRefreshUrl: PropTypes.string
+  statregRefreshUrl: PropTypes.string,
+  statregDashboardServiceUrl: PropTypes.string
 }
 
 export const DataQuery = PropTypes.shape({
