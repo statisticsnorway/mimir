@@ -17,19 +17,18 @@ const view = resolve('./table.html')
 
 exports.get = function(req) {
   try {
-    const content = getContent()
-    const table = parseTable(req, content)
-    log.info('table PrettyJSON%s',JSON.stringify(table ,null,4));
-    return renderPart(req, table)
+    const tableContent = getContent()
+    return renderPart(req, tableContent)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-function renderPart(req, table) {
+function renderPart(req, tableContent) {
+  const table = parseTable(req, tableContent)
   let tableTitle
 
-  if (table) {
+  if (table && table.tbmlData) {
     tableTitle = table.tbmlData.tbml.metadata.title
   } else {
     tableTitle = 'Ingen tabell knyttet til innhold'
