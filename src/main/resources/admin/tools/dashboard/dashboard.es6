@@ -1,11 +1,11 @@
 const {
-  createMeasurement,
+  createMeasurement
 } = __non_webpack_require__('/lib/ssb/perf')
 const {
   getNode
 } = __non_webpack_require__('/lib/repo/common')
 const {
-  fromDatasetCache
+  fromDatasetRepoCache
 } = __non_webpack_require__('/lib/ssb/cache')
 const {
   assetUrl,
@@ -26,8 +26,7 @@ const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const i18n = __non_webpack_require__('/lib/xp/i18n')
 const {
   EVENT_LOG_BRANCH,
-  EVENT_LOG_REPO,
-  getQueryChildNodesStatus
+  EVENT_LOG_REPO
 } = __non_webpack_require__('/lib/repo/eventLog')
 const {
   Events
@@ -54,7 +53,6 @@ const view = resolve('./dashboard.html')
 const DEFAULT_CONTENTSTUDIO_URL = getToolUrl('com.enonic.app.contentstudio', 'main')
 
 const perf = createMeasurement('XP SSR perf')
-const eventLogPerf = createMeasurement('Time spent on eventlog entries')
 
 const MEASUREMENT_MARKS = {
   XP_DATASET: 'XP Dataset Fetch (content)',
@@ -87,6 +85,8 @@ const preferContentWithDataSource = (contentWithDataSource, dataQueries) => {
  * @return {{pageContributions: *, body: *}}
  */
 function renderPart(req) {
+  perf.clearMarks()
+  perf.clearMeasures()
   perf.mark('start')
   const datasetMap = oldGetDataset()
   perf.mark(MEASUREMENT_MARKS.XP_DATASET)
@@ -103,7 +103,7 @@ function renderPart(req) {
   log.info(`Content with DataSource: ${contentWithDataSource.length}`)
   log.info(`Content DQ ${dataQueries.length}`)
 
-  const dsIds = contentWithDataSource.map((ds) => ds.id);
+  const dsIds = contentWithDataSource.map((ds) => ds.id)
   const int = filter((dq) => !!includes(dq.id, dsIds), dataQueries)
   log.info(`Content intersect ${int && Array.isArray(int) && int.map((i) => i.id)}`)
 
@@ -139,20 +139,15 @@ function renderPart(req) {
     clientRender: true
   })
 
-  perf.mark('renderBody()')
+  perf.mark(MEASUREMENT_MARKS.XP_RENDER)
 
-  perf.measure('INIT', undefined, 'start')
   perf.measure(MEASUREMENT_MARKS.XP_DATASET, 'start', MEASUREMENT_MARKS.XP_DATASET)
   perf.measure(MEASUREMENT_MARKS.XP_DATAQUERIES, MEASUREMENT_MARKS.XP_DATASET, MEASUREMENT_MARKS.XP_DATAQUERIES)
   perf.measure(MEASUREMENT_MARKS.XP_CONTENT_TOTAL, 'start', MEASUREMENT_MARKS.XP_DATAQUERIES)
   perf.measure(MEASUREMENT_MARKS.REPO_STATREG_FETCH, MEASUREMENT_MARKS.XP_DATAQUERIES, MEASUREMENT_MARKS.REPO_STATREG_FETCH)
-  perf.measure(MEASUREMENT_MARKS.XP_RENDER, MEASUREMENT_MARKS.REPO_STATREG_FETCH, MEASUREMENT_MARKS.XP_RENDER)
-
-  log.info(JSON.stringify(perf.getMeasurements()))
-  log.info(`(of which eventLog fetches took ${eventLogPerf.getMeasurementAggregate()} ms)`)
-
-  perf.clearMarks()
-  perf.clearMeasures()
+  perf.measure(MEASUREMENT_MARKS.REPO_DATASOURCES, MEASUREMENT_MARKS.REPO_STATREG_FETCH, MEASUREMENT_MARKS.REPO_DATASOURCES)
+  perf.measure(MEASUREMENT_MARKS.XP_RENDER, MEASUREMENT_MARKS.REPO_DATASOURCES, MEASUREMENT_MARKS.XP_RENDER)
+  log.info(JSON.stringify(perf.getMeasurements(), null, 2))
 
   return {
     body,
@@ -226,14 +221,7 @@ function oldGetDataQueries(datasetMap) {
     const hasData = !!dataset
     const queryLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataquery._id}`)
 
-    // const eventLogMarkerStart = `${dataquery._id}-start`
-    // const eventLogMarkerEnd = `${dataquery._id}-end`
-
-    // eventLogPerf.mark(eventLogMarkerStart)
     const eventLogNodes = [] // getQueryChildNodesStatus(`/queries/${dataquery._id}`)
-    // eventLogPerf.mark(eventLogMarkerEnd)
-
-    // eventLogPerf.measure(dataquery._id, eventLogMarkerStart, eventLogMarkerEnd)
 
     return {
       id: dataquery._id,
@@ -265,7 +253,7 @@ function oldGetDataQueries(datasetMap) {
 
 function prepDataSources(req, dataSources) {
   return dataSources.map((dataSource) => {
-    const dataset = fromDatasetCache(req, dataSource._id, () => getDataset(dataSource))
+    const dataset = fromDatasetRepoCache(dataSource._id, () => getDataset(dataSource))
     const hasData = !!dataset
     const queryLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataSource._id}`)
     const eventLogNodes = [] // getQueryChildNodesStatus(`/queries/${dataSource._id}`)
