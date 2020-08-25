@@ -1,3 +1,4 @@
+const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getContent
 } = __non_webpack_require__('/lib/xp/portal')
@@ -8,44 +9,50 @@ const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
 const {
-  getDataset
-} = __non_webpack_require__( '/lib/ssb/dataset/dataset')
+  parseTable
+} = __non_webpack_require__( '/lib/ssb/table')
 
 const view = resolve('./table.html')
 
-exports.get = (req) => {
+
+exports.get = function(req) {
   try {
-    return renderPart(req)
+    const content = getContent()
+    const table = parseTable(req, content)
+    log.info('table PrettyJSON%s',JSON.stringify(table ,null,4));
+    return renderPart(req, table)
   } catch (e) {
-    return renderError(req, 'Error in part: ', e)
+    return renderError(req, 'Error in part', e)
   }
 }
 
-function renderPart(req) {
-  const page = getContent()
-  const dataSource = page.data.dataSource
-  const datasetRepo = getDataset(page)
+function renderPart(req, table) {
   let tableTitle
 
-  if (dataSource && dataSource._selected === 'tbprocessor') {
-    if (datasetRepo) {
-      const metadata = datasetRepo.data.tbml.metadata
-      tableTitle = metadata.title.content ? metadata.title.content : metadata.title
-    } else {
-      tableTitle = 'Ingen tabell knyttet til innhold'
-    }
+  if (table) {
+    tableTitle = table.tbmlData.tbml.metadata.title
+  } else {
+    tableTitle = 'Ingen tabell knyttet til innhold'
   }
 
+  const tableReact = new React4xp('Table')
+    .setProps({
+      tableTitle: tableTitle
+    })
+    .uniqueId()
 
-  const model = {
-    title: page.displayName,
-    tableTitle
-  }
-
-  const body = render(view, model)
+  const body = render(view, {
+    tableId: tableReact.react4xpId
+  })
 
   return {
-    body,
+    body: tableReact.renderBody({
+      body,
+      clientRender: true
+    }),
+    pageContributions: tableReact.renderPageContributions({
+      clientRender: true
+    }),
     contentType: 'text/html'
   }
 }
