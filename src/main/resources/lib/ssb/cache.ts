@@ -263,8 +263,8 @@ function clearCache(content: Content, branch: string, cleared: Array<string>): A
 }
 
 function clearCacheRepo(node: EnonicEventData['nodes'][0]): void {
-  log.info(`clear ${node.id} from dataset repo cache`)
-  datasetRepoCache.remove(node.id)
+  log.info(`clear ${node.path} from dataset repo cache`)
+  datasetRepoCache.remove(node.path)
 }
 
 function getFilterCache(branch: string, filterKey: string): Cache {
@@ -351,6 +351,7 @@ export function fromDatasetRepoCache(
   key: string,
   fallback: () => DatasetRepoNode<JSONstat | TbmlData> | null): DatasetRepoNode<JSONstat | TbmlData> | undefined {
   return datasetRepoCache.get(key, () => {
+    // log.info(`added ${key} to dataset repo cache`)
     const res: DatasetRepoNode<JSONstat | TbmlData> | null = fallback()
     // cant be null for some reason, so store it as undefined instead
     return res || undefined

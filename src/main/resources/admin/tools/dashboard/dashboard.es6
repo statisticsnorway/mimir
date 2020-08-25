@@ -45,7 +45,8 @@ const {
 } = __non_webpack_require__('/lib/xp/admin')
 const {
   getContentWithDataSource,
-  getDataset
+  getDataset,
+  extractKey
 } = __non_webpack_require__('/lib/ssb/dataset/dataset')
 import { filter, includes } from 'ramda'
 
@@ -253,7 +254,7 @@ function oldGetDataQueries(datasetMap) {
 
 function prepDataSources(req, dataSources) {
   return dataSources.map((dataSource) => {
-    const dataset = fromDatasetRepoCache(dataSource._id, () => getDataset(dataSource))
+    const dataset = fromDatasetRepoCache(`/${dataSource.data.dataSource._selected}/${extractKey(dataSource)}`, () => getDataset(dataSource))
     const hasData = !!dataset
     const queryLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataSource._id}`)
     const eventLogNodes = [] // getQueryChildNodesStatus(`/queries/${dataSource._id}`)
