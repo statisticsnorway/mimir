@@ -101,12 +101,12 @@ function renderPart(req) {
 
   const assets = getAssets()
 
-  log.info(`Content with DataSource: ${contentWithDataSource.length}`)
-  log.info(`Content DQ ${dataQueries.length}`)
+  // log.info(`Content with DataSource: ${contentWithDataSource.length}`)
+  // log.info(`Content DQ ${dataQueries.length}`)
 
-  const dsIds = contentWithDataSource.map((ds) => ds.id)
-  const int = filter((dq) => !!includes(dq.id, dsIds), dataQueries)
-  log.info(`Content intersect ${int && Array.isArray(int) && int.map((i) => i.id)}`)
+  // const dsIds = contentWithDataSource.map((ds) => ds.id)
+  // const int = filter((dq) => !!includes(dq.id, dsIds), dataQueries)
+  // log.info(`Content intersect ${int && Array.isArray(int) && int.map((i) => i.id)}`)
 
   const dashboardDataset = new React4xp('Dashboard/Dashboard')
     .setProps({
@@ -148,7 +148,7 @@ function renderPart(req) {
   perf.measure(MEASUREMENT_MARKS.REPO_STATREG_FETCH, MEASUREMENT_MARKS.XP_DATAQUERIES, MEASUREMENT_MARKS.REPO_STATREG_FETCH)
   perf.measure(MEASUREMENT_MARKS.REPO_DATASOURCES, MEASUREMENT_MARKS.REPO_STATREG_FETCH, MEASUREMENT_MARKS.REPO_DATASOURCES)
   perf.measure(MEASUREMENT_MARKS.XP_RENDER, MEASUREMENT_MARKS.REPO_DATASOURCES, MEASUREMENT_MARKS.XP_RENDER)
-  log.info(JSON.stringify(perf.getMeasurements(), null, 2))
+  // log.info(JSON.stringify(perf.getMeasurements(), null, 2))
 
   return {
     body,
