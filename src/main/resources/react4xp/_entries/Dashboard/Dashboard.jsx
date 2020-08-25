@@ -17,6 +17,9 @@ import { StatRegFetchInfo } from './types'
 import DataQueryTable from './DataQueryTable'
 
 const byType = groupBy((dataQuery) => {
+  if (dataQuery.logData && dataQuery.logData.showWarningIcon) {
+    return 'error'
+  }
   return dataQuery.parentType
 })
 
@@ -129,10 +132,11 @@ class Dashboard extends React.Component {
     )
   }
 
-  renderAccordians(header, queries) {
+  renderAccordians(header, queries, openByDefault = false) {
     return (
       <Accordion header={header}
         className="mx-0"
+        openByDefault={openByDefault}
       >
         { this.props.featureToggling.updateList &&
           <DashboardButtons
@@ -168,6 +172,11 @@ class Dashboard extends React.Component {
                   <h2 className="mb-3">
                     {`Spørringer mot statistikkbank og tabellbygger (${this.state.dataQueries ? this.state.dataQueries.length : '0'} stk)`}
                   </h2>
+                  {
+                    groupedQueries.error &&
+                    this.renderAccordians(`Spørringer som feilet (${groupedQueries.error.length})`, groupedQueries.error, true)
+                  }
+
                   {
                     groupedQueries.factPage &&
                     this.renderAccordians(`Spørringer fra Faktasider (${groupedQueries.factPage.length})`, groupedQueries.factPage)
