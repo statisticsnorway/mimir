@@ -15,6 +15,16 @@ highchartsModuleExporting(Highcharts)
 highchartsModuleNoDataToDisplay(Highcharts)
 highchartsModuleExportData(Highcharts)
 
+const EMPTY_CONFIG = {
+  title: {
+    style: {}
+  },
+  tooltip: {},
+  plotOptions: {
+    series: {}
+  }
+}
+
 const createSetOptions = {
   lang: {
     contextButtonTitle: 'Last ned/skriv ut',
@@ -61,7 +71,7 @@ export function init() {
 
     // Initialisering av HighCharts-figurer fra tilhørende HTML-tabell
     $('.highcharts-canvas[id^="highcharts-"]').each(function(index, chart) {
-      const config = window['highchart' + $(chart).data('contentkey')]
+      const config = window['highchart' + $(chart).data('contentkey')] || EMPTY_CONFIG
 
       const canvas = $(chart)
       const highchartsContentKey = canvas.data('contentkey')
