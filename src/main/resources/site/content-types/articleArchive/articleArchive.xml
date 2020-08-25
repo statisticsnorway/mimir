@@ -2,11 +2,7 @@
     <display-name>Artikkel- og publikasjonsarkiv</display-name>
     <super-type>base:structured</super-type>
     <form>
-        <input name="title" type="TextLine">
-            <label>Tittel på artikkelarkivet/samlesiden</label>
-            <occurrences minimum="0" maximum="1" />
-        </input>
-        <input name="premable" type="TextArea">
+        <input name="preamble" type="TextArea">
             <label>Ingress</label>
             <occurrences minimum="0" maximum="1" />
         </input>
@@ -14,7 +10,6 @@
             <label>Bilde</label>
             <occurrences minimum="0" maximum="1" />
         </input>
-
         <input name="freeText" type="HtmlArea">
             <label>Fritekst</label>
             <occurrences minimum="0" maximum="1" />

@@ -1,11 +1,12 @@
 import { Content, ContentLibrary, QueryResponse } from 'enonic-types/lib/content'
 import { PortalLibrary } from 'enonic-types/lib/portal'
 import { MenuItem } from '../../site/content-types/menuItem/menuItem'
-import { SiteConfig } from '../../site/site-config'
 import { Footer } from '../../site/content-types/footer/footer'
-import { Header } from '../../site/content-types/header/header';
+import { Header } from '../../site/content-types/header/header'
 
-const { hasPath } = require('ramda')
+const {
+  hasPath
+} = require('ramda')
 const {
   getContent, imageUrl, pageUrl
 }: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
@@ -55,11 +56,11 @@ function createMenuBranch(menuItem: Content<MenuItem>): MenuItemParsed {
   }
 }
 
-function isMenuItemActive(children: QueryResponse<MenuItem>, content: Content | null): boolean {
-  return children.total > 0 && content && content._path? children.hits.reduce( (hasActiveChildren: boolean, child: Content<MenuItem>) => {
-    if ( hasPath(['data', 'urlSrc', 'content', 'contentId'], child) && child.data.urlSrc!.content!.contentId === content._id) {
+export function isMenuItemActive(children: QueryResponse<MenuItem>, content: Content | null): boolean {
+  return children.total > 0 && content && content._path ? children.hits.reduce( (hasActiveChildren: boolean, child: Content<MenuItem>) => {
+    if (hasPath(['data', 'urlSrc', 'content', 'contentId'], child) && child.data.urlSrc!.content!.contentId === content._id) {
       hasActiveChildren = true
-    } else if(hasPath(['data', 'urlSrc', 'manual', 'url'], child) && content._path.indexOf(child.data.urlSrc!.manual!.url!) > 0) {
+    } else if (hasPath(['data', 'urlSrc', 'manual', 'url'], child) && content._path.indexOf(child.data.urlSrc!.manual!.url!) > 0) {
       hasActiveChildren = true
     }
     return hasActiveChildren
