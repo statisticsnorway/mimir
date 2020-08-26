@@ -157,7 +157,6 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    console.log('Received StatReg statuses', this.props.statRegFetchStatuses)
     const groupedQueries = byType(this.state.dataQueries)
     return (
       <Tabs defaultActiveKey="queries">
