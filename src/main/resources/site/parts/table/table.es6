@@ -45,10 +45,7 @@ function renderPart(req) {
     }
   }
 
-  const standardSymbol = {
-    href: getStandardSymbolArticleLink(siteConfig.standardSymbolPage),
-    text: phrases.tableStandardSymbols
-  }
+  const standardSymbol = getStandardSymbolPage(siteConfig.standardSymbolPage, phrases.tableStandardSymbols)
 
   const model = {
     tableTitle,
@@ -63,8 +60,16 @@ function renderPart(req) {
   }
 }
 
-const getStandardSymbolArticleLink = (standardSymbolPage) => {
-  return standardSymbolPage ? pageUrl({
-    id: standardSymbolPage
-  }) : ''
+const getStandardSymbolPage = (standardSymbolPage, standardSymbolText) => {
+  if (standardSymbolPage) {
+    const standardSymbolHref = standardSymbolPage ? pageUrl({
+      id: standardSymbolPage
+    }) : ''
+
+    return {
+      href: standardSymbolHref,
+      text: standardSymbolText
+    }
+  }
+  return null
 }

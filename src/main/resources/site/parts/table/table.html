@@ -1,11 +1,11 @@
 <section class="xp-part table container-fluid">
     <div class="row">
         <div class="col-12 p-0">
-            <p class="pl-3" data-th-if="${tableTitle}">
+            <p data-th-if="${tableTitle}">
                 <span class="font-weight-bold mr-1" data-th-text="'Tabelltittel:'" />
                 <span data-th-text="${tableTitle}" />
             </p>
-            <p>
+            <p data-th-if="${standardSymbol}">
                 <a data-th-href="${standardSymbol.href}" data-th-text="${standardSymbol.text}" />
             </p>
         </div>
