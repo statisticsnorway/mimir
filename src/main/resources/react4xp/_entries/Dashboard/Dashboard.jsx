@@ -19,7 +19,7 @@ import { Zap, ZapOff } from 'react-feather'
 import Badge from 'react-bootstrap/Badge'
 import { Container } from 'react-bootstrap'
 
-const byType = groupBy((dataQuery) => {
+const byParentType = groupBy((dataQuery) => {
   if (dataQuery.logData && dataQuery.logData.showWarningIcon) {
     return 'error'
   }
@@ -190,6 +190,7 @@ class Dashboard extends React.Component {
       >
         { this.props.featureToggling.updateList &&
           <DashboardButtons
+            className="mb-3"
             dataQueries={queries}
             refreshRow={(queries) => this.refreshRow(queries)}
             getRequest={(id) => this.getRequest(id)}
@@ -202,7 +203,6 @@ class Dashboard extends React.Component {
   }
 
   renderAccordionForStatRegFetches() {
-    console.log('Accordion StatReg statuses', this.props.statRegFetchStatuses)
     return (
       <Accordion header="Status" className="mx-0" openByDefault={true}>
         <StatRegDashboard currStatus={this.props.statRegFetchStatuses} />
@@ -211,7 +211,8 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const groupedQueries = byType(this.state.dataQueries)
+    const groupedQueries = byParentType(this.state.dataQueries)
+    const tableQueries = this.state.dataQueries.filter((q) => q.type === 'mimir:table')
     return (
       <Container>
         {this.renderBadge()}
@@ -257,12 +258,22 @@ class Dashboard extends React.Component {
               </Row>
 
               <Row className="my-3">
-                <Col className="p-4">
+                <Col className="p-4 tables-wrapper">
                   <ClearCacheButton
                     onSuccess={(message) => this.showSuccess(message)}
                     onError={(message) => this.showError(message)}
                     clearCacheServiceUrl={this.props.clearCacheServiceUrl}
                   />
+                  { this.props.featureToggling.updateList &&
+                    <DashboardButtons
+                      className="d-inline mx-3"
+                      dataQueries={tableQueries}
+                      refreshRow={(tableQueries) => this.refreshRow(tableQueries)}
+                      getRequest={(id) => this.getRequest(id)}
+                      setLoading={(id, value ) => this.setLoading(id, value)}
+                      buttonText={`Oppdater alle tabeller (${tableQueries.length})`}
+                    />
+                  }
                 </Col>
               </Row>
 
@@ -338,6 +349,7 @@ export const DataQuery = PropTypes.shape({
   displayName: PropTypes.string,
   path: PropTypes.string,
   parentType: PropTypes.string,
+  type: PropTypes.string,
   format: PropTypes.string,
   isPublished: PropTypes.bool,
   hasData: PropTypes.bool,

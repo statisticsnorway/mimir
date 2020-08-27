@@ -263,6 +263,7 @@ function prepDataSources(req, dataSources) {
       displayName: dataSource.displayName,
       path: dataSource._path,
       parentType: getParentType(dataSource._path),
+      type: dataSource.type,
       format: dataSource.data.dataSource._selected,
       dataset: {
         modified: hasData ? dateToFormat(dataset._ts) : undefined,
