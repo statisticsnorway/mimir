@@ -15,6 +15,7 @@ import { groupBy } from 'ramda'
 import { StatRegFetchInfo } from './types'
 import DataQueryTable from './DataQueryTable'
 
+
 const byType = groupBy((dataQuery) => {
   return dataQuery.parentType
 })
@@ -192,7 +193,9 @@ class Dashboard extends React.Component {
                 <h2 className="d-inline-block w-75">Data fra Statistikkregisteret</h2>
                 <div className="d-inline-block float-right">
                   <RefreshDataButton
-                      statregDashboardServiceUrl={this.props.statregDashboardServiceUrlUrl}
+                      onSuccess={(message) => this.showSuccess(message)}
+                      onError={(message) => this.showError(message)}
+                      statregDashboardServiceUrl={this.props.refreshStatregDataUrl}
                   />
                 </div>
                 {this.renderAccordionForStatRegFetches()}
@@ -240,6 +243,7 @@ Dashboard.propTypes = {
   header: PropTypes.string,
   dashboardService: PropTypes.string,
   clearCacheServiceUrl: PropTypes.string,
+  refreshStatregDataUrl: PropTypes.string,
   dataQueries: PropTypes.arrayOf(
     PropTypes.shape(DataQuery)
   ),
@@ -253,8 +257,6 @@ Dashboard.propTypes = {
   }),
   contentStudioBaseUrl: PropTypes.string,
   statRegFetchStatuses: PropTypes.arrayOf(StatRegFetchInfo),
-  statregRefreshUrl: PropTypes.string,
-  statregDashboardServiceUrl: PropTypes.string
 }
 
 export const DataQuery = PropTypes.shape({

@@ -47,6 +47,7 @@ class RefreshDataButton extends React.Component {
         })
     } else {
       console.log('statregDashboardServiceUrl is null')
+      console.log(statregDashboardServiceUrl)
     }
   }
 

@@ -125,6 +125,9 @@ function getAssets() {
     }),
     clearCacheServiceUrl: serviceUrl({
       service: 'clearCache'
+    }),
+    refreshStatregDataUrl: serviceUrl({
+      service: 'statregDashboard'
     })
   }
 }
