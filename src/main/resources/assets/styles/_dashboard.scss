@@ -1,6 +1,4 @@
 .part-dashboard {
-  margin: 20px 0 50px;
-
   .dataset:before {
     content: "\25CF";
     margin-right: 5px;
@@ -86,6 +84,21 @@
   }
   .error:before {
     color: $ssb-red-3
+  }
+
+  .nav {
+    .nav-link {
+      color: black;
+      background: white;
+      border-color: $ssb-green-5 $ssb-green-5 transparent;
+
+      &:hover {
+        border-color: black black transparent
+      }
+      &.active {
+        background: $ssb-green-1
+      }
+    }
   }
 }
 
