@@ -187,6 +187,7 @@ export const createConfig = (highchartData, displayName) => ({
     type: highchartData.yAxisType || 'linear'
   },
   xAxis: {
+    reversed: false,
     title: {
       style,
       text: highchartData.xAxisTitle || '',

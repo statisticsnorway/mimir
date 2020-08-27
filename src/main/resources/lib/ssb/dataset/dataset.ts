@@ -42,7 +42,7 @@ export function getDataset(content: Content<DataSource>): DatasetRepoNode<JSONst
   }
 }
 
-function extractKey(content: Content<DataSource>) {
+export function extractKey(content: Content<DataSource>): string | null {
   switch (content.data.dataSource?._selected) {
   case DataSourceType.STATBANK_API:
     return getStatbankApiKey(content)
@@ -53,7 +53,7 @@ function extractKey(content: Content<DataSource>) {
   }
 }
 
-function extractData(content: Content<DataSource>) {
+function extractData(content: Content<DataSource>): JSONstat | TbmlData | null {
   switch (content.data.dataSource?._selected) {
   case DataSourceType.STATBANK_API:
     return fetchStatbankApiData(content)
@@ -148,6 +148,7 @@ export interface CreateOrUpdateStatus {
 }
 
 export interface DatasetLib {
+  extractKey: (content: Content<DataSource>) => string;
   getDataset: (content: Content<DataSource>) => DatasetRepoNode<JSONstat | TbmlData> | null;
   refreshDataset: (content: Content<DataSource>, asUser: boolean) => CreateOrUpdateStatus;
   deleteDataset: (content: Content<DataSource>) => boolean;
