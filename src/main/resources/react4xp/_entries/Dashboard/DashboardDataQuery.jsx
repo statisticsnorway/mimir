@@ -83,7 +83,7 @@ class DashboardDataQuery extends React.Component {
         {logData.showWarningIcon && <span className="warningIcon"><AlertTriangle size="12" color="#FF4500"/></span>}<br/>
         {logData.modifiedReadable ? logData.modifiedReadable : ''}<br/>
         {logData.modified ? logData.modified : ''}<br/>
-        {logData.by.displayName ? `av ${logData.by.displayName}` : '' }
+        {logData.by && logData.by.displayName ? `av ${logData.by.displayName}` : '' }
       </td>
     )
   }

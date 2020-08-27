@@ -1,5 +1,6 @@
 import JsonStat from 'jsonstat-toolkit'
 import { X_AXIS_TITLE_POSITION, Y_AXIS_TITLE_POSITION } from '../../../lib/highcharts/config'
+import { DataSource as DataSourceType } from '../../../lib/repo/dataset'
 const util = __non_webpack_require__( '/lib/util')
 const {
   getMunicipality
@@ -29,6 +30,9 @@ const {
 const {
   parseDataWithMunicipality
 } = __non_webpack_require__('/lib/ssb/dataset')
+const {
+  getDataset
+} = __non_webpack_require__('/lib/ssb/dataset/dataset')
 const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
@@ -63,7 +67,7 @@ function renderPart(req, highchartIds) {
     })
 
     let config
-    if (highchart && highchart.data.dataquery) {
+    if (highchart && highchart.data.dataquery) { // OLD
       const cachedQuery = fromDatasetCache(req, highchart.data.dataquery, () => {
         const dataQueryContent = getDataquery({
           key: highchart.data.dataquery
@@ -71,7 +75,7 @@ function renderPart(req, highchartIds) {
         const datasetContent = getDataSetWithDataQueryId(highchart.data.dataquery).hits[0]
         let parsedData = JSON.parse(datasetContent.data.json)
         if (dataQueryContent.data.datasetFormat._selected === 'jsonStat') {
-        // eslint-disable-next-line new-cap
+          // eslint-disable-next-line new-cap
           parsedData = JsonStat(parsedData).Dataset(0)
         }
         return {
@@ -79,150 +83,15 @@ function renderPart(req, highchartIds) {
           format: dataQueryContent.data.datasetFormat
         }
       })
-      const data = cachedQuery.data
-      const datasetFormat = cachedQuery.format
-      let filterOptions
-      let xAxisLabel
-      let yAxisLabel
-      let usingJsonStat = false
-      if (datasetFormat._selected === 'jsonStat') {
-        const jsonStatConfig = datasetFormat.jsonStat
-        filterOptions = jsonStatConfig.datasetFilterOptions
-        xAxisLabel = jsonStatConfig.xAxisLabel
-        yAxisLabel = jsonStatConfig.yAxisLabel
-        usingJsonStat = true
-      }
-
-      const graphType = highchart.data.graphType
-      const filterOnMunicipalities = filterOptions && filterOptions._selected && filterOptions._selected === 'municipalityFilter'
-      let xAxisTitle = highchart.data.xAxisTitle
-      config = createConfig(highchart.data, highchart.displayName)
-      let graphData
-
-      if (usingJsonStat) {
+      config = createHighchartData(req, highchart, cachedQuery.data, cachedQuery.format)
+    } else if (highchart && highchart.data.dataSource) { // NEW
+      const datasetFromRepo = getDataset(highchart)
+      let parsedData = datasetFromRepo && datasetFromRepo.data
+      if (highchart.data.dataSource._selected === DataSourceType.STATBANK_API) {
         // eslint-disable-next-line new-cap
-        const dataset = data
-        const dimensionFilter = dataset.id.map( () => 0 )
-
-        if (filterOnMunicipalities) {
-          const municipality = getMunicipality(req)
-          xAxisTitle = municipality.displayName
-          const filterTarget = filterOptions.municipalityFilter.municipalityDimension
-          const filterTargetIndex = dataset.id.indexOf(filterTarget)
-          dimensionFilter[filterTargetIndex] = parseDataWithMunicipality(dataset, filterTarget, municipality, xAxisLabel)
-        }
-
-        if (graphType === 'barNegative') {
-          graphData = barNegativeFormat(dataset, dimensionFilter, xAxisLabel, yAxisLabel)
-        } else {
-          graphData = defaultFormat(dataset, dimensionFilter, xAxisLabel)
-        }
-      } else {
-        graphData = defaultTbmlFormat(data, graphType, highchart.data.xAxisType)
+        parsedData = JsonStat(parsedData).Dataset(0)
       }
-
-      if (graphType === 'barNegative') {
-        // axes get flipped so interchange title positions
-        config.series = graphData.series
-        config.xAxis = {
-          title: {
-            ...config.xAxis.title,
-            ...Y_AXIS_TITLE_POSITION
-          },
-          categories: graphData.categories,
-          reversed: false,
-          labels: {
-            step: 1,
-            style
-          },
-          lineColor,
-          accessibility: {
-            description: xAxisLabel
-          }
-        }
-        config.yAxis.title = {
-          ...config.yAxis.title,
-          ...X_AXIS_TITLE_POSITION
-        }
-      } else {
-        let useGraphDataCategories = false
-        if (highchart.data.switchRowsAndColumns ||
-            (!usingJsonStat && (
-              graphType === 'line' ||
-              graphType === 'column' ||
-              graphType === 'area' ||
-              graphType === 'bar'
-            ))) {
-          useGraphDataCategories = true
-        }
-        let showLabels = false
-        if (graphType === 'line' ||
-            graphType === 'area' ||
-            highchart.data.switchRowsAndColumns ||
-            (!usingJsonStat && (graphType === 'column' || graphType === 'bar'))) {
-          showLabels = true
-        }
-        config.series = graphData.series
-
-        config.xAxis = {
-          categories: useGraphDataCategories ? graphData.categories : [highchart.displayName],
-          gridLineWidth: graphType === 'line' ? 0 : 1,
-          lineColor,
-          tickInterval: highchart.data.tickInterval ? highchart.data.tickInterval.replace(/,/g, '.') : null,
-          labels: {
-            enabled: showLabels,
-            style
-          },
-          max: highchart.data.xAxisMax ? highchart.data.xAxisMax.replace(/,/g, '.') : null,
-          min: highchart.data.xAxisMin ? highchart.data.xAxisMin.replace(/,/g, '.') : null,
-          // Confusing detail: when type=bar, X axis becomes Y and vice versa.
-          // In other words, include 'bar' in this if-test, instead of putting it in the yAxis config
-          tickmarkPlacement: (graphType == 'column' || graphType == 'bar') ? 'between' : 'on',
-          title: {
-            ...config.xAxis.title,
-            text: xAxisTitle
-          },
-          type: highchart.data.xAxisType || 'categories',
-          tickWidth: 1,
-          tickColor: '#21383a'
-        }
-
-        if (graphType === 'bar') {
-          // the axes get flipped, so interchange the title positions
-          config.yAxis.title = {
-            ...config.yAxis.title,
-            ...X_AXIS_TITLE_POSITION
-          }
-
-          config.xAxis.title = {
-            ...config.xAxis.title,
-            ...Y_AXIS_TITLE_POSITION
-          }
-        }
-      }
-
-      if (!config.series) {
-        config.data = {
-          switchRowsAndColumns: highchart.data.switchRowsAndColumns,
-          decimalPoint: ',',
-          table: 'highcharts-datatable-' + highchart._id
-        }
-      }
-
-      if (graphType === 'pie' || highchart.data.switchRowsAndColumns) {
-        config.series = [{
-          name: graphData.categories[0] && !usingJsonStat ? graphData.categories[0] : 'Antall',
-          data: config.series.reduce((data, serie) => {
-            if (serie.y != null) {
-              data.push({
-                y: serie.y,
-                name: serie.name
-              })
-            }
-            return data
-          }, [])
-        }]
-      }
+      config = parsedData && createHighchartData(req, highchart, parsedData, highchart.data.dataSource) || undefined
     } else if (highchart && highchart.data.htmlTable) {
       config = {
         ...createConfig(highchart.data, highchart.displayName),
@@ -244,6 +113,151 @@ function renderPart(req, highchartIds) {
   }
 }
 
+function createHighchartData(req, highchart, data, datasetFormat) {
+  let filterOptions
+  let xAxisLabel
+  let yAxisLabel
+  let usingJsonStat = false
+  if (datasetFormat._selected === 'jsonStat' || datasetFormat._selected === DataSourceType.STATBANK_API) {
+    const jsonStatConfig = datasetFormat.jsonStat || datasetFormat[DataSourceType.STATBANK_API]
+    filterOptions = jsonStatConfig.datasetFilterOptions
+    xAxisLabel = jsonStatConfig.xAxisLabel
+    yAxisLabel = jsonStatConfig.yAxisLabel
+    usingJsonStat = true
+  }
+
+  const graphType = highchart.data.graphType
+  const filterOnMunicipalities = filterOptions && filterOptions._selected && filterOptions._selected === 'municipalityFilter'
+  let xAxisTitle = highchart.data.xAxisTitle
+  const config = createConfig(highchart.data, highchart.displayName)
+  let graphData
+
+  if (usingJsonStat) {
+    // eslint-disable-next-line new-cap
+    const dataset = data
+    const dimensionFilter = dataset && dataset.id.map( () => 0 )
+
+    if (filterOnMunicipalities) {
+      const municipality = getMunicipality(req)
+      xAxisTitle = municipality.displayName
+      const filterTarget = filterOptions.municipalityFilter.municipalityDimension
+      const filterTargetIndex = dataset && dataset.id.indexOf(filterTarget)
+      dimensionFilter[filterTargetIndex] = parseDataWithMunicipality(dataset, filterTarget, municipality, xAxisLabel)
+    }
+
+    if (graphType === 'barNegative') {
+      graphData = barNegativeFormat(dataset, dimensionFilter, xAxisLabel, yAxisLabel)
+    } else {
+      graphData = defaultFormat(dataset, dimensionFilter, xAxisLabel)
+    }
+  } else {
+    graphData = defaultTbmlFormat(data, graphType, highchart.data.xAxisType)
+  }
+
+  if (graphType === 'barNegative') {
+    // axes get flipped so interchange title positions
+    config.series = graphData.series
+    config.xAxis = {
+      title: {
+        ...config.xAxis.title,
+        ...Y_AXIS_TITLE_POSITION
+      },
+      categories: graphData.categories,
+      reversed: false,
+      labels: {
+        step: 1,
+        style
+      },
+      lineColor,
+      accessibility: {
+        description: xAxisLabel
+      }
+    }
+    config.yAxis.title = {
+      ...config.yAxis.title,
+      ...X_AXIS_TITLE_POSITION
+    }
+  } else {
+    let useGraphDataCategories = false
+    if (highchart.data.switchRowsAndColumns ||
+      (!usingJsonStat && (
+        graphType === 'line' ||
+        graphType === 'column' ||
+        graphType === 'area' ||
+        graphType === 'bar'
+      ))) {
+      useGraphDataCategories = true
+    }
+    let showLabels = false
+    if (graphType === 'line' ||
+      graphType === 'area' ||
+      highchart.data.switchRowsAndColumns ||
+      (!usingJsonStat && (graphType === 'column' || graphType === 'bar'))) {
+      showLabels = true
+    }
+    config.series = graphData.series
+
+    config.xAxis = {
+      categories: useGraphDataCategories ? graphData.categories : [highchart.displayName],
+      gridLineWidth: graphType === 'line' ? 0 : 1,
+      lineColor,
+      tickInterval: highchart.data.tickInterval ? highchart.data.tickInterval.replace(/,/g, '.') : null,
+      labels: {
+        enabled: showLabels,
+        style
+      },
+      max: highchart.data.xAxisMax ? highchart.data.xAxisMax.replace(/,/g, '.') : null,
+      min: highchart.data.xAxisMin ? highchart.data.xAxisMin.replace(/,/g, '.') : null,
+      // Confusing detail: when type=bar, X axis becomes Y and vice versa.
+      // In other words, include 'bar' in this if-test, instead of putting it in the yAxis config
+      tickmarkPlacement: (graphType == 'column' || graphType == 'bar') ? 'between' : 'on',
+      title: {
+        ...config.xAxis.title,
+        text: xAxisTitle
+      },
+      type: highchart.data.xAxisType || 'categories',
+      tickWidth: 1,
+      tickColor: '#21383a'
+    }
+
+    if (graphType === 'bar') {
+      // the axes get flipped, so interchange the title positions
+      config.yAxis.title = {
+        ...config.yAxis.title,
+        ...X_AXIS_TITLE_POSITION
+      }
+
+      config.xAxis.title = {
+        ...config.xAxis.title,
+        ...Y_AXIS_TITLE_POSITION
+      }
+    }
+  }
+
+  if (!config.series) {
+    config.data = {
+      switchRowsAndColumns: highchart.data.switchRowsAndColumns,
+      decimalPoint: ',',
+      table: 'highcharts-datatable-' + highchart._id
+    }
+  }
+
+  if (graphType === 'pie' || highchart.data.switchRowsAndColumns) {
+    config.series = [{
+      name: graphData.categories[0] && !usingJsonStat ? graphData.categories[0] : 'Antall',
+      data: config.series.reduce((data, serie) => {
+        if (serie.y != null) {
+          data.push({
+            y: serie.y,
+            name: serie.name
+          })
+        }
+        return data
+      }, [])
+    }]
+  }
+  return config
+}
 
 function initHighchart(highchart, config) {
   const tableRegex = /<table[^>]*>/igm

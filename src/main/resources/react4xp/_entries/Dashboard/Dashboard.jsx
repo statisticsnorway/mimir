@@ -4,10 +4,12 @@ import PropTypes from 'prop-types'
 import Alert from 'react-bootstrap/Alert'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
-import Table from 'react-bootstrap/Table'
+import Tabs from 'react-bootstrap/Tabs'
+import Tab from 'react-bootstrap/Tab'
 import DashboardDataQuery from './DashboardDataQuery'
 import DashboardButtons from './DashboardButtons'
 import ClearCacheButton from './ClearCacheButton'
+import Convert from './Convert'
 import StatRegDashboard from './StatRegDashboard'
 import RefreshDataButton from './RefreshDataButton'
 import axios from 'axios'
@@ -17,6 +19,9 @@ import DataQueryTable from './DataQueryTable'
 
 
 const byType = groupBy((dataQuery) => {
+  if (dataQuery.logData && dataQuery.logData.showWarningIcon) {
+    return 'error'
+  }
   return dataQuery.parentType
 })
 
@@ -130,10 +135,11 @@ class Dashboard extends React.Component {
     )
   }
 
-  renderAccordians(header, queries) {
+  renderAccordians(header, queries, openByDefault = false) {
     return (
       <Accordion header={header}
         className="mx-0"
+        openByDefault={openByDefault}
       >
         { this.props.featureToggling.updateList &&
           <DashboardButtons
@@ -149,7 +155,6 @@ class Dashboard extends React.Component {
   }
 
   renderAccordionForStatRegFetches() {
-    console.log('Accordion StatReg statuses', this.state.statRegData)
     return (
       <Accordion header="Status" className="mx-0" openByDefault={true}>
         <StatRegDashboard currStatus={this.state.statRegData} />
@@ -158,33 +163,39 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    console.log('Received StatReg statuses', this.state.statRegData)
     const groupedQueries = byType(this.state.dataQueries)
     return (
-      <section className="xp-part part-dashboard container">
-        <Row>
-          <Col>
-            <div className="p-4 tables-wrapper">
-              <h2 className="mb-3">
-                {`Spørringer mot statistikkbank og tabellbygger (${this.state.dataQueries ? this.state.dataQueries.length : '0'} stk)`}
-              </h2>
-              {
-                groupedQueries.factPage &&
-                this.renderAccordians(`Spørringer fra Faktasider (${groupedQueries.factPage.length})`, groupedQueries.factPage)
-              }
+      <Tabs defaultActiveKey="queries">
+        <Tab eventKey="queries" title="Spørringer">
+          <section className="xp-part part-dashboard container">
+            <Row>
+              <Col>
+                <div className="p-4 tables-wrapper">
+                  <h2 className="mb-3">
+                    {`Spørringer mot statistikkbank og tabellbygger (${this.state.dataQueries ? this.state.dataQueries.length : '0'} stk)`}
+                  </h2>
+                  {
+                    groupedQueries.error &&
+                    this.renderAccordians(`Spørringer som feilet (${groupedQueries.error.length})`, groupedQueries.error, true)
+                  }
 
-              {
-                groupedQueries.municipality &&
-                this.renderAccordians(`Spørringer fra Kommunefakta (${groupedQueries.municipality.length})`, groupedQueries.municipality)
-              }
+                  {
+                    groupedQueries.factPage &&
+                    this.renderAccordians(`Spørringer fra Faktasider (${groupedQueries.factPage.length})`, groupedQueries.factPage)
+                  }
 
-              {
-                groupedQueries.default &&
-                this.renderAccordians(`Andre (${groupedQueries.default.length})`, groupedQueries.default)
-              }
-            </div>
-          </Col>
-        </Row>
+                  {
+                    groupedQueries.municipality &&
+                    this.renderAccordians(`Spørringer fra Kommunefakta (${groupedQueries.municipality.length})`, groupedQueries.municipality)
+                  }
+
+                  {
+                    groupedQueries.default &&
+                    this.renderAccordians(`Andre (${groupedQueries.default.length})`, groupedQueries.default)
+                  }
+                </div>
+              </Col>
+            </Row>
 
         <section className="xp-part part-dashboard container">
           <Row>
@@ -204,36 +215,53 @@ class Dashboard extends React.Component {
           </Row>
         </section>
 
-        <Row className="my-3">
-          <Col className="p-4">
-            <ClearCacheButton
-              onSuccess={(message) => this.showSuccess(message)}
-              onError={(message) => this.showError(message)}
-              clearCacheServiceUrl={this.props.clearCacheServiceUrl}
-            />
-          </Col>
-        </Row>
+            <Row className="my-3">
+              <Col className="p-4">
+                <ClearCacheButton
+                  onSuccess={(message) => this.showSuccess(message)}
+                  onError={(message) => this.showError(message)}
+                  clearCacheServiceUrl={this.props.clearCacheServiceUrl}
+                />
+              </Col>
+            </Row>
 
-        <Alert variant="danger"
-          show={this.state.showErrorAlert}
-          onClose={() => this.setState({
-            showErrorAlert: false
-          })}
-          dismissible
-          role="alert">
-          <p>{this.state.errorMsg}</p>
-        </Alert>
+            <Alert variant="danger"
+              show={this.state.showErrorAlert}
+              onClose={() => this.setState({
+                showErrorAlert: false
+              })}
+              dismissible
+              role="alert">
+              <p>{this.state.errorMsg}</p>
+            </Alert>
 
-        <Alert variant="success"
-          show={this.state.showSuccessAlert}
-          onClose={() => this.setState({
-            showSuccessAlert: false
-          })}
-          dismissible
-          role="alert">
-          <p>{this.state.successMsg}</p>
-        </Alert>
-      </section>
+            <Alert variant="success"
+              show={this.state.showSuccessAlert}
+              onClose={() => this.setState({
+                showSuccessAlert: false
+              })}
+              dismissible
+              role="alert">
+              <p>{this.state.successMsg}</p>
+            </Alert>
+          </section>
+
+        </Tab>
+        <Tab eventKey="other" title="Annet">
+          <section className="xp-part part-dashboard container">
+            <Row>
+              <Col>
+                <div className="p-4 tables-wrapper">
+                  <h2 className="mb-3">
+                    {`Konvertering`}
+                  </h2>
+                  <Convert convertServiceUrl={this.props.convertServiceUrl}></Convert>
+                </div>
+              </Col>
+            </Row>
+          </section>
+        </Tab>
+      </Tabs>
     )
   }
 }
@@ -244,6 +272,7 @@ Dashboard.propTypes = {
   dashboardService: PropTypes.string,
   clearCacheServiceUrl: PropTypes.string,
   refreshStatregDataUrl: PropTypes.string,
+  convertServiceUrl: PropTypes.string,
   dataQueries: PropTypes.arrayOf(
     PropTypes.shape(DataQuery)
   ),
@@ -256,7 +285,11 @@ Dashboard.propTypes = {
     updateList: PropTypes.bool
   }),
   contentStudioBaseUrl: PropTypes.string,
-  statRegFetchStatuses: PropTypes.arrayOf(StatRegFetchInfo),
+  statRegFetchStatuses: PropTypes.shape({
+    contacts: StatRegFetchInfo,
+    statistics: StatRegFetchInfo,
+    publications: StatRegFetchInfo
+  })
 }
 
 export const DataQuery = PropTypes.shape({

@@ -13,5 +13,4 @@
 - [ ] If the code has some complexity; Comments? Documentation?
 - [ ] Regexp or "clever" code - could it be simplified?
 - [ ] Is there error messages for missing or malformed inputs or does the code just crash?
-- [ ] ????
-- [ ] Profit!
+

@@ -1,13 +1,8 @@
 export interface ArticleArchive {
   /**
-   * Tittel på artikkelarkivet/samlesiden
-   */
-  title?: string;
-
-  /**
    * Ingress
    */
-  premable?: string;
+  preamble?: string;
 
   /**
    * Bilde
@@ -15,12 +10,12 @@ export interface ArticleArchive {
   image?: string;
 
   /**
+   * Fritekst
+   */
+  freeText?: string;
+
+  /**
    * ISSN-nummer
    */
   issnNumber?: string;
-
-  /**
-   * URL
-   */
-  url?: string;
 }
