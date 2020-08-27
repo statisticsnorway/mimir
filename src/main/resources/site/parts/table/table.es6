@@ -36,7 +36,9 @@ function renderPart(req, tableContent) {
 
   const tableReact = new React4xp('Table')
     .setProps({
-      tableTitle: tableTitle
+      tableTitle: tableTitle,
+      displayName: tableContent.displayName,
+      thead: table.tbmlData.tbml.presentation.table.thead
     })
     .uniqueId()
 
