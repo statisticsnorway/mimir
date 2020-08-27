@@ -240,6 +240,7 @@ class Table extends React.Component {
       return (
         <table>
           {this.createThead(this.props.thead)}
+          {this.createTbody(this.props.tbody)}
         </table>
       )
     }
@@ -249,30 +250,53 @@ class Table extends React.Component {
     if (thead) {
       return (
         <thead>
-          {this.createRows(thead.tr)}
+          {this.createRowsHead(thead.tr)}
         </thead>
       )
     }
   }
 
-  createRows(row) {
+  createTbody(tbody) {
+    if (tbody) {
+      return (
+        <tbody>
+          {this.createRowsBody(tbody.tr)}
+        </tbody>
+      )
+    }
+  }
+
+  createRowsHead(row) {
     if (row) {
       return (
         <tr>
-          { this.createTh(row.th) }
-          { this.createTd(row.td) }
+          { this.createTdHead(row.td) }
+          { this.createThHead(row.th) }
         </tr>
       )
     }
   }
 
-  createTd(td) {
+  createRowsBody(row) {
+    if (row) {
+      return row.map((value, i) => {
+        return (
+          <tr key={i}>
+            { this.createThBody(value.th) }
+            { this.createTdBody(value.td) }
+          </tr>
+        )
+      })
+    }
+  }
+
+  createTdHead(td) {
     return (
       <td>{td}</td>
     )
   }
 
-  createTh(th) {
+  createThHead(th) {
     if (th) {
       return th.map((value, i) => {
         return (
@@ -280,6 +304,22 @@ class Table extends React.Component {
         )
       })
     }
+  }
+
+  createTdBody(td) {
+    if (td) {
+      return td.map((value, i) => {
+        return (
+          <td key={i}>{value}</td>
+        )
+      })
+    }
+  }
+
+  createThBody(th) {
+    return (
+      <th>{th}</th>
+    )
   }
 
 
@@ -302,6 +342,14 @@ Table.propTypes = {
         td: PropTypes.string,
         th: PropTypes.array
       }
+    )
+  }),
+  tbody: PropTypes.shape({
+    tr: PropTypes.arrayOf(
+      PropTypes.shape({
+        td: PropTypes.array,
+        th: PropTypes.number
+      })
     )
   })
 }
