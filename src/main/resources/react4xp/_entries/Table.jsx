@@ -291,9 +291,11 @@ class Table extends React.Component {
   }
 
   createTdHead(td) {
-    return (
-      <td>{td}</td>
-    )
+    if (td != undefined) {
+      return (
+        <td>{td}</td>
+      )
+    }
   }
 
   createThHead(th) {
