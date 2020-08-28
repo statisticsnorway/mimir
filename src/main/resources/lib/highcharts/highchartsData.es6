@@ -57,7 +57,7 @@ export function switchRowsAndColumnsCheck(highchartContent, seriesAndCategories,
 
 function switchRowsAndColumns(seriesAndCategories, dataFormat) {
   const isJsonStat = dataFormat._selected === 'jsonStat' || dataFormat._selected === DataSourceType.STATBANK_API
-  const c = {
+  return {
     categories: seriesAndCategories.categories[0] && !isJsonStat ? seriesAndCategories.series.map((serie) => serie.name) : 'Antall',
     series: seriesAndCategories.categories.map((category, categoryIndex) => ({
       name: category,
@@ -66,28 +66,8 @@ function switchRowsAndColumns(seriesAndCategories, dataFormat) {
       })
     }))
   }
-  return c
 }
-/*
-function switchRowsAndColumns(seriesAndCategories, dataFormat) {
-  const isJsonStat = dataFormat._selected === 'jsonStat' || dataFormat._selected === DataSourceType.STATBANK_API
-  const c = {
-    categories: seriesAndCategories.categories,
-    series: [{
-      name: seriesAndCategories.categories[0] && !isJsonStat ? seriesAndCategories.categories[0] : 'Antall',
-      data: seriesAndCategories.series.reduce((data, serie) => {
-        if (serie.y != null) {
-          data.push({
-            y: serie.y,
-            name: serie.name
-          })
-        }
-        return data
-      }, [])
-    }]
-  }
-  return c
-}*/
+
 
 /**
  * @param {Object} highchartContent
