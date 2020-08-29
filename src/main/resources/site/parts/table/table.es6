@@ -33,13 +33,14 @@ function renderPart(req, tableContent) {
   } else {
     tableTitle = 'Ingen tabell knyttet til innhold'
   }
+  log.info('tableHead PrettyJSON%s',JSON.stringify(table.body ,null,4));
 
   const tableReact = new React4xp('Table')
     .setProps({
       tableTitle: tableTitle,
       displayName: tableContent.displayName,
-      thead: table.tbmlData.tbml.presentation.table.thead,
-      tbody: table.tbmlData.tbml.presentation.table.tbody
+      head: table.head,
+      body: table.body
     })
     .uniqueId()
 

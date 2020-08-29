@@ -236,11 +236,11 @@ class Table extends React.Component {
   }
 
   createTable() {
-    if (this.props.thead) {
+    if (this.props.head) {
       return (
         <table>
-          {this.createThead(this.props.thead)}
-          {this.createTbody(this.props.tbody)}
+          {this.createThead(this.props.head)}
+          {this.createTbody(this.props.body)}
         </table>
       )
     }
@@ -250,7 +250,7 @@ class Table extends React.Component {
     if (thead) {
       return (
         <thead>
-          {this.createRowsHead(thead.tr)}
+          {this.createRowsHead(thead)}
         </thead>
       )
     }
@@ -260,68 +260,69 @@ class Table extends React.Component {
     if (tbody) {
       return (
         <tbody>
-          {this.createRowsBody(tbody.tr)}
+          {this.createRowsBody(tbody)}
         </tbody>
       )
     }
   }
 
-  createRowsHead(row) {
-    if (row) {
-      return (
-        <tr>
-          { this.createTdHead(row.td) }
-          { this.createThHead(row.th) }
-        </tr>
-      )
-    }
-  }
-
-  createRowsBody(row) {
-    if (row) {
-      return row.map((value, i) => {
+  createRowsHead(rows) {
+    if (rows) {
+      return rows.map((row, i) => {
         return (
-          <tr key={i}>
-            { this.createThBody(value.th) }
-            { this.createTdBody(value.td) }
+          <tr key={i} teste={i}>
+            { this.createCell(row) }
           </tr>
         )
       })
     }
   }
 
-  createTdHead(td) {
-    return (
-      <td>{td}</td>
-    )
-  }
-
-  createThHead(th) {
-    if (th) {
-      return th.map((value, i) => {
+  createRowsBody(rows) {
+    if (rows) {
+      return rows.map((row, i) => {
         return (
-          <th key={i}>{value}</th>
+          <tr key={i}>
+            { this.createCell(row) }
+          </tr>
         )
       })
     }
   }
 
-  createTdBody(td) {
-    if (td) {
-      return td.map((value, i) => {
-        return (
-          <td key={i}>{value}</td>
-        )
-      })
-    }
-  }
+  createCell(row) {
+     return Object.keys(row).map(function(keyName, keyIndex) {
+       const value = row[keyName]
+      if (keyName === 'td') {
+        if (Array.isArray(value)) {
+          return value.map((cellValue, i) => {
+            return (
+              <td key={i}>{cellValue}</td>
+            )
+          })
+        } else {
+          return (
+            <td key={keyIndex} rowSpan={value.rowspan} colSpan={value.colspan}>{value.content}</td>
+          )
+        }
+        }
+      if (keyName === 'th') {
+        if (Array.isArray(value)) {
+          return value.map((cellValue, i) => {
+            return (
+              <th key={i}>{cellValue}</th>
+            )
+          })
+        } else {
+          return (
+            <th key={keyIndex} rowSpan={value.rowspan} colSpan={value.colspan}>{value.content}</th>
+          )
+        }
+      }
 
-  createThBody(th) {
-    return (
-      <th>{th}</th>
-    )
-  }
+    })
 
+  }
 
   render() {
     return <div className="container tabell">
@@ -336,22 +337,34 @@ class Table extends React.Component {
 Table.propTypes = {
   displayName: PropTypes.string,
   tableTitle: PropTypes.string,
-  thead: PropTypes.shape({
-    tr: PropTypes.shape(
-      {
-        td: PropTypes.string,
-        th: PropTypes.array
-      }
-    )
-  }),
-  tbody: PropTypes.shape({
-    tr: PropTypes.arrayOf(
-      PropTypes.shape({
-        td: PropTypes.array,
-        th: PropTypes.number
+  head: PropTypes.arrayOf(
+    PropTypes.shape({
+      td: PropTypes.array | PropTypes.string | PropTypes.shape({
+        rowspan: PropTypes.number,
+        colspan: PropTypes.number,
+        content: PropTypes.string
+      }),
+      th: PropTypes.number | PropTypes.array | PropTypes.shape({
+        rowspan: PropTypes.number,
+        colspan: PropTypes.number,
+        content: PropTypes.string
       })
-    )
-  })
+    })
+  ),
+  body: PropTypes.arrayOf(
+    PropTypes.shape({
+      td: PropTypes.array | PropTypes.string | PropTypes.shape({
+        rowspan: PropTypes.number,
+        colspan: PropTypes.number,
+        content: PropTypes.string
+      }),
+      th: PropTypes.number | PropTypes.array | PropTypes.shape({
+        rowspan: PropTypes.number,
+        colspan: PropTypes.number,
+        content: PropTypes.string
+      })
+    })
+  )
 }
 
 export default (props) => <Table {...props}/>
