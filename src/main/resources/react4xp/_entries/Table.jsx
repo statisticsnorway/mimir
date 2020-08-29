@@ -294,19 +294,33 @@ class Table extends React.Component {
      return Object.keys(row).map(function(keyName, keyIndex) {
        const value = row[keyName]
       if (keyName === 'td') {
-        if (Array.isArray(value)) {
-          return value.map((cellValue, i) => {
-            return (
-              <td key={i}>{cellValue}</td>
-            )
-          })
-        } else {
+        if (typeof value === 'string' | typeof value === 'number') {
           return (
-            <td key={keyIndex} rowSpan={value.rowspan} colSpan={value.colspan}>{value.content}</td>
+            <td key={keyIndex}>{value}</td>
           )
-        }
+        } else {
+          if (Array.isArray(value)) {
+            return value.map((cellValue, i) => {
+              return (
+                <td key={i}>{cellValue}</td>
+              )
+            })
+          } else {
+            return (
+              <td key={keyIndex} rowSpan={value.rowspan} colSpan={value.colspan}>{value.content}</td>
+            )
+          }
+        
+      }
+
         }
       if (keyName === 'th') {
+        if (typeof value === 'string' | typeof value === 'number') {
+          return (
+            <th key={keyIndex}>{value}</th>
+          )
+        } else {
+
         if (Array.isArray(value)) {
           return value.map((cellValue, i) => {
             return (
@@ -319,6 +333,7 @@ class Table extends React.Component {
           )
         }
       }
+    }
 
     })
 
@@ -339,29 +354,33 @@ Table.propTypes = {
   tableTitle: PropTypes.string,
   head: PropTypes.arrayOf(
     PropTypes.shape({
-      td: PropTypes.array | PropTypes.string | PropTypes.shape({
+      td: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
         rowspan: PropTypes.number,
         colspan: PropTypes.number,
-        content: PropTypes.string
+        content: PropTypes.string,
+        class: PropTypes.string
       }),
-      th: PropTypes.number | PropTypes.array | PropTypes.shape({
+      th: PropTypes.array | PropTypes.number | PropTypes.string |  PropTypes.shape({
         rowspan: PropTypes.number,
         colspan: PropTypes.number,
-        content: PropTypes.string
+        content: PropTypes.string,
+        class: PropTypes.string
       })
     })
   ),
   body: PropTypes.arrayOf(
     PropTypes.shape({
-      td: PropTypes.array | PropTypes.string | PropTypes.shape({
+      td: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
         rowspan: PropTypes.number,
         colspan: PropTypes.number,
-        content: PropTypes.string
+        content: PropTypes.string,
+        class: PropTypes.string
       }),
-      th: PropTypes.number | PropTypes.array | PropTypes.shape({
+      th: PropTypes.array | PropTypes.number | PropTypes.string |  PropTypes.shape({
         rowspan: PropTypes.number,
         colspan: PropTypes.number,
-        content: PropTypes.string
+        content: PropTypes.string,
+        class: PropTypes.string
       })
     })
   )

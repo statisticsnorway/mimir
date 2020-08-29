@@ -33,7 +33,6 @@ function renderPart(req, tableContent) {
   } else {
     tableTitle = 'Ingen tabell knyttet til innhold'
   }
-  log.info('tableHead PrettyJSON%s',JSON.stringify(table.body ,null,4));
 
   const tableReact = new React4xp('Table')
     .setProps({
