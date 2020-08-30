@@ -32,7 +32,7 @@ class RefreshDataButton extends React.Component {
         })
         .catch((err) => {
           console.error(err)
-          const message = err
+          let message = err
           if (err.response.data.message) {
             message = err.response.data.message
           }
@@ -47,7 +47,6 @@ class RefreshDataButton extends React.Component {
         })
     } else {
       console.log('statregDashboardServiceUrl is null')
-      console.log(statregDashboardServiceUrl)
     }
   }
 

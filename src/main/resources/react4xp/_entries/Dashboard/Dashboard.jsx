@@ -277,7 +277,6 @@ class Dashboard extends React.Component {
                       buttonText={`Oppdater alle tabeller (${tableQueries.length})`}
                     />
                   }
-                </div>
               </Col>
             </Row>
 
@@ -288,7 +287,7 @@ class Dashboard extends React.Component {
                 <h2 className="d-inline-block w-75">Data fra Statistikkregisteret</h2>
                 <div className="d-inline-block float-right">
                   <RefreshDataButton
-                      onSuccess={(message) => this.showSuccess(message)}
+                      onSuccess={(message) => this.showSuccess('Statreg data er oppdatert')}
                       onError={(message) => this.showError(message)}
                       statregDashboardServiceUrl={this.props.refreshStatregDataUrl}
                   />
@@ -302,7 +301,7 @@ class Dashboard extends React.Component {
             <Row className="my-3">
               <Col className="p-4">
                 <ClearCacheButton
-                  onSuccess={(message) => this.showSuccess(message)}
+                  onSuccess={(message) => this.showSuccess('Statreg data oppdatert')}
                   onError={(message) => this.showError(message)}
                   clearCacheServiceUrl={this.props.clearCacheServiceUrl}
                 />
