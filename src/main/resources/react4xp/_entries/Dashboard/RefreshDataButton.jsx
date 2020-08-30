@@ -23,7 +23,7 @@ class RefreshDataButton extends React.Component {
         loading: true
       })
 
-      console.log('trying to reach', statregDashboardServiceUrl);
+      console.log('trying to reach', statregDashboardServiceUrl)
       axios.get(statregDashboardServiceUrl)
         .then((response) => {
           if (onSuccess) {

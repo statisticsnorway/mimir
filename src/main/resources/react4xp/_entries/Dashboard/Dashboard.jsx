@@ -1,5 +1,5 @@
 import React from 'react'
-import { Accordion, Button } from '@statisticsnorway/ssb-component-library'
+import { Accordion } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import Alert from 'react-bootstrap/Alert'
 import Col from 'react-bootstrap/Col'
@@ -277,36 +277,36 @@ class Dashboard extends React.Component {
                       buttonText={`Oppdater alle tabeller (${tableQueries.length})`}
                     />
                   }
-              </Col>
-            </Row>
+                </Col>
+              </Row>
 
-        <section className="xp-part part-dashboard container">
-          <Row>
-            <Col>
-              <div className="p-4 tables-wrapper">
-                <h2 className="d-inline-block w-75">Data fra Statistikkregisteret</h2>
-                <div className="d-inline-block float-right">
-                  <RefreshDataButton
-                      onSuccess={(message) => this.showSuccess('Statreg data er oppdatert')}
-                      onError={(message) => this.showError(message)}
-                      statregDashboardServiceUrl={this.props.refreshStatregDataUrl}
+              <section className="xp-part part-dashboard container">
+                <Row>
+                  <Col>
+                    <div className="p-4 tables-wrapper">
+                      <h2 className="d-inline-block w-75">Data fra Statistikkregisteret</h2>
+                      <div className="d-inline-block float-right">
+                        <RefreshDataButton
+                          onSuccess={(message) => this.showSuccess('Statreg data er oppdatert')}
+                          onError={(message) => this.showError(message)}
+                          statregDashboardServiceUrl={this.props.refreshStatregDataUrl}
+                        />
+                      </div>
+                      {this.renderAccordionForStatRegFetches()}
+                    </div>
+                  </Col>
+                </Row>
+              </section>
+
+              <Row className="my-3">
+                <Col className="p-4">
+                  <ClearCacheButton
+                    onSuccess={(message) => this.showSuccess('Statreg data oppdatert')}
+                    onError={(message) => this.showError(message)}
+                    clearCacheServiceUrl={this.props.clearCacheServiceUrl}
                   />
-                </div>
-                {this.renderAccordionForStatRegFetches()}
-              </div>
-            </Col>
-          </Row>
-        </section>
-
-            <Row className="my-3">
-              <Col className="p-4">
-                <ClearCacheButton
-                  onSuccess={(message) => this.showSuccess('Statreg data oppdatert')}
-                  onError={(message) => this.showError(message)}
-                  clearCacheServiceUrl={this.props.clearCacheServiceUrl}
-                />
-              </Col>
-            </Row>
+                </Col>
+              </Row>
 
               <Alert variant="danger"
                 show={this.state.showErrorAlert}
