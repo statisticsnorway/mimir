@@ -35,22 +35,17 @@ function renderPart(req, tableContent) {
   moment.locale(tableContent.language ? tableContent.language : 'nb')
   const phrases = getPhrases(tableContent)
 
-  let tableTitle
-
-  if (table && table.metadata) {
-    tableTitle = table.metadata.title
-  } else {
-    tableTitle = 'Ingen tabell knyttet til innhold'
-  }
-
   const standardSymbol = getStandardSymbolPage(siteConfig.standardSymbolPage, phrases.tableStandardSymbols)
 
   const tableReact = new React4xp('Table')
     .setProps({
-      tableTitle: tableTitle,
       displayName: tableContent.displayName,
-      head: table.head,
-      body: table.body,
+      table : {
+        caption: table.caption,
+        thead: table.thead,
+        tbody: table.tbody,
+        tableClass: table.tableClass
+      },
       standardSymbol: standardSymbol
     })
     .uniqueId()

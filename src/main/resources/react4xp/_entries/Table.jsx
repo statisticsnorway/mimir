@@ -1,46 +1,43 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from '@statisticsnorway/ssb-component-library'
+import {isEmpty} from 'ramda';
 
 class Table extends React.Component {
-  addHeader() {
-    if (this.props.tableTitle) {
-      return (
-        <h3 className="mb-5">{this.props.tableTitle}</h3>
-      )
-    }
-    return
-  }
-
   createTable() {
-    if (this.props.head) {
+    return (
+      <table className={this.props.table.tableClass}>
+        {this.addCaption()}
+        {this.addThead()}
+        {this.addTbody()}
+      </table>
+    )
+  }
+
+  addCaption() {
+    if (this.props.table.caption) {
       return (
-        <table>
-          {this.createThead(this.props.head)}
-          {this.createTbody(this.props.body)}
-        </table>
+        <caption>
+          {this.props.table.caption}
+        </caption>
       )
     }
   }
 
-  createThead(thead) {
-    if (thead) {
-      return (
-        <thead>
-          {this.createRowsHead(thead)}
-        </thead>
-      )
-    }
+  addThead() {
+    return (
+      <thead>
+        {this.createRowsHead(this.props.table.thead)}
+      </thead>
+    )
   }
 
-  createTbody(tbody) {
-    if (tbody) {
-      return (
-        <tbody>
-          {this.createRowsBody(tbody)}
-        </tbody>
-      )
-    }
+  addTbody() {
+    return (
+      <tbody>
+        {this.createRowsBody(this.props.table.tbody)}
+      </tbody>
+    )
   }
 
   createRowsHead(rows) {
@@ -59,6 +56,7 @@ class Table extends React.Component {
     if (rows) {
       return rows.map((row, i) => {
         return (
+        // TODO: When parsing Tbml has correct order use createCell
           <tr key={i}>
             { this.createBodyTh(row) }
             { this.createBodyTd(row) }
@@ -113,42 +111,29 @@ class Table extends React.Component {
   createCell(row) {
     return Object.keys(row).map(function(keyName, keyIndex) {
       const value = row[keyName]
-      if (keyName === 'td') {
-        if (typeof value === 'string' | typeof value === 'number') {
-          return (
-            <td key={keyIndex}>{value}</td>
-          )
-        } else {
-          if (Array.isArray(value)) {
-            return value.map((cellValue, i) => {
-              return (
-                <td key={i}>{cellValue}</td>
-              )
-            })
-          } else {
+      if (typeof value === 'string' | typeof value === 'number') {
+        return (
+          React.createElement(keyName, {
+            key: keyIndex
+          }, value)
+        )
+      } else {
+        if (Array.isArray(value)) {
+          return value.map((cellValue, i) => {
             return (
-              <td key={keyIndex} rowSpan={value.rowspan} colSpan={value.colspan}>{value.content}</td>
+              React.createElement(keyName, {
+                key: i
+              }, cellValue)
             )
-          }
-        }
-      }
-      if (keyName === 'th') {
-        if (typeof value === 'string' | typeof value === 'number') {
-          return (
-            <th key={keyIndex}>{value}</th>
-          )
+          })
         } else {
-          if (Array.isArray(value)) {
-            return value.map((cellValue, i) => {
-              return (
-                <th key={i}>{cellValue}</th>
-              )
-            })
-          } else {
-            return (
-              <th key={keyIndex} rowSpan={value.rowspan} colSpan={value.colspan}>{value.content}</th>
-            )
-          }
+          return (
+            React.createElement(keyName, {
+              key: keyIndex,
+              rowspan: value.rowspan,
+              colspan: value.colspan
+            }, value.content)
+          )
         }
       }
     })
@@ -164,50 +149,56 @@ class Table extends React.Component {
   }
 
   render() {
-    return <div className="container tabell">
-      <h1 className="mb-5">{this.props.displayName}</h1>
-      {this.addHeader()}
-      {this.createTable()}
-      {this.addStandardSymbols()}
-    </div>
+    if (!isEmpty(this.props.table)) {
+      return <div className="container tabell">
+        {this.createTable()}
+        {this.addStandardSymbols()}
+      </div>
+    } else {
+      return <div>
+        <p>Ingen tilknyttet Tabell</p>
+      </div>
+    }
   }
 }
 
 Table.propTypes = {
-  displayName: PropTypes.string,
-  tableTitle: PropTypes.string,
   standardSymbol: PropTypes.shape({
     href: PropTypes.string,
     text: PropTypes.string
   }),
-  head: PropTypes.arrayOf(
-    PropTypes.shape({
-      td: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
-        rowspan: PropTypes.number,
-        colspan: PropTypes.number,
-        content: PropTypes.string,
-        class: PropTypes.string
-      }),
-      th: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
-        rowspan: PropTypes.number,
-        colspan: PropTypes.number,
-        content: PropTypes.string,
-        class: PropTypes.string
+  table: PropTypes.shape({
+    caption: PropTypes.string,
+    tableClass: PropTypes.string,
+    thead: PropTypes.arrayOf(
+      PropTypes.shape({
+        td: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
+          rowspan: PropTypes.number,
+          colspan: PropTypes.number,
+          content: PropTypes.string,
+          class: PropTypes.string
+        }),
+        th: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
+          rowspan: PropTypes.number,
+          colspan: PropTypes.number,
+          content: PropTypes.string,
+          class: PropTypes.string
+        })
       })
-    })
-  ),
-  body: PropTypes.arrayOf(
-    PropTypes.shape({
-      th: PropTypes.number | PropTypes.string | PropTypes.shape({
-        content: PropTypes.string,
-        class: PropTypes.string
-      }),
-      td: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
-        content: PropTypes.string,
-        class: PropTypes.string
+    ),
+    tbody: PropTypes.arrayOf(
+      PropTypes.shape({
+        th: PropTypes.number | PropTypes.string | PropTypes.shape({
+          content: PropTypes.string,
+          class: PropTypes.string
+        }),
+        td: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
+          content: PropTypes.string,
+          class: PropTypes.string
+        })
       })
-    })
-  )
+    )
+  })
 }
 
 export default (props) => <Table {...props}/>
