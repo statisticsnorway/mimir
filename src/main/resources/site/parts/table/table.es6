@@ -38,8 +38,8 @@ function renderPart(req, tableContent) {
     .setProps({
       tableTitle: tableTitle,
       displayName: tableContent.displayName,
-      thead: table.tbmlData.tbml.presentation.table.thead,
-      tbody: table.tbmlData.tbml.presentation.table.tbody
+      head: table.head,
+      body: table.body
     })
     .uniqueId()
 
