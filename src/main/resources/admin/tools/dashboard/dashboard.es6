@@ -1,29 +1,33 @@
 const {
+  createMeasurement
+} = __non_webpack_require__('/lib/ssb/perf')
+const {
   getNode
-} = __non_webpack_require__( '/lib/repo/common')
-
+} = __non_webpack_require__('/lib/repo/common')
+const {
+  fromDatasetRepoCache
+} = __non_webpack_require__('/lib/ssb/cache')
 const {
   assetUrl,
   serviceUrl
-} = __non_webpack_require__( '/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 
 const {
   render
-} = __non_webpack_require__( '/lib/thymeleaf')
+} = __non_webpack_require__('/lib/thymeleaf')
 const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
 const {
   isPublished, dateToFormat, dateToReadable
 } = __non_webpack_require__('/lib/ssb/utils')
-const content = __non_webpack_require__( '/lib/xp/content')
+const content = __non_webpack_require__('/lib/xp/content')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const i18n = __non_webpack_require__('/lib/xp/i18n')
 const {
   EVENT_LOG_BRANCH,
-  EVENT_LOG_REPO,
-  getQueryChildNodesStatus
-} = __non_webpack_require__( '/lib/repo/eventLog')
+  EVENT_LOG_REPO
+} = __non_webpack_require__('/lib/repo/eventLog')
 const {
   Events
 } = __non_webpack_require__('/lib/repo/query')
@@ -41,12 +45,24 @@ const {
 } = __non_webpack_require__('/lib/xp/admin')
 const {
   getContentWithDataSource,
-  getDataset
+  getDataset,
+  extractKey
 } = __non_webpack_require__('/lib/ssb/dataset/dataset')
-const util = __non_webpack_require__( '/lib/util')
+import { filter, includes } from 'ramda'
 
 const view = resolve('./dashboard.html')
 const DEFAULT_CONTENTSTUDIO_URL = getToolUrl('com.enonic.app.contentstudio', 'main')
+
+const perf = createMeasurement('XP SSR perf')
+
+const MEASUREMENT_MARKS = {
+  XP_DATASET: 'XP Dataset Fetch (content)',
+  XP_DATAQUERIES: 'XP Dataqueries Fetch (content)',
+  XP_CONTENT_TOTAL: 'XP Content (Total)',
+  REPO_STATREG_FETCH: 'StatReg Fetch (repo)',
+  REPO_DATASOURCES: 'Fetch Datasources (from Repo)',
+  XP_RENDER: 'XP Render Part'
+}
 
 exports.get = function(req) {
   try {
@@ -56,23 +72,46 @@ exports.get = function(req) {
   }
 }
 
+// If there exists content with datasource and the old dataquery, prefer the one with datasource
+// TODO: verify if this is correct.
+//       if we cannot afford to pick just the intersection, return a join of both input arrays
+const preferContentWithDataSource = (contentWithDataSource, dataQueries) => {
+  const dsIds = contentWithDataSource.map((ds) => ds.id)
+  const exclQueries = filter((dq) => !includes(dq.id, dsIds), dataQueries) || []
+  return [...contentWithDataSource, ...exclQueries]
+}
+
 /**
  * @param {object} req
  * @return {{pageContributions: *, body: *}}
  */
 function renderPart(req) {
+  perf.clearMarks()
+  perf.clearMeasures()
+  perf.mark('start')
   const datasetMap = oldGetDataset()
+  perf.mark(MEASUREMENT_MARKS.XP_DATASET)
   const dataQueries = oldGetDataQueries(datasetMap)
+  perf.mark(MEASUREMENT_MARKS.XP_DATAQUERIES)
   const statRegFetchStatuses = getStatRegFetchStatuses()
+  perf.mark(MEASUREMENT_MARKS.REPO_STATREG_FETCH)
 
-  const contentWithDataSource = prepDataSources(getContentWithDataSource())
+  const contentWithDataSource = prepDataSources(req, getContentWithDataSource())
+  perf.mark(MEASUREMENT_MARKS.REPO_DATASOURCES)
 
   const assets = getAssets()
+
+  // log.info(`Content with DataSource: ${contentWithDataSource.length}`)
+  // log.info(`Content DQ ${dataQueries.length}`)
+
+  // const dsIds = contentWithDataSource.map((ds) => ds.id)
+  // const int = filter((dq) => !!includes(dq.id, dsIds), dataQueries)
+  // log.info(`Content intersect ${int && Array.isArray(int) && int.map((i) => i.id)}`)
 
   const dashboardDataset = new React4xp('Dashboard/Dashboard')
     .setProps({
       header: 'Alle spørringer',
-      dataQueries: [...dataQueries, ...contentWithDataSource],
+      dataQueries: preferContentWithDataSource(contentWithDataSource, dataQueries),
       dashboardService: assets.dashboardService,
       clearCacheServiceUrl: assets.clearCacheServiceUrl,
       convertServiceUrl: assets.convertServiceUrl,
@@ -88,8 +127,6 @@ function renderPart(req) {
     clientRender: true
   }))
 
-  log.info(`Sending statuses ${JSON.stringify(statRegFetchStatuses)}`)
-
   const model = {
     ...assets,
     dataQueries,
@@ -102,6 +139,16 @@ function renderPart(req) {
     body,
     clientRender: true
   })
+
+  perf.mark(MEASUREMENT_MARKS.XP_RENDER)
+
+  perf.measure(MEASUREMENT_MARKS.XP_DATASET, 'start', MEASUREMENT_MARKS.XP_DATASET)
+  perf.measure(MEASUREMENT_MARKS.XP_DATAQUERIES, MEASUREMENT_MARKS.XP_DATASET, MEASUREMENT_MARKS.XP_DATAQUERIES)
+  perf.measure(MEASUREMENT_MARKS.XP_CONTENT_TOTAL, 'start', MEASUREMENT_MARKS.XP_DATAQUERIES)
+  perf.measure(MEASUREMENT_MARKS.REPO_STATREG_FETCH, MEASUREMENT_MARKS.XP_DATAQUERIES, MEASUREMENT_MARKS.REPO_STATREG_FETCH)
+  perf.measure(MEASUREMENT_MARKS.REPO_DATASOURCES, MEASUREMENT_MARKS.REPO_STATREG_FETCH, MEASUREMENT_MARKS.REPO_DATASOURCES)
+  perf.measure(MEASUREMENT_MARKS.XP_RENDER, MEASUREMENT_MARKS.REPO_DATASOURCES, MEASUREMENT_MARKS.XP_RENDER)
+  // log.info(JSON.stringify(perf.getMeasurements(), null, 2))
 
   return {
     body,
@@ -174,8 +221,9 @@ function oldGetDataQueries(datasetMap) {
     const dataset = datasetMap[dataquery._id]
     const hasData = !!dataset
     const queryLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataquery._id}`)
-    // commented out because it takes too much time. We are discussing how to show logs.
+
     const eventLogNodes = [] // getQueryChildNodesStatus(`/queries/${dataquery._id}`)
+
     return {
       id: dataquery._id,
       displayName: dataquery.displayName,
@@ -204,17 +252,18 @@ function oldGetDataQueries(datasetMap) {
   })
 }
 
-function prepDataSources(dataSources) {
+function prepDataSources(req, dataSources) {
   return dataSources.map((dataSource) => {
-    const dataset = getDataset(dataSource)
+    const dataset = fromDatasetRepoCache(`/${dataSource.data.dataSource._selected}/${extractKey(dataSource)}`, () => getDataset(dataSource))
     const hasData = !!dataset
     const queryLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataSource._id}`)
-    const eventLogNodes = getQueryChildNodesStatus(`/queries/${dataSource._id}`)
+    const eventLogNodes = [] // getQueryChildNodesStatus(`/queries/${dataSource._id}`)
     return {
       id: dataSource._id,
       displayName: dataSource.displayName,
       path: dataSource._path,
       parentType: getParentType(dataSource._path),
+      type: dataSource.type,
       format: dataSource.data.dataSource._selected,
       dataset: {
         modified: hasData ? dateToFormat(dataset._ts) : undefined,
@@ -281,7 +330,7 @@ const getStatRegFetchStatuses = () => {
     const eventLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, eventLogKey)
     return {
       ...acc,
-      [key]:  eventLogNode.data.latestEventInfo
+      [key]: eventLogNode.data.latestEventInfo
     }
   }, {})
 }

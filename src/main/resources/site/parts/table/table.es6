@@ -1,7 +1,10 @@
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
-  getContent
+  getContent, getSiteConfig, pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
+const {
+  getPhrases
+} = __non_webpack_require__( '/lib/language')
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
@@ -12,6 +15,7 @@ const {
   parseTable
 } = __non_webpack_require__( '/lib/ssb/table')
 
+const moment = require('moment/min/moment-with-locales')
 const view = resolve('./table.html')
 
 
@@ -26,6 +30,11 @@ exports.get = function(req) {
 
 function renderPart(req, tableContent) {
   const table = parseTable(req, tableContent)
+  const siteConfig = getSiteConfig()
+
+  moment.locale(tableContent.language ? tableContent.language : 'nb')
+  const phrases = getPhrases(tableContent)
+
   let tableTitle
 
   if (table && table.tbmlData) {
@@ -34,12 +43,15 @@ function renderPart(req, tableContent) {
     tableTitle = 'Ingen tabell knyttet til innhold'
   }
 
+  const standardSymbol = getStandardSymbolPage(siteConfig.standardSymbolPage, phrases.tableStandardSymbols)
+
   const tableReact = new React4xp('Table')
     .setProps({
       tableTitle: tableTitle,
       displayName: tableContent.displayName,
       head: table.head,
-      body: table.body
+      body: table.body,
+      standardSymbol: standardSymbol
     })
     .uniqueId()
 
@@ -57,4 +69,18 @@ function renderPart(req, tableContent) {
     }),
     contentType: 'text/html'
   }
+}
+
+const getStandardSymbolPage = (standardSymbolPage, standardSymbolText) => {
+  if (standardSymbolPage) {
+    const standardSymbolHref = standardSymbolPage ? pageUrl({
+      id: standardSymbolPage
+    }) : ''
+
+    return {
+      href: standardSymbolHref,
+      text: standardSymbolText
+    }
+  }
+  return null
 }

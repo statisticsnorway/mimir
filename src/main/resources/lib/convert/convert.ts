@@ -210,7 +210,7 @@ function dataqueryToDataSource(dataquery: Content<Dataquery>): DataSource['dataS
 }
 
 export interface Socket {
-  on: (event: string, handler: () => void) => void;
+  on: (event: string, handler: (options: object | undefined) => void) => void;
   emit: (event: string, data: string | object) => void;
 }
 

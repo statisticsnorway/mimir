@@ -30,6 +30,11 @@ export interface SiteConfig {
   }>;
 
   /**
+   * Standardtegn i tabeller
+   */
+  standardSymbolPage?: string;
+
+  /**
    * Språk instillinger
    */
   language: Array<{

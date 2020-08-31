@@ -1,0 +1,5 @@
+.table {
+  @include media-breakpoint-down(md) {
+    padding: 0;
+  }
+}
