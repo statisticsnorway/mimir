@@ -47,6 +47,10 @@ function renderPart(req, tableContent) {
 
   const tableReact = new React4xp('Table')
     .setProps({
+      downloadAsTitle: {
+        title: phrases.tableDownloadAs
+      },
+      downloadAsOptions: getDownloadAsOptions(phrases),
       tableTitle: tableTitle,
       displayName: tableContent.displayName,
       head: table.head,
@@ -69,6 +73,24 @@ function renderPart(req, tableContent) {
     }),
     contentType: 'text/html'
   }
+}
+
+const getDownloadAsOptions = (phrases) => {
+  const downloadAs = []
+
+  const CSV = {
+    title: phrases.tableDownloadCSV,
+    id: 'downloadCSV'
+  }
+  downloadAs.push(CSV)
+
+  const XLS = {
+    title: phrases.tableDownloadXLS,
+    id: 'downloadXLS'
+  }
+  downloadAs.push(XLS)
+
+  return downloadAs
 }
 
 const getStandardSymbolPage = (standardSymbolPage, standardSymbolText) => {

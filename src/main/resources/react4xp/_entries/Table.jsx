@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Link } from '@statisticsnorway/ssb-component-library'
+import { Dropdown, Link } from '@statisticsnorway/ssb-component-library'
 
 class Table extends React.Component {
   addHeader() {
@@ -163,9 +163,21 @@ class Table extends React.Component {
     return
   }
 
+  addDownloadAsDropdown() {
+    return (
+      <div className="d-lg-flex justify-content-end">
+        <Dropdown
+          selectedItem={this.props.downloadAsTitle}
+          items={this.props.downloadAsOptions}
+        />
+      </div>
+    )
+  }
+
   render() {
     return <div className="container tabell">
       <h1 className="mb-5">{this.props.displayName}</h1>
+      {this.addDownloadAsDropdown()}
       {this.addHeader()}
       {this.createTable()}
       {this.addStandardSymbols()}
@@ -174,6 +186,13 @@ class Table extends React.Component {
 }
 
 Table.propTypes = {
+  downloadAsTitle: PropTypes.object,
+  downloadAsOptions: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string,
+      id: PropTypes.string
+    })
+  ),
   displayName: PropTypes.string,
   tableTitle: PropTypes.string,
   standardSymbol: PropTypes.shape({
