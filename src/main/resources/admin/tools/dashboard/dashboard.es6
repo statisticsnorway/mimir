@@ -32,15 +32,6 @@ const {
   Events
 } = __non_webpack_require__('/lib/repo/query')
 const {
-  STATREG_REPO_CONTACTS_KEY
-} = __non_webpack_require__('/lib/repo/statreg/contacts')
-const {
-  STATREG_REPO_STATISTICS_KEY
-} = __non_webpack_require__('/lib/repo/statreg/statistics')
-const {
-  STATREG_REPO_PUBLICATIONS_KEY
-} = __non_webpack_require__('/lib/repo/statreg/publications')
-const {
   getToolUrl
 } = __non_webpack_require__('/lib/xp/admin')
 const {
@@ -48,6 +39,10 @@ const {
   getDataset,
   extractKey
 } = __non_webpack_require__('/lib/ssb/dataset/dataset')
+const {
+  getStatRegFetchStatuses
+} = __non_webpack_require__('/lib/repo/statreg')
+
 import { filter, includes } from 'ramda'
 
 const view = resolve('./dashboard.html')
@@ -119,7 +114,8 @@ function renderPart(req) {
         updateList: req.params.updateList ? true : false
       },
       contentStudioBaseUrl: `${DEFAULT_CONTENTSTUDIO_URL}#/default/edit/`,
-      statRegFetchStatuses
+      statRegFetchStatuses,
+      ...assets
     })
     .setId('dataset')
 
@@ -161,12 +157,17 @@ function renderPart(req) {
  * @return {{dashboardService: *, stylesUrl: *, jsLibsUrl: *, logoUrl: *}}
  */
 function getAssets() {
+  log.info(`svc url :: dashboard ${serviceUrl({ service: 'dashboard '})}`)
+  log.info(`svc url :: statregDashboard ${serviceUrl({ service: 'statregDashboard '})}`)
   return {
     jsLibsUrl: assetUrl({
       path: 'js/bundle.js'
     }),
     dashboardService: serviceUrl({
       service: 'dashboard'
+    }),
+    statregRefreshUrl: serviceUrl({
+      service: 'statregDashboard'
     }),
     stylesUrl: assetUrl({
       path: 'styles/bundle.css'
@@ -176,6 +177,9 @@ function getAssets() {
     }),
     clearCacheServiceUrl: serviceUrl({
       service: 'clearCache'
+    }),
+    refreshStatregDataUrl: serviceUrl({
+      service: 'statregDashboard'
     }),
     wsServiceUrl: serviceUrl({
       service: 'websocket'
@@ -320,17 +324,3 @@ function getParentPath(path) {
   return pathElements.join('/')
 }
 
-const getStatRegFetchStatuses = () => {
-  return [
-    STATREG_REPO_CONTACTS_KEY,
-    STATREG_REPO_STATISTICS_KEY,
-    STATREG_REPO_PUBLICATIONS_KEY
-  ].reduce((acc, key) => {
-    const eventLogKey = `/statreg/${key}`
-    const eventLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, eventLogKey)
-    return {
-      ...acc,
-      [key]: eventLogNode.data.latestEventInfo
-    }
-  }, {})
-}
