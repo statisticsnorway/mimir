@@ -37,8 +37,8 @@ function renderPart(req, tableContent) {
 
   let tableTitle
 
-  if (table && table.tbmlData) {
-    tableTitle = table.tbmlData.tbml.metadata.title
+  if (table && table.metadata) {
+    tableTitle = table.metadata.title
   } else {
     tableTitle = 'Ingen tabell knyttet til innhold'
   }

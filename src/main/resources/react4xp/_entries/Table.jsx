@@ -77,17 +77,9 @@ class Table extends React.Component {
             <th key={keyIndex}>{value}</th>
           )
         } else {
-          if (Array.isArray(value)) {
-            return value.map((cellValue, i) => {
-              return (
-                <th key={i}>{cellValue}</th>
-              )
-            })
-          } else {
-            return (
-              <th key={keyIndex} className={value.class} rowSpan={value.rowspan} colSpan={value.colspan}>{value.content}</th>
-            )
-          }
+          return (
+            <th key={keyIndex} className={value.class} rowSpan={value.rowspan} colSpan={value.colspan}>{value.content}</th>
+          )
         }
       }
     })
@@ -206,15 +198,11 @@ Table.propTypes = {
   ),
   body: PropTypes.arrayOf(
     PropTypes.shape({
-      td: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
-        rowspan: PropTypes.number,
-        colspan: PropTypes.number,
+      th: PropTypes.number | PropTypes.string | PropTypes.shape({
         content: PropTypes.string,
         class: PropTypes.string
       }),
-      th: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
-        rowspan: PropTypes.number,
-        colspan: PropTypes.number,
+      td: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
         content: PropTypes.string,
         class: PropTypes.string
       })

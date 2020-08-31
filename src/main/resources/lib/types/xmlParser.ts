@@ -11,7 +11,7 @@ export interface TbmlData {
   };
 }
 
-interface Metadata {
+export interface Metadata {
   instance: {
     publicRelatedTableIds: string;
     'xml:lang': string;
