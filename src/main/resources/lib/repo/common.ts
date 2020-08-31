@@ -39,6 +39,8 @@ export function withSuperUserContext<T>(repository: string, branch: string, call
 
 export function withLoggedInUserContext<T>(branch: string, callback: UserContextCallback<T>): T {
   const user: User | null = auth.getUser()
+  log.info('withloggedinuser')
+  log.info('%s', JSON.stringify(user, null, 2))
   const loggedInUser: LoggedInUser = {
     login: user ? user.login : '',
     idProvider: user?.idProvider

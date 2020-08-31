@@ -19,10 +19,11 @@ class DashboardDataQuery extends React.Component {
     }
   }
 
-  getDataset(dataQueryId) {
-    this.setLoading(true)
-    this.resultHandler(this.props.getRequest(dataQueryId))
+  requestDatasetUpdate(dataQueryId) {
+    this.setLoading(dataQueryId, true)
+    this.props.io.emit('dashboard-refresh-dataset', {ids: [dataQueryId]})
   }
+
 
   deleteDataset(dataQueryId) {
     this.setState({
@@ -31,31 +32,14 @@ class DashboardDataQuery extends React.Component {
     return this.resultHandler(this.props.deleteRequest(dataQueryId))
   }
 
-  resultHandler(p) {
-    return p.then((response) => {
-      if (response.status === 200) {
-        this.props.refreshRow(response.data.updates)
-        this.props.showSuccess(response.data.message)
-      } else {
-        this.props.showError(response.data.message)
-      }
-    })
-      .catch((e) => {
-        console.log(e)
-        this.props.refreshRow(e.response.data.updates)
-        this.props.showError(e.response.data.message)
-      })
-      .finally(() => {
-        this.setState({
-          deleting: false
-        })
-        this.setLoading(false)
-      })
+  resultHandler(datasetInfo) {
+    this.setLoading(false)
   }
 
   setLoading(value) {
     this.props.setLoading(this.props.dataquery.id, value)
   }
+
 
   renderLogData() {
     const dataQueryId = this.props.dataquery.id
@@ -129,7 +113,7 @@ class DashboardDataQuery extends React.Component {
           <Button varitant="primary"
             size="sm"
             className="mx-1"
-            onClick={() => this.getDataset(dataQuery.id)}
+            onClick={() => this.requestDatasetUpdate(dataQuery.id)}
           >
             { this.props.dataquery.loading ? <span className="spinner-border spinner-border-sm" /> : <RefreshCw size={16}/> }
           </Button>
@@ -146,7 +130,8 @@ DashboardDataQuery.propTypes = {
   getRequest: PropTypes.func,
   deleteRequest: PropTypes.func,
   setLoading: PropTypes.func,
-  contentStudioBaseUrl: PropTypes.string
+  contentStudioBaseUrl: PropTypes.string,
+  io: PropTypes.object,
 }
 
 export default (props) => <DashboardDataQuery {...props} />

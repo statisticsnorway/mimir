@@ -66,6 +66,8 @@ class Dashboard extends React.Component {
     })
 
     wsConnection.setEventHandler('open', (event) => {
+      console.log('event')
+      console.log('%s', JSON.stringify(event, null, 2))
       this.onConnectionOpen(event)
     })
 
@@ -77,6 +79,32 @@ class Dashboard extends React.Component {
     setInterval(() => {
       this.state.io.emit('keep-alive', 'ping')
     }, 1000 * 60 * 3)
+  }
+
+  componentDidUpdate() {
+    if(this.state.io) {
+      this.setupWSListener()
+    }
+  }
+
+  setupWSListener() {
+    this.state.io.on(`dashboard-activity-refreshDataset`, (dataset) => this.setLoading(dataset.id, true))
+    this.state.io.on(`dashboard-activity-refreshDataset-result`, (datasetInfo) => this.updateDatasetInfo(datasetInfo))
+  }
+
+  updateDatasetInfo(datasetInfo) {
+    this.setState({
+      dataQueries: this.state.dataQueries.map((query) => {
+        if (query.id === datasetInfo.id) {
+          return {
+            ...query,
+            logData: datasetInfo.logData
+          }
+        }
+        return query
+      })
+    })
+    this.setLoading(datasetInfo.id, false)
   }
 
   renderBadge() {
@@ -159,10 +187,11 @@ class Dashboard extends React.Component {
 
   renderDataQueries(queries) {
     return queries.map( (dataquery) => {
+      const fromStateQuery = this.state.dataQueries.find( (dq) => dq.id === dataquery.id)
       return (
-        <DashboardDataQuery key={dataquery.id}
-          id={dataquery.id}
-          dataquery={dataquery}
+        <DashboardDataQuery key={fromStateQuery.id}
+          id={fromStateQuery.id}
+          dataquery={fromStateQuery}
           showSuccess={(msg) => this.showSuccess(msg)}
           showError={(msg) => this.showError(msg)}
           getRequest={(id) => this.getRequest(id)}
@@ -170,7 +199,8 @@ class Dashboard extends React.Component {
           refreshRow={(id) => this.refreshRow(id)}
           setLoading={(id, value) => this.setLoading(id, value)}
           contentStudioBaseUrl={this.props.contentStudioBaseUrl}
-          eventLogNodes={dataquery.logData && dataquery.logData.eventLogNodes ? dataquery.logData.eventLogNodes : undefined }
+          eventLogNodes={fromStateQuery.logData && fromStateQuery.logData.eventLogNodes ? fromStateQuery.logData.eventLogNodes : undefined }
+          io={this.state.io}
         />
       )
     })
