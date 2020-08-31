@@ -1,3 +1,4 @@
+const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getContent, getSiteConfig, pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
@@ -11,51 +12,61 @@ const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
 const {
-  getDataset
-} = __non_webpack_require__( '/lib/ssb/dataset/dataset')
+  parseTable
+} = __non_webpack_require__( '/lib/ssb/table')
 
 const moment = require('moment/min/moment-with-locales')
 const view = resolve('./table.html')
 
-exports.get = (req) => {
+
+exports.get = function(req) {
   try {
-    return renderPart(req)
+    const tableContent = getContent()
+    return renderPart(req, tableContent)
   } catch (e) {
-    return renderError(req, 'Error in part: ', e)
+    return renderError(req, 'Error in part', e)
   }
 }
 
-function renderPart(req) {
-  const page = getContent()
+function renderPart(req, tableContent) {
+  const table = parseTable(req, tableContent)
   const siteConfig = getSiteConfig()
 
-  moment.locale(page.language ? page.language : 'nb')
-  const phrases = getPhrases(page)
+  moment.locale(tableContent.language ? tableContent.language : 'nb')
+  const phrases = getPhrases(tableContent)
 
-  const dataSource = page.data.dataSource
-  const datasetRepo = getDataset(page)
   let tableTitle
 
-  if (dataSource && dataSource._selected === 'tbprocessor') {
-    if (datasetRepo) {
-      const metadata = datasetRepo.data.tbml.metadata
-      tableTitle = metadata.title.content ? metadata.title.content : metadata.title
-    } else {
-      tableTitle = 'Ingen tabell knyttet til innhold'
-    }
+  if (table && table.metadata) {
+    tableTitle = table.metadata.title
+  } else {
+    tableTitle = 'Ingen tabell knyttet til innhold'
   }
 
   const standardSymbol = getStandardSymbolPage(siteConfig.standardSymbolPage, phrases.tableStandardSymbols)
 
-  const model = {
-    tableTitle,
-    standardSymbol
-  }
+  const tableReact = new React4xp('Table')
+    .setProps({
+      tableTitle: tableTitle,
+      displayName: tableContent.displayName,
+      head: table.head,
+      body: table.body,
+      standardSymbol: standardSymbol
+    })
+    .uniqueId()
 
-  const body = render(view, model)
+  const body = render(view, {
+    tableId: tableReact.react4xpId
+  })
 
   return {
-    body,
+    body: tableReact.renderBody({
+      body,
+      clientRender: true
+    }),
+    pageContributions: tableReact.renderPageContributions({
+      clientRender: true
+    }),
     contentType: 'text/html'
   }
 }

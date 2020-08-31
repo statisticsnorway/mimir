@@ -1,13 +1,1 @@
-<section class="xp-part table container-fluid">
-    <div class="row">
-        <div class="col-12 p-0">
-            <p data-th-if="${tableTitle}">
-                <span class="font-weight-bold mr-1" data-th-text="'Tabelltittel:'" />
-                <span data-th-text="${tableTitle}" />
-            </p>
-            <p data-th-if="${standardSymbol}">
-                <a data-th-href="${standardSymbol.href}" data-th-text="${standardSymbol.text}" />
-            </p>
-        </div>
-    </div>
-</section>
+<section class="xp-part table" data-th-id="${tableId}"></section>
