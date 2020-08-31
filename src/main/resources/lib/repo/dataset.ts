@@ -23,6 +23,7 @@ export enum DataSource {
   STATBANK_SAVED = 'statbankSaved',
   DATASET = 'dataset',
   KLASS = 'klass',
+  HTMLTABLE = 'htmlTable'
 }
 
 export function setupDatasetRepo(): void {
