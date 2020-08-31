@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Link } from '@statisticsnorway/ssb-component-library'
 
 class Table extends React.Component {
   addHeader() {
@@ -161,11 +162,21 @@ class Table extends React.Component {
     })
   }
 
+  addStandardSymbols() {
+    if (this.props.standardSymbol) {
+      return (
+        <Link href={this.props.standardSymbol.href} >{this.props.standardSymbol.text}</Link>
+      )
+    }
+    return
+  }
+
   render() {
     return <div className="container tabell">
       <h1 className="mb-5">{this.props.displayName}</h1>
       {this.addHeader()}
       {this.createTable()}
+      {this.addStandardSymbols()}
     </div>
   }
 }
@@ -173,6 +184,10 @@ class Table extends React.Component {
 Table.propTypes = {
   displayName: PropTypes.string,
   tableTitle: PropTypes.string,
+  standardSymbol: PropTypes.shape({
+    href: PropTypes.string,
+    text: PropTypes.string
+  }),
   head: PropTypes.arrayOf(
     PropTypes.shape({
       td: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({

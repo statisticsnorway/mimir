@@ -19,7 +19,9 @@ const util: UtilLibrary = __non_webpack_require__( '/lib/util')
 export function parseTable(req: Request, table: Content<Table>): TableView {
   const tableViewData: TableView = {
     title: table.displayName,
-    tbmlData: undefined
+    tbmlData: undefined,
+    head: undefined,
+    body: undefined
   }
 
   const datasetRepo: DatasetRepoNode<JSONstat> | null = getDataset(table)
