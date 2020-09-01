@@ -18,6 +18,11 @@ const {
   getSources
 } = __non_webpack_require__( '/lib/ssb/utils')
 const {
+  data: {
+    forceArray
+  }
+} = __non_webpack_require__( '/lib/util')
+const {
   get
 } = __non_webpack_require__( '/lib/xp/content')
 
@@ -48,7 +53,7 @@ function renderPart(req, tableContent) {
   const phrases = getPhrases(tableContent)
 
   // sources
-  const sourceConfig = tableContent.data.sources ? data.forceArray(tableContent.data.sources) : []
+  const sourceConfig = tableContent.data.sources ? forceArray(tableContent.data.sources) : []
   const sourceLabel = phrases.source
   const sources = getSources(sourceConfig)
 
