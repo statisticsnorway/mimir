@@ -1,6 +1,7 @@
 import JsonStat from 'jsonstat-toolkit'
-const { DataSource : DataSourceType } = __non_webpack_require__( '/lib/repo/dataset')
-
+const {
+  DataSource: DataSourceType
+} = __non_webpack_require__( '/lib/repo/dataset')
 const util = __non_webpack_require__( '/lib/util')
 const {
   getDataSetWithDataQueryId
@@ -14,7 +15,6 @@ const {
 const {
   render
 } = __non_webpack_require__( '/lib/thymeleaf')
-
 const {
   createHighchartObject
 } = __non_webpack_require__('/lib/highcharts/highchartsUtils')
