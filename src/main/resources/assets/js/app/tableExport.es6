@@ -1,16 +1,16 @@
 import $ from 'jquery'
-// import 'file-saver'
-// import 'tableexport.jquery.plugin'
+import 'tableexport.jquery.plugin/libs/FileSaver/FileSaver.min.js'
+import 'tableexport.jquery.plugin/tableExport.min.js'
 
 export function init() {
   $(function() {
-    $('#downloadCSV').click((e) => {
+    $('#downloadTableAsCSV').click((e) => {
       e.preventDefault()
 
-      /* $('table').tableExport({
+      $('table').tableExport({
         type: 'csv',
         csvSeparator: ';'
-      })*/
+      })
     })
   })
 }

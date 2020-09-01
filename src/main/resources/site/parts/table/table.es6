@@ -80,13 +80,13 @@ const getDownloadAsOptions = (phrases) => {
 
   const CSV = {
     title: phrases.tableDownloadCSV,
-    id: 'downloadCSV'
+    id: 'downloadTableAsCSV'
   }
   downloadAs.push(CSV)
 
   const XLS = {
     title: phrases.tableDownloadXLS,
-    id: 'downloadXLS'
+    id: 'downloadTableAsXLS'
   }
   downloadAs.push(XLS)
 
