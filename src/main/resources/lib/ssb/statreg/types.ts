@@ -146,3 +146,4 @@ export function extractPublications(payload: string): Array<Publication> {
   const publisering: Array<Publisering> = pubXML.publiseringer.publisering
   return publisering.map((pub) => transformPubllication(pub))
 }
+

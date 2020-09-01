@@ -1,46 +1,51 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Dropdown, Link } from '@statisticsnorway/ssb-component-library'
+import { isEmpty } from 'ramda'
 
 class Table extends React.Component {
-  addHeader() {
-    if (this.props.tableTitle) {
-      return (
-        <h3 className="mb-5">{this.props.tableTitle}</h3>
-      )
-    }
-    return
-  }
-
   createTable() {
-    if (this.props.head) {
-      return (
-        <table>
-          {this.createThead(this.props.head)}
-          {this.createTbody(this.props.body)}
-        </table>
-      )
+    return (
+      <table className={this.props.table.tableClass}>
+        {this.addCaption()}
+        {this.addThead()}
+        {this.addTbody()}
+      </table>
+    )
+  }
+
+  addCaption() {
+    if (this.props.table.caption) {
+      if (typeof this.props.table.caption === 'object') {
+        return (
+          <caption noterefs={this.props.table.caption.noterefs}>
+            {this.props.table.caption.content}
+          </caption>
+        )
+      } else {
+        return (
+          <caption>
+            {this.props.table.caption}
+          </caption>
+        )
+      }
     }
   }
 
-  createThead(thead) {
-    if (thead) {
-      return (
-        <thead>
-          {this.createRowsHead(thead)}
-        </thead>
-      )
-    }
+  addThead() {
+    return (
+      <thead>
+        {this.createRowsHead(this.props.table.thead)}
+      </thead>
+    )
   }
 
-  createTbody(tbody) {
-    if (tbody) {
-      return (
-        <tbody>
-          {this.createRowsBody(tbody)}
-        </tbody>
-      )
-    }
+  addTbody() {
+    return (
+      <tbody>
+        {this.createRowsBody(this.props.table.tbody)}
+      </tbody>
+    )
   }
 
   createRowsHead(rows) {
@@ -59,6 +64,7 @@ class Table extends React.Component {
     if (rows) {
       return rows.map((row, i) => {
         return (
+        // TODO: When parsing Tbml has correct order use createCell
           <tr key={i}>
             { this.createBodyTh(row) }
             { this.createBodyTd(row) }
@@ -78,7 +84,9 @@ class Table extends React.Component {
           )
         } else {
           return (
-            <th key={keyIndex} className={value.class} rowSpan={value.rowspan} colSpan={value.colspan}>{value.content}</th>
+            <th key={keyIndex} className={value.class} rowSpan={value.rowspan} colSpan={value.colspan} >
+              {value.content}
+            </th>
           )
         }
       }
@@ -96,13 +104,21 @@ class Table extends React.Component {
         } else {
           if (Array.isArray(value)) {
             return value.map((cellValue, i) => {
-              return (
-                <td key={i}>{cellValue}</td>
-              )
+              if (typeof cellValue === 'object') {
+                return (
+                  <td className={cellValue.class} key={i}>{cellValue.content}</td>
+                )
+              } else {
+                return (
+                  <td key={i}>{cellValue}</td>
+                )
+              }
             })
           } else {
             return (
-              <td key={keyIndex} className={value.class} rowSpan={value.rowspan} colSpan={value.colspan}>{value.content}</td>
+              <td key={keyIndex} className={value.class} rowSpan={value.rowspan} colSpan={value.colspan}>
+                {value.content}
+              </td>
             )
           }
         }
@@ -113,42 +129,41 @@ class Table extends React.Component {
   createCell(row) {
     return Object.keys(row).map(function(keyName, keyIndex) {
       const value = row[keyName]
-      if (keyName === 'td') {
-        if (typeof value === 'string' | typeof value === 'number') {
-          return (
-            <td key={keyIndex}>{value}</td>
-          )
-        } else {
-          if (Array.isArray(value)) {
-            return value.map((cellValue, i) => {
+      if (typeof value === 'string' | typeof value === 'number') {
+        return (
+          React.createElement(keyName, {
+            key: keyIndex
+          }, value)
+        )
+      } else {
+        if (Array.isArray(value)) {
+          return value.map((cellValue, i) => {
+            if (typeof cellValue === 'object') {
               return (
-                <td key={i}>{cellValue}</td>
+                React.createElement(keyName, {
+                  key: i,
+                  rowSpan: cellValue.rowspan,
+                  colSpan: cellValue.colspan,
+                  noterefs: cellValue.noterefs
+                }, cellValue.content)
               )
-            })
-          } else {
-            return (
-              <td key={keyIndex} rowSpan={value.rowspan} colSpan={value.colspan}>{value.content}</td>
-            )
-          }
-        }
-      }
-      if (keyName === 'th') {
-        if (typeof value === 'string' | typeof value === 'number') {
-          return (
-            <th key={keyIndex}>{value}</th>
-          )
-        } else {
-          if (Array.isArray(value)) {
-            return value.map((cellValue, i) => {
+            } else {
               return (
-                <th key={i}>{cellValue}</th>
+                React.createElement(keyName, {
+                  key: i
+                }, cellValue)
               )
-            })
-          } else {
-            return (
-              <th key={keyIndex} rowSpan={value.rowspan} colSpan={value.colspan}>{value.content}</th>
-            )
-          }
+            }
+          })
+        } else {
+          return (
+            React.createElement(keyName, {
+              key: keyIndex,
+              rowSpan: value.rowspan,
+              colSpan: value.colspan,
+              noterefs: value.noterefs
+            }, value.content)
+          )
         }
       }
     })
@@ -175,13 +190,17 @@ class Table extends React.Component {
   }
 
   render() {
-    return <div className="container tabell">
-      <h1 className="mb-5">{this.props.displayName}</h1>
-      {this.addDownloadAsDropdown()}
-      {this.addHeader()}
-      {this.createTable()}
-      {this.addStandardSymbols()}
-    </div>
+    if (!isEmpty(this.props.table)) {
+      return <div className="container">
+        {this.addDownloadAsDropdown()}
+        {this.createTable()}
+        {this.addStandardSymbols()}
+      </div>
+    } else {
+      return <div>
+        <p>Ingen tilknyttet Tabell</p>
+      </div>
+    }
   }
 }
 
@@ -193,40 +212,47 @@ Table.propTypes = {
       id: PropTypes.string
     })
   ),
-  displayName: PropTypes.string,
-  tableTitle: PropTypes.string,
   standardSymbol: PropTypes.shape({
     href: PropTypes.string,
     text: PropTypes.string
   }),
-  head: PropTypes.arrayOf(
-    PropTypes.shape({
-      td: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
-        rowspan: PropTypes.number,
-        colspan: PropTypes.number,
-        content: PropTypes.string,
-        class: PropTypes.string
-      }),
-      th: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
-        rowspan: PropTypes.number,
-        colspan: PropTypes.number,
-        content: PropTypes.string,
-        class: PropTypes.string
+  table: PropTypes.shape({
+    caption: PropTypes.string | PropTypes.shape({
+      content: PropTypes.string,
+      noterefs: PropTypes.string
+    }),
+    tableClass: PropTypes.string,
+    thead: PropTypes.arrayOf(
+      PropTypes.shape({
+        td: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
+          rowspan: PropTypes.number,
+          colspan: PropTypes.number,
+          content: PropTypes.string,
+          class: PropTypes.string
+        }),
+        th: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
+          rowspan: PropTypes.number,
+          colspan: PropTypes.number,
+          content: PropTypes.string,
+          class: PropTypes.string,
+          noterefs: PropTypes.string
+        })
       })
-    })
-  ),
-  body: PropTypes.arrayOf(
-    PropTypes.shape({
-      th: PropTypes.number | PropTypes.string | PropTypes.shape({
-        content: PropTypes.string,
-        class: PropTypes.string
-      }),
-      td: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
-        content: PropTypes.string,
-        class: PropTypes.string
+    ),
+    tbody: PropTypes.arrayOf(
+      PropTypes.shape({
+        th: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
+          content: PropTypes.string,
+          class: PropTypes.string,
+          noterefs: PropTypes.string
+        }),
+        td: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
+          content: PropTypes.string,
+          class: PropTypes.string
+        })
       })
-    })
-  )
+    )
+  })
 }
 
 export default (props) => <Table {...props}/>
