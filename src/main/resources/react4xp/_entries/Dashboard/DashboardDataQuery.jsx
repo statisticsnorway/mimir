@@ -107,6 +107,7 @@ class DashboardDataQuery extends React.Component {
             <Link href={this.props.contentStudioBaseUrl + dataQuery.id}>
               {dataQuery.displayName}
             </Link> : ''}
+          { dataQuery.type ? <span className={'float-right detail ' + dataQuery.type.split(':').pop()}>{dataQuery.type.split(':').pop()}</span> : '' }
           <span className={'float-right detail ' + dataQuery.format}>{dataQuery.format}</span>
           {!dataQuery.isPublished ? <span className={'float-right detail unpublished'}>Ikke publisert</span> : ''}
         </td>
