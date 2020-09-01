@@ -16,11 +16,19 @@ class Table extends React.Component {
 
   addCaption() {
     if (this.props.table.caption) {
-      return (
-        <caption>
-          {this.props.table.caption}
-        </caption>
-      )
+      if (typeof this.props.table.caption === 'object') {
+        return (
+          <caption noterefs={this.props.table.caption.noterefs}>
+            {this.props.table.caption.content}
+          </caption>
+        )
+      } else {
+        return (
+          <caption>
+            {this.props.table.caption}
+          </caption>
+        )
+      }
     }
   }
 
@@ -96,9 +104,15 @@ class Table extends React.Component {
         } else {
           if (Array.isArray(value)) {
             return value.map((cellValue, i) => {
-              return (
-                <td key={i}>{cellValue}</td>
-              )
+              if (typeof cellValue === 'object') {
+                return (
+                  <td className={cellValue.class} key={i}>{cellValue.content}</td>
+                )
+              } else {
+                return (
+                  <td key={i}>{cellValue}</td>
+                )
+              }
             })
           } else {
             return (
@@ -184,7 +198,10 @@ Table.propTypes = {
     text: PropTypes.string
   }),
   table: PropTypes.shape({
-    caption: PropTypes.string,
+    caption: PropTypes.string | PropTypes.shape({
+      content: PropTypes.string,
+      noterefs: PropTypes.string
+    }),
     tableClass: PropTypes.string,
     thead: PropTypes.arrayOf(
       PropTypes.shape({
