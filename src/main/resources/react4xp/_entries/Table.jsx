@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from '@statisticsnorway/ssb-component-library'
-import {isEmpty} from 'ramda';
+import { isEmpty } from 'ramda'
 
 class Table extends React.Component {
   createTable() {
@@ -76,7 +76,9 @@ class Table extends React.Component {
           )
         } else {
           return (
-            <th key={keyIndex} className={value.class} rowSpan={value.rowspan} colSpan={value.colspan}>{value.content}</th>
+            <th key={keyIndex} className={value.class} rowSpan={value.rowspan} colSpan={value.colspan} >
+              {value.content}
+            </th>
           )
         }
       }
@@ -100,7 +102,9 @@ class Table extends React.Component {
             })
           } else {
             return (
-              <td key={keyIndex} className={value.class} rowSpan={value.rowspan} colSpan={value.colspan}>{value.content}</td>
+              <td key={keyIndex} className={value.class} rowSpan={value.rowspan} colSpan={value.colspan}>
+                {value.content}
+              </td>
             )
           }
         }
@@ -130,8 +134,8 @@ class Table extends React.Component {
           return (
             React.createElement(keyName, {
               key: keyIndex,
-              rowspan: value.rowspan,
-              colspan: value.colspan
+              rowSpan: value.rowspan,
+              colSpan: value.colspan
             }, value.content)
           )
         }
