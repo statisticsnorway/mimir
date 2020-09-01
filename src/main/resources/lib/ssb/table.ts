@@ -4,7 +4,7 @@
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { Content } from 'enonic-types/lib/content'
 import { Table } from '../../site/content-types/table/table'
-import { Metadata, TbmlData, TableRow } from '../types/xmlParser'
+import { TbmlData, TableRow } from '../types/xmlParser'
 import { Dataset as JSDataset } from '../types/jsonstat-toolkit'
 import { Request } from 'enonic-types/lib/controller'
 import { DatasetRepoNode } from '../repo/dataset'
@@ -18,10 +18,10 @@ const util: UtilLibrary = __non_webpack_require__( '/lib/util')
 
 export function parseTable(req: Request, table: Content<Table>): TableView {
   const tableViewData: TableView = {
-    title: table.displayName,
-    metadata: undefined,
-    head: undefined,
-    body: undefined
+    caption: undefined,
+    thead: undefined,
+    tbody: undefined,
+    tableClass: undefined
   }
 
   const datasetRepo: DatasetRepoNode<JSONstat> | null = getDataset(table)
@@ -32,12 +32,12 @@ export function parseTable(req: Request, table: Content<Table>): TableView {
 
     if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
       const tbmlData: TbmlData = data as TbmlData
-      const metadata: Metadata = tbmlData.tbml.metadata
       const headRows: Array<TableRow> = util.data.forceArray(tbmlData.tbml.presentation.table.thead.tr) as Array<TableRow>
       const bodyRows: Array<TableRow> = util.data.forceArray(tbmlData.tbml.presentation.table.tbody.tr) as Array<TableRow>
-      tableViewData.metadata = metadata
-      tableViewData.head = headRows
-      tableViewData.body = bodyRows
+      tableViewData.caption = tbmlData.tbml.metadata.title
+      tableViewData.thead = headRows
+      tableViewData.tbody = bodyRows
+      tableViewData.tableClass = tbmlData.tbml.presentation.table.class
     }
     return tableViewData
   }
@@ -45,9 +45,9 @@ export function parseTable(req: Request, table: Content<Table>): TableView {
   return tableViewData
 }
 
-export interface TableView {
-    title: string;
-    metadata?: Metadata;
-    head?: Array<TableRow>;
-    body?: Array<TableRow>;
+interface TableView {
+  caption?: string;
+  thead?: Array<TableRow>;
+  tbody?: Array<TableRow>;
+  tableClass?: string;
 }

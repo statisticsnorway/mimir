@@ -39,7 +39,8 @@ const partsWithPreview = [ // Parts that has preview
   `${app.name}:dataquery`,
   `${app.name}:factBox`,
   `${app.name}:contentList`,
-  `${app.name}:omStatistikken`
+  `${app.name}:omStatistikken`,
+  `${app.name}:table`
 ]
 
 const previewOverride = {
