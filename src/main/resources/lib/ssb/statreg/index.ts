@@ -1,7 +1,8 @@
 import { QueryFilters } from '../../repo/common'
-import { STATISTICS_URL, CONTACTS_URL, PUBLICATIONS_URL } from './config'
+import {STATISTICS_URL, CONTACTS_URL, PUBLICATIONS_URL, ALL_DATA_URL} from './config'
 import { extractStatistics, extractContacts, extractPublications } from './types'
 import { fetchStatRegData } from './common'
+import { setupStatRegRepo, getStatRegFetchStatuses } from '../../repo/statreg'
 
 
 export function fetchStatistics(filters: QueryFilters) {
@@ -16,3 +17,9 @@ export function fetchContacts(filters: QueryFilters) {
 export function fetchPublications(filters: QueryFilters) {
   return fetchStatRegData('Publications', PUBLICATIONS_URL, filters, extractPublications)
 }
+
+export function refreshStatRegData(): object {
+  setupStatRegRepo()
+  return getStatRegFetchStatuses()
+}
+
