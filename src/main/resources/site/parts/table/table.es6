@@ -14,6 +14,9 @@ const {
 const {
   parseTable
 } = __non_webpack_require__( '/lib/ssb/table')
+const {
+  get
+} = __non_webpack_require__( '/lib/xp/content')
 
 const moment = require('moment/min/moment-with-locales')
 const view = resolve('./table.html')
@@ -26,6 +29,12 @@ exports.get = function(req) {
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
+}
+
+exports.preview = function(req, id) {
+  return renderPart(req, get({
+    key: id
+  }))
 }
 
 function renderPart(req, tableContent) {

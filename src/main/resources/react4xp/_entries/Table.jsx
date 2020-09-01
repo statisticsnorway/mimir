@@ -124,18 +124,30 @@ class Table extends React.Component {
       } else {
         if (Array.isArray(value)) {
           return value.map((cellValue, i) => {
-            return (
-              React.createElement(keyName, {
-                key: i
-              }, cellValue)
-            )
+            if (typeof cellValue === 'object') {
+              return (
+                React.createElement(keyName, {
+                  key: i,
+                  rowSpan: cellValue.rowspan,
+                  colSpan: cellValue.colspan,
+                  noterefs: cellValue.noterefs
+                }, cellValue.content)
+              )
+            } else {
+              return (
+                React.createElement(keyName, {
+                  key: i
+                }, cellValue)
+              )
+            }
           })
         } else {
           return (
             React.createElement(keyName, {
               key: keyIndex,
               rowSpan: value.rowspan,
-              colSpan: value.colspan
+              colSpan: value.colspan,
+              noterefs: value.noterefs
             }, value.content)
           )
         }
@@ -186,15 +198,17 @@ Table.propTypes = {
           rowspan: PropTypes.number,
           colspan: PropTypes.number,
           content: PropTypes.string,
-          class: PropTypes.string
+          class: PropTypes.string,
+          noterefs: PropTypes.string
         })
       })
     ),
     tbody: PropTypes.arrayOf(
       PropTypes.shape({
-        th: PropTypes.number | PropTypes.string | PropTypes.shape({
+        th: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
           content: PropTypes.string,
-          class: PropTypes.string
+          class: PropTypes.string,
+          noterefs: PropTypes.string
         }),
         td: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
           content: PropTypes.string,
