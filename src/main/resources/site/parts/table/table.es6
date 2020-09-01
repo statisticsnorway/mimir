@@ -17,6 +17,9 @@ const {
 const {
   getSources
 } = __non_webpack_require__( '/lib/ssb/utils')
+const {
+  get
+} = __non_webpack_require__( '/lib/xp/content')
 
 const moment = require('moment/min/moment-with-locales')
 const view = resolve('./table.html')
@@ -31,6 +34,12 @@ exports.get = function(req) {
   }
 }
 
+exports.preview = function(req, id) {
+  return renderPart(req, get({
+    key: id
+  }))
+}
+
 function renderPart(req, tableContent) {
   const table = parseTable(req, tableContent)
   const siteConfig = getSiteConfig()
@@ -43,22 +52,17 @@ function renderPart(req, tableContent) {
   const sourceLabel = phrases.source
   const sources = getSources(sourceConfig)
 
-  let tableTitle
-
-  if (table && table.metadata) {
-    tableTitle = table.metadata.title
-  } else {
-    tableTitle = 'Ingen tabell knyttet til innhold'
-  }
-
   const standardSymbol = getStandardSymbolPage(siteConfig.standardSymbolPage, phrases.tableStandardSymbols)
 
   const tableReact = new React4xp('Table')
     .setProps({
-      tableTitle: tableTitle,
       displayName: tableContent.displayName,
-      head: table.head,
-      body: table.body,
+      table: {
+        caption: table.caption,
+        thead: table.thead,
+        tbody: table.tbody,
+        tableClass: table.tableClass
+      },
       standardSymbol: standardSymbol,
       sources,
       sourceLabel
