@@ -14,6 +14,9 @@ const {
 const {
   parseTable
 } = __non_webpack_require__( '/lib/ssb/table')
+const {
+  getSources
+} = __non_webpack_require__( '/lib/ssb/utils')
 
 const moment = require('moment/min/moment-with-locales')
 const view = resolve('./table.html')
@@ -35,6 +38,11 @@ function renderPart(req, tableContent) {
   moment.locale(tableContent.language ? tableContent.language : 'nb')
   const phrases = getPhrases(tableContent)
 
+  // sources
+  const sourceConfig = tableContent.data.sources ? data.forceArray(tableContent.data.sources) : []
+  const sourceLabel = phrases.source
+  const sources = getSources(sourceConfig)
+
   let tableTitle
 
   if (table && table.metadata) {
@@ -51,7 +59,9 @@ function renderPart(req, tableContent) {
       displayName: tableContent.displayName,
       head: table.head,
       body: table.body,
-      standardSymbol: standardSymbol
+      standardSymbol: standardSymbol,
+      sources,
+      sourceLabel
     })
     .uniqueId()
 

@@ -1,7 +1,7 @@
 <mixin>
     <display-name>Kilder</display-name>
     <form>
-        <option-set name="checkOptionSet">
+        <option-set name="sources">
             <label>Kildelenke</label>
             <expanded>true</expanded>
             <occurrences minimum="0" maximum="0"/>

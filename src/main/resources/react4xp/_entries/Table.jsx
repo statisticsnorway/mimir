@@ -163,12 +163,36 @@ class Table extends React.Component {
     return
   }
 
+  renderSources() {
+    const {
+      sources,
+      sourceLabel
+    } = this.props
+
+    if (sources && sources.length > 0) {
+      return (
+        <div className="row">
+          <h4>{sourceLabel}</h4>
+          {sources.map((source, index) => {
+            return (
+              <div key={index} className="col-3">
+                <Link href={source.url}>{source.urlText}</Link>
+              </div>
+            )
+          })}
+        </div>
+      )
+    }
+    return null
+  }
+
   render() {
     return <div className="container tabell">
       <h1 className="mb-5">{this.props.displayName}</h1>
       {this.addHeader()}
       {this.createTable()}
       {this.addStandardSymbols()}
+      {this.renderSources()}
     </div>
   }
 }
@@ -176,6 +200,11 @@ class Table extends React.Component {
 Table.propTypes = {
   displayName: PropTypes.string,
   tableTitle: PropTypes.string,
+  sourceLabel: PropTypes.string,
+  sources: PropTypes.arrayOf(PropTypes.shape({
+    urlText: PropTypes.string,
+    url: PropTypes.string
+  })),
   standardSymbol: PropTypes.shape({
     href: PropTypes.string,
     text: PropTypes.string
