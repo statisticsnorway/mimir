@@ -5,6 +5,11 @@ export interface Statistics {
   aboutTheStatistics?: string;
 
   /**
+   * Tabell
+   */
+  mainTable?: string;
+
+  /**
    * Statistikk
    */
   statistic?: string;
