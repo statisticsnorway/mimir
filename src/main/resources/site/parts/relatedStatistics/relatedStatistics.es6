@@ -41,7 +41,7 @@ const renderPart = (req) => {
   const phrases = getPhrases(page)
 
   if (!relatedStatistics || relatedStatistics.length === 0) {
-    if (req.mode === 'edit') {
+    if (req.mode === 'edit' && page.type !== `${app.name}:statistics` && page.type !== `${app.name}:article`) {
       return {
         body: render(view)
       }

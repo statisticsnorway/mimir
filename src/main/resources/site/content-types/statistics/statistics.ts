@@ -1,13 +1,13 @@
 export interface Statistics {
   /**
-   * Om Statistikken
-   */
-  aboutTheStatistics?: string;
-
-  /**
    * Tabell
    */
   mainTable?: string;
+
+  /**
+   * Om Statistikken
+   */
+  aboutTheStatistics?: string;
 
   /**
    * Statistikk

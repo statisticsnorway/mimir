@@ -45,7 +45,7 @@ function renderPart(req, tableId) {
     if (req.mode === 'edit' && page.type !== `${app.name}:statistics`) {
       return {
         body: render(view, {
-          tableLabel
+          label: tableLabel
         })
       }
     } else {

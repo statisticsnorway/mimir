@@ -4,19 +4,6 @@
     <super-type>base:structured</super-type>
     <form>
         <mixin name="statistic" />
-        <field-set>
-            <label>Om Statistikken</label>
-            <items>
-                <input name="aboutTheStatistics" type="ContentSelector">
-                    <label>Om Statistikken</label>
-                    <occurrences minimum="0" maximum="1"/>
-                    <config>
-                        <allowType>omStatistikken</allowType>
-                        <description>Legg til Om Statistikken</description>
-                    </config>
-                </input>
-            </items>
-        </field-set>
 
         <field-set>
             <label>Hovedtallstabell</label>
@@ -27,6 +14,20 @@
                     <config>
                         <allowType>table</allowType>
                         <description>Legg til Hovedtallstabell</description>
+                    </config>
+                </input>
+            </items>
+        </field-set>
+
+        <field-set>
+            <label>Om Statistikken</label>
+            <items>
+                <input name="aboutTheStatistics" type="ContentSelector">
+                    <label>Om Statistikken</label>
+                    <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <allowType>omStatistikken</allowType>
+                        <description>Legg til Om Statistikken</description>
                     </config>
                 </input>
             </items>
