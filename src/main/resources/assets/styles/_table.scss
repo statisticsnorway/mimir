@@ -3,3 +3,323 @@
     padding: 0;
   }
 }
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background-color: $ssb-white;
+}
+
+tbody tr {
+  background-color: $ssb-white;
+
+  &:nth-child(odd) {
+    background-color: $ssb-green-1;
+  }
+
+  &:hover,
+  &:nth-child(odd):hover {
+    background-color: $ssb-purple-1;
+  }
+}
+
+td {
+  vertical-align: top;
+}
+
+td,
+th {
+  padding: 0.4em 1em;
+}
+
+.table-content {
+  overflow: auto;
+}
+
+.table-header {
+  overflow: hidden;
+
+  h3 {
+    margin-bottom: 0.5em;
+  }
+
+  #select-table {
+    width: 40%;
+    float: left;
+  }
+
+  #right {
+    width: 40%;
+    float: right;
+    text-align: right;
+    margin-bottom: 0;
+  }
+
+  #left {
+    width: 40%;
+    float: left;
+    text-align: left;
+  }
+}
+
+
+.table-footer {
+  margin: 0.5em 0;
+
+  a.standardtegn {
+    font-size: 1.2em;
+  }
+
+  span {
+    margin: 1em 0em;
+  }
+}
+
+
+table.statistics {
+  overflow: scroll;
+
+  caption {
+    text-align: left;
+    padding: 0.5em 0 0.5em 0.625em;
+  }
+
+  colgroup,
+  colgroup.first-col {
+    border-left: none;
+  }
+
+  colgroup.border-right {
+    border-right: 1px solid $ssb-dark-2;
+  }
+
+  sup,
+  sub {
+    height: 0;
+    line-height: 1.5em;
+    vertical-align: baseline;
+    position: relative;
+  }
+
+  sup {
+    margin-left: 0.3em;
+    bottom: 0.8ex;
+  }
+
+  sub {
+    top: 0.5ex;
+  }
+
+  th {
+    font-weight: normal;
+  }
+
+  th,
+  td {
+    padding: 0.5em 1em;
+
+    &.last {
+      border-right: none;
+    }
+  }
+
+  td a {
+    white-space: normal;
+  }
+
+  thead,
+  tbody {
+
+    th,
+    td {
+      border-top: 1px solid $ssb-dark-2;
+      border-right: 1px solid $ssb-dark-2;
+      border-bottom: 1px solid $ssb-dark-2;
+    }
+
+    th.level1 {
+      padding-left: 1.75em;
+    }
+
+    th.level2 {
+      padding-left: 2.50em;
+    }
+
+    th.level3 {
+      padding-left: 3.25em;
+    }
+
+    th.sum,
+    td.sum {
+      font-weight: bold;
+    }
+  }
+
+  thead {
+    border-bottom: none;
+    border-top: 1px solid $ssb-dark-5;
+  }
+
+  tbody {
+    border: 1px solid $ssb-dark-5;
+
+    .head {
+      background-color: $ssb-white;
+    }
+
+    tr {
+      border-top: 1px solid $ssb-dark-2;
+      border-bottom: 1px solid $ssb-dark-2;
+
+      &:first-child {
+        border-top: 1px solid $ssb-dark-5;
+
+        th,
+        td {
+          border-top: 1px solid $ssb-dark-5;
+        }
+      }
+
+      &:last-child {
+        border-bottom: 1px solid $ssb-dark-5;
+
+        th,
+        td {
+          border-bottom: 1px solid $ssb-dark-5;
+        }
+      }
+    }
+
+    th,
+    td {
+      text-align: right;
+      vertical-align: bottom;
+    }
+
+    th {
+
+      &:first-child {
+        text-align: left;
+        border-left: none;
+      }
+
+      &.colspan {
+        border-top: 1px solid $ssb-dark-5;
+        border-bottom: 1px solid $ssb-dark-5;
+        text-align: left;
+        font-weight: bold;
+      }
+
+      &:last-child {
+        border-right: none;
+      }
+
+      &.title {
+        font-weight: bold;
+        font-size: 1.1em;
+      }
+    }
+
+    td {
+      white-space: nowrap;
+
+      &.important {
+        font-weight: bold;
+      }
+
+      &.left-align {
+        text-align: left;
+      }
+
+      &.preliminary:before {
+        content: "*";
+      }
+    }
+  }
+
+  thead,
+  tbody tr.head {
+
+    th,
+    td {
+      text-align: right;
+      border: 1px solid $ssb-dark-5;
+    }
+
+    th {
+      padding-top: 1.5em;
+
+      &.colspan {
+        text-align: center;
+        font-weight: normal;
+      }
+    }
+
+    td {
+      white-space: nowrap;
+    }
+
+    tr.first {
+
+      th.first,
+      td.first {
+        text-align: left;
+      }
+    }
+  }
+
+  tfoot tr {
+
+    td {
+      padding: 0.2em 0.6em 0.2em 0.6em;
+      word-wrap: break-word;
+
+      &.fotnote {
+        padding-left: 1.5em;
+
+        sup {
+          margin-right: 0.5em;
+          margin-left: -1em;
+        }
+      }
+
+      &.rettelse {
+        padding-top: 1em;
+        padding-left: 0.9em;
+      }
+
+      &.first {
+        padding-top: 0.5em;
+      }
+    }
+  }
+}
+
+
+// TODO: stylen under er for scroll piler som må legges til med javascript på et senere tidspunkt
+// scroll arrow for tables that are too wide (class added in JavaScript)
+.table-scroll-x,
+.table-scroll-x:hover {
+  font-size: 30px;
+  color: #3e8601;
+  display: block;
+  text-align: right;
+  margin-right: 5px;
+}
+
+.table-footer p.kildehenvisning {
+  margin-bottom: 0.4em;
+}
+
+ul.statbankkilde {
+  padding-left: 1em;
+  font-size:1.3em;
+  list-style-type: none;
+
+  li {
+    margin-bottom: 0.4em;
+  }
+}
