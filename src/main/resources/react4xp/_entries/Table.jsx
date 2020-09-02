@@ -186,11 +186,13 @@ class Table extends React.Component {
 
     if (sources && sources.length > 0) {
       return (
-        <div className="row">
-          <h4>{sourceLabel}</h4>
+        <div className="row mt-3">
+          <div className="w-100 col-12">
+            <span><strong>{sourceLabel}</strong></span>
+          </div>
           {sources.map((source, index) => {
             return (
-              <div key={index} className="col-3">
+              <div key={index} className="col-lg-3 col-12 mb-3">
                 <Link href={source.url}>{source.urlText}</Link>
               </div>
             )
