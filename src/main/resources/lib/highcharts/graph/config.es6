@@ -187,7 +187,7 @@ export const createConfig = (highchartData, displayName) => ({
     type: highchartData.yAxisType || 'linear'
   },
   xAxis: {
-    reversed: false,
+    reversed: (highchartData.xAxisFlip == true ? true : false),
     title: {
       style,
       text: highchartData.xAxisTitle || '',
@@ -379,6 +379,7 @@ export const createDefaultConfig = (highchartData, displayName) => ({
     type: highchartData.yAxisType || 'linear'
   },
   xAxis: {
+    reversed: (highchartData.xAxisFlip == true ? true : false),
     title: {
       style,
       text: highchartData.xAxisTitle || '',

@@ -1,5 +1,10 @@
 export interface Statistics {
   /**
+   * Tabell
+   */
+  mainTable?: string;
+
+  /**
    * Om Statistikken
    */
   aboutTheStatistics?: string;

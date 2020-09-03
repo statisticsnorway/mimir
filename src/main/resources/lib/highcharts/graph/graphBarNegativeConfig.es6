@@ -32,7 +32,7 @@ export function barNegativeConfig(highchartContent, options) {
         ...Y_AXIS_TITLE_POSITION
       },
       categories: options.categories,
-      reversed: false,
+      reversed: (highchartContent.data.xAxisFlip == true ? true : false),
       labels: {
         enable: highchartContent.data.switchRowsAndColumns,
         step: 1,

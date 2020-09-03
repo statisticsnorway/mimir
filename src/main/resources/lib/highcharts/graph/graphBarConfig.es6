@@ -26,7 +26,7 @@ export function barConfig(highchartContent, options) {
       }
     },
     xAxis: {
-      reversed: false,
+      reversed: (highchartContent.data.xAxisFlip == true ? true : false),
       labels: {
         enable: highchartContent.data.switchRowsAndColumns || !options.isJsonStat
       },
