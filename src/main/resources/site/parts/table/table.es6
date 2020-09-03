@@ -15,6 +15,14 @@ const {
   parseTable
 } = __non_webpack_require__( '/lib/ssb/table')
 const {
+  getSources
+} = __non_webpack_require__( '/lib/ssb/utils')
+const {
+  data: {
+    forceArray
+  }
+} = __non_webpack_require__( '/lib/util')
+const {
   get
 } = __non_webpack_require__( '/lib/xp/content')
 
@@ -64,6 +72,11 @@ function renderPart(req, tableId) {
   moment.locale(tableContent.language ? tableContent.language : 'nb')
   const phrases = getPhrases(tableContent)
 
+  // sources
+  const sourceConfig = tableContent.data.sources ? forceArray(tableContent.data.sources) : []
+  const sourceLabel = phrases.source
+  const sources = getSources(sourceConfig)
+
   const standardSymbol = getStandardSymbolPage(siteConfig.standardSymbolPage, phrases.tableStandardSymbols)
 
   const tableReact = new React4xp('Table')
@@ -73,9 +86,12 @@ function renderPart(req, tableId) {
         caption: table.caption,
         thead: table.thead,
         tbody: table.tbody,
+        tfoot: table.tfoot,
         tableClass: table.tableClass
       },
-      standardSymbol: standardSymbol
+      standardSymbol: standardSymbol,
+      sources,
+      sourceLabel
     })
     .uniqueId()
 

@@ -5,8 +5,6 @@
     <form>
         <mixin name="dataSource"/>
 
-        <mixin name="footnote" />
-
         <mixin name="sources" />
 
         <input type="TextLine" name="correctionNotice">
