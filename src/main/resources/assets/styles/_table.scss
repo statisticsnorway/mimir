@@ -2,11 +2,10 @@
   @include media-breakpoint-down(md) {
     padding: 0;
   }
-}
 
-.table {
   width: 100%;
   border-collapse: collapse;
+  overflow: scroll;
 }
 
 thead {
@@ -65,7 +64,6 @@ th {
   }
 }
 
-
 .table-footer {
   margin: 0.5em 0;
 
@@ -78,11 +76,15 @@ th {
   }
 }
 
-
+//specific styling for statistics tables. remove class "statistics" if no longer needed
 table.statistics {
   overflow: scroll;
 
   caption {
+    border: 1px solid $ssb-dark-5;
+    caption-side: top;
+    color: $ssb-dark-6;
+    font-weight: bold;
     text-align: left;
     padding: 0.5em 0 0.5em 0.625em;
   }
@@ -120,10 +122,6 @@ table.statistics {
   th,
   td {
     padding: 0.5em 1em;
-
-    &.last {
-      border-right: none;
-    }
   }
 
   td a {
@@ -190,6 +188,9 @@ table.statistics {
         td {
           border-bottom: 1px solid $ssb-dark-5;
         }
+      }
+      td:last-child {
+        border-right: 1px solid $ssb-dark-5;
       }
     }
 
