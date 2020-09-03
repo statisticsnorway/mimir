@@ -6,6 +6,11 @@
   width: 100%;
   border-collapse: collapse;
   overflow: scroll;
+
+  .ssb-link {
+    display: inline-block;
+    margin-top: 20px;
+  }
 }
 
 thead {
@@ -96,23 +101,6 @@ table.statistics {
 
   colgroup.border-right {
     border-right: 1px solid $ssb-dark-2;
-  }
-
-  sup,
-  sub {
-    height: 0;
-    line-height: 1.5em;
-    vertical-align: baseline;
-    position: relative;
-  }
-
-  sup {
-    margin-left: 0.3em;
-    bottom: 0.8ex;
-  }
-
-  sub {
-    top: 0.5ex;
   }
 
   th {
@@ -230,14 +218,6 @@ table.statistics {
       &.important {
         font-weight: bold;
       }
-
-      &.left-align {
-        text-align: left;
-      }
-
-      &.preliminary:before {
-        content: "*";
-      }
     }
   }
 
@@ -252,6 +232,7 @@ table.statistics {
 
     th {
       padding-top: 1.5em;
+      text-align: left;
 
       &.colspan {
         text-align: center;
@@ -263,13 +244,6 @@ table.statistics {
       white-space: nowrap;
     }
 
-    tr.first {
-
-      th.first,
-      td.first {
-        text-align: left;
-      }
-    }
   }
 
   tfoot tr {
