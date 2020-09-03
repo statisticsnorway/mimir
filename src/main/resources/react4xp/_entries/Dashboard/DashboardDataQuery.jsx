@@ -11,6 +11,19 @@ import moment from 'moment'
 const simpleDateFormat = (ds) =>
   moment(ds).locale('nb').format('DD.MM.YYYY HH:mm')
 
+function decideType(type) {
+  switch (type) {
+  case 'mimir:keyFigure':
+    return 'keyfigureType'
+  case 'mimir:highchart':
+    return 'highchartsType'
+  case 'mimir:table':
+    return 'tableType'
+  default:
+    return ''
+  }
+}
+
 class DashboardDataQuery extends React.Component {
   constructor(props) {
     super(props)
@@ -107,6 +120,7 @@ class DashboardDataQuery extends React.Component {
             <Link href={this.props.contentStudioBaseUrl + dataQuery.id}>
               {dataQuery.displayName}
             </Link> : ''}
+          { dataQuery.type ? <span className={'float-right detail ' + decideType(dataQuery.type)}>{dataQuery.type.split(':').pop()}</span> : '' }
           <span className={'float-right detail ' + dataQuery.format}>{dataQuery.format}</span>
           {!dataQuery.isPublished ? <span className={'float-right detail unpublished'}>Ikke publisert</span> : ''}
         </td>
@@ -116,7 +130,7 @@ class DashboardDataQuery extends React.Component {
           { dataQuery.dataset.modified ? simpleDateFormat(dataQuery.dataset.modified) : ''}
         </td>
 
-        {dataQuery.logData ? this.renderLogData(): <td></td>}
+        {dataQuery.logData ? this.renderLogData() : <td></td>}
 
         <td className="actions">
           <Button variant="secondary"
