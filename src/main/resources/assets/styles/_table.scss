@@ -2,7 +2,8 @@
   @include media-breakpoint-down(md) {
     padding: 0;
   }
-
+  
+  font-family: $font-roboto-plain;
   width: 100%;
   border-collapse: collapse;
   overflow: scroll;
@@ -246,28 +247,38 @@ table.statistics {
 
   }
 
-  tfoot tr {
+  tfoot {
+    border: 1px solid black;
 
-    td {
-      padding: 0.2em 0.6em 0.2em 0.6em;
-      word-wrap: break-word;
-
-      &.fotnote {
-        padding-left: 1.5em;
-
-        sup {
-          margin-right: 0.5em;
-          margin-left: -1em;
+    tr {
+      border: none;
+      
+      td {
+        padding: 0.2em 0.6em 0.2em 0.6em;
+        word-wrap: break-word;
+        border: none;
+        line-height: 28px;
+      }
+      
+      &.footnote {
+        td {
+          sup {
+            padding-right: 1em;
+            padding-left: .5em;
+          }
         }
       }
-
-      &.rettelse {
-        padding-top: 1em;
-        padding-left: 0.9em;
+      &.correction-notice {
+        td {
+          padding-top: 1em;
+        }
       }
-
-      &.first {
-        padding-top: 0.5em;
+      
+      &:first-of-type > td {
+        padding-top: 2em
+      }
+      &:last-of-type > td {
+        padding-bottom: 2em
       }
     }
   }

@@ -52,7 +52,7 @@ class Table extends React.Component {
   renderCorrectionNotice() {
     if (this.props.table.tfoot.correctionNotice) {
       return (
-        <tr className="table-correction-notice">
+        <tr className="correction-notice">
           <td colSpan="100%">
             {this.props.table.tfoot.correctionNotice}
           </td>
@@ -72,7 +72,7 @@ class Table extends React.Component {
         <tfoot>
           {footnotes.map((footnote, index) => {
             return (
-              <tr key={index} className="table-footnote">
+              <tr key={index} className="footnote">
                 <td colSpan="100%">
                   <sup>{index + 1}</sup>{footnote}
                 </td>
