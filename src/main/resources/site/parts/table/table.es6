@@ -20,24 +20,44 @@ const {
 
 const moment = require('moment/min/moment-with-locales')
 const view = resolve('./table.html')
+const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 
 
 exports.get = function(req) {
   try {
-    const tableContent = getContent()
-    return renderPart(req, tableContent)
+    const tableId = getContent().data.mainTable
+
+    return renderPart(req, tableId)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-exports.preview = function(req, id) {
-  return renderPart(req, get({
-    key: id
-  }))
-}
+exports.preview = (req, id) => renderPart(req, [id])
 
-function renderPart(req, tableContent) {
+function renderPart(req, tableId) {
+  const page = getContent()
+  const tableLabel = i18nLib.localize({
+    key: 'table'
+  })
+
+  if (!tableId) {
+    if (req.mode === 'edit' && page.type !== `${app.name}:statistics`) {
+      return {
+        body: render(view, {
+          label: tableLabel
+        })
+      }
+    } else {
+      return {
+        body: null
+      }
+    }
+  }
+
+  const tableContent = get({
+    key: tableId
+  })
   const table = parseTable(req, tableContent)
   const siteConfig = getSiteConfig()
 
@@ -49,7 +69,7 @@ function renderPart(req, tableContent) {
   const tableReact = new React4xp('Table')
     .setProps({
       displayName: tableContent.displayName,
-      table : {
+      table: {
         caption: table.caption,
         thead: table.thead,
         tbody: table.tbody,

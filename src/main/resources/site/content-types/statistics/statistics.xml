@@ -4,6 +4,21 @@
     <super-type>base:structured</super-type>
     <form>
         <mixin name="statistic" />
+
+        <field-set>
+            <label>Hovedtallstabell</label>
+            <items>
+                <input name="mainTable" type="ContentSelector">
+                    <label>Tabell</label>
+                    <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <allowType>table</allowType>
+                        <description>Legg til Hovedtallstabell</description>
+                    </config>
+                </input>
+            </items>
+        </field-set>
+
         <field-set>
             <label>Om Statistikken</label>
             <items>
