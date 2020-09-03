@@ -10,6 +10,7 @@ class Table extends React.Component {
         {this.addCaption()}
         {this.addThead()}
         {this.addTbody()}
+        {this.addTFoot()}
       </table>
     )
   }
@@ -46,6 +47,43 @@ class Table extends React.Component {
         {this.createRowsBody(this.props.table.tbody)}
       </tbody>
     )
+  }
+
+  renderCorrectionNotice() {
+    if (this.props.table.tfoot.correctionNotice) {
+      return (
+        <tr className="table-correction-notice">
+          <td colSpan="100%">
+            {this.props.table.tfoot.correctionNotice}
+          </td>
+        </tr>
+      )
+    }
+    return null
+  }
+
+  addTFoot() {
+    const {
+      footnotes, correctionNotice
+    } = this.props.table.tfoot
+
+    if (footnotes.length > 0 || correctionNotice) {
+      return (
+        <tfoot>
+          {footnotes.map((footnote, index) => {
+            return (
+              <tr key={index} className="table-footnote">
+                <td colSpan="100%">
+                  <sup>{index + 1}</sup>{footnote}
+                </td>
+              </tr>
+            )
+          })}
+          {this.renderCorrectionNotice()}
+        </tfoot>
+      )
+    }
+    return null
   }
 
   createRowsHead(rows) {
@@ -263,7 +301,11 @@ Table.propTypes = {
           class: PropTypes.string
         })
       })
-    )
+    ),
+    tfoot: PropTypes.shape({
+      footnotes: PropTypes.arrayOf(PropTypes.string),
+      correctionNotice: PropTypes.string
+    })
   })
 }
 

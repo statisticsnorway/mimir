@@ -66,6 +66,7 @@ function renderPart(req, tableContent) {
         caption: table.caption,
         thead: table.thead,
         tbody: table.tbody,
+        tfoot: table.tfoot,
         tableClass: table.tableClass
       },
       standardSymbol: standardSymbol,

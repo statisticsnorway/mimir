@@ -4,7 +4,7 @@
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { Content } from 'enonic-types/lib/content'
 import { Table } from '../../site/content-types/table/table'
-import { TbmlData, TableRow } from '../types/xmlParser'
+import { TbmlData, TableRow, Note, Notes } from '../types/xmlParser'
 import { Dataset as JSDataset } from '../types/jsonstat-toolkit'
 import { Request } from 'enonic-types/lib/controller'
 import { DatasetRepoNode } from '../repo/dataset'
@@ -21,6 +21,10 @@ export function parseTable(req: Request, table: Content<Table>): TableView {
     caption: undefined,
     thead: undefined,
     tbody: undefined,
+    tfoot: {
+      footnotes: [],
+      correctionNotice: ''
+    },
     tableClass: undefined
   }
 
@@ -38,6 +42,12 @@ export function parseTable(req: Request, table: Content<Table>): TableView {
       tableViewData.thead = headRows
       tableViewData.tbody = bodyRows
       tableViewData.tableClass = tbmlData.tbml.presentation.table.class
+      tableViewData.tfoot.correctionNotice = table.data.correctionNotice || ''
+      const notes: Notes | undefined = tbmlData.tbml.metadata.notes
+      if (notes) {
+        const notesList: Array<Note> = util.data.forceArray(notes.note) as Array<Note>
+        tableViewData.tfoot.footnotes = notesList.map((note) => note.content)
+      }
     }
     return tableViewData
   }
@@ -49,5 +59,9 @@ interface TableView {
   caption?: string;
   thead?: Array<TableRow>;
   tbody?: Array<TableRow>;
+  tfoot: {
+    footnotes: Array<string>;
+    correctionNotice: string;
+  };
   tableClass?: string;
 }
