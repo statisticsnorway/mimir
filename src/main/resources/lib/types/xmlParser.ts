@@ -11,7 +11,7 @@ export interface TbmlData {
   };
 }
 
-interface Metadata {
+export interface Metadata {
   instance: {
     publicRelatedTableIds: string;
     'xml:lang': string;
@@ -22,6 +22,16 @@ interface Metadata {
   title: string;
   category: string;
   tags: string;
+  notes?: Notes;
+}
+
+export interface Notes {
+  note: Array<Note> | Note;
+}
+
+export interface Note {
+  noteid: string;
+  content: string;
 }
 
 interface Table {

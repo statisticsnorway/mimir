@@ -130,6 +130,11 @@ export interface Highchart {
   xEnableLabel: boolean;
 
   /**
+   * Reverser X-akse
+   */
+  xAxisFlip: boolean;
+
+  /**
    * Y-akse Tittel
    */
   yAxisTitle?: string;

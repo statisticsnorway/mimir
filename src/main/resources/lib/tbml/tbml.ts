@@ -46,8 +46,7 @@ function xmlToJson(xml: string, queryId?: string): TbmlData {
     const result: TbmlData = __.toNativeObject(xmlParser.parse(xml))
     if (queryId) {
       logUserDataQuery(queryId, {
-        message: Events.XML_TO_JSON,
-        xmlResult: result
+        message: Events.XML_TO_JSON
       })
     }
     return result

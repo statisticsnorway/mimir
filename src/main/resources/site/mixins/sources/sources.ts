@@ -2,7 +2,7 @@ export interface Sources {
   /**
    * Kildelenke
    */
-  checkOptionSet?: {
+  sources?: {
     /**
      * Selected
      */
