@@ -51,6 +51,7 @@ function renderPart(req, tableContent) {
         title: phrases.tableDownloadAs
       },
       downloadAsOptions: getDownloadAsOptions(phrases),
+      displayName: tableContent.displayName,
       table : {
         caption: table.caption,
         thead: table.thead,

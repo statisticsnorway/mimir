@@ -179,11 +179,16 @@ class Table extends React.Component {
   }
 
   addDownloadAsDropdown() {
+    const {
+      downloadAsTitle,
+      downloadAsOptions
+    } = this.props
+
     return (
-      <div className="d-lg-flex justify-content-end">
+      <div className="download-table-container">
         <Dropdown
-          selectedItem={this.props.downloadAsTitle}
-          items={this.props.downloadAsOptions}
+          selectedItem={downloadAsTitle}
+          items={downloadAsOptions}
         />
       </div>
     )

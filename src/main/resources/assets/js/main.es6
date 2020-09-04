@@ -7,7 +7,7 @@ import { init as initMenuDropDown } from './app/menuDropdown.es6'
 import { init as initPrint } from './app/print.es6'
 import { init as initRelatedKostra } from './app/relatedKostra.es6'
 import { init as initDivider } from './app/divider.es6'
-import { init as initTableExport } from './app/tableExport.es6'
+import { init as initTable } from './app/table.es6'
 
 document.addEventListener('DOMContentLoaded', () => {
   initAutocomplete()
@@ -19,5 +19,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initPrint()
   initRelatedKostra()
   initDivider()
-  initTableExport()
+  initTable()
 }, false)
