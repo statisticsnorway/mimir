@@ -43,13 +43,14 @@ export function getTbmlData(url: string, queryId?: string): TbmlData {
 
 function xmlToJson(xml: string, queryId?: string): TbmlData {
   try {
-    const result: TbmlData = __.toNativeObject(xmlParser.parse(xml))
+    const json: string = xmlParser.parse(xml)
+    const tbmlData: TbmlData = JSON.parse(json)
     if (queryId) {
       logUserDataQuery(queryId, {
         message: Events.XML_TO_JSON
       })
     }
-    return result
+    return tbmlData
   } catch (e) {
     throw new Error( `Failed while parsing tbml data: ${e}`)
   }
