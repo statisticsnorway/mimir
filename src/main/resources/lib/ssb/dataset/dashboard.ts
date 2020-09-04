@@ -7,6 +7,8 @@ import { getNode } from '../../repo/common'
 import { EVENT_LOG_REPO, EVENT_LOG_BRANCH } from '../../repo/eventLog'
 import { RepoNode } from 'enonic-types/lib/node'
 import { I18nLibrary } from 'enonic-types/lib/i18n'
+import { ContextLibrary, RunContext } from 'enonic-types/lib/context'
+import { AuthLibrary, User } from 'enonic-types/lib/auth'
 
 const {
   refreshDataset
@@ -18,31 +20,67 @@ const {
   dateToFormat, dateToReadable
 } = __non_webpack_require__( '/lib/ssb/utils')
 const i18n: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
+const {
+  run
+}: ContextLibrary = __non_webpack_require__('/lib/xp/context')
+const {
+  getUser
+}: AuthLibrary = __non_webpack_require__('/lib/xp/auth')
+
+const users: Array<string> = []
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
-  socket.on('dashboard-refresh-dataset', (options: RefreshDatasetOptions) => {
-    options.ids.forEach((id: string) => {
-      socketEmitter.broadcast('dashboard-activity-refreshDataset', {id: id})
-      const dataSource: Content<DataSource> | null = getContent({
-        key: id
-      })
-      if (dataSource) {
-        const refreshDatasetResult: CreateOrUpdateStatus = refreshDataset(dataSource, true)
-        logUserDataQuery(dataSource._id, {
-          message: refreshDatasetResult.status
-        })
-        socketEmitter.broadcast('dashboard-activity-refreshDataset-result', transfromQueryResult(refreshDatasetResult))
 
-      } else {
-        socketEmitter.broadcast('dashboard-activity-refreshDataset-result', {
-          id: id,
-          message: i18n.localize({
-            key: Events.FAILED_TO_FIND_DATAQUERY
-          }),
-          status: Events.FAILED_TO_FIND_DATAQUERY
-        })
+  socket.on('dashboard-register-user', (options: RegisterUserOptions) => {
+    log.info('update user')
+    if(options && options.user) {
+      users[parseInt(socket.id)] = options.user
+    }
+    log.info('users is now:')
+    log.info('0 %s', JSON.stringify(users, null, 2))
+  })
+
+  socket.on('dashboard-refresh-dataset', (options: RefreshDatasetOptions) => {
+    const context: RunContext = {
+      branch: 'master',
+      repository: 'com.enonic.cms.default',
+      principals: ['role:system.admin'],
+      user: {
+        login: users[parseInt(socket.id)],
+        idProvider: 'system'
       }
+    }
+    log.info('run refresh with user ')
+    log.info('1 %s', JSON.stringify(users, null, 2))
+    log.info('2 %s', JSON.stringify(socket.id, null, 2))
+    log.info('3 %s', JSON.stringify(users[parseInt(socket.id)], null, 2))
+    run(context, () => refreshDatasetHandler(options.ids, socketEmitter))
+  })
+}
+
+function refreshDatasetHandler(ids: Array<string>, socketEmitter: SocketEmitter): void {
+  ids.forEach((id: string) => {
+    socketEmitter.broadcast('dashboard-activity-refreshDataset', {
+      id: id
     })
+    const dataSource: Content<DataSource> | null = getContent({
+      key: id
+    })
+    if (dataSource) {
+      const refreshDatasetResult: CreateOrUpdateStatus = refreshDataset(dataSource, true)
+      logUserDataQuery(dataSource._id, {
+        message: refreshDatasetResult.status
+      })
+      socketEmitter.broadcast('dashboard-activity-refreshDataset-result', transfromQueryResult(refreshDatasetResult))
+    } else {
+      socketEmitter.broadcast('dashboard-activity-refreshDataset-result', {
+        id: id,
+        message: i18n.localize({
+          key: Events.FAILED_TO_FIND_DATAQUERY
+        }),
+        status: Events.FAILED_TO_FIND_DATAQUERY
+      })
+    }
   })
 }
 
@@ -117,6 +155,9 @@ interface DashboardRefreshResultLogData {
   modifiedReadable: string;
 }
 
+export interface RegisterUserOptions {
+  user: string;
+}
 
 export interface RefreshDatasetOptions {
   ids: Array<string>;

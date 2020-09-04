@@ -6,6 +6,8 @@ import { JSONstat } from '../../types/jsonstat-toolkit'
 import { RepoQueryLib } from '../../repo/query'
 import { TbmlData } from '../../types/xmlParser'
 import { TbprocessorLib } from './tbprocessor'
+import {Context, ContextLibrary, RunContext} from "enonic-types/lib/context";
+import {AuthLibrary, User} from "enonic-types/lib/auth";
 
 const {
   logUserDataQuery, Events
@@ -13,6 +15,12 @@ const {
 const {
   query
 }: ContentLibrary = __non_webpack_require__('/lib/xp/content')
+const {
+  run
+}: ContextLibrary = __non_webpack_require__('/lib/xp/context')
+const {
+  getUser
+}: AuthLibrary = __non_webpack_require__('/lib/xp/auth')
 const {
   getStatbankApi,
   fetchStatbankApiData,
@@ -67,6 +75,7 @@ function extractData(content: Content<DataSource>): JSONstat | TbmlData | null {
 export function refreshDataset(content: Content<DataSource>, asUser: boolean = true): CreateOrUpdateStatus {
   const data: JSONstat | TbmlData | null = extractData(content)
   const key: string | null = extractKey(content)
+  const user: User | null = getUser()
 
   if (data && content.data.dataSource && content.data.dataSource._selected && key) {
     let dataset: DatasetRepoNode<JSONstat | TbmlData> | null = getDataset(content)
@@ -74,26 +83,45 @@ export function refreshDataset(content: Content<DataSource>, asUser: boolean = t
     if (!dataset || hasNewData) {
       dataset = createOrUpdateDataset(content.data.dataSource?._selected, key, data)
     }
+
     return {
+      pewpew: 1,
       dataquery: content,
       status: !hasNewData ? Events.NO_NEW_DATA : Events.GET_DATA_COMPLETE,
       newDatasetData: hasNewData,
-      dataset
+      dataset,
+      user
     }
   } else {
     if (asUser) {
       logUserDataQuery(content._id, {
-        message: Events.FAILED_TO_GET_DATA
+        message: Events.FAILED_TO_GET_DATA,
       })
     }
     return {
+      pewpew: 2,
       dataquery: content,
       status: Events.FAILED_TO_GET_DATA,
       dataset: null,
-      newDatasetData: false
+      newDatasetData: false,
+      user
     }
   }
 }
+
+export function refreshDatasetWithUserKey(content: Content<DataSource>, userLogin: string): CreateOrUpdateStatus {
+  const context: RunContext = {
+    branch: 'master',
+    repository: 'com.enonic.cms.default',
+    principals: ['role:system.admin'],
+    user: {
+      login: userLogin,
+      idProvider: 'system'
+    }
+  }
+  return run(context, () => refreshDataset(content, true))
+}
+
 
 export function deleteDataset(content: Content<DataSource>): boolean {
   let key: string | undefined
@@ -141,16 +169,19 @@ function isDataNew(data: JSONstat | TbmlData, dataset: DatasetRepoNode<JSONstat 
 }
 
 export interface CreateOrUpdateStatus {
+  pewpew: number;
   dataquery: Content<DataSource>;
   dataset: DatasetRepoNode<JSONstat | TbmlData> | null;
   newDatasetData: boolean;
   status: string;
+  user: User | null;
 }
 
 export interface DatasetLib {
   extractKey: (content: Content<DataSource>) => string;
   getDataset: (content: Content<DataSource>) => DatasetRepoNode<JSONstat | TbmlData> | null;
   refreshDataset: (content: Content<DataSource>, asUser: boolean) => CreateOrUpdateStatus;
+  refreshDatasetWithUserKey: (content: Content<DataSource>, userLogin: string) => CreateOrUpdateStatus;
   deleteDataset: (content: Content<DataSource>) => boolean;
   getContentWithDataSource: () => Array<Content<DataSource>>;
   isDataNew: (data: JSONstat | TbmlData, dataset: DatasetRepoNode<JSONstat | TbmlData> | null) => boolean;
