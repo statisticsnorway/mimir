@@ -66,8 +66,6 @@ class Dashboard extends React.Component {
     })
 
     wsConnection.setEventHandler('open', (event) => {
-      console.log('event')
-      console.log('%s', JSON.stringify(event, null, 2))
       this.onConnectionOpen(event)
     })
 
