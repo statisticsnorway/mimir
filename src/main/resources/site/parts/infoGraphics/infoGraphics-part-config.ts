@@ -22,7 +22,7 @@ export interface InfoGraphicsPartConfig {
   /**
    * Kildelenke
    */
-  checkOptionSet?: {
+  sources?: {
     /**
      * Selected
      */

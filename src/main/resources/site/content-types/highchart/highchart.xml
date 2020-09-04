@@ -184,6 +184,10 @@
       <label>Skjul aksemarkører</label>
       <help-text>Kan skrus på dersom det ikke ønskes markører langs X-aksen (f.eks dersom tegnforklaringen gir tilstrekkelig info)</help-text>
     </input>
+    <input name="xAxisFlip" type="CheckBox">
+      <label>Reverser X-akse</label>
+      <help-text>Huk av denne dersom man ønsker å reversere rekkefølge på x-akse</help-text>
+    </input>
 
     <input name="yAxisTitle" type="TextLine">
       <label>Y-akse Tittel</label>
