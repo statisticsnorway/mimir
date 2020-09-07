@@ -110,9 +110,9 @@ exports.get = function(req) {
 
   if (pageType === 'municipality' && municipality) {
     // TODO: Deaktiverer at kommunesidene er søkbare til vi finner en løsning med kommunenavn i tittel MIMIR-549
-    addMetaInfoSearch = false
+    addMetaInfoSearch = true
     metaInfoSearchId = metaInfoSearchId + '_' + municipality.code
-    metaInfoSearchTitle = 'Kommunefakta ' + municipality.displayName
+    metaInfoSearchTitle = municipality.displayName
     metaInfoSearchGroup = metaInfoSearchGroup + '_' + municipality.code
     metaInfoSearchKeywords = municipality.displayName + ' kommune'
   }
