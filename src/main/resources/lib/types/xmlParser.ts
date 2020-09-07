@@ -1,5 +1,5 @@
 export interface XmlParser {
-  parse: (xml: string) => TbmlData;
+  parse: (xml: string) => string;
 }
 
 export interface TbmlData {
