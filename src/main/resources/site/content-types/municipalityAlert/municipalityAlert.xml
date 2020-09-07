@@ -11,8 +11,8 @@
             <label>Velg hvilke sidetype varselet skal vises på</label>
             <occurrences minimum="1" maximum="1"/>
             <config>
-                <option value="municipalityFact">Vis på Kommunefakta</option>
-                <option value="municipalityArea">Vis på Kommuneareal</option>
+                <option value="kommunefakta">Vis på Kommunefakta</option>
+                <option value="kommuneareal">Vis på Kommuneareal</option>
                 <option value="showOnAll">Vis på alle sider</option>
             </config>
             <default>one</default>

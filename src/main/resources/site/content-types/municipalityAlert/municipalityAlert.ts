@@ -7,7 +7,7 @@ export interface MunicipalityAlert {
   /**
    * Velg hvilke sidetype varselet skal vises på
    */
-  municipalPageType: "municipalityFact" | "municipalityArea" | "showOnAll";
+  municipalPageType: "kommunefakta" | "kommuneareal" | "showOnAll";
 
   /**
    * Velg hvilken kommuner det gjelder her.

@@ -74,7 +74,6 @@ exports.get = function(req) {
   const showIngress = ingress && page.type === 'mimir:page'
   const pageType = page.page.config.pageType ? page.page.config.pageType : 'default'
 
-
   // Create preview if available
   let preview
   if (partsWithPreview.indexOf(page.type) >= 0) {
@@ -94,6 +93,7 @@ exports.get = function(req) {
     municipality = getMunicipality(req)
   }
 
+  let municipalPageType
   let addMetaInfoSearch = true
   let metaInfoSearchId = page._id
   let metaInfoSearchTitle = page.displayName
@@ -103,6 +103,12 @@ exports.get = function(req) {
   let metaInfoDescription
 
   if (pageType === 'municipality') {
+    if (page._path.indexOf('kommunefakta') > 0) {
+      municipalPageType = 'kommunefakta'
+    }
+    if (page._path.indexOf('kommuneareal') > 0) {
+      municipalPageType = 'kommuneareal'
+    }
     metaInfoSearchContentType = 'kommunefakta'
     metaInfoSearchKeywords = 'kommune, kommuneprofil',
     metaInfoDescription = page.x['com-enonic-app-metafields']['meta-data'].seoDescription
@@ -229,7 +235,7 @@ exports.get = function(req) {
     body
   })
 
-  const alerts = alertsForContext(municipality)
+  const alerts = alertsForContext(municipality, municipalPageType)
   if (alerts.length > 0) {
     const alertComponent = new React4xp('Alerts')
       .setProps({
