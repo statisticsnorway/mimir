@@ -169,6 +169,8 @@ table.statistics {
     td {
       text-align: right;
       vertical-align: bottom;
+      //height works like min-height in tables and min-height won't work
+      height: 36px;
     }
 
     th {
@@ -215,9 +217,9 @@ table.statistics {
 
     th {
       padding-top: 1.5em;
-      text-align: center;
+      text-align: right;
 
-      &.colspan {
+      &[colspan] {
         text-align: center;
         font-weight: normal;
       }

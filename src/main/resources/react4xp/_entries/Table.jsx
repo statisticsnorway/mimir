@@ -123,7 +123,7 @@ class Table extends React.Component {
         } else {
           return (
             <th key={keyIndex} className={value.class} rowSpan={value.rowspan} colSpan={value.colspan} >
-              {value.content}
+              {value.content} &nbsp;
             </th>
           )
         }
