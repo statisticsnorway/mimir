@@ -8,6 +8,7 @@
     }
 
     @include media-breakpoint-down(md) {
+      margin-top: $spacer * 2;
       margin-bottom: $spacer * 2;
     }
 
@@ -17,7 +18,7 @@
       }
     }
   }
-  
+
   font-family: $font-roboto-plain;
   width: 100%;
   border-collapse: collapse;
@@ -249,14 +250,14 @@ table.statistics {
 
     tr {
       border: none;
-      
+
       td {
         padding: 0.2em 0.6em 0.2em 0.6em;
         word-wrap: break-word;
         border: none;
         line-height: 28px;
       }
-      
+
       &.footnote {
         td {
           sup {
@@ -270,7 +271,7 @@ table.statistics {
           padding-top: 1em;
         }
       }
-      
+
       &:first-of-type > td {
         padding-top: 2em
       }

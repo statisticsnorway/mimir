@@ -1,16 +1,9 @@
-import '../jquery-global.js'
-import 'tableexport.jquery.plugin/libs/FileSaver/FileSaver.min.js'
-import 'tableexport.jquery.plugin/tableExport.min.js'
+import $ from 'jquery'
 
 export function init() {
   $(function() {
     $(window).resize(function() {
       moveDownloadTableDropdown()
-    })
-
-    $('#downloadTableAsCSV').click((e) => {
-      e.preventDefault()
-      tableExport()
     })
   })
 
@@ -21,14 +14,4 @@ export function init() {
       $('.download-table-container').insertBefore('table')
     }
   }
-
-  function tableExport() {
-    const closestTable = $('table').closest('.container')
-    closestTable.tableExport({
-      type: 'csv',
-      fileName: 'tabell',
-      csvSeparator: ';'
-    })
-  }
 }
-

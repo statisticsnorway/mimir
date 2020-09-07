@@ -3,7 +3,24 @@ import PropTypes from 'prop-types'
 import { Dropdown, Link } from '@statisticsnorway/ssb-component-library'
 import { isEmpty } from 'ramda'
 
+import '../../assets/js/jquery-global.js'
+import 'tableexport.jquery.plugin/libs/FileSaver/FileSaver.min.js'
+import 'tableexport.jquery.plugin/tableExport.min.js'
+
 class Table extends React.Component {
+  componentDidMount() {
+    this.downloadTableAsCSV = this.downloadTableAsCSV.bind(this)
+  }
+
+  downloadTableAsCSV() {
+    const table = $('table').closest('.download-table-container')
+    table.tableExport({
+      type: 'csv',
+      fileName: 'tabell',
+      csvSeparator: ';'
+    })
+  }
+
   createTable() {
     return (
       <table className={this.props.table.tableClass}>
@@ -222,11 +239,18 @@ class Table extends React.Component {
       downloadAsOptions
     } = this.props
 
+    const downloadTable = (item) => {
+      if (item.id === 'downloadTableAsCSV') {
+        { this.downloadTableAsCSV() }
+      }
+    }
+
     return (
       <div className="download-table-container">
         <Dropdown
           selectedItem={downloadAsTitle}
           items={downloadAsOptions}
+          onSelect={downloadTable}
         />
       </div>
     )
