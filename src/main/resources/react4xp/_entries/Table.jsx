@@ -8,17 +8,36 @@ import 'tableexport.jquery.plugin/libs/FileSaver/FileSaver.min.js'
 import 'tableexport.jquery.plugin/tableExport.min.js'
 
 class Table extends React.Component {
-  componentDidMount() {
-    this.downloadTableAsCSV = this.downloadTableAsCSV.bind(this)
-  }
-
   downloadTableAsCSV() {
-    const table = $('table').closest('.download-table-container')
+    const table = $('table').closest('.container')
     table.tableExport({
       type: 'csv',
       fileName: 'tabell',
       csvSeparator: ';'
     })
+  }
+
+  addDownloadAsDropdown() {
+    const {
+      downloadAsTitle,
+      downloadAsOptions
+    } = this.props
+
+    const downloadTable = (item) => {
+      if (item.id === 'downloadTableAsCSV') {
+        {this.downloadTableAsCSV()}
+      }
+    }
+
+    return (
+      <div className="download-table-container">
+        <Dropdown
+          selectedItem={downloadAsTitle}
+          items={downloadAsOptions}
+          onSelect={downloadTable}
+        />
+      </div>
+    )
   }
 
   createTable() {
@@ -231,29 +250,6 @@ class Table extends React.Component {
       )
     }
     return
-  }
-
-  addDownloadAsDropdown() {
-    const {
-      downloadAsTitle,
-      downloadAsOptions
-    } = this.props
-
-    const downloadTable = (item) => {
-      if (item.id === 'downloadTableAsCSV') {
-        { this.downloadTableAsCSV() }
-      }
-    }
-
-    return (
-      <div className="download-table-container">
-        <Dropdown
-          selectedItem={downloadAsTitle}
-          items={downloadAsOptions}
-          onSelect={downloadTable}
-        />
-      </div>
-    )
   }
 
   renderSources() {
