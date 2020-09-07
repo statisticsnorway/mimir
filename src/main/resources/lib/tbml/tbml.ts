@@ -42,14 +42,18 @@ export function getTbmlData(url: string, queryId?: string): TbmlData {
 }
 
 function xmlToJson(xml: string, queryId?: string): TbmlData {
-  const result: TbmlData = __.toNativeObject(xmlParser.parse(xml))
-  if (queryId) {
-    logUserDataQuery(queryId, {
-      message: Events.XML_TO_JSON,
-      xmlResult: result
-    })
+  try {
+    const json: string = xmlParser.parse(xml)
+    const tbmlData: TbmlData = JSON.parse(json)
+    if (queryId) {
+      logUserDataQuery(queryId, {
+        message: Events.XML_TO_JSON
+      })
+    }
+    return tbmlData
+  } catch (e) {
+    throw new Error( `Failed while parsing tbml data: ${e}`)
   }
-  return result
 }
 
 export interface TbmlLib {

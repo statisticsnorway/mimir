@@ -1,0 +1,15 @@
+<content-type>
+    <display-name>Tabell</display-name>
+    <super-type>base:structured</super-type>
+    <allow-child-content>true</allow-child-content>
+    <form>
+        <mixin name="dataSource"/>
+
+        <mixin name="sources" />
+
+        <input type="TextLine" name="correctionNotice">
+            <label>Rettemelding</label>
+            <occurrences minimum="0" maximum="1" />
+        </input>
+    </form>
+</content-type>

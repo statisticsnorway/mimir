@@ -2,7 +2,7 @@ const {
   data
 } = __non_webpack_require__( '/lib/util')
 const {
-  getComponent, imageUrl, pageUrl
+  getComponent, imageUrl
 } = __non_webpack_require__( '/lib/xp/portal')
 const {
   render
@@ -11,7 +11,9 @@ const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
 const content = __non_webpack_require__( '/lib/xp/content')
-
+const {
+  getSources
+} = __non_webpack_require__( '/lib/ssb/utils')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 
 import { Base64 } from 'js-base64'
@@ -30,7 +32,7 @@ exports.preview = (req) => renderPart(req)
 
 function renderPart(req) {
   const part = getComponent()
-  const sourceConfig = part.config.checkOptionSet ? data.forceArray(part.config.checkOptionSet) : []
+  const sourceConfig = part.config.sources ? data.forceArray(part.config.sources) : []
 
   const source = i18nLib.localize({
     key: 'source'
@@ -75,32 +77,4 @@ function renderPart(req) {
     body,
     contentType: 'text/html'
   }
-}
-
-/**
- *
- * @param {Object} sourceConfig
- * @return {array} a list of sources, text and url
- */
-function getSources(sourceConfig) {
-  return sourceConfig.map((selectedSource) => {
-    let sourceText
-    let sourceUrl
-
-    if (selectedSource._selected == 'urlSource') {
-      sourceText = selectedSource.urlSource.urlText
-      sourceUrl = selectedSource.urlSource.url
-    }
-
-    if (selectedSource._selected == 'relatedSource') {
-      sourceText = selectedSource.relatedSource.urlText
-      sourceUrl = pageUrl({
-        id: selectedSource.relatedSource.sourceSelector
-      })
-    }
-    return {
-      urlText: sourceText,
-      url: sourceUrl
-    }
-  })
 }
