@@ -96,7 +96,6 @@ exports.get = function(req) {
 
   let addMetaInfoSearch = true
   let metaInfoSearchId = page._id
-  let metaInfoSearchTitle = page.displayName
   let metaInfoSearchContentType = page._name
   let metaInfoSearchGroup = page._id
   let metaInfoSearchKeywords
@@ -112,7 +111,6 @@ exports.get = function(req) {
     // TODO: Deaktiverer at kommunesidene er søkbare til vi finner en løsning med kommunenavn i tittel MIMIR-549
     addMetaInfoSearch = true
     metaInfoSearchId = metaInfoSearchId + '_' + municipality.code
-    metaInfoSearchTitle = municipality.displayName
     metaInfoSearchGroup = metaInfoSearchGroup + '_' + municipality.code
     metaInfoSearchKeywords = municipality.displayName + ' kommune'
   }
@@ -210,7 +208,6 @@ exports.get = function(req) {
     footerBody: footer ? footer.body : undefined,
     addMetaInfoSearch,
     metaInfoSearchId,
-    metaInfoSearchTitle,
     metaInfoSearchGroup,
     metaInfoSearchContentType,
     metaInfoSearchKeywords,
