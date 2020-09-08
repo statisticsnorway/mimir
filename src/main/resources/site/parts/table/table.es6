@@ -30,7 +30,6 @@ const moment = require('moment/min/moment-with-locales')
 const view = resolve('./table.html')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 
-
 exports.get = function(req) {
   try {
     const tableId = getContent().data.mainTable
@@ -81,6 +80,10 @@ function renderPart(req, tableId) {
 
   const tableReact = new React4xp('Table')
     .setProps({
+      downloadAsTitle: {
+        title: phrases.tableDownloadAs
+      },
+      downloadAsOptions: getDownloadAsOptions(phrases),
       displayName: tableContent.displayName,
       table: {
         caption: table.caption,
@@ -109,6 +112,24 @@ function renderPart(req, tableId) {
     }),
     contentType: 'text/html'
   }
+}
+
+const getDownloadAsOptions = (phrases) => {
+  const downloadAs = []
+
+  const CSV = {
+    title: phrases.tableDownloadCSV,
+    id: 'downloadTableAsCSV'
+  }
+  downloadAs.push(CSV)
+
+  const XLS = {
+    title: phrases.tableDownloadXLS,
+    id: 'downloadTableAsXLS'
+  }
+  downloadAs.push(XLS)
+
+  return downloadAs
 }
 
 const getStandardSymbolPage = (standardSymbolPage, standardSymbolText) => {
