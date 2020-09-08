@@ -20,7 +20,7 @@ const {
 export function getKlass(content: Content<DataSource>): DatasetRepoNode<object> | null {
   if (content.data.dataSource && content.data.dataSource._selected) {
     const dataSource: DataSource['dataSource'] = content.data.dataSource
-    if (dataSource.klass && dataSource.klass && dataSource.klass.urlOrId) {
+    if (dataSource.klass && dataSource.klass.urlOrId) {
       return getDataset(content.data.dataSource?._selected, content._id)
     }
   }

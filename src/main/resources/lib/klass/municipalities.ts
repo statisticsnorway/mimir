@@ -69,10 +69,10 @@ function getMunicipalsFromContent(): Array<MunicipalCode> {
           }
         }
       } else {
-        const dataset: DatasetRepoNode<object> | undefined = fromDatasetRepoCache(extractKey(dataSource), () => {
+        const dataset: DatasetRepoNode<object> | undefined = fromDatasetRepoCache(`${dataSource.data.dataSource?._selected}/${extractKey(dataSource)}`, () => {
           return getDataset(dataSource)
         })
-        if (dataset && dataset.data && dataset.data) {
+        if (dataset && dataset.data) {
           const data: {codes: Array<MunicipalCode>} = dataset.data as {codes: Array<MunicipalCode>}
           return data.codes
         }
@@ -204,11 +204,32 @@ function changesWithMunicipalityCode(municipalityCode: string): Array<Municipali
 
 function getMunicipalityChanges(): MunicipalityChangeList {
   const changeListId: string | undefined = getSiteConfig<SiteConfig>().municipalChangeListContentId
-  const datasetList: QueryResponse<Dataset> = getDataSetWithDataQueryId(changeListId)
-  const changeListContent: Content<Dataset> | undefined = datasetList.count > 0 ? datasetList.hits[0] : undefined
-  const body: string |undefined = changeListContent ? changeListContent.data.json : undefined
-  return body ? JSON.parse(body) : {
-    codes: []
+  if (changeListId) {
+    const dataSource: Content<DataSource> | null = getContent({
+      key: changeListId
+    })
+    if (dataSource) {
+      if (dataSource.type === `${app.name}:dataquery`) {
+        const datasetList: QueryResponse<Dataset> = getDataSetWithDataQueryId(changeListId)
+        const changeListContent: Content<Dataset> | undefined = datasetList.count > 0 ? datasetList.hits[0] : undefined
+        const body: string |undefined = changeListContent ? changeListContent.data.json : undefined
+        return body ? JSON.parse(body) : {
+          codeChanges: []
+        }
+      } else {
+        const dataset: DatasetRepoNode<object> | undefined = fromDatasetRepoCache(`${dataSource.data.dataSource?._selected}/${extractKey(dataSource)}`, () => {
+          return getDataset(dataSource)
+        })
+        if (dataset && dataset.data) {
+          const data: MunicipalityChangeList = dataset.data as MunicipalityChangeList
+          return data
+        }
+      }
+    }
+  }
+
+  return {
+    codeChanges: []
   }
 }
 

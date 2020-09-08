@@ -47,10 +47,10 @@ function getCountiesFromContent(): Array<County> {
           }
         }
       } else {
-        const dataset: DatasetRepoNode<object> | undefined = fromDatasetRepoCache(extractKey(dataSource), () => {
+        const dataset: DatasetRepoNode<object> | undefined = fromDatasetRepoCache(`${dataSource.data.dataSource?._selected}/${extractKey(dataSource)}`, () => {
           return getDataset(dataSource)
         })
-        if (dataset && dataset.data && dataset.data) {
+        if (dataset && dataset.data) {
           const data: {codes: Array<County>} = dataset.data as {codes: Array<County>}
           return data.codes
         }
