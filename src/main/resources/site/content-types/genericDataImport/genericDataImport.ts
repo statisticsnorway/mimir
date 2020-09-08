@@ -95,7 +95,7 @@ export interface GenericDataImport {
       /**
        * URL
        */
-      url?: string;
+      urlOrId?: string;
     };
   };
 }

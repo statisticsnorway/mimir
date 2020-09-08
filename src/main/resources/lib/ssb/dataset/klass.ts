@@ -20,7 +20,7 @@ const {
 export function getKlass(content: Content<DataSource>): DatasetRepoNode<object> | null {
   if (content.data.dataSource && content.data.dataSource._selected) {
     const dataSource: DataSource['dataSource'] = content.data.dataSource
-    if (dataSource.klass && dataSource.klass && dataSource.klass.url) {
+    if (dataSource.klass && dataSource.klass && dataSource.klass.urlOrId) {
       return getDataset(content.data.dataSource?._selected, content._id)
     }
   }
@@ -33,10 +33,10 @@ export function fetchKlassData(content: Content<DataSource>): object | null {
   if (content.data.dataSource) {
     try {
       const dataSource: DataSource['dataSource'] = content.data.dataSource
-      if (dataSource._selected && dataSource.klass && dataSource.klass.url) {
-        let url: string = `${baseUrl}/v1/classifications/${dataSource.klass.url}`
-        if (isUrl(dataSource.klass.url)) {
-          url = dataSource.klass.url
+      if (dataSource._selected && dataSource.klass && dataSource.klass.urlOrId) {
+        let url: string = `${baseUrl}/v1/classifications/${dataSource.klass.urlOrId}`
+        if (isUrl(dataSource.klass.urlOrId)) {
+          url = dataSource.klass.urlOrId
         }
         data = fetchData(url, null, undefined, content._id)
       }

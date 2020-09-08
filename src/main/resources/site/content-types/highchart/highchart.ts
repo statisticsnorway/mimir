@@ -260,7 +260,7 @@ export interface Highchart {
       /**
        * URL
        */
-      url?: string;
+      urlOrId?: string;
     };
   };
 }

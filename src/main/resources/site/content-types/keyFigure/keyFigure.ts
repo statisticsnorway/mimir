@@ -155,7 +155,7 @@ export interface KeyFigure {
       /**
        * URL
        */
-      url?: string;
+      urlOrId?: string;
     };
   };
 }
