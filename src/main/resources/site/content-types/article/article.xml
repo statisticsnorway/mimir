@@ -56,28 +56,47 @@
             </config>
         </input>
 
-        <input name="appurtenantStatisticsXP" type="ContentSelector">
-            <label>Lenke til tilhørende statistikk (XP)</label>
+        <option-set name="appurtenantStatistics">
+            <label>Tilhørende statistikk</label>
+            <expanded>false</expanded>
+            <occurrences minimum="0" maximum="0"/>
+            <options minimum="1" maximum="1">
+                <option name="appurtenantStatisticsXP">
+                    <label>Lenke til tilhørende statistikk (XP)</label>
+                    <items>
+                        <input name="appurtenantStatisticsXPContent" type="ContentSelector">
+                            <label>Statistikk</label>
+                            <occurrences minimum="0" maximum="1" />
+                            <config>
+                                <allowContentType>statistics</allowContentType>
+                            </config>
+                        </input>
+                    </items>
+                </option>
+
+                <option name="appurtenantStatisticsCMS">
+                    <label>Lenke til tilhørende statistikk (4.7.)</label>
+                    <items>
+                        <input name="href" type="TextLine">
+                            <label>URL</label>
+                            <occurrences minimum="0" maximum="1" />
+                        </input>
+                        <input name="title" type="TextLine">
+                            <label>Tittel</label>
+                            <occurrences minimum="0" maximum="1" />
+                        </input>
+                    </items>
+                </option>
+            </options>
+        </option-set>
+
+        <input name="articleArchive" type="ContentSelector">
+            <label>Arkiv</label>
             <occurrences minimum="0" maximum="0" />
             <config>
-                <allowContentType>statistics</allowContentType>
+                <allowContentType>articleArchive</allowContentType>
             </config>
         </input>
-
-        <item-set name="appurtenantStatisticsCMS">
-            <label>Lenke til tilhørende statistikk (4.7.)</label>
-            <occurrences minimum="0" maximum="0" />
-            <items>
-                <input name="name" type="TextLine">
-                    <label>Navn</label>
-                    <occurrences minimum="0" maximum="1" />
-                </input>
-                <input name="href" type="TextLine">
-                    <label>URL</label>
-                    <occurrences minimum="0" maximum="1" />
-                </input>
-            </items>
-        </item-set>
 
         <mixin name="relatedExternalLinks" />
 

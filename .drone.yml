@@ -1,7 +1,7 @@
 kind: pipeline
 type: docker
 name: "Pull Request Tests"
-# Only builds (and hopefully tests) on pull request.
+# Builds and tests on pull request. Required success before merge can happen.
 trigger:
   branch:
     - master
@@ -10,7 +10,7 @@ trigger:
       - pull_request
 steps:
   - name: build & test
-    image: enonic/enonic-ci:7.1-node
+    image: enonic/enonic-ci:7.4-node
     commands:
       - /setup_sandbox.sh
       - enonic project build
@@ -27,12 +27,12 @@ trigger:
       - push
 steps:
   - name: build & test
-    image: enonic/enonic-ci:7.1-node
+    image: enonic/enonic-ci:7.4-node
     commands:
       - /setup_sandbox.sh
       - enonic project build
   - name: deploy
-    image: enonic/enonic-ci:7.1-node
+    image: enonic/enonic-ci:7.4-node
     environment:
       ENONIC_CLI_REMOTE_URL:
         from_secret: ssb-xp7t-url
@@ -52,12 +52,12 @@ trigger:
     - qa
 steps:
   - name: build & test
-    image: enonic/enonic-ci:7.1-node
+    image: enonic/enonic-ci:7.4-node
     commands:
       - /setup_sandbox.sh
       - enonic project build
   - name: deploy
-    image: enonic/enonic-ci:7.1-node
+    image: enonic/enonic-ci:7.4-node
     environment:
       ENONIC_CLI_REMOTE_URL:
         from_secret: ssb-xp7q-url
@@ -67,6 +67,30 @@ steps:
         from_secret: ssb-xp7q-pass
     commands:
       - enonic app install --file build/libs/*.jar
+  - name: mabl end-to-end test
+    image: enonic/enonic-ci:7.4-node
+    environment:
+      MABL_API_KEY:
+        from_secret: mabl-api-key
+      MABL_APP_ID:
+        from_secret: mabl-application-id
+    commands:
+      - npm install -g @mablhq/mabl-cli
+      - mabl deployments create --api-key $MABL_API_KEY --application-id $MABL_APP_ID  --labels MIMIR --await-completion
+  - name: slack
+    image: plugins/slack
+    settings:
+      webhook:
+        from_secret: slack_webhook_mimir_utv
+      channel: mimir_utv
+      template: >
+        {{#success build.status}}
+          🛠Build {{build.number}} deploy to QA succeeded. Good job.
+        {{else}}
+          💣Build {{build.number}} failed. {{build.author}} triggered the build. Maybe do a fix? Here's the failed build: {{build.link}}
+        {{/success}}
+    when:
+      status: [success, failure]
 ---
 kind: pipeline
 type: docker
@@ -77,12 +101,12 @@ trigger:
     - prod
 steps:
   - name: build & test
-    image: enonic/enonic-ci:7.1-node
+    image: enonic/enonic-ci:7.4-node
     commands:
       - /setup_sandbox.sh
       - enonic project build
   - name: deploy
-    image: enonic/enonic-ci:7.1-node
+    image: enonic/enonic-ci:7.4-node
     environment:
       ENONIC_CLI_REMOTE_URL:
         from_secret: ssb-xp7p-url

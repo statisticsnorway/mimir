@@ -14,11 +14,17 @@ const {
   setupDatasetRepo
 } = __non_webpack_require__( '/lib/repo/dataset')
 const {
+  getContentWithDataSource
+} = __non_webpack_require__( '/lib/ssb/dataset/dataset')
+const {
   refreshQueriesAsync
 } = __non_webpack_require__('/lib/task')
 const content = __non_webpack_require__( '/lib/xp/content')
 const cron = __non_webpack_require__('/lib/cron')
 const cache = __non_webpack_require__('/lib/ssb/cache')
+const {
+  setupFetchDataOnCreateListener
+} = __non_webpack_require__('/lib/listeners')
 
 const user = {
   login: 'su',
@@ -42,6 +48,10 @@ function job() {
     contentTypes: [`${app.name}:dataquery`],
     query: `data.table LIKE 'http*'`
   })
+  const dataSourceQueries = getContentWithDataSource()
+  allHttpQueries.hits = allHttpQueries.hits.concat(dataSourceQueries)
+  allHttpQueries.count = allHttpQueries.hits.length
+  allHttpQueries.total = allHttpQueries.hits.length
   updateJobLog(jobLogNode._id, (node) => {
     return {
       data: {
@@ -55,9 +65,10 @@ function job() {
   log.info('-- Completed dataquery cron job --')
 }
 
+const dataqueryCron = app.config && app.config['ssb.cron.dataquery'] ? app.config['ssb.cron.dataquery'] : '0 15 * * *'
 cron.schedule({
   name: 'dataquery',
-  cron: '0 6 * * *',
+  cron: dataqueryCron,
   times: 365 * 10,
   callback: job,
   context: master
@@ -68,11 +79,13 @@ cache.setup()
 setupEventLog()
 setupDatasetRepo()
 setupStatRegRepo()
+setupFetchDataOnCreateListener()
 
 // and setup a cron for periodic executions in the future
+const statregCron = app.config && app.config['ssb.cron.statreg'] ? app.config['ssb.cron.statreg'] : '30 14 * * *'
 const STATREG_CRON_CONFIG = {
   name: 'StatReg Periodic Refresh',
-  cron: '30 14 * * *',
+  cron: statregCron,
   times: 365 * 10,
   callback: setupStatRegRepo,
   context: master

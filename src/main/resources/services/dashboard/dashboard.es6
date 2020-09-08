@@ -8,10 +8,11 @@ const {
   getAllOrOneDataQuery
 } = __non_webpack_require__('/lib/ssb/dataquery')
 const {
-  getAllOrOneDataSet
+  getDataSetWithDataQueryId
 } = __non_webpack_require__( '/lib/ssb/dataset')
 const {
-  refreshDataset
+  refreshDataset,
+  deleteDataset
 } = __non_webpack_require__( '/lib/ssb/dataset/dataset')
 const {
   Events, logUserDataQuery
@@ -83,12 +84,21 @@ exports.delete = (req) => {
     logUserDataQuery(req.params.id, {
       message: Events.START_DELETE
     })
-    return getAllOrOneDataSet(req.params.id).map((dataset) => {
-      return {
-        dataset,
-        deleted: content.delete({
-          key: dataset._id
-        })
+    return getAllOrOneDataQuery(req.params.id).map((dataquery) => {
+      if (dataquery.type === `${app.name}:dataquery`) { // OLD
+        const dataset = getDataSetWithDataQueryId(dataquery._id).hits[0]
+        return {
+          dataquery,
+          dataset,
+          deleted: content.delete({
+            key: dataset._id
+          })
+        }
+      } else { // NEW
+        return {
+          dataquery,
+          deleted: deleteDataset(dataquery)
+        }
       }
     })
   })
@@ -107,7 +117,7 @@ exports.delete = (req) => {
   })
 
   const publishResult = content.publish({
-    keys: deleteResult.map((result) => result.dataset._id),
+    keys: deleteResult.filter((result) => !!result.dataset).map((result) => result.dataset._id),
     sourceBranch: 'draft',
     targetBranch: 'master'
   })
@@ -127,9 +137,9 @@ exports.delete = (req) => {
   })
 
   const updateResult = deleteResult.map( (result) => { // refreshResult
-    const queryLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${result.dataset.data.dataquery}`)
+    const queryLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${result.dataquery._id}`)
     return {
-      id: result.dataset.data.dataquery,
+      id: result.dataquery._id,
       message: queryLogNode.data.modifiedResult ? i18n.localize({
         key: queryLogNode.data.modifiedResult
       }) : undefined,

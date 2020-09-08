@@ -51,9 +51,12 @@ $container-max-widths: (
 @import "./downloadLink";
 @import "./relatedArticles";
 @import "./relatedExternalLinks";
-@import "./statistics.scss";
+@import "./relatedFactPage";
+@import "./statistics";
 @import "./relatedStatistics";
 @import "./statbankBox";
+@import "./articleArchive";
+@import "./table";
 
 body {
   -moz-osx-font-smoothing: grayscale;

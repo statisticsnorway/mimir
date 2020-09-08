@@ -1,6 +1,4 @@
 .part-dashboard {
-  margin: 20px 0 50px;
-
   .dataset:before {
     content: "\25CF";
     margin-right: 5px;
@@ -87,6 +85,21 @@
   .error:before {
     color: $ssb-red-3
   }
+
+  .nav {
+    .nav-link {
+      color: black;
+      background: white;
+      border-color: $ssb-green-5 $ssb-green-5 transparent;
+
+      &:hover {
+        border-color: black black transparent
+      }
+      &.active {
+        background: $ssb-green-1
+      }
+    }
+  }
 }
 
 .detail {
@@ -105,6 +118,18 @@
 
 .klass {
   background: skyblue;
+}
+
+.highchartsType {
+  background: goldenrod;
+}
+
+.tableType {
+  background: rosybrown;
+}
+
+.keyfigureType {
+  background: lightseagreen;
 }
 
 .unpublished {
@@ -142,7 +167,7 @@
       }
 
       .sort-icon.inactive {
-        color: #c3dcdc;
+        color: #000000;
       }
     }
   }
@@ -159,5 +184,23 @@
   margin: 0 0 0 4px;
   svg {
     margin-bottom: 2px
+  }
+}
+
+.dashboard-convert {
+  .convert-label {
+    font-size: 1.25rem;
+  }
+
+  .progress {
+    height: 100%;
+    font-size: 1rem;
+  }
+
+  .convert-error {
+    background-color: #F8D7DA;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    word-break: break-all;
   }
 }

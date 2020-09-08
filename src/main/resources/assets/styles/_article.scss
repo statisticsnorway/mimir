@@ -74,7 +74,7 @@
   .article-body {
     @include make-row();
 
-    .body-text {
+    & > * {
       @include make-col-ready();
       @include make-col(12);
 
@@ -97,25 +97,31 @@
     }
   }
 
-  .divider-wrapper {
-    @include make-row;
-    margin-top: 44px;
-
-    &:last-child {
-      display: none;
-    }
-
-    @include media-breakpoint-up(lg) {
-      margin-left: inherit;
-      margin-right: inherit;
-    }
-  }
-
   blockquote  {
     padding-left: 40px !important;
 
     @include media-breakpoint-down(md) {
       padding-left: 0 !important;
+    }
+  }
+
+  section.part-divider:last-child {
+    display: none;
+  }
+
+  .appurtenant-statistics-wrapper {
+    @include make-row;
+    margin-top: $spacer * 2.5;
+
+    & > * {
+      @include make-col-ready();
+      @include make-col(12);
+
+      margin-top: $spacer * 1;
+
+      @include media-breakpoint-down(md) {
+        padding: 0;
+      }
     }
   }
 }

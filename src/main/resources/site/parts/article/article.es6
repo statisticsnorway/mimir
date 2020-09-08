@@ -14,9 +14,9 @@ const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
 
-const moment = require('moment/min/moment-with-locales')
 const languageLib = __non_webpack_require__( '/lib/language')
-
+const moment = require('moment/min/moment-with-locales')
+const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view = resolve('./article.html')
 
 exports.get = (req) => {
@@ -53,34 +53,14 @@ function renderPart(req) {
     }
   })
 
-  const appurtenantStatistics = []
+  const divider = new React4xp('Divider')
+    .setProps({
+      dark: true
+    })
+    .setId('dividerId')
 
-  const appurtenantStatisticsXP = page.data.appurtenantStatisticsXP ? data.forceArray(page.data.appurtenantStatisticsXP) : []
-  appurtenantStatisticsXP.map((appurtenantStatisticsXPContent) => {
-    if (appurtenantStatisticsXPContent) {
-      const appurtenantStatisticsXPInfo = get({
-        key: appurtenantStatisticsXPContent
-      })
-
-      appurtenantStatistics.push({
-        name: appurtenantStatisticsXPInfo.displayName,
-        href: pageUrl({
-          id: appurtenantStatisticsXPContent
-        })
-      })
-    }
-  })
-
-  const appurtenantStatisticsCMS = page.data.appurtenantStatisticsCMS ? data.forceArray(page.data.appurtenantStatisticsCMS) : []
-  appurtenantStatisticsCMS.map((appurtenantStatisticsCMSItems) => {
-    if (appurtenantStatisticsCMSItems) {
-      appurtenantStatistics.push({
-        ...appurtenantStatisticsCMSItems
-      })
-    }
-  })
-
-  appurtenantStatistics.sort((a, b) => a.name.localeCompare(b.name))
+  const appurtenantStatisticsConfig = page.data.appurtenantStatistics ? data.forceArray(page.data.appurtenantStatistics) : []
+  const appurtenantStatistics = getAppurtenantStatisticsLinks(appurtenantStatisticsConfig)
 
   const model = {
     title: page.displayName,
@@ -96,10 +76,34 @@ function renderPart(req) {
     introTitle: page.data.introTitle
   }
 
-  const body = render(view, model)
-
   return {
-    body,
+    body: divider.renderBody({
+      body: render(view, model)
+    }),
     contentType: 'text/html'
   }
+}
+
+const getAppurtenantStatisticsLinks = (appurtenantStatisticsConfig) => {
+  return appurtenantStatisticsConfig.map((option) => {
+    if (option._selected === 'appurtenantStatisticsXP') {
+      const appurtenantStatisticsXP = option.appurtenantStatisticsXP.appurtenantStatisticsXPContent
+      const appurtenantStatisticsXPContent = get({
+        key: appurtenantStatisticsXP
+      })
+
+      return {
+        title: appurtenantStatisticsXPContent.displayName,
+        href: pageUrl({
+          id: appurtenantStatisticsXP
+        })
+      }
+    } else if (option._selected === 'appurtenantStatisticsCMS') {
+      const appurtenantStatisticsCMS = option.appurtenantStatisticsCMS
+
+      return {
+        ...appurtenantStatisticsCMS
+      }
+    }
+  })
 }

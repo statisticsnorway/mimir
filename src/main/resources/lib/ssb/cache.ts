@@ -4,10 +4,11 @@ import { Request, Response } from 'enonic-types/lib/controller'
 import { EventLibrary, EnonicEvent, EnonicEventData } from 'enonic-types/lib/event'
 import { ContextLibrary } from 'enonic-types/lib/context'
 import { ContentLibrary, QueryResponse, Content } from 'enonic-types/lib/content'
-import { Dataset as JSDataset } from '../types/jsonstat-toolkit'
+import { Dataset as JSDataset, JSONstat } from '../types/jsonstat-toolkit'
 import { TbmlData } from '../types/xmlParser'
 import { Dataquery } from '../../site/content-types/dataquery/dataquery'
 import { Dataset } from '../../site/content-types/dataset/dataset'
+import { DATASET_REPO, DatasetRepoNode } from '../repo/dataset'
 
 const {
   newCache
@@ -64,6 +65,10 @@ const masterRelatedFactPageCache: Cache = newCache({
   expire: 3600,
   size: 200
 })
+const datasetRepoCache: Cache = newCache({
+  expire: 3600,
+  size: 1500
+})
 let changeQueue: EnonicEventData['nodes'] = []
 let clearTaskId: string | undefined
 
@@ -81,8 +86,9 @@ export function setup(): void {
   })
 }
 
+const validRepos: Array<string> = ['com.enonic.cms.default', DATASET_REPO]
 function addToChangeQueue(event: EnonicEvent<EnonicEventData>): void {
-  const validNodes: EnonicEventData['nodes'] = event.data.nodes.filter((n) => n.repo === 'com.enonic.cms.default')
+  const validNodes: EnonicEventData['nodes'] = event.data.nodes.filter((n) => validRepos.indexOf(n.repo) > -1)
   if (validNodes.length > 0) {
     changeQueue = changeQueue.concat(validNodes)
     addClearTask()
@@ -108,7 +114,8 @@ function addClearTask(): void {
             clearDatasetCache: true,
             clearDividerCache: true,
             clearRelatedArticlesCache: true,
-            clearRelatedFactPageCache: true
+            clearRelatedFactPageCache: true,
+            clearDatasetRepoCache: true
           })
         } else {
           onNodeChange(changedNodes)
@@ -147,26 +154,30 @@ function clearForBranch(nodes: EnonicEventData['nodes'], branch: string): void {
   () => {
     const cleared: Array<string> = []
     nodes.forEach((n) => {
-      // clear id and all references to id from cache
-      log.info(`try to clear ${n.id}(${branch})`)
-      const content: Content | null = get({
-        key: n.id
-      })
-      if (content) {
-        clearCache(content, branch, cleared)
-      } else {
-        // the element is deleted, so lets try to clear it only based on id, and its parent
-        clearCache({
-          _id: n.id
-        } as Content, branch, cleared )
-        // the path on these nodes are not site, but repo relative, so we need to strip out the /content at the start
-        const parentPath: string = n.path.substring('/content'.length, n.path.lastIndexOf('/'))
-        const parent: Content | null = get({
-          key: parentPath
+      if (n.repo === 'com.enonic.cms.default') {
+        // clear id and all references to id from cache
+        log.info(`try to clear ${n.id}(${branch})`)
+        const content: Content | null = get({
+          key: n.id
         })
-        if (parent) {
-          clearCache(parent, branch, cleared)
+        if (content) {
+          clearCache(content, branch, cleared)
+        } else {
+          // the element is deleted, so lets try to clear it only based on id, and its parent
+          clearCache({
+            _id: n.id
+          } as Content, branch, cleared )
+          // the path on these nodes are not site, but repo relative, so we need to strip out the /content at the start
+          const parentPath: string = n.path.substring('/content'.length, n.path.lastIndexOf('/'))
+          const parent: Content | null = get({
+            key: parentPath
+          })
+          if (parent) {
+            clearCache(parent, branch, cleared)
+          }
         }
+      } else if (n.repo === DATASET_REPO) {
+        clearCacheRepo(n)
       }
     })
   })
@@ -251,6 +262,11 @@ function clearCache(content: Content, branch: string, cleared: Array<string>): A
   return cleared
 }
 
+function clearCacheRepo(node: EnonicEventData['nodes'][0]): void {
+  log.info(`clear ${node.path} from dataset repo cache`)
+  datasetRepoCache.remove(node.path)
+}
+
 function getFilterCache(branch: string, filterKey: string): Cache {
   const cacheMap: Map<string, Cache> = branch === 'master' ? masterFilterCaches : draftFilterCaches
   let filterCache: Cache | undefined = cacheMap.get(filterKey)
@@ -288,7 +304,7 @@ export function fromMenuCache(req: Request, key: string, fallback: () => unknown
   return fallback()
 }
 
-export function fromDatasetCache(req: Request, key: string, fallback: () => DatasetCache): DatasetCache {
+export function fromDatasetCache<T>(req: Request, key: string, fallback: () => DatasetCache | T): DatasetCache | T {
   if (req.mode === 'live' || req.mode === 'preview') {
     const branch: string = req.mode === 'live' ? 'master' : 'draft'
     const datasetCache: Cache = branch === 'master' ? masterDatasetCache : draftDatasetCache
@@ -331,6 +347,17 @@ export function fromRelatedFactPageCache(req: Request, key: string, fallback: ()
   return fallback()
 }
 
+export function fromDatasetRepoCache(
+  key: string,
+  fallback: () => DatasetRepoNode<JSONstat | TbmlData> | null): DatasetRepoNode<JSONstat | TbmlData> | undefined {
+  return datasetRepoCache.get(key, () => {
+    // log.info(`added ${key} to dataset repo cache`)
+    const res: DatasetRepoNode<JSONstat | TbmlData> | null = fallback()
+    // cant be null for some reason, so store it as undefined instead
+    return res || undefined
+  })
+}
+
 function completelyClearFilterCache(branch: string): void {
   const cacheMap: Map<string, Cache> = branch === 'master' ? masterFilterCaches : draftFilterCaches
   cacheMap.forEach((cache: Cache, filterKey: string) => {
@@ -369,6 +396,11 @@ function completelyClearRelatedFactPageCache(branch: string): void {
   relatedFactPageCache.clear()
 }
 
+function completelyClearDatasetRepoCache(): void {
+  log.info(`clear dataset repo cache`)
+  datasetRepoCache.clear()
+}
+
 function completelyClearCache(options: CompletelyClearCacheOptions): void {
   if (options.clearFilterCache) {
     completelyClearFilterCache('master')
@@ -398,6 +430,10 @@ function completelyClearCache(options: CompletelyClearCacheOptions): void {
     completelyClearRelatedFactPageCache('master')
     completelyClearRelatedFactPageCache('draft')
   }
+
+  if (options.clearDatasetRepoCache) {
+    completelyClearDatasetRepoCache()
+  }
 }
 
 export interface DatasetCache {
@@ -412,6 +448,7 @@ export interface CompletelyClearCacheOptions {
   clearDividerCache: boolean;
   clearRelatedArticlesCache: boolean;
   clearRelatedFactPageCache: boolean;
+  clearDatasetRepoCache: boolean;
 }
 
 export interface SSBCacheLibrary {
@@ -422,4 +459,5 @@ export interface SSBCacheLibrary {
   fromDividerCache: (dividerColor: string, fallback: () => string) => string;
   fromRelatedArticlesCache: (req: Request, key: string, fallback: () => unknown) => unknown;
   fromRelatedFactPageCache: (req: Request, key: string, fallback: () => unknown) => unknown;
+  fromDatasetRepoCache: (key: string, fallback: () => DatasetRepoNode<JSONstat | TbmlData> | null) => DatasetRepoNode<JSONstat | TbmlData> | undefined;
 }

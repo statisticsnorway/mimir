@@ -151,12 +151,44 @@ export function isPublished(content) {
   if (content.publish.from) {
     const from = new Date(content.publish.from)
     return from < now
-  } else if(content.publish.first){
+  } else if (content.publish.first) {
     const first = new Date(content.publish.first)
     return first < now
   }
   return false
 }
 
+export function isUrl(urlOrId) {
+  return urlOrId.indexOf('http') > -1
+}
+
 export const dateToFormat = (ds) => moment(ds).locale('nb').format('DD.MM.YYYY HH:mm')
 export const dateToReadable = (ds) => moment(ds).locale('nb').fromNow()
+
+/**
+ *
+ * @param {Object} sourceConfig
+ * @return {array} a list of sources, text and url
+ */
+export const getSources = (sourceConfig) => {
+  return sourceConfig.map((selectedSource) => {
+    let sourceText
+    let sourceUrl
+
+    if (selectedSource._selected == 'urlSource') {
+      sourceText = selectedSource.urlSource.urlText
+      sourceUrl = selectedSource.urlSource.url
+    }
+
+    if (selectedSource._selected == 'relatedSource') {
+      sourceText = selectedSource.relatedSource.urlText
+      sourceUrl = pageUrl({
+        id: selectedSource.relatedSource.sourceSelector
+      })
+    }
+    return {
+      urlText: sourceText,
+      url: sourceUrl
+    }
+  })
+}

@@ -15,9 +15,9 @@ export interface Article {
   articleText?: string;
 
   /**
-   * Lenke til tilhørende statistikk (XP)
+   * Arkiv
    */
-  appurtenantStatisticsXP?: Array<string>;
+  articleArchive?: Array<string>;
 
   /**
    * Løpenummer
@@ -45,21 +45,6 @@ export interface Article {
   }>;
 
   /**
-   * Lenke til tilhørende statistikk (4.7.)
-   */
-  appurtenantStatisticsCMS?: Array<{
-    /**
-     * Navn
-     */
-    name?: string;
-
-    /**
-     * URL
-     */
-    href?: string;
-  }>;
-
-  /**
    * Vis tidspunkt for sist redigering
    */
   showModifiedDate?: {
@@ -81,6 +66,41 @@ export interface Article {
        * Tidspunkt for endring
        */
       modifiedDate?: string;
+    };
+  };
+
+  /**
+   * Tilhørende statistikk
+   */
+  appurtenantStatistics?: {
+    /**
+     * Selected
+     */
+    _selected: string;
+
+    /**
+     * Lenke til tilhørende statistikk (XP)
+     */
+    appurtenantStatisticsXP?: {
+      /**
+       * Statistikk
+       */
+      appurtenantStatisticsXPContent?: string;
+    };
+
+    /**
+     * Lenke til tilhørende statistikk (4.7.)
+     */
+    appurtenantStatisticsCMS?: {
+      /**
+       * URL
+       */
+      href?: string;
+
+      /**
+       * Tittel
+       */
+      title?: string;
     };
   };
 
