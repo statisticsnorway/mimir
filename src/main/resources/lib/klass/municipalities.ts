@@ -5,11 +5,16 @@ import { Request } from 'enonic-types/lib/controller'
 import { CacheLib, Cache } from '../types/cache'
 import { PortalLibrary } from 'enonic-types/lib/portal'
 import { County, CountiesLib } from './counties'
+import { DatasetLib } from '../ssb/dataset/dataset'
+import { DatasetRepoNode } from '../repo/dataset'
+import { DataSource } from '../../site/mixins/dataSource/dataSource'
+import { SSBCacheLibrary } from '../ssb/cache'
 const {
   sanitize
 } = __non_webpack_require__( '/lib/xp/common')
 const {
-  getChildren
+  getChildren,
+  get: getContent
 }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
 const {
   getDataSetWithDataQueryId
@@ -23,6 +28,13 @@ const {
 const {
   newCache
 }: CacheLib = __non_webpack_require__( '/lib/cache')
+const {
+  getDataset,
+  extractKey
+}: DatasetLib = __non_webpack_require__( '/lib/ssb/dataset/dataset')
+const {
+  fromDatasetRepoCache
+}: SSBCacheLibrary = __non_webpack_require__( '/lib/ssb/cache')
 
 /**
  * @return {array} Returns everything in the "code" node from ssb api
@@ -42,13 +54,28 @@ function getMunicipalsFromContent(): Array<MunicipalCode> {
   const siteConfig: SiteConfig = getSiteConfig()
   const key: string | undefined = siteConfig.municipalDataContentId
   if (key) {
-    const children: Array<Content<Dataset>> = getChildren({
+    const dataSource: Content<DataSource> | null = getContent({
       key
-    }).hits as Array<Content<Dataset>>
-    if (children.length > 0) {
-      const content: Content<Dataset> = children[0]
-      if (content.data.json) {
-        return JSON.parse(content.data.json).codes as Array<MunicipalCode>
+    })
+    if (dataSource) {
+      if (dataSource.type === `${app.name}:dataquery`) {
+        const children: Array<Content<Dataset>> = getChildren({
+          key
+        }).hits as Array<Content<Dataset>>
+        if (children.length > 0) {
+          const content: Content<Dataset> = children[0]
+          if (content.data.json) {
+            return JSON.parse(content.data.json).codes as Array<MunicipalCode>
+          }
+        }
+      } else {
+        const dataset: DatasetRepoNode<object> | undefined = fromDatasetRepoCache(extractKey(dataSource), () => {
+          return getDataset(dataSource)
+        })
+        if (dataset && dataset.data && dataset.data) {
+          const data: {codes: Array<MunicipalCode>} = dataset.data as {codes: Array<MunicipalCode>}
+          return data.codes
+        }
       }
     }
   }
