@@ -83,6 +83,7 @@ th {
 //specific styling for statistics tables. remove class "statistics" if no longer needed
 table.statistics {
   overflow: scroll;
+  width: 100%;
 
   caption {
     border: 1px solid $ssb-dark-5;
