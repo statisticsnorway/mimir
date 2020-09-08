@@ -95,7 +95,7 @@ export interface DataSource {
       /**
        * URL
        */
-      url?: string;
+      urlOrId?: string;
     };
   };
 }
