@@ -93,7 +93,7 @@ function convert(element: Content<DataSource>, queryId: string): void {
         }
 
         // remove old attributes from highchart
-        if (c.type === `${app.name}:highchart`) {
+        if (c.type === `${app.name}:highchart` && c.data) {
           if (c.data.hasOwnProperty('xAllowDecimal')) {
             delete (c.data as unknown as OldHighchartData).xAllowDecimal
           }
@@ -212,6 +212,10 @@ function dataqueryToDataSource(dataquery: Content<Dataquery>): DataSource['dataS
 export interface Socket {
   on: (event: string, handler: (options: object | undefined) => void) => void;
   emit: (event: string, data: string | object) => void;
+  broadcast: (event: string, data: string | object ) => void;
+}
+export interface SocketEmitter {
+  broadcast: (event: string, data: string | object ) => void;
 }
 
 interface OldHighchartData extends DataSource{

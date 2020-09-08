@@ -7,6 +7,6 @@ public class XmlParser {
   public Object parse(final String xml) throws Exception {
     final JSONObject jsonObject = XML.toJSONObject(xml);
 
-    return new XmlMapper(jsonObject);
+    return jsonObject.toString();
   }
 }

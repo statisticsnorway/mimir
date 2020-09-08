@@ -1,4 +1,4 @@
-import { Socket } from '../../convert/convert'
+import { Socket, SocketEmitter } from '../../convert/convert'
 import { DatasetLib, CreateOrUpdateStatus } from './dataset'
 import { ContentLibrary, Content } from 'enonic-types/lib/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
@@ -19,10 +19,10 @@ const {
 } = __non_webpack_require__( '/lib/ssb/utils')
 const i18n: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
 
-export function setupHandlers(socket: Socket): void {
-  socket.on('dashboard-refresh', (options: RefreshDatasetOptions) => {
-    // NOTE THIS IS UNTESTED AND JUST EXAMPLE CODE
+export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
+  socket.on('dashboard-refresh-dataset', (options: RefreshDatasetOptions) => {
     options.ids.forEach((id: string) => {
+      socketEmitter.broadcast('dashboard-activity-refreshDataset', {id: id})
       const dataSource: Content<DataSource> | null = getContent({
         key: id
       })
@@ -31,9 +31,10 @@ export function setupHandlers(socket: Socket): void {
         logUserDataQuery(dataSource._id, {
           message: refreshDatasetResult.status
         })
-        socket.emit('dashboard-refresh-result', transfromQueryResult(refreshDatasetResult))
+        socketEmitter.broadcast('dashboard-activity-refreshDataset-result', transfromQueryResult(refreshDatasetResult))
+
       } else {
-        socket.emit('dashboard-refresh-result', {
+        socketEmitter.broadcast('dashboard-activity-refreshDataset-result', {
           id: id,
           message: i18n.localize({
             key: Events.FAILED_TO_FIND_DATAQUERY
@@ -55,6 +56,7 @@ function transfromQueryResult(result: CreateOrUpdateStatus): DashboardRefreshRes
       queryLogNode = nodes as QueryLogNode
     }
   }
+
   return {
     id: result.dataquery._id,
     message: i18n.localize({
