@@ -7,7 +7,7 @@ export interface Article {
   /**
    * Ingress
    */
-  ingress: string;
+  ingress?: string;
 
   /**
    * Artikkeltekst
