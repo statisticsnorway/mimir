@@ -174,10 +174,10 @@ exports.get = function(req) {
         .setProps({
           ...footerContent
         })
-        .setId('footer')
+        .setId('reactfooter')
       return {
         body: footerComponent.renderBody({
-          body: '<footer id="footer"></footer>'
+          body: '<footer id="reactfooter"></footer>'
         }),
         component: footerComponent
       }

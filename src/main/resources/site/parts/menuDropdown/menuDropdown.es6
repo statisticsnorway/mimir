@@ -98,7 +98,7 @@ function renderPart(req) {
   const body = inputStickyMenu.renderBody({
     body: render(view, model)
   })
-
+  log.info('react render length of stickymenu: %s', JSON.stringify(body.length, null, 2))
   return {
     body,
     contentType: 'text/html'
