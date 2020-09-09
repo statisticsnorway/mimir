@@ -70,6 +70,7 @@ function renderPart(req, tableId) {
 
   moment.locale(tableContent.language ? tableContent.language : 'nb')
   const phrases = getPhrases(tableContent)
+  const language = page.language
 
   // sources
   const sourceConfig = tableContent.data.sources ? forceArray(tableContent.data.sources) : []
@@ -90,7 +91,8 @@ function renderPart(req, tableId) {
         thead: table.thead,
         tbody: table.tbody,
         tfoot: table.tfoot,
-        tableClass: table.tableClass
+        tableClass: table.tableClass,
+        language: language
       },
       standardSymbol: standardSymbol,
       sources,
