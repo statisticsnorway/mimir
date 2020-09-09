@@ -151,10 +151,10 @@ exports.get = function(req) {
         .setProps({
           ...headerContent
         })
-        .setId('header')
+        .setId('reactheader')
       return {
         body: headerComponent.renderBody({
-          body: '<div id="header"></div>'
+          body: '<div id="reactheader"></div>'
         }),
         component: headerComponent
       }
