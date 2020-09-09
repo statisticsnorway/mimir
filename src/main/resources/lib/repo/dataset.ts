@@ -23,6 +23,7 @@ export enum DataSource {
   STATBANK_SAVED = 'statbankSaved',
   DATASET = 'dataset',
   KLASS = 'klass',
+  HTMLTABLE = 'htmlTable'
 }
 
 export function setupDatasetRepo(): void {
@@ -90,6 +91,7 @@ export function deleteDataset(dataSourceType: string, key: string): boolean {
 
 export interface DatasetRepoNode<T> extends RepoNode {
   data?: string | T;
+  _ts?: string;
 }
 
 export interface RepoDatasetLib {

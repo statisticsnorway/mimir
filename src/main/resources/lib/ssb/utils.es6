@@ -30,8 +30,8 @@ export const createHumanReadableFormat = (value) => {
 }
 
 
-export const alertsForContext = (municipality) => {
-  const currentMunicipalityAlerts = municipality ? listMunicipalityAlerts( municipality.code ) : {
+export const alertsForContext = (municipality, municipalPageType) => {
+  const currentMunicipalityAlerts = municipality ? listMunicipalityAlerts( municipality.code, municipalPageType ) : {
     hits: []
   }
   const alerts = [...listOperationsAlerts().hits, ...currentMunicipalityAlerts.hits]
@@ -164,3 +164,31 @@ export function isUrl(urlOrId) {
 
 export const dateToFormat = (ds) => moment(ds).locale('nb').format('DD.MM.YYYY HH:mm')
 export const dateToReadable = (ds) => moment(ds).locale('nb').fromNow()
+
+/**
+ *
+ * @param {Object} sourceConfig
+ * @return {array} a list of sources, text and url
+ */
+export const getSources = (sourceConfig) => {
+  return sourceConfig.map((selectedSource) => {
+    let sourceText
+    let sourceUrl
+
+    if (selectedSource._selected == 'urlSource') {
+      sourceText = selectedSource.urlSource.urlText
+      sourceUrl = selectedSource.urlSource.url
+    }
+
+    if (selectedSource._selected == 'relatedSource') {
+      sourceText = selectedSource.relatedSource.urlText
+      sourceUrl = pageUrl({
+        id: selectedSource.relatedSource.sourceSelector
+      })
+    }
+    return {
+      urlText: sourceText,
+      url: sourceUrl
+    }
+  })
+}

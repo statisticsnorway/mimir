@@ -19,7 +19,8 @@ class DashboardButtons extends React.Component {
       loading: true
     })
 
-    const threads = Array(this.state.maxThreads).fill(0).map( (c, i) => {
+    const maxThreads = this.state.maxThreads > this.props.dataQueries.length ? this.props.dataQueries.length : this.state.maxThreads
+    const threads = Array(maxThreads).fill(0).map( (c, i) => {
       this.setState((state) => ({
         queueIndex: state.queueIndex + 1
       }))
@@ -60,9 +61,12 @@ class DashboardButtons extends React.Component {
   }
 
   render() {
+    const {
+      className
+    } = this.props
     return (
-      <div className="my-3">
-        <Button onClick={() => this.threadStarter()}>Oppdater liste
+      <div className={`${className ? className : ''}`}>
+        <Button onClick={() => this.threadStarter()}>{this.props.buttonText || 'Oppdater liste'}
           {this.state.loading ? <span className="spinner-border spinner-border-sm ml-2 mb-1" /> : <RefreshCw className="ml-2" />}
         </Button>
       </div>
@@ -76,5 +80,7 @@ DashboardButtons.propTypes = {
   dataQueries: PropTypes.arrayOf(PropTypes.shape(DataQuery)),
   refreshRow: PropTypes.func,
   getRequest: PropTypes.func,
-  setLoading: PropTypes.func
+  setLoading: PropTypes.func,
+  buttonText: PropTypes.string,
+  className: PropTypes.string
 }

@@ -1,6 +1,10 @@
+const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
-  getContent
+  getContent, getSiteConfig, pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
+const {
+  getPhrases
+} = __non_webpack_require__( '/lib/language')
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
@@ -8,44 +12,115 @@ const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
 const {
-  getDataset
-} = __non_webpack_require__( '/lib/ssb/dataset/dataset')
+  parseTable
+} = __non_webpack_require__( '/lib/ssb/table')
+const {
+  getSources
+} = __non_webpack_require__( '/lib/ssb/utils')
+const {
+  data: {
+    forceArray
+  }
+} = __non_webpack_require__( '/lib/util')
+const {
+  get
+} = __non_webpack_require__( '/lib/xp/content')
 
+const moment = require('moment/min/moment-with-locales')
 const view = resolve('./table.html')
+const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 
-exports.get = (req) => {
+
+exports.get = function(req) {
   try {
-    return renderPart(req)
+    const tableId = getContent().data.mainTable
+
+    return renderPart(req, tableId)
   } catch (e) {
-    return renderError(req, 'Error in part: ', e)
+    return renderError(req, 'Error in part', e)
   }
 }
 
-function renderPart(req) {
-  const page = getContent()
-  const dataSource = page.data.dataSource
-  const datasetRepo = getDataset(page)
-  let tableTitle
+exports.preview = (req, id) => renderPart(req, [id])
 
-  if (dataSource && dataSource._selected === 'tbprocessor') {
-    if (datasetRepo) {
-      const metadata = datasetRepo.data.tbml.metadata
-      tableTitle = metadata.title.content ? metadata.title.content : metadata.title
+function renderPart(req, tableId) {
+  const page = getContent()
+  const tableLabel = i18nLib.localize({
+    key: 'table'
+  })
+
+  if (!tableId) {
+    if (req.mode === 'edit' && page.type !== `${app.name}:statistics`) {
+      return {
+        body: render(view, {
+          label: tableLabel
+        })
+      }
     } else {
-      tableTitle = 'Ingen tabell knyttet til innhold'
+      return {
+        body: null
+      }
     }
   }
 
+  const tableContent = get({
+    key: tableId
+  })
+  const table = parseTable(req, tableContent)
+  const siteConfig = getSiteConfig()
 
-  const model = {
-    title: page.displayName,
-    tableTitle
-  }
+  moment.locale(tableContent.language ? tableContent.language : 'nb')
+  const phrases = getPhrases(tableContent)
 
-  const body = render(view, model)
+  // sources
+  const sourceConfig = tableContent.data.sources ? forceArray(tableContent.data.sources) : []
+  const sourceLabel = phrases.source
+  const sources = getSources(sourceConfig)
+
+  const standardSymbol = getStandardSymbolPage(siteConfig.standardSymbolPage, phrases.tableStandardSymbols)
+
+  const tableReact = new React4xp('Table')
+    .setProps({
+      displayName: tableContent.displayName,
+      table: {
+        caption: table.caption,
+        thead: table.thead,
+        tbody: table.tbody,
+        tfoot: table.tfoot,
+        tableClass: table.tableClass
+      },
+      standardSymbol: standardSymbol,
+      sources,
+      sourceLabel
+    })
+    .uniqueId()
+
+  const body = render(view, {
+    tableId: tableReact.react4xpId
+  })
 
   return {
-    body,
+    body: tableReact.renderBody({
+      body,
+      clientRender: true
+    }),
+    pageContributions: tableReact.renderPageContributions({
+      clientRender: true
+    }),
     contentType: 'text/html'
   }
+}
+
+const getStandardSymbolPage = (standardSymbolPage, standardSymbolText) => {
+  if (standardSymbolPage) {
+    const standardSymbolHref = standardSymbolPage ? pageUrl({
+      id: standardSymbolPage
+    }) : ''
+
+    return {
+      href: standardSymbolHref,
+      text: standardSymbolText
+    }
+  }
+  return null
 }

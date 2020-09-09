@@ -105,14 +105,9 @@ export interface Table {
   };
 
   /**
-   * Fotnote-tekst
-   */
-  footNote?: string;
-
-  /**
    * Kildelenke
    */
-  checkOptionSet?: {
+  sources?: {
     /**
      * Selected
      */

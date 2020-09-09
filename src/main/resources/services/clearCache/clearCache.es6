@@ -12,7 +12,8 @@ exports.get = (req) => {
       clearDatasetCache: true,
       clearDividerCache: true,
       clearRelatedArticlesCache: true,
-      clearRelatedFactPageCache: true
+      clearRelatedFactPageCache: true,
+      clearDatasetRepoCache: true
     }
   })
   return {
