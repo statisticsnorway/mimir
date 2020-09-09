@@ -10,11 +10,9 @@ import DashboardDataQuery from './DashboardDataQuery'
 import DashboardButtons from './DashboardButtons'
 import ClearCacheButton from './ClearCacheButton'
 import Convert from './Convert'
-import StatRegDashboard from './StatRegDashboard'
-import RefreshDataButton from './RefreshDataButton'
+import StatRegDashboard, { StatRegFetchInfo } from './StatRegDashboard'
 import Axios from 'axios'
 import { groupBy } from 'ramda'
-import { StatRegFetchInfo } from './types'
 import DataQueryTable from './DataQueryTable'
 import { Zap, ZapOff } from 'react-feather'
 import Badge from 'react-bootstrap/Badge'
@@ -83,7 +81,7 @@ class Dashboard extends React.Component {
   }
 
   componentDidUpdate() {
-    if(this.state.io) {
+    if (this.state.io) {
       this.setupWSListener()
     }
   }
@@ -233,14 +231,6 @@ class Dashboard extends React.Component {
     )
   }
 
-  renderAccordionForStatRegFetches() {
-    return (
-      <Accordion header="Status" className="mx-0" openByDefault={true}>
-        <StatRegDashboard currStatus={this.state.statRegData} />
-      </Accordion>
-    )
-  }
-
   render() {
     const groupedQueries = byParentType(this.state.dataQueries)
     const tableQueries = this.state.dataQueries.filter((q) => q.type === 'mimir:table')
@@ -279,23 +269,12 @@ class Dashboard extends React.Component {
                 </Col>
               </Row>
 
-              <section className="xp-part part-dashboard container">
-                <Row>
-                  <Col>
-                    <div className="p-4 tables-wrapper">
-                      <h2 className="d-inline-block w-75">Data fra Statistikkregisteret</h2>
-                      <div className="d-inline-block float-right">
-                        <RefreshDataButton
-                            onSuccess={(message) => this.showSuccess('Statreg data er oppdatert')}
-                            onError={(message) => this.showError(message)}
-                            statregDashboardServiceUrl={this.props.refreshStatregDataUrl}
-                        />
-                      </div>
-                      {this.renderAccordionForStatRegFetches()}
-                    </div>
-                  </Col>
-                </Row>
-              </section>
+              <StatRegDashboard
+                onError={() => this.showError}
+                onSuccess={() => this.showSuccess}
+                refreshStatregDataUrl={this.props.refreshStatregDataUrl}
+                currStatus={this.props.statRegFetchStatuses}
+              />
 
               <Row className="my-3">
                 <Col className="p-4 tables-wrapper">
