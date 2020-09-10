@@ -51,7 +51,13 @@
         <input name="articleText" type="HtmlArea">
             <label>Artikkeltekst</label>
             <config>
-                <include>Blockquote</include>
+                <exclude>*</exclude>
+                <include>Styles Bold Italic Underline Strike Cut Copy
+                    JustifyBlock JustifyLeft JustifyCenter JustifyRight
+                    BulletedList NumberedList Outdent Indent
+                    SpecialChar Anchor Image Macro Link Unlink
+                    Table TableBlockquote
+                    Subscript Superscript  </include>
                 <allowHeadings>h2 h3 h4 h5</allowHeadings>
             </config>
         </input>
