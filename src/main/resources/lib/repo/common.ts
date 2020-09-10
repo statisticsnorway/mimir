@@ -106,6 +106,8 @@ export function nodeExists(repository: string, branch: string, key: string): boo
 }
 
 export interface RepoCommonLib {
+  ENONIC_CMS_DEFAULT_REPO: string;
+  SYSADMIN_ROLE: string;
   withSuperUserContext: <T>(repository: string, branch: string, callback: ContextCallback<T>) => T;
   withLoggedInUserContext: <T>(branch: string, callback: UserContextCallback<T>) => T;
   getConnection: (repository: string, branch: string) => RepoConnection;

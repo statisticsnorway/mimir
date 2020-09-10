@@ -1,23 +1,36 @@
 import { RepoNode } from 'enonic-types/lib/node'
-import { repoExists, createRepo } from './repo'
-import { QueryFilters, createNode, getNode, modifyNode, nodeExists, withLoggedInUserContext } from './common'
-import { ensureArray } from '../ssb/arrayUtils'
+import { QueryFilters, RepoCommonLib } from './common'
+import { ArrayUtilsLib } from '../ssb/arrayUtils'
 import { STATREG_REPO_CONTACTS_KEY, fetchContacts } from './statreg/contacts'
 import { STATREG_REPO_STATISTICS_KEY, fetchStatistics } from './statreg/statistics'
 import { STATREG_REPO_PUBLICATIONS_KEY, fetchPublications } from './statreg/publications'
-import { createEventLog, EVENT_LOG_BRANCH, EVENT_LOG_REPO, updateEventLog } from './eventLog'
 import { StatRegFetchInfo,
   StatRegFetchJobNode,
   StatRegFetchStatus,
   StatRegLatestFetchInfoNode } from './statreg/eventLog'
 import moment = require('moment')
+import { EventLogLib } from './eventLog'
+import { RepoLib } from './repo'
+
+const {
+  ensureArray
+}: ArrayUtilsLib = __non_webpack_require__('/lib/ssb/arrayUtils')
+const {
+  createNode, getNode, modifyNode, nodeExists, withLoggedInUserContext
+}: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
+const {
+  repoExists, createRepo
+}: RepoLib = __non_webpack_require__('/lib/repo/repo')
+const {
+  createEventLog, updateEventLog, EVENT_LOG_BRANCH, EVENT_LOG_REPO
+}: EventLogLib = __non_webpack_require__('/lib/repo/eventLog')
 
 export const STATREG_REPO: string = 'no.ssb.statreg'
 export const STATREG_BRANCH: string = 'master'
 
 export interface StatRegNodeConfig {
     key: string;
-    fetcher: () => any;
+    fetcher: () => object;
 }
 
 export interface StatRegContent {
@@ -60,7 +73,7 @@ function getEventRoot(eventType: string): StatRegLatestFetchInfoNode {
 }
 
 // write to
-function logToEventLogAndUpdateLatestInfo(key: string, fetchEvent: StatRegFetchJobNode, evtData: StatRegFetchInfo) {
+function logToEventLogAndUpdateLatestInfo(key: string, fetchEvent: StatRegFetchJobNode, evtData: StatRegFetchInfo): RepoNode {
   const eventRoot: StatRegLatestFetchInfoNode = getEventRoot(key)
   const now: Date = new Date()
   updateEventLog<StatRegLatestFetchInfoNode>(eventRoot._id, (node) => {
@@ -82,7 +95,7 @@ function logToEventLogAndUpdateLatestInfo(key: string, fetchEvent: StatRegFetchJ
   })
 
   return updateEventLog<StatRegFetchJobNode>(fetchEvent._id, (node) => {
-    const preamble: string = eventLogPreamble(key, now, evtData.status)
+    const preamble: string = eventLogPreamble(key, now)
     return {
       ...node,
       _name: preamble,
@@ -104,8 +117,8 @@ function toDisplayString(key: string): string {
   }
 }
 
-function setupStatRegFetcher(statRegFetcher: StatRegNodeConfig) {
-  const fetchEventNode: StatRegFetchJobNode = createStatRegEvent(statRegFetcher.key, `Fetching ${statRegFetcher.key} ...`)
+function setupStatRegFetcher(statRegFetcher: StatRegNodeConfig): RepoNode {
+  const fetchEventNode: StatRegFetchJobNode = createStatRegEvent(statRegFetcher.key)
   log.info(`Setting up StatReg Node: '/${statRegFetcher.key}' ...`)
   const node: StatRegNode | null = getStatRegNode(statRegFetcher.key)
   try {
@@ -135,7 +148,7 @@ function setupStatRegFetcher(statRegFetcher: StatRegNodeConfig) {
   }
 }
 
-function setupNodes(fetchers: Array<StatRegNodeConfig>) {
+function setupNodes(fetchers: Array<StatRegNodeConfig>): void {
   ensureArray(fetchers)
     .forEach((statRegFetcher: StatRegNodeConfig) => {
       setupStatRegFetcher(statRegFetcher)
@@ -160,7 +173,7 @@ export const STATREG_NODES: Array<StatRegNodeConfig> = [
   STATREG_PUBLICATIONS_NODE
 ]
 
-export function setupStatRegEventLog() {
+export function setupStatRegEventLog(): void {
   if (!nodeExists(EVENT_LOG_REPO, EVENT_LOG_BRANCH, '/statreg')) {
     log.info('Setting up StatReg EventLog ...')
     const root: RepoNode = createEventLog({
@@ -192,14 +205,14 @@ const EVENT_LOG_PREAMBLE_TIME_FMT: string = 'DD.MM.YYYY HH:mm:ss'
 // for now using just the time
 //
 // return `${moment(eventTime).format(EVENT_LOG_PREAMBLE_TIME_FMT)} - ${status}`
-export function eventLogPreamble(key: string, eventTime: Date, status: StatRegFetchStatus): string {
+export function eventLogPreamble(key: string, eventTime: Date): string {
   return moment(eventTime).format(EVENT_LOG_PREAMBLE_TIME_FMT)
 }
 
-export function createStatRegEvent(key: string, name?: string): StatRegFetchJobNode {
+export function createStatRegEvent(key: string): StatRegFetchJobNode {
   return withLoggedInUserContext(EVENT_LOG_BRANCH, (user) => {
     const now: Date = new Date()
-    const preamble: string = eventLogPreamble(key, now, StatRegFetchStatus.INIT)
+    const preamble: string = eventLogPreamble(key, now)
     return createEventLog({
       _parentPath: `/statreg/${key}`,
       _name: preamble,
@@ -213,7 +226,7 @@ export function createStatRegEvent(key: string, name?: string): StatRegFetchJobN
   })
 }
 
-export function setupStatRegRepo(nodeConfig: Array<StatRegNodeConfig> = STATREG_NODES) {
+export function setupStatRegRepo(nodeConfig: Array<StatRegNodeConfig> = STATREG_NODES): void {
   if (!repoExists(STATREG_REPO, STATREG_BRANCH)) {
     log.info(`Creating Repo: '${STATREG_REPO}' ...`)
     createRepo(STATREG_REPO, STATREG_BRANCH)
