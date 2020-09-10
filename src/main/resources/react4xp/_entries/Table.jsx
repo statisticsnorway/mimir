@@ -154,11 +154,11 @@ class Table extends React.Component {
       const value = row[keyName]
       if (keyName === 'th') {
         return (
-            this.createHeadTh(keyName, value, keyIndex)
+          this.createHeadTh(keyName, value, keyIndex)
         )
       } else if (keyName === 'td') {
         return (
-            this.createHeadTd(keyName, value, keyIndex)
+          this.createHeadTd(keyName, value, keyIndex)
         )
       }
     })
@@ -173,12 +173,19 @@ class Table extends React.Component {
       if (Array.isArray(value)) {
         return value.map((cellValue, i) => {
           if (typeof cellValue === 'object') {
-            return (
-              <th key={i} className={cellValue.class} rowSpan={cellValue.rowspan} colSpan={cellValue.colspan}>
-                {cellValue.content}
-                {this.addNoteRefs(cellValue.noterefs)}
-              </th>
-            )
+            if (Array.isArray(cellValue)) {
+              //TODO: Because some values is split into array by xmlParser i have to do this, find better fix
+              return (
+                <th key={i}>{cellValue.join(' ')}</th>
+              )
+            } else {
+              return (
+                <th key={i} className={cellValue.class} rowSpan={cellValue.rowspan} colSpan={cellValue.colspan}>
+                  {cellValue.content}
+                  {this.addNoteRefs(cellValue.noterefs)}
+                </th>
+              )
+            }
           } else {
             return (
               <th key={i}>{cellValue}</th>
@@ -270,7 +277,7 @@ class Table extends React.Component {
       const noteRefIndex = noteRefsList.indexOf(noteRefId)
       if (noteRefIndex > -1) {
         return (
-            <sup>{noteRefIndex + 1}</sup>
+          <sup>{noteRefIndex + 1}</sup>
         )
       }
     }
