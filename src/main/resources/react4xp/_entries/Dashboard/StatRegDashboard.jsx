@@ -95,8 +95,8 @@ class StatRegDashboard extends React.Component {
               <h2 className="d-inline-block w-75">Data fra Statistikkregisteret</h2>
               <div className="d-inline-block float-right">
                 <RefreshDataButton
-                  onSuccess={this.props.onSuccess}
-                  onError={this.props.onError}
+                  onSuccess={(message) => this.props.onSuccess('Statreg data er oppdatert')}
+                  onError={(message) => this.props.onError(message)}
                   statregDashboardServiceUrl={this.props.refreshStatregDataUrl}
                 />
               </div>
