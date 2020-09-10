@@ -214,37 +214,44 @@ exports.get = function(req) {
     metaInfoDescription
   }
 
-  let body = thymeleaf.render(view, model)
-
+  const thymeleafRenderBody = thymeleaf.render(view, model)
   const breadcrumbs = getBreadcrumbs(page, municipality)
+
   const breadcrumbComponent = new React4xp('Breadcrumb')
     .setProps({
       items: breadcrumbs
     })
     .setId('breadcrumbs')
-  body = breadcrumbComponent.renderBody({
-    body
+
+  const bodyWithBreadCrumbs = breadcrumbComponent.renderBody({
+    body: thymeleafRenderBody
   })
 
   const alerts = alertsForContext(municipality)
-  if (alerts.length > 0) {
-    const alertComponent = new React4xp('Alerts')
-      .setProps({
-        alerts
-      })
-      .setId('alerts')
-    body = alertComponent.renderBody({
+  const bodyWithAlerts = alerts.length ?
+    addAlerts(alerts, bodyWithBreadCrumbs, pageContributions) :
+    { body: bodyWithBreadCrumbs, pageContributions }
+
+  return {
+    body: bodyWithAlerts.body,
+    pageContributions: bodyWithAlerts.pageContributions
+  }
+}
+
+function addAlerts(alerts, body, pageContributions ){
+  const alertComponent = new React4xp('Alerts')
+    .setProps({
+      alerts
+    })
+    .setId('alerts')
+  return {
+    body: alertComponent.renderBody({
       body,
       clientRender: true
-    })
-    pageContributions = alertComponent.renderPageContributions({
+    }),
+    pageContributions: alertComponent.renderPageContributions({
       pageContributions,
       clientRender: true
     })
-  }
-
-  return {
-    body,
-    pageContributions
   }
 }
