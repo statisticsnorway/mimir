@@ -260,7 +260,7 @@ class Table extends React.Component {
 
     if (sources && sources.length > 0) {
       return (
-        <div className="row mt-3">
+        <div className="row mt-5 source">
           <div className="w-100 col-12">
             <span><strong>{sourceLabel}</strong></span>
           </div>

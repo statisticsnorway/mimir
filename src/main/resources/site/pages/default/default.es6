@@ -74,7 +74,6 @@ exports.get = function(req) {
   const showIngress = ingress && page.type === 'mimir:page'
   const pageType = page.page.config.pageType ? page.page.config.pageType : 'default'
 
-
   // Create preview if available
   let preview
   if (partsWithPreview.indexOf(page.type) >= 0) {
@@ -94,6 +93,7 @@ exports.get = function(req) {
     municipality = getMunicipality(req)
   }
 
+  let municipalPageType
   let addMetaInfoSearch = true
   let metaInfoSearchId = page._id
   let metaInfoSearchContentType = page._name
@@ -102,6 +102,12 @@ exports.get = function(req) {
   let metaInfoDescription
 
   if (pageType === 'municipality') {
+    if (page._path.indexOf('/kommunefakta/') > -1) {
+      municipalPageType = 'kommunefakta'
+    }
+    if (page._path.indexOf('/kommuneareal/') > -1) {
+      municipalPageType = 'kommuneareal'
+    }
     metaInfoSearchContentType = 'kommunefakta'
     metaInfoSearchKeywords = 'kommune, kommuneprofil',
     metaInfoDescription = page.x['com-enonic-app-metafields']['meta-data'].seoDescription
@@ -227,7 +233,7 @@ exports.get = function(req) {
     body: thymeleafRenderBody
   })
 
-  const alerts = alertsForContext(municipality)
+  const alerts = alertsForContext(municipality, municipalPageType)
   const bodyWithAlerts = alerts.length ?
     addAlerts(alerts, bodyWithBreadCrumbs, pageContributions) :
     { body: bodyWithBreadCrumbs, pageContributions }
