@@ -56,7 +56,7 @@
             </config>
         </input>
 
-        <option-set name="appurtenantStatistics">
+        <option-set name="associatedStatistics">
             <label>Tilhørende statistikk</label>
             <expanded>false</expanded>
             <occurrences minimum="0" maximum="0"/>

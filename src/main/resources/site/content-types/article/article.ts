@@ -72,7 +72,7 @@ export interface Article {
   /**
    * Tilhørende statistikk
    */
-  appurtenantStatistics?: {
+  associatedStatistics?: {
     /**
      * Selected
      */

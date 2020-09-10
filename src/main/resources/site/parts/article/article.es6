@@ -59,8 +59,8 @@ function renderPart(req) {
     })
     .setId('dividerId')
 
-  const appurtenantStatisticsConfig = page.data.appurtenantStatistics ? data.forceArray(page.data.appurtenantStatistics) : []
-  const appurtenantStatistics = getAppurtenantStatisticsLinks(appurtenantStatisticsConfig)
+  const associatedStatisticsConfig = page.data.associatedStatistics ? data.forceArray(page.data.associatedStatistics) : []
+  const associatedStatistics = getAssociatedStatisticsLinks(associatedStatisticsConfig)
 
   const model = {
     title: page.displayName,
@@ -71,7 +71,7 @@ function renderPart(req) {
     pubDate,
     modifiedDate,
     authors,
-    appurtenantStatistics,
+    associatedStatistics,
     serialNumber: page.data.serialNumber,
     introTitle: page.data.introTitle
   }
@@ -82,30 +82,30 @@ function renderPart(req) {
   })
 
   return {
-    body: appurtenantStatistics.length ? dividerBody : body,
+    body: associatedStatistics.length ? dividerBody : body,
     contentType: 'text/html'
   }
 }
 
-const getAppurtenantStatisticsLinks = (appurtenantStatisticsConfig) => {
-  return appurtenantStatisticsConfig.map((option) => {
+const getAssociatedStatisticsLinks = (associatedStatisticsConfig) => {
+  return associatedStatisticsConfig.map((option) => {
     if (option._selected === 'XP') {
-      const appurtenantStatisticsXP = option.XP.content
-      const appurtenantStatisticsXPContent = get({
-        key: appurtenantStatisticsXP
+      const associatedStatisticsXP = option.XP.content
+      const associatedStatisticsXPContent = get({
+        key: associatedStatisticsXP
       })
 
       return {
-        title: appurtenantStatisticsXPContent.displayName,
+        title: associatedStatisticsXPContent.displayName,
         href: pageUrl({
-          id: appurtenantStatisticsXP
+          id: associatedStatisticsXP
         })
       }
     } else if (option._selected === 'CMS') {
-      const appurtenantStatisticsCMS = option.CMS
+      const associatedStatisticsCMS = option.CMS
 
       return {
-        ...appurtenantStatisticsCMS
+        ...associatedStatisticsCMS
       }
     }
   })
