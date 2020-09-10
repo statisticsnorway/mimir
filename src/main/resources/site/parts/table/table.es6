@@ -117,17 +117,17 @@ function renderPart(req, tableId) {
 const getDownloadAsOptions = (phrases) => {
   const downloadAs = []
 
-  const CSV = {
-    title: phrases.tableDownloadCSV,
-    id: 'downloadTableAsCSV'
-  }
-  downloadAs.push(CSV)
-
   const XLS = {
-    title: phrases.tableDownloadXLS,
+    title: '.xlsx (Excel)',
     id: 'downloadTableAsXLS'
   }
   downloadAs.push(XLS)
+
+  const CSV = {
+    title: '.CSV',
+    id: 'downloadTableAsCSV'
+  }
+  downloadAs.push(CSV)
 
   return downloadAs
 }
