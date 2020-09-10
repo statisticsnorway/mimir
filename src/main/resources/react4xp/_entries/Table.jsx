@@ -21,6 +21,7 @@ class Table extends React.Component {
         return (
           <caption noterefs={this.props.table.caption.noterefs}>
             {this.props.table.caption.content}
+            {this.addNoteRefs(this.props.table.caption.noterefs)}
           </caption>
         )
       } else {
@@ -28,6 +29,18 @@ class Table extends React.Component {
           <caption>
             {this.props.table.caption}
           </caption>
+        )
+      }
+    }
+  }
+
+  addNoteRefs(noteRefId) {
+    if (noteRefId != undefined) {
+      const noteRefsList = this.props.table.noteRefs
+      const noteRefIndex = noteRefsList.indexOf(noteRefId)
+      if (noteRefIndex > -1) {
+        return (
+          <sup>{noteRefIndex + 1}</sup>
         )
       }
     }
@@ -66,15 +79,16 @@ class Table extends React.Component {
     const {
       footnotes, correctionNotice
     } = this.props.table.tfoot
-
-    if (footnotes.length > 0 || correctionNotice) {
+    const noteRefsList = this.props.table.noteRefs
+    if (footnotes.length > 0 && noteRefsList.length > 0 || correctionNotice) {
       return (
         <tfoot>
-          {footnotes.map((footnote, index) => {
+          {noteRefsList.map((noteRef, index) => {
+            const footNote = footnotes.find((note) => note.noteid === noteRef)
             return (
               <tr key={index} className="footnote">
                 <td colSpan="100%">
-                  <sup>{index + 1}</sup>{footnote}
+                  <sup>{index + 1}</sup>{footNote.content}
                 </td>
               </tr>
             )
@@ -303,9 +317,15 @@ Table.propTypes = {
       })
     ),
     tfoot: PropTypes.shape({
-      footnotes: PropTypes.arrayOf(PropTypes.string),
+      footnotes: PropTypes.arrayOf(
+        PropTypes.shape({
+          noteid: PropTypes.string,
+          content: PropTypes.string
+        })
+      ),
       correctionNotice: PropTypes.string
-    })
+    }),
+    noteRefs: PropTypes.arrayOf(PropTypes.string)
   })
 }
 

@@ -4,7 +4,7 @@
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { Content } from 'enonic-types/lib/content'
 import { Table } from '../../site/content-types/table/table'
-import { TbmlData, TableRow, Note, Notes } from '../types/xmlParser'
+import { TbmlData, TableRow, Note, Notes, PreliminaryData, Title } from '../types/xmlParser'
 import { Dataset as JSDataset } from '../types/jsonstat-toolkit'
 import { Request } from 'enonic-types/lib/controller'
 import { DatasetRepoNode } from '../repo/dataset'
@@ -25,7 +25,8 @@ export function parseTable(req: Request, table: Content<Table>): TableView {
       footnotes: [],
       correctionNotice: ''
     },
-    tableClass: undefined
+    tableClass: undefined,
+    noteRefs: []
   }
 
   const datasetRepo: DatasetRepoNode<JSONstat> | null = getDataset(table)
@@ -36,17 +37,30 @@ export function parseTable(req: Request, table: Content<Table>): TableView {
 
     if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
       const tbmlData: TbmlData = data as TbmlData
+      const title: Title = tbmlData.tbml.metadata.title
       const headRows: Array<TableRow> = util.data.forceArray(tbmlData.tbml.presentation.table.thead.tr) as Array<TableRow>
       const bodyRows: Array<TableRow> = util.data.forceArray(tbmlData.tbml.presentation.table.tbody.tr) as Array<TableRow>
-      tableViewData.caption = tbmlData.tbml.metadata.title
+      const noteRefs: Array<string> = []
+      if (title.noterefs) {
+        noteRefs.push(title.noterefs)
+      }
+      headRows.forEach((row) => {
+        getNoterefs(row, noteRefs)
+      })
+      bodyRows.forEach((row) => {
+        getNoterefs(row, noteRefs)
+      })
+      tableViewData.caption = title
       tableViewData.thead = headRows
       tableViewData.tbody = bodyRows
       tableViewData.tableClass = tbmlData.tbml.presentation.table.class
       tableViewData.tfoot.correctionNotice = table.data.correctionNotice || ''
+      tableViewData.noteRefs = noteRefs
+
       const notes: Notes | undefined = tbmlData.tbml.metadata.notes
       if (notes) {
         const notesList: Array<Note> = util.data.forceArray(notes.note) as Array<Note>
-        tableViewData.tfoot.footnotes = notesList.map((note) => note.content)
+        tableViewData.tfoot.footnotes = notesList
       }
     }
     return tableViewData
@@ -55,13 +69,25 @@ export function parseTable(req: Request, table: Content<Table>): TableView {
   return tableViewData
 }
 
+function getNoterefs(row: TableRow, noteRefs: Array<string>): Array<string> {
+  const cellArray: Array<PreliminaryData> = util.data.forceArray(row.th) as Array<PreliminaryData>
+  cellArray.forEach((cell) => {
+    if (cell.noterefs) {
+      noteRefs.push(cell.noterefs)
+    }
+  })
+
+  return noteRefs
+}
+
 interface TableView {
-  caption?: string;
+  caption?: Title;
   thead?: Array<TableRow>;
   tbody?: Array<TableRow>;
   tfoot: {
-    footnotes: Array<string>;
+    footnotes: Array<Note>;
     correctionNotice: string;
   };
   tableClass?: string;
+  noteRefs: Array<string>;
 }
