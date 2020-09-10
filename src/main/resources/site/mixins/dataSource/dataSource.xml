@@ -84,7 +84,7 @@
         <option name="klass">
           <label>Klass</label>
           <items>
-            <input name="url" type="TextLine">
+            <input name="urlOrId" type="TextLine">
               <label>URL</label>
               <occurrences minimum="0" maximum="1"/>
             </input>

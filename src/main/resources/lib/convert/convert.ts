@@ -201,7 +201,7 @@ function dataqueryToDataSource(dataquery: Content<Dataquery>): DataSource['dataS
         return {
           _selected: 'klass',
           klass: {
-            url: dataquery.data.table
+            urlOrId: dataquery.data.table
           }
         }
       }

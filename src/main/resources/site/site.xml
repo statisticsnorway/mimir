@@ -9,6 +9,7 @@
           <occurrences minimum="0" maximum="1"/>
           <config>
             <allowContentType>dataquery</allowContentType>
+            <allowContentType>genericDataImport</allowContentType>
             <treeMode>true</treeMode>
             <showStatus>true</showStatus>
             <hideToggleIcon>true</hideToggleIcon>
@@ -19,6 +20,7 @@
           <occurrences minimum="0" maximum="1"/>
           <config>
             <allowContentType>dataquery</allowContentType>
+            <allowContentType>genericDataImport</allowContentType>
             <treeMode>true</treeMode>
             <showStatus>true</showStatus>
             <hideToggleIcon>true</hideToggleIcon>
@@ -29,6 +31,7 @@
           <occurrences minimum="0" maximum="1"/>
           <config>
             <allowContentType>dataquery</allowContentType>
+            <allowContentType>genericDataImport</allowContentType>
             <treeMode>true</treeMode>
             <showStatus>true</showStatus>
             <hideToggleIcon>false</hideToggleIcon>

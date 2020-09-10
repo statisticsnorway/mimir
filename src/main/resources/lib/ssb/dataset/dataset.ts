@@ -6,6 +6,7 @@ import { JSONstat } from '../../types/jsonstat-toolkit'
 import { RepoQueryLib } from '../../repo/query'
 import { TbmlData } from '../../types/xmlParser'
 import { TbprocessorLib } from './tbprocessor'
+import { KlassLib } from './klass'
 import { Context, ContextLibrary, RunContext } from 'enonic-types/lib/context'
 import { AuthLibrary, User } from 'enonic-types/lib/auth'
 
@@ -32,17 +33,25 @@ const {
   fetchTbprocessorData
 }: TbprocessorLib = __non_webpack_require__('/lib/ssb/dataset/tbprocessor')
 const {
+  getKlass,
+  getKlassKey,
+  fetchKlassData
+}: KlassLib = __non_webpack_require__('/lib/ssb/dataset/klass')
+const {
   createOrUpdateDataset,
   deleteDataset: deleteDatasetFromRepo
 }: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
 
-export function getDataset(content: Content<DataSource>): DatasetRepoNode<JSONstat | TbmlData> | null {
+export function getDataset(content: Content<DataSource>): DatasetRepoNode<JSONstat | TbmlData | object> | null {
   switch (content.data.dataSource?._selected) {
   case DataSourceType.STATBANK_API: {
     return getStatbankApi(content)
   }
   case DataSourceType.TBPROCESSOR: {
     return getTbprocessor(content)
+  }
+  case DataSourceType.KLASS: {
+    return getKlass(content)
   }
   default: {
     return null
@@ -56,34 +65,37 @@ export function extractKey(content: Content<DataSource>): string | null {
     return getStatbankApiKey(content)
   case DataSourceType.TBPROCESSOR:
     return getTbprocessorKey(content)
+  case DataSourceType.KLASS:
+    return getKlassKey(content)
   default:
     return null
   }
 }
 
-function extractData(content: Content<DataSource>): JSONstat | TbmlData | null {
+function extractData(content: Content<DataSource>): JSONstat | TbmlData | object | null {
   switch (content.data.dataSource?._selected) {
   case DataSourceType.STATBANK_API:
     return fetchStatbankApiData(content)
   case DataSourceType.TBPROCESSOR:
     return fetchTbprocessorData(content)
+  case DataSourceType.KLASS:
+    return fetchKlassData(content)
   default:
     return null
   }
 }
 
 export function refreshDataset(content: Content<DataSource>, asUser: boolean = true): CreateOrUpdateStatus {
-  const data: JSONstat | TbmlData | null = extractData(content)
+  const data: JSONstat | TbmlData | object | null = extractData(content)
   const key: string | null = extractKey(content)
   const user: User | null = getUser()
 
   if (data && content.data.dataSource && content.data.dataSource._selected && key) {
-    let dataset: DatasetRepoNode<JSONstat | TbmlData> | null = getDataset(content)
+    let dataset: DatasetRepoNode<JSONstat | TbmlData | object> | null = getDataset(content)
     const hasNewData: boolean = isDataNew(data, dataset)
     if (!dataset || hasNewData) {
       dataset = createOrUpdateDataset(content.data.dataSource?._selected, key, data)
     }
-
     return {
       dataquery: content,
       status: !hasNewData ? Events.NO_NEW_DATA : Events.GET_DATA_COMPLETE,
@@ -132,6 +144,10 @@ export function deleteDataset(content: Content<DataSource>): boolean {
     key = getTbprocessorKey(content)
     break
   }
+  case DataSourceType.KLASS: {
+    key = getKlassKey(content)
+    break
+  }
   }
   if (content.data.dataSource && content.data.dataSource._selected && key) {
     return deleteDatasetFromRepo(content.data.dataSource._selected, key)
@@ -157,7 +173,7 @@ export function getContentWithDataSource(): Array<Content<DataSource>> {
   return hits
 }
 
-function isDataNew(data: JSONstat | TbmlData, dataset: DatasetRepoNode<JSONstat | TbmlData> | null): boolean {
+function isDataNew(data: JSONstat | TbmlData | object, dataset: DatasetRepoNode<JSONstat | TbmlData | object> | null): boolean {
   if (!dataset) {
     return true
   } else if (data && dataset) {
@@ -168,7 +184,7 @@ function isDataNew(data: JSONstat | TbmlData, dataset: DatasetRepoNode<JSONstat 
 
 export interface CreateOrUpdateStatus {
   dataquery: Content<DataSource>;
-  dataset: DatasetRepoNode<JSONstat | TbmlData> | null;
+  dataset: DatasetRepoNode<JSONstat | TbmlData | object> | null;
   newDatasetData: boolean;
   status: string;
   user: User | null;
@@ -176,10 +192,10 @@ export interface CreateOrUpdateStatus {
 
 export interface DatasetLib {
   extractKey: (content: Content<DataSource>) => string;
-  getDataset: (content: Content<DataSource>) => DatasetRepoNode<JSONstat | TbmlData> | null;
+  getDataset: (content: Content<DataSource>) => DatasetRepoNode<JSONstat | TbmlData | object> | null;
   refreshDataset: (content: Content<DataSource>, asUser: boolean) => CreateOrUpdateStatus;
   refreshDatasetWithUserKey: (content: Content<DataSource>, userLogin: string) => CreateOrUpdateStatus;
   deleteDataset: (content: Content<DataSource>) => boolean;
   getContentWithDataSource: () => Array<Content<DataSource>>;
-  isDataNew: (data: JSONstat | TbmlData, dataset: DatasetRepoNode<JSONstat | TbmlData> | null) => boolean;
+  isDataNew: (data: JSONstat | TbmlData | object, dataset: DatasetRepoNode<JSONstat | TbmlData | object> | null) => boolean;
 }

@@ -18,14 +18,23 @@ const {
 } = __non_webpack_require__( '/lib/ssb/dataset/dataset')
 
 
-export function setupFetchDataOnCreateListener() {
+export function setupFetchDataOnCreateListener(): void {
   listener({
     type: 'node.updated',
     callback: function(event: EnonicEvent) {
       const contentWithDataSource: QueryResponse<HighchartConfig | KeyFigure | Table> = query({
         query: `_id = '${event.data.nodes[0].id}' AND 
-          ( data.dataSource._selected = '${DataSource.STATBANK_API}' OR data.dataSource._selected = '${DataSource.TBPROCESSOR}' )`,
-        contentTypes: [`${app.name}:highchart`, `${app.name}:keyFigure`, `${app.name}:table`],
+          (
+            data.dataSource._selected = '${DataSource.STATBANK_API}' OR 
+            data.dataSource._selected = '${DataSource.TBPROCESSOR}' OR 
+            data.dataSource._selected = '${DataSource.KLASS}'
+          )`,
+        contentTypes: [
+          `${app.name}:highchart`,
+          `${app.name}:keyFigure`,
+          `${app.name}:table`,
+          `${app.name}:genericDataImport`
+        ],
         filters: {
           exists: {
             field: `data.dataSource.*.urlOrId`

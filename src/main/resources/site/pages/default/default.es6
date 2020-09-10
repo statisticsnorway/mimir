@@ -74,7 +74,6 @@ exports.get = function(req) {
   const showIngress = ingress && page.type === 'mimir:page'
   const pageType = page.page.config.pageType ? page.page.config.pageType : 'default'
 
-
   // Create preview if available
   let preview
   if (partsWithPreview.indexOf(page.type) >= 0) {
@@ -94,15 +93,21 @@ exports.get = function(req) {
     municipality = getMunicipality(req)
   }
 
+  let municipalPageType
   let addMetaInfoSearch = true
   let metaInfoSearchId = page._id
-  let metaInfoSearchTitle = page.displayName
   let metaInfoSearchContentType = page._name
   let metaInfoSearchGroup = page._id
   let metaInfoSearchKeywords
   let metaInfoDescription
 
   if (pageType === 'municipality') {
+    if (page._path.indexOf('/kommunefakta/') > -1) {
+      municipalPageType = 'kommunefakta'
+    }
+    if (page._path.indexOf('/kommuneareal/') > -1) {
+      municipalPageType = 'kommuneareal'
+    }
     metaInfoSearchContentType = 'kommunefakta'
     metaInfoSearchKeywords = 'kommune, kommuneprofil',
     metaInfoDescription = page.x['com-enonic-app-metafields']['meta-data'].seoDescription
@@ -110,9 +115,8 @@ exports.get = function(req) {
 
   if (pageType === 'municipality' && municipality) {
     // TODO: Deaktiverer at kommunesidene er søkbare til vi finner en løsning med kommunenavn i tittel MIMIR-549
-    addMetaInfoSearch = false
+    addMetaInfoSearch = true
     metaInfoSearchId = metaInfoSearchId + '_' + municipality.code
-    metaInfoSearchTitle = 'Kommunefakta ' + municipality.displayName
     metaInfoSearchGroup = metaInfoSearchGroup + '_' + municipality.code
     metaInfoSearchKeywords = municipality.displayName + ' kommune'
   }
@@ -210,7 +214,6 @@ exports.get = function(req) {
     footerBody: footer ? footer.body : undefined,
     addMetaInfoSearch,
     metaInfoSearchId,
-    metaInfoSearchTitle,
     metaInfoSearchGroup,
     metaInfoSearchContentType,
     metaInfoSearchKeywords,
@@ -229,7 +232,7 @@ exports.get = function(req) {
     body
   })
 
-  const alerts = alertsForContext(municipality)
+  const alerts = alertsForContext(municipality, municipalPageType)
   if (alerts.length > 0) {
     const alertComponent = new React4xp('Alerts')
       .setProps({

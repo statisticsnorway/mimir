@@ -1,9 +1,45 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Link } from '@statisticsnorway/ssb-component-library'
+import { Dropdown, Link } from '@statisticsnorway/ssb-component-library'
 import { isEmpty } from 'ramda'
 
+import '../../assets/js/jquery-global.js'
+import 'tableexport.jquery.plugin/libs/FileSaver/FileSaver.min.js'
+import 'tableexport.jquery.plugin/tableExport.min.js'
+
 class Table extends React.Component {
+  downloadTableAsCSV() {
+    const table = $('table').closest('.container')
+    table.tableExport({
+      type: 'csv',
+      fileName: 'tabell',
+      csvSeparator: ';'
+    })
+  }
+
+  addDownloadAsDropdown() {
+    const {
+      downloadAsTitle,
+      downloadAsOptions
+    } = this.props
+
+    const downloadTable = (item) => {
+      if (item.id === 'downloadTableAsCSV') {
+        {this.downloadTableAsCSV()}
+      }
+    }
+
+    return (
+      <div className="download-table-container">
+        <Dropdown
+          selectedItem={downloadAsTitle}
+          items={downloadAsOptions}
+          onSelect={downloadTable}
+        />
+      </div>
+    )
+  }
+
   createTable() {
     return (
       <table className={this.props.table.tableClass}>
@@ -224,7 +260,7 @@ class Table extends React.Component {
 
     if (sources && sources.length > 0) {
       return (
-        <div className="row mt-3">
+        <div className="row mt-5 source">
           <div className="w-100 col-12">
             <span><strong>{sourceLabel}</strong></span>
           </div>
@@ -243,7 +279,8 @@ class Table extends React.Component {
 
   render() {
     if (!isEmpty(this.props.table)) {
-      return <div className="container tabell">
+      return <div className="container">
+        {this.addDownloadAsDropdown()}
         {this.createTable()}
         {this.addStandardSymbols()}
         {this.renderSources()}
@@ -257,6 +294,13 @@ class Table extends React.Component {
 }
 
 Table.propTypes = {
+  downloadAsTitle: PropTypes.object,
+  downloadAsOptions: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string,
+      id: PropTypes.string
+    })
+  ),
   standardSymbol: PropTypes.shape({
     href: PropTypes.string,
     text: PropTypes.string
