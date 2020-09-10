@@ -100,7 +100,7 @@ export interface Table {
       /**
        * URL
        */
-      url?: string;
+      urlOrId?: string;
     };
   };
 
