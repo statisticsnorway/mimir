@@ -1,15 +1,20 @@
-import { Socket, SocketEmitter } from '../../convert/convert'
+
 import { DatasetLib, CreateOrUpdateStatus } from './dataset'
 import { ContentLibrary, Content } from 'enonic-types/lib/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
-import { logUserDataQuery, Events } from '../../repo/query'
-import { getNode } from '../../repo/common'
+import { Events } from '../../repo/query'
 import { EVENT_LOG_REPO, EVENT_LOG_BRANCH } from '../../repo/eventLog'
 import { RepoNode } from 'enonic-types/lib/node'
 import { I18nLibrary } from 'enonic-types/lib/i18n'
 import { ContextLibrary, RunContext } from 'enonic-types/lib/context'
-import { AuthLibrary, User } from 'enonic-types/lib/auth'
+import { Socket, SocketEmitter } from '../../types/socket'
 
+const {
+  logUserDataQuery
+} = __non_webpack_require__( '/lib/repo/query')
+const {
+  getNode
+} = __non_webpack_require__( '/lib/repo/common')
 const {
   refreshDataset
 }: DatasetLib = __non_webpack_require__( '/lib/ssb/dataset/dataset')
@@ -23,21 +28,14 @@ const i18n: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
 const {
   run
 }: ContextLibrary = __non_webpack_require__('/lib/xp/context')
-const {
-  getUser
-}: AuthLibrary = __non_webpack_require__('/lib/xp/auth')
 
 const users: Array<string> = []
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
-
   socket.on('dashboard-register-user', (options: RegisterUserOptions) => {
-    log.info('update user')
-    if(options && options.user) {
+    if (options && options.user) {
       users[parseInt(socket.id)] = options.user
     }
-    log.info('users is now:')
-    log.info('0 %s', JSON.stringify(users, null, 2))
   })
 
   socket.on('dashboard-refresh-dataset', (options: RefreshDatasetOptions) => {
@@ -50,10 +48,6 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
         idProvider: 'system'
       }
     }
-    log.info('run refresh with user ')
-    log.info('1 %s', JSON.stringify(users, null, 2))
-    log.info('2 %s', JSON.stringify(socket.id, null, 2))
-    log.info('3 %s', JSON.stringify(users[parseInt(socket.id)], null, 2))
     run(context, () => refreshDatasetHandler(options.ids, socketEmitter))
   })
 }

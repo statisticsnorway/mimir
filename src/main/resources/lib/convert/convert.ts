@@ -4,6 +4,7 @@ import { KeyFigure } from '../../site/content-types/keyFigure/keyFigure'
 import { Dataquery } from '../../site/content-types/dataquery/dataquery'
 import { DataSource } from '../../site/mixins/dataSource/dataSource'
 import { Highchart } from '../../site/content-types/highchart/highchart'
+import { Socket } from '../types/socket'
 
 const {
   query,
@@ -207,16 +208,6 @@ function dataqueryToDataSource(dataquery: Content<Dataquery>): DataSource['dataS
     }
   }
   return null
-}
-
-export interface Socket {
-  id: string;
-  on: (event: string, handler: (options: object | undefined) => void) => void;
-  emit: (event: string, data: string | object) => void;
-}
-
-export interface SocketEmitter {
-  broadcast: (event: string, data: string | object ) => void;
 }
 
 interface OldHighchartData extends DataSource{

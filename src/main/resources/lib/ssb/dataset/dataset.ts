@@ -6,8 +6,8 @@ import { JSONstat } from '../../types/jsonstat-toolkit'
 import { RepoQueryLib } from '../../repo/query'
 import { TbmlData } from '../../types/xmlParser'
 import { TbprocessorLib } from './tbprocessor'
-import {Context, ContextLibrary, RunContext} from "enonic-types/lib/context";
-import {AuthLibrary, User} from "enonic-types/lib/auth";
+import { Context, ContextLibrary, RunContext } from 'enonic-types/lib/context'
+import { AuthLibrary, User } from 'enonic-types/lib/auth'
 
 const {
   logUserDataQuery, Events
@@ -85,7 +85,6 @@ export function refreshDataset(content: Content<DataSource>, asUser: boolean = t
     }
 
     return {
-      pewpew: 1,
       dataquery: content,
       status: !hasNewData ? Events.NO_NEW_DATA : Events.GET_DATA_COMPLETE,
       newDatasetData: hasNewData,
@@ -95,11 +94,10 @@ export function refreshDataset(content: Content<DataSource>, asUser: boolean = t
   } else {
     if (asUser) {
       logUserDataQuery(content._id, {
-        message: Events.FAILED_TO_GET_DATA,
+        message: Events.FAILED_TO_GET_DATA
       })
     }
     return {
-      pewpew: 2,
       dataquery: content,
       status: Events.FAILED_TO_GET_DATA,
       dataset: null,
@@ -169,7 +167,6 @@ function isDataNew(data: JSONstat | TbmlData, dataset: DatasetRepoNode<JSONstat 
 }
 
 export interface CreateOrUpdateStatus {
-  pewpew: number;
   dataquery: Content<DataSource>;
   dataset: DatasetRepoNode<JSONstat | TbmlData> | null;
   newDatasetData: boolean;
