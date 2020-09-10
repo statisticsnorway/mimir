@@ -30,8 +30,8 @@ export const createHumanReadableFormat = (value) => {
 }
 
 
-export const alertsForContext = (municipality) => {
-  const currentMunicipalityAlerts = municipality ? listMunicipalityAlerts( municipality.code ) : {
+export const alertsForContext = (municipality, municipalPageType) => {
+  const currentMunicipalityAlerts = municipality ? listMunicipalityAlerts( municipality.code, municipalPageType ) : {
     hits: []
   }
   const alerts = [...listOperationsAlerts().hits, ...currentMunicipalityAlerts.hits]
