@@ -103,10 +103,10 @@ exports.get = function(req) {
   let metaInfoDescription
 
   if (pageType === 'municipality') {
-    if (page._path.indexOf('kommunefakta') > 0) {
+    if (page._path.indexOf('/kommunefakta/') > -1) {
       municipalPageType = 'kommunefakta'
     }
-    if (page._path.indexOf('kommuneareal') > 0) {
+    if (page._path.indexOf('/kommuneareal/') > -1) {
       municipalPageType = 'kommuneareal'
     }
     metaInfoSearchContentType = 'kommunefakta'
