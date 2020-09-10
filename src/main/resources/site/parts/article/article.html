@@ -4,7 +4,7 @@
             <div class="title-ingress-wrapper">
                 <p class="introTitle" data-th-if="${introTitle}" data-th-text="${introTitle}"/>
                 <h1 class="col-lg-10" data-th-text="${title}" />
-                <p class="ingress col-lg-8" data-th-text="${ingress}" />
+                <p class="ingress col-lg-8" data-th-if="${ingress}" data-th-text="${ingress}" />
             </div>
         </div>
         <div class="col-12 p-0">

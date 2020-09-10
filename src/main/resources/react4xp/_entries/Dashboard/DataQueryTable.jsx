@@ -46,6 +46,7 @@ const SortOrder = {
 const DataQueryTable = ({
   queries, renderDataQueries
 }) => {
+//class DataQueryTable extends React.Component {
   const [currSort, setCurrSort] = useState(SortFields.LAST_UPDATED)
   const [currOrder, setCurrOrder] = useState(SortOrder.DESCENDING)
   const [sorted, setSorted] = useState(
@@ -126,4 +127,4 @@ DataQueryTable.propTypes = {
   renderDataQueries: PropTypes.func.isRequired
 }
 
-export default DataQueryTable
+export default (props) => <DataQueryTable {...props} />

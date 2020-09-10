@@ -1,8 +1,24 @@
 .table {
-  @include media-breakpoint-down(md) {
-    padding: 0;
+  .download-table-container {
+    display: flex;
+    margin-bottom: $spacer * 1;
+
+    @include media-breakpoint-up(lg) {
+      justify-content: flex-end;
+    }
+
+    @include media-breakpoint-down(md) {
+      margin-top: $spacer * 2;
+      margin-bottom: $spacer * 2;
+    }
+
+    .ssb-dropdown {
+      @include media-breakpoint-down(md) {
+        width: 100%;
+      }
+    }
   }
-  
+
   font-family: $font-roboto-plain;
   width: 100%;
   border-collapse: collapse;
@@ -11,6 +27,12 @@
   .ssb-link {
     display: inline-block;
     margin-top: 20px;
+  }
+
+  .source {
+    a {
+      margin-top: 10px;
+    }
   }
 }
 
@@ -67,6 +89,7 @@ th {
 //specific styling for statistics tables. remove class "statistics" if no longer needed
 table.statistics {
   overflow: scroll;
+  width: 100%;
 
   caption {
     border: 1px solid $ssb-dark-5;
@@ -169,6 +192,8 @@ table.statistics {
     td {
       text-align: right;
       vertical-align: bottom;
+      //height works like min-height in tables and min-height won't work
+      height: 36px;
     }
 
     th {
@@ -215,9 +240,9 @@ table.statistics {
 
     th {
       padding-top: 1.5em;
-      text-align: center;
+      text-align: right;
 
-      &.colspan {
+      &[colspan] {
         text-align: center;
         font-weight: normal;
       }
@@ -234,14 +259,14 @@ table.statistics {
 
     tr {
       border: none;
-      
+
       td {
         padding: 0.2em 0.6em 0.2em 0.6em;
         word-wrap: break-word;
         border: none;
         line-height: 28px;
       }
-      
+
       &.footnote {
         td {
           sup {
@@ -255,7 +280,7 @@ table.statistics {
           padding-top: 1em;
         }
       }
-      
+
       &:first-of-type > td {
         padding-top: 2em
       }
