@@ -5,6 +5,11 @@ export interface MunicipalityAlert {
   message: string;
 
   /**
+   * Velg hvilke sidetype varselet skal vises på
+   */
+  municipalPageType: "kommunefakta" | "kommuneareal" | "showOnAll";
+
+  /**
    * Velg hvilken kommuner det gjelder her.
    */
   municipalCodes?: string;
