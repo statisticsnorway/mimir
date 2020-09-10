@@ -25,7 +25,7 @@ class Table extends React.Component {
 
     const downloadTable = (item) => {
       if (item.id === 'downloadTableAsCSV') {
-        {this.downloadTableAsCSV()}
+        { this.downloadTableAsCSV() }
       }
     }
 
@@ -163,17 +163,18 @@ class Table extends React.Component {
   }
 
   createBodyTh(row) {
-    return Object.keys(row).map(function(keyName, keyIndex) {
-      const value = row[keyName]
-      if (keyName === 'th') {
+    return Object.keys(row).map((key, index) => {
+      const value = row[key]
+      if (key === 'th') {
         if (typeof value === 'string' | typeof value === 'number') {
           return (
-            <th key={keyIndex}>{value}</th>
+            <th key={index}>{value}</th>
           )
         } else {
           return (
-            <th key={keyIndex} className={value.class} rowSpan={value.rowspan} colSpan={value.colspan} >
+            <th key={index} className={value.class} rowSpan={value.rowspan} colSpan={value.colspan}>
               {value.content}
+              {this.addNoteRefs(value.noterefs)}
             </th>
           )
         }
