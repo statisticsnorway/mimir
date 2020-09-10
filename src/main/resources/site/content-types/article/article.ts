@@ -81,17 +81,17 @@ export interface Article {
     /**
      * Lenke til tilhørende statistikk (XP)
      */
-    appurtenantStatisticsXP?: {
+    XP?: {
       /**
        * Statistikk
        */
-      appurtenantStatisticsXPContent?: string;
+      content?: string;
     };
 
     /**
      * Lenke til tilhørende statistikk (4.7.)
      */
-    appurtenantStatisticsCMS?: {
+    CMS?: {
       /**
        * URL
        */

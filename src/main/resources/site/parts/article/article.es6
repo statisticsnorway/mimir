@@ -76,18 +76,21 @@ function renderPart(req) {
     introTitle: page.data.introTitle
   }
 
+  const body = render(view, model)
+  const dividerBody = divider.renderBody({
+    body
+  })
+
   return {
-    body: divider.renderBody({
-      body: render(view, model)
-    }),
+    body: appurtenantStatistics.length ? dividerBody : body,
     contentType: 'text/html'
   }
 }
 
 const getAppurtenantStatisticsLinks = (appurtenantStatisticsConfig) => {
   return appurtenantStatisticsConfig.map((option) => {
-    if (option._selected === 'appurtenantStatisticsXP') {
-      const appurtenantStatisticsXP = option.appurtenantStatisticsXP.appurtenantStatisticsXPContent
+    if (option._selected === 'XP') {
+      const appurtenantStatisticsXP = option.XP.content
       const appurtenantStatisticsXPContent = get({
         key: appurtenantStatisticsXP
       })
@@ -98,8 +101,8 @@ const getAppurtenantStatisticsLinks = (appurtenantStatisticsConfig) => {
           id: appurtenantStatisticsXP
         })
       }
-    } else if (option._selected === 'appurtenantStatisticsCMS') {
-      const appurtenantStatisticsCMS = option.appurtenantStatisticsCMS
+    } else if (option._selected === 'CMS') {
+      const appurtenantStatisticsCMS = option.CMS
 
       return {
         ...appurtenantStatisticsCMS

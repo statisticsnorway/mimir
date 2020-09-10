@@ -105,8 +105,10 @@
     }
   }
 
-  section.part-divider:last-child {
-    display: none;
+  #dividerId {
+    & > * {
+      margin-top: $spacer * 4;
+    }
   }
 
   .appurtenant-statistics-wrapper {

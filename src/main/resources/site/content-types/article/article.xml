@@ -61,10 +61,10 @@
             <expanded>false</expanded>
             <occurrences minimum="0" maximum="0"/>
             <options minimum="1" maximum="1">
-                <option name="appurtenantStatisticsXP">
+                <option name="XP">
                     <label>Lenke til tilhørende statistikk (XP)</label>
                     <items>
-                        <input name="appurtenantStatisticsXPContent" type="ContentSelector">
+                        <input name="content" type="ContentSelector">
                             <label>Statistikk</label>
                             <occurrences minimum="0" maximum="1" />
                             <config>
@@ -74,7 +74,7 @@
                     </items>
                 </option>
 
-                <option name="appurtenantStatisticsCMS">
+                <option name="CMS">
                     <label>Lenke til tilhørende statistikk (4.7.)</label>
                     <items>
                         <input name="href" type="TextLine">
