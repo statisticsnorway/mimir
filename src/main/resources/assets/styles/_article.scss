@@ -72,7 +72,7 @@
   }
 
   .article-body {
-    @include make-row();
+    @include make-row;
 
     & > * {
       @include make-col-ready();
@@ -106,8 +106,19 @@
   }
 
   #dividerId {
+    @include make-row;
+
     & > * {
       margin-top: $spacer * 4;
+
+      @include media-breakpoint-down(md) {
+        @include make-col-ready();
+        @include make-col(12);
+      }
+    }
+
+    @include media-breakpoint-up(lg) {
+      margin: 0;
     }
   }
 
