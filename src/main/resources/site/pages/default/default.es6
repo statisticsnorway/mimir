@@ -197,6 +197,17 @@ exports.get = function(req) {
     })
   }
 
+  const breadcrumbs = getBreadcrumbs(page, municipality)
+
+  const breadcrumbComponent = new React4xp('Breadcrumb')
+  breadcrumbComponent.setProps({
+    items: breadcrumbs
+  })
+    .setId('breadcrumbs')
+    .uniqueId()
+
+  log.info('Add id %s', JSON.stringify(breadcrumbComponent.react4xpId, null, 2))
+
   const model = {
     pageTitle: 'SSB', // not really used on normal pages because of SEO app (404 still uses this)
     page,
@@ -217,21 +228,17 @@ exports.get = function(req) {
     metaInfoSearchGroup,
     metaInfoSearchContentType,
     metaInfoSearchKeywords,
-    metaInfoDescription
+    metaInfoDescription,
+    breadcrumbsReactId: breadcrumbComponent.react4xpId
   }
 
   const thymeleafRenderBody = thymeleaf.render(view, model)
-  const breadcrumbs = getBreadcrumbs(page, municipality)
 
-  const breadcrumbComponent = new React4xp('Breadcrumb')
-    .setProps({
-      items: breadcrumbs
-    })
-    .setId('breadcrumbs')
 
   const bodyWithBreadCrumbs = breadcrumbComponent.renderBody({
     body: thymeleafRenderBody
   })
+
 
   const alerts = alertsForContext(municipality, municipalPageType)
   const bodyWithAlerts = alerts.length ?

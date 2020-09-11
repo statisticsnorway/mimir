@@ -81,6 +81,7 @@ function renderPart(req) {
       ariaLabelSearchButton: searchText
     })
     .setId('inputStickyMenu')
+    .uniqueId()
 
   const municipalityName = municipality ? removeCountyFromMunicipalityName(municipality.displayName) : undefined
 
@@ -92,16 +93,16 @@ function renderPart(req) {
     dataServiceUrl,
     municipality: municipality,
     municipalities: parsedMunicipalities,
-    municipalityName: municipalityName
+    municipalityName: municipalityName,
+    inputStickyMenuId: inputStickyMenu.react4xpId
   }
+
   const thymeleafRender = render(view, model)
-  log.info('thymeleaf render length of thymeleafRender: %s', JSON.stringify(thymeleafRender.length, null, 2))
+
   const body = inputStickyMenu.renderBody({
     body: thymeleafRender
   })
-  log.info('%s', JSON.stringify('inputStickyMenu', null, 2))
-  log.info('react render length of stickymenu: %s', JSON.stringify(body.length, null, 2))
-
+  
   return {
     body,
     contentType: 'text/html'
