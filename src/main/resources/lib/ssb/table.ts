@@ -19,13 +19,13 @@ const util: UtilLibrary = __non_webpack_require__( '/lib/util')
 export function parseTable(req: Request, table: Content<Table>): TableView {
   const tableViewData: TableView = {
     caption: undefined,
-    thead: undefined,
-    tbody: undefined,
+    thead: [],
+    tbody: [],
     tfoot: {
       footnotes: [],
       correctionNotice: ''
     },
-    tableClass: undefined,
+    tableClass: '',
     noteRefs: []
   }
 
@@ -40,16 +40,15 @@ export function parseTable(req: Request, table: Content<Table>): TableView {
       const title: Title = tbmlData.tbml.metadata.title
       const headRows: Array<TableRow> = util.data.forceArray(tbmlData.tbml.presentation.table.thead.tr) as Array<TableRow>
       const bodyRows: Array<TableRow> = util.data.forceArray(tbmlData.tbml.presentation.table.tbody.tr) as Array<TableRow>
-      const noteRefs: Array<string> = []
-      if (title.noterefs) {
-        noteRefs.push(title.noterefs)
-      }
+
+      const noteRefs: Array<string> = title.noterefs ? [title.noterefs] : []
       headRows.forEach((row) => {
-        getNoterefs(row, noteRefs)
+        util.data.forceArray(row.th).forEach((th: PreliminaryData) => th.noterefs ? noteRefs.push(th.noterefs) : null)
       })
       bodyRows.forEach((row) => {
-        getNoterefs(row, noteRefs)
+        util.data.forceArray(row.th).forEach((th: PreliminaryData) => th.noterefs ? noteRefs.push(th.noterefs) : null)
       })
+
       tableViewData.caption = title
       tableViewData.thead = headRows
       tableViewData.tbody = bodyRows
@@ -69,25 +68,14 @@ export function parseTable(req: Request, table: Content<Table>): TableView {
   return tableViewData
 }
 
-function getNoterefs(row: TableRow, noteRefs: Array<string>): Array<string> {
-  const cellArray: Array<PreliminaryData> = util.data.forceArray(row.th) as Array<PreliminaryData>
-  cellArray.forEach((cell) => {
-    if (cell.noterefs) {
-      noteRefs.push(cell.noterefs)
-    }
-  })
-
-  return noteRefs
-}
-
 interface TableView {
   caption?: Title;
-  thead?: Array<TableRow>;
-  tbody?: Array<TableRow>;
+  thead: Array<TableRow>;
+  tbody: Array<TableRow>;
   tfoot: {
     footnotes: Array<Note>;
     correctionNotice: string;
   };
-  tableClass?: string;
+  tableClass: string;
   noteRefs: Array<string>;
 }
