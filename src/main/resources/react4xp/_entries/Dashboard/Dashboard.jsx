@@ -277,6 +277,7 @@ class Dashboard extends React.Component {
                 onSuccess={() => this.showSuccess}
                 refreshStatregDataUrl={this.props.refreshStatregDataUrl}
                 currStatus={this.props.statRegFetchStatuses}
+                io={this.state.io}
               />
 
               <Row className="my-3">

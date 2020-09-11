@@ -9,6 +9,18 @@ import { Accordion } from '@statisticsnorway/ssb-component-library'
 const SIMPLE_DATE_FORMAT = 'DD.MM.YYYY HH:mm'
 
 class StatRegDashboard extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      loadingJobs: true,
+      statRegJobs: []
+    }
+  }
+  componentDidMount() {
+    // NOTE fetch statreg jobs
+  }
+
   statusIcon(item) {
     return item.status === 'Success' ? 'ok' : 'error'
   }
@@ -35,6 +47,10 @@ class StatRegDashboard extends React.Component {
   }
 
   renderTable() {
+    if (this.state.loadingJobs) {
+      return (<span className="spinner-border spinner-border" />)
+    }
+
     const {
       contacts, statistics, publications
     } = this.props.currStatus
@@ -119,7 +135,8 @@ StatRegDashboard.propTypes = {
     contacts: StatRegFetchInfo,
     statistics: StatRegFetchInfo,
     publications: StatRegFetchInfo
-  })
+  }),
+  io: PropTypes.object
 }
 
 export const StatRegFetchInfo = PropTypes.shape({
