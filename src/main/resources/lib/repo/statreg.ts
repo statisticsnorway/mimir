@@ -11,6 +11,7 @@ import { StatRegFetchInfo,
 import moment = require('moment')
 import { EventLogLib } from './eventLog'
 import { RepoLib } from './repo'
+import { Socket, SocketEmitter } from '../types/socket'
 
 const {
   ensureArray
@@ -256,4 +257,10 @@ export function getStatRegFetchStatuses(): object {
       [key]: eventLogNode ? eventLogNode.data.latestEventInfo : {}
     }
   }, {})
+}
+
+export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
+  socket.on('statreg-dashboard-get-status-update', () => {
+    socket.emit('statreg-dashboard-status-update', getStatRegFetchStatuses())
+  })
 }

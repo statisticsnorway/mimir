@@ -26,9 +26,86 @@ const byParentType = groupBy((dataQuery) => {
   return dataQuery.parentType
 })
 
+const ioWrapper = (wsConnection) => {
+  if (!wsConnection) {
+    wsConnection = new ExpWS()
+  }
+  const io = new wsConnection.Io()
+  const connectionListeners = []
+  const state = {
+    isConnected: false,
+    wsConnection,
+    emit: io.emit,
+    on: io.on
+  }
+
+  /**
+   * @public
+   * @param {string} key
+   * @param {function} callback
+   */
+  const listenToConnectionEvent = function(key, callback) {
+    connectionListeners.push({
+      key,
+      callback
+    })
+  }
+
+  /**
+   * @private
+   * @param {object} event
+   */
+  const onConnectionOpen = function(event) {
+    connectionListeners.forEach((l) => {
+      if (l.key === 'open') {
+        l.callback(event)
+      }
+    })
+
+    // keep-alive for socket (or it will timeout and stop working after 5 minutes)
+    setInterval(() => {
+      io.emit('keep-alive', 'ping')
+    }, 1000 * 60 * 3)
+  }
+
+  /**
+   * @private
+   * @param {object} event
+   */
+  const onConnectionClose = function(event) {
+    connectionListeners.forEach((l) => {
+      if (l.key === 'close') {
+        l.callback(event)
+      }
+    })
+  }
+
+  // listen to open and close ws connection, so we can tell the user they have disconnected
+  wsConnection.setEventHandler('close', (event) => {
+    state.isConnected = false
+    onConnectionClose(event)
+  })
+
+  wsConnection.setEventHandler('open', (event) => {
+    state.isConnected = true
+    onConnectionOpen(event)
+  })
+
+  return Object.assign(state, {
+    listenToConnectionEvent
+  })
+}
+
 class Dashboard extends React.Component {
   constructor(props) {
     super(props)
+
+    const io = ioWrapper()
+
+    io.listenToConnectionEvent('open', (e) => this.onConnectionOpen(e))
+    io.listenToConnectionEvent('close', (e) => this.onConnectionClose(e))
+
+
     this.state = {
       dataQueries: props.dataQueries,
       statRegData: props.statRegFetchStatuses,
@@ -36,11 +113,13 @@ class Dashboard extends React.Component {
       successMsg: '',
       showErrorAlert: false,
       showSuccessAlert: false,
-      wsConnection: new ExpWS(),
-      io: null,
-      isConnected: false
+      io,
+      isConnected: io.isConnected
     }
 
+    if (io.isConnected) {
+      this.onConnectionOpen()
+    }
     this.renderDataQueries = this.renderDataQueries.bind(this)
   }
 
@@ -54,39 +133,14 @@ class Dashboard extends React.Component {
     this.setState({
       isConnected: true
     })
+
+    // tell the server which user is connected
     this.state.io.emit('dashboard-register-user', {
       user: this.props.userLogin
     })
-  }
 
-  componentDidMount() {
-    const {
-      wsConnection
-    } = this.state
-
-    // listen to open and close ws connection, so we can tell the user they have disconnected
-    wsConnection.setEventHandler('close', (event) => {
-      this.onConnectionClose(event)
-    })
-
-    wsConnection.setEventHandler('open', (event) => {
-      this.onConnectionOpen(event)
-    })
-
-    this.setState({
-      io: new wsConnection.Io()
-    })
-
-    // keep-alive for socket (or it will timeout and stop working after 5 minutes)
-    setInterval(() => {
-      this.state.io.emit('keep-alive', 'ping')
-    }, 1000 * 60 * 3)
-  }
-
-  componentDidUpdate() {
-    if (this.state.io) {
-      this.setupWSListener()
-    }
+    // setup dataset listeners
+    this.setupWSListener()
   }
 
   setupWSListener() {

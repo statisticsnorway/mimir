@@ -16,9 +16,26 @@ class StatRegDashboard extends React.Component {
       loadingJobs: true,
       statRegJobs: []
     }
+
+    this.props.io.listenToConnectionEvent('open', (e) => this.onConnectionOpen(e))
+
+    if (this.props.io.isConnected) {
+      this.onConnectionOpen()
+    }
   }
-  componentDidMount() {
-    // NOTE fetch statreg jobs
+
+  onConnectionOpen() {
+    this.setupListeners()
+    this.props.io.emit('statreg-dashboard-get-status-update')
+  }
+
+  setupListeners() {
+    this.props.io.on('statreg-dashboard-status-update', (statregStatuses) => {
+      this.setState({
+        loadingJobs: false
+      })
+      console.log(statregStatuses)
+    })
   }
 
   statusIcon(item) {
