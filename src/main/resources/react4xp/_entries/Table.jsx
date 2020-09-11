@@ -59,6 +59,7 @@ class Table extends React.Component {
         return (
           <caption noterefs={this.props.table.caption.noterefs}>
             {this.props.table.caption.content}
+            {this.addNoteRefs(this.props.table.caption.noterefs)}
           </caption>
         )
       } else {
@@ -104,15 +105,16 @@ class Table extends React.Component {
     const {
       footnotes, correctionNotice
     } = this.props.table.tfoot
-
-    if (footnotes.length > 0 || correctionNotice) {
+    const noteRefsList = this.props.table.noteRefs
+    if (footnotes.length > 0 && noteRefsList.length > 0 || correctionNotice) {
       return (
         <tfoot>
-          {footnotes.map((footnote, index) => {
+          {noteRefsList.map((noteRef, index) => {
+            const footNote = footnotes.find((note) => note.noteid === noteRef)
             return (
               <tr key={index} className="footnote">
                 <td colSpan="100%">
-                  <sup>{index + 1}</sup>{footnote}
+                  <sup>{index + 1}</sup>{footNote.content}
                 </td>
               </tr>
             )
@@ -129,7 +131,7 @@ class Table extends React.Component {
       return rows.map((row, i) => {
         return (
           <tr key={i}>
-            { this.createCell(row) }
+            { this.createHeaderCell(row) }
           </tr>
         )
       })
@@ -140,7 +142,6 @@ class Table extends React.Component {
     if (rows) {
       return rows.map((row, i) => {
         return (
-        // TODO: When parsing Tbml has correct order use createCell
           <tr key={i}>
             { this.createBodyTh(row) }
             { this.createBodyTd(row) }
@@ -150,18 +151,88 @@ class Table extends React.Component {
     }
   }
 
-  createBodyTh(row) {
-    return Object.keys(row).map(function(keyName, keyIndex) {
+  createHeaderCell(row) {
+    return Object.keys(row).map((keyName, keyIndex) => {
       const value = row[keyName]
       if (keyName === 'th') {
+        return (
+          this.createHeadTh(keyName, value, keyIndex)
+        )
+      } else if (keyName === 'td') {
+        return (
+          this.createHeadTd(keyName, value, keyIndex)
+        )
+      }
+    })
+  }
+
+  createHeadTh(key, value, index) {
+    if (typeof value === 'string' | typeof value === 'number') {
+      return (
+        <th key={index}>{value}</th>
+      )
+    } else {
+      if (Array.isArray(value)) {
+        return value.map((cellValue, i) => {
+          if (typeof cellValue === 'object') {
+            if (Array.isArray(cellValue)) {
+              //TODO: Because some values is split into array by xmlParser i have to do this, find better fix
+              return (
+                <th key={i}>{cellValue.join(' ')}</th>
+              )
+            } else {
+              return (
+                <th key={i} className={cellValue.class} rowSpan={cellValue.rowspan} colSpan={cellValue.colspan}>
+                  {cellValue.content}
+                  {this.addNoteRefs(cellValue.noterefs)}
+                </th>
+              )
+            }
+          } else {
+            return (
+              <th key={i}>{cellValue}</th>
+            )
+          }
+        })
+      } else {
+        return (
+          <th key={key} className={value.class} rowSpan={value.rowspan} colSpan={value.colspan}>
+            {value.content}
+            {this.addNoteRefs(value.noterefs)}
+          </th>
+        )
+      }
+    }
+  }
+
+  createHeadTd(key, value, index) {
+    if (typeof value === 'string' | typeof value === 'number') {
+      return (
+        <td key={index}>{value}</td>
+      )
+    } else {
+      return (
+        <td key={key} className={value.class} rowSpan={value.rowspan} colSpan={value.colspan}>
+          {value.content}
+          {this.addNoteRefs(value.noterefs)}
+        </td>
+      )
+    }
+  }
+
+  createBodyTh(row) {
+    return Object.keys(row).map((key, index) => {
+      const value = row[key]
+      if (key === 'th') {
         if (typeof value === 'string' | typeof value === 'number') {
           return (
-            <th key={keyIndex}>{value}</th>
+            <th key={index}>{value}</th>
           )
         } else {
           return (
-            <th key={keyIndex} className={value.class} rowSpan={value.rowspan} colSpan={value.colspan} >
+            <th key={index} className={value.class} rowSpan={value.rowspan} colSpan={value.colspan}>
               {value.content}
+              {this.addNoteRefs(value.noterefs)}
             </th>
           )
         }
@@ -202,47 +273,16 @@ class Table extends React.Component {
     })
   }
 
-  createCell(row) {
-    return Object.keys(row).map(function(keyName, keyIndex) {
-      const value = row[keyName]
-      if (typeof value === 'string' | typeof value === 'number') {
+  addNoteRefs(noteRefId) {
+    if (noteRefId != undefined) {
+      const noteRefsList = this.props.table.noteRefs
+      const noteRefIndex = noteRefsList.indexOf(noteRefId)
+      if (noteRefIndex > -1) {
         return (
-          React.createElement(keyName, {
-            key: keyIndex
-          }, value)
+          <sup>{noteRefIndex + 1}</sup>
         )
-      } else {
-        if (Array.isArray(value)) {
-          return value.map((cellValue, i) => {
-            if (typeof cellValue === 'object') {
-              return (
-                React.createElement(keyName, {
-                  key: i,
-                  rowSpan: cellValue.rowspan,
-                  colSpan: cellValue.colspan,
-                  noterefs: cellValue.noterefs
-                }, cellValue.content)
-              )
-            } else {
-              return (
-                React.createElement(keyName, {
-                  key: i
-                }, cellValue)
-              )
-            }
-          })
-        } else {
-          return (
-            React.createElement(keyName, {
-              key: keyIndex,
-              rowSpan: value.rowspan,
-              colSpan: value.colspan,
-              noterefs: value.noterefs
-            }, value.content)
-          )
-        }
       }
-    })
+    }
   }
 
   addStandardSymbols() {
@@ -350,9 +390,15 @@ Table.propTypes = {
       })
     ),
     tfoot: PropTypes.shape({
-      footnotes: PropTypes.arrayOf(PropTypes.string),
+      footnotes: PropTypes.arrayOf(
+        PropTypes.shape({
+          noteid: PropTypes.string,
+          content: PropTypes.string
+        })
+      ),
       correctionNotice: PropTypes.string
-    })
+    }),
+    noteRefs: PropTypes.arrayOf(PropTypes.string)
   })
 }
 

@@ -91,7 +91,8 @@ function renderPart(req, tableId) {
         thead: table.thead,
         tbody: table.tbody,
         tfoot: table.tfoot,
-        tableClass: table.tableClass
+        tableClass: table.tableClass,
+        noteRefs: table.noteRefs
       },
       standardSymbol: standardSymbol,
       sources,
