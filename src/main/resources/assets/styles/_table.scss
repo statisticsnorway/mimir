@@ -148,6 +148,10 @@ table.statistics {
     td.sum {
       font-weight: bold;
     }
+
+    td.preliminary:before {
+      content: "*";
+    }
   }
 
   thead {
