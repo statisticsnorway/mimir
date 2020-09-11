@@ -67,7 +67,7 @@ export function parseTable(req: Request, table: Content<Table>): TableView {
 function getNoterefs(row: TableRow, noteRefs: Array<string>): Array<string> {
   util.data.forceArray(row.th).forEach((cell: PreliminaryData) => {
     if (typeof cell === 'object') {
-      if (cell.noterefs) {
+      if (cell.noterefs && noteRefs.indexOf(cell.noterefs) < 0) {
         noteRefs.push(cell.noterefs)
       }
     }
