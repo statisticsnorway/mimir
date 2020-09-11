@@ -1,3 +1,4 @@
+const auth = __non_webpack_require__('/lib/xp/auth')
 const {
   createMeasurement
 } = __non_webpack_require__('/lib/ssb/perf')
@@ -95,13 +96,7 @@ function renderPart(req) {
   perf.mark(MEASUREMENT_MARKS.REPO_DATASOURCES)
 
   const assets = getAssets()
-
-  // log.info(`Content with DataSource: ${contentWithDataSource.length}`)
-  // log.info(`Content DQ ${dataQueries.length}`)
-
-  // const dsIds = contentWithDataSource.map((ds) => ds.id)
-  // const int = filter((dq) => !!includes(dq.id, dsIds), dataQueries)
-  // log.info(`Content intersect ${int && Array.isArray(int) && int.map((i) => i.id)}`)
+  const user = auth.getUser()
 
   const dashboardDataset = new React4xp('Dashboard/Dashboard')
     .setProps({
@@ -115,6 +110,7 @@ function renderPart(req) {
       },
       contentStudioBaseUrl: `${DEFAULT_CONTENTSTUDIO_URL}#/default/edit/`,
       statRegFetchStatuses,
+      userLogin: user.login,
       ...assets
     })
     .setId('dataset')
@@ -144,7 +140,6 @@ function renderPart(req) {
   perf.measure(MEASUREMENT_MARKS.REPO_STATREG_FETCH, MEASUREMENT_MARKS.XP_DATAQUERIES, MEASUREMENT_MARKS.REPO_STATREG_FETCH)
   perf.measure(MEASUREMENT_MARKS.REPO_DATASOURCES, MEASUREMENT_MARKS.REPO_STATREG_FETCH, MEASUREMENT_MARKS.REPO_DATASOURCES)
   perf.measure(MEASUREMENT_MARKS.XP_RENDER, MEASUREMENT_MARKS.REPO_DATASOURCES, MEASUREMENT_MARKS.XP_RENDER)
-  // log.info(JSON.stringify(perf.getMeasurements(), null, 2))
 
   return {
     body,
@@ -157,8 +152,6 @@ function renderPart(req) {
  * @return {{dashboardService: *, stylesUrl: *, jsLibsUrl: *, logoUrl: *}}
  */
 function getAssets() {
-  log.info(`svc url :: dashboard ${serviceUrl({ service: 'dashboard '})}`)
-  log.info(`svc url :: statregDashboard ${serviceUrl({ service: 'statregDashboard '})}`)
   return {
     jsLibsUrl: assetUrl({
       path: 'js/bundle.js'

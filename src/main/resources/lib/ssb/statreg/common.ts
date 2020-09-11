@@ -1,8 +1,6 @@
 import { HttpLibrary, HttpResponse } from 'enonic-types/lib/http'
-import { XmlParser } from '../../types/xmlParser'
 import { QueryFilters } from '../../repo/common'
 
-const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 const http: HttpLibrary = __non_webpack_require__('/lib/http-client')
 
 export function filtersToQuery(filters: QueryFilters): string {
@@ -17,7 +15,6 @@ export function fetchStatRegData<T, XmlType>(
   serviceUrl: string,
   filters: QueryFilters,
   extractor: (payload: string) => Array<T>): Array<T> {
-
   const result: HttpResponse = http.request({
     url: `${serviceUrl}${filtersToQuery(filters)}`,
     method: 'GET',

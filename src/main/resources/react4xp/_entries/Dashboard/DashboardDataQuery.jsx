@@ -34,7 +34,9 @@ class DashboardDataQuery extends React.Component {
 
   requestDatasetUpdate(dataQueryId) {
     this.setLoading(dataQueryId, true)
-    this.props.io.emit('dashboard-refresh-dataset', {ids: [dataQueryId]})
+    this.props.io.emit('dashboard-refresh-dataset', {
+      ids: [dataQueryId]
+    })
   }
 
 
@@ -45,7 +47,7 @@ class DashboardDataQuery extends React.Component {
     return this.resultHandler(this.props.deleteRequest(dataQueryId))
   }
 
-  resultHandler(datasetInfo) {
+  resultHandler() {
     this.setLoading(false)
   }
 
@@ -145,7 +147,7 @@ DashboardDataQuery.propTypes = {
   deleteRequest: PropTypes.func,
   setLoading: PropTypes.func,
   contentStudioBaseUrl: PropTypes.string,
-  io: PropTypes.object,
+  io: PropTypes.object
 }
 
 export default (props) => <DashboardDataQuery {...props} />

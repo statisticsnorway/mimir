@@ -56,6 +56,9 @@ class Dashboard extends React.Component {
     this.setState({
       isConnected: true
     })
+    this.state.io.emit('dashboard-register-user', {
+      user: this.props.userLogin
+    })
   }
 
   componentDidMount() {
@@ -83,7 +86,7 @@ class Dashboard extends React.Component {
   }
 
   componentDidUpdate() {
-    if(this.state.io) {
+    if (this.state.io) {
       this.setupWSListener()
     }
   }
@@ -286,9 +289,9 @@ class Dashboard extends React.Component {
                       <h2 className="d-inline-block w-75">Data fra Statistikkregisteret</h2>
                       <div className="d-inline-block float-right">
                         <RefreshDataButton
-                            onSuccess={(message) => this.showSuccess('Statreg data er oppdatert')}
-                            onError={(message) => this.showError(message)}
-                            statregDashboardServiceUrl={this.props.refreshStatregDataUrl}
+                          onSuccess={(message) => this.showSuccess('Statreg data er oppdatert')}
+                          onError={(message) => this.showError(message)}
+                          statregDashboardServiceUrl={this.props.refreshStatregDataUrl}
                         />
                       </div>
                       {this.renderAccordionForStatRegFetches()}
@@ -382,7 +385,8 @@ Dashboard.propTypes = {
     contacts: StatRegFetchInfo,
     statistics: StatRegFetchInfo,
     publications: StatRegFetchInfo
-  })
+  }),
+  userLogin: PropTypes.string
 }
 
 export const DataQuery = PropTypes.shape({

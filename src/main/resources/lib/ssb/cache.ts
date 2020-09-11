@@ -349,10 +349,10 @@ export function fromRelatedFactPageCache(req: Request, key: string, fallback: ()
 
 export function fromDatasetRepoCache(
   key: string,
-  fallback: () => DatasetRepoNode<JSONstat | TbmlData> | null): DatasetRepoNode<JSONstat | TbmlData> | undefined {
+  fallback: () => DatasetRepoNode<JSONstat | TbmlData | object> | null): DatasetRepoNode<JSONstat | TbmlData | object> | undefined {
   return datasetRepoCache.get(key, () => {
     // log.info(`added ${key} to dataset repo cache`)
-    const res: DatasetRepoNode<JSONstat | TbmlData> | null = fallback()
+    const res: DatasetRepoNode<JSONstat | TbmlData | object> | null = fallback()
     // cant be null for some reason, so store it as undefined instead
     return res || undefined
   })
@@ -459,5 +459,7 @@ export interface SSBCacheLibrary {
   fromDividerCache: (dividerColor: string, fallback: () => string) => string;
   fromRelatedArticlesCache: (req: Request, key: string, fallback: () => unknown) => unknown;
   fromRelatedFactPageCache: (req: Request, key: string, fallback: () => unknown) => unknown;
-  fromDatasetRepoCache: (key: string, fallback: () => DatasetRepoNode<JSONstat | TbmlData> | null) => DatasetRepoNode<JSONstat | TbmlData> | undefined;
+  fromDatasetRepoCache:
+    (key: string, fallback: () => DatasetRepoNode<JSONstat | TbmlData | object> | null)
+      => DatasetRepoNode<JSONstat | TbmlData | object> | undefined;
 }
