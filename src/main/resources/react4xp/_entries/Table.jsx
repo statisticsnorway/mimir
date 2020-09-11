@@ -17,23 +17,25 @@ class Table extends React.Component {
     })
   }
 
-  addDownloadAsDropdown() {
+  addDownloadTableDropdown() {
     const {
-      downloadAsTitle,
-      downloadAsOptions
+      downloadTableLabel,
+      downloadTableTitle,
+      downloadTableOptions
     } = this.props
 
     const downloadTable = (item) => {
       if (item.id === 'downloadTableAsCSV') {
-        {this.downloadTableAsCSV()}
+        { this.downloadTableAsCSV() }
       }
     }
 
     return (
       <div className="download-table-container">
         <Dropdown
-          selectedItem={downloadAsTitle}
-          items={downloadAsOptions}
+          header={downloadTableLabel}
+          selectedItem={downloadTableTitle}
+          items={downloadTableOptions}
           onSelect={downloadTable}
         />
       </div>
@@ -280,7 +282,7 @@ class Table extends React.Component {
   render() {
     if (!isEmpty(this.props.table)) {
       return <div className="container">
-        {this.addDownloadAsDropdown()}
+        {this.addDownloadTableDropdown()}
         {this.createTable()}
         {this.addStandardSymbols()}
         {this.renderSources()}
@@ -294,8 +296,9 @@ class Table extends React.Component {
 }
 
 Table.propTypes = {
-  downloadAsTitle: PropTypes.object,
-  downloadAsOptions: PropTypes.arrayOf(
+  downloadTableLabel: PropTypes.string,
+  downloadTableTitle: PropTypes.object,
+  downloadTableOptions: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string,
       id: PropTypes.string
