@@ -3,6 +3,10 @@
     display: flex;
     margin-bottom: $spacer * 1;
 
+    label {
+      display: none;
+    }
+
     @include media-breakpoint-up(lg) {
       justify-content: flex-end;
     }
