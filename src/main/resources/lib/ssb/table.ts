@@ -42,12 +42,8 @@ export function parseTable(req: Request, table: Content<Table>): TableView {
       const bodyRows: Array<TableRow> = util.data.forceArray(tbmlData.tbml.presentation.table.tbody.tr) as Array<TableRow>
 
       const noteRefs: Array<string> = title.noterefs ? [title.noterefs] : []
-      headRows.forEach((row) => {
-        util.data.forceArray(row.th).forEach((th: PreliminaryData) => th.noterefs ? noteRefs.push(th.noterefs) : null)
-      })
-      bodyRows.forEach((row) => {
-        util.data.forceArray(row.th).forEach((th: PreliminaryData) => th.noterefs ? noteRefs.push(th.noterefs) : null)
-      })
+      headRows.forEach((row) => getNoterefs(row, noteRefs))
+      bodyRows.forEach((row) => getNoterefs(row, noteRefs))
 
       tableViewData.caption = title
       tableViewData.thead = headRows
@@ -66,6 +62,18 @@ export function parseTable(req: Request, table: Content<Table>): TableView {
   }
 
   return tableViewData
+}
+
+function getNoterefs(row: TableRow, noteRefs: Array<string>): Array<string> {
+  util.data.forceArray(row.th).forEach((cell: PreliminaryData) => {
+    if (typeof cell === 'object') {
+      if (cell.noterefs) {
+        noteRefs.push(cell.noterefs)
+      }
+    }
+  })
+
+  return noteRefs
 }
 
 interface TableView {
