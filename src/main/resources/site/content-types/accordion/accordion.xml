@@ -13,6 +13,15 @@
         </input>
         <input name="body" type="HtmlArea">
           <label>Innhold</label>
+          <config>
+            <exclude>*</exclude>
+            <include>Styles Bold Italic Underline Strike Cut Copy
+              JustifyBlock JustifyLeft JustifyCenter JustifyRight
+              BulletedList NumberedList Outdent Indent
+              SpecialChar Anchor Image Macro Link Unlink
+              Table TableBlockquote
+              Subscript Superscript</include>
+          </config>
           <occurrences minimum="0" maximum="1"/>
         </input>
         <item-set name="items">
@@ -25,6 +34,15 @@
             </input>
             <input type="HtmlArea" name="body">
               <label>Brødtekst</label>
+              <config>
+                <exclude>*</exclude>
+                <include>Styles Bold Italic Underline Strike Cut Copy
+                  JustifyBlock JustifyLeft JustifyCenter JustifyRight
+                  BulletedList NumberedList Outdent Indent
+                  SpecialChar Anchor Image Macro Link Unlink
+                  Table TableBlockquote
+                  Subscript Superscript</include>
+              </config>
               <occurrences minimum="0" maximum="1"/>
             </input>
           </items>
