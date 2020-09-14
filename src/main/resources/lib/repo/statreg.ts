@@ -11,7 +11,6 @@ import { StatRegFetchInfo,
 import moment = require('moment')
 import { EventLogLib } from './eventLog'
 import { RepoLib } from './repo'
-import { Socket, SocketEmitter } from '../types/socket'
 
 const {
   ensureArray
@@ -109,7 +108,7 @@ function logToEventLogAndUpdateLatestInfo(key: string, fetchEvent: StatRegFetchJ
   })
 }
 
-function toDisplayString(key: string): string {
+export function toDisplayString(key: string): string {
   switch (key) {
   case STATREG_REPO_CONTACTS_KEY: return 'kontakter'
   case STATREG_REPO_STATISTICS_KEY: return 'statistikk'
@@ -238,29 +237,4 @@ export function setupStatRegRepo(nodeConfig: Array<StatRegNodeConfig> = STATREG_
   setupStatRegEventLog()
   setupNodes(nodeConfig)
   log.info('StatReg Repo setup complete.')
-}
-
-export type StatRegLatestFetchInfoNodeType = StatRegLatestFetchInfoNode | readonly StatRegLatestFetchInfoNode[] | null;
-
-export function getStatRegFetchStatuses(): object {
-  return [
-    STATREG_REPO_CONTACTS_KEY,
-    STATREG_REPO_STATISTICS_KEY,
-    STATREG_REPO_PUBLICATIONS_KEY
-  ].reduce((acc, key) => {
-    const eventLogKey: string = `/statreg/${key}`
-    const eventLogNodeResult: StatRegLatestFetchInfoNodeType = getNode<StatRegLatestFetchInfoNode>(EVENT_LOG_REPO, EVENT_LOG_BRANCH, eventLogKey)
-    const eventLogNode: StatRegLatestFetchInfoNode = eventLogNodeResult && (Array.isArray(eventLogNodeResult) ? eventLogNodeResult[0] : eventLogNodeResult)
-
-    return {
-      ...acc,
-      [key]: eventLogNode ? eventLogNode.data.latestEventInfo : {}
-    }
-  }, {})
-}
-
-export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
-  socket.on('statreg-dashboard-get-status-update', () => {
-    socket.emit('statreg-dashboard-status-update', getStatRegFetchStatuses())
-  })
 }

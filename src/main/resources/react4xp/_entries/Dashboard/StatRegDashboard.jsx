@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { Button, Table, Row, Col } from 'react-bootstrap'
 import { RefreshCw } from 'react-feather'
 import moment from 'moment'
-import RefreshDataButton from './RefreshDataButton'
 import { Accordion } from '@statisticsnorway/ssb-component-library'
 
 const SIMPLE_DATE_FORMAT = 'DD.MM.YYYY HH:mm'
@@ -14,7 +13,7 @@ class StatRegDashboard extends React.Component {
 
     this.state = {
       loadingJobs: true,
-      statRegJobs: []
+      statRegStatuses: []
     }
 
     this.props.io.listenToConnectionEvent('open', (e) => this.onConnectionOpen(e))
@@ -26,39 +25,97 @@ class StatRegDashboard extends React.Component {
 
   onConnectionOpen() {
     this.setupListeners()
-    this.props.io.emit('statreg-dashboard-get-status-update')
+    this.props.io.emit('statreg-dashboard-status')
   }
 
   setupListeners() {
-    this.props.io.on('statreg-dashboard-status-update', (statregStatuses) => {
+    // get initial statreg statuses
+    this.props.io.on('statreg-dashboard-status-result', (statRegStatuses) => {
       this.setState({
-        loadingJobs: false
+        loadingJobs: false,
+        statRegStatuses
       })
-      console.log(statregStatuses)
+    })
+
+    // turn on spinner and block double refresh
+    this.props.io.on('statreg-dashboard-refresh-start', (statRegKey) => {
+      const {
+        statRegStatuses
+      } = this.state
+      const status = statRegStatuses.find((s) => s.key === statRegKey)
+      if (status) {
+        status.loading = true
+        this.setState({
+          statRegStatuses
+        })
+      }
+    })
+
+    // update result
+    this.props.io.on('statreg-dashboard-refresh-result', (newStatus) => {
+      const {
+        statRegStatuses
+      } = this.state
+      const oldStatus = statRegStatuses.find((s) => s.key === newStatus.key)
+      if (oldStatus) {
+        oldStatus.displayName = newStatus.displayName
+        oldStatus.status = newStatus.status
+        oldStatus.message = newStatus.message
+        oldStatus.completionTime = newStatus.completionTime
+        oldStatus.loading = false
+      } else {
+        statRegStatuses.push(newStatus)
+      }
+      this.setState({
+        loadingJobs: false,
+        statRegStatuses
+      })
     })
   }
 
-  statusIcon(item) {
-    return item.status === 'Success' ? 'ok' : 'error'
+  statusIcon(status) {
+    return status === 'Success' ? 'ok' : 'error'
   }
 
   formatDate(dateStr) {
-    return moment(dateStr).format(SIMPLE_DATE_FORMAT)
+    if (dateStr) {
+      return moment(dateStr).format(SIMPLE_DATE_FORMAT)
+    }
+    return '-'
   }
 
   refreshStatReg(key) {
-    // NOTE add socket stuff
+    const status = this.state.statRegStatuses.find((s) => s.key === key && !s.loading)
+    if (status) {
+      status.loading = true
+      this.setState({
+        statRegStatuses: this.state.statRegStatuses
+      })
+      this.props.io.emit('statreg-dashboard-refresh', [key])
+    }
   }
 
-  makeRefreshButton(key) {
+  refreshAll() {
+    const statRegStatusesNotLoading = this.state.statRegStatuses.filter((status) => !status.loading)
+    statRegStatusesNotLoading.forEach((status) => {
+      status.loading = true
+    })
+    this.props.io.emit('statreg-dashboard-refresh', statRegStatusesNotLoading.map((status) => status.key))
+    this.setState({
+      statRegStatuses: this.state.statRegStatuses
+    })
+  }
+
+  makeRefreshButton(statRegStatus) {
     return (
       <Button
         variant="primary"
         size="sm"
         className="mx-1"
-        onClick={() => this.refreshStatReg(key)}
+        onClick={() => this.refreshStatReg(statRegStatus.key)}
+        disabled={statRegStatus.loading}
       >
-        <RefreshCw size={16} />
+        { statRegStatus.loading ? <span className="spinner-border spinner-border-sm" /> : <RefreshCw size={16}/> }
       </Button>
     )
   }
@@ -68,9 +125,6 @@ class StatRegDashboard extends React.Component {
       return (<span className="spinner-border spinner-border" />)
     }
 
-    const {
-      contacts, statistics, publications
-    } = this.props.currStatus
     return (
       <Table bordered striped>
         <thead>
@@ -82,38 +136,24 @@ class StatRegDashboard extends React.Component {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td className={`${this.statusIcon(contacts)} dataset`}>
-              <a className="ssb-link" href="#">Kontakter</a>
-            </td>
-            <td>{this.formatDate(contacts.completionTime)}</td>
-            <td>{contacts.message}</td>
-            <td style={{
-              textAlign: 'center'
-            }}>{this.makeRefreshButton('contacts')}</td>
-          </tr>
-          <tr>
-            <td className={`${this.statusIcon(statistics)} dataset`}>
-              <a className="ssb-link" href="#">Statistikk</a>
-            </td>
-            <td>{this.formatDate(statistics.completionTime)}</td>
-            <td>{statistics.message}</td>
-            <td style={{
-              textAlign: 'center'
-            }}>{this.makeRefreshButton('statistics')}</td>
-          </tr>
-          <tr>
-            <td className={`${this.statusIcon(publications)} dataset`}>
-              <a className="ssb-link" href="#">Publiseringer</a>
-            </td>
-            <td>{this.formatDate(publications.completionTime)}</td>
-            <td>{publications.message}</td>
-            <td style={{
-              textAlign: 'center'
-            }}>
-              {this.makeRefreshButton('publications')}
-            </td>
-          </tr>
+          {this.state.statRegStatuses.map((statRegStatus, index) => {
+            const {
+              displayName,
+              status,
+              completionTime,
+              message
+            } = statRegStatus
+            return (
+              <tr key={index}>
+                <td className={`${this.statusIcon(status)} dataset`}>
+                  <a className="ssb-link my-0" href="#">{displayName}</a>
+                </td>
+                <td>{this.formatDate(completionTime)}</td>
+                <td>{message}</td>
+                <td className="text-center">{this.makeRefreshButton(statRegStatus)}</td>
+              </tr>
+            )
+          })}
         </tbody>
       </Table>
     )
@@ -127,11 +167,12 @@ class StatRegDashboard extends React.Component {
             <div className="p-4 tables-wrapper">
               <h2 className="d-inline-block w-75">Data fra Statistikkregisteret</h2>
               <div className="d-inline-block float-right">
-                <RefreshDataButton
-                  onSuccess={(message) => this.props.onSuccess('Statreg data er oppdatert')}
-                  onError={(message) => this.props.onError(message)}
-                  statregDashboardServiceUrl={this.props.refreshStatregDataUrl}
-                />
+                <Button
+                  onClick={() => this.refreshAll()}
+                  disabled={this.state.statRegStatuses.filter((s) => s.loading).length === this.state.statRegStatuses.length}
+                >
+                  Oppdater data
+                </Button>
               </div>
               <Accordion header="Status" className="mx-0" openByDefault={true}>
                 {this.renderTable()}
@@ -145,14 +186,8 @@ class StatRegDashboard extends React.Component {
 }
 
 StatRegDashboard.propTypes = {
-  refreshStatregDataUrl: PropTypes.string.isRequired,
   onSuccess: PropTypes.func.isRequired,
   onError: PropTypes.func.isRequired,
-  currStatus: PropTypes.shape({
-    contacts: StatRegFetchInfo,
-    statistics: StatRegFetchInfo,
-    publications: StatRegFetchInfo
-  }),
   io: PropTypes.object
 }
 

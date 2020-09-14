@@ -10,7 +10,7 @@ import DashboardDataQuery from './DashboardDataQuery'
 import DashboardButtons from './DashboardButtons'
 import ClearCacheButton from './ClearCacheButton'
 import Convert from './Convert'
-import StatRegDashboard, { StatRegFetchInfo } from './StatRegDashboard'
+import StatRegDashboard from './StatRegDashboard'
 import Axios from 'axios'
 import { groupBy } from 'ramda'
 import DataQueryTable from './DataQueryTable'
@@ -108,7 +108,6 @@ class Dashboard extends React.Component {
 
     this.state = {
       dataQueries: props.dataQueries,
-      statRegData: props.statRegFetchStatuses,
       errorMsg: '',
       successMsg: '',
       showErrorAlert: false,
@@ -329,8 +328,6 @@ class Dashboard extends React.Component {
               <StatRegDashboard
                 onError={() => this.showError}
                 onSuccess={() => this.showSuccess}
-                refreshStatregDataUrl={this.props.refreshStatregDataUrl}
-                currStatus={this.props.statRegFetchStatuses}
                 io={this.state.io}
               />
 
@@ -401,7 +398,6 @@ Dashboard.propTypes = {
   header: PropTypes.string,
   dashboardService: PropTypes.string,
   clearCacheServiceUrl: PropTypes.string,
-  refreshStatregDataUrl: PropTypes.string,
   convertServiceUrl: PropTypes.string,
   dataQueries: PropTypes.arrayOf(
     PropTypes.shape(DataQuery)
@@ -415,11 +411,6 @@ Dashboard.propTypes = {
     updateList: PropTypes.bool
   }),
   contentStudioBaseUrl: PropTypes.string,
-  statRegFetchStatuses: PropTypes.shape({
-    contacts: StatRegFetchInfo,
-    statistics: StatRegFetchInfo,
-    publications: StatRegFetchInfo
-  }),
   userLogin: PropTypes.string
 }
 
