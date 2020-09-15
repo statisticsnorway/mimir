@@ -22,7 +22,7 @@ export function fetchStatistics(filters: QueryFilters): Array<StatisticInListing
 }
 
 function extractContacts(payload: string): Array<Contact> {
-  const kontaktXML: KontaktXML = __.toNativeObject(xmlParser.parse(payload))
+  const kontaktXML: KontaktXML = JSON.parse(xmlParser.parse(payload))
   const kontakter: Array<Kontakt> = kontaktXML.kontakter.kontakt
   return kontakter.map((k) => transformContact(k))
 }
@@ -65,7 +65,7 @@ export function transformPubllication(pub: Publisering): Publication {
 }
 
 export function extractPublications(payload: string): Array<Publication> {
-  const pubXML: PubliseringXML = __.toNativeObject(xmlParser.parse(payload))
+  const pubXML: PubliseringXML = JSON.parse(xmlParser.parse(payload))
   const publisering: Array<Publisering> = pubXML.publiseringer.publisering
   return publisering.map((pub) => transformPubllication(pub))
 }
