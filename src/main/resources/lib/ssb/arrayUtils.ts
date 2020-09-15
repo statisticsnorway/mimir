@@ -1,8 +1,9 @@
+import { UtilLibrary } from '../types/util'
 const {
   data: {
     forceArray
   }
-} = __non_webpack_require__( '/lib/util')
+}: UtilLibrary = __non_webpack_require__( '/lib/util')
 
 export function ensureArray<T>(candidate: Array<T> | null): Array<T> {
   return candidate ? forceArray(candidate) : []
