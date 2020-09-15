@@ -1,5 +1,5 @@
 import { QueryFilters, getNode } from '../../repo/common'
-import { STATISTICS_URL, CONTACTS_URL, PUBLICATIONS_URL } from './config'
+import { StatRegConfigLib } from './config'
 import { StatisticInListing,
   Contact,
   KontaktXML,
@@ -19,6 +19,13 @@ import { STATREG_REPO_STATISTICS_KEY } from '../../repo/statreg/statistics'
 import { STATREG_REPO_PUBLICATIONS_KEY } from '../../repo/statreg/publications'
 import { StatRegLatestFetchInfoNode } from '../../repo/statreg/eventLog'
 import { EVENT_LOG_REPO, EVENT_LOG_BRANCH } from '../../repo/eventLog'
+
+const {
+  STATISTICS_URL,
+  CONTACTS_URL,
+  PUBLICATIONS_URL,
+  getStatRegBaseUrl
+}: StatRegConfigLib = __non_webpack_require__('/lib/ssb/statreg/config')
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
 function extractStatistics(payload: string): Array<StatisticInListing> {
@@ -26,7 +33,7 @@ function extractStatistics(payload: string): Array<StatisticInListing> {
 }
 
 export function fetchStatistics(filters: QueryFilters): Array<StatisticInListing> {
-  return fetchStatRegData('Statistics', STATISTICS_URL, filters, extractStatistics)
+  return fetchStatRegData('Statistics', getStatRegBaseUrl() + STATISTICS_URL, filters, extractStatistics)
 }
 
 function extractContacts(payload: string): Array<Contact> {
@@ -55,7 +62,7 @@ export function transformContact(kontakt: Kontakt): Contact {
 }
 
 export function fetchContacts(filters: QueryFilters): Array<Contact> {
-  return fetchStatRegData('Contacts', CONTACTS_URL, filters, extractContacts)
+  return fetchStatRegData('Contacts', getStatRegBaseUrl() + CONTACTS_URL, filters, extractContacts)
 }
 
 export function transformPubllication(pub: Publisering): Publication {
@@ -80,7 +87,7 @@ export function extractPublications(payload: string): Array<Publication> {
 
 // TODO: this function has to be extended to fetch all publications (the URL used only pulls the 'upcoming' items!
 export function fetchPublications(filters: QueryFilters): Array<Publication> {
-  return fetchStatRegData('Publications', PUBLICATIONS_URL, filters, extractPublications)
+  return fetchStatRegData('Publications', getStatRegBaseUrl() + PUBLICATIONS_URL, filters, extractPublications)
 }
 
 export function refreshStatRegData(): Array<StatRegStatus> {
