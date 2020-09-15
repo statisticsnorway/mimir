@@ -111,6 +111,7 @@ function renderPart(req) {
       contentStudioBaseUrl: `${DEFAULT_CONTENTSTUDIO_URL}#/default/edit/`,
       statRegFetchStatuses,
       userLogin: user.login,
+      store: user.idProvider,
       ...assets
     })
     .setId('dataset')

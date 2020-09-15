@@ -57,7 +57,8 @@ class Dashboard extends React.Component {
       isConnected: true
     })
     this.state.io.emit('dashboard-register-user', {
-      user: this.props.userLogin
+      user: this.props.userLogin,
+      store: this.props.store
     })
   }
 
@@ -386,7 +387,8 @@ Dashboard.propTypes = {
     statistics: StatRegFetchInfo,
     publications: StatRegFetchInfo
   }),
-  userLogin: PropTypes.string
+  userLogin: PropTypes.string,
+  store: PropTypes.string
 }
 
 export const DataQuery = PropTypes.shape({
