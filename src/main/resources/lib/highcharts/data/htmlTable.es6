@@ -56,7 +56,6 @@ function convertToCorrectGraphFormat(seriesAndCategories, graphType, xAxisType) 
   } else if (graphType === 'column' || graphType === 'bar' ||
              graphType === 'barNegative' || graphType === 'area' || graphType === 'line') {
     return seriesAndCategories
-
   } else {
     return {
       categories: seriesAndCategories.categories,
@@ -94,7 +93,7 @@ function dataFormatPie(seriesAndCategories) {
   if (seriesAndCategories.categories.length === 1) {
     return {
       series: [{
-        name:'Antall',
+        name: 'Antall',
         data: seriesAndCategories.series.map((serie) => ({
           ...serie,
           y: serie.data[0]

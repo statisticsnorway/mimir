@@ -1,3 +1,4 @@
+/* eslint-disable new-cap */
 const {
   getMunicipality
 } = __non_webpack_require__( '/lib/klass/municipalities')
@@ -26,7 +27,7 @@ export function seriesAndCategoriesFromJsonStat(req, highchart, dataset, dataset
 
   if (highchart.data.graphType === 'barNegative') {
     return barNegativeFormat(dataset, dimensionFilter, xAxisLabel, yAxisLabel)
-  } else if(highchart.data.graphType === 'pie') {
+  } else if (highchart.data.graphType === 'pie') {
     return pieFormat(dataset, dimensionFilter, xAxisLabel)
   } else {
     return defaultFormat(dataset, dimensionFilter, xAxisLabel)
