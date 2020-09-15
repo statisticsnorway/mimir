@@ -1,6 +1,14 @@
 import { QueryFilters, getNode } from '../../repo/common'
 import { STATISTICS_URL, CONTACTS_URL, PUBLICATIONS_URL } from './config'
-import { StatisticInListing, Contact, KontaktXML, Kontakt, KontaktNavnType, KontaktNavn, Publisering, Publication, PubliseringXML } from './types'
+import { StatisticInListing,
+  Contact,
+  KontaktXML,
+  Kontakt,
+  KontaktNavnType,
+  KontaktNavn,
+  Publisering,
+  Publication,
+  PubliseringXML } from './types'
 import { fetchStatRegData } from './common'
 import { setupStatRegRepo, toDisplayString, STATREG_NODES } from '../../repo/statreg'
 import { XmlParser } from '../../types/xmlParser'

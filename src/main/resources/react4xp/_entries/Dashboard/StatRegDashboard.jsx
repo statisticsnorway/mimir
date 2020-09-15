@@ -146,7 +146,7 @@ class StatRegDashboard extends React.Component {
             return (
               <tr key={index}>
                 <td className={`${this.statusIcon(status)} dataset`}>
-                  <a className="ssb-link my-0" href="#">{displayName}</a>
+                  <a className="ssb-link my-0 text-capitalize" href="#">{displayName}</a>
                 </td>
                 <td>{this.formatDate(completionTime)}</td>
                 <td>{message}</td>

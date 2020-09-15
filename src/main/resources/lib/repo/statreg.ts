@@ -1,13 +1,13 @@
 import { RepoNode } from 'enonic-types/lib/node'
 import { QueryFilters, RepoCommonLib } from './common'
 import { ArrayUtilsLib } from '../ssb/arrayUtils'
-import { STATREG_REPO_CONTACTS_KEY, fetchContacts } from './statreg/contacts'
-import { STATREG_REPO_STATISTICS_KEY, fetchStatistics } from './statreg/statistics'
-import { STATREG_REPO_PUBLICATIONS_KEY, fetchPublications } from './statreg/publications'
+import { StatRegContactsLib } from './statreg/contacts'
+import { StatRegStatisticsLib } from './statreg/statistics'
+import { StatRegPublicationsLib } from './statreg/publications'
 import { StatRegFetchInfo,
   StatRegFetchJobNode,
-  StatRegFetchStatus,
-  StatRegLatestFetchInfoNode } from './statreg/eventLog'
+  StatRegLatestFetchInfoNode,
+  StatRegEventLog } from './statreg/eventLog'
 import moment = require('moment')
 import { EventLogLib } from './eventLog'
 import { RepoLib } from './repo'
@@ -24,6 +24,18 @@ const {
 const {
   createEventLog, updateEventLog, EVENT_LOG_BRANCH, EVENT_LOG_REPO
 }: EventLogLib = __non_webpack_require__('/lib/repo/eventLog')
+const {
+  StatRegFetchStatus
+}: StatRegEventLog = __non_webpack_require__('/lib/repo/statreg/eventLog')
+const {
+  STATREG_REPO_CONTACTS_KEY, fetchContacts
+}: StatRegContactsLib = __non_webpack_require__('/lib/repo/statreg/contacts')
+const {
+  STATREG_REPO_STATISTICS_KEY, fetchStatistics
+}: StatRegStatisticsLib = __non_webpack_require__('/lib/repo/statreg/statistics')
+const {
+  STATREG_REPO_PUBLICATIONS_KEY, fetchPublications
+}: StatRegPublicationsLib = __non_webpack_require__('/lib/repo/statreg/publications')
 
 export const STATREG_REPO: string = 'no.ssb.statreg'
 export const STATREG_BRANCH: string = 'master'
@@ -155,7 +167,7 @@ function setupNodes(fetchers: Array<StatRegNodeConfig>): void {
     })
 }
 
-export function configureNode(key: string, fetcher: (filters: QueryFilters) => any): StatRegNodeConfig {
+export function configureNode(key: string, fetcher: (filters: QueryFilters) => unknown): StatRegNodeConfig {
   return {
     key,
     fetcher
