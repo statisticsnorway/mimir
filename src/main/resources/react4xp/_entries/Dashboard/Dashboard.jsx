@@ -11,10 +11,8 @@ import DashboardButtons from './DashboardButtons'
 import ClearCacheButton from './ClearCacheButton'
 import Convert from './Convert'
 import StatRegDashboard from './StatRegDashboard'
-import RefreshDataButton from './RefreshDataButton'
 import Axios from 'axios'
 import { groupBy } from 'ramda'
-import { StatRegFetchInfo } from './types'
 import DataQueryTable from './DataQueryTable'
 import { Zap, ZapOff } from 'react-feather'
 import Badge from 'react-bootstrap/Badge'
@@ -28,21 +26,99 @@ const byParentType = groupBy((dataQuery) => {
   return dataQuery.parentType
 })
 
+const ioWrapper = (wsConnection) => {
+  if (!wsConnection) {
+    wsConnection = new ExpWS()
+  }
+  const io = new wsConnection.Io()
+  const connectionListeners = []
+  const state = {
+    isConnected: false,
+    wsConnection,
+    emit: io.emit,
+    on: io.on
+  }
+
+  /**
+   * @public
+   * @param {string} key
+   * @param {function} callback
+   */
+  const listenToConnectionEvent = function(key, callback) {
+    connectionListeners.push({
+      key,
+      callback
+    })
+  }
+
+  /**
+   * @private
+   * @param {object} event
+   */
+  const onConnectionOpen = function(event) {
+    connectionListeners.forEach((l) => {
+      if (l.key === 'open') {
+        l.callback(event)
+      }
+    })
+
+    // keep-alive for socket (or it will timeout and stop working after 5 minutes)
+    setInterval(() => {
+      io.emit('keep-alive', 'ping')
+    }, 1000 * 60 * 3)
+  }
+
+  /**
+   * @private
+   * @param {object} event
+   */
+  const onConnectionClose = function(event) {
+    connectionListeners.forEach((l) => {
+      if (l.key === 'close') {
+        l.callback(event)
+      }
+    })
+  }
+
+  // listen to open and close ws connection, so we can tell the user they have disconnected
+  wsConnection.setEventHandler('close', (event) => {
+    state.isConnected = false
+    onConnectionClose(event)
+  })
+
+  wsConnection.setEventHandler('open', (event) => {
+    state.isConnected = true
+    onConnectionOpen(event)
+  })
+
+  return Object.assign(state, {
+    listenToConnectionEvent
+  })
+}
+
 class Dashboard extends React.Component {
   constructor(props) {
     super(props)
+
+    const io = ioWrapper()
+
+    io.listenToConnectionEvent('open', (e) => this.onConnectionOpen(e))
+    io.listenToConnectionEvent('close', (e) => this.onConnectionClose(e))
+
+
     this.state = {
       dataQueries: props.dataQueries,
-      statRegData: props.statRegFetchStatuses,
       errorMsg: '',
       successMsg: '',
       showErrorAlert: false,
       showSuccessAlert: false,
-      wsConnection: new ExpWS(),
-      io: null,
-      isConnected: false
+      io,
+      isConnected: io.isConnected
     }
 
+    if (io.isConnected) {
+      this.onConnectionOpen()
+    }
     this.renderDataQueries = this.renderDataQueries.bind(this)
   }
 
@@ -56,40 +132,15 @@ class Dashboard extends React.Component {
     this.setState({
       isConnected: true
     })
+
+    // tell the server which user is connected
     this.state.io.emit('dashboard-register-user', {
       user: this.props.userLogin,
       store: this.props.store
     })
-  }
 
-  componentDidMount() {
-    const {
-      wsConnection
-    } = this.state
-
-    // listen to open and close ws connection, so we can tell the user they have disconnected
-    wsConnection.setEventHandler('close', (event) => {
-      this.onConnectionClose(event)
-    })
-
-    wsConnection.setEventHandler('open', (event) => {
-      this.onConnectionOpen(event)
-    })
-
-    this.setState({
-      io: new wsConnection.Io()
-    })
-
-    // keep-alive for socket (or it will timeout and stop working after 5 minutes)
-    setInterval(() => {
-      this.state.io.emit('keep-alive', 'ping')
-    }, 1000 * 60 * 3)
-  }
-
-  componentDidUpdate() {
-    if (this.state.io) {
-      this.setupWSListener()
-    }
+    // setup dataset listeners
+    this.setupWSListener()
   }
 
   setupWSListener() {
@@ -237,14 +288,6 @@ class Dashboard extends React.Component {
     )
   }
 
-  renderAccordionForStatRegFetches() {
-    return (
-      <Accordion header="Status" className="mx-0" openByDefault={true}>
-        <StatRegDashboard currStatus={this.state.statRegData} />
-      </Accordion>
-    )
-  }
-
   render() {
     const groupedQueries = byParentType(this.state.dataQueries)
     const tableQueries = this.state.dataQueries.filter((q) => q.type === 'mimir:table')
@@ -283,23 +326,11 @@ class Dashboard extends React.Component {
                 </Col>
               </Row>
 
-              <section className="xp-part part-dashboard container">
-                <Row>
-                  <Col>
-                    <div className="p-4 tables-wrapper">
-                      <h2 className="d-inline-block w-75">Data fra Statistikkregisteret</h2>
-                      <div className="d-inline-block float-right">
-                        <RefreshDataButton
-                          onSuccess={(message) => this.showSuccess('Statreg data er oppdatert')}
-                          onError={(message) => this.showError(message)}
-                          statregDashboardServiceUrl={this.props.refreshStatregDataUrl}
-                        />
-                      </div>
-                      {this.renderAccordionForStatRegFetches()}
-                    </div>
-                  </Col>
-                </Row>
-              </section>
+              <StatRegDashboard
+                onError={() => this.showError}
+                onSuccess={() => this.showSuccess}
+                io={this.state.io}
+              />
 
               <Row className="my-3">
                 <Col className="p-4 tables-wrapper">
@@ -368,7 +399,6 @@ Dashboard.propTypes = {
   header: PropTypes.string,
   dashboardService: PropTypes.string,
   clearCacheServiceUrl: PropTypes.string,
-  refreshStatregDataUrl: PropTypes.string,
   convertServiceUrl: PropTypes.string,
   dataQueries: PropTypes.arrayOf(
     PropTypes.shape(DataQuery)
@@ -382,11 +412,6 @@ Dashboard.propTypes = {
     updateList: PropTypes.bool
   }),
   contentStudioBaseUrl: PropTypes.string,
-  statRegFetchStatuses: PropTypes.shape({
-    contacts: StatRegFetchInfo,
-    statistics: StatRegFetchInfo,
-    publications: StatRegFetchInfo
-  }),
   userLogin: PropTypes.string,
   store: PropTypes.string
 }
