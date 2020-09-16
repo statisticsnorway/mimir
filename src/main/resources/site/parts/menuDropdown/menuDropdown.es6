@@ -100,11 +100,13 @@ function renderPart(req) {
   const thymeleafRender = render(view, model)
 
   const body = inputStickyMenu.renderBody({
-    body: thymeleafRender
+    body: thymeleafRender,
+    clientRender: true
   })
-  
+
   return {
     body,
+    pageContributions: inputStickyMenu.renderPageContributions(),
     contentType: 'text/html'
   }
 }

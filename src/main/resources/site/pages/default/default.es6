@@ -206,6 +206,11 @@ exports.get = function(req) {
     .setId('breadcrumbs')
     .uniqueId()
 
+  pageContributions = breadcrumbComponent.renderPageContributions({
+    pageContributions,
+    clientRender: true
+  })
+
   log.info('Add id %s', JSON.stringify(breadcrumbComponent.react4xpId, null, 2))
 
   const model = {
@@ -236,7 +241,8 @@ exports.get = function(req) {
 
 
   const bodyWithBreadCrumbs = breadcrumbComponent.renderBody({
-    body: thymeleafRenderBody
+    body: thymeleafRenderBody,
+    clientRender: true
   })
 
 
