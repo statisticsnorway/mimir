@@ -34,6 +34,15 @@
         </div>
         <div class="col-12 p-0">
             <div class="article-body" data-th-utext="${bodyText}" />
+            <section id="dividerId" class="xp-part part-divider"></section>
+            <div data-th-if="${#lists.size(associatedStatistics) >= 1}" class="associated-statistics-wrapper">
+                <h3>Tallene er hentet fra</h3>
+                <div data-th-each="associatedStatistic : ${associatedStatistics}">
+                    <p data-th-if="${associatedStatistic.title}">
+                        <a data-th-href="${associatedStatistic.href}" data-th-text="${associatedStatistic.title}" />
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 </section>
