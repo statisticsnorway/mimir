@@ -11,3 +11,8 @@ export function getContactsFromRepo() {
   const node: StatRegNode | null = getStatRegNode(STATREG_REPO_CONTACTS_KEY)
   return node ? node.content : null
 }
+
+export interface StartRegContactsLib {
+  fetchContacts: () => void;
+  getContactsFromRepo: () => void;
+}

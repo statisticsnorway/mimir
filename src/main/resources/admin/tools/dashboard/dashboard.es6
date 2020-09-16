@@ -40,9 +40,6 @@ const {
   getDataset,
   extractKey
 } = __non_webpack_require__('/lib/ssb/dataset/dataset')
-const {
-  getStatRegFetchStatuses
-} = __non_webpack_require__('/lib/repo/statreg')
 
 import { filter, includes } from 'ramda'
 
@@ -55,7 +52,6 @@ const MEASUREMENT_MARKS = {
   XP_DATASET: 'XP Dataset Fetch (content)',
   XP_DATAQUERIES: 'XP Dataqueries Fetch (content)',
   XP_CONTENT_TOTAL: 'XP Content (Total)',
-  REPO_STATREG_FETCH: 'StatReg Fetch (repo)',
   REPO_DATASOURCES: 'Fetch Datasources (from Repo)',
   XP_RENDER: 'XP Render Part'
 }
@@ -88,9 +84,6 @@ function renderPart(req) {
   const datasetMap = oldGetDataset()
   perf.mark(MEASUREMENT_MARKS.XP_DATASET)
   const dataQueries = oldGetDataQueries(datasetMap)
-  perf.mark(MEASUREMENT_MARKS.XP_DATAQUERIES)
-  const statRegFetchStatuses = getStatRegFetchStatuses()
-  perf.mark(MEASUREMENT_MARKS.REPO_STATREG_FETCH)
 
   const contentWithDataSource = prepDataSources(req, getContentWithDataSource())
   perf.mark(MEASUREMENT_MARKS.REPO_DATASOURCES)
@@ -109,8 +102,8 @@ function renderPart(req) {
         updateList: req.params.updateList ? true : false
       },
       contentStudioBaseUrl: `${DEFAULT_CONTENTSTUDIO_URL}#/default/edit/`,
-      statRegFetchStatuses,
       userLogin: user.login,
+      store: user.idProvider,
       ...assets
     })
     .setId('dataset')
@@ -137,8 +130,7 @@ function renderPart(req) {
   perf.measure(MEASUREMENT_MARKS.XP_DATASET, 'start', MEASUREMENT_MARKS.XP_DATASET)
   perf.measure(MEASUREMENT_MARKS.XP_DATAQUERIES, MEASUREMENT_MARKS.XP_DATASET, MEASUREMENT_MARKS.XP_DATAQUERIES)
   perf.measure(MEASUREMENT_MARKS.XP_CONTENT_TOTAL, 'start', MEASUREMENT_MARKS.XP_DATAQUERIES)
-  perf.measure(MEASUREMENT_MARKS.REPO_STATREG_FETCH, MEASUREMENT_MARKS.XP_DATAQUERIES, MEASUREMENT_MARKS.REPO_STATREG_FETCH)
-  perf.measure(MEASUREMENT_MARKS.REPO_DATASOURCES, MEASUREMENT_MARKS.REPO_STATREG_FETCH, MEASUREMENT_MARKS.REPO_DATASOURCES)
+  perf.measure(MEASUREMENT_MARKS.REPO_DATASOURCES, MEASUREMENT_MARKS.XP_DATAQUERIES, MEASUREMENT_MARKS.REPO_DATASOURCES)
   perf.measure(MEASUREMENT_MARKS.XP_RENDER, MEASUREMENT_MARKS.REPO_DATASOURCES, MEASUREMENT_MARKS.XP_RENDER)
 
   return {
@@ -159,9 +151,6 @@ function getAssets() {
     dashboardService: serviceUrl({
       service: 'dashboard'
     }),
-    statregRefreshUrl: serviceUrl({
-      service: 'statregDashboard'
-    }),
     stylesUrl: assetUrl({
       path: 'styles/bundle.css'
     }),
@@ -170,9 +159,6 @@ function getAssets() {
     }),
     clearCacheServiceUrl: serviceUrl({
       service: 'clearCache'
-    }),
-    refreshStatregDataUrl: serviceUrl({
-      service: 'statregDashboard'
     }),
     wsServiceUrl: serviceUrl({
       service: 'websocket'

@@ -5,6 +5,15 @@
     <form>
         <input type="HtmlArea" name="message">
             <label>Tekst</label>
+            <config>
+                <exclude>*</exclude>
+                <include>Styles Bold Italic Underline Strike Cut Copy
+                    JustifyBlock JustifyLeft JustifyCenter JustifyRight
+                    BulletedList NumberedList Outdent Indent
+                    SpecialChar Anchor Image Macro Link Unlink
+                    Table TableBlockquote
+                    Subscript Superscript</include>
+            </config>
             <occurrences minimum="1" maximum="1"/>
         </input>
         <input name="municipalPageType" type="RadioButton">
