@@ -51,7 +51,7 @@ export interface StatRegContent {
 
 export type StatRegNode = RepoNode & StatRegContent;
 
-export function createStatRegNode(name: string, content: StatRegContent): void{
+export function createStatRegNode(name: string, content: StatRegContent): void {
   createNode(STATREG_REPO, STATREG_BRANCH, {
     _path: name,
     _name: name,
@@ -249,4 +249,23 @@ export function setupStatRegRepo(nodeConfig: Array<StatRegNodeConfig> = STATREG_
   setupStatRegEventLog()
   setupNodes(nodeConfig)
   log.info('StatReg Repo setup complete.')
+}
+
+export interface StatRegRepoLib {
+  STATREG_REPO: string;
+  STATREG_BRANCH: string;
+  createStatRegNode: (name: string, content: StatRegContent) => void;
+  getStatRegNode: (key: string) => StatRegNode | null;
+  modifyStatRegNode: (key: string, content: StatRegContent) => StatRegNode;
+  toDisplayString: (key: string) => string;
+  configureNode: (key: string, fetcher: (filters: QueryFilters) => unknown) => StatRegNodeConfig;
+  STATREG_CONTACTS_NODE: StatRegNodeConfig;
+  STATREG_STATISTICS_NODE: StatRegNodeConfig;
+  STATREG_PUBLICATIONS_NODE: StatRegNodeConfig;
+  STATREG_NODES: Array<StatRegNodeConfig>;
+  setupStatRegEventLog: () => void;
+  EVENT_LOG_PREAMBLE_TIME_FMT: string;
+  eventLogPreamble: (key: string, eventTime: Date) => string;
+  createStatRegEvent: (key: string) => StatRegFetchJobNode;
+  setupStatRegRepo: (nodeConfig?: Array<StatRegNodeConfig>) => void;
 }

@@ -1,4 +1,4 @@
-import { QueryFilters, getNode } from '../../repo/common'
+import { QueryFilters, RepoCommonLib } from '../../repo/common'
 import { StatRegConfigLib } from './config'
 import { StatisticInListing,
   Contact,
@@ -9,16 +9,16 @@ import { StatisticInListing,
   Publisering,
   Publication,
   PubliseringXML } from './types'
-import { fetchStatRegData } from './common'
-import { setupStatRegRepo, toDisplayString, STATREG_NODES } from '../../repo/statreg'
+import { StatRegCommonLib } from './common'
+import { StatRegRepoLib } from '../../repo/statreg'
 import { XmlParser } from '../../types/xmlParser'
 import { find } from 'ramda'
 import { Socket, SocketEmitter } from '../../types/socket'
-import { STATREG_REPO_CONTACTS_KEY } from '../../repo/statreg/contacts'
-import { STATREG_REPO_STATISTICS_KEY } from '../../repo/statreg/statistics'
-import { STATREG_REPO_PUBLICATIONS_KEY } from '../../repo/statreg/publications'
+import { StatRegContactsLib } from '../../repo/statreg/contacts'
+import { StatRegStatisticsLib } from '../../repo/statreg/statistics'
+import { StatRegPublicationsLib } from '../../repo/statreg/publications'
 import { StatRegLatestFetchInfoNode } from '../../repo/statreg/eventLog'
-import { EVENT_LOG_REPO, EVENT_LOG_BRANCH } from '../../repo/eventLog'
+import { EventLogLib } from '../../repo/eventLog'
 
 const {
   STATISTICS_URL,
@@ -26,6 +26,29 @@ const {
   PUBLICATIONS_URL,
   getStatRegBaseUrl
 }: StatRegConfigLib = __non_webpack_require__('/lib/ssb/statreg/config')
+const {
+  fetchStatRegData
+}: StatRegCommonLib = __non_webpack_require__('/lib/ssb/statreg/common')
+const {
+  getNode
+}: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
+const {
+  STATREG_NODES,
+  setupStatRegRepo,
+  toDisplayString
+}: StatRegRepoLib = __non_webpack_require__('/lib/repo/statreg')
+const {
+  STATREG_REPO_CONTACTS_KEY
+}: StatRegContactsLib = __non_webpack_require__('/lib/repo/statreg/contacts')
+const {
+  STATREG_REPO_STATISTICS_KEY
+}: StatRegStatisticsLib = __non_webpack_require__('/lib/repo/statreg/statistics')
+const {
+  STATREG_REPO_PUBLICATIONS_KEY
+}: StatRegPublicationsLib = __non_webpack_require__('/lib/repo/statreg/publications')
+const {
+  EVENT_LOG_REPO, EVENT_LOG_BRANCH
+}: EventLogLib = __non_webpack_require__('/lib/repo/eventLog')
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
 function extractStatistics(payload: string): Array<StatisticInListing> {
@@ -65,7 +88,7 @@ export function fetchContacts(filters: QueryFilters): Array<Contact> {
   return fetchStatRegData('Contacts', getStatRegBaseUrl() + CONTACTS_URL, filters, extractContacts)
 }
 
-export function transformPubllication(pub: Publisering): Publication {
+export function transformPublication(pub: Publisering): Publication {
   const {
     id, variant, statistikkKortnavn, deskFlyt, endret
   } = pub
@@ -82,7 +105,7 @@ export function transformPubllication(pub: Publisering): Publication {
 export function extractPublications(payload: string): Array<Publication> {
   const pubXML: PubliseringXML = JSON.parse(xmlParser.parse(payload))
   const publisering: Array<Publisering> = pubXML.publiseringer.publisering
-  return publisering.map((pub) => transformPubllication(pub))
+  return publisering.map((pub) => transformPublication(pub))
 }
 
 // TODO: this function has to be extended to fetch all publications (the URL used only pulls the 'upcoming' items!
@@ -153,4 +176,17 @@ export interface StatRegStatus {
   message: string;
   startTime: string | undefined;
   status: string | undefined;
+}
+
+export interface SSBStatRegLib {
+  fetchStatistics: (filters: QueryFilters) => Array<StatisticInListing>;
+  transformContact: (kontakt: Kontakt) => Contact;
+  fetchContacts: (filters: QueryFilters) => Array<Contact>;
+  transformPublication: (pub: Publisering) => Publication;
+  extractPublications: (payload: string) => Array<Publication>;
+  fetchPublications: (filters: QueryFilters) => Array<Publication>;
+  refreshStatRegData: () => Array<StatRegStatus>;
+  getStatRegFetchStatuses: () => Array<StatRegStatus>;
+  getStatRegStatus: (key: string) => StatRegStatus;
+  setupHandlers: (socket: Socket, socketEmitter: SocketEmitter) => void;
 }
