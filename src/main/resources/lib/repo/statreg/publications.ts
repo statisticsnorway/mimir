@@ -1,7 +1,17 @@
-import { getStatRegNode, StatRegNode } from '../statreg'
-import { fetchPublications as fetchPublicationsSvc } from '../../ssb/statreg'
+import { StatRegNode, StatRegRepoLib } from '../statreg'
+import { SSBStatRegLib } from '../../ssb/statreg'
 import { Publication } from '../../ssb/statreg/types'
-import { ensureArray } from '../../ssb/arrayUtils'
+import { ArrayUtilsLib } from '../../ssb/arrayUtils'
+
+const {
+  ensureArray
+}: ArrayUtilsLib = __non_webpack_require__('/lib/ssb/arrayUtils')
+const {
+  fetchPublications: fetchPublicationsSvc
+}: SSBStatRegLib = __non_webpack_require__('/lib/ssb/statreg')
+const {
+  getStatRegNode
+}: StatRegRepoLib = __non_webpack_require__('/lib/repo/statreg')
 
 export const STATREG_REPO_PUBLICATIONS_KEY: string = 'publications'
 

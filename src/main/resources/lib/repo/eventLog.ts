@@ -1,9 +1,20 @@
-import { createNode, nodeExists, getChildNodes, getNode, withConnection } from './common'
+import { RepoCommonLib } from './common'
 import { NodeCreateParams, NodeQueryHit, NodeQueryResponse, RepoNode } from 'enonic-types/lib/node'
-import { repoExists, createRepo } from './repo'
+import { RepoLib } from './repo'
 import { EventInfo, QueryInfo } from './query'
 import { I18nLibrary } from 'enonic-types/lib/i18n'
 const i18n: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
+const {
+  nodeExists,
+  createNode,
+  getNode,
+  getChildNodes,
+  withConnection
+}: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
+const {
+  repoExists,
+  createRepo
+}: RepoLib = __non_webpack_require__('/lib/repo/repo')
 
 export const EVENT_LOG_REPO: string = 'no.ssb.eventlog'
 export const EVENT_LOG_BRANCH: string = 'master'
