@@ -6,7 +6,7 @@ export const PUBLICATIONS_URL: string = `/publisering/listSomXml`
 export const ALL_DATA_URL: string = `/*/listSomXml`
 
 export function getStatRegBaseUrl(): string {
-  return (app.config && app.config[STAT_REG_SVC_PROP]) || 'https://www.ssb.no/statbank'
+  return (app.config && app.config[STAT_REG_SVC_PROP]) || 'https://i.ssb.no/statistikkregisteret'
 }
 
 export interface StatRegConfigLib {
