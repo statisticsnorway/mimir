@@ -23,6 +23,16 @@
     }
   }
 
+  @include media-breakpoint-down(md) {
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+
+    .source > div {
+      padding: 0;
+    }
+  }
+
   font-family: $font-roboto-plain;
   width: 100%;
   border-collapse: collapse;

@@ -354,6 +354,7 @@ Table.propTypes = {
     urlText: PropTypes.string,
     url: PropTypes.string
   })),
+  iconUrl: PropTypes.string,
   table: PropTypes.shape({
     caption: PropTypes.string | PropTypes.shape({
       content: PropTypes.string,

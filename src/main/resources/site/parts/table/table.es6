@@ -1,6 +1,6 @@
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
-  getContent, getSiteConfig, pageUrl
+  getContent, getSiteConfig, pageUrl, assetUrl
 } = __non_webpack_require__('/lib/xp/portal')
 const {
   getPhrases
@@ -76,6 +76,9 @@ function renderPart(req, tableId) {
   const sourceConfig = tableContent.data.sources ? forceArray(tableContent.data.sources) : []
   const sourceLabel = phrases.source
   const sources = getSources(sourceConfig)
+  const iconUrl = assetUrl({
+    path: 'swipe-icon.svg'
+  })
 
   const standardSymbol = getStandardSymbolPage(siteConfig.standardSymbolPage, phrases.tableStandardSymbols)
 
@@ -98,7 +101,8 @@ function renderPart(req, tableId) {
       },
       standardSymbol: standardSymbol,
       sources,
-      sourceLabel
+      sourceLabel,
+      iconUrl: iconUrl
     })
     .uniqueId()
 
