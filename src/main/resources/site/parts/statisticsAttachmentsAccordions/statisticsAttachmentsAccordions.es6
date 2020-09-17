@@ -4,6 +4,9 @@ const {
   }
 } = __non_webpack_require__( '/lib/util')
 const {
+  concat
+} = require('ramda')
+const {
   get
 } = __non_webpack_require__( '/lib/xp/content')
 const {
@@ -74,33 +77,36 @@ const renderPart = (req) => {
     })
     .uniqueId()
 
-  const tablePageContributions = attachmentTable.map(({
+  const tablesPageContributions = attachmentTable.map(({
     pageContributions
   }) => {
     return {
       pageContributions
     }
   })
-  log.info(JSON.stringify(tablePageContributions, null, 2))
 
   const isOutsideContentStudio = (
     req.mode === 'live' || req.mode === 'preview'
   )
 
-  const body = accordionComponent.renderBody({
+  const accordionBody = accordionComponent.renderBody({
     body: render(view, {
       title,
       accordionId: accordionComponent.react4xpId
     }),
     clientRender: isOutsideContentStudio
   })
-  const pageContributions = accordionComponent.renderPageContributions({
-    pageContributions: tablePageContributions,
+  const accordionPageContributions = accordionComponent.renderPageContributions({
     clientRender: isOutsideContentStudio
   })
 
+  //const pageContributions = getPageContributions(accordionPageContributions, tablesPageContributions)
+  const pageContributions = {
+    bodyEnd: concat(accordionPageContributions.bodyEnd, tablesPageContributions[0].pageContributions.bodyEnd)
+  }
+
   return {
-    body,
+    body: accordionBody,
     pageContributions,
     contentType: 'text/html'
   }
@@ -126,4 +132,17 @@ const getAttachmentTable = (attachmentTable, req, tableSubHeader) => {
     })
   }
   return
+}
+
+const getPageContributions = (accordionPageContributions, tablesPageContributions) => {
+  let pageContributions
+  if (tablesPageContributions.length > 0) {
+    pageContributions = {
+      bodyEnd: concat(accordionPageContributions.bodyEnd, tablesPageContributions.map((tablePageContributions) => {
+        return tablePageContributions.pageContributions.bodyEnd
+      }))
+    }
+    return pageContributions
+  }
+  return accordionPageContributions
 }
