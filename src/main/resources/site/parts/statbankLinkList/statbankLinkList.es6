@@ -37,7 +37,7 @@ function renderPart(req) {
   const linkTitleWithNumber = linkTitle + ' (' + page.data.linkNumber + ')'
   const statbankLinkHref = shortName ? `${STATBANKWEB_URL}/list/${shortName}` : STATBANKWEB_URL
 
-  if (!shortName || shortName.length === 0) {
+  if (!shortName || shortName.length === 0 || shortName === undefined) {
     if (req.mode === 'edit' && page.type !== `${app.name}:article` && page.type !== `${app.name}:statistics`) {
       return {
         body: render(view)
