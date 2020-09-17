@@ -1,4 +1,9 @@
 .table {
+  //hide scroll icon on desktop
+  caption > img {
+    display: none;
+  }
+
   .download-table-container {
     display: flex;
     margin-bottom: $spacer * 1;
@@ -27,6 +32,13 @@
     width: 95%;
     margin-left: auto;
     margin-right: auto;
+
+    caption > img {
+      display: block;
+      height: 30px;
+      position: relative;
+      left: 250px;
+    }
 
     .source > div {
       padding: 0;

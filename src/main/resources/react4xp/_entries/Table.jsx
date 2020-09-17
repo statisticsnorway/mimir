@@ -58,6 +58,7 @@ class Table extends React.Component {
       if (typeof this.props.table.caption === 'object') {
         return (
           <caption noterefs={this.props.table.caption.noterefs}>
+            <img src={this.props.iconUrl} />
             {this.props.table.caption.content}
             {this.addNoteRefs(this.props.table.caption.noterefs)}
           </caption>
@@ -65,6 +66,7 @@ class Table extends React.Component {
       } else {
         return (
           <caption>
+            <img src={this.props.iconUrl} />
             {this.props.table.caption}
           </caption>
         )
