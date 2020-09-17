@@ -1,7 +1,3 @@
-import { find } from 'ramda'
-import { XmlParser } from '../../types/xmlParser'
-const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
-
 // XML response types (Common)
 
 export interface ListMeta {
@@ -42,32 +38,7 @@ export interface Contact {
 
 // -------------------------------------------------------------------------------
 
-type KontaktNavnType = KontaktNavn | '' | undefined;
-
-export function transformContact(kontakt: Kontakt): Contact {
-  const {
-    id, telefon: telephone, mobil: mobile, epost: email, navn
-  } = kontakt
-
-  const navnNo: KontaktNavnType =
-        Array.isArray(navn) ?
-          find((n: KontaktNavn) => n['xml:lang'] === 'no')(navn) :
-          ''
-
-  return {
-    id,
-    telephone,
-    mobile,
-    email,
-    name: navnNo && navnNo.content
-  } as Contact
-}
-
-export function extractContacts(payload: string): Array<Contact> {
-  const kontaktXML: KontaktXML = __.toNativeObject(xmlParser.parse(payload))
-  const kontakter: Array<Kontakt> = kontaktXML.kontakter.kontakt
-  return kontakter.map((k) => transformContact(k))
-}
+export type KontaktNavnType = KontaktNavn | '' | undefined;
 
 // XML response types for Statistics from StatReg ----------------------------------
 
@@ -97,10 +68,6 @@ export interface Statistics {
     statistics: Array<StatisticInListing>;
 }
 
-export function extractStatistics(payload: string): Array<StatisticInListing> {
-  return JSON.parse(payload).statistics
-}
-
 // XML response types from StatReg for Publications --------------------------------
 
 export interface Publisering {
@@ -126,24 +93,3 @@ export interface Publication {
     status: string;
     modifiedTime: string;
 }
-
-export function transformPubllication(pub: Publisering): Publication {
-  const {
-    id, variant, statistikkKortnavn, deskFlyt, endret
-  } = pub
-
-  return {
-    id,
-    variant,
-    statisticsKey: statistikkKortnavn,
-    status: deskFlyt,
-    modifiedTime: endret
-  }
-}
-
-export function extractPublications(payload: string): Array<Publication> {
-  const pubXML: PubliseringXML = __.toNativeObject(xmlParser.parse(payload))
-  const publisering: Array<Publisering> = pubXML.publiseringer.publisering
-  return publisering.map((pub) => transformPubllication(pub))
-}
-

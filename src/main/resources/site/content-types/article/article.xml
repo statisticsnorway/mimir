@@ -51,10 +51,50 @@
         <input name="articleText" type="HtmlArea">
             <label>Artikkeltekst</label>
             <config>
-                <include>Blockquote</include>
+                <exclude>*</exclude>
+                <include>Styles Bold Italic Underline Strike Cut Copy
+                    JustifyBlock JustifyLeft JustifyCenter JustifyRight
+                    BulletedList NumberedList Outdent Indent
+                    SpecialChar Anchor Image Macro Link Unlink
+                    Table TableBlockquote
+                    Subscript Superscript  </include>
                 <allowHeadings>h2 h3 h4 h5</allowHeadings>
             </config>
         </input>
+
+        <option-set name="associatedStatistics">
+            <label>Tilhørende statistikk</label>
+            <expanded>false</expanded>
+            <occurrences minimum="0" maximum="0"/>
+            <options minimum="1" maximum="1">
+                <option name="XP">
+                    <label>Lenke til tilhørende statistikk (XP)</label>
+                    <items>
+                        <input name="content" type="ContentSelector">
+                            <label>Statistikk</label>
+                            <occurrences minimum="0" maximum="1" />
+                            <config>
+                                <allowContentType>statistics</allowContentType>
+                            </config>
+                        </input>
+                    </items>
+                </option>
+
+                <option name="CMS">
+                    <label>Lenke til tilhørende statistikk (4.7.)</label>
+                    <items>
+                        <input name="href" type="TextLine">
+                            <label>URL</label>
+                            <occurrences minimum="0" maximum="1" />
+                        </input>
+                        <input name="title" type="TextLine">
+                            <label>Tittel</label>
+                            <occurrences minimum="0" maximum="1" />
+                        </input>
+                    </items>
+                </option>
+            </options>
+        </option-set>
 
         <input name="articleArchive" type="ContentSelector">
             <label>Arkiv</label>

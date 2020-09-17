@@ -58,13 +58,13 @@ export function switchRowsAndColumnsCheck(highchartContent, seriesAndCategories,
 function switchRowsAndColumns(seriesAndCategories, dataFormat) {
   const isJsonStat = dataFormat._selected === 'jsonStat' || dataFormat._selected === DataSourceType.STATBANK_API
   return {
-    categories: seriesAndCategories.categories[0] && !isJsonStat ? seriesAndCategories.series.map((serie) => serie.name) : 'Antall',
-    series: seriesAndCategories.categories.map((category, categoryIndex) => ({
-      name: category,
+    categories: seriesAndCategories.series.map((serie) => serie.name),
+    series: [{
+      name: 'Antall',
       data: seriesAndCategories.series.map((serie) => {
-        return serie.data[categoryIndex]
+        return serie.data[0]
       })
-    }))
+    }]
   }
 }
 

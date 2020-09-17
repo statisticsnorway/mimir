@@ -11,7 +11,7 @@ export const EVENT_LOG_BRANCH: string = 'master'
 export type EditorCallback<T> = (node: T & RepoNode) => T & RepoNode;
 
 export function setupEventLog(): void {
-  if (! eventLogExists()) {
+  if (!eventLogExists()) {
     log.info(`Setting up EventLog ...`)
     createEventLog({
       _path: 'queries',
@@ -22,8 +22,6 @@ export function setupEventLog(): void {
       _name: 'jobs'
     })
     log.info(`EventLog Repo for jobs and queries initialized.`)
-  } else {
-    log.info(`EventLog Repo found.`)
   }
 }
 
@@ -36,7 +34,7 @@ export function createEventLogRepo(): void {
 }
 
 export function createEventLog<T>(content: T & NodeCreateParams, createRepoIfNotFound: boolean = true): T & RepoNode {
-  if (! eventLogExists() && createRepoIfNotFound) {
+  if (!eventLogExists() && createRepoIfNotFound) {
     createEventLogRepo()
   }
 
@@ -76,3 +74,13 @@ export interface LogSummary {
   by: string;
 }
 
+export interface EventLogLib {
+  EVENT_LOG_REPO: string;
+  EVENT_LOG_BRANCH: string;
+  setupEventLog: () => void;
+  eventLogExists: () => boolean;
+  createEventLogRepo: () => void;
+  createEventLog: <T>(content: T & NodeCreateParams, createRepoIfNotFound?: boolean) => T & RepoNode;
+  updateEventLog: <T>(key: string, editor: EditorCallback<T>) => T & RepoNode;
+  getQueryChildNodesStatus: <T>(queryId: string) => ReadonlyArray<LogSummary> | undefined;
+}

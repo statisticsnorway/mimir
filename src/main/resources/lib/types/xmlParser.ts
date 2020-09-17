@@ -19,7 +19,7 @@ export interface Metadata {
     definitionId: number;
   };
   tablesource: string;
-  title: string;
+  title: Title;
   category: string;
   tags: string;
   notes?: Notes;
@@ -31,6 +31,11 @@ export interface Notes {
 
 export interface Note {
   noteid: string;
+  content: string;
+}
+
+export interface Title {
+  noterefs: string;
   content: string;
 }
 
@@ -52,4 +57,5 @@ export interface TableRow {
 export interface PreliminaryData {
   class: string;
   content: number;
+  noterefs: string;
 }
