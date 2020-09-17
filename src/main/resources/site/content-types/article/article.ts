@@ -70,6 +70,41 @@ export interface Article {
   };
 
   /**
+   * Tilhørende statistikk
+   */
+  associatedStatistics?: {
+    /**
+     * Selected
+     */
+    _selected: string;
+
+    /**
+     * Lenke til tilhørende statistikk (XP)
+     */
+    XP?: {
+      /**
+       * Statistikk
+       */
+      content?: string;
+    };
+
+    /**
+     * Lenke til tilhørende statistikk (4.7.)
+     */
+    CMS?: {
+      /**
+       * URL
+       */
+      href?: string;
+
+      /**
+       * Tittel
+       */
+      title?: string;
+    };
+  };
+
+  /**
    * Relaterte eksterne lenker
    */
   relatedExternalLinkItemSet?: Array<{

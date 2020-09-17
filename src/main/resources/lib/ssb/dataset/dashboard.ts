@@ -29,12 +29,12 @@ const {
   run
 }: ContextLibrary = __non_webpack_require__('/lib/xp/context')
 
-const users: Array<string> = []
+const users: Array<RegisterUserOptions> = []
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('dashboard-register-user', (options: RegisterUserOptions) => {
     if (options && options.user) {
-      users[parseInt(socket.id)] = options.user
+      users[parseInt(socket.id)] = { user: options.user, store: options.store }
     }
   })
 
@@ -44,8 +44,8 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
       repository: 'com.enonic.cms.default',
       principals: ['role:system.admin'],
       user: {
-        login: users[parseInt(socket.id)],
-        idProvider: 'system'
+        login: users[parseInt(socket.id)].user,
+        idProvider: users[parseInt(socket.id)].store ? users[parseInt(socket.id)].store : 'system'
       }
     }
     run(context, () => refreshDatasetHandler(options.ids, socketEmitter))
@@ -151,6 +151,7 @@ interface DashboardRefreshResultLogData {
 
 export interface RegisterUserOptions {
   user: string;
+  store: string;
 }
 
 export interface RefreshDatasetOptions {

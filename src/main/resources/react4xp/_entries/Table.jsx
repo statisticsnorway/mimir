@@ -241,6 +241,7 @@ class Table extends React.Component {
   }
 
   createBodyTd(row) {
+    const language = this.props.table.language
     return Object.keys(row).map(function(keyName, keyIndex) {
       const value = row[keyName]
       if (keyName === 'td') {
@@ -257,7 +258,7 @@ class Table extends React.Component {
                 )
               } else {
                 return (
-                  <td key={i}>{cellValue}</td>
+                  <td key={i}>{cellValue.toLocaleString((language == 'en') ? 'en-GB' : 'no-NO')}</td>
                 )
               }
             })
@@ -398,6 +399,7 @@ Table.propTypes = {
       ),
       correctionNotice: PropTypes.string
     }),
+    language: PropTypes.string,
     noteRefs: PropTypes.arrayOf(PropTypes.string)
   })
 }
