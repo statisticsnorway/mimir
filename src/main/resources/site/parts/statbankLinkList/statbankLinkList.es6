@@ -10,6 +10,7 @@ const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
 const React4xp = require('/lib/enonic/react4xp')
+const util = __non_webpack_require__('/lib/util')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 const view = resolve('./statbankLinkList.html')
 const STATBANKWEB_URL = app.config && app.config['ssb.statbankweb.baseUrl'] ? app.config['ssb.statbankweb.baseUrl'] : 'https://www.ssb.no/statbank'
@@ -50,7 +51,7 @@ function renderPart(req) {
 
   const model = {
     title: title,
-    statbankLinks: page.data.statbankLinkItemSet
+    statbankLinks: util.data.forceArray(page.data.statbankLinkItemSet)
   }
 
   const statbankLinkComponent = new React4xp('StatbankLinkList')
@@ -63,9 +64,7 @@ function renderPart(req) {
     })
     .setId('statbank-link')
 
-  const body = render(view, model, {
-    statbankLinkId: statbankLinkComponent.react4xpId
-  })
+  const body = render(view, model)
 
   return {
     body: statbankLinkComponent.renderBody({
