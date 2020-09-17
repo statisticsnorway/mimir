@@ -33,6 +33,30 @@
             </items>
         </field-set>
 
+        <field-set>
+            <label>Statbank lenkeliste</label>
+            <items>
+                <item-set name="statbankLinkItemSet">
+                    <label>Statbank lenker</label>
+                    <occurrences minimum="0" maximum="5"/>
+                    <items>
+                        <input type="TextLine" name="urlText">
+                            <label>Lenketekst</label>
+                            <occurrences minimum="1" maximum="1" />
+                        </input>
+                        <input type="TextLine" name="url">
+                            <label>URL</label>
+                            <occurrences minimum="1" maximum="1" />
+                        </input>
+                    </items>
+                </item-set>
+                <input type="TextLine" name="linkNumber">
+                    <label>Antall tabeller i statbank</label>
+                    <occurrences minimum="0" maximum="1" />
+                </input>
+            </items>
+        </field-set>
+
         <mixin name="relatedStatistics"/>
 
         <mixin name="relatedExternalLinks" />
