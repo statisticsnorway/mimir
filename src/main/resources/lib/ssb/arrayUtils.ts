@@ -5,7 +5,7 @@ const {
   }
 }: UtilLibrary = __non_webpack_require__( '/lib/util')
 
-export function ensureArray<T>(candidate: Array<T> | null): Array<T> {
+export function ensureArray<T>(candidate: Array<T> | null | T): Array<T> {
   return candidate ? forceArray(candidate) : []
 }
 
@@ -18,6 +18,6 @@ export function chunkArray<T>(myArray: Array<T>, chunkSize: number): Array<Array
 }
 
 export interface ArrayUtilsLib {
-  ensureArray: <T>(candidate: Array<T> | null) => Array<T>;
+  ensureArray: <T>(candidate: Array<T> | T | null) => Array<T>;
   chunkArray: <T>(myArray: Array<T>, chunkSize: number) => Array<Array<T>>;
 }

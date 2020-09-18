@@ -1,7 +1,8 @@
-require('../../lib/polyfills/nashorn')
-
-import { getAllStatisticsFromRepo } from '../../lib/repo/statreg/statistics'
-import { handleRepoGet } from '../repoUtils'
+__non_webpack_require__('/lib/polyfills/nashorn')
+const {
+  getAllStatisticsFromRepo,
+  handleRepoGet
+} = __non_webpack_require__('/lib/repo/statreg/statistics')
 
 const toOption = (stat) => ({
   ...stat,
@@ -29,7 +30,8 @@ const filterByIds = (stats, filters) => {
 exports.get = (req) => {
   return handleRepoGet(
     req,
-    'Statistics', getAllStatisticsFromRepo,
+    'Statistics',
+    getAllStatisticsFromRepo,
     toOption,
     req.params.ids ? filterByIds : filterByShortName)
 }

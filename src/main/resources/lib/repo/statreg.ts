@@ -11,6 +11,7 @@ import { StatRegFetchInfo,
 import moment = require('moment')
 import { EventLogLib } from './eventLog'
 import { RepoLib } from './repo'
+import { StatRegConfigLib } from '../ssb/statreg/config'
 
 const {
   ensureArray
@@ -36,9 +37,10 @@ const {
 const {
   STATREG_REPO_PUBLICATIONS_KEY, fetchPublications
 }: StatRegPublicationsLib = __non_webpack_require__('/lib/repo/statreg/publications')
-
-export const STATREG_REPO: string = 'no.ssb.statreg'
-export const STATREG_BRANCH: string = 'master'
+const {
+  STATREG_BRANCH,
+  STATREG_REPO
+}: StatRegConfigLib = __non_webpack_require__('/lib/ssb/statreg/config')
 
 export interface StatRegNodeConfig {
     key: string;
@@ -59,13 +61,13 @@ export function createStatRegNode(name: string, content: StatRegContent): void {
   })
 }
 
-export function getStatRegNode(key: string): StatRegNode | null {
+function getStatRegNode(key: string): StatRegNode | null {
   const node: StatRegNode[] = getNode(STATREG_REPO, STATREG_BRANCH, `/${key}`) as StatRegNode[]
   // log.info(`Retrieving Node ${key}: ${JSON.stringify(node)}`)
   return Array.isArray(node) ? node[0] : node
 }
 
-export function modifyStatRegNode(key: string, content: StatRegContent): StatRegNode {
+function modifyStatRegNode(key: string, content: StatRegContent): StatRegNode {
   return modifyNode<StatRegNode>(STATREG_REPO, STATREG_BRANCH, key, (node) => {
     return {
       ...node,
@@ -167,16 +169,16 @@ function setupNodes(fetchers: Array<StatRegNodeConfig>): void {
     })
 }
 
-export function configureNode(key: string, fetcher: (filters: QueryFilters) => unknown): StatRegNodeConfig {
+function configureNode(key: string, fetcher: (filters: QueryFilters) => unknown): StatRegNodeConfig {
   return {
     key,
     fetcher
   } as StatRegNodeConfig
 }
 
-export const STATREG_CONTACTS_NODE: StatRegNodeConfig = configureNode(STATREG_REPO_CONTACTS_KEY, fetchContacts)
-export const STATREG_STATISTICS_NODE: StatRegNodeConfig = configureNode(STATREG_REPO_STATISTICS_KEY, fetchStatistics)
-export const STATREG_PUBLICATIONS_NODE: StatRegNodeConfig = configureNode(STATREG_REPO_PUBLICATIONS_KEY, fetchPublications)
+const STATREG_CONTACTS_NODE: StatRegNodeConfig = configureNode(STATREG_REPO_CONTACTS_KEY, fetchContacts)
+const STATREG_STATISTICS_NODE: StatRegNodeConfig = configureNode(STATREG_REPO_STATISTICS_KEY, fetchStatistics)
+const STATREG_PUBLICATIONS_NODE: StatRegNodeConfig = configureNode(STATREG_REPO_PUBLICATIONS_KEY, fetchPublications)
 
 
 export const STATREG_NODES: Array<StatRegNodeConfig> = [
@@ -185,7 +187,7 @@ export const STATREG_NODES: Array<StatRegNodeConfig> = [
   STATREG_PUBLICATIONS_NODE
 ]
 
-export function setupStatRegEventLog(): void {
+function setupStatRegEventLog(): void {
   if (!nodeExists(EVENT_LOG_REPO, EVENT_LOG_BRANCH, '/statreg')) {
     log.info('Setting up StatReg EventLog ...')
     const root: RepoNode = createEventLog({
@@ -212,16 +214,11 @@ export function setupStatRegEventLog(): void {
 
 const EVENT_LOG_PREAMBLE_TIME_FMT: string = 'DD.MM.YYYY HH:mm:ss'
 
-// It will be nice to show status in the name itself - but looks like
-// it is not directly possible to do so in XP Node API
-// for now using just the time
-//
-// return `${moment(eventTime).format(EVENT_LOG_PREAMBLE_TIME_FMT)} - ${status}`
-export function eventLogPreamble(key: string, eventTime: Date): string {
+function eventLogPreamble(key: string, eventTime: Date): string {
   return moment(eventTime).format(EVENT_LOG_PREAMBLE_TIME_FMT)
 }
 
-export function createStatRegEvent(key: string): StatRegFetchJobNode {
+function createStatRegEvent(key: string): StatRegFetchJobNode {
   return withLoggedInUserContext(EVENT_LOG_BRANCH, (user) => {
     const now: Date = new Date()
     const preamble: string = eventLogPreamble(key, now)
@@ -252,20 +249,7 @@ export function setupStatRegRepo(nodeConfig: Array<StatRegNodeConfig> = STATREG_
 }
 
 export interface StatRegRepoLib {
-  STATREG_REPO: string;
-  STATREG_BRANCH: string;
-  createStatRegNode: (name: string, content: StatRegContent) => void;
-  getStatRegNode: (key: string) => StatRegNode | null;
-  modifyStatRegNode: (key: string, content: StatRegContent) => StatRegNode;
   toDisplayString: (key: string) => string;
-  configureNode: (key: string, fetcher: (filters: QueryFilters) => unknown) => StatRegNodeConfig;
-  STATREG_CONTACTS_NODE: StatRegNodeConfig;
-  STATREG_STATISTICS_NODE: StatRegNodeConfig;
-  STATREG_PUBLICATIONS_NODE: StatRegNodeConfig;
   STATREG_NODES: Array<StatRegNodeConfig>;
-  setupStatRegEventLog: () => void;
-  EVENT_LOG_PREAMBLE_TIME_FMT: string;
-  eventLogPreamble: (key: string, eventTime: Date) => string;
-  createStatRegEvent: (key: string) => StatRegFetchJobNode;
   setupStatRegRepo: (nodeConfig?: Array<StatRegNodeConfig>) => void;
 }
