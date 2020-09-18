@@ -2,7 +2,8 @@
 const xmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
 export function seriesAndCategoriesFromHtmlTable(highchartsContent) {
-  const result = __.toNativeObject(xmlParser.parse(highchartsContent.data.htmlTable))
+  const stringJson = __.toNativeObject(xmlParser.parse(highchartsContent.data.htmlTable))
+  const result = JSON.parse(stringJson)
   const categories = result.table.tbody.tr.reduce((previous, tr, index) => {
     if (index > 0) previous.push(tr.td[0].content)
     return previous

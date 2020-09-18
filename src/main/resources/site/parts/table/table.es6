@@ -80,17 +80,19 @@ function renderPart(req, tableId) {
 
   const tableReact = new React4xp('Table')
     .setProps({
-      downloadAsTitle: {
+      downloadTableLabel: phrases.tableDownloadAs,
+      downloadTableTitle: {
         title: phrases.tableDownloadAs
       },
-      downloadAsOptions: getDownloadAsOptions(phrases),
+      downloadTableOptions: getDownloadTableOptions(phrases),
       displayName: tableContent.displayName,
       table: {
         caption: table.caption,
         thead: table.thead,
         tbody: table.tbody,
         tfoot: table.tfoot,
-        tableClass: table.tableClass
+        tableClass: table.tableClass,
+        noteRefs: table.noteRefs
       },
       standardSymbol: standardSymbol,
       sources,
@@ -114,22 +116,22 @@ function renderPart(req, tableId) {
   }
 }
 
-const getDownloadAsOptions = (phrases) => {
-  const downloadAs = []
-
-  const CSV = {
-    title: phrases.tableDownloadCSV,
-    id: 'downloadTableAsCSV'
-  }
-  downloadAs.push(CSV)
+const getDownloadTableOptions = () => {
+  const downloadTable = []
 
   const XLS = {
-    title: phrases.tableDownloadXLS,
+    title: '.xlsx (Excel)',
     id: 'downloadTableAsXLS'
   }
-  downloadAs.push(XLS)
+  downloadTable.push(XLS)
 
-  return downloadAs
+  const CSV = {
+    title: '.CSV',
+    id: 'downloadTableAsCSV'
+  }
+  downloadTable.push(CSV)
+
+  return downloadTable
 }
 
 const getStandardSymbolPage = (standardSymbolPage, standardSymbolText) => {

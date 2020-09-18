@@ -135,7 +135,8 @@ class Dashboard extends React.Component {
 
     // tell the server which user is connected
     this.state.io.emit('dashboard-register-user', {
-      user: this.props.userLogin
+      user: this.props.userLogin,
+      store: this.props.store
     })
 
     // setup dataset listeners
@@ -411,7 +412,8 @@ Dashboard.propTypes = {
     updateList: PropTypes.bool
   }),
   contentStudioBaseUrl: PropTypes.string,
-  userLogin: PropTypes.string
+  userLogin: PropTypes.string,
+  store: PropTypes.string
 }
 
 export const DataQuery = PropTypes.shape({
