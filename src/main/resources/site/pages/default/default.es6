@@ -206,9 +206,9 @@ exports.get = function(req) {
     .setId('breadcrumbs')
     .uniqueId()
 
-  pageContributions = breadcrumbComponent.renderPageContributions({
-    pageContributions,
-  })
+  /*pageContributions = breadcrumbComponent.renderPageContributions({
+    pageContributions
+  })*/
 
   log.info('Add id %s', JSON.stringify(breadcrumbComponent.renderBody(), null, 2))
 
