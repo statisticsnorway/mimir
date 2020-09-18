@@ -1,3 +1,4 @@
+/* eslint-disable */
 declare function __non_webpack_require__<T>(path: string): T
 
 declare function require<T>(path: string): T

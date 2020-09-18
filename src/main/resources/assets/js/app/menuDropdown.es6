@@ -19,6 +19,10 @@ export function init() {
         top
       } = el.getBoundingClientRect()
 
+      const onSwingTimeout = () => {
+        map.collapse('show')
+      }
+
       if (top > 1) {
         animate = true
 
@@ -27,9 +31,7 @@ export function init() {
           scrollTop: pos.top
         }, 400, 'swing', () => {
           animate = false
-          setTimeout(() => {
-            map.collapse('show')
-          }, 50)
+          setTimeout(onSwingTimeout, 50)
         })
       } else {
         map.collapse('toggle')

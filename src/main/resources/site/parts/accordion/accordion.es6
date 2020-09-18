@@ -2,7 +2,9 @@ const {
   getComponent,
   processHtml
 } = __non_webpack_require__( '/lib/xp/portal')
-const {sanitize} = __non_webpack_require__( '/lib/xp/common')
+const {
+  sanitize
+} = __non_webpack_require__( '/lib/xp/common')
 const {
   renderError
 } = __non_webpack_require__('/lib/error/error')

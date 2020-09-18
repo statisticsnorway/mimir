@@ -48,7 +48,7 @@ const {
 const contentTypeName: string = `${app.name}:keyFigure`
 
 export function get(keys: string | Array<string>): Array<Content<KeyFigure>> {
-  keys = util.data.forceArray(keys) as Array<string>
+  keys = util.data.forceArray(keys)
   const content: QueryResponse<KeyFigure> = query({
     contentTypes: [contentTypeName],
     query: ``,
@@ -162,7 +162,7 @@ function getDataTbProcessor(
   keyFigure: Content<KeyFigure>
 ): KeyFigureView {
   const tbmlData: TbmlData = data as TbmlData
-  const bodyRows: Array<TableRow> = util.data.forceArray(tbmlData.tbml.presentation.table.tbody.tr) as Array<TableRow>
+  const bodyRows: Array<TableRow> = util.data.forceArray(tbmlData.tbml.presentation.table.tbody.tr)
   const head: TableRow = tbmlData.tbml.presentation.table.thead.tr
   const [row1, row2] = bodyRows
 
@@ -209,7 +209,7 @@ function getDataTbProcessor(
       changePeriod: row2.th.toString()
     }
   }
-  keyFigureViewData.time = (util.data.forceArray(head.th)[0] as number | string).toString()
+  keyFigureViewData.time = (util.data.forceArray(head.th)[0]).toString()
 
   return keyFigureViewData
 }

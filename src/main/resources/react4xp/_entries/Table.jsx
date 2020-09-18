@@ -176,7 +176,7 @@ class Table extends React.Component {
         return value.map((cellValue, i) => {
           if (typeof cellValue === 'object') {
             if (Array.isArray(cellValue)) {
-              //TODO: Because some values is split into array by xmlParser i have to do this, find better fix
+              // TODO: Because some values is split into array by xmlParser i have to do this, find better fix
               return (
                 <th key={i}>{cellValue.join(' ')}</th>
               )
