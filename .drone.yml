@@ -22,6 +22,7 @@ name: "Test Environment"
 trigger:
   branch:
     - master
+    - MIMIR-793-debuggingComponentsDisapearing
   event:
     include:
       - push

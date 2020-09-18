@@ -208,10 +208,9 @@ exports.get = function(req) {
 
   pageContributions = breadcrumbComponent.renderPageContributions({
     pageContributions,
-    clientRender: true
   })
 
-  log.info('Add id %s', JSON.stringify(breadcrumbComponent.react4xpId, null, 2))
+  log.info('Add id %s', JSON.stringify(breadcrumbComponent.renderBody(), null, 2))
 
   const model = {
     pageTitle: 'SSB', // not really used on normal pages because of SEO app (404 still uses this)
@@ -239,10 +238,8 @@ exports.get = function(req) {
 
   const thymeleafRenderBody = thymeleaf.render(view, model)
 
-
   const bodyWithBreadCrumbs = breadcrumbComponent.renderBody({
     body: thymeleafRenderBody,
-    clientRender: true
   })
 
 
