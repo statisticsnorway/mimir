@@ -1,6 +1,6 @@
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
-  getContent, getSiteConfig, pageUrl
+  getContent, getSiteConfig, pageUrl, assetUrl
 } = __non_webpack_require__('/lib/xp/portal')
 const {
   getPhrases
@@ -70,11 +70,15 @@ function renderPart(req, tableId) {
 
   moment.locale(tableContent.language ? tableContent.language : 'nb')
   const phrases = getPhrases(tableContent)
+  const language = page.language
 
   // sources
   const sourceConfig = tableContent.data.sources ? forceArray(tableContent.data.sources) : []
   const sourceLabel = phrases.source
   const sources = getSources(sourceConfig)
+  const iconUrl = assetUrl({
+    path: 'swipe-icon.svg'
+  })
 
   const standardSymbol = getStandardSymbolPage(siteConfig.standardSymbolPage, phrases.tableStandardSymbols)
 
@@ -92,11 +96,13 @@ function renderPart(req, tableId) {
         tbody: table.tbody,
         tfoot: table.tfoot,
         tableClass: table.tableClass,
+        language: language,
         noteRefs: table.noteRefs
       },
       standardSymbol: standardSymbol,
       sources,
-      sourceLabel
+      sourceLabel,
+      iconUrl: iconUrl
     })
     .uniqueId()
 

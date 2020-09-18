@@ -58,9 +58,12 @@ function renderPart(req, menuBoxId) {
   })
   return {
     body: menuBox.renderBody({
-      body
+      body,
+      clientRender: true
+    }),
+    pageContributions: menuBox.renderPageContributions({
+      clientRender: true
     })
-    // pageContributions: menuBox.renderPageContributions()
   }
 }
 

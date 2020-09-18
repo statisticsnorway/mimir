@@ -30,23 +30,25 @@ exports.preview = (req) => renderPart(req, {
 const renderPart = (req, config) => {
   const dividerColor = config.dividerColor || 'light'
 
-  const body = fromDividerCache(dividerColor, () => {
-    const divider = new React4xp('Divider')
-      .setProps(
-        setColor(dividerColor)
-      )
-      .setId('dividerId')
+  const divider = new React4xp('Divider')
+    .setProps(
+      setColor(dividerColor)
+    )
+    .setId('dividerId')
+    .uniqueId()
 
-    const dividerBody = divider.renderBody({
-      body: render(view)
-    })
-
-    // UD: Removes the dividerId to prevent the duplicate ids errors
-    return dividerBody.replace(/id="dividerId"/, '')
+  const body = divider.renderBody({
+    body: render(view, {dividerId: divider.react4xpId}),
+    clientRender: true
+  })
+  const pageContributions = divider.renderPageContributions({
+    clientRender: true
   })
 
+
   return {
-    body
+    body,
+    pageContributions
   }
 }
 
