@@ -15,7 +15,6 @@ export function areaConfig(highchartContent, options) {
       labels: {
         enabled: true
       },
-      categories: !highchartContent.data.switchRowsAndColumns || !options.isJsonStat ? options.categories : [highchartContent.displayName],
       stackLabels: {
         enabled: highchartContent.stacking === 'normal' && highchartContent.showStackedTotal,
         // HC sets x or y := 0 by default, leaving no breathing space between the bar and the label

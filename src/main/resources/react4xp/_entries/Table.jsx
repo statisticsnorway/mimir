@@ -58,6 +58,7 @@ class Table extends React.Component {
       if (typeof this.props.table.caption === 'object') {
         return (
           <caption noterefs={this.props.table.caption.noterefs}>
+            <img src={this.props.iconUrl} />
             {this.props.table.caption.content}
             {this.addNoteRefs(this.props.table.caption.noterefs)}
           </caption>
@@ -65,6 +66,7 @@ class Table extends React.Component {
       } else {
         return (
           <caption>
+            <img src={this.props.iconUrl} />
             {this.props.table.caption}
           </caption>
         )
@@ -241,6 +243,7 @@ class Table extends React.Component {
   }
 
   createBodyTd(row) {
+    const language = this.props.table.language
     return Object.keys(row).map(function(keyName, keyIndex) {
       const value = row[keyName]
       if (keyName === 'td') {
@@ -257,7 +260,7 @@ class Table extends React.Component {
                 )
               } else {
                 return (
-                  <td key={i}>{cellValue}</td>
+                  <td key={i}>{cellValue.toLocaleString((language == 'en') ? 'en-GB' : 'no-NO')}</td>
                 )
               }
             })
@@ -353,6 +356,7 @@ Table.propTypes = {
     urlText: PropTypes.string,
     url: PropTypes.string
   })),
+  iconUrl: PropTypes.string,
   table: PropTypes.shape({
     caption: PropTypes.string | PropTypes.shape({
       content: PropTypes.string,
@@ -398,6 +402,7 @@ Table.propTypes = {
       ),
       correctionNotice: PropTypes.string
     }),
+    language: PropTypes.string,
     noteRefs: PropTypes.arrayOf(PropTypes.string)
   })
 }
