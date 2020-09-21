@@ -60,7 +60,7 @@ const renderPart = (req) => {
     }
   }
 
-  const attachmentTable = getAttachmentTable(attachmentTables, req, phrases.tableSubHeader)
+  const attachmentTable = getAttachmentTable(attachmentTables, req, phrases.table)
   const accordionComponent = new React4xp('site/parts/accordion/accordion')
     .setProps({
       accordions: attachmentTable.map(({
@@ -77,20 +77,13 @@ const renderPart = (req) => {
     })
     .uniqueId()
 
-  const tablesPageContributions = attachmentTable.map(({
-    pageContributions
-  }) => {
-    return {
-      pageContributions
-    }
-  })
-
   const isOutsideContentStudio = (
     req.mode === 'live' || req.mode === 'preview'
   )
 
   const accordionBody = accordionComponent.renderBody({
     body: render(view, {
+      attachmentTables,
       title,
       accordionId: accordionComponent.react4xpId
     }),
@@ -100,10 +93,7 @@ const renderPart = (req) => {
     clientRender: isOutsideContentStudio
   })
 
-  //const pageContributions = getPageContributions(accordionPageContributions, tablesPageContributions)
-  const pageContributions = {
-    bodyEnd: concat(accordionPageContributions.bodyEnd, tablesPageContributions[0].pageContributions.bodyEnd)
-  }
+  const pageContributions = getFinalPageContributions(accordionPageContributions, attachmentTable)
 
   return {
     body: accordionBody,
@@ -112,9 +102,9 @@ const renderPart = (req) => {
   }
 }
 
-const getAttachmentTable = (attachmentTable, req, tableSubHeader) => {
-  if (attachmentTable.length > 0) {
-    return attachmentTable.map((attachmentTableId, index) => {
+const getAttachmentTable = (attachmentTables, req, tableName) => {
+  if (attachmentTables && attachmentTables.length > 0) {
+    return attachmentTables.map((attachmentTableId, index) => {
       const attachmentTableContent = get({
         key: attachmentTableId
       })
@@ -124,25 +114,31 @@ const getAttachmentTable = (attachmentTable, req, tableSubHeader) => {
       return {
         id: `attachment-table-${index + 1}`,
         open: attachmentTableContent.displayName,
-        subHeader: tableSubHeader,
+        subHeader: tableName,
         body: tablePreview.body,
         items: [],
         pageContributions: tablePreview.pageContributions
       }
     })
   }
-  return
+  return []
 }
 
-const getPageContributions = (accordionPageContributions, tablesPageContributions) => {
-  let pageContributions
-  if (tablesPageContributions.length > 0) {
-    pageContributions = {
-      bodyEnd: concat(accordionPageContributions.bodyEnd, tablesPageContributions.map((tablePageContributions) => {
-        return tablePageContributions.pageContributions.bodyEnd
-      }))
+const getFinalPageContributions = (accordionPageContributions, attachmentTable) => {
+  const tablesPageContributions = attachmentTable.map(({
+    pageContributions
+  }) => {
+    return { pageContributions }
+  })
+
+  if (tablesPageContributions && tablesPageContributions.length > 0) {
+    const combinedTablesPageContributions = tablesPageContributions.reduce((acc, nextItem) => {
+      return acc.concat(acc, nextItem.pageContributions.bodyEnd)
+    }, [])
+
+    return {
+      bodyEnd: concat(accordionPageContributions.bodyEnd, combinedTablesPageContributions)
     }
-    return pageContributions
   }
   return accordionPageContributions
 }
