@@ -34,7 +34,10 @@ const users: Array<RegisterUserOptions> = []
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('dashboard-register-user', (options: RegisterUserOptions) => {
     if (options && options.user) {
-      users[parseInt(socket.id)] = { user: options.user, store: options.store }
+      users[parseInt(socket.id)] = {
+        user: options.user,
+        store: options.store
+      }
     }
   })
 

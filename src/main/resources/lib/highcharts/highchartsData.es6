@@ -56,7 +56,6 @@ export function switchRowsAndColumnsCheck(highchartContent, seriesAndCategories,
 }
 
 function switchRowsAndColumns(seriesAndCategories, dataFormat) {
-  const isJsonStat = dataFormat._selected === 'jsonStat' || dataFormat._selected === DataSourceType.STATBANK_API
   return {
     categories: seriesAndCategories.series.map((serie) => serie.name),
     series: [{

@@ -10,7 +10,7 @@ export function filtersToQuery(filters: QueryFilters): string {
     ''
 }
 
-export function fetchStatRegData<T, XmlType>(
+export function fetchStatRegData<T>(
   dataKey: string,
   serviceUrl: string,
   filters: QueryFilters,
@@ -35,4 +35,13 @@ export function fetchStatRegData<T, XmlType>(
 
   log.error(`HTTP ${serviceUrl} (${result.status} ${result.message}`)
   throw new Error(`Could not fetch ${dataKey} from StatReg: ${result.status} ${result.message}`)
+}
+
+export interface StatRegCommonLib {
+  filtersToQuery: (filters: QueryFilters) => string;
+  fetchStatRegData: <T> (
+    dataKey: string,
+    serviceUrl: string,
+    filters: QueryFilters,
+    extractor: (payload: string) => Array<T>) => Array<T>;
 }

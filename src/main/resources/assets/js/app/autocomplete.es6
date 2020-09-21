@@ -39,15 +39,13 @@ export function init() {
           } else {
             $('.footer-top-row .ssb-btn').focus()
           }
-        }
-        // 40 = arrow down key
-        else if (e.which === 40) {
+        } else if (e.which === 40) { // 40 = arrow down key
           e.preventDefault()
           const next = elem.nextElementSibling
           if (next) {
             next.focus()
           }
-          //38 = arrow up key
+          // 38 = arrow up key
         } else if (e.which === 38) {
           e.preventDefault()
           const prev = elem.previousElementSibling

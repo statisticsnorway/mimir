@@ -1,21 +1,16 @@
 const {
-  getComponent,
-  serviceUrl
+  getComponent
 } = __non_webpack_require__( '/lib/xp/portal')
 const {
   getUpdated,
   getUpdatedReadable
 } = __non_webpack_require__('/lib/ssb/dataset')
 const {
-  render
-} = __non_webpack_require__( '/lib/thymeleaf')
-const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
 
 const content = __non_webpack_require__( '/lib/xp/content')
 const util = __non_webpack_require__( '/lib/util')
-const view = resolve('./dashboard.html')
 
 exports.get = function(req) {
   try {
@@ -80,16 +75,6 @@ function renderPart(req, dashboardIds) {
       })
     }
   })
-
-  const dashboardService = serviceUrl({
-    service: 'dashboard'
-  })
-
-  const model = {
-    dashboards,
-    dataQueries,
-    dashboardService
-  }
 
   const body = 'Dette dashbordet har blitt flyttet til admin panelet på høyre side.'
 

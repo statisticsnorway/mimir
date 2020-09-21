@@ -66,6 +66,7 @@ export class Measurement {
 
     getMeasurementAggregate(): number {
       const {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
         metricsStart, ...rest
       } = this._measures
       return Object.keys(rest)
@@ -74,6 +75,7 @@ export class Measurement {
 
     getMeasurements(): { [key: string]: number } {
       const {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
         metricsStart, ...rest
       } = this._measures
 
