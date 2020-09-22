@@ -46,7 +46,7 @@ const renderPart = (req) => {
   const title = phrases.statisticsAttachmentsAccordion
 
   const attachmentTables = page.data.attachmentTables ? forceArray(page.data.attachmentTables) : []
-  if (!attachmentTables) {
+  if (attachmentTables.length === 0) {
     if (req.mode === 'edit' && page.type !== `${app.name}:statistics`) {
       return {
         body: render(view, {
@@ -83,7 +83,6 @@ const renderPart = (req) => {
 
   const accordionBody = accordionComponent.renderBody({
     body: render(view, {
-      attachmentTables,
       title,
       accordionId: accordionComponent.react4xpId
     }),
@@ -103,7 +102,7 @@ const renderPart = (req) => {
 }
 
 const getAttachmentTable = (attachmentTables, req, tableName) => {
-  if (attachmentTables && attachmentTables.length > 0) {
+  if (attachmentTables.length > 0) {
     return attachmentTables.map((attachmentTableId, index) => {
       const attachmentTableContent = get({
         key: attachmentTableId
@@ -125,13 +124,15 @@ const getAttachmentTable = (attachmentTables, req, tableName) => {
 }
 
 const getFinalPageContributions = (accordionPageContributions, attachmentTable) => {
-  const tablesPageContributions = attachmentTable.map(({
+  const tablesPageContributions = attachmentTable.length > 0 ? attachmentTable.map(({
     pageContributions
   }) => {
-    return { pageContributions }
-  })
+    return {
+      pageContributions
+    }
+  }) : []
 
-  if (tablesPageContributions && tablesPageContributions.length > 0) {
+  if (tablesPageContributions.length > 0) {
     const combinedTablesPageContributions = tablesPageContributions.reduce((acc, nextItem) => {
       return acc.concat(acc, nextItem.pageContributions.bodyEnd)
     }, [])
