@@ -52,7 +52,7 @@ export function getSeriesAndCategories(req, highchartsContent, data, dataFormat)
 export function switchRowsAndColumnsCheck(highchartContent, seriesAndCategories, dataFormat) {
   return (!dataFormat._selected === DataSourceType.STATBANK_API && highchartContent.data.graphType === 'pie' ||
     highchartContent.data.switchRowsAndColumns) ?
-    switchRowsAndColumns(seriesAndCategories, dataFormat) : seriesAndCategories
+    switchRowsAndColumns(seriesAndCategories) : seriesAndCategories
 }
 
 function switchRowsAndColumns(seriesAndCategories) {

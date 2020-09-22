@@ -52,6 +52,14 @@ export const seriesAndCategoriesFromTbml = (data, graphType, xAxisType) => {
   return {
     categories,
     series,
-    title: data.tbml.metadata.title
+    title: parseTitle(data.tbml.metadata)
+  }
+}
+
+function parseTitle(metadata) {
+  if (metadata.title && typeof(metadata.title) === 'string') {
+    return metadata.title
+  } else if (metadata.title && metadata.title.content) {
+    return metadata.title.content
   }
 }
