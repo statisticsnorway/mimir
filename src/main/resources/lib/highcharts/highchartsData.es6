@@ -55,11 +55,11 @@ export function switchRowsAndColumnsCheck(highchartContent, seriesAndCategories,
     switchRowsAndColumns(seriesAndCategories, dataFormat) : seriesAndCategories
 }
 
-function switchRowsAndColumns(seriesAndCategories, dataFormat) {
+function switchRowsAndColumns(seriesAndCategories) {
   return {
     categories: seriesAndCategories.series.map((serie) => serie.name),
     series: [{
-      name: 'Antall',
+      name: seriesAndCategories.title ? seriesAndCategories.title : 'Antall',
       data: seriesAndCategories.series.map((serie) => {
         return serie.data[0]
       })

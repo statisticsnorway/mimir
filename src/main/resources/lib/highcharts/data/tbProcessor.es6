@@ -51,6 +51,7 @@ export const seriesAndCategoriesFromTbml = (data, graphType, xAxisType) => {
 
   return {
     categories,
-    series
+    series,
+    title: data.tbml.metadata.title
   }
 }
