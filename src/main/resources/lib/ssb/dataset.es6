@@ -1,3 +1,4 @@
+/* eslint-disable new-cap */
 const {
   query
 } = __non_webpack_require__( '/lib/xp/content')
@@ -46,24 +47,9 @@ export const getTime = (dataset) => {
 }
 
 /**
- * Get value from dataset with index
- * @param {Object} data: JSON-STAT object
- * @param {string} filterTarget
- * @param {string} filter
- * @return {{label: {String}, value: {String}}}
- */
-export const getValueWithIndex = (data, filterTarget, filter) => {
-  const ds = JsonStat(data).Dimension(0)
-  const dataKey = data.dimension.id[0]
-  const valueIndexes = data.dimension[dataKey].category.index
-  return data.value[valueIndexes[index]]
-}
-
-/**
- *
- * @param {} datasetId
- * @param {} municipality
- * @return {*}
+ * @param {Object} dataset
+ * @param {Object} municipality
+ * @return {Array<Object>}
  */
 export const getDataFromCurrentOrOldMunicipalityCode = (dataset, municipality) => {
   if (dataset && dataset.data && dataset.data.json) {
@@ -92,7 +78,6 @@ export const getDataFromCurrentOrOldMunicipalityCode = (dataset, municipality) =
 
 export const getUpdated = (ds) => moment(ds.modifiedTime).format('DD.MM.YYYY HH:mm:ss')
 export const getUpdatedReadable = (ds) => moment(ds.modifiedTime).fromNow()
-
 
 export const parseDataWithMunicipality = (dataset, filterTarget, municipality, xAxis) => {
   let code = municipality.code

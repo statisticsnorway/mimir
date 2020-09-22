@@ -1,6 +1,9 @@
 import { RepoLibrary, RepositoryConfig } from 'enonic-types/lib/repo'
-import { withSuperUserContext } from './common'
+import { RepoCommonLib } from './common'
 const repo: RepoLibrary = __non_webpack_require__('/lib/xp/repo')
+const {
+  withSuperUserContext
+}: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
 
 export function getRepo(repoId: string, branch: string): RepositoryConfig | null {
   return withSuperUserContext<RepositoryConfig | null>(repoId, branch, () => {

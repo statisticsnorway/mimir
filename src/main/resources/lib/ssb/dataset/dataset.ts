@@ -7,7 +7,7 @@ import { RepoQueryLib } from '../../repo/query'
 import { TbmlData } from '../../types/xmlParser'
 import { TbprocessorLib } from './tbprocessor'
 import { KlassLib } from './klass'
-import { Context, ContextLibrary, RunContext } from 'enonic-types/lib/context'
+import { ContextLibrary, RunContext } from 'enonic-types/lib/context'
 import { AuthLibrary, User } from 'enonic-types/lib/auth'
 
 const {

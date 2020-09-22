@@ -58,6 +58,7 @@ class Table extends React.Component {
       if (typeof this.props.table.caption === 'object') {
         return (
           <caption noterefs={this.props.table.caption.noterefs}>
+            <img src={this.props.iconUrl} />
             {this.props.table.caption.content}
             {this.addNoteRefs(this.props.table.caption.noterefs)}
           </caption>
@@ -65,6 +66,7 @@ class Table extends React.Component {
       } else {
         return (
           <caption>
+            <img src={this.props.iconUrl} />
             {this.props.table.caption}
           </caption>
         )
@@ -176,7 +178,7 @@ class Table extends React.Component {
         return value.map((cellValue, i) => {
           if (typeof cellValue === 'object') {
             if (Array.isArray(cellValue)) {
-              //TODO: Because some values is split into array by xmlParser i have to do this, find better fix
+              // TODO: Because some values is split into array by xmlParser i have to do this, find better fix
               return (
                 <th key={i}>{cellValue.join(' ')}</th>
               )
@@ -354,6 +356,7 @@ Table.propTypes = {
     urlText: PropTypes.string,
     url: PropTypes.string
   })),
+  iconUrl: PropTypes.string,
   table: PropTypes.shape({
     caption: PropTypes.string | PropTypes.shape({
       content: PropTypes.string,

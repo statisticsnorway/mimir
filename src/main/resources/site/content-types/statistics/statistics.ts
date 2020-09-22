@@ -15,6 +15,26 @@ export interface Statistics {
   aboutTheStatistics?: string;
 
   /**
+   * Antall tabeller i statbank
+   */
+  linkNumber?: string;
+
+  /**
+   * Statbank lenker
+   */
+  statbankLinkItemSet?: Array<{
+    /**
+     * Lenketekst
+     */
+    urlText: string;
+
+    /**
+     * URL
+     */
+    url: string;
+  }>;
+
+  /**
    * Statistikk
    */
   statistic?: string;

@@ -1,7 +1,6 @@
 const {
   logUserDataQuery
 } = __non_webpack_require__( '../repo/query')
-
 const {
   get: getContent,
   query

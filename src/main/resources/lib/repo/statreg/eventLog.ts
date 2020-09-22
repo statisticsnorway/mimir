@@ -1,4 +1,4 @@
-import { RepoNode } from 'enonic-types/lib/node';
+import { RepoNode } from 'enonic-types/lib/node'
 
 export enum StatRegFetchStatus {
     INIT = 'Init',
@@ -15,11 +15,19 @@ export interface StatRegFetchInfo {
     completionTime?: string;
 }
 
-export type StatRegFetchJobNode = RepoNode & { data: StatRegFetchInfo }
+export interface StatRegFetchJobNode extends RepoNode {
+    data: StatRegFetchInfo;
+}
 
 export interface StatRegLatestFetchInfo {
     latestEvent: string;
     latestEventInfo: StatRegFetchInfo;
 }
 
-export type StatRegLatestFetchInfoNode = RepoNode & { data: StatRegLatestFetchInfo }
+export interface StatRegLatestFetchInfoNode extends RepoNode {
+    data: StatRegLatestFetchInfo;
+}
+
+export interface StatRegEventLog {
+    StatRegFetchStatus: typeof StatRegFetchStatus;
+}
