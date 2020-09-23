@@ -6,10 +6,6 @@
       @include make-col-ready();
       @include make-col(12);
 
-      h1 {
-        padding: 0;
-      }
-
       @include media-breakpoint-down(md) {
         padding: 0;
       }

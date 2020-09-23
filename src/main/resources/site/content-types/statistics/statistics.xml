@@ -34,6 +34,20 @@
         </field-set>
 
         <field-set>
+            <label>Nøkkeltall</label>
+            <items>
+                <input name="statisticsKeyFigure" type="ContentSelector">
+                    <label>Nøkkeltall</label>
+                    <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <allowType>keyFigure</allowType>
+                        <description>Legg til nøkkeltall</description>
+                    </config>
+                </input>
+            </items>
+        </field-set>
+
+        <field-set>
             <label>Statbank lenkeliste</label>
             <items>
                 <item-set name="statbankLinkItemSet">
