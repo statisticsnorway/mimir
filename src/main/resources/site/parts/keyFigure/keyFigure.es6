@@ -7,7 +7,6 @@ const {
   getMunicipality
 } = __non_webpack_require__( '/lib/klass/municipalities')
 const {
-  getContent,
   getComponent,
   getSiteConfig
 } = __non_webpack_require__( '/lib/xp/portal')
