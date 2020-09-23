@@ -37,11 +37,14 @@ function renderPart(req) {
   })
   const linkTitleWithNumber = linkTitle + ' (' + page.data.linkNumber + ')'
   const statbankLinkHref = shortName ? `${STATBANKWEB_URL}/list/${shortName}` : STATBANKWEB_URL
+  const statbankLinkItemSet = page.data.statbankLinkItemSet
 
-  if (!shortName || shortName.length === 0 || shortName === undefined) {
-    if (req.mode === 'edit' && page.type !== `${app.name}:article` && page.type !== `${app.name}:statistics`) {
+  if (!statbankLinkItemSet || statbankLinkItemSet.length === 0) {
+    if (req.mode === 'edit' && page.type !== `${app.name}:statistics`) {
       return {
-        body: render(view)
+        body: render(view, {
+          title: title
+        })
       }
     }
     return {
@@ -51,7 +54,7 @@ function renderPart(req) {
 
   const model = {
     title: title,
-    statbankLinks: util.data.forceArray(page.data.statbankLinkItemSet)
+    statbankLinks: util.data.forceArray(statbankLinkItemSet)
   }
 
   const statbankLinkComponent = new React4xp('StatbankLinkList')
