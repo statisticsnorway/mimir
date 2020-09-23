@@ -25,7 +25,7 @@ const {
 const moment = require('moment/min/moment-with-locales')
 const tableController = __non_webpack_require__('../table/table')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const view = resolve('./statisticsAttachmentsAccordions.html')
+const view = resolve('./attachmentTablesFigures.html')
 
 exports.get = function(req) {
   try {
@@ -43,7 +43,7 @@ const renderPart = (req) => {
   moment.locale(page.language ? page.language : 'nb')
   const phrases = getPhrases(page)
 
-  const title = phrases.statisticsAttachmentsAccordion
+  const title = phrases.attachmentTablesFigures
 
   const attachmentTables = page.data.attachmentTables ? forceArray(page.data.attachmentTables) : []
   if (attachmentTables.length === 0) {
