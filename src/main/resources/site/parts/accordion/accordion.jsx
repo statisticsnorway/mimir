@@ -7,7 +7,7 @@ class Accordion extends React.Component {
     super(props)
   }
 
-  renderNestenAccordions(items) {
+  renderNestedAccordions(items) {
     return (
       items.map((item, i) =>
         <NestedAccordion key={i} header={item.title}>
@@ -38,10 +38,11 @@ class Accordion extends React.Component {
               id={accordion.id}
               key={index}
               header={accordion.open}
+              subHeader={accordion.subHeader}
               openByDefault={anchor && accordion.id && accordion.id === anchor}
             >
               <div dangerouslySetInnerHTML={this.createMarkup(accordion.body)}></div>
-              {this.renderNestenAccordions(accordion.items)}
+              {this.renderNestedAccordions(accordion.items)}
             </AccordionComponent>
           )}
       </section>
@@ -54,6 +55,7 @@ Accordion.propTypes = {
     PropTypes.shape({
       id: PropTypes.string,
       open: PropTypes.string.isRequired,
+      subHeader: PropTypes.string,
       body: PropTypes.string.isRequired,
       items: PropTypes.arrayOf(
         PropTypes.shape({
