@@ -98,6 +98,7 @@ function renderPart(req) {
       dashboardService: assets.dashboardService,
       clearCacheServiceUrl: assets.clearCacheServiceUrl,
       convertServiceUrl: assets.convertServiceUrl,
+      fetchLogUrl: assets.fetchLogUrl,
       featureToggling: {
         updateList: req.params.updateList ? true : false
       },
@@ -165,6 +166,9 @@ function getAssets() {
     }),
     convertServiceUrl: serviceUrl({
       service: 'convert'
+    }),
+    fetchLogUrl: serviceUrl({
+      service: 'eventLog'
     })
   }
 }
