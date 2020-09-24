@@ -30,11 +30,6 @@ export interface SiteConfig {
   }>;
 
   /**
-   * Standardtegn i tabeller
-   */
-  standardSymbolPage?: string;
-
-  /**
    * Språk instillinger
    */
   language: Array<{
@@ -72,5 +67,10 @@ export interface SiteConfig {
      * Footer
      */
     footerId?: string;
+
+    /**
+     * Standardtegn i tabeller
+     */
+    standardSymbolPage?: string;
   }>;
 }
