@@ -58,7 +58,7 @@ function renderPart(req) {
   const contacts = chunkArray(selectedContacts, WIDTH)
 
   if (!contacts || (contacts.length < 1)) {
-    if (req.mode === 'edit' || req.mode === 'preview') {
+    if (req.mode === 'edit' && page.type !== `${app.name}:statistics` && page.type !== `${app.name}:article`) {
       return {
         body: render(view)
       }
