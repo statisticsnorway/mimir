@@ -147,7 +147,7 @@ function renderPart(req, aboutTheStatisticsId) {
             key: variable
           }),
           body: category[variable] ? processHtml({
-            value: category[variable]
+            value: category[variable].replace(/&nbsp;/g, ' ')
           }) : i18nLib.localize({
             key: 'notRelevant'
           })

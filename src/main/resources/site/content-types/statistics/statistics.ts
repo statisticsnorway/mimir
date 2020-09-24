@@ -5,6 +5,11 @@ export interface Statistics {
   mainTable?: string;
 
   /**
+   * Vedleggstabell
+   */
+  attachmentTables?: Array<string>;
+
+  /**
    * Om Statistikken
    */
   aboutTheStatistics?: string;
