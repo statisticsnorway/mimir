@@ -29,7 +29,7 @@ const {
   getStatbankApiKey
 }: StatbankApiLib = __non_webpack_require__('/lib/ssb/dataset/statbankApi')
 const {
-  fetchStatbankSavedData,
+  fetchStatbankSavedData
 }: StatbankSavedLib = __non_webpack_require__('/lib/ssb/dataset/statbankSaved')
 const {
   getTbprocessor,
