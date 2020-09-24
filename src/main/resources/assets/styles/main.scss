@@ -88,6 +88,11 @@ section.part-divider + section.part-divider {
   background-color: $ssb-dark-1;
 }
 
+.premain {
+  max-width: 100%;
+  background: white;
+}
+
 .row {
   @include media-breakpoint-down(md) {
     margin-right: 0;
