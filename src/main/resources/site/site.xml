@@ -117,11 +117,6 @@
             <hideToggleIcon>false</hideToggleIcon>
           </config>
         </input>
-      </items>
-    </item-set>
-    <field-set>
-      <label>Tabell</label>
-      <items>
         <input name="standardSymbolPage" type="ContentSelector">
           <label>Standardtegn i tabeller</label>
           <occurrences minimum="0" maximum="1"/>
@@ -130,7 +125,7 @@
           </config>
         </input>
       </items>
-    </field-set>
+    </item-set>
   </form>
   <mappings>
     <mapping filter="/site/filters/router.js" order="10">
