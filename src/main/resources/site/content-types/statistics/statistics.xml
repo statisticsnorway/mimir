@@ -27,6 +27,7 @@
                     <occurrences minimum="0" maximum="0"/>
                     <config>
                         <allowType>table</allowType>
+                        <allowType>highchart</allowType>
                         <description>Legg til Vedleggstabell</description>
                     </config>
                 </input>
