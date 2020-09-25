@@ -46,7 +46,7 @@ const renderPart = (req) => {
 
   const title = phrases.attachmentTablesFigures
 
-  const attachmentTablesAndFigures = page.data.attachmentTables ? forceArray(page.data.attachmentTables) : []
+  const attachmentTablesAndFigures = page.data.attachmentTablesFigures ? forceArray(page.data.attachmentTablesFigures) : []
   if (attachmentTablesAndFigures.length === 0) {
     if (req.mode === 'edit' && page.type !== `${app.name}:statistics`) {
       return {
@@ -61,7 +61,7 @@ const renderPart = (req) => {
     }
   }
 
-  const attachmentTableAndFigureView = getTablesAndFigures(attachmentTablesAndFigures, req, phrases.table)
+  const attachmentTableAndFigureView = getTablesAndFigures(attachmentTablesAndFigures, req, phrases)
   const accordionComponent = new React4xp('site/parts/accordion/accordion')
     .setProps({
       accordions: attachmentTableAndFigureView.map(({
@@ -90,8 +90,6 @@ const renderPart = (req) => {
     clientRender: isOutsideContentStudio
   })
 
-  log.info('accordionComponent PrettyJSON%s', JSON.stringify(accordionComponent, null, 4))
-
   const accordionPageContributions = accordionComponent.renderPageContributions({
     clientRender: isOutsideContentStudio
   })
@@ -105,7 +103,7 @@ const renderPart = (req) => {
   }
 }
 
-const getTablesAndFigures = (attachmentTablesAndFigures, req, tableName) => {
+const getTablesAndFigures = (attachmentTablesAndFigures, req, phrases) => {
   if (attachmentTablesAndFigures.length > 0) {
     return attachmentTablesAndFigures.map((id, index) => {
       const content = get({
@@ -113,37 +111,37 @@ const getTablesAndFigures = (attachmentTablesAndFigures, req, tableName) => {
       })
 
       if (content.type === 'mimir:table') {
-        return getTable(content, tableController.preview(req, id), index)
+        return getTable(content, tableController.preview(req, id), index, phrases.table)
       }
 
       if (content.type === 'mimir:highchart') {
-        return getFigure(content, highchartController.preview(req, id), index)
+        return getFigure(content, highchartController.preview(req, id), index, phrases.figure)
       }
     })
   }
   return []
 }
 
-log.info('getTablesAndFigures PrettyJSON%s', JSON.stringify(getTablesAndFigures, null, 4))
-
-const getTable = (content, preview, index) => {
+const getTable = (content, preview, index, subhead) => {
   return {
-    id: `attachment-table-${index + 1}`,
+    id: `attachment-table-figure-${index + 1}`,
     open: content.displayName,
-    subHeader: 'Tabell',
+    subHeader: subhead,
     body: preview.body,
     items: [],
     pageContributions: preview.pageContributions
   }
 }
 
-const getFigure = (content, preview, index) => {
+const getFigure = (content, preview, index, subhead) => {
   return {
-    id: `figure-${index + 1}`,
+    id: `attachment-table-figure-${index + 1}`,
     open: content.displayName,
-    subHeader: 'Figur',
-    body: preview.body,
-    items: []
+    subHeader: subhead,
+    // body: preview.body, TODO: Må fikse så denne fungerer
+    body:  '<p>Figur må komme her</p>',
+    items: [],
+    pageContributions: []
   }
 }
 

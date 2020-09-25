@@ -20,10 +20,10 @@
         </field-set>
 
         <field-set>
-            <label>Vedleggstabell</label>
+            <label>Vedleggstabeller og figurer</label>
             <items>
-                <input name="attachmentTables" type="ContentSelector">
-                    <label>Vedleggstabell</label>
+                <input name="attachmentTablesFigures" type="ContentSelector">
+                    <label>Vedleggstabell eller figur</label>
                     <occurrences minimum="0" maximum="0"/>
                     <config>
                         <allowType>table</allowType>
