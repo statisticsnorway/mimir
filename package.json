@@ -86,13 +86,15 @@
     "react-bootstrap-easy-dialog": "^0.3.3",
     "react-dom": "^16.13.1",
     "react-feather": "^2.0.8",
+    "react-responsive": "^8.1.0",
     "react4xp": "^1.1.3",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
     "tableexport.jquery.plugin": "^1.10.20",
     "terser-webpack-plugin": "^1.4.5",
     "ts-loader": "^6.2.2",
-    "typescript": "^3.9.7"
+    "typescript": "^3.9.7",
+    "uuid": "^3.3.3"
   },
   "browserslist": [
     "last 2 version",
