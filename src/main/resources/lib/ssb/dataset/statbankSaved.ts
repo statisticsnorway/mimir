@@ -37,7 +37,7 @@ export function fetchStatbankSavedData(content: Content<DataSource>): object | n
       const dataSource: DataSource['dataSource'] = content.data.dataSource
       if (dataSource._selected && dataSource.statbankSaved && dataSource.statbankSaved.urlOrId) {
         const url: string = isUrl(dataSource.statbankSaved.urlOrId) ?
-          dataSource.statbankSaved.urlOrId as string :
+          dataSource.statbankSaved.urlOrId :
           `${baseUrl}${basePath}${dataSource.statbankSaved.urlOrId}${format}`
         return fetchData(url, undefined, undefined, content._id)
       }
