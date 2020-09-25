@@ -64,13 +64,13 @@ export interface GenericDataImport {
     };
 
     /**
-     * (Ikke i bruk) Lagrede spørringer mot statistikkbanken
+     * Lagrede spørringer mot statistikkbanken
      */
     statbankSaved?: {
       /**
-       * URL
+       * URL eller tabell-id
        */
-      url?: string;
+      urlOrId?: string;
     };
 
     /**
