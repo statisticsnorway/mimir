@@ -2,4 +2,10 @@
   & .row:first-of-type {
     margin-top: $spacer * 1.5;
   }
+
+  .ssb-card {
+    @include media-breakpoint-down(md) {
+      padding: 0;
+    }
+  }
 }

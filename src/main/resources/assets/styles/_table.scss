@@ -30,8 +30,7 @@
 
   @include media-breakpoint-down(md) {
     width: 95%;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0;
 
     caption > img {
       display: block;
