@@ -75,7 +75,7 @@ export function createOrUpdateDataset<T>(dataSourceType: string, key: string, da
     return createNode(DATASET_REPO, DATASET_BRANCH, {
       _name: key,
       _parentPath: `/${dataSourceType}`,
-      data: JSON.stringify(data, null, 0)
+      data: prepareData(dataSourceType, data)
     })
   } else {
     return modifyNode(DATASET_REPO, DATASET_BRANCH, `/${dataSourceType}/${key}`, (dataset) => {
@@ -83,6 +83,10 @@ export function createOrUpdateDataset<T>(dataSourceType: string, key: string, da
       return dataset
     })
   }
+}
+
+function prepareData<T>(dataSourceType: string, data: T): T | string {
+  return dataSourceType === DataSource.STATBANK_SAVED ? data : JSON.stringify(data, null, 0)
 }
 
 export function deleteDataset(dataSourceType: string, key: string): boolean {

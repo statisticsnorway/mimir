@@ -59,6 +59,7 @@ exports.getLanguage = function(page) {
     footerId: currentLanguageConfig.footerId,
     code: currentLanguageConfig.code,
     link: (currentLanguageConfig.link !== null) ? currentLanguageConfig.link : '',
+    standardSymbolPage: currentLanguageConfig.standardSymbolPage,
     phrases: {
       ...(i18n.getPhrases(page.language === 'nb' ? '' : page.language, ['site/i18n/phrases']))
     },

@@ -64,7 +64,8 @@ function renderPart(req, externalLinks) {
     .uniqueId()
 
   const body = render(view, {
-    relatedExternalLinksId: relatedExternalLinksComponent.react4xpId
+    relatedExternalLinksId: relatedExternalLinksComponent.react4xpId,
+    label: phrases.externalLinksHeading
   })
   return {
     body: relatedExternalLinksComponent.renderBody({

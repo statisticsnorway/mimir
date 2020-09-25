@@ -9,6 +9,7 @@ import { TbprocessorLib } from './tbprocessor'
 import { KlassLib } from './klass'
 import { ContextLibrary, RunContext } from 'enonic-types/lib/context'
 import { AuthLibrary, User } from 'enonic-types/lib/auth'
+import { StatbankSavedLib } from './statbankSaved'
 
 const {
   logUserDataQuery, Events
@@ -27,6 +28,9 @@ const {
   fetchStatbankApiData,
   getStatbankApiKey
 }: StatbankApiLib = __non_webpack_require__('/lib/ssb/dataset/statbankApi')
+const {
+  fetchStatbankSavedData
+}: StatbankSavedLib = __non_webpack_require__('/lib/ssb/dataset/statbankSaved')
 const {
   getTbprocessor,
   getTbprocessorKey,
@@ -65,6 +69,8 @@ export function extractKey(content: Content<DataSource>): string | null {
     return getStatbankApiKey(content)
   case DataSourceType.TBPROCESSOR:
     return getTbprocessorKey(content)
+  case DataSourceType.STATBANK_SAVED:
+    return getStatbankApiKey(content)
   case DataSourceType.KLASS:
     return getKlassKey(content)
   default:
@@ -78,6 +84,8 @@ function extractData(content: Content<DataSource>): JSONstat | TbmlData | object
     return fetchStatbankApiData(content)
   case DataSourceType.TBPROCESSOR:
     return fetchTbprocessorData(content)
+  case DataSourceType.STATBANK_SAVED:
+    return fetchStatbankSavedData(content)
   case DataSourceType.KLASS:
     return fetchKlassData(content)
   default:
