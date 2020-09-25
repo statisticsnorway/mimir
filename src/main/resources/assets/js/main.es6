@@ -18,5 +18,4 @@ document.addEventListener('DOMContentLoaded', () => {
   initPrint()
   initRelatedKostra()
   initDivider()
-  initTable()
 }, false)
