@@ -50,6 +50,11 @@ name: "QA Environment"
 trigger:
   target:
     - qa
+  branch:
+    - master
+  event:
+    include:
+      - push
 steps:
   - name: build & test
     image: enonic/enonic-ci:7.4-node
