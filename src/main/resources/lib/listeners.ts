@@ -27,6 +27,7 @@ export function setupFetchDataOnCreateListener(): void {
           (
             data.dataSource._selected = '${DataSource.STATBANK_API}' OR 
             data.dataSource._selected = '${DataSource.TBPROCESSOR}' OR 
+            data.dataSource._selected = '${DataSource.STATBANK_SAVED}' OR 
             data.dataSource._selected = '${DataSource.KLASS}'
           )`,
         contentTypes: [

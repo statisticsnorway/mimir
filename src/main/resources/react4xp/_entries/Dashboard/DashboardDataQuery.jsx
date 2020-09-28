@@ -7,6 +7,7 @@ import { DataQuery } from './Dashboard'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Popover from 'react-bootstrap/Popover'
 import moment from 'moment'
+import Axios from 'axios'
 
 const simpleDateFormat = (ds) =>
   moment(ds).locale('nb').format('DD.MM.YYYY HH:mm')
@@ -28,7 +29,9 @@ class DashboardDataQuery extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      deleting: false
+      deleting: false,
+      eventLogNodes: [],
+      loadingLogs: false
     }
   }
 
@@ -55,36 +58,75 @@ class DashboardDataQuery extends React.Component {
     this.props.setLoading(this.props.dataquery.id, value)
   }
 
+  loadEventLogData() {
+    this.setState({
+      loadingLogs: true
+    })
+    Axios.get(this.props.fetchLogUrl, {
+      params: {
+        queryId: this.props.id
+      }
+    }) .then((response) => {
+      this.setState({
+        eventLogNodes: response.data
+      })
+    })
+      .catch(function(error) {
+        console.log(error)
+      })
+      .finally( () => {
+        this.setState({
+          loadingLogs: false
+        })
+      })
+  }
+
+  renderJobLogs() {
+    if (this.state.loadingLogs === true) {
+      return (
+        <span className="spinner-border spinner-border" />
+      )
+    } else {
+      return this.state.eventLogNodes.map((logNode, index) => this.renderLogNode(index, logNode))
+    }
+  }
 
   renderLogData() {
     const dataQueryId = this.props.dataquery.id
     const logData = this.props.dataquery.logData
-    return (
-      <td>
-        {logData.eventLogNodes &&
+    if (logData) {
+      return (
+        <td>
+          {this.state.eventLogNodes &&
         <OverlayTrigger
           trigger="click"
           key={dataQueryId}
           placement="bottom"
+          onToggle={(opening) => {
+            if (opening) {
+              this.loadEventLogData()
+            }
+          }}
           overlay={
             <Popover id={`popover-positioned-${dataQueryId}`}>
               <Popover.Title as="h3">Logg detaljer</Popover.Title>
               <Popover.Content className="ssbPopoverBody">
-                {logData.eventLogNodes.map((logNode, index) => this.renderLogNode(index, logNode))}
+                {this.renderJobLogs()}
               </Popover.Content>
             </Popover>
           }
         >
           <span className="haveList">{logData.message ? logData.message : ''}</span>
         </OverlayTrigger>
-        }
-        {!logData.eventLogNodes && logData.message && <span>{logData.message}</span>}
-        {logData.showWarningIcon && <span className="warningIcon"><AlertTriangle size="12" color="#FF4500"/></span>}<br/>
-        {logData.modifiedReadable ? logData.modifiedReadable : ''}<br/>
-        {logData.modified ? logData.modified : ''}<br/>
-        {logData.by && logData.by.displayName ? `av ${logData.by.displayName}` : '' }
-      </td>
-    )
+          }
+          {!logData.eventLogNodes && logData.message && <span>{logData.message}</span>}
+          {logData.showWarningIcon && <span className="warningIcon"><AlertTriangle size="12" color="#FF4500"/></span>}<br/>
+          {logData.modifiedReadable ? logData.modifiedReadable : ''}<br/>
+          {logData.modified ? logData.modified : ''}<br/>
+          {logData.by && logData.by.displayName ? `av ${logData.by.displayName}` : '' }
+        </td>
+      )
+    } else return <td>no logs</td>
   }
 
   renderLogNode(i, logNode) {
@@ -139,8 +181,10 @@ class DashboardDataQuery extends React.Component {
 }
 
 DashboardDataQuery.propTypes = {
+  id: PropTypes.string,
   dataquery: PropTypes.shape(DataQuery),
   showError: PropTypes.func,
+  fetchLogUrl: PropTypes.string,
   showSuccess: PropTypes.func,
   refreshRow: PropTypes.func,
   getRequest: PropTypes.func,

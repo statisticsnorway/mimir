@@ -247,6 +247,7 @@ class Dashboard extends React.Component {
       return (
         <DashboardDataQuery key={fromStateQuery.id}
           id={fromStateQuery.id}
+          fetchLogUrl={this.props.fetchLogUrl || ''}
           dataquery={fromStateQuery}
           showSuccess={(msg) => this.showSuccess(msg)}
           showError={(msg) => this.showError(msg)}
@@ -400,6 +401,7 @@ Dashboard.propTypes = {
   dashboardService: PropTypes.string,
   clearCacheServiceUrl: PropTypes.string,
   convertServiceUrl: PropTypes.string,
+  fetchLogUrl: PropTypes.string,
   dataQueries: PropTypes.arrayOf(
     PropTypes.shape(DataQuery)
   ),

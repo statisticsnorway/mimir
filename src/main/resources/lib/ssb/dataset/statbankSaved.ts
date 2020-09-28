@@ -9,7 +9,7 @@ const {
 }: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
 const {
   get: fetchData
-} = __non_webpack_require__('/lib/dataquery')
+} = __non_webpack_require__('/lib/statBankSaved/statBankSaved')
 const {
   logUserDataQuery,
   Events
@@ -28,38 +28,33 @@ export function getStatbankApi(content: Content<DataSource>): DatasetRepoNode<JS
   return null
 }
 
-export function fetchStatbankApiData(content: Content<DataSource>): JSONstat | null {
-  const baseUrl: string = app.config && app.config['ssb.pxwebapi.baseUrl'] ? app.config['ssb.pxwebapi.baseUrl'] : 'https://data.ssb.no/api/v0/no'
-  let data: JSONstat | null = null
+export function fetchStatbankSavedData(content: Content<DataSource>): object | null {
   if (content.data.dataSource) {
+    const format: string = '.html5_table'
+    const basePath: string = '/sq/'
+    const baseUrl: string = app.config && app.config['ssb.statbankweb.baseUrl'] ? app.config['ssb.statbankweb.baseUrl'] : 'https://www.ssb.no/statbank'
     try {
       const dataSource: DataSource['dataSource'] = content.data.dataSource
-      if (dataSource._selected && dataSource.statbankApi && dataSource.statbankApi.json) {
-        let url: string = `${baseUrl}/table/${dataSource.statbankApi.urlOrId}`
-        if (isUrl(dataSource.statbankApi.urlOrId)) {
-          url = dataSource.statbankApi.urlOrId as string
-        }
-        data = fetchData(url, dataSource.statbankApi.json && JSON.parse(dataSource.statbankApi.json), undefined, content._id)
+      if (dataSource._selected && dataSource.statbankSaved && dataSource.statbankSaved.urlOrId) {
+        const url: string = isUrl(dataSource.statbankSaved.urlOrId) ?
+          dataSource.statbankSaved.urlOrId :
+          `${baseUrl}${basePath}${dataSource.statbankSaved.urlOrId}${format}`
+        return fetchData(url, undefined, undefined, content._id)
       }
     } catch (e) {
-      const message: string = `Failed to fetch data from statregApi: ${content._id} (${e})`
+      const message: string = `Failed to fetch data from statregSaved: ${content._id} (${e})`
       logUserDataQuery(content._id, {
         message: Events.FAILED_TO_REQUEST_DATASET,
         info: message
       })
       log.error(message)
     }
+    return null
+  } else {
+    return null
   }
-  return data
 }
 
-
-export function getStatbankApiKey(content: Content<DataSource>): string {
-  return content._id
-}
-
-export interface StatbankApiLib {
-  getStatbankApi: (content: Content<DataSource>) => DatasetRepoNode<JSONstat> | null;
-  fetchStatbankApiData: (content: Content<DataSource>) => JSONstat | null;
-  getStatbankApiKey: (content: Content<DataSource>) => string;
+export interface StatbankSavedLib {
+  fetchStatbankSavedData: (content: Content<DataSource>) => JSONstat | null;
 }

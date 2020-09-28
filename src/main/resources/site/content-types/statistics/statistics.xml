@@ -20,6 +20,20 @@
         </field-set>
 
         <field-set>
+            <label>Vedleggstabell</label>
+            <items>
+                <input name="attachmentTables" type="ContentSelector">
+                    <label>Vedleggstabell</label>
+                    <occurrences minimum="0" maximum="0"/>
+                    <config>
+                        <allowType>table</allowType>
+                        <description>Legg til Vedleggstabell</description>
+                    </config>
+                </input>
+            </items>
+        </field-set>
+
+        <field-set>
             <label>Om Statistikken</label>
             <items>
                 <input name="aboutTheStatistics" type="ContentSelector">
