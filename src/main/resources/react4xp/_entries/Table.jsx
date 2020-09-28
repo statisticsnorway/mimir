@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Dropdown, Link } from '@statisticsnorway/ssb-component-library'
 import { isEmpty } from 'ramda'
+import MediaQuery from 'react-responsive'
 
 import '../../assets/js/jquery-global.js'
 import 'tableexport.jquery.plugin/libs/FileSaver/FileSaver.min.js'
@@ -9,7 +10,11 @@ import 'tableexport.jquery.plugin/tableExport.min.js'
 
 class Table extends React.Component {
   downloadTableAsCSV() {
-    const table = $('table').closest('.container')
+    const {
+      id
+    } = this.props.table
+
+    const table = $(`#${id}`)
     table.tableExport({
       type: 'csv',
       fileName: 'tabell',
@@ -43,8 +48,12 @@ class Table extends React.Component {
   }
 
   createTable() {
+    const {
+      id, tableClass
+    } = this.props.table
+
     return (
-      <table className={this.props.table.tableClass}>
+      <table id={id} className={tableClass}>
         {this.addCaption()}
         {this.addThead()}
         {this.addTbody()}
@@ -323,10 +332,18 @@ class Table extends React.Component {
   }
 
   render() {
+    const lg = 992
+    const md = 782
+
     if (!isEmpty(this.props.table)) {
       return <div className="container">
-        {this.addDownloadTableDropdown()}
+        <MediaQuery minDeviceWidth={lg}>
+          {this.addDownloadTableDropdown()}
+        </MediaQuery>
         {this.createTable()}
+        <MediaQuery maxDeviceWidth={md}>
+          {this.addDownloadTableDropdown()}
+        </MediaQuery>
         {this.addStandardSymbols()}
         {this.renderSources()}
       </div>
@@ -362,6 +379,7 @@ Table.propTypes = {
       content: PropTypes.string,
       noterefs: PropTypes.string
     }),
+    id: PropTypes.string,
     tableClass: PropTypes.string,
     thead: PropTypes.arrayOf(
       PropTypes.shape({
