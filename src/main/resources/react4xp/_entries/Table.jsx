@@ -4,9 +4,8 @@ import { Dropdown, Link } from '@statisticsnorway/ssb-component-library'
 import { isEmpty } from 'ramda'
 import MediaQuery from 'react-responsive'
 
-import '../../assets/js/jquery-global.js'
-import 'tableexport.jquery.plugin/libs/FileSaver/FileSaver.min.js'
-import 'tableexport.jquery.plugin/tableExport.min.js'
+import '../../assets/js/jquery-global'
+import '../../assets/js/tableExport'
 
 class Table extends React.Component {
   downloadTableAsCSV() {
