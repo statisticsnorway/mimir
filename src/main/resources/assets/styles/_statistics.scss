@@ -1,11 +1,19 @@
 .statistics {
+  & > .row > .col-12 {
+    @include media-breakpoint-down(md) {
+      padding: 0;
+    }
+  }
+
   .titles-dates-wrapper {
-    @include make-row;
-
-    > * {
-      @include make-col-ready();
-      @include make-col(12);
-
+    .col-12 {
+      @include media-breakpoint-down(md) {
+        padding: 0;
+      }
+    }
+  }
+  .key-figures {
+    .col-12 {
       @include media-breakpoint-down(md) {
         padding: 0;
       }
