@@ -1,8 +1,10 @@
 __non_webpack_require__('/lib/polyfills/nashorn')
 const {
-  getAllStatisticsFromRepo,
-  handleRepoGet
+  getAllStatisticsFromRepo
 } = __non_webpack_require__('/lib/repo/statreg/statistics')
+const {
+  handleRepoGet
+} = __non_webpack_require__('/lib/ssb/statreg/repoUtils')
 
 const toOption = (stat) => ({
   ...stat,
