@@ -95,7 +95,8 @@
         theadSelector: 'tr',
         tableName: 'myTableName',
         type: 'csv', // 'csv', 'tsv', 'txt', 'sql', 'json', 'xml', 'excel', 'doc', 'png' or 'pdf'
-        worksheetName: 'Worksheet'
+        worksheetName: 'Worksheet',
+        jsxlsx: null
       }
 
       const FONT_ROW_RATIO = 1.15
@@ -814,7 +815,7 @@
         wb.SheetNames.push(defaults.worksheetName)
         wb.Sheets[defaults.worksheetName] = ws
 
-        const wbout = XLSX.write(wb, {
+        const wbout = defaults.jsxlsx.write(wb, {
           bookType: defaults.type,
           bookSST: false,
           type: 'binary'
@@ -2050,7 +2051,7 @@
               v: data[R][C]
             }
             if (cell.v === null) continue
-            const cell_ref = XLSX.utils.encode_cell({
+            const cell_ref = defaults.jsxlsx.utils.encode_cell({
               c: C,
               r: R
             })
@@ -2058,14 +2059,14 @@
             if (typeof cell.v === 'number') cell.t = 'n'
             else if (typeof cell.v === 'boolean') cell.t = 'b'
             else if (cell.v instanceof Date) {
-              cell.t = 'n'; cell.z = XLSX.SSF._table[14]
+              cell.t = 'n'; cell.z = defaults.jsxlsx.SSF._table[14]
               cell.v = jx_datenum(cell.v)
             } else cell.t = 's'
             ws[cell_ref] = cell
           }
         }
 
-        if (range.s.c < 10000000) ws['!ref'] = XLSX.utils.encode_range(range)
+        if (range.s.c < 10000000) ws['!ref'] = defaults.jsxlsx.utils.encode_range(range)
         return ws
       }
 

@@ -91,7 +91,8 @@
     "style-loader": "^0.23.1",
     "terser-webpack-plugin": "^1.4.5",
     "ts-loader": "^6.2.2",
-    "typescript": "^3.9.7"
+    "typescript": "^3.9.7",
+    "xlsx": "^0.16.7"
   },
   "browserslist": [
     "last 2 version",

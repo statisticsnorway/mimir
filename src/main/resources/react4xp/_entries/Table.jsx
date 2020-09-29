@@ -5,6 +5,7 @@ import { isEmpty } from 'ramda'
 
 import '../../assets/js/jquery-global.js'
 import { ChevronLeft, ChevronRight } from 'react-feather'
+import XLSX from 'xlsx/dist/xlsx.core.min'
 import '../../assets/js/tableExport'
 
 class Table extends React.Component {
@@ -72,34 +73,6 @@ class Table extends React.Component {
     this.updateTableControlsDesktop()
   }
 
-  downloadTableAsCSV() {
-    const table = $(this.tableRef.current)
-    table.tableExport({
-      type: 'csv',
-      fileName: 'tabell',
-      csvSeparator: ';'
-    })
-  }
-
-  downloadTableAsExcel() {
-    const table = $(this.tableRef.current)
-    table.tableExport({
-      type: 'xlsx',
-      fileName: 'tabell',
-      numbers: {
-        html: {
-          decimalMark: ',',
-          thousandsSeparator: ' '
-        },
-        output:
-            {
-              decimalMark: '.',
-              thousandsSeparator: ''
-            }
-      }
-    })
-  }
-
   addDownloadTableDropdown(mobile) {
     const {
       downloadTableLabel,
@@ -127,6 +100,35 @@ class Table extends React.Component {
         />
       </div>
     )
+  }
+
+  downloadTableAsCSV() {
+    const table = $(this.tableRef.current)
+    table.tableExport({
+      type: 'csv',
+      fileName: 'tabell',
+      csvSeparator: ';'
+    })
+  }
+
+  downloadTableAsExcel() {
+    const table = $(this.tableRef.current)
+    table.tableExport({
+      type: 'xlsx',
+      jsxlsx: XLSX,
+      fileName: 'tabell',
+      numbers: {
+        html: {
+          decimalMark: ',',
+          thousandsSeparator: ' '
+        },
+        output:
+            {
+              decimalMark: '.',
+              thousandsSeparator: ''
+            }
+      }
+    })
   }
 
   createTable() {
