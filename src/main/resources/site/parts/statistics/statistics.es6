@@ -13,6 +13,9 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
+const {
+  preview: keyFigurePreview
+} = __non_webpack_require__('../keyFigure/keyFigure')
 
 const moment = require('moment/min/moment-with-locales')
 const view = resolve('./statistics.html')
@@ -38,6 +41,7 @@ const renderPart = (req) => {
   const nextUpdate = phrases.nextUpdate + ': '
   let previousRelease = phrases.notAvailable
   let nextRelease = phrases.notYetDetermined
+  let statisticsKeyFigure
 
   if (statistic) {
     title = statistic.name
@@ -51,17 +55,25 @@ const renderPart = (req) => {
     }
   }
 
+  if (page.data.statisticsKeyFigure) {
+    statisticsKeyFigure = keyFigurePreview(req, page.data.statisticsKeyFigure)
+  }
+
   const model = {
     title,
     updated,
     nextUpdate,
     previousRelease,
-    nextRelease
+    nextRelease,
+    statisticsKeyFigure: statisticsKeyFigure ? statisticsKeyFigure.body : null
   }
 
   const body = render(view, model)
   return {
     body,
+    pageContributions: {
+      bodyEnd: statisticsKeyFigure ? statisticsKeyFigure.pageContributions.bodyEnd : []
+    },
     contentType: 'text/html'
   }
 }

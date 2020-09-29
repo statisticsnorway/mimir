@@ -70,5 +70,9 @@
       </items>
     </item-set>
     <mixin name="dataSource"/>
+    <input name="manualSource" type="Double">
+      <label>Manuell kilde</label>
+      <occurrences minimum="0" maximum="1"/>
+    </input>
   </form>
 </content-type>
