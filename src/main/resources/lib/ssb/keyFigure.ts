@@ -165,8 +165,8 @@ export function parseKeyFigure(req: Request, keyFigure: Content<KeyFigure>, muni
 
 function datasetOrNull(keyFigure: Content<KeyFigure>): DatasetRepoNode<JSONstat> | null {
   return keyFigure.data.dataSource && keyFigure.data.dataSource._selected ?
-  fromDatasetRepoCache(`/${keyFigure.data.dataSource._selected}/${extractKey(keyFigure)}`,
-    () => getDataset(keyFigure)) :
+    fromDatasetRepoCache(`/${keyFigure.data.dataSource._selected}/${extractKey(keyFigure)}`,
+      () => getDataset(keyFigure)) :
     null
 }
 
