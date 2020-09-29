@@ -2,11 +2,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Dropdown, Link } from '@statisticsnorway/ssb-component-library'
 import { isEmpty } from 'ramda'
+import MediaQuery from 'react-responsive'
 
 import '../../assets/js/jquery-global.js'
 import 'tableexport.jquery.plugin/libs/FileSaver/FileSaver.min.js'
 import 'tableexport.jquery.plugin/tableExport.min.js'
 import { ChevronLeft, ChevronRight } from 'react-feather'
+import '../../assets/js/tableExport'
 
 class Table extends React.Component {
   constructor(props) {
@@ -82,7 +84,7 @@ class Table extends React.Component {
     })
   }
 
-  addDownloadTableDropdown(mobile) {
+  addDownloadTableDropdown() {
     const {
       downloadTableLabel,
       downloadTableTitle,
@@ -96,7 +98,7 @@ class Table extends React.Component {
     }
 
     return (
-      <div className={`download-table-container ${mobile ? 'd-flex d-lg-none' : 'd-none d-lg-flex'}`}>
+      <div className={`download-table-container`}>
         <Dropdown
           header={downloadTableLabel}
           selectedItem={downloadTableTitle}
@@ -108,8 +110,12 @@ class Table extends React.Component {
   }
 
   createTable() {
+    const {
+      tableClass
+    } = this.props.table
+
     return (
-      <table className={this.props.table.tableClass} ref={this.tableRef}>
+      <table className={tableClass} ref={this.tableRef}>
         {this.addCaption()}
         {this.addThead()}
         {this.addTbody()}
@@ -399,10 +405,15 @@ class Table extends React.Component {
   }
 
   render() {
+    const lg = 992
+    const md = 782
+
     if (!isEmpty(this.props.table)) {
       return (
         <div className="container">
-          {this.addDownloadTableDropdown(false)}
+          <MediaQuery minDeviceWidth={lg}>
+            {this.addDownloadTableDropdown()}
+          </MediaQuery>
           <div>
             {this.createScrollControlsDesktop()}
             {this.createScrollControlsMobile()}
@@ -410,7 +421,9 @@ class Table extends React.Component {
               {this.createTable()}
             </div>
           </div>
-          {this.addDownloadTableDropdown(true)}
+          <MediaQuery maxDeviceWidth={md}>
+            {this.addDownloadTableDropdown()}
+          </MediaQuery>
           {this.addStandardSymbols()}
           {this.renderSources()}
         </div>
@@ -447,6 +460,7 @@ Table.propTypes = {
       content: PropTypes.string,
       noterefs: PropTypes.string
     }),
+    id: PropTypes.string,
     tableClass: PropTypes.string,
     thead: PropTypes.arrayOf(
       PropTypes.shape({
