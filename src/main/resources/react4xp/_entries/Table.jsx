@@ -10,15 +10,34 @@ import 'tableexport.jquery.plugin/tableExport.min.js'
 
 class Table extends React.Component {
   downloadTableAsCSV() {
-    const {
-      id
-    } = this.props.table
+    const id = this.props.table.id
 
     const table = $(`#${id}`)
     table.tableExport({
       type: 'csv',
       fileName: 'tabell',
       csvSeparator: ';'
+    })
+  }
+
+  downloadTableAsExcel() {
+    const id = this.props.table.id
+
+    const table = $(`#${id}`)
+    table.tableExport({
+      type: 'xlsx',
+      fileName: 'tabell',
+      numbers: {
+        html: {
+          decimalMark: ',',
+          thousandsSeparator: ' '
+        },
+        output:
+            {
+              decimalMark: '.',
+              thousandsSeparator: ''
+            }
+      }
     })
   }
 
@@ -32,6 +51,10 @@ class Table extends React.Component {
     const downloadTable = (item) => {
       if (item.id === 'downloadTableAsCSV') {
         { this.downloadTableAsCSV() }
+      }
+
+      if (item.id === 'downloadTableAsXLSX') {
+        { this.downloadTableAsExcel() }
       }
     }
 

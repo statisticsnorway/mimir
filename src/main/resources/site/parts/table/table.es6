@@ -124,7 +124,7 @@ const getDownloadTableOptions = () => {
 
   const XLS = {
     title: '.xlsx (Excel)',
-    id: 'downloadTableAsXLS'
+    id: 'downloadTableAsXLSX'
   }
   downloadTable.push(XLS)
 
