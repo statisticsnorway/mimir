@@ -3,10 +3,7 @@ import PropTypes from 'prop-types'
 import { Dropdown, Link } from '@statisticsnorway/ssb-component-library'
 import { isEmpty } from 'ramda'
 import MediaQuery from 'react-responsive'
-
 import '../../assets/js/jquery-global.js'
-import 'tableexport.jquery.plugin/libs/FileSaver/FileSaver.min.js'
-import 'tableexport.jquery.plugin/tableExport.min.js'
 import { ChevronLeft, ChevronRight } from 'react-feather'
 import '../../assets/js/tableExport'
 
@@ -414,12 +411,10 @@ class Table extends React.Component {
           <MediaQuery minDeviceWidth={lg}>
             {this.addDownloadTableDropdown()}
           </MediaQuery>
-          <div>
-            {this.createScrollControlsDesktop()}
-            {this.createScrollControlsMobile()}
-            <div className="table-wrapper" onScroll={() => this.updateTableControlsDesktop()} ref={this.tableWrapperRef}>
-              {this.createTable()}
-            </div>
+          {this.createScrollControlsDesktop()}
+          {this.createScrollControlsMobile()}
+          <div className="table-wrapper" onScroll={() => this.updateTableControlsDesktop()} ref={this.tableWrapperRef}>
+            {this.createTable()}
           </div>
           <MediaQuery maxDeviceWidth={md}>
             {this.addDownloadTableDropdown()}
