@@ -117,6 +117,9 @@ export function parseKeyFigure(req: Request, keyFigure: Content<KeyFigure>, muni
       getDataTbProcessor(keyFigureViewData, data, keyFigure)
     }
     return keyFigureViewData
+  } else if (keyFigure.data.manualSource) {
+    keyFigureViewData.number = parseValue(keyFigure.data.manualSource)
+    return keyFigureViewData
   }
 
   // TODO: Fjerne koden nedenfor når vi har fjernet dataQuery fra innholdstypen Keyfigures
