@@ -76,6 +76,7 @@ const renderPart = (req) => {
         }
       })
     })
+    .setId('accordion')
     .uniqueId()
 
   const isOutsideContentStudio = (
@@ -109,7 +110,6 @@ const getTablesAndFigures = (attachmentTablesAndFigures, req, phrases) => {
       const content = get({
         key: id
       })
-
       if (content.type === 'mimir:table') {
         return getTable(content, tableController.preview(req, id), index, phrases.table)
       }
@@ -138,10 +138,9 @@ const getFigure = (content, preview, index, subhead) => {
     id: `attachment-table-figure-${index + 1}`,
     open: content.displayName,
     subHeader: subhead,
-    // body: preview.body, TODO: Må fikse så denne fungerer
-    body:  '<p>Figur må komme her</p>',
+    body: preview.body,
     items: [],
-    pageContributions: []
+    pageContributions: preview.pageContributions
   }
 }
 
