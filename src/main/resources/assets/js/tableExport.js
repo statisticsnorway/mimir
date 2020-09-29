@@ -71,10 +71,10 @@
             thousandsSeparator: ','
           },
           output: // set to false to not format numbers in exported output
-                        {
-                          decimalMark: '.',
-                          thousandsSeparator: ','
-                        }
+              {
+                decimalMark: '.',
+                thousandsSeparator: ','
+              }
         },
         onCellData: null,
         onCellHtmlData: null,
@@ -421,8 +421,8 @@
       } else if (defaults.type === 'excel' && defaults.excelFileFormat === 'xmlss') {
         var $tables = $(el).filter(function() {
           return $(this).data('tableexport-display') != 'none' &&
-                        ($(this).is(':visible') ||
-                            $(this).data('tableexport-display') == 'always')
+              ($(this).is(':visible') ||
+                  $(this).data('tableexport-display') == 'always')
         })
         const docDatas = []
         $tables.each(function() {
@@ -503,39 +503,39 @@
 
         const CreationDate = new Date().toISOString()
         var docFile = '<?xml version="1.0" encoding="UTF-8"?><?mso-application progid="Excel.Sheet"?> ' +
-                    '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" ' +
-                    'xmlns:o="urn:schemas-microsoft-com:office:office" ' +
-                    'xmlns:x="urn:schemas-microsoft-com:office:excel" ' +
-                    'xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet" ' +
-                    'xmlns:html="http://www.w3.org/TR/REC-html40"> ' +
-                    '<DocumentProperties xmlns="urn:schemas-microsoft-com:office:office"> ' +
-                    '<Created>' + CreationDate + '</Created> ' +
-                    '</DocumentProperties> ' +
-                    '<OfficeDocumentSettings xmlns="urn:schemas-microsoft-com:office:office"> ' +
-                    '<AllowPNG/> ' +
-                    '</OfficeDocumentSettings> ' +
-                    '<ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel"> ' +
-                    '<WindowHeight>9000</WindowHeight> ' +
-                    '<WindowWidth>13860</WindowWidth> ' +
-                    '<WindowTopX>0</WindowTopX> ' +
-                    '<WindowTopY>0</WindowTopY> ' +
-                    '<ProtectStructure>False</ProtectStructure> ' +
-                    '<ProtectWindows>False</ProtectWindows> ' +
-                    '</ExcelWorkbook> ' +
-                    '<Styles> ' +
-                    '<Style ss:ID="Default" ss:Name="Default"> ' +
-                    '<Alignment ss:Vertical="Center"/> ' +
-                    '<Borders/> ' +
-                    '<Font/> ' +
-                    '<Interior/> ' +
-                    '<NumberFormat/> ' +
-                    '<Protection/> ' +
-                    '</Style> ' +
-                    '<Style ss:ID="Normal" ss:Name="Normal"/> ' +
-                    '<Style ss:ID="pct1"> ' +
-                    '  <NumberFormat ss:Format="Percent"/> ' +
-                    '</Style> ' +
-                    '</Styles>'
+            '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" ' +
+            'xmlns:o="urn:schemas-microsoft-com:office:office" ' +
+            'xmlns:x="urn:schemas-microsoft-com:office:excel" ' +
+            'xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet" ' +
+            'xmlns:html="http://www.w3.org/TR/REC-html40"> ' +
+            '<DocumentProperties xmlns="urn:schemas-microsoft-com:office:office"> ' +
+            '<Created>' + CreationDate + '</Created> ' +
+            '</DocumentProperties> ' +
+            '<OfficeDocumentSettings xmlns="urn:schemas-microsoft-com:office:office"> ' +
+            '<AllowPNG/> ' +
+            '</OfficeDocumentSettings> ' +
+            '<ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel"> ' +
+            '<WindowHeight>9000</WindowHeight> ' +
+            '<WindowWidth>13860</WindowWidth> ' +
+            '<WindowTopX>0</WindowTopX> ' +
+            '<WindowTopY>0</WindowTopY> ' +
+            '<ProtectStructure>False</ProtectStructure> ' +
+            '<ProtectWindows>False</ProtectWindows> ' +
+            '</ExcelWorkbook> ' +
+            '<Styles> ' +
+            '<Style ss:ID="Default" ss:Name="Default"> ' +
+            '<Alignment ss:Vertical="Center"/> ' +
+            '<Borders/> ' +
+            '<Font/> ' +
+            '<Interior/> ' +
+            '<NumberFormat/> ' +
+            '<Protection/> ' +
+            '</Style> ' +
+            '<Style ss:ID="Normal" ss:Name="Normal"/> ' +
+            '<Style ss:ID="pct1"> ' +
+            '  <NumberFormat ss:Format="Percent"/> ' +
+            '</Style> ' +
+            '</Styles>'
 
         for (let j = 0; j < docDatas.length; j++) {
           const ssName = typeof defaults.worksheetName === 'string' ? defaults.worksheetName + ' ' + (j + 1) :
@@ -543,9 +543,9 @@
               'Table ' + (j + 1)
 
           docFile += '<Worksheet ss:Name="' + ssName + '">' +
-                        docDatas[j] +
-                        '<WorksheetOptions/> ' +
-                        '</Worksheet>'
+              docDatas[j] +
+              '<WorksheetOptions/> ' +
+              '</Worksheet>'
         }
 
         docFile += '</Workbook>'
@@ -578,8 +578,8 @@
         const MSDocSchema = 'xmlns:x="urn:schemas-microsoft-com:office:' + MSDocType + '"'
         var $tables = $(el).filter(function() {
           return $(this).data('tableexport-display') != 'none' &&
-                        ($(this).is(':visible') ||
-                            $(this).data('tableexport-display') == 'always')
+              ($(this).is(':visible') ||
+                  $(this).data('tableexport-display') == 'always')
         })
         let docData = ''
 
@@ -1058,8 +1058,8 @@
           if (typeof teOptions.images != 'undefined') {
             $(el).filter(function() {
               return $(this).data('tableexport-display') != 'none' &&
-                                ($(this).is(':visible') ||
-                                    $(this).data('tableexport-display') == 'always')
+                  ($(this).is(':visible') ||
+                      $(this).data('tableexport-display') == 'always')
             }).each(function() {
               let rowCount = 0
 
@@ -1092,8 +1092,8 @@
           loadImages( teOptions, function(imageCount) {
             $(el).filter(function() {
               return $(this).data('tableexport-display') != 'none' &&
-                                ($(this).is(':visible') ||
-                                    $(this).data('tableexport-display') == 'always')
+                  ($(this).is(':visible') ||
+                      $(this).data('tableexport-display') == 'always')
             }).each(function() {
               let colKey
               let rowIndex = 0
@@ -1189,8 +1189,8 @@
                   const rowopt = teOptions.rowoptions [data.row.index + ':' + data.column.dataKey]
 
                   if (typeof rowopt != 'undefined' &&
-                                        typeof rowopt.style != 'undefined' &&
-                                        rowopt.style.hidden !== true) {
+                      typeof rowopt.style != 'undefined' &&
+                      rowopt.style.hidden !== true) {
                     cell.styles.halign = rowopt.style.align
                     if (atOptions.styles.fillColor === 'inherit') {
                       cell.styles.fillColor = rowopt.style.bcolor
@@ -1210,7 +1210,7 @@
                   const colopt = teOptions.columns [data.column.dataKey]
 
                   if ((colopt.style.hasOwnProperty('hidden') !== true || colopt.style.hidden !== true) &&
-                                        colopt.rowIndex >= 0 ) {
+                      colopt.rowIndex >= 0 ) {
                     return prepareAutoTableText(cell, data, colopt)
                   } else {
                     return false
@@ -1274,7 +1274,7 @@
                     }
 
                     if (obj !== null && obj.rowIndex >= 0 &&
-                                            (obj.style.hasOwnProperty('hidden') !== true || obj.style.hidden !== true)) {
+                        (obj.style.hasOwnProperty('hidden') !== true || obj.style.hidden !== true)) {
                       teOptions.columns.push(obj)
                     }
                   })
@@ -1398,7 +1398,7 @@
             }
           } else if (typeof defaults.ignoreColumn[0] == 'number') {
             if ($.inArray(colIndex, defaults.ignoreColumn) != -1 ||
-                            $.inArray(colIndex - rowLength, defaults.ignoreColumn) != -1) {
+                $.inArray(colIndex - rowLength, defaults.ignoreColumn) != -1) {
               result = true
             }
           }
@@ -1408,21 +1408,21 @@
 
       function ForEachVisibleCell(tableRow, selector, rowIndex, rowCount, cellcallback) {
         if ($.inArray(rowIndex, defaults.ignoreRow) == -1 &&
-                    $.inArray(rowIndex - rowCount, defaults.ignoreRow) == -1) {
+            $.inArray(rowIndex - rowCount, defaults.ignoreRow) == -1) {
           const $row = $(tableRow).filter(function() {
             return $(this).data('tableexport-display') != 'none' &&
-                            ($(this).is(':visible') ||
-                                $(this).data('tableexport-display') == 'always' ||
-                                $(this).closest('table').data('tableexport-display') == 'always')
+                ($(this).is(':visible') ||
+                    $(this).data('tableexport-display') == 'always' ||
+                    $(this).closest('table').data('tableexport-display') == 'always')
           }).find(selector)
 
           let rowColspan = 0
 
           $row.each(function(colIndex) {
             if ($(this).data('tableexport-display') == 'always' ||
-                            ($(this).css('display') != 'none' &&
-                                $(this).css('visibility') != 'hidden' &&
-                                $(this).data('tableexport-display') != 'none')) {
+                ($(this).css('display') != 'none' &&
+                    $(this).css('visibility') != 'hidden' &&
+                    $(this).data('tableexport-display') != 'none')) {
               if (typeof (cellcallback) === 'function') {
                 let c; let Colspan = 1
                 let r; let Rowspan = 1
@@ -1723,8 +1723,8 @@
               let txt = tag.innerText || tag.textContent || ''
 
               txt = ((txt.length && txt[0] == ' ') ? ' ' : '') +
-                                $.trim(txt) +
-                                ((txt.length > 1 && txt[txt.length - 1] == ' ') ? ' ' : '')
+                  $.trim(txt) +
+                  ((txt.length > 1 && txt[txt.length - 1] == ' ') ? ' ' : '')
 
               if ($(tag).is('br')) {
                 x = cell.textPos.x
@@ -1745,7 +1745,7 @@
 
               if (w) {
                 if (cell.styles.overflow === 'linebreak' &&
-                                    x > cell.textPos.x && (x + w) > (cell.textPos.x + cell.width)) {
+                    x > cell.textPos.x && (x + w) > (cell.textPos.x + cell.width)) {
                   const chars = '.,!%*;:=-'
                   if (chars.indexOf(txt.charAt(0)) >= 0) {
                     const s = txt.charAt(0)
@@ -1874,15 +1874,15 @@
             })
 
             if (defaults.type == 'json' ||
-                            (defaults.type === 'excel' && defaults.excelFileFormat === 'xmlss') ||
-                            defaults.numbers.output === false) {
+                (defaults.type === 'excel' && defaults.excelFileFormat === 'xmlss') ||
+                defaults.numbers.output === false) {
               var number = parseNumber(result)
 
               if (number !== false) {
                 result = Number(number)
               }
             } else if (defaults.numbers.html.decimalMark != defaults.numbers.output.decimalMark ||
-                            defaults.numbers.html.thousandsSeparator != defaults.numbers.output.thousandsSeparator) {
+                defaults.numbers.html.thousandsSeparator != defaults.numbers.output.thousandsSeparator) {
               var number = parseNumber(result)
 
               if ( number !== false ) {
@@ -1893,7 +1893,7 @@
                 const mod = frac[0].length > 3 ? frac[0].length % 3 : 0
 
                 result = (defaults.numbers.output.thousandsSeparator ? ((mod ? frac[0].substr(0, mod) + defaults.numbers.output.thousandsSeparator : '') + frac[0].substr(mod).replace(/(\d{3})(?=\d)/g, '$1' + defaults.numbers.output.thousandsSeparator)) : frac[0]) +
-                                    (frac[1].length ? defaults.numbers.output.decimalMark + frac[1] : '')
+                    (frac[1].length ? defaults.numbers.output.decimalMark + frac[1] : '')
               }
             }
           }
@@ -2188,8 +2188,8 @@
             enc4 = 64
           }
           output = output +
-                        keyStr.charAt(enc1) + keyStr.charAt(enc2) +
-                        keyStr.charAt(enc3) + keyStr.charAt(enc4)
+              keyStr.charAt(enc1) + keyStr.charAt(enc2) +
+              keyStr.charAt(enc3) + keyStr.charAt(enc4)
         }
         return output
       }
