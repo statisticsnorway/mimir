@@ -66,6 +66,11 @@ export const createDefaultConfig = (highchartData, displayName) => ({
     enabled: ( highchartData.creditsText || highchartData.creditsHref )
   },
   exporting: {
+    chartOptions: {
+      credits: {
+        text: 'kilde: ' + highchartData.creditsText,
+      }
+    },
     buttons: {
       contextButton: {
         height: 26,
