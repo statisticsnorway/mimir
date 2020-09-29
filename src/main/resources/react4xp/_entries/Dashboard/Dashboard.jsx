@@ -7,35 +7,49 @@
  */
 
 import * as React from 'react'
-import { Provider } from 'react-redux'
+import { Provider, useDispatch } from 'react-redux'
 import { Helmet, HelmetProvider } from 'react-helmet-async'
 import { Switch, Route, BrowserRouter } from 'react-router-dom'
 
 import { HomePage } from './containers/HomePage/index'
-import { configureAppStore } from './store/configureStore.es6'
+import WebsocketProvider, { WebSocketContext } from './utils/websocket/WebsocketProvider'
+import { configureAppStore } from './store/configureStore'
+import { requestStatuses } from './containers/StatRegDashboard/actions'
 
 function Dashboard() {
   return (
     <Provider store={configureAppStore()}>
-      <HelmetProvider>
-        <React.StrictMode>
-          <BrowserRouter>
-            <Helmet
-              titleTemplate="SSB Dashboard desk"
-              defaultTitle="SSB Dashboard desk"
-            >
-            </Helmet>
-
-            <Switch>
-              <Route path="/" component={HomePage} />
-              {/* <Route component={HomePage} /> */}
-            </Switch>
-          </BrowserRouter>
-        </React.StrictMode>
-      </HelmetProvider>
+      <WebsocketProvider>
+        <HelmetProvider>
+          <React.StrictMode>
+            <DashboardRouter/>
+          </React.StrictMode>
+        </HelmetProvider>
+      </WebsocketProvider>
     </Provider>
   )
 }
 
+function DashboardRouter() {
+  // all initial fetches
+  const dispatch = useDispatch()
+  const io = React.useContext(WebSocketContext)
+  io.setup(dispatch)
+  requestStatuses(dispatch, io)
+  return (
+    <BrowserRouter>
+      <Helmet
+        titleTemplate="SSB Dashboard desk"
+        defaultTitle="SSB Dashboard desk"
+      >
+      </Helmet>
+
+      <Switch>
+        <Route path="/" component={HomePage} />
+        {/* <Route component={HomePage} /> */}
+      </Switch>
+    </BrowserRouter>
+  )
+}
 
 export default (props) => <Dashboard {...props} />

@@ -3,6 +3,7 @@ import { createInjectorsEnhancer } from 'redux-injectors'
 import createSagaMiddleware from 'redux-saga'
 import { createReducer } from './reducers'
 import { reducer as statRegReducer } from '../containers/StatRegDashboard/slice'
+import { reducer as commonReducer } from '../containers/HomePage/slice'
 
 export function configureAppStore() {
   const reduxSagaMonitorOptions = {}
@@ -23,6 +24,7 @@ export function configureAppStore() {
 
   const store = configureStore({
     reducer: {
+      common: commonReducer,
       statReg: statRegReducer
     },
     middleware: [...getDefaultMiddleware(), ...middlewares],
