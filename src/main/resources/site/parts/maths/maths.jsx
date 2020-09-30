@@ -9,23 +9,25 @@ class Maths extends React.Component {
   }
 
   render() {
-    return (
-      <MathJax.Provider>
-        <span>
-          This is an inline math formula: <MathJax.Node inline formula={'a = b'} />
-          <br/>
-          And a block one:
-          <MathJax.Node formula={this.props.mathsFormula} />
-          <br/>
-          And a big, complex inline formula <MathJax.Node inline formula={this.props.mathsFormula} />
-        </span>
-      </MathJax.Provider>
-    )
+    if (this.props.nodeType === 'inline') {
+      return (
+        <MathJax.Provider>
+          <MathJax.Node inline formula={this.props.mathsFormula}/>
+        </MathJax.Provider>
+      )
+    } else {
+      return (
+        <MathJax.Provider>
+          <MathJax.Node formula={this.props.mathsFormula}/>
+        </MathJax.Provider>
+      )
+    }
   }
 }
 
 Maths.propTypes = {
-  mathsFormula: PropTypes.string
+  mathsFormula: PropTypes.string,
+  nodeType: PropTypes.string
 }
 
 export default (props) => <Maths {...props} />
