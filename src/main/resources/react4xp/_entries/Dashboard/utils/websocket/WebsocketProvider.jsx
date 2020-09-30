@@ -1,7 +1,7 @@
 import React, { createContext } from 'react'
 import PropTypes from 'prop-types'
 import { actions as commonActions } from '../../containers/HomePage/slice'
-import { actions as statRegActions } from '../../containers/StatRegDashboard/slice'
+import setupStatRegListeners from '../../containers/StatRegDashboard/listeners.es6'
 
 const WebSocketContext = createContext(null)
 export { WebSocketContext }
@@ -15,6 +15,7 @@ function WebsocketProvider({
   let provider
   let emitQueue = []
 
+  // dummy emit function that adds emits to a waiting queue before the socket connection is open
   function addEmitQueue(key, data) {
     emitQueue.push({
       key,
@@ -31,6 +32,8 @@ function WebsocketProvider({
         dispatch({
           type: commonActions.onDisconnect.type
         })
+
+        // remove keep alive
         if (pingInterval) {
           clearInterval(pingInterval)
           pingInterval = undefined
@@ -41,33 +44,17 @@ function WebsocketProvider({
         dispatch({
           type: commonActions.onConnect.type
         })
+        // setup keep alive
         if (!pingInterval) {
           pingInterval = setInterval(() => {
             io.emit('keep-alive', 'ping')
           }, 1000 * 60 * 3)
         }
 
-        io.on('statreg-dashboard-status-result', (data) => {
-          dispatch({
-            type: statRegActions.statusesLoaded.type,
-            statuses: data
-          })
-        })
+        // setup store listeners
+        setupStatRegListeners(io, dispatch)
 
-        io.on('statreg-dashboard-refresh-result', (data) => {
-          dispatch({
-            type: statRegActions.resultRefreshStatus.type,
-            status: data
-          })
-        })
-
-        io.on('statreg-dashboard-refresh-start', (key) => {
-          dispatch({
-            type: statRegActions.startRefreshStatus.type,
-            keys: [key]
-          })
-        })
-
+        // run all emits waiting in queue
         emitQueue.forEach((q) => {
           io.emit(q.key, q.data)
         })
