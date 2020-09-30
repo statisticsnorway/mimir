@@ -3,18 +3,37 @@ import { useDispatch, useSelector } from 'react-redux'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { Table } from 'react-bootstrap'
 import { selectDataQueriesByType } from './selectors'
-import { Accordion } from '@statisticsnorway/ssb-component-library'
+import { Accordion, Link } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 
 export function DataQueryTable(props) {
   const dataQueries = useSelector(selectDataQueriesByType(props.dataQueryType))
 
+  function decideType(type) {
+    switch (type) {
+    case 'mimir:keyFigure':
+      return 'keyfigureType'
+    case 'mimir:highchart':
+      return 'highchartsType'
+    case 'mimir:table':
+      return 'tableType'
+    default:
+      return ''
+    }
+  }
+
+  function renderBadges(contentType, format, isPublished) {
+    return (
+      <React.Fragment>
+        <span className={`float-right detail ${decideType(contentType)}`}>{contentType.split(':').pop()}</span>
+        <span className={'float-right detail ' + format}>{format}</span>
+        {!isPublished ? <span className={'float-right detail unpublished'}>Ikke publisert</span> : null}
+      </React.Fragment>
+    )
+  }
+
   return (
-    <Accordion
-      header={`${props.header} (${dataQueries.length})`}
-      className="mx-0"
-      openByDefault={!!props.openByDefault}
-    >
+    <Accordion header={`${props.header} (${dataQueries.length})`} className="mx-0" openByDefault={!!props.openByDefault}>
       <Table bordered striped>
         <thead>
           <tr>
@@ -37,14 +56,28 @@ export function DataQueryTable(props) {
           </tr>
         </thead>
         <tbody>
-          {dataQueries.map((q) => {
+          {dataQueries.map((dataQuery) => {
+            const {
+              dataset,
+              displayName,
+              hasData,
+              id,
+              type: contentType,
+              format,
+              isPublished
+            } = dataQuery
             return (
-              <tr key={q.id} className="small">
-                <td>{q.displayName}</td>
-                <td>
-                  { q.dataset.modifiedReadable ? q.dataset.modifiedReadable : ''}<br/>
-                  { q.dataset.modified ? q.dataset.modified : ''}
+              <tr key={id} className="small">
+                <td className={`${hasData ? 'ok' : 'error'} dataset`}>
+                  <Link isExternal href={/* this.props.contentStudioBaseUrl*/ '/' + id}>{displayName}</Link>
+                  {renderBadges(contentType, format, isPublished)}
                 </td>
+                <td>
+                  {dataset.modifiedReadable ? dataset.modifiedReadable : ''}
+                  <br />
+                  {dataset.modified ? dataset.modified : ''}
+                </td>
+                <td>logdata</td>
                 <td>refresh</td>
               </tr>
             )
