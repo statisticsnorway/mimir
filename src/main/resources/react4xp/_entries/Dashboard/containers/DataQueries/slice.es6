@@ -38,6 +38,20 @@ const dataQueriesSlice = createSlice({
         }
         dataQuery.loading = false
       }
+    },
+    dataQueryEventLogLoading(state, action) {
+      const dataQuery = state.dataQueries.find((q) => q.id === action.id)
+      if (dataQuery) {
+        dataQuery.loadingLogs = true
+        dataQuery.eventLogNodes = []
+      }
+    },
+    dataQueryEventLogLoaded(state, action) {
+      const dataQuery = state.dataQueries.find((q) => q.id === action.id)
+      if (dataQuery) {
+        dataQuery.loadingLogs = false
+        dataQuery.eventLogNodes = action.logs
+      }
     }
   }
 })

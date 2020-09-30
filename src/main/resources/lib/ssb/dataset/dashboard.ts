@@ -3,7 +3,7 @@ import { DatasetLib, CreateOrUpdateStatus } from './dataset'
 import { ContentLibrary, Content } from 'enonic-types/lib/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { Events } from '../../repo/query'
-import { EVENT_LOG_REPO, EVENT_LOG_BRANCH } from '../../repo/eventLog'
+import { EVENT_LOG_REPO, EVENT_LOG_BRANCH, LogSummary, EventLogLib } from '../../repo/eventLog'
 import { RepoNode } from 'enonic-types/lib/node'
 import { I18nLibrary } from 'enonic-types/lib/i18n'
 import { ContextLibrary, RunContext } from 'enonic-types/lib/context'
@@ -42,6 +42,9 @@ const {
 const {
   fromDatasetRepoCache
 }: SSBCacheLibrary = __non_webpack_require__('/lib/ssb/cache')
+const {
+  getQueryChildNodesStatus
+}: EventLogLib = __non_webpack_require__('/lib/repo/eventLog')
 
 const users: Array<RegisterUserOptions> = []
 
@@ -49,6 +52,17 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   socket.on('get-dataqueries', () => {
     const contentWithDataSource: Array<unknown> = prepDataSources(getContentWithDataSource())
     socket.emit('dataqueries-result', contentWithDataSource)
+  })
+
+  socket.on('get-eventlog-node', (dataQueryId)=> {
+    let status: Array<LogSummary> | undefined = getQueryChildNodesStatus(`/queries/${dataQueryId}`) as Array<LogSummary> | undefined
+    if (!status) {
+      status = []
+    }
+    socket.emit('eventlog-node-result', {
+      logs: status,
+      id: dataQueryId
+    })
   })
 
   socket.on('dashboard-register-user', (options: RegisterUserOptions) => {
@@ -104,6 +118,7 @@ function prepDataSources(dataSources: Array<Content<DataSource>>): Array<unknown
           modifiedReadable: dateToReadable(queryLogNode.data.modifiedTs),
           eventLogNodes: []
         } : undefined,
+        eventLogNodes: [],
         loading: false,
         deleting: false
       }

@@ -1,12 +1,12 @@
 import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
-import { Button, Table } from 'react-bootstrap'
+import { Button, OverlayTrigger, Popover, Table } from 'react-bootstrap'
 import { selectDataQueriesByType } from './selectors'
 import { Accordion, Link } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
-import { RefreshCw } from 'react-feather'
-import { requestDatasetUpdate } from './actions'
+import { AlertTriangle, RefreshCw } from 'react-feather'
+import { requestDatasetUpdate, requestEventLogData } from './actions'
 
 export function DataQueryTable(props) {
   const dataQueries = useSelector(selectDataQueriesByType(props.dataQueryType))
@@ -33,6 +33,63 @@ export function DataQueryTable(props) {
         <span className={'float-right detail ' + format}>{format}</span>
         {!isPublished ? <span className={'float-right detail unpublished'}>Ikke publisert</span> : null}
       </React.Fragment>
+    )
+  }
+
+  function renderLogData(dataQuery) {
+    const dataQueryId = dataQuery.id
+    const logData = dataQuery.logData
+    if (logData) {
+      return (
+        <td>
+          {dataQuery.eventLogNodes &&
+        <OverlayTrigger
+          trigger="click"
+          key={dataQueryId}
+          placement="bottom"
+          onToggle={(opening) => {
+            if (opening) {
+              requestEventLogData(dispatch, io, dataQueryId)
+            }
+          }}
+          overlay={
+            <Popover id={`popover-positioned-${dataQueryId}`}>
+              <Popover.Title as="h3">Logg detaljer</Popover.Title>
+              <Popover.Content className="ssbPopoverBody">
+                {renderJobLogs(dataQuery)}
+              </Popover.Content>
+            </Popover>
+          }
+        >
+          <span className="haveList">{logData.message ? logData.message : ''}</span>
+        </OverlayTrigger>
+          }
+          {!logData.eventLogNodes && logData.message && <span>{logData.message}</span>}
+          {logData.showWarningIcon && <span className="warningIcon"><AlertTriangle size="12" color="#FF4500"/></span>}<br/>
+          {logData.modifiedReadable ? logData.modifiedReadable : ''}<br/>
+          {logData.modified ? logData.modified : ''}<br/>
+          {logData.by && logData.by.displayName ? `av ${logData.by.displayName}` : '' }
+        </td>
+      )
+    } else return <td>no logs</td>
+  }
+
+  function renderJobLogs(dataQuery) {
+    if (dataQuery.loadingLogs === true) {
+      return (
+        <span className="spinner-border spinner-border" />
+      )
+    } else {
+      return dataQuery.eventLogNodes.map((logNode, index) => renderLogNode(index, logNode))
+    }
+  }
+
+  function renderLogNode(i, logNode) {
+    return (
+      <p>
+        <span>{logNode.modifiedTs}</span> - <span>{logNode.by}</span><br/>
+        <span> &gt; {logNode.result}</span>
+      </p>
     )
   }
 
@@ -69,7 +126,8 @@ export function DataQueryTable(props) {
               type: contentType,
               format,
               isPublished,
-              loading
+              loading,
+              logData
             } = dataQuery
             return (
               <tr key={id} className="small">
@@ -82,7 +140,7 @@ export function DataQueryTable(props) {
                   <br />
                   {dataset.modified ? dataset.modified : ''}
                 </td>
-                <td>logdata</td>
+                {logData ? renderLogData(dataQuery) : <td></td>}
                 <td>
                   <Button varitant="primary"
                     size="sm"

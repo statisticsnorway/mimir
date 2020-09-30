@@ -21,14 +21,11 @@ import PropTypes from 'prop-types'
 import { setUserServerSide } from './containers/HomePage/actions.es6'
 
 function Dashboard(props) {
-  console.log(props)
   return (
     <Provider store={configureAppStore()}>
       <WebsocketProvider>
         <HelmetProvider>
-          <React.StrictMode>
-            <DashboardRouter user={props.user}/>
-          </React.StrictMode>
+          <DashboardRouter user={props.user}/>
         </HelmetProvider>
       </WebsocketProvider>
     </Provider>
@@ -61,7 +58,6 @@ function DashboardRouter(props) {
 
       <Switch>
         <Route path="/" component={HomePage} />
-        {/* <Route component={HomePage} /> */}
       </Switch>
     </BrowserRouter>
   )

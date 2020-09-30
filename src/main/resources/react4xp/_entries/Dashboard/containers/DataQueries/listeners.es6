@@ -21,4 +21,12 @@ export default function setupDataQuieriesListeners(io, dispatch) {
       ids: [data.id]
     })
   })
+
+  io.on('eventlog-node-result', (data) => {
+    dispatch({
+      type: actions.dataQueryEventLogLoaded.type,
+      id: data.id,
+      logs: data.logs
+    })
+  })
 }

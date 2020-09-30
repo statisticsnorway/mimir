@@ -17,3 +17,11 @@ export function requestDatasetUpdate(dispatch, io, ids) {
     ids
   })
 }
+
+export function requestEventLogData(dispatch, io, id) {
+  dispatch({
+    type: actions.dataQueryEventLogLoading.type,
+    id
+  })
+  io.emit('get-eventlog-node', id)
+}
