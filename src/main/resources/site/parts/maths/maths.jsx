@@ -1,8 +1,7 @@
 import React from 'react'
 
 import MathJax from 'react-mathjax'
-
-const tex = `f(x) = \\int_{-\\infty}^\\infty\\hat f(\\xi)\\,e^{2 \\pi i \\xi x}\\,d\\xi`
+import PropTypes from 'prop-types'
 
 class Maths extends React.Component {
   constructor(props) {
@@ -16,13 +15,18 @@ class Maths extends React.Component {
           This is an inline math formula: <MathJax.Node inline formula={'a = b'} />
           <br/>
           And a block one:
-          <MathJax.Node formula={tex} />
+          <MathJax.Node formula={this.props.mathsFormula} />
           <br/>
-          And a big, complex inline formula <MathJax.Node inline formula={tex} />
+          And a big, complex inline formula <MathJax.Node inline formula={this.props.mathsFormula} />
         </span>
       </MathJax.Provider>
     )
   }
 }
-export default () => <Maths/>
+
+Maths.propTypes = {
+  mathsFormula: PropTypes.string
+}
+
+export default (props) => <Maths {...props} />
 

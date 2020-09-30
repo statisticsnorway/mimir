@@ -1,6 +1,7 @@
-
+const {
+  getComponent
+} = __non_webpack_require__( '/lib/xp/portal')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-
 const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
@@ -13,12 +14,12 @@ exports.get = function(req) {
   }
 }
 
-exports.preview = (req, id) => renderPart(req, [id])
-
-const props = {
-  content: 'testinnhold'
-}
-
 function renderPart(req) {
+  const part = getComponent()
+  const props = {
+    mathsFormula: part.config.mathsFormula,
+    nodeType: part.config.nodeType
+  }
+
   return React4xp.render('site/parts/maths/maths', props, req)
 }
