@@ -91,7 +91,7 @@ export function StatRegDashboard() {
   }
 
   return (
-    <section className="xp-part part-dashboard container my-5">
+    <section className="xp-part part-dashboard container mb-5">
       <Row>
         <Col>
           <div className="p-4 tables-wrapper">

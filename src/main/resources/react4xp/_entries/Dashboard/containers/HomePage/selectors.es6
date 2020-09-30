@@ -9,3 +9,8 @@ export const selectIsConnected = createSelector(
   [selectDomain],
   (commonState) => commonState.isConnected,
 )
+
+export const selectLoadingClearCache = createSelector(
+  [selectDomain],
+  (commonState) => commonState.loadingClearCache,
+)

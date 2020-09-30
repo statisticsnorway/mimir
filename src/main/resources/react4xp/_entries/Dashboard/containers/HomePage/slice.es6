@@ -1,7 +1,8 @@
 import { createSlice } from '../../utils/@reduxjs/toolkit'
 
 export const initialState = {
-  isConnected: false
+  isConnected: false,
+  loadingClearCache: false
 }
 
 const commonSlice = createSlice({
@@ -10,10 +11,15 @@ const commonSlice = createSlice({
   reducers: {
     onConnect(state) {
       state.isConnected = true
-      console.log(state)
     },
     onDisconnect(state) {
       state.isConnected = false
+    },
+    startLoadingClearCache(state) {
+      state.loadingClearCache = true
+    },
+    stopLoadingClearCache(state) {
+      state.loadingClearCache = false
     }
   }
 })

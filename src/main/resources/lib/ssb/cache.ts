@@ -9,12 +9,14 @@ import { TbmlData } from '../types/xmlParser'
 import { Dataquery } from '../../site/content-types/dataquery/dataquery'
 import { Dataset } from '../../site/content-types/dataset/dataset'
 import { DATASET_REPO, DatasetRepoNode } from '../repo/dataset'
+import { Socket } from '../types/socket'
 
 const {
   newCache
 }: CacheLib = __non_webpack_require__( '/lib/cache')
 const {
-  listener
+  listener,
+  send
 }: EventLibrary = __non_webpack_require__('/lib/xp/event')
 const {
   run
@@ -436,6 +438,26 @@ function completelyClearCache(options: CompletelyClearCacheOptions): void {
   }
 }
 
+export function setupHandlers(socket: Socket): void {
+  socket.on('clear-cache', () => {
+    send({
+      type: 'clearCache',
+      distributed: true,
+      data: {
+        clearFilterCache: true,
+        clearMenuCache: true,
+        clearDatasetCache: true,
+        clearDividerCache: true,
+        clearRelatedArticlesCache: true,
+        clearRelatedFactPageCache: true,
+        clearDatasetRepoCache: true
+      }
+    })
+
+    socket.emit('clear-cache-finished', {})
+  })
+}
+
 export interface DatasetCache {
   data: JSDataset | Array<JSDataset> | null | TbmlData | TbmlData;
   format: Dataquery['datasetFormat'];
@@ -462,4 +484,5 @@ export interface SSBCacheLibrary {
   fromDatasetRepoCache:
     (key: string, fallback: () => DatasetRepoNode<JSONstat | TbmlData | object> | null)
       => DatasetRepoNode<JSONstat | TbmlData | object> | undefined;
+  setupHandlers: (socket: Socket) => void;
 }

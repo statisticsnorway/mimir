@@ -1,7 +1,8 @@
 import React, { createContext } from 'react'
 import PropTypes from 'prop-types'
 import { actions as commonActions } from '../../containers/HomePage/slice'
-import setupStatRegListeners from '../../containers/StatRegDashboard/listeners.es6'
+import setupStatRegListeners from '../../containers/StatRegDashboard/listeners'
+import setupHomePageListeners from '../../containers/HomePage/listeners'
 
 const WebSocketContext = createContext(null)
 export { WebSocketContext }
@@ -53,6 +54,7 @@ function WebsocketProvider({
 
         // setup store listeners
         setupStatRegListeners(io, dispatch)
+        setupHomePageListeners(io, dispatch)
 
         // run all emits waiting in queue
         emitQueue.forEach((q) => {
