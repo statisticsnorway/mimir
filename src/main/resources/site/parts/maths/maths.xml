@@ -1,0 +1,20 @@
+<part>
+  <display-name>Mattematisk formel</display-name>
+  <description>Fyll inn LaTeX formel. Velg om den skal vises i linje eller som blokk</description>
+  <form>
+    <input name="mathsFormula" type="TextLine">
+      <label>Formel</label>
+      <occurrences minimum="1" maximum="1"/>
+    </input>
+    <input name="nodeType" type="RadioButton">
+      <label>Visningstype</label>
+      <description>Velg om du vil vise formelen i linjen med tekst eller som en separat blokk</description>
+      <occurrences minimum="1" maximum="1"/>
+      <config>
+        <option value="inline">Inline</option>
+        <option value="block">Block</option>
+      </config>
+      <default>block</default>
+    </input>
+  </form>
+</part>
