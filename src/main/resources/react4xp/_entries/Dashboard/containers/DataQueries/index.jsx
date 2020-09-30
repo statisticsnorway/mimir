@@ -1,6 +1,5 @@
-import React, { useContext } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
+import React from 'react'
+import { useSelector } from 'react-redux'
 import { Col, Row } from 'react-bootstrap'
 import { selectDataQueries, selectLoading } from './selectors'
 import { DataQueryTable } from './DataQueryTable'
