@@ -10,6 +10,9 @@ const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+const {
+  getUser
+} = __non_webpack_require__('/lib/xp/auth')
 
 const view = resolve('./dashboard.html')
 
@@ -27,10 +30,11 @@ exports.get = function(req) {
  */
 function renderPart(req) {
   const assets = getAssets()
-  // const user = auth.getUser()
+  const user = getUser()
 
   const dashboardDataset = new React4xp('Dashboard/Dashboard')
     .setProps({
+      user
     })
     .setId('dashboard')
 

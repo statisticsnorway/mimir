@@ -2,13 +2,17 @@ import { createSlice } from '../../utils/@reduxjs/toolkit'
 
 export const initialState = {
   isConnected: false,
-  loadingClearCache: false
+  loadingClearCache: false,
+  user: undefined
 }
 
 const commonSlice = createSlice({
   name: 'common',
   initialState,
   reducers: {
+    setUser(state, action) {
+      state.user = action.user
+    },
     onConnect(state) {
       state.isConnected = true
     },

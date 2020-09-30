@@ -7,3 +7,9 @@ export function requestClearCache(dispatch, io) {
 
   io.emit('clear-cache')
 }
+
+export function setUserServerSide(dispatch, io, user) {
+  io.emit('dashboard-register-user', {
+    user
+  })
+}

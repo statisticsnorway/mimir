@@ -1,13 +1,17 @@
 import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
-import { Table } from 'react-bootstrap'
+import { Button, Table } from 'react-bootstrap'
 import { selectDataQueriesByType } from './selectors'
 import { Accordion, Link } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
+import { RefreshCw } from 'react-feather'
+import { requestDatasetUpdate } from './actions'
 
 export function DataQueryTable(props) {
   const dataQueries = useSelector(selectDataQueriesByType(props.dataQueryType))
+  const io = useContext(WebSocketContext)
+  const dispatch = useDispatch()
 
   function decideType(type) {
     switch (type) {
@@ -64,7 +68,8 @@ export function DataQueryTable(props) {
               id,
               type: contentType,
               format,
-              isPublished
+              isPublished,
+              loading
             } = dataQuery
             return (
               <tr key={id} className="small">
@@ -78,7 +83,15 @@ export function DataQueryTable(props) {
                   {dataset.modified ? dataset.modified : ''}
                 </td>
                 <td>logdata</td>
-                <td>refresh</td>
+                <td>
+                  <Button varitant="primary"
+                    size="sm"
+                    className="mx-1"
+                    onClick={() => requestDatasetUpdate(dispatch, io, [id])}
+                  >
+                    { loading ? <span className="spinner-border spinner-border-sm" /> : <RefreshCw size={16}/> }
+                  </Button>
+                </td>
               </tr>
             )
           })}

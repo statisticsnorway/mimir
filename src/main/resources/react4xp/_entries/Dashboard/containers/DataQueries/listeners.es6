@@ -7,4 +7,18 @@ export default function setupDataQuieriesListeners(io, dispatch) {
       dataQueries: data
     })
   })
+
+  io.on('dashboard-activity-refreshDataset-result', (data) => {
+    dispatch({
+      type: actions.dataQueryLoaded.type,
+      dataQuery: data
+    })
+  })
+
+  io.on('dashboard-activity-refreshDataset', (data) => {
+    dispatch({
+      type: actions.dataQueryLoading.type,
+      ids: [data.id]
+    })
+  })
 }

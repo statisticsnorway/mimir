@@ -7,3 +7,13 @@ export function requestDataQueries(dispatch, io) {
 
   io.emit('get-dataqueries')
 }
+
+export function requestDatasetUpdate(dispatch, io, ids) {
+  dispatch({
+    type: actions.dataQueryLoading.type,
+    ids
+  })
+  io.emit('dashboard-refresh-dataset', {
+    ids
+  })
+}
