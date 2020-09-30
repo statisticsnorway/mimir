@@ -4,6 +4,7 @@ import createSagaMiddleware from 'redux-saga'
 import { createReducer } from './reducers'
 import { reducer as statRegReducer } from '../containers/StatRegDashboard/slice'
 import { reducer as commonReducer } from '../containers/HomePage/slice'
+import { reducer as dataQueriesReducer } from '../containers/DataQueries/slice'
 
 export function configureAppStore() {
   const reduxSagaMonitorOptions = {}
@@ -25,7 +26,8 @@ export function configureAppStore() {
   const store = configureStore({
     reducer: {
       common: commonReducer,
-      statReg: statRegReducer
+      statReg: statRegReducer,
+      dataQueries: dataQueriesReducer
     },
     middleware: [...getDefaultMiddleware(), ...middlewares],
     devTools: process.env.NODE_ENV !== 'production',

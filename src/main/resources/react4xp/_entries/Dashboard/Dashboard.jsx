@@ -15,6 +15,7 @@ import { HomePage } from './containers/HomePage/index'
 import WebsocketProvider, { WebSocketContext } from './utils/websocket/WebsocketProvider'
 import { configureAppStore } from './store/configureStore'
 import { requestStatuses } from './containers/StatRegDashboard/actions'
+import { requestDataQueries } from './containers/DataQueries/actions'
 
 function Dashboard() {
   return (
@@ -36,6 +37,7 @@ function DashboardRouter() {
   const io = React.useContext(WebSocketContext)
   io.setup(dispatch)
   requestStatuses(dispatch, io)
+  requestDataQueries(dispatch, io)
   return (
     <BrowserRouter>
       <Helmet

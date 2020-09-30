@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { actions as commonActions } from '../../containers/HomePage/slice'
 import setupStatRegListeners from '../../containers/StatRegDashboard/listeners'
 import setupHomePageListeners from '../../containers/HomePage/listeners'
+import setupDataQuieriesListeners from '../../containers/DataQueries/listeners'
 
 const WebSocketContext = createContext(null)
 export { WebSocketContext }
@@ -55,6 +56,7 @@ function WebsocketProvider({
         // setup store listeners
         setupStatRegListeners(io, dispatch)
         setupHomePageListeners(io, dispatch)
+        setupDataQuieriesListeners(io, dispatch)
 
         // run all emits waiting in queue
         emitQueue.forEach((q) => {
