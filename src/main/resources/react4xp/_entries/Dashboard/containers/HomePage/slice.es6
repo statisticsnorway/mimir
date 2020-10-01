@@ -3,13 +3,17 @@ import { createSlice } from '../../utils/@reduxjs/toolkit'
 export const initialState = {
   isConnected: false,
   loadingClearCache: false,
-  user: undefined
+  user: undefined,
+  contentStudioBaseUrl: ''
 }
 
 const commonSlice = createSlice({
   name: 'common',
   initialState,
   reducers: {
+    setContentStudioBaseUrl(state, action) {
+      state.contentStudioBaseUrl = action.contentStudioBaseUrl
+    },
     setUser(state, action) {
       state.user = action.user
     },

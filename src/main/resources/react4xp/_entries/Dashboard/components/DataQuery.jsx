@@ -21,7 +21,8 @@ export function DataQuery(props) {
       eventLogNodes
     },
     onRefresh,
-    onOpenEventLogData
+    onOpenEventLogData,
+    contentStudioBaseUrl
   } = props
 
   function renderLogData() {
@@ -79,7 +80,7 @@ export function DataQuery(props) {
   return (
     <tr key={id} className="small">
       <td className={`${hasData ? 'ok' : 'error'} dataset`}>
-        <Link isExternal href={/* this.props.contentStudioBaseUrl*/ '/' + id}>{displayName}</Link>
+        <Link isExternal href={contentStudioBaseUrl + id}>{displayName}</Link>
         <DataQueryBadges contentType={contentType} format={format} isPublished={isPublished}/>
       </td>
       <td>
@@ -104,5 +105,6 @@ export function DataQuery(props) {
 DataQuery.propTypes = {
   dataQuery: PropTypes.object,
   onRefresh: PropTypes.func,
-  onOpenEventLogData: PropTypes.func
+  onOpenEventLogData: PropTypes.func,
+  contentStudioBaseUrl: PropTypes.string
 }

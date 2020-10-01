@@ -14,3 +14,8 @@ export const selectLoadingClearCache = createSelector(
   [selectDomain],
   (commonState) => commonState.loadingClearCache,
 )
+
+export const selectContentStudioBaseUrl = createSelector(
+  [selectDomain],
+  (commonState) => commonState.contentStudioBaseUrl,
+)

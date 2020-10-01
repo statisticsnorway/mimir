@@ -13,8 +13,12 @@ const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getUser
 } = __non_webpack_require__('/lib/xp/auth')
+const {
+  getToolUrl
+} = __non_webpack_require__('/lib/xp/admin')
 
 const view = resolve('./dashboard.html')
+const DEFAULT_CONTENTSTUDIO_URL = getToolUrl('com.enonic.app.contentstudio', 'main')
 
 exports.get = function(req) {
   try {
@@ -34,7 +38,8 @@ function renderPart(req) {
 
   const dashboardDataset = new React4xp('Dashboard/Dashboard')
     .setProps({
-      user
+      user,
+      contentStudioBaseUrl: `${DEFAULT_CONTENTSTUDIO_URL}#/default/edit/`
     })
     .setId('dashboard')
 
