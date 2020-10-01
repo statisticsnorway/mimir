@@ -14,6 +14,7 @@ const {
   get, getChildren, query
 }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
 const {
+  getAttachmentContent,
   getImageCaption
 } = __non_webpack_require__('/lib/ssb/utils')
 
@@ -45,6 +46,7 @@ function createMenuBranch(menuItem: Content<MenuItem>): MenuItemParsed {
     scale: 'block(12px,12px)'
   }) : undefined
   const iconAltText: string | undefined = menuItem.data.icon ? getImageCaption(menuItem.data.icon) : undefined
+  const iconSvgTag: string | undefined =  menuItem.data.icon ? getAttachmentContent( menuItem.data.icon) : undefined
   return {
     title: menuItem.displayName,
     shortName: menuItem.data.shortName ? menuItem.data.shortName : undefined,
@@ -52,6 +54,7 @@ function createMenuBranch(menuItem: Content<MenuItem>): MenuItemParsed {
     isActive,
     icon: iconPath && iconPath.search('error') === -1 ? iconPath : undefined,
     iconAltText,
+    iconSvgTag,
     menuItems: children.total > 0 ? children.hits.map((childMenuItem) => createMenuBranch(childMenuItem)) : undefined
   }
 }
@@ -111,6 +114,7 @@ export interface MenuItemParsed extends MenuItem {
   path?: string;
   isActive: boolean;
   iconAltText?: string;
+  iconSvgTag?: string;
   menuItems?: Array<MenuItem> | undefined;
 }
 

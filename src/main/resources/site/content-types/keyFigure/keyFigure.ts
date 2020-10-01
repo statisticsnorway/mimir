@@ -35,6 +35,11 @@ export interface KeyFigure {
   glossaryText?: string;
 
   /**
+   * Manuell kilde
+   */
+  manualSource?: string;
+
+  /**
    * Endringstall
    */
   changes?: Array<{

@@ -38,11 +38,15 @@ const {
   getImageCaption
 } = __non_webpack_require__( '/lib/ssb/utils')
 const {
+  fromDatasetRepoCache
+} = __non_webpack_require__('/lib/ssb/cache')
+const {
   fromDatasetCache
 }: SSBCacheLibrary = __non_webpack_require__( '/lib/ssb/cache')
 const util: UtilLibrary = __non_webpack_require__( '/lib/util')
 const {
-  getDataset
+  getDataset,
+  extractKey
 } = __non_webpack_require__( '/lib/ssb/dataset/dataset')
 
 const contentTypeName: string = `${app.name}:keyFigure`
@@ -91,7 +95,7 @@ export function parseKeyFigure(req: Request, keyFigure: Content<KeyFigure>, muni
   }
 
   const dataQueryId: string | undefined = keyFigure.data.dataquery
-  const datasetRepo: DatasetRepoNode<JSONstat> | null = getDataset(keyFigure)
+  const datasetRepo: DatasetRepoNode<JSONstat> | null = datasetOrNull(keyFigure)
 
   if (datasetRepo) {
     const dataSource: KeyFigure['dataSource'] | undefined = keyFigure.data.dataSource
@@ -112,6 +116,9 @@ export function parseKeyFigure(req: Request, keyFigure: Content<KeyFigure>, muni
     } else if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
       getDataTbProcessor(keyFigureViewData, data, keyFigure)
     }
+    return keyFigureViewData
+  } else if (keyFigure.data.manualSource) {
+    keyFigureViewData.number = parseValue(keyFigure.data.manualSource.replace(/,/g, '.'))
     return keyFigureViewData
   }
 
@@ -154,6 +161,13 @@ export function parseKeyFigure(req: Request, keyFigure: Content<KeyFigure>, muni
     }
   }
   return keyFigureViewData
+}
+
+function datasetOrNull(keyFigure: Content<KeyFigure>): DatasetRepoNode<JSONstat> | null {
+  return keyFigure.data.dataSource && keyFigure.data.dataSource._selected ?
+    fromDatasetRepoCache(`/${keyFigure.data.dataSource._selected}/${extractKey(keyFigure)}`,
+      () => getDataset(keyFigure)) :
+    null
 }
 
 function getDataTbProcessor(
