@@ -90,7 +90,7 @@ export function DataQuery(props) {
       </td>
       {logData ? renderLogData() : <td></td>}
       <td>
-        <Button varitant="primary"
+        <Button variant="primary"
           size="sm"
           className="mx-1"
           onClick={onRefresh}

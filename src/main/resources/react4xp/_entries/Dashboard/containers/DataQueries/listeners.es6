@@ -1,6 +1,6 @@
 import { actions } from './slice'
 
-export default function setupDataQuieriesListeners(io, dispatch) {
+export default function setupDataQueriesListeners(io, dispatch) {
   io.on('dataqueries-result', (data) => {
     dispatch({
       type: actions.dataQueriesLoaded.type,
