@@ -8,14 +8,16 @@ const {
 
 exports.get = function(req) {
   try {
-    return renderPart(req)
+    const part = getComponent()
+    return renderPart(req, part)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-function renderPart(req) {
-  const part = getComponent()
+exports.preview = (req, part) => renderPart(req, part)
+
+function renderPart(req, part) {
   const props = {
     mathsFormula: part.config.mathsFormula,
     nodeType: part.config.nodeType
