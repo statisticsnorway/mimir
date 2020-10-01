@@ -1,5 +1,5 @@
 <part>
-  <display-name>Mattematisk formel</display-name>
+  <display-name>Matematisk formel</display-name>
   <description>Fyll inn LaTeX formel. Velg om den skal vises i linje eller som blokk</description>
   <form>
     <input name="mathsFormula" type="TextLine">
