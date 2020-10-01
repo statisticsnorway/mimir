@@ -22,7 +22,7 @@ export const selectDataQueries = createSelector(
   (dataQueriesState) => dataQueriesState.dataQueries,
 )
 
-export const selectDataQueriesByType = (dataQueryType) => {
+export const selectDataQueriesByParentType = (dataQueryType) => {
   return createSelector(
     [selectDomain],
     (dataQueriesState) => {
@@ -31,6 +31,15 @@ export const selectDataQueriesByType = (dataQueryType) => {
         return groupedQueries[dataQueryType]
       }
       return []
+    },
+  )
+}
+
+export const selectDataQueriesByType = (dataQueryType) => {
+  return createSelector(
+    [selectDomain],
+    (dataQueriesState) => {
+      return dataQueriesState.dataQueries.filter((q) => q.type === dataQueryType)
     },
   )
 }

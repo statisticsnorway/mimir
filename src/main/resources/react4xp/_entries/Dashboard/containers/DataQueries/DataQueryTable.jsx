@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { Button, Table } from 'react-bootstrap'
-import { selectDataQueriesByType } from './selectors'
+import { selectDataQueriesByParentType } from './selectors'
 import { Accordion } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import { requestDatasetUpdate, requestEventLogData } from './actions'
@@ -10,7 +10,7 @@ import { DataQuery } from '../../components/DataQuery'
 import { RefreshCw } from 'react-feather'
 
 export function DataQueryTable(props) {
-  const dataQueries = useSelector(selectDataQueriesByType(props.dataQueryType))
+  const dataQueries = useSelector(selectDataQueriesByParentType(props.dataQueryType))
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
 

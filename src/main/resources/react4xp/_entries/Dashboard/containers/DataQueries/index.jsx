@@ -11,7 +11,7 @@ export function DataQueries() {
   function renderDataQueryTables() {
     if (loading) {
       return (
-        <span className="spinner-border spinner-border-sm" />
+        <span className="spinner-border spinner-border" />
       )
     }
     return (
