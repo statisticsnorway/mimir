@@ -68,7 +68,7 @@ export const createDefaultConfig = (highchartData, displayName) => ({
   exporting: {
     chartOptions: {
       credits: {
-        text: 'kilde: ' + highchartData.creditsText,
+        text: 'Kilde: ' + highchartData.creditsText,
       }
     },
     buttons: {
