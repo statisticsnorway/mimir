@@ -19,8 +19,7 @@ exports.preview = (req, part) => renderPart(req, part)
 
 function renderPart(req, part) {
   const props = {
-    mathsFormula: part.config.mathsFormula,
-    nodeType: part.config.nodeType
+    mathsFormula: part.config.mathsFormula
   }
 
   return React4xp.render('site/parts/maths/maths', props, req)
