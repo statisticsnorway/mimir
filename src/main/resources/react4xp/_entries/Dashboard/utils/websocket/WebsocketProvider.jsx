@@ -50,7 +50,7 @@ function WebsocketProvider({
         if (!pingInterval) {
           pingInterval = setInterval(() => {
             io.emit('keep-alive', 'ping')
-          }, 1000 * 60 * 3)
+          }, 1000 * 30)
         }
 
         // setup store listeners
