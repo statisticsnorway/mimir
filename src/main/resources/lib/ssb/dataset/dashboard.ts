@@ -210,6 +210,7 @@ function transfromQueryResult(result: CreateOrUpdateStatus): DashboardRefreshRes
     } : {},
     logData: queryLogNode ? {
       ...queryLogNode.data,
+      showWarningIcon: showWarningIcon(queryLogNode.data.modifiedResult as Events),
       message: i18n.localize({
         key: queryLogNode.data.modifiedResult
       }),
