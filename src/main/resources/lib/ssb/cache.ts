@@ -351,7 +351,7 @@ export function fromDatasetRepoCache(
   key: string,
   fallback: () => DatasetRepoNode<JSONstat | TbmlData | object> | null): DatasetRepoNode<JSONstat | TbmlData | object> | undefined {
   return datasetRepoCache.get(key, () => {
-    // log.info(`added ${key} to dataset repo cache`)
+    log.info(`added ${key} to dataset repo cache`)
     const res: DatasetRepoNode<JSONstat | TbmlData | object> | null = fallback()
     // cant be null for some reason, so store it as undefined instead
     return res || undefined

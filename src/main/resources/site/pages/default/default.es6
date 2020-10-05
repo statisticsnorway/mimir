@@ -232,7 +232,13 @@ exports.get = function(req) {
     body
   })
 
-  const alerts = alertsForContext(municipality, municipalPageType)
+  const alertOptions = page.type === `${app.name}:statistics` ? {
+    statisticPageId: page._id
+  } : {
+    municipality,
+    municipalPageType
+  }
+  const alerts = alertsForContext(page.type, alertOptions)
   if (alerts.length > 0) {
     const alertComponent = new React4xp('Alerts')
       .setProps({

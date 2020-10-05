@@ -15,6 +15,11 @@ export interface Statistics {
   aboutTheStatistics?: string;
 
   /**
+   * Nøkkeltall
+   */
+  statisticsKeyFigure?: string;
+
+  /**
    * Antall tabeller i statbank
    */
   linkNumber?: string;

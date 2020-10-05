@@ -2,14 +2,101 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Dropdown, Link } from '@statisticsnorway/ssb-component-library'
 import { isEmpty } from 'ramda'
-
+import MediaQuery from 'react-responsive'
 import '../../assets/js/jquery-global.js'
-import 'tableexport.jquery.plugin/libs/FileSaver/FileSaver.min.js'
-import 'tableexport.jquery.plugin/tableExport.min.js'
+import { ChevronLeft, ChevronRight } from 'react-feather'
+import '../../assets/js/tableExport'
 
 class Table extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      prevClientWidth: 0
+    }
+
+    this.captionRef = React.createRef()
+    this.tableControlsDesktopRef = React.createRef()
+    this.tableControlsMobileRef = React.createRef()
+    this.tableRef = React.createRef()
+    this.tableWrapperRef = React.createRef()
+
+    this.widthCheckInterval = undefined
+  }
+
+  componentDidUpdate() {
+    this.updateTableControlsDesktop()
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.widthCheckInterval)
+  }
+
+  componentDidMount() {
+    this.updateTableControlsDesktop()
+    // NOTE terrible solution, but its from react docs (https://reactjs.org/docs/state-and-lifecycle.html#adding-lifecycle-methods-to-a-class)
+    this.widthCheckInterval = setInterval(() => {
+      this.widthCheck()
+    }, 250)
+    window.addEventListener('resize', () => this.updateTableControlsDesktop())
+  }
+
+  widthCheck() {
+    if (this.tableWrapperRef.current.clientWidth !== this.state.prevClientWidth) {
+      this.setState({
+        prevClientWidth: this.tableWrapperRef.current.clientWidth
+      })
+      this.updateTableControlsDesktop()
+    }
+  }
+
+  updateTableControlsDesktop() {
+    const controls = this.tableControlsDesktopRef.current
+    const tableWrapper = this.tableWrapperRef.current
+    const left = controls.children.item(0)
+    const right = controls.children.item(1)
+
+    // hide controlls if there is no scrollbar
+    if (tableWrapper.scrollWidth > tableWrapper.clientWidth || tableWrapper.clientWidth === 0) {
+      controls.classList.remove('d-none')
+      this.tableControlsMobileRef.current.classList.remove('d-none')
+      // disable left
+      if (tableWrapper.scrollLeft <= 0) {
+        left.classList.add('disabled')
+      } else {
+        left.classList.remove('disabled')
+      }
+
+      // disable right
+      if (tableWrapper.scrollLeft + tableWrapper.clientWidth >= tableWrapper.scrollWidth) {
+        right.classList.add('disabled')
+      } else {
+        right.classList.remove('disabled')
+      }
+
+      // move desktop controls to correct pos
+      const captionHalfHeight = this.captionRef.current.offsetHeight / 2
+      const controlsHalfHeight = left.scrollHeight / 2
+      left.style.marginTop = `${captionHalfHeight - controlsHalfHeight}px`
+      right.style.marginTop = `${captionHalfHeight - controlsHalfHeight}px`
+    } else {
+      controls.classList.add('d-none')
+      this.tableControlsMobileRef.current.classList.add('d-none')
+    }
+  }
+
+  scrollLeft() {
+    this.tableWrapperRef.current.scrollLeft -= 100
+    this.updateTableControlsDesktop()
+  }
+
+  scrollRight() {
+    this.tableWrapperRef.current.scrollLeft += 100
+    this.updateTableControlsDesktop()
+  }
+
   downloadTableAsCSV() {
-    const table = $('table').closest('.container')
+    const table = $(this.tableRef.current)
     table.tableExport({
       type: 'csv',
       fileName: 'tabell',
@@ -31,7 +118,7 @@ class Table extends React.Component {
     }
 
     return (
-      <div className="download-table-container">
+      <div className={`download-table-container`}>
         <Dropdown
           header={downloadTableLabel}
           selectedItem={downloadTableTitle}
@@ -43,8 +130,12 @@ class Table extends React.Component {
   }
 
   createTable() {
+    const {
+      tableClass
+    } = this.props.table
+
     return (
-      <table className={this.props.table.tableClass}>
+      <table className={tableClass} ref={this.tableRef}>
         {this.addCaption()}
         {this.addThead()}
         {this.addTbody()}
@@ -54,24 +145,35 @@ class Table extends React.Component {
   }
 
   addCaption() {
-    if (this.props.table.caption) {
-      if (typeof this.props.table.caption === 'object') {
-        return (
-          <caption noterefs={this.props.table.caption.noterefs}>
-            <img src={this.props.iconUrl} />
-            {this.props.table.caption.content}
-            {this.addNoteRefs(this.props.table.caption.noterefs)}
-          </caption>
-        )
-      } else {
-        return (
-          <caption>
-            <img src={this.props.iconUrl} />
-            {this.props.table.caption}
-          </caption>
-        )
-      }
+    const {
+      caption
+    } = this.props.table
+    if (caption) {
+      const hasNoteRefs = typeof caption === 'object'
+      return (
+        <caption noterefs={hasNoteRefs ? caption.noterefs : null} ref={this.captionRef}>
+          {hasNoteRefs ? caption.content : caption}
+          {hasNoteRefs ? this.addNoteRefs(caption.noterefs) : null}
+        </caption>
+      )
     }
+  }
+
+  createScrollControlsMobile() {
+    return (
+      <div className="table-controls-mobile" ref={this.tableControlsMobileRef}>
+        <img src={this.props.iconUrl} />
+      </div>
+    )
+  }
+
+  createScrollControlsDesktop() {
+    return (
+      <div className="table-controls-desktop" ref={this.tableControlsDesktopRef}>
+        <span className="mr-2" onClick={() => this.scrollLeft()}><ChevronLeft/></span>
+        <span onClick={() => this.scrollRight()}><ChevronRight/></span>
+      </div>
+    )
   }
 
   addThead() {
@@ -323,13 +425,27 @@ class Table extends React.Component {
   }
 
   render() {
+    const lg = 992
+    const md = 782
+
     if (!isEmpty(this.props.table)) {
-      return <div className="container">
-        {this.addDownloadTableDropdown()}
-        {this.createTable()}
-        {this.addStandardSymbols()}
-        {this.renderSources()}
-      </div>
+      return (
+        <div className="container">
+          <MediaQuery minDeviceWidth={lg}>
+            {this.addDownloadTableDropdown()}
+          </MediaQuery>
+          {this.createScrollControlsDesktop()}
+          {this.createScrollControlsMobile()}
+          <div className="table-wrapper" onScroll={() => this.updateTableControlsDesktop()} ref={this.tableWrapperRef}>
+            {this.createTable()}
+          </div>
+          <MediaQuery maxDeviceWidth={md}>
+            {this.addDownloadTableDropdown()}
+          </MediaQuery>
+          {this.addStandardSymbols()}
+          {this.renderSources()}
+        </div>
+      )
     } else {
       return <div>
         <p>Ingen tilknyttet Tabell</p>
@@ -362,6 +478,7 @@ Table.propTypes = {
       content: PropTypes.string,
       noterefs: PropTypes.string
     }),
+    id: PropTypes.string,
     tableClass: PropTypes.string,
     thead: PropTypes.arrayOf(
       PropTypes.shape({

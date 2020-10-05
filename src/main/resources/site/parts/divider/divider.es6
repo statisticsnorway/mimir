@@ -7,9 +7,10 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
-const {
-  fromDividerCache
-} = __non_webpack_require__('/lib/ssb/cache')
+// NOTE reimplement divider cache after SSR works again
+// const {
+//   fromDividerCache
+// } = __non_webpack_require__('/lib/ssb/cache')
 
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view = resolve('./divider.html')
@@ -38,7 +39,9 @@ const renderPart = (req, config) => {
     .uniqueId()
 
   const body = divider.renderBody({
-    body: render(view, {dividerId: divider.react4xpId}),
+    body: render(view, {
+      dividerId: divider.react4xpId
+    }),
     clientRender: true
   })
   const pageContributions = divider.renderPageContributions({

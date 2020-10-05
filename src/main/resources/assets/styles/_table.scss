@@ -1,9 +1,4 @@
 .table {
-  //hide scroll icon on desktop
-  caption > img {
-    display: none;
-  }
-
   .download-table-container {
     display: flex;
     margin-bottom: $spacer * 1;
@@ -28,17 +23,52 @@
     }
   }
 
+  .table-controls-desktop {
+    color: $ssb-green-4;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 40px;
+    height: 0;
+    user-select: none;
+
+    span {
+      cursor: pointer;
+      z-index: 1;
+
+      &.disabled {
+        color: $ssb-dark-2;
+        cursor: default;
+      }
+    }
+
+    @include media-breakpoint-down(md) {
+      display: none;
+    }
+  }
+
+  .table-controls-mobile {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 20px;
+    height: 0;
+
+    & > img {
+      height: 40px;
+      margin-top: 5px;
+    }
+
+    @include media-breakpoint-up(lg) {
+      display: none;
+    }
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+  }
+
   @include media-breakpoint-down(md) {
     width: 95%;
-    margin-left: auto;
-    margin-right: auto;
-
-    caption > img {
-      display: block;
-      height: 30px;
-      position: relative;
-      left: 250px;
-    }
+    margin: 0;
 
     .source > div {
       padding: 0;
@@ -48,7 +78,6 @@
   font-family: $font-roboto-plain;
   width: 100%;
   border-collapse: collapse;
-  overflow-x: scroll;
 
   .ssb-link {
     display: inline-block;
@@ -114,7 +143,6 @@ th {
 
 //specific styling for statistics tables. remove class "statistics" if no longer needed
 table.statistics {
-  overflow: scroll;
   width: 100%;
 
   caption {
@@ -124,6 +152,10 @@ table.statistics {
     font-weight: bold;
     text-align: left;
     padding: 0.5em 0 0.5em 0.625em;
+
+    @include media-breakpoint-down(md) {
+      padding-top: 50px
+    }
   }
 
   colgroup,
