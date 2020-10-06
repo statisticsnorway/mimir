@@ -98,10 +98,17 @@ function renderPart(req, highchartIds) {
     return createHighchartsReactProps(highchart, config)
   })
 
+  const inlineScript = highcharts.map((highchart) => `<script inline="javascript">
+   window['highchart' + '${highchart.contentKey}'] = ${JSON.stringify(highchart.config)}
+   </script>`)
+
   return {
     body: render(view, {
       highcharts
     }),
+    pageContributions: {
+      bodyEnd: inlineScript
+    },
     contentType: 'text/html'
   }
 }
