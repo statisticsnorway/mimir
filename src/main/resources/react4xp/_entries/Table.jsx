@@ -73,6 +73,21 @@ class Table extends React.Component {
     this.updateTableControlsDesktop()
   }
 
+  trimValue(value) {
+    if (value != undefined  && typeof value === 'string') {
+      return value.trim()
+    }
+    return value
+  }
+
+  formatNumber(value) {
+    const language = this.props.table.language
+    if (value != undefined) {
+      return typeof value === 'number' ? value.toLocaleString((language == 'en') ? 'en-GB' : 'no-NO') : value.trim()
+    }
+    return value
+  }
+
   addDownloadTableDropdown(mobile) {
     const {
       downloadTableLabel,
@@ -275,7 +290,7 @@ class Table extends React.Component {
   createHeadTh(key, value, index) {
     if (typeof value === 'string' | typeof value === 'number') {
       return (
-        <th key={index}>{value}</th>
+        <th key={index}>{this.trimValue(value)}</th>
       )
     } else {
       if (Array.isArray(value)) {
@@ -289,21 +304,21 @@ class Table extends React.Component {
             } else {
               return (
                 <th key={i} className={cellValue.class} rowSpan={cellValue.rowspan} colSpan={cellValue.colspan}>
-                  {cellValue.content}
+                  {this.trimValue(cellValue.content)}
                   {this.addNoteRefs(cellValue.noterefs)}
                 </th>
               )
             }
           } else {
             return (
-              <th key={i}>{cellValue}</th>
+              <th key={i}>{this.trimValue(cellValue)}</th>
             )
           }
         })
       } else {
         return (
           <th key={key} className={value.class} rowSpan={value.rowspan} colSpan={value.colspan}>
-            {value.content}
+            {this.trimValue(value.content)}
             {this.addNoteRefs(value.noterefs)}
           </th>
         )
@@ -314,12 +329,12 @@ class Table extends React.Component {
   createHeadTd(key, value, index) {
     if (typeof value === 'string' | typeof value === 'number') {
       return (
-        <td key={index}>{value}</td>
+        <td key={index}>{this.trimValue(value)}</td>
       )
     } else {
       return (
         <td key={key} className={value.class} rowSpan={value.rowspan} colSpan={value.colspan}>
-          {value.content}
+          {this.trimValue(value.content)}
           {this.addNoteRefs(value.noterefs)}
         </td>
       )
@@ -332,12 +347,12 @@ class Table extends React.Component {
       if (key === 'th') {
         if (typeof value === 'string' | typeof value === 'number') {
           return (
-            <th key={index}>{value}</th>
+            <th key={index}>{this.trimValue(value)}</th>
           )
         } else {
           return (
             <th key={index} className={value.class} rowSpan={value.rowspan} colSpan={value.colspan}>
-              {value.content}
+              {this.trimValue(value.content)}
               {this.addNoteRefs(value.noterefs)}
             </th>
           )
@@ -347,31 +362,30 @@ class Table extends React.Component {
   }
 
   createBodyTd(row) {
-    const language = this.props.table.language
-    return Object.keys(row).map(function(keyName, keyIndex) {
+    return Object.keys(row).map((keyName, keyIndex) => {
       const value = row[keyName]
       if (keyName === 'td') {
         if (typeof value === 'string' | typeof value === 'number') {
           return (
-            <th key={keyIndex}>{value}</th>
+            <td key={keyIndex}>{this.formatNumber(value)}</td>
           )
         } else {
           if (Array.isArray(value)) {
             return value.map((cellValue, i) => {
               if (typeof cellValue === 'object') {
                 return (
-                  <td className={cellValue.class} key={i}>{cellValue.content}</td>
+                  <td className={cellValue.class} key={i}>{this.formatNumber(cellValue.content)}</td>
                 )
               } else {
                 return (
-                  <td key={i}>{cellValue.toLocaleString((language == 'en') ? 'en-GB' : 'no-NO')}</td>
+                  <td key={i}>{this.formatNumber(cellValue)}</td>
                 )
               }
             })
           } else {
             return (
               <td key={keyIndex} className={value.class} rowSpan={value.rowspan} colSpan={value.colspan}>
-                {value.content}
+                {this.formatNumber(value.content)}
               </td>
             )
           }
