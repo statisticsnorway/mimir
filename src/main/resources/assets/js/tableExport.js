@@ -805,6 +805,10 @@
           rowIndex++
         })
 
+        if (defaults.consoleLog === true) {
+          console.log(data)
+        }
+
         const wb = new jx_Workbook()
         const ws = jx_createSheet(data)
 
