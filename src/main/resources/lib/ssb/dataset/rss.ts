@@ -21,7 +21,7 @@ const {
 }: DatasetLib = __non_webpack_require__( '/lib/ssb/dataset/dataset')
 
 function fetchRSS(): Array<RSSItem> {
-  const statbankRssUrl: string | undefined = app.config && app.config['ssb.rss.statbank']
+  const statbankRssUrl: string | undefined = app.config && app.config['ssb.rss.statbank'] ? app.config['ssb.rss.statbank'] : 'https://www.ssb.no/rss/statbank'
   if (statbankRssUrl) {
     const response: HttpResponse = http.request({
       url: statbankRssUrl
