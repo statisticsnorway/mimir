@@ -12,7 +12,7 @@
   $.fn.extend({
     tableExport: function(options) {
       const defaults = {
-        consoleLog: false,
+        consoleLog: true,
         csvEnclosure: '"',
         csvSeparator: ',',
         csvUseBOM: true,
@@ -1804,7 +1804,11 @@
 
       function parseNumber(value) {
         value = value || '0'
-        value = replaceAll(value, defaults.numbers.html.thousandsSeparator, '')
+        if (' ' === defaults.numbers.html.thousandsSeparator) {
+          value = value.replace(/\s/g, '')
+        } else {
+          value = replaceAll(value, defaults.numbers.html.thousandsSeparator, '')
+        }
         value = replaceAll(value, defaults.numbers.html.decimalMark, '.')
 
         return typeof value === 'number' || jQuery.isNumeric(value) !== false ? value : false
