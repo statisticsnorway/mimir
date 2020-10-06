@@ -67,8 +67,16 @@ export function getTbprocessorKey(content: Content<DataSource>): string {
   return content._id // fallback, should never find anything
 }
 
+export function getTableIdFromTbprocessor(data: TbmlData): Array<string> {
+  if (data.tbml.metadata.instance.publicRelatedTableIds) {
+    return data.tbml.metadata.instance.publicRelatedTableIds.toString().split(' ')
+  }
+  return []
+}
+
 export interface TbprocessorLib {
   getTbprocessor: (content: Content<DataSource>) => DatasetRepoNode<TbmlData> | null;
   fetchTbprocessorData: (content: Content<DataSource>) => TbmlData | null;
   getTbprocessorKey: (content: Content<DataSource>) => string;
+  getTableIdFromTbprocessor: (dataset: TbmlData) => Array<string>;
 }
