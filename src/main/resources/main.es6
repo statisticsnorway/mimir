@@ -19,12 +19,14 @@ const {
 const {
   refreshQueriesAsync
 } = __non_webpack_require__('/lib/task')
-const content = __non_webpack_require__( '/lib/xp/content')
 const cron = __non_webpack_require__('/lib/cron')
 const cache = __non_webpack_require__('/lib/ssb/cache')
 const {
   setupFetchDataOnCreateListener
 } = __non_webpack_require__('/lib/listeners')
+const {
+  dataSourceRSSFilter
+} = __non_webpack_require__('/lib/ssb/dataset/rss')
 
 const user = {
   login: 'su',
@@ -43,24 +45,18 @@ __.disposer(() => log.info('Application ' + app.name + ' stopped')) // Log appli
 function job() {
   log.info('-- Running dataquery cron job --')
   const jobLogNode = startJobLog('-- Running dataquery cron job --')
-  const allHttpQueries = content.query({
-    count: 999,
-    contentTypes: [`${app.name}:dataquery`],
-    query: `data.table LIKE 'http*'`
-  })
-  const dataSourceQueries = getContentWithDataSource()
-  allHttpQueries.hits = allHttpQueries.hits.concat(dataSourceQueries)
-  allHttpQueries.count = allHttpQueries.hits.length
-  allHttpQueries.total = allHttpQueries.hits.length
+
+  let dataSourceQueries = getContentWithDataSource()
+  dataSourceQueries = dataSourceRSSFilter(dataSourceQueries)
   updateJobLog(jobLogNode._id, (node) => {
     return {
       data: {
         ...node.data,
-        queryIds: allHttpQueries.hits.map(( httpQuery) => httpQuery._id)
+        queryIds: dataSourceQueries.map((q) => q._id)
       }
     }
   })
-  const refreshDataResult = allHttpQueries && refreshQueriesAsync(allHttpQueries)
+  const refreshDataResult = dataSourceQueries && refreshQueriesAsync(dataSourceQueries)
   completeJobLog(jobLogNode._id, JobStatus.COMPLETE, refreshDataResult)
   log.info('-- Completed dataquery cron job --')
 }
