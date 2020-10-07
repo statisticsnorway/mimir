@@ -11,6 +11,7 @@ const {
   list: listStatisticAlerts
 } = __non_webpack_require__( '/lib/ssb/statisticAlert')
 const {
+  imageUrl,
   processHtml,
   pageUrl
 } = __non_webpack_require__( '/lib/xp/portal')
@@ -20,7 +21,7 @@ const {
 } = __non_webpack_require__( '/lib/thymeleaf')
 const {
   readLines
-} = __non_webpack_require__('/lib/xp/io');
+} = __non_webpack_require__('/lib/xp/io')
 const moment = require('moment/min/moment-with-locales')
 
 const errorView = resolve('../error/error.html')
@@ -169,6 +170,8 @@ export function getImageAlt(imageId) {
   return imageContent !== undefined ? imageContent.data.altText : ''
 }
 
+
+
 export function isPublished(content) {
   const now = new Date()
   if (content.publish.from) {
@@ -217,16 +220,18 @@ export const getSources = (sourceConfig) => {
 }
 
 export const getAttachmentContent = (contentId) => {
-  if(!contentId) return undefined
-  const attachmentContent = content.get({key: contentId})
+  if (!contentId) return undefined
+  const attachmentContent = content.get({
+    key: contentId
+  })
 
-  if(!attachmentContent) return undefined
+  if (!attachmentContent) return undefined
   const stream = content.getAttachmentStream({
     key: attachmentContent._id,
     name: attachmentContent._name
   })
 
-  if(!stream) return undefined
-  const lines = readLines(stream);
+  if (!stream) return undefined
+  const lines = readLines(stream)
   return lines[0]
 }

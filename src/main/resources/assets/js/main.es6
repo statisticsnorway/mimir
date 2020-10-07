@@ -10,7 +10,7 @@ import { init as initDivider } from './app/divider.es6'
 
 document.addEventListener('DOMContentLoaded', () => {
   initAutocomplete()
-  initBanner()
+  //initBanner()
   initHeader()
   initHighcharts()
   initMap()

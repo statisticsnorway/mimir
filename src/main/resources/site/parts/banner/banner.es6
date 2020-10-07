@@ -38,13 +38,15 @@ function renderPart(req) {
   })
   const municipality = pageType._selected === 'kommunefakta' ? getMunicipality(req) : undefined
   const municipalityName = municipality ? removeCountyFromMunicipalityName(municipality.displayName) : undefined
+  const imgSrcSet = part.config.image? imageSrcSet(part.config.image) : undefined
 
   const model = {
+    ...imgSrcSet,
     pageDisplayName: page.displayName,
     bannerImageAltText: getImageAlt(part.config.image),
     bannerImage: part.config.image ? imageUrl({
       id: part.config.image,
-      scale: 'block(1400,400)'
+      scale: 'block(350,100)'
     }) : undefined,
     municipalityTitle: municipality ? municipalityName + ' (' + municipality.county.name + ')' : undefined,
     pageType,
@@ -58,3 +60,28 @@ function renderPart(req) {
     contentType: 'text/html'
   }
 }
+
+
+/**
+ * Creates a src set string to use on a img's srcset atrribute
+ * @param {string} imageId
+ * @return {string}
+ */
+function imageSrcSet(imageId) {
+  const widths = ['2000', '1500', '1260', '800', '650']
+  const srcset = widths.map( (width) => `${imageUrl({
+    id: imageId,
+    scale: `block(${width}, 272)`
+  })} ${width}w`).join(', ')
+  const sizes = `(min-width: 1501px) 2000px,
+                 ((min-width: 1261px) and (max-width: 1500px)) 1500px, 
+                 ((min-width: 801px) and (max-width: 1261px)) 1260px, 
+                 ((min-width: 651px) and (max-width: 800px)) 800px, 650px`;
+
+  return {
+    sizes,
+    srcset
+  }
+}
+
+
