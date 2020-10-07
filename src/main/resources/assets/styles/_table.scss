@@ -147,11 +147,12 @@ table.statistics {
 
   caption {
     border: 1px solid $ssb-dark-5;
+    border-bottom: none;
     caption-side: top;
     color: $ssb-dark-6;
     font-weight: bold;
     text-align: left;
-    padding: 0.5em 0 0.5em 0.625em;
+    padding: 1.5em 0 1.5em 0.625em;
 
     @include media-breakpoint-down(md) {
       padding-top: 50px

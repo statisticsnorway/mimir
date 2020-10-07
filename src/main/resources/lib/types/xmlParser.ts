@@ -13,7 +13,7 @@ export interface TbmlData {
 
 export interface Metadata {
   instance: {
-    publicRelatedTableIds: string;
+    publicRelatedTableIds?: string | number;
     'xml:lang': string;
     relatedTableIds: string;
     definitionId: number;

@@ -1,8 +1,5 @@
 <section class="xp-part part-highchart" data-th-each="highchart: ${highcharts}">
-  <script data-th-inline="javascript">
-    var contentKey = /*[[${highchart.contentKey}]]*/ "-id"
-    window['highchart' + contentKey] = /*[[${highchart.config}]]*/ {}
-  </script>
+  <span data-th-utext="${dataScript}" data-th-remove="tag"></span>
   <div class="row position-relative">
     <div class="col-12">
       <figure data-th-fragment="graph" class="highcharts-figure mb-0" data-th-classappend="${highchart.hideTitle == true ? 'hide-title' : ''}">

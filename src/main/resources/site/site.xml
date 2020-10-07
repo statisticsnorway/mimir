@@ -8,7 +8,6 @@
           <label>Kommunedata innhold fra api</label>
           <occurrences minimum="0" maximum="1"/>
           <config>
-            <allowContentType>dataquery</allowContentType>
             <allowContentType>genericDataImport</allowContentType>
             <treeMode>true</treeMode>
             <showStatus>true</showStatus>
@@ -19,7 +18,6 @@
           <label>Fylkedata innhold fra api</label>
           <occurrences minimum="0" maximum="1"/>
           <config>
-            <allowContentType>dataquery</allowContentType>
             <allowContentType>genericDataImport</allowContentType>
             <treeMode>true</treeMode>
             <showStatus>true</showStatus>
@@ -30,7 +28,6 @@
           <label>Endringslister fra api</label>
           <occurrences minimum="0" maximum="1"/>
           <config>
-            <allowContentType>dataquery</allowContentType>
             <allowContentType>genericDataImport</allowContentType>
             <treeMode>true</treeMode>
             <showStatus>true</showStatus>
