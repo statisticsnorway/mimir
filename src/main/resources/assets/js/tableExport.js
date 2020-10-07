@@ -12,7 +12,7 @@
   $.fn.extend({
     tableExport: function(options) {
       const defaults = {
-        consoleLog: true,
+        consoleLog: false,
         csvEnclosure: '"',
         csvSeparator: ',',
         csvUseBOM: true,
