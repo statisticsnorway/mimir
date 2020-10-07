@@ -4,12 +4,6 @@ const {
 } = __non_webpack_require__( '/lib/repo/dataset')
 const util = __non_webpack_require__( '/lib/util')
 const {
-  getDataSetWithDataQueryId
-} = __non_webpack_require__( '/lib/ssb/dataset')
-const {
-  fromDatasetCache
-} = __non_webpack_require__( '/lib/ssb/cache')
-const {
   getComponent
 } = __non_webpack_require__( '/lib/xp/portal')
 const {
@@ -25,9 +19,6 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
-const {
-  get: getDataquery
-} = __non_webpack_require__( '/lib/ssb/dataquery')
 const {
   fromDatasetRepoCache
 } = __non_webpack_require__('/lib/ssb/cache')
@@ -62,24 +53,7 @@ function renderPart(req, highchartIds) {
     })
 
     let config
-    if (highchart && highchart.data.dataquery) { // OLD
-      const cachedQuery = fromDatasetCache(req, highchart.data.dataquery, () => {
-        const dataQueryContent = getDataquery({
-          key: highchart.data.dataquery
-        })
-        const datasetContent = getDataSetWithDataQueryId(highchart.data.dataquery).hits[0]
-        let parsedData = JSON.parse(datasetContent.data.json)
-        if (dataQueryContent.data.datasetFormat._selected === 'jsonStat') {
-          // eslint-disable-next-line new-cap
-          parsedData = JsonStat(parsedData).Dataset(0)
-        }
-        return {
-          data: parsedData,
-          format: dataQueryContent.data.datasetFormat
-        }
-      })
-      config = createHighchartObject(req, highchart, cachedQuery.data, cachedQuery.format)
-    } else if (highchart && highchart.data.dataSource) { // NEW
+    if (highchart && highchart.data.dataSource) {
       const datasetFromRepo = datasetOrNull(highchart)
       let parsedData = datasetFromRepo && datasetFromRepo.data
       if (highchart.data.dataSource._selected === DataSourceType.STATBANK_API) {
