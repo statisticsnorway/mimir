@@ -20,11 +20,6 @@ export interface KeyFigure {
   size?: "small" | "medium" | "large";
 
   /**
-   * Data fra spørring
-   */
-  dataquery?: string;
-
-  /**
    * Vis som grønn boks
    */
   greenBox: boolean;
