@@ -118,7 +118,7 @@ export function parseKeyFigure(req: Request, keyFigure: Content<KeyFigure>, muni
     }
     return keyFigureViewData
   } else if (keyFigure.data.manualSource) {
-    keyFigureViewData.number = parseValue(keyFigure.data.manualSource)
+    keyFigureViewData.number = parseValue(keyFigure.data.manualSource.replace(/,/g, '.'))
     return keyFigureViewData
   }
 

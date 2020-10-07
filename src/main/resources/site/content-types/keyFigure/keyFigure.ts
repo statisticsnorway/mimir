@@ -37,7 +37,7 @@ export interface KeyFigure {
   /**
    * Manuell kilde
    */
-  manualSource?: number;
+  manualSource?: string;
 
   /**
    * Endringstall

@@ -58,8 +58,16 @@ export function getStatbankApiKey(content: Content<DataSource>): string {
   return content._id
 }
 
+export function getTableIdFromStatbankApi(content: Content<DataSource>): string | undefined {
+  if (content.data.dataSource?.statbankApi?.urlOrId) {
+    return content.data.dataSource?.statbankApi?.urlOrId.split('?').shift()?.replace(/\/$/, '').split('/').pop()
+  }
+  return
+}
+
 export interface StatbankApiLib {
   getStatbankApi: (content: Content<DataSource>) => DatasetRepoNode<JSONstat> | null;
   fetchStatbankApiData: (content: Content<DataSource>) => JSONstat | null;
   getStatbankApiKey: (content: Content<DataSource>) => string;
+  getTableIdFromStatbankApi: (content: Content<DataSource>) => string | undefined;
 }

@@ -256,7 +256,7 @@ exports.get = function(req) {
   }
 
   return {
-    body,
+    body: `<!DOCTYPE html>${body}`,
     pageContributions
   }
 }

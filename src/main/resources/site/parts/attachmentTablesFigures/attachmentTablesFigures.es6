@@ -24,6 +24,7 @@ const {
 
 const moment = require('moment/min/moment-with-locales')
 const tableController = __non_webpack_require__('../table/table')
+const highchartController = __non_webpack_require__('../highchart/highchart')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view = resolve('./attachmentTablesFigures.html')
 
@@ -45,8 +46,8 @@ const renderPart = (req) => {
 
   const title = phrases.attachmentTablesFigures
 
-  const attachmentTables = page.data.attachmentTables ? forceArray(page.data.attachmentTables) : []
-  if (attachmentTables.length === 0) {
+  const attachmentTablesAndFigures = page.data.attachmentTablesFigures ? forceArray(page.data.attachmentTablesFigures) : []
+  if (attachmentTablesAndFigures.length === 0) {
     if (req.mode === 'edit' && page.type !== `${app.name}:statistics`) {
       return {
         body: render(view, {
@@ -60,10 +61,10 @@ const renderPart = (req) => {
     }
   }
 
-  const attachmentTable = getAttachmentTable(attachmentTables, req, phrases.table)
+  const attachmentTableAndFigureView = getTablesAndFigures(attachmentTablesAndFigures, req, phrases)
   const accordionComponent = new React4xp('site/parts/accordion/accordion')
     .setProps({
-      accordions: attachmentTable.map(({
+      accordions: attachmentTableAndFigureView.map(({
         id, open, subHeader, body, items
       }) => {
         return {
@@ -75,6 +76,7 @@ const renderPart = (req) => {
         }
       })
     })
+    .setId('accordion')
     .uniqueId()
 
   const isOutsideContentStudio = (
@@ -88,11 +90,12 @@ const renderPart = (req) => {
     }),
     clientRender: isOutsideContentStudio
   })
+
   const accordionPageContributions = accordionComponent.renderPageContributions({
     clientRender: isOutsideContentStudio
   })
 
-  const pageContributions = getFinalPageContributions(accordionPageContributions, attachmentTable)
+  const pageContributions = getFinalPageContributions(accordionPageContributions, attachmentTableAndFigureView)
 
   return {
     body: accordionBody,
@@ -101,30 +104,48 @@ const renderPart = (req) => {
   }
 }
 
-const getAttachmentTable = (attachmentTables, req, tableName) => {
-  if (attachmentTables.length > 0) {
-    return attachmentTables.map((attachmentTableId, index) => {
-      const attachmentTableContent = get({
-        key: attachmentTableId
+const getTablesAndFigures = (attachmentTablesAndFigures, req, phrases) => {
+  if (attachmentTablesAndFigures.length > 0) {
+    return attachmentTablesAndFigures.map((id, index) => {
+      const content = get({
+        key: id
       })
+      if (content.type === 'mimir:table') {
+        return getTable(content, tableController.preview(req, id), index, phrases.table)
+      }
 
-      const tablePreview = tableController.preview(req, attachmentTableId)
-
-      return {
-        id: `attachment-table-${index + 1}`,
-        open: attachmentTableContent.displayName,
-        subHeader: tableName,
-        body: tablePreview.body,
-        items: [],
-        pageContributions: tablePreview.pageContributions
+      if (content.type === 'mimir:highchart') {
+        return getFigure(content, highchartController.preview(req, id), index, phrases.figure)
       }
     })
   }
   return []
 }
 
-const getFinalPageContributions = (accordionPageContributions, attachmentTable) => {
-  const tablesPageContributions = attachmentTable.length > 0 ? attachmentTable.map(({
+const getTable = (content, preview, index, subhead) => {
+  return {
+    id: `attachment-table-figure-${index + 1}`,
+    open: content.displayName,
+    subHeader: subhead,
+    body: preview.body,
+    items: [],
+    pageContributions: preview.pageContributions
+  }
+}
+
+const getFigure = (content, preview, index, subhead) => {
+  return {
+    id: `attachment-table-figure-${index + 1}`,
+    open: content.displayName,
+    subHeader: subhead,
+    body: preview.body,
+    items: [],
+    pageContributions: preview.pageContributions
+  }
+}
+
+const getFinalPageContributions = (accordionPageContributions, attachmentTableAndFigure) => {
+  const tablesPageContributions = attachmentTableAndFigure.length > 0 ? attachmentTableAndFigure.map(({
     pageContributions
   }) => {
     return {

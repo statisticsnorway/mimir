@@ -228,5 +228,9 @@
       <default>0</default>
       <help-text>Her velger du hvor mange desimalplasser du vil vise i y-akse</help-text>
     </input>
+    <input name="yAxisOffset" type="TextLine">
+      <label>Offset Y-akse tittel</label>
+      <help-text>Kun heltall, positiv(venstre) eller negativ(høyre) verdi. NB: Denne flytter y-akse tittel.</help-text>
+    </input>
   </form>
 </content-type>

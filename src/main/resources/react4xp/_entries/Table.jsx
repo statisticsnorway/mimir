@@ -12,21 +12,44 @@ import '../../assets/js/tableExport'
 class Table extends React.Component {
   constructor(props) {
     super(props)
+
+    this.state = {
+      prevClientWidth: 0
+    }
+
     this.captionRef = React.createRef()
     this.tableControlsDesktopRef = React.createRef()
     this.tableControlsMobileRef = React.createRef()
     this.tableRef = React.createRef()
     this.tableWrapperRef = React.createRef()
+
+    this.widthCheckInterval = undefined
   }
 
   componentDidUpdate() {
     this.updateTableControlsDesktop()
   }
 
+  componentWillUnmount() {
+    clearInterval(this.widthCheckInterval)
+  }
+
   componentDidMount() {
     this.updateTableControlsDesktop()
-
+    // NOTE terrible solution, but its from react docs (https://reactjs.org/docs/state-and-lifecycle.html#adding-lifecycle-methods-to-a-class)
+    this.widthCheckInterval = setInterval(() => {
+      this.widthCheck()
+    }, 250)
     window.addEventListener('resize', () => this.updateTableControlsDesktop())
+  }
+
+  widthCheck() {
+    if (this.tableWrapperRef.current.clientWidth !== this.state.prevClientWidth) {
+      this.setState({
+        prevClientWidth: this.tableWrapperRef.current.clientWidth
+      })
+      this.updateTableControlsDesktop()
+    }
   }
 
   updateTableControlsDesktop() {
@@ -36,7 +59,7 @@ class Table extends React.Component {
     const right = controls.children.item(1)
 
     // hide controlls if there is no scrollbar
-    if (tableWrapper.scrollWidth > tableWrapper.clientWidth) {
+    if (tableWrapper.scrollWidth > tableWrapper.clientWidth || tableWrapper.clientWidth === 0) {
       controls.classList.remove('d-none')
       this.tableControlsMobileRef.current.classList.remove('d-none')
       // disable left

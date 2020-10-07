@@ -5,9 +5,9 @@ export interface Statistics {
   mainTable?: string;
 
   /**
-   * Vedleggstabell
+   * Vedleggstabell eller figur
    */
-  attachmentTables?: Array<string>;
+  attachmentTablesFigures?: Array<string>;
 
   /**
    * Om Statistikken

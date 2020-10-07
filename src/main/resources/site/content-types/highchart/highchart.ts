@@ -160,6 +160,11 @@ export interface Highchart {
   yAxisDecimalPlaces?: "0" | "1" | "2";
 
   /**
+   * Offset Y-akse tittel
+   */
+  yAxisOffset?: string;
+
+  /**
    * Spørring mot Statistikkbanken
    */
   dataquery?: string;
