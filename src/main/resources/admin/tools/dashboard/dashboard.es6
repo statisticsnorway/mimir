@@ -89,9 +89,6 @@ function getAssets() {
     wsServiceUrl: serviceUrl({
       service: 'websocket'
     }),
-    convertServiceUrl: serviceUrl({
-      service: 'convert'
-    }),
     fetchLogUrl: serviceUrl({
       service: 'eventLog'
     })
