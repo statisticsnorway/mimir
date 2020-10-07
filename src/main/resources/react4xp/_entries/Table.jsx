@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Dropdown, Link } from '@statisticsnorway/ssb-component-library'
 import { isEmpty } from 'ramda'
+import NumberFormat from 'react-number-format'
 
 import '../../assets/js/jquery-global.js'
 import { ChevronLeft, ChevronRight } from 'react-feather'
@@ -74,7 +75,7 @@ class Table extends React.Component {
   }
 
   trimValue(value) {
-    if (value != undefined  && typeof value === 'string') {
+    if (value != undefined && typeof value === 'string') {
       return value.trim()
     }
     return value
@@ -82,8 +83,20 @@ class Table extends React.Component {
 
   formatNumber(value) {
     const language = this.props.table.language
+    const decimalSeparator = (language == 'en') ? '.' : ','
     if (value != undefined) {
-      return typeof value === 'number' ? value.toLocaleString((language == 'en') ? 'en-GB' : 'no-NO') : value.trim()
+      if (typeof value === 'number') {
+        return (
+          <NumberFormat
+            value={value}
+            displayType={'text'}
+            thousandSeparator={' '}
+            decimalSeparator={decimalSeparator}
+          />
+        )
+      } else {
+        return value.trim()
+      }
     }
     return value
   }

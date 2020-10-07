@@ -1804,11 +1804,7 @@
 
       function parseNumber(value) {
         value = value || '0'
-        if (' ' === defaults.numbers.html.thousandsSeparator) {
-          value = value.replace(/\s/g, '')
-        } else {
-          value = replaceAll(value, defaults.numbers.html.thousandsSeparator, '')
-        }
+        value = replaceAll(value, defaults.numbers.html.thousandsSeparator, '')
         value = replaceAll(value, defaults.numbers.html.decimalMark, '.')
 
         return typeof value === 'number' || jQuery.isNumeric(value) !== false ? value : false
