@@ -37,12 +37,12 @@ export function fetchStatbankSavedData(content: Content<DataSource>): object | n
       const dataSource: DataSource['dataSource'] = content.data.dataSource
       if (dataSource._selected && dataSource.statbankSaved && dataSource.statbankSaved.urlOrId) {
         const url: string = isUrl(dataSource.statbankSaved.urlOrId) ?
-          dataSource.statbankSaved.urlOrId :
+          `${dataSource.statbankSaved.urlOrId}${format}` :
           `${baseUrl}${basePath}${dataSource.statbankSaved.urlOrId}${format}`
-        return fetchData(url, undefined, undefined, content._id)
+        return fetchData(url)
       }
     } catch (e) {
-      const message: string = `Failed to fetch data from statregSaved: ${content._id} (${e})`
+      const message: string = `Failed to fetch data from statbankweb: ${content._id} (${e})`
       logUserDataQuery(content._id, {
         message: Events.FAILED_TO_REQUEST_DATASET,
         info: message
