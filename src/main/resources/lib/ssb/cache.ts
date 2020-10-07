@@ -4,10 +4,8 @@ import { Request, Response } from 'enonic-types/lib/controller'
 import { EventLibrary, EnonicEvent, EnonicEventData } from 'enonic-types/lib/event'
 import { ContextLibrary } from 'enonic-types/lib/context'
 import { ContentLibrary, QueryResponse, Content } from 'enonic-types/lib/content'
-import { Dataset as JSDataset, JSONstat } from '../types/jsonstat-toolkit'
+import { JSONstat } from '../types/jsonstat-toolkit'
 import { TbmlData } from '../types/xmlParser'
-import { Dataquery } from '../../site/content-types/dataquery/dataquery'
-import { Dataset } from '../../site/content-types/dataset/dataset'
 import { DATASET_REPO, DatasetRepoNode } from '../repo/dataset'
 import { Socket } from '../types/socket'
 
@@ -38,14 +36,6 @@ const masterMenuCache: Cache = newCache({
 const draftMenuCache: Cache = newCache({
   expire: 3600,
   size: 2
-})
-const masterDatasetCache: Cache = newCache({
-  expire: 3600,
-  size: 1500
-})
-const draftDatasetCache: Cache = newCache({
-  expire: 3600,
-  size: 1500
 })
 const dividerCache: Cache = newCache({
   expire: 3600,
@@ -113,7 +103,6 @@ function addClearTask(): void {
           completelyClearCache({
             clearFilterCache: true,
             clearMenuCache: true,
-            clearDatasetCache: true,
             clearDividerCache: true,
             clearRelatedArticlesCache: true,
             clearRelatedFactPageCache: true,
@@ -236,26 +225,7 @@ function clearCache(content: Content, branch: string, cleared: Array<string>): A
     completelyClearMenuCache(branch)
   }
 
-  // clear dataset cache based on dataquery id
-  if (content.type === `${app.name}:dataquery`) {
-    log.info(`clear ${content._id} from dataset cache (${branch})`)
-    const datasetCache: Cache = branch === 'master' ? masterDatasetCache : draftDatasetCache
-    datasetCache.remove(content._id)
-  }
-
-  // find dataquery based on dataset
   const references: Array<Content> = getReferences(content._id)
-  if (content.type === `${app.name}:dataset`) {
-    const dataset: Content<Dataset> = content as Content<Dataset>
-    if (dataset.data.dataquery) {
-      const dataquery: Content | null = get({
-        key: dataset.data.dataquery
-      })
-      if (dataquery) {
-        references.push(dataquery)
-      }
-    }
-  }
   references.forEach((ref) => {
     log.info(`try to clear reference ${ref._id} to ${content._id}(${branch})`)
     clearCache(ref, branch, cleared)
@@ -300,18 +270,6 @@ export function fromMenuCache(req: Request, key: string, fallback: () => unknown
     const menuCache: Cache = branch === 'master' ? masterMenuCache : draftMenuCache
     return menuCache.get(key, () => {
       log.info(`added ${key} to menu cache (${branch})`)
-      return fallback()
-    })
-  }
-  return fallback()
-}
-
-export function fromDatasetCache<T>(req: Request, key: string, fallback: () => DatasetCache | T): DatasetCache | T {
-  if (req.mode === 'live' || req.mode === 'preview') {
-    const branch: string = req.mode === 'live' ? 'master' : 'draft'
-    const datasetCache: Cache = branch === 'master' ? masterDatasetCache : draftDatasetCache
-    return datasetCache.get(key, () => {
-      log.info(`added ${key} to dataset cache (${branch})`)
       return fallback()
     })
   }
@@ -375,12 +333,6 @@ function completelyClearMenuCache(branch: string): void {
   menuCache.clear()
 }
 
-function completelyClearDatasetCache(branch: string): void {
-  log.info(`clear dataset cache (${branch})`)
-  const datasetCache: Cache = branch === 'master' ? masterDatasetCache : draftDatasetCache
-  datasetCache.clear()
-}
-
 function completelyClearDividerCache(): void {
   log.info(`clear divider cache`)
   dividerCache.clear()
@@ -414,11 +366,6 @@ function completelyClearCache(options: CompletelyClearCacheOptions): void {
     completelyClearMenuCache('draft')
   }
 
-  if (options.clearDatasetCache) {
-    completelyClearDatasetCache('master')
-    completelyClearDatasetCache('draft')
-  }
-
   if (options.clearDividerCache) {
     completelyClearDividerCache()
   }
@@ -446,7 +393,6 @@ export function setupHandlers(socket: Socket): void {
       data: {
         clearFilterCache: true,
         clearMenuCache: true,
-        clearDatasetCache: true,
         clearDividerCache: true,
         clearRelatedArticlesCache: true,
         clearRelatedFactPageCache: true,
@@ -458,15 +404,9 @@ export function setupHandlers(socket: Socket): void {
   })
 }
 
-export interface DatasetCache {
-  data: JSDataset | Array<JSDataset> | null | TbmlData | TbmlData;
-  format: Dataquery['datasetFormat'];
-}
-
 export interface CompletelyClearCacheOptions {
   clearFilterCache: boolean;
   clearMenuCache: boolean;
-  clearDatasetCache: boolean;
   clearDividerCache: boolean;
   clearRelatedArticlesCache: boolean;
   clearRelatedFactPageCache: boolean;
@@ -477,7 +417,6 @@ export interface SSBCacheLibrary {
   setup: () => void;
   fromFilterCache: (req: Request, filterKey: string, key: string, fallback: () => Response) => Response;
   fromMenuCache: (req: Request, key: string, fallback: () => unknown) => unknown;
-  fromDatasetCache: (req: Request, key: string, fallback: () => DatasetCache) => DatasetCache;
   fromDividerCache: (dividerColor: string, fallback: () => string) => string;
   fromRelatedArticlesCache: (req: Request, key: string, fallback: () => unknown) => unknown;
   fromRelatedFactPageCache: (req: Request, key: string, fallback: () => unknown) => unknown;
