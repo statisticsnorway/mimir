@@ -1,5 +1,6 @@
 const {
   getComponent,
+  getContent,
   processHtml
 } = __non_webpack_require__( '/lib/xp/portal')
 const {
@@ -23,7 +24,13 @@ exports.get = function(req) {
   }
 }
 
-exports.preview = (req, accordionIds) => renderPart(req, accordionIds)
+exports.preview = (req, accordionIds) => {
+  const page = getContent()
+  if (page.type === `${app.name}:accordion`) {
+    return renderPart(req, [accordionIds])
+  }
+  return renderPart(req, accordionIds)
+}
 
 function renderPart(req, accordionIds) {
   const accordions = []
