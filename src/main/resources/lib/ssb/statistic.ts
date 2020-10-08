@@ -9,6 +9,7 @@ const {
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-statistics', () => {
     const statisticData: Array<StatisticDashboard> = prepStatistics(getStatistics())
+    socket.emit('statistics-result', statisticData)
   })
 }
 
