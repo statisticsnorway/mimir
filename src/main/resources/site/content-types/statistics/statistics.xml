@@ -6,6 +6,21 @@
         <mixin name="statistic" />
 
         <field-set>
+            <label>Endringsdato</label>
+            <items>
+                <input name="lastModified" type="DateTime">
+                    <label>Dato og tid</label>
+                    <occurrences minimum="0" maximum="1" />
+                    <default>now</default>
+                </input>
+                <input name="modifiedText" type="TextLine">
+                    <label>Endringstekst</label>
+                    <occurrences minimum="0" maximum="1" />
+                </input>
+            </items>
+        </field-set>
+
+        <field-set>
             <label>Hovedtallstabell</label>
             <items>
                 <input name="mainTable" type="ContentSelector">

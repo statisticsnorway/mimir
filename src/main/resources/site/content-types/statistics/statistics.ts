@@ -1,5 +1,15 @@
 export interface Statistics {
   /**
+   * Dato og tid
+   */
+  lastModified?: string;
+
+  /**
+   * Endringstekst
+   */
+  modifiedText?: string;
+
+  /**
    * Tabell
    */
   mainTable?: string;

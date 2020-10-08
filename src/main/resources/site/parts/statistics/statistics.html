@@ -14,6 +14,10 @@
                         <span class="font-weight-bold" data-th-utext="${nextUpdate}" />
                         <span data-th-text="${nextRelease}" />
                     </p>
+                    <p class="col-12" data-th-if="${changeDate}">
+                        <span class="font-weight-bold" data-th-utext="${changed}" />
+                        <span data-th-text="${changeDate}" data-th-id="${modifiedDateId}" />
+                    </p>
                 </div>
             </div>
         </div>
