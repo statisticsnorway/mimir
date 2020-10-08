@@ -165,11 +165,6 @@ export interface Highchart {
   yAxisOffset?: string;
 
   /**
-   * Spørring mot Statistikkbanken
-   */
-  dataquery?: string;
-
-  /**
    * Datakilde
    */
   dataSource?: {

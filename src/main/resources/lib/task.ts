@@ -5,9 +5,6 @@ import { DataSource } from '../site/mixins/dataSource/dataSource'
 import { RepoQueryLib } from './repo/query'
 
 const {
-  refreshQuery
-} = __non_webpack_require__('/lib/dataquery')
-const {
   refreshDataset
 }: DatasetLib = __non_webpack_require__('/lib/ssb/dataset/dataset')
 const {
@@ -34,17 +31,13 @@ export function refreshQueriesAsync(httpQueries: Array<Content<DataSource>>, bat
           progress({
             info: `Refresh dataset ${httpQuery._id}`
           })
-          if (httpQuery.type === `${app.name}:dataquery`) { // old
-            refreshQuery(httpQuery)
-          } else { // new
-            logAdminDataQuery(httpQuery._id, {
-              message: Events.GET_DATA_STARTED
-            })
-            const result: CreateOrUpdateStatus = refreshDataset(httpQuery, false)
-            logAdminDataQuery(httpQuery._id, {
-              message: result.status
-            })
-          }
+          logAdminDataQuery(httpQuery._id, {
+            message: Events.GET_DATA_STARTED
+          })
+          const result: CreateOrUpdateStatus = refreshDataset(httpQuery, false)
+          logAdminDataQuery(httpQuery._id, {
+            message: result.status
+          })
         })
       }
     })

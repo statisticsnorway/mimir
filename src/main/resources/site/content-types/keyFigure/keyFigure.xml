@@ -30,14 +30,6 @@
       </config>
       <default>one</default>
     </input>
-    <input name="dataquery" type="ContentSelector">
-      <label>Data fra spørring</label>
-      <occurrences minimum="0" maximum="1"/>
-      <config>
-        <allowPath>${site}</allowPath>
-        <allowType>dataquery</allowType>
-      </config>
-    </input>
     <item-set name="changes">
       <label>Endringstall</label>
       <occurrences minimum="0" maximum="1"/>
