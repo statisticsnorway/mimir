@@ -87,6 +87,7 @@
     "react-bootstrap-easy-dialog": "^0.3.3",
     "react-dom": "^16.13.1",
     "react-feather": "^2.0.8",
+    "react-number-format": "^4.4.1",
     "react-helmet-async": "^1.0.7",
     "react-redux": "^7.2.1",
     "react-mathjax": "^1.0.1",
@@ -100,7 +101,8 @@
     "terser-webpack-plugin": "^1.4.5",
     "ts-loader": "^6.2.2",
     "typescript": "^3.9.7",
-    "uuid": "^3.3.3"
+    "uuid": "^3.3.3",
+    "xlsx": "^0.16.7"
   },
   "browserslist": [
     "last 2 version",
