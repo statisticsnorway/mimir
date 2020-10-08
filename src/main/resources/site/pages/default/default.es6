@@ -157,16 +157,17 @@ exports.get = function(req) {
         .setProps({
           ...headerContent
         })
-        .setId('reactheader')
+        .setId('header')
       return {
         body: headerComponent.renderBody({
-          body: '<div id="reactheader"></div>'
+          body: '<div id="header"></div>'
         }),
         component: headerComponent
       }
     }
     return undefined
   })
+
   if (header && header.component) {
     pageContributions = header.component.renderPageContributions({
       pageContributions
@@ -180,10 +181,10 @@ exports.get = function(req) {
         .setProps({
           ...footerContent
         })
-        .setId('reactfooter')
+        .setId('footer')
       return {
         body: footerComponent.renderBody({
-          body: '<footer id="reactfooter"></footer>'
+          body: '<footer id="footer"></footer>'
         }),
         component: footerComponent
       }
@@ -205,12 +206,6 @@ exports.get = function(req) {
   })
     .setId('breadcrumbs')
     .uniqueId()
-
-  /*pageContributions = breadcrumbComponent.renderPageContributions({
-    pageContributions
-  })*/
-
-  log.info('Add id %s', JSON.stringify(breadcrumbComponent.renderBody(), null, 2))
 
   const model = {
     pageTitle: 'SSB', // not really used on normal pages because of SEO app (404 still uses this)
@@ -240,21 +235,35 @@ exports.get = function(req) {
 
   const bodyWithBreadCrumbs = breadcrumbComponent.renderBody({
     body: thymeleafRenderBody,
+    clientRender: true
+  })
+
+  pageContributions = breadcrumbComponent.renderPageContributions({
+    pageContributions
   })
 
 
-  const alerts = alertsForContext(municipality, municipalPageType)
+  const alertOptions = page.type === `${app.name}:statistics` ? {
+    statisticPageId: page._id
+  } : {
+    municipality,
+    municipalPageType
+  }
+  const alerts = alertsForContext(page.type, alertOptions)
   const bodyWithAlerts = alerts.length ?
     addAlerts(alerts, bodyWithBreadCrumbs, pageContributions) :
-    { body: bodyWithBreadCrumbs, pageContributions }
+    {
+      body: bodyWithBreadCrumbs,
+      pageContributions
+    }
 
   return {
-    body: bodyWithAlerts.body,
+    body: `<!DOCTYPE html>${bodyWithAlerts.body}`,
     pageContributions: bodyWithAlerts.pageContributions
   }
 }
 
-function addAlerts(alerts, body, pageContributions ){
+function addAlerts(alerts, body, pageContributions ) {
   const alertComponent = new React4xp('Alerts')
     .setProps({
       alerts

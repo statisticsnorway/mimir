@@ -283,19 +283,29 @@ header.ssb-header-wrapper {
           align-items: flex-start;
 
           .icon-wrapper {
-            margin: 4px 9px 0 0;
+            margin: 0 9px 0 0;
             display: grid;
+            width: 13px;
           }
 
           .link-text {
             color: $ssb-dark-4;
+            margin: 2px 0 0;
           }
 
           &:hover {
-             .link-text{
-               color: white;
-             }
-           }
+            .link-text{
+              color: white;
+            }
+            svg {
+              line,
+              path,
+              .cls-1,
+              .cls-2 {
+                stroke: white;
+              }
+            }
+          }
         }
         img {
           width: 12px;

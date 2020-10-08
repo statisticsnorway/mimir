@@ -211,17 +211,17 @@ function dataqueryToDataSource(dataquery: Content<Dataquery>): DataSource['dataS
 }
 
 interface OldHighchartData extends DataSource{
-  xAllowDecimal: boolean;
-  yAxisAllowDecimal: boolean;
-  type: string;
-  numberdecimals: number;
-  stabling: string;
-  zoomtype: string;
-  kildetekst: string;
-  kildeurl: string;
-  'forklaring-datagrunnlag': string;
-  nolegend: boolean;
-  'pie-legend': boolean;
-  byttraderogkolonner: boolean;
-  stabelsum: boolean;
+  xAllowDecimal?: boolean;
+  yAxisAllowDecimal?: boolean;
+  type?: string;
+  numberdecimals?: number;
+  stabling?: string;
+  zoomtype?: string;
+  kildetekst?: string;
+  kildeurl?: string;
+  'forklaring-datagrunnlag'?: string;
+  nolegend?: boolean;
+  'pie-legend'?: boolean;
+  byttraderogkolonner?: boolean;
+  stabelsum?: boolean;
 }

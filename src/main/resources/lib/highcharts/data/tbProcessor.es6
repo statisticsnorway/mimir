@@ -8,7 +8,6 @@ const getRowValue = (value) => {
 }
 
 export const seriesAndCategoriesFromTbml = (data, graphType, xAxisType) => {
-
   const rows = util.data.forceArray(data.tbml.presentation.table.tbody.tr)
   const headers = util.data.forceArray(data.tbml.presentation.table.thead.tr.th)
   let categories = []
@@ -18,11 +17,11 @@ export const seriesAndCategoriesFromTbml = (data, graphType, xAxisType) => {
     series = [{
       name: headers[0],
       data: rows.map((row) => {
-      return {
-        name: row.th,
-        y: getRowValue(row.td)
-      }
-    })
+        return {
+          name: row.th,
+          y: getRowValue(row.td)
+        }
+      })
     }]
   } else if ((graphType === 'area' || graphType === 'line') && xAxisType === 'linear') {
     categories = headers
@@ -52,6 +51,15 @@ export const seriesAndCategoriesFromTbml = (data, graphType, xAxisType) => {
 
   return {
     categories,
-    series
+    series,
+    title: parseTitle(data.tbml.metadata)
+  }
+}
+
+function parseTitle(metadata) {
+  if (metadata.title && typeof(metadata.title) === 'string') {
+    return metadata.title
+  } else if (metadata.title && metadata.title.content) {
+    return metadata.title.content
   }
 }

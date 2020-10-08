@@ -7,5 +7,5 @@ export interface UtilLibrary {
 }
 
 interface UtilDataLibrary {
-  forceArray(data: unknown): Array<unknown>;
+  forceArray<T>(data: T | Array<T>): Array<T>;
 }

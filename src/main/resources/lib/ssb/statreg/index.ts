@@ -1,84 +1,32 @@
-import { QueryFilters, getNode } from '../../repo/common'
-import { STATISTICS_URL, CONTACTS_URL, PUBLICATIONS_URL } from './config'
-import { StatisticInListing, Contact, KontaktXML, Kontakt, KontaktNavnType, KontaktNavn, Publisering, Publication, PubliseringXML } from './types'
-import { fetchStatRegData } from './common'
-import { setupStatRegRepo, toDisplayString, STATREG_NODES } from '../../repo/statreg'
-import { XmlParser } from '../../types/xmlParser'
-import { find } from 'ramda'
+import { RepoCommonLib } from '../../repo/common'
+import { StatRegRepoLib } from '../../repo/statreg'
 import { Socket, SocketEmitter } from '../../types/socket'
-import { STATREG_REPO_CONTACTS_KEY } from '../../repo/statreg/contacts'
-import { STATREG_REPO_STATISTICS_KEY } from '../../repo/statreg/statistics'
-import { STATREG_REPO_PUBLICATIONS_KEY } from '../../repo/statreg/publications'
+import { StatRegContactsLib } from '../../repo/statreg/contacts'
+import { StatRegStatisticsLib } from '../../repo/statreg/statistics'
+import { StatRegPublicationsLib } from '../../repo/statreg/publications'
 import { StatRegLatestFetchInfoNode } from '../../repo/statreg/eventLog'
-import { EVENT_LOG_REPO, EVENT_LOG_BRANCH } from '../../repo/eventLog'
-const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
+import { EventLogLib } from '../../repo/eventLog'
 
-function extractStatistics(payload: string): Array<StatisticInListing> {
-  return JSON.parse(payload).statistics
-}
-
-export function fetchStatistics(filters: QueryFilters): Array<StatisticInListing> {
-  return fetchStatRegData('Statistics', STATISTICS_URL, filters, extractStatistics)
-}
-
-function extractContacts(payload: string): Array<Contact> {
-  const kontaktXML: KontaktXML = JSON.parse(xmlParser.parse(payload))
-  const kontakter: Array<Kontakt> = kontaktXML.kontakter.kontakt
-  return kontakter.map((k) => transformContact(k))
-}
-
-export function transformContact(kontakt: Kontakt): Contact {
-  const {
-    id, telefon: telephone, mobil: mobile, epost: email, navn
-  } = kontakt
-
-  const navnNo: KontaktNavnType =
-        Array.isArray(navn) ?
-          find((n: KontaktNavn) => n['xml:lang'] === 'no')(navn) :
-          ''
-
-  return {
-    id,
-    telephone,
-    mobile,
-    email,
-    name: navnNo && navnNo.content
-  } as Contact
-}
-
-export function fetchContacts(filters: QueryFilters): Array<Contact> {
-  return fetchStatRegData('Contacts', CONTACTS_URL, filters, extractContacts)
-}
-
-export function transformPubllication(pub: Publisering): Publication {
-  const {
-    id, variant, statistikkKortnavn, deskFlyt, endret
-  } = pub
-
-  return {
-    id,
-    variant,
-    statisticsKey: statistikkKortnavn,
-    status: deskFlyt,
-    modifiedTime: endret
-  }
-}
-
-export function extractPublications(payload: string): Array<Publication> {
-  const pubXML: PubliseringXML = JSON.parse(xmlParser.parse(payload))
-  const publisering: Array<Publisering> = pubXML.publiseringer.publisering
-  return publisering.map((pub) => transformPubllication(pub))
-}
-
-// TODO: this function has to be extended to fetch all publications (the URL used only pulls the 'upcoming' items!
-export function fetchPublications(filters: QueryFilters): Array<Publication> {
-  return fetchStatRegData('Publications', PUBLICATIONS_URL, filters, extractPublications)
-}
-
-export function refreshStatRegData(): Array<StatRegStatus> {
-  setupStatRegRepo()
-  return getStatRegFetchStatuses()
-}
+const {
+  getNode
+}: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
+const {
+  STATREG_NODES,
+  setupStatRegRepo,
+  toDisplayString
+}: StatRegRepoLib = __non_webpack_require__('/lib/repo/statreg')
+const {
+  STATREG_REPO_CONTACTS_KEY
+}: StatRegContactsLib = __non_webpack_require__('/lib/repo/statreg/contacts')
+const {
+  STATREG_REPO_STATISTICS_KEY
+}: StatRegStatisticsLib = __non_webpack_require__('/lib/repo/statreg/statistics')
+const {
+  STATREG_REPO_PUBLICATIONS_KEY
+}: StatRegPublicationsLib = __non_webpack_require__('/lib/repo/statreg/publications')
+const {
+  EVENT_LOG_REPO, EVENT_LOG_BRANCH
+}: EventLogLib = __non_webpack_require__('/lib/repo/eventLog')
 
 export type StatRegLatestFetchInfoNodeType = StatRegLatestFetchInfoNode | readonly StatRegLatestFetchInfoNode[] | null;
 export function getStatRegFetchStatuses(): Array<StatRegStatus> {
@@ -89,7 +37,7 @@ export function getStatRegFetchStatuses(): Array<StatRegStatus> {
   ].map(getStatRegStatus)
 }
 
-export function getStatRegStatus(key: string): StatRegStatus {
+function getStatRegStatus(key: string): StatRegStatus {
   const eventLogKey: string = `/statreg/${key}`
   const eventLogNodeResult: StatRegLatestFetchInfoNodeType = getNode<StatRegLatestFetchInfoNode>(EVENT_LOG_REPO, EVENT_LOG_BRANCH, eventLogKey)
   const eventLogNode: StatRegLatestFetchInfoNode = eventLogNodeResult && (Array.isArray(eventLogNodeResult) ? eventLogNodeResult[0] : eventLogNodeResult)
@@ -138,4 +86,8 @@ export interface StatRegStatus {
   message: string;
   startTime: string | undefined;
   status: string | undefined;
+}
+
+export interface SSBStatRegLib {
+  setupHandlers: (socket: Socket, socketEmitter: SocketEmitter) => void;
 }

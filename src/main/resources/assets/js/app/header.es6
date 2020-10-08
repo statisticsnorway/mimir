@@ -13,7 +13,7 @@ export function init() {
           const tooltip = $('#language-tooltip')
           if (tooltip.hasClass('d-none')) {
             tooltip.removeClass('d-none')
-            const popper = new Popper(document.getElementById('change-language'),
+            new Popper(document.getElementById('change-language'),
               document.getElementById('language-tooltip'),
               {
                 placement: 'bottom'
@@ -25,7 +25,7 @@ export function init() {
       }
     })
 
-    $('header input').keyup(function(e){
+    $('header input').keyup(function(e) {
       e.which === 13 ? $('header .input-wrapper button').click() : ''
     })
   })

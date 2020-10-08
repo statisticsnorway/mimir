@@ -55,10 +55,10 @@
           </items>
         </option>
         <option name="statbankSaved">
-          <label>(Ikke i bruk) Lagrede spørringer mot statistikkbanken</label>
+          <label>Lagrede spørringer mot statistikkbanken</label>
           <items>
-            <input name="url" type="TextLine">
-              <label>URL</label>
+            <input name="urlOrId" type="TextLine">
+              <label>URL eller tabell-id</label>
               <occurrences minimum="0" maximum="1"/>
             </input>
           </items>

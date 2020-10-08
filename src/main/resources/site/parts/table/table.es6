@@ -1,10 +1,7 @@
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
-  getContent, getSiteConfig, pageUrl, assetUrl
+  getContent, pageUrl, assetUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  getPhrases
-} = __non_webpack_require__( '/lib/language')
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
@@ -25,10 +22,13 @@ const {
 const {
   get
 } = __non_webpack_require__( '/lib/xp/content')
+const {
+  getLanguage
+} = __non_webpack_require__( '/lib/language')
 
 const moment = require('moment/min/moment-with-locales')
 const view = resolve('./table.html')
-const i18nLib = __non_webpack_require__('/lib/xp/i18n')
+import uuid from 'uuid/v4'
 
 exports.get = function(req) {
   try {
@@ -44,15 +44,14 @@ exports.preview = (req, id) => renderPart(req, [id])
 
 function renderPart(req, tableId) {
   const page = getContent()
-  const tableLabel = i18nLib.localize({
-    key: 'table'
-  })
+  const language = getLanguage(page)
+  const phrases = language.phrases
 
   if (!tableId) {
     if (req.mode === 'edit' && page.type !== `${app.name}:statistics`) {
       return {
         body: render(view, {
-          label: tableLabel
+          label: phrases.table
         })
       }
     } else {
@@ -66,11 +65,8 @@ function renderPart(req, tableId) {
     key: tableId
   })
   const table = parseTable(req, tableContent)
-  const siteConfig = getSiteConfig()
 
   moment.locale(tableContent.language ? tableContent.language : 'nb')
-  const phrases = getPhrases(tableContent)
-  const language = page.language
 
   // sources
   const sourceConfig = tableContent.data.sources ? forceArray(tableContent.data.sources) : []
@@ -80,7 +76,7 @@ function renderPart(req, tableId) {
     path: 'swipe-icon.svg'
   })
 
-  const standardSymbol = getStandardSymbolPage(siteConfig.standardSymbolPage, phrases.tableStandardSymbols)
+  const standardSymbol = getStandardSymbolPage(language.standardSymbolPage, phrases.tableStandardSymbols)
 
   const tableReact = new React4xp('Table')
     .setProps({
@@ -92,11 +88,12 @@ function renderPart(req, tableId) {
       displayName: tableContent.displayName,
       table: {
         caption: table.caption,
+        id: uuid(),
         thead: table.thead,
         tbody: table.tbody,
         tfoot: table.tfoot,
         tableClass: table.tableClass,
-        language: language,
+        language: language.code,
         noteRefs: table.noteRefs
       },
       standardSymbol: standardSymbol,

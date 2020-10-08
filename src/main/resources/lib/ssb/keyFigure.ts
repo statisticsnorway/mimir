@@ -38,17 +38,21 @@ const {
   getImageCaption
 } = __non_webpack_require__( '/lib/ssb/utils')
 const {
+  fromDatasetRepoCache
+} = __non_webpack_require__('/lib/ssb/cache')
+const {
   fromDatasetCache
 }: SSBCacheLibrary = __non_webpack_require__( '/lib/ssb/cache')
 const util: UtilLibrary = __non_webpack_require__( '/lib/util')
 const {
-  getDataset
+  getDataset,
+  extractKey
 } = __non_webpack_require__( '/lib/ssb/dataset/dataset')
 
 const contentTypeName: string = `${app.name}:keyFigure`
 
 export function get(keys: string | Array<string>): Array<Content<KeyFigure>> {
-  keys = util.data.forceArray(keys) as Array<string>
+  keys = util.data.forceArray(keys)
   const content: QueryResponse<KeyFigure> = query({
     contentTypes: [contentTypeName],
     query: ``,
@@ -91,7 +95,7 @@ export function parseKeyFigure(req: Request, keyFigure: Content<KeyFigure>, muni
   }
 
   const dataQueryId: string | undefined = keyFigure.data.dataquery
-  const datasetRepo: DatasetRepoNode<JSONstat> | null = getDataset(keyFigure)
+  const datasetRepo: DatasetRepoNode<JSONstat> | null = datasetOrNull(keyFigure)
 
   if (datasetRepo) {
     const dataSource: KeyFigure['dataSource'] | undefined = keyFigure.data.dataSource
@@ -112,6 +116,9 @@ export function parseKeyFigure(req: Request, keyFigure: Content<KeyFigure>, muni
     } else if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
       getDataTbProcessor(keyFigureViewData, data, keyFigure)
     }
+    return keyFigureViewData
+  } else if (keyFigure.data.manualSource) {
+    keyFigureViewData.number = parseValue(keyFigure.data.manualSource.replace(/,/g, '.'))
     return keyFigureViewData
   }
 
@@ -156,13 +163,20 @@ export function parseKeyFigure(req: Request, keyFigure: Content<KeyFigure>, muni
   return keyFigureViewData
 }
 
+function datasetOrNull(keyFigure: Content<KeyFigure>): DatasetRepoNode<JSONstat> | null {
+  return keyFigure.data.dataSource && keyFigure.data.dataSource._selected ?
+    fromDatasetRepoCache(`/${keyFigure.data.dataSource._selected}/${extractKey(keyFigure)}`,
+      () => getDataset(keyFigure)) :
+    null
+}
+
 function getDataTbProcessor(
   keyFigureViewData: KeyFigureView,
   data: JSDataset | Array<JSDataset> | null | TbmlData,
   keyFigure: Content<KeyFigure>
 ): KeyFigureView {
   const tbmlData: TbmlData = data as TbmlData
-  const bodyRows: Array<TableRow> = util.data.forceArray(tbmlData.tbml.presentation.table.tbody.tr) as Array<TableRow>
+  const bodyRows: Array<TableRow> = util.data.forceArray(tbmlData.tbml.presentation.table.tbody.tr)
   const head: TableRow = tbmlData.tbml.presentation.table.thead.tr
   const [row1, row2] = bodyRows
 
@@ -209,7 +223,7 @@ function getDataTbProcessor(
       changePeriod: row2.th.toString()
     }
   }
-  keyFigureViewData.time = (util.data.forceArray(head.th)[0] as number | string).toString()
+  keyFigureViewData.time = (util.data.forceArray(head.th)[0]).toString()
 
   return keyFigureViewData
 }

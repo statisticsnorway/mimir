@@ -1,9 +1,14 @@
-require('../../lib/polyfills/nashorn')
+__non_webpack_require__('/lib/polyfills/nashorn')
+const {
+  handleRepoGet
+} = __non_webpack_require__('/lib/ssb/statreg/repoUtils')
+const {
+  getContactsFromRepo
+} = __non_webpack_require__('/lib/repo/statreg/contacts')
 
-import { getContactsFromRepo } from '../../lib/repo/statreg/contacts';
-import { handleRepoGet } from '../repoUtils'
-
-const toOption = ({ id, name, email, mobile, telephone }) => ({
+const toOption = ({
+  id, name, email, mobile, telephone
+}) => ({
   id,
   displayName: name,
   description: email,
@@ -29,7 +34,8 @@ const filterByIds = (contacts, filters) => {
 exports.get = (req) => {
   return handleRepoGet(
     req,
-    'Contacts', getContactsFromRepo,
+    'Contacts',
+    getContactsFromRepo,
     toOption,
     req.params.ids ? filterByIds : filterByDisplayName)
 }

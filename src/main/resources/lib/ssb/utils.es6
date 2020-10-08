@@ -8,6 +8,9 @@ const {
   list: listMunicipalityAlerts
 } = __non_webpack_require__( '/lib/ssb/municipalityAlert')
 const {
+  list: listStatisticAlerts
+} = __non_webpack_require__( '/lib/ssb/statisticAlert')
+const {
   processHtml,
   pageUrl
 } = __non_webpack_require__( '/lib/xp/portal')
@@ -15,6 +18,9 @@ const content = __non_webpack_require__( '/lib/xp/content')
 const {
   render
 } = __non_webpack_require__( '/lib/thymeleaf')
+const {
+  readLines
+} = __non_webpack_require__('/lib/xp/io');
 const moment = require('moment/min/moment-with-locales')
 
 const errorView = resolve('../error/error.html')
@@ -29,9 +35,26 @@ export const createHumanReadableFormat = (value) => {
   return value > 999 ? numberWithSpaces(value).toString().replace(/\./, ',') : value.toString().replace(/\./, ',')
 }
 
+export const alertsForContext = (context, options) => {
+  return context === `${app.name}:statistics` ? getStatisticAlerts(options) : getMunicipalityAlerts(options)
+}
 
-export const alertsForContext = (municipality, municipalPageType) => {
-  const currentMunicipalityAlerts = municipality ? listMunicipalityAlerts( municipality.code, municipalPageType ) : {
+const getStatisticAlerts = (options) => {
+  const alerts = [...listOperationsAlerts().hits, ...listStatisticAlerts(options.statisticPageId).hits]
+  return alerts.map( (alert) => ({
+    title: alert.displayName,
+    messageType: alert.type === `${app.name}:operationsAlert` ? 'warning' : 'info',
+    message: processHtml({
+      value: alert.data.message
+    })
+  }))
+}
+
+
+const getMunicipalityAlerts = (options) => {
+  const municipality = options.municipality
+  const municipalPageType = options.municipalPageType
+  const currentMunicipalityAlerts = options.municipality ? listMunicipalityAlerts( municipality.code, municipalPageType ) : {
     hits: []
   }
   const alerts = [...listOperationsAlerts().hits, ...currentMunicipalityAlerts.hits]
@@ -191,4 +214,19 @@ export const getSources = (sourceConfig) => {
       url: sourceUrl
     }
   })
+}
+
+export const getAttachmentContent = (contentId) => {
+  if(!contentId) return undefined
+  const attachmentContent = content.get({key: contentId})
+
+  if(!attachmentContent) return undefined
+  const stream = content.getAttachmentStream({
+    key: attachmentContent._id,
+    name: attachmentContent._name
+  })
+
+  if(!stream) return undefined
+  const lines = readLines(stream);
+  return lines[0]
 }

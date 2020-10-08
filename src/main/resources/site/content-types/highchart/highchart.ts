@@ -160,6 +160,11 @@ export interface Highchart {
   yAxisDecimalPlaces?: "0" | "1" | "2";
 
   /**
+   * Offset Y-akse tittel
+   */
+  yAxisOffset?: string;
+
+  /**
    * Spørring mot Statistikkbanken
    */
   dataquery?: string;
@@ -229,13 +234,13 @@ export interface Highchart {
     };
 
     /**
-     * (Ikke i bruk) Lagrede spørringer mot statistikkbanken
+     * Lagrede spørringer mot statistikkbanken
      */
     statbankSaved?: {
       /**
-       * URL
+       * URL eller tabell-id
        */
-      url?: string;
+      urlOrId?: string;
     };
 
     /**

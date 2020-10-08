@@ -11,8 +11,14 @@ import { DatasetRepoNode } from '../repo/dataset'
 import { DataSource as DataSourceType } from '../repo/dataset'
 import { UtilLibrary } from '../types/util'
 const {
-  getDataset
+  getDataset,
+  extractKey
 } = __non_webpack_require__( '/lib/ssb/dataset/dataset')
+
+const {
+  fromDatasetRepoCache
+} = __non_webpack_require__('/lib/ssb/cache')
+
 const util: UtilLibrary = __non_webpack_require__( '/lib/util')
 
 
@@ -29,7 +35,7 @@ export function parseTable(req: Request, table: Content<Table>): TableView {
     noteRefs: []
   }
 
-  const datasetRepo: DatasetRepoNode<JSONstat> | null = getDataset(table)
+  const datasetRepo: DatasetRepoNode<JSONstat> | null = datasetOrNull(table)
 
   if (datasetRepo) {
     const dataSource: Table['dataSource'] | undefined = table.data.dataSource
@@ -38,8 +44,8 @@ export function parseTable(req: Request, table: Content<Table>): TableView {
     if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
       const tbmlData: TbmlData = data as TbmlData
       const title: Title = tbmlData.tbml.metadata.title
-      const headRows: Array<TableRow> = util.data.forceArray(tbmlData.tbml.presentation.table.thead.tr) as Array<TableRow>
-      const bodyRows: Array<TableRow> = util.data.forceArray(tbmlData.tbml.presentation.table.tbody.tr) as Array<TableRow>
+      const headRows: Array<TableRow> = util.data.forceArray(tbmlData.tbml.presentation.table.thead.tr)
+      const bodyRows: Array<TableRow> = util.data.forceArray(tbmlData.tbml.presentation.table.tbody.tr)
 
       const noteRefs: Array<string> = title.noterefs ? [title.noterefs] : []
       headRows.forEach((row) => getNoterefs(row, noteRefs))
@@ -54,7 +60,7 @@ export function parseTable(req: Request, table: Content<Table>): TableView {
 
       const notes: Notes | undefined = tbmlData.tbml.metadata.notes
       if (notes) {
-        const notesList: Array<Note> = util.data.forceArray(notes.note) as Array<Note>
+        const notesList: Array<Note> = util.data.forceArray(notes.note)
         tableViewData.tfoot.footnotes = notesList
       }
     }
@@ -64,8 +70,16 @@ export function parseTable(req: Request, table: Content<Table>): TableView {
   return tableViewData
 }
 
+
+function datasetOrNull(table: Content<Table>): DatasetRepoNode<JSONstat> | null {
+  return table.data.dataSource && table.data.dataSource._selected ?
+    fromDatasetRepoCache(`/${table.data.dataSource._selected}/${extractKey(table)}`,
+      () => getDataset(table)) :
+    null
+}
+
 function getNoterefs(row: TableRow, noteRefs: Array<string>): Array<string> {
-  util.data.forceArray(row.th).forEach((cell: PreliminaryData) => {
+  util.data.forceArray(row.th).forEach((cell: string | number | PreliminaryData) => {
     if (typeof cell === 'object') {
       if (cell.noterefs && noteRefs.indexOf(cell.noterefs) < 0) {
         noteRefs.push(cell.noterefs)

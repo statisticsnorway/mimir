@@ -35,7 +35,7 @@ class Header extends React.Component {
   toggleSubMenu(index) {
     const activeIndex = this.state.indexForCurrentActiveMenuItem === index ? undefined : index
     const mainMenu = [...this.state.mainMenu]
-    if(document.activeElement instanceof HTMLElement) document.activeElement.blur()
+    if (document.activeElement instanceof HTMLElement) document.activeElement.blur()
     mainMenu[index] = !mainMenu[index]
 
     this.setState({
@@ -57,14 +57,19 @@ class Header extends React.Component {
       return (<Link key={'link_' + index} href={altLanguage.path}>{altLanguage.title}</Link>)
     })
   }
+
+  renderIcon(icon) {
+    return <span dangerouslySetInnerHTML={{__html:icon}}></span>
+  }
+
   renderSubMenu(topMenuItem, activeMenuItem) {
     return topMenuItem.menuItems && topMenuItem.menuItems.map((menuItem, itemIndex) => {
       return (
-        <li key={'listItemLink_' + itemIndex}>
+        <li key={'listItemLink_' + itemIndex} tabIndex={activeMenuItem ? 0 : -1 }>
           <Link
             tabIndex={activeMenuItem ? 0 : -1 }
             href={menuItem.path}
-            icon={ menuItem.icon ? <img src={menuItem.icon} alt={menuItem.iconAltText}/> : undefined }>{menuItem.title}
+            icon={ menuItem.iconSvgTag ? this.renderIcon(menuItem.iconSvgTag) : undefined }>{menuItem.title}
           </Link>
         </li>)
     })
@@ -155,6 +160,7 @@ Header.propTypes = {
       title: PropTypes.string,
       path: PropTypes.string,
       icon: PropTypes.string,
+      iconSvgTag: PropTypes.string,
       isActive: PropTypes.boolean,
       menuItems: PropTypes.arrayOf(
         PropTypes.shape({

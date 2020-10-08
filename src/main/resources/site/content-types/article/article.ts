@@ -105,6 +105,11 @@ export interface Article {
   };
 
   /**
+   * Relaterte statistikker
+   */
+  relatedStatistics?: Array<string>;
+
+  /**
    * Relaterte eksterne lenker
    */
   relatedExternalLinkItemSet?: Array<{

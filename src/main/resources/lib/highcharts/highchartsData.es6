@@ -52,15 +52,14 @@ export function getSeriesAndCategories(req, highchartsContent, data, dataFormat)
 export function switchRowsAndColumnsCheck(highchartContent, seriesAndCategories, dataFormat) {
   return (!dataFormat._selected === DataSourceType.STATBANK_API && highchartContent.data.graphType === 'pie' ||
     highchartContent.data.switchRowsAndColumns) ?
-    switchRowsAndColumns(seriesAndCategories, dataFormat) : seriesAndCategories
+    switchRowsAndColumns(seriesAndCategories) : seriesAndCategories
 }
 
-function switchRowsAndColumns(seriesAndCategories, dataFormat) {
-  const isJsonStat = dataFormat._selected === 'jsonStat' || dataFormat._selected === DataSourceType.STATBANK_API
+function switchRowsAndColumns(seriesAndCategories) {
   return {
     categories: seriesAndCategories.series.map((serie) => serie.name),
     series: [{
-      name: 'Antall',
+      name: seriesAndCategories.title ? seriesAndCategories.title : 'Antall',
       data: seriesAndCategories.series.map((serie) => {
         return serie.data[0]
       })

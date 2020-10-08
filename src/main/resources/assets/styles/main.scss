@@ -58,6 +58,8 @@ $container-max-widths: (
 @import "./articleArchive";
 @import "./table";
 @import "./statbankLinkList";
+@import "./attachmentTablesFigures";
+@import "./omStatistikken";
 
 body {
   -moz-osx-font-smoothing: grayscale;
@@ -85,6 +87,11 @@ section.part-divider + section.part-divider {
 
 .bkg-grey {
   background-color: $ssb-dark-1;
+}
+
+.premain {
+  max-width: 100%;
+  background: white;
 }
 
 .row {

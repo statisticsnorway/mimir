@@ -1,5 +1,6 @@
-import { getStatisticByIdFromRepo } from '../../../lib/repo/statreg/statistics'
-
+const {
+  getStatisticByIdFromRepo
+} = __non_webpack_require__('/lib/repo/statreg/statistics')
 const {
   getContent,
   assetUrl

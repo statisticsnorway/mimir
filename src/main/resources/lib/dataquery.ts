@@ -231,7 +231,7 @@ function createDataset(data: string, dataquery: Content<Dataquery>): RefreshData
           json: data
         }
       }) as Content<Dataset>
-      const publishResult: PublishResponse = publishDatasets([dataset._id])
+      publishDatasets([dataset._id])
 
       return {
         newDatasetData: true,

@@ -5,9 +5,19 @@ export interface Statistics {
   mainTable?: string;
 
   /**
+   * Vedleggstabell eller figur
+   */
+  attachmentTablesFigures?: Array<string>;
+
+  /**
    * Om Statistikken
    */
   aboutTheStatistics?: string;
+
+  /**
+   * Nøkkeltall
+   */
+  statisticsKeyFigure?: string;
 
   /**
    * Antall tabeller i statbank
