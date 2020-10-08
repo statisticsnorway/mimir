@@ -28,7 +28,6 @@ const {
 
 const moment = require('moment/min/moment-with-locales')
 const view = resolve('./table.html')
-import uuid from 'uuid/v4'
 
 exports.get = function(req) {
   try {
@@ -88,7 +87,6 @@ function renderPart(req, tableId) {
       displayName: tableContent.displayName,
       table: {
         caption: table.caption,
-        id: uuid(),
         thead: table.thead,
         tbody: table.tbody,
         tfoot: table.tfoot,
@@ -124,7 +122,7 @@ const getDownloadTableOptions = () => {
 
   const XLS = {
     title: '.xlsx (Excel)',
-    id: 'downloadTableAsXLS'
+    id: 'downloadTableAsXLSX'
   }
   downloadTable.push(XLS)
 
