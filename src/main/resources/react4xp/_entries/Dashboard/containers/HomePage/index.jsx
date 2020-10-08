@@ -6,6 +6,7 @@ import { selectIsConnected } from './selectors'
 import { ConnectionBadge } from '../../components/ConnectionBadge'
 import { DashboardControls } from '../DashboardControls'
 import { DataQueries } from '../DataQueries'
+import { Statistics } from '../Statistics'
 
 export function HomePage() {
   const isConnected = useSelector(selectIsConnected)
@@ -13,7 +14,10 @@ export function HomePage() {
   return (
     <Container>
       <ConnectionBadge isConnected={isConnected} />
-      <Tabs defaultActiveKey="queries">
+      <Tabs defaultActiveKey="statistics">
+        <Tab eventKey="statistics" title="Statistikker">
+          <Statistics/>
+        </Tab>
         <Tab eventKey="queries" title="Spørringer">
           <DataQueries/>
           <StatRegDashboard/>

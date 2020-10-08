@@ -5,6 +5,7 @@ import { createReducer } from './reducers'
 import { reducer as statRegReducer } from '../containers/StatRegDashboard/slice'
 import { reducer as commonReducer } from '../containers/HomePage/slice'
 import { reducer as dataQueriesReducer } from '../containers/DataQueries/slice'
+import { reducer as statisticsReducer } from '../containers/Statistics/slice'
 
 export function configureAppStore() {
   const reduxSagaMonitorOptions = {}
@@ -27,7 +28,8 @@ export function configureAppStore() {
     reducer: {
       common: commonReducer,
       statReg: statRegReducer,
-      dataQueries: dataQueriesReducer
+      dataQueries: dataQueriesReducer,
+      statistics: statisticsReducer
     },
     middleware: [...getDefaultMiddleware(), ...middlewares],
     devTools: process.env.NODE_ENV !== 'production',

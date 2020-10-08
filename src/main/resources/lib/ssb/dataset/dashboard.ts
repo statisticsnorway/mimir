@@ -1,6 +1,6 @@
 
 import { DatasetLib, CreateOrUpdateStatus } from './dataset'
-import { ContentLibrary, Content } from 'enonic-types/lib/content'
+import {ContentLibrary, Content, QueryResponse} from 'enonic-types/lib/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { Events } from '../../repo/query'
 import { EVENT_LOG_REPO, EVENT_LOG_BRANCH, LogSummary, EventLogLib } from '../../repo/eventLog'
@@ -28,7 +28,8 @@ const {
   getDataset
 }: DatasetLib = __non_webpack_require__( '/lib/ssb/dataset/dataset')
 const {
-  get: getContent
+  get: getContent,
+  query
 }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
 const {
   dateToFormat,
@@ -85,6 +86,17 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
       }
     }
     run(context, () => refreshDatasetHandler(options.ids, socketEmitter))
+  })
+
+  socket.on('get-statistics', () => {
+    let statistics: Array<unknown> = []
+    const result: QueryResponse<Content> = query({
+      contentTypes: [`${app.name}:statistics`],
+      query: ``,
+      count: 50
+    })
+    statistics = statistics.concat(result.hits)
+    socket.emit('statistics-result', statistics)
   })
 }
 
