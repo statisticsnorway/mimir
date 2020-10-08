@@ -167,6 +167,7 @@ exports.get = function(req) {
     }
     return undefined
   })
+
   if (header && header.component) {
     pageContributions = header.component.renderPageContributions({
       pageContributions
@@ -197,6 +198,15 @@ exports.get = function(req) {
     })
   }
 
+  const breadcrumbs = getBreadcrumbs(page, municipality)
+
+  const breadcrumbComponent = new React4xp('Breadcrumb')
+  breadcrumbComponent.setProps({
+    items: breadcrumbs
+  })
+    .setId('breadcrumbs')
+    .uniqueId()
+
   const model = {
     pageTitle: 'SSB', // not really used on normal pages because of SEO app (404 still uses this)
     page,
@@ -217,20 +227,21 @@ exports.get = function(req) {
     metaInfoSearchGroup,
     metaInfoSearchContentType,
     metaInfoSearchKeywords,
-    metaInfoDescription
+    metaInfoDescription,
+    breadcrumbsReactId: breadcrumbComponent.react4xpId
   }
 
-  let body = thymeleaf.render(view, model)
+  const thymeleafRenderBody = thymeleaf.render(view, model)
 
-  const breadcrumbs = getBreadcrumbs(page, municipality)
-  const breadcrumbComponent = new React4xp('Breadcrumb')
-    .setProps({
-      items: breadcrumbs
-    })
-    .setId('breadcrumbs')
-  body = breadcrumbComponent.renderBody({
-    body
+  const bodyWithBreadCrumbs = breadcrumbComponent.renderBody({
+    body: thymeleafRenderBody,
+    clientRender: true
   })
+
+  pageContributions = breadcrumbComponent.renderPageContributions({
+    pageContributions
+  })
+
 
   const alertOptions = page.type === `${app.name}:statistics` ? {
     statisticPageId: page._id
@@ -239,24 +250,33 @@ exports.get = function(req) {
     municipalPageType
   }
   const alerts = alertsForContext(page.type, alertOptions)
-  if (alerts.length > 0) {
-    const alertComponent = new React4xp('Alerts')
-      .setProps({
-        alerts
-      })
-      .setId('alerts')
-    body = alertComponent.renderBody({
+  const bodyWithAlerts = alerts.length ?
+    addAlerts(alerts, bodyWithBreadCrumbs, pageContributions) :
+    {
+      body: bodyWithBreadCrumbs,
+      pageContributions
+    }
+
+  return {
+    body: `<!DOCTYPE html>${bodyWithAlerts.body}`,
+    pageContributions: bodyWithAlerts.pageContributions
+  }
+}
+
+function addAlerts(alerts, body, pageContributions ) {
+  const alertComponent = new React4xp('Alerts')
+    .setProps({
+      alerts
+    })
+    .setId('alerts')
+  return {
+    body: alertComponent.renderBody({
       body,
       clientRender: true
-    })
-    pageContributions = alertComponent.renderPageContributions({
+    }),
+    pageContributions: alertComponent.renderPageContributions({
       pageContributions,
       clientRender: true
     })
-  }
-
-  return {
-    body: `<!DOCTYPE html>${body}`,
-    pageContributions
   }
 }
