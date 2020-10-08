@@ -7,7 +7,7 @@ import { ChevronDown, ChevronUp } from 'react-feather'
 export function Statistics() {
   const statistics = useSelector(selectStatistics)
   const loading = useSelector(selectLoading)
-  // console.log('statistics : ' + JSON.stringify(statistics))
+  console.log('statistics : ' + statistics.length)
 
   function renderStatistics() {
     if (loading) {
@@ -38,9 +38,9 @@ export function Statistics() {
         <tbody>
           {statistics.map((statistic) => {
             return (
-              <tr key={id} className="small">
+              <tr key={statistic._id}>
                 <td className='statistic'>
-                  <span>Statistikk kortnavn</span>
+                  <span>{statistic._name}</span>
                 </td>
                 <td>
                   <span>Dato</span>
