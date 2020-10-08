@@ -5,13 +5,11 @@ import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { ContentLibrary, QueryResponse, Content } from 'enonic-types/lib/content'
 import { PortalLibrary } from 'enonic-types/lib/portal'
 import { KeyFigure } from '../../site/content-types/keyFigure/keyFigure'
-import { Dataset } from '../../site/content-types/dataset/dataset'
 import { Dataquery } from '../../site/content-types/dataquery/dataquery'
 import { MunicipalityWithCounty } from '../klass/municipalities'
 import { TbmlData, TableRow, PreliminaryData } from '../types/xmlParser'
 import { Dataset as JSDataset, Dimension, Category } from '../types/jsonstat-toolkit'
 import { UtilLibrary } from '../types/util'
-import { DatasetCache, SSBCacheLibrary } from './cache'
 import { Request } from 'enonic-types/lib/controller'
 import { DatasetRepoNode } from '../repo/dataset'
 import { DataSource as DataSourceType } from '../repo/dataset'
@@ -21,12 +19,6 @@ const {
 const {
   imageUrl
 }: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
-const {
-  get: getDataquery
-} = __non_webpack_require__( '/lib/ssb/dataquery')
-const {
-  getDataSetWithDataQueryId
-} = __non_webpack_require__( '/lib/ssb/dataset')
 const {
   localizeTimePeriod
 } = __non_webpack_require__( '/lib/language')
@@ -40,9 +32,6 @@ const {
 const {
   fromDatasetRepoCache
 } = __non_webpack_require__('/lib/ssb/cache')
-const {
-  fromDatasetCache
-}: SSBCacheLibrary = __non_webpack_require__( '/lib/ssb/cache')
 const util: UtilLibrary = __non_webpack_require__( '/lib/util')
 const {
   getDataset,
@@ -94,7 +83,6 @@ export function parseKeyFigure(req: Request, keyFigure: Content<KeyFigure>, muni
     glossaryText: keyFigure.data.glossaryText
   }
 
-  const dataQueryId: string | undefined = keyFigure.data.dataquery
   const datasetRepo: DatasetRepoNode<JSONstat> | null = datasetOrNull(keyFigure)
 
   if (datasetRepo) {
@@ -120,45 +108,6 @@ export function parseKeyFigure(req: Request, keyFigure: Content<KeyFigure>, muni
   } else if (keyFigure.data.manualSource) {
     keyFigureViewData.number = parseValue(keyFigure.data.manualSource.replace(/,/g, '.'))
     return keyFigureViewData
-  }
-
-  // TODO: Fjerne koden nedenfor når vi har fjernet dataQuery fra innholdstypen Keyfigures
-
-  if (dataQueryId && !datasetRepo) {
-    const cachedQuery: DatasetCache = fromDatasetCache(req, dataQueryId, () => {
-      const dataQueryContent: Content<Dataquery> = getDataquery({
-        key: dataQueryId
-      })
-      const datasetContent: Content<Dataset> = getDataSetWithDataQueryId(dataQueryId).hits[0]
-      let parsedData: JSDataset | Array<JSDataset> | null | TbmlData | TbmlData = JSON.parse(datasetContent.data.json)
-      if (dataQueryContent.data.datasetFormat._selected === 'jsonStat') {
-        parsedData = JSONstat(parsedData).Dataset(0)
-      }
-      return {
-        data: parsedData,
-        format: dataQueryContent.data.datasetFormat
-      }
-    })
-    const data: JSDataset | Array<JSDataset> | null | TbmlData = cachedQuery.data
-    const datasetFormat: Dataquery['datasetFormat'] = cachedQuery.format
-
-    if (datasetFormat._selected === 'jsonStat') {
-      // prepare jsonstat
-      const ds: JSDataset | Array<JSDataset> | null = data as JSDataset | Array<JSDataset> | null
-      const jsonStatConfig: JsonStatFormat | undefined = datasetFormat[datasetFormat._selected]
-      const xAxisLabel: string | undefined = jsonStatConfig ? jsonStatConfig.xAxisLabel : undefined
-      const yAxisLabel: string | undefined = jsonStatConfig ? jsonStatConfig.yAxisLabel : undefined
-
-      // if filter get data with filter
-      if (jsonStatConfig && jsonStatConfig.datasetFilterOptions && jsonStatConfig.datasetFilterOptions._selected) {
-        const filterOptions: DatasetOption = jsonStatConfig.datasetFilterOptions
-        getDataWithFilterStatbankApi(keyFigureViewData, municipality, filterOptions, ds, xAxisLabel, yAxisLabel)
-      } else if (xAxisLabel && ds && !(ds instanceof Array)) {
-      // get all data without filter
-      }
-    } else if (datasetFormat._selected === 'tbml') {
-      getDataTbProcessor(keyFigureViewData, data, keyFigure)
-    }
   }
   return keyFigureViewData
 }
