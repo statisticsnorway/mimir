@@ -2,12 +2,10 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { Col, Row, Table } from 'react-bootstrap'
 import { selectStatistics, selectLoading } from './selectors'
-import { ChevronDown, ChevronUp } from 'react-feather'
 
 export function Statistics() {
   const statistics = useSelector(selectStatistics)
   const loading = useSelector(selectLoading)
-  console.log('statistics : ' + statistics.length)
 
   function renderStatistics() {
     if (loading) {
@@ -38,12 +36,12 @@ export function Statistics() {
         <tbody>
           {statistics.map((statistic) => {
             return (
-              <tr key={statistic._id}>
+              <tr key={statistic.id}>
                 <td className='statistic'>
-                  <span>{statistic._name}</span>
+                  <span>{statistic.name}</span>
                 </td>
                 <td>
-                  <span>Dato</span>
+                  <span>{statistic.shortName}</span>
                 </td>
               </tr>
             )
