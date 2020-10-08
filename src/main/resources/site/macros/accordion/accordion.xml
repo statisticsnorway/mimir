@@ -1,0 +1,6 @@
+<macro>
+    <display-name>Trekkspill</display-name>
+    <form>
+        <mixin name="accordion" />
+    </form>
+</macro>
