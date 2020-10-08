@@ -230,7 +230,7 @@
     </input>
     <input name="yAxisOffset" type="TextLine">
       <label>Offset Y-akse tittel</label>
-      <help-text>Kun heltall, positiv(venstre) eller negativ(høyre) verdi. NB: Denne flytter y-akse tittel.</help-text>
+      <help-text>Denne flytter y-aksetittelen. Kun heltall. Positiv verdi flytter til venstre, negativ verdi flytter til høyre.</help-text>
     </input>
   </form>
 </content-type>
