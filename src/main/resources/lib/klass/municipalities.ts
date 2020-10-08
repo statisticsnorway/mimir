@@ -56,24 +56,12 @@ function getMunicipalsFromContent(): Array<MunicipalCode> {
       key
     })
     if (dataSource) {
-      if (dataSource.type === `${app.name}:dataquery`) {
-        const children: Array<Content<Dataset>> = getChildren({
-          key
-        }).hits as Array<Content<Dataset>>
-        if (children.length > 0) {
-          const content: Content<Dataset> = children[0]
-          if (content.data.json) {
-            return JSON.parse(content.data.json).codes as Array<MunicipalCode>
-          }
-        }
-      } else {
-        const dataset: DatasetRepoNode<object> | undefined = fromDatasetRepoCache(`${dataSource.data.dataSource?._selected}/${extractKey(dataSource)}`, () => {
-          return getDataset(dataSource)
-        })
-        if (dataset && dataset.data) {
-          const data: {codes: Array<MunicipalCode>} = dataset.data as {codes: Array<MunicipalCode>}
-          return data.codes
-        }
+      const dataset: DatasetRepoNode<object> | undefined = fromDatasetRepoCache(`${dataSource.data.dataSource?._selected}/${extractKey(dataSource)}`, () => {
+        return getDataset(dataSource)
+      })
+      if (dataset && dataset.data) {
+        const data: {codes: Array<MunicipalCode>} = dataset.data as {codes: Array<MunicipalCode>}
+        return data.codes
       }
     }
   }
