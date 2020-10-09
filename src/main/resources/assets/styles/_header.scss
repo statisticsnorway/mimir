@@ -201,6 +201,7 @@ header.ssb-header-wrapper {
 
         .navigation-item:before {
           height: 4px;
+          background: black;
 
           @include media-breakpoint-down(md) {
             height: 0;
