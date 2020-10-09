@@ -11,7 +11,6 @@ const {
   list: listStatisticAlerts
 } = __non_webpack_require__( '/lib/ssb/statisticAlert')
 const {
-  imageUrl,
   processHtml,
   pageUrl
 } = __non_webpack_require__( '/lib/xp/portal')
