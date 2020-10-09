@@ -1,3 +1,4 @@
+const util = __non_webpack_require__('/lib/util')
 
 const xmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
@@ -115,4 +116,12 @@ function dataFormatPie(seriesAndCategories) {
       }]
     }
   }
+}
+
+
+export const getRowValue = (value) => {
+  if (typeof value === 'object' && value.content != undefined) {
+    return value.content
+  }
+  return value
 }
