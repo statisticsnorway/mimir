@@ -46,7 +46,6 @@ const renderPart = (req) => {
   let nextRelease = phrases.notYetDetermined
   let statisticsKeyFigure
   let changeDate
-  let pageContributions
 
   if (statistic) {
     title = statistic.name
@@ -91,10 +90,12 @@ const renderPart = (req) => {
   }
 
   let body = render(view, model)
-  body = modifiedDateComponent.renderBody({
-    body
-  })
-  pageContributions = modifiedDateComponent.renderPageContributions({
+  if (changeDate) {
+    body = modifiedDateComponent.renderBody({
+      body
+    })
+  }
+  const pageContributions = modifiedDateComponent.renderPageContributions({
     pageContributions: {
       bodyEnd: statisticsKeyFigure ? statisticsKeyFigure.pageContributions.bodyEnd : []
     },
