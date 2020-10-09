@@ -1,6 +1,6 @@
 
 import { DatasetLib, CreateOrUpdateStatus } from './dataset'
-import {ContentLibrary, Content} from 'enonic-types/lib/content'
+import { ContentLibrary, Content } from 'enonic-types/lib/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { Events } from '../../repo/query'
 import { EVENT_LOG_REPO, EVENT_LOG_BRANCH, LogSummary, EventLogLib } from '../../repo/eventLog'
