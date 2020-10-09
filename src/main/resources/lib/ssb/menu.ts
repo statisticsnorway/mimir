@@ -46,7 +46,7 @@ function createMenuBranch(menuItem: Content<MenuItem>): MenuItemParsed {
     scale: 'block(12px,12px)'
   }) : undefined
   const iconAltText: string | undefined = menuItem.data.icon ? getImageCaption(menuItem.data.icon) : undefined
-  const iconSvgTag: string | undefined =  menuItem.data.icon ? getAttachmentContent( menuItem.data.icon) : undefined
+  const iconSvgTag: string | undefined = menuItem.data.icon ? getAttachmentContent( menuItem.data.icon) : undefined
   return {
     title: menuItem.displayName,
     shortName: menuItem.data.shortName ? menuItem.data.shortName : undefined,

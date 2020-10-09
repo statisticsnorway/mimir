@@ -201,6 +201,7 @@ header.ssb-header-wrapper {
 
         .navigation-item:before {
           height: 4px;
+          background: black;
 
           @include media-breakpoint-down(md) {
             height: 0;
@@ -297,13 +298,8 @@ header.ssb-header-wrapper {
             .link-text{
               color: white;
             }
-            svg {
-              line,
-              path,
-              .cls-1,
-              .cls-2 {
-                stroke: white;
-              }
+            svg * {
+              stroke: white;
             }
           }
         }
