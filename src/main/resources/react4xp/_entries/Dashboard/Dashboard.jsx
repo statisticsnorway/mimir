@@ -16,6 +16,7 @@ import WebsocketProvider, { WebSocketContext } from './utils/websocket/Websocket
 import { configureAppStore } from './store/configureStore'
 import { requestStatuses } from './containers/StatRegDashboard/actions'
 import { requestDataQueries } from './containers/DataQueries/actions'
+import { requestStatistics } from './containers/Statistics/actions'
 import { actions as commonActions } from './containers/HomePage/slice'
 import PropTypes from 'prop-types'
 import { setUserServerSide } from './containers/HomePage/actions.es6'
@@ -53,6 +54,7 @@ function DashboardRouter(props) {
   setUserServerSide(dispatch, io, props.user)
   requestStatuses(dispatch, io)
   requestDataQueries(dispatch, io)
+  requestStatistics(dispatch, io)
   return (
     <BrowserRouter>
       <Helmet
