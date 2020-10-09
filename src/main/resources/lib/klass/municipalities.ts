@@ -210,8 +210,8 @@ function getMunicipalityChanges(): MunicipalityChangeList {
   }
 }
 
-export function removeCountyFromMunicipalityName(municiaplityName: string): string {
-  return municiaplityName.split('(')[0].trim()
+export function removeCountyFromMunicipalityName(municipalityName: string): string {
+  return municipalityName.split('(')[0].trim()
 }
 
 export interface MunicipalityChangeList {
@@ -235,7 +235,7 @@ export interface MunicipalitiesLib {
   municipalsWithCounties (): Array<MunicipalityWithCounty>;
   getMunicipality (req: Request): MunicipalityWithCounty|undefined;
   getMunicipalityByName: (municipalities: Array<MunicipalityWithCounty>, municipalityName: string) => MunicipalityWithCounty|undefined;
-  removeCountyFromMunicipalityName: (municiaplityName: string) => string;
+  removeCountyFromMunicipalityName: (municipalityName: string) => string;
 }
 
 interface RequestWithCode extends Request {
