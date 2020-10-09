@@ -59,15 +59,17 @@ class Header extends React.Component {
   }
 
   renderIcon(icon) {
-    return <span dangerouslySetInnerHTML={{__html:icon}}></span>
+    return <span dangerouslySetInnerHTML={{
+      __html: icon
+    }}></span>
   }
 
   renderSubMenu(topMenuItem, activeMenuItem) {
     return topMenuItem.menuItems && topMenuItem.menuItems.map((menuItem, itemIndex) => {
       return (
-        <li key={'listItemLink_' + itemIndex} tabIndex={activeMenuItem ? 0 : -1 }>
+        <li key={'listItemLink_' + itemIndex}>
           <Link
-            tabIndex={activeMenuItem ? 0 : -1 }
+            tabIndex={this.state.showSubMenu && activeMenuItem ? 0 : -1 }
             href={menuItem.path}
             icon={ menuItem.iconSvgTag ? this.renderIcon(menuItem.iconSvgTag) : undefined }>{menuItem.title}
           </Link>

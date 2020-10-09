@@ -4,6 +4,7 @@ import { actions as commonActions } from '../../containers/HomePage/slice'
 import setupStatRegListeners from '../../containers/StatRegDashboard/listeners'
 import setupHomePageListeners from '../../containers/HomePage/listeners'
 import setupDataQueriesListeners from '../../containers/DataQueries/listeners'
+import setupStatisticsListeners from '../../containers/Statistics/listeners'
 
 const WebSocketContext = createContext(null)
 export { WebSocketContext }
@@ -57,6 +58,7 @@ function WebsocketProvider({
         setupStatRegListeners(io, dispatch)
         setupHomePageListeners(io, dispatch)
         setupDataQueriesListeners(io, dispatch)
+        setupStatisticsListeners(io, dispatch)
 
         // run all emits waiting in queue
         emitQueue.forEach((q) => {
