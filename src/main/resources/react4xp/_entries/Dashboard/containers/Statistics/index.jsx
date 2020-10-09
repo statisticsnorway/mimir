@@ -41,7 +41,7 @@ export function Statistics() {
                   <span>{statistic.name}</span>
                 </td>
                 <td>
-                  <span>{statistic.shortName}</span>
+                  <span>{statistic.nextRelease}</span>
                 </td>
               </tr>
             )
