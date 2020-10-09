@@ -5,6 +5,14 @@
   .container {
     min-height: 272px;
   }
+  .banner-image {
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    img {
+      height: 100%;
+    }
+  }
   .subtitle {
     text-shadow: 0 0 4px rgba(0,0,0,0.4);
   }
