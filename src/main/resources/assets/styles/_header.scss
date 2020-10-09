@@ -297,13 +297,8 @@ header.ssb-header-wrapper {
             .link-text{
               color: white;
             }
-            svg {
-              line,
-              path,
-              .cls-1,
-              .cls-2 {
-                stroke: white;
-              }
+            svg * {
+              stroke: white;
             }
           }
         }
