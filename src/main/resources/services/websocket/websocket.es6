@@ -1,5 +1,4 @@
 const ws = __non_webpack_require__('/lib/wsUtil')
-const convert = __non_webpack_require__('/lib/convert/convert')
 const dashboard = __non_webpack_require__('/lib/ssb/dataset/dashboard')
 const statreg = __non_webpack_require__('/lib/ssb/statreg')
 const cache = __non_webpack_require__('/lib/ssb/cache')
@@ -13,7 +12,6 @@ const socketEmitter = new ws.SocketEmitter()
 socketEmitter.connect(connectionCallback)
 
 function connectionCallback(socket) {
-  convert.setupHandlers(socket)
   dashboard.setupHandlers(socket, socketEmitter)
   statreg.setupHandlers(socket, socketEmitter)
   cache.setupHandlers(socket)
