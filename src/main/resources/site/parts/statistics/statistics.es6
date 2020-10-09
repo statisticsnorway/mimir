@@ -17,6 +17,7 @@ const {
   preview: keyFigurePreview
 } = __non_webpack_require__('../keyFigure/keyFigure')
 
+const React4xp = require('/lib/enonic/react4xp')
 const moment = require('moment/min/moment-with-locales')
 const view = resolve('./statistics.html')
 
@@ -39,9 +40,12 @@ const renderPart = (req) => {
   let title = page.displayName
   const updated = phrases.updated + ': '
   const nextUpdate = phrases.nextUpdate + ': '
+  const changed = phrases.modified + ': '
+  const modifiedText = page.data.modifiedText
   let previousRelease = phrases.notAvailable
   let nextRelease = phrases.notYetDetermined
   let statisticsKeyFigure
+  let changeDate
 
   if (statistic) {
     title = statistic.name
@@ -59,21 +63,47 @@ const renderPart = (req) => {
     statisticsKeyFigure = keyFigurePreview(req, page.data.statisticsKeyFigure)
   }
 
+  if (moment(page.data.lastModified).isAfter(statistic.variants.previousRelease)) {
+    changeDate = moment(page.data.lastModified).format('DD. MMMM YYYY, HH:MM')
+  }
+
+  const modifiedDateComponent = new React4xp('ModifiedDate')
+    .setProps({
+      explanation: modifiedText,
+      className: '',
+      children: changeDate
+    })
+    .setId('modifiedDate')
+    .uniqueId()
+
   const model = {
     title,
     updated,
     nextUpdate,
+    changed,
+    changeDate,
+    modifiedText,
     previousRelease,
     nextRelease,
+    modifiedDateId: modifiedDateComponent.react4xpId,
     statisticsKeyFigure: statisticsKeyFigure ? statisticsKeyFigure.body : null
   }
 
-  const body = render(view, model)
-  return {
-    body,
+  let body = render(view, model)
+  if (changeDate) {
+    body = modifiedDateComponent.renderBody({
+      body
+    })
+  }
+  const pageContributions = modifiedDateComponent.renderPageContributions({
     pageContributions: {
       bodyEnd: statisticsKeyFigure ? statisticsKeyFigure.pageContributions.bodyEnd : []
     },
+    clientRender: true
+  })
+  return {
+    body,
+    pageContributions,
     contentType: 'text/html'
   }
 }
