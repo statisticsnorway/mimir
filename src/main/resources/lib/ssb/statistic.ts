@@ -1,6 +1,6 @@
 import { Socket, SocketEmitter } from '../types/socket'
 import { Content, ContentLibrary, QueryResponse } from 'enonic-types/lib/content'
-import { StatisticInListing } from './statreg/types'
+import { StatisticInListing, VariantInListing } from './statreg/types'
 import { UtilLibrary } from '../types/util'
 
 const {
@@ -9,6 +9,9 @@ const {
 const {
   getStatisticByIdFromRepo
 } = __non_webpack_require__('/lib/repo/statreg/statistics')
+const {
+  dateToFormat
+} = __non_webpack_require__( '/lib/ssb/utils')
 const util: UtilLibrary = __non_webpack_require__( '/lib/util')
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
@@ -21,18 +24,16 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
 function prepStatistics(statistics: Array<Content<Statistic>>): Array<StatisticDashboard> {
   const statisticData: Array<StatisticDashboard> = []
   statistics.map((statistic: Content<Statistic>) => {
-    const name: string = statistic.language === 'en' ? 'Engelsk: ' + statistic._name : statistic._name
-    const statregData: StatregData | undefined = statistic.data.statistic? getStatregInfo(statistic.data.statistic) : undefined
-    let nextRelease = ''
+    const statregData: StatregData | undefined = statistic.data.statistic ? getStatregInfo(statistic.data.statistic) : undefined
     if (statregData) {
-      nextRelease = statregData.nextRelease
+      const name: string = statistic.language === 'en' ? 'Eng. ' + statregData.shortName : statregData.shortName
+      const statisticDataDashboard: StatisticDashboard = {
+        id: statistic._id,
+        name: name,
+        nextRelease: statregData.nextRelease ? dateToFormat(statregData.nextRelease ): ''
+      }
+      statisticData.push(statisticDataDashboard)
     }
-    const statisticDataDashboard: StatisticDashboard = {
-      id: statistic._id,
-      name: name,
-      nextRelease: nextRelease
-    }
-    statisticData.push(statisticDataDashboard)
   })
   return statisticData
 }
@@ -51,13 +52,13 @@ function getStatistics(): Array<Content<Statistic>> {
 function getStatregInfo(key: string): StatregData | undefined {
   const statisticStatreg: StatisticInListing | undefined = getStatisticByIdFromRepo(key)
   if (statisticStatreg) {
-    const variants = util.data.forceArray(statisticStatreg.variants)
-    const variant = variants[0] //TODO: Multiple variants 
+    const variants: Array<VariantInListing> = util.data.forceArray(statisticStatreg.variants)
+    const variant: VariantInListing = variants[0] // TODO: Multiple variants
     const result: StatregData = {
       shortName: statisticStatreg.shortName,
       frekvens: variant.frekvens,
       previousRelease: variant.previousRelease,
-      nextRelease: variant.nextRelease ? variant.nextRelease : '',
+      nextRelease: variant.nextRelease ? variant.nextRelease : ''
     }
     return result
   }
