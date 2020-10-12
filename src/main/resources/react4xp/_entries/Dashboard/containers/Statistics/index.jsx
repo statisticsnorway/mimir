@@ -3,10 +3,24 @@ import { useSelector } from 'react-redux'
 import { Button, Col, Row, Table } from 'react-bootstrap'
 import { selectStatistics, selectLoading } from './selectors'
 import { RefreshCw } from 'react-feather'
+import Moment from 'react-moment'
 
 export function Statistics() {
   const statistics = useSelector(selectStatistics)
   const loading = useSelector(selectLoading)
+
+  const statisticTmp = statistics.slice()
+  const statisticsSorted = statisticTmp.sort((a, b) => {
+    const dateA = new Date(a.nextRelease)
+    const dateB = new Date(b.nextRelease)
+    if (dateA < dateB) {
+      return -1
+    } else if (dateA > dateB) {
+      return 1
+    } else {
+      return 0
+    }
+  })
 
   function renderStatistics() {
     if (loading) {
@@ -51,17 +65,19 @@ export function Statistics() {
   }
 
   function getStatistics() {
-    if (statistics != undefined) {
+    if (statisticsSorted != undefined) {
       return (
         <tbody>
-          {statistics.map((statistic) => {
+          {statisticsSorted.map((statistic) => {
             return (
               <tr key={statistic.id}>
                 <td className='statistic'>
                   <span>{statistic.name}</span>
                 </td>
                 <td>
-                  <span>{statistic.nextRelease}</span>
+                  <span>
+                  <Moment format="DD.MM.YYYY hh:mm">{statistic.nextRelease}</Moment>
+                  </span>
                 </td>
                 <td className="text-center">{makeRefreshButton(statistic.id)}</td>
               </tr>

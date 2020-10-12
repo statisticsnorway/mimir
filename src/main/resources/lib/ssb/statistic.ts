@@ -25,12 +25,12 @@ function prepStatistics(statistics: Array<Content<Statistic>>): Array<StatisticD
   const statisticData: Array<StatisticDashboard> = []
   statistics.map((statistic: Content<Statistic>) => {
     const statregData: StatregData | undefined = statistic.data.statistic ? getStatregInfo(statistic.data.statistic) : undefined
-    if (statregData) {
+    if (statregData && statregData.nextRelease) {
       const name: string = statistic.language === 'en' ? 'Eng. ' + statregData.shortName : statregData.shortName
       const statisticDataDashboard: StatisticDashboard = {
         id: statistic._id,
         name: name,
-        nextRelease: statregData.nextRelease ? dateToFormat(statregData.nextRelease ): ''
+        nextRelease: statregData.nextRelease ? statregData.nextRelease : ''
       }
       statisticData.push(statisticDataDashboard)
     }
