@@ -3,6 +3,12 @@
     margin-bottom: $spacer * 3;
   }
 
+  .accordion-header {
+    .sub-header {
+      width: 75px;
+    }
+  }
+
   .accordion-body {
     padding-right: 0;
   }

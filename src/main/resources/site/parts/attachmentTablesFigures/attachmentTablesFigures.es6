@@ -106,38 +106,44 @@ const renderPart = (req) => {
 
 const getTablesAndFigures = (attachmentTablesAndFigures, req, phrases) => {
   if (attachmentTablesAndFigures.length > 0) {
-    return attachmentTablesAndFigures.map((id, index) => {
+    let tableIndex = 0
+    let figureIndex = 0
+
+    return attachmentTablesAndFigures.map((id) => {
       const content = get({
         key: id
       })
+
       if (content.type === 'mimir:table') {
-        return getTable(content, tableController.preview(req, id), index, phrases.table)
+        tableIndex += 1
+        return getTable(content, tableController.preview(req, id), tableIndex, phrases.table)
       }
 
       if (content.type === 'mimir:highchart') {
-        return getFigure(content, highchartController.preview(req, id), index, phrases.figure)
+        figureIndex += 1
+        return getFigure(content, highchartController.preview(req, id), figureIndex, phrases.figure)
       }
     })
   }
   return []
 }
 
-const getTable = (content, preview, index, subhead) => {
+const getTable = (content, preview, tableIndex, subhead) => {
   return {
-    id: `attachment-table-figure-${index + 1}`,
+    id: `attachment-table-${tableIndex}`,
     open: content.displayName,
-    subHeader: subhead,
+    subHeader: `${subhead} ${tableIndex}`,
     body: preview.body,
     items: [],
     pageContributions: preview.pageContributions
   }
 }
 
-const getFigure = (content, preview, index, subhead) => {
+const getFigure = (content, preview, figureIndex, subhead) => {
   return {
-    id: `attachment-table-figure-${index + 1}`,
+    id: `attachment-figure-${figureIndex}`,
     open: content.displayName,
-    subHeader: subhead,
+    subHeader: `${subhead} ${figureIndex}`,
     body: preview.body,
     items: [],
     pageContributions: preview.pageContributions
