@@ -35,7 +35,7 @@ function prepStatistics(statistics: Array<Content<Statistic>>): Array<StatisticD
       statisticData.push(statisticDataDashboard)
     }
   })
-  return statisticData
+  return sortByNextRelease(statisticData)
 }
 
 function getStatistics(): Array<Content<Statistic>> {
@@ -63,6 +63,22 @@ function getStatregInfo(key: string): StatregData | undefined {
     return result
   }
   return undefined
+}
+
+function sortByNextRelease(statisticData: Array<StatisticDashboard>): Array<StatisticDashboard> {
+  const statisticsSorted: Array<StatisticDashboard> = statisticData.sort((a, b) => {
+    const dateA: Date | string = a.nextRelease ? new Date(a.nextRelease) : ''
+    const dateB: Date | string = b.nextRelease ? new Date(b.nextRelease) : ''
+    if (dateA < dateB) {
+      return -1
+    } else if (dateA > dateB) {
+      return 1
+    } else {
+      return 0
+    }
+  })
+
+  return statisticsSorted
 }
 
 interface StatisticDashboard {

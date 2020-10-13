@@ -9,19 +9,6 @@ export function Statistics() {
   const statistics = useSelector(selectStatistics)
   const loading = useSelector(selectLoading)
 
-  const statisticTmp = statistics.slice()
-  const statisticsSorted = statisticTmp.sort((a, b) => {
-    const dateA = new Date(a.nextRelease)
-    const dateB = new Date(b.nextRelease)
-    if (dateA < dateB) {
-      return -1
-    } else if (dateA > dateB) {
-      return 1
-    } else {
-      return 0
-    }
-  })
-
   function renderStatistics() {
     if (loading) {
       return (
@@ -65,10 +52,10 @@ export function Statistics() {
   }
 
   function getStatistics() {
-    if (statisticsSorted != undefined) {
+    if (statistics != undefined) {
       return (
         <tbody>
-          {statisticsSorted.map((statistic) => {
+          {statistics.map((statistic) => {
             return (
               <tr key={statistic.id}>
                 <td className='statistic'>
@@ -76,7 +63,7 @@ export function Statistics() {
                 </td>
                 <td>
                   <span>
-                  <Moment format="DD.MM.YYYY hh:mm">{statistic.nextRelease}</Moment>
+                    <Moment format="DD.MM.YYYY hh:mm">{statistic.nextRelease}</Moment>
                   </span>
                 </td>
                 <td className="text-center">{makeRefreshButton(statistic.id)}</td>
