@@ -30,13 +30,9 @@ const {
   getImageCaption
 } = __non_webpack_require__( '/lib/ssb/utils')
 const {
-  fromDatasetRepoCache
+  datasetOrUndefined
 } = __non_webpack_require__('/lib/ssb/cache')
 const util: UtilLibrary = __non_webpack_require__( '/lib/util')
-const {
-  getDataset,
-  extractKey
-} = __non_webpack_require__( '/lib/ssb/dataset/dataset')
 
 const contentTypeName: string = `${app.name}:keyFigure`
 
@@ -83,7 +79,7 @@ export function parseKeyFigure(req: Request, keyFigure: Content<KeyFigure>, muni
     glossaryText: keyFigure.data.glossaryText
   }
 
-  const datasetRepo: DatasetRepoNode<JSONstat> | null = datasetOrNull(keyFigure)
+  const datasetRepo: DatasetRepoNode<JSONstat> | null = datasetOrUndefined(keyFigure)
 
   if (datasetRepo) {
     const dataSource: KeyFigure['dataSource'] | undefined = keyFigure.data.dataSource
@@ -110,13 +106,6 @@ export function parseKeyFigure(req: Request, keyFigure: Content<KeyFigure>, muni
     return keyFigureViewData
   }
   return keyFigureViewData
-}
-
-function datasetOrNull(keyFigure: Content<KeyFigure>): DatasetRepoNode<JSONstat> | null {
-  return keyFigure.data.dataSource && keyFigure.data.dataSource._selected ?
-    fromDatasetRepoCache(`/${keyFigure.data.dataSource._selected}/${extractKey(keyFigure)}`,
-      () => getDataset(keyFigure)) :
-    null
 }
 
 function getDataTbProcessor(

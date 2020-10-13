@@ -8,6 +8,8 @@ import { JSONstat } from '../types/jsonstat-toolkit'
 import { TbmlData } from '../types/xmlParser'
 import { DATASET_REPO, DatasetRepoNode } from '../repo/dataset'
 import { Socket } from '../types/socket'
+import { Table } from '../../site/content-types/table/table'
+import { Highchart } from '../../site/content-types/highchart/highchart'
 
 const {
   newCache
@@ -26,6 +28,12 @@ const {
   query,
   get
 }: ContentLibrary = __non_webpack_require__('/lib/xp/content')
+
+const {
+  getDataset,
+  extractKey
+} = __non_webpack_require__('/lib/ssb/dataset/dataset')
+
 
 const masterFilterCaches: Map<string, Cache> = new Map()
 const draftFilterCaches: Map<string, Cache> = new Map()
@@ -317,6 +325,14 @@ export function fromDatasetRepoCache(
     return res || undefined
   })
 }
+
+export function datasetOrUndefined(content: Content<Highchart | Table>): DatasetRepoNode<JSONstat | TbmlData | object> | undefined {
+  return content.data.dataSource && content.data.dataSource._selected ?
+    fromDatasetRepoCache(`/${content.data.dataSource._selected}/${extractKey(content)}`,
+      () => getDataset(content)) :
+    undefined
+}
+
 
 function completelyClearFilterCache(branch: string): void {
   const cacheMap: Map<string, Cache> = branch === 'master' ? masterFilterCaches : draftFilterCaches

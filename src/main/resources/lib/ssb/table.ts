@@ -10,17 +10,12 @@ import { Request } from 'enonic-types/lib/controller'
 import { DatasetRepoNode } from '../repo/dataset'
 import { DataSource as DataSourceType } from '../repo/dataset'
 import { UtilLibrary } from '../types/util'
-const {
-  getDataset,
-  extractKey
-} = __non_webpack_require__( '/lib/ssb/dataset/dataset')
 
 const {
-  fromDatasetRepoCache
+  datasetOrUndefined
 } = __non_webpack_require__('/lib/ssb/cache')
 
 const util: UtilLibrary = __non_webpack_require__( '/lib/util')
-
 
 export function parseTable(req: Request, table: Content<Table>): TableView {
   const tableViewData: TableView = {
@@ -35,7 +30,7 @@ export function parseTable(req: Request, table: Content<Table>): TableView {
     noteRefs: []
   }
 
-  const datasetRepo: DatasetRepoNode<JSONstat> | null = datasetOrNull(table)
+  const datasetRepo: DatasetRepoNode<JSONstat> | null = datasetOrUndefined(table)
 
   if (datasetRepo) {
     const dataSource: Table['dataSource'] | undefined = table.data.dataSource
@@ -68,14 +63,6 @@ export function parseTable(req: Request, table: Content<Table>): TableView {
   }
 
   return tableViewData
-}
-
-
-function datasetOrNull(table: Content<Table>): DatasetRepoNode<JSONstat> | null {
-  return table.data.dataSource && table.data.dataSource._selected ?
-    fromDatasetRepoCache(`/${table.data.dataSource._selected}/${extractKey(table)}`,
-      () => getDataset(table)) :
-    null
 }
 
 function getNoterefs(row: TableRow, noteRefs: Array<string>): Array<string> {

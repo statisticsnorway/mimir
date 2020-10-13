@@ -21,6 +21,10 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
+const {
+  datasetOrUndefined
+} = __non_webpack_require__('/lib/ssb/cache')
+
 
 const moment = require('moment/min/moment-with-locales')
 const tableController = __non_webpack_require__('../table/table')
@@ -105,39 +109,42 @@ const renderPart = (req) => {
 }
 
 const getTablesAndFigures = (attachmentTablesAndFigures, req, phrases) => {
-  if (attachmentTablesAndFigures.length > 0) {
-    return attachmentTablesAndFigures.map((id, index) => {
+  let figureIndex = 0
+  let tableIndex = 0
+  return (attachmentTablesAndFigures.length > 0) ?
+    attachmentTablesAndFigures.map((id, index) => {
       const content = get({
         key: id
       })
-      if (content.type === 'mimir:table') {
-        return getTable(content, tableController.preview(req, id), index, phrases.table)
+      if (content && content.type === `${app.name}:table`) {
+        ++tableIndex
+        return getTableReturnObject(content, tableController.preview(req, id), `${phrases.table} ${tableIndex}`, index)
+      } else if (content && content.type === `${app.name}:highchart`) {
+        ++figureIndex
+        return getFigureReturnObject(content, highchartController.preview(req, id), `${phrases.figure} ${figureIndex}`, index)
       }
-
-      if (content.type === 'mimir:highchart') {
-        return getFigure(content, highchartController.preview(req, id), index, phrases.figure)
-      }
-    })
-  }
-  return []
+    }) : []
 }
 
-const getTable = (content, preview, index, subhead) => {
+
+function getTableReturnObject(content, preview, subHeader, index) {
+  const datasetFromRepo = datasetOrUndefined(content)
   return {
     id: `attachment-table-figure-${index + 1}`,
-    open: content.displayName,
-    subHeader: subhead,
+    open: datasetFromRepo ? datasetFromRepo.data.tbml.metadata.title : content.displayName,
+    subHeader,
     body: preview.body,
     items: [],
     pageContributions: preview.pageContributions
   }
 }
 
-const getFigure = (content, preview, index, subhead) => {
+function getFigureReturnObject(content, preview, subHeader, index) {
+  const datasetFromRepo = datasetOrUndefined(content)
   return {
     id: `attachment-table-figure-${index + 1}`,
-    open: content.displayName,
-    subHeader: subhead,
+    open: datasetFromRepo ? datasetFromRepo.data.tbml.metadata.title : content.displayName,
+    subHeader,
     body: preview.body,
     items: [],
     pageContributions: preview.pageContributions
