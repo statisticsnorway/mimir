@@ -1,5 +1,5 @@
 import { SiteConfig } from '../../site/site-config'
-import { ContentLibrary, Content, QueryResponse } from 'enonic-types/lib/content'
+import { ContentLibrary, Content } from 'enonic-types/lib/content'
 import { Dataset } from '../../site/content-types/dataset/dataset'
 import { Request } from 'enonic-types/lib/controller'
 import { CacheLib, Cache } from '../types/cache'
@@ -9,16 +9,14 @@ import { DatasetLib } from '../ssb/dataset/dataset'
 import { DatasetRepoNode } from '../repo/dataset'
 import { DataSource } from '../../site/mixins/dataSource/dataSource'
 import { SSBCacheLibrary } from '../ssb/cache'
+import { CommonLibrary } from '../types/common'
 const {
   sanitize
-} = __non_webpack_require__( '/lib/xp/common')
+}: CommonLibrary = __non_webpack_require__( '/lib/xp/common')
 const {
   getChildren,
   get: getContent
 }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
-const {
-  getDataSetWithDataQueryId
-} = __non_webpack_require__( '../ssb/dataset')
 const {
   getSiteConfig
 }: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
@@ -58,24 +56,12 @@ function getMunicipalsFromContent(): Array<MunicipalCode> {
       key
     })
     if (dataSource) {
-      if (dataSource.type === `${app.name}:dataquery`) {
-        const children: Array<Content<Dataset>> = getChildren({
-          key
-        }).hits as Array<Content<Dataset>>
-        if (children.length > 0) {
-          const content: Content<Dataset> = children[0]
-          if (content.data.json) {
-            return JSON.parse(content.data.json).codes as Array<MunicipalCode>
-          }
-        }
-      } else {
-        const dataset: DatasetRepoNode<object> | undefined = fromDatasetRepoCache(`${dataSource.data.dataSource?._selected}/${extractKey(dataSource)}`, () => {
-          return getDataset(dataSource)
-        })
-        if (dataset && dataset.data) {
-          const data: {codes: Array<MunicipalCode>} = dataset.data as {codes: Array<MunicipalCode>}
-          return data.codes
-        }
+      const dataset: DatasetRepoNode<object> | undefined = fromDatasetRepoCache(`${dataSource.data.dataSource?._selected}/${extractKey(dataSource)}`, () => {
+        return getDataset(dataSource)
+      })
+      if (dataset && dataset.data) {
+        const data: {codes: Array<MunicipalCode>} = dataset.data as {codes: Array<MunicipalCode>}
+        return data.codes
       }
     }
   }
@@ -209,21 +195,12 @@ function getMunicipalityChanges(): MunicipalityChangeList {
       key: changeListId
     })
     if (dataSource) {
-      if (dataSource.type === `${app.name}:dataquery`) {
-        const datasetList: QueryResponse<Dataset> = getDataSetWithDataQueryId(changeListId)
-        const changeListContent: Content<Dataset> | undefined = datasetList.count > 0 ? datasetList.hits[0] : undefined
-        const body: string |undefined = changeListContent ? changeListContent.data.json : undefined
-        return body ? JSON.parse(body) : {
-          codeChanges: []
-        }
-      } else {
-        const dataset: DatasetRepoNode<object> | undefined = fromDatasetRepoCache(`${dataSource.data.dataSource?._selected}/${extractKey(dataSource)}`, () => {
-          return getDataset(dataSource)
-        })
-        if (dataset && dataset.data) {
-          const data: MunicipalityChangeList = dataset.data as MunicipalityChangeList
-          return data
-        }
+      const dataset: DatasetRepoNode<object> | undefined = fromDatasetRepoCache(`${dataSource.data.dataSource?._selected}/${extractKey(dataSource)}`, () => {
+        return getDataset(dataSource)
+      })
+      if (dataset && dataset.data) {
+        const data: MunicipalityChangeList = dataset.data as MunicipalityChangeList
+        return data
       }
     }
   }
@@ -233,8 +210,8 @@ function getMunicipalityChanges(): MunicipalityChangeList {
   }
 }
 
-export function removeCountyFromMunicipalityName(municiaplityName: string): string {
-  return municiaplityName.split('(')[0].trim()
+export function removeCountyFromMunicipalityName(municipalityName: string): string {
+  return municipalityName.split('(')[0].trim()
 }
 
 export interface MunicipalityChangeList {
@@ -257,6 +234,8 @@ export interface MunicipalitiesLib {
   createPath (municipalName: string, countyName?: string): string;
   municipalsWithCounties (): Array<MunicipalityWithCounty>;
   getMunicipality (req: Request): MunicipalityWithCounty|undefined;
+  getMunicipalityByName: (municipalities: Array<MunicipalityWithCounty>, municipalityName: string) => MunicipalityWithCounty|undefined;
+  removeCountyFromMunicipalityName: (municipalityName: string) => string;
 }
 
 interface RequestWithCode extends Request {

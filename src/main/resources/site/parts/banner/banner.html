@@ -1,13 +1,15 @@
 <section
-  class="xp-part part-banner position-relative clearfix opacity-0 col-12 searchabletext"
+  class="xp-part part-banner position-relative clearfix col-12 searchabletext"
   data-th-classappend="${pageType._selected} == 'faktaside' ? 'factpage-banner' : ''">
 
-  <img data-th-if="${bannerImage}"
-       class="position-absolute w-100 h-100 d-print-none"
-       data-th-src="${bannerImage}"
-       data-th-attr="data-url=${bannerImage}"
-       data-th-alt="${bannerImageAltText}"/>
-
+  <figure data-th-if="${bannerImage}"
+          class="banner-image position-absolute">
+    <img class=" d-print-none"
+         data-th-sizes="${sizes}"
+         data-th-src="${bannerImage}"
+         data-th-srcset="${srcset}"
+         data-th-alt="${bannerImageAltText}"/>
+  </figure>
   <div class="container h-100 d-flex align-items-center">
     <div class="row">
 

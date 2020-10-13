@@ -123,20 +123,6 @@
       <help-text>Lim inn (Ctrl-V) en tabell rett fra Excel. Tabeller bør være så enkle som mulig (Overskrifter i første rad/kolonne og ellers bare tall, ingen spesialformatering, manglende tall må være tomme celler)</help-text>
     </input>
 
-    <field-set>
-      <label>Data</label>
-      <items>
-        <input name="dataquery" type="ContentSelector">
-          <label>Spørring mot Statistikkbanken</label>
-          <occurrences minimum="0" maximum="1"/>
-          <config>
-            <allowPath>${site}</allowPath>
-            <allowType>dataquery</allowType>
-          </config>
-        </input>
-      </items>
-    </field-set>
-
     <input name="switchRowsAndColumns" type="CheckBox">
       <label>Bytt rader og kolonner</label>
       <help-text>Bytt mellom å tolke tabelldataene horisontalt eller vertikalt før grafen tegnes, med hensyn til gruppering</help-text>
@@ -230,7 +216,7 @@
     </input>
     <input name="yAxisOffset" type="TextLine">
       <label>Offset Y-akse tittel</label>
-      <help-text>Kun heltall, positiv(venstre) eller negativ(høyre) verdi. NB: Denne flytter y-akse tittel.</help-text>
+      <help-text>Denne flytter y-aksetittelen. Kun heltall. Positiv verdi flytter til venstre, negativ verdi flytter til høyre.</help-text>
     </input>
   </form>
 </content-type>

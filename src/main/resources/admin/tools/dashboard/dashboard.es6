@@ -74,26 +74,14 @@ function getAssets() {
     jsLibsUrl: assetUrl({
       path: 'js/bundle.js'
     }),
-    dashboardService: serviceUrl({
-      service: 'dashboard'
-    }),
     stylesUrl: assetUrl({
       path: 'styles/bundle.css'
     }),
     logoUrl: assetUrl({
       path: 'SSB_logo_black.svg'
     }),
-    clearCacheServiceUrl: serviceUrl({
-      service: 'clearCache'
-    }),
     wsServiceUrl: serviceUrl({
       service: 'websocket'
-    }),
-    convertServiceUrl: serviceUrl({
-      service: 'convert'
-    }),
-    fetchLogUrl: serviceUrl({
-      service: 'eventLog'
     })
   }
 }

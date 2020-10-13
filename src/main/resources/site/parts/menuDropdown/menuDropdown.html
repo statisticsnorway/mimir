@@ -17,7 +17,7 @@
         <div id="search-container" class="collapse" data-th-class="${!modeMunicipality} ? 'choose-municipality-search' : 'hide-search' ">
           <div class="card ssb-dropdown">
             <div data-th-if="${modeMunicipality}" class="roboto-bold text-nowrap pr-4">Bytt kommune:</div>
-            <div id="inputStickyMenu"></div>
+            <div data-th-id="${inputStickyMenuId}"></div>
             <div id="municipality-list" class="dropdown-menu w-100 list-of-options" aria-labelledby="input-query-municipality">
               <a class="dropdown-item a-plain option-list-element"
                  data-th-each="municipality: ${municipalities}"

@@ -30,7 +30,7 @@ MenuBox.propTypes = {
       subtitle: PropTypes.string,
       icon: PropTypes.shape({
         src: PropTypes.string.isRequired,
-        alt: PropTypes.string.isRequired
+        alt: PropTypes.string
       }),
       href: PropTypes.string.isRequired
     }))

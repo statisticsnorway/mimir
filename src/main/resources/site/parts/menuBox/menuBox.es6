@@ -50,7 +50,6 @@ function renderPart(req, menuBoxId) {
     .setProps({
       boxes
     })
-    .setId('menu-box')
     .uniqueId()
 
   const body = render(view, {
