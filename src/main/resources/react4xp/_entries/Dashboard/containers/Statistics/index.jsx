@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Button, Col, Row, Table } from 'react-bootstrap'
+import { Button, Col, Row, Table, Modal, InputGroup, Form, FormControl } from 'react-bootstrap'
 import { selectStatistics, selectLoading } from './selectors'
 import { RefreshCw } from 'react-feather'
 import Moment from 'react-moment'
@@ -8,6 +8,58 @@ import Moment from 'react-moment'
 export function Statistics() {
   const statistics = useSelector(selectStatistics)
   const loading = useSelector(selectLoading)
+  const [show, setShow] = useState(false)
+  const [modalInfo, setModalInfo] = useState({})
+  const [showModal, setShowModal] = useState(false)
+  const handleClose = () => setShow(false)
+  const handleShow = () => setShow(true)
+
+  const toggleTrueFalse = () => {
+    setShowModal(handleShow)
+  }
+
+  const updateTables = () => {
+    console.log('Oppdatere tall: ' + modalInfo.name)
+    handleClose()
+  }
+
+  const ModalContent = () => {
+    return (
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Oppdatering av tabeller på web</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <h2>Statistikk: {modalInfo.name}</h2>
+          <span>For å oppdatere tabeller med ennå ikke publiserte tall må brukernavn og passord for lastebrukere i Statistikkbanken brukes.</span>
+          <br/>
+          <span>For andre endringer velg "Hent publiserte tall" uten å oppgi brukernavn og passord</span>
+          <Form className="mt-3">
+            <Form.Group controlId="formBasicUsername">
+              <Form.Label>Brukernavn</Form.Label>
+              <Form.Control type="username" placeholder="Brukernavn" disabled />
+            </Form.Group>
+
+            <Form.Group controlId="formBasicPassword">
+              <Form.Label>Password</Form.Label>
+              <Form.Control type="password" placeholder="Passord" disabled />
+            </Form.Group>
+            <Form.Group controlId="formBasicCheckbox">
+              <Form.Check type="checkbox" label="Hent publiserte tall"/>
+            </Form.Group>
+            <Button variant="primary" onClick={updateTables}>
+                Send
+            </Button>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+              Lukk
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    )
+  }
 
   function renderStatistics() {
     if (loading) {
@@ -16,20 +68,23 @@ export function Statistics() {
       )
     }
     return (
-      <Table bordered striped>
-        <thead>
-          <tr>
-            <th className="roboto-bold">
-              <span>Statistikk</span>
-            </th>
-            <th className="roboto-bold">
-              <span>Publisering</span>
-            </th>
-            <th />
-          </tr>
-        </thead>
-        {getStatistics()}
-      </Table>
+      <div>
+        <Table bordered striped>
+          <thead>
+            <tr>
+              <th className="roboto-bold">
+                <span>Statistikk</span>
+              </th>
+              <th className="roboto-bold">
+                <span>Publisering</span>
+              </th>
+              <th />
+            </tr>
+          </thead>
+          {getStatistics()}
+        </Table>
+        {show ? <ModalContent/> : null }
+      </div>
     )
   }
 
@@ -48,7 +103,9 @@ export function Statistics() {
   }
 
   function refreshStatistic(key) {
-    console.log('Refresh statistic: ' + key)
+    const statistic = statistics.find((item) => item.id === key)
+    setModalInfo(statistic)
+    toggleTrueFalse()
   }
 
   function getStatistics() {
@@ -59,7 +116,7 @@ export function Statistics() {
             return (
               <tr key={statistic.id}>
                 <td className='statistic'>
-                  <span>{statistic.name}</span>
+                  <span>{statistic.language === 'en' ? 'Eng. ' + statistic.shortName : statistic.shortName}</span>
                 </td>
                 <td>
                   <span>

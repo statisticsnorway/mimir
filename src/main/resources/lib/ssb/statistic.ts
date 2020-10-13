@@ -9,9 +9,6 @@ const {
 const {
   getStatisticByIdFromRepo
 } = __non_webpack_require__('/lib/repo/statreg/statistics')
-const {
-  dateToFormat
-} = __non_webpack_require__( '/lib/ssb/utils')
 const util: UtilLibrary = __non_webpack_require__( '/lib/util')
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
@@ -26,10 +23,11 @@ function prepStatistics(statistics: Array<Content<Statistic>>): Array<StatisticD
   statistics.map((statistic: Content<Statistic>) => {
     const statregData: StatregData | undefined = statistic.data.statistic ? getStatregInfo(statistic.data.statistic) : undefined
     if (statregData && statregData.nextRelease) {
-      const name: string = statistic.language === 'en' ? 'Eng. ' + statregData.shortName : statregData.shortName
       const statisticDataDashboard: StatisticDashboard = {
         id: statistic._id,
-        name: name,
+        language: statistic.language ? statistic.language : '',
+        name: statistic._name ? statistic._name : '',
+        shortName: statregData.shortName,
         nextRelease: statregData.nextRelease ? statregData.nextRelease : ''
       }
       statisticData.push(statisticDataDashboard)
@@ -83,7 +81,9 @@ function sortByNextRelease(statisticData: Array<StatisticDashboard>): Array<Stat
 
 interface StatisticDashboard {
   id: string;
-  name: string;
+  language?: string;
+  name?: string;
+  shortName: string;
   nextRelease?: string;
 }
 
