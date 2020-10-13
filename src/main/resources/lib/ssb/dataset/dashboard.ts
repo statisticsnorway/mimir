@@ -35,6 +35,9 @@ const {
   dateToReadable,
   isPublished
 } = __non_webpack_require__( '/lib/ssb/utils')
+const {
+  getParentType
+} = __non_webpack_require__('/lib/ssb/parent')
 const i18n: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
 const {
   run
@@ -134,30 +137,6 @@ function showWarningIcon(result: Events): boolean {
     Events.FAILED_TO_CREATE_DATASET,
     Events.FAILED_TO_REFRESH_DATASET
   ].indexOf(result) >= 0
-}
-
-function getParentType(path: string): string | undefined {
-  const parentPath: string = getParentPath(path)
-  const parentContent: Content<object, DefaultPageConfig> | null = getContent({
-    key: parentPath
-  })
-
-  if (parentContent) {
-    if (parentContent.page.config || parentContent.type === 'portal:site') {
-      return parentContent.page.config.pageType ? parentContent.page.config.pageType : 'default'
-    } else {
-      return getParentType(parentPath)
-    }
-  } else {
-    log.error(`Cound not find content from path ${path}`)
-    return undefined
-  }
-}
-
-function getParentPath(path: string): string {
-  const pathElements: Array<string> = path.split('/')
-  pathElements.pop()
-  return pathElements.join('/')
 }
 
 function refreshDatasetHandler(ids: Array<string>, socketEmitter: SocketEmitter): void {
