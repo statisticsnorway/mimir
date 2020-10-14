@@ -71,7 +71,7 @@ function renderPart(req, relatedArticles) {
         })
 
         if (!articleContent) {
-          return null
+          return undefined
         }
 
         let imageSrc

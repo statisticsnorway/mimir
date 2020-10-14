@@ -52,9 +52,9 @@ function DashboardRouter(props) {
     contentStudioBaseUrl: props.contentStudioBaseUrl
   })
   setUserServerSide(dispatch, io, props.user)
+  requestStatistics(dispatch, io)
   requestStatuses(dispatch, io)
   requestDataQueries(dispatch, io)
-  requestStatistics(dispatch, io)
   return (
     <BrowserRouter>
       <Helmet
