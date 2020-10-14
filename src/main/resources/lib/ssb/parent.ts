@@ -23,7 +23,7 @@ function parentType(path: string): string | undefined {
     if (parentContent.page.config || parentContent.type === 'portal:site') {
       return parentContent.page.config.pageType ? parentContent.page.config.pageType : 'default'
     } else {
-      return fromParentTypeCache(parentPathKey,() => parentType(parentPathKey))
+      return fromParentTypeCache(parentPathKey, () => parentType(parentPathKey))
     }
   } else {
     log.error(`Cound not find content from path ${path}`)
