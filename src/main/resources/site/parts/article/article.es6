@@ -8,6 +8,9 @@ const {
   getContent, pageUrl, processHtml
 } = __non_webpack_require__('/lib/xp/portal')
 const {
+  getPhrases
+} = __non_webpack_require__( '/lib/language')
+const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
 const {
@@ -30,6 +33,7 @@ exports.get = (req) => {
 function renderPart(req) {
   const page = getContent()
   moment.locale(page.language ? page.language : 'nb')
+  const phrases = getPhrases(page)
 
   const bodyText = processHtml({
     value: page.data.articleText ? page.data.articleText.replace(/&nbsp;/g, ' ') : undefined
@@ -59,8 +63,13 @@ function renderPart(req) {
     })
     .setId('dividerId')
 
+  const associatedStatisticsHeader = phrases.associatedStatisticsHeader
   const associatedStatisticsConfig = page.data.associatedStatistics ? data.forceArray(page.data.associatedStatistics) : []
   const associatedStatistics = getAssociatedStatisticsLinks(associatedStatisticsConfig)
+
+  const articleArchiveInArticleHeader = phrases.articleArchiveInArticleHeader
+  const articleArchivesConfig = page.data.articleArchive ? data.forceArray(page.data.articleArchive) : []
+  const articleArchives = getArticleArchiveLinks(articleArchivesConfig)
 
   const model = {
     title: page.displayName,
@@ -71,7 +80,10 @@ function renderPart(req) {
     pubDate,
     modifiedDate,
     authors,
+    associatedStatisticsHeader,
     associatedStatistics,
+    articleArchiveInArticleHeader,
+    articleArchives,
     serialNumber: page.data.serialNumber,
     introTitle: page.data.introTitle
   }
@@ -82,31 +94,52 @@ function renderPart(req) {
   })
 
   return {
-    body: associatedStatistics.length ? dividerBody : body,
+    body: (associatedStatistics.length > 0 || articleArchives.length > 0) ? dividerBody : body,
     contentType: 'text/html'
   }
 }
 
 const getAssociatedStatisticsLinks = (associatedStatisticsConfig) => {
-  return associatedStatisticsConfig.map((option) => {
-    if (option._selected === 'XP') {
-      const associatedStatisticsXP = option.XP.content
-      const associatedStatisticsXPContent = get({
-        key: associatedStatisticsXP
+  if (associatedStatisticsConfig.length > 0) {
+    return associatedStatisticsConfig.map((option) => {
+      if (option._selected === 'XP') {
+        const associatedStatisticsXP = option.XP.content
+        const associatedStatisticsXPContent = get({
+          key: associatedStatisticsXP
+        })
+
+        return {
+          title: associatedStatisticsXPContent.displayName,
+          href: pageUrl({
+            id: associatedStatisticsXP
+          })
+        }
+      } else if (option._selected === 'CMS') {
+        const associatedStatisticsCMS = option.CMS
+
+        return {
+          ...associatedStatisticsCMS
+        }
+      }
+    })
+  }
+  return []
+}
+
+const getArticleArchiveLinks = (articleArchivesConfig) => {
+  if (articleArchivesConfig.length > 0) {
+    return articleArchivesConfig.map((articleArchive) => {
+      const articleArchiveContent = get({
+        key: articleArchive
       })
 
       return {
-        title: associatedStatisticsXPContent.displayName,
+        title: articleArchiveContent.displayName,
         href: pageUrl({
-          id: associatedStatisticsXP
+          id: articleArchive
         })
       }
-    } else if (option._selected === 'CMS') {
-      const associatedStatisticsCMS = option.CMS
-
-      return {
-        ...associatedStatisticsCMS
-      }
-    }
-  })
+    })
+  }
+  return []
 }
