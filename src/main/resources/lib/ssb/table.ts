@@ -9,8 +9,8 @@ import { Dataset as JSDataset } from '../types/jsonstat-toolkit'
 import { Request } from 'enonic-types/lib/controller'
 import { DatasetRepoNode } from '../repo/dataset'
 import { DataSource as DataSourceType } from '../repo/dataset'
-import { UtilLibrary } from '../types/util'
 import { StatbankSavedLib } from './dataset/statbankSaved'
+import { SSBCacheLibrary } from './cache'
 
 const {
   data: {
@@ -20,13 +20,10 @@ const {
 
 const {
   datasetOrUndefined
-} = __non_webpack_require__('/lib/ssb/cache')
+}: SSBCacheLibrary = __non_webpack_require__('/lib/ssb/cache')
 const {
   fetchStatbankSavedData
 }: StatbankSavedLib = __non_webpack_require__('/lib/ssb/dataset/statbankSaved')
-
-const util: UtilLibrary = __non_webpack_require__( '/lib/util')
-
 
 export function parseTable(req: Request, table: Content<Table>): TableView {
   let tableViewData: TableView = {
@@ -41,7 +38,7 @@ export function parseTable(req: Request, table: Content<Table>): TableView {
     noteRefs: []
   }
 
-  const datasetRepo: DatasetRepoNode<JSONstat> | null = datasetOrUndefined(table)
+  const datasetRepo: DatasetRepoNode<JSONstat> | undefined = datasetOrUndefined(table)
   const dataSource: Table['dataSource'] | undefined = table.data.dataSource
 
   if (datasetRepo) {

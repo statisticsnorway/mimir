@@ -169,8 +169,6 @@ export function getImageAlt(imageId) {
   return imageContent !== undefined ? imageContent.data.altText : ''
 }
 
-
-
 export function isPublished(content) {
   const now = new Date()
   if (content.publish.from) {

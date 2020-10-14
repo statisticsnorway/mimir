@@ -439,5 +439,6 @@ export interface SSBCacheLibrary {
   fromDatasetRepoCache:
     (key: string, fallback: () => DatasetRepoNode<JSONstat | TbmlData | object> | null)
       => DatasetRepoNode<JSONstat | TbmlData | object> | undefined;
+  datasetOrUndefined: (content: Content<Highchart | Table>) => DatasetRepoNode<JSONstat | TbmlData | object> | undefined;
   setupHandlers: (socket: Socket) => void;
 }

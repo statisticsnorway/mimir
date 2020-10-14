@@ -13,6 +13,8 @@ import { UtilLibrary } from '../types/util'
 import { Request } from 'enonic-types/lib/controller'
 import { DatasetRepoNode } from '../repo/dataset'
 import { DataSource as DataSourceType } from '../repo/dataset'
+import { SSBCacheLibrary } from './cache'
+
 const {
   query
 }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
@@ -31,7 +33,7 @@ const {
 } = __non_webpack_require__( '/lib/ssb/utils')
 const {
   datasetOrUndefined
-} = __non_webpack_require__('/lib/ssb/cache')
+}: SSBCacheLibrary = __non_webpack_require__('/lib/ssb/cache')
 const util: UtilLibrary = __non_webpack_require__( '/lib/util')
 
 const contentTypeName: string = `${app.name}:keyFigure`
@@ -79,7 +81,7 @@ export function parseKeyFigure(req: Request, keyFigure: Content<KeyFigure>, muni
     glossaryText: keyFigure.data.glossaryText
   }
 
-  const datasetRepo: DatasetRepoNode<JSONstat> | null = datasetOrUndefined(keyFigure)
+  const datasetRepo: DatasetRepoNode<JSONstat> | undefined = datasetOrUndefined(keyFigure)
 
   if (datasetRepo) {
     const dataSource: KeyFigure['dataSource'] | undefined = keyFigure.data.dataSource
