@@ -122,9 +122,13 @@
     }
   }
 
-  .associated-statistics-wrapper {
+  .as-aa-links-wrapper {
     @include make-row;
-    margin-top: $spacer * 2.5;
+    margin-top: $spacer * 1;
+
+    &:first-child {
+      margin-top: $spacer * 2.5;
+    }
 
     & > * {
       @include make-col-ready();
