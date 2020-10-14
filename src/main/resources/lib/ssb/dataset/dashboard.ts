@@ -169,7 +169,7 @@ function refreshDatasetHandler(ids: Array<string>, socketEmitter: SocketEmitter)
       key: id
     })
     if (dataSource) {
-      const refreshDatasetResult: CreateOrUpdateStatus = refreshDataset(dataSource, true)
+      const refreshDatasetResult: CreateOrUpdateStatus = refreshDataset(dataSource)
       logUserDataQuery(dataSource._id, {
         message: refreshDatasetResult.status
       })

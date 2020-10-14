@@ -11,7 +11,9 @@ const {
   setupStatRegRepo
 } = __non_webpack_require__( '/lib/repo/statreg')
 const {
-  setupDatasetRepo
+  setupDatasetRepo,
+  DATASET_BRANCH,
+  UNPUBLISHED_DATASET_BRANCH
 } = __non_webpack_require__( '/lib/repo/dataset')
 const {
   getContentWithDataSource
@@ -73,7 +75,8 @@ cron.schedule({
 cache.setup()
 
 setupEventLog()
-setupDatasetRepo()
+setupDatasetRepo(DATASET_BRANCH)
+setupDatasetRepo(UNPUBLISHED_DATASET_BRANCH)
 setupStatRegRepo()
 setupFetchDataOnCreateListener()
 

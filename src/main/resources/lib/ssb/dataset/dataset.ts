@@ -43,19 +43,20 @@ const {
 }: KlassLib = __non_webpack_require__('/lib/ssb/dataset/klass')
 const {
   createOrUpdateDataset,
-  deleteDataset: deleteDatasetFromRepo
+  deleteDataset: deleteDatasetFromRepo,
+  DATASET_BRANCH
 }: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
 
-export function getDataset(content: Content<DataSource>): DatasetRepoNode<JSONstat | TbmlData | object> | null {
+export function getDataset(content: Content<DataSource>, branch: string = DATASET_BRANCH): DatasetRepoNode<JSONstat | TbmlData | object> | null {
   switch (content.data.dataSource?._selected) {
   case DataSourceType.STATBANK_API: {
-    return getStatbankApi(content)
+    return getStatbankApi(content, branch)
   }
   case DataSourceType.TBPROCESSOR: {
-    return getTbprocessor(content)
+    return getTbprocessor(content, branch)
   }
   case DataSourceType.KLASS: {
-    return getKlass(content)
+    return getKlass(content, branch)
   }
   default: {
     return null
@@ -93,7 +94,7 @@ function extractData(content: Content<DataSource>): JSONstat | TbmlData | object
   }
 }
 
-export function refreshDataset(content: Content<DataSource>, asUser: boolean = true): CreateOrUpdateStatus {
+export function refreshDataset(content: Content<DataSource>, branch: string = DATASET_BRANCH, asUser: boolean = true): CreateOrUpdateStatus {
   const data: JSONstat | TbmlData | object | null = extractData(content)
   const key: string | null = extractKey(content)
   const user: User | null = getUser()
@@ -102,7 +103,7 @@ export function refreshDataset(content: Content<DataSource>, asUser: boolean = t
     let dataset: DatasetRepoNode<JSONstat | TbmlData | object> | null = getDataset(content)
     const hasNewData: boolean = isDataNew(data, dataset)
     if (!dataset || hasNewData) {
-      dataset = createOrUpdateDataset(content.data.dataSource?._selected, key, data)
+      dataset = createOrUpdateDataset(content.data.dataSource?._selected, branch, key, data)
     }
     return {
       dataquery: content,
@@ -127,7 +128,7 @@ export function refreshDataset(content: Content<DataSource>, asUser: boolean = t
   }
 }
 
-export function refreshDatasetWithUserKey(content: Content<DataSource>, userLogin: string): CreateOrUpdateStatus {
+export function refreshDatasetWithUserKey(content: Content<DataSource>, userLogin: string, branch: string = DATASET_BRANCH, ): CreateOrUpdateStatus {
   const context: RunContext = {
     branch: 'master',
     repository: 'com.enonic.cms.default',
@@ -137,11 +138,11 @@ export function refreshDatasetWithUserKey(content: Content<DataSource>, userLogi
       idProvider: 'system'
     }
   }
-  return run(context, () => refreshDataset(content, true))
+  return run(context, () => refreshDataset(content, branch, true))
 }
 
 
-export function deleteDataset(content: Content<DataSource>): boolean {
+export function deleteDataset(content: Content<DataSource>, branch: string = DATASET_BRANCH): boolean {
   let key: string | undefined
   switch (content.data.dataSource?._selected) {
   case DataSourceType.STATBANK_API: {
@@ -158,7 +159,7 @@ export function deleteDataset(content: Content<DataSource>): boolean {
   }
   }
   if (content.data.dataSource && content.data.dataSource._selected && key) {
-    return deleteDatasetFromRepo(content.data.dataSource._selected, key)
+    return deleteDatasetFromRepo(content.data.dataSource._selected, branch, key)
   } else {
     return false
   }
@@ -199,11 +200,11 @@ export interface CreateOrUpdateStatus {
 }
 
 export interface DatasetLib {
+  getDataset: (content: Content<DataSource>, branch?: string) => DatasetRepoNode<JSONstat | TbmlData | object> | null;
   extractKey: (content: Content<DataSource>) => string;
-  getDataset: (content: Content<DataSource>) => DatasetRepoNode<JSONstat | TbmlData | object> | null;
-  refreshDataset: (content: Content<DataSource>, asUser: boolean) => CreateOrUpdateStatus;
-  refreshDatasetWithUserKey: (content: Content<DataSource>, userLogin: string) => CreateOrUpdateStatus;
-  deleteDataset: (content: Content<DataSource>) => boolean;
+  refreshDataset: (content: Content<DataSource>, branch?: string, asUser?: boolean) => CreateOrUpdateStatus;
+  refreshDatasetWithUserKey: (content: Content<DataSource>, userLogin: string, branch?: string) => CreateOrUpdateStatus;
+  deleteDataset: (content: Content<DataSource>, branch?: string) => boolean;
   getContentWithDataSource: () => Array<Content<DataSource>>;
   isDataNew: (data: JSONstat | TbmlData | object, dataset: DatasetRepoNode<JSONstat | TbmlData | object> | null) => boolean;
 }
