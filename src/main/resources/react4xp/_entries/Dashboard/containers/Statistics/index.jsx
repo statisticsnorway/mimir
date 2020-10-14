@@ -4,10 +4,13 @@ import { Button, Col, Row, Table, Modal, InputGroup, Form, FormControl } from 'r
 import { selectStatistics, selectLoading } from './selectors'
 import { RefreshCw } from 'react-feather'
 import Moment from 'react-moment'
+import { Link } from '@statisticsnorway/ssb-component-library'
+import { selectContentStudioBaseUrl } from '../HomePage/selectors'
 
 export function Statistics() {
   const statistics = useSelector(selectStatistics)
   const loading = useSelector(selectLoading)
+  const contentStudioBaseUrl = useSelector(selectContentStudioBaseUrl)
   const [show, setShow] = useState(false)
   const [modalInfo, setModalInfo] = useState({})
   const [showModal, setShowModal] = useState(false)
@@ -119,7 +122,10 @@ export function Statistics() {
             return (
               <tr key={statistic.id}>
                 <td className='statistic'>
-                  <span>{statistic.language === 'en' ? 'Eng. ' + statistic.shortName : statistic.shortName}</span>
+                  <Link
+                    isExternal
+                    href={contentStudioBaseUrl + statistic.id}>{statistic.language === 'en' ? 'Eng. ' + statistic.shortName : statistic.shortName}
+                  </Link>
                 </td>
                 <td>
                   <span>
