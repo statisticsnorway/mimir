@@ -23,6 +23,56 @@ export function Statistics() {
     handleClose()
   }
 
+  function renderStatistics() {
+    if (loading) {
+      return (
+        <span className="spinner-border spinner-border" />
+      )
+    }
+    return (
+      <div>
+        <Table bordered striped>
+          <thead>
+            <tr>
+              <th className="roboto-bold">
+                <span>Statistikk</span>
+              </th>
+              <th className="roboto-bold">
+                <span>Neste publisering</span>
+              </th>
+              <th />
+              <th className="roboto-bold">
+                <span>Logg/sist oppdatert</span>
+              </th>
+            </tr>
+          </thead>
+          {getStatistics()}
+        </Table>
+        {show ? <ModalContent/> : null }
+      </div>
+    )
+  }
+
+  function makeRefreshButton(key) {
+    return (
+      <Button
+        variant="primary"
+        size="sm"
+        className="mx-1"
+        onClick={() => refreshStatistic(key)}
+        disabled={key.loading}
+      >
+        { key.loading ? <span className="spinner-border spinner-border-sm" /> : <RefreshCw size={16}/> }
+      </Button>
+    )
+  }
+
+  function refreshStatistic(key) {
+    const statistic = statistics.find((item) => item.id === key)
+    setModalInfo(statistic)
+    toggleTrueFalse()
+  }
+
   const ModalContent = () => {
     return (
       <Modal show={show} onHide={handleClose}>
@@ -30,7 +80,7 @@ export function Statistics() {
           <Modal.Title>Oppdatering av tabeller på web</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <h2>Statistikk: {modalInfo.name}</h2>
+          <h2>Statistikk: {modalInfo.shortName}</h2>
           <span>For å oppdatere tabeller med ennå ikke publiserte tall må brukernavn og passord for lastebrukere i Statistikkbanken brukes.</span>
           <br/>
           <span>For andre endringer velg "Hent publiserte tall" uten å oppgi brukernavn og passord</span>
@@ -61,53 +111,6 @@ export function Statistics() {
     )
   }
 
-  function renderStatistics() {
-    if (loading) {
-      return (
-        <span className="spinner-border spinner-border" />
-      )
-    }
-    return (
-      <div>
-        <Table bordered striped>
-          <thead>
-            <tr>
-              <th className="roboto-bold">
-                <span>Statistikk</span>
-              </th>
-              <th className="roboto-bold">
-                <span>Publisering</span>
-              </th>
-              <th />
-            </tr>
-          </thead>
-          {getStatistics()}
-        </Table>
-        {show ? <ModalContent/> : null }
-      </div>
-    )
-  }
-
-  function makeRefreshButton(key) {
-    return (
-      <Button
-        variant="primary"
-        size="sm"
-        className="mx-1"
-        onClick={() => refreshStatistic(key)}
-        disabled={key.loading}
-      >
-        { key.loading ? <span className="spinner-border spinner-border-sm" /> : <RefreshCw size={16}/> }
-      </Button>
-    )
-  }
-
-  function refreshStatistic(key) {
-    const statistic = statistics.find((item) => item.id === key)
-    setModalInfo(statistic)
-    toggleTrueFalse()
-  }
-
   function getStatistics() {
     if (statistics != undefined) {
       return (
@@ -124,6 +127,7 @@ export function Statistics() {
                   </span>
                 </td>
                 <td className="text-center">{makeRefreshButton(statistic.id)}</td>
+                <td/>
               </tr>
             )
           })}
