@@ -170,7 +170,7 @@ export function getImageAlt(imageId) {
 }
 
 export function isPublished(content) {
-  return content.publish.from ? new Date(removeLast3Digits(content.publish.from)) < new Date() : false
+  return content.publish.from ? (new Date(removeLast3Digits(content.publish.from))) < (new Date()) : false
 }
 
 /**
@@ -183,7 +183,7 @@ export function isPublished(content) {
 function removeLast3Digits(timestamp) {
   const groupRegexp = /([0-9\-]{8,10}T[0-9\:]{6,8}.[0-9]{3})(?:[0-9])*(Z)/gm
   const matched = groupRegexp.exec(timestamp)
-  return matched.length > 1 ? `${matched[1]}${matched[2]}` : timestamp
+  return matched && matched.length > 1 ? `${matched[1]}${matched[2]}` : timestamp
 }
 
 
