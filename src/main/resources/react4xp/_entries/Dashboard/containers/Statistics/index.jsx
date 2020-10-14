@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Button, Col, Row, Table, Modal, InputGroup, Form, FormControl } from 'react-bootstrap'
+import { Button, Col, Row, Table, Modal, Form } from 'react-bootstrap'
 import { selectStatistics, selectLoading } from './selectors'
 import { RefreshCw } from 'react-feather'
 import Moment from 'react-moment'
