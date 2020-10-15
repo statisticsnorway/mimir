@@ -11,7 +11,6 @@
                 <input name="lastModified" type="DateTime">
                     <label>Dato og tid</label>
                     <occurrences minimum="0" maximum="1" />
-                    <default>now</default>
                 </input>
                 <input name="modifiedText" type="TextLine">
                     <label>Endringstekst</label>
