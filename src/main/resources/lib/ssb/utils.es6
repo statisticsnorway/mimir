@@ -12,7 +12,8 @@ const {
 } = __non_webpack_require__( '/lib/ssb/statisticAlert')
 const {
   processHtml,
-  pageUrl
+  pageUrl,
+  getContent
 } = __non_webpack_require__( '/lib/xp/portal')
 const content = __non_webpack_require__( '/lib/xp/content')
 const {
@@ -32,7 +33,11 @@ const numberWithSpaces = (x) => {
 }
 
 export const createHumanReadableFormat = (value) => {
-  return value > 999 ? numberWithSpaces(value).toString().replace(/\./, ',') : value.toString().replace(/\./, ',')
+  if (getContent().language != 'en') {
+    return value > 999 ? numberWithSpaces(value).toString().replace(/\./, ',') : value.toString().replace(/\./, ',')
+  } else {
+    return value > 999 ? numberWithSpaces(value) : value.toString()
+  }
 }
 
 export const alertsForContext = (context, options) => {
