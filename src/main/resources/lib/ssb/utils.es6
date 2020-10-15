@@ -175,16 +175,22 @@ export function getImageAlt(imageId) {
 }
 
 export function isPublished(content) {
-  const now = new Date()
-  if (content.publish.from) {
-    const from = new Date(content.publish.from)
-    return from < now
-  } else if (content.publish.first) {
-    const first = new Date(content.publish.first)
-    return first < now
-  }
-  return false
+  return content.publish.from ? (new Date(removeLast3Digits(content.publish.from))) < (new Date()) : false
 }
+
+/**
+ * The timestamp from enonic contains 6 millisecond decimals. This is not supported in
+ * today's nashorn and therefor it cannot create new date object with it. This function
+ * removes the last 3 digits.
+ * @param {string} timestamp in iso format: 2020-10-14T08:15:24.307260Z
+ * @return {string} timestamp in iso format: 2020-10-14T08:15:24.307Z
+ */
+function removeLast3Digits(timestamp) {
+  const groupRegexp = /([0-9\-]{8,10}T[0-9\:]{6,8}.[0-9]{3})(?:[0-9])*(Z)/gm
+  const matched = groupRegexp.exec(timestamp)
+  return matched && matched.length > 1 ? `${matched[1]}${matched[2]}` : timestamp
+}
+
 
 export function isUrl(urlOrId) {
   return urlOrId.indexOf('http') > -1
