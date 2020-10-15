@@ -1,10 +1,12 @@
 import { RepoCommonLib } from './common'
 import { RepoNode } from 'enonic-types/lib/node'
 import { RepoLib } from './repo'
+import { RepositoryConfig } from 'enonic-types/lib/repo'
 
 const {
-  repoExists,
-  createRepo
+  getRepo,
+  createRepo,
+  createBranch
 }: RepoLib = __non_webpack_require__('/lib/repo/repo')
 const {
   nodeExists,
@@ -27,19 +29,27 @@ export enum DataSource {
   HTMLTABLE = 'htmlTable'
 }
 
-export function setupDatasetRepo(branch: string): void {
-  if (!datasetRepoExists(branch)) {
-    createRepo(DATASET_REPO, branch)
+export function setupDatasetRepo(): void {
+  let repo: RepositoryConfig | null = getRepo(DATASET_REPO, DATASET_BRANCH)
+  if (!repo) {
+    repo = createRepo(DATASET_REPO, DATASET_REPO)
   }
-  createSourceNode(DataSource.STATBANK_API, branch)
-  createSourceNode(DataSource.TBPROCESSOR, branch)
-  createSourceNode(DataSource.STATBANK_SAVED, branch)
-  createSourceNode(DataSource.DATASET, branch)
-  createSourceNode(DataSource.KLASS, branch)
-}
-
-function datasetRepoExists(branch: string): boolean {
-  return repoExists(DATASET_REPO, branch)
+  if (repo.branches.indexOf(DATASET_BRANCH) < 0) {
+    createBranch(DATASET_REPO, DATASET_BRANCH)
+  }
+  if (repo.branches.indexOf(UNPUBLISHED_DATASET_BRANCH) < 0) {
+    createBranch(DATASET_REPO, UNPUBLISHED_DATASET_BRANCH)
+  }
+  createSourceNode(DataSource.STATBANK_API, DATASET_BRANCH)
+  createSourceNode(DataSource.STATBANK_API, UNPUBLISHED_DATASET_BRANCH)
+  createSourceNode(DataSource.TBPROCESSOR, DATASET_BRANCH)
+  createSourceNode(DataSource.TBPROCESSOR, UNPUBLISHED_DATASET_BRANCH)
+  createSourceNode(DataSource.STATBANK_SAVED, DATASET_BRANCH)
+  createSourceNode(DataSource.STATBANK_SAVED, UNPUBLISHED_DATASET_BRANCH)
+  createSourceNode(DataSource.DATASET, DATASET_BRANCH)
+  createSourceNode(DataSource.DATASET, UNPUBLISHED_DATASET_BRANCH)
+  createSourceNode(DataSource.KLASS, DATASET_BRANCH)
+  createSourceNode(DataSource.KLASS, UNPUBLISHED_DATASET_BRANCH)
 }
 
 function createSourceNode(dataSource: string, branch: string): void {

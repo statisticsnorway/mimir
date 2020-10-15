@@ -11,9 +11,8 @@ import { Socket, SocketEmitter } from '../../types/socket'
 import { SSBCacheLibrary } from '../cache'
 import { JSONstat } from '../../types/jsonstat-toolkit'
 import { TbmlData } from '../../types/xmlParser'
-import { DatasetRepoNode } from '../../repo/dataset'
+import { DatasetRepoNode, RepoDatasetLib } from '../../repo/dataset'
 import { RepoCommonLib } from '../../repo/common'
-import { DefaultPageConfig } from '../../../site/pages/default/default-page-config'
 
 const {
   logUserDataQuery
@@ -27,6 +26,9 @@ const {
   extractKey,
   getDataset
 }: DatasetLib = __non_webpack_require__( '/lib/ssb/dataset/dataset')
+const {
+  DATASET_BRANCH
+}: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
 const {
   get: getContent
 }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
@@ -49,7 +51,7 @@ const {
   getQueryChildNodesStatus
 }: EventLogLib = __non_webpack_require__('/lib/repo/eventLog')
 
-const users: Array<RegisterUserOptions> = []
+export const users: Array<RegisterUserOptions> = []
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-dataqueries', () => {
@@ -139,16 +141,20 @@ function showWarningIcon(result: Events): boolean {
   ].indexOf(result) >= 0
 }
 
-function refreshDatasetHandler(ids: Array<string>, socketEmitter: SocketEmitter): void {
-  ids.forEach((id: string) => {
+export function refreshDatasetHandler(ids: Array<string>, socketEmitter: SocketEmitter, branch: string = DATASET_BRANCH): void {
+  // tell all dashboard instances that these are going to be loaded
+  ids.forEach((id) => {
     socketEmitter.broadcast('dashboard-activity-refreshDataset', {
-      id: id
+      id
     })
+  })
+  // start loading each datasource
+  ids.forEach((id: string) => {
     const dataSource: Content<DataSource> | null = getContent({
       key: id
     })
     if (dataSource) {
-      const refreshDatasetResult: CreateOrUpdateStatus = refreshDataset(dataSource)
+      const refreshDatasetResult: CreateOrUpdateStatus = refreshDataset(dataSource, branch)
       logUserDataQuery(dataSource._id, {
         message: refreshDatasetResult.status
       })
@@ -244,4 +250,10 @@ export interface RegisterUserOptions {
 
 export interface RefreshDatasetOptions {
   ids: Array<string>;
+}
+
+export interface DashboardDatasetLib {
+  users: Array<RegisterUserOptions>;
+  setupHandlers: (socket: Socket, socketEmitter: SocketEmitter) => void;
+  refreshDatasetHandler: (ids: Array<string>, socketEmitter: SocketEmitter, branch?: string) => void;
 }

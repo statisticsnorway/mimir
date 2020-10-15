@@ -23,8 +23,18 @@ export function createRepo(repoId: string, branch: string): RepositoryConfig {
   })
 }
 
+export function createBranch(repoId: string, branchId: string): RepositoryConfig {
+  return withSuperUserContext<RepositoryConfig>(repoId, branchId, () => {
+    return repo.createBranch({
+      branchId,
+      repoId
+    })
+  })
+}
+
 export interface RepoLib {
   getRepo: (repoId: string, branch: string) => RepositoryConfig | null;
   repoExists: (repoId: string, branch: string) => boolean;
   createRepo: (repoId: string, branch: string) => RepositoryConfig;
+  createBranch: (repoId: string, branchId: string) => RepositoryConfig;
 }

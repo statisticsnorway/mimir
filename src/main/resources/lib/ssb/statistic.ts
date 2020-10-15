@@ -2,25 +2,83 @@ import { Socket, SocketEmitter } from '../types/socket'
 import { Content, ContentLibrary, QueryResponse } from 'enonic-types/lib/content'
 import { StatisticInListing, VariantInListing } from './statreg/types'
 import { UtilLibrary } from '../types/util'
+import { Statistics } from '../../site/content-types/statistics/statistics'
+import { DashboardDatasetLib } from './dataset/dashboard'
+import { ContextLibrary, RunContext } from 'enonic-types/lib/context'
+import { RepoDatasetLib } from '../repo/dataset'
 
 const {
-  query
+  query,
+  get: getContent
 }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
 const {
   getStatisticByIdFromRepo
 } = __non_webpack_require__('/lib/repo/statreg/statistics')
-const util: UtilLibrary = __non_webpack_require__( '/lib/util')
+const {
+  data: {
+    forceArray
+  }
+}: UtilLibrary = __non_webpack_require__( '/lib/util')
+const {
+  users,
+  refreshDatasetHandler
+}: DashboardDatasetLib = __non_webpack_require__('/lib/ssb/dataset/dashboard')
+const {
+  run
+}: ContextLibrary = __non_webpack_require__('/lib/xp/context')
+const {
+  DATASET_BRANCH,
+  UNPUBLISHED_DATASET_BRANCH
+}: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-statistics', () => {
     const statisticData: Array<StatisticDashboard> = prepStatistics(getStatistics())
     socket.emit('statistics-result', statisticData)
   })
+
+  socket.on('refresh-statistic', (data: RefreshInfo) => {
+    socketEmitter.broadcast('statistics-activity-refresh-started', {
+      id: data.id
+    })
+    const statistic: Content<Statistics> | null = getContent({
+      key: data.id
+    })
+    if (statistic) {
+      let datasetIdsToUpdate: Array<string> = []
+      if (statistic.data.mainTable) {
+        datasetIdsToUpdate.push(statistic.data.mainTable)
+      }
+      if (statistic.data.statisticsKeyFigure) {
+        datasetIdsToUpdate.push(statistic.data.statisticsKeyFigure)
+      }
+      if (statistic.data.attachmentTablesFigures) {
+        datasetIdsToUpdate = datasetIdsToUpdate.concat(datasetIdsToUpdate, forceArray(statistic.data.attachmentTablesFigures))
+      }
+      if (datasetIdsToUpdate.length > 0) {
+        const context: RunContext = {
+          branch: 'master',
+          repository: 'com.enonic.cms.default',
+          principals: ['role:system.admin'],
+          user: {
+            login: users[parseInt(socket.id)].user,
+            idProvider: users[parseInt(socket.id)].store ? users[parseInt(socket.id)].store : 'system'
+          }
+        }
+        run(context, () => {
+          refreshDatasetHandler(datasetIdsToUpdate, socketEmitter, data.fetchPublished ? DATASET_BRANCH : UNPUBLISHED_DATASET_BRANCH)
+          socketEmitter.broadcast('statistics-refresh-result', {
+            id: data.id
+          })
+        })
+      }
+    }
+  })
 }
 
-function prepStatistics(statistics: Array<Content<Statistic>>): Array<StatisticDashboard> {
+function prepStatistics(statistics: Array<Content<Statistics>>): Array<StatisticDashboard> {
   const statisticData: Array<StatisticDashboard> = []
-  statistics.map((statistic: Content<Statistic>) => {
+  statistics.map((statistic: Content<Statistics>) => {
     const statregData: StatregData | undefined = statistic.data.statistic ? getStatregInfo(statistic.data.statistic) : undefined
     if (statregData && statregData.nextRelease) {
       const statisticDataDashboard: StatisticDashboard = {
@@ -36,9 +94,9 @@ function prepStatistics(statistics: Array<Content<Statistic>>): Array<StatisticD
   return sortByNextRelease(statisticData)
 }
 
-function getStatistics(): Array<Content<Statistic>> {
-  let hits: Array<Content<Statistic>> = []
-  const result: QueryResponse<Statistic> = query({
+function getStatistics(): Array<Content<Statistics>> {
+  let hits: Array<Content<Statistics>> = []
+  const result: QueryResponse<Statistics> = query({
     contentTypes: [`${app.name}:statistics`],
     query: `data.statistic LIKE "*"`,
     count: 50
@@ -50,7 +108,7 @@ function getStatistics(): Array<Content<Statistic>> {
 function getStatregInfo(key: string): StatregData | undefined {
   const statisticStatreg: StatisticInListing | undefined = getStatisticByIdFromRepo(key)
   if (statisticStatreg) {
-    const variants: Array<VariantInListing> = util.data.forceArray(statisticStatreg.variants)
+    const variants: Array<VariantInListing> = forceArray(statisticStatreg.variants)
     const variant: VariantInListing = variants[0] // TODO: Multiple variants
     const result: StatregData = {
       shortName: statisticStatreg.shortName,
@@ -79,17 +137,17 @@ function sortByNextRelease(statisticData: Array<StatisticDashboard>): Array<Stat
   return statisticsSorted
 }
 
+interface RefreshInfo {
+  id: string;
+  fetchPublished: boolean;
+}
+
 interface StatisticDashboard {
   id: string;
   language?: string;
   name?: string;
   shortName: string;
   nextRelease?: string;
-}
-
-interface Statistic {
-  statistic?: string;
-  language: string;
 }
 
 interface StatregData {

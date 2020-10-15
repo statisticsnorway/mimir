@@ -16,7 +16,7 @@ export function Statistics() {
   const contentStudioBaseUrl = useSelector(selectContentStudioBaseUrl)
   const [show, setShow] = useState(false)
   const [modalInfo, setModalInfo] = useState({})
-  const [showModal, setShowModal] = useState(false)
+  const [, setShowModal] = useState(false)
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
