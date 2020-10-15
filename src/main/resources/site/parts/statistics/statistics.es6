@@ -63,8 +63,10 @@ const renderPart = (req) => {
     statisticsKeyFigure = keyFigurePreview(req, page.data.statisticsKeyFigure)
   }
 
-  if (moment(page.data.lastModified).isAfter(statistic.variants.previousRelease)) {
-    changeDate = moment(page.data.lastModified).format('DD. MMMM YYYY, HH:MM')
+  if (page.data.lastModified && statistic.variants.previousRelease) {
+    if (moment(page.data.lastModified).isAfter(statistic.variants.previousRelease)) {
+      changeDate = moment(page.data.lastModified).format('DD. MMMM YYYY, HH:MM')
+    }
   }
 
   const modifiedDateComponent = new React4xp('ModifiedDate')

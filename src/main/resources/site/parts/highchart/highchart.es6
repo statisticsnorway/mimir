@@ -12,15 +12,12 @@ const {
 const {
   createHighchartObject
 } = __non_webpack_require__('/lib/highcharts/highchartsUtils')
-const {
-  getDataset,
-  extractKey
-} = __non_webpack_require__('/lib/ssb/dataset/dataset')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
 const {
-  fromDatasetRepoCache
+  datasetOrUndefined
 } = __non_webpack_require__('/lib/ssb/cache')
 
 
@@ -54,7 +51,7 @@ function renderPart(req, highchartIds) {
 
     let config
     if (highchart && highchart.data.dataSource) {
-      const datasetFromRepo = datasetOrNull(highchart)
+      const datasetFromRepo = datasetOrUndefined(highchart)
       let parsedData = datasetFromRepo && datasetFromRepo.data
       if (highchart.data.dataSource._selected === DataSourceType.STATBANK_API) {
         // eslint-disable-next-line new-cap
@@ -86,14 +83,6 @@ function renderPart(req, highchartIds) {
     contentType: 'text/html'
   }
 }
-
-function datasetOrNull(highcharts) {
-  return highcharts.data.dataSource && highcharts.data.dataSource._selected ?
-    fromDatasetRepoCache(`/${highcharts.data.dataSource._selected}/${extractKey(highcharts)}`,
-      () => getDataset(highcharts)) :
-    null
-}
-
 
 function createHighchartsReactProps(highchart, config) {
   return {
