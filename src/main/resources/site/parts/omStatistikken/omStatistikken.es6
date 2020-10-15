@@ -8,11 +8,15 @@ const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
 const {
+  getStatisticByIdFromRepo
+} = __non_webpack_require__('/lib/repo/statreg/statistics')
+const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 const view = resolve('./omStatistikken.html')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+const moment = require('moment/min/moment-with-locales')
 
 exports.get = function(req) {
   try {
@@ -31,6 +35,18 @@ function renderPart(req, aboutTheStatisticsId) {
   })
 
   const page = getContent()
+  moment.locale(page.language ? page.language : 'nb')
+  const statistic = page.data.statistic && getStatisticByIdFromRepo(page.data.statistic)
+
+  let nextRelease = i18nLib.localize({
+    key: 'notYetDetermined'
+  })
+  if (statistic && statistic.variants.nextRelease && statistic.variants.nextRelease !== '') {
+    nextRelease = moment(statistic.variants.nextRelease).format('DD. MMMM YYYY')
+  } if (page.type === `${app.name}:omStatistikken` && (req.mode === 'edit' || req.mode === 'preview')) {
+    // Kun ment for internt bruk, i forhåndsvisning av om-statistikken.
+    nextRelease = '<i>Kan kun vises på statistikksiden, ikke i forhåndsvisning av om-statistikken</i>'
+  }
 
   if (!aboutTheStatisticsId) {
     if (req.mode === 'edit' && page.type !== `${app.name}:statistics`) {
@@ -54,13 +70,15 @@ function renderPart(req, aboutTheStatisticsId) {
 
   const items = {
     definition: ['conceptsAndVariables', 'standardRatings'],
-    administrativeInformation: ['regionalLevel', 'frequency', 'internationalReporting', 'storageAndUse'],
+    administrativeInformation: ['responsibleDept', 'nameAndSubject', 'nextUpdate', 'regionalLevel', 'frequency', 'internationalReporting', 'storageAndUse'],
     background: ['purposeAndHistory', 'usersAndUse', 'equalTreatmentUsers', 'relationOtherStatistics', 'legalAuthority', 'eeaReference'],
     production: ['scope', 'dataSourcesAndSamples', 'dataCollectionEditingAndCalculations', 'seasonalAdjustment', 'confidentiality', 'comparability'],
     accuracyAndReliability: ['errorSources', 'revision'],
     aboutSeasonalAdjustment: ['generalInformation', 'whySeasonallyAdjustStatistic', 'preTreatment', 'seasonalAdjustment',
       'auditProcedures', 'qualityOfSeasonalAdjustment', 'specialCases', 'postingProcedures', 'relevantDocumentation']
   }
+
+  content.administrativeInformation.nextUpdate = nextRelease
 
   const accordions = []
   isNotEmpty(content.definition) ? accordions.push(
