@@ -8,11 +8,14 @@ export function requestStatistics(dispatch, io) {
   io.emit('get-statistics')
 }
 
-export function refreshStatistic(dispatch, io, id) {
+export function refreshStatistic(dispatch, io, id, fetchPublished) {
   dispatch({
     type: actions.startRefreshStatistic.type,
     id
   })
 
-  io.emit('refresh-statistic', id)
+  io.emit('refresh-statistic', {
+    id,
+    fetchPublished
+  })
 }
