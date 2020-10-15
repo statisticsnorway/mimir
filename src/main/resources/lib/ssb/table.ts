@@ -10,19 +10,17 @@ import { Request } from 'enonic-types/lib/controller'
 import { DatasetRepoNode } from '../repo/dataset'
 import { DataSource as DataSourceType } from '../repo/dataset'
 import { StatbankSavedLib } from './dataset/statbankSaved'
+import { SSBCacheLibrary } from './cache'
 
 const {
   data: {
     forceArray
   }
 } = __non_webpack_require__( '/lib/util')
+
 const {
-  getDataset,
-  extractKey
-} = __non_webpack_require__( '/lib/ssb/dataset/dataset')
-const {
-  fromDatasetRepoCache
-} = __non_webpack_require__('/lib/ssb/cache')
+  datasetOrUndefined
+}: SSBCacheLibrary = __non_webpack_require__('/lib/ssb/cache')
 const {
   fetchStatbankSavedData
 }: StatbankSavedLib = __non_webpack_require__('/lib/ssb/dataset/statbankSaved')
@@ -40,7 +38,7 @@ export function parseTable(req: Request, table: Content<Table>): TableView {
     noteRefs: []
   }
 
-  const datasetRepo: DatasetRepoNode<JSONstat> | null = datasetOrNull(table)
+  const datasetRepo: DatasetRepoNode<JSONstat> | undefined = datasetOrUndefined(table)
   const dataSource: Table['dataSource'] | undefined = table.data.dataSource
 
   if (datasetRepo) {
@@ -48,7 +46,6 @@ export function parseTable(req: Request, table: Content<Table>): TableView {
 
     if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
       const tbmlData: TbmlData = data as TbmlData
-
       const title: Title = tbmlData.tbml.metadata.title
       const notes: Notes | undefined = tbmlData.tbml.metadata.notes
 
@@ -66,13 +63,6 @@ export function parseTable(req: Request, table: Content<Table>): TableView {
     tableViewData = getTableViewData(table, parsedStatbankSavedData, title, notes)
   }
   return tableViewData
-}
-
-function datasetOrNull(table: Content<Table>): DatasetRepoNode<JSONstat> | null {
-  return table.data.dataSource && table.data.dataSource._selected ?
-    fromDatasetRepoCache(`/${table.data.dataSource._selected}/${extractKey(table)}`,
-      () => getDataset(table)) :
-    null
 }
 
 function getTableViewData(table: Content<Table>, dataContent: TbmlData | JSONstat, title: Title, notes: Notes | undefined): TableView {
