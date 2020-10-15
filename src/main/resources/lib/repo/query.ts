@@ -39,6 +39,8 @@ export interface QueryStatus {
   request?: HttpRequestParams;
   xmlResult?: TbmlData;
   info?: string;
+  function?: string;
+  file?: string;
 }
 
 export interface EventInfo {
@@ -58,6 +60,7 @@ export enum Events {
   START_DELETE = 'START_DELETE',
   DATASET_PUBLISHED = 'DATASET_PUBLISHED',
   DATASET_UPDATED = 'DATASET_UPDATED',
+  DATASOURCE_MISSING = 'DATASOURCE_MISSING',
   DELETE_FAILED = 'DELETE_FAILED',
   DELETE_OK = 'DELETE_OK',
   DELETE_OK_PUBLISHED = 'DELETE_OK_PUBLISHED',

@@ -27,6 +27,8 @@ export function fetch(url: string, queryId?: string): string {
 
   if (queryId) {
     logUserDataQuery(queryId, {
+      file: '/lib/tbml/tbml.ts',
+      function: 'fetch',
       message: Events.REQUESTING_DATA,
       response: response,
       request: {
@@ -44,14 +46,16 @@ export function getTbmlData(url: string, queryId?: string): TbmlData {
 function xmlToJson(xml: string, queryId?: string): TbmlData {
   try {
     const json: string = xmlParser.parse(xml)
-    const tbmlData: TbmlData = JSON.parse(json)
+    return JSON.parse(json)
+  } catch (e) {
     if (queryId) {
       logUserDataQuery(queryId, {
+        function: 'xmlToJson',
+        file: '/lib/tbml/tbml.ts',
+        info: e,
         message: Events.XML_TO_JSON
       })
     }
-    return tbmlData
-  } catch (e) {
     throw new Error( `Failed while parsing tbml data: ${e}`)
   }
 }

@@ -150,6 +150,8 @@ function refreshDatasetHandler(ids: Array<string>, socketEmitter: SocketEmitter)
     if (dataSource) {
       const refreshDatasetResult: CreateOrUpdateStatus = refreshDataset(dataSource, true)
       logUserDataQuery(dataSource._id, {
+        file: '/lib/ssb/dataset/dashboard.ts',
+        function: 'refreshDatasetHandler',
         message: refreshDatasetResult.status
       })
       socketEmitter.broadcast('dashboard-activity-refreshDataset-result', transfromQueryResult(refreshDatasetResult))

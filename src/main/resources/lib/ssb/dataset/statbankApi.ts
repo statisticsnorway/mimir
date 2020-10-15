@@ -25,6 +25,12 @@ export function getStatbankApi(content: Content<DataSource>): DatasetRepoNode<JS
       return getDataset(content.data.dataSource?._selected, content._id)
     }
   }
+  logUserDataQuery(content._id, {
+    file: '/lib/ssb/dataset/statbankApi.ts',
+    function: 'getStatbankApi',
+    message: Events.DATASOURCE_MISSING,
+    info: 'content.data.datasource is undefined.'
+  })
   return null
 }
 
@@ -44,6 +50,8 @@ export function fetchStatbankApiData(content: Content<DataSource>): JSONstat | n
     } catch (e) {
       const message: string = `Failed to fetch data from statregApi: ${content._id} (${e})`
       logUserDataQuery(content._id, {
+        file: '/lib/ssb/dataset/statbankApi.ts',
+        function: 'fetchStatbankApiData',
         message: Events.FAILED_TO_REQUEST_DATASET,
         info: message
       })

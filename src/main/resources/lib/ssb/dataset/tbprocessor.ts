@@ -45,6 +45,8 @@ export function fetchTbprocessorData(content: Content<DataSource>): TbmlData | n
     } catch (e) {
       const message: string = `Failed to fetch data from tbprocessor: ${content._id} (${e})`
       logUserDataQuery(content._id, {
+        file: '/lib/ssb/dataset/tbprocessor.ts',
+        function: 'fetchTbprocessorData',
         message: Events.FAILED_TO_REQUEST_DATASET,
         info: message
       })

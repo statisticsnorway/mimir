@@ -67,6 +67,8 @@ export function get(url: string, json: DataqueryRequestData | undefined,
   const result: HttpResponse = http.request(requestParams)
   if (queryId) {
     logUserDataQuery(queryId, {
+      file: '/lib/dataquery.ts',
+      function: 'get',
       message: Events.REQUESTING_DATA,
       response: result,
       request: requestParams
@@ -157,6 +159,8 @@ export function getData(dataquery: Content<Dataquery>): object | null {
     } catch (e) {
       const message: string = `Failed to fetch data for dataquery: ${dataquery._id} (${e})`
       logUserDataQuery(dataquery._id, {
+        file: '/lib/dataquery.ts',
+        function: 'getData',
         message: Events.FAILED_TO_REQUEST_DATASET,
         info: message
       })
