@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useContext, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Button, Col, Row, Table, Modal, Form } from 'react-bootstrap'
 import { selectStatistics, selectLoading } from './selectors'
 import { RefreshCw } from 'react-feather'
 import Moment from 'react-moment'
 import { Link } from '@statisticsnorway/ssb-component-library'
 import { selectContentStudioBaseUrl } from '../HomePage/selectors'
+import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
+import { refreshStatistic } from './actions.es6'
 
 export function Statistics() {
   const statistics = useSelector(selectStatistics)
@@ -14,15 +16,20 @@ export function Statistics() {
   const [show, setShow] = useState(false)
   const [modalInfo, setModalInfo] = useState({})
   const [showModal, setShowModal] = useState(false)
+  const [fetchPublished, setFetchPublished] = useState(false)
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
+
+  const io = useContext(WebSocketContext)
+  const dispatch = useDispatch()
 
   const toggleTrueFalse = () => {
     setShowModal(handleShow)
   }
 
   const updateTables = () => {
-    console.log('Oppdatere tall: ' + modalInfo.name)
+    console.log('Oppdatere tall: ' + modalInfo.name, modalInfo)
+    refreshStatistic(dispatch, io, modalInfo.id)
     handleClose()
   }
 
@@ -56,22 +63,22 @@ export function Statistics() {
     )
   }
 
-  function makeRefreshButton(key) {
+  function makeRefreshButton(statistic) {
     return (
       <Button
         variant="primary"
         size="sm"
         className="mx-1"
-        onClick={() => refreshStatistic(key)}
-        disabled={key.loading}
+        onClick={() => onRefreshStatistic(statistic)}
+        disabled={statistic.loading}
       >
-        { key.loading ? <span className="spinner-border spinner-border-sm" /> : <RefreshCw size={16}/> }
+        { statistic.loading ? <span className="spinner-border spinner-border-sm" /> : <RefreshCw size={16}/> }
       </Button>
     )
   }
 
-  function refreshStatistic(key) {
-    const statistic = statistics.find((item) => item.id === key)
+  function onRefreshStatistic(statistic) {
+    // const statistic = statistics.find((item) => item.id === key)
     setModalInfo(statistic)
     toggleTrueFalse()
   }
@@ -98,7 +105,12 @@ export function Statistics() {
               <Form.Control type="password" placeholder="Passord" disabled />
             </Form.Group>
             <Form.Group controlId="formBasicCheckbox">
-              <Form.Check type="checkbox" label="Hent publiserte tall"/>
+              <Form.Check
+                onChange={(event) => setFetchPublished(event.target.checked)}
+                checked={fetchPublished}
+                type="checkbox"
+                label="Hent publiserte tall"
+              />
             </Form.Group>
             <Button variant="primary" onClick={updateTables}>
                 Send
@@ -132,7 +144,7 @@ export function Statistics() {
                     <Moment format="DD.MM.YYYY hh:mm">{statistic.nextRelease}</Moment>
                   </span>
                 </td>
-                <td className="text-center">{makeRefreshButton(statistic.id)}</td>
+                <td className="text-center">{makeRefreshButton(statistic)}</td>
                 <td/>
               </tr>
             )
