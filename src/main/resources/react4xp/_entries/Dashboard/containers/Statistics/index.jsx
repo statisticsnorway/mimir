@@ -17,6 +17,25 @@ export function Statistics() {
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
+  const statisticsNo = statistics ? statistics.filter((s) => s.language === 'nb') : []
+  const statisticsEn = statistics ? statistics.filter((s) => s.language === 'en') : []
+
+  const statisticsFinal = []
+  if (statisticsNo.length > 0) {
+    statisticsNo.map((statistic) => {
+      statisticsFinal.push(statistic)
+      const statisticEnglish = statisticsEn.find((s) => s.shortName === statistic.shortName)
+      if (statisticEnglish) {
+        statisticsFinal.push(statisticEnglish)
+      } else {
+        statisticsFinal.push({
+          shortName: statistic.shortName,
+          language: 'en'
+        })
+      }
+    })
+  }
+
   const toggleTrueFalse = () => {
     setShowModal(handleShow)
   }
@@ -33,7 +52,7 @@ export function Statistics() {
       )
     }
     return (
-      <div>
+      <div className="next-release">
         <Table bordered striped>
           <thead>
             <tr>
@@ -115,26 +134,12 @@ export function Statistics() {
   }
 
   function getStatistics() {
-    if (statistics != undefined) {
+    if (statisticsFinal.length > 0) {
       return (
         <tbody>
-          {statistics.map((statistic) => {
+          {statisticsFinal.map((statistic) => {
             return (
-              <tr key={statistic.id}>
-                <td className='statistic'>
-                  <Link
-                    isExternal
-                    href={contentStudioBaseUrl + statistic.id}>{statistic.language === 'en' ? 'Eng. ' + statistic.shortName : statistic.shortName}
-                  </Link>
-                </td>
-                <td>
-                  <span>
-                    <Moment format="DD.MM.YYYY hh:mm">{statistic.nextRelease}</Moment>
-                  </span>
-                </td>
-                <td className="text-center">{makeRefreshButton(statistic.id)}</td>
-                <td/>
-              </tr>
+              statisticRow(statistic)
             )
           })}
         </tbody>
@@ -142,6 +147,49 @@ export function Statistics() {
     }
     return (
       <tbody/>
+    )
+  }
+
+  function statisticRow(statistic) {
+    const key = statistic.shortName + '_' + statistic.language
+    return (
+      <tr key={key}>
+        <td className='statistic'>
+          {getShortNameLink(statistic)}
+        </td>
+        <td>
+          {getNextRelease(statistic)}
+        </td>
+        <td className="text-center">{statistic.nextRelease ? makeRefreshButton(statistic.id) : ''}</td>
+        <td/>
+      </tr>
+    )
+  }
+
+  function getNextRelease(statistic) {
+    if (statistic.nextRelease) {
+      return (
+        <span>
+          <Moment format="DD.MM.YYYY hh:mm">{statistic.nextRelease}</Moment>
+        </span>
+      )
+    }
+    return (
+      <span/>
+    )
+  }
+
+  function getShortNameLink(statistic) {
+    if (statistic.nextRelease) {
+      return (
+        <Link
+          isExternal
+          href={contentStudioBaseUrl + statistic.id}>{statistic.language === 'en' ? 'Eng. ' + statistic.shortName : statistic.shortName}
+        </Link>
+      )
+    }
+    return (
+      <span>{statistic.language === 'en' ? 'Eng. ' + statistic.shortName : statistic.shortName}</span>
     )
   }
 
