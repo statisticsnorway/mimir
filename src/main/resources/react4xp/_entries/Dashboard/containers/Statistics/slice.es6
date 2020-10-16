@@ -16,6 +16,14 @@ const statisticsSlice = createSlice({
     statisticsLoaded(state, action) {
       state.loading = false
       state.statistics = action.statistics
+    },
+    startRefreshStatistic(state, action) {
+      const stat = state.statistics.find((s) => s.id === action.id)
+      stat.loading = true
+    },
+    resultRefreshStatistic(state, action) {
+      const stat = state.statistics.find((s) => s.id === action.statistic.id)
+      stat.loading = false
     }
   }
 })

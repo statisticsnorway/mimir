@@ -1,11 +1,14 @@
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
-import { Button, Col, Row, Table, Modal, Form } from 'react-bootstrap'
+import React, { useContext, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Button, Col, Row, Table, Modal } from 'react-bootstrap'
 import { selectStatistics, selectLoading } from './selectors'
 import { RefreshCw } from 'react-feather'
 import Moment from 'react-moment'
 import { Link } from '@statisticsnorway/ssb-component-library'
 import { selectContentStudioBaseUrl } from '../HomePage/selectors'
+import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
+import { refreshStatistic } from './actions.es6'
+import { RefreshStatisticsForm } from '../../components/RefreshStatisticsForm'
 
 export function Statistics() {
   const statistics = useSelector(selectStatistics)
@@ -13,10 +16,12 @@ export function Statistics() {
   const contentStudioBaseUrl = useSelector(selectContentStudioBaseUrl)
   const [show, setShow] = useState(false)
   const [modalInfo, setModalInfo] = useState({})
-  const [showModal, setShowModal] = useState(false)
+  const [, setShowModal] = useState(false)
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
+  const io = useContext(WebSocketContext)
+  const dispatch = useDispatch()
   const statisticsNo = statistics ? statistics.filter((s) => s.language === 'nb') : []
   const statisticsEn = statistics ? statistics.filter((s) => s.language === 'en') : []
 
@@ -40,8 +45,14 @@ export function Statistics() {
     setShowModal(handleShow)
   }
 
-  const updateTables = () => {
-    console.log('Oppdatere tall: ' + modalInfo.name)
+  const updateTables = (formData) => {
+    const {
+      // username,
+      // password,
+      fetchPublished
+    } = formData
+    console.log(modalInfo, fetchPublished)
+    refreshStatistic(dispatch, io, modalInfo.id, fetchPublished)
     handleClose()
   }
 
@@ -75,22 +86,21 @@ export function Statistics() {
     )
   }
 
-  function makeRefreshButton(key) {
+  function makeRefreshButton(statistic) {
     return (
       <Button
         variant="primary"
         size="sm"
         className="mx-1"
-        onClick={() => refreshStatistic(key)}
-        disabled={key.loading}
+        onClick={() => onRefreshStatistic(statistic)}
+        disabled={statistic.loading}
       >
-        { key.loading ? <span className="spinner-border spinner-border-sm" /> : <RefreshCw size={16}/> }
+        { statistic.loading ? <span className="spinner-border spinner-border-sm" /> : <RefreshCw size={16}/> }
       </Button>
     )
   }
 
-  function refreshStatistic(key) {
-    const statistic = statistics.find((item) => item.id === key)
+  function onRefreshStatistic(statistic) {
     setModalInfo(statistic)
     toggleTrueFalse()
   }
@@ -106,23 +116,7 @@ export function Statistics() {
           <span>For å oppdatere tabeller med ennå ikke publiserte tall må brukernavn og passord for lastebrukere i Statistikkbanken brukes.</span>
           <br/>
           <span>For andre endringer velg "Hent publiserte tall" uten å oppgi brukernavn og passord</span>
-          <Form className="mt-3">
-            <Form.Group controlId="formBasicUsername">
-              <Form.Label>Brukernavn</Form.Label>
-              <Form.Control type="username" placeholder="Brukernavn" disabled />
-            </Form.Group>
-
-            <Form.Group controlId="formBasicPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control type="password" placeholder="Passord" disabled />
-            </Form.Group>
-            <Form.Group controlId="formBasicCheckbox">
-              <Form.Check type="checkbox" label="Hent publiserte tall"/>
-            </Form.Group>
-            <Button variant="primary" onClick={updateTables}>
-                Send
-            </Button>
-          </Form>
+          <RefreshStatisticsForm onSubmit={(e) => updateTables(e)}/>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
@@ -160,7 +154,7 @@ export function Statistics() {
         <td>
           {getNextRelease(statistic)}
         </td>
-        <td className="text-center">{statistic.nextRelease ? makeRefreshButton(statistic.id) : ''}</td>
+        <td className="text-center">{statistic.nextRelease ? makeRefreshButton(statistic) : ''}</td>
         <td/>
       </tr>
     )
