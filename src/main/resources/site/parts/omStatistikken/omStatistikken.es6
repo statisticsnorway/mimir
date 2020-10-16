@@ -78,8 +78,9 @@ function renderPart(req, aboutTheStatisticsId) {
       'auditProcedures', 'qualityOfSeasonalAdjustment', 'specialCases', 'postingProcedures', 'relevantDocumentation']
   }
 
-  content.administrativeInformation.nextUpdate = nextRelease
-
+  if (content.administrativeInformation) {
+    content.administrativeInformation.nextUpdate = nextRelease
+  }
   const accordions = []
   isNotEmpty(content.definition) ? accordions.push(
     getAccordion('om-statistikken-definisjoner', 'definitions', content.definition, items.definition)) : undefined
