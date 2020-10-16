@@ -345,9 +345,7 @@ export function fromParentTypeCache(
   key: string,
   fallback: () => string): string {
   return parentTypeCache.get(key, () => {
-    const res: string = fallback()
-    log.info(`added ${key} - ${res} to parent type cache`)
-    return res
+    return fallback()
   })
 }
 
