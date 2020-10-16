@@ -67,11 +67,11 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
         }
         run(context, () => {
           refreshDatasetHandler(datasetIdsToUpdate, socketEmitter, data.fetchPublished ? DATASET_BRANCH : UNPUBLISHED_DATASET_BRANCH)
-          socketEmitter.broadcast('statistics-refresh-result', {
-            id: data.id
-          })
         })
       }
+      socketEmitter.broadcast('statistics-refresh-result', {
+        id: data.id
+      })
     }
   })
 }

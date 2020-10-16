@@ -100,7 +100,7 @@ export function refreshDataset(content: Content<DataSource>, branch: string = DA
   const user: User | null = getUser()
 
   if (data && content.data.dataSource && content.data.dataSource._selected && key) {
-    let dataset: DatasetRepoNode<JSONstat | TbmlData | object> | null = getDataset(content)
+    let dataset: DatasetRepoNode<JSONstat | TbmlData | object> | null = getDataset(content, branch)
     const hasNewData: boolean = isDataNew(data, dataset)
     if (!dataset || hasNewData) {
       dataset = createOrUpdateDataset(content.data.dataSource?._selected, branch, key, data)
