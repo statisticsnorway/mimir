@@ -7,4 +7,18 @@ export default function setupStatisticsListeners(io, dispatch) {
       statistics: data
     })
   })
+
+  io.on('statistics-refresh-result', (data) => {
+    dispatch({
+      type: actions.resultRefreshStatistic.type,
+      statistic: data
+    })
+  })
+
+  io.on('statistics-activity-refresh-started', (data) => {
+    dispatch({
+      type: actions.startRefreshStatistic.type,
+      id: data.id
+    })
+  })
 }

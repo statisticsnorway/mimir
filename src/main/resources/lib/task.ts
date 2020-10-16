@@ -3,7 +3,11 @@ import { splitEvery } from 'ramda'
 import { DatasetLib, CreateOrUpdateStatus } from './ssb/dataset/dataset'
 import { DataSource } from '../site/mixins/dataSource/dataSource'
 import { RepoQueryLib } from './repo/query'
+import { RepoDatasetLib } from './repo/dataset'
 
+const {
+  DATASET_BRANCH
+}: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
 const {
   refreshDataset
 }: DatasetLib = __non_webpack_require__('/lib/ssb/dataset/dataset')
@@ -34,7 +38,7 @@ export function refreshQueriesAsync(httpQueries: Array<Content<DataSource>>, bat
           logAdminDataQuery(httpQuery._id, {
             message: Events.GET_DATA_STARTED
           })
-          const result: CreateOrUpdateStatus = refreshDataset(httpQuery, false)
+          const result: CreateOrUpdateStatus = refreshDataset(httpQuery, DATASET_BRANCH, false)
           logAdminDataQuery(httpQuery._id, {
             message: result.status
           })

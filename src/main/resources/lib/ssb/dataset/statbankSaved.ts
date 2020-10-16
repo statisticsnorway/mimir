@@ -18,11 +18,11 @@ const {
   isUrl
 } = __non_webpack_require__('/lib/ssb/utils')
 
-export function getStatbankApi(content: Content<DataSource>): DatasetRepoNode<JSONstat> | null {
+export function getStatbankApi(content: Content<DataSource>, branch: string): DatasetRepoNode<JSONstat> | null {
   if (content.data.dataSource && content.data.dataSource._selected) {
     const dataSource: DataSource['dataSource'] = content.data.dataSource
     if (dataSource.statbankApi && dataSource.statbankApi.json && dataSource.statbankApi.urlOrId) {
-      return getDataset(content.data.dataSource?._selected, content._id)
+      return getDataset(content.data.dataSource?._selected, branch, content._id)
     }
   }
   return null
@@ -58,5 +58,6 @@ export function fetchStatbankSavedData(content: Content<DataSource>): object | n
 }
 
 export interface StatbankSavedLib {
+  getStatbankApi(content: Content<DataSource>, branch: string): DatasetRepoNode<JSONstat> | null;
   fetchStatbankSavedData: (content: Content<DataSource>) => JSONstat | null;
 }

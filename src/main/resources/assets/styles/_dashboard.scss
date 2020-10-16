@@ -92,6 +92,27 @@
       border-top: 0 none;
     }
   }
+
+  .next-release {
+    height: 600px;
+    overflow: auto;
+
+    table {
+      tbody tr {
+        background-color: $ssb-white;
+
+        &:nth-child(4n+1), &:nth-child(4n+2) {
+          background: #F2F2F2;
+        }
+      }
+
+      .ssb-link {
+        margin-top: 0;
+      }
+    }
+
+  }
+
   .errorMsg {
     display: block;
   }

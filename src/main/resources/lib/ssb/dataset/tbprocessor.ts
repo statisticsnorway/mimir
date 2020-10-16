@@ -19,11 +19,11 @@ const {
   isUrl
 } = __non_webpack_require__('/lib//ssb/utils')
 
-export function getTbprocessor(content: Content<DataSource>): DatasetRepoNode<TbmlData> | null {
+export function getTbprocessor(content: Content<DataSource>, branch: string): DatasetRepoNode<TbmlData> | null {
   if (content.data.dataSource && content.data.dataSource._selected) {
     const dataSource: DataSource['dataSource'] = content.data.dataSource
     if (dataSource.tbprocessor && dataSource.tbprocessor.urlOrId) {
-      return getDataset(content.data.dataSource?._selected, getTbprocessorKey(content))
+      return getDataset(content.data.dataSource?._selected, branch, getTbprocessorKey(content))
     }
   }
   return null
@@ -77,7 +77,7 @@ export function getTableIdFromTbprocessor(data: TbmlData): Array<string> {
 }
 
 export interface TbprocessorLib {
-  getTbprocessor: (content: Content<DataSource>) => DatasetRepoNode<TbmlData> | null;
+  getTbprocessor: (content: Content<DataSource>, branch: string) => DatasetRepoNode<TbmlData> | null;
   fetchTbprocessorData: (content: Content<DataSource>) => TbmlData | null;
   getTbprocessorKey: (content: Content<DataSource>) => string;
   getTableIdFromTbprocessor: (dataset: TbmlData) => Array<string>;
