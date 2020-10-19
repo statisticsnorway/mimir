@@ -17,11 +17,11 @@ const {
   isUrl
 } = __non_webpack_require__('/lib/ssb/utils')
 
-export function getKlass(content: Content<DataSource>): DatasetRepoNode<object> | null {
+export function getKlass(content: Content<DataSource>, branch: string): DatasetRepoNode<object> | null {
   if (content.data.dataSource && content.data.dataSource._selected) {
     const dataSource: DataSource['dataSource'] = content.data.dataSource
     if (dataSource.klass && dataSource.klass.urlOrId) {
-      return getDataset(content.data.dataSource?._selected, content._id)
+      return getDataset(content.data.dataSource?._selected, branch, content._id)
     }
   }
   return null
@@ -57,7 +57,7 @@ export function getKlassKey(content: Content<DataSource>): string {
 }
 
 export interface KlassLib {
-  getKlass: (content: Content<DataSource>) => DatasetRepoNode<object> | null;
+  getKlass: (content: Content<DataSource>, branch: string) => DatasetRepoNode<object> | null;
   fetchKlassData: (content: Content<DataSource>) => object | null;
   getKlassKey: (content: Content<DataSource>) => string;
 }

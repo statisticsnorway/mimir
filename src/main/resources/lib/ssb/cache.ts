@@ -8,6 +8,8 @@ import { JSONstat } from '../types/jsonstat-toolkit'
 import { TbmlData } from '../types/xmlParser'
 import { DATASET_REPO, DatasetRepoNode } from '../repo/dataset'
 import { Socket } from '../types/socket'
+import { Table } from '../../site/content-types/table/table'
+import { Highchart } from '../../site/content-types/highchart/highchart'
 
 const {
   newCache
@@ -26,6 +28,12 @@ const {
   query,
   get
 }: ContentLibrary = __non_webpack_require__('/lib/xp/content')
+
+const {
+  getDataset,
+  extractKey
+} = __non_webpack_require__('/lib/ssb/dataset/dataset')
+
 
 const masterFilterCaches: Map<string, Cache> = new Map()
 const draftFilterCaches: Map<string, Cache> = new Map()
@@ -61,6 +69,12 @@ const datasetRepoCache: Cache = newCache({
   expire: 3600,
   size: 1500
 })
+
+const parentTypeCache: Cache = newCache({
+  expire: 3600,
+  size: 2000
+})
+
 let changeQueue: EnonicEventData['nodes'] = []
 let clearTaskId: string | undefined
 
@@ -106,7 +120,8 @@ function addClearTask(): void {
             clearDividerCache: true,
             clearRelatedArticlesCache: true,
             clearRelatedFactPageCache: true,
-            clearDatasetRepoCache: true
+            clearDatasetRepoCache: true,
+            clearParentTypeCache: true
           })
         } else {
           onNodeChange(changedNodes)
@@ -318,6 +333,24 @@ export function fromDatasetRepoCache(
   })
 }
 
+export function datasetOrUndefined(content: Content<Highchart | Table>): DatasetRepoNode<JSONstat | TbmlData | object> | undefined {
+  return content.data.dataSource && content.data.dataSource._selected ?
+    fromDatasetRepoCache(`/${content.data.dataSource._selected}/${extractKey(content)}`,
+      () => getDataset(content)) :
+    undefined
+}
+
+
+export function fromParentTypeCache(
+  key: string,
+  fallback: () => string): string {
+  return parentTypeCache.get(key, () => {
+    const res: string = fallback()
+    log.info(`added ${key} - ${res} to parent type cache`)
+    return res
+  })
+}
+
 function completelyClearFilterCache(branch: string): void {
   const cacheMap: Map<string, Cache> = branch === 'master' ? masterFilterCaches : draftFilterCaches
   cacheMap.forEach((cache: Cache, filterKey: string) => {
@@ -355,6 +388,11 @@ function completelyClearDatasetRepoCache(): void {
   datasetRepoCache.clear()
 }
 
+function completelyClearParentTypeCache(): void {
+  log.info(`clear parent type cache`)
+  parentTypeCache.clear()
+}
+
 function completelyClearCache(options: CompletelyClearCacheOptions): void {
   if (options.clearFilterCache) {
     completelyClearFilterCache('master')
@@ -382,6 +420,10 @@ function completelyClearCache(options: CompletelyClearCacheOptions): void {
 
   if (options.clearDatasetRepoCache) {
     completelyClearDatasetRepoCache()
+  }
+
+  if (options.clearParentTypeCache) {
+    completelyClearParentTypeCache()
   }
 }
 
@@ -411,6 +453,7 @@ export interface CompletelyClearCacheOptions {
   clearRelatedArticlesCache: boolean;
   clearRelatedFactPageCache: boolean;
   clearDatasetRepoCache: boolean;
+  clearParentTypeCache: boolean;
 }
 
 export interface SSBCacheLibrary {
@@ -423,5 +466,7 @@ export interface SSBCacheLibrary {
   fromDatasetRepoCache:
     (key: string, fallback: () => DatasetRepoNode<JSONstat | TbmlData | object> | null)
       => DatasetRepoNode<JSONstat | TbmlData | object> | undefined;
+  fromParentTypeCache: (path: string, fallback: () => string) => string;
+  datasetOrUndefined: (content: Content<Highchart | Table>) => DatasetRepoNode<JSONstat | TbmlData | object> | undefined;
   setupHandlers: (socket: Socket) => void;
 }
