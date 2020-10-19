@@ -2,15 +2,15 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
-import { ContentLibrary, QueryResponse, Content } from 'enonic-types/lib/content'
-import { PortalLibrary } from 'enonic-types/lib/portal'
+import { ContentLibrary, QueryResponse, Content } from 'enonic-types/content'
+import { PortalLibrary } from 'enonic-types/portal'
 import { KeyFigure } from '../../site/content-types/keyFigure/keyFigure'
 import { Dataquery } from '../../site/content-types/dataquery/dataquery'
 import { MunicipalityWithCounty } from '../klass/municipalities'
 import { TbmlData, TableRow, PreliminaryData } from '../types/xmlParser'
 import { Dataset as JSDataset, Dimension, Category } from '../types/jsonstat-toolkit'
 import { UtilLibrary } from '../types/util'
-import { Request } from 'enonic-types/lib/controller'
+import { Request } from 'enonic-types/controller'
 import { DatasetRepoNode } from '../repo/dataset'
 import { DataSource as DataSourceType } from '../repo/dataset'
 const {

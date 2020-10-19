@@ -1,8 +1,8 @@
-import { PortalLibrary } from 'enonic-types/lib/portal'
+import { PortalLibrary } from 'enonic-types/portal'
 import { MenuItem } from '../../site/content-types/menuItem/menuItem'
 import { Language } from '../types/language'
 import { Link } from './menu'
-import { Content, ContentLibrary } from 'enonic-types/lib/content'
+import { Content, ContentLibrary } from 'enonic-types/content'
 import { Footer } from '../../site/content-types/footer/footer'
 const {
   assetUrl

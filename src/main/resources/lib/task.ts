@@ -1,4 +1,4 @@
-import { Content } from 'enonic-types/lib/content'
+import { Content } from 'enonic-types/content'
 import { splitEvery } from 'ramda'
 import { DatasetLib, CreateOrUpdateStatus } from './ssb/dataset/dataset'
 import { DataSource } from '../site/mixins/dataSource/dataSource'

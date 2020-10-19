@@ -1,4 +1,4 @@
-import { RepoLibrary, RepositoryConfig } from 'enonic-types/lib/repo'
+import { RepoLibrary, RepositoryConfig } from 'enonic-types/repo'
 import { RepoCommonLib } from './common'
 const repo: RepoLibrary = __non_webpack_require__('/lib/xp/repo')
 const {

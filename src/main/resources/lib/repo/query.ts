@@ -1,8 +1,8 @@
-import { RepoNode } from 'enonic-types/lib/node'
+import { RepoNode } from 'enonic-types/node'
 import { RepoCommonLib } from './common'
 import { EditorCallback, EventLogLib } from './eventLog'
-import { User } from 'enonic-types/lib/auth'
-import { HttpRequestParams, HttpResponse } from 'enonic-types/lib/http'
+import { User } from 'enonic-types/auth'
+import { HttpRequestParams, HttpResponse } from 'enonic-types/http'
 import { TbmlData } from '../types/xmlParser'
 const {
   dateToFormat

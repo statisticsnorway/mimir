@@ -1,5 +1,5 @@
 import { Socket, SocketEmitter } from '../types/socket'
-import { Content, ContentLibrary, QueryResponse } from 'enonic-types/lib/content'
+import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
 
 const {
   query

@@ -1,4 +1,4 @@
-import { HttpLibrary, HttpRequestParams, HttpResponse } from 'enonic-types/lib/http'
+import { HttpLibrary, HttpRequestParams, HttpResponse } from 'enonic-types/http'
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 import { XmlParser } from '../types/xmlParser'
 
