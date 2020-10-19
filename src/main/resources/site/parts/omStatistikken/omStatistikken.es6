@@ -70,7 +70,7 @@ function renderPart(req, aboutTheStatisticsId) {
 
   const items = {
     definition: ['conceptsAndVariables', 'standardRatings'],
-    administrativeInformation: ['responsibleDept', 'nameAndSubject', 'nextUpdate', 'regionalLevel', 'frequency', 'internationalReporting', 'storageAndUse'],
+    administrativeInformation: ['nameAndSubject', 'nextUpdate', 'responsibleDept', 'regionalLevel', 'frequency', 'internationalReporting', 'storageAndUse'],
     background: ['purposeAndHistory', 'usersAndUse', 'equalTreatmentUsers', 'relationOtherStatistics', 'legalAuthority', 'eeaReference'],
     production: ['scope', 'dataSourcesAndSamples', 'dataCollectionEditingAndCalculations', 'seasonalAdjustment', 'confidentiality', 'comparability'],
     accuracyAndReliability: ['errorSources', 'revision'],
@@ -78,8 +78,9 @@ function renderPart(req, aboutTheStatisticsId) {
       'auditProcedures', 'qualityOfSeasonalAdjustment', 'specialCases', 'postingProcedures', 'relevantDocumentation']
   }
 
-  content.administrativeInformation.nextUpdate = nextRelease
-
+  if (content.administrativeInformation) {
+    content.administrativeInformation.nextUpdate = nextRelease
+  }
   const accordions = []
   isNotEmpty(content.definition) ? accordions.push(
     getAccordion('om-statistikken-definisjoner', 'definitions', content.definition, items.definition)) : undefined
