@@ -1,5 +1,6 @@
+import { AuthLibrary, UserQueryResult } from 'enonic-types/auth'
 import { Content } from 'enonic-types/content'
-import { RunContext } from 'enonic-types/context'
+import { ContextLibrary, RunContext } from 'enonic-types/context'
 import { DataSource } from '../../site/mixins/dataSource/dataSource'
 import { RepoJobLib, JobEventNode, JobInfoNode } from '../repo/job'
 import { StatRegRepoLib } from '../repo/statreg'
@@ -26,14 +27,46 @@ const {
 const {
   dataSourceRSSFilter
 } = __non_webpack_require__('/lib/ssb/dataset/rss')
+const {
+  findUsers,
+  createUser
+}: AuthLibrary = require('/lib/xp/auth')
+const {
+  run
+}: ContextLibrary = require('/lib/xp/context')
 
-const cronContext: RunContext = { // Master context (XP)
+const createUserContext: RunContext = { // Master context (XP)
   repository: 'com.enonic.cms.default',
   branch: 'master',
   principals: ['role:system.admin'],
   user: {
     login: 'su',
     idProvider: 'system'
+  }
+}
+
+const cronContext: RunContext = { // Master context (XP)
+  repository: 'com.enonic.cms.default',
+  branch: 'master',
+  principals: ['role:system.admin'],
+  user: {
+    login: 'cronjob',
+    idProvider: 'system'
+  }
+}
+
+function setupCronJobUser(): void {
+  const findUsersResult: UserQueryResult<object> = findUsers({
+    count: 1,
+    query: `login LIKE "cronjob"`
+  })
+  if (findUsersResult.hits.length === 0) {
+    createUser({
+      idProvider: 'system',
+      name: 'cronjob',
+      displayName: 'Carl Cronjob',
+      email: 'cronjob@ssb.no'
+    })
   }
 }
 
@@ -56,6 +89,8 @@ function job(): void {
 }
 
 export function setupCronJobs(): void {
+  run(createUserContext, setupCronJobUser)
+
   // setup dataquery cron job
   const dataqueryCron: string = app.config && app.config['ssb.cron.dataquery'] ? app.config['ssb.cron.dataquery'] : '0 15 * * *'
   cron.schedule({
