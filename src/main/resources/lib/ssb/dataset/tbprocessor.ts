@@ -47,8 +47,9 @@ export function fetchTbprocessorData(content: Content<DataSource>): TbmlData | n
       logUserDataQuery(content._id, {
         file: '/lib/ssb/dataset/tbprocessor.ts',
         function: 'fetchTbprocessorData',
-        message: Events.FAILED_TO_REQUEST_DATASET,
-        info: message
+        message: Events.REQUEST_COULD_NOT_CONNECT,
+        info: message,
+        status: e
       })
       log.error(message)
     }

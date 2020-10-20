@@ -52,8 +52,9 @@ export function fetchStatbankApiData(content: Content<DataSource>): JSONstat | n
       logUserDataQuery(content._id, {
         file: '/lib/ssb/dataset/statbankApi.ts',
         function: 'fetchStatbankApiData',
-        message: Events.FAILED_TO_REQUEST_DATASET,
-        info: message
+        message: Events.REQUEST_COULD_NOT_CONNECT,
+        info: message,
+        status: e
       })
       log.error(message)
     }

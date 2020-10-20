@@ -42,14 +42,13 @@ export function fetchStatbankSavedData(content: Content<DataSource>): object | n
         return fetchData(url)
       }
     } catch (e) {
-      const message: string = `Failed to fetch data from statbankweb: ${content._id} (${e})`
+      log.error(`Failed to fetch data from statbankweb: ${content._id} (${e})`)
       logUserDataQuery(content._id, {
         file: '/lib/ssb/dataset/statbankSaved.ts',
         function: 'fetchStatbankSavedData',
-        message: Events.FAILED_TO_REQUEST_DATASET,
-        info: message
+        message: Events.REQUEST_COULD_NOT_CONNECT,
+        status: e
       })
-      log.error(message)
     }
     return null
   } else {

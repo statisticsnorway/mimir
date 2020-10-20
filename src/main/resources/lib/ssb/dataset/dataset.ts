@@ -113,14 +113,6 @@ export function refreshDataset(content: Content<DataSource>, branch: string = DA
       user
     }
   } else {
-    if (asUser) {
-      logUserDataQuery(content._id, {
-        file: '/lib/ssb/dataset/dataset.ts',
-        function: 'refreshDataset',
-        message: Events.FAILED_TO_GET_DATA,
-        info: 'Missing data, datasource._selected or key.'
-      })
-    }
     return {
       dataquery: content,
       status: Events.FAILED_TO_GET_DATA,
