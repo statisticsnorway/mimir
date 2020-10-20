@@ -1,5 +1,5 @@
-import { Content } from 'enonic-types/lib/content'
-import { HttpLibrary, HttpResponse } from 'enonic-types/lib/http'
+import { Content } from 'enonic-types/content'
+import { HttpLibrary, HttpResponse } from 'enonic-types/http'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { TbmlData, XmlParser } from '../../types/xmlParser'
 import { DatasetRepoNode, DataSource as DataSourceType } from '../../repo/dataset'

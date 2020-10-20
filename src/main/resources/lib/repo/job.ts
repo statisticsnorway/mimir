@@ -1,6 +1,6 @@
-import { RepoNode } from 'enonic-types/lib/node'
+import { RepoNode } from 'enonic-types/node'
 import { EditorCallback, EventLogLib } from './eventLog'
-import { AuthLibrary, User } from 'enonic-types/lib/auth'
+import { AuthLibrary, User } from 'enonic-types/auth'
 const {
   modifyNode
 } = __non_webpack_require__( '/lib/repo/common')

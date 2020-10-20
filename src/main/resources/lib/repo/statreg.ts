@@ -1,4 +1,4 @@
-import { RepoNode } from 'enonic-types/lib/node'
+import { RepoNode } from 'enonic-types/node'
 import { QueryFilters, RepoCommonLib } from './common'
 import { ArrayUtilsLib } from '../ssb/arrayUtils'
 import { StatRegContactsLib } from './statreg/contacts'

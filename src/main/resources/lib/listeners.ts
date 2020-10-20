@@ -1,8 +1,8 @@
-import { Content, QueryResponse } from 'enonic-types/lib/content'
+import { Content, QueryResponse } from 'enonic-types/content'
 import { HighchartConfig } from '../site/macros/highchart/highchart-config'
 import { KeyFigure } from '../site/content-types/keyFigure/keyFigure'
 import { Table } from '../site/content-types/table/table'
-import { EnonicEvent } from 'enonic-types/lib/event'
+import { EnonicEvent } from 'enonic-types/event'
 
 const {
   listener

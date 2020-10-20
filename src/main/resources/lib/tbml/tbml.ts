@@ -1,4 +1,4 @@
-import { HttpLibrary, HttpResponse } from 'enonic-types/lib/http'
+import { HttpLibrary, HttpResponse } from 'enonic-types/http'
 import { TbmlData, XmlParser } from '../types/xmlParser'
 import { RepoQueryLib } from '../repo/query'
 

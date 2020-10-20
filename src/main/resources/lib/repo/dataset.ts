@@ -1,7 +1,7 @@
 import { RepoCommonLib } from './common'
-import { RepoNode } from 'enonic-types/lib/node'
+import { RepoNode } from 'enonic-types/node'
 import { RepoLib } from './repo'
-import { RepositoryConfig } from 'enonic-types/lib/repo'
+import { RepositoryConfig } from 'enonic-types/repo'
 
 const {
   getRepo,
