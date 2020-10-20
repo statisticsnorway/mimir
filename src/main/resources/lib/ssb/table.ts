@@ -2,11 +2,11 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import { JSONstat } from '../../types/jsonstat-toolkit'
-import { Content } from 'enonic-types/lib/content'
+import { Content } from 'enonic-types/content'
 import { Table } from '../../site/content-types/table/table'
 import { TbmlData, TableRow, Note, Notes, PreliminaryData, Title } from '../types/xmlParser'
 import { Dataset as JSDataset } from '../types/jsonstat-toolkit'
-import { Request } from 'enonic-types/lib/controller'
+import { Request } from 'enonic-types/controller'
 import { DatasetRepoNode } from '../repo/dataset'
 import { DataSource as DataSourceType } from '../repo/dataset'
 import { StatbankSavedLib } from './dataset/statbankSaved'

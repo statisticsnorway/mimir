@@ -1,4 +1,4 @@
-import { Params, Request, Response } from 'enonic-types/lib/controller'
+import { Request, Response } from 'enonic-types/controller'
 import { ArrayUtilsLib } from '../arrayUtils'
 
 const {
@@ -15,7 +15,7 @@ export function handleRepoGet<T, A>(
   repoName: string,
   contentFetcher: () => Array<T>,
   optionTransform: (o: T) => A,
-  applyFilters: (o: Array<T>, f: Params) => Array<T>
+  applyFilters: (o: Array<T>, f: Request['params']) => Array<T>
 ): Response {
   try {
     const content: Array<T> | T = contentFetcher()

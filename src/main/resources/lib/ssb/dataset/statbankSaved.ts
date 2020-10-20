@@ -1,5 +1,5 @@
 import { DatasetRepoNode, RepoDatasetLib } from '../../repo/dataset'
-import { Content } from 'enonic-types/lib/content'
+import { Content } from 'enonic-types/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { JSONstat } from '../../types/jsonstat-toolkit'
 import { RepoQueryLib } from '../../repo/query'

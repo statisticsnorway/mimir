@@ -1,5 +1,5 @@
-import { Content, ContentLibrary, QueryResponse } from 'enonic-types/lib/content'
-import { PortalLibrary } from 'enonic-types/lib/portal'
+import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
+import { PortalLibrary } from 'enonic-types/portal'
 import { MenuItem } from '../../site/content-types/menuItem/menuItem'
 import { Footer } from '../../site/content-types/footer/footer'
 import { Header } from '../../site/content-types/header/header'

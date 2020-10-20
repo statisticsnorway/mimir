@@ -1,4 +1,4 @@
-import { HttpResponse, HttpLibrary, HttpRequestParams } from 'enonic-types/lib/http'
+import { HttpResponse, HttpLibrary, HttpRequestParams } from 'enonic-types/http'
 const {
   Events, logUserDataQuery
 } = __non_webpack_require__('/lib/repo/query')

@@ -1,6 +1,6 @@
-import { ContextLibrary } from 'enonic-types/lib/context'
-import { AuthLibrary, User } from 'enonic-types/lib/auth'
-import { NodeCreateParams, NodeLibrary, NodeQueryResponse, RepoConnection, RepoNode } from 'enonic-types/lib/node'
+import { ContextLibrary } from 'enonic-types/context'
+import { AuthLibrary, User } from 'enonic-types/auth'
+import { NodeCreateParams, NodeLibrary, NodeQueryResponse, RepoConnection, RepoNode } from 'enonic-types/node'
 import { EditorCallback } from './eventLog'
 
 const auth: AuthLibrary = __non_webpack_require__( '/lib/xp/auth')

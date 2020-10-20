@@ -1,6 +1,6 @@
-import { PortalLibrary } from 'enonic-types/lib/portal'
+import { PortalLibrary } from 'enonic-types/portal'
 import { SiteConfig } from '../../site/site-config'
-import { Content, ContentLibrary } from 'enonic-types/lib/content'
+import { Content, ContentLibrary } from 'enonic-types/content'
 import { DatasetRepoNode } from '../repo/dataset'
 import { DatasetLib } from '../ssb/dataset/dataset'
 import { SSBCacheLibrary } from '../ssb/cache'

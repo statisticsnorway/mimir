@@ -1,5 +1,5 @@
 import { DatasetRepoNode, RepoDatasetLib } from '../../repo/dataset'
-import { Content } from 'enonic-types/lib/content'
+import { Content } from 'enonic-types/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { RepoQueryLib } from '../../repo/query'
 import { TbmlData } from '../../types/xmlParser'
