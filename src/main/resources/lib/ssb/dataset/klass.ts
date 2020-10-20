@@ -43,7 +43,9 @@ export function fetchKlassData(content: Content<DataSource>): object | null {
     } catch (e) {
       const message: string = `Failed to fetch data from klass: ${content._id} (${e})`
       logUserDataQuery(content._id, {
-        message: Events.FAILED_TO_REQUEST_DATASET,
+        file: '/lib/ssb/dataset/klass.ts',
+        function: 'fetchKlassData',
+        message: Events.REQUEST_GOT_ERROR_RESPONSE,
         info: message
       })
       log.error(message)

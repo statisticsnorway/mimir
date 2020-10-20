@@ -35,17 +35,28 @@ export function get(url: string, json: DataqueryRequestData | undefined,
     body: json ? JSON.stringify(json) : ''
   }
 
-  const result: HttpResponse = http.request(requestParams)
   if (queryId) {
     logUserDataQuery(queryId, {
-      message: Events.REQUESTING_DATA,
-      response: result,
+      file: '/lib/dataquery.ts',
+      function: 'get',
+      message: Events.REQUEST_DATA,
       request: requestParams
     })
   }
 
+  const result: HttpResponse = http.request(requestParams)
+
   if (result.status !== 200) {
     log.error(`HTTP ${url} (${result.status} ${result.message})`)
+    if (queryId) {
+      logUserDataQuery(queryId, {
+        file: '/lib/dataquery.ts',
+        function: 'get',
+        message: Events.REQUEST_GOT_ERROR_RESPONSE,
+        response: result,
+        info: url
+      })
+    }
   }
 
   if (result.status === 429) { // 429 = too many requests
