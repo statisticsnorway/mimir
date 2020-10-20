@@ -12,7 +12,7 @@ const {
 }: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
 const {
   STATREG_NODES,
-  setupStatRegRepo,
+  fetchStatRegData,
   toDisplayString
 }: StatRegRepoLib = __non_webpack_require__('/lib/repo/statreg')
 const {
@@ -73,7 +73,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     })
     // start refreshing
     statRegKeys.forEach((key) => {
-      setupStatRegRepo(STATREG_NODES.filter((nodeConfig) => nodeConfig.key === key))
+      fetchStatRegData(STATREG_NODES.filter((nodeConfig) => nodeConfig.key === key))
       socketEmitter.broadcast('statreg-dashboard-refresh-result', getStatRegStatus(key))
     })
   })

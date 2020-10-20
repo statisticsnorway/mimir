@@ -8,7 +8,8 @@ const {
   JobStatus
 } = __non_webpack_require__('/lib/repo/job')
 const {
-  setupStatRegRepo
+  setupStatRegRepo,
+  fetchStatRegData
 } = __non_webpack_require__( '/lib/repo/statreg')
 const {
   setupDatasetRepo
@@ -83,7 +84,7 @@ const STATREG_CRON_CONFIG = {
   name: 'StatReg Periodic Refresh',
   cron: statregCron,
   times: 365 * 10,
-  callback: setupStatRegRepo,
+  callback: fetchStatRegData,
   context: master
 }
 
