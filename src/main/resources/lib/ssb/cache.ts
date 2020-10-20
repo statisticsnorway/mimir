@@ -10,6 +10,7 @@ import { DATASET_REPO, DatasetRepoNode } from '../repo/dataset'
 import { Socket } from '../types/socket'
 import { Table } from '../../site/content-types/table/table'
 import { Highchart } from '../../site/content-types/highchart/highchart'
+import { MunicipalityWithCounty } from '../klass/municipalities'
 
 const {
   newCache
@@ -69,6 +70,18 @@ const datasetRepoCache: Cache = newCache({
   expire: 3600,
   size: 1500
 })
+const parsedMunicipalityCache: Cache = newCache({
+  size: 1000,
+  expire: 3600
+})
+const municipalityWithCodeCache: Cache = newCache({
+  size: 1000,
+  expire: 3600
+})
+const municipalityWithNameCache: Cache = newCache({
+  size: 1000,
+  expire: 3600
+})
 
 const parentTypeCache: Cache = newCache({
   expire: 3600,
@@ -121,6 +134,9 @@ function addClearTask(): void {
             clearRelatedArticlesCache: true,
             clearRelatedFactPageCache: true,
             clearDatasetRepoCache: true,
+            clearParsedMunicipalityCache: true,
+            clearMunicipalityWithCodeCache: true,
+            clearMunicipalityWithNameCache: true,
             clearParentTypeCache: true
           })
         } else {
@@ -340,6 +356,26 @@ export function datasetOrUndefined(content: Content<Highchart | Table>): Dataset
     undefined
 }
 
+export function fromParsedMunicipalityCache(key: string, fallback: () => Array<MunicipalityWithCounty>): Array<MunicipalityWithCounty> {
+  return parsedMunicipalityCache.get(key, () => {
+    log.info(`added ${key} to parsed municipality cache`)
+    return fallback()
+  })
+}
+
+export function fromMunicipalityWithCodeCache(key: string, fallback: () => MunicipalityWithCounty | undefined): MunicipalityWithCounty | undefined {
+  return municipalityWithCodeCache.get(key, () => {
+    log.info(`added ${key} to municipality with code cache`)
+    return fallback()
+  })
+}
+
+export function fromMunicipalityWithNameCache(key: string, fallback: () => MunicipalityWithCounty | undefined): MunicipalityWithCounty | undefined {
+  return municipalityWithNameCache.get(key, () => {
+    log.info(`added ${key} to municipality with name cache`)
+    return fallback()
+  })
+}
 
 export function fromParentTypeCache(
   key: string,
@@ -388,6 +424,21 @@ function completelyClearDatasetRepoCache(): void {
   datasetRepoCache.clear()
 }
 
+function completelyClearParsedMunicipalityCache(): void {
+  log.info(`clear parsed municipality cache`)
+  parsedMunicipalityCache.clear()
+}
+
+function completelyClearMunicipalityWithCodeCache(): void {
+  log.info(`clear municipality with code cache`)
+  municipalityWithCodeCache.clear()
+}
+
+function completelyClearMunicipalityWithNameCache(): void {
+  log.info(`clear municipality with name cache`)
+  municipalityWithNameCache.clear()
+}
+
 function completelyClearParentTypeCache(): void {
   log.info(`clear parent type cache`)
   parentTypeCache.clear()
@@ -422,6 +473,18 @@ function completelyClearCache(options: CompletelyClearCacheOptions): void {
     completelyClearDatasetRepoCache()
   }
 
+  if (options.clearParsedMunicipalityCache) {
+    completelyClearParsedMunicipalityCache()
+  }
+
+  if (options.clearMunicipalityWithCodeCache) {
+    completelyClearMunicipalityWithCodeCache()
+  }
+
+  if (options.clearMunicipalityWithNameCache) {
+    completelyClearMunicipalityWithNameCache()
+  }
+
   if (options.clearParentTypeCache) {
     completelyClearParentTypeCache()
   }
@@ -438,7 +501,10 @@ export function setupHandlers(socket: Socket): void {
         clearDividerCache: true,
         clearRelatedArticlesCache: true,
         clearRelatedFactPageCache: true,
-        clearDatasetRepoCache: true
+        clearDatasetRepoCache: true,
+        clearParsedMunicipalityCache: true,
+        clearMunicipalityWithCodeCache: true,
+        clearMunicipalityWithNameCache: true,
       }
     })
 
@@ -453,6 +519,9 @@ export interface CompletelyClearCacheOptions {
   clearRelatedArticlesCache: boolean;
   clearRelatedFactPageCache: boolean;
   clearDatasetRepoCache: boolean;
+  clearParsedMunicipalityCache: boolean;
+  clearMunicipalityWithCodeCache: boolean;
+  clearMunicipalityWithNameCache: boolean;
   clearParentTypeCache: boolean;
 }
 
@@ -466,6 +535,9 @@ export interface SSBCacheLibrary {
   fromDatasetRepoCache:
     (key: string, fallback: () => DatasetRepoNode<JSONstat | TbmlData | object> | null)
       => DatasetRepoNode<JSONstat | TbmlData | object> | undefined;
+  fromParsedMunicipalityCache: (key: string, fallback: () => Array<MunicipalityWithCounty>) => Array<MunicipalityWithCounty>;
+  fromMunicipalityWithCodeCache: (key: string, fallback: () => MunicipalityWithCounty | undefined) => MunicipalityWithCounty | undefined;
+  fromMunicipalityWithNameCache: (key: string, fallback: () => MunicipalityWithCounty | undefined) => MunicipalityWithCounty | undefined;
   fromParentTypeCache: (path: string, fallback: () => string) => string;
   datasetOrUndefined: (content: Content<Highchart | Table>) => DatasetRepoNode<JSONstat | TbmlData | object> | undefined;
   setupHandlers: (socket: Socket) => void;
