@@ -5,7 +5,6 @@ import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { ContentLibrary, QueryResponse, Content } from 'enonic-types/content'
 import { PortalLibrary } from 'enonic-types/portal'
 import { KeyFigure } from '../../site/content-types/keyFigure/keyFigure'
-import { Dataquery } from '../../site/content-types/dataquery/dataquery'
 import { MunicipalityWithCounty } from '../klass/municipalities'
 import { TbmlData, TableRow, PreliminaryData } from '../types/xmlParser'
 import { Dataset as JSDataset, Dimension, Category } from '../types/jsonstat-toolkit'
@@ -61,8 +60,9 @@ export function get(keys: string | Array<string>): Array<Content<KeyFigure>> {
   return hits
 }
 
-type JsonStatFormat = Dataquery['datasetFormat']['jsonStat'];
-type DatasetOption = NonNullable<JsonStatFormat>['datasetFilterOptions']
+type KeyFigureDataSource = KeyFigure['dataSource']
+type StatBankApi = NonNullable<KeyFigureDataSource>[DataSourceType.STATBANK_API]
+type DatasetFilterOptions = NonNullable<StatBankApi>['datasetFilterOptions']
 
 export function parseKeyFigure(req: Request, keyFigure: Content<KeyFigure>, municipality?: MunicipalityWithCounty): KeyFigureView {
   const keyFigureViewData: KeyFigureView = {
@@ -94,7 +94,7 @@ export function parseKeyFigure(req: Request, keyFigure: Content<KeyFigure>, muni
 
       // if filter get data with filter
       if (dataSource.statbankApi && dataSource.statbankApi.datasetFilterOptions && dataSource.statbankApi.datasetFilterOptions._selected) {
-        const filterOptions: DatasetOption = dataSource.statbankApi.datasetFilterOptions
+        const filterOptions: DatasetFilterOptions = dataSource.statbankApi.datasetFilterOptions
         getDataWithFilterStatbankApi(keyFigureViewData, municipality, filterOptions, ds, xAxisLabel, yAxisLabel)
       } else if (xAxisLabel && ds && !(ds instanceof Array)) {
         // get all data without filter
@@ -171,7 +171,7 @@ function getDataTbProcessor(
 function getDataWithFilterStatbankApi(
   keyFigureViewData: KeyFigureView,
   municipality: MunicipalityWithCounty | undefined,
-  filterOptions: DatasetOption,
+  filterOptions: DatasetFilterOptions,
   ds: JSDataset | Array<JSDataset>| null,
   xAxisLabel: string | undefined,
   yAxisLabel: string | undefined
