@@ -1,4 +1,4 @@
-import { HttpLibrary, HttpResponse } from 'enonic-types/lib/http'
+import { HttpLibrary, HttpResponse } from 'enonic-types/http'
 import { TbmlData, XmlParser } from '../types/xmlParser'
 import { RepoQueryLib } from '../repo/query'
 
@@ -11,6 +11,18 @@ const {
 
 export function fetch(url: string, queryId?: string): string {
   let result: string = '<tbml></tbml>'
+
+  if (queryId) {
+    logUserDataQuery(queryId, {
+      file: '/lib/tbml/tbml.ts',
+      function: 'fetch',
+      message: Events.REQUEST_DATA,
+      request: {
+        url
+      }
+    })
+  }
+
   const response: HttpResponse = http.request({
     url
   })
@@ -22,18 +34,18 @@ export function fetch(url: string, queryId?: string): string {
   if (status === 200 && body) {
     result = body
   } else {
-    throw new Error( `Failed with status ${status} while fetching tbml data from ${url}`)
+    if (queryId) {
+      logUserDataQuery(queryId, {
+        file: '/lib/tbml/tbml.ts',
+        function: 'fetch',
+        message: Events.REQUEST_GOT_ERROR_RESPONSE,
+        status: `${status}`,
+        response
+      })
+    }
+    log.error(`Failed with status ${status} while fetching tbml data from ${url}`)
   }
 
-  if (queryId) {
-    logUserDataQuery(queryId, {
-      message: Events.REQUESTING_DATA,
-      response: response,
-      request: {
-        url
-      }
-    })
-  }
   return result
 }
 
@@ -44,14 +56,16 @@ export function getTbmlData(url: string, queryId?: string): TbmlData {
 function xmlToJson(xml: string, queryId?: string): TbmlData {
   try {
     const json: string = xmlParser.parse(xml)
-    const tbmlData: TbmlData = JSON.parse(json)
+    return JSON.parse(json)
+  } catch (e) {
     if (queryId) {
       logUserDataQuery(queryId, {
+        function: 'xmlToJson',
+        file: '/lib/tbml/tbml.ts',
+        info: e,
         message: Events.XML_TO_JSON
       })
     }
-    return tbmlData
-  } catch (e) {
     throw new Error( `Failed while parsing tbml data: ${e}`)
   }
 }

@@ -1,8 +1,7 @@
 import { SiteConfig } from '../../site/site-config'
-import { ContentLibrary, Content } from 'enonic-types/lib/content'
-import { Dataset } from '../../site/content-types/dataset/dataset'
-import { Request } from 'enonic-types/lib/controller'
-import { PortalLibrary } from 'enonic-types/lib/portal'
+import { ContentLibrary, Content } from 'enonic-types/content'
+import { Request } from 'enonic-types/controller'
+import { PortalLibrary } from 'enonic-types/portal'
 import { County, CountiesLib } from './counties'
 import { DatasetLib } from '../ssb/dataset/dataset'
 import { DatasetRepoNode } from '../repo/dataset'
@@ -14,7 +13,6 @@ const {
   sanitize
 }: CommonLibrary = __non_webpack_require__( '/lib/xp/common')
 const {
-  getChildren,
   get: getContent
 }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
 const {
@@ -101,7 +99,7 @@ export function getMunicipality(req: RequestWithCode): MunicipalityWithCounty|un
   if (req.params && req.params.selfRequest && req.params.municipality) {
     // TODO: Figure out why municipality is duplicated in params!
     if (Array.isArray(req.params.municipality)) municipality = JSON.parse(req.params.municipality[0]) as MunicipalityWithCounty
-    else municipality = JSON.parse(req.params.municipality as string) as MunicipalityWithCounty
+    else municipality = JSON.parse(req.params.municipality) as MunicipalityWithCounty
     if (municipality) {
       return municipality
     }

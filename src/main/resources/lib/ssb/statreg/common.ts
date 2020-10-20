@@ -1,4 +1,4 @@
-import { HttpLibrary, HttpResponse } from 'enonic-types/lib/http'
+import { HttpLibrary, HttpResponse } from 'enonic-types/http'
 import { QueryFilters } from '../../repo/common'
 
 const http: HttpLibrary = __non_webpack_require__('/lib/http-client')

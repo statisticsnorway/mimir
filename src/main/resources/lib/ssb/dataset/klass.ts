@@ -1,5 +1,5 @@
 import { DatasetRepoNode, RepoDatasetLib } from '../../repo/dataset'
-import { Content } from 'enonic-types/lib/content'
+import { Content } from 'enonic-types/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { RepoQueryLib } from '../../repo/query'
 
@@ -43,7 +43,9 @@ export function fetchKlassData(content: Content<DataSource>): object | null {
     } catch (e) {
       const message: string = `Failed to fetch data from klass: ${content._id} (${e})`
       logUserDataQuery(content._id, {
-        message: Events.FAILED_TO_REQUEST_DATASET,
+        file: '/lib/ssb/dataset/klass.ts',
+        function: 'fetchKlassData',
+        message: Events.REQUEST_GOT_ERROR_RESPONSE,
         info: message
       })
       log.error(message)

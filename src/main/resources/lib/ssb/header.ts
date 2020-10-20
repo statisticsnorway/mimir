@@ -1,6 +1,6 @@
-import { PortalLibrary } from 'enonic-types/lib/portal'
+import { PortalLibrary } from 'enonic-types/portal'
 import { Language } from '../types/language'
-import { Content, ContentLibrary } from 'enonic-types/lib/content'
+import { Content, ContentLibrary } from 'enonic-types/content'
 import { Header } from '../../site/content-types/header/header'
 import { Link } from './menu'
 import { MenuItem } from '../../site/content-types/menuItem/menuItem'

@@ -1,12 +1,12 @@
 
 import { DatasetLib, CreateOrUpdateStatus } from './dataset'
-import { ContentLibrary, Content } from 'enonic-types/lib/content'
+import { ContentLibrary, Content } from 'enonic-types/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { Events } from '../../repo/query'
 import { EVENT_LOG_REPO, EVENT_LOG_BRANCH, LogSummary, EventLogLib } from '../../repo/eventLog'
-import { RepoNode } from 'enonic-types/lib/node'
-import { I18nLibrary } from 'enonic-types/lib/i18n'
-import { ContextLibrary, RunContext } from 'enonic-types/lib/context'
+import { RepoNode } from 'enonic-types/node'
+import { I18nLibrary } from 'enonic-types/i18n'
+import { ContextLibrary, RunContext } from 'enonic-types/context'
 import { Socket, SocketEmitter } from '../../types/socket'
 import { SSBCacheLibrary } from '../cache'
 import { JSONstat } from '../../types/jsonstat-toolkit'
@@ -135,7 +135,7 @@ function prepDataSources(dataSources: Array<Content<DataSource>>): Array<unknown
 function showWarningIcon(result: Events): boolean {
   return [
     Events.FAILED_TO_GET_DATA,
-    Events.FAILED_TO_REQUEST_DATASET,
+    Events.REQUEST_GOT_ERROR_RESPONSE,
     Events.FAILED_TO_CREATE_DATASET,
     Events.FAILED_TO_REFRESH_DATASET
   ].indexOf(result) >= 0
@@ -156,6 +156,8 @@ export function refreshDatasetHandler(ids: Array<string>, socketEmitter: SocketE
     if (dataSource) {
       const refreshDatasetResult: CreateOrUpdateStatus = refreshDataset(dataSource, branch)
       logUserDataQuery(dataSource._id, {
+        file: '/lib/ssb/dataset/dashboard.ts',
+        function: 'refreshDatasetHandler',
         message: refreshDatasetResult.status
       })
       socketEmitter.broadcast('dashboard-activity-refreshDataset-result', transfromQueryResult(refreshDatasetResult))

@@ -1,10 +1,10 @@
 import { Socket, SocketEmitter } from '../types/socket'
-import { Content, ContentLibrary, QueryResponse } from 'enonic-types/lib/content'
+import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
 import { StatisticInListing, VariantInListing } from './statreg/types'
 import { UtilLibrary } from '../types/util'
 import { Statistics } from '../../site/content-types/statistics/statistics'
 import { DashboardDatasetLib } from './dataset/dashboard'
-import { ContextLibrary, RunContext } from 'enonic-types/lib/context'
+import { ContextLibrary, RunContext } from 'enonic-types/context'
 import { RepoDatasetLib } from '../repo/dataset'
 
 const {

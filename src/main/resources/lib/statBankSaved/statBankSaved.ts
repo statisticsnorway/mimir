@@ -1,13 +1,19 @@
-import { HttpLibrary, HttpRequestParams, HttpResponse } from 'enonic-types/lib/http'
+import { HttpLibrary, HttpRequestParams, HttpResponse } from 'enonic-types/http'
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 import { XmlParser } from '../types/xmlParser'
+import {RepoQueryLib} from '../repo/query';
 
 const {
   sleep
 } = __non_webpack_require__('/lib/xp/task')
 const http: HttpLibrary = __non_webpack_require__('/lib/http-client')
 
-export function get(url: string): object | null {
+const {
+  logUserDataQuery,
+  Events
+}: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
+
+export function get(url: string,  queryId?: string): object | null {
   const requestParams: HttpRequestParams = {
     url,
     method: 'POST',
@@ -20,19 +26,37 @@ export function get(url: string): object | null {
     readTimeout: 5000
   }
 
-  const result: HttpResponse = http.request(requestParams)
-  if (result.status !== 200) {
-    log.error(`HTTP ${url} (${result.status} ${result.message})`)
+  if (queryId) {
+    logUserDataQuery(queryId, {
+      file: '/lib/tbml/tbml.ts',
+      function: 'fetch',
+      message: Events.REQUEST_DATA,
+      request: requestParams
+    })
   }
 
-  if (result.status === 429) { // 429 = too many requests
+  const response: HttpResponse = http.request(requestParams)
+
+  if (response.status !== 200) {
+    if (queryId) {
+      logUserDataQuery(queryId, {
+        file: '/lib/tbml/tbml.ts',
+        function: 'fetch',
+        message: Events.REQUEST_GOT_ERROR_RESPONSE,
+        response
+      })
+    }
+    log.error(`HTTP ${url} (${response.status} ${response.message})`)
+  }
+
+  if (response.status === 429) { // 429 = too many requests
     sleep(30 * 1000)
   }
 
-  if (result.status === 200 && result.body) {
+  if (response.status === 200 && response.body) {
     return {
-      html: result.body,
-      json: xmlParser.parse(result.body)
+      html: response.body,
+      json: xmlParser.parse(response.body)
     }
   }
   return null

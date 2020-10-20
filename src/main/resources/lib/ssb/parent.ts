@@ -1,4 +1,4 @@
-import { Content } from 'enonic-types/lib/content'
+import { Content } from 'enonic-types/content'
 import { DefaultPageConfig } from '../../site/pages/default/default-page-config'
 
 const {

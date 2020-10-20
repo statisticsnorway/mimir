@@ -1,8 +1,8 @@
 import { RepoCommonLib } from './common'
-import { NodeCreateParams, NodeQueryHit, NodeQueryResponse, RepoNode } from 'enonic-types/lib/node'
+import { NodeCreateParams, NodeQueryHit, NodeQueryResponse, RepoNode } from 'enonic-types/node'
 import { RepoLib } from './repo'
 import { EventInfo, QueryInfo } from './query'
-import { I18nLibrary } from 'enonic-types/lib/i18n'
+import { I18nLibrary } from 'enonic-types/i18n'
 const i18n: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
 const {
   nodeExists,
@@ -69,7 +69,8 @@ export function getQueryChildNodesStatus<T>(queryId: string): ReadonlyArray<LogS
       return Array.isArray(nodes) ? nodes[0] : nodes
     }).map( (node: EventInfo) => ({
       result: i18n.localize({
-        key: node.data.status.message
+        key: node.data.status.message,
+        values: node.data.status.status ? [`(${node.data.status.status})`] : ['']
       }),
       modifiedTs: node.data.ts,
       by: node.data.by && node.data.by.displayName ? node.data.by.displayName : ''

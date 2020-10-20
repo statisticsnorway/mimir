@@ -1,4 +1,4 @@
-import { ContentLibrary, Content, QueryResponse } from 'enonic-types/lib/content'
+import { ContentLibrary, Content, QueryResponse } from 'enonic-types/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { DataSource as DataSourceType, DatasetRepoNode, RepoDatasetLib } from '../../repo/dataset'
 import { StatbankApiLib } from './statbankApi'
@@ -7,8 +7,8 @@ import { RepoQueryLib } from '../../repo/query'
 import { TbmlData } from '../../types/xmlParser'
 import { TbprocessorLib } from './tbprocessor'
 import { KlassLib } from './klass'
-import { ContextLibrary, RunContext } from 'enonic-types/lib/context'
-import { AuthLibrary, User } from 'enonic-types/lib/auth'
+import { ContextLibrary, RunContext } from 'enonic-types/context'
+import { AuthLibrary, User } from 'enonic-types/auth'
 import { StatbankSavedLib } from './statbankSaved'
 
 const {
@@ -113,11 +113,6 @@ export function refreshDataset(content: Content<DataSource>, branch: string = DA
       user
     }
   } else {
-    if (asUser) {
-      logUserDataQuery(content._id, {
-        message: Events.FAILED_TO_GET_DATA
-      })
-    }
     return {
       dataquery: content,
       status: Events.FAILED_TO_GET_DATA,

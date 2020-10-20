@@ -1,4 +1,4 @@
-import { RepoNode } from 'enonic-types/lib/node'
+import { RepoNode } from 'enonic-types/node'
 import { QueryFilters, RepoCommonLib } from './common'
 import { ArrayUtilsLib } from '../ssb/arrayUtils'
 import { StatRegContactsLib } from './statreg/contacts'
@@ -235,7 +235,7 @@ function createStatRegEvent(key: string): StatRegFetchJobNode {
   })
 }
 
-export function setupStatRegRepo(nodeConfig: Array<StatRegNodeConfig> = STATREG_NODES): void {
+export function setupStatRegRepo(): void {
   if (!repoExists(STATREG_REPO, STATREG_BRANCH)) {
     log.info(`Creating Repo: '${STATREG_REPO}' ...`)
     createRepo(STATREG_REPO, STATREG_BRANCH)
@@ -244,12 +244,16 @@ export function setupStatRegRepo(nodeConfig: Array<StatRegNodeConfig> = STATREG_
   }
 
   setupStatRegEventLog()
-  setupNodes(nodeConfig)
   log.info('StatReg Repo setup complete.')
+}
+
+export function fetchStatRegData(nodeConfig: Array<StatRegNodeConfig> = STATREG_NODES): void {
+  setupNodes(nodeConfig)
 }
 
 export interface StatRegRepoLib {
   toDisplayString: (key: string) => string;
   STATREG_NODES: Array<StatRegNodeConfig>;
-  setupStatRegRepo: (nodeConfig?: Array<StatRegNodeConfig>) => void;
+  setupStatRegRepo: () => void;
+  fetchStatRegData(nodeConfig?: Array<StatRegNodeConfig>): void;
 }

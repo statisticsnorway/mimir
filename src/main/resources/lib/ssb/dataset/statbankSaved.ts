@@ -1,5 +1,5 @@
 import { DatasetRepoNode, RepoDatasetLib } from '../../repo/dataset'
-import { Content } from 'enonic-types/lib/content'
+import { Content } from 'enonic-types/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { JSONstat } from '../../types/jsonstat-toolkit'
 import { RepoQueryLib } from '../../repo/query'
@@ -42,12 +42,13 @@ export function fetchStatbankSavedData(content: Content<DataSource>): object | n
         return fetchData(url)
       }
     } catch (e) {
-      const message: string = `Failed to fetch data from statbankweb: ${content._id} (${e})`
+      log.error(`Failed to fetch data from statbankweb: ${content._id} (${e})`)
       logUserDataQuery(content._id, {
-        message: Events.FAILED_TO_REQUEST_DATASET,
-        info: message
+        file: '/lib/ssb/dataset/statbankSaved.ts',
+        function: 'fetchStatbankSavedData',
+        message: Events.REQUEST_COULD_NOT_CONNECT,
+        status: e
       })
-      log.error(message)
     }
     return null
   } else {

@@ -1,5 +1,5 @@
 import { DatasetRepoNode, RepoDatasetLib } from '../../repo/dataset'
-import { Content } from 'enonic-types/lib/content'
+import { Content } from 'enonic-types/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { RepoQueryLib } from '../../repo/query'
 import { TbmlData } from '../../types/xmlParser'
@@ -45,8 +45,11 @@ export function fetchTbprocessorData(content: Content<DataSource>): TbmlData | n
     } catch (e) {
       const message: string = `Failed to fetch data from tbprocessor: ${content._id} (${e})`
       logUserDataQuery(content._id, {
-        message: Events.FAILED_TO_REQUEST_DATASET,
-        info: message
+        file: '/lib/ssb/dataset/tbprocessor.ts',
+        function: 'fetchTbprocessorData',
+        message: Events.REQUEST_COULD_NOT_CONNECT,
+        info: message,
+        status: e
       })
       log.error(message)
     }

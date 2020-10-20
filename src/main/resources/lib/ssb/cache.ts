@@ -1,9 +1,9 @@
 import { TaskLib } from '../types/task'
 import { CacheLib, Cache } from '../types/cache'
-import { Request, Response } from 'enonic-types/lib/controller'
-import { EventLibrary, EnonicEvent, EnonicEventData } from 'enonic-types/lib/event'
-import { ContextLibrary } from 'enonic-types/lib/context'
-import { ContentLibrary, QueryResponse, Content } from 'enonic-types/lib/content'
+import { Request, Response } from 'enonic-types/controller'
+import { EventLibrary, EnonicEvent, EnonicEventData } from 'enonic-types/event'
+import { ContextLibrary } from 'enonic-types/context'
+import { ContentLibrary, QueryResponse, Content } from 'enonic-types/content'
 import { JSONstat } from '../types/jsonstat-toolkit'
 import { TbmlData } from '../types/xmlParser'
 import { DATASET_REPO, DatasetRepoNode } from '../repo/dataset'
@@ -381,9 +381,7 @@ export function fromParentTypeCache(
   key: string,
   fallback: () => string): string {
   return parentTypeCache.get(key, () => {
-    const res: string = fallback()
-    log.info(`added ${key} - ${res} to parent type cache`)
-    return res
+    return fallback()
   })
 }
 
