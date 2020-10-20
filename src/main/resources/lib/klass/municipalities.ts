@@ -1,6 +1,5 @@
 import { SiteConfig } from '../../site/site-config'
 import { ContentLibrary, Content } from 'enonic-types/lib/content'
-import { Dataset } from '../../site/content-types/dataset/dataset'
 import { Request } from 'enonic-types/lib/controller'
 import { CacheLib, Cache } from '../types/cache'
 import { PortalLibrary } from 'enonic-types/lib/portal'
@@ -14,7 +13,6 @@ const {
   sanitize
 }: CommonLibrary = __non_webpack_require__( '/lib/xp/common')
 const {
-  getChildren,
   get: getContent
 }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
 const {
