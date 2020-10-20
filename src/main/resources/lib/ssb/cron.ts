@@ -9,7 +9,7 @@ import { CronLib } from '../types/cron'
 import { DatasetLib } from './dataset/dataset'
 
 const {
-  setupStatRegRepo
+  fetchStatRegData
 }: StatRegRepoLib = __non_webpack_require__( '/lib/repo/statreg')
 const cron: CronLib = __non_webpack_require__('/lib/cron')
 const {
@@ -107,7 +107,7 @@ export function setupCronJobs(): void {
     name: 'StatReg Periodic Refresh',
     cron: statregCron,
     times: 365 * 10,
-    callback: setupStatRegRepo,
+    callback: fetchStatRegData,
     context: cronContext
   })
 }
