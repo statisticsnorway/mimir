@@ -6,7 +6,7 @@ import { County, CountiesLib } from './counties'
 import { DatasetLib } from '../ssb/dataset/dataset'
 import { DatasetRepoNode } from '../repo/dataset'
 import { DataSource } from '../../site/mixins/dataSource/dataSource'
-import { SSBCacheLibrary, fromParsedMunicipalityCache, fromMunicipalityWithCodeCache, fromMunicipalityWithNameCache } from '../ssb/cache'
+import { SSBCacheLibrary } from '../ssb/cache'
 import { CommonLibrary } from '../types/common'
 
 const {
@@ -26,7 +26,10 @@ const {
   extractKey
 }: DatasetLib = __non_webpack_require__( '/lib/ssb/dataset/dataset')
 const {
-  fromDatasetRepoCache
+  fromDatasetRepoCache,
+  fromParsedMunicipalityCache,
+  fromMunicipalityWithCodeCache,
+  fromMunicipalityWithNameCache
 }: SSBCacheLibrary = __non_webpack_require__( '/lib/ssb/cache')
 
 /**
@@ -41,7 +44,6 @@ export const list: () => Array<MunicipalCode> = () => getMunicipalsFromContent()
  */
 export const query: (queryString: string) => Array<MunicipalCode> = (queryString) => getMunicipalsFromContent()
   .filter( (municipal) => RegExp(queryString.toLowerCase()).test(`${municipal.code} ${municipal.name.toLowerCase()}` ))
-
 
 function getMunicipalsFromContent(): Array<MunicipalCode> {
   const siteConfig: SiteConfig = getSiteConfig()

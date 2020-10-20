@@ -35,7 +35,6 @@ const {
   extractKey
 } = __non_webpack_require__('/lib/ssb/dataset/dataset')
 
-
 const masterFilterCaches: Map<string, Cache> = new Map()
 const draftFilterCaches: Map<string, Cache> = new Map()
 const masterMenuCache: Cache = newCache({
@@ -502,7 +501,7 @@ export function setupHandlers(socket: Socket): void {
         clearDatasetRepoCache: true,
         clearParsedMunicipalityCache: true,
         clearMunicipalityWithCodeCache: true,
-        clearMunicipalityWithNameCache: true,
+        clearMunicipalityWithNameCache: true
       }
     })
 
