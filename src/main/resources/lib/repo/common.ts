@@ -1,6 +1,13 @@
 import { ContextLibrary } from 'enonic-types/context'
 import { AuthLibrary, User } from 'enonic-types/auth'
-import { NodeCreateParams, NodeLibrary, NodeQueryResponse, RepoConnection, RepoNode } from 'enonic-types/node'
+import {
+  NodeCreateParams,
+  NodeLibrary,
+  NodeQueryParams,
+  NodeQueryResponse,
+  RepoConnection,
+  RepoNode
+} from 'enonic-types/node'
 import { EditorCallback } from './eventLog'
 
 const auth: AuthLibrary = __non_webpack_require__( '/lib/xp/auth')
@@ -91,10 +98,11 @@ export function modifyNode<T>(repository: string, branch: string, key: string, e
   })
 }
 
-export function getChildNodes(repository: string, branch: string, key: string): NodeQueryResponse {
+export function getChildNodes(repository: string, branch: string, key: string, count: number = 10): NodeQueryResponse {
   return withConnection(repository, branch, (conn) => {
     return conn.findChildren({
-      parentKey: key
+      parentKey: key,
+      count
     })
   })
 }
@@ -102,6 +110,12 @@ export function getChildNodes(repository: string, branch: string, key: string): 
 export function nodeExists(repository: string, branch: string, key: string): boolean {
   return withConnection(repository, branch, (conn) => {
     return !!conn.exists(key)
+  })
+}
+
+export function queryNodes(repository: string, branch: string, params: NodeQueryParams): NodeQueryResponse {
+  return withConnection(repository, branch, (conn) => {
+    return conn.query(params)
   })
 }
 
@@ -117,6 +131,7 @@ export interface RepoCommonLib {
   getNode: <T>(repository: string, branch: string, key: string) => ReadonlyArray<T & RepoNode> | T & RepoNode | null;
   deleteNode: (repository: string, branch: string, key: string) => boolean;
   modifyNode: <T>(repository: string, branch: string, key: string, editor: EditorCallback<T>) => T;
-  getChildNodes: (repository: string, branch: string, key: string) => NodeQueryResponse;
+  getChildNodes: (repository: string, branch: string, key: string, count?: number) => NodeQueryResponse;
   nodeExists: (repository: string, branch: string, key: string) => boolean;
+  queryNodes: (repository: string, branch: string, params: NodeQueryParams) => NodeQueryResponse;
 }
