@@ -56,7 +56,6 @@ export function DataQuery(props) {
         show={show}
         onHide={handleClose}
         animation={false}
-        centered
       >
         <Modal.Header closeButton>
           <Modal.Title>

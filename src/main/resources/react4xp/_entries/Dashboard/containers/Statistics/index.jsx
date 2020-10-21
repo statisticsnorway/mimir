@@ -16,7 +16,6 @@ export function Statistics() {
   const contentStudioBaseUrl = useSelector(selectContentStudioBaseUrl)
   const [show, setShow] = useState(false)
   const [modalInfo, setModalInfo] = useState({})
-  const [, setShowModal] = useState(false)
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
@@ -39,10 +38,6 @@ export function Statistics() {
         })
       }
     })
-  }
-
-  const toggleTrueFalse = () => {
-    setShowModal(handleShow)
   }
 
   const updateTables = (formData) => {
@@ -102,7 +97,7 @@ export function Statistics() {
 
   function onRefreshStatistic(statistic) {
     setModalInfo(statistic)
-    toggleTrueFalse()
+    setShow(handleShow)
   }
 
   const ModalContent = () => {
