@@ -135,7 +135,7 @@ function prepDataSources(dataSources: Array<Content<DataSource>>): Array<unknown
 function showWarningIcon(result: Events): boolean {
   return [
     Events.FAILED_TO_GET_DATA,
-    Events.FAILED_TO_REQUEST_DATASET,
+    Events.REQUEST_GOT_ERROR_RESPONSE,
     Events.FAILED_TO_CREATE_DATASET,
     Events.FAILED_TO_REFRESH_DATASET
   ].indexOf(result) >= 0
@@ -156,6 +156,8 @@ export function refreshDatasetHandler(ids: Array<string>, socketEmitter: SocketE
     if (dataSource) {
       const refreshDatasetResult: CreateOrUpdateStatus = refreshDataset(dataSource, branch)
       logUserDataQuery(dataSource._id, {
+        file: '/lib/ssb/dataset/dashboard.ts',
+        function: 'refreshDatasetHandler',
         message: refreshDatasetResult.status
       })
       socketEmitter.broadcast('dashboard-activity-refreshDataset-result', transfromQueryResult(refreshDatasetResult))

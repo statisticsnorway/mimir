@@ -28,6 +28,7 @@ export interface JobInfo {
     httpStatusCode?: number;
     startTime: string;
     completionTime: string;
+    queryIds?: Array<string>;
   };
 }
 
@@ -74,7 +75,8 @@ export function completeJobLog(jobLogId: string, message: string, refreshDataRes
 }
 
 export interface RepoJobLib {
-  startJobLog: (task?: string) => object;
+  JobStatus: typeof JobStatus;
+  startJobLog: (task?: string) => JobEventNode;
   updateJobLog: <T>(jobId: string, editor: EditorCallback<JobInfoNode>) => JobInfoNode;
   completeJobLog: (jobLogId: string, message: string, refreshDataResult: object ) => JobInfoNode;
 }
