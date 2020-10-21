@@ -5,19 +5,24 @@
     <form>
         <mixin name="statistic" />
 
-        <field-set>
-            <label>Endringsdato</label>
-            <items>
-                <input name="lastModified" type="DateTime">
-                    <label>Dato og tid</label>
-                    <occurrences minimum="0" maximum="1" />
-                </input>
-                <input name="modifiedText" type="TextLine">
-                    <label>Endringstekst</label>
-                    <occurrences minimum="0" maximum="1" />
-                </input>
-            </items>
-        </field-set>
+        <option-set name="showModifiedDate">
+            <label>Vis tidspunkt for sist redigering</label>
+            <expanded>false</expanded>
+            <occurrences minimum="0" maximum="1"/>
+            <options minimum="1" maximum="1">
+                <option name="modifiedOption">
+                    <label>Skal det vises dato?</label>
+                    <items>
+                        <input name="lastModified" type="DateTime">
+                            <label>Dato og tid</label>
+                        </input>
+                        <input name="modifiedText" type="TextLine">
+                            <label>Endringstekst</label>
+                        </input>
+                    </items>
+                </option>
+            </options>
+        </option-set>
 
         <field-set>
             <label>Hovedtallstabell</label>
