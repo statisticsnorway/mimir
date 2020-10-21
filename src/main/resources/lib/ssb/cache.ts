@@ -70,16 +70,16 @@ const datasetRepoCache: Cache = newCache({
   size: 1500
 })
 const parsedMunicipalityCache: Cache = newCache({
-  size: 1000,
-  expire: 3600
+  expire: 3600,
+  size: 1000
 })
 const municipalityWithCodeCache: Cache = newCache({
-  size: 1000,
-  expire: 3600
+  expire: 3600,
+  size: 1000
 })
 const municipalityWithNameCache: Cache = newCache({
-  size: 1000,
-  expire: 3600
+  expire: 3600,
+  size: 1000
 })
 
 const parentTypeCache: Cache = newCache({
