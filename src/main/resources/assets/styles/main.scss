@@ -60,6 +60,8 @@ $container-max-widths: (
 @import "./statbankLinkList";
 @import "./attachmentTablesFigures";
 @import "./omStatistikken";
+@import "./associatedStatistics";
+@import "./associatedArticleArchives";
 
 body {
   -moz-osx-font-smoothing: grayscale;
