@@ -26,48 +26,45 @@ export function DataQuery(props) {
   } = props
 
   const [show, setShow] = useState(false)
-  const [, setShowModal] = useState(false)
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
   const openEventlog = () => {
     onOpenEventLogData()
-    setShowModal(handleShow)
+    setShow(handleShow)
   }
 
   function renderLogData() {
     if (logData) {
       return (
-        <td className="text-center">
-          {/*{eventLogNodes}*/}
-          {/*{logData.showWarningIcon && <span className="warningIcon"><AlertTriangle size="12" color="#FF4500"/></span>}<br/>*/}
-          {/*{logData.modifiedReadable ? logData.modifiedReadable : ''}<br/>*/}
-          {/*{logData.modified ? logData.modified : ''}<br/>*/}
-          {/*{logData.by && logData.by.displayName ? `av ${logData.by.displayName}` : '' }*/}
-          {makeLogButton()}
+        <td className="text-center haveList" onClick={() => openEventlog()}>
+          <span>
+            {logData.message ? logData.message : ''}
+            {logData.showWarningIcon && <span className="warningIcon"><AlertTriangle size="12" color="#FF4500"/></span>}<br/>
+            {logData.modifiedReadable ? logData.modifiedReadable : ''}<br/>
+            {logData.modified ? logData.modified : ''}<br/>
+            {logData.by && logData.by.displayName ? `av ${logData.by.displayName}` : '' }
+          </span>
         </td>
       )
     } else return <td>no logs</td>
   }
 
-  function makeLogButton() {
-    return (
-      <Button
-        variant="primary"
-        size="sm"
-        className="mx-1"
-        onClick={() => openEventlog()}
-      >Logg</Button>
-    )
-  }
-
   const ModalContent = () => {
     return (
-      <Modal show={show} onHide={handleClose} centered>
+      <Modal
+        show={show}
+        onHide={handleClose}
+        animation={false}
+        centered
+      >
         <Modal.Header closeButton>
-          <Modal.Title>Logg detaljer</Modal.Title>
+          <Modal.Title>
+            Logg detaljer
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <h3>{displayName}</h3>
           {renderJobLogs()}
         </Modal.Body>
         <Modal.Footer>
