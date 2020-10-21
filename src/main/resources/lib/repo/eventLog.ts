@@ -104,7 +104,7 @@ export function deleteExpiredEventLogs(): void {
   contentsWithLogs.hits
     .filter((content) => nodeExists(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `${path}/${content._id}`))
     .forEach( (content) => {
-      const eventLogs: NodeQueryResponse = getChildNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `${path}/${content._id}`, 100)
+      const eventLogs: NodeQueryResponse = getChildNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `${path}/${content._id}`, 2000)
       if (eventLogs.total > maxLogsBeforeDeleting) {
         const query: string = `_parentPath = '${path}/${content._id}' AND _ts < dateTime('${oneMonthAgo.toISOString()}')`
         const expiredLogs: NodeQueryResponse = queryNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, {
