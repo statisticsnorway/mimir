@@ -154,8 +154,16 @@ table.statistics {
     text-align: left;
     padding: 1.5em 0 1.5em 0.625em;
 
+    .caption-text-wrapper {
+      max-width: 800px;
+    }
+
     @include media-breakpoint-down(md) {
-      padding-top: 50px
+      padding-top: 50px;
+      
+      .caption-text-wrapper {
+        max-width: initial;
+      }
     }
   }
 

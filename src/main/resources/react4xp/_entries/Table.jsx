@@ -205,8 +205,10 @@ class Table extends React.Component {
       const hasNoteRefs = typeof caption === 'object'
       return (
         <caption noterefs={hasNoteRefs ? caption.noterefs : null} ref={this.captionRef}>
-          {hasNoteRefs ? caption.content : caption}
-          {hasNoteRefs ? this.addNoteRefs(caption.noterefs) : null}
+          <div className="caption-text-wrapper">
+            {hasNoteRefs ? caption.content : caption}
+            {hasNoteRefs ? this.addNoteRefs(caption.noterefs) : null}
+          </div>
         </caption>
       )
     }
