@@ -30,31 +30,36 @@ export function DataQuery(props) {
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
-  const toggleTrueFalse = () => {
+  const openEventlog = () => {
+    onOpenEventLogData()
     setShowModal(handleShow)
   }
 
   function renderLogData() {
     if (logData) {
       return (
-        <td
-          onClick={() => openEventlogQuery()}
-        >
-          {eventLogNodes}
-          {logData.showWarningIcon && <span className="warningIcon"><AlertTriangle size="12" color="#FF4500"/></span>}<br/>
-          {logData.modifiedReadable ? logData.modifiedReadable : ''}<br/>
-          {logData.modified ? logData.modified : ''}<br/>
-          {logData.by && logData.by.displayName ? `av ${logData.by.displayName}` : '' }
+        <td className="text-center">
+          {/*{eventLogNodes}*/}
+          {/*{logData.showWarningIcon && <span className="warningIcon"><AlertTriangle size="12" color="#FF4500"/></span>}<br/>*/}
+          {/*{logData.modifiedReadable ? logData.modifiedReadable : ''}<br/>*/}
+          {/*{logData.modified ? logData.modified : ''}<br/>*/}
+          {/*{logData.by && logData.by.displayName ? `av ${logData.by.displayName}` : '' }*/}
+          {makeLogButton()}
         </td>
       )
     } else return <td>no logs</td>
   }
 
-  function openEventlogQuery() {
-    onOpenEventLogData()
-    toggleTrueFalse()
+  function makeLogButton() {
+    return (
+      <Button
+        variant="primary"
+        size="sm"
+        className="mx-1"
+        onClick={() => openEventlog()}
+      >Logg</Button>
+    )
   }
-
 
   const ModalContent = () => {
     return (
@@ -63,7 +68,6 @@ export function DataQuery(props) {
           <Modal.Title>Logg detaljer</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <h2> {displayName}</h2>
           {renderJobLogs()}
         </Modal.Body>
         <Modal.Footer>
