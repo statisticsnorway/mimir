@@ -47,3 +47,7 @@ export function refreshQueriesAsync(httpQueries: Array<Content<DataSource>>, bat
     })
   })
 }
+
+export interface SSBTaskLib {
+  refreshQueriesAsync: (httpQueries: Array<Content<DataSource>>, batchSize?: number) => Array<string>;
+}
