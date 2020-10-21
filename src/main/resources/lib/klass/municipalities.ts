@@ -1,7 +1,6 @@
 import { SiteConfig } from '../../site/site-config'
 import { ContentLibrary, Content } from 'enonic-types/content'
 import { Request } from 'enonic-types/controller'
-import { CacheLib, Cache } from '../types/cache'
 import { PortalLibrary } from 'enonic-types/portal'
 import { County, CountiesLib } from './counties'
 import { DatasetLib } from '../ssb/dataset/dataset'
@@ -9,6 +8,7 @@ import { DatasetRepoNode } from '../repo/dataset'
 import { DataSource } from '../../site/mixins/dataSource/dataSource'
 import { SSBCacheLibrary } from '../ssb/cache'
 import { CommonLibrary } from '../types/common'
+
 const {
   sanitize
 }: CommonLibrary = __non_webpack_require__( '/lib/xp/common')
@@ -22,14 +22,14 @@ const {
   list: countyList
 }: CountiesLib = __non_webpack_require__( '/lib/klass/counties')
 const {
-  newCache
-}: CacheLib = __non_webpack_require__( '/lib/cache')
-const {
   getDataset,
   extractKey
 }: DatasetLib = __non_webpack_require__( '/lib/ssb/dataset/dataset')
 const {
-  fromDatasetRepoCache
+  fromDatasetRepoCache,
+  fromParsedMunicipalityCache,
+  fromMunicipalityWithCodeCache,
+  fromMunicipalityWithNameCache
 }: SSBCacheLibrary = __non_webpack_require__( '/lib/ssb/cache')
 
 /**
@@ -44,7 +44,6 @@ export const list: () => Array<MunicipalCode> = () => getMunicipalsFromContent()
  */
 export const query: (queryString: string) => Array<MunicipalCode> = (queryString) => getMunicipalsFromContent()
   .filter( (municipal) => RegExp(queryString.toLowerCase()).test(`${municipal.code} ${municipal.name.toLowerCase()}` ))
-
 
 function getMunicipalsFromContent(): Array<MunicipalCode> {
   const siteConfig: SiteConfig = getSiteConfig()
@@ -77,16 +76,11 @@ export function createPath(municipalName: string, countyName?: string): string {
   return `/${sanitize(path)}`
 }
 
-const parsedMunicipalityCache: Cache = newCache({
-  size: 1000,
-  expire: 3600
-})
-
 export function municipalsWithCounties(): Array<MunicipalityWithCounty> {
   const counties: Array<County> = countyList()
   const municipalities: Array<MunicipalCode> = list()
   // Caching this since it is a bit heavy
-  return parsedMunicipalityCache.get('parsedMunicipality', () => municipalities.map( (municipality: MunicipalCode) => {
+  return fromParsedMunicipalityCache('parsedMunicipality', () => municipalities.map((municipality: MunicipalCode) => {
     const getTwoFirstDigits: RegExp = /^(\d\d).*$/
     const currentCounty: County = counties.filter((county: County) => county.code === municipality.code.replace(getTwoFirstDigits, '$1'))[0]
     const numMunicipalsWithSameName: number = municipalities.filter( (mun) => mun.name === municipality.name).length
@@ -137,12 +131,8 @@ export function getMunicipality(req: RequestWithCode): MunicipalityWithCounty|un
  * @return {*}
  */
 
-const municipalityWithCodeCache: Cache = newCache({
-  size: 1000,
-  expire: 3600
-})
 function getMunicipalityByCode(municipalities: Array<MunicipalityWithCounty>, municipalityCode: string): MunicipalityWithCounty|undefined {
-  return municipalityWithCodeCache.get(`municipality_${municipalityCode}`, () => {
+  return fromMunicipalityWithCodeCache(`municipality_${municipalityCode}`, () => {
     const changes: Array<MunicipalityChange> | undefined = changesWithMunicipalityCode(municipalityCode)
     const municipality: Array<MunicipalityWithCounty> = municipalities.filter((municipality) => municipality.code === municipalityCode)
     return municipality.length > 0 ? {
@@ -158,12 +148,9 @@ function getMunicipalityByCode(municipalities: Array<MunicipalityWithCounty>, mu
  * @param {string} municipalityName
  * @return {*}
  */
-const municipalityWithNameCache: Cache = newCache({
-  size: 1000,
-  expire: 3600
-})
+
 export function getMunicipalityByName(municipalities: Array<MunicipalityWithCounty>, municipalityName: string): MunicipalityWithCounty|undefined {
-  return municipalityWithNameCache.get(`municipality_${municipalityName}`, () => {
+  return fromMunicipalityWithNameCache(`municipality_${municipalityName}`, () => {
     const municipality: Array<MunicipalityWithCounty> = municipalities.filter((municipality) => municipality.path === `/${municipalityName}`)
 
     if (municipality.length > 0) {
