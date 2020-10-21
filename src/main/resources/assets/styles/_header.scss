@@ -163,6 +163,14 @@ header.ssb-header-wrapper {
             font-weight: normal;
           }
         }
+        .icon-wrapper svg * {
+          stroke: $ssb-green-4;
+        }
+        &:hover {
+          svg * {
+            stroke: $ssb-white;
+          }
+        }
       }
     }
 
@@ -286,7 +294,7 @@ header.ssb-header-wrapper {
           .icon-wrapper {
             margin: 0 9px 0 0;
             display: grid;
-            width: 13px;
+            width: 18px;
           }
 
           .link-text {

@@ -113,11 +113,6 @@ export function refreshDataset(content: Content<DataSource>, branch: string = DA
       user
     }
   } else {
-    if (asUser) {
-      logUserDataQuery(content._id, {
-        message: Events.FAILED_TO_GET_DATA
-      })
-    }
     return {
       dataquery: content,
       status: Events.FAILED_TO_GET_DATA,

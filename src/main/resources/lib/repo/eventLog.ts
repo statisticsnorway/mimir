@@ -77,7 +77,8 @@ export function getQueryChildNodesStatus<T>(queryId: string): ReadonlyArray<LogS
       return Array.isArray(nodes) ? nodes[0] : nodes
     }).map( (node: EventInfo) => ({
       result: i18n.localize({
-        key: node.data.status.message
+        key: node.data.status.message,
+        values: node.data.status.status ? [`(${node.data.status.status})`] : ['']
       }),
       modifiedTs: node.data.ts,
       by: node.data.by && node.data.by.displayName ? node.data.by.displayName : ''
