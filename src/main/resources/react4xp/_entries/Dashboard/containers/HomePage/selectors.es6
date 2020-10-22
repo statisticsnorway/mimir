@@ -19,3 +19,8 @@ export const selectContentStudioBaseUrl = createSelector(
   [selectDomain],
   (commonState) => commonState.contentStudioBaseUrl,
 )
+
+export const selectDataToolBoxBaseUrl = createSelector(
+  [selectDomain],
+  (commonState) => commonState.dataToolBoxBaseUrl
+)
