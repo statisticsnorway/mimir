@@ -22,7 +22,8 @@ export function DataQuery(props) {
     },
     onRefresh,
     onOpenEventLogData,
-    contentStudioBaseUrl
+    contentStudioBaseUrl,
+    dataToolBoxBaseUrl
   } = props
 
   const [show, setShow] = useState(false)
@@ -32,6 +33,10 @@ export function DataQuery(props) {
   const openEventlog = () => {
     onOpenEventLogData()
     setShow(handleShow)
+  }
+
+  const openToolBox = () => {
+    window.open(dataToolBoxBaseUrl + id)
   }
 
   function renderLogData() {
@@ -67,6 +72,7 @@ export function DataQuery(props) {
           {renderJobLogs()}
         </Modal.Body>
         <Modal.Footer>
+          <Button variant="info" onClick={openToolBox}>Datatoolbox</Button>
           <Button variant="secondary" onClick={handleClose}>Lukk</Button>
         </Modal.Footer>
       </Modal>
@@ -120,5 +126,6 @@ DataQuery.propTypes = {
   dataQuery: PropTypes.object,
   onRefresh: PropTypes.func,
   onOpenEventLogData: PropTypes.func,
-  contentStudioBaseUrl: PropTypes.string
+  contentStudioBaseUrl: PropTypes.string,
+  dataToolBoxBaseUrl: PropTypes.string
 }
