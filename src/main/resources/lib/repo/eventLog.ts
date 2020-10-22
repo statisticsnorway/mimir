@@ -89,7 +89,7 @@ export function getQueryChildNodesStatus<T>(queryId: string): ReadonlyArray<LogS
 }
 
 export function deleteExpiredEventLogs(): void {
-  log.info('Deleting expire event logs')
+  log.info('Deleting expired event logs')
   const path: string = '/queries'
   const maxLogsBeforeDeleting: number = 10
   const monthsBeforeLogsExpire: number = 1
