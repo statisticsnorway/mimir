@@ -19,6 +19,7 @@ const {
 } = __non_webpack_require__( '/lib/util')
 
 const {
+  getDataset
 } = __non_webpack_require__( '/lib/ssb/dataset/dataset')
 
 const {
