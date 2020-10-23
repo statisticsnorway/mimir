@@ -114,9 +114,7 @@ function renderPart(req, tableId) {
       sourceLabel,
       iconUrl: iconUrl,
       preview: req.mode === 'preview' ? true : false,
-      featureToggling: {
-        showDraft: req.params.showDraft ? true : false
-      }
+      paramShowDraft: req.params.showDraft ? true : false
     })
     .uniqueId()
 

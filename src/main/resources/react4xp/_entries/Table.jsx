@@ -16,8 +16,8 @@ class Table extends React.Component {
 
     this.state = {
       prevClientWidth: 0,
-      table: this.props.table,
-      fetchUnPublished: false
+      fetchUnPublished: false,
+      table: this.props.paramShowDraft ? this.props.tableDraft : this.props.table
     }
 
     this.captionRef = React.createRef()
@@ -208,8 +208,6 @@ class Table extends React.Component {
         <p>Ingen tabell</p>
       )
     }
-
-    
   }
 
   addCaption() {
@@ -653,7 +651,8 @@ Table.propTypes = {
     language: PropTypes.string,
     noteRefs: PropTypes.arrayOf(PropTypes.string)
   }),
-  preview: PropTypes.bool
+  preview: PropTypes.bool,
+  paramShowDraft: PropTypes.bool
 }
 
 export default (props) => <Table {...props}/>
