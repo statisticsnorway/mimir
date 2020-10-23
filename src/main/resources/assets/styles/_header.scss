@@ -224,11 +224,8 @@ header.ssb-header-wrapper {
       padding: 0 0 15px 0;
       text-align: left;
       align-items: flex-end;
-      margin-right: 40px;
+      margin-right: 30px;
       cursor: pointer;
-      svg {
-        display: none;
-      }
 
       @include media-breakpoint-down(md) {
         padding: 0 0 15px 0;
