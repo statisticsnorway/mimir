@@ -190,14 +190,26 @@ class Table extends React.Component {
       tableClass
     } = this.props.table
 
-    return (
-      <table className={tableClass} ref={this.tableRef}>
-        {this.addCaption()}
-        {this.addThead()}
-        {this.addTbody()}
-        {this.addTFoot()}
-      </table>
-    )
+    if ((this.state.table.thead).length > 0) {
+      return (
+        <table className={tableClass} ref={this.tableRef}>
+          {this.addCaption()}
+          {this.addThead()}
+          {this.addTbody()}
+          {this.addTFoot()}
+        </table>
+      )
+    } else if (this.showDraft) {
+      return (
+        <p>Ingen upubliserte tall</p>
+      )
+    } else {
+      return (
+        <p>Ingen tabell</p>
+      )
+    }
+
+    
   }
 
   addCaption() {
@@ -503,7 +515,6 @@ class Table extends React.Component {
   }
 
   render() {
-    console.log('REnder')
     if (!isEmpty(this.state.table)) {
       return (
         <div className="container">
