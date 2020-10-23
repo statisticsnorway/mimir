@@ -25,6 +25,10 @@ const {
 const {
   getLanguage
 } = __non_webpack_require__( '/lib/language')
+const {
+  DATASET_BRANCH,
+  UNPUBLISHED_DATASET_BRANCH
+} = __non_webpack_require__('/lib/repo/dataset')
 
 const moment = require('moment/min/moment-with-locales')
 const view = resolve('./table.html')
@@ -63,7 +67,9 @@ function renderPart(req, tableId) {
   const tableContent = get({
     key: tableId
   })
-  const table = parseTable(req, tableContent)
+  const table = parseTable(req, tableContent, DATASET_BRANCH)
+  const tableDraft = parseTable(req, tableContent, UNPUBLISHED_DATASET_BRANCH)
+  const showDraft = tableDraft.thead && req.mode === 'preview'
 
   moment.locale(tableContent.language ? tableContent.language : 'nb')
 
@@ -94,10 +100,23 @@ function renderPart(req, tableId) {
         language: language.code,
         noteRefs: table.noteRefs
       },
+      tableDraft: {
+        caption: showDraft ? tableDraft.caption : undefined,
+        thead: showDraft ? tableDraft.thead : undefined,
+        tbody: showDraft ? tableDraft.tbody : undefined,
+        tfoot: showDraft ? tableDraft.tfoot : undefined,
+        tableClass: showDraft ? tableDraft.tableClass : undefined,
+        language: language.code,
+        noteRefs: showDraft ? tableDraft.noteRefs : undefined
+      },
       standardSymbol: standardSymbol,
       sources,
       sourceLabel,
-      iconUrl: iconUrl
+      iconUrl: iconUrl,
+      preview: req.mode === 'preview' ? true : false,
+      featureToggling: {
+        showDraft: req.params.showDraft ? true : false
+      }
     })
     .uniqueId()
 
