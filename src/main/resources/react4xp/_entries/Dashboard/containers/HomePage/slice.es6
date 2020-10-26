@@ -4,7 +4,8 @@ export const initialState = {
   isConnected: false,
   loadingClearCache: false,
   user: undefined,
-  contentStudioBaseUrl: ''
+  contentStudioBaseUrl: '',
+  dataToolBoxBaseUrl: ''
 }
 
 const commonSlice = createSlice({
@@ -13,6 +14,9 @@ const commonSlice = createSlice({
   reducers: {
     setContentStudioBaseUrl(state, action) {
       state.contentStudioBaseUrl = action.contentStudioBaseUrl
+    },
+    setDataToolBoxBaseUrl(state, action) {
+      state.dataToolBoxBaseUrl = action.dataToolBoxBaseUrl
     },
     setUser(state, action) {
       state.user = action.user

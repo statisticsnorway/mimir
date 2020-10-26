@@ -41,7 +41,8 @@ const renderPart = (req) => {
   const updated = phrases.updated + ': '
   const nextUpdate = phrases.nextUpdate + ': '
   const changed = phrases.modified + ': '
-  const modifiedText = page.data.modifiedText
+  const modifiedText = page.data.showModifiedDate ? page.data.showModifiedDate.modifiedOption.modifiedText : null
+  const modifiedDate = page.data.showModifiedDate ? page.data.showModifiedDate.modifiedOption.lastModified : null
   let previousRelease = phrases.notAvailable
   let nextRelease = phrases.notYetDetermined
   let statisticsKeyFigure
@@ -63,9 +64,9 @@ const renderPart = (req) => {
     statisticsKeyFigure = keyFigurePreview(req, page.data.statisticsKeyFigure)
   }
 
-  if (page.data.lastModified && statistic.variants.previousRelease) {
-    if (moment(page.data.lastModified).isAfter(statistic.variants.previousRelease)) {
-      changeDate = moment(page.data.lastModified).format('DD. MMMM YYYY, HH:MM')
+  if (page.data.showModifiedDate && statistic.variants.previousRelease) {
+    if (moment(modifiedDate).isAfter(statistic.variants.previousRelease)) {
+      changeDate = moment(modifiedDate).format('DD. MMMM YYYY, HH:MM')
     }
   }
 
