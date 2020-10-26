@@ -6,7 +6,7 @@
         <mixin name="statistic" />
 
         <option-set name="showModifiedDate">
-            <label>Legg til endringsdato</label>
+            <label>Endringsdato</label>
             <expanded>false</expanded>
             <occurrences minimum="0" maximum="1"/>
             <options minimum="1" maximum="1">
