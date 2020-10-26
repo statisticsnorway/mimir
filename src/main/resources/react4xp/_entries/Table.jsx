@@ -16,7 +16,7 @@ class Table extends React.Component {
 
     this.state = {
       prevClientWidth: 0,
-      table: this.props.paramShowDraft ? this.props.tableDraft : this.props.table
+      table: this.props.paramShowDraft && this.props.showPreviewDraft ? this.props.tableDraft : this.props.table
     }
 
     this.captionRef = React.createRef()
@@ -466,7 +466,7 @@ class Table extends React.Component {
   }
 
   addPreviewButton() {
-    if (this.props.preview) {
+    if (this.props.showPreviewDraft) {
       return (
         <Form.Check
           onChange={(e) => this.showDraft(e.target.checked)}
@@ -649,7 +649,7 @@ Table.propTypes = {
     language: PropTypes.string,
     noteRefs: PropTypes.arrayOf(PropTypes.string)
   }),
-  preview: PropTypes.bool,
+  showPreviewDraft: PropTypes.bool,
   paramShowDraft: PropTypes.bool
 }
 
