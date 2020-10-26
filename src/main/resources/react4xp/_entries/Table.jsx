@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
-import { Dropdown, Link, Button } from '@statisticsnorway/ssb-component-library'
+import { Dropdown, Link } from '@statisticsnorway/ssb-component-library'
 import { isEmpty } from 'ramda'
 import NumberFormat from 'react-number-format'
 import { Form } from 'react-bootstrap'
@@ -16,7 +16,6 @@ class Table extends React.Component {
 
     this.state = {
       prevClientWidth: 0,
-      fetchUnPublished: false,
       table: this.props.paramShowDraft ? this.props.tableDraft : this.props.table
     }
 
@@ -469,9 +468,9 @@ class Table extends React.Component {
   addPreviewButton() {
     if (this.props.preview) {
       return (
-        // <Button primary onClick={this.showDraft}>Vis upubliserte tall</Button>
         <Form.Check
           onChange={(e) => this.showDraft(e.target.checked)}
+          defaultChecked={this.props.paramShowDraft}
           type="checkbox"
           label="Vis upubliserte tall"
         />
@@ -482,7 +481,6 @@ class Table extends React.Component {
 
   showDraft(checked) {
     this.setState({
-      fetchUnPublished: checked,
       table: checked ? this.props.tableDraft : this.props.table
     })
   }
