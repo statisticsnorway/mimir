@@ -6,6 +6,7 @@ import { Statistics } from '../../site/content-types/statistics/statistics'
 import { DashboardDatasetLib } from './dataset/dashboard'
 import { ContextLibrary, RunContext } from 'enonic-types/context'
 import { RepoDatasetLib } from '../repo/dataset'
+import moment = require('moment')
 
 const {
   query,
@@ -80,7 +81,7 @@ function prepStatistics(statistics: Array<Content<Statistics>>): Array<Statistic
   const statisticData: Array<StatisticDashboard> = []
   statistics.map((statistic: Content<Statistics>) => {
     const statregData: StatregData | undefined = statistic.data.statistic ? getStatregInfo(statistic.data.statistic) : undefined
-    if (statregData && statregData.nextRelease) {
+    if (statregData && statregData.nextRelease && moment(statregData.nextRelease).isSameOrAfter(new Date(), 'day')) {
       const statisticDataDashboard: StatisticDashboard = {
         id: statistic._id,
         language: statistic.language ? statistic.language : '',
