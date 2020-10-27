@@ -1,15 +1,5 @@
 export interface Statistics {
   /**
-   * Dato og tid
-   */
-  lastModified?: string;
-
-  /**
-   * Endringstekst
-   */
-  modifiedText?: string;
-
-  /**
    * Tabell
    */
   mainTable?: string;
@@ -48,6 +38,31 @@ export interface Statistics {
      */
     url: string;
   }>;
+
+  /**
+   * Legg til endringsdato
+   */
+  showModifiedDate?: {
+    /**
+     * Selected
+     */
+    _selected: string;
+
+    /**
+     * Endringsmelding
+     */
+    modifiedOption?: {
+      /**
+       * Dato og tid
+       */
+      lastModified?: string;
+
+      /**
+       * Endringstekst
+       */
+      modifiedText?: string;
+    };
+  };
 
   /**
    * Statistikk

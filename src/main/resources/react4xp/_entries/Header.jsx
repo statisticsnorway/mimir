@@ -126,7 +126,7 @@ class Header extends React.Component {
                 <div key={index} className={`tabItem${activeMenuItem ? ' activeTab' : ''}`}>
                   <button onClick={menuItemClick} >
                     <span className={ activeMenuItem ? 'active navigation-item' : 'navigation-item'} >
-                      {this.state.mainMenu[index] ? <ChevronDown size="20" /> : <ChevronRight size="20" />}
+                      {activeMenuItem && this.state.showSubMenu ? <ChevronDown size="20" /> : <ChevronRight size="20" />}
                       <span>{topMenuItem.title}</span>
                     </span>
                   </button>
