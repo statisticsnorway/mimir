@@ -79,6 +79,7 @@ function renderPart(req, tableId) {
   }
   const showPreviewDraft = adminRole && req.mode === 'preview'
   const draftExist = tableDraft && tableDraft.thead.length > 0
+  const pageTypeStatistic = page.type === `${app.name}:statistics`
 
   moment.locale(tableContent.language ? tableContent.language : 'nb')
 
@@ -122,7 +123,8 @@ function renderPart(req, tableId) {
       iconUrl: iconUrl,
       showPreviewDraft: showPreviewDraft,
       paramShowDraft: req.params.showDraft ? true : false,
-      draftExist: draftExist
+      draftExist: draftExist,
+      pageTypeStatistic: pageTypeStatistic
     })
     .uniqueId()
 

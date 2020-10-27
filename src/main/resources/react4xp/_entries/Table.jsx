@@ -16,7 +16,8 @@ class Table extends React.Component {
 
     this.state = {
       prevClientWidth: 0,
-      fetchUnPublished: this.props.paramShowDraft ? true : false,
+      showPreviewToggle: this.props.showPreviewDraft && (!this.props.pageTypeStatistic || this.props.paramShowDraft && this.props.pageTypeStatistic),
+      fetchUnPublished: this.props.paramShowDraft,
       table: this.props.paramShowDraft && this.props.showPreviewDraft && this.props.draftExist ? this.props.tableDraft : this.props.table
     }
 
@@ -457,7 +458,7 @@ class Table extends React.Component {
   }
 
   addPreviewButton() {
-    if (this.props.showPreviewDraft) {
+    if (this.state.showPreviewToggle && !this.props.pageTypeStatistic) {
       return (
         <Form.Check
           onChange={(e) => this.showDraft(e.target.checked)}
@@ -661,7 +662,8 @@ Table.propTypes = {
   }),
   showPreviewDraft: PropTypes.bool,
   paramShowDraft: PropTypes.bool,
-  draftExist: PropTypes.bool
+  draftExist: PropTypes.bool,
+  pageTypeStatistic: PropTypes.bool
 }
 
 export default (props) => <Table {...props}/>
