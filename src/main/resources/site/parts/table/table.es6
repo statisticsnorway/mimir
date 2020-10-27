@@ -121,10 +121,10 @@ function renderPart(req, tableId) {
       sources,
       sourceLabel,
       iconUrl: iconUrl,
-      showPreviewDraft: showPreviewDraft,
+      showPreviewDraft,
       paramShowDraft: req.params.showDraft ? true : false,
-      draftExist: draftExist,
-      pageTypeStatistic: pageTypeStatistic
+      draftExist,
+      pageTypeStatistic
     })
     .uniqueId()
 

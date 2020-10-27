@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Dropdown, Link } from '@statisticsnorway/ssb-component-library'
 import { isEmpty } from 'ramda'
 import NumberFormat from 'react-number-format'
-import { Alert, Form } from 'react-bootstrap'
+import { Alert, Button } from 'react-bootstrap'
 
 import '../../assets/js/jquery-global.js'
 import { ChevronLeft, ChevronRight } from 'react-feather'
@@ -18,7 +18,7 @@ class Table extends React.Component {
       prevClientWidth: 0,
       showPreviewToggle: this.props.showPreviewDraft && (!this.props.pageTypeStatistic || this.props.paramShowDraft && this.props.pageTypeStatistic),
       fetchUnPublished: this.props.paramShowDraft,
-      table: this.props.paramShowDraft && this.props.showPreviewDraft && this.props.draftExist ? this.props.tableDraft : this.props.table
+      table: this.props.paramShowDraft && this.props.draftExist ? this.props.tableDraft : this.props.table
     }
 
     this.captionRef = React.createRef()
@@ -28,6 +28,7 @@ class Table extends React.Component {
     this.tableWrapperRef = React.createRef()
 
     this.widthCheckInterval = undefined
+    this.toggleDraft = this.toggleDraft.bind(this)
   }
 
   componentDidUpdate() {
@@ -460,15 +461,22 @@ class Table extends React.Component {
   addPreviewButton() {
     if (this.state.showPreviewToggle && !this.props.pageTypeStatistic) {
       return (
-        <Form.Check
-          onChange={(e) => this.showDraft(e.target.checked)}
-          defaultChecked={this.props.paramShowDraft}
-          type="checkbox"
-          label="Vis upubliserte tall"
-        />
+        <Button
+          variant="primary"
+          onClick={this.toggleDraft}
+        >
+          {!this.state.fetchUnPublished ? 'Vis upubliserte tall' : 'Vis publiserte tall'}
+        </Button>
       )
     }
     return
+  }
+
+  toggleDraft() {
+    this.setState({
+      fetchUnPublished: !this.state.fetchUnPublished,
+      table: !this.state.fetchUnPublished && this.props.draftExist ? this.props.tableDraft : this.props.table
+    })
   }
 
   addPreviewInfo() {
@@ -488,13 +496,6 @@ class Table extends React.Component {
       }
     }
     return
-  }
-
-  showDraft(checked) {
-    this.setState({
-      fetchUnPublished: checked,
-      table: checked && this.props.draftExist ? this.props.tableDraft : this.props.table
-    })
   }
 
   renderSources() {
