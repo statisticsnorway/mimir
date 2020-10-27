@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Dropdown, Link } from '@statisticsnorway/ssb-component-library'
 import { isEmpty } from 'ramda'
 import NumberFormat from 'react-number-format'
-import { Form } from 'react-bootstrap'
+import { Alert, Form } from 'react-bootstrap'
 
 import '../../assets/js/jquery-global.js'
 import { ChevronLeft, ChevronRight } from 'react-feather'
@@ -16,7 +16,8 @@ class Table extends React.Component {
 
     this.state = {
       prevClientWidth: 0,
-      table: this.props.paramShowDraft && this.props.showPreviewDraft ? this.props.tableDraft : this.props.table
+      fetchUnPublished: this.props.paramShowDraft ? true : false,
+      table: this.props.paramShowDraft && this.props.showPreviewDraft && this.props.draftExist ? this.props.tableDraft : this.props.table
     }
 
     this.captionRef = React.createRef()
@@ -189,24 +190,14 @@ class Table extends React.Component {
       tableClass
     } = this.props.table
 
-    if ((this.state.table.thead).length > 0) {
-      return (
-        <table className={tableClass} ref={this.tableRef}>
-          {this.addCaption()}
-          {this.addThead()}
-          {this.addTbody()}
-          {this.addTFoot()}
-        </table>
-      )
-    } else if (this.showDraft) {
-      return (
-        <p>Ingen upubliserte tall</p>
-      )
-    } else {
-      return (
-        <p>Ingen tabell</p>
-      )
-    }
+    return (
+      <table className={tableClass} ref={this.tableRef}>
+        {this.addCaption()}
+        {this.addThead()}
+        {this.addTbody()}
+        {this.addTFoot()}
+      </table>
+    )
   }
 
   addCaption() {
@@ -479,9 +470,29 @@ class Table extends React.Component {
     return
   }
 
+  addPreviewInfo() {
+    if (this.props.showPreviewDraft) {
+      if (this.state.fetchUnPublished && this.props.draftExist) {
+        return (
+          <Alert variant='info'>
+          Tallene i tabellen nedenfor er upublisert
+          </Alert>
+        )
+      } else if (this.state.fetchUnPublished && !this.props.draftExist) {
+        return (
+          <Alert variant='warning'>
+              Finnes ikke upubliserte tall for denne tabellen
+          </Alert>
+        )
+      }
+    }
+    return
+  }
+
   showDraft(checked) {
     this.setState({
-      table: checked ? this.props.tableDraft : this.props.table
+      fetchUnPublished: checked,
+      table: checked && this.props.draftExist ? this.props.tableDraft : this.props.table
     })
   }
 
@@ -516,6 +527,7 @@ class Table extends React.Component {
         <div className="container">
           {this.addPreviewButton()}
           {this.addDownloadTableDropdown(false)}
+          {this.addPreviewInfo()}
           {this.createScrollControlsDesktop()}
           {this.createScrollControlsMobile()}
           <div className="table-wrapper" onScroll={() => this.updateTableControlsDesktop()} ref={this.tableWrapperRef}>
@@ -606,7 +618,6 @@ Table.propTypes = {
       content: PropTypes.string,
       noterefs: PropTypes.string
     }),
-    tableClass: PropTypes.string,
     thead: PropTypes.arrayOf(
       PropTypes.shape({
         td: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
@@ -646,11 +657,11 @@ Table.propTypes = {
       ),
       correctionNotice: PropTypes.string
     }),
-    language: PropTypes.string,
     noteRefs: PropTypes.arrayOf(PropTypes.string)
   }),
   showPreviewDraft: PropTypes.bool,
-  paramShowDraft: PropTypes.bool
+  paramShowDraft: PropTypes.bool,
+  draftExist: PropTypes.bool
 }
 
 export default (props) => <Table {...props}/>

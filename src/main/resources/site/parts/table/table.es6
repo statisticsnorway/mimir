@@ -78,6 +78,7 @@ function renderPart(req, tableId) {
     tableDraft = parseTable(req, tableContent, UNPUBLISHED_DATASET_BRANCH)
   }
   const showPreviewDraft = adminRole && req.mode === 'preview'
+  const draftExist = tableDraft && tableDraft.thead.length > 0
 
   moment.locale(tableContent.language ? tableContent.language : 'nb')
 
@@ -113,8 +114,6 @@ function renderPart(req, tableId) {
         thead: tableDraft ? tableDraft.thead : undefined,
         tbody: tableDraft ? tableDraft.tbody : undefined,
         tfoot: tableDraft ? tableDraft.tfoot : undefined,
-        tableClass: tableDraft ? tableDraft.tableClass : undefined,
-        language: language.code,
         noteRefs: tableDraft ? tableDraft.noteRefs : undefined
       },
       standardSymbol: standardSymbol,
@@ -122,7 +121,8 @@ function renderPart(req, tableId) {
       sourceLabel,
       iconUrl: iconUrl,
       showPreviewDraft: showPreviewDraft,
-      paramShowDraft: req.params.showDraft ? true : false
+      paramShowDraft: req.params.showDraft ? true : false,
+      draftExist: draftExist
     })
     .uniqueId()
 
