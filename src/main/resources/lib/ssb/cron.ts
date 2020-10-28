@@ -7,7 +7,11 @@ import { StatRegRepoLib } from '../repo/statreg'
 import { SSBTaskLib } from '../task'
 import { CronLib } from '../types/cron'
 import { DatasetLib } from './dataset/dataset'
+import { PublishDatasetLib } from './dataset/publish'
 
+const {
+  publishDataset
+}: PublishDatasetLib = __non_webpack_require__( '/lib/ssb/dataset/publish')
 const {
   fetchStatRegData
 }: StatRegRepoLib = __non_webpack_require__( '/lib/repo/statreg')
@@ -108,6 +112,16 @@ export function setupCronJobs(): void {
     cron: statregCron,
     times: 365 * 10,
     callback: fetchStatRegData,
+    context: cronContext
+  })
+
+  // publish dataset cron job
+  const datasetPublishCron: string = app.config && app.config['ssb.cron.publishDataset'] ? app.config['ssb.cron.publishDataset'] : '50 07 * * *'
+  cron.schedule({
+    name: 'Dataset publish',
+    cron: datasetPublishCron,
+    times: 365 * 10,
+    callback: publishDataset,
     context: cronContext
   })
 }

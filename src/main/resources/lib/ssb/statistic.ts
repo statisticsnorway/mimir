@@ -45,16 +45,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
       key: data.id
     })
     if (statistic) {
-      let datasetIdsToUpdate: Array<string> = []
-      if (statistic.data.mainTable) {
-        datasetIdsToUpdate.push(statistic.data.mainTable)
-      }
-      if (statistic.data.statisticsKeyFigure) {
-        datasetIdsToUpdate.push(statistic.data.statisticsKeyFigure)
-      }
-      if (statistic.data.attachmentTablesFigures) {
-        datasetIdsToUpdate = datasetIdsToUpdate.concat(datasetIdsToUpdate, forceArray(statistic.data.attachmentTablesFigures))
-      }
+      const datasetIdsToUpdate: Array<string> = getDatasetFromStatistics(statistic)
       if (datasetIdsToUpdate.length > 0) {
         const context: RunContext = {
           branch: 'master',
@@ -94,7 +85,7 @@ function prepStatistics(statistics: Array<Content<Statistics>>): Array<Statistic
   return sortByNextRelease(statisticData)
 }
 
-function getStatistics(): Array<Content<Statistics>> {
+export function getStatistics(): Array<Content<Statistics>> {
   let hits: Array<Content<Statistics>> = []
   const result: QueryResponse<Statistics> = query({
     contentTypes: [`${app.name}:statistics`],
@@ -137,6 +128,21 @@ function sortByNextRelease(statisticData: Array<StatisticDashboard>): Array<Stat
   return statisticsSorted
 }
 
+export function getDatasetFromStatistics(statistic: Content<Statistics>): Array<string> {
+  let datasetIds: Array<string> = []
+  if (statistic.data.mainTable) {
+    datasetIds.push(statistic.data.mainTable)
+  }
+  if (statistic.data.statisticsKeyFigure) {
+    datasetIds.push(statistic.data.statisticsKeyFigure)
+  }
+  if (statistic.data.attachmentTablesFigures) {
+    datasetIds = datasetIds.concat(datasetIds, forceArray(statistic.data.attachmentTablesFigures))
+  }
+
+  return datasetIds
+}
+
 interface RefreshInfo {
   id: string;
   fetchPublished: boolean;
@@ -155,4 +161,10 @@ interface StatregData {
   frekvens: string;
   previousRelease: string;
   nextRelease: string;
+}
+
+export interface StatisticLib {
+  setupHandlers: (socket: Socket, socketEmitter: SocketEmitter) => void;
+  getStatistics: () => Array<Content<Statistics>>;
+  getDatasetFromStatistics: (statistic: Content<Statistics>) => Array<string>;
 }
