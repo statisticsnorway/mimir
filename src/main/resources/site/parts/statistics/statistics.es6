@@ -19,6 +19,7 @@ const {
 
 const React4xp = require('/lib/enonic/react4xp')
 const moment = require('moment/min/moment-with-locales')
+const util = __non_webpack_require__('/lib/util')
 const view = resolve('./statistics.html')
 
 exports.get = (req) => {
@@ -50,13 +51,30 @@ const renderPart = (req) => {
 
   if (statistic) {
     title = statistic.name
-
-    if (statistic.variants.previousRelease && statistic.variants.previousRelease !== '') {
-      previousRelease = moment(statistic.variants.previousRelease).format('DD. MMMM YYYY')
+    const variants = util.data.forceArray(statistic.variants)
+    let sortedVariants = []
+    if (variants.length > 1) {
+      sortedVariants = variants.sort((a, b) => {
+        const dateA = a.nextRelease ? new Date(a.nextRelease) : ''
+        const dateB = b.nextRelease ? new Date(b.nextRelease) : ''
+        if (dateA < dateB) {
+          return -1
+        } else if (dateA > dateB) {
+          return 1
+        } else {
+          return 0
+        }
+      })
     }
 
-    if (statistic.variants.nextRelease && statistic.variants.nextRelease !== '') {
-      nextRelease = moment(statistic.variants.nextRelease).format('DD. MMMM YYYY')
+    const variant = variants.length > 1 ? sortedVariants[0] : statistic.variants
+
+    if (variant.previousRelease && variant.previousRelease !== '') {
+      previousRelease = moment(variant.previousRelease).format('DD. MMMM YYYY')
+    }
+
+    if (variant.nextRelease && variant.nextRelease !== '') {
+      nextRelease = moment(variant.nextRelease).format('DD. MMMM YYYY')
     }
   }
 
@@ -64,8 +82,8 @@ const renderPart = (req) => {
     statisticsKeyFigure = keyFigurePreview(req, page.data.statisticsKeyFigure)
   }
 
-  if (page.data.showModifiedDate && statistic.variants.previousRelease) {
-    if (moment(modifiedDate).isAfter(statistic.variants.previousRelease)) {
+  if (page.data.showModifiedDate && variant.previousRelease) {
+    if (moment(modifiedDate).isAfter(variant.previousRelease)) {
       changeDate = moment(modifiedDate).format('DD. MMMM YYYY, HH:MM')
     }
   }
