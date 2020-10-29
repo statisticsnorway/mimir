@@ -92,12 +92,15 @@ const getAssociatedStatisticsLinks = (associatedStatisticsConfig) => {
           key: associatedStatisticsXP
         })
 
-        return {
-          title: associatedStatisticsXPContent.displayName,
-          href: pageUrl({
-            id: associatedStatisticsXP
-          })
+        if (associatedStatisticsXPContent) {
+          return {
+            title: associatedStatisticsXPContent.displayName,
+            href: pageUrl({
+              id: associatedStatisticsXP
+            })
+          }
         }
+        return null
       } else if (option._selected === 'CMS') {
         const associatedStatisticsCMS = option.CMS
 
@@ -105,7 +108,7 @@ const getAssociatedStatisticsLinks = (associatedStatisticsConfig) => {
           ...associatedStatisticsCMS
         }
       }
-    })
+    }).filter((statistics) => !!statistics)
   }
   return []
 }
