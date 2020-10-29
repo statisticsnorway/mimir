@@ -116,7 +116,7 @@ export function setupCronJobs(): void {
   })
 
   // publish dataset cron job
-  const datasetPublishCron: string = app.config && app.config['ssb.cron.publishDataset'] ? app.config['ssb.cron.publishDataset'] : '50 07 * * *'
+  const datasetPublishCron: string = app.config && app.config['ssb.cron.publishDataset'] ? app.config['ssb.cron.publishDataset'] : '50 05 * * *'
   cron.schedule({
     name: 'Dataset publish',
     cron: datasetPublishCron,
