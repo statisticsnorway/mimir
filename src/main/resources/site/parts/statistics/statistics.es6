@@ -48,33 +48,21 @@ const renderPart = (req) => {
   let nextRelease = phrases.notYetDetermined
   let statisticsKeyFigure
   let changeDate
+  let nextReleaseDate
+  let previousReleaseDate
 
   if (statistic) {
     title = statistic.name
     const variants = util.data.forceArray(statistic.variants)
-    let sortedVariants = []
-    if (variants.length > 1) {
-      sortedVariants = variants.sort((a, b) => {
-        const dateA = a.nextRelease ? new Date(a.nextRelease) : ''
-        const dateB = b.nextRelease ? new Date(b.nextRelease) : ''
-        if (dateA < dateB) {
-          return -1
-        } else if (dateA > dateB) {
-          return 1
-        } else {
-          return 0
-        }
-      })
+    nextReleaseDate = getNextRelease(variants)
+    previousReleaseDate = getPreviousRelease(variants)
+
+    if (previousReleaseDate && previousReleaseDate !== '') {
+      previousRelease = moment(previousReleaseDate).format('DD. MMMM YYYY')
     }
 
-    const variant = variants.length > 1 ? sortedVariants[0] : statistic.variants
-
-    if (variant.previousRelease && variant.previousRelease !== '') {
-      previousRelease = moment(variant.previousRelease).format('DD. MMMM YYYY')
-    }
-
-    if (variant.nextRelease && variant.nextRelease !== '') {
-      nextRelease = moment(variant.nextRelease).format('DD. MMMM YYYY')
+    if (nextReleaseDate && nextReleaseDate !== '') {
+      nextRelease = moment(nextReleaseDate).format('DD. MMMM YYYY')
     }
   }
 
@@ -82,8 +70,8 @@ const renderPart = (req) => {
     statisticsKeyFigure = keyFigurePreview(req, page.data.statisticsKeyFigure)
   }
 
-  if (page.data.showModifiedDate && variant.previousRelease) {
-    if (moment(modifiedDate).isAfter(variant.previousRelease)) {
+  if (page.data.showModifiedDate && previousReleaseDate) {
+    if (moment(modifiedDate).isAfter(previousReleaseDate)) {
       changeDate = moment(modifiedDate).format('DD. MMMM YYYY, HH:MM')
     }
   }
@@ -127,4 +115,40 @@ const renderPart = (req) => {
     pageContributions,
     contentType: 'text/html'
   }
+}
+
+const getNextRelease = (variants) => {
+  let sortedVariants = []
+  if (variants.length > 1) {
+    sortedVariants = variants.sort((a, b) => {
+      const dateA = a.nextRelease ? new Date(a.nextRelease) : ''
+      const dateB = b.nextRelease ? new Date(b.nextRelease) : ''
+      if (dateA < dateB) {
+        return -1
+      } else if (dateA > dateB) {
+        return 1
+      } else {
+        return 0
+      }
+    })
+  }
+  return variants.length > 1 ? sortedVariants[0].nextRelease : variants.nextRelease
+}
+
+const getPreviousRelease = (variants) => {
+  let sortedVariants = []
+  if (variants.length > 1) {
+    sortedVariants = variants.sort((a, b) => {
+      const dateA = a.previousRelease ? new Date(a.previousRelease) : ''
+      const dateB = b.previousRelease ? new Date(b.previousRelease) : ''
+      if (dateA < dateB) {
+        return 1
+      } else if (dateA > dateB) {
+        return -1
+      } else {
+        return 0
+      }
+    })
+  }
+  return variants.length > 1 ? sortedVariants[0].previousRelease : variants.previousRelease
 }
