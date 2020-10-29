@@ -58,12 +58,9 @@ function renderPart(req) {
 
   const associatedArticleArchiveLinksComponent = new React4xp('Links')
     .setProps({
-      links: associatedArticleArchiveLinks.map(({
-        title, href
-      }) => {
+      links: associatedArticleArchiveLinks.map((articleArchiveLinks) => {
         return {
-          children: title,
-          href
+          ...articleArchiveLinks
         }
       })
     })
@@ -74,18 +71,11 @@ function renderPart(req) {
     associatedArticleArchiveLinksId: associatedArticleArchiveLinksComponent.react4xpId
   })
 
-  const isOutsideContentStudio = (
-    req.mode === 'live' || req.mode === 'preview'
-  )
-
   return {
     body: associatedArticleArchiveLinksComponent.renderBody({
-      body,
-      clientRender: isOutsideContentStudio
+      body
     }),
-    pageContributions: associatedArticleArchiveLinksComponent.renderPageContributions({
-      clientRender: isOutsideContentStudio
-    }),
+    pageContributions: associatedArticleArchiveLinksComponent.renderPageContributions(),
     contentType: 'text/html'
   }
 }
@@ -97,13 +87,16 @@ const getAssociatedArticleArchiveLinks = (associatedArticleArchivesConfig) => {
         key: articleArchive
       })
 
-      return {
-        title: articleArchiveContent.displayName,
-        href: pageUrl({
-          id: articleArchive
-        })
+      if (articleArchiveContent) {
+        return {
+          children: articleArchiveContent.displayName,
+          href: pageUrl({
+            id: articleArchive
+          })
+        }
       }
-    })
+      return null
+    }).filter((articleArchive) => !!articleArchive)
   }
   return []
 }

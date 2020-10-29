@@ -74,18 +74,11 @@ function renderPart(req) {
     associatedStatisticsLinksId: associatedStatisticsLinksComponent.react4xpId
   })
 
-  const isOutsideContentStudio = (
-    req.mode === 'live' || req.mode === 'preview'
-  )
-
   return {
     body: associatedStatisticsLinksComponent.renderBody({
-      body,
-      clientRender: isOutsideContentStudio
+      body
     }),
-    pageContributions: associatedStatisticsLinksComponent.renderPageContributions({
-      clientRender: isOutsideContentStudio
-    }),
+    pageContributions: associatedStatisticsLinksComponent.renderPageContributions(),
     contentType: 'text/html'
   }
 }
