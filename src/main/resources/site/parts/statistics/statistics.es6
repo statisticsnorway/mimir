@@ -66,8 +66,8 @@ const renderPart = (req) => {
   if (statistic) {
     title = statistic.name
     const variants = util.data.forceArray(statistic.variants)
-    nextReleaseDate = getNextRelease(variants)
-    previousReleaseDate = getPreviousRelease(variants)
+    nextReleaseDate = variants.length > 1 ? getNextRelease(variants) : variants[0].nextRelease
+    previousReleaseDate = variants.length > 1 ? getPreviousRelease(variants) : variants[0].previousRelease
 
     if (previousReleaseDate && previousReleaseDate !== '') {
       previousRelease = moment(previousReleaseDate).format('DD. MMMM YYYY')
@@ -132,38 +132,15 @@ const renderPart = (req) => {
   }
 }
 
-const getNextRelease = (variants) => {
-  let sortedVariants = []
-  if (variants.length > 1) {
-    sortedVariants = variants.sort((a, b) => {
-      const dateA = a.nextRelease ? new Date(a.nextRelease) : ''
-      const dateB = b.nextRelease ? new Date(b.nextRelease) : ''
-      if (dateA < dateB) {
-        return -1
-      } else if (dateA > dateB) {
-        return 1
-      } else {
-        return 0
-      }
-    })
-  }
-  return variants.length > 1 ? sortedVariants[0].nextRelease : variants.nextRelease
+const getPreviousRelease = (variants) => {
+  variants.sort((d1, d2) => new Date(d1.previousRelease) - new Date(d2.previousRelease)).reverse()
+  return variants[0].previousRelease
 }
 
-const getPreviousRelease = (variants) => {
-  let sortedVariants = []
-  if (variants.length > 1) {
-    sortedVariants = variants.sort((a, b) => {
-      const dateA = a.previousRelease ? new Date(a.previousRelease) : ''
-      const dateB = b.previousRelease ? new Date(b.previousRelease) : ''
-      if (dateA < dateB) {
-        return 1
-      } else if (dateA > dateB) {
-        return -1
-      } else {
-        return 0
-      }
-    })
+const getNextRelease = (variants) => {
+  const variantWithDate = variants.filter((variant) => variant.nextRelease !== '')
+  if (variantWithDate.length > 1) {
+    variantWithDate.sort((d1, d2) => new Date(d1.nextRelease) - new Date(d2.nextRelease))
   }
-  return variants.length > 1 ? sortedVariants[0].previousRelease : variants.previousRelease
+  return variantWithDate.length > 0 ? variantWithDate[0].nextRelease : ''
 }
