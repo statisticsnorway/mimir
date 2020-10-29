@@ -25,6 +25,13 @@ const {
 const {
   getLanguage
 } = __non_webpack_require__( '/lib/language')
+const {
+  DATASET_BRANCH,
+  UNPUBLISHED_DATASET_BRANCH
+} = __non_webpack_require__('/lib/repo/dataset')
+const {
+  hasRole
+} = __non_webpack_require__('/lib/xp/auth')
 
 const moment = require('moment/min/moment-with-locales')
 const view = resolve('./table.html')
@@ -63,7 +70,16 @@ function renderPart(req, tableId) {
   const tableContent = get({
     key: tableId
   })
-  const table = parseTable(req, tableContent)
+
+  const adminRole = hasRole('system.admin')
+  const table = parseTable(req, tableContent, DATASET_BRANCH)
+  let tableDraft = undefined
+  if (adminRole && req.mode === 'preview') {
+    tableDraft = parseTable(req, tableContent, UNPUBLISHED_DATASET_BRANCH)
+  }
+  const showPreviewDraft = adminRole && req.mode === 'preview'
+  const draftExist = tableDraft && tableDraft.thead.length > 0
+  const pageTypeStatistic = page.type === `${app.name}:statistics`
 
   moment.locale(tableContent.language ? tableContent.language : 'nb')
 
@@ -94,10 +110,21 @@ function renderPart(req, tableId) {
         language: language.code,
         noteRefs: table.noteRefs
       },
+      tableDraft: {
+        caption: tableDraft ? tableDraft.caption : undefined,
+        thead: tableDraft ? tableDraft.thead : undefined,
+        tbody: tableDraft ? tableDraft.tbody : undefined,
+        tfoot: tableDraft ? tableDraft.tfoot : undefined,
+        noteRefs: tableDraft ? tableDraft.noteRefs : undefined
+      },
       standardSymbol: standardSymbol,
       sources,
       sourceLabel,
-      iconUrl: iconUrl
+      iconUrl: iconUrl,
+      showPreviewDraft,
+      paramShowDraft: req.params.showDraft ? true : false,
+      draftExist,
+      pageTypeStatistic
     })
     .uniqueId()
 

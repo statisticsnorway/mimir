@@ -7,7 +7,7 @@ import { Table } from '../../site/content-types/table/table'
 import { TbmlData, TableRow, Note, Notes, PreliminaryData, Title } from '../types/xmlParser'
 import { Dataset as JSDataset } from '../types/jsonstat-toolkit'
 import { Request } from 'enonic-types/controller'
-import { DatasetRepoNode } from '../repo/dataset'
+import { DatasetRepoNode, RepoDatasetLib } from '../repo/dataset'
 import { DataSource as DataSourceType } from '../repo/dataset'
 import { StatbankSavedLib } from './dataset/statbankSaved'
 import { SSBCacheLibrary } from './cache'
@@ -19,13 +19,22 @@ const {
 } = __non_webpack_require__( '/lib/util')
 
 const {
+  getDataset
+} = __non_webpack_require__( '/lib/ssb/dataset/dataset')
+
+const {
   datasetOrUndefined
 }: SSBCacheLibrary = __non_webpack_require__('/lib/ssb/cache')
 const {
   fetchStatbankSavedData
 }: StatbankSavedLib = __non_webpack_require__('/lib/ssb/dataset/statbankSaved')
 
-export function parseTable(req: Request, table: Content<Table>): TableView {
+const {
+  DATASET_BRANCH,
+  UNPUBLISHED_DATASET_BRANCH
+}: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
+
+export function parseTable(req: Request, table: Content<Table>, branch: string = DATASET_BRANCH): TableView {
   let tableViewData: TableView = {
     caption: undefined,
     thead: [],
@@ -38,7 +47,13 @@ export function parseTable(req: Request, table: Content<Table>): TableView {
     noteRefs: []
   }
 
-  const datasetRepo: DatasetRepoNode<JSONstat> | undefined = datasetOrUndefined(table)
+  let datasetRepo: DatasetRepoNode<JSONstat> | undefined
+  if (branch === UNPUBLISHED_DATASET_BRANCH) {
+    datasetRepo = getDataset(table, UNPUBLISHED_DATASET_BRANCH)
+  } else {
+    datasetRepo = datasetOrUndefined(table)
+  }
+
   const dataSource: Table['dataSource'] | undefined = table.data.dataSource
 
   if (datasetRepo) {

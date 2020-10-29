@@ -26,7 +26,7 @@ function Dashboard(props) {
     <Provider store={configureAppStore()}>
       <WebsocketProvider>
         <HelmetProvider>
-          <DashboardRouter user={props.user} contentStudioBaseUrl={props.contentStudioBaseUrl}/>
+          <DashboardRouter user={props.user} contentStudioBaseUrl={props.contentStudioBaseUrl} dataToolBoxBaseUrl={props.dataToolBoxBaseUrl} />
         </HelmetProvider>
       </WebsocketProvider>
     </Provider>
@@ -35,7 +35,8 @@ function Dashboard(props) {
 
 Dashboard.propTypes = {
   user: PropTypes.object,
-  contentStudioBaseUrl: PropTypes.string
+  contentStudioBaseUrl: PropTypes.string,
+  dataToolBoxBaseUrl: PropTypes.string
 }
 
 function DashboardRouter(props) {
@@ -50,6 +51,10 @@ function DashboardRouter(props) {
   dispatch({
     type: commonActions.setContentStudioBaseUrl.type,
     contentStudioBaseUrl: props.contentStudioBaseUrl
+  })
+  dispatch({
+    type: commonActions.setDataToolBoxBaseUrl.type,
+    dataToolBoxBaseUrl: props.dataToolBoxBaseUrl
   })
   setUserServerSide(dispatch, io, props.user)
   requestStatistics(dispatch, io)
@@ -72,7 +77,8 @@ function DashboardRouter(props) {
 
 DashboardRouter.propTypes = {
   user: PropTypes.object,
-  contentStudioBaseUrl: PropTypes.string
+  contentStudioBaseUrl: PropTypes.string,
+  dataToolBoxBaseUrl: PropTypes.string
 }
 
 export default (props) => <Dashboard {...props} />

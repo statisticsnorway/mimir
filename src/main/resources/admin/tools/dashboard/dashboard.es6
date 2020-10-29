@@ -19,6 +19,7 @@ const {
 
 const view = resolve('./dashboard.html')
 const DEFAULT_CONTENTSTUDIO_URL = getToolUrl('com.enonic.app.contentstudio', 'main')
+const DEFAULT_TOOLBOX_URL = getToolUrl('systems.rcd.enonic.datatoolbox', 'data-toolbox')
 
 exports.get = function(req) {
   try {
@@ -39,7 +40,8 @@ function renderPart(req) {
   const dashboardDataset = new React4xp('Dashboard/Dashboard')
     .setProps({
       user,
-      contentStudioBaseUrl: `${DEFAULT_CONTENTSTUDIO_URL}#/default/edit/`
+      contentStudioBaseUrl: `${DEFAULT_CONTENTSTUDIO_URL}#/default/edit/`,
+      dataToolBoxBaseUrl: `${DEFAULT_TOOLBOX_URL}#nodes?repo=no.ssb.eventlog&branch=master&path=%2Fqueries%2F`
     })
     .setId('dashboard')
 

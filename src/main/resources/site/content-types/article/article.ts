@@ -1,48 +1,13 @@
 export interface Article {
   /**
-   * Vis publiseringsdato
-   */
-  showPublishDate: boolean;
-
-  /**
-   * Ingress
-   */
-  ingress?: string;
-
-  /**
-   * Artikkeltekst
-   */
-  articleText?: string;
-
-  /**
-   * Arkiv
-   */
-  articleArchive?: Array<string>;
-
-  /**
-   * Løpenummer
-   */
-  serialNumber?: string;
-
-  /**
    * Stikktittel
    */
   introTitle?: string;
 
   /**
-   * Forfatter
+   * Vis publiseringsdato
    */
-  authorItemSet?: Array<{
-    /**
-     * Navn
-     */
-    name?: string;
-
-    /**
-     * E-post
-     */
-    email?: string;
-  }>;
+  showPublishDate: boolean;
 
   /**
    * Vis tidspunkt for sist redigering
@@ -68,6 +33,36 @@ export interface Article {
       modifiedDate?: string;
     };
   };
+
+  /**
+   * Løpenummer
+   */
+  serialNumber?: string;
+
+  /**
+   * Forfatter
+   */
+  authorItemSet?: Array<{
+    /**
+     * Navn
+     */
+    name?: string;
+
+    /**
+     * E-post
+     */
+    email?: string;
+  }>;
+
+  /**
+   * Ingress
+   */
+  ingress?: string;
+
+  /**
+   * Artikkeltekst
+   */
+  articleText?: string;
 
   /**
    * Tilhørende statistikk
@@ -103,6 +98,11 @@ export interface Article {
       title?: string;
     };
   };
+
+  /**
+   * Arkiv
+   */
+  articleArchive?: Array<string>;
 
   /**
    * Relaterte statistikker
