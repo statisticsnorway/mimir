@@ -66,8 +66,8 @@ const renderPart = (req) => {
   if (statistic) {
     title = statistic.name
     const variants = util.data.forceArray(statistic.variants)
-    nextReleaseDate = variants.length > 1 ? getNextRelease(variants) : variants[0].nextRelease
-    previousReleaseDate = variants.length > 1 ? getPreviousRelease(variants) : variants[0].previousRelease
+    nextReleaseDate = getNextRelease(variants)
+    previousReleaseDate = getPreviousRelease(variants)
 
     if (previousReleaseDate && previousReleaseDate !== '') {
       previousRelease = moment(previousReleaseDate).format('DD. MMMM YYYY')
@@ -133,12 +133,14 @@ const renderPart = (req) => {
 }
 
 const getPreviousRelease = (variants) => {
-  variants.sort((d1, d2) => new Date(d1.previousRelease) - new Date(d2.previousRelease)).reverse()
+  if (variants.length > 1) {
+    variants.sort((d1, d2) => new Date(d1.previousRelease) - new Date(d2.previousRelease)).reverse()
+  }
   return variants[0].previousRelease
 }
 
 const getNextRelease = (variants) => {
-  const variantWithDate = variants.filter((variant) => variant.nextRelease !== '')
+  const variantWithDate = variants.filter((variant) => variant.nextRelease !== '' && moment(variant.nextRelease).isAfter(new Date(), 'day'))
   if (variantWithDate.length > 1) {
     variantWithDate.sort((d1, d2) => new Date(d1.nextRelease) - new Date(d2.nextRelease))
   }
