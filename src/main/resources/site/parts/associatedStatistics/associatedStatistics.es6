@@ -58,12 +58,9 @@ function renderPart(req) {
 
   const associatedStatisticsLinksComponent = new React4xp('Links')
     .setProps({
-      links: associatedStatisticsLinks.map(({
-        title, href
-      }) => {
+      links: associatedStatisticsLinks.map((statistics) => {
         return {
-          children: title,
-          href
+          ...statistics
         }
       })
     })
@@ -94,7 +91,7 @@ const getAssociatedStatisticsLinks = (associatedStatisticsConfig) => {
 
         if (associatedStatisticsXPContent) {
           return {
-            title: associatedStatisticsXPContent.displayName,
+            children: associatedStatisticsXPContent.displayName,
             href: pageUrl({
               id: associatedStatisticsXP
             })
@@ -105,7 +102,8 @@ const getAssociatedStatisticsLinks = (associatedStatisticsConfig) => {
         const associatedStatisticsCMS = option.CMS
 
         return {
-          ...associatedStatisticsCMS
+          children: associatedStatisticsCMS.title,
+          href: associatedStatisticsCMS.href
         }
       }
     }).filter((statistics) => !!statistics)
