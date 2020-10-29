@@ -40,7 +40,7 @@ export interface Statistics {
   }>;
 
   /**
-   * Legg til endringsdato
+   * Endringsdato
    */
   showModifiedDate?: {
     /**

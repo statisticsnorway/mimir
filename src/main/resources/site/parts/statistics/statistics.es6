@@ -1,5 +1,5 @@
 const {
-  getContent
+  getContent, pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
 const {
   getStatisticByIdFromRepo
@@ -16,6 +16,9 @@ const {
 const {
   preview: keyFigurePreview
 } = __non_webpack_require__('../keyFigure/keyFigure')
+const {
+  hasRole
+} = __non_webpack_require__('/lib/xp/auth')
 
 const React4xp = require('/lib/enonic/react4xp')
 const moment = require('moment/min/moment-with-locales')
@@ -50,6 +53,15 @@ const renderPart = (req) => {
   let changeDate
   let nextReleaseDate
   let previousReleaseDate
+  const adminRole = hasRole('system.admin')
+  const showPreviewDraft = adminRole && req.mode === 'preview'
+  const paramShowDraft = req.params.showDraft
+  const draftUrl = paramShowDraft ? pageUrl() : pageUrl({
+    params: {
+      showDraft: true
+    }
+  })
+  const draftButtonText = paramShowDraft ? 'Vis publiserte tall' : 'Vis upubliserte tall'
 
   if (statistic) {
     title = statistic.name
@@ -95,7 +107,10 @@ const renderPart = (req) => {
     previousRelease,
     nextRelease,
     modifiedDateId: modifiedDateComponent.react4xpId,
-    statisticsKeyFigure: statisticsKeyFigure ? statisticsKeyFigure.body : null
+    statisticsKeyFigure: statisticsKeyFigure ? statisticsKeyFigure.body : null,
+    showPreviewDraft,
+    draftUrl,
+    draftButtonText
   }
 
   let body = render(view, model)
