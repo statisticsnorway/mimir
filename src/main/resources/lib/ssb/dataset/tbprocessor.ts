@@ -2,8 +2,9 @@ import { DatasetRepoNode, RepoDatasetLib } from '../../repo/dataset'
 import { Content } from 'enonic-types/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { RepoQueryLib } from '../../repo/query'
-import { TbmlData } from '../../types/xmlParser'
-import { TbmlLib } from '../../tbml/tbml'
+import { TbmlData, TbmlSourceList } from '../../types/xmlParser'
+import { getTbmlSourceList, TbmlLib } from '../../tbml/tbml'
+import { mergeDeepLeft } from 'ramda'
 
 const {
   getDataset
@@ -29,32 +30,73 @@ export function getTbprocessor(content: Content<DataSource>, branch: string): Da
   return null
 }
 
-export function fetchTbprocessorData(content: Content<DataSource>): TbmlData | null {
-  const baseUrl: string = app.config && app.config['ssb.tbprocessor.baseUrl'] ? app.config['ssb.tbprocessor.baseUrl'] : 'https://i.ssb.no/tbprocessor'
-  let data: TbmlData | null = null
-  if (content.data.dataSource) {
-    try {
-      const dataSource: DataSource['dataSource'] = content.data.dataSource
-      if (dataSource._selected && dataSource.tbprocessor && dataSource.tbprocessor.urlOrId) {
-        let url: string = `${baseUrl}/process/tbmldata/${getTbprocessorKey(content)}`
-        if (isUrl(dataSource.tbprocessor.urlOrId)) {
-          url = dataSource.tbprocessor.urlOrId
-        }
-        data = getTbmlData(url, content._id)
-      }
-    } catch (e) {
-      const message: string = `Failed to fetch data from tbprocessor: ${content._id} (${e})`
-      logUserDataQuery(content._id, {
+function hasTBProcessorDatasource(content: Content<DataSource>): string | undefined {
+  return content.data.dataSource &&
+    content.data.dataSource._selected &&
+    content.data.dataSource.tbprocessor &&
+    content.data.dataSource.tbprocessor.urlOrId
+}
+
+function tryRequestTbmlData(url: string, contentId?: string): TbmlData | null {
+  try {
+    return getTbmlData(url, contentId)
+  } catch (e) {
+    const message: string = `Failed to fetch data from tbprocessor: ${contentId} (${e})`
+    if (contentId) {
+      logUserDataQuery(contentId, {
         file: '/lib/ssb/dataset/tbprocessor.ts',
         function: 'fetchTbprocessorData',
         message: Events.REQUEST_COULD_NOT_CONNECT,
         info: message,
         status: e
       })
-      log.error(message)
+    }
+    log.error(message)
+  }
+  return null
+}
+
+function tryRequestTbmlSourceList(url: string, contentId?: string): TbmlSourceList | null {
+  try {
+    return getTbmlSourceList(url)
+  } catch (e) {
+    const message: string = `Failed to fetch source list from tbprocessor: ${contentId} (${e})`
+    if (contentId) {
+      logUserDataQuery(contentId, {
+        file: '/lib/ssb/dataset/tbprocessor.ts',
+        function: 'tryRequestTbmlSourceList',
+        message: Events.REQUEST_COULD_NOT_CONNECT,
+        info: message,
+        status: e
+      })
+    }
+    log.error(message)
+  }
+  return null
+}
+
+function getDataAndMetaData(content: Content<DataSource>): TbmlData | null {
+  const baseUrl: string = app.config && app.config['ssb.tbprocessor.baseUrl'] ? app.config['ssb.tbprocessor.baseUrl'] : 'https://i.ssb.no/tbprocessor'
+  const dataPath: string = `/process/tbmldata/`
+  const sourceListPath: string = `/document/sourceList/`
+  const tbmlKey: string = getTbprocessorKey(content)
+  const tbmlData: TbmlData | null = tryRequestTbmlData(`${baseUrl}${dataPath}${tbmlKey}`, content._id)
+  const tbmlSourceList: TbmlSourceList | null = tryRequestTbmlSourceList(`${baseUrl}${sourceListPath}${tbmlKey}`, content._id)
+  const sourceListObject: object = {
+    tbml: {
+      metadata: {
+        sourceList: tbmlSourceList ? tbmlSourceList.sourceList.tbml.source : undefined
+      }
     }
   }
-  return data
+  const tbmlDataAndSourceList: TbmlData | null = tbmlData && tbmlSourceList ? mergeDeepLeft(tbmlData, sourceListObject) : null
+
+  return tbmlData && !tbmlSourceList ? tbmlData : tbmlDataAndSourceList
+}
+
+export function fetchTbprocessorData(content: Content<DataSource>): TbmlData | null {
+  const urlOrId: string | undefined = hasTBProcessorDatasource(content)
+  return urlOrId ? getDataAndMetaData(content) : null
 }
 
 export function getTbprocessorKey(content: Content<DataSource>): string {

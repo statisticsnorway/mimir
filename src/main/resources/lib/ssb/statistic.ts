@@ -5,7 +5,15 @@ import { UtilLibrary } from '../types/util'
 import { Statistics } from '../../site/content-types/statistics/statistics'
 import { DashboardDatasetLib } from './dataset/dashboard'
 import { ContextLibrary, RunContext } from 'enonic-types/context'
-import { RepoDatasetLib } from '../repo/dataset'
+import { DatasetRepoNode, RepoDatasetLib } from '../repo/dataset'
+
+import { Highchart } from '../../site/content-types/highchart/highchart'
+import { Table } from '../../site/content-types/table/table'
+import { KeyFigure } from '../../site/content-types/keyFigure/keyFigure'
+import { TbprocessorLib } from './dataset/tbprocessor'
+import { DataSource } from '../../site/mixins/dataSource/dataSource'
+import {Source, TbmlData} from '../types/xmlParser'
+import {groupBy} from 'ramda';
 
 const {
   query,
@@ -30,6 +38,9 @@ const {
   DATASET_BRANCH,
   UNPUBLISHED_DATASET_BRANCH
 }: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
+const {
+  getTbprocessor
+}: TbprocessorLib = __non_webpack_require__('/lib/ssb/dataset/tbprocessor')
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-statistics', () => {
@@ -45,16 +56,8 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
       key: data.id
     })
     if (statistic) {
-      let datasetIdsToUpdate: Array<string> = []
-      if (statistic.data.mainTable) {
-        datasetIdsToUpdate.push(statistic.data.mainTable)
-      }
-      if (statistic.data.statisticsKeyFigure) {
-        datasetIdsToUpdate.push(statistic.data.statisticsKeyFigure)
-      }
-      if (statistic.data.attachmentTablesFigures) {
-        datasetIdsToUpdate = datasetIdsToUpdate.concat(datasetIdsToUpdate, forceArray(statistic.data.attachmentTablesFigures))
-      }
+      const datasetIdsToUpdate: Array<string> = datasetIdsFromStatistic(statistic)
+
       if (datasetIdsToUpdate.length > 0) {
         const context: RunContext = {
           branch: 'master',
@@ -76,17 +79,63 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   })
 }
 
+function datasetIdsFromStatistic(statistic: Content<Statistics>): Array<string> {
+  const mainTableId: Array<string> = statistic.data.mainTable ? [statistic.data.mainTable] : []
+  const statisticsKeyFigureId: Array<string> = statistic.data.statisticsKeyFigure ? [statistic.data.statisticsKeyFigure] : []
+  const attachmentTablesFiguresIds: Array<string> = statistic.data.attachmentTablesFigures ? forceArray(statistic.data.attachmentTablesFigures) : []
+  return [...mainTableId, ...statisticsKeyFigureId, ...attachmentTablesFiguresIds]
+}
+
+function sourceListFromStatistic(statistic: Content<Statistics>): Array<TbmlSources> {
+  const datasetIds: Array<string> = datasetIdsFromStatistic(statistic)
+
+  const datasets: Array<DatasetRepoNode<TbmlData>> = datasetIds.reduce((acc: Array<DatasetRepoNode<TbmlData>>, contentId: string) => {
+    const dataset: DatasetRepoNode<TbmlData> | null = getDatasetFromContentId(contentId)
+    if (dataset) acc.push(dataset)
+    return acc
+  }, [])
+
+  const byOwners: any = groupBy((source: Source) => {
+    return `${source.owner}`
+  } )
+
+  return datasets.map((dataset) => {
+    return {
+      tbmlId: dataset._name,
+      sourceList: dataset.data && typeof(dataset.data) !== 'string' && dataset.data.tbml.metadata.sourceList ?
+        byOwners(dataset.data.tbml.metadata.sourceList) : undefined
+    }
+  })
+}
+
+function getDatasetFromContentId(contentId: string): DatasetRepoNode<TbmlData> | null {
+  const queryResult: QueryResponse<Highchart | Table | KeyFigure> = query({
+    query: `_id = '${contentId}'`,
+    count: 1,
+    filters: {
+      exists: {
+        field: 'data.dataSource.tbprocessor.urlOrId'
+      }
+    }
+  })
+
+  const content: Content<DataSource> | undefined = queryResult.count === 1 ? queryResult.hits[0] : undefined
+  return content ? getTbprocessor(content, 'master') : null
+}
+
 function prepStatistics(statistics: Array<Content<Statistics>>): Array<StatisticDashboard> {
   const statisticData: Array<StatisticDashboard> = []
   statistics.map((statistic: Content<Statistics>) => {
     const statregData: StatregData | undefined = statistic.data.statistic ? getStatregInfo(statistic.data.statistic) : undefined
+    const relatedTables: Array<TbmlSources> = sourceListFromStatistic(statistic)
     if (statregData && statregData.nextRelease) {
       const statisticDataDashboard: StatisticDashboard = {
         id: statistic._id,
         language: statistic.language ? statistic.language : '',
         name: statistic._name ? statistic._name : '',
         shortName: statregData.shortName,
-        nextRelease: statregData.nextRelease ? statregData.nextRelease : ''
+        nextRelease: statregData.nextRelease ? statregData.nextRelease : '',
+        relatedTables
       }
       statisticData.push(statisticDataDashboard)
     }
@@ -139,6 +188,9 @@ function sortByNextRelease(statisticData: Array<StatisticDashboard>): Array<Stat
 
 interface RefreshInfo {
   id: string;
+  user: string;
+  password: string;
+  owner: string;
   fetchPublished: boolean;
 }
 
@@ -148,6 +200,7 @@ interface StatisticDashboard {
   name?: string;
   shortName: string;
   nextRelease?: string;
+  relatedTables?: Array<TbmlSources>;
 }
 
 interface StatregData {
@@ -155,4 +208,11 @@ interface StatregData {
   frekvens: string;
   previousRelease: string;
   nextRelease: string;
+}
+
+interface TbmlSources {
+  tbmlId: string;
+  sourceList?: {
+    [key: number]: Array<Source>;
+  };
 }

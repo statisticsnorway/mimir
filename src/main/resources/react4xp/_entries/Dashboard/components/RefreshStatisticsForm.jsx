@@ -4,7 +4,9 @@ import PropTypes from 'prop-types'
 
 export function RefreshStatisticsForm(props) {
   const {
-    onSubmit
+    onSubmit,
+    owner,
+    sources
   } = props
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -12,12 +14,12 @@ export function RefreshStatisticsForm(props) {
 
   return (
     <Form className="mt-3">
+      <p>Autorisasjon for {owner}. <br/>Tabeller: {sources.map( (source) => source.tableId).join(', ')}.</p>
       <Form.Group controlId="formBasicUsername">
         <Form.Label>Brukernavn</Form.Label>
         <Form.Control
           type="username"
           placeholder="Brukernavn"
-          disabled
           onChange={(e) => setUsername(e.target.value)}
         />
       </Form.Group>
@@ -27,7 +29,6 @@ export function RefreshStatisticsForm(props) {
         <Form.Control
           type="password"
           placeholder="Passord"
-          disabled
           onChange={(e) => setPassword(e.target.value)}
         />
       </Form.Group>
@@ -43,6 +44,7 @@ export function RefreshStatisticsForm(props) {
         onClick={() => onSubmit({
           username,
           password,
+          owner,
           fetchPublished
         })}
       >
@@ -53,6 +55,13 @@ export function RefreshStatisticsForm(props) {
 }
 
 RefreshStatisticsForm.propTypes = {
-  onSubmit: PropTypes.func
+  onSubmit: PropTypes.func,
+  owner: PropTypes.string,
+  sources: PropTypes.arrayOf(
+    PropTypes.shape({
+      tableId: PropTypes.number | PropTypes.string
+    })
+  )
 }
+
 export default (props) => <RefreshStatisticsForm {...props} />

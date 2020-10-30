@@ -1,5 +1,5 @@
 import { HttpLibrary, HttpResponse } from 'enonic-types/http'
-import { TbmlData, XmlParser } from '../types/xmlParser'
+import { TbmlData, TbmlSourceList, XmlParser } from '../types/xmlParser'
 import { RepoQueryLib } from '../repo/query'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
@@ -53,7 +53,13 @@ export function getTbmlData(url: string, queryId?: string): TbmlData {
   return xmlToJson(fetch(url, queryId), queryId)
 }
 
-function xmlToJson(xml: string, queryId?: string): TbmlData {
+export function getTbmlSourceList(url: string): TbmlSourceList | null {
+  const result: string = fetch(url)
+  const jsonResult: TbmlSourceList = xmlToJson(result)
+  return jsonResult ? jsonResult : null
+}
+
+function xmlToJson<T>(xml: string, queryId?: string): T {
   try {
     const json: string = xmlParser.parse(xml)
     return JSON.parse(json)
@@ -73,4 +79,5 @@ function xmlToJson(xml: string, queryId?: string): TbmlData {
 export interface TbmlLib {
   fetch: (url: string, queryId?: string) => string;
   getTbmlData: (url: string, queryId?: string) => TbmlData;
+  getTbmlSourceList: (tbmlId: string) => object;
 }

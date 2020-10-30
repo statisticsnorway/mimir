@@ -117,7 +117,7 @@ function getDataTbProcessor(
 ): KeyFigureView {
   const tbmlData: TbmlData = data as TbmlData
   const bodyRows: Array<TableRow> = util.data.forceArray(tbmlData.tbml.presentation.table.tbody.tr)
-  const head: TableRow = tbmlData.tbml.presentation.table.thead.tr
+  const head: TableRow | Array<TableRow> = tbmlData.tbml.presentation.table.thead.tr
   const [row1, row2] = bodyRows
 
   if (row1) {
@@ -163,7 +163,12 @@ function getDataTbProcessor(
       changePeriod: row2.th.toString()
     }
   }
-  keyFigureViewData.time = (util.data.forceArray(head.th)[0]).toString()
+
+  // the table head are sometimes an array with th's and td's, when it happens it looks like
+  // the last index is the right one to pick.
+  const th: string = Array.isArray(head) ? head[head.length -1].th :  head.th
+
+  keyFigureViewData.time = (util.data.forceArray(th)[0]).toString()
 
   return keyFigureViewData
 }

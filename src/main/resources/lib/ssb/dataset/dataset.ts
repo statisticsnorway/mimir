@@ -79,7 +79,7 @@ export function extractKey(content: Content<DataSource>): string | null {
   }
 }
 
-function extractData(content: Content<DataSource>): JSONstat | TbmlData | object | null {
+function fetchData(content: Content<DataSource>): JSONstat | TbmlData | object | null {
   switch (content.data.dataSource?._selected) {
   case DataSourceType.STATBANK_API:
     return fetchStatbankApiData(content)
@@ -95,7 +95,7 @@ function extractData(content: Content<DataSource>): JSONstat | TbmlData | object
 }
 
 export function refreshDataset(content: Content<DataSource>, branch: string = DATASET_BRANCH, asUser: boolean = true): CreateOrUpdateStatus {
-  const data: JSONstat | TbmlData | object | null = extractData(content)
+  const data: JSONstat | TbmlData | object | null = fetchData(content)
   const key: string | null = extractKey(content)
   const user: User | null = getUser()
 

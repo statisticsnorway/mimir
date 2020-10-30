@@ -42,12 +42,13 @@ export function Statistics() {
 
   const updateTables = (formData) => {
     const {
-      // username,
-      // password,
+      username,
+      password,
+      owner,
       fetchPublished
     } = formData
-    console.log(modalInfo, fetchPublished)
-    refreshStatistic(dispatch, io, modalInfo.id, fetchPublished)
+    const login = username && password ? {owner, username, password} : undefined
+    refreshStatistic(dispatch, io, modalInfo.id, fetchPublished, login)
     handleClose()
   }
 
@@ -100,6 +101,14 @@ export function Statistics() {
     setShow(handleShow)
   }
 
+  function renderStatisticsForm(key, sources, i) {
+    return (
+      <React.Fragment key={i}>
+        <RefreshStatisticsForm onSubmit={(e) => updateTables(e)} owner={key} sources={sources}/>
+      </React.Fragment>
+    )
+  }
+
   const ModalContent = () => {
     return (
       <Modal show={show} onHide={handleClose}>
@@ -107,11 +116,19 @@ export function Statistics() {
           <Modal.Title>Oppdatering av tabeller på web</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <h2>Statistikk: {modalInfo.shortName}</h2>
-          <span>For å oppdatere tabeller med ennå ikke publiserte tall må brukernavn og passord for lastebrukere i Statistikkbanken brukes.</span>
-          <br/>
-          <span>For andre endringer velg "Hent publiserte tall" uten å oppgi brukernavn og passord</span>
-          <RefreshStatisticsForm onSubmit={(e) => updateTables(e)}/>
+          <Row>
+            <Col>
+              <h2>Statistikk: {modalInfo.shortName}</h2>
+              <span>For å oppdatere tabeller med ennå ikke publiserte tall må brukernavn og passord for lastebrukere i Statistikkbanken brukes.</span>
+              <br/>
+              <span>For andre endringer velg "Hent publiserte tall" uten å oppgi brukernavn og passord.</span>
+            </Col>
+          </Row>
+          { modalInfo.relatedTables.map( (table) => {
+            return Object.keys(table.sourceList).map((key, i) => {
+              return renderStatisticsForm(key, table.sourceList[key], i)
+            })
+          })}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
