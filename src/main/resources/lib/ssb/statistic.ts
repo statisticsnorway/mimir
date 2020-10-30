@@ -6,6 +6,7 @@ import { Statistics } from '../../site/content-types/statistics/statistics'
 import { DashboardDatasetLib } from './dataset/dashboard'
 import { ContextLibrary, RunContext } from 'enonic-types/context'
 import { DatasetRepoNode, RepoDatasetLib } from '../repo/dataset'
+import moment = require('moment')
 
 import { Highchart } from '../../site/content-types/highchart/highchart'
 import { Table } from '../../site/content-types/table/table'
@@ -128,7 +129,7 @@ function prepStatistics(statistics: Array<Content<Statistics>>): Array<Statistic
   statistics.map((statistic: Content<Statistics>) => {
     const statregData: StatregData | undefined = statistic.data.statistic ? getStatregInfo(statistic.data.statistic) : undefined
     const relatedTables: Array<TbmlSources> = sourceListFromStatistic(statistic)
-    if (statregData && statregData.nextRelease) {
+    if (statregData && statregData.nextRelease && moment(statregData.nextRelease).isSameOrAfter(new Date(), 'day')) {
       const statisticDataDashboard: StatisticDashboard = {
         id: statistic._id,
         language: statistic.language ? statistic.language : '',
@@ -143,7 +144,7 @@ function prepStatistics(statistics: Array<Content<Statistics>>): Array<Statistic
   return sortByNextRelease(statisticData)
 }
 
-function getStatistics(): Array<Content<Statistics>> {
+export function getStatistics(): Array<Content<Statistics>> {
   let hits: Array<Content<Statistics>> = []
   const result: QueryResponse<Statistics> = query({
     contentTypes: [`${app.name}:statistics`],
@@ -215,4 +216,10 @@ interface TbmlSources {
   sourceList?: {
     [key: number]: Array<Source>;
   };
+}
+
+export interface StatisticLib {
+  setupHandlers: (socket: Socket, socketEmitter: SocketEmitter) => void;
+  getStatistics: () => Array<Content<Statistics>>;
+  getDatasetFromStatistics: (statistic: Content<Statistics>) => Array<string>;
 }

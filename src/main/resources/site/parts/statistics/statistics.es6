@@ -1,5 +1,5 @@
 const {
-  getContent
+  getContent, pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
 const {
   getStatisticByIdFromRepo
@@ -16,6 +16,9 @@ const {
 const {
   preview: keyFigurePreview
 } = __non_webpack_require__('../keyFigure/keyFigure')
+const {
+  hasRole
+} = __non_webpack_require__('/lib/xp/auth')
 
 const React4xp = require('/lib/enonic/react4xp')
 const moment = require('moment/min/moment-with-locales')
@@ -41,11 +44,21 @@ const renderPart = (req) => {
   const updated = phrases.updated + ': '
   const nextUpdate = phrases.nextUpdate + ': '
   const changed = phrases.modified + ': '
-  const modifiedText = page.data.modifiedText
+  const modifiedText = page.data.showModifiedDate ? page.data.showModifiedDate.modifiedOption.modifiedText : null
+  const modifiedDate = page.data.showModifiedDate ? page.data.showModifiedDate.modifiedOption.lastModified : null
   let previousRelease = phrases.notAvailable
   let nextRelease = phrases.notYetDetermined
   let statisticsKeyFigure
   let changeDate
+  const adminRole = hasRole('system.admin')
+  const showPreviewDraft = adminRole && req.mode === 'preview'
+  const paramShowDraft = req.params.showDraft
+  const draftUrl = paramShowDraft ? pageUrl() : pageUrl({
+    params: {
+      showDraft: true
+    }
+  })
+  const draftButtonText = paramShowDraft ? 'Vis publiserte tall' : 'Vis upubliserte tall'
 
   if (statistic) {
     title = statistic.name
@@ -63,9 +76,9 @@ const renderPart = (req) => {
     statisticsKeyFigure = keyFigurePreview(req, page.data.statisticsKeyFigure)
   }
 
-  if (page.data.lastModified && statistic.variants.previousRelease) {
-    if (moment(page.data.lastModified).isAfter(statistic.variants.previousRelease)) {
-      changeDate = moment(page.data.lastModified).format('DD. MMMM YYYY, HH:MM')
+  if (page.data.showModifiedDate && statistic.variants.previousRelease) {
+    if (moment(modifiedDate).isAfter(statistic.variants.previousRelease)) {
+      changeDate = moment(modifiedDate).format('DD. MMMM YYYY, HH:MM')
     }
   }
 
@@ -88,7 +101,10 @@ const renderPart = (req) => {
     previousRelease,
     nextRelease,
     modifiedDateId: modifiedDateComponent.react4xpId,
-    statisticsKeyFigure: statisticsKeyFigure ? statisticsKeyFigure.body : null
+    statisticsKeyFigure: statisticsKeyFigure ? statisticsKeyFigure.body : null,
+    showPreviewDraft,
+    draftUrl,
+    draftButtonText
   }
 
   let body = render(view, model)

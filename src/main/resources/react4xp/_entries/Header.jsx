@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Divider, Input, Link } from '@statisticsnorway/ssb-component-library'
-import { ChevronDown, ChevronUp, Menu, X } from 'react-feather'
+import { ChevronDown, ChevronRight, Menu, X } from 'react-feather'
 
 class Header extends React.Component {
   constructor(props) {
@@ -126,8 +126,8 @@ class Header extends React.Component {
                 <div key={index} className={`tabItem${activeMenuItem ? ' activeTab' : ''}`}>
                   <button onClick={menuItemClick} >
                     <span className={ activeMenuItem ? 'active navigation-item' : 'navigation-item'} >
+                      {activeMenuItem && this.state.showSubMenu ? <ChevronDown size="20" /> : <ChevronRight size="20" />}
                       <span>{topMenuItem.title}</span>
-                      {this.state.mainMenu[index] ? <ChevronUp/> : <ChevronDown/>}
                     </span>
                   </button>
                   <Divider/>

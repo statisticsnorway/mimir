@@ -8,11 +8,12 @@ import PropTypes from 'prop-types'
 import { requestDatasetUpdate, requestEventLogData } from './actions'
 import { DataQuery } from '../../components/DataQuery'
 import { RefreshCw } from 'react-feather'
-import { selectContentStudioBaseUrl } from '../HomePage/selectors'
+import { selectContentStudioBaseUrl, selectDataToolBoxBaseUrl } from '../HomePage/selectors'
 
 export function DataQueryTable(props) {
   const dataQueries = useSelector(selectDataQueriesByParentType(props.dataQueryType))
   const contentStudioBaseUrl = useSelector(selectContentStudioBaseUrl)
+  const dataToolBoxBaseUrl = useSelector(selectDataToolBoxBaseUrl)
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
 
@@ -58,6 +59,7 @@ export function DataQueryTable(props) {
                 onRefresh={() => requestDatasetUpdate(dispatch, io, [dataQuery.id])}
                 onOpenEventLogData={() => requestEventLogData(dispatch, io, dataQuery.id)}
                 contentStudioBaseUrl={contentStudioBaseUrl}
+                dataToolBoxBaseUrl={dataToolBoxBaseUrl}
               />
             )
           })}
