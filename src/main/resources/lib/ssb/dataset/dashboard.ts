@@ -141,7 +141,11 @@ function showWarningIcon(result: Events): boolean {
   ].indexOf(result) >= 0
 }
 
-export function refreshDatasetHandler(ids: Array<string>, socketEmitter: SocketEmitter, branch: string = DATASET_BRANCH): void {
+export function refreshDatasetHandler(
+  ids: Array<string>,
+  socketEmitter: SocketEmitter,
+  branch: string = DATASET_BRANCH,
+  token?: string): void {
   // tell all dashboard instances that these are going to be loaded
   ids.forEach((id) => {
     socketEmitter.broadcast('dashboard-activity-refreshDataset', {
@@ -154,7 +158,7 @@ export function refreshDatasetHandler(ids: Array<string>, socketEmitter: SocketE
       key: id
     })
     if (dataSource) {
-      const refreshDatasetResult: CreateOrUpdateStatus = refreshDataset(dataSource, branch)
+      const refreshDatasetResult: CreateOrUpdateStatus = refreshDataset(dataSource, branch, true, token)
       logUserDataQuery(dataSource._id, {
         file: '/lib/ssb/dataset/dashboard.ts',
         function: 'refreshDatasetHandler',
@@ -257,5 +261,5 @@ export interface RefreshDatasetOptions {
 export interface DashboardDatasetLib {
   users: Array<RegisterUserOptions>;
   setupHandlers: (socket: Socket, socketEmitter: SocketEmitter) => void;
-  refreshDatasetHandler: (ids: Array<string>, socketEmitter: SocketEmitter, branch?: string) => void;
+  refreshDatasetHandler: (ids: Array<string>, socketEmitter: SocketEmitter, branch?: string, token?: string) => void;
 }

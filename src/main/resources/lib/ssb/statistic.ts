@@ -42,6 +42,9 @@ const {
 const {
   getTbprocessor
 }: TbprocessorLib = __non_webpack_require__('/lib/ssb/dataset/tbprocessor')
+const {
+  createHeaderAuthorizationToken
+}= __non_webpack_require__('/lib/cipher/cipher')
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-statistics', () => {
@@ -56,6 +59,9 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     const statistic: Content<Statistics> | null = getContent({
       key: data.id
     })
+
+    const token: string = data.login ? createHeaderAuthorizationToken(data.login.username, data.login.password) : undefined
+
     if (statistic) {
       const datasetIdsToUpdate: Array<string> = datasetIdsFromStatistic(statistic)
 
@@ -70,7 +76,11 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
           }
         }
         run(context, () => {
-          refreshDatasetHandler(datasetIdsToUpdate, socketEmitter, data.fetchPublished ? DATASET_BRANCH : UNPUBLISHED_DATASET_BRANCH)
+          refreshDatasetHandler(
+            datasetIdsToUpdate,
+            socketEmitter,
+            data.fetchPublished ? DATASET_BRANCH : UNPUBLISHED_DATASET_BRANCH,
+            token)
         })
       }
       socketEmitter.broadcast('statistics-refresh-result', {
@@ -129,7 +139,8 @@ function prepStatistics(statistics: Array<Content<Statistics>>): Array<Statistic
   statistics.map((statistic: Content<Statistics>) => {
     const statregData: StatregData | undefined = statistic.data.statistic ? getStatregInfo(statistic.data.statistic) : undefined
     const relatedTables: Array<TbmlSources> = sourceListFromStatistic(statistic)
-    if (statregData && statregData.nextRelease && moment(statregData.nextRelease).isSameOrAfter(new Date(), 'day')) {
+    //if (statregData && statregData.nextRelease && moment(statregData.nextRelease).isSameOrAfter(new Date(), 'day')) {
+    if (statregData && statregData.nextRelease) {
       const statisticDataDashboard: StatisticDashboard = {
         id: statistic._id,
         language: statistic.language ? statistic.language : '',
@@ -189,8 +200,10 @@ function sortByNextRelease(statisticData: Array<StatisticDashboard>): Array<Stat
 
 interface RefreshInfo {
   id: string;
-  user: string;
-  password: string;
+  login?: {
+    username: string;
+    password: string;
+  };
   owner: string;
   fetchPublished: boolean;
 }

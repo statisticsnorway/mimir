@@ -37,9 +37,9 @@ function hasTBProcessorDatasource(content: Content<DataSource>): string | undefi
     content.data.dataSource.tbprocessor.urlOrId
 }
 
-function tryRequestTbmlData(url: string, contentId?: string): TbmlData | null {
+function tryRequestTbmlData(url: string, contentId?: string, token?: string ): TbmlData | null {
   try {
-    return getTbmlData(url, contentId)
+    return getTbmlData(url, contentId, token)
   } catch (e) {
     const message: string = `Failed to fetch data from tbprocessor: ${contentId} (${e})`
     if (contentId) {
@@ -75,12 +75,12 @@ function tryRequestTbmlSourceList(url: string, contentId?: string): TbmlSourceLi
   return null
 }
 
-function getDataAndMetaData(content: Content<DataSource>): TbmlData | null {
+function getDataAndMetaData(content: Content<DataSource>, token: string | undefined): TbmlData | null {
   const baseUrl: string = app.config && app.config['ssb.tbprocessor.baseUrl'] ? app.config['ssb.tbprocessor.baseUrl'] : 'https://i.ssb.no/tbprocessor'
   const dataPath: string = `/process/tbmldata/`
   const sourceListPath: string = `/document/sourceList/`
   const tbmlKey: string = getTbprocessorKey(content)
-  const tbmlData: TbmlData | null = tryRequestTbmlData(`${baseUrl}${dataPath}${tbmlKey}`, content._id)
+  const tbmlData: TbmlData | null = tryRequestTbmlData(`${baseUrl}${dataPath}${tbmlKey}`, content._id, token)
   const tbmlSourceList: TbmlSourceList | null = tryRequestTbmlSourceList(`${baseUrl}${sourceListPath}${tbmlKey}`, content._id)
   const sourceListObject: object = {
     tbml: {
@@ -94,9 +94,9 @@ function getDataAndMetaData(content: Content<DataSource>): TbmlData | null {
   return tbmlData && !tbmlSourceList ? tbmlData : tbmlDataAndSourceList
 }
 
-export function fetchTbprocessorData(content: Content<DataSource>): TbmlData | null {
+export function fetchTbprocessorData(content: Content<DataSource>, token?: string): TbmlData | null {
   const urlOrId: string | undefined = hasTBProcessorDatasource(content)
-  return urlOrId ? getDataAndMetaData(content) : null
+  return urlOrId ? getDataAndMetaData(content, token) : null
 }
 
 export function getTbprocessorKey(content: Content<DataSource>): string {
@@ -121,7 +121,7 @@ export function getTableIdFromTbprocessor(data: TbmlData): Array<string> {
 
 export interface TbprocessorLib {
   getTbprocessor: (content: Content<DataSource>, branch: string) => DatasetRepoNode<TbmlData> | null;
-  fetchTbprocessorData: (content: Content<DataSource>) => TbmlData | null;
+  fetchTbprocessorData: (content: Content<DataSource>, token?: string) => TbmlData | null;
   getTbprocessorKey: (content: Content<DataSource>) => string;
   getTableIdFromTbprocessor: (dataset: TbmlData) => Array<string>;
 }

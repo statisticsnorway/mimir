@@ -9,8 +9,11 @@ const {
   Events
 }: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
 
-export function fetch(url: string, queryId?: string): string {
+export function fetch(url: string, queryId?: string, token?: string): string {
   let result: string = '<tbml></tbml>'
+  const authorizationHeader: Authorization | undefined = token ? {
+    Authorization: `Basic ${token}`
+  }: undefined
 
   if (queryId) {
     logUserDataQuery(queryId, {
@@ -24,8 +27,10 @@ export function fetch(url: string, queryId?: string): string {
   }
 
   const response: HttpResponse = http.request({
-    url
+    url,
+    headers: {...authorizationHeader}
   })
+
   const {
     body,
     status
@@ -49,8 +54,8 @@ export function fetch(url: string, queryId?: string): string {
   return result
 }
 
-export function getTbmlData(url: string, queryId?: string): TbmlData {
-  return xmlToJson(fetch(url, queryId), queryId)
+export function getTbmlData(url: string, queryId?: string, token?: string): TbmlData {
+  return xmlToJson(fetch(url, queryId, token), queryId)
 }
 
 export function getTbmlSourceList(url: string): TbmlSourceList | null {
@@ -77,7 +82,11 @@ function xmlToJson<T>(xml: string, queryId?: string): T {
 }
 
 export interface TbmlLib {
-  fetch: (url: string, queryId?: string) => string;
-  getTbmlData: (url: string, queryId?: string) => TbmlData;
+  fetch: (url: string, queryId?: string, token?: string) => string;
+  getTbmlData: (url: string, queryId?: string, token?: string) => TbmlData;
   getTbmlSourceList: (tbmlId: string) => object;
+}
+
+export interface Authorization {
+  Authorization: string;
 }
