@@ -40,7 +40,7 @@ export interface Statistics {
   }>;
 
   /**
-   * Vis tidspunkt for sist redigering
+   * Endringsdato
    */
   showModifiedDate?: {
     /**
@@ -49,7 +49,7 @@ export interface Statistics {
     _selected: string;
 
     /**
-     * Skal det vises dato?
+     * Endringsmelding
      */
     modifiedOption?: {
       /**
