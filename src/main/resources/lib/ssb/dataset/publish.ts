@@ -45,8 +45,9 @@ export function publishDataset(): void {
     const nextRelease: string | null = getNextRelease(stat)
     if (nextRelease) {
       const releaseDate: Date = new Date(nextRelease)
-      const now: Date = new Date()
-      const oneHourFromNow: Date = new Date(Date.now() + (1000 * 60 * 60))
+      const serverOffsetInMs: number = app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+      const now: Date = new Date(new Date().getTime() + serverOffsetInMs)
+      const oneHourFromNow: Date = new Date(now.getTime() + (1000 * 60 * 60))
       if (releaseDate > now && releaseDate < oneHourFromNow) {
         const dataSourceIds: Array<string> = getDatasetFromStatistics(stat)
         const dataSources: Array<Content<DataSource> | null> = dataSourceIds.map((key) => {
@@ -90,7 +91,8 @@ function createTask(statistic: Content<Statistics>, releaseDate: Date, validPubl
   submit({
     description: `Publish statistic (${statistic.data.statistic})`,
     task: () => {
-      const now: Date = new Date()
+      const serverOffsetInMs: number = app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+      const now: Date = new Date(new Date().getTime() + serverOffsetInMs)
       const sleepFor: number = releaseDate.getTime() - now.getTime()
       log.info(`Publish statistic (${statistic.data.statistic}) in ${sleepFor}ms (${releaseDate.toISOString()})`)
       sleep(sleepFor)
