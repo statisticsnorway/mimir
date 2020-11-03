@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Dropdown, Link } from '@statisticsnorway/ssb-component-library'
 import { isEmpty } from 'ramda'
 import NumberFormat from 'react-number-format'
+import { Alert, Button } from 'react-bootstrap'
 
 import '../../assets/js/jquery-global.js'
 import { ChevronLeft, ChevronRight } from 'react-feather'
@@ -14,7 +15,10 @@ class Table extends React.Component {
     super(props)
 
     this.state = {
-      prevClientWidth: 0
+      prevClientWidth: 0,
+      showPreviewToggle: this.props.showPreviewDraft && (!this.props.pageTypeStatistic || this.props.paramShowDraft && this.props.pageTypeStatistic),
+      fetchUnPublished: this.props.paramShowDraft,
+      table: this.props.paramShowDraft && this.props.draftExist ? this.props.tableDraft : this.props.table
     }
 
     this.captionRef = React.createRef()
@@ -24,6 +28,7 @@ class Table extends React.Component {
     this.tableWrapperRef = React.createRef()
 
     this.widthCheckInterval = undefined
+    this.toggleDraft = this.toggleDraft.bind(this)
   }
 
   componentDidUpdate() {
@@ -200,7 +205,7 @@ class Table extends React.Component {
   addCaption() {
     const {
       caption
-    } = this.props.table
+    } = this.state.table
     if (caption) {
       const hasNoteRefs = typeof caption === 'object'
       return (
@@ -234,7 +239,7 @@ class Table extends React.Component {
   addThead() {
     return (
       <thead>
-        {this.createRowsHead(this.props.table.thead)}
+        {this.createRowsHead(this.state.table.thead)}
       </thead>
     )
   }
@@ -242,17 +247,17 @@ class Table extends React.Component {
   addTbody() {
     return (
       <tbody>
-        {this.createRowsBody(this.props.table.tbody)}
+        {this.createRowsBody(this.state.table.tbody)}
       </tbody>
     )
   }
 
   renderCorrectionNotice() {
-    if (this.props.table.tfoot.correctionNotice) {
+    if (this.state.table.tfoot.correctionNotice) {
       return (
         <tr className="correction-notice">
           <td colSpan="100%">
-            {this.props.table.tfoot.correctionNotice}
+            {this.state.table.tfoot.correctionNotice}
           </td>
         </tr>
       )
@@ -263,8 +268,8 @@ class Table extends React.Component {
   addTFoot() {
     const {
       footnotes, correctionNotice
-    } = this.props.table.tfoot
-    const noteRefsList = this.props.table.noteRefs
+    } = this.state.table.tfoot
+    const noteRefsList = this.state.table.noteRefs
     if (footnotes.length > 0 && noteRefsList.length > 0 || correctionNotice) {
       return (
         <tfoot>
@@ -434,7 +439,7 @@ class Table extends React.Component {
 
   addNoteRefs(noteRefId) {
     if (noteRefId != undefined) {
-      const noteRefsList = this.props.table.noteRefs
+      const noteRefsList = this.state.table.noteRefs
       const noteRefIndex = noteRefsList.indexOf(noteRefId)
       if (noteRefIndex > -1) {
         return (
@@ -449,6 +454,46 @@ class Table extends React.Component {
       return (
         <Link href={this.props.standardSymbol.href} >{this.props.standardSymbol.text}</Link>
       )
+    }
+    return
+  }
+
+  addPreviewButton() {
+    if (this.state.showPreviewToggle && !this.props.pageTypeStatistic) {
+      return (
+        <Button
+          variant="primary"
+          onClick={this.toggleDraft}
+        >
+          {!this.state.fetchUnPublished ? 'Vis upubliserte tall' : 'Vis publiserte tall'}
+        </Button>
+      )
+    }
+    return
+  }
+
+  toggleDraft() {
+    this.setState({
+      fetchUnPublished: !this.state.fetchUnPublished,
+      table: !this.state.fetchUnPublished && this.props.draftExist ? this.props.tableDraft : this.props.table
+    })
+  }
+
+  addPreviewInfo() {
+    if (this.props.showPreviewDraft) {
+      if (this.state.fetchUnPublished && this.props.draftExist) {
+        return (
+          <Alert variant='info'>
+          Tallene i tabellen nedenfor er upublisert
+          </Alert>
+        )
+      } else if (this.state.fetchUnPublished && !this.props.draftExist) {
+        return (
+          <Alert variant='warning'>
+              Finnes ikke upubliserte tall for denne tabellen
+          </Alert>
+        )
+      }
     }
     return
   }
@@ -479,10 +524,12 @@ class Table extends React.Component {
   }
 
   render() {
-    if (!isEmpty(this.props.table)) {
+    if (!isEmpty(this.state.table)) {
       return (
         <div className="container">
+          {this.addPreviewButton()}
           {this.addDownloadTableDropdown(false)}
+          {this.addPreviewInfo()}
           {this.createScrollControlsDesktop()}
           {this.createScrollControlsMobile()}
           <div className="table-wrapper" onScroll={() => this.updateTableControlsDesktop()} ref={this.tableWrapperRef}>
@@ -567,7 +614,57 @@ Table.propTypes = {
     }),
     language: PropTypes.string,
     noteRefs: PropTypes.arrayOf(PropTypes.string)
-  })
+  }),
+  tableDraft: PropTypes.shape({
+    caption: PropTypes.string | PropTypes.shape({
+      content: PropTypes.string,
+      noterefs: PropTypes.string
+    }),
+    thead: PropTypes.arrayOf(
+      PropTypes.shape({
+        td: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
+          rowspan: PropTypes.number,
+          colspan: PropTypes.number,
+          content: PropTypes.string,
+          class: PropTypes.string
+        }),
+        th: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
+          rowspan: PropTypes.number,
+          colspan: PropTypes.number,
+          content: PropTypes.string,
+          class: PropTypes.string,
+          noterefs: PropTypes.string
+        })
+      })
+    ),
+    tbody: PropTypes.arrayOf(
+      PropTypes.shape({
+        th: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
+          content: PropTypes.string,
+          class: PropTypes.string,
+          noterefs: PropTypes.string
+        }),
+        td: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
+          content: PropTypes.string,
+          class: PropTypes.string
+        })
+      })
+    ),
+    tfoot: PropTypes.shape({
+      footnotes: PropTypes.arrayOf(
+        PropTypes.shape({
+          noteid: PropTypes.string,
+          content: PropTypes.string
+        })
+      ),
+      correctionNotice: PropTypes.string
+    }),
+    noteRefs: PropTypes.arrayOf(PropTypes.string)
+  }),
+  showPreviewDraft: PropTypes.bool,
+  paramShowDraft: PropTypes.bool,
+  draftExist: PropTypes.bool,
+  pageTypeStatistic: PropTypes.bool
 }
 
 export default (props) => <Table {...props}/>
