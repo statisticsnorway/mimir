@@ -13,8 +13,8 @@ import { Table } from '../../site/content-types/table/table'
 import { KeyFigure } from '../../site/content-types/keyFigure/keyFigure'
 import { TbprocessorLib } from './dataset/tbprocessor'
 import { DataSource } from '../../site/mixins/dataSource/dataSource'
-import {Source, TbmlData} from '../types/xmlParser'
-import {groupBy} from 'ramda';
+import { Source, TbmlData } from '../types/xmlParser'
+import { groupBy } from 'ramda'
 
 const {
   query,
@@ -106,9 +106,9 @@ function sourceListFromStatistic(statistic: Content<Statistics>): Array<TbmlSour
     return acc
   }, [])
 
-  const byOwners: any = groupBy((source: Source) => {
+  const byOwners: Function = groupBy((source: Source) => {
     return `${source.owner}`
-  } )
+  })
 
   return datasets.map((dataset) => {
     return {
@@ -138,8 +138,7 @@ function prepStatistics(statistics: Array<Content<Statistics>>): Array<Statistic
   statistics.map((statistic: Content<Statistics>) => {
     const statregData: StatregData | undefined = statistic.data.statistic ? getStatregInfo(statistic.data.statistic) : undefined
     const relatedTables: Array<TbmlSources> = sourceListFromStatistic(statistic)
-    //if (statregData && statregData.nextRelease && moment(statregData.nextRelease).isSameOrAfter(new Date(), 'day')) {
-    if (statregData && statregData.nextRelease ) {
+    if (statregData && statregData.nextRelease && moment(statregData.nextRelease).isSameOrAfter(new Date(), 'day')) {
       const statisticDataDashboard: StatisticDashboard = {
         id: statistic._id,
         language: statistic.language ? statistic.language : '',
@@ -234,4 +233,8 @@ export interface StatisticLib {
   setupHandlers: (socket: Socket, socketEmitter: SocketEmitter) => void;
   getStatistics: () => Array<Content<Statistics>>;
   getDatasetFromStatistics: (statistic: Content<Statistics>) => Array<string>;
+}
+
+export interface GroupByResult {
+  [key: number]: Array<object>;
 }
