@@ -1,9 +1,43 @@
-<h1>Siden ble ikke funnet - 404</h1>
-<p>Du har dessverre havnet på en side som ikke finnes. Informasjonen som var på denne siden er høyst sannsynlig flyttet, fått nytt navn eller fjernet fordi den er utdatert.</p>
-<h2>Vennligst prøv ett av følgende:</h2>
-<ul>
-  <li>Sjekk om du har stavet sidens adresse riktig i adressefeltet.</li>
-  <li>Gå til <a href="/">www.ssb.no</a> og se om du kan finne siden derfra.</li>
-  <li>Gå <a href="javascript:history.go(-1)">tilbake</a> for å prøve en annen lenke</li>
-  <li>Søk etter siden i søkefeltet nedenfor</li>
-</ul>
+<html>
+    <head>
+        <script async="true" data-th-if="${GA_TRACKING_ID}" data-th-src="|https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}|"></script>
+        <script th:inline="javascript" data-th-if="${GA_TRACKING_ID}">
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', /*[[${GA_TRACKING_ID}]]*/);
+        </script>
+
+        <meta http-equiv="Content-Type" content="text/html;" charset="UTF-8">
+        <title data-th-text="${pageTitle}">Side ikke funnet / Page not found - SSB</title>
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans%7COpen+Sans:700%7CRoboto:700%7CRoboto+Condensed:700"/>
+        <link rel="stylesheet" data-th-href="${stylesUrl}"/>
+        <link rel="alternate" data-th-if="${alternateLanguageVersionUrl}" data-th-href="${alternateLanguageVersionUrl}" data-th-hreflang="${language.alternate}"/>
+    </head>
+    <body class="xp-page" data-th-classappend="${bodyClasses}">
+        <div class="container">
+            <div class="row d-flex justify-content-center error-page">
+                <div class="col-12 ml-5 mt-5">
+                    <h1 class="col-10 text-center" data-th-text="${title}">Denne siden finnes ikke</h1>
+                </div>
+                <div class="col-4 ml-5 mt-5 text-wrapper">
+                    <p data-th-text="${text}">Du har dessverre havnet på en side som ikke finnes.</p>
+                    <ul>
+                        <li>
+                            <a href="javascript:history.back()" data-th-text="${goBack}">tilbake</a>
+                            <span data-th-text="${or}">Eller</span>
+                            <a href="/" data-th-text="${frontPage}">forsiden</a>
+                        </li>
+                        <li><span data-th-text="${search}">eller prøve søket</span></li>
+                    </ul>
+                    <div data-th-id="${searchBoxId}">
+                    </div>
+                </div>
+                <div class="col-3 mt-4 ml-5">
+                    <img data-th-src="${illustration}" alt="404 feil / Error 404">
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

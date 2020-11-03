@@ -1,0 +1,12 @@
+.error-page {
+  h1 {
+    color: $ssb-green-3;
+  }
+  ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  p, ul, a {
+    font-weight: bold;
+  }
+}
