@@ -13,6 +13,7 @@ import { JSONstat } from '../../types/jsonstat-toolkit'
 import { TbmlData } from '../../types/xmlParser'
 import { DatasetRepoNode, RepoDatasetLib } from '../../repo/dataset'
 import { RepoCommonLib } from '../../repo/common'
+import { User } from 'enonic-types/auth'
 
 const {
   logUserDataQuery
@@ -51,7 +52,7 @@ const {
   getQueryChildNodesStatus
 }: EventLogLib = __non_webpack_require__('/lib/repo/eventLog')
 
-export const users: Array<RegisterUserOptions> = []
+export const users: Array<User> = []
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-dataqueries', () => {
@@ -70,12 +71,9 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     })
   })
 
-  socket.on('dashboard-register-user', (options: RegisterUserOptions) => {
-    if (options && options.user) {
-      users[parseInt(socket.id)] = {
-        user: options.user,
-        store: options.store
-      }
+  socket.on('dashboard-register-user', (user: User) => {
+    if (user) {
+      users[parseInt(socket.id)] = user
     }
   })
 
@@ -85,8 +83,8 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
       repository: 'com.enonic.cms.default',
       principals: ['role:system.admin'],
       user: {
-        login: users[parseInt(socket.id)].user,
-        idProvider: users[parseInt(socket.id)].store ? users[parseInt(socket.id)].store : 'system'
+        login: users[parseInt(socket.id)].login,
+        idProvider: users[parseInt(socket.id)].idProvider ? users[parseInt(socket.id)].idProvider : 'system'
       }
     }
     run(context, () => refreshDatasetHandler(options.ids, socketEmitter))
@@ -245,17 +243,12 @@ interface DashboardRefreshResultLogData {
   modifiedReadable: string;
 }
 
-export interface RegisterUserOptions {
-  user: string;
-  store: string;
-}
-
 export interface RefreshDatasetOptions {
   ids: Array<string>;
 }
 
 export interface DashboardDatasetLib {
-  users: Array<RegisterUserOptions>;
+  users: Array<User>;
   setupHandlers: (socket: Socket, socketEmitter: SocketEmitter) => void;
   refreshDatasetHandler: (ids: Array<string>, socketEmitter: SocketEmitter, branch?: string) => void;
 }
