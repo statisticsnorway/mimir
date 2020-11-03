@@ -1,7 +1,7 @@
 import { HttpLibrary, HttpRequestParams, HttpResponse } from 'enonic-types/http'
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 import { XmlParser } from '../types/xmlParser'
-import {RepoQueryLib} from '../repo/query';
+import { RepoQueryLib } from '../repo/query'
 
 const {
   sleep
@@ -13,7 +13,7 @@ const {
   Events
 }: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
 
-export function get(url: string,  queryId?: string): object | null {
+export function get(url: string, queryId?: string): object | null {
   const requestParams: HttpRequestParams = {
     url,
     method: 'POST',

@@ -38,7 +38,7 @@ export function refreshQueriesAsync(httpQueries: Array<Content<DataSource>>, bat
           logUserDataQuery(httpQuery._id, {
             message: Events.GET_DATA_STARTED
           })
-          const result: CreateOrUpdateStatus = refreshDataset(httpQuery, DATASET_BRANCH, false)
+          const result: CreateOrUpdateStatus = refreshDataset(httpQuery, DATASET_BRANCH)
           logUserDataQuery(httpQuery._id, {
             message: result.status
           })
