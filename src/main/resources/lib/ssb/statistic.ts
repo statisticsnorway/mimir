@@ -114,7 +114,7 @@ function sourceListFromStatistic(statistic: Content<Statistics>): Array<TbmlSour
     return {
       tbmlId: dataset._name,
       sourceList: dataset.data && typeof(dataset.data) !== 'string' && dataset.data.tbml.metadata.sourceList ?
-        byOwners(dataset.data.tbml.metadata.sourceList) : undefined
+        byOwners(forceArray(dataset.data.tbml.metadata.sourceList)) : undefined
     }
   })
 }
@@ -129,7 +129,6 @@ function getDatasetFromContentId(contentId: string): DatasetRepoNode<TbmlData> |
       }
     }
   })
-
   const content: Content<DataSource> | undefined = queryResult.count === 1 ? queryResult.hits[0] : undefined
   return content ? getTbprocessor(content, 'master') : null
 }
@@ -140,7 +139,7 @@ function prepStatistics(statistics: Array<Content<Statistics>>): Array<Statistic
     const statregData: StatregData | undefined = statistic.data.statistic ? getStatregInfo(statistic.data.statistic) : undefined
     const relatedTables: Array<TbmlSources> = sourceListFromStatistic(statistic)
     //if (statregData && statregData.nextRelease && moment(statregData.nextRelease).isSameOrAfter(new Date(), 'day')) {
-    if (statregData && statregData.nextRelease) {
+    if (statregData && statregData.nextRelease ) {
       const statisticDataDashboard: StatisticDashboard = {
         id: statistic._id,
         language: statistic.language ? statistic.language : '',

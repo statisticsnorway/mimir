@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, Col, Row, Table, Modal } from 'react-bootstrap'
+import {Button, Col, Row, Table, Modal} from 'react-bootstrap'
 import { selectStatistics, selectLoading } from './selectors'
 import { RefreshCw } from 'react-feather'
 import Moment from 'react-moment'
@@ -42,13 +42,9 @@ export function Statistics() {
 
   const updateTables = (formData) => {
     const {
-      username,
-      password,
-      owner,
-      fetchPublished
+      owners
     } = formData
-    const login = username && password ? {owner, username, password} : undefined
-    refreshStatistic(dispatch, io, modalInfo.id, fetchPublished, login)
+    refreshStatistic(dispatch, io, modalInfo.id, owners)
     handleClose()
   }
 
@@ -104,7 +100,7 @@ export function Statistics() {
   function renderStatisticsForm(key, sources, i) {
     return (
       <React.Fragment key={i}>
-        <RefreshStatisticsForm onSubmit={(e) => updateTables(e)} owner={key} sources={sources}/>
+        <RefreshStatisticsForm onSubmit={(e) => updateTables(e)} modalInfo={modalInfo}/>
       </React.Fragment>
     )
   }
@@ -124,11 +120,7 @@ export function Statistics() {
               <span>For andre endringer velg "Hent publiserte tall" uten å oppgi brukernavn og passord.</span>
             </Col>
           </Row>
-          { modalInfo.relatedTables.map( (table) => {
-            return Object.keys(table.sourceList).map((key, i) => {
-              return renderStatisticsForm(key, table.sourceList[key], i)
-            })
-          })}
+          { renderStatisticsForm() }
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
