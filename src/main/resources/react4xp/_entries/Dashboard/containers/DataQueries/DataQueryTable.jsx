@@ -6,10 +6,10 @@ import { selectDataQueriesByParentType } from './selectors'
 import { Accordion, Link } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import { requestDatasetUpdate, requestEventLogData } from './actions'
-import { DataQuery } from '../../components/DataQuery'
 import { AlertTriangle, RefreshCw } from 'react-feather'
 import { selectContentStudioBaseUrl, selectDataToolBoxBaseUrl } from '../HomePage/selectors'
 import { ReactTable } from '../../components/ReactTable'
+import { DataQueryBadges } from '../../components/DataQueryBadges'
 
 export function DataQueryTable(props) {
   const dataQueries = useSelector(selectDataQueriesByParentType(props.dataQueryType))
@@ -124,6 +124,7 @@ export function DataQueryTable(props) {
         dataquery: (
           <span className={`${dataQuery.hasData ? 'ok' : 'error'} dataset`}>
             <Link isExternal href={contentStudioBaseUrl + dataQuery.id}>{dataQuery.displayName}</Link>
+            <DataQueryBadges contentType={dataQuery.type} format={dataQuery.format} isPublished={dataQuery.isPublished}/>
           </span>
         ),
         lastUpdated: (

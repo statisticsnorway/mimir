@@ -58,8 +58,7 @@ export function ReactTable(props) {
 
 ReactTable.propTypes = {
   columns: PropTypes.array,
-  data: PropTypes.array,
-  subComponent: PropTypes.node
+  data: PropTypes.array
 }
 
 export default (props) => <ReactTable {...props} />
