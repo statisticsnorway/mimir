@@ -23,6 +23,9 @@ exports.handle404 = function(err) {
   const illustration = assetUrl({
     path: 'SSB_404_illustration.svg'
   })
+  const logo = assetUrl({
+    path: 'SSB_logo_black.svg'
+  })
 
   const title = i18nLib.localize({
     key: '404.title'
@@ -46,19 +49,11 @@ exports.handle404 = function(err) {
     key: 'menuSearch'
   })
 
-  function goToSearchResultPage(value) {
-    window.location = `https://ssb.no/sok?sok=${value}`
-  }
-
-  const searchComponent = new React4xp('Input')
+  const searchComponent = new React4xp('Search')
     .setProps({
-      id: 'search_ssb',
-      ariaLabel: '',
-      searchField: true,
-      submitCallback: { goToSearchResultPage },
-      placeholder: searchText,
-      ariaLabelSearchButton: searchText,
-      className: ''
+      searchText: searchText,
+      searchResultPageUrl: 'https://www.ssb.no/sok',
+      className: 'show'
     })
     .setId('searchBox')
     .uniqueId()
@@ -74,6 +69,7 @@ exports.handle404 = function(err) {
     or,
     search,
     illustration,
+    logo,
     configRegions: [],
     showIngress: false,
     bodyClasses: '',
@@ -87,9 +83,15 @@ exports.handle404 = function(err) {
     clientRender: true
   })
 
+  const pageContributions = searchComponent.renderPageContributions({
+    pageContributions,
+    clientRender: true
+  })
+
   return {
     body,
-    pageContributions: searchComponent.renderPageContributions(),
-    contentType: 'text/html'
+    pageContributions,
+    contentType: 'text/html',
+    postProcess: true
   }
 }

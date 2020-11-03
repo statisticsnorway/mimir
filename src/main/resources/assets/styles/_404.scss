@@ -9,4 +9,16 @@
   p, ul, a {
     font-weight: bold;
   }
+  .logo {
+    img {
+      max-width: 230px;
+      max-height: 50px;
+    }
+  }
+  .title-wrapper {
+    margin-top: 70px;
+  }
+  .search-wrapper {
+    max-width: 300px;
+  }
 }
