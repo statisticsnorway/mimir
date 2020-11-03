@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import {Button, Col, Row, Table, Modal} from 'react-bootstrap'
+import { Button, Col, Row, Table, Modal } from 'react-bootstrap'
 import { selectStatistics, selectLoading } from './selectors'
 import { RefreshCw } from 'react-feather'
 import Moment from 'react-moment'
@@ -117,7 +117,7 @@ export function Statistics() {
               <h2>Statistikk: {modalInfo.shortName}</h2>
               <span>For å oppdatere tabeller med ennå ikke publiserte tall må brukernavn og passord for lastebrukere i Statistikkbanken brukes.</span>
               <br/>
-              <span>For andre endringer velg "Hent publiserte tall" uten å oppgi brukernavn og passord.</span>
+              <span>For andre endringer velg &quot;Hent publiserte tall&quot; uten å oppgi brukernavn og passord.</span>
             </Col>
           </Row>
           { renderStatisticsForm() }

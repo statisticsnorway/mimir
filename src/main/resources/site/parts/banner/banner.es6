@@ -38,7 +38,7 @@ function renderPart(req) {
   })
   const municipality = pageType._selected === 'kommunefakta' ? getMunicipality(req) : undefined
   const municipalityName = municipality ? removeCountyFromMunicipalityName(municipality.displayName) : undefined
-  const imgSrcSet = part.config.image? imageSrcSet(part.config.image) : undefined
+  const imgSrcSet = part.config.image ? imageSrcSet(part.config.image) : undefined
 
   const model = {
     ...imgSrcSet,
@@ -76,7 +76,7 @@ function imageSrcSet(imageId) {
   const sizes = `(min-width: 1501px) 2000px,
                  ((min-width: 1261px) and (max-width: 1500px)) 1500px, 
                  ((min-width: 801px) and (max-width: 1261px)) 1260px, 
-                 ((min-width: 651px) and (max-width: 800px)) 800px, 650px`;
+                 ((min-width: 651px) and (max-width: 800px)) 800px, 650px`
 
   return {
     sizes,

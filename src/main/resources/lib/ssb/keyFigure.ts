@@ -166,7 +166,7 @@ function getDataTbProcessor(
 
   // the table head are sometimes an array with th's and td's, when it happens it looks like
   // the last index is the right one to pick.
-  const th: string = Array.isArray(head) ? head[head.length -1].th :  head.th
+  const th: string = Array.isArray(head) ? head[head.length - 1].th : head.th
 
   keyFigureViewData.time = (util.data.forceArray(th)[0]).toString()
 

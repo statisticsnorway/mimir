@@ -12,7 +12,7 @@ import { AuthLibrary, User } from 'enonic-types/auth'
 import { StatbankSavedLib } from './statbankSaved'
 
 const {
-  logUserDataQuery, Events
+  Events
 }: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
 const {
   query
@@ -94,7 +94,7 @@ function fetchData(content: Content<DataSource>): JSONstat | TbmlData | object |
   }
 }
 
-export function refreshDataset(content: Content<DataSource>, branch: string = DATASET_BRANCH, asUser: boolean = true): CreateOrUpdateStatus {
+export function refreshDataset(content: Content<DataSource>, branch: string = DATASET_BRANCH): CreateOrUpdateStatus {
   const data: JSONstat | TbmlData | object | null = fetchData(content)
   const key: string | null = extractKey(content)
   const user: User | null = getUser()
@@ -133,7 +133,7 @@ export function refreshDatasetWithUserKey(content: Content<DataSource>, userLogi
       idProvider: 'system'
     }
   }
-  return run(context, () => refreshDataset(content, branch, true))
+  return run(context, () => refreshDataset(content, branch))
 }
 
 
@@ -197,7 +197,7 @@ export interface CreateOrUpdateStatus {
 export interface DatasetLib {
   getDataset: (content: Content<DataSource>, branch?: string) => DatasetRepoNode<JSONstat | TbmlData | object> | null;
   extractKey: (content: Content<DataSource>) => string;
-  refreshDataset: (content: Content<DataSource>, branch?: string, asUser?: boolean) => CreateOrUpdateStatus;
+  refreshDataset: (content: Content<DataSource>, branch?: string) => CreateOrUpdateStatus;
   refreshDatasetWithUserKey: (content: Content<DataSource>, userLogin: string, branch?: string) => CreateOrUpdateStatus;
   deleteDataset: (content: Content<DataSource>, branch?: string) => boolean;
   getContentWithDataSource: () => Array<Content<DataSource>>;
