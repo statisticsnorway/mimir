@@ -2,13 +2,9 @@ const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
 const {
-  getContent,
   assetUrl
 } = __non_webpack_require__( '/lib/xp/portal')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const {
-  getLanguage
-} = __non_webpack_require__( '/lib/language')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 
 const fourOFourView = resolve('./404.html')
