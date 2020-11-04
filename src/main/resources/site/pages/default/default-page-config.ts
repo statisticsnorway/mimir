@@ -29,6 +29,11 @@ export interface DefaultPageConfig {
     showGreyTriangle: boolean;
 
     /**
+     * Grå bakgrunn på region
+     */
+    showGreyBackground: boolean;
+
+    /**
      * Tittel
      */
     title?: string;
