@@ -28,17 +28,24 @@ export function DataQueryTable(props) {
   const columns = React.useMemo(() => [
     {
       Header: 'Spørring ',
-      accessor: 'dataquery'
+      accessor: 'dataquery',
+      sortType: (a, b) => {
+        return a.original.dataquerySort > b.original.dataquerySort ? 1 : -1
+      }
     },
     {
       Header: 'Sist oppdatert ',
       accessor: 'lastUpdated',
-      sortType: 'datetime' // TODO: replace with function, retrieve only the date and sort by that
+      sortType: (a, b) => {
+        return a.original.lastUpdatedSort > b.original.lastUpdatedSort ? 1 : -1
+      }
     },
     {
       Header: 'Siste aktivitet ',
       accessor: 'lastActivity',
-      sortType: 'datetime' // TODO: replace with function, for now only sort by date of last activity
+      sortType: (a, b) => {
+        return a.original.lastActivitySort > b.original.lastActivitySort ? 1 : -1
+      }
     },
     {
       Header: '',
@@ -127,6 +134,7 @@ export function DataQueryTable(props) {
             <DataQueryBadges contentType={dataQuery.type} format={dataQuery.format} isPublished={dataQuery.isPublished}/>
           </span>
         ),
+        dataquerySort: dataQuery.displayName.toLowerCase(),
         lastUpdated: (
           <span>
             {dataQuery.dataset.modifiedReadable ? dataQuery.dataset.modifiedReadable : ''}
@@ -134,7 +142,9 @@ export function DataQueryTable(props) {
             {dataQuery.dataset.modified ? dataQuery.dataset.modified : ''}
           </span>
         ),
+        lastUpdatedSort: dataQueries.dataset && dataQueries.dataset.modified ? new Date(dataQueries.dataset.modified) : new Date('01.01.1970'),
         lastActivity: dataQuery.logData ? renderLogData(dataQuery) : <span></span>,
+        lastActivitySort: dataQuery.logData && dataQuery.logData.modified ? new Date(dataQuery.logData.modified) : new Date('01.01.1970'),
         refreshDataQuery: (
           <Button variant="primary"
             size="sm"
