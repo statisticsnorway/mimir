@@ -16,7 +16,7 @@ const {
   submit
 } = __non_webpack_require__('/lib/xp/task')
 const {
-  logAdminDataQuery,
+  logUserDataQuery,
   Events
 }: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
 
@@ -35,11 +35,11 @@ export function refreshQueriesAsync(httpQueries: Array<Content<DataSource>>, bat
           progress({
             info: `Refresh dataset ${httpQuery._id}`
           })
-          logAdminDataQuery(httpQuery._id, {
+          logUserDataQuery(httpQuery._id, {
             message: Events.GET_DATA_STARTED
           })
           const result: CreateOrUpdateStatus = refreshDataset(httpQuery, DATASET_BRANCH)
-          logAdminDataQuery(httpQuery._id, {
+          logUserDataQuery(httpQuery._id, {
             message: result.status
           })
         })

@@ -65,8 +65,8 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
           repository: 'com.enonic.cms.default',
           principals: ['role:system.admin'],
           user: {
-            login: users[parseInt(socket.id)].user,
-            idProvider: users[parseInt(socket.id)].store ? users[parseInt(socket.id)].store : 'system'
+            login: users[parseInt(socket.id)].login,
+            idProvider: users[parseInt(socket.id)].idProvider ? users[parseInt(socket.id)].idProvider : 'system'
           }
         }
         run(context, () => {
