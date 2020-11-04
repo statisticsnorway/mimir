@@ -158,7 +158,7 @@ export function refreshDatasetHandler(
       key: id
     })
     if (dataSource) {
-      const refreshDatasetResult: CreateOrUpdateStatus = refreshDataset(dataSource, branch, true, token)
+      const refreshDatasetResult: CreateOrUpdateStatus = refreshDataset(dataSource, branch, token)
       logUserDataQuery(dataSource._id, {
         file: '/lib/ssb/dataset/dashboard.ts',
         function: 'refreshDatasetHandler',
