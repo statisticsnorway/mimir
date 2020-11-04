@@ -11,6 +11,7 @@ import { selectContentStudioBaseUrl } from '../HomePage/selectors'
 import { ReactTable } from '../../components/ReactTable'
 import { DataQueryBadges } from '../../components/DataQueryBadges'
 import { DataQueryLog } from './DataQueryLog'
+import { RefreshDataQueryButton } from './RefreshDataQueryButton'
 
 export function DataQueryTable(props) {
   const dataQueries = useSelector(selectDataQueriesByParentType(props.dataQueryType))
@@ -28,9 +29,9 @@ export function DataQueryTable(props) {
   const columns = React.useMemo(() => [
     {
       Header: 'Spørring ',
-      accessor: 'dataquery',
+      accessor: 'dataQuery',
       sortType: (a, b) => {
-        return a.original.dataquerySort > b.original.dataquerySort ? 1 : -1
+        return a.original.dataQuerySort > b.original.dataQuerySort ? 1 : -1
       }
     },
     {
@@ -57,13 +58,13 @@ export function DataQueryTable(props) {
   function getDataQueries(dataQueries) {
     return dataQueries.map((dataQuery) => {
       return {
-        dataquery: (
+        dataQuery: (
           <span className={`${dataQuery.hasData ? 'ok' : 'error'} dataset`}>
             <Link isExternal href={contentStudioBaseUrl + dataQuery.id}>{dataQuery.displayName}</Link>
             <DataQueryBadges contentType={dataQuery.type} format={dataQuery.format} isPublished={dataQuery.isPublished}/>
           </span>
         ),
-        dataquerySort: dataQuery.displayName.toLowerCase(),
+        dataQuerySort: dataQuery.displayName.toLowerCase(),
         lastUpdated: (
           <span>
             {dataQuery.dataset.modifiedReadable ? dataQuery.dataset.modifiedReadable : ''}
@@ -73,19 +74,11 @@ export function DataQueryTable(props) {
         ),
         lastUpdatedSort: dataQuery.dataset && dataQuery.dataset.modified ? new Date(dataQuery.dataset.modified) : new Date('01.01.1970'),
         lastActivity: (
-          <DataQueryLog
-            dataQueryId={dataQuery.id}
-          />
+          <DataQueryLog dataQueryId={dataQuery.id} />
         ),
         lastActivitySort: dataQuery.logData && dataQuery.logData.modified ? new Date(dataQuery.logData.modified) : new Date('01.01.1970'),
         refreshDataQuery: (
-          <Button variant="primary"
-            size="sm"
-            className="mx-1"
-            onClick={() => requestDatasetUpdate(dispatch, io, [dataQuery.id])}
-          >
-            {dataQuery.loading ? <span className="spinner-border spinner-border-sm"/> : <RefreshCw size={16}/>}
-          </Button>
+          <RefreshDataQueryButton dataQueryId={dataQuery.id} />
         )
       }
     })
