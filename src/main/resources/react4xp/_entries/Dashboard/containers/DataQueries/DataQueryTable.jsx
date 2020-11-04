@@ -1,20 +1,20 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
-import { Button, Modal } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 import { selectDataQueriesByParentType } from './selectors'
 import { Accordion, Link } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
-import { requestDatasetUpdate, requestEventLogData } from './actions'
-import { AlertTriangle, RefreshCw } from 'react-feather'
-import { selectContentStudioBaseUrl, selectDataToolBoxBaseUrl } from '../HomePage/selectors'
+import { requestDatasetUpdate } from './actions'
+import { RefreshCw } from 'react-feather'
+import { selectContentStudioBaseUrl } from '../HomePage/selectors'
 import { ReactTable } from '../../components/ReactTable'
 import { DataQueryBadges } from '../../components/DataQueryBadges'
+import { DataQueryLog } from './DataQueryLog'
 
 export function DataQueryTable(props) {
   const dataQueries = useSelector(selectDataQueriesByParentType(props.dataQueryType))
   const contentStudioBaseUrl = useSelector(selectContentStudioBaseUrl)
-  const dataToolBoxBaseUrl = useSelector(selectDataToolBoxBaseUrl)
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
 
@@ -54,77 +54,6 @@ export function DataQueryTable(props) {
     }
   ], [])
 
-  const [show, setShow] = useState(false)
-  const handleClose = () => setShow(false)
-  const handleShow = () => setShow(true)
-
-  const openEventlog = (dataQuery) => {
-    requestEventLogData(dispatch, io, dataQuery.id)
-    setShow(handleShow)
-  }
-
-  function renderLogData(dataQuery) {
-    if (dataQuery.logData) {
-      return (
-        <span className="text-center haveList" onClick={() => openEventlog(dataQuery)}>
-          <span>
-            {dataQuery.logData.message ? dataQuery.logData.message : ''}
-            {dataQuery.logData.showWarningIcon && <span className="warningIcon"><AlertTriangle size="12" color="#FF4500"/></span>}<br/>
-            {dataQuery.logData.modifiedReadable ? dataQuery.logData.modifiedReadable : ''}<br/>
-            {dataQuery.logData.modified ? dataQuery.logData.modified : ''}<br/>
-            {dataQuery.logData.by && dataQuery.logData.by.displayName ? `av ${dataQuery.logData.by.displayName}` : '' }
-          </span>
-        </span>
-      )
-    } else return <span>no logs</span>
-  }
-
-  const openToolBox = (dataQuery) => {
-    window.open(dataToolBoxBaseUrl + dataQuery.id)
-  }
-
-  function renderJobLogs(dataQuery) {
-    if (dataQuery.loadingLogs === true) {
-      return (
-        <span className="spinner-border spinner-border" />
-      )
-    } else {
-      return dataQuery.eventLogNodes.map((logNode, index) => {
-        return (
-          <p key={index}>
-            <span>{logNode.modifiedTs}</span> - <span>{logNode.by}</span><br/>
-            <span> &gt; {logNode.result}</span>
-          </p>
-        )
-      })
-    }
-  }
-
-  // TODO: Implement ModalContent
-  const ModalContent = (dataQuery) => {
-    return (
-      <Modal
-        show={show}
-        onHide={handleClose}
-        animation={false}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>
-              Logg detaljer
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <h3>{dataQuery.displayName}</h3>
-          {renderJobLogs(dataQuery)}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="info" onClick={openToolBox(dataQuery)}>Datatoolbox</Button>
-          <Button variant="secondary" onClick={handleClose}>Lukk</Button>
-        </Modal.Footer>
-      </Modal>
-    )
-  }
-
   function getDataQueries(dataQueries) {
     return dataQueries.map((dataQuery) => {
       return {
@@ -142,8 +71,12 @@ export function DataQueryTable(props) {
             {dataQuery.dataset.modified ? dataQuery.dataset.modified : ''}
           </span>
         ),
-        lastUpdatedSort: dataQueries.dataset && dataQueries.dataset.modified ? new Date(dataQueries.dataset.modified) : new Date('01.01.1970'),
-        lastActivity: dataQuery.logData ? renderLogData(dataQuery) : <span></span>,
+        lastUpdatedSort: dataQuery.dataset && dataQuery.dataset.modified ? new Date(dataQuery.dataset.modified) : new Date('01.01.1970'),
+        lastActivity: (
+          <DataQueryLog
+            dataQueryId={dataQuery.id}
+          />
+        ),
         lastActivitySort: dataQuery.logData && dataQuery.logData.modified ? new Date(dataQuery.logData.modified) : new Date('01.01.1970'),
         refreshDataQuery: (
           <Button variant="primary"
