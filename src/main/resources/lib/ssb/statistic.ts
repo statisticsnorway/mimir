@@ -60,7 +60,14 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
       key: data.id
     })
 
-    const token: string = data.login ? createHeaderAuthorizationToken(data.login.username, data.login.password) : undefined
+    const tokenA: Array<string> | undefined = data.owners ? Object.keys(data.owners).map( (ownerKey) => {
+      const ownerKeyInt: number = parseInt(ownerKey)
+      return data.owners ?
+        createHeaderAuthorizationToken(data.owners[ownerKeyInt].username, data.owners[ownerKeyInt].password) :
+        undefined
+    }) : undefined
+
+    const token: string| undefined = tokenA && tokenA.length ? tokenA[0] : undefined
 
     if (statistic) {
       const datasetIdsToUpdate: Array<string> = datasetIdsFromStatistic(statistic)
@@ -198,9 +205,11 @@ function sortByNextRelease(statisticData: Array<StatisticDashboard>): Array<Stat
 
 interface RefreshInfo {
   id: string;
-  login?: {
-    username: string;
-    password: string;
+  owners?: {
+    [ownerKey: number]: {
+      username: string;
+      password: string;
+    }
   };
   owner: string;
   fetchPublished: boolean;

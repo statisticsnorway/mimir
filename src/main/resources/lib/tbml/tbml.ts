@@ -1,4 +1,4 @@
-import { HttpLibrary, HttpResponse } from 'enonic-types/http'
+import {HttpLibrary, HttpRequestParams, HttpResponse} from 'enonic-types/http'
 import { TbmlData, TbmlSourceList, XmlParser } from '../types/xmlParser'
 import { RepoQueryLib } from '../repo/query'
 
@@ -12,24 +12,24 @@ const {
 export function fetch(url: string, queryId?: string, token?: string): string {
   let result: string = '<tbml></tbml>'
   const authorizationHeader: Authorization | undefined = token ? {
-    Authorization: `Basic ${token}`
+    Authorization: token
   }: undefined
+
+  const requestParams: HttpRequestParams = {
+    url,
+    headers: {...authorizationHeader}
+  }
 
   if (queryId) {
     logUserDataQuery(queryId, {
       file: '/lib/tbml/tbml.ts',
       function: 'fetch',
       message: Events.REQUEST_DATA,
-      request: {
-        url
-      }
+      request: requestParams
     })
   }
 
-  const response: HttpResponse = http.request({
-    url,
-    headers: {...authorizationHeader}
-  })
+  const response: HttpResponse = http.request(requestParams)
 
   const {
     body,
