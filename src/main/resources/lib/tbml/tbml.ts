@@ -20,21 +20,23 @@ export function fetch(url: string, queryId?: string, token?: string): string {
     headers: {...authorizationHeader}
   }
 
+  const response: HttpResponse = http.request(requestParams)
+  const {
+    body,
+    status
+  } = response
+
   if (queryId) {
     logUserDataQuery(queryId, {
       file: '/lib/tbml/tbml.ts',
       function: 'fetch',
       message: Events.REQUEST_DATA,
-      request: requestParams
+      status: `${status}`,
+      request: requestParams,
+      response
     })
   }
 
-  const response: HttpResponse = http.request(requestParams)
-
-  const {
-    body,
-    status
-  } = response
 
   if (status === 200 && body) {
     result = body
