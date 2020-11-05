@@ -103,7 +103,8 @@ function sourceListFromStatistic(statistic: Content<Statistics>): Array<TbmlSour
   return datasets.map((dataset) => {
     return {
       tbmlId: dataset._name,
-      sourceList: dataset.data && typeof(dataset.data) !== 'string' && dataset.data.tbml.metadata.sourceList ?
+      sourceList: dataset.data && typeof(dataset.data) !== 'string' &&
+      dataset.data.tbml.metadata && dataset.data.tbml.metadata.sourceList ?
         byOwners(forceArray(dataset.data.tbml.metadata.sourceList)) : undefined
     }
   })
