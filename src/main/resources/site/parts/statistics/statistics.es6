@@ -22,6 +22,7 @@ const {
 
 const React4xp = require('/lib/enonic/react4xp')
 const moment = require('moment/min/moment-with-locales')
+const util = __non_webpack_require__('/lib/util')
 const view = resolve('./statistics.html')
 
 exports.get = (req) => {
@@ -50,6 +51,8 @@ const renderPart = (req) => {
   let nextRelease = phrases.notYetDetermined
   let statisticsKeyFigure
   let changeDate
+  let nextReleaseDate
+  let previousReleaseDate
   const adminRole = hasRole('system.admin')
   const showPreviewDraft = adminRole && req.mode === 'preview'
   const paramShowDraft = req.params.showDraft
@@ -62,13 +65,16 @@ const renderPart = (req) => {
 
   if (statistic) {
     title = statistic.name
+    const variants = util.data.forceArray(statistic.variants)
+    nextReleaseDate = getNextRelease(variants)
+    previousReleaseDate = getPreviousRelease(variants)
 
-    if (statistic.variants.previousRelease && statistic.variants.previousRelease !== '') {
-      previousRelease = moment(statistic.variants.previousRelease).format('DD. MMMM YYYY')
+    if (previousReleaseDate && previousReleaseDate !== '') {
+      previousRelease = moment(previousReleaseDate).format('DD. MMMM YYYY')
     }
 
-    if (statistic.variants.nextRelease && statistic.variants.nextRelease !== '') {
-      nextRelease = moment(statistic.variants.nextRelease).format('DD. MMMM YYYY')
+    if (nextReleaseDate && nextReleaseDate !== '') {
+      nextRelease = moment(nextReleaseDate).format('DD. MMMM YYYY')
     }
   }
 
@@ -76,8 +82,8 @@ const renderPart = (req) => {
     statisticsKeyFigure = keyFigurePreview(req, page.data.statisticsKeyFigure)
   }
 
-  if (page.data.showModifiedDate && statistic.variants.previousRelease) {
-    if (moment(modifiedDate).isAfter(statistic.variants.previousRelease)) {
+  if (page.data.showModifiedDate && previousReleaseDate) {
+    if (moment(modifiedDate).isAfter(previousReleaseDate)) {
       changeDate = moment(modifiedDate).format('DD. MMMM YYYY, HH:MM')
     }
   }
@@ -124,4 +130,19 @@ const renderPart = (req) => {
     pageContributions,
     contentType: 'text/html'
   }
+}
+
+const getPreviousRelease = (variants) => {
+  if (variants.length > 1) {
+    variants.sort((d1, d2) => new Date(d1.previousRelease) - new Date(d2.previousRelease)).reverse()
+  }
+  return variants[0].previousRelease
+}
+
+const getNextRelease = (variants) => {
+  const variantWithDate = variants.filter((variant) => variant.nextRelease !== '' && moment(variant.nextRelease).isAfter(new Date(), 'day'))
+  if (variantWithDate.length > 1) {
+    variantWithDate.sort((d1, d2) => new Date(d1.nextRelease) - new Date(d2.nextRelease))
+  }
+  return variantWithDate.length > 0 ? variantWithDate[0].nextRelease : ''
 }

@@ -63,6 +63,9 @@
         <input name="showGreyTriangle" type="CheckBox">
           <label>Med mørk og skrå bakgrunn</label>
         </input>
+        <input name="showGreyBackground" type="CheckBox">
+          <label>Grå bakgrunn på region</label>
+        </input>
       </items>
     </item-set>
   </form>

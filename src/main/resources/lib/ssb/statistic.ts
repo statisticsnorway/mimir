@@ -78,8 +78,8 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
           repository: 'com.enonic.cms.default',
           principals: ['role:system.admin'],
           user: {
-            login: users[parseInt(socket.id)].user,
-            idProvider: users[parseInt(socket.id)].store ? users[parseInt(socket.id)].store : 'system'
+            login: users[parseInt(socket.id)].login,
+            idProvider: users[parseInt(socket.id)].idProvider ? users[parseInt(socket.id)].idProvider : 'system'
           }
         }
         run(context, () => {
@@ -120,7 +120,8 @@ function sourceListFromStatistic(statistic: Content<Statistics>): Array<TbmlSour
   return datasets.map((dataset) => {
     return {
       tbmlId: dataset._name,
-      sourceList: dataset.data && typeof(dataset.data) !== 'string' && dataset.data.tbml.metadata.sourceList ?
+      sourceList: dataset.data && typeof(dataset.data) !== 'string' &&
+      dataset.data.tbml.metadata && dataset.data.tbml.metadata.sourceList ?
         byOwners(forceArray(dataset.data.tbml.metadata.sourceList)) : undefined
     }
   })
