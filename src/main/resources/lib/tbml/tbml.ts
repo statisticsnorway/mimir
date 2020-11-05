@@ -20,11 +20,15 @@ export function fetch(url: string, queryId?: string, token?: string): string {
     headers: {...authorizationHeader}
   }
 
+  log.info(JSON.stringify(requestParams, null, 2))
+
   const response: HttpResponse = http.request(requestParams)
   const {
     body,
     status
   } = response
+
+  log.info(JSON.stringify(body, null, 2))
 
   if (queryId) {
     logUserDataQuery(queryId, {
@@ -36,7 +40,6 @@ export function fetch(url: string, queryId?: string, token?: string): string {
       response
     })
   }
-
 
   if (status === 200 && body) {
     result = body
