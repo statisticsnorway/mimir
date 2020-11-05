@@ -37,7 +37,7 @@ export function DataQueryLog(props) {
   function renderLogData() {
     if (logData) {
       return (
-        <span className="text-center haveList">
+        <span className="d-flex justify-content-center text-center haveList">
           <span onClick={() => openEventlog()}>
             {logData.message ? logData.message : ''}
             {logData.showWarningIcon && <span className="warningIcon"><AlertTriangle size="12" color="#FF4500"/></span>}<br/>
@@ -48,7 +48,7 @@ export function DataQueryLog(props) {
           {show ? <ModalContent/> : null}
         </span>
       )
-    } else return <span>no logs</span>
+    } else return <span className="d-flex justify-content-center text-center">no logs</span>
   }
 
   const ModalContent = () => {

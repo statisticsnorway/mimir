@@ -24,14 +24,14 @@ export function ReactTable(props) {
           <tr key={index} {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map((column, index) => (
               <th key={index} {...column.getHeaderProps(column.getSortByToggleProps())}>
-                {column.render('Header')}
                 <span>
+                  {column.render('Header')}
                   {column.disableSortBy ? '' :
                     column.isSorted ?
                       (column.isSortedDesc ?
-                        <ChevronDown size={17} /> :
-                        <ChevronUp size={17} />
-                      ) : <span><ChevronUp size={17} /><ChevronDown size={17} /></span>}
+                        <ChevronDown size={12} /> :
+                        <ChevronUp size={12} />
+                      ) : <span><ChevronUp size={12} /><ChevronDown size={12} /></span>}
                 </span>
               </th>
             ))}
@@ -42,7 +42,7 @@ export function ReactTable(props) {
         {rows.map((row, index) => {
           prepareRow(row)
           return (
-            <tr key={index} {...row.getRowProps()}>
+            <tr key={index} {...row.getRowProps()} className="small">
               {row.cells.map((cell, i) => {
                 return (
                   <td key={i} {...cell.getCellProps}>{cell.render('Cell')}</td>
