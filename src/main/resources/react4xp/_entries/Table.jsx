@@ -275,7 +275,7 @@ class Table extends React.Component {
         <tfoot>
           {noteRefsList.map((noteRef, index) => {
             const footNote = footnotes.find((note) => note.noteid === noteRef)
-            return (
+            return ( footNote &&
               <tr key={index} className="footnote">
                 <td colSpan="100%">
                   <sup>{index + 1}</sup>{footNote.content}
