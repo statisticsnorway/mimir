@@ -23,6 +23,24 @@ export interface Metadata {
   category: string;
   tags: string;
   notes?: Notes;
+  sourceList: Source | Array<Source>;
+}
+
+export interface TbmlSourceList {
+  sourceList: {
+    tbml: {
+      id: number;
+      source: Source | Array<Source>;
+    };
+  };
+}
+
+export interface Source {
+  owner: number;
+  tableApproved: string;
+  tableId: string;
+  id: string;
+  table: string;
 }
 
 export interface Notes {

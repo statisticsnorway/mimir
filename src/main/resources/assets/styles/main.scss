@@ -60,6 +60,7 @@ $container-max-widths: (
 @import "./statbankLinkList";
 @import "./attachmentTablesFigures";
 @import "./omStatistikken";
+@import "./404";
 @import "./associatedStatistics";
 @import "./associatedArticleArchives";
 
@@ -89,6 +90,10 @@ section.part-divider + section.part-divider {
 
 .bkg-grey {
   background-color: $ssb-dark-1;
+}
+
+.region-grey {
+  background-color: $ssb-dark-2;
 }
 
 .premain {
