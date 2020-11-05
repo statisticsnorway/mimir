@@ -2,14 +2,24 @@ const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
 const {
+  getSite,
   assetUrl
 } = __non_webpack_require__( '/lib/xp/portal')
+const {
+  getLanguage
+} = __non_webpack_require__( '/lib/language')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 
 const fourOFourView = resolve('./404.html')
 
 exports.handle404 = function(err) {
+  //getting language from site because 404 page is not connected to any content.
+  //So unless we stop setting language via menu and start to set it via site, this will always show as 'nb'
+  //TODO: find another way to find and set locale of 404 page
+  const page = getSite()
+  const language = getLanguage(page)
+
   const stylesUrl = assetUrl({
     path: 'styles/bundle.css'
   })
@@ -56,6 +66,7 @@ exports.handle404 = function(err) {
 
   const model = {
     pageTitle: 'Side ikke funnet / Page not found - SSB',
+    language,
     jsLibsUrl,
     stylesUrl,
     title,
