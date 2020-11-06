@@ -43,3 +43,12 @@ export const selectDataQueriesByType = (dataQueryType) => {
     },
   )
 }
+
+export const selectDataQueriesById = (dataQueryId) => {
+  return createSelector(
+    [selectDomain],
+    (dataQueriesState) => {
+      return dataQueriesState.dataQueries.find((q) => q.id === dataQueryId)
+    },
+  )
+}
