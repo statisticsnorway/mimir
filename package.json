@@ -79,7 +79,7 @@
     "numeral": "^2.0.6",
     "popper.js": "^1.16.1",
     "postcss-loader": "^3.0.0",
-    "postcss-normalize": "^7.0.1",
+    "postcss-normalize": "^9.0.0",
     "prop-types": "^15.7.2",
     "ramda": "^0.26.1",
     "react": "^16.13.1",
