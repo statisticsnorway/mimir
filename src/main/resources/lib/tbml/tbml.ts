@@ -26,6 +26,7 @@ export function fetch(url: string, queryId?: string): string {
   const response: HttpResponse = http.request({
     url
   })
+
   const {
     body,
     status

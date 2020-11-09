@@ -79,9 +79,12 @@ function getDataAndMetaData(content: Content<DataSource>): TbmlData | null {
   const baseUrl: string = app.config && app.config['ssb.tbprocessor.baseUrl'] ? app.config['ssb.tbprocessor.baseUrl'] : 'https://i.test.ssb.no/tbprocessor'
   const dataPath: string = `/process/tbmldata/`
   const sourceListPath: string = `/document/sourceList/`
+
   const tbmlKey: string = getTbprocessorKey(content)
   const tbmlData: TbmlData | null = tryRequestTbmlData(`${baseUrl}${dataPath}${tbmlKey}`, content._id)
+
   const tbmlSourceList: TbmlSourceList | null = tryRequestTbmlSourceList(`${baseUrl}${sourceListPath}${tbmlKey}`, content._id)
+
   const sourceListObject: object = {
     tbml: {
       metadata: {
