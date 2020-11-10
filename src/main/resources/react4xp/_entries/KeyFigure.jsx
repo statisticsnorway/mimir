@@ -1,13 +1,65 @@
 import React from 'react'
 import { KeyFigures as SSBKeyFigures, References, Divider } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
+import { Alert, Button } from 'react-bootstrap'
 
 class KeyFigures extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      showPreviewToggle: this.props.showPreviewDraft && (this.props.pageTypeKeyFigure || this.props.paramShowDraft && !this.props.pageTypeKeyFigure),
+      fetchUnPublished: this.props.paramShowDraft,
+      keyFigures: this.props.paramShowDraft && this.props.draftExist ? this.props.keyFiguresDraft : this.props.keyFigures
+    }
+
+    this.toggleDraft = this.toggleDraft.bind(this)
+  }
+
+  toggleDraft() {
+    this.setState({
+      fetchUnPublished: !this.state.fetchUnPublished,
+      keyFigures: !this.state.fetchUnPublished && this.props.draftExist ? this.props.keyFiguresDraft : this.props.keyFigures
+    })
+  }
+
+  addPreviewButton() {
+    if (this.state.showPreviewToggle && this.props.pageTypeKeyFigure) {
+      return (
+        <Button
+          variant="primary"
+          onClick={this.toggleDraft}
+          className="mb-4"
+        >
+          {!this.state.fetchUnPublished ? 'Vis upubliserte tall' : 'Vis publiserte tall'}
+        </Button>
+      )
+    }
+    return
+  }
+
+  addPreviewInfo() {
+    if (this.props.showPreviewDraft) {
+      if (this.state.fetchUnPublished && this.props.draftExist) {
+        return (
+          <Alert variant='info' className="mb-4">
+              Tallene i nøkkeltallet nedenfor er upublisert
+          </Alert>
+        )
+      } else if (this.state.fetchUnPublished && !this.props.draftExist) {
+        return (
+          <Alert variant='warning' className="mb-4">
+              Finnes ikke upubliserte tall for dette nøkkeltallet
+          </Alert>
+        )
+      }
+    }
+    return
+  }
+
   createRows() {
-    const {
-      keyFigures,
-      columns
-    } = this.props
+    const keyFigures = this.state.keyFigures
+    const columns = this.props.columns
 
     let isRight = true
     return keyFigures.map((keyFigure, i) => {
@@ -59,6 +111,8 @@ class KeyFigures extends React.Component {
 
   render() {
     return <div className="container">
+      {this.addPreviewButton()}
+      {this.addPreviewInfo()}
       {this.addHeader()}
       <div className="row">
         {this.createRows()}
@@ -70,6 +124,29 @@ class KeyFigures extends React.Component {
 
 KeyFigures.propTypes = {
   displayName: PropTypes.string,
+  keyFiguresDraft: PropTypes.arrayOf(
+    PropTypes.shape({
+      iconUrl: PropTypes.string,
+      iconAltText: PropTypes.string,
+      number: PropTypes.string,
+      numberDescription: PropTypes.string,
+      noNumberText: PropTypes.string,
+      size: PropTypes.string,
+      title: PropTypes.string,
+      time: PropTypes.string,
+      changes: PropTypes.shape({
+        changeDirection: PropTypes.string,
+        changeText: PropTypes.string,
+        changePeriod: PropTypes.string
+      }),
+      glossary: PropTypes.string,
+      greenBox: PropTypes.bool,
+      source: PropTypes.shape({
+        url: PropTypes.string,
+        title: PropTypes.title
+      })
+    })
+  ),
   keyFigures: PropTypes.arrayOf(
     PropTypes.shape({
       iconUrl: PropTypes.string,
@@ -97,7 +174,11 @@ KeyFigures.propTypes = {
     url: PropTypes.string,
     title: PropTypes.title
   }),
-  columns: PropTypes.bool
+  columns: PropTypes.bool,
+  showPreviewDraft: PropTypes.bool,
+  paramShowDraft: PropTypes.bool,
+  draftExist: PropTypes.bool,
+  pageTypeKeyFigure: PropTypes.bool
 }
 
 export default (props) => <KeyFigures {...props}/>

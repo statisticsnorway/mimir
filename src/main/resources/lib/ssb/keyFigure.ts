@@ -10,7 +10,7 @@ import { TbmlData, TableRow, PreliminaryData } from '../types/xmlParser'
 import { Dataset as JSDataset, Dimension, Category } from '../types/jsonstat-toolkit'
 import { UtilLibrary } from '../types/util'
 import { Request } from 'enonic-types/controller'
-import { DatasetRepoNode } from '../repo/dataset'
+import { DatasetRepoNode, RepoDatasetLib } from '../repo/dataset'
 import { DataSource as DataSourceType } from '../repo/dataset'
 import { SSBCacheLibrary } from './cache'
 
@@ -34,6 +34,14 @@ const {
   datasetOrUndefined
 }: SSBCacheLibrary = __non_webpack_require__('/lib/ssb/cache')
 const util: UtilLibrary = __non_webpack_require__( '/lib/util')
+
+const {
+  getDataset
+} = __non_webpack_require__( '/lib/ssb/dataset/dataset')
+const {
+  DATASET_BRANCH,
+  UNPUBLISHED_DATASET_BRANCH
+}: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
 
 const contentTypeName: string = `${app.name}:keyFigure`
 
@@ -64,7 +72,11 @@ type KeyFigureDataSource = KeyFigure['dataSource']
 type StatBankApi = NonNullable<KeyFigureDataSource>[DataSourceType.STATBANK_API]
 type DatasetFilterOptions = NonNullable<StatBankApi>['datasetFilterOptions']
 
-export function parseKeyFigure(req: Request, keyFigure: Content<KeyFigure>, municipality?: MunicipalityWithCounty): KeyFigureView {
+export function parseKeyFigure(
+  req: Request,
+  keyFigure: Content<KeyFigure>,
+  municipality?: MunicipalityWithCounty,
+  branch: string = DATASET_BRANCH): KeyFigureView {
   const keyFigureViewData: KeyFigureView = {
     iconUrl: getIconUrl(keyFigure),
     iconAltText: keyFigure.data.icon ? getImageCaption(keyFigure.data.icon) : '',
@@ -81,7 +93,12 @@ export function parseKeyFigure(req: Request, keyFigure: Content<KeyFigure>, muni
     glossaryText: keyFigure.data.glossaryText
   }
 
-  const datasetRepo: DatasetRepoNode<JSONstat> | undefined = datasetOrUndefined(keyFigure)
+  let datasetRepo: DatasetRepoNode<JSONstat> | undefined
+  if (branch === UNPUBLISHED_DATASET_BRANCH) {
+    datasetRepo = getDataset(keyFigure, UNPUBLISHED_DATASET_BRANCH)
+  } else {
+    datasetRepo = datasetOrUndefined(keyFigure)
+  }
 
   if (datasetRepo) {
     const dataSource: KeyFigure['dataSource'] | undefined = keyFigure.data.dataSource
