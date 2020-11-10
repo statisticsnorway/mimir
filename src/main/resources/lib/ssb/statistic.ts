@@ -171,6 +171,20 @@ function getStatregInfo(key: string): StatregData | undefined {
   return undefined
 }
 
+export function getPreviousRelease(key: string): string {
+  //TODO Fikse sortering her
+  const statisticStatreg: StatisticInListing | undefined = getStatisticByIdFromRepo(key)
+  if (statisticStatreg) {
+    const variants: Array<VariantInListing> = forceArray(statisticStatreg.variants)
+    if (variants.length > 1) {
+      return variants[0].previousRelease
+    } else {
+      return variants[0].previousRelease
+    }
+  }
+  return ''
+}
+
 function sortByNextRelease(statisticData: Array<StatisticDashboard>): Array<StatisticDashboard> {
   const statisticsSorted: Array<StatisticDashboard> = statisticData.sort((a, b) => {
     const dateA: Date | string = a.nextRelease ? new Date(a.nextRelease) : ''

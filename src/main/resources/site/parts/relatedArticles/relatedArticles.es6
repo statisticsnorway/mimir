@@ -24,7 +24,11 @@ const {
 const {
   fromRelatedArticlesCache
 } = __non_webpack_require__('/lib/ssb/cache')
+const {
+  getPreviousRelease
+} = __non_webpack_require__('/lib/ssb/statistic')
 const moment = require('moment/min/moment-with-locales')
+const contentLib = __non_webpack_require__('/lib/xp/content')
 
 const view = resolve('./relatedArticles.html')
 
@@ -62,6 +66,16 @@ function renderPart(req, relatedArticles) {
   }
 
   moment.locale(page.language ? page.language : 'nb')
+
+  if (page.type === `${app.name}:statistics`) {
+    const statisticId = page._id
+    const previousRelease = getPreviousRelease(page.data.statistic)
+    const statisticPublishDate = moment(new Date(previousRelease)).format('YYYY-MM-DD')
+    const assosiatedArticle = getDsArticle(statisticId, statisticPublishDate)
+    if (assosiatedArticle) {
+      relatedArticles.unshift(assosiatedArticle)
+    }
+  }
 
   relatedArticles = relatedArticles.map((article) => {
     if (article._selected === 'article') {
@@ -168,4 +182,24 @@ const getSubTitle = (articleContent, phrases) => {
     prettyDate = moment(articleContent.createdTime).format('DD. MMMM YYYY')
   }
   return `${type ? `${type} / ` : ''}${prettyDate}`
+}
+
+const getDsArticle = (statisticId, statisticPublishDate) => {
+  const articleContent = contentLib.query({
+    count: 1,
+    sort: 'publish.from DESC',
+    query: `data.associatedStatistics.XP.content = "${statisticId}" AND publish.from LIKE "${statisticPublishDate}*" `,
+    contentTypes: [
+      `${app.name}:article`
+    ]
+  }).hits
+
+  const articleObject = {
+    _selected: 'article',
+    article: {
+      article: articleContent[0]._id
+    }
+  }
+
+  return articleObject
 }
