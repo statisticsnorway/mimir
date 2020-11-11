@@ -25,7 +25,10 @@ const {
   fromRelatedArticlesCache
 } = __non_webpack_require__('/lib/ssb/cache')
 const {
-  getPreviousRelease
+  getStatisticByIdFromRepo
+} = __non_webpack_require__('/lib/repo/statreg/statistics')
+const {
+  getPreviousAndNextRelease
 } = __non_webpack_require__('/lib/ssb/statistic')
 const moment = require('moment/min/moment-with-locales')
 const contentLib = __non_webpack_require__('/lib/xp/content')
@@ -69,11 +72,16 @@ function renderPart(req, relatedArticles) {
 
   if (page.type === `${app.name}:statistics`) {
     const statisticId = page._id
-    const previousRelease = getPreviousRelease(page.data.statistic)
-    const statisticPublishDate = moment(new Date(previousRelease)).format('YYYY-MM-DD')
-    const assosiatedArticle = getDsArticle(statisticId, statisticPublishDate)
-    if (assosiatedArticle) {
-      relatedArticles.unshift(assosiatedArticle)
+    const statregData = getStatisticByIdFromRepo(page.data.statistic)
+    if (statregData) {
+      const releaseDates = getPreviousAndNextRelease(statregData)
+      const previousRelease = releaseDates.previousRelease
+      const nextRelease = releaseDates.nextRelease
+      const statisticPublishDate = moment(new Date(previousRelease)).format('YYYY-MM-DD')
+      const assosiatedArticle = getDsArticle(statisticId, statisticPublishDate)
+      if (assosiatedArticle) {
+        relatedArticles.unshift(assosiatedArticle)
+      }
     }
   }
 
