@@ -13,6 +13,7 @@ import { Request } from 'enonic-types/controller'
 import { DatasetRepoNode } from '../repo/dataset'
 import { DataSource as DataSourceType } from '../repo/dataset'
 import { SSBCacheLibrary } from './cache'
+import { Thead } from '../../lib/types/xmlParser'
 
 const {
   query
@@ -33,12 +34,17 @@ const {
 const {
   datasetOrUndefined
 }: SSBCacheLibrary = __non_webpack_require__('/lib/ssb/cache')
-const util: UtilLibrary = __non_webpack_require__( '/lib/util')
+
+const {
+  data: {
+    forceArray
+  }
+} = __non_webpack_require__( '/lib/util')
 
 const contentTypeName: string = `${app.name}:keyFigure`
 
 export function get(keys: string | Array<string>): Array<Content<KeyFigure>> {
-  keys = util.data.forceArray(keys)
+  keys = forceArray(keys) as Array<string>
   const content: QueryResponse<KeyFigure> = query({
     contentTypes: [contentTypeName],
     query: ``,
@@ -116,13 +122,17 @@ function getDataTbProcessor(
   keyFigure: Content<KeyFigure>
 ): KeyFigureView {
   const tbmlData: TbmlData = data as TbmlData
-  const bodyRows: Array<TableRow> = util.data.forceArray(tbmlData.tbml.presentation.table.tbody.tr)
-  const head: TableRow | Array<TableRow> = tbmlData.tbml.presentation.table.thead.tr
+  const bodyRows: Array<TableRow> = forceArray(tbmlData.tbml.presentation.table.tbody.tr)
+
+  const head: Array<Thead> = forceArray(tbmlData.tbml.presentation.table.thead)
+    .map( (thead: Thead) => ({
+      tr: forceArray(thead.tr)
+    }))
   const [row1, row2] = bodyRows
 
   if (row1) {
     let value: number
-    const td: number | PreliminaryData = util.data.forceArray(row1.td)[0] as number | PreliminaryData
+    const td: number | PreliminaryData = forceArray(row1.td)[0] as number | PreliminaryData
     if (typeof td === 'object' && td.content != undefined) {
       value = td.content
     } else {
@@ -132,7 +142,7 @@ function getDataTbProcessor(
   }
   if (row2 && keyFigure.data.changes) {
     let change: number
-    const td: number | PreliminaryData = util.data.forceArray(row2.td)[0] as number | PreliminaryData
+    const td: number | PreliminaryData = forceArray(row2.td)[0] as number | PreliminaryData
     if (typeof td === 'object' && td.content != undefined) {
       change = td.content
     } else {
@@ -166,9 +176,9 @@ function getDataTbProcessor(
 
   // the table head are sometimes an array with th's and td's, when it happens it looks like
   // the last index is the right one to pick.
-  const th: string = Array.isArray(head) ? head[head.length - 1].th : head.th
-
-  keyFigureViewData.time = (util.data.forceArray(th)[0]).toString()
+  const tr: Array<TableRow> | undefined = Array.isArray(head) ? head[head.length - 1].tr as Array<TableRow> : undefined
+  const th: string | number | string[] | undefined = Array.isArray(tr) ? tr[tr.length - 1].th : undefined
+  keyFigureViewData.time = (forceArray(th)[0]).toString()
 
   return keyFigureViewData
 }

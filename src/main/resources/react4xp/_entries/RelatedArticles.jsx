@@ -71,7 +71,7 @@ class RelatedArticles extends React.Component {
             return (
               <Card
                 key={index}
-                className={`mb-3 col-auto ${this.state.isHidden ? 'd-none' : ''} ${this.getBreakpoints(index)}`}
+                className={`mb-3 col-auto col-12 col-lg-4 ${this.state.isHidden ? 'd-none' : ''} ${this.getBreakpoints(index)}`}
                 imagePlacement="top"
                 image={
                   <img
