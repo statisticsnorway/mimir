@@ -192,16 +192,10 @@ export function Statistics() {
   }
 
   return (
-    <section className="xp-part part-dashboard container mb-5">
-      <Row>
-        <Col>
-          <div className="p-4 tables-wrapper">
-            <h2 className="mb-3">Kommende publiseringer</h2>
-            {renderStatistics()}
-          </div>
-        </Col>
-      </Row>
-    </section>
+    <div className="p-4 tables-wrapper">
+      <h2 className="mb-3">Kommende publiseringer</h2>
+      {renderStatistics()}
+    </div>
   )
 }
 

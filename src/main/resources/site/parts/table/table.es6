@@ -39,14 +39,15 @@ const view = resolve('./table.html')
 exports.get = function(req) {
   try {
     const tableId = getContent().data.mainTable
-
     return renderPart(req, tableId)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-exports.preview = (req, id) => renderPart(req, [id])
+exports.preview = (req, id) => {
+  return renderPart(req, [id])
+}
 
 function renderPart(req, tableId) {
   const page = getContent()
@@ -93,39 +94,42 @@ function renderPart(req, tableId) {
 
   const standardSymbol = getStandardSymbolPage(language.standardSymbolPage, phrases.tableStandardSymbols)
 
+  const props = {
+    downloadTableLabel: phrases.tableDownloadAs,
+    downloadTableTitle: {
+      title: phrases.tableDownloadAs
+    },
+    downloadTableOptions: getDownloadTableOptions(phrases),
+    displayName: tableContent.displayName,
+    table: {
+      caption: table.caption,
+      thead: table.thead,
+      tbody: table.tbody,
+      tfoot: table.tfoot,
+      tableClass: table.tableClass,
+      language: language.code,
+      noteRefs: table.noteRefs
+    },
+    tableDraft: {
+      caption: tableDraft ? tableDraft.caption : undefined,
+      thead: tableDraft ? tableDraft.thead : undefined,
+      tbody: tableDraft ? tableDraft.tbody : undefined,
+      tfoot: tableDraft ? tableDraft.tfoot : undefined,
+      noteRefs: tableDraft ? tableDraft.noteRefs : undefined
+    },
+    standardSymbol: standardSymbol,
+    sources,
+    sourceLabel,
+    iconUrl: iconUrl,
+    showPreviewDraft,
+    paramShowDraft: req.params.showDraft ? true : false,
+    draftExist,
+    pageTypeStatistic
+  }
+
   const tableReact = new React4xp('Table')
-    .setProps({
-      downloadTableLabel: phrases.tableDownloadAs,
-      downloadTableTitle: {
-        title: phrases.tableDownloadAs
-      },
-      downloadTableOptions: getDownloadTableOptions(phrases),
-      displayName: tableContent.displayName,
-      table: {
-        caption: table.caption,
-        thead: table.thead,
-        tbody: table.tbody,
-        tfoot: table.tfoot,
-        tableClass: table.tableClass,
-        language: language.code,
-        noteRefs: table.noteRefs
-      },
-      tableDraft: {
-        caption: tableDraft ? tableDraft.caption : undefined,
-        thead: tableDraft ? tableDraft.thead : undefined,
-        tbody: tableDraft ? tableDraft.tbody : undefined,
-        tfoot: tableDraft ? tableDraft.tfoot : undefined,
-        noteRefs: tableDraft ? tableDraft.noteRefs : undefined
-      },
-      standardSymbol: standardSymbol,
-      sources,
-      sourceLabel,
-      iconUrl: iconUrl,
-      showPreviewDraft,
-      paramShowDraft: req.params.showDraft ? true : false,
-      draftExist,
-      pageTypeStatistic
-    })
+    .setProps(props)
+    .setId('table')
     .uniqueId()
 
   const body = render(view, {

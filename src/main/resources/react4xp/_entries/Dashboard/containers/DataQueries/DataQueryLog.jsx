@@ -1,37 +1,32 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import PropTypes from 'prop-types'
-import { DataQueryBadges } from './DataQueryBadges'
-import { Link } from '@statisticsnorway/ssb-component-library'
 import { Button, Modal } from 'react-bootstrap'
-import { AlertTriangle, RefreshCw } from 'react-feather'
+import { AlertTriangle } from 'react-feather'
+import { requestEventLogData } from './actions'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectDataToolBoxBaseUrl } from '../HomePage/selectors'
+import { selectDataQueriesById } from './selectors'
+import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 
-export function DataQuery(props) {
+export function DataQueryLog(props) {
+  const dispatch = useDispatch()
+  const io = useContext(WebSocketContext)
+  const dataToolBoxBaseUrl = useSelector(selectDataToolBoxBaseUrl)
+  const dataQuery = useSelector(selectDataQueriesById(props.dataQueryId))
   const {
-    dataQuery: {
-      dataset,
-      displayName,
-      hasData,
-      id,
-      type: contentType,
-      format,
-      isPublished,
-      loading,
-      logData,
-      loadingLogs,
-      eventLogNodes
-    },
-    onRefresh,
-    onOpenEventLogData,
-    contentStudioBaseUrl,
-    dataToolBoxBaseUrl
-  } = props
+    displayName,
+    id,
+    logData,
+    loadingLogs,
+    eventLogNodes
+  } = dataQuery
 
   const [show, setShow] = useState(false)
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
   const openEventlog = () => {
-    onOpenEventLogData()
+    requestEventLogData(dispatch, io, id)
     setShow(handleShow)
   }
 
@@ -42,17 +37,18 @@ export function DataQuery(props) {
   function renderLogData() {
     if (logData) {
       return (
-        <td className="text-center haveList" onClick={() => openEventlog()}>
-          <span>
+        <span className="d-flex justify-content-center text-center haveList">
+          <span onClick={() => openEventlog()}>
             {logData.message ? logData.message : ''}
             {logData.showWarningIcon && <span className="warningIcon"><AlertTriangle size="12" color="#FF4500"/></span>}<br/>
             {logData.modifiedReadable ? logData.modifiedReadable : ''}<br/>
             {logData.modified ? logData.modified : ''}<br/>
             {logData.by && logData.by.displayName ? `av ${logData.by.displayName}` : '' }
           </span>
-        </td>
+          {show ? <ModalContent/> : null}
+        </span>
       )
-    } else return <td>no logs</td>
+    } else return <span className="d-flex justify-content-center text-center">no logs</span>
   }
 
   const ModalContent = () => {
@@ -97,35 +93,10 @@ export function DataQuery(props) {
   }
 
   return (
-    <tr key={id} className="small">
-      <td className={`${hasData ? 'ok' : 'error'} dataset`}>
-        <Link isExternal href={contentStudioBaseUrl + id}>{displayName}</Link>
-        <DataQueryBadges contentType={contentType} format={format} isPublished={isPublished}/>
-      </td>
-      <td>
-        {dataset.modifiedReadable ? dataset.modifiedReadable : ''}
-        <br />
-        {dataset.modified ? dataset.modified : ''}
-      </td>
-      {logData ? renderLogData() : <td></td>}
-      <td>
-        <Button variant="primary"
-          size="sm"
-          className="mx-1"
-          onClick={onRefresh}
-        >
-          { loading ? <span className="spinner-border spinner-border-sm" /> : <RefreshCw size={16}/> }
-        </Button>
-      </td>
-      {show ? <ModalContent/> : null }
-    </tr>
+    renderLogData()
   )
 }
 
-DataQuery.propTypes = {
-  dataQuery: PropTypes.object,
-  onRefresh: PropTypes.func,
-  onOpenEventLogData: PropTypes.func,
-  contentStudioBaseUrl: PropTypes.string,
-  dataToolBoxBaseUrl: PropTypes.string
+DataQueryLog.propTypes = {
+  dataQueryId: PropTypes.string
 }

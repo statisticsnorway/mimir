@@ -55,8 +55,7 @@ const createDefaultCssLoaders = () => ([
   {
     loader: MiniCssExtractPlugin.loader,
     options: {
-      publicPath: '../',
-      hmr: isDev
+      publicPath: '../'
     }
   },
   {

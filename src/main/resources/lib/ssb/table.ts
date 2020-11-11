@@ -11,6 +11,7 @@ import { DatasetRepoNode, RepoDatasetLib } from '../repo/dataset'
 import { DataSource as DataSourceType } from '../repo/dataset'
 import { StatbankSavedLib } from './dataset/statbankSaved'
 import { SSBCacheLibrary } from './cache'
+import { Thead } from '../types/xmlParser'
 
 const {
   data: {
@@ -80,13 +81,38 @@ export function parseTable(req: Request, table: Content<Table>, branch: string =
   return tableViewData
 }
 
-function getTableViewData(table: Content<Table>, dataContent: TbmlData | JSONstat, title: Title, notes: Notes | undefined): TableView {
-  const headRows: Array<TableRow> = forceArray(dataContent.table.thead.tr)
-  const bodyRows: Array<TableRow> = forceArray(dataContent.table.tbody.tr)
+function mergeTableRows(thead: Array<Thead>): Array<TableRow> {
+  return thead.reduce( (acc: Array<TableRow>, thead: Thead ) => {
+    const tr: Array<TableRow> | undefined = !Array.isArray(thead) ? thead.tr as Array<TableRow> : undefined
+    if (tr) acc.push(...tr)
+    return acc
+  }, [])
+}
 
-  const noteRefs: Array<string> = title.noterefs ? [title.noterefs] : []
-  headRows.map((row) => getNoterefs(row, noteRefs))
-  bodyRows.map((row) => getNoterefs(row, noteRefs))
+function getTableViewData(table: Content<Table>, dataContent: TbmlData | JSONstat, title: Title, notes: Notes | undefined): TableView {
+  const headRows: Array<Thead> = forceArray(dataContent.table.thead)
+    .map( (thead: Thead) => ({
+      tr: forceArray(thead.tr)
+    }))
+
+  const bodyRows: Array<Thead> = forceArray(dataContent.table.tbody)
+    .map( (tbody: Thead) => ({
+      tr: forceArray(tbody.tr)
+    }))
+
+  const headNoteRefs: Array<string> = mergeTableRows(headRows).reduce((acc: Array<string>, row: TableRow) => {
+    if (row) acc.push(...getNoterefs(row))
+    return acc
+  }, [])
+
+  const bodyNoteRefs: Array<string> = mergeTableRows(bodyRows).reduce((acc: Array<string>, row: TableRow) => {
+    if (row) acc.push(...getNoterefs(row))
+    return acc
+  }, [])
+
+  const noteRefs: Array<string> = title.noterefs ?
+    [title.noterefs, ...headNoteRefs, ...bodyNoteRefs] :
+    [...headNoteRefs, ...bodyNoteRefs]
 
   const notesList: Array<Note> = notes ? forceArray(notes.note) : []
 
@@ -103,21 +129,20 @@ function getTableViewData(table: Content<Table>, dataContent: TbmlData | JSONsta
   }
 }
 
-function getNoterefs(row: TableRow, noteRefs: Array<string>): Array<string> {
-  forceArray(row.th).forEach((cell: string | number | PreliminaryData) => {
+function getNoterefs(row: TableRow): Array<string> {
+  return forceArray(row.th).reduce((acc: Array<string>, cell: string | number | PreliminaryData) => {
     if (typeof cell === 'object') {
-      if (cell.noterefs && noteRefs.indexOf(cell.noterefs) < 0) {
-        noteRefs.push(cell.noterefs)
+      if (cell.noterefs && acc.indexOf(cell.noterefs) < 0) {
+        acc.push(cell.noterefs)
       }
     }
-  })
-  return noteRefs
+  }, [])
 }
 
 interface TableView {
   caption?: Title;
-  thead: Array<TableRow>;
-  tbody: Array<TableRow>;
+  thead: Array<Thead>;
+  tbody: Array<Thead>;
   tfoot: {
     footnotes: Array<Note>;
     correctionNotice: string;
