@@ -185,6 +185,7 @@ const getSubTitle = (articleContent, phrases) => {
 }
 
 const getDsArticle = (statisticId, statisticPublishDate) => {
+  let articleObject
   const articleContent = contentLib.query({
     count: 1,
     sort: 'publish.from DESC',
@@ -194,10 +195,12 @@ const getDsArticle = (statisticId, statisticPublishDate) => {
     ]
   }).hits
 
-  const articleObject = {
-    _selected: 'article',
-    article: {
-      article: articleContent[0]._id
+  if (articleContent.length > 0) {
+    articleObject = {
+      _selected: 'article',
+      article: {
+        article: articleContent[0]._id
+      }
     }
   }
 
