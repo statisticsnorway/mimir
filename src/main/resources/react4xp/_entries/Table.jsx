@@ -13,7 +13,6 @@ import '../../assets/js/tableExport'
 class Table extends React.Component {
   constructor(props) {
     super(props)
-
     this.state = {
       prevClientWidth: 0,
       showPreviewToggle: this.props.showPreviewDraft && (!this.props.pageTypeStatistic || this.props.paramShowDraft && this.props.pageTypeStatistic),
@@ -195,8 +194,14 @@ class Table extends React.Component {
     return (
       <table className={tableClass} ref={this.tableRef}>
         {this.addCaption()}
-        {this.addThead()}
-        {this.addTbody()}
+        {this.state.table.thead.map( (t, index) => {
+          return (
+            <React.Fragment key={index}>
+              {this.addThead(index)}
+              {this.addTbody(index)}
+            </React.Fragment>
+          )
+        })}
         {this.addTFoot()}
       </table>
     )
@@ -236,18 +241,18 @@ class Table extends React.Component {
     )
   }
 
-  addThead() {
+  addThead(index) {
     return (
       <thead>
-        {this.createRowsHead(this.state.table.thead)}
+        {this.createRowsHead(this.state.table.thead[index].tr)}
       </thead>
     )
   }
 
-  addTbody() {
+  addTbody(index) {
     return (
       <tbody>
-        {this.createRowsBody(this.state.table.tbody)}
+        {this.createRowsBody(this.state.table.tbody[index].tr)}
       </tbody>
     )
   }

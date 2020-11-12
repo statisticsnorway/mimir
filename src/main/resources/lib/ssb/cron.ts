@@ -34,10 +34,10 @@ const {
 const {
   findUsers,
   createUser
-}: AuthLibrary = require('/lib/xp/auth')
+}: AuthLibrary = __non_webpack_require__('/lib/xp/auth')
 const {
   run
-}: ContextLibrary = require('/lib/xp/context')
+}: ContextLibrary = __non_webpack_require__('/lib/xp/context')
 
 const createUserContext: RunContext = { // Master context (XP)
   repository: 'com.enonic.cms.default',

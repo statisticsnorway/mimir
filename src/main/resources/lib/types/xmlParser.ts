@@ -61,10 +61,12 @@ interface Table {
   tbody: {
     tr: Array<TableRow>;
   };
-  thead: {
-    tr: TableRow;
-  };
+  thead: Thead | Array<Thead>;
   class: string;
+}
+
+export interface Thead {
+  tr: TableRow | Array<TableRow>;
 }
 
 export interface TableRow {

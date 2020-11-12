@@ -40,7 +40,6 @@ const renderPart = (req) => {
   const phrases = getPhrases(page)
   moment.locale(page.language ? page.language : 'nb')
   const statistic = page.data.statistic && getStatisticByIdFromRepo(page.data.statistic)
-
   let title = page.displayName
   const updated = phrases.updated + ': '
   const nextUpdate = phrases.nextUpdate + ': '
@@ -116,15 +115,16 @@ const renderPart = (req) => {
   let body = render(view, model)
   if (changeDate) {
     body = modifiedDateComponent.renderBody({
-      body
+      body,
+      clientRender: true
     })
   }
-  const pageContributions = modifiedDateComponent.renderPageContributions({
+  const pageContributions = changeDate ? modifiedDateComponent.renderPageContributions({
     pageContributions: {
       bodyEnd: statisticsKeyFigure ? statisticsKeyFigure.pageContributions.bodyEnd : []
     },
     clientRender: true
-  })
+  }) : undefined
   return {
     body,
     pageContributions,
