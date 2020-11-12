@@ -10,7 +10,7 @@ import { StatisticInListing, VariantInListing } from '../statreg/types'
 import { DatasetLib } from './dataset'
 const {
   getStatistics,
-  getDatasetFromStatistics
+  getDatasetIdsFromStatistic
 }: StatisticLib = __non_webpack_require__('/lib/ssb/statistic')
 const {
   get: getContent
@@ -39,6 +39,7 @@ const {
 }: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
 
 export function publishDataset(): void {
+  log.info('Start publish job')
   const statistics: Array<Content<Statistics>> = getStatistics()
   const publishedDatasetIds: Array<string> = []
   statistics.forEach((stat) => {
@@ -49,7 +50,8 @@ export function publishDataset(): void {
       const now: Date = new Date(new Date().getTime() + serverOffsetInMs)
       const oneHourFromNow: Date = new Date(now.getTime() + (1000 * 60 * 60))
       if (releaseDate > now && releaseDate < oneHourFromNow) {
-        const dataSourceIds: Array<string> = getDatasetFromStatistics(stat)
+        log.info(`Stat ${stat.data.statistic} releases today`)
+        const dataSourceIds: Array<string> = getDatasetIdsFromStatistic(stat)
         const dataSources: Array<Content<DataSource> | null> = dataSourceIds.map((key) => {
           return getContent({
             key
@@ -81,10 +83,13 @@ export function publishDataset(): void {
         }) as Array<PublicationItem>
         if (validPublications.length > 0) {
           createTask(stat, releaseDate, validPublications)
+        } else {
+          log.info(`No unpublished dataset to publish for ${stat.data.statistic}`)
         }
       }
     }
   })
+  log.info('End publish job')
 }
 
 function createTask(statistic: Content<Statistics>, releaseDate: Date, validPublications: Array<PublicationItem>): void {
