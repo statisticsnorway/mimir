@@ -112,17 +112,15 @@ class KeyFigures extends React.Component {
   }
 
   render() {
-    if (!isEmpty(this.state.keyFigures)) {
-      return <div className="container">
-        {this.addPreviewButton()}
-        {this.addPreviewInfo()}
-        {this.addHeader()}
-        <div className="row">
-          {this.createRows()}
-          {this.addSource()}
-        </div>
+    return <div className="container">
+      {this.addPreviewButton()}
+      {this.addPreviewInfo()}
+      {this.addHeader()}
+      <div className="row">
+        {this.createRows()}
+        {this.addSource()}
       </div>
-    }
+    </div>
   }
 }
 

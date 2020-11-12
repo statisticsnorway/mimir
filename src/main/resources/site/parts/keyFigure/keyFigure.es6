@@ -84,9 +84,6 @@ const renderPart = (req, municipality, keyFigureIds) => {
   const draftExist = keyFiguresDraft && keyFiguresDraft.length > 0
   const pageTypeKeyFigure = page.type === `${app.name}:keyFigure`
 
-  log.info('keyFigures: %s', JSON.stringify(keyFigures, null, 2))
-  log.info('keyFiguresDraft: %s', JSON.stringify(keyFiguresDraft, null, 2))
-
   // continue if we have any keyFigures
   return keyFigures && keyFigures.length > 0 || draftExist ?
     renderKeyFigure(keyFigures, part, keyFiguresDraft, showPreviewDraft, req, draftExist, pageTypeKeyFigure) : {
