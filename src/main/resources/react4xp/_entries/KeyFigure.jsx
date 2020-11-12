@@ -40,18 +40,20 @@ class KeyFigures extends React.Component {
 
   addPreviewInfo() {
     if (this.props.showPreviewDraft) {
-      if (this.state.fetchUnPublished && this.props.draftExist) {
-        return (
-          <Alert variant='info' className="mb-4">
-              Tallene i nøkkeltallet nedenfor er upublisert
-          </Alert>
-        )
-      } else if (this.state.fetchUnPublished && !this.props.draftExist) {
-        return (
-          <Alert variant='warning' className="mb-4">
-              Finnes ikke upubliserte tall for dette nøkkeltallet
-          </Alert>
-        )
+      if (this.state.fetchUnPublished) {
+        if (this.props.draftExist) {
+          return (
+            <Alert variant='info' className="mb-4">
+                  Tallet i nøkkeltallet nedenfor er upublisert
+            </Alert>
+          )
+        } else {
+          return (
+            <Alert variant='warning' className="mb-4">
+                  Finnes ikke upubliserte tall for dette nøkkeltallet
+            </Alert>
+          )
+        }
       }
     }
     return
@@ -110,15 +112,17 @@ class KeyFigures extends React.Component {
   }
 
   render() {
-    return <div className="container">
-      {this.addPreviewButton()}
-      {this.addPreviewInfo()}
-      {this.addHeader()}
-      <div className="row">
-        {this.createRows()}
-        {this.addSource()}
+    if (!isEmpty(this.state.keyFigures)) {
+      return <div className="container">
+        {this.addPreviewButton()}
+        {this.addPreviewInfo()}
+        {this.addHeader()}
+        <div className="row">
+          {this.createRows()}
+          {this.addSource()}
+        </div>
       </div>
-    </div>
+    }
   }
 }
 

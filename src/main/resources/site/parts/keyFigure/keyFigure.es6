@@ -20,13 +20,14 @@ const {
 const {
   renderError
 } = __non_webpack_require__( '/lib/error/error')
+
+const {
+  hasRole
+} = __non_webpack_require__('/lib/xp/auth')
 const {
   DATASET_BRANCH,
   UNPUBLISHED_DATASET_BRANCH
 } = __non_webpack_require__('/lib/repo/dataset')
-const {
-  hasRole
-} = __non_webpack_require__('/lib/xp/auth')
 
 const view = resolve('./keyFigure.html')
 
@@ -53,7 +54,6 @@ const renderPart = (req, municipality, keyFigureIds) => {
   const page = getContent()
   const part = getComponent()
 
-  const adminRole = hasRole('system.admin')
   // get all keyFigures and filter out non-existing keyFigures
   const keyFigures = getKeyFigures(keyFigureIds)
     .map((keyFigure) => {
@@ -64,6 +64,8 @@ const renderPart = (req, municipality, keyFigureIds) => {
         source: keyFigure.data.source
       }
     })
+
+  const adminRole = hasRole('system.admin')
 
   let keyFiguresDraft
   if (adminRole && req.mode === 'preview') {
@@ -82,6 +84,9 @@ const renderPart = (req, municipality, keyFigureIds) => {
   const draftExist = keyFiguresDraft && keyFiguresDraft.length > 0
   const pageTypeKeyFigure = page.type === `${app.name}:keyFigure`
 
+  log.info('keyFigures: %s', JSON.stringify(keyFigures, null, 2))
+  log.info('keyFiguresDraft: %s', JSON.stringify(keyFiguresDraft, null, 2))
+
   // continue if we have any keyFigures
   return keyFigures && keyFigures.length > 0 || draftExist ?
     renderKeyFigure(keyFigures, part, keyFiguresDraft, showPreviewDraft, req, draftExist, pageTypeKeyFigure) : {
@@ -96,34 +101,14 @@ function renderKeyFigure(parsedKeyFigures, part, parsedKeyFiguresDraft, showPrev
       displayName: part ? part.config.title : undefined,
       keyFigures: parsedKeyFigures.map((keyFigure) => {
         return {
-          iconUrl: keyFigure.iconUrl,
-          iconAltText: keyFigure.iconAltText,
-          number: keyFigure.number,
-          numberDescription: keyFigure.numberDescription,
-          noNumberText: keyFigure.noNumberText,
-          size: keyFigure.size,
-          title: keyFigure.title,
-          time: keyFigure.time,
-          changes: keyFigure.changes,
-          glossary: keyFigure.glossaryText,
-          greenBox: keyFigure.greenBox,
-          source: keyFigure.source
+          ...keyFigure,
+          glossary: keyFigure.glossaryText
         }
       }),
-      keyFiguresDraft: parsedKeyFiguresDraft ? parsedKeyFiguresDraft.map((keyFiguresDraft) => {
+      keyFiguresDraft: parsedKeyFiguresDraft ? parsedKeyFiguresDraft.map((keyFigureDraft) => {
         return {
-          iconUrl: keyFiguresDraft.iconUrl,
-          iconAltText: keyFiguresDraft.iconAltText,
-          number: keyFiguresDraft.number,
-          numberDescription: keyFiguresDraft.numberDescription,
-          noNumberText: keyFiguresDraft.noNumberText,
-          size: keyFiguresDraft.size,
-          title: keyFiguresDraft.title,
-          time: keyFiguresDraft.time,
-          changes: keyFiguresDraft.changes,
-          glossary: keyFiguresDraft.glossaryText,
-          greenBox: keyFiguresDraft.greenBox,
-          source: keyFiguresDraft.source
+          ...keyFigureDraft,
+          glossary: keyFigureDraft.glossaryText
         }
       }) : undefined,
       source: part && part.config && part.config.source || undefined,
