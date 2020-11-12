@@ -16,7 +16,7 @@ const {
 } = __non_webpack_require__( '/lib/xp/content')
 const util = __non_webpack_require__('/lib/util')
 const {
-  getImageAlt
+  getImageAlt, getPreviousReleaseStatistic, getNextReleaseStatistic
 } = __non_webpack_require__('/lib/ssb/utils')
 const {
   getPhrases
@@ -188,8 +188,8 @@ const addDsArticle = (page, relatedArticles, showPreview) => {
 
   if (statistic) {
     const variants = util.data.forceArray(statistic.variants)
-    const previousRelease = getPreviousRelease(variants)
-    const nextRelease = getNextRelease(variants)
+    const previousRelease = getPreviousReleaseStatistic(variants)
+    const nextRelease = getNextReleaseStatistic(variants)
     const statisticPublishDate = showPreview && nextRelease !== '' ? nextRelease : previousRelease
     const assosiatedArticle = getDsArticle(statisticId, statisticPublishDate)
 
@@ -220,19 +220,4 @@ const getDsArticle = (statisticId, statisticPublishDate) => {
   } : undefined
 
   return articleObject
-}
-
-const getPreviousRelease = (variants) => {
-  if (variants.length > 1) {
-    variants.sort((d1, d2) => new Date(d1.previousRelease) - new Date(d2.previousRelease)).reverse()
-  }
-  return variants[0].previousRelease
-}
-
-const getNextRelease = (variants) => {
-  const variantWithDate = variants.filter((variant) => variant.nextRelease !== '' && moment(variant.nextRelease).isAfter(new Date(), 'day'))
-  if (variantWithDate.length > 1) {
-    variantWithDate.sort((d1, d2) => new Date(d1.nextRelease) - new Date(d2.nextRelease))
-  }
-  return variantWithDate.length > 0 ? variantWithDate[0].nextRelease : ''
 }

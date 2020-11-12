@@ -23,6 +23,9 @@ const {
 const React4xp = require('/lib/enonic/react4xp')
 const moment = require('moment/min/moment-with-locales')
 const util = __non_webpack_require__('/lib/util')
+const {
+  getPreviousReleaseStatistic, getNextReleaseStatistic
+} = __non_webpack_require__('/lib/ssb/utils')
 const view = resolve('./statistics.html')
 
 exports.get = (req) => {
@@ -65,8 +68,8 @@ const renderPart = (req) => {
   if (statistic) {
     title = statistic.name
     const variants = util.data.forceArray(statistic.variants)
-    nextReleaseDate = getNextRelease(variants)
-    previousReleaseDate = getPreviousRelease(variants)
+    nextReleaseDate = getNextReleaseStatistic(variants)
+    previousReleaseDate = getPreviousReleaseStatistic(variants)
 
     if (previousReleaseDate && previousReleaseDate !== '') {
       previousRelease = moment(previousReleaseDate).format('DD. MMMM YYYY')
@@ -130,19 +133,4 @@ const renderPart = (req) => {
     pageContributions,
     contentType: 'text/html'
   }
-}
-
-const getPreviousRelease = (variants) => {
-  if (variants.length > 1) {
-    variants.sort((d1, d2) => new Date(d1.previousRelease) - new Date(d2.previousRelease)).reverse()
-  }
-  return variants[0].previousRelease
-}
-
-const getNextRelease = (variants) => {
-  const variantWithDate = variants.filter((variant) => variant.nextRelease !== '' && moment(variant.nextRelease).isAfter(new Date(), 'day'))
-  if (variantWithDate.length > 1) {
-    variantWithDate.sort((d1, d2) => new Date(d1.nextRelease) - new Date(d2.nextRelease))
-  }
-  return variantWithDate.length > 0 ? variantWithDate[0].nextRelease : ''
 }
