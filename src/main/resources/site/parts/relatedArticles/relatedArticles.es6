@@ -28,9 +28,6 @@ const {
   getStatisticByIdFromRepo
 } = __non_webpack_require__('/lib/repo/statreg/statistics')
 const {
-  getPreviousAndNextRelease
-} = __non_webpack_require__('/lib/ssb/statistic')
-const {
   hasRole
 } = __non_webpack_require__('/lib/xp/auth')
 const moment = require('moment/min/moment-with-locales')
@@ -187,21 +184,25 @@ const getSubTitle = (articleContent, phrases) => {
 
 const addDsArticle = (page, relatedArticles, showPreview) => {
   const statisticId = page._id
-  const statRegData = getStatisticByIdFromRepo(page.data.statistic)
-  if (statRegData) {
-    const releaseDates = getPreviousAndNextRelease(statRegData)
-    const previousRelease = moment(new Date(releaseDates.previousRelease)).format('YYYY-MM-DD')
-    const nextRelease = releaseDates.nextRelease !== '' ? moment(new Date(releaseDates.nextRelease)).format('YYYY-MM-DD') : ''
+  const statistic = getStatisticByIdFromRepo(page.data.statistic)
+
+  if (statistic) {
+    const variants = util.data.forceArray(statistic.variants)
+    const previousRelease = getPreviousRelease(variants)
+    const nextRelease = getNextRelease(variants)
     const statisticPublishDate = showPreview && nextRelease !== '' ? nextRelease : previousRelease
     const assosiatedArticle = getDsArticle(statisticId, statisticPublishDate)
+
     if (assosiatedArticle) {
       relatedArticles.unshift(assosiatedArticle)
     }
   }
+
   return relatedArticles
 }
 
 const getDsArticle = (statisticId, statisticPublishDate) => {
+  statisticPublishDate = moment(new Date(statisticPublishDate)).format('YYYY-MM-DD')
   const articleContent = contentLib.query({
     count: 1,
     sort: 'publish.from DESC',
@@ -219,4 +220,19 @@ const getDsArticle = (statisticId, statisticPublishDate) => {
   } : undefined
 
   return articleObject
+}
+
+const getPreviousRelease = (variants) => {
+  if (variants.length > 1) {
+    variants.sort((d1, d2) => new Date(d1.previousRelease) - new Date(d2.previousRelease)).reverse()
+  }
+  return variants[0].previousRelease
+}
+
+const getNextRelease = (variants) => {
+  const variantWithDate = variants.filter((variant) => variant.nextRelease !== '' && moment(variant.nextRelease).isAfter(new Date(), 'day'))
+  if (variantWithDate.length > 1) {
+    variantWithDate.sort((d1, d2) => new Date(d1.nextRelease) - new Date(d2.nextRelease))
+  }
+  return variantWithDate.length > 0 ? variantWithDate[0].nextRelease : ''
 }

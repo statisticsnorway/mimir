@@ -171,32 +171,6 @@ function getStatregInfo(key: string): StatregData | undefined {
   return undefined
 }
 
-export function getPreviousAndNextRelease(statistikk: StatisticInListing): ReleaseDates | undefined {
-  const variants: Array<VariantInListing> = forceArray(statistikk.variants)
-  let prevRelease: string = variants[0].previousRelease
-  let nextRelease: string = variants[0].nextRelease
-  if (variants.length > 1) {
-    // Sort Variants by latest previousRelease date
-    variants.sort((d1, d2) => {
-      return new Date(d1.previousRelease).valueOf() - new Date(d2.previousRelease).valueOf()
-    }).reverse()
-    prevRelease = variants[0].previousRelease
-
-    // Sort Variants by nearest nextRelease date
-    variants.sort((d1, d2) => {
-      return new Date(d1.nextRelease).valueOf() - new Date(d2.nextRelease).valueOf()
-    })
-    nextRelease = variants[0].nextRelease
-  }
-
-  const result: ReleaseDates = {
-    previousRelease: prevRelease,
-    nextRelease: nextRelease
-  }
-
-  return result
-}
-
 function sortByNextRelease(statisticData: Array<StatisticDashboard>): Array<StatisticDashboard> {
   const statisticsSorted: Array<StatisticDashboard> = statisticData.sort((a, b) => {
     const dateA: Date | string = a.nextRelease ? new Date(a.nextRelease) : ''
@@ -242,11 +216,6 @@ interface TbmlSources {
   sourceList?: {
     [key: number]: Array<Source>;
   };
-}
-
-interface ReleaseDates {
-  previousRelease: string;
-  nextRelease: string;
 }
 
 export interface StatisticLib {
