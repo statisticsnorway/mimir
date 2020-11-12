@@ -30,6 +30,9 @@ const {
 const {
   getPreviousAndNextRelease
 } = __non_webpack_require__('/lib/ssb/statistic')
+const {
+  hasRole
+} = __non_webpack_require__('/lib/xp/auth')
 const moment = require('moment/min/moment-with-locales')
 const contentLib = __non_webpack_require__('/lib/xp/content')
 
@@ -54,6 +57,11 @@ exports.preview = (req, id) => renderPart(req, [id])
 function renderPart(req, relatedArticles) {
   const page = getContent()
   const phrases = getPhrases(page)
+  const showPreview = req.params.showDraft && hasRole('system.admin') && req.mode === 'preview'
+
+  if (page.type === `${app.name}:statistics`) {
+    addDsArticle(page, relatedArticles, showPreview)
+  }
 
   if (!relatedArticles || relatedArticles.length === 0) {
     if (req.mode === 'edit' && page.type !== `${app.name}:article` && page.type !== `${app.name}:statistics`) {
@@ -69,21 +77,6 @@ function renderPart(req, relatedArticles) {
   }
 
   moment.locale(page.language ? page.language : 'nb')
-
-  if (page.type === `${app.name}:statistics`) {
-    const statisticId = page._id
-    const statregData = getStatisticByIdFromRepo(page.data.statistic)
-    if (statregData) {
-      const releaseDates = getPreviousAndNextRelease(statregData)
-      const previousRelease = releaseDates.previousRelease
-      const nextRelease = releaseDates.nextRelease
-      const statisticPublishDate = moment(new Date(previousRelease)).format('YYYY-MM-DD')
-      const assosiatedArticle = getDsArticle(statisticId, statisticPublishDate)
-      if (assosiatedArticle) {
-        relatedArticles.unshift(assosiatedArticle)
-      }
-    }
-  }
 
   relatedArticles = relatedArticles.map((article) => {
     if (article._selected === 'article') {
@@ -192,8 +185,23 @@ const getSubTitle = (articleContent, phrases) => {
   return `${type ? `${type} / ` : ''}${prettyDate}`
 }
 
+const addDsArticle = (page, relatedArticles, showPreview) => {
+  const statisticId = page._id
+  const statRegData = getStatisticByIdFromRepo(page.data.statistic)
+  if (statRegData) {
+    const releaseDates = getPreviousAndNextRelease(statRegData)
+    const previousRelease = moment(new Date(releaseDates.previousRelease)).format('YYYY-MM-DD')
+    const nextRelease = releaseDates.nextRelease !== '' ? moment(new Date(releaseDates.nextRelease)).format('YYYY-MM-DD') : ''
+    const statisticPublishDate = showPreview && nextRelease !== '' ? nextRelease : previousRelease
+    const assosiatedArticle = getDsArticle(statisticId, statisticPublishDate)
+    if (assosiatedArticle) {
+      relatedArticles.unshift(assosiatedArticle)
+    }
+  }
+  return relatedArticles
+}
+
 const getDsArticle = (statisticId, statisticPublishDate) => {
-  let articleObject
   const articleContent = contentLib.query({
     count: 1,
     sort: 'publish.from DESC',
@@ -203,14 +211,12 @@ const getDsArticle = (statisticId, statisticPublishDate) => {
     ]
   }).hits
 
-  if (articleContent.length > 0) {
-    articleObject = {
-      _selected: 'article',
-      article: {
-        article: articleContent[0]._id
-      }
+  const articleObject = articleContent.length > 0 ? {
+    _selected: 'article',
+    article: {
+      article: articleContent[0]._id
     }
-  }
+  } : undefined
 
   return articleObject
 }
