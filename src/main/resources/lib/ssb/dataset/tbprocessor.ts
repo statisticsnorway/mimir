@@ -24,7 +24,8 @@ export function getTbprocessor(content: Content<DataSource>, branch: string): Da
   if (content.data.dataSource && content.data.dataSource._selected) {
     const dataSource: DataSource['dataSource'] = content.data.dataSource
     if (dataSource.tbprocessor && dataSource.tbprocessor.urlOrId) {
-      return getDataset(content.data.dataSource?._selected, branch, getTbprocessorKey(content))
+      const langauge: string = content.language || ''
+      return getDataset(content.data.dataSource?._selected, branch, `${getTbprocessorKey(content)}${langauge === 'en' ? langauge : ''}`)
     }
   }
   return null
@@ -79,9 +80,10 @@ function getDataAndMetaData(content: Content<DataSource>): TbmlData | null {
   const baseUrl: string = app.config && app.config['ssb.tbprocessor.baseUrl'] ? app.config['ssb.tbprocessor.baseUrl'] : 'https://i.test.ssb.no/tbprocessor'
   const dataPath: string = `/process/tbmldata/`
   const sourceListPath: string = `/document/sourceList/`
+  const language: string = content.language || ''
 
   const tbmlKey: string = getTbprocessorKey(content)
-  const tbmlData: TbmlData | null = tryRequestTbmlData(`${baseUrl}${dataPath}${tbmlKey}`, content._id)
+  const tbmlData: TbmlData | null = tryRequestTbmlData(`${baseUrl}${dataPath}${tbmlKey}${language === 'en' ? `?lang=${language}` : ''}`, content._id)
 
   const tbmlSourceList: TbmlSourceList | null = tryRequestTbmlSourceList(`${baseUrl}${sourceListPath}${tbmlKey}`, content._id)
 
