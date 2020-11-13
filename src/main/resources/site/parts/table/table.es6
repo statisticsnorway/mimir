@@ -93,6 +93,10 @@ function renderPart(req, tableId) {
   })
 
   const standardSymbol = getStandardSymbolPage(language.standardSymbolPage, phrases.tableStandardSymbols)
+  const sourceList = table.sourceList
+  const sourceListExternal = sourceList ? sourceList.filter((s) => s.tableApproved === 'internet') : []
+  const uniqueTableIds = sourceListExternal.length > 0 ? sourceListExternal.map((item) => item.tableId)
+    .filter((value, index, self) => self.indexOf(value) === index) : []
 
   const props = {
     downloadTableLabel: phrases.tableDownloadAs,
@@ -124,7 +128,8 @@ function renderPart(req, tableId) {
     showPreviewDraft,
     paramShowDraft: req.params.showDraft ? true : false,
     draftExist,
-    pageTypeStatistic
+    pageTypeStatistic,
+    sourceListTables: uniqueTableIds
   }
 
   const tableReact = new React4xp('Table')
