@@ -3,7 +3,7 @@ import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
 import { StatisticInListing, VariantInListing } from './statreg/types'
 import { UtilLibrary } from '../types/util'
 import { Statistics } from '../../site/content-types/statistics/statistics'
-import { DashboardDatasetLib } from './dataset/dashboard'
+import {DashboardDatasetLib, ProcessXml} from './dataset/dashboard'
 import { ContextLibrary, RunContext } from 'enonic-types/context'
 import { DatasetRepoNode, RepoDatasetLib } from '../repo/dataset'
 import moment = require('moment')
@@ -43,7 +43,7 @@ const {
   getTbprocessor
 }: TbprocessorLib = __non_webpack_require__('/lib/ssb/dataset/tbprocessor')
 const {
-  createHeaderAuthorizationToken
+  encrypt
 }= __non_webpack_require__('/lib/cipher/cipher')
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
@@ -60,14 +60,8 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
       key: data.id
     })
 
-    const tokenA: Array<string> | undefined = data.owners ? Object.keys(data.owners).map( (ownerKey) => {
-      const ownerKeyInt: number = parseInt(ownerKey)
-      return data.owners ?
-        createHeaderAuthorizationToken(data.owners[ownerKeyInt].username, data.owners[ownerKeyInt].password) :
-        undefined
-    }) : undefined
-
-    const token: string| undefined = tokenA && tokenA.length ? tokenA[0] : undefined
+    const fetchPublished: boolean = data.fetchPublished === 'on'
+    const processXmls: Array<ProcessXml> | undefined = fetchPublished && data.owners ? processXmlFromOwners(data.owners) : undefined
 
     if (statistic) {
       const datasetIdsToUpdate: Array<string> = datasetIdsFromStatistic(statistic)
@@ -86,8 +80,9 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
           refreshDatasetHandler(
             datasetIdsToUpdate,
             socketEmitter,
-            data.fetchPublished ? DATASET_BRANCH : UNPUBLISHED_DATASET_BRANCH,
-            token)
+            fetchPublished ? DATASET_BRANCH : UNPUBLISHED_DATASET_BRANCH,
+            processXmls
+            )
         })
       }
       socketEmitter.broadcast('statistics-refresh-result', {
@@ -95,6 +90,28 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
       })
     }
   })
+}
+
+function processXmlFromOwners(owners: RefreshInfo['owners']) {
+  return owners && Object.keys(owners).reduce((acc: Array<ProcessXml>, ownerKey) => {
+    const ownerKeyInt: number = parseInt(ownerKey)
+    const currentOwnerObj: OwnerObject | undefined = owners && owners[ownerKeyInt] ? owners[ownerKeyInt] : undefined
+    const ownerTableIds: Array<string> | undefined = currentOwnerObj && Array.isArray(currentOwnerObj.ownerTableIds) ?
+      currentOwnerObj.ownerTableIds : undefined
+
+    const sourceNodesString: Array<string> | undefined = currentOwnerObj && ownerTableIds ?
+      ownerTableIds.map((tableId) => {
+        return `<source user="${currentOwnerObj.username}" password="${encrypt(currentOwnerObj.password)}" id="${tableId}"/>`
+      }) : undefined
+
+    if (sourceNodesString && currentOwnerObj) {
+      acc.push({
+        tbmlId: parseInt(currentOwnerObj.tbmlId),
+        processXml: `<process>${sourceNodesString.join('')}</process>`
+      })
+    }
+    return acc
+  }, [])
 }
 
 function datasetIdsFromStatistic(statistic: Content<Statistics>): Array<string> {
@@ -207,14 +224,18 @@ function sortByNextRelease(statisticData: Array<StatisticDashboard>): Array<Stat
 interface RefreshInfo {
   id: string;
   owners?: {
-    [ownerKey: number]: {
-      username: string;
-      password: string;
-    }
+    [ownerKey: number]: OwnerObject;
   };
   owner: string;
-  fetchPublished: boolean;
+  fetchPublished: 'on' | null;
 }
+
+interface OwnerObject {
+  username: string;
+  password: string;
+  ownerTableIds?: Array<string>;
+  tbmlId: string;
+};
 
 interface StatisticDashboard {
   id: string;

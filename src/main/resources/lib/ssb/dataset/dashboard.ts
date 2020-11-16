@@ -143,7 +143,7 @@ export function refreshDatasetHandler(
   ids: Array<string>,
   socketEmitter: SocketEmitter,
   branch: string = DATASET_BRANCH,
-  token?: string): void {
+  processXmls?: Array<ProcessXml>): void {
   // tell all dashboard instances that these are going to be loaded
   ids.forEach((id) => {
     socketEmitter.broadcast('dashboard-activity-refreshDataset', {
@@ -156,7 +156,15 @@ export function refreshDatasetHandler(
       key: id
     })
     if (dataSource) {
-      const refreshDatasetResult: CreateOrUpdateStatus = refreshDataset(dataSource, branch, token)
+      const dataSourceKey: number = parseInt(extractKey(dataSource))
+      const ownerCredentialsForTbml: Array<ProcessXml> | undefined = processXmls ?
+        processXmls.filter((processXml: ProcessXml) => processXml.tbmlId === dataSourceKey) : undefined
+
+      const refreshDatasetResult: CreateOrUpdateStatus = refreshDataset(
+        dataSource,
+        branch,
+      ownerCredentialsForTbml && ownerCredentialsForTbml.length ? ownerCredentialsForTbml[0].processXml : undefined)
+
       logUserDataQuery(dataSource._id, {
         file: '/lib/ssb/dataset/dashboard.ts',
         function: 'refreshDatasetHandler',
@@ -254,5 +262,10 @@ export interface RefreshDatasetOptions {
 export interface DashboardDatasetLib {
   users: Array<User>;
   setupHandlers: (socket: Socket, socketEmitter: SocketEmitter) => void;
-  refreshDatasetHandler: (ids: Array<string>, socketEmitter: SocketEmitter, branch?: string, token?: string) => void;
+  refreshDatasetHandler: (ids: Array<string>, socketEmitter: SocketEmitter, branch?: string, processXml?: Array<ProcessXml>) => void;
+}
+
+export interface ProcessXml {
+  tbmlId: number;
+  processXml: string;
 }

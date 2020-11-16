@@ -62,10 +62,10 @@ export function parseTable(req: Request, table: Content<Table>, branch: string =
 
     if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
       const tbmlData: TbmlData = data as TbmlData
-      const title: Title = tbmlData.tbml.metadata.title
-      const notes: Notes | undefined = tbmlData.tbml.metadata.notes
+      const title: Title | undefined = tbmlData.tbml.metadata ? tbmlData.tbml.metadata.title : undefined
+      const notes: Notes | undefined = tbmlData.tbml.metadata ? tbmlData.tbml.metadata.notes : undefined
 
-      tableViewData = getTableViewData(table, tbmlData.tbml.presentation, title, notes)
+      tableViewData = tbmlData.tbml.presentation ? getTableViewData(table, tbmlData.tbml.presentation, title, notes) : tableViewData
     }
   }
 
@@ -89,7 +89,7 @@ function mergeTableRows(thead: Array<Thead>): Array<TableRow> {
   }, [])
 }
 
-function getTableViewData(table: Content<Table>, dataContent: TbmlData | JSONstat, title: Title, notes: Notes | undefined): TableView {
+function getTableViewData(table: Content<Table>, dataContent: TbmlData | JSONstat, title: Title | undefined, notes: Notes | undefined): TableView {
   const headRows: Array<Thead> = forceArray(dataContent.table.thead)
     .map( (thead: Thead) => ({
       tr: forceArray(thead.tr)
@@ -110,7 +110,7 @@ function getTableViewData(table: Content<Table>, dataContent: TbmlData | JSONsta
     return acc
   }, [])
 
-  const noteRefs: Array<string> = title.noterefs ?
+  const noteRefs: Array<string> = title && title.noterefs ?
     [title.noterefs, ...headNoteRefs, ...bodyNoteRefs] :
     [...headNoteRefs, ...bodyNoteRefs]
 

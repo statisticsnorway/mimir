@@ -15,7 +15,7 @@ public class SimpleStreamCipher {
     private Cipher cipher;
     private Base64 coder;
 
-    public synchronized ByteArrayOutputStream encrypt(String secretKey, String userNameCombo)
+    public synchronized ByteArrayOutputStream encrypt(String secretKey, String stringToEncrypt)
             throws Exception {
 
         if(secretKey.length()!=16){
@@ -31,7 +31,7 @@ public class SimpleStreamCipher {
         }
 
         cipher.init(Cipher.ENCRYPT_MODE, key);
-        byte[] cipherText = cipher.doFinal(userNameCombo.getBytes());
+        byte[] cipherText = cipher.doFinal(stringToEncrypt.getBytes());
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         baos.write(coder.encode(cipherText));
         return baos;

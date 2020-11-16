@@ -8,7 +8,7 @@ export function requestStatistics(dispatch, io) {
   io.emit('get-statistics')
 }
 
-export function refreshStatistic(dispatch, io, id, owners) {
+export function refreshStatistic(dispatch, io, id, owners, fetchPublished) {
   dispatch({
     type: actions.startRefreshStatistic.type,
     id
@@ -16,6 +16,7 @@ export function refreshStatistic(dispatch, io, id, owners) {
 
   io.emit('refresh-statistic', {
     id,
-    owners
+    owners,
+    fetchPublished
   })
 }

@@ -79,12 +79,12 @@ export function extractKey(content: Content<DataSource>): string | null {
   }
 }
 
-function fetchData(content: Content<DataSource>, token?: string): JSONstat | TbmlData | object | null {
+function fetchData(content: Content<DataSource>, processXml?: string): JSONstat | TbmlData | object | null {
   switch (content.data.dataSource?._selected) {
   case DataSourceType.STATBANK_API:
     return fetchStatbankApiData(content)
   case DataSourceType.TBPROCESSOR:
-    return fetchTbprocessorData(content, token)
+    return fetchTbprocessorData(content, processXml)
   case DataSourceType.STATBANK_SAVED:
     return fetchStatbankSavedData(content)
   case DataSourceType.KLASS:
@@ -97,9 +97,9 @@ function fetchData(content: Content<DataSource>, token?: string): JSONstat | Tbm
 export function refreshDataset(
   content: Content<DataSource>,
   branch: string = DATASET_BRANCH,
-  token?: string ): CreateOrUpdateStatus {
+  processXml?: string ): CreateOrUpdateStatus {
   /**/
-  const data: JSONstat | TbmlData | object | null = fetchData(content, token)
+  const data: JSONstat | TbmlData | object | null = fetchData(content, processXml)
   const key: string | null = extractKey(content)
   const user: User | null = getUser()
 
@@ -201,7 +201,7 @@ export interface CreateOrUpdateStatus {
 export interface DatasetLib {
   getDataset: (content: Content<DataSource>, branch?: string) => DatasetRepoNode<JSONstat | TbmlData | object> | null;
   extractKey: (content: Content<DataSource>) => string;
-  refreshDataset: (content: Content<DataSource>, branch?: string, token?: string) => CreateOrUpdateStatus;
+  refreshDataset: (content: Content<DataSource>, branch?: string, processXml?: string) => CreateOrUpdateStatus;
   refreshDatasetWithUserKey: (content: Content<DataSource>, userLogin: string, branch?: string) => CreateOrUpdateStatus;
   deleteDataset: (content: Content<DataSource>, branch?: string) => boolean;
   getContentWithDataSource: () => Array<Content<DataSource>>;
