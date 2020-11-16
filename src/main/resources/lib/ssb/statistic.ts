@@ -61,7 +61,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     })
 
     const fetchPublished: boolean = data.fetchPublished === 'on'
-    const processXmls: Array<ProcessXml> | undefined = fetchPublished && data.owners ? processXmlFromOwners(data.owners) : undefined
+    const processXmls: Array<ProcessXml> | undefined = !fetchPublished && data.owners ? processXmlFromOwners(data.owners) : undefined
 
     if (statistic) {
       const datasetIdsToUpdate: Array<string> = getDatasetIdsFromStatistic(statistic)
