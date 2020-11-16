@@ -64,7 +64,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     const processXmls: Array<ProcessXml> | undefined = fetchPublished && data.owners ? processXmlFromOwners(data.owners) : undefined
 
     if (statistic) {
-      const datasetIdsToUpdate: Array<string> = datasetIdsFromStatistic(statistic)
+      const datasetIdsToUpdate: Array<string> = getDatasetIdsFromStatistic(statistic)
 
       if (datasetIdsToUpdate.length > 0) {
         const context: RunContext = {
@@ -114,7 +114,7 @@ function processXmlFromOwners(owners: RefreshInfo['owners']) {
   }, [])
 }
 
-function datasetIdsFromStatistic(statistic: Content<Statistics>): Array<string> {
+export function getDatasetIdsFromStatistic(statistic: Content<Statistics>): Array<string> {
   const mainTableId: Array<string> = statistic.data.mainTable ? [statistic.data.mainTable] : []
   const statisticsKeyFigureId: Array<string> = statistic.data.statisticsKeyFigure ? [statistic.data.statisticsKeyFigure] : []
   const attachmentTablesFiguresIds: Array<string> = statistic.data.attachmentTablesFigures ? forceArray(statistic.data.attachmentTablesFigures) : []
@@ -122,7 +122,7 @@ function datasetIdsFromStatistic(statistic: Content<Statistics>): Array<string> 
 }
 
 function sourceListFromStatistic(statistic: Content<Statistics>): Array<TbmlSources> {
-  const datasetIds: Array<string> = datasetIdsFromStatistic(statistic)
+  const datasetIds: Array<string> = getDatasetIdsFromStatistic(statistic)
 
   const datasets: Array<DatasetRepoNode<TbmlData>> = datasetIds.reduce((acc: Array<DatasetRepoNode<TbmlData>>, contentId: string) => {
     const dataset: DatasetRepoNode<TbmlData> | null = getDatasetFromContentId(contentId)
@@ -263,7 +263,7 @@ interface TbmlSources {
 export interface StatisticLib {
   setupHandlers: (socket: Socket, socketEmitter: SocketEmitter) => void;
   getStatistics: () => Array<Content<Statistics>>;
-  getDatasetFromStatistics: (statistic: Content<Statistics>) => Array<string>;
+  getDatasetIdsFromStatistic: (statistic: Content<Statistics>) => Array<string>;
 }
 
 export interface GroupByResult {

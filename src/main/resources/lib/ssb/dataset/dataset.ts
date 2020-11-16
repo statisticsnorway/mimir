@@ -69,7 +69,8 @@ export function extractKey(content: Content<DataSource>): string | null {
   case DataSourceType.STATBANK_API:
     return getStatbankApiKey(content)
   case DataSourceType.TBPROCESSOR:
-    return getTbprocessorKey(content)
+    const language: string = content.language || ''
+    return `${getTbprocessorKey(content)}${language === 'en' ? language : ''}`
   case DataSourceType.STATBANK_SAVED:
     return getStatbankApiKey(content)
   case DataSourceType.KLASS:
@@ -142,21 +143,7 @@ export function refreshDatasetWithUserKey(content: Content<DataSource>, userLogi
 
 
 export function deleteDataset(content: Content<DataSource>, branch: string = DATASET_BRANCH): boolean {
-  let key: string | undefined
-  switch (content.data.dataSource?._selected) {
-  case DataSourceType.STATBANK_API: {
-    key = getStatbankApiKey(content)
-    break
-  }
-  case DataSourceType.TBPROCESSOR: {
-    key = getTbprocessorKey(content)
-    break
-  }
-  case DataSourceType.KLASS: {
-    key = getKlassKey(content)
-    break
-  }
-  }
+  const key: string | null = extractKey(content)
   if (content.data.dataSource && content.data.dataSource._selected && key) {
     return deleteDatasetFromRepo(content.data.dataSource._selected, branch, key)
   } else {
