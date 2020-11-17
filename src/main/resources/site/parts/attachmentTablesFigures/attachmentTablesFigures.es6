@@ -130,8 +130,6 @@ const getTablesAndFigures = (attachmentTablesAndFigures, req, phrases) => {
 
 function getTableReturnObject(content, preview, subHeader, index) {
   const datasetFromRepo = datasetOrUndefined(content)
-  log.info('datasetFromRepo.data.tbml')
-  log.info(JSON.stringify(datasetFromRepo.data.tbml, null, 2))
   const title = datasetFromRepo && datasetFromRepo.data.tbml.metadata ? datasetFromRepo.data.tbml.metadata.title : content.displayName
   return {
     id: `attachment-table-figure-${index + 1}`,
