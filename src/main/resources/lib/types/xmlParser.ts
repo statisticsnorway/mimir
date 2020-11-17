@@ -8,7 +8,7 @@ export interface TbmlData {
       table: Table;
     };
     metadata: Metadata;
-  };
+  } | '';
 }
 
 export interface Metadata {

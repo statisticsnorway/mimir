@@ -62,10 +62,13 @@ export function parseTable(req: Request, table: Content<Table>, branch: string =
 
     if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
       const tbmlData: TbmlData = data as TbmlData
-      const title: Title = tbmlData.tbml.metadata.title
-      const notes: Notes | undefined = tbmlData.tbml.metadata.notes
-
-      tableViewData = getTableViewData(table, tbmlData.tbml.presentation, title, notes)
+      if(tbmlData.tbml !== '' && tbmlData.tbml.metadata) {
+        const title: Title = typeof(tbmlData.tbml.metadata.title) == 'string' ?
+          { noterefs: '', content: tbmlData.tbml.metadata.title as string } :
+          tbmlData.tbml.metadata.title
+        const notes: Notes | undefined = tbmlData.tbml.metadata.notes
+        tableViewData = getTableViewData(table, tbmlData.tbml.presentation, title, notes)
+      }
     }
   }
 
