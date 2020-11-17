@@ -107,7 +107,7 @@ export function parseKeyFigure(req: Request, keyFigure: Content<KeyFigure>, muni
       }
     } else if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
       const tbmlData: TbmlData = data as TbmlData
-      if(tbmlData !== null && tbmlData.tbml !== '' && tbmlData.tbml.presentation) getDataTbProcessor(keyFigureViewData, tbmlData, keyFigure)
+      if(tbmlData !== null && tbmlData.tbml.presentation) getDataTbProcessor(keyFigureViewData, tbmlData, keyFigure)
     }
     return keyFigureViewData
   } else if (keyFigure.data.manualSource) {
