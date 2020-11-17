@@ -1,3 +1,4 @@
+__non_webpack_require__('/lib/polyfills/nashorn')
 /* eslint-disable new-cap */
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
@@ -63,11 +64,11 @@ export function parseTable(req: Request, table: Content<Table>, branch: string =
 
     if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
       const tbmlData: TbmlData = data as TbmlData
-      const title: Title = tbmlData.tbml.metadata.title
-      const notes: Notes | undefined = tbmlData.tbml.metadata.notes
+      const title: Title | undefined = tbmlData.tbml.metadata ? tbmlData.tbml.metadata.title : undefined
+      const notes: Notes | undefined = tbmlData.tbml.metadata ? tbmlData.tbml.metadata.notes : undefined
       const sourceList: Source | Array<Source> | undefined = tbmlData.tbml.metadata.sourceList
 
-      tableViewData = getTableViewData(table, tbmlData.tbml.presentation, title, notes, sourceList)
+      tableViewData = tbmlData.tbml.presentation ? getTableViewData(table, tbmlData.tbml.presentation, title, notes, sourceList) : tableViewData
     }
   }
 
@@ -92,7 +93,8 @@ function mergeTableRows(thead: Array<Thead>): Array<TableRow> {
   }, [])
 }
 
-function getTableViewData(table: Content<Table>, dataContent: TbmlData | JSONstat, title: Title, notes: Notes | undefined, sourceList: Source | Array<Source> | undefined): TableView {
+function getTableViewData(table: Content<Table>, dataContent: TbmlData | JSONstat,
+  title: Title | undefined, notes: Notes | undefined, sourceList: Source | Array<Source> | undefined): TableView {
   const headRows: Array<Thead> = forceArray(dataContent.table.thead)
     .map( (thead: Thead) => ({
       tr: forceArray(thead.tr)
@@ -113,7 +115,7 @@ function getTableViewData(table: Content<Table>, dataContent: TbmlData | JSONsta
     return acc
   }, [])
 
-  const noteRefs: Array<string> = title.noterefs ?
+  const noteRefs: Array<string> = title && title.noterefs ?
     [title.noterefs, ...headNoteRefs, ...bodyNoteRefs] :
     [...headNoteRefs, ...bodyNoteRefs]
 
@@ -136,7 +138,7 @@ function getTableViewData(table: Content<Table>, dataContent: TbmlData | JSONsta
 function getNoterefs(row: TableRow): Array<string> {
   return forceArray(row.th).reduce((acc: Array<string>, cell: string | number | PreliminaryData) => {
     if (typeof cell === 'object') {
-      if (cell.noterefs && acc && !acc.includes(cell.noterefs)) {
+      if (cell.noterefs && acc && acc.includes(cell.noterefs)) {
         acc.push(cell.noterefs)
       }
     }
@@ -153,5 +155,5 @@ interface TableView {
   };
   tableClass: string;
   noteRefs: Array<string>;
-  sourceList: Source | Array<Source> | undefined
+  sourceList: Source | Array<Source> | undefined;
 }

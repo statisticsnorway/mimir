@@ -1,3 +1,4 @@
+__non_webpack_require__('/lib/polyfills/nashorn')
 import { Content, ContentLibrary } from 'enonic-types/content'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
@@ -75,7 +76,7 @@ export function publishDataset(): void {
           if (!p.dataset) {
             return false
           }
-          if (publishedDatasetIds.indexOf(p.dataset._id) === -1) {
+          if (publishedDatasetIds.includes(p.dataset._id)) {
             publishedDatasetIds.push(p.dataset._id)
             return true
           }
