@@ -54,6 +54,8 @@ const renderPart = (req, municipality, keyFigureIds) => {
   const page = getContent()
   const part = getComponent()
 
+  const adminRole = hasRole('system.admin')
+
   // get all keyFigures and filter out non-existing keyFigures
   const keyFigures = getKeyFigures(keyFigureIds)
     .map((keyFigure) => {
@@ -64,8 +66,6 @@ const renderPart = (req, municipality, keyFigureIds) => {
         source: keyFigure.data.source
       }
     })
-
-  const adminRole = hasRole('system.admin')
 
   let keyFiguresDraft
   if (adminRole && req.mode === 'preview') {
@@ -81,7 +81,7 @@ const renderPart = (req, municipality, keyFigureIds) => {
   }
 
   const showPreviewDraft = adminRole && req.mode === 'preview'
-  const draftExist = keyFiguresDraft && keyFiguresDraft.length > 0
+  const draftExist = !!keyFiguresDraft
   const pageTypeKeyFigure = page.type === `${app.name}:keyFigure`
 
   // continue if we have any keyFigures
@@ -96,16 +96,16 @@ function renderKeyFigure(parsedKeyFigures, part, parsedKeyFiguresDraft, showPrev
   const keyFigureReact = new React4xp('KeyFigure')
     .setProps({
       displayName: part ? part.config.title : undefined,
-      keyFigures: parsedKeyFigures.map((keyFigure) => {
+      keyFigures: parsedKeyFigures.map((keyFigureData) => {
         return {
-          ...keyFigure,
-          glossary: keyFigure.glossaryText
+          ...keyFigureData,
+          glossary: keyFigureData.glossaryText
         }
       }),
-      keyFiguresDraft: parsedKeyFiguresDraft ? parsedKeyFiguresDraft.map((keyFigureDraft) => {
+      keyFiguresDraft: parsedKeyFiguresDraft ? parsedKeyFiguresDraft.map((keyFigureDraftData) => {
         return {
-          ...keyFigureDraft,
-          glossary: keyFigureDraft.glossaryText
+          ...keyFigureDraftData,
+          glossary: keyFigureDraftData.glossaryText
         }
       }) : undefined,
       source: part && part.config && part.config.source || undefined,
