@@ -66,7 +66,7 @@ export function parseTable(req: Request, table: Content<Table>, branch: string =
       const tbmlData: TbmlData = data as TbmlData
       const title: Title | undefined = tbmlData.tbml.metadata ? tbmlData.tbml.metadata.title : undefined
       const notes: Notes | undefined = tbmlData.tbml.metadata ? tbmlData.tbml.metadata.notes : undefined
-      const sourceList: Source | Array<Source> | undefined = tbmlData.tbml.metadata.sourceList
+      const sourceList: Source | Array<Source> | undefined = tbmlData.tbml.metadata ? tbmlData.tbml.metadata.sourceList : undefined
 
       tableViewData = tbmlData.tbml.presentation ? getTableViewData(table, tbmlData.tbml.presentation, title, notes, sourceList) : tableViewData
     }
