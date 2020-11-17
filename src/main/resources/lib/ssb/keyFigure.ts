@@ -1,3 +1,4 @@
+__non_webpack_require__('/lib/polyfills/nashorn')
 /* eslint-disable new-cap */
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
@@ -8,7 +9,6 @@ import { KeyFigure } from '../../site/content-types/keyFigure/keyFigure'
 import { MunicipalityWithCounty } from '../klass/municipalities'
 import { TbmlData, TableRow, PreliminaryData } from '../types/xmlParser'
 import { Dataset as JSDataset, Dimension, Category } from '../types/jsonstat-toolkit'
-import { UtilLibrary } from '../types/util'
 import { Request } from 'enonic-types/controller'
 import { DatasetRepoNode } from '../repo/dataset'
 import { DataSource as DataSourceType } from '../repo/dataset'
@@ -259,7 +259,7 @@ function getDataFromMunicipalityCode(ds: JSDataset, municipalityCode: string, yA
 const notFoundValues: Array<string> = ['.', '..', '...', ':', '-']
 function parseValue(value: number | string | null): string | undefined {
   let hasValue: boolean = true
-  if (!value || notFoundValues.indexOf(value.toString()) > -1) {
+  if (!value || notFoundValues.includes(value.toString())) {
     hasValue = false
   }
   return hasValue ? createHumanReadableFormat(value) : undefined

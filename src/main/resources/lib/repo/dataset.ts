@@ -1,3 +1,4 @@
+__non_webpack_require__('/lib/polyfills/nashorn')
 import { RepoCommonLib } from './common'
 import { RepoNode } from 'enonic-types/node'
 import { RepoLib } from './repo'
@@ -34,10 +35,10 @@ export function setupDatasetRepo(): void {
   if (!repo) {
     repo = createRepo(DATASET_REPO, DATASET_REPO)
   }
-  if (repo.branches.indexOf(DATASET_BRANCH) < 0) {
+  if (repo.branches.includes(DATASET_BRANCH)) {
     createBranch(DATASET_REPO, DATASET_BRANCH)
   }
-  if (repo.branches.indexOf(UNPUBLISHED_DATASET_BRANCH) < 0) {
+  if (repo.branches.includes(UNPUBLISHED_DATASET_BRANCH)) {
     createBranch(DATASET_REPO, UNPUBLISHED_DATASET_BRANCH)
   }
   createSourceNode(DataSource.STATBANK_API, DATASET_BRANCH)

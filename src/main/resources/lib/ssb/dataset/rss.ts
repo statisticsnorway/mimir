@@ -1,3 +1,4 @@
+__non_webpack_require__('/lib/polyfills/nashorn')
 import { Content } from 'enonic-types/content'
 import { HttpLibrary, HttpResponse } from 'enonic-types/http'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
@@ -60,7 +61,7 @@ function inRSSItems(dataSource: Content<DataSource>, dataset: DatasetRepoNode<JS
   return RSSItems.filter((item) => {
     const tableId: string = item['ssbrss:tableid'].toString()
     const tableIdAsNumber: number = parseInt(tableId) // remove "0" from start of tableId
-    if (keys.indexOf(tableId) >= 0 || keys.indexOf(tableIdAsNumber.toString()) >= 0 || keys.length === 0) { // check for 04859 and 4859
+    if (keys.includes(tableId) || keys.includes(tableIdAsNumber.toString()) || keys.length === 0) { // check for 04859 and 4859
       return true
     }
     return false

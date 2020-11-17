@@ -9,19 +9,25 @@ export function RefreshStatisticsForm(props) {
   } = props
 
   const [owners, setOwners] = useState({})
+  const [fetchPublished, setFetchedPublished] = useState(null)
 
-  function updateOwnerCredentials(ownerKey, propKey, value) {
+  function updateOwnerCredentials(ownerKey, propKey, value, ownerTableIds, tbmlId) {
     if (!!owners[ownerKey]) {
       owners[ownerKey][propKey] = value
+      owners[ownerKey].ownerTableIds = ownerTableIds,
+      tbmlId
     } else {
       owners[ownerKey] = {
-        [propKey]: value
+        [propKey]: value,
+        ownerTableIds: ownerTableIds,
+        tbmlId
       }
     }
     setOwners(owners)
   }
 
   function renderOwnerInputField(owner, sources, i, tbmlId) {
+    const ownerTableIds = sources.map((source) => source.id)
     return (
       <div key={i}>
         <p>Autorisasjon for TBML {tbmlId} med eier {owner}. <br/>TabelId: {
@@ -36,7 +42,7 @@ export function RefreshStatisticsForm(props) {
           <Form.Control
             type="username"
             placeholder="Brukernavn"
-            onChange={(e) => updateOwnerCredentials(owner, 'username', e.target.value)}
+            onChange={(e) => updateOwnerCredentials(owner, 'username', e.target.value, ownerTableIds, tbmlId)}
           />
         </Form.Group>
         <Form.Group controlId="formBasicPassword">
@@ -44,14 +50,7 @@ export function RefreshStatisticsForm(props) {
           <Form.Control
             type="password"
             placeholder="Passord"
-            onChange={(e) => updateOwnerCredentials(owner, 'password', e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group controlId="formBasicCheckbox">
-          <Form.Check
-            onChange={(e) => updateOwnerCredentials(owner, 'fetchPublished', e.target.checked)}
-            type="checkbox"
-            label="Hent publiserte tall"
+            onChange={(e) => updateOwnerCredentials(owner, 'password', e.target.value, ownerTableIds, tbmlId)}
           />
         </Form.Group>
       </div>
@@ -67,10 +66,18 @@ export function RefreshStatisticsForm(props) {
           })
         })
       }
+      <Form.Group controlId="formBasicCheckbox">
+        <Form.Check
+          onChange={(e) => setFetchedPublished(e.target.value)}
+          type="checkbox"
+          label="Hent publiserte tall"
+        />
+      </Form.Group>
       <Button
         variant="primary"
         onClick={() => onSubmit({
-          owners
+          owners,
+          fetchPublished
         })}
       >
         Send
