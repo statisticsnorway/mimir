@@ -9,8 +9,8 @@ const {
   Events
 }: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
 
-export function fetch(url: string, queryId?: string, processXml?: string): string {
-  let result: string = '<tbml></tbml>'
+export function fetch(url: string, queryId?: string, processXml?: string): string | null{
+  let result: string | null = null
 
   const requestParams: HttpRequestParams = {
     url,
@@ -54,14 +54,21 @@ export function fetch(url: string, queryId?: string, processXml?: string): strin
   return result
 }
 
-export function getTbmlData(url: string, queryId?: string, processXml?: string): TbmlData {
-  return xmlToJson(fetch(url, queryId, processXml), queryId)
+export function getTbmlData(url: string, queryId?: string, processXml?: string): TbmlData | null {
+  const result: string | null = fetch(url, queryId, processXml)
+  if (result) {
+    return xmlToJson(result, queryId)
+  }
+  return null
 }
 
 export function getTbmlSourceList(url: string): TbmlSourceList | null {
-  const result: string = fetch(url)
-  const jsonResult: TbmlSourceList = xmlToJson(result)
-  return jsonResult ? jsonResult : null
+  const result: string | null = fetch(url)
+  if (result) {
+    const jsonResult: TbmlSourceList = xmlToJson(result)
+    return jsonResult ? jsonResult : null
+  }
+  return null
 }
 
 function xmlToJson<T>(xml: string, queryId?: string): T {
@@ -83,7 +90,7 @@ function xmlToJson<T>(xml: string, queryId?: string): T {
 
 export interface TbmlLib {
   fetch: (url: string, queryId?: string, token?: string) => string;
-  getTbmlData: (url: string, queryId?: string, token?: string) => TbmlData;
+  getTbmlData: (url: string, queryId?: string, processXml?: string) => TbmlData | null;
   getTbmlSourceList: (tbmlId: string) => TbmlSourceList | null;
 }
 
