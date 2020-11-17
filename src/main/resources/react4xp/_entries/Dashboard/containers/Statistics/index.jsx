@@ -42,9 +42,10 @@ export function Statistics() {
 
   const updateTables = (formData) => {
     const {
-      owners
+      owners,
+      fetchPublished
     } = formData
-    refreshStatistic(dispatch, io, modalInfo.id, owners)
+    refreshStatistic(dispatch, io, modalInfo.id, owners, fetchPublished)
     handleClose()
   }
 

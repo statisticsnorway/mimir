@@ -1,3 +1,4 @@
+__non_webpack_require__('/lib/polyfills/nashorn')
 import { TaskLib } from '../types/task'
 import { CacheLib, Cache } from '../types/cache'
 import { Request, Response } from 'enonic-types/controller'
@@ -106,7 +107,7 @@ export function setup(): void {
 
 const validRepos: Array<string> = ['com.enonic.cms.default', DATASET_REPO]
 function addToChangeQueue(event: EnonicEvent<EnonicEventData>): void {
-  const validNodes: EnonicEventData['nodes'] = event.data.nodes.filter((n) => validRepos.indexOf(n.repo) > -1)
+  const validNodes: EnonicEventData['nodes'] = event.data.nodes.filter((n) => validRepos.includes(n.repo))
   if (validNodes.length > 0) {
     changeQueue = changeQueue.concat(validNodes)
     addClearTask()
