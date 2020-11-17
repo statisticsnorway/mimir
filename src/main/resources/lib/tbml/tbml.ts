@@ -1,4 +1,4 @@
-import { HttpLibrary, HttpResponse } from 'enonic-types/http'
+import { HttpLibrary, HttpRequestParams, HttpResponse } from 'enonic-types/http'
 import { TbmlData, TbmlSourceList, XmlParser } from '../types/xmlParser'
 import { RepoQueryLib } from '../repo/query'
 
@@ -9,28 +9,32 @@ const {
   Events
 }: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
 
-export function fetch(url: string, queryId?: string): string {
+export function fetch(url: string, queryId?: string, processXml?: string): string {
   let result: string = '<tbml></tbml>'
+
+  const requestParams: HttpRequestParams = {
+    url,
+    body: processXml,
+    method: processXml ? 'POST' : 'GET',
+    readTimeout: 30000
+  }
+  const response: HttpResponse = http.request(requestParams)
+
+  const {
+    body,
+    status
+  } = response
 
   if (queryId) {
     logUserDataQuery(queryId, {
       file: '/lib/tbml/tbml.ts',
       function: 'fetch',
       message: Events.REQUEST_DATA,
-      request: {
-        url
-      }
+      status: `${status}`,
+      request: requestParams,
+      response
     })
   }
-
-  const response: HttpResponse = http.request({
-    url
-  })
-
-  const {
-    body,
-    status
-  } = response
 
   if (status === 200 && body) {
     result = body
@@ -50,8 +54,8 @@ export function fetch(url: string, queryId?: string): string {
   return result
 }
 
-export function getTbmlData(url: string, queryId?: string): TbmlData {
-  return xmlToJson(fetch(url, queryId), queryId)
+export function getTbmlData(url: string, queryId?: string, processXml?: string): TbmlData {
+  return xmlToJson(fetch(url, queryId, processXml), queryId)
 }
 
 export function getTbmlSourceList(url: string): TbmlSourceList | null {
@@ -78,7 +82,11 @@ function xmlToJson<T>(xml: string, queryId?: string): T {
 }
 
 export interface TbmlLib {
-  fetch: (url: string, queryId?: string) => string;
-  getTbmlData: (url: string, queryId?: string) => TbmlData;
-  getTbmlSourceList: (tbmlId: string) => object;
+  fetch: (url: string, queryId?: string, token?: string) => string;
+  getTbmlData: (url: string, queryId?: string, token?: string) => TbmlData;
+  getTbmlSourceList: (tbmlId: string) => TbmlSourceList | null;
+}
+
+export interface Authorization {
+  Authorization: string;
 }

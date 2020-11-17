@@ -443,8 +443,8 @@ class Table extends React.Component {
   }
 
   addNoteRefs(noteRefId) {
-    if (noteRefId != undefined) {
-      const noteRefsList = this.state.table.noteRefs
+    const noteRefsList = noteRefId ? this.state.table.noteRefs : undefined
+    if (noteRefsList !== undefined) {
       const noteRefIndex = noteRefsList.indexOf(noteRefId)
       if (noteRefIndex > -1) {
         return (

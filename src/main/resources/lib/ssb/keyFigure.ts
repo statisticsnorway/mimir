@@ -1,3 +1,4 @@
+__non_webpack_require__('/lib/polyfills/nashorn')
 /* eslint-disable new-cap */
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
@@ -274,7 +275,7 @@ function getDataFromMunicipalityCode(ds: JSDataset, municipalityCode: string, yA
 const notFoundValues: Array<string> = ['.', '..', '...', ':', '-']
 function parseValue(value: number | string | null): string | undefined {
   let hasValue: boolean = true
-  if (!value || notFoundValues.indexOf(value.toString()) > -1) {
+  if (!value || notFoundValues.includes(value.toString())) {
     hasValue = false
   }
   return hasValue ? createHumanReadableFormat(value) : undefined

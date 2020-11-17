@@ -16,7 +16,7 @@ const {
 } = __non_webpack_require__( '/lib/xp/content')
 const util = __non_webpack_require__('/lib/util')
 const {
-  getImageAlt
+  getImageAlt, getPreviousReleaseStatistic, getNextReleaseStatistic
 } = __non_webpack_require__('/lib/ssb/utils')
 const {
   getPhrases
@@ -24,7 +24,14 @@ const {
 const {
   fromRelatedArticlesCache
 } = __non_webpack_require__('/lib/ssb/cache')
+const {
+  getStatisticByIdFromRepo
+} = __non_webpack_require__('/lib/repo/statreg/statistics')
+const {
+  hasRole
+} = __non_webpack_require__('/lib/xp/auth')
 const moment = require('moment/min/moment-with-locales')
+const contentLib = __non_webpack_require__('/lib/xp/content')
 
 const view = resolve('./relatedArticles.html')
 
@@ -47,6 +54,11 @@ exports.preview = (req, id) => renderPart(req, [id])
 function renderPart(req, relatedArticles) {
   const page = getContent()
   const phrases = getPhrases(page)
+  const showPreview = req.params.showDraft && hasRole('system.admin') && req.mode === 'preview'
+
+  if (page.type === `${app.name}:statistics`) {
+    addDsArticle(page, relatedArticles, showPreview)
+  }
 
   if (!relatedArticles || relatedArticles.length === 0) {
     if (req.mode === 'edit' && page.type !== `${app.name}:article` && page.type !== `${app.name}:statistics`) {
@@ -168,4 +180,44 @@ const getSubTitle = (articleContent, phrases) => {
     prettyDate = moment(articleContent.createdTime).format('DD. MMMM YYYY')
   }
   return `${type ? `${type} / ` : ''}${prettyDate}`
+}
+
+const addDsArticle = (page, relatedArticles, showPreview) => {
+  const statisticId = page._id
+  const statistic = getStatisticByIdFromRepo(page.data.statistic)
+
+  if (statistic) {
+    const variants = util.data.forceArray(statistic.variants)
+    const previousRelease = getPreviousReleaseStatistic(variants)
+    const nextRelease = getNextReleaseStatistic(variants)
+    const statisticPublishDate = showPreview && nextRelease !== '' ? nextRelease : previousRelease
+    const assosiatedArticle = getDsArticle(statisticId, statisticPublishDate)
+
+    if (assosiatedArticle) {
+      relatedArticles.unshift(assosiatedArticle)
+    }
+  }
+
+  return relatedArticles
+}
+
+const getDsArticle = (statisticId, statisticPublishDate) => {
+  statisticPublishDate = moment(new Date(statisticPublishDate)).format('YYYY-MM-DD')
+  const articleContent = contentLib.query({
+    count: 1,
+    sort: 'publish.from DESC',
+    query: `data.associatedStatistics.XP.content = "${statisticId}" AND publish.from LIKE "${statisticPublishDate}*" `,
+    contentTypes: [
+      `${app.name}:article`
+    ]
+  }).hits
+
+  const articleObject = articleContent.length > 0 ? {
+    _selected: 'article',
+    article: {
+      article: articleContent[0]._id
+    }
+  } : undefined
+
+  return articleObject
 }

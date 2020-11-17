@@ -28,7 +28,7 @@ export function get(url: string, queryId?: string): object | null {
 
   if (queryId) {
     logUserDataQuery(queryId, {
-      file: '/lib/tbml/tbml.ts',
+      file: '/lib/statbankSaved/statbankSaved.ts',
       function: 'fetch',
       message: Events.REQUEST_DATA,
       request: requestParams
@@ -40,7 +40,7 @@ export function get(url: string, queryId?: string): object | null {
   if (response.status !== 200) {
     if (queryId) {
       logUserDataQuery(queryId, {
-        file: '/lib/tbml/tbml.ts',
+        file: '/lib/statbankSaved/statbankSaved.ts',
         function: 'fetch',
         message: Events.REQUEST_GOT_ERROR_RESPONSE,
         response
