@@ -69,7 +69,8 @@ export function extractKey(content: Content<DataSource>): string | null {
   case DataSourceType.STATBANK_API:
     return getStatbankApiKey(content)
   case DataSourceType.TBPROCESSOR:
-    return getTbprocessorKey(content)
+    const language: string = content.language || ''
+    return `${getTbprocessorKey(content)}${language === 'en' ? language : ''}`
   case DataSourceType.STATBANK_SAVED:
     return getStatbankApiKey(content)
   case DataSourceType.KLASS:
@@ -79,12 +80,12 @@ export function extractKey(content: Content<DataSource>): string | null {
   }
 }
 
-function fetchData(content: Content<DataSource>): JSONstat | TbmlData | object | null {
+function fetchData(content: Content<DataSource>, processXml?: string): JSONstat | TbmlData | object | null {
   switch (content.data.dataSource?._selected) {
   case DataSourceType.STATBANK_API:
     return fetchStatbankApiData(content)
   case DataSourceType.TBPROCESSOR:
-    return fetchTbprocessorData(content)
+    return fetchTbprocessorData(content, processXml)
   case DataSourceType.STATBANK_SAVED:
     return fetchStatbankSavedData(content)
   case DataSourceType.KLASS:
@@ -94,8 +95,12 @@ function fetchData(content: Content<DataSource>): JSONstat | TbmlData | object |
   }
 }
 
-export function refreshDataset(content: Content<DataSource>, branch: string = DATASET_BRANCH): CreateOrUpdateStatus {
-  const data: JSONstat | TbmlData | object | null = fetchData(content)
+export function refreshDataset(
+  content: Content<DataSource>,
+  branch: string = DATASET_BRANCH,
+  processXml?: string ): CreateOrUpdateStatus {
+  /**/
+  const data: JSONstat | TbmlData | object | null = fetchData(content, processXml)
   const key: string | null = extractKey(content)
   const user: User | null = getUser()
 
@@ -138,21 +143,7 @@ export function refreshDatasetWithUserKey(content: Content<DataSource>, userLogi
 
 
 export function deleteDataset(content: Content<DataSource>, branch: string = DATASET_BRANCH): boolean {
-  let key: string | undefined
-  switch (content.data.dataSource?._selected) {
-  case DataSourceType.STATBANK_API: {
-    key = getStatbankApiKey(content)
-    break
-  }
-  case DataSourceType.TBPROCESSOR: {
-    key = getTbprocessorKey(content)
-    break
-  }
-  case DataSourceType.KLASS: {
-    key = getKlassKey(content)
-    break
-  }
-  }
+  const key: string | null = extractKey(content)
   if (content.data.dataSource && content.data.dataSource._selected && key) {
     return deleteDatasetFromRepo(content.data.dataSource._selected, branch, key)
   } else {
@@ -197,7 +188,7 @@ export interface CreateOrUpdateStatus {
 export interface DatasetLib {
   getDataset: (content: Content<DataSource>, branch?: string) => DatasetRepoNode<JSONstat | TbmlData | object> | null;
   extractKey: (content: Content<DataSource>) => string;
-  refreshDataset: (content: Content<DataSource>, branch?: string) => CreateOrUpdateStatus;
+  refreshDataset: (content: Content<DataSource>, branch?: string, processXml?: string) => CreateOrUpdateStatus;
   refreshDatasetWithUserKey: (content: Content<DataSource>, userLogin: string, branch?: string) => CreateOrUpdateStatus;
   deleteDataset: (content: Content<DataSource>, branch?: string) => boolean;
   getContentWithDataSource: () => Array<Content<DataSource>>;

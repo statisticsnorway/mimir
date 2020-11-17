@@ -1,4 +1,4 @@
-
+__non_webpack_require__('/lib/polyfills/nashorn')
 import { DatasetLib, CreateOrUpdateStatus } from './dataset'
 import { ContentLibrary, Content } from 'enonic-types/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
@@ -136,10 +136,14 @@ function showWarningIcon(result: Events): boolean {
     Events.REQUEST_GOT_ERROR_RESPONSE,
     Events.FAILED_TO_CREATE_DATASET,
     Events.FAILED_TO_REFRESH_DATASET
-  ].indexOf(result) >= 0
+  ].includes(result)
 }
 
-export function refreshDatasetHandler(ids: Array<string>, socketEmitter: SocketEmitter, branch: string = DATASET_BRANCH): void {
+export function refreshDatasetHandler(
+  ids: Array<string>,
+  socketEmitter: SocketEmitter,
+  branch: string = DATASET_BRANCH,
+  processXmls?: Array<ProcessXml>): void {
   // tell all dashboard instances that these are going to be loaded
   ids.forEach((id) => {
     socketEmitter.broadcast('dashboard-activity-refreshDataset', {
@@ -152,7 +156,15 @@ export function refreshDatasetHandler(ids: Array<string>, socketEmitter: SocketE
       key: id
     })
     if (dataSource) {
-      const refreshDatasetResult: CreateOrUpdateStatus = refreshDataset(dataSource, branch)
+      const dataSourceKey: number = parseInt(extractKey(dataSource))
+      const ownerCredentialsForTbml: Array<ProcessXml> | undefined = processXmls ?
+        processXmls.filter((processXml: ProcessXml) => processXml.tbmlId === dataSourceKey) : undefined
+
+      const refreshDatasetResult: CreateOrUpdateStatus = refreshDataset(
+        dataSource,
+        branch,
+        ownerCredentialsForTbml && ownerCredentialsForTbml.length ? ownerCredentialsForTbml[0].processXml : undefined)
+
       logUserDataQuery(dataSource._id, {
         file: '/lib/ssb/dataset/dashboard.ts',
         function: 'refreshDatasetHandler',
@@ -250,5 +262,10 @@ export interface RefreshDatasetOptions {
 export interface DashboardDatasetLib {
   users: Array<User>;
   setupHandlers: (socket: Socket, socketEmitter: SocketEmitter) => void;
-  refreshDatasetHandler: (ids: Array<string>, socketEmitter: SocketEmitter, branch?: string) => void;
+  refreshDatasetHandler: (ids: Array<string>, socketEmitter: SocketEmitter, branch?: string, processXml?: Array<ProcessXml>) => void;
+}
+
+export interface ProcessXml {
+  tbmlId: number;
+  processXml: string;
 }

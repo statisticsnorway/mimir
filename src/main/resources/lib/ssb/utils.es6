@@ -243,3 +243,18 @@ export const getAttachmentContent = (contentId) => {
   const lines = readLines(stream)
   return lines[0]
 }
+
+export const getPreviousReleaseStatistic = (variants) => {
+  if (variants.length > 1) {
+    variants.sort((d1, d2) => new Date(d1.previousRelease) - new Date(d2.previousRelease)).reverse()
+  }
+  return variants[0].previousRelease
+}
+
+export const getNextReleaseStatistic = (variants) => {
+  const variantWithDate = variants.filter((variant) => variant.nextRelease !== '' && moment(variant.nextRelease).isAfter(new Date(), 'day'))
+  if (variantWithDate.length > 1) {
+    variantWithDate.sort((d1, d2) => new Date(d1.nextRelease) - new Date(d2.nextRelease))
+  }
+  return variantWithDate.length > 0 ? variantWithDate[0].nextRelease : ''
+}
