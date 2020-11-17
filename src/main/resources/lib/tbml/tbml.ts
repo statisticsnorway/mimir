@@ -1,4 +1,4 @@
-import {HttpLibrary, HttpRequestParams, HttpResponse} from 'enonic-types/http'
+import { HttpLibrary, HttpRequestParams, HttpResponse } from 'enonic-types/http'
 import { TbmlData, TbmlSourceList, XmlParser } from '../types/xmlParser'
 import { RepoQueryLib } from '../repo/query'
 

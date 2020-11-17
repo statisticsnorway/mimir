@@ -1,3 +1,4 @@
+__non_webpack_require__('/lib/polyfills/nashorn')
 /* eslint-disable new-cap */
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
@@ -132,7 +133,7 @@ function getTableViewData(table: Content<Table>, dataContent: TbmlData | JSONsta
 function getNoterefs(row: TableRow): Array<string> {
   return forceArray(row.th).reduce((acc: Array<string>, cell: string | number | PreliminaryData) => {
     if (typeof cell === 'object') {
-      if (cell.noterefs && acc && acc.indexOf(cell.noterefs) < 0) {
+      if (cell.noterefs && acc && acc.includes(cell.noterefs)) {
         acc.push(cell.noterefs)
       }
     }

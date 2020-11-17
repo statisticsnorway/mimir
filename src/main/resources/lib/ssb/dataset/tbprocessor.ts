@@ -78,13 +78,17 @@ function tryRequestTbmlSourceList(url: string, contentId?: string): TbmlSourceLi
 }
 
 function getDataAndMetaData(content: Content<DataSource>, processXml?: string ): TbmlData | null {
-  const baseUrl: string = app.config && app.config['ssb.tbprocessor.baseUrl'] ? app.config['ssb.tbprocessor.baseUrl'] : 'https://i.ssb.no/tbprocessor'
+  const baseUrl: string = app.config && app.config['ssb.tbprocessor.baseUrl'] ?
+    app.config['ssb.tbprocessor.baseUrl'] : 'https://i.ssb.no/tbprocessor'
   const dataPath: string = `/process/tbmldata/`
   const sourceListPath: string = `/document/sourceList/`
   const language: string = content.language || ''
 
   const tbmlKey: string = getTbprocessorKey(content)
-  const tbmlData: TbmlData | null = tryRequestTbmlData(`${baseUrl}${dataPath}${tbmlKey}${language === 'en' ? `?lang=${language}` : ''}`, content._id, processXml)
+  const tbmlData: TbmlData | null = tryRequestTbmlData(
+    `${baseUrl}${dataPath}${tbmlKey}${language === 'en' ? `?lang=${language}` : ''}`,
+    content._id,
+    processXml)
 
   const tbmlSourceList: TbmlSourceList | null = tryRequestTbmlSourceList(`${baseUrl}${sourceListPath}${tbmlKey}`, content._id)
 
@@ -95,7 +99,8 @@ function getDataAndMetaData(content: Content<DataSource>, processXml?: string ):
       }
     }
   }
-  const tbmlDataAndSourceList: TbmlData | null = tbmlData && tbmlSourceList ? mergeDeepLeft(tbmlData, sourceListObject) : null
+  const tbmlDataAndSourceList: TbmlData | null = tbmlData && tbmlSourceList ?
+    mergeDeepLeft(tbmlData, sourceListObject) : null
 
   return tbmlData && !tbmlSourceList ? tbmlData : tbmlDataAndSourceList
 }

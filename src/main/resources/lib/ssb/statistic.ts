@@ -3,7 +3,7 @@ import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
 import { StatisticInListing, VariantInListing } from './statreg/types'
 import { UtilLibrary } from '../types/util'
 import { Statistics } from '../../site/content-types/statistics/statistics'
-import {DashboardDatasetLib, ProcessXml} from './dataset/dashboard'
+import { DashboardDatasetLib, ProcessXml } from './dataset/dashboard'
 import { ContextLibrary, RunContext } from 'enonic-types/context'
 import { DatasetRepoNode, RepoDatasetLib } from '../repo/dataset'
 import moment = require('moment')
@@ -44,7 +44,7 @@ const {
 }: TbprocessorLib = __non_webpack_require__('/lib/ssb/dataset/tbprocessor')
 const {
   encrypt
-}= __non_webpack_require__('/lib/cipher/cipher')
+} = __non_webpack_require__('/lib/cipher/cipher')
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-statistics', () => {
@@ -82,7 +82,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
             socketEmitter,
             fetchPublished ? DATASET_BRANCH : UNPUBLISHED_DATASET_BRANCH,
             processXmls
-            )
+          )
         })
       }
       socketEmitter.broadcast('statistics-refresh-result', {
@@ -92,7 +92,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   })
 }
 
-function processXmlFromOwners(owners: RefreshInfo['owners']) {
+function processXmlFromOwners(owners: RefreshInfo['owners']): Array<ProcessXml> | undefined {
   return owners && Object.keys(owners).reduce((acc: Array<ProcessXml>, ownerKey) => {
     const ownerKeyInt: number = parseInt(ownerKey)
     const currentOwnerObj: OwnerObject | undefined = owners && owners[ownerKeyInt] ? owners[ownerKeyInt] : undefined

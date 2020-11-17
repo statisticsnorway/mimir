@@ -1,4 +1,4 @@
-
+__non_webpack_require__('/lib/polyfills/nashorn')
 import { DatasetLib, CreateOrUpdateStatus } from './dataset'
 import { ContentLibrary, Content } from 'enonic-types/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
@@ -136,7 +136,7 @@ function showWarningIcon(result: Events): boolean {
     Events.REQUEST_GOT_ERROR_RESPONSE,
     Events.FAILED_TO_CREATE_DATASET,
     Events.FAILED_TO_REFRESH_DATASET
-  ].indexOf(result) >= 0
+  ].includes(result)
 }
 
 export function refreshDatasetHandler(
@@ -163,7 +163,7 @@ export function refreshDatasetHandler(
       const refreshDatasetResult: CreateOrUpdateStatus = refreshDataset(
         dataSource,
         branch,
-      ownerCredentialsForTbml && ownerCredentialsForTbml.length ? ownerCredentialsForTbml[0].processXml : undefined)
+        ownerCredentialsForTbml && ownerCredentialsForTbml.length ? ownerCredentialsForTbml[0].processXml : undefined)
 
       logUserDataQuery(dataSource._id, {
         file: '/lib/ssb/dataset/dashboard.ts',
