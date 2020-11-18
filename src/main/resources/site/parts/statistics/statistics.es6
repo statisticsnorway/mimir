@@ -116,19 +116,25 @@ const renderPart = (req) => {
   }
 
   let body = render(view, model)
+  let pageContributions = {
+    bodyEnd: statisticsKeyFigure ? statisticsKeyFigure.pageContributions.bodyEnd : []
+  }
+
   if (changeDate) {
     body = modifiedDateComponent.renderBody({
       body,
+      clientRender: true
+    })
+
+    pageContributions = modifiedDateComponent.renderPageContributions({
+      pageContributions,
       clientRender: true
     })
   }
 
   return {
     body,
-    pageContributions: {
-      bodyEnd: statisticsKeyFigure ? statisticsKeyFigure.pageContributions.bodyEnd : []
-    },
-    clientRender: true,
+    pageContributions,
     contentType: 'text/html'
   }
 }
