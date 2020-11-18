@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, Col, Row, Table, Modal } from 'react-bootstrap'
-import { selectStatistics, selectLoading } from './selectors'
+import { selectStatisticsWithRelease, selectLoading } from './selectors'
 import { RefreshCw } from 'react-feather'
 import Moment from 'react-moment'
 import { Link } from '@statisticsnorway/ssb-component-library'
@@ -11,7 +11,7 @@ import { refreshStatistic } from './actions.es6'
 import { RefreshStatisticsForm } from '../../components/RefreshStatisticsForm'
 
 export function Statistics() {
-  const statistics = useSelector(selectStatistics)
+  const statistics = useSelector(selectStatisticsWithRelease)
   const loading = useSelector(selectLoading)
   const contentStudioBaseUrl = useSelector(selectContentStudioBaseUrl)
   const [show, setShow] = useState(false)

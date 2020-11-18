@@ -162,15 +162,18 @@ function prepStatistics(statistics: Array<Content<Statistics>>): Array<Statistic
   const statisticData: Array<StatisticDashboard> = []
   statistics.map((statistic: Content<Statistics>) => {
     const statregData: StatregData | undefined = statistic.data.statistic ? getStatregInfo(statistic.data.statistic) : undefined
-    const relatedTables: Array<TbmlSources> = sourceListFromStatistic(statistic)
-    if (statregData && statregData.nextRelease && moment(statregData.nextRelease).isSameOrAfter(new Date(), 'day')) {
+    if (statregData) {
+      const relatedTables: Array<TbmlSources> = sourceListFromStatistic(statistic)
       const statisticDataDashboard: StatisticDashboard = {
         id: statistic._id,
         language: statistic.language ? statistic.language : '',
-        name: statistic._name ? statistic._name : '',
+        name: statistic.displayName ? statistic.displayName : '',
         shortName: statregData.shortName,
-        nextRelease: statregData.nextRelease ? statregData.nextRelease : '',
+        nextRelease: undefined,
         relatedTables
+      }
+      if (statregData && statregData.nextRelease && moment(statregData.nextRelease).isSameOrAfter(new Date(), 'day')) {
+        statisticDataDashboard.nextRelease = statregData.nextRelease ? statregData.nextRelease : ''
       }
       statisticData.push(statisticDataDashboard)
     }

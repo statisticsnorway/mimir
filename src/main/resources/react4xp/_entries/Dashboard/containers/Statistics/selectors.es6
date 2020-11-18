@@ -13,3 +13,8 @@ export const selectStatistics = createSelector(
   [selectDomain],
   (statisticsState) => statisticsState.statistics,
 )
+
+export const selectStatisticsWithRelease = createSelector(
+  [selectDomain],
+  (statisticsState) => statisticsState.statistics.filter((s) => !!s.nextRelease)
+)
