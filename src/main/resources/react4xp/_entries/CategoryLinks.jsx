@@ -6,16 +6,17 @@ const CategoryLinks = (props) => {
   return (
     <React.Fragment>
       <div className="container">
-        <div className="row justify-content-center">
+        <div className="row justify-content-start">
           {props.links.map((link, index) => {
             return (
-              <CategoryLink
-                href={link.href}
-                titleText={link.titleText}
-                subText={link.subText}
-                key={index}
-                className='col-12 col-md-5 m-2'
-              />
+              <div className="col-12 col-md-6 mb-4" key={index}>
+                <CategoryLink
+                  href={link.href}
+                  titleText={link.titleText}
+                  subText={link.subText}
+                  className=''
+                />
+              </div>
             )
           }
           )}
