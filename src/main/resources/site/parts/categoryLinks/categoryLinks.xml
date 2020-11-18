@@ -1,0 +1,26 @@
+<part>
+    <display-name>Category Link</display-name>
+    <form>
+        <item-set name="CategoryLinkItemSet">
+            <label>Category link</label>
+            <occurrences minimum="0" maximum="0"/>
+            <items>
+                <input type="TextLine" name="titleText">
+                    <label>Lenke tittel</label>
+                    <occurrences minimum="1" maximum="1"/>
+                </input>
+                <input type="TextLine" name="subText">
+                    <label>Forklaringstekst</label>
+                    <occurrences minimum="1" maximum="1"/>
+                </input>
+                <input name="href" type="ContentSelector">
+                    <label>Lenkemål</label>
+                    <occurrences minimum="1" maximum="1"/>
+                    <config>
+                        <allowPath>${site}</allowPath>
+                    </config>
+                </input>
+            </items>
+        </item-set>
+    </form>
+</part>
