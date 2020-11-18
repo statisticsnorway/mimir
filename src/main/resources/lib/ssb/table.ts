@@ -5,7 +5,7 @@ __non_webpack_require__('/lib/polyfills/nashorn')
 import { JSONstat } from '../../types/jsonstat-toolkit'
 import { Content } from 'enonic-types/content'
 import { Table } from '../../site/content-types/table/table'
-import { TbmlData, TableRow, Note, Notes, PreliminaryData, Title } from '../types/xmlParser'
+import { TbmlData, TableRow, Note, Notes, PreliminaryData, Title, Source } from '../types/xmlParser'
 import { Dataset as JSDataset } from '../types/jsonstat-toolkit'
 import { Request } from 'enonic-types/controller'
 import { DatasetRepoNode, RepoDatasetLib } from '../repo/dataset'
@@ -46,7 +46,8 @@ export function parseTable(req: Request, table: Content<Table>, branch: string =
       correctionNotice: ''
     },
     tableClass: '',
-    noteRefs: []
+    noteRefs: [],
+    sourceList: []
   }
 
   let datasetRepo: DatasetRepoNode<JSONstat> | undefined
@@ -68,7 +69,9 @@ export function parseTable(req: Request, table: Content<Table>, branch: string =
           { noterefs: '', content: tbmlData.tbml.metadata.title as string } :
           tbmlData.tbml.metadata.title
         const notes: Notes | undefined = tbmlData.tbml.metadata.notes
-        tableViewData = getTableViewData(table, tbmlData.tbml.presentation, title, notes)
+        const sourceList: Source | Array<Source> | undefined = tbmlData.tbml.metadata ? tbmlData.tbml.metadata.sourceList : undefined
+
+        tableViewData = getTableViewData(table, tbmlData.tbml.presentation, title, notes, sourceList)
       }
     }
   }
@@ -79,8 +82,9 @@ export function parseTable(req: Request, table: Content<Table>, branch: string =
 
     const title: Title = parsedStatbankSavedData.table.caption
     const notes: Notes | undefined = undefined // TODO: no metadata.notes in the statbankSaved json data yet
+    const sourceList: Source | Array<Source> | undefined = undefined // TODO: no sourceList in the statbankSaved json data
 
-    tableViewData = getTableViewData(table, parsedStatbankSavedData, title, notes)
+    tableViewData = getTableViewData(table, parsedStatbankSavedData, title, notes, sourceList)
   }
   return tableViewData
 }
@@ -93,7 +97,8 @@ function mergeTableRows(thead: Array<Thead>): Array<TableRow> {
   }, [])
 }
 
-function getTableViewData(table: Content<Table>, dataContent: TbmlData | JSONstat, title: Title | undefined, notes: Notes | undefined): TableView {
+function getTableViewData(table: Content<Table>, dataContent: TbmlData | JSONstat,
+  title: Title | undefined, notes: Notes | undefined, sourceList: Source | Array<Source> | undefined): TableView {
   const headRows: Array<Thead> = forceArray(dataContent.table.thead)
     .map( (thead: Thead) => ({
       tr: forceArray(thead.tr)
@@ -129,7 +134,8 @@ function getTableViewData(table: Content<Table>, dataContent: TbmlData | JSONsta
       footnotes: notesList,
       correctionNotice: table.data.correctionNotice || ''
     },
-    noteRefs
+    noteRefs,
+    sourceList
   }
 }
 
@@ -153,4 +159,5 @@ interface TableView {
   };
   tableClass: string;
   noteRefs: Array<string>;
+  sourceList: Source | Array<Source> | undefined;
 }
