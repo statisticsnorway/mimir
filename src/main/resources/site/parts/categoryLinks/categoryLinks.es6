@@ -11,9 +11,8 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
-
-//const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const React4xp = require('/lib/enonic/react4xp')
+
 const view = resolve('./categoryLinks.html')
 
 exports.get = function(req) {
