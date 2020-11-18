@@ -123,7 +123,8 @@ export function parseKeyFigure(
         // get all data without filter
       }
     } else if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
-      getDataTbProcessor(keyFigureViewData, data, keyFigure)
+      const tbmlData: TbmlData = data as TbmlData
+      if(tbmlData !== null && tbmlData.tbml.presentation) getDataTbProcessor(keyFigureViewData, tbmlData, keyFigure)
     }
     return keyFigureViewData
   } else if (keyFigure.data.manualSource) {
@@ -135,10 +136,10 @@ export function parseKeyFigure(
 
 function getDataTbProcessor(
   keyFigureViewData: KeyFigureView,
-  data: JSDataset | Array<JSDataset> | null | TbmlData,
+  tbmlData: TbmlData,
   keyFigure: Content<KeyFigure>
 ): KeyFigureView {
-  const tbmlData: TbmlData = data as TbmlData
+  //
   const bodyRows: Array<TableRow> = forceArray(tbmlData.tbml.presentation.table.tbody.tr)
 
   const head: Array<Thead> = forceArray(tbmlData.tbml.presentation.table.thead)

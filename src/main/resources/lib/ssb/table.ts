@@ -64,11 +64,15 @@ export function parseTable(req: Request, table: Content<Table>, branch: string =
 
     if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
       const tbmlData: TbmlData = data as TbmlData
-      const title: Title | undefined = tbmlData.tbml.metadata ? tbmlData.tbml.metadata.title : undefined
-      const notes: Notes | undefined = tbmlData.tbml.metadata ? tbmlData.tbml.metadata.notes : undefined
-      const sourceList: Source | Array<Source> | undefined = tbmlData.tbml.metadata ? tbmlData.tbml.metadata.sourceList : undefined
+      if(tbmlData && tbmlData.tbml && tbmlData.tbml.metadata && tbmlData.tbml.presentation) {
+        const title: Title = typeof(tbmlData.tbml.metadata.title) == 'string' ?
+          { noterefs: '', content: tbmlData.tbml.metadata.title as string } :
+          tbmlData.tbml.metadata.title
+        const notes: Notes | undefined = tbmlData.tbml.metadata.notes
+        const sourceList: Source | Array<Source> | undefined = tbmlData.tbml.metadata ? tbmlData.tbml.metadata.sourceList : undefined
 
-      tableViewData = tbmlData.tbml.presentation ? getTableViewData(table, tbmlData.tbml.presentation, title, notes, sourceList) : tableViewData
+        tableViewData = getTableViewData(table, tbmlData.tbml.presentation, title, notes, sourceList)
+      }
     }
   }
 
