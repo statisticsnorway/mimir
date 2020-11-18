@@ -122,15 +122,13 @@ const renderPart = (req) => {
       clientRender: true
     })
   }
-  const pageContributions = changeDate ? modifiedDateComponent.renderPageContributions({
+
+  return {
+    body,
     pageContributions: {
       bodyEnd: statisticsKeyFigure ? statisticsKeyFigure.pageContributions.bodyEnd : []
     },
-    clientRender: true
-  }) : undefined
-  return {
-    body,
-    pageContributions,
+    clientRender: true,
     contentType: 'text/html'
   }
 }
