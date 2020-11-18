@@ -20,3 +20,10 @@ export function refreshStatistic(dispatch, io, id, owners, fetchPublished) {
     fetchPublished
   })
 }
+
+export function setOpenStatistic(dispatch, id) {
+  dispatch({
+    type: actions.setOpenStatistic.type,
+    id
+  })
+}
