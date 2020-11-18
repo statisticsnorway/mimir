@@ -512,16 +512,16 @@ class Table extends React.Component {
       statBankWebUrl
     } = this.props
 
-    if (sourceListTables && sourceListTables.length > 0 | sources && sources.length > 0) {
+    if (sourceListTables && sourceListTables.length > 0 || sources && sources.length > 0) {
       return (
         <div className="row mt-5 source">
           <div className="w-100 col-12">
             <span><strong>{sourceLabel}</strong></span>
           </div>
-          {sourceListTables.map((source, index) => {
+          {sourceListTables.map((tableId, index) => {
             return (
               <div key={index} className="col-lg-3 col-12 mb-3">
-                <Link href={statBankWebUrl + '/table/' + source}>{sourceTableLabel + ' ' + source}</Link>
+                <Link href={statBankWebUrl + '/table/' + tableId}>{sourceTableLabel + ' ' + tableId}</Link>
               </div>
             )
           })}
