@@ -33,11 +33,11 @@ const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view = resolve('./attachmentTablesFigures.html')
 
 exports.get = function(req) {
-  //try {
+  try {
     return renderPart(req)
-  /*} catch (e) {
+  } catch (e) {
     return renderError(req, 'Error in part', e)
-  }*/
+  }
 }
 
 exports.preview = (req) => renderPart(req)
