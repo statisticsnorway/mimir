@@ -18,3 +18,13 @@ export const selectStatisticsWithRelease = createSelector(
   [selectDomain],
   (statisticsState) => statisticsState.statistics.filter((s) => !!s.nextRelease)
 )
+
+export const selectOpenStatistic = createSelector(
+  [selectDomain],
+  (statisticsState) => statisticsState.openStatistic
+)
+
+export const selectHasLoadingStatistic = createSelector(
+  [selectDomain],
+  (statisticsState) => statisticsState.statistics.filter((s) => s.loading).length > 0
+)

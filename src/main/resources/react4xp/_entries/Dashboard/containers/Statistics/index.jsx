@@ -1,23 +1,20 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, Col, Row, Table, Modal } from 'react-bootstrap'
-import { selectStatisticsWithRelease, selectLoading } from './selectors'
+import { selectStatisticsWithRelease, selectLoading, selectOpenStatistic } from './selectors'
 import { RefreshCw } from 'react-feather'
 import Moment from 'react-moment'
 import { Link } from '@statisticsnorway/ssb-component-library'
 import { selectContentStudioBaseUrl } from '../HomePage/selectors'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
-import { refreshStatistic } from './actions.es6'
+import { refreshStatistic, setOpenStatistic } from './actions'
 import { RefreshStatisticsForm } from '../../components/RefreshStatisticsForm'
 
 export function Statistics() {
   const statistics = useSelector(selectStatisticsWithRelease)
   const loading = useSelector(selectLoading)
   const contentStudioBaseUrl = useSelector(selectContentStudioBaseUrl)
-  const [show, setShow] = useState(false)
-  const [modalInfo, setModalInfo] = useState({})
-  const handleClose = () => setShow(false)
-  const handleShow = () => setShow(true)
+  const modalInfo = useSelector(selectOpenStatistic)
 
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
@@ -74,7 +71,7 @@ export function Statistics() {
           </thead>
           {getStatistics()}
         </Table>
-        {show ? <ModalContent/> : null }
+        {modalInfo ? <ModalContent/> : null }
       </div>
     )
   }
@@ -94,8 +91,7 @@ export function Statistics() {
   }
 
   function onRefreshStatistic(statistic) {
-    setModalInfo(statistic)
-    setShow(handleShow)
+    setOpenStatistic(dispatch, statistic.id)
   }
 
   function renderStatisticsForm(key, sources, i) {
@@ -106,9 +102,13 @@ export function Statistics() {
     )
   }
 
+  function handleClose() {
+    setOpenStatistic(dispatch, null)
+  }
+
   const ModalContent = () => {
     return (
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={true} onHide={() => handleClose()}>
         <Modal.Header closeButton>
           <Modal.Title>Oppdatering av tabeller på web</Modal.Title>
         </Modal.Header>
@@ -124,7 +124,7 @@ export function Statistics() {
           { renderStatisticsForm() }
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button variant="secondary" onClick={() => handleClose()}>
               Lukk
           </Button>
         </Modal.Footer>
