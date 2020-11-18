@@ -506,15 +506,25 @@ class Table extends React.Component {
   renderSources() {
     const {
       sources,
-      sourceLabel
+      sourceLabel,
+      sourceListTables,
+      sourceTableLabel,
+      statBankWebUrl
     } = this.props
 
-    if (sources && sources.length > 0) {
+    if (sourceListTables && sourceListTables.length > 0 | sources && sources.length > 0) {
       return (
         <div className="row mt-5 source">
           <div className="w-100 col-12">
             <span><strong>{sourceLabel}</strong></span>
           </div>
+          {sourceListTables.map((source, index) => {
+            return (
+              <div key={index} className="col-lg-3 col-12 mb-3">
+                <Link href={statBankWebUrl + '/table/' + source}>{sourceTableLabel + ' ' + source}</Link>
+              </div>
+            )
+          })}
           {sources.map((source, index) => {
             return (
               <div key={index} className="col-lg-3 col-12 mb-3">
@@ -669,7 +679,10 @@ Table.propTypes = {
   showPreviewDraft: PropTypes.bool,
   paramShowDraft: PropTypes.bool,
   draftExist: PropTypes.bool,
-  pageTypeStatistic: PropTypes.bool
+  pageTypeStatistic: PropTypes.bool,
+  sourceListTables: PropTypes.arrayOf(PropTypes.string),
+  sourceTableLabel: PropTypes.string,
+  statBankWebUrl: PropTypes.string
 }
 
 export default (props) => <Table {...props}/>
