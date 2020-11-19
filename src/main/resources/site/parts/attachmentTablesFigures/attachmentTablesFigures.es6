@@ -66,6 +66,7 @@ const renderPart = (req) => {
   }
 
   const attachmentTableAndFigureView = getTablesAndFigures(attachmentTablesAndFigures, req, phrases)
+
   const accordionComponent = new React4xp('site/parts/accordion/accordion')
     .setProps({
       accordions: attachmentTableAndFigureView.map(({
@@ -129,9 +130,10 @@ const getTablesAndFigures = (attachmentTablesAndFigures, req, phrases) => {
 
 function getTableReturnObject(content, preview, subHeader, index) {
   const datasetFromRepo = datasetOrUndefined(content)
+  const title = datasetFromRepo && datasetFromRepo.data.tbml.metadata ? datasetFromRepo.data.tbml.metadata.title : content.displayName
   return {
     id: `attachment-table-figure-${index + 1}`,
-    open: datasetFromRepo ? datasetFromRepo.data.tbml.metadata.title : content.displayName,
+    open: typeof(title) === 'string' ? title: title.content,
     subHeader,
     body: preview.body,
     items: [],
@@ -141,9 +143,10 @@ function getTableReturnObject(content, preview, subHeader, index) {
 
 function getFigureReturnObject(content, preview, subHeader, index) {
   const datasetFromRepo = datasetOrUndefined(content)
+  const title = datasetFromRepo && datasetFromRepo.data.tbml.metadata ? datasetFromRepo.data.tbml.metadata.title : content.displayName
   return {
     id: `attachment-table-figure-${index + 1}`,
-    open: datasetFromRepo ? datasetFromRepo.data.tbml.metadata.title : content.displayName,
+    open:  typeof(title) === 'string' ? title: title.content,
     subHeader,
     body: preview.body,
     items: [],

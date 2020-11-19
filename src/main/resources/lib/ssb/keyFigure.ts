@@ -10,7 +10,7 @@ import { MunicipalityWithCounty } from '../klass/municipalities'
 import { TbmlData, TableRow, PreliminaryData } from '../types/xmlParser'
 import { Dataset as JSDataset, Dimension, Category } from '../types/jsonstat-toolkit'
 import { Request } from 'enonic-types/controller'
-import { DatasetRepoNode } from '../repo/dataset'
+import { DatasetRepoNode, RepoDatasetLib } from '../repo/dataset'
 import { DataSource as DataSourceType } from '../repo/dataset'
 import { SSBCacheLibrary } from './cache'
 import { Thead } from '../../lib/types/xmlParser'
@@ -41,6 +41,14 @@ const {
   }
 } = __non_webpack_require__( '/lib/util')
 
+const {
+  getDataset
+} = __non_webpack_require__( '/lib/ssb/dataset/dataset')
+const {
+  DATASET_BRANCH,
+  UNPUBLISHED_DATASET_BRANCH
+}: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
+
 const contentTypeName: string = `${app.name}:keyFigure`
 
 export function get(keys: string | Array<string>): Array<Content<KeyFigure>> {
@@ -70,7 +78,11 @@ type KeyFigureDataSource = KeyFigure['dataSource']
 type StatBankApi = NonNullable<KeyFigureDataSource>[DataSourceType.STATBANK_API]
 type DatasetFilterOptions = NonNullable<StatBankApi>['datasetFilterOptions']
 
-export function parseKeyFigure(req: Request, keyFigure: Content<KeyFigure>, municipality?: MunicipalityWithCounty): KeyFigureView {
+export function parseKeyFigure(
+  req: Request,
+  keyFigure: Content<KeyFigure>,
+  municipality?: MunicipalityWithCounty,
+  branch: string = DATASET_BRANCH): KeyFigureView {
   const keyFigureViewData: KeyFigureView = {
     iconUrl: getIconUrl(keyFigure),
     iconAltText: keyFigure.data.icon ? getImageCaption(keyFigure.data.icon) : '',
@@ -87,7 +99,12 @@ export function parseKeyFigure(req: Request, keyFigure: Content<KeyFigure>, muni
     glossaryText: keyFigure.data.glossaryText
   }
 
-  const datasetRepo: DatasetRepoNode<JSONstat> | undefined = datasetOrUndefined(keyFigure)
+  let datasetRepo: DatasetRepoNode<JSONstat> | undefined
+  if (branch === UNPUBLISHED_DATASET_BRANCH) {
+    datasetRepo = getDataset(keyFigure, UNPUBLISHED_DATASET_BRANCH)
+  } else {
+    datasetRepo = datasetOrUndefined(keyFigure)
+  }
 
   if (datasetRepo) {
     const dataSource: KeyFigure['dataSource'] | undefined = keyFigure.data.dataSource
@@ -106,7 +123,8 @@ export function parseKeyFigure(req: Request, keyFigure: Content<KeyFigure>, muni
         // get all data without filter
       }
     } else if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
-      getDataTbProcessor(keyFigureViewData, data, keyFigure)
+      const tbmlData: TbmlData = data as TbmlData
+      if(tbmlData !== null && tbmlData.tbml.presentation) getDataTbProcessor(keyFigureViewData, tbmlData, keyFigure)
     }
     return keyFigureViewData
   } else if (keyFigure.data.manualSource) {
@@ -118,10 +136,10 @@ export function parseKeyFigure(req: Request, keyFigure: Content<KeyFigure>, muni
 
 function getDataTbProcessor(
   keyFigureViewData: KeyFigureView,
-  data: JSDataset | Array<JSDataset> | null | TbmlData,
+  tbmlData: TbmlData,
   keyFigure: Content<KeyFigure>
 ): KeyFigureView {
-  const tbmlData: TbmlData = data as TbmlData
+  //
   const bodyRows: Array<TableRow> = forceArray(tbmlData.tbml.presentation.table.tbody.tr)
 
   const head: Array<Thead> = forceArray(tbmlData.tbml.presentation.table.thead)

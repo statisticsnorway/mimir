@@ -7,6 +7,7 @@ const {
   getMunicipality
 } = __non_webpack_require__( '/lib/klass/municipalities')
 const {
+  getContent,
   getComponent,
   getSiteConfig
 } = __non_webpack_require__( '/lib/xp/portal')
@@ -20,33 +21,45 @@ const {
   renderError
 } = __non_webpack_require__( '/lib/error/error')
 
+const {
+  hasRole
+} = __non_webpack_require__('/lib/xp/auth')
+const {
+  DATASET_BRANCH,
+  UNPUBLISHED_DATASET_BRANCH
+} = __non_webpack_require__('/lib/repo/dataset')
+
 const view = resolve('./keyFigure.html')
 
 exports.get = function(req) {
   try {
     const part = getComponent()
     const keyFigureIds = data.forceArray(part.config.figure)
-    const municiaplity = getMunicipality(req)
-    return renderPart(req, municiaplity, keyFigureIds)
+    const municipality = getMunicipality(req)
+    return renderPart(req, municipality, keyFigureIds)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
 exports.preview = (req, id) => {
-  const defaultMuniciaplity = getSiteConfig().defaultMunicipality
-  const municiaplity = getMunicipality({
-    code: defaultMuniciaplity
+  const defaultMunicipality = getSiteConfig().defaultMunicipality
+  const municipality = getMunicipality({
+    code: defaultMunicipality
   })
-  return renderPart(req, municiaplity, [id])
+  return renderPart(req, municipality, [id])
 }
 
 const renderPart = (req, municipality, keyFigureIds) => {
+  const page = getContent()
   const part = getComponent()
+
+  const adminRole = hasRole('system.admin')
+
   // get all keyFigures and filter out non-existing keyFigures
   const keyFigures = getKeyFigures(keyFigureIds)
     .map((keyFigure) => {
-      const keyFigureData = parseKeyFigure(req, keyFigure, municipality)
+      const keyFigureData = parseKeyFigure(req, keyFigure, municipality, DATASET_BRANCH)
       return {
         id: keyFigure._id,
         ...keyFigureData,
@@ -54,41 +67,53 @@ const renderPart = (req, municipality, keyFigureIds) => {
       }
     })
 
-  // continue if we have any keyFigures
-  return keyFigures.length ? renderKeyFigure(keyFigures, part) : {
-    body: '',
-    contentType: 'text/html'
+  let keyFiguresDraft
+  if (adminRole && req.mode === 'preview') {
+    keyFiguresDraft = getKeyFigures(keyFigureIds)
+      .map((keyFigure) => {
+        const keyFigureData = parseKeyFigure(req, keyFigure, municipality, UNPUBLISHED_DATASET_BRANCH)
+        return {
+          id: keyFigure._id,
+          ...keyFigureData,
+          source: keyFigure.data.source
+        }
+      })
   }
+
+  const showPreviewDraft = adminRole && req.mode === 'preview'
+  const draftExist = !!keyFiguresDraft
+  const pageTypeKeyFigure = page.type === `${app.name}:keyFigure`
+
+  // continue if we have any keyFigures
+  return keyFigures && keyFigures.length > 0 || draftExist ?
+    renderKeyFigure(keyFigures, part, keyFiguresDraft, showPreviewDraft, req, draftExist, pageTypeKeyFigure) : {
+      body: '',
+      contentType: 'text/html'
+    }
 }
 
-/**
- *
- * @param {array} parsedKeyFigures
- * @param {object} part
- * @return {{body: string, contentType: string}}
- */
-function renderKeyFigure(parsedKeyFigures, part) {
+function renderKeyFigure(parsedKeyFigures, part, parsedKeyFiguresDraft, showPreviewDraft, req, draftExist, pageTypeKeyFigure) {
   const keyFigureReact = new React4xp('KeyFigure')
     .setProps({
       displayName: part ? part.config.title : undefined,
-      keyFigures: parsedKeyFigures.map((keyFigure) => {
+      keyFigures: parsedKeyFigures.map((keyFigureData) => {
         return {
-          iconUrl: keyFigure.iconUrl,
-          iconAltText: keyFigure.iconAltText,
-          number: keyFigure.number,
-          numberDescription: keyFigure.numberDescription,
-          noNumberText: keyFigure.noNumberText,
-          size: keyFigure.size,
-          title: keyFigure.title,
-          time: keyFigure.time,
-          changes: keyFigure.changes,
-          glossary: keyFigure.glossaryText,
-          greenBox: keyFigure.greenBox,
-          source: keyFigure.source
+          ...keyFigureData,
+          glossary: keyFigureData.glossaryText
         }
       }),
+      keyFiguresDraft: parsedKeyFiguresDraft ? parsedKeyFiguresDraft.map((keyFigureDraftData) => {
+        return {
+          ...keyFigureDraftData,
+          glossary: keyFigureDraftData.glossaryText
+        }
+      }) : undefined,
       source: part && part.config && part.config.source || undefined,
-      columns: part && part.config && part.config.columns
+      columns: part && part.config && part.config.columns,
+      showPreviewDraft,
+      paramShowDraft: req.params.showDraft,
+      draftExist,
+      pageTypeKeyFigure
     })
     .uniqueId()
 

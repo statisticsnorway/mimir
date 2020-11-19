@@ -2,7 +2,8 @@ import { createSlice } from '../../utils/@reduxjs/toolkit'
 
 export const initialState = {
   statistics: [],
-  loading: true
+  loading: true,
+  openStatistic: null
 }
 
 const statisticsSlice = createSlice({
@@ -24,6 +25,16 @@ const statisticsSlice = createSlice({
     resultRefreshStatistic(state, action) {
       const stat = state.statistics.find((s) => s.id === action.statistic.id)
       stat.loading = false
+    },
+    setOpenStatistic(state, action) {
+      if (action.id) {
+        const stat = state.statistics.find((s) => s.id === action.id)
+        if (stat) {
+          state.openStatistic = stat
+        }
+      } else {
+        state.openStatistic = null
+      }
     }
   }
 })

@@ -87,12 +87,19 @@ function renderPart(req, tableId) {
   // sources
   const sourceConfig = tableContent.data.sources ? forceArray(tableContent.data.sources) : []
   const sourceLabel = phrases.source
+  const sourceTableLabel = phrases.statbankTableSource
   const sources = getSources(sourceConfig)
   const iconUrl = assetUrl({
     path: 'swipe-icon.svg'
   })
 
   const standardSymbol = getStandardSymbolPage(language.standardSymbolPage, phrases.tableStandardSymbols)
+  const baseUrl = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
+  const statBankWebUrl = tableContent.language === 'en' ? baseUrl + '/en/statbank' : baseUrl + '/statbank'
+  const sourceList = table.sourceList ? forceArray(table.sourceList) : undefined
+  const sourceListExternal = sourceList ? sourceList.filter((s) => s.tableApproved === 'internet') : []
+  const uniqueTableIds = sourceListExternal.length > 0 ? sourceListExternal.map((item) => item.tableId)
+    .filter((value, index, self) => self.indexOf(value) === index) : []
 
   const props = {
     downloadTableLabel: phrases.tableDownloadAs,
@@ -124,7 +131,10 @@ function renderPart(req, tableId) {
     showPreviewDraft,
     paramShowDraft: req.params.showDraft ? true : false,
     draftExist,
-    pageTypeStatistic
+    pageTypeStatistic,
+    sourceListTables: uniqueTableIds,
+    sourceTableLabel,
+    statBankWebUrl
   }
 
   const tableReact = new React4xp('Table')
