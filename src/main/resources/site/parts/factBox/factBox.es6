@@ -46,7 +46,7 @@ function renderPart(req, factBoxId) {
   })
   if (!factBoxContent) throw new Error(`FactBox with id ${factBoxId} doesn't exist`)
   const text = processHtml({
-    value: factBoxContent.data.text
+    value: factBoxContent.data.text.replace(/&nbsp;/g, ' ')
   })
   const factBox = new React4xp('FactBox')
     .setProps({
