@@ -22,7 +22,13 @@ exports.get = function(req) {
   }
 }
 
-exports.preview = (req, id) => renderPart(req, id)
+exports.preview = function(req, id) {
+  try {
+    return renderPart(req, id)
+  } catch (e) {
+    return renderError(req, 'Error in part', e)
+  }
+}
 
 function renderPart(req, factBoxId) {
   // throw an error if there is no selected factbox, or an empty section for edit mode

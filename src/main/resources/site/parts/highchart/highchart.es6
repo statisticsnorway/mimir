@@ -35,7 +35,11 @@ exports.get = function(req) {
 }
 
 exports.preview = (req, id) => {
-  return renderPart(req, [id])
+  try {
+    return renderPart(req, [id])
+  } catch(e) {
+    return renderError(req, 'Error in part', e)
+  }
 }
 
 /**
