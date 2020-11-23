@@ -1,6 +1,8 @@
 import JsonStat from 'jsonstat-toolkit'
 const {
-  DataSource: DataSourceType
+  DataSource: DataSourceType,
+  getDataset,
+  UNPUBLISHED_DATASET_BRANCH
 } = __non_webpack_require__( '/lib/repo/dataset')
 const util = __non_webpack_require__( '/lib/util')
 const {
@@ -19,6 +21,9 @@ const {
 const {
   datasetOrUndefined
 } = __non_webpack_require__('/lib/ssb/cache')
+const {
+  hasRole
+} = __non_webpack_require__('/lib/xp/auth')
 
 
 const content = __non_webpack_require__( '/lib/xp/content')
@@ -48,10 +53,19 @@ function renderPart(req, highchartIds) {
     const highchart = content.get({
       key
     })
+    const adminRole = hasRole('system.admin')
+    const type = highchart.data.dataSource._selected
+    const paramShowDraft = req.params.showDraft
+    const showPreviewDraft = adminRole && req.mode === 'preview' && type === 'tbprocessor' && paramShowDraft
 
     let config
     if (highchart && highchart.data.dataSource) {
-      const datasetFromRepo = datasetOrUndefined(highchart)
+      // note use of conditional
+      const datasetFromRepo = showPreviewDraft ?
+        getDataset(type, UNPUBLISHED_DATASET_BRANCH, highchart.data.dataSource.tbprocessor.urlOrId) :
+        datasetOrUndefined(highchart)
+
+      log.info(JSON.stringify(datasetFromRepo, null, 2))
       let parsedData = datasetFromRepo && datasetFromRepo.data
       if (highchart.data.dataSource._selected === DataSourceType.STATBANK_API) {
         // eslint-disable-next-line new-cap
