@@ -9,6 +9,7 @@ import { selectContentStudioBaseUrl } from '../HomePage/selectors'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { refreshStatistic, setOpenStatistic } from './actions'
 import { RefreshStatisticsForm } from '../../components/RefreshStatisticsForm'
+import { StatisticsLog } from './StatisticsLog'
 
 export function Statistics() {
   const statistics = useSelector(selectStatisticsWithRelease)
@@ -160,7 +161,9 @@ export function Statistics() {
           {getNextRelease(statistic)}
         </td>
         <td className="text-center">{statistic.nextRelease ? makeRefreshButton(statistic) : ''}</td>
-        <td/>
+        <td>
+          <StatisticsLog statistics={statistic} />
+        </td>
       </tr>
     )
   }
