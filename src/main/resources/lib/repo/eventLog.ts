@@ -71,7 +71,7 @@ export function updateEventLog<T>(key: string, editor: EditorCallback<T> ): T & 
 
 export function getQueryChildNodesStatus<T>(queryId: string): ReadonlyArray<LogSummary> | undefined {
   if (nodeExists(EVENT_LOG_REPO, EVENT_LOG_BRANCH, queryId)) {
-    const childNodeIds: NodeQueryResponse<string> = getChildNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, queryId)
+    const childNodeIds: NodeQueryResponse<never> = getChildNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, queryId)
     return childNodeIds.hits.map((hit: NodeQueryHit) => {
       const nodes: ReadonlyArray<QueryInfo> | QueryInfo | null = getNode<QueryInfo>(EVENT_LOG_REPO, EVENT_LOG_BRANCH, hit.id)
       return Array.isArray(nodes) ? nodes[0] : nodes
@@ -104,10 +104,10 @@ export function deleteExpiredEventLogs(): void {
   contentsWithLogs.hits
     .filter((content) => nodeExists(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `${path}/${content._id}`))
     .forEach( (content) => {
-      const eventLogs: NodeQueryResponse<string> = getChildNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `${path}/${content._id}`, 2000)
+      const eventLogs: NodeQueryResponse<never> = getChildNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `${path}/${content._id}`, 2000)
       if (eventLogs.total > maxLogsBeforeDeleting) {
         const query: string = `_parentPath = '${path}/${content._id}' AND _ts < dateTime('${oneMonthAgo.toISOString()}')`
-        const expiredLogs: NodeQueryResponse<string> = queryNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, {
+        const expiredLogs: NodeQueryResponse<never> = queryNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, {
           query
         })
         expiredLogs.hits.forEach( (eventLog: NodeQueryHit) => {
