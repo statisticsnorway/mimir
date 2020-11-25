@@ -173,7 +173,7 @@ exports.get = function(req) {
     })
   }
 
-  const footer = fromMenuCache(req, 'footer', () => {
+  const footer = fromMenuCache(req, `footer_${language.code}`, () => {
     const footerContent = getFooterContent(language)
     if (footerContent) {
       const footerComponent = new React4xp('Footer')
