@@ -64,9 +64,12 @@ export function parseTable(req: Request, table: Content<Table>, branch: string =
 
     if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
       const tbmlData: TbmlData = data as TbmlData
-      if(tbmlData && tbmlData.tbml && tbmlData.tbml.metadata && tbmlData.tbml.presentation) {
+      if (tbmlData && tbmlData.tbml && tbmlData.tbml.metadata && tbmlData.tbml.presentation) {
         const title: Title = typeof(tbmlData.tbml.metadata.title) == 'string' ?
-          { noterefs: '', content: tbmlData.tbml.metadata.title as string } :
+          {
+            noterefs: '',
+            content: tbmlData.tbml.metadata.title as string
+          } :
           tbmlData.tbml.metadata.title
         const notes: Notes | undefined = tbmlData.tbml.metadata.notes
         const sourceList: Source | Array<Source> | undefined = tbmlData.tbml.metadata ? tbmlData.tbml.metadata.sourceList : undefined

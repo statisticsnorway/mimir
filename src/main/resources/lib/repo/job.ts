@@ -17,8 +17,8 @@ export enum JobStatus {
   COMPLETE = 'COMPLETE',
 }
 
-export const JOB_STATUS_STARTED: 'STARTED'= 'STARTED'
-export const JOB_STATUS_COMPLETE: 'COMPLETE'= 'COMPLETE'
+export const JOB_STATUS_STARTED: 'STARTED' = 'STARTED'
+export const JOB_STATUS_COMPLETE: 'COMPLETE' = 'COMPLETE'
 
 export type JobInfoNode = RepoNode & JobInfo
 export type JobEventNode = RepoNode & JobEvent

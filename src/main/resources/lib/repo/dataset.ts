@@ -33,7 +33,7 @@ export enum DataSource {
 export function setupDatasetRepo(): void {
   let repo: RepositoryConfig | null = getRepo(DATASET_REPO, DATASET_BRANCH)
   if (!repo) {
-    repo = createRepo(DATASET_REPO, DATASET_REPO)
+    repo = createRepo(DATASET_REPO, DATASET_BRANCH)
   }
   if (!repo.branches.includes(DATASET_BRANCH)) {
     createBranch(DATASET_REPO, DATASET_BRANCH)
