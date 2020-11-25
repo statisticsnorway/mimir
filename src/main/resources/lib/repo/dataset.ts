@@ -33,12 +33,12 @@ export enum DataSource {
 export function setupDatasetRepo(): void {
   let repo: RepositoryConfig | null = getRepo(DATASET_REPO, DATASET_BRANCH)
   if (!repo) {
-    repo = createRepo(DATASET_REPO, DATASET_REPO)
+    repo = createRepo(DATASET_REPO, DATASET_BRANCH)
   }
-  if (repo.branches.includes(DATASET_BRANCH)) {
+  if (!repo.branches.includes(DATASET_BRANCH)) {
     createBranch(DATASET_REPO, DATASET_BRANCH)
   }
-  if (repo.branches.includes(UNPUBLISHED_DATASET_BRANCH)) {
+  if (!repo.branches.includes(UNPUBLISHED_DATASET_BRANCH)) {
     createBranch(DATASET_REPO, UNPUBLISHED_DATASET_BRANCH)
   }
   createSourceNode(DataSource.STATBANK_API, DATASET_BRANCH)
@@ -115,7 +115,7 @@ export interface RepoDatasetLib {
   DATASET_REPO: string;
   DATASET_BRANCH: string;
   UNPUBLISHED_DATASET_BRANCH: string;
-  setupDatasetRepo: (branch: string) => void;
+  setupDatasetRepo: () => void;
   getDataset: <T>(dataSourceType: string, branch: string, key: string) => DatasetRepoNode<T> | null;
   createOrUpdateDataset: <T>(dataSourceType: string, branch: string, key: string, data: T) => DatasetRepoNode<T>;
   deleteDataset: (dataSourceType: string, branch: string, key: string) => boolean;
