@@ -76,7 +76,7 @@ export function publishDataset(): void {
           if (!p.dataset) {
             return false
           }
-          if (publishedDatasetIds.includes(p.dataset._id)) {
+          if (!publishedDatasetIds.includes(p.dataset._id)) {
             publishedDatasetIds.push(p.dataset._id)
             return true
           }

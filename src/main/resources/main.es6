@@ -1,6 +1,5 @@
 const {
-  setupEventLog,
-  deleteExpiredEventLogs
+  setupEventLog
 } = __non_webpack_require__( '/lib/repo/eventLog')
 const {
   setupStatRegRepo
@@ -25,16 +24,6 @@ setupDatasetRepo()
 setupStatRegRepo()
 setupFetchDataOnCreateListener()
 setupCronJobs()
-
-const deleteExpiredEventLogCron = app.config && app.config['ssb.cron.dataquery'] ? app.config['ssb.cron.dataquery'] : '* 16 * * *'
-cron.schedule({
-  name: 'Delete expired event logs',
-  cron: deleteExpiredEventLogCron,
-  times: 1,
-  callback: deleteExpiredEventLogs,
-  context: master
-})
-
 
 const now = new Date()
 log.info(`Startup script complete: ${now.toISOString()}`)
