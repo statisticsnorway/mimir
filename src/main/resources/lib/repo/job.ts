@@ -17,6 +17,9 @@ export enum JobStatus {
   COMPLETE = 'COMPLETE',
 }
 
+export const JOB_STATUS_STARTED: 'STARTED' = 'STARTED'
+export const JOB_STATUS_COMPLETE: 'COMPLETE' = 'COMPLETE'
+
 export type JobInfoNode = RepoNode & JobInfo
 export type JobEventNode = RepoNode & JobEvent
 
@@ -76,6 +79,8 @@ export function completeJobLog(jobLogId: string, message: string, refreshDataRes
 
 export interface RepoJobLib {
   JobStatus: typeof JobStatus;
+  JOB_STATUS_STARTED: typeof JOB_STATUS_STARTED;
+  JOB_STATUS_COMPLETE: typeof JOB_STATUS_COMPLETE;
   startJobLog: (task?: string) => JobEventNode;
   updateJobLog: <T>(jobId: string, editor: EditorCallback<JobInfoNode>) => JobInfoNode;
   completeJobLog: (jobLogId: string, message: string, refreshDataResult: object ) => JobInfoNode;
