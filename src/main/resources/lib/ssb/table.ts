@@ -142,7 +142,7 @@ function getTableViewData(table: Content<Table>, dataContent: TbmlData | JSONsta
 function getNoterefs(row: TableRow): Array<string> {
   return forceArray(row.th).reduce((acc: Array<string>, cell: string | number | PreliminaryData) => {
     if (typeof cell === 'object') {
-      if (cell.noterefs && acc && acc.includes(cell.noterefs)) {
+      if (cell.noterefs && acc && !acc.includes(cell.noterefs)) {
         acc.push(cell.noterefs)
       }
     }
