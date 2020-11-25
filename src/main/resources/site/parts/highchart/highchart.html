@@ -2,6 +2,7 @@
   <span data-th-utext="${dataScript}" data-th-remove="tag"></span>
   <div class="row position-relative">
     <div class="col-12">
+      <div data-th-if="${highchart.config.draft}" class="alert-info mb-4" data-th-text="${'Tallet i figuren nedenfor er upublisert'}"></div>
       <figure data-th-fragment="graph" class="highcharts-figure mb-0" data-th-classappend="${highchart.hideTitle == true ? 'hide-title' : ''}">
         <div data-th-id="highcharts- + ${highchart.contentKey}"
           class="highcharts-canvas"

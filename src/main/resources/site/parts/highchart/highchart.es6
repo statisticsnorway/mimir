@@ -53,25 +53,26 @@ function renderPart(req, highchartIds) {
     const highchart = content.get({
       key
     })
-    const adminRole = hasRole('system.admin')
-    const type = highchart.data.dataSource._selected
-    const paramShowDraft = req.params.showDraft
-    const showPreviewDraft = adminRole && req.mode === 'preview' && type === 'tbprocessor' && paramShowDraft
 
     let config
     if (highchart && highchart.data.dataSource) {
+      const adminRole = hasRole('system.admin')
+      const type = highchart.data.dataSource._selected
+      const paramShowDraft = req.params.showDraft
+      const showPreviewDraft = adminRole && req.mode === 'preview' && type === 'tbprocessor' && paramShowDraft === 'true'
+
       // note use of conditional
       const datasetFromRepo = showPreviewDraft ?
         getDataset(type, UNPUBLISHED_DATASET_BRANCH, highchart.data.dataSource.tbprocessor.urlOrId) :
         datasetOrUndefined(highchart)
 
-      log.info(JSON.stringify(datasetFromRepo, null, 2))
       let parsedData = datasetFromRepo && datasetFromRepo.data
       if (highchart.data.dataSource._selected === DataSourceType.STATBANK_API) {
         // eslint-disable-next-line new-cap
         parsedData = JsonStat(parsedData).Dataset(0)
       }
       config = parsedData && createHighchartObject(req, highchart, parsedData, highchart.data.dataSource) || undefined
+      config.draft = showPreviewDraft
     } else if (highchart && highchart.data.htmlTable) {
       config = {
         ...createHighchartObject(req, highchart, highchart.data, {
