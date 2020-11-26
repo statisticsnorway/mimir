@@ -49,6 +49,54 @@ export interface MetadataRaw {
   sourceList: Source | Array<Source>;
 }
 
+export interface TbmlDataUniform {
+  tbml: {
+    presentation: {
+      table: TableUniform;
+    };
+    metadata: MetadataUniform;
+  };
+}
+
+export interface TableUniform {
+  tbody: Array<TableRowUniform>;
+  thead: Array<TableRowUniform>;
+  class: string;
+}
+
+export interface TableRowUniform {
+  tr: Array<TableCellUniform>;
+}
+
+export interface TableCellUniform {
+  th: HeaderCellUniform;
+  td: DataCellUniform;
+}
+
+export interface HeaderCellUniform {
+  th: Array<string | number>;
+}
+
+export interface DataCellUniform {
+  td: Array<number | string | PreliminaryData>;
+}
+
+export interface MetadataUniform {
+  instance: {
+    publicRelatedTableIds: Array<string>;
+    language: string;
+    relatedTableIds: Array<string>;
+    definitionId: number;
+  };
+  tablesource: string;
+  title: Title;
+  category: string;
+  tags: string;
+  notes: Array<Note>;
+  sourceList: Array<Source>;
+}
+
+
 export interface TbmlData {
   tbml: {
     presentation: {
