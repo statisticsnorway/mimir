@@ -1,15 +1,14 @@
 import { RepoNode } from 'enonic-types/node'
-import { EditorCallback, EventLogLib } from './eventLog'
+import { EditorCallback, RepoEventLogLib } from './eventLog'
 import { AuthLibrary, User } from 'enonic-types/auth'
 const {
   modifyNode
 } = __non_webpack_require__( '/lib/repo/common')
-
 const {
   EVENT_LOG_REPO,
   EVENT_LOG_BRANCH,
   createEventLog
-}: EventLogLib = __non_webpack_require__('/lib/repo/eventLog')
+}: RepoEventLogLib = __non_webpack_require__('/lib/repo/eventLog')
 const auth: AuthLibrary = __non_webpack_require__( '/lib/xp/auth')
 
 export enum JobStatus {
@@ -25,7 +24,7 @@ export type JobEventNode = RepoNode & JobEvent
 
 export interface JobInfo {
   data: {
-    status: JobStatus;
+    status: typeof JOB_STATUS_STARTED | typeof JOB_STATUS_COMPLETE;
     refreshDataResult: object;
     message: string;
     httpStatusCode?: number;
@@ -52,7 +51,7 @@ export function startJobLog(task?: string): JobEventNode {
     data: {
       task: task,
       jobStarted: now.toISOString(),
-      status: JobStatus.STARTED,
+      status: JOB_STATUS_STARTED,
       user
     }
   })
@@ -69,7 +68,7 @@ export function completeJobLog(jobLogId: string, message: string, refreshDataRes
     node.data = {
       ...node.data,
       completionTime: now.toISOString(),
-      status: JobStatus.COMPLETE,
+      status: JOB_STATUS_COMPLETE,
       message,
       refreshDataResult
     }
@@ -78,7 +77,6 @@ export function completeJobLog(jobLogId: string, message: string, refreshDataRes
 }
 
 export interface RepoJobLib {
-  JobStatus: typeof JobStatus;
   JOB_STATUS_STARTED: typeof JOB_STATUS_STARTED;
   JOB_STATUS_COMPLETE: typeof JOB_STATUS_COMPLETE;
   startJobLog: (task?: string) => JobEventNode;
