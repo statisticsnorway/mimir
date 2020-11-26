@@ -17,7 +17,7 @@ import { TbmlData,
   MetadataRaw,
   Title,
   Source,
-  Note } from '../types/xmlParser'
+  Note, TableRow, Thead } from '../types/xmlParser'
 import { RepoQueryLib } from '../repo/query'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
@@ -90,8 +90,6 @@ export function getTbmlData(url: string, queryId?: string, processXml?: string):
   const result: string | null = fetch(url, queryId, processXml)
   if (result) {
     const tbmlDataRaw: TbmlDataRaw = xmlToJson(result, queryId)
-    // log.info('tbmlDataRaw PrettyJSON%s',JSON.stringify(tbmlDataRaw ,null,4));
-    log.info('UNIFORM')
     const tbmlDataUniform: TbmlDataUniform = getTbmlDataUniform(tbmlDataRaw)
     log.info('tbmlDataUniform PrettyJSON%s', JSON.stringify(tbmlDataUniform, null, 4))
 
@@ -110,8 +108,8 @@ export function getTbmlSourceList(url: string): TbmlSourceList | null {
 }
 
 function getTbmlDataUniform(tbmlDataRaw: TbmlDataRaw ): TbmlDataUniform {
-  const tableHead: Array<TableRowUniform> = mergeTableRows(tbmlDataRaw.tbml.presentation.table.thead)
-  const tableBody: Array<TableRowUniform> = mergeTableRows(tbmlDataRaw.tbml.presentation.table.tbody)
+  const tableHead: Array<TableRowUniform> = getTableHead(tbmlDataRaw.tbml.presentation.table.thead)
+  const tableBody: Array<TableRowUniform> = getTableBody(tbmlDataRaw.tbml.presentation.table.tbody)
   const metadataUniform: MetadataUniform = getMetadataDataUniform(tbmlDataRaw.tbml.metadata)
 
   const tbmlDataUniform: TbmlDataUniform = {
@@ -128,6 +126,53 @@ function getTbmlDataUniform(tbmlDataRaw: TbmlDataRaw ): TbmlDataUniform {
   }
 
   return tbmlDataUniform
+}
+
+function getTableHead(thead: TableRowRaw | Array<TableRowRaw>): Array<TableRowUniform> {
+  const headRows: Array<TableRowUniform> = forceArray(thead)
+    .map( (thead: TableRowUniform) => ({
+      tr: getTableCellHeader(forceArray(thead.tr))
+    }))
+
+  return headRows
+}
+
+function getTableCellHeader(tableCell: Array<TableCellRaw>): Array<TableCellUniform> {
+// Todo Rekkefølge
+  const cells: Array<TableCellUniform> = forceArray(tableCell)
+    .map( (cell: TableCellUniform) => ({
+      td: getdataCell(forceArray(cell.td)),
+      th: getHeaderCell(forceArray(cell.th))
+    }))
+
+  return cells
+}
+
+function getHeaderCell(headerCell: HeaderCellRaw): HeaderCellUniform {
+  return forceArray(headerCell)
+}
+
+function getdataCell(dataCell: DataCellRaw): DataCellUniform {
+  return forceArray(dataCell)
+}
+
+function getTableBody(tbody: TableRowRaw | Array<TableRowRaw>): Array<TableRowUniform> {
+  const bodyRows: Array<TableRowUniform> = forceArray(tbody)
+    .map( (tbody: TableRowUniform) => ({
+      tr: getTableCellBody(forceArray(tbody.tr))
+    }))
+
+  return bodyRows
+}
+
+function getTableCellBody(tableCell: Array<TableCellRaw>): Array<TableCellUniform> {
+  const cells: Array<TableCellUniform> = forceArray(tableCell)
+    .map( (cell: TableCellUniform) => ({
+      th: getHeaderCell(forceArray(cell.th)),
+      td: getdataCell(forceArray(cell.td))
+    }))
+
+  return cells
 }
 
 function getMetadataDataUniform(metadataRaw: MetadataRaw ): MetadataUniform {
@@ -161,21 +206,6 @@ function getMetadataDataUniform(metadataRaw: MetadataRaw ): MetadataUniform {
   return metaData
 }
 
-function mergeTableRows(tableRow: TableRowRaw | Array<TableRowRaw>): Array<TableRowUniform> {
-  return forceArray(tableRow)
-}
-
-function mergeTableCells(tableCell: TableCellRaw | Array<TableCellRaw>): TableCellUniform {
-  return forceArray(tableCell)
-}
-
-function mergeHeaderCells(headerCell: HeaderCellRaw): HeaderCellUniform {
-  return forceArray(headerCell)
-}
-
-function mergeDataCells(dataCell: DataCellRaw): DataCellUniform {
-  return forceArray(dataCell)
-}
 
 function xmlToJson<T>(xml: string, queryId?: string): T {
   try {
