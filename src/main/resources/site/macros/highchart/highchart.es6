@@ -6,6 +6,10 @@ exports.macro = function(context) {
     dark: false
   })
   const highchart = highchartController.preview(context, context.params.highchart)
-  highchart.body = divider.body + highchart.body + divider.body
+
+  if (highchart.body) {
+    highchart.body = divider.body + highchart.body + divider.body
+  }
+
   return highchart
 }

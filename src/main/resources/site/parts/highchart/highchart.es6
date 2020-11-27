@@ -69,9 +69,8 @@ function renderPart(req, highchartIds) {
         })
       }
     }
-
     return createHighchartsReactProps(highchart, config)
-  })
+  }).filter((key) => !!key)
 
   const inlineScript = highcharts.map((highchart) => `<script inline="javascript">
    window['highchart' + '${highchart.contentKey}'] = ${JSON.stringify(highchart.config)}
