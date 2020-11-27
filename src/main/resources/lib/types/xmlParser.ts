@@ -2,6 +2,53 @@ export interface XmlParser {
   parse: (xml: string) => string;
 }
 
+export interface TbmlDataRaw {
+  tbml: {
+    presentation: {
+      table: TableRaw;
+    };
+    metadata: MetadataRaw;
+  };
+}
+
+export interface TableRaw {
+  tbody: TableRowRaw | Array<TableRowRaw>;
+  thead: TableRowRaw | Array<TableRowRaw>;
+  class: string;
+}
+
+export interface TableRowRaw {
+  tr: TableCellRaw | Array<TableCellRaw>;
+}
+
+export interface TableCellRaw {
+  th: HeaderCellRaw;
+  td: DataCellRaw;
+}
+
+export interface HeaderCellRaw {
+  th: Array<string> | number | string;
+}
+
+export interface DataCellRaw {
+  td: Array<number> | Array<string> | number | string | PreliminaryData;
+}
+
+export interface MetadataRaw {
+  instance: {
+    publicRelatedTableIds?: string | number;
+    'xml:lang': string;
+    relatedTableIds: string;
+    definitionId: number;
+  };
+  tablesource: string;
+  title: string | Title;
+  category: string;
+  tags: string;
+  notes?: Notes;
+  sourceList: Source | Array<Source>;
+}
+
 export interface TbmlData {
   tbml: {
     presentation: {

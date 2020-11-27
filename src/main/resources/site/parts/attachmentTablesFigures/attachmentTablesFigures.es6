@@ -133,7 +133,7 @@ function getTableReturnObject(content, preview, subHeader, index) {
   const title = datasetFromRepo && datasetFromRepo.data.tbml.metadata ? datasetFromRepo.data.tbml.metadata.title : content.displayName
   return {
     id: `attachment-table-figure-${index + 1}`,
-    open: typeof(title) === 'string' ? title: title.content,
+    open: typeof(title) === 'string' ? title : title.content,
     subHeader,
     body: preview.body,
     items: [],
@@ -146,7 +146,7 @@ function getFigureReturnObject(content, preview, subHeader, index) {
   const title = datasetFromRepo && datasetFromRepo.data.tbml.metadata ? datasetFromRepo.data.tbml.metadata.title : content.displayName
   return {
     id: `attachment-table-figure-${index + 1}`,
-    open:  typeof(title) === 'string' ? title: title.content,
+    open: typeof(title) === 'string' ? title : title.content,
     subHeader,
     body: preview.body,
     items: [],
