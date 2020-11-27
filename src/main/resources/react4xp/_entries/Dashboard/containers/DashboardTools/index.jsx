@@ -9,6 +9,10 @@ import { Col, Container, Row } from 'react-bootstrap'
 import { Dropdown } from '@statisticsnorway/ssb-component-library'
 import { selectStatistics, selectLoading, selectHasLoadingStatistic } from '../Statistics/selectors'
 import { setOpenStatistic } from '../Statistics/actions'
+import { selectDataQueriesByType } from '../DataQueries/selectors'
+import { requestDatasetUpdate } from '../DataQueries/actions'
+import { startRefresh } from '../StatRegDashboard/actions'
+import { selectStatuses } from '../StatRegDashboard/selectors'
 
 export function DataQueryTools() {
   const loadingCache = useSelector(selectLoadingClearCache)
@@ -18,6 +22,39 @@ export function DataQueryTools() {
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
   const [selectedStat, setSelectedStat] = useState(null)
+  const tableQueries = useSelector(selectDataQueriesByType('mimir:table'))
+  const loading = useSelector(selectLoading)
+  const statuses = useSelector(selectStatuses)
+
+  function refreshStatReg(key) {
+    startRefresh(dispatch, io, [key])
+  }
+
+  function makeRefreshButton(statRegStatus) {
+    return (
+      <Button
+        variant="primary"
+        className="mx-1"
+        onClick={() => refreshStatReg(statRegStatus.key)}
+        disabled={statRegStatus.loading}
+      >
+        Oppdater { statRegStatus.displayName } { statRegStatus.loading ? <span className="spinner-border spinner-border-sm" /> : <RefreshCw size={16}/> }
+      </Button>
+    )
+  }
+
+  function refreshAllTables() {
+    const ids = tableQueries.filter((q) => !q.loading).map((q) => q.id)
+    requestDatasetUpdate(dispatch, io, ids)
+  }
+
+  function renderSpinner(loading) {
+    if (loading) {
+      return (<span className="spinner-border spinner-border-sm ml-2 mb-1" />)
+    }
+    return null
+  }
+  const loadingTables = tableQueries.filter((q) => q.loading).length > 0
 
   function clearCache() {
     requestClearCache(dispatch, io)
@@ -71,7 +108,7 @@ export function DataQueryTools() {
             </Button>
           </Col>
         </Row>
-        <Row className="mb-3">
+        <Row className="mb-4">
           <Col className="col-10 p-0">
             {renderStatisticsSearch()}
           </Col>
@@ -87,6 +124,26 @@ export function DataQueryTools() {
             </Button>
           </Col>
         </Row>
+        <Row className="mb-4">
+          <Col className="p-0">
+            <Button disabled={loadingStatistics} onClick={() => refreshAllTables()}>
+              {`Oppdater alle tabeller (${tableQueries.length})`} {renderSpinner(loadingTables)}
+            </Button>
+          </Col>
+        </Row>
+        {statuses.map((statRegStatus, index) => {
+          const {
+            displayName,
+            status
+          } = statRegStatus
+          return (
+            <Row className="mb-4" key={index}>
+              <Col className="p-0">
+                {makeRefreshButton(statRegStatus)}
+              </Col>
+            </Row>
+          )
+        })}
       </Container>
     </div>
   )
