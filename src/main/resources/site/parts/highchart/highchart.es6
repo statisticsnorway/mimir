@@ -60,11 +60,9 @@ function renderPart(req, highchartIds) {
       const type = highchart.data.dataSource._selected
       const paramShowDraft = req.params.showDraft
       const showPreviewDraft = adminRole && req.mode === 'preview' && type === 'tbprocessor' && paramShowDraft === 'true'
+      const draftData = showPreviewDraft ? getDataset(type, UNPUBLISHED_DATASET_BRANCH, highchart.data.dataSource.tbprocessor.urlOrId) : null
 
-      // note use of conditional
-      const datasetFromRepo = showPreviewDraft ?
-        getDataset(type, UNPUBLISHED_DATASET_BRANCH, highchart.data.dataSource.tbprocessor.urlOrId) :
-        datasetOrUndefined(highchart)
+      const datasetFromRepo = draftData ? draftData : datasetOrUndefined(highchart)
 
       let parsedData = datasetFromRepo && datasetFromRepo.data
       if (highchart.data.dataSource._selected === DataSourceType.STATBANK_API) {
@@ -72,7 +70,8 @@ function renderPart(req, highchartIds) {
         parsedData = JsonStat(parsedData).Dataset(0)
       }
       config = parsedData && createHighchartObject(req, highchart, parsedData, highchart.data.dataSource) || undefined
-      config.draft = showPreviewDraft
+      config.draft = !!draftData
+      config.noDraftAvailable = showPreviewDraft && !draftData
     } else if (highchart && highchart.data.htmlTable) {
       config = {
         ...createHighchartObject(req, highchart, highchart.data, {
