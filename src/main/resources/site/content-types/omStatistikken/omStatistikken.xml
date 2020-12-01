@@ -64,16 +64,16 @@
                     <label>Administrative opplysninger</label>
                     <occurrences minimum="0" maximum="1"/>
                     <items>
-                        <input name="responsibleDept" type="HtmlArea">
+                        <input name="nameAndSubject" type="HtmlArea">
                             <occurrences minimum="0" maximum="1" />
-                            <label>Ansvarlig Seksjon</label>
+                            <label>Navn og emne</label>
                             <config>
                                 <allowHeadings>h3 h4</allowHeadings>
                             </config>
                         </input>
-                        <input name="nameAndSubject" type="HtmlArea">
+                        <input name="responsibleDept" type="HtmlArea">
                             <occurrences minimum="0" maximum="1" />
-                            <label>Navn og emne</label>
+                            <label>Ansvarlig Seksjon</label>
                             <config>
                                 <allowHeadings>h3 h4</allowHeadings>
                             </config>
