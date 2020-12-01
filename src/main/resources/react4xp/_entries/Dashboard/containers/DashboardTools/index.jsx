@@ -23,7 +23,6 @@ export function DataQueryTools() {
   const dispatch = useDispatch()
   const [selectedStat, setSelectedStat] = useState(null)
   const tableQueries = useSelector(selectDataQueriesByType('mimir:table'))
-  const loading = useSelector(selectLoading)
   const statuses = useSelector(selectStatuses)
 
   function refreshStatReg(key) {
@@ -132,10 +131,7 @@ export function DataQueryTools() {
           </Col>
         </Row>
         {statuses.map((statRegStatus, index) => {
-          const {
-            displayName,
-            status
-          } = statRegStatus
+          const {} = statRegStatus
           return (
             <Row className="mb-4" key={index}>
               <Col className="p-0">
