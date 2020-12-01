@@ -19,7 +19,8 @@ import { requestDataQueries } from './containers/DataQueries/actions'
 import { requestStatistics } from './containers/Statistics/actions'
 import { actions as commonActions } from './containers/HomePage/slice'
 import PropTypes from 'prop-types'
-import { setUserServerSide } from './containers/HomePage/actions.es6'
+import { setUserServerSide } from './containers/HomePage/actions'
+import { requestJobs } from './containers/Jobs/actions'
 
 function Dashboard(props) {
   return (
@@ -60,6 +61,7 @@ function DashboardRouter(props) {
   requestStatistics(dispatch, io)
   requestStatuses(dispatch, io)
   requestDataQueries(dispatch, io)
+  requestJobs(dispatch, io)
   return (
     <BrowserRouter>
       <Helmet

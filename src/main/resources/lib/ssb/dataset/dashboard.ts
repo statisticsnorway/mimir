@@ -14,6 +14,7 @@ import { TbmlData } from '../../types/xmlParser'
 import { DatasetRepoNode, RepoDatasetLib } from '../../repo/dataset'
 import { RepoCommonLib } from '../../repo/common'
 import { User } from 'enonic-types/auth'
+import { TaskLib } from '../../types/task'
 
 const {
   logUserDataQuery
@@ -51,13 +52,21 @@ const {
 const {
   getQueryChildNodesStatus
 }: EventLogLib = __non_webpack_require__('/lib/repo/eventLog')
+const {
+  submit: submitTask
+}: TaskLib = __non_webpack_require__('/lib/xp/task')
 
 export const users: Array<User> = []
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-dataqueries', () => {
-    const contentWithDataSource: Array<unknown> = prepDataSources(getContentWithDataSource())
-    socket.emit('dataqueries-result', contentWithDataSource)
+    submitTask({
+      description: 'get-dataqueries',
+      task: () => {
+        const contentWithDataSource: Array<unknown> = prepDataSources(getContentWithDataSource())
+        socket.emit('dataqueries-result', contentWithDataSource)
+      }
+    })
   })
 
   socket.on('get-eventlog-node', (dataQueryId)=> {
@@ -88,6 +97,15 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
       }
     }
     run(context, () => refreshDatasetHandler(options.ids, socketEmitter))
+  })
+
+  socket.on('dashboard-jobs', () => {
+    submitTask({
+      description: 'dashboard-jobs',
+      task: () => {
+        socket.emit('dashboard-jobs-result', [])
+      }
+    })
   })
 }
 
