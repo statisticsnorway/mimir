@@ -24,14 +24,14 @@ export interface OmStatistikken {
    */
   administrativeInformation?: Array<{
     /**
-     * Ansvarlig Seksjon
-     */
-    responsibleDept?: string;
-
-    /**
      * Navn og emne
      */
     nameAndSubject?: string;
+
+    /**
+     * Ansvarlig Seksjon
+     */
+    responsibleDept?: string;
 
     /**
      * Regionalt nivå

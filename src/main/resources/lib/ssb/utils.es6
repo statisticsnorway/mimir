@@ -106,6 +106,10 @@ const addBreadcrumbs = (page, visitedPage, breadcrumbs = []) => {
 
 export const getBreadcrumbs = (page, municipality) => {
   const breadcrumbs = addBreadcrumbs(page, page)
+  if (getContent().language == 'en') {
+    breadcrumbs.shift()
+    breadcrumbs[0].text = 'Home'
+  }
   if (municipality) {
     breadcrumbs.pop()
     breadcrumbs.push({

@@ -64,9 +64,12 @@ export function parseTable(req: Request, table: Content<Table>, branch: string =
 
     if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
       const tbmlData: TbmlData = data as TbmlData
-      if(tbmlData && tbmlData.tbml && tbmlData.tbml.metadata && tbmlData.tbml.presentation) {
+      if (tbmlData && tbmlData.tbml && tbmlData.tbml.metadata && tbmlData.tbml.presentation) {
         const title: Title = typeof(tbmlData.tbml.metadata.title) == 'string' ?
-          { noterefs: '', content: tbmlData.tbml.metadata.title as string } :
+          {
+            noterefs: '',
+            content: tbmlData.tbml.metadata.title as string
+          } :
           tbmlData.tbml.metadata.title
         const notes: Notes | undefined = tbmlData.tbml.metadata.notes
         const sourceList: Source | Array<Source> | undefined = tbmlData.tbml.metadata ? tbmlData.tbml.metadata.sourceList : undefined
@@ -142,7 +145,7 @@ function getTableViewData(table: Content<Table>, dataContent: TbmlData | JSONsta
 function getNoterefs(row: TableRow): Array<string> {
   return forceArray(row.th).reduce((acc: Array<string>, cell: string | number | PreliminaryData) => {
     if (typeof cell === 'object') {
-      if (cell.noterefs && acc && acc.includes(cell.noterefs)) {
+      if (cell.noterefs && acc && !acc.includes(cell.noterefs)) {
         acc.push(cell.noterefs)
       }
     }

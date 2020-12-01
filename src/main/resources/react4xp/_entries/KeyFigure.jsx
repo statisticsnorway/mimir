@@ -39,21 +39,25 @@ class KeyFigures extends React.Component {
   }
 
   addPreviewInfo() {
+    const keyFigures = this.state.keyFigures
+
     if (this.props.showPreviewDraft) {
       if (this.state.fetchUnPublished) {
-        if (this.props.draftExist) {
-          return (
-            <Alert variant='info' className="mb-4">
+        return keyFigures.map((keyFigure) => {
+          if (this.props.draftExist && keyFigure.number) {
+            return (
+              <Alert variant='info' className="mb-4">
                   Tallet i nøkkeltallet nedenfor er upublisert
-            </Alert>
-          )
-        } else {
-          return (
-            <Alert variant='warning' className="mb-4">
+              </Alert>
+            )
+          } else {
+            return (
+              <Alert variant='warning' className="mb-4">
                   Finnes ikke upubliserte tall for dette nøkkeltallet
-            </Alert>
-          )
-        }
+              </Alert>
+            )
+          }
+        })
       }
     }
     return

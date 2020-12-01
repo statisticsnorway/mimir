@@ -8,6 +8,7 @@ import { SSBTaskLib } from '../task'
 import { CronLib } from '../types/cron'
 import { DatasetLib } from './dataset/dataset'
 import { PublishDatasetLib } from './dataset/publish'
+import { EventLogLib } from '../ssb/eventLog';
 
 const {
   publishDataset
@@ -26,7 +27,7 @@ const {
   completeJobLog,
   startJobLog,
   updateJobLog,
-  JobStatus
+  JOB_STATUS_COMPLETE,
 }: RepoJobLib = __non_webpack_require__('/lib/repo/job')
 const {
   dataSourceRSSFilter
@@ -38,6 +39,9 @@ const {
 const {
   run
 }: ContextLibrary = __non_webpack_require__('/lib/xp/context')
+const {
+  deleteExpiredEventLogs
+}: EventLogLib = __non_webpack_require__('/lib/ssb/eventLog')
 
 const createUserContext: RunContext = { // Master context (XP)
   repository: 'com.enonic.cms.default',
@@ -88,7 +92,7 @@ function job(): void {
     return node
   })
   const refreshDataResult: undefined | Array<string> = dataSourceQueries && refreshQueriesAsync(dataSourceQueries)
-  completeJobLog(jobLogNode._id, JobStatus.COMPLETE, refreshDataResult)
+  completeJobLog(jobLogNode._id, JOB_STATUS_COMPLETE, refreshDataResult)
   log.info('-- Completed dataquery cron job --')
 }
 
@@ -98,7 +102,7 @@ export function setupCronJobs(): void {
   // setup dataquery cron job
   const dataqueryCron: string = app.config && app.config['ssb.cron.dataquery'] ? app.config['ssb.cron.dataquery'] : '0 15 * * *'
   cron.schedule({
-    name: 'dataquery',
+    name: 'Data from datasource endpoints',
     cron: dataqueryCron,
     times: 365 * 10,
     callback: job,
@@ -122,6 +126,15 @@ export function setupCronJobs(): void {
     cron: datasetPublishCron,
     times: 365 * 10,
     callback: publishDataset,
+    context: cronContext
+  })
+
+  const deleteExpiredEventLogCron: string = app.config && app.config['ssb.cron.dataquery'] ? app.config['ssb.cron.dataquery'] : '45 13 * * *'
+  cron.schedule({
+    name: 'Delete expired event logs',
+    cron: deleteExpiredEventLogCron,
+    times: 365 * 10,
+    callback: deleteExpiredEventLogs,
     context: cronContext
   })
 }

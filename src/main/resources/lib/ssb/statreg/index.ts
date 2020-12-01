@@ -5,7 +5,7 @@ import { StatRegContactsLib } from '../../repo/statreg/contacts'
 import { StatRegStatisticsLib } from '../../repo/statreg/statistics'
 import { StatRegPublicationsLib } from '../../repo/statreg/publications'
 import { StatRegLatestFetchInfoNode } from '../../repo/statreg/eventLog'
-import { EventLogLib } from '../../repo/eventLog'
+import { RepoEventLogLib } from '../../repo/eventLog'
 
 const {
   getNode
@@ -26,7 +26,7 @@ const {
 }: StatRegPublicationsLib = __non_webpack_require__('/lib/repo/statreg/publications')
 const {
   EVENT_LOG_REPO, EVENT_LOG_BRANCH
-}: EventLogLib = __non_webpack_require__('/lib/repo/eventLog')
+}: RepoEventLogLib = __non_webpack_require__('/lib/repo/eventLog')
 
 export type StatRegLatestFetchInfoNodeType = StatRegLatestFetchInfoNode | readonly StatRegLatestFetchInfoNode[] | null;
 export function getStatRegFetchStatuses(): Array<StatRegStatus> {
