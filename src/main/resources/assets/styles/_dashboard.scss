@@ -194,5 +194,14 @@
       margin-bottom: 2px
     }
   }
+
+  .job-log-container {
+    .row {
+      .col {
+        max-height: 400px;
+        overflow: auto;
+      }
+    }
+  }
 }
 

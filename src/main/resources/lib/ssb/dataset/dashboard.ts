@@ -15,6 +15,7 @@ import { DatasetRepoNode, RepoDatasetLib } from '../../repo/dataset'
 import { RepoCommonLib } from '../../repo/common'
 import { User } from 'enonic-types/auth'
 import { TaskLib } from '../../types/task'
+import { JobInfoNode, JOB_STATUS_COMPLETE, JOB_STATUS_STARTED, RepoJobLib } from '../../repo/job'
 
 const {
   logUserDataQuery
@@ -55,6 +56,10 @@ const {
 const {
   submit: submitTask
 }: TaskLib = __non_webpack_require__('/lib/xp/task')
+const {
+  queryJobLogs,
+  getJobLog
+}: RepoJobLib = __non_webpack_require__('/lib/repo/job')
 
 export const users: Array<User> = []
 
@@ -103,10 +108,42 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     submitTask({
       description: 'dashboard-jobs',
       task: () => {
-        socket.emit('dashboard-jobs-result', [])
+        socket.emit('dashboard-jobs-result', getJobs())
       }
     })
   })
+}
+
+function getJobs(): Array<DashboardJobInfo> {
+  return queryJobLogs({
+    start: 0,
+    count: 100,
+    query: 'data.user.key = "user:system:cronjob" AND _path LIKE "/jobs/*"',
+    sort: '_ts DESC'
+  }).hits.reduce((result: Array<DashboardJobInfo>, j) => {
+    const res: JobInfoNode | ReadonlyArray<JobInfoNode> | null = getJobLog(j.id)
+    if (res) {
+      const jobLog: JobInfoNode = Array.isArray(res) ? res[0] : res
+      result.push({
+        id: jobLog._id,
+        task: jobLog.data.task,
+        status: jobLog.data.status,
+        startTime: jobLog.data.jobStarted ? dateToFormat(jobLog.data.jobStarted) : undefined,
+        completionTime: jobLog.data.completionTime ? dateToFormat(jobLog.data.completionTime) : undefined,
+        message: ''
+      })
+    }
+    return result
+  }, [])
+}
+
+interface DashboardJobInfo {
+  id: string;
+  task: string;
+  status: typeof JOB_STATUS_STARTED | typeof JOB_STATUS_COMPLETE;
+  startTime: string;
+  completionTime?: string;
+  message: string;
 }
 
 function prepDataSources(dataSources: Array<Content<DataSource>>): Array<unknown> {

@@ -11,14 +11,19 @@ export function Jobs() {
     {
       Header: 'Tidspunkt',
       accessor: 'ts',
-      sortType: () => {
-        return 1
+      sortType: (a, b) => {
+        return a.original.tsSort > b.original.tsSort ? 1 : -1
       }
     },
     {
       Header: 'Jobbnavn',
       accessor: 'name',
-      disableSortBy: true
+      sortType: (a, b) => {
+        if (a.original.nameSort === b.original.nameSort) {
+          return a.original.tsSort > b.original.tsSort ? 1 : -1
+        }
+        return a.original.nameSort > b.original.nameSort ? 1 : -1
+      }
     },
     {
       Header: 'Info',
@@ -28,9 +33,20 @@ export function Jobs() {
   ])
 
   function getJobRows() {
-    return jobs
+    return jobs.map((job) => {
+      const ts = job.completionTime ? job.completionTime : job.startTime
+      const name = job.task
+      const info = `${job.status} - ${job.message}`
+      return {
+        ts,
+        tsSort: new Date(ts),
+        name,
+        nameSort: name.toLowerCase(),
+        info
+      }
+    })
   }
-  const tableRows = React.useMemo(() => getJobRows(), [])
+  const tableRows = React.useMemo(() => getJobRows(), [jobs])
 
   function renderSpinner() {
     return (
@@ -47,7 +63,7 @@ export function Jobs() {
   return (
     <div className="p-4 tables-wrapper">
       <h2>Jobblogg</h2>
-      <Container>
+      <Container className="job-log-container">
         <Row className="mb-3">
           <Col>
             {loading ? renderSpinner() : renderTable()}
