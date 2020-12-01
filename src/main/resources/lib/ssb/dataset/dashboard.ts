@@ -3,7 +3,7 @@ import { DatasetLib, CreateOrUpdateStatus } from './dataset'
 import { ContentLibrary, Content } from 'enonic-types/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { Events } from '../../repo/query'
-import { EVENT_LOG_REPO, EVENT_LOG_BRANCH, LogSummary, EventLogLib } from '../../repo/eventLog'
+import { EVENT_LOG_REPO, EVENT_LOG_BRANCH, LogSummary, RepoEventLogLib } from '../../repo/eventLog'
 import { RepoNode } from 'enonic-types/node'
 import { I18nLibrary } from 'enonic-types/i18n'
 import { ContextLibrary, RunContext } from 'enonic-types/context'
@@ -50,7 +50,7 @@ const {
 }: SSBCacheLibrary = __non_webpack_require__('/lib/ssb/cache')
 const {
   getQueryChildNodesStatus
-}: EventLogLib = __non_webpack_require__('/lib/repo/eventLog')
+}: RepoEventLogLib = __non_webpack_require__('/lib/repo/eventLog')
 
 export const users: Array<User> = []
 
