@@ -44,6 +44,7 @@ export interface MetadataRaw {
   tablesource: string;
   title: string | Title;
   category: string;
+  shortnameweb: string;
   tags: string;
   notes?: Notes;
   sourceList: Source | Array<Source>;
@@ -91,11 +92,15 @@ export interface MetadataUniform {
   tablesource: string;
   title: Title;
   category: string;
+  shortnameweb: string;
   tags: string;
-  notes: Array<Note>;
-  sourceList: Array<Source>;
+  notes: NotesUniform;
+  sourceList?: Array<Source>;
 }
 
+export interface NotesUniform {
+  note: Array<Note>;
+}
 
 export interface TbmlData {
   tbml: {
