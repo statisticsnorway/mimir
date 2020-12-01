@@ -27,7 +27,7 @@ export interface TableCellRaw {
 }
 
 export interface HeaderCellRaw {
-  th: Array<string> | number | string;
+  th: Array<string> | number | string | PreliminaryData;
 }
 
 export interface DataCellRaw {

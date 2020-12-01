@@ -379,6 +379,20 @@ class Table extends React.Component {
       return (
         <td key={index}>{this.trimValue(value)}</td>
       )
+    } else if (Array.isArray(value)) {
+      return value.map((cellValue, i) => {
+        if (typeof cellValue === 'object') {
+          return (
+            <td className={cellValue.class} key={i} rowSpan={cellValue.rowspan} colSpan={cellValue.colspan}>
+              {this.formatNumber(cellValue.content)}
+            </td>
+          )
+        } else {
+          return (
+            <td key={i}>{this.trimValue(cellValue)}</td>
+          )
+        }
+      })
     } else {
       return (
         <td key={key} className={value.class} rowSpan={value.rowspan} colSpan={value.colspan}>

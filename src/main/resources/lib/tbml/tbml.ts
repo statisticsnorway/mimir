@@ -3,20 +3,15 @@ import { TbmlData,
   TbmlDataRaw,
   TableRowRaw,
   TableCellRaw,
-  HeaderCellRaw,
-  DataCellRaw,
   TbmlDataUniform,
   TableRowUniform,
   TableCellUniform,
-  HeaderCellUniform,
-  DataCellUniform,
   MetadataUniform,
   TbmlSourceList,
   XmlParser,
   MetadataRaw,
   Title,
-  Source,
-  Note, NotesUniform } from '../types/xmlParser'
+  Note } from '../types/xmlParser'
 import { RepoQueryLib } from '../repo/query'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
@@ -89,9 +84,9 @@ export function getTbmlData(url: string, queryId?: string, processXml?: string):
   const result: string | null = fetch(url, queryId, processXml)
   if (result) {
     const tbmlDataRaw: TbmlDataRaw = xmlToJson(result, queryId)
-    // log.info('tbmlDataRaw PrettyJSON%s', JSON.stringify(tbmlDataRaw, null, 4))
+    log.info('tbmlDataRaw PrettyJSON%s', JSON.stringify(tbmlDataRaw, null, 4))
     const tbmlDataUniform: TbmlDataUniform = getTbmlDataUniform(tbmlDataRaw)
-    // log.info('tbmlDataUniform PrettyJSON%s', JSON.stringify(tbmlDataUniform, null, 4))
+    log.info('tbmlDataUniform PrettyJSON%s', JSON.stringify(tbmlDataUniform, null, 4))
 
     return tbmlDataUniform
   }
@@ -112,7 +107,7 @@ function getTbmlDataUniform(tbmlDataRaw: TbmlDataRaw ): TbmlDataUniform {
   const tableBody: Array<TableRowUniform> = getTableBody(tbmlDataRaw.tbml.presentation.table.tbody)
   const metadataUniform: MetadataUniform = getMetadataDataUniform(tbmlDataRaw.tbml.metadata)
 
-  const tbmlDataUniform: TbmlDataUniform = {
+  return {
     tbml: {
       presentation: {
         table: {
@@ -124,54 +119,36 @@ function getTbmlDataUniform(tbmlDataRaw: TbmlDataRaw ): TbmlDataUniform {
       metadata: metadataUniform
     }
   }
-
-  return tbmlDataUniform
 }
 
 function getTableHead(thead: TableRowRaw | Array<TableRowRaw>): Array<TableRowUniform> {
-  const headRows: Array<TableRowUniform> = forceArray(thead)
+  return forceArray(thead)
     .map( (thead: TableRowUniform) => ({
       tr: getTableCellHeader(forceArray(thead.tr))
     }))
-
-  return headRows
 }
 
 function getTableBody(tbody: TableRowRaw | Array<TableRowRaw>): Array<TableRowUniform> {
-  const bodyRows: Array<TableRowUniform> = forceArray(tbody)
+  return forceArray(tbody)
     .map( (tbody: TableRowUniform) => ({
       tr: getTableCellBody(forceArray(tbody.tr))
     }))
-
-  return bodyRows
 }
 
 function getTableCellHeader(tableCell: Array<TableCellRaw>): Array<TableCellUniform> {
-  const cells: Array<TableCellUniform> = forceArray(tableCell)
+  return forceArray(tableCell)
     .map( (cell: TableCellUniform) => ({
-      td: getdataCell(forceArray(cell.td)),
-      th: getHeaderCell(forceArray(cell.th))
+      td: cell.td ? forceArray(cell.td) : undefined,
+      th: cell.th ? forceArray(cell.th) : undefined
     }))
-
-  return cells
 }
 
 function getTableCellBody(tableCell: Array<TableCellRaw>): Array<TableCellUniform> {
-  const cells: Array<TableCellUniform> = forceArray(tableCell)
+  return forceArray(tableCell)
     .map( (cell: TableCellUniform) => ({
-      th: getHeaderCell(forceArray(cell.th)),
-      td: getdataCell(forceArray(cell.td))
+      th: cell.th ? forceArray(cell.th) : undefined,
+      td: cell.td ? forceArray(cell.td) : undefined
     }))
-
-  return cells
-}
-
-function getHeaderCell(headerCell: HeaderCellRaw): HeaderCellUniform {
-  return forceArray(headerCell)
-}
-
-function getdataCell(dataCell: DataCellRaw): DataCellUniform {
-  return forceArray(dataCell)
 }
 
 function getMetadataDataUniform(metadataRaw: MetadataRaw ): MetadataUniform {
@@ -186,7 +163,7 @@ function getMetadataDataUniform(metadataRaw: MetadataRaw ): MetadataUniform {
   const relatedTableIds: string = metadataRaw.instance.relatedTableIds
   const notes: Array<Note> = metadataRaw.notes ? forceArray(metadataRaw.notes.note) : []
 
-  const metaData: MetadataUniform = {
+  return {
     instance: {
       publicRelatedTableIds: publicRelatedTableIds ? publicRelatedTableIds.toString().split(' ') : [],
       language: metadataRaw.instance['xml:lang'],
@@ -202,8 +179,6 @@ function getMetadataDataUniform(metadataRaw: MetadataRaw ): MetadataUniform {
       note: notes
     }
   }
-
-  return metaData
 }
 
 
