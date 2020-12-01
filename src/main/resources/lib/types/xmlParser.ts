@@ -60,8 +60,8 @@ export interface TbmlDataUniform {
 }
 
 export interface TableUniform {
-  tbody: Array<TableRowUniform>;
   thead: Array<TableRowUniform>;
+  tbody: Array<TableRowUniform>;
   class: string;
 }
 
@@ -75,7 +75,7 @@ export interface TableCellUniform {
 }
 
 export interface HeaderCellUniform {
-  th: Array<string | number>;
+  th: Array<number | string | PreliminaryData>;
 }
 
 export interface DataCellUniform {

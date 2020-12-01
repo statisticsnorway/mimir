@@ -398,12 +398,26 @@ class Table extends React.Component {
             <th key={index}>{this.trimValue(value)}</th>
           )
         } else {
-          return (
-            <th key={index} className={value.class} rowSpan={value.rowspan} colSpan={value.colspan}>
-              {this.trimValue(value.content)}
-              {this.addNoteRefs(value.noterefs)}
-            </th>
-          )
+          if (Array.isArray(value)) {
+            return value.map((cellValue, i) => {
+              if (typeof cellValue === 'object') {
+                return (
+                  <th className={cellValue.class} key={i}>{this.formatNumber(cellValue.content)}</th>
+                )
+              } else {
+                return (
+                  <th key={i}>{this.formatNumber(cellValue)}</th>
+                )
+              }
+            })
+          } else {
+            return (
+              <th key={index} className={value.class} rowSpan={value.rowspan} colSpan={value.colspan}>
+                {this.trimValue(value.content)}
+                {this.addNoteRefs(value.noterefs)}
+              </th>
+            )
+          }
         }
       }
     })

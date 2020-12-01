@@ -1,6 +1,5 @@
 import { HttpLibrary, HttpRequestParams, HttpResponse } from 'enonic-types/http'
-import {
-  TbmlData,
+import { TbmlData,
   TbmlDataRaw,
   TableRowRaw,
   TableCellRaw,
@@ -17,8 +16,7 @@ import {
   MetadataRaw,
   Title,
   Source,
-  Note, NotesUniform
-} from '../types/xmlParser'
+  Note, NotesUniform } from '../types/xmlParser'
 import { RepoQueryLib } from '../repo/query'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
@@ -91,9 +89,9 @@ export function getTbmlData(url: string, queryId?: string, processXml?: string):
   const result: string | null = fetch(url, queryId, processXml)
   if (result) {
     const tbmlDataRaw: TbmlDataRaw = xmlToJson(result, queryId)
-    log.info('tbmlDataRaw PrettyJSON%s', JSON.stringify(tbmlDataRaw, null, 4))
+    // log.info('tbmlDataRaw PrettyJSON%s', JSON.stringify(tbmlDataRaw, null, 4))
     const tbmlDataUniform: TbmlDataUniform = getTbmlDataUniform(tbmlDataRaw)
-    log.info('tbmlDataUniform PrettyJSON%s', JSON.stringify(tbmlDataUniform, null, 4))
+    // log.info('tbmlDataUniform PrettyJSON%s', JSON.stringify(tbmlDataUniform, null, 4))
 
     return tbmlDataUniform
   }
@@ -133,10 +131,19 @@ function getTbmlDataUniform(tbmlDataRaw: TbmlDataRaw ): TbmlDataUniform {
 function getTableHead(thead: TableRowRaw | Array<TableRowRaw>): Array<TableRowUniform> {
   const headRows: Array<TableRowUniform> = forceArray(thead)
     .map( (thead: TableRowUniform) => ({
-      tr: forceArray(thead.tr)
+      tr: getTableCellHeader(forceArray(thead.tr))
     }))
 
   return headRows
+}
+
+function getTableBody(tbody: TableRowRaw | Array<TableRowRaw>): Array<TableRowUniform> {
+  const bodyRows: Array<TableRowUniform> = forceArray(tbody)
+    .map( (tbody: TableRowUniform) => ({
+      tr: getTableCellBody(forceArray(tbody.tr))
+    }))
+
+  return bodyRows
 }
 
 function getTableCellHeader(tableCell: Array<TableCellRaw>): Array<TableCellUniform> {
@@ -149,24 +156,6 @@ function getTableCellHeader(tableCell: Array<TableCellRaw>): Array<TableCellUnif
   return cells
 }
 
-function getTableBody(tbody: TableRowRaw | Array<TableRowRaw>): Array<TableRowUniform> {
-  const bodyRows: Array<TableRowUniform> = forceArray(tbody)
-    .map( (tbody: TableRowUniform) => ({
-      tr: forceArray(tbody.tr)
-    }))
-
-  return bodyRows
-}
-
-function getHeaderCell(headerCell: HeaderCellRaw): HeaderCellUniform {
-  return forceArray(headerCell)
-}
-
-function getdataCell(dataCell: DataCellRaw): DataCellUniform {
-  return forceArray(dataCell)
-}
-
-
 function getTableCellBody(tableCell: Array<TableCellRaw>): Array<TableCellUniform> {
   const cells: Array<TableCellUniform> = forceArray(tableCell)
     .map( (cell: TableCellUniform) => ({
@@ -175,6 +164,14 @@ function getTableCellBody(tableCell: Array<TableCellRaw>): Array<TableCellUnifor
     }))
 
   return cells
+}
+
+function getHeaderCell(headerCell: HeaderCellRaw): HeaderCellUniform {
+  return forceArray(headerCell)
+}
+
+function getdataCell(dataCell: DataCellRaw): DataCellUniform {
+  return forceArray(dataCell)
 }
 
 function getMetadataDataUniform(metadataRaw: MetadataRaw ): MetadataUniform {
