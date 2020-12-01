@@ -28,3 +28,13 @@ export const selectHasLoadingStatistic = createSelector(
   [selectDomain],
   (statisticsState) => statisticsState.statistics.filter((s) => s.loading).length > 0
 )
+
+export const selectRefreshStatistic = createSelector(
+  [selectDomain],
+  (statisticsState) => statisticsState.refreshStatistic
+)
+
+export const selectRefreshMessages = createSelector(
+  [selectDomain],
+  (statisticsState) => statisticsState.updateMessage
+)

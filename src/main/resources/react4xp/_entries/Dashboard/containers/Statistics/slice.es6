@@ -3,7 +3,9 @@ import { createSlice } from '../../utils/@reduxjs/toolkit'
 export const initialState = {
   statistics: [],
   loading: true,
-  openStatistic: null
+  openStatistic: null,
+  refreshStatistic: 'request',
+  updateMessage: []
 }
 
 const statisticsSlice = createSlice({
@@ -21,6 +23,7 @@ const statisticsSlice = createSlice({
     startRefreshStatistic(state, action) {
       const stat = state.statistics.find((s) => s.id === action.id)
       stat.loading = true
+      state.refreshStatistic = 'status'
     },
     resultRefreshStatistic(state, action) {
       const stat = state.statistics.find((s) => s.id === action.statistic.id)
@@ -34,6 +37,13 @@ const statisticsSlice = createSlice({
         }
       } else {
         state.openStatistic = null
+      }
+    },
+    setRefreshStatisticStatus(state, action) {
+      if(action.data.step === 1) {
+        state.updateMessage[action.data.tableIndex] = action.data
+      } else {
+        state.updateMessage[action.data.tableIndex].result = action.data.status
       }
     }
   }

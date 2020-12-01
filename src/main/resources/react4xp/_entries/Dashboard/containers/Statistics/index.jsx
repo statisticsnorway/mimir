@@ -1,7 +1,12 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, Col, Row, Table, Modal } from 'react-bootstrap'
-import { selectStatisticsWithRelease, selectLoading, selectOpenStatistic } from './selectors'
+import {
+  selectStatisticsWithRelease,
+  selectLoading,
+  selectOpenStatistic,
+  selectRefreshStatistic,
+  selectRefreshMessages } from './selectors'
 import { RefreshCw } from 'react-feather'
 import Moment from 'react-moment'
 import { Link } from '@statisticsnorway/ssb-component-library'
@@ -9,12 +14,15 @@ import { selectContentStudioBaseUrl } from '../HomePage/selectors'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { refreshStatistic, setOpenStatistic } from './actions'
 import { RefreshStatisticsForm } from '../../components/RefreshStatisticsForm'
+import { RefreshStatisticsStatus } from '../../components/RefreshStatisticsStatus'
 
 export function Statistics() {
   const statistics = useSelector(selectStatisticsWithRelease)
   const loading = useSelector(selectLoading)
   const contentStudioBaseUrl = useSelector(selectContentStudioBaseUrl)
   const modalInfo = useSelector(selectOpenStatistic)
+  const refreshStatus = useSelector(selectRefreshStatistic)
+  const refreshMessages = useSelector(selectRefreshMessages)
 
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
@@ -43,7 +51,7 @@ export function Statistics() {
       fetchPublished
     } = formData
     refreshStatistic(dispatch, io, modalInfo.id, owners, fetchPublished)
-    handleClose()
+    //handleClose()
   }
 
   function renderStatistics() {
@@ -97,7 +105,8 @@ export function Statistics() {
   function renderStatisticsForm(key, sources, i) {
     return (
       <React.Fragment key={i}>
-        <RefreshStatisticsForm onSubmit={(e) => updateTables(e)} modalInfo={modalInfo}/>
+        {refreshStatus === 'request' && <RefreshStatisticsForm onSubmit={(e) => updateTables(e)} modalInfo={modalInfo}/>}
+        {refreshStatus !== 'request' && <RefreshStatisticsStatus show={refreshStatus !== 'request'} refreshMessages={refreshMessages}/>}
       </React.Fragment>
     )
   }

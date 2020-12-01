@@ -151,12 +151,21 @@ export function refreshDatasetHandler(
     })
   })
   // start loading each datasource
-  ids.forEach((id: string) => {
+  ids.forEach((id: string, index: number) => {
     const dataSource: Content<DataSource> | null = getContent({
       key: id
     })
     if (dataSource) {
       const dataSourceKey: number = parseInt(extractKey(dataSource))
+
+      socketEmitter.broadcast('statistics-activity-refresh-feedback', {
+        name: dataSource.displayName,
+        datasourceKey: dataSourceKey,
+        status: `Henter data for ${dataSource.displayName}`,
+        step: 1,
+        tableIndex: index
+      })
+
       const ownerCredentialsForTbml: Array<ProcessXml> | undefined = processXmls ?
         processXmls.filter((processXml: ProcessXml) => processXml.tbmlId === dataSourceKey) : undefined
 
@@ -170,8 +179,23 @@ export function refreshDatasetHandler(
         function: 'refreshDatasetHandler',
         message: refreshDatasetResult.status
       })
+
+      socketEmitter.broadcast('statistics-activity-refresh-feedback', {
+        name: dataSource.displayName,
+        datasourceKey: dataSourceKey,
+        status: refreshDatasetResult.status,
+        step: 2,
+        tableIndex: index
+      })
+
       socketEmitter.broadcast('dashboard-activity-refreshDataset-result', transfromQueryResult(refreshDatasetResult))
     } else {
+      socketEmitter.broadcast('statistics-activity-refresh-feedback', {
+        status: `Fant ingen innhold med id ${id}`,
+        step: 1,
+        tableIndex: index
+      })
+
       socketEmitter.broadcast('dashboard-activity-refreshDataset-result', {
         id: id,
         message: i18n.localize({
