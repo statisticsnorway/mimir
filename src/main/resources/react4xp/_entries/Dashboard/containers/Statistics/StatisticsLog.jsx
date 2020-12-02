@@ -1,69 +1,87 @@
 import React, { useContext, useState } from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { Button, Modal } from 'react-bootstrap'
 import { Check, X } from 'react-feather'
-import { requestEventLogData } from './actions'
-
-/* TODO:
-*   Should only include the tbml ids that have been updated */
+import { requestEventLogData } from '../DataQueries/actions'
+import { selectDataQueriesById } from '../DataQueries/selectors'
+import { Accordion } from '@statisticsnorway/ssb-component-library'
 
 export function StatisticsLog(props) {
-  const dispatch = useDispatch()
-  const io = useContext(WebSocketContext)
-
   const {
-    id,
-    name,
-    relatedTables,
-    logData,
-    loadingLogs,
-    eventLogNodes
-  } = props.statistics
+    statisticsShortName,
+    relatedTables
+  } = props
+
+  const io = useContext(WebSocketContext)
+  const dispatch = useDispatch()
+
+  const dataQueries = relatedTables.map(({
+    queryId
+  }) => useSelector(selectDataQueriesById(queryId)))
+    .sort((a, b) => {
+      const aDate = a.logData && a.logData.modified ? new Date(a.logData.modified) : new Date('01.01.1970')
+      const bDate = b.logData && b.logData.modified ? new Date(b.logData.modified) : new Date('01.01.1970')
+
+      return aDate > bDate ? 1 : -1
+    })
 
   const [show, setShow] = useState(false)
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
   const openEventlog = () => {
-    requestEventLogData(dispatch, io, id)
+    dataQueries.map((dataQuery) => requestEventLogData(dispatch, io, dataQuery.id))
     setShow(handleShow)
   }
 
   function renderLogData() {
-    if (logData) {
-      return (
-        <span className="d-flex justify-content-center text-center haveList">
-          <span onClick={() => openEventlog()}>
-            Oppdatert
-            {logData.modified ? logData.modified : ''}
-            {logData.by && logData.by.displayName ? `av ${logData.by.displayName}` : ''}
-            {logData.showWarningIcon ? <span><X size="12" color="#FF4500"/></span> : <span><Check size="12" color="#1A9D49" /></span>}
+    if (dataQueries.length > 0) {
+      const [{
+        logData
+      }] = dataQueries
+
+      if (logData) {
+        return (
+          <span className="d-sm-flex justify-content-center text-center small haveList">
+            <span onClick={() => openEventlog()}>
+              Oppdatert&nbsp;
+              {logData.modified ? logData.modified : ''}
+              {logData.by && logData.by.displayName ? ` av ${logData.by.displayName}` : ''}
+              {logData.showWarningIcon ? <span><X size="14" color="#FF4500"/></span> : <span><Check size="14" color="#1A9D49" /></span>}
+            </span>
+            {show ? <ModalContent/> : null}
           </span>
-          {show ? <ModalContent/> : null}
-        </span>
-      )
-    } else return <span className="d-flex justify-content-center text-center">Ingen logger</span>
+        )
+      }
+    }
+    return <span className="d-sm-flex justify-content-center text-center small">Ingen logger</span>
   }
 
   function renderJobLogs() {
-    if (loadingLogs === true) {
+    return dataQueries.map((dataQuery, index) => {
       return (
-        <span className="spinner-border spinner-border"/>
+        <Accordion
+          key={index}
+          className={dataQuery.logData && dataQuery.logData.showWarningIcon ? 'warning' : ''}
+          header={dataQuery.displayName}
+          subHeader={relatedTables[index].tbmlId}>
+          {dataQuery.loadingLogs ?
+            (<span className="spinner-border spinner-border" />) :
+            (dataQuery.eventLogNodes.map((logNode, index) => {
+              return (
+                <p key={index}>
+                  <span>{logNode.modifiedTs}</span> - <span>{logNode.by}</span><br/>
+                  <span> &gt; {logNode.result}</span>
+                </p>
+              )
+            }))
+          }
+        </Accordion>
       )
-    } else {
-      return eventLogNodes.map((logNode, index) => {
-        return (
-          <p key={index}>
-            <span>{logNode.modifiedTs}</span> - <span>{logNode.by}</span><br/>
-            <span> &gt; {relatedTables.length > 0 ? relatedTables.map(({
-              tbmlId
-            }) => tbmlId) : 'Ingen tabeller'}</span><br/>
-          </p>
-        )
-      })
     }
+    )
   }
 
   const ModalContent = () => {
@@ -79,7 +97,7 @@ export function StatisticsLog(props) {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <h3>{name}</h3>
+          <h3>{statisticsShortName}</h3>
           {renderJobLogs()}
         </Modal.Body>
         <Modal.Footer>
@@ -95,5 +113,6 @@ export function StatisticsLog(props) {
 }
 
 StatisticsLog.propTypes = {
-  statistics: PropTypes.object
+  statisticsShortName: PropTypes.string,
+  relatedTables: PropTypes.array
 }

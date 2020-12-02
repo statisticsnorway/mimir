@@ -194,5 +194,9 @@
       margin-bottom: 2px
     }
   }
+
+  .ssb-accordion.warning .accordion-header .sub-header {
+    color: $ssb-red-3;
+  }
 }
 

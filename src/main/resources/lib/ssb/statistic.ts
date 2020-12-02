@@ -6,6 +6,7 @@ import { Statistics } from '../../site/content-types/statistics/statistics'
 import { DashboardDatasetLib, ProcessXml } from './dataset/dashboard'
 import { ContextLibrary, RunContext } from 'enonic-types/context'
 import { DatasetRepoNode, RepoDatasetLib } from '../repo/dataset'
+
 import moment = require('moment')
 
 import { Highchart } from '../../site/content-types/highchart/highchart'
@@ -124,9 +125,14 @@ export function getDatasetIdsFromStatistic(statistic: Content<Statistics>): Arra
 function sourceListFromStatistic(statistic: Content<Statistics>): Array<TbmlSources> {
   const datasetIds: Array<string> = getDatasetIdsFromStatistic(statistic)
 
-  const datasets: Array<DatasetRepoNode<TbmlData>> = datasetIds.reduce((acc: Array<DatasetRepoNode<TbmlData>>, contentId: string) => {
+  const sources: Array<SourceList> = datasetIds.reduce((acc: Array<SourceList>, contentId: string) => {
     const dataset: DatasetRepoNode<TbmlData> | null = getDatasetFromContentId(contentId)
-    if (dataset) acc.push(dataset)
+    if (dataset) {
+      acc.push({
+        dataset,
+        queryId: contentId
+      })
+    }
     return acc
   }, [])
 
@@ -134,14 +140,23 @@ function sourceListFromStatistic(statistic: Content<Statistics>): Array<TbmlSour
     return `${source.owner}`
   })
 
-  return datasets.map((dataset) => {
+  return sources.map((source) => {
+    const {
+      dataset
+    } = source
     return {
+      queryId: source.queryId,
       tbmlId: dataset._name,
       sourceList: dataset.data && typeof(dataset.data) !== 'string' &&
       dataset.data.tbml.metadata && dataset.data.tbml.metadata.sourceList ?
         byOwners(forceArray(dataset.data.tbml.metadata.sourceList)) : undefined
     }
   })
+}
+
+interface SourceList {
+  queryId: string;
+  dataset: DatasetRepoNode<TbmlData>;
 }
 
 function getDatasetFromContentId(contentId: string): DatasetRepoNode<TbmlData> | null {
@@ -162,8 +177,10 @@ function prepStatistics(statistics: Array<Content<Statistics>>): Array<Statistic
   const statisticData: Array<StatisticDashboard> = []
   statistics.map((statistic: Content<Statistics>) => {
     const statregData: StatregData | undefined = statistic.data.statistic ? getStatregInfo(statistic.data.statistic) : undefined
+
     if (statregData) {
       const relatedTables: Array<TbmlSources> = sourceListFromStatistic(statistic)
+
       const statisticDataDashboard: StatisticDashboard = {
         id: statistic._id,
         language: statistic.language ? statistic.language : '',
@@ -257,6 +274,7 @@ interface StatregData {
 }
 
 interface TbmlSources {
+  queryId: string;
   tbmlId: string;
   sourceList?: {
     [key: number]: Array<Source>;
