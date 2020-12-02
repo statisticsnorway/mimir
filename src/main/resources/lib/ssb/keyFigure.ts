@@ -7,7 +7,7 @@ import { ContentLibrary, QueryResponse, Content } from 'enonic-types/content'
 import { PortalLibrary } from 'enonic-types/portal'
 import { KeyFigure } from '../../site/content-types/keyFigure/keyFigure'
 import { MunicipalityWithCounty } from '../klass/municipalities'
-import { TbmlData, TableRow, PreliminaryData } from '../types/xmlParser'
+import { TbmlData, TableRow, PreliminaryData, TableRowUniform } from '../types/xmlParser'
 import { Dataset as JSDataset, Dimension, Category } from '../types/jsonstat-toolkit'
 import { Request } from 'enonic-types/controller'
 import { DatasetRepoNode, RepoDatasetLib } from '../repo/dataset'
@@ -139,14 +139,13 @@ function getDataTbProcessor(
   tbmlData: TbmlData,
   keyFigure: Content<KeyFigure>
 ): KeyFigureView {
-  //
-  const bodyRows: Array<TableRow> = forceArray(tbmlData.tbml.presentation.table.tbody.tr)
+  const bodyRows: Array<TableRowUniform> = forceArray(tbmlData.tbml.presentation.table.tbody)
 
   const head: Array<Thead> = forceArray(tbmlData.tbml.presentation.table.thead)
     .map( (thead: Thead) => ({
       tr: forceArray(thead.tr)
     }))
-  const [row1, row2] = bodyRows
+  const [row1, row2] = forceArray(bodyRows[0].tr)
 
   if (row1) {
     let value: number
