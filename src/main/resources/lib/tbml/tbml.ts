@@ -138,16 +138,16 @@ function getTableBody(tbody: TableRowRaw | Array<TableRowRaw>): Array<TableRowUn
 function getTableCellHeader(tableCell: Array<TableCellRaw>): Array<TableCellUniform> {
   return forceArray(tableCell)
     .map( (cell: TableCellUniform) => ({
-      td: cell.td ? forceArray(cell.td) : undefined,
-      th: cell.th ? forceArray(cell.th) : undefined
+      td: typeof cell.td != 'undefined' ? forceArray(cell.td) : undefined,
+      th: typeof cell.th != 'undefined' ? forceArray(cell.th) : undefined
     }))
 }
 
 function getTableCellBody(tableCell: Array<TableCellRaw>): Array<TableCellUniform> {
   return forceArray(tableCell)
     .map( (cell: TableCellUniform) => ({
-      th: cell.th ? forceArray(cell.th) : undefined,
-      td: cell.td ? forceArray(cell.td) : undefined
+      th: typeof cell.th != 'undefined' ? forceArray(cell.th) : undefined,
+      td: typeof cell.td != 'undefined' ? forceArray(cell.td) : undefined
     }))
 }
 
