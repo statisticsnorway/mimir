@@ -195,8 +195,16 @@
     }
   }
 
+  .job-log-container {
+    .row {
+      .col {
+        max-height: 400px;
+        overflow: auto;
+      }
+    }
+  }
+  
   .ssb-accordion.warning .accordion-header .sub-header {
     color: $ssb-red-3;
   }
 }
-

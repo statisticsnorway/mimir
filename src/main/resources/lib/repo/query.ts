@@ -1,6 +1,6 @@
 import { RepoNode } from 'enonic-types/node'
 import { RepoCommonLib } from './common'
-import { EditorCallback, EventLogLib } from './eventLog'
+import { EditorCallback, RepoEventLogLib } from './eventLog'
 import { User } from 'enonic-types/auth'
 import { HttpRequestParams, HttpResponse } from 'enonic-types/http'
 import { TbmlData } from '../types/xmlParser'
@@ -19,7 +19,7 @@ const {
   EVENT_LOG_REPO,
   createEventLog,
   updateEventLog
-}: EventLogLib = __non_webpack_require__('/lib/repo/eventLog')
+}: RepoEventLogLib = __non_webpack_require__('/lib/repo/eventLog')
 export type QueryInfoNode = QueryInfo & RepoNode
 
 export interface QueryInfo {

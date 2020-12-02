@@ -6,6 +6,7 @@ import { reducer as statRegReducer } from '../containers/StatRegDashboard/slice'
 import { reducer as commonReducer } from '../containers/HomePage/slice'
 import { reducer as dataQueriesReducer } from '../containers/DataQueries/slice'
 import { reducer as statisticsReducer } from '../containers/Statistics/slice'
+import { reducer as jobsReducer } from '../containers/Jobs/slice'
 
 export function configureAppStore() {
   const reduxSagaMonitorOptions = {}
@@ -29,7 +30,8 @@ export function configureAppStore() {
       common: commonReducer,
       statReg: statRegReducer,
       dataQueries: dataQueriesReducer,
-      statistics: statisticsReducer
+      statistics: statisticsReducer,
+      jobs: jobsReducer
     },
     middleware: [...getDefaultMiddleware(), ...middlewares],
     devTools: process.env.NODE_ENV !== 'production',

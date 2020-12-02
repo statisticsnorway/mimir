@@ -9,7 +9,7 @@ import { StatRegFetchInfo,
   StatRegLatestFetchInfoNode,
   StatRegEventLog } from './statreg/eventLog'
 import moment = require('moment')
-import { EventLogLib } from './eventLog'
+import { RepoEventLogLib } from './eventLog'
 import { RepoLib } from './repo'
 import { StatRegConfigLib } from '../ssb/statreg/config'
 
@@ -24,7 +24,7 @@ const {
 }: RepoLib = __non_webpack_require__('/lib/repo/repo')
 const {
   createEventLog, updateEventLog, EVENT_LOG_BRANCH, EVENT_LOG_REPO
-}: EventLogLib = __non_webpack_require__('/lib/repo/eventLog')
+}: RepoEventLogLib = __non_webpack_require__('/lib/repo/eventLog')
 const {
   StatRegFetchStatus
 }: StatRegEventLog = __non_webpack_require__('/lib/repo/statreg/eventLog')
