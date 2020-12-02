@@ -167,7 +167,7 @@ function getMetadataDataUniform(metadataRaw: MetadataRaw ): MetadataUniform {
     instance: {
       publicRelatedTableIds: publicRelatedTableIds ? publicRelatedTableIds.toString().split(' ') : [],
       language: metadataRaw.instance['xml:lang'],
-      relatedTableIds: relatedTableIds.split(' '),
+      relatedTableIds: relatedTableIds ? relatedTableIds.toString().split(' ') : [],
       definitionId: metadataRaw.instance.definitionId
     },
     tablesource: metadataRaw.tablesource,
