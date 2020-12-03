@@ -3,7 +3,7 @@ import { Content } from 'enonic-types/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { RepoQueryLib } from '../../repo/query'
 import { TbmlData, TbmlSourceList } from '../../types/xmlParser'
-import { TbmlLib } from '../../tbml/tbml'
+import {TbmlLib, TbprocessorParsedResponse} from '../../tbml/tbml'
 import { mergeDeepLeft } from 'ramda'
 
 const {
@@ -39,7 +39,7 @@ function hasTBProcessorDatasource(content: Content<DataSource>): string | undefi
     content.data.dataSource.tbprocessor.urlOrId
 }
 
-function tryRequestTbmlData(url: string, contentId?: string, processXml?: string ): TbmlData | null {
+function tryRequestTbmlData(url: string, contentId?: string, processXml?: string ): TbprocessorParsedResponse | null {
   try {
     return getTbmlData(url, contentId, processXml)
   } catch (e) {

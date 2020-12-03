@@ -101,6 +101,8 @@ export function refreshDataset(
   processXml?: string ): CreateOrUpdateStatus {
   /**/
   const data: JSONstat | TbmlData | object | null = fetchData(content, processXml)
+  log.info('datafrom fetchdata')
+  log.info(JSON.stringify(data, null, 2))
   const key: string | null = extractKey(content)
   const user: User | null = getUser()
 

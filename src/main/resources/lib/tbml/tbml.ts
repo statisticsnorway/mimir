@@ -9,8 +9,8 @@ const {
   Events
 }: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
 
-export function fetch(url: string, queryId?: string, processXml?: string): string | null{
-  let result: string | null = null
+export function fetch(url: string, queryId?: string, processXml?: string): {body: string; status: number} | null{
+  let result: {body: string; status: number} | null = null
 
   const requestParams: HttpRequestParams = {
     url,
@@ -19,7 +19,8 @@ export function fetch(url: string, queryId?: string, processXml?: string): strin
     readTimeout: 30000
   }
   const response: HttpResponse = http.request(requestParams)
-
+  log.info('response')
+  log.info(JSON.stringify(response, null, 2))
   const {
     body,
     status
@@ -37,7 +38,10 @@ export function fetch(url: string, queryId?: string, processXml?: string): strin
   }
 
   if (status === 200 && body) {
-    result = body
+    result = {
+      body,
+      status
+    }
   } else {
     if (queryId) {
       logUserDataQuery(queryId, {
@@ -49,17 +53,27 @@ export function fetch(url: string, queryId?: string, processXml?: string): strin
       })
     }
     log.error(`Failed with status ${status} while fetching tbml data from ${url}`)
+    result = body ? {body, status} : null
   }
 
   return result
 }
 
-export function getTbmlData(url: string, queryId?: string, processXml?: string): TbmlData | null {
-  const result: string | null = fetch(url, queryId, processXml)
-  if (result) {
-    return xmlToJson(result, queryId)
+export function getTbmlData(url: string, queryId?: string, processXml?: string): TbprocessorParsedResponse | null {
+  const result: {body: string; status: number} | null = fetch(url, queryId, processXml)
+  if (result && result.body && result.status === 200) {
+    return {
+      ...result,
+      parsedBody: xmlToJson(result.body, queryId)
+    }
   }
-  return null
+  return result
+}
+
+export interface TbprocessorParsedResponse {
+  body: string;
+  status: number;
+  parsedBody?: TbmlData;
 }
 
 export function getTbmlSourceList(url: string): TbmlSourceList | null {
@@ -90,7 +104,7 @@ function xmlToJson<T>(xml: string, queryId?: string): T {
 
 export interface TbmlLib {
   fetch: (url: string, queryId?: string, token?: string) => string;
-  getTbmlData: (url: string, queryId?: string, processXml?: string) => TbmlData | null;
+  getTbmlData: (url: string, queryId?: string, processXml?: string) => TbprocessorParsedResponse | null;
   getTbmlSourceList: (tbmlId: string) => TbmlSourceList | null;
 }
 
