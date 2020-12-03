@@ -1,15 +1,17 @@
-import { RepoNode } from 'enonic-types/node'
-import { EditorCallback, EventLogLib } from './eventLog'
+import { NodeQueryParams, NodeQueryResponse, RepoNode } from 'enonic-types/node'
+import { EditorCallback, RepoEventLogLib } from './eventLog'
 import { AuthLibrary, User } from 'enonic-types/auth'
+import { RepoCommonLib } from './common'
 const {
-  modifyNode
-} = __non_webpack_require__( '/lib/repo/common')
-
+  modifyNode,
+  getNode,
+  queryNodes
+}: RepoCommonLib = __non_webpack_require__( '/lib/repo/common')
 const {
   EVENT_LOG_REPO,
   EVENT_LOG_BRANCH,
   createEventLog
-}: EventLogLib = __non_webpack_require__('/lib/repo/eventLog')
+}: RepoEventLogLib = __non_webpack_require__('/lib/repo/eventLog')
 const auth: AuthLibrary = __non_webpack_require__( '/lib/xp/auth')
 
 export enum JobStatus {
@@ -25,11 +27,12 @@ export type JobEventNode = RepoNode & JobEvent
 
 export interface JobInfo {
   data: {
-    status: JobStatus;
+    status: typeof JOB_STATUS_STARTED | typeof JOB_STATUS_COMPLETE;
+    task: string;
     refreshDataResult: object;
     message: string;
     httpStatusCode?: number;
-    startTime: string;
+    jobStarted: string;
     completionTime: string;
     queryIds?: Array<string>;
   };
@@ -52,7 +55,7 @@ export function startJobLog(task?: string): JobEventNode {
     data: {
       task: task,
       jobStarted: now.toISOString(),
-      status: JobStatus.STARTED,
+      status: JOB_STATUS_STARTED,
       user
     }
   })
@@ -62,6 +65,13 @@ export function updateJobLog<T>(jobId: string, editor: EditorCallback<JobInfoNod
   return modifyNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, jobId, editor)
 }
 
+export function queryJobLogs(params: NodeQueryParams<never>): NodeQueryResponse<never> {
+  return queryNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, params)
+}
+
+export function getJobLog(id: string): JobInfoNode | ReadonlyArray<JobInfoNode> | null {
+  return getNode<JobInfoNode>(EVENT_LOG_REPO, EVENT_LOG_BRANCH, id)
+}
 
 export function completeJobLog(jobLogId: string, message: string, refreshDataResult: object ): JobInfoNode {
   const now: Date = new Date()
@@ -69,7 +79,7 @@ export function completeJobLog(jobLogId: string, message: string, refreshDataRes
     node.data = {
       ...node.data,
       completionTime: now.toISOString(),
-      status: JobStatus.COMPLETE,
+      status: JOB_STATUS_COMPLETE,
       message,
       refreshDataResult
     }
@@ -78,10 +88,11 @@ export function completeJobLog(jobLogId: string, message: string, refreshDataRes
 }
 
 export interface RepoJobLib {
-  JobStatus: typeof JobStatus;
   JOB_STATUS_STARTED: typeof JOB_STATUS_STARTED;
   JOB_STATUS_COMPLETE: typeof JOB_STATUS_COMPLETE;
   startJobLog: (task?: string) => JobEventNode;
   updateJobLog: <T>(jobId: string, editor: EditorCallback<JobInfoNode>) => JobInfoNode;
+  queryJobLogs: <T>(params: NodeQueryParams<never>) => NodeQueryResponse<never>;
+  getJobLog: (id: string) => JobInfoNode | ReadonlyArray<JobInfoNode> | null;
   completeJobLog: (jobLogId: string, message: string, refreshDataResult: object ) => JobInfoNode;
 }

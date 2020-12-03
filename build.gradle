@@ -35,7 +35,7 @@ dependencies {
     include "com.enonic.xp:lib-io:${xpVersion}"
     include "com.enonic.xp:lib-websocket:${xpVersion}"
     include 'commons-codec:commons-codec:1.15'
-    include "no.item.wsUtil:wsUtil:1.1.1"
+    include "no.item.xp.wsUtil:wsUtil:2.0.0"
     testCompile "com.enonic.xp:testing:${xpVersion}"
 }
 
@@ -44,7 +44,7 @@ repositories {
     jcenter()
     xp.enonicRepo()
     maven {
-        url  "https://dl.bintray.com/pdrevland/wsUtil"
+        url  "https://dl.bintray.com/itemconsulting/public/"
     }
 }
 
