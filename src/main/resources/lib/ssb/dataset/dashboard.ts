@@ -166,6 +166,7 @@ export function refreshDatasetHandler(
         tableIndex: index
       })
 
+      // only get credentials for this datasourceKey (in this case a tbml id)
       const ownerCredentialsForTbml: Array<ProcessXml> | undefined = processXmls ?
         processXmls.filter((processXml: ProcessXml) => processXml.tbmlId === dataSourceKey) : undefined
 
