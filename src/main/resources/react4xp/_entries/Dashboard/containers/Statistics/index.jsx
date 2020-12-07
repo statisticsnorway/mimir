@@ -15,10 +15,13 @@ import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { refreshStatistic, setOpenStatistic } from './actions'
 import { RefreshStatisticsForm } from '../../components/RefreshStatisticsForm'
 import { RefreshStatisticsStatus } from '../../components/RefreshStatisticsStatus'
+import { StatisticsLog } from './StatisticsLog'
+import { selectLoading as selectQueryLoading } from '../DataQueries/selectors'
 
 export function Statistics() {
   const statistics = useSelector(selectStatisticsWithRelease)
   const loading = useSelector(selectLoading)
+  const loadingQueries = useSelector(selectQueryLoading)
   const contentStudioBaseUrl = useSelector(selectContentStudioBaseUrl)
   const modalInfo = useSelector(selectOpenStatistic)
   const refreshStatus = useSelector(selectRefreshStatistic)
@@ -158,6 +161,15 @@ export function Statistics() {
     )
   }
 
+  function renderLog(statistic) {
+    if (loadingQueries) {
+      return <span className="spinner-border spinner-border-sm"/>
+    }
+    return (
+      <StatisticsLog statisticsShortName={statistic.shortName} relatedTables={statistic.relatedTables ? statistic.relatedTables : []}/>
+    )
+  }
+
   function statisticRow(statistic) {
     const key = statistic.shortName + '_' + statistic.language
     return (
@@ -169,7 +181,9 @@ export function Statistics() {
           {getNextRelease(statistic)}
         </td>
         <td className="text-center">{statistic.nextRelease ? makeRefreshButton(statistic) : ''}</td>
-        <td/>
+        <td>
+          {renderLog(statistic)}
+        </td>
       </tr>
     )
   }
