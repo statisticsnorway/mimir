@@ -198,6 +198,12 @@ class Table extends React.Component {
           return (
             <React.Fragment key={index}>
               {this.addThead(index)}
+            </React.Fragment>
+          )
+        })}
+        {this.state.table.tbody.map( (t, index) => {
+          return (
+            <React.Fragment key={index}>
               {this.addTbody(index)}
             </React.Fragment>
           )
