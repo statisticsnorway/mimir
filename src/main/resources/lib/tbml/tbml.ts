@@ -10,7 +10,7 @@ const {
 }: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
 
 
-export function getTbmlData(url: string, queryId?: string, processXml?: string): TbprocessorParsedResponse {
+export function getTbmlData<T extends TbmlData | TbmlSourceList>(url: string, queryId?: string, processXml?: string): TbprocessorParsedResponse<T> {
   const response: HttpResponse = fetch(url, queryId, processXml)
   return {
     body: response.body,
@@ -20,7 +20,6 @@ export function getTbmlData(url: string, queryId?: string, processXml?: string):
 }
 
 function fetch(url: string, queryId?: string, processXml?: string): HttpResponse {
-
   const requestParams: HttpRequestParams = {
     url,
     body: processXml,
@@ -75,13 +74,13 @@ function xmlToJson<T>(xml: string, queryId?: string): T {
 }
 
 export interface TbmlLib {
-  getTbmlData: (url: string, queryId?: string, processXml?: string) => TbprocessorParsedResponse<T>;
+  getTbmlData: <T extends TbmlData | TbmlSourceList>(url: string, queryId?: string, processXml?: string) => TbprocessorParsedResponse<T>;
 }
 
-export interface TbprocessorParsedResponse<T> {
+export interface TbprocessorParsedResponse<T extends TbmlData | TbmlSourceList> {
   body: string | null;
   status: number;
-  parsedBody?: TbmlData | TbmlSourceList;
+  parsedBody?: T;
 }
 
 export interface Authorization {

@@ -230,6 +230,9 @@ export function refreshDatasetHandler(
         branch,
         ownerCredentialsForTbml && ownerCredentialsForTbml.length ? ownerCredentialsForTbml[0].processXml : undefined)
 
+      log.info('refreshDatasetResult')
+      log.info(JSON.stringify(refreshDatasetResult, null, 2))
+
       logUserDataQuery(dataSource._id, {
         file: '/lib/ssb/dataset/dashboard.ts',
         function: 'refreshDatasetHandler',

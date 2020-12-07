@@ -5,11 +5,12 @@ import { StatbankApiLib } from './statbankApi'
 import { JSONstat } from '../../types/jsonstat-toolkit'
 import { RepoQueryLib } from '../../repo/query'
 import { TbmlData } from '../../types/xmlParser'
-import { TbprocessorLib } from './tbprocessor'
+import {FetchTbProcessorData, TbprocessorLib} from './tbprocessor'
 import { KlassLib } from './klass'
 import { ContextLibrary, RunContext } from 'enonic-types/context'
 import { AuthLibrary, User } from 'enonic-types/auth'
 import { StatbankSavedLib } from './statbankSaved'
+import {TbprocessorParsedResponse} from "../../tbml/tbml";
 
 const {
   Events
@@ -80,7 +81,7 @@ export function extractKey(content: Content<DataSource>): string | null {
   }
 }
 
-function fetchData(content: Content<DataSource>, processXml?: string): JSONstat | TbmlData | object | null {
+function fetchData(content: Content<DataSource>, processXml?: string): JSONstat | TbmlData | TbprocessorParsedResponse<TbmlData> | object | null {
   switch (content.data.dataSource?._selected) {
   case DataSourceType.STATBANK_API:
     return fetchStatbankApiData(content)
@@ -100,8 +101,8 @@ export function refreshDataset(
   branch: string = DATASET_BRANCH,
   processXml?: string ): CreateOrUpdateStatus {
   /**/
-  const data: JSONstat | TbmlData | object | null = fetchData(content, processXml)
-  log.info('datafrom fetchdata')
+  const data: JSONstat | TbmlData | TbprocessorParsedResponse<TbmlData> | object | null = fetchData(content, processXml)
+  log.info('fetchData result: ')
   log.info(JSON.stringify(data, null, 2))
   const key: string | null = extractKey(content)
   const user: User | null = getUser()
