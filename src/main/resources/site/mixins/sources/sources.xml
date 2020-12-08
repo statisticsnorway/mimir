@@ -13,11 +13,11 @@
                     <items>
                         <input name="urlText" type="TextLine">
                             <label>Tekst til kildelenke</label>
-                            <occurrences minimum="0" maximum="1" />
+                            <occurrences minimum="1" maximum="1" />
                         </input>
                         <input name="url" type="TextLine">
                             <label>Kildelenke</label>
-                            <occurrences minimum="0" maximum="1" />
+                            <occurrences minimum="1" maximum="1" />
                         </input>
                     </items>
                 </option>

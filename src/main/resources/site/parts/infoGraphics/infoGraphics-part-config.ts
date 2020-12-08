@@ -35,12 +35,12 @@ export interface InfoGraphicsPartConfig {
       /**
        * Tekst til kildelenke
        */
-      urlText?: string;
+      urlText: string;
 
       /**
        * Kildelenke
        */
-      url?: string;
+      url: string;
     };
 
     /**
