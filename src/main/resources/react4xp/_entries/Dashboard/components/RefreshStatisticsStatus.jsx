@@ -6,7 +6,7 @@ import { Col, Row } from 'react-bootstrap'
 export function RefreshStatisticsStatus(props) {
   return(
     <>
-      <h2>Humlesnurre status</h2>
+      <h2>Oppdaterer </h2>
       {
           props.refreshMessages.map((msg, i) => {
             return <Row key={i}>

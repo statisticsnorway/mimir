@@ -45,6 +45,10 @@ const statisticsSlice = createSlice({
       } else {
         state.updateMessage[action.data.tableIndex].result = action.data.status
       }
+    },
+    resetRefreshStatus(state, action) {
+      state.refreshStatistic = action.status
+      state.updateMessage = []
     }
   }
 })

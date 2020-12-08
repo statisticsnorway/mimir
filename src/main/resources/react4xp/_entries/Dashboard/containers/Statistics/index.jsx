@@ -12,7 +12,7 @@ import Moment from 'react-moment'
 import { Link } from '@statisticsnorway/ssb-component-library'
 import { selectContentStudioBaseUrl } from '../HomePage/selectors'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
-import { refreshStatistic, setOpenStatistic } from './actions'
+import { refreshStatistic, setOpenStatistic, resetRefreshStatus } from './actions'
 import { RefreshStatisticsForm } from '../../components/RefreshStatisticsForm'
 import { RefreshStatisticsStatus } from '../../components/RefreshStatisticsStatus'
 import { StatisticsLog } from './StatisticsLog'
@@ -116,6 +116,7 @@ export function Statistics() {
 
   function handleClose() {
     setOpenStatistic(dispatch, null)
+    resetRefreshStatus(dispatch, 'request')
   }
 
   const ModalContent = () => {
