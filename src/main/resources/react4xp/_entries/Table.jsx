@@ -526,7 +526,7 @@ class Table extends React.Component {
             )
           })}
           {sources.map((source, index) => {
-            if (source.url !== undefined && source.url !== null || source.urlText !== undefined && source.urlText !== null) {
+            if (source.url !== undefined && source.url !== null && source.urlText !== undefined && source.urlText !== null) {
               return (
                 <div key={index} className="col-lg-3 col-12 mb-3">
                   <Link href={source.url}>{source.urlText}</Link>
