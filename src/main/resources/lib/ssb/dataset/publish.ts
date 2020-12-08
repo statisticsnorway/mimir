@@ -10,6 +10,11 @@ import { StatisticLib } from '../statistic'
 import { StatisticInListing, VariantInListing } from '../statreg/types'
 import { DatasetLib } from './dataset'
 import { RepoJobLib, JobEventNode, JobInfoNode, StatisticsPublishResult, DataSourceStatisticsPublishResult } from '../../repo/job'
+import { RepoQueryLib } from '../../repo/query'
+const {
+  Events,
+  logUserDataQuery
+}: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
 const {
   getStatistics,
   getDatasetIdsFromStatistic
@@ -155,6 +160,11 @@ function createTask(jobId: string, statistic: Content<Statistics>, releaseDate: 
           if (key) {
             log.info(`publishing dataset ${dataSource.data.dataSource?._selected} - ${key} for ${statistic.data.statistic}`)
             createOrUpdateDataset(dataSource.data.dataSource?._selected, DATASET_BRANCH, key, dataset.data)
+            logUserDataQuery(dataSource._id, {
+              file: '/lib/ssb/dataset/publish.ts',
+              function: 'createTask',
+              message: Events.DATASET_PUBLISHED
+            })
             deleteDataset(dataSource, UNPUBLISHED_DATASET_BRANCH)
             if (statRefreshResult) {
               const dataSourceRefreshResult: DataSourceStatisticsPublishResult | undefined = forceArray(statRefreshResult.dataSources).find((ds) => {

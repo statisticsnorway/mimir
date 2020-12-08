@@ -99,7 +99,6 @@ export function refreshDataset(
   content: Content<DataSource>,
   branch: string = DATASET_BRANCH,
   processXml?: string ): CreateOrUpdateStatus {
-  /**/
   const data: JSONstat | TbmlData | object | null = fetchData(content, processXml)
   const key: string | null = extractKey(content)
   const user: User | null = getUser()
@@ -140,7 +139,6 @@ export function refreshDatasetWithUserKey(content: Content<DataSource>, userLogi
   }
   return run(context, () => refreshDataset(content, branch))
 }
-
 
 export function deleteDataset(content: Content<DataSource>, branch: string = DATASET_BRANCH): boolean {
   const key: string | null = extractKey(content)

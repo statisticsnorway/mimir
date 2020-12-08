@@ -1,12 +1,18 @@
-import React, { useMemo } from 'react'
-import { Col, Container, Row } from 'react-bootstrap'
+import React, { useMemo, useState } from 'react'
+import { Col, Container, Row, Modal, Button } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
 import { ReactTable } from '../../components/ReactTable'
 import { selectJobs, selectLoading } from './selectors'
+import { Check, X } from 'react-feather'
+import { selectContentStudioBaseUrl } from '../HomePage/selectors'
+import { Link, Accordion } from '@statisticsnorway/ssb-component-library'
+import { DataQueryBadges } from '../../components/DataQueryBadges'
 
 export function Jobs() {
   const loading = useSelector(selectLoading)
   const jobs = useSelector(selectJobs)
+  const contentStudioBaseUrl = useSelector(selectContentStudioBaseUrl)
+  const [currentModalJob, setCurrentModalJob] = useState(null)
   const columns = useMemo(() => [
     {
       Header: 'Tidspunkt',
@@ -36,7 +42,7 @@ export function Jobs() {
     return jobs.map((job) => {
       const ts = job.completionTime ? job.completionTime : job.startTime
       const name = job.task
-      const info = `${job.status} - ${job.message}`
+      const info = renderInfo(job)
       return {
         ts,
         tsSort: new Date(ts),
@@ -60,6 +66,71 @@ export function Jobs() {
     )
   }
 
+  function openJobLogModal(job) {
+    setCurrentModalJob(job)
+  }
+
+  function closeJobLogModal() {
+    setCurrentModalJob(null)
+  }
+
+  function renderInfo(job) {
+    if (job.task === 'Publish statistics') {
+      return (
+        <span className="modal-trigger" onClick={() => openJobLogModal(job)}>
+          {job.status} - {job.message}
+        </span>
+      )
+    }
+    return <span>{job.status} - {job.message}</span>
+  }
+
+  const ModalContent = () => {
+    return (
+      <Modal
+        show={true}
+        onHide={() => closeJobLogModal()}
+        animation={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>
+            Logg detaljer
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {renderJobLogs()}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => closeJobLogModal()}>Lukk</Button>
+        </Modal.Footer>
+      </Modal>
+    )
+  }
+
+  function renderJobLogs() {
+    return currentModalJob.result.map((statisticResult, index) => {
+      return (
+        <Accordion
+          key={index}
+          header={statisticResult.shortName}
+          subHeader={statisticResult.status}>
+          {statisticResult.dataSources.map((dataSource, index) => {
+            return (
+              <p key={index}>
+                {dataSource.status} -&nbsp;
+                <span className="small">
+                  <DataQueryBadges contentType={dataSource.type} format={dataSource.datasetType} isPublished={true} floatRight={false} />
+                </span>
+                <br />
+                <Link isExternal href={contentStudioBaseUrl + dataSource.id}>{dataSource.displayName}</Link> - {dataSource.datasetKey}
+              </p>
+            )
+          })}
+        </Accordion>
+      )
+    })
+  }
+
   return (
     <div className="p-4 tables-wrapper">
       <h2>Jobblogg</h2>
@@ -67,6 +138,7 @@ export function Jobs() {
         <Row className="mb-3">
           <Col>
             {loading ? renderSpinner() : renderTable()}
+            {currentModalJob ? <ModalContent/> : null}
           </Col>
         </Row>
       </Container>
