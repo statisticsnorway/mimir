@@ -239,7 +239,7 @@ export function refreshDatasetHandler(
       socketEmitter.broadcast('statistics-activity-refresh-feedback', {
         name: dataSource.displayName,
         datasourceKey: dataSourceKey,
-        status: refreshDatasetResult.status,
+        status: i18n.localize({key: refreshDatasetResult.status}),
         step: 2,
         tableIndex: index
       })
