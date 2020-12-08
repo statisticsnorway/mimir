@@ -111,12 +111,23 @@ export function refreshDataset(
     if (!dataset || hasNewData) {
       dataset = createOrUpdateDataset(content.data.dataSource?._selected, branch, key, data)
     }
-    return {
-      dataquery: content,
-      status: !hasNewData ? Events.NO_NEW_DATA : Events.GET_DATA_COMPLETE,
-      newDatasetData: hasNewData,
-      dataset,
-      user
+
+    if (determineIfTbprocessorParsedResponse(data) && data.status && data.status === 500) {
+      return {
+        dataquery: content,
+        status: data.body ? data.body : '',
+        dataset: null,
+        newDatasetData: false,
+        user
+      }
+    } else {
+      return {
+        dataquery: content,
+        status: !hasNewData ? Events.NO_NEW_DATA : Events.GET_DATA_COMPLETE,
+        newDatasetData: hasNewData,
+        dataset,
+        user
+      }
     }
   } else {
     return {
@@ -128,6 +139,15 @@ export function refreshDataset(
     }
   }
 }
+
+function determineIfTbprocessorParsedResponse(toBeDetermined: TbprocessorParsedResponse<TbmlData> | object):
+  toBeDetermined is TbprocessorParsedResponse<TbmlData> {
+  if ((toBeDetermined as TbprocessorParsedResponse<TbmlData>).status) {
+    return true
+  }
+  return false
+}
+
 
 export function refreshDatasetWithUserKey(content: Content<DataSource>, userLogin: string, branch: string = DATASET_BRANCH, ): CreateOrUpdateStatus {
   const context: RunContext = {
