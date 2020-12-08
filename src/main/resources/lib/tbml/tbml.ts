@@ -15,7 +15,7 @@ export function getTbmlData<T extends TbmlData | TbmlSourceList>(url: string, qu
   return {
     body: response.body,
     status: response.status,
-    parsedBody: response.body && response.status === 200 ? xmlToJson(response.body, queryId): undefined
+    parsedBody: response.body && response.status === 200 ? xmlToJson(response.body, queryId) : undefined
   }
 }
 

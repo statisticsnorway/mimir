@@ -34,3 +34,10 @@ export function resetRefreshStatus(dispatch, status) {
     status
   })
 }
+
+export function setOpenModal(dispatch, status) {
+  dispatch({
+    type: actions.setOpenModal.type,
+    status
+  })
+}

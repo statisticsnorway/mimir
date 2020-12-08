@@ -73,7 +73,7 @@ function getDataAndMetaData(content: Content<DataSource>, processXml?: string ):
   const tbmlDataUrl: string = `${baseUrl}${dataPath}${tbmlKey}${language === 'en' ? `?lang=${language}` : ''}`
   const tbmlParsedResponse: TbprocessorParsedResponse<TbmlData> | null = tryRequestTbmlData<TbmlData>(tbmlDataUrl, content._id, processXml)
 
-  if(tbmlParsedResponse && tbmlParsedResponse.status === 200) {
+  if (tbmlParsedResponse && tbmlParsedResponse.status === 200) {
     const sourceListUrl: string = `${baseUrl}${sourceListPath}${tbmlKey}`
     const tbmlDataAndSourceList: TbmlData | null = addSourceList(sourceListUrl, tbmlParsedResponse, content._id)
     return {

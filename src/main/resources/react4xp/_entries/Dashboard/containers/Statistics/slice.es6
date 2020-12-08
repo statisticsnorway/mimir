@@ -4,8 +4,9 @@ export const initialState = {
   statistics: [],
   loading: true,
   openStatistic: null,
-  refreshStatistic: 'request',
-  updateMessage: []
+  modalDisplay: 'request',
+  updateMessage: [],
+  openModal: false
 }
 
 const statisticsSlice = createSlice({
@@ -23,7 +24,7 @@ const statisticsSlice = createSlice({
     startRefreshStatistic(state, action) {
       const stat = state.statistics.find((s) => s.id === action.id)
       stat.loading = true
-      state.refreshStatistic = 'status'
+      state.modalDisplay = 'loading'
     },
     resultRefreshStatistic(state, action) {
       const stat = state.statistics.find((s) => s.id === action.statistic.id)
@@ -40,15 +41,23 @@ const statisticsSlice = createSlice({
       }
     },
     setRefreshStatisticStatus(state, action) {
-      if(action.data.step === 1) {
+      if (action.data.step === 1) {
         state.updateMessage[action.data.tableIndex] = action.data
       } else {
         state.updateMessage[action.data.tableIndex].result = action.data.status
       }
     },
     resetRefreshStatus(state, action) {
-      state.refreshStatistic = action.status
+      state.modalDisplay = action.status
       state.updateMessage = []
+    },
+    setOpenModal(state, action) {
+      state.openModal = action.status
+    },
+    setModalDisplay(state, action) {
+      console.log('setModalDisplay')
+      console.log(action)
+      state.modalDisplay = action.status
     }
   }
 })

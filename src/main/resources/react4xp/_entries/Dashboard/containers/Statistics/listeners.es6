@@ -28,4 +28,10 @@ export default function setupStatisticsListeners(io, dispatch) {
       data
     })
   })
+  io.on('statistics-activity-refresh-complete', (data) => {
+    dispatch({
+      type: actions.setModalDisplay.type,
+      data
+    })
+  })
 }

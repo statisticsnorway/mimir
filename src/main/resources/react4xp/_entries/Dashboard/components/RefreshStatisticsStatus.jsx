@@ -1,26 +1,26 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
 import { Col, Row } from 'react-bootstrap'
+import { useSelector } from 'react-redux'
+import { selectModalDisplay, selectRefreshMessages } from '../containers/Statistics/selectors'
 
 
 export function RefreshStatisticsStatus(props) {
-  return(
+  const refreshMessages = useSelector(selectRefreshMessages)
+  const modalDisplay = useSelector(selectModalDisplay)
+
+  return (
     <>
-      <h2>Oppdaterer </h2>
+      <h2>Oppdaterer { modalDisplay === 'loading' ? <span className="spinner-border spinner-border-sm my-1" /> : null }</h2>
       {
-          props.refreshMessages.map((msg, i) => {
-            return <Row key={i}>
-              <Col>{msg.name}</Col>
-              <Col>{msg.status} {msg.result}</Col>
-            </Row>
-          })
+        refreshMessages.map((msg, i) => {
+          return <Row key={i}>
+            <Col>{msg.name}</Col>
+            <Col>{msg.status} {msg.result}</Col>
+          </Row>
+        })
       }
     </>
   )
-}
-
-RefreshStatisticsStatus.propTypes = {
-  refreshMessages: PropTypes.array
 }
 
 export default (props) => <RefreshStatisticsStatus {...props} />

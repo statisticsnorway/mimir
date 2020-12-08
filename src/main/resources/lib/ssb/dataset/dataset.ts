@@ -5,12 +5,12 @@ import { StatbankApiLib } from './statbankApi'
 import { JSONstat } from '../../types/jsonstat-toolkit'
 import { RepoQueryLib } from '../../repo/query'
 import { TbmlData } from '../../types/xmlParser'
-import {FetchTbProcessorData, TbprocessorLib} from './tbprocessor'
+import { TbprocessorLib } from './tbprocessor'
 import { KlassLib } from './klass'
 import { ContextLibrary, RunContext } from 'enonic-types/context'
 import { AuthLibrary, User } from 'enonic-types/auth'
 import { StatbankSavedLib } from './statbankSaved'
-import {TbprocessorParsedResponse} from "../../tbml/tbml";
+import { TbprocessorParsedResponse } from '../../tbml/tbml'
 
 const {
   Events
@@ -102,8 +102,6 @@ export function refreshDataset(
   processXml?: string ): CreateOrUpdateStatus {
   /**/
   const data: JSONstat | TbmlData | TbprocessorParsedResponse<TbmlData> | object | null = fetchData(content, processXml)
-  log.info('fetchData result: ')
-  log.info(JSON.stringify(data, null, 2))
   const key: string | null = extractKey(content)
   const user: User | null = getUser()
 
