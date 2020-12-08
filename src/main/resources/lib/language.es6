@@ -5,10 +5,12 @@ const content = __non_webpack_require__( '/lib/xp/content')
 
 let english
 let norwegian
+let newNorwegian
 
 try {
   english = i18n.getPhrases('en', ['site/i18n/phrases'])
   norwegian = i18n.getPhrases('', ['site/i18n/phrases'])
+  newNorwegian = i18n.getPhrases('nn', ['site/i18n/phrases'])
 } catch (e) {
   e.toString()
 }
@@ -71,7 +73,15 @@ exports.getLanguage = function(page) {
 
 
 exports.getPhrases = (page) => {
-  return page.language && page.language === 'en' ? english : norwegian
+  if (page.language) {
+    if (page.language === 'en') {
+      return english
+    } else if (page.language === 'nn') {
+      return newNorwegian
+    } else {
+      return norwegian
+    }
+  }
 }
 
 /**
