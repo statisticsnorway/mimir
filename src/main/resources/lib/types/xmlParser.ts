@@ -50,6 +50,15 @@ export interface MetadataRaw {
   sourceList: Source | Array<Source>;
 }
 
+export interface TbmlSourceListRaw {
+  sourceList: {
+    tbml: {
+      id: number;
+      source: Source | Array<Source>;
+    };
+  };
+}
+
 export interface TbmlDataUniform {
   tbml: {
     presentation: {
@@ -100,6 +109,15 @@ export interface MetadataUniform {
 
 export interface NotesUniform {
   note: Array<Note>;
+}
+
+export interface TbmlSourceListUniform {
+  sourceList: {
+    tbml: {
+      id: number;
+      source: Array<Source>;
+    };
+  };
 }
 
 export interface TbmlData {

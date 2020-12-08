@@ -1,13 +1,13 @@
 import { HttpLibrary, HttpRequestParams, HttpResponse } from 'enonic-types/http'
-import { TbmlData,
-  TbmlDataRaw,
+import { TbmlDataRaw,
   TableRowRaw,
   TableCellRaw,
   TbmlDataUniform,
   TableRowUniform,
   TableCellUniform,
   MetadataUniform,
-  TbmlSourceList,
+  TbmlSourceListRaw,
+  TbmlSourceListUniform,
   XmlParser,
   MetadataRaw,
   Title,
@@ -72,34 +72,33 @@ export function fetch(url: string, queryId?: string, processXml?: string): strin
   return result
 }
 
-export function getTbmlDataGml(url: string, queryId?: string, processXml?: string): TbmlData | null {
-  const result: string | null = fetch(url, queryId, processXml)
-  if (result) {
-    return xmlToJson(result, queryId)
-  }
-  return null
-}
-
 export function getTbmlData(url: string, queryId?: string, processXml?: string): TbmlDataUniform | null {
   const result: string | null = fetch(url, queryId, processXml)
   if (result) {
     const tbmlDataRaw: TbmlDataRaw = xmlToJson(result, queryId)
-    log.info('tbmlDataRaw PrettyJSON%s', JSON.stringify(tbmlDataRaw, null, 4))
-    const tbmlDataUniform: TbmlDataUniform = getTbmlDataUniform(tbmlDataRaw)
-    log.info('tbmlDataUniform PrettyJSON%s', JSON.stringify(tbmlDataUniform, null, 4))
-
-    return tbmlDataUniform
+    return getTbmlDataUniform(tbmlDataRaw)
   }
   return null
 }
 
-export function getTbmlSourceList(url: string): TbmlSourceList | null {
+export function getTbmlSourceList(url: string): TbmlSourceListUniform | null {
   const result: string | null = fetch(url)
   if (result) {
-    const jsonResult: TbmlSourceList = xmlToJson(result)
-    return jsonResult ? jsonResult : null
+    const jsonResult: TbmlSourceListRaw = xmlToJson(result)
+    return jsonResult ? getTbmlSourceListUniform(jsonResult) : null
   }
   return null
+}
+
+function getTbmlSourceListUniform(tbmlSourceList: TbmlSourceListRaw ): TbmlSourceListUniform {
+  return {
+    sourceList: {
+      tbml: {
+        id: tbmlSourceList.sourceList.tbml.id,
+        source: forceArray(tbmlSourceList.sourceList.tbml.source)
+      }
+    }
+  }
 }
 
 function getTbmlDataUniform(tbmlDataRaw: TbmlDataRaw ): TbmlDataUniform {
@@ -201,8 +200,8 @@ function xmlToJson<T>(xml: string, queryId?: string): T {
 
 export interface TbmlLib {
   fetch: (url: string, queryId?: string, token?: string) => string;
-  getTbmlData: (url: string, queryId?: string, processXml?: string) => TbmlData | null;
-  getTbmlSourceList: (tbmlId: string) => TbmlSourceList | null;
+  getTbmlData: (url: string, queryId?: string, processXml?: string) => TbmlDataUniform | null;
+  getTbmlSourceList: (tbmlId: string) => TbmlSourceListUniform | null;
 }
 
 export interface Authorization {
