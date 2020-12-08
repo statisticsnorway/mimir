@@ -17,6 +17,12 @@ const auth: AuthLibrary = __non_webpack_require__( '/lib/xp/auth')
 export enum JobStatus {
   STARTED = 'STARTED',
   COMPLETE = 'COMPLETE',
+  SKIPPED = 'SKIPPED',
+  ERROR = 'ERROR',
+}
+
+export enum JobNames {
+  PUBLISH_JOB = 'Publish statistics'
 }
 
 export const JOB_STATUS_STARTED: 'STARTED' = 'STARTED'
@@ -29,7 +35,7 @@ export interface JobInfo {
   data: {
     status: typeof JOB_STATUS_STARTED | typeof JOB_STATUS_COMPLETE;
     task: string;
-    refreshDataResult: object;
+    refreshDataResult: object | Array<StatisticsPublishResult>;
     message: string;
     httpStatusCode?: number;
     jobStarted: string;
@@ -38,6 +44,18 @@ export interface JobInfo {
   };
 }
 
+export interface StatisticsPublishResult {
+  statistic: string;
+  shortNameId: string;
+  status: string;
+  dataSources: Array<DataSourceStatisticsPublishResult>;
+}
+
+export interface DataSourceStatisticsPublishResult {
+  id: string;
+  status: string;
+  message: string;
+}
 export interface JobEvent {
   data: {
     task?: string;
@@ -90,6 +108,8 @@ export function completeJobLog(jobLogId: string, message: string, refreshDataRes
 export interface RepoJobLib {
   JOB_STATUS_STARTED: typeof JOB_STATUS_STARTED;
   JOB_STATUS_COMPLETE: typeof JOB_STATUS_COMPLETE;
+  JobNames: typeof JobNames;
+  JobStatus: typeof JobStatus;
   startJobLog: (task?: string) => JobEventNode;
   updateJobLog: <T>(jobId: string, editor: EditorCallback<JobInfoNode>) => JobInfoNode;
   queryJobLogs: <T>(params: NodeQueryParams<never>) => NodeQueryResponse<never>;
