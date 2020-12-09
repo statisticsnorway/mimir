@@ -129,7 +129,7 @@ export function setupCronJobs(): void {
     context: cronContext
   })
 
-  const deleteExpiredEventLogCron: string = app.config && app.config['ssb.cron.dataquery'] ? app.config['ssb.cron.dataquery'] : '45 13 * * *'
+  const deleteExpiredEventLogCron: string = app.config && app.config['ssb.cron.deleteLogs'] ? app.config['ssb.cron.deleteLogs'] : '45 13 * * *'
   cron.schedule({
     name: 'Delete expired event logs',
     cron: deleteExpiredEventLogCron,
