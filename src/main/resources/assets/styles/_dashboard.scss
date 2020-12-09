@@ -194,7 +194,7 @@
       margin-bottom: 2px
     }
   }
-  
+
   .job-log-container {
     .row {
       .col {
@@ -203,5 +203,8 @@
       }
     }
   }
+  
+  .ssb-accordion.warning .accordion-header .sub-header {
+    color: $ssb-red-3;
+  }
 }
-
