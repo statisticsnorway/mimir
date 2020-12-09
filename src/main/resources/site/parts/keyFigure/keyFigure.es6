@@ -20,10 +20,6 @@ const {
 const {
   renderError
 } = __non_webpack_require__( '/lib/error/error')
-
-const {
-  hasRole
-} = __non_webpack_require__('/lib/xp/auth')
 const {
   DATASET_BRANCH,
   UNPUBLISHED_DATASET_BRANCH
