@@ -5,7 +5,7 @@ import { DataSource } from '../../site/mixins/dataSource/dataSource'
 import { RepoJobLib, JobEventNode, JobInfoNode } from '../repo/job'
 import { StatRegRepoLib } from '../repo/statreg'
 import { SSBTaskLib } from '../task'
-import { CronLib } from '../types/cron'
+import {CronLib, GetCronResult} from '../types/cron'
 import { DatasetLib } from './dataset/dataset'
 import { PublishDatasetLib } from './dataset/publish'
 import { EventLogLib } from '../ssb/eventLog';
@@ -137,6 +137,10 @@ export function setupCronJobs(): void {
     callback: deleteExpiredEventLogs,
     context: cronContext
   })
+
+  const cronList: Array<GetCronResult> = cron.list()
+  log.info('All cron jobs registered')
+  log.info(JSON.stringify(cronList, null, 2))
 }
 
 export interface SSBCronLib {
