@@ -3,7 +3,7 @@ import { RepoCommonLib } from './common'
 import { EditorCallback, RepoEventLogLib } from './eventLog'
 import { User } from 'enonic-types/auth'
 import { HttpRequestParams, HttpResponse } from 'enonic-types/http'
-import { TbmlData } from '../types/xmlParser'
+import { TbmlDataUniform } from '../types/xmlParser'
 const {
   dateToFormat
 } = __non_webpack_require__('/lib/ssb/utils')
@@ -37,7 +37,7 @@ export interface QueryStatus {
   message: string;
   response?: HttpResponse;
   request?: HttpRequestParams;
-  xmlResult?: TbmlData;
+  xmlResult?: TbmlDataUniform;
   info?: string;
   function?: string;
   file?: string;

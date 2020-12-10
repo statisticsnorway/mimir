@@ -20,14 +20,13 @@ const {
 const {
   renderError
 } = __non_webpack_require__( '/lib/error/error')
-
-const {
-  hasRole
-} = __non_webpack_require__('/lib/xp/auth')
 const {
   DATASET_BRANCH,
   UNPUBLISHED_DATASET_BRANCH
 } = __non_webpack_require__('/lib/repo/dataset')
+const {
+  hasWritePermissions
+} = __non_webpack_require__('/lib/ssb/permissions')
 
 const view = resolve('./keyFigure.html')
 
@@ -53,8 +52,7 @@ exports.preview = (req, id) => {
 const renderPart = (req, municipality, keyFigureIds) => {
   const page = getContent()
   const part = getComponent()
-
-  const adminRole = hasRole('system.admin')
+  const showPreviewDraft = hasWritePermissions(req, page._id)
 
   // get all keyFigures and filter out non-existing keyFigures
   const keyFigures = getKeyFigures(keyFigureIds)
@@ -68,7 +66,7 @@ const renderPart = (req, municipality, keyFigureIds) => {
     })
 
   let keyFiguresDraft
-  if (adminRole && req.mode === 'preview') {
+  if (showPreviewDraft) {
     keyFiguresDraft = getKeyFigures(keyFigureIds)
       .map((keyFigure) => {
         const keyFigureData = parseKeyFigure(req, keyFigure, municipality, UNPUBLISHED_DATASET_BRANCH)
@@ -80,7 +78,6 @@ const renderPart = (req, municipality, keyFigureIds) => {
       })
   }
 
-  const showPreviewDraft = adminRole && req.mode === 'preview'
   const draftExist = !!keyFiguresDraft
   const pageTypeKeyFigure = page.type === `${app.name}:keyFigure`
 
