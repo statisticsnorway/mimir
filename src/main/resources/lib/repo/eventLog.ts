@@ -69,14 +69,17 @@ export function getQueryChildNodesStatus<T>(queryId: string): ReadonlyArray<LogS
     return childNodeIds.hits.map((hit: NodeQueryHit) => {
       const nodes: ReadonlyArray<QueryInfo> | QueryInfo | null = getNode<QueryInfo>(EVENT_LOG_REPO, EVENT_LOG_BRANCH, hit.id)
       return Array.isArray(nodes) ? nodes[0] : nodes
-    }).map( (node: EventInfo) => ({
-      result: i18n.localize({
+    }).map( (node: EventInfo) => {
+      const resultMessage: string = i18n.localize({
         key: node.data.status.message,
         values: node.data.status.status ? [`(${node.data.status.status})`] : ['']
-      }),
-      modifiedTs: node.data.ts,
-      by: node.data.by && node.data.by.displayName ? node.data.by.displayName : ''
-    }))
+      })
+      return {
+        result: resultMessage !== 'NOT_TRANSLATED' ? resultMessage : node.data.status.message,
+        modifiedTs: node.data.ts,
+        by: node.data.by && node.data.by.displayName ? node.data.by.displayName : ''
+      }
+    })
   } else {
     return undefined
   }

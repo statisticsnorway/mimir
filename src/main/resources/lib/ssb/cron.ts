@@ -8,7 +8,7 @@ import { SSBTaskLib } from '../task'
 import {CronLib, GetCronResult} from '../types/cron'
 import { DatasetLib } from './dataset/dataset'
 import { PublishDatasetLib } from './dataset/publish'
-import { EventLogLib } from '../ssb/eventLog';
+import { EventLogLib } from '../ssb/eventLog'
 
 const {
   publishDataset
@@ -27,7 +27,7 @@ const {
   completeJobLog,
   startJobLog,
   updateJobLog,
-  JOB_STATUS_COMPLETE,
+  JOB_STATUS_COMPLETE
 }: RepoJobLib = __non_webpack_require__('/lib/repo/job')
 const {
   dataSourceRSSFilter
