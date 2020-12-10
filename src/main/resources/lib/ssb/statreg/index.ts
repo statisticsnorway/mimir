@@ -1,15 +1,10 @@
-import { RepoCommonLib } from '../../repo/common'
 import { StatRegRepoLib } from '../../repo/statreg'
 import { Socket, SocketEmitter } from '../../types/socket'
 import { StatRegContactsLib } from '../../repo/statreg/contacts'
 import { StatRegStatisticsLib } from '../../repo/statreg/statistics'
 import { StatRegPublicationsLib } from '../../repo/statreg/publications'
 import { StatRegLatestFetchInfoNode } from '../../repo/statreg/eventLog'
-import { RepoEventLogLib } from '../../repo/eventLog'
 
-const {
-  getNode
-}: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
 const {
   STATREG_NODES,
   fetchStatRegData,
@@ -24,9 +19,6 @@ const {
 const {
   STATREG_REPO_PUBLICATIONS_KEY
 }: StatRegPublicationsLib = __non_webpack_require__('/lib/repo/statreg/publications')
-const {
-  EVENT_LOG_REPO, EVENT_LOG_BRANCH
-}: RepoEventLogLib = __non_webpack_require__('/lib/repo/eventLog')
 
 export type StatRegLatestFetchInfoNodeType = StatRegLatestFetchInfoNode | readonly StatRegLatestFetchInfoNode[] | null;
 export function getStatRegFetchStatuses(): Array<StatRegStatus> {
@@ -38,10 +30,6 @@ export function getStatRegFetchStatuses(): Array<StatRegStatus> {
 }
 
 function getStatRegStatus(key: string): StatRegStatus {
-  const eventLogKey: string = `/statreg/${key}`
-  const eventLogNodeResult: StatRegLatestFetchInfoNodeType = getNode<StatRegLatestFetchInfoNode>(EVENT_LOG_REPO, EVENT_LOG_BRANCH, eventLogKey)
-  const eventLogNode: StatRegLatestFetchInfoNode = eventLogNodeResult && (Array.isArray(eventLogNodeResult) ? eventLogNodeResult[0] : eventLogNodeResult)
-
   const statRegData: StatRegStatus = {
     key,
     displayName: toDisplayString(key),
@@ -50,14 +38,6 @@ function getStatRegStatus(key: string): StatRegStatus {
     startTime: undefined,
     status: undefined
   }
-
-  if (eventLogNode && eventLogNode.data.latestEventInfo) {
-    statRegData.completionTime = eventLogNode.data.latestEventInfo.completionTime
-    statRegData.message = eventLogNode.data.latestEventInfo.message || ''
-    statRegData.startTime = eventLogNode.data.latestEventInfo.startTime
-    statRegData.status = eventLogNode.data.latestEventInfo.status
-  }
-
   return statRegData
 }
 

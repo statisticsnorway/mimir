@@ -1,7 +1,7 @@
-import { StatRegNode } from '../statreg'
+import { StatRegFetchResult, StatRegNode } from '../statreg'
 import { Publication, Publisering, PubliseringXML } from '../../ssb/statreg/types'
 import { ArrayUtilsLib } from '../../ssb/arrayUtils'
-import { QueryFilters, RepoCommonLib } from '../common'
+import { RepoCommonLib } from '../common'
 import { StatRegConfigLib } from '../../ssb/statreg/config'
 import { XmlParser } from '../../types/xmlParser'
 import { StatRegCommonLib } from '../../ssb/statreg/common'
@@ -32,8 +32,8 @@ function extractPublications(payload: string): Array<Publication> {
 }
 
 // TODO: this function has to be extended to fetch all publications (the URL used only pulls the 'upcoming' items!
-export function fetchPublications(filters: QueryFilters): Array<Publication> {
-  return fetchStatRegData('Publications', getStatRegBaseUrl() + PUBLICATIONS_URL, filters, extractPublications)
+export function fetchPublications(): StatRegFetchResult {
+  return fetchStatRegData('Publications', getStatRegBaseUrl() + PUBLICATIONS_URL, extractPublications)
 }
 
 function transformPublication(pub: Publisering): Publication {
@@ -50,10 +50,10 @@ function transformPublication(pub: Publisering): Publication {
   }
 }
 
-function getAllPublicationsFromRepo(): Array<Publication> | null {
+function getAllPublicationsFromRepo(): Array<Publication> {
   const node: StatRegNode[] = getNode(STATREG_REPO, STATREG_BRANCH, `/${STATREG_REPO_PUBLICATIONS_KEY}`) as StatRegNode[]
   const publicationsNode: StatRegNode | null = Array.isArray(node) ? node[0] : node
-  return publicationsNode ? (publicationsNode.content as Array<Publication>) : null
+  return publicationsNode ? (publicationsNode.data as Array<Publication>) : []
 }
 
 export function getPublicationsForStatistic(shortName: string): Array<Publication> {
@@ -63,6 +63,6 @@ export function getPublicationsForStatistic(shortName: string): Array<Publicatio
 
 export interface StatRegPublicationsLib {
   STATREG_REPO_PUBLICATIONS_KEY: string;
-  fetchPublications: () => Array<Publication>;
+  fetchPublications: () => StatRegFetchResult;
   getPublicationsForStatistic: (shortName: string) => Array<Publication>;
 }

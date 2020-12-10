@@ -1,5 +1,5 @@
-import { find } from 'ramda'
-import { StatRegNode } from '../statreg'
+__non_webpack_require__('/lib/polyfills/nashorn')
+import { StatRegFetchResult, StatRegNode } from '../statreg'
 import { StatisticInListing } from '../../ssb/statreg/types'
 import { ArrayUtilsLib } from '../../ssb/arrayUtils'
 import { StatRegConfigLib } from '../../ssb/statreg/config'
@@ -24,18 +24,18 @@ const {
 
 export const STATREG_REPO_STATISTICS_KEY: string = 'statistics'
 
-export function fetchStatistics(): Array<StatisticInListing> {
-  return fetchStatRegData('Statistics', getStatRegBaseUrl() + STATISTICS_URL, {}, extractStatistics)
+export function fetchStatistics(): StatRegFetchResult {
+  return fetchStatRegData('Statistics', getStatRegBaseUrl() + STATISTICS_URL, extractStatistics)
 }
 
 function extractStatistics(payload: string): Array<StatisticInListing> {
   return JSON.parse(payload).statistics
 }
 
-export function getAllStatisticsFromRepo(): Array<StatisticInListing> | null {
+export function getAllStatisticsFromRepo(): Array<StatisticInListing> {
   const node: StatRegNode[] = getNode(STATREG_REPO, STATREG_BRANCH, `/${STATREG_REPO_STATISTICS_KEY}`) as StatRegNode[]
-  const statisticsNode: StatRegNode | null = Array.isArray(node) ? node[0] : node
-  return statisticsNode ? (statisticsNode.content as Array<StatisticInListing>) : null
+  const statisticsNode: StatRegNode = Array.isArray(node) ? node[0] : node
+  return statisticsNode ? (statisticsNode.data as Array<StatisticInListing>) : []
 }
 
 export function getStatisticByIdFromRepo(statId: string): StatisticInListing | undefined {
@@ -43,7 +43,7 @@ export function getStatisticByIdFromRepo(statId: string): StatisticInListing | u
     return undefined
   }
   const allStats: Array<StatisticInListing> = ensureArray(getAllStatisticsFromRepo())
-  return find((stat: StatisticInListing) => `${stat.id}` === statId)(allStats)
+  return allStats.find((s) => statId === `${s.id}`)
 }
 
 export function getStatisticByShortNameFromRepo(shortName: string): StatisticInListing | undefined {
@@ -51,13 +51,13 @@ export function getStatisticByShortNameFromRepo(shortName: string): StatisticInL
     return undefined
   }
   const allStats: Array<StatisticInListing> = ensureArray(getAllStatisticsFromRepo())
-  return find((stat: StatisticInListing) => stat.shortName === shortName)(allStats)
+  return allStats.find((s) => shortName === s.shortName)
 }
 
 export interface StatRegStatisticsLib {
   STATREG_REPO_STATISTICS_KEY: string;
-  fetchStatistics: () => Array<StatisticInListing>;
-  getAllStatisticsFromRepo: () => Array<StatisticInListing> | null;
+  fetchStatistics: () => StatRegFetchResult;
+  getAllStatisticsFromRepo: () => Array<StatisticInListing>;
   getStatisticByIdFromRepo: (statId: string) => StatisticInListing | undefined;
   getStatisticByShortNameFromRepo: (shortName: string) => StatisticInListing | undefined;
 }
