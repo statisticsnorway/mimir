@@ -1,14 +1,9 @@
-import { HttpLibrary, HttpResponse } from 'enonic-types/http'
-import { Events } from '../../repo/query'
-import { StatRegFetchResult } from '../../repo/statreg'
-import { Contact, Publication, StatisticInListing } from './types'
+import { HttpLibrary, HttpRequestParams, HttpResponse } from 'enonic-types/http'
+import { Events, logUserDataQuery } from '../../repo/query'
 const http: HttpLibrary = __non_webpack_require__('/lib/http-client')
 
-export function fetchStatRegData(
-  dataKey: string,
-  serviceUrl: string,
-  extractor: (payload: string) => Array<Contact> | Array<Publication> | Array<StatisticInListing>): StatRegFetchResult {
-  const result: HttpResponse = http.request({
+export function fetchStatRegData(dataKey: string, serviceUrl: string): HttpResponse {
+  const requestParams: HttpRequestParams = {
     url: serviceUrl,
     method: 'GET',
     contentType: 'application/json',
@@ -18,27 +13,31 @@ export function fetchStatRegData(
     },
     connectionTimeout: 30000,
     readTimeout: 30000
+  }
+  const response: HttpResponse = http.request(requestParams)
+
+  logUserDataQuery(dataKey, {
+    file: '/lib/ssb/statreg/common.ts',
+    function: 'fetchStatRegData',
+    message: Events.REQUEST_DATA,
+    status: `${response.status}`,
+    request: requestParams,
+    response
   })
 
-  if ((result.status === 200) && result.body) {
-    const data: Array<Contact> | Array<Publication> | Array<StatisticInListing> = extractor(result.body)
-    log.info(`Fetched ${data ? data.length : 0} ${dataKey}`)
-    return {
-      content: data,
-      status: Events.GET_DATA_COMPLETE
-    }
-  } else {
-    log.error(`HTTP ${serviceUrl} (${result.status} ${result.message}`)
-    return {
-      content: null,
-      status: Events.FAILED_TO_GET_DATA
-    }
+  if (response.status !== 200) {
+    logUserDataQuery(dataKey, {
+      file: '/lib/ssb/statreg/common.ts',
+      function: 'fetchStatRegData',
+      message: Events.REQUEST_GOT_ERROR_RESPONSE,
+      status: `${response.status}`,
+      response
+    })
   }
+
+  return response
 }
 
 export interface StatRegCommonLib {
-  fetchStatRegData: (
-    dataKey: string,
-    serviceUrl: string,
-    extractor: (payload: string) => Array<Contact> | Array<Publication> | Array<StatisticInListing>) => StatRegFetchResult;
+  fetchStatRegData: (dataKey: string, serviceUrl: string) => HttpResponse;
 }

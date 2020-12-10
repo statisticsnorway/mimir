@@ -36,12 +36,14 @@ const {
 
 export interface StatRegNodeConfig {
   key: string;
-  fetcher: () => StatRegFetchResult;
+  fetcher: () => Array<Contact> | Array<StatisticInListing> | Array<Publication> | null;
+  compareResult: (node: StatRegNode | null, result: Array<Contact> | Array<StatisticInListing> | Array<Publication>) => StatRegCompareResult;
 }
 
-export interface StatRegFetchResult {
-  content: Array<Contact> | Array<StatisticInListing> | Array<Publication> | null;
-  status: string;
+interface StatRegCompareResult {
+  added: number;
+  deleted: number;
+  changed: number;
 }
 
 export interface StatRegContent {
@@ -90,26 +92,55 @@ function setupStatRegFetcher(statRegFetcher: StatRegNodeConfig): void {
       function: 'setupStatRegFetcher',
       message: Events.GET_DATA_STARTED
     })
-    const result: StatRegFetchResult = statRegFetcher.fetcher()
-
-    if (result.content) {
+    const result: Array<Contact> | Array<StatisticInListing> | Array<Publication> | null = statRegFetcher.fetcher()
+    if (result) {
       if (node) {
-        modifyStatRegNode(node._id, result.content)
+        modifyStatRegNode(node._id, result)
       } else {
-        createStatRegNode(statRegFetcher.key, result.content)
+        createStatRegNode(statRegFetcher.key, result)
       }
+      const {
+        changed,
+        added,
+        deleted
+      } = statRegFetcher.compareResult(node, result)
+
+      let message: string = Events.NO_NEW_DATA
+      if (changed || added || deleted) {
+        message = `Import of ${statRegFetcher.key} complete - 
+        ${changed} changed, ${added} added, ${deleted} deleted, ${result.length - added - changed} ignored`
+      }
+
+      logUserDataQuery(statRegFetcher.key, {
+        file: '/lib/repo/statreg.ts',
+        function: 'setupStatRegFetcher',
+        message
+      })
     } else {
-      // TODO Log error
+      logUserDataQuery(statRegFetcher.key, {
+        file: '/lib/repo/statreg.ts',
+        function: 'setupStatRegFetcher',
+        message: Events.FAILED_TO_GET_DATA
+      })
     }
   } catch (err) {
     log.error(`Could not fetch ${statRegFetcher.key}... ${JSON.stringify(err)}`)
   }
 }
 
-function configureNode(key: string, fetcher: () => StatRegFetchResult): StatRegNodeConfig {
+function tempCompare(node: StatRegNode | null, result: Array<Contact> | Array<StatisticInListing> | Array<Publication>): StatRegCompareResult {
+  return {
+    added: 0,
+    deleted: 0,
+    changed: 0
+  }
+}
+
+function configureNode(key: string, fetcher: () => Array<Contact> | Array<StatisticInListing> | Array<Publication> | null): StatRegNodeConfig {
   return {
     key,
-    fetcher
+    fetcher,
+    compareResult: tempCompare
   }
 }
 

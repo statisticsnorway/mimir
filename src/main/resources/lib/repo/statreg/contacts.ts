@@ -1,10 +1,12 @@
-import { StatRegFetchResult, StatRegNode } from '../statreg'
+import { StatRegNode } from '../statreg'
 import { Contact, Kontakt, KontaktNavn, KontaktNavnType, KontaktXML } from '../../ssb/statreg/types'
 import { XmlParser } from '../../types/xmlParser'
 import { find } from 'ramda'
 import { StatRegCommonLib } from '../../ssb/statreg/common'
 import { StatRegConfigLib } from '../../ssb/statreg/config'
 import { RepoCommonLib } from '../common'
+import { HttpResponse } from 'enonic-types/http'
+import { Events, logUserDataQuery } from '../query'
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
 const {
@@ -53,12 +55,27 @@ function transformContact(kontakt: Kontakt): Contact {
   } as Contact
 }
 
-export function fetchContacts(): StatRegFetchResult {
-  return fetchStatRegData('Contacts', getStatRegBaseUrl() + CONTACTS_URL, extractContacts)
+export function fetchContacts(): Array<Contact> | null {
+  try {
+    const response: HttpResponse = fetchStatRegData('Contacts', getStatRegBaseUrl() + CONTACTS_URL)
+    if (response.status === 200 && response.body) {
+      return extractContacts(response.body)
+    }
+  } catch (error) {
+    const message: string = `Failed to fetch data from statreg: Contacts (${error})`
+    logUserDataQuery('Contacts', {
+      file: '/lib/ssb/statreg/contacts.ts',
+      function: 'fetchContacts',
+      message: Events.REQUEST_COULD_NOT_CONNECT,
+      info: message,
+      status: error
+    })
+  }
+  return null
 }
 
 export interface StatRegContactsLib {
   STATREG_REPO_CONTACTS_KEY: string;
-  fetchContacts: () => StatRegFetchResult;
+  fetchContacts: () => Array<Contact> | null;
   getContactsFromRepo: () => Array<Contact> | null;
 }

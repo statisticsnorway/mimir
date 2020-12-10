@@ -1,10 +1,12 @@
 __non_webpack_require__('/lib/polyfills/nashorn')
-import { StatRegFetchResult, StatRegNode } from '../statreg'
+import { StatRegNode } from '../statreg'
 import { StatisticInListing } from '../../ssb/statreg/types'
 import { ArrayUtilsLib } from '../../ssb/arrayUtils'
 import { StatRegConfigLib } from '../../ssb/statreg/config'
 import { StatRegCommonLib } from '../../ssb/statreg/common'
 import { RepoCommonLib } from '../common'
+import { Events, logUserDataQuery } from '../query'
+import { HttpResponse } from 'enonic-types/http'
 
 const {
   ensureArray
@@ -24,8 +26,23 @@ const {
 
 export const STATREG_REPO_STATISTICS_KEY: string = 'statistics'
 
-export function fetchStatistics(): StatRegFetchResult {
-  return fetchStatRegData('Statistics', getStatRegBaseUrl() + STATISTICS_URL, extractStatistics)
+export function fetchStatistics(): Array<StatisticInListing> | null {
+  try {
+    const response: HttpResponse = fetchStatRegData('Statistics', getStatRegBaseUrl() + STATISTICS_URL)
+    if (response.status === 200 && response.body) {
+      return extractStatistics(response.body)
+    }
+  } catch (error) {
+    const message: string = `Failed to fetch data from statreg: Statistics (${error})`
+    logUserDataQuery('Statistics', {
+      file: '/lib/ssb/statreg/statistics.ts',
+      function: 'fetchStatistics',
+      message: Events.REQUEST_COULD_NOT_CONNECT,
+      info: message,
+      status: error
+    })
+  }
+  return null
 }
 
 function extractStatistics(payload: string): Array<StatisticInListing> {
@@ -56,7 +73,7 @@ export function getStatisticByShortNameFromRepo(shortName: string): StatisticInL
 
 export interface StatRegStatisticsLib {
   STATREG_REPO_STATISTICS_KEY: string;
-  fetchStatistics: () => StatRegFetchResult;
+  fetchStatistics: () => Array<StatisticInListing> | null;
   getAllStatisticsFromRepo: () => Array<StatisticInListing>;
   getStatisticByIdFromRepo: (statId: string) => StatisticInListing | undefined;
   getStatisticByShortNameFromRepo: (shortName: string) => StatisticInListing | undefined;

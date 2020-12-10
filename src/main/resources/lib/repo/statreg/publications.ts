@@ -1,10 +1,12 @@
-import { StatRegFetchResult, StatRegNode } from '../statreg'
+import { StatRegNode } from '../statreg'
 import { Publication, Publisering, PubliseringXML } from '../../ssb/statreg/types'
 import { ArrayUtilsLib } from '../../ssb/arrayUtils'
 import { RepoCommonLib } from '../common'
 import { StatRegConfigLib } from '../../ssb/statreg/config'
 import { XmlParser } from '../../types/xmlParser'
 import { StatRegCommonLib } from '../../ssb/statreg/common'
+import { Events, logUserDataQuery } from '../query'
+import { HttpResponse } from 'enonic-types/http'
 
 const {
   ensureArray
@@ -31,9 +33,23 @@ function extractPublications(payload: string): Array<Publication> {
   return publisering.map((pub) => transformPublication(pub))
 }
 
-// TODO: this function has to be extended to fetch all publications (the URL used only pulls the 'upcoming' items!
-export function fetchPublications(): StatRegFetchResult {
-  return fetchStatRegData('Publications', getStatRegBaseUrl() + PUBLICATIONS_URL, extractPublications)
+export function fetchPublications(): Array<Publication> | null {
+  try {
+    const response: HttpResponse = fetchStatRegData('Publications', getStatRegBaseUrl() + PUBLICATIONS_URL)
+    if (response.status === 200 && response.body) {
+      return extractPublications(response.body)
+    }
+  } catch (error) {
+    const message: string = `Failed to fetch data from statreg: Publications (${error})`
+    logUserDataQuery('Publications', {
+      file: '/lib/ssb/statreg/publications.ts',
+      function: 'fetchPublications',
+      message: Events.REQUEST_COULD_NOT_CONNECT,
+      info: message,
+      status: error
+    })
+  }
+  return null
 }
 
 function transformPublication(pub: Publisering): Publication {
@@ -63,6 +79,6 @@ export function getPublicationsForStatistic(shortName: string): Array<Publicatio
 
 export interface StatRegPublicationsLib {
   STATREG_REPO_PUBLICATIONS_KEY: string;
-  fetchPublications: () => StatRegFetchResult;
+  fetchPublications: () => Array<Publication> | null;
   getPublicationsForStatistic: (shortName: string) => Array<Publication>;
 }
