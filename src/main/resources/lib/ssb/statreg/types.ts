@@ -59,6 +59,7 @@ export interface StatisticInListing {
     id: string;
     shortName: string;
     name: string;
+    nameEN: string;
     status: string;
     modifiedTime: string;
     variants: Array<VariantInListing>;
