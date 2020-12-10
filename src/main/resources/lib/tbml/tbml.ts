@@ -27,9 +27,31 @@ const {
   }
 } = __non_webpack_require__( '/lib/util')
 
-export function fetch(url: string, queryId?: string, processXml?: string): string | null{
-  let result: string | null = null
+export function getTbmlData<T extends TbmlDataUniform | TbmlSourceListUniform>(
+  url: string,
+  queryId?: string, processXml?: string): TbprocessorParsedResponse<TbmlDataUniform | TbmlSourceListUniform> {
+  //
+  const response: HttpResponse = fetch(url, queryId, processXml)
+  return {
+    body: response.body,
+    status: response.status,
+    parsedBody: response.body && response.status === 200 ? processBody<T>(response.body, queryId) : undefined
+  }
+}
 
+function processBody<T extends TbmlDataUniform | TbmlSourceListUniform>(
+  body: string,
+  queryId?: string): TbmlDataUniform | TbmlSourceListUniform  {
+  //
+  const tbmlDataRaw: TbmlDataRaw | TbmlSourceListRaw = xmlToJson(body, queryId)
+  if ((tbmlDataRaw as TbmlSourceListRaw).sourceList) {
+    return getTbmlSourceListUniform(tbmlDataRaw as TbmlSourceListRaw)
+  }else {
+    return getTbmlDataUniform(tbmlDataRaw as TbmlDataRaw)
+  }
+}
+
+export function fetch(url: string, queryId?: string, processXml?: string): HttpResponse {
   const requestParams: HttpRequestParams = {
     url,
     body: processXml,
@@ -38,56 +60,32 @@ export function fetch(url: string, queryId?: string, processXml?: string): strin
   }
   const response: HttpResponse = http.request(requestParams)
 
-  const {
-    body,
-    status
-  } = response
-
   if (queryId) {
     logUserDataQuery(queryId, {
       file: '/lib/tbml/tbml.ts',
       function: 'fetch',
       message: Events.REQUEST_DATA,
-      status: `${status}`,
+      status: `${response.status}`,
       request: requestParams,
       response
     })
   }
 
-  if (status === 200 && body) {
-    result = body
-  } else {
+  if (response.status !== 200 && response.body) {
     if (queryId) {
       logUserDataQuery(queryId, {
         file: '/lib/tbml/tbml.ts',
         function: 'fetch',
         message: Events.REQUEST_GOT_ERROR_RESPONSE,
-        status: `${status}`,
+        status: `${response.status}`,
         response
       })
     }
-    log.error(`Failed with status ${status} while fetching tbml data from ${url}`)
+    const message: string = `Failed with status ${response.status} while fetching tbml data from ${url}`
+    log.error(message)
   }
 
-  return result
-}
-
-export function getTbmlData(url: string, queryId?: string, processXml?: string): TbmlDataUniform | null {
-  const result: string | null = fetch(url, queryId, processXml)
-  if (result) {
-    const tbmlDataRaw: TbmlDataRaw = xmlToJson(result, queryId)
-    return getTbmlDataUniform(tbmlDataRaw)
-  }
-  return null
-}
-
-export function getTbmlSourceList(url: string): TbmlSourceListUniform | null {
-  const result: string | null = fetch(url)
-  if (result) {
-    const jsonResult: TbmlSourceListRaw = xmlToJson(result)
-    return jsonResult ? getTbmlSourceListUniform(jsonResult) : null
-  }
-  return null
+  return response
 }
 
 function getTbmlSourceListUniform(tbmlSourceList: TbmlSourceListRaw ): TbmlSourceListUniform {
@@ -199,9 +197,13 @@ function xmlToJson<T>(xml: string, queryId?: string): T {
 }
 
 export interface TbmlLib {
-  fetch: (url: string, queryId?: string, token?: string) => string;
-  getTbmlData: (url: string, queryId?: string, processXml?: string) => TbmlDataUniform | null;
-  getTbmlSourceList: (tbmlId: string) => TbmlSourceListUniform | null;
+  getTbmlData: <T extends TbmlDataUniform | TbmlSourceListUniform>(url: string, queryId?: string, processXml?: string) => TbprocessorParsedResponse<T>;
+}
+
+export interface TbprocessorParsedResponse<T extends TbmlDataUniform | TbmlSourceListUniform> {
+  body: string | null;
+  status: number;
+  parsedBody?: T;
 }
 
 export interface Authorization {

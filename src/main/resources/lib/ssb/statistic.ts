@@ -90,6 +90,9 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
         id: data.id
       })
     }
+    socketEmitter.broadcast('statistics-activity-refresh-complete', {
+      id: data.id
+    })
   })
 }
 

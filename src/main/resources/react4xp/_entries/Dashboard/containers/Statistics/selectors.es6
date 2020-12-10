@@ -28,3 +28,18 @@ export const selectHasLoadingStatistic = createSelector(
   [selectDomain],
   (statisticsState) => statisticsState.statistics.filter((s) => s.loading).length > 0
 )
+
+export const selectModalDisplay = createSelector(
+  [selectDomain],
+  (statisticsState) => statisticsState.modalDisplay
+)
+
+export const selectRefreshMessages = createSelector(
+  [selectDomain],
+  (statisticsState) => statisticsState.updateMessage
+)
+
+export const selectOpenModal = createSelector(
+  [selectDomain],
+  (statisticsState) => statisticsState.openModal
+)
