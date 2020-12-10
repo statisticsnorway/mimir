@@ -65,8 +65,7 @@ const renderPart = (req) => {
   const draftButtonText = paramShowDraft ? 'Vis publiserte tall' : 'Vis upubliserte tall'
 
   if (statistic) {
-    const englishStatisticName = statistic.nameEN && statistic.nameEN !== null ? statistic.nameEN : 'Missing english name'
-    title = page.language === 'en' ? englishStatisticName : statistic.name
+    title = page.language === 'en' && statistic.nameEN && statistic.nameEN !== null ? statistic.nameEN : statistic.name
     const variants = util.data.forceArray(statistic.variants)
     nextReleaseDate = getNextReleaseStatistic(variants)
     previousReleaseDate = getPreviousReleaseStatistic(variants)
