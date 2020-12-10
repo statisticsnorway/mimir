@@ -27,7 +27,7 @@ export interface TableCellRaw {
 }
 
 export interface HeaderCellRaw {
-  th: Array<string> | number | string;
+  th: Array<string> | number | string | PreliminaryData;
 }
 
 export interface DataCellRaw {
@@ -44,9 +44,80 @@ export interface MetadataRaw {
   tablesource: string;
   title: string | Title;
   category: string;
+  shortnameweb: string;
   tags: string;
   notes?: Notes;
   sourceList: Source | Array<Source>;
+}
+
+export interface TbmlSourceListRaw {
+  sourceList: {
+    tbml: {
+      id: number;
+      source: Source | Array<Source>;
+    };
+  };
+}
+
+export interface TbmlDataUniform {
+  tbml: {
+    presentation: {
+      table: TableUniform;
+    };
+    metadata: MetadataUniform;
+  };
+}
+
+export interface TableUniform {
+  thead: Array<TableRowUniform>;
+  tbody: Array<TableRowUniform>;
+  class: string;
+}
+
+export interface TableRowUniform {
+  tr: Array<TableCellUniform>;
+}
+
+export interface TableCellUniform {
+  th: HeaderCellUniform;
+  td: DataCellUniform;
+}
+
+export interface HeaderCellUniform {
+  th: Array<number | string | PreliminaryData>;
+}
+
+export interface DataCellUniform {
+  td: Array<number | string | PreliminaryData>;
+}
+
+export interface MetadataUniform {
+  instance: {
+    publicRelatedTableIds: Array<string>;
+    language: string;
+    relatedTableIds: Array<string>;
+    definitionId: number;
+  };
+  tablesource: string;
+  title: Title;
+  category: string;
+  shortnameweb: string;
+  tags: string;
+  notes: NotesUniform;
+  sourceList?: Array<Source>;
+}
+
+export interface NotesUniform {
+  note: Array<Note>;
+}
+
+export interface TbmlSourceListUniform {
+  sourceList: {
+    tbml: {
+      id: number;
+      source: Array<Source>;
+    };
+  };
 }
 
 export interface TbmlData {
