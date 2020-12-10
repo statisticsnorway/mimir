@@ -10,7 +10,7 @@ import { ContextLibrary, RunContext } from 'enonic-types/context'
 import { Socket, SocketEmitter } from '../../types/socket'
 import { SSBCacheLibrary } from '../cache'
 import { JSONstat } from '../../types/jsonstat-toolkit'
-import { TbmlData } from '../../types/xmlParser'
+import { TbmlDataUniform } from '../../types/xmlParser'
 import { DatasetRepoNode, RepoDatasetLib } from '../../repo/dataset'
 import { RepoCommonLib } from '../../repo/common'
 import { User } from 'enonic-types/auth'
@@ -149,7 +149,7 @@ interface DashboardJobInfo {
 function prepDataSources(dataSources: Array<Content<DataSource>>): Array<unknown> {
   return dataSources.map((dataSource) => {
     if (dataSource.data.dataSource) {
-      const dataset: DatasetRepoNode<object | JSONstat | TbmlData> | undefined =
+      const dataset: DatasetRepoNode<object | JSONstat | TbmlDataUniform> | undefined =
         fromDatasetRepoCache(`/${dataSource.data.dataSource._selected}/${extractKey(dataSource)}`, () => getDataset(dataSource))
       const hasData: boolean = !!dataset
       const queryLogNode: QueryLogNode | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataSource._id}`) as QueryLogNode

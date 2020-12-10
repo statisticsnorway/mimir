@@ -120,12 +120,12 @@ export interface Table {
       /**
        * Tekst til kildelenke
        */
-      urlText?: string;
+      urlText: string;
 
       /**
        * Kildelenke
        */
-      url?: string;
+      url: string;
     };
 
     /**

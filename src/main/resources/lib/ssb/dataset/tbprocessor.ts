@@ -2,7 +2,7 @@ import { DatasetRepoNode, RepoDatasetLib } from '../../repo/dataset'
 import { Content } from 'enonic-types/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { RepoQueryLib } from '../../repo/query'
-import { TbmlData, TbmlSourceList } from '../../types/xmlParser'
+import { TbmlDataUniform, TbmlSourceListUniform } from '../../types/xmlParser'
 import { TbmlLib, TbprocessorParsedResponse } from '../../tbml/tbml'
 import { mergeDeepLeft } from 'ramda'
 
@@ -20,7 +20,7 @@ const {
   isUrl
 } = __non_webpack_require__('/lib/ssb/utils')
 
-export function getTbprocessor(content: Content<DataSource>, branch: string): DatasetRepoNode<TbmlData> | null {
+export function getTbprocessor(content: Content<DataSource>, branch: string): DatasetRepoNode<TbmlDataUniform> | null {
   if (content.data.dataSource && content.data.dataSource._selected) {
     const dataSource: DataSource['dataSource'] = content.data.dataSource
     if (dataSource.tbprocessor && dataSource.tbprocessor.urlOrId) {
@@ -38,7 +38,7 @@ function hasTBProcessorDatasource(content: Content<DataSource>): string | undefi
     content.data.dataSource.tbprocessor.urlOrId
 }
 
-function tryRequestTbmlData<T extends TbmlData | TbmlSourceList>(
+function tryRequestTbmlData<T extends TbmlDataUniform | TbmlSourceListUniform>(
   url: string,
   contentId?: string,
   processXml?: string ): TbprocessorParsedResponse<T> | null {
@@ -71,11 +71,11 @@ function getDataAndMetaData(content: Content<DataSource>, processXml?: string ):
   const tbmlKey: string = getTbprocessorKey(content)
 
   const tbmlDataUrl: string = `${baseUrl}${dataPath}${tbmlKey}${language === 'en' ? `?lang=${language}` : ''}`
-  const tbmlParsedResponse: TbprocessorParsedResponse<TbmlData> | null = tryRequestTbmlData<TbmlData>(tbmlDataUrl, content._id, processXml)
+  const tbmlParsedResponse: TbprocessorParsedResponse<TbmlDataUniform> | null = tryRequestTbmlData<TbmlDataUniform>(tbmlDataUrl, content._id, processXml)
 
   if (tbmlParsedResponse && tbmlParsedResponse.status === 200) {
     const sourceListUrl: string = `${baseUrl}${sourceListPath}${tbmlKey}`
-    const tbmlDataAndSourceList: TbmlData | null = addSourceList(sourceListUrl, tbmlParsedResponse, content._id)
+    const tbmlDataAndSourceList: TbmlDataUniform | null = addSourceList(sourceListUrl, tbmlParsedResponse, content._id)
     return {
       ...tbmlParsedResponse,
       parsedBody: tbmlDataAndSourceList ? tbmlDataAndSourceList : tbmlParsedResponse.parsedBody
@@ -100,7 +100,7 @@ function addSourceList(sourceListUrl: string, tbmlParsedResponse: TbprocessorPar
     mergeDeepLeft(tbmlParsedResponse.parsedBody, sourceListObject) : null
 }
 
-export function fetchTbprocessorData(content: Content<DataSource>, processXml?: string): TbprocessorParsedResponse<TbmlData> | null {
+export function fetchTbprocessorData(content: Content<DataSource>, processXml?: string): TbprocessorParsedResponse<TbmlDataUniform> | null {
   const urlOrId: string | undefined = hasTBProcessorDatasource(content)
   return urlOrId ? getDataAndMetaData(content, processXml) : null
 }
@@ -118,7 +118,7 @@ export function getTbprocessorKey(content: Content<DataSource>): string {
   return content._id // fallback, should never find anything
 }
 
-export function getTableIdFromTbprocessor(data: TbmlData): Array<string> {
+export function getTableIdFromTbprocessor(data: TbmlDataUniform): Array<string> {
   if (data && data.tbml.metadata.instance.publicRelatedTableIds) {
     return data.tbml.metadata.instance.publicRelatedTableIds.toString().split(' ')
   }
@@ -126,10 +126,10 @@ export function getTableIdFromTbprocessor(data: TbmlData): Array<string> {
 }
 
 export interface TbprocessorLib {
-  getTbprocessor: (content: Content<DataSource>, branch: string) => DatasetRepoNode<TbmlData> | null;
+  getTbprocessor: (content: Content<DataSource>, branch: string) => DatasetRepoNode<TbmlDataUniform> | null;
   fetchTbprocessorData: (content: Content<DataSource>, processXml?: string) => FetchTbProcessorData | null;
   getTbprocessorKey: (content: Content<DataSource>) => string;
-  getTableIdFromTbprocessor: (dataset: TbmlData) => Array<string>;
+  getTableIdFromTbprocessor: (dataset: TbmlDataUniform) => Array<string>;
 }
 
 export interface FetchTbProcessorData {

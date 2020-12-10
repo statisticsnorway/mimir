@@ -6,7 +6,7 @@ import { EventLibrary, EnonicEvent, EnonicEventData } from 'enonic-types/event'
 import { ContextLibrary } from 'enonic-types/context'
 import { ContentLibrary, QueryResponse, Content } from 'enonic-types/content'
 import { JSONstat } from '../types/jsonstat-toolkit'
-import { TbmlData } from '../types/xmlParser'
+import { TbmlDataUniform } from '../types/xmlParser'
 import { DATASET_REPO, DatasetRepoNode } from '../repo/dataset'
 import { Socket } from '../types/socket'
 import { Table } from '../../site/content-types/table/table'
@@ -340,16 +340,16 @@ export function fromRelatedFactPageCache(req: Request, key: string, fallback: ()
 
 export function fromDatasetRepoCache(
   key: string,
-  fallback: () => DatasetRepoNode<JSONstat | TbmlData | object> | null): DatasetRepoNode<JSONstat | TbmlData | object> | undefined {
+  fallback: () => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null): DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined {
   return datasetRepoCache.get(key, () => {
     log.info(`added ${key} to dataset repo cache`)
-    const res: DatasetRepoNode<JSONstat | TbmlData | object> | null = fallback()
+    const res: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null = fallback()
     // cant be null for some reason, so store it as undefined instead
     return res || undefined
   })
 }
 
-export function datasetOrUndefined(content: Content<Highchart | Table>): DatasetRepoNode<JSONstat | TbmlData | object> | undefined {
+export function datasetOrUndefined(content: Content<Highchart | Table>): DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined {
   return content.data.dataSource && content.data.dataSource._selected ?
     fromDatasetRepoCache(`/${content.data.dataSource._selected}/${extractKey(content)}`,
       () => getDataset(content)) :
@@ -531,12 +531,12 @@ export interface SSBCacheLibrary {
   fromRelatedArticlesCache: (req: Request, key: string, fallback: () => unknown) => unknown;
   fromRelatedFactPageCache: (req: Request, key: string, fallback: () => unknown) => unknown;
   fromDatasetRepoCache:
-    (key: string, fallback: () => DatasetRepoNode<JSONstat | TbmlData | object> | null)
-      => DatasetRepoNode<JSONstat | TbmlData | object> | undefined;
+    (key: string, fallback: () => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null)
+      => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined;
   fromParsedMunicipalityCache: (key: string, fallback: () => Array<MunicipalityWithCounty>) => Array<MunicipalityWithCounty>;
   fromMunicipalityWithCodeCache: (key: string, fallback: () => MunicipalityWithCounty | undefined) => MunicipalityWithCounty | undefined;
   fromMunicipalityWithNameCache: (key: string, fallback: () => MunicipalityWithCounty | undefined) => MunicipalityWithCounty | undefined;
   fromParentTypeCache: (path: string, fallback: () => string) => string;
-  datasetOrUndefined: (content: Content<Highchart | Table>) => DatasetRepoNode<JSONstat | TbmlData | object> | undefined;
+  datasetOrUndefined: (content: Content<Highchart | Table>) => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined;
   setupHandlers: (socket: Socket) => void;
 }

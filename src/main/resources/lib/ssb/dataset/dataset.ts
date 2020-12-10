@@ -4,7 +4,7 @@ import { DataSource as DataSourceType, DatasetRepoNode, RepoDatasetLib } from '.
 import { StatbankApiLib } from './statbankApi'
 import { JSONstat } from '../../types/jsonstat-toolkit'
 import { RepoQueryLib } from '../../repo/query'
-import { TbmlData } from '../../types/xmlParser'
+import { TbmlDataUniform } from '../../types/xmlParser'
 import { TbprocessorLib } from './tbprocessor'
 import { KlassLib } from './klass'
 import { ContextLibrary, RunContext } from 'enonic-types/context'
@@ -48,7 +48,7 @@ const {
   DATASET_BRANCH
 }: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
 
-export function getDataset(content: Content<DataSource>, branch: string = DATASET_BRANCH): DatasetRepoNode<JSONstat | TbmlData | object> | null {
+export function getDataset(content: Content<DataSource>, branch: string = DATASET_BRANCH): DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null {
   switch (content.data.dataSource?._selected) {
   case DataSourceType.STATBANK_API: {
     return getStatbankApi(content, branch)
@@ -81,7 +81,7 @@ export function extractKey(content: Content<DataSource>): string | null {
   }
 }
 
-function fetchData(content: Content<DataSource>, processXml?: string): JSONstat | TbmlData | TbprocessorParsedResponse<TbmlData> | object | null {
+function fetchData(content: Content<DataSource>, processXml?: string): JSONstat | TbmlDataUniform | TbprocessorParsedResponse<TbmlDataUniform> | object | null {
   switch (content.data.dataSource?._selected) {
   case DataSourceType.STATBANK_API:
     return fetchStatbankApiData(content)
@@ -101,12 +101,12 @@ export function refreshDataset(
   branch: string = DATASET_BRANCH,
   processXml?: string ): CreateOrUpdateStatus {
   /**/
-  const data: JSONstat | TbmlData | TbprocessorParsedResponse<TbmlData> | object | null = fetchData(content, processXml)
+  const data: JSONstat | TbmlDataUniform | TbprocessorParsedResponse<TbmlDataUniform> | object | null = fetchData(content, processXml)
   const key: string | null = extractKey(content)
   const user: User | null = getUser()
 
   if (data && content.data.dataSource && content.data.dataSource._selected && key) {
-    let dataset: DatasetRepoNode<JSONstat | TbmlData | object> | null = getDataset(content, branch)
+    let dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null = getDataset(content, branch)
     const hasNewData: boolean = isDataNew(data, dataset)
     if (!dataset || hasNewData) {
       dataset = createOrUpdateDataset(content.data.dataSource?._selected, branch, key, data)
@@ -140,9 +140,9 @@ export function refreshDataset(
   }
 }
 
-function determineIfTbprocessorParsedResponse(toBeDetermined: TbprocessorParsedResponse<TbmlData> | object):
-  toBeDetermined is TbprocessorParsedResponse<TbmlData> {
-  if ((toBeDetermined as TbprocessorParsedResponse<TbmlData>).status) {
+function determineIfTbprocessorParsedResponse(toBeDetermined: TbprocessorParsedResponse<TbmlDataUniform> | object):
+  toBeDetermined is TbprocessorParsedResponse<TbmlDataUniform> {
+  if ((toBeDetermined as TbprocessorParsedResponse<TbmlDataUniform>).status) {
     return true
   }
   return false
@@ -189,7 +189,7 @@ export function getContentWithDataSource(): Array<Content<DataSource>> {
   return hits
 }
 
-function isDataNew(data: JSONstat | TbmlData | object, dataset: DatasetRepoNode<JSONstat | TbmlData | object> | null): boolean {
+function isDataNew(data: JSONstat | TbmlDataUniform | object, dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null): boolean {
   if (!dataset) {
     return true
   } else if (data && dataset) {
@@ -200,18 +200,18 @@ function isDataNew(data: JSONstat | TbmlData | object, dataset: DatasetRepoNode<
 
 export interface CreateOrUpdateStatus {
   dataquery: Content<DataSource>;
-  dataset: DatasetRepoNode<JSONstat | TbmlData | object> | null;
+  dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null;
   newDatasetData: boolean;
   status: string;
   user: User | null;
 }
 
 export interface DatasetLib {
-  getDataset: (content: Content<DataSource>, branch?: string) => DatasetRepoNode<JSONstat | TbmlData | object> | null;
+  getDataset: (content: Content<DataSource>, branch?: string) => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null;
   extractKey: (content: Content<DataSource>) => string;
   refreshDataset: (content: Content<DataSource>, branch?: string, processXml?: string) => CreateOrUpdateStatus;
   refreshDatasetWithUserKey: (content: Content<DataSource>, userLogin: string, branch?: string) => CreateOrUpdateStatus;
   deleteDataset: (content: Content<DataSource>, branch?: string) => boolean;
   getContentWithDataSource: () => Array<Content<DataSource>>;
-  isDataNew: (data: JSONstat | TbmlData | object, dataset: DatasetRepoNode<JSONstat | TbmlData | object> | null) => boolean;
+  isDataNew: (data: JSONstat | TbmlDataUniform | object, dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null) => boolean;
 }

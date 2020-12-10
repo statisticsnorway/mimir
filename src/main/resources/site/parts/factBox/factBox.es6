@@ -22,7 +22,13 @@ exports.get = function(req) {
   }
 }
 
-exports.preview = (req, id) => renderPart(req, id)
+exports.preview = function(req, id) {
+  try {
+    return renderPart(req, id)
+  } catch (e) {
+    return renderError(req, 'Error in part', e)
+  }
+}
 
 function renderPart(req, factBoxId) {
   // throw an error if there is no selected factbox, or an empty section for edit mode
@@ -40,7 +46,7 @@ function renderPart(req, factBoxId) {
   })
   if (!factBoxContent) throw new Error(`FactBox with id ${factBoxId} doesn't exist`)
   const text = processHtml({
-    value: factBoxContent.data.text
+    value: factBoxContent.data.text.replace(/&nbsp;/g, ' ')
   })
   const factBox = new React4xp('FactBox')
     .setProps({

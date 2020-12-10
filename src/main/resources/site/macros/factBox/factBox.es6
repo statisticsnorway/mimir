@@ -1,5 +1,17 @@
-const controller = __non_webpack_require__(`../../parts/factBox/factBox`)
+const factBoxController = __non_webpack_require__(`../../parts/factBox/factBox`)
+
+const {
+  renderError
+} = __non_webpack_require__('/lib/error/error')
 
 exports.macro = function(context) {
-  return controller.preview(context, context.params.factBox)
+  try {
+    const factBox = factBoxController.preview(context, context.params.factBox)
+
+    if (factBox.status && factBox.status !== 200) throw new Error(`factBox with id ${context.params.factBox} missing`)
+
+    return factBox
+  } catch (e) {
+    return renderError(context.request, 'Error in macro', e)
+  }
 }

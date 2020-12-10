@@ -2,7 +2,7 @@ __non_webpack_require__('/lib/polyfills/nashorn')
 import { Content } from 'enonic-types/content'
 import { HttpLibrary, HttpResponse } from 'enonic-types/http'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
-import { TbmlData, XmlParser } from '../../types/xmlParser'
+import { TbmlDataUniform, XmlParser } from '../../types/xmlParser'
 import { DatasetRepoNode, DataSource as DataSourceType } from '../../repo/dataset'
 import { TbprocessorLib } from './tbprocessor'
 import { StatbankApiLib } from './statbankApi'
@@ -47,10 +47,10 @@ function isValidType(dataSource: Content<DataSource>): boolean {
   return false
 }
 
-function inRSSItems(dataSource: Content<DataSource>, dataset: DatasetRepoNode<JSONstat | TbmlData | object>, RSSItems: Array<RSSItem>): boolean {
+function inRSSItems(dataSource: Content<DataSource>, dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object>, RSSItems: Array<RSSItem>): boolean {
   let keys: Array<string> = []
   if (dataSource.data.dataSource?.tbprocessor?.urlOrId) {
-    keys = keys.concat(getTableIdFromTbprocessor(dataset.data as TbmlData))
+    keys = keys.concat(getTableIdFromTbprocessor(dataset.data as TbmlDataUniform))
   }
   if (dataSource.data.dataSource?.statbankApi?.urlOrId) {
     const statbankApiTableId: string | undefined = getTableIdFromStatbankApi(dataSource)
@@ -83,7 +83,7 @@ export function dataSourceRSSFilter(dataSources: Array<Content<DataSource>>): Ar
 
   const filteredDataSources: Array<Content<DataSource>> = dataSources.reduce((t: Array<Content<DataSource>>, dataSource) => {
     if (isValidType(dataSource)) {
-      const dataset: DatasetRepoNode<JSONstat | TbmlData | object> | null = getDataset(dataSource)
+      const dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null = getDataset(dataSource)
       if (!dataset) {
         logData.noData += 1
         t.push(dataSource)
