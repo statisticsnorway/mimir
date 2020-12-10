@@ -278,7 +278,7 @@ function transfromQueryResult(result: CreateOrUpdateStatus): DashboardRefreshRes
       queryLogNode = nodes as QueryLogNode
     }
   }
-  const queryLogMessage: string | null = queryLogNode && i18n.localize({ 
+  const queryLogMessage: string | null = queryLogNode && i18n.localize({
     key: queryLogNode.data.modifiedResult
   });
   return {

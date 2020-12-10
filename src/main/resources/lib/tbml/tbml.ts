@@ -29,13 +29,13 @@ const {
 
 export function getTbmlData<T extends TbmlDataUniform | TbmlSourceListUniform>(
   url: string,
-  queryId?: string, processXml?: string): TbprocessorParsedResponse<T> {
+  queryId?: string, processXml?: string): TbprocessorParsedResponse<TbmlDataUniform | TbmlSourceListUniform> {
   //
   const response: HttpResponse = fetch(url, queryId, processXml)
   return {
     body: response.body,
     status: response.status,
-    parsedBody: response.body && response.status === 200 ? processBody(response.body, queryId) : undefined
+    parsedBody: response.body && response.status === 200 ? processBody<T>(response.body, queryId) : undefined
   }
 }
 
@@ -43,8 +43,12 @@ function processBody<T extends TbmlDataUniform | TbmlSourceListUniform>(
   body: string,
   queryId?: string): TbmlDataUniform | TbmlSourceListUniform  {
   //
-  const tbmlDataRaw: TbmlDataRaw = xmlToJson(body, queryId)
-  return getTbmlDataUniform(tbmlDataRaw)
+  const tbmlDataRaw: TbmlDataRaw | TbmlSourceListRaw = xmlToJson(body, queryId)
+  if ((tbmlDataRaw as TbmlSourceListRaw).sourceList) {
+    return getTbmlSourceListUniform(tbmlDataRaw as TbmlSourceListRaw)
+  }else {
+    return getTbmlDataUniform(tbmlDataRaw as TbmlDataRaw)
+  }
 }
 
 export function fetch(url: string, queryId?: string, processXml?: string): HttpResponse {

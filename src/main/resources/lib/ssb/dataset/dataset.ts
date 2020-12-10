@@ -105,22 +105,39 @@ export function refreshDataset(
   const key: string | null = extractKey(content)
   const user: User | null = getUser()
 
+  log.info('data')
+  log.info(JSON.stringify(data, null, 2))
+
   if (data && content.data.dataSource && content.data.dataSource._selected && key) {
     let dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null = getDataset(content, branch)
-    const hasNewData: boolean = isDataNew(data, dataset)
-    if (!dataset || hasNewData) {
-      dataset = createOrUpdateDataset(content.data.dataSource?._selected, branch, key, data)
-    }
 
-    if (determineIfTbprocessorParsedResponse(data) && data.status && data.status === 500) {
-      return {
-        dataquery: content,
-        status: data.body ? data.body : '',
-        dataset: null,
-        newDatasetData: false,
-        user
+    if (determineIfTbprocessorParsedResponse(data) ) {
+      if (data.status && data.status === 500) {
+        return {
+          dataquery: content,
+          status: data.body ? data.body : '',
+          dataset: null,
+          newDatasetData: false,
+          user
+        }
+      } else {
+        const hasNewData: boolean = data.parsedBody ? isDataNew(data.parsedBody, dataset) : false
+        if (!dataset || hasNewData) {
+          dataset = createOrUpdateDataset(content.data.dataSource?._selected, branch, key, data)
+        }
+        return {
+          dataquery: content,
+          status: !hasNewData ? Events.NO_NEW_DATA : Events.GET_DATA_COMPLETE,
+          newDatasetData: hasNewData,
+          dataset,
+          user
+        }
       }
     } else {
+      const hasNewData: boolean = isDataNew(data, dataset)
+      if (!dataset || hasNewData) {
+        dataset = createOrUpdateDataset(content.data.dataSource?._selected, branch, key, data)
+      }
       return {
         dataquery: content,
         status: !hasNewData ? Events.NO_NEW_DATA : Events.GET_DATA_COMPLETE,

@@ -61,7 +61,7 @@ function tryRequestTbmlData<T extends TbmlDataUniform | TbmlSourceListUniform>(
   return null
 }
 
-function getDataAndMetaData(content: Content<DataSource>, processXml?: string ): TbprocessorParsedResponse<TbmlData> | null {
+function getDataAndMetaData(content: Content<DataSource>, processXml?: string ): TbprocessorParsedResponse<TbmlDataUniform> | null {
   const baseUrl: string = app.config && app.config['ssb.tbprocessor.baseUrl'] ?
     app.config['ssb.tbprocessor.baseUrl'] : 'https://i.ssb.no/tbprocessor'
   const dataPath: string = `/process/tbmldata/`
@@ -72,6 +72,9 @@ function getDataAndMetaData(content: Content<DataSource>, processXml?: string ):
 
   const tbmlDataUrl: string = `${baseUrl}${dataPath}${tbmlKey}${language === 'en' ? `?lang=${language}` : ''}`
   const tbmlParsedResponse: TbprocessorParsedResponse<TbmlDataUniform> | null = tryRequestTbmlData<TbmlDataUniform>(tbmlDataUrl, content._id, processXml)
+
+  log.info('tbmlParsedResponse')
+  log.info(JSON.stringify(tbmlParsedResponse, null, 2))
 
   if (tbmlParsedResponse && tbmlParsedResponse.status === 200) {
     const sourceListUrl: string = `${baseUrl}${sourceListPath}${tbmlKey}`
@@ -85,13 +88,13 @@ function getDataAndMetaData(content: Content<DataSource>, processXml?: string ):
   }
 }
 
-function addSourceList(sourceListUrl: string, tbmlParsedResponse: TbprocessorParsedResponse<TbmlData>, contentId: string): TbmlData | null {
-  const tbmlSourceListParsedResponse: TbprocessorParsedResponse<TbmlSourceList> | null = tryRequestTbmlData<TbmlSourceList>(sourceListUrl, contentId)
+function addSourceList(sourceListUrl: string, tbmlParsedResponse: TbprocessorParsedResponse<TbmlDataUniform>, contentId: string): TbmlDataUniform | null {
+  const sourceListParsedResponse: TbprocessorParsedResponse<TbmlSourceListUniform> | null = tryRequestTbmlData<TbmlSourceListUniform>(sourceListUrl, contentId)
 
-  const sourceListObject: object | undefined = tbmlSourceListParsedResponse && tbmlSourceListParsedResponse.parsedBody ? {
+  const sourceListObject: object | undefined = sourceListParsedResponse && sourceListParsedResponse.parsedBody ? {
     tbml: {
       metadata: {
-        sourceList: tbmlSourceListParsedResponse.parsedBody.sourceList.tbml.source
+        sourceList: sourceListParsedResponse.parsedBody.sourceList.tbml.source
       }
     }
   } : undefined
