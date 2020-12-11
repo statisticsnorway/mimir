@@ -128,17 +128,9 @@ export function getDatasetIdsFromStatistic(statistic: Content<Statistics>): Arra
   return [...mainTableId, ...statisticsKeyFigureId, ...attachmentTablesFiguresIds]
 }
 
-function sourcesForUserFromStatistic(statistic: Content<Statistics>): Array<OwnerTable> {
+function sourcesForUserFromStatistic(statistic: Content<Statistics>): Array<OwnerWithSources> {
   const datasetIds: Array<string> = getDatasetIdsFromStatistic(statistic)
 
-
-  /*
- * Gå igjennom sources
- * Filter på de som, under seg
- * har en source som har eieren vi henter ut
- * gjør dette med alle eiere som finnes i sources til den akutelle statistikken
- *
- *  */
   const sources: Array<SourceList> = datasetIds.reduce((acc: Array<SourceList>, contentId: string) => {
     const dataset: DatasetRepoNode<TbmlDataUniform> | null = getDatasetFromContentId(contentId)
     if (dataset) {
@@ -151,7 +143,7 @@ function sourcesForUserFromStatistic(statistic: Content<Statistics>): Array<Owne
   }, [])
 
 
-  const test: Array<OwnerTable> = sources.reduce((acc: Array<OwnerTable>, source: SourceList) => {
+  return sources.reduce((acc: Array<OwnerWithSources>, source: SourceList) => {
     const {
       dataset
     } = source
@@ -161,22 +153,33 @@ function sourcesForUserFromStatistic(statistic: Content<Statistics>): Array<Owne
       dataset.data.tbml.metadata &&
       dataset.data.tbml.metadata.sourceList) {
       forceArray(dataset.data.tbml.metadata.sourceList).forEach((source: Source) => {
-        log.info('GLNRBN source printings : ' + JSON.stringify(source, null, 2))
-        const index: number = acc.findIndex((it) => it.ownerId == source.owner)
-        if (index != -1) {
-          acc[index].tbmlIdList.push(source.id)
+        const userIndex: number = acc.findIndex((it) => it.ownerId == source.owner)
+        if (userIndex != -1) {
+          const tbmlIdIndex: number = acc[userIndex].tbmlIdList.findIndex((it) => it.tbmlId == source.tableId)
+          log.info(`user: ${source.owner} index: ${userIndex} - ${tbmlIdIndex}`)
+          if (tbmlIdIndex == -1) {
+            acc[userIndex].tbmlIdList.push({
+              tbmlId: source.tableId,
+              sourceTableId: [source.id]
+            })
+          } else {
+            acc[userIndex].tbmlIdList[tbmlIdIndex].sourceTableId.push(source.id)
+          }
         } else {
           acc.push({
             ownerId: source.owner,
-            tbmlIdList: [source.id]
+            tbmlIdList: [{
+              tbmlId: source.tableId,
+              sourceTableId: [source.id]
+            }]
+
           })
         }
       })
     }
     return acc
   }, [])
-  log.info('GLNRBN printing TEST! ' + JSON.stringify(test, null, 2))
-  return test
+  // log.info('GLNRBN printing TEST! ' + JSON.stringify(test, null, 2))
 }
 
 function sourceListFromStatistic(statistic: Content<Statistics>): Array<TbmlSources> {
@@ -237,7 +240,8 @@ function prepStatistics(statistics: Array<Content<Statistics>>): Array<Statistic
 
     if (statregData) {
       const relatedTables: Array<TbmlSources> = sourceListFromStatistic(statistic)
-      const relatedUserTBMLs: Array<OwnerTable> = sourcesForUserFromStatistic(statistic)
+      const relatedUserTBMLs: Array<OwnerWithSources> = sourcesForUserFromStatistic(statistic)
+      // log.info('GLNRBN all tbmls-users : ' + JSON.stringify(relatedUserTBMLs, null, 2))
 
       const statisticDataDashboard: StatisticDashboard = {
         id: statistic._id,
@@ -323,7 +327,7 @@ interface StatisticDashboard {
   shortName: string;
   nextRelease?: string;
   relatedTables?: Array<TbmlSources>;
-  relatedUserTBMLs?: Array<OwnerTable>;
+  relatedUserTBMLs?: Array<OwnerWithSources>;
 }
 
 interface StatregData {
@@ -341,9 +345,14 @@ interface TbmlSources {
   };
 }
 
-interface OwnerTable {
+interface OwnerWithSources {
   ownerId: number;
-  tbmlIdList: Array<string>;
+  tbmlIdList: Array<TbmlId>;
+}
+
+interface TbmlId {
+  tbmlId: string;
+  sourceTableId: Array<string>;
 }
 
 export interface StatisticLib {
