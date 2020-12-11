@@ -338,7 +338,7 @@ function transfromQueryResult(result: CreateOrUpdateStatus): DashboardRefreshRes
   }
   const queryLogMessage: string | null = queryLogNode && i18n.localize({
     key: queryLogNode.data.modifiedResult
-  });
+  })
   return {
     id: result.dataquery._id,
     message: i18n.localize({
@@ -353,7 +353,7 @@ function transfromQueryResult(result: CreateOrUpdateStatus): DashboardRefreshRes
     logData: queryLogNode ? {
       ...queryLogNode.data,
       showWarningIcon: showWarningIcon(queryLogNode.data.modifiedResult as Events),
-      message: queryLogMessage !== 'NOT_TRANSLATED' ? queryLogMessage : queryLogNode.data.modifiedResult ,
+      message: queryLogMessage !== 'NOT_TRANSLATED' ? queryLogMessage : queryLogNode.data.modifiedResult,
       modified: queryLogNode.data.modified,
       modifiedReadable: dateToReadable(queryLogNode.data.modifiedTs)
     } : {}

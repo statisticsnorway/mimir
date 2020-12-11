@@ -94,9 +94,9 @@ export function Statistics() {
     if (statisticsFinal.length > 0) {
       return (
         <tbody>
-          {statisticsFinal.map((statistic) => {
+          {statisticsFinal.map((statistic, index) => {
             return (
-              statisticRow(statistic)
+              statisticRow(statistic, index)
             )
           })}
         </tbody>
@@ -116,8 +116,8 @@ export function Statistics() {
     )
   }
 
-  function statisticRow(statistic) {
-    const key = statistic.shortName + '_' + statistic.language
+  function statisticRow(statistic, index) {
+    const key = statistic.shortName + '_' + statistic.language + '_' + index
     return (
       <tr key={key}>
         <td className='statistic'>
