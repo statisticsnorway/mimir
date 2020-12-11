@@ -122,8 +122,8 @@ export function refreshDataset(
         }
       } else {
         const hasNewData: boolean = data.parsedBody ? isDataNew(data.parsedBody, dataset) : false
-        if (!dataset || hasNewData) {
-          dataset = createOrUpdateDataset(content.data.dataSource?._selected, branch, key, data)
+        if ((!dataset || hasNewData) && data.parsedBody) {
+          dataset = createOrUpdateDataset(content.data.dataSource?._selected, branch, key, data.parsedBody)
         }
         return {
           dataquery: content,
