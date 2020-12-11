@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 export function DataQueryBadges(props) {
   const {
-    contentType, format, isPublished
+    contentType, format, isPublished, floatRight = true
   } = props
 
   function decideType() {
@@ -21,9 +21,9 @@ export function DataQueryBadges(props) {
 
   return (
     <React.Fragment>
-      <span className={`float-right detail ${decideType(contentType)}`}>{contentType.split(':').pop()}</span>
-      <span className={'float-right detail ' + format}>{format}</span>
-      {!isPublished ? <span className={'float-right detail unpublished'}>Ikke publisert</span> : null}
+      <span className={`${floatRight ? 'float-right' : ''} detail ${decideType(contentType)}`}>{contentType.split(':').pop()}</span>
+      <span className={`${floatRight ? 'float-right' : ''} detail ${format}`}>{format}</span>
+      {!isPublished ? <span className={`${floatRight ? 'float-right' : ''} detail unpublished`}>Ikke publisert</span> : null}
     </React.Fragment>
   )
 }
@@ -31,5 +31,6 @@ export function DataQueryBadges(props) {
 DataQueryBadges.propTypes = {
   contentType: PropTypes.string,
   format: PropTypes.string,
-  isPublished: PropTypes.bool
+  isPublished: PropTypes.bool,
+  floatRight: PropTypes.bool
 }

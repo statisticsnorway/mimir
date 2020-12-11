@@ -179,7 +179,6 @@ export function refreshDatasetWithUserKey(content: Content<DataSource>, userLogi
   return run(context, () => refreshDataset(content, branch))
 }
 
-
 export function deleteDataset(content: Content<DataSource>, branch: string = DATASET_BRANCH): boolean {
   const key: string | null = extractKey(content)
   if (content.data.dataSource && content.data.dataSource._selected && key) {
