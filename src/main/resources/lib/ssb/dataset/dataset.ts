@@ -105,9 +105,6 @@ export function refreshDataset(
   const key: string | null = extractKey(content)
   const user: User | null = getUser()
 
-  log.info('data')
-  log.info(JSON.stringify(data, null, 2))
-
   if (data && content.data.dataSource && content.data.dataSource._selected && key) {
     let dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null = getDataset(content, branch)
 
