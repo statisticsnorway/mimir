@@ -5,10 +5,10 @@ import { DataSource } from '../../site/mixins/dataSource/dataSource'
 import { RepoJobLib, JobEventNode, JobInfoNode } from '../repo/job'
 import { StatRegRepoLib } from '../repo/statreg'
 import { SSBTaskLib } from '../task'
-import { CronLib } from '../types/cron'
+import {CronLib, GetCronResult} from '../types/cron'
 import { DatasetLib } from './dataset/dataset'
 import { PublishDatasetLib } from './dataset/publish'
-import { EventLogLib } from '../ssb/eventLog';
+import { EventLogLib } from '../ssb/eventLog'
 
 const {
   publishDataset
@@ -27,7 +27,7 @@ const {
   completeJobLog,
   startJobLog,
   updateJobLog,
-  JOB_STATUS_COMPLETE,
+  JOB_STATUS_COMPLETE
 }: RepoJobLib = __non_webpack_require__('/lib/repo/job')
 const {
   dataSourceRSSFilter
@@ -129,7 +129,7 @@ export function setupCronJobs(): void {
     context: cronContext
   })
 
-  const deleteExpiredEventLogCron: string = app.config && app.config['ssb.cron.dataquery'] ? app.config['ssb.cron.dataquery'] : '45 13 * * *'
+  const deleteExpiredEventLogCron: string = app.config && app.config['ssb.cron.deleteLogs'] ? app.config['ssb.cron.deleteLogs'] : '45 13 * * *'
   cron.schedule({
     name: 'Delete expired event logs',
     cron: deleteExpiredEventLogCron,
@@ -137,6 +137,10 @@ export function setupCronJobs(): void {
     callback: deleteExpiredEventLogs,
     context: cronContext
   })
+
+  const cronList: Array<GetCronResult> = cron.list()
+  log.info('All cron jobs registered')
+  log.info(JSON.stringify(cronList, null, 2))
 }
 
 export interface SSBCronLib {

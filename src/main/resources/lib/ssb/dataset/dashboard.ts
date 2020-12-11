@@ -10,7 +10,7 @@ import { ContextLibrary, RunContext } from 'enonic-types/context'
 import { Socket, SocketEmitter } from '../../types/socket'
 import { SSBCacheLibrary } from '../cache'
 import { JSONstat } from '../../types/jsonstat-toolkit'
-import { TbmlData } from '../../types/xmlParser'
+import { TbmlDataUniform } from '../../types/xmlParser'
 import { DatasetRepoNode, RepoDatasetLib } from '../../repo/dataset'
 import { RepoCommonLib } from '../../repo/common'
 import { User } from 'enonic-types/auth'
@@ -207,7 +207,7 @@ interface DashboardJobInfo {
 function prepDataSources(dataSources: Array<Content<DataSource>>): Array<unknown> {
   return dataSources.map((dataSource) => {
     if (dataSource.data.dataSource) {
-      const dataset: DatasetRepoNode<object | JSONstat | TbmlData> | undefined =
+      const dataset: DatasetRepoNode<object | JSONstat | TbmlDataUniform> | undefined =
         fromDatasetRepoCache(`/${dataSource.data.dataSource._selected}/${extractKey(dataSource)}`, () => getDataset(dataSource))
       const hasData: boolean = !!dataset
       const queryLogNode: QueryLogNode | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataSource._id}`) as QueryLogNode
@@ -264,12 +264,22 @@ export function refreshDatasetHandler(
     })
   })
   // start loading each datasource
-  ids.forEach((id: string) => {
+  ids.forEach((id: string, index: number) => {
     const dataSource: Content<DataSource> | null = getContent({
       key: id
     })
     if (dataSource) {
       const dataSourceKey: number = parseInt(extractKey(dataSource))
+
+      socketEmitter.broadcast('statistics-activity-refresh-feedback', {
+        name: dataSource.displayName,
+        datasourceKey: dataSourceKey,
+        status: `Henter data for ${dataSource.displayName}`,
+        step: 1,
+        tableIndex: index
+      })
+
+      // only get credentials for this datasourceKey (in this case a tbml id)
       const ownerCredentialsForTbml: Array<ProcessXml> | undefined = processXmls ?
         processXmls.filter((processXml: ProcessXml) => processXml.tbmlId === dataSourceKey) : undefined
 
@@ -283,8 +293,28 @@ export function refreshDatasetHandler(
         function: 'refreshDatasetHandler',
         message: refreshDatasetResult.status
       })
+
+      socketEmitter.broadcast('statistics-activity-refresh-feedback', {
+        name: dataSource.displayName,
+        datasourceKey: dataSourceKey,
+        status: i18n.localize({
+          key: refreshDatasetResult.status
+        }) === 'NOT_TRANSLATED' ?
+          refreshDatasetResult.status : i18n.localize({
+            key: refreshDatasetResult.status
+          }),
+        step: 2,
+        tableIndex: index
+      })
+
       socketEmitter.broadcast('dashboard-activity-refreshDataset-result', transfromQueryResult(refreshDatasetResult))
     } else {
+      socketEmitter.broadcast('statistics-activity-refresh-feedback', {
+        status: `Fant ingen innhold med id ${id}`,
+        step: 1,
+        tableIndex: index
+      })
+
       socketEmitter.broadcast('dashboard-activity-refreshDataset-result', {
         id: id,
         message: i18n.localize({
@@ -306,7 +336,9 @@ function transfromQueryResult(result: CreateOrUpdateStatus): DashboardRefreshRes
       queryLogNode = nodes as QueryLogNode
     }
   }
-
+  const queryLogMessage: string | null = queryLogNode && i18n.localize({
+    key: queryLogNode.data.modifiedResult
+  });
   return {
     id: result.dataquery._id,
     message: i18n.localize({
@@ -321,9 +353,7 @@ function transfromQueryResult(result: CreateOrUpdateStatus): DashboardRefreshRes
     logData: queryLogNode ? {
       ...queryLogNode.data,
       showWarningIcon: showWarningIcon(queryLogNode.data.modifiedResult as Events),
-      message: i18n.localize({
-        key: queryLogNode.data.modifiedResult
-      }),
+      message: queryLogMessage !== 'NOT_TRANSLATED' ? queryLogMessage : queryLogNode.data.modifiedResult ,
       modified: queryLogNode.data.modified,
       modifiedReadable: dateToReadable(queryLogNode.data.modifiedTs)
     } : {}

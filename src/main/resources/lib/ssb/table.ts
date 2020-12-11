@@ -5,7 +5,7 @@ __non_webpack_require__('/lib/polyfills/nashorn')
 import { JSONstat } from '../../types/jsonstat-toolkit'
 import { Content } from 'enonic-types/content'
 import { Table } from '../../site/content-types/table/table'
-import { TbmlData, TableRow, Note, Notes, PreliminaryData, Title, Source } from '../types/xmlParser'
+import { TbmlDataUniform, TableRow, Note, Notes, PreliminaryData, Title, Source } from '../types/xmlParser'
 import { Dataset as JSDataset } from '../types/jsonstat-toolkit'
 import { Request } from 'enonic-types/controller'
 import { DatasetRepoNode, RepoDatasetLib } from '../repo/dataset'
@@ -60,10 +60,10 @@ export function parseTable(req: Request, table: Content<Table>, branch: string =
   const dataSource: Table['dataSource'] | undefined = table.data.dataSource
 
   if (datasetRepo) {
-    const data: JSDataset | Array<JSDataset> | null | TbmlData = datasetRepo.data
+    const data: JSDataset | Array<JSDataset> | null | TbmlDataUniform = datasetRepo.data
 
     if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
-      const tbmlData: TbmlData = data as TbmlData
+      const tbmlData: TbmlDataUniform = data as TbmlDataUniform
       if (tbmlData && tbmlData.tbml && tbmlData.tbml.metadata && tbmlData.tbml.presentation) {
         const title: Title = typeof(tbmlData.tbml.metadata.title) == 'string' ?
           {
@@ -100,7 +100,7 @@ function mergeTableRows(thead: Array<Thead>): Array<TableRow> {
   }, [])
 }
 
-function getTableViewData(table: Content<Table>, dataContent: TbmlData | JSONstat,
+function getTableViewData(table: Content<Table>, dataContent: TbmlDataUniform | JSONstat,
   title: Title | undefined, notes: Notes | undefined, sourceList: Source | Array<Source> | undefined): TableView {
   const headRows: Array<Thead> = forceArray(dataContent.table.thead)
     .map( (thead: Thead) => ({

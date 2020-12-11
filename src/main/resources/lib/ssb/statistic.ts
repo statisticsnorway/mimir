@@ -14,7 +14,7 @@ import { Table } from '../../site/content-types/table/table'
 import { KeyFigure } from '../../site/content-types/keyFigure/keyFigure'
 import { TbprocessorLib } from './dataset/tbprocessor'
 import { DataSource } from '../../site/mixins/dataSource/dataSource'
-import { Source, TbmlData } from '../types/xmlParser'
+import { Source, TbmlDataUniform } from '../types/xmlParser'
 import { groupBy } from 'ramda'
 
 const {
@@ -90,6 +90,9 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
         id: data.id
       })
     }
+    socketEmitter.broadcast('statistics-activity-refresh-complete', {
+      id: data.id
+    })
   })
 }
 
@@ -126,7 +129,7 @@ function sourceListFromStatistic(statistic: Content<Statistics>): Array<TbmlSour
   const datasetIds: Array<string> = getDatasetIdsFromStatistic(statistic)
 
   const sources: Array<SourceList> = datasetIds.reduce((acc: Array<SourceList>, contentId: string) => {
-    const dataset: DatasetRepoNode<TbmlData> | null = getDatasetFromContentId(contentId)
+    const dataset: DatasetRepoNode<TbmlDataUniform> | null = getDatasetFromContentId(contentId)
     if (dataset) {
       acc.push({
         dataset,
@@ -156,10 +159,10 @@ function sourceListFromStatistic(statistic: Content<Statistics>): Array<TbmlSour
 
 interface SourceList {
   queryId: string;
-  dataset: DatasetRepoNode<TbmlData>;
+  dataset: DatasetRepoNode<TbmlDataUniform>;
 }
 
-function getDatasetFromContentId(contentId: string): DatasetRepoNode<TbmlData> | null {
+function getDatasetFromContentId(contentId: string): DatasetRepoNode<TbmlDataUniform> | null {
   const queryResult: QueryResponse<Highchart | Table | KeyFigure> = query({
     query: `_id = '${contentId}'`,
     count: 1,

@@ -1,5 +1,17 @@
 import { HttpLibrary, HttpRequestParams, HttpResponse } from 'enonic-types/http'
-import { TbmlData, TbmlSourceList, XmlParser } from '../types/xmlParser'
+import { TbmlDataRaw,
+  TableRowRaw,
+  TableCellRaw,
+  TbmlDataUniform,
+  TableRowUniform,
+  TableCellUniform,
+  MetadataUniform,
+  TbmlSourceListRaw,
+  TbmlSourceListUniform,
+  XmlParser,
+  MetadataRaw,
+  Title,
+  Note } from '../types/xmlParser'
 import { RepoQueryLib } from '../repo/query'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
@@ -9,9 +21,37 @@ const {
   Events
 }: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
 
-export function fetch(url: string, queryId?: string, processXml?: string): string | null{
-  let result: string | null = null
+const {
+  data: {
+    forceArray
+  }
+} = __non_webpack_require__( '/lib/util')
 
+export function getTbmlData<T extends TbmlDataUniform | TbmlSourceListUniform>(
+  url: string,
+  queryId?: string, processXml?: string): TbprocessorParsedResponse<TbmlDataUniform | TbmlSourceListUniform> {
+  //
+  const response: HttpResponse = fetch(url, queryId, processXml)
+  return {
+    body: response.body,
+    status: response.status,
+    parsedBody: response.body && response.status === 200 ? processBody<T>(response.body, queryId) : undefined
+  }
+}
+
+function processBody<T extends TbmlDataUniform | TbmlSourceListUniform>(
+  body: string,
+  queryId?: string): TbmlDataUniform | TbmlSourceListUniform  {
+  //
+  const tbmlDataRaw: TbmlDataRaw | TbmlSourceListRaw = xmlToJson(body, queryId)
+  if ((tbmlDataRaw as TbmlSourceListRaw).sourceList) {
+    return getTbmlSourceListUniform(tbmlDataRaw as TbmlSourceListRaw)
+  }else {
+    return getTbmlDataUniform(tbmlDataRaw as TbmlDataRaw)
+  }
+}
+
+export function fetch(url: string, queryId?: string, processXml?: string): HttpResponse {
   const requestParams: HttpRequestParams = {
     url,
     body: processXml,
@@ -20,56 +60,124 @@ export function fetch(url: string, queryId?: string, processXml?: string): strin
   }
   const response: HttpResponse = http.request(requestParams)
 
-  const {
-    body,
-    status
-  } = response
-
   if (queryId) {
     logUserDataQuery(queryId, {
       file: '/lib/tbml/tbml.ts',
       function: 'fetch',
       message: Events.REQUEST_DATA,
-      status: `${status}`,
+      status: `${response.status}`,
       request: requestParams,
       response
     })
   }
 
-  if (status === 200 && body) {
-    result = body
-  } else {
+  if (response.status !== 200 && response.body) {
     if (queryId) {
       logUserDataQuery(queryId, {
         file: '/lib/tbml/tbml.ts',
         function: 'fetch',
         message: Events.REQUEST_GOT_ERROR_RESPONSE,
-        status: `${status}`,
+        status: `${response.status}`,
         response
       })
     }
-    log.error(`Failed with status ${status} while fetching tbml data from ${url}`)
+    const message: string = `Failed with status ${response.status} while fetching tbml data from ${url}`
+    log.error(message)
   }
 
-  return result
+  return response
 }
 
-export function getTbmlData(url: string, queryId?: string, processXml?: string): TbmlData | null {
-  const result: string | null = fetch(url, queryId, processXml)
-  if (result) {
-    return xmlToJson(result, queryId)
+function getTbmlSourceListUniform(tbmlSourceList: TbmlSourceListRaw ): TbmlSourceListUniform {
+  return {
+    sourceList: {
+      tbml: {
+        id: tbmlSourceList.sourceList.tbml.id,
+        source: forceArray(tbmlSourceList.sourceList.tbml.source)
+      }
+    }
   }
-  return null
 }
 
-export function getTbmlSourceList(url: string): TbmlSourceList | null {
-  const result: string | null = fetch(url)
-  if (result) {
-    const jsonResult: TbmlSourceList = xmlToJson(result)
-    return jsonResult ? jsonResult : null
+function getTbmlDataUniform(tbmlDataRaw: TbmlDataRaw ): TbmlDataUniform {
+  const tableHead: Array<TableRowUniform> = getTableHead(tbmlDataRaw.tbml.presentation.table.thead)
+  const tableBody: Array<TableRowUniform> = getTableBody(tbmlDataRaw.tbml.presentation.table.tbody)
+  const metadataUniform: MetadataUniform = getMetadataDataUniform(tbmlDataRaw.tbml.metadata)
+
+  return {
+    tbml: {
+      presentation: {
+        table: {
+          thead: tableHead,
+          tbody: tableBody,
+          class: tbmlDataRaw.tbml.presentation.table.class
+        }
+      },
+      metadata: metadataUniform
+    }
   }
-  return null
 }
+
+function getTableHead(thead: TableRowRaw | Array<TableRowRaw>): Array<TableRowUniform> {
+  return forceArray(thead)
+    .map( (thead: TableRowUniform) => ({
+      tr: getTableCellHeader(forceArray(thead.tr))
+    }))
+}
+
+function getTableBody(tbody: TableRowRaw | Array<TableRowRaw>): Array<TableRowUniform> {
+  return forceArray(tbody)
+    .map( (tbody: TableRowUniform) => ({
+      tr: getTableCellBody(forceArray(tbody.tr))
+    }))
+}
+
+function getTableCellHeader(tableCell: Array<TableCellRaw>): Array<TableCellUniform> {
+  return forceArray(tableCell)
+    .map( (cell: TableCellUniform) => ({
+      td: typeof cell.td != 'undefined' ? forceArray(cell.td) : undefined,
+      th: typeof cell.th != 'undefined' ? forceArray(cell.th) : undefined
+    }))
+}
+
+function getTableCellBody(tableCell: Array<TableCellRaw>): Array<TableCellUniform> {
+  return forceArray(tableCell)
+    .map( (cell: TableCellUniform) => ({
+      th: typeof cell.th != 'undefined' ? forceArray(cell.th) : undefined,
+      td: typeof cell.td != 'undefined' ? forceArray(cell.td) : undefined
+    }))
+}
+
+function getMetadataDataUniform(metadataRaw: MetadataRaw ): MetadataUniform {
+  const title: Title = typeof(metadataRaw.title) == 'string' ?
+    {
+      noterefs: '',
+      content: metadataRaw.title
+    } :
+    metadataRaw.title
+
+  const publicRelatedTableIds: string | number | undefined = metadataRaw.instance.publicRelatedTableIds
+  const relatedTableIds: string = metadataRaw.instance.relatedTableIds
+  const notes: Array<Note> = metadataRaw.notes ? forceArray(metadataRaw.notes.note) : []
+
+  return {
+    instance: {
+      publicRelatedTableIds: publicRelatedTableIds ? publicRelatedTableIds.toString().split(' ') : [],
+      language: metadataRaw.instance['xml:lang'],
+      relatedTableIds: relatedTableIds ? relatedTableIds.toString().split(' ') : [],
+      definitionId: metadataRaw.instance.definitionId
+    },
+    tablesource: metadataRaw.tablesource,
+    title: title,
+    category: metadataRaw.category,
+    shortnameweb: metadataRaw.shortnameweb,
+    tags: metadataRaw.tags,
+    notes: {
+      note: notes
+    }
+  }
+}
+
 
 function xmlToJson<T>(xml: string, queryId?: string): T {
   try {
@@ -89,9 +197,13 @@ function xmlToJson<T>(xml: string, queryId?: string): T {
 }
 
 export interface TbmlLib {
-  fetch: (url: string, queryId?: string, token?: string) => string;
-  getTbmlData: (url: string, queryId?: string, processXml?: string) => TbmlData | null;
-  getTbmlSourceList: (tbmlId: string) => TbmlSourceList | null;
+  getTbmlData: <T extends TbmlDataUniform | TbmlSourceListUniform>(url: string, queryId?: string, processXml?: string) => TbprocessorParsedResponse<T>;
+}
+
+export interface TbprocessorParsedResponse<T extends TbmlDataUniform | TbmlSourceListUniform> {
+  body: string | null;
+  status: number;
+  parsedBody?: T;
 }
 
 export interface Authorization {

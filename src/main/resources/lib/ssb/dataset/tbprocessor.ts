@@ -2,16 +2,15 @@ import { DatasetRepoNode, RepoDatasetLib } from '../../repo/dataset'
 import { Content } from 'enonic-types/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { RepoQueryLib } from '../../repo/query'
-import { TbmlData, TbmlSourceList } from '../../types/xmlParser'
-import { TbmlLib } from '../../tbml/tbml'
+import { TbmlDataUniform, TbmlSourceListUniform } from '../../types/xmlParser'
+import { TbmlLib, TbprocessorParsedResponse } from '../../tbml/tbml'
 import { mergeDeepLeft } from 'ramda'
 
 const {
   getDataset
 }: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
 const {
-  getTbmlData,
-  getTbmlSourceList
+  getTbmlData
 }: TbmlLib = __non_webpack_require__('/lib/tbml/tbml')
 const {
   logUserDataQuery,
@@ -19,9 +18,9 @@ const {
 }: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
 const {
   isUrl
-} = __non_webpack_require__('/lib//ssb/utils')
+} = __non_webpack_require__('/lib/ssb/utils')
 
-export function getTbprocessor(content: Content<DataSource>, branch: string): DatasetRepoNode<TbmlData> | null {
+export function getTbprocessor(content: Content<DataSource>, branch: string): DatasetRepoNode<TbmlDataUniform> | null {
   if (content.data.dataSource && content.data.dataSource._selected) {
     const dataSource: DataSource['dataSource'] = content.data.dataSource
     if (dataSource.tbprocessor && dataSource.tbprocessor.urlOrId) {
@@ -39,7 +38,11 @@ function hasTBProcessorDatasource(content: Content<DataSource>): string | undefi
     content.data.dataSource.tbprocessor.urlOrId
 }
 
-function tryRequestTbmlData(url: string, contentId?: string, processXml?: string ): TbmlData | null {
+function tryRequestTbmlData<T extends TbmlDataUniform | TbmlSourceListUniform>(
+  url: string,
+  contentId?: string,
+  processXml?: string ): TbprocessorParsedResponse<T> | null {
+  //
   try {
     return getTbmlData(url, contentId, processXml)
   } catch (e) {
@@ -58,26 +61,7 @@ function tryRequestTbmlData(url: string, contentId?: string, processXml?: string
   return null
 }
 
-function tryRequestTbmlSourceList(url: string, contentId?: string): TbmlSourceList | null {
-  try {
-    return getTbmlSourceList(url)
-  } catch (e) {
-    const message: string = `Failed to fetch source list from tbprocessor: ${contentId} (${e})`
-    if (contentId) {
-      logUserDataQuery(contentId, {
-        file: '/lib/ssb/dataset/tbprocessor.ts',
-        function: 'tryRequestTbmlSourceList',
-        message: Events.REQUEST_COULD_NOT_CONNECT,
-        info: message,
-        status: e
-      })
-    }
-    log.error(message)
-  }
-  return null
-}
-
-function getDataAndMetaData(content: Content<DataSource>, processXml?: string ): TbmlData | null {
+function getDataAndMetaData(content: Content<DataSource>, processXml?: string ): TbprocessorParsedResponse<TbmlDataUniform> | null {
   const baseUrl: string = app.config && app.config['ssb.tbprocessor.baseUrl'] ?
     app.config['ssb.tbprocessor.baseUrl'] : 'https://i.ssb.no/tbprocessor'
   const dataPath: string = `/process/tbmldata/`
@@ -85,27 +69,41 @@ function getDataAndMetaData(content: Content<DataSource>, processXml?: string ):
   const language: string = content.language || ''
 
   const tbmlKey: string = getTbprocessorKey(content)
-  const tbmlData: TbmlData | null = tryRequestTbmlData(
-    `${baseUrl}${dataPath}${tbmlKey}${language === 'en' ? `?lang=${language}` : ''}`,
-    content._id,
-    processXml)
 
-  const tbmlSourceList: TbmlSourceList | null = tryRequestTbmlSourceList(`${baseUrl}${sourceListPath}${tbmlKey}`, content._id)
+  const tbmlDataUrl: string = `${baseUrl}${dataPath}${tbmlKey}${language === 'en' ? `?lang=${language}` : ''}`
+  const tbmlParsedResponse: TbprocessorParsedResponse<TbmlDataUniform> | null = tryRequestTbmlData<TbmlDataUniform>(tbmlDataUrl, content._id, processXml)
 
-  const sourceListObject: object = {
-    tbml: {
-      metadata: {
-        sourceList: tbmlSourceList ? tbmlSourceList.sourceList.tbml.source : undefined
-      }
+  log.info('tbmlParsedResponse')
+  log.info(JSON.stringify(tbmlParsedResponse, null, 2))
+
+  if (tbmlParsedResponse && tbmlParsedResponse.status === 200) {
+    const sourceListUrl: string = `${baseUrl}${sourceListPath}${tbmlKey}`
+    const tbmlDataAndSourceList: TbmlDataUniform | null = addSourceList(sourceListUrl, tbmlParsedResponse, content._id)
+    return {
+      ...tbmlParsedResponse,
+      parsedBody: tbmlDataAndSourceList ? tbmlDataAndSourceList : tbmlParsedResponse.parsedBody
     }
+  } else {
+    return tbmlParsedResponse
   }
-  const tbmlDataAndSourceList: TbmlData | null = tbmlData && tbmlSourceList ?
-    mergeDeepLeft(tbmlData, sourceListObject) : null
-
-  return tbmlData && !tbmlSourceList ? tbmlData : tbmlDataAndSourceList
 }
 
-export function fetchTbprocessorData(content: Content<DataSource>, processXml?: string): TbmlData | null {
+function addSourceList(sourceListUrl: string, tbmlParsedResponse: TbprocessorParsedResponse<TbmlDataUniform>, contentId: string): TbmlDataUniform | null {
+  const sourceListParsedResponse: TbprocessorParsedResponse<TbmlSourceListUniform> | null = tryRequestTbmlData<TbmlSourceListUniform>(sourceListUrl, contentId)
+
+  const sourceListObject: object | undefined = sourceListParsedResponse && sourceListParsedResponse.parsedBody ? {
+    tbml: {
+      metadata: {
+        sourceList: sourceListParsedResponse.parsedBody.sourceList.tbml.source
+      }
+    }
+  } : undefined
+
+  return tbmlParsedResponse && tbmlParsedResponse.parsedBody && sourceListObject ?
+    mergeDeepLeft(tbmlParsedResponse.parsedBody, sourceListObject) : null
+}
+
+export function fetchTbprocessorData(content: Content<DataSource>, processXml?: string): TbprocessorParsedResponse<TbmlDataUniform> | null {
   const urlOrId: string | undefined = hasTBProcessorDatasource(content)
   return urlOrId ? getDataAndMetaData(content, processXml) : null
 }
@@ -123,7 +121,7 @@ export function getTbprocessorKey(content: Content<DataSource>): string {
   return content._id // fallback, should never find anything
 }
 
-export function getTableIdFromTbprocessor(data: TbmlData): Array<string> {
+export function getTableIdFromTbprocessor(data: TbmlDataUniform): Array<string> {
   if (data && data.tbml.metadata.instance.publicRelatedTableIds) {
     return data.tbml.metadata.instance.publicRelatedTableIds.toString().split(' ')
   }
@@ -131,8 +129,13 @@ export function getTableIdFromTbprocessor(data: TbmlData): Array<string> {
 }
 
 export interface TbprocessorLib {
-  getTbprocessor: (content: Content<DataSource>, branch: string) => DatasetRepoNode<TbmlData> | null;
-  fetchTbprocessorData: (content: Content<DataSource>, processXml?: string) => TbmlData | null;
+  getTbprocessor: (content: Content<DataSource>, branch: string) => DatasetRepoNode<TbmlDataUniform> | null;
+  fetchTbprocessorData: (content: Content<DataSource>, processXml?: string) => FetchTbProcessorData | null;
   getTbprocessorKey: (content: Content<DataSource>) => string;
-  getTableIdFromTbprocessor: (dataset: TbmlData) => Array<string>;
+  getTableIdFromTbprocessor: (dataset: TbmlDataUniform) => Array<string>;
+}
+
+export interface FetchTbProcessorData {
+  status: number;
+  body: string;
 }
