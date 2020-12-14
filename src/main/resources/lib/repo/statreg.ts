@@ -6,7 +6,8 @@ import { StatRegPublicationsLib } from './statreg/publications'
 import { RepoLib } from './repo'
 import { StatRegConfigLib } from '../ssb/statreg/config'
 import { Events, logUserDataQuery } from './query'
-import { Contact, Publication, StatisticInListing } from '../ssb/statreg/types'
+import { StatRegBase } from '../ssb/statreg/types'
+import { equals } from 'ramda'
 
 const {
   createNode,
@@ -36,8 +37,7 @@ const {
 
 export interface StatRegNodeConfig {
   key: string;
-  fetcher: () => Array<Contact> | Array<StatisticInListing> | Array<Publication> | null;
-  compareResult: (node: StatRegNode | null, result: Array<Contact> | Array<StatisticInListing> | Array<Publication>) => StatRegCompareResult;
+  fetcher: () => Array<StatRegBase> | null;
 }
 
 interface StatRegCompareResult {
@@ -47,7 +47,7 @@ interface StatRegCompareResult {
 }
 
 export interface StatRegContent {
-  data: Array<Contact> | Array<StatisticInListing> | Array<Publication>;
+  data: Array<StatRegBase>;
 }
 
 export type StatRegNode = RepoNode & StatRegContent;
@@ -65,7 +65,7 @@ function getStatRegNode(key: string): StatRegNode | null {
   return Array.isArray(node) ? node[0] : node
 }
 
-function modifyStatRegNode(key: string, content: Array<Contact> | Array<StatisticInListing> | Array<Publication>): StatRegNode {
+function modifyStatRegNode(key: string, content: Array<StatRegBase>): StatRegNode {
   return modifyNode<StatRegNode>(STATREG_REPO, STATREG_BRANCH, key, (node) => {
     return {
       ...node,
@@ -92,7 +92,7 @@ function setupStatRegFetcher(statRegFetcher: StatRegNodeConfig): void {
       function: 'setupStatRegFetcher',
       message: Events.GET_DATA_STARTED
     })
-    const result: Array<Contact> | Array<StatisticInListing> | Array<Publication> | null = statRegFetcher.fetcher()
+    const result: Array<StatRegBase> | null = statRegFetcher.fetcher()
     if (result) {
       if (node) {
         modifyStatRegNode(node._id, result)
@@ -103,13 +103,11 @@ function setupStatRegFetcher(statRegFetcher: StatRegNodeConfig): void {
         changed,
         added,
         deleted
-      } = statRegFetcher.compareResult(node, result)
+      } = compareResult(node, result)
 
       let message: string = Events.NO_NEW_DATA
-      if (changed || added || deleted) {
-        message = `Import of ${statRegFetcher.key} complete - 
-        ${changed} changed, ${added} added, ${deleted} deleted, ${result.length - added - changed} ignored`
-      }
+      message =
+        `Import of ${statRegFetcher.key} complete - ${changed} changed, ${added} added, ${deleted} deleted, ${result.length - added - changed} ignored`
 
       logUserDataQuery(statRegFetcher.key, {
         file: '/lib/repo/statreg.ts',
@@ -128,19 +126,42 @@ function setupStatRegFetcher(statRegFetcher: StatRegNodeConfig): void {
   }
 }
 
-function tempCompare(node: StatRegNode | null, result: Array<Contact> | Array<StatisticInListing> | Array<Publication>): StatRegCompareResult {
+function compareResult(node: StatRegNode | null, result: Array<StatRegBase>): StatRegCompareResult {
+  let added: number = 0
+  let deleted: number = 0
+  let changed: number = 0
+  if (!node) {
+    added = result.length
+  } else {
+    result.forEach((newStatReg: StatRegBase) => {
+      const oldStatReg: StatRegBase | undefined = node.data.find((oldStatReg) => oldStatReg.id === newStatReg.id)
+      if (oldStatReg) {
+        if (!equals(oldStatReg, newStatReg)) {
+          changed += 1
+        }
+      } else {
+        added += 1
+      }
+    })
+    node.data.forEach((oldStatReg: StatRegBase) => {
+      const newStatReg: StatRegBase | undefined = result.find((newStatReg) => newStatReg.id === oldStatReg.id)
+      if (!newStatReg) {
+        deleted += 1
+      }
+    })
+  }
+
   return {
-    added: 0,
-    deleted: 0,
-    changed: 0
+    added,
+    deleted,
+    changed
   }
 }
 
-function configureNode(key: string, fetcher: () => Array<Contact> | Array<StatisticInListing> | Array<Publication> | null): StatRegNodeConfig {
+function configureNode(key: string, fetcher: () => Array<StatRegBase> | null): StatRegNodeConfig {
   return {
     key,
-    fetcher,
-    compareResult: tempCompare
+    fetcher
   }
 }
 

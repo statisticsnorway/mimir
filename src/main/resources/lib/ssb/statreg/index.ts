@@ -4,6 +4,10 @@ import { StatRegContactsLib } from '../../repo/statreg/contacts'
 import { StatRegStatisticsLib } from '../../repo/statreg/statistics'
 import { StatRegPublicationsLib } from '../../repo/statreg/publications'
 import { StatRegLatestFetchInfoNode } from '../../repo/statreg/eventLog'
+import { getNode } from '../../repo/common'
+import { EVENT_LOG_BRANCH, EVENT_LOG_REPO } from '../../repo/eventLog'
+import { Events, QueryInfo } from '../../repo/query'
+import { DashboardDatasetLib } from '../dataset/dashboard'
 
 const {
   STATREG_NODES,
@@ -19,6 +23,9 @@ const {
 const {
   STATREG_REPO_PUBLICATIONS_KEY
 }: StatRegPublicationsLib = __non_webpack_require__('/lib/repo/statreg/publications')
+const {
+  showWarningIcon
+}: DashboardDatasetLib = __non_webpack_require__('/lib/ssb/dataset/dashboard')
 
 export type StatRegLatestFetchInfoNodeType = StatRegLatestFetchInfoNode | readonly StatRegLatestFetchInfoNode[] | null;
 export function getStatRegFetchStatuses(): Array<StatRegStatus> {
@@ -30,13 +37,13 @@ export function getStatRegFetchStatuses(): Array<StatRegStatus> {
 }
 
 function getStatRegStatus(key: string): StatRegStatus {
+  const logNode: QueryInfo | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${key}`) as QueryInfo
   const statRegData: StatRegStatus = {
     key,
     displayName: toDisplayString(key),
-    completionTime: undefined,
-    message: '',
-    startTime: undefined,
-    status: undefined
+    completionTime: logNode.data.modified,
+    message: logNode.data.modifiedResult || '',
+    hasError: showWarningIcon(logNode.data.modifiedResult as Events)
   }
   return statRegData
 }
@@ -64,8 +71,7 @@ export interface StatRegStatus {
   displayName: string;
   completionTime: string | undefined;
   message: string;
-  startTime: string | undefined;
-  status: string | undefined;
+  hasError: boolean;
 }
 
 export interface SSBStatRegLib {

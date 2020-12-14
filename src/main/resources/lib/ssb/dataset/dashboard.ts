@@ -243,7 +243,7 @@ function prepDataSources(dataSources: Array<Content<DataSource>>): Array<unknown
   })
 }
 
-function showWarningIcon(result: Events): boolean {
+export function showWarningIcon(result: Events): boolean {
   return [
     Events.FAILED_TO_GET_DATA,
     Events.REQUEST_GOT_ERROR_RESPONSE,
@@ -405,6 +405,7 @@ export interface RefreshDatasetOptions {
 export interface DashboardDatasetLib {
   users: Array<User>;
   setupHandlers: (socket: Socket, socketEmitter: SocketEmitter) => void;
+  showWarningIcon: (result: Events) => boolean;
   refreshDatasetHandler: (ids: Array<string>, socketEmitter: SocketEmitter, branch?: string, processXml?: Array<ProcessXml>) => void;
 }
 

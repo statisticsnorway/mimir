@@ -1,14 +1,11 @@
 import React, { useContext } from 'react'
 import { Button, Table, Row, Col } from 'react-bootstrap'
 import { RefreshCw } from 'react-feather'
-import moment from 'moment'
 import { Accordion } from '@statisticsnorway/ssb-component-library'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectStatuses, selectLoading } from './selectors'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { startRefresh } from './actions.es6'
-
-const SIMPLE_DATE_FORMAT = 'DD.MM.YYYY HH:mm'
 
 export function StatRegDashboard() {
   const loading = useSelector(selectLoading)
@@ -17,15 +14,8 @@ export function StatRegDashboard() {
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
 
-  function statusIcon(status) {
-    return status === 'Success' ? 'ok' : 'error'
-  }
-
-  function formatDate(dateStr) {
-    if (dateStr) {
-      return moment(dateStr).format(SIMPLE_DATE_FORMAT)
-    }
-    return '-'
+  function statusIcon(hasError) {
+    return hasError ? 'error' : 'ok'
   }
 
   function refreshStatReg(key) {
@@ -70,16 +60,16 @@ export function StatRegDashboard() {
           {statuses.map((statRegStatus, index) => {
             const {
               displayName,
-              status,
+              hasError,
               completionTime,
               message
             } = statRegStatus
             return (
               <tr key={index}>
-                <td className={`${statusIcon(status)} dataset`}>
+                <td className={`${statusIcon(hasError)} dataset`}>
                   <a className="ssb-link my-0 text-capitalize" href="#">{displayName}</a>
                 </td>
-                <td>{formatDate(completionTime)}</td>
+                <td>{completionTime}</td>
                 <td>{message}</td>
                 <td className="text-center">{makeRefreshButton(statRegStatus)}</td>
               </tr>
