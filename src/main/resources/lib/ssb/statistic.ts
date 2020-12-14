@@ -69,6 +69,11 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
 
     if (statistic) {
       const datasetIdsToUpdate: Array<string> = getDatasetIdsFromStatistic(statistic)
+      const datasetWithCredentials: Array<string> = fetchPublished ?
+        datasetIdsToUpdate :
+        datasetIdsToUpdate.filter( (datasetId) => data.owners && data.owners.map((owner: OwnerObject) => {
+          return owner.ownerTableIds ? ownerHasTbmlId(owner.ownerTableIds, datasetId) : false
+        }))
 
       if (datasetIdsToUpdate.length > 0) {
         const context: RunContext = {
@@ -82,7 +87,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
         }
         run(context, () => {
           refreshDatasetHandler(
-            datasetIdsToUpdate,
+            datasetWithCredentials,
             socketEmitter,
             fetchPublished ? DATASET_BRANCH : UNPUBLISHED_DATASET_BRANCH,
             processXmls
@@ -99,11 +104,18 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   })
 }
 
+function ownerHasTbmlId(ownerTableIds: Array<OwnerWithSources>, datasetId: string): boolean {
+  return ownerTableIds.reduce((acc: boolean, ownerTableId: OwnerWithSources): boolean => {
+    if (!acc) acc = ownerTableId.tbmlIdList.find((tbmlIdObj) => tbmlIdObj.tbmlId === datasetId) ? true : false
+    return acc
+  }, false)
+}
+
 function processXmlFromOwners(owners: RefreshInfo['owners']): Array<ProcessXml> | undefined {
   return owners && Object.keys(owners).reduce((acc: Array<ProcessXml>, ownerKey) => {
     const ownerKeyInt: number = parseInt(ownerKey)
     const currentOwnerObj: OwnerObject | undefined = owners && owners[ownerKeyInt] ? owners[ownerKeyInt] : undefined
-    const ownerTableIds: Array<string> | undefined = currentOwnerObj && Array.isArray(currentOwnerObj.ownerTableIds) ?
+    const ownerTableIds: Array<OwnerWithSources> | undefined = currentOwnerObj && Array.isArray(currentOwnerObj.ownerTableIds) ?
       currentOwnerObj.ownerTableIds : undefined
 
     const sourceNodesString: Array<string> | undefined = currentOwnerObj && ownerTableIds ?
@@ -269,9 +281,7 @@ function sortByNextRelease(statisticData: Array<StatisticDashboard>): Array<Stat
 
 interface RefreshInfo {
   id: string;
-  owners?: {
-    [ownerKey: number]: OwnerObject;
-  };
+  owners?: Array<OwnerObject>;
   owner: string;
   fetchPublished: 'on' | null;
 }
@@ -279,7 +289,7 @@ interface RefreshInfo {
 interface OwnerObject {
   username: string;
   password: string;
-  ownerTableIds?: Array<string>;
+  ownerTableIds?: Array<OwnerWithSources>;
   tbmlId: string;
 };
 

@@ -19,16 +19,28 @@ tbml id 123 url: tbprocessor/docuemnt/123
 <process>
   <source ID="">
 </proces>
+
+[
+   {
+    ownerId: 214​,
+    password: "qwe",
+    tbmlIdList: [{
+      sourceTableId: Array [ "ID10002658", "ID10002661" ]
+      tbmlId: "08806"}
+    username: "asdf"
+  }
+]
 */
 
   function updateOwnerCredentials(ownersObj, propKey, value) {
-    if (!!owners[ownersObj.ownerId]) {
-      owners[ownersObj.ownerId][propKey] = value
+    const currentOwner = owners.find((owner) => owner.ownerId === ownersObj.ownerId)
+    if (currentOwner) {
+      currentOwner[propKey] = value
     } else {
-      owners[ownersObj.ownerId] = {
+      owners.push({
         ...ownersObj,
         [propKey]: value
-      }
+      })
     }
     setOwners(owners)
     console.log(owners)
@@ -46,6 +58,7 @@ tbml id 123 url: tbprocessor/docuemnt/123
         <Form.Group controlId="formBasicUsername">
           <Form.Label>Brukernavn</Form.Label>
           <Form.Control
+            required
             type="username"
             placeholder="Brukernavn"
             onChange={(e) => updateOwnerCredentials(owner, 'username', e.target.value )}
@@ -54,6 +67,7 @@ tbml id 123 url: tbprocessor/docuemnt/123
         <Form.Group controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>
           <Form.Control
+            required
             type="password"
             placeholder="Passord"
             onChange={(e) => updateOwnerCredentials(owner, 'password', e.target.value )}
@@ -93,8 +107,22 @@ tbml id 123 url: tbprocessor/docuemnt/123
   //   )
   // }
 
+  function testValid(event) {
+    console.log(event)
+    const test = event.currentTarget.checkcValidity()
+    if (test) {
+      onSubmit({
+        owners,
+        fetchPublished
+      })
+    } else {
+      event.preventDefault()
+      event.stopPropagation()
+    }
+  }
+
   return (
-    <Form className="mt-3">
+    <Form className="mt-3" >
       {
         // modalInfo.relatedTables.map((table) => {
         //   return table.sourceList && Object.keys(table.sourceList).map((key, i) => {
@@ -115,10 +143,7 @@ tbml id 123 url: tbprocessor/docuemnt/123
       </Form.Group>
       <Button
         variant="primary"
-        onClick={() => onSubmit({
-          owners,
-          fetchPublished
-        })}
+        onClick={(event) => testValid(event)}
       >
         Send
       </Button>
