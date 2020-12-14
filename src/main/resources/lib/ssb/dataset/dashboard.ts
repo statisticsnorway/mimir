@@ -15,7 +15,10 @@ import { DatasetRepoNode, RepoDatasetLib } from '../../repo/dataset'
 import { RepoCommonLib } from '../../repo/common'
 import { User } from 'enonic-types/auth'
 import { TaskLib } from '../../types/task'
-import { JobInfoNode, JOB_STATUS_COMPLETE, JOB_STATUS_STARTED, RepoJobLib } from '../../repo/job'
+import { JobInfoNode, JOB_STATUS_COMPLETE, JOB_STATUS_STARTED, RepoJobLib, StatisticsPublishResult } from '../../repo/job'
+import { UtilLibrary } from '../../types/util'
+import { StatRegStatisticsLib } from '../../repo/statreg/statistics'
+import { StatisticInListing } from '../../ssb/statreg/types'
 
 const {
   logUserDataQuery
@@ -58,8 +61,17 @@ const {
 }: TaskLib = __non_webpack_require__('/lib/xp/task')
 const {
   queryJobLogs,
-  getJobLog
+  getJobLog,
+  JobNames
 }: RepoJobLib = __non_webpack_require__('/lib/repo/job')
+const {
+  data: {
+    forceArray
+  }
+}: UtilLibrary = __non_webpack_require__( '/lib/util')
+const {
+  getStatisticByIdFromRepo
+}: StatRegStatisticsLib = __non_webpack_require__('/lib/repo/statreg/statistics')
 
 export const users: Array<User> = []
 
@@ -130,13 +142,58 @@ function getJobs(): Array<DashboardJobInfo> {
         status: jobLog.data.status,
         startTime: jobLog.data.jobStarted ? dateToFormat(jobLog.data.jobStarted) : undefined,
         completionTime: jobLog.data.completionTime ? dateToFormat(jobLog.data.completionTime) : undefined,
-        message: ''
+        message: jobLog.data.message ? jobLog.data.message : '',
+        result: parseResult(jobLog)
       })
     }
     return result
   }, [])
 }
 
+function parseResult(jobLog: JobInfoNode): Array<DashboardPublishJobResult> {
+  if (jobLog.data.task === JobNames.PUBLISH_JOB) {
+    const refreshDataResult: Array<StatisticsPublishResult> = forceArray(jobLog.data.refreshDataResult || []) as Array<StatisticsPublishResult>
+    return refreshDataResult.map((statResult) => {
+      const statregData: StatisticInListing | undefined = getStatisticByIdFromRepo(statResult.shortNameId)
+      const statId: string = statResult.statistic
+      const shortName: string = statregData ? statregData.shortName : statResult.shortNameId // get name from shortNameId
+      const dataSources: DashboardPublishJobResult['dataSources'] = forceArray(statResult.dataSources).map((ds) => {
+        const dataSource: Content<DataSource> | null = getContent({
+          key: ds.id
+        })
+        return {
+          id: ds.id,
+          displayName: dataSource ? dataSource.displayName : ds.id,
+          status: ds.status,
+          type: dataSource?.type,
+          datasetType: dataSource?.data?.dataSource?._selected,
+          datasetKey: dataSource ? extractKey(dataSource) : undefined
+        }
+      })
+      return {
+        id: statId,
+        shortName,
+        status: statResult.status,
+        dataSources
+      }
+    })
+  }
+  return []
+}
+
+interface DashboardPublishJobResult {
+  id: string;
+  shortName: string;
+  status: string;
+  dataSources: Array<{
+    id: string;
+    displayName: string;
+    status: string;
+    type?: string;
+    datasetType?: string;
+    datasetKey?: string;
+  }>;
+}
 interface DashboardJobInfo {
   id: string;
   task: string;
@@ -144,6 +201,7 @@ interface DashboardJobInfo {
   startTime: string;
   completionTime?: string;
   message: string;
+  result: Array<unknown>;
 }
 
 function prepDataSources(dataSources: Array<Content<DataSource>>): Array<unknown> {
@@ -280,7 +338,7 @@ function transfromQueryResult(result: CreateOrUpdateStatus): DashboardRefreshRes
   }
   const queryLogMessage: string | null = queryLogNode && i18n.localize({
     key: queryLogNode.data.modifiedResult
-  });
+  })
   return {
     id: result.dataquery._id,
     message: i18n.localize({
@@ -295,7 +353,7 @@ function transfromQueryResult(result: CreateOrUpdateStatus): DashboardRefreshRes
     logData: queryLogNode ? {
       ...queryLogNode.data,
       showWarningIcon: showWarningIcon(queryLogNode.data.modifiedResult as Events),
-      message: queryLogMessage !== 'NOT_TRANSLATED' ? queryLogMessage : queryLogNode.data.modifiedResult ,
+      message: queryLogMessage !== 'NOT_TRANSLATED' ? queryLogMessage : queryLogNode.data.modifiedResult,
       modified: queryLogNode.data.modified,
       modifiedReadable: dateToReadable(queryLogNode.data.modifiedTs)
     } : {}

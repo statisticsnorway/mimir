@@ -19,39 +19,39 @@
       left: 20%;
       right: 20%;
     }
-    
-    .tbml, .tbprocessor {
-      background: #af00ff57;
-    }
-
-    .jsonStat, .statbankApi{
-      background: #90cc93;
-    }
-
-    .klass {
-      background: skyblue;
-    }
-
-    .highchartsType {
-      background: goldenrod;
-    }
-
-    .tableType {
-      background: rosybrown;
-    }
-
-    .keyfigureType {
-      background: lightseagreen;
-    }
-
-    .unpublished {
-      background: indianred;
-      color: white;
-    }
 
     .accordion-body {
       padding: 20px 0;
     }
+  }
+
+  .tbml, .tbprocessor {
+    background: #af00ff57;
+  }
+
+  .jsonStat, .statbankApi{
+    background: #90cc93;
+  }
+
+  .klass {
+    background: skyblue;
+  }
+
+  .highchartsType {
+    background: goldenrod;
+  }
+
+  .tableType {
+    background: rosybrown;
+  }
+
+  .keyfigureType {
+    background: lightseagreen;
+  }
+
+  .unpublished {
+    background: indianred;
+    color: white;
   }
 
   h1 {
@@ -200,6 +200,10 @@
       .col {
         max-height: 400px;
         overflow: auto;
+
+        .modal-trigger {
+          cursor: pointer;
+        }
       }
     }
   }

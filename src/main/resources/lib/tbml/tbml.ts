@@ -41,12 +41,12 @@ export function getTbmlData<T extends TbmlDataUniform | TbmlSourceListUniform>(
 
 function processBody<T extends TbmlDataUniform | TbmlSourceListUniform>(
   body: string,
-  queryId?: string): TbmlDataUniform | TbmlSourceListUniform  {
+  queryId?: string): TbmlDataUniform | TbmlSourceListUniform {
   //
   const tbmlDataRaw: TbmlDataRaw | TbmlSourceListRaw = xmlToJson(body, queryId)
   if ((tbmlDataRaw as TbmlSourceListRaw).sourceList) {
     return getTbmlSourceListUniform(tbmlDataRaw as TbmlSourceListRaw)
-  }else {
+  } else {
     return getTbmlDataUniform(tbmlDataRaw as TbmlDataRaw)
   }
 }

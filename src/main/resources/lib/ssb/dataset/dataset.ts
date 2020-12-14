@@ -105,9 +105,6 @@ export function refreshDataset(
   const key: string | null = extractKey(content)
   const user: User | null = getUser()
 
-  log.info('data')
-  log.info(JSON.stringify(data, null, 2))
-
   if (data && content.data.dataSource && content.data.dataSource._selected && key) {
     let dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null = getDataset(content, branch)
 
@@ -122,8 +119,8 @@ export function refreshDataset(
         }
       } else {
         const hasNewData: boolean = data.parsedBody ? isDataNew(data.parsedBody, dataset) : false
-        if (!dataset || hasNewData) {
-          dataset = createOrUpdateDataset(content.data.dataSource?._selected, branch, key, data)
+        if ((!dataset || hasNewData) && data.parsedBody) {
+          dataset = createOrUpdateDataset(content.data.dataSource?._selected, branch, key, data.parsedBody)
         }
         return {
           dataquery: content,
@@ -178,7 +175,6 @@ export function refreshDatasetWithUserKey(content: Content<DataSource>, userLogi
   }
   return run(context, () => refreshDataset(content, branch))
 }
-
 
 export function deleteDataset(content: Content<DataSource>, branch: string = DATASET_BRANCH): boolean {
   const key: string | null = extractKey(content)
