@@ -152,7 +152,7 @@ function getJobs(): Array<DashboardJobInfo> {
 
 function parseResult(jobLog: JobInfoNode): Array<DashboardPublishJobResult> {
   if (jobLog.data.task === JobNames.PUBLISH_JOB) {
-    const refreshDataResult: Array<StatisticsPublishResult> = forceArray(jobLog.data.refreshDataResult) as Array<StatisticsPublishResult>
+    const refreshDataResult: Array<StatisticsPublishResult> = forceArray(jobLog.data.refreshDataResult || []) as Array<StatisticsPublishResult>
     return refreshDataResult.map((statResult) => {
       const statregData: StatisticInListing | undefined = getStatisticByIdFromRepo(statResult.shortNameId)
       const statId: string = statResult.statistic

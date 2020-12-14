@@ -133,6 +133,9 @@ export function publishDataset(): void {
     }
     return node
   })
+  if (jobResult.length === 0) {
+    completeJobLog(jobLogNode._id, `Successfully updated 0 statistics`, [])
+  }
   log.info('End publish job')
 }
 
