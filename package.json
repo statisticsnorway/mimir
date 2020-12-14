@@ -103,7 +103,7 @@
     "terser-webpack-plugin": "^4.2.3",
     "ts-loader": "^6.2.2",
     "typescript": "^3.9.7",
-    "uuid": "^3.3.3",
+    "uuid": "^8.3.2",
     "xlsx": "^0.16.9"
   },
   "browserslist": [
