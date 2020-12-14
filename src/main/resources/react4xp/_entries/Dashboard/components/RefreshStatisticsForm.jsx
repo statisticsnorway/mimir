@@ -21,19 +21,17 @@ tbml id 123 url: tbprocessor/docuemnt/123
 </proces>
 */
 
-  function updateOwnerCredentials(ownersObj, propKey, value, ownerId) {
-    if (!!ownersObj[ownerKey]) {
-      owners[ownerKey][propKey] = value
-      owners[ownerKey].ownerTableIds = ownerTableIds,
-      tbmlId
+  function updateOwnerCredentials(ownersObj, propKey, value) {
+    if (!!owners[ownersObj.ownerId]) {
+      owners[ownersObj.ownerId][propKey] = value
     } else {
-      owners[ownerKey] = {
-        [propKey]: value,
-        ownerTableIds: ownerTableIds,
-        tbmlId
+      owners[ownersObj.ownerId] = {
+        ...ownersObj,
+        [propKey]: value
       }
     }
     setOwners(owners)
+    console.log(owners)
   }
   function renderOwnerInputForMultipleTbml(owner, index) {
     return (
@@ -50,7 +48,7 @@ tbml id 123 url: tbprocessor/docuemnt/123
           <Form.Control
             type="username"
             placeholder="Brukernavn"
-            onChange={(e) => updateOwnerCredentials(owner, 'username', e.target.value, owner.ownerId )}
+            onChange={(e) => updateOwnerCredentials(owner, 'username', e.target.value )}
           />
         </Form.Group>
         <Form.Group controlId="formBasicPassword">
@@ -58,42 +56,42 @@ tbml id 123 url: tbprocessor/docuemnt/123
           <Form.Control
             type="password"
             placeholder="Passord"
-            onChange={(e) => updateOwnerCredentials(owner, 'password', e.target.value, owner.ownerId )}
+            onChange={(e) => updateOwnerCredentials(owner, 'password', e.target.value )}
           />
         </Form.Group></p>
       </div>
     )
   }
-  function renderOwnerInputField(owner, sources, i, tbmlId) {
-    const ownerTableIds = sources.map((source) => source.id)
-    return (
-      <div key={i}>
-        <p>Autorisasjon for TBML {tbmlId} med eier {owner}. <br/>TabelId: {
-          sources
-            .map( (source) => source.tableId)
-            .filter((value, index, self) => self.indexOf(value) === index) // only unique values
-            .join(', ')
-        }.
-        </p>
-        <Form.Group controlId="formBasicUsername">
-          <Form.Label>Brukernavn</Form.Label>
-          <Form.Control
-            type="username"
-            placeholder="Brukernavn"
-            onChange={(e) => updateOwnerCredentials(owner, 'username', e.target.value, ownerTableIds, tbmlId)}
-          />
-        </Form.Group>
-        <Form.Group controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="Passord"
-            onChange={(e) => updateOwnerCredentials(owner, 'password', e.target.value, ownerTableIds, tbmlId)}
-          />
-        </Form.Group>
-      </div>
-    )
-  }
+  // function renderOwnerInputField(owner, sources, i, tbmlId) {
+  //   const ownerTableIds = sources.map((source) => source.id)
+  //   return (
+  //     <div key={i}>
+  //       <p>Autorisasjon for TBML {tbmlId} med eier {owner}. <br/>TabelId: {
+  //         sources
+  //           .map( (source) => source.tableId)
+  //           .filter((value, index, self) => self.indexOf(value) === index) // only unique values
+  //           .join(', ')
+  //       }.
+  //       </p>
+  //       <Form.Group controlId="formBasicUsername">
+  //         <Form.Label>Brukernavn</Form.Label>
+  //         <Form.Control
+  //           type="username"
+  //           placeholder="Brukernavn"
+  //           onChange={(e) => updateOwnerCredentials(owner, 'username', e.target.value, ownerTableIds, tbmlId)}
+  //         />
+  //       </Form.Group>
+  //       <Form.Group controlId="formBasicPassword">
+  //         <Form.Label>Password</Form.Label>
+  //         <Form.Control
+  //           type="password"
+  //           placeholder="Passord"
+  //           onChange={(e) => updateOwnerCredentials(owner, 'password', e.target.value, ownerTableIds, tbmlId)}
+  //         />
+  //       </Form.Group>
+  //     </div>
+  //   )
+  // }
 
   return (
     <Form className="mt-3">

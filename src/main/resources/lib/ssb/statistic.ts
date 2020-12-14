@@ -139,7 +139,6 @@ function sourcesForUserFromStatistic(statistic: Content<Statistics>): Array<Owne
     return acc
   }, [])
 
-
   return sources.reduce((acc: Array<OwnerWithSources>, source: SourceList) => {
     const {
       dataset
@@ -176,39 +175,6 @@ function sourcesForUserFromStatistic(statistic: Content<Statistics>): Array<Owne
     }
     return acc
   }, [])
-  // log.info('GLNRBN printing TEST! ' + JSON.stringify(test, null, 2))
-}
-
-function sourceListFromStatistic(statistic: Content<Statistics>): Array<TbmlSources> {
-  const datasetIds: Array<string> = getDatasetIdsFromStatistic(statistic)
-
-  const sources: Array<SourceList> = datasetIds.reduce((acc: Array<SourceList>, contentId: string) => {
-    const dataset: DatasetRepoNode<TbmlDataUniform> | null = getDatasetFromContentId(contentId)
-    if (dataset) {
-      acc.push({
-        dataset,
-        queryId: contentId
-      })
-    }
-    return acc
-  }, [])
-
-  const byOwners: Function = groupBy((source: Source) => {
-    return `${source.owner}`
-  })
-
-  return sources.map((source) => {
-    const {
-      dataset
-    } = source
-    return {
-      queryId: source.queryId,
-      tbmlId: dataset._name,
-      sourceList: dataset.data && typeof(dataset.data) !== 'string' &&
-      dataset.data.tbml.metadata && dataset.data.tbml.metadata.sourceList ?
-        byOwners(forceArray(dataset.data.tbml.metadata.sourceList)) : undefined
-    }
-  })
 }
 
 interface SourceList {
@@ -236,9 +202,7 @@ function prepStatistics(statistics: Array<Content<Statistics>>): Array<Statistic
     const statregData: StatregData | undefined = statistic.data.statistic ? getStatregInfo(statistic.data.statistic) : undefined
 
     if (statregData) {
-      const relatedTables: Array<TbmlSources> = sourceListFromStatistic(statistic)
       const relatedUserTBMLs: Array<OwnerWithSources> = sourcesForUserFromStatistic(statistic)
-      // log.info('GLNRBN all tbmls-users : ' + JSON.stringify(relatedUserTBMLs, null, 2))
 
       const statisticDataDashboard: StatisticDashboard = {
         id: statistic._id,
@@ -246,7 +210,6 @@ function prepStatistics(statistics: Array<Content<Statistics>>): Array<Statistic
         name: statistic.displayName ? statistic.displayName : '',
         shortName: statregData.shortName,
         nextRelease: undefined,
-        relatedTables,
         relatedUserTBMLs
       }
       if (statregData && statregData.nextRelease && moment(statregData.nextRelease).isSameOrAfter(new Date(), 'day')) {
