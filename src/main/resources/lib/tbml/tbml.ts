@@ -93,7 +93,7 @@ function getTbmlSourceListUniform(tbmlSourceList: TbmlSourceListRaw ): TbmlSourc
     sourceList: {
       tbml: {
         id: tbmlSourceList.sourceList.tbml.id,
-        source: forceArray(tbmlSourceList.sourceList.tbml.source)
+        source: tbmlSourceList.sourceList.tbml.source ? forceArray(tbmlSourceList.sourceList.tbml.source) : []
       }
     }
   }
