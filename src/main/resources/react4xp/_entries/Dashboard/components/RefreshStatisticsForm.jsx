@@ -107,20 +107,6 @@ tbml id 123 url: tbprocessor/docuemnt/123
   //   )
   // }
 
-  function testValid(event) {
-    console.log(event)
-    const test = event.currentTarget.checkcValidity()
-    if (test) {
-      onSubmit({
-        owners,
-        fetchPublished
-      })
-    } else {
-      event.preventDefault()
-      event.stopPropagation()
-    }
-  }
-
   return (
     <Form className="mt-3" onSubmit={testValid}>
       {
