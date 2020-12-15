@@ -6,8 +6,9 @@ import { StatRegPublicationsLib } from './statreg/publications'
 import { RepoLib } from './repo'
 import { StatRegConfigLib } from '../ssb/statreg/config'
 import { RepoQueryLib } from './query'
-import { StatRegBase } from '../ssb/statreg/types'
+import { StatisticInListing, StatRegBase } from '../ssb/statreg/types'
 import { equals } from 'ramda'
+import { ArrayUtilsLib } from '../ssb/arrayUtils'
 
 const {
   createNode,
@@ -38,6 +39,9 @@ const {
   Events,
   logUserDataQuery
 }: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
+const {
+  ensureArray
+}: ArrayUtilsLib = __non_webpack_require__('/lib/ssb/arrayUtils')
 
 const STATREG_CONTACTS_NODE: StatRegNodeConfig = configureNode(STATREG_REPO_CONTACTS_KEY, fetchContacts)
 const STATREG_STATISTICS_NODE: StatRegNodeConfig = configureNode(STATREG_REPO_STATISTICS_KEY, fetchStatistics)
@@ -66,13 +70,13 @@ export function setupStatRegRepo(): void {
   log.info('StatReg Repo setup complete.')
 }
 
-export function fetchStatRegData(nodeConfig: Array<StatRegNodeConfig> = STATREG_NODES): void {
-  nodeConfig.forEach((statRegFetcher: StatRegNodeConfig) => {
-    setupStatRegFetcher(statRegFetcher)
+export function refreshStatRegData(nodeConfig: Array<StatRegNodeConfig> = STATREG_NODES): Array<StatRegRefreshResult> {
+  return nodeConfig.map((statRegFetcher: StatRegNodeConfig) => {
+    return setupStatRegFetcher(statRegFetcher)
   })
 }
 
-function setupStatRegFetcher(statRegFetcher: StatRegNodeConfig): void {
+function setupStatRegFetcher(statRegFetcher: StatRegNodeConfig): StatRegRefreshResult {
   log.info(`Setting up StatReg Node: '/${statRegFetcher.key}' ...`)
   const node: StatRegNode | null = getStatRegNode(statRegFetcher.key)
   try {
@@ -83,35 +87,62 @@ function setupStatRegFetcher(statRegFetcher: StatRegNodeConfig): void {
     })
     const result: Array<StatRegBase> | null = statRegFetcher.fetcher()
     if (result) {
-      if (node) {
-        modifyStatRegNode(node._id, result)
-      } else {
-        createStatRegNode(statRegFetcher.key, result)
-      }
-      const {
-        changed,
-        added,
-        deleted
-      } = compareResult(node, result)
+      const res: StatRegCompareResult = compareResult(node, result)
+      const status: string = res.changed || res.added || res.deleted ? Events.DATASET_UPDATED : Events.NO_NEW_DATA
 
-      let message: string = Events.NO_NEW_DATA
-      message =
-        `Import of ${statRegFetcher.key} complete - ${changed} changed, ${added} added, ${deleted} deleted, ${result.length - added - changed} ignored`
+      if (status !== Events.NO_NEW_DATA) {
+        if (node) {
+          modifyStatRegNode(node._id, result)
+        } else {
+          createStatRegNode(statRegFetcher.key, result)
+        }
+      }
 
       logUserDataQuery(statRegFetcher.key, {
         file: '/lib/repo/statreg.ts',
         function: 'setupStatRegFetcher',
-        message
+        message: status,
+        result: res
       })
+      return {
+        key: statRegFetcher.key,
+        status,
+        info: res
+      }
     } else {
       logUserDataQuery(statRegFetcher.key, {
         file: '/lib/repo/statreg.ts',
         function: 'setupStatRegFetcher',
         message: Events.FAILED_TO_GET_DATA
       })
+      return {
+        key: statRegFetcher.key,
+        status: Events.FAILED_TO_GET_DATA,
+        info: {
+          changed: 0,
+          added: 0,
+          deleted: 0,
+          total: node ? node.data.length : 0
+        }
+      }
     }
   } catch (err) {
     log.error(`Could not fetch ${statRegFetcher.key}... ${JSON.stringify(err)}`)
+    logUserDataQuery(statRegFetcher.key, {
+      file: '/lib/repo/statreg.ts',
+      function: 'setupStatRegFetcher',
+      message: Events.FAILED_TO_REFRESH_DATASET
+    })
+    return {
+      key: statRegFetcher.key,
+      status: Events.FAILED_TO_REFRESH_DATASET,
+      info: {
+        changed: 0,
+        added: 0,
+        deleted: 0,
+        total: node ? node.data.length : 0
+      }
+    }
   }
 }
 
@@ -119,11 +150,23 @@ function compareResult(node: StatRegNode | null, result: Array<StatRegBase>): St
   let added: number = 0
   let deleted: number = 0
   let changed: number = 0
+  let total: number = 0
   if (!node) {
     added = result.length
+    total = added
   } else {
+    const oldResult: Array<StatRegBase> = node.data.map((o: StatisticInListing) => {
+      if (o.variants) {
+        return {
+          ...o,
+          variants: ensureArray(o.variants)
+        }
+      } else {
+        return o
+      }
+    })
     result.forEach((newStatReg: StatRegBase) => {
-      const oldStatReg: StatRegBase | undefined = node.data.find((oldStatReg) => oldStatReg.id === newStatReg.id)
+      const oldStatReg: StatRegBase | undefined = oldResult.find((oldStatReg) => oldStatReg.id === newStatReg.id)
       if (oldStatReg) {
         if (!equals(oldStatReg, newStatReg)) {
           changed += 1
@@ -132,18 +175,20 @@ function compareResult(node: StatRegNode | null, result: Array<StatRegBase>): St
         added += 1
       }
     })
-    node.data.forEach((oldStatReg: StatRegBase) => {
+    oldResult.forEach((oldStatReg: StatRegBase) => {
       const newStatReg: StatRegBase | undefined = result.find((newStatReg) => newStatReg.id === oldStatReg.id)
       if (!newStatReg) {
         deleted += 1
       }
     })
+    total = result.length
   }
 
   return {
     added,
     deleted,
-    changed
+    changed,
+    total
   }
 }
 
@@ -155,7 +200,7 @@ function createStatRegNode(name: string, content: object): void {
   })
 }
 
-function getStatRegNode(key: string): StatRegNode | null {
+export function getStatRegNode(key: string): StatRegNode | null {
   const node: StatRegNode[] = getNode(STATREG_REPO, STATREG_BRANCH, `/${key}`) as StatRegNode[]
   return Array.isArray(node) ? node[0] : node
 }
@@ -179,14 +224,23 @@ interface StatRegCompareResult {
   added: number;
   deleted: number;
   changed: number;
+  total: number;
 }
 
 export interface StatRegContent {
   data: Array<StatRegBase>;
+  _ts: string;
+}
+
+export interface StatRegRefreshResult {
+  key: string;
+  status: string;
+  info: StatRegCompareResult;
 }
 
 export interface StatRegRepoLib {
   setupStatRegRepo: () => void;
-  fetchStatRegData(nodeConfig?: Array<StatRegNodeConfig>): void;
+  refreshStatRegData(nodeConfig?: Array<StatRegNodeConfig>): Array<StatRegRefreshResult>;
+  getStatRegNode: (key: string) => StatRegNode | null;
   STATREG_NODES: Array<StatRegNodeConfig>;
 }

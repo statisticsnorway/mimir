@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectStatuses, selectLoading } from './selectors'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { startRefresh } from './actions.es6'
+import { DataQueryLog } from '../DataQueries/DataQueryLog'
 
 export function StatRegDashboard() {
   const loading = useSelector(selectLoading)
@@ -56,21 +57,24 @@ export function StatRegDashboard() {
             <th />
           </tr>
         </thead>
-        <tbody>
-          {statuses.map((statRegStatus, index) => {
+        <tbody className="small">
+          {statuses.map((statRegStatus) => {
             const {
               displayName,
-              hasError,
-              completionTime,
-              message
+              modifiedReadable,
+              modified,
+              logData: {
+                showWarningIcon
+              },
+              key
             } = statRegStatus
             return (
-              <tr key={index}>
-                <td className={`${statusIcon(hasError)} dataset`}>
+              <tr key={key}>
+                <td className={`${statusIcon(showWarningIcon)} dataset`}>
                   <a className="ssb-link my-0 text-capitalize" href="#">{displayName}</a>
                 </td>
-                <td>{completionTime}</td>
-                <td>{message}</td>
+                <td>{modifiedReadable}<br/>{modified}</td>
+                <td><DataQueryLog dataQueryId={key} isStatReg={true}/></td>
                 <td className="text-center">{makeRefreshButton(statRegStatus)}</td>
               </tr>
             )

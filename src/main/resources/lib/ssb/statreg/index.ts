@@ -1,17 +1,21 @@
-import { StatRegRepoLib } from '../../repo/statreg'
+import { StatRegRefreshResult, StatRegRepoLib, StatRegNode } from '../../repo/statreg'
 import { Socket, SocketEmitter } from '../../types/socket'
 import { StatRegContactsLib } from '../../repo/statreg/contacts'
 import { StatRegStatisticsLib } from '../../repo/statreg/statistics'
 import { StatRegPublicationsLib } from '../../repo/statreg/publications'
 import { StatRegLatestFetchInfoNode } from '../../repo/statreg/eventLog'
 import { RepoCommonLib } from '../../repo/common'
-import { RepoEventLogLib } from '../../repo/eventLog'
+import { LogSummary, RepoEventLogLib } from '../../repo/eventLog'
 import { Events, QueryInfo } from '../../repo/query'
-import { DashboardDatasetLib } from '../dataset/dashboard'
+import { DashboardUtilsLib } from '../dataset/dashboardUtils'
+import { I18nLibrary } from 'enonic-types/i18n'
+import { ContextLibrary, RunContext } from 'enonic-types/context'
+import { DashboardRefreshResultLogData } from '../dataset/dashboard'
 
 const {
   STATREG_NODES,
-  fetchStatRegData
+  refreshStatRegData,
+  getStatRegNode
 }: StatRegRepoLib = __non_webpack_require__('/lib/repo/statreg')
 const {
   STATREG_REPO_CONTACTS_KEY
@@ -23,15 +27,25 @@ const {
   STATREG_REPO_PUBLICATIONS_KEY
 }: StatRegPublicationsLib = __non_webpack_require__('/lib/repo/statreg/publications')
 const {
-  showWarningIcon
-}: DashboardDatasetLib = __non_webpack_require__('/lib/ssb/dataset/dashboard')
+  showWarningIcon,
+  users
+}: DashboardUtilsLib = __non_webpack_require__('/lib/ssb/dataset/dashboardUtils')
 const {
   getNode
 }: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
 const {
   EVENT_LOG_BRANCH,
-  EVENT_LOG_REPO
+  EVENT_LOG_REPO,
+  getQueryChildNodesStatus
 }: RepoEventLogLib = __non_webpack_require__('/lib/repo/eventLog')
+const {
+  dateToReadable,
+  dateToFormat
+} = __non_webpack_require__( '/lib/ssb/utils')
+const i18n: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
+const {
+  run
+}: ContextLibrary = __non_webpack_require__('/lib/xp/context')
 
 export type StatRegLatestFetchInfoNodeType = StatRegLatestFetchInfoNode | readonly StatRegLatestFetchInfoNode[] | null;
 export function getStatRegFetchStatuses(): Array<StatRegStatus> {
@@ -53,12 +67,25 @@ function toDisplayString(key: string): string {
 
 function getStatRegStatus(key: string): StatRegStatus {
   const logNode: QueryInfo | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${key}`) as QueryInfo
+  const statRegNode: StatRegNode | null = getStatRegNode(key)
+  const modifiedResult: string = logNode.data.modifiedResult || ''
+  const logMessage: string = i18n.localize({
+    key: modifiedResult || '',
+    values: [modifiedResult || '']
+  })
   const statRegData: StatRegStatus = {
     key,
     displayName: toDisplayString(key),
-    completionTime: logNode.data.modified,
-    message: logNode.data.modifiedResult || '',
-    hasError: showWarningIcon(logNode.data.modifiedResult as Events)
+    modified: statRegNode ? dateToFormat(statRegNode._ts) : undefined,
+    modifiedReadable: statRegNode ? dateToReadable(statRegNode._ts) : undefined,
+    logData: {
+      ...logNode.data,
+      modified: logNode.data.modified,
+      modifiedReadable: dateToReadable(logNode.data.modifiedTs),
+      showWarningIcon: showWarningIcon(modifiedResult as Events),
+      message: logMessage
+    },
+    eventLogNodes: []
   }
   return statRegData
 }
@@ -74,21 +101,104 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
       socketEmitter.broadcast('statreg-dashboard-refresh-start', key)
     })
     // start refreshing
-    statRegKeys.forEach((key) => {
-      fetchStatRegData(STATREG_NODES.filter((nodeConfig) => nodeConfig.key === key))
-      socketEmitter.broadcast('statreg-dashboard-refresh-result', getStatRegStatus(key))
+    const context: RunContext = {
+      branch: 'master',
+      repository: 'com.enonic.cms.default',
+      principals: ['role:system.admin'],
+      user: {
+        login: users[parseInt(socket.id)].login,
+        idProvider: users[parseInt(socket.id)].idProvider ? users[parseInt(socket.id)].idProvider : 'system'
+      }
+    }
+    run(context, () => {
+      runRefresh(socketEmitter, statRegKeys)
     })
+  })
+
+  socket.on('get-statreg-eventlog-node', (key)=> {
+    let status: Array<LogSummary> | undefined = getQueryChildNodesStatus(`/queries/${key}`) as Array<LogSummary> | undefined
+    if (!status) {
+      status = []
+    }
+    socket.emit('statreg-eventlog-node-result', {
+      logs: status,
+      id: key
+    })
+  })
+}
+
+function runRefresh(socketEmitter: SocketEmitter, statRegKeys: Array<string>): void {
+  statRegKeys.forEach((key) => {
+    refreshStatRegData(STATREG_NODES.filter((nodeConfig) => nodeConfig.key === key))
+    socketEmitter.broadcast('statreg-dashboard-refresh-result', getStatRegStatus(key))
+  })
+}
+
+export function parseStatRegJobInfo(refreshDataResult: Array<StatRegRefreshResult>): Array<StatRegJobInfo> {
+  return refreshDataResult.map((result) => {
+    const displayName: string = toDisplayString(result.key)
+    const status: string = i18n.localize({
+      key: result.status,
+      values: [result.status]
+    })
+    let infoMessage: string = ''
+    if (result.status === Events.DATASET_UPDATED || result.status === Events.NO_NEW_DATA) {
+      const {
+        added,
+        changed,
+        deleted,
+        total
+      } = result.info
+      if (added || changed || deleted) {
+        infoMessage = ''
+        if (added) {
+          infoMessage += `lagt til: ${added}`
+        }
+        if (changed) {
+          if (infoMessage.length > 1) {
+            infoMessage += ', '
+          }
+          infoMessage += `endret: ${changed}`
+        }
+        if (deleted) {
+          if (infoMessage.length > 1) {
+            infoMessage += ', '
+          }
+          infoMessage += `slettet: ${deleted}`
+        }
+        infoMessage += `, totalt: ${total}`
+      } else {
+        infoMessage = `totalt: ${total}`
+      }
+    }
+    return {
+      displayName,
+      status,
+      showWarningIcon: showWarningIcon(result.status as Events),
+      hasNewData: result.status === Events.DATASET_UPDATED,
+      infoMessage
+    }
   })
 }
 
 export interface StatRegStatus {
   key: string;
   displayName: string;
-  completionTime: string | undefined;
-  message: string;
-  hasError: boolean;
+  modified: string;
+  modifiedReadable: string;
+  logData: DashboardRefreshResultLogData;
+  eventLogNodes: Array<LogSummary>;
+}
+
+export interface StatRegJobInfo {
+  displayName: string;
+  status: string;
+  showWarningIcon: boolean;
+  hasNewData: boolean;
+  infoMessage: string;
 }
 
 export interface SSBStatRegLib {
   setupHandlers: (socket: Socket, socketEmitter: SocketEmitter) => void;
+  parseStatRegJobInfo: (refreshDataResult: Array<StatRegRefreshResult>) => Array<StatRegJobInfo>;
 }

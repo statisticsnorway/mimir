@@ -17,3 +17,10 @@ export function startRefresh(dispatch, io, keys) {
   io.emit('statreg-dashboard-refresh', keys)
 }
 
+export function requestStatRegEventLogData(dispatch, io, id) {
+  dispatch({
+    type: actions.statRegEventLogLoading.type,
+    id
+  })
+  io.emit('get-statreg-eventlog-node', id)
+}

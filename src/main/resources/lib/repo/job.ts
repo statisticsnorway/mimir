@@ -22,7 +22,8 @@ export enum JobStatus {
 }
 
 export enum JobNames {
-  PUBLISH_JOB = 'Publish statistics'
+  PUBLISH_JOB = 'Publish statistics',
+  STATREG_JOB = 'Refresh statreg data'
 }
 
 export const JOB_STATUS_STARTED: 'STARTED' = 'STARTED'
