@@ -213,7 +213,7 @@ export function Statistics() {
   }
 
   function getAboutStatisticLink(statistic) {
-    if (statistic.nextRelease) {
+    if (statistic.aboutTheStatistics) {
       return (
         <Link
           isExternal
