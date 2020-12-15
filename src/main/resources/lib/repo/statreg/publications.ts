@@ -5,7 +5,7 @@ import { RepoCommonLib } from '../common'
 import { StatRegConfigLib } from '../../ssb/statreg/config'
 import { XmlParser } from '../../types/xmlParser'
 import { StatRegCommonLib } from '../../ssb/statreg/common'
-import { Events, logUserDataQuery } from '../query'
+import { RepoQueryLib } from '../query'
 import { HttpResponse } from 'enonic-types/http'
 
 const {
@@ -23,6 +23,10 @@ const {
 const {
   fetchStatRegData
 }: StatRegCommonLib = __non_webpack_require__('/lib/ssb/statreg/common')
+const {
+  Events,
+  logUserDataQuery
+}: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
 export const STATREG_REPO_PUBLICATIONS_KEY: string = 'publications'

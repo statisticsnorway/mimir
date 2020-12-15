@@ -5,7 +5,7 @@ import { ArrayUtilsLib } from '../../ssb/arrayUtils'
 import { StatRegConfigLib } from '../../ssb/statreg/config'
 import { StatRegCommonLib } from '../../ssb/statreg/common'
 import { RepoCommonLib } from '../common'
-import { Events, logUserDataQuery } from '../query'
+import { RepoQueryLib } from '../query'
 import { HttpResponse } from 'enonic-types/http'
 
 const {
@@ -23,6 +23,10 @@ const {
 const {
   getNode
 }: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
+const {
+  Events,
+  logUserDataQuery
+}: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
 
 export const STATREG_REPO_STATISTICS_KEY: string = 'statistics'
 

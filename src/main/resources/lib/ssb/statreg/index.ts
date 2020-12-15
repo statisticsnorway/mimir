@@ -4,15 +4,14 @@ import { StatRegContactsLib } from '../../repo/statreg/contacts'
 import { StatRegStatisticsLib } from '../../repo/statreg/statistics'
 import { StatRegPublicationsLib } from '../../repo/statreg/publications'
 import { StatRegLatestFetchInfoNode } from '../../repo/statreg/eventLog'
-import { getNode } from '../../repo/common'
-import { EVENT_LOG_BRANCH, EVENT_LOG_REPO } from '../../repo/eventLog'
+import { RepoCommonLib } from '../../repo/common'
+import { RepoEventLogLib } from '../../repo/eventLog'
 import { Events, QueryInfo } from '../../repo/query'
 import { DashboardDatasetLib } from '../dataset/dashboard'
 
 const {
   STATREG_NODES,
-  fetchStatRegData,
-  toDisplayString
+  fetchStatRegData
 }: StatRegRepoLib = __non_webpack_require__('/lib/repo/statreg')
 const {
   STATREG_REPO_CONTACTS_KEY
@@ -26,6 +25,13 @@ const {
 const {
   showWarningIcon
 }: DashboardDatasetLib = __non_webpack_require__('/lib/ssb/dataset/dashboard')
+const {
+  getNode
+}: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
+const {
+  EVENT_LOG_BRANCH,
+  EVENT_LOG_REPO
+}: RepoEventLogLib = __non_webpack_require__('/lib/repo/eventLog')
 
 export type StatRegLatestFetchInfoNodeType = StatRegLatestFetchInfoNode | readonly StatRegLatestFetchInfoNode[] | null;
 export function getStatRegFetchStatuses(): Array<StatRegStatus> {
@@ -34,6 +40,15 @@ export function getStatRegFetchStatuses(): Array<StatRegStatus> {
     STATREG_REPO_STATISTICS_KEY,
     STATREG_REPO_PUBLICATIONS_KEY
   ].map(getStatRegStatus)
+}
+
+function toDisplayString(key: string): string {
+  switch (key) {
+  case STATREG_REPO_CONTACTS_KEY: return 'kontakter'
+  case STATREG_REPO_STATISTICS_KEY: return 'statistikk'
+  case STATREG_REPO_PUBLICATIONS_KEY: return 'publiseringer'
+  default: return key
+  }
 }
 
 function getStatRegStatus(key: string): StatRegStatus {
