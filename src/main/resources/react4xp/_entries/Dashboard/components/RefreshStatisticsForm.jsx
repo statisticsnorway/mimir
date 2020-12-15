@@ -10,7 +10,7 @@ export function RefreshStatisticsForm(props) {
     modalInfo
   } = props
 
-  const [owners, setOwners] = useState({})
+  const [owners, setOwners] = useState([])
   const [fetchPublished, setFetchedPublished] = useState(null)
 
   /*
@@ -122,7 +122,7 @@ tbml id 123 url: tbprocessor/docuemnt/123
   }
 
   return (
-    <Form className="mt-3" >
+    <Form className="mt-3" onSubmit={testValid}>
       {
         // modalInfo.relatedTables.map((table) => {
         //   return table.sourceList && Object.keys(table.sourceList).map((key, i) => {
@@ -143,7 +143,10 @@ tbml id 123 url: tbprocessor/docuemnt/123
       </Form.Group>
       <Button
         variant="primary"
-        onClick={(event) => testValid(event)}
+        onClick={() => onSubmit({
+          owners,
+          fetchPublished
+        })}
       >
         Send
       </Button>

@@ -63,17 +63,25 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     const statistic: Content<Statistics> | null = getContent({
       key: data.id
     })
-
+    log.info('data')
+    log.info(JSON.stringify(data, null, 2))
     const fetchPublished: boolean = data.fetchPublished === 'on'
+    log.info('fetchPublished: ' + fetchPublished)
     const processXmls: Array<ProcessXml> | undefined = !fetchPublished && data.owners ? processXmlFromOwners(data.owners) : undefined
 
     if (statistic) {
       const datasetIdsToUpdate: Array<string> = getDatasetIdsFromStatistic(statistic)
+      log.info(JSON.stringify('datasetIdsToUpdate', null ,2))
+      log.info(JSON.stringify(datasetIdsToUpdate, null ,2))
       const datasetWithCredentials: Array<string> = fetchPublished ?
         datasetIdsToUpdate :
         datasetIdsToUpdate.filter( (datasetId) => data.owners && data.owners.map((owner: OwnerObject) => {
-          return owner.ownerTableIds ? ownerHasTbmlId(owner.ownerTableIds, datasetId) : false
+          log.info(JSON.stringify('owner', null, 2))
+          log.info(JSON.stringify(owner, null, 2))
+          return owner.tbmlIdList ? ownerHasTbmlId(owner.tbmlIdList, datasetId) : false
         }))
+      log.info(JSON.stringify('datasetWithCredentials', null ,2))
+      log.info(JSON.stringify(datasetWithCredentials, null ,2))
 
       if (datasetIdsToUpdate.length > 0) {
         const context: RunContext = {
@@ -104,30 +112,28 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   })
 }
 
-function ownerHasTbmlId(ownerTableIds: Array<OwnerWithSources>, datasetId: string): boolean {
-  return ownerTableIds.reduce((acc: boolean, ownerTableId: OwnerWithSources): boolean => {
-    if (!acc) acc = ownerTableId.tbmlIdList.find((tbmlIdObj) => tbmlIdObj.tbmlId === datasetId) ? true : false
+function ownerHasTbmlId(tbmlIdList: Array<TbmlId>, datasetId: string): boolean {
+  return tbmlIdList.reduce((acc: boolean, tbmlId: TbmlId): boolean => {
+    if (!acc) acc = tbmlId.tbmlId === datasetId ? true : false
     return acc
   }, false)
 }
 
-function processXmlFromOwners(owners: RefreshInfo['owners']): Array<ProcessXml> | undefined {
-  return owners && Object.keys(owners).reduce((acc: Array<ProcessXml>, ownerKey) => {
-    const ownerKeyInt: number = parseInt(ownerKey)
-    const currentOwnerObj: OwnerObject | undefined = owners && owners[ownerKeyInt] ? owners[ownerKeyInt] : undefined
-    const ownerTableIds: Array<OwnerWithSources> | undefined = currentOwnerObj && Array.isArray(currentOwnerObj.ownerTableIds) ?
-      currentOwnerObj.ownerTableIds : undefined
-
-    const sourceNodesString: Array<string> | undefined = currentOwnerObj && ownerTableIds ?
-      ownerTableIds.map((tableId) => {
-        return `<source user="${currentOwnerObj.username}" password="${encrypt(currentOwnerObj.password)}" id="${tableId}"/>`
+function processXmlFromOwners(owners: Array<OwnerObject>): Array<ProcessXml> | undefined {
+  return owners.reduce((acc: Array<ProcessXml>, ownerObj: OwnerObject) => {
+    const sourceNodesString: Array<string> | undefined = ownerObj && ownerObj.tbmlIdList ?
+      ownerObj.tbmlIdList.map((tableId: TbmlId) => {
+        return `<source user="${ownerObj.username}" password="${encrypt(ownerObj.password)}" id="${tableId.sourceTableId}"/>`
       }) : undefined
-
-    if (sourceNodesString && currentOwnerObj) {
-      acc.push({
-        tbmlId: parseInt(currentOwnerObj.tbmlId),
-        processXml: `<process>${sourceNodesString.join('')}</process>`
-      })
+    log.info('sourceNodesString')
+    log.info(JSON.stringify(sourceNodesString, null, 2))
+    if (sourceNodesString && ownerObj) {
+      ownerObj && ownerObj.tbmlIdList && ownerObj.tbmlIdList.forEach((tbmlIdObj: TbmlId) => {
+        acc.push({
+          tbmlId: parseInt(tbmlIdObj.tbmlId),
+          processXml: `<process>${sourceNodesString.join('')}</process>`
+        })
+      }, [])
     }
     return acc
   }, [])
@@ -167,7 +173,6 @@ function sourcesForUserFromStatistic(statistic: Content<Statistics>): Array<Owne
         const userIndex: number = acc.findIndex((it) => it.ownerId == source.owner)
         if (userIndex != -1) {
           const tbmlIdIndex: number = acc[userIndex].tbmlIdList.findIndex((it) => it.tbmlId == source.tableId)
-          log.info(`user: ${source.owner} index: ${userIndex} - ${tbmlIdIndex}`)
           if (tbmlIdIndex == -1) {
             acc[userIndex].tbmlIdList.push({
               tbmlId: source.tableId,
@@ -282,15 +287,14 @@ function sortByNextRelease(statisticData: Array<StatisticDashboard>): Array<Stat
 interface RefreshInfo {
   id: string;
   owners?: Array<OwnerObject>;
-  owner: string;
   fetchPublished: 'on' | null;
 }
 
 interface OwnerObject {
   username: string;
   password: string;
-  ownerTableIds?: Array<OwnerWithSources>;
-  tbmlId: string;
+  tbmlIdList?: Array<TbmlId>;
+  ownerId: string;
 };
 
 interface StatisticDashboard {
