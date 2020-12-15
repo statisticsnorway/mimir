@@ -2,8 +2,8 @@ import { AuthLibrary, UserQueryResult } from 'enonic-types/auth'
 import { Content } from 'enonic-types/content'
 import { ContextLibrary, RunContext } from 'enonic-types/context'
 import { DataSource } from '../../site/mixins/dataSource/dataSource'
-import { RepoJobLib, JobEventNode, JobInfoNode, JobNames } from '../repo/job'
-import { StatRegRefreshResult, StatRegRepoLib, STATREG_NODES } from '../repo/statreg'
+import { RepoJobLib, JobEventNode, JobInfoNode } from '../repo/job'
+import { StatRegRefreshResult, StatRegRepoLib } from '../repo/statreg'
 import { SSBTaskLib } from '../task'
 import { CronLib, GetCronResult } from '../types/cron'
 import { DatasetLib } from './dataset/dataset'
@@ -14,7 +14,8 @@ const {
   publishDataset
 }: PublishDatasetLib = __non_webpack_require__( '/lib/ssb/dataset/publish')
 const {
-  refreshStatRegData
+  refreshStatRegData,
+  STATREG_NODES
 }: StatRegRepoLib = __non_webpack_require__( '/lib/repo/statreg')
 const cron: CronLib = __non_webpack_require__('/lib/cron')
 const {
@@ -27,7 +28,8 @@ const {
   completeJobLog,
   startJobLog,
   updateJobLog,
-  JOB_STATUS_COMPLETE
+  JOB_STATUS_COMPLETE,
+  JobNames
 }: RepoJobLib = __non_webpack_require__('/lib/repo/job')
 const {
   dataSourceRSSFilter
