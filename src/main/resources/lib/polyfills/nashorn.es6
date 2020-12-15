@@ -144,6 +144,7 @@ if (!Array.prototype.findIndex) {
       }
 
       // 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
+      // eslint-disable-next-line prefer-rest-params
       const thisArg = arguments[1]
 
       // 5. Let k be 0.

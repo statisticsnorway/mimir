@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
 import PropTypes from 'prop-types'
-import { func } from 'prop-types'
-import { User } from 'react-feather'
 
 export function RefreshStatisticsForm(props) {
   const {
@@ -12,25 +10,6 @@ export function RefreshStatisticsForm(props) {
 
   const [owners, setOwners] = useState([])
   const [fetchPublished, setFetchedPublished] = useState(null)
-
-  /*
-[ {owner: 312, username: "asd", password: "qwe", [ {tbmlId: 555, sources: ["ID 333", "ID 444"...] } ], ...]
-tbml id 123 url: tbprocessor/docuemnt/123
-<process>
-  <source ID="">
-</proces>
-
-[
-   {
-    ownerId: 214​,
-    password: "qwe",
-    tbmlIdList: [{
-      sourceTableId: Array [ "ID10002658", "ID10002661" ]
-      tbmlId: "08806"}
-    username: "asdf"
-  }
-]
-*/
 
   function updateOwnerCredentials(ownersObj, propKey, value) {
     const currentOwner = owners.find((owner) => owner.ownerId === ownersObj.ownerId)
@@ -43,15 +22,15 @@ tbml id 123 url: tbprocessor/docuemnt/123
       })
     }
     setOwners(owners)
-    console.log(owners)
   }
   function renderOwnerInputForMultipleTbml(owner, index) {
     return (
       <div key={index}>
-        <p>Autorisasjon for bruker {owner.ownerId} som har <ul> {
+        <p>Autorisasjon for bruker {owner.ownerId} som har</p>
+        <ul> {
           owner.tbmlIdList.map((tbml, i) => {
             return (<li key={i}>
-              TBML {tbml.tbmlId} med kilder: {tbml.sourceTableId.join(', ')}.
+              TBML {owner.tbmlId} og TableId {tbml.tableId} med kilder: {tbml.sourceTableIds.join(', ')}.
             </li>)
           })
         } </ul>
@@ -72,43 +51,13 @@ tbml id 123 url: tbprocessor/docuemnt/123
             placeholder="Passord"
             onChange={(e) => updateOwnerCredentials(owner, 'password', e.target.value )}
           />
-        </Form.Group></p>
+        </Form.Group>
       </div>
     )
   }
-  // function renderOwnerInputField(owner, sources, i, tbmlId) {
-  //   const ownerTableIds = sources.map((source) => source.id)
-  //   return (
-  //     <div key={i}>
-  //       <p>Autorisasjon for TBML {tbmlId} med eier {owner}. <br/>TabelId: {
-  //         sources
-  //           .map( (source) => source.tableId)
-  //           .filter((value, index, self) => self.indexOf(value) === index) // only unique values
-  //           .join(', ')
-  //       }.
-  //       </p>
-  //       <Form.Group controlId="formBasicUsername">
-  //         <Form.Label>Brukernavn</Form.Label>
-  //         <Form.Control
-  //           type="username"
-  //           placeholder="Brukernavn"
-  //           onChange={(e) => updateOwnerCredentials(owner, 'username', e.target.value, ownerTableIds, tbmlId)}
-  //         />
-  //       </Form.Group>
-  //       <Form.Group controlId="formBasicPassword">
-  //         <Form.Label>Password</Form.Label>
-  //         <Form.Control
-  //           type="password"
-  //           placeholder="Passord"
-  //           onChange={(e) => updateOwnerCredentials(owner, 'password', e.target.value, ownerTableIds, tbmlId)}
-  //         />
-  //       </Form.Group>
-  //     </div>
-  //   )
-  // }
 
   return (
-    <Form className="mt-3" onSubmit={testValid}>
+    <Form className="mt-3">
       {
         // modalInfo.relatedTables.map((table) => {
         //   return table.sourceList && Object.keys(table.sourceList).map((key, i) => {
@@ -161,10 +110,11 @@ RefreshStatisticsForm.propTypes = {
     relatedUserTBMLs: PropTypes.arrayOf(
       PropTypes.shape({
         ownerId: PropTypes.number,
+        tbmlId: PropTypes.number,
         tbmlIdList: PropTypes.arrayOf(
           PropTypes.shape({
             tbmlId: PropTypes.string,
-            sourceTableId: PropTypes.arrayOf(PropTypes.string)
+            sourceTableIds: PropTypes.arrayOf(PropTypes.string)
           })
         )
       })

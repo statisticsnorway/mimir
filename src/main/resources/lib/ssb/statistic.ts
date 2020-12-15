@@ -16,9 +16,6 @@ import { KeyFigure } from '../../site/content-types/keyFigure/keyFigure'
 import { TbprocessorLib } from './dataset/tbprocessor'
 import { DataSource } from '../../site/mixins/dataSource/dataSource'
 import { Source, TbmlDataUniform } from '../types/xmlParser'
-import { groupBy } from 'ramda'
-import { Statistic } from '../../site/mixins/statistic/statistic'
-import { number, string } from 'prop-types'
 
 const {
   query,
@@ -40,8 +37,7 @@ const {
   run
 }: ContextLibrary = __non_webpack_require__('/lib/xp/context')
 const {
-  DATASET_BRANCH,
-  UNPUBLISHED_DATASET_BRANCH
+  DATASET_BRANCH
 }: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
 const {
   getTbprocessor
@@ -65,15 +61,9 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     })
     const fetchPublished: boolean = data.fetchPublished === 'on'
 
-
     if (statistic) {
       const datasetIdsToUpdate: Array<string> = getDatasetIdsFromStatistic(statistic)
       const processXmls: Array<ProcessXml> | undefined = !fetchPublished && data.owners ? processXmlFromOwners(data.owners) : undefined
-      const datasetWithCredentials: Array<string> = fetchPublished ?
-        datasetIdsToUpdate :
-        datasetIdsToUpdate.filter( (datasetId) => data.owners && data.owners.map((owner: OwnerObject) => {
-          return owner.tbmlIdList ? ownerHasTbmlId(owner.tbmlIdList, datasetId) : false
-        }))
 
       if (datasetIdsToUpdate.length > 0) {
         const context: RunContext = {
@@ -87,9 +77,10 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
         }
         run(context, () => {
           refreshDatasetHandler(
-            datasetWithCredentials,
+            datasetIdsToUpdate,
             socketEmitter,
-            fetchPublished ? DATASET_BRANCH : UNPUBLISHED_DATASET_BRANCH,
+            DATASET_BRANCH,
+            fetchPublished,
             processXmls
           )
         })
@@ -104,87 +95,32 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   })
 }
 
-function ownerHasTbmlId(tbmlIdList: Array<TbmlId>, datasetId: string): boolean {
-  return tbmlIdList.reduce((acc: boolean, tbmlId: TbmlId): boolean => {
-    if (!acc) acc = tbmlId.tbmlId === datasetId ? true : false
-    return acc
-  }, false)
-}
-/*
- *
-{
-  "id": "20ba5d2f-7412-4e3e-8d19-41e8deb0b5f5",
-  "owners": [
-    {
-      "ownerId": 312,
-      "tbmlIdList": [
-        {
-          "tbmlId": 11652,
-          "sourceTableId": [
-            "ID10010125"
-          ]
-        },
-        {
-          "tbmlId": 223311,
-          "sourceTableId": [
-            "ID10010128"
-          ]
-        },
-        {
-          "tbmlId": 12314,
-          "sourceTableId": [
-            "ID10041925"
-          ]
-        }
-      ],
-      "username": "last312",
-      "password": "asd"
-    }
-  ],
-  "fetchPublished": null
-}
-
-**processXml
-
-
-[{
-  tbmlId: 223311,
-  processXml: '
-      <process>
-        <source user="last312" password="sss" id="ID023943240"/>
-        <source user="last431" password="aaa" id="ID023943241"/>
-      </process>'
-},
-...
-]
-  i.test.ssb.no/tbprocessor/document/223311
-
-
- * <process>
- *  <source user="qwe" password="zxc" id="ID023943240"/>
- *  <source user="qwe" password="zxc" id="ID023943240"/>
- * </process>
- */
-function processXmlFromOwners(owners: Array<OwnerObject>): Array<ProcessXml> | undefined {
-  return owners.reduce((acc: Array<ProcessXml>, ownerObj: OwnerObject) => {
-    const sourceNodesString: Array<string> | undefined = ownerObj && ownerObj.tbmlIdList ?
-      ownerObj.tbmlIdList.map((tableId: TbmlId) => {
-        return `<source user="${ownerObj.username}" password="${encrypt(ownerObj.password)}" id="${tableId.sourceTableId}"/>`
-      }) : undefined
-
-    log.info('sourceNodesString')
-    log.info(JSON.stringify(sourceNodesString, null, 2))
-
-    if (sourceNodesString && ownerObj) {
-      ownerObj && ownerObj.tbmlIdList && ownerObj.tbmlIdList.forEach((tbmlIdObj: TbmlId) => {
-        acc.push({
-          tbmlId: parseInt(tbmlIdObj.tbmlId),
-          processXml: `<process>${sourceNodesString.join('')}</process>`
+function processXmlFromOwners(owners: Array<OwnerObject>): Array<ProcessXml> {
+  const preRender: Array<SourceNodeRender> = owners.reduce((acc: Array<SourceNodeRender>, ownerObj: OwnerObject) => {
+    ownerObj.tbmlIdList && ownerObj.tbmlIdList.forEach( (tbmlIdObj: TbmlId) => {
+      const tbmlProcess: SourceNodeRender | undefined = acc.find((process: SourceNodeRender) => process.tableId === parseInt(tbmlIdObj.tableId))
+      if (tbmlProcess) {
+        tbmlIdObj.sourceTableIds.forEach((sourceTable) => {
+          tbmlProcess.sourceNodeStrings.push(`<source user="${ownerObj.username}" password="${encrypt(ownerObj.password)}" id="${sourceTable}"/>`)
         })
-      }, [])
-    }
+      } else {
+        acc.push({
+          tbmlId: ownerObj.tbmlId,
+          tableId: parseInt(tbmlIdObj.tableId),
+          sourceNodeStrings: tbmlIdObj.sourceTableIds.map( (sourceTable) => {
+            return `<source user="${ownerObj.username}" password="${encrypt(ownerObj.password)}" id="${sourceTable}"/>`
+          })
+        })
+      }
+    })
     return acc
   }, [])
+
+  return preRender.map((sourceNode) => ({
+    tbmlId: sourceNode.tbmlId,
+    tableId: sourceNode.tableId,
+    processXml: `<process>${sourceNode.sourceNodeStrings.join('')}</process>`
+  }))
 }
 
 export function getDatasetIdsFromStatistic(statistic: Content<Statistics>): Array<string> {
@@ -196,7 +132,6 @@ export function getDatasetIdsFromStatistic(statistic: Content<Statistics>): Arra
 
 function sourcesForUserFromStatistic(statistic: Content<Statistics>): Array<OwnerWithSources> {
   const datasetIds: Array<string> = getDatasetIdsFromStatistic(statistic)
-
   const sources: Array<SourceList> = datasetIds.reduce((acc: Array<SourceList>, contentId: string) => {
     const dataset: DatasetRepoNode<TbmlDataUniform> | null = getDatasetFromContentId(contentId)
     if (dataset) {
@@ -217,24 +152,26 @@ function sourcesForUserFromStatistic(statistic: Content<Statistics>): Array<Owne
       typeof(dataset.data) !== 'string' &&
       dataset.data.tbml.metadata &&
       dataset.data.tbml.metadata.sourceList) {
+      const tbmlId: number = dataset.data.tbml.metadata.instance.definitionId
       forceArray(dataset.data.tbml.metadata.sourceList).forEach((source: Source) => {
         const userIndex: number = acc.findIndex((it) => it.ownerId == source.owner)
         if (userIndex != -1) {
-          const tbmlIdIndex: number = acc[userIndex].tbmlIdList.findIndex((it) => it.tbmlId == source.tableId)
+          const tbmlIdIndex: number = acc[userIndex].tbmlIdList.findIndex((it) => it.tableId == source.tableId)
           if (tbmlIdIndex == -1) {
             acc[userIndex].tbmlIdList.push({
-              tbmlId: source.tableId,
-              sourceTableId: [source.id]
+              tableId: source.tableId,
+              sourceTableIds: [source.id]
             })
           } else {
-            acc[userIndex].tbmlIdList[tbmlIdIndex].sourceTableId.push(source.id)
+            acc[userIndex].tbmlIdList[tbmlIdIndex].sourceTableIds.push(source.id)
           }
         } else {
           acc.push({
             ownerId: source.owner,
+            tbmlId: tbmlId,
             tbmlIdList: [{
-              tbmlId: source.tableId,
-              sourceTableId: [source.id]
+              tableId: source.tableId,
+              sourceTableIds: [source.id]
             }]
 
           })
@@ -243,11 +180,6 @@ function sourcesForUserFromStatistic(statistic: Content<Statistics>): Array<Owne
     }
     return acc
   }, [])
-}
-
-interface SourceList {
-  queryId: string;
-  dataset: DatasetRepoNode<TbmlDataUniform>;
 }
 
 function getDatasetFromContentId(contentId: string): DatasetRepoNode<TbmlDataUniform> | null {
@@ -271,7 +203,6 @@ function prepStatistics(statistics: Array<Content<Statistics>>): Array<Statistic
 
     if (statregData) {
       const relatedUserTBMLs: Array<OwnerWithSources> = sourcesForUserFromStatistic(statistic)
-
       const statisticDataDashboard: StatisticDashboard = {
         id: statistic._id,
         language: statistic.language ? statistic.language : '',
@@ -332,6 +263,17 @@ function sortByNextRelease(statisticData: Array<StatisticDashboard>): Array<Stat
   return statisticsSorted
 }
 
+interface SourceNodeRender {
+  tbmlId: number;
+  tableId: number;
+  sourceNodeStrings: Array<string>;
+}
+
+interface SourceList {
+  queryId: string;
+  dataset: DatasetRepoNode<TbmlDataUniform>;
+}
+
 interface RefreshInfo {
   id: string;
   owners?: Array<OwnerObject>;
@@ -342,7 +284,8 @@ interface OwnerObject {
   username: string;
   password: string;
   tbmlIdList?: Array<TbmlId>;
-  ownerId: string;
+  ownerId: number;
+  tbmlId: number;
 };
 
 interface StatisticDashboard {
@@ -372,12 +315,13 @@ interface TbmlSources {
 
 interface OwnerWithSources {
   ownerId: number;
+  tbmlId: number;
   tbmlIdList: Array<TbmlId>;
 }
 
 interface TbmlId {
-  tbmlId: string;
-  sourceTableId: Array<string>;
+  tableId: string;
+  sourceTableIds: Array<string>;
 }
 
 export interface StatisticLib {
@@ -386,6 +330,3 @@ export interface StatisticLib {
   getDatasetIdsFromStatistic: (statistic: Content<Statistics>) => Array<string>;
 }
 
-export interface GroupByResult {
-  [key: number]: Array<object>;
-}
