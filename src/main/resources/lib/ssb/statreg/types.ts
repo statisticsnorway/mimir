@@ -56,6 +56,7 @@ export interface VariantInListing {
 export interface StatisticInListing extends StatRegBase {
     shortName: string;
     name: string;
+    nameEN: string;
     status: string;
     modifiedTime: string;
     variants: Array<VariantInListing>;

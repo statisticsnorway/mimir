@@ -11,9 +11,13 @@ const {
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
-const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 const view = resolve('./statbankBox.html')
 const STATBANKWEB_URL = app.config && app.config['ssb.statbankweb.baseUrl'] ? app.config['ssb.statbankweb.baseUrl'] : 'https://www.ssb.no/statbank'
+
+const moment = require('moment/min/moment-with-locales')
+const {
+  getPhrases
+} = __non_webpack_require__( '/lib/language')
 
 exports.get = function(req) {
   try {
@@ -29,9 +33,11 @@ function renderPart(req) {
   const page = getContent()
   const statistic = page.data.statistic && getStatisticByIdFromRepo(page.data.statistic)
   const shortName = statistic && statistic.shortName ? statistic.shortName : undefined
-  const title = i18nLib.localize({
-    key: 'statbankBox.title'
-  })
+
+  moment.locale(page.language ? page.language : 'nb')
+  const phrases = getPhrases(page)
+
+  const title = phrases['statbankBox.title']
 
   const model = {
     statbankIcon: assetUrl({
