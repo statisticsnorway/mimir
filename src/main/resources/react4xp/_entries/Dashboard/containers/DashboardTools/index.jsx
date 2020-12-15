@@ -110,7 +110,7 @@ export function DataQueryTools() {
         <li className="list-group-item">
           <Link
             isExternal
-            href="/pxwebi/pxweb/no/prod_24v_intern/">Intern statistikkbank
+            href="/pxwebi/pxweb/no/">Intern statistikkbank
           </Link>
         </li>
         <li className="list-group-item">
