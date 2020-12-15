@@ -10,7 +10,7 @@ export function RefreshStatisticsForm(props) {
     modalInfo
   } = props
 
-  const [owners, setOwners] = useState({})
+  const [owners, setOwners] = useState([])
   const [fetchPublished, setFetchedPublished] = useState(null)
 
   /*
