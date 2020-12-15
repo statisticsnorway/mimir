@@ -11,9 +11,13 @@ const {
 } = __non_webpack_require__('/lib/thymeleaf')
 const React4xp = require('/lib/enonic/react4xp')
 const util = __non_webpack_require__('/lib/util')
-const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 const view = resolve('./statbankLinkList.html')
 const STATBANKWEB_URL = app.config && app.config['ssb.statbankweb.baseUrl'] ? app.config['ssb.statbankweb.baseUrl'] : 'https://www.ssb.no/statbank'
+
+const moment = require('moment/min/moment-with-locales')
+const {
+  getPhrases
+} = __non_webpack_require__( '/lib/language')
 
 exports.get = function(req) {
   try {
@@ -29,12 +33,13 @@ function renderPart(req) {
   const page = getContent()
   const statistic = page.data.statistic && getStatisticByIdFromRepo(page.data.statistic)
   const shortName = statistic && statistic.shortName ? statistic.shortName : undefined
-  const title = i18nLib.localize({
-    key: 'statbankList.title'
-  })
-  const linkTitle = i18nLib.localize( {
-    key: 'statbankList.linkTitle'
-  })
+
+  moment.locale(page.language ? page.language : 'nb')
+  const phrases = getPhrases(page)
+
+  const title = phrases['statbankList.title']
+  const linkTitle = phrases['statbankList.linkTitle']
+
   const linkTitleWithNumber = linkTitle + ' (' + page.data.linkNumber + ')'
   const statbankLinkHref = shortName ? `${STATBANKWEB_URL}/list/${shortName}` : STATBANKWEB_URL
   const statbankLinkItemSet = page.data.statbankLinkItemSet
