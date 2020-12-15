@@ -107,20 +107,6 @@ tbml id 123 url: tbprocessor/docuemnt/123
   //   )
   // }
 
-  function testValid(event) {
-    console.log(event)
-    const test = event.currentTarget.checkcValidity()
-    if (test) {
-      onSubmit({
-        owners,
-        fetchPublished
-      })
-    } else {
-      event.preventDefault()
-      event.stopPropagation()
-    }
-  }
-
   return (
     <Form className="mt-3" >
       {
@@ -143,7 +129,10 @@ tbml id 123 url: tbprocessor/docuemnt/123
       </Form.Group>
       <Button
         variant="primary"
-        onClick={(event) => testValid(event)}
+        onClick={() => onSubmit({
+          owners,
+          fetchPublished
+        })}
       >
         Send
       </Button>
