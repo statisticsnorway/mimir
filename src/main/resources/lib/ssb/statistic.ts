@@ -63,25 +63,17 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     const statistic: Content<Statistics> | null = getContent({
       key: data.id
     })
-    log.info('data')
-    log.info(JSON.stringify(data, null, 2))
     const fetchPublished: boolean = data.fetchPublished === 'on'
-    log.info('fetchPublished: ' + fetchPublished)
-    const processXmls: Array<ProcessXml> | undefined = !fetchPublished && data.owners ? processXmlFromOwners(data.owners) : undefined
+
 
     if (statistic) {
       const datasetIdsToUpdate: Array<string> = getDatasetIdsFromStatistic(statistic)
-      log.info(JSON.stringify('datasetIdsToUpdate', null ,2))
-      log.info(JSON.stringify(datasetIdsToUpdate, null ,2))
+      const processXmls: Array<ProcessXml> | undefined = !fetchPublished && data.owners ? processXmlFromOwners(data.owners) : undefined
       const datasetWithCredentials: Array<string> = fetchPublished ?
         datasetIdsToUpdate :
         datasetIdsToUpdate.filter( (datasetId) => data.owners && data.owners.map((owner: OwnerObject) => {
-          log.info(JSON.stringify('owner', null, 2))
-          log.info(JSON.stringify(owner, null, 2))
           return owner.tbmlIdList ? ownerHasTbmlId(owner.tbmlIdList, datasetId) : false
         }))
-      log.info(JSON.stringify('datasetWithCredentials', null ,2))
-      log.info(JSON.stringify(datasetWithCredentials, null ,2))
 
       if (datasetIdsToUpdate.length > 0) {
         const context: RunContext = {
@@ -118,15 +110,71 @@ function ownerHasTbmlId(tbmlIdList: Array<TbmlId>, datasetId: string): boolean {
     return acc
   }, false)
 }
+/*
+ *
+{
+  "id": "20ba5d2f-7412-4e3e-8d19-41e8deb0b5f5",
+  "owners": [
+    {
+      "ownerId": 312,
+      "tbmlIdList": [
+        {
+          "tbmlId": 11652,
+          "sourceTableId": [
+            "ID10010125"
+          ]
+        },
+        {
+          "tbmlId": 223311,
+          "sourceTableId": [
+            "ID10010128"
+          ]
+        },
+        {
+          "tbmlId": 12314,
+          "sourceTableId": [
+            "ID10041925"
+          ]
+        }
+      ],
+      "username": "last312",
+      "password": "asd"
+    }
+  ],
+  "fetchPublished": null
+}
 
+**processXml
+
+
+[{
+  tbmlId: 223311,
+  processXml: '
+      <process>
+        <source user="last312" password="sss" id="ID023943240"/>
+        <source user="last431" password="aaa" id="ID023943241"/>
+      </process>'
+},
+...
+]
+  i.test.ssb.no/tbprocessor/document/223311
+
+
+ * <process>
+ *  <source user="qwe" password="zxc" id="ID023943240"/>
+ *  <source user="qwe" password="zxc" id="ID023943240"/>
+ * </process>
+ */
 function processXmlFromOwners(owners: Array<OwnerObject>): Array<ProcessXml> | undefined {
   return owners.reduce((acc: Array<ProcessXml>, ownerObj: OwnerObject) => {
     const sourceNodesString: Array<string> | undefined = ownerObj && ownerObj.tbmlIdList ?
       ownerObj.tbmlIdList.map((tableId: TbmlId) => {
         return `<source user="${ownerObj.username}" password="${encrypt(ownerObj.password)}" id="${tableId.sourceTableId}"/>`
       }) : undefined
+
     log.info('sourceNodesString')
     log.info(JSON.stringify(sourceNodesString, null, 2))
+
     if (sourceNodesString && ownerObj) {
       ownerObj && ownerObj.tbmlIdList && ownerObj.tbmlIdList.forEach((tbmlIdObj: TbmlId) => {
         acc.push({
