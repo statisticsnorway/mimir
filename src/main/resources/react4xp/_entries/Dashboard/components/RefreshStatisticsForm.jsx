@@ -30,8 +30,7 @@ export function RefreshStatisticsForm(props) {
         <ul> {
           owner.tbmlList.map((tbml, i) => {
             return (<li key={i}>
-              TBML {tbml.tbmlId} med kilder: {tbml.statbankTableIds.map( (source) => source.tableId)
-                .filter((value, index, self) => self.indexOf(value) === index) // only unique values
+              TBML {tbml.tbmlId} med kilder: {tbml.statbankTableIds.filter((value, index, self) => self.indexOf(value) === index) // only unique values
                 .join(', ')}.
             </li>)
           })
