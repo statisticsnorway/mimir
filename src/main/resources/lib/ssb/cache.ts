@@ -92,7 +92,7 @@ let changeQueue: EnonicEventData['nodes'] = []
 let clearTaskId: string | undefined
 
 export function setup(): void {
-  log.info('initializing cache node listener')
+  cacheLog('initializing cache node listener')
   listener({
     type: 'node.*',
     localOnly: true,
@@ -178,7 +178,7 @@ function clearForBranch(nodes: EnonicEventData['nodes'], branch: string): void {
     nodes.forEach((n) => {
       if (n.repo === 'com.enonic.cms.default') {
         // clear id and all references to id from cache
-        log.info(`try to clear ${n.id}(${branch})`)
+        cacheLog(`try to clear ${n.id}(${branch})`)
         const content: Content | null = get({
           key: n.id
         })
@@ -224,7 +224,7 @@ function getReferences(id: string): Array<Content> {
 
 function clearCache(content: Content, branch: string, cleared: Array<string>): Array<string> {
   if (cleared.filter((c) => content._id === c).length > 0) { // already cleared
-    log.info(`already cleared ${content._id}(${branch})`)
+    cacheLog(`already cleared ${content._id}(${branch})`)
     return cleared
   }
   cleared.push(content._id)
@@ -233,21 +233,21 @@ function clearCache(content: Content, branch: string, cleared: Array<string>): A
   const cacheMap: Map<string, Cache> = branch === 'master' ? masterFilterCaches : draftFilterCaches
   const filterCache: Cache | undefined = cacheMap.get(content._id)
   if (filterCache) {
-    log.info(`clear ${content._id} filter cache(${branch})`)
+    cacheLog(`clear ${content._id} filter cache(${branch})`)
     filterCache.clear()
   }
 
   // clear related article cache
   if (content.type === `${app.name}:article`) {
     const relatedArticlesCache: Cache = branch === 'master' ? masterRelatedArticlesCache : draftRelatedArticlesCache
-    log.info(`clear ${content._id} from related articles cache (${branch})`)
+    cacheLog(`clear ${content._id} from related articles cache (${branch})`)
     relatedArticlesCache.remove(content._id)
   }
 
   // clear related fact page cache
   if (content.type === `${app.name}:contentList` || content.type === `${app.name}:page`) {
     const relatedFactPageCache: Cache = branch === 'master' ? masterRelatedFactPageCache : draftRelatedFactPageCache
-    log.info(`clear ${content._id} from related fact page cache (${branch})`)
+    cacheLog(`clear ${content._id} from related fact page cache (${branch})`)
     relatedFactPageCache.remove(content._id)
   }
 
@@ -258,7 +258,7 @@ function clearCache(content: Content, branch: string, cleared: Array<string>): A
 
   const references: Array<Content> = getReferences(content._id)
   references.forEach((ref) => {
-    log.info(`try to clear reference ${ref._id} to ${content._id}(${branch})`)
+    cacheLog(`try to clear reference ${ref._id} to ${content._id}(${branch})`)
     clearCache(ref, branch, cleared)
   })
 
@@ -266,7 +266,7 @@ function clearCache(content: Content, branch: string, cleared: Array<string>): A
 }
 
 function clearCacheRepo(node: EnonicEventData['nodes'][0]): void {
-  log.info(`clear ${node.path} from dataset repo cache`)
+  cacheLog(`clear ${node.path} from dataset repo cache`)
   datasetRepoCache.remove(node.path)
 }
 
@@ -288,7 +288,7 @@ export function fromFilterCache(req: Request, filterKey: string, key: string, fa
     const branch: string = req.mode === 'live' ? 'master' : 'draft'
     const filterCache: Cache = getFilterCache(branch, filterKey)
     return filterCache.get(key, () => {
-      log.info(`added ${key} to ${filterKey} filter cache (${branch})`)
+      cacheLog(`added ${key} to ${filterKey} filter cache (${branch})`)
       return fallback()
     })
   }
@@ -300,7 +300,7 @@ export function fromMenuCache(req: Request, key: string, fallback: () => unknown
     const branch: string = req.mode === 'live' ? 'master' : 'draft'
     const menuCache: Cache = branch === 'master' ? masterMenuCache : draftMenuCache
     return menuCache.get(key, () => {
-      log.info(`added ${key} to menu cache (${branch})`)
+      cacheLog(`added ${key} to menu cache (${branch})`)
       return fallback()
     })
   }
@@ -309,7 +309,7 @@ export function fromMenuCache(req: Request, key: string, fallback: () => unknown
 
 export function fromDividerCache(dividerColor: string, fallback: () => string): string {
   return dividerCache.get(dividerColor, () => {
-    log.info(`added ${dividerColor} to divider cache`)
+    cacheLog(`added ${dividerColor} to divider cache`)
     return fallback()
   })
 }
@@ -319,7 +319,7 @@ export function fromRelatedArticlesCache(req: Request, key: string, fallback: ()
     const branch: string = req.mode === 'live' ? 'master' : 'draft'
     const relatedArticlesCache: Cache = branch === 'master' ? masterRelatedArticlesCache : draftRelatedArticlesCache
     return relatedArticlesCache.get(key, () => {
-      log.info(`added ${key} to related articles cache (${branch})`)
+      cacheLog(`added ${key} to related articles cache (${branch})`)
       return fallback()
     })
   }
@@ -331,7 +331,7 @@ export function fromRelatedFactPageCache(req: Request, key: string, fallback: ()
     const branch: string = req.mode === 'live' ? 'master' : 'draft'
     const relatedFactPageCache: Cache = branch === 'master' ? masterRelatedFactPageCache : draftRelatedFactPageCache
     return relatedFactPageCache.get(key, () => {
-      log.info(`added ${key} to related fact page cache (${branch})`)
+      cacheLog(`added ${key} to related fact page cache (${branch})`)
       return fallback()
     })
   }
@@ -342,7 +342,7 @@ export function fromDatasetRepoCache(
   key: string,
   fallback: () => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null): DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined {
   return datasetRepoCache.get(key, () => {
-    log.info(`added ${key} to dataset repo cache`)
+    cacheLog(`added ${key} to dataset repo cache`)
     const res: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null = fallback()
     // cant be null for some reason, so store it as undefined instead
     return res || undefined
@@ -358,21 +358,21 @@ export function datasetOrUndefined(content: Content<Highchart | Table>): Dataset
 
 export function fromParsedMunicipalityCache(key: string, fallback: () => Array<MunicipalityWithCounty>): Array<MunicipalityWithCounty> {
   return parsedMunicipalityCache.get(key, () => {
-    log.info(`added ${key} to parsed municipality cache`)
+    cacheLog(`added ${key} to parsed municipality cache`)
     return fallback()
   })
 }
 
 export function fromMunicipalityWithCodeCache(key: string, fallback: () => MunicipalityWithCounty | undefined): MunicipalityWithCounty | undefined {
   return municipalityWithCodeCache.get(key, () => {
-    log.info(`added ${key} to municipality with code cache`)
+    cacheLog(`added ${key} to municipality with code cache`)
     return fallback()
   })
 }
 
 export function fromMunicipalityWithNameCache(key: string, fallback: () => MunicipalityWithCounty | undefined): MunicipalityWithCounty | undefined {
   return municipalityWithNameCache.get(key, () => {
-    log.info(`added ${key} to municipality with name cache`)
+    cacheLog(`added ${key} to municipality with name cache`)
     return fallback()
   })
 }
@@ -388,57 +388,57 @@ export function fromParentTypeCache(
 function completelyClearFilterCache(branch: string): void {
   const cacheMap: Map<string, Cache> = branch === 'master' ? masterFilterCaches : draftFilterCaches
   cacheMap.forEach((cache: Cache, filterKey: string) => {
-    log.info(`clear ${filterKey} filter cache(${branch})`)
+    cacheLog(`clear ${filterKey} filter cache(${branch})`)
     cache.clear()
     cacheMap.delete(filterKey)
   })
 }
 
 function completelyClearMenuCache(branch: string): void {
-  log.info(`clear header/footer cache (${branch})`)
+  cacheLog(`clear header/footer cache (${branch})`)
   const menuCache: Cache = branch === 'master' ? masterMenuCache : draftMenuCache
   menuCache.clear()
 }
 
 function completelyClearDividerCache(): void {
-  log.info(`clear divider cache`)
+  cacheLog(`clear divider cache`)
   dividerCache.clear()
 }
 
 function completelyClearRelatedArticleCache(branch: string): void {
-  log.info(`clear related article cache (${branch})`)
+  cacheLog(`clear related article cache (${branch})`)
   const relatedArticlesCache: Cache = branch === 'master' ? masterRelatedArticlesCache : draftRelatedArticlesCache
   relatedArticlesCache.clear()
 }
 
 function completelyClearRelatedFactPageCache(branch: string): void {
-  log.info(`clear related fact page cache (${branch})`)
+  cacheLog(`clear related fact page cache (${branch})`)
   const relatedFactPageCache: Cache = branch === 'master' ? masterRelatedFactPageCache : draftRelatedFactPageCache
   relatedFactPageCache.clear()
 }
 
 function completelyClearDatasetRepoCache(): void {
-  log.info(`clear dataset repo cache`)
+  cacheLog(`clear dataset repo cache`)
   datasetRepoCache.clear()
 }
 
 function completelyClearParsedMunicipalityCache(): void {
-  log.info(`clear parsed municipality cache`)
+  cacheLog(`clear parsed municipality cache`)
   parsedMunicipalityCache.clear()
 }
 
 function completelyClearMunicipalityWithCodeCache(): void {
-  log.info(`clear municipality with code cache`)
+  cacheLog(`clear municipality with code cache`)
   municipalityWithCodeCache.clear()
 }
 
 function completelyClearMunicipalityWithNameCache(): void {
-  log.info(`clear municipality with name cache`)
+  cacheLog(`clear municipality with name cache`)
   municipalityWithNameCache.clear()
 }
 
 function completelyClearParentTypeCache(): void {
-  log.info(`clear parent type cache`)
+  cacheLog(`clear parent type cache`)
   parentTypeCache.clear()
 }
 
@@ -508,6 +508,12 @@ export function setupHandlers(socket: Socket): void {
 
     socket.emit('clear-cache-finished', {})
   })
+}
+
+function cacheLog(msg: string): void {
+  if (app.config && app.config['ssb.log.cache'] && app.config['ssb.log.cache'] === 'true') {
+    log.info(msg)
+  }
 }
 
 export interface CompletelyClearCacheOptions {
