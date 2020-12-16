@@ -56,6 +56,9 @@ export function Statistics() {
                 <span>Statistikk</span>
               </th>
               <th className="roboto-bold">
+                <span>Om statistikken</span>
+              </th>
+              <th className="roboto-bold">
                 <span>Neste publisering</span>
               </th>
               <th />
@@ -124,6 +127,9 @@ export function Statistics() {
           {getShortNameLink(statistic)}
         </td>
         <td>
+          {getAboutStatisticLink(statistic)}
+        </td>
+        <td>
           {getNextRelease(statistic)}
         </td>
         <td className="text-center">{statistic.nextRelease ? makeRefreshButton(statistic) : ''}</td>
@@ -158,6 +164,20 @@ export function Statistics() {
     }
     return (
       <span>{statistic.language === 'en' ? 'Eng. ' + statistic.shortName : statistic.shortName}</span>
+    )
+  }
+
+  function getAboutStatisticLink(statistic) {
+    if (statistic.aboutTheStatistics) {
+      return (
+        <Link
+          isExternal
+          href={contentStudioBaseUrl + statistic.aboutTheStatistics}>{statistic.language === 'en' ? 'Eng. ' + 'Om statistikken' : 'Om statistikken'}
+        </Link>
+      )
+    }
+    return (
+      <span>{statistic.language === 'en' ? 'Eng. ' + 'Om statistikken' : 'Om statistikken'}</span>
     )
   }
 

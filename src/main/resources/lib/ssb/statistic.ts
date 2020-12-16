@@ -190,7 +190,8 @@ function prepStatistics(statistics: Array<Content<Statistics>>): Array<Statistic
         name: statistic.displayName ? statistic.displayName : '',
         shortName: statregData.shortName,
         nextRelease: undefined,
-        relatedTables
+        relatedTables,
+        aboutTheStatistics: statistic.data.aboutTheStatistics
       }
       if (statregData && statregData.nextRelease && moment(statregData.nextRelease).isSameOrAfter(new Date(), 'day')) {
         statisticDataDashboard.nextRelease = statregData.nextRelease ? statregData.nextRelease : ''
@@ -267,6 +268,7 @@ interface StatisticDashboard {
   shortName: string;
   nextRelease?: string;
   relatedTables?: Array<TbmlSources>;
+  aboutTheStatistics?: string;
 }
 
 interface StatregData {
