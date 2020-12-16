@@ -122,7 +122,7 @@ function setupStatRegFetcher(statRegFetcher: StatRegNodeConfig): StatRegRefreshR
           changed: 0,
           added: 0,
           deleted: 0,
-          total: node ? node.data.length : 0
+          total: node && node.data ? node.data.length : 0
         }
       }
     }
@@ -140,7 +140,7 @@ function setupStatRegFetcher(statRegFetcher: StatRegNodeConfig): StatRegRefreshR
         changed: 0,
         added: 0,
         deleted: 0,
-        total: node ? node.data.length : 0
+        total: node && node.data ? node.data.length : 0
       }
     }
   }
@@ -151,7 +151,7 @@ function compareResult(node: StatRegNode | null, result: Array<StatRegBase>): St
   let deleted: number = 0
   let changed: number = 0
   let total: number = 0
-  if (!node) {
+  if (!node || !node.data) {
     added = result.length
     total = added
   } else {
