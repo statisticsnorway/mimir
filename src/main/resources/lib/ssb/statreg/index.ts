@@ -66,9 +66,9 @@ function toDisplayString(key: string): string {
 }
 
 function getStatRegStatus(key: string): StatRegStatus {
-  const logNode: QueryInfo | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${key}`) as QueryInfo
+  const logNode: QueryInfo | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${key}`) as QueryInfo | null
   const statRegNode: StatRegNode | null = getStatRegNode(key)
-  const modifiedResult: string = logNode.data.modifiedResult || ''
+  const modifiedResult: string = logNode && logNode.data.modifiedResult || ''
   const logMessage: string = i18n.localize({
     key: modifiedResult || '',
     values: [modifiedResult || '']
@@ -78,13 +78,13 @@ function getStatRegStatus(key: string): StatRegStatus {
     displayName: toDisplayString(key),
     modified: statRegNode ? dateToFormat(statRegNode._ts) : undefined,
     modifiedReadable: statRegNode ? dateToReadable(statRegNode._ts) : undefined,
-    logData: {
+    logData: logNode ? {
       ...logNode.data,
       modified: logNode.data.modified,
       modifiedReadable: dateToReadable(logNode.data.modifiedTs),
       showWarningIcon: showWarningIcon(modifiedResult as Events),
       message: logMessage
-    },
+    } : {},
     eventLogNodes: []
   }
   return statRegData
@@ -186,7 +186,7 @@ export interface StatRegStatus {
   displayName: string;
   modified: string;
   modifiedReadable: string;
-  logData: DashboardRefreshResultLogData;
+  logData: DashboardRefreshResultLogData | {};
   eventLogNodes: Array<LogSummary>;
 }
 
