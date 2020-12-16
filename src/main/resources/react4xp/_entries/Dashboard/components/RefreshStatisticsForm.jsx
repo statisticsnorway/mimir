@@ -60,11 +60,6 @@ export function RefreshStatisticsForm(props) {
   return (
     <Form className="mt-3">
       {
-        // modalInfo.relatedTables.map((table) => {
-        //   return table.sourceList && Object.keys(table.sourceList).map((key, i) => {
-        //     return renderOwnerInputField(key, table.sourceList[key], i, table.tbmlId)
-        //   })
-        // })
         modalInfo.relatedUserTBMLs.map((owner, index) => {
           return renderOwnerInputForMultipleTbml(owner, index)
         })
@@ -99,15 +94,6 @@ RefreshStatisticsForm.propTypes = {
     })
   ),
   modalInfo: PropTypes.shape({
-    relatedTables: PropTypes.arrayOf(
-      PropTypes.shape({
-        owner: PropTypes.number,
-        tableApproved: PropTypes.string,
-        tableId: PropTypes.number,
-        id: PropTypes.string,
-        table: PropTypes.string
-      })
-    ),
     relatedUserTBMLs: PropTypes.arrayOf(
       PropTypes.shape({
         ownerId: PropTypes.number,

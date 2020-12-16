@@ -98,7 +98,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
 function processXmlFromOwners(owners: Array<OwnerObject>): Array<ProcessXml> {
   const preRender: Array<SourceNodeRender> = owners.reduce((acc: Array<SourceNodeRender>, ownerObj: OwnerObject) => {
     ownerObj.tbmlList && ownerObj.tbmlList.forEach( (tbmlIdObj: Tbml) => {
-      const tbmlProcess: SourceNodeRender | undefined = acc.find((process: SourceNodeRender) => process.tableId === parseInt(tbmlIdObj.tableId))
+      const tbmlProcess: SourceNodeRender | undefined = acc.find((process: SourceNodeRender) => process.tbmlId === tbmlIdObj.tbmlId)
       if (tbmlProcess) {
         tbmlIdObj.sourceTableIds.forEach((sourceTable) => {
           tbmlProcess.sourceNodeStrings.push(`<source user="${ownerObj.username}" password="${encrypt(ownerObj.password)}" id="${sourceTable}"/>`)
@@ -106,7 +106,6 @@ function processXmlFromOwners(owners: Array<OwnerObject>): Array<ProcessXml> {
       } else {
         acc.push({
           tbmlId: ownerObj.tbmlId,
-          tableId: parseInt(tbmlIdObj.tableId),
           sourceNodeStrings: tbmlIdObj.sourceTableIds.map( (sourceTable) => {
             return `<source user="${ownerObj.username}" password="${encrypt(ownerObj.password)}" id="${sourceTable}"/>`
           })
@@ -118,7 +117,6 @@ function processXmlFromOwners(owners: Array<OwnerObject>): Array<ProcessXml> {
 
   return preRender.map((sourceNode) => ({
     tbmlId: sourceNode.tbmlId,
-    tableId: sourceNode.tableId,
     processXml: `<process>${sourceNode.sourceNodeStrings.join('')}</process>`
   }))
 }
@@ -156,24 +154,22 @@ function sourcesForUserFromStatistic(statistic: Content<Statistics>): Array<Owne
       forceArray(dataset.data.tbml.metadata.sourceList).forEach((source: Source) => {
         const userIndex: number = acc.findIndex((it) => it.ownerId == source.owner)
         if (userIndex != -1) {
-          const tbmlIdIndex: number = acc[userIndex].tbmlList.findIndex((it) => it.tbmlId == tbmlId)
-          if (tbmlIdIndex == -1) {
+          const tbmlIndex: number = acc[userIndex].tbmlList.findIndex((it) => it.tbmlId == tbmlId)
+          if (tbmlIndex == -1) {
             acc[userIndex].tbmlList.push({
               tbmlId: tbmlId,
-              tableId: source.tableId,
               sourceTableIds: [source.id],
               statbankTableIds: [source.tableId]
             })
           } else {
-            acc[userIndex].tbmlList[tbmlIdIndex].sourceTableIds.push(source.id)
-            acc[userIndex].tbmlList[tbmlIdIndex].statbankTableIds.push(source.tableId)
+            acc[userIndex].tbmlList[tbmlIndex].sourceTableIds.push(source.id)
+            acc[userIndex].tbmlList[tbmlIndex].statbankTableIds.push(source.tableId)
           }
         } else {
           acc.push({
             ownerId: source.owner,
             tbmlList: [{
               tbmlId: tbmlId,
-              tableId: source.tableId,
               sourceTableIds: [source.id],
               statbankTableIds: [source.tableId]
             }]
@@ -269,7 +265,6 @@ function sortByNextRelease(statisticData: Array<StatisticDashboard>): Array<Stat
 
 interface SourceNodeRender {
   tbmlId: number;
-  tableId: number;
   sourceNodeStrings: Array<string>;
 }
 
@@ -324,7 +319,6 @@ interface OwnerWithSources {
 
 interface Tbml {
   tbmlId: number;
-  tableId: string;
   sourceTableIds: Array<string>;
   statbankTableIds: Array<string>;
 }
