@@ -156,7 +156,7 @@ function sourcesForUserFromStatistic(statistic: Content<Statistics>): Array<Owne
       forceArray(dataset.data.tbml.metadata.sourceList).forEach((source: Source) => {
         const userIndex: number = acc.findIndex((it) => it.ownerId == source.owner)
         if (userIndex != -1) {
-          const tbmlIdIndex: number = acc[userIndex].tbmlList.findIndex((it) => it.tableId == source.tableId)
+          const tbmlIdIndex: number = acc[userIndex].tbmlList.findIndex((it) => it.tbmlId == tbmlId)
           if (tbmlIdIndex == -1) {
             acc[userIndex].tbmlList.push({
               tbmlId: tbmlId,
