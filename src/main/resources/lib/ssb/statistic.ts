@@ -97,7 +97,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
 
 function processXmlFromOwners(owners: Array<OwnerObject>): Array<ProcessXml> {
   const preRender: Array<SourceNodeRender> = owners.reduce((acc: Array<SourceNodeRender>, ownerObj: OwnerObject) => {
-    ownerObj.tbmlIdList && ownerObj.tbmlIdList.forEach( (tbmlIdObj: TbmlId) => {
+    ownerObj.tbmlList && ownerObj.tbmlList.forEach( (tbmlIdObj: Tbml) => {
       const tbmlProcess: SourceNodeRender | undefined = acc.find((process: SourceNodeRender) => process.tableId === parseInt(tbmlIdObj.tableId))
       if (tbmlProcess) {
         tbmlIdObj.sourceTableIds.forEach((sourceTable) => {
@@ -156,22 +156,26 @@ function sourcesForUserFromStatistic(statistic: Content<Statistics>): Array<Owne
       forceArray(dataset.data.tbml.metadata.sourceList).forEach((source: Source) => {
         const userIndex: number = acc.findIndex((it) => it.ownerId == source.owner)
         if (userIndex != -1) {
-          const tbmlIdIndex: number = acc[userIndex].tbmlIdList.findIndex((it) => it.tableId == source.tableId)
+          const tbmlIdIndex: number = acc[userIndex].tbmlList.findIndex((it) => it.tableId == source.tableId)
           if (tbmlIdIndex == -1) {
-            acc[userIndex].tbmlIdList.push({
+            acc[userIndex].tbmlList.push({
+              tbmlId: tbmlId,
               tableId: source.tableId,
-              sourceTableIds: [source.id]
+              sourceTableIds: [source.id],
+              statbankTableIds: [source.tableId]
             })
           } else {
-            acc[userIndex].tbmlIdList[tbmlIdIndex].sourceTableIds.push(source.id)
+            acc[userIndex].tbmlList[tbmlIdIndex].sourceTableIds.push(source.id)
+            acc[userIndex].tbmlList[tbmlIdIndex].statbankTableIds.push(source.tableId)
           }
         } else {
           acc.push({
             ownerId: source.owner,
-            tbmlId: tbmlId,
-            tbmlIdList: [{
+            tbmlList: [{
+              tbmlId: tbmlId,
               tableId: source.tableId,
-              sourceTableIds: [source.id]
+              sourceTableIds: [source.id],
+              statbankTableIds: [source.tableId]
             }]
 
           })
@@ -283,7 +287,7 @@ interface RefreshInfo {
 interface OwnerObject {
   username: string;
   password: string;
-  tbmlIdList?: Array<TbmlId>;
+  tbmlList?: Array<Tbml>;
   ownerId: number;
   tbmlId: number;
 };
@@ -315,13 +319,14 @@ interface TbmlSources {
 
 interface OwnerWithSources {
   ownerId: number;
-  tbmlId: number;
-  tbmlIdList: Array<TbmlId>;
+  tbmlList: Array<Tbml>;
 }
 
-interface TbmlId {
+interface Tbml {
+  tbmlId: number;
   tableId: string;
   sourceTableIds: Array<string>;
+  statbankTableIds: Array<string>;
 }
 
 export interface StatisticLib {

@@ -28,9 +28,9 @@ export function RefreshStatisticsForm(props) {
       <div key={index}>
         <p>Autorisasjon for bruker {owner.ownerId} som har</p>
         <ul> {
-          owner.tbmlIdList.map((tbml, i) => {
+          owner.tbmlList.map((tbml, i) => {
             return (<li key={i}>
-              TBML {owner.tbmlId} og TableId {tbml.tableId} med kilder: {tbml.sourceTableIds.join(', ')}.
+              TBML {tbml.tbmlId} med kilder: {tbml.statbankTableIds.join(', ')}.
             </li>)
           })
         } </ul>
@@ -110,11 +110,11 @@ RefreshStatisticsForm.propTypes = {
     relatedUserTBMLs: PropTypes.arrayOf(
       PropTypes.shape({
         ownerId: PropTypes.number,
-        tbmlId: PropTypes.number,
-        tbmlIdList: PropTypes.arrayOf(
+        tbmlList: PropTypes.arrayOf(
           PropTypes.shape({
-            tbmlId: PropTypes.string,
-            sourceTableIds: PropTypes.arrayOf(PropTypes.string)
+            tbmlId: PropTypes.number,
+            sourceTableIds: PropTypes.arrayOf(PropTypes.string),
+            statbankTableIds: PropTypes.arrayOf(PropTypes.string)
           })
         )
       })
