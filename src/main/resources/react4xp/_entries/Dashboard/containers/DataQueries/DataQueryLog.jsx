@@ -7,15 +7,20 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectDataToolBoxBaseUrl } from '../HomePage/selectors'
 import { selectDataQueriesById } from './selectors'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
+import { selectStatRegStatus } from '../StatRegDashboard/selectors'
+import { requestStatRegEventLogData } from '../StatRegDashboard/actions.es6'
 
 export function DataQueryLog(props) {
+  const {
+    dataQueryId,
+    isStatReg
+  } = props
   const dispatch = useDispatch()
   const io = useContext(WebSocketContext)
   const dataToolBoxBaseUrl = useSelector(selectDataToolBoxBaseUrl)
-  const dataQuery = useSelector(selectDataQueriesById(props.dataQueryId))
+  const dataQuery = isStatReg ? useSelector(selectStatRegStatus(dataQueryId)) : useSelector(selectDataQueriesById(dataQueryId))
   const {
     displayName,
-    id,
     logData,
     loadingLogs,
     eventLogNodes
@@ -26,12 +31,16 @@ export function DataQueryLog(props) {
   const handleShow = () => setShow(true)
 
   const openEventlog = () => {
-    requestEventLogData(dispatch, io, id)
+    if (isStatReg) {
+      requestStatRegEventLogData(dispatch, io, dataQueryId)
+    } else {
+      requestEventLogData(dispatch, io, dataQueryId)
+    }
     setShow(handleShow)
   }
 
   const openToolBox = () => {
-    window.open(dataToolBoxBaseUrl + id)
+    window.open(dataToolBoxBaseUrl + dataQueryId)
   }
 
   function renderLogData() {
@@ -98,5 +107,6 @@ export function DataQueryLog(props) {
 }
 
 DataQueryLog.propTypes = {
-  dataQueryId: PropTypes.string
+  dataQueryId: PropTypes.string,
+  isStatReg: PropTypes.bool
 }

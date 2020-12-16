@@ -21,4 +21,12 @@ export default function setupStatRegListeners(io, dispatch) {
       keys: [data]
     })
   })
+
+  io.on('statreg-eventlog-node-result', (data) => {
+    dispatch({
+      type: actions.statRegEventLogLoaded.type,
+      id: data.id,
+      logs: data.logs
+    })
+  })
 }
