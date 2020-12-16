@@ -12,13 +12,14 @@ import { TbmlDataUniform,
   Notes,
   PreliminaryData,
   Title,
-  Source, Thead, TableRowRaw, TableCellRaw } from '../types/xmlParser'
+  Source, Thead } from '../types/xmlParser'
 import { Dataset as JSDataset } from '../types/jsonstat-toolkit'
 import { Request } from 'enonic-types/controller'
 import { DatasetRepoNode, RepoDatasetLib } from '../repo/dataset'
 import { DataSource as DataSourceType } from '../repo/dataset'
 import { StatbankSavedLib } from './dataset/statbankSaved'
 import { SSBCacheLibrary } from './cache'
+import { getTableCellHeader, getTableCellBody } from '../tbml/tbml'
 
 const {
   data: {
@@ -93,14 +94,6 @@ export function parseTable(req: Request, table: Content<Table>, branch: string =
   return tableViewData
 }
 
-function mergeTableRows(rows: TableRowRaw | Array<TableRowRaw>): Array<TableRowUniform> {
-  return forceArray(rows).reduce( (acc: Array<TableRowUniform>, row: TableRowRaw ) => {
-    const tr: Array<TableRowUniform> = !Array.isArray(row) ? forceArray(row.tr) as Array<TableRowUniform> : []
-    if (tr) acc.push(...tr)
-    return acc
-  }, [])
-}
-
 function getTableViewData(table: Content<Table>, dataContent: TbmlDataUniform | JSONstat,
   title: Title | undefined, notes: Notes | undefined, sourceList: Array<Source>, datasource: string): TableView {
   let headRows: Array<TableRowUniform> = []
@@ -160,22 +153,6 @@ function getTableViewData(table: Content<Table>, dataContent: TbmlDataUniform | 
     noteRefs,
     sourceList
   }
-}
-
-function getTableCellHeader(tableCell: Array<TableCellRaw>): Array<TableCellUniform> {
-  return forceArray(tableCell)
-    .map( (cell: TableCellUniform) => ({
-      td: typeof cell.td != 'undefined' ? forceArray(cell.td) : undefined,
-      th: typeof cell.th != 'undefined' ? forceArray(cell.th) : undefined
-    }))
-}
-
-function getTableCellBody(tableCell: Array<TableCellRaw>): Array<TableCellUniform> {
-  return forceArray(tableCell)
-    .map( (cell: TableCellUniform) => ({
-      th: typeof cell.th != 'undefined' ? forceArray(cell.th) : undefined,
-      td: typeof cell.td != 'undefined' ? forceArray(cell.td) : undefined
-    }))
 }
 
 function getNoterefsHeader(row: TableCellUniform): Array<string> {
