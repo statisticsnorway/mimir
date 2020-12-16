@@ -95,8 +95,8 @@ function renderPart(req, tableId) {
   const standardSymbol = getStandardSymbolPage(language.standardSymbolPage, phrases.tableStandardSymbols)
   const baseUrl = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
   const statBankWebUrl = tableContent.language === 'en' ? baseUrl + '/en/statbank' : baseUrl + '/statbank'
-  const sourceList = table.sourceList ? forceArray(table.sourceList) : undefined
-  const sourceListExternal = sourceList ? sourceList.filter((s) => s.tableApproved === 'internet') : []
+  const sourceList = table.sourceList ? forceArray(table.sourceList) : []
+  const sourceListExternal = sourceList.length > 0 ? sourceList.filter((s) => s.tableApproved === 'internet') : []
   const uniqueTableIds = sourceListExternal.length > 0 ? sourceListExternal.map((item) => item.tableId.toString())
     .filter((value, index, self) => self.indexOf(value) === index) : []
 

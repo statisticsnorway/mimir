@@ -1,5 +1,4 @@
 // XML response types (Common)
-
 export interface ListMeta {
     antall: number;
     dato: string;
@@ -28,8 +27,7 @@ export interface KontaktXML {
     kontakter: KontaktListe;
 }
 
-export interface Contact {
-    id: string;
+export interface Contact extends StatRegBase {
     telephone: number;
     mobile: number;
     email: string;
@@ -55,10 +53,10 @@ export interface VariantInListing {
     nextRelease: string;
 }
 
-export interface StatisticInListing {
-    id: string;
+export interface StatisticInListing extends StatRegBase {
     shortName: string;
     name: string;
+    nameEN: string;
     status: string;
     modifiedTime: string;
     variants: Array<VariantInListing>;
@@ -86,10 +84,13 @@ export interface PubliseringXML {
     publiseringer: PubliseringsListe;
 }
 
-export interface Publication {
-    id: string;
+export interface Publication extends StatRegBase {
     variant: string;
     statisticsKey: string;
     status: string;
     modifiedTime: string;
+}
+
+export interface StatRegBase {
+    id: string;
 }
