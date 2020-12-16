@@ -232,6 +232,10 @@ export interface StatRegContent {
   _ts: string;
 }
 
+export interface OldStatRegContent {
+  content: Array<StatRegBase>;
+}
+
 export interface StatRegRefreshResult {
   key: string;
   status: string;
