@@ -12,6 +12,8 @@ import { Socket } from '../types/socket'
 import { Table } from '../../site/content-types/table/table'
 import { Highchart } from '../../site/content-types/highchart/highchart'
 import { MunicipalityWithCounty } from '../klass/municipalities'
+import { ServerLogLib } from './serverLog'
+import { DatasetLib } from './dataset/dataset'
 
 const {
   newCache
@@ -30,11 +32,13 @@ const {
   query,
   get
 }: ContentLibrary = __non_webpack_require__('/lib/xp/content')
-
 const {
   getDataset,
   extractKey
-} = __non_webpack_require__('/lib/ssb/dataset/dataset')
+}: DatasetLib = __non_webpack_require__('/lib/ssb/dataset/dataset')
+const {
+  cacheLog
+}: ServerLogLib = __non_webpack_require__('/lib/ssb/serverLog')
 
 const masterFilterCaches: Map<string, Cache> = new Map()
 const draftFilterCaches: Map<string, Cache> = new Map()
@@ -508,12 +512,6 @@ export function setupHandlers(socket: Socket): void {
 
     socket.emit('clear-cache-finished', {})
   })
-}
-
-function cacheLog(msg: string): void {
-  if (app.config && app.config['ssb.log.cache'] && app.config['ssb.log.cache'] === 'true') {
-    log.info(msg)
-  }
 }
 
 export interface CompletelyClearCacheOptions {
