@@ -105,7 +105,7 @@ function processXmlFromOwners(owners: Array<OwnerObject>): Array<ProcessXml> {
         })
       } else {
         acc.push({
-          tbmlId: ownerObj.tbmlId,
+          tbmlId: tbmlIdObj.tbmlId,
           sourceNodeStrings: tbmlIdObj.sourceTableIds.map( (sourceTable) => {
             return `<source user="${ownerObj.username}" password="${encrypt(ownerObj.password)}" id="${sourceTable}"/>`
           })
