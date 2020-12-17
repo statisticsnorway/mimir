@@ -1,19 +1,14 @@
 __non_webpack_require__('/lib/polyfills/nashorn')
-/* eslint-disable new-cap */
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
-import { JSONstat } from '../../types/jsonstat-toolkit'
 import { Content } from 'enonic-types/content'
 import { Table } from '../../site/content-types/table/table'
 import { TbmlDataUniform,
   TableRowUniform,
   TableCellUniform,
   Note,
-  Notes,
+  NotesUniform,
   PreliminaryData,
   Title,
-  Source, Thead } from '../types/xmlParser'
-import { Dataset as JSDataset } from '../types/jsonstat-toolkit'
+  Source, Thead, StatbankSavedRaw, StatbankSavedUniform } from '../types/xmlParser'
 import { Request } from 'enonic-types/controller'
 import { DatasetRepoNode, RepoDatasetLib } from '../repo/dataset'
 import { DataSource as DataSourceType } from '../repo/dataset'
@@ -57,7 +52,7 @@ export function parseTable(req: Request, table: Content<Table>, branch: string =
     sourceList: []
   }
 
-  let datasetRepo: DatasetRepoNode<JSONstat> | undefined
+  let datasetRepo: DatasetRepoNode<TbmlDataUniform | StatbankSavedRaw | object> | undefined
   if (branch === UNPUBLISHED_DATASET_BRANCH) {
     datasetRepo = getDataset(table, UNPUBLISHED_DATASET_BRANCH)
   } else {
@@ -67,91 +62,91 @@ export function parseTable(req: Request, table: Content<Table>, branch: string =
   const dataSource: Table['dataSource'] | undefined = table.data.dataSource
 
   if (datasetRepo) {
-    const data: JSDataset | Array<JSDataset> | null | TbmlDataUniform = datasetRepo.data
+    const data: string | TbmlDataUniform | StatbankSavedRaw | object | undefined = datasetRepo.data
 
     if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
       const tbmlData: TbmlDataUniform = data as TbmlDataUniform
       if (tbmlData && tbmlData.tbml && tbmlData.tbml.metadata && tbmlData.tbml.presentation) {
-        const title: Title = tbmlData.tbml.metadata.title
-        const notes: Notes | undefined = tbmlData.tbml.metadata.notes
-        const sourceList: Array<Source> = tbmlData.tbml.metadata && tbmlData.tbml.metadata.sourceList ? tbmlData.tbml.metadata.sourceList : []
-
-        tableViewData = getTableViewData(table, tbmlData.tbml.presentation, title, notes, sourceList, DataSourceType.TBPROCESSOR)
+        tableViewData = getTableViewData(table, tbmlData)
+        log.info('tableViewData PrettyJSON%s', JSON.stringify(tableViewData, null, 4))
       }
     }
   }
 
   if (dataSource && dataSource._selected === DataSourceType.STATBANK_SAVED) {
-    const statbankSavedData: JSONstat | null = fetchStatbankSavedData(table)
-    const parsedStatbankSavedData: JSONstat | null = JSON.parse(statbankSavedData.json)
-
-    const title: Title = parsedStatbankSavedData.table.caption
-    const notes: Notes | undefined = undefined // TODO: no metadata.notes in the statbankSaved json data yet
-    const sourceList: Array<Source> = [] // TODO: no sourceList in the statbankSaved json data
-
-    tableViewData = getTableViewData(table, parsedStatbankSavedData, title, notes, sourceList, DataSourceType.STATBANK_SAVED)
+    const statbankSavedData: StatbankSavedRaw | null = fetchStatbankSavedData(table)
+    const parsedStatbankSavedData: StatbankSavedUniform = statbankSavedData ? JSON.parse(statbankSavedData.json) : null
+    if (parsedStatbankSavedData) {
+      tableViewData = getTableViewDataStatbankSaved(table, parsedStatbankSavedData)
+    }
   }
   return tableViewData
 }
 
-function getTableViewData(table: Content<Table>, dataContent: TbmlDataUniform | JSONstat,
-  title: Title | undefined, notes: Notes | undefined, sourceList: Array<Source>, datasource: string): TableView {
-  let headRows: Array<TableRowUniform> = []
-  let bodyRows: Array<TableRowUniform> = []
-  let headNoteRefs: Array<string> = []
-  let bodyNoteRefs: Array<string> = []
-  let noteRefs: Array<string> = []
+function getTableViewData(table: Content<Table>, dataContent: TbmlDataUniform ): TableView {
+  const title: Title = dataContent.tbml.metadata.title
+  const notes: NotesUniform = dataContent.tbml.metadata.notes
+  const sourceList: Array<Source> = dataContent.tbml.metadata && dataContent.tbml.metadata.sourceList ? dataContent.tbml.metadata.sourceList : []
+  const headRows: Array<TableRowUniform> = dataContent.tbml.presentation.table.thead
+  const bodyRows: Array<TableRowUniform> = dataContent.tbml.presentation.table.tbody
 
-  if (datasource === DataSourceType.TBPROCESSOR) {
-    headRows = dataContent.table.thead
-    bodyRows = dataContent.table.tbody
+  const headNoteRefs: Array<string> = headRows.reduce((acc: Array<string>, row: TableRowUniform) => {
+    const tableCells: Array<TableCellUniform> = row.tr
+    tableCells.map((cell: TableCellUniform) => {
+      if (cell) acc.push(...getNoterefsHeader(cell))
+    })
+    return acc
+  }, [])
 
-    headNoteRefs = headRows.reduce((acc: Array<string>, row: TableRowUniform) => {
-      const tableCells: Array<TableCellUniform> = row.tr
-      tableCells.map((cell: TableCellUniform) => {
-        if (cell) acc.push(...getNoterefsHeader(cell))
-      })
-      return acc
-    }, [])
+  const bodyNoteRefs: Array<string> = bodyRows.reduce((acc: Array<string>, row: TableRowUniform) => {
+    const tableCells: Array<TableCellUniform> = row.tr
+    tableCells.map((cell: TableCellUniform) => {
+      if (cell) acc.push(...getNoterefsHeader(cell))
+    })
+    return acc
+  }, [])
 
-    bodyNoteRefs = bodyRows.reduce((acc: Array<string>, row: TableRowUniform) => {
-      const tableCells: Array<TableCellUniform> = row.tr
-      tableCells.map((cell: TableCellUniform) => {
-        if (cell) acc.push(...getNoterefsHeader(cell))
-      })
-      return acc
-    }, [])
-
-    noteRefs = title && title.noterefs ?
-      [title.noterefs, ...headNoteRefs, ...bodyNoteRefs] :
-      [...headNoteRefs, ...bodyNoteRefs]
-  }
-
-  if (datasource === DataSourceType.STATBANK_SAVED) {
-    headRows = forceArray(dataContent.table.thead)
-      .map( (thead: Thead) => ({
-        tr: getTableCellHeader(forceArray(thead.tr))
-      }))
-
-    bodyRows = forceArray(dataContent.table.tbody)
-      .map( (tbody: Thead) => ({
-        tr: getTableCellBody(forceArray(tbody.tr))
-      }))
-  }
-
-  const notesList: Array<Note> = notes ? forceArray(notes.note) : []
+  const noteRefs: Array<string> = title && title.noterefs ?
+    [title.noterefs, ...headNoteRefs, ...bodyNoteRefs] :
+    [...headNoteRefs, ...bodyNoteRefs]
 
   return {
     caption: title,
     thead: headRows,
     tbody: bodyRows,
-    tableClass: dataContent.class ? dataContent.class : 'statistics',
+    tableClass: dataContent.tbml.presentation.table.class ? dataContent.tbml.presentation.table.class : 'statistics',
     tfoot: {
-      footnotes: notesList,
+      footnotes: notes ? notes.note : [],
+      // footnotes: notesList,
       correctionNotice: table.data.correctionNotice || ''
     },
     noteRefs,
     sourceList
+  }
+}
+
+function getTableViewDataStatbankSaved(table: Content<Table>, dataContent: StatbankSavedUniform ): TableView {
+  const title: Title = dataContent.table.caption
+  const headRows: Array<TableRowUniform> = forceArray(dataContent.table.thead)
+    .map( (thead: Thead) => ({
+      tr: getTableCellHeader(forceArray(thead.tr))
+    }))
+  const bodyRows: Array<TableRowUniform> = forceArray(dataContent.table.tbody)
+    .map( (tbody: Thead) => ({
+      tr: getTableCellBody(forceArray(tbody.tr))
+    }))
+
+  return {
+    caption: title,
+    thead: headRows,
+    tbody: bodyRows,
+    tableClass: 'statistics',
+    tfoot: {
+      footnotes: [],
+      correctionNotice: ''
+    },
+    noteRefs: [],
+    sourceList: []
   }
 }
 

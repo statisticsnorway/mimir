@@ -11,6 +11,20 @@ export interface TbmlDataRaw {
   };
 }
 
+export interface StatbankSavedRaw {
+  html: string;
+  json: string;
+}
+
+export interface StatbankSavedUniform {
+  table: {
+    thead: TableRowRaw | Array<TableRowRaw>;
+    tbody: TableRowRaw | Array<TableRowRaw>;
+    caption: Title;
+    id: string;
+  };
+}
+
 export interface TableRaw {
   tbody: TableRowRaw | Array<TableRowRaw>;
   thead: TableRowRaw | Array<TableRowRaw>;
