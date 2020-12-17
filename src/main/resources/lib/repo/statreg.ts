@@ -9,6 +9,7 @@ import { RepoQueryLib } from './query'
 import { StatisticInListing, StatRegBase } from '../ssb/statreg/types'
 import { equals } from 'ramda'
 import { ArrayUtilsLib } from '../ssb/arrayUtils'
+import { ServerLogLib } from '../ssb/serverLog'
 
 const {
   createNode,
@@ -42,6 +43,9 @@ const {
 const {
   ensureArray
 }: ArrayUtilsLib = __non_webpack_require__('/lib/ssb/arrayUtils')
+const {
+  cronJobLog
+}: ServerLogLib = __non_webpack_require__( '/lib/ssb/serverLog')
 
 const STATREG_CONTACTS_NODE: StatRegNodeConfig = configureNode(STATREG_REPO_CONTACTS_KEY, fetchContacts)
 const STATREG_STATISTICS_NODE: StatRegNodeConfig = configureNode(STATREG_REPO_STATISTICS_KEY, fetchStatistics)
@@ -62,12 +66,12 @@ function configureNode(key: string, fetcher: () => Array<StatRegBase> | null): S
 
 export function setupStatRegRepo(): void {
   if (!repoExists(STATREG_REPO, STATREG_BRANCH)) {
-    log.info(`Creating Repo: '${STATREG_REPO}' ...`)
+    cronJobLog(`Creating Repo: '${STATREG_REPO}' ...`)
     createRepo(STATREG_REPO, STATREG_BRANCH)
   } else {
-    log.info('StatReg Repo found.')
+    cronJobLog('StatReg Repo found.')
   }
-  log.info('StatReg Repo setup complete.')
+  cronJobLog('StatReg Repo setup complete.')
 }
 
 export function refreshStatRegData(nodeConfig: Array<StatRegNodeConfig> = STATREG_NODES): Array<StatRegRefreshResult> {
@@ -77,7 +81,7 @@ export function refreshStatRegData(nodeConfig: Array<StatRegNodeConfig> = STATRE
 }
 
 function setupStatRegFetcher(statRegFetcher: StatRegNodeConfig): StatRegRefreshResult {
-  log.info(`Setting up StatReg Node: '/${statRegFetcher.key}' ...`)
+  cronJobLog(`Setting up StatReg Node: '/${statRegFetcher.key}' ...`)
   const node: StatRegNode | null = getStatRegNode(statRegFetcher.key)
   try {
     logUserDataQuery(statRegFetcher.key, {
