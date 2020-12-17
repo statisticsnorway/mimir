@@ -158,20 +158,20 @@ function sourcesForUserFromStatistic(statistic: Content<Statistics>): Array<Owne
           if (tbmlIndex == -1) {
             acc[userIndex].tbmlList.push({
               tbmlId: tbmlId,
-              sourceTableIds: [source.id],
-              statbankTableIds: [source.tableId]
+              sourceTableIds: [source.id.toString()],
+              statbankTableIds: [source.tableId.toString()]
             })
           } else {
-            acc[userIndex].tbmlList[tbmlIndex].sourceTableIds.push(source.id)
-            acc[userIndex].tbmlList[tbmlIndex].statbankTableIds.push(source.tableId)
+            acc[userIndex].tbmlList[tbmlIndex].sourceTableIds.push(source.id.toString())
+            acc[userIndex].tbmlList[tbmlIndex].statbankTableIds.push(source.tableId.toString())
           }
         } else {
           acc.push({
             ownerId: source.owner,
             tbmlList: [{
               tbmlId: tbmlId,
-              sourceTableIds: [source.id],
-              statbankTableIds: [source.tableId]
+              sourceTableIds: [source.id.toString()],
+              statbankTableIds: [source.tableId.toString()]
             }]
 
           })
