@@ -80,6 +80,25 @@ export function Jobs() {
           {job.status} - {job.message}
         </span>
       )
+    } else if (job.task === 'Refresh statreg data') {
+      return (
+        <React.Fragment>
+          {job.status}<br/>
+          {job.result.map((res, index) => {
+            const {
+              status,
+              displayName,
+              infoMessage,
+              showWarningIcon
+            } = res
+            return (
+              <React.Fragment key={index}>
+                {displayName} - {showWarningIcon ? <span className="error">{status}</span> : status}{infoMessage ? ` : ${infoMessage}` : ''} <br/>
+              </React.Fragment>
+            )
+          })}
+        </React.Fragment>
+      )
     }
     return <span>{job.status} - {job.message}</span>
   }

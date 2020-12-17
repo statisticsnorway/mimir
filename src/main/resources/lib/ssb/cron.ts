@@ -3,7 +3,7 @@ import { Content } from 'enonic-types/content'
 import { ContextLibrary, RunContext } from 'enonic-types/context'
 import { DataSource } from '../../site/mixins/dataSource/dataSource'
 import { RepoJobLib, JobEventNode, JobInfoNode } from '../repo/job'
-import { StatRegRepoLib } from '../repo/statreg'
+import { StatRegRefreshResult, StatRegRepoLib } from '../repo/statreg'
 import { SSBTaskLib } from '../task'
 import { CronLib, GetCronResult } from '../types/cron'
 import { DatasetLib } from './dataset/dataset'
@@ -14,7 +14,8 @@ const {
   publishDataset
 }: PublishDatasetLib = __non_webpack_require__( '/lib/ssb/dataset/publish')
 const {
-  fetchStatRegData
+  refreshStatRegData,
+  STATREG_NODES
 }: StatRegRepoLib = __non_webpack_require__( '/lib/repo/statreg')
 const cron: CronLib = __non_webpack_require__('/lib/cron')
 const {
@@ -27,7 +28,8 @@ const {
   completeJobLog,
   startJobLog,
   updateJobLog,
-  JOB_STATUS_COMPLETE
+  JOB_STATUS_COMPLETE,
+  JobNames
 }: RepoJobLib = __non_webpack_require__('/lib/repo/job')
 const {
   dataSourceRSSFilter
@@ -96,6 +98,19 @@ function job(): void {
   log.info('-- Completed dataquery cron job --')
 }
 
+function statRegJob(): void {
+  const jobLogNode: JobEventNode = startJobLog(JobNames.STATREG_JOB)
+  updateJobLog(jobLogNode._id, (node: JobInfoNode) => {
+    node.data = {
+      ...node.data,
+      queryIds: STATREG_NODES.map((s) => s.key)
+    }
+    return node
+  })
+  const result: Array<StatRegRefreshResult> = refreshStatRegData()
+  completeJobLog(jobLogNode._id, JOB_STATUS_COMPLETE, result)
+}
+
 export function setupCronJobs(): void {
   run(createUserContext, setupCronJobUser)
 
@@ -115,7 +130,7 @@ export function setupCronJobs(): void {
     name: 'StatReg Periodic Refresh',
     cron: statregCron,
     times: 365 * 10,
-    callback: fetchStatRegData,
+    callback: statRegJob,
     context: cronContext
   })
 
