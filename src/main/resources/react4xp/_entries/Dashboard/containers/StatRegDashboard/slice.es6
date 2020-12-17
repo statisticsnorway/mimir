@@ -34,6 +34,20 @@ const statRegSlice = createSlice({
           return s
         }
       })
+    },
+    statRegEventLogLoading(state, action) {
+      const statReg = state.statuses.find((s) => s.key === action.key)
+      if (statReg) {
+        statReg.loadingLogs = true
+        statReg.eventLogNodes = []
+      }
+    },
+    statRegEventLogLoaded(state, action) {
+      const statReg = state.statuses.find((s) => s.key === action.id)
+      if (statReg) {
+        statReg.loadingLogs = false
+        statReg.eventLogNodes = action.logs
+      }
     }
   }
 })

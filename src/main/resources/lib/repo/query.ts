@@ -26,9 +26,9 @@ export interface QueryInfo {
   _name: string;
   data: {
     queryId: string;
-    modified?: string;
+    modified: string;
     modifiedTs?: string;
-    modifiedResult?: string;
+    modifiedResult: string;
     by: User;
   };
 }
@@ -42,6 +42,7 @@ export interface QueryStatus {
   function?: string;
   file?: string;
   status?: string;
+  result?: object;
 }
 
 export interface EventInfo {

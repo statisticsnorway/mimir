@@ -1,14 +1,12 @@
 import React, { useContext } from 'react'
 import { Button, Table, Row, Col } from 'react-bootstrap'
 import { RefreshCw } from 'react-feather'
-import moment from 'moment'
 import { Accordion } from '@statisticsnorway/ssb-component-library'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectStatuses, selectLoading } from './selectors'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { startRefresh } from './actions.es6'
-
-const SIMPLE_DATE_FORMAT = 'DD.MM.YYYY HH:mm'
+import { DataQueryLog } from '../DataQueries/DataQueryLog'
 
 export function StatRegDashboard() {
   const loading = useSelector(selectLoading)
@@ -17,15 +15,8 @@ export function StatRegDashboard() {
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
 
-  function statusIcon(status) {
-    return status === 'Success' ? 'ok' : 'error'
-  }
-
-  function formatDate(dateStr) {
-    if (dateStr) {
-      return moment(dateStr).format(SIMPLE_DATE_FORMAT)
-    }
-    return '-'
+  function statusIcon(hasError) {
+    return hasError ? 'error' : 'ok'
   }
 
   function refreshStatReg(key) {
@@ -66,21 +57,24 @@ export function StatRegDashboard() {
             <th />
           </tr>
         </thead>
-        <tbody>
-          {statuses.map((statRegStatus, index) => {
+        <tbody className="small">
+          {statuses.map((statRegStatus) => {
             const {
               displayName,
-              status,
-              completionTime,
-              message
+              modifiedReadable,
+              modified,
+              logData: {
+                showWarningIcon
+              },
+              key
             } = statRegStatus
             return (
-              <tr key={index}>
-                <td className={`${statusIcon(status)} dataset`}>
+              <tr key={key}>
+                <td className={`${statusIcon(showWarningIcon)} dataset`}>
                   <a className="ssb-link my-0 text-capitalize" href="#">{displayName}</a>
                 </td>
-                <td>{formatDate(completionTime)}</td>
-                <td>{message}</td>
+                <td>{modifiedReadable}<br/>{modified}</td>
+                <td><DataQueryLog dataQueryId={key} isStatReg={true}/></td>
                 <td className="text-center">{makeRefreshButton(statRegStatus)}</td>
               </tr>
             )

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectLoadingClearCache } from '../HomePage/selectors'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { requestClearCache } from '../HomePage/actions.es6'
-import {ChevronDown, ChevronUp, RefreshCw, Trash} from 'react-feather'
+import { ChevronDown, ChevronUp, RefreshCw, Trash } from 'react-feather'
 import { Col, Container, Row } from 'react-bootstrap'
 import { Link, Dropdown } from '@statisticsnorway/ssb-component-library'
 import { selectStatistics, selectLoading, selectHasLoadingStatistic } from '../Statistics/selectors'
@@ -77,16 +77,23 @@ export function DataQueryTools() {
         <span className="spinner-border spinner-border-sm ml-2 mb-1" />
       )
     }
+    const items = statistics.map((s) => {
+      return {
+        title: `${s.shortName} - ${s.name}`,
+        id: s.id
+      }
+    })
+    if (items.length === 0) {
+      items.push({
+        title: `Ingen statistikker`,
+        id: '-1'
+      })
+    }
     return (
       <Dropdown
         placeholder="Finn statistikk"
         searchable
-        items={statistics.map((s) => {
-          return {
-            title: `${s.shortName} - ${s.name}`,
-            id: s.id
-          }
-        })}
+        items={items}
         onSelect={(e) => onStatisticsSearchSelect(e)}
       />
     )

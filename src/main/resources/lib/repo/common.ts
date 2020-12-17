@@ -19,10 +19,6 @@ export type ContextCallback<T> = () => T;
 export type UserContextCallback<T> = (user: User | null) => T;
 export type ConnectionCallback<T> = (conn: RepoConnection) => T;
 
-export type QueryFilters = {
-  [key: string]: string;
-} | null;
-
 export const SUPER_USER: User = {
   login: 'su',
   displayName: 'su',
