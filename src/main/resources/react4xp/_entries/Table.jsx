@@ -344,8 +344,6 @@ class Table extends React.Component {
   createHeadTh(value) {
     return value.map((cellValue, i) => {
       if (typeof cellValue === 'object') {
-        console.log('CellValue : ' + JSON.stringify(cellValue))
-        console.log('ARRAY: ' + Array.isArray(cellValue))
         if (Array.isArray(cellValue)) {
           // TODO: Because some values is split into array by xmlParser i have to do this, find better fix
           return (

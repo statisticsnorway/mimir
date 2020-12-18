@@ -8,13 +8,12 @@ import { TbmlDataUniform,
   NotesUniform,
   PreliminaryData,
   Title,
-  Source, Thead, StatbankSavedRaw, StatbankSavedUniform } from '../types/xmlParser'
+  Source, Thead, StatbankSavedRaw, StatbankSavedUniform, TableCellRaw } from '../types/xmlParser'
 import { Request } from 'enonic-types/controller'
 import { DatasetRepoNode, RepoDatasetLib } from '../repo/dataset'
 import { DataSource as DataSourceType } from '../repo/dataset'
 import { StatbankSavedLib } from './dataset/statbankSaved'
 import { SSBCacheLibrary } from './cache'
-import { getTableCellHeader, getTableCellBody } from '../tbml/tbml'
 
 const {
   data: {
@@ -68,7 +67,6 @@ export function parseTable(req: Request, table: Content<Table>, branch: string =
       const tbmlData: TbmlDataUniform = data as TbmlDataUniform
       if (tbmlData && tbmlData.tbml && tbmlData.tbml.metadata && tbmlData.tbml.presentation) {
         tableViewData = getTableViewData(table, tbmlData)
-        log.info('tableViewData PrettyJSON%s', JSON.stringify(tableViewData, null, 4))
       }
     }
   }
@@ -117,7 +115,6 @@ function getTableViewData(table: Content<Table>, dataContent: TbmlDataUniform ):
     tableClass: dataContent.tbml.presentation.table.class ? dataContent.tbml.presentation.table.class : 'statistics',
     tfoot: {
       footnotes: notes ? notes.note : [],
-      // footnotes: notesList,
       correctionNotice: table.data.correctionNotice || ''
     },
     noteRefs,
@@ -148,6 +145,23 @@ function getTableViewDataStatbankSaved(table: Content<Table>, dataContent: Statb
     noteRefs: [],
     sourceList: []
   }
+}
+
+
+function getTableCellHeader(tableCell: Array<TableCellRaw>): Array<TableCellUniform> {
+  return forceArray(tableCell)
+    .map( (cell: TableCellUniform) => ({
+      td: typeof cell.td != 'undefined' ? forceArray(cell.td) : undefined,
+      th: typeof cell.th != 'undefined' ? forceArray(cell.th) : undefined
+    }))
+}
+
+function getTableCellBody(tableCell: Array<TableCellRaw>): Array<TableCellUniform> {
+  return forceArray(tableCell)
+    .map( (cell: TableCellUniform) => ({
+      th: typeof cell.th != 'undefined' ? forceArray(cell.th) : undefined,
+      td: typeof cell.td != 'undefined' ? forceArray(cell.td) : undefined
+    }))
 }
 
 function getNoterefsHeader(row: TableCellUniform): Array<string> {

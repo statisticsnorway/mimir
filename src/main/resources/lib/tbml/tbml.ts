@@ -132,7 +132,7 @@ function getTableBody(tbody: TableRowRaw | Array<TableRowRaw>): Array<TableRowUn
     }))
 }
 
-export function getTableCellHeader(tableCell: Array<TableCellRaw>): Array<TableCellUniform> {
+function getTableCellHeader(tableCell: Array<TableCellRaw>): Array<TableCellUniform> {
   return forceArray(tableCell)
     .map( (cell: TableCellUniform) => ({
       td: typeof cell.td != 'undefined' ? forceArray(cell.td) : undefined,
@@ -140,7 +140,7 @@ export function getTableCellHeader(tableCell: Array<TableCellRaw>): Array<TableC
     }))
 }
 
-export function getTableCellBody(tableCell: Array<TableCellRaw>): Array<TableCellUniform> {
+function getTableCellBody(tableCell: Array<TableCellRaw>): Array<TableCellUniform> {
   return forceArray(tableCell)
     .map( (cell: TableCellUniform) => ({
       th: typeof cell.th != 'undefined' ? forceArray(cell.th) : undefined,
