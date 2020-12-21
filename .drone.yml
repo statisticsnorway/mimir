@@ -25,7 +25,7 @@ steps:
         from_secret: mabl-env-test
     commands:
       - npm install -g @mablhq/mabl-cli 
-      - mabl branches merge --from ${DRONE_SOURCE_BRANCH}
+      - mabl branches merge --from ${DRONE_SOURCE_BRANCH} --api-key $MABL_API_KEY
 ---
 kind: pipeline
 type: docker
