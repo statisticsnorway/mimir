@@ -1,10 +1,40 @@
 kind: pipeline
 type: docker
+name: "test merge git branch and also mabl"
+# Builds and tests on pull request. Required success before merge can happen.
+trigger:
+  branch:
+    - mimir-233-add-env
+  event:
+    include:
+      - push
+steps:
+  # - name: build & test
+  #   image: enonic/enonic-ci:7.4-node
+  #   commands:
+  #     - /setup_sandbox.sh
+  #     - enonic project build
+  - name: mabl create and test branch
+    image: enonic/enonic-ci:7.4-node
+    environment:
+      MABL_API_KEY:
+        from_secret: mabl-api-key
+      MABL_APP_ID:
+        from_secret: mabl-application-id
+      MABL_ENV_ID_TEST:
+        from_secret: mabl-env-test
+    commands:
+      - npm install -g @mablhq/mabl-cli 
+      - mabl branches merge --from ${DRONE_SOURCE_BRANCH}
+---
+kind: pipeline
+type: docker
 name: "Pull Request Tests"
 # Builds and tests on pull request. Required success before merge can happen.
 trigger:
   branch:
     - master
+    - mimir-233-add-env
   event:
     include:
       - pull_request
