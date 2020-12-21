@@ -74,9 +74,11 @@ steps:
         from_secret: mabl-api-key
       MABL_APP_ID:
         from_secret: mabl-application-id
+      MABL_ENV_ID_QA:
+        from_secret: mabl-env-qa
     commands:
       - npm install -g @mablhq/mabl-cli
-      - mabl deployments create --api-key $MABL_API_KEY --application-id $MABL_APP_ID  --labels MIMIR --await-completion
+      - mabl deployments create --api-key $MABL_API_KEY --application-id $MABL_APP_ID  --labels MIMIR --environment-id $MABL_ENV_ID_QA --await-completion
   - name: slack
     image: plugins/slack
     settings:
