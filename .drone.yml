@@ -25,7 +25,7 @@ steps:
         from_secret: mabl-env-test
     commands:
       - npm install -g @mablhq/mabl-cli 
-      - mabl deployments create --api-key $MABL_API_KEY --application-id $MABL_APP_ID --labels MIMIR --environment-id $MABL_ENV_ID_TEST --await-completion --mabl-branch $DRONE_SOURCE_BRANCH --auto-branch true
+      - mabl deployments create --api-key $MABL_API_KEY --application-id $MABL_APP_ID --labels MIMIR --environment-id $MABL_ENV_ID_TEST --await-completion --mabl-branch ${DRONE_SOURCE_BRANCH} --auto-branch true
 ---
 kind: pipeline
 type: docker
