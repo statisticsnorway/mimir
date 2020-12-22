@@ -7,14 +7,17 @@ trigger:
     - mimir-233-add-env
   event:
     include:
-      - push
+      - pull_request
+  action: 
+    include:
+      - closed
 steps:
   # - name: build & test
   #   image: enonic/enonic-ci:7.4-node
   #   commands:
   #     - /setup_sandbox.sh
   #     - enonic project build
-  - name: mabl create and test branch
+  - name: mabl merge and run test branch
     image: enonic/enonic-ci:7.4-node
     environment:
       MABL_API_KEY:
