@@ -6,6 +6,7 @@ import { Statistics } from '../../site/content-types/statistics/statistics'
 import { DashboardDatasetLib, ProcessXml } from './dataset/dashboard'
 import { ContextLibrary, RunContext } from 'enonic-types/context'
 import { DatasetRepoNode, RepoDatasetLib } from '../repo/dataset'
+import { DashboardUtilsLib } from './dataset/dashboardUtils'
 __non_webpack_require__('/lib/polyfills/nashorn')
 
 import moment = require('moment')
@@ -30,9 +31,12 @@ const {
   }
 }: UtilLibrary = __non_webpack_require__( '/lib/util')
 const {
-  users,
   refreshDatasetHandler
 }: DashboardDatasetLib = __non_webpack_require__('/lib/ssb/dataset/dashboard')
+const {
+  users
+}: DashboardUtilsLib = __non_webpack_require__('/lib/ssb/dataset/dashboardUtils')
+
 const {
   run
 }: ContextLibrary = __non_webpack_require__('/lib/xp/context')
