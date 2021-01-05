@@ -26,11 +26,11 @@ export const selectDataToolBoxBaseUrl = createSelector(
 )
 
 export const selectInternalBaseUrl = createSelector(
-    [selectDomain],
-    (commonState) => commonState.internalBaseUrl
+  [selectDomain],
+  (commonState) => commonState.internalBaseUrl
 )
 
 export const selectInternalStatbankUrl = createSelector(
-    [selectDomain],
-    (commonState) => commonState.internalStatbankUrl
+  [selectDomain],
+  (commonState) => commonState.internalStatbankUrl
 )
