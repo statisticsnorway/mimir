@@ -1,7 +1,7 @@
 import Button from 'react-bootstrap/Button'
 import React, { useContext, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectLoadingClearCache } from '../HomePage/selectors'
+import {selectInternalBaseUrl, selectInternalStatbankUrl, selectLoadingClearCache} from '../HomePage/selectors'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { requestClearCache } from '../HomePage/actions.es6'
 import {ChevronDown, ChevronUp, RefreshCw, Trash} from 'react-feather'
@@ -25,6 +25,8 @@ export function DataQueryTools() {
   const tableQueries = useSelector(selectDataQueriesByType('mimir:table'))
   const statuses = useSelector(selectStatuses)
   const [showLinkTools, setShowLinkTools] = useState(false)
+  const internalBaseUrl = useSelector(selectInternalBaseUrl)
+  const internalStatbankUrl = useSelector(selectInternalStatbankUrl)
 
   function refreshStatReg(key) {
     startRefresh(dispatch, io, [key])
@@ -98,19 +100,19 @@ export function DataQueryTools() {
         <li className="list-group-item">
           <Link
             isExternal
-            href={'/statistikkregisteret/publisering/list'}>Statistikkregisteret
+            href={internalBaseUrl + '/statistikkregisteret/publisering/list'}>Statistikkregisteret
           </Link>
         </li>
         <li className="list-group-item">
           <Link
             isExternal
-            href={'/designer'}>Tabellbygger
+            href={internalBaseUrl + '/designer'}>Tabellbygger
           </Link>
         </li>
         <li className="list-group-item">
           <Link
             isExternal
-            href="/pxwebi/pxweb/no/">Intern statistikkbank
+            href={internalStatbankUrl}>Intern statistikkbank
           </Link>
         </li>
         <li className="list-group-item">
