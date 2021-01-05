@@ -119,8 +119,8 @@ export function getTbprocessorKey(content: Content<DataSource>): string {
 }
 
 export function getTableIdFromTbprocessor(data: TbmlDataUniform): Array<string> {
-  if (data && data.tbml.metadata.instance.publicRelatedTableIds) {
-    return data.tbml.metadata.instance.publicRelatedTableIds.toString().split(' ')
+  if (data && data.tbml && data.tbml.metadata && data.tbml.metadata.instance && data.tbml.metadata.instance.publicRelatedTableIds) {
+    return data.tbml.metadata.instance.publicRelatedTableIds
   }
   return []
 }
