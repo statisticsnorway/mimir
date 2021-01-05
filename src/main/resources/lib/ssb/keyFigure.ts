@@ -7,7 +7,7 @@ import { ContentLibrary, QueryResponse, Content } from 'enonic-types/content'
 import { PortalLibrary } from 'enonic-types/portal'
 import { KeyFigure } from '../../site/content-types/keyFigure/keyFigure'
 import { MunicipalityWithCounty } from '../klass/municipalities'
-import { TbmlDataUniform, TableRowUniform, TableCellUniform, HeaderCellUniform, DataCellUniform, PreliminaryData } from '../types/xmlParser'
+import { TbmlDataUniform, TableRowUniform, TableCellUniform, HeaderCellUniform, DataCellUniform } from '../types/xmlParser'
 import { Category, Dataset as JSDataset, Dimension } from '../types/jsonstat-toolkit'
 import { UtilLibrary } from '../types/util'
 import { DatasetRepoNode, RepoDatasetLib, DataSource as DataSourceType } from '../repo/dataset'
@@ -137,8 +137,8 @@ function getDataTbProcessor(
   keyFigure: Content<KeyFigure>
 ): KeyFigureView {
   const bodyRows: Array<TableRowUniform> = forceArray(tbmlData.tbml.presentation.table.tbody)
-
   const head: Array<TableRowUniform> = forceArray(tbmlData.tbml.presentation.table.thead)
+
   const [row1, row2] = forceArray(bodyRows[0].tr)
 
   if (row1) {
@@ -148,7 +148,7 @@ function getDataTbProcessor(
   if (row2 && keyFigure.data.changes) {
     const td: DataCellUniform = forceArray(row2.td)[0]
     let changeText: string | undefined = parseValue(td)
-    const change: number = changeText ? parseFloat(changeText) : 0
+    const change: number | undefined = changeText ? parseFloat(changeText) : undefined
 
     // add denomination if there is any change
     if (changeText && keyFigure.data.changes) {
@@ -159,15 +159,20 @@ function getDataTbProcessor(
     }
     // set arrow direction based on change
     let changeDirection: KeyFigureChanges['changeDirection'] = 'same'
-    if (change > 0) {
-      changeDirection = 'up'
-    } else if (change < 0) {
-      changeDirection = 'down'
+    if (change) {
+      if (change > 0) {
+        changeDirection = 'up'
+      }
+
+      if (change < 0) {
+        changeDirection = 'down'
+      }
     } else {
       changeText = localize({
         key: 'keyFigure.noChange'
       })
     }
+
     keyFigureViewData.changes = {
       changeDirection,
       changeText,
