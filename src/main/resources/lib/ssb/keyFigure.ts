@@ -7,13 +7,12 @@ import { ContentLibrary, QueryResponse, Content } from 'enonic-types/content'
 import { PortalLibrary } from 'enonic-types/portal'
 import { KeyFigure } from '../../site/content-types/keyFigure/keyFigure'
 import { MunicipalityWithCounty } from '../klass/municipalities'
-import { TbmlDataUniform, TableRow, PreliminaryData, TableRowUniform } from '../types/xmlParser'
-import { Dataset as JSDataset, Dimension, Category } from '../types/jsonstat-toolkit'
-import { Request } from 'enonic-types/controller'
-import { DatasetRepoNode, RepoDatasetLib } from '../repo/dataset'
-import { DataSource as DataSourceType } from '../repo/dataset'
+import { TbmlDataUniform, TableRowUniform, TableCellUniform, HeaderCellUniform, DataCellUniform, PreliminaryData } from '../types/xmlParser'
+import { Category, Dataset as JSDataset, Dimension } from '../types/jsonstat-toolkit'
+import { UtilLibrary } from '../types/util'
+import { DatasetRepoNode, RepoDatasetLib, DataSource as DataSourceType } from '../repo/dataset'
+import { DatasetLib } from '../ssb/dataset/dataset'
 import { SSBCacheLibrary } from './cache'
-import { Thead } from '../../lib/types/xmlParser'
 
 const {
   query
@@ -21,6 +20,22 @@ const {
 const {
   imageUrl
 }: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
+const {
+  datasetOrUndefined
+}: SSBCacheLibrary = __non_webpack_require__('/lib/ssb/cache')
+const {
+  data: {
+    forceArray
+  }
+}: UtilLibrary = __non_webpack_require__( '/lib/util')
+const {
+  DATASET_BRANCH,
+  UNPUBLISHED_DATASET_BRANCH
+}: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
+const {
+  getDataset
+}: DatasetLib = __non_webpack_require__('/lib/ssb/dataset/dataset')
+
 const {
   localizeTimePeriod
 } = __non_webpack_require__( '/lib/language')
@@ -31,28 +46,11 @@ const {
   createHumanReadableFormat,
   getImageCaption
 } = __non_webpack_require__( '/lib/ssb/utils')
-const {
-  datasetOrUndefined
-}: SSBCacheLibrary = __non_webpack_require__('/lib/ssb/cache')
-
-const {
-  data: {
-    forceArray
-  }
-} = __non_webpack_require__( '/lib/util')
-
-const {
-  getDataset
-} = __non_webpack_require__( '/lib/ssb/dataset/dataset')
-const {
-  DATASET_BRANCH,
-  UNPUBLISHED_DATASET_BRANCH
-}: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
 
 const contentTypeName: string = `${app.name}:keyFigure`
 
 export function get(keys: string | Array<string>): Array<Content<KeyFigure>> {
-  keys = forceArray(keys) as Array<string>
+  keys = forceArray(keys)
   const content: QueryResponse<KeyFigure> = query({
     contentTypes: [contentTypeName],
     query: ``,
@@ -79,7 +77,6 @@ type StatBankApi = NonNullable<KeyFigureDataSource>[DataSourceType.STATBANK_API]
 type DatasetFilterOptions = NonNullable<StatBankApi>['datasetFilterOptions']
 
 export function parseKeyFigure(
-  req: Request,
   keyFigure: Content<KeyFigure>,
   municipality?: MunicipalityWithCounty,
   branch: string = DATASET_BRANCH): KeyFigureView {
@@ -99,7 +96,7 @@ export function parseKeyFigure(
     glossaryText: keyFigure.data.glossaryText
   }
 
-  let datasetRepo: DatasetRepoNode<JSONstat> | undefined
+  let datasetRepo: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined | null
   if (branch === UNPUBLISHED_DATASET_BRANCH) {
     datasetRepo = getDataset(keyFigure, UNPUBLISHED_DATASET_BRANCH)
   } else {
@@ -108,7 +105,7 @@ export function parseKeyFigure(
 
   if (datasetRepo) {
     const dataSource: KeyFigure['dataSource'] | undefined = keyFigure.data.dataSource
-    const data: JSDataset | Array<JSDataset> | null | TbmlDataUniform = datasetRepo.data
+    const data: JSDataset | Array<JSDataset> | TbmlDataUniform | undefined = datasetRepo.data
 
     if (dataSource && dataSource._selected === DataSourceType.STATBANK_API) {
       const ds: JSDataset | Array<JSDataset> | null = JSONstat(data).Dataset(0) as JSDataset | Array<JSDataset> | null
@@ -118,7 +115,7 @@ export function parseKeyFigure(
       // if filter get data with filter
       if (dataSource.statbankApi && dataSource.statbankApi.datasetFilterOptions && dataSource.statbankApi.datasetFilterOptions._selected) {
         const filterOptions: DatasetFilterOptions = dataSource.statbankApi.datasetFilterOptions
-        getDataWithFilterStatbankApi(keyFigureViewData, municipality, filterOptions, ds, xAxisLabel, yAxisLabel)
+        getDataWithFilterStatbankApi(keyFigureViewData, municipality, filterOptions, ds, yAxisLabel)
       } else if (xAxisLabel && ds && !(ds instanceof Array)) {
         // get all data without filter
       }
@@ -141,31 +138,18 @@ function getDataTbProcessor(
 ): KeyFigureView {
   const bodyRows: Array<TableRowUniform> = forceArray(tbmlData.tbml.presentation.table.tbody)
 
-  const head: Array<Thead> = forceArray(tbmlData.tbml.presentation.table.thead)
-    .map( (thead: Thead) => ({
-      tr: forceArray(thead.tr)
-    }))
+  const head: Array<TableRowUniform> = forceArray(tbmlData.tbml.presentation.table.thead)
   const [row1, row2] = forceArray(bodyRows[0].tr)
 
   if (row1) {
-    let value: number
-    const td: number | PreliminaryData = forceArray(row1.td)[0] as number | PreliminaryData
-    if (typeof td === 'object' && td.content != undefined) {
-      value = td.content
-    } else {
-      value = td as number
-    }
-    keyFigureViewData.number = parseValue(value)
+    const td: DataCellUniform = forceArray(row1.td)[0]
+    keyFigureViewData.number = parseValue(td)
   }
   if (row2 && keyFigure.data.changes) {
-    let change: number
-    const td: number | PreliminaryData = forceArray(row2.td)[0] as number | PreliminaryData
-    if (typeof td === 'object' && td.content != undefined) {
-      change = td.content
-    } else {
-      change = td as number
-    }
-    let changeText: undefined | string = parseValue(change)
+    const td: DataCellUniform = forceArray(row2.td)[0]
+    let changeText: string | undefined = parseValue(td)
+    const change: number = changeText ? parseFloat(changeText) : 0
+
     // add denomination if there is any change
     if (changeText && keyFigure.data.changes) {
       const denomination: string | undefined = (keyFigure.data.changes as { denomination?: string }).denomination
@@ -193,9 +177,9 @@ function getDataTbProcessor(
 
   // the table head are sometimes an array with th's and td's, when it happens it looks like
   // the last index is the right one to pick.
-  const tr: Array<TableRow> | undefined = Array.isArray(head) ? head[head.length - 1].tr as Array<TableRow> : undefined
-  const th: string | number | string[] | undefined = Array.isArray(tr) ? tr[tr.length - 1].th : undefined
-  keyFigureViewData.time = (forceArray(th)[0]).toString()
+  const tr: Array<TableCellUniform> | undefined = Array.isArray(head) ? head[head.length - 1].tr : undefined
+  const th: HeaderCellUniform | undefined = Array.isArray(tr) ? tr[tr.length - 1].th : undefined
+  keyFigureViewData.time = th ? (forceArray(th)[0]).toString() : undefined
 
   return keyFigureViewData
 }
@@ -205,7 +189,6 @@ function getDataWithFilterStatbankApi(
   municipality: MunicipalityWithCounty | undefined,
   filterOptions: DatasetFilterOptions,
   ds: JSDataset | Array<JSDataset>| null,
-  xAxisLabel: string | undefined,
   yAxisLabel: string | undefined
 ): KeyFigureView {
   if (yAxisLabel && ds && !(ds instanceof Array)) {
@@ -273,7 +256,7 @@ function getDataFromMunicipalityCode(ds: JSDataset, municipalityCode: string, yA
 }
 
 const notFoundValues: Array<string> = ['.', '..', '...', ':', '-']
-function parseValue(value: number | string | null): string | undefined {
+function parseValue(value: DataCellUniform | number | string | null): string | undefined {
   let hasValue: boolean = true
   if (!value || notFoundValues.includes(value.toString())) {
     hasValue = false
@@ -286,7 +269,7 @@ interface MunicipalData {
   label?: string;
 }
 
-export interface KeyFigureView {
+interface KeyFigureView {
   iconUrl?: string;
   iconAltText?: string;
   number?: string;
@@ -300,7 +283,7 @@ export interface KeyFigureView {
   glossaryText?: string;
 }
 
-export interface KeyFigureChanges {
+interface KeyFigureChanges {
   changeDirection: 'up' | 'down' | 'same';
   changeText?: string;
   changePeriod: string;
