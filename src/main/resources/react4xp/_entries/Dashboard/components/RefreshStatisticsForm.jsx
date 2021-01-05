@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Form } from 'react-bootstrap'
+import { Button, Form, Row, Col } from 'react-bootstrap'
 import PropTypes from 'prop-types'
 
 export function RefreshStatisticsForm(props) {
@@ -25,7 +25,7 @@ export function RefreshStatisticsForm(props) {
   }
   function renderOwnerInputForMultipleTbml(owner, index) {
     return (
-      <div key={index}>
+      <div key={index} className='border border-dark rounded p-2'>
         <p>Autorisasjon for bruker {owner.ownerId} som har</p>
         <ul> {
           owner.tbmlList.map((tbml, i) => {
@@ -35,24 +35,30 @@ export function RefreshStatisticsForm(props) {
             </li>)
           })
         } </ul>
-        <Form.Group controlId="formBasicUsername">
-          <Form.Label>Brukernavn</Form.Label>
-          <Form.Control
-            required
-            type="username"
-            placeholder="Brukernavn"
-            onChange={(e) => updateOwnerCredentials(owner, 'username', e.target.value )}
-          />
-        </Form.Group>
-        <Form.Group controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            required
-            type="password"
-            placeholder="Passord"
-            onChange={(e) => updateOwnerCredentials(owner, 'password', e.target.value )}
-          />
-        </Form.Group>
+        <Row>
+          <Col>
+            <Form.Group controlId="formBasicUsername">
+              <Form.Label>Brukernavn</Form.Label>
+              <Form.Control
+                required
+                type="username"
+                placeholder="Brukernavn"
+                onChange={(e) => updateOwnerCredentials(owner, 'username', e.target.value )}
+              />
+            </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group controlId="formBasicPassword">
+              <Form.Label>Password</Form.Label>
+              <Form.Control
+                required
+                type="password"
+                placeholder="Passord"
+                onChange={(e) => updateOwnerCredentials(owner, 'password', e.target.value )}
+              />
+            </Form.Group>
+          </Col>
+        </Row>
       </div>
     )
   }
