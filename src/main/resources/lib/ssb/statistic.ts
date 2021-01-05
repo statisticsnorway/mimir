@@ -230,7 +230,7 @@ export function getStatistics(): Array<Content<Statistics>> {
   const result: QueryResponse<Statistics> = query({
     contentTypes: [`${app.name}:statistics`],
     query: `data.statistic LIKE "*"`,
-    count: 50
+    count: 1000
   })
   hits = hits.concat(result.hits)
   return hits
