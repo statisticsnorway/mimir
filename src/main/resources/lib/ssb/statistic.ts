@@ -6,6 +6,8 @@ import { Statistics } from '../../site/content-types/statistics/statistics'
 import { DashboardDatasetLib, ProcessXml } from './dataset/dashboard'
 import { ContextLibrary, RunContext } from 'enonic-types/context'
 import { DatasetRepoNode, RepoDatasetLib } from '../repo/dataset'
+import { DashboardUtilsLib } from './dataset/dashboardUtils'
+__non_webpack_require__('/lib/polyfills/nashorn')
 
 import moment = require('moment')
 
@@ -15,7 +17,6 @@ import { KeyFigure } from '../../site/content-types/keyFigure/keyFigure'
 import { TbprocessorLib } from './dataset/tbprocessor'
 import { DataSource } from '../../site/mixins/dataSource/dataSource'
 import { Source, TbmlDataUniform } from '../types/xmlParser'
-import { groupBy } from 'ramda'
 
 const {
   query,
@@ -30,15 +31,17 @@ const {
   }
 }: UtilLibrary = __non_webpack_require__( '/lib/util')
 const {
-  users,
   refreshDatasetHandler
 }: DashboardDatasetLib = __non_webpack_require__('/lib/ssb/dataset/dashboard')
+const {
+  users
+}: DashboardUtilsLib = __non_webpack_require__('/lib/ssb/dataset/dashboardUtils')
+
 const {
   run
 }: ContextLibrary = __non_webpack_require__('/lib/xp/context')
 const {
-  DATASET_BRANCH,
-  UNPUBLISHED_DATASET_BRANCH
+  DATASET_BRANCH
 }: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
 const {
   getTbprocessor
@@ -60,12 +63,11 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     const statistic: Content<Statistics> | null = getContent({
       key: data.id
     })
-
     const fetchPublished: boolean = data.fetchPublished === 'on'
-    const processXmls: Array<ProcessXml> | undefined = !fetchPublished && data.owners ? processXmlFromOwners(data.owners) : undefined
 
     if (statistic) {
       const datasetIdsToUpdate: Array<string> = getDatasetIdsFromStatistic(statistic)
+      const processXmls: Array<ProcessXml> | undefined = !fetchPublished && data.owners ? processXmlFromOwners(data.owners) : undefined
 
       if (datasetIdsToUpdate.length > 0) {
         const context: RunContext = {
@@ -81,7 +83,8 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
           refreshDatasetHandler(
             datasetIdsToUpdate,
             socketEmitter,
-            fetchPublished ? DATASET_BRANCH : UNPUBLISHED_DATASET_BRANCH,
+            DATASET_BRANCH,
+            fetchPublished,
             processXmls
           )
         })
@@ -96,26 +99,30 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   })
 }
 
-function processXmlFromOwners(owners: RefreshInfo['owners']): Array<ProcessXml> | undefined {
-  return owners && Object.keys(owners).reduce((acc: Array<ProcessXml>, ownerKey) => {
-    const ownerKeyInt: number = parseInt(ownerKey)
-    const currentOwnerObj: OwnerObject | undefined = owners && owners[ownerKeyInt] ? owners[ownerKeyInt] : undefined
-    const ownerTableIds: Array<string> | undefined = currentOwnerObj && Array.isArray(currentOwnerObj.ownerTableIds) ?
-      currentOwnerObj.ownerTableIds : undefined
-
-    const sourceNodesString: Array<string> | undefined = currentOwnerObj && ownerTableIds ?
-      ownerTableIds.map((tableId) => {
-        return `<source user="${currentOwnerObj.username}" password="${encrypt(currentOwnerObj.password)}" id="${tableId}"/>`
-      }) : undefined
-
-    if (sourceNodesString && currentOwnerObj) {
-      acc.push({
-        tbmlId: parseInt(currentOwnerObj.tbmlId),
-        processXml: `<process>${sourceNodesString.join('')}</process>`
-      })
-    }
+function processXmlFromOwners(owners: Array<OwnerObject>): Array<ProcessXml> {
+  const preRender: Array<SourceNodeRender> = owners.reduce((acc: Array<SourceNodeRender>, ownerObj: OwnerObject) => {
+    ownerObj.tbmlList && ownerObj.tbmlList.forEach( (tbmlIdObj: Tbml) => {
+      const tbmlProcess: SourceNodeRender | undefined = acc.find((process: SourceNodeRender) => process.tbmlId === tbmlIdObj.tbmlId)
+      if (tbmlProcess) {
+        tbmlIdObj.sourceTableIds.forEach((sourceTable) => {
+          tbmlProcess.sourceNodeStrings.push(`<source user="${ownerObj.username}" password="${encrypt(ownerObj.password)}" id="${sourceTable}"/>`)
+        })
+      } else {
+        acc.push({
+          tbmlId: tbmlIdObj.tbmlId,
+          sourceNodeStrings: tbmlIdObj.sourceTableIds.map( (sourceTable) => {
+            return `<source user="${ownerObj.username}" password="${encrypt(ownerObj.password)}" id="${sourceTable}"/>`
+          })
+        })
+      }
+    })
     return acc
   }, [])
+
+  return preRender.map((sourceNode) => ({
+    tbmlId: sourceNode.tbmlId,
+    processXml: `<process>${sourceNode.sourceNodeStrings.join('')}</process>`
+  }))
 }
 
 export function getDatasetIdsFromStatistic(statistic: Content<Statistics>): Array<string> {
@@ -125,9 +132,8 @@ export function getDatasetIdsFromStatistic(statistic: Content<Statistics>): Arra
   return [...mainTableId, ...statisticsKeyFigureId, ...attachmentTablesFiguresIds]
 }
 
-function sourceListFromStatistic(statistic: Content<Statistics>): Array<TbmlSources> {
+function sourcesForUserFromStatistic(statistic: Content<Statistics>): Array<OwnerWithSources> {
   const datasetIds: Array<string> = getDatasetIdsFromStatistic(statistic)
-
   const sources: Array<SourceList> = datasetIds.reduce((acc: Array<SourceList>, contentId: string) => {
     const dataset: DatasetRepoNode<TbmlDataUniform> | null = getDatasetFromContentId(contentId)
     if (dataset) {
@@ -139,27 +145,45 @@ function sourceListFromStatistic(statistic: Content<Statistics>): Array<TbmlSour
     return acc
   }, [])
 
-  const byOwners: Function = groupBy((source: Source) => {
-    return `${source.owner}`
-  })
-
-  return sources.map((source) => {
+  return sources.reduce((acc: Array<OwnerWithSources>, source: SourceList) => {
     const {
       dataset
     } = source
-    return {
-      queryId: source.queryId,
-      tbmlId: dataset._name,
-      sourceList: dataset.data && typeof(dataset.data) !== 'string' &&
-      dataset.data.tbml.metadata && dataset.data.tbml.metadata.sourceList ?
-        byOwners(forceArray(dataset.data.tbml.metadata.sourceList)) : undefined
-    }
-  })
-}
 
-interface SourceList {
-  queryId: string;
-  dataset: DatasetRepoNode<TbmlDataUniform>;
+    if (dataset.data &&
+      typeof(dataset.data) !== 'string' &&
+      dataset.data.tbml.metadata &&
+      dataset.data.tbml.metadata.sourceList) {
+      const tbmlId: number = dataset.data.tbml.metadata.instance.definitionId
+      forceArray(dataset.data.tbml.metadata.sourceList).forEach((source: Source) => {
+        const userIndex: number = acc.findIndex((it) => it.ownerId == source.owner)
+        if (userIndex != -1) {
+          const tbmlIndex: number = acc[userIndex].tbmlList.findIndex((it) => it.tbmlId == tbmlId)
+          if (tbmlIndex == -1) {
+            acc[userIndex].tbmlList.push({
+              tbmlId: tbmlId,
+              sourceTableIds: [source.id.toString()],
+              statbankTableIds: [source.tableId.toString()]
+            })
+          } else {
+            acc[userIndex].tbmlList[tbmlIndex].sourceTableIds.push(source.id.toString())
+            acc[userIndex].tbmlList[tbmlIndex].statbankTableIds.push(source.tableId.toString())
+          }
+        } else {
+          acc.push({
+            ownerId: source.owner,
+            tbmlList: [{
+              tbmlId: tbmlId,
+              sourceTableIds: [source.id.toString()],
+              statbankTableIds: [source.tableId.toString()]
+            }]
+
+          })
+        }
+      })
+    }
+    return acc
+  }, [])
 }
 
 function getDatasetFromContentId(contentId: string): DatasetRepoNode<TbmlDataUniform> | null {
@@ -182,15 +206,14 @@ function prepStatistics(statistics: Array<Content<Statistics>>): Array<Statistic
     const statregData: StatregData | undefined = statistic.data.statistic ? getStatregInfo(statistic.data.statistic) : undefined
 
     if (statregData) {
-      const relatedTables: Array<TbmlSources> = sourceListFromStatistic(statistic)
-
+      const relatedUserTBMLs: Array<OwnerWithSources> = sourcesForUserFromStatistic(statistic)
       const statisticDataDashboard: StatisticDashboard = {
         id: statistic._id,
         language: statistic.language ? statistic.language : '',
         name: statistic.displayName ? statistic.displayName : '',
         shortName: statregData.shortName,
         nextRelease: undefined,
-        relatedTables,
+        relatedUserTBMLs,
         aboutTheStatistics: statistic.data.aboutTheStatistics
       }
       if (statregData && statregData.nextRelease && moment(statregData.nextRelease).isSameOrAfter(new Date(), 'day')) {
@@ -245,20 +268,28 @@ function sortByNextRelease(statisticData: Array<StatisticDashboard>): Array<Stat
   return statisticsSorted
 }
 
+interface SourceNodeRender {
+  tbmlId: number;
+  sourceNodeStrings: Array<string>;
+}
+
+interface SourceList {
+  queryId: string;
+  dataset: DatasetRepoNode<TbmlDataUniform>;
+}
+
 interface RefreshInfo {
   id: string;
-  owners?: {
-    [ownerKey: number]: OwnerObject;
-  };
-  owner: string;
+  owners?: Array<OwnerObject>;
   fetchPublished: 'on' | null;
 }
 
 interface OwnerObject {
   username: string;
   password: string;
-  ownerTableIds?: Array<string>;
-  tbmlId: string;
+  tbmlList?: Array<Tbml>;
+  ownerId: number;
+  tbmlId: number;
 };
 
 interface StatisticDashboard {
@@ -268,6 +299,7 @@ interface StatisticDashboard {
   shortName: string;
   nextRelease?: string;
   relatedTables?: Array<TbmlSources>;
+ relatedUserTBMLs?: Array<OwnerWithSources>;
   aboutTheStatistics?: string;
 }
 
@@ -286,12 +318,20 @@ interface TbmlSources {
   };
 }
 
+interface OwnerWithSources {
+  ownerId: number;
+  tbmlList: Array<Tbml>;
+}
+
+interface Tbml {
+  tbmlId: number;
+  sourceTableIds: Array<string>;
+  statbankTableIds: Array<string>;
+}
+
 export interface StatisticLib {
   setupHandlers: (socket: Socket, socketEmitter: SocketEmitter) => void;
   getStatistics: () => Array<Content<Statistics>>;
   getDatasetIdsFromStatistic: (statistic: Content<Statistics>) => Array<string>;
 }
 
-export interface GroupByResult {
-  [key: number]: Array<object>;
-}

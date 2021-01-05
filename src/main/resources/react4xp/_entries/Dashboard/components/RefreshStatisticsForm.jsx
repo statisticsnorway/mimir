@@ -8,49 +8,49 @@ export function RefreshStatisticsForm(props) {
     modalInfo
   } = props
 
-  const [owners, setOwners] = useState({})
+  const [owners, setOwners] = useState([])
   const [fetchPublished, setFetchedPublished] = useState(null)
 
-  function updateOwnerCredentials(ownerKey, propKey, value, ownerTableIds, tbmlId) {
-    if (!!owners[ownerKey]) {
-      owners[ownerKey][propKey] = value
-      owners[ownerKey].ownerTableIds = ownerTableIds,
-      tbmlId
+  function updateOwnerCredentials(ownersObj, propKey, value) {
+    const currentOwner = owners.find((owner) => owner.ownerId === ownersObj.ownerId)
+    if (currentOwner) {
+      currentOwner[propKey] = value
     } else {
-      owners[ownerKey] = {
-        [propKey]: value,
-        ownerTableIds: ownerTableIds,
-        tbmlId
-      }
+      owners.push({
+        ...ownersObj,
+        [propKey]: value
+      })
     }
     setOwners(owners)
   }
-
-  function renderOwnerInputField(owner, sources, i, tbmlId) {
-    const ownerTableIds = sources.map((source) => source.id)
+  function renderOwnerInputForMultipleTbml(owner, index) {
     return (
-      <div key={i}>
-        <p>Autorisasjon for TBML {tbmlId} med eier {owner}. <br/>TabelId: {
-          sources
-            .map( (source) => source.tableId)
-            .filter((value, index, self) => self.indexOf(value) === index) // only unique values
-            .join(', ')
-        }.
-        </p>
+      <div key={index}>
+        <p>Autorisasjon for bruker {owner.ownerId} som har</p>
+        <ul> {
+          owner.tbmlList.map((tbml, i) => {
+            return (<li key={i}>
+              TBML {tbml.tbmlId} med kilder: {tbml.statbankTableIds.filter((value, index, self) => self.indexOf(value) === index) // only unique values
+                .join(', ')}.
+            </li>)
+          })
+        } </ul>
         <Form.Group controlId="formBasicUsername">
           <Form.Label>Brukernavn</Form.Label>
           <Form.Control
+            required
             type="username"
             placeholder="Brukernavn"
-            onChange={(e) => updateOwnerCredentials(owner, 'username', e.target.value, ownerTableIds, tbmlId)}
+            onChange={(e) => updateOwnerCredentials(owner, 'username', e.target.value )}
           />
         </Form.Group>
         <Form.Group controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>
           <Form.Control
+            required
             type="password"
             placeholder="Passord"
-            onChange={(e) => updateOwnerCredentials(owner, 'password', e.target.value, ownerTableIds, tbmlId)}
+            onChange={(e) => updateOwnerCredentials(owner, 'password', e.target.value )}
           />
         </Form.Group>
       </div>
@@ -60,11 +60,10 @@ export function RefreshStatisticsForm(props) {
   return (
     <Form className="mt-3">
       {
-        modalInfo.relatedTables.map((table) => {
-          return table.sourceList && Object.keys(table.sourceList).map((key, i) => {
-            return renderOwnerInputField(key, table.sourceList[key], i, table.tbmlId)
-          })
+        modalInfo.relatedUserTBMLs.map((owner, index) => {
+          return renderOwnerInputForMultipleTbml(owner, index)
         })
+
       }
       <Form.Group controlId="formBasicCheckbox">
         <Form.Check
@@ -95,13 +94,16 @@ RefreshStatisticsForm.propTypes = {
     })
   ),
   modalInfo: PropTypes.shape({
-    relatedTables: PropTypes.arrayOf(
+    relatedUserTBMLs: PropTypes.arrayOf(
       PropTypes.shape({
-        owner: PropTypes.number,
-        tableApproved: PropTypes.string,
-        tableId: PropTypes.number,
-        id: PropTypes.string,
-        table: PropTypes.string
+        ownerId: PropTypes.number,
+        tbmlList: PropTypes.arrayOf(
+          PropTypes.shape({
+            tbmlId: PropTypes.number,
+            sourceTableIds: PropTypes.arrayOf(PropTypes.string),
+            statbankTableIds: PropTypes.arrayOf(PropTypes.string)
+          })
+        )
       })
     )
   })
