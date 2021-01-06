@@ -85,8 +85,8 @@ function getTableViewData(table: Content<Table>, dataContent: TbmlDataUniform ):
   const title: Title = dataContent.tbml.metadata.title
   const notes: NotesUniform = dataContent.tbml.metadata.notes
   const sourceList: Array<Source> = dataContent.tbml.metadata && dataContent.tbml.metadata.sourceList ? dataContent.tbml.metadata.sourceList : []
-  const headRows: Array<TableRowUniform> = dataContent.tbml.presentation.table.thead
-  const bodyRows: Array<TableRowUniform> = dataContent.tbml.presentation.table.tbody
+  const headRows: Array<TableRowUniform> = forceArray(dataContent.tbml.presentation.table.thead)
+  const bodyRows: Array<TableRowUniform> = forceArray(dataContent.tbml.presentation.table.tbody)
 
   const headNoteRefs: Array<string> = headRows.reduce((acc: Array<string>, row: TableRowUniform) => {
     const tableCells: Array<TableCellUniform> = row.tr
@@ -166,14 +166,14 @@ function getTableCellBody(tableCell: Array<TableCellRaw>): Array<TableCellUnifor
 
 function getNoterefsHeader(row: TableCellUniform): Array<string> {
   const values: Array<number | string | PreliminaryData> = forceArray(row.th)
-  const noteRefs: Array<string> = []
-  values.map((cell: number | string | PreliminaryData) => {
+  const noteRefs: Array<string> = values.reduce((acc: Array<string>, cell: number | string | PreliminaryData) => {
     if (typeof cell === 'object') {
-      if (cell.noterefs && noteRefs && !noteRefs.includes(cell.noterefs)) {
-        noteRefs.push(cell.noterefs)
+      if (cell.noterefs && !acc.includes(cell.noterefs)) {
+        acc.push(cell.noterefs)
       }
     }
-  })
+    return acc
+  }, [])
   return noteRefs
 }
 
