@@ -23,9 +23,10 @@ export function RefreshStatisticsForm(props) {
     }
     setOwners(owners)
   }
+
   function renderOwnerInputForMultipleTbml(owner, index) {
     return (
-      <div key={index} className='border border-dark rounded p-2'>
+      <div key={index} className='border border-dark rounded p-2 mb-3'>
         <p>Autorisasjon for bruker {owner.ownerId} som har</p>
         <ul> {
           owner.tbmlList.map((tbml, i) => {
@@ -37,7 +38,7 @@ export function RefreshStatisticsForm(props) {
         } </ul>
         <Row>
           <Col>
-            <Form.Group controlId="formBasicUsername">
+            <Form.Group controlId={'formBasicUsername_' + index}>
               <Form.Label>Brukernavn</Form.Label>
               <Form.Control
                 required
@@ -48,13 +49,24 @@ export function RefreshStatisticsForm(props) {
             </Form.Group>
           </Col>
           <Col>
-            <Form.Group controlId="formBasicPassword">
+            <Form.Group controlId={'formBasicPassword_' + index}>
               <Form.Label>Password</Form.Label>
               <Form.Control
                 required
                 type="password"
                 placeholder="Passord"
                 onChange={(e) => updateOwnerCredentials(owner, 'password', e.target.value )}
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Form.Group controlId={'formBasicCheckbox_' + index}>
+              <Form.Check
+                onChange={(e) => updateOwnerCredentials(owner, 'fetchPublished', e.target.value )}
+                type="checkbox"
+                label="Hent publiserte tall"
               />
             </Form.Group>
           </Col>
@@ -71,13 +83,6 @@ export function RefreshStatisticsForm(props) {
         })
 
       }
-      <Form.Group controlId="formBasicCheckbox">
-        <Form.Check
-          onChange={(e) => setFetchedPublished(e.target.value)}
-          type="checkbox"
-          label="Hent publiserte tall"
-        />
-      </Form.Group>
       <Button
         variant="primary"
         onClick={() => onSubmit({
