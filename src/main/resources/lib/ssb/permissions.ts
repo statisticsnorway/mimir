@@ -18,9 +18,7 @@ export function hasWritePermissions(req: Request, key: string): boolean {
       key
     })
     const userPrincipals: Array<string> = (getContext().authInfo as AuthInfoExtended).principals
-    log.info(JSON.stringify(userPrincipals, null, 2))
     const usersPermissions: Array<PermissionsParams> = permissions.filter((p) => userPrincipals.includes(p.principal))
-    log.info(JSON.stringify(permissions, null, 2))
     return !!usersPermissions.find((permission) => {
       return permission.allow.includes('WRITE_PERMISSIONS') || permission.allow.includes('MODIFY')
     })
