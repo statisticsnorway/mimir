@@ -7,7 +7,7 @@ import { ContentLibrary, QueryResponse, Content } from 'enonic-types/content'
 import { PortalLibrary } from 'enonic-types/portal'
 import { KeyFigure } from '../../site/content-types/keyFigure/keyFigure'
 import { MunicipalityWithCounty } from '../klass/municipalities'
-import { TbmlDataUniform, TableRowUniform, TableCellUniform, HeaderCellUniform, DataCellUniform } from '../types/xmlParser'
+import { TbmlDataUniform, TableRowUniform, TableCellUniform, PreliminaryData } from '../types/xmlParser'
 import { Category, Dataset as JSDataset, Dimension } from '../types/jsonstat-toolkit'
 import { UtilLibrary } from '../types/util'
 import { DatasetRepoNode, RepoDatasetLib, DataSource as DataSourceType } from '../repo/dataset'
@@ -138,17 +138,25 @@ function getDataTbProcessor(
 ): KeyFigureView {
   const bodyRows: Array<TableRowUniform> = forceArray(tbmlData.tbml.presentation.table.tbody)
   const head: Array<TableRowUniform> = forceArray(tbmlData.tbml.presentation.table.thead)
-
   const [row1, row2] = forceArray(bodyRows[0].tr)
 
   if (row1) {
-    const td: DataCellUniform = forceArray(row1.td)[0]
-    keyFigureViewData.number = parseValue(td)
+    const td: Array<number | string | PreliminaryData> = forceArray(row1.td)
+    const value: number | string | PreliminaryData = td[0]
+
+    keyFigureViewData.number = typeof value === 'object' ? parseValue(value.content) : parseValue(value)
   }
   if (row2 && keyFigure.data.changes) {
-    const td: DataCellUniform = forceArray(row2.td)[0]
-    let changeText: string | undefined = parseValue(td)
-    const change: number | undefined = changeText ? parseFloat(changeText) : undefined
+    const td: Array<number | string | PreliminaryData> = forceArray(row2.td)
+    const value: number | string | PreliminaryData = td[0]
+
+    let change: number | string | undefined
+    if (typeof value === 'object') {
+      change = value.content
+    } else {
+      change = value
+    }
+    let changeText: string | undefined = parseValue(change)
 
     // add denomination if there is any change
     if (changeText && keyFigure.data.changes) {
@@ -159,14 +167,10 @@ function getDataTbProcessor(
     }
     // set arrow direction based on change
     let changeDirection: KeyFigureChanges['changeDirection'] = 'same'
-    if (change) {
-      if (change > 0) {
-        changeDirection = 'up'
-      }
-
-      if (change < 0) {
-        changeDirection = 'down'
-      }
+    if (change > 0) {
+      changeDirection = 'up'
+    } else if (change < 0) {
+      changeDirection = 'down'
     } else {
       changeText = localize({
         key: 'keyFigure.noChange'
@@ -179,12 +183,9 @@ function getDataTbProcessor(
       changePeriod: row2.th.toString()
     }
   }
-
-  // the table head are sometimes an array with th's and td's, when it happens it looks like
-  // the last index is the right one to pick.
-  const tr: Array<TableCellUniform> | undefined = Array.isArray(head) ? head[head.length - 1].tr : undefined
-  const th: HeaderCellUniform | undefined = Array.isArray(tr) ? tr[tr.length - 1].th : undefined
-  keyFigureViewData.time = th ? (forceArray(th)[0]).toString() : undefined
+  const tr: Array<TableCellUniform> = head[head.length - 1].tr
+  const th: Array<number | string | PreliminaryData> = tr[head.length - 1].th
+  keyFigureViewData.time = (forceArray(th)[0]).toString()
 
   return keyFigureViewData
 }
@@ -261,7 +262,7 @@ function getDataFromMunicipalityCode(ds: JSDataset, municipalityCode: string, yA
 }
 
 const notFoundValues: Array<string> = ['.', '..', '...', ':', '-']
-function parseValue(value: DataCellUniform | number | string | null): string | undefined {
+function parseValue(value: number | string | null): string | undefined {
   let hasValue: boolean = true
   if (!value || notFoundValues.includes(value.toString())) {
     hasValue = false
