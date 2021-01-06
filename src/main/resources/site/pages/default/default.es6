@@ -9,7 +9,8 @@ const {
 } = __non_webpack_require__( '/lib/language')
 const {
   alertsForContext,
-  getBreadcrumbs
+  getBreadcrumbs,
+  getPreviousReleaseStatistic
 } = __non_webpack_require__( '/lib/ssb/utils')
 const {
   getMunicipality
@@ -25,6 +26,9 @@ const {
 const {
   fromMenuCache
 } = __non_webpack_require__('/lib/ssb/cache')
+const {
+  getStatisticByIdFromRepo
+} = __non_webpack_require__('/lib/repo/statreg/statistics')
 
 const partsWithPreview = [ // Parts that has preview
   `${app.name}:map`,
@@ -99,6 +103,7 @@ exports.get = function(req) {
   let metaInfoSearchGroup = page._id
   let metaInfoSearchKeywords
   let metaInfoDescription
+  let metaInfoSearchPublishFrom = page.publish.from
 
   if (pageType === 'municipality') {
     if (page._path.indexOf('/kommunefakta/') > -1) {
@@ -122,6 +127,17 @@ exports.get = function(req) {
 
   if (pageType === 'factPage') {
     metaInfoSearchContentType = 'faktaside'
+  }
+
+  if (page.type === `${app.name}:statistics`) {
+    const statistic = getStatisticByIdFromRepo(page.data.statistic)
+    if (statistic) {
+      const variants = util.data.forceArray(statistic.variants)
+      const previousRelease = getPreviousReleaseStatistic(variants)
+      metaInfoSearchPublishFrom = new Date(previousRelease).toISOString()
+    }
+    metaInfoSearchContentType = 'statistikk'
+    metaInfoDescription = page.x['com-enonic-app-metafields']['meta-data'].seoDescription
   }
 
   let config
@@ -227,6 +243,7 @@ exports.get = function(req) {
     metaInfoSearchContentType,
     metaInfoSearchKeywords,
     metaInfoDescription,
+    metaInfoSearchPublishFrom,
     breadcrumbsReactId: breadcrumbComponent.react4xpId
   }
 
