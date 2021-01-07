@@ -22,7 +22,7 @@ export function Statistics() {
   const openModal = useSelector(selectOpenModal)
 
   const dispatch = useDispatch()
-  const statisticsNo = statistics ? statistics.filter((s) => s.language === 'nb') : []
+  const statisticsNo = statistics ? statistics.filter((s) => s.language === 'nb' || s.language === 'nn') : []
   const statisticsEn = statistics ? statistics.filter((s) => s.language === 'en') : []
 
   const statisticsFinal = []

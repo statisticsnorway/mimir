@@ -3,6 +3,7 @@ import { Content } from 'enonic-types/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { JSONstat } from '../../types/jsonstat-toolkit'
 import { RepoQueryLib } from '../../repo/query'
+import { StatbankSavedRaw } from '../../types/xmlParser'
 
 const {
   getDataset
@@ -58,5 +59,5 @@ export function fetchStatbankSavedData(content: Content<DataSource>): object | n
 
 export interface StatbankSavedLib {
   getStatbankApi(content: Content<DataSource>, branch: string): DatasetRepoNode<JSONstat> | null;
-  fetchStatbankSavedData: (content: Content<DataSource>) => JSONstat | null;
+  fetchStatbankSavedData: (content: Content<DataSource>) => StatbankSavedRaw | null;
 }

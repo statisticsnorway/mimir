@@ -6,6 +6,7 @@ import { NodeQueryHit, NodeQueryResponse } from 'enonic-types/node'
 import { RepoEventLogLib } from '../repo/eventLog'
 import { RepoJobLib, JobEventNode } from '../repo/job'
 import { RepoCommonLib } from '../repo/common'
+import { ServerLogLib } from './serverLog'
 
 const {
   query
@@ -29,8 +30,12 @@ const {
   JOB_STATUS_COMPLETE
 }: RepoJobLib = __non_webpack_require__('/lib/repo/job')
 
+const {
+  cronJobLog
+}: ServerLogLib = __non_webpack_require__( '/lib/ssb/serverLog')
+
 export function deleteExpiredEventLogs(): void {
-  log.info('Deleting expired eventlogs')
+  cronJobLog('Deleting expired eventlogs')
   const job: JobEventNode = startJobLog('Delete expired eventlogs')
   const path: string = '/queries'
   const maxLogsBeforeDeleting: number = 10
@@ -66,7 +71,7 @@ export function deleteExpiredEventLogs(): void {
     }
     return node
   })
-  log.info('Delete expired logs complete')
+  cronJobLog('Delete expired logs complete')
 }
 
 function deleteLog(path: string, content: Content<Table | Highchart | KeyFigure>, expiredDate: Date): Array<string> {

@@ -9,6 +9,8 @@ import { CronLib, GetCronResult } from '../types/cron'
 import { DatasetLib } from './dataset/dataset'
 import { PublishDatasetLib } from './dataset/publish'
 import { EventLogLib } from '../ssb/eventLog'
+import { ServerLogLib } from './serverLog'
+import { DatasetRSSLib } from './dataset/rss'
 
 const {
   publishDataset
@@ -33,7 +35,7 @@ const {
 }: RepoJobLib = __non_webpack_require__('/lib/repo/job')
 const {
   dataSourceRSSFilter
-} = __non_webpack_require__('/lib/ssb/dataset/rss')
+}: DatasetRSSLib = __non_webpack_require__('/lib/ssb/dataset/rss')
 const {
   findUsers,
   createUser
@@ -44,6 +46,9 @@ const {
 const {
   deleteExpiredEventLogs
 }: EventLogLib = __non_webpack_require__('/lib/ssb/eventLog')
+const {
+  cronJobLog
+}: ServerLogLib = __non_webpack_require__('/lib/ssb/serverLog')
 
 const createUserContext: RunContext = { // Master context (XP)
   repository: 'com.enonic.cms.default',
@@ -81,7 +86,7 @@ function setupCronJobUser(): void {
 }
 
 function job(): void {
-  log.info('-- Running dataquery cron job --')
+  cronJobLog('-- Running dataquery cron job --')
   const jobLogNode: JobEventNode = startJobLog('-- Running dataquery cron job --')
 
   let dataSourceQueries: Array<Content<DataSource>> = getContentWithDataSource()
@@ -95,7 +100,7 @@ function job(): void {
   })
   const refreshDataResult: undefined | Array<string> = dataSourceQueries && refreshQueriesAsync(dataSourceQueries)
   completeJobLog(jobLogNode._id, JOB_STATUS_COMPLETE, refreshDataResult)
-  log.info('-- Completed dataquery cron job --')
+  cronJobLog('-- Completed dataquery cron job --')
 }
 
 function statRegJob(): void {
@@ -154,8 +159,8 @@ export function setupCronJobs(): void {
   })
 
   const cronList: Array<GetCronResult> = cron.list()
-  log.info('All cron jobs registered')
-  log.info(JSON.stringify(cronList, null, 2))
+  cronJobLog('All cron jobs registered')
+  cronJobLog(JSON.stringify(cronList, null, 2))
 }
 
 export interface SSBCronLib {
