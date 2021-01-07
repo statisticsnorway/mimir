@@ -11,6 +11,7 @@ import { StatisticInListing, VariantInListing } from '../statreg/types'
 import { DatasetLib } from './dataset'
 import { RepoJobLib, JobEventNode, JobInfoNode, StatisticsPublishResult, DataSourceStatisticsPublishResult } from '../../repo/job'
 import { RepoQueryLib } from '../../repo/query'
+import { ServerLogLib } from '../serverLog'
 const {
   Events,
   logUserDataQuery
@@ -51,11 +52,14 @@ const {
   JobNames,
   JobStatus
 }: RepoJobLib = __non_webpack_require__('/lib/repo/job')
+const {
+  cronJobLog
+}: ServerLogLib = __non_webpack_require__( '/lib/ssb/serverLog')
 
 const jobs: {[key: string]: JobEventNode | JobInfoNode} = {}
 
 export function publishDataset(): void {
-  log.info('Start publish job')
+  cronJobLog('Start publish job')
   const jobLogNode: JobEventNode = startJobLog(JobNames.PUBLISH_JOB)
   jobs[jobLogNode._id] = jobLogNode
   const statistics: Array<Content<Statistics>> = getStatistics()

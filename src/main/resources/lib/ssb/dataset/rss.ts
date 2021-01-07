@@ -8,6 +8,7 @@ import { TbprocessorLib } from './tbprocessor'
 import { StatbankApiLib } from './statbankApi'
 import { DatasetLib } from './dataset'
 import { JSONstat } from '../../types/jsonstat-toolkit'
+import { ServerLogLib } from '../serverLog'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 const http: HttpLibrary = __non_webpack_require__( '/lib/http-client')
@@ -20,6 +21,9 @@ const {
 const {
   getDataset
 }: DatasetLib = __non_webpack_require__( '/lib/ssb/dataset/dataset')
+const {
+  cronJobLog
+}: ServerLogLib = __non_webpack_require__( '/lib/ssb/serverLog')
 
 function fetchRSS(): Array<RSSItem> {
   const statbankRssUrl: string | undefined = app.config && app.config['ssb.rss.statbank'] ? app.config['ssb.rss.statbank'] : 'https://www.ssb.no/rss/statbank'
@@ -99,7 +103,7 @@ export function dataSourceRSSFilter(dataSources: Array<Content<DataSource>>): Ar
   }, [])
 
   logData.end = filteredDataSources.length
-  log.info(JSON.stringify(logData, null, 2))
+  cronJobLog(JSON.stringify(logData, null, 2))
 
   return filteredDataSources
 }
@@ -142,4 +146,8 @@ interface RSSContact {
   'ssbrss:person': string;
   'ssbrss:phone': number;
   'ssbrss:email': string;
+}
+
+export interface DatasetRSSLib {
+  dataSourceRSSFilter: (dataSources: Array<Content<DataSource>>) => Array<Content<DataSource>>;
 }
