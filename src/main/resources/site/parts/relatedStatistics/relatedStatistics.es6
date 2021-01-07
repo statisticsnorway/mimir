@@ -1,6 +1,8 @@
 import { hasPath } from 'ramda'
 const {
-  data
+  data: {
+    forceArray
+  }
 } = __non_webpack_require__('/lib/util')
 const {
   get
@@ -48,15 +50,9 @@ const renderPart = (req) => {
     }
   }
 
-  return renderRelatedStatistics(parseRelatedContent(relatedStatistics ? data.forceArray(relatedStatistics) : []), phrases)
+  return renderRelatedStatistics(parseRelatedContent(relatedStatistics ? forceArray(relatedStatistics) : []), phrases)
 }
 
-/**
- *
- * @param {Array} relatedStatisticsContent
- * @param {Object} phrases
- * @return {{ body: string, pageContributions: string }}
- */
 const renderRelatedStatistics = (relatedStatisticsContent, phrases) => {
   if (relatedStatisticsContent && relatedStatisticsContent.length) {
     const relatedStatisticsXP = new React4xp('RelatedStatistics')
@@ -92,28 +88,32 @@ const renderRelatedStatistics = (relatedStatisticsContent, phrases) => {
   }
 }
 
-/**
- *
- * @param {Array} relatedStatistics
- * @return {Object} Returns title, preamble, and href
- */
 const parseRelatedContent = (relatedStatistics) => {
-  return relatedStatistics.map((relatedContent) => {
-    const relatedStatisticsContent = get({
-      key: relatedContent
-    })
+  return relatedStatistics.map((statistics) => {
+    if (statistics._selected === 'xp') {
+      const statisticsContentId = statistics.xp.contentId
+      const relatedStatisticsContent = get({
+        key: statisticsContentId
+      })
 
-    let preamble
-    if (hasPath(['x', 'com-enonic-app-metafields', 'meta-data', 'seoDescription'], relatedStatisticsContent)) {
-      preamble = relatedStatisticsContent.x['com-enonic-app-metafields']['meta-data'].seoDescription
+      let preamble
+      if (hasPath(['x', 'com-enonic-app-metafields', 'meta-data', 'seoDescription'], relatedStatisticsContent)) {
+        preamble = relatedStatisticsContent.x['com-enonic-app-metafields']['meta-data'].seoDescription
+      }
+
+      return {
+        title: relatedStatisticsContent.displayName,
+        preamble,
+        href: pageUrl({
+          id: statisticsContentId
+        })
+      }
     }
 
     return {
-      title: relatedStatisticsContent.displayName,
-      preamble,
-      href: pageUrl({
-        id: relatedContent
-      })
+      title: statistics.cms.title,
+      preamble: statistics.cms.profiledText,
+      href: statistics.cms.url
     }
   })
 }
