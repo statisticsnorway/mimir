@@ -6,6 +6,7 @@ import { selectJobs, selectLoading } from './selectors'
 import { selectContentStudioBaseUrl } from '../HomePage/selectors'
 import { Link, Accordion } from '@statisticsnorway/ssb-component-library'
 import { DataQueryBadges } from '../../components/DataQueryBadges'
+import moment from 'moment/min/moment-with-locales'
 
 export function Jobs() {
   const loading = useSelector(selectLoading)
@@ -39,7 +40,7 @@ export function Jobs() {
 
   function getJobRows() {
     return jobs.map((job) => {
-      const ts = job.completionTime ? job.completionTime : job.startTime
+      const ts = moment(job.completionTime ? job.completionTime : job.startTime).locale('nb').format('DD.MM.YYYY HH.mm')
       const name = job.task
       const info = renderInfo(job)
       return {
