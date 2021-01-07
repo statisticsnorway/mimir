@@ -526,7 +526,7 @@ class Table extends React.Component {
           {this.addPreviewInfo()}
           {this.createScrollControlsDesktop()}
           {this.createScrollControlsMobile()}
-          <div className="table-wrapper" onScroll={() => this.updateTableControlsDesktop()} ref={this.tableWrapperRef}>
+          <div className="table-wrapper searchabletext" onScroll={() => this.updateTableControlsDesktop()} ref={this.tableWrapperRef}>
             {this.createTable()}
           </div>
           {this.addDownloadTableDropdown(true)}
