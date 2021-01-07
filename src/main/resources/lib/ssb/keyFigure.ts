@@ -183,9 +183,12 @@ function getDataTbProcessor(
       changePeriod: row2.th.toString()
     }
   }
+
+  // the table head are sometimes an array with th's and td's, when it happens it looks like
+  // the last index is the right one to pick.
   const tr: Array<TableCellUniform> = head[head.length - 1].tr
-  const th: Array<number | string | PreliminaryData> = tr[head.length - 1].th
-  keyFigureViewData.time = (forceArray(th)[0]).toString()
+  const th: Array<number | string | PreliminaryData> | undefined = Array.isArray(tr) ? tr[head.length - 1].th : undefined
+  keyFigureViewData.time = th ? (forceArray(th)[0]).toString() : undefined
 
   return keyFigureViewData
 }
