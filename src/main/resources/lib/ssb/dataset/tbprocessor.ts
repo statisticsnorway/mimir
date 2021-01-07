@@ -75,7 +75,7 @@ function getDataAndMetaData(content: Content<DataSource>, processXml?: string ):
   const dataSource: DataSource['dataSource'] = content.data.dataSource
   if (dataSource && dataSource.tbprocessor && isUrl(dataSource.tbprocessor.urlOrId)) {
     tbmlDataUrl = `${dataSource.tbprocessor.urlOrId as string}${language === 'en' ? `?lang=${language}` : ''}`
-    sourceListUrl = `${dataSource.tbprocessor.urlOrId as string}`.replace(sourceListPath, dataPath)
+    sourceListUrl = `${dataSource.tbprocessor.urlOrId as string}`.replace(dataPath, sourceListPath)
   }
 
   const tbmlParsedResponse: TbprocessorParsedResponse<TbmlDataUniform> | null = tryRequestTbmlData<TbmlDataUniform>(tbmlDataUrl, content._id, processXml)
