@@ -20,7 +20,7 @@ const toOption = ({
 
 const filterByDisplayName = (contacts, filters) => {
   log.info(`searching ${filters.query} in ${contacts.length}`)
-  return contacts.filter((c) => c.name.toLowerCase().includes(filters.query.toLowerCase()))
+  return contacts.filter((c) => filters.query != undefined ? c.name.toLowerCase().includes(filters.query.toLowerCase()) : 'a')
 }
 
 const filterByIds = (contacts, filters) => {
