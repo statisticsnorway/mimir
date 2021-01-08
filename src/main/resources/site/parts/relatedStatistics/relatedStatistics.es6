@@ -1,6 +1,8 @@
 import { hasPath } from 'ramda'
 const {
-  data
+  data: {
+    forceArray
+  }
 } = __non_webpack_require__('/lib/util')
 const {
   get
@@ -35,7 +37,7 @@ exports.preview = (req) => renderPart(req)
 
 const renderPart = (req) => {
   const page = getContent()
-  const relatedStatistics = page.data.relatedStatistics
+  const relatedStatistics = page.data.relatedStatisticsOptions
 
   moment.locale(page.language ? page.language : 'nb')
   const phrases = getPhrases(page)
@@ -51,7 +53,7 @@ const renderPart = (req) => {
     }
   }
 
-  return renderRelatedStatistics(statisticsTitle, parseRelatedContent(relatedStatistics ? data.forceArray(relatedStatistics) : []), phrases)
+  return renderRelatedStatistics(statisticsTitle, parseRelatedContent(relatedStatistics ? forceArray(relatedStatistics) : []), phrases)
 }
 
 const renderRelatedStatistics = (statisticsTitle, relatedStatisticsContent, phrases) => {
@@ -59,13 +61,9 @@ const renderRelatedStatistics = (statisticsTitle, relatedStatisticsContent, phra
     const relatedStatisticsXP = new React4xp('RelatedStatistics')
       .setProps({
         headerTitle: statisticsTitle,
-        relatedStatistics: relatedStatisticsContent.map(({
-          title, preamble, href
-        }) => {
+        relatedStatistics: relatedStatisticsContent.map((statisticsContent) => {
           return {
-            title,
-            preamble,
-            href
+            ...statisticsContent
           }
         }),
         showAll: phrases.showAll,
@@ -91,28 +89,35 @@ const renderRelatedStatistics = (statisticsTitle, relatedStatisticsContent, phra
   }
 }
 
-/**
- *
- * @param {Array} relatedStatistics
- * @return {Object} Returns title, preamble, and href
- */
 const parseRelatedContent = (relatedStatistics) => {
-  return relatedStatistics.map((relatedContent) => {
-    const relatedStatisticsContent = get({
-      key: relatedContent
+  if (relatedStatistics.length > 0) {
+    return relatedStatistics.map((statistics) => {
+      if (statistics._selected === 'xp') {
+        const statisticsContentId = statistics.xp.contentId
+        const relatedStatisticsContent = get({
+          key: statisticsContentId
+        })
+
+        let preamble
+        if (hasPath(['x', 'com-enonic-app-metafields', 'meta-data', 'seoDescription'], relatedStatisticsContent)) {
+          preamble = relatedStatisticsContent.x['com-enonic-app-metafields']['meta-data'].seoDescription
+        }
+
+        return {
+          title: relatedStatisticsContent.displayName,
+          preamble,
+          href: pageUrl({
+            id: statisticsContentId
+          })
+        }
+      }
+
+      return {
+        title: statistics.cms.title,
+        preamble: statistics.cms.profiledText,
+        href: statistics.cms.url
+      }
     })
-
-    let preamble
-    if (hasPath(['x', 'com-enonic-app-metafields', 'meta-data', 'seoDescription'], relatedStatisticsContent)) {
-      preamble = relatedStatisticsContent.x['com-enonic-app-metafields']['meta-data'].seoDescription
-    }
-
-    return {
-      title: relatedStatisticsContent.displayName,
-      preamble,
-      href: pageUrl({
-        id: relatedContent
-      })
-    }
-  })
+  }
+  return []
 }
