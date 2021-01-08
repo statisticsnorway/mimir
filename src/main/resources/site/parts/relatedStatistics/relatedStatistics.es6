@@ -57,9 +57,7 @@ const renderRelatedStatistics = (relatedStatisticsContent, phrases) => {
   if (relatedStatisticsContent && relatedStatisticsContent.length) {
     const relatedStatisticsXP = new React4xp('RelatedStatistics')
       .setProps({
-        relatedStatistics: relatedStatisticsContent.map(({
-          statisticsContent
-        }) => {
+        relatedStatistics: relatedStatisticsContent.map((statisticsContent) => {
           return {
             ...statisticsContent
           }
