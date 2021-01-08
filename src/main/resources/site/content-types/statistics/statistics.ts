@@ -72,7 +72,7 @@ export interface Statistics {
   /**
    * Relatert statistikk
    */
-  relatedStatistics?: {
+  relatedStatisticsOptions?: {
     /**
      * Selected
      */

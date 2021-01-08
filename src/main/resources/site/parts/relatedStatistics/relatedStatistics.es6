@@ -37,7 +37,7 @@ exports.preview = (req) => renderPart(req)
 
 const renderPart = (req) => {
   const page = getContent()
-  const relatedStatistics = page.data.relatedStatistics
+  const relatedStatistics = page.data.relatedStatisticsOptions
 
   moment.locale(page.language ? page.language : 'nb')
   const phrases = getPhrases(page)
@@ -58,12 +58,10 @@ const renderRelatedStatistics = (relatedStatisticsContent, phrases) => {
     const relatedStatisticsXP = new React4xp('RelatedStatistics')
       .setProps({
         relatedStatistics: relatedStatisticsContent.map(({
-          title, preamble, href
+          statisticsContent
         }) => {
           return {
-            title,
-            preamble,
-            href
+            ...statisticsContent
           }
         }),
         showAll: phrases.showAll,
@@ -89,31 +87,34 @@ const renderRelatedStatistics = (relatedStatisticsContent, phrases) => {
 }
 
 const parseRelatedContent = (relatedStatistics) => {
-  return relatedStatistics.map((statistics) => {
-    if (statistics._selected === 'xp') {
-      const statisticsContentId = statistics.xp.contentId
-      const relatedStatisticsContent = get({
-        key: statisticsContentId
-      })
+  if (relatedStatistics.length > 0) {
+    return relatedStatistics.map((statistics) => {
+      if (statistics._selected === 'xp') {
+        const statisticsContentId = statistics.xp.contentId
+        const relatedStatisticsContent = get({
+          key: statisticsContentId
+        })
 
-      let preamble
-      if (hasPath(['x', 'com-enonic-app-metafields', 'meta-data', 'seoDescription'], relatedStatisticsContent)) {
-        preamble = relatedStatisticsContent.x['com-enonic-app-metafields']['meta-data'].seoDescription
+        let preamble
+        if (hasPath(['x', 'com-enonic-app-metafields', 'meta-data', 'seoDescription'], relatedStatisticsContent)) {
+          preamble = relatedStatisticsContent.x['com-enonic-app-metafields']['meta-data'].seoDescription
+        }
+
+        return {
+          title: relatedStatisticsContent.displayName,
+          preamble,
+          href: pageUrl({
+            id: statisticsContentId
+          })
+        }
       }
 
       return {
-        title: relatedStatisticsContent.displayName,
-        preamble,
-        href: pageUrl({
-          id: statisticsContentId
-        })
+        title: statistics.cms.title,
+        preamble: statistics.cms.profiledText,
+        href: statistics.cms.url
       }
-    }
-
-    return {
-      title: statistics.cms.title,
-      preamble: statistics.cms.profiledText,
-      href: statistics.cms.url
-    }
-  })
+    })
+  }
+  return []
 }

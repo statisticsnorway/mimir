@@ -4,7 +4,7 @@
         <field-set>
             <label>Relaterte statistikker</label>
             <items>
-                <option-set name="relatedStatistics">
+                <option-set name="relatedStatisticsOptions">
                     <label>Relatert statistikk</label>
                     <expanded>false</expanded>
                     <occurrences minimum="0" maximum="0" />

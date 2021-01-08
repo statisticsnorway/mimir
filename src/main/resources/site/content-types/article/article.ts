@@ -107,7 +107,7 @@ export interface Article {
   /**
    * Relatert statistikk
    */
-  relatedStatistics?: {
+  relatedStatisticsOptions?: {
     /**
      * Selected
      */
