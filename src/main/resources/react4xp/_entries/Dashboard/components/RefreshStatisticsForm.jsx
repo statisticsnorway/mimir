@@ -1,6 +1,10 @@
 import React, { useState } from 'react'
 import { Button, Form, Row, Col } from 'react-bootstrap'
 import PropTypes from 'prop-types'
+import { selectInternalStatbankUrl } from '../containers/HomePage/selectors'
+import { useSelector } from 'react-redux'
+import { Link } from '@statisticsnorway/ssb-component-library'
+
 
 export function RefreshStatisticsForm(props) {
   const {
@@ -14,6 +18,8 @@ export function RefreshStatisticsForm(props) {
       acc[o.ownerId] = false
       return acc
     }, {}))
+
+  const internalStatbankUrl = useSelector(selectInternalStatbankUrl)
 
   function updateOwnerCredentials(ownersObj, propKey, value) {
     const currentOwner = owners.find((owner) => owner.ownerId === ownersObj.ownerId)
@@ -42,19 +48,12 @@ export function RefreshStatisticsForm(props) {
     return (
       <div key={index} className='border border-dark rounded p-2 mb-3'>
         <p>Autorisasjon for bruker {owner.ownerId} som har</p>
-        <ul> {
-          owner.tbmlList.map((tbml, i) => {
-            return (<li key={i}>
-              TBML {tbml.tbmlId} med kilder: {tbml.statbankTableIds.filter((value, index, self) => self.indexOf(value) === index) // only unique values
-                .join(', ')}.
-            </li>)
-          })
-        } </ul>
         <Row>
           <Col>
             <Form.Group controlId={'formBasicUsername_' + index}>
               <Form.Label>Brukernavn</Form.Label>
               <Form.Control
+                role="username"
                 required={fetchPublished[owner.ownerId] ? '' : 'required'}
                 disabled={fetchPublished[owner.ownerId] ? 'disabled' : ''}
                 type="username"
@@ -65,8 +64,9 @@ export function RefreshStatisticsForm(props) {
           </Col>
           <Col>
             <Form.Group controlId={'formBasicPassword_' + index}>
-              <Form.Label>Password</Form.Label>
+              <Form.Label>Passord</Form.Label>
               <Form.Control
+                role="password"
                 required={fetchPublished[owner.ownerId] ? '' : 'required'}
                 disabled={fetchPublished[owner.ownerId] ? 'disabled' : ''}
                 type="password"
@@ -87,6 +87,23 @@ export function RefreshStatisticsForm(props) {
             </Form.Group>
           </Col>
         </Row>
+        <div> {
+          owner.tbmlList.map((tbml, i) => {
+            return (<div key={i} className='d-inline pr-1 small'>
+              TBML {tbml.tbmlId} med kilder: {tbml.statbankTableIds.filter((value, index, self) => self.indexOf(value) === index) // filter: unike verdier
+                .map((statbankTableId, i) => {
+                  return (<span
+                    key={i}
+                    className='pr-1'>
+                    <Link className='tbmlModalLink' isExternal href={internalStatbankUrl + 'search/?searchquery=' + statbankTableId}>
+                      {statbankTableId}
+                    </Link>
+                  </span>)
+                })
+              }.
+            </div>)
+          })
+        } </div>
       </div>
     )
   }
