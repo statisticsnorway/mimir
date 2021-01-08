@@ -13,6 +13,7 @@ export function RefreshStatisticsForm(props) {
   } = props
 
   const [owners, setOwners] = useState([])
+  const [validated, setValidated] = useState(false)
   const [fetchPublished, setFetchPublished] = useState(modalInfo.relatedUserTBMLs
     .reduce( (acc, o) => {
       acc[o.ownerId] = false
@@ -42,6 +43,14 @@ export function RefreshStatisticsForm(props) {
       [ownerObj.ownerId]: newStatus
     }))
     updateOwnerCredentials(ownerObj, 'fetchPublished', newStatus)
+  }
+
+  function processForm(event) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    if (form.checkValidity() !== false) {
+      onSubmit(owners)
+    }
   }
 
   function renderOwnerInputForMultipleTbml(owner, index) {
@@ -109,18 +118,15 @@ export function RefreshStatisticsForm(props) {
   }
 
   return (
-    <Form className="mt-3">
+    <Form className="mt-3" validated={validated} onSubmit={processForm}>
       {
         modalInfo.relatedUserTBMLs.map((owner, index) => {
           return renderOwnerInputForMultipleTbml(owner, index)
         })
-
       }
       <Button
+        type="submit"
         variant="primary"
-        onClick={() => onSubmit({
-          owners
-        })}
       >
         Send
       </Button>
