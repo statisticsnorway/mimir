@@ -10,11 +10,23 @@ import { ContextLibrary, RunContext } from 'enonic-types/context'
 import { Socket, SocketEmitter } from '../../types/socket'
 import { SSBCacheLibrary } from '../cache'
 import { JSONstat } from '../../types/jsonstat-toolkit'
-import { TbmlData } from '../../types/xmlParser'
+import { TbmlDataUniform } from '../../types/xmlParser'
 import { DatasetRepoNode, RepoDatasetLib } from '../../repo/dataset'
 import { RepoCommonLib } from '../../repo/common'
 import { User } from 'enonic-types/auth'
+import { TaskLib } from '../../types/task'
+import { JobInfoNode, JOB_STATUS_COMPLETE, JOB_STATUS_STARTED, RepoJobLib, StatisticsPublishResult } from '../../repo/job'
+import { UtilLibrary } from '../../types/util'
+import { StatRegStatisticsLib } from '../../repo/statreg/statistics'
+import { StatisticInListing } from '../../ssb/statreg/types'
+import { StatRegRefreshResult } from '../../repo/statreg'
+import { StatRegJobInfo, SSBStatRegLib } from '../statreg'
+import { DashboardUtilsLib } from './dashboardUtils'
 
+const {
+  users,
+  showWarningIcon
+}: DashboardUtilsLib = __non_webpack_require__('/lib/ssb/dataset/dashboardUtils')
 const {
   logUserDataQuery
 } = __non_webpack_require__( '/lib/repo/query')
@@ -28,7 +40,8 @@ const {
   getDataset
 }: DatasetLib = __non_webpack_require__( '/lib/ssb/dataset/dataset')
 const {
-  DATASET_BRANCH
+  DATASET_BRANCH,
+  UNPUBLISHED_DATASET_BRANCH
 }: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
 const {
   get: getContent
@@ -51,13 +64,36 @@ const {
 const {
   getQueryChildNodesStatus
 }: RepoEventLogLib = __non_webpack_require__('/lib/repo/eventLog')
+const {
+  submit: submitTask
+}: TaskLib = __non_webpack_require__('/lib/xp/task')
+const {
+  queryJobLogs,
+  getJobLog,
+  JobNames
+}: RepoJobLib = __non_webpack_require__('/lib/repo/job')
+const {
+  data: {
+    forceArray
+  }
+}: UtilLibrary = __non_webpack_require__( '/lib/util')
+const {
+  getStatisticByIdFromRepo
+}: StatRegStatisticsLib = __non_webpack_require__('/lib/repo/statreg/statistics')
+const {
+  parseStatRegJobInfo
+}: SSBStatRegLib = __non_webpack_require__('/lib/ssb/statreg')
 
-export const users: Array<User> = []
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-dataqueries', () => {
-    const contentWithDataSource: Array<unknown> = prepDataSources(getContentWithDataSource())
-    socket.emit('dataqueries-result', contentWithDataSource)
+    submitTask({
+      description: 'get-dataqueries',
+      task: () => {
+        const contentWithDataSource: Array<unknown> = prepDataSources(getContentWithDataSource())
+        socket.emit('dataqueries-result', contentWithDataSource)
+      }
+    })
   })
 
   socket.on('get-eventlog-node', (dataQueryId)=> {
@@ -89,12 +125,102 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     }
     run(context, () => refreshDatasetHandler(options.ids, socketEmitter))
   })
+
+  socket.on('dashboard-jobs', () => {
+    submitTask({
+      description: 'dashboard-jobs',
+      task: () => {
+        socket.emit('dashboard-jobs-result', getJobs())
+      }
+    })
+  })
+}
+
+function getJobs(): Array<DashboardJobInfo> {
+  return queryJobLogs({
+    start: 0,
+    count: 100,
+    query: 'data.user.key = "user:system:cronjob" AND _path LIKE "/jobs/*"',
+    sort: '_ts DESC'
+  }).hits.reduce((result: Array<DashboardJobInfo>, j) => {
+    const res: JobInfoNode | ReadonlyArray<JobInfoNode> | null = getJobLog(j.id)
+    if (res) {
+      const jobLog: JobInfoNode = Array.isArray(res) ? res[0] : res
+      result.push({
+        id: jobLog._id,
+        task: jobLog.data.task,
+        status: jobLog.data.status,
+        startTime: jobLog.data.jobStarted ? dateToFormat(jobLog.data.jobStarted) : undefined,
+        completionTime: jobLog.data.completionTime ? dateToFormat(jobLog.data.completionTime) : undefined,
+        message: jobLog.data.message ? jobLog.data.message : '',
+        result: parseResult(jobLog)
+      })
+    }
+    return result
+  }, [])
+}
+
+function parseResult(jobLog: JobInfoNode): Array<DashboardPublishJobResult> | Array<StatRegJobInfo> {
+  if (jobLog.data.task === JobNames.PUBLISH_JOB) {
+    const refreshDataResult: Array<StatisticsPublishResult> = forceArray(jobLog.data.refreshDataResult || []) as Array<StatisticsPublishResult>
+    return refreshDataResult.map((statResult) => {
+      const statregData: StatisticInListing | undefined = getStatisticByIdFromRepo(statResult.shortNameId)
+      const statId: string = statResult.statistic
+      const shortName: string = statregData ? statregData.shortName : statResult.shortNameId // get name from shortNameId
+      const dataSources: DashboardPublishJobResult['dataSources'] = forceArray(statResult.dataSources).map((ds) => {
+        const dataSource: Content<DataSource> | null = getContent({
+          key: ds.id
+        })
+        return {
+          id: ds.id,
+          displayName: dataSource ? dataSource.displayName : ds.id,
+          status: ds.status,
+          type: dataSource?.type,
+          datasetType: dataSource?.data?.dataSource?._selected,
+          datasetKey: dataSource ? extractKey(dataSource) : undefined
+        }
+      })
+      return {
+        id: statId,
+        shortName,
+        status: statResult.status,
+        dataSources
+      }
+    })
+  } else if (jobLog.data.task === JobNames.STATREG_JOB) {
+    const refreshDataResult: Array<StatRegRefreshResult> = forceArray(jobLog.data.refreshDataResult || []) as Array<StatRegRefreshResult>
+    return parseStatRegJobInfo(refreshDataResult)
+  }
+  return []
+}
+
+interface DashboardPublishJobResult {
+  id: string;
+  shortName: string;
+  status: string;
+  dataSources: Array<{
+    id: string;
+    displayName: string;
+    status: string;
+    type?: string;
+    datasetType?: string;
+    datasetKey?: string;
+  }>;
+}
+interface DashboardJobInfo {
+  id: string;
+  task: string;
+  status: typeof JOB_STATUS_STARTED | typeof JOB_STATUS_COMPLETE;
+  startTime: string;
+  completionTime?: string;
+  message: string;
+  result: Array<unknown>;
 }
 
 function prepDataSources(dataSources: Array<Content<DataSource>>): Array<unknown> {
   return dataSources.map((dataSource) => {
     if (dataSource.data.dataSource) {
-      const dataset: DatasetRepoNode<object | JSONstat | TbmlData> | undefined =
+      const dataset: DatasetRepoNode<object | JSONstat | TbmlDataUniform> | undefined =
         fromDatasetRepoCache(`/${dataSource.data.dataSource._selected}/${extractKey(dataSource)}`, () => getDataset(dataSource))
       const hasData: boolean = !!dataset
       const queryLogNode: QueryLogNode | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataSource._id}`) as QueryLogNode
@@ -118,31 +244,20 @@ function prepDataSources(dataSources: Array<Content<DataSource>>): Array<unknown
             key: queryLogNode.data.modifiedResult
           }),
           modified: queryLogNode.data.modified,
-          modifiedReadable: dateToReadable(queryLogNode.data.modifiedTs),
-          eventLogNodes: []
+          modifiedReadable: dateToReadable(queryLogNode.data.modifiedTs)
         } : undefined,
-        eventLogNodes: [],
-        loading: false,
-        deleting: false
+        eventLogNodes: []
       }
     }
     return null
   })
 }
 
-function showWarningIcon(result: Events): boolean {
-  return [
-    Events.FAILED_TO_GET_DATA,
-    Events.REQUEST_GOT_ERROR_RESPONSE,
-    Events.FAILED_TO_CREATE_DATASET,
-    Events.FAILED_TO_REFRESH_DATASET
-  ].includes(result)
-}
-
 export function refreshDatasetHandler(
   ids: Array<string>,
   socketEmitter: SocketEmitter,
   branch: string = DATASET_BRANCH,
+  fetchPublished: boolean = true,
   processXmls?: Array<ProcessXml>): void {
   // tell all dashboard instances that these are going to be loaded
   ids.forEach((id) => {
@@ -151,27 +266,58 @@ export function refreshDatasetHandler(
     })
   })
   // start loading each datasource
-  ids.forEach((id: string) => {
+  ids.forEach((id: string, index: number) => {
     const dataSource: Content<DataSource> | null = getContent({
       key: id
     })
     if (dataSource) {
       const dataSourceKey: number = parseInt(extractKey(dataSource))
-      const ownerCredentialsForTbml: Array<ProcessXml> | undefined = processXmls ?
-        processXmls.filter((processXml: ProcessXml) => processXml.tbmlId === dataSourceKey) : undefined
 
+      socketEmitter.broadcast('statistics-activity-refresh-feedback', {
+        name: dataSource.displayName,
+        datasourceKey: dataSourceKey,
+        status: `Henter data for ${dataSource.displayName}`,
+        step: 1,
+        tableIndex: index
+      })
+
+      // only get credentials for this datasourceKey (in this case a tbml id)
+      const ownerCredentialsForTbml: ProcessXml | undefined = processXmls ?
+        processXmls.find((processXml: ProcessXml) => processXml.tbmlId === dataSourceKey) : undefined
+
+      // refresh data in draft only if there is owner credentials exists and fetchpublished is false
       const refreshDatasetResult: CreateOrUpdateStatus = refreshDataset(
         dataSource,
-        branch,
-        ownerCredentialsForTbml && ownerCredentialsForTbml.length ? ownerCredentialsForTbml[0].processXml : undefined)
+        !fetchPublished && ownerCredentialsForTbml ? UNPUBLISHED_DATASET_BRANCH : branch,
+        ownerCredentialsForTbml ? ownerCredentialsForTbml.processXml : undefined)
 
       logUserDataQuery(dataSource._id, {
         file: '/lib/ssb/dataset/dashboard.ts',
         function: 'refreshDatasetHandler',
         message: refreshDatasetResult.status
       })
+
+      socketEmitter.broadcast('statistics-activity-refresh-feedback', {
+        name: dataSource.displayName,
+        datasourceKey: dataSourceKey,
+        status: i18n.localize({
+          key: refreshDatasetResult.status
+        }) === 'NOT_TRANSLATED' ?
+          refreshDatasetResult.status : i18n.localize({
+            key: refreshDatasetResult.status
+          }),
+        step: 2,
+        tableIndex: index
+      })
+
       socketEmitter.broadcast('dashboard-activity-refreshDataset-result', transfromQueryResult(refreshDatasetResult))
     } else {
+      socketEmitter.broadcast('statistics-activity-refresh-feedback', {
+        status: `Fant ingen innhold med id ${id}`,
+        step: 1,
+        tableIndex: index
+      })
+
       socketEmitter.broadcast('dashboard-activity-refreshDataset-result', {
         id: id,
         message: i18n.localize({
@@ -193,13 +339,11 @@ function transfromQueryResult(result: CreateOrUpdateStatus): DashboardRefreshRes
       queryLogNode = nodes as QueryLogNode
     }
   }
-
+  const queryLogMessage: string | null = queryLogNode && i18n.localize({
+    key: queryLogNode.data.modifiedResult
+  })
   return {
     id: result.dataquery._id,
-    message: i18n.localize({
-      key: result.status
-    }),
-    status: result.status,
     dataset: result.dataset ? {
       newDatasetData: result.newDatasetData ? result.newDatasetData : false,
       modified: dateToFormat(result.dataset._ts),
@@ -208,9 +352,7 @@ function transfromQueryResult(result: CreateOrUpdateStatus): DashboardRefreshRes
     logData: queryLogNode ? {
       ...queryLogNode.data,
       showWarningIcon: showWarningIcon(queryLogNode.data.modifiedResult as Events),
-      message: i18n.localize({
-        key: queryLogNode.data.modifiedResult
-      }),
+      message: queryLogMessage !== 'NOT_TRANSLATED' ? queryLogMessage : queryLogNode.data.modifiedResult,
       modified: queryLogNode.data.modified,
       modifiedReadable: dateToReadable(queryLogNode.data.modifiedTs)
     } : {}
@@ -237,8 +379,6 @@ interface QueryLogNode extends RepoNode {
 
 interface DashboardRefreshResult {
   id: string;
-  message: string;
-  status: string;
   dataset: DashboardRefreshResultDataset | {};
   logData: DashboardRefreshResultLogData | {};
 }
@@ -249,10 +389,11 @@ interface DashboardRefreshResultDataset {
   modifiedReadable: string;
 }
 
-interface DashboardRefreshResultLogData {
+export interface DashboardRefreshResultLogData {
   message: string;
   modified: string;
   modifiedReadable: string;
+  showWarningIcon: boolean;
 }
 
 export interface RefreshDatasetOptions {
@@ -262,7 +403,13 @@ export interface RefreshDatasetOptions {
 export interface DashboardDatasetLib {
   users: Array<User>;
   setupHandlers: (socket: Socket, socketEmitter: SocketEmitter) => void;
-  refreshDatasetHandler: (ids: Array<string>, socketEmitter: SocketEmitter, branch?: string, processXml?: Array<ProcessXml>) => void;
+ showWarningIcon: (result: Events) => boolean;
+  refreshDatasetHandler: (
+    ids: Array<string>,
+    socketEmitter: SocketEmitter,
+    branch?: string,
+    fetchPublished?: boolean,
+    processXml?: Array<ProcessXml>) => void;
 }
 
 export interface ProcessXml {

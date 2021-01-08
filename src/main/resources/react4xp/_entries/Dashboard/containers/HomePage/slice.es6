@@ -5,7 +5,9 @@ export const initialState = {
   loadingClearCache: false,
   user: undefined,
   contentStudioBaseUrl: '',
-  dataToolBoxBaseUrl: ''
+  dataToolBoxBaseUrl: '',
+  internalBaseUrl: '',
+  internalStatbankUrl: ''
 }
 
 const commonSlice = createSlice({
@@ -17,6 +19,12 @@ const commonSlice = createSlice({
     },
     setDataToolBoxBaseUrl(state, action) {
       state.dataToolBoxBaseUrl = action.dataToolBoxBaseUrl
+    },
+    setInternalBaseUrl(state, action) {
+      state.internalBaseUrl = action.internalBaseUrl
+    },
+    setInternalStatbankUrl(state, action) {
+      state.internalStatbankUrl = action.internalStatbankUrl
     },
     setUser(state, action) {
       state.user = action.user

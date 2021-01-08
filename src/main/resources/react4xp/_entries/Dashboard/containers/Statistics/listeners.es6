@@ -21,4 +21,17 @@ export default function setupStatisticsListeners(io, dispatch) {
       id: data.id
     })
   })
+
+  io.on('statistics-activity-refresh-feedback', (data) => {
+    dispatch({
+      type: actions.setRefreshStatisticStatus.type,
+      data
+    })
+  })
+  io.on('statistics-activity-refresh-complete', (data) => {
+    dispatch({
+      type: actions.setModalDisplay.type,
+      data
+    })
+  })
 }

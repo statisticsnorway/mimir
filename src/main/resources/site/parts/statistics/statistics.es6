@@ -17,8 +17,8 @@ const {
   preview: keyFigurePreview
 } = __non_webpack_require__('../keyFigure/keyFigure')
 const {
-  hasRole
-} = __non_webpack_require__('/lib/xp/auth')
+  hasWritePermissions
+} = __non_webpack_require__('/lib/ssb/permissions')
 
 const React4xp = require('/lib/enonic/react4xp')
 const moment = require('moment/min/moment-with-locales')
@@ -55,8 +55,7 @@ const renderPart = (req) => {
   let changeDate
   let nextReleaseDate
   let previousReleaseDate
-  const adminRole = hasRole('system.admin')
-  const showPreviewDraft = adminRole && req.mode === 'preview'
+  const showPreviewDraft = hasWritePermissions(req, page._id)
   const paramShowDraft = req.params.showDraft
   const draftUrl = paramShowDraft ? pageUrl() : pageUrl({
     params: {
@@ -66,7 +65,7 @@ const renderPart = (req) => {
   const draftButtonText = paramShowDraft ? 'Vis publiserte tall' : 'Vis upubliserte tall'
 
   if (statistic) {
-    title = statistic.name
+    title = page.language === 'en' && statistic.nameEN && statistic.nameEN !== null ? statistic.nameEN : statistic.name
     const variants = util.data.forceArray(statistic.variants)
     nextReleaseDate = getNextReleaseStatistic(variants)
     previousReleaseDate = getPreviousReleaseStatistic(variants)

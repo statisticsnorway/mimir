@@ -13,7 +13,10 @@ const {
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
-const i18nLib = __non_webpack_require__('/lib/xp/i18n')
+const {
+  getPhrases
+} = __non_webpack_require__( '/lib/language')
+
 const view = resolve('./omStatistikken.html')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const moment = require('moment/min/moment-with-locales')
@@ -30,17 +33,15 @@ exports.get = function(req) {
 exports.preview = (req, id) => renderPart(req, [id])
 
 function renderPart(req, aboutTheStatisticsId) {
-  const aboutStatisticLabel = i18nLib.localize({
-    key: 'aboutTheStatistics'
-  })
-
   const page = getContent()
+
   moment.locale(page.language ? page.language : 'nb')
+  const phrases = getPhrases(page)
+
+  const aboutStatisticLabel = phrases.aboutTheStatistics
   const statistic = page.data.statistic && getStatisticByIdFromRepo(page.data.statistic)
 
-  let nextRelease = i18nLib.localize({
-    key: 'notYetDetermined'
-  })
+  let nextRelease = phrases.notYetDetermined
   if (statistic && statistic.variants.nextRelease && statistic.variants.nextRelease !== '') {
     nextRelease = moment(statistic.variants.nextRelease).format('DD. MMMM YYYY')
   } if (page.type === `${app.name}:omStatistikken` && (req.mode === 'edit' || req.mode === 'preview')) {
@@ -83,25 +84,24 @@ function renderPart(req, aboutTheStatisticsId) {
   }
   const accordions = []
   isNotEmpty(content.definition) ? accordions.push(
-    getAccordion('om-statistikken-definisjoner', 'definitions', content.definition, items.definition)) : undefined
+    getAccordion('om-statistikken-definisjoner', phrases.definitions, content.definition, items.definition)) : undefined
   isNotEmpty(content.administrativeInformation) ? accordions.push(
-    getAccordion('om-statistikken-administrative_opplysninger', 'administrativeInformation',
+    getAccordion('om-statistikken-administrative_opplysninger', phrases.administrativeInformation,
       content.administrativeInformation, items.administrativeInformation)) : undefined
   isNotEmpty(content.background) ? accordions.push(
-    getAccordion('om-statistikken-bakgrunn', 'background', content.background, items.background)) : undefined
+    getAccordion('om-statistikken-bakgrunn', phrases.background, content.background, items.background)) : undefined
   isNotEmpty(content.production) ? accordions.push(
-    getAccordion('om-statistikken-produksjon', 'production', content.production, items.production)) : undefined
+    getAccordion('om-statistikken-produksjon', phrases.production, content.production, items.production)) : undefined
   isNotEmpty(content.accuracyAndReliability) ? accordions.push(
-    getAccordion('om-statistikken-feilkilder', 'accuracyAndReliability', content.accuracyAndReliability, items.accuracyAndReliability)) : undefined
+    getAccordion('om-statistikken-feilkilder', phrases.accuracyAndReliability,
+      content.accuracyAndReliability, items.accuracyAndReliability)) : undefined
 
   const relevantDocumentation = {
     id: 'om-statistikken-relevant-dokumentasjon',
     body: processHtml({
       value: content.relevantDocumentation
     }),
-    open: i18nLib.localize({
-      key: 'relevantDocumentation'
-    }),
+    open: phrases.relevantDocumentation,
     items: []
   }
 
@@ -110,7 +110,7 @@ function renderPart(req, aboutTheStatisticsId) {
   }
 
   isNotEmpty(content.aboutSeasonalAdjustment) ? accordions.push(
-    getAccordion('om-sesongjustering', 'aboutSeasonalAdjustment', content.aboutSeasonalAdjustment,
+    getAccordion('om-sesongjustering', phrases.aboutSeasonalAdjustment, content.aboutSeasonalAdjustment,
       items.aboutSeasonalAdjustment)) : undefined
 
   if (accordions.length === 0) {
@@ -147,9 +147,7 @@ function renderPart(req, aboutTheStatisticsId) {
     const accordion = {
       id: id,
       body: '',
-      open: i18nLib.localize({
-        key: categoryText
-      }),
+      open: categoryText,
       items: getItems(category, items)
     }
 
@@ -162,18 +160,13 @@ function renderPart(req, aboutTheStatisticsId) {
     if (category) {
       variables.forEach((variable) => {
         const item = {
-          title: i18nLib.localize({
-            key: variable
-          }),
+          title: phrases[variable],
           body: category[variable] ? processHtml({
             value: category[variable].replace(/&nbsp;/g, ' ')
-          }) : i18nLib.localize({
-            key: 'notRelevant'
-          })
+          }) : phrases.notRelevant
         }
         items.push(item)
-      }
-      )
+      })
     }
     return items
   }

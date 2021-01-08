@@ -8,6 +8,7 @@ import { DataQueryTools } from '../DataQueryTools'
 import { DataQueries } from '../DataQueries'
 import { Statistics } from '../Statistics'
 import DashboardTools from '../DashboardTools'
+import Jobs from '../Jobs'
 
 export function HomePage() {
   const isConnected = useSelector(selectIsConnected)
@@ -24,6 +25,11 @@ export function HomePage() {
               </Col>
               <Col className="col-4">
                 <DashboardTools/>
+              </Col>
+            </Row>
+            <Row className="mt-3">
+              <Col className="col-8">
+                <Jobs/>
               </Col>
             </Row>
           </Container>

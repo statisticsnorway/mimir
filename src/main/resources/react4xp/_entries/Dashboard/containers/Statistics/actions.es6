@@ -27,3 +27,17 @@ export function setOpenStatistic(dispatch, id) {
     id
   })
 }
+
+export function resetRefreshStatus(dispatch, status) {
+  dispatch({
+    type: actions.resetRefreshStatus.type,
+    status
+  })
+}
+
+export function setOpenModal(dispatch, status) {
+  dispatch({
+    type: actions.setOpenModal.type,
+    status
+  })
+}

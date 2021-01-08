@@ -325,86 +325,75 @@ class Table extends React.Component {
       const value = row[keyName]
       if (keyName === 'th') {
         return (
-          this.createHeadTh(keyName, value, keyIndex)
+          this.createHeadTh(value)
         )
       } else if (keyName === 'td') {
         return (
-          this.createHeadTd(keyName, value, keyIndex)
+          this.createHeadTd(value)
         )
       }
     })
   }
 
-  createHeadTh(key, value, index) {
-    if (typeof value === 'string' | typeof value === 'number') {
-      return (
-        <th key={index}>{this.trimValue(value)}</th>
-      )
-    } else {
-      if (Array.isArray(value)) {
-        return value.map((cellValue, i) => {
-          if (typeof cellValue === 'object') {
-            if (Array.isArray(cellValue)) {
-              // TODO: Because some values is split into array by xmlParser i have to do this, find better fix
-              return (
-                <th key={i}>{cellValue.join(' ')}</th>
-              )
-            } else {
-              return (
-                <th key={i} className={cellValue.class} rowSpan={cellValue.rowspan} colSpan={cellValue.colspan}>
-                  {this.trimValue(cellValue.content)}
-                  {this.addNoteRefs(cellValue.noterefs)}
-                </th>
-              )
-            }
-          } else {
-            return (
-              <th key={i}>{this.trimValue(cellValue)}</th>
-            )
-          }
-        })
+  createHeadTh(value) {
+    return value.map((cellValue, i) => {
+      if (typeof cellValue === 'object') {
+        if (Array.isArray(cellValue)) {
+          // TODO: Because some values is split into array by xmlParser i have to do this, find better fix
+          return (
+            <th key={i}>{cellValue.join(' ')}</th>
+          )
+        } else {
+          return (
+            <th key={i} className={cellValue.class} rowSpan={cellValue.rowspan} colSpan={cellValue.colspan}>
+              {this.trimValue(cellValue.content)}
+              {this.addNoteRefs(cellValue.noterefs)}
+            </th>
+          )
+        }
       } else {
         return (
-          <th key={key} className={value.class} rowSpan={value.rowspan} colSpan={value.colspan}>
-            {this.trimValue(value.content)}
-            {this.addNoteRefs(value.noterefs)}
-          </th>
+          <th key={i}>{this.trimValue(cellValue)}</th>
         )
       }
-    }
+    })
   }
 
-  createHeadTd(key, value, index) {
-    if (typeof value === 'string' | typeof value === 'number') {
-      return (
-        <td key={index}>{this.trimValue(value)}</td>
-      )
-    } else {
-      return (
-        <td key={key} className={value.class} rowSpan={value.rowspan} colSpan={value.colspan}>
-          {this.trimValue(value.content)}
-          {this.addNoteRefs(value.noterefs)}
-        </td>
-      )
-    }
+  createHeadTd(value) {
+    return value.map((cellValue, i) => {
+      if (typeof cellValue === 'object') {
+        return (
+          <td key={i} className={cellValue.class} rowSpan={cellValue.rowspan} colSpan={cellValue.colspan}>
+            {this.trimValue(cellValue.content)}
+            {this.addNoteRefs(cellValue.noterefs)}
+          </td>
+        )
+      } else {
+        return (
+          <td key={i}>{this.trimValue(cellValue)}</td>
+        )
+      }
+    })
   }
 
   createBodyTh(row) {
     return Object.keys(row).map((key, index) => {
       const value = row[key]
       if (key === 'th') {
-        if (typeof value === 'string' | typeof value === 'number') {
-          return (
-            <th key={index}>{this.trimValue(value)}</th>
-          )
-        } else {
-          return (
-            <th key={index} className={value.class} rowSpan={value.rowspan} colSpan={value.colspan}>
-              {this.trimValue(value.content)}
-              {this.addNoteRefs(value.noterefs)}
-            </th>
-          )
-        }
+        return value.map((cellValue, i) => {
+          if (typeof cellValue === 'object') {
+            return (
+              <th key={i} className={cellValue.class} rowSpan={cellValue.rowspan} colSpan={cellValue.colspan}>
+                {this.trimValue(cellValue.content)}
+                {this.addNoteRefs(cellValue.noterefs)}
+              </th>
+            )
+          } else {
+            return (
+              <th key={i}>{this.trimValue(cellValue)}</th>
+            )
+          }
+        })
       }
     })
   }
@@ -413,31 +402,19 @@ class Table extends React.Component {
     return Object.keys(row).map((keyName, keyIndex) => {
       const value = row[keyName]
       if (keyName === 'td') {
-        if (typeof value === 'string' | typeof value === 'number') {
-          return (
-            <td key={keyIndex}>{this.formatNumber(value)}</td>
-          )
-        } else {
-          if (Array.isArray(value)) {
-            return value.map((cellValue, i) => {
-              if (typeof cellValue === 'object') {
-                return (
-                  <td className={cellValue.class} key={i}>{this.formatNumber(cellValue.content)}</td>
-                )
-              } else {
-                return (
-                  <td key={i}>{this.formatNumber(cellValue)}</td>
-                )
-              }
-            })
-          } else {
+        return value.map((cellValue, i) => {
+          if (typeof cellValue === 'object') {
             return (
-              <td key={keyIndex} className={value.class} rowSpan={value.rowspan} colSpan={value.colspan}>
-                {this.formatNumber(value.content)}
+              <td key={i} className={cellValue.class} rowSpan={cellValue.rowspan} colSpan={cellValue.colspan}>
+                {this.formatNumber(cellValue.content)}
               </td>
             )
+          } else {
+            return (
+              <td key={i}>{this.formatNumber(cellValue)}</td>
+            )
           }
-        }
+        })
       }
     })
   }
@@ -526,11 +503,13 @@ class Table extends React.Component {
             )
           })}
           {sources.map((source, index) => {
-            return (
-              <div key={index} className="col-lg-3 col-12 mb-3">
-                <Link href={source.url}>{source.urlText}</Link>
-              </div>
-            )
+            if (source.url !== undefined && source.url !== null && source.urlText !== undefined && source.urlText !== null) {
+              return (
+                <div key={index} className="col-lg-3 col-12 mb-3">
+                  <Link href={source.url}>{source.urlText}</Link>
+                </div>
+              )
+            }
           })}
         </div>
       )
@@ -547,7 +526,7 @@ class Table extends React.Component {
           {this.addPreviewInfo()}
           {this.createScrollControlsDesktop()}
           {this.createScrollControlsMobile()}
-          <div className="table-wrapper" onScroll={() => this.updateTableControlsDesktop()} ref={this.tableWrapperRef}>
+          <div className="table-wrapper searchabletext" onScroll={() => this.updateTableControlsDesktop()} ref={this.tableWrapperRef}>
             {this.createTable()}
           </div>
           {this.addDownloadTableDropdown(true)}

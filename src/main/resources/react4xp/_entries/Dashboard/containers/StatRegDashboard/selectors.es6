@@ -13,3 +13,12 @@ export const selectStatuses = createSelector(
   [selectDomain],
   (statRegState) => statRegState.statuses,
 )
+
+export const selectStatRegStatus = (statRegKey) => {
+  return createSelector(
+    [selectDomain],
+    (statRegState) => {
+      return statRegState.statuses.find((q) => q.key === statRegKey)
+    },
+  )
+}

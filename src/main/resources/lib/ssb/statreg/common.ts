@@ -1,22 +1,15 @@
-import { HttpLibrary, HttpResponse } from 'enonic-types/http'
-import { QueryFilters } from '../../repo/common'
+import { HttpLibrary, HttpRequestParams, HttpResponse } from 'enonic-types/http'
+import { RepoQueryLib } from '../../repo/query'
 
 const http: HttpLibrary = __non_webpack_require__('/lib/http-client')
+const {
+  Events,
+  logUserDataQuery
+}: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
 
-export function filtersToQuery(filters: QueryFilters): string {
-  return filters ? Object.keys(filters)
-    .map((key) => `${key}=${filters[key]}`)
-    .join('&') :
-    ''
-}
-
-export function fetchStatRegData<T>(
-  dataKey: string,
-  serviceUrl: string,
-  filters: QueryFilters,
-  extractor: (payload: string) => Array<T>): Array<T> {
-  const result: HttpResponse = http.request({
-    url: `${serviceUrl}${filtersToQuery(filters)}`,
+export function fetchStatRegData(dataKey: string, serviceUrl: string): HttpResponse {
+  const requestParams: HttpRequestParams = {
+    url: serviceUrl,
     method: 'GET',
     contentType: 'application/json',
     headers: {
@@ -25,23 +18,31 @@ export function fetchStatRegData<T>(
     },
     connectionTimeout: 30000,
     readTimeout: 30000
+  }
+  const response: HttpResponse = http.request(requestParams)
+
+  logUserDataQuery(dataKey, {
+    file: '/lib/ssb/statreg/common.ts',
+    function: 'fetchStatRegData',
+    message: Events.REQUEST_DATA,
+    status: `${response.status}`,
+    request: requestParams,
+    response
   })
 
-  if ((result.status === 200) && result.body) {
-    const data: Array<T> = extractor(result.body)
-    log.info(`Fetched ${data ? data.length : 0} ${dataKey}`)
-    return data
+  if (response.status !== 200) {
+    logUserDataQuery(dataKey, {
+      file: '/lib/ssb/statreg/common.ts',
+      function: 'fetchStatRegData',
+      message: Events.REQUEST_GOT_ERROR_RESPONSE,
+      status: `${response.status}`,
+      response
+    })
   }
 
-  log.error(`HTTP ${serviceUrl} (${result.status} ${result.message}`)
-  throw new Error(`Could not fetch ${dataKey} from StatReg: ${result.status} ${result.message}`)
+  return response
 }
 
 export interface StatRegCommonLib {
-  filtersToQuery: (filters: QueryFilters) => string;
-  fetchStatRegData: <T> (
-    dataKey: string,
-    serviceUrl: string,
-    filters: QueryFilters,
-    extractor: (payload: string) => Array<T>) => Array<T>;
+  fetchStatRegData: (dataKey: string, serviceUrl: string) => HttpResponse;
 }

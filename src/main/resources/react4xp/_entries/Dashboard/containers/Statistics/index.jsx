@@ -1,24 +1,28 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, Col, Row, Table, Modal } from 'react-bootstrap'
-import { selectStatisticsWithRelease, selectLoading, selectOpenStatistic } from './selectors'
+import { Button, Table } from 'react-bootstrap'
+import { selectStatisticsWithRelease,
+  selectLoading,
+  selectOpenModal } from './selectors'
 import { RefreshCw } from 'react-feather'
 import Moment from 'react-moment'
 import { Link } from '@statisticsnorway/ssb-component-library'
 import { selectContentStudioBaseUrl } from '../HomePage/selectors'
-import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
-import { refreshStatistic, setOpenStatistic } from './actions'
-import { RefreshStatisticsForm } from '../../components/RefreshStatisticsForm'
+import { setOpenStatistic, setOpenModal } from './actions'
+
+import { StatisticsLog } from './StatisticsLog'
+import { selectLoading as selectQueryLoading } from '../DataQueries/selectors'
+import { RefreshStatisticsModal } from '../../components/RefreshStatisticsModal'
 
 export function Statistics() {
   const statistics = useSelector(selectStatisticsWithRelease)
   const loading = useSelector(selectLoading)
+  const loadingQueries = useSelector(selectQueryLoading)
   const contentStudioBaseUrl = useSelector(selectContentStudioBaseUrl)
-  const modalInfo = useSelector(selectOpenStatistic)
+  const openModal = useSelector(selectOpenModal)
 
-  const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
-  const statisticsNo = statistics ? statistics.filter((s) => s.language === 'nb') : []
+  const statisticsNo = statistics ? statistics.filter((s) => s.language === 'nb' || s.language === 'nn') : []
   const statisticsEn = statistics ? statistics.filter((s) => s.language === 'en') : []
 
   const statisticsFinal = []
@@ -37,15 +41,6 @@ export function Statistics() {
     })
   }
 
-  const updateTables = (formData) => {
-    const {
-      owners,
-      fetchPublished
-    } = formData
-    refreshStatistic(dispatch, io, modalInfo.id, owners, fetchPublished)
-    handleClose()
-  }
-
   function renderStatistics() {
     if (loading) {
       return (
@@ -61,6 +56,9 @@ export function Statistics() {
                 <span>Statistikk</span>
               </th>
               <th className="roboto-bold">
+                <span>Om statistikken</span>
+              </th>
+              <th className="roboto-bold">
                 <span>Neste publisering</span>
               </th>
               <th />
@@ -71,7 +69,7 @@ export function Statistics() {
           </thead>
           {getStatistics()}
         </Table>
-        {modalInfo ? <ModalContent/> : null }
+        {openModal ? <RefreshStatisticsModal/> : null }
       </div>
     )
   }
@@ -92,53 +90,16 @@ export function Statistics() {
 
   function onRefreshStatistic(statistic) {
     setOpenStatistic(dispatch, statistic.id)
-  }
-
-  function renderStatisticsForm(key, sources, i) {
-    return (
-      <React.Fragment key={i}>
-        <RefreshStatisticsForm onSubmit={(e) => updateTables(e)} modalInfo={modalInfo}/>
-      </React.Fragment>
-    )
-  }
-
-  function handleClose() {
-    setOpenStatistic(dispatch, null)
-  }
-
-  const ModalContent = () => {
-    return (
-      <Modal show={true} onHide={() => handleClose()}>
-        <Modal.Header closeButton>
-          <Modal.Title>Oppdatering av tabeller på web</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Row>
-            <Col>
-              <h2>Statistikk: {modalInfo.shortName}</h2>
-              <span>For å oppdatere tabeller med ennå ikke publiserte tall må brukernavn og passord for lastebrukere i Statistikkbanken brukes.</span>
-              <br/>
-              <span>For andre endringer velg &quot;Hent publiserte tall&quot; uten å oppgi brukernavn og passord.</span>
-            </Col>
-          </Row>
-          { renderStatisticsForm() }
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => handleClose()}>
-              Lukk
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    )
+    setOpenModal(dispatch, true)
   }
 
   function getStatistics() {
     if (statisticsFinal.length > 0) {
       return (
         <tbody>
-          {statisticsFinal.map((statistic) => {
+          {statisticsFinal.map((statistic, index) => {
             return (
-              statisticRow(statistic)
+              statisticRow(statistic, index)
             )
           })}
         </tbody>
@@ -149,18 +110,32 @@ export function Statistics() {
     )
   }
 
-  function statisticRow(statistic) {
-    const key = statistic.shortName + '_' + statistic.language
+  function renderLog(statistic) {
+    if (loadingQueries) {
+      return <span className="spinner-border spinner-border-sm"/>
+    }
+    return (
+      <StatisticsLog statisticsShortName={statistic.shortName} relatedTables={statistic.relatedTables ? statistic.relatedTables : []}/>
+    )
+  }
+
+  function statisticRow(statistic, index) {
+    const key = statistic.shortName + '_' + statistic.language + '_' + index
     return (
       <tr key={key}>
         <td className='statistic'>
           {getShortNameLink(statistic)}
         </td>
         <td>
+          {getAboutStatisticLink(statistic)}
+        </td>
+        <td>
           {getNextRelease(statistic)}
         </td>
         <td className="text-center">{statistic.nextRelease ? makeRefreshButton(statistic) : ''}</td>
-        <td/>
+        <td>
+          {renderLog(statistic)}
+        </td>
       </tr>
     )
   }
@@ -189,6 +164,20 @@ export function Statistics() {
     }
     return (
       <span>{statistic.language === 'en' ? 'Eng. ' + statistic.shortName : statistic.shortName}</span>
+    )
+  }
+
+  function getAboutStatisticLink(statistic) {
+    if (statistic.aboutTheStatistics) {
+      return (
+        <Link
+          isExternal
+          href={contentStudioBaseUrl + statistic.aboutTheStatistics}>{statistic.language === 'en' ? 'Eng. ' + 'Om statistikken' : 'Om statistikken'}
+        </Link>
+      )
+    }
+    return (
+      <span>{statistic.language === 'en' ? 'Eng. ' + 'Om statistikken' : 'Om statistikken'}</span>
     )
   }
 

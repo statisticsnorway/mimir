@@ -15,12 +15,12 @@ export interface Sources {
       /**
        * Tekst til kildelenke
        */
-      urlText?: string;
+      urlText: string;
 
       /**
        * Kildelenke
        */
-      url?: string;
+      url: string;
     };
 
     /**

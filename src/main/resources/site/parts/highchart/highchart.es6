@@ -22,8 +22,8 @@ const {
   datasetOrUndefined
 } = __non_webpack_require__('/lib/ssb/cache')
 const {
-  hasRole
-} = __non_webpack_require__('/lib/xp/auth')
+  hasWritePermissions
+} = __non_webpack_require__('/lib/ssb/permissions')
 
 
 const content = __non_webpack_require__( '/lib/xp/content')
@@ -40,7 +40,11 @@ exports.get = function(req) {
 }
 
 exports.preview = (req, id) => {
-  return renderPart(req, [id])
+  try {
+    return renderPart(req, [id])
+  } catch (e) {
+    return renderError(req, 'Error in part', e)
+  }
 }
 
 /**
@@ -56,10 +60,9 @@ function renderPart(req, highchartIds) {
 
     let config
     if (highchart && highchart.data.dataSource) {
-      const adminRole = hasRole('system.admin')
       const type = highchart.data.dataSource._selected
       const paramShowDraft = req.params.showDraft
-      const showPreviewDraft = adminRole && req.mode === 'preview' && type === 'tbprocessor' && paramShowDraft === 'true'
+      const showPreviewDraft = hasWritePermissions(req, highchart._id) && type === 'tbprocessor' && paramShowDraft === 'true'
       const draftData = showPreviewDraft ? getDataset(type, UNPUBLISHED_DATASET_BRANCH, highchart.data.dataSource.tbprocessor.urlOrId) : null
 
       const datasetFromRepo = draftData ? draftData : datasetOrUndefined(highchart)
@@ -79,9 +82,8 @@ function renderPart(req, highchartIds) {
         })
       }
     }
-
     return createHighchartsReactProps(highchart, config)
-  })
+  }).filter((key) => !!key)
 
   const inlineScript = highcharts.map((highchart) => `<script inline="javascript">
    window['highchart' + '${highchart.contentKey}'] = ${JSON.stringify(highchart.config)}

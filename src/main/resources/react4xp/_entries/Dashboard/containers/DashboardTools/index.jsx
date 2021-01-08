@@ -1,12 +1,12 @@
 import Button from 'react-bootstrap/Button'
 import React, { useContext, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectLoadingClearCache } from '../HomePage/selectors'
+import { selectInternalBaseUrl, selectInternalStatbankUrl, selectLoadingClearCache } from '../HomePage/selectors'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { requestClearCache } from '../HomePage/actions.es6'
-import { RefreshCw, Trash } from 'react-feather'
+import { ChevronDown, ChevronUp, RefreshCw, Trash } from 'react-feather'
 import { Col, Container, Row } from 'react-bootstrap'
-import { Dropdown } from '@statisticsnorway/ssb-component-library'
+import { Link, Dropdown } from '@statisticsnorway/ssb-component-library'
 import { selectStatistics, selectLoading, selectHasLoadingStatistic } from '../Statistics/selectors'
 import { setOpenStatistic } from '../Statistics/actions'
 import { selectDataQueriesByType } from '../DataQueries/selectors'
@@ -24,6 +24,9 @@ export function DataQueryTools() {
   const [selectedStat, setSelectedStat] = useState(null)
   const tableQueries = useSelector(selectDataQueriesByType('mimir:table'))
   const statuses = useSelector(selectStatuses)
+  const [showLinkTools, setShowLinkTools] = useState(false)
+  const internalBaseUrl = useSelector(selectInternalBaseUrl)
+  const internalStatbankUrl = useSelector(selectInternalStatbankUrl)
 
   function refreshStatReg(key) {
     startRefresh(dispatch, io, [key])
@@ -76,18 +79,56 @@ export function DataQueryTools() {
         <span className="spinner-border spinner-border-sm ml-2 mb-1" />
       )
     }
+    const items = statistics.map((s) => {
+      return {
+        title: `${s.shortName} - ${s.name}`,
+        id: s.id
+      }
+    })
+    if (items.length === 0) {
+      items.push({
+        title: `Ingen statistikker`,
+        id: '-1'
+      })
+    }
     return (
       <Dropdown
         placeholder="Finn statistikk"
         searchable
-        items={statistics.map((s) => {
-          return {
-            title: `${s.shortName} - ${s.name}`,
-            id: s.id
-          }
-        })}
+        items={items}
         onSelect={(e) => onStatisticsSearchSelect(e)}
       />
+    )
+  }
+
+  function renderLinkTools() {
+    return (
+      <ul className="list-unstyled list-group">
+        <li className="list-group-item">
+          <Link
+            isExternal
+            href={internalBaseUrl + '/statistikkregisteret/publisering/list'}>Statistikkregisteret
+          </Link>
+        </li>
+        <li className="list-group-item">
+          <Link
+            isExternal
+            href={internalBaseUrl + '/designer'}>Tabellbygger
+          </Link>
+        </li>
+        <li className="list-group-item">
+          <Link
+            isExternal
+            href={internalStatbankUrl}>Intern statistikkbank
+          </Link>
+        </li>
+        <li className="list-group-item">
+          <Link
+            isExternal
+            href="https://wiki.ssb.no/display/VEILEDNING/Home">Veiledninger i publiseringer på ssb.no
+          </Link>
+        </li>
+      </ul>
     )
   }
 
@@ -140,6 +181,19 @@ export function DataQueryTools() {
             </Row>
           )
         })}
+        <Row className="link-tools-list">
+          <Col>
+            <h3>Verktøyliste</h3>
+            <Button
+              variant="primary"
+              className="mx-1 mb-2"
+              onClick={showLinkTools ? () => setShowLinkTools(false) : () => setShowLinkTools(true)}
+            >
+              {showLinkTools ? 'Skjul lenker' : 'Vis lenker' } {showLinkTools ? <ChevronUp size={16}/> : <ChevronDown size={16}/> }
+            </Button>
+            {showLinkTools ? renderLinkTools() : null}
+          </Col>
+        </Row>
       </Container>
     </div>
   )

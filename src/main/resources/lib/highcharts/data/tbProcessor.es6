@@ -8,8 +8,11 @@ const getRowValue = (value) => {
 }
 
 export const seriesAndCategoriesFromTbml = (data, graphType, xAxisType) => {
-  const rows = util.data.forceArray(data.tbml.presentation.table.tbody.tr)
-  const headers = util.data.forceArray(data.tbml.presentation.table.thead.tr.th)
+  const tbody = util.data.forceArray(data.tbml.presentation.table.tbody)
+  const thead = util.data.forceArray(data.tbml.presentation.table.thead)
+  const rows = util.data.forceArray(tbody[0].tr)
+  const headerRows = util.data.forceArray(thead[0].tr)
+  const headers = util.data.forceArray(headerRows[0].th)
   let categories = []
   let series = []
   if (graphType === 'pie') {
@@ -19,7 +22,7 @@ export const seriesAndCategoriesFromTbml = (data, graphType, xAxisType) => {
       data: rows.map((row) => {
         return {
           name: row.th,
-          y: getRowValue(row.td)
+          y: getRowValue(util.data.forceArray(row.td)[0])
         }
       })
     }]

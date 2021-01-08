@@ -1,46 +1,53 @@
 const moment = require('moment/min/moment-with-locales')
 const i18n = __non_webpack_require__( '/lib/xp/i18n')
-const portal = __non_webpack_require__( '/lib/xp/portal')
-const content = __non_webpack_require__( '/lib/xp/content')
+const {
+  getSite, getSiteConfig, pageUrl
+} = __non_webpack_require__( '/lib/xp/portal')
+const {
+  exists
+} = __non_webpack_require__( '/lib/xp/content')
 
 let english
 let norwegian
+let newNorwegian
 
 try {
   english = i18n.getPhrases('en', ['site/i18n/phrases'])
   norwegian = i18n.getPhrases('', ['site/i18n/phrases'])
+  newNorwegian = i18n.getPhrases('nn', ['site/i18n/phrases'])
 } catch (e) {
   e.toString()
 }
 
 exports.getLanguage = function(page) {
-  const site = portal.getSite()
-  const siteConfig = portal.getSiteConfig()
+  const site = getSite()
+  const siteConfig = getSiteConfig()
 
   moment.locale(page.language ? page.language : 'nb')
 
   const currentLanguageConfig = siteConfig.language.filter( (language) => language.code === page.language)[0]
+
   const alternativeLanguagesConfig = siteConfig.language.filter( (language) => language.code !== page.language)
-  const currentLangPath = currentLanguageConfig.link ? currentLanguageConfig.link : ''
+  const currentLangPath = currentLanguageConfig && currentLanguageConfig.link ? currentLanguageConfig.link : ''
   const pagePathAfterSiteName = page._path.replace(`${site._path}${currentLangPath}`, '')
 
   const alternativeLanguages = alternativeLanguagesConfig.map( (altLanguage) => {
     const altVersionPath = altLanguage.link ? altLanguage.link : ''
     const altVersionUri = `${site._path}${altVersionPath}${pagePathAfterSiteName}`
-    const altVersionExists = content.exists({
+    const altVersionExists = exists({
       key: altVersionUri
     })
     let path = ''
     if (altVersionExists) {
-      path = portal.pageUrl({
+      path = pageUrl({
         path: altVersionUri
       })
     } else if (altLanguage.homePageId) {
-      path = portal.pageUrl({
+      path = pageUrl({
         id: altLanguage.homePageId
       })
     } else {
-      path = portal.pageUrl({
+      path = pageUrl({
         path: altVersionPath
       })
     }
@@ -53,13 +60,14 @@ exports.getLanguage = function(page) {
     }
   })
 
+  const norwegianConfig = siteConfig.language[0]
   const result = {
-    menuContentId: currentLanguageConfig.menuContentId,
-    headerId: currentLanguageConfig.headerId,
-    footerId: currentLanguageConfig.footerId,
-    code: currentLanguageConfig.code,
-    link: (currentLanguageConfig.link !== null) ? currentLanguageConfig.link : '',
-    standardSymbolPage: currentLanguageConfig.standardSymbolPage,
+    menuContentId: currentLanguageConfig ? currentLanguageConfig.menuContentId : norwegianConfig.menuContentId,
+    headerId: currentLanguageConfig ? currentLanguageConfig.headerId : norwegianConfig.headerId,
+    footerId: currentLanguageConfig ? currentLanguageConfig.footerId : norwegianConfig.footerId,
+    code: currentLanguageConfig ? currentLanguageConfig.code : page.language,
+    link: currentLanguageConfig ? (currentLanguageConfig.link !== null) ? currentLanguageConfig.link : '' : '',
+    standardSymbolPage: currentLanguageConfig ? currentLanguageConfig.standardSymbolPage : norwegianConfig.standardSymbolPage,
     phrases: {
       ...(i18n.getPhrases(page.language === 'nb' ? '' : page.language, ['site/i18n/phrases']))
     },
@@ -69,9 +77,16 @@ exports.getLanguage = function(page) {
   return result
 }
 
-
 exports.getPhrases = (page) => {
-  return page.language && page.language === 'en' ? english : norwegian
+  if (page.language) {
+    if (page.language === 'en') {
+      return english
+    } else if (page.language === 'nn') {
+      return newNorwegian
+    } else {
+      return norwegian
+    }
+  }
 }
 
 /**

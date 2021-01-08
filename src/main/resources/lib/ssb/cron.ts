@@ -3,18 +3,21 @@ import { Content } from 'enonic-types/content'
 import { ContextLibrary, RunContext } from 'enonic-types/context'
 import { DataSource } from '../../site/mixins/dataSource/dataSource'
 import { RepoJobLib, JobEventNode, JobInfoNode } from '../repo/job'
-import { StatRegRepoLib } from '../repo/statreg'
+import { StatRegRefreshResult, StatRegRepoLib } from '../repo/statreg'
 import { SSBTaskLib } from '../task'
-import { CronLib } from '../types/cron'
+import { CronLib, GetCronResult } from '../types/cron'
 import { DatasetLib } from './dataset/dataset'
 import { PublishDatasetLib } from './dataset/publish'
-import { EventLogLib } from '../ssb/eventLog';
+import { EventLogLib } from '../ssb/eventLog'
+import { ServerLogLib } from './serverLog'
+import { DatasetRSSLib } from './dataset/rss'
 
 const {
   publishDataset
 }: PublishDatasetLib = __non_webpack_require__( '/lib/ssb/dataset/publish')
 const {
-  fetchStatRegData
+  refreshStatRegData,
+  STATREG_NODES
 }: StatRegRepoLib = __non_webpack_require__( '/lib/repo/statreg')
 const cron: CronLib = __non_webpack_require__('/lib/cron')
 const {
@@ -28,10 +31,11 @@ const {
   startJobLog,
   updateJobLog,
   JOB_STATUS_COMPLETE,
+  JobNames
 }: RepoJobLib = __non_webpack_require__('/lib/repo/job')
 const {
   dataSourceRSSFilter
-} = __non_webpack_require__('/lib/ssb/dataset/rss')
+}: DatasetRSSLib = __non_webpack_require__('/lib/ssb/dataset/rss')
 const {
   findUsers,
   createUser
@@ -42,6 +46,9 @@ const {
 const {
   deleteExpiredEventLogs
 }: EventLogLib = __non_webpack_require__('/lib/ssb/eventLog')
+const {
+  cronJobLog
+}: ServerLogLib = __non_webpack_require__('/lib/ssb/serverLog')
 
 const createUserContext: RunContext = { // Master context (XP)
   repository: 'com.enonic.cms.default',
@@ -79,7 +86,7 @@ function setupCronJobUser(): void {
 }
 
 function job(): void {
-  log.info('-- Running dataquery cron job --')
+  cronJobLog('-- Running dataquery cron job --')
   const jobLogNode: JobEventNode = startJobLog('-- Running dataquery cron job --')
 
   let dataSourceQueries: Array<Content<DataSource>> = getContentWithDataSource()
@@ -93,7 +100,20 @@ function job(): void {
   })
   const refreshDataResult: undefined | Array<string> = dataSourceQueries && refreshQueriesAsync(dataSourceQueries)
   completeJobLog(jobLogNode._id, JOB_STATUS_COMPLETE, refreshDataResult)
-  log.info('-- Completed dataquery cron job --')
+  cronJobLog('-- Completed dataquery cron job --')
+}
+
+function statRegJob(): void {
+  const jobLogNode: JobEventNode = startJobLog(JobNames.STATREG_JOB)
+  updateJobLog(jobLogNode._id, (node: JobInfoNode) => {
+    node.data = {
+      ...node.data,
+      queryIds: STATREG_NODES.map((s) => s.key)
+    }
+    return node
+  })
+  const result: Array<StatRegRefreshResult> = refreshStatRegData()
+  completeJobLog(jobLogNode._id, JOB_STATUS_COMPLETE, result)
 }
 
 export function setupCronJobs(): void {
@@ -115,7 +135,7 @@ export function setupCronJobs(): void {
     name: 'StatReg Periodic Refresh',
     cron: statregCron,
     times: 365 * 10,
-    callback: fetchStatRegData,
+    callback: statRegJob,
     context: cronContext
   })
 
@@ -129,7 +149,7 @@ export function setupCronJobs(): void {
     context: cronContext
   })
 
-  const deleteExpiredEventLogCron: string = app.config && app.config['ssb.cron.dataquery'] ? app.config['ssb.cron.dataquery'] : '45 13 * * *'
+  const deleteExpiredEventLogCron: string = app.config && app.config['ssb.cron.deleteLogs'] ? app.config['ssb.cron.deleteLogs'] : '45 13 * * *'
   cron.schedule({
     name: 'Delete expired event logs',
     cron: deleteExpiredEventLogCron,
@@ -137,6 +157,10 @@ export function setupCronJobs(): void {
     callback: deleteExpiredEventLogs,
     context: cronContext
   })
+
+  const cronList: Array<GetCronResult> = cron.list()
+  cronJobLog('All cron jobs registered')
+  cronJobLog(JSON.stringify(cronList, null, 2))
 }
 
 export interface SSBCronLib {
