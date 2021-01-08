@@ -9,7 +9,11 @@ export function RefreshStatisticsForm(props) {
   } = props
 
   const [owners, setOwners] = useState([])
-  const [fetchPublished, setFetchedPublished] = useState(null)
+  const [fetchPublished, setFetchPublished] = useState(modalInfo.relatedUserTBMLs
+    .reduce( (acc, o) => {
+      acc[o.ownerId] = false
+      return acc
+    }, {}))
 
   function updateOwnerCredentials(ownersObj, propKey, value) {
     const currentOwner = owners.find((owner) => owner.ownerId === ownersObj.ownerId)
@@ -22,6 +26,16 @@ export function RefreshStatisticsForm(props) {
       })
     }
     setOwners(owners)
+  }
+
+  function updateFetchPublished(ownerObj, event) {
+    event.persist()
+    const newStatus = event.target ? event.target.checked : false
+    setFetchPublished((prev) => ({
+      ...prev,
+      [ownerObj.ownerId]: newStatus
+    }))
+    updateOwnerCredentials(ownerObj, 'fetchPublished', newStatus)
   }
 
   function renderOwnerInputForMultipleTbml(owner, index) {
@@ -41,7 +55,8 @@ export function RefreshStatisticsForm(props) {
             <Form.Group controlId={'formBasicUsername_' + index}>
               <Form.Label>Brukernavn</Form.Label>
               <Form.Control
-                required
+                required={fetchPublished[owner.ownerId] ? '' : 'required'}
+                disabled={fetchPublished[owner.ownerId] ? 'disabled' : ''}
                 type="username"
                 placeholder="Brukernavn"
                 onChange={(e) => updateOwnerCredentials(owner, 'username', e.target.value )}
@@ -52,7 +67,8 @@ export function RefreshStatisticsForm(props) {
             <Form.Group controlId={'formBasicPassword_' + index}>
               <Form.Label>Password</Form.Label>
               <Form.Control
-                required
+                required={fetchPublished[owner.ownerId] ? '' : 'required'}
+                disabled={fetchPublished[owner.ownerId] ? 'disabled' : ''}
                 type="password"
                 placeholder="Passord"
                 onChange={(e) => updateOwnerCredentials(owner, 'password', e.target.value )}
@@ -64,7 +80,7 @@ export function RefreshStatisticsForm(props) {
           <Col>
             <Form.Group controlId={'formBasicCheckbox_' + index}>
               <Form.Check
-                onChange={(e) => updateOwnerCredentials(owner, 'fetchPublished', e.target.value )}
+                onChange={(e) => updateFetchPublished(owner, e )}
                 type="checkbox"
                 label="Hent publiserte tall"
               />
@@ -86,8 +102,7 @@ export function RefreshStatisticsForm(props) {
       <Button
         variant="primary"
         onClick={() => onSubmit({
-          owners,
-          fetchPublished
+          owners
         })}
       >
         Send
