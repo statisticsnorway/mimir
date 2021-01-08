@@ -20,7 +20,7 @@ export function hasWritePermissions(req: Request, key: string): boolean {
     const userPrincipals: Array<string> = (getContext().authInfo as AuthInfoExtended).principals
     const usersPermissions: Array<PermissionsParams> = permissions.filter((p) => userPrincipals.includes(p.principal))
     return !!usersPermissions.find((permission) => {
-      return permission.allow.includes('WRITE_PERMISSIONS')
+      return permission.allow.includes('WRITE_PERMISSIONS') || permission.allow.includes('MODIFY')
     })
   }
   return false
