@@ -40,7 +40,7 @@ export function Jobs() {
 
   function getJobRows() {
     return jobs.map((job) => {
-      const ts = moment(job.completionTime ? job.completionTime : job.startTime).locale('nb').format('DD.MM.YYYY HH.mm')
+      const ts = moment(job.completionTime ? job.completionTime : job.startTime).locale('nb').format('DD.MM.YYYY HH.mm.ss')
       const name = job.task
       const info = renderInfo(job)
       return {
