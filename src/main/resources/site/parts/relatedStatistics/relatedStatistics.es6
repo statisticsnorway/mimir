@@ -40,27 +40,25 @@ const renderPart = (req) => {
   moment.locale(page.language ? page.language : 'nb')
   const phrases = getPhrases(page)
 
+  const statisticsTitle = phrases.menuStatistics
   if (!relatedStatistics || relatedStatistics.length === 0) {
     if (req.mode === 'edit' && page.type !== `${app.name}:statistics` && page.type !== `${app.name}:article`) {
       return {
-        body: render(view)
+        body: render(view, {
+          statisticsTitle
+        })
       }
     }
   }
 
-  return renderRelatedStatistics(parseRelatedContent(relatedStatistics ? data.forceArray(relatedStatistics) : []), phrases)
+  return renderRelatedStatistics(statisticsTitle, parseRelatedContent(relatedStatistics ? data.forceArray(relatedStatistics) : []), phrases)
 }
 
-/**
- *
- * @param {Array} relatedStatisticsContent
- * @param {Object} phrases
- * @return {{ body: string, pageContributions: string }}
- */
-const renderRelatedStatistics = (relatedStatisticsContent, phrases) => {
+const renderRelatedStatistics = (statisticsTitle, relatedStatisticsContent, phrases) => {
   if (relatedStatisticsContent && relatedStatisticsContent.length) {
     const relatedStatisticsXP = new React4xp('RelatedStatistics')
       .setProps({
+        headerTitle: statisticsTitle,
         relatedStatistics: relatedStatisticsContent.map(({
           title, preamble, href
         }) => {
@@ -81,7 +79,8 @@ const renderRelatedStatistics = (relatedStatisticsContent, phrases) => {
 
     return {
       body: relatedStatisticsXP.renderBody({
-        body
+        body,
+        label: statisticsTitle
       }),
       pageContributions: relatedStatisticsXP.renderPageContributions()
     }

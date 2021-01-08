@@ -13,8 +13,13 @@ const {
 const {
   ensureArray, chunkArray
 } = __non_webpack_require__('/lib/ssb/arrayUtils')
+const {
+  getPhrases
+} = __non_webpack_require__( '/lib/language')
+
 import { find } from 'ramda'
 
+const moment = require('moment/min/moment-with-locales')
 const view = resolve('./contact.html')
 
 exports.get = function(req) {
@@ -40,6 +45,10 @@ function renderPart(req) {
   const WIDTH = 4 // how many boxes in a row
   const page = getContent()
   const part = getComponent()
+
+  moment.locale(page.language ? page.language : 'nb')
+  const phrases = getPhrases(page)
+
   const statRegContacts = getContactsFromRepo()
   let contactIds = []
 
@@ -57,10 +66,13 @@ function renderPart(req) {
 
   const contacts = chunkArray(selectedContacts, WIDTH)
 
+  const contactTitle = phrases.contact.charAt(0).toUpperCase() + phrases.contact.slice(1)
   if (!contacts || (contacts.length < 1)) {
     if (req.mode === 'edit' && page.type !== `${app.name}:statistics` && page.type !== `${app.name}:article`) {
       return {
-        body: render(view)
+        body: render(view, {
+          label: contactTitle
+        })
       }
     } else {
       return {
@@ -70,7 +82,7 @@ function renderPart(req) {
   }
 
   const model = {
-    label: getComponent().config.label,
+    contactTitle,
     contacts
   }
 
