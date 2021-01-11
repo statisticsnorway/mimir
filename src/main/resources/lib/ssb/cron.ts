@@ -90,8 +90,8 @@ function setupCronJobUser(): void {
 }
 
 function job(): void {
-  cronJobLog('-- Running dataquery cron job --')
-  const jobLogNode: JobEventNode = startJobLog('-- Running dataquery cron job --')
+  cronJobLog('Kjøre oppdaterte spørringer')
+  const jobLogNode: JobEventNode = startJobLog('Kjøre oppdaterte spørringer')
 
   let dataSourceQueries: Array<Content<DataSource>> = getContentWithDataSource()
   dataSourceQueries = dataSourceRSSFilter(dataSourceQueries)
@@ -161,7 +161,7 @@ export function setupCronJobs(): void {
 
   const deleteExpiredEventLogCron: string = app.config && app.config['ssb.cron.deleteLogs'] ? app.config['ssb.cron.deleteLogs'] : '45 13 * * *'
   cron.schedule({
-    name: 'Delete expired event logs',
+    name: 'Slette eventlog',
     cron: deleteExpiredEventLogCron,
     times: 365 * 10,
     callback: () => runOnMasterOnly(deleteExpiredEventLogs),

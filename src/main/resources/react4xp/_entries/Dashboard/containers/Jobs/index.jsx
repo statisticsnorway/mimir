@@ -75,13 +75,13 @@ export function Jobs() {
   }
 
   function renderInfo(job) {
-    if (job.task === 'Publish statistics') {
+    if (job.task === 'Publisering statistikk') {
       return (
         <span className="modal-trigger" onClick={() => openJobLogModal(job)}>
           {job.status} - {job.message}
         </span>
       )
-    } else if (job.task === 'Refresh statreg data') {
+    } else if (job.task === 'Import Statreg') {
       return (
         <React.Fragment>
           {job.status}<br/>
