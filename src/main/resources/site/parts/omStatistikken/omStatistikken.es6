@@ -45,12 +45,16 @@ function renderPart(req, aboutTheStatisticsId) {
   let nextRelease = phrases.notYetDetermined
   const aboutStatisticLabel = phrases.aboutTheStatistics
   const statistic = page.data.statistic && getStatisticByIdFromRepo(page.data.statistic)
-  const variants = util.data.forceArray(statistic.variants)
-  const nextReleaseDate = getNextReleaseStatistic(variants)
 
-  if (nextReleaseDate && nextReleaseDate !== '') {
-    nextRelease = moment(nextReleaseDate).format('DD. MMMM YYYY')
-  } if (page.type === `${app.name}:omStatistikken` && (req.mode === 'edit' || req.mode === 'preview')) {
+  if (statistic) {
+    const variants = util.data.forceArray(statistic.variants)
+    const nextReleaseDate = getNextReleaseStatistic(variants)
+
+    if (nextReleaseDate && nextReleaseDate !== '') {
+      nextRelease = moment(nextReleaseDate).format('DD. MMMM YYYY')
+    }
+  }
+  if (page.type === `${app.name}:omStatistikken` && (req.mode === 'edit' || req.mode === 'preview')) {
     // Kun ment for internt bruk, i forhåndsvisning av om-statistikken.
     nextRelease = '<i>Kan kun vises på statistikksiden, ikke i forhåndsvisning av om-statistikken</i>'
   }
