@@ -150,8 +150,8 @@ function getJobs(): Array<DashboardJobInfo> {
         id: jobLog._id,
         task: jobLog.data.task,
         status: jobLog.data.status,
-        startTime: jobLog.data.jobStarted ? dateToFormat(jobLog.data.jobStarted) : undefined,
-        completionTime: jobLog.data.completionTime ? dateToFormat(jobLog.data.completionTime) : undefined,
+        startTime: jobLog.data.jobStarted,
+        completionTime: jobLog.data.completionTime ? jobLog.data.completionTime : undefined,
         message: jobLog.data.message ? jobLog.data.message : '',
         result: parseResult(jobLog)
       })

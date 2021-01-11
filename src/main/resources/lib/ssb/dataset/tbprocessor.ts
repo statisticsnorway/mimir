@@ -69,12 +69,18 @@ function getDataAndMetaData(content: Content<DataSource>, processXml?: string ):
   const language: string = content.language || ''
 
   const tbmlKey: string = getTbprocessorKey(content)
+  let tbmlDataUrl: string = `${baseUrl}${dataPath}${tbmlKey}${language === 'en' ? `?lang=${language}` : ''}`
+  let sourceListUrl: string = `${baseUrl}${sourceListPath}${tbmlKey}`
 
-  const tbmlDataUrl: string = `${baseUrl}${dataPath}${tbmlKey}${language === 'en' ? `?lang=${language}` : ''}`
+  const dataSource: DataSource['dataSource'] = content.data.dataSource
+  if (dataSource && dataSource.tbprocessor && isUrl(dataSource.tbprocessor.urlOrId)) {
+    tbmlDataUrl = `${dataSource.tbprocessor.urlOrId as string}${language === 'en' ? `?lang=${language}` : ''}`
+    sourceListUrl = `${dataSource.tbprocessor.urlOrId as string}`.replace(dataPath, sourceListPath)
+  }
+
   const tbmlParsedResponse: TbprocessorParsedResponse<TbmlDataUniform> | null = tryRequestTbmlData<TbmlDataUniform>(tbmlDataUrl, content._id, processXml)
 
   if (tbmlParsedResponse && tbmlParsedResponse.status === 200) {
-    const sourceListUrl: string = `${baseUrl}${sourceListPath}${tbmlKey}`
     const tbmlDataAndSourceList: TbmlDataUniform | null = addSourceList(sourceListUrl, tbmlParsedResponse, content._id)
     return {
       ...tbmlParsedResponse,

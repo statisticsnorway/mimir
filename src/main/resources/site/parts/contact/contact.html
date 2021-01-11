@@ -1,18 +1,12 @@
 <section class="xp-part part-contacts container mt-md-5 pt-3">
-  <h2 data-th-text="${label}?: 'Kontakt'" class="roboto-condensed-bold mb-md-4 pb-md-3 bt-6"></h2>
+  <h2 data-th-text="${label}?: ${contactTitle}" class="roboto-condensed-bold mb-md-4 pb-md-3 bt-6"></h2>
   <div data-th-if="${contacts}" data-th-each="contactGroup : ${contacts}" class="row d-flex flex-wrap">
     <div data-th-if="${contact}" data-th-each="contact : ${contactGroup}" class="col-md-4 col-lg-3 contacts">
-      <p class="roboto-plain lead mb-1 text-break text-wrap part-contact-name" data-th-text=${contact.name}>
-        TESTNAVN
-      </p>
+      <p class="roboto-plain lead mb-1 text-break text-wrap part-contact-name" data-th-text=${contact.name} />
       <p data-th-if="${contact.email}" class="part-contact-email mb-1">
-        <a class="roboto-plain" data-th-href="@{'mailto:' + ${contact.email}}" data-th-text="${contact.email}">
-          epost
-        </a>
+        <a class="roboto-plain" data-th-href="@{'mailto:' + ${contact.email}}" data-th-text="${contact.email}" />
       </p>
-      <p data-th-if="${contact.telephone}" data-th-text="${contact.telephone}" class="part-contact-telephone">
-        phone
-      </p>
+      <p data-th-if="${contact.telephone}" data-th-text="${contact.telephone}" class="part-contact-telephone" />
     </div>
   </div>
 </section>
