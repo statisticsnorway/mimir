@@ -66,7 +66,7 @@ function renderPart(req) {
 
   const contacts = chunkArray(selectedContacts, WIDTH)
 
-  const contactTitle = phrases.contact.charAt(0).toUpperCase() + phrases.contact.slice(1)
+  const contactTitle = phrases.contact
   if (!contacts || (contacts.length < 1)) {
     if (req.mode === 'edit' && page.type !== `${app.name}:statistics` && page.type !== `${app.name}:article`) {
       return {
