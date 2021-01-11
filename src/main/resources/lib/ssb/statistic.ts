@@ -132,7 +132,7 @@ export function getDatasetIdsFromStatistic(statistic: Content<Statistics>): Arra
   return [...mainTableId, ...statisticsKeyFigureId, ...attachmentTablesFiguresIds]
 }
 
-function sourcesForUserFromStatistic(statistic: Content<Statistics>): Array<OwnerWithSources> {
+function getDatasetFromStatistics(statistic: Content<Statistics>): Array<SourceList> {
   const datasetIds: Array<string> = getDatasetIdsFromStatistic(statistic)
   const sources: Array<SourceList> = datasetIds.reduce((acc: Array<SourceList>, contentId: string) => {
     const dataset: DatasetRepoNode<TbmlDataUniform> | null = getDatasetFromContentId(contentId)
@@ -144,7 +144,10 @@ function sourcesForUserFromStatistic(statistic: Content<Statistics>): Array<Owne
     }
     return acc
   }, [])
+  return sources
+}
 
+function getSourcesForUserFromStatistic(sources: Array<SourceList>): Array<OwnerWithSources> {
   return sources.reduce((acc: Array<OwnerWithSources>, source: SourceList) => {
     const {
       dataset
@@ -206,7 +209,25 @@ function prepStatistics(statistics: Array<Content<Statistics>>): Array<Statistic
     const statregData: StatregData | undefined = statistic.data.statistic ? getStatregInfo(statistic.data.statistic) : undefined
 
     if (statregData) {
-      const relatedUserTBMLs: Array<OwnerWithSources> = sourcesForUserFromStatistic(statistic)
+      const datasets: Array<SourceList> = getDatasetFromStatistics(statistic)
+      const relatedUserTBMLs: Array<OwnerWithSources> = getSourcesForUserFromStatistic(datasets)
+      const relatedTables: Array<RelatedTbml> = datasets.reduce((acc: Array<RelatedTbml>, tbml) => {
+        const {
+          dataset,
+          queryId
+        } = tbml
+        if (dataset.data &&
+          typeof(dataset.data) !== 'string' &&
+          dataset.data.tbml.metadata &&
+          dataset.data.tbml.metadata.sourceList) {
+          const tbmlId: string = dataset.data.tbml.metadata.instance.definitionId.toString()
+          acc.push({
+            tbmlId,
+            queryId
+          })
+        }
+        return acc
+      }, [])
       const statisticDataDashboard: StatisticDashboard = {
         id: statistic._id,
         language: statistic.language ? statistic.language : '',
@@ -214,6 +235,7 @@ function prepStatistics(statistics: Array<Content<Statistics>>): Array<Statistic
         shortName: statregData.shortName,
         nextRelease: undefined,
         relatedUserTBMLs,
+        relatedTables,
         aboutTheStatistics: statistic.data.aboutTheStatistics
       }
       if (statregData && statregData.nextRelease && moment(statregData.nextRelease).isSameOrAfter(new Date(), 'day')) {
@@ -300,8 +322,8 @@ interface StatisticDashboard {
   name?: string;
   shortName: string;
   nextRelease?: string;
-  relatedTables?: Array<TbmlSources>;
- relatedUserTBMLs?: Array<OwnerWithSources>;
+  relatedTables?: Array<RelatedTbml>;
+  relatedUserTBMLs?: Array<OwnerWithSources>;
   aboutTheStatistics?: string;
 }
 
@@ -311,12 +333,9 @@ interface StatregData {
   nextRelease: string;
 }
 
-interface TbmlSources {
+interface RelatedTbml {
   queryId: string;
   tbmlId: string;
-  sourceList?: {
-    [key: number]: Array<Source>;
-  };
 }
 
 interface OwnerWithSources {
