@@ -61,11 +61,11 @@ class RelatedStatistics extends React.Component {
 
   render() {
     const {
-      relatedStatistics
+      headerTitle, relatedStatistics
     } = this.props
     return (
       <div className="container">
-        <h2 className="pt-4">Statistikk</h2>
+        <h2 className="pt-4">{headerTitle}</h2>
         <div className="row mt-5">
           {relatedStatistics.map((relatedStatistics, index) => {
             return (
@@ -88,6 +88,7 @@ class RelatedStatistics extends React.Component {
 }
 
 RelatedStatistics.propTypes = {
+  headerTitle: PropTypes.string,
   relatedStatistics: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string.isRequired,
