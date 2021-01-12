@@ -8,7 +8,7 @@ import { PortalLibrary } from 'enonic-types/portal'
 import { KeyFigure } from '../../site/content-types/keyFigure/keyFigure'
 import { MunicipalityWithCounty } from '../klass/municipalities'
 import { TbmlDataUniform, TableRowUniform, TableCellUniform, PreliminaryData } from '../types/xmlParser'
-import { Category, Dataset as JSDataset, Dimension } from '../types/jsonstat-toolkit'
+import { Category, Dimension, JSONstat as JSONstatType } from '../types/jsonstat-toolkit'
 import { UtilLibrary } from '../types/util'
 import { DatasetRepoNode, RepoDatasetLib, DataSource as DataSourceType } from '../repo/dataset'
 import { DatasetLib } from '../ssb/dataset/dataset'
@@ -96,7 +96,7 @@ export function parseKeyFigure(
     glossaryText: keyFigure.data.glossaryText
   }
 
-  let datasetRepo: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined | null
+  let datasetRepo: DatasetRepoNode<JSONstatType | TbmlDataUniform | object> | undefined | null
   if (branch === UNPUBLISHED_DATASET_BRANCH) {
     datasetRepo = getDataset(keyFigure, UNPUBLISHED_DATASET_BRANCH)
   } else {
@@ -105,10 +105,10 @@ export function parseKeyFigure(
 
   if (datasetRepo) {
     const dataSource: KeyFigure['dataSource'] | undefined = keyFigure.data.dataSource
-    const data: JSDataset | Array<JSDataset> | TbmlDataUniform | undefined = datasetRepo.data
+    const data: string | JSONstatType | TbmlDataUniform | object | undefined = datasetRepo.data
 
     if (dataSource && dataSource._selected === DataSourceType.STATBANK_API) {
-      const ds: JSDataset | Array<JSDataset> | null = JSONstat(data).Dataset(0) as JSDataset | Array<JSDataset> | null
+      const ds: JSONstatType | null = JSONstat(data).Dataset(0)
       const xAxisLabel: string | undefined = dataSource.statbankApi ? dataSource.statbankApi.xAxisLabel : undefined
       const yAxisLabel: string | undefined = dataSource.statbankApi ? dataSource.statbankApi.yAxisLabel : undefined
 
@@ -195,7 +195,7 @@ function getDataWithFilterStatbankApi(
   keyFigureViewData: KeyFigureView,
   municipality: MunicipalityWithCounty | undefined,
   filterOptions: DatasetFilterOptions,
-  ds: JSDataset | Array<JSDataset>| null,
+  ds: JSONstat | null,
   yAxisLabel: string | undefined
 ): KeyFigureView {
   if (yAxisLabel && ds && !(ds instanceof Array)) {
@@ -229,7 +229,7 @@ function getIconUrl(keyFigure: Content<KeyFigure>): string {
   return iconUrl
 }
 
-function getDataFromMunicipalityCode(ds: JSDataset, municipalityCode: string, yAxisLabel: string, filterTarget: string): MunicipalData | null {
+function getDataFromMunicipalityCode(ds: JSONstat, municipalityCode: string, yAxisLabel: string, filterTarget: string): MunicipalData | null {
   const filterTargetIndex: number = ds.id.indexOf(filterTarget)
   const filterDimension: Dimension | null = ds.Dimension(filterTarget) as Dimension | null
   if ( !filterDimension ) {
