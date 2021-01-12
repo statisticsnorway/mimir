@@ -136,18 +136,18 @@ function getDataTbProcessor(
   tbmlData: TbmlDataUniform,
   keyFigure: Content<KeyFigure>
 ): KeyFigureView {
-  const bodyRows: Array<TableRowUniform> = forceArray(tbmlData.tbml.presentation.table.tbody)
-  const head: Array<TableRowUniform> = forceArray(tbmlData.tbml.presentation.table.thead)
-  const [row1, row2] = forceArray(bodyRows[0].tr)
+  const bodyRows: Array<TableRowUniform> = tbmlData.tbml.presentation.table.tbody
+  const head: Array<TableRowUniform> = tbmlData.tbml.presentation.table.thead
+  const [row1, row2] = bodyRows[0].tr
 
   if (row1) {
-    const td: Array<number | string | PreliminaryData> = forceArray(row1.td)
+    const td: Array<number | string | PreliminaryData> = row1.td
     const value: number | string | PreliminaryData = td[0]
 
     keyFigureViewData.number = typeof value === 'object' ? parseValue(value.content) : parseValue(value)
   }
   if (row2 && keyFigure.data.changes) {
-    const td: Array<number | string | PreliminaryData> = forceArray(row2.td)
+    const td: Array<number | string | PreliminaryData> = row2.td
     const value: number | string | PreliminaryData = td[0]
 
     let change: number | string | undefined
@@ -184,11 +184,9 @@ function getDataTbProcessor(
     }
   }
 
-  // the table head are sometimes an array with th's and td's, when it happens it looks like
-  // the last index is the right one to pick.
   const tr: Array<TableCellUniform> = head[head.length - 1].tr
-  const th: Array<number | string | PreliminaryData> | undefined = Array.isArray(tr) ? tr[head.length - 1].th : undefined
-  keyFigureViewData.time = th ? (forceArray(th)[0]).toString() : undefined
+  const th: Array<number | string | PreliminaryData> = tr[head.length - 1].th
+  keyFigureViewData.time = th[0].toString()
 
   return keyFigureViewData
 }
