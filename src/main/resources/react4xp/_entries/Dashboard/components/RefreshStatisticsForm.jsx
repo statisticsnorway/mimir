@@ -13,7 +13,7 @@ export function RefreshStatisticsForm(props) {
   } = props
 
   const [owners, setOwners] = useState([])
-  const [validated, setValidated] = useState(false)
+  const [validated] = useState(false)
   const [fetchPublished, setFetchPublished] = useState(modalInfo.relatedUserTBMLs
     .reduce( (acc, o) => {
       acc[o.ownerId] = false
@@ -46,8 +46,8 @@ export function RefreshStatisticsForm(props) {
   }
 
   function processForm(event) {
-    event.preventDefault();
-    const form = event.currentTarget;
+    event.preventDefault()
+    const form = event.currentTarget
     if (form.checkValidity() !== false) {
       onSubmit(owners)
     }
