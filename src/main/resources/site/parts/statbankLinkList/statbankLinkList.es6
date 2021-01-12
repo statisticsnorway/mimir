@@ -41,7 +41,10 @@ function renderPart(req) {
   const linkTitle = phrases['statbankList.linkTitle']
 
   const linkTitleWithNumber = linkTitle + ' (' + page.data.linkNumber + ')'
-  const statbankLinkHref = shortName ? `${STATBANKWEB_URL}/list/${shortName}` : STATBANKWEB_URL
+  let statbankLinkHref = shortName ? `${STATBANKWEB_URL}/list/${shortName}` : STATBANKWEB_URL
+  if (page.language === 'en') {
+    statbankLinkHref = statbankLinkHref.replace('/statbank/', '/en/statbank/')
+  }
   const statbankLinkItemSet = page.data.statbankLinkItemSet
 
   if (!statbankLinkItemSet || statbankLinkItemSet.length === 0) {

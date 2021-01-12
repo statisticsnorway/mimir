@@ -105,9 +105,44 @@ export interface Article {
   articleArchive?: Array<string>;
 
   /**
-   * Relaterte statistikker
+   * Relatert statistikk
    */
-  relatedStatistics?: Array<string>;
+  relatedStatisticsOptions?: {
+    /**
+     * Selected
+     */
+    _selected: string;
+
+    /**
+     * Statistikk fra XP
+     */
+    xp?: {
+      /**
+       * Statistikk
+       */
+      contentId?: Array<string>;
+    };
+
+    /**
+     * Statistikk fra 4.7
+     */
+    cms?: {
+      /**
+       * Tittel
+       */
+      title: string;
+
+      /**
+       * Profileringstekst
+       */
+      profiledText: string;
+
+      /**
+       * URL
+       */
+      url: string;
+    };
+  };
 
   /**
    * Relaterte eksterne lenker

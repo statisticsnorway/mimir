@@ -38,13 +38,17 @@ function renderPart(req) {
   const phrases = getPhrases(page)
 
   const title = phrases['statbankBox.title']
+  let href = shortName ? `${STATBANKWEB_URL}/list/${shortName}` : STATBANKWEB_URL
+  if (page.language === 'en') {
+    href = href.replace('/statbank/', '/en/statbank/')
+  }
 
   const model = {
     statbankIcon: assetUrl({
       path: 'SSB_ikon_statbank.svg'
     }),
     title: title,
-    href: shortName ? `${STATBANKWEB_URL}/list/${shortName}` : STATBANKWEB_URL
+    href
   }
 
   const body = render(view, model)

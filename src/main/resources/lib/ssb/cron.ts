@@ -9,6 +9,7 @@ import { CronLib, GetCronResult } from '../types/cron'
 import { DatasetLib } from './dataset/dataset'
 import { PublishDatasetLib } from './dataset/publish'
 import { EventLogLib } from '../ssb/eventLog'
+import { ClusterLib } from '../types/cluster'
 import { ServerLogLib } from './serverLog'
 import { DatasetRSSLib } from './dataset/rss'
 
@@ -46,6 +47,9 @@ const {
 const {
   deleteExpiredEventLogs
 }: EventLogLib = __non_webpack_require__('/lib/ssb/eventLog')
+const {
+  isMaster
+}: ClusterLib = __non_webpack_require__('/lib/xp/cluster')
 const {
   cronJobLog
 }: ServerLogLib = __non_webpack_require__('/lib/ssb/serverLog')
@@ -116,6 +120,12 @@ function statRegJob(): void {
   completeJobLog(jobLogNode._id, JOB_STATUS_COMPLETE, result)
 }
 
+function runOnMasterOnly(task: () => void): void {
+  if (isMaster()) {
+    task()
+  }
+}
+
 export function setupCronJobs(): void {
   run(createUserContext, setupCronJobUser)
 
@@ -125,7 +135,7 @@ export function setupCronJobs(): void {
     name: 'Data from datasource endpoints',
     cron: dataqueryCron,
     times: 365 * 10,
-    callback: job,
+    callback: () => runOnMasterOnly(job),
     context: cronContext
   })
 
@@ -135,7 +145,7 @@ export function setupCronJobs(): void {
     name: 'StatReg Periodic Refresh',
     cron: statregCron,
     times: 365 * 10,
-    callback: statRegJob,
+    callback: () => runOnMasterOnly(statRegJob),
     context: cronContext
   })
 
@@ -145,7 +155,7 @@ export function setupCronJobs(): void {
     name: 'Dataset publish',
     cron: datasetPublishCron,
     times: 365 * 10,
-    callback: publishDataset,
+    callback: () => runOnMasterOnly(publishDataset),
     context: cronContext
   })
 
@@ -154,7 +164,7 @@ export function setupCronJobs(): void {
     name: 'Delete expired event logs',
     cron: deleteExpiredEventLogCron,
     times: 365 * 10,
-    callback: deleteExpiredEventLogs,
+    callback: () => runOnMasterOnly(deleteExpiredEventLogs),
     context: cronContext
   })
 

@@ -97,7 +97,7 @@ function renderPart(req, tableId) {
   const statBankWebUrl = tableContent.language === 'en' ? baseUrl + '/en/statbank' : baseUrl + '/statbank'
   const sourceList = table.sourceList ? forceArray(table.sourceList) : []
   const sourceListExternal = sourceList.length > 0 ? sourceList.filter((s) => s.tableApproved === 'internet') : []
-  const uniqueTableIds = sourceListExternal.length > 0 ? sourceListExternal.map((item) => item.tableId)
+  const uniqueTableIds = sourceListExternal.length > 0 ? sourceListExternal.map((item) => item.tableId.toString())
     .filter((value, index, self) => self.indexOf(value) === index) : []
 
   const props = {
