@@ -56,7 +56,6 @@ steps:
     commands:
       - /setup_sandbox.sh
       - enonic project build
-      - sleep 60
   - name: deploy
     image: enonic/enonic-ci:7.4-node
     environment:
@@ -68,6 +67,7 @@ steps:
         from_secret: ssb-xp7q-pass
     commands:
       - enonic app install --file build/libs/*.jar
+      - sleep 60
   - name: mabl end-to-end test
     image: enonic/enonic-ci:7.4-node
     environment:
@@ -109,7 +109,6 @@ steps:
     commands:
       - /setup_sandbox.sh
       - enonic project build
-      - sleep 60
   - name: deploy
     image: enonic/enonic-ci:7.4-node
     environment:
@@ -121,6 +120,7 @@ steps:
         from_secret: ssb-xp7q-pass
     commands:
       - enonic app install --file build/libs/*.jar
+      - sleep 60
   - name: mabl end-to-end test
     image: enonic/enonic-ci:7.4-node
     environment:
