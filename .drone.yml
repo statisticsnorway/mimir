@@ -67,7 +67,7 @@ steps:
         from_secret: ssb-xp7q-pass
     commands:
       - enonic app install --file build/libs/*.jar
-      - sleep 60
+      - sleep 120
   - name: mabl end-to-end test
     image: enonic/enonic-ci:7.4-node
     environment:
@@ -120,7 +120,7 @@ steps:
         from_secret: ssb-xp7q-pass
     commands:
       - enonic app install --file build/libs/*.jar
-      - sleep 60
+      - sleep 120
   - name: mabl end-to-end test
     image: enonic/enonic-ci:7.4-node
     environment:
