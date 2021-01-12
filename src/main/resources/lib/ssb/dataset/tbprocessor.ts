@@ -51,7 +51,7 @@ function tryRequestTbmlData<T extends TbmlDataUniform | TbmlSourceListUniform>(
     if (contentId) {
       logUserDataQuery(contentId, {
         file: '/lib/ssb/dataset/tbprocessor.ts',
-        function: 'fetchTbprocessorData',
+        function: 'tryRequestTbmlData',
         message: Events.REQUEST_COULD_NOT_CONNECT,
         info: message,
         status: e
