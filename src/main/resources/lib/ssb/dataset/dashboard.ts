@@ -257,7 +257,6 @@ export function refreshDatasetHandler(
   ids: Array<string>,
   socketEmitter: SocketEmitter,
   branch: string = DATASET_BRANCH,
-  fetchPublished: boolean = true,
   processXmls?: Array<ProcessXml>): void {
   // tell all dashboard instances that these are going to be loaded
   ids.forEach((id) => {
@@ -284,11 +283,10 @@ export function refreshDatasetHandler(
       // only get credentials for this datasourceKey (in this case a tbml id)
       const ownerCredentialsForTbml: ProcessXml | undefined = processXmls ?
         processXmls.find((processXml: ProcessXml) => processXml.tbmlId === dataSourceKey) : undefined
-
       // refresh data in draft only if there is owner credentials exists and fetchpublished is false
       const refreshDatasetResult: CreateOrUpdateStatus = refreshDataset(
         dataSource,
-        !fetchPublished && ownerCredentialsForTbml ? UNPUBLISHED_DATASET_BRANCH : branch,
+        ownerCredentialsForTbml ? UNPUBLISHED_DATASET_BRANCH : branch,
         ownerCredentialsForTbml ? ownerCredentialsForTbml.processXml : undefined)
 
       logUserDataQuery(dataSource._id, {
@@ -408,7 +406,6 @@ export interface DashboardDatasetLib {
     ids: Array<string>,
     socketEmitter: SocketEmitter,
     branch?: string,
-    fetchPublished?: boolean,
     processXml?: Array<ProcessXml>) => void;
 }
 
