@@ -262,11 +262,13 @@ function getStatregInfo(key: string): StatregData | undefined {
   const statisticStatreg: StatisticInListing | undefined = getStatisticByIdFromRepo(key)
   if (statisticStatreg) {
     const variants: Array<VariantInListing> = forceArray(statisticStatreg.variants)
+    if (variants.length > 1) {
+      variants.sort((a: VariantInListing, b: VariantInListing) => new Date(a.nextRelease).getTime() - new Date(b.nextRelease).getTime())
+    }
     const variant: VariantInListing = variants[0] // TODO: Multiple variants
     const result: StatregData = {
       shortName: statisticStatreg.shortName,
       frekvens: variant.frekvens,
-      previousRelease: variant.previousRelease,
       nextRelease: variant.nextRelease ? variant.nextRelease : ''
     }
     return result
@@ -328,7 +330,6 @@ interface StatisticDashboard {
 interface StatregData {
   shortName: string;
   frekvens: string;
-  previousRelease: string;
   nextRelease: string;
 }
 
