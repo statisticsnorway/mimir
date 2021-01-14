@@ -32,8 +32,9 @@ jobs:
         MABL_API_KEY: ${{ secrets.MABLAPIKEY }}
         MABL_APP_ID: ${{ secrets.MABLAPPID }}
         #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - run: npm install -g @mablhq/mabl-cli
-    - run: mabl deployments create --api-key $MABL_API_KEY --application-id $MABL_APP_ID --mabl-branch ${GITHUB_HEAD_REF##*/} --labels MIMIR --revision ${GITHUB_SHA} --auto-branch true --await-completion
+      run: |
+        npm install -g @mablhq/mabl-cli
+        mabl deployments create --api-key $MABL_API_KEY --application-id $MABL_APP_ID --mabl-branch ${GITHUB_HEAD_REF##*/} --labels MIMIR --revision ${GITHUB_SHA} --auto-branch true --await-completion
 
       # Runs a set of commands using the runners shell
       #- name: Run a multi-line script
