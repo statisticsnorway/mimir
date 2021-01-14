@@ -129,7 +129,7 @@ function renderPart(req, relatedArticles) {
         subTitle = article.externalArticle.type
       }
       if (article.externalArticle.date) {
-        const prettyDate = moment(article.externalArticle.date).format('DD. MMMM YYYY')
+        const prettyDate = moment(article.externalArticle.date).format('D. MMMM YYYY')
         subTitle += `${subTitle ? ' / ' : ''}${prettyDate}`
       }
 
@@ -175,9 +175,9 @@ const getSubTitle = (articleContent, phrases) => {
   }
   let prettyDate = ''
   if (articleContent.publish && articleContent.publish.from) {
-    prettyDate = moment(articleContent.publish.from).format('DD. MMMM YYYY')
+    prettyDate = moment(articleContent.publish.from).format('D. MMMM YYYY')
   } else {
-    prettyDate = moment(articleContent.createdTime).format('DD. MMMM YYYY')
+    prettyDate = moment(articleContent.createdTime).format('D. MMMM YYYY')
   }
   return `${type ? `${type} / ` : ''}${prettyDate}`
 }
