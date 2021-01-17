@@ -1,14 +1,14 @@
 import Button from 'react-bootstrap/Button'
 import React, { useContext, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectLoadingClearCache } from '../HomePage/selectors'
+import { selectInternalBaseUrl, selectInternalStatbankUrl, selectLoadingClearCache } from '../HomePage/selectors'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { requestClearCache } from '../HomePage/actions.es6'
 import { ChevronDown, ChevronUp, RefreshCw, Trash } from 'react-feather'
 import { Col, Container, Row } from 'react-bootstrap'
 import { Link, Dropdown } from '@statisticsnorway/ssb-component-library'
 import { selectStatistics, selectLoading, selectHasLoadingStatistic } from '../Statistics/selectors'
-import { setOpenStatistic } from '../Statistics/actions'
+import { setOpenStatistic, setOpenModal } from '../Statistics/actions'
 import { selectDataQueriesByType } from '../DataQueries/selectors'
 import { requestDatasetUpdate } from '../DataQueries/actions'
 import { startRefresh } from '../StatRegDashboard/actions'
@@ -25,6 +25,8 @@ export function DataQueryTools() {
   const tableQueries = useSelector(selectDataQueriesByType('mimir:table'))
   const statuses = useSelector(selectStatuses)
   const [showLinkTools, setShowLinkTools] = useState(false)
+  const internalBaseUrl = useSelector(selectInternalBaseUrl)
+  const internalStatbankUrl = useSelector(selectInternalStatbankUrl)
 
   function refreshStatReg(key) {
     startRefresh(dispatch, io, [key])
@@ -105,19 +107,19 @@ export function DataQueryTools() {
         <li className="list-group-item">
           <Link
             isExternal
-            href={'/statistikkregisteret/publisering/list'}>Statistikkregisteret
+            href={internalBaseUrl + '/statistikkregisteret/publisering/list'}>Statistikkregisteret
           </Link>
         </li>
         <li className="list-group-item">
           <Link
             isExternal
-            href={'/designer'}>Tabellbygger
+            href={internalBaseUrl + '/designer'}>Tabellbygger
           </Link>
         </li>
         <li className="list-group-item">
           <Link
             isExternal
-            href="/pxwebi/pxweb/no/prod_24v_intern/">Intern statistikkbank
+            href={internalStatbankUrl}>Intern statistikkbank
           </Link>
         </li>
         <li className="list-group-item">
@@ -155,7 +157,10 @@ export function DataQueryTools() {
               variant="primary"
               size="sm"
               className="mx-1"
-              onClick={() => setOpenStatistic(dispatch, selectedStat.id)}
+              onClick={() => {
+                setOpenStatistic(dispatch, selectedStat.id)
+                setOpenModal(dispatch, true)
+              }}
               disabled={hasLoadingStatistic || loadingStatistics || !selectedStat}
             >
               { hasLoadingStatistic ? <span className="spinner-border spinner-border-sm" /> : <RefreshCw size={16}/> }

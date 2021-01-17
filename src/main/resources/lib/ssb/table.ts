@@ -1,18 +1,19 @@
 __non_webpack_require__('/lib/polyfills/nashorn')
-/* eslint-disable new-cap */
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
-import { JSONstat } from '../../types/jsonstat-toolkit'
 import { Content } from 'enonic-types/content'
 import { Table } from '../../site/content-types/table/table'
-import { TbmlDataUniform, TableRow, Note, Notes, PreliminaryData, Title, Source } from '../types/xmlParser'
-import { Dataset as JSDataset } from '../types/jsonstat-toolkit'
+import { TbmlDataUniform,
+  TableRowUniform,
+  TableCellUniform,
+  Note,
+  NotesUniform,
+  PreliminaryData,
+  Title,
+  Source, Thead, StatbankSavedRaw, StatbankSavedUniform, TableCellRaw } from '../types/xmlParser'
 import { Request } from 'enonic-types/controller'
 import { DatasetRepoNode, RepoDatasetLib } from '../repo/dataset'
 import { DataSource as DataSourceType } from '../repo/dataset'
 import { StatbankSavedLib } from './dataset/statbankSaved'
 import { SSBCacheLibrary } from './cache'
-import { Thead } from '../types/xmlParser'
 
 const {
   data: {
@@ -50,7 +51,7 @@ export function parseTable(req: Request, table: Content<Table>, branch: string =
     sourceList: []
   }
 
-  let datasetRepo: DatasetRepoNode<JSONstat> | undefined
+  let datasetRepo: DatasetRepoNode<TbmlDataUniform | StatbankSavedRaw | object> | undefined
   if (branch === UNPUBLISHED_DATASET_BRANCH) {
     datasetRepo = getDataset(table, UNPUBLISHED_DATASET_BRANCH)
   } else {
@@ -60,65 +61,46 @@ export function parseTable(req: Request, table: Content<Table>, branch: string =
   const dataSource: Table['dataSource'] | undefined = table.data.dataSource
 
   if (datasetRepo) {
-    const data: JSDataset | Array<JSDataset> | null | TbmlDataUniform = datasetRepo.data
+    const data: string | TbmlDataUniform | StatbankSavedRaw | object | undefined = datasetRepo.data
 
     if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
       const tbmlData: TbmlDataUniform = data as TbmlDataUniform
       if (tbmlData && tbmlData.tbml && tbmlData.tbml.metadata && tbmlData.tbml.presentation) {
-        const title: Title = typeof(tbmlData.tbml.metadata.title) == 'string' ?
-          {
-            noterefs: '',
-            content: tbmlData.tbml.metadata.title as string
-          } :
-          tbmlData.tbml.metadata.title
-        const notes: Notes | undefined = tbmlData.tbml.metadata.notes
-        const sourceList: Source | Array<Source> | undefined = tbmlData.tbml.metadata ? tbmlData.tbml.metadata.sourceList : undefined
-
-        tableViewData = getTableViewData(table, tbmlData.tbml.presentation, title, notes, sourceList)
+        tableViewData = getTableViewData(table, tbmlData)
       }
     }
   }
 
   if (dataSource && dataSource._selected === DataSourceType.STATBANK_SAVED) {
-    const statbankSavedData: JSONstat | null = fetchStatbankSavedData(table)
-    const parsedStatbankSavedData: JSONstat | null = JSON.parse(statbankSavedData.json)
-
-    const title: Title = parsedStatbankSavedData.table.caption
-    const notes: Notes | undefined = undefined // TODO: no metadata.notes in the statbankSaved json data yet
-    const sourceList: Source | Array<Source> | undefined = undefined // TODO: no sourceList in the statbankSaved json data
-
-    tableViewData = getTableViewData(table, parsedStatbankSavedData, title, notes, sourceList)
+    const statbankSavedData: StatbankSavedRaw | null = fetchStatbankSavedData(table)
+    const parsedStatbankSavedData: StatbankSavedUniform = statbankSavedData ? JSON.parse(statbankSavedData.json) : null
+    if (parsedStatbankSavedData) {
+      tableViewData = getTableViewDataStatbankSaved(table, parsedStatbankSavedData)
+    }
   }
   return tableViewData
 }
 
-function mergeTableRows(thead: Array<Thead>): Array<TableRow> {
-  return thead.reduce( (acc: Array<TableRow>, thead: Thead ) => {
-    const tr: Array<TableRow> | undefined = !Array.isArray(thead) ? thead.tr as Array<TableRow> : undefined
-    if (tr) acc.push(...tr)
-    return acc
-  }, [])
-}
+function getTableViewData(table: Content<Table>, dataContent: TbmlDataUniform ): TableView {
+  const title: Title = dataContent.tbml.metadata.title
+  const notes: NotesUniform = dataContent.tbml.metadata.notes
+  const sourceList: Array<Source> = dataContent.tbml.metadata && dataContent.tbml.metadata.sourceList ? dataContent.tbml.metadata.sourceList : []
+  const headRows: Array<TableRowUniform> = forceArray(dataContent.tbml.presentation.table.thead)
+  const bodyRows: Array<TableRowUniform> = forceArray(dataContent.tbml.presentation.table.tbody)
 
-function getTableViewData(table: Content<Table>, dataContent: TbmlDataUniform | JSONstat,
-  title: Title | undefined, notes: Notes | undefined, sourceList: Source | Array<Source> | undefined): TableView {
-  const headRows: Array<Thead> = forceArray(dataContent.table.thead)
-    .map( (thead: Thead) => ({
-      tr: forceArray(thead.tr)
-    }))
-
-  const bodyRows: Array<Thead> = forceArray(dataContent.table.tbody)
-    .map( (tbody: Thead) => ({
-      tr: forceArray(tbody.tr)
-    }))
-
-  const headNoteRefs: Array<string> = mergeTableRows(headRows).reduce((acc: Array<string>, row: TableRow) => {
-    if (row) acc.push(...getNoterefs(row))
+  const headNoteRefs: Array<string> = headRows.reduce((acc: Array<string>, row: TableRowUniform) => {
+    const tableCells: Array<TableCellUniform> = row.tr
+    tableCells.map((cell: TableCellUniform) => {
+      if (cell) acc.push(...getNoterefsHeader(cell))
+    })
     return acc
   }, [])
 
-  const bodyNoteRefs: Array<string> = mergeTableRows(bodyRows).reduce((acc: Array<string>, row: TableRow) => {
-    if (row) acc.push(...getNoterefs(row))
+  const bodyNoteRefs: Array<string> = bodyRows.reduce((acc: Array<string>, row: TableRowUniform) => {
+    const tableCells: Array<TableCellUniform> = row.tr
+    tableCells.map((cell: TableCellUniform) => {
+      if (cell) acc.push(...getNoterefsHeader(cell))
+    })
     return acc
   }, [])
 
@@ -126,15 +108,13 @@ function getTableViewData(table: Content<Table>, dataContent: TbmlDataUniform | 
     [title.noterefs, ...headNoteRefs, ...bodyNoteRefs] :
     [...headNoteRefs, ...bodyNoteRefs]
 
-  const notesList: Array<Note> = notes ? forceArray(notes.note) : []
-
   return {
     caption: title,
     thead: headRows,
     tbody: bodyRows,
-    tableClass: dataContent.class ? dataContent.class : 'statistics',
+    tableClass: dataContent.tbml.presentation.table.class ? dataContent.tbml.presentation.table.class : 'statistics',
     tfoot: {
-      footnotes: notesList,
+      footnotes: notes ? notes.note : [],
       correctionNotice: table.data.correctionNotice || ''
     },
     noteRefs,
@@ -142,20 +122,65 @@ function getTableViewData(table: Content<Table>, dataContent: TbmlDataUniform | 
   }
 }
 
-function getNoterefs(row: TableRow): Array<string> {
-  return forceArray(row.th).reduce((acc: Array<string>, cell: string | number | PreliminaryData) => {
+function getTableViewDataStatbankSaved(table: Content<Table>, dataContent: StatbankSavedUniform ): TableView {
+  const title: Title = dataContent.table.caption
+  const headRows: Array<TableRowUniform> = forceArray(dataContent.table.thead)
+    .map( (thead: Thead) => ({
+      tr: getTableCellHeader(forceArray(thead.tr))
+    }))
+  const bodyRows: Array<TableRowUniform> = forceArray(dataContent.table.tbody)
+    .map( (tbody: Thead) => ({
+      tr: getTableCellBody(forceArray(tbody.tr))
+    }))
+
+  return {
+    caption: title,
+    thead: headRows,
+    tbody: bodyRows,
+    tableClass: 'statistics',
+    tfoot: {
+      footnotes: [],
+      correctionNotice: ''
+    },
+    noteRefs: [],
+    sourceList: []
+  }
+}
+
+
+function getTableCellHeader(tableCell: Array<TableCellRaw>): Array<TableCellUniform> {
+  return forceArray(tableCell)
+    .map( (cell: TableCellUniform) => ({
+      td: typeof cell.td != 'undefined' ? forceArray(cell.td) : undefined,
+      th: typeof cell.th != 'undefined' ? forceArray(cell.th) : undefined
+    }))
+}
+
+function getTableCellBody(tableCell: Array<TableCellRaw>): Array<TableCellUniform> {
+  return forceArray(tableCell)
+    .map( (cell: TableCellUniform) => ({
+      th: typeof cell.th != 'undefined' ? forceArray(cell.th) : undefined,
+      td: typeof cell.td != 'undefined' ? forceArray(cell.td) : undefined
+    }))
+}
+
+function getNoterefsHeader(row: TableCellUniform): Array<string> {
+  const values: Array<number | string | PreliminaryData> = forceArray(row.th)
+  const noteRefs: Array<string> = values.reduce((acc: Array<string>, cell: number | string | PreliminaryData) => {
     if (typeof cell === 'object') {
-      if (cell.noterefs && acc && !acc.includes(cell.noterefs)) {
+      if (cell.noterefs && !acc.includes(cell.noterefs)) {
         acc.push(cell.noterefs)
       }
     }
+    return acc
   }, [])
+  return noteRefs
 }
 
 interface TableView {
   caption?: Title;
-  thead: Array<Thead>;
-  tbody: Array<Thead>;
+  thead: Array<TableRowUniform>;
+  tbody: Array<TableRowUniform>;
   tfoot: {
     footnotes: Array<Note>;
     correctionNotice: string;

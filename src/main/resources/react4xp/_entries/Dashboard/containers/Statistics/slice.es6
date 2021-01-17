@@ -55,8 +55,6 @@ const statisticsSlice = createSlice({
       state.openModal = action.status
     },
     setModalDisplay(state, action) {
-      console.log('setModalDisplay')
-      console.log(action)
       state.modalDisplay = action.status
     }
   }

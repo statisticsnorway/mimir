@@ -1,18 +1,8 @@
 export interface Highchart {
   /**
-   * Description
-   */
-  description: string;
-
-  /**
    * Undertittel
    */
   subtitle?: string;
-
-  /**
-   * Forklaring datagrunnlag for Screen-reader (ps. ikke i bruk)
-   */
-  datasetExplanation?: string;
 
   /**
    * Graftype
@@ -20,62 +10,7 @@ export interface Highchart {
   graphType: "line" | "pie" | "column" | "bar" | "area" | "barNegative";
 
   /**
-   * Høyde i prosent av bredde
-   */
-  heightAspectRatio?: string;
-
-  /**
-   * Vis desimaler for avlesingspunktene i diagrammet, antall:
-   */
-  numberDecimals?: "0" | "1" | "2" | "3";
-
-  /**
-   * Stabling av verdier
-   */
-  stacking?: "disabled" | "normal" | "percent";
-
-  /**
-   * Vis samlet sum for stolpe
-   */
-  showStackedTotal: boolean;
-
-  /**
-   * Skjul tegnforklaringen
-   */
-  noLegend: boolean;
-
-  /**
-   * Plassering av tegnforklaring
-   */
-  legendAlign?: "right" | "center";
-
-  /**
-   * Tegnforklaring under (kun kakediagram)
-   */
-  pieLegend: boolean;
-
-  /**
-   * Tickinterval
-   */
-  tickInterval?: string;
-
-  /**
-   * Zoom i graf
-   */
-  zoomType?: "null" | "x" | "y" | "xy";
-
-  /**
-   * Midtstille tittel
-   */
-  titleCenter: boolean;
-
-  /**
-   * Skjul tittel
-   */
-  hideTitle: boolean;
-
-  /**
-   * Kildetabell for Highcharts-figur
+   * Kildetabell limt inn fra Excel
    */
   htmlTable?: string;
 
@@ -83,86 +18,6 @@ export interface Highchart {
    * Bytt rader og kolonner
    */
   switchRowsAndColumns: boolean;
-
-  /**
-   * Kombinere forklaringer
-   */
-  combineInfo: boolean;
-
-  /**
-   * Fotnote-tekst
-   */
-  footnoteText?: string;
-
-  /**
-   * Kildetekst
-   */
-  creditsText?: string;
-
-  /**
-   * Kilde-URL
-   */
-  creditsHref?: string;
-
-  /**
-   * X-akse Tittel
-   */
-  xAxisTitle?: string;
-
-  /**
-   * X-skala
-   */
-  xAxisType?: "category" | "linear" | "logarithmic";
-
-  /**
-   * X-akse Minste verdi
-   */
-  xAxisMin?: string;
-
-  /**
-   * X-akse Største verdi
-   */
-  xAxisMax?: string;
-
-  /**
-   * Skjul aksemarkører
-   */
-  xEnableLabel: boolean;
-
-  /**
-   * Reverser X-akse
-   */
-  xAxisFlip: boolean;
-
-  /**
-   * Y-akse Tittel
-   */
-  yAxisTitle?: string;
-
-  /**
-   * Y-skala
-   */
-  yAxisType?: "category" | "linear" | "logarithmic";
-
-  /**
-   * Y-akse Minste verdi
-   */
-  yAxisMin?: string;
-
-  /**
-   * Y-akse Største verdi
-   */
-  yAxisMax?: string;
-
-  /**
-   * Vis desimaler på Y-akseverdiene, antall:
-   */
-  yAxisDecimalPlaces?: "0" | "1" | "2";
-
-  /**
-   * Offset Y-akse tittel
-   */
-  yAxisOffset?: string;
 
   /**
    * Datakilde
@@ -263,4 +118,134 @@ export interface Highchart {
       urlOrId?: string;
     };
   };
+
+  /**
+   * Skjul tittel (gjelder kun figur til faktasider o.l.)
+   */
+  hideTitle: boolean;
+
+  /**
+   * Kombinere forklaringer
+   */
+  combineInfo: boolean;
+
+  /**
+   * Antall desimaler som skal vises på verdiene ved mouseover:
+   */
+  numberDecimals?: "0" | "1" | "2" | "3";
+
+  /**
+   * Stabling av verdier (for stolpe- og arealdiagram)
+   */
+  stacking?: "disabled" | "normal" | "percent";
+
+  /**
+   * Vis stablesum
+   */
+  showStackedTotal: boolean;
+
+  /**
+   * Zoom i graf
+   */
+  zoomType?: "null" | "x" | "y" | "xy";
+
+  /**
+   * Høyde i prosent av bredde
+   */
+  heightAspectRatio?: string;
+
+  /**
+   * Plassering av tegnforklaring
+   */
+  legendAlign?: "right" | "center";
+
+  /**
+   * Skjul tegnforklaringen (gjelder ikke for kakediagram).
+   */
+  noLegend: boolean;
+
+  /**
+   * Tegnforklaring under (gjelder kun for kakediagram).
+   */
+  pieLegend: boolean;
+
+  /**
+   * X-akse, tittel
+   */
+  xAxisTitle?: string;
+
+  /**
+   * X-skala
+   */
+  xAxisType?: "category" | "linear" | "logarithmic";
+
+  /**
+   * X-akse, minste verdi
+   */
+  xAxisMin?: string;
+
+  /**
+   * X-akse, største verdi
+   */
+  xAxisMax?: string;
+
+  /**
+   * Tickintervall (overstyring av avstand mellom verdier på x-aksen).
+   */
+  tickInterval?: string;
+
+  /**
+   * Skjul aksemarkører
+   */
+  xEnableLabel: boolean;
+
+  /**
+   * Reverser X-akse
+   */
+  xAxisFlip: boolean;
+
+  /**
+   * Y-akse, tittel
+   */
+  yAxisTitle?: string;
+
+  /**
+   * Plassering av y-aksetittel
+   */
+  yAxisOffset?: string;
+
+  /**
+   * Y-skala
+   */
+  yAxisType?: "category" | "linear" | "logarithmic";
+
+  /**
+   * Y-akse, minste verdi
+   */
+  yAxisMin?: string;
+
+  /**
+   * Y-akse, største verdi
+   */
+  yAxisMax?: string;
+
+  /**
+   * Vis desimaler på Y-akseverdiene, antall:
+   */
+  yAxisDecimalPlaces?: "0" | "1" | "2";
+
+  /**
+   * Fotnote-tekst
+   */
+  footnoteText?: string;
+
+  /**
+   * Kildetekst
+   */
+  creditsText?: string;
+
+  /**
+   * Kilde-URL
+   */
+  creditsHref?: string;
 }

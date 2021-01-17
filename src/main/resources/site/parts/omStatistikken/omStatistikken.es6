@@ -16,6 +16,10 @@ const {
 const {
   getPhrases
 } = __non_webpack_require__( '/lib/language')
+const util = __non_webpack_require__('/lib/util')
+const {
+  getNextReleaseStatistic
+} = __non_webpack_require__('/lib/ssb/utils')
 
 const view = resolve('./omStatistikken.html')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
@@ -38,13 +42,19 @@ function renderPart(req, aboutTheStatisticsId) {
   moment.locale(page.language ? page.language : 'nb')
   const phrases = getPhrases(page)
 
+  let nextRelease = phrases.notYetDetermined
   const aboutStatisticLabel = phrases.aboutTheStatistics
   const statistic = page.data.statistic && getStatisticByIdFromRepo(page.data.statistic)
 
-  let nextRelease = phrases.notYetDetermined
-  if (statistic && statistic.variants.nextRelease && statistic.variants.nextRelease !== '') {
-    nextRelease = moment(statistic.variants.nextRelease).format('DD. MMMM YYYY')
-  } if (page.type === `${app.name}:omStatistikken` && (req.mode === 'edit' || req.mode === 'preview')) {
+  if (statistic) {
+    const variants = util.data.forceArray(statistic.variants)
+    const nextReleaseDate = getNextReleaseStatistic(variants)
+
+    if (nextReleaseDate && nextReleaseDate !== '') {
+      nextRelease = moment(nextReleaseDate).format('DD. MMMM YYYY')
+    }
+  }
+  if (page.type === `${app.name}:omStatistikken` && (req.mode === 'edit' || req.mode === 'preview')) {
     // Kun ment for internt bruk, i forhåndsvisning av om-statistikken.
     nextRelease = '<i>Kan kun vises på statistikksiden, ikke i forhåndsvisning av om-statistikken</i>'
   }

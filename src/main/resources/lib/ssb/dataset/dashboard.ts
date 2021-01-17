@@ -40,7 +40,8 @@ const {
   getDataset
 }: DatasetLib = __non_webpack_require__( '/lib/ssb/dataset/dataset')
 const {
-  DATASET_BRANCH
+  DATASET_BRANCH,
+  UNPUBLISHED_DATASET_BRANCH
 }: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
 const {
   get: getContent
@@ -149,8 +150,8 @@ function getJobs(): Array<DashboardJobInfo> {
         id: jobLog._id,
         task: jobLog.data.task,
         status: jobLog.data.status,
-        startTime: jobLog.data.jobStarted ? dateToFormat(jobLog.data.jobStarted) : undefined,
-        completionTime: jobLog.data.completionTime ? dateToFormat(jobLog.data.completionTime) : undefined,
+        startTime: jobLog.data.jobStarted,
+        completionTime: jobLog.data.completionTime ? jobLog.data.completionTime : undefined,
         message: jobLog.data.message ? jobLog.data.message : '',
         result: parseResult(jobLog)
       })
@@ -280,13 +281,13 @@ export function refreshDatasetHandler(
       })
 
       // only get credentials for this datasourceKey (in this case a tbml id)
-      const ownerCredentialsForTbml: Array<ProcessXml> | undefined = processXmls ?
-        processXmls.filter((processXml: ProcessXml) => processXml.tbmlId === dataSourceKey) : undefined
-
+      const ownerCredentialsForTbml: ProcessXml | undefined = processXmls ?
+        processXmls.find((processXml: ProcessXml) => processXml.tbmlId === dataSourceKey) : undefined
+      // refresh data in draft only if there is owner credentials exists and fetchpublished is false
       const refreshDatasetResult: CreateOrUpdateStatus = refreshDataset(
         dataSource,
-        branch,
-        ownerCredentialsForTbml && ownerCredentialsForTbml.length ? ownerCredentialsForTbml[0].processXml : undefined)
+        ownerCredentialsForTbml ? UNPUBLISHED_DATASET_BRANCH : branch,
+        ownerCredentialsForTbml ? ownerCredentialsForTbml.processXml : undefined)
 
       logUserDataQuery(dataSource._id, {
         file: '/lib/ssb/dataset/dashboard.ts',
@@ -400,8 +401,12 @@ export interface RefreshDatasetOptions {
 export interface DashboardDatasetLib {
   users: Array<User>;
   setupHandlers: (socket: Socket, socketEmitter: SocketEmitter) => void;
-  showWarningIcon: (result: Events) => boolean;
-  refreshDatasetHandler: (ids: Array<string>, socketEmitter: SocketEmitter, branch?: string, processXml?: Array<ProcessXml>) => void;
+ showWarningIcon: (result: Events) => boolean;
+  refreshDatasetHandler: (
+    ids: Array<string>,
+    socketEmitter: SocketEmitter,
+    branch?: string,
+    processXml?: Array<ProcessXml>) => void;
 }
 
 export interface ProcessXml {
