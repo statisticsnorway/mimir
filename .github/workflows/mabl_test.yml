@@ -5,8 +5,8 @@ name: MIMIR MABL
 # Controls when the action will run. Workflow runs when manually triggered using the UI
 # or API.
 on:
-  pull_request:
-    branches: [mimir-285-commit-id]
+  #pull_request:
+   # branches: [mimir-285-commit-id]
   workflow_dispatch:
    # Inputs the workflow accepts.
     inputs:
@@ -30,7 +30,7 @@ jobs:
   mabl_test:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    container: enonic/enonic-ci:7.4-node
+    container: node:10.18-jessie
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     - name: Git checkout
