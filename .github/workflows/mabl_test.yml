@@ -6,7 +6,7 @@ name: MIMIR MABL
 # or API.
 on:
   pull_request:
-    branches: [mimir-233-add-env]
+    branches: [mimir-285-commit-id]
   workflow_dispatch:
    # Inputs the workflow accepts.
     inputs:
@@ -45,7 +45,7 @@ jobs:
     - name: mabl end-to-end test - TEST
       env:
         MABL_API_KEY: ${{ secrets.MABLAPIKEY }}
-        MABL_APP_ID: ${{ secrets.MABLAPPLICATIONID }}
+        MABL_APP_ID: ${{ secrets.MABLAPPID }}
         ENV_ID_QA: Aq0hjEH0LRF900ArcQ1aVA-e
         ENV_ID_TEST: hFHgoD4pwpATsDDeZFaRsg-e
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
