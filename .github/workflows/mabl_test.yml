@@ -5,6 +5,8 @@ name: MIMIR MABL
 # Controls when the action will run. Workflow runs when manually triggered using the UI
 # or API.
 on:
+  pull_request:
+    branches: [mimir-233-add-env]
   workflow_dispatch:
    # Inputs the workflow accepts.
     inputs:
