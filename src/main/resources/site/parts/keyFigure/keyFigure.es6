@@ -57,7 +57,7 @@ const renderPart = (req, municipality, keyFigureIds) => {
   // get all keyFigures and filter out non-existing keyFigures
   const keyFigures = getKeyFigures(keyFigureIds)
     .map((keyFigure) => {
-      const keyFigureData = parseKeyFigure(req, keyFigure, municipality, DATASET_BRANCH)
+      const keyFigureData = parseKeyFigure(keyFigure, municipality, DATASET_BRANCH)
       return {
         id: keyFigure._id,
         ...keyFigureData,
@@ -69,7 +69,7 @@ const renderPart = (req, municipality, keyFigureIds) => {
   if (showPreviewDraft) {
     keyFiguresDraft = getKeyFigures(keyFigureIds)
       .map((keyFigure) => {
-        const keyFigureData = parseKeyFigure(req, keyFigure, municipality, UNPUBLISHED_DATASET_BRANCH)
+        const keyFigureData = parseKeyFigure(keyFigure, municipality, UNPUBLISHED_DATASET_BRANCH)
         return {
           id: keyFigure._id,
           ...keyFigureData,
