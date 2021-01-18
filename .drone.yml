@@ -6,6 +6,7 @@ name: "Pull Request Tests"
 trigger:
   branch:
     - mimir-285-commit-id
+    - mimir-285-patch-2
   event:
     include:
       - pull_request
