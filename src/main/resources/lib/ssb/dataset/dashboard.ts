@@ -256,7 +256,6 @@ function prepDataSources(dataSources: Array<Content<DataSource>>): Array<unknown
 export function refreshDatasetHandler(
   ids: Array<string>,
   socketEmitter: SocketEmitter,
-  branch: string = DATASET_BRANCH,
   processXmls?: Array<ProcessXml>): void {
   // tell all dashboard instances that these are going to be loaded
   ids.forEach((id) => {
@@ -286,7 +285,7 @@ export function refreshDatasetHandler(
       // refresh data in draft only if there is owner credentials exists and fetchpublished is false
       const refreshDatasetResult: CreateOrUpdateStatus = refreshDataset(
         dataSource,
-        ownerCredentialsForTbml ? UNPUBLISHED_DATASET_BRANCH : branch,
+        ownerCredentialsForTbml ? UNPUBLISHED_DATASET_BRANCH : DATASET_BRANCH,
         ownerCredentialsForTbml ? ownerCredentialsForTbml.processXml : undefined)
 
       logUserDataQuery(dataSource._id, {
@@ -405,7 +404,6 @@ export interface DashboardDatasetLib {
   refreshDatasetHandler: (
     ids: Array<string>,
     socketEmitter: SocketEmitter,
-    branch?: string,
     processXml?: Array<ProcessXml>) => void;
 }
 

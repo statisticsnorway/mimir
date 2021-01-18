@@ -82,7 +82,6 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
           refreshDatasetHandler(
             datasetIdsToUpdate,
             socketEmitter,
-            DATASET_BRANCH,
             processXmls
           )
         })
