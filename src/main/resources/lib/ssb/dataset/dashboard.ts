@@ -291,7 +291,8 @@ export function refreshDatasetHandler(
       logUserDataQuery(dataSource._id, {
         file: '/lib/ssb/dataset/dashboard.ts',
         function: 'refreshDatasetHandler',
-        message: refreshDatasetResult.status
+        message: refreshDatasetResult.status,
+        branch: ownerCredentialsForTbml ? UNPUBLISHED_DATASET_BRANCH : DATASET_BRANCH
       })
 
       socketEmitter.broadcast('statistics-activity-refresh-feedback', {

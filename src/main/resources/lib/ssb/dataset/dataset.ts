@@ -108,6 +108,7 @@ export function refreshDataset(
   if (data && content.data.dataSource && content.data.dataSource._selected && key) {
     let dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null = getDataset(content, branch)
 
+    // Check if data is of type TbprocessorParsedResponse
     if (determineIfTbprocessorParsedResponse(data) ) {
       if (data.status && data.status === 500) {
         return {
