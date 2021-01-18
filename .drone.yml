@@ -6,16 +6,15 @@ name: "Pull Request Tests"
 trigger:
   branch:
     - mimir-285-commit-id
-    - mimir-285-patch-2
   event:
     include:
       - pull_request
 steps:
-   - name: build & test
-     image: enonic/enonic-ci:7.4-node
-     commands:
-       - /setup_sandbox.sh
-       - enonic project build
+  # - name: build & test
+  #   image: enonic/enonic-ci:7.4-node
+  #   commands:
+  #     - /setup_sandbox.sh
+  #     - enonic project build
   - name: mabl create and test branch
     image: enonic/enonic-ci:7.4-node
     environment:
