@@ -41,7 +41,8 @@ export function Jobs() {
   function getJobRows() {
     return jobs.map((job) => {
       const ts = moment(job.completionTime ? job.completionTime : job.startTime).locale('nb').format('DD.MM.YYYY HH.mm.ss')
-      const name = job.task
+      const name = getTranslatedJobName(job.task)
+
       const info = renderInfo(job)
       return {
         ts,
@@ -53,6 +54,21 @@ export function Jobs() {
     })
   }
   const tableRows = React.useMemo(() => getJobRows(), [jobs])
+
+  function getTranslatedJobName(task) {
+    switch (task) {
+    case '-- Running dataquery cron job --':
+      return 'Kjøre oppdaterte spørringer'
+    case 'Delete expired eventlogs':
+      return 'Slette eventlog'
+    case 'Publish statistics':
+      return 'Publisering statistikk'
+    case 'Refresh statreg data':
+      return 'Import Statreg'
+    default:
+      return task
+    }
+  }
 
   function renderSpinner() {
     return (
@@ -75,13 +91,13 @@ export function Jobs() {
   }
 
   function renderInfo(job) {
-    if (job.task === 'Publisering statistikk') {
+    if (job.task === 'Publish statistics') {
       return (
         <span className="modal-trigger" onClick={() => openJobLogModal(job)}>
           {job.status} - {job.message}
         </span>
       )
-    } else if (job.task === 'Import Statreg') {
+    } else if (job.task === 'Refresh statreg data') {
       return (
         <React.Fragment>
           {job.status}<br/>
