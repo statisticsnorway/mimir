@@ -35,8 +35,8 @@ const {
 }: ServerLogLib = __non_webpack_require__( '/lib/ssb/serverLog')
 
 export function deleteExpiredEventLogs(): void {
-  cronJobLog('Delete expired eventlogs')
-  const job: JobEventNode = startJobLog('Delete expired eventlogs')
+  cronJobLog('Deleting expired eventlogs')
+  const job: JobEventNode = startJobLog('Deleting expired eventlogs')
   const path: string = '/queries'
   const maxLogsBeforeDeleting: number = 10
   const monthsBeforeLogsExpire: number = 1
