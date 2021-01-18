@@ -1,5 +1,38 @@
 kind: pipeline
 type: docker
+name: "test merge git branch and also mabl"
+# Builds and tests on pull request. Required success before merge can happen.
+trigger:
+  branch:
+    - mimir-233-add-env
+  event:
+    include:
+      - pull_request
+  action: 
+    include:
+      - closed
+steps:
+  # - name: build & test
+  #   image: enonic/enonic-ci:7.4-node
+  #   commands:
+  #     - /setup_sandbox.sh
+  #     - enonic project build
+  - name: mabl merge and run test branch
+    image: enonic/enonic-ci:7.4-node
+    environment:
+      MABL_API_KEY:
+        from_secret: mabl-api-key
+      MABL_APP_ID:
+        from_secret: mabl-application-id
+      MABL_ENV_ID_TEST:
+        from_secret: mabl-env-test
+    commands:
+      - npm install -g @mablhq/mabl-cli 
+      - mabl auth activate-key $MABL_API_KEY
+      - mabl branches merge --from ${DRONE_SOURCE_BRANCH}
+---
+kind: pipeline
+type: docker
 name: "Pull Request Tests"
 # Builds and tests on pull request. Required success before merge can happen.
 trigger:
@@ -24,7 +57,7 @@ steps:
       MABL_ENV_ID_TEST:
         from_secret: mabl-env-test
     commands:
-      - npm install -g @mablhq/mabl-cli 
+      - npm install -g @mablhq/mabl-cli
       - mabl deployments create --api-key $MABL_API_KEY --application-id $MABL_APP_ID --labels GITHUB_ACTIONS --environment-id $MABL_ENV_ID_TEST --revision $DRONE_COMMIT_SHA --await-completion --mabl-branch ${DRONE_SOURCE_BRANCH} --auto-branch true
 ---
 kind: pipeline
@@ -87,9 +120,11 @@ steps:
         from_secret: mabl-api-key
       MABL_APP_ID:
         from_secret: mabl-application-id
+      MABL_ENV_ID_QA:
+        from_secret: mabl-env-qa
     commands:
       - npm install -g @mablhq/mabl-cli
-      - mabl deployments create --api-key $MABL_API_KEY --application-id $MABL_APP_ID  --labels MIMIR --await-completion
+      - mabl deployments create --api-key $MABL_API_KEY --application-id $MABL_APP_ID  --labels MIMIR --environment-id $MABL_ENV_ID_QA --await-completion
   - name: slack
     image: plugins/slack
     settings:
