@@ -63,11 +63,10 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     const statistic: Content<Statistics> | null = getContent({
       key: data.id
     })
-    const fetchPublished: boolean = data.fetchPublished === 'on'
 
     if (statistic) {
       const datasetIdsToUpdate: Array<string> = getDatasetIdsFromStatistic(statistic)
-      const processXmls: Array<ProcessXml> | undefined = !fetchPublished && data.owners ? processXmlFromOwners(data.owners) : undefined
+      const processXmls: Array<ProcessXml> | undefined = data.owners ? processXmlFromOwners(data.owners) : undefined
 
       if (datasetIdsToUpdate.length > 0) {
         const context: RunContext = {
@@ -84,7 +83,6 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
             datasetIdsToUpdate,
             socketEmitter,
             DATASET_BRANCH,
-            fetchPublished,
             processXmls
           )
         })
@@ -101,7 +99,9 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
 
 function processXmlFromOwners(owners: Array<OwnerObject>): Array<ProcessXml> {
   const preRender: Array<SourceNodeRender> = owners.reduce((acc: Array<SourceNodeRender>, ownerObj: OwnerObject) => {
-    ownerObj.tbmlList && ownerObj.tbmlList.forEach( (tbmlIdObj: Tbml) => {
+    // if the fetchPublished is set to on, do not create process xml
+    // Only requests with xml will try to fetch unpublished data
+    ownerObj.fetchPublished !== 'on' && ownerObj.tbmlList && ownerObj.tbmlList.forEach( (tbmlIdObj: Tbml) => {
       const tbmlProcess: SourceNodeRender | undefined = acc.find((process: SourceNodeRender) => process.tbmlId === tbmlIdObj.tbmlId)
       if (tbmlProcess) {
         tbmlIdObj.sourceTableIds.forEach((sourceTable) => {
@@ -132,7 +132,7 @@ export function getDatasetIdsFromStatistic(statistic: Content<Statistics>): Arra
   return [...mainTableId, ...statisticsKeyFigureId, ...attachmentTablesFiguresIds]
 }
 
-function sourcesForUserFromStatistic(statistic: Content<Statistics>): Array<OwnerWithSources> {
+function getDatasetFromStatistics(statistic: Content<Statistics>): Array<SourceList> {
   const datasetIds: Array<string> = getDatasetIdsFromStatistic(statistic)
   const sources: Array<SourceList> = datasetIds.reduce((acc: Array<SourceList>, contentId: string) => {
     const dataset: DatasetRepoNode<TbmlDataUniform> | null = getDatasetFromContentId(contentId)
@@ -144,7 +144,10 @@ function sourcesForUserFromStatistic(statistic: Content<Statistics>): Array<Owne
     }
     return acc
   }, [])
+  return sources
+}
 
+function getSourcesForUserFromStatistic(sources: Array<SourceList>): Array<OwnerWithSources> {
   return sources.reduce((acc: Array<OwnerWithSources>, source: SourceList) => {
     const {
       dataset
@@ -206,7 +209,25 @@ function prepStatistics(statistics: Array<Content<Statistics>>): Array<Statistic
     const statregData: StatregData | undefined = statistic.data.statistic ? getStatregInfo(statistic.data.statistic) : undefined
 
     if (statregData) {
-      const relatedUserTBMLs: Array<OwnerWithSources> = sourcesForUserFromStatistic(statistic)
+      const datasets: Array<SourceList> = getDatasetFromStatistics(statistic)
+      const relatedUserTBMLs: Array<OwnerWithSources> = getSourcesForUserFromStatistic(datasets)
+      const relatedTables: Array<RelatedTbml> = datasets.reduce((acc: Array<RelatedTbml>, tbml) => {
+        const {
+          dataset,
+          queryId
+        } = tbml
+        if (dataset.data &&
+          typeof(dataset.data) !== 'string' &&
+          dataset.data.tbml.metadata &&
+          dataset.data.tbml.metadata.sourceList) {
+          const tbmlId: string = dataset.data.tbml.metadata.instance.definitionId.toString()
+          acc.push({
+            tbmlId,
+            queryId
+          })
+        }
+        return acc
+      }, [])
       const statisticDataDashboard: StatisticDashboard = {
         id: statistic._id,
         language: statistic.language ? statistic.language : '',
@@ -214,6 +235,7 @@ function prepStatistics(statistics: Array<Content<Statistics>>): Array<Statistic
         shortName: statregData.shortName,
         nextRelease: undefined,
         relatedUserTBMLs,
+        relatedTables,
         aboutTheStatistics: statistic.data.aboutTheStatistics
       }
       if (statregData && statregData.nextRelease && moment(statregData.nextRelease).isSameOrAfter(new Date(), 'day')) {
@@ -240,11 +262,13 @@ function getStatregInfo(key: string): StatregData | undefined {
   const statisticStatreg: StatisticInListing | undefined = getStatisticByIdFromRepo(key)
   if (statisticStatreg) {
     const variants: Array<VariantInListing> = forceArray(statisticStatreg.variants)
+    if (variants.length > 1) {
+      variants.sort((a: VariantInListing, b: VariantInListing) => new Date(a.nextRelease).getTime() - new Date(b.nextRelease).getTime())
+    }
     const variant: VariantInListing = variants[0] // TODO: Multiple variants
     const result: StatregData = {
       shortName: statisticStatreg.shortName,
       frekvens: variant.frekvens,
-      previousRelease: variant.previousRelease,
       nextRelease: variant.nextRelease ? variant.nextRelease : ''
     }
     return result
@@ -281,7 +305,6 @@ interface SourceList {
 interface RefreshInfo {
   id: string;
   owners?: Array<OwnerObject>;
-  fetchPublished: 'on' | null;
 }
 
 interface OwnerObject {
@@ -290,6 +313,7 @@ interface OwnerObject {
   tbmlList?: Array<Tbml>;
   ownerId: number;
   tbmlId: number;
+  fetchPublished: 'on' | null;
 };
 
 interface StatisticDashboard {
@@ -298,24 +322,20 @@ interface StatisticDashboard {
   name?: string;
   shortName: string;
   nextRelease?: string;
-  relatedTables?: Array<TbmlSources>;
- relatedUserTBMLs?: Array<OwnerWithSources>;
+  relatedTables?: Array<RelatedTbml>;
+  relatedUserTBMLs?: Array<OwnerWithSources>;
   aboutTheStatistics?: string;
 }
 
 interface StatregData {
   shortName: string;
   frekvens: string;
-  previousRelease: string;
   nextRelease: string;
 }
 
-interface TbmlSources {
+interface RelatedTbml {
   queryId: string;
   tbmlId: string;
-  sourceList?: {
-    [key: number]: Array<Source>;
-  };
 }
 
 interface OwnerWithSources {

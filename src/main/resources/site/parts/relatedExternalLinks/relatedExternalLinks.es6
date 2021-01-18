@@ -33,18 +33,21 @@ exports.preview = (req, id) => renderPart(req, [id])
 
 function renderPart(req, externalLinks) {
   const page = getContent()
+
+  const phrases = getPhrases(page)
+  const externalLinksTitle = phrases.externalLinksHeading
   if (!externalLinks || externalLinks.length === 0) {
     if (req.mode === 'edit' && page.type !== `${app.name}:article` && page.type !== `${app.name}:statistics`) {
       return {
-        body: render(view)
+        body: render(view, {
+          externalLinksTitle
+        })
       }
     }
     return {
       body: null
     }
   }
-
-  const phrases = getPhrases(page)
 
   externalLinks = externalLinks.map((externalLink) => {
     return {
@@ -65,7 +68,7 @@ function renderPart(req, externalLinks) {
 
   const body = render(view, {
     relatedExternalLinksId: relatedExternalLinksComponent.react4xpId,
-    label: phrases.externalLinksHeading
+    label: externalLinksTitle
   })
   return {
     body: relatedExternalLinksComponent.renderBody({

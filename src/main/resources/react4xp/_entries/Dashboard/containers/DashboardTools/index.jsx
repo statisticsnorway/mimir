@@ -8,7 +8,7 @@ import { ChevronDown, ChevronUp, RefreshCw, Trash } from 'react-feather'
 import { Col, Container, Row } from 'react-bootstrap'
 import { Link, Dropdown } from '@statisticsnorway/ssb-component-library'
 import { selectStatistics, selectLoading, selectHasLoadingStatistic } from '../Statistics/selectors'
-import { setOpenStatistic } from '../Statistics/actions'
+import { setOpenStatistic, setOpenModal } from '../Statistics/actions'
 import { selectDataQueriesByType } from '../DataQueries/selectors'
 import { requestDatasetUpdate } from '../DataQueries/actions'
 import { startRefresh } from '../StatRegDashboard/actions'
@@ -157,7 +157,10 @@ export function DataQueryTools() {
               variant="primary"
               size="sm"
               className="mx-1"
-              onClick={() => setOpenStatistic(dispatch, selectedStat.id)}
+              onClick={() => {
+                setOpenStatistic(dispatch, selectedStat.id)
+                setOpenModal(dispatch, true)
+              }}
               disabled={hasLoadingStatistic || loadingStatistics || !selectedStat}
             >
               { hasLoadingStatistic ? <span className="spinner-border spinner-border-sm" /> : <RefreshCw size={16}/> }

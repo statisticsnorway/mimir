@@ -39,7 +39,7 @@ export function RefreshStatisticsModal(props) {
   }
 
   return (
-    <Modal show={true} onHide={() => handleClose()}>
+    <Modal size='lg' show={true} onHide={() => handleClose()}>
       <Modal.Header closeButton>
         <Modal.Title>Oppdatering av tabeller på web</Modal.Title>
       </Modal.Header>
