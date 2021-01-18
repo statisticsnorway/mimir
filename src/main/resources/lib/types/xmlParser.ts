@@ -93,15 +93,7 @@ export interface TableRowUniform {
 }
 
 export interface TableCellUniform {
-  th: HeaderCellUniform;
-  td: DataCellUniform;
-}
-
-export interface HeaderCellUniform {
   th: Array<number | string | PreliminaryData>;
-}
-
-export interface DataCellUniform {
   td: Array<number | string | PreliminaryData>;
 }
 

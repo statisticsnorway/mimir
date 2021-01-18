@@ -1,3 +1,9 @@
+import {TableCellUniform, TbmlDataUniform} from "../types/xmlParser";
+import {Request} from "enonic-types/controller";
+import {Highchart} from "../../site/content-types/highchart/highchart";
+import {Content} from 'enonic-types/content';
+import {JSONstat} from "../types/jsonstat-toolkit";
+
 const {
   seriesAndCategoriesFromHtmlTable
 } = __non_webpack_require__( '/lib/highcharts/data/htmlTable')
@@ -19,8 +25,12 @@ const {
  * @param {Object} dataFormat
  * @return {{series: {data: *, name: (*|string)}[], categories: *}|*}
  */
-export function prepareHighchartsData(req, highchartsContent, data, dataFormat) {
-  const seriesAndCategories = getSeriesAndCategories(req, highchartsContent, data, dataFormat)
+export function prepareHighchartsData(
+  req: Request,
+  highchartsContent: Content<Highchart>,
+  data: JSONstat | TbmlDataUniform | object | string | undefined,
+  dataFormat: string) {
+  const seriesAndCategories: SeriesAndCategories = getSeriesAndCategories(req, highchartsContent, data, dataFormat)
   const seriesAndCategoriesOrData = seriesAndCategories && !seriesAndCategories.series ?
     addDataProperties(highchartsContent, seriesAndCategories) : seriesAndCategories
   return switchRowsAndColumnsCheck(highchartsContent, seriesAndCategoriesOrData, dataFormat)
@@ -33,14 +43,36 @@ export function prepareHighchartsData(req, highchartsContent, data, dataFormat) 
  * @param {Object} dataFormat
  * @return {{categories: *, series: *}}
  */
-export function getSeriesAndCategories(req, highchartsContent, data, dataFormat) {
+export function getSeriesAndCategories(req: Request, highchart: Content<Highchart>, data, dataFormat): SeriesAndCategories | undefined {
   if (dataFormat._selected === 'jsonStat' || dataFormat._selected === DataSourceType.STATBANK_API) {
-    return seriesAndCategoriesFromJsonStat(req, highchartsContent, data, dataFormat)
+    return seriesAndCategoriesFromJsonStat(req, highchart, data, dataFormat)
   } else if (dataFormat._selected === 'tbml' || dataFormat._selected === DataSourceType.TBPROCESSOR) {
-    return seriesAndCategoriesFromTbml(data, highchartsContent.data.graphType, highchartsContent.data.xAxisType)
+    return seriesAndCategoriesFromTbml(data, highchart.data.graphType, highchart.data.xAxisType)
   } else if (dataFormat._selected === DataSourceType.HTMLTABLE) {
-    return seriesAndCategoriesFromHtmlTable(highchartsContent)
+    return seriesAndCategoriesFromHtmlTable(highchart)
   }
+  return undefined
+}
+
+export interface SeriesAndCategories {
+  categories: object;
+  series: Array<Series>;
+  title: string | object | undefined;
+}
+
+export interface Series {
+  name: string;
+  data: Array<PieData | AreaLineLinearData>;
+}
+
+export interface PieData {
+  name: string;
+  y: Array<number>;
+}
+
+export interface AreaLineLinearData {
+  name: string;
+  data: Array<[number, number]>;
 }
 
 /**
@@ -91,3 +123,5 @@ export const getRowValue = (value) => {
   }
   return value
 }
+
+
