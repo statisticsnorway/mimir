@@ -66,12 +66,13 @@ exports.getLanguage = function(page) {
     headerId: currentLanguageConfig ? currentLanguageConfig.headerId : norwegianConfig.headerId,
     footerId: currentLanguageConfig ? currentLanguageConfig.footerId : norwegianConfig.footerId,
     code: currentLanguageConfig ? currentLanguageConfig.code : page.language,
-    link: currentLanguageConfig ? (currentLanguageConfig.link !== null) ? currentLanguageConfig.link : '' : '',
+    link: currentLanguageConfig ? (currentLanguageConfig.link !== null ? currentLanguageConfig.link : '') : '',
     standardSymbolPage: currentLanguageConfig ? currentLanguageConfig.standardSymbolPage : norwegianConfig.standardSymbolPage,
     phrases: {
       ...(i18n.getPhrases(page.language === 'nb' ? '' : page.language, ['site/i18n/phrases']))
     },
-    alternativeLanguages
+    alternativeLanguages: (page.language === 'nb' || page.language === 'en') ? alternativeLanguages :
+      alternativeLanguages.filter((altLanguage) => altLanguage.code === 'en')
   }
 
   return result

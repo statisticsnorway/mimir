@@ -63,11 +63,10 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     const statistic: Content<Statistics> | null = getContent({
       key: data.id
     })
-    const fetchPublished: boolean = data.fetchPublished === 'on'
 
     if (statistic) {
       const datasetIdsToUpdate: Array<string> = getDatasetIdsFromStatistic(statistic)
-      const processXmls: Array<ProcessXml> | undefined = !fetchPublished && data.owners ? processXmlFromOwners(data.owners) : undefined
+      const processXmls: Array<ProcessXml> | undefined = data.owners ? processXmlFromOwners(data.owners) : undefined
 
       if (datasetIdsToUpdate.length > 0) {
         const context: RunContext = {
@@ -84,7 +83,6 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
             datasetIdsToUpdate,
             socketEmitter,
             DATASET_BRANCH,
-            fetchPublished,
             processXmls
           )
         })
@@ -101,7 +99,9 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
 
 function processXmlFromOwners(owners: Array<OwnerObject>): Array<ProcessXml> {
   const preRender: Array<SourceNodeRender> = owners.reduce((acc: Array<SourceNodeRender>, ownerObj: OwnerObject) => {
-    ownerObj.tbmlList && ownerObj.tbmlList.forEach( (tbmlIdObj: Tbml) => {
+    // if the fetchPublished is set to on, do not create process xml
+    // Only requests with xml will try to fetch unpublished data
+    ownerObj.fetchPublished !== 'on' && ownerObj.tbmlList && ownerObj.tbmlList.forEach( (tbmlIdObj: Tbml) => {
       const tbmlProcess: SourceNodeRender | undefined = acc.find((process: SourceNodeRender) => process.tbmlId === tbmlIdObj.tbmlId)
       if (tbmlProcess) {
         tbmlIdObj.sourceTableIds.forEach((sourceTable) => {
@@ -262,11 +262,13 @@ function getStatregInfo(key: string): StatregData | undefined {
   const statisticStatreg: StatisticInListing | undefined = getStatisticByIdFromRepo(key)
   if (statisticStatreg) {
     const variants: Array<VariantInListing> = forceArray(statisticStatreg.variants)
+    if (variants.length > 1) {
+      variants.sort((a: VariantInListing, b: VariantInListing) => new Date(a.nextRelease).getTime() - new Date(b.nextRelease).getTime())
+    }
     const variant: VariantInListing = variants[0] // TODO: Multiple variants
     const result: StatregData = {
       shortName: statisticStatreg.shortName,
       frekvens: variant.frekvens,
-      previousRelease: variant.previousRelease,
       nextRelease: variant.nextRelease ? variant.nextRelease : ''
     }
     return result
@@ -303,7 +305,6 @@ interface SourceList {
 interface RefreshInfo {
   id: string;
   owners?: Array<OwnerObject>;
-  fetchPublished: 'on' | null;
 }
 
 interface OwnerObject {
@@ -312,6 +313,7 @@ interface OwnerObject {
   tbmlList?: Array<Tbml>;
   ownerId: number;
   tbmlId: number;
+  fetchPublished: 'on' | null;
 };
 
 interface StatisticDashboard {
@@ -328,7 +330,6 @@ interface StatisticDashboard {
 interface StatregData {
   shortName: string;
   frekvens: string;
-  previousRelease: string;
   nextRelease: string;
 }
 

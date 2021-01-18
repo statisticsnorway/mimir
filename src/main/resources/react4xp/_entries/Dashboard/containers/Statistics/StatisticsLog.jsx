@@ -38,22 +38,24 @@ export function StatisticsLog(props) {
 
   function renderLogData() {
     if (dataQueries.length > 0) {
-      const [{
-        logData
-      }] = dataQueries
-
-      if (logData) {
-        return (
-          <span className="d-sm-flex justify-content-center text-center small haveList">
-            <span onClick={() => openEventlog()}>
-              Oppdatert&nbsp;
-              {logData.modified ? logData.modified : ''}
-              {logData.by && logData.by.displayName ? ` av ${logData.by.displayName}` : ''}
-              {logData.showWarningIcon ? <span><X size="14" color="#FF4500"/></span> : <span><Check size="14" color="#1A9D49" /></span>}
+      const [firstDataQuery] = dataQueries
+      if (firstDataQuery) {
+        const {
+          logData
+        } = firstDataQuery
+        if (logData) {
+          return (
+            <span className="d-sm-flex justify-content-center text-center small haveList">
+              <span onClick={() => openEventlog()}>
+                Oppdatert&nbsp;
+                {logData.modified ? logData.modified : ''}
+                {logData.by && logData.by.displayName ? ` av ${logData.by.displayName}` : ''}
+                {logData.showWarningIcon ? <span><X size="14" color="#FF4500"/></span> : <span><Check size="14" color="#1A9D49" /></span>}
+              </span>
+              {show ? <ModalContent/> : null}
             </span>
-            {show ? <ModalContent/> : null}
-          </span>
-        )
+          )
+        }
       }
     }
     return <span className="d-sm-flex justify-content-center text-center small">Ingen logger</span>
