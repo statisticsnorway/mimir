@@ -93,11 +93,11 @@ function getLink(urlContentSelector) {
 
 function getSubtitle(content, date) {
   if (content && date) {
-    return content + ' / ' + moment(date).format('DD. MMMM YYYY').toLowerCase()
+    return content + ' / ' + moment(date).format('D. MMMM YYYY').toLowerCase()
   } else if (content) {
     return content
   } else if (date) {
-    return moment(date).format('DD. MMMM YYYY').toLowerCase()
+    return moment(date).format('D. MMMM YYYY').toLowerCase()
   } else {
     return ''
   }
