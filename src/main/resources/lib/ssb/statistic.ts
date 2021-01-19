@@ -1,6 +1,6 @@
 import { Socket, SocketEmitter } from '../types/socket'
 import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
-import { StatisticInListing, VariantInListing } from './statreg/types'
+import { StatisticInListing, VariantInListing, ReleaseInListing } from './statreg/types'
 import { UtilLibrary } from '../types/util'
 import { Statistics } from '../../site/content-types/statistics/statistics'
 import { DashboardDatasetLib, ProcessXml } from './dataset/dashboard'
@@ -233,13 +233,16 @@ function prepStatistics(statistics: Array<Content<Statistics>>): Array<Statistic
         language: statistic.language ? statistic.language : '',
         name: statistic.displayName ? statistic.displayName : '',
         shortName: statregData.shortName,
+        variantId: statregData.variantId,
         nextRelease: undefined,
+        nextReleaseId: undefined,
         relatedUserTBMLs,
         relatedTables,
         aboutTheStatistics: statistic.data.aboutTheStatistics
       }
       if (statregData && statregData.nextRelease && moment(statregData.nextRelease).isSameOrAfter(new Date(), 'day')) {
         statisticDataDashboard.nextRelease = statregData.nextRelease ? statregData.nextRelease : ''
+        statisticDataDashboard.nextReleaseId = statregData.releaseId ? statregData.releaseId : ''
       }
       statisticData.push(statisticDataDashboard)
     }
@@ -266,10 +269,17 @@ function getStatregInfo(key: string): StatregData | undefined {
       variants.sort((a: VariantInListing, b: VariantInListing) => new Date(a.nextRelease).getTime() - new Date(b.nextRelease).getTime())
     }
     const variant: VariantInListing = variants[0] // TODO: Multiple variants
+    const releases: Array<ReleaseInListing> = variant.upcomingReleases ? forceArray(variant.upcomingReleases) : []
+    if (releases.length > 1) {
+      releases.sort((a: ReleaseInListing, b: ReleaseInListing) => new Date(a.publishTime).getTime() - new Date(b.publishTime).getTime())
+    }
+    const release: ReleaseInListing | undefined = releases.length > 0 ? releases[0] : undefined
     const result: StatregData = {
       shortName: statisticStatreg.shortName,
       frekvens: variant.frekvens,
-      nextRelease: variant.nextRelease ? variant.nextRelease : ''
+      nextRelease: variant.nextRelease ? variant.nextRelease : '',
+      variantId: variant.id,
+      releaseId: release ? release.id : ''
     }
     return result
   }
@@ -321,7 +331,9 @@ interface StatisticDashboard {
   language?: string;
   name?: string;
   shortName: string;
+  variantId: string;
   nextRelease?: string;
+  nextReleaseId?: string;
   relatedTables?: Array<RelatedTbml>;
   relatedUserTBMLs?: Array<OwnerWithSources>;
   aboutTheStatistics?: string;
@@ -331,6 +343,8 @@ interface StatregData {
   shortName: string;
   frekvens: string;
   nextRelease: string;
+  variantId: string;
+  releaseId: string;
 }
 
 interface RelatedTbml {

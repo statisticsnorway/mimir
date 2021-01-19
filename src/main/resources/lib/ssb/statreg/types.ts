@@ -48,9 +48,16 @@ export type KontaktNavnType = KontaktNavn | '' | undefined;
  * GET /statistics/{shortName} endpoint
  */
 export interface VariantInListing {
+    id: string;
     frekvens: string;
     previousRelease: string;
     nextRelease: string;
+    upcomingReleases: Array<ReleaseInListing>;
+}
+
+export interface ReleaseInListing {
+    id: string;
+    publishTime: string;
 }
 
 export interface StatisticInListing extends StatRegBase {
