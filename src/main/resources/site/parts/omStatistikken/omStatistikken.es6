@@ -51,7 +51,7 @@ function renderPart(req, aboutTheStatisticsId) {
     const nextReleaseDate = getNextReleaseStatistic(variants)
 
     if (nextReleaseDate && nextReleaseDate !== '') {
-      nextRelease = moment(nextReleaseDate).format('DD. MMMM YYYY')
+      nextRelease = moment(nextReleaseDate).format('D. MMMM YYYY')
     }
   }
   if (page.type === `${app.name}:omStatistikken` && (req.mode === 'edit' || req.mode === 'preview')) {
