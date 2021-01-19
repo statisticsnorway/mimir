@@ -161,7 +161,7 @@ export function setupCronJobs(): void {
 
   const deleteExpiredEventLogCron: string = app.config && app.config['ssb.cron.deleteLogs'] ? app.config['ssb.cron.deleteLogs'] : '45 13 * * *'
   cron.schedule({
-    name: 'Deleting expired eventlogs',
+    name: 'Delete expired event logs',
     cron: deleteExpiredEventLogCron,
     times: 365 * 10,
     callback: () => runOnMasterOnly(deleteExpiredEventLogs),
