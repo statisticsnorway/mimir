@@ -114,7 +114,8 @@ name: "QA Environment - Push to master"
 # Deploy to qa on push to master
 trigger:
   branch:
-    - master
+    #- master
+    - mimir-285-commit-id
   event:
     include:
       - push
