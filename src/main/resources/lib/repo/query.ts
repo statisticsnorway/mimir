@@ -43,6 +43,7 @@ export interface QueryStatus {
   file?: string;
   status?: string;
   result?: object;
+  branch?: string;
 }
 
 export interface EventInfo {
