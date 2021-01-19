@@ -155,6 +155,8 @@ steps:
         from_secret: mabl-api-key
       MABL_APP_ID:
         from_secret: mabl-application-id
+      MABL_ENV_ID_QA:
+        from_secret: mabl-env-qa
     commands:
       - npm install -g @mablhq/mabl-cli
       - mabl deployments create --api-key $MABL_API_KEY --application-id $MABL_APP_ID  --environment-id $MABL_ENV_ID_QA --revision $DRONE_COMMIT_SHA --labels GITHUB_ACTIONS --await-completion
@@ -163,7 +165,7 @@ steps:
     settings:
       webhook:
         from_secret: slack_webhook_mimir_utv
-      channel: nils_b
+      channel: mimir_utv
       template: >
         {{#success build.status}}
           🛠Build {{build.number}} deploy to QA succeeded. Good job.
