@@ -281,8 +281,13 @@ export function refreshDatasetHandler(
 
       // only get credentials for this datasourceKey (in this case a tbml id)
       const ownerCredentialsForTbml: ProcessXml | undefined = processXmls ?
-        processXmls.find((processXml: ProcessXml) => processXml.tbmlId === dataSourceKey) : undefined
+        processXmls.find((processXml: ProcessXml) => {
+          log.info(`${dataSourceKey} === ${processXml.tbmlId}`)
+          return processXml.tbmlId === dataSourceKey
+        }) : undefined
       // refresh data in draft only if there is owner credentials exists and fetchpublished is false
+      log.info('ownerCredentialsForTbml')
+      log.info(JSON.stringify(ownerCredentialsForTbml, null, 2))
       const refreshDatasetResult: CreateOrUpdateStatus = refreshDataset(
         dataSource,
         ownerCredentialsForTbml ? UNPUBLISHED_DATASET_BRANCH : DATASET_BRANCH,

@@ -67,7 +67,8 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     if (statistic) {
       const datasetIdsToUpdate: Array<string> = getDatasetIdsFromStatistic(statistic)
       const processXmls: Array<ProcessXml> | undefined = data.owners ? processXmlFromOwners(data.owners) : undefined
-
+      log.info('statistic.ts: processXmls')
+      log.info(JSON.stringify(processXmls, null, 2))
       if (datasetIdsToUpdate.length > 0) {
         const context: RunContext = {
           branch: 'master',
