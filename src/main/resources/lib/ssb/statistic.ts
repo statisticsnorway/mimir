@@ -101,7 +101,8 @@ function processXmlFromOwners(owners: Array<OwnerObject>): Array<ProcessXml> {
   const preRender: Array<SourceNodeRender> = owners.reduce((acc: Array<SourceNodeRender>, ownerObj: OwnerObject) => {
     // if the fetchPublished is set to on, do not create process xml
     // Only requests with xml will try to fetch unpublished data
-    ownerObj.fetchPublished && ownerObj.tbmlList && ownerObj.tbmlList.forEach( (tbmlIdObj: Tbml) => {
+    log.info(JSON.stringify(ownerObj, null, 2))
+    !ownerObj.fetchPublished && ownerObj.tbmlList && ownerObj.tbmlList.forEach( (tbmlIdObj: Tbml) => {
       const tbmlProcess: SourceNodeRender | undefined = acc.find((process: SourceNodeRender) => process.tbmlId === tbmlIdObj.tbmlId)
       if (tbmlProcess) {
         tbmlIdObj.sourceTableIds.forEach((sourceTable) => {
