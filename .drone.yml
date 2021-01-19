@@ -26,7 +26,7 @@ steps:
         from_secret: ssb-xp7t-pass
     #commands:
     #  - enonic app install --file build/libs/*.jar
-  - name: mabl create and test branch
+  - name: mabl create and test branch - test.ssb.no
     image: enonic/enonic-ci:7.4-node
     environment:
       MABL_API_KEY:
@@ -146,9 +146,9 @@ steps:
       ENONIC_CLI_REMOTE_PASS:
         from_secret: ssb-xp7q-pass
     commands:
-      - enonic app install --file build/libs/*.jar
-      - sleep 120
-  - name: mabl end-to-end test
+      #- enonic app install --file build/libs/*.jar
+      #- sleep 120
+  - name: mabl end-to-end test QA
     image: enonic/enonic-ci:7.4-node
     environment:
       MABL_API_KEY:
@@ -157,13 +157,13 @@ steps:
         from_secret: mabl-application-id
     commands:
       - npm install -g @mablhq/mabl-cli
-      - mabl deployments create --api-key $MABL_API_KEY --application-id $MABL_APP_ID  --labels MIMIR --await-completion
+      - mabl deployments create --api-key $MABL_API_KEY --application-id $MABL_APP_ID  --environment-id $MABL_ENV_ID_QA --revision $DRONE_COMMIT_SHA --labels GITHUB_ACTIONS --await-completion
   - name: slack
     image: plugins/slack
     settings:
       webhook:
         from_secret: slack_webhook_mimir_utv
-      channel: mimir_utv
+      channel: nils_b
       template: >
         {{#success build.status}}
           🛠Build {{build.number}} deploy to QA succeeded. Good job.
