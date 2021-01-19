@@ -2,7 +2,7 @@ __non_webpack_require__('/lib/polyfills/nashorn')
 import { DatasetLib, CreateOrUpdateStatus } from './dataset'
 import { ContentLibrary, Content } from 'enonic-types/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
-import { Events } from '../../repo/query'
+import { Events, RepoQueryLib } from '../../repo/query'
 import { EVENT_LOG_REPO, EVENT_LOG_BRANCH, LogSummary, RepoEventLogLib } from '../../repo/eventLog'
 import { RepoNode } from 'enonic-types/node'
 import { I18nLibrary } from 'enonic-types/i18n'
@@ -29,7 +29,7 @@ const {
 }: DashboardUtilsLib = __non_webpack_require__('/lib/ssb/dataset/dashboardUtils')
 const {
   logUserDataQuery
-} = __non_webpack_require__( '/lib/repo/query')
+}: RepoQueryLib = __non_webpack_require__( '/lib/repo/query')
 const {
   getNode
 }: RepoCommonLib = __non_webpack_require__( '/lib/repo/common')
@@ -282,12 +282,9 @@ export function refreshDatasetHandler(
       // only get credentials for this datasourceKey (in this case a tbml id)
       const ownerCredentialsForTbml: ProcessXml | undefined = processXmls ?
         processXmls.find((processXml: ProcessXml) => {
-          log.info(`${dataSourceKey} === ${processXml.tbmlId}`)
           return processXml.tbmlId === dataSourceKey
         }) : undefined
       // refresh data in draft only if there is owner credentials exists and fetchpublished is false
-      log.info('ownerCredentialsForTbml')
-      log.info(JSON.stringify(ownerCredentialsForTbml, null, 2))
       const refreshDatasetResult: CreateOrUpdateStatus = refreshDataset(
         dataSource,
         ownerCredentialsForTbml ? UNPUBLISHED_DATASET_BRANCH : DATASET_BRANCH,
@@ -297,7 +294,6 @@ export function refreshDatasetHandler(
         file: '/lib/ssb/dataset/dashboard.ts',
         function: 'refreshDatasetHandler',
         message: refreshDatasetResult.status,
-        result: refreshDatasetResult,
         branch: ownerCredentialsForTbml ? UNPUBLISHED_DATASET_BRANCH : DATASET_BRANCH
       })
 
