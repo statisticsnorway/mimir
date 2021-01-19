@@ -292,6 +292,7 @@ export function refreshDatasetHandler(
         file: '/lib/ssb/dataset/dashboard.ts',
         function: 'refreshDatasetHandler',
         message: refreshDatasetResult.status,
+        result: refreshDatasetResult,
         branch: ownerCredentialsForTbml ? UNPUBLISHED_DATASET_BRANCH : DATASET_BRANCH
       })
 
@@ -343,7 +344,7 @@ function transfromQueryResult(result: CreateOrUpdateStatus): DashboardRefreshRes
   return {
     id: result.dataquery._id,
     dataset: result.dataset ? {
-      newDatasetData: result.newDatasetData ? result.newDatasetData : false,
+      newDatasetData: result.hasNewData ? result.hasNewData : false,
       modified: dateToFormat(result.dataset._ts),
       modifiedReadable: dateToReadable(result.dataset._ts)
     } : {},

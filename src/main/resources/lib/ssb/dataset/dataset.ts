@@ -101,46 +101,51 @@ export function refreshDataset(
   branch: string = DATASET_BRANCH,
   processXml?: string ): CreateOrUpdateStatus {
   /**/
-  const data: JSONstat | TbmlDataUniform | TbprocessorParsedResponse<TbmlDataUniform> | object | null = fetchData(content, processXml)
+  const newDataset: JSONstat | TbmlDataUniform | TbprocessorParsedResponse<TbmlDataUniform> | object | null = fetchData(content, processXml)
   const key: string | null = extractKey(content)
   const user: User | null = getUser()
 
-  if (data && content.data.dataSource && content.data.dataSource._selected && key) {
-    let dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null = getDataset(content, branch)
+  if (newDataset && content.data.dataSource && content.data.dataSource._selected && key) {
+    let oldDataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null = getDataset(content, branch)
 
     // Check if data is of type TbprocessorParsedResponse
-    if (determineIfTbprocessorParsedResponse(data) ) {
-      if (data.status && data.status === 500) {
+    if (determineIfTbprocessorParsedResponse(newDataset) ) {
+      // pass error msg from tbprocessor: e.g: bad username/password combo, wrong tbml id.
+      if (newDataset.status && newDataset.status === 500) {
         return {
           dataquery: content,
-          status: data.body ? data.body : '',
+          status: newDataset.body ? newDataset.body : '',
           dataset: null,
-          newDatasetData: false,
+          hasNewData: false,
+          newDataset,
+          branch,
           user
         }
       } else {
-        const hasNewData: boolean = data.parsedBody ? isDataNew(data.parsedBody, dataset) : false
-        if ((!dataset || hasNewData) && data.parsedBody) {
-          dataset = createOrUpdateDataset(content.data.dataSource?._selected, branch, key, data.parsedBody)
+        const hasNewData: boolean = newDataset.parsedBody ? isDataNew(newDataset.parsedBody, oldDataset) : false
+        if ((!oldDataset || hasNewData) && newDataset.parsedBody) {
+          oldDataset = createOrUpdateDataset(content.data.dataSource?._selected, branch, key, newDataset.parsedBody)
         }
         return {
           dataquery: content,
-          status: !hasNewData ? Events.NO_NEW_DATA : Events.GET_DATA_COMPLETE,
-          newDatasetData: hasNewData,
-          dataset,
+          status: hasNewData ? Events.GET_DATA_COMPLETE : Events.NO_NEW_DATA,
+          hasNewData: hasNewData,
+          dataset: oldDataset,
+          newDataset,
+          branch,
           user
         }
       }
     } else {
-      const hasNewData: boolean = isDataNew(data, dataset)
-      if (!dataset || hasNewData) {
-        dataset = createOrUpdateDataset(content.data.dataSource?._selected, branch, key, data)
+      const hasNewData: boolean = isDataNew(newDataset, oldDataset)
+      if (!oldDataset || hasNewData) {
+        oldDataset = createOrUpdateDataset(content.data.dataSource?._selected, branch, key, newDataset)
       }
       return {
         dataquery: content,
-        status: !hasNewData ? Events.NO_NEW_DATA : Events.GET_DATA_COMPLETE,
-        newDatasetData: hasNewData,
-        dataset,
+        status: hasNewData ? Events.GET_DATA_COMPLETE : Events.NO_NEW_DATA,
+        hasNewData: hasNewData,
+        dataset: oldDataset,
         user
       }
     }
@@ -149,7 +154,7 @@ export function refreshDataset(
       dataquery: content,
       status: Events.FAILED_TO_GET_DATA,
       dataset: null,
-      newDatasetData: false,
+      hasNewData: false,
       user
     }
   }
@@ -203,11 +208,13 @@ export function getContentWithDataSource(): Array<Content<DataSource>> {
   return hits
 }
 
-function isDataNew(data: JSONstat | TbmlDataUniform | object, dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null): boolean {
-  if (!dataset) {
+function isDataNew(
+  newDataset: JSONstat | TbmlDataUniform | object,
+  oldDataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null): boolean {
+  if (!oldDataset) {
     return true
-  } else if (data && dataset) {
-    return JSON.stringify(dataset.data, null, 0) !== JSON.stringify(data, null, 0)
+  } else if (newDataset && oldDataset) {
+    return JSON.stringify(oldDataset.data, null, 0) !== JSON.stringify(newDataset, null, 0)
   }
   return false
 }
@@ -215,9 +222,11 @@ function isDataNew(data: JSONstat | TbmlDataUniform | object, dataset: DatasetRe
 export interface CreateOrUpdateStatus {
   dataquery: Content<DataSource>;
   dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null;
-  newDatasetData: boolean;
+  hasNewData: boolean;
   status: string;
   user: User | null;
+  newDataset?: object;
+  branch?: string;
 }
 
 export interface DatasetLib {
