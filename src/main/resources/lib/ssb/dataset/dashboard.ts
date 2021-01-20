@@ -2,7 +2,7 @@ __non_webpack_require__('/lib/polyfills/nashorn')
 import { DatasetLib, CreateOrUpdateStatus } from './dataset'
 import { ContentLibrary, Content } from 'enonic-types/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
-import { Events } from '../../repo/query'
+import { Events, RepoQueryLib } from '../../repo/query'
 import { EVENT_LOG_REPO, EVENT_LOG_BRANCH, LogSummary, RepoEventLogLib } from '../../repo/eventLog'
 import { RepoNode } from 'enonic-types/node'
 import { I18nLibrary } from 'enonic-types/i18n'
@@ -29,7 +29,7 @@ const {
 }: DashboardUtilsLib = __non_webpack_require__('/lib/ssb/dataset/dashboardUtils')
 const {
   logUserDataQuery
-} = __non_webpack_require__( '/lib/repo/query')
+}: RepoQueryLib = __non_webpack_require__( '/lib/repo/query')
 const {
   getNode
 }: RepoCommonLib = __non_webpack_require__( '/lib/repo/common')
@@ -256,7 +256,6 @@ function prepDataSources(dataSources: Array<Content<DataSource>>): Array<unknown
 export function refreshDatasetHandler(
   ids: Array<string>,
   socketEmitter: SocketEmitter,
-  branch: string = DATASET_BRANCH,
   processXmls?: Array<ProcessXml>): void {
   // tell all dashboard instances that these are going to be loaded
   ids.forEach((id) => {
@@ -282,17 +281,20 @@ export function refreshDatasetHandler(
 
       // only get credentials for this datasourceKey (in this case a tbml id)
       const ownerCredentialsForTbml: ProcessXml | undefined = processXmls ?
-        processXmls.find((processXml: ProcessXml) => processXml.tbmlId === dataSourceKey) : undefined
+        processXmls.find((processXml: ProcessXml) => {
+          return processXml.tbmlId === dataSourceKey
+        }) : undefined
       // refresh data in draft only if there is owner credentials exists and fetchpublished is false
       const refreshDatasetResult: CreateOrUpdateStatus = refreshDataset(
         dataSource,
-        ownerCredentialsForTbml ? UNPUBLISHED_DATASET_BRANCH : branch,
+        ownerCredentialsForTbml ? UNPUBLISHED_DATASET_BRANCH : DATASET_BRANCH,
         ownerCredentialsForTbml ? ownerCredentialsForTbml.processXml : undefined)
 
       logUserDataQuery(dataSource._id, {
         file: '/lib/ssb/dataset/dashboard.ts',
         function: 'refreshDatasetHandler',
-        message: refreshDatasetResult.status
+        message: refreshDatasetResult.status,
+        branch: ownerCredentialsForTbml ? UNPUBLISHED_DATASET_BRANCH : DATASET_BRANCH
       })
 
       socketEmitter.broadcast('statistics-activity-refresh-feedback', {
@@ -343,7 +345,7 @@ function transfromQueryResult(result: CreateOrUpdateStatus): DashboardRefreshRes
   return {
     id: result.dataquery._id,
     dataset: result.dataset ? {
-      newDatasetData: result.newDatasetData ? result.newDatasetData : false,
+      newDatasetData: result.hasNewData ? result.hasNewData : false,
       modified: dateToFormat(result.dataset._ts),
       modifiedReadable: dateToReadable(result.dataset._ts)
     } : {},
@@ -405,7 +407,6 @@ export interface DashboardDatasetLib {
   refreshDatasetHandler: (
     ids: Array<string>,
     socketEmitter: SocketEmitter,
-    branch?: string,
     processXml?: Array<ProcessXml>) => void;
 }
 

@@ -96,7 +96,6 @@ export interface TableCellUniform {
   th: Array<number | string | PreliminaryData>;
   td: Array<number | string | PreliminaryData>;
 }
-
 export interface MetadataUniform {
   instance: {
     publicRelatedTableIds: Array<string>;
