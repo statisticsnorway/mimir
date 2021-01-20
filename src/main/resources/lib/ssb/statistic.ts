@@ -204,11 +204,11 @@ function getDatasetFromContentId(contentId: string): DatasetRepoNode<TbmlDataUni
 }
 
 function prepStatistics(statistics: Array<Content<Statistics>>): Array<StatisticDashboard> {
-  log.info('prepStatistics')
+  log.error('prepStatistics')
   const statisticData: Array<StatisticDashboard> = []
   statistics.map((statistic: Content<Statistics>) => {
     const statregData: StatregData | undefined = statistic.data.statistic ? getStatregInfo(statistic.data.statistic) : undefined
-    log.info('statregData PrettyJSON%s',JSON.stringify(statregData ,null,4));
+    log.error('statregData PrettyJSON%s',JSON.stringify(statregData ,null,4));
     if (statregData) {
       const datasets: Array<SourceList> = getDatasetFromStatistics(statistic)
       const relatedUserTBMLs: Array<OwnerWithSources> = getSourcesForUserFromStatistic(datasets)
@@ -254,7 +254,7 @@ function prepStatistics(statistics: Array<Content<Statistics>>): Array<Statistic
 }
 
 export function getStatistics(): Array<Content<Statistics>> {
-  log.info('getStatistics')
+  log.error('getStatistics')
   let hits: Array<Content<Statistics>> = []
   const result: QueryResponse<Statistics> = query({
     contentTypes: [`${app.name}:statistics`],
@@ -262,7 +262,7 @@ export function getStatistics(): Array<Content<Statistics>> {
     count: 1000
   })
   hits = hits.concat(result.hits)
-  log.info('Antall Statistikker: ' + hits.length)
+  log.error('Antall Statistikker: ' + hits.length)
   return hits
 }
 
