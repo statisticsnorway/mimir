@@ -42,7 +42,6 @@ function tryRequestTbmlData<T extends TbmlDataUniform | TbmlSourceListUniform>(
   url: string,
   contentId?: string,
   processXml?: string ): TbprocessorParsedResponse<T> | null {
-  //
   try {
     return getTbmlData(url, contentId, processXml)
   } catch (e) {
