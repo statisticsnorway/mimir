@@ -1,6 +1,6 @@
 import { Socket, SocketEmitter } from '../types/socket'
 import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
-import { StatisticInListing, VariantInListing, ReleaseInListing } from './statreg/types'
+import { StatisticInListing, VariantInListing } from './statreg/types'
 import { UtilLibrary } from '../types/util'
 import { Statistics } from '../../site/content-types/statistics/statistics'
 import { DashboardDatasetLib, ProcessXml } from './dataset/dashboard'
@@ -244,7 +244,7 @@ function prepStatistics(statistics: Array<Content<Statistics>>): Array<Statistic
         }
         if (statregData && statregData.nextRelease && moment(statregData.nextRelease).isSameOrAfter(new Date(), 'day')) {
           statisticDataDashboard.nextRelease = statregData.nextRelease ? statregData.nextRelease : ''
-          statisticDataDashboard.nextReleaseId = statregData.releaseId ? statregData.releaseId : ''
+          statisticDataDashboard.nextReleaseId = statregData.nextReleaseId ? statregData.nextReleaseId : ''
         }
         statisticData.push(statisticDataDashboard)
       }
@@ -275,18 +275,13 @@ function getStatregInfo(key: string): StatregData | undefined {
       variants.sort((a: VariantInListing, b: VariantInListing) => new Date(a.nextRelease).getTime() - new Date(b.nextRelease).getTime())
     }
     const variant: VariantInListing = variants[0] // TODO: Multiple variants
-    const releases: Array<ReleaseInListing> = variant.upcomingReleases ? forceArray(variant.upcomingReleases) : []
-    if (releases.length > 1) {
-      releases.sort((a: ReleaseInListing, b: ReleaseInListing) => new Date(a.publishTime).getTime() - new Date(b.publishTime).getTime())
-    }
-    const release: ReleaseInListing | undefined = releases.length > 0 ? releases[0] : undefined
     const result: StatregData = {
       statisticId: statisticStatreg.id,
       shortName: statisticStatreg.shortName,
       frequency: variant.frekvens,
       nextRelease: variant.nextRelease ? variant.nextRelease : '',
-      variantId: variant.id,
-      releaseId: release ? release.id : ''
+      nextReleaseId: variant.nextReleaseId ? variant.nextReleaseId : '',
+      variantId: variant.id
     }
     return result
   }
@@ -353,8 +348,8 @@ interface StatregData {
   shortName: string;
   frequency: string;
   nextRelease: string;
+  nextReleaseId: string;
   variantId: string;
-  releaseId: string;
 }
 
 interface RelatedTbml {

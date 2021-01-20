@@ -52,12 +52,7 @@ export interface VariantInListing {
     frekvens: string;
     previousRelease: string;
     nextRelease: string;
-    upcomingReleases: Array<ReleaseInListing>;
-}
-
-export interface ReleaseInListing {
-    id: string;
-    publishTime: string;
+    nextReleaseId: string;
 }
 
 export interface StatisticInListing extends StatRegBase {
