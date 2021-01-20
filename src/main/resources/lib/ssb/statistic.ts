@@ -133,7 +133,6 @@ export function getDatasetIdsFromStatistic(statistic: Content<Statistics>): Arra
 }
 
 function getDatasetFromStatistics(statistic: Content<Statistics>): Array<SourceList> {
-  log.error('getDatasetFromStatistics: ' + statistic.displayName)
   const datasetIds: Array<string> = getDatasetIdsFromStatistic(statistic)
   const sources: Array<SourceList> = datasetIds.reduce((acc: Array<SourceList>, contentId: string) => {
     const dataset: DatasetRepoNode<TbmlDataUniform> | null = getDatasetFromContentId(contentId)
@@ -149,7 +148,6 @@ function getDatasetFromStatistics(statistic: Content<Statistics>): Array<SourceL
 }
 
 function getSourcesForUserFromStatistic(sources: Array<SourceList>): Array<OwnerWithSources> {
-  log.error('getSourcesForUserFromStatistic: ' + sources.length)
   return sources.reduce((acc: Array<OwnerWithSources>, source: SourceList) => {
     const {
       dataset
@@ -209,13 +207,10 @@ function prepStatistics(statistics: Array<Content<Statistics>>): Array<Statistic
   const statisticData: Array<StatisticDashboard> = []
   statistics.map((statistic: Content<Statistics>) => {
     try {
-      log.error('STATISTIKK: ' + statistic.displayName)
       const statregData: StatregData | undefined = statistic.data.statistic ? getStatregInfo(statistic.data.statistic) : undefined
-      log.error('statregData PrettyJSON%s', JSON.stringify(statregData, null, 4))
       if (statregData) {
         const datasets: Array<SourceList> = getDatasetFromStatistics(statistic)
         const relatedUserTBMLs: Array<OwnerWithSources> = getSourcesForUserFromStatistic(datasets)
-        log.error('relatedUserTBMLs: ' + relatedUserTBMLs.length)
         const relatedTables: Array<RelatedTbml> = datasets.reduce((acc: Array<RelatedTbml>, tbml) => {
           const {
             dataset,
@@ -258,7 +253,6 @@ function prepStatistics(statistics: Array<Content<Statistics>>): Array<Statistic
       log.error(message)
     }
   })
-  log.error('Antall statistikker ferdig: ' + statisticData.length)
   return sortByNextRelease(statisticData)
 }
 
@@ -274,7 +268,6 @@ export function getStatistics(): Array<Content<Statistics>> {
 }
 
 function getStatregInfo(key: string): StatregData | undefined {
-  log.error('GetStatregInfo: ' + key)
   const statisticStatreg: StatisticInListing | undefined = getStatisticByIdFromRepo(key)
   if (statisticStatreg) {
     const variants: Array<VariantInListing> = forceArray(statisticStatreg.variants)
