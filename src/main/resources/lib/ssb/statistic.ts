@@ -204,10 +204,11 @@ function getDatasetFromContentId(contentId: string): DatasetRepoNode<TbmlDataUni
 }
 
 function prepStatistics(statistics: Array<Content<Statistics>>): Array<StatisticDashboard> {
+  log.info('prepStatistics')
   const statisticData: Array<StatisticDashboard> = []
   statistics.map((statistic: Content<Statistics>) => {
     const statregData: StatregData | undefined = statistic.data.statistic ? getStatregInfo(statistic.data.statistic) : undefined
-
+    log.info('statregData PrettyJSON%s',JSON.stringify(statregData ,null,4));
     if (statregData) {
       const datasets: Array<SourceList> = getDatasetFromStatistics(statistic)
       const relatedUserTBMLs: Array<OwnerWithSources> = getSourcesForUserFromStatistic(datasets)
@@ -232,7 +233,9 @@ function prepStatistics(statistics: Array<Content<Statistics>>): Array<Statistic
         id: statistic._id,
         language: statistic.language ? statistic.language : '',
         name: statistic.displayName ? statistic.displayName : '',
+        statisticId: statregData.statisticId,
         shortName: statregData.shortName,
+        frequency: statregData.frequency,
         variantId: statregData.variantId,
         nextRelease: undefined,
         nextReleaseId: undefined,
@@ -251,6 +254,7 @@ function prepStatistics(statistics: Array<Content<Statistics>>): Array<Statistic
 }
 
 export function getStatistics(): Array<Content<Statistics>> {
+  log.info('getStatistics')
   let hits: Array<Content<Statistics>> = []
   const result: QueryResponse<Statistics> = query({
     contentTypes: [`${app.name}:statistics`],
@@ -258,6 +262,7 @@ export function getStatistics(): Array<Content<Statistics>> {
     count: 1000
   })
   hits = hits.concat(result.hits)
+  log.info('Antall Statistikker: ' + hits.length)
   return hits
 }
 
@@ -275,8 +280,9 @@ function getStatregInfo(key: string): StatregData | undefined {
     }
     const release: ReleaseInListing | undefined = releases.length > 0 ? releases[0] : undefined
     const result: StatregData = {
+      statisticId: statisticStatreg.id,
       shortName: statisticStatreg.shortName,
-      frekvens: variant.frekvens,
+      frequency: variant.frekvens,
       nextRelease: variant.nextRelease ? variant.nextRelease : '',
       variantId: variant.id,
       releaseId: release ? release.id : ''
@@ -330,7 +336,9 @@ interface StatisticDashboard {
   id: string;
   language?: string;
   name?: string;
+  statisticId: string;
   shortName: string;
+  frequency: string;
   variantId: string;
   nextRelease?: string;
   nextReleaseId?: string;
@@ -340,8 +348,9 @@ interface StatisticDashboard {
 }
 
 interface StatregData {
+  statisticId: string;
   shortName: string;
-  frekvens: string;
+  frequency: string;
   nextRelease: string;
   variantId: string;
   releaseId: string;
