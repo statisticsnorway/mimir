@@ -5,7 +5,8 @@ name: MERGE MABL FEATURE BRANCH
 # Controls when the action will run. Workflow runs when manually triggered using the UI
 # or API.
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches: [mimir-285-commit-id]
   workflow_dispatch:
    # Inputs the workflow accepts.
@@ -31,7 +32,7 @@ jobs:
       run: echo running on branch ${GITHUB_HEAD_REF##*/} or ${GITHUB_REF##*/} or ${{ github.event.inputs.branch }}
     - name: merge mabl branch
       env:
-        MABL_API_KEY: ${{ secrets.MABL_API_KEY }}
+        MABL_API_KEY: ${{ secrets.MABLAPIKEY }}
       run: |
         mabl auth activate-key $MABL_API_KEY
         mabl branches merge --from ${GITHUB_HEAD_REF##*/}
