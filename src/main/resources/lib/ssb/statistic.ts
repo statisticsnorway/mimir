@@ -149,7 +149,7 @@ function getDatasetFromStatistics(statistic: Content<Statistics>): Array<SourceL
 }
 
 function getSourcesForUserFromStatistic(sources: Array<SourceList>): Array<OwnerWithSources> {
-  log.error('getSourcesForUserFromStatistic: ')
+  log.error('getSourcesForUserFromStatistic: ' + sources.length)
   return sources.reduce((acc: Array<OwnerWithSources>, source: SourceList) => {
     const {
       dataset
@@ -208,50 +208,57 @@ function getDatasetFromContentId(contentId: string): DatasetRepoNode<TbmlDataUni
 function prepStatistics(statistics: Array<Content<Statistics>>): Array<StatisticDashboard> {
   const statisticData: Array<StatisticDashboard> = []
   statistics.map((statistic: Content<Statistics>) => {
-    log.error('STATISTIKK: ' + statistic.displayName)
-    const statregData: StatregData | undefined = statistic.data.statistic ? getStatregInfo(statistic.data.statistic) : undefined
-    log.error('statregData PrettyJSON%s',JSON.stringify(statregData ,null,4));
-    if (statregData) {
-      const datasets: Array<SourceList> = getDatasetFromStatistics(statistic)
-      const relatedUserTBMLs: Array<OwnerWithSources> = getSourcesForUserFromStatistic(datasets)
-      const relatedTables: Array<RelatedTbml> = datasets.reduce((acc: Array<RelatedTbml>, tbml) => {
-        const {
-          dataset,
-          queryId
-        } = tbml
-        if (dataset.data &&
-          typeof(dataset.data) !== 'string' &&
-          dataset.data.tbml.metadata &&
-          dataset.data.tbml.metadata.sourceList) {
-          const tbmlId: string = dataset.data.tbml.metadata.instance.definitionId.toString()
-          acc.push({
-            tbmlId,
+    try {
+      log.error('STATISTIKK: ' + statistic.displayName)
+      const statregData: StatregData | undefined = statistic.data.statistic ? getStatregInfo(statistic.data.statistic) : undefined
+      log.error('statregData PrettyJSON%s', JSON.stringify(statregData, null, 4))
+      if (statregData) {
+        const datasets: Array<SourceList> = getDatasetFromStatistics(statistic)
+        const relatedUserTBMLs: Array<OwnerWithSources> = getSourcesForUserFromStatistic(datasets)
+        log.error('relatedUserTBMLs: ' + relatedUserTBMLs.length)
+        const relatedTables: Array<RelatedTbml> = datasets.reduce((acc: Array<RelatedTbml>, tbml) => {
+          const {
+            dataset,
             queryId
-          })
+          } = tbml
+          if (dataset.data &&
+              typeof(dataset.data) !== 'string' &&
+              dataset.data.tbml.metadata &&
+              dataset.data.tbml.metadata.sourceList) {
+            const tbmlId: string = dataset.data.tbml.metadata.instance.definitionId.toString()
+            acc.push({
+              tbmlId,
+              queryId
+            })
+          }
+          return acc
+        }, [])
+        const statisticDataDashboard: StatisticDashboard = {
+          id: statistic._id,
+          language: statistic.language ? statistic.language : '',
+          name: statistic.displayName ? statistic.displayName : '',
+          statisticId: statregData.statisticId,
+          shortName: statregData.shortName,
+          frequency: statregData.frequency,
+          variantId: statregData.variantId,
+          nextRelease: undefined,
+          nextReleaseId: undefined,
+          relatedUserTBMLs,
+          relatedTables,
+          aboutTheStatistics: statistic.data.aboutTheStatistics
         }
-        return acc
-      }, [])
-      const statisticDataDashboard: StatisticDashboard = {
-        id: statistic._id,
-        language: statistic.language ? statistic.language : '',
-        name: statistic.displayName ? statistic.displayName : '',
-        statisticId: statregData.statisticId,
-        shortName: statregData.shortName,
-        frequency: statregData.frequency,
-        variantId: statregData.variantId,
-        nextRelease: undefined,
-        nextReleaseId: undefined,
-        relatedUserTBMLs,
-        relatedTables,
-        aboutTheStatistics: statistic.data.aboutTheStatistics
+        if (statregData && statregData.nextRelease && moment(statregData.nextRelease).isSameOrAfter(new Date(), 'day')) {
+          statisticDataDashboard.nextRelease = statregData.nextRelease ? statregData.nextRelease : ''
+          statisticDataDashboard.nextReleaseId = statregData.releaseId ? statregData.releaseId : ''
+        }
+        statisticData.push(statisticDataDashboard)
       }
-      if (statregData && statregData.nextRelease && moment(statregData.nextRelease).isSameOrAfter(new Date(), 'day')) {
-        statisticDataDashboard.nextRelease = statregData.nextRelease ? statregData.nextRelease : ''
-        statisticDataDashboard.nextReleaseId = statregData.releaseId ? statregData.releaseId : ''
-      }
-      statisticData.push(statisticDataDashboard)
+    } catch (e) {
+      const message: string = `Failed to prepStatistics for statistic: ${statistic.displayName} (${e})`
+      log.error(message)
     }
   })
+  log.error('Antall statistikker ferdig: ' + statisticData.length)
   return sortByNextRelease(statisticData)
 }
 
