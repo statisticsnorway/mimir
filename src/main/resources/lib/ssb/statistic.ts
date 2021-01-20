@@ -17,6 +17,7 @@ import { KeyFigure } from '../../site/content-types/keyFigure/keyFigure'
 import { TbprocessorLib } from './dataset/tbprocessor'
 import { DataSource } from '../../site/mixins/dataSource/dataSource'
 import { Source, TbmlDataUniform } from '../types/xmlParser'
+import { JobEventNode, JobInfoNode, JobNames, JobStatus, startJobLog, updateJobLog } from '../repo/job'
 
 const {
   query,
@@ -67,7 +68,6 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     if (statistic) {
       const datasetIdsToUpdate: Array<string> = getDatasetIdsFromStatistic(statistic)
       const processXmls: Array<ProcessXml> | undefined = data.owners ? processXmlFromOwners(data.owners) : undefined
-
       if (datasetIdsToUpdate.length > 0) {
         const context: RunContext = {
           branch: 'master',
@@ -79,6 +79,16 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
           }
         }
         run(context, () => {
+          const jobLogNode: JobEventNode = startJobLog(JobNames.STATISTICS_REFRESH_JOB)
+          updateJobLog(jobLogNode._id, (node: JobInfoNode) => {
+            const refreshDataResult: object = createStatisticsJobLogRefreshDataResult(datasetIdsToUpdate)
+            node.data = {
+              ...node.data,
+              queryIds: datasetIdsToUpdate,
+              refreshDataResult
+            }
+            return node
+          })
           refreshDatasetHandler(
             datasetIdsToUpdate,
             socketEmitter,
@@ -94,6 +104,16 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     socketEmitter.broadcast('statistics-activity-refresh-complete', {
       id: data.id
     })
+  })
+}
+
+function createStatisticsJobLogRefreshDataResult(datasetIdsToUpdate: Array<string>): object {
+  return datasetIdsToUpdate.map((id) => {
+    return {
+      queryId: id,
+      status: JobStatus.STARTED,
+      eventLogs: []
+    }
   })
 }
 
