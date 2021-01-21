@@ -71,11 +71,11 @@ const renderPart = (req) => {
     previousReleaseDate = getPreviousReleaseStatistic(variants)
 
     if (previousReleaseDate && previousReleaseDate !== '') {
-      previousRelease = moment(previousReleaseDate).format('DD. MMMM YYYY')
+      previousRelease = moment(previousReleaseDate).format('D. MMMM YYYY')
     }
 
     if (nextReleaseDate && nextReleaseDate !== '') {
-      nextRelease = moment(nextReleaseDate).format('DD. MMMM YYYY')
+      nextRelease = moment(nextReleaseDate).format('D. MMMM YYYY')
     }
   }
 
@@ -85,7 +85,7 @@ const renderPart = (req) => {
 
   if (page.data.showModifiedDate && previousReleaseDate) {
     if (moment(modifiedDate).isAfter(previousReleaseDate)) {
-      changeDate = moment(modifiedDate).format('DD. MMMM YYYY, HH:MM')
+      changeDate = moment(modifiedDate).format('D. MMMM YYYY, HH:MM')
     }
   }
 

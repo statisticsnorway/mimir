@@ -120,7 +120,7 @@ function statRegJob(): void {
   completeJobLog(jobLogNode._id, JOB_STATUS_COMPLETE, result)
 }
 
-function runOnMasterOnly(task: () => void): void {
+export function runOnMasterOnly(task: () => void): void {
   if (isMaster()) {
     task()
   }
@@ -175,4 +175,5 @@ export function setupCronJobs(): void {
 
 export interface SSBCronLib {
     setupCronJobs: () => void;
+    runOnMasterOnly: (task: () => void) => void;
 }

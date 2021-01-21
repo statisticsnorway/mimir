@@ -99,7 +99,7 @@ export function setup(): void {
   cacheLog('initializing cache node listener')
   listener({
     type: 'node.*',
-    localOnly: true,
+    localOnly: false,
     callback: addToChangeQueue
   })
 
