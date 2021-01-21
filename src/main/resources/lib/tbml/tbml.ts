@@ -56,7 +56,7 @@ export function fetch(url: string, queryId?: string, processXml?: string): HttpR
     url,
     body: processXml,
     method: processXml ? 'POST' : 'GET',
-    readTimeout: 30000
+    readTimeout: 40000
   }
   const response: HttpResponse = http.request(requestParams)
 
