@@ -5,7 +5,7 @@ name: "Test Environment"
 # Builds and tests on pull request. Required success before merge can happen.
 trigger:
   branch:
-    - master
+    - mimir-285-drone-add-check
   event:
     include:
       - pull_request
