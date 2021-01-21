@@ -23,6 +23,6 @@ jobs:
       env:
         MABL_API_KEY: ${{ secrets.MABLAPIKEY }}
       run: |
-        run: echo running on branch ${GITHUB_HEAD_REF##*/}
+        echo running on branch ${GITHUB_HEAD_REF##*/}
         mabl auth activate-key $MABL_API_KEY
         mabl branches merge --from ${GITHUB_HEAD_REF##*/}
