@@ -27,3 +27,4 @@ setupCronJobs()
 
 const now = new Date()
 log.info(`Startup script complete: ${now.toISOString()}`)
+log.info('ØD tester')
