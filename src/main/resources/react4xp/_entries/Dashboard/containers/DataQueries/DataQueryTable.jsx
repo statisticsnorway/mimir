@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { Button } from 'react-bootstrap'
-import { selectDataQueriesByParentType, selectDataQueriesByType } from './selectors'
+import { selectDataQueriesByParentType } from './selectors'
 import { Accordion, Link } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import { requestDatasetUpdate } from './actions'
@@ -14,9 +14,7 @@ import { DataQueryLog } from './DataQueryLog'
 import { RefreshDataQueryButton } from './RefreshDataQueryButton'
 
 export function DataQueryTable(props) {
-  const dataQueries = props.dataQueryType ?
-    useSelector(selectDataQueriesByParentType(props.dataQueryType)) :
-    useSelector(selectDataQueriesByType('mimir:statistics'))
+  const dataQueries = useSelector(selectDataQueriesByParentType(props.dataQueryType))
   const contentStudioBaseUrl = useSelector(selectContentStudioBaseUrl)
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
@@ -100,7 +98,6 @@ export function DataQueryTable(props) {
 
 DataQueryTable.propTypes = {
   dataQueryType: PropTypes.string,
-  contentType: PropTypes.string,
   header: PropTypes.string,
   openByDefault: PropTypes.bool
 }
