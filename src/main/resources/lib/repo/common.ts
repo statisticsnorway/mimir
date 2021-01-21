@@ -19,7 +19,7 @@ export type ContextCallback<T> = () => T;
 export type UserContextCallback<T> = (user: User | null) => T;
 export type ConnectionCallback<T> = (conn: RepoConnection) => T;
 
-export const SUPER_USER: User = {
+const SUPER_USER: User = {
   login: 'su',
   displayName: 'su',
   idProvider: 'system'
@@ -52,7 +52,7 @@ export function withLoggedInUserContext<T>(branch: string, callback: UserContext
   }, () => callback(user))
 }
 
-export function getConnection(repository: string, branch: string): RepoConnection {
+function getConnection(repository: string, branch: string): RepoConnection {
   return withSuperUserContext<RepoConnection>(repository, branch, () => {
     return node.connect({
       repoId: repository,
@@ -114,12 +114,8 @@ export function queryNodes(repository: string, branch: string, params: NodeQuery
 }
 
 export interface RepoCommonLib {
-  ENONIC_CMS_DEFAULT_REPO: string;
-  SYSADMIN_ROLE: string;
-  SUPER_USER: User;
   withSuperUserContext: <T>(repository: string, branch: string, callback: ContextCallback<T>) => T;
   withLoggedInUserContext: <T>(branch: string, callback: UserContextCallback<T>) => T;
-  getConnection: (repository: string, branch: string) => RepoConnection;
   withConnection: <T>(repository: string, branch: string, callback: ConnectionCallback<T>) => T;
   createNode: <T>(repository: string, branch: string, content: T & NodeCreateParams) => T & RepoNode;
   getNode: <T>(repository: string, branch: string, key: string) => ReadonlyArray<T & RepoNode> | T & RepoNode | null;
