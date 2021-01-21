@@ -67,7 +67,6 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     if (statistic) {
       const datasetIdsToUpdate: Array<string> = getDatasetIdsFromStatistic(statistic)
       const processXmls: Array<ProcessXml> | undefined = data.owners ? processXmlFromOwners(data.owners) : undefined
-
       if (datasetIdsToUpdate.length > 0) {
         const context: RunContext = {
           branch: 'master',
@@ -82,7 +81,6 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
           refreshDatasetHandler(
             datasetIdsToUpdate,
             socketEmitter,
-            DATASET_BRANCH,
             processXmls
           )
         })
@@ -101,7 +99,7 @@ function processXmlFromOwners(owners: Array<OwnerObject>): Array<ProcessXml> {
   const preRender: Array<SourceNodeRender> = owners.reduce((acc: Array<SourceNodeRender>, ownerObj: OwnerObject) => {
     // if the fetchPublished is set to on, do not create process xml
     // Only requests with xml will try to fetch unpublished data
-    ownerObj.fetchPublished !== 'on' && ownerObj.tbmlList && ownerObj.tbmlList.forEach( (tbmlIdObj: Tbml) => {
+    !ownerObj.fetchPublished && ownerObj.tbmlList && ownerObj.tbmlList.forEach( (tbmlIdObj: Tbml) => {
       const tbmlProcess: SourceNodeRender | undefined = acc.find((process: SourceNodeRender) => process.tbmlId === tbmlIdObj.tbmlId)
       if (tbmlProcess) {
         tbmlIdObj.sourceTableIds.forEach((sourceTable) => {
@@ -325,7 +323,7 @@ interface OwnerObject {
   tbmlList?: Array<Tbml>;
   ownerId: number;
   tbmlId: number;
-  fetchPublished: 'on' | null;
+  fetchPublished: true | undefined;
 };
 
 interface StatisticDashboard {
