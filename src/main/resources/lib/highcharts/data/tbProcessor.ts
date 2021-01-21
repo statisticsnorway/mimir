@@ -1,38 +1,47 @@
-import {Series, SeriesAndCategories} from '../highchartsData';
-import {UtilLibrary} from '../../types/util';
-import {
-  HeaderCellUniform,
-  PreliminaryData,
+import { AreaLineLinearData, Series, SeriesAndCategories } from '../highchartsData'
+import { UtilLibrary } from '../../types/util'
+import { PreliminaryData,
   TableCellUniform,
   TableRowUniform,
-  TbmlDataUniform
-} from '../../types/xmlParser';
-import {SeriesLabelOptionsObject} from "highcharts";
-
-
+  TbmlDataUniform } from '../../types/xmlParser'
 
 const util: UtilLibrary = __non_webpack_require__('/lib/util')
+const {
+  getRowValue
+} = __non_webpack_require__('/lib/ssb/utils')
 
-const getRowValue = (value: object | number | string): number | string => {
-  if (typeof value === 'object' && value.content != undefined) {
-    return value.content
-  }
-  return value
-}
-
-export const seriesAndCategoriesFromTbml = (data: TbmlDataUniform, graphType: string, xAxisType: string): SeriesAndCategories => {
+export function seriesAndCategoriesFromTbml(
+  data: TbmlDataUniform,
+  graphType: string,
+  xAxisType: string): SeriesAndCategories {
+  //
   const tbody: Array<TableRowUniform> = data.tbml.presentation.table.tbody
   const thead: Array<TableRowUniform> = data.tbml.presentation.table.thead
   const rows: TableRowUniform['tr'] = tbody[0].tr
   const headerRows: Array<TableCellUniform> = thead[0].tr
-  const headers: HeaderCellUniform = headerRows[0].th
-  let categories: HeaderCellUniform
-  let series: Array<Series>
+  const headers: TableCellUniform['th'] = headerRows[0].th
+  const categories: TableCellUniform['th'] = determineCategories(graphType, headers, rows, xAxisType)
+  const series: Array<Series> = determineSeries(graphType, headers, categories, rows, xAxisType)
+
+  return {
+    categories,
+    series,
+    title: data.tbml.metadata.title
+  }
+}
+
+
+function determineSeries(
+  graphType: string,
+  headers: TableCellUniform['th'],
+  categories: TableCellUniform['th'],
+  rows: TableRowUniform['tr'],
+  xAxisType: string): Array<Series> {
+  //
   if (graphType === 'pie') {
-    categories = headers
-    series = [{
+    return [{
       name: headers[0],
-      data: rows.map((row) => {
+      data: rows.map((row: TableCellUniform) => {
         return {
           name: row.th,
           y: getRowValue(row.td[0])
@@ -40,11 +49,11 @@ export const seriesAndCategoriesFromTbml = (data: TbmlDataUniform, graphType: st
       })
     }]
   } else if ((graphType === 'area' || graphType === 'line') && xAxisType === 'linear') {
-    categories = headers
-    series = categories.map((cat: string, index: number) => {
+    return categories.map((cat: number | string | PreliminaryData, index: number): Series => {
+      const name: string = getRowValue(cat) as string
       return {
-        name: cat,
-        data: rows.map((row) => {
+        name,
+        data: rows.map((row: TableCellUniform): AreaLineLinearData => {
           return [
             row.th,
             getRowValue(row.td[index])
@@ -53,37 +62,28 @@ export const seriesAndCategoriesFromTbml = (data: TbmlDataUniform, graphType: st
       }
     })
   } else {
-    series = headers.map((name) => ({
+    const series: Array<Series> = headers.map((name) => ({
       name,
       data: []
     }))
-    rows.forEach((row) => {
-      categories.push(row.th)
+    rows.forEach((row: TableCellUniform) => {
       series.forEach((serie, index) => {
         serie.data.push(getRowValue(util.data.forceArray(row.td)[index]))
       })
     })
-  }
-
-  return {
-    categories,
-    series,
-    title: parseTitle(data.tbml.metadata)
+    return series
   }
 }
 
-
-function parseTitle(metadata: TbmlMetaData): string | object | undefined {
-  if (metadata.title && typeof(metadata.title) === 'string') {
-    return metadata.title
-  } else if (metadata.title && typeof(metadata.title) !== 'string' && metadata.title.content) {
-    return metadata.title.content
+function determineCategories(
+  graphType: string,
+  headers: TableCellUniform['th'],
+  rows: TableRowUniform['tr'],
+  xAxisType: string): TableCellUniform['th'] {
+  /**/
+  if (graphType === 'pie' || ((graphType === 'area' || graphType === 'line') && xAxisType === 'linear') ) {
+    return headers
+  } else {
+    return rows.map( (row) => row.th[0])
   }
-  return undefined
-}
-
-interface TbmlMetaData {
-  title: string | {
-    content: object;
-  };
 }

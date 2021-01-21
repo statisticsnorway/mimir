@@ -262,3 +262,10 @@ export const getNextReleaseStatistic = (variants) => {
   }
   return variantWithDate.length > 0 ? variantWithDate[0].nextRelease : ''
 }
+
+export const getRowValue = (value) => {
+  if (typeof value === 'object' && value.content != undefined) {
+    return value.content
+  }
+  return value
+}

@@ -1,13 +1,17 @@
-import JsonStat from 'jsonstat-toolkit'
+/* eslint-disable new-cap */
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// @ts-ignore
+import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { Component, PortalLibrary } from 'enonic-types/portal'
 import { HighchartPartConfig } from './highchart-part-config'
 import { Content, ContentLibrary } from 'enonic-types/content'
 import { UtilLibrary } from '../../../lib/types/util'
 import { Request, Response } from 'enonic-types/controller'
 import { Highchart } from '../../content-types/highchart/highchart'
-import {DatasetRepoNode} from "../../../lib/repo/dataset";
-import {JSONstat} from "../../../lib/types/jsonstat-toolkit";
-import {TbmlDataUniform} from "../../../lib/types/xmlParser";
+import { DatasetRepoNode } from '../../../lib/repo/dataset'
+import { JSONstat as JSONstatType } from '../../../lib/types/jsonstat-toolkit'
+import { TbmlDataUniform } from '../../../lib/types/xmlParser'
+import { HighchartsGraphConfig } from '../../../lib/types/highcharts'
 const {
   DataSource: DataSourceType,
   getDataset,
@@ -56,45 +60,17 @@ exports.preview = (req: Request, id: string): Response => {
   }
 }
 
-/**
- * @param {object} req
- * @param {array<string>} highchartIds
- * @return {{body: *, contentType: string}}
- */
+
 function renderPart(req: Request, highchartIds: Array<string>): Response {
   const highcharts: Array<HighchartsRectProps> = highchartIds.map((key) => {
     const highchart: Content<Highchart> | null = content.get({
       key
     })
-
-    let config
-    if (highchart && highchart.data.dataSource) {
-      const type: string = highchart.data.dataSource._selected
-      const paramShowDraft: boolean = req.params.showDraft !== undefined && req.params.showDraft === 'true'
-      const showPreviewDraft: boolean = hasWritePermissions(req, highchart._id) && type === 'tbprocessor' && paramShowDraft
-      const draftData: DatasetRepoNode<TbmlDataUniform> | null = showPreviewDraft && highchart.data.dataSource.tbprocessor ?
-        getDataset(type, UNPUBLISHED_DATASET_BRANCH, highchart.data.dataSource.tbprocessor.urlOrId) : null
-
-      const datasetFromRepo: DatasetRepoNode<JSONstat | TbmlDataUniform | object> = draftData ? draftData : datasetOrUndefined(highchart)
-      let parsedData: JSONstat | TbmlDataUniform | object | string | undefined = datasetFromRepo && datasetFromRepo.data
-      if (type === DataSourceType.STATBANK_API) {
-        // eslint-disable-next-line new-cap
-        parsedData = JsonStat(parsedData).Dataset(0)
-      }
-      config = parsedData && createHighchartObject(req, highchart, parsedData, highchart.data.dataSource) || undefined
-      config.draft = !!draftData
-      config.noDraftAvailable = showPreviewDraft && !draftData
-    } else if (highchart && highchart.data.htmlTable) {
-      config = {
-        ...createHighchartObject(req, highchart, highchart.data, {
-          _selected: 'htmlTable'
-        })
-      }
-    }
-    return createHighchartsReactProps(highchart, config)
+    const config: HighchartsExtendedProps | undefined = highchart ? determinConfigType(req, highchart) : undefined
+    return highchart && config ? createHighchartsReactProps(highchart, config) : {}
   }).filter((key) => !!key)
 
-  const inlineScript = highcharts.map((highchart) => `<script inline="javascript">
+  const inlineScript: Array<string> = highcharts.map((highchart) => `<script inline="javascript">
    window['highchart' + '${highchart.contentKey}'] = ${JSON.stringify(highchart.config)}
    </script>`)
 
@@ -109,7 +85,55 @@ function renderPart(req: Request, highchartIds: Array<string>): Response {
   }
 }
 
-function createHighchartsReactProps(highchart: Content<Highchart>, config): HighchartsRectProps {
+
+function determinConfigType(req: Request, highchart: Content<Highchart>): HighchartsExtendedProps | undefined {
+  if (highchart && highchart.data.dataSource) {
+    return createDataFromDataSource(req, highchart)
+  } else if (highchart && highchart.data.htmlTable) {
+    return createDataFromHtmlTable(req, highchart)
+  }
+  return undefined
+}
+
+
+function createDataFromHtmlTable(req: Request, highchart: Content<Highchart>): HighchartsExtendedProps {
+  return {
+    ...createHighchartObject(req, highchart, highchart.data, {
+      _selected: 'htmlTable'
+    })
+  }
+}
+
+
+function createDataFromDataSource(req: Request, highchart: Content<Highchart>): HighchartsExtendedProps | undefined {
+  if ( highchart && highchart.data && highchart.data.dataSource) {
+    const type: string = highchart.data.dataSource._selected
+
+    // get draft
+    const paramShowDraft: boolean = req.params.showDraft !== undefined && req.params.showDraft === 'true'
+    const showPreviewDraft: boolean = hasWritePermissions(req, highchart._id) && type === 'tbprocessor' && paramShowDraft
+    const draftData: DatasetRepoNode<TbmlDataUniform> | null = showPreviewDraft && highchart.data.dataSource.tbprocessor ?
+      getDataset(type, UNPUBLISHED_DATASET_BRANCH, highchart.data.dataSource.tbprocessor.urlOrId) : null
+
+    // get dataset
+    const datasetFromRepo: DatasetRepoNode<JSONstatType | TbmlDataUniform | object> = draftData ? draftData : datasetOrUndefined(highchart)
+    let parsedData: JSONstatType | TbmlDataUniform | object | string | undefined = datasetFromRepo && datasetFromRepo.data
+    if (parsedData !== undefined && type === DataSourceType.STATBANK_API) {
+      // eslint-disable-next-line new-cap
+      parsedData = JSONstat(parsedData).Dataset(0)
+    }
+    // create config
+    const config: HighchartsExtendedProps = parsedData && createHighchartObject(req, highchart, parsedData, highchart.data.dataSource) || {}
+    config.draft = !!draftData
+    config.noDraftAvailable = showPreviewDraft && !draftData
+    return config
+  } else {
+    return undefined
+  }
+}
+
+
+function createHighchartsReactProps(highchart: Content<Highchart>, config: HighchartsExtendedProps): HighchartsRectProps {
   return {
     config: config,
     type: highchart.data.graphType,
@@ -121,19 +145,20 @@ function createHighchartsReactProps(highchart: Content<Highchart>, config): High
     hideTitle: highchart.data.hideTitle
   }
 }
+type HighchartsExtendedProps = HighchartsGraphConfig & HighchartsReactExtraProps
 
 interface HighchartsRectProps {
-  config: HighchartsReactPropsConfig;
-  type: string;
-  contentKey: string;
-  footnoteText: string;
-  creditsEnabled: boolean;
-  creditsHref: string;
-  creditsText: string;
-  hideTitle: boolean;
+  config?: HighchartsExtendedProps;
+  type?: string;
+  contentKey?: string;
+  footnoteText?: string;
+  creditsEnabled?: boolean;
+  creditsHref?: string;
+  creditsText?: string;
+  hideTitle?: boolean;
 }
 
-interface HighchartsReactPropsConfig {
+interface HighchartsReactExtraProps {
   draft: boolean;
   noDraftAvailable: boolean;
 }

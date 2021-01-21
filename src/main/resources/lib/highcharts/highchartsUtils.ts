@@ -1,8 +1,11 @@
-import {Request} from "enonic-types/controller";
-import {Highchart} from "../../site/content-types/highchart/highchart";
-import {Content} from "enonic-types/content";
-import {JSONstat} from "../types/jsonstat-toolkit";
-import {TbmlDataUniform} from "../types/xmlParser";
+import { Request } from 'enonic-types/controller'
+import { Highchart } from '../../site/content-types/highchart/highchart'
+import { Content } from 'enonic-types/content'
+import { JSONstat } from '../types/jsonstat-toolkit'
+import { TbmlDataUniform } from '../types/xmlParser'
+import { DataSource } from '../../site/mixins/dataSource/dataSource'
+import { HighchartsGraphConfig } from '../types/highcharts'
+import { HighchartsData } from './highchartsData'
 
 const {
   prepareHighchartsGraphConfig
@@ -19,24 +22,9 @@ export function createHighchartObject(
   req: Request,
   highchart: Content<Highchart>,
   data: JSONstat | TbmlDataUniform | object | string | undefined,
-  dataFormat: string): HighchartObject {
-  const highchartsData: HighchartsData = prepareHighchartsData(req, highchart, data, dataFormat)
-  const highchartsGraphConfig: HighchartsGraphConfig = prepareHighchartsGraphConfig(highchart, dataFormat, highchartsData && highchartsData.categories)
+  dataSource: DataSource['dataSource']): HighchartsGraphConfig {
+  const highchartsData: HighchartsData = prepareHighchartsData(req, highchart, data, dataSource)
+  const highchartsGraphConfig: HighchartsGraphConfig = prepareHighchartsGraphConfig(highchart, dataSource, highchartsData && highchartsData.categories)
   return mergeDeepRight(highchartsData, highchartsGraphConfig)
 }
 
-export interface HighchartObject {
-
-}
-
-export interface HighchartsData {
-  series: Array<{
-    data: object;
-    name: string;
-  }>;
-  categories: object;
-}
-
-export interface HighchartsGraphConfig {
-
-}
