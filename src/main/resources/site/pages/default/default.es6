@@ -129,6 +129,7 @@ exports.get = function(req) {
     metaInfoSearchContentType = 'faktaside'
   }
 
+  // Metainfo statistikk
   if (page.type === `${app.name}:statistics`) {
     const statistic = getStatisticByIdFromRepo(page.data.statistic)
     if (statistic) {
