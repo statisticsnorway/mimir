@@ -11,7 +11,7 @@ Same as lint, but doesn't fix the files, just creates the error/warning dump in 
 
 ## Setup
 ### Visual Studio Code
-Install eslint globally<br>
+Install eslint globally  
 `npm install eslint -g`
 
 Install Eslint Plugin: 
