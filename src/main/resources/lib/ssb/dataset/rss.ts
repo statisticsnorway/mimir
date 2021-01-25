@@ -24,6 +24,9 @@ const {
 const {
   cronJobLog
 }: ServerLogLib = __non_webpack_require__( '/lib/ssb/serverLog')
+const {
+  getParentType
+} = __non_webpack_require__('/lib/ssb/parent')
 
 function fetchRSS(): Array<RSSItem> {
   const statbankRssUrl: string | undefined = app.config && app.config['ssb.rss.statbank'] ? app.config['ssb.rss.statbank'] : 'https://www.ssb.no/rss/statbank'
@@ -51,6 +54,10 @@ function isValidType(dataSource: Content<DataSource>): boolean {
   return false
 }
 
+function parentTypeFilter(dataSources: Array<Content<DataSource>>): Array<Content<DataSource>> {
+  return dataSources.filter((datasource) => getParentType(datasource._path) !== 'mimir:statistics')
+}
+
 function inRSSItems(dataSource: Content<DataSource>, dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object>, RSSItems: Array<RSSItem>): boolean {
   let keys: Array<string> = []
   if (dataSource.data.dataSource?.tbprocessor?.urlOrId) {
@@ -73,19 +80,20 @@ function inRSSItems(dataSource: Content<DataSource>, dataset: DatasetRepoNode<JS
 }
 
 export function dataSourceRSSFilter(dataSources: Array<Content<DataSource>>): Array<Content<DataSource>> {
+  const filteredDatasources: Array<Content<DataSource>> = parentTypeFilter(dataSources)
   const today: number = new Date().getDate()
   const RSSItems: Array<RSSItem> = fetchRSS()
     .filter((item) => new Date(item.pubDate).getDate() === today) // only keep those with updates today
 
   const logData: RSSFilterLogData = {
-    start: dataSources.length,
+    start: filteredDatasources.length,
     noData: 0,
     otherDataType: 0,
     inRSSOrNoKey: 0,
     end: 0
   }
 
-  const filteredDataSources: Array<Content<DataSource>> = dataSources.reduce((t: Array<Content<DataSource>>, dataSource) => {
+  const filteredDatasourcesRSS: Array<Content<DataSource>> = filteredDatasources.reduce((t: Array<Content<DataSource>>, dataSource) => {
     if (isValidType(dataSource)) {
       const dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null = getDataset(dataSource)
       if (!dataset) {
@@ -102,10 +110,10 @@ export function dataSourceRSSFilter(dataSources: Array<Content<DataSource>>): Ar
     return t
   }, [])
 
-  logData.end = filteredDataSources.length
+  logData.end = filteredDatasourcesRSS.length
   cronJobLog(JSON.stringify(logData, null, 2))
 
-  return filteredDataSources
+  return filteredDatasourcesRSS
 }
 
 interface RSSFilterLogData{
