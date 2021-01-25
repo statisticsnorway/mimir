@@ -115,5 +115,16 @@
         <mixin name="relatedFactPage" />
 
         <mixin name="contacts" />
+
+        <field-set>
+            <label>Stikkord</label>
+            <items>
+                <input name="keywords" type="TextArea">
+                    <label>Stikkord</label>
+                    <occurrences minimum="0" maximum="1" />
+                    <help-text >Stikkordene brukes av søket, men vises ikke på ssb.no. Komma brukes for å skille stikkord</help-text>
+                </input>
+            </items>
+        </field-set>
     </form>
 </content-type>

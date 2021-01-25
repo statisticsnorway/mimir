@@ -40,6 +40,11 @@ export interface Statistics {
   }>;
 
   /**
+   * Stikkord
+   */
+  keywords?: string;
+
+  /**
    * Endringsdato
    */
   showModifiedDate?: {
