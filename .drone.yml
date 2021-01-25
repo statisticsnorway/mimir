@@ -15,6 +15,7 @@ steps:
     commands:
       - /setup_sandbox.sh
       - enonic project build
+  #- name: tag test
   - name: deploy
     image: enonic/enonic-ci:7.4-node
     environment:
