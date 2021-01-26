@@ -15,7 +15,6 @@ import { RefreshStatisticsModal } from '../../components/RefreshStatisticsModal'
 
 export function Statistics() {
   const statistics = useSelector(selectStatisticsWithRelease)
-  console.log(statistics)
   const loading = useSelector(selectLoading)
   const contentStudioBaseUrl = useSelector(selectContentStudioBaseUrl)
   const internalBaseUrl = useSelector(selectInternalBaseUrl)
