@@ -83,6 +83,7 @@ export function getDataset<T>(dataSourceType: string, branch: string, key: strin
 }
 
 export function createOrUpdateDataset<T>(dataSourceType: string, branch: string, key: string, data: T): DatasetRepoNode<T> {
+  log.info(`create or update dataset in ${dataSourceType} and ${branch} with key: ${key}`)
   if (!nodeExists(DATASET_REPO, branch, `/${dataSourceType}/${key}`)) {
     return createNode(DATASET_REPO, branch, {
       _name: key,

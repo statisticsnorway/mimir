@@ -29,12 +29,12 @@
   "homepage": "https://github.com/statisticsnorway/mimir#readme",
   "devDependencies": {
     "@babel/cli": "^7.12.10",
-    "@babel/core": "^7.12.3",
+    "@babel/core": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.10",
     "@babel/preset-stage-0": "^7.0.0",
     "@babel/register": "^7.12.1",
-    "@types/ramda": "^0.27.23",
+    "@types/ramda": "^0.27.34",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
     "babel-loader": "^8.2.2",
@@ -43,7 +43,7 @@
     "eslint": "^6.8.0",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-react": "^7.21.5",
-    "webpack": "^4.44.2",
+    "webpack": "^4.46.0",
     "webpack-cli": "^3.3.12"
   },
   "dependencies": {
@@ -78,7 +78,7 @@
     "npm-safe-install": "^1.1.0",
     "numeral": "^2.0.6",
     "popper.js": "^1.16.1",
-    "postcss-loader": "^3.0.0",
+    "postcss-loader": "^4.2.0",
     "postcss-normalize": "^9.0.0",
     "prop-types": "^15.7.2",
     "ramda": "^0.27.1",
@@ -101,7 +101,7 @@
     "sass-loader": "^10.0.5",
     "style-loader": "^2.0.0",
     "terser-webpack-plugin": "^4.2.3",
-    "ts-loader": "^8.0.13",
+    "ts-loader": "^8.0.14",
     "typescript": "^3.9.7",
     "xlsx": "^0.16.9"
   },

@@ -20,16 +20,16 @@ export function HomePage() {
         <Tab eventKey="statistics" title="Statistikker">
           <Container>
             <Row>
-              <Col className="col-8">
+              <Col className="col-12">
                 <Statistics/>
-              </Col>
-              <Col className="col-4">
-                <DashboardTools/>
               </Col>
             </Row>
             <Row className="mt-3">
               <Col className="col-8">
                 <Jobs/>
+              </Col>
+              <Col className="col-4">
+                <DashboardTools/>
               </Col>
             </Row>
           </Container>

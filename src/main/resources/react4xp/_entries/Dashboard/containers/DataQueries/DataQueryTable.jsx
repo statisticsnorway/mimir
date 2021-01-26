@@ -55,7 +55,7 @@ export function DataQueryTable(props) {
     }
   ], [])
 
-  function getDataQueries(dataQueries) {
+  function getDataQueries() {
     return dataQueries.map((dataQuery) => {
       return {
         dataQuery: (
@@ -83,7 +83,7 @@ export function DataQueryTable(props) {
       }
     })
   }
-  const data = React.useMemo(() => getDataQueries(dataQueries), [])
+  const data = React.useMemo(() => getDataQueries(), [dataQueries])
 
   return (
     <Accordion header={`${props.header} (${dataQueries.length})`} className="mx-0" openByDefault={!!props.openByDefault}>

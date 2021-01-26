@@ -30,12 +30,8 @@ export function RefreshStatisticsModal(props) {
     resetRefreshStatus(dispatch, 'request')
   }
 
-  const updateTables = (formData) => {
-    const {
-      owners,
-      fetchPublished
-    } = formData
-    refreshStatistic(dispatch, io, modalInfo.id, owners, fetchPublished)
+  const updateTables = (owners) => {
+    refreshStatistic(dispatch, io, modalInfo.id, owners)
   }
 
   return (

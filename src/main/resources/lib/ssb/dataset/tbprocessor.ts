@@ -1,3 +1,4 @@
+__non_webpack_require__('/lib/polyfills/nashorn')
 import { DatasetRepoNode, RepoDatasetLib } from '../../repo/dataset'
 import { Content } from 'enonic-types/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
@@ -42,7 +43,6 @@ function tryRequestTbmlData<T extends TbmlDataUniform | TbmlSourceListUniform>(
   url: string,
   contentId?: string,
   processXml?: string ): TbprocessorParsedResponse<T> | null {
-  //
   try {
     return getTbmlData(url, contentId, processXml)
   } catch (e) {
@@ -80,7 +80,50 @@ function getDataAndMetaData(content: Content<DataSource>, processXml?: string ):
 
   const tbmlParsedResponse: TbprocessorParsedResponse<TbmlDataUniform> | null = tryRequestTbmlData<TbmlDataUniform>(tbmlDataUrl, content._id, processXml)
 
-  if (tbmlParsedResponse && tbmlParsedResponse.status === 200) {
+  // If this is true, it's most likely an internal table (unpublised data only)
+  // We pass this as a status 200, add an empty table to presentation,
+  // and fetch source list, so it's possible to import unpublished data from dashboard
+  const isInternal: boolean = !!(
+    tbmlParsedResponse &&
+    tbmlParsedResponse.status === 500 &&
+    tbmlParsedResponse.body &&
+    tbmlParsedResponse.body.includes('code: 401') &&
+    tbmlParsedResponse.body.includes('StatbankService.svc')
+  )
+  if (tbmlParsedResponse && (tbmlParsedResponse.status === 200 || isInternal)) {
+    if (isInternal) {
+      tbmlParsedResponse.status = 200
+      tbmlParsedResponse.parsedBody = {
+        tbml: {
+          presentation: {
+            table: {
+              thead: [],
+              tbody: [],
+              class: 'statistics'
+            }
+          },
+          metadata: {
+            instance: {
+              publicRelatedTableIds: [],
+              language: 'no',
+              relatedTableIds: [],
+              definitionId: parseInt(tbmlKey)
+            },
+            tablesource: '',
+            title: {
+              noterefs: '',
+              content: ''
+            },
+            category: '',
+            shortnameweb: '',
+            tags: '',
+            notes: {
+              note: []
+            }
+          }
+        }
+      }
+    }
     const tbmlDataAndSourceList: TbmlDataUniform | null = addSourceList(sourceListUrl, tbmlParsedResponse, content._id)
     return {
       ...tbmlParsedResponse,

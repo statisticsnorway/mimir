@@ -79,7 +79,9 @@ const renderPart = (req) => {
           body,
           items
         }
-      })
+      }),
+      showAll: phrases.showAll,
+      showLess: phrases.showLess
     })
     .setId('accordion')
     .uniqueId()

@@ -256,7 +256,7 @@ export const getPreviousReleaseStatistic = (variants) => {
 }
 
 export const getNextReleaseStatistic = (variants) => {
-  const variantWithDate = variants.filter((variant) => variant.nextRelease !== '' && moment(variant.nextRelease).isAfter(new Date(), 'day'))
+  const variantWithDate = variants.filter((variant) => variant.nextRelease !== '' && moment(variant.nextRelease).isSameOrAfter(new Date(), 'minute'))
   if (variantWithDate.length > 1) {
     variantWithDate.sort((d1, d2) => new Date(d1.nextRelease) - new Date(d2.nextRelease))
   }
