@@ -43,6 +43,7 @@ export interface JobInfo {
     jobStarted: string;
     completionTime: string;
     queryIds?: Array<string>;
+    user: User;
   };
 }
 

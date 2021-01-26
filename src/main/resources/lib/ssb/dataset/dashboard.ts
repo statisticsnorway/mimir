@@ -207,7 +207,7 @@ interface DashboardPublishJobResult {
     datasetKey?: string;
   }>;
 }
-interface DashboardJobInfo {
+export interface DashboardJobInfo {
   id: string;
   task: string;
   status: typeof JOB_STATUS_STARTED | typeof JOB_STATUS_COMPLETE;
@@ -215,6 +215,7 @@ interface DashboardJobInfo {
   completionTime?: string;
   message: string;
   result: Array<unknown>;
+  user?: User;
 }
 
 function prepDataSources(dataSources: Array<Content<DataSource>>): Array<unknown> {
