@@ -7,6 +7,7 @@ import { DashboardDatasetLib, ProcessXml, RefreshDatasetResult, DashboardJobInfo
 import { ContextLibrary, RunContext } from 'enonic-types/context'
 import { DatasetRepoNode } from '../repo/dataset'
 import { DashboardUtilsLib } from './dataset/dashboardUtils'
+import { I18nLibrary } from 'enonic-types/i18n'
 __non_webpack_require__('/lib/polyfills/nashorn')
 
 import moment = require('moment')
@@ -18,7 +19,7 @@ import { TbprocessorLib } from './dataset/tbprocessor'
 import { DataSource } from '../../site/mixins/dataSource/dataSource'
 import { Source, TbmlDataUniform } from '../types/xmlParser'
 import { JobEventNode, JobInfoNode, JobNames, JobStatus, RepoJobLib } from '../repo/job'
-import { NodeQueryResponse, RepoConnection } from 'enonic-types/node'
+import { NodeQueryResponse } from 'enonic-types/node'
 import { RepoEventLogLib } from '../repo/eventLog'
 import { RepoCommonLib } from '../repo/common'
 
@@ -62,6 +63,7 @@ const {
   EVENT_LOG_BRANCH,
   EVENT_LOG_REPO
 }: RepoEventLogLib = __non_webpack_require__('/lib/repo/eventLog')
+const i18n: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-statistics', () => {
@@ -297,6 +299,11 @@ function getStatisticsJobLogInfo(id: string, count: number = 1): Array<Dashboard
 
 function prepStatisticsJobLogInfo(jobNode: JobInfoNode): DashboardJobInfo {
   const jobResult: Array<RefreshDatasetResult> = forceArray(jobNode.data.refreshDataResult || []) as Array<RefreshDatasetResult>
+  jobResult.forEach((datasetResult: RefreshDatasetResult) => {
+    datasetResult.status = i18n.localize({
+      key: datasetResult.status
+    })
+  })
   return {
     id: jobNode._id,
     startTime: jobNode.data.jobStarted,
