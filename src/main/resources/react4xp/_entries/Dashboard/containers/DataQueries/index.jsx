@@ -19,6 +19,7 @@ export function DataQueries() {
         <DataQueryTable header="Spørringer som feilet" dataQueryType="error" openByDefault={true}/>
         <DataQueryTable header="Spørringer fra Faktasider" dataQueryType="factPage"/>
         <DataQueryTable header="Spørringer fra Kommunefakta" dataQueryType="municipality"/>
+        <DataQueryTable header="Spørringer fra statistikker" dataQueryType="mimir:statistics"/>
         <DataQueryTable header="Andre" dataQueryType="default"/>
       </React.Fragment>
     )

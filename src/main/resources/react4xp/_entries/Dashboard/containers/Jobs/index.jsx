@@ -41,7 +41,8 @@ export function Jobs() {
   function getJobRows() {
     return jobs.map((job) => {
       const ts = moment(job.completionTime ? job.completionTime : job.startTime).locale('nb').format('DD.MM.YYYY HH.mm.ss')
-      const name = job.task
+      const name = getTranslatedJobName(job.task)
+
       const info = renderInfo(job)
       return {
         ts,
@@ -53,6 +54,21 @@ export function Jobs() {
     })
   }
   const tableRows = React.useMemo(() => getJobRows(), [jobs])
+
+  function getTranslatedJobName(task) {
+    switch (task) {
+    case '-- Running dataquery cron job --':
+      return 'Kjøre oppdaterte spørringer'
+    case 'Delete expired eventlogs':
+      return 'Slette eventlog'
+    case 'Publish statistics':
+      return 'Publisering statistikk'
+    case 'Refresh statreg data':
+      return 'Import Statreg'
+    default:
+      return task
+    }
+  }
 
   function renderSpinner() {
     return (

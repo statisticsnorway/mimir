@@ -20,7 +20,9 @@ function parentType(path: string): string | undefined {
   })
 
   if (parentContent) {
-    if (parentContent.page.config || parentContent.type === 'portal:site') {
+    if (parentContent.type === `${app.name}:statistics`) {
+      return parentContent.type
+    } else if (parentContent.page.config || parentContent.type === 'portal:site') {
       return parentContent.page.config.pageType ? parentContent.page.config.pageType : 'default'
     } else {
       return fromParentTypeCache(parentPathKey, () => parentType(parentPathKey))
