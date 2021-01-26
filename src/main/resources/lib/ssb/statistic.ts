@@ -3,9 +3,9 @@ import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
 import { StatisticInListing, VariantInListing } from './statreg/types'
 import { UtilLibrary } from '../types/util'
 import { Statistics } from '../../site/content-types/statistics/statistics'
-import { DashboardDatasetLib, ProcessXml } from './dataset/dashboard'
+import { DashboardDatasetLib, ProcessXml, RefreshDatasetResult } from './dataset/dashboard'
 import { ContextLibrary, RunContext } from 'enonic-types/context'
-import { DatasetRepoNode, RepoDatasetLib } from '../repo/dataset'
+import { DatasetRepoNode } from '../repo/dataset'
 import { DashboardUtilsLib } from './dataset/dashboardUtils'
 __non_webpack_require__('/lib/polyfills/nashorn')
 
@@ -17,7 +17,7 @@ import { KeyFigure } from '../../site/content-types/keyFigure/keyFigure'
 import { TbprocessorLib } from './dataset/tbprocessor'
 import { DataSource } from '../../site/mixins/dataSource/dataSource'
 import { Source, TbmlDataUniform } from '../types/xmlParser'
-import { JobEventNode, JobInfoNode, JobNames, JobStatus, startJobLog, updateJobLog } from '../repo/job'
+import { JobEventNode, JobInfoNode, JobNames, JobStatus, RepoJobLib } from '../repo/job'
 
 const {
   query,
@@ -42,14 +42,16 @@ const {
   run
 }: ContextLibrary = __non_webpack_require__('/lib/xp/context')
 const {
-  DATASET_BRANCH
-}: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
-const {
   getTbprocessor
 }: TbprocessorLib = __non_webpack_require__('/lib/ssb/dataset/tbprocessor')
 const {
   encrypt
 } = __non_webpack_require__('/lib/cipher/cipher')
+const {
+  completeJobLog,
+  updateJobLog,
+  startJobLog
+}: RepoJobLib = __non_webpack_require__('/lib/repo/job')
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-statistics', () => {
@@ -81,19 +83,15 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
         run(context, () => {
           const jobLogNode: JobEventNode = startJobLog(JobNames.STATISTICS_REFRESH_JOB)
           updateJobLog(jobLogNode._id, (node: JobInfoNode) => {
-            const refreshDataResult: object = createStatisticsJobLogRefreshDataResult(datasetIdsToUpdate)
-            node.data = {
-              ...node.data,
-              queryIds: datasetIdsToUpdate,
-              refreshDataResult
-            }
+            node.data.queryIds = [data.id]
             return node
           })
-          refreshDatasetHandler(
+          const refreshDataResult: Array<RefreshDatasetResult> = refreshDatasetHandler(
             datasetIdsToUpdate,
             socketEmitter,
             processXmls
           )
+          completeJobLog(jobLogNode._id, JobStatus.COMPLETE, refreshDataResult)
         })
       }
       socketEmitter.broadcast('statistics-refresh-result', {
@@ -103,16 +101,6 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     socketEmitter.broadcast('statistics-activity-refresh-complete', {
       id: data.id
     })
-  })
-}
-
-function createStatisticsJobLogRefreshDataResult(datasetIdsToUpdate: Array<string>): object {
-  return datasetIdsToUpdate.map((id) => {
-    return {
-      queryId: id,
-      status: JobStatus.STARTED,
-      eventLogs: []
-    }
   })
 }
 
