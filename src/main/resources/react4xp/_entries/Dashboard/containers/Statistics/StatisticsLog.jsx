@@ -20,6 +20,7 @@ export function StatisticsLog(props) {
   const handleShow = () => setShow(true)
 
   const openEventlog = () => {
+    return
     dataQueries.map((dataQuery) => requestEventLogData(dispatch, io, dataQuery.id))
     setShow(handleShow)
   }
@@ -32,7 +33,7 @@ export function StatisticsLog(props) {
       })(log.result)
       return (
         <React.Fragment>
-          <span className="d-sm-flex justify-content-center text-center small haveList" onClick={() => {} /* openEventlog()*/}>
+          <span className="d-sm-flex justify-content-center text-center small haveList" onClick={() => openEventlog()}>
             {log.message} - {moment(log.completionTime ? log.completionTime : log.startTime).locale('nb').format('DD.MM.YYYY HH.mm')}
             <br/>
             {log.user ? log.user.displayName : ''}
