@@ -129,6 +129,7 @@ exports.get = function(req) {
     metaInfoSearchContentType = 'faktaside'
   }
 
+  // Metainfo statistikk
   if (page.type === `${app.name}:statistics`) {
     const statistic = getStatisticByIdFromRepo(page.data.statistic)
     if (statistic) {
@@ -138,6 +139,7 @@ exports.get = function(req) {
     }
     metaInfoSearchContentType = 'statistikk'
     metaInfoDescription = page.x['com-enonic-app-metafields']['meta-data'].seoDescription
+    metaInfoSearchKeywords = page.data.keywords ? page.data.keywords : ''
   }
 
   let config

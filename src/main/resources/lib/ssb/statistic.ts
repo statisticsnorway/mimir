@@ -213,42 +213,51 @@ function getDatasetFromContentId(contentId: string): DatasetRepoNode<TbmlDataUni
 function prepStatistics(statistics: Array<Content<Statistics>>): Array<StatisticDashboard> {
   const statisticData: Array<StatisticDashboard> = []
   statistics.map((statistic: Content<Statistics>) => {
-    const statregData: StatregData | undefined = statistic.data.statistic ? getStatregInfo(statistic.data.statistic) : undefined
-
-    if (statregData) {
-      const datasets: Array<SourceList> = getDatasetFromStatistics(statistic)
-      const relatedUserTBMLs: Array<OwnerWithSources> = getSourcesForUserFromStatistic(datasets)
-      const relatedTables: Array<RelatedTbml> = datasets.reduce((acc: Array<RelatedTbml>, tbml) => {
-        const {
-          dataset,
-          queryId
-        } = tbml
-        if (dataset.data &&
-          typeof(dataset.data) !== 'string' &&
-          dataset.data.tbml.metadata &&
-          dataset.data.tbml.metadata.sourceList) {
-          const tbmlId: string = dataset.data.tbml.metadata.instance.definitionId.toString()
-          acc.push({
-            tbmlId,
+    try {
+      const statregData: StatregData | undefined = statistic.data.statistic ? getStatregInfo(statistic.data.statistic) : undefined
+      if (statregData) {
+        const datasets: Array<SourceList> = getDatasetFromStatistics(statistic)
+        const relatedUserTBMLs: Array<OwnerWithSources> = getSourcesForUserFromStatistic(datasets)
+        const relatedTables: Array<RelatedTbml> = datasets.reduce((acc: Array<RelatedTbml>, tbml) => {
+          const {
+            dataset,
             queryId
-          })
+          } = tbml
+          if (dataset.data &&
+              typeof(dataset.data) !== 'string' &&
+              dataset.data.tbml.metadata &&
+              dataset.data.tbml.metadata.sourceList) {
+            const tbmlId: string = dataset.data.tbml.metadata.instance.definitionId.toString()
+            acc.push({
+              tbmlId,
+              queryId
+            })
+          }
+          return acc
+        }, [])
+        const statisticDataDashboard: StatisticDashboard = {
+          id: statistic._id,
+          language: statistic.language ? statistic.language : '',
+          name: statistic.displayName ? statistic.displayName : '',
+          statisticId: statregData.statisticId,
+          shortName: statregData.shortName,
+          frequency: statregData.frequency,
+          variantId: statregData.variantId,
+          nextRelease: undefined,
+          nextReleaseId: undefined,
+          relatedUserTBMLs,
+          relatedTables,
+          aboutTheStatistics: statistic.data.aboutTheStatistics
         }
-        return acc
-      }, [])
-      const statisticDataDashboard: StatisticDashboard = {
-        id: statistic._id,
-        language: statistic.language ? statistic.language : '',
-        name: statistic.displayName ? statistic.displayName : '',
-        shortName: statregData.shortName,
-        nextRelease: undefined,
-        relatedUserTBMLs,
-        relatedTables,
-        aboutTheStatistics: statistic.data.aboutTheStatistics
+        if (statregData && statregData.nextRelease && moment(statregData.nextRelease).isSameOrAfter(new Date(), 'day')) {
+          statisticDataDashboard.nextRelease = statregData.nextRelease ? statregData.nextRelease : ''
+          statisticDataDashboard.nextReleaseId = statregData.nextReleaseId ? statregData.nextReleaseId : ''
+        }
+        statisticData.push(statisticDataDashboard)
       }
-      if (statregData && statregData.nextRelease && moment(statregData.nextRelease).isSameOrAfter(new Date(), 'day')) {
-        statisticDataDashboard.nextRelease = statregData.nextRelease ? statregData.nextRelease : ''
-      }
-      statisticData.push(statisticDataDashboard)
+    } catch (e) {
+      const message: string = `Failed to prepStatistics for statistic: ${statistic.displayName} (${e})`
+      log.error(message)
     }
   })
   return sortByNextRelease(statisticData)
@@ -274,9 +283,12 @@ function getStatregInfo(key: string): StatregData | undefined {
     }
     const variant: VariantInListing = variants[0] // TODO: Multiple variants
     const result: StatregData = {
+      statisticId: statisticStatreg.id,
       shortName: statisticStatreg.shortName,
-      frekvens: variant.frekvens,
-      nextRelease: variant.nextRelease ? variant.nextRelease : ''
+      frequency: variant.frekvens,
+      nextRelease: variant.nextRelease ? variant.nextRelease : '',
+      nextReleaseId: variant.nextReleaseId ? variant.nextReleaseId : '',
+      variantId: variant.id
     }
     return result
   }
@@ -327,17 +339,24 @@ interface StatisticDashboard {
   id: string;
   language?: string;
   name?: string;
+  statisticId: string;
   shortName: string;
+  frequency: string;
+  variantId: string;
   nextRelease?: string;
+  nextReleaseId?: string;
   relatedTables?: Array<RelatedTbml>;
   relatedUserTBMLs?: Array<OwnerWithSources>;
   aboutTheStatistics?: string;
 }
 
 interface StatregData {
+  statisticId: string;
   shortName: string;
-  frekvens: string;
+  frequency: string;
   nextRelease: string;
+  nextReleaseId: string;
+  variantId: string;
 }
 
 interface RelatedTbml {

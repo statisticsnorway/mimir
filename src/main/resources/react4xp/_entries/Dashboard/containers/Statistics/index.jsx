@@ -7,7 +7,7 @@ import { selectStatisticsWithRelease,
 import { RefreshCw } from 'react-feather'
 import Moment from 'react-moment'
 import { Link } from '@statisticsnorway/ssb-component-library'
-import { selectContentStudioBaseUrl } from '../HomePage/selectors'
+import { selectContentStudioBaseUrl, selectInternalBaseUrl } from '../HomePage/selectors'
 import { setOpenStatistic, setOpenModal } from './actions'
 
 import { StatisticsLog } from './StatisticsLog'
@@ -19,6 +19,7 @@ export function Statistics() {
   const loading = useSelector(selectLoading)
   const loadingQueries = useSelector(selectQueryLoading)
   const contentStudioBaseUrl = useSelector(selectContentStudioBaseUrl)
+  const internalBaseUrl = useSelector(selectInternalBaseUrl)
   const openModal = useSelector(selectOpenModal)
 
   const dispatch = useDispatch()
@@ -54,6 +55,9 @@ export function Statistics() {
             <tr>
               <th className="roboto-bold">
                 <span>Statistikk</span>
+              </th>
+              <th className="roboto-bold">
+                <span>Frekvens</span>
               </th>
               <th className="roboto-bold">
                 <span>Om statistikken</span>
@@ -127,6 +131,9 @@ export function Statistics() {
           {getShortNameLink(statistic)}
         </td>
         <td>
+          {getFrekvens(statistic)}
+        </td>
+        <td>
           {getAboutStatisticLink(statistic)}
         </td>
         <td>
@@ -145,7 +152,25 @@ export function Statistics() {
       return (
         <span>
           <Moment format="DD.MM.YYYY hh:mm">{statistic.nextRelease}</Moment>
+          {getStatregLinks(statistic)}
         </span>
+      )
+    }
+    return (
+      <span/>
+    )
+  }
+
+  function getStatregLinks(statistic) {
+    if (statistic.nextReleaseId && statistic.statisticId && statistic.variantId) {
+      const editUrl = internalBaseUrl + '/statistikkregisteret/publisering/edit/' + statistic.nextReleaseId
+      const createUrl = internalBaseUrl + '/statistikkregisteret/publisering/create?statistikk.id=' +
+          statistic.statisticId + '&variant.id=' + statistic.variantId
+      return (
+        <React.Fragment>
+          <Link isExternal href={editUrl} title="Endre publisering i statistikkregisteret" className="ml-2">[Endre]</Link>
+          <Link isExternal href={createUrl} title="Melde ny publisering i statistikkregisteret" className="ml-2">[Meld]</Link>
+        </React.Fragment>
       )
     }
     return (
@@ -165,6 +190,14 @@ export function Statistics() {
     return (
       <span>{statistic.language === 'en' ? 'Eng. ' + statistic.shortName : statistic.shortName}</span>
     )
+  }
+
+  function getFrekvens(statistic) {
+    if (statistic.frequency) {
+      return (
+        <span>{statistic.frequency}</span>
+      )
+    }
   }
 
   function getAboutStatisticLink(statistic) {
