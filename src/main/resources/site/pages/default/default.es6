@@ -139,6 +139,7 @@ exports.get = function(req) {
     }
     metaInfoSearchContentType = 'statistikk'
     metaInfoDescription = page.x['com-enonic-app-metafields']['meta-data'].seoDescription
+    metaInfoSearchKeywords = page.data.keywords ? page.data.keywords : ''
   }
 
   let config
