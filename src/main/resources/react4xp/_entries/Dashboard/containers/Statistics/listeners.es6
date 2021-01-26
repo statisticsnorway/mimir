@@ -34,4 +34,10 @@ export default function setupStatisticsListeners(io, dispatch) {
       data
     })
   })
+  io.on('statistics-refresh-result-log', (data) => {
+    dispatch({
+      type: actions.updateStatisticsLog.type,
+      data
+    })
+  })
 }

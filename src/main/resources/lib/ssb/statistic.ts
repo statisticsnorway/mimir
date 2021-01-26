@@ -101,7 +101,11 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
             socketEmitter,
             processXmls
           )
-          completeJobLog(jobLogNode._id, JobStatus.COMPLETE, refreshDataResult)
+          const finishedJobLog: JobInfoNode = completeJobLog(jobLogNode._id, JobStatus.COMPLETE, refreshDataResult)
+          socketEmitter.broadcast('statistics-refresh-result-log', {
+            id: data.id,
+            log: prepStatisticsJobLogInfo(finishedJobLog)
+          })
         })
       }
       socketEmitter.broadcast('statistics-refresh-result', {
@@ -284,21 +288,25 @@ function getStatisticsJobLogInfo(id: string, count: number = 1): Array<Dashboard
     return statisticsJobLog.hits.reduce((res: Array<DashboardJobInfo>, jobRes) => {
       const jobNode: JobInfoNode | null = connection.get(jobRes.id)
       if (jobNode) {
-        const jobResult: Array<RefreshDatasetResult> = forceArray(jobNode.data.refreshDataResult || []) as Array<RefreshDatasetResult>
-        res.push({
-          id: jobNode._id,
-          startTime: jobNode.data.jobStarted,
-          completionTime: jobNode.data.completionTime ? jobNode.data.completionTime : undefined,
-          status: jobNode.data.status,
-          task: jobNode.data.task,
-          message: jobNode.data.message ? jobNode.data.message : '',
-          result: jobResult,
-          user: jobNode.data.user
-        })
+        res.push(prepStatisticsJobLogInfo(jobNode))
       }
       return res
     }, [])
   })
+}
+
+function prepStatisticsJobLogInfo(jobNode: JobInfoNode): DashboardJobInfo {
+  const jobResult: Array<RefreshDatasetResult> = forceArray(jobNode.data.refreshDataResult || []) as Array<RefreshDatasetResult>
+  return {
+    id: jobNode._id,
+    startTime: jobNode.data.jobStarted,
+    completionTime: jobNode.data.completionTime ? jobNode.data.completionTime : undefined,
+    status: jobNode.data.status,
+    task: jobNode.data.task,
+    message: jobNode.data.message ? jobNode.data.message : '',
+    result: jobResult,
+    user: jobNode.data.user
+  }
 }
 
 // function getEventLogsFromStatisticsJobLog(connection: RepoConnection, jobLogId: string): Array<unknown> {
