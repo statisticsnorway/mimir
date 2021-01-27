@@ -14,7 +14,7 @@ steps:
     image: enonic/enonic-ci:7.4-node
     commands:
       - /setup_sandbox.sh
-      - enonic project build
+     # - enonic project build
   - name: deploy
     image: enonic/enonic-ci:7.4-node
     environment:
@@ -38,6 +38,9 @@ steps:
     commands:
       - npm install -g @mablhq/mabl-cli 
       - mabl deployments create --api-key $MABL_API_KEY --application-id $MABL_APP_ID --labels GITHUB_ACTIONS --environment-id $MABL_ENV_ID_TEST --revision $DRONE_COMMIT_SHA --await-completion --mabl-branch ${DRONE_SOURCE_BRANCH} --auto-branch true
+    when:
+      ref:
+      - refs/tags/*mimir*
 ---
 kind: pipeline
 type: docker
