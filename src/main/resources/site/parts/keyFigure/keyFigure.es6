@@ -114,8 +114,14 @@ function renderKeyFigure(parsedKeyFigures, part, parsedKeyFiguresDraft, showPrev
     })
     .uniqueId()
 
+  const hiddenTitle = parsedKeyFigures.map((keyFigureData) => {
+    return keyFigureData.title
+  })
+  const parsedHiddenTitle = hiddenTitle.toString().replace(/[\[\]']+/g, '')
+
   const body = render(view, {
-    keyFiguresId: keyFigureReact.react4xpId
+    keyFiguresId: keyFigureReact.react4xpId,
+    hiddenTitle: parsedHiddenTitle
   })
 
   return {
