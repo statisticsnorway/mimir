@@ -23,7 +23,8 @@ export enum JobStatus {
 
 export enum JobNames {
   PUBLISH_JOB = 'Publish statistics',
-  STATREG_JOB = 'Refresh statreg data'
+  STATREG_JOB = 'Refresh statreg data',
+  STATISTICS_REFRESH_JOB = 'refresh statistics'
 }
 
 export const JOB_STATUS_STARTED: 'STARTED' = 'STARTED'
@@ -42,6 +43,7 @@ export interface JobInfo {
     jobStarted: string;
     completionTime: string;
     queryIds?: Array<string>;
+    user: User;
   };
 }
 
