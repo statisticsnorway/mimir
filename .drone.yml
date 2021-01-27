@@ -25,7 +25,7 @@ steps:
       ENONIC_CLI_REMOTE_PASS:
         from_secret: ssb-xp7t-pass
     #commands:
-    #  - enonic app install --file build/libs/*.jar
+    ##  - enonic app install --file build/libs/*.jar
   - name: mabl create and test branch - test.ssb.no
     image: enonic/enonic-ci:7.4-node
     environment:
