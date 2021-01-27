@@ -1,4 +1,4 @@
-import { PreliminaryData, TableCellUniform, TbmlDataUniform } from '../types/xmlParser'
+import { PreliminaryData, TbmlDataUniform } from '../types/xmlParser'
 import { Request } from 'enonic-types/controller'
 import { Highchart } from '../../site/content-types/highchart/highchart'
 import { Content } from 'enonic-types/content'
