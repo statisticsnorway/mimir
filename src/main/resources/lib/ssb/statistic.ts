@@ -316,6 +316,7 @@ function prepStatisticsJobLogInfo(jobNode: JobInfoNode): DashboardJobInfo {
   }
 }
 
+// NOTE example code to fetch event logs connected to datasources on statistics job log
 // function getEventLogsFromStatisticsJobLog(connection: RepoConnection, jobLogId: string): Array<unknown> {
 //   const jobLog: JobInfoNode = connection.get(jobLogId)
 //   const userLogin: string | undefined = jobLog.data.user?.login
