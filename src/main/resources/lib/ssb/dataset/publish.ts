@@ -140,7 +140,17 @@ export function publishDataset(): void {
   if (jobResult.length === 0) {
     completeJobLog(jobLogNode._id, `Successfully updated 0 statistics`, [])
   }
-  log.info('End publish job')
+}
+
+function allJobsAreSkipped(jobResult: Array<StatisticsPublishResult>): boolean {
+  const sum: Array<boolean> = jobResult.reduce( (acc: Array<boolean>, jr: StatisticsPublishResult): Array<boolean> => {
+      const numberOfSkippedDataSources: number = jr.dataSources.filter((ds: DataSourceStatisticsPublishResult) => {
+        return ds.status === JobStatus.SKIPPED
+      }).length
+      acc.push(jr.dataSources.length === numberOfSkippedDataSources)
+      return acc
+    }, [])
+  return !sum.includes(false)
 }
 
 function createTask(jobId: string, statistic: Content<Statistics>, releaseDate: Date, validPublications: Array<PublicationItem>): void {
@@ -150,13 +160,17 @@ function createTask(jobId: string, statistic: Content<Statistics>, releaseDate: 
       const serverOffsetInMs: number = app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
       const now: Date = new Date(new Date().getTime() + serverOffsetInMs)
       const sleepFor: number = releaseDate.getTime() - now.getTime()
-      log.info(`Publish statistic (${statistic.data.statistic}) in ${sleepFor}ms (${releaseDate.toISOString()})`)
       sleep(sleepFor)
       const job: JobInfoNode = jobs[jobId] as JobInfoNode
       const jobRefreshResult: Array<StatisticsPublishResult> = forceArray(job.data.refreshDataResult) as Array<StatisticsPublishResult>
       const statRefreshResult: StatisticsPublishResult | undefined = jobRefreshResult.find((s) => {
         return s.statistic === statistic._id
       })
+      /*
+      * Iterate this statistics related datasources, and check if they have unpublished data
+      * If they do, create or update the dataset on master branch
+      * Then delete dataset in draft
+      * */
       validPublications.forEach((publication) => {
         const {
           dataSource,
@@ -165,7 +179,6 @@ function createTask(jobId: string, statistic: Content<Statistics>, releaseDate: 
         if (dataset && dataSource.data.dataSource) {
           const key: string | null = extractKey(dataSource)
           if (key) {
-            log.info(`publishing dataset ${dataSource.data.dataSource?._selected} - ${key} for ${statistic.data.statistic}`)
             createOrUpdateDataset(dataSource.data.dataSource?._selected, DATASET_BRANCH, key, dataset.data)
             logUserDataQuery(dataSource._id, {
               file: '/lib/ssb/dataset/publish.ts',
@@ -184,6 +197,7 @@ function createTask(jobId: string, statistic: Content<Statistics>, releaseDate: 
           }
         }
       })
+      // Update the statistics refresh result object
       if (job && statRefreshResult) {
         statRefreshResult.status = JobStatus.COMPLETE
         const allComplete: boolean = jobRefreshResult.filter((s) => {
