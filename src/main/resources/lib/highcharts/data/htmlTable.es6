@@ -6,7 +6,8 @@ export function seriesAndCategoriesFromHtmlTable(highchartsContent) {
   const stringJson = __.toNativeObject(xmlParser.parse(highchartsContent.data.htmlTable))
   const result = JSON.parse(stringJson)
   const categories = result.table.tbody.tr.reduce((previous, tr, index) => {
-    if (index > 0) previous.push(tr.td[0].content)
+    const categoryValue = typeof tr.td[0] === 'object' ? tr.td[0].content : tr.td[0]
+    if (index > 0) previous.push(categoryValue)
     return previous
   }, [])
 
@@ -14,9 +15,10 @@ export function seriesAndCategoriesFromHtmlTable(highchartsContent) {
 
   const dataInSeries = tableData.tr[0].td.reduce( (acc, current, tdIndex) => {
     acc.push({
-      name: current.content,
+      name: typeof current === 'object' ? current.content : current,
       data: tableData.tr.reduce( (dataAcc, tr, trIndex) => {
-        if (trIndex > 0) dataAcc.push(parseValue(tr.td[tdIndex].content))
+        const value = typeof tr.td[tdIndex] === 'object' ? tr.td[tdIndex].content : tr.td[tdIndex]
+        if (trIndex > 0) dataAcc.push(parseValue(value))
         return dataAcc
       }, [])
     })
