@@ -70,15 +70,15 @@ export function getDataset<T>(dataSourceType: string, branch: string, key: strin
   } else {
     dataset = res as DatasetRepoNode<T> | null
   }
-
   if (dataset && dataset.data && typeof(dataset.data) === 'string') {
     try {
       dataset.data = JSON.parse(dataset.data)
     } catch (e) {
+      log.error('Error parsing json')
+      log.error(JSON.stringify(e, null, 2))
       // not json-string in data, so let's ignore it
     }
   }
-
   return dataset
 }
 
