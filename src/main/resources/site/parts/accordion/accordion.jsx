@@ -26,10 +26,10 @@ class Accordion extends React.Component {
       accordions
     } = this.props
 
-    if (accordions.length < 5) {
-      return 'd-none'
+    if (accordions.length > 5) {
+      return ''
     }
-    return ''
+    return 'd-none'
   }
 
   getButtonText() {
