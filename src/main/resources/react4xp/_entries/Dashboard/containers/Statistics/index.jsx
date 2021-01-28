@@ -11,13 +11,11 @@ import { selectContentStudioBaseUrl, selectInternalBaseUrl } from '../HomePage/s
 import { setOpenStatistic, setOpenModal } from './actions'
 
 import { StatisticsLog } from './StatisticsLog'
-import { selectLoading as selectQueryLoading } from '../DataQueries/selectors'
 import { RefreshStatisticsModal } from '../../components/RefreshStatisticsModal'
 
 export function Statistics() {
   const statistics = useSelector(selectStatisticsWithRelease)
   const loading = useSelector(selectLoading)
-  const loadingQueries = useSelector(selectQueryLoading)
   const contentStudioBaseUrl = useSelector(selectContentStudioBaseUrl)
   const internalBaseUrl = useSelector(selectInternalBaseUrl)
   const openModal = useSelector(selectOpenModal)
@@ -114,15 +112,6 @@ export function Statistics() {
     )
   }
 
-  function renderLog(statistic) {
-    if (loadingQueries) {
-      return <span className="spinner-border spinner-border-sm"/>
-    }
-    return (
-      <StatisticsLog statisticsShortName={statistic.shortName} relatedTables={statistic.relatedTables ? statistic.relatedTables : []}/>
-    )
-  }
-
   function statisticRow(statistic, index) {
     const key = statistic.shortName + '_' + statistic.language + '_' + index
     return (
@@ -141,7 +130,7 @@ export function Statistics() {
         </td>
         <td className="text-center">{statistic.nextRelease ? makeRefreshButton(statistic) : ''}</td>
         <td>
-          {renderLog(statistic)}
+          {statistic.logData ? <StatisticsLog statistic={statistic}/> : null}
         </td>
       </tr>
     )

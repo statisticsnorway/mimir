@@ -9,7 +9,6 @@ const {
 } = __non_webpack_require__('/lib/ssb/utils')
 const {
   getNode,
-  SUPER_USER,
   withConnection,
   withLoggedInUserContext,
   withSuperUserContext
@@ -71,22 +70,19 @@ export enum Events {
   XML_TO_JSON = 'XML_TO_JSON'
 }
 
-export function logDataQueryEvent(queryId: string, status: QueryStatus, user: User): void {
-  withSuperUserContext(EVENT_LOG_REPO, EVENT_LOG_BRANCH, () => {
+function logDataQueryEvent(queryId: string, status: QueryStatus, user: User): EventInfo & RepoNode {
+  return withSuperUserContext<EventInfo & RepoNode>(EVENT_LOG_REPO, EVENT_LOG_BRANCH, () => {
     startQuery(queryId, user, status)
-    addEventToQueryLog(queryId, user, status)
+    const eventLog: EventInfo & RepoNode = addEventToQueryLog(queryId, user, status)
     updateQueryLogStatus(queryId, user, status)
+    return eventLog
   })
 }
 
-export function logUserDataQuery(queryId: string, status: QueryStatus): void {
-  withLoggedInUserContext(EVENT_LOG_BRANCH, (user: User) => {
-    logDataQueryEvent(queryId, status, user)
+export function logUserDataQuery(queryId: string, status: QueryStatus): EventInfo & RepoNode {
+  return withLoggedInUserContext(EVENT_LOG_BRANCH, (user: User) => {
+    return logDataQueryEvent(queryId, status, user)
   })
-}
-
-export function logAdminDataQuery(queryId: string, status: QueryStatus): void {
-  logDataQueryEvent(queryId, status, SUPER_USER)
 }
 
 function addEventToQueryLog(queryId: string, user: User, status: QueryStatus): EventInfo & RepoNode {
@@ -101,7 +97,7 @@ function addEventToQueryLog(queryId: string, user: User, status: QueryStatus): E
   })
 }
 
-export function startQuery(queryId: string, user: User, status: QueryStatus): QueryInfoNode {
+function startQuery(queryId: string, user: User, status: QueryStatus): QueryInfoNode {
   return withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, () => {
     const queryLogNode: ReadonlyArray<QueryInfoNode> | QueryInfoNode | null = getNode<QueryInfo>(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${queryId}`)
     if (queryLogNode !== undefined && queryLogNode !== null) {
@@ -112,7 +108,7 @@ export function startQuery(queryId: string, user: User, status: QueryStatus): Qu
   })
 }
 
-export function createQueryNode(queryId: string, user: User, status: QueryStatus): QueryInfoNode {
+function createQueryNode(queryId: string, user: User, status: QueryStatus): QueryInfoNode {
   const ts: Date = new Date()
   return createEventLog<QueryInfo>({
     _parentPath: '/queries',
@@ -126,11 +122,11 @@ export function createQueryNode(queryId: string, user: User, status: QueryStatus
   })
 }
 
-export function updateQuery<T>(key: string, editor: EditorCallback<QueryInfoNode>): QueryInfoNode {
+function updateQuery<T>(key: string, editor: EditorCallback<QueryInfoNode>): QueryInfoNode {
   return updateEventLog(key, editor)
 }
 
-export function updateQueryLogStatus(queryId: string, user: User, status: QueryStatus): QueryInfoNode {
+function updateQueryLogStatus(queryId: string, user: User, status: QueryStatus): QueryInfoNode {
   const ts: Date = new Date()
 
   return updateQuery(`/queries/${queryId}`, function(node: QueryInfoNode): QueryInfoNode {
@@ -146,12 +142,6 @@ export function updateQueryLogStatus(queryId: string, user: User, status: QueryS
 }
 
 export interface RepoQueryLib {
-  logDataQueryEvent: (queryId: string, status: QueryStatus, user: User) => void;
-  logUserDataQuery: (queryId: string, status: QueryStatus) => void;
-  logAdminDataQuery: (queryId: string, status: QueryStatus) => void;
-  startQuery: (queryId: string, user: User, status: QueryStatus) => QueryInfoNode;
-  createQueryNode: (queryId: string, user: User, status: QueryStatus) => QueryInfoNode;
-  updateQuery: <T>(key: string, editor: EditorCallback<QueryInfoNode>) => QueryInfoNode;
-  updateQueryLogStatus: (queryId: string, user: User, status: QueryStatus) => QueryInfoNode;
+  logUserDataQuery: (queryId: string, status: QueryStatus) => EventInfo & RepoNode;
   Events: typeof Events;
 }

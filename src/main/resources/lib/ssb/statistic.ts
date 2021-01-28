@@ -3,10 +3,11 @@ import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
 import { StatisticInListing, VariantInListing } from './statreg/types'
 import { UtilLibrary } from '../types/util'
 import { Statistics } from '../../site/content-types/statistics/statistics'
-import { DashboardDatasetLib, ProcessXml } from './dataset/dashboard'
+import { DashboardDatasetLib, ProcessXml, RefreshDatasetResult, DashboardJobInfo } from './dataset/dashboard'
 import { ContextLibrary, RunContext } from 'enonic-types/context'
-import { DatasetRepoNode, RepoDatasetLib } from '../repo/dataset'
+import { DatasetRepoNode } from '../repo/dataset'
 import { DashboardUtilsLib } from './dataset/dashboardUtils'
+import { I18nLibrary } from 'enonic-types/i18n'
 __non_webpack_require__('/lib/polyfills/nashorn')
 
 import moment = require('moment')
@@ -17,6 +18,10 @@ import { KeyFigure } from '../../site/content-types/keyFigure/keyFigure'
 import { TbprocessorLib } from './dataset/tbprocessor'
 import { DataSource } from '../../site/mixins/dataSource/dataSource'
 import { Source, TbmlDataUniform } from '../types/xmlParser'
+import { JobEventNode, JobInfoNode, JobNames, JobStatus, RepoJobLib } from '../repo/job'
+import { NodeQueryResponse } from 'enonic-types/node'
+import { RepoEventLogLib } from '../repo/eventLog'
+import { RepoCommonLib } from '../repo/common'
 
 const {
   query,
@@ -41,14 +46,24 @@ const {
   run
 }: ContextLibrary = __non_webpack_require__('/lib/xp/context')
 const {
-  DATASET_BRANCH
-}: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
-const {
   getTbprocessor
 }: TbprocessorLib = __non_webpack_require__('/lib/ssb/dataset/tbprocessor')
 const {
   encrypt
 } = __non_webpack_require__('/lib/cipher/cipher')
+const {
+  completeJobLog,
+  updateJobLog,
+  startJobLog
+}: RepoJobLib = __non_webpack_require__('/lib/repo/job')
+const {
+  withConnection
+}: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
+const {
+  EVENT_LOG_BRANCH,
+  EVENT_LOG_REPO
+}: RepoEventLogLib = __non_webpack_require__('/lib/repo/eventLog')
+const i18n: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-statistics', () => {
@@ -78,11 +93,21 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
           }
         }
         run(context, () => {
-          refreshDatasetHandler(
+          const jobLogNode: JobEventNode = startJobLog(JobNames.STATISTICS_REFRESH_JOB)
+          updateJobLog(jobLogNode._id, (node: JobInfoNode) => {
+            node.data.queryIds = [data.id]
+            return node
+          })
+          const refreshDataResult: Array<RefreshDatasetResult> = refreshDatasetHandler(
             datasetIdsToUpdate,
             socketEmitter,
             processXmls
           )
+          const finishedJobLog: JobInfoNode = completeJobLog(jobLogNode._id, JobStatus.COMPLETE, refreshDataResult)
+          socketEmitter.broadcast('statistics-refresh-result-log', {
+            id: data.id,
+            log: prepStatisticsJobLogInfo(finishedJobLog)
+          })
         })
       }
       socketEmitter.broadcast('statistics-refresh-result', {
@@ -238,7 +263,8 @@ function prepStatistics(statistics: Array<Content<Statistics>>): Array<Statistic
           nextReleaseId: undefined,
           relatedUserTBMLs,
           relatedTables,
-          aboutTheStatistics: statistic.data.aboutTheStatistics
+          aboutTheStatistics: statistic.data.aboutTheStatistics,
+          logData: getStatisticsJobLogInfo(statistic._id)
         }
         if (statregData && statregData.nextRelease && moment(statregData.nextRelease).isSameOrAfter(new Date(), 'day')) {
           statisticDataDashboard.nextRelease = statregData.nextRelease ? statregData.nextRelease : ''
@@ -253,6 +279,60 @@ function prepStatistics(statistics: Array<Content<Statistics>>): Array<Statistic
   })
   return sortByNextRelease(statisticData)
 }
+
+function getStatisticsJobLogInfo(id: string, count: number = 1): Array<DashboardJobInfo> {
+  return withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (connection) => {
+    const statisticsJobLog: NodeQueryResponse = connection.query({
+      query: `_path LIKE "/jobs/*" AND data.task = "${JobNames.STATISTICS_REFRESH_JOB}" AND data.queryIds = "${id}"`,
+      count,
+      sort: '_ts DESC'
+    })
+    return statisticsJobLog.hits.reduce((res: Array<DashboardJobInfo>, jobRes) => {
+      const jobNode: JobInfoNode | null = connection.get(jobRes.id)
+      if (jobNode) {
+        res.push(prepStatisticsJobLogInfo(jobNode))
+      }
+      return res
+    }, [])
+  })
+}
+
+function prepStatisticsJobLogInfo(jobNode: JobInfoNode): DashboardJobInfo {
+  const jobResult: Array<RefreshDatasetResult> = forceArray(jobNode.data.refreshDataResult || []) as Array<RefreshDatasetResult>
+  jobResult.forEach((datasetResult: RefreshDatasetResult) => {
+    datasetResult.status = i18n.localize({
+      key: datasetResult.status
+    })
+  })
+  return {
+    id: jobNode._id,
+    startTime: jobNode.data.jobStarted,
+    completionTime: jobNode.data.completionTime ? jobNode.data.completionTime : undefined,
+    status: jobNode.data.status,
+    task: jobNode.data.task,
+    message: jobNode.data.message ? jobNode.data.message : '',
+    result: jobResult,
+    user: jobNode.data.user
+  }
+}
+
+// NOTE example code to fetch event logs connected to datasources on statistics job log
+// function getEventLogsFromStatisticsJobLog(connection: RepoConnection, jobLogId: string): Array<unknown> {
+//   const jobLog: JobInfoNode = connection.get(jobLogId)
+//   const userLogin: string | undefined = jobLog.data.user?.login
+//   const from: string = jobLog.data.jobStarted
+//   const to: string = jobLog.data.completionTime
+//   const datasetIds: Array<string> = jobLog.data.refreshDataResult as Array<string> || []
+//   return datasetIds.map((id) => {
+//     log.info(`_path LIKE "/queries/${id}/*" AND data.by.login = "${userLogin}" AND range("_ts", instant("${from}"), instant("${to}"))`)
+//     const eventLogsResult: NodeQueryResponse = connection.query({
+//       query: `_path LIKE "/queries/${id}/*" AND data.by.login = "${userLogin}" AND range("_ts", instant("${from}"), instant("${to}"))`,
+//       count: 10,
+//       sort: '_ts DESC'
+//     })
+//     return null
+//   })
+// }
 
 export function getStatistics(): Array<Content<Statistics>> {
   let hits: Array<Content<Statistics>> = []
@@ -339,6 +419,7 @@ interface StatisticDashboard {
   relatedTables?: Array<RelatedTbml>;
   relatedUserTBMLs?: Array<OwnerWithSources>;
   aboutTheStatistics?: string;
+  logData: Array<DashboardJobInfo>;
 }
 
 interface StatregData {

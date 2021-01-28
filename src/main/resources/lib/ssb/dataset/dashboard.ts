@@ -207,7 +207,7 @@ interface DashboardPublishJobResult {
     datasetKey?: string;
   }>;
 }
-interface DashboardJobInfo {
+export interface DashboardJobInfo {
   id: string;
   task: string;
   status: typeof JOB_STATUS_STARTED | typeof JOB_STATUS_COMPLETE;
@@ -215,6 +215,7 @@ interface DashboardJobInfo {
   completionTime?: string;
   message: string;
   result: Array<unknown>;
+  user?: User;
 }
 
 function prepDataSources(dataSources: Array<Content<DataSource>>): Array<unknown> {
@@ -256,7 +257,8 @@ function prepDataSources(dataSources: Array<Content<DataSource>>): Array<unknown
 export function refreshDatasetHandler(
   ids: Array<string>,
   socketEmitter: SocketEmitter,
-  processXmls?: Array<ProcessXml>): void {
+  processXmls?: Array<ProcessXml>
+): Array<RefreshDatasetResult> {
   // tell all dashboard instances that these are going to be loaded
   ids.forEach((id) => {
     socketEmitter.broadcast('dashboard-activity-refreshDataset', {
@@ -264,7 +266,7 @@ export function refreshDatasetHandler(
     })
   })
   // start loading each datasource
-  ids.forEach((id: string, index: number) => {
+  return ids.map((id: string, index: number) => {
     const dataSource: Content<DataSource> | null = getContent({
       key: id
     })
@@ -311,6 +313,11 @@ export function refreshDatasetHandler(
       })
 
       socketEmitter.broadcast('dashboard-activity-refreshDataset-result', transfromQueryResult(refreshDatasetResult))
+      return {
+        id,
+        status: refreshDatasetResult.status,
+        branch: ownerCredentialsForTbml ? UNPUBLISHED_DATASET_BRANCH : DATASET_BRANCH
+      }
     } else {
       socketEmitter.broadcast('statistics-activity-refresh-feedback', {
         status: `Fant ingen innhold med id ${id}`,
@@ -325,6 +332,11 @@ export function refreshDatasetHandler(
         }),
         status: Events.FAILED_TO_FIND_DATAQUERY
       })
+      return {
+        id,
+        status: Events.FAILED_TO_FIND_DATAQUERY,
+        branch: DATASET_BRANCH
+      }
     }
   })
 }
@@ -377,6 +389,7 @@ interface QueryLogNode extends RepoNode {
   };
 }
 
+
 interface DashboardRefreshResult {
   id: string;
   dataset: DashboardRefreshResultDataset | {};
@@ -387,6 +400,12 @@ interface DashboardRefreshResultDataset {
   newDatasetData: boolean;
   modified: string;
   modifiedReadable: string;
+}
+
+export interface RefreshDatasetResult {
+  id: string;
+  status: string;
+  branch: string;
 }
 
 export interface DashboardRefreshResultLogData {
@@ -403,11 +422,12 @@ export interface RefreshDatasetOptions {
 export interface DashboardDatasetLib {
   users: Array<User>;
   setupHandlers: (socket: Socket, socketEmitter: SocketEmitter) => void;
- showWarningIcon: (result: Events) => boolean;
+  showWarningIcon: (result: Events) => boolean;
   refreshDatasetHandler: (
     ids: Array<string>,
     socketEmitter: SocketEmitter,
-    processXml?: Array<ProcessXml>) => void;
+    processXml?: Array<ProcessXml>
+  ) => Array<RefreshDatasetResult>;
 }
 
 export interface ProcessXml {
