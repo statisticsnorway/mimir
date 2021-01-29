@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
-import { Button } from 'react-bootstrap'
+import { Button, Modal } from 'react-bootstrap'
 import { selectDataQueriesByParentType } from './selectors'
 import { Accordion, Link } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
@@ -18,10 +18,39 @@ export function DataQueryTable(props) {
   const contentStudioBaseUrl = useSelector(selectContentStudioBaseUrl)
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
+  const [modalShow, setModalShow] = React.useState(false)
 
   function updateAll() {
     const ids = dataQueries.filter((q) => !q.loading).map((q) => q.id)
     requestDatasetUpdate(dispatch, io, ids)
+  }
+
+  function ConfirmationModal(props) {
+    return (
+      <Modal
+        {...props}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+              Oppdatere liste
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <h4>Er du sikker på at du vil oppdatere listen?</h4>
+          <p>
+              trykker du ja, vil du oppdatere alle tabeller og figurer i hele listen og
+              jobben kan ikke stoppes når den er blitt startet
+          </p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={props.onHide}>Avbryt</Button>
+          <Button onClick={() => updateAll()}>Ja, oppdater liste</Button>
+        </Modal.Footer>
+      </Modal>
+    )
   }
 
   const anyLoading = dataQueries.filter((q) => q.loading).length > 0
@@ -87,11 +116,15 @@ export function DataQueryTable(props) {
 
   return (
     <Accordion header={`${props.header} (${dataQueries.length})`} className="mx-0" openByDefault={!!props.openByDefault}>
-      <Button className="mb-3" onClick={() => updateAll()}>
+      <ReactTable columns={columns} data={data} />
+      <Button className="mb-3" onClick={() => setModalShow(true)}>
         Oppdater liste
         {anyLoading ? <span className="spinner-border spinner-border-sm ml-2 mb-1" /> : <RefreshCw className="ml-2" />}
       </Button>
-      <ReactTable columns={columns} data={data} />
+      <ConfirmationModal
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+      />
     </Accordion>
   )
 }
