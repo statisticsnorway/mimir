@@ -34,7 +34,7 @@
     "@babel/preset-react": "^7.12.10",
     "@babel/preset-stage-0": "^7.0.0",
     "@babel/register": "^7.12.1",
-    "@types/ramda": "^0.27.34",
+    "@types/ramda": "^0.27.36",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
     "babel-loader": "^8.2.2",
