@@ -7,6 +7,7 @@ import { StatRegCommonLib } from '../../ssb/statreg/common'
 import { RepoCommonLib } from '../common'
 import { RepoQueryLib } from '../query'
 import { HttpResponse } from 'enonic-types/http'
+import moment = require('moment')
 
 const {
   ensureArray
@@ -54,7 +55,7 @@ export function fetchStatisticsWithRelease(before: Date): Array<StatisticInListi
   return statistics.reduce((statsWithRelease: Array<StatisticInListing>, stat) => {
     const variants: Array<VariantInListing> = ensureArray(stat.variants)
     variants.sort((a: VariantInListing, b: VariantInListing) => new Date(a.nextRelease).getTime() - new Date(b.nextRelease).getTime())
-    if (variants[0] && new Date(variants[0].nextRelease) <= before) {
+    if (variants[0] && moment(variants[0].nextRelease).isBetween(new Date(), before, 'day', '[]')) {
       statsWithRelease.push(stat)
     }
     return statsWithRelease

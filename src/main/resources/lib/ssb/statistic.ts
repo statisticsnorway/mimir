@@ -9,7 +9,6 @@ import { ContextLibrary, RunContext } from 'enonic-types/context'
 import { DatasetRepoNode } from '../repo/dataset'
 import { DashboardUtilsLib } from './dataset/dashboardUtils'
 import { I18nLibrary } from 'enonic-types/i18n'
-import moment = require('moment')
 import { Highchart } from '../../site/content-types/highchart/highchart'
 import { Table } from '../../site/content-types/table/table'
 import { KeyFigure } from '../../site/content-types/keyFigure/keyFigure'
@@ -347,6 +346,24 @@ function getStatistics(): Array<StatisticDashboard> {
       return `${statregStat.id}` === statistic.data.statistic
     }) as StatisticInListing
     const statregData: StatregData = getStatregInfo(statregStat)
+    const datasets: Array<SourceList> = getDatasetFromStatistics(statistic)
+    const relatedTables: Array<RelatedTbml> = datasets.reduce((acc: Array<RelatedTbml>, tbml) => {
+      const {
+        dataset,
+        queryId
+      } = tbml
+      if (dataset.data &&
+              typeof(dataset.data) !== 'string' &&
+              dataset.data.tbml.metadata &&
+              dataset.data.tbml.metadata.sourceList) {
+        const tbmlId: string = dataset.data.tbml.metadata.instance.definitionId.toString()
+        acc.push({
+          tbmlId,
+          queryId
+        })
+      }
+      return acc
+    }, [])
     const statisticDataDashboard: StatisticDashboard = {
       id: statistic._id,
       language: statistic.language ? statistic.language : '',
@@ -355,18 +372,16 @@ function getStatistics(): Array<StatisticDashboard> {
       shortName: statregData.shortName,
       frequency: statregData.frequency,
       variantId: statregData.variantId,
-      nextRelease: undefined,
-      nextReleaseId: undefined,
+      nextRelease: statregData.nextRelease,
+      nextReleaseId: statregData.nextReleaseId,
       relatedUserTBMLs: [],
-      relatedTables: [],
+      relatedTables: relatedTables,
       aboutTheStatistics: statistic.data.aboutTheStatistics,
       logData: getStatisticsJobLogInfo(statistic._id)
     }
-    if (statregData && statregData.nextRelease && moment(statregData.nextRelease).isSameOrAfter(new Date(), 'day')) {
-      statisticDataDashboard.nextRelease = statregData.nextRelease ? statregData.nextRelease : ''
-      statisticDataDashboard.nextReleaseId = statregData.nextReleaseId ? statregData.nextReleaseId : ''
-    }
     return statisticDataDashboard
+  }).sort((a, b) => {
+    return new Date(a.nextRelease).getTime() - new Date(b.nextRelease).getTime()
   })
 }
 
@@ -435,8 +450,8 @@ interface StatisticDashboard {
   shortName: string;
   frequency: string;
   variantId: string;
-  nextRelease?: string;
-  nextReleaseId?: string;
+  nextRelease: string;
+  nextReleaseId: string;
   relatedTables?: Array<RelatedTbml>;
   relatedUserTBMLs?: Array<OwnerWithSources>;
   aboutTheStatistics?: string;
