@@ -67,7 +67,7 @@ const renderPart = (req) => {
 
   const attachmentTableAndFigureView = getTablesAndFigures(attachmentTablesAndFigures, req, phrases)
 
-  const accordionComponent = new React4xp('site/parts/accordion/accordion')
+  const accordionComponent = new React4xp('AttachmentTablesFigures')
     .setProps({
       accordions: attachmentTableAndFigureView.map(({
         id, open, subHeader, body, items
@@ -80,6 +80,7 @@ const renderPart = (req) => {
           items
         }
       }),
+      freeText: page.data.freeTextAttachmentTablesFigures,
       showAll: phrases.showAll,
       showLess: phrases.showLess
     })
