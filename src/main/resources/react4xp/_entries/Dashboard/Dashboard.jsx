@@ -69,9 +69,9 @@ function DashboardRouter(props) {
     internalStatbankUrl: props.internalStatbankUrl
   })
   setUserServerSide(dispatch, io, props.user)
-  requestStatistics(dispatch, io)
-  requestStatuses(dispatch, io)
-  requestDataQueries(dispatch, io)
+  // requestStatistics(dispatch, io)
+  // requestStatuses(dispatch, io)
+  // requestDataQueries(dispatch, io)
   requestJobs(dispatch, io)
   return (
     <BrowserRouter>
