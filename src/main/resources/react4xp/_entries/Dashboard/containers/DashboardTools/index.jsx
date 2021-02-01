@@ -7,7 +7,7 @@ import { requestClearCache } from '../HomePage/actions.es6'
 import { ChevronDown, ChevronUp, RefreshCw, Trash } from 'react-feather'
 import { Col, Container, Row } from 'react-bootstrap'
 import { Link, Dropdown } from '@statisticsnorway/ssb-component-library'
-import { selectStatistics, selectLoading, selectHasLoadingStatistic } from '../Statistics/selectors'
+import { selectSearchList, selectLoadingSearchList, selectHasLoadingStatistic } from '../Statistics/selectors'
 import { setOpenStatistic, setOpenModal } from '../Statistics/actions'
 import { selectDataQueriesByType } from '../DataQueries/selectors'
 import { requestDatasetUpdate } from '../DataQueries/actions'
@@ -16,8 +16,8 @@ import { selectStatuses } from '../StatRegDashboard/selectors'
 
 export function DataQueryTools() {
   const loadingCache = useSelector(selectLoadingClearCache)
-  const statistics = useSelector(selectStatistics)
-  const loadingStatistics = useSelector(selectLoading)
+  const statisticsSearchList = useSelector(selectSearchList)
+  const loadingStatisticsSearchList = useSelector(selectLoadingSearchList)
   const hasLoadingStatistic = useSelector(selectHasLoadingStatistic)
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
@@ -74,12 +74,12 @@ export function DataQueryTools() {
   }
 
   function renderStatisticsSearch() {
-    if (loadingStatistics) {
+    if (loadingStatisticsSearchList) {
       return (
         <span className="spinner-border spinner-border-sm ml-2 mb-1" />
       )
     }
-    const items = statistics.map((s) => {
+    const items = statisticsSearchList.map((s) => {
       return {
         title: `${s.shortName} - ${s.name}`,
         id: s.id
@@ -161,7 +161,7 @@ export function DataQueryTools() {
                 setOpenStatistic(dispatch, selectedStat.id)
                 setOpenModal(dispatch, true)
               }}
-              disabled={hasLoadingStatistic || loadingStatistics || !selectedStat}
+              disabled={hasLoadingStatistic || loadingStatisticsSearchList || !selectedStat}
             >
               { hasLoadingStatistic ? <span className="spinner-border spinner-border-sm" /> : <RefreshCw size={16}/> }
             </Button>
@@ -169,7 +169,7 @@ export function DataQueryTools() {
         </Row>
         <Row className="mb-4">
           <Col className="p-0">
-            <Button disabled={loadingStatistics} onClick={() => refreshAllTables()}>
+            <Button disabled={loadingStatisticsSearchList} onClick={() => refreshAllTables()}>
               {`Oppdater alle tabeller (${tableQueries.length})`} {renderSpinner(loadingTables)}
             </Button>
           </Col>

@@ -2,7 +2,9 @@ import { createSlice } from '../../utils/@reduxjs/toolkit'
 
 export const initialState = {
   statistics: [],
+  statisticsSearchList: [],
   loading: true,
+  loadingSearchList: true,
   openStatistic: null,
   modalDisplay: 'request',
   updateMessage: [],
@@ -68,6 +70,14 @@ const statisticsSlice = createSlice({
     },
     setModalDisplay(state, action) {
       state.modalDisplay = action.status
+    },
+    loadStatisticsSearchList(state) {
+      state.loadingSearchList = true
+      state.statisticsSearchList = []
+    },
+    statisticsSearchListLoaded(state, action) {
+      state.loadingSearchList = false
+      state.statisticsSearchList = action.statisticsSearchList
     }
   }
 })

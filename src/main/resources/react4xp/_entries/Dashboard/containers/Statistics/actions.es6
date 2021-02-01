@@ -8,6 +8,14 @@ export function requestStatistics(dispatch, io) {
   io.emit('get-statistics')
 }
 
+export function requestStatisticsSearchList(dispatch, io) {
+  dispatch({
+    type: actions.loadStatisticsSearchList.type
+  })
+
+  io.emit('get-statistics-search-list')
+}
+
 export function refreshStatistic(dispatch, io, id, owners) {
   dispatch({
     type: actions.startRefreshStatistic.type,

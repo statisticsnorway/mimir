@@ -1,5 +1,5 @@
 __non_webpack_require__('/lib/polyfills/nashorn')
-import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
+import { Content, ContentLibrary } from 'enonic-types/content'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { RepoDatasetLib, DatasetRepoNode } from '../../repo/dataset'
@@ -17,10 +17,10 @@ const {
   logUserDataQuery
 }: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
 const {
-  getDatasetIdsFromStatistic
+  getDatasetIdsFromStatistic,
+  getStatisticsContent
 }: StatisticLib = __non_webpack_require__('/lib/ssb/statistic')
 const {
-  query,
   get: getContent
 }: ContentLibrary = __non_webpack_require__('/lib/xp/content')
 const {
@@ -58,22 +58,11 @@ const {
 
 const jobs: {[key: string]: JobEventNode | JobInfoNode} = {}
 
-function getStatistics(): Array<Content<Statistics>> {
-  let hits: Array<Content<Statistics>> = []
-  const result: QueryResponse<Statistics> = query({
-    contentTypes: [`${app.name}:statistics`],
-    query: `data.statistic LIKE "*"`,
-    count: 1000
-  })
-  hits = hits.concat(result.hits)
-  return hits
-}
-
 export function publishDataset(): void {
   cronJobLog('Start publish job')
   const jobLogNode: JobEventNode = startJobLog(JobNames.PUBLISH_JOB)
   jobs[jobLogNode._id] = jobLogNode
-  const statistics: Array<Content<Statistics>> = getStatistics()
+  const statistics: Array<Content<Statistics>> = getStatisticsContent()
   const publishedDatasetIds: Array<string> = []
   const jobResult: Array<StatisticsPublishResult> = []
   statistics.forEach((stat) => {
@@ -229,7 +218,7 @@ function getNextRelease(statistic: Content<Statistics>): string | null{
 }
 
 export interface PublishDatasetLib {
-    publishDataset: () => void;
+  publishDataset: () => void;
 }
 
 interface PublicationItem {

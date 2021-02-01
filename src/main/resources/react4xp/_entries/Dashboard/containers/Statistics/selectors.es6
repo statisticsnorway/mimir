@@ -43,3 +43,13 @@ export const selectOpenModal = createSelector(
   [selectDomain],
   (statisticsState) => statisticsState.openModal
 )
+
+export const selectLoadingSearchList = createSelector(
+  [selectDomain],
+  (statisticsState) => statisticsState.loadingSearchList,
+)
+
+export const selectSearchList = createSelector(
+  [selectDomain],
+  (statisticsState) => statisticsState.statisticsSearchList,
+)

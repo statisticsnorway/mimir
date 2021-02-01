@@ -20,12 +20,14 @@ import { NodeQueryResponse } from 'enonic-types/node'
 import { RepoEventLogLib } from '../repo/eventLog'
 import { RepoCommonLib } from '../repo/common'
 import { StatRegStatisticsLib } from '../repo/statreg/statistics'
+import { TaskLib } from '../types/task'
 const {
   query,
   get: getContent
 }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
 const {
-  fetchStatisticsWithRelease
+  fetchStatisticsWithRelease,
+  getAllStatisticsFromRepo
 }: StatRegStatisticsLib = __non_webpack_require__('/lib/repo/statreg/statistics')
 const {
   data: {
@@ -61,11 +63,29 @@ const {
   EVENT_LOG_REPO
 }: RepoEventLogLib = __non_webpack_require__('/lib/repo/eventLog')
 const i18n: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
+const {
+  submit: submitTask
+}: TaskLib = __non_webpack_require__('/lib/xp/task')
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-statistics', () => {
-    const statisticData: Array<StatisticDashboard> = getStatistics()
-    socket.emit('statistics-result', statisticData)
+    submitTask({
+      description: 'get-statistics',
+      task: () => {
+        const statisticData: Array<StatisticDashboard> = getStatistics()
+        socket.emit('statistics-result', statisticData)
+      }
+    })
+  })
+
+  socket.on('get-statistics-search-list', () => {
+    submitTask({
+      description: 'get-statistics-search-list',
+      task: () => {
+        const statisticsSearchData: Array<StatisticSearch> = getStatisticsSeachList()
+        socket.emit('statistics-search-list-result', statisticsSearchData)
+      }
+    })
   })
 
   socket.on('refresh-statistic', (data: RefreshInfo) => {
@@ -418,6 +438,32 @@ function sortByNextRelease(statisticData: Array<StatisticDashboard>): Array<Stat
   return statisticsSorted
 }
 
+function getStatisticsSeachList(): Array<StatisticSearch> {
+  const statregStatistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
+  const statisticsContent: Array<Content<Statistics>> = getStatisticsContent()
+  return statisticsContent.map((statistics) => {
+    const statregData: StatisticInListing | undefined = statregStatistics.find((s) => {
+      return `${s.id}` === statistics.data.statistic
+    })
+    return {
+      id: statistics._id,
+      name: statistics.displayName,
+      shortName: statregData?.shortName || ''
+    }
+  })
+}
+
+export function getStatisticsContent(): Array<Content<Statistics>> {
+  let hits: Array<Content<Statistics>> = []
+  const result: QueryResponse<Statistics> = query({
+    contentTypes: [`${app.name}:statistics`],
+    query: `data.statistic LIKE "*"`,
+    count: 1000
+  })
+  hits = hits.concat(result.hits)
+  return hits
+}
+
 interface SourceNodeRender {
   tbmlId: number;
   sourceNodeStrings: Array<string>;
@@ -446,7 +492,7 @@ interface StatisticDashboard {
   id: string;
   language?: string;
   name?: string;
-  statisticId: string;
+  statisticId: number;
   shortName: string;
   frequency: string;
   variantId: string;
@@ -458,8 +504,14 @@ interface StatisticDashboard {
   logData: Array<DashboardJobInfo>;
 }
 
+interface StatisticSearch {
+  id: string;
+  shortName: string;
+  name: string;
+}
+
 interface StatregData {
-  statisticId: string;
+  statisticId: number;
   shortName: string;
   frequency: string;
   nextRelease: string;
@@ -486,5 +538,6 @@ interface Tbml {
 export interface StatisticLib {
   setupHandlers: (socket: Socket, socketEmitter: SocketEmitter) => void;
   getDatasetIdsFromStatistic: (statistic: Content<Statistics>) => Array<string>;
+  getStatisticsContent: () => Array<Content<Statistics>>;
 }
 
