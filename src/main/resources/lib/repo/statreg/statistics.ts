@@ -1,6 +1,6 @@
 __non_webpack_require__('/lib/polyfills/nashorn')
 import { StatRegNode, OldStatRegContent } from '../statreg'
-import { StatisticInListing } from '../../ssb/statreg/types'
+import { StatisticInListing, VariantInListing } from '../../ssb/statreg/types'
 import { ArrayUtilsLib } from '../../ssb/arrayUtils'
 import { StatRegConfigLib } from '../../ssb/statreg/config'
 import { StatRegCommonLib } from '../../ssb/statreg/common'
@@ -49,6 +49,18 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
   return null
 }
 
+export function fetchStatisticsWithRelease(before: Date): Array<StatisticInListing> {
+  const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
+  return statistics.reduce((statsWithRelease: Array<StatisticInListing>, stat) => {
+    const variants: Array<VariantInListing> = ensureArray(stat.variants)
+    variants.sort((a: VariantInListing, b: VariantInListing) => new Date(a.nextRelease).getTime() - new Date(b.nextRelease).getTime())
+    if (variants[0] && new Date(variants[0].nextRelease) <= before) {
+      statsWithRelease.push(stat)
+    }
+    return statsWithRelease
+  }, [])
+}
+
 function extractStatistics(payload: string): Array<StatisticInListing> {
   return JSON.parse(payload).statistics
 }
@@ -84,6 +96,7 @@ export function getStatisticByShortNameFromRepo(shortName: string): StatisticInL
 export interface StatRegStatisticsLib {
   STATREG_REPO_STATISTICS_KEY: string;
   fetchStatistics: () => Array<StatisticInListing> | null;
+  fetchStatisticsWithRelease: (before: Date) => Array<StatisticInListing>;
   getAllStatisticsFromRepo: () => Array<StatisticInListing>;
   getStatisticByIdFromRepo: (statId: string) => StatisticInListing | undefined;
   getStatisticByShortNameFromRepo: (shortName: string) => StatisticInListing | undefined;

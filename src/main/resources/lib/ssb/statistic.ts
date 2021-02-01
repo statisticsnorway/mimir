@@ -1,3 +1,4 @@
+__non_webpack_require__('/lib/polyfills/nashorn')
 import { Socket, SocketEmitter } from '../types/socket'
 import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
 import { StatisticInListing, VariantInListing } from './statreg/types'
@@ -8,10 +9,7 @@ import { ContextLibrary, RunContext } from 'enonic-types/context'
 import { DatasetRepoNode } from '../repo/dataset'
 import { DashboardUtilsLib } from './dataset/dashboardUtils'
 import { I18nLibrary } from 'enonic-types/i18n'
-__non_webpack_require__('/lib/polyfills/nashorn')
-
 import moment = require('moment')
-
 import { Highchart } from '../../site/content-types/highchart/highchart'
 import { Table } from '../../site/content-types/table/table'
 import { KeyFigure } from '../../site/content-types/keyFigure/keyFigure'
@@ -22,14 +20,14 @@ import { JobEventNode, JobInfoNode, JobNames, JobStatus, RepoJobLib } from '../r
 import { NodeQueryResponse } from 'enonic-types/node'
 import { RepoEventLogLib } from '../repo/eventLog'
 import { RepoCommonLib } from '../repo/common'
-
+import { StatRegStatisticsLib } from '../repo/statreg/statistics'
 const {
   query,
   get: getContent
 }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
 const {
-  getStatisticByIdFromRepo
-} = __non_webpack_require__('/lib/repo/statreg/statistics')
+  fetchStatisticsWithRelease
+}: StatRegStatisticsLib = __non_webpack_require__('/lib/repo/statreg/statistics')
 const {
   data: {
     forceArray
@@ -67,7 +65,7 @@ const i18n: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-statistics', () => {
-    const statisticData: Array<StatisticDashboard> = prepStatistics(getStatistics())
+    const statisticData: Array<StatisticDashboard> = getStatistics()
     socket.emit('statistics-result', statisticData)
   })
 
@@ -228,55 +226,55 @@ function getDatasetFromContentId(contentId: string): DatasetRepoNode<TbmlDataUni
 
 function prepStatistics(statistics: Array<Content<Statistics>>): Array<StatisticDashboard> {
   const statisticData: Array<StatisticDashboard> = []
-  statistics.map((statistic: Content<Statistics>) => {
-    try {
-      const statregData: StatregData | undefined = statistic.data.statistic ? getStatregInfo(statistic.data.statistic) : undefined
-      if (statregData) {
-        const datasets: Array<SourceList> = getDatasetFromStatistics(statistic)
-        const relatedUserTBMLs: Array<OwnerWithSources> = getSourcesForUserFromStatistic(datasets)
-        const relatedTables: Array<RelatedTbml> = datasets.reduce((acc: Array<RelatedTbml>, tbml) => {
-          const {
-            dataset,
-            queryId
-          } = tbml
-          if (dataset.data &&
-              typeof(dataset.data) !== 'string' &&
-              dataset.data.tbml.metadata &&
-              dataset.data.tbml.metadata.sourceList) {
-            const tbmlId: string = dataset.data.tbml.metadata.instance.definitionId.toString()
-            acc.push({
-              tbmlId,
-              queryId
-            })
-          }
-          return acc
-        }, [])
-        const statisticDataDashboard: StatisticDashboard = {
-          id: statistic._id,
-          language: statistic.language ? statistic.language : '',
-          name: statistic.displayName ? statistic.displayName : '',
-          statisticId: statregData.statisticId,
-          shortName: statregData.shortName,
-          frequency: statregData.frequency,
-          variantId: statregData.variantId,
-          nextRelease: undefined,
-          nextReleaseId: undefined,
-          relatedUserTBMLs,
-          relatedTables,
-          aboutTheStatistics: statistic.data.aboutTheStatistics,
-          logData: getStatisticsJobLogInfo(statistic._id)
-        }
-        if (statregData && statregData.nextRelease && moment(statregData.nextRelease).isSameOrAfter(new Date(), 'day')) {
-          statisticDataDashboard.nextRelease = statregData.nextRelease ? statregData.nextRelease : ''
-          statisticDataDashboard.nextReleaseId = statregData.nextReleaseId ? statregData.nextReleaseId : ''
-        }
-        statisticData.push(statisticDataDashboard)
-      }
-    } catch (e) {
-      const message: string = `Failed to prepStatistics for statistic: ${statistic.displayName} (${e})`
-      log.error(message)
-    }
-  })
+  // statistics.map((statistic: Content<Statistics>) => {
+  //   try {
+  //     const statregData: StatregData | undefined = statistic.data.statistic ? getStatregInfo(statistic.data.statistic) : undefined
+  //     if (statregData) {
+  //       const datasets: Array<SourceList> = getDatasetFromStatistics(statistic)
+  //       const relatedUserTBMLs: Array<OwnerWithSources> = getSourcesForUserFromStatistic(datasets)
+  //       const relatedTables: Array<RelatedTbml> = datasets.reduce((acc: Array<RelatedTbml>, tbml) => {
+  //         const {
+  //           dataset,
+  //           queryId
+  //         } = tbml
+  //         if (dataset.data &&
+  //             typeof(dataset.data) !== 'string' &&
+  //             dataset.data.tbml.metadata &&
+  //             dataset.data.tbml.metadata.sourceList) {
+  //           const tbmlId: string = dataset.data.tbml.metadata.instance.definitionId.toString()
+  //           acc.push({
+  //             tbmlId,
+  //             queryId
+  //           })
+  //         }
+  //         return acc
+  //       }, [])
+  //       const statisticDataDashboard: StatisticDashboard = {
+  //         id: statistic._id,
+  //         language: statistic.language ? statistic.language : '',
+  //         name: statistic.displayName ? statistic.displayName : '',
+  //         statisticId: statregData.statisticId,
+  //         shortName: statregData.shortName,
+  //         frequency: statregData.frequency,
+  //         variantId: statregData.variantId,
+  //         nextRelease: undefined,
+  //         nextReleaseId: undefined,
+  //         relatedUserTBMLs,
+  //         relatedTables,
+  //         aboutTheStatistics: statistic.data.aboutTheStatistics,
+  //         logData: getStatisticsJobLogInfo(statistic._id)
+  //       }
+  //       if (statregData && statregData.nextRelease && moment(statregData.nextRelease).isSameOrAfter(new Date(), 'day')) {
+  //         statisticDataDashboard.nextRelease = statregData.nextRelease ? statregData.nextRelease : ''
+  //         statisticDataDashboard.nextReleaseId = statregData.nextReleaseId ? statregData.nextReleaseId : ''
+  //       }
+  //       statisticData.push(statisticDataDashboard)
+  //     }
+  //   } catch (e) {
+  //     const message: string = `Failed to prepStatistics for statistic: ${statistic.displayName} (${e})`
+  //     log.error(message)
+  //   }
+  // })
   return sortByNextRelease(statisticData)
 }
 
@@ -334,36 +332,59 @@ function prepStatisticsJobLogInfo(jobNode: JobInfoNode): DashboardJobInfo {
 //   })
 // }
 
-export function getStatistics(): Array<Content<Statistics>> {
-  let hits: Array<Content<Statistics>> = []
-  const result: QueryResponse<Statistics> = query({
-    contentTypes: [`${app.name}:statistics`],
-    query: `data.statistic LIKE "*"`,
+const TWO_WEEKS: number = 14 // TODO: put in config?
+function getStatistics(): Array<StatisticDashboard> {
+  const statsBeforeDate: Date = new Date()
+  statsBeforeDate.setDate(statsBeforeDate.getDate() + TWO_WEEKS)
+  const statregStatistics: Array<StatisticInListing> = fetchStatisticsWithRelease(statsBeforeDate)
+  const statisticsContent: Array<Content<Statistics>> = query({
+    query: `data.statistic IN(${statregStatistics.map((s) => `"${s.id}"`).join(',')})`,
     count: 1000
+  }).hits as unknown as Array<Content<Statistics>>
+
+  return statisticsContent.map((statistic) => {
+    const statregStat: StatisticInListing = statregStatistics.find((statregStat) => {
+      return `${statregStat.id}` === statistic.data.statistic
+    }) as StatisticInListing
+    const statregData: StatregData = getStatregInfo(statregStat)
+    const statisticDataDashboard: StatisticDashboard = {
+      id: statistic._id,
+      language: statistic.language ? statistic.language : '',
+      name: statistic.displayName ? statistic.displayName : '',
+      statisticId: statregData.statisticId,
+      shortName: statregData.shortName,
+      frequency: statregData.frequency,
+      variantId: statregData.variantId,
+      nextRelease: undefined,
+      nextReleaseId: undefined,
+      relatedUserTBMLs: [],
+      relatedTables: [],
+      aboutTheStatistics: statistic.data.aboutTheStatistics,
+      logData: getStatisticsJobLogInfo(statistic._id)
+    }
+    if (statregData && statregData.nextRelease && moment(statregData.nextRelease).isSameOrAfter(new Date(), 'day')) {
+      statisticDataDashboard.nextRelease = statregData.nextRelease ? statregData.nextRelease : ''
+      statisticDataDashboard.nextReleaseId = statregData.nextReleaseId ? statregData.nextReleaseId : ''
+    }
+    return statisticDataDashboard
   })
-  hits = hits.concat(result.hits)
-  return hits
 }
 
-function getStatregInfo(key: string): StatregData | undefined {
-  const statisticStatreg: StatisticInListing | undefined = getStatisticByIdFromRepo(key)
-  if (statisticStatreg) {
-    const variants: Array<VariantInListing> = forceArray(statisticStatreg.variants)
-    if (variants.length > 1) {
-      variants.sort((a: VariantInListing, b: VariantInListing) => new Date(a.nextRelease).getTime() - new Date(b.nextRelease).getTime())
-    }
-    const variant: VariantInListing = variants[0] // TODO: Multiple variants
-    const result: StatregData = {
-      statisticId: statisticStatreg.id,
-      shortName: statisticStatreg.shortName,
-      frequency: variant.frekvens,
-      nextRelease: variant.nextRelease ? variant.nextRelease : '',
-      nextReleaseId: variant.nextReleaseId ? variant.nextReleaseId : '',
-      variantId: variant.id
-    }
-    return result
+function getStatregInfo(statisticStatreg: StatisticInListing): StatregData {
+  const variants: Array<VariantInListing> = forceArray(statisticStatreg.variants)
+  if (variants.length > 1) {
+    variants.sort((a: VariantInListing, b: VariantInListing) => new Date(a.nextRelease).getTime() - new Date(b.nextRelease).getTime())
   }
-  return undefined
+  const variant: VariantInListing = variants[0] // TODO: Multiple variants
+  const result: StatregData = {
+    statisticId: statisticStatreg.id,
+    shortName: statisticStatreg.shortName,
+    frequency: variant.frekvens,
+    nextRelease: variant.nextRelease ? variant.nextRelease : '',
+    nextReleaseId: variant.nextReleaseId ? variant.nextReleaseId : '',
+    variantId: variant.id
+  }
+  return result
 }
 
 function sortByNextRelease(statisticData: Array<StatisticDashboard>): Array<StatisticDashboard> {
@@ -449,7 +470,6 @@ interface Tbml {
 
 export interface StatisticLib {
   setupHandlers: (socket: Socket, socketEmitter: SocketEmitter) => void;
-  getStatistics: () => Array<Content<Statistics>>;
   getDatasetIdsFromStatistic: (statistic: Content<Statistics>) => Array<string>;
 }
 
