@@ -1,4 +1,7 @@
 const util = __non_webpack_require__('/lib/util')
+const {
+  getRowValue
+} = __non_webpack_require__('/lib/ssb/utils')
 
 const xmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
@@ -6,7 +9,7 @@ export function seriesAndCategoriesFromHtmlTable(highchartsContent) {
   const stringJson = __.toNativeObject(xmlParser.parse(highchartsContent.data.htmlTable))
   const result = JSON.parse(stringJson)
   const categories = result.table.tbody.tr.reduce((previous, tr, index) => {
-    const categoryValue = typeof tr.td[0] === 'object' ? tr.td[0].content : tr.td[0]
+    const categoryValue = getRowValue(tr.td[0])
     if (index > 0) previous.push(categoryValue)
     return previous
   }, [])
@@ -17,7 +20,7 @@ export function seriesAndCategoriesFromHtmlTable(highchartsContent) {
     acc.push({
       name: typeof current === 'object' ? current.content : current,
       data: tableData.tr.reduce( (dataAcc, tr, trIndex) => {
-        const value = typeof tr.td[tdIndex] === 'object' ? tr.td[tdIndex].content : tr.td[tdIndex]
+        const value = getRowValue(tr.td[tdIndex])
         if (trIndex > 0) dataAcc.push(parseValue(value))
         return dataAcc
       }, [])
@@ -99,7 +102,7 @@ function dataFormatPie(seriesAndCategories) {
       series: [{
         name: 'Antall',
         data: seriesAndCategories.series.map((serie) => ({
-          ...serie,
+          ...serie.name,
           y: serie.data[0]
         }))
       }]
@@ -111,19 +114,10 @@ function dataFormatPie(seriesAndCategories) {
         data: seriesAndCategories.categories.map((category, index) => {
           return {
             name: category,
-            y: seriesAndCategories.series[0].data[index],
-            data: seriesAndCategories.series[0].data[index]
+            y: seriesAndCategories.series[0].data[index]
           }
         })
       }]
     }
   }
-}
-
-
-export const getRowValue = (value) => {
-  if (typeof value === 'object' && value.content != undefined) {
-    return value.content
-  }
-  return value
 }
