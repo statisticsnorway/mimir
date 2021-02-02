@@ -98,10 +98,12 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
             node.data.queryIds = [data.id]
             return node
           })
+          const feedbackEventName: string = 'statistics-activity-refresh-feedback'
           const refreshDataResult: Array<RefreshDatasetResult> = refreshDatasetHandler(
             datasetIdsToUpdate,
             socketEmitter,
-            processXmls
+            processXmls,
+            feedbackEventName
           )
           const finishedJobLog: JobInfoNode = completeJobLog(jobLogNode._id, JobStatus.COMPLETE, refreshDataResult)
           socketEmitter.broadcast('statistics-refresh-result-log', {
