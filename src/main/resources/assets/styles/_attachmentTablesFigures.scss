@@ -13,6 +13,12 @@
     padding-right: 0;
   }
 
+  .ssb-accordion {
+    @include media-breakpoint-down(md) {
+      padding: 0;
+    }
+  }
+
   .free-text-wrapper {
     background: $ssb-dark-1;
     margin-left: auto;
