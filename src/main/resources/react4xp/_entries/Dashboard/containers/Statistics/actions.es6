@@ -34,6 +34,15 @@ export function setOpenStatistic(dispatch, io, statistic) {
     id: statistic ? statistic.id : null
   })
 
+  // from search dropdown, fetch both
+  if (statistic && statistic.relatedTables === undefined) {
+    if (!statistic.loadingRelatedTablesAndOwnersWithSources) {
+      fetchRelatedTablesAndOwnersWithSources(dispatch, io, statistic.id)
+    }
+    return
+  }
+
+  // from statistics window, fetch only owners with sources
   if (statistic && !statistic.loadingOwnersWithSources && !statistic.ownersWithSources) {
     fetchOwnersWithSources(dispatch, io, statistic.id, statistic.relatedTables.map((t) => t.queryId))
   }
@@ -62,5 +71,16 @@ export function fetchOwnersWithSources(dispatch, io, id, dataSourceIds) {
   io.emit('get-statistics-owners-with-sources', {
     id,
     dataSourceIds
+  })
+}
+
+export function fetchRelatedTablesAndOwnersWithSources(dispatch, io, id) {
+  dispatch({
+    type: actions.loadStatisticsRelatedTables.type,
+    id
+  })
+
+  io.emit('get-statistics-related-tables-and-owners-with-sources', {
+    id
   })
 }

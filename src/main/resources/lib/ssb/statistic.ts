@@ -102,6 +102,27 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     })
   })
 
+  socket.on('get-statistics-related-tables-and-owners-with-sources', (options: GetRelatedTablesOptions) => {
+    submitTask({
+      description: 'get-statistics-related-tables-and-owners-with-sources',
+      task: () => {
+        const statistic: Content<Statistics> | null = getContent({
+          key: options.id
+        })
+        let relatedTables: Array<RelatedTbml> = []
+        if (statistic) {
+          relatedTables = getRelatedTables(statistic)
+        }
+        const ownersWithSources: Array<OwnerWithSources> = getOwnersWithSources(relatedTables.map((t) => t.queryId))
+        socket.emit('statistics-related-tables-and-owners-with-sources-result', {
+          id: options.id,
+          relatedTables,
+          ownersWithSources
+        })
+      }
+    })
+  })
+
   socket.on('refresh-statistic', (data: RefreshInfo) => {
     socketEmitter.broadcast('statistics-activity-refresh-started', {
       id: data.id
@@ -325,22 +346,7 @@ function getStatistics(): Array<StatisticDashboard> {
       return `${statregStat.id}` === statistic.data.statistic
     }) as StatisticInListing
     const statregData: StatregData = getStatregInfo(statregStat)
-    const dataSourceIds: Array<string> = getDataSourceIdsFromStatistics(statistic)
-    const dataSources: Array<Content<DataSource>> = query({
-      count: dataSourceIds.length,
-      query: 'data.dataSource._selected = "tbprocessor" AND data.dataSource.tbprocessor.urlOrId LIKE "*"',
-      filters: {
-        ids: {
-          values: dataSourceIds
-        }
-      }
-    }).hits as unknown as Array<Content<DataSource>>
-    const relatedTables: Array<RelatedTbml> = dataSources.map((dataSource) => {
-      return {
-        queryId: dataSource._id,
-        tbmlId: getTbprocessorKey(dataSource)
-      }
-    })
+    const relatedTables: Array<RelatedTbml> = getRelatedTables(statistic)
     const statisticDataDashboard: StatisticDashboard = {
       id: statistic._id,
       language: statistic.language ? statistic.language : '',
@@ -360,6 +366,27 @@ function getStatistics(): Array<StatisticDashboard> {
   }).sort((a, b) => {
     return new Date(a.nextRelease).getTime() - new Date(b.nextRelease).getTime()
   })
+}
+
+function getRelatedTables(statistic: Content<Statistics>): Array<RelatedTbml> {
+  const dataSourceIds: Array<string> = getDataSourceIdsFromStatistics(statistic)
+  const dataSources: Array<Content<DataSource>> = query({
+    count: dataSourceIds.length,
+    query: 'data.dataSource._selected = "tbprocessor" AND data.dataSource.tbprocessor.urlOrId LIKE "*"',
+    filters: {
+      ids: {
+        values: dataSourceIds
+      }
+    }
+  }).hits as unknown as Array<Content<DataSource>>
+  const relatedTables: Array<RelatedTbml> = dataSources.map((dataSource) => {
+    return {
+      queryId: dataSource._id,
+      tbmlId: getTbprocessorKey(dataSource)
+    }
+  })
+
+  return relatedTables
 }
 
 function getStatregInfo(statisticStatreg: StatisticInListing): StatregData {
@@ -439,6 +466,10 @@ interface RefreshInfo {
 interface GetSourceListOwnersOptions {
   id: string;
   dataSourceIds: Array<string>;
+}
+
+interface GetRelatedTablesOptions {
+  id: string;
 }
 
 interface OwnerObject {

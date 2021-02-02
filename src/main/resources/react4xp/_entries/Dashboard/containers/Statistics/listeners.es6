@@ -56,4 +56,11 @@ export default function setupStatisticsListeners(io, dispatch) {
       data
     })
   })
+
+  io.on('statistics-related-tables-and-owners-with-sources-result', (data) => {
+    dispatch({
+      type: actions.statisticsRelatedTablesLoaded.type,
+      data
+    })
+  })
 }

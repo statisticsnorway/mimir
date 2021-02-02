@@ -22,11 +22,7 @@ export const selectStatisticsWithRelease = createSelector(
 export const selectOpenStatistic = createSelector(
   [selectDomain],
   (statisticsState) => {
-    const stat = statisticsState.statistics.find((s) => s.id === statisticsState.openStatistic)
-    if (!stat) {
-      stat = statisticsState.statisticsSearchList.find((s) => s.id === statisticsState.openStatistic)
-    }
-    return stat
+    return statisticsState.statistics.find((s) => s.id === statisticsState.openStatistic)
   }
 )
 
