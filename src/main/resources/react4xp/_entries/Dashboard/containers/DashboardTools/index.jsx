@@ -158,7 +158,7 @@ export function DataQueryTools() {
               size="sm"
               className="mx-1"
               onClick={() => {
-                setOpenStatistic(dispatch, selectedStat.id)
+                setOpenStatistic(dispatch, io, selectedStat)
                 setOpenModal(dispatch, true)
               }}
               disabled={hasLoadingStatistic || loadingStatisticsSearchList || !selectedStat}

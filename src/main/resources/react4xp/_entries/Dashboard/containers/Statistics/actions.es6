@@ -28,11 +28,15 @@ export function refreshStatistic(dispatch, io, id, owners) {
   })
 }
 
-export function setOpenStatistic(dispatch, id) {
+export function setOpenStatistic(dispatch, io, statistic) {
   dispatch({
     type: actions.setOpenStatistic.type,
-    id
+    id: statistic ? statistic.id : null
   })
+
+  if (statistic && !statistic.loadingOwnersWithSources && !statistic.ownersWithSources) {
+    fetchOwnersWithSources(dispatch, io, statistic.id, statistic.relatedTables.map((t) => t.queryId))
+  }
 }
 
 export function resetRefreshStatus(dispatch, status) {
@@ -46,5 +50,17 @@ export function setOpenModal(dispatch, status) {
   dispatch({
     type: actions.setOpenModal.type,
     status
+  })
+}
+
+export function fetchOwnersWithSources(dispatch, io, id, dataSourceIds) {
+  dispatch({
+    type: actions.loadStatisticsOwnersWithSources.type,
+    id
+  })
+
+  io.emit('get-statistics-owners-with-sources', {
+    id,
+    dataSourceIds
   })
 }

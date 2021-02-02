@@ -89,14 +89,14 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     })
   })
 
-  socket.on('get-statistics-source-list-owners', (options: GetSourceListOwnersOptions) => {
+  socket.on('get-statistics-owners-with-sources', (options: GetSourceListOwnersOptions) => {
     submitTask({
       description: 'get-statistics-owners-with-sources',
       task: () => {
-        const sourceListOwners: Array<OwnerWithSources> = getOwnersWithSources(options.dataSourceIds)
+        const ownersWithSources: Array<OwnerWithSources> = getOwnersWithSources(options.dataSourceIds)
         socket.emit('statistics-owners-with-sources-result', {
           id: options.id,
-          sourceListOwners
+          ownersWithSources
         })
       }
     })

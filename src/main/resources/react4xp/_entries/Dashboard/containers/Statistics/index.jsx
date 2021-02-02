@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, Table } from 'react-bootstrap'
 import { selectStatisticsWithRelease,
@@ -9,9 +9,9 @@ import Moment from 'react-moment'
 import { Link } from '@statisticsnorway/ssb-component-library'
 import { selectContentStudioBaseUrl, selectInternalBaseUrl } from '../HomePage/selectors'
 import { setOpenStatistic, setOpenModal } from './actions'
-
 import { StatisticsLog } from './StatisticsLog'
 import { RefreshStatisticsModal } from '../../components/RefreshStatisticsModal'
+import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 
 export function Statistics() {
   const statistics = useSelector(selectStatisticsWithRelease)
@@ -21,6 +21,7 @@ export function Statistics() {
   const openModal = useSelector(selectOpenModal)
 
   const dispatch = useDispatch()
+  const io = useContext(WebSocketContext)
   const statisticsNo = statistics ? statistics.filter((s) => s.language === 'nb' || s.language === 'nn') : []
   const statisticsEn = statistics ? statistics.filter((s) => s.language === 'en') : []
 
@@ -91,7 +92,7 @@ export function Statistics() {
   }
 
   function onRefreshStatistic(statistic) {
-    setOpenStatistic(dispatch, statistic.id)
+    setOpenStatistic(dispatch, io, statistic)
     setOpenModal(dispatch, true)
   }
 

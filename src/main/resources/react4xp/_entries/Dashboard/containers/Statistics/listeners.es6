@@ -49,4 +49,11 @@ export default function setupStatisticsListeners(io, dispatch) {
       statisticsSearchList: data
     })
   })
+
+  io.on('statistics-owners-with-sources-result', (data) => {
+    dispatch({
+      type: actions.statisticsOwnersWithSourcesLoaded.type,
+      data
+    })
+  })
 }

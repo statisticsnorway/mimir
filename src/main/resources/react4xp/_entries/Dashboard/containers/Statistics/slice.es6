@@ -78,6 +78,29 @@ const statisticsSlice = createSlice({
     statisticsSearchListLoaded(state, action) {
       state.loadingSearchList = false
       state.statisticsSearchList = action.statisticsSearchList
+    },
+    loadStatisticsOwnersWithSources(state, action) {
+      if (action.id) {
+        const stat = state.statistics.find((s) => s.id === action.id)
+        if (stat) {
+          stat.loadingOwnersWithSources = true
+          if (state.openStatistic && state.openStatistic.id === action.id) {
+            state.openStatistic = stat
+          }
+        }
+      }
+    },
+    statisticsOwnersWithSourcesLoaded(state, action) {
+      if (action.data.id) {
+        const stat = state.statistics.find((s) => s.id === action.data.id)
+        if (stat) {
+          stat.ownersWithSources = action.data.ownersWithSources
+          stat.loadingOwnersWithSources = false
+          if (state.openStatistic && state.openStatistic.id === action.data.id) {
+            state.openStatistic = stat
+          }
+        }
+      }
     }
   }
 })
