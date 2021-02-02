@@ -12,4 +12,18 @@
   .accordion-body {
     padding-right: 0;
   }
+
+  .free-text-wrapper {
+    background: $ssb-dark-1;
+    margin-left: auto;
+    margin-right: auto;
+    padding: $spacer * 3;
+
+    @include media-breakpoint-down(md) {
+      padding-top: $spacer * 3;
+      padding-left: $spacer * 1;
+      padding-bottom: $spacer * 3;
+      padding-right: $spacer * 1;
+    }
+  }
 }

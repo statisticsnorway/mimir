@@ -1,5 +1,5 @@
 import React from 'react'
-import { Accordion, Button, NestedAccordion } from '@statisticsnorway/ssb-component-library'
+import { Accordion, Button } from '@statisticsnorway/ssb-component-library'
 import { ChevronDown, ChevronUp } from 'react-feather'
 
 import PropTypes from 'prop-types'
@@ -64,16 +64,6 @@ class AttachmentTableFigures extends React.Component {
     )
   }
 
-  renderNestedAccordions(items) {
-    return (
-      items.map((item, i) =>
-        <NestedAccordion key={i} header={item.title}>
-          <div dangerouslySetInnerHTML={this.createMarkup(item.body)}/>
-        </NestedAccordion>
-      )
-    )
-  }
-
   createMarkup(html) {
     return {
       __html: html
@@ -89,11 +79,14 @@ class AttachmentTableFigures extends React.Component {
 
   getFreeTextBreakpoint() {
     const {
-      accordions
+      accordions,
+      freeText
     } = this.props
 
     if (this.state.isHidden && accordions.length > 5) {
       return 'd-none'
+    } else if (freeText) {
+      return 'mt-5'
     }
     return ''
   }
@@ -121,11 +114,12 @@ class AttachmentTableFigures extends React.Component {
                   openByDefault={anchor && accordion.id && accordion.id === anchor}
                 >
                   <div dangerouslySetInnerHTML={this.createMarkup(accordion.body)}></div>
-                  {this.renderNestedAccordions(accordion.items)}
                 </Accordion>
               </React.Fragment>
             )}
-          <div className={`col-12 mt-5 ${this.getFreeTextBreakpoint()}`} dangerouslySetInnerHTML={this.createMarkup(freeText)}></div>
+        </div>
+        <div className={`row free-text-wrapper ${this.getFreeTextBreakpoint()}`}>
+          <div className="col-12 col-lg-6" dangerouslySetInnerHTML={this.createMarkup(freeText)}></div>
         </div>
         {this.renderShowMoreButton()}
       </section>
@@ -139,13 +133,7 @@ AttachmentTableFigures.propTypes = {
       id: PropTypes.string,
       open: PropTypes.string.isRequired,
       subHeader: PropTypes.string,
-      body: PropTypes.string.isRequired,
-      items: PropTypes.arrayOf(
-        PropTypes.shape({
-          title: PropTypes.string.isRequired,
-          body: PropTypes.string.isRequired
-        })
-      )
+      body: PropTypes.string.isRequired
     })
   ),
   freeText: PropTypes.string,

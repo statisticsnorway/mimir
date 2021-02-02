@@ -70,14 +70,13 @@ const renderPart = (req) => {
   const accordionComponent = new React4xp('AttachmentTablesFigures')
     .setProps({
       accordions: attachmentTableAndFigureView.map(({
-        id, open, subHeader, body, items
+        id, open, subHeader, body
       }) => {
         return {
           id,
           open,
           subHeader,
-          body,
-          items
+          body
         }
       }),
       freeText: page.data.freeTextAttachmentTablesFigures,
@@ -139,7 +138,6 @@ function getTableReturnObject(content, preview, subHeader, index) {
     open: typeof(title) === 'string' ? title : title.content,
     subHeader,
     body: preview.body,
-    items: [],
     pageContributions: preview.pageContributions
   }
 }
@@ -152,7 +150,6 @@ function getFigureReturnObject(content, preview, subHeader, index) {
     open: typeof(title) === 'string' ? title : title.content,
     subHeader,
     body: preview.body,
-    items: [],
     pageContributions: preview.pageContributions
   }
 }
