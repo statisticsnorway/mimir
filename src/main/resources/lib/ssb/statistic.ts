@@ -89,6 +89,19 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     })
   })
 
+  socket.on('get-statistics-source-list-owners', (options: GetSourceListOwnersOptions) => {
+    submitTask({
+      description: 'get-statistics-owners-with-sources',
+      task: () => {
+        const sourceListOwners: Array<OwnerWithSources> = getOwnersWithSources(options.dataSourceIds)
+        socket.emit('statistics-owners-with-sources-result', {
+          id: options.id,
+          sourceListOwners
+        })
+      }
+    })
+  })
+
   socket.on('refresh-statistic', (data: RefreshInfo) => {
     socketEmitter.broadcast('statistics-activity-refresh-started', {
       id: data.id
@@ -173,21 +186,6 @@ export function getDataSourceIdsFromStatistics(statistic: Content<Statistics>): 
   return [...mainTableId, ...statisticsKeyFigureId, ...attachmentTablesFiguresIds]
 }
 
-function getDatasetFromStatistics(statistic: Content<Statistics>): Array<SourceList> {
-  const dataSourceIds: Array<string> = getDataSourceIdsFromStatistics(statistic)
-  const sources: Array<SourceList> = dataSourceIds.reduce((acc: Array<SourceList>, contentId: string) => {
-    const dataset: DatasetRepoNode<TbmlDataUniform> | null = getDatasetFromContentId(contentId)
-    if (dataset) {
-      acc.push({
-        dataset,
-        queryId: contentId
-      })
-    }
-    return acc
-  }, [])
-  return sources
-}
-
 function getSourcesForUserFromStatistic(sources: Array<SourceList>): Array<OwnerWithSources> {
   return sources.reduce((acc: Array<OwnerWithSources>, source: SourceList) => {
     const {
@@ -244,58 +242,18 @@ function getDatasetFromContentId(contentId: string): DatasetRepoNode<TbmlDataUni
   return content ? getTbprocessor(content, 'master') : null
 }
 
-function prepStatistics(statistics: Array<Content<Statistics>>): Array<StatisticDashboard> {
-  const statisticData: Array<StatisticDashboard> = []
-  // statistics.map((statistic: Content<Statistics>) => {
-  //   try {
-  //     const statregData: StatregData | undefined = statistic.data.statistic ? getStatregInfo(statistic.data.statistic) : undefined
-  //     if (statregData) {
-  //       const datasets: Array<SourceList> = getDatasetFromStatistics(statistic)
-  //       const relatedUserTBMLs: Array<OwnerWithSources> = getSourcesForUserFromStatistic(datasets)
-  //       const relatedTables: Array<RelatedTbml> = datasets.reduce((acc: Array<RelatedTbml>, tbml) => {
-  //         const {
-  //           dataset,
-  //           queryId
-  //         } = tbml
-  //         if (dataset.data &&
-  //             typeof(dataset.data) !== 'string' &&
-  //             dataset.data.tbml.metadata &&
-  //             dataset.data.tbml.metadata.sourceList) {
-  //           const tbmlId: string = dataset.data.tbml.metadata.instance.definitionId.toString()
-  //           acc.push({
-  //             tbmlId,
-  //             queryId
-  //           })
-  //         }
-  //         return acc
-  //       }, [])
-  //       const statisticDataDashboard: StatisticDashboard = {
-  //         id: statistic._id,
-  //         language: statistic.language ? statistic.language : '',
-  //         name: statistic.displayName ? statistic.displayName : '',
-  //         statisticId: statregData.statisticId,
-  //         shortName: statregData.shortName,
-  //         frequency: statregData.frequency,
-  //         variantId: statregData.variantId,
-  //         nextRelease: undefined,
-  //         nextReleaseId: undefined,
-  //         relatedUserTBMLs,
-  //         relatedTables,
-  //         aboutTheStatistics: statistic.data.aboutTheStatistics,
-  //         logData: getStatisticsJobLogInfo(statistic._id)
-  //       }
-  //       if (statregData && statregData.nextRelease && moment(statregData.nextRelease).isSameOrAfter(new Date(), 'day')) {
-  //         statisticDataDashboard.nextRelease = statregData.nextRelease ? statregData.nextRelease : ''
-  //         statisticDataDashboard.nextReleaseId = statregData.nextReleaseId ? statregData.nextReleaseId : ''
-  //       }
-  //       statisticData.push(statisticDataDashboard)
-  //     }
-  //   } catch (e) {
-  //     const message: string = `Failed to prepStatistics for statistic: ${statistic.displayName} (${e})`
-  //     log.error(message)
-  //   }
-  // })
-  return sortByNextRelease(statisticData)
+function getOwnersWithSources(dataSourceIds: Array<string> ): Array<OwnerWithSources> {
+  const datasets: Array<SourceList> = dataSourceIds.reduce((acc: Array<SourceList>, contentId: string) => {
+    const dataset: DatasetRepoNode<TbmlDataUniform> | null = getDatasetFromContentId(contentId)
+    if (dataset) {
+      acc.push({
+        dataset,
+        queryId: contentId
+      })
+    }
+    return acc
+  }, [])
+  return getSourcesForUserFromStatistic(datasets)
 }
 
 function getStatisticsJobLogInfo(id: string, count: number = 1): Array<DashboardJobInfo> {
@@ -393,7 +351,7 @@ function getStatistics(): Array<StatisticDashboard> {
       variantId: statregData.variantId,
       nextRelease: statregData.nextRelease,
       nextReleaseId: statregData.nextReleaseId,
-      relatedUserTBMLs: [],
+      ownersWithSources: undefined,
       relatedTables: relatedTables,
       aboutTheStatistics: statistic.data.aboutTheStatistics,
       logData: getStatisticsJobLogInfo(statistic._id)
@@ -478,6 +436,11 @@ interface RefreshInfo {
   owners?: Array<OwnerObject>;
 }
 
+interface GetSourceListOwnersOptions {
+  id: string;
+  dataSourceIds: Array<string>;
+}
+
 interface OwnerObject {
   username: string;
   password: string;
@@ -498,7 +461,7 @@ interface StatisticDashboard {
   nextRelease: string;
   nextReleaseId: string;
   relatedTables?: Array<RelatedTbml>;
-  relatedUserTBMLs?: Array<OwnerWithSources>;
+  ownersWithSources?: Array<OwnerWithSources>;
   aboutTheStatistics?: string;
   logData: Array<DashboardJobInfo>;
 }
