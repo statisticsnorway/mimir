@@ -33,14 +33,7 @@ const statisticsSlice = createSlice({
       stat.loading = false
     },
     setOpenStatistic(state, action) {
-      if (action.id) {
-        const stat = state.statistics.find((s) => s.id === action.id)
-        if (stat) {
-          state.openStatistic = stat
-        }
-      } else {
-        state.openStatistic = null
-      }
+      state.openStatistic = action.id
     },
     updateStatisticsLog(state, action) {
       if (action.data.id) {
@@ -84,9 +77,6 @@ const statisticsSlice = createSlice({
         const stat = state.statistics.find((s) => s.id === action.id)
         if (stat) {
           stat.loadingOwnersWithSources = true
-          if (state.openStatistic && state.openStatistic.id === action.id) {
-            state.openStatistic = stat
-          }
         }
       }
     },
@@ -96,9 +86,6 @@ const statisticsSlice = createSlice({
         if (stat) {
           stat.ownersWithSources = action.data.ownersWithSources
           stat.loadingOwnersWithSources = false
-          if (state.openStatistic && state.openStatistic.id === action.data.id) {
-            state.openStatistic = stat
-          }
         }
       }
     }
