@@ -40,6 +40,18 @@ const statisticsSlice = createSlice({
         state.openStatistic = null
       }
     },
+    updateStatisticsLog(state, action) {
+      if (action.data.id) {
+        const stat = state.statistics.find((s) => s.id === action.data.id)
+        if (stat) {
+          if (!stat.logData) {
+            stat.logData = [action.data.log]
+          } else {
+            stat.logData.unshift(action.data.log)
+          }
+        }
+      }
+    },
     setRefreshStatisticStatus(state, action) {
       if (action.data.step === 1) {
         state.updateMessage[action.data.tableIndex] = action.data

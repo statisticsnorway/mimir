@@ -162,7 +162,9 @@ class Table extends React.Component {
     table.tableExport({
       type: 'csv',
       fileName: 'tabell',
-      csvSeparator: ';'
+      csvSeparator: ';',
+      csvEnclosure: '',
+      tfootSelector: ''
     })
   }
 
