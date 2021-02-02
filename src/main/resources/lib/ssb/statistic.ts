@@ -45,7 +45,8 @@ const {
   run
 }: ContextLibrary = __non_webpack_require__('/lib/xp/context')
 const {
-  getTbprocessor
+  getTbprocessor,
+  getTbprocessorKey
 }: TbprocessorLib = __non_webpack_require__('/lib/ssb/dataset/tbprocessor')
 const {
   encrypt
@@ -97,7 +98,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     })
 
     if (statistic) {
-      const datasetIdsToUpdate: Array<string> = getDatasetIdsFromStatistic(statistic)
+      const datasetIdsToUpdate: Array<string> = getDataSourceIdsFromStatistics(statistic)
       const processXmls: Array<ProcessXml> | undefined = data.owners ? processXmlFromOwners(data.owners) : undefined
       if (datasetIdsToUpdate.length > 0) {
         const context: RunContext = {
@@ -165,7 +166,7 @@ function processXmlFromOwners(owners: Array<OwnerObject>): Array<ProcessXml> {
   }))
 }
 
-export function getDatasetIdsFromStatistic(statistic: Content<Statistics>): Array<string> {
+export function getDataSourceIdsFromStatistics(statistic: Content<Statistics>): Array<string> {
   const mainTableId: Array<string> = statistic.data.mainTable ? [statistic.data.mainTable] : []
   const statisticsKeyFigureId: Array<string> = statistic.data.statisticsKeyFigure ? [statistic.data.statisticsKeyFigure] : []
   const attachmentTablesFiguresIds: Array<string> = statistic.data.attachmentTablesFigures ? forceArray(statistic.data.attachmentTablesFigures) : []
@@ -173,8 +174,8 @@ export function getDatasetIdsFromStatistic(statistic: Content<Statistics>): Arra
 }
 
 function getDatasetFromStatistics(statistic: Content<Statistics>): Array<SourceList> {
-  const datasetIds: Array<string> = getDatasetIdsFromStatistic(statistic)
-  const sources: Array<SourceList> = datasetIds.reduce((acc: Array<SourceList>, contentId: string) => {
+  const dataSourceIds: Array<string> = getDataSourceIdsFromStatistics(statistic)
+  const sources: Array<SourceList> = dataSourceIds.reduce((acc: Array<SourceList>, contentId: string) => {
     const dataset: DatasetRepoNode<TbmlDataUniform> | null = getDatasetFromContentId(contentId)
     if (dataset) {
       acc.push({
@@ -366,24 +367,22 @@ function getStatistics(): Array<StatisticDashboard> {
       return `${statregStat.id}` === statistic.data.statistic
     }) as StatisticInListing
     const statregData: StatregData = getStatregInfo(statregStat)
-    const datasets: Array<SourceList> = getDatasetFromStatistics(statistic)
-    const relatedTables: Array<RelatedTbml> = datasets.reduce((acc: Array<RelatedTbml>, tbml) => {
-      const {
-        dataset,
-        queryId
-      } = tbml
-      if (dataset.data &&
-              typeof(dataset.data) !== 'string' &&
-              dataset.data.tbml.metadata &&
-              dataset.data.tbml.metadata.sourceList) {
-        const tbmlId: string = dataset.data.tbml.metadata.instance.definitionId.toString()
-        acc.push({
-          tbmlId,
-          queryId
-        })
+    const dataSourceIds: Array<string> = getDataSourceIdsFromStatistics(statistic)
+    const dataSources: Array<Content<DataSource>> = query({
+      count: dataSourceIds.length,
+      query: 'data.dataSource._selected = "tbprocessor" AND data.dataSource.tbprocessor.urlOrId LIKE "*"',
+      filters: {
+        ids: {
+          values: dataSourceIds
+        }
       }
-      return acc
-    }, [])
+    }).hits as unknown as Array<Content<DataSource>>
+    const relatedTables: Array<RelatedTbml> = dataSources.map((dataSource) => {
+      return {
+        queryId: dataSource._id,
+        tbmlId: getTbprocessorKey(dataSource)
+      }
+    })
     const statisticDataDashboard: StatisticDashboard = {
       id: statistic._id,
       language: statistic.language ? statistic.language : '',
