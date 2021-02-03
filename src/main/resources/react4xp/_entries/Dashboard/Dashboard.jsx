@@ -76,8 +76,8 @@ function DashboardRouter(props) {
   return (
     <BrowserRouter>
       <Helmet
-        titleTemplate="SSB Dashboard desk"
-        defaultTitle="SSB Dashboard desk"
+        titleTemplate="SSB Dashboard"
+        defaultTitle="SSB Dashboard"
       >
       </Helmet>
 
