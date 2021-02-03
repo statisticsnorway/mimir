@@ -1,6 +1,10 @@
 .page-dashboard {
   background: $ssb-dark-1;
 
+  header {
+    margin-bottom: 30px;
+  }
+
   .part-dashboard {
     .dataset:before {
       content: "\25CF";
@@ -86,8 +90,14 @@
     }
   }
 
+  .badge {
+    float: right;
+    margin-top: -65px;
+  }
+
   .tables-wrapper {
     border: 2px solid $ssb-green-5;
+    border-top: none;
     background: white;
 
     .actions {
@@ -129,16 +139,20 @@
   }
 
   .nav {
+    border-bottom: 2px solid $ssb-green-5;
+
     .nav-link {
       color: black;
-      background: white;
+      background: $ssb-green-1;
       border-color: $ssb-green-5 $ssb-green-5 transparent;
 
       &:hover {
         border-color: black black transparent
       }
       &.active {
-        background: $ssb-green-1
+        background: $ssb-white;
+        border-bottom: 2px solid $ssb-white;
+        margin-bottom: -2px;
       }
     }
   }
