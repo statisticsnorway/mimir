@@ -13,10 +13,12 @@ import { selectDataQueriesByType } from '../DataQueries/selectors'
 import { requestDatasetUpdate } from '../DataQueries/actions'
 import { startRefresh } from '../StatRegDashboard/actions'
 import { selectStatuses } from '../StatRegDashboard/selectors'
+import { selectStatistics } from '../Statistics/selectors.es6'
 
 export function DataQueryTools() {
   const loadingCache = useSelector(selectLoadingClearCache)
   const statisticsSearchList = useSelector(selectSearchList)
+  const statistics = useSelector(selectStatistics)
   const loadingStatisticsSearchList = useSelector(selectLoadingSearchList)
   const hasLoadingStatistic = useSelector(selectHasLoadingStatistic)
   const io = useContext(WebSocketContext)
@@ -70,7 +72,11 @@ export function DataQueryTools() {
   }
 
   function onStatisticsSearchSelect(e) {
-    setSelectedStat(e)
+    let stat = statistics.find((s) => s.id === e.id)
+    if (!stat) {
+      stat = statisticsSearchList.find((s) => s.id === e.id)
+    }
+    setSelectedStat(stat)
   }
 
   function renderStatisticsSearch() {
