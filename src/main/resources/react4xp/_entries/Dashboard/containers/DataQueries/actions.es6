@@ -5,7 +5,7 @@ export function requestDataQueries(dispatch, io) {
     type: actions.loadDataQueries.type
   })
 
-  io.emit('get-dataqueries')
+  io.emit('get-dataqueries-error')
 }
 
 export function requestDatasetUpdate(dispatch, io, ids) {

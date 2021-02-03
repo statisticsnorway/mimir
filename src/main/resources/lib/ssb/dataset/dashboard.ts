@@ -2,9 +2,9 @@ __non_webpack_require__('/lib/polyfills/nashorn')
 import { DatasetLib, CreateOrUpdateStatus } from './dataset'
 import { ContentLibrary, Content } from 'enonic-types/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
-import { Events, RepoQueryLib } from '../../repo/query'
+import { Events, QueryInfoNode, RepoQueryLib } from '../../repo/query'
 import { EVENT_LOG_REPO, EVENT_LOG_BRANCH, LogSummary, RepoEventLogLib } from '../../repo/eventLog'
-import { RepoNode } from 'enonic-types/node'
+import { NodeQueryHit, NodeQueryResponse, RepoNode } from 'enonic-types/node'
 import { I18nLibrary } from 'enonic-types/i18n'
 import { ContextLibrary, RunContext } from 'enonic-types/context'
 import { Socket, SocketEmitter } from '../../types/socket'
@@ -12,16 +12,16 @@ import { SSBCacheLibrary } from '../cache'
 import { JSONstat } from '../../types/jsonstat-toolkit'
 import { TbmlDataUniform } from '../../types/xmlParser'
 import { DatasetRepoNode, RepoDatasetLib } from '../../repo/dataset'
-import { RepoCommonLib } from '../../repo/common'
+import { RepoCommonLib, withConnection } from '../../repo/common'
 import { User } from 'enonic-types/auth'
 import { TaskLib } from '../../types/task'
-import { JobInfoNode, JOB_STATUS_COMPLETE, JOB_STATUS_STARTED, RepoJobLib, StatisticsPublishResult } from '../../repo/job'
+import { JobEventNode, JobInfoNode, JOB_STATUS_COMPLETE, JOB_STATUS_STARTED, RepoJobLib, StatisticsPublishResult } from '../../repo/job'
 import { UtilLibrary } from '../../types/util'
 import { StatRegStatisticsLib } from '../../repo/statreg/statistics'
 import { StatisticInListing } from '../../ssb/statreg/types'
 import { StatRegRefreshResult } from '../../repo/statreg'
 import { StatRegJobInfo, SSBStatRegLib } from '../statreg'
-import { DashboardUtilsLib } from './dashboardUtils'
+import { DashboardUtilsLib, WARNING_ICON_EVENTS } from './dashboardUtils'
 
 const {
   users,
@@ -44,7 +44,8 @@ const {
   UNPUBLISHED_DATASET_BRANCH
 }: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
 const {
-  get: getContent
+  get: getContent,
+  query
 }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
 const {
   dateToFormat,
@@ -84,14 +85,13 @@ const {
   parseStatRegJobInfo
 }: SSBStatRegLib = __non_webpack_require__('/lib/ssb/statreg')
 
-
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
-  socket.on('get-dataqueries', () => {
+  socket.on('get-dataqueries-error', () => {
     submitTask({
-      description: 'get-dataqueries',
+      description: 'get-dataqueries-error',
       task: () => {
-        const contentWithDataSource: Array<unknown> = prepDataSources(getContentWithDataSource())
-        socket.emit('dataqueries-result', contentWithDataSource)
+        const contentWithDataSource: Array<unknown> = getDataSourcesWithError()
+        socket.emit('dataqueries-error-result', contentWithDataSource)
       }
     })
   })
@@ -134,6 +134,30 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
       }
     })
   })
+}
+
+function getDataSourcesWithError(): Array<DashboardDataSource> {
+  const errorLogNodes: Array<QueryInfoNode> = withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (connection) => {
+    const errorLogResult: ReadonlyArray<NodeQueryHit> = connection.query({
+      query: `_path LIKE "/queries/*" AND data.modifiedResult IN(${WARNING_ICON_EVENTS.map((e) => `"${e}"`).join(',')})`,
+      count: 1000
+    }).hits
+    return errorLogResult.reduce((errorLogNodes: Array<QueryInfoNode>, errorLog) => {
+      const errorLogNode: QueryInfoNode | null = connection.get(errorLog.id)
+      if (errorLogNode) {
+        errorLogNodes.push(errorLogNode)
+      }
+      return errorLogNodes
+    }, [])
+  })
+  const dataSourcesWithError: Array<Content<DataSource>> = query({
+    query: `_id IN(${errorLogNodes.map((s) => `"${s._name}"`).join(',')}) AND data.dataSource._selected LIKE "*"`,
+    count: errorLogNodes.length
+  }).hits as unknown as Array<Content<DataSource>>
+  return dataSourcesWithError.map((dataSource: Content<DataSource>) => {
+    const queryLogNode: QueryInfoNode | undefined = errorLogNodes.find((errorLog) => errorLog._name === dataSource._id)
+    return buildDashboardDataSource(dataSource, queryLogNode)
+  }).filter((ds) => !!ds) as Array<DashboardDataSource>
 }
 
 function getJobs(): Array<DashboardJobInfo> {
@@ -220,38 +244,41 @@ export interface DashboardJobInfo {
 
 function prepDataSources(dataSources: Array<Content<DataSource>>): Array<unknown> {
   return dataSources.map((dataSource) => {
-    if (dataSource.data.dataSource) {
-      const dataset: DatasetRepoNode<object | JSONstat | TbmlDataUniform> | undefined =
-        fromDatasetRepoCache(`/${dataSource.data.dataSource._selected}/${extractKey(dataSource)}`, () => getDataset(dataSource))
-      const hasData: boolean = !!dataset
-      const queryLogNode: QueryLogNode | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataSource._id}`) as QueryLogNode
-      return {
-        id: dataSource._id,
-        displayName: dataSource.displayName,
-        path: dataSource._path,
-        parentType: getParentType(dataSource._path),
-        type: dataSource.type,
-        format: dataSource.data.dataSource._selected,
-        dataset: {
-          modified: dataset ? dateToFormat(dataset._ts) : undefined,
-          modifiedReadable: dataset ? dateToReadable(dataset._ts) : undefined
-        },
-        hasData,
-        isPublished: isPublished(dataSource),
-        logData: queryLogNode ? {
-          ...queryLogNode.data,
-          showWarningIcon: showWarningIcon(queryLogNode.data.modifiedResult as Events),
-          message: i18n.localize({
-            key: queryLogNode.data.modifiedResult
-          }),
-          modified: queryLogNode.data.modified,
-          modifiedReadable: dateToReadable(queryLogNode.data.modifiedTs)
-        } : undefined,
-        eventLogNodes: []
-      }
-    }
-    return null
+    const queryLogNode: QueryInfoNode | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataSource._id}`) as QueryInfoNode
+    return buildDashboardDataSource(dataSource, queryLogNode)
   })
+}
+
+function buildDashboardDataSource(dataSource: Content<DataSource>, queryLogNode: QueryInfoNode | undefined): DashboardDataSource | null {
+  if (dataSource.data.dataSource?._selected) {
+    const dataset: DatasetRepoNode<object | JSONstat | TbmlDataUniform> | undefined =
+    fromDatasetRepoCache(`/${dataSource.data.dataSource._selected}/${extractKey(dataSource)}`, () => getDataset(dataSource))
+    const hasData: boolean = !!dataset
+    return {
+      id: dataSource._id,
+      displayName: dataSource.displayName,
+      path: dataSource._path,
+      parentType: getParentType(dataSource._path),
+      type: dataSource.type,
+      format: dataSource.data.dataSource._selected,
+      dataset: {
+        modified: dataset ? dateToFormat(dataset._ts) : undefined,
+        modifiedReadable: dataset ? dateToReadable(dataset._ts) : undefined
+      },
+      hasData,
+      isPublished: isPublished(dataSource),
+      logData: queryLogNode ? {
+        ...queryLogNode.data,
+        showWarningIcon: showWarningIcon(queryLogNode.data.modifiedResult as Events),
+        message: i18n.localize({
+          key: queryLogNode.data.modifiedResult
+        }),
+        modified: queryLogNode.data.modified,
+        modifiedReadable: dateToReadable(queryLogNode.data.modifiedTs)
+      } : undefined
+    }
+  }
+  return null
 }
 
 export function refreshDatasetHandler(
@@ -433,4 +460,25 @@ export interface DashboardDatasetLib {
 export interface ProcessXml {
   tbmlId: number;
   processXml: string;
+}
+
+export interface DashboardDataSource {
+  id: string;
+  displayName: string;
+  path: string;
+  parentType: string;
+  type: string;
+  format: string;
+  dataset: {
+    modified?: string;
+    modifiedReadable?: string;
+  };
+  hasData: boolean;
+  isPublished: boolean;
+  logData?: QueryInfoNode['data'] & {
+    showWarningIcon: boolean;
+    message: string;
+    modified: string;
+    modifiedReadable: string;
+  };
 }
