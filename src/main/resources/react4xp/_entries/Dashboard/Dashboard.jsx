@@ -71,9 +71,9 @@ function DashboardRouter(props) {
   setUserServerSide(dispatch, io, props.user)
   requestStatistics(dispatch, io)
   requestStatisticsSearchList(dispatch, io)
-  // requestStatuses(dispatch, io)
-  // requestDataQueries(dispatch, io)
-  // requestJobs(dispatch, io)
+  requestStatuses(dispatch, io)
+  requestDataQueries(dispatch, io)
+  requestJobs(dispatch, io)
   return (
     <BrowserRouter>
       <Helmet
