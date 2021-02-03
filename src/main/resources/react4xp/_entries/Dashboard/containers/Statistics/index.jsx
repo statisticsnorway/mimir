@@ -170,10 +170,18 @@ export function Statistics() {
   function getShortNameLink(statistic) {
     if (statistic.nextRelease) {
       return (
-        <Link
-          isExternal
-          href={contentStudioBaseUrl + statistic.id}>{statistic.language === 'en' ? 'Eng. ' + statistic.shortName : statistic.shortName}
-        </Link>
+        <>
+          <Link
+            isExternal
+            href={contentStudioBaseUrl + statistic.id}>
+            {statistic.language === 'en' ? 'Eng. ' + statistic.shortName : statistic.shortName}
+          </Link>
+          <Link
+            isExternal
+            title="Forhåndsvisning" href={statistic.previewUrl} className="ml-2">
+            [Forhåndsvisning]
+          </Link>
+        </>
       )
     }
     return (

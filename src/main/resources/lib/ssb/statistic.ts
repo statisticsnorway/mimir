@@ -28,6 +28,9 @@ const {
   get: getContent
 }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
 const {
+  getBaseUri
+} = __non_webpack_require__( '/lib/xp/admin')
+const {
   getStatisticByIdFromRepo
 } = __non_webpack_require__('/lib/repo/statreg/statistics')
 const {
@@ -228,6 +231,7 @@ function getDatasetFromContentId(contentId: string): DatasetRepoNode<TbmlDataUni
 
 function prepStatistics(statistics: Array<Content<Statistics>>): Array<StatisticDashboard> {
   const statisticData: Array<StatisticDashboard> = []
+  const baseUri: string = getBaseUri()
   statistics.map((statistic: Content<Statistics>) => {
     try {
       const statregData: StatregData | undefined = statistic.data.statistic ? getStatregInfo(statistic.data.statistic) : undefined
@@ -253,6 +257,7 @@ function prepStatistics(statistics: Array<Content<Statistics>>): Array<Statistic
         }, [])
         const statisticDataDashboard: StatisticDashboard = {
           id: statistic._id,
+          previewUrl: `${baseUri}/site/preview/default/draft${statistic._path}`,
           language: statistic.language ? statistic.language : '',
           name: statistic.displayName ? statistic.displayName : '',
           statisticId: statregData.statisticId,
@@ -408,6 +413,7 @@ interface OwnerObject {
 
 interface StatisticDashboard {
   id: string;
+  previewUrl?: string;
   language?: string;
   name?: string;
   statisticId: string;
