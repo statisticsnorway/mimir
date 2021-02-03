@@ -1,5 +1,5 @@
 dependencies {
-    include 'com.enonic.lib:lib-react4xp:1.0.2' // (or -SNAPSHOT, etc: your chosen/built lib version)
+    include 'com.enonic.lib:lib-react4xp:1.2.0' // (or -SNAPSHOT, etc: your chosen/built lib version)
 }
 
 import groovy.json.JsonOutput
