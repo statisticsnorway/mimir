@@ -25,6 +25,11 @@ export function DataQueryTable(props) {
     requestDatasetUpdate(dispatch, io, ids)
   }
 
+  function closeClick() {
+    setModalShow(false)
+    updateAll()
+  }
+
   function ConfirmationModal(props) {
     return (
       <Modal
@@ -46,8 +51,8 @@ export function DataQueryTable(props) {
           </p>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={props.onHide}>Avbryt</Button>
-          <Button onClick={() => updateAll()}>Ja, oppdater liste</Button>
+          <Button variant="secondary" onClick={() => setModalShow(false)}>Avbryt</Button>
+          <Button onClick={() => closeClick()}>Ja, oppdater liste</Button>
         </Modal.Footer>
       </Modal>
     )
@@ -117,7 +122,7 @@ export function DataQueryTable(props) {
   return (
     <Accordion header={`${props.header} (${dataQueries.length})`} className="mx-0" openByDefault={!!props.openByDefault}>
       <ReactTable columns={columns} data={data} />
-      <Button className="mb-3" onClick={() => setModalShow(true)}>
+      <Button className="mb-3 float-right" onClick={() => setModalShow(true)}>
         Oppdater liste
         {anyLoading ? <span className="spinner-border spinner-border-sm ml-2 mb-1" /> : <RefreshCw className="ml-2" />}
       </Button>
