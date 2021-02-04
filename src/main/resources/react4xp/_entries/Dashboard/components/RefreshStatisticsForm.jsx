@@ -14,7 +14,7 @@ export function RefreshStatisticsForm(props) {
 
   const [owners, setOwners] = useState([])
   const [validated] = useState(false)
-  const [fetchPublished, setFetchPublished] = useState(modalInfo.relatedUserTBMLs
+  const [fetchPublished, setFetchPublished] = useState(modalInfo.ownersWithSources
     .reduce( (acc, o) => {
       acc[o.ownerId] = false
       return acc
@@ -120,7 +120,7 @@ export function RefreshStatisticsForm(props) {
   return (
     <Form className="mt-3" validated={validated} onSubmit={processForm}>
       {
-        modalInfo.relatedUserTBMLs.map((owner, index) => {
+        modalInfo.ownersWithSources.map((owner, index) => {
           return renderOwnerInputForMultipleTbml(owner, index)
         })
       }
@@ -143,7 +143,7 @@ RefreshStatisticsForm.propTypes = {
     })
   ),
   modalInfo: PropTypes.shape({
-    relatedUserTBMLs: PropTypes.arrayOf(
+    ownersWithSources: PropTypes.arrayOf(
       PropTypes.shape({
         ownerId: PropTypes.number,
         tbmlList: PropTypes.arrayOf(

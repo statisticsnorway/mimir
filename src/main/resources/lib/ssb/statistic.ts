@@ -1,3 +1,4 @@
+__non_webpack_require__('/lib/polyfills/nashorn')
 import { Socket, SocketEmitter } from '../types/socket'
 import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
 import { StatisticInListing, VariantInListing } from './statreg/types'
@@ -8,10 +9,6 @@ import { ContextLibrary, RunContext } from 'enonic-types/context'
 import { DatasetRepoNode } from '../repo/dataset'
 import { DashboardUtilsLib } from './dataset/dashboardUtils'
 import { I18nLibrary } from 'enonic-types/i18n'
-__non_webpack_require__('/lib/polyfills/nashorn')
-
-import moment = require('moment')
-
 import { Highchart } from '../../site/content-types/highchart/highchart'
 import { Table } from '../../site/content-types/table/table'
 import { KeyFigure } from '../../site/content-types/keyFigure/keyFigure'
@@ -22,14 +19,16 @@ import { JobEventNode, JobInfoNode, JobNames, JobStatus, RepoJobLib } from '../r
 import { NodeQueryResponse } from 'enonic-types/node'
 import { RepoEventLogLib } from '../repo/eventLog'
 import { RepoCommonLib } from '../repo/common'
-
+import { StatRegStatisticsLib } from '../repo/statreg/statistics'
+import { TaskLib } from '../types/task'
 const {
   query,
   get: getContent
 }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
 const {
-  getStatisticByIdFromRepo
-} = __non_webpack_require__('/lib/repo/statreg/statistics')
+  fetchStatisticsWithRelease,
+  getAllStatisticsFromRepo
+}: StatRegStatisticsLib = __non_webpack_require__('/lib/repo/statreg/statistics')
 const {
   data: {
     forceArray
@@ -46,7 +45,8 @@ const {
   run
 }: ContextLibrary = __non_webpack_require__('/lib/xp/context')
 const {
-  getTbprocessor
+  getTbprocessor,
+  getTbprocessorKey
 }: TbprocessorLib = __non_webpack_require__('/lib/ssb/dataset/tbprocessor')
 const {
   encrypt
@@ -64,11 +64,63 @@ const {
   EVENT_LOG_REPO
 }: RepoEventLogLib = __non_webpack_require__('/lib/repo/eventLog')
 const i18n: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
+const {
+  submit: submitTask
+}: TaskLib = __non_webpack_require__('/lib/xp/task')
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-statistics', () => {
-    const statisticData: Array<StatisticDashboard> = prepStatistics(getStatistics())
-    socket.emit('statistics-result', statisticData)
+    submitTask({
+      description: 'get-statistics',
+      task: () => {
+        const statisticData: Array<StatisticDashboard> = getStatistics()
+        socket.emit('statistics-result', statisticData)
+      }
+    })
+  })
+
+  socket.on('get-statistics-search-list', () => {
+    submitTask({
+      description: 'get-statistics-search-list',
+      task: () => {
+        const statisticsSearchData: Array<StatisticSearch> = getStatisticsSearchList()
+        socket.emit('statistics-search-list-result', statisticsSearchData)
+      }
+    })
+  })
+
+  socket.on('get-statistics-owners-with-sources', (options: GetSourceListOwnersOptions) => {
+    submitTask({
+      description: 'get-statistics-owners-with-sources',
+      task: () => {
+        const ownersWithSources: Array<OwnerWithSources> = getOwnersWithSources(options.dataSourceIds)
+        socket.emit('statistics-owners-with-sources-result', {
+          id: options.id,
+          ownersWithSources
+        })
+      }
+    })
+  })
+
+  socket.on('get-statistics-related-tables-and-owners-with-sources', (options: GetRelatedTablesOptions) => {
+    submitTask({
+      description: 'get-statistics-related-tables-and-owners-with-sources',
+      task: () => {
+        const statistic: Content<Statistics> | null = getContent({
+          key: options.id
+        })
+        let relatedTables: Array<RelatedTbml> = []
+        if (statistic) {
+          relatedTables = getRelatedTables(statistic)
+        }
+        const ownersWithSources: Array<OwnerWithSources> = getOwnersWithSources(relatedTables.map((t) => t.queryId))
+        socket.emit('statistics-related-tables-and-owners-with-sources-result', {
+          id: options.id,
+          relatedTables,
+          ownersWithSources
+        })
+      }
+    })
   })
 
   socket.on('refresh-statistic', (data: RefreshInfo) => {
@@ -80,7 +132,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     })
 
     if (statistic) {
-      const datasetIdsToUpdate: Array<string> = getDatasetIdsFromStatistic(statistic)
+      const datasetIdsToUpdate: Array<string> = getDataSourceIdsFromStatistics(statistic)
       const processXmls: Array<ProcessXml> | undefined = data.owners ? processXmlFromOwners(data.owners) : undefined
       if (datasetIdsToUpdate.length > 0) {
         const context: RunContext = {
@@ -150,26 +202,11 @@ function processXmlFromOwners(owners: Array<OwnerObject>): Array<ProcessXml> {
   }))
 }
 
-export function getDatasetIdsFromStatistic(statistic: Content<Statistics>): Array<string> {
+export function getDataSourceIdsFromStatistics(statistic: Content<Statistics>): Array<string> {
   const mainTableId: Array<string> = statistic.data.mainTable ? [statistic.data.mainTable] : []
   const statisticsKeyFigureId: Array<string> = statistic.data.statisticsKeyFigure ? [statistic.data.statisticsKeyFigure] : []
   const attachmentTablesFiguresIds: Array<string> = statistic.data.attachmentTablesFigures ? forceArray(statistic.data.attachmentTablesFigures) : []
   return [...mainTableId, ...statisticsKeyFigureId, ...attachmentTablesFiguresIds]
-}
-
-function getDatasetFromStatistics(statistic: Content<Statistics>): Array<SourceList> {
-  const datasetIds: Array<string> = getDatasetIdsFromStatistic(statistic)
-  const sources: Array<SourceList> = datasetIds.reduce((acc: Array<SourceList>, contentId: string) => {
-    const dataset: DatasetRepoNode<TbmlDataUniform> | null = getDatasetFromContentId(contentId)
-    if (dataset) {
-      acc.push({
-        dataset,
-        queryId: contentId
-      })
-    }
-    return acc
-  }, [])
-  return sources
 }
 
 function getSourcesForUserFromStatistic(sources: Array<SourceList>): Array<OwnerWithSources> {
@@ -228,58 +265,18 @@ function getDatasetFromContentId(contentId: string): DatasetRepoNode<TbmlDataUni
   return content ? getTbprocessor(content, 'master') : null
 }
 
-function prepStatistics(statistics: Array<Content<Statistics>>): Array<StatisticDashboard> {
-  const statisticData: Array<StatisticDashboard> = []
-  statistics.map((statistic: Content<Statistics>) => {
-    try {
-      const statregData: StatregData | undefined = statistic.data.statistic ? getStatregInfo(statistic.data.statistic) : undefined
-      if (statregData) {
-        const datasets: Array<SourceList> = getDatasetFromStatistics(statistic)
-        const relatedUserTBMLs: Array<OwnerWithSources> = getSourcesForUserFromStatistic(datasets)
-        const relatedTables: Array<RelatedTbml> = datasets.reduce((acc: Array<RelatedTbml>, tbml) => {
-          const {
-            dataset,
-            queryId
-          } = tbml
-          if (dataset.data &&
-              typeof(dataset.data) !== 'string' &&
-              dataset.data.tbml.metadata &&
-              dataset.data.tbml.metadata.sourceList) {
-            const tbmlId: string = dataset.data.tbml.metadata.instance.definitionId.toString()
-            acc.push({
-              tbmlId,
-              queryId
-            })
-          }
-          return acc
-        }, [])
-        const statisticDataDashboard: StatisticDashboard = {
-          id: statistic._id,
-          language: statistic.language ? statistic.language : '',
-          name: statistic.displayName ? statistic.displayName : '',
-          statisticId: statregData.statisticId,
-          shortName: statregData.shortName,
-          frequency: statregData.frequency,
-          variantId: statregData.variantId,
-          nextRelease: undefined,
-          nextReleaseId: undefined,
-          relatedUserTBMLs,
-          relatedTables,
-          aboutTheStatistics: statistic.data.aboutTheStatistics,
-          logData: getStatisticsJobLogInfo(statistic._id)
-        }
-        if (statregData && statregData.nextRelease && moment(statregData.nextRelease).isSameOrAfter(new Date(), 'day')) {
-          statisticDataDashboard.nextRelease = statregData.nextRelease ? statregData.nextRelease : ''
-          statisticDataDashboard.nextReleaseId = statregData.nextReleaseId ? statregData.nextReleaseId : ''
-        }
-        statisticData.push(statisticDataDashboard)
-      }
-    } catch (e) {
-      const message: string = `Failed to prepStatistics for statistic: ${statistic.displayName} (${e})`
-      log.error(message)
+function getOwnersWithSources(dataSourceIds: Array<string> ): Array<OwnerWithSources> {
+  const datasets: Array<SourceList> = dataSourceIds.reduce((acc: Array<SourceList>, contentId: string) => {
+    const dataset: DatasetRepoNode<TbmlDataUniform> | null = getDatasetFromContentId(contentId)
+    if (dataset) {
+      acc.push({
+        dataset,
+        queryId: contentId
+      })
     }
-  })
-  return sortByNextRelease(statisticData)
+    return acc
+  }, [])
+  return getSourcesForUserFromStatistic(datasets)
 }
 
 function getStatisticsJobLogInfo(id: string, count: number = 1): Array<DashboardJobInfo> {
@@ -336,7 +333,97 @@ function prepStatisticsJobLogInfo(jobNode: JobInfoNode): DashboardJobInfo {
 //   })
 // }
 
-export function getStatistics(): Array<Content<Statistics>> {
+const TWO_WEEKS: number = 14 // TODO: put in config?
+function getStatistics(): Array<StatisticDashboard> {
+  const statsBeforeDate: Date = new Date()
+  statsBeforeDate.setDate(statsBeforeDate.getDate() + TWO_WEEKS)
+  const statregStatistics: Array<StatisticInListing> = fetchStatisticsWithRelease(statsBeforeDate)
+  const statisticsContent: Array<Content<Statistics>> = query({
+    query: `data.statistic IN(${statregStatistics.map((s) => `"${s.id}"`).join(',')})`,
+    count: 1000
+  }).hits as unknown as Array<Content<Statistics>>
+
+  return statisticsContent.map((statistic) => {
+    const statregStat: StatisticInListing = statregStatistics.find((statregStat) => {
+      return `${statregStat.id}` === statistic.data.statistic
+    }) as StatisticInListing
+    const statregData: StatregData = getStatregInfo(statregStat)
+    const relatedTables: Array<RelatedTbml> = getRelatedTables(statistic)
+    const statisticDataDashboard: StatisticDashboard = {
+      id: statistic._id,
+      language: statistic.language ? statistic.language : '',
+      name: statistic.displayName ? statistic.displayName : '',
+      statisticId: statregData.statisticId,
+      shortName: statregData.shortName,
+      frequency: statregData.frequency,
+      variantId: statregData.variantId,
+      nextRelease: statregData.nextRelease,
+      nextReleaseId: statregData.nextReleaseId,
+      ownersWithSources: undefined,
+      relatedTables: relatedTables,
+      aboutTheStatistics: statistic.data.aboutTheStatistics,
+      logData: getStatisticsJobLogInfo(statistic._id)
+    }
+    return statisticDataDashboard
+  }).sort((a, b) => {
+    return new Date(a.nextRelease).getTime() - new Date(b.nextRelease).getTime()
+  })
+}
+
+function getRelatedTables(statistic: Content<Statistics>): Array<RelatedTbml> {
+  const dataSourceIds: Array<string> = getDataSourceIdsFromStatistics(statistic)
+  const dataSources: Array<Content<DataSource>> = query({
+    count: dataSourceIds.length,
+    query: 'data.dataSource._selected = "tbprocessor" AND data.dataSource.tbprocessor.urlOrId LIKE "*"',
+    filters: {
+      ids: {
+        values: dataSourceIds
+      }
+    }
+  }).hits as unknown as Array<Content<DataSource>>
+  const relatedTables: Array<RelatedTbml> = dataSources.map((dataSource) => {
+    return {
+      queryId: dataSource._id,
+      tbmlId: getTbprocessorKey(dataSource)
+    }
+  })
+
+  return relatedTables
+}
+
+function getStatregInfo(statisticStatreg: StatisticInListing): StatregData {
+  const variants: Array<VariantInListing> = forceArray(statisticStatreg.variants)
+  if (variants.length > 1) {
+    variants.sort((a: VariantInListing, b: VariantInListing) => new Date(a.nextRelease).getTime() - new Date(b.nextRelease).getTime())
+  }
+  const variant: VariantInListing = variants[0] // TODO: Multiple variants
+  const result: StatregData = {
+    statisticId: statisticStatreg.id,
+    shortName: statisticStatreg.shortName,
+    frequency: variant.frekvens,
+    nextRelease: variant.nextRelease ? variant.nextRelease : '',
+    nextReleaseId: variant.nextReleaseId ? variant.nextReleaseId : '',
+    variantId: variant.id
+  }
+  return result
+}
+
+function getStatisticsSearchList(): Array<StatisticSearch> {
+  const statregStatistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
+  const statisticsContent: Array<Content<Statistics>> = getStatisticsContent()
+  return statisticsContent.map((statistics) => {
+    const statregData: StatisticInListing | undefined = statregStatistics.find((s) => {
+      return `${s.id}` === statistics.data.statistic
+    })
+    return {
+      id: statistics._id,
+      name: statistics.displayName,
+      shortName: statregData?.shortName || ''
+    }
+  })
+}
+
+export function getStatisticsContent(): Array<Content<Statistics>> {
   let hits: Array<Content<Statistics>> = []
   const result: QueryResponse<Statistics> = query({
     contentTypes: [`${app.name}:statistics`],
@@ -345,43 +432,6 @@ export function getStatistics(): Array<Content<Statistics>> {
   })
   hits = hits.concat(result.hits)
   return hits
-}
-
-function getStatregInfo(key: string): StatregData | undefined {
-  const statisticStatreg: StatisticInListing | undefined = getStatisticByIdFromRepo(key)
-  if (statisticStatreg) {
-    const variants: Array<VariantInListing> = forceArray(statisticStatreg.variants)
-    if (variants.length > 1) {
-      variants.sort((a: VariantInListing, b: VariantInListing) => new Date(a.nextRelease).getTime() - new Date(b.nextRelease).getTime())
-    }
-    const variant: VariantInListing = variants[0] // TODO: Multiple variants
-    const result: StatregData = {
-      statisticId: statisticStatreg.id,
-      shortName: statisticStatreg.shortName,
-      frequency: variant.frekvens,
-      nextRelease: variant.nextRelease ? variant.nextRelease : '',
-      nextReleaseId: variant.nextReleaseId ? variant.nextReleaseId : '',
-      variantId: variant.id
-    }
-    return result
-  }
-  return undefined
-}
-
-function sortByNextRelease(statisticData: Array<StatisticDashboard>): Array<StatisticDashboard> {
-  const statisticsSorted: Array<StatisticDashboard> = statisticData.sort((a, b) => {
-    const dateA: Date | string = a.nextRelease ? new Date(a.nextRelease) : ''
-    const dateB: Date | string = b.nextRelease ? new Date(b.nextRelease) : ''
-    if (dateA < dateB) {
-      return -1
-    } else if (dateA > dateB) {
-      return 1
-    } else {
-      return 0
-    }
-  })
-
-  return statisticsSorted
 }
 
 interface SourceNodeRender {
@@ -399,6 +449,15 @@ interface RefreshInfo {
   owners?: Array<OwnerObject>;
 }
 
+interface GetSourceListOwnersOptions {
+  id: string;
+  dataSourceIds: Array<string>;
+}
+
+interface GetRelatedTablesOptions {
+  id: string;
+}
+
 interface OwnerObject {
   username: string;
   password: string;
@@ -412,20 +471,26 @@ interface StatisticDashboard {
   id: string;
   language?: string;
   name?: string;
-  statisticId: string;
+  statisticId: number;
   shortName: string;
   frequency: string;
   variantId: string;
-  nextRelease?: string;
-  nextReleaseId?: string;
+  nextRelease: string;
+  nextReleaseId: string;
   relatedTables?: Array<RelatedTbml>;
-  relatedUserTBMLs?: Array<OwnerWithSources>;
+  ownersWithSources?: Array<OwnerWithSources>;
   aboutTheStatistics?: string;
   logData: Array<DashboardJobInfo>;
 }
 
+interface StatisticSearch {
+  id: string;
+  shortName: string;
+  name: string;
+}
+
 interface StatregData {
-  statisticId: string;
+  statisticId: number;
   shortName: string;
   frequency: string;
   nextRelease: string;
@@ -451,7 +516,7 @@ interface Tbml {
 
 export interface StatisticLib {
   setupHandlers: (socket: Socket, socketEmitter: SocketEmitter) => void;
-  getStatistics: () => Array<Content<Statistics>>;
   getDatasetIdsFromStatistic: (statistic: Content<Statistics>) => Array<string>;
+  getStatisticsContent: () => Array<Content<Statistics>>;
 }
 

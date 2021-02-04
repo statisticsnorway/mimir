@@ -12,7 +12,7 @@ export interface KontaktNavn {
 }
 
 export interface Kontakt {
-    id: string;
+    id: number;
     epost: string;
     telefon: number;
     mobil: number;
@@ -71,7 +71,7 @@ export interface Statistics {
 // XML response types from StatReg for Publications --------------------------------
 
 export interface Publisering {
-    id: string;
+    id: number;
     variant: string;
     deskFlyt: string;
     endret: string;
@@ -94,5 +94,5 @@ export interface Publication extends StatRegBase {
 }
 
 export interface StatRegBase {
-    id: string;
+    id: number;
 }
