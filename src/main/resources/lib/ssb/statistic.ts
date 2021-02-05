@@ -83,7 +83,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     submitTask({
       description: 'get-statistics-search-list',
       task: () => {
-        const statisticsSearchData: Array<StatisticSearch> = getStatisticsSeachList()
+        const statisticsSearchData: Array<StatisticSearch> = getStatisticsSearchList()
         socket.emit('statistics-search-list-result', statisticsSearchData)
       }
     })
@@ -150,10 +150,12 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
             node.data.queryIds = [data.id]
             return node
           })
+          const feedbackEventName: string = 'statistics-activity-refresh-feedback'
           const refreshDataResult: Array<RefreshDatasetResult> = refreshDatasetHandler(
             datasetIdsToUpdate,
             socketEmitter,
-            processXmls
+            processXmls,
+            feedbackEventName
           )
           const finishedJobLog: JobInfoNode = completeJobLog(jobLogNode._id, JobStatus.COMPLETE, refreshDataResult)
           socketEmitter.broadcast('statistics-refresh-result-log', {
@@ -406,23 +408,7 @@ function getStatregInfo(statisticStatreg: StatisticInListing): StatregData {
   return result
 }
 
-function sortByNextRelease(statisticData: Array<StatisticDashboard>): Array<StatisticDashboard> {
-  const statisticsSorted: Array<StatisticDashboard> = statisticData.sort((a, b) => {
-    const dateA: Date | string = a.nextRelease ? new Date(a.nextRelease) : ''
-    const dateB: Date | string = b.nextRelease ? new Date(b.nextRelease) : ''
-    if (dateA < dateB) {
-      return -1
-    } else if (dateA > dateB) {
-      return 1
-    } else {
-      return 0
-    }
-  })
-
-  return statisticsSorted
-}
-
-function getStatisticsSeachList(): Array<StatisticSearch> {
+function getStatisticsSearchList(): Array<StatisticSearch> {
   const statregStatistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
   const statisticsContent: Array<Content<Statistics>> = getStatisticsContent()
   return statisticsContent.map((statistics) => {

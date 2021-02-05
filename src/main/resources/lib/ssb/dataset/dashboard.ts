@@ -284,7 +284,8 @@ function buildDashboardDataSource(dataSource: Content<DataSource>, queryLogNode:
 export function refreshDatasetHandler(
   ids: Array<string>,
   socketEmitter: SocketEmitter,
-  processXmls?: Array<ProcessXml>
+  processXmls?: Array<ProcessXml>,
+  feedbackEventName?: string
 ): Array<RefreshDatasetResult> {
   // tell all dashboard instances that these are going to be loaded
   ids.forEach((id) => {
@@ -300,7 +301,7 @@ export function refreshDatasetHandler(
     if (dataSource) {
       const dataSourceKey: number = parseInt(extractKey(dataSource))
 
-      socketEmitter.broadcast('statistics-activity-refresh-feedback', {
+      feedbackEventName && socketEmitter.broadcast(feedbackEventName, {
         name: dataSource.displayName,
         datasourceKey: dataSourceKey,
         status: `Henter data for ${dataSource.displayName}`,
@@ -326,7 +327,7 @@ export function refreshDatasetHandler(
         branch: ownerCredentialsForTbml ? UNPUBLISHED_DATASET_BRANCH : DATASET_BRANCH
       })
 
-      socketEmitter.broadcast('statistics-activity-refresh-feedback', {
+      feedbackEventName && socketEmitter.broadcast(feedbackEventName, {
         name: dataSource.displayName,
         datasourceKey: dataSourceKey,
         status: i18n.localize({
@@ -346,7 +347,7 @@ export function refreshDatasetHandler(
         branch: ownerCredentialsForTbml ? UNPUBLISHED_DATASET_BRANCH : DATASET_BRANCH
       }
     } else {
-      socketEmitter.broadcast('statistics-activity-refresh-feedback', {
+      feedbackEventName && socketEmitter.broadcast(feedbackEventName, {
         status: `Fant ingen innhold med id ${id}`,
         step: 1,
         tableIndex: index
@@ -453,7 +454,8 @@ export interface DashboardDatasetLib {
   refreshDatasetHandler: (
     ids: Array<string>,
     socketEmitter: SocketEmitter,
-    processXml?: Array<ProcessXml>
+    processXml?: Array<ProcessXml>,
+    feedbackEventName?: string
   ) => Array<RefreshDatasetResult>;
 }
 
