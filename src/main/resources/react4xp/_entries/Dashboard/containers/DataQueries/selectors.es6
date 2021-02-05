@@ -27,6 +27,11 @@ export const selectDataQueries = createSelector(
   (dataQueriesState) => dataQueriesState.dataQueries,
 )
 
+export const selectFactPageQueryGroups = createSelector(
+  [selectDomain],
+  (dataQueriesState) => dataQueriesState.factPageQueryGroups
+)
+
 export const selectDataQueriesByParentType = (dataQueryType) => {
   return createSelector(
     [selectDomain],

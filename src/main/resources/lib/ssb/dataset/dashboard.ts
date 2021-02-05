@@ -4,7 +4,7 @@ import { ContentLibrary, Content } from 'enonic-types/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { Events, QueryInfoNode, RepoQueryLib } from '../../repo/query'
 import { EVENT_LOG_REPO, EVENT_LOG_BRANCH, LogSummary, RepoEventLogLib } from '../../repo/eventLog'
-import { NodeQueryHit, NodeQueryResponse, RepoNode } from 'enonic-types/node'
+import { NodeQueryHit, RepoNode } from 'enonic-types/node'
 import { I18nLibrary } from 'enonic-types/i18n'
 import { ContextLibrary, RunContext } from 'enonic-types/context'
 import { Socket, SocketEmitter } from '../../types/socket'
@@ -15,13 +15,15 @@ import { DatasetRepoNode, RepoDatasetLib } from '../../repo/dataset'
 import { RepoCommonLib, withConnection } from '../../repo/common'
 import { User } from 'enonic-types/auth'
 import { TaskLib } from '../../types/task'
-import { JobEventNode, JobInfoNode, JOB_STATUS_COMPLETE, JOB_STATUS_STARTED, RepoJobLib, StatisticsPublishResult } from '../../repo/job'
+import { JobInfoNode, JOB_STATUS_COMPLETE, JOB_STATUS_STARTED, RepoJobLib, StatisticsPublishResult } from '../../repo/job'
 import { UtilLibrary } from '../../types/util'
 import { StatRegStatisticsLib } from '../../repo/statreg/statistics'
 import { StatisticInListing } from '../../ssb/statreg/types'
 import { StatRegRefreshResult } from '../../repo/statreg'
 import { StatRegJobInfo, SSBStatRegLib } from '../statreg'
 import { DashboardUtilsLib, WARNING_ICON_EVENTS } from './dashboardUtils'
+import { DefaultPageConfig } from '../../../site/pages/default/default-page-config'
+import { Page } from '../../../site/content-types/page/page'
 
 const {
   users,
@@ -89,8 +91,18 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     submitTask({
       description: 'get-error-queries',
       task: () => {
-        const contentWithDataSource: Array<unknown> = getDataSourcesWithError()
+        const contentWithDataSource: Array<DashboardDataSource> = getDataSourcesWithError()
         socket.emit('error-queries-result', contentWithDataSource)
+      }
+    })
+  })
+
+  socket.on('get-fact-page-query-groups', () => {
+    submitTask({
+      description: 'get-fact-page-query-groups',
+      task: () => {
+        const factpages: Array<DashboardFactPage> = getFactPageQueryGroups()
+        socket.emit('fact-page-query-groups-result', factpages)
       }
     })
   })
@@ -157,6 +169,22 @@ function getDataSourcesWithError(): Array<DashboardDataSource> {
     const queryLogNode: QueryInfoNode | undefined = errorLogNodes.find((errorLog) => errorLog._name === dataSource._id)
     return buildDashboardDataSource(dataSource, queryLogNode)
   }).filter((ds) => !!ds) as Array<DashboardDataSource>
+}
+
+function getFactPageQueryGroups(): Array<DashboardFactPage> {
+  const factPages: Array<Content<Page, DefaultPageConfig>> = query({
+    query: `components.page.config.mimir.default.pageType LIKE "factPage"`,
+    count: 1000
+  }).hits as unknown as Array<Content<Page, DefaultPageConfig>>
+
+  return factPages.map((factPage) => {
+    return {
+      id: factPage._id,
+      displayName: factPage.displayName,
+      loaded: false,
+      dataQueries: []
+    }
+  })
 }
 
 function getJobs(): Array<DashboardJobInfo> {
@@ -482,4 +510,11 @@ export interface DashboardDataSource {
     modified: string;
     modifiedReadable: string;
   };
+}
+
+export interface DashboardFactPage {
+  id: string;
+  displayName: string;
+  loaded: boolean;
+  dataQueries: Array<string>;
 }

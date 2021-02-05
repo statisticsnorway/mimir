@@ -1,9 +1,9 @@
-import { Accordion } from '@statisticsnorway/ssb-component-library'
+import { Accordion, NestedAccordion } from '@statisticsnorway/ssb-component-library'
 import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectLoadingFactPageQueryGroups } from './selectors'
+import { selectLoadingFactPageQueryGroups, selectFactPageQueryGroups } from './selectors'
 import PropTypes from 'prop-types'
-import { requestFactPageQueryGroups } from './actions.es6'
+import { requestFactPageQueryGroups } from './actions'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 
 export function FactPageQueries(props) {
@@ -11,6 +11,7 @@ export function FactPageQueries(props) {
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
   const isLoading = useSelector(selectLoadingFactPageQueryGroups)
+  const factPages = useSelector(selectFactPageQueryGroups)
 
   function onToggleAccordion(isOpen) {
     if (firstOpen && isOpen) {
@@ -26,7 +27,13 @@ export function FactPageQueries(props) {
       )
     }
     return (
-      <div>done</div>
+      factPages.map((factPage) => {
+        return (
+          <NestedAccordion key={`fact-page-query-${factPage.id}`} header={`${factPage.displayName}`}>
+            {factPage.id}
+          </NestedAccordion>
+        )
+      })
     )
   }
 
