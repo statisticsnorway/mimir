@@ -1,11 +1,11 @@
 import { actions } from './slice'
 
-export function requestDataQueries(dispatch, io) {
+export function requestErrorQueries(dispatch, io) {
   dispatch({
-    type: actions.loadDataQueries.type
+    type: actions.loadErrorQueries.type
   })
 
-  io.emit('get-dataqueries-error')
+  io.emit('get-error-queries')
 }
 
 export function requestDatasetUpdate(dispatch, io, ids) {

@@ -12,13 +12,17 @@ import { ReactTable } from '../../components/ReactTable'
 import { DataQueryBadges } from '../../components/DataQueryBadges'
 import { DataQueryLog } from './DataQueryLog'
 import { RefreshDataQueryButton } from './RefreshDataQueryButton'
+import { requestErrorQueries } from './actions'
+import { selectLoadingErrors } from './selectors'
 
 export function DataQueryTable(props) {
   const dataQueries = useSelector(selectDataQueriesByParentType(props.dataQueryType))
   const contentStudioBaseUrl = useSelector(selectContentStudioBaseUrl)
+  const isLoading = useSelector(selectLoadingErrors)
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
   const [modalShow, setModalShow] = React.useState(false)
+  const [firstOpen, setFirstOpen] = React.useState(true)
 
   function updateAll() {
     const ids = dataQueries.filter((q) => !q.loading).map((q) => q.id)
@@ -117,21 +121,52 @@ export function DataQueryTable(props) {
       }
     })
   }
-  const data = React.useMemo(() => getDataQueries(), [dataQueries])
 
+  function onToggleAccordion(isOpen) {
+    if (firstOpen && isOpen) {
+      setFirstOpen(false)
+      requestErrorQueries(dispatch, io)
+    }
+  }
+
+
+  function renderAccordionBody() {
+    if (isLoading) {
+      return (
+        <span className="spinner-border spinner-border" />
+      )
+    }
+    return (
+      <React.Fragment>
+        <ReactTable columns={columns} data={data} />
+        <Button className="mb-3 float-right" onClick={() => setModalShow(true)}>
+          Oppdater liste
+          {anyLoading ? <span className="spinner-border spinner-border-sm ml-2 mb-1" /> : <RefreshCw className="ml-2" />}
+        </Button>
+        <ConfirmationModal
+          show={modalShow}
+          onHide={() => setModalShow(false)}
+        />
+      </React.Fragment>
+    )
+  }
+
+  onToggleAccordion(props.openByDefault)
+  const data = React.useMemo(() => getDataQueries(), [dataQueries])
   return (
-    <Accordion header={`${props.header} (${dataQueries.length})`} className="mx-0" openByDefault={!!props.openByDefault}>
-      <ReactTable columns={columns} data={data} />
-      <Button className="mb-3 float-right" onClick={() => setModalShow(true)}>
-        Oppdater liste
-        {anyLoading ? <span className="spinner-border spinner-border-sm ml-2 mb-1" /> : <RefreshCw className="ml-2" />}
-      </Button>
-      <ConfirmationModal
-        show={modalShow}
-        onHide={() => setModalShow(false)}
-      />
+    <Accordion
+      header={`${props.header} (${dataQueries.length})`}
+      className="mx-0"
+      openByDefault={!!props.openByDefault}
+      onToggle={(isOpen) => onToggleAccordion(isOpen)}
+    >
+      {renderAccordionBody()}
     </Accordion>
   )
+}
+
+DataQueryTable.defaultProps = {
+  openByDefault: false
 }
 
 DataQueryTable.propTypes = {

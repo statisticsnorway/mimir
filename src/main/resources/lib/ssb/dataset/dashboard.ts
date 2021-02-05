@@ -35,7 +35,6 @@ const {
 }: RepoCommonLib = __non_webpack_require__( '/lib/repo/common')
 const {
   refreshDataset,
-  getContentWithDataSource,
   extractKey,
   getDataset
 }: DatasetLib = __non_webpack_require__( '/lib/ssb/dataset/dataset')
@@ -86,12 +85,12 @@ const {
 }: SSBStatRegLib = __non_webpack_require__('/lib/ssb/statreg')
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
-  socket.on('get-dataqueries-error', () => {
+  socket.on('get-error-queries', () => {
     submitTask({
-      description: 'get-dataqueries-error',
+      description: 'get-error-queries',
       task: () => {
         const contentWithDataSource: Array<unknown> = getDataSourcesWithError()
-        socket.emit('dataqueries-error-result', contentWithDataSource)
+        socket.emit('error-queries-result', contentWithDataSource)
       }
     })
   })

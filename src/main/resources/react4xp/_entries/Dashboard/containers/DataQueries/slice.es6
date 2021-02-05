@@ -2,20 +2,19 @@ import { createSlice } from '../../utils/@reduxjs/toolkit'
 
 export const initialState = {
   dataQueries: [],
-  loading: true
+  loadingErrors: true
 }
 
 const dataQueriesSlice = createSlice({
   name: 'dataQueries',
   initialState,
   reducers: {
-    loadDataQueries(state) {
-      state.loading = true
-      state.dataQueries = []
+    loadErrorQueries(state) {
+      state.loadingErrors = true
     },
-    dataQueriesLoaded(state, action) {
-      state.loading = false
-      state.dataQueries = action.dataQueries
+    errorQueriesLoaded(state, action) {
+      state.loadingErrors = false
+      state.dataQueries = state.dataQueries.concat(action.dataQueries)
     },
     dataQueryLoading(state, action) {
       action.ids.forEach((id) => {

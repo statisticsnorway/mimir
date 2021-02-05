@@ -12,9 +12,9 @@ const byParentType = groupBy((dataQuery) => {
 // First select the relevant part from the state
 const selectDomain = (state) => state.dataQueries || initialState
 
-export const selectLoading = createSelector(
+export const selectLoadingErrors = createSelector(
   [selectDomain],
-  (dataQueriesState) => dataQueriesState.loading,
+  (dataQueriesState) => dataQueriesState.loadingErrors,
 )
 
 export const selectDataQueries = createSelector(
