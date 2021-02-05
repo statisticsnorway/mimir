@@ -257,7 +257,8 @@ exports.get = function(req) {
   })
 
   pageContributions = breadcrumbComponent.renderPageContributions({
-    pageContributions
+    pageContributions,
+    clientRender: true
   })
 
 

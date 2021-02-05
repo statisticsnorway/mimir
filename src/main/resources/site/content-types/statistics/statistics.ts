@@ -95,7 +95,7 @@ export interface Statistics {
       /**
        * Statistikk
        */
-      contentId?: Array<string>;
+      contentId?: string;
     };
 
     /**
