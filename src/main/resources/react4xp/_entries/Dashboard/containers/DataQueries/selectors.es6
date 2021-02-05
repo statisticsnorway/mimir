@@ -17,6 +17,11 @@ export const selectLoadingErrors = createSelector(
   (dataQueriesState) => dataQueriesState.loadingErrors,
 )
 
+export const selectLoadingFactPageQueryGroups = createSelector(
+  [selectDomain],
+  (dataQueriesState) => dataQueriesState.loadingFactPageQueryGroups,
+)
+
 export const selectDataQueries = createSelector(
   [selectDomain],
   (dataQueriesState) => dataQueriesState.dataQueries,

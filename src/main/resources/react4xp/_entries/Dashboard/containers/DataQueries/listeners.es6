@@ -8,6 +8,13 @@ export default function setupDataQueriesListeners(io, dispatch) {
     })
   })
 
+  io.on('fact-page-query-groups-result', (data) => {
+    dispatch({
+      type: actions.factPageQueryGroupsLoaded.type,
+      factPageQueryGroups: data
+    })
+  })
+
   io.on('dashboard-activity-refreshDataset-result', (data) => {
     dispatch({
       type: actions.dataQueryLoaded.type,

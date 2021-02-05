@@ -8,6 +8,14 @@ export function requestErrorQueries(dispatch, io) {
   io.emit('get-error-queries')
 }
 
+export function requestFactPageQueryGroups(dispatch, io) {
+  dispatch({
+    type: actions.loadFactPageQueryGroups.type
+  })
+
+  io.emit('get-fact-page-query-groups')
+}
+
 export function requestDatasetUpdate(dispatch, io, ids) {
   dispatch({
     type: actions.dataQueryLoading.type,

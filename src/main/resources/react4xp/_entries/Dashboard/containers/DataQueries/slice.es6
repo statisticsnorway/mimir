@@ -2,7 +2,9 @@ import { createSlice } from '../../utils/@reduxjs/toolkit'
 
 export const initialState = {
   dataQueries: [],
-  loadingErrors: true
+  loadingErrors: true,
+  factPageQueryGroups: [],
+  loadingFactPageQueryGroups: true
 }
 
 const dataQueriesSlice = createSlice({
@@ -15,6 +17,14 @@ const dataQueriesSlice = createSlice({
     errorQueriesLoaded(state, action) {
       state.loadingErrors = false
       state.dataQueries = state.dataQueries.concat(action.dataQueries)
+    },
+    loadFactPageQueryGroups(state) {
+      state.loadingFactPageQueryGroups = true
+      state.factPageQueryGroups = []
+    },
+    factPageQueryGroupsLoaded(state, action) {
+      state.loadingFactPageQueryGroups = false
+      state.factPageQueryGroups = action.factPageQueryGroups
     },
     dataQueryLoading(state, action) {
       action.ids.forEach((id) => {
