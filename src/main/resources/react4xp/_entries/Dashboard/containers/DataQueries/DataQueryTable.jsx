@@ -2,7 +2,6 @@ import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { Button, Modal } from 'react-bootstrap'
-import { selectDataQueriesByParentType } from './selectors'
 import { Accordion, Link } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import { requestDatasetUpdate } from './actions'
@@ -12,13 +11,11 @@ import { ReactTable } from '../../components/ReactTable'
 import { DataQueryBadges } from '../../components/DataQueryBadges'
 import { DataQueryLog } from './DataQueryLog'
 import { RefreshDataQueryButton } from './RefreshDataQueryButton'
-import { requestErrorQueries } from './actions'
-import { selectLoadingErrors } from './selectors'
 
 export function DataQueryTable(props) {
-  const dataQueries = useSelector(selectDataQueriesByParentType(props.dataQueryType))
+  const dataQueries = useSelector(props.querySelector)
   const contentStudioBaseUrl = useSelector(selectContentStudioBaseUrl)
-  const isLoading = useSelector(selectLoadingErrors)
+  const isLoading = useSelector(props.loadingSelector)
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
   const [modalShow, setModalShow] = React.useState(false)
@@ -125,7 +122,7 @@ export function DataQueryTable(props) {
   function onToggleAccordion(isOpen) {
     if (firstOpen && isOpen) {
       setFirstOpen(false)
-      requestErrorQueries(dispatch, io)
+      props.requestQueries(dispatch, io)
     }
   }
 
@@ -170,9 +167,11 @@ DataQueryTable.defaultProps = {
 }
 
 DataQueryTable.propTypes = {
-  dataQueryType: PropTypes.string,
   header: PropTypes.string,
-  openByDefault: PropTypes.bool
+  openByDefault: PropTypes.bool,
+  querySelector: PropTypes.func.isRequired,
+  loadingSelector: PropTypes.func.isRequired,
+  requestQueries: PropTypes.func.isRequired
 }
 
 export default (props) => <DataQueryTable {...props} />

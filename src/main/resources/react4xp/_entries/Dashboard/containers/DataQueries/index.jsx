@@ -1,12 +1,19 @@
 import React from 'react'
 import { Col, Row } from 'react-bootstrap'
 import { DataQueryTable } from './DataQueryTable'
+import { selectLoadingErrors, selectDataQueriesByParentType } from './selectors'
+import { requestErrorQueries } from './actions'
 
 export function DataQueries() {
   function renderDataQueryTables() {
     return (
       <React.Fragment>
-        <DataQueryTable header="Spørringer som feilet" dataQueryType="error"/>
+        <DataQueryTable
+          header="Spørringer som feilet"
+          querySelector={selectDataQueriesByParentType('error')}
+          loadingSelector={selectLoadingErrors}
+          requestQueries={requestErrorQueries}
+        />
         {/* <DataQueryTable header="Spørringer fra Faktasider" dataQueryType="factPage"/>
         <DataQueryTable header="Spørringer fra Kommunefakta" dataQueryType="municipality"/>
         <DataQueryTable header="Spørringer fra statistikker" dataQueryType="mimir:statistics"/>
