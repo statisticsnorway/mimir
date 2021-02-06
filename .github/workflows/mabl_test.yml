@@ -36,10 +36,14 @@ jobs:
     - uses: chrislennon/action-drone@v1
       with:
           version: '0.8.1'
+      env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
     - run: drone info
       env:
-          DRONE_SERVER: ${{ secrets.DRONE_SERVER }}
-          DRONE_TOKEN: ${{ secrets.DRONE_TOKEN }}
+          #DRONE_SERVER: ${{ secrets.DRONE_SERVER }}
+          DRONE_SERVER: https://ssb-drone.enonic.cloud
+          #DRONE_TOKEN: ${{ secrets.DRONE_TOKEN }}
+          DRONE_TOKEN: p5vfRnRTFjIiWYtd7Z4uFTKNsNgg6ZRm
     - name: Git checkout
       uses: actions/checkout@v2
     - name: Branch name and commit hash
