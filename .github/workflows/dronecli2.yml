@@ -1,22 +1,21 @@
-# This is a basic workflow that is manually triggered
+name: Test
 
-name: DRONE_MIMIR
-
-# Controls when the action will run. Workflow runs when manually triggered using the UI
-# or API.
 on:
-  workflow_dispatch:
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+  pull_request
+
 jobs:
-  # This workflow contains a single job called "greet"
-  drone_cli:
-    # The type of runner that the job will run on
+  build:
     runs-on: ubuntu-latest
     steps:
-     - uses: chrislennon/action-drone@v1
-       with:
+      - uses: chrislennon/action-drone@v1
+        with:
           version: '0.8.1'
-     - run: drone info
-       env:
-          DRONE_SERVER: ${{ secrets.DRONE_SERVER }}
-          DRONE_TOKEN: ${{ secrets.DRONE_TOKEN }}
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+      - run: drone info
+        env:
+          #DRONE_SERVER: ${{ secrets.DRONE_SERVER }}
+          DRONE_SERVER: ssb-drone.enonic.cloud
+          #DRONE_TOKEN: ${{ secrets.DRONE_TOKEN }}
+          DRONE_TOKEN: nUXyf8glrBodbKc2Y5QAThBEbFwPyarL
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
