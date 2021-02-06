@@ -33,13 +33,11 @@ jobs:
     container: node:10.18-jessie
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    
     - uses: chrislennon/action-drone@v1
       with:
           version: '0.8.1'
       env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-    - name: drone cli
     - run: drone info
       env:
           #DRONE_SERVER: ${{ secrets.DRONE_SERVER }}
