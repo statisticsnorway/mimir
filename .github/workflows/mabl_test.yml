@@ -38,7 +38,7 @@ jobs:
           version: '0.8.1'
       env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-    - run: drone exec -pipeline='Test Environment' -exclude='mabl create and test branch - test.ssb.no'
+    - run: drone exec --repo-name=statisticsnorway/mimir
       env:
           #DRONE_SERVER: ${{ secrets.DRONE_SERVER }}
           DRONE_SERVER: https://ssb-drone.enonic.cloud
