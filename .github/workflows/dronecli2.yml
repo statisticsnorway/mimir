@@ -15,10 +15,10 @@ jobs:
     container: node:10.18-jessie
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    - uses: chrislennon/action-drone@v1
-        with:
+     - uses: chrislennon/action-drone@v1
+       with:
           version: '0.8.1'
-      - run: drone info
-        env:
+     - run: drone info
+       env:
           DRONE_SERVER: ${{ secrets.DRONE_SERVER }}
           DRONE_TOKEN: ${{ secrets.DRONE_TOKEN }}
