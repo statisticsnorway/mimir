@@ -4,7 +4,9 @@ import { Highchart } from '../../site/content-types/highchart/highchart'
 import { Content } from 'enonic-types/content'
 import { JSONstat } from '../types/jsonstat-toolkit'
 import { DataSource } from '../../site/mixins/dataSource/dataSource'
+import { UtilLibrary } from '../types/util'
 
+const util: UtilLibrary = __non_webpack_require__('/lib/util')
 const {
   seriesAndCategoriesFromHtmlTable
 } = __non_webpack_require__( '/lib/highcharts/data/htmlTable')
@@ -62,15 +64,21 @@ export function switchRowsAndColumnsCheck(
 
 
 function switchRowsAndColumns(seriesAndCategories: SeriesAndCategories ): SeriesAndCategories {
-  const name: string = seriesAndCategories.title && typeof seriesAndCategories.title === 'string' ? seriesAndCategories.title : 'Antall'
+  const categories: Array<string | number | PreliminaryData> = util.data.forceArray(seriesAndCategories.categories)
+  const series: Array<Series> = categories.reduce((series: Array<Series>, category: string | number | PreliminaryData, index: number) => {
+    const serie: Series = {
+      name: category,
+      data: seriesAndCategories.series.map((serie) => {
+        return serie.data[index]
+      })
+    }
+    series.push(serie)
+    return series
+  }, [])
+
   return {
     categories: seriesAndCategories.series.map((serie) => serie.name),
-    series: [{
-      name,
-      data: seriesAndCategories.series.map((serie) => {
-        return serie.data[0]
-      })
-    }]
+    series: series
   }
 }
 
@@ -97,7 +105,7 @@ export interface HighchartsData {
 }
 
 export interface SeriesAndCategories {
-  categories: object;
+  categories: Array<string | number | PreliminaryData>;
   series: Array<Series>;
   title?: string | object | undefined;
   data?: {
@@ -106,7 +114,6 @@ export interface SeriesAndCategories {
     table: string;
   };
 }
-
 export interface Series {
   name: string | number | PreliminaryData;
   data: Array<AreaLineLinearData | PieData>;
