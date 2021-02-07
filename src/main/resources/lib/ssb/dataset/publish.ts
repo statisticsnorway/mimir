@@ -17,8 +17,8 @@ const {
   logUserDataQuery
 }: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
 const {
-  getStatistics,
-  getDatasetIdsFromStatistic
+  getDatasetIdsFromStatistic,
+  getStatisticsContent
 }: StatisticLib = __non_webpack_require__('/lib/ssb/statistic')
 const {
   get: getContent
@@ -62,7 +62,7 @@ export function publishDataset(): void {
   cronJobLog('Start publish job')
   const jobLogNode: JobEventNode = startJobLog(JobNames.PUBLISH_JOB)
   jobs[jobLogNode._id] = jobLogNode
-  const statistics: Array<Content<Statistics>> = getStatistics()
+  const statistics: Array<Content<Statistics>> = getStatisticsContent()
   const publishedDatasetIds: Array<string> = []
   const jobResult: Array<StatisticsPublishResult> = []
   statistics.forEach((stat) => {
@@ -218,7 +218,7 @@ function getNextRelease(statistic: Content<Statistics>): string | null{
 }
 
 export interface PublishDatasetLib {
-    publishDataset: () => void;
+  publishDataset: () => void;
 }
 
 interface PublicationItem {

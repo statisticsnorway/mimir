@@ -10,6 +10,11 @@ export interface Statistics {
   attachmentTablesFigures?: Array<string>;
 
   /**
+   * Fritekstfelt
+   */
+  freeTextAttachmentTablesFigures?: string;
+
+  /**
    * Om Statistikken
    */
   aboutTheStatistics?: string;
@@ -90,7 +95,7 @@ export interface Statistics {
       /**
        * Statistikk
        */
-      contentId?: Array<string>;
+      contentId?: string;
     };
 
     /**

@@ -139,7 +139,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
 function getJobs(): Array<DashboardJobInfo> {
   return queryJobLogs({
     start: 0,
-    count: 100,
+    count: 20,
     query: 'data.user.key = "user:system:cronjob" AND _path LIKE "/jobs/*"',
     sort: '_ts DESC'
   }).hits.reduce((result: Array<DashboardJobInfo>, j) => {

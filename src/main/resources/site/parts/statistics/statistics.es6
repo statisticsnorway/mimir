@@ -85,7 +85,7 @@ const renderPart = (req) => {
 
   if (page.data.showModifiedDate && previousReleaseDate) {
     if (moment(modifiedDate).isAfter(previousReleaseDate)) {
-      changeDate = moment(modifiedDate).format('D. MMMM YYYY, HH:MM')
+      changeDate = moment(modifiedDate).format('D. MMMM YYYY, HH:mm')
     }
   }
 

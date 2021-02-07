@@ -21,7 +21,9 @@ export const selectStatisticsWithRelease = createSelector(
 
 export const selectOpenStatistic = createSelector(
   [selectDomain],
-  (statisticsState) => statisticsState.openStatistic
+  (statisticsState) => {
+    return statisticsState.statistics.find((s) => s.id === statisticsState.openStatistic)
+  }
 )
 
 export const selectHasLoadingStatistic = createSelector(
@@ -42,4 +44,14 @@ export const selectRefreshMessages = createSelector(
 export const selectOpenModal = createSelector(
   [selectDomain],
   (statisticsState) => statisticsState.openModal
+)
+
+export const selectLoadingSearchList = createSelector(
+  [selectDomain],
+  (statisticsState) => statisticsState.loadingSearchList,
+)
+
+export const selectSearchList = createSelector(
+  [selectDomain],
+  (statisticsState) => statisticsState.statisticsSearchList,
 )

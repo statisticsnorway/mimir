@@ -67,19 +67,19 @@ const renderPart = (req) => {
 
   const attachmentTableAndFigureView = getTablesAndFigures(attachmentTablesAndFigures, req, phrases)
 
-  const accordionComponent = new React4xp('site/parts/accordion/accordion')
+  const accordionComponent = new React4xp('AttachmentTablesFigures')
     .setProps({
       accordions: attachmentTableAndFigureView.map(({
-        id, open, subHeader, body, items
+        id, open, subHeader, body
       }) => {
         return {
           id,
           open,
           subHeader,
-          body,
-          items
+          body
         }
       }),
+      freeText: page.data.freeTextAttachmentTablesFigures,
       showAll: phrases.showAll,
       showLess: phrases.showLess
     })
@@ -115,18 +115,20 @@ const getTablesAndFigures = (attachmentTablesAndFigures, req, phrases) => {
   let figureIndex = 0
   let tableIndex = 0
   return (attachmentTablesAndFigures.length > 0) ?
-    attachmentTablesAndFigures.map((id, index) => {
-      const content = get({
-        key: id
-      })
-      if (content && content.type === `${app.name}:table`) {
-        ++tableIndex
-        return getTableReturnObject(content, tableController.preview(req, id), `${phrases.table} ${tableIndex}`, index)
-      } else if (content && content.type === `${app.name}:highchart`) {
-        ++figureIndex
-        return getFigureReturnObject(content, highchartController.preview(req, id), `${phrases.figure} ${figureIndex}`, index)
-      }
-    }) : []
+    attachmentTablesAndFigures
+      .filter((tableOrFigure) => !!tableOrFigure)
+      .map((id, index) => {
+        const content = get({
+          key: id
+        })
+        if (content && content.type === `${app.name}:table`) {
+          ++tableIndex
+          return getTableReturnObject(content, tableController.preview(req, id), `${phrases.table} ${tableIndex}`, index)
+        } else if (content && content.type === `${app.name}:highchart`) {
+          ++figureIndex
+          return getFigureReturnObject(content, highchartController.preview(req, id), `${phrases.figure} ${figureIndex}`, index)
+        }
+      }) : []
 }
 
 
@@ -138,7 +140,6 @@ function getTableReturnObject(content, preview, subHeader, index) {
     open: typeof(title) === 'string' ? title : title.content,
     subHeader,
     body: preview.body,
-    items: [],
     pageContributions: preview.pageContributions
   }
 }
@@ -151,7 +152,6 @@ function getFigureReturnObject(content, preview, subHeader, index) {
     open: typeof(title) === 'string' ? title : title.content,
     subHeader,
     body: preview.body,
-    items: [],
     pageContributions: preview.pageContributions
   }
 }

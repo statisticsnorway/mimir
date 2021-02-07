@@ -117,7 +117,7 @@ const parseRelatedContent = (relatedStatistics) => {
         preamble: statistics.cms.profiledText,
         href: statistics.cms.url
       }
-    })
+    }).filter((statistics) => !!statistics)
   }
   return []
 }

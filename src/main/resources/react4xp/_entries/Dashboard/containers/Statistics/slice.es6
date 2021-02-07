@@ -2,7 +2,9 @@ import { createSlice } from '../../utils/@reduxjs/toolkit'
 
 export const initialState = {
   statistics: [],
+  statisticsSearchList: [],
   loading: true,
+  loadingSearchList: true,
   openStatistic: null,
   modalDisplay: 'request',
   updateMessage: [],
@@ -31,14 +33,15 @@ const statisticsSlice = createSlice({
       stat.loading = false
     },
     setOpenStatistic(state, action) {
-      if (action.id) {
-        const stat = state.statistics.find((s) => s.id === action.id)
+      let stat = state.statistics.find((s) => s.id === action.id)
+      if (!stat) {
+        // from search dropdown, move to statistics array
+        stat = state.statisticsSearchList.find((s) => s.id === action.id)
         if (stat) {
-          state.openStatistic = stat
+          state.statistics.push(stat)
         }
-      } else {
-        state.openStatistic = null
       }
+      state.openStatistic = action.id
     },
     updateStatisticsLog(state, action) {
       if (action.data.id) {
@@ -68,6 +71,49 @@ const statisticsSlice = createSlice({
     },
     setModalDisplay(state, action) {
       state.modalDisplay = action.status
+    },
+    loadStatisticsSearchList(state) {
+      state.loadingSearchList = true
+      state.statisticsSearchList = []
+    },
+    statisticsSearchListLoaded(state, action) {
+      state.loadingSearchList = false
+      state.statisticsSearchList = action.statisticsSearchList
+    },
+    loadStatisticsOwnersWithSources(state, action) {
+      if (action.id) {
+        const stat = state.statistics.find((s) => s.id === action.id)
+        if (stat) {
+          stat.loadingOwnersWithSources = true
+        }
+      }
+    },
+    statisticsOwnersWithSourcesLoaded(state, action) {
+      if (action.data.id) {
+        const stat = state.statistics.find((s) => s.id === action.data.id)
+        if (stat) {
+          stat.ownersWithSources = action.data.ownersWithSources
+          stat.loadingOwnersWithSources = false
+        }
+      }
+    },
+    loadStatisticsRelatedTables(state, action) {
+      if (action.id) {
+        const stat = state.statistics.find((s) => s.id === action.id)
+        if (stat) {
+          stat.loadingRelatedTablesAndOwnersWithSources = true
+        }
+      }
+    },
+    statisticsRelatedTablesLoaded(state, action) {
+      if (action.data.id) {
+        const stat = state.statistics.find((s) => s.id === action.data.id)
+        if (stat) {
+          stat.relatedTables = action.data.relatedTables
+          stat.ownersWithSources = action.data.ownersWithSources
+          stat.loadingRelatedTablesAndOwnersWithSources = false
+        }
+      }
     }
   }
 })
