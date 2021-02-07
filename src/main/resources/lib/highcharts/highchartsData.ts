@@ -4,9 +4,7 @@ import { Highchart } from '../../site/content-types/highchart/highchart'
 import { Content } from 'enonic-types/content'
 import { JSONstat } from '../types/jsonstat-toolkit'
 import { DataSource } from '../../site/mixins/dataSource/dataSource'
-import { UtilLibrary } from '../types/util'
 
-const util: UtilLibrary = __non_webpack_require__('/lib/util')
 const {
   seriesAndCategoriesFromHtmlTable
 } = __non_webpack_require__( '/lib/highcharts/data/htmlTable')
@@ -19,6 +17,14 @@ const {
 const {
   DataSource: DataSourceType
 } = __non_webpack_require__( '/lib/repo/dataset')
+const {
+  data: {
+    forceArray
+  }
+} = __non_webpack_require__( '/lib/util')
+const {
+  getRowValue
+} = __non_webpack_require__('/lib/ssb/utils')
 
 export function prepareHighchartsData(
   req: Request,
@@ -55,7 +61,7 @@ export function getSeriesAndCategories(
 export function switchRowsAndColumnsCheck(
   highchartContent: Content<Highchart>,
   seriesAndCategories: SeriesAndCategories,
-  dataSource: DataSource['dataSource']) {
+  dataSource: DataSource['dataSource']): SeriesAndCategories {
   //
   return (dataSource && !dataSource._selected === DataSourceType.STATBANK_API && highchartContent.data.graphType === 'pie' ||
     highchartContent.data.switchRowsAndColumns) ?
@@ -64,8 +70,8 @@ export function switchRowsAndColumnsCheck(
 
 
 function switchRowsAndColumns(seriesAndCategories: SeriesAndCategories ): SeriesAndCategories {
-  const categories: Array<string | number | PreliminaryData> = util.data.forceArray(seriesAndCategories.categories)
-  const series: Array<Series> = categories.reduce((series: Array<Series>, category: string | number | PreliminaryData, index: number) => {
+  const categories: Array<string | number | PreliminaryData > = forceArray(getRowValue(seriesAndCategories.categories))
+  const series: Array<Series> = categories.reduce((series: Array<Series>, category, index: number) => {
     const serie: Series = {
       name: category,
       data: seriesAndCategories.series.map((serie) => {
@@ -105,7 +111,7 @@ export interface HighchartsData {
 }
 
 export interface SeriesAndCategories {
-  categories: Array<string | number | PreliminaryData>;
+  categories: object;
   series: Array<Series>;
   title?: string | object | undefined;
   data?: {
