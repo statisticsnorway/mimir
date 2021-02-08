@@ -1,3 +1,5 @@
+import {AdminLibrary} from "enonic-types/admin";
+
 __non_webpack_require__('/lib/polyfills/nashorn')
 import { Socket, SocketEmitter } from '../types/socket'
 import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
@@ -26,8 +28,8 @@ const {
   get: getContent
 }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
 const {
-  getBaseUri
-} = __non_webpack_require__( '/lib/xp/admin')
+  getHomeToolUrl,
+}: AdminLibrary = __non_webpack_require__( '/lib/xp/admin')
 const {
   fetchStatisticsWithRelease,
   getAllStatisticsFromRepo
@@ -338,6 +340,7 @@ function prepStatisticsJobLogInfo(jobNode: JobInfoNode): DashboardJobInfo {
 
 const TWO_WEEKS: number = 14 // TODO: put in config?
 function getStatistics(): Array<StatisticDashboard> {
+  log.info('whate hsdg slkj lsidj ')
   const statsBeforeDate: Date = new Date()
   statsBeforeDate.setDate(statsBeforeDate.getDate() + TWO_WEEKS)
   const statregStatistics: Array<StatisticInListing> = fetchStatisticsWithRelease(statsBeforeDate)
@@ -346,7 +349,13 @@ function getStatistics(): Array<StatisticDashboard> {
     count: 1000
   }).hits as unknown as Array<Content<Statistics>>
 
+  log.info('jkshfsdf')
   return statisticsContent.map((statistic) => {
+    log.info('statistic')
+    log.info(JSON.stringify(statistic, null, 2))
+    const baseUri: string = statistic._path? getHomeToolUrl({type: 'server', path: statistic._path}) : ''
+    log.info('Pewpew jheherhso dfi')
+    log.info(baseUri)
     const statregStat: StatisticInListing = statregStatistics.find((statregStat) => {
       return `${statregStat.id}` === statistic.data.statistic
     }) as StatisticInListing
@@ -365,7 +374,8 @@ function getStatistics(): Array<StatisticDashboard> {
       ownersWithSources: undefined,
       relatedTables: relatedTables,
       aboutTheStatistics: statistic.data.aboutTheStatistics,
-      logData: getStatisticsJobLogInfo(statistic._id)
+      logData: getStatisticsJobLogInfo(statistic._id),
+      previewUrl: `${baseUri}/site/preview/default/draft${statistic._path}`
     }
     return statisticDataDashboard
   }).sort((a, b) => {
