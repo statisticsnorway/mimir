@@ -17,7 +17,7 @@ const {
   logUserDataQuery
 }: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
 const {
-  getDatasetIdsFromStatistic,
+  getDataSourceIdsFromStatistics,
   getStatisticsContent
 }: StatisticLib = __non_webpack_require__('/lib/ssb/statistic')
 const {
@@ -80,7 +80,7 @@ export function publishDataset(): void {
           status: JobStatus.STARTED,
           dataSources: []
         }
-        const dataSourceIds: Array<string> = getDatasetIdsFromStatistic(stat)
+        const dataSourceIds: Array<string> = getDataSourceIdsFromStatistics(stat)
         const dataSources: Array<Content<DataSource> | null> = dataSourceIds.map((key) => {
           return getContent({
             key
@@ -137,10 +137,20 @@ export function publishDataset(): void {
     }
     return node
   })
-  if (jobResult.length === 0) {
+  if (jobResult.length === 0 || allJobsAreSkipped(jobResult)) {
     completeJobLog(jobLogNode._id, `Successfully updated 0 statistics`, [])
   }
-  log.info('End publish job')
+}
+
+function allJobsAreSkipped(jobResult: Array<StatisticsPublishResult>): boolean {
+  const sum: Array<boolean> = jobResult.reduce( (acc: Array<boolean>, jr: StatisticsPublishResult): Array<boolean> => {
+    const numberOfSkippedDataSources: number = jr.dataSources.filter((ds: DataSourceStatisticsPublishResult) => {
+      return ds.status === JobStatus.SKIPPED
+    }).length
+    acc.push(jr.dataSources.length === numberOfSkippedDataSources)
+    return acc
+  }, [])
+  return !sum.includes(false)
 }
 
 function createTask(jobId: string, statistic: Content<Statistics>, releaseDate: Date, validPublications: Array<PublicationItem>): void {
@@ -157,6 +167,11 @@ function createTask(jobId: string, statistic: Content<Statistics>, releaseDate: 
       const statRefreshResult: StatisticsPublishResult | undefined = jobRefreshResult.find((s) => {
         return s.statistic === statistic._id
       })
+      /*
+      * Iterate this statistics related datasources, and check if they have unpublished data
+      * If they do, create or update the dataset on master branch
+      * Then delete dataset in draft
+      * */
       validPublications.forEach((publication) => {
         const {
           dataSource,
@@ -184,6 +199,7 @@ function createTask(jobId: string, statistic: Content<Statistics>, releaseDate: 
           }
         }
       })
+      // Update the statistics refresh result object
       if (job && statRefreshResult) {
         statRefreshResult.status = JobStatus.COMPLETE
         const allComplete: boolean = jobRefreshResult.filter((s) => {
