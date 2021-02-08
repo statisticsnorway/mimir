@@ -9,17 +9,25 @@ export function RefreshStatisticsStatus(props) {
   const modalDisplay = useSelector(selectModalDisplay)
 
   return (
-    <>
-      <h2>Oppdaterer { modalDisplay === 'loading' ? <span className="spinner-border spinner-border-sm my-1" /> : null }</h2>
+    <React.Fragment>
+      <h2 className="mt-4">
+        Oppdaterer { modalDisplay === 'loading' ? <span className="spinner-border spinner-border-sm my-1" /> : null }
+      </h2>
       {
         refreshMessages.map((msg, i) => {
-          return <Row key={i}>
-            <Col>{msg.name}</Col>
-            <Col>{msg.status} {msg.result}</Col>
-          </Row>
+          return (
+            <Row key={i} className="mb-3">
+              <Col>{msg.name}</Col>
+              <Col>
+                {msg.status}
+                <br />
+                {msg.result}
+              </Col>
+            </Row>
+          )
         })
       }
-    </>
+    </React.Fragment>
   )
 }
 
