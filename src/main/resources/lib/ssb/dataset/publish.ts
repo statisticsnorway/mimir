@@ -137,7 +137,7 @@ export function publishDataset(): void {
     }
     return node
   })
-  if (jobResult.length === 0) {
+  if (jobResult.length === 0 || allJobsAreSkipped(jobResult)) {
     completeJobLog(jobLogNode._id, `Successfully updated 0 statistics`, [])
   }
 }
