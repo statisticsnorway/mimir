@@ -160,6 +160,7 @@ function createTask(jobId: string, statistic: Content<Statistics>, releaseDate: 
       const serverOffsetInMs: number = app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
       const now: Date = new Date(new Date().getTime() + serverOffsetInMs)
       const sleepFor: number = releaseDate.getTime() - now.getTime()
+      log.info(`Publish statistic (${statistic.data.statistic}) in ${sleepFor}ms (${releaseDate.toISOString()})`)
       sleep(sleepFor)
       const job: JobInfoNode = jobs[jobId] as JobInfoNode
       const jobRefreshResult: Array<StatisticsPublishResult> = forceArray(job.data.refreshDataResult) as Array<StatisticsPublishResult>
@@ -179,6 +180,7 @@ function createTask(jobId: string, statistic: Content<Statistics>, releaseDate: 
         if (dataset && dataSource.data.dataSource) {
           const key: string | null = extractKey(dataSource)
           if (key) {
+            log.info(`publishing dataset ${dataSource.data.dataSource?._selected} - ${key} for ${statistic.data.statistic}`)
             createOrUpdateDataset(dataSource.data.dataSource?._selected, DATASET_BRANCH, key, dataset.data)
             logUserDataQuery(dataSource._id, {
               file: '/lib/ssb/dataset/publish.ts',
