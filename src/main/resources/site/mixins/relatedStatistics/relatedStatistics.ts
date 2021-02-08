@@ -15,7 +15,7 @@ export interface RelatedStatistics {
       /**
        * Statistikk
        */
-      contentId?: Array<string>;
+      contentId?: string;
     };
 
     /**

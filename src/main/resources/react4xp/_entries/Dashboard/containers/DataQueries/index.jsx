@@ -29,7 +29,7 @@ export function DataQueries() {
     <section className="xp-part part-dashboard container mb-5">
       <Row>
         <Col>
-          <div className="p-4 tables-wrapper">
+          <div className="p-4 tables-wrapper border-top-0">
             <h2 className="mb-3">{`Spørringer mot statistikkbank og tabellbygger (${dataQueries.length} stk)`}</h2>
             {renderDataQueryTables()}
           </div>

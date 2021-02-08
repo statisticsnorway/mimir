@@ -29,7 +29,7 @@
   "homepage": "https://github.com/statisticsnorway/mimir#readme",
   "devDependencies": {
     "@babel/cli": "^7.12.10",
-    "@babel/core": "^7.12.10",
+    "@babel/core": "^7.12.13",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.10",
     "@babel/preset-stage-0": "^7.0.0",
@@ -48,7 +48,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.5.0",
-    "@statisticsnorway/ssb-component-library": "^2.0.37",
+    "@statisticsnorway/ssb-component-library": "^2.0.38",
     "@types/react": "^17.0.0",
     "autoprefixer": "^10.2.4",
     "awesome-typescript-loader": "^5.2.1",
@@ -56,7 +56,7 @@
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "bootstrap": "^4.5.3",
-    "copy-webpack-plugin": "^6.3.1",
+    "copy-webpack-plugin": "^6.4.1",
     "cross-env": "^7.0.3",
     "css-loader": "^5.0.1",
     "cssnano": "^4.1.10",

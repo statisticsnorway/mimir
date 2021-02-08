@@ -163,7 +163,7 @@ Header.propTypes = {
       path: PropTypes.string,
       icon: PropTypes.string,
       iconSvgTag: PropTypes.string,
-      isActive: PropTypes.boolean,
+      isActive: PropTypes.bool,
       menuItems: PropTypes.arrayOf(
         PropTypes.shape({
           title: PropTypes.string,

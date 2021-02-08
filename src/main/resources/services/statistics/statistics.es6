@@ -1,3 +1,4 @@
+
 __non_webpack_require__('/lib/polyfills/nashorn')
 const {
   getAllStatisticsFromRepo
@@ -5,6 +6,18 @@ const {
 const {
   handleRepoGet
 } = __non_webpack_require__('/lib/ssb/statreg/repoUtils')
+
+const {
+  publishDataset
+} = __non_webpack_require__('/lib/ssb/dataset/publish')
+
+const {
+  cronContext
+} = __non_webpack_require__('/lib/ssb/cron')
+
+const {
+  run
+} = __non_webpack_require__('/lib/xp/context')
 
 const toOption = (stat) => ({
   ...stat,
@@ -36,4 +49,15 @@ exports.get = (req) => {
     getAllStatisticsFromRepo,
     toOption,
     req.params.ids ? filterByIds : filterByShortName)
+}
+
+exports.post = (req) => {
+  if(req.params.runPublishDataset === 'OK') {
+    run(cronContext, publishDataset)
+    return {
+      body: {status: 'Running statRegJon'},
+      contentType: 'application/json',
+      status: 200
+    }
+  }
 }

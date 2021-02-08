@@ -10,15 +10,20 @@ import { WebSocketContext } from '../utils/websocket/WebsocketProvider'
 
 export function RefreshStatisticsModal(props) {
   const modalDisplay = useSelector(selectModalDisplay)
-  const modalInfo = useSelector(selectOpenStatistic)
+  const openStatistic = useSelector(selectOpenStatistic)
 
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
 
-  function renderStatisticsForm(key, sources, i) {
+  function renderStatisticsForm() {
+    if (openStatistic.loadingOwnersWithSources || !openStatistic.ownersWithSources) {
+      return (
+        <span className="spinner-border spinner-border" />
+      )
+    }
     return (
-      <React.Fragment key={i}>
-        {modalDisplay === 'request' && <RefreshStatisticsForm onSubmit={(e) => updateTables(e)} modalInfo={modalInfo}/>}
+      <React.Fragment>
+        {modalDisplay === 'request' && <RefreshStatisticsForm onSubmit={(e) => updateTables(e)} modalInfo={openStatistic}/>}
         {modalDisplay !== 'request' && <RefreshStatisticsStatus />}
       </React.Fragment>
     )
@@ -26,12 +31,12 @@ export function RefreshStatisticsModal(props) {
 
   function handleClose() {
     setOpenModal(dispatch, false)
-    setOpenStatistic(dispatch, null)
+    setOpenStatistic(dispatch, io, null)
     resetRefreshStatus(dispatch, 'request')
   }
 
   const updateTables = (owners) => {
-    refreshStatistic(dispatch, io, modalInfo.id, owners)
+    refreshStatistic(dispatch, io, openStatistic.id, owners)
   }
 
   return (
@@ -42,7 +47,7 @@ export function RefreshStatisticsModal(props) {
       <Modal.Body>
         <Row>
           <Col>
-            <h2>Statistikk: {modalInfo.shortName}</h2>
+            <h2>Statistikk: {openStatistic.shortName}</h2>
             <span>For å oppdatere tabeller med ennå ikke publiserte tall må brukernavn og passord for lastebrukere i Statistikkbanken brukes.</span>
             <br/>
             <span>For andre endringer velg &quot;Hent publiserte tall&quot; uten å oppgi brukernavn og passord.</span>

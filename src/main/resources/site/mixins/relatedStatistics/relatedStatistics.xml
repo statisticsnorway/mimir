@@ -15,7 +15,7 @@
                             <items>
                                 <input name="contentId" type="ContentSelector">
                                     <label>Statistikk</label>
-                                    <occurrences minimum="0" maximum="0" />
+                                    <occurrences minimum="0" maximum="1" />
                                     <config>
                                         <allowContentType>statistics</allowContentType>
                                     </config>

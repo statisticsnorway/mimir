@@ -120,7 +120,7 @@ export interface Article {
       /**
        * Statistikk
        */
-      contentId?: Array<string>;
+      contentId?: string;
     };
 
     /**
