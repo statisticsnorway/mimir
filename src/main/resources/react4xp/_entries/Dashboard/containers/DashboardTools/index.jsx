@@ -194,9 +194,6 @@ export function DataQueryTools() {
           </Col>
         </Row>
         <Row className="mb-4">
-          {renderTbmlDefinitionsStatbankTable()}
-        </Row>
-        <Row className="mb-4">
           <Col>
             <Button className="mx-1" disabled={loadingStatisticsSearchList} onClick={() => refreshAllTables()}>
               {`Oppdater alle tabeller (${tableQueries.length})`} {renderSpinner(loadingTables)}
@@ -213,6 +210,9 @@ export function DataQueryTools() {
             </Row>
           )
         })}
+        <Row className="mb-4">
+          {renderTbmlDefinitionsStatbankTable()}
+        </Row>
         <Row className="link-tools-list">
           <Col>
             <h3>Verktøyliste</h3>
