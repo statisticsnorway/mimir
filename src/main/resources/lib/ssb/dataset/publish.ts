@@ -17,7 +17,7 @@ const {
   logUserDataQuery
 }: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
 const {
-  getDatasetIdsFromStatistic,
+  getDataSourceIdsFromStatistics,
   getStatisticsContent
 }: StatisticLib = __non_webpack_require__('/lib/ssb/statistic')
 const {
@@ -80,7 +80,7 @@ export function publishDataset(): void {
           status: JobStatus.STARTED,
           dataSources: []
         }
-        const dataSourceIds: Array<string> = getDatasetIdsFromStatistic(stat)
+        const dataSourceIds: Array<string> = getDataSourceIdsFromStatistics(stat)
         const dataSources: Array<Content<DataSource> | null> = dataSourceIds.map((key) => {
           return getContent({
             key
@@ -144,12 +144,12 @@ export function publishDataset(): void {
 
 function allJobsAreSkipped(jobResult: Array<StatisticsPublishResult>): boolean {
   const sum: Array<boolean> = jobResult.reduce( (acc: Array<boolean>, jr: StatisticsPublishResult): Array<boolean> => {
-      const numberOfSkippedDataSources: number = jr.dataSources.filter((ds: DataSourceStatisticsPublishResult) => {
-        return ds.status === JobStatus.SKIPPED
-      }).length
-      acc.push(jr.dataSources.length === numberOfSkippedDataSources)
-      return acc
-    }, [])
+    const numberOfSkippedDataSources: number = jr.dataSources.filter((ds: DataSourceStatisticsPublishResult) => {
+      return ds.status === JobStatus.SKIPPED
+    }).length
+    acc.push(jr.dataSources.length === numberOfSkippedDataSources)
+    return acc
+  }, [])
   return !sum.includes(false)
 }
 
