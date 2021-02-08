@@ -141,8 +141,12 @@ function renderPart(req, tableId) {
     .setId('table')
     .uniqueId()
 
+
+  const hiddenTitle = table.caption.content
+
   const body = render(view, {
-    tableId: tableReact.react4xpId
+    tableId: tableReact.react4xpId,
+    hiddenTitle: hiddenTitle
   })
 
   return {

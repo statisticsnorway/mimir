@@ -28,15 +28,38 @@ export default function setupStatisticsListeners(io, dispatch) {
       data
     })
   })
+
   io.on('statistics-activity-refresh-complete', (data) => {
     dispatch({
       type: actions.setModalDisplay.type,
       data
     })
   })
+
   io.on('statistics-refresh-result-log', (data) => {
     dispatch({
       type: actions.updateStatisticsLog.type,
+      data
+    })
+  })
+
+  io.on('statistics-search-list-result', (data) => {
+    dispatch({
+      type: actions.statisticsSearchListLoaded.type,
+      statisticsSearchList: data
+    })
+  })
+
+  io.on('statistics-owners-with-sources-result', (data) => {
+    dispatch({
+      type: actions.statisticsOwnersWithSourcesLoaded.type,
+      data
+    })
+  })
+
+  io.on('statistics-related-tables-and-owners-with-sources-result', (data) => {
+    dispatch({
+      type: actions.statisticsRelatedTablesLoaded.type,
       data
     })
   })
