@@ -5,8 +5,10 @@ export const initialState = {
   loadingErrors: true,
   factPageQueryGroups: [],
   statisticsGroups: [],
+  municipalGroups: [],
   loadingFactPageQueryGroups: true,
-  loadingStatisticsGroups: true
+  loadingStatisticsGroups: true,
+  loadingMunicipalGroups: true
 }
 
 const dataQueriesSlice = createSlice({
@@ -72,6 +74,33 @@ const dataQueriesSlice = createSlice({
           return dataQueries
         }, state.dataQueries)
         statistic.loading = false
+      }
+    },
+    loadMunicipalGroups(state) {
+      state.loadingMunicipalGroups = true
+      state.municipalGroups = []
+    },
+    municipalGroupsLoaded(state, action) {
+      state.loadingMunicipalGroups = false
+      state.municipalGroups = action.municipalGroups
+    },
+    loadMunicipalDataSources(state, action) {
+      const municipal = state.municipalGroups.find((municipal) => municipal.id === action.id)
+      if (municipal) {
+        municipal.loading = true
+      }
+    },
+    municipalDataSourcesLoaded(state, action) {
+      const municipal = state.municipalGroups.find((municipal) => municipal.id === action.id)
+      if (municipal) {
+        municipal.dataSources = action.dataSources.map((ds) => ds.id)
+        state.dataQueries = action.dataSources.reduce((dataQueries, ds) => {
+          if (!dataQueries.find((dq) => dq.id === ds.id)) {
+            dataQueries.push(ds)
+          }
+          return dataQueries
+        }, state.dataQueries)
+        municipal.loading = false
       }
     },
     dataQueryLoading(state, action) {

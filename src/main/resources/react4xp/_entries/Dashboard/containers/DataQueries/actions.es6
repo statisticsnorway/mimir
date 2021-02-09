@@ -24,6 +24,14 @@ export function requestStatisticsGroups(dispatch, io) {
   io.emit('get-statistics-groups')
 }
 
+export function requestMunicipalGroups(dispatch, io) {
+  dispatch({
+    type: actions.loadMunicipalGroups.type
+  })
+
+  io.emit('get-municipal-groups')
+}
+
 export function requestFactPageDataSources(id) {
   return (dispatch, io) => {
     dispatch({
@@ -38,10 +46,22 @@ export function requestFactPageDataSources(id) {
 export function requestStatisticsDataSources(id) {
   return (dispatch, io) => {
     dispatch({
-      type: actions.loadStatisticsDataSources.type
+      type: actions.loadStatisticsDataSources.type,
+      id
     })
 
     io.emit('get-statistics-data-sources', id)
+  }
+}
+
+export function requestMunicipalDataSources(id) {
+  return (dispatch, io) => {
+    dispatch({
+      type: actions.loadMunicipalDataSources.type,
+      id
+    })
+
+    io.emit('get-municipal-data-sources', id)
   }
 }
 

@@ -59,4 +59,19 @@ export default function setupDataQueriesListeners(io, dispatch) {
       dataSources: data.dataSources
     })
   })
+
+  io.on('municipal-groups-result', (data) => {
+    dispatch({
+      type: actions.municipalGroupsLoaded.type,
+      municipalGroups: data
+    })
+  })
+
+  io.on('municipal-data-sources-result', (data) => {
+    dispatch({
+      type: actions.municipalDataSourcesLoaded.type,
+      id: data.id,
+      dataSources: data.dataSources
+    })
+  })
 }

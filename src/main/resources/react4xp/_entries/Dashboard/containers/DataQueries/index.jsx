@@ -5,6 +5,7 @@ import { selectLoadingErrors, selectDataQueriesByParentType } from './selectors'
 import { requestErrorQueries } from './actions'
 import { FactPageQueries } from './FactPageQueries'
 import { StatisticsQueries } from './StatisticsQueries'
+import { MunicipalQueries } from './MunicipalQueries'
 
 export function DataQueries() {
   function renderDataQueryTables() {
@@ -18,7 +19,7 @@ export function DataQueries() {
         />
         <FactPageQueries/>
         <StatisticsQueries/>
-        {/* <DataQueryTable header="Spørringer fra Kommunefakta" dataQueryType="municipality"/> */}
+        <MunicipalQueries/>
         {/* <DataQueryTable header="Andre" dataQueryType="default"/> */}
       </React.Fragment>
     )

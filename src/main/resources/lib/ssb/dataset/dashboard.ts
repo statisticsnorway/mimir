@@ -144,6 +144,29 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     })
   })
 
+  socket.on('get-municipal-groups', () => {
+    submitTask({
+      description: 'get-municipal-groups',
+      task: () => {
+        const municipals: Array<DashboardDataSourceGroups> = getMunicipalGroups()
+        socket.emit('municipal-groups-result', municipals)
+      }
+    })
+  })
+
+  socket.on('get-municipal-data-sources', (id: string) => {
+    submitTask({
+      description: 'get-municipal-data-sources',
+      task: () => {
+        const dataSources: Array<DashboardDataSource> = getMunicipalDataSources(id)
+        socket.emit('municipal-data-sources-result', {
+          id,
+          dataSources
+        })
+      }
+    })
+  })
+
   socket.on('get-eventlog-node', (dataQueryId)=> {
     let status: Array<LogSummary> | undefined = getQueryChildNodesStatus(`/queries/${dataQueryId}`) as Array<LogSummary> | undefined
     if (!status) {
@@ -238,20 +261,6 @@ function getFactPageDataSources(factPageId: string): Array<DashboardDataSource> 
   return []
 }
 
-function getStatisticsDataSources(statisticId: string): Array<DashboardDataSource> {
-  const statistic: Content<Page> | null = getContent({
-    key: statisticId
-  })
-  if (statistic) {
-    const hits: Array<Content<DataSource>> = query({
-      query: `_path LIKE "/content${statistic._path}/*" AND data.dataSource._selected LIKE "*"`,
-      count: 100
-    }).hits as unknown as Array<Content<DataSource>>
-    return prepDataSources(hits)
-  }
-  return []
-}
-
 function getStatisticsGroups(): Array<DashboardDataSourceGroups> {
   const statistics: Array<Content<Statistics>> = query({
     contentTypes: [`${app.name}:statistics`],
@@ -267,6 +276,50 @@ function getStatisticsGroups(): Array<DashboardDataSourceGroups> {
       dataSources: undefined
     }
   })
+}
+
+function getStatisticsDataSources(statisticId: string): Array<DashboardDataSource> {
+  const statistic: Content<Page> | null = getContent({
+    key: statisticId
+  })
+  if (statistic) {
+    const hits: Array<Content<DataSource>> = query({
+      query: `_path LIKE "/content${statistic._path}/*" AND data.dataSource._selected LIKE "*"`,
+      count: 100
+    }).hits as unknown as Array<Content<DataSource>>
+    return prepDataSources(hits)
+  }
+  return []
+}
+
+function getMunicipalGroups(): Array<DashboardDataSourceGroups> {
+  const municipals: Array<Content<Page, DefaultPageConfig>> = query({
+    query: `components.page.config.mimir.default.pageType LIKE "municipality" AND _parentPath LIKE "/content/ssb"`,
+    count: 5
+  }).hits as unknown as Array<Content<Page, DefaultPageConfig>>
+
+  return municipals.map((municipal) => {
+    return {
+      id: municipal._id,
+      displayName: municipal.displayName,
+      loading: false,
+      dataSources: undefined
+    }
+  })
+}
+
+function getMunicipalDataSources(municipalId: string): Array<DashboardDataSource> {
+  const municipal: Content<Page> | null = getContent({
+    key: municipalId
+  })
+  if (municipal) {
+    const hits: Array<Content<DataSource>> = query({
+      query: `_path LIKE "/content${municipal._path}/*" AND data.dataSource._selected LIKE "*"`,
+      count: 100
+    }).hits as unknown as Array<Content<DataSource>>
+    return prepDataSources(hits)
+  }
+  return []
 }
 
 function getJobs(): Array<DashboardJobInfo> {
