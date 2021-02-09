@@ -17,6 +17,14 @@ const {
 const {
   DataSource: DataSourceType
 } = __non_webpack_require__( '/lib/repo/dataset')
+const {
+  data: {
+    forceArray
+  }
+} = __non_webpack_require__( '/lib/util')
+const {
+  getRowValue
+} = __non_webpack_require__('/lib/ssb/utils')
 
 export function prepareHighchartsData(
   req: Request,
@@ -53,7 +61,7 @@ export function getSeriesAndCategories(
 export function switchRowsAndColumnsCheck(
   highchartContent: Content<Highchart>,
   seriesAndCategories: SeriesAndCategories,
-  dataSource: DataSource['dataSource']) {
+  dataSource: DataSource['dataSource']): SeriesAndCategories {
   //
   return (dataSource && !dataSource._selected === DataSourceType.STATBANK_API && highchartContent.data.graphType === 'pie' ||
     highchartContent.data.switchRowsAndColumns) ?
@@ -62,15 +70,21 @@ export function switchRowsAndColumnsCheck(
 
 
 function switchRowsAndColumns(seriesAndCategories: SeriesAndCategories ): SeriesAndCategories {
-  const name: string = seriesAndCategories.title && typeof seriesAndCategories.title === 'string' ? seriesAndCategories.title : 'Antall'
+  const categories: Array<string | number | PreliminaryData > = forceArray(getRowValue(seriesAndCategories.categories))
+  const series: Array<Series> = categories.reduce((series: Array<Series>, category, index: number) => {
+    const serie: Series = {
+      name: category,
+      data: seriesAndCategories.series.map((serie) => {
+        return serie.data[index]
+      })
+    }
+    series.push(serie)
+    return series
+  }, [])
+
   return {
     categories: seriesAndCategories.series.map((serie) => serie.name),
-    series: [{
-      name,
-      data: seriesAndCategories.series.map((serie) => {
-        return serie.data[0]
-      })
-    }]
+    series: series
   }
 }
 
@@ -106,7 +120,6 @@ export interface SeriesAndCategories {
     table: string;
   };
 }
-
 export interface Series {
   name: string | number | PreliminaryData;
   data: Array<AreaLineLinearData | PieData>;
