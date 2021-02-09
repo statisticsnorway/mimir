@@ -21,7 +21,6 @@ import { RepoEventLogLib } from '../repo/eventLog'
 import { RepoCommonLib } from '../repo/common'
 import { StatRegStatisticsLib } from '../repo/statreg/statistics'
 import { TaskLib } from '../types/task'
-import { ENONIC_CMS_DEFAULT_REPO } from '../repo/common'
 
 const {
   query,
@@ -59,7 +58,8 @@ const {
   startJobLog
 }: RepoJobLib = __non_webpack_require__('/lib/repo/job')
 const {
-  withConnection
+  withConnection,
+  ENONIC_CMS_DEFAULT_REPO
 }: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
 const {
   EVENT_LOG_BRANCH,

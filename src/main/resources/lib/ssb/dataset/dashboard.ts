@@ -22,7 +22,6 @@ import { StatisticInListing } from '../../ssb/statreg/types'
 import { StatRegRefreshResult } from '../../repo/statreg'
 import { StatRegJobInfo, SSBStatRegLib } from '../statreg'
 import { DashboardUtilsLib } from './dashboardUtils'
-import { ENONIC_CMS_DEFAULT_REPO } from '../../repo/common'
 
 const {
   users,
@@ -32,7 +31,8 @@ const {
   logUserDataQuery
 }: RepoQueryLib = __non_webpack_require__( '/lib/repo/query')
 const {
-  getNode
+  getNode,
+  ENONIC_CMS_DEFAULT_REPO
 }: RepoCommonLib = __non_webpack_require__( '/lib/repo/common')
 const {
   refreshDataset,

@@ -115,6 +115,7 @@ export function queryNodes(repository: string, branch: string, params: NodeQuery
 }
 
 export interface RepoCommonLib {
+  ENONIC_CMS_DEFAULT_REPO: string;
   withSuperUserContext: <T>(repository: string, branch: string, callback: ContextCallback<T>) => T;
   withLoggedInUserContext: <T>(branch: string, callback: UserContextCallback<T>) => T;
   withConnection: <T>(repository: string, branch: string, callback: ConnectionCallback<T>) => T;

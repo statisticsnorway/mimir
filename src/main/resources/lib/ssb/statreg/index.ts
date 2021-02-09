@@ -11,7 +11,6 @@ import { DashboardUtilsLib } from '../dataset/dashboardUtils'
 import { I18nLibrary } from 'enonic-types/i18n'
 import { ContextLibrary, RunContext } from 'enonic-types/context'
 import { DashboardRefreshResultLogData } from '../dataset/dashboard'
-import { ENONIC_CMS_DEFAULT_REPO } from '../../repo/common'
 
 const {
   STATREG_NODES,
@@ -32,7 +31,8 @@ const {
   users
 }: DashboardUtilsLib = __non_webpack_require__('/lib/ssb/dataset/dashboardUtils')
 const {
-  getNode
+  getNode,
+  ENONIC_CMS_DEFAULT_REPO
 }: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
 const {
   EVENT_LOG_BRANCH,

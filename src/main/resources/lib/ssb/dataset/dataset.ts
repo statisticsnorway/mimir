@@ -11,7 +11,7 @@ import { ContextLibrary, RunContext } from 'enonic-types/context'
 import { AuthLibrary, User } from 'enonic-types/auth'
 import { StatbankSavedLib } from './statbankSaved'
 import { TbprocessorParsedResponse } from '../../tbml/tbml'
-import { ENONIC_CMS_DEFAULT_REPO } from '../../repo/common'
+import { RepoCommonLib } from '../../repo/common'
 
 const {
   Events
@@ -48,6 +48,9 @@ const {
   deleteDataset: deleteDatasetFromRepo,
   DATASET_BRANCH
 }: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
+const {
+  ENONIC_CMS_DEFAULT_REPO
+}: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
 
 export function getDataset(content: Content<DataSource>, branch: string = DATASET_BRANCH): DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null {
   switch (content.data.dataSource?._selected) {

@@ -14,7 +14,7 @@ import { Highchart } from '../../site/content-types/highchart/highchart'
 import { MunicipalityWithCounty } from '../klass/municipalities'
 import { ServerLogLib } from './serverLog'
 import { DatasetLib } from './dataset/dataset'
-import { ENONIC_CMS_DEFAULT_REPO } from '../repo/common'
+import { RepoCommonLib } from '../repo/common'
 
 const {
   newCache
@@ -40,6 +40,9 @@ const {
 const {
   cacheLog
 }: ServerLogLib = __non_webpack_require__('/lib/ssb/serverLog')
+const {
+  ENONIC_CMS_DEFAULT_REPO
+}: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
 
 const masterFilterCaches: Map<string, Cache> = new Map()
 const draftFilterCaches: Map<string, Cache> = new Map()
