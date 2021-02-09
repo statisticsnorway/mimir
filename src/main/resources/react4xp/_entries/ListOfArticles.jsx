@@ -127,13 +127,21 @@ class ListOfArticles extends React.Component {
   }
 
   render() {
-    return (
-      <div className="list-of-articles-container col-12">
-        {this.addTitle()}
-        {this.addArticles()}
-        {this.renderShowMoreButton()}
-      </div>
-    )
+    const {
+      articles
+    } = this.props
+
+    if(articles.length > 0) {
+      return (
+        <div className="list-of-articles-container col-12">
+          {this.addTitle()}
+          {this.addArticles()}
+          {this.renderShowMoreButton()}
+        </div>
+      )
+    } else {
+      return null
+    }
   }
 }
 
