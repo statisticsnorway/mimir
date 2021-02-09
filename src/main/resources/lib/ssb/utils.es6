@@ -81,7 +81,7 @@ export const pageMode = (req) => {
 const addBreadcrumbs = (page, visitedPage, breadcrumbs = []) => {
   if (page.type === 'portal:site') {
     breadcrumbs.unshift({
-      text: getPhrases(visitedPage).home,
+      text: getPhrases(visitedPage) ? getPhrases(visitedPage).home : 'no home',
       link: '/'
     })
   } else {
