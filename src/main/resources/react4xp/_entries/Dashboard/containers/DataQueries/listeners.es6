@@ -36,4 +36,12 @@ export default function setupDataQueriesListeners(io, dispatch) {
       logs: data.logs
     })
   })
+
+  io.on('fact-page-data-sources-result', (data) => {
+    dispatch({
+      type: actions.factPageDataSourcesLoaded.type,
+      id: data.id,
+      dataSources: data.dataSources
+    })
+  })
 }

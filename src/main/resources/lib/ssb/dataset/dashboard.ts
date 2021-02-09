@@ -107,6 +107,19 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     })
   })
 
+  socket.on('get-fact-page-data-sources', (id: string) => {
+    submitTask({
+      description: 'get-fact-page-data-sources',
+      task: () => {
+        const dataSources: Array<DashboardDataSource> = getFactPageDataSources(id)
+        socket.emit('fact-page-data-sources-result', {
+          id,
+          dataSources
+        })
+      }
+    })
+  })
+
   socket.on('get-eventlog-node', (dataQueryId)=> {
     let status: Array<LogSummary> | undefined = getQueryChildNodesStatus(`/queries/${dataQueryId}`) as Array<LogSummary> | undefined
     if (!status) {
@@ -181,10 +194,24 @@ function getFactPageQueryGroups(): Array<DashboardFactPage> {
     return {
       id: factPage._id,
       displayName: factPage.displayName,
-      loaded: false,
-      dataQueries: []
+      loading: false,
+      dataSources: undefined
     }
   })
+}
+
+function getFactPageDataSources(factPageId: string): Array<DashboardDataSource> {
+  const factPage: Content<Page> | null = getContent({
+    key: factPageId
+  })
+  if (factPage) {
+    const hits: Array<Content<DataSource>> = query({
+      query: `_path LIKE "/content${factPage._path}/*" AND data.dataSource._selected LIKE "*"`,
+      count: 100
+    }).hits as unknown as Array<Content<DataSource>>
+    return prepDataSources(hits)
+  }
+  return []
 }
 
 function getJobs(): Array<DashboardJobInfo> {
@@ -269,11 +296,15 @@ export interface DashboardJobInfo {
   user?: User;
 }
 
-function prepDataSources(dataSources: Array<Content<DataSource>>): Array<unknown> {
-  return dataSources.map((dataSource) => {
+function prepDataSources(dataSources: Array<Content<DataSource>>): Array<DashboardDataSource> {
+  return dataSources.reduce((dashboardDataSources: Array<DashboardDataSource>, dataSource) => {
     const queryLogNode: QueryInfoNode | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataSource._id}`) as QueryInfoNode
-    return buildDashboardDataSource(dataSource, queryLogNode)
-  })
+    const dashboardDataSource: DashboardDataSource | null = buildDashboardDataSource(dataSource, queryLogNode)
+    if (dashboardDataSource) {
+      dashboardDataSources.push(dashboardDataSource)
+    }
+    return dashboardDataSources
+  }, [])
 }
 
 function buildDashboardDataSource(dataSource: Content<DataSource>, queryLogNode: QueryInfoNode | undefined): DashboardDataSource | null {
@@ -515,6 +546,6 @@ export interface DashboardDataSource {
 export interface DashboardFactPage {
   id: string;
   displayName: string;
-  loaded: boolean;
-  dataQueries: Array<string>;
+  loading: boolean;
+  dataSources?: Array<string>;
 }

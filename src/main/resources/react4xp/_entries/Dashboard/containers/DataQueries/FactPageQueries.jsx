@@ -1,10 +1,14 @@
 import { Accordion, NestedAccordion } from '@statisticsnorway/ssb-component-library'
 import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectLoadingFactPageQueryGroups, selectFactPageQueryGroups } from './selectors'
+import { selectLoadingFactPageQueryGroups,
+  selectFactPageQueryGroups,
+  selectFactPageDataQueries,
+  selectFactPageLoading } from './selectors'
 import PropTypes from 'prop-types'
-import { requestFactPageQueryGroups } from './actions'
+import { requestFactPageQueryGroups, requestFactPageDataSources } from './actions'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
+import { DataQueryTable } from './DataQueryTable'
 
 export function FactPageQueries(props) {
   const [firstOpen, setFirstOpen] = React.useState(true)
@@ -20,6 +24,19 @@ export function FactPageQueries(props) {
     }
   }
 
+  function renderDataQueryTable(factPage) {
+    return (
+      <DataQueryTable
+        key={`fact-page-query-${factPage.id}`}
+        header={`${factPage.displayName}`}
+        querySelector={selectFactPageDataQueries(factPage.id)}
+        loadingSelector={selectFactPageLoading(factPage.id)}
+        requestQueries={requestFactPageDataSources(factPage.id)}
+        type={NestedAccordion}
+      />
+    )
+  }
+
   function renderAccordionBody() {
     if (isLoading) {
       return (
@@ -27,13 +44,7 @@ export function FactPageQueries(props) {
       )
     }
     return (
-      factPages.map((factPage) => {
-        return (
-          <NestedAccordion key={`fact-page-query-${factPage.id}`} header={`${factPage.displayName}`}>
-            {factPage.id}
-          </NestedAccordion>
-        )
-      })
+      factPages.map((factPage) => renderDataQueryTable(factPage))
     )
   }
 

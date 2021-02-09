@@ -26,6 +26,25 @@ const dataQueriesSlice = createSlice({
       state.loadingFactPageQueryGroups = false
       state.factPageQueryGroups = action.factPageQueryGroups
     },
+    loadFactPageDataSources(state, action) {
+      const factPage = state.factPageQueryGroups.find((factPage) => factPage.id === action.id)
+      if (factPage) {
+        factPage.loading = true
+      }
+    },
+    factPageDataSourcesLoaded(state, action) {
+      const factPage = state.factPageQueryGroups.find((factPage) => factPage.id === action.id)
+      if (factPage) {
+        factPage.dataSources = action.dataSources.map((ds) => ds.id)
+        state.dataQueries = action.dataSources.reduce((dataQueries, ds) => {
+          if (!dataQueries.find((dq) => dq.id === ds.id)) {
+            dataQueries.push(ds)
+          }
+          return dataQueries
+        }, state.dataQueries)
+        factPage.loading = false
+      }
+    },
     dataQueryLoading(state, action) {
       action.ids.forEach((id) => {
         const dataQuery = state.dataQueries.find((q) => q.id === id)

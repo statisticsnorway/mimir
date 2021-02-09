@@ -16,6 +16,17 @@ export function requestFactPageQueryGroups(dispatch, io) {
   io.emit('get-fact-page-query-groups')
 }
 
+export function requestFactPageDataSources(id) {
+  return (dispatch, io) => {
+    dispatch({
+      type: actions.loadFactPageDataSources.type,
+      id
+    })
+
+    io.emit('get-fact-page-data-sources', id)
+  }
+}
+
 export function requestDatasetUpdate(dispatch, io, ids) {
   dispatch({
     type: actions.dataQueryLoading.type,

@@ -151,19 +151,20 @@ export function DataQueryTable(props) {
   onToggleAccordion(props.openByDefault)
   const data = React.useMemo(() => getDataQueries(), [dataQueries])
   return (
-    <Accordion
-      header={`${props.header} (${dataQueries.length})`}
+    <props.type
+      header={`${props.header} (${isLoading || firstOpen ? '-' : dataQueries.length})`}
       className="mx-0"
       openByDefault={!!props.openByDefault}
       onToggle={(isOpen) => onToggleAccordion(isOpen)}
     >
       {renderAccordionBody()}
-    </Accordion>
+    </props.type>
   )
 }
 
 DataQueryTable.defaultProps = {
-  openByDefault: false
+  openByDefault: false,
+  type: Accordion
 }
 
 DataQueryTable.propTypes = {
@@ -171,7 +172,8 @@ DataQueryTable.propTypes = {
   openByDefault: PropTypes.bool,
   querySelector: PropTypes.func.isRequired,
   loadingSelector: PropTypes.func.isRequired,
-  requestQueries: PropTypes.func.isRequired
+  requestQueries: PropTypes.func.isRequired,
+  type: PropTypes.elementType
 }
 
 export default (props) => <DataQueryTable {...props} />

@@ -62,3 +62,28 @@ export const selectDataQueriesById = (dataQueryId) => {
     },
   )
 }
+
+export const selectFactPageLoading = (factPageId) => {
+  return createSelector(
+    [selectDomain],
+    (dataQueriesState) => {
+      const factPage = dataQueriesState.factPageQueryGroups.find((factPage) => factPage.id === factPageId)
+      return factPage && (factPage.loading || factPage.dataSources === undefined)
+    },
+  )
+}
+
+export const selectFactPageDataQueries = (factPageId) => {
+  return createSelector(
+    [selectDomain],
+    (dataQueriesState) => {
+      const factPage = dataQueriesState.factPageQueryGroups.find((factPage) => factPage.id === factPageId)
+      if (factPage && !factPage.loading && factPage.dataSources) {
+        return factPage.dataSources.map((dataSourceId) => {
+          return dataQueriesState.dataQueries.find((dq) => dq.id === dataSourceId)
+        })
+      }
+      return []
+    },
+  )
+}
