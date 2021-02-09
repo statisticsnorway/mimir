@@ -28,9 +28,6 @@ const {
   get: getContent
 }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
 const {
-  getHomeToolUrl,
-}: AdminLibrary = __non_webpack_require__( '/lib/xp/admin')
-const {
   fetchStatisticsWithRelease,
   getAllStatisticsFromRepo
 }: StatRegStatisticsLib = __non_webpack_require__('/lib/repo/statreg/statistics')
@@ -340,7 +337,7 @@ function prepStatisticsJobLogInfo(jobNode: JobInfoNode): DashboardJobInfo {
 
 const TWO_WEEKS: number = 14 // TODO: put in config?
 function getStatistics(): Array<StatisticDashboard> {
-  log.info('whate hsdg slkj lsidj ')
+  const prefix: string = app.config && app.config['admin-prefix'] ? app.config['admin-prefix'] : '/xp/admin'
   const statsBeforeDate: Date = new Date()
   statsBeforeDate.setDate(statsBeforeDate.getDate() + TWO_WEEKS)
   const statregStatistics: Array<StatisticInListing> = fetchStatisticsWithRelease(statsBeforeDate)
@@ -349,13 +346,7 @@ function getStatistics(): Array<StatisticDashboard> {
     count: 1000
   }).hits as unknown as Array<Content<Statistics>>
 
-  log.info('jkshfsdf')
   return statisticsContent.map((statistic) => {
-    log.info('statistic')
-    log.info(JSON.stringify(statistic, null, 2))
-    const baseUri: string = statistic._path? getHomeToolUrl({type: 'server', path: statistic._path}) : ''
-    log.info('Pewpew jheherhso dfi')
-    log.info(baseUri)
     const statregStat: StatisticInListing = statregStatistics.find((statregStat) => {
       return `${statregStat.id}` === statistic.data.statistic
     }) as StatisticInListing
@@ -375,7 +366,7 @@ function getStatistics(): Array<StatisticDashboard> {
       relatedTables: relatedTables,
       aboutTheStatistics: statistic.data.aboutTheStatistics,
       logData: getStatisticsJobLogInfo(statistic._id),
-      previewUrl: `${baseUri}/site/preview/default/draft${statistic._path}`
+      previewUrl: statistic._path ? `${prefix}/site/preview/default/draft${statistic._path}` : ''
     }
     return statisticDataDashboard
   }).sort((a, b) => {
