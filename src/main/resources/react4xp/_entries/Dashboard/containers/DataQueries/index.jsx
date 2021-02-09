@@ -4,6 +4,7 @@ import { DataQueryTable } from './DataQueryTable'
 import { selectLoadingErrors, selectDataQueriesByParentType } from './selectors'
 import { requestErrorQueries } from './actions'
 import { FactPageQueries } from './FactPageQueries'
+import { StatisticsQueries } from './StatisticsQueries'
 
 export function DataQueries() {
   function renderDataQueryTables() {
@@ -16,10 +17,9 @@ export function DataQueries() {
           requestQueries={requestErrorQueries}
         />
         <FactPageQueries/>
-        {/* <DataQueryTable header="Spørringer fra Faktasider" dataQueryType="factPage"/>
-        <DataQueryTable header="Spørringer fra Kommunefakta" dataQueryType="municipality"/>
-        <DataQueryTable header="Spørringer fra statistikker" dataQueryType="mimir:statistics"/>
-        <DataQueryTable header="Andre" dataQueryType="default"/> */}
+        <StatisticsQueries/>
+        {/* <DataQueryTable header="Spørringer fra Kommunefakta" dataQueryType="municipality"/> */}
+        {/* <DataQueryTable header="Andre" dataQueryType="default"/> */}
       </React.Fragment>
     )
   }

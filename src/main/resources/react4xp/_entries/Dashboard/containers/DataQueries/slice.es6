@@ -4,7 +4,9 @@ export const initialState = {
   dataQueries: [],
   loadingErrors: true,
   factPageQueryGroups: [],
-  loadingFactPageQueryGroups: true
+  statisticsGroups: [],
+  loadingFactPageQueryGroups: true,
+  loadingStatisticsGroups: true
 }
 
 const dataQueriesSlice = createSlice({
@@ -43,6 +45,33 @@ const dataQueriesSlice = createSlice({
           return dataQueries
         }, state.dataQueries)
         factPage.loading = false
+      }
+    },
+    loadStatisticsGroups(state) {
+      state.loadingStatisticsGroups = true
+      state.statisticsGroups = []
+    },
+    statisticsGroupsLoaded(state, action) {
+      state.loadingStatisticsGroups = false
+      state.statisticsGroups = action.statisticsGroups
+    },
+    loadStatisticsDataSources(state, action) {
+      const statistic = state.statisticsGroups.find((statistic) => statistic.id === action.id)
+      if (statistic) {
+        statistic.loading = true
+      }
+    },
+    statisticsDataSourcesLoaded(state, action) {
+      const statistic = state.statisticsGroups.find((statistic) => statistic.id === action.id)
+      if (statistic) {
+        statistic.dataSources = action.dataSources.map((ds) => ds.id)
+        state.dataQueries = action.dataSources.reduce((dataQueries, ds) => {
+          if (!dataQueries.find((dq) => dq.id === ds.id)) {
+            dataQueries.push(ds)
+          }
+          return dataQueries
+        }, state.dataQueries)
+        statistic.loading = false
       }
     },
     dataQueryLoading(state, action) {

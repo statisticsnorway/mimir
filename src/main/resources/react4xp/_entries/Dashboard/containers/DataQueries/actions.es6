@@ -16,6 +16,14 @@ export function requestFactPageQueryGroups(dispatch, io) {
   io.emit('get-fact-page-query-groups')
 }
 
+export function requestStatisticsGroups(dispatch, io) {
+  dispatch({
+    type: actions.loadStatisticsGroups.type
+  })
+
+  io.emit('get-statistics-groups')
+}
+
 export function requestFactPageDataSources(id) {
   return (dispatch, io) => {
     dispatch({
@@ -24,6 +32,16 @@ export function requestFactPageDataSources(id) {
     })
 
     io.emit('get-fact-page-data-sources', id)
+  }
+}
+
+export function requestStatisticsDataSources(id) {
+  return (dispatch, io) => {
+    dispatch({
+      type: actions.loadStatisticsDataSources.type
+    })
+
+    io.emit('get-statistics-data-sources', id)
   }
 }
 

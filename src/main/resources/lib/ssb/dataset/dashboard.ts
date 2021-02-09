@@ -24,6 +24,7 @@ import { StatRegJobInfo, SSBStatRegLib } from '../statreg'
 import { DashboardUtilsLib, WARNING_ICON_EVENTS } from './dashboardUtils'
 import { DefaultPageConfig } from '../../../site/pages/default/default-page-config'
 import { Page } from '../../../site/content-types/page/page'
+import { Statistics } from '../../../site/content-types/statistics/statistics'
 
 const {
   users,
@@ -101,7 +102,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     submitTask({
       description: 'get-fact-page-query-groups',
       task: () => {
-        const factpages: Array<DashboardFactPage> = getFactPageQueryGroups()
+        const factpages: Array<DashboardDataSourceGroups> = getFactPageQueryGroups()
         socket.emit('fact-page-query-groups-result', factpages)
       }
     })
@@ -113,6 +114,29 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
       task: () => {
         const dataSources: Array<DashboardDataSource> = getFactPageDataSources(id)
         socket.emit('fact-page-data-sources-result', {
+          id,
+          dataSources
+        })
+      }
+    })
+  })
+
+  socket.on('get-statistics-groups', () => {
+    submitTask({
+      description: 'get-statistics-groups',
+      task: () => {
+        const statistics: Array<DashboardDataSourceGroups> = getStatisticsGroups()
+        socket.emit('statistics-groups-result', statistics)
+      }
+    })
+  })
+
+  socket.on('get-statistics-data-sources', (id: string) => {
+    submitTask({
+      description: 'get-statistics-data-sources',
+      task: () => {
+        const dataSources: Array<DashboardDataSource> = getStatisticsDataSources(id)
+        socket.emit('statistics-data-sources-result', {
           id,
           dataSources
         })
@@ -184,7 +208,7 @@ function getDataSourcesWithError(): Array<DashboardDataSource> {
   }).filter((ds) => !!ds) as Array<DashboardDataSource>
 }
 
-function getFactPageQueryGroups(): Array<DashboardFactPage> {
+function getFactPageQueryGroups(): Array<DashboardDataSourceGroups> {
   const factPages: Array<Content<Page, DefaultPageConfig>> = query({
     query: `components.page.config.mimir.default.pageType LIKE "factPage"`,
     count: 1000
@@ -212,6 +236,37 @@ function getFactPageDataSources(factPageId: string): Array<DashboardDataSource> 
     return prepDataSources(hits)
   }
   return []
+}
+
+function getStatisticsDataSources(statisticId: string): Array<DashboardDataSource> {
+  const statistic: Content<Page> | null = getContent({
+    key: statisticId
+  })
+  if (statistic) {
+    const hits: Array<Content<DataSource>> = query({
+      query: `_path LIKE "/content${statistic._path}/*" AND data.dataSource._selected LIKE "*"`,
+      count: 100
+    }).hits as unknown as Array<Content<DataSource>>
+    return prepDataSources(hits)
+  }
+  return []
+}
+
+function getStatisticsGroups(): Array<DashboardDataSourceGroups> {
+  const statistics: Array<Content<Statistics>> = query({
+    contentTypes: [`${app.name}:statistics`],
+    query: `data.statistic LIKE "*"`,
+    count: 1000
+  }).hits as unknown as Array<Content<Statistics>>
+
+  return statistics.map((statistic) => {
+    return {
+      id: statistic._id,
+      displayName: statistic.displayName,
+      loading: false,
+      dataSources: undefined
+    }
+  })
 }
 
 function getJobs(): Array<DashboardJobInfo> {
@@ -543,7 +598,7 @@ export interface DashboardDataSource {
   };
 }
 
-export interface DashboardFactPage {
+export interface DashboardDataSourceGroups {
   id: string;
   displayName: string;
   loading: boolean;

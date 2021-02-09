@@ -22,6 +22,11 @@ export const selectLoadingFactPageQueryGroups = createSelector(
   (dataQueriesState) => dataQueriesState.loadingFactPageQueryGroups,
 )
 
+export const selectLoadingStatisticsGroups = createSelector(
+  [selectDomain],
+  (dataQueriesState) => dataQueriesState.loadingStatisticsGroups,
+)
+
 export const selectDataQueries = createSelector(
   [selectDomain],
   (dataQueriesState) => dataQueriesState.dataQueries,
@@ -30,6 +35,11 @@ export const selectDataQueries = createSelector(
 export const selectFactPageQueryGroups = createSelector(
   [selectDomain],
   (dataQueriesState) => dataQueriesState.factPageQueryGroups
+)
+
+export const selectStatisticsGroups = createSelector(
+  [selectDomain],
+  (dataQueriesState) => dataQueriesState.statisticsGroups,
 )
 
 export const selectDataQueriesByParentType = (dataQueryType) => {
@@ -80,6 +90,31 @@ export const selectFactPageDataQueries = (factPageId) => {
       const factPage = dataQueriesState.factPageQueryGroups.find((factPage) => factPage.id === factPageId)
       if (factPage && !factPage.loading && factPage.dataSources) {
         return factPage.dataSources.map((dataSourceId) => {
+          return dataQueriesState.dataQueries.find((dq) => dq.id === dataSourceId)
+        })
+      }
+      return []
+    },
+  )
+}
+
+export const selectStatisticsLoading = (statisticId) => {
+  return createSelector(
+    [selectDomain],
+    (dataQueriesState) => {
+      const statistic = dataQueriesState.statisticsGroups.find((statistic) => statistic.id === statisticId)
+      return statistic && (statistic.loading || statistic.dataSources === undefined)
+    },
+  )
+}
+
+export const selectStatisticsDataSources = (statisticId) => {
+  return createSelector(
+    [selectDomain],
+    (dataQueriesState) => {
+      const statistic = dataQueriesState.statisticsGroups.find((statistic) => statistic.id === statisticId)
+      if (statistic && !statistic.loading && statistic.dataSources) {
+        return statistic.dataSources.map((dataSourceId) => {
           return dataQueriesState.dataQueries.find((dq) => dq.id === dataSourceId)
         })
       }

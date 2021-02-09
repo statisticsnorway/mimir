@@ -44,4 +44,19 @@ export default function setupDataQueriesListeners(io, dispatch) {
       dataSources: data.dataSources
     })
   })
+
+  io.on('statistics-groups-result', (data) => {
+    dispatch({
+      type: actions.statisticsGroupsLoaded.type,
+      statisticsGroups: data
+    })
+  })
+
+  io.on('statistics-data-sources-result', (data) => {
+    dispatch({
+      type: actions.statisticsDataSourcesLoaded.type,
+      id: data.id,
+      dataSources: data.dataSources
+    })
+  })
 }
