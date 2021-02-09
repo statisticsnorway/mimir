@@ -11,6 +11,7 @@ import { ContextLibrary, RunContext } from 'enonic-types/context'
 import { AuthLibrary, User } from 'enonic-types/auth'
 import { StatbankSavedLib } from './statbankSaved'
 import { TbprocessorParsedResponse } from '../../tbml/tbml'
+import { ENONIC_CMS_DEFAULT_REPO } from '../../repo/common'
 
 const {
   Events
@@ -172,7 +173,7 @@ function determineIfTbprocessorParsedResponse(toBeDetermined: TbprocessorParsedR
 export function refreshDatasetWithUserKey(content: Content<DataSource>, userLogin: string, branch: string = DATASET_BRANCH, ): CreateOrUpdateStatus {
   const context: RunContext = {
     branch: 'master',
-    repository: 'com.enonic.cms.default',
+    repository: ENONIC_CMS_DEFAULT_REPO,
     principals: ['role:system.admin'],
     user: {
       login: userLogin,

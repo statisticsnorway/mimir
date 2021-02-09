@@ -21,6 +21,8 @@ import { RepoEventLogLib } from '../repo/eventLog'
 import { RepoCommonLib } from '../repo/common'
 import { StatRegStatisticsLib } from '../repo/statreg/statistics'
 import { TaskLib } from '../types/task'
+import { ENONIC_CMS_DEFAULT_REPO } from '../repo/common'
+
 const {
   query,
   get: getContent
@@ -137,7 +139,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
       if (datasetIdsToUpdate.length > 0) {
         const context: RunContext = {
           branch: 'master',
-          repository: 'com.enonic.cms.default',
+          repository: ENONIC_CMS_DEFAULT_REPO,
           principals: ['role:system.admin'],
           user: {
             login: users[parseInt(socket.id)].login,

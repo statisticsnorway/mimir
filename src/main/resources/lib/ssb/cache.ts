@@ -14,6 +14,7 @@ import { Highchart } from '../../site/content-types/highchart/highchart'
 import { MunicipalityWithCounty } from '../klass/municipalities'
 import { ServerLogLib } from './serverLog'
 import { DatasetLib } from './dataset/dataset'
+import { ENONIC_CMS_DEFAULT_REPO } from '../repo/common'
 
 const {
   newCache
@@ -109,7 +110,7 @@ export function setup(): void {
   })
 }
 
-const validRepos: Array<string> = ['com.enonic.cms.default', DATASET_REPO]
+const validRepos: Array<string> = [ENONIC_CMS_DEFAULT_REPO, DATASET_REPO]
 function addToChangeQueue(event: EnonicEvent<EnonicEventData>): void {
   const validNodes: EnonicEventData['nodes'] = event.data.nodes.filter((n) => validRepos.includes(n.repo))
   if (validNodes.length > 0) {
@@ -169,7 +170,7 @@ function onNodeChange(validNodes: EnonicEventData['nodes']): void {
 function clearForBranch(nodes: EnonicEventData['nodes'], branch: string): void {
   // need to run in correct context for getReferences to work
   run({
-    repository: 'com.enonic.cms.default',
+    repository: ENONIC_CMS_DEFAULT_REPO,
     branch: branch,
     user: {
       login: 'su',
@@ -180,7 +181,7 @@ function clearForBranch(nodes: EnonicEventData['nodes'], branch: string): void {
   () => {
     const cleared: Array<string> = []
     nodes.forEach((n) => {
-      if (n.repo === 'com.enonic.cms.default') {
+      if (n.repo === ENONIC_CMS_DEFAULT_REPO) {
         // clear id and all references to id from cache
         cacheLog(`try to clear ${n.id}(${branch})`)
         const content: Content | null = get({

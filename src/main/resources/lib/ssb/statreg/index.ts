@@ -11,6 +11,7 @@ import { DashboardUtilsLib } from '../dataset/dashboardUtils'
 import { I18nLibrary } from 'enonic-types/i18n'
 import { ContextLibrary, RunContext } from 'enonic-types/context'
 import { DashboardRefreshResultLogData } from '../dataset/dashboard'
+import { ENONIC_CMS_DEFAULT_REPO } from '../../repo/common'
 
 const {
   STATREG_NODES,
@@ -103,7 +104,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     // start refreshing
     const context: RunContext = {
       branch: 'master',
-      repository: 'com.enonic.cms.default',
+      repository: ENONIC_CMS_DEFAULT_REPO,
       principals: ['role:system.admin'],
       user: {
         login: users[parseInt(socket.id)].login,

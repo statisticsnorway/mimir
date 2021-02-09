@@ -22,6 +22,7 @@ import { StatisticInListing } from '../../ssb/statreg/types'
 import { StatRegRefreshResult } from '../../repo/statreg'
 import { StatRegJobInfo, SSBStatRegLib } from '../statreg'
 import { DashboardUtilsLib } from './dashboardUtils'
+import { ENONIC_CMS_DEFAULT_REPO } from '../../repo/common'
 
 const {
   users,
@@ -116,7 +117,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   socket.on('dashboard-refresh-dataset', (options: RefreshDatasetOptions) => {
     const context: RunContext = {
       branch: 'master',
-      repository: 'com.enonic.cms.default',
+      repository: ENONIC_CMS_DEFAULT_REPO,
       principals: ['role:system.admin'],
       user: {
         login: users[parseInt(socket.id)].login,

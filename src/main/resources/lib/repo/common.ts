@@ -12,7 +12,8 @@ const auth: AuthLibrary = __non_webpack_require__( '/lib/xp/auth')
 const context: ContextLibrary = __non_webpack_require__('/lib/xp/context')
 const node: NodeLibrary = __non_webpack_require__('/lib/xp/node')
 
-const ENONIC_CMS_DEFAULT_REPO: string = 'com.enonic.cms.default'
+const ENONIC_PROJECT_ID: string = app.config && app.config['ssb.project.id'] ? app.config['ssb.project.id'] : 'default'
+export const ENONIC_CMS_DEFAULT_REPO: string = `com.enonic.cms.${ENONIC_PROJECT_ID}`
 const SYSADMIN_ROLE: string = 'role:system.admin'
 
 export type ContextCallback<T> = () => T;

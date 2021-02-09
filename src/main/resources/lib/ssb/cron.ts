@@ -12,6 +12,7 @@ import { EventLogLib } from '../ssb/eventLog'
 import { ClusterLib } from '../types/cluster'
 import { ServerLogLib } from './serverLog'
 import { DatasetRSSLib } from './dataset/rss'
+import { ENONIC_CMS_DEFAULT_REPO } from '../repo/common'
 
 const {
   publishDataset
@@ -55,7 +56,7 @@ const {
 }: ServerLogLib = __non_webpack_require__('/lib/ssb/serverLog')
 
 const createUserContext: RunContext = { // Master context (XP)
-  repository: 'com.enonic.cms.default',
+  repository: ENONIC_CMS_DEFAULT_REPO,
   branch: 'master',
   principals: ['role:system.admin'],
   user: {
@@ -65,7 +66,7 @@ const createUserContext: RunContext = { // Master context (XP)
 }
 
 export const cronContext: RunContext = { // Master context (XP)
-  repository: 'com.enonic.cms.default',
+  repository: ENONIC_CMS_DEFAULT_REPO,
   branch: 'master',
   principals: ['role:system.admin'],
   user: {
