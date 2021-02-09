@@ -53,7 +53,8 @@ class Header extends React.Component {
     }
   }
   languageLinks() {
-    return this.props.language.alternativeLanguages.map((altLanguage, index) => {
+    const {alternativeLanguages} = this.props.language
+    return alternativeLanguages.map((altLanguage, index) => {
       return (<Link key={'link_' + index} href={altLanguage.path}>{altLanguage.title}</Link>)
     })
   }
