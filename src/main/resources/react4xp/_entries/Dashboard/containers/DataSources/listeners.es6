@@ -1,6 +1,6 @@
 import { actions } from './slice'
 
-export default function setupDataQueriesListeners(io, dispatch) {
+export default function setupDataSourcesListeners(io, dispatch) {
   io.on('error-queries-result', (data) => {
     dispatch({
       type: actions.errorQueriesLoaded.type,

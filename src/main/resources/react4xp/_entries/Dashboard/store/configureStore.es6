@@ -4,7 +4,7 @@ import createSagaMiddleware from 'redux-saga'
 import { createReducer } from './reducers'
 import { reducer as statRegReducer } from '../containers/StatRegDashboard/slice'
 import { reducer as commonReducer } from '../containers/HomePage/slice'
-import { reducer as dataQueriesReducer } from '../containers/DataQueries/slice'
+import { reducer as dataQueriesReducer } from '../containers/DataSources/slice'
 import { reducer as statisticsReducer } from '../containers/Statistics/slice'
 import { reducer as jobsReducer } from '../containers/Jobs/slice'
 

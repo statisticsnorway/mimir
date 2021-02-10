@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { StatRegDashboard } from '../StatRegDashboard'
 import { selectIsConnected } from './selectors'
 import { ConnectionBadge } from '../../components/ConnectionBadge'
-import { DataQueries } from '../DataQueries'
+import { DataSources } from '../DataSources'
 import { Statistics } from '../Statistics'
 import DashboardTools from '../DashboardTools'
 import Jobs from '../Jobs'
@@ -34,7 +34,7 @@ export function HomePage() {
           </Container>
         </Tab>
         <Tab eventKey="queries" title="Spørringer">
-          <DataQueries/>
+          <DataSources/>
           <StatRegDashboard/>
         </Tab>
       </Tabs>

@@ -7,7 +7,7 @@ import { FactPageQueries } from './FactPageQueries'
 import { StatisticsQueries } from './StatisticsQueries'
 import { MunicipalQueries } from './MunicipalQueries'
 
-export function DataQueries() {
+export function DataSources() {
   function renderDataQueryTables() {
     return (
       <React.Fragment>
@@ -45,4 +45,4 @@ export function DataQueries() {
   )
 }
 
-export default (props) => <DataQueries {...props} />
+export default (props) => <DataSources {...props} />

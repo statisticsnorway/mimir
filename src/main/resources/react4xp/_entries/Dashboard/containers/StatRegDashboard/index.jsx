@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectStatuses, selectLoading } from './selectors'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { startRefresh } from './actions.es6'
-import { DataQueryLog } from '../DataQueries/DataQueryLog'
+import { DataQueryLog } from '../DataSources/DataQueryLog'
 
 export function StatRegDashboard() {
   const loading = useSelector(selectLoading)
