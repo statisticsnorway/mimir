@@ -32,6 +32,11 @@ export const selectLoadingMunicipalGroups = createSelector(
   (dataQueriesState) => dataQueriesState.loadingMunicipalGroups,
 )
 
+export const selectLoadingDefaultDataSources = createSelector(
+  [selectDomain],
+  (dataQueriesState) => dataQueriesState.loadingDefault,
+)
+
 export const selectDataQueries = createSelector(
   [selectDomain],
   (dataQueriesState) => dataQueriesState.dataQueries,

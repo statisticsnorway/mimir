@@ -65,6 +65,14 @@ export function requestMunicipalDataSources(id) {
   }
 }
 
+export function requestDefaultDataSources(dispatch, io) {
+  dispatch({
+    type: actions.loadDefaultDataSources.type
+  })
+
+  io.emit('get-default-data-sources', )
+}
+
 export function requestDatasetUpdate(dispatch, io, ids) {
   dispatch({
     type: actions.dataQueryLoading.type,

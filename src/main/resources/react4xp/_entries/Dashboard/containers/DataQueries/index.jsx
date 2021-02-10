@@ -1,8 +1,8 @@
 import React from 'react'
 import { Col, Row } from 'react-bootstrap'
 import { DataQueryTable } from './DataQueryTable'
-import { selectLoadingErrors, selectDataQueriesByParentType } from './selectors'
-import { requestErrorQueries } from './actions'
+import { selectLoadingErrors, selectDataQueriesByParentType, selectLoadingDefaultDataSources } from './selectors'
+import { requestErrorQueries, requestDefaultDataSources } from './actions'
 import { FactPageQueries } from './FactPageQueries'
 import { StatisticsQueries } from './StatisticsQueries'
 import { MunicipalQueries } from './MunicipalQueries'
@@ -16,11 +16,17 @@ export function DataQueries() {
           querySelector={selectDataQueriesByParentType('error')}
           loadingSelector={selectLoadingErrors}
           requestQueries={requestErrorQueries}
+          openByDefault={true}
         />
         <FactPageQueries/>
         <StatisticsQueries/>
         <MunicipalQueries/>
-        {/* <DataQueryTable header="Andre" dataQueryType="default"/> */}
+        <DataQueryTable
+          header="Andre"
+          querySelector={selectDataQueriesByParentType('default')}
+          loadingSelector={selectLoadingDefaultDataSources}
+          requestQueries={requestDefaultDataSources}
+        />
       </React.Fragment>
     )
   }

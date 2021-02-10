@@ -2,13 +2,14 @@ import { createSlice } from '../../utils/@reduxjs/toolkit'
 
 export const initialState = {
   dataQueries: [],
-  loadingErrors: true,
   factPageQueryGroups: [],
   statisticsGroups: [],
   municipalGroups: [],
+  loadingErrors: true,
   loadingFactPageQueryGroups: true,
   loadingStatisticsGroups: true,
-  loadingMunicipalGroups: true
+  loadingMunicipalGroups: true,
+  loadingDefault: true
 }
 
 const dataQueriesSlice = createSlice({
@@ -19,8 +20,25 @@ const dataQueriesSlice = createSlice({
       state.loadingErrors = true
     },
     errorQueriesLoaded(state, action) {
+      state.dataQueries = action.dataQueries.reduce((dataQueries, ds) => {
+        if (!dataQueries.find((dq) => dq.id === ds.id)) {
+          dataQueries.push(ds)
+        }
+        return dataQueries
+      }, state.dataQueries)
       state.loadingErrors = false
-      state.dataQueries = state.dataQueries.concat(action.dataQueries)
+    },
+    loadDefaultDataSources(state) {
+      state.loadingDefault = true
+    },
+    defaultDataSourcesLoaded(state, action) {
+      state.dataQueries = action.dataSources.reduce((dataQueries, ds) => {
+        if (!dataQueries.find((dq) => dq.id === ds.id)) {
+          dataQueries.push(ds)
+        }
+        return dataQueries
+      }, state.dataQueries)
+      state.loadingDefault = false
     },
     loadFactPageQueryGroups(state) {
       state.loadingFactPageQueryGroups = true

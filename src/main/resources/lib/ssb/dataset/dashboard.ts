@@ -167,6 +167,16 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     })
   })
 
+  socket.on('get-default-data-sources', () => {
+    submitTask({
+      description: 'get-default-data-sources',
+      task: () => {
+        const dataSources: Array<DashboardDataSource> = getDefaultDataSources()
+        socket.emit('default-data-sources-result', dataSources)
+      }
+    })
+  })
+
   socket.on('get-eventlog-node', (dataQueryId)=> {
     let status: Array<LogSummary> | undefined = getQueryChildNodesStatus(`/queries/${dataQueryId}`) as Array<LogSummary> | undefined
     if (!status) {
@@ -241,6 +251,7 @@ function getFactPageQueryGroups(): Array<DashboardDataSourceGroups> {
     return {
       id: factPage._id,
       displayName: factPage.displayName,
+      path: factPage._path,
       loading: false,
       dataSources: undefined
     }
@@ -272,6 +283,7 @@ function getStatisticsGroups(): Array<DashboardDataSourceGroups> {
     return {
       id: statistic._id,
       displayName: statistic.displayName,
+      path: statistic._path,
       loading: false,
       dataSources: undefined
     }
@@ -302,6 +314,7 @@ function getMunicipalGroups(): Array<DashboardDataSourceGroups> {
     return {
       id: municipal._id,
       displayName: municipal.displayName,
+      path: municipal._path,
       loading: false,
       dataSources: undefined
     }
@@ -320,6 +333,18 @@ function getMunicipalDataSources(municipalId: string): Array<DashboardDataSource
     return prepDataSources(hits)
   }
   return []
+}
+
+function getDefaultDataSources(): Array<DashboardDataSource> {
+  const factPageGroupPaths: Array<string> = getFactPageQueryGroups().map((g) => g.path)
+  const municipalGroupPaths: Array<string> = getMunicipalGroups().map((g) => g.path)
+  const statisticsGroupPaths: Array<string> = getStatisticsGroups().map((g) => g.path)
+  const paths: Array<string> = Array<string>().concat(factPageGroupPaths, municipalGroupPaths, statisticsGroupPaths)
+  const hits: Array<Content<DataSource>> = query({
+    query: `_path NOT IN(${paths.map((path) => `"/content${path}/*"`).join(',')}) AND data.dataSource._selected LIKE "*"`,
+    count: 1000
+  }).hits as unknown as Array<Content<DataSource>>
+  return prepDataSources(hits)
 }
 
 function getJobs(): Array<DashboardJobInfo> {
@@ -654,6 +679,7 @@ export interface DashboardDataSource {
 export interface DashboardDataSourceGroups {
   id: string;
   displayName: string;
+  path: string;
   loading: boolean;
   dataSources?: Array<string>;
 }

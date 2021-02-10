@@ -74,4 +74,11 @@ export default function setupDataQueriesListeners(io, dispatch) {
       dataSources: data.dataSources
     })
   })
+
+  io.on('default-data-sources-result', (data) => {
+    dispatch({
+      type: actions.defaultDataSourcesLoaded.type,
+      dataSources: data
+    })
+  })
 }
