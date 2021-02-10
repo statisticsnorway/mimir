@@ -64,7 +64,7 @@ const createUserContext: RunContext = { // Master context (XP)
   }
 }
 
-const cronContext: RunContext = { // Master context (XP)
+export const cronContext: RunContext = { // Master context (XP)
   repository: 'com.enonic.cms.default',
   branch: 'master',
   principals: ['role:system.admin'],
@@ -107,7 +107,7 @@ function job(): void {
   cronJobLog('-- Completed dataquery cron job --')
 }
 
-function statRegJob(): void {
+export function statRegJob(): void {
   const jobLogNode: JobEventNode = startJobLog(JobNames.STATREG_JOB)
   updateJobLog(jobLogNode._id, (node: JobInfoNode) => {
     node.data = {

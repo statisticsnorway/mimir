@@ -6,7 +6,7 @@ import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { requestClearCache } from '../HomePage/actions.es6'
 import { ChevronDown, ChevronUp, RefreshCw, Trash } from 'react-feather'
 import { Col, Container, Row } from 'react-bootstrap'
-import { Link, Dropdown } from '@statisticsnorway/ssb-component-library'
+import { Link, Dropdown, Input } from '@statisticsnorway/ssb-component-library'
 import { selectSearchList, selectLoadingSearchList, selectHasLoadingStatistic } from '../Statistics/selectors'
 import { setOpenStatistic, setOpenModal } from '../Statistics/actions'
 import { startRefresh } from '../StatRegDashboard/actions'
@@ -83,6 +83,7 @@ export function DashboardTools() {
     }
     return (
       <Dropdown
+        className="mx-1"
         placeholder="Finn statistikk"
         searchable
         items={items}
@@ -122,13 +123,32 @@ export function DashboardTools() {
     )
   }
 
+  function handleTbmlDefinitionsStatbankTableSearch(value) {
+    window.open(`${internalBaseUrl}/tbprocessor/document/listByTableId?tableid=${value}`, '_blank')
+  }
+
+  function renderTbmlDefinitionsStatbankTable() {
+    return (
+      <Col className="mx-1">
+        <span className="font-weight-bold">Vis TBML-definisjoner basert på Statbanktabell</span>
+        <Input
+          className="mt-3"
+          ariaLabel="Search table ID"
+          placeholder="Tabellens ID"
+          searchField
+          submitCallback={handleTbmlDefinitionsStatbankTableSearch}
+        />
+      </Col>
+    )
+  }
+
   return (
     <div className="p-4 tables-wrapper">
       <h2>Diverse verktøy</h2>
       <Container>
         <Row className="mb-3">
           <Col>
-            <span>Tøm Cache</span>
+            <span className="mx-1">Tøm Cache</span>
             <Button
               size="sm"
               className="mx-3"
@@ -139,10 +159,10 @@ export function DashboardTools() {
           </Col>
         </Row>
         <Row className="mb-4">
-          <Col className="col-10 p-0">
+          <Col className="col-10">
             {renderStatisticsSearch()}
           </Col>
-          <Col className="col-2 p-0 pt-1">
+          <Col className="col-2 pt-1">
             <Button
               variant="primary"
               size="sm"
@@ -161,12 +181,15 @@ export function DashboardTools() {
           const {} = statRegStatus
           return (
             <Row className="mb-4" key={index}>
-              <Col className="p-0">
+              <Col>
                 {makeRefreshButton(statRegStatus)}
               </Col>
             </Row>
           )
         })}
+        <Row className="mb-4">
+          {renderTbmlDefinitionsStatbankTable()}
+        </Row>
         <Row className="link-tools-list">
           <Col>
             <h3>Verktøyliste</h3>

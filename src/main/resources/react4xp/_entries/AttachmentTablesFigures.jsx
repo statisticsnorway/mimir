@@ -83,12 +83,10 @@ class AttachmentTableFigures extends React.Component {
       freeText
     } = this.props
 
-    if (this.state.isHidden && accordions.length > 5) {
+    if (!freeText || this.state.isHidden && accordions.length > 5) {
       return 'd-none'
-    } else if (freeText) {
-      return 'mt-5'
     }
-    return ''
+    return 'mt-5'
   }
 
   render() {

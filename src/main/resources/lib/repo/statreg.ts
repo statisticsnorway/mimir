@@ -93,7 +93,6 @@ function setupStatRegFetcher(statRegFetcher: StatRegNodeConfig): StatRegRefreshR
     if (result) {
       const res: StatRegCompareResult = compareResult(node, result)
       const status: string = res.changed || res.added || res.deleted ? Events.DATASET_UPDATED : Events.NO_NEW_DATA
-
       if (status !== Events.NO_NEW_DATA) {
         if (node) {
           modifyStatRegNode(node._id, result)

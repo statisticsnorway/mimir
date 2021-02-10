@@ -28,7 +28,8 @@ class RelatedBoxes extends React.Component {
           {relatedContentLists.map((relatedRelatedContent, index) =>
             <PictureCard
               className={`mb-3 ${index > 3 && this.state.isHidden ? 'd-none' : ''}`}
-              imageSrc={relatedRelatedContent.image} altText={relatedRelatedContent.imageAlt}
+              imageSrc={relatedRelatedContent.image}
+              altText={relatedRelatedContent.imageAlt ? relatedRelatedContent.imageAlt : ''}
               link={relatedRelatedContent.link}
               type={relatedRelatedContent.type ? relatedRelatedContent.type : undefined}
               title={relatedRelatedContent.title}
@@ -53,7 +54,7 @@ RelatedBoxes.propTypes = {
       link: PropTypes.string.isRequired,
       type: PropTypes.string,
       image: PropTypes.string.isRequired,
-      imageAlt: PropTypes.string.isRequired
+      imageAlt: PropTypes.string
     })
   ).isRequired,
   showAll: PropTypes.string.isRequired,

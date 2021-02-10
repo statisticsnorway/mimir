@@ -61,8 +61,8 @@ Accordion.propTypes = {
       body: PropTypes.string.isRequired,
       items: PropTypes.arrayOf(
         PropTypes.shape({
-          title: PropTypes.string.isRequired,
-          body: PropTypes.string.isRequired
+          title: PropTypes.string,
+          body: PropTypes.string
         })
       )
     })
