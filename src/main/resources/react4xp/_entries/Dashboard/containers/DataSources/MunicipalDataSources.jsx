@@ -8,9 +8,9 @@ import { selectMunicipalGroups,
 import PropTypes from 'prop-types'
 import { requestMunicipalGroups, requestMunicipalDataSources } from './actions'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
-import { DataQueryTable } from './DataQueryTable'
+import { DataSourceTable } from './DataSourceTable'
 
-export function MunicipalQueries(props) {
+export function MunicipalDataSources(props) {
   const [firstOpen, setFirstOpen] = React.useState(true)
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
@@ -24,14 +24,14 @@ export function MunicipalQueries(props) {
     }
   }
 
-  function renderDataQueryTable(municipal) {
+  function renderDataSourceTable(municipal) {
     return (
-      <DataQueryTable
-        key={`municipal-query-${municipal.id}`}
+      <DataSourceTable
+        key={`municipal-data-source-${municipal.id}`}
         header={`${municipal.displayName}`}
-        querySelector={selectMunicipalDataSources(municipal.id)}
+        dataSourceSelector={selectMunicipalDataSources(municipal.id)}
         loadingSelector={selectMunicipalLoading(municipal.id)}
-        requestQueries={requestMunicipalDataSources(municipal.id)}
+        requestDataSources={requestMunicipalDataSources(municipal.id)}
         type={NestedAccordion}
       />
     )
@@ -44,7 +44,7 @@ export function MunicipalQueries(props) {
       )
     }
     return (
-      municipals.map((municipal) => renderDataQueryTable(municipal))
+      municipals.map((municipal) => renderDataSourceTable(municipal))
     )
   }
 
@@ -60,12 +60,12 @@ export function MunicipalQueries(props) {
   )
 }
 
-MunicipalQueries.defaultProps = {
+MunicipalDataSources.defaultProps = {
   openByDefault: false
 }
 
-MunicipalQueries.propTypes = {
+MunicipalDataSources.propTypes = {
   openByDefault: PropTypes.bool
 }
 
-export default (props) => <MunicipalQueries {...props} />
+export default (props) => <MunicipalDataSources {...props} />

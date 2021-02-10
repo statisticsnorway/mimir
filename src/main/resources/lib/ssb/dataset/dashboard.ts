@@ -88,22 +88,22 @@ const {
 }: SSBStatRegLib = __non_webpack_require__('/lib/ssb/statreg')
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
-  socket.on('get-error-queries', () => {
+  socket.on('get-error-data-sources', () => {
     submitTask({
-      description: 'get-error-queries',
+      description: 'get-error-data-sources',
       task: () => {
         const contentWithDataSource: Array<DashboardDataSource> = getDataSourcesWithError()
-        socket.emit('error-queries-result', contentWithDataSource)
+        socket.emit('error-data-sources-result', contentWithDataSource)
       }
     })
   })
 
-  socket.on('get-fact-page-query-groups', () => {
+  socket.on('get-fact-page-groups', () => {
     submitTask({
-      description: 'get-fact-page-query-groups',
+      description: 'get-fact-page-groups',
       task: () => {
-        const factpages: Array<DashboardDataSourceGroups> = getFactPageQueryGroups()
-        socket.emit('fact-page-query-groups-result', factpages)
+        const factpages: Array<DashboardDataSourceGroups> = getFactPageGroups()
+        socket.emit('fact-page-groups-result', factpages)
       }
     })
   })
@@ -241,7 +241,7 @@ function getDataSourcesWithError(): Array<DashboardDataSource> {
   }).filter((ds) => !!ds) as Array<DashboardDataSource>
 }
 
-function getFactPageQueryGroups(): Array<DashboardDataSourceGroups> {
+function getFactPageGroups(): Array<DashboardDataSourceGroups> {
   const factPages: Array<Content<Page, DefaultPageConfig>> = query({
     query: `components.page.config.mimir.default.pageType LIKE "factPage"`,
     count: 1000
@@ -336,7 +336,7 @@ function getMunicipalDataSources(municipalId: string): Array<DashboardDataSource
 }
 
 function getDefaultDataSources(): Array<DashboardDataSource> {
-  const factPageGroupPaths: Array<string> = getFactPageQueryGroups().map((g) => g.path)
+  const factPageGroupPaths: Array<string> = getFactPageGroups().map((g) => g.path)
   const municipalGroupPaths: Array<string> = getMunicipalGroups().map((g) => g.path)
   const statisticsGroupPaths: Array<string> = getStatisticsGroups().map((g) => g.path)
   const paths: Array<string> = Array<string>().concat(factPageGroupPaths, municipalGroupPaths, statisticsGroupPaths)

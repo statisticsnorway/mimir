@@ -1,31 +1,31 @@
 import React from 'react'
 import { Col, Row } from 'react-bootstrap'
-import { DataQueryTable } from './DataQueryTable'
-import { selectLoadingErrors, selectDataQueriesByParentType, selectLoadingDefaultDataSources } from './selectors'
-import { requestErrorQueries, requestDefaultDataSources } from './actions'
-import { FactPageQueries } from './FactPageQueries'
-import { StatisticsQueries } from './StatisticsQueries'
-import { MunicipalQueries } from './MunicipalQueries'
+import { DataSourceTable } from './DataSourceTable'
+import { selectLoadingErrors, selectDataSourcesByParentType, selectLoadingDefaultDataSources } from './selectors'
+import { requestErrorDataSources, requestDefaultDataSources } from './actions'
+import { FactPageDataSources } from './FactPageDataSources'
+import { StatisticsDataSources } from './StatisticsDataSources'
+import { MunicipalDataSources } from './MunicipalDataSources'
 
 export function DataSources() {
-  function renderDataQueryTables() {
+  function renderDataSourceTables() {
     return (
       <React.Fragment>
-        <DataQueryTable
+        <DataSourceTable
           header="Spørringer som feilet"
-          querySelector={selectDataQueriesByParentType('error')}
+          dataSourceSelector={selectDataSourcesByParentType('error')}
           loadingSelector={selectLoadingErrors}
-          requestQueries={requestErrorQueries}
+          requestDataSources={requestErrorDataSources}
           openByDefault={true}
         />
-        <FactPageQueries/>
-        <StatisticsQueries/>
-        <MunicipalQueries/>
-        <DataQueryTable
+        <FactPageDataSources/>
+        <StatisticsDataSources/>
+        <MunicipalDataSources/>
+        <DataSourceTable
           header="Andre"
-          querySelector={selectDataQueriesByParentType('default')}
+          dataSourceSelector={selectDataSourcesByParentType('default')}
           loadingSelector={selectLoadingDefaultDataSources}
-          requestQueries={requestDefaultDataSources}
+          requestDataSources={requestDefaultDataSources}
         />
       </React.Fragment>
     )
@@ -37,7 +37,7 @@ export function DataSources() {
         <Col>
           <div className="p-4 tables-wrapper border-top-0">
             <h2 className="mb-3">{`Spørringer mot statistikkbank og tabellbygger`}</h2>
-            {renderDataQueryTables()}
+            {renderDataSourceTables()}
           </div>
         </Col>
       </Row>

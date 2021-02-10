@@ -1,37 +1,37 @@
 import { Accordion, NestedAccordion } from '@statisticsnorway/ssb-component-library'
 import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectLoadingFactPageQueryGroups,
-  selectFactPageQueryGroups,
-  selectFactPageDataQueries,
+import { selectLoadingFactPageGroups,
+  selectFactPageGroups,
+  selectFactPageDataSources,
   selectFactPageLoading } from './selectors'
 import PropTypes from 'prop-types'
-import { requestFactPageQueryGroups, requestFactPageDataSources } from './actions'
+import { requestFactPageGroups, requestFactPageDataSources } from './actions'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
-import { DataQueryTable } from './DataQueryTable'
+import { DataSourceTable } from './DataSourceTable'
 
-export function FactPageQueries(props) {
+export function FactPageDataSources(props) {
   const [firstOpen, setFirstOpen] = React.useState(true)
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
-  const isLoading = useSelector(selectLoadingFactPageQueryGroups)
-  const factPages = useSelector(selectFactPageQueryGroups)
+  const isLoading = useSelector(selectLoadingFactPageGroups)
+  const factPages = useSelector(selectFactPageGroups)
 
   function onToggleAccordion(isOpen) {
     if (firstOpen && isOpen) {
       setFirstOpen(false)
-      requestFactPageQueryGroups(dispatch, io)
+      requestFactPageGroups(dispatch, io)
     }
   }
 
-  function renderDataQueryTable(factPage) {
+  function renderDataSourceTable(factPage) {
     return (
-      <DataQueryTable
-        key={`fact-page-query-${factPage.id}`}
+      <DataSourceTable
+        key={`fact-page-data-sources-${factPage.id}`}
         header={`${factPage.displayName}`}
-        querySelector={selectFactPageDataQueries(factPage.id)}
+        dataSourceSelector={selectFactPageDataSources(factPage.id)}
         loadingSelector={selectFactPageLoading(factPage.id)}
-        requestQueries={requestFactPageDataSources(factPage.id)}
+        requestDataSources={requestFactPageDataSources(factPage.id)}
         type={NestedAccordion}
       />
     )
@@ -44,7 +44,7 @@ export function FactPageQueries(props) {
       )
     }
     return (
-      factPages.map((factPage) => renderDataQueryTable(factPage))
+      factPages.map((factPage) => renderDataSourceTable(factPage))
     )
   }
 
@@ -60,12 +60,12 @@ export function FactPageQueries(props) {
   )
 }
 
-FactPageQueries.defaultProps = {
+FactPageDataSources.defaultProps = {
   openByDefault: false
 }
 
-FactPageQueries.propTypes = {
+FactPageDataSources.propTypes = {
   openByDefault: PropTypes.bool
 }
 
-export default (props) => <FactPageQueries {...props} />
+export default (props) => <FactPageDataSources {...props} />

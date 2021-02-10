@@ -2,88 +2,88 @@ import { createSelector } from '@reduxjs/toolkit'
 import { initialState } from './slice'
 import { groupBy } from 'ramda'
 
-const byParentType = groupBy((dataQuery) => {
-  if (dataQuery.logData && dataQuery.logData.showWarningIcon) {
+const byParentType = groupBy((dataSource) => {
+  if (dataSource.logData && dataSource.logData.showWarningIcon) {
     return 'error'
   }
-  return dataQuery.parentType
+  return dataSource.parentType
 })
 
 // First select the relevant part from the state
-const selectDomain = (state) => state.dataQueries || initialState
+const selectDomain = (state) => state.dataSources || initialState
 
 export const selectLoadingErrors = createSelector(
   [selectDomain],
-  (dataQueriesState) => dataQueriesState.loadingErrors,
+  (dataSourcesState) => dataSourcesState.loadingErrors,
 )
 
-export const selectLoadingFactPageQueryGroups = createSelector(
+export const selectLoadingFactPageGroups = createSelector(
   [selectDomain],
-  (dataQueriesState) => dataQueriesState.loadingFactPageQueryGroups,
+  (dataSourcesState) => dataSourcesState.loadingFactPageGroups,
 )
 
 export const selectLoadingStatisticsGroups = createSelector(
   [selectDomain],
-  (dataQueriesState) => dataQueriesState.loadingStatisticsGroups,
+  (dataSourcesState) => dataSourcesState.loadingStatisticsGroups,
 )
 
 export const selectLoadingMunicipalGroups = createSelector(
   [selectDomain],
-  (dataQueriesState) => dataQueriesState.loadingMunicipalGroups,
+  (dataSourcesState) => dataSourcesState.loadingMunicipalGroups,
 )
 
 export const selectLoadingDefaultDataSources = createSelector(
   [selectDomain],
-  (dataQueriesState) => dataQueriesState.loadingDefault,
+  (dataSourcesState) => dataSourcesState.loadingDefault,
 )
 
-export const selectDataQueries = createSelector(
+export const selectDataSources = createSelector(
   [selectDomain],
-  (dataQueriesState) => dataQueriesState.dataQueries,
+  (dataSourcesState) => dataSourcesState.dataSources,
 )
 
-export const selectFactPageQueryGroups = createSelector(
+export const selectFactPageGroups = createSelector(
   [selectDomain],
-  (dataQueriesState) => dataQueriesState.factPageQueryGroups
+  (dataSourcesState) => dataSourcesState.factPageGroups
 )
 
 export const selectStatisticsGroups = createSelector(
   [selectDomain],
-  (dataQueriesState) => dataQueriesState.statisticsGroups,
+  (dataSourcesState) => dataSourcesState.statisticsGroups,
 )
 
 export const selectMunicipalGroups = createSelector(
   [selectDomain],
-  (dataQueriesState) => dataQueriesState.municipalGroups
+  (dataSourcesState) => dataSourcesState.municipalGroups
 )
 
-export const selectDataQueriesByParentType = (dataQueryType) => {
+export const selectDataSourcesByParentType = (dataSourceType) => {
   return createSelector(
     [selectDomain],
-    (dataQueriesState) => {
-      const groupedQueries = byParentType(dataQueriesState.dataQueries)
-      if (groupedQueries[dataQueryType]) {
-        return groupedQueries[dataQueryType]
+    (dataSourcesState) => {
+      const groupedDataSources = byParentType(dataSourcesState.dataSources)
+      if (groupedDataSources[dataSourceType]) {
+        return groupedDataSources[dataSourceType]
       }
       return []
     },
   )
 }
 
-export const selectDataQueriesByType = (dataQueryType) => {
+export const selectDataSourcesByType = (dataSourceType) => {
   return createSelector(
     [selectDomain],
-    (dataQueriesState) => {
-      return dataQueriesState.dataQueries.filter((q) => q.type === dataQueryType)
+    (dataSourcesState) => {
+      return dataSourcesState.dataSources.filter((ds) => ds.type === dataSourceType)
     },
   )
 }
 
-export const selectDataQueriesById = (dataQueryId) => {
+export const selectDataSourceById = (dataSourceId) => {
   return createSelector(
     [selectDomain],
-    (dataQueriesState) => {
-      return dataQueriesState.dataQueries.find((q) => q.id === dataQueryId)
+    (dataSourcesState) => {
+      return dataSourcesState.dataSources.find((ds) => ds.id === dataSourceId)
     },
   )
 }
@@ -91,21 +91,21 @@ export const selectDataQueriesById = (dataQueryId) => {
 export const selectFactPageLoading = (factPageId) => {
   return createSelector(
     [selectDomain],
-    (dataQueriesState) => {
-      const factPage = dataQueriesState.factPageQueryGroups.find((factPage) => factPage.id === factPageId)
+    (dataSourcesState) => {
+      const factPage = dataSourcesState.factPageGroups.find((factPage) => factPage.id === factPageId)
       return factPage && (factPage.loading || factPage.dataSources === undefined)
     },
   )
 }
 
-export const selectFactPageDataQueries = (factPageId) => {
+export const selectFactPageDataSources = (factPageId) => {
   return createSelector(
     [selectDomain],
-    (dataQueriesState) => {
-      const factPage = dataQueriesState.factPageQueryGroups.find((factPage) => factPage.id === factPageId)
+    (dataSourcesState) => {
+      const factPage = dataSourcesState.factPageGroups.find((factPage) => factPage.id === factPageId)
       if (factPage && !factPage.loading && factPage.dataSources) {
         return factPage.dataSources.map((dataSourceId) => {
-          return dataQueriesState.dataQueries.find((dq) => dq.id === dataSourceId)
+          return dataSourcesState.dataSources.find((dq) => dq.id === dataSourceId)
         })
       }
       return []
@@ -116,8 +116,8 @@ export const selectFactPageDataQueries = (factPageId) => {
 export const selectStatisticsLoading = (statisticId) => {
   return createSelector(
     [selectDomain],
-    (dataQueriesState) => {
-      const statistic = dataQueriesState.statisticsGroups.find((statistic) => statistic.id === statisticId)
+    (dataSourcesState) => {
+      const statistic = dataSourcesState.statisticsGroups.find((statistic) => statistic.id === statisticId)
       return statistic && (statistic.loading || statistic.dataSources === undefined)
     },
   )
@@ -126,11 +126,11 @@ export const selectStatisticsLoading = (statisticId) => {
 export const selectStatisticsDataSources = (statisticId) => {
   return createSelector(
     [selectDomain],
-    (dataQueriesState) => {
-      const statistic = dataQueriesState.statisticsGroups.find((statistic) => statistic.id === statisticId)
+    (dataSourcesState) => {
+      const statistic = dataSourcesState.statisticsGroups.find((statistic) => statistic.id === statisticId)
       if (statistic && !statistic.loading && statistic.dataSources) {
         return statistic.dataSources.map((dataSourceId) => {
-          return dataQueriesState.dataQueries.find((dq) => dq.id === dataSourceId)
+          return dataSourcesState.dataSources.find((dq) => dq.id === dataSourceId)
         })
       }
       return []
@@ -141,8 +141,8 @@ export const selectStatisticsDataSources = (statisticId) => {
 export const selectMunicipalLoading = (municipalId) => {
   return createSelector(
     [selectDomain],
-    (dataQueriesState) => {
-      const municipal = dataQueriesState.municipalGroups.find((municipal) => municipal.id === municipalId)
+    (dataSourcesState) => {
+      const municipal = dataSourcesState.municipalGroups.find((municipal) => municipal.id === municipalId)
       return municipal && (municipal.loading || municipal.dataSources === undefined)
     },
   )
@@ -151,11 +151,11 @@ export const selectMunicipalLoading = (municipalId) => {
 export const selectMunicipalDataSources = (municipalId) => {
   return createSelector(
     [selectDomain],
-    (dataQueriesState) => {
-      const municipal = dataQueriesState.municipalGroups.find((municipal) => municipal.id === municipalId)
+    (dataSourcesState) => {
+      const municipal = dataSourcesState.municipalGroups.find((municipal) => municipal.id === municipalId)
       if (municipal && !municipal.loading && municipal.dataSources) {
         return municipal.dataSources.map((dataSourceId) => {
-          return dataQueriesState.dataQueries.find((dq) => dq.id === dataSourceId)
+          return dataSourcesState.dataSources.find((dq) => dq.id === dataSourceId)
         })
       }
       return []

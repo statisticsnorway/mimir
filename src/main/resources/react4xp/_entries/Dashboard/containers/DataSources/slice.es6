@@ -1,69 +1,69 @@
 import { createSlice } from '../../utils/@reduxjs/toolkit'
 
 export const initialState = {
-  dataQueries: [],
-  factPageQueryGroups: [],
+  dataSources: [],
+  factPageGroups: [],
   statisticsGroups: [],
   municipalGroups: [],
   loadingErrors: true,
-  loadingFactPageQueryGroups: true,
+  loadingFactPageGroups: true,
   loadingStatisticsGroups: true,
   loadingMunicipalGroups: true,
   loadingDefault: true
 }
 
-const dataQueriesSlice = createSlice({
-  name: 'dataQueries',
+const dataSourcesSlice = createSlice({
+  name: 'dataSources',
   initialState,
   reducers: {
-    loadErrorQueries(state) {
+    loadErrorDataSources(state) {
       state.loadingErrors = true
     },
-    errorQueriesLoaded(state, action) {
-      state.dataQueries = action.dataQueries.reduce((dataQueries, ds) => {
-        if (!dataQueries.find((dq) => dq.id === ds.id)) {
-          dataQueries.push(ds)
+    errorDataSourcesLoaded(state, action) {
+      state.dataSources = action.dataSources.reduce((dataSources, ds) => {
+        if (!dataSources.find((dq) => dq.id === ds.id)) {
+          dataSources.push(ds)
         }
-        return dataQueries
-      }, state.dataQueries)
+        return dataSources
+      }, state.dataSources)
       state.loadingErrors = false
     },
     loadDefaultDataSources(state) {
       state.loadingDefault = true
     },
     defaultDataSourcesLoaded(state, action) {
-      state.dataQueries = action.dataSources.reduce((dataQueries, ds) => {
-        if (!dataQueries.find((dq) => dq.id === ds.id)) {
-          dataQueries.push(ds)
+      state.dataSources = action.dataSources.reduce((dataSources, ds) => {
+        if (!dataSources.find((dq) => dq.id === ds.id)) {
+          dataSources.push(ds)
         }
-        return dataQueries
-      }, state.dataQueries)
+        return dataSources
+      }, state.dataSources)
       state.loadingDefault = false
     },
-    loadFactPageQueryGroups(state) {
-      state.loadingFactPageQueryGroups = true
-      state.factPageQueryGroups = []
+    loadFactPageGroups(state) {
+      state.loadingFactPageGroups = true
+      state.factPageGroups = []
     },
-    factPageQueryGroupsLoaded(state, action) {
-      state.loadingFactPageQueryGroups = false
-      state.factPageQueryGroups = action.factPageQueryGroups
+    factPageGroupsLoaded(state, action) {
+      state.loadingFactPageGroups = false
+      state.factPageGroups = action.factPageGroups
     },
     loadFactPageDataSources(state, action) {
-      const factPage = state.factPageQueryGroups.find((factPage) => factPage.id === action.id)
+      const factPage = state.factPageGroups.find((factPage) => factPage.id === action.id)
       if (factPage) {
         factPage.loading = true
       }
     },
     factPageDataSourcesLoaded(state, action) {
-      const factPage = state.factPageQueryGroups.find((factPage) => factPage.id === action.id)
+      const factPage = state.factPageGroups.find((factPage) => factPage.id === action.id)
       if (factPage) {
         factPage.dataSources = action.dataSources.map((ds) => ds.id)
-        state.dataQueries = action.dataSources.reduce((dataQueries, ds) => {
-          if (!dataQueries.find((dq) => dq.id === ds.id)) {
-            dataQueries.push(ds)
+        state.dataSources = action.dataSources.reduce((dataSources, ds) => {
+          if (!dataSources.find((dq) => dq.id === ds.id)) {
+            dataSources.push(ds)
           }
-          return dataQueries
-        }, state.dataQueries)
+          return dataSources
+        }, state.dataSources)
         factPage.loading = false
       }
     },
@@ -85,12 +85,12 @@ const dataQueriesSlice = createSlice({
       const statistic = state.statisticsGroups.find((statistic) => statistic.id === action.id)
       if (statistic) {
         statistic.dataSources = action.dataSources.map((ds) => ds.id)
-        state.dataQueries = action.dataSources.reduce((dataQueries, ds) => {
-          if (!dataQueries.find((dq) => dq.id === ds.id)) {
-            dataQueries.push(ds)
+        state.dataSources = action.dataSources.reduce((dataSources, ds) => {
+          if (!dataSources.find((dq) => dq.id === ds.id)) {
+            dataSources.push(ds)
           }
-          return dataQueries
-        }, state.dataQueries)
+          return dataSources
+        }, state.dataSources)
         statistic.loading = false
       }
     },
@@ -112,49 +112,49 @@ const dataQueriesSlice = createSlice({
       const municipal = state.municipalGroups.find((municipal) => municipal.id === action.id)
       if (municipal) {
         municipal.dataSources = action.dataSources.map((ds) => ds.id)
-        state.dataQueries = action.dataSources.reduce((dataQueries, ds) => {
-          if (!dataQueries.find((dq) => dq.id === ds.id)) {
-            dataQueries.push(ds)
+        state.dataSources = action.dataSources.reduce((dataSources, ds) => {
+          if (!dataSources.find((dq) => dq.id === ds.id)) {
+            dataSources.push(ds)
           }
-          return dataQueries
-        }, state.dataQueries)
+          return dataSources
+        }, state.dataSources)
         municipal.loading = false
       }
     },
-    dataQueryLoading(state, action) {
+    dataSourceLoading(state, action) {
       action.ids.forEach((id) => {
-        const dataQuery = state.dataQueries.find((q) => q.id === id)
-        if (dataQuery) {
-          dataQuery.loading = true
+        const dataSource = state.dataSources.find((q) => q.id === id)
+        if (dataSource) {
+          dataSource.loading = true
         }
       })
     },
-    dataQueryLoaded(state, action) {
-      const dataQuery = state.dataQueries.find((q) => q.id === action.dataQuery.id)
-      if (dataQuery) {
-        dataQuery.message = action.dataQuery.message
-        dataQuery.status = action.dataQuery.status
-        if (action.dataQuery.logData) {
-          dataQuery.logData = action.dataQuery.logData
+    dataSourceLoaded(state, action) {
+      const dataSource = state.dataSources.find((q) => q.id === action.dataSource.id)
+      if (dataSource) {
+        dataSource.message = action.dataSource.message
+        dataSource.status = action.dataSource.status
+        if (action.dataSource.logData) {
+          dataSource.logData = action.dataSource.logData
         }
-        if (action.dataQuery.dataset) {
-          dataQuery.dataset = action.dataQuery.dataset
+        if (action.dataSource.dataset) {
+          dataSource.dataset = action.dataSource.dataset
         }
-        dataQuery.loading = false
+        dataSource.loading = false
       }
     },
-    dataQueryEventLogLoading(state, action) {
-      const dataQuery = state.dataQueries.find((q) => q.id === action.id)
-      if (dataQuery) {
-        dataQuery.loadingLogs = true
-        dataQuery.eventLogNodes = []
+    dataSourceEventLogLoading(state, action) {
+      const dataSource = state.dataSources.find((q) => q.id === action.id)
+      if (dataSource) {
+        dataSource.loadingLogs = true
+        dataSource.eventLogNodes = []
       }
     },
-    dataQueryEventLogLoaded(state, action) {
-      const dataQuery = state.dataQueries.find((q) => q.id === action.id)
-      if (dataQuery) {
-        dataQuery.loadingLogs = false
-        dataQuery.eventLogNodes = action.logs
+    dataSourceEventLogLoaded(state, action) {
+      const dataSource = state.dataSources.find((q) => q.id === action.id)
+      if (dataSource) {
+        dataSource.loadingLogs = false
+        dataSource.eventLogNodes = action.logs
       }
     }
   }
@@ -162,4 +162,4 @@ const dataQueriesSlice = createSlice({
 
 export const {
   actions, reducer, name: sliceKey
-} = dataQueriesSlice
+} = dataSourcesSlice

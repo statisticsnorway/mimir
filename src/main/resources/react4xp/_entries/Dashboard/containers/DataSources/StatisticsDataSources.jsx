@@ -8,9 +8,9 @@ import { selectStatisticsGroups,
 import PropTypes from 'prop-types'
 import { requestStatisticsGroups, requestStatisticsDataSources } from './actions'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
-import { DataQueryTable } from './DataQueryTable'
+import { DataSourceTable } from './DataSourceTable'
 
-export function StatisticsQueries(props) {
+export function StatisticsDataSources(props) {
   const [firstOpen, setFirstOpen] = React.useState(true)
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
@@ -24,14 +24,14 @@ export function StatisticsQueries(props) {
     }
   }
 
-  function renderDataQueryTable(statistic) {
+  function renderDataSourceTable(statistic) {
     return (
-      <DataQueryTable
-        key={`statistics-query-${statistic.id}`}
+      <DataSourceTable
+        key={`statistics-data-sources-${statistic.id}`}
         header={`${statistic.displayName}`}
-        querySelector={selectStatisticsDataSources(statistic.id)}
+        dataSourceSelector={selectStatisticsDataSources(statistic.id)}
         loadingSelector={selectStatisticsLoading(statistic.id)}
-        requestQueries={requestStatisticsDataSources(statistic.id)}
+        requestDataSources={requestStatisticsDataSources(statistic.id)}
         type={NestedAccordion}
       />
     )
@@ -44,7 +44,7 @@ export function StatisticsQueries(props) {
       )
     }
     return (
-      statistics.map((statistic) => renderDataQueryTable(statistic))
+      statistics.map((statistic) => renderDataSourceTable(statistic))
     )
   }
 
@@ -60,12 +60,12 @@ export function StatisticsQueries(props) {
   )
 }
 
-StatisticsQueries.defaultProps = {
+StatisticsDataSources.defaultProps = {
   openByDefault: false
 }
 
-StatisticsQueries.propTypes = {
+StatisticsDataSources.propTypes = {
   openByDefault: PropTypes.bool
 }
 
-export default (props) => <StatisticsQueries {...props} />
+export default (props) => <StatisticsDataSources {...props} />

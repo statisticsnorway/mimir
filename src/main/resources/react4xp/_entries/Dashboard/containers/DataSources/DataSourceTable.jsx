@@ -9,11 +9,11 @@ import { RefreshCw } from 'react-feather'
 import { selectContentStudioBaseUrl } from '../HomePage/selectors'
 import { ReactTable } from '../../components/ReactTable'
 import { DataQueryBadges } from '../../components/DataQueryBadges'
-import { DataQueryLog } from './DataQueryLog'
-import { RefreshDataQueryButton } from './RefreshDataQueryButton'
+import { DataSourceLog } from './DataSourceLog'
+import { RefreshDataSourceButton } from './RefreshDataSourceButton'
 
-export function DataQueryTable(props) {
-  const dataQueries = useSelector(props.querySelector)
+export function DataSourceTable(props) {
+  const dataSources = useSelector(props.dataSourceSelector)
   const contentStudioBaseUrl = useSelector(selectContentStudioBaseUrl)
   const isLoading = useSelector(props.loadingSelector)
   const io = useContext(WebSocketContext)
@@ -22,7 +22,7 @@ export function DataQueryTable(props) {
   const [firstOpen, setFirstOpen] = React.useState(true)
 
   function updateAll() {
-    const ids = dataQueries.filter((q) => !q.loading).map((q) => q.id)
+    const ids = dataSources.filter((q) => !q.loading).map((q) => q.id)
     requestDatasetUpdate(dispatch, io, ids)
   }
 
@@ -59,14 +59,14 @@ export function DataQueryTable(props) {
     )
   }
 
-  const anyLoading = dataQueries.filter((q) => q.loading).length > 0
+  const anyLoading = dataSources.filter((ds) => ds.loading).length > 0
 
   const columns = React.useMemo(() => [
     {
       Header: 'Spørring ',
-      accessor: 'dataQuery',
+      accessor: 'dataSource',
       sortType: (a, b) => {
-        return a.original.dataQuerySort > b.original.dataQuerySort ? 1 : -1
+        return a.original.dataSourceSort > b.original.dataSourceSort ? 1 : -1
       }
     },
     {
@@ -85,35 +85,35 @@ export function DataQueryTable(props) {
     },
     {
       Header: '',
-      accessor: 'refreshDataQuery',
+      accessor: 'refreshDataSource',
       disableSortBy: true
     }
   ], [])
 
-  function getDataQueries() {
-    return dataQueries.map((dataQuery) => {
+  function getDataSources() {
+    return dataSources.map((dataSource) => {
       return {
-        dataQuery: (
-          <span className={`${dataQuery.hasData ? 'ok' : 'error'} dataset`}>
-            <Link isExternal href={contentStudioBaseUrl + dataQuery.id}>{dataQuery.displayName}</Link>
-            <DataQueryBadges contentType={dataQuery.type} format={dataQuery.format} isPublished={dataQuery.isPublished}/>
+        dataSource: (
+          <span className={`${dataSource.hasData ? 'ok' : 'error'} dataset`}>
+            <Link isExternal href={contentStudioBaseUrl + dataSource.id}>{dataSource.displayName}</Link>
+            <DataQueryBadges contentType={dataSource.type} format={dataSource.format} isPublished={dataSource.isPublished}/>
           </span>
         ),
-        dataQuerySort: dataQuery.displayName.toLowerCase(),
+        dataSourceSort: dataSource.displayName.toLowerCase(),
         lastUpdated: (
           <span>
-            {dataQuery.dataset.modifiedReadable ? dataQuery.dataset.modifiedReadable : ''}
+            {dataSource.dataset.modifiedReadable ? dataSource.dataset.modifiedReadable : ''}
             <br/>
-            {dataQuery.dataset.modified ? dataQuery.dataset.modified : ''}
+            {dataSource.dataset.modified ? dataSource.dataset.modified : ''}
           </span>
         ),
-        lastUpdatedSort: dataQuery.dataset && dataQuery.dataset.modified ? new Date(dataQuery.dataset.modified) : new Date('01.01.1970'),
+        lastUpdatedSort: dataSource.dataset && dataSource.dataset.modified ? new Date(dataSource.dataset.modified) : new Date('01.01.1970'),
         lastActivity: (
-          <DataQueryLog dataQueryId={dataQuery.id} />
+          <DataSourceLog dataSourceId={dataSource.id} />
         ),
-        lastActivitySort: dataQuery.logData && dataQuery.logData.modified ? new Date(dataQuery.logData.modified) : new Date('01.01.1970'),
-        refreshDataQuery: (
-          <RefreshDataQueryButton dataQueryId={dataQuery.id} />
+        lastActivitySort: dataSource.logData && dataSource.logData.modified ? new Date(dataSource.logData.modified) : new Date('01.01.1970'),
+        refreshDataSource: (
+          <RefreshDataSourceButton dataSourceId={dataSource.id} />
         )
       }
     })
@@ -122,7 +122,7 @@ export function DataQueryTable(props) {
   function onToggleAccordion(isOpen) {
     if (firstOpen && isOpen) {
       setFirstOpen(false)
-      props.requestQueries(dispatch, io)
+      props.requestDataSources(dispatch, io)
     }
   }
 
@@ -149,10 +149,10 @@ export function DataQueryTable(props) {
   }
 
   onToggleAccordion(props.openByDefault)
-  const data = React.useMemo(() => getDataQueries(), [dataQueries])
+  const data = React.useMemo(() => getDataSources(), [dataSources])
   return (
     <props.type
-      header={`${props.header} (${isLoading || firstOpen ? '-' : dataQueries.length})`}
+      header={`${props.header} (${isLoading || firstOpen ? '-' : dataSources.length})`}
       className="mx-0"
       openByDefault={!!props.openByDefault}
       onToggle={(isOpen) => onToggleAccordion(isOpen)}
@@ -162,18 +162,18 @@ export function DataQueryTable(props) {
   )
 }
 
-DataQueryTable.defaultProps = {
+DataSourceTable.defaultProps = {
   openByDefault: false,
   type: Accordion
 }
 
-DataQueryTable.propTypes = {
+DataSourceTable.propTypes = {
   header: PropTypes.string,
   openByDefault: PropTypes.bool,
-  querySelector: PropTypes.func.isRequired,
+  dataSourceSelector: PropTypes.func.isRequired,
   loadingSelector: PropTypes.func.isRequired,
-  requestQueries: PropTypes.func.isRequired,
+  requestDataSources: PropTypes.func.isRequired,
   type: PropTypes.elementType
 }
 
-export default (props) => <DataQueryTable {...props} />
+export default (props) => <DataSourceTable {...props} />

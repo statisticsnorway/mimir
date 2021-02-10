@@ -1,37 +1,37 @@
 import { actions } from './slice'
 
 export default function setupDataSourcesListeners(io, dispatch) {
-  io.on('error-queries-result', (data) => {
+  io.on('error-data-sources-result', (data) => {
     dispatch({
-      type: actions.errorQueriesLoaded.type,
-      dataQueries: data
+      type: actions.errorDataSourcesLoaded.type,
+      dataSources: data
     })
   })
 
-  io.on('fact-page-query-groups-result', (data) => {
+  io.on('fact-page-groups-result', (data) => {
     dispatch({
-      type: actions.factPageQueryGroupsLoaded.type,
-      factPageQueryGroups: data
+      type: actions.factPageGroupsLoaded.type,
+      factPageGroups: data
     })
   })
 
   io.on('dashboard-activity-refreshDataset-result', (data) => {
     dispatch({
-      type: actions.dataQueryLoaded.type,
-      dataQuery: data
+      type: actions.dataSourceLoaded.type,
+      dataSource: data
     })
   })
 
   io.on('dashboard-activity-refreshDataset', (data) => {
     dispatch({
-      type: actions.dataQueryLoading.type,
+      type: actions.dataSourceLoading.type,
       ids: [data.id]
     })
   })
 
   io.on('eventlog-node-result', (data) => {
     dispatch({
-      type: actions.dataQueryEventLogLoaded.type,
+      type: actions.dataSourceEventLogLoaded.type,
       id: data.id,
       logs: data.logs
     })
