@@ -35,7 +35,7 @@ class Footer extends React.Component {
     return topMenuItem.menuItems && topMenuItem.menuItems.map((menuItem, itemIndex) => {
       return (
         <li key={itemIndex}>
-          <Link negative href={menuItem.path} icon={<ArrowRight size="20" />}>{menuItem.title}</Link>
+          <Link negative href={menuItem.path ? menuItem.path : ''} icon={<ArrowRight size="20" />}>{menuItem.title}</Link>
         </li>)
     })
   }
@@ -60,7 +60,7 @@ class Footer extends React.Component {
     return (
       <div className="global-links">
         {globalLinks.map((globalLink, index) => {
-          return (<Link key={'link_' + index} href={globalLink.path} negative>{globalLink.title}</Link>)
+          return (<Link key={'link_' + index} href={globalLink.path ? globalLink.path : ''} negative>{globalLink.title}</Link>)
         })}
       </div>)
   }
@@ -73,7 +73,7 @@ class Footer extends React.Component {
     const test = copyrightText + ', ' + year
     return (
       <div className="copyright">
-        <Link href={copyrightUrl} isExternal negative >{test}</Link>
+        <Link href={copyrightUrl ? copyrightUrl : ''} isExternal negative >{test}</Link>
       </div>)
   }
 
