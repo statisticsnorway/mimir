@@ -131,7 +131,7 @@ class ListOfArticles extends React.Component {
       articles
     } = this.props
 
-    if(articles.length > 0) {
+    if (articles.length > 0) {
       return (
         <div className="list-of-articles-container col-12">
           {this.addTitle()}

@@ -52,10 +52,12 @@ exports.get = (req) => {
 }
 
 exports.post = (req) => {
-  if(req.params.runPublishDataset === 'OK') {
+  if (req.params.runPublishDataset === 'OK') {
     run(cronContext, publishDataset)
     return {
-      body: {status: 'Running statRegJon'},
+      body: {
+        status: 'Running statRegJon'
+      },
       contentType: 'application/json',
       status: 200
     }
