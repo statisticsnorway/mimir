@@ -341,7 +341,7 @@ function getDefaultDataSources(): Array<DashboardDataSource> {
   const statisticsGroupPaths: Array<string> = getStatisticsGroups().map((g) => g.path)
   const paths: Array<string> = Array<string>().concat(factPageGroupPaths, municipalGroupPaths, statisticsGroupPaths)
   const hits: Array<Content<DataSource>> = query({
-    query: `_path NOT IN(${paths.map((path) => `"/content${path}/*"`).join(',')}) AND data.dataSource._selected LIKE "*"`,
+    query: `${paths.map((p) => `_path NOT LIKE "/content${p}/*"`).join(' AND ')} AND data.dataSource._selected LIKE "*"`,
     count: 1000
   }).hits as unknown as Array<Content<DataSource>>
   return prepDataSources(hits)
