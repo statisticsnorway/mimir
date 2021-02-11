@@ -53,7 +53,10 @@ class Header extends React.Component {
     }
   }
   languageLinks() {
-    return this.props.language.alternativeLanguages.map((altLanguage, index) => {
+    const {
+      alternativeLanguages
+    } = this.props.language
+    return alternativeLanguages.map((altLanguage, index) => {
       return (<Link key={'link_' + index} href={altLanguage.path}>{altLanguage.title}</Link>)
     })
   }
@@ -161,14 +164,15 @@ Header.propTypes = {
     PropTypes.shape({
       title: PropTypes.string,
       path: PropTypes.string,
-      icon: PropTypes.string,
-      iconSvgTag: PropTypes.string,
       isActive: PropTypes.bool,
       menuItems: PropTypes.arrayOf(
         PropTypes.shape({
           title: PropTypes.string,
           path: PropTypes.string,
-          icon: PropTypes.string
+          isActive: PropTypes.bool,
+          icon: PropTypes.string,
+          iconAltText: PropTypes.string,
+          iconSvgTag: PropTypes.string
         })
       )
     })
