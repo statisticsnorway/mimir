@@ -1,3 +1,5 @@
+import {AdminLibrary} from "enonic-types/admin";
+
 __non_webpack_require__('/lib/polyfills/nashorn')
 import { Socket, SocketEmitter } from '../types/socket'
 import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
@@ -337,6 +339,7 @@ function prepStatisticsJobLogInfo(jobNode: JobInfoNode): DashboardJobInfo {
 
 const TWO_WEEKS: number = 14 // TODO: put in config?
 function getStatistics(): Array<StatisticDashboard> {
+  const prefix: string = app.config && app.config['admin-prefix'] ? app.config['admin-prefix'] : '/xp/admin'
   const statsBeforeDate: Date = new Date()
   statsBeforeDate.setDate(statsBeforeDate.getDate() + TWO_WEEKS)
   const statregStatistics: Array<StatisticInListing> = fetchStatisticsWithRelease(statsBeforeDate)
@@ -364,7 +367,8 @@ function getStatistics(): Array<StatisticDashboard> {
       ownersWithSources: undefined,
       relatedTables: relatedTables,
       aboutTheStatistics: statistic.data.aboutTheStatistics,
-      logData: getStatisticsJobLogInfo(statistic._id)
+      logData: getStatisticsJobLogInfo(statistic._id),
+      previewUrl: statistic._path ? `${prefix}/site/preview/default/draft${statistic._path}` : ''
     }
     return statisticDataDashboard
   }).sort((a, b) => {
@@ -471,6 +475,7 @@ interface OwnerObject {
 
 interface StatisticDashboard {
   id: string;
+  previewUrl?: string;
   language?: string;
   name?: string;
   statisticId: number;
