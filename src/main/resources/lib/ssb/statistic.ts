@@ -21,6 +21,7 @@ import { RepoEventLogLib } from '../repo/eventLog'
 import { RepoCommonLib } from '../repo/common'
 import { StatRegStatisticsLib } from '../repo/statreg/statistics'
 import { TaskLib } from '../types/task'
+
 const {
   query,
   get: getContent
@@ -57,7 +58,8 @@ const {
   startJobLog
 }: RepoJobLib = __non_webpack_require__('/lib/repo/job')
 const {
-  withConnection
+  withConnection,
+  ENONIC_CMS_DEFAULT_REPO
 }: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
 const {
   EVENT_LOG_BRANCH,
@@ -137,7 +139,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
       if (datasetIdsToUpdate.length > 0) {
         const context: RunContext = {
           branch: 'master',
-          repository: 'com.enonic.cms.default',
+          repository: ENONIC_CMS_DEFAULT_REPO,
           principals: ['role:system.admin'],
           user: {
             login: users[parseInt(socket.id)].login,

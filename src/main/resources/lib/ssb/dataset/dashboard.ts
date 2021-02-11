@@ -31,7 +31,8 @@ const {
   logUserDataQuery
 }: RepoQueryLib = __non_webpack_require__( '/lib/repo/query')
 const {
-  getNode
+  getNode,
+  ENONIC_CMS_DEFAULT_REPO
 }: RepoCommonLib = __non_webpack_require__( '/lib/repo/common')
 const {
   refreshDataset,
@@ -116,7 +117,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   socket.on('dashboard-refresh-dataset', (options: RefreshDatasetOptions) => {
     const context: RunContext = {
       branch: 'master',
-      repository: 'com.enonic.cms.default',
+      repository: ENONIC_CMS_DEFAULT_REPO,
       principals: ['role:system.admin'],
       user: {
         login: users[parseInt(socket.id)].login,

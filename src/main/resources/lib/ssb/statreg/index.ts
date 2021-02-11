@@ -31,7 +31,8 @@ const {
   users
 }: DashboardUtilsLib = __non_webpack_require__('/lib/ssb/dataset/dashboardUtils')
 const {
-  getNode
+  getNode,
+  ENONIC_CMS_DEFAULT_REPO
 }: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
 const {
   EVENT_LOG_BRANCH,
@@ -103,7 +104,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     // start refreshing
     const context: RunContext = {
       branch: 'master',
-      repository: 'com.enonic.cms.default',
+      repository: ENONIC_CMS_DEFAULT_REPO,
       principals: ['role:system.admin'],
       user: {
         login: users[parseInt(socket.id)].login,
