@@ -8,7 +8,7 @@ class Accordion extends React.Component {
     return (
       items.map((item, i) =>
         <NestedAccordion key={i} header={item.title}>
-          <div dangerouslySetInnerHTML={this.createMarkup(item.body)}/>
+          <div dangerouslySetInnerHTML={item.body ? this.createMarkup(item.body) : ''}/>
         </NestedAccordion>
       )
     )
@@ -58,7 +58,7 @@ Accordion.propTypes = {
       id: PropTypes.string,
       open: PropTypes.string.isRequired,
       subHeader: PropTypes.string,
-      body: PropTypes.string.isRequired,
+      body: PropTypes.string,
       items: PropTypes.arrayOf(
         PropTypes.shape({
           title: PropTypes.string,

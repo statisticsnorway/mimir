@@ -141,12 +141,12 @@ Footer.propTypes = {
     PropTypes.shape({
       title: PropTypes.string,
       path: PropTypes.string,
-      icon: PropTypes.string,
+      isActive: PropTypes.bool,
       menuItems: PropTypes.arrayOf(
         PropTypes.shape({
           title: PropTypes.string,
           path: PropTypes.string,
-          icon: PropTypes.string
+          isActive: PropTypes.bool
         })
       )
     })
