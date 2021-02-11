@@ -1,4 +1,4 @@
-import {AdminLibrary} from "enonic-types/admin";
+import { AdminLibrary } from 'enonic-types/admin'
 
 __non_webpack_require__('/lib/polyfills/nashorn')
 import { Socket, SocketEmitter } from '../types/socket'
@@ -74,27 +74,36 @@ const {
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-statistics', () => {
-    submitTask({
+    const context: RunContext = {
+      repository: ENONIC_CMS_DEFAULT_REPO
+    }
+    run(context, () => submitTask({
       description: 'get-statistics',
       task: () => {
         const statisticData: Array<StatisticDashboard> = getStatistics()
         socket.emit('statistics-result', statisticData)
       }
-    })
+    }))
   })
 
   socket.on('get-statistics-search-list', () => {
-    submitTask({
+    const context: RunContext = {
+      repository: ENONIC_CMS_DEFAULT_REPO
+    }
+    run(context, () => submitTask({
       description: 'get-statistics-search-list',
       task: () => {
         const statisticsSearchData: Array<StatisticSearch> = getStatisticsSearchList()
         socket.emit('statistics-search-list-result', statisticsSearchData)
       }
-    })
+    }))
   })
 
   socket.on('get-statistics-owners-with-sources', (options: GetSourceListOwnersOptions) => {
-    submitTask({
+    const context: RunContext = {
+      repository: ENONIC_CMS_DEFAULT_REPO
+    }
+    run(context, () => submitTask({
       description: 'get-statistics-owners-with-sources',
       task: () => {
         const ownersWithSources: Array<OwnerWithSources> = getOwnersWithSources(options.dataSourceIds)
@@ -103,11 +112,14 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
           ownersWithSources
         })
       }
-    })
+    }))
   })
 
   socket.on('get-statistics-related-tables-and-owners-with-sources', (options: GetRelatedTablesOptions) => {
-    submitTask({
+    const context: RunContext = {
+      repository: ENONIC_CMS_DEFAULT_REPO
+    }
+    run(context, () => submitTask({
       description: 'get-statistics-related-tables-and-owners-with-sources',
       task: () => {
         const statistic: Content<Statistics> | null = getContent({
@@ -124,54 +136,59 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
           ownersWithSources
         })
       }
-    })
+    }))
   })
 
   socket.on('refresh-statistic', (data: RefreshInfo) => {
     socketEmitter.broadcast('statistics-activity-refresh-started', {
       id: data.id
     })
-    const statistic: Content<Statistics> | null = getContent({
-      key: data.id
-    })
+    let context: RunContext = {
+      repository: ENONIC_CMS_DEFAULT_REPO
+    }
+    run(context, () => {
+      const statistic: Content<Statistics> | null = getContent({
+        key: data.id
+      })
 
-    if (statistic) {
-      const datasetIdsToUpdate: Array<string> = getDataSourceIdsFromStatistics(statistic)
-      const processXmls: Array<ProcessXml> | undefined = data.owners ? processXmlFromOwners(data.owners) : undefined
-      if (datasetIdsToUpdate.length > 0) {
-        const context: RunContext = {
-          branch: 'master',
-          repository: ENONIC_CMS_DEFAULT_REPO,
-          principals: ['role:system.admin'],
-          user: {
-            login: users[parseInt(socket.id)].login,
-            idProvider: users[parseInt(socket.id)].idProvider ? users[parseInt(socket.id)].idProvider : 'system'
+      if (statistic) {
+        const datasetIdsToUpdate: Array<string> = getDataSourceIdsFromStatistics(statistic)
+        const processXmls: Array<ProcessXml> | undefined = data.owners ? processXmlFromOwners(data.owners) : undefined
+        if (datasetIdsToUpdate.length > 0) {
+          context = {
+            branch: 'master',
+            repository: ENONIC_CMS_DEFAULT_REPO,
+            principals: ['role:system.admin'],
+            user: {
+              login: users[parseInt(socket.id)].login,
+              idProvider: users[parseInt(socket.id)].idProvider ? users[parseInt(socket.id)].idProvider : 'system'
+            }
           }
+          run(context, () => {
+            const jobLogNode: JobEventNode = startJobLog(JobNames.STATISTICS_REFRESH_JOB)
+            updateJobLog(jobLogNode._id, (node: JobInfoNode) => {
+              node.data.queryIds = [data.id]
+              return node
+            })
+            const feedbackEventName: string = 'statistics-activity-refresh-feedback'
+            const refreshDataResult: Array<RefreshDatasetResult> = refreshDatasetHandler(
+              datasetIdsToUpdate,
+              socketEmitter,
+              processXmls,
+              feedbackEventName
+            )
+            const finishedJobLog: JobInfoNode = completeJobLog(jobLogNode._id, JobStatus.COMPLETE, refreshDataResult)
+            socketEmitter.broadcast('statistics-refresh-result-log', {
+              id: data.id,
+              log: prepStatisticsJobLogInfo(finishedJobLog)
+            })
+          })
         }
-        run(context, () => {
-          const jobLogNode: JobEventNode = startJobLog(JobNames.STATISTICS_REFRESH_JOB)
-          updateJobLog(jobLogNode._id, (node: JobInfoNode) => {
-            node.data.queryIds = [data.id]
-            return node
-          })
-          const feedbackEventName: string = 'statistics-activity-refresh-feedback'
-          const refreshDataResult: Array<RefreshDatasetResult> = refreshDatasetHandler(
-            datasetIdsToUpdate,
-            socketEmitter,
-            processXmls,
-            feedbackEventName
-          )
-          const finishedJobLog: JobInfoNode = completeJobLog(jobLogNode._id, JobStatus.COMPLETE, refreshDataResult)
-          socketEmitter.broadcast('statistics-refresh-result-log', {
-            id: data.id,
-            log: prepStatisticsJobLogInfo(finishedJobLog)
-          })
+        socketEmitter.broadcast('statistics-refresh-result', {
+          id: data.id
         })
       }
-      socketEmitter.broadcast('statistics-refresh-result', {
-        id: data.id
-      })
-    }
+    })
     socketEmitter.broadcast('statistics-activity-refresh-complete', {
       id: data.id
     })
