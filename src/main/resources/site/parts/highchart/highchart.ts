@@ -40,7 +40,7 @@ const {
 
 
 const content: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
-const view: any = resolve('./highchart.html')
+const view: object = resolve('./highchart.html')
 
 exports.get = function(req: Request): Response {
   try {
