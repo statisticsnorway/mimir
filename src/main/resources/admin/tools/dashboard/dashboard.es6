@@ -23,6 +23,7 @@ const DEFAULT_TOOLBOX_URL = getToolUrl('systems.rcd.enonic.datatoolbox', 'data-t
 const INTERNAL_BASE_URL = app.config && app.config['ssb.internal.baseUrl'] ? app.config['ssb.internal.baseUrl'] : 'https://i.ssb.no'
 const INTERNAL_STATBANK_URL = app.config && app.config['ssb.statbankintern.baseUrl'] ? app.config['ssb.statbankintern.baseUrl'] :
   'https://i.ssb.no/pxwebi/pxweb/no/prod_24v_intern/'
+const ENONIC_PROJECT_ID = app.config && app.config['ssb.project.id'] ? app.config['ssb.project.id'] : 'default'
 
 exports.get = function(req) {
   try {
@@ -43,7 +44,7 @@ function renderPart(req) {
   const dashboardDataset = new React4xp('Dashboard/Dashboard')
     .setProps({
       user,
-      contentStudioBaseUrl: `${DEFAULT_CONTENTSTUDIO_URL}#/default/edit/`,
+      contentStudioBaseUrl: `${DEFAULT_CONTENTSTUDIO_URL}#/${ENONIC_PROJECT_ID}/edit/`,
       dataToolBoxBaseUrl: `${DEFAULT_TOOLBOX_URL}#nodes?repo=no.ssb.eventlog&branch=master&path=%2Fqueries%2F`,
       internalBaseUrl: `${INTERNAL_BASE_URL}`,
       internalStatbankUrl: `${INTERNAL_STATBANK_URL}`

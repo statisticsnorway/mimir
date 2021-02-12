@@ -94,7 +94,7 @@ export interface HighchartsGraphConfig {
       };
     };
   };
-  series?: Array<HighchartsSeries>
+  series?: Array<HighchartsSeries>;
   subtitle: HighchartsConfigTitle;
   title: HighchartsConfigTitle;
   yAxis: HighchartsConfigAxis;

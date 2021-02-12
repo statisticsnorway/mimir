@@ -11,6 +11,7 @@ import { ContextLibrary, RunContext } from 'enonic-types/context'
 import { AuthLibrary, User } from 'enonic-types/auth'
 import { StatbankSavedLib } from './statbankSaved'
 import { TbprocessorParsedResponse } from '../../tbml/tbml'
+import { RepoCommonLib } from '../../repo/common'
 
 const {
   Events
@@ -47,6 +48,9 @@ const {
   deleteDataset: deleteDatasetFromRepo,
   DATASET_BRANCH
 }: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
+const {
+  ENONIC_CMS_DEFAULT_REPO
+}: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
 
 export function getDataset(content: Content<DataSource>, branch: string = DATASET_BRANCH): DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null {
   switch (content.data.dataSource?._selected) {
@@ -172,7 +176,7 @@ function determineIfTbprocessorParsedResponse(toBeDetermined: TbprocessorParsedR
 export function refreshDatasetWithUserKey(content: Content<DataSource>, userLogin: string, branch: string = DATASET_BRANCH, ): CreateOrUpdateStatus {
   const context: RunContext = {
     branch: 'master',
-    repository: 'com.enonic.cms.default',
+    repository: ENONIC_CMS_DEFAULT_REPO,
     principals: ['role:system.admin'],
     user: {
       login: userLogin,
