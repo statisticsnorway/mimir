@@ -15,7 +15,6 @@ import { HomePage } from './containers/HomePage/index'
 import WebsocketProvider, { WebSocketContext } from './utils/websocket/WebsocketProvider'
 import { configureAppStore } from './store/configureStore'
 import { requestStatuses } from './containers/StatRegDashboard/actions'
-import { requestDataQueries } from './containers/DataQueries/actions'
 import { requestStatistics, requestStatisticsSearchList } from './containers/Statistics/actions'
 import { actions as commonActions } from './containers/HomePage/slice'
 import PropTypes from 'prop-types'
@@ -72,7 +71,6 @@ function DashboardRouter(props) {
   requestStatistics(dispatch, io)
   requestStatisticsSearchList(dispatch, io)
   requestStatuses(dispatch, io)
-  requestDataQueries(dispatch, io)
   requestJobs(dispatch, io)
   return (
     <BrowserRouter>

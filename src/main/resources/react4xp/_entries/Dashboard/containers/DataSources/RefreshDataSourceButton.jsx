@@ -5,16 +5,16 @@ import { RefreshCw } from 'react-feather'
 import { Button } from 'react-bootstrap'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectDataQueriesById } from './selectors'
+import { selectDataSourceById } from './selectors'
 
-export function RefreshDataQueryButton(props) {
+export function RefreshDataSourceButton(props) {
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
-  const dataQuery = useSelector(selectDataQueriesById(props.dataQueryId))
+  const dataSource = useSelector(selectDataSourceById(props.dataSourceId))
   const {
     id,
     loading
-  } = dataQuery
+  } = dataSource
 
   return (
     <Button variant="primary"
@@ -27,8 +27,8 @@ export function RefreshDataQueryButton(props) {
   )
 }
 
-RefreshDataQueryButton.propTypes = {
-  dataQueryId: PropTypes.string
+RefreshDataSourceButton.propTypes = {
+  dataSourceId: PropTypes.string
 }
 
-export default (props) => <RefreshDataQueryButton {...props} />
+export default (props) => <RefreshDataSourceButton {...props} />

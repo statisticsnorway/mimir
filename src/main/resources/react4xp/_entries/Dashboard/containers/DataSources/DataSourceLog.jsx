@@ -5,26 +5,26 @@ import { AlertTriangle } from 'react-feather'
 import { requestEventLogData } from './actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectDataToolBoxBaseUrl } from '../HomePage/selectors'
-import { selectDataQueriesById } from './selectors'
+import { selectDataSourceById } from './selectors'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { selectStatRegStatus } from '../StatRegDashboard/selectors'
 import { requestStatRegEventLogData } from '../StatRegDashboard/actions.es6'
 
-export function DataQueryLog(props) {
+export function DataSourceLog(props) {
   const {
-    dataQueryId,
+    dataSourceId,
     isStatReg
   } = props
   const dispatch = useDispatch()
   const io = useContext(WebSocketContext)
   const dataToolBoxBaseUrl = useSelector(selectDataToolBoxBaseUrl)
-  const dataQuery = isStatReg ? useSelector(selectStatRegStatus(dataQueryId)) : useSelector(selectDataQueriesById(dataQueryId))
+  const dataSource = isStatReg ? useSelector(selectStatRegStatus(dataSourceId)) : useSelector(selectDataSourceById(dataSourceId))
   const {
     displayName,
     logData,
     loadingLogs,
     eventLogNodes
-  } = dataQuery
+  } = dataSource
 
   const [show, setShow] = useState(false)
   const handleClose = () => setShow(false)
@@ -32,15 +32,15 @@ export function DataQueryLog(props) {
 
   const openEventlog = () => {
     if (isStatReg) {
-      requestStatRegEventLogData(dispatch, io, dataQueryId)
+      requestStatRegEventLogData(dispatch, io, dataSourceId)
     } else {
-      requestEventLogData(dispatch, io, dataQueryId)
+      requestEventLogData(dispatch, io, dataSourceId)
     }
     setShow(handleShow)
   }
 
   const openToolBox = () => {
-    window.open(dataToolBoxBaseUrl + dataQueryId)
+    window.open(dataToolBoxBaseUrl + dataSourceId)
   }
 
   function renderLogData() {
@@ -106,7 +106,7 @@ export function DataQueryLog(props) {
   )
 }
 
-DataQueryLog.propTypes = {
-  dataQueryId: PropTypes.string,
+DataSourceLog.propTypes = {
+  dataSourceId: PropTypes.string,
   isStatReg: PropTypes.bool
 }
