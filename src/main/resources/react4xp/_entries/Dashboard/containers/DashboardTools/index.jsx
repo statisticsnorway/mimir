@@ -9,13 +9,11 @@ import { Col, Container, Row } from 'react-bootstrap'
 import { Link, Dropdown, Input } from '@statisticsnorway/ssb-component-library'
 import { selectSearchList, selectLoadingSearchList, selectHasLoadingStatistic } from '../Statistics/selectors'
 import { setOpenStatistic, setOpenModal } from '../Statistics/actions'
-import { selectDataQueriesByType } from '../DataQueries/selectors'
-import { requestDatasetUpdate } from '../DataQueries/actions'
 import { startRefresh } from '../StatRegDashboard/actions'
 import { selectStatuses } from '../StatRegDashboard/selectors'
 import { selectStatistics } from '../Statistics/selectors.es6'
 
-export function DataQueryTools() {
+export function DashboardTools() {
   const loadingCache = useSelector(selectLoadingClearCache)
   const statisticsSearchList = useSelector(selectSearchList)
   const statistics = useSelector(selectStatistics)
@@ -24,7 +22,6 @@ export function DataQueryTools() {
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
   const [selectedStat, setSelectedStat] = useState(null)
-  const tableQueries = useSelector(selectDataQueriesByType('mimir:table'))
   const statuses = useSelector(selectStatuses)
   const [showLinkTools, setShowLinkTools] = useState(false)
   const internalBaseUrl = useSelector(selectInternalBaseUrl)
@@ -46,19 +43,6 @@ export function DataQueryTools() {
       </Button>
     )
   }
-
-  function refreshAllTables() {
-    const ids = tableQueries.filter((q) => !q.loading).map((q) => q.id)
-    requestDatasetUpdate(dispatch, io, ids)
-  }
-
-  function renderSpinner(loading) {
-    if (loading) {
-      return (<span className="spinner-border spinner-border-sm ml-2 mb-1" />)
-    }
-    return null
-  }
-  const loadingTables = tableQueries.filter((q) => q.loading).length > 0
 
   function clearCache() {
     requestClearCache(dispatch, io)
@@ -193,13 +177,6 @@ export function DataQueryTools() {
             </Button>
           </Col>
         </Row>
-        <Row className="mb-4">
-          <Col>
-            <Button className="mx-1" disabled={loadingStatisticsSearchList} onClick={() => refreshAllTables()}>
-              {`Oppdater alle tabeller (${tableQueries.length})`} {renderSpinner(loadingTables)}
-            </Button>
-          </Col>
-        </Row>
         {statuses.map((statRegStatus, index) => {
           const {} = statRegStatus
           return (
@@ -231,4 +208,4 @@ export function DataQueryTools() {
   )
 }
 
-export default (props) => <DataQueryTools {...props} />
+export default (props) => <DashboardTools {...props} />

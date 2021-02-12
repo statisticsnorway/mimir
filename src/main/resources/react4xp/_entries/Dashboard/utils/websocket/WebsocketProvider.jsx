@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { actions as commonActions } from '../../containers/HomePage/slice'
 import setupStatRegListeners from '../../containers/StatRegDashboard/listeners'
 import setupHomePageListeners from '../../containers/HomePage/listeners'
-import setupDataQueriesListeners from '../../containers/DataQueries/listeners'
+import setupDataSourcesListeners from '../../containers/DataSources/listeners'
 import setupStatisticsListeners from '../../containers/Statistics/listeners'
 import setupJobsListeners from '../../containers/Jobs/listeners'
 
@@ -58,7 +58,7 @@ function WebsocketProvider({
         // setup store listeners
         setupStatRegListeners(io, dispatch)
         setupHomePageListeners(io, dispatch)
-        setupDataQueriesListeners(io, dispatch)
+        setupDataSourcesListeners(io, dispatch)
         setupStatisticsListeners(io, dispatch)
         setupJobsListeners(io, dispatch)
 
