@@ -250,9 +250,12 @@ export const getAttachmentContent = (contentId) => {
 
 export const getPreviousReleaseStatistic = (variants) => {
   if (variants.length > 1) {
-    variants.sort((d1, d2) => new Date(d1.previousRelease) - new Date(d2.previousRelease)).reverse()
+    const variantsWithPreviouseDate = variants.filter((variant) => variant.previousRelease !== '')
+    const sortedAndReversed = variantsWithPreviouseDate.sort((d1, d2) => new Date(d1.previousRelease) - new Date(d2.previousRelease)).reverse()
+    return sortedAndReversed[0].previousRelease
+  } else {
+    return variants[0].previousRelease
   }
-  return variants[0].previousRelease
 }
 
 export const getNextReleaseStatistic = (variants) => {
