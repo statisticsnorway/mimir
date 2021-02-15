@@ -12,6 +12,7 @@ import { DatasetLib } from './dataset'
 import { RepoJobLib, JobEventNode, JobInfoNode, StatisticsPublishResult, DataSourceStatisticsPublishResult } from '../../repo/job'
 import { RepoQueryLib } from '../../repo/query'
 import { ServerLogLib } from '../serverLog'
+import { EventLibrary } from 'enonic-types/event'
 const {
   Events,
   logUserDataQuery
@@ -55,6 +56,9 @@ const {
 const {
   cronJobLog
 }: ServerLogLib = __non_webpack_require__( '/lib/ssb/serverLog')
+const {
+  send
+}: EventLibrary = __non_webpack_require__('/lib/xp/event')
 
 const jobs: {[key: string]: JobEventNode | JobInfoNode} = {}
 
@@ -207,6 +211,13 @@ function createTask(jobId: string, statistic: Content<Statistics>, releaseDate: 
         }).length === jobRefreshResult.length
         if (allComplete) {
           completeJobLog(jobId, `Successfully updated ${jobRefreshResult.length} statistics`, jobRefreshResult)
+          send({
+            type: 'clearCache',
+            distributed: true,
+            data: {
+              clearDatasetRepoCache: true
+            }
+          })
         } else {
           updateJobLog(jobId, (node: JobInfoNode) => {
             node.data = {
