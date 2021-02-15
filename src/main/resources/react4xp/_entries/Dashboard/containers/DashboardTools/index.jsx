@@ -1,12 +1,11 @@
-import Button from 'react-bootstrap/Button'
 import React, { useContext, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectInternalBaseUrl, selectInternalStatbankUrl, selectLoadingClearCache } from '../HomePage/selectors'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { requestClearCache } from '../HomePage/actions.es6'
-import { ChevronDown, ChevronUp, RefreshCw, Trash } from 'react-feather'
+import { RefreshCw, Trash } from 'react-feather'
 import { Col, Container, Row } from 'react-bootstrap'
-import { Link, Dropdown, Input } from '@statisticsnorway/ssb-component-library'
+import { Button, Dropdown, Input } from '@statisticsnorway/ssb-component-library'
 import { selectSearchList, selectLoadingSearchList, selectHasLoadingStatistic } from '../Statistics/selectors'
 import { setOpenStatistic, setOpenModal } from '../Statistics/actions'
 import { startRefresh } from '../StatRegDashboard/actions'
@@ -23,7 +22,6 @@ export function DashboardTools() {
   const dispatch = useDispatch()
   const [selectedStat, setSelectedStat] = useState(null)
   const statuses = useSelector(selectStatuses)
-  const [showLinkTools, setShowLinkTools] = useState(false)
   const internalBaseUrl = useSelector(selectInternalBaseUrl)
   const internalStatbankUrl = useSelector(selectInternalStatbankUrl)
 
@@ -32,15 +30,24 @@ export function DashboardTools() {
   }
 
   function makeRefreshButton(statRegStatus) {
+    let statRegName
+    if (statRegStatus.displayName === 'statistikk') {
+      statRegName = 'statistikker'
+    } else {
+      statRegName = statRegStatus.displayName
+    }
+
     return (
-      <Button
-        variant="primary"
-        className="mx-1"
-        onClick={() => refreshStatReg(statRegStatus.key)}
-        disabled={statRegStatus.loading}
-      >
-        Oppdater { statRegStatus.displayName } { statRegStatus.loading ? <span className="spinner-border spinner-border-sm" /> : <RefreshCw size={16}/> }
-      </Button>
+      <div className="d-flex align-items-center">
+        <span className="font-weight-bold">Oppdater alle {statRegName}</span>
+        <Button
+          className="ml-auto"
+          onClick={() => refreshStatReg(statRegStatus.key)}
+          disabled={statRegStatus.loading}
+        >
+          { statRegStatus.loading ? <span className="spinner-border spinner-border-sm" /> : <RefreshCw size={18}/> }
+        </Button>
+      </div>
     )
   }
 
@@ -52,7 +59,7 @@ export function DashboardTools() {
     if (loading) {
       return (<span className="spinner-border spinner-border-sm" />)
     }
-    return (<Trash size={16}/>)
+    return (<Trash size={18}/>)
   }
 
   function onStatisticsSearchSelect(e) {
@@ -81,10 +88,12 @@ export function DashboardTools() {
         id: '-1'
       })
     }
+
     return (
       <Dropdown
-        className="mx-1"
-        placeholder="Finn statistikk"
+        className="search-update-statistics"
+        header="Søk og oppdater statistikk"
+        placeholder="Søk og oppdater statistikk"
         searchable
         items={items}
         onSelect={(e) => onStatisticsSearchSelect(e)}
@@ -92,34 +101,51 @@ export function DashboardTools() {
     )
   }
 
+  function getLinkOptions() {
+    const linkOptions = []
+    linkOptions.push({
+      id: 'link-statreg',
+      title: 'Statistikkregisteret'
+    },
+    {
+      id: 'link-designer',
+      title: 'Tabellbygger'
+    },
+    {
+      id: 'link-statbank',
+      title: 'Intern statistikkbank'
+    },
+    {
+      id: 'link-guide-publications',
+      title: 'Veiledninger i publiseringer på ssb.no'
+    })
+    return linkOptions
+  }
+
   function renderLinkTools() {
+    const openLinks = (item) => {
+      if (item.id === 'link-statreg') {
+        return window.open(`${internalBaseUrl}/statistikkregisteret/publisering/list`, '_blank')
+      } else if (item.id === 'link-designer') {
+        return window.open(`${internalBaseUrl}/designer`, '_blank')
+      } else if (item.id === 'link-statbank') {
+        return window.open(internalStatbankUrl, '_blank')
+      } else if (item.id === 'link-guide-publications') {
+        return window.open('https://wiki.ssb.no/display/VEILEDNING/Home', '_blank')
+      }
+      return
+    }
+
     return (
-      <ul className="list-unstyled list-group">
-        <li className="list-group-item">
-          <Link
-            isExternal
-            href={internalBaseUrl + '/statistikkregisteret/publisering/list'}>Statistikkregisteret
-          </Link>
-        </li>
-        <li className="list-group-item">
-          <Link
-            isExternal
-            href={internalBaseUrl + '/designer'}>Tabellbygger
-          </Link>
-        </li>
-        <li className="list-group-item">
-          <Link
-            isExternal
-            href={internalStatbankUrl}>Intern statistikkbank
-          </Link>
-        </li>
-        <li className="list-group-item">
-          <Link
-            isExternal
-            href="https://wiki.ssb.no/display/VEILEDNING/Home">Veiledninger i publiseringer på ssb.no
-          </Link>
-        </li>
-      </ul>
+      <Dropdown
+        header="Andre verktøy"
+        selectedItem={{
+          id: 'placeholder',
+          title: 'Andre verktøy'
+        }}
+        items={getLinkOptions()}
+        onSelect={openLinks}
+      />
     )
   }
 
@@ -129,12 +155,11 @@ export function DashboardTools() {
 
   function renderTbmlDefinitionsStatbankTable() {
     return (
-      <Col className="mx-1">
-        <span className="font-weight-bold">Vis TBML-definisjoner basert på Statbanktabell</span>
+      <Col>
         <Input
           className="mt-3"
           ariaLabel="Search table ID"
-          placeholder="Tabellens ID"
+          placeholder="Finn TBML-def. med tabellnummer"
           searchField
           submitCallback={handleTbmlDefinitionsStatbankTableSearch}
         />
@@ -144,36 +169,34 @@ export function DashboardTools() {
 
   return (
     <div className="p-4 tables-wrapper">
-      <h2>Diverse verktøy</h2>
+      <h2>Verktøy</h2>
       <Container>
-        <Row className="mb-3">
+        <Row className="mb-4">
           <Col>
-            <span className="mx-1">Tøm Cache</span>
             <Button
-              size="sm"
-              className="mx-3"
+              primary
+              className="w-100 d-flex justify-content-center"
               onClick={() => clearCache()}
               disabled={loadingCache}>
-              {renderIcon(loadingCache)}
+              <div>
+                {renderIcon(loadingCache)} <span className="pl-2">Tøm cache</span>
+              </div>
             </Button>
           </Col>
         </Row>
         <Row className="mb-4">
-          <Col className="col-10">
+          <Col className="col-9 pr-0">
             {renderStatisticsSearch()}
           </Col>
-          <Col className="col-2 pt-1">
+          <Col className="pl-3 pr-0">
             <Button
-              variant="primary"
-              size="sm"
-              className="mx-1"
               onClick={() => {
                 setOpenStatistic(dispatch, io, selectedStat)
                 setOpenModal(dispatch, true)
               }}
               disabled={hasLoadingStatistic || loadingStatisticsSearchList || !selectedStat}
             >
-              { hasLoadingStatistic ? <span className="spinner-border spinner-border-sm" /> : <RefreshCw size={16}/> }
+              { hasLoadingStatistic ? <span className="spinner-border spinner-border-sm" /> : <RefreshCw size={18}/> }
             </Button>
           </Col>
         </Row>
@@ -190,17 +213,9 @@ export function DashboardTools() {
         <Row className="mb-4">
           {renderTbmlDefinitionsStatbankTable()}
         </Row>
-        <Row className="link-tools-list">
+        <Row className="mb-4">
           <Col>
-            <h3>Verktøyliste</h3>
-            <Button
-              variant="primary"
-              className="mx-1 mb-2"
-              onClick={showLinkTools ? () => setShowLinkTools(false) : () => setShowLinkTools(true)}
-            >
-              {showLinkTools ? 'Skjul lenker' : 'Vis lenker' } {showLinkTools ? <ChevronUp size={16}/> : <ChevronDown size={16}/> }
-            </Button>
-            {showLinkTools ? renderLinkTools() : null}
+            {renderLinkTools()}
           </Col>
         </Row>
       </Container>

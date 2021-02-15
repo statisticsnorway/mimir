@@ -13,31 +13,35 @@ export function HomePage() {
   const isConnected = useSelector(selectIsConnected)
 
   return (
-    <Container>
-      <ConnectionBadge isConnected={isConnected} />
-      <Tabs defaultActiveKey="statistics">
-        <Tab eventKey="statistics" title="Statistikker">
-          <Container>
-            <Row>
-              <Col className="col-12">
-                <Statistics/>
-              </Col>
-            </Row>
-            <Row className="mt-3">
-              <Col className="col-8">
-                <Jobs/>
-              </Col>
-              <Col className="col-4">
-                <DashboardTools/>
-              </Col>
-            </Row>
-          </Container>
-        </Tab>
-        <Tab eventKey="queries" title="Spørringer">
-          <DataSources/>
-          <StatRegDashboard/>
-        </Tab>
-      </Tabs>
+    <Container fluid>
+      <Row>
+        <Col>
+          <ConnectionBadge isConnected={isConnected} />
+          <Tabs defaultActiveKey="statistics">
+            <Tab eventKey="statistics" title="Statistikker">
+              <Container fluid className="p-0">
+                <Row>
+                  <Col className="col-9">
+                    <Statistics/>
+                  </Col>
+                  <Col className="col">
+                    <DashboardTools/>
+                  </Col>
+                </Row>
+                <Row className="mt-3">
+                  <Col className="col-12">
+                    <Jobs/>
+                  </Col>
+                </Row>
+              </Container>
+            </Tab>
+            <Tab eventKey="queries" title="Spørringer">
+              <DataSources/>
+              <StatRegDashboard/>
+            </Tab>
+          </Tabs>
+        </Col>
+      </Row>
     </Container>
   )
 }

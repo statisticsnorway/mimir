@@ -90,11 +90,6 @@
     }
   }
 
-  .badge {
-    float: right;
-    margin-top: -65px;
-  }
-
   .tables-wrapper {
     border: 2px solid $ssb-green-5;
     background: white;
@@ -232,5 +227,30 @@
   
   .ssb-accordion.warning .accordion-header .sub-header {
     color: $ssb-red-3;
+  }
+  
+  .connected-wrapper, .disconnected-wrapper {
+    display: block;
+    float: right;
+    margin-top: -65px;
+    padding-top: $spacer * 0.5;
+    padding-left: $spacer * 1;
+    padding-bottom: $spacer * 0.5;
+    padding-right: $spacer * 1;
+    color: $ssb-white;
+    font-size: 0.8em;
+    font-weight: bold;
+  }
+
+  .connected-wrapper {
+    background-color: $ssb-blue-3;
+  }
+
+  .disconnected-wrapper {
+    background-color: $ssb-red-3;
+  }
+
+  .ssb-dropdown label, .search-update-statistics svg {
+    display: none;
   }
 }

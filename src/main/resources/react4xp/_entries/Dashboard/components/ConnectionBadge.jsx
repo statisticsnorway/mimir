@@ -1,5 +1,4 @@
 import React from 'react'
-import { Badge } from 'react-bootstrap'
 import { Zap, ZapOff } from 'react-feather'
 
 export function ConnectionBadge(props) {
@@ -7,8 +6,8 @@ export function ConnectionBadge(props) {
     isConnected
   } = props
   if (isConnected) {
-    return (<Badge variant="success"><span>Connected<Zap></Zap></span></Badge>)
+    return (<div className="connected-wrapper"><Zap></Zap><span className="ml-2">Tilkoblet</span></div>)
   } else {
-    return (<Badge variant="danger"><span>Disconnected<ZapOff></ZapOff></span></Badge>)
+    return (<div className="disconnected-wrapper"><ZapOff></ZapOff><span className="ml-2">Frakoblet</span></div>)
   }
 }

@@ -85,7 +85,7 @@ export function StatRegDashboard() {
   }
 
   return (
-    <section className="xp-part part-dashboard container mb-5">
+    <section className="xp-part part-dashboard container-fluid p-0 mb-5">
       <Row>
         <Col>
           <div className="p-4 tables-wrapper">
