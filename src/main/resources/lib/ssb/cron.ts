@@ -13,6 +13,7 @@ import { ClusterLib } from '../types/cluster'
 import { ServerLogLib } from './serverLog'
 import { DatasetRSSLib } from './dataset/rss'
 import { RepoCommonLib } from '../repo/common'
+import { MockUnpublishedLib } from './dataset/mockUnpublished'
 
 const {
   publishDataset
@@ -57,6 +58,9 @@ const {
 const {
   ENONIC_CMS_DEFAULT_REPO
 }: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
+const {
+  updateUnpublishedMockTbml
+}: MockUnpublishedLib = __non_webpack_require__('/lib/ssb/dataset/mockUnpublished')
 
 const createUserContext: RunContext = { // Master context (XP)
   repository: ENONIC_CMS_DEFAULT_REPO,
@@ -169,6 +173,16 @@ export function setupCronJobs(): void {
     cron: deleteExpiredEventLogCron,
     times: 365 * 10,
     callback: () => runOnMasterOnly(deleteExpiredEventLogs),
+    context: cronContext
+  })
+
+  const updateUnpublishedMockCron: string =
+    app.config && app.config['ssb.cron.updateUnpublishedMock'] ? app.config['ssb.cron.updateUnpublishedMock'] : '0 04 * * *'
+  cron.schedule({
+    name: 'Update unpublished mock tbml',
+    cron: updateUnpublishedMockCron,
+    times: 365 * 10,
+    callback: () => runOnMasterOnly(updateUnpublishedMockTbml),
     context: cronContext
   })
 
