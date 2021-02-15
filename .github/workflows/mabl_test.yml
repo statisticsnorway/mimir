@@ -38,7 +38,7 @@ jobs:
           version: '0.8.1'
       env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-    - run: drone build promote statisticsnorway/mimir 120 test
+    - run: drone build promote statisticsnorway/mimir 120 qa
       env:
           #DRONE_SERVER: ${{ secrets.DRONE_SERVER }}
           DRONE_SERVER: https://ssb-drone.enonic.cloud
