@@ -176,15 +176,17 @@ export function setupCronJobs(): void {
     context: cronContext
   })
 
-  const updateUnpublishedMockCron: string =
-    app.config && app.config['ssb.cron.updateUnpublishedMock'] ? app.config['ssb.cron.updateUnpublishedMock'] : '0 04 * * *'
-  cron.schedule({
-    name: 'Update unpublished mock tbml',
-    cron: updateUnpublishedMockCron,
-    times: 365 * 10,
-    callback: () => runOnMasterOnly(updateUnpublishedMockTbml),
-    context: cronContext
-  })
+  if (app.config && app.config['ssb.mock.enable'] === 'true') {
+    const updateUnpublishedMockCron: string =
+      app.config && app.config['ssb.cron.updateUnpublishedMock'] ? app.config['ssb.cron.updateUnpublishedMock'] : '0 04 * * *'
+    cron.schedule({
+      name: 'Update unpublished mock tbml',
+      cron: updateUnpublishedMockCron,
+      times: 365 * 10,
+      callback: () => runOnMasterOnly(updateUnpublishedMockTbml),
+      context: cronContext
+    })
+  }
 
   const cronList: Array<GetCronResult> = cron.list()
   cronJobLog('All cron jobs registered')

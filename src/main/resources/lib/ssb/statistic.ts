@@ -1,5 +1,3 @@
-import {AdminLibrary} from "enonic-types/admin";
-
 __non_webpack_require__('/lib/polyfills/nashorn')
 import { Socket, SocketEmitter } from '../types/socket'
 import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'

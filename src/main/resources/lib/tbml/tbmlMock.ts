@@ -5,8 +5,10 @@ import moment = require('moment')
 __non_webpack_require__('/lib/polyfills/nashorn')
 
 export function getTbmlMock(url: string): HttpResponse | null {
-  if (url.includes('process/tbmldata/-1')) {
-    return getTbmlMock1()
+  if (app.config && app.config['ssb.mock.enable'] === 'true') {
+    if (url.includes('process/tbmldata/-1')) {
+      return getTbmlMock1()
+    }
   }
   return null
 }

@@ -36,29 +36,30 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
     const response: HttpResponse = fetchStatRegData('Statistics', getStatRegBaseUrl() + STATISTICS_URL)
     if (response.status === 200 && response.body) {
       const statistics: Array<StatisticInListing> = extractStatistics(response.body)
-      // TODO add config param
       // TODO next release - check before/after 0800
-      statistics.push({
-        id: 0,
-        shortName: 'mimir',
-        name: 'Mimir',
-        nameEN: 'Mimir',
-        status: '',
-        modifiedTime: '2020-04-16 11:14:19.121',
-        variants: [{
-          id: '0',
-          frekvens: 'Dag',
-          previousRelease: moment()
-            .subtract(1, 'days')
-            .toISOString(),
-          nextRelease: moment()
-            .hour(8)
-            .minute(0)
-            .add(1, 'days')
-            .toISOString(),
-          nextReleaseId: '0'
-        }]
-      })
+      if (app.config && app.config['ssb.mock.enable'] === 'true') {
+        statistics.push({
+          id: 0,
+          shortName: 'mimir',
+          name: 'Mimir',
+          nameEN: 'Mimir',
+          status: '',
+          modifiedTime: '2020-04-16 11:14:19.121',
+          variants: [{
+            id: '0',
+            frekvens: 'Dag',
+            previousRelease: moment()
+              .subtract(1, 'days')
+              .toISOString(),
+            nextRelease: moment()
+              .hour(8)
+              .minute(0)
+              .add(1, 'days')
+              .toISOString(),
+            nextReleaseId: '0'
+          }]
+        })
+      }
 
       return statistics
     }
