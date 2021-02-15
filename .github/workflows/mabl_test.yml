@@ -30,7 +30,7 @@ jobs:
   mabl_test:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    container: node:10.18-jessie
+    container: enonic/enonic-ci:7.4-node
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     - uses: chrislennon/action-drone@v1
