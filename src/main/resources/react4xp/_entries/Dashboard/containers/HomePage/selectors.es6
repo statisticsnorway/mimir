@@ -34,3 +34,8 @@ export const selectInternalStatbankUrl = createSelector(
   [selectDomain],
   (commonState) => commonState.internalStatbankUrl
 )
+
+export const selectDashboardOptions = createSelector(
+  [selectDomain],
+  (commonState) => commonState.dashboardOptions
+)

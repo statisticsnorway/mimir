@@ -17,7 +17,7 @@ const {
   preview: keyFigurePreview
 } = __non_webpack_require__('../keyFigure/keyFigure')
 const {
-  hasWritePermissions
+  hasWritePermissionsAndPreview
 } = __non_webpack_require__('/lib/ssb/permissions')
 
 const React4xp = require('/lib/enonic/react4xp')
@@ -55,7 +55,7 @@ const renderPart = (req) => {
   let changeDate
   let nextReleaseDate
   let previousReleaseDate
-  const showPreviewDraft = hasWritePermissions(req, page._id)
+  const showPreviewDraft = hasWritePermissionsAndPreview(req, page._id)
   const paramShowDraft = req.params.showDraft
   const draftUrl = paramShowDraft ? pageUrl() : pageUrl({
     params: {
