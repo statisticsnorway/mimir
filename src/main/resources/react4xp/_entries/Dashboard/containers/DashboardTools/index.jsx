@@ -138,6 +138,7 @@ export function DashboardTools() {
 
     return (
       <Dropdown
+        className="other-tools-dropdown"
         header="Andre verktøy"
         selectedItem={{
           id: 'placeholder',
@@ -169,9 +170,9 @@ export function DashboardTools() {
 
   return (
     <div className="p-4 tables-wrapper border-top-0">
-      <h2>Verktøy</h2>
+      <h2 className="mb-4">Verktøy</h2>
       <Container>
-        <Row className="mb-4">
+        <Row className="mb-5">
           <Col>
             <Button
               primary
@@ -184,11 +185,11 @@ export function DashboardTools() {
             </Button>
           </Col>
         </Row>
-        <Row className="mb-4 d-flex justify-content-center">
+        <Row className="mb-4">
           <Col className="col-9 pr-0">
             {renderStatisticsSearch()}
           </Col>
-          <Col className="pl-auto pr-0">
+          <Col className="pl-4 pr-0">
             <Button
               onClick={() => {
                 setOpenStatistic(dispatch, io, selectedStat)
@@ -210,7 +211,7 @@ export function DashboardTools() {
             </Row>
           )
         })}
-        <Row className="mb-4">
+        <Row className="mb-5">
           {renderTbmlDefinitionsStatbankTable()}
         </Row>
         <Row className="mb-4">
