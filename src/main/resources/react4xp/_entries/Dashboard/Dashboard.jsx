@@ -41,7 +41,13 @@ function Dashboard(props) {
 
 Dashboard.propTypes = {
   user: PropTypes.object,
-  dashboardOptionsForUser: PropTypes.object,
+  dashboardOptionsForUser: PropTypes.shape({
+    dashboardTools: PropTypes.bool,
+    statistics: PropTypes.bool,
+    jobLogs: PropTypes.bool,
+    dataSources: PropTypes.bool,
+    statisticRegister: PropTypes.bool
+  }),
   contentStudioBaseUrl: PropTypes.string,
   dataToolBoxBaseUrl: PropTypes.string,
   internalBaseUrl: PropTypes.string,
@@ -78,10 +84,11 @@ function DashboardRouter(props) {
     internalStatbankUrl: props.internalStatbankUrl
   })
   setUserServerSide(dispatch, io, props.user)
-  requestStatistics(dispatch, io)
-  requestStatisticsSearchList(dispatch, io)
-  requestStatuses(dispatch, io)
-  requestJobs(dispatch, io)
+  console.log(props)
+  if (props.dashboardOptionsForUser.statistics) requestStatistics(dispatch, io)
+  if (props.dashboardOptionsForUser.dashboardTools) requestStatisticsSearchList(dispatch, io)
+  if (props.dashboardOptionsForUser.statisticRegister) requestStatuses(dispatch, io)
+  if (props.dashboardOptionsForUser.jobLogs) requestJobs(dispatch, io)
   return (
     <BrowserRouter>
       <Helmet
@@ -99,7 +106,13 @@ function DashboardRouter(props) {
 
 DashboardRouter.propTypes = {
   user: PropTypes.object,
-  dashboardOptionsForUser: PropTypes.object,
+  dashboardOptionsForUser: PropTypes.shape({
+    dashboardTools: PropTypes.bool,
+    statistics: PropTypes.bool,
+    jobLogs: PropTypes.bool,
+    dataSources: PropTypes.bool,
+    statisticRegister: PropTypes.bool
+  }),
   contentStudioBaseUrl: PropTypes.string,
   dataToolBoxBaseUrl: PropTypes.string,
   internalBaseUrl: PropTypes.string,

@@ -29,10 +29,10 @@ const ENONIC_PROJECT_ID = app.config && app.config['ssb.project.id'] ? app.confi
 const DASHBOARD_FAG = 'dashboard.fag'
 
 const dashboardOptions = {
-  dashboardtool: false,
+  dashboardTool: false,
   statistics: false,
-  joblog: false,
-  datasources: false,
+  jobLog: false,
+  dataSources: false,
   statisticRegister: false
 }
 
