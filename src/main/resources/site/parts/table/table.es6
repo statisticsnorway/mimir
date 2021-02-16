@@ -30,7 +30,7 @@ const {
   UNPUBLISHED_DATASET_BRANCH
 } = __non_webpack_require__('/lib/repo/dataset')
 const {
-  hasWritePermissions
+  hasWritePermissionsAndPreview
 } = __non_webpack_require__('/lib/ssb/permissions')
 
 const moment = require('moment/min/moment-with-locales')
@@ -72,7 +72,7 @@ function renderPart(req, tableId) {
     key: tableId
   })
 
-  const showPreviewDraft = hasWritePermissions(req, tableId)
+  const showPreviewDraft = hasWritePermissionsAndPreview(req, tableId)
   const table = parseTable(req, tableContent, DATASET_BRANCH)
   let tableDraft = undefined
   if (showPreviewDraft) {

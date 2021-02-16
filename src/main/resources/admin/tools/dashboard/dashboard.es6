@@ -81,7 +81,8 @@ function renderPart(req) {
 
   const model = {
     ...assets,
-    pageContributions
+    pageContributions,
+    username: user.displayName
   }
 
   let body = render(view, model)

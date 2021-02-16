@@ -25,7 +25,7 @@ const {
   UNPUBLISHED_DATASET_BRANCH
 } = __non_webpack_require__('/lib/repo/dataset')
 const {
-  hasWritePermissions
+  hasWritePermissionsAndPreview
 } = __non_webpack_require__('/lib/ssb/permissions')
 
 const view = resolve('./keyFigure.html')
@@ -52,7 +52,7 @@ exports.preview = (req, id) => {
 const renderPart = (req, municipality, keyFigureIds) => {
   const page = getContent()
   const part = getComponent()
-  const showPreviewDraft = hasWritePermissions(req, page._id)
+  const showPreviewDraft = hasWritePermissionsAndPreview(req, page._id)
 
   // get all keyFigures and filter out non-existing keyFigures
   const keyFigures = getKeyFigures(keyFigureIds)
