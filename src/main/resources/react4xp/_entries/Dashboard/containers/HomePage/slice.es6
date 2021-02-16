@@ -4,6 +4,7 @@ export const initialState = {
   isConnected: false,
   loadingClearCache: false,
   user: undefined,
+  dashboardOptions: {},
   contentStudioBaseUrl: '',
   dataToolBoxBaseUrl: '',
   internalBaseUrl: '',
@@ -28,6 +29,9 @@ const commonSlice = createSlice({
     },
     setUser(state, action) {
       state.user = action.user
+    },
+    setDashboardOptions(state, action) {
+      state.dashboardOptions = action.dashboardOptions
     },
     onConnect(state) {
       state.isConnected = true

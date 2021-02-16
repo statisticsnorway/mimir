@@ -26,8 +26,13 @@ function Dashboard(props) {
     <Provider store={configureAppStore()}>
       <WebsocketProvider>
         <HelmetProvider>
-          <DashboardRouter user={props.user} contentStudioBaseUrl={props.contentStudioBaseUrl} dataToolBoxBaseUrl={props.dataToolBoxBaseUrl}
-            internalBaseUrl={props.internalBaseUrl} internalStatbankUrl={props.internalStatbankUrl} />
+          <DashboardRouter
+            user={props.user}
+            dashboardOptionsForUser={props.dashboardOptionsForUser}
+            contentStudioBaseUrl={props.contentStudioBaseUrl}
+            dataToolBoxBaseUrl={props.dataToolBoxBaseUrl}
+            internalBaseUrl={props.internalBaseUrl}
+            internalStatbankUrl={props.internalStatbankUrl} />
         </HelmetProvider>
       </WebsocketProvider>
     </Provider>
@@ -36,6 +41,7 @@ function Dashboard(props) {
 
 Dashboard.propTypes = {
   user: PropTypes.object,
+  dashboardOptionsForUser: PropTypes.object,
   contentStudioBaseUrl: PropTypes.string,
   dataToolBoxBaseUrl: PropTypes.string,
   internalBaseUrl: PropTypes.string,
@@ -50,6 +56,10 @@ function DashboardRouter(props) {
   dispatch({
     type: commonActions.setUser.type,
     user: props.user
+  })
+  dispatch({
+    type: commonActions.setDashboardOptions.type,
+    dashboardOptions: props.dashboardOptionsForUser
   })
   dispatch({
     type: commonActions.setContentStudioBaseUrl.type,
@@ -89,6 +99,7 @@ function DashboardRouter(props) {
 
 DashboardRouter.propTypes = {
   user: PropTypes.object,
+  dashboardOptionsForUser: PropTypes.object,
   contentStudioBaseUrl: PropTypes.string,
   dataToolBoxBaseUrl: PropTypes.string,
   internalBaseUrl: PropTypes.string,
