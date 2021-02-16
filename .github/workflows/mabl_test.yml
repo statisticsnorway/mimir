@@ -38,8 +38,8 @@ jobs:
           version: '1.2.4'
       env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-    - run: drone exec --pipeline='Test Environment' --repo=statisticsnorway/mimir .drone.yml
-    #- run: drone build promote statisticsnorway/mimir 120 qa
+    #- run: drone exec --pipeline='Test Environment' --repo=statisticsnorway/mimir .drone.yml
+    - run: drone build promote statisticsnorway/mimir 120 test
     #- run: drone --v
       env:
           #DRONE_SERVER: ${{ secrets.DRONE_SERVER }}
