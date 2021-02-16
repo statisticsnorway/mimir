@@ -13,7 +13,7 @@ export function HomePage() {
   const isConnected = useSelector(selectIsConnected)
 
   return (
-    <Container fluid>
+    <Container fluid className="px-5">
       <Row>
         <Col>
           <ConnectionBadge isConnected={isConnected} />
@@ -24,11 +24,11 @@ export function HomePage() {
                   <Col className="col-9">
                     <Statistics/>
                   </Col>
-                  <Col className="col">
+                  <Col>
                     <DashboardTools/>
                   </Col>
                 </Row>
-                <Row className="mt-3">
+                <Row>
                   <Col className="col-12">
                     <Jobs/>
                   </Col>

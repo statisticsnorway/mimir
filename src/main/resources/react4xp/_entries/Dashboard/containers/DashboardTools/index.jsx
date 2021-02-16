@@ -168,7 +168,7 @@ export function DashboardTools() {
   }
 
   return (
-    <div className="p-4 tables-wrapper">
+    <div className="p-4 tables-wrapper border-top-0">
       <h2>Verktøy</h2>
       <Container>
         <Row className="mb-4">
@@ -184,11 +184,11 @@ export function DashboardTools() {
             </Button>
           </Col>
         </Row>
-        <Row className="mb-4">
+        <Row className="mb-4 d-flex justify-content-center">
           <Col className="col-9 pr-0">
             {renderStatisticsSearch()}
           </Col>
-          <Col className="pl-3 pr-0">
+          <Col className="pl-auto pr-0">
             <Button
               onClick={() => {
                 setOpenStatistic(dispatch, io, selectedStat)
