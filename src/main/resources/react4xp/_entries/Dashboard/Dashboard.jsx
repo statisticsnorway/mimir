@@ -84,7 +84,6 @@ function DashboardRouter(props) {
     internalStatbankUrl: props.internalStatbankUrl
   })
   setUserServerSide(dispatch, io, props.user)
-  console.log(props)
   if (props.dashboardOptionsForUser.statistics) requestStatistics(dispatch, io)
   if (props.dashboardOptionsForUser.dashboardTools) requestStatisticsSearchList(dispatch, io)
   if (props.dashboardOptionsForUser.statisticRegister) requestStatuses(dispatch, io)
