@@ -1,4 +1,4 @@
-import {AdminLibrary} from "enonic-types/admin";
+import { AdminLibrary } from 'enonic-types/admin'
 
 __non_webpack_require__('/lib/polyfills/nashorn')
 import { Socket, SocketEmitter } from '../types/socket'
@@ -23,14 +23,20 @@ import { RepoEventLogLib } from '../repo/eventLog'
 import { RepoCommonLib } from '../repo/common'
 import { StatRegStatisticsLib } from '../repo/statreg/statistics'
 import { TaskLib } from '../types/task'
+import { AuthLibrary } from 'enonic-types/auth'
+import { PermissionsLib } from './permissions'
 
+const {
+  hasWritePermissions
+}: PermissionsLib = __non_webpack_require__( '/lib/ssb/permissions')
 const {
   query,
   get: getContent
 }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
 const {
   fetchStatisticsWithRelease,
-  getAllStatisticsFromRepo
+  getAllStatisticsFromRepo,
+  getStatisticByIdFromRepo
 }: StatRegStatisticsLib = __non_webpack_require__('/lib/repo/statreg/statistics')
 const {
   data: {
@@ -71,13 +77,25 @@ const i18n: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
 const {
   submit: submitTask
 }: TaskLib = __non_webpack_require__('/lib/xp/task')
+const {
+  hasRole
+}: AuthLibrary = __non_webpack_require__('/lib/xp/auth')
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-statistics', () => {
     submitTask({
       description: 'get-statistics',
       task: () => {
-        const statisticData: Array<StatisticDashboard> = getStatistics()
+        const context: RunContext = {
+          branch: 'master',
+          repository: ENONIC_CMS_DEFAULT_REPO,
+          // principals: ['role:system.admin'],
+          user: {
+            login: users[parseInt(socket.id)].login,
+            idProvider: users[parseInt(socket.id)].idProvider ? users[parseInt(socket.id)].idProvider : 'system'
+          }
+        }
+        const statisticData: Array<StatisticDashboard> = run(context, () => getStatistics())
         socket.emit('statistics-result', statisticData)
       }
     })
@@ -337,9 +355,20 @@ function prepStatisticsJobLogInfo(jobNode: JobInfoNode): DashboardJobInfo {
 //   })
 // }
 
+function checkIfUserIsAdmin(): boolean {
+  return hasRole('system.admin')
+}
+
 const TWO_WEEKS: number = 14 // TODO: put in config?
 function getStatistics(): Array<StatisticDashboard> {
-  const prefix: string = app.config && app.config['admin-prefix'] ? app.config['admin-prefix'] : '/xp/admin'
+  const userIsAdmin: boolean = checkIfUserIsAdmin()
+  const statistic: Array<StatisticDashboard> = userIsAdmin ? getAdminStatistics() : getUserStatistics()
+  return statistic.sort((a, b) => {
+    return new Date(a.nextRelease || '01.01.3000').getTime() - new Date(b.nextRelease || '01.01.3000').getTime()
+  })
+}
+
+function getAdminStatistics(): Array<StatisticDashboard> {
   const statsBeforeDate: Date = new Date()
   statsBeforeDate.setDate(statsBeforeDate.getDate() + TWO_WEEKS)
   const statregStatistics: Array<StatisticInListing> = fetchStatisticsWithRelease(statsBeforeDate)
@@ -347,33 +376,49 @@ function getStatistics(): Array<StatisticDashboard> {
     query: `data.statistic IN(${statregStatistics.map((s) => `"${s.id}"`).join(',')})`,
     count: 1000
   }).hits as unknown as Array<Content<Statistics>>
+  return statisticsContent.map( (statisticContent) => prepDashboardStatistics(statisticContent, statregStatistics))
+}
 
-  return statisticsContent.map((statistic) => {
-    const statregStat: StatisticInListing = statregStatistics.find((statregStat) => {
-      return `${statregStat.id}` === statistic.data.statistic
-    }) as StatisticInListing
-    const statregData: StatregData = getStatregInfo(statregStat)
-    const relatedTables: Array<RelatedTbml> = getRelatedTables(statistic)
-    const statisticDataDashboard: StatisticDashboard = {
-      id: statistic._id,
-      language: statistic.language ? statistic.language : '',
-      name: statistic.displayName ? statistic.displayName : '',
-      statisticId: statregData.statisticId,
-      shortName: statregData.shortName,
-      frequency: statregData.frequency,
-      variantId: statregData.variantId,
-      nextRelease: statregData.nextRelease,
-      nextReleaseId: statregData.nextReleaseId,
-      ownersWithSources: undefined,
-      relatedTables: relatedTables,
-      aboutTheStatistics: statistic.data.aboutTheStatistics,
-      logData: getStatisticsJobLogInfo(statistic._id),
-      previewUrl: statistic._path ? `${prefix}/site/preview/default/draft${statistic._path}` : ''
+function getUserStatistics(): Array<StatisticDashboard> {
+  const userStatisticContent: Array<Content<Statistics>> = query({
+    query: `data.statistic LIKE '*'`,
+    contentTypes: [`${app.name}:statistics`],
+    count: 1000
+  }).hits.filter((statistic: Content<Statistics>) => hasWritePermissions(statistic._id)) as unknown as Array<Content<Statistics>>
+
+  const userStatistic: Array<StatisticInListing> = userStatisticContent.reduce((acc: Array<StatisticInListing>, statistic) => {
+    if (statistic.data.statistic) {
+      const resultFromRepo: StatisticInListing | undefined = getStatisticByIdFromRepo(statistic.data.statistic)
+      if (resultFromRepo) acc.push(resultFromRepo)
     }
-    return statisticDataDashboard
-  }).sort((a, b) => {
-    return new Date(a.nextRelease).getTime() - new Date(b.nextRelease).getTime()
+    return acc
+  }, [])
+  return userStatisticContent.map( (statisticContent) => prepDashboardStatistics(statisticContent, userStatistic))
+}
+
+function prepDashboardStatistics(statisticContent: Content<Statistics>, statregStatistics: Array<StatisticInListing>): StatisticDashboard {
+  const prefix: string = app.config && app.config['admin-prefix'] ? app.config['admin-prefix'] : '/xp/admin'
+  const statregStat: StatisticInListing | undefined = statregStatistics.find((statregStat) => {
+    return `${statregStat.id}` === statisticContent.data.statistic
   })
+  const statregData: StatregData = getStatregInfo(statregStat)
+  const relatedTables: Array<RelatedTbml> = getRelatedTables(statisticContent)
+  return {
+    id: statisticContent._id,
+    language: statisticContent.language ? statisticContent.language : '',
+    name: statisticContent.displayName ? statisticContent.displayName : '',
+    statisticId: statregData.statisticId,
+    shortName: statregData.shortName,
+    frequency: statregData.frequency,
+    variantId: statregData.variantId,
+    nextRelease: statregData.nextRelease,
+    nextReleaseId: statregData.nextReleaseId,
+    ownersWithSources: undefined,
+    relatedTables: relatedTables,
+    aboutTheStatistics: statisticContent.data.aboutTheStatistics,
+    logData: getStatisticsJobLogInfo(statisticContent._id),
+    previewUrl: statisticContent._path ? `${prefix}/site/preview/default/draft${statisticContent._path}` : ''
+  }
 }
 
 function getRelatedTables(statistic: Content<Statistics>): Array<RelatedTbml> {
@@ -397,7 +442,17 @@ function getRelatedTables(statistic: Content<Statistics>): Array<RelatedTbml> {
   return relatedTables
 }
 
-function getStatregInfo(statisticStatreg: StatisticInListing): StatregData {
+function getStatregInfo(statisticStatreg: StatisticInListing | undefined): StatregData {
+  if (!statisticStatreg) {
+    return {
+      statisticId: -1,
+      shortName: '',
+      frequency: '',
+      nextRelease: '',
+      nextReleaseId: '',
+      variantId: ''
+    }
+  }
   const variants: Array<VariantInListing> = forceArray(statisticStatreg.variants)
   if (variants.length > 1) {
     variants.sort((a: VariantInListing, b: VariantInListing) => new Date(a.nextRelease).getTime() - new Date(b.nextRelease).getTime())

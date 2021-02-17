@@ -11,7 +11,8 @@ const {
 } = __non_webpack_require__('/lib/error/error')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
-  getUser
+  getUser,
+  hasRole
 } = __non_webpack_require__('/lib/xp/auth')
 const {
   getToolUrl
@@ -24,6 +25,16 @@ const INTERNAL_BASE_URL = app.config && app.config['ssb.internal.baseUrl'] ? app
 const INTERNAL_STATBANK_URL = app.config && app.config['ssb.statbankintern.baseUrl'] ? app.config['ssb.statbankintern.baseUrl'] :
   'https://i.ssb.no/pxwebi/pxweb/no/prod_24v_intern/'
 const ENONIC_PROJECT_ID = app.config && app.config['ssb.project.id'] ? app.config['ssb.project.id'] : 'default'
+
+const DASHBOARD_FAG = 'dashboard.fag'
+
+const dashboardOptions = {
+  dashboardTool: false,
+  statistics: false,
+  jobLog: false,
+  dataSources: false,
+  statisticRegister: false
+}
 
 exports.get = function(req) {
   try {
@@ -41,9 +52,22 @@ function renderPart(req) {
   const assets = getAssets()
   const user = getUser()
 
+  // finn ut om brukern er fag eller admin
+  const userHasDashboardFagRole = hasRole(DASHBOARD_FAG)
+  const userHasAdmin = hasRole('system.admin')
+
+  const dashboardOptionsForUser = {
+    dashboardTools: userHasAdmin,
+    statistics: userHasDashboardFagRole || userHasAdmin,
+    jobLogs: userHasAdmin,
+    dataSources: userHasAdmin,
+    statisticRegister: userHasAdmin
+  }
+
   const dashboardDataset = new React4xp('Dashboard/Dashboard')
     .setProps({
       user,
+      dashboardOptionsForUser,
       contentStudioBaseUrl: `${DEFAULT_CONTENTSTUDIO_URL}#/${ENONIC_PROJECT_ID}/edit/`,
       dataToolBoxBaseUrl: `${DEFAULT_TOOLBOX_URL}#nodes?repo=no.ssb.eventlog&branch=master&path=%2Fqueries%2F`,
       internalBaseUrl: `${INTERNAL_BASE_URL}`,
@@ -57,7 +81,8 @@ function renderPart(req) {
 
   const model = {
     ...assets,
-    pageContributions
+    pageContributions,
+    username: user.displayName
   }
 
   let body = render(view, model)

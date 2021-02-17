@@ -35,7 +35,7 @@ const {
   datasetOrUndefined
 } = __non_webpack_require__('/lib/ssb/cache')
 const {
-  hasWritePermissions
+  hasWritePermissionsAndPreview
 } = __non_webpack_require__('/lib/ssb/permissions')
 
 
@@ -111,7 +111,7 @@ function createDataFromDataSource(req: Request, highchart: Content<Highchart>): 
 
     // get draft
     const paramShowDraft: boolean = req.params.showDraft !== undefined && req.params.showDraft === 'true'
-    const showPreviewDraft: boolean = hasWritePermissions(req, highchart._id) && type === 'tbprocessor' && paramShowDraft
+    const showPreviewDraft: boolean = hasWritePermissionsAndPreview(req, highchart._id) && type === 'tbprocessor' && paramShowDraft
     const draftData: DatasetRepoNode<TbmlDataUniform> | null = showPreviewDraft && highchart.data.dataSource.tbprocessor ?
       getDataset(type, UNPUBLISHED_DATASET_BRANCH, highchart.data.dataSource.tbprocessor.urlOrId) : null
 
