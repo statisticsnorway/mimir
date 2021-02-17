@@ -56,9 +56,6 @@ export function Statistics() {
                 <span>Statistikk</span>
               </th>
               <th className="roboto-bold">
-                <span>Frekvens</span>
-              </th>
-              <th className="roboto-bold">
                 <span>Om statistikken</span>
               </th>
               <th className="roboto-bold">
@@ -119,9 +116,6 @@ export function Statistics() {
       <tr key={key}>
         <td className='statistic'>
           {getShortNameLink(statistic)}
-        </td>
-        <td>
-          {getFrekvens(statistic)}
         </td>
         <td>
           {getAboutStatisticLink(statistic)}
@@ -189,14 +183,6 @@ export function Statistics() {
     return (
       <span>{statistic.language === 'en' ? 'Eng. ' + statistic.shortName : statistic.shortName}</span>
     )
-  }
-
-  function getFrekvens(statistic) {
-    if (statistic.frequency) {
-      return (
-        <span>{statistic.frequency}</span>
-      )
-    }
   }
 
   function getAboutStatisticLink(statistic) {
