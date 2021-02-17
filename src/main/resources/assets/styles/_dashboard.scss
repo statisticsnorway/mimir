@@ -3,6 +3,8 @@
 
   header {
     margin-bottom: 30px;
+    padding-left: $spacer * 3;
+    padding-right: $spacer * 3;
   }
 
   .part-dashboard {
@@ -251,12 +253,12 @@
     color: $ssb-red-3;
   }
 
-  .ssb-dropdown label, .search-update-statistics svg {
+  .ssb-dropdown label, .dropdown-update-statistics svg {
     display: none;
   }
 
   .other-tools-dropdown {
-    margin-right: 0;
     max-width: 100%;
+    margin-right: 0;
   }
 }

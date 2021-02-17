@@ -6,8 +6,14 @@ export function ConnectionBadge(props) {
     isConnected
   } = props
   if (isConnected) {
-    return (<div className="connected-wrapper"><Zap></Zap><span className="ml-2">Tilkoblet</span></div>)
+    return (
+      <div className="connected-wrapper">
+        <Zap /><span className="ml-2">Tilkoblet</span>
+      </div>)
   } else {
-    return (<div className="disconnected-wrapper"><ZapOff></ZapOff><span className="ml-2">Frakoblet</span></div>)
+    return (
+      <div className="disconnected-wrapper">
+        <ZapOff /><span className="ml-2">Frakoblet</span>
+      </div>)
   }
 }

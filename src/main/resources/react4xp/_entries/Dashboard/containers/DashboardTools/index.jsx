@@ -91,7 +91,7 @@ export function DashboardTools() {
 
     return (
       <Dropdown
-        className="search-update-statistics"
+        className="dropdown-update-statistics"
         header="Søk og oppdater statistikk"
         placeholder="Søk og oppdater statistikk"
         searchable
@@ -122,16 +122,20 @@ export function DashboardTools() {
     return linkOptions
   }
 
+  function openLinkInNewWindow(link) {
+    window.open(link, '_blank')
+  }
+
   function renderLinkTools() {
     const openLinks = (item) => {
       if (item.id === 'link-statreg') {
-        return window.open(`${internalBaseUrl}/statistikkregisteret/publisering/list`, '_blank')
+        return openLinkInNewWindow(`${internalBaseUrl}/statistikkregisteret/publisering/list`)
       } else if (item.id === 'link-designer') {
-        return window.open(`${internalBaseUrl}/designer`, '_blank')
+        return openLinkInNewWindow(`${internalBaseUrl}/designer`)
       } else if (item.id === 'link-statbank') {
-        return window.open(internalStatbankUrl, '_blank')
+        return openLinkInNewWindow(internalStatbankUrl)
       } else if (item.id === 'link-guide-publications') {
-        return window.open('https://wiki.ssb.no/display/VEILEDNING/Home', '_blank')
+        return openLinkInNewWindow('https://wiki.ssb.no/display/VEILEDNING/Home')
       }
       return
     }
