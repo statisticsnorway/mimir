@@ -21,14 +21,14 @@ import { StatRegStatisticsLib } from '../../repo/statreg/statistics'
 import { StatisticInListing } from '../../ssb/statreg/types'
 import { StatRegRefreshResult } from '../../repo/statreg'
 import { StatRegJobInfo, SSBStatRegLib } from '../statreg'
-import { DashboardUtilsLib, WARNING_ICON_EVENTS } from './dashboardUtils'
+import { DashboardUtilsLib } from './dashboardUtils'
 import { DefaultPageConfig } from '../../../site/pages/default/default-page-config'
 import { Page } from '../../../site/content-types/page/page'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
-
 const {
   users,
-  showWarningIcon
+  showWarningIcon,
+  WARNING_ICON_EVENTS
 }: DashboardUtilsLib = __non_webpack_require__('/lib/ssb/dataset/dashboardUtils')
 const {
   logUserDataQuery
@@ -379,7 +379,7 @@ function parseResult(jobLog: JobInfoNode): Array<DashboardPublishJobResult> | Ar
       const statregData: StatisticInListing | undefined = getStatisticByIdFromRepo(statResult.shortNameId)
       const statId: string = statResult.statistic
       const shortName: string = statregData ? statregData.shortName : statResult.shortNameId // get name from shortNameId
-      const dataSources: DashboardPublishJobResult['dataSources'] = forceArray(statResult.dataSources).map((ds) => {
+      const dataSources: DashboardPublishJobResult['dataSources'] = forceArray(statResult.dataSources || []).map((ds) => {
         const dataSource: Content<DataSource> | null = getContent({
           key: ds.id
         })
