@@ -154,8 +154,9 @@ export function Statistics() {
   function getStatregLinks(statistic) {
     if (statistic.nextReleaseId && statistic.statisticId && statistic.variantId) {
       const editUrl = internalBaseUrl + '/statistikkregisteret/publisering/edit/' + statistic.nextReleaseId
-      const createUrl = internalBaseUrl + '/statistikkregisteret/publisering/create?statistikk.id=' +
-          statistic.statisticId + '&variant.id=' + statistic.variantId
+      const createUrl = statistic.activeVariants > 1 ?
+        internalBaseUrl + '/statistikkregisteret/statistikk/show/' + statistic.statisticId :
+        internalBaseUrl + '/statistikkregisteret/publisering/create?statistikk.id=' + statistic.statisticId + '&variant.id=' + statistic.variantId
       return (
         <React.Fragment>
           <Link isExternal href={editUrl} title="Endre publisering i statistikkregisteret" className="ml-2">[Endre]</Link>
