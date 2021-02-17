@@ -23,14 +23,10 @@ export function HomePage() {
                 <Row>
                   <Col className="col-9">
                     <Statistics/>
-                  </Col>
-                  <Col>
-                    <DashboardTools/>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col className="col-12">
                     <Jobs/>
+                  </Col>
+                  <Col className="pl-4">
+                    <DashboardTools/>
                   </Col>
                 </Row>
               </Container>

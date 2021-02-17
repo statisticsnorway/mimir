@@ -38,7 +38,7 @@ export function DashboardTools() {
     }
 
     return (
-      <div className="d-flex align-items-center">
+      <div className="d-flex justify-content-center align-items-center">
         <span className="font-weight-bold">Oppdater alle {statRegName}</span>
         <Button
           className="ml-auto"
@@ -59,7 +59,7 @@ export function DashboardTools() {
     if (loading) {
       return (<span className="spinner-border spinner-border-sm" />)
     }
-    return (<Trash size={18}/>)
+    return (<Trash size={20}/>)
   }
 
   function onStatisticsSearchSelect(e) {
@@ -141,7 +141,7 @@ export function DashboardTools() {
         className="other-tools-dropdown"
         header="Andre verktøy"
         selectedItem={{
-          id: 'placeholder',
+          id: 'link-dropdown-placeholder',
           title: 'Andre verktøy'
         }}
         items={getLinkOptions()}
@@ -180,7 +180,7 @@ export function DashboardTools() {
               onClick={() => clearCache()}
               disabled={loadingCache}>
               <div>
-                {renderIcon(loadingCache)} <span className="pl-2">Tøm cache</span>
+                {renderIcon(loadingCache)} <span>Tøm cache</span>
               </div>
             </Button>
           </Col>
