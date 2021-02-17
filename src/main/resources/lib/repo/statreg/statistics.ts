@@ -36,8 +36,26 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
     const response: HttpResponse = fetchStatRegData('Statistics', getStatRegBaseUrl() + STATISTICS_URL)
     if (response.status === 200 && response.body) {
       const statistics: Array<StatisticInListing> = extractStatistics(response.body)
-      // TODO next release - check before/after 0800
       if (app.config && app.config['ssb.mock.enable'] === 'true') {
+        // use todays date for next release if its before 0800 in the morning
+        const serverOffsetInMs: number = app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+        const midnight: moment.Moment = moment()
+          .hour(0)
+          .minute(0)
+        const eight: moment.Moment = moment()
+          .hour(8)
+          .minute(0)
+        const isBeforeEight: boolean = moment()
+          .add(serverOffsetInMs, 'milliseconds')
+          .isBetween(midnight, eight, 'hour', '[)')
+
+        const previousRelease: moment.Moment = moment()
+          .subtract(isBeforeEight ? 1 : 0, 'days')
+        const nextRelease: moment.Moment = moment()
+          .hour(8)
+          .minute(0)
+          .add(isBeforeEight ? 0 : 1, 'days')
+
         statistics.push({
           id: 0,
           shortName: 'mimir',
@@ -48,14 +66,8 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
           variants: [{
             id: '0',
             frekvens: 'Dag',
-            previousRelease: moment()
-              .subtract(1, 'days')
-              .toISOString(),
-            nextRelease: moment()
-              .hour(8)
-              .minute(0)
-              .add(1, 'days')
-              .toISOString(),
+            previousRelease: previousRelease.toISOString(),
+            nextRelease: nextRelease.toISOString(),
             nextReleaseId: '0'
           }]
         })
