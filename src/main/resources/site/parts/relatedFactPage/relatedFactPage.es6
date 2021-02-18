@@ -84,7 +84,7 @@ function renderPart(req, itemList) {
             const contentListItem = content.get({
               key: c
             })
-            return parseRelatedContent(contentListItem, type)
+            return contentListItem ? parseRelatedContent(contentListItem, type) : null
           })
         } else { // handles content selector from content-types (articles, statistics etc)
           return parseRelatedContent(relatedContent, type)
