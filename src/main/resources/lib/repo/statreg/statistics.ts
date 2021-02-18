@@ -35,7 +35,45 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
   try {
     const response: HttpResponse = fetchStatRegData('Statistics', getStatRegBaseUrl() + STATISTICS_URL)
     if (response.status === 200 && response.body) {
-      return extractStatistics(response.body)
+      const statistics: Array<StatisticInListing> = extractStatistics(response.body)
+      if (app.config && app.config['ssb.mock.enable'] === 'true') {
+        // use todays date for next release if its before 0800 in the morning
+        const serverOffsetInMs: number = app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+        const midnight: moment.Moment = moment()
+          .hour(0)
+          .minute(0)
+        const eight: moment.Moment = moment()
+          .hour(8)
+          .minute(0)
+        const isBeforeEight: boolean = moment()
+          .add(serverOffsetInMs, 'milliseconds')
+          .isBetween(midnight, eight, 'hour', '[)')
+
+        const previousRelease: moment.Moment = moment()
+          .subtract(isBeforeEight ? 1 : 0, 'days')
+        const nextRelease: moment.Moment = moment()
+          .hour(8)
+          .minute(0)
+          .add(isBeforeEight ? 0 : 1, 'days')
+
+        statistics.push({
+          id: 0,
+          shortName: 'mimir',
+          name: 'Mimir',
+          nameEN: 'Mimir',
+          status: '',
+          modifiedTime: '2020-04-16 11:14:19.121',
+          variants: [{
+            id: '0',
+            frekvens: 'Dag',
+            previousRelease: previousRelease.toISOString(),
+            nextRelease: nextRelease.toISOString(),
+            nextReleaseId: '0'
+          }]
+        })
+      }
+
+      return statistics
     }
   } catch (error) {
     const message: string = `Failed to fetch data from statreg: Statistics (${error})`
