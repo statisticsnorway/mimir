@@ -20,8 +20,6 @@ export function StatisticsLog(props) {
   const handleShow = () => setShow(true)
 
   const openEventlog = () => {
-    return
-    dataQueries.map((dataQuery) => requestEventLogData(dispatch, io, dataQuery.id))
     setShow(handleShow)
   }
 
@@ -60,44 +58,43 @@ export function StatisticsLog(props) {
   }
 
   function renderJobLogs() {
-    return dataQueries.map((dataQuery, index) => {
+    return statistic.logData.map((log, index) => {
       return (
         <Accordion
           key={index}
-          className={dataQuery.logData && dataQuery.logData.showWarningIcon ? 'warning' : ''}
-          header={dataQuery.displayName}
-          subHeader={relatedTables[index].tbmlId}>
-          {dataQuery.loadingLogs ?
-            (<span className="spinner-border spinner-border" />) :
-            (dataQuery.eventLogNodes.map((logNode, index) => {
-              return (
-                <p key={index}>
-                  <span>{logNode.modifiedTs}</span> - <span>{logNode.by}</span><br/>
-                  <span> &gt; {logNode.result}</span>
-                </p>
-              )
-            }))
-          }
+          className={log.status}
+          header={`${formatTime(log.completionTime)}: ${log.task} (${log.status})`}
+        >
+          { log.result.map((result, index) => {
+            return (
+              <ul key={index}>
+                <li key={index}>{result.branch}: {result.status}</li>
+              </ul>)
+          })}
+          <span>Av: {log.user.login}</span>
         </Accordion>
       )
     }
     )
   }
-
+  function formatTime(time) {
+    return moment(time).locale('nb').format('DD.MM.YYYY HH.mm')
+  }
   const ModalContent = () => {
     return (
       <Modal
+        size="lg"
         show={show}
         onHide={handleClose}
         animation={false}
       >
         <Modal.Header closeButton>
           <Modal.Title>
-            Logg detaljer
+            {statistic.name}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <h3>{statisticsShortName}</h3>
+          <h3>Logg detaljer</h3>
           {renderJobLogs()}
         </Modal.Body>
         <Modal.Footer>

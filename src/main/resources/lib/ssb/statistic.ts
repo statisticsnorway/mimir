@@ -416,7 +416,7 @@ function prepDashboardStatistics(statisticContent: Content<Statistics>, statregS
     ownersWithSources: undefined,
     relatedTables: relatedTables,
     aboutTheStatistics: statisticContent.data.aboutTheStatistics,
-    logData: getStatisticsJobLogInfo(statisticContent._id),
+    logData: getStatisticsJobLogInfo(statisticContent._id, 10),
     previewUrl: statisticContent._path ? `${prefix}/site/preview/default/draft${statisticContent._path}` : ''
   }
 }
