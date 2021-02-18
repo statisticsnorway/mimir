@@ -96,6 +96,12 @@
     <region name="Rad_R"/>
     <region name="Rad_S"/>
     <region name="Rad_T"/>
+    <region name="Rad_U"/>
+    <region name="Rad_V"/>
+    <region name="Rad_W"/>
+    <region name="Rad_X"/>
+    <region name="Rad_Y"/>
+    <region name="Rad_Z"/>
     <region name="main"/>
   </regions>
 </page>
