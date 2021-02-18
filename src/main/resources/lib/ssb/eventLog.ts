@@ -1,22 +1,14 @@
-import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
-import { Table } from '../../site/content-types/table/table'
-import { Highchart } from '../../site/content-types/highchart/highchart'
-import { KeyFigure } from '../../site/content-types/keyFigure/keyFigure'
-import { NodeQueryHit, NodeQueryResponse } from 'enonic-types/node'
+import { NodeQueryHit, NodeQueryResponse, RepoNode } from 'enonic-types/node'
 import { RepoEventLogLib } from '../repo/eventLog'
 import { RepoJobLib, JobEventNode } from '../repo/job'
 import { RepoCommonLib } from '../repo/common'
 import { ServerLogLib } from './serverLog'
 
 const {
-  query
-}: ContentLibrary = __non_webpack_require__('/lib/xp/content')
-
-const {
-  nodeExists,
   getChildNodes,
   queryNodes,
-  deleteNode
+  withConnection,
+  getNode
 }: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
 
 const {
@@ -34,6 +26,11 @@ const {
   cronJobLog
 }: ServerLogLib = __non_webpack_require__( '/lib/ssb/serverLog')
 
+interface RepoNodeExtended extends RepoNode {
+  _path: string;
+  _name: string;
+}
+
 export function deleteExpiredEventLogs(): void {
   cronJobLog('Deleting expired eventlogs')
   const job: JobEventNode = startJobLog('Delete expired eventlogs')
@@ -41,22 +38,27 @@ export function deleteExpiredEventLogs(): void {
   const maxLogsBeforeDeleting: number = 10
   const monthsBeforeLogsExpire: number = 1
 
-  const contentsWithDatasources: QueryResponse<Table | Highchart | KeyFigure> = query({
-    contentTypes: [`${app.name}:table`, `${app.name}:highchart`, `${app.name}:keyfigure`],
-    count: 2000,
-    query: ``
-  })
   const expireDate: Date = new Date()
   expireDate.setMonth(expireDate.getMonth() - monthsBeforeLogsExpire)
-  const contentsWithLogs: Array<Content<Table | Highchart | KeyFigure>> = contentsWithDatasources.hits
-    .filter((content) => nodeExists(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `${path}/${content._id}`))
 
-  const deleteResult: Array<object> | undefined = contentsWithLogs.reduce( (acc: Array<object>, content) => {
-    const eventLogs: NodeQueryResponse<never> = getChildNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `${path}/${content._id}`, 2000)
+  const parentNodes: Array<RepoNodeExtended> = queryNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, {
+    query: `_parentPath = "${path}"`,
+    count: 3000
+  }).hits.reduce((acc: Array<RepoNodeExtended>, parentNodeHit: NodeQueryHit) => {
+    const parentNode: RepoNodeExtended | null = getNode<RepoNodeExtended>(EVENT_LOG_REPO, EVENT_LOG_BRANCH, parentNodeHit.id) as RepoNodeExtended | null
+    if (parentNode) {
+      acc.push(parentNode)
+    }
+    return acc
+  }, [])
+
+  const deleteResult: Array<object> | undefined = parentNodes.reduce( (acc: Array<object>, parent) => {
+    const eventLogs: NodeQueryResponse<never> = getChildNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `${parent._id}`, 0, true)
     if (eventLogs.total > maxLogsBeforeDeleting) {
+      const deleteResult: Array<string> = deleteLog(path, parent, expireDate, eventLogs.total)
       acc.push({
-        contentId: content._id,
-        deleteResult: deleteLog(path, content, expireDate)
+        contentId: parent._name,
+        deleteResult
       })
     }
     return acc
@@ -66,7 +68,7 @@ export function deleteExpiredEventLogs(): void {
     node.data = {
       ...node.data,
       refreshDataResult: deleteResult,
-      queryIds: contentsWithLogs.map((content: Content<Table | Highchart | KeyFigure>) => content._id),
+      queryIds: parentNodes.map((parent: RepoNodeExtended) => parent._name),
       status: JOB_STATUS_COMPLETE
     }
     return node
@@ -74,15 +76,16 @@ export function deleteExpiredEventLogs(): void {
   cronJobLog('Delete expired logs complete')
 }
 
-function deleteLog(path: string, content: Content<Table | Highchart | KeyFigure>, expiredDate: Date): Array<string> {
-  const query: string = `_parentPath = '${path}/${content._id}' AND _ts < dateTime('${expiredDate.toISOString()}')`
+function deleteLog(path: string, parent: RepoNodeExtended, expiredDate: Date, count: number): Array<string> {
+  const query: string = `_parentPath = '${parent._path}' AND _ts < dateTime('${expiredDate.toISOString()}')`
   const expiredLogs: NodeQueryResponse<never> = queryNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, {
-    query
+    query,
+    count
   })
-  return expiredLogs.hits.map( (eventLog: NodeQueryHit) => {
-    return deleteNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `${path}/${content._id}/${eventLog.id}`) ?
-      `Deleted expired event log: ${path}/${content._id}/${eventLog.id}` :
-      `Failed to delete event log: ${path}/${content._id}/${eventLog.id}`
+  return withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (conn) => {
+    return conn.delete(expiredLogs.hits.map((h) => h.id)).map((id) => {
+      return `Deleted expired event log: ${parent._id}/${id}`
+    })
   })
 }
 

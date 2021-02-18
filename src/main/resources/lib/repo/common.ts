@@ -93,11 +93,12 @@ export function modifyNode<T>(repository: string, branch: string, key: string, e
   })
 }
 
-export function getChildNodes(repository: string, branch: string, key: string, count: number = 10): NodeQueryResponse<never> {
+export function getChildNodes(repository: string, branch: string, key: string, count: number = 10, countOnly: boolean = false): NodeQueryResponse<never> {
   return withConnection(repository, branch, (conn) => {
     return conn.findChildren({
       parentKey: key,
-      count
+      count,
+      countOnly
     })
   })
 }
@@ -123,7 +124,7 @@ export interface RepoCommonLib {
   getNode: <T>(repository: string, branch: string, key: string) => ReadonlyArray<T & RepoNode> | T & RepoNode | null;
   deleteNode: (repository: string, branch: string, key: string) => boolean;
   modifyNode: <T>(repository: string, branch: string, key: string, editor: EditorCallback<T>) => T;
-  getChildNodes: (repository: string, branch: string, key: string, count?: number) => NodeQueryResponse<never>;
+  getChildNodes: (repository: string, branch: string, key: string, count?: number, countOnly?: boolean) => NodeQueryResponse<never>;
   nodeExists: (repository: string, branch: string, key: string) => boolean;
   queryNodes: (repository: string, branch: string, params: NodeQueryParams<never>) => NodeQueryResponse<never>;
 }
