@@ -59,14 +59,12 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
           .second(0)
           .millisecond(0)
           .subtract(isBeforeEight ? 1 : 0, 'days')
-          .subtract(serverOffsetInMs, 'milliseconds')
         const nextRelease: moment.Moment = moment()
           .hour(8)
           .minute(0)
           .second(0)
           .millisecond(0)
           .add(isBeforeEight ? 0 : 1, 'days')
-          .subtract(serverOffsetInMs, 'milliseconds')
 
         statistics.push({
           id: 0,
@@ -78,8 +76,8 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
           variants: [{
             id: '0',
             frekvens: 'Dag',
-            previousRelease: previousRelease.format('YYYY-MM-DD HH.mm.ss.S'),
-            nextRelease: nextRelease.format('YYYY-MM-DD HH.mm.ss.S'),
+            previousRelease: previousRelease.format('YYYY-MM-DD HH:mm:ss.S'),
+            nextRelease: nextRelease.format('YYYY-MM-DD HH:mm:ss.S'),
             nextReleaseId: '0'
           }]
         })
