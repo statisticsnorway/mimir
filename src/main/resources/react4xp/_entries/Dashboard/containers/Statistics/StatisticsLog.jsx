@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { Button, Modal } from 'react-bootstrap'
-import { requestEventLogData } from '../DataSources/actions'
+import { requestStatisticsJobLog, requestJobLogDetails } from './actions'
 import { Accordion } from '@statisticsnorway/ssb-component-library'
 import moment from 'moment/min/moment-with-locales'
 import { groupBy } from 'ramda'
@@ -16,11 +16,25 @@ export function StatisticsLog(props) {
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
   const [show, setShow] = useState(false)
+  const [firstOpen, setFirstOpen] = useState(true)
+  const [subAccordion, setSubAccordion] = useState([])
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
   const openEventlog = () => {
+    if (firstOpen) {
+      requestStatisticsJobLog(dispatch, io, statistic.id)
+      setFirstOpen(false)
+    }
     setShow(handleShow)
+  }
+
+  function onToggleAccordion(index) {
+    if (!subAccordion[index]) {
+      console.log('first time')
+      subAccordion[index] = true
+      setSubAccordion(subAccordion)
+    }
   }
 
   function renderLogData() {
@@ -64,14 +78,9 @@ export function StatisticsLog(props) {
           key={index}
           className={log.status}
           header={`${formatTime(log.completionTime)}: ${log.task} (${log.status})`}
+          onToggle={() => onToggleAccordion(index)}
         >
-          { log.result.map((result, index) => {
-            return (
-              <ul key={index}>
-                <li key={index}>{result.branch}: {result.status}</li>
-              </ul>)
-          })}
-          <span>Av: {log.user.login}</span>
+          pewpew
         </Accordion>
       )
     }

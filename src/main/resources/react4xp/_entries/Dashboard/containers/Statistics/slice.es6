@@ -76,6 +76,9 @@ const statisticsSlice = createSlice({
       state.loadingSearchList = true
       state.statisticsSearchList = []
     },
+    loadStatisticsJoblog(state, action) {
+
+    },
     statisticsSearchListLoaded(state, action) {
       state.loadingSearchList = false
       state.statisticsSearchList = action.statisticsSearchList
@@ -112,6 +115,14 @@ const statisticsSlice = createSlice({
           stat.relatedTables = action.data.relatedTables
           stat.ownersWithSources = action.data.ownersWithSources
           stat.loadingRelatedTablesAndOwnersWithSources = false
+        }
+      }
+    },
+    statisticJoblogLoaded(state, action) {
+      if (action.data.id) {
+        const stat = state.statistics.find((s) => s.id === action.data.id)
+        if (stat) {
+          stat.logData = action.data.jobLogs
         }
       }
     }

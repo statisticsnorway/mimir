@@ -1,4 +1,4 @@
-import { AdminLibrary } from 'enonic-types/admin'
+import { QueryInfoNode } from '../repo/query'
 
 __non_webpack_require__('/lib/polyfills/nashorn')
 import { Socket, SocketEmitter } from '../types/socket'
@@ -18,7 +18,7 @@ import { TbprocessorLib } from './dataset/tbprocessor'
 import { DataSource } from '../../site/mixins/dataSource/dataSource'
 import { Source, TbmlDataUniform } from '../types/xmlParser'
 import { JobEventNode, JobInfoNode, JobNames, JobStatus, RepoJobLib } from '../repo/job'
-import { NodeQueryResponse } from 'enonic-types/node'
+import { NodeQueryResponse, RepoConnection } from 'enonic-types/node'
 import { RepoEventLogLib } from '../repo/eventLog'
 import { RepoCommonLib } from '../repo/common'
 import { StatRegStatisticsLib } from '../repo/statreg/statistics'
@@ -67,7 +67,8 @@ const {
 }: RepoJobLib = __non_webpack_require__('/lib/repo/job')
 const {
   withConnection,
-  ENONIC_CMS_DEFAULT_REPO
+  ENONIC_CMS_DEFAULT_REPO,
+  getNode
 }: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
 const {
   EVENT_LOG_BRANCH,
@@ -120,6 +121,28 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
           id: options.id,
           ownersWithSources
         })
+      }
+    })
+  })
+
+  socket.on('get-statistics-job-log', (options: GenericIdParam) => {
+    submitTask({
+      description: 'get-statistics-job-log',
+      task: () => {
+        const jobLogs: Array<object> = getStatisticsJobLogInfo(options.id, 10)
+        socket.emit('get-statistics-job-log-result', {
+          id: options.id,
+          jobLogs
+        })
+      }
+    })
+  })
+
+  socket.on('get-statistic-job-log-details', (options: GenericIdParam) => {
+    submitTask({
+      description: 'get-statistic-job-log-details',
+      task: () => {
+        const logDetails: Array<object> = getEventLogsFromStatisticsJobLog(options.id)
       }
     })
   })
@@ -338,22 +361,23 @@ function prepStatisticsJobLogInfo(jobNode: JobInfoNode): DashboardJobInfo {
 }
 
 // NOTE example code to fetch event logs connected to datasources on statistics job log
-// function getEventLogsFromStatisticsJobLog(connection: RepoConnection, jobLogId: string): Array<unknown> {
-//   const jobLog: JobInfoNode = connection.get(jobLogId)
-//   const userLogin: string | undefined = jobLog.data.user?.login
-//   const from: string = jobLog.data.jobStarted
-//   const to: string = jobLog.data.completionTime
-//   const datasetIds: Array<string> = jobLog.data.refreshDataResult as Array<string> || []
-//   return datasetIds.map((id) => {
-//     log.info(`_path LIKE "/queries/${id}/*" AND data.by.login = "${userLogin}" AND range("_ts", instant("${from}"), instant("${to}"))`)
-//     const eventLogsResult: NodeQueryResponse = connection.query({
-//       query: `_path LIKE "/queries/${id}/*" AND data.by.login = "${userLogin}" AND range("_ts", instant("${from}"), instant("${to}"))`,
-//       count: 10,
-//       sort: '_ts DESC'
-//     })
-//     return null
-//   })
-// }
+function getEventLogsFromStatisticsJobLog(jobLogId: string): Array<unknown> {
+  const jobLog: JobInfoNode | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/job/${jobLogId}`) as JobInfoNode
+  // const jobLog: JobInfoNode = connection.get(jobLogId)
+  const userLogin: string | undefined = jobLog.data.user?.login
+  const from: string = jobLog.data.jobStarted
+  const to: string = jobLog.data.completionTime
+  const datasetIds: Array<string> = jobLog.data.refreshDataResult as Array<string> || []
+  return datasetIds.map((id) => {
+    log.info(`_path LIKE "/queries/${id}/*" AND data.by.login = "${userLogin}" AND range("_ts", instant("${from}"), instant("${to}"))`)
+    const eventLogsResult: NodeQueryResponse = connection.query({
+      query: `_path LIKE "/queries/${id}/*" AND data.by.login = "${userLogin}" AND range("_ts", instant("${from}"), instant("${to}"))`,
+      count: 10,
+      sort: '_ts DESC'
+    })
+    return null
+  })
+}
 
 function checkIfUserIsAdmin(): boolean {
   return hasRole('system.admin')
@@ -416,7 +440,7 @@ function prepDashboardStatistics(statisticContent: Content<Statistics>, statregS
     ownersWithSources: undefined,
     relatedTables: relatedTables,
     aboutTheStatistics: statisticContent.data.aboutTheStatistics,
-    logData: getStatisticsJobLogInfo(statisticContent._id, 10),
+    logData: getStatisticsJobLogInfo(statisticContent._id),
     previewUrl: statisticContent._path ? `${prefix}/site/preview/default/draft${statisticContent._path}` : ''
   }
 }
@@ -516,6 +540,10 @@ interface GetSourceListOwnersOptions {
 }
 
 interface GetRelatedTablesOptions {
+  id: string;
+}
+
+interface GenericIdParam {
   id: string;
 }
 

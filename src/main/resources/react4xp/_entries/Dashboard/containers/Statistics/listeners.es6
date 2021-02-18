@@ -63,4 +63,11 @@ export default function setupStatisticsListeners(io, dispatch) {
       data
     })
   })
+
+  io.on('get-statistics-job-log-result', (data) => {
+    dispatch({
+      type: actions.statisticJoblogLoaded.type,
+      data
+    })
+  })
 }
