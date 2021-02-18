@@ -46,7 +46,7 @@ const renderPart = (req) => {
 
   const statisticsTitle = phrases.menuStatistics
   if (!activeStatistics || activeStatistics.length === 0) {
-    if (req.mode === 'edit' && page.type !== `${app.name}:statistics` && page.type !== `${app.name}:article`) {
+    if (req.mode === 'edit') {
       return {
         body: render(view, {
           statisticsTitle
