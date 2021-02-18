@@ -7,7 +7,7 @@ name: CREATE MABL FEATURE BRANCH
 on:
   pull_request:
     types: [labeled]
-    branches: [mimir-367-dronecli]
+    branches: [master]
   workflow_dispatch:
 jobs:
   # This workflow contains a single job called "create_mabl_branch"
