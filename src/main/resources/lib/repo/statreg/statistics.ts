@@ -42,9 +42,13 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
         const midnight: moment.Moment = moment()
           .hour(0)
           .minute(0)
+          .second(0)
+          .millisecond(0)
         const eight: moment.Moment = moment()
           .hour(8)
           .minute(0)
+          .second(0)
+          .millisecond(0)
         const isBeforeEight: boolean = moment()
           .add(serverOffsetInMs, 'milliseconds')
           .isBetween(midnight, eight, 'hour', '[)')
@@ -52,11 +56,15 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
         const previousRelease: moment.Moment = moment()
           .hour(8)
           .minute(0)
+          .second(0)
+          .millisecond(0)
           .subtract(isBeforeEight ? 1 : 0, 'days')
           .subtract(serverOffsetInMs, 'milliseconds')
         const nextRelease: moment.Moment = moment()
           .hour(8)
           .minute(0)
+          .second(0)
+          .millisecond(0)
           .add(isBeforeEight ? 0 : 1, 'days')
           .subtract(serverOffsetInMs, 'milliseconds')
 
@@ -70,8 +78,8 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
           variants: [{
             id: '0',
             frekvens: 'Dag',
-            previousRelease: previousRelease.toISOString(),
-            nextRelease: nextRelease.toISOString(),
+            previousRelease: previousRelease.format('YYYY-MM-DD HH.mm.ss.S'),
+            nextRelease: nextRelease.format('YYYY-MM-DD HH.mm.ss.S'),
             nextReleaseId: '0'
           }]
         })
