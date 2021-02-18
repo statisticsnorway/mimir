@@ -50,11 +50,15 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
           .isBetween(midnight, eight, 'hour', '[)')
 
         const previousRelease: moment.Moment = moment()
+          .hour(8)
+          .minute(0)
           .subtract(isBeforeEight ? 1 : 0, 'days')
+          .subtract(serverOffsetInMs, 'milliseconds')
         const nextRelease: moment.Moment = moment()
           .hour(8)
           .minute(0)
           .add(isBeforeEight ? 0 : 1, 'days')
+          .subtract(serverOffsetInMs, 'milliseconds')
 
         statistics.push({
           id: 0,
