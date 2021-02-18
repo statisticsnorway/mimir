@@ -107,7 +107,7 @@ const parseContent = (activeStatistics) => {
 
         return {
           title: activeStatisticsContent.displayName,
-          preamble,
+          preamble: preamble ? preamble : '',
           href: pageUrl({
             id: statisticsContentId
           })

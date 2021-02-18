@@ -105,7 +105,7 @@ const parseRelatedContent = (relatedStatistics) => {
 
         return {
           title: relatedStatisticsContent.displayName,
-          preamble,
+          preamble: preamble ? preamble : '',
           href: pageUrl({
             id: statisticsContentId
           })
