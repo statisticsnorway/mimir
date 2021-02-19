@@ -168,14 +168,14 @@ export function getImageCaption(imageId) {
   const imageContent = content.get({
     key: imageId
   })
-  return imageContent !== undefined ? imageContent.data.caption : ''
+  return imageContent && imageContent !== undefined ? imageContent.data.caption : ''
 }
 
 export function getImageAlt(imageId) {
   const imageContent = content.get({
     key: imageId
   })
-  return imageContent !== undefined ? imageContent.data.altText : ''
+  return imageContent && imageContent !== undefined ? imageContent.data.altText : ''
 }
 
 export function isPublished(content) {
