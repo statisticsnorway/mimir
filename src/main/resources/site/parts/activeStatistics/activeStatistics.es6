@@ -60,16 +60,14 @@ const renderPart = (req) => {
 
 const renderActiveStatistics = (statisticsTitle, activeStatisticsContent, phrases) => {
   if (activeStatisticsContent && activeStatisticsContent.length) {
-    const activeStatisticsXP = new React4xp('RelatedStatistics')
+    const activeStatisticsXP = new React4xp('ActiveStatistics')
       .setProps({
         headerTitle: statisticsTitle,
-        relatedStatistics: activeStatisticsContent.map((statisticsContent) => {
+        activeStatistics: activeStatisticsContent.map((statisticsContent) => {
           return {
             ...statisticsContent
           }
-        }),
-        showAll: phrases.showAll,
-        showLess: phrases.showLess
+        })
       })
       .uniqueId()
 
