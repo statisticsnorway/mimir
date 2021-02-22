@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button, Card, Text } from '@statisticsnorway/ssb-component-library'
+import { Col, Container, Row } from 'react-bootstrap'
 import PropTypes from 'prop-types'
 import { ChevronDown, ChevronUp } from 'react-feather'
 
@@ -22,9 +23,9 @@ class EndedStatistics extends React.Component {
 
   renderIcon() {
     if (this.state.isHidden) {
-      return <ChevronDown size={18} />
+      return <ChevronDown size={20} className="mr-2" />
     }
-    return <ChevronUp size={18} />
+    return <ChevronUp size={20} className="mr-2" />
   }
 
   renderShowMoreButton() {
@@ -32,11 +33,11 @@ class EndedStatistics extends React.Component {
       buttonText
     } = this.props
     return (
-      <div className="row hide-show-btn">
-        <div className="col">
+      <Row className="hide-show-btn">
+        <Col>
           <Button onClick={this.toggleBox}>{this.renderIcon()}{buttonText}</Button>
-        </div>
-      </div>
+        </Col>
+      </Row>
     )
   }
 
@@ -45,9 +46,9 @@ class EndedStatistics extends React.Component {
       endedStatistics
     } = this.props
     return (
-      <div className="container">
+      <Container>
         {this.renderShowMoreButton()}
-        <div className="row mt-3">
+        <Row className="mt-3">
           {endedStatistics.map(({
             href, title, preamble
           }, index) => {
@@ -63,8 +64,8 @@ class EndedStatistics extends React.Component {
               </Card>
             )
           })}
-        </div>
-      </div>
+        </Row>
+      </Container>
     )
   }
 }

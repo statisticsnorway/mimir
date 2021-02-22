@@ -1,0 +1,20 @@
+.part-ended-statistics {
+  .ssb-card {
+    .card-content {
+      background-color: transparent;
+      border-color: $ssb-dark-6;
+
+      .arrow-icon {
+        color: $ssb-dark-6;
+      }
+    }
+
+    .clickable:hover .card-content {
+      border-color: $ssb-dark-6;
+
+      .arrow-icon {
+        border-color: $ssb-dark-6;
+      }
+    }
+  }
+}
