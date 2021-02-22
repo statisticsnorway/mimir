@@ -58,10 +58,10 @@ const renderPart = (req) => {
 
 const renderRelatedStatistics = (statisticsTitle, relatedStatisticsContent, phrases) => {
   if (relatedStatisticsContent && relatedStatisticsContent.length) {
-    const relatedStatisticsXP = new React4xp('RelatedStatistics')
+    const relatedStatisticsXP = new React4xp('StatisticsCards')
       .setProps({
         headerTitle: statisticsTitle,
-        relatedStatistics: relatedStatisticsContent.map((statisticsContent) => {
+        statistics: relatedStatisticsContent.map((statisticsContent) => {
           return {
             ...statisticsContent
           }
