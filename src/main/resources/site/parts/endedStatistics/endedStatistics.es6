@@ -56,7 +56,7 @@ const renderEndedStatistics = (endedStatisticsContent, phrases) => {
             ...statisticsContent
           }
         }),
-        endedCardText: phrases.endedCardText,
+        iconText: phrases.endedCardText,
         buttonText: phrases.endedStatistics
       })
       .uniqueId()

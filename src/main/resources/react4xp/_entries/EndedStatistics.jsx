@@ -33,7 +33,7 @@ class EndedStatistics extends React.Component {
       buttonText
     } = this.props
     return (
-      <Row className="hide-show-btn">
+      <Row>
         <Col>
           <Button onClick={this.toggleBox}>{this.renderIcon()}{buttonText}</Button>
         </Col>
@@ -43,7 +43,7 @@ class EndedStatistics extends React.Component {
 
   render() {
     const {
-      endedStatistics
+      endedStatistics, iconText
     } = this.props
     return (
       <Container>
@@ -57,6 +57,7 @@ class EndedStatistics extends React.Component {
                 key={index}
                 className={`mb-3 col-12 col-lg-4 ${this.state.isHidden ? 'd-none' : ''}`}
                 href={href}
+                hrefText={iconText}
                 title={title}>
                 <Text>
                   {preamble}
@@ -78,7 +79,7 @@ EndedStatistics.propTypes = {
       href: PropTypes.string.isRequired
     })
   ).isRequired,
-  endedCardText: PropTypes.string,
+  iconText: PropTypes.string,
   buttonText: PropTypes.string.isRequired
 }
 

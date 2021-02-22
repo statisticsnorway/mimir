@@ -5,15 +5,23 @@
       border-color: $ssb-dark-6;
 
       .arrow-icon {
+        width: 22px;
+        height: 22px;
         color: $ssb-dark-6;
+      }
+
+      .href-text {
+        font-weight: normal;
+        font-size: 14px;
+        padding-left: 10px;
       }
     }
 
     .clickable:hover .card-content {
       border-color: $ssb-dark-6;
 
-      .arrow-icon {
-        border-color: $ssb-dark-6;
+      .card-action {
+        background-color: $ssb-dark-6;
       }
     }
   }
