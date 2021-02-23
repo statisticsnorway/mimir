@@ -1,3 +1,4 @@
+import { StatisticInListing } from '../statreg/types'
 __non_webpack_require__('/lib/polyfills/nashorn')
 import { Content } from 'enonic-types/content'
 import { HttpLibrary, HttpResponse } from 'enonic-types/http'
@@ -9,6 +10,8 @@ import { StatbankApiLib } from './statbankApi'
 import { DatasetLib } from './dataset'
 import { JSONstat } from '../../types/jsonstat-toolkit'
 import { ServerLogLib } from '../serverLog'
+import { DefaultPageConfig } from '../../../site/pages/default/default-page-config'
+import { Statistics } from '../../../site/content-types/statistics/statistics'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 const http: HttpLibrary = __non_webpack_require__( '/lib/http-client')
@@ -25,8 +28,12 @@ const {
   cronJobLog
 }: ServerLogLib = __non_webpack_require__( '/lib/ssb/serverLog')
 const {
-  getParentType
+  getParentType, getParentContent
 } = __non_webpack_require__('/lib/ssb/parent')
+
+const {
+  fetchStatisticsWithRelease
+} = __non_webpack_require__('/lib/repo/statreg/statistics')
 
 function fetchRSS(): Array<RSSItem> {
   const statbankRssUrl: string | undefined = app.config && app.config['ssb.rss.statbank'] ? app.config['ssb.rss.statbank'] : 'https://www.ssb.no/rss/statbank'
@@ -52,6 +59,23 @@ function isValidType(dataSource: Content<DataSource>): boolean {
   }
 
   return false
+}
+
+function getSavedQuerysStatistic(dataSources: Array<Content<DataSource>>): Array<Content<DataSource>> {
+  const statisticsWithReleaseToday: Array<string> = fetchStatisticsWithRelease(new Date()).map((s: StatisticInListing) => s.id.toString())
+  const savedQuerysStatistics: Array<Content<DataSource>> = dataSources.filter((datasource) =>
+    getParentType(datasource._path) === 'mimir:statistics' && datasource.data.dataSource?._selected === 'statbankSaved')
+
+  return savedQuerysStatistics.reduce((acc: Array<Content<DataSource>>, datasource) => {
+    const parentContent: Content<object, DefaultPageConfig> | null = getParentContent(datasource._path)
+    if (parentContent && parentContent.type === 'mimir:statistics') {
+      const statisticContent: Content<Statistics> = parentContent
+      if (statisticContent.data.statistic && statisticsWithReleaseToday.includes(statisticContent.data.statistic.toString())) {
+        acc.push(datasource)
+      }
+    }
+    return acc
+  }, [])
 }
 
 function parentTypeFilter(dataSources: Array<Content<DataSource>>): Array<Content<DataSource>> {
@@ -80,7 +104,12 @@ function inRSSItems(dataSource: Content<DataSource>, dataset: DatasetRepoNode<JS
 }
 
 export function dataSourceRSSFilter(dataSources: Array<Content<DataSource>>): Array<Content<DataSource>> {
-  const filteredDatasources: Array<Content<DataSource>> = parentTypeFilter(dataSources)
+  let filteredDatasources: Array<Content<DataSource>> = parentTypeFilter(dataSources)
+  const savedQuerysStatisticsToday: Array<Content<DataSource>> = getSavedQuerysStatistic(dataSources)
+  if (savedQuerysStatisticsToday.length > 0) {
+    filteredDatasources = filteredDatasources.concat(savedQuerysStatisticsToday)
+  }
+
   const today: number = new Date().getDate()
   const RSSItems: Array<RSSItem> = fetchRSS()
     .filter((item) => new Date(item.pubDate).getDate() === today) // only keep those with updates today
