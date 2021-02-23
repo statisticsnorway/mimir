@@ -11,7 +11,7 @@ import { PublishDatasetLib } from './dataset/publish'
 import { EventLogLib } from '../ssb/eventLog'
 import { ClusterLib } from '../types/cluster'
 import { ServerLogLib } from './serverLog'
-import { DatasetRSSLib } from './dataset/rss'
+import { DatasetRSSLib, RSSFilter } from './dataset/rss'
 import { RepoCommonLib } from '../repo/common'
 import { MockUnpublishedLib } from './dataset/mockUnpublished'
 
@@ -101,8 +101,8 @@ function job(): void {
   cronJobLog('-- Running dataquery cron job --')
   const jobLogNode: JobEventNode = startJobLog('-- Running dataquery cron job --')
 
-  let dataSourceQueries: Array<Content<DataSource>> = getContentWithDataSource()
-  dataSourceQueries = dataSourceRSSFilter(dataSourceQueries)
+  const filterData: RSSFilter = dataSourceRSSFilter(getContentWithDataSource())
+  const dataSourceQueries: Array<Content<DataSource>> = filterData.filteredDataSources
   updateJobLog(jobLogNode._id, (node: JobInfoNode) => {
     node.data = {
       ...node.data,
@@ -110,8 +110,14 @@ function job(): void {
     }
     return node
   })
-  const refreshDataResult: undefined | Array<string> = dataSourceQueries && refreshQueriesAsync(dataSourceQueries)
-  completeJobLog(jobLogNode._id, JOB_STATUS_COMPLETE, refreshDataResult)
+  if (dataSourceQueries && dataSourceQueries.length > 1) {
+    refreshQueriesAsync(dataSourceQueries, jobLogNode._id, filterData.logData)
+  } else {
+    completeJobLog(jobLogNode._id, JOB_STATUS_COMPLETE, {
+      filterInfo: filterData.logData,
+      result: []
+    })
+  }
   cronJobLog('-- Completed dataquery cron job --')
 }
 

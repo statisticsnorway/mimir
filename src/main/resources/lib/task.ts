@@ -4,6 +4,9 @@ import { DatasetLib, CreateOrUpdateStatus } from './ssb/dataset/dataset'
 import { DataSource } from '../site/mixins/dataSource/dataSource'
 import { RepoQueryLib } from './repo/query'
 import { RepoDatasetLib } from './repo/dataset'
+import { TaskLib } from './types/task'
+import { RSSFilterLogData } from './ssb/dataset/rss'
+import { completeJobLog, JOB_STATUS_COMPLETE } from './repo/job'
 
 const {
   DATASET_BRANCH
@@ -14,25 +17,35 @@ const {
 const {
   progress,
   submit
-} = __non_webpack_require__('/lib/xp/task')
+}: TaskLib = __non_webpack_require__('/lib/xp/task')
 const {
   logUserDataQuery,
   Events
 }: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
 
-export function refreshQueriesAsync(httpQueries: Array<Content<DataSource>>, batchSize: number = 4): Array<string> {
-  const httpQueriesBatch: Array<Array<Content<DataSource>>> = splitEvery((httpQueries.length / batchSize), httpQueries)
+export function refreshQueriesAsync(
+  httpQueries: Array<Content<DataSource>>,
+  jobLogId: string,
+  filterInfo: RSSFilterLogData,
+  batchSize: number = 4
+): Array<string> {
+  const httpQueriesBatches: Array<Array<Content<DataSource>>> = splitEvery((httpQueries.length / batchSize), httpQueries)
+  const jobLogResult: Array<CreateOrUpdateStatus> = []
   let a: number = 0
-  return httpQueriesBatch.map( (httpQueries: Array<Content<DataSource>>) => {
+  return httpQueriesBatches.map((httpQueriesbatch: Array<Content<DataSource>>) => {
     a++
     return submit({
       description: `RefreshRows_${a}`,
       task: function() {
         progress({
-          info: `Start task for datasets ${httpQueries.map((httpQuery) => httpQuery._id)}`
+          current: 0,
+          total: httpQueriesbatch.length,
+          info: `Start task for datasets ${httpQueriesbatch.map((httpQuery) => httpQuery._id)}`
         })
-        httpQueries.map((httpQuery: Content<DataSource>) => {
+        httpQueriesbatch.map((httpQuery: Content<DataSource>, index) => {
           progress({
+            current: index,
+            total: httpQueriesbatch.length,
             info: `Refresh dataset ${httpQuery._id}`
           })
           logUserDataQuery(httpQuery._id, {
@@ -42,6 +55,19 @@ export function refreshQueriesAsync(httpQueries: Array<Content<DataSource>>, bat
           logUserDataQuery(httpQuery._id, {
             message: result.status
           })
+          jobLogResult.push(result)
+          if (jobLogResult.length === httpQueries.length) {
+            completeJobLog(jobLogId, JOB_STATUS_COMPLETE, {
+              filterInfo,
+              result: jobLogResult.map((r) => ({
+                id: r.dataquery._id,
+                displayName: r.dataquery.displayName,
+                contentType: r.dataquery.type,
+                dataSourceType: r.dataquery.data.dataSource?._selected,
+                status: r.status
+              }))
+            })
+          }
         })
       }
     })
@@ -49,5 +75,5 @@ export function refreshQueriesAsync(httpQueries: Array<Content<DataSource>>, bat
 }
 
 export interface SSBTaskLib {
-  refreshQueriesAsync: (httpQueries: Array<Content<DataSource>>, batchSize?: number) => Array<string>;
+  refreshQueriesAsync: (httpQueries: Array<Content<DataSource>>, jobLogId: string, filterInfo: RSSFilterLogData, batchSize?: number) => Array<string>;
 }
