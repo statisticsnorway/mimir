@@ -2,7 +2,6 @@ const {
   getComponent,
   imageUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const content = __non_webpack_require__( '/lib/xp/content')
 const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
