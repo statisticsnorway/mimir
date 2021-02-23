@@ -98,8 +98,8 @@ function setupCronJobUser(): void {
 }
 
 function job(): void {
-  cronJobLog('-- Running dataquery cron job --')
-  const jobLogNode: JobEventNode = startJobLog('-- Running dataquery cron job --')
+  cronJobLog(JobNames.REFRESH_DATASET_JOB)
+  const jobLogNode: JobEventNode = startJobLog(JobNames.REFRESH_DATASET_JOB)
 
   const filterData: RSSFilter = dataSourceRSSFilter(getContentWithDataSource())
   const dataSourceQueries: Array<Content<DataSource>> = filterData.filteredDataSources
@@ -118,7 +118,7 @@ function job(): void {
       result: []
     })
   }
-  cronJobLog('-- Completed dataquery cron job --')
+  cronJobLog(JobNames.REFRESH_DATASET_JOB)
 }
 
 export function statRegJob(): void {

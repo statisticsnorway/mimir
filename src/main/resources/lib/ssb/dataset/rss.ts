@@ -134,14 +134,16 @@ export interface RSSFilterLogData {
   noData: Array<string>;
   otherDataType: Array<string>;
   inRSSOrNoKey: Array<string>;
-  skipped: Array<{
-    id: string;
-    displayName: string;
-    contentType: string;
-    dataSourceType?: string;
-    status: string;
-  }>;
+  skipped: Array<DataSourceInfo>;
   end: Array<string>;
+}
+
+export interface DataSourceInfo {
+  id: string;
+  displayName: string;
+  contentType: string;
+  dataSourceType?: string;
+  status: string;
 }
 
 export interface RSSFilter {

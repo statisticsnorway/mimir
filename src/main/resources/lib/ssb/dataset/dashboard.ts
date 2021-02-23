@@ -15,7 +15,7 @@ import { DatasetRepoNode, RepoDatasetLib } from '../../repo/dataset'
 import { RepoCommonLib, withConnection } from '../../repo/common'
 import { User } from 'enonic-types/auth'
 import { TaskLib } from '../../types/task'
-import { JobInfoNode, JOB_STATUS_COMPLETE, JOB_STATUS_STARTED, RepoJobLib, StatisticsPublishResult } from '../../repo/job'
+import { DatasetRefreshResult, JobInfoNode, JOB_STATUS_COMPLETE, JOB_STATUS_STARTED, RepoJobLib, StatisticsPublishResult } from '../../repo/job'
 import { UtilLibrary } from '../../types/util'
 import { StatRegStatisticsLib } from '../../repo/statreg/statistics'
 import { StatisticInListing } from '../../ssb/statreg/types'
@@ -372,7 +372,7 @@ function getJobs(): Array<DashboardJobInfo> {
   }, [])
 }
 
-function parseResult(jobLog: JobInfoNode): Array<DashboardPublishJobResult> | Array<StatRegJobInfo> {
+function parseResult(jobLog: JobInfoNode): Array<DashboardPublishJobResult> | Array<StatRegJobInfo> | DatasetRefreshResult {
   if (jobLog.data.task === JobNames.PUBLISH_JOB) {
     const refreshDataResult: Array<StatisticsPublishResult> = forceArray(jobLog.data.refreshDataResult || []) as Array<StatisticsPublishResult>
     return refreshDataResult.map((statResult) => {
@@ -402,6 +402,31 @@ function parseResult(jobLog: JobInfoNode): Array<DashboardPublishJobResult> | Ar
   } else if (jobLog.data.task === JobNames.STATREG_JOB) {
     const refreshDataResult: Array<StatRegRefreshResult> = forceArray(jobLog.data.refreshDataResult || []) as Array<StatRegRefreshResult>
     return parseStatRegJobInfo(refreshDataResult)
+  } else if (jobLog.data.task === JobNames.REFRESH_DATASET_JOB) {
+    const result: DatasetRefreshResult = jobLog.data.refreshDataResult as DatasetRefreshResult
+    if (!result.filterInfo) {
+      result.filterInfo = {
+        start: [],
+        end: [],
+        inRSSOrNoKey: [],
+        noData: [],
+        otherDataType: [],
+        skipped: []
+      }
+    }
+    result.filterInfo.start = forceArray(result.filterInfo.inRSSOrNoKey || [])
+    result.filterInfo.inRSSOrNoKey = forceArray(result.filterInfo.inRSSOrNoKey || [])
+    result.filterInfo.noData = forceArray(result.filterInfo.noData || [])
+    result.filterInfo.otherDataType = forceArray(result.filterInfo.otherDataType) || []
+    result.filterInfo.skipped = forceArray(result.filterInfo.skipped || [])
+    result.filterInfo.end = forceArray(result.filterInfo.end || [])
+    result.result = forceArray(result.result || []).map((ds) => {
+      ds.status = i18n.localize({
+        key: ds.status
+      })
+      return ds
+    })
+    return result
   }
   return []
 }
@@ -426,7 +451,7 @@ export interface DashboardJobInfo {
   startTime: string;
   completionTime?: string;
   message: string;
-  result: Array<unknown>;
+  result: Array<unknown> | object;
   user?: User;
 }
 
