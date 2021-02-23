@@ -62,9 +62,10 @@ function isValidType(dataSource: Content<DataSource>): boolean {
 }
 
 function getSavedQuerysStatistic(dataSources: Array<Content<DataSource>>): Array<Content<DataSource>> {
-  const statisticsWithReleaseToday: Array<string> = fetchStatisticsWithRelease(new Date()).map((s: StatisticInListing) => s.id.toString())
   const savedQuerysStatistics: Array<Content<DataSource>> = dataSources.filter((datasource) =>
     getParentType(datasource._path) === 'mimir:statistics' && datasource.data.dataSource?._selected === 'statbankSaved')
+
+  const statisticsWithReleaseToday: Array<string> = fetchStatisticsWithRelease(new Date()).map((s: StatisticInListing) => s.id.toString())
 
   return savedQuerysStatistics.reduce((acc: Array<Content<DataSource>>, datasource) => {
     const parentContent: Content<object, DefaultPageConfig> | null = getParentContent(datasource._path)
