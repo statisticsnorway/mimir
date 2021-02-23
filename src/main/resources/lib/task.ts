@@ -6,7 +6,7 @@ import { RepoQueryLib } from './repo/query'
 import { RepoDatasetLib } from './repo/dataset'
 import { TaskLib } from './types/task'
 import { RSSFilterLogData } from './ssb/dataset/rss'
-import { completeJobLog, JOB_STATUS_COMPLETE } from './repo/job'
+import { RepoJobLib } from './repo/job'
 
 const {
   DATASET_BRANCH
@@ -22,6 +22,10 @@ const {
   logUserDataQuery,
   Events
 }: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
+const {
+  completeJobLog,
+  JOB_STATUS_COMPLETE
+}: RepoJobLib = __non_webpack_require__('/lib/repo/job')
 
 export function refreshQueriesAsync(
   httpQueries: Array<Content<DataSource>>,
