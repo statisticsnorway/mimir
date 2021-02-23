@@ -1,6 +1,8 @@
 # Documentation
 Documentation for Mimir
 
+test
+
 ## Table of Contents
 1. [Kommunefakta](./Kommunefakta.md)
 1. [Highcharts](./Highcharts.md)
