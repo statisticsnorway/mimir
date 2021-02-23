@@ -54,7 +54,7 @@ class EndedStatistics extends React.Component {
           }, index) => {
             return (
               <Card
-                key={index}
+                key={`ended-statistics-card-${index}`}
                 className={`mb-3 col-12 col-lg-4 ${this.state.isHidden ? 'd-none' : ''}`}
                 href={href}
                 hrefText={iconText}
