@@ -58,18 +58,16 @@ const renderPart = (req) => {
   return renderActiveStatistics(statisticsTitle, parseContent(activeStatistics ? forceArray(activeStatistics) : []), phrases)
 }
 
-const renderActiveStatistics = (statisticsTitle, activeStatisticsContent, phrases) => {
+const renderActiveStatistics = (statisticsTitle, activeStatisticsContent) => {
   if (activeStatisticsContent && activeStatisticsContent.length) {
-    const activeStatisticsXP = new React4xp('RelatedStatistics')
+    const activeStatisticsXP = new React4xp('StatisticsCards')
       .setProps({
         headerTitle: statisticsTitle,
-        relatedStatistics: activeStatisticsContent.map((statisticsContent) => {
+        statistics: activeStatisticsContent.map((statisticsContent) => {
           return {
             ...statisticsContent
           }
-        }),
-        showAll: phrases.showAll,
-        showLess: phrases.showLess
+        })
       })
       .uniqueId()
 
