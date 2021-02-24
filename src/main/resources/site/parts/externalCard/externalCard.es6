@@ -62,9 +62,12 @@ const renderExternalCard = (links) => {
 
     return {
       body: externalCardComponent.renderBody({
-        body
+        body,
+        clientRender: true
       }),
-      pageContributions: externalCardComponent.renderPageContributions()
+      pageContributions: externalCardComponent.renderPageContributions({
+        clientRender: true
+      })
     }
   }
   return NO_LINKS_FOUND
