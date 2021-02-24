@@ -12,7 +12,7 @@ const ExternalCards = (props) => {
             return (
               <div className="col-4 mb-4" key={index}>
                 <div className="external-card">
-                  <img src={link.image} alt=" "/>
+                  <img className="d-block mx-auto" src={link.image} alt=" "/>
                   <p className="text-center"
                     dangerouslySetInnerHTML={{
                       __html: link.content
