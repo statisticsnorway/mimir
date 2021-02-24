@@ -3,6 +3,8 @@
 
   header {
     margin-bottom: 30px;
+    padding-left: $spacer * 3;
+    padding-right: $spacer * 3;
   }
 
   .part-dashboard {
@@ -90,14 +92,31 @@
     }
   }
 
-  .badge {
+  .connected-wrapper, .disconnected-wrapper {
+    display: block;
     float: right;
     margin-top: -65px;
+    padding-top: $spacer * 0.5;
+    padding-left: $spacer * 1;
+    padding-bottom: $spacer * 0.5;
+    padding-right: $spacer * 1;
+    color: $ssb-white;
+    font-size: 0.8em;
+    font-weight: bold;
+  }
+
+  .connected-wrapper {
+    background-color: $ssb-blue-3;
+  }
+
+  .disconnected-wrapper {
+    background-color: $ssb-red-3;
   }
 
   .tables-wrapper {
     border: 2px solid $ssb-green-5;
     background: white;
+    margin-bottom: $spacer * 3;
 
     .actions {
       display: flex;
@@ -232,5 +251,14 @@
   
   .ssb-accordion.warning .accordion-header .sub-header {
     color: $ssb-red-3;
+  }
+
+  .ssb-dropdown label, .dropdown-update-statistics svg {
+    display: none;
+  }
+
+  .other-tools-dropdown {
+    max-width: 100%;
+    margin-right: 0;
   }
 }

@@ -17,52 +17,37 @@ export function HomePage() {
     if (dashboardOptions.dataSources || dashboardOptions.statisticRegister) {
       return (
         <Tab eventKey="queries" title="Spørringer">
-          { (dashboardOptions.dataSources) ? <DataSources/> : null }
-          { (dashboardOptions.statisticRegister) ? <StatRegDashboard/> : null }
+          {dashboardOptions.dataSources && <DataSources/>}
+          {dashboardOptions.statisticRegister && <StatRegDashboard/>}
         </Tab>
       )
     }
   }
 
-  function createJobsAndTools() {
-    if ( dashboardOptions.jobLogs || dashboardOptions.dashboardTools) {
-      return (
-        <Row className="mt-3">
-          {dashboardOptions.jobLogs &&
-            <Col className="col-8">
-              <Jobs/>
-            </Col>
-          }
-          {dashboardOptions.dashboardTools &&
-            <Col className="col-4">
-              <DashboardTools/>
-            </Col>
-          }
-        </Row>
-      )
-    }
-  }
-
-  function createStatistics() {
-    if (dashboardOptions.statistics) {
+  function createStatisticsTab() {
+    if (dashboardOptions.statistics || dashboardOptions.dashboardTools || dashboardOptions.dashboardTools) {
       return (
         <Row>
-          <Col className="col-12">
-            <Statistics/>
+          <Col className={dashboardOptions.dashboardTools ? 'col-9' : 'col-12'}>
+            {dashboardOptions.statistics && <Statistics/>}
+            {dashboardOptions.jobLogs && <Jobs/>}
           </Col>
+          {dashboardOptions.dashboardTools &&
+            <Col className="pl-4">
+              <DashboardTools/>
+            </Col>}
         </Row>
       )
     }
   }
 
   return (
-    <Container>
+    <Container fluid className="px-5">
       <ConnectionBadge isConnected={isConnected} />
       <Tabs defaultActiveKey="statistics">
         <Tab eventKey="statistics" title="Statistikker">
-          <Container>
-            { createStatistics() }
-            { createJobsAndTools() }
+          <Container fluid className="p-0">
+            { createStatisticsTab() }
           </Container>
         </Tab>
         { createDatasourcesTab() }
