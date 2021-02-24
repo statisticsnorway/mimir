@@ -86,23 +86,14 @@ export function fetchRelatedTablesAndOwnersWithSources(dispatch, io, id) {
 }
 
 export function requestStatisticsJobLog(dispatch, io, id) {
-  dispatch({
-    type: actions.loadStatisticsJoblog.type,
-    id
-  })
-
   io.emit('get-statistics-job-log', {
     id
   })
 }
 
-export function requestJobLogDetails(dispatch, io, id) {
-  dispatch({
-    type: actions.loadJobLogDetails.type,
-    id
-  })
-
+export function requestJobLogDetails(dispatch, io, jobLogId, statisticId) {
   io.emit('get-statistic-job-log-details', {
-    id
+    id: jobLogId,
+    statisticId
   })
 }

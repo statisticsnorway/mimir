@@ -2,6 +2,7 @@ import { createSlice } from '../../utils/@reduxjs/toolkit'
 
 export const initialState = {
   statistics: [],
+  statisticsLogData: [],
   statisticsSearchList: [],
   loading: true,
   loadingSearchList: true,
@@ -76,9 +77,6 @@ const statisticsSlice = createSlice({
       state.loadingSearchList = true
       state.statisticsSearchList = []
     },
-    loadStatisticsJoblog(state, action) {
-
-    },
     statisticsSearchListLoaded(state, action) {
       state.loadingSearchList = false
       state.statisticsSearchList = action.statisticsSearchList
@@ -125,9 +123,68 @@ const statisticsSlice = createSlice({
           stat.logData = action.data.jobLogs
         }
       }
+    },
+    statisticJoblogDetailsLoaded(state, action) {
+      console.log('statisticJoblogDetailsLoaded')
+      console.log(action)
+      if (action.data) {
+        const statsLogData = state.statisticsLogData.find((s) => s.id === action.data.id)
+        if (statsLogData) {
+          console.log('statsLogData exists')
+          console.log(statsLogData)
+          console.log(statsLogData.logs)
+          const jobLog = statsLogData.logs.find((v) => v.jobId === action.data.logs.jobId)
+          if (!jobLog) {
+            console.log('joblog does not exists')
+            jobLog.details.push({
+              id: action.data.logs.jobId,
+              eventLogResults: action.data.logs.logDetails
+            })
+          } else {
+            console.log('jobLog exists')
+            console.log(jobLog)
+          }
+        } else {
+          const logObject = {
+            id: action.data.id,
+            logs: {
+              jobId: action.data.logs.jobId,
+              details: action.data.logs.logDetails
+            }
+          }
+          const tmpArray = [
+            ...state.statisticsLogData,
+            logObject
+          ]
+          // if (statsLogData && statsLogData.length > 0) {
+          state.statisticsLogData.push(logObject)
+          /* } else {
+            state.statisticsLogData = tmpArray
+          }*/
+
+          console.log(state.statisticsLogData)
+        }
+      }
     }
   }
 })
+
+/*
+statisticsLogData = [{
+  id: 1234-sdf,
+  logs: [{
+    jobId: 543-123,
+    details: [{
+      displayName: 'something titleish',
+      eventLogResults: [{
+        id: 98723-sdf,
+        score: 0
+      }]
+    }]
+  }]
+}]
+
+ */
 
 export const {
   actions, reducer, name: sliceKey

@@ -70,4 +70,11 @@ export default function setupStatisticsListeners(io, dispatch) {
       data
     })
   })
+
+  io.on('get-statistic-job-log-details-result', (data) => {
+    dispatch({
+      type: actions.statisticJoblogDetailsLoaded.type,
+      data
+    })
+  })
 }

@@ -1,25 +1,27 @@
 import React, { useContext, useState } from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { Button, Modal } from 'react-bootstrap'
-import { requestStatisticsJobLog, requestJobLogDetails } from './actions'
+import { requestJobLogDetails, requestStatisticsJobLog } from './actions'
 import { Accordion } from '@statisticsnorway/ssb-component-library'
 import moment from 'moment/min/moment-with-locales'
 import { groupBy } from 'ramda'
+import { StatisticsLogJobDetails } from './StatisticsLogJobDetails'
 
 export function StatisticsLog(props) {
   const {
-    statistic
+    getStatisticSelector
   } = props
 
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
   const [show, setShow] = useState(false)
   const [firstOpen, setFirstOpen] = useState(true)
-  const [subAccordion, setSubAccordion] = useState([])
+  const [logsLoaded, setLogsLoaded] = useState([])
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
+  const statistic = useSelector(getStatisticSelector)
 
   const openEventlog = () => {
     if (firstOpen) {
@@ -29,16 +31,21 @@ export function StatisticsLog(props) {
     setShow(handleShow)
   }
 
-  function onToggleAccordion(index) {
-    if (!subAccordion[index]) {
-      console.log('first time')
-      subAccordion[index] = true
-      setSubAccordion(subAccordion)
+  function loadLogs(index) {
+    console.log('loadLogs')
+
+    if (statistic.logData[index].details.length === 0) {
+      console.log('requesting')
+      requestJobLogDetails(dispatch, io, statistic.logData[index].id, statistic.id)
     }
   }
 
   function renderLogData() {
-    if (statistic.logData.length > 0) {
+    if (!statistic) {
+      setStatistic(stats)
+    }
+
+    if (statistic && statistic.logData && statistic.logData.length > 0) {
       const log = statistic.logData[0]
       const groupedDataSourceLogs = groupBy((log) => {
         return log.status
@@ -71,24 +78,11 @@ export function StatisticsLog(props) {
     )
   }
 
-  function renderJobLogs() {
-    return statistic.logData.map((log, index) => {
-      return (
-        <Accordion
-          key={index}
-          className={log.status}
-          header={`${formatTime(log.completionTime)}: ${log.task} (${log.status})`}
-          onToggle={() => onToggleAccordion(index)}
-        >
-          pewpew
-        </Accordion>
-      )
-    }
-    )
-  }
+
   function formatTime(time) {
     return moment(time).locale('nb').format('DD.MM.YYYY HH.mm')
   }
+
   const ModalContent = () => {
     return (
       <Modal
@@ -104,7 +98,7 @@ export function StatisticsLog(props) {
         </Modal.Header>
         <Modal.Body>
           <h3>Logg detaljer</h3>
-          {renderJobLogs()}
+          <StatisticsLog/>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>Lukk</Button>
@@ -119,5 +113,5 @@ export function StatisticsLog(props) {
 }
 
 StatisticsLog.propTypes = {
-  statistic: PropTypes.object
+  getStatisticSelector: PropTypes.func
 }

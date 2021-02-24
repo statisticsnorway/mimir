@@ -55,3 +55,10 @@ export const selectSearchList = createSelector(
   [selectDomain],
   (statisticsState) => statisticsState.statisticsSearchList,
 )
+
+export const selectStatistic = (statisticId) => {
+  return createSelector(
+    [selectDomain],
+    (statisticsState) => statisticsState.statistics.find((s) => s.id === statisticId)
+  )
+}

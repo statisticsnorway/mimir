@@ -25,6 +25,7 @@ import { StatRegStatisticsLib } from '../repo/statreg/statistics'
 import { TaskLib } from '../types/task'
 import { AuthLibrary } from 'enonic-types/auth'
 import { PermissionsLib } from './permissions'
+import { Dataset } from '../types/jsonstat-toolkit'
 
 const {
   hasWritePermissions
@@ -68,7 +69,8 @@ const {
 const {
   withConnection,
   ENONIC_CMS_DEFAULT_REPO,
-  getNode
+  getNode,
+  queryNodes
 }: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
 const {
   EVENT_LOG_BRANCH,
@@ -138,11 +140,18 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     })
   })
 
-  socket.on('get-statistic-job-log-details', (options: GenericIdParam) => {
+  socket.on('get-statistic-job-log-details', (options: {id: string; statisticId: string}) => {
     submitTask({
       description: 'get-statistic-job-log-details',
       task: () => {
         const logDetails: Array<object> = getEventLogsFromStatisticsJobLog(options.id)
+        socket.emit('get-statistic-job-log-details-result', {
+          id: options.statisticId,
+          logs: {
+            jobId: options.id,
+            logDetails: logDetails
+          }
+        })
       }
     })
   })
@@ -352,6 +361,7 @@ function prepStatisticsJobLogInfo(jobNode: JobInfoNode): DashboardJobInfo {
     id: jobNode._id,
     startTime: jobNode.data.jobStarted,
     completionTime: jobNode.data.completionTime ? jobNode.data.completionTime : undefined,
+    details: [],
     status: jobNode.data.status,
     task: jobNode.data.task,
     message: jobNode.data.message ? jobNode.data.message : '',
@@ -361,23 +371,36 @@ function prepStatisticsJobLogInfo(jobNode: JobInfoNode): DashboardJobInfo {
 }
 
 // NOTE example code to fetch event logs connected to datasources on statistics job log
-function getEventLogsFromStatisticsJobLog(jobLogId: string): Array<unknown> {
-  const jobLog: JobInfoNode | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/job/${jobLogId}`) as JobInfoNode
-  // const jobLog: JobInfoNode = connection.get(jobLogId)
-  const userLogin: string | undefined = jobLog.data.user?.login
-  const from: string = jobLog.data.jobStarted
-  const to: string = jobLog.data.completionTime
-  const datasetIds: Array<string> = jobLog.data.refreshDataResult as Array<string> || []
-  return datasetIds.map((id) => {
-    log.info(`_path LIKE "/queries/${id}/*" AND data.by.login = "${userLogin}" AND range("_ts", instant("${from}"), instant("${to}"))`)
-    const eventLogsResult: NodeQueryResponse = connection.query({
-      query: `_path LIKE "/queries/${id}/*" AND data.by.login = "${userLogin}" AND range("_ts", instant("${from}"), instant("${to}"))`,
+function getEventLogsFromStatisticsJobLog(jobLogId: string): Array<object> {
+  const jobInfoNode: JobInfoNode | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/jobs/${jobLogId}`) as JobInfoNode
+  if (!jobInfoNode) {
+    return []
+  }
+  const userLogin: string | undefined = jobInfoNode.data.user?.login
+  const from: string = jobInfoNode.data.jobStarted
+  const to: string = jobInfoNode.data.completionTime
+  const datasets: Array<{id: string}> = forceArray(jobInfoNode.data.refreshDataResult) as Array<{id: string}> || []
+  return datasets.map((dataset ) => {
+    const datasetContent: Content<Highchart | Table | KeyFigure > | null = getContent({
+      key: dataset.id
+    })
+    const eventLogResult: NodeQueryResponse = queryNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, {
+      query: `_path LIKE "/queries/${dataset.id}/*" AND data.by.login = "${userLogin}" AND range("_ts", instant("${from}"), instant("${to}"))`,
       count: 10,
       sort: '_ts DESC'
     })
-    return null
+    return {
+      displayName: datasetContent?.displayName,
+      eventLogResult: eventLogResult.hits
+    }
   })
 }
+
+/* const eventLogsResult: NodeQueryResponse = connection.query({
+     query: `_path LIKE "/queries/${id}/*" AND data.by.login = "${userLogin}" AND range("_ts", instant("${from}"), instant("${to}"))`,
+     count: 10,
+     sort: '_ts DESC'
+   })*/
 
 function checkIfUserIsAdmin(): boolean {
   return hasRole('system.admin')
