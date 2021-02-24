@@ -10,6 +10,21 @@ export interface DefaultPageConfig {
   bkg_color: "white" | "grey";
 
   /**
+   * Emneinformasjon
+   */
+  subjectInfo?: Array<{
+    /**
+     * Hovedemne eller Delemne
+     */
+    subjectType: "mainSubject" | "subSubject";
+
+    /**
+     * Emnekode
+     */
+    subjectCode: string;
+  }>;
+
+  /**
    * Region
    */
   regions: Array<{
@@ -21,7 +36,7 @@ export interface DefaultPageConfig {
     /**
      * Region
      */
-    region: "Rad_A" | "Rad_B" | "Rad_C" | "Rad_D" | "Rad_E" | "Rad_F" | "Rad_G" | "Rad_H" | "Rad_I" | "Rad_J" | "Rad_K" | "Rad_L" | "Rad_M" | "Rad_N" | "Rad_O" | "Rad_P" | "Rad_Q" | "Rad_R" | "Rad_S" | "Rad_T";
+    region: "Rad_A" | "Rad_B" | "Rad_C" | "Rad_D" | "Rad_E" | "Rad_F" | "Rad_G" | "Rad_H" | "Rad_I" | "Rad_J" | "Rad_K" | "Rad_L" | "Rad_M" | "Rad_N" | "Rad_O" | "Rad_P" | "Rad_Q" | "Rad_R" | "Rad_S" | "Rad_T" | "Rad_U" | "Rad_V" | "Rad_W" | "Rad_X" | "Rad_Y" | "Rad_Z";
 
     /**
      * Med mørk og skrå bakgrunn

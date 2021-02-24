@@ -9,6 +9,7 @@ const {
 } = __non_webpack_require__( '/lib/xp/content')
 const {
   getContent,
+  getComponent,
   pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
 const {
@@ -23,7 +24,7 @@ const {
 
 const moment = require('moment/min/moment-with-locales')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const view = resolve('./relatedStatistics.html')
+const view = resolve('./activeStatistics.html')
 
 exports.get = (req) => {
   try {
@@ -37,14 +38,15 @@ exports.preview = (req) => renderPart(req)
 
 const renderPart = (req) => {
   const page = getContent()
-  const relatedStatistics = page.data.relatedStatisticsOptions
+  const part = getComponent()
+  const activeStatistics = part.config.relatedStatisticsOptions
 
   moment.locale(page.language ? page.language : 'nb')
   const phrases = getPhrases(page)
 
   const statisticsTitle = phrases.menuStatistics
-  if (!relatedStatistics || relatedStatistics.length === 0) {
-    if (req.mode === 'edit' && page.type !== `${app.name}:statistics` && page.type !== `${app.name}:article`) {
+  if (!activeStatistics || activeStatistics.length === 0) {
+    if (req.mode === 'edit') {
       return {
         body: render(view, {
           statisticsTitle
@@ -53,15 +55,15 @@ const renderPart = (req) => {
     }
   }
 
-  return renderRelatedStatistics(statisticsTitle, parseRelatedContent(relatedStatistics ? forceArray(relatedStatistics) : []), phrases)
+  return renderActiveStatistics(statisticsTitle, parseContent(activeStatistics ? forceArray(activeStatistics) : []), phrases)
 }
 
-const renderRelatedStatistics = (statisticsTitle, relatedStatisticsContent, phrases) => {
-  if (relatedStatisticsContent && relatedStatisticsContent.length) {
-    const relatedStatisticsXP = new React4xp('RelatedStatistics')
+const renderActiveStatistics = (statisticsTitle, activeStatisticsContent, phrases) => {
+  if (activeStatisticsContent && activeStatisticsContent.length) {
+    const activeStatisticsXP = new React4xp('RelatedStatistics')
       .setProps({
         headerTitle: statisticsTitle,
-        relatedStatistics: relatedStatisticsContent.map((statisticsContent) => {
+        relatedStatistics: activeStatisticsContent.map((statisticsContent) => {
           return {
             ...statisticsContent
           }
@@ -72,15 +74,15 @@ const renderRelatedStatistics = (statisticsTitle, relatedStatisticsContent, phra
       .uniqueId()
 
     const body = render(view, {
-      relatedStatisticsId: relatedStatisticsXP.react4xpId
+      activeStatisticsId: activeStatisticsXP.react4xpId
     })
 
     return {
-      body: relatedStatisticsXP.renderBody({
+      body: activeStatisticsXP.renderBody({
         body,
         label: statisticsTitle
       }),
-      pageContributions: relatedStatisticsXP.renderPageContributions()
+      pageContributions: activeStatisticsXP.renderPageContributions()
     }
   }
   return {
@@ -89,22 +91,22 @@ const renderRelatedStatistics = (statisticsTitle, relatedStatisticsContent, phra
   }
 }
 
-const parseRelatedContent = (relatedStatistics) => {
-  if (relatedStatistics.length > 0) {
-    return relatedStatistics.map((statistics) => {
+const parseContent = (activeStatistics) => {
+  if (activeStatistics.length > 0) {
+    return activeStatistics.map((statistics) => {
       if (statistics._selected === 'xp') {
         const statisticsContentId = statistics.xp.contentId
-        const relatedStatisticsContent = get({
+        const activeStatisticsContent = get({
           key: statisticsContentId
         })
 
         let preamble
-        if (hasPath(['x', 'com-enonic-app-metafields', 'meta-data', 'seoDescription'], relatedStatisticsContent)) {
-          preamble = relatedStatisticsContent.x['com-enonic-app-metafields']['meta-data'].seoDescription
+        if (hasPath(['x', 'com-enonic-app-metafields', 'meta-data', 'seoDescription'], activeStatisticsContent)) {
+          preamble = activeStatisticsContent.x['com-enonic-app-metafields']['meta-data'].seoDescription
         }
 
         return {
-          title: relatedStatisticsContent.displayName,
+          title: activeStatisticsContent.displayName,
           preamble: preamble ? preamble : '',
           href: pageUrl({
             id: statisticsContentId

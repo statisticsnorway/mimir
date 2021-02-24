@@ -11,6 +11,26 @@
       </config>
       <default>default</default>
     </input>
+    <item-set name="subjectInfo">
+      <label>Emneinformasjon</label>
+      <expanded>false</expanded>
+      <occurrences minimum="0" maximum="1"/>
+      <items>
+        <input name="subjectType" type="RadioButton">
+          <label>Hovedemne eller Delemne</label>
+          <occurrences minimum="1" maximum="1"/>
+          <config>
+            <option value="mainSubject">Hovedemne</option>
+            <option value="subSubject">Delemne</option>
+          </config>
+        </input>
+        <input type="TextLine" name="subjectCode">
+          <label>Emnekode</label>
+          <help-text>Hvert hovedemne og delemne har en kode, finner det i emnestrukturen i 4.7</help-text>
+          <occurrences minimum="1" maximum="1"/>
+        </input>
+      </items>
+    </item-set>
   	<input name="bkg_color" type="RadioButton">
   		<label>Velg bakgrunnsfarge</label>
   		<occurrences minimum="1" maximum="1"/>
@@ -22,7 +42,7 @@
     </input>
     <item-set name="regions">
       <label>Region</label>
-      <occurrences minimum="1" maximum="15"/>
+      <occurrences minimum="1" maximum="26"/>
       <items>
         <mixin name="title"/>
         <input name="view" type="RadioButton">
@@ -58,6 +78,12 @@
             <option value="Rad_R">Rad R</option>
             <option value="Rad_S">Rad S</option>
             <option value="Rad_T">Rad T</option>
+            <option value="Rad_U">Rad U</option>
+            <option value="Rad_V">Rad V</option>
+            <option value="Rad_W">Rad W</option>
+            <option value="Rad_X">Rad X</option>
+            <option value="Rad_Y">Rad Y</option>
+            <option value="Rad_Z">Rad Z</option>
           </config>
         </input>
         <input name="showGreyTriangle" type="CheckBox">
@@ -90,6 +116,12 @@
     <region name="Rad_R"/>
     <region name="Rad_S"/>
     <region name="Rad_T"/>
+    <region name="Rad_U"/>
+    <region name="Rad_V"/>
+    <region name="Rad_W"/>
+    <region name="Rad_X"/>
+    <region name="Rad_Y"/>
+    <region name="Rad_Z"/>
     <region name="main"/>
   </regions>
 </page>
