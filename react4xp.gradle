@@ -152,6 +152,7 @@ task react4xp_components(type: NodeTask) {
     inputs.file(react4xp.outputFileName)
     inputs.file("package.json")
     inputs.file("package-lock.json")
+    inputs.file("react4xp.properties")
 }
 react4xp_components.dependsOn += 'config_tasks'
 jar.dependsOn += "react4xp_components"

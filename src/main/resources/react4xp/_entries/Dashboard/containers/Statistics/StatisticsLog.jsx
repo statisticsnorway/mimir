@@ -3,11 +3,10 @@ import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { Button, Modal } from 'react-bootstrap'
-import { requestJobLogDetails, requestStatisticsJobLog } from './actions'
-import { Accordion } from '@statisticsnorway/ssb-component-library'
+import { requestStatisticsJobLog } from './actions'
 import moment from 'moment/min/moment-with-locales'
 import { groupBy } from 'ramda'
-import { StatisticsLogJobDetails } from './StatisticsLogJobDetails'
+import { StatisticsLogJob } from './StatisticsLogJob'
 
 export function StatisticsLog(props) {
   const {
@@ -31,14 +30,6 @@ export function StatisticsLog(props) {
     setShow(handleShow)
   }
 
-  function loadLogs(index) {
-    console.log('loadLogs')
-
-    if (statistic.logData[index].details.length === 0) {
-      console.log('requesting')
-      requestJobLogDetails(dispatch, io, statistic.logData[index].id, statistic.id)
-    }
-  }
 
   function renderLogData() {
     if (!statistic) {
@@ -79,10 +70,6 @@ export function StatisticsLog(props) {
   }
 
 
-  function formatTime(time) {
-    return moment(time).locale('nb').format('DD.MM.YYYY HH.mm')
-  }
-
   const ModalContent = () => {
     return (
       <Modal
@@ -98,7 +85,7 @@ export function StatisticsLog(props) {
         </Modal.Header>
         <Modal.Body>
           <h3>Logg detaljer</h3>
-          <StatisticsLog/>
+          <StatisticsLogJob selectStatistic={getStatisticSelector} selectStatisticsLogsData={selectStatisticsLogsData}/>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>Lukk</Button>

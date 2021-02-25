@@ -125,44 +125,27 @@ const statisticsSlice = createSlice({
       }
     },
     statisticJoblogDetailsLoaded(state, action) {
-      console.log('statisticJoblogDetailsLoaded')
-      console.log(action)
       if (action.data) {
         const statsLogData = state.statisticsLogData.find((s) => s.id === action.data.id)
         if (statsLogData) {
-          console.log('statsLogData exists')
-          console.log(statsLogData)
-          console.log(statsLogData.logs)
           const jobLog = statsLogData.logs.find((v) => v.jobId === action.data.logs.jobId)
           if (!jobLog) {
-            console.log('joblog does not exists')
-            jobLog.details.push({
-              id: action.data.logs.jobId,
-              eventLogResults: action.data.logs.logDetails
+            statsLogData.logs.push({
+              jobLog: action.data.logs.jobId,
+              details: action.data.logs.logDetails,
+              dataLoaded: true
             })
-          } else {
-            console.log('jobLog exists')
-            console.log(jobLog)
           }
         } else {
           const logObject = {
             id: action.data.id,
-            logs: {
+            logs: [{
               jobId: action.data.logs.jobId,
-              details: action.data.logs.logDetails
-            }
+              details: action.data.logs.logDetails,
+              dataLoaded: true
+            }]
           }
-          const tmpArray = [
-            ...state.statisticsLogData,
-            logObject
-          ]
-          // if (statsLogData && statsLogData.length > 0) {
           state.statisticsLogData.push(logObject)
-          /* } else {
-            state.statisticsLogData = tmpArray
-          }*/
-
-          console.log(state.statisticsLogData)
         }
       }
     }
@@ -170,10 +153,13 @@ const statisticsSlice = createSlice({
 })
 
 /*
-statisticsLogData = [{
+* structure of statisticsLogData
+*
+ statisticsLogData = [{
   id: 1234-sdf,
   logs: [{
     jobId: 543-123,
+    dataLoaded: true,
     details: [{
       displayName: 'something titleish',
       eventLogResults: [{

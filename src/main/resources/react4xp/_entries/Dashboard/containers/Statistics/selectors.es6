@@ -62,3 +62,13 @@ export const selectStatistic = (statisticId) => {
     (statisticsState) => statisticsState.statistics.find((s) => s.id === statisticId)
   )
 }
+
+export const selectAccordionOpen = (statisticId, jobId) => {
+  return createSelector([selectDomain], (statisticsState) => {
+    if (!statisticsState.statisticsLogData) return false
+    const log = statisticsState.statisticsLogData.find((s) => s.id === statisticId)
+    if (!log || log.logs) return false
+    const logDetails = log.logs.find((t) => t.jobId === jobId).dataLoaded
+    return logDetails ? true : false
+  })
+}
