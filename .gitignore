@@ -7,6 +7,7 @@ build
 .settings
 .classpath
 node_modules
+nashorn_code_cache
 .idea/
 .enonic
 .DS_Store
