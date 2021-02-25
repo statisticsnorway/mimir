@@ -48,7 +48,7 @@ const renderExternalCard = (links) => {
             content: link.content,
             image: imageUrl({
               id: link.image,
-              scale: 'max(132)'
+              scale: 'height(70)'
             })
           }
         })

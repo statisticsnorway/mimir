@@ -10,9 +10,9 @@ const ExternalCards = (props) => {
         <div className="row justify-content-start">
           {props.links.map((link, index) => {
             return (
-              <div className="col-4 mb-4" key={index}>
+              <div className="col-12 mb-4 col-md-4" key={index}>
                 <div className="external-card">
-                  <img src={link.image} alt=" "/>
+                  <img className="d-block mx-auto" src={link.image} alt=" "/>
                   <p className="text-center"
                     dangerouslySetInnerHTML={{
                       __html: link.content
