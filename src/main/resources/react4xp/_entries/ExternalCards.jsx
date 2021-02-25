@@ -11,7 +11,7 @@ const ExternalCards = (props) => {
           {props.links.map((link, index) => {
             return (
               <div className="col-12 mb-4 col-md-4" key={index}>
-                <div className="external-card">
+                <div className="external-card px-3">
                   <img className="d-block mx-auto" src={link.image} alt=" "/>
                   <p className="text-center"
                     dangerouslySetInnerHTML={{
