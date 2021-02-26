@@ -9,7 +9,8 @@ export const initialState = {
   openStatistic: null,
   modalDisplay: 'request',
   updateMessage: [],
-  openModal: false
+  openModal: false,
+  test: false
 }
 
 const statisticsSlice = createSlice({
@@ -145,6 +146,7 @@ const statisticsSlice = createSlice({
               dataLoaded: true
             }]
           }
+          state.accordionOpen = true
           state.statisticsLogData.push(logObject)
         }
       }

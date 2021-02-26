@@ -30,7 +30,7 @@ export function StatisticsLogJob(props) {
           onToggle={(e) => loadLogs(e, index)}
           openByDefault={useSelector(getLogsSelector)}
         >
-          <span>Her kommer nestedaccorion</span>
+          <span>Her kommer nested accorion</span>
         </Accordion>
       )
     })
