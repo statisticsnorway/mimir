@@ -9,7 +9,7 @@ import { selectAccordionOpen } from './selectors'
 
 export function StatisticsLogJob(props) {
   const statistic = useSelector(props.selectStatistic)
-  const statisticsLogData = useSelector(props.selectStatisticsLogsData)
+  // const statisticsLogData = useSelector(props.selectStatisticsLogsData)
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
 

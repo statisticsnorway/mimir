@@ -85,7 +85,7 @@ export function StatisticsLog(props) {
         </Modal.Header>
         <Modal.Body>
           <h3>Logg detaljer</h3>
-          <StatisticsLogJob selectStatistic={getStatisticSelector} selectStatisticsLogsData={selectStatisticsLogsData}/>
+          <StatisticsLogJob selectStatistic={getStatisticSelector} />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>Lukk</Button>
