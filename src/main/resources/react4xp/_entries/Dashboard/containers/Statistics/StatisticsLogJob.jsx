@@ -5,46 +5,56 @@ import { useDispatch, useSelector } from 'react-redux'
 import moment from 'moment/min/moment-with-locales'
 import { requestJobLogDetails } from './actions'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
-import { selectAccordionOpen } from './selectors'
+import { selectJobLog, selectJobLogDetailsLoaded } from './selectors'
 
 export function StatisticsLogJob(props) {
-  const statistic = useSelector(props.selectStatistic)
-  // const statisticsLogData = useSelector(props.selectStatisticsLogsData)
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
+  const [firstOpen, setFirstOpen] = React.useState(true)
+  const [isOpenState, setIsOpenState] = React.useState(false)
+  const logDetailsLoaded = false // useSelector(selectJobLogDetailsLoaded(props.statisticId, props.jobId))
+  const log = useSelector(selectJobLog(props.statisticId, props.jobId))
 
-  function loadLogs(e, index) {
-    if (statistic.logData[index].details.length === 0) {
-      requestJobLogDetails(dispatch, io, statistic.logData[index].id, statistic.id)
+  function onToggleAccordion(isOpen) {
+    if (firstOpen && isOpen) {
+      setFirstOpen(false)
+      requestJobLogDetails(dispatch, io, props.jobId, props.statisticId)
+      // request log details
     }
-  }
-
-  function renderModal() {
-    return statistic.logData.map((log, index) => {
-      const getLogsSelector = selectAccordionOpen(statistic.id, statistic.logData[index].id)
-      return (
-        <Accordion
-          key={index}
-          className={log.status}
-          header={`${formatTime(log.completionTime)}: ${log.task} (${log.status})`}
-          onToggle={(e) => loadLogs(e, index)}
-          openByDefault={useSelector(getLogsSelector)}
-        >
-          <span>Her kommer nested accorion</span>
-        </Accordion>
-      )
-    })
+    setIsOpenState(isOpen)
   }
 
   function formatTime(time) {
     return moment(time).locale('nb').format('DD.MM.YYYY HH.mm')
   }
 
+  function renderAccordionBody() {
+    if (logDetailsLoaded) {
+      return (
+        <div>
+          jobLogDetails
+        </div>
+      )
+    } else {
+      return (
+        <span className="spinner-border spinner-border" />
+      )
+    }
+  }
+
   return (
-    renderModal()
+    <Accordion
+      className={log.status}
+      header={`${formatTime(log.completionTime)}: ${log.task} (${log.status})`}
+      onToggle={(isOpen) => onToggleAccordion(isOpen)}
+      openByDefault={isOpenState}
+    >
+      {renderAccordionBody()}
+    </Accordion>
   )
 }
 
 StatisticsLogJob.propTypes = {
-  getStatisticSelector: PropTypes.func
+  statisticId: PropTypes.string,
+  jobId: PropTypes.string
 }

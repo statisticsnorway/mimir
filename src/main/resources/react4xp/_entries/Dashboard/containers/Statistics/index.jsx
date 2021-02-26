@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Button, Table } from 'react-bootstrap'
 import { selectStatisticsWithRelease,
   selectLoading,
-  selectOpenModal, selectStatistic } from './selectors'
+  selectOpenModal } from './selectors'
 import { RefreshCw } from 'react-feather'
 import Moment from 'react-moment'
 import { Link } from '@statisticsnorway/ssb-component-library'
@@ -131,7 +131,7 @@ export function Statistics() {
         </td>
         <td className="text-center">{statistic.nextRelease ? makeRefreshButton(statistic) : ''}</td>
         <td>
-          {statistic.logData ? <StatisticsLog getStatisticSelector={selectStatistic(statistic.id)}/> : null}
+          {statistic.logData ? <StatisticsLog statisticId={statistic.id}/> : null}
         </td>
       </tr>
     )

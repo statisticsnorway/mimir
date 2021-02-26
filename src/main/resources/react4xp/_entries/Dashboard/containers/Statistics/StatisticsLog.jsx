@@ -7,20 +7,21 @@ import { requestStatisticsJobLog } from './actions'
 import moment from 'moment/min/moment-with-locales'
 import { groupBy } from 'ramda'
 import { StatisticsLogJob } from './StatisticsLogJob'
+import { selectStatisticsLogDataLoaded, selectStatistic } from './selectors'
 
 export function StatisticsLog(props) {
   const {
-    getStatisticSelector
+    statisticId
   } = props
 
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
   const [show, setShow] = useState(false)
   const [firstOpen, setFirstOpen] = useState(true)
-  const [logsLoaded, setLogsLoaded] = useState([])
+  const statistic = useSelector(selectStatistic(statisticId))
+  const logsLoaded = useSelector(selectStatisticsLogDataLoaded(statistic.id))
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
-  const statistic = useSelector(getStatisticSelector)
 
   const openEventlog = () => {
     if (firstOpen) {
@@ -69,6 +70,22 @@ export function StatisticsLog(props) {
     )
   }
 
+  function renderModalBody() {
+    if (logsLoaded) {
+      return (
+        statistic.logData.map((log, index) => {
+          return (
+            <StatisticsLogJob key={index} statisticId={statistic.id} jobId={statistic.logData[index].id} />
+          )
+        })
+      )
+    }
+
+    return (
+      <span className="spinner-border spinner-border" />
+    )
+  }
+
 
   const ModalContent = () => {
     return (
@@ -85,7 +102,8 @@ export function StatisticsLog(props) {
         </Modal.Header>
         <Modal.Body>
           <h3>Logg detaljer</h3>
-          <StatisticsLogJob selectStatistic={getStatisticSelector} />
+          {renderModalBody()}
+          {/* <StatisticsLogJob selectStatistic={getStatisticSelector} /> */}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>Lukk</Button>
@@ -100,5 +118,5 @@ export function StatisticsLog(props) {
 }
 
 StatisticsLog.propTypes = {
-  getStatisticSelector: PropTypes.func
+  statisticId: PropTypes.string
 }

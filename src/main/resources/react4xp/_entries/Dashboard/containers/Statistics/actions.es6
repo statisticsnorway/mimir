@@ -92,6 +92,11 @@ export function requestStatisticsJobLog(dispatch, io, id) {
 }
 
 export function requestJobLogDetails(dispatch, io, jobLogId, statisticId) {
+  // dispatch({
+  //   type: actions.loadJobLogDetails.type,
+  //   statisticId,
+  //   jobLogId
+  // })
   io.emit('get-statistic-job-log-details', {
     id: jobLogId,
     statisticId

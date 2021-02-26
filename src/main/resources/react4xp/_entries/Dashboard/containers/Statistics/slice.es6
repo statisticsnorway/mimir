@@ -122,6 +122,7 @@ const statisticsSlice = createSlice({
         const stat = state.statistics.find((s) => s.id === action.data.id)
         if (stat) {
           stat.logData = action.data.jobLogs
+          stat.logDataLoaded = true
         }
       }
     },

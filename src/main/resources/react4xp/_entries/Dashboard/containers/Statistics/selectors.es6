@@ -63,12 +63,48 @@ export const selectStatistic = (statisticId) => {
   )
 }
 
-export const selectAccordionOpen = (statisticId, jobId) => {
+export const selectStatisticsLogDataLoaded = (statisticId) => {
+  return createSelector(
+    [selectDomain],
+    (statisticsState) => statisticsState.statistics.find((s) => s.id === statisticId).logDataLoaded
+  )
+}
+
+export const selectJobLog = (statisticId, jobId) => {
+  return createSelector(
+    [selectDomain],
+    (statisticsState) => {
+      const stat = statisticsState.statistics.find((statLog) => statLog.id === statisticId)
+      if (stat && stat.logData) {
+        const jobLog = stat.logData.find((jobLog) => jobLog.id === jobId)
+        return jobLog
+      }
+      return null
+    }
+  )
+}
+
+export const selectJobLogDetails = (statisticId, jobId) => {
+  return createSelector(
+    [selectDomain],
+    (statisticsState) => {
+      const statisticLogData = statisticsState.statisticsLogData.find((statLog) => statLog.id === statisticId)
+      if (statisticLogData && statisticLogData.logs) {
+        const log = statisticLogData.logs.find((log) => log.jobId === jobId)
+        return log
+      }
+      return null
+    }
+  )
+}
+
+export const selectJobLogDetailsLoaded = (statisticId, jobId) => {
   return createSelector([selectDomain], (statisticsState) => {
-    if (!statisticsState.statisticsLogData) return false
-    const log = statisticsState.statisticsLogData.find((s) => s.id === statisticId)
-    if (!log || log.logs) return false
-    const logDetails = log.logs.find((t) => t.jobId === jobId).dataLoaded
-    return logDetails ? true : false
+    const statisticLogData = statisticsState.statisticsLogData.find((s) => s.id === statisticId)
+    if (statisticLogData && statisticLogData.logs) {
+      const log = statisticLogData.logs.find((log) => log.jobId === jobId)
+      return !!log
+    }
+    return false
   })
 }
