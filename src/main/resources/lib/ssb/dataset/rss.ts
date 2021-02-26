@@ -32,7 +32,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/parent')
 
 const {
-  fetchStatisticsWithRelease
+  fetchStatisticsWithReleaseToday
 } = __non_webpack_require__('/lib/repo/statreg/statistics')
 
 function fetchRSS(): Array<RSSItem> {
@@ -63,9 +63,9 @@ function isValidType(dataSource: Content<DataSource>): boolean {
 
 function getSavedQuerysStatistic(dataSources: Array<Content<DataSource>>): Array<Content<DataSource>> {
   const savedQuerysStatistics: Array<Content<DataSource>> = dataSources.filter((datasource) =>
-    getParentType(datasource._path) === 'mimir:statistics' && datasource.data.dataSource?._selected === 'statbankSaved')
+      datasource.data.dataSource?._selected === 'statbankSaved' && getParentType(datasource._path) === 'mimir:statistics')
 
-  const statisticsWithReleaseToday: Array<string> = fetchStatisticsWithRelease(new Date()).map((s: StatisticInListing) => s.id.toString())
+  const statisticsWithReleaseToday: Array<string> = fetchStatisticsWithReleaseToday().map((s: StatisticInListing) => s.id.toString())
 
   return savedQuerysStatistics.reduce((acc: Array<Content<DataSource>>, datasource) => {
     const parentContent: Content<object, DefaultPageConfig> | null = getParentContent(datasource._path)
