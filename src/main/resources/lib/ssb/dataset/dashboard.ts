@@ -424,6 +424,7 @@ function parseResult(jobLog: JobInfoNode): Array<DashboardPublishJobResult> | Ar
     result.filterInfo.skipped = forceArray(result.filterInfo.skipped || [])
     result.filterInfo.end = forceArray(result.filterInfo.end || [])
     result.result = forceArray(result.result || []).map((ds) => {
+      ds.hasError = showWarningIcon(ds.status as Events)
       ds.status = i18n.localize({
         key: ds.status
       })

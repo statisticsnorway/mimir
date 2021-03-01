@@ -174,6 +174,7 @@ export interface DataSourceInfo {
   contentType: string;
   dataSourceType?: string;
   status: string;
+  hasError?: boolean;
 }
 
 export interface RSSFilter {

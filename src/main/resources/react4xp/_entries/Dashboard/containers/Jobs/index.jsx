@@ -120,10 +120,11 @@ export function Jobs() {
       )
     } else if (job.task === 'Refresh dataset') {
       const count = job.result.result.length
+      const errorCount = job.result.result.filter((ds) => ds.hasError).length
       const ignoreCount = job.result.filterInfo && job.result.filterInfo.skipped && job.result.filterInfo.skipped.length
       return (
         <span className="modal-trigger" onClick={() => openJobLogModal(job)}>
-          {job.status} - Oppdatert {count} spørringer og ignorert {ignoreCount}
+          {job.status} - Oppdaterte {count - errorCount} spørringer, {errorCount} feilet, og {ignoreCount} ignorert
         </span>
       )
     }
