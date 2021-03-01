@@ -110,6 +110,18 @@ export function fetchStatisticsWithRelease(before: Date): Array<StatisticInListi
   }, [])
 }
 
+export function fetchStatisticsWithReleaseToday(): Array<StatisticInListing> {
+  const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
+  return statistics.reduce((statsWithRelease: Array<StatisticInListing>, stat) => {
+    const variants: Array<VariantInListing> = ensureArray(stat.variants).filter((variant) =>
+      moment(variant.nextRelease).isSame(new Date(), 'day') || moment(variant.previousRelease).isSame(new Date(), 'day'))
+    if (variants.length > 0) {
+      statsWithRelease.push(stat)
+    }
+    return statsWithRelease
+  }, [])
+}
+
 function extractStatistics(payload: string): Array<StatisticInListing> {
   return JSON.parse(payload).statistics
 }
@@ -146,6 +158,7 @@ export interface StatRegStatisticsLib {
   STATREG_REPO_STATISTICS_KEY: string;
   fetchStatistics: () => Array<StatisticInListing> | null;
   fetchStatisticsWithRelease: (before: Date) => Array<StatisticInListing>;
+  fetchStatisticsWithReleaseToday: () => Array<StatisticInListing>;
   getAllStatisticsFromRepo: () => Array<StatisticInListing>;
   getStatisticByIdFromRepo: (statId: string) => StatisticInListing | undefined;
   getStatisticByShortNameFromRepo: (shortName: string) => StatisticInListing | undefined;
