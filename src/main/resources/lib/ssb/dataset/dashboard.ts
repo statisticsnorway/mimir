@@ -232,6 +232,9 @@ function getDataSourcesWithError(): Array<DashboardDataSource> {
       return errorLogNodes
     }, [])
   })
+  if (errorLogNodes.length === 0) {
+    return []
+  }
   const dataSourcesWithError: Array<Content<DataSource>> = query({
     query: `_id IN(${errorLogNodes.map((s) => `"${s._name}"`).join(',')}) AND data.dataSource._selected LIKE "*"`,
     count: errorLogNodes.length

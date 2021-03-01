@@ -127,6 +127,7 @@ export function publishDataset(): void {
         if (validPublications.length > 0) {
           createTask(jobLogNode._id, stat, releaseDate, validPublications)
         } else {
+          statJobInfo.status = JobStatus.SKIPPED
           log.info(`No unpublished dataset to publish for ${stat.data.statistic}`)
         }
         jobResult.push(statJobInfo)
@@ -207,7 +208,7 @@ function createTask(jobId: string, statistic: Content<Statistics>, releaseDate: 
       if (job && statRefreshResult) {
         statRefreshResult.status = JobStatus.COMPLETE
         const allComplete: boolean = jobRefreshResult.filter((s) => {
-          return s.status === JobStatus.COMPLETE || s.status === JobStatus.ERROR
+          return s.status === JobStatus.COMPLETE || s.status === JobStatus.ERROR || s.status === JobStatus.SKIPPED
         }).length === jobRefreshResult.length
         if (allComplete) {
           completeJobLog(jobId, `Successfully updated ${jobRefreshResult.length} statistics`, jobRefreshResult)

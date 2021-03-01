@@ -1,0 +1,16 @@
+.external-card {
+  border: 1px solid $ssb-dark-2;
+  background-color: $ssb-white;
+
+  &:hover {
+    border: 1px solid $ssb-green-4;
+  }
+
+  img {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  a.ssb-link {
+    margin-bottom: 20px;
+  }
+}

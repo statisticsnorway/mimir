@@ -12,6 +12,13 @@ export function getParentType(path: string): string | undefined {
   return fromParentTypeCache(path, () => parentType(path))
 }
 
+export function getParentContent(path: string): Content<object, DefaultPageConfig> | null {
+  const parentPathKey: string = parentPath(path)
+  return getContent({
+    key: parentPathKey
+  })
+}
+
 function parentType(path: string): string | undefined {
   const parentPathKey: string = parentPath(path)
 

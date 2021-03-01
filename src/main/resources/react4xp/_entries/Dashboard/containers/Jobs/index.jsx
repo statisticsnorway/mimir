@@ -198,7 +198,7 @@ export function Jobs() {
   return (
     <div className="p-4 tables-wrapper">
       <h2>Jobblogg</h2>
-      <Container className="job-log-container">
+      <Container fluid className="job-log-container">
         <Row className="mb-3">
           <Col>
             {loading ? renderSpinner() : renderTable()}
