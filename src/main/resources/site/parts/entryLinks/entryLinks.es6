@@ -54,10 +54,10 @@ const renderPart = (req) => {
     }
   }
 
-  return renderEntryLinks(headerTitle, entryLinksContent, req)
+  return renderEntryLinks(headerTitle, entryLinksContent)
 }
 
-const renderEntryLinks = (headerTitle, entryLinksContent, req) => {
+const renderEntryLinks = (headerTitle, entryLinksContent) => {
   if (entryLinksContent.length > 0) {
     const entryLinksComponent = new React4xp('EntryLinks')
       .setProps({
@@ -71,16 +71,12 @@ const renderEntryLinks = (headerTitle, entryLinksContent, req) => {
       label: headerTitle
     })
 
-    const isOutsideContentStudio = (
-      req.mode === 'live' || req.mode === 'preview'
-    )
-
     return {
       body: entryLinksComponent.renderBody({
         body
       }),
       pageContributions: entryLinksComponent.renderPageContributions(),
-      clientRender: isOutsideContentStudio
+      clientRender: true
     }
   }
 
