@@ -101,7 +101,7 @@ function renderPart(req) {
 
   const body = inputStickyMenu.renderBody({
     body: thymeleafRender,
-    clientRender: true
+    clientRender: req.mode !== 'edit'
   })
 
   return {

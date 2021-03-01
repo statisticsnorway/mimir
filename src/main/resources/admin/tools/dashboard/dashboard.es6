@@ -76,7 +76,7 @@ function renderPart(req) {
     .setId('dashboard')
 
   const pageContributions = parseContributions(dashboardDataset.renderPageContributions({
-    clientRender: true
+    clientRender: req.mode !== 'edit'
   }))
 
   const model = {
@@ -89,7 +89,7 @@ function renderPart(req) {
 
   body = dashboardDataset.renderBody({
     body,
-    clientRender: true
+    clientRender: req.mode !== 'edit'
   })
 
   return {

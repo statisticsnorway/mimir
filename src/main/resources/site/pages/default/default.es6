@@ -253,12 +253,12 @@ exports.get = function(req) {
 
   const bodyWithBreadCrumbs = breadcrumbComponent.renderBody({
     body: thymeleafRenderBody,
-    clientRender: true
+    clientRender: req.mode !== 'edit'
   })
 
   pageContributions = breadcrumbComponent.renderPageContributions({
     pageContributions,
-    clientRender: true
+    clientRender: req.mode !== 'edit'
   })
 
 
@@ -291,11 +291,11 @@ function addAlerts(alerts, body, pageContributions ) {
   return {
     body: alertComponent.renderBody({
       body,
-      clientRender: true
+      clientRender: req.mode !== 'edit'
     }),
     pageContributions: alertComponent.renderPageContributions({
       pageContributions,
-      clientRender: true
+      clientRender: req.mode !== 'edit'
     })
   }
 }

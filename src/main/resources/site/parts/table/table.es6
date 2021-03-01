@@ -152,10 +152,10 @@ function renderPart(req, tableId) {
   return {
     body: tableReact.renderBody({
       body,
-      clientRender: true
+      clientRender: req.mode !== 'edit'
     }),
     pageContributions: tableReact.renderPageContributions({
-      clientRender: true
+      clientRender: req.mode !== 'edit'
     }),
     contentType: 'text/html'
   }

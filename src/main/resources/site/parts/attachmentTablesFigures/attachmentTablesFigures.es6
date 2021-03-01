@@ -86,20 +86,16 @@ const renderPart = (req) => {
     .setId('accordion')
     .uniqueId()
 
-  const isOutsideContentStudio = (
-    req.mode === 'live' || req.mode === 'preview'
-  )
-
   const accordionBody = accordionComponent.renderBody({
     body: render(view, {
       title,
       accordionId: accordionComponent.react4xpId
     }),
-    clientRender: isOutsideContentStudio
+    clientRender: req.mode !== 'edit'
   })
 
   const accordionPageContributions = accordionComponent.renderPageContributions({
-    clientRender: isOutsideContentStudio
+    clientRender: req.mode !== 'edit'
   })
 
   const pageContributions = getFinalPageContributions(accordionPageContributions, attachmentTableAndFigureView)

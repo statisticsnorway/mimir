@@ -79,10 +79,6 @@ const renderPart = (req) => {
     issnNumber
   }
 
-  const isOutsideContentStudio = (
-    req.mode === 'live' || req.mode === 'preview'
-  )
-
   const preambleBody = preambleObj.renderBody({
     body: render(view, model)
   })
@@ -90,11 +86,11 @@ const renderPart = (req) => {
 
   const finalBody = listOfArticlesObj.renderBody({
     body: preambleBody,
-    clientRender: isOutsideContentStudio
+    clientRender: req.mode !== 'edit'
   })
   const finalPagePageContributions = listOfArticlesObj.renderPageContributions({
     pageContributions: preamblePageContributions,
-    clientRender: isOutsideContentStudio
+    clientRender: req.mode !== 'edit'
   })
 
   return {
