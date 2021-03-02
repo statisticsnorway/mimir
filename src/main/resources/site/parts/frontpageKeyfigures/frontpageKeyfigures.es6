@@ -35,22 +35,25 @@ exports.preview = (req) => renderPart(req)
 
 function renderPart(req) {
   const part = getComponent()
-  const keyFiguresPart = data.forceArray(part.config.keyfiguresFrontpage)
+  const keyFiguresPart = part.config.keyfiguresFrontpage ? data.forceArray(part.config.keyfiguresFrontpage) : []
 
-  const frontpageKeyfigures = keyFiguresPart.map((keyFigure) => {
-    const keyFigureContent = get({
+  const frontpageKeyfigures = keyFiguresPart.length > 0 ? keyFiguresPart.map((keyFigure) => {
+    const keyFigureContent = keyFigure.keyfigure ? get({
       key: keyFigure.keyfigure
-    })
-    const keyFigureData = parseKeyFigure(keyFigureContent, undefined, DATASET_BRANCH)
-    return {
-      id: keyFigureData._id,
-      title: keyFigure.urlText,
-      href: keyFigure.url,
-      number: keyFigureData.number,
-      numberDescription: keyFigureData.numberDescription,
-      noNumberText: keyFigureData.noNumberText
+    }) : undefined
+
+    if (keyFigureContent) {
+      const keyFigureData = parseKeyFigure(keyFigureContent, undefined, DATASET_BRANCH)
+      return {
+        id: keyFigureData._id,
+        title: keyFigure.urlText,
+        href: keyFigure.url,
+        number: keyFigureData.number,
+        numberDescription: keyFigureData.numberDescription,
+        noNumberText: keyFigureData.noNumberText
+      }
     }
-  })
+  }) : []
 
   return frontpageKeyfigures && frontpageKeyfigures.length > 0 ? renderFrontpageKeyfigures(frontpageKeyfigures) : {
     body: '',

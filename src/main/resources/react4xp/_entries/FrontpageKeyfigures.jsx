@@ -11,7 +11,7 @@ class FrontpageKeyfigures extends React.Component {
         <React.Fragment key={`figure-${i}`}>
           <div className="col-lg-3">
             <div className="keyfigure">
-              <Link href={keyFigure.href} linkType="header">{keyFigure.title}</Link>
+              <Link className="mb-2" href={keyFigure.href} linkType="header">{keyFigure.title}</Link>
               <div className="number-section">
                 <div className="ssb-number small">{keyFigure.number}</div>
                 <span className="kf-title subtitle">{keyFigure.numberDescription}</span>
