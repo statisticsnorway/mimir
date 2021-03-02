@@ -1,7 +1,4 @@
 export interface ActiveStatisticsPartConfig {
-  /**
-   * Relatert statistikk
-   */
   relatedStatisticsOptions?: {
     /**
      * Selected
