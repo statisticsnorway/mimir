@@ -40,7 +40,7 @@ class EntryLinks extends React.Component {
     return (
       <div className="container mt-4 mb-5">
         <div className="row">
-          <div className="col-12 p-0">
+          <div className="col-12">
             <h2>{headerTitle}</h2>
           </div>
           {this.renderEntryLinks()}
