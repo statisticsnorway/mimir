@@ -106,6 +106,8 @@ export const selectJobLogDetailsLoaded = (statisticId, jobId) => {
       const stat = state.statistics ? state.statistics.find((s) => s.id === statisticId) : []
       if (stat && stat.logs) {
         const log = stat.logs.find((log) => log.jobId === jobId)
+        console.log('got log: ' + !!log)
+        console.log(log)
         return !!log
       }
       return false

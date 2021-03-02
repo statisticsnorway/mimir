@@ -77,6 +77,8 @@ export function StatisticsLog(props) {
   }
 
   function renderModalBody() {
+    console.log('statistic')
+    console.log(statistic)
     if (logsLoaded) {
       return (
         statistic.logData.map((log, index) => {
