@@ -1,7 +1,4 @@
 export interface EndedStatisticsPartConfig {
-  /**
-   * Relatert statistikk
-   */
   relatedStatisticsOptions?: {
     /**
      * Selected
