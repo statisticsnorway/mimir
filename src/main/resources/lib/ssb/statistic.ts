@@ -1,4 +1,4 @@
-import { QueryInfoNode } from '../repo/query'
+import { EventInfo, QueryInfoNode, QueryStatus } from '../repo/query'
 
 __non_webpack_require__('/lib/polyfills/nashorn')
 import { Socket, SocketEmitter } from '../types/socket'
@@ -391,7 +391,19 @@ function getEventLogsFromStatisticsJobLog(jobLogId: string): Array<object> {
     })
     return {
       displayName: datasetContent?.displayName,
-      eventLogResult: eventLogResult.hits
+      eventLogResult: eventLogResult.hits.map((hit) => {
+        const a: EventInfo | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataset.id}/${hit.id}`) as EventInfo
+        log.info(JSON.stringify(a, null, 2))
+        return {
+          id: hit.id,
+          status: {
+            ...a.data.status,
+            message: i18n.localize({
+              key: a.data.status.message
+            })
+          }
+        }
+      })
     }
   })
 }

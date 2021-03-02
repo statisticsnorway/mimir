@@ -129,28 +129,11 @@ const statisticsSlice = createSlice({
       if (action.data) {
         const stat = state.statistics.find((s) => s.id === action.data.id)
         if (stat && stat.logData) {
-          console.log('stat and stat logs found')
-          const jobLog = stat.logData.find((v) => v.jobId === action.data.logs.jobId)
-          if (!jobLog) {
-            console.log('jobLog not found')
-            const logObject = {
-              jobLog: action.data.logs.jobId,
-              details: action.data.logs.logDetails,
-              dataLoaded: true
-            }
-            console.log('push logObject')
-            console.log(logObject)
-            stat.logs.push(logObject)
-            console.log('stat.logs pushed new content')
+          const jobLog = stat.logData.find((v) => v.id === action.data.logs.jobId)
+          if (jobLog) {
+            jobLog.dataLoaded = true
+            jobLog.details = action.data.logs.logDetails
           }
-        } else if (stat) {
-          console.log('Only stat found')
-          const logObject = [{
-            jobId: action.data.logs.jobId,
-            details: action.data.logs.logDetails,
-            dataLoaded: true
-          }]
-          stat.logData = logObject
         }
       }
     }

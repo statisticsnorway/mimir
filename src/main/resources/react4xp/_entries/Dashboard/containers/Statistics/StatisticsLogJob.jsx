@@ -12,7 +12,7 @@ export function StatisticsLogJob(props) {
   const dispatch = useDispatch()
   const [firstOpen, setFirstOpen] = React.useState(true)
   const logDetailsLoaded = useSelector(selectJobLogDetailsLoaded(props.statisticId, props.jobId))
-  const jobLog = useSelector(selectJobLog(props.statisticId, props.jobId))
+  const logData = useSelector(selectJobLog(props.statisticId, props.jobId))
 
   function onToggleAccordion(isOpen) {
     if (firstOpen && isOpen) {
@@ -26,21 +26,23 @@ export function StatisticsLogJob(props) {
     return moment(time).locale('nb').format('DD.MM.YYYY HH.mm')
   }
 
-  function renderDetails(eventLog) {
-    return <li>{eventLog.id}</li>
-  }
-
   function renderAccordionBody() {
     if (logDetailsLoaded) {
-      return (<span>Loaded: { logDetailsLoaded }</span>)
-      jobLog.logs.details.map((log, i) => {
+      return logData.details.map((log, i) => {
         return (
           <NestedAccordion
             key={i}
-            header={`${log.displayName})`}
+            header={`Logg detailjer for: ${log.displayName}`}
             className="mx-0">
             <ul>
-              {log.eventLogResult.map((eventLog) => renderDetails(eventLog))}
+              {log.eventLogResult.map((eventLog, k) => {
+                return (
+                  <li key={k}>
+                    {eventLog.status.message}
+                    {eventLog.status.status}
+                  </li>
+                )
+              })}
             </ul>
           </NestedAccordion>
         )
@@ -54,8 +56,9 @@ export function StatisticsLogJob(props) {
 
   return (
     <Accordion
-      className={jobLog.status}
-      header={`${formatTime(jobLog.completionTime)}: ${jobLog.task} (${jobLog.status})`}
+      key={props.jobId}
+      className={logData.status}
+      header={`${formatTime(logData.completionTime)}: ${logData.task} (${logData.status})`}
       onToggle={(isOpen) => onToggleAccordion(isOpen)}
       openByDefault={props.accordionOpenStatus}
     >
