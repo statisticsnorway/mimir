@@ -104,9 +104,6 @@ export interface Article {
    */
   articleArchive?: Array<string>;
 
-  /**
-   * Relatert statistikk
-   */
   relatedStatisticsOptions?: {
     /**
      * Selected
