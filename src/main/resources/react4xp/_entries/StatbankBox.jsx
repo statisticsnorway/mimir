@@ -13,15 +13,13 @@ class StatbankBox extends React.Component {
         <div className="row">
           <a className={`statbank-link ${fullWidth ? 'col-lg-12' : 'col-lg-7'}`} href={href}>
             <div className="content">
-              <div className={`row col-12${fullWidth ? ' d-flex align-items-center' : ''}`}>
-                <div className="icon-wrapper">
-                  <img src={icon} alt="Statbank logo"/>
-                </div>
-                <div className="title-wrapper">
-                  <h3 className="title">{title}</h3>
-                </div>
-                {fullWidth && <ArrowRight size={24} className="ml-auto arrow-icon" />}
+              <div className="icon-wrapper">
+                <img src={icon} alt="Statbank logo"/>
               </div>
+              <div className="title-wrapper">
+                <h3 className="title">{title}</h3>
+              </div>
+              {fullWidth && <ArrowRight size={28} className="arrow-icon" />}
             </div>
           </a>
         </div>
