@@ -64,7 +64,7 @@ function renderPart(req) {
     statisticRegister: userHasAdmin
   }
 
-  const dashboardDataset = new React4xp('Dashboard/Dashboard')
+  const dashboardDataset = new React4xp('Dashboard')
     .setProps({
       user,
       dashboardOptionsForUser,
