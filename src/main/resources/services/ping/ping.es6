@@ -5,7 +5,8 @@ const {
 export function get(req) {
   const contentType = 'application/xml'
   const body = `<ping>
-            <version>${getVersion()}</version>
+            <version>${app.version}</version>
+            <XPversion>${getVersion()}</XPversion>
 </ping > `
   return {
     body,
