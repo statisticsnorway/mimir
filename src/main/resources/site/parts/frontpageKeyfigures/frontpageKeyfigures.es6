@@ -3,6 +3,9 @@ const {
   getComponent
 } = __non_webpack_require__( '/lib/xp/portal')
 const {
+  get
+} = __non_webpack_require__( '/lib/xp/content')
+const {
   render
 } = __non_webpack_require__( '/lib/thymeleaf')
 const {
@@ -12,7 +15,6 @@ const {
   data
 } = __non_webpack_require__( '/lib/util')
 const {
-  get: getKeyFigures,
   parseKeyFigure
 } = __non_webpack_require__( '/lib/ssb/keyFigure')
 const {
@@ -33,38 +35,39 @@ exports.preview = (req) => renderPart(req)
 
 function renderPart(req) {
   const part = getComponent()
-  const frontpageKeyfigures = data.forceArray(part.config.keyfiguresFrontpage)
-  const frontpageKeyfigureIds = frontpageKeyfigures.length > 0 ? frontpageKeyfigures.map((k) => k.keyfigure) : []
+  const keyFiguresPart = data.forceArray(part.config.keyfiguresFrontpage)
 
-  const keyFigures = getKeyFigures(frontpageKeyfigureIds)
-    .map((keyFigure) => {
-      const keyFigureData = parseKeyFigure(keyFigure, undefined, DATASET_BRANCH)
-      return {
-        id: keyFigure._id,
-        ...keyFigureData
-      }
+  const frontpageKeyfigures = keyFiguresPart.map((keyFigure) => {
+    const keyFigureContent = get({
+      key: keyFigure.keyfigure
     })
+    const keyFigureData = parseKeyFigure(keyFigureContent, undefined, DATASET_BRANCH)
+    return {
+      id: keyFigureData._id,
+      title: keyFigure.urlText,
+      href: keyFigure.url,
+      number: keyFigureData.number,
+      numberDescription: keyFigureData.numberDescription,
+      noNumberText: keyFigureData.noNumberText
+    }
+  })
 
-  return keyFigures && keyFigures.length > 0 ? renderFrontpageKeyfigures(keyFigures, part) : {
+  return frontpageKeyfigures && frontpageKeyfigures.length > 0 ? renderFrontpageKeyfigures(frontpageKeyfigures) : {
     body: '',
     contentType: 'text/html'
   }
 }
 
-function renderFrontpageKeyfigures(parsedKeyFigures, part) {
+function renderFrontpageKeyfigures(frontpageKeyfigures) {
   const frontpageKeyfiguresReact = new React4xp('FrontpageKeyfigures')
     .setProps({
-      displayName: part ? part.config.title : undefined,
-      keyFigures: parsedKeyFigures.map((keyFigureData) => {
+      keyFigures: frontpageKeyfigures.map((frontpageKeyfigure) => {
         return {
-          ...keyFigureData
+          ...frontpageKeyfigure
         }
       })
     })
     .uniqueId()
-
-  log.info('frontpageKeyfiguresReact')
-  log.info(JSON.stringify(frontpageKeyfiguresReact, null, 4))
 
   const body = render(view, {
     frontpageKeyfiguresId: frontpageKeyfiguresReact.react4xpId

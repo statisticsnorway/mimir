@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Link } from '@statisticsnorway/ssb-component-library'
 
 class FrontpageKeyfigures extends React.Component {
   createRows() {
@@ -10,7 +11,7 @@ class FrontpageKeyfigures extends React.Component {
         <React.Fragment key={`figure-${i}`}>
           <div className="col-lg-3">
             <div className="keyfigure">
-              <h4 className="mb-2">{keyFigure.title}</h4>
+              <Link href={keyFigure.href} linkType="header">{keyFigure.title}</Link>
               <div className="number-section">
                 <div className="ssb-number small">{keyFigure.number}</div>
                 <span className="kf-title subtitle">{keyFigure.numberDescription}</span>
@@ -34,11 +35,12 @@ class FrontpageKeyfigures extends React.Component {
 FrontpageKeyfigures.propTypes = {
   keyFigures: PropTypes.arrayOf(
     PropTypes.shape({
+      id: PropTypes.string,
+      href: PropTypes.string,
       number: PropTypes.string,
       numberDescription: PropTypes.string,
       noNumberText: PropTypes.string,
-      title: PropTypes.string,
-      time: PropTypes.string
+      title: PropTypes.string
     })
   )
 }
