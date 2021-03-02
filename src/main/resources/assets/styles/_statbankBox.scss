@@ -36,6 +36,10 @@
     @include media-breakpoint-down(sm) {
       padding-left: 20px;
     }
+    
+    .arrow-icon {
+      color: $ssb-green-3;
+    }
   }
 
   .icon-wrapper {

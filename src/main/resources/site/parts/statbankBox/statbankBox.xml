@@ -1,3 +1,19 @@
 <part>
     <display-name>Inngang Statistikkbanken</display-name>
+    <form>
+        <input name="title" type="TextLine">
+            <label>Tittel</label>
+            <occurrences minimum="0" maximum="1" />
+        </input>
+        <input name="href" type="TextLine">
+            <label>URL</label>
+            <occurrences minimum="0" maximum="1" />
+        </input>
+        <input name="fullWidthCheckBox" type="CheckBox">
+            <label>Full bredde</label>
+            <config>
+                <alignment>right</alignment>
+            </config>
+        </input>
+    </form>
 </part>
