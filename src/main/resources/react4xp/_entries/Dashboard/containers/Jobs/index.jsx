@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { ReactTable } from '../../components/ReactTable'
 import { selectJobs, selectLoading } from './selectors'
 import { selectContentStudioBaseUrl } from '../HomePage/selectors'
-import { Link, Accordion } from '@statisticsnorway/ssb-component-library'
+import { Link, Accordion, Divider } from '@statisticsnorway/ssb-component-library'
 import { DataQueryBadges } from '../../components/DataQueryBadges'
 import moment from 'moment/min/moment-with-locales'
 
@@ -58,6 +58,8 @@ export function Jobs() {
   function getTranslatedJobName(task) {
     switch (task) {
     case '-- Running dataquery cron job --':
+      return 'Kjøre oppdaterte spørringer'
+    case 'Refresh dataset':
       return 'Kjøre oppdaterte spørringer'
     case 'Delete expired eventlogs':
       return 'Slette eventlog'
@@ -116,6 +118,15 @@ export function Jobs() {
           })}
         </React.Fragment>
       )
+    } else if (job.task === 'Refresh dataset') {
+      const count = job.result.result.length
+      const errorCount = job.result.result.filter((ds) => ds.hasError).length
+      const ignoreCount = job.result.filterInfo && job.result.filterInfo.skipped && job.result.filterInfo.skipped.length
+      return (
+        <span className="modal-trigger" onClick={() => openJobLogModal(job)}>
+          {job.status} - Oppdaterte {count - errorCount} spørringer, {errorCount} feilet, og {ignoreCount} ignorert
+        </span>
+      )
     }
     return <span>{job.status} - {job.message}</span>
   }
@@ -126,6 +137,7 @@ export function Jobs() {
         show={true}
         onHide={() => closeJobLogModal()}
         animation={false}
+        size="lg"
       >
         <Modal.Header closeButton>
           <Modal.Title>
@@ -143,27 +155,45 @@ export function Jobs() {
   }
 
   function renderJobLogs() {
-    return currentModalJob.result.map((statisticResult, index) => {
-      return (
-        <Accordion
-          key={index}
-          header={statisticResult.shortName}
-          subHeader={statisticResult.status}>
-          {statisticResult.dataSources.map((dataSource, index) => {
-            return (
-              <p key={index}>
-                {dataSource.status} -&nbsp;
-                <span className="small">
-                  <DataQueryBadges contentType={dataSource.type} format={dataSource.datasetType} isPublished={true} floatRight={false} />
-                </span>
-                <br />
-                <Link isExternal href={contentStudioBaseUrl + dataSource.id}>{dataSource.displayName}</Link> - {dataSource.datasetKey}
-              </p>
-            )
-          })}
-        </Accordion>
-      )
-    })
+    if (currentModalJob.task === 'Publish statistics') {
+      return currentModalJob.result.map((statisticResult, index) => {
+        return (
+          <Accordion
+            key={index}
+            header={statisticResult.shortName}
+            subHeader={statisticResult.status}>
+            {statisticResult.dataSources.map((dataSource, index) => {
+              return (
+                <p key={index}>
+                  {dataSource.status} -&nbsp;
+                  <span className="small">
+                    <DataQueryBadges contentType={dataSource.type} format={dataSource.datasetType} isPublished={true} floatRight={false} />
+                  </span>
+                  <br />
+                  <Link isExternal href={contentStudioBaseUrl + dataSource.id}>{dataSource.displayName}</Link> - {dataSource.datasetKey}
+                </p>
+              )
+            })}
+          </Accordion>
+        )
+      })
+    } else if (currentModalJob.task === 'Refresh dataset') {
+      return currentModalJob.result.result.map((dataSource) => {
+        return (
+          <React.Fragment key={`refresh_dataset_log_${dataSource.id}`}>
+            <p>
+              <Link isExternal href={contentStudioBaseUrl + dataSource.id}>{dataSource.displayName}</Link>
+              <span className="small">
+                <DataQueryBadges contentType={dataSource.contentType} format={dataSource.dataSourceType} isPublished={true} floatRight={false}/>
+              </span>
+              <br />
+              {dataSource.status}
+            </p>
+            <Divider className="my-3"/>
+          </React.Fragment>
+        )
+      })
+    }
   }
 
   return (

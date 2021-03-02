@@ -10,6 +10,7 @@ import { StatbankApiLib } from './statbankApi'
 import { DatasetLib } from './dataset'
 import { JSONstat } from '../../types/jsonstat-toolkit'
 import { ServerLogLib } from '../serverLog'
+import { JobStatus } from '../../repo/job'
 import { DefaultPageConfig } from '../../../site/pages/default/default-page-config'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 
@@ -104,7 +105,7 @@ function inRSSItems(dataSource: Content<DataSource>, dataset: DatasetRepoNode<JS
   }).length > 0
 }
 
-export function dataSourceRSSFilter(dataSources: Array<Content<DataSource>>): Array<Content<DataSource>> {
+export function dataSourceRSSFilter(dataSources: Array<Content<DataSource>>): RSSFilter {
   let filteredDatasources: Array<Content<DataSource>> = parentTypeFilter(dataSources)
   const savedQuerysStatisticsToday: Array<Content<DataSource>> = getSavedQuerysStatistic(dataSources)
   if (savedQuerysStatisticsToday.length > 0) {
@@ -116,42 +117,69 @@ export function dataSourceRSSFilter(dataSources: Array<Content<DataSource>>): Ar
     .filter((item) => new Date(item.pubDate).getDate() === today) // only keep those with updates today
 
   const logData: RSSFilterLogData = {
-    start: filteredDatasources.length,
-    noData: 0,
-    otherDataType: 0,
-    inRSSOrNoKey: 0,
-    end: 0
+    start: filteredDatasources.map((ds) => ds._id),
+    noData: [],
+    otherDataType: [],
+    inRSSOrNoKey: [],
+    skipped: [],
+    end: []
   }
 
   const filteredDatasourcesRSS: Array<Content<DataSource>> = filteredDatasources.reduce((t: Array<Content<DataSource>>, dataSource) => {
     if (isValidType(dataSource)) {
       const dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null = getDataset(dataSource)
       if (!dataset) {
-        logData.noData += 1
+        logData.noData.push(dataSource._id)
         t.push(dataSource)
       } else if (inRSSItems(dataSource, dataset, RSSItems)) {
-        logData.inRSSOrNoKey += 1
+        logData.inRSSOrNoKey.push(dataSource._id)
         t.push(dataSource)
+      } else {
+        logData.skipped.push({
+          id: dataSource._id,
+          displayName: dataSource.displayName,
+          contentType: dataSource.type,
+          dataSourceType: dataSource.data.dataSource?._selected,
+          status: JobStatus.SKIPPED
+        })
       }
     } else {
-      logData.otherDataType += 1
+      logData.otherDataType.push(dataSource._id)
       t.push(dataSource)
     }
     return t
   }, [])
 
-  logData.end = filteredDatasourcesRSS.length
+  logData.end = filteredDatasourcesRSS.map((ds) => ds._id)
   cronJobLog(JSON.stringify(logData, null, 2))
 
-  return filteredDatasourcesRSS
+  return {
+    logData,
+    filteredDataSources: filteredDatasourcesRSS
+  }
 }
 
-interface RSSFilterLogData{
-  start: number;
-  noData: number;
-  otherDataType: number;
-  inRSSOrNoKey: number;
-  end: number;
+export interface RSSFilterLogData {
+  start: Array<string>;
+  noData: Array<string>;
+  otherDataType: Array<string>;
+  inRSSOrNoKey: Array<string>;
+  skipped: Array<DataSourceInfo>;
+  end: Array<string>;
+}
+
+export interface DataSourceInfo {
+  id: string;
+  displayName: string;
+  contentType: string;
+  dataSourceType?: string;
+  status: string;
+  hasError?: boolean;
+}
+
+export interface RSSFilter {
+  logData: RSSFilterLogData;
+  filteredDataSources: Array<Content<DataSource>>;
 }
 
 interface RSS {
@@ -187,5 +215,5 @@ interface RSSContact {
 }
 
 export interface DatasetRSSLib {
-  dataSourceRSSFilter: (dataSources: Array<Content<DataSource>>) => Array<Content<DataSource>>;
+  dataSourceRSSFilter: (dataSources: Array<Content<DataSource>>) => RSSFilter;
 }
