@@ -19,13 +19,19 @@ const {
 const {
   hasWritePermissionsAndPreview
 } = __non_webpack_require__('/lib/ssb/permissions')
-
-const React4xp = require('/lib/enonic/react4xp')
-const moment = require('moment/min/moment-with-locales')
+const {
+  sleep
+} = __non_webpack_require__('/lib/xp/task')
+const {
+  currentlyWaitingForPublish
+} = __non_webpack_require__('/lib/ssb/dataset/publish')
 const util = __non_webpack_require__('/lib/util')
 const {
   getPreviousReleaseStatistic, getNextReleaseStatistic
 } = __non_webpack_require__('/lib/ssb/utils')
+
+const React4xp = require('/lib/enonic/react4xp')
+const moment = require('moment/min/moment-with-locales')
 const view = resolve('./statistics.html')
 
 exports.get = (req) => {
@@ -43,6 +49,11 @@ const renderPart = (req) => {
   const phrases = getPhrases(page)
   moment.locale(page.language ? page.language : 'nb')
   const statistic = page.data.statistic && getStatisticByIdFromRepo(page.data.statistic)
+  let waitedFor = 0
+  while (currentlyWaitingForPublish(page) && waitedFor < 10000) {
+    waitedFor += 100
+    sleep(100)
+  }
   let title = page.displayName
   const updated = phrases.updated + ': '
   const nextUpdate = phrases.nextUpdate + ': '

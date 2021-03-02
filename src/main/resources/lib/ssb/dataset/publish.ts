@@ -7,7 +7,7 @@ import { StatRegStatisticsLib } from '../../repo/statreg/statistics'
 import { TaskLib } from '../../types/task'
 import { UtilLibrary } from '../../types/util'
 import { StatisticLib } from '../statistic'
-import { StatisticInListing, VariantInListing } from '../statreg/types'
+import { StatisticInListing } from '../statreg/types'
 import { DatasetLib } from './dataset'
 import { RepoJobLib, JobEventNode, JobInfoNode, StatisticsPublishResult, DataSourceStatisticsPublishResult } from '../../repo/job'
 import { RepoQueryLib } from '../../repo/query'
@@ -59,8 +59,34 @@ const {
 const {
   send
 }: EventLibrary = __non_webpack_require__('/lib/xp/event')
+const {
+  getNextReleaseStatistic
+} = __non_webpack_require__('/lib/ssb/utils')
 
 const jobs: {[key: string]: JobEventNode | JobInfoNode} = {}
+
+export function currentlyWaitingForPublish(statistic: Content<Statistics>): boolean {
+  for (const key in jobs) {
+    if ({}.hasOwnProperty.call(jobs, key)) {
+      const job: JobInfoNode = jobs[key] as JobInfoNode
+      if (job.data.status !== JobStatus.COMPLETE) {
+        const jobRefreshResult: Array<StatisticsPublishResult> = forceArray(job.data.refreshDataResult) as Array<StatisticsPublishResult>
+        const statRefreshResult: StatisticsPublishResult | undefined = jobRefreshResult.find((s) => {
+          return s.statistic === statistic._id
+        })
+        if (statRefreshResult && statRefreshResult.status !== JobStatus.COMPLETE && statRefreshResult.status !== JobStatus.SKIPPED) {
+          const nextRelease: string | null = getNextRelease(statistic)
+          const serverOffsetInMs: number = app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+          const now: Date = new Date(new Date().getTime() + serverOffsetInMs + 1000)
+          if (nextRelease && new Date(nextRelease) <= now) {
+            return true
+          }
+        }
+      }
+    }
+  }
+  return false
+}
 
 export function publishDataset(): void {
   cronJobLog('Start publish job')
@@ -237,9 +263,7 @@ function getNextRelease(statistic: Content<Statistics>): string | null{
   if (statistic.data.statistic) {
     const statisticStatreg: StatisticInListing | undefined = getStatisticByIdFromRepo(statistic.data.statistic)
     if (statisticStatreg) {
-      const variants: Array<VariantInListing> = forceArray(statisticStatreg.variants)
-      const variant: VariantInListing = variants[0] // TODO: Multiple variants
-      return variant.nextRelease ? variant.nextRelease : null
+      return getNextReleaseStatistic(forceArray(statisticStatreg.variants))
     }
   }
   return null
@@ -247,6 +271,7 @@ function getNextRelease(statistic: Content<Statistics>): string | null{
 
 export interface PublishDatasetLib {
   publishDataset: () => void;
+  currentlyWaitingForPublish: (statistic: StatisticInListing) => boolean ;
 }
 
 interface PublicationItem {
