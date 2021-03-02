@@ -2,7 +2,6 @@ import { createSlice } from '../../utils/@reduxjs/toolkit'
 
 export const initialState = {
   statistics: [],
-  statisticsLogData: [],
   statisticsSearchList: [],
   loading: true,
   loadingSearchList: true,
@@ -128,27 +127,32 @@ const statisticsSlice = createSlice({
     },
     statisticJoblogDetailsLoaded(state, action) {
       if (action.data) {
-        const statsLogData = state.statisticsLogData.find((s) => s.id === action.data.id)
-        if (statsLogData) {
-          const jobLog = statsLogData.logs.find((v) => v.jobId === action.data.logs.jobId)
+        const stat = state.statistics.find((s) => s.id === action.data.id)
+        console.log('stat found')
+        console.log(stat)
+        if (stat && stat.logs) {
+          console.log('stat and stat logs found')
+          const jobLog = stat.logs.find((v) => v.jobId === action.data.logs.jobId)
+          console.log(jobLog)
           if (!jobLog) {
-            statsLogData.logs.push({
+            console.log('jobLog not found')
+            console.log(action.data)
+            stat.logs.push({
               jobLog: action.data.logs.jobId,
               details: action.data.logs.logDetails,
               dataLoaded: true
             })
+            console.log('stat.logs pushed new content')
+            console.log(stat.logs)
           }
-        } else {
-          const logObject = {
-            id: action.data.id,
-            logs: [{
-              jobId: action.data.logs.jobId,
-              details: action.data.logs.logDetails,
-              dataLoaded: true
-            }]
-          }
-          state.accordionOpen = true
-          state.statisticsLogData.push(logObject)
+        } else if (stat) {
+          console.log('Only stat found')
+          const logObject = [{
+            jobId: action.data.logs.jobId,
+            details: action.data.logs.logDetails,
+            dataLoaded: true
+          }]
+          stat.logs = logObject
         }
       }
     }
@@ -158,7 +162,7 @@ const statisticsSlice = createSlice({
 /*
 * structure of statisticsLogData
 *
- statisticsLogData = [{
+ statistics = [{
   id: 1234-sdf,
   logs: [{
     jobId: 543-123,
@@ -171,6 +175,7 @@ const statisticsSlice = createSlice({
       }]
     }]
   }]
+  * ...
 }]
 
  */

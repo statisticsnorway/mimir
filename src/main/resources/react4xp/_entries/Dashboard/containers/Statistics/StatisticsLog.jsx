@@ -18,6 +18,7 @@ export function StatisticsLog(props) {
   const dispatch = useDispatch()
   const [show, setShow] = useState(false)
   const [firstOpen, setFirstOpen] = useState(true)
+  const [accordionOpenStatus, setAccordionOpenStatus] = useState([])
   const statistic = useSelector(selectStatistic(statisticId))
   const logsLoaded = useSelector(selectStatisticsLogDataLoaded(statistic.id))
   const handleClose = () => setShow(false)
@@ -31,6 +32,11 @@ export function StatisticsLog(props) {
     setShow(handleShow)
   }
 
+  function setAccordionStatusOnIndex(index, status) {
+    const tmp = accordionOpenStatus
+    tmp[index] = status
+    setAccordionOpenStatus(tmp)
+  }
 
   function renderLogData() {
     if (!statistic) {
@@ -75,7 +81,14 @@ export function StatisticsLog(props) {
       return (
         statistic.logData.map((log, index) => {
           return (
-            <StatisticsLogJob key={index} statisticId={statistic.id} jobId={statistic.logData[index].id} />
+            <StatisticsLogJob
+              key={index}
+              index={index}
+              statisticId={statistic.id}
+              jobId={statistic.logData[index].id}
+              accordionOpenStatus={!!accordionOpenStatus[index]}
+              setAccordionStatusOnIndex={setAccordionStatusOnIndex}
+            />
           )
         })
       )
