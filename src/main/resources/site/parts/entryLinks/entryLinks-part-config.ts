@@ -1,4 +1,7 @@
 export interface EntryLinksPartConfig {
+  /**
+   * Inngang
+   */
   entryLinks?: Array<{
     /**
      * Tittel

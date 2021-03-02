@@ -1,8 +1,8 @@
 <part>
     <display-name>Innganger med ikoner</display-name>
-    <description></description>
     <form>
         <item-set name="entryLinks">
+            <label>Inngang</label>
             <occurrences minimum="0" maximum="4" />
             <items>
                 <input name="title" type="TextLine">
