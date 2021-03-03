@@ -58,10 +58,10 @@ function renderPart(req, menuBoxId) {
   return {
     body: menuBox.renderBody({
       body,
-      clientRender: true
+      clientRender: req.mode !== 'edit'
     }),
     pageContributions: menuBox.renderPageContributions({
-      clientRender: true
+      clientRender: req.mode !== 'edit'
     })
   }
 }

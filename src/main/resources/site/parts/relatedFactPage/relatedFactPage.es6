@@ -131,10 +131,10 @@ function renderPart(req, itemList) {
   return {
     body: relatedFactPage.renderBody({
       body,
-      clientRender: true
+      clientRender: req.mode !== 'edit'
     }),
     pageContributions: relatedFactPage.renderPageContributions({
-      clientRender: true
+      clientRender: req.mode !== 'edit'
     })
   }
 }

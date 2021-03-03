@@ -252,13 +252,11 @@ exports.get = function(req) {
   const thymeleafRenderBody = thymeleaf.render(view, model)
 
   const bodyWithBreadCrumbs = breadcrumbComponent.renderBody({
-    body: thymeleafRenderBody,
-    clientRender: false
+    body: thymeleafRenderBody
   })
 
   pageContributions = breadcrumbComponent.renderPageContributions({
-    pageContributions,
-    clientRender: false
+    pageContributions
   })
 
 
@@ -290,12 +288,10 @@ function addAlerts(alerts, body, pageContributions ) {
     .setId('alerts')
   return {
     body: alertComponent.renderBody({
-      body,
-      clientRender: true
+      body
     }),
     pageContributions: alertComponent.renderPageContributions({
-      pageContributions,
-      clientRender: true
+      pageContributions
     })
   }
 }
