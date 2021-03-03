@@ -42,10 +42,10 @@ const renderPart = (req, config) => {
     body: render(view, {
       dividerId: divider.react4xpId
     }),
-    clientRender: true
+    clientRender: req.mode !== 'edit'
   })
   const pageContributions = divider.renderPageContributions({
-    clientRender: true
+    clientRender: req.mode !== 'edit'
   })
 
 
