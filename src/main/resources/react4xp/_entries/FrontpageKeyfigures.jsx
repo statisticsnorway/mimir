@@ -11,7 +11,7 @@ class FrontpageKeyfigures extends React.Component {
         <React.Fragment key={`figure-${i}`}>
           <div className="col-lg-3">
             <div className="keyfigure">
-              <Link className="mb-2" href={keyFigure.href} linkType="header">{keyFigure.title}</Link>
+              <Link className="mb-2" href={keyFigure.url} linkType="header">{keyFigure.urlText}</Link>
               <div className="number-section">
                 <div className="ssb-number small">{keyFigure.number}</div>
                 <span className="kf-title subtitle">{keyFigure.numberDescription}</span>
@@ -36,11 +36,12 @@ FrontpageKeyfigures.propTypes = {
   keyFigures: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string,
-      href: PropTypes.string,
+      title: PropTypes.string,
+      url: PropTypes.string,
+      urlText: PropTypes.string,
       number: PropTypes.string,
       numberDescription: PropTypes.string,
-      noNumberText: PropTypes.string,
-      title: PropTypes.string
+      noNumberText: PropTypes.string
     })
   )
 }

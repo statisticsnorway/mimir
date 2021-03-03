@@ -14,7 +14,7 @@ export interface FrontpageKeyfiguresPartConfig {
     urlText: string;
 
     /**
-     * URL
+     * Lenke på nøkkeltall
      */
     url: string;
   }>;

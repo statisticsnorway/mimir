@@ -46,8 +46,9 @@ function renderPart(req) {
       const keyFigureData = parseKeyFigure(keyFigureContent, undefined, DATASET_BRANCH)
       return {
         id: keyFigureData._id,
-        title: keyFigure.urlText,
-        href: keyFigure.url,
+        title: keyFigureData.title,
+        urlText: keyFigure.urlText,
+        url: keyFigure.url,
         number: keyFigureData.number,
         numberDescription: keyFigureData.numberDescription,
         noNumberText: keyFigureData.noNumberText
