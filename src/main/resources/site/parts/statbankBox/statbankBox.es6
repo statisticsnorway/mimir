@@ -65,28 +65,28 @@ const parseStatbankBoxContent = (page, part, phrases) => {
   const statistic = page.data.statistic && getStatisticByIdFromRepo(page.data.statistic)
   const shortName = statistic && statistic.shortName ? statistic.shortName : undefined
 
-  const manualTitle = part.config.title
+  const overrideTitle = part.config.title
   const fullWidth = part.config.fullWidthCheckBox
   let title
-  if (manualTitle) {
-    title = manualTitle
+  if (overrideTitle) {
+    title = overrideTitle
   } else if (fullWidth) {
     title = 'Statistikkbanken - alle tallene våre samlet på ett sted'
   } else {
     title = phrases['statbankBox.title']
   }
 
-  const manualUrl = part.config.href
+  const overrideUrl = part.config.href
   let href
-  if (manualUrl) {
-    href = manualUrl
+  if (overrideUrl) {
+    href = overrideUrl
   } else if (shortName) {
     href = `${STATBANKWEB_URL}/list/${shortName}`
   } else {
     href = STATBANKWEB_URL
   }
 
-  if (!manualUrl && page.language === 'en') {
+  if (!overrideUrl && page.language === 'en') {
     href = href.replace('/statbank/', '/en/statbank/')
   }
 
