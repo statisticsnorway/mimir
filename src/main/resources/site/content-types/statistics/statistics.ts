@@ -79,9 +79,6 @@ export interface Statistics {
    */
   statistic?: string;
 
-  /**
-   * Relatert statistikk
-   */
   relatedStatisticsOptions?: {
     /**
      * Selected

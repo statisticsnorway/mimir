@@ -5,13 +5,11 @@
             <label>Relaterte statistikker</label>
             <items>
                 <option-set name="relatedStatisticsOptions">
-                    <label>Relatert statistikk</label>
                     <expanded>false</expanded>
                     <occurrences minimum="0" maximum="0" />
                     <options minimum="1" maximum="1">
                         <option name="xp">
                             <label>Statistikk fra XP</label>
-                            <default>true</default>
                             <items>
                                 <input name="contentId" type="ContentSelector">
                                     <label>Statistikk</label>

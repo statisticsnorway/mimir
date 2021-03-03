@@ -1,7 +1,4 @@
 export interface RelatedStatistics {
-  /**
-   * Relatert statistikk
-   */
   relatedStatisticsOptions?: {
     /**
      * Selected
