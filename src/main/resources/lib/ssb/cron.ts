@@ -11,8 +11,9 @@ import { PublishDatasetLib } from './dataset/publish'
 import { EventLogLib } from '../ssb/eventLog'
 import { ClusterLib } from '../types/cluster'
 import { ServerLogLib } from './serverLog'
-import { DatasetRSSLib } from './dataset/rss'
+import { DatasetRSSLib, RSSFilter } from './dataset/rss'
 import { RepoCommonLib } from '../repo/common'
+import { MockUnpublishedLib } from './dataset/mockUnpublished'
 
 const {
   publishDataset
@@ -57,6 +58,9 @@ const {
 const {
   ENONIC_CMS_DEFAULT_REPO
 }: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
+const {
+  updateUnpublishedMockTbml
+}: MockUnpublishedLib = __non_webpack_require__('/lib/ssb/dataset/mockUnpublished')
 
 const createUserContext: RunContext = { // Master context (XP)
   repository: ENONIC_CMS_DEFAULT_REPO,
@@ -94,11 +98,11 @@ function setupCronJobUser(): void {
 }
 
 function job(): void {
-  cronJobLog('-- Running dataquery cron job --')
-  const jobLogNode: JobEventNode = startJobLog('-- Running dataquery cron job --')
+  cronJobLog(JobNames.REFRESH_DATASET_JOB)
+  const jobLogNode: JobEventNode = startJobLog(JobNames.REFRESH_DATASET_JOB)
 
-  let dataSourceQueries: Array<Content<DataSource>> = getContentWithDataSource()
-  dataSourceQueries = dataSourceRSSFilter(dataSourceQueries)
+  const filterData: RSSFilter = dataSourceRSSFilter(getContentWithDataSource())
+  const dataSourceQueries: Array<Content<DataSource>> = filterData.filteredDataSources
   updateJobLog(jobLogNode._id, (node: JobInfoNode) => {
     node.data = {
       ...node.data,
@@ -106,9 +110,15 @@ function job(): void {
     }
     return node
   })
-  const refreshDataResult: undefined | Array<string> = dataSourceQueries && refreshQueriesAsync(dataSourceQueries)
-  completeJobLog(jobLogNode._id, JOB_STATUS_COMPLETE, refreshDataResult)
-  cronJobLog('-- Completed dataquery cron job --')
+  if (dataSourceQueries && dataSourceQueries.length > 1) {
+    refreshQueriesAsync(dataSourceQueries, jobLogNode._id, filterData.logData)
+  } else {
+    completeJobLog(jobLogNode._id, JOB_STATUS_COMPLETE, {
+      filterInfo: filterData.logData,
+      result: []
+    })
+  }
+  cronJobLog(JobNames.REFRESH_DATASET_JOB)
 }
 
 export function statRegJob(): void {
@@ -171,6 +181,18 @@ export function setupCronJobs(): void {
     callback: () => runOnMasterOnly(deleteExpiredEventLogs),
     context: cronContext
   })
+
+  if (app.config && app.config['ssb.mock.enable'] === 'true') {
+    const updateUnpublishedMockCron: string =
+      app.config && app.config['ssb.cron.updateUnpublishedMock'] ? app.config['ssb.cron.updateUnpublishedMock'] : '0 04 * * *'
+    cron.schedule({
+      name: 'Update unpublished mock tbml',
+      cron: updateUnpublishedMockCron,
+      times: 365 * 10,
+      callback: () => runOnMasterOnly(updateUnpublishedMockTbml),
+      context: cronContext
+    })
+  }
 
   const cronList: Array<GetCronResult> = cron.list()
   cronJobLog('All cron jobs registered')

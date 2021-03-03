@@ -63,6 +63,8 @@ $container-max-widths: (
 @import "./404";
 @import "./associatedStatistics";
 @import "./associatedArticleArchives";
+@import "./externalCard";
+@import "./endedStatistics";
 
 body {
   -moz-osx-font-smoothing: grayscale;

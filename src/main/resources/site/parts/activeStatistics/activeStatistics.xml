@@ -1,0 +1,7 @@
+<part>
+    <display-name>Aktiv statistikk</display-name>
+    <description></description>
+    <form>
+        <mixin name="relatedStatistics" />
+    </form>
+</part>

@@ -253,12 +253,12 @@ exports.get = function(req) {
 
   const bodyWithBreadCrumbs = breadcrumbComponent.renderBody({
     body: thymeleafRenderBody,
-    clientRender: true
+    clientRender: false
   })
 
   pageContributions = breadcrumbComponent.renderPageContributions({
     pageContributions,
-    clientRender: true
+    clientRender: false
   })
 
 

@@ -1,6 +1,5 @@
-import { EventInfo, QueryInfoNode, QueryStatus } from '../repo/query'
-
 __non_webpack_require__('/lib/polyfills/nashorn')
+import { EventInfo, QueryInfoNode, QueryStatus } from '../repo/query'
 import { Socket, SocketEmitter } from '../types/socket'
 import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
 import { StatisticInListing, VariantInListing } from './statreg/types'
@@ -340,7 +339,6 @@ function getStatisticsJobLogInfo(id: string, count: number = 1): Array<Dashboard
       count,
       sort: '_ts DESC'
     })
-
     return statisticsJobLog.hits.reduce((res: Array<DashboardJobInfo>, jobRes) => {
       const jobNode: JobInfoNode | null = connection.get(jobRes.id)
       if (jobNode) {
@@ -466,6 +464,7 @@ function prepDashboardStatistics(statisticContent: Content<Statistics>, statregS
     variantId: statregData.variantId,
     nextRelease: statregData.nextRelease,
     nextReleaseId: statregData.nextReleaseId,
+    activeVariants: statregData.activeVariants,
     ownersWithSources: undefined,
     relatedTables: relatedTables,
     aboutTheStatistics: statisticContent.data.aboutTheStatistics,
@@ -503,7 +502,8 @@ function getStatregInfo(statisticStatreg: StatisticInListing | undefined): Statr
       frequency: '',
       nextRelease: '',
       nextReleaseId: '',
-      variantId: ''
+      variantId: '',
+      activeVariants: -1
     }
   }
   const variants: Array<VariantInListing> = forceArray(statisticStatreg.variants)
@@ -517,7 +517,8 @@ function getStatregInfo(statisticStatreg: StatisticInListing | undefined): Statr
     frequency: variant.frekvens,
     nextRelease: variant.nextRelease ? variant.nextRelease : '',
     nextReleaseId: variant.nextReleaseId ? variant.nextReleaseId : '',
-    variantId: variant.id
+    variantId: variant.id,
+    activeVariants: variants.length
   }
   return result
 }
@@ -596,6 +597,7 @@ interface StatisticDashboard {
   variantId: string;
   nextRelease: string;
   nextReleaseId: string;
+  activeVariants: number;
   relatedTables?: Array<RelatedTbml>;
   ownersWithSources?: Array<OwnerWithSources>;
   aboutTheStatistics?: string;
@@ -615,6 +617,7 @@ interface StatregData {
   nextRelease: string;
   nextReleaseId: string;
   variantId: string;
+  activeVariants: number;
 }
 
 interface RelatedTbml {

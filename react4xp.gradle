@@ -150,6 +150,7 @@ task react4xp_components(type: NodeTask) {
     }
 
     inputs.file(react4xp.outputFileName)
+    inputs.file("react4xp.properties")
     inputs.file("package.json")
     inputs.file("package-lock.json")
     inputs.file("react4xp.properties")

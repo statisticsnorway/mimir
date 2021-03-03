@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button, Card, Text } from '@statisticsnorway/ssb-component-library'
+import { Col, Container, Row } from 'react-bootstrap'
 import PropTypes from 'prop-types'
 
 class RelatedStatistics extends React.Component {
@@ -22,14 +23,19 @@ class RelatedStatistics extends React.Component {
 
   getButtonBreakpoints() {
     const {
-      relatedStatistics
+      showAll,
+      showLess,
+      statistics
     } = this.props
-    if (relatedStatistics.length > 6) {
-      return '' // always display if it's more than 6
-    } else if (relatedStatistics.length > 4) {
-      return 'd-xl-none'
-    } else if (relatedStatistics.length > 3) {
-      return 'd-lg-none'
+    if (showAll && showLess) {
+      if (statistics.length > 6) {
+        return '' // always display if it's more than 6
+      } else if (statistics.length > 4) {
+        return 'd-xl-none'
+      } else if (statistics.length > 3) {
+        return 'd-lg-none'
+      }
+      return 'd-none'
     }
     return 'd-none' // always hide if there is less than 3
   }
@@ -40,11 +46,11 @@ class RelatedStatistics extends React.Component {
       showLess
     } = this.props
     return (
-      <div className={`row hide-show-btn justify-content-center justify-content-lg-start ${this.getButtonBreakpoints()}`}>
-        <div className="col-auto">
+      <Row className={`justify-content-center justify-content-lg-start ${this.getButtonBreakpoints()}`}>
+        <Col className="col-auto">
           <Button onClick={this.toggleBox}>{this.state.isHidden ? showAll : showLess}</Button>
-        </div>
-      </div>
+        </Col>
+      </Row>
     )
   }
 
@@ -61,43 +67,51 @@ class RelatedStatistics extends React.Component {
 
   render() {
     const {
-      headerTitle, relatedStatistics
+      headerTitle,
+      statistics,
+      showAll,
+      showLess
     } = this.props
+    const hasButton = showAll && showLess
     return (
-      <div className="container">
-        <h2 className="pt-4">{headerTitle}</h2>
-        <div className="row mt-5">
-          {relatedStatistics.map((relatedStatistics, index) => {
+      <Container>
+        <Row>
+          <Col lg="12">
+            <h2 className="mt-4 mb-5">{headerTitle}</h2>
+          </Col>
+          {statistics.map(({
+            href, title, preamble
+          }, index) => {
             return (
               <Card
                 key={index}
-                className={`mb-3 col-12 col-lg-4 ${this.state.isHidden ? 'd-none' : ''} ${this.getBreakpoints(index)}`}
-                href={relatedStatistics.href}
-                title={relatedStatistics.title}>
+                className={`mb-3 col-12 col-lg-4 ${hasButton && this.state.isHidden ? 'd-none' : ''} ${this.getBreakpoints(index)}`}
+                href={href}
+                title={title}>
                 <Text>
-                  {relatedStatistics.preamble}
+                  {preamble}
                 </Text>
               </Card>
             )
           })}
-        </div>
-        {this.renderShowMoreButton()}
-      </div>
+        </Row>
+        {hasButton && this.renderShowMoreButton()}
+      </Container>
     )
   }
 }
 
 RelatedStatistics.propTypes = {
   headerTitle: PropTypes.string,
-  relatedStatistics: PropTypes.arrayOf(
+  statistics: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string.isRequired,
       preamble: PropTypes.string.isRequired,
       href: PropTypes.string.isRequired
     })
   ).isRequired,
-  showAll: PropTypes.string.isRequired,
-  showLess: PropTypes.string.isRequired
+  showAll: PropTypes.string,
+  showLess: PropTypes.string
 }
 
 export default (props) => <RelatedStatistics {...props} />

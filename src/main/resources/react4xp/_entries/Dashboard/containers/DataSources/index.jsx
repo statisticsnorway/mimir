@@ -32,7 +32,7 @@ export function DataSources() {
   }
 
   return (
-    <section className="xp-part part-dashboard container mb-5">
+    <section className="xp-part part-dashboard container-fluid p-0">
       <Row>
         <Col>
           <div className="p-4 tables-wrapper border-top-0">

@@ -12,7 +12,7 @@ const {
   getPhrases
 } = __non_webpack_require__( '/lib/language')
 const {
-  getImageCaption
+  getImageAlt
 } = __non_webpack_require__('/lib/ssb/utils')
 const {
   fromRelatedFactPageCache
@@ -84,7 +84,7 @@ function renderPart(req, itemList) {
             const contentListItem = content.get({
               key: c
             })
-            return parseRelatedContent(contentListItem, type)
+            return contentListItem ? parseRelatedContent(contentListItem, type) : null
           })
         } else { // handles content selector from content-types (articles, statistics etc)
           return parseRelatedContent(relatedContent, type)
@@ -130,9 +130,12 @@ function renderPart(req, itemList) {
 
   return {
     body: relatedFactPage.renderBody({
-      body
+      body,
+      clientRender: true
     }),
-    pageContributions: relatedFactPage.renderPageContributions()
+    pageContributions: relatedFactPage.renderPageContributions({
+      clientRender: true
+    })
   }
 }
 
@@ -151,7 +154,7 @@ const parseRelatedContent = (relatedContent, type) => {
       id: imageId,
       scale: 'block(380, 400)'
     })
-    imageAlt = getImageCaption(imageId)
+    imageAlt = getImageAlt(imageId)
   } else {
     image = imagePlaceholder({
       width: 380,

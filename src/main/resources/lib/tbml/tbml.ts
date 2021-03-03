@@ -13,6 +13,7 @@ import { TbmlDataRaw,
   Title,
   Note } from '../types/xmlParser'
 import { RepoQueryLib } from '../repo/query'
+import { TbmlMockLib } from './tbmlMock'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 const http: HttpLibrary = __non_webpack_require__( '/lib/http-client')
@@ -20,12 +21,16 @@ const {
   logUserDataQuery,
   Events
 }: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
+const {
+  getTbmlMock
+}: TbmlMockLib = __non_webpack_require__('/lib/tbml/tbmlMock')
 
 const {
   data: {
     forceArray
   }
 } = __non_webpack_require__( '/lib/util')
+
 
 export function getTbmlData<T extends TbmlDataUniform | TbmlSourceListUniform>(
   url: string,
@@ -52,13 +57,14 @@ function processBody<T extends TbmlDataUniform | TbmlSourceListUniform>(
 }
 
 export function fetch(url: string, queryId?: string, processXml?: string): HttpResponse {
+  const mock: HttpResponse | null = getTbmlMock(url)
   const requestParams: HttpRequestParams = {
     url,
     body: processXml,
     method: processXml ? 'POST' : 'GET',
     readTimeout: 40000
   }
-  const response: HttpResponse = http.request(requestParams)
+  const response: HttpResponse = mock ? mock : http.request(requestParams)
 
   if (queryId) {
     logUserDataQuery(queryId, {
