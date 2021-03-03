@@ -408,12 +408,6 @@ function getEventLogsFromStatisticsJobLog(jobLogId: string): Array<object> {
   })
 }
 
-/* const eventLogsResult: NodeQueryResponse = connection.query({
-     query: `_path LIKE "/queries/${id}/*" AND data.by.login = "${userLogin}" AND range("_ts", instant("${from}"), instant("${to}"))`,
-     count: 10,
-     sort: '_ts DESC'
-   })*/
-
 function checkIfUserIsAdmin(): boolean {
   return hasRole('system.admin')
 }
