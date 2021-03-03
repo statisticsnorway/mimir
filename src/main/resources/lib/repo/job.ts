@@ -2,6 +2,7 @@ import { NodeQueryParams, NodeQueryResponse, RepoNode } from 'enonic-types/node'
 import { EditorCallback, RepoEventLogLib } from './eventLog'
 import { AuthLibrary, User } from 'enonic-types/auth'
 import { RepoCommonLib } from './common'
+import { DataSourceInfo, RSSFilterLogData } from '../ssb/dataset/rss'
 const {
   modifyNode,
   getNode,
@@ -24,7 +25,8 @@ export enum JobStatus {
 export enum JobNames {
   PUBLISH_JOB = 'Publish statistics',
   STATREG_JOB = 'Refresh statreg data',
-  STATISTICS_REFRESH_JOB = 'refresh statistics'
+  STATISTICS_REFRESH_JOB = 'refresh statistics',
+  REFRESH_DATASET_JOB = 'Refresh dataset'
 }
 
 export const JOB_STATUS_STARTED: 'STARTED' = 'STARTED'
@@ -37,7 +39,7 @@ export interface JobInfo {
   data: {
     status: typeof JOB_STATUS_STARTED | typeof JOB_STATUS_COMPLETE;
     task: string;
-    refreshDataResult: object | Array<StatisticsPublishResult>;
+    refreshDataResult: object | Array<StatisticsPublishResult> | DatasetRefreshResult;
     message: string;
     httpStatusCode?: number;
     jobStarted: string;
@@ -45,6 +47,11 @@ export interface JobInfo {
     queryIds?: Array<string>;
     user: User;
   };
+}
+
+export interface DatasetRefreshResult {
+  filterInfo: RSSFilterLogData;
+  result: Array<DataSourceInfo>;
 }
 
 export interface StatisticsPublishResult {
