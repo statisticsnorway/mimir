@@ -5,6 +5,23 @@
   .keyfigure {
     background: $ssb-white;
     padding: 20px;
+    min-height: 176px;
+
+    .number-section {
+      @include roboto;
+      margin-top: 8px;
+
+      .number-description {
+        font-size: 16px;
+      }
+
+      .no-number {
+        color: $ssb-dark-3;
+        font-size: 20px;
+        font-weight: bold;
+      }
+    }
+
   }
 
 }

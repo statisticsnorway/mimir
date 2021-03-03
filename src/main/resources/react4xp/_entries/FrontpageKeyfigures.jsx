@@ -11,16 +11,30 @@ class FrontpageKeyfigures extends React.Component {
         <React.Fragment key={`figure-${i}`}>
           <div className="col-lg-3">
             <div className="keyfigure">
-              <Link className="mb-2" href={keyFigure.url} linkType="header">{keyFigure.urlText}</Link>
+              <Link href={keyFigure.url} linkType="header">{keyFigure.urlText}</Link>
               <div className="number-section">
-                <div className="ssb-number small">{keyFigure.number}</div>
-                <span className="kf-title subtitle">{keyFigure.numberDescription}</span>
+                {this.addKeyfigure(keyFigure)}
               </div>
             </div>
           </div>
         </React.Fragment>
       )
     })
+  }
+
+  addKeyfigure(keyFigure) {
+    if (keyFigure.number) {
+      return (
+        <React.Fragment>
+          <div className="ssb-number small">{keyFigure.number}</div>
+          <span className="kf-title subtitle">{keyFigure.numberDescription}</span>
+        </React.Fragment>
+      )
+    } else {
+      return (
+        <span className="no-number">{keyFigure.noNumberText}</span>
+      )
+    }
   }
 
   render() {

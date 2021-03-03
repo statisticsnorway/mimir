@@ -56,13 +56,13 @@ function renderPart(req) {
     }
   }) : []
 
-  return frontpageKeyfigures && frontpageKeyfigures.length > 0 ? renderFrontpageKeyfigures(frontpageKeyfigures) : {
+  return frontpageKeyfigures && frontpageKeyfigures.length > 0 ? renderFrontpageKeyfigures(req, frontpageKeyfigures) : {
     body: '',
     contentType: 'text/html'
   }
 }
 
-function renderFrontpageKeyfigures(frontpageKeyfigures) {
+function renderFrontpageKeyfigures(req, frontpageKeyfigures) {
   const frontpageKeyfiguresReact = new React4xp('FrontpageKeyfigures')
     .setProps({
       keyFigures: frontpageKeyfigures.map((frontpageKeyfigure) => {
@@ -80,10 +80,10 @@ function renderFrontpageKeyfigures(frontpageKeyfigures) {
   return {
     body: frontpageKeyfiguresReact.renderBody({
       body,
-      clientRender: true
+      clientRender: req.mode !== 'edit'
     }),
     pageContributions: frontpageKeyfiguresReact.renderPageContributions({
-      clientRender: true
+      clientRender: req.mode !== 'edit'
     }),
     contentType: 'text/html'
   }
