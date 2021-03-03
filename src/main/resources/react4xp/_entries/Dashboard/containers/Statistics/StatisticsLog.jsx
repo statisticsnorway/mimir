@@ -19,6 +19,7 @@ export function StatisticsLog(props) {
   const [show, setShow] = useState(false)
   const [firstOpen, setFirstOpen] = useState(true)
   const [accordionOpenStatus, setAccordionOpenStatus] = useState([])
+  const [nestedAccordionStatus, setNestedAccordionStatus] = useState([])
   const statistic = useSelector(selectStatistic(statisticId))
   const logsLoaded = useSelector(selectStatisticsLogDataLoaded(statistic.id))
   const handleClose = () => setShow(false)
@@ -38,11 +39,15 @@ export function StatisticsLog(props) {
     setAccordionOpenStatus(tmp)
   }
 
-  function renderLogData() {
-    if (!statistic) {
-      setStatistic(stats)
-    }
+  function setNestedAccordionWithIndexes(logIndex, detailIndex, status) {
+    const logs = nestedAccordionStatus
+    const details = logs[logIndex] ? logs[logIndex] : []
+    details[detailIndex] = status
+    logs[logIndex] = details
+    setNestedAccordionStatus(logs)
+  }
 
+  function renderLogData() {
     if (statistic && statistic.logData && statistic.logData.length > 0) {
       const log = statistic.logData[0]
       const groupedDataSourceLogs = groupBy((log) => {
@@ -90,6 +95,8 @@ export function StatisticsLog(props) {
               jobId={statistic.logData[index].id}
               accordionOpenStatus={!!accordionOpenStatus[index]}
               setAccordionStatusOnIndex={setAccordionStatusOnIndex}
+              nestedAccordionStatus={nestedAccordionStatus[index]}
+              setNestedAccordionWithIndexes={setNestedAccordionWithIndexes}
             />
           )
         })

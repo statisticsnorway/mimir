@@ -116,7 +116,7 @@ const statisticsSlice = createSlice({
         }
       }
     },
-    statisticJoblogLoaded(state, action) {
+    statisticJobLogLoaded(state, action) {
       if (action.data.id) {
         const stat = state.statistics.find((s) => s.id === action.data.id)
         if (stat) {
@@ -125,7 +125,7 @@ const statisticsSlice = createSlice({
         }
       }
     },
-    statisticJoblogDetailsLoaded(state, action) {
+    statisticJobLogDetailsLoaded(state, action) {
       if (action.data) {
         const stat = state.statistics.find((s) => s.id === action.data.id)
         if (stat && stat.logData) {
@@ -136,30 +136,20 @@ const statisticsSlice = createSlice({
           }
         }
       }
+    },
+    jobLogDetailsOpened(state, action) {
+      if (action.data) {
+        const stat = state.statistics.find((s) => s.id === action.data.id)
+        if (stat && stat.logData) {
+          const jobLog = stat.logData.find((v) => v.id === action.data.logs.jobId)
+          if (jobLog) {
+            jobLog.dataOpended = true
+          }
+        }
+      }
     }
   }
 })
-
-/*
-* structure of statisticsLogData
-*
- statistics = [{
-  id: 1234-sdf,
-  logs: [{
-    jobId: 543-123,
-    dataLoaded: true,
-    details: [{
-      displayName: 'something titleish',
-      eventLogResults: [{
-        id: 98723-sdf,
-        score: 0
-      }]
-    }]
-  }]
-  * ...
-}]
-
- */
 
 export const {
   actions, reducer, name: sliceKey

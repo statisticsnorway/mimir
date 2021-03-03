@@ -22,24 +22,30 @@ export function StatisticsLogJob(props) {
     props.setAccordionStatusOnIndex(props.index, isOpen)
   }
 
+  function setNestedAccordionStatus(i, nestedIsOpen) {
+    props.setNestedAccordionWithIndexes(props.index, i, nestedIsOpen)
+  }
+
   function formatTime(time) {
     return moment(time).locale('nb').format('DD.MM.YYYY HH.mm')
   }
 
   function renderAccordionBody() {
-    if (logDetailsLoaded) {
+    if (logDetailsLoaded && logData.details) {
       return logData.details.map((log, i) => {
         return (
           <NestedAccordion
             key={i}
-            header={`Logg detailjer for: ${log.displayName}`}
-            className="mx-0">
+            header={log.displayName}
+            className="mx-0"
+            openByDefault={props.nestedAccordionStatus && !!props.nestedAccordionStatus[i]}
+            onToggle={(nestedIsOpen) => setNestedAccordionStatus(i, nestedIsOpen)}>
             <ul>
               {log.eventLogResult.map((eventLog, k) => {
                 return (
                   <li key={k}>
-                    {eventLog.status.message}
-                    {eventLog.status.status}
+                    <span>{ eventLog.status.message }</span>
+                    <span> { eventLog.status.status }</span>
                   </li>
                 )
               })}
@@ -72,5 +78,7 @@ StatisticsLogJob.propTypes = {
   jobId: PropTypes.string,
   accordionOpenStatus: PropTypes.bool,
   setAccordionStatusOnIndex: PropTypes.func,
-  index: PropTypes.number
+  index: PropTypes.number,
+  nestedAccordionStatus: PropTypes.array,
+  setNestedAccordionWithIndexes: PropTypes.func
 }

@@ -340,6 +340,7 @@ function getStatisticsJobLogInfo(id: string, count: number = 1): Array<Dashboard
       count,
       sort: '_ts DESC'
     })
+
     return statisticsJobLog.hits.reduce((res: Array<DashboardJobInfo>, jobRes) => {
       const jobNode: JobInfoNode | null = connection.get(jobRes.id)
       if (jobNode) {
@@ -393,7 +394,6 @@ function getEventLogsFromStatisticsJobLog(jobLogId: string): Array<object> {
       displayName: datasetContent?.displayName,
       eventLogResult: eventLogResult.hits.map((hit) => {
         const a: EventInfo | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataset.id}/${hit.id}`) as EventInfo
-        log.info(JSON.stringify(a, null, 2))
         return {
           id: hit.id,
           status: {
