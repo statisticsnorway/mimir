@@ -29,7 +29,7 @@
   "homepage": "https://github.com/statisticsnorway/mimir#readme",
   "devDependencies": {
     "@babel/cli": "^7.12.16",
-    "@babel/core": "^7.12.13",
+    "@babel/core": "^7.13.8",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.10",
     "@babel/preset-stage-0": "^7.0.0",
