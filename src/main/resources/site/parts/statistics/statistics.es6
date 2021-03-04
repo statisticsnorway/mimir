@@ -49,10 +49,12 @@ const renderPart = (req) => {
   const phrases = getPhrases(page)
   moment.locale(page.language ? page.language : 'nb')
   const statistic = page.data.statistic && getStatisticByIdFromRepo(page.data.statistic)
+  const wait = app.config && app.config['ssb.statistics.publishWait'] ? parseInt(app.config['ssb.statistics.publishWait']) : 100
+  const maxWait = app.config && app.config['ssb.statistics.publishMaxWait'] ? parseInt(app.config['ssb.statistics.publishMaxWait']) : 10000
   let waitedFor = 0
-  while (currentlyWaitingForPublish(page) && waitedFor < 10000) {
-    waitedFor += 100
-    sleep(100)
+  while (currentlyWaitingForPublish(page) && waitedFor < maxWait) {
+    waitedFor += wait
+    sleep(wait)
   }
   let title = page.displayName
   const updated = phrases.updated + ': '
