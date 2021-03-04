@@ -18,7 +18,7 @@ function WebsocketProvider({
   let pingInterval
   let provider
   let emitQueue = []
-
+  let connectionStatus = 'closed'
   // dummy emit function that adds emits to a waiting queue before the socket connection is open
   function addEmitQueue(key, data) {
     emitQueue.push({
@@ -30,8 +30,7 @@ function WebsocketProvider({
   if (!provider) {
     function setup(dispatch) {
       wsConnection = new ExpWS()
-      // listen to open and close ws connection, so we can tell the user they have disconnected
-      wsConnection.setEventHandler('close', (event) => {
+      function closeConnection() {
         provider.emit = addEmitQueue
         dispatch({
           type: commonActions.onDisconnect.type
@@ -42,16 +41,24 @@ function WebsocketProvider({
           clearInterval(pingInterval)
           pingInterval = undefined
         }
-      })
+      }
+      // listen to open and close ws connection, so we can tell the user they have disconnected
+      wsConnection.setEventHandler('close', () => closeConnection())
 
-      wsConnection.setEventHandler('open', (event) => {
+      wsConnection.setEventHandler('open', () => {
         dispatch({
           type: commonActions.onConnect.type
         })
         // setup keep alive
         if (!pingInterval) {
           pingInterval = setInterval(() => {
-            io.emit('keep-alive', 'ping')
+            if (connectionStatus !== 'pending') {
+              connectionStatus = 'pending'
+              io.emit('keep-alive', 'ping')
+            } else {
+              connectionStatus = 'closed'
+              closeConnection()
+            }
           }, 1000 * 30)
         }
 
@@ -61,6 +68,10 @@ function WebsocketProvider({
         setupDataSourcesListeners(io, dispatch)
         setupStatisticsListeners(io, dispatch)
         setupJobsListeners(io, dispatch)
+
+        io.on('keep-alive', () => {
+          connectionStatus = 'connected'
+        })
 
         // run all emits waiting in queue
         emitQueue.forEach((q) => {
