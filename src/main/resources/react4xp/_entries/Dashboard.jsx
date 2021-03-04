@@ -11,15 +11,15 @@ import { Provider, useDispatch } from 'react-redux'
 import { Helmet, HelmetProvider } from 'react-helmet-async'
 import { Switch, Route, BrowserRouter } from 'react-router-dom'
 
-import { HomePage } from './containers/HomePage/index'
-import WebsocketProvider, { WebSocketContext } from './utils/websocket/WebsocketProvider'
-import { configureAppStore } from './store/configureStore'
-import { requestStatuses } from './containers/StatRegDashboard/actions'
-import { requestStatistics, requestStatisticsSearchList } from './containers/Statistics/actions'
-import { actions as commonActions } from './containers/HomePage/slice'
+import { HomePage } from '../dashboard/containers/HomePage/index'
+import WebsocketProvider, { WebSocketContext } from '../dashboard/utils/websocket/WebsocketProvider'
+import { configureAppStore } from '../dashboard/store/configureStore'
+import { requestStatuses } from '../dashboard/containers/StatRegDashboard/actions'
+import { requestStatistics, requestStatisticsSearchList } from '../dashboard/containers/Statistics/actions'
+import { actions as commonActions } from '../dashboard/containers/HomePage/slice'
 import PropTypes from 'prop-types'
-import { setUserServerSide } from './containers/HomePage/actions'
-import { requestJobs } from './containers/Jobs/actions'
+import { setUserServerSide } from '../dashboard/containers/HomePage/actions'
+import { requestJobs } from '../dashboard/containers/Jobs/actions'
 
 function Dashboard(props) {
   return (
