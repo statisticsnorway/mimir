@@ -34,10 +34,10 @@ const NO_LINKS_FOUND = {
 const renderPart = (req) => {
   const part = getComponent()
 
-  return renderExternalCard(part.config.externalCards ? data.forceArray(part.config.externalCards) : [])
+  return renderExternalCard(req, part.config.externalCards ? data.forceArray(part.config.externalCards) : [])
 }
 
-const renderExternalCard = (links) => {
+const renderExternalCard = (req, links) => {
   if (links && links.length) {
     const externalCardComponent = new React4xp('ExternalCards')
       .setProps({
@@ -63,10 +63,10 @@ const renderExternalCard = (links) => {
     return {
       body: externalCardComponent.renderBody({
         body,
-        clientRender: true
+        clientRender: req.mode !== 'edit'
       }),
       pageContributions: externalCardComponent.renderPageContributions({
-        clientRender: true
+        clientRender: req.mode !== 'edit'
       })
     }
   }

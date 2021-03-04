@@ -127,10 +127,10 @@ function renderKeyFigure(parsedKeyFigures, part, parsedKeyFiguresDraft, showPrev
   return {
     body: keyFigureReact.renderBody({
       body,
-      clientRender: true
+      clientRender: req.mode !== 'edit'
     }),
     pageContributions: keyFigureReact.renderPageContributions({
-      clientRender: true
+      clientRender: req.mode !== 'edit'
     }),
     contentType: 'text/html'
   }

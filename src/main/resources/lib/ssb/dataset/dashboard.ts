@@ -407,15 +407,18 @@ function parseResult(jobLog: JobInfoNode): Array<DashboardPublishJobResult> | Ar
     const refreshDataResult: Array<StatRegRefreshResult> = forceArray(jobLog.data.refreshDataResult || []) as Array<StatRegRefreshResult>
     return parseStatRegJobInfo(refreshDataResult)
   } else if (jobLog.data.task === JobNames.REFRESH_DATASET_JOB) {
-    const result: DatasetRefreshResult = jobLog.data.refreshDataResult as DatasetRefreshResult
-    if (!result.filterInfo) {
-      result.filterInfo = {
-        start: [],
-        end: [],
-        inRSSOrNoKey: [],
-        noData: [],
-        otherDataType: [],
-        skipped: []
+    let result: DatasetRefreshResult | undefined = jobLog.data.refreshDataResult as DatasetRefreshResult | undefined
+    if (!result || !result.filterInfo) {
+      result = {
+        filterInfo: {
+          start: [],
+          end: [],
+          inRSSOrNoKey: [],
+          noData: [],
+          otherDataType: [],
+          skipped: []
+        },
+        result: []
       }
     }
     result.filterInfo.start = forceArray(result.filterInfo.inRSSOrNoKey || [])
