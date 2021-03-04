@@ -170,6 +170,7 @@ export function publishDataset(): void {
   })
   if (jobResult.length === 0 || allJobsAreSkipped(jobResult)) {
     completeJobLog(jobLogNode._id, `Successfully updated 0 statistics`, [])
+    delete jobs[jobLogNode._id]
   }
 }
 
@@ -238,6 +239,7 @@ function createTask(jobId: string, statistic: Content<Statistics>, releaseDate: 
         }).length === jobRefreshResult.length
         if (allComplete) {
           completeJobLog(jobId, `Successfully updated ${jobRefreshResult.length} statistics`, jobRefreshResult)
+          delete jobs[jobId]
           send({
             type: 'clearCache',
             distributed: true,
