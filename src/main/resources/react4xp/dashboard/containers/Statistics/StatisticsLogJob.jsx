@@ -37,7 +37,7 @@ export function StatisticsLogJob(props) {
         return (
           <NestedAccordion
             key={i}
-            header={log.displayName}
+            header={`${log.displayName} (${log.branch})`}
             className="mx-0"
             openByDefault={props.nestedAccordionStatus && !!props.nestedAccordionStatus[i]}
             onToggle={(nestedIsOpen) => setNestedAccordionStatus(i, nestedIsOpen)}>

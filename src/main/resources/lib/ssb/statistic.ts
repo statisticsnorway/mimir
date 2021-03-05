@@ -377,7 +377,7 @@ function getEventLogsFromStatisticsJobLog(jobLogId: string): Array<object> {
   const userLogin: string | undefined = jobInfoNode.data.user?.login
   const from: string = jobInfoNode.data.jobStarted
   const to: string = jobInfoNode.data.completionTime
-  const datasets: Array<{id: string}> = forceArray(jobInfoNode.data.refreshDataResult) as Array<{id: string}> || []
+  const datasets: Array<RefreshDatasetResult> = forceArray(jobInfoNode.data.refreshDataResult) as Array<RefreshDatasetResult> || []
   return datasets.map((dataset ) => {
     const datasetContent: Content<Highchart | Table | KeyFigure > | null = getContent({
       key: dataset.id
@@ -390,7 +390,7 @@ function getEventLogsFromStatisticsJobLog(jobLogId: string): Array<object> {
     })
     return {
       displayName: datasetContent?.displayName,
-      branch: EVENT_LOG_BRANCH,
+      branch: dataset.branch,
       eventLogResult: eventLogResult.hits.map((hit) => {
         const node: EventInfo | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataset.id}/${hit.id}`) as EventInfo
         const resultMessage: string = i18n.localize({
