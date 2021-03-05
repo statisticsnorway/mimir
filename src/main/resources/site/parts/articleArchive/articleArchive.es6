@@ -49,7 +49,7 @@ const renderPart = (req) => {
     id: page.data.image,
     scale: 'block(1180, 275)'
   }) : undefined
-  const imageAltText = page.data.image ? getImageAlt(page.data.image) : ' '
+  const imageAltText = getImageAlt(page.data.image) ? getImageAlt(page.data.image) : ' '
 
   const listOfArticles = parseArticleData(page._id, phrases)
   const listOfArticlesObj = new React4xp('ListOfArticles')

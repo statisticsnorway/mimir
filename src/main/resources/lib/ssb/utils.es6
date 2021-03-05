@@ -168,7 +168,7 @@ export function getImageCaption(imageId) {
   const imageContent = content.get({
     key: imageId
   })
-  return imageContent && imageContent !== undefined ? imageContent.data.caption : ''
+  return imageContent && imageContent !== undefined ? imageContent.data.caption : ' '
 }
 
 export function getImageAlt(imageId) {
