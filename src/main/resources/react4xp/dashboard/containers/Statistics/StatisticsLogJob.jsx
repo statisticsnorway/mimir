@@ -6,6 +6,7 @@ import moment from 'moment/min/moment-with-locales'
 import { requestJobLogDetails } from './actions'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { selectJobLog, selectJobLogDetailsLoaded } from './selectors'
+import { AlertTriangle } from 'react-feather'
 
 export function StatisticsLogJob(props) {
   const io = useContext(WebSocketContext)
@@ -41,12 +42,12 @@ export function StatisticsLogJob(props) {
             openByDefault={props.nestedAccordionStatus && !!props.nestedAccordionStatus[i]}
             onToggle={(nestedIsOpen) => setNestedAccordionStatus(i, nestedIsOpen)}>
             <ul>
-              {log.eventLogResult.map((eventLog, k) => {
+              {log.eventLogResult.map((logNode, k) => {
                 return (
-                  <li key={k}>
-                    <span>{ eventLog.status.message }</span>
-                    <span> { eventLog.status.status }</span>
-                  </li>
+                  <p key={k}>
+                    <span>{logNode.modifiedTs}</span> - <span>{logNode.by}</span><br/>
+                    <span> &gt; {logNode.result}</span>
+                  </p>
                 )
               })}
             </ul>

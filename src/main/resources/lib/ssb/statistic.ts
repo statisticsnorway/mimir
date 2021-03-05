@@ -1,5 +1,5 @@
 __non_webpack_require__('/lib/polyfills/nashorn')
-import { EventInfo, QueryInfoNode, QueryStatus } from '../repo/query'
+import { EventInfo } from '../repo/query'
 import { Socket, SocketEmitter } from '../types/socket'
 import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
 import { StatisticInListing, VariantInListing } from './statreg/types'
@@ -17,14 +17,13 @@ import { TbprocessorLib } from './dataset/tbprocessor'
 import { DataSource } from '../../site/mixins/dataSource/dataSource'
 import { Source, TbmlDataUniform } from '../types/xmlParser'
 import { JobEventNode, JobInfoNode, JobNames, JobStatus, RepoJobLib } from '../repo/job'
-import { NodeQueryResponse, RepoConnection } from 'enonic-types/node'
+import { NodeQueryResponse } from 'enonic-types/node'
 import { RepoEventLogLib } from '../repo/eventLog'
 import { RepoCommonLib } from '../repo/common'
 import { StatRegStatisticsLib } from '../repo/statreg/statistics'
 import { TaskLib } from '../types/task'
 import { AuthLibrary } from 'enonic-types/auth'
 import { PermissionsLib } from './permissions'
-import { Dataset } from '../types/jsonstat-toolkit'
 
 const {
   hasWritePermissions
@@ -383,6 +382,7 @@ function getEventLogsFromStatisticsJobLog(jobLogId: string): Array<object> {
     const datasetContent: Content<Highchart | Table | KeyFigure > | null = getContent({
       key: dataset.id
     })
+    // const eventLogResult: Array<LogSummary> | undefined = getQueryChildNodesStatus(`/queries/${dataset.id}`) as Array<LogSummary> | undefined
     const eventLogResult: NodeQueryResponse = queryNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, {
       query: `_path LIKE "/queries/${dataset.id}/*" AND data.by.login = "${userLogin}" AND range("_ts", instant("${from}"), instant("${to}"))`,
       count: 10,
@@ -390,16 +390,17 @@ function getEventLogsFromStatisticsJobLog(jobLogId: string): Array<object> {
     })
     return {
       displayName: datasetContent?.displayName,
+      branch: EVENT_LOG_BRANCH,
       eventLogResult: eventLogResult.hits.map((hit) => {
-        const a: EventInfo | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataset.id}/${hit.id}`) as EventInfo
+        const node: EventInfo | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataset.id}/${hit.id}`) as EventInfo
+        const resultMessage: string = i18n.localize({
+          key: node.data.status.message,
+          values: node.data.status.status ? [`(${node.data.status.status})`] : ['']
+        })
         return {
-          id: hit.id,
-          status: {
-            ...a.data.status,
-            message: i18n.localize({
-              key: a.data.status.message
-            })
-          }
+          result: resultMessage !== 'NOT_TRANSLATED' ? resultMessage : node.data.status.message,
+          modifiedTs: node.data.ts,
+          by: node.data.by && node.data.by.displayName ? node.data.by.displayName : ''
         }
       })
     }
