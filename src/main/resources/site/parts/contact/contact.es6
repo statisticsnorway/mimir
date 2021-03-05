@@ -36,7 +36,7 @@ exports.preview = (req) => renderPart(req)
 const treatPhoneNumber = (phone) => phone ? `${phone}`.match(/..?/g).join(' ') : ''
 const landCodeVisual = '(+47) '
 const landCode = '+47'
-
+// stonks
 const transformContact = (contact) => ({
   ...contact,
   telephone: getContent().language == 'en' && contact.telephone != '' ?
