@@ -3,7 +3,7 @@
         <div data-th-if="${title}" class="title-wrapper">
             <h2 class="title" data-th-text="${title}">Finn flere tall i Statistikkbanken</h2>
         </div>
-        <ul class="statbank-link-list">
+        <ul class="statbank-link-list" id="statbankLinkList">
             <li data-th-each="statbankLink : ${statbankLinks}">
                 <a class="statbank-list-link" data-th-href="${statbankLink.url}">
                     <span data-th-text="${statbankLink.urlText}"></span>
