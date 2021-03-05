@@ -69,6 +69,7 @@ export function StatisticsLogJob(props) {
       onToggle={(isOpen) => onToggleAccordion(isOpen)}
       openByDefault={props.accordionOpenStatus}
     >
+      <span>Initiert av {logData.user.displayName}</span>
       {renderAccordionBody()}
     </Accordion>
   )

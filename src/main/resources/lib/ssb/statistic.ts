@@ -22,7 +22,7 @@ import { RepoEventLogLib } from '../repo/eventLog'
 import { RepoCommonLib } from '../repo/common'
 import { StatRegStatisticsLib } from '../repo/statreg/statistics'
 import { TaskLib } from '../types/task'
-import { AuthLibrary } from 'enonic-types/auth'
+import { AuthLibrary, User } from 'enonic-types/auth'
 import { PermissionsLib } from './permissions'
 
 const {
@@ -142,12 +142,13 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     submitTask({
       description: 'get-statistic-job-log-details',
       task: () => {
-        const logDetails: Array<object> = getEventLogsFromStatisticsJobLog(options.id)
+        const logDetails: {user: User; dataset: Array<object>} | undefined = getEventLogsFromStatisticsJobLog(options.id)
         socket.emit('get-statistic-job-log-details-result', {
           id: options.statisticId,
+          user: logDetails && logDetails.user ? logDetails.user : '',
           logs: {
             jobId: options.id,
-            logDetails: logDetails
+            logDetails: logDetails && logDetails.dataset ? logDetails.dataset : []
           }
         })
       }
@@ -369,42 +370,44 @@ function prepStatisticsJobLogInfo(jobNode: JobInfoNode): DashboardJobInfo {
 }
 
 // NOTE example code to fetch event logs connected to datasources on statistics job log
-function getEventLogsFromStatisticsJobLog(jobLogId: string): Array<object> {
+function getEventLogsFromStatisticsJobLog(jobLogId: string): {user: User; dataset: Array<object>} | undefined {
   const jobInfoNode: JobInfoNode | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/jobs/${jobLogId}`) as JobInfoNode
   if (!jobInfoNode) {
-    return []
+    return undefined
   }
   const userLogin: string | undefined = jobInfoNode.data.user?.login
   const from: string = jobInfoNode.data.jobStarted
   const to: string = jobInfoNode.data.completionTime
   const datasets: Array<RefreshDatasetResult> = forceArray(jobInfoNode.data.refreshDataResult) as Array<RefreshDatasetResult> || []
-  return datasets.map((dataset ) => {
-    const datasetContent: Content<Highchart | Table | KeyFigure > | null = getContent({
-      key: dataset.id
-    })
-    // const eventLogResult: Array<LogSummary> | undefined = getQueryChildNodesStatus(`/queries/${dataset.id}`) as Array<LogSummary> | undefined
-    const eventLogResult: NodeQueryResponse = queryNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, {
-      query: `_path LIKE "/queries/${dataset.id}/*" AND data.by.login = "${userLogin}" AND range("_ts", instant("${from}"), instant("${to}"))`,
-      count: 10,
-      sort: '_ts DESC'
-    })
-    return {
-      displayName: datasetContent?.displayName,
-      branch: dataset.branch,
-      eventLogResult: eventLogResult.hits.map((hit) => {
-        const node: EventInfo | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataset.id}/${hit.id}`) as EventInfo
-        const resultMessage: string = i18n.localize({
-          key: node.data.status.message,
-          values: node.data.status.status ? [`(${node.data.status.status})`] : ['']
-        })
-        return {
-          result: resultMessage !== 'NOT_TRANSLATED' ? resultMessage : node.data.status.message,
-          modifiedTs: node.data.ts,
-          by: node.data.by && node.data.by.displayName ? node.data.by.displayName : ''
-        }
+  return {
+    user: jobInfoNode.data.user,
+    dataset: datasets.map((dataset) => {
+      const datasetContent: Content<Highchart | Table | KeyFigure> | null = getContent({
+        key: dataset.id
       })
-    }
-  })
+      const eventLogResult: NodeQueryResponse = queryNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, {
+        query: `_path LIKE "/queries/${dataset.id}/*" AND data.by.login = "${userLogin}" AND range("_ts", instant("${from}"), instant("${to}"))`,
+        count: 10,
+        sort: '_ts DESC'
+      })
+      return {
+        displayName: datasetContent?.displayName,
+        branch: dataset.branch,
+        eventLogResult: eventLogResult.hits.map((hit) => {
+          const node: EventInfo | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataset.id}/${hit.id}`) as EventInfo
+          const resultMessage: string = i18n.localize({
+            key: node.data.status.message,
+            values: node.data.status.status ? [`(${node.data.status.status})`] : ['']
+          })
+          return {
+            result: resultMessage !== 'NOT_TRANSLATED' ? resultMessage : node.data.status.message,
+            modifiedTs: node.data.ts,
+            by: node.data.by && node.data.by.displayName ? node.data.by.displayName : ''
+          }
+        })
+      }
+    })
+  }
 }
 
 function checkIfUserIsAdmin(): boolean {
