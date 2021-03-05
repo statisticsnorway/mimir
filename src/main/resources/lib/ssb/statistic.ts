@@ -392,7 +392,7 @@ function getEventLogsFromStatisticsJobLog(jobLogId: string): {user: User; datase
       })
       return {
         displayName: datasetContent?.displayName,
-        branch: dataset.branch,
+        branch: dataset.branch === 'master' ? 'publisert' : 'ubpulisert',
         eventLogResult: eventLogResult.hits.map((hit) => {
           const node: EventInfo | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataset.id}/${hit.id}`) as EventInfo
           const resultMessage: string = i18n.localize({
