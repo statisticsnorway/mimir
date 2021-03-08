@@ -34,10 +34,14 @@ exports.preview = (req) => renderPart(req)
 
 // split 8-digit phone numbers into groups of 2 digits each dvs. "12345678" => "12 34 56 78"
 const treatPhoneNumber = (phone) => phone ? `${phone}`.match(/..?/g).join(' ') : ''
-
+const landCodeVisual = '(+47) '
+const landCode = '+47'
+// stonks
 const transformContact = (contact) => ({
   ...contact,
-  telephone: treatPhoneNumber(contact.telephone)
+  telephone: getContent().language == 'en' && contact.telephone != '' ?
+    landCodeVisual.concat(treatPhoneNumber(contact.telephone)) : treatPhoneNumber(contact.telephone),
+  phonelink: landCode.concat(contact.telephone)
 })
 
 

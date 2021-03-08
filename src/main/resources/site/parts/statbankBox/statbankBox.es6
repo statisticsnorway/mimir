@@ -38,10 +38,11 @@ function renderPart(req) {
   moment.locale(page.language ? page.language : 'nb')
   const phrases = getPhrases(page)
 
-  return renderStatbankBox(parseStatbankBoxContent(page, part, phrases))
+  const isNotInEditMode = req.mode !== 'edit'
+  return renderStatbankBox(parseStatbankBoxContent(page, part, phrases), isNotInEditMode)
 }
 
-const renderStatbankBox = (statbankBoxContent) => {
+const renderStatbankBox = (statbankBoxContent, isNotInEditMode) => {
   const statbankBoxComponent = new React4xp('StatbankBox')
     .setProps({
       ...statbankBoxContent
@@ -54,10 +55,12 @@ const renderStatbankBox = (statbankBoxContent) => {
 
   return {
     body: statbankBoxComponent.renderBody({
-      body
+      body,
+      clientRender: isNotInEditMode
     }),
-    pageContributions: statbankBoxComponent.renderPageContributions(),
-    clientRender: true
+    pageContributions: statbankBoxComponent.renderPageContributions({
+      clientRender: isNotInEditMode
+    })
   }
 }
 

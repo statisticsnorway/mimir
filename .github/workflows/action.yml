@@ -1,5 +1,7 @@
-name: 'Auto Assign'
-on: pull_request
+name: "Auto Assign"
+on:
+  pull_request:
+    types: [opened]
 
 jobs:
   add-reviews:

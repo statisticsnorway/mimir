@@ -1,0 +1,28 @@
+<part>
+    <display-name>Nøkkeltall forside</display-name>
+    <form>
+        <item-set name="keyfiguresFrontpage">
+            <label>Nøkkeltall</label>
+            <expanded>false</expanded>
+            <occurrences minimum="0" maximum="4"/>
+            <items>
+                <input name="keyfigure" type="ContentSelector">
+                    <label>Nøkkeltall</label>
+                    <occurrences minimum="0" maximum="1" />
+                    <config>
+                        <allowContentType>keyFigure</allowContentType>
+                    </config>
+                </input>
+                <input type="TextLine" name="urlText">
+                    <label>Lenketekst</label>
+                    <occurrences minimum="1" maximum="1" />
+                </input>
+                <input type="TextLine" name="url">
+                    <label>Lenke på nøkkeltall</label>
+                    <occurrences minimum="1" maximum="1" />
+                    <help-text>Fri url felt. Legges inn som dette eks. "http://www.ssb.no"</help-text>
+                </input>
+            </items>
+        </item-set>
+    </form>
+</part>

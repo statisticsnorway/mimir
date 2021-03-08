@@ -89,7 +89,7 @@ function getIcon(iconId) {
         id: iconId,
         scale: 'block(100,100)'
       }),
-      alt: getImageAlt(iconId)
+      alt: getImageAlt(iconId) ? getImageAlt(iconId) : ' '
     }
   } else {
     return undefined

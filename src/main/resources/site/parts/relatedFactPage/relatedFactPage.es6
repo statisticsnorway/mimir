@@ -148,13 +148,13 @@ const parseRelatedContent = (relatedContent, type) => {
     imageId = relatedContent.x['com-enonic-app-metafields']['meta-data'].seoImage
   }
   let image
-  let imageAlt = ''
+  let imageAlt = ' '
   if (imageId) {
     image = imageUrl({
       id: imageId,
       scale: 'block(380, 400)'
     })
-    imageAlt = getImageAlt(imageId)
+    imageAlt = getImageAlt(imageId) ? getImageAlt(imageId) : ' '
   } else {
     image = imagePlaceholder({
       width: 380,

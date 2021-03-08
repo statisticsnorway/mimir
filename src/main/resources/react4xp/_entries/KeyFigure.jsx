@@ -73,7 +73,8 @@ class KeyFigures extends React.Component {
       return (
         <React.Fragment key={`figure-${i}`}>
           <div className={`col-12 ${columns && keyFigure.size !== 'large' ? 'col-md-6' : ''}`}>
-            <SSBKeyFigures {...keyFigure} icon={keyFigure.iconUrl && <img src={keyFigure.iconUrl} alt={keyFigure.iconAltText}></img>}/>
+            <SSBKeyFigures {...keyFigure} icon={keyFigure.iconUrl && <img src={keyFigure.iconUrl}
+              alt={keyFigure.iconAltText ? keyFigure.iconAltText : ' '}></img>}/>
             {this.addKeyFigureSource(keyFigure)}
           </div>
           {i < keyFigures.length - 1 ? <Divider className={`my-5 d-block ${!isRight ? 'd-md-none' : ''}`} light /> : null}

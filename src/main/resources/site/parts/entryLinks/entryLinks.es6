@@ -54,10 +54,11 @@ const renderPart = (req) => {
     }
   }
 
-  return renderEntryLinks(headerTitle, entryLinksContent)
+  const isNotInEditMode = req.mode !== 'edit'
+  return renderEntryLinks(headerTitle, entryLinksContent, isNotInEditMode)
 }
 
-const renderEntryLinks = (headerTitle, entryLinksContent) => {
+const renderEntryLinks = (headerTitle, entryLinksContent, isNotInEditMode) => {
   if (entryLinksContent.length > 0) {
     const entryLinksComponent = new React4xp('EntryLinks')
       .setProps({
@@ -73,10 +74,12 @@ const renderEntryLinks = (headerTitle, entryLinksContent) => {
 
     return {
       body: entryLinksComponent.renderBody({
-        body
+        body,
+        clientRender: isNotInEditMode
       }),
-      pageContributions: entryLinksComponent.renderPageContributions(),
-      clientRender: true
+      pageContributions: entryLinksComponent.renderPageContributions({
+        clientRender: isNotInEditMode
+      })
     }
   }
 
