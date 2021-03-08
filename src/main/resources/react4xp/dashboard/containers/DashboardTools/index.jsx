@@ -2,15 +2,16 @@ import React, { useContext, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectInternalBaseUrl, selectInternalStatbankUrl, selectLoadingClearCache } from '../HomePage/selectors'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
-import { requestClearCache } from '../HomePage/actions.es6'
+import { requestClearCache } from '../HomePage/actions'
 import { RefreshCw, Trash } from 'react-feather'
-import { Button as ReactBootstrapButton, Col, Container, Row, Modal } from 'react-bootstrap'
+import { Col, Container, Row } from 'react-bootstrap'
 import { Button, Dropdown, Input } from '@statisticsnorway/ssb-component-library'
 import { selectSearchList, selectLoadingSearchList, selectHasLoadingStatistic } from '../Statistics/selectors'
 import { setOpenStatistic, setOpenModal } from '../Statistics/actions'
 import { startRefresh } from '../StatRegDashboard/actions'
 import { selectStatuses } from '../StatRegDashboard/selectors'
-import { selectStatistics } from '../Statistics/selectors.es6'
+import { selectStatistics } from '../Statistics/selectors'
+import { RefreshStatRegModal } from '../../components/RefreshStatRegModal'
 
 export function DashboardTools() {
   const loadingCache = useSelector(selectLoadingClearCache)
@@ -26,32 +27,12 @@ export function DashboardTools() {
   const internalStatbankUrl = useSelector(selectInternalStatbankUrl)
 
   const [selectedStatReg, setSelectStatReg] = useState(null)
-  const [show, setShow] = useState(false)
-  const handleClose = () => setShow(false)
-  const handleShow = () => setShow(true)
+  const [modalShow, setModalShow] = useState(false)
 
   function refreshStatReg(key) {
     startRefresh(dispatch, io, [key])
     setSelectStatReg(statuses.find((status) => status.key === key))
-    setShow(handleShow)
-  }
-
-  const RefreshStatRegModal = () => {
-    return (
-      <Modal size="lg" show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Oppdatering av {selectedStatReg.displayName}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {selectedStatReg.logData.showWarningIcon ? <p>Noe gikk galt</p> : <p>OK</p>}
-        </Modal.Body>
-        <Modal.Footer>
-          <ReactBootstrapButton variant="secondary" onClick={handleClose}>
-              Lukk
-          </ReactBootstrapButton>
-        </Modal.Footer>
-      </Modal>
-    )
+    setModalShow(true)
   }
 
   function makeStatRegRefresh(statRegStatus) {
@@ -240,7 +221,7 @@ export function DashboardTools() {
             </Row>
           )
         })}
-        {show && <RefreshStatRegModal />}
+        {modalShow && <RefreshStatRegModal statReg={selectedStatReg} handleClose={() => setModalShow(false)} />}
         <Row className="mb-5">
           {renderTbmlDefinitionsStatbankTable()}
         </Row>
