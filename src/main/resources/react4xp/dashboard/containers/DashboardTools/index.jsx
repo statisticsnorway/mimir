@@ -4,7 +4,7 @@ import { selectInternalBaseUrl, selectInternalStatbankUrl, selectLoadingClearCac
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { requestClearCache } from '../HomePage/actions.es6'
 import { RefreshCw, Trash } from 'react-feather'
-import { Col, Container, Row } from 'react-bootstrap'
+import { Button as ReactBootstrapButton, Col, Container, Row, Modal } from 'react-bootstrap'
 import { Button, Dropdown, Input } from '@statisticsnorway/ssb-component-library'
 import { selectSearchList, selectLoadingSearchList, selectHasLoadingStatistic } from '../Statistics/selectors'
 import { setOpenStatistic, setOpenModal } from '../Statistics/actions'
@@ -25,11 +25,36 @@ export function DashboardTools() {
   const internalBaseUrl = useSelector(selectInternalBaseUrl)
   const internalStatbankUrl = useSelector(selectInternalStatbankUrl)
 
+  const [selectedStatReg, setSelectStatReg] = useState(null)
+  const [show, setShow] = useState(false)
+  const handleClose = () => setShow(false)
+  const handleShow = () => setShow(true)
+
   function refreshStatReg(key) {
     startRefresh(dispatch, io, [key])
+    setSelectStatReg(statuses.find((status) => status.key === key))
+    setShow(handleShow)
   }
 
-  function makeRefreshButton(statRegStatus) {
+  const RefreshStatRegModal = () => {
+    return (
+      <Modal size="lg" show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Oppdatering av {selectedStatReg.displayName}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedStatReg.logData.showWarningIcon ? <p>Noe gikk galt</p> : <p>OK</p>}
+        </Modal.Body>
+        <Modal.Footer>
+          <ReactBootstrapButton variant="secondary" onClick={handleClose}>
+              Lukk
+          </ReactBootstrapButton>
+        </Modal.Footer>
+      </Modal>
+    )
+  }
+
+  function makeStatRegRefresh(statRegStatus) {
     let statRegName
     if (statRegStatus.displayName === 'statistikk') {
       statRegName = 'statistikker'
@@ -210,11 +235,12 @@ export function DashboardTools() {
           return (
             <Row className="mb-4" key={index}>
               <Col>
-                {makeRefreshButton(statRegStatus)}
+                {makeStatRegRefresh(statRegStatus)}
               </Col>
             </Row>
           )
         })}
+        {show && <RefreshStatRegModal />}
         <Row className="mb-5">
           {renderTbmlDefinitionsStatbankTable()}
         </Row>
