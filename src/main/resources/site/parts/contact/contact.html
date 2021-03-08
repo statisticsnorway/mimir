@@ -6,7 +6,9 @@
       <p data-th-if="${contact.email}" class="part-contact-email mb-1">
         <a class="roboto-plain" data-th-href="@{'mailto:' + ${contact.email}}" data-th-text="${contact.email}" />
       </p>
-      <p data-th-if="${contact.telephone}" data-th-text="${contact.telephone}" class="part-contact-telephone" />
+      <p data-th-if="${contact.telephone} != ''" class="part-contact-telephone mt-2">
+        <a data-th-text="${contact.telephone}" data-th-href="@{'tel:' + ${contact.phonelink}}" />
+      </p>
     </div>
   </div>
 </section>
