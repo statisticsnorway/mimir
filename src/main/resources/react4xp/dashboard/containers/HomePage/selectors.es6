@@ -39,3 +39,13 @@ export const selectDashboardOptions = createSelector(
   [selectDomain],
   (commonState) => commonState.dashboardOptions
 )
+
+export const selectServerTime = createSelector(
+  [selectDomain],
+  (commonState) => commonState.serverTime
+)
+
+export const selectServerTimeReceived = createSelector(
+  [selectDomain],
+  (commonState) => commonState.serverTimeReceived
+)

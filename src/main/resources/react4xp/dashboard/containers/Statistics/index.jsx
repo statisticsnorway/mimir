@@ -200,7 +200,7 @@ export function Statistics() {
   }
 
   return (
-    <div className="p-4 tables-wrapper border-top-0">
+    <div className="p-4 tables-wrapper">
       <h2 className="mb-3">Kommende publiseringer</h2>
       {renderStatistics()}
     </div>

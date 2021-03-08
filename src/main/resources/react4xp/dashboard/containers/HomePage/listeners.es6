@@ -6,4 +6,11 @@ export default function setupHomePageListeners(io, dispatch) {
       type: actions.stopLoadingClearCache.type
     })
   })
+
+  io.on('dashboard-server-time-result', (data) => {
+    dispatch({
+      type: actions.serverTimeLoaded.type,
+      serverTime: data
+    })
+  })
 }

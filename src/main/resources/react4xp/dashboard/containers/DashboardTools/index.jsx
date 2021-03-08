@@ -173,7 +173,7 @@ export function DashboardTools() {
   }
 
   return (
-    <div className="p-4 tables-wrapper border-top-0">
+    <div className="p-4 tables-wrapper">
       <h2 className="mb-4">Verktøy</h2>
       <Container>
         <Row className="mb-5">
