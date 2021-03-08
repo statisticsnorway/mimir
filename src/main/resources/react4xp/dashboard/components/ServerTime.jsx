@@ -13,7 +13,7 @@ export function ServerTime(props) {
   useEffect((prevProps, prevState) => {
     if (serverTime && serverTimeReceived) {
       const timeInterval = setInterval(() => {
-        setCurrentServerTime(new Date(serverTime).getTime() + (Date.now() - new Date(serverTimeReceived)))
+        setCurrentServerTime(serverTime + (Date.now() - new Date(serverTimeReceived)))
       }, 1000)
       return () => clearInterval(timeInterval)
     }
