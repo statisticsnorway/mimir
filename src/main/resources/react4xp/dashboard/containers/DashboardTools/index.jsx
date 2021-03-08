@@ -26,12 +26,12 @@ export function DashboardTools() {
   const internalBaseUrl = useSelector(selectInternalBaseUrl)
   const internalStatbankUrl = useSelector(selectInternalStatbankUrl)
 
-  const [selectedStatReg, setSelectStatReg] = useState(null)
+  const [selectedStatRegKey, setSelectStatRegKey] = useState(null)
   const [modalShow, setModalShow] = useState(false)
 
   function refreshStatReg(key) {
     startRefresh(dispatch, io, [key])
-    setSelectStatReg(statuses.find((status) => status.key === key))
+    setSelectStatRegKey(key)
     setModalShow(true)
   }
 
@@ -221,7 +221,7 @@ export function DashboardTools() {
             </Row>
           )
         })}
-        {modalShow && <RefreshStatRegModal statReg={selectedStatReg} handleClose={() => setModalShow(false)} />}
+        {modalShow && <RefreshStatRegModal statRegKey={selectedStatRegKey} handleClose={() => setModalShow(false)} />}
         <Row className="mb-5">
           {renderTbmlDefinitionsStatbankTable()}
         </Row>

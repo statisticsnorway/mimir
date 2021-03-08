@@ -1,27 +1,36 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import { Button, Modal } from 'react-bootstrap'
+import { selectStatRegStatus } from '../containers/StatRegDashboard/selectors'
 
 export function RefreshStatRegModal(props) {
-  const {
-    statReg,
-    handleClose
-  } = props
-  const {
-    displayName,
-    logData
-  } = statReg
+  const statReg = useSelector(selectStatRegStatus(props.statRegKey))
+
+  function renderMessage(logData) {
+    if (!statReg.loading) {
+      if (logData.showWarningIcon) {
+        return (
+          <p>Noe gikk galt</p>
+        )
+      }
+      return (
+        <p>Alt gikk OK</p>
+      )
+    }
+    return <span className="spinner-border spinner-border-sm" />
+  }
 
   return (
-    <Modal size="lg" show={true} onHide={handleClose}>
+    <Modal size="lg" show={true} onHide={props.handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Oppdatering av {displayName}</Modal.Title>
+        <Modal.Title>Oppdatering av {statReg.displayName}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {logData.showWarningIcon ? <p>Noe gikk galt</p> : <p>OK</p>}
+        {renderMessage(statReg.logData)}
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>
+        <Button variant="secondary" onClick={props.handleClose}>
             Lukk
         </Button>
       </Modal.Footer>
@@ -30,6 +39,6 @@ export function RefreshStatRegModal(props) {
 }
 
 RefreshStatRegModal.propTypes = {
-  statReg: PropTypes.object,
+  statRegKey: PropTypes.string,
   handleClose: PropTypes.func
 }
