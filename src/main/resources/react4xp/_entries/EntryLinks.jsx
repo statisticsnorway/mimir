@@ -16,7 +16,7 @@ class EntryLinks extends React.Component {
           <div className="col-3 mt-4">
             <div className="row d-flex justify-content-center">
               <div className="col-4">
-                <img src={icon} alt={altText} />
+                <img src={icon} alt={altText ? altText : ' '} />
               </div>
               <div className="col-12 mt-4 text-center">
                 <Link

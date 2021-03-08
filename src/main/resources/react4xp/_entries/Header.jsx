@@ -100,7 +100,7 @@ class Header extends React.Component {
         </nav>
         <div className="misc top-row flex-row justify-space-between flex-wrap">
           <a id="header-logo" className="plainLink" href="/">
-            <img src={logoUrl} alt={logoAltText} className="logo" />
+            <img src={logoUrl} alt={logoAltText ? logoAltText : ' '} className="logo" />
           </a>
 
           <button className="hamburger" onClick={this.toggleMainMenu}>
