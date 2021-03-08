@@ -41,7 +41,7 @@ const transformContact = (contact) => ({
   ...contact,
   telephone: getContent().language == 'en' && contact.telephone != '' ?
     landCodeVisual.concat(treatPhoneNumber(contact.telephone)) : treatPhoneNumber(contact.telephone),
-  phonelink: getContent().language == 'en' ? landCode.concat(contact.telephone) : contact.telephone
+  phonelink: landCode.concat(contact.telephone)
 })
 
 
