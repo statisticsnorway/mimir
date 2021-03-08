@@ -125,7 +125,7 @@ export function parseKeyFigure(
 
       // Logging Mocked keyFigure
       if (dataSource?.tbprocessor?.urlOrId === '-1' && branch === 'master') {
-        log.info('MIMIR nøkkeltall, verdi:' + keyFigureViewData.number)
+        log.info('MIMIR mocked Keyfigure, value:' + keyFigureViewData.number)
       }
     }
     return keyFigureViewData
