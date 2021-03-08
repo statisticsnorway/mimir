@@ -2,9 +2,9 @@ import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import { Button, Modal } from 'react-bootstrap'
-import { selectStatRegStatus } from '../containers/StatRegDashboard/selectors'
-import { requestStatRegEventLogData } from '../containers/StatRegDashboard/actions'
-import { WebSocketContext } from '../utils/websocket/WebsocketProvider'
+import { selectStatRegStatus } from '../StatRegDashboard/selectors'
+import { requestStatRegEventLogData } from '../StatRegDashboard/actions'
+import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 
 export function RefreshStatRegModal(props) {
   const io = useContext(WebSocketContext)

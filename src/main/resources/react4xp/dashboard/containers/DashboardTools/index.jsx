@@ -11,7 +11,7 @@ import { setOpenStatistic, setOpenModal } from '../Statistics/actions'
 import { startRefresh } from '../StatRegDashboard/actions'
 import { selectStatuses } from '../StatRegDashboard/selectors'
 import { selectStatistics } from '../Statistics/selectors'
-import { RefreshStatRegModal } from '../../components/RefreshStatRegModal'
+import { RefreshStatRegModal } from './RefreshStatRegModal'
 
 export function DashboardTools() {
   const loadingCache = useSelector(selectLoadingClearCache)
