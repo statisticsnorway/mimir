@@ -1,6 +1,39 @@
 export interface Statistics {
   /**
    * 
+   * 						Endringsdato
+   * 					
+   */
+  showModifiedDate?: {
+    /**
+     * Selected
+     */
+    _selected: string;
+
+    /**
+     * 
+     * 								Endringsmelding
+     * 							
+     */
+    modifiedOption?: {
+      /**
+       * 
+       * 										Dato og tid
+       * 									
+       */
+      lastModified?: string;
+
+      /**
+       * 
+       * 										Endringstekst
+       * 									
+       */
+      modifiedText?: string;
+    };
+  };
+
+  /**
+   * 
    * 						Tabell
    * 					
    */
@@ -68,39 +101,6 @@ export interface Statistics {
    * 					
    */
   keywords?: string;
-
-  /**
-   * 
-   * 				Endringsdato
-   * 			
-   */
-  showModifiedDate?: {
-    /**
-     * Selected
-     */
-    _selected: string;
-
-    /**
-     * 
-     * 						Endringsmelding
-     * 					
-     */
-    modifiedOption?: {
-      /**
-       * 
-       * 								Dato og tid
-       * 							
-       */
-      lastModified?: string;
-
-      /**
-       * 
-       * 								Endringstekst
-       * 							
-       */
-      modifiedText?: string;
-    };
-  };
 
   /**
    * Statistikk

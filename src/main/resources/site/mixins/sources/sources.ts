@@ -1,7 +1,7 @@
 export interface Sources {
   /**
    * 
-   * 				Kildelenke
+   * 				Kilder
    * 			
    */
   sources?: {
@@ -33,7 +33,7 @@ export interface Sources {
 
     /**
      * 
-     * 						Lenke til internt innhold
+     * 						Kilde fra XP
      * 					
      */
     relatedSource?: {

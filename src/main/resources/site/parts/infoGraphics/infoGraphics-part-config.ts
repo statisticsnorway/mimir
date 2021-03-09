@@ -21,7 +21,7 @@ export interface InfoGraphicsPartConfig {
 
   /**
    * 
-   * 				Kildelenke
+   * 				Kilder
    * 			
    */
   sources?: {
@@ -53,7 +53,7 @@ export interface InfoGraphicsPartConfig {
 
     /**
      * 
-     * 						Lenke til internt innhold
+     * 						Kilde fra XP
      * 					
      */
     relatedSource?: {

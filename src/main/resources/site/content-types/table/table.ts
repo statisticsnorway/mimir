@@ -142,7 +142,7 @@ export interface Table {
 
   /**
    * 
-   * 				Kildelenke
+   * 				Kilder
    * 			
    */
   sources?: {
@@ -174,7 +174,7 @@ export interface Table {
 
     /**
      * 
-     * 						Lenke til internt innhold
+     * 						Kilde fra XP
      * 					
      */
     relatedSource?: {
