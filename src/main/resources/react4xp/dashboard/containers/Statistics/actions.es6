@@ -84,3 +84,16 @@ export function fetchRelatedTablesAndOwnersWithSources(dispatch, io, id) {
     id
   })
 }
+
+export function requestStatisticsJobLog(dispatch, io, id) {
+  io.emit('get-statistics-job-log', {
+    id
+  })
+}
+
+export function requestJobLogDetails(dispatch, io, jobLogId, statisticId) {
+  io.emit('get-statistic-job-log-details', {
+    id: jobLogId,
+    statisticId
+  })
+}

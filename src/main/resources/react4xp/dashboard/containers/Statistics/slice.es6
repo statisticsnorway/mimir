@@ -8,7 +8,8 @@ export const initialState = {
   openStatistic: null,
   modalDisplay: 'request',
   updateMessage: [],
-  openModal: false
+  openModal: false,
+  test: false
 }
 
 const statisticsSlice = createSlice({
@@ -112,6 +113,38 @@ const statisticsSlice = createSlice({
           stat.relatedTables = action.data.relatedTables
           stat.ownersWithSources = action.data.ownersWithSources
           stat.loadingRelatedTablesAndOwnersWithSources = false
+        }
+      }
+    },
+    statisticJobLogLoaded(state, action) {
+      if (action.data.id) {
+        const stat = state.statistics.find((s) => s.id === action.data.id)
+        if (stat) {
+          stat.logData = action.data.jobLogs
+          stat.logDataLoaded = true
+        }
+      }
+    },
+    statisticJobLogDetailsLoaded(state, action) {
+      if (action.data) {
+        const stat = state.statistics.find((s) => s.id === action.data.id)
+        if (stat && stat.logData) {
+          const jobLog = stat.logData.find((v) => v.id === action.data.logs.jobId)
+          if (jobLog) {
+            jobLog.dataLoaded = true
+            jobLog.details = action.data.logs.logDetails
+          }
+        }
+      }
+    },
+    jobLogDetailsOpened(state, action) {
+      if (action.data) {
+        const stat = state.statistics.find((s) => s.id === action.data.id)
+        if (stat && stat.logData) {
+          const jobLog = stat.logData.find((v) => v.id === action.data.logs.jobId)
+          if (jobLog) {
+            jobLog.dataOpended = true
+          }
         }
       }
     }

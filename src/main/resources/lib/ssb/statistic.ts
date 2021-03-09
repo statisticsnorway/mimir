@@ -1,4 +1,5 @@
 __non_webpack_require__('/lib/polyfills/nashorn')
+import { EventInfo } from '../repo/query'
 import { Socket, SocketEmitter } from '../types/socket'
 import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
 import { StatisticInListing, VariantInListing } from './statreg/types'
@@ -21,7 +22,7 @@ import { RepoEventLogLib } from '../repo/eventLog'
 import { RepoCommonLib } from '../repo/common'
 import { StatRegStatisticsLib } from '../repo/statreg/statistics'
 import { TaskLib } from '../types/task'
-import { AuthLibrary } from 'enonic-types/auth'
+import { AuthLibrary, User } from 'enonic-types/auth'
 import { PermissionsLib } from './permissions'
 
 const {
@@ -65,7 +66,9 @@ const {
 }: RepoJobLib = __non_webpack_require__('/lib/repo/job')
 const {
   withConnection,
-  ENONIC_CMS_DEFAULT_REPO
+  ENONIC_CMS_DEFAULT_REPO,
+  getNode,
+  queryNodes
 }: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
 const {
   EVENT_LOG_BRANCH,
@@ -117,6 +120,36 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
         socket.emit('statistics-owners-with-sources-result', {
           id: options.id,
           ownersWithSources
+        })
+      }
+    })
+  })
+
+  socket.on('get-statistics-job-log', (options: GenericIdParam) => {
+    submitTask({
+      description: 'get-statistics-job-log',
+      task: () => {
+        const jobLogs: Array<object> = getStatisticsJobLogInfo(options.id, 10)
+        socket.emit('get-statistics-job-log-result', {
+          id: options.id,
+          jobLogs
+        })
+      }
+    })
+  })
+
+  socket.on('get-statistic-job-log-details', (options: {id: string; statisticId: string}) => {
+    submitTask({
+      description: 'get-statistic-job-log-details',
+      task: () => {
+        const logDetails: {user: User; dataset: Array<object>} | undefined = getEventLogsFromStatisticsJobLog(options.id)
+        socket.emit('get-statistic-job-log-details-result', {
+          id: options.statisticId,
+          user: logDetails && logDetails.user ? logDetails.user : '',
+          logs: {
+            jobId: options.id,
+            logDetails: logDetails && logDetails.dataset ? logDetails.dataset : []
+          }
         })
       }
     })
@@ -327,6 +360,7 @@ function prepStatisticsJobLogInfo(jobNode: JobInfoNode): DashboardJobInfo {
     id: jobNode._id,
     startTime: jobNode.data.jobStarted,
     completionTime: jobNode.data.completionTime ? jobNode.data.completionTime : undefined,
+    details: [],
     status: jobNode.data.status,
     task: jobNode.data.task,
     message: jobNode.data.message ? jobNode.data.message : '',
@@ -336,22 +370,45 @@ function prepStatisticsJobLogInfo(jobNode: JobInfoNode): DashboardJobInfo {
 }
 
 // NOTE example code to fetch event logs connected to datasources on statistics job log
-// function getEventLogsFromStatisticsJobLog(connection: RepoConnection, jobLogId: string): Array<unknown> {
-//   const jobLog: JobInfoNode = connection.get(jobLogId)
-//   const userLogin: string | undefined = jobLog.data.user?.login
-//   const from: string = jobLog.data.jobStarted
-//   const to: string = jobLog.data.completionTime
-//   const datasetIds: Array<string> = jobLog.data.refreshDataResult as Array<string> || []
-//   return datasetIds.map((id) => {
-//     log.info(`_path LIKE "/queries/${id}/*" AND data.by.login = "${userLogin}" AND range("_ts", instant("${from}"), instant("${to}"))`)
-//     const eventLogsResult: NodeQueryResponse = connection.query({
-//       query: `_path LIKE "/queries/${id}/*" AND data.by.login = "${userLogin}" AND range("_ts", instant("${from}"), instant("${to}"))`,
-//       count: 10,
-//       sort: '_ts DESC'
-//     })
-//     return null
-//   })
-// }
+function getEventLogsFromStatisticsJobLog(jobLogId: string): {user: User; dataset: Array<object>} | undefined {
+  const jobInfoNode: JobInfoNode | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/jobs/${jobLogId}`) as JobInfoNode
+  if (!jobInfoNode) {
+    return undefined
+  }
+  const userLogin: string | undefined = jobInfoNode.data.user?.login
+  const from: string = jobInfoNode.data.jobStarted
+  const to: string = jobInfoNode.data.completionTime
+  const datasets: Array<RefreshDatasetResult> = forceArray(jobInfoNode.data.refreshDataResult) as Array<RefreshDatasetResult> || []
+  return {
+    user: jobInfoNode.data.user,
+    dataset: datasets.map((dataset) => {
+      const datasetContent: Content<Highchart | Table | KeyFigure> | null = getContent({
+        key: dataset.id
+      })
+      const eventLogResult: NodeQueryResponse = queryNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, {
+        query: `_path LIKE "/queries/${dataset.id}/*" AND data.by.login = "${userLogin}" AND range("_ts", instant("${from}"), instant("${to}"))`,
+        count: 10,
+        sort: '_ts DESC'
+      })
+      return {
+        displayName: datasetContent?.displayName,
+        branch: dataset.branch === 'master' ? 'publisert' : 'ubpulisert',
+        eventLogResult: eventLogResult.hits.map((hit) => {
+          const node: EventInfo | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataset.id}/${hit.id}`) as EventInfo
+          const resultMessage: string = i18n.localize({
+            key: node.data.status.message,
+            values: node.data.status.status ? [`(${node.data.status.status})`] : ['']
+          })
+          return {
+            result: resultMessage !== 'NOT_TRANSLATED' ? resultMessage : node.data.status.message,
+            modifiedTs: node.data.ts,
+            by: node.data.by && node.data.by.displayName ? node.data.by.displayName : ''
+          }
+        })
+      }
+    })
+  }
+}
 
 function checkIfUserIsAdmin(): boolean {
   return hasRole('system.admin')
@@ -517,6 +574,10 @@ interface GetSourceListOwnersOptions {
 }
 
 interface GetRelatedTablesOptions {
+  id: string;
+}
+
+interface GenericIdParam {
   id: string;
 }
 
