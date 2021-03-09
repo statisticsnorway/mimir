@@ -1,6 +1,8 @@
 export interface RelatedArticles {
   /**
-   * Relatert artikkel
+   * 
+   * 						Relatert artikkel
+   * 					
    */
   relatedArticles?: {
     /**
@@ -9,46 +11,64 @@ export interface RelatedArticles {
     _selected: string;
 
     /**
-     * Artikkel
+     * 
+     * 								Artikkel
+     * 							
      */
     article?: {
       /**
-       * Artikkel
+       * 
+       * 										Artikkel fra XP
+       * 									
        */
       article: string;
     };
 
     /**
-     * Artikkel fra CMS
+     * 
+     * 								Artikkel fra 4.7-CMS
+     * 							
      */
     externalArticle?: {
       /**
-       * URL
+       * 
+       * 										URL
+       * 									
        */
       url: string;
 
       /**
-       * Tittel
+       * 
+       * 										Tittel
+       * 									
        */
       title: string;
 
       /**
-       * Type
+       * 
+       * 										Type
+       * 									
        */
       type?: string;
 
       /**
-       * Dato
+       * 
+       * 										Dato
+       * 									
        */
       date?: string;
 
       /**
-       * Ingress
+       * 
+       * 										Ingress
+       * 									
        */
       preface: string;
 
       /**
-       * Bilde
+       * 
+       * 										Bilde
+       * 									
        */
       image: string;
     };
