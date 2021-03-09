@@ -1,15 +1,21 @@
 export interface RelatedExternalLinks {
   /**
-   * Relaterte eksterne lenker
+   * 
+   * 						Relaterte eksterne lenker
+   * 					
    */
   relatedExternalLinkItemSet?: Array<{
     /**
-     * Lenketekst
+     * 
+     * 								Lenketekst
+     * 							
      */
     urlText: string;
 
     /**
-     * URL
+     * 
+     * 								URL
+     * 							
      */
     url: string;
   }>;

@@ -5,7 +5,9 @@ export interface Table {
   correctionNotice?: string;
 
   /**
-   * Datakilde
+   * 
+   * 				Datakilde
+   * 			
    */
   dataSource?: {
     /**
@@ -14,31 +16,43 @@ export interface Table {
     _selected: string;
 
     /**
-     * Api-spørring mot statistikkbanken
+     * 
+     * 						Api-spørring mot statistikkbanken
+     * 					
      */
     statbankApi?: {
       /**
-       * URL eller tabell-id
+       * 
+       * 								URL eller tabell-id
+       * 							
        */
       urlOrId?: string;
 
       /**
-       * API-spørring mot statistikkbanken (JSON-format)
+       * 
+       * 								API-spørring mot statistikkbanken (JSON-format)
+       * 							
        */
       json?: string;
 
       /**
-       * Navn på x-akse dimensjon
+       * 
+       * 								Navn på x-akse dimensjon
+       * 							
        */
       xAxisLabel?: string;
 
       /**
-       * Navn på y-akse dimensjon
+       * 
+       * 								Navn på y-akse dimensjon
+       * 							
        */
       yAxisLabel?: string;
 
       /**
-       * Filtrering på dataset
+       * 
+       * 								Filtrering på dataset
+       * 							
        */
       datasetFilterOptions?: {
         /**
@@ -47,11 +61,15 @@ export interface Table {
         _selected?: string;
 
         /**
-         * Filtrer på kommune
+         * 
+         * 										Filtrer på kommune
+         * 									
          */
         municipalityFilter?: {
           /**
-           * Hvilken dimensjon skal filtreres på kommunenummer
+           * 
+           * 												Hvilken dimensjon skal filtreres på kommunenummer
+           * 											
            */
           municipalityDimension: string;
         };
@@ -59,53 +77,73 @@ export interface Table {
     };
 
     /**
-     * Tall fra tabellbygger
+     * 
+     * 						Tall fra tabellbygger
+     * 					
      */
     tbprocessor?: {
       /**
-       * URL eller TBML-id
+       * 
+       * 								URL eller TBML-id
+       * 							
        */
       urlOrId?: string;
     };
 
     /**
-     * Lagrede spørringer mot statistikkbanken
+     * 
+     * 						Lagrede spørringer mot statistikkbanken
+     * 					
      */
     statbankSaved?: {
       /**
-       * URL eller tabell-id
+       * 
+       * 								URL eller tabell-id
+       * 							
        */
       urlOrId?: string;
     };
 
     /**
-     * (Ikke i bruk) Ferdige dataset
+     * 
+     * 						(Ikke i bruk) Ferdige dataset
+     * 					
      */
     dataset?: {
       /**
-       * ID
+       * 
+       * 								ID
+       * 							
        */
       id?: string;
 
       /**
-       * Format
+       * 
+       * 								Format
+       * 							
        */
       format: "json" | "csv";
     };
 
     /**
-     * Klass
+     * 
+     * 						Klass
+     * 					
      */
     klass?: {
       /**
-       * URL
+       * 
+       * 								URL
+       * 							
        */
       urlOrId?: string;
     };
   };
 
   /**
-   * Kildelenke
+   * 
+   * 				Kilder
+   * 			
    */
   sources?: {
     /**
@@ -114,31 +152,43 @@ export interface Table {
     _selected: string;
 
     /**
-     * Url lenke
+     * 
+     * 						Kilde fra url
+     * 					
      */
     urlSource?: {
       /**
-       * Tekst til kildelenke
+       * 
+       * 								Tekst til kildelenke
+       * 							
        */
       urlText: string;
 
       /**
-       * Kildelenke
+       * 
+       * 								Kildelenke
+       * 							
        */
       url: string;
     };
 
     /**
-     * Lenke til internt innhold
+     * 
+     * 						Kilde fra XP
+     * 					
      */
     relatedSource?: {
       /**
-       * Tekst til kildelenke
+       * 
+       * 								Tekst til kildelenke
+       * 							
        */
       urlText?: string;
 
       /**
-       * Relatert innhold
+       * 
+       * 								Relatert innhold
+       * 							
        */
       sourceSelector?: string;
     };
