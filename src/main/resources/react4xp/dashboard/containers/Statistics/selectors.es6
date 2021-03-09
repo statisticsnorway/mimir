@@ -57,3 +57,57 @@ export const selectSearchList = createSelector(
   [selectDomain],
   (statisticsState) => statisticsState.statisticsSearchList,
 )
+
+export const selectStatistic = (statisticId) => {
+  return createSelector(
+    [selectDomain],
+    (statisticsState) => statisticsState.statistics.find((s) => s.id === statisticId)
+  )
+}
+
+export const selectStatisticsLogDataLoaded = (statisticId) => {
+  return createSelector(
+    [selectDomain],
+    (statisticsState) => statisticsState.statistics.find((s) => s.id === statisticId).logDataLoaded
+  )
+}
+
+export const selectJobLog = (statisticId, jobId) => {
+  return createSelector(
+    [selectDomain],
+    (statisticsState) => {
+      const stat = statisticsState.statistics.find((statLog) => statLog.id === statisticId)
+      if (stat && stat.logData) {
+        return stat.logData.find((jobLog) => jobLog.id === jobId)
+      }
+      return null
+    }
+  )
+}
+
+export const selectJobLogDetails = (statisticId, jobId) => {
+  return createSelector(
+    [selectDomain],
+    (state) => {
+      const stat = state.statistics ? state.statistics.find((statLog) => statLog.id === statisticId) : []
+      if (stat && stat.logData) {
+        const log = stat.logData.find((log) => log.id === jobId)
+        return log
+      }
+      return null
+    }
+  )
+}
+
+export const selectJobLogDetailsLoaded = (statisticId, jobId) => {
+  return createSelector(
+    [selectDomain],
+    (state) => {
+      const stat = state.statistics ? state.statistics.find((s) => s.id === statisticId) : []
+      if (stat && stat.logData) {
+        const log = stat.logData.find((log) => log.id === jobId)
+        return !!log.dataLoaded
+      }
+      return false
+    })
+}

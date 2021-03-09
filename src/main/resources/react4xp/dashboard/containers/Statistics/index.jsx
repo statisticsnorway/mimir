@@ -127,7 +127,7 @@ export function Statistics() {
           {statistic.nextRelease ? makeRefreshButton(statistic) : ''}
         </td>
         <td>
-          {statistic.logData ? <StatisticsLog statistic={statistic}/> : null}
+          {statistic.logData ? <StatisticsLog statisticId={statistic.id}/> : null}
         </td>
       </tr>
     )
@@ -137,7 +137,7 @@ export function Statistics() {
     if (statistic.nextRelease) {
       return (
         <span>
-          <Moment format="DD.MM.YYYY hh:mm">{statistic.nextRelease}</Moment>
+          <Moment format="DD.MM.YYYY HH:mm">{statistic.nextRelease}</Moment>
           {getStatregLinks(statistic)}
         </span>
       )

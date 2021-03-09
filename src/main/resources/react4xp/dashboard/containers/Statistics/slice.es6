@@ -136,6 +136,38 @@ const statisticsSlice = createSlice({
           stat.loadingRelatedTablesAndOwnersWithSources = false
         }
       }
+    },
+    statisticJobLogLoaded(state, action) {
+      if (action.data.id) {
+        const stat = state.statistics.find((s) => s.id === action.data.id)
+        if (stat) {
+          stat.logData = action.data.jobLogs
+          stat.logDataLoaded = true
+        }
+      }
+    },
+    statisticJobLogDetailsLoaded(state, action) {
+      if (action.data) {
+        const stat = state.statistics.find((s) => s.id === action.data.id)
+        if (stat && stat.logData) {
+          const jobLog = stat.logData.find((v) => v.id === action.data.logs.jobId)
+          if (jobLog) {
+            jobLog.dataLoaded = true
+            jobLog.details = action.data.logs.logDetails
+          }
+        }
+      }
+    },
+    jobLogDetailsOpened(state, action) {
+      if (action.data) {
+        const stat = state.statistics.find((s) => s.id === action.data.id)
+        if (stat && stat.logData) {
+          const jobLog = stat.logData.find((v) => v.id === action.data.logs.jobId)
+          if (jobLog) {
+            jobLog.dataOpended = true
+          }
+        }
+      }
     }
   }
 })
