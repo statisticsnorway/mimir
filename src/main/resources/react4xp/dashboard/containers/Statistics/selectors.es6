@@ -31,10 +31,12 @@ export const selectHasLoadingStatistic = createSelector(
   (statisticsState) => statisticsState.statistics.filter((s) => s.loading).length > 0
 )
 
-export const selectModalDisplay = createSelector(
-  [selectDomain],
-  (statisticsState) => statisticsState.modalDisplay
-)
+export const createSelectModalDisplay = (statisticId) => {
+  return createSelector(
+    [selectDomain],
+    (statisticsState) => statisticsState.modals.find((modal) => modal.statisticId === statisticId)
+  )
+}
 
 export const selectRefreshMessages = createSelector(
   [selectDomain],

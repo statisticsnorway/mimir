@@ -62,6 +62,21 @@ export function setOpenModal(dispatch, status) {
   })
 }
 
+export function setModal(dispatch, modal) {
+  dispatch({
+    type: actions.setModal.type,
+    modal
+  })
+}
+
+export function resetModal(dispatch, id) {
+  dispatch({
+    type: actions.resetModal.type,
+    id
+  })
+}
+
+
 export function fetchOwnersWithSources(dispatch, io, id, dataSourceIds) {
   dispatch({
     type: actions.loadStatisticsOwnersWithSources.type,

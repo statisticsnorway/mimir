@@ -1,20 +1,21 @@
 import React from 'react'
-import { Col, Row } from 'react-bootstrap'
-import { useSelector } from 'react-redux'
-import { selectModalDisplay, selectRefreshMessages } from '../containers/Statistics/selectors'
+import { Col, Row, Button } from 'react-bootstrap'
+import PropTypes from 'prop-types'
 
 
 export function RefreshStatisticsStatus(props) {
-  const refreshMessages = useSelector(selectRefreshMessages)
-  const modalDisplay = useSelector(selectModalDisplay)
+  const {
+    modalDisplay,
+    updateMessages
+  } = props.modal
 
   return (
     <React.Fragment>
       <h2 className="mt-4">
-        Oppdaterer { modalDisplay === 'loading' ? <span className="spinner-border spinner-border-sm my-1" /> : null }
+        Oppdaterer { modalDisplay === 'loading' && <span className="spinner-border spinner-border-sm my-1" /> }
       </h2>
       {
-        refreshMessages.map((msg, i) => {
+        updateMessages.map((msg, i) => {
           return (
             <Row key={i} className="mb-3">
               <Col>{msg.name}</Col>
@@ -27,8 +28,14 @@ export function RefreshStatisticsStatus(props) {
           )
         })
       }
+      {modalDisplay === 'complete' && <Button onClick={() => props.resetModal()}>Reset</Button>}
     </React.Fragment>
   )
+}
+
+RefreshStatisticsStatus.propTypes = {
+  modal: PropTypes.object,
+  resetModal: PropTypes.func
 }
 
 export default (props) => <RefreshStatisticsStatus {...props} />

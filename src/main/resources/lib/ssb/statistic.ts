@@ -177,52 +177,60 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   })
 
   socket.on('refresh-statistic', (data: RefreshInfo) => {
-    socketEmitter.broadcast('statistics-activity-refresh-started', {
-      id: data.id
-    })
-    const statistic: Content<Statistics> | null = getContent({
-      key: data.id
-    })
+    submitTask({
+      description: 'refresh-statistic',
+      task: () => {
+        socketEmitter.broadcast('statistics-activity-refresh-started', {
+          id: data.id
+        })
+        const statistic: Content<Statistics> | null = getContent({
+          key: data.id
+        })
 
-    if (statistic) {
-      const datasetIdsToUpdate: Array<string> = getDataSourceIdsFromStatistics(statistic)
-      const processXmls: Array<ProcessXml> | undefined = data.owners ? processXmlFromOwners(data.owners) : undefined
-      if (datasetIdsToUpdate.length > 0) {
-        const context: RunContext = {
-          branch: 'master',
-          repository: ENONIC_CMS_DEFAULT_REPO,
-          principals: ['role:system.admin'],
-          user: {
-            login: users[parseInt(socket.id)].login,
-            idProvider: users[parseInt(socket.id)].idProvider ? users[parseInt(socket.id)].idProvider : 'system'
+        if (statistic) {
+          const datasetIdsToUpdate: Array<string> = getDataSourceIdsFromStatistics(statistic)
+          const processXmls: Array<ProcessXml> | undefined = data.owners ? processXmlFromOwners(data.owners) : undefined
+          if (datasetIdsToUpdate.length > 0) {
+            const context: RunContext = {
+              branch: 'master',
+              repository: ENONIC_CMS_DEFAULT_REPO,
+              principals: ['role:system.admin'],
+              user: {
+                login: users[parseInt(socket.id)].login,
+                idProvider: users[parseInt(socket.id)].idProvider ? users[parseInt(socket.id)].idProvider : 'system'
+              }
+            }
+            run(context, () => {
+              const jobLogNode: JobEventNode = startJobLog(JobNames.STATISTICS_REFRESH_JOB)
+              updateJobLog(jobLogNode._id, (node: JobInfoNode) => {
+                node.data.queryIds = [data.id]
+                return node
+              })
+              const feedbackEventName: string = 'statistics-activity-refresh-feedback'
+              const relatedStatisticsId: string = data.id
+              const refreshDataResult: Array<RefreshDatasetResult> = refreshDatasetHandler(
+                datasetIdsToUpdate,
+                socketEmitter,
+                processXmls,
+                feedbackEventName,
+                relatedStatisticsId
+              )
+              const finishedJobLog: JobInfoNode = completeJobLog(jobLogNode._id, JobStatus.COMPLETE, refreshDataResult)
+              socketEmitter.broadcast('statistics-refresh-result-log', {
+                id: data.id,
+                log: prepStatisticsJobLogInfo(finishedJobLog)
+              })
+            })
           }
+          socketEmitter.broadcast('statistics-refresh-result', {
+            id: data.id
+          })
         }
-        run(context, () => {
-          const jobLogNode: JobEventNode = startJobLog(JobNames.STATISTICS_REFRESH_JOB)
-          updateJobLog(jobLogNode._id, (node: JobInfoNode) => {
-            node.data.queryIds = [data.id]
-            return node
-          })
-          const feedbackEventName: string = 'statistics-activity-refresh-feedback'
-          const refreshDataResult: Array<RefreshDatasetResult> = refreshDatasetHandler(
-            datasetIdsToUpdate,
-            socketEmitter,
-            processXmls,
-            feedbackEventName
-          )
-          const finishedJobLog: JobInfoNode = completeJobLog(jobLogNode._id, JobStatus.COMPLETE, refreshDataResult)
-          socketEmitter.broadcast('statistics-refresh-result-log', {
-            id: data.id,
-            log: prepStatisticsJobLogInfo(finishedJobLog)
-          })
+        socketEmitter.broadcast('statistics-activity-refresh-complete', {
+          id: data.id,
+          status: 'complete'
         })
       }
-      socketEmitter.broadcast('statistics-refresh-result', {
-        id: data.id
-      })
-    }
-    socketEmitter.broadcast('statistics-activity-refresh-complete', {
-      id: data.id
     })
   })
 }
