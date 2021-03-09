@@ -31,7 +31,6 @@ export function RefreshStatRegModal(props) {
     })
   }
 
-  const statRegName = displayName === 'statistikk' ? 'statistikker' : displayName
   function renderMessage() {
     if (loading) {
       return <span className="spinner-border spinner-border-sm" />
@@ -49,6 +48,7 @@ export function RefreshStatRegModal(props) {
     }
   }
 
+  const statRegName = displayName === 'statistikk' ? 'statistikker' : displayName
   return (
     <Modal size="lg" show={true} onHide={props.handleClose}>
       <Modal.Header closeButton>
