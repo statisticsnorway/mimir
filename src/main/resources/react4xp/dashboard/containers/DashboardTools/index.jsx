@@ -35,7 +35,7 @@ export function DashboardTools() {
     setModalShow(true)
   }
 
-  function makeStatRegRefresh(statRegStatus) {
+  function makeStatRegRefreshOptions(statRegStatus) {
     let statRegName
     if (statRegStatus.displayName === 'statistikk') {
       statRegName = 'statistikker'
@@ -216,7 +216,7 @@ export function DashboardTools() {
           return (
             <Row className="mb-4" key={index}>
               <Col>
-                {makeStatRegRefresh(statRegStatus)}
+                {makeStatRegRefreshOptions(statRegStatus)}
               </Col>
             </Row>
           )

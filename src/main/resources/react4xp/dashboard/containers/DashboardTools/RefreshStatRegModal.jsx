@@ -38,32 +38,21 @@ export function RefreshStatRegModal(props) {
     statRegName = displayName
   }
 
-  function renderMessage(logData) {
-    if (!loading) {
-      if (logData.showWarningIcon) {
-        return (
-          <div>
-            {logData.message ? logData.message : ''}
-            <span className="warningIcon"><AlertTriangle size="12" color="#FF4500"/></span><br/>
-            {logData.modifiedReadable ? logData.modifiedReadable : ''}<br/>
-            {logData.modified ? logData.modified : ''}<br/>
-            {logData.by && logData.by.displayName ? `av ${logData.by.displayName}` : '' }
-            <div className="mt-4">
-              {renderJobLogs()}
-            </div>
-          </div>
-        )
-      }
+  function renderMessage() {
+    if (loading) {
+      return <span className="spinner-border spinner-border-sm" />
+    } else {
       return (
-        <p>
-          {logData.message ? logData.message : ''}<br/>
+        <div>
+          {logData.message ? logData.message : ''}
+          {logData.showWarningIcon ? <span className="warningIcon"><AlertTriangle size="12" color="#FF4500"/><br/></span> : <br/>}
           {logData.modifiedReadable ? logData.modifiedReadable : ''}<br/>
           {logData.modified ? logData.modified : ''}<br/>
           {logData.by && logData.by.displayName ? `av ${logData.by.displayName}` : '' }
-        </p>
+          {logData.showWarningIcon && <div className="mt-4">{renderJobLogs()}</div>}
+        </div>
       )
     }
-    return <span className="spinner-border spinner-border-sm" />
   }
 
   return (
@@ -72,7 +61,7 @@ export function RefreshStatRegModal(props) {
         <Modal.Title>Oppdatering av {statRegName}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {renderMessage(logData)}
+        {renderMessage()}
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={props.handleClose}>
