@@ -368,7 +368,8 @@ function getJobs(): Array<DashboardJobInfo> {
         startTime: jobLog.data.jobStarted,
         completionTime: jobLog.data.completionTime ? jobLog.data.completionTime : undefined,
         message: jobLog.data.message ? jobLog.data.message : '',
-        result: parseResult(jobLog)
+        result: parseResult(jobLog),
+        details: []
       })
     }
     return result
@@ -460,6 +461,7 @@ export interface DashboardJobInfo {
   message: string;
   result: Array<unknown> | object;
   user?: User;
+  details: Array<object>;
 }
 
 function prepDataSources(dataSources: Array<Content<DataSource>>): Array<DashboardDataSource> {
