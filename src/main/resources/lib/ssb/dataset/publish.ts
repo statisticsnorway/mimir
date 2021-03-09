@@ -13,6 +13,8 @@ import { RepoJobLib, JobEventNode, JobInfoNode, StatisticsPublishResult, DataSou
 import { RepoQueryLib } from '../../repo/query'
 import { ServerLogLib } from '../serverLog'
 import { EventLibrary } from 'enonic-types/event'
+import moment = require('moment')
+import { NodeQueryHit } from 'enonic-types/node'
 const {
   Events,
   logUserDataQuery
@@ -51,7 +53,9 @@ const {
   startJobLog,
   updateJobLog,
   JobNames,
-  JobStatus
+  JobStatus,
+  queryJobLogs,
+  getJobLog
 }: RepoJobLib = __non_webpack_require__('/lib/repo/job')
 const {
   cronJobLog
@@ -60,27 +64,47 @@ const {
   send
 }: EventLibrary = __non_webpack_require__('/lib/xp/event')
 const {
-  getNextReleaseStatistic
+  getNextReleaseStatistic,
+  getPreviousReleaseStatistic
 } = __non_webpack_require__('/lib/ssb/utils')
 
 const jobs: {[key: string]: JobEventNode | JobInfoNode} = {}
 
 export function currentlyWaitingForPublish(statistic: Content<Statistics>): boolean {
-  for (const key in jobs) {
-    if ({}.hasOwnProperty.call(jobs, key)) {
-      const job: JobInfoNode = jobs[key] as JobInfoNode
-      if (job.data.status !== JobStatus.COMPLETE) {
-        const jobRefreshResult: Array<StatisticsPublishResult> = forceArray(job.data.refreshDataResult) as Array<StatisticsPublishResult>
-        const statRefreshResult: StatisticsPublishResult | undefined = jobRefreshResult.find((s) => {
-          return s.statistic === statistic._id
-        })
-        if (statRefreshResult && statRefreshResult.status !== JobStatus.COMPLETE && statRefreshResult.status !== JobStatus.SKIPPED) {
-          const nextRelease: string | null = getNextRelease(statistic)
-          const serverOffsetInMs: number = app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
-          const now: Date = new Date(new Date().getTime() + serverOffsetInMs + 1000)
-          if (nextRelease && new Date(nextRelease) <= now) {
-            return true
-          }
+  const from: string = new Date(Date.now() - 1800000).toISOString()
+  const to: string = new Date().toISOString()
+  const jobRes: NodeQueryHit | null = queryJobLogs({
+    start: 0,
+    count: 1,
+    query: `
+      _path LIKE "/jobs/*" AND 
+      data.task = "${JobNames.PUBLISH_JOB}" AND 
+      data.status = "${JobStatus.STARTED}" AND 
+      range("_ts", instant("${from}"), instant("${to}"))`,
+    sort: '_ts DESC'
+  }).hits[0]
+  if (jobRes) {
+    const job: JobInfoNode | null = getJobLog(jobRes.id) as JobInfoNode | null
+    if (job) {
+      const jobRefreshResult: Array<StatisticsPublishResult> = forceArray(job.data.refreshDataResult) as Array<StatisticsPublishResult>
+      const statRefreshResult: StatisticsPublishResult | undefined = jobRefreshResult.find((s) => {
+        return s && s.statistic === statistic._id
+      })
+      if (statRefreshResult && statRefreshResult.status !== JobStatus.COMPLETE && statRefreshResult.status !== JobStatus.SKIPPED) {
+        const nextRelease: string | null = getNextRelease(statistic)
+        const previousRelease: string | null = getPreviousRelease(statistic)
+        const serverOffsetInMs: number = app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+        const now: Date = new Date(new Date().getTime() + serverOffsetInMs + 1000)
+        if (
+          (nextRelease && moment(nextRelease).isSameOrBefore(now)) ||
+          (
+            previousRelease &&
+            moment(previousRelease).isSame(now, 'day') &&
+            !moment(nextRelease).isSame(now, 'day') &&
+            moment(previousRelease).isSameOrBefore(now)
+          )
+        ) {
+          return true
         }
       }
     }
@@ -266,6 +290,16 @@ function getNextRelease(statistic: Content<Statistics>): string | null{
     const statisticStatreg: StatisticInListing | undefined = getStatisticByIdFromRepo(statistic.data.statistic)
     if (statisticStatreg) {
       return getNextReleaseStatistic(forceArray(statisticStatreg.variants))
+    }
+  }
+  return null
+}
+
+function getPreviousRelease(statistic: Content<Statistics>): string | null {
+  if (statistic.data.statistic) {
+    const statisticStatreg: StatisticInListing | undefined = getStatisticByIdFromRepo(statistic.data.statistic)
+    if (statisticStatreg) {
+      return getPreviousReleaseStatistic(forceArray(statisticStatreg.variants))
     }
   }
   return null
