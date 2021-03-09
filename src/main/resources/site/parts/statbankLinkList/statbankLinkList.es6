@@ -73,15 +73,18 @@ function renderPart(req) {
       children: linkTitleWithNumber,
       linkType: 'profiled'
     })
-    .setId('statbank-link')
+    .setId('statbankLinkId')
 
   const body = render(view, model)
 
   return {
     body: statbankLinkComponent.renderBody({
-      body
+      body,
+      clientRender: req.mode !== 'edit'
     }),
-    pageContributions: statbankLinkComponent.renderPageContributions(),
+    pageContributions: statbankLinkComponent.renderPageContributions({
+      clientRender: req.mode !== 'edit'
+    }),
     contentType: 'text/html'
   }
 }

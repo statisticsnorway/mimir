@@ -1,16 +1,22 @@
 export interface Article {
   /**
-   * Stikktittel
+   * 
+   * 						Stikktittel
+   * 					
    */
   introTitle?: string;
 
   /**
-   * Vis publiseringsdato
+   * 
+   * 						Vis publiseringsdato
+   * 					
    */
   showPublishDate: boolean;
 
   /**
-   * Vis tidspunkt for sist redigering
+   * 
+   * 						Endringsdato
+   * 					
    */
   showModifiedDate?: {
     /**
@@ -19,53 +25,73 @@ export interface Article {
     _selected: string | Array<string>;
 
     /**
-     * Skal det vises dato?
+     * 
+     * 								Skal det vises dato?
+     * 							
      */
     dateOption?: {
       /**
-       * Vis klokkeslett for publisering
+       * 
+       * 										Vis klokkeslett for publisering
+       * 									
        */
       showModifiedTime: boolean;
 
       /**
-       * Tidspunkt for endring
+       * 
+       * 										Tidspunkt for endring
+       * 									
        */
       modifiedDate?: string;
     };
   };
 
   /**
-   * Løpenummer
+   * 
+   * 						Løpenummer
+   * 					
    */
   serialNumber?: string;
 
   /**
-   * Forfatter
+   * 
+   * 						Forfattere
+   * 					
    */
   authorItemSet?: Array<{
     /**
-     * Navn
+     * 
+     * 								Navn
+     * 							
      */
     name?: string;
 
     /**
-     * E-post
+     * 
+     * 								E-post
+     * 							
      */
     email?: string;
   }>;
 
   /**
-   * Ingress
+   * 
+   * 						Ingress
+   * 					
    */
   ingress?: string;
 
   /**
-   * Artikkeltekst
+   * 
+   * 						Artikkeltekst
+   * 					
    */
   articleText?: string;
 
   /**
-   * Tilhørende statistikk
+   * 
+   * 						Tilhørende statistikk
+   * 					
    */
   associatedStatistics?: {
     /**
@@ -74,33 +100,45 @@ export interface Article {
     _selected: string;
 
     /**
-     * Lenke til tilhørende statistikk (XP)
+     * 
+     * 								Lenke til tilhørende statistikk (XP)
+     * 							
      */
     XP?: {
       /**
-       * Statistikk
+       * 
+       * 										Statistikk
+       * 									
        */
       content?: string;
     };
 
     /**
-     * Lenke til tilhørende statistikk (4.7.)
+     * 
+     * 								Lenke til tilhørende statistikk (4.7.)
+     * 							
      */
     CMS?: {
       /**
-       * URL
+       * 
+       * 										URL
+       * 									
        */
       href?: string;
 
       /**
-       * Tittel
+       * 
+       * 										Tittel
+       * 									
        */
       title?: string;
     };
   };
 
   /**
-   * Arkiv
+   * 
+   * 						Arkiv
+   * 					
    */
   articleArchive?: Array<string>;
 
@@ -142,22 +180,30 @@ export interface Article {
   };
 
   /**
-   * Relaterte eksterne lenker
+   * 
+   * 						Relaterte eksterne lenker
+   * 					
    */
   relatedExternalLinkItemSet?: Array<{
     /**
-     * Lenketekst
+     * 
+     * 								Lenketekst
+     * 							
      */
     urlText: string;
 
     /**
-     * URL
+     * 
+     * 								URL
+     * 							
      */
     url: string;
   }>;
 
   /**
-   * Relatert artikkel
+   * 
+   * 						Relatert artikkel
+   * 					
    */
   relatedArticles?: {
     /**
@@ -166,46 +212,64 @@ export interface Article {
     _selected: string;
 
     /**
-     * Artikkel
+     * 
+     * 								Artikkel
+     * 							
      */
     article?: {
       /**
-       * Artikkel
+       * 
+       * 										Artikkel fra XP
+       * 									
        */
       article: string;
     };
 
     /**
-     * Artikkel fra CMS
+     * 
+     * 								Artikkel fra 4.7-CMS
+     * 							
      */
     externalArticle?: {
       /**
-       * URL
+       * 
+       * 										URL
+       * 									
        */
       url: string;
 
       /**
-       * Tittel
+       * 
+       * 										Tittel
+       * 									
        */
       title: string;
 
       /**
-       * Type
+       * 
+       * 										Type
+       * 									
        */
       type?: string;
 
       /**
-       * Dato
+       * 
+       * 										Dato
+       * 									
        */
       date?: string;
 
       /**
-       * Ingress
+       * 
+       * 										Ingress
+       * 									
        */
       preface: string;
 
       /**
-       * Bilde
+       * 
+       * 										Bilde
+       * 									
        */
       image: string;
     };

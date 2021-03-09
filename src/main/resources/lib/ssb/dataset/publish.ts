@@ -7,12 +7,14 @@ import { StatRegStatisticsLib } from '../../repo/statreg/statistics'
 import { TaskLib } from '../../types/task'
 import { UtilLibrary } from '../../types/util'
 import { StatisticLib } from '../statistic'
-import { StatisticInListing, VariantInListing } from '../statreg/types'
+import { StatisticInListing } from '../statreg/types'
 import { DatasetLib } from './dataset'
 import { RepoJobLib, JobEventNode, JobInfoNode, StatisticsPublishResult, DataSourceStatisticsPublishResult } from '../../repo/job'
 import { RepoQueryLib } from '../../repo/query'
 import { ServerLogLib } from '../serverLog'
 import { EventLibrary } from 'enonic-types/event'
+import moment = require('moment')
+import { NodeQueryHit } from 'enonic-types/node'
 const {
   Events,
   logUserDataQuery
@@ -51,7 +53,9 @@ const {
   startJobLog,
   updateJobLog,
   JobNames,
-  JobStatus
+  JobStatus,
+  queryJobLogs,
+  getJobLog
 }: RepoJobLib = __non_webpack_require__('/lib/repo/job')
 const {
   cronJobLog
@@ -59,8 +63,54 @@ const {
 const {
   send
 }: EventLibrary = __non_webpack_require__('/lib/xp/event')
+const {
+  getNextReleaseStatistic,
+  getPreviousReleaseStatistic
+} = __non_webpack_require__('/lib/ssb/utils')
 
 const jobs: {[key: string]: JobEventNode | JobInfoNode} = {}
+
+export function currentlyWaitingForPublish(statistic: Content<Statistics>): boolean {
+  const from: string = new Date(Date.now() - 1800000).toISOString()
+  const to: string = new Date().toISOString()
+  const jobRes: NodeQueryHit | null = queryJobLogs({
+    start: 0,
+    count: 1,
+    query: `
+      _path LIKE "/jobs/*" AND 
+      data.task = "${JobNames.PUBLISH_JOB}" AND 
+      data.status = "${JobStatus.STARTED}" AND 
+      range("_ts", instant("${from}"), instant("${to}"))`,
+    sort: '_ts DESC'
+  }).hits[0]
+  if (jobRes) {
+    const job: JobInfoNode | null = getJobLog(jobRes.id) as JobInfoNode | null
+    if (job) {
+      const jobRefreshResult: Array<StatisticsPublishResult> = forceArray(job.data.refreshDataResult) as Array<StatisticsPublishResult>
+      const statRefreshResult: StatisticsPublishResult | undefined = jobRefreshResult.find((s) => {
+        return s && s.statistic === statistic._id
+      })
+      if (statRefreshResult && statRefreshResult.status !== JobStatus.COMPLETE && statRefreshResult.status !== JobStatus.SKIPPED) {
+        const nextRelease: string | null = getNextRelease(statistic)
+        const previousRelease: string | null = getPreviousRelease(statistic)
+        const serverOffsetInMs: number = app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+        const now: Date = new Date(new Date().getTime() + serverOffsetInMs + 1000)
+        if (
+          (nextRelease && moment(nextRelease).isSameOrBefore(now)) ||
+          (
+            previousRelease &&
+            moment(previousRelease).isSame(now, 'day') &&
+            !moment(nextRelease).isSame(now, 'day') &&
+            moment(previousRelease).isSameOrBefore(now)
+          )
+        ) {
+          return true
+        }
+      }
+    }
+  }
+  return false
+}
 
 export function publishDataset(): void {
   cronJobLog('Start publish job')
@@ -144,6 +194,7 @@ export function publishDataset(): void {
   })
   if (jobResult.length === 0 || allJobsAreSkipped(jobResult)) {
     completeJobLog(jobLogNode._id, `Successfully updated 0 statistics`, [])
+    delete jobs[jobLogNode._id]
   }
 }
 
@@ -212,6 +263,7 @@ function createTask(jobId: string, statistic: Content<Statistics>, releaseDate: 
         }).length === jobRefreshResult.length
         if (allComplete) {
           completeJobLog(jobId, `Successfully updated ${jobRefreshResult.length} statistics`, jobRefreshResult)
+          delete jobs[jobId]
           send({
             type: 'clearCache',
             distributed: true,
@@ -237,9 +289,17 @@ function getNextRelease(statistic: Content<Statistics>): string | null{
   if (statistic.data.statistic) {
     const statisticStatreg: StatisticInListing | undefined = getStatisticByIdFromRepo(statistic.data.statistic)
     if (statisticStatreg) {
-      const variants: Array<VariantInListing> = forceArray(statisticStatreg.variants)
-      const variant: VariantInListing = variants[0] // TODO: Multiple variants
-      return variant.nextRelease ? variant.nextRelease : null
+      return getNextReleaseStatistic(forceArray(statisticStatreg.variants))
+    }
+  }
+  return null
+}
+
+function getPreviousRelease(statistic: Content<Statistics>): string | null {
+  if (statistic.data.statistic) {
+    const statisticStatreg: StatisticInListing | undefined = getStatisticByIdFromRepo(statistic.data.statistic)
+    if (statisticStatreg) {
+      return getPreviousReleaseStatistic(forceArray(statisticStatreg.variants))
     }
   }
   return null
@@ -247,6 +307,7 @@ function getNextRelease(statistic: Content<Statistics>): string | null{
 
 export interface PublishDatasetLib {
   publishDataset: () => void;
+  currentlyWaitingForPublish: (statistic: StatisticInListing) => boolean ;
 }
 
 interface PublicationItem {

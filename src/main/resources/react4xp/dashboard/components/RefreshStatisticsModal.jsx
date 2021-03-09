@@ -3,19 +3,30 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Button, Col, Modal, Row } from 'react-bootstrap'
 import { RefreshStatisticsForm } from './RefreshStatisticsForm'
 import { RefreshStatisticsStatus } from './RefreshStatisticsStatus'
-import { refreshStatistic, resetRefreshStatus, setOpenModal, setOpenStatistic } from '../containers/Statistics/actions'
-import { selectOpenStatistic, selectModalDisplay } from '../containers/Statistics/selectors'
+import { refreshStatistic, setOpenModal, setOpenStatistic, setModal, resetModal } from '../containers/Statistics/actions'
+import { createSelectModalDisplay, selectOpenStatistic } from '../containers/Statistics/selectors'
 import { WebSocketContext } from '../utils/websocket/WebsocketProvider'
 
 
 export function RefreshStatisticsModal(props) {
-  const modalDisplay = useSelector(selectModalDisplay)
-  const openStatistic = useSelector(selectOpenStatistic)
-
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
 
+  const openStatistic = useSelector(selectOpenStatistic)
+  const selectModalDisplay = createSelectModalDisplay(openStatistic.id)
+
+
   function renderStatisticsForm() {
+    const modal = useSelector(selectModalDisplay)
+    if (!modal) {
+      const newModal = {
+        statisticId: openStatistic.id,
+        modalDisplay: 'request',
+        updateMessages: []
+      }
+      setModal(dispatch, newModal)
+    }
+
     if (openStatistic.loadingOwnersWithSources || !openStatistic.ownersWithSources) {
       return (
         <span className="spinner-border spinner-border" />
@@ -23,8 +34,8 @@ export function RefreshStatisticsModal(props) {
     }
     return (
       <React.Fragment>
-        {modalDisplay === 'request' && <RefreshStatisticsForm onSubmit={(e) => updateTables(e)} modalInfo={openStatistic}/>}
-        {modalDisplay !== 'request' && <RefreshStatisticsStatus />}
+        {modal.modalDisplay === 'request' && <RefreshStatisticsForm onSubmit={(e) => updateTables(e)} modalInfo={openStatistic}/>}
+        {modal.modalDisplay !== 'request' && <RefreshStatisticsStatus modal={modal} resetModal={handleResetModal} />}
       </React.Fragment>
     )
   }
@@ -32,11 +43,14 @@ export function RefreshStatisticsModal(props) {
   function handleClose() {
     setOpenModal(dispatch, false)
     setOpenStatistic(dispatch, io, null)
-    resetRefreshStatus(dispatch, 'request')
   }
 
   const updateTables = (owners) => {
     refreshStatistic(dispatch, io, openStatistic.id, owners)
+  }
+
+  function handleResetModal() {
+    resetModal(dispatch, openStatistic.id)
   }
 
   return (

@@ -87,7 +87,7 @@ function renderPart(req, relatedArticles) {
         }
 
         let imageSrc
-        let imageAlt = ''
+        let imageAlt = ' '
 
         if (!articleContent.x ||
             !articleContent.x['com-enonic-app-metafields'] ||
@@ -103,7 +103,7 @@ function renderPart(req, relatedArticles) {
             id: image,
             scale: 'block(320, 180)' // 16:9
           })
-          imageAlt = getImageAlt(image)
+          imageAlt = getImageAlt(image) ? getImageAlt(image) : ' '
         }
 
 

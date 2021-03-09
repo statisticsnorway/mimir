@@ -368,7 +368,8 @@ function getJobs(): Array<DashboardJobInfo> {
         startTime: jobLog.data.jobStarted,
         completionTime: jobLog.data.completionTime ? jobLog.data.completionTime : undefined,
         message: jobLog.data.message ? jobLog.data.message : '',
-        result: parseResult(jobLog)
+        result: parseResult(jobLog),
+        details: []
       })
     }
     return result
@@ -406,15 +407,18 @@ function parseResult(jobLog: JobInfoNode): Array<DashboardPublishJobResult> | Ar
     const refreshDataResult: Array<StatRegRefreshResult> = forceArray(jobLog.data.refreshDataResult || []) as Array<StatRegRefreshResult>
     return parseStatRegJobInfo(refreshDataResult)
   } else if (jobLog.data.task === JobNames.REFRESH_DATASET_JOB) {
-    const result: DatasetRefreshResult = jobLog.data.refreshDataResult as DatasetRefreshResult
-    if (!result.filterInfo) {
-      result.filterInfo = {
-        start: [],
-        end: [],
-        inRSSOrNoKey: [],
-        noData: [],
-        otherDataType: [],
-        skipped: []
+    let result: DatasetRefreshResult | undefined = jobLog.data.refreshDataResult as DatasetRefreshResult | undefined
+    if (!result || !result.filterInfo) {
+      result = {
+        filterInfo: {
+          start: [],
+          end: [],
+          inRSSOrNoKey: [],
+          noData: [],
+          otherDataType: [],
+          skipped: []
+        },
+        result: []
       }
     }
     result.filterInfo.start = forceArray(result.filterInfo.inRSSOrNoKey || [])
@@ -457,6 +461,7 @@ export interface DashboardJobInfo {
   message: string;
   result: Array<unknown> | object;
   user?: User;
+  details: Array<object>;
 }
 
 function prepDataSources(dataSources: Array<Content<DataSource>>): Array<DashboardDataSource> {
@@ -506,7 +511,8 @@ export function refreshDatasetHandler(
   ids: Array<string>,
   socketEmitter: SocketEmitter,
   processXmls?: Array<ProcessXml>,
-  feedbackEventName?: string
+  feedbackEventName?: string,
+  relatedStatisticsId?: string,
 ): Array<RefreshDatasetResult> {
   // tell all dashboard instances that these are going to be loaded
   ids.forEach((id) => {
@@ -527,7 +533,8 @@ export function refreshDatasetHandler(
         datasourceKey: dataSourceKey,
         status: `Henter data for ${dataSource.displayName}`,
         step: 1,
-        tableIndex: index
+        tableIndex: index,
+        relatedStatisticsId: relatedStatisticsId ? relatedStatisticsId : undefined
       })
 
       // only get credentials for this datasourceKey (in this case a tbml id)
@@ -676,7 +683,8 @@ export interface DashboardDatasetLib {
     ids: Array<string>,
     socketEmitter: SocketEmitter,
     processXml?: Array<ProcessXml>,
-    feedbackEventName?: string
+    feedbackEventName?: string,
+    relatedStatisticsId?: string,
   ) => Array<RefreshDatasetResult>;
 }
 

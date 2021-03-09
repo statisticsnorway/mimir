@@ -43,7 +43,7 @@ function renderPart(req) {
   const model = {
     ...imgSrcSet,
     pageDisplayName: page.displayName,
-    bannerImageAltText: getImageAlt(part.config.image),
+    bannerImageAltText: getImageAlt(part.config.image) ? getImageAlt(part.config.image) : ' ',
     bannerImage: part.config.image ? imageUrl({
       id: part.config.image,
       scale: 'block(350,100)'
