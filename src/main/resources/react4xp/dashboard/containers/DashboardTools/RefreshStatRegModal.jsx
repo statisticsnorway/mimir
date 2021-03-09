@@ -31,13 +31,7 @@ export function RefreshStatRegModal(props) {
     })
   }
 
-  let statRegName
-  if (displayName === 'statistikk') {
-    statRegName = 'statistikker'
-  } else {
-    statRegName = displayName
-  }
-
+  const statRegName = displayName === 'statistikk' ? 'statistikker' : displayName
   function renderMessage() {
     if (loading) {
       return <span className="spinner-border spinner-border-sm" />
