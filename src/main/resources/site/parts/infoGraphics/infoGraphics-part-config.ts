@@ -20,7 +20,9 @@ export interface InfoGraphicsPartConfig {
   longDesc?: string;
 
   /**
-   * Kildelenke
+   * 
+   * 				Kilder
+   * 			
    */
   sources?: {
     /**
@@ -29,31 +31,43 @@ export interface InfoGraphicsPartConfig {
     _selected: string;
 
     /**
-     * Url lenke
+     * 
+     * 						Kilde fra url
+     * 					
      */
     urlSource?: {
       /**
-       * Tekst til kildelenke
+       * 
+       * 								Tekst til kildelenke
+       * 							
        */
       urlText: string;
 
       /**
-       * Kildelenke
+       * 
+       * 								Kildelenke
+       * 							
        */
       url: string;
     };
 
     /**
-     * Lenke til internt innhold
+     * 
+     * 						Kilde fra XP
+     * 					
      */
     relatedSource?: {
       /**
-       * Tekst til kildelenke
+       * 
+       * 								Tekst til kildelenke
+       * 							
        */
       urlText?: string;
 
       /**
-       * Relatert innhold
+       * 
+       * 								Relatert innhold
+       * 							
        */
       sourceSelector?: string;
     };

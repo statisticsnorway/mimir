@@ -29,7 +29,7 @@ class RelatedBoxes extends React.Component {
             <PictureCard
               className={`mb-3 ${index > 3 && this.state.isHidden ? 'd-none' : ''}`}
               imageSrc={relatedRelatedContent.image}
-              altText={relatedRelatedContent.imageAlt ? relatedRelatedContent.imageAlt : ''}
+              altText={relatedRelatedContent.imageAlt ? relatedRelatedContent.imageAlt : ' '}
               link={relatedRelatedContent.link}
               type={relatedRelatedContent.type ? relatedRelatedContent.type : undefined}
               title={relatedRelatedContent.title}

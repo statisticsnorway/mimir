@@ -63,7 +63,7 @@ function renderPart(req) {
 
   const model = {
     title: part.config.title,
-    altText: imageData.data.altText ? imageData.data.altText : imageData.data.caption,
+    altText: imageData.data.altText ? imageData.data.altText : imageData.data.caption ? imageData.data.caption : ' ',
     image: part.config.image,
     imageSrc: imageSrc,
     footnote: part.config.footNote,

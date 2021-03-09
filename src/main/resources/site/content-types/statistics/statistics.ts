@@ -1,56 +1,8 @@
 export interface Statistics {
   /**
-   * Tabell
-   */
-  mainTable?: string;
-
-  /**
-   * Vedleggstabell eller figur
-   */
-  attachmentTablesFigures?: Array<string>;
-
-  /**
-   * Fritekstfelt
-   */
-  freeTextAttachmentTablesFigures?: string;
-
-  /**
-   * Om Statistikken
-   */
-  aboutTheStatistics?: string;
-
-  /**
-   * Nøkkeltall
-   */
-  statisticsKeyFigure?: string;
-
-  /**
-   * Antall tabeller i statbank
-   */
-  linkNumber?: string;
-
-  /**
-   * Statbank lenker
-   */
-  statbankLinkItemSet?: Array<{
-    /**
-     * Lenketekst
-     */
-    urlText: string;
-
-    /**
-     * URL
-     */
-    url: string;
-  }>;
-
-  /**
-   * Stikkord
-   */
-  keywords?: string;
-
-  /**
-   * Endringsdato
+   * 
+   * 						Endringsdato
+   * 					
    */
   showModifiedDate?: {
     /**
@@ -59,20 +11,96 @@ export interface Statistics {
     _selected: string;
 
     /**
-     * Endringsmelding
+     * 
+     * 								Endringsmelding
+     * 							
      */
     modifiedOption?: {
       /**
-       * Dato og tid
+       * 
+       * 										Dato og tid
+       * 									
        */
       lastModified?: string;
 
       /**
-       * Endringstekst
+       * 
+       * 										Endringstekst
+       * 									
        */
       modifiedText?: string;
     };
   };
+
+  /**
+   * 
+   * 						Tabell
+   * 					
+   */
+  mainTable?: string;
+
+  /**
+   * 
+   * 						Vedleggstabell eller figur
+   * 					
+   */
+  attachmentTablesFigures?: Array<string>;
+
+  /**
+   * 
+   * 						Fritekstfelt
+   * 					
+   */
+  freeTextAttachmentTablesFigures?: string;
+
+  /**
+   * 
+   * 						Om Statistikken
+   * 					
+   */
+  aboutTheStatistics?: string;
+
+  /**
+   * 
+   * 						Nøkkeltall
+   * 					
+   */
+  statisticsKeyFigure?: string;
+
+  /**
+   * 
+   * 						Antall tabeller i statbank
+   * 					
+   */
+  linkNumber?: string;
+
+  /**
+   * 
+   * 						Lenker til tabeller i statistikkbanken
+   * 					
+   */
+  statbankLinkItemSet?: Array<{
+    /**
+     * 
+     * 								Lenketekst
+     * 							
+     */
+    urlText: string;
+
+    /**
+     * 
+     * 								URL
+     * 							
+     */
+    url: string;
+  }>;
+
+  /**
+   * 
+   * 						Stikkord
+   * 					
+   */
+  keywords?: string;
 
   /**
    * Statistikk
@@ -117,22 +145,30 @@ export interface Statistics {
   };
 
   /**
-   * Relaterte eksterne lenker
+   * 
+   * 						Relaterte eksterne lenker
+   * 					
    */
   relatedExternalLinkItemSet?: Array<{
     /**
-     * Lenketekst
+     * 
+     * 								Lenketekst
+     * 							
      */
     urlText: string;
 
     /**
-     * URL
+     * 
+     * 								URL
+     * 							
      */
     url: string;
   }>;
 
   /**
-   * Relatert artikkel
+   * 
+   * 						Relatert artikkel
+   * 					
    */
   relatedArticles?: {
     /**
@@ -141,46 +177,64 @@ export interface Statistics {
     _selected: string;
 
     /**
-     * Artikkel
+     * 
+     * 								Artikkel
+     * 							
      */
     article?: {
       /**
-       * Artikkel
+       * 
+       * 										Artikkel fra XP
+       * 									
        */
       article: string;
     };
 
     /**
-     * Artikkel fra CMS
+     * 
+     * 								Artikkel fra 4.7-CMS
+     * 							
      */
     externalArticle?: {
       /**
-       * URL
+       * 
+       * 										URL
+       * 									
        */
       url: string;
 
       /**
-       * Tittel
+       * 
+       * 										Tittel
+       * 									
        */
       title: string;
 
       /**
-       * Type
+       * 
+       * 										Type
+       * 									
        */
       type?: string;
 
       /**
-       * Dato
+       * 
+       * 										Dato
+       * 									
        */
       date?: string;
 
       /**
-       * Ingress
+       * 
+       * 										Ingress
+       * 									
        */
       preface: string;
 
       /**
-       * Bilde
+       * 
+       * 										Bilde
+       * 									
        */
       image: string;
     };

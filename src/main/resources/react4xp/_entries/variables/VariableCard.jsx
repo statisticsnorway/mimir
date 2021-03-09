@@ -12,7 +12,7 @@ const VariableCard = ({
   return (
     <Card
       {...rest}
-      icon={icon ? <img src={icon} alt={variable.title} /> : null}
+      icon={icon ? <img src={icon} alt={variable.title ? variable.title : ' '} /> : null}
     >
       <Text><Interweave content={description} /></Text>
     </Card>
