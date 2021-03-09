@@ -6,9 +6,8 @@ export const initialState = {
   loading: true,
   loadingSearchList: true,
   openStatistic: null,
-  modalDisplay: 'request',
-  updateMessage: [],
-  openModal: false
+  openModal: false,
+  modals: []
 }
 
 const statisticsSlice = createSlice({
@@ -25,8 +24,9 @@ const statisticsSlice = createSlice({
     },
     startRefreshStatistic(state, action) {
       const stat = state.statistics.find((s) => s.id === action.id)
+      const modal = state.modals.find((s) => s.statisticId === action.id)
       stat.loading = true
-      state.modalDisplay = 'loading'
+      modal.modalDisplay = 'loading'
     },
     resultRefreshStatistic(state, action) {
       const stat = state.statistics.find((s) => s.id === action.statistic.id)
@@ -56,21 +56,43 @@ const statisticsSlice = createSlice({
       }
     },
     setRefreshStatisticStatus(state, action) {
-      if (action.data.step === 1) {
-        state.updateMessage[action.data.tableIndex] = action.data
-      } else {
-        state.updateMessage[action.data.tableIndex].result = action.data.status
+      const modal = state.modals.find((modal) => modal.statisticId === action.data.relatedStatisticsId)
+      if (modal) {
+        if (action.data.step === 1) {
+          modal.updateMessages[action.data.tableIndex] = action.data
+        } else {
+          modal.updateMessages[action.data.tableIndex].result = action.data.status
+        }
       }
     },
     resetRefreshStatus(state, action) {
       state.modalDisplay = action.status
-      state.updateMessage = []
+      state.updateMessages = []
+    },
+    resetModal(state, action) {
+      const modal = state.modals.find((modal) => modal.statisticId === action.id)
+      if (modal) {
+        modal.updateMessages = []
+        modal.modalDisplay = 'request'
+      }
     },
     setOpenModal(state, action) {
       state.openModal = action.status
     },
+    setModal(state, action) {
+      const modal = state.modals.find((modal) => modal.statisticId === action.modal.statisticId)
+      if (!!modal) {
+        modal.openModal = action.modal.openModal
+        modal.modalDisplay = action.setModalDisplay
+      } else {
+        state.modals.push(action.modal)
+      }
+    },
     setModalDisplay(state, action) {
-      state.modalDisplay = action.status
+      const modal = state.modals.find((modal) => modal.statisticId === action.data.id)
+      if (modal) {
+        modal.modalDisplay = action.data.status
+      }
     },
     loadStatisticsSearchList(state) {
       state.loadingSearchList = true

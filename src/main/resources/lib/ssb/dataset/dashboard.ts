@@ -509,7 +509,8 @@ export function refreshDatasetHandler(
   ids: Array<string>,
   socketEmitter: SocketEmitter,
   processXmls?: Array<ProcessXml>,
-  feedbackEventName?: string
+  feedbackEventName?: string,
+  relatedStatisticsId?: string,
 ): Array<RefreshDatasetResult> {
   // tell all dashboard instances that these are going to be loaded
   ids.forEach((id) => {
@@ -530,7 +531,8 @@ export function refreshDatasetHandler(
         datasourceKey: dataSourceKey,
         status: `Henter data for ${dataSource.displayName}`,
         step: 1,
-        tableIndex: index
+        tableIndex: index,
+        relatedStatisticsId: relatedStatisticsId ? relatedStatisticsId : undefined
       })
 
       // only get credentials for this datasourceKey (in this case a tbml id)
@@ -679,7 +681,8 @@ export interface DashboardDatasetLib {
     ids: Array<string>,
     socketEmitter: SocketEmitter,
     processXml?: Array<ProcessXml>,
-    feedbackEventName?: string
+    feedbackEventName?: string,
+    relatedStatisticsId?: string,
   ) => Array<RefreshDatasetResult>;
 }
 

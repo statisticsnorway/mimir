@@ -123,7 +123,9 @@ export function Statistics() {
         <td>
           {getNextRelease(statistic)}
         </td>
-        <td className="text-center">{statistic.nextRelease ? makeRefreshButton(statistic) : ''}</td>
+        <td className="text-center">
+          {statistic.nextRelease ? makeRefreshButton(statistic) : ''}
+        </td>
         <td>
           {statistic.logData ? <StatisticsLog statistic={statistic}/> : null}
         </td>
