@@ -5,6 +5,7 @@ import { Button, Modal } from 'react-bootstrap'
 import { selectStatRegStatus } from '../StatRegDashboard/selectors'
 import { requestStatRegEventLogData } from '../StatRegDashboard/actions'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
+import { AlertTriangle } from 'react-feather'
 
 export function RefreshStatRegModal(props) {
   const io = useContext(WebSocketContext)
@@ -13,14 +14,13 @@ export function RefreshStatRegModal(props) {
   const statReg = useSelector(selectStatRegStatus(props.statRegKey))
   const {
     displayName,
-    eventLogNodes,
     logData,
+    eventLogNodes,
     loading
   } = statReg
 
   function renderJobLogs() {
     requestStatRegEventLogData(dispatch, io, props.statRegKey)
-
     return eventLogNodes.map((logNode, index) => {
       return (
         <p key={index}>
@@ -43,9 +43,11 @@ export function RefreshStatRegModal(props) {
       if (logData.showWarningIcon) {
         return (
           <div>
-            <span>
-              Noe gikk galt med oppdatering av {statRegName}. Her er jobbloggen:
-            </span>
+            {logData.message ? logData.message : ''}
+            <span className="warningIcon"><AlertTriangle size="12" color="#FF4500"/></span><br/>
+            {logData.modifiedReadable ? logData.modifiedReadable : ''}<br/>
+            {logData.modified ? logData.modified : ''}<br/>
+            {logData.by && logData.by.displayName ? `av ${logData.by.displayName}` : '' }
             <div className="mt-4">
               {renderJobLogs()}
             </div>
@@ -53,7 +55,12 @@ export function RefreshStatRegModal(props) {
         )
       }
       return (
-        <p>{statRegName.charAt(0).toUpperCase() + statRegName.slice(1)} ble oppdatert uten feil.</p>
+        <p>
+          {logData.message ? logData.message : ''}<br/>
+          {logData.modifiedReadable ? logData.modifiedReadable : ''}<br/>
+          {logData.modified ? logData.modified : ''}<br/>
+          {logData.by && logData.by.displayName ? `av ${logData.by.displayName}` : '' }
+        </p>
       )
     }
     return <span className="spinner-border spinner-border-sm" />
