@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
+import moment from 'moment/min/moment-with-locales'
 
 export function ServerTime(props) {
   const {
@@ -12,24 +13,15 @@ export function ServerTime(props) {
   useEffect((prevProps, prevState) => {
     if (serverTime && serverTimeReceived) {
       const timeInterval = setInterval(() => {
-        setCurrentServerTime(serverTime + (Date.now() - new Date(serverTimeReceived)))
+        setCurrentServerTime(moment.parseZone(serverTime).add(Date.now() - new Date(serverTimeReceived), 'ms').format('HH.mm.ss'))
       }, 1000)
       return () => clearInterval(timeInterval)
     }
   }, [props.serverTime, props.serverTimeReceived])
 
-  function appendZero(num) {
-    if (num < 10) return `0${num}`
-    return `${num}`
-  }
-
   function renderServerTime() {
     if (currentServerTime) {
-      const t = new Date(currentServerTime)
-      const hour = appendZero(t.getHours())
-      const minute = appendZero(t.getMinutes())
-      const second = appendZero(t.getSeconds())
-      return <span>{hour}:{minute}:{second}</span>
+      return <span>{currentServerTime}</span>
     }
     return <span className="spinner-border spinner-border-sm my-1" />
   }
