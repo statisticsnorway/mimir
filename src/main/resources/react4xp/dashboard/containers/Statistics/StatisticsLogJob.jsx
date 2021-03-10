@@ -18,9 +18,7 @@ export function StatisticsLogJob(props) {
   function onToggleAccordion(isOpen) {
     if (firstOpen && isOpen ) {
       setFirstOpen(false)
-      if (logData.status === 'COMPLETE') {
-        requestJobLogDetails(dispatch, io, props.jobId, props.statisticId)
-      }
+      requestJobLogDetails(dispatch, io, props.jobId, props.statisticId)
     }
     props.setAccordionStatusOnIndex(props.index, isOpen)
   }
