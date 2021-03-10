@@ -33,7 +33,7 @@ const renderPart = (req) => {
     bannerImageAltText: getImageAlt(part.config.image),
     bannerImage: part.config.image ? imageUrl({
       id: part.config.image,
-      scale: 'block(120,80)'
+      scale: 'block(86,86)'
     }) : undefined
   }
 
