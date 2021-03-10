@@ -18,7 +18,7 @@ import { requestStatuses } from '../dashboard/containers/StatRegDashboard/action
 import { requestStatistics, requestStatisticsSearchList } from '../dashboard/containers/Statistics/actions'
 import { actions as commonActions } from '../dashboard/containers/HomePage/slice'
 import PropTypes from 'prop-types'
-import { setUserServerSide } from '../dashboard/containers/HomePage/actions'
+import { setUserServerSide, requestServerTime } from '../dashboard/containers/HomePage/actions'
 import { requestJobs } from '../dashboard/containers/Jobs/actions'
 
 function Dashboard(props) {
@@ -88,6 +88,7 @@ function DashboardRouter(props) {
   if (props.dashboardOptionsForUser.dashboardTools) requestStatisticsSearchList(dispatch, io)
   if (props.dashboardOptionsForUser.statisticRegister) requestStatuses(dispatch, io)
   if (props.dashboardOptionsForUser.jobLogs) requestJobs(dispatch, io)
+  requestServerTime(dispatch, io)
   return (
     <BrowserRouter>
       <Helmet

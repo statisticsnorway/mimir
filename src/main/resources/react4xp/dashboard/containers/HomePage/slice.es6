@@ -8,7 +8,9 @@ export const initialState = {
   contentStudioBaseUrl: '',
   dataToolBoxBaseUrl: '',
   internalBaseUrl: '',
-  internalStatbankUrl: ''
+  internalStatbankUrl: '',
+  serverTime: undefined,
+  serverTimeReceived: undefined
 }
 
 const commonSlice = createSlice({
@@ -44,6 +46,10 @@ const commonSlice = createSlice({
     },
     stopLoadingClearCache(state) {
       state.loadingClearCache = false
+    },
+    serverTimeLoaded(state, action) {
+      state.serverTime = action.serverTime
+      state.serverTimeReceived = Date.now()
     }
   }
 })

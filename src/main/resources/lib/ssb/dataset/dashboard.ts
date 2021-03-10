@@ -216,6 +216,10 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
       }
     })
   })
+
+  socket.on('dashboard-server-time', () => {
+    socket.emit('dashboard-server-time-result', new Date().toISOString())
+  })
 }
 
 function getDataSourcesWithError(): Array<DashboardDataSource> {

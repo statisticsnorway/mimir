@@ -92,25 +92,34 @@
     }
   }
 
-  .connected-wrapper, .disconnected-wrapper {
-    display: block;
+  .dashboard-info {
     float: right;
     margin-top: -65px;
-    padding-top: $spacer * 0.5;
-    padding-left: $spacer * 1;
-    padding-bottom: $spacer * 0.5;
-    padding-right: $spacer * 1;
-    color: $ssb-white;
     font-size: 0.8em;
     font-weight: bold;
+    & > * {
+      padding-top: $spacer * 0.5;
+      padding-left: $spacer * 1;
+      padding-bottom: $spacer * 0.5;
+      padding-right: $spacer * 1;
+      min-height: 40px;
+    }
   }
 
   .connected-wrapper {
     background-color: $ssb-blue-3;
+    color: $ssb-white;
   }
 
   .disconnected-wrapper {
     background-color: $ssb-red-3;
+    color: $ssb-white;
+  }
+
+  .server-time {
+    background-color: $ssb-white;
+    border: 1px solid $ssb-dark-6;
+    margin-right: 1rem;
   }
 
   .tables-wrapper {
@@ -157,8 +166,7 @@
   }
 
   .nav {
-    border-bottom: 2px solid $ssb-green-5;
-
+    border-bottom: none;
     .nav-link {
       color: black;
       background: $ssb-green-1;
