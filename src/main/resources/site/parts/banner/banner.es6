@@ -68,12 +68,14 @@ function renderPart(req) {
  * @return {string}
  */
 function imageSrcSet(imageId) {
-  const widths = ['2000', '1500', '1260', '800', '650']
+  const widths = ['3840', '2560', '2000', '1500', '1260', '800', '650']
   const srcset = widths.map( (width) => `${imageUrl({
     id: imageId,
     scale: `block(${width}, 272)`
   })} ${width}w`).join(', ')
-  const sizes = `(min-width: 1501px) 2000px,
+  const sizes = `(min-width: 2561px) 3840px,
+                 (min-width: 2001px) and (max-width: 2560px) 2560px,
+                 (min-width: 1501px) and (max-width: 2000px) 2000px,
                  ((min-width: 1261px) and (max-width: 1500px)) 1500px, 
                  ((min-width: 801px) and (max-width: 1261px)) 1260px, 
                  ((min-width: 651px) and (max-width: 800px)) 800px, 650px`
