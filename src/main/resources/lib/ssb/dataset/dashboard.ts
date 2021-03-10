@@ -569,7 +569,8 @@ export function refreshDatasetHandler(
             key: refreshDatasetResult.status
           }),
         step: 2,
-        tableIndex: index
+        tableIndex: index,
+        relatedStatisticsId: relatedStatisticsId ? relatedStatisticsId : undefined
       })
 
       socketEmitter.broadcast('dashboard-activity-refreshDataset-result', transfromQueryResult(refreshDatasetResult))
@@ -582,7 +583,8 @@ export function refreshDatasetHandler(
       feedbackEventName && socketEmitter.broadcast(feedbackEventName, {
         status: `Fant ingen innhold med id ${id}`,
         step: 1,
-        tableIndex: index
+        tableIndex: index,
+        relatedStatisticsId: relatedStatisticsId ? relatedStatisticsId : undefined
       })
 
       socketEmitter.broadcast('dashboard-activity-refreshDataset-result', {
