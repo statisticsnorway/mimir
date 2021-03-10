@@ -86,7 +86,7 @@ const parseStatbankBoxContent = (page, part, phrases) => {
   } else if (shortName) {
     href = `${STATBANKWEB_URL}/list/${shortName}`
   } else {
-    href = STATBANKWEB_URL
+    href = `${STATBANKWEB_URL}/`
   }
 
   if (!overrideUrl && page.language === 'en') {
@@ -95,7 +95,7 @@ const parseStatbankBoxContent = (page, part, phrases) => {
 
   return {
     title,
-    href,
+    href: href,
     icon: assetUrl({
       path: 'SSB_ikon_statbank.svg'
     }),
