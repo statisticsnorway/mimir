@@ -122,6 +122,11 @@ export function parseKeyFigure(
     } else if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
       const tbmlData: TbmlDataUniform = data as TbmlDataUniform
       if (tbmlData !== null && tbmlData.tbml.presentation) getDataTbProcessor(keyFigureViewData, tbmlData, keyFigure)
+
+      // Logging Mocked keyFigure
+      if (dataSource?.tbprocessor?.urlOrId === '-1' && branch === 'master') {
+        log.info('MIMIR mocked Keyfigure, value:' + keyFigureViewData.number)
+      }
     }
     return keyFigureViewData
   } else if (keyFigure.data.manualSource) {
