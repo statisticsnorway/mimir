@@ -16,9 +16,11 @@ export function StatisticsLogJob(props) {
   const logData = useSelector(selectJobLog(props.statisticId, props.jobId))
 
   function onToggleAccordion(isOpen) {
-    if (firstOpen && isOpen) {
+    if (firstOpen && isOpen ) {
       setFirstOpen(false)
-      requestJobLogDetails(dispatch, io, props.jobId, props.statisticId)
+      if (logData.status === 'COMPLETE') {
+        requestJobLogDetails(dispatch, io, props.jobId, props.statisticId)
+      }
     }
     props.setAccordionStatusOnIndex(props.index, isOpen)
   }
@@ -65,7 +67,7 @@ export function StatisticsLogJob(props) {
     <Accordion
       key={props.jobId}
       className={logData.status}
-      header={`${formatTime(logData.completionTime)}: ${logData.task} (${logData.status})`}
+      header={`${formatTime(logData.started)}: ${logData.task} (${logData.status})`}
       onToggle={(isOpen) => onToggleAccordion(isOpen)}
       openByDefault={props.accordionOpenStatus}
     >
