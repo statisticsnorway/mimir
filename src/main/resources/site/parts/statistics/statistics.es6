@@ -19,13 +19,19 @@ const {
 const {
   hasWritePermissionsAndPreview
 } = __non_webpack_require__('/lib/ssb/permissions')
-
-const React4xp = require('/lib/enonic/react4xp')
-const moment = require('moment/min/moment-with-locales')
+const {
+  sleep
+} = __non_webpack_require__('/lib/xp/task')
+const {
+  currentlyWaitingForPublish
+} = __non_webpack_require__('/lib/ssb/dataset/publish')
 const util = __non_webpack_require__('/lib/util')
 const {
   getPreviousReleaseStatistic, getNextReleaseStatistic
 } = __non_webpack_require__('/lib/ssb/utils')
+
+const React4xp = require('/lib/enonic/react4xp')
+const moment = require('moment/min/moment-with-locales')
 const view = resolve('./statistics.html')
 
 exports.get = (req) => {
@@ -43,6 +49,16 @@ const renderPart = (req) => {
   const phrases = getPhrases(page)
   moment.locale(page.language ? page.language : 'nb')
   const statistic = page.data.statistic && getStatisticByIdFromRepo(page.data.statistic)
+  const wait = app.config && app.config['ssb.statistics.publishWait'] ? parseInt(app.config['ssb.statistics.publishWait']) : 100
+  const maxWait = app.config && app.config['ssb.statistics.publishMaxWait'] ? parseInt(app.config['ssb.statistics.publishMaxWait']) : 10000
+  let waitedFor = 0
+  while (currentlyWaitingForPublish(page) && waitedFor < maxWait) {
+    waitedFor += wait
+    sleep(wait)
+  }
+  if (waitedFor >= maxWait) {
+    log.warn(`waited for more than ${maxWait}ms on publish for ${page.data.statistic}`)
+  }
   let title = page.displayName
   const updated = phrases.updated + ': '
   const nextUpdate = phrases.nextUpdate + ': '
@@ -122,12 +138,12 @@ const renderPart = (req) => {
   if (changeDate) {
     body = modifiedDateComponent.renderBody({
       body,
-      clientRender: true
+      clientRender: req.mode !== 'edit'
     })
 
     pageContributions = modifiedDateComponent.renderPageContributions({
       pageContributions,
-      clientRender: true
+      clientRender: req.mode !== 'edit'
     })
   }
 

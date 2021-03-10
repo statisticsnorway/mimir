@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectInternalBaseUrl, selectInternalStatbankUrl, selectLoadingClearCache } from '../HomePage/selectors'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
-import { requestClearCache } from '../HomePage/actions.es6'
+import { requestClearCache } from '../HomePage/actions'
 import { RefreshCw, Trash } from 'react-feather'
 import { Col, Container, Row } from 'react-bootstrap'
 import { Button, Dropdown, Input } from '@statisticsnorway/ssb-component-library'
@@ -10,7 +10,8 @@ import { selectSearchList, selectLoadingSearchList, selectHasLoadingStatistic } 
 import { setOpenStatistic, setOpenModal } from '../Statistics/actions'
 import { startRefresh } from '../StatRegDashboard/actions'
 import { selectStatuses } from '../StatRegDashboard/selectors'
-import { selectStatistics } from '../Statistics/selectors.es6'
+import { selectStatistics } from '../Statistics/selectors'
+import { RefreshStatRegModal } from './RefreshStatRegModal'
 
 export function DashboardTools() {
   const loadingCache = useSelector(selectLoadingClearCache)
@@ -25,11 +26,16 @@ export function DashboardTools() {
   const internalBaseUrl = useSelector(selectInternalBaseUrl)
   const internalStatbankUrl = useSelector(selectInternalStatbankUrl)
 
+  const [selectedStatRegKey, setSelectStatRegKey] = useState(null)
+  const [modalShow, setModalShow] = useState(false)
+
   function refreshStatReg(key) {
     startRefresh(dispatch, io, [key])
+    setSelectStatRegKey(key)
+    setModalShow(true)
   }
 
-  function makeRefreshButton(statRegStatus) {
+  function makeStatRegRefreshOptions(statRegStatus) {
     let statRegName
     if (statRegStatus.displayName === 'statistikk') {
       statRegName = 'statistikker'
@@ -210,11 +216,12 @@ export function DashboardTools() {
           return (
             <Row className="mb-4" key={index}>
               <Col>
-                {makeRefreshButton(statRegStatus)}
+                {makeStatRegRefreshOptions(statRegStatus)}
               </Col>
             </Row>
           )
         })}
+        {modalShow && <RefreshStatRegModal statRegKey={selectedStatRegKey} handleClose={() => setModalShow(false)} />}
         <Row className="mb-5">
           {renderTbmlDefinitionsStatbankTable()}
         </Row>

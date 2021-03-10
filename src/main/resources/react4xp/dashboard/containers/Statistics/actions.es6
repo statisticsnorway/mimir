@@ -62,6 +62,21 @@ export function setOpenModal(dispatch, status) {
   })
 }
 
+export function setModal(dispatch, modal) {
+  dispatch({
+    type: actions.setModal.type,
+    modal
+  })
+}
+
+export function resetModal(dispatch, id) {
+  dispatch({
+    type: actions.resetModal.type,
+    id
+  })
+}
+
+
 export function fetchOwnersWithSources(dispatch, io, id, dataSourceIds) {
   dispatch({
     type: actions.loadStatisticsOwnersWithSources.type,
@@ -82,5 +97,18 @@ export function fetchRelatedTablesAndOwnersWithSources(dispatch, io, id) {
 
   io.emit('get-statistics-related-tables-and-owners-with-sources', {
     id
+  })
+}
+
+export function requestStatisticsJobLog(dispatch, io, id) {
+  io.emit('get-statistics-job-log', {
+    id
+  })
+}
+
+export function requestJobLogDetails(dispatch, io, jobLogId, statisticId) {
+  io.emit('get-statistic-job-log-details', {
+    id: jobLogId,
+    statisticId
   })
 }

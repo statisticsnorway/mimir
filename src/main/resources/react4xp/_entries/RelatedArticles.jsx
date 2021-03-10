@@ -76,7 +76,7 @@ class RelatedArticles extends React.Component {
                 image={
                   <img
                     src={article.imageSrc}
-                    alt={article.imageAlt} />
+                    alt={article.imageAlt ? article.imageAlt : ' '} />
                 }
                 href={article.href}
                 subTitle={article.subTitle}

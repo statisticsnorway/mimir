@@ -123,9 +123,11 @@ export function Jobs() {
       const errorCount = job.result.result.filter((ds) => ds.hasError).length
       const ignoreCount = job.result.filterInfo && job.result.filterInfo.skipped && job.result.filterInfo.skipped.length
       return (
-        <span className="modal-trigger" onClick={() => openJobLogModal(job)}>
-          {job.status} - Oppdaterte {count - errorCount} spørringer, {errorCount} feilet, og {ignoreCount} ignorert
-        </span>
+        job.status !== 'STARTED' ?
+          <span className="modal-trigger" onClick={() => openJobLogModal(job)}>
+            {job.status} - Oppdaterte {count - errorCount} spørringer, {errorCount} feilet, og {ignoreCount} ignorert
+          </span> :
+          <span>{job.status}</span>
       )
     }
     return <span>{job.status} - {job.message}</span>

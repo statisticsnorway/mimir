@@ -87,12 +87,12 @@ exports.handle404 = function(err) {
   const thymeleafRender = render(fourOFourView, model)
   const body = searchComponent.renderBody({
     body: thymeleafRender,
-    clientRender: true
+    clientRender: err.request.mode !== 'edit'
   })
 
   const pageContributions = searchComponent.renderPageContributions({
     pageContributions,
-    clientRender: true
+    clientRender: err.request.mode !== 'edit'
   })
 
   return {

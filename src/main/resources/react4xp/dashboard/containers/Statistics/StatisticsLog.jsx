@@ -1,32 +1,54 @@
 import React, { useContext, useState } from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { Button, Modal } from 'react-bootstrap'
-import { requestEventLogData } from '../DataSources/actions'
-import { Accordion } from '@statisticsnorway/ssb-component-library'
+import { requestStatisticsJobLog } from './actions'
 import moment from 'moment/min/moment-with-locales'
 import { groupBy } from 'ramda'
+import { StatisticsLogJob } from './StatisticsLogJob'
+import { selectStatisticsLogDataLoaded, selectStatistic } from './selectors'
 
 export function StatisticsLog(props) {
   const {
-    statistic
+    statisticId
   } = props
 
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
   const [show, setShow] = useState(false)
+  const [firstOpen, setFirstOpen] = useState(true)
+  const [accordionOpenStatus, setAccordionOpenStatus] = useState([])
+  const [nestedAccordionStatus, setNestedAccordionStatus] = useState([])
+  const statistic = useSelector(selectStatistic(statisticId))
+  const logsLoaded = useSelector(selectStatisticsLogDataLoaded(statistic.id))
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
   const openEventlog = () => {
-    return
-    dataQueries.map((dataQuery) => requestEventLogData(dispatch, io, dataQuery.id))
+    if (firstOpen) {
+      requestStatisticsJobLog(dispatch, io, statistic.id)
+      setFirstOpen(false)
+    }
     setShow(handleShow)
   }
 
+  function setAccordionStatusOnIndex(index, status) {
+    const tmp = accordionOpenStatus
+    tmp[index] = status
+    setAccordionOpenStatus(tmp)
+  }
+
+  function setNestedAccordionWithIndexes(logIndex, detailIndex, status) {
+    const logs = nestedAccordionStatus
+    const details = logs[logIndex] ? logs[logIndex] : []
+    details[detailIndex] = status
+    logs[logIndex] = details
+    setNestedAccordionStatus(logs)
+  }
+
   function renderLogData() {
-    if (statistic.logData.length > 0) {
+    if (statistic && statistic.logData && statistic.logData.length > 0) {
       const log = statistic.logData[0]
       const groupedDataSourceLogs = groupBy((log) => {
         return log.status
@@ -59,46 +81,49 @@ export function StatisticsLog(props) {
     )
   }
 
-  function renderJobLogs() {
-    return dataQueries.map((dataQuery, index) => {
+  function renderModalBody() {
+    if (logsLoaded) {
       return (
-        <Accordion
-          key={index}
-          className={dataQuery.logData && dataQuery.logData.showWarningIcon ? 'warning' : ''}
-          header={dataQuery.displayName}
-          subHeader={relatedTables[index].tbmlId}>
-          {dataQuery.loadingLogs ?
-            (<span className="spinner-border spinner-border" />) :
-            (dataQuery.eventLogNodes.map((logNode, index) => {
-              return (
-                <p key={index}>
-                  <span>{logNode.modifiedTs}</span> - <span>{logNode.by}</span><br/>
-                  <span> &gt; {logNode.result}</span>
-                </p>
-              )
-            }))
-          }
-        </Accordion>
+        statistic.logData.map((log, index) => {
+          return (
+            <StatisticsLogJob
+              key={index}
+              index={index}
+              statisticId={statistic.id}
+              jobId={statistic.logData[index].id}
+              accordionOpenStatus={!!accordionOpenStatus[index]}
+              setAccordionStatusOnIndex={setAccordionStatusOnIndex}
+              nestedAccordionStatus={nestedAccordionStatus[index]}
+              setNestedAccordionWithIndexes={setNestedAccordionWithIndexes}
+            />
+          )
+        })
       )
     }
+
+    return (
+      <span className="spinner-border spinner-border" />
     )
   }
+
 
   const ModalContent = () => {
     return (
       <Modal
+        size="lg"
         show={show}
         onHide={handleClose}
         animation={false}
       >
         <Modal.Header closeButton>
           <Modal.Title>
-            Logg detaljer
+            {statistic.name}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <h3>{statisticsShortName}</h3>
-          {renderJobLogs()}
+          <h3>Logg detaljer</h3>
+          {renderModalBody()}
+          {/* <StatisticsLogJob selectStatistic={getStatisticSelector} /> */}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>Lukk</Button>
@@ -113,5 +138,5 @@ export function StatisticsLog(props) {
 }
 
 StatisticsLog.propTypes = {
-  statistic: PropTypes.object
+  statisticId: PropTypes.string
 }

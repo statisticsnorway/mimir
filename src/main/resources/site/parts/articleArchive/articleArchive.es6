@@ -49,7 +49,7 @@ const renderPart = (req) => {
     id: page.data.image,
     scale: 'block(1180, 275)'
   }) : undefined
-  const imageAltText = page.data.image ? getImageAlt(page.data.image) : ''
+  const imageAltText = getImageAlt(page.data.image) ? getImageAlt(page.data.image) : ' '
 
   const listOfArticles = parseArticleData(page._id, phrases)
   const listOfArticlesObj = new React4xp('ListOfArticles')
@@ -79,10 +79,6 @@ const renderPart = (req) => {
     issnNumber
   }
 
-  const isOutsideContentStudio = (
-    req.mode === 'live' || req.mode === 'preview'
-  )
-
   const preambleBody = preambleObj.renderBody({
     body: render(view, model)
   })
@@ -90,11 +86,11 @@ const renderPart = (req) => {
 
   const finalBody = listOfArticlesObj.renderBody({
     body: preambleBody,
-    clientRender: isOutsideContentStudio
+    clientRender: req.mode !== 'edit'
   })
   const finalPagePageContributions = listOfArticlesObj.renderPageContributions({
     pageContributions: preamblePageContributions,
-    clientRender: isOutsideContentStudio
+    clientRender: req.mode !== 'edit'
   })
 
   return {
