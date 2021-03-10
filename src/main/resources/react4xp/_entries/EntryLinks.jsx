@@ -13,12 +13,12 @@ class EntryLinks extends React.Component {
     }, index) => {
       return (
         <React.Fragment key={`entry-link-${index}`}>
-          <div className="col-3 mt-4">
-            <div className="row d-flex justify-content-center">
-              <div className="col-4">
-                <img src={icon} alt={altText ? altText : ' '} />
+          <div className="col-3 mt-4 p-0">
+            <div className="row text-center">
+              <div className="col-12">
+                <img src={icon} alt={altText ? altText : ' '} className="desktop-icons" />
               </div>
-              <div className="col-12 mt-4 text-center">
+              <div className="col-12 mt-4">
                 <Link
                   href={href}
                   linkType="header">
