@@ -383,6 +383,12 @@ function getEventLogsFromStatisticsJobLog(jobLogId: string): {user: User; datase
   if (!jobInfoNode) {
     return undefined
   }
+  if (!jobInfoNode.data.refreshDataResult) {
+    return {
+      user: jobInfoNode.data.user,
+      dataset: []
+    }
+  }
   const userLogin: string | undefined = jobInfoNode.data.user?.login
   const from: string = jobInfoNode.data.jobStarted
   const to: string = jobInfoNode.data.completionTime
