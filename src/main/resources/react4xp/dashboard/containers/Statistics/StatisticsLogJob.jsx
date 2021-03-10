@@ -67,7 +67,7 @@ export function StatisticsLogJob(props) {
     <Accordion
       key={props.jobId}
       className={logData.status}
-      header={`${formatTime(logData.started)}: ${logData.task} (${logData.status})`}
+      header={`${formatTime(logData.startTime)}: ${logData.task} (${logData.status})`}
       onToggle={(isOpen) => onToggleAccordion(isOpen)}
       openByDefault={props.accordionOpenStatus}
     >
