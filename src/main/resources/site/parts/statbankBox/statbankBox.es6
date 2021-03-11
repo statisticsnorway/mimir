@@ -74,7 +74,7 @@ const parseStatbankBoxContent = (page, part, phrases) => {
   if (overrideTitle) {
     title = overrideTitle
   } else if (fullWidth) {
-    title = 'Statistikkbanken - alle tallene våre samlet på ett sted'
+    title = phrases['statbankBox.alt.title']
   } else {
     title = phrases['statbankBox.title']
   }
