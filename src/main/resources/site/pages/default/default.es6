@@ -224,6 +224,8 @@ exports.get = function(req) {
     .setId('breadcrumbs')
     .uniqueId()
 
+  const hideBreadcrumb = page.page.config.hide_breadcrumb ? page.page.config.hide_breadcrumb : false
+
   const model = {
     pageTitle: 'SSB', // not really used on normal pages because of SEO app (404 still uses this)
     page,
@@ -246,7 +248,8 @@ exports.get = function(req) {
     metaInfoSearchKeywords,
     metaInfoDescription,
     metaInfoSearchPublishFrom,
-    breadcrumbsReactId: breadcrumbComponent.react4xpId
+    breadcrumbsReactId: breadcrumbComponent.react4xpId,
+    hideBreadcrumb
   }
 
   const thymeleafRenderBody = thymeleaf.render(view, model)

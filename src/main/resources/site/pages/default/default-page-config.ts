@@ -5,6 +5,11 @@ export interface DefaultPageConfig {
   pageType: "default" | "municipality" | "factPage";
 
   /**
+   * Skjul Brødsmulesti
+   */
+  hide_breadcrumb: boolean;
+
+  /**
    * Velg bakgrunnsfarge
    */
   bkg_color: "white" | "grey";
