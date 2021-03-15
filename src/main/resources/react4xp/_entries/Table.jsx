@@ -4,11 +4,7 @@ import { Dropdown, Link } from '@statisticsnorway/ssb-component-library'
 import { isEmpty } from 'ramda'
 import NumberFormat from 'react-number-format'
 import { Alert, Button } from 'react-bootstrap'
-
-// import '../../assets/js/jquery-global.js'
 import { ChevronLeft, ChevronRight } from 'react-feather'
-// import XLSX from 'xlsx/dist/xlsx.core.min'
-// import '../../assets/js/tableExport'
 import { downloadTableFile } from '../../assets/js/app/tableExport'
 
 class Table extends React.Component {
@@ -421,7 +417,7 @@ class Table extends React.Component {
 
   addNoteRefs(noteRefId) {
     const noteRefsList = noteRefId ? this.state.table.noteRefs : undefined
-    if (noteRefsList !== undefined) {
+    if (noteRefsList) {
       const noteRefIndex = noteRefsList.indexOf(noteRefId)
       if (noteRefIndex > -1) {
         return (
@@ -503,7 +499,7 @@ class Table extends React.Component {
             )
           })}
           {sources.map((source, index) => {
-            if (source.url !== undefined && source.url !== null && source.urlText !== undefined && source.urlText !== null) {
+            if (source.url && source.urlText) {
               return (
                 <div key={index} className="col-lg-3 col-12 mb-3">
                   <Link href={source.url}>{source.urlText}</Link>
