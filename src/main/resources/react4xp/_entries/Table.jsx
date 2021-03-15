@@ -277,7 +277,6 @@ class Table extends React.Component {
       footnotes, correctionNotice
     } = this.state.table.tfoot
     const noteRefsList = this.state.table.noteRefs
-    console.log(footnotes)
     if (footnotes && footnotes.length > 0 && noteRefsList.length > 0 || correctionNotice) {
       return (
         <tfoot>
