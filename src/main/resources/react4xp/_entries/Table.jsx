@@ -5,10 +5,11 @@ import { isEmpty } from 'ramda'
 import NumberFormat from 'react-number-format'
 import { Alert, Button } from 'react-bootstrap'
 
-import '../../assets/js/jquery-global.js'
+// import '../../assets/js/jquery-global.js'
 import { ChevronLeft, ChevronRight } from 'react-feather'
-import XLSX from 'xlsx/dist/xlsx.core.min'
-import '../../assets/js/tableExport'
+// import XLSX from 'xlsx/dist/xlsx.core.min'
+// import '../../assets/js/tableExport'
+import { downloadTableFile } from '../../assets/js/app/tableExport'
 
 class Table extends React.Component {
   constructor(props) {
@@ -102,7 +103,7 @@ class Table extends React.Component {
   }
 
   trimValue(value) {
-    if (value != undefined && typeof value === 'string') {
+    if (value && typeof value === 'string') {
       return value.trim()
     }
     return value
@@ -110,8 +111,8 @@ class Table extends React.Component {
 
   formatNumber(value) {
     const language = this.props.table.language
-    const decimalSeparator = (language == 'en') ? '.' : ','
-    if (value != undefined) {
+    const decimalSeparator = (language === 'en') ? '.' : ','
+    if (value) {
       if (typeof value === 'number') {
         return (
           <NumberFormat
@@ -158,8 +159,16 @@ class Table extends React.Component {
   }
 
   downloadTableAsCSV() {
-    const table = $(this.tableRef.current)
-    table.tableExport({
+    // const table = $(this.tableRef.current)
+    // table.tableExport({
+    //   type: 'csv',
+    //   fileName: 'tabell',
+    //   csvSeparator: ';',
+    //   csvEnclosure: '',
+    //   tfootSelector: ''
+    // })
+    const table = this.tableRef.current
+    downloadTableFile(table, {
       type: 'csv',
       fileName: 'tabell',
       csvSeparator: ';',
@@ -169,23 +178,23 @@ class Table extends React.Component {
   }
 
   downloadTableAsExcel() {
-    const table = $(this.tableRef.current)
-    table.tableExport({
-      type: 'xlsx',
-      jsxlsx: XLSX,
-      fileName: 'tabell',
-      numbers: {
-        html: {
-          decimalMark: ',',
-          thousandsSeparator: ' '
-        },
-        output:
-            {
-              decimalMark: '.',
-              thousandsSeparator: ''
-            }
-      }
-    })
+    // const table = $(this.tableRef.current)
+    // table.tableExport({
+    //   type: 'xlsx',
+    //   // jsxlsx: XLSX,
+    //   fileName: 'tabell',
+    //   numbers: {
+    //     html: {
+    //       decimalMark: ',',
+    //       thousandsSeparator: ' '
+    //     },
+    //     output:
+    //         {
+    //           decimalMark: '.',
+    //           thousandsSeparator: ''
+    //         }
+    //   }
+    // })
   }
 
   createTable() {
@@ -277,7 +286,7 @@ class Table extends React.Component {
       footnotes, correctionNotice
     } = this.state.table.tfoot
     const noteRefsList = this.state.table.noteRefs
-    if (footnotes.length > 0 && noteRefsList.length > 0 || correctionNotice) {
+    if (footnotes && footnotes.length > 0 && noteRefsList.length > 0 || correctionNotice) {
       return (
         <tfoot>
           {noteRefsList.map((noteRef, index) => {
