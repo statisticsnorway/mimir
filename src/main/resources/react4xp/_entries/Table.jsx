@@ -159,16 +159,7 @@ class Table extends React.Component {
   }
 
   downloadTableAsCSV() {
-    // const table = $(this.tableRef.current)
-    // table.tableExport({
-    //   type: 'csv',
-    //   fileName: 'tabell',
-    //   csvSeparator: ';',
-    //   csvEnclosure: '',
-    //   tfootSelector: ''
-    // })
-    const table = this.tableRef.current
-    downloadTableFile(table, {
+    downloadTableFile(this.tableRef.current, {
       type: 'csv',
       fileName: 'tabell',
       csvSeparator: ';',
@@ -178,23 +169,21 @@ class Table extends React.Component {
   }
 
   downloadTableAsExcel() {
-    // const table = $(this.tableRef.current)
-    // table.tableExport({
-    //   type: 'xlsx',
-    //   // jsxlsx: XLSX,
-    //   fileName: 'tabell',
-    //   numbers: {
-    //     html: {
-    //       decimalMark: ',',
-    //       thousandsSeparator: ' '
-    //     },
-    //     output:
-    //         {
-    //           decimalMark: '.',
-    //           thousandsSeparator: ''
-    //         }
-    //   }
-    // })
+    downloadTableFile(this.tableRef.current, {
+      type: 'xlsx',
+      fileName: 'tabell',
+      numbers: {
+        html: {
+          decimalMark: ',',
+          thousandsSeparator: ' '
+        },
+        output:
+          {
+            decimalMark: '.',
+            thousandsSeparator: ''
+          }
+      }
+    })
   }
 
   createTable() {
