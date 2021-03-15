@@ -132,26 +132,32 @@ class Table extends React.Component {
       downloadTableOptions
     } = this.props
 
-    const downloadTable = (item) => {
-      if (item.id === 'downloadTableAsCSV') {
-        { this.downloadTableAsCSV() }
+    if (downloadTableLabel && downloadTableTitle && downloadTableOptions) {
+      const downloadTable = (item) => {
+        if (item.id === 'downloadTableAsCSV') {
+          {
+            this.downloadTableAsCSV()
+          }
+        }
+
+        if (item.id === 'downloadTableAsXLSX') {
+          {
+            this.downloadTableAsExcel()
+          }
+        }
       }
 
-      if (item.id === 'downloadTableAsXLSX') {
-        { this.downloadTableAsExcel() }
-      }
+      return (
+        <div className={`download-table-container ${mobile ? 'd-flex d-lg-none' : 'd-none d-lg-flex'}`}>
+          <Dropdown
+            header={downloadTableLabel}
+            selectedItem={downloadTableTitle}
+            items={downloadTableOptions}
+            onSelect={downloadTable}
+          />
+        </div>
+      )
     }
-
-    return (
-      <div className={`download-table-container ${mobile ? 'd-flex d-lg-none' : 'd-none d-lg-flex'}`}>
-        <Dropdown
-          header={downloadTableLabel}
-          selectedItem={downloadTableTitle}
-          items={downloadTableOptions}
-          onSelect={downloadTable}
-        />
-      </div>
-    )
   }
 
   downloadTableAsCSV() {
@@ -271,6 +277,7 @@ class Table extends React.Component {
       footnotes, correctionNotice
     } = this.state.table.tfoot
     const noteRefsList = this.state.table.noteRefs
+    console.log(footnotes)
     if (footnotes && footnotes.length > 0 && noteRefsList.length > 0 || correctionNotice) {
       return (
         <tfoot>
@@ -429,12 +436,15 @@ class Table extends React.Component {
   }
 
   addStandardSymbols() {
-    if (this.props.standardSymbol) {
+    const {
+      standardSymbol
+    } = this.props
+
+    if (standardSymbol && standardSymbol.href && standardSymbol.text) {
       return (
-        <Link href={this.props.standardSymbol.href} >{this.props.standardSymbol.text}</Link>
+        <Link href={standardSymbol.href} >{standardSymbol.text}</Link>
       )
     }
-    return
   }
 
   addPreviewButton() {
