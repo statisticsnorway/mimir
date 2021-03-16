@@ -53,6 +53,11 @@ export interface ReleasesInListing {
     publishTime: string;
 }
 
+export interface ReleaseDatesVariant {
+    nextRelease: Array<string>;
+    previousRelease: Array<string>;
+}
+
 export interface VariantInListing {
     id: string;
     frekvens: string;

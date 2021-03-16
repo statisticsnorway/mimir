@@ -1,6 +1,6 @@
 __non_webpack_require__('/lib/polyfills/nashorn')
 import { StatRegNode, OldStatRegContent } from '../statreg'
-import { StatisticInListing, VariantInListing } from '../../ssb/statreg/types'
+import { StatisticInListing, VariantInListing, ReleasesInListing, ReleaseDatesVariant } from '../../ssb/statreg/types'
 import { ArrayUtilsLib } from '../../ssb/arrayUtils'
 import { StatRegConfigLib } from '../../ssb/statreg/config'
 import { StatRegCommonLib } from '../../ssb/statreg/common'
@@ -154,6 +154,38 @@ export function getStatisticByShortNameFromRepo(shortName: string): StatisticInL
   return allStats.find((s) => shortName === s.shortName)
 }
 
+export function getReleaseDatesByVariants(variants: Array<VariantInListing>): ReleaseDatesVariant {
+  const releaseDatesStatistic: ReleaseDatesVariant = {
+    nextRelease: [],
+    previousRelease: []
+  }
+  const nextReleases: Array<string> = []
+  const previousReleases: Array<string> = []
+  variants.forEach((variant) => {
+    const upcomingReleases: Array<ReleasesInListing> = variant.upcomingReleases ? ensureArray(variant.upcomingReleases) : []
+    if (upcomingReleases.length > 0) {
+      upcomingReleases.map((release) => nextReleases.push(release.publishTime))
+      previousReleases.push(variant.previousRelease)
+    } else {
+      nextReleases.push(variant.nextRelease)
+      previousReleases.push(variant.previousRelease)
+    }
+  })
+
+  if (nextReleases.length > 0) {
+    nextReleases.sort( (a: string, b: string) => new Date(a).getTime() - new Date(b).getTime())
+  }
+
+  if (previousReleases.length > 0) {
+    previousReleases.sort( (a: string, b: string) => new Date(a).getTime() - new Date(b).getTime()).reverse()
+  }
+
+  releaseDatesStatistic.nextRelease = nextReleases
+  releaseDatesStatistic.previousRelease = previousReleases
+
+  return releaseDatesStatistic
+}
+
 export interface StatRegStatisticsLib {
   STATREG_REPO_STATISTICS_KEY: string;
   fetchStatistics: () => Array<StatisticInListing> | null;
@@ -162,4 +194,5 @@ export interface StatRegStatisticsLib {
   getAllStatisticsFromRepo: () => Array<StatisticInListing>;
   getStatisticByIdFromRepo: (statId: string) => StatisticInListing | undefined;
   getStatisticByShortNameFromRepo: (shortName: string) => StatisticInListing | undefined;
+  getReleaseDatesByVariants: (variants: Array<VariantInListing>) => Array<string>;
 }

@@ -2,7 +2,7 @@ const {
   getContent, pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
 const {
-  getStatisticByIdFromRepo
+  getStatisticByIdFromRepo, getReleaseDatesByVariants
 } = __non_webpack_require__('/lib/repo/statreg/statistics')
 const {
   getPhrases
@@ -26,9 +26,6 @@ const {
   currentlyWaitingForPublish
 } = __non_webpack_require__('/lib/ssb/dataset/publish')
 const util = __non_webpack_require__('/lib/util')
-const {
-  getPreviousReleaseStatistic, getNextReleaseStatistic
-} = __non_webpack_require__('/lib/ssb/utils')
 
 const React4xp = require('/lib/enonic/react4xp')
 const moment = require('moment/min/moment-with-locales')
@@ -67,6 +64,7 @@ const renderPart = (req) => {
   const modifiedDate = page.data.showModifiedDate ? page.data.showModifiedDate.modifiedOption.lastModified : null
   let previousRelease = phrases.notAvailable
   let nextRelease = phrases.notYetDetermined
+  let previewNextRelease = phrases.notYetDetermined
   let statisticsKeyFigure
   let changeDate
   let nextReleaseDate
@@ -83,8 +81,14 @@ const renderPart = (req) => {
   if (statistic) {
     title = page.language === 'en' && statistic.nameEN && statistic.nameEN !== null ? statistic.nameEN : statistic.name
     const variants = util.data.forceArray(statistic.variants)
-    nextReleaseDate = getNextReleaseStatistic(variants)
-    previousReleaseDate = getPreviousReleaseStatistic(variants)
+    const releaseDates = getReleaseDatesByVariants(variants)
+    const isStatregDataOld = releaseDates.nextRelease[0] !== ' ' && moment(releaseDates.nextRelease[0]).isBefore(new Date(), 'minute')
+    nextReleaseDate = isStatregDataOld && releaseDates.nextRelease.length > 1 ? releaseDates.nextRelease[1] : releaseDates.nextRelease[0]
+    previousReleaseDate = isStatregDataOld ? releaseDates.nextRelease[0] : releaseDates.previousRelease[0]
+
+    if(releaseDates.nextRelease.length > 1 && releaseDates.nextRelease[1] !== '') {
+      previewNextRelease = moment(releaseDates.nextRelease[1]).format('D. MMMM YYYY')
+    }
 
     if (previousReleaseDate && previousReleaseDate !== '') {
       previousRelease = moment(previousReleaseDate).format('D. MMMM YYYY')
@@ -122,7 +126,7 @@ const renderPart = (req) => {
     changeDate,
     modifiedText,
     previousRelease: paramShowDraft && showPreviewDraft ? nextRelease : previousRelease,
-    nextRelease: paramShowDraft && showPreviewDraft ? phrases.notYetDetermined : nextRelease,
+    nextRelease: paramShowDraft && showPreviewDraft ? previewNextRelease : nextRelease,
     modifiedDateId: modifiedDateComponent.react4xpId,
     statisticsKeyFigure: statisticsKeyFigure ? statisticsKeyFigure.body : null,
     showPreviewDraft,
