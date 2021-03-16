@@ -272,4 +272,3 @@ export const getRowValue = (value) => {
   }
   return value
 }
-
