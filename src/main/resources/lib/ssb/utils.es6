@@ -249,21 +249,13 @@ export const getAttachmentContent = (contentId) => {
 }
 
 export const getPreviousReleaseStatistic = (variants) => {
-  if (variants.length > 1) {
-    const variantsWithPreviouseDate = variants.filter((variant) => variant.previousRelease !== '')
-    const sortedAndReversed = variantsWithPreviouseDate.sort((d1, d2) => new Date(d1.previousRelease) - new Date(d2.previousRelease)).reverse()
-    return sortedAndReversed[0].previousRelease
-  } else {
-    return variants[0].previousRelease
-  }
+  const releases = getReleases(variants)
+  return releases.previousRelease
 }
 
 export const getNextReleaseStatistic = (variants) => {
-  const variantWithDate = variants.filter((variant) => variant.nextRelease !== '' && moment(variant.nextRelease).isSameOrAfter(new Date(), 'minute'))
-  if (variantWithDate.length > 1) {
-    variantWithDate.sort((d1, d2) => new Date(d1.nextRelease) - new Date(d2.nextRelease))
-  }
-  return variantWithDate.length > 0 ? variantWithDate[0].nextRelease : ''
+  const releases = getReleases(variants)
+  return releases.nextRelease
 }
 
 export const getRowValue = (value) => {
@@ -271,4 +263,56 @@ export const getRowValue = (value) => {
     return value.content
   }
   return value
+}
+
+const getReleasesVariant = (variant) => {
+  const statisticRelease = {
+    nextRelease: '',
+    nextReleaseId: '',
+    previousRelease: ''
+  }
+  const upcomingReleases = variant.upcomingReleases ? variant.upcomingReleases : []
+
+  const firstUpcompingRelease = Array.isArray(upcomingReleases) ? upcomingReleases[0] : upcomingReleases
+  const isOld = moment(firstUpcompingRelease.publishTime).isBefore(new Date(), 'minute')
+
+  if (isOld && Array.isArray(upcomingReleases)) {
+    statisticRelease.nextRelease = upcomingReleases[1].publishTime
+    statisticRelease.nextReleaseId = upcomingReleases[1].id
+    statisticRelease.previousRelease = upcomingReleases[0].publishTime
+  } else {
+    statisticRelease.nextRelease = firstUpcompingRelease.publishTime
+    statisticRelease.nextReleaseId = firstUpcompingRelease.id
+    statisticRelease.previousRelease = variant.previousRelease
+  }
+
+  return statisticRelease
+}
+
+const getReleases = (variants) => {
+  const statisticReleases = []
+  const statisticReleaseSorted = {
+    nextRelease: '',
+    nextReleaseId: '',
+    previousRelease: ''
+  }
+
+  variants.forEach((variant) => {
+    const releases = getReleasesVariant(variant)
+    statisticReleases.push(releases)
+  })
+
+  if (statisticReleases.length > 1) {
+    const nextReleaseSorted = statisticReleases.sort((d1, d2) => new Date(d1.nextRelease) - new Date(d2.nextRelease))
+    statisticReleaseSorted.nextRelease = nextReleaseSorted[0].nextRelease
+    statisticReleaseSorted.nextReleaseId = nextReleaseSorted[0].nextReleaseId
+    const previousReleaseSorted = statisticReleases.sort((d1, d2) => new Date(d1.previousRelease) - new Date(d2.previousRelease)).reverse()
+    statisticReleaseSorted.previousRelease = previousReleaseSorted[0].previousRelease
+  } else {
+    statisticReleaseSorted.nextRelease = statisticReleases[0].nextRelease
+    statisticReleaseSorted.nextReleaseId = statisticReleases[0].nextReleaseId
+    statisticReleaseSorted.previousRelease = statisticReleases[0].previousRelease
+  }
+
+  return statisticReleaseSorted
 }
