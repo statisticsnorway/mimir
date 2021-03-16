@@ -28,23 +28,21 @@
       </div>
     </div>
   </div>
-
+  
   <!-- Metainfo to make the page searchable -->
   <div id="metainfo-container" data-th-if="${addMetaInfoSearch}" data-th-include="mimir:/site/includes/metainfoSearch.html" data-th-remove="tag"></div>
-
+  
   <!-- MAIN -->
   <main class="xp-region"  id="content" data-th-if="${!isFragment}">
     <div class="container premain">
       <div class="row">
         <div class="col">
-          <div class="container bg-white pt-2 pb-4">
+          <div class="container bg-white pt-2 pb-4" data-th-unless="${hideBreadcrumb}">
             <!-- breadcrumbs -->
             <div data-th-id="${breadcrumbsReactId}" class="d-print-none"></div>
-
-            <!-- Alerts Info and error -->
-            <section class="xp-part pt-2" id="alerts"></section>
           </div>
-
+          <!-- Alerts Info and error -->
+          <section class="xp-part" id="alerts"></section>
           <!-- Page Title -->
           <div data-th-if="${page.data.title}" class="container mb-5">
             <div class="row">
