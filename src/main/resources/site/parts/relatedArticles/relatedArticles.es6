@@ -16,8 +16,11 @@ const {
 } = __non_webpack_require__( '/lib/xp/content')
 const util = __non_webpack_require__('/lib/util')
 const {
-  getImageAlt, getPreviousReleaseStatistic, getNextReleaseStatistic
+  getImageAlt
 } = __non_webpack_require__('/lib/ssb/utils')
+const {
+  getNextReleaseStatistic, getPreviousReleaseStatistic
+} = __non_webpack_require__('/lib/repo/statreg/statistics')
 const {
   getPhrases
 } = __non_webpack_require__( '/lib/language')

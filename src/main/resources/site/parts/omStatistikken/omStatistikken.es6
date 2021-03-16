@@ -19,7 +19,7 @@ const {
 const util = __non_webpack_require__('/lib/util')
 const {
   getNextReleaseStatistic
-} = __non_webpack_require__('/lib/ssb/utils')
+} = __non_webpack_require__('/lib/repo/statreg/statistics')
 
 const view = resolve('./omStatistikken.html')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
