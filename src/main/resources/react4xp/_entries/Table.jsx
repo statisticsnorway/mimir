@@ -283,7 +283,8 @@ class Table extends React.Component {
       return (
         <tfoot>
           {noteIdList.map((noteId, index) => {
-            const footNote = noteRefsList.find((noterefs) => noterefs === noteId.noteid)
+            const filtered = noteRefsList.filter((noterefs) => noterefs === noteId.noteid)
+            const footNote = filtered && filtered[0]
             return ( footNote &&
               <tr key={index} className="footnote">
                 <td colSpan="100%">
