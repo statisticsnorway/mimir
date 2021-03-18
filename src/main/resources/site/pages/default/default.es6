@@ -9,9 +9,11 @@ const {
 } = __non_webpack_require__( '/lib/language')
 const {
   alertsForContext,
-  getBreadcrumbs,
-  getPreviousReleaseStatistic
+  getBreadcrumbs
 } = __non_webpack_require__( '/lib/ssb/utils')
+const {
+  getReleaseDatesByVariants
+} = __non_webpack_require__('/lib/repo/statreg/statistics')
 const {
   getMunicipality
 } = __non_webpack_require__( '/lib/klass/municipalities')
@@ -134,7 +136,8 @@ exports.get = function(req) {
     const statistic = getStatisticByIdFromRepo(page.data.statistic)
     if (statistic) {
       const variants = util.data.forceArray(statistic.variants)
-      const previousRelease = getPreviousReleaseStatistic(variants)
+      const releaseDates = getReleaseDatesByVariants(variants)
+      const previousRelease = releaseDates.previousRelease[0]
       metaInfoSearchPublishFrom = new Date(previousRelease).toISOString()
     }
     metaInfoSearchContentType = 'statistikk'

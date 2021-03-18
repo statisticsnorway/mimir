@@ -82,11 +82,10 @@ const renderPart = (req) => {
     title = page.language === 'en' && statistic.nameEN && statistic.nameEN !== null ? statistic.nameEN : statistic.name
     const variants = util.data.forceArray(statistic.variants)
     const releaseDates = getReleaseDatesByVariants(variants)
-    const isStatregDataOld = releaseDates.nextRelease[0] !== ' ' && moment(releaseDates.nextRelease[0]).isBefore(new Date(), 'minute')
-    nextReleaseDate = isStatregDataOld && releaseDates.nextRelease.length > 1 ? releaseDates.nextRelease[1] : releaseDates.nextRelease[0]
-    previousReleaseDate = isStatregDataOld ? releaseDates.nextRelease[0] : releaseDates.previousRelease[0]
+    nextReleaseDate = releaseDates.nextRelease[0]
+    previousReleaseDate = releaseDates.previousRelease[0]
 
-    if(releaseDates.nextRelease.length > 1 && releaseDates.nextRelease[1] !== '') {
+    if (releaseDates.nextRelease.length > 1 && releaseDates.nextRelease[1] !== '') {
       previewNextRelease = moment(releaseDates.nextRelease[1]).format('D. MMMM YYYY')
     }
 

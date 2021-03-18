@@ -154,23 +154,6 @@ export function getStatisticByShortNameFromRepo(shortName: string): StatisticInL
   return allStats.find((s) => shortName === s.shortName)
 }
 
-export function getPreviousReleaseStatistic(variants: Array<VariantInListing>): string {
-  const releaseDatesStatistic: ReleaseDatesVariant = getReleaseDatesByVariants(variants)
-  const isStatregDataOld: boolean = releaseDatesStatistic.nextRelease[0] !== ' ' && moment(releaseDatesStatistic.nextRelease[0]).isBefore(new Date(), 'minute')
-  const previousReleaseDate: string = isStatregDataOld ? releaseDatesStatistic.nextRelease[0] : releaseDatesStatistic.previousRelease[0]
-
-  return previousReleaseDate
-}
-
-export function getNextReleaseStatistic(variants: Array<VariantInListing>): string {
-  const releaseDatesStatistic: ReleaseDatesVariant = getReleaseDatesByVariants(variants)
-  const isStatregDataOld: boolean = releaseDatesStatistic.nextRelease[0] !== ' ' && moment(releaseDatesStatistic.nextRelease[0]).isBefore(new Date(), 'minute')
-  const nextRelease: string = isStatregDataOld && releaseDatesStatistic.nextRelease.length > 1 ?
-    releaseDatesStatistic.nextRelease[1] : releaseDatesStatistic.nextRelease[0]
-
-  return nextRelease
-}
-
 export function getReleaseDatesByVariants(variants: Array<VariantInListing>): ReleaseDatesVariant {
   const releaseDatesStatistic: ReleaseDatesVariant = {
     nextRelease: [],
@@ -182,22 +165,23 @@ export function getReleaseDatesByVariants(variants: Array<VariantInListing>): Re
     const upcomingReleases: Array<ReleasesInListing> = variant.upcomingReleases ? ensureArray(variant.upcomingReleases) : []
     if (upcomingReleases.length > 0) {
       upcomingReleases.map((release) => nextReleases.push(release.publishTime))
-      previousReleases.push(variant.previousRelease)
     } else {
       nextReleases.push(variant.nextRelease)
-      previousReleases.push(variant.previousRelease)
     }
+    previousReleases.push(variant.previousRelease)
   })
 
-  if (nextReleases.length > 0) {
-    nextReleases.sort( (a: string, b: string) => new Date(a).getTime() - new Date(b).getTime())
-  }
+  const nextReleasesSorted: Array<string> = nextReleases.sort( (a: string, b: string) => new Date(a).getTime() - new Date(b).getTime())
+  const nextReleaseFiltered: Array<string> = nextReleasesSorted.filter((release) => moment(release).isAfter(new Date(), 'minute'))
+  const nextReleaseIndex: number = nextReleasesSorted.indexOf(nextReleaseFiltered[0])
 
-  if (previousReleases.length > 0) {
-    previousReleases.sort( (a: string, b: string) => new Date(a).getTime() - new Date(b).getTime()).reverse()
+  // If oldDate get date before nextRelease as previous date
+  if (nextReleaseFiltered.length > 0 && nextReleaseIndex > 0) {
+    previousReleases.push(nextReleasesSorted[nextReleaseIndex - 1])
   }
+  previousReleases.sort( (a: string, b: string) => new Date(a).getTime() - new Date(b).getTime()).reverse()
 
-  releaseDatesStatistic.nextRelease = nextReleases
+  releaseDatesStatistic.nextRelease = nextReleaseFiltered
   releaseDatesStatistic.previousRelease = previousReleases
 
   return releaseDatesStatistic
@@ -212,6 +196,4 @@ export interface StatRegStatisticsLib {
   getStatisticByIdFromRepo: (statId: string) => StatisticInListing | undefined;
   getStatisticByShortNameFromRepo: (shortName: string) => StatisticInListing | undefined;
   getReleaseDatesByVariants: (variants: Array<VariantInListing>) => Array<string>;
-  getNextReleaseStatistic: (variants: Array<VariantInListing>) => string;
-  getPreviousReleaseStatistic: (variants: Array<VariantInListing>) => string;
 }
