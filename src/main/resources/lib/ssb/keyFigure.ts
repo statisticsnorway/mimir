@@ -149,7 +149,7 @@ function getDataTbProcessor(
     const td: Array<number | string | PreliminaryData> = row1.td
     const value: number | string | PreliminaryData = td[0]
 
-    keyFigureViewData.number = typeof value === 'object' ? parseValue(value.content) : parseValue(value)
+    keyFigureViewData.number = typeof value === 'object' ? parseValueZeroSafe(value.content) : parseValueZeroSafe(value)
   }
   if (row2 && keyFigure.data.changes) {
     const td: Array<number | string | PreliminaryData> = row2.td
@@ -265,6 +265,14 @@ function getDataFromMunicipalityCode(ds: JSONstat, municipalityCode: string, yAx
     }
   }
   return null
+}
+
+function parseValueZeroSafe(value: number | string | null): string | undefined {
+  if (value === 0) {
+    return createHumanReadableFormat(value)
+  } else {
+    return parseValue(value)
+  }
 }
 
 const notFoundValues: Array<string> = ['.', '..', '...', ':', '-']
