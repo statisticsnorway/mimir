@@ -3,9 +3,16 @@
   .banner-text-wrapper {
     margin-top: 26px;
   }
-  
+
   img {
     min-height: 86px;
     min-width: 86px;
+  }
+  @include media-breakpoint-down (sm) {
+    h2 {
+      font-family: $font-roboto-bold;
+      font-weight: 700;
+      font-size: 20px;
+    }
   }
 }
