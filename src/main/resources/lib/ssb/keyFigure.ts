@@ -191,7 +191,7 @@ function getDataTbProcessor(
 
   const tr: Array<TableCellUniform> = head[head.length - 1].tr
   const th: Array<number | string | PreliminaryData> = tr[head.length - 1].th
-  keyFigureViewData.time = th[0].toString()
+  keyFigureViewData.time = Array.isArray(th[0]) ? th[0].join(' ').toString() : th[0].toString()
 
   return keyFigureViewData
 }
