@@ -120,7 +120,6 @@ exports.get = function(req) {
   }
 
   if (pageType === 'municipality' && municipality) {
-    // TODO: Deaktiverer at kommunesidene er søkbare til vi finner en løsning med kommunenavn i tittel MIMIR-549
     addMetaInfoSearch = true
     metaInfoSearchId = metaInfoSearchId + '_' + municipality.code
     metaInfoSearchGroup = metaInfoSearchGroup + '_' + municipality.code
@@ -138,7 +137,7 @@ exports.get = function(req) {
       const variants = util.data.forceArray(statistic.variants)
       const releaseDates = getReleaseDatesByVariants(variants)
       const previousRelease = releaseDates.previousRelease[0]
-      metaInfoSearchPublishFrom = new Date(previousRelease).toISOString()
+      metaInfoSearchPublishFrom = previousRelease ? new Date(previousRelease).toISOString() : new Date().toISOString()
     }
     metaInfoSearchContentType = 'statistikk'
     metaInfoDescription = page.x['com-enonic-app-metafields']['meta-data'].seoDescription
