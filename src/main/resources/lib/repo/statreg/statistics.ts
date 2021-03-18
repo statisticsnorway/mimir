@@ -163,19 +163,17 @@ export function getReleaseDatesByVariants(variants: Array<VariantInListing>): Re
   const previousReleases: Array<string> = []
   variants.forEach((variant) => {
     const upcomingReleases: Array<ReleasesInListing> = variant.upcomingReleases ? ensureArray(variant.upcomingReleases) : []
-    if (upcomingReleases.length > 0) {
-      upcomingReleases.map((release) => nextReleases.push(release.publishTime))
-    } else {
-      nextReleases.push(variant.nextRelease)
-    }
+    upcomingReleases.map((release) => nextReleases.push(release.publishTime))
     previousReleases.push(variant.previousRelease)
+    //TODO:Remove next line when upcomingReleases exist in all enviroments
+    if (upcomingReleases.length === 0 && variant.nextRelease !== '') nextReleases.push(variant.nextRelease)
   })
 
   const nextReleasesSorted: Array<string> = nextReleases.sort( (a: string, b: string) => new Date(a).getTime() - new Date(b).getTime())
   const nextReleaseFiltered: Array<string> = nextReleasesSorted.filter((release) => moment(release).isAfter(new Date(), 'minute'))
   const nextReleaseIndex: number = nextReleasesSorted.indexOf(nextReleaseFiltered[0])
 
-  // If oldDate get date before nextRelease as previous date
+  // If Statregdata is old, get date before nextRelease as previous date
   if (nextReleaseFiltered.length > 0 && nextReleaseIndex > 0) {
     previousReleases.push(nextReleasesSorted[nextReleaseIndex - 1])
   }
