@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <content-type>
-    <display-name> Omskrivningsregler Varnish</display-name>
+    <display-name>Omskrivningsregler Varnish</display-name>
     <description>Lenker som skal gå til XP</description>
     <super-type>base:structured</super-type>
     <form>
