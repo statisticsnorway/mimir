@@ -6,7 +6,7 @@ export interface RewriteVarnish {
     /**
      * Lenke XP
      */
-    requestUrl?: string;
+    requestUrl: string;
 
     /**
      * Aktiver regel
