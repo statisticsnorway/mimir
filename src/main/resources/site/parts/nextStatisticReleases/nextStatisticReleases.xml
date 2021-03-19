@@ -1,0 +1,17 @@
+<part>
+    <display-name>Neste statistikkpubliseringer</display-name>
+    <form>
+        <item-set name="keyfiguresFrontpage">
+            <label>Nøkkeltall</label>
+            <expanded>false</expanded>
+            <occurrences minimum="0" maximum="4"/>
+            <items>
+                <input type="TextLine" name="numberOfStatistics">
+                    <label>Antall statistikker i liste</label>
+                    <default>8</default>
+                    <occurrences minimum="0" maximum="0" />
+                </input>
+            </items>
+        </item-set>
+    </form>
+</part>
