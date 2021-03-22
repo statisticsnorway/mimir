@@ -91,7 +91,7 @@ const renderEntryLinks = (headerTitle, entryLinksContent, isNotInEditMode) => {
 
 const parseEntryLinks = (entryLinksContent) => {
   return entryLinksContent.map(({
-    title, href, icon
+    title, href, icon, mobileIcon
   }) => {
     const iconData = get({
       key: icon
@@ -112,6 +112,10 @@ const parseEntryLinks = (entryLinksContent) => {
       icon: imageUrl({
         id: icon,
         scale: 'block(80,80)'
+      }),
+      mobileIcon: imageUrl({
+        id: mobileIcon,
+        scale: 'block(15,15)'
       }),
       altText
     }

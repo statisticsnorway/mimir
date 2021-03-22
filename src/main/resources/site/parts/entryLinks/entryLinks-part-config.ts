@@ -17,5 +17,10 @@ export interface EntryLinksPartConfig {
      * Ikon
      */
     icon: string;
+
+    /**
+     * Mobil-Ikon
+     */
+    mobileIcon: string;
   }>;
 }

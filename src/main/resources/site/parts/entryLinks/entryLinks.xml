@@ -17,6 +17,10 @@
                     <label>Ikon</label>
                     <occurrences minimum="1" maximum="1" />
                 </input>
+                <input name="mobileIcon" type="ImageSelector">
+                    <label>Mobil-Ikon</label>
+                    <occurrences minimum="1" maximum="1" />
+                </input>
             </items>
         </item-set>
     </form>
