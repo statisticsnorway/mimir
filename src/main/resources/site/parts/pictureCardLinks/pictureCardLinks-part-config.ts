@@ -2,7 +2,7 @@ export interface PictureCardLinksPartConfig {
   /**
    * Redaksjonell boks
    */
-  pictureCardLink: Array<{
+  pictureCardLinks: Array<{
     /**
      * Tittel
      */

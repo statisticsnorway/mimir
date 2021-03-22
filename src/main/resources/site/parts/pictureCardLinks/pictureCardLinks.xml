@@ -2,7 +2,7 @@
     <display-name>Redaksjonelle bokser</display-name>
     <description></description>
     <form>
-        <item-set name="pictureCardLink">
+        <item-set name="pictureCardLinks">
             <label>Redaksjonell boks</label>
             <occurrences minimum="2" maximum="4"/>
             <items>

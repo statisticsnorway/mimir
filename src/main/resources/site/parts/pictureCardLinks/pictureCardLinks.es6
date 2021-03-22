@@ -1,11 +1,16 @@
 const {
+  getImageAlt
+} = __non_webpack_require__('/lib/ssb/utils')
+const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
 const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
 const {
-  getComponent
+  getComponent,
+  imageUrl,
+  imagePlaceholder
 } = __non_webpack_require__('/lib/xp/portal')
 
 const view = resolve('./pictureCardLinks.html')
@@ -25,9 +30,9 @@ exports.preview = function(req, id) {
 
 function renderPart(req) {
   const part = getComponent()
-  log.info(JSON.stringify(part))
   const pictureCardLinks = new React4xp('PictureCardLinks')
     .setProps({
+      pictureCardLinks: parsePictureCardLinks(part.config.pictureCardLinks)
     })
     .uniqueId()
 
@@ -43,4 +48,37 @@ function renderPart(req) {
       clientRender: req.mode !== 'edit'
     })
   }
+}
+
+function parsePictureCardLinks(pictureCardLinks) {
+  pictureCardLinks = Array.isArray(pictureCardLinks) ? pictureCardLinks : [pictureCardLinks]
+  return pictureCardLinks.reduce((acc, pictureCardLink) => {
+    if (pictureCardLink) {
+      const title = pictureCardLink.title
+      const subTitle = pictureCardLink.subTitle
+      const href = pictureCardLink.href
+      let imageSrc = ''
+      let imageAlt = ' '
+      if (pictureCardLink.image) {
+        imageSrc = imageUrl({
+          id: pictureCardLink.image,
+          scale: 'block(580, 420)'
+        })
+        imageAlt = getImageAlt(pictureCardLink.image) || ' '
+      } else {
+        imageSrc = imagePlaceholder({
+          width: 580,
+          height: 420
+        })
+      }
+      acc.push({
+        title,
+        subTitle,
+        href,
+        imageSrc,
+        imageAlt
+      })
+    }
+    return acc
+  }, [])
 }
