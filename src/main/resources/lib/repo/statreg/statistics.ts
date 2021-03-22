@@ -78,7 +78,13 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
             frekvens: 'Dag',
             previousRelease: previousRelease.format('YYYY-MM-DD HH:mm:ss.S'),
             nextRelease: nextRelease.format('YYYY-MM-DD HH:mm:ss.S'),
-            nextReleaseId: '0'
+            nextReleaseId: '0',
+            upcomingReleases: [
+              {
+                id: '0',
+                publishTime: nextRelease.format('YYYY-MM-DD HH:mm:ss.S')
+              }
+            ]
           }]
         })
       }
@@ -165,7 +171,7 @@ export function getReleaseDatesByVariants(variants: Array<VariantInListing>): Re
     const upcomingReleases: Array<ReleasesInListing> = variant.upcomingReleases ? ensureArray(variant.upcomingReleases) : []
     upcomingReleases.map((release) => nextReleases.push(release.publishTime))
     previousReleases.push(variant.previousRelease)
-    //TODO:Remove next line when upcomingReleases exist in all enviroments
+    // TODO:Remove next line when upcomingReleases exist in all enviroments
     if (upcomingReleases.length === 0 && variant.nextRelease !== '') nextReleases.push(variant.nextRelease)
   })
 
