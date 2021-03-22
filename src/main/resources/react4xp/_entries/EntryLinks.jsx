@@ -9,16 +9,17 @@ class EntryLinks extends React.Component {
     } = this.props
 
     return entryLinks.map(({
-      title, href, icon, altText
+      title, href, icon, mobileIcon, altText
     }, index) => {
       return (
         <React.Fragment key={`entry-link-${index}`}>
-          <div className="col-3 mt-4 p-0">
-            <div className="row text-center">
-              <div className="col-12">
-                <img src={icon} alt={altText ? altText : ' '} className="desktop-icons" />
+          <div className="col-md-3 mt-4 p-0">
+            <div className="row text-left text-md-center ">
+              <div className="col-md-12 col-auto align-items-end">
+                <img src={icon} alt={altText ? altText : ' '} className="desktop-icons d-none d-md-inline" />
+                <img src={mobileIcon} alt={altText ? altText : ' '} className="mobile-icons d-md-none" />
               </div>
-              <div className="col-12 mt-4">
+              <div className="col-md-12 col-10 mt-md-4">
                 <Link
                   href={href}
                   linkType="header">
