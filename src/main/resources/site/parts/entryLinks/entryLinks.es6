@@ -20,6 +20,9 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
+const {
+  getAttachmentContent
+} = __non_webpack_require__( '/lib/ssb/utils')
 
 const moment = require('moment/min/moment-with-locales')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
@@ -113,10 +116,7 @@ const parseEntryLinks = (entryLinksContent) => {
         id: icon,
         scale: 'block(80,80)'
       }),
-      mobileIcon: imageUrl({
-        id: mobileIcon,
-        scale: 'block(15,15)'
-      }),
+      mobileIcon: getAttachmentContent(mobileIcon),
       altText
     }
   })
