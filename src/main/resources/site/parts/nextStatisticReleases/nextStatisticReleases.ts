@@ -26,21 +26,31 @@ export function get(req: Request): Response {
   // get statistics
   const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
 
-  // All statistics published today.
+  // All statistics published today, and fill up with next days.
   const releasesFiltered: Array<StatisticInListing> = filterOnNextRelease(releases)
 
+  // Choose the right variant and prepare the date in a way it works with the groupBy function
   const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: StatisticInListing) => prepareRelease(release))
-  // const releasesGroupedByMonth:
 
-  const releasesGroubedByYear: object = groupStatisticsByYear(groupStatisticsByMonth(groupStatisticsByDay(releasesPrepped)))
-  log.info(JSON.stringify('releasesGroubedByYear', null, 2))
-  log.info(JSON.stringify(releasesGroubedByYear, null, 2))
+  // group by year, then  month, then day
+  const groupedByYear: GroupedBy = groupStatisticsByYear(releasesPrepped)
+  const groupedByMonth: GroupedBy = {}
+  const groupedByDay: GroupedBy = {}
+  Object.keys(groupedByYear).forEach((year) => {
+    const tmpMonth: GroupedBy = groupStatisticsByMonth(groupedByYear[year])
+    Object.keys(tmpMonth).forEach((month) => {
+      groupedByDay[month] = groupStatisticsByDay(tmpMonth[month])
+    })
+    groupedByMonth[year] = groupedByDay
+  })
+
+  const props: object = {
+    releases: groupedByMonth
+  }
 
   // render component
   const reactComponent: React4xpObject = new React4xp('NextStatisticReleases')
-    .setProps({
-      releases: releasesFiltered
-    })
+    .setProps(props)
     .setId('nextStatisticsReleases')
     .uniqueId()
 
@@ -124,3 +134,8 @@ interface PreparedVariant {
   frequency: string;
 
 }
+
+interface GroupedBy {
+  [key: string]: Array<object> | object;
+}
+
