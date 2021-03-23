@@ -20,6 +20,9 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
+const {
+  getAttachmentContent
+} = __non_webpack_require__( '/lib/ssb/utils')
 
 const moment = require('moment/min/moment-with-locales')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
@@ -91,7 +94,7 @@ const renderEntryLinks = (headerTitle, entryLinksContent, isNotInEditMode) => {
 
 const parseEntryLinks = (entryLinksContent) => {
   return entryLinksContent.map(({
-    title, href, icon
+    title, href, icon, mobileIcon
   }) => {
     const iconData = get({
       key: icon
@@ -113,6 +116,7 @@ const parseEntryLinks = (entryLinksContent) => {
         id: icon,
         scale: 'block(80,80)'
       }),
+      mobileIcon: getAttachmentContent(mobileIcon),
       altText
     }
   })
