@@ -84,6 +84,7 @@ function prepareRelease(release: StatisticInListing) {
   return {
     id: release.id,
     name: release.name,
+    shortName: release.shortName,
     variant: preparedVariant
   }
 }
@@ -102,7 +103,7 @@ function formatVariant(variant: VariantInListing): PreparedVariant {
   const date: Date = new Date(variant.nextRelease)
   return {
     id: variant.id,
-    day: date.getDay(),
+    day: date.getDate(),
     monthNumber: date.getMonth(),
     year: date.getFullYear(),
     frequency: variant.frekvens
@@ -155,7 +156,6 @@ interface PreparedVariant {
   monthNumber: number;
   year: number;
   frequency: string;
-
 }
 
 interface GroupedBy {

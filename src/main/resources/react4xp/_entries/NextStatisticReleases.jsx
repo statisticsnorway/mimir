@@ -29,8 +29,8 @@ class NextStatisticReleases extends React.Component {
                     {currentDay.map((release, index) => {
                       return (
                         <li key={index}>
-                          <Link linkType='header'>{release.name}</Link>
-                          <Paragraph>Tall for {release.variant.frequency}</Paragraph>
+                          <Link href={`/${release.shortName}`} linkType='header'>{release.name}</Link>
+                          <Paragraph></Paragraph>
                         </li>
                       )
                     })}
