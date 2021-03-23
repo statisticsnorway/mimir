@@ -29,17 +29,17 @@ const groupStatisticsByDay: any = groupBy((statistic: PreparedStatistics): strin
   return statistic.variant.day.toString()
 })
 
-exports.get = function(req: Request) {
+exports.get = function(req: Request): Response {
   try {
-    return renderPart(req)
+    return renderPart()
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-exports.preview = (req: Request) => renderPart(req)
+exports.preview = (): Response => renderPart()
 
-export function renderPart(req: Request): Response {
+export function renderPart(): Response {
   const part: Component<NextStatisticReleasesPartConfig> = getComponent()
   const numberOfRelases: number = part.config.numberOfStatistics ? parseInt(part.config.numberOfStatistics) : 8
   // get statistics
@@ -79,7 +79,7 @@ export function renderPart(req: Request): Response {
   }
 }
 
-function prepareRelease(release: StatisticInListing) {
+function prepareRelease(release: StatisticInListing): PreparedStatistics {
   const preparedVariant: PreparedVariant = Array.isArray(release.variants) ? closestReleaseDate(release.variants) : formatVariant(release.variants)
   return {
     id: release.id,
@@ -110,7 +110,7 @@ function formatVariant(variant: VariantInListing): PreparedVariant {
   }
 }
 
-function filterOnNextRelease(stats: Array<StatisticInListing>, numberOfReleases: number) {
+function filterOnNextRelease(stats: Array<StatisticInListing>, numberOfReleases: number): Array<StatisticInListing> {
   const nextReleases: Array<StatisticInListing> = []
   for (let i: number = 0; nextReleases.length < numberOfReleases; i++) {
     const day: Date = new Date()
@@ -134,11 +134,11 @@ function checkLimitAndTrim(nextReleases: Array<StatisticInListing>, releasesOnTh
   return releasesOnThisDay
 }
 
-function checkReleaseDate(variant: VariantInListing, day: Date) {
+function checkReleaseDate(variant: VariantInListing, day: Date): boolean {
   return sameDay(new Date(variant.nextRelease), day)
 }
 
-function sameDay(d1: Date, d2: Date) {
+function sameDay(d1: Date, d2: Date): boolean {
   return d1.getDate() === d2.getDate() &&
       d1.getMonth() === d2.getMonth() &&
       d1.getFullYear() === d2.getFullYear()
@@ -147,6 +147,7 @@ function sameDay(d1: Date, d2: Date) {
 interface PreparedStatistics {
   id: number;
   name: string;
+  shortName: string;
   variant: PreparedVariant;
 }
 

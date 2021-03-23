@@ -9,6 +9,27 @@ class NextStatisticReleases extends React.Component {
     super(props)
   }
 
+  renderDayWithReleases(currentDay, dayIndex, monthIndex, yearIndex) {
+    return (
+      <article className={dayIndex === 0 && 'first'} key={`${yearIndex}-${monthIndex}-${dayIndex}`}>
+        <time dateTime={`${year}-${month}-${day}`}>
+          <span className='day'>{day}</span>
+          <span className='month'>{months[month]}</span>
+        </time>
+        <ol className='releaseList'>
+          {currentDay.map((release, index) => {
+            return (
+              <li key={index}>
+                <Link href={`/${release.shortName}`} linkType='header'>{release.name}</Link>
+                <Paragraph></Paragraph>
+              </li>
+            )
+          })}
+        </ol>
+      </article>
+    )
+  }
+
   render() {
     return (<section className='nextStatisticsReleases'>
       <Title size={3}>Ny statistikk</Title>
@@ -18,25 +39,7 @@ class NextStatisticReleases extends React.Component {
           return Object.keys(currentYear).map((month, monthIndex) => {
             const currentMonth = currentYear[month]
             return Object.keys(currentMonth).map((day, dayIndex) => {
-              const currentDay = currentMonth[day]
-              return (
-                <article className={dayIndex === 0 && 'first'} key={`${yearIndex}-${monthIndex}-${dayIndex}`}>
-                  <time dateTime={`${year}-${month}-${day}`}>
-                    <span className='day'>{day}</span>
-                    <span className='month'>{months[month]}</span>
-                  </time>
-                  <ol className='releaseList'>
-                    {currentDay.map((release, index) => {
-                      return (
-                        <li key={index}>
-                          <Link href={`/${release.shortName}`} linkType='header'>{release.name}</Link>
-                          <Paragraph></Paragraph>
-                        </li>
-                      )
-                    })}
-                  </ol>
-                </article>
-              )
+              return this.renderDayWithReleases(day, currentMonth[day], dayIndex, monthIndex, yearIndex)
             })
           })
         })}

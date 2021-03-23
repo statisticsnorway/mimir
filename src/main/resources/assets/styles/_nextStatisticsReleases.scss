@@ -4,13 +4,15 @@
   h3 {
     font-size: 28px;
     margin-bottom: 30px;
+    font-family: $font-roboto-condensed-bold;
+    font-weight: 700;
   }
 
   article {
     display: flex;
 
     &.first .releaseList {
-        border-top: 2px solid black;
+        border-top: 1px solid $ssb-dark-5;
     }
   }
   .releaseList {
@@ -24,8 +26,8 @@
     }
   }
   time {
-    border: solid 2px black;
-    width: 102px;
+    border: 2px solid $ssb-dark-5;
+    width: 97px;
     height: 80px;
     margin: 3.5px 20px 3px 0;
     text-align: center;
