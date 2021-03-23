@@ -7,7 +7,9 @@ const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getAllStatisticsFromRepo
 } = __non_webpack_require__( '../../../lib/repo/statreg/statistics')
-
+const {
+  renderError
+} = __non_webpack_require__( '/lib/error/error')
 
 const groupStatisticsByYear: any = groupBy((statistic: PreparedStatistics): string => {
   return statistic.variant.year.toString()
@@ -21,8 +23,17 @@ const groupStatisticsByDay: any = groupBy((statistic: PreparedStatistics): strin
   return statistic.variant.day.toString()
 })
 
+exports.get = function(req: Request) {
+  try {
+    return renderPart(req)
+  } catch (e) {
+    return renderError(req, 'Error in part', e)
+  }
+}
 
-export function get(req: Request): Response {
+exports.preview = (req: Request) => renderPart(req)
+
+export function renderPart(req: Request): Response {
   // get statistics
   const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
 
@@ -100,9 +111,18 @@ function filterOnNextRelease(stats: Array<StatisticInListing>) {
         stat.variants.find((variant: VariantInListing) => checkReleaseDate(variant, day)) :
         checkReleaseDate(stat.variants, day)
     })
-    nextReleases.push(...releasesOnThisDay)
+    const trimmed: Array<StatisticInListing> = checkLimitAndTrim(nextReleases, releasesOnThisDay, 8)
+    nextReleases.push(...trimmed)
   }
   return nextReleases
+}
+
+function checkLimitAndTrim(nextReleases: Array<StatisticInListing>, releasesOnThisDay: Array<StatisticInListing>, count: number): Array<StatisticInListing> {
+  if (nextReleases.length + releasesOnThisDay.length > count) {
+    const whereToSlice: number = (count - nextReleases.length)
+    return releasesOnThisDay.slice(0, whereToSlice)
+  }
+  return releasesOnThisDay
 }
 
 function checkReleaseDate(variant: VariantInListing, day: Date) {
