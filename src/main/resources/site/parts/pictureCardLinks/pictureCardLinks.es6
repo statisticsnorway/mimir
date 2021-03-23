@@ -24,8 +24,8 @@ exports.get = function(req) {
   }
 }
 
-exports.preview = function(req, id) {
-  return renderPart(req, id)
+exports.preview = function(req) {
+  return renderPart(req)
 }
 
 function renderPart(req) {
