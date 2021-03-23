@@ -1,0 +1,31 @@
+.nextStatisticsReleases {
+  article {
+    display: flex;
+  }
+  .releaseList {
+    list-style: none;
+    border-bottom: solid 1px #c3dcdc;
+    padding: 0;
+    width: 100%;
+
+    &.first {
+      border-top: solid 1px black;
+    }
+  }
+  time {
+    border: solid 2px black;
+    width: 80px;
+    height: 80px;
+    margin: 3.5px 20px 3px 0;
+    text-align: center;
+
+    .day {
+      font-size: 40px;
+      font-family: $font-roboto-condensed-bold;
+      line-height: 1;
+      display: block;
+      margin-top: 7px;
+    }
+
+  }
+}
