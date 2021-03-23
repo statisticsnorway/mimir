@@ -32,11 +32,11 @@ function useHover() {
 const PictureLink = (props) => {
   const [hoverRef, hovered] = useHover()
   return (
-    <a className="ssb-picture-card vertical" ref={hoverRef} href={props.href}>
+    <a className={`ssb-picture-card vertical ${props.className || ''}`} ref={hoverRef} href={props.href}>
       <div className="image-background">
         <img src={props.imageSrc} alt={props.imageSrc} />
       </div>
-      <div className="overlay">
+      <div className="overlay w-100">
         <span className="il-title">{props.title}</span>
         <span className="il-type">{props.subTitle}</span>
         {hovered ?
@@ -52,21 +52,33 @@ PictureLink.propTypes = {
   subTitle: PropTypes.string,
   href: PropTypes.string,
   imageSrc: PropTypes.string,
-  imageAlt: PropTypes.string
+  imageAlt: PropTypes.string,
+  className: PropTypes.string
 }
 
 const PictureCardLinks = (props) => {
+  function getColSize(length, index) {
+    if (length === 2 || (length === 3 && index === 0)) return 'col-6'
+    if (length === 3 && index > 0) return 'col-3'
+    return 'col-3'
+  }
+
   return (
-    <div>
+    <div className="row">
       {props.pictureCardLinks.map((pictureCard, index) => {
-        return <PictureLink
+        return <div
           key={`picture-card-link-${props.react4xpId}-${index}`}
-          title={pictureCard.title}
-          subTitle={pictureCard.subTitle}
-          href={pictureCard.href}
-          imageSrc={pictureCard.imageSrc}
-          imageAlt={pictureCard.imageAlt}
-        />
+          className={getColSize(props.pictureCardLinks.length, index)}
+        >
+          <PictureLink
+            className="w-100"
+            title={pictureCard.title}
+            subTitle={pictureCard.subTitle}
+            href={pictureCard.href}
+            imageSrc={pictureCard.imageSrc}
+            imageAlt={pictureCard.imageAlt}
+          />
+        </div>
       })}
     </div>
   )
