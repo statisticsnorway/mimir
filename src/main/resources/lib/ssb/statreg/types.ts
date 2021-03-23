@@ -12,10 +12,10 @@ export interface KontaktNavn {
 }
 
 export interface Kontakt {
-    id: number;
+    id: number | string;
     epost: string;
-    telefon: number;
-    mobil: number;
+    telefon: number | string;
+    mobil: number | string;
     navn: Array<KontaktNavn>;
 }
 
@@ -28,8 +28,8 @@ export interface KontaktXML {
 }
 
 export interface Contact extends StatRegBase {
-    telephone: number;
-    mobile: number;
+    telephone: number | string;
+    mobile: number | string;
     email: string;
     name: string;
 }

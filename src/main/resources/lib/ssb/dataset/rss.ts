@@ -210,7 +210,7 @@ interface RSSItem {
 
 interface RSSContact {
   'ssbrss:person': string;
-  'ssbrss:phone': number;
+  'ssbrss:phone': number | string;
   'ssbrss:email': string;
 }
 

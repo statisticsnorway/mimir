@@ -544,7 +544,7 @@ export function refreshDatasetHandler(
       // only get credentials for this datasourceKey (in this case a tbml id)
       const ownerCredentialsForTbml: ProcessXml | undefined = processXmls ?
         processXmls.find((processXml: ProcessXml) => {
-          return processXml.tbmlId === dataSourceKey
+          return processXml.tbmlId.toString() === dataSourceKey.toString()
         }) : undefined
       // refresh data in draft only if there is owner credentials exists and fetchpublished is false
       const refreshDatasetResult: CreateOrUpdateStatus = refreshDataset(
@@ -695,7 +695,7 @@ export interface DashboardDatasetLib {
 }
 
 export interface ProcessXml {
-  tbmlId: number;
+  tbmlId: string;
   processXml: string;
 }
 
