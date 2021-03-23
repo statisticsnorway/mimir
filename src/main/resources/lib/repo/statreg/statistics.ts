@@ -1,6 +1,6 @@
 __non_webpack_require__('/lib/polyfills/nashorn')
 import { StatRegNode, OldStatRegContent } from '../statreg'
-import { StatisticInListing, VariantInListing } from '../../ssb/statreg/types'
+import { StatisticInListing, VariantInListing, ReleasesInListing, ReleaseDatesVariant } from '../../ssb/statreg/types'
 import { ArrayUtilsLib } from '../../ssb/arrayUtils'
 import { StatRegConfigLib } from '../../ssb/statreg/config'
 import { StatRegCommonLib } from '../../ssb/statreg/common'
@@ -78,7 +78,13 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
             frekvens: 'Dag',
             previousRelease: previousRelease.format('YYYY-MM-DD HH:mm:ss.S'),
             nextRelease: nextRelease.format('YYYY-MM-DD HH:mm:ss.S'),
-            nextReleaseId: '0'
+            nextReleaseId: '0',
+            upcomingReleases: [
+              {
+                id: '0',
+                publishTime: nextRelease.format('YYYY-MM-DD HH:mm:ss.S')
+              }
+            ]
           }]
         })
       }
@@ -154,6 +160,37 @@ export function getStatisticByShortNameFromRepo(shortName: string): StatisticInL
   return allStats.find((s) => shortName === s.shortName)
 }
 
+export function getReleaseDatesByVariants(variants: Array<VariantInListing>): ReleaseDatesVariant {
+  const releaseDatesStatistic: ReleaseDatesVariant = {
+    nextRelease: [],
+    previousRelease: []
+  }
+  const nextReleases: Array<string> = []
+  const previousReleases: Array<string> = []
+  variants.forEach((variant) => {
+    const upcomingReleases: Array<ReleasesInListing> = variant.upcomingReleases ? ensureArray(variant.upcomingReleases) : []
+    upcomingReleases.map((release) => nextReleases.push(release.publishTime))
+    previousReleases.push(variant.previousRelease)
+    // TODO:Remove next line when upcomingReleases exist in all enviroments
+    if (upcomingReleases.length === 0 && variant.nextRelease !== '') nextReleases.push(variant.nextRelease)
+  })
+
+  const nextReleasesSorted: Array<string> = nextReleases.sort( (a: string, b: string) => new Date(a).getTime() - new Date(b).getTime())
+  const nextReleaseFiltered: Array<string> = nextReleasesSorted.filter((release) => moment(release).isAfter(new Date(), 'minute'))
+  const nextReleaseIndex: number = nextReleasesSorted.indexOf(nextReleaseFiltered[0])
+
+  // If Statregdata is old, get date before nextRelease as previous date
+  if (nextReleaseFiltered.length > 0 && nextReleaseIndex > 0) {
+    previousReleases.push(nextReleasesSorted[nextReleaseIndex - 1])
+  }
+  previousReleases.sort( (a: string, b: string) => new Date(a).getTime() - new Date(b).getTime()).reverse()
+
+  releaseDatesStatistic.nextRelease = nextReleaseFiltered
+  releaseDatesStatistic.previousRelease = previousReleases
+
+  return releaseDatesStatistic
+}
+
 export interface StatRegStatisticsLib {
   STATREG_REPO_STATISTICS_KEY: string;
   fetchStatistics: () => Array<StatisticInListing> | null;
@@ -162,4 +199,5 @@ export interface StatRegStatisticsLib {
   getAllStatisticsFromRepo: () => Array<StatisticInListing>;
   getStatisticByIdFromRepo: (statId: string) => StatisticInListing | undefined;
   getStatisticByShortNameFromRepo: (shortName: string) => StatisticInListing | undefined;
+  getReleaseDatesByVariants: (variants: Array<VariantInListing>) => Array<string>;
 }

@@ -1,11 +1,13 @@
 <html data-th-lang="${language.code}">
 <head>
+  <!-- UA GA tracking script with added GA4 gtag config -->
   <script async="true" data-th-if="${GA_TRACKING_ID}" data-th-src="|https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}|"></script>
   <script th:inline="javascript" data-th-if="${GA_TRACKING_ID}">
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', /*[[${GA_TRACKING_ID}]]*/);
+    gtag('config', 'G-RWG24LNZ9T');
   </script>
 
   <meta charset="UTF-8"/>
@@ -75,7 +77,7 @@
                 <div class="row">
                   <div class="col">
                     <h2 data-th-if="${region.hideTitle && region.title}" class="sr-only sr-only-focusable mb-5" data-th-text="${region.title}"></h2>
-                    <h2 data-th-if="${!region.hideTitle && region.title}" class="mb-5" data-th-text="${region.title}"></h2>
+                    <h2 data-th-if="${!region.hideTitle && region.title}" class="mb-5 mt-2 pt-5" data-th-text="${region.title}"></h2>
                   </div>
                 </div>
               </div>

@@ -7,7 +7,7 @@ import { StatRegStatisticsLib } from '../../repo/statreg/statistics'
 import { TaskLib } from '../../types/task'
 import { UtilLibrary } from '../../types/util'
 import { StatisticLib } from '../statistic'
-import { StatisticInListing } from '../statreg/types'
+import { StatisticInListing, ReleaseDatesVariant } from '../statreg/types'
 import { DatasetLib } from './dataset'
 import { RepoJobLib, JobEventNode, JobInfoNode, StatisticsPublishResult, DataSourceStatisticsPublishResult } from '../../repo/job'
 import { RepoQueryLib } from '../../repo/query'
@@ -64,9 +64,8 @@ const {
   send
 }: EventLibrary = __non_webpack_require__('/lib/xp/event')
 const {
-  getNextReleaseStatistic,
-  getPreviousReleaseStatistic
-} = __non_webpack_require__('/lib/ssb/utils')
+  getReleaseDatesByVariants
+} = __non_webpack_require__('/lib/repo/statreg/statistics')
 
 const jobs: {[key: string]: JobEventNode | JobInfoNode} = {}
 
@@ -305,7 +304,8 @@ function getNextRelease(statistic: Content<Statistics>): string | null{
   if (statistic.data.statistic) {
     const statisticStatreg: StatisticInListing | undefined = getStatisticByIdFromRepo(statistic.data.statistic)
     if (statisticStatreg) {
-      return getNextReleaseStatistic(forceArray(statisticStatreg.variants))
+      const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(forceArray(statisticStatreg.variants))
+      return releaseDates.nextRelease[0]
     }
   }
   return null
@@ -315,7 +315,8 @@ function getPreviousRelease(statistic: Content<Statistics>): string | null {
   if (statistic.data.statistic) {
     const statisticStatreg: StatisticInListing | undefined = getStatisticByIdFromRepo(statistic.data.statistic)
     if (statisticStatreg) {
-      return getPreviousReleaseStatistic(forceArray(statisticStatreg.variants))
+      const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(forceArray(statisticStatreg.variants))
+      return releaseDates.previousRelease[0]
     }
   }
   return null

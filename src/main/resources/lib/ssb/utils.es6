@@ -248,24 +248,6 @@ export const getAttachmentContent = (contentId) => {
   return lines[0]
 }
 
-export const getPreviousReleaseStatistic = (variants) => {
-  if (variants.length > 1) {
-    const variantsWithPreviouseDate = variants.filter((variant) => variant.previousRelease !== '')
-    const sortedAndReversed = variantsWithPreviouseDate.sort((d1, d2) => new Date(d1.previousRelease) - new Date(d2.previousRelease)).reverse()
-    return sortedAndReversed[0].previousRelease
-  } else {
-    return variants[0].previousRelease
-  }
-}
-
-export const getNextReleaseStatistic = (variants) => {
-  const variantWithDate = variants.filter((variant) => variant.nextRelease !== '' && moment(variant.nextRelease).isSameOrAfter(new Date(), 'minute'))
-  if (variantWithDate.length > 1) {
-    variantWithDate.sort((d1, d2) => new Date(d1.nextRelease) - new Date(d2.nextRelease))
-  }
-  return variantWithDate.length > 0 ? variantWithDate[0].nextRelease : ''
-}
-
 export const getRowValue = (value) => {
   if (typeof value === 'object' && value.content != undefined) {
     return value.content
