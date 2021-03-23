@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Button, Col, Modal, Row } from 'react-bootstrap'
 import { RefreshStatisticsForm } from './RefreshStatisticsForm'
 import { RefreshStatisticsStatus } from './RefreshStatisticsStatus'
-import { refreshStatistic, setOpenModal, setOpenStatistic, setModal } from '../containers/Statistics/actions'
+import { refreshStatistic, setOpenModal, setOpenStatistic, setModal, resetModal } from '../containers/Statistics/actions'
 import { createSelectModalDisplay, selectOpenStatistic } from '../containers/Statistics/selectors'
 import { WebSocketContext } from '../utils/websocket/WebsocketProvider'
 
@@ -42,6 +42,7 @@ export function RefreshStatisticsModal(props) {
   function handleClose() {
     setOpenModal(dispatch, false)
     setOpenStatistic(dispatch, io, null)
+    resetModal(dispatch, openStatistic.id)
   }
 
   const updateTables = (owners) => {
