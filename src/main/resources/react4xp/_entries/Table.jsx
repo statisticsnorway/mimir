@@ -109,15 +109,15 @@ class Table extends React.Component {
     const language = this.props.table.language
     const decimalSeparator = (language === 'en') ? '.' : ','
     if (value) {
-      if (typeof value === 'number' || this.isStringNumber(value)) {
-        const countDecimals = value.toString().indexOf('.') > -1 ? value.toString().split('.')[1].length : 0
+      if (typeof value === 'number' || typeof value === 'string' && !isNaN(value)) {
+        const decimals = value.toString().indexOf('.') > -1 ? value.toString().split('.')[1].length : 0
         return (
           <NumberFormat
             value={ Number(value) }
             displayType={'text'}
             thousandSeparator={' '}
             decimalSeparator={decimalSeparator}
-            decimalScale={countDecimals}
+            decimalScale={decimals}
             fixedDecimalScale={true}
           />
         )
@@ -126,10 +126,6 @@ class Table extends React.Component {
       }
     }
     return value
-  }
-
-  isStringNumber(str) {
-    return !isNaN(str) && !isNaN(parseFloat(str))
   }
 
   addDownloadTableDropdown(mobile) {

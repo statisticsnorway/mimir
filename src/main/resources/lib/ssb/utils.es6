@@ -277,6 +277,6 @@ export const getRowValue = (value) => {
 }
 
 export const isNumber = (str) => {
-  return ((str != null) && (str !== '') && !isNaN(Number(str.toString())))
+  return ((str != null) && (str !== '') && !isNaN(str))
 }
 
