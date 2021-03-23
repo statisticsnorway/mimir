@@ -1,11 +1,6 @@
 export interface NextStatisticReleasesPartConfig {
   /**
-   * Nøkkeltall
+   * Antall statistikker i liste
    */
-  keyfiguresFrontpage?: Array<{
-    /**
-     * Antall statistikker i liste
-     */
-    numberOfStatistics?: string;
-  }>;
+  numberOfStatistics?: string;
 }

@@ -44,13 +44,11 @@ export function get(req: Request): Response {
     groupedByMonth[year] = groupedByDay
   })
 
-  const props: object = {
-    releases: groupedByMonth
-  }
-
   // render component
   const reactComponent: React4xpObject = new React4xp('NextStatisticReleases')
-    .setProps(props)
+    .setProps({
+      releases: groupedByMonth
+    })
     .setId('nextStatisticsReleases')
     .uniqueId()
 
@@ -81,13 +79,11 @@ function closestReleaseDate(variants: Array<VariantInListing>): PreparedVariant 
   return formatVariant(variantWithClosestNextRelease)
 }
 
-const months: Array<string> = ['jan', 'feb', 'mar', 'apr', 'mai', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'des']
 function formatVariant(variant: VariantInListing): PreparedVariant {
   const date: Date = new Date(variant.nextRelease)
   return {
     id: variant.id,
     day: date.getDay(),
-    month: months[date.getMonth()],
     monthNumber: date.getMonth(),
     year: date.getFullYear(),
     frequency: variant.frekvens
@@ -128,7 +124,6 @@ interface PreparedStatistics {
 interface PreparedVariant {
   id: string;
   day: number;
-  month: string;
   monthNumber: number;
   year: number;
   frequency: string;

@@ -20,12 +20,12 @@ class NextStatisticReleases extends React.Component {
             return Object.keys(currentMonth).map((day, dayIndex) => {
               const currentDay = currentMonth[day]
               return (
-                <article key={`${yearIndex}-${monthIndex}-${dayIndex}`}>
+                <article className={dayIndex === 0 && 'first'} key={`${yearIndex}-${monthIndex}-${dayIndex}`}>
                   <time dateTime={`${year}-${month}-${day}`}>
                     <span className='day'>{day}</span>
                     <span className='month'>{months[month]}</span>
                   </time>
-                  <ol className='releaseList first'>
+                  <ol className='releaseList'>
                     {currentDay.map((release, index) => {
                       return (
                         <li key={index}>

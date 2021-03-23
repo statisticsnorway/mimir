@@ -1,6 +1,17 @@
 .nextStatisticsReleases {
+  margin-top: 80px;
+
+  h3 {
+    font-size: 28px;
+    margin-bottom: 30px;
+  }
+
   article {
     display: flex;
+
+    &.first .releaseList {
+        border-top: 2px solid black;
+    }
   }
   .releaseList {
     list-style: none;
@@ -8,13 +19,15 @@
     padding: 0;
     width: 100%;
 
-    &.first {
-      border-top: solid 1px black;
+    &:first-child {
+      background: orange
+
     }
+
   }
   time {
     border: solid 2px black;
-    width: 80px;
+    width: 102px;
     height: 80px;
     margin: 3.5px 20px 3px 0;
     text-align: center;
