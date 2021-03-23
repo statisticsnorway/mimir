@@ -1,5 +1,5 @@
 import React from 'react'
-import { Col, Row, Button } from 'react-bootstrap'
+import { Col, Row } from 'react-bootstrap'
 import PropTypes from 'prop-types'
 
 
@@ -28,14 +28,12 @@ export function RefreshStatisticsStatus(props) {
           )
         })
       }
-      {modalDisplay === 'complete' && <Button onClick={() => props.resetModal()}>Reset</Button>}
     </React.Fragment>
   )
 }
 
 RefreshStatisticsStatus.propTypes = {
-  modal: PropTypes.object,
-  resetModal: PropTypes.func
+  modal: PropTypes.object
 }
 
 export default (props) => <RefreshStatisticsStatus {...props} />
