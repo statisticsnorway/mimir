@@ -33,6 +33,7 @@ class EntryLinks extends React.Component {
                 </Link>
                 <Link
                   href={href}
+                  linkType="profiled"
                   icon={ this.renderIcon(mobileIcon) }
                   className="d-md-none mobile-link-icon">
                   {title}
