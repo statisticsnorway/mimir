@@ -110,7 +110,7 @@ class Table extends React.Component {
     const decimalSeparator = (language === 'en') ? '.' : ','
     if (value) {
       if (typeof value === 'number' || this.isStringNumber(value)) {
-        const countDecimals = value.includes('.') ? value.split('.')[1].length : 0
+        const countDecimals = value.toString().indexOf('.') > -1 ? value.toString().split('.')[1].length : 0
         return (
           <NumberFormat
             value={ Number(value) }
