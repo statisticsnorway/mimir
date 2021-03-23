@@ -2,6 +2,8 @@ import { Request, Response } from 'enonic-types/controller'
 import { StatisticInListing, VariantInListing } from '../../../lib/ssb/statreg/types'
 import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
 import { groupBy } from 'ramda'
+import { Component, PortalLibrary } from 'enonic-types/portal'
+import { NextStatisticReleasesPartConfig } from './nextStatisticReleases-part-config'
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 const {
@@ -10,6 +12,10 @@ const {
 const {
   renderError
 } = __non_webpack_require__( '/lib/error/error')
+const {
+  getComponent
+}: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
+
 
 const groupStatisticsByYear: any = groupBy((statistic: PreparedStatistics): string => {
   return statistic.variant.year.toString()
@@ -34,11 +40,13 @@ exports.get = function(req: Request) {
 exports.preview = (req: Request) => renderPart(req)
 
 export function renderPart(req: Request): Response {
+  const part: Component<NextStatisticReleasesPartConfig> = getComponent()
+  const numberOfRelases: number = part.config.numberOfStatistics ? parseInt(part.config.numberOfStatistics) : 8
   // get statistics
   const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
 
   // All statistics published today, and fill up with next days.
-  const releasesFiltered: Array<StatisticInListing> = filterOnNextRelease(releases)
+  const releasesFiltered: Array<StatisticInListing> = filterOnNextRelease(releases, numberOfRelases)
 
   // Choose the right variant and prepare the date in a way it works with the groupBy function
   const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: StatisticInListing) => prepareRelease(release))
@@ -101,9 +109,9 @@ function formatVariant(variant: VariantInListing): PreparedVariant {
   }
 }
 
-function filterOnNextRelease(stats: Array<StatisticInListing>) {
+function filterOnNextRelease(stats: Array<StatisticInListing>, numberOfReleases: number) {
   const nextReleases: Array<StatisticInListing> = []
-  for (let i: number = 0; nextReleases.length < 8; i++) {
+  for (let i: number = 0; nextReleases.length < numberOfReleases; i++) {
     const day: Date = new Date()
     day.setDate(day.getDate() + i)
     const releasesOnThisDay: Array<StatisticInListing> = stats.filter((stat: StatisticInListing) => {
@@ -111,7 +119,7 @@ function filterOnNextRelease(stats: Array<StatisticInListing>) {
         stat.variants.find((variant: VariantInListing) => checkReleaseDate(variant, day)) :
         checkReleaseDate(stat.variants, day)
     })
-    const trimmed: Array<StatisticInListing> = checkLimitAndTrim(nextReleases, releasesOnThisDay, 8)
+    const trimmed: Array<StatisticInListing> = checkLimitAndTrim(nextReleases, releasesOnThisDay, numberOfReleases)
     nextReleases.push(...trimmed)
   }
   return nextReleases
