@@ -16,16 +16,26 @@ const {
   getComponent
 }: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
 
+const {
+  data: {
+    forceArray
+  }
+} = __non_webpack_require__( '/lib/util')
 
-const groupStatisticsByYear: any = groupBy((statistic: PreparedStatistics): string => {
+
+interface GroupedBy<T> {
+  [key: string]: Array<T> | T;
+}
+
+const groupStatisticsByYear: (statistics: Array<PreparedStatistics>) => GroupedBy<PreparedStatistics> = groupBy((statistic: PreparedStatistics): string => {
   return statistic.variant.year.toString()
 })
 
-const groupStatisticsByMonth: any = groupBy((statistic: PreparedStatistics): string => {
+const groupStatisticsByMonth: (statistics: Array<PreparedStatistics>) => GroupedBy<PreparedStatistics> = groupBy((statistic: PreparedStatistics): string => {
   return statistic.variant.monthNumber.toString()
 })
 
-const groupStatisticsByDay: any = groupBy((statistic: PreparedStatistics): string => {
+const groupStatisticsByDay: (statistics: Array<PreparedStatistics>) => GroupedBy<PreparedStatistics> = groupBy((statistic: PreparedStatistics): string => {
   return statistic.variant.day.toString()
 })
 
@@ -41,32 +51,32 @@ exports.preview = (): Response => renderPart()
 
 export function renderPart(): Response {
   const part: Component<NextStatisticReleasesPartConfig> = getComponent()
-  const numberOfRelases: number = part.config.numberOfStatistics ? parseInt(part.config.numberOfStatistics) : 8
+  const numberOfReleases: number = part.config.numberOfStatistics ? parseInt(part.config.numberOfStatistics) : 8
   // get statistics
   const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
 
   // All statistics published today, and fill up with next days.
-  const releasesFiltered: Array<StatisticInListing> = filterOnNextRelease(releases, numberOfRelases)
+  const releasesFiltered: Array<StatisticInListing> = filterOnNextRelease(releases, numberOfReleases)
 
   // Choose the right variant and prepare the date in a way it works with the groupBy function
   const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: StatisticInListing) => prepareRelease(release))
 
   // group by year, then  month, then day
-  const groupedByYear: GroupedBy = groupStatisticsByYear(releasesPrepped)
-  const groupedByMonth: GroupedBy = {}
-  const groupedByDay: GroupedBy = {}
+  const groupedByYear: GroupedBy<PreparedStatistics> = groupStatisticsByYear(releasesPrepped)
+  const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> = {}
+  const groupedByMonthAndDay: GroupedBy<GroupedBy<PreparedStatistics>> = {}
   Object.keys(groupedByYear).forEach((year) => {
-    const tmpMonth: GroupedBy = groupStatisticsByMonth(groupedByYear[year])
+    const tmpMonth: GroupedBy<PreparedStatistics> = groupStatisticsByMonth(forceArray(groupedByYear[year]))
     Object.keys(tmpMonth).forEach((month) => {
-      groupedByDay[month] = groupStatisticsByDay(tmpMonth[month])
+      groupedByMonthAndDay[month] = groupStatisticsByDay(forceArray(tmpMonth[month]))
     })
-    groupedByMonth[year] = groupedByDay
+    groupedByYearMonthAndDay[year] = groupedByMonthAndDay
   })
 
   // render component
   const reactComponent: React4xpObject = new React4xp('NextStatisticReleases')
     .setProps({
-      releases: groupedByMonth
+      releases: groupedByYearMonthAndDay
     })
     .setId('nextStatisticsReleases')
     .uniqueId()
@@ -159,7 +169,4 @@ interface PreparedVariant {
   frequency: string;
 }
 
-interface GroupedBy {
-  [key: string]: Array<object> | object;
-}
 

@@ -9,12 +9,12 @@ class NextStatisticReleases extends React.Component {
     super(props)
   }
 
-  renderDayWithReleases(currentDay, dayIndex, monthIndex, yearIndex) {
+  renderDayWithReleases(currentDay, currentDate, indexes) {
     return (
-      <article className={dayIndex === 0 && 'first'} key={`${yearIndex}-${monthIndex}-${dayIndex}`}>
-        <time dateTime={`${year}-${month}-${day}`}>
-          <span className='day'>{day}</span>
-          <span className='month'>{months[month]}</span>
+      <article className={indexes.dayIndex === 0 && 'first'} key={`${indexes.yearIndex}-${indexes.monthIndex}-${indexes.dayIndex}`}>
+        <time dateTime={`${currentDate.year}-${currentDate.month}-${currentDate.day}`}>
+          <span className='day'>{currentDate.day}</span>
+          <span className='month'>{months[currentDate.month]}</span>
         </time>
         <ol className='releaseList'>
           {currentDay.map((release, index) => {
@@ -39,7 +39,15 @@ class NextStatisticReleases extends React.Component {
           return Object.keys(currentYear).map((month, monthIndex) => {
             const currentMonth = currentYear[month]
             return Object.keys(currentMonth).map((day, dayIndex) => {
-              return this.renderDayWithReleases(day, currentMonth[day], dayIndex, monthIndex, yearIndex)
+              return this.renderDayWithReleases( currentMonth[day], {
+                year,
+                month,
+                day
+              }, {
+                dayIndex,
+                monthIndex,
+                yearIndex
+              })
             })
           })
         })}
