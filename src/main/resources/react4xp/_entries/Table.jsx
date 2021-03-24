@@ -277,18 +277,17 @@ class Table extends React.Component {
       footnotes, correctionNotice
     } = this.state.table.tfoot
     const noteRefsList = this.state.table.noteRefs
-    const noteIdList = this.state.table.tfoot.footnotes
 
-    if (footnotes.length > 0 && noteRefsList.length > 0 || correctionNotice) {
+    if (footnotes && footnotes.length > 0 && noteRefsList.length > 0 || correctionNotice) {
       return (
         <tfoot>
-          {noteIdList.map((noteId, index) => {
-            const filtered = noteRefsList.filter((noterefs) => noterefs === noteId.noteid)
+          {noteRefsList.map((noteRef, index) => {
+            const filtered = footnotes.filter((note) => note.noteid === noteRef)
             const footNote = filtered && filtered[0]
             return ( footNote &&
               <tr key={index} className="footnote">
                 <td colSpan="100%">
-                  <sup>{index + 1}</sup>{noteId.content}
+                  <sup>{index + 1}</sup>{footNote.content}
                 </td>
               </tr>
             )
@@ -425,11 +424,14 @@ class Table extends React.Component {
   }
 
   addNoteRefs(noteRefId) {
-    const noteRef = noteRefId ? noteRefId.replace(/[^0-9.]/g, '') : undefined
-    if ( noteRef ) {
-      return (
-        <sup>{parseInt(noteRef) + 1}</sup>
-      )
+    const noteRefsList = noteRefId ? this.state.table.noteRefs : undefined
+    if (noteRefsList) {
+      const noteRefIndex = noteRefsList.indexOf(noteRefId)
+      if (noteRefIndex > -1) {
+        return (
+          <sup>{noteRefIndex + 1}</sup>
+        )
+      }
     }
   }
 

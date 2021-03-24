@@ -108,6 +108,8 @@ function getTableViewData(table: Content<Table>, dataContent: TbmlDataUniform ):
     [title.noterefs, ...headNoteRefs, ...bodyNoteRefs] :
     [...headNoteRefs, ...bodyNoteRefs]
 
+  const uniqueNoteRefs: Array<string> = noteRefs.filter((v, i, a) => a.indexOf(v) === i)
+
   return {
     caption: title,
     thead: headRows,
@@ -117,7 +119,7 @@ function getTableViewData(table: Content<Table>, dataContent: TbmlDataUniform ):
       footnotes: notes ? notes.note : [],
       correctionNotice: table.data.correctionNotice || ''
     },
-    noteRefs,
+    noteRefs: uniqueNoteRefs,
     sourceList
   }
 }
