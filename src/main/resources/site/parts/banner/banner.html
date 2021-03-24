@@ -14,14 +14,14 @@
     <div class="row">
 
       <div data-th-if="${pageType._selected == 'kommunefakta'}" class="col-12">
-        <div class="subtitle roboto-bold position-relative" data-th-text="${pageDisplayName}">Kommunefakta</div>
+        <div class="subtitle mb-3 roboto-plain position-relative" data-th-text="${pageDisplayName}">Kommunefakta</div>
         <h1 class="mt-0 pt-0 position-relative"
             data-th-if="${municipalityTitle}"
             data-th-text="${municipalityTitle}">Navn på kommune</h1>
       </div>
 
       <div data-th-if="${pageType._selected == 'faktaside'}" class="col-12">
-        <div class="subtitle roboto-bold position-relative" data-th-text="${factsAbout}">Fakta om</div>
+        <div class="subtitle mb-3 roboto-plain position-relative" data-th-text="${factsAbout}">Fakta om</div>
         <h1 class="mt-0 pt-0 position-relative" data-th-text="${pageType.faktaside.title}">Tittel på faktaside</h1>
       </div>
 

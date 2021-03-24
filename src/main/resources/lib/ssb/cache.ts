@@ -111,6 +111,13 @@ export function setup(): void {
     type: 'custom.clearCache',
     callback: (e: EnonicEvent<CompletelyClearCacheOptions>) => completelyClearCache(e.data)
   })
+
+  listener({
+    type: 'custom.clearDatasetCache',
+    callback: (e: EnonicEvent<{path: string}>) => {
+      clearCacheRepo(e.data.path)
+    }
+  })
 }
 
 const validRepos: Array<string> = [ENONIC_CMS_DEFAULT_REPO, DATASET_REPO]
@@ -207,7 +214,7 @@ function clearForBranch(nodes: EnonicEventData['nodes'], branch: string): void {
           }
         }
       } else if (n.repo === DATASET_REPO) {
-        clearCacheRepo(n)
+        clearCacheRepo(n.path)
       }
     })
   })
@@ -273,9 +280,9 @@ function clearCache(content: Content, branch: string, cleared: Array<string>): A
   return cleared
 }
 
-function clearCacheRepo(node: EnonicEventData['nodes'][0]): void {
-  cacheLog(`clear ${node.path} from dataset repo cache`)
-  datasetRepoCache.remove(node.path)
+function clearCacheRepo(path: string): void {
+  cacheLog(`clear ${path} from dataset repo cache`)
+  datasetRepoCache.remove(path)
 }
 
 function getFilterCache(branch: string, filterKey: string): Cache {

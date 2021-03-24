@@ -31,6 +31,9 @@
         </input>
       </items>
     </item-set>
+    <input name="hide_breadcrumb" type="CheckBox">
+      <label>Skjul Brødsmulesti</label>
+    </input>
   	<input name="bkg_color" type="RadioButton">
   		<label>Velg bakgrunnsfarge</label>
   		<occurrences minimum="1" maximum="1"/>

@@ -10,33 +10,43 @@ class Footer extends React.Component {
 
   renderFooterMenuDesktop(footerNavigation) {
     return footerNavigation.map((topMenuItem, index) => {
-      return (
-        <div key={index} className="footer-link">
-          <Title size={4} negative>{topMenuItem.title}</Title>
-          <ol>
-            {this.renderFooterLinkMenu(topMenuItem)}
-          </ol>
-        </div>)
+      if (topMenuItem && topMenuItem.title) {
+        return (
+          <div key={index} className="footer-link">
+            <Title size={4} negative>{topMenuItem.title}</Title>
+            <ol>
+              {this.renderFooterLinkMenu(topMenuItem)}
+            </ol>
+          </div>
+        )
+      }
     })
   }
 
   renderFooterMenuMobile(footerNavigation) {
     return footerNavigation.map((topMenuItem, index) => {
-      return (
-        <Accordion key={index} header={topMenuItem.title}>
-          <ol>
-            {this.renderFooterLinkMenu(topMenuItem)}
-          </ol>
-        </Accordion>)
+      if (topMenuItem && topMenuItem.title) {
+        return (
+          <Accordion key={index} header={topMenuItem.title}>
+            <ol>
+              {this.renderFooterLinkMenu(topMenuItem)}
+            </ol>
+          </Accordion>
+        )
+      }
     })
   }
 
   renderFooterLinkMenu(topMenuItem) {
     return topMenuItem.menuItems && topMenuItem.menuItems.map((menuItem, itemIndex) => {
-      return (
-        <li key={itemIndex}>
-          <Link negative href={menuItem.path ? menuItem.path : ''} icon={<ArrowRight size="20" />}>{menuItem.title}</Link>
-        </li>)
+      if (menuItem && menuItem.path && menuItem.title) {
+        return (
+          <li key={itemIndex}>
+            <Link negative href={menuItem.path}
+              icon={<ArrowRight size="20"/>}>{menuItem.title}</Link>
+          </li>
+        )
+      }
     })
   }
 
@@ -44,25 +54,37 @@ class Footer extends React.Component {
     const {
       facebookUrl, twitterUrl, linkedinUrl, rssUrl
     } = this.props
-    return (
-      <div className="social-links">
-        <Link ariaLabel='Facebook' href={facebookUrl} isExternal negative icon={<Facebook size={24} />} />
-        <Link ariaLabel='Twitter' href={twitterUrl} isExternal negative icon={<Twitter size={24} />} />
-        <Link ariaLabel='Linkedin' href={linkedinUrl} isExternal negative icon={<Linkedin size={24} />} />
-        <Link ariaLabel='Rss' href={rssUrl} negative icon={<Rss size={24} />} />
-      </div>)
+    if (facebookUrl && twitterUrl && linkedinUrl && rssUrl) {
+      return (
+        <div className="social-links">
+          <Link ariaLabel='Facebook' href={facebookUrl} isExternal negative icon={<Facebook size={24}/>}/>
+          <Link ariaLabel='Twitter' href={twitterUrl} isExternal negative icon={<Twitter size={24}/>}/>
+          <Link ariaLabel='Linkedin' href={linkedinUrl} isExternal negative icon={<Linkedin size={24}/>}/>
+          <Link ariaLabel='Rss' href={rssUrl} negative icon={<Rss size={24}/>}/>
+        </div>
+      )
+    }
   }
 
   renderGlobalLinks() {
     const {
       globalLinks
     } = this.props
-    return (
-      <div className="global-links">
-        {globalLinks.map((globalLink, index) => {
-          return (<Link key={'link_' + index} href={globalLink.path ? globalLink.path : ''} negative>{globalLink.title}</Link>)
-        })}
-      </div>)
+    if (globalLinks) {
+      return (
+        <div className="global-links">
+          {globalLinks.map((globalLink, index) => {
+            if (globalLink && globalLink.path && globalLink.title) {
+              return (
+                <Link key={'link_' + index} href={globalLink.path} negative>
+                  {globalLink.title}
+                </Link>
+              )
+            }
+          })}
+        </div>
+      )
+    }
   }
 
   renderCopyRight() {
@@ -70,11 +92,14 @@ class Footer extends React.Component {
     const {
       copyrightUrl, copyrightText
     } = this.props
-    const test = copyrightText + ', ' + year
-    return (
-      <div className="copyright">
-        <Link href={copyrightUrl ? copyrightUrl : ''} isExternal negative >{test}</Link>
-      </div>)
+    if (copyrightUrl && copyrightText) {
+      const text = copyrightText + ', ' + year
+      return (
+        <div className="copyright">
+          <Link href={copyrightUrl} isExternal negative>{text}</Link>
+        </div>
+      )
+    }
   }
 
   goToTop() {
@@ -91,42 +116,44 @@ class Footer extends React.Component {
     const {
       logoUrl, footerNavigation, topButtonText
     } = this.props
-    return (
-      <div className="ssb-footer-wrapper">
-        <div className="container">
-          <div className="footer-top-row">
-            <img src={logoUrl} alt="ssb-logo"/>
-            <Button negative onClick={()=> this.goToTop()
-            }>
-              <ArrowUp size="22" className="mr-2" />
-              {topButtonText}
-            </Button>
-          </div>
-          <div className="footer-content">
-            <nav id="footerMenu">
-              <div className="footer-menu">
-                {this.renderFooterMenuDesktop(footerNavigation)}
-              </div>
-              <div className="showOnMobile footer-menu">
-                {this.renderFooterMenuMobile(footerNavigation)}
-              </div>
-            </nav>
-          </div>
-          <div className="footer-bottom-row">
-            <div className="links-left">
-              {this.renderCopyRight()}
-              {this.renderGlobalLinks()}
+    if (logoUrl && footerNavigation && topButtonText) {
+      return (
+        <div className="ssb-footer-wrapper">
+          <div className="container">
+            <div className="footer-top-row">
+              <img src={logoUrl} alt="ssb-logo"/>
+              <Button negative onClick={() => this.goToTop()
+              }>
+                <ArrowUp size="22" className="mr-2"/>
+                {topButtonText}
+              </Button>
             </div>
-            {this.renderSocialLinks()}
-          </div>
-          <div className="showOnMobile footer-bottom-row">
-            {this.renderSocialLinks()}
-            {this.renderGlobalLinks()}
-            {this.renderCopyRight()}
+            <div className="footer-content">
+              <nav id="footerMenu">
+                <div className="footer-menu">
+                  {this.renderFooterMenuDesktop(footerNavigation)}
+                </div>
+                <div className="showOnMobile footer-menu">
+                  {this.renderFooterMenuMobile(footerNavigation)}
+                </div>
+              </nav>
+            </div>
+            <div className="footer-bottom-row">
+              <div className="links-left">
+                {this.renderCopyRight()}
+                {this.renderGlobalLinks()}
+              </div>
+              {this.renderSocialLinks()}
+            </div>
+            <div className="showOnMobile footer-bottom-row">
+              {this.renderSocialLinks()}
+              {this.renderGlobalLinks()}
+              {this.renderCopyRight()}
+            </div>
           </div>
         </div>
-      </div>
-    )
+      )
+    }
   }
 }
 

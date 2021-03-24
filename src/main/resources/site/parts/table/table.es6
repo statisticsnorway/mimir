@@ -181,14 +181,13 @@ const getDownloadTableOptions = () => {
 
 const getStandardSymbolPage = (standardSymbolPage, standardSymbolText) => {
   if (standardSymbolPage) {
-    const standardSymbolHref = standardSymbolPage ? pageUrl({
+    const standardSymbolHref = pageUrl({
       id: standardSymbolPage
-    }) : ''
+    })
 
     return {
       href: standardSymbolHref,
       text: standardSymbolText
     }
   }
-  return null
 }
