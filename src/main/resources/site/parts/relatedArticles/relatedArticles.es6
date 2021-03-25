@@ -16,8 +16,11 @@ const {
 } = __non_webpack_require__( '/lib/xp/content')
 const util = __non_webpack_require__('/lib/util')
 const {
-  getImageAlt, getPreviousReleaseStatistic, getNextReleaseStatistic
+  getImageAlt
 } = __non_webpack_require__('/lib/ssb/utils')
+const {
+  getReleaseDatesByVariants
+} = __non_webpack_require__('/lib/repo/statreg/statistics')
 const {
   getPhrases
 } = __non_webpack_require__( '/lib/language')
@@ -188,8 +191,9 @@ const addDsArticle = (page, relatedArticles, showPreview) => {
 
   if (statistic) {
     const variants = util.data.forceArray(statistic.variants)
-    const previousRelease = getPreviousReleaseStatistic(variants)
-    const nextRelease = getNextReleaseStatistic(variants)
+    const releaseDates = getReleaseDatesByVariants(variants)
+    const nextRelease = releaseDates.nextRelease[0]
+    const previousRelease = releaseDates.previousRelease[0]
     const statisticPublishDate = showPreview && nextRelease !== '' ? nextRelease : previousRelease
     const assosiatedArticle = getDsArticle(statisticId, statisticPublishDate)
 

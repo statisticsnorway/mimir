@@ -14,10 +14,9 @@ export function RefreshStatisticsModal(props) {
 
   const openStatistic = useSelector(selectOpenStatistic)
   const selectModalDisplay = createSelectModalDisplay(openStatistic.id)
-
+  const modal = useSelector(selectModalDisplay)
 
   function renderStatisticsForm() {
-    const modal = useSelector(selectModalDisplay)
     if (!modal) {
       const newModal = {
         statisticId: openStatistic.id,
@@ -35,7 +34,7 @@ export function RefreshStatisticsModal(props) {
     return (
       <React.Fragment>
         {modal.modalDisplay === 'request' && <RefreshStatisticsForm onSubmit={(e) => updateTables(e)} modalInfo={openStatistic}/>}
-        {modal.modalDisplay !== 'request' && <RefreshStatisticsStatus modal={modal} resetModal={handleResetModal} />}
+        {modal.modalDisplay !== 'request' && <RefreshStatisticsStatus modal={modal} />}
       </React.Fragment>
     )
   }
@@ -43,19 +42,22 @@ export function RefreshStatisticsModal(props) {
   function handleClose() {
     setOpenModal(dispatch, false)
     setOpenStatistic(dispatch, io, null)
+    resetModal(dispatch, openStatistic.id)
   }
 
   const updateTables = (owners) => {
     refreshStatistic(dispatch, io, openStatistic.id, owners)
   }
 
-  function handleResetModal() {
-    resetModal(dispatch, openStatistic.id)
-  }
-
+  const modalLoading = modal && modal.modalDisplay === 'loading'
   return (
-    <Modal size='lg' show={true} onHide={() => handleClose()}>
-      <Modal.Header closeButton>
+    <Modal size='lg'
+      show={true}
+      onHide={() => handleClose()}
+      keyboard={!modalLoading}
+      backdrop={modalLoading ? 'static' : undefined}
+    >
+      <Modal.Header closeButton={!modalLoading}>
         <Modal.Title>Oppdatering av tabeller på web</Modal.Title>
       </Modal.Header>
       <Modal.Body>
@@ -70,8 +72,8 @@ export function RefreshStatisticsModal(props) {
         { renderStatisticsForm() }
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={() => handleClose()}>
-          Lukk
+        <Button variant="secondary" disabled={modalLoading} onClick={() => handleClose()}>
+            Lukk
         </Button>
       </Modal.Footer>
     </Modal>

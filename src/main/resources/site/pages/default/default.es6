@@ -9,9 +9,11 @@ const {
 } = __non_webpack_require__( '/lib/language')
 const {
   alertsForContext,
-  getBreadcrumbs,
-  getPreviousReleaseStatistic
+  getBreadcrumbs
 } = __non_webpack_require__( '/lib/ssb/utils')
+const {
+  getReleaseDatesByVariants
+} = __non_webpack_require__('/lib/repo/statreg/statistics')
 const {
   getMunicipality
 } = __non_webpack_require__( '/lib/klass/municipalities')
@@ -118,7 +120,6 @@ exports.get = function(req) {
   }
 
   if (pageType === 'municipality' && municipality) {
-    // TODO: Deaktiverer at kommunesidene er søkbare til vi finner en løsning med kommunenavn i tittel MIMIR-549
     addMetaInfoSearch = true
     metaInfoSearchId = metaInfoSearchId + '_' + municipality.code
     metaInfoSearchGroup = metaInfoSearchGroup + '_' + municipality.code
@@ -134,8 +135,9 @@ exports.get = function(req) {
     const statistic = getStatisticByIdFromRepo(page.data.statistic)
     if (statistic) {
       const variants = util.data.forceArray(statistic.variants)
-      const previousRelease = getPreviousReleaseStatistic(variants)
-      metaInfoSearchPublishFrom = new Date(previousRelease).toISOString()
+      const releaseDates = getReleaseDatesByVariants(variants)
+      const previousRelease = releaseDates.previousRelease[0]
+      metaInfoSearchPublishFrom = previousRelease ? new Date(previousRelease).toISOString() : new Date().toISOString()
     }
     metaInfoSearchContentType = 'statistikk'
     metaInfoDescription = page.x['com-enonic-app-metafields']['meta-data'].seoDescription
