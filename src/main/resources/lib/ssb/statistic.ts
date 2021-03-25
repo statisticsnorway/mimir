@@ -287,7 +287,7 @@ function getSourcesForUserFromStatistic(sources: Array<SourceList>): Array<Owner
           const tbmlIndex: number = acc[userIndex].tbmlList.findIndex((it) => it.tbmlId == tbmlId)
           if (tbmlIndex == -1) {
             acc[userIndex].tbmlList.push({
-              tbmlId: tbmlId.toString(),
+              tbmlId: tbmlId,
               sourceTableIds: [source.id.toString()],
               statbankTableIds: [source.tableId.toString()]
             })
