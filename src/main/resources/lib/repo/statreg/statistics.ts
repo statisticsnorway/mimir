@@ -108,7 +108,11 @@ export function fetchStatisticsWithRelease(before: Date): Array<StatisticInListi
   const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
   return statistics.reduce((statsWithRelease: Array<StatisticInListing>, stat) => {
     const variants: Array<VariantInListing> = ensureArray(stat.variants)
-    variants.sort((a: VariantInListing, b: VariantInListing) => new Date(a.nextRelease).getTime() - new Date(b.nextRelease).getTime())
+      .sort((a: VariantInListing, b: VariantInListing) => {
+        const aDate: Date = a.nextRelease ? new Date(a.nextRelease) : new Date('01.01.3000')
+        const bDate: Date = b.nextRelease ? new Date(b.nextRelease) : new Date('01.01.3000')
+        return aDate.getTime() - bDate.getTime()
+      })
     if (variants[0] && moment(variants[0].nextRelease).isBetween(new Date(), before, 'day', '[]')) {
       statsWithRelease.push(stat)
     }
