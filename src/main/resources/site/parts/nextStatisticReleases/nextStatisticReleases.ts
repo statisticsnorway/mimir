@@ -23,10 +23,6 @@ const {
 } = __non_webpack_require__( '/lib/util')
 
 
-interface GroupedBy<T> {
-  [key: string]: Array<T> | T;
-}
-
 const groupStatisticsByYear: (statistics: Array<PreparedStatistics>) => GroupedBy<PreparedStatistics> = groupBy((statistic: PreparedStatistics): string => {
   return statistic.variant.year.toString()
 })
@@ -52,19 +48,19 @@ exports.preview = (): Response => renderPart()
 export function renderPart(): Response {
   const part: Component<NextStatisticReleasesPartConfig> = getComponent()
   const numberOfReleases: number = part.config.numberOfStatistics ? parseInt(part.config.numberOfStatistics) : 8
-  // get statistics
+  // Get statistics
   const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
 
-  // All statistics published today, and fill up with next days.
-  const releasesFiltered: Array<StatisticInListing> = filterOnNextRelease(releases, numberOfReleases)
+  // All statistics published today, and fill up with previous releases.
+  const releasesFiltered: Array<StatisticInListing> = filterOnPreviousReleases(releases, numberOfReleases)
 
   // Choose the right variant and prepare the date in a way it works with the groupBy function
   const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: StatisticInListing) => prepareRelease(release))
 
-  // group by year, then  month, then day
+  // group by year, then month, then day
   const groupedByYear: GroupedBy<PreparedStatistics> = groupStatisticsByYear(releasesPrepped)
-  const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> = {}
   const groupedByMonthAndDay: GroupedBy<GroupedBy<PreparedStatistics>> = {}
+  const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> = {}
   Object.keys(groupedByYear).forEach((year) => {
     const tmpMonth: GroupedBy<PreparedStatistics> = groupStatisticsByMonth(forceArray(groupedByYear[year]))
     Object.keys(tmpMonth).forEach((month) => {
@@ -100,17 +96,17 @@ function prepareRelease(release: StatisticInListing): PreparedStatistics {
 }
 
 function closestReleaseDate(variants: Array<VariantInListing>): PreparedVariant {
-  const variantWithClosestNextRelease: VariantInListing = variants.reduce((earliestVariant, variant) => {
-    const newDate: Date = new Date(variant.nextRelease)
-    if (!variant || newDate < new Date(earliestVariant.nextRelease) ) return variant
+  const variantWithClosestPreviousRelease: VariantInListing = variants.reduce((earliestVariant, variant) => {
+    const newDate: Date = new Date(variant.previousRelease)
+    if (!variant || newDate < new Date(earliestVariant.previousRelease) ) return variant
     return earliestVariant
   })
 
-  return formatVariant(variantWithClosestNextRelease)
+  return formatVariant(variantWithClosestPreviousRelease)
 }
 
 function formatVariant(variant: VariantInListing): PreparedVariant {
-  const date: Date = new Date(variant.nextRelease)
+  const date: Date = new Date(variant.previousRelease)
   return {
     id: variant.id,
     day: date.getDate(),
@@ -120,32 +116,32 @@ function formatVariant(variant: VariantInListing): PreparedVariant {
   }
 }
 
-function filterOnNextRelease(stats: Array<StatisticInListing>, numberOfReleases: number): Array<StatisticInListing> {
-  const nextReleases: Array<StatisticInListing> = []
-  for (let i: number = 0; nextReleases.length < numberOfReleases; i++) {
+function filterOnPreviousReleases(stats: Array<StatisticInListing>, numberOfReleases: number): Array<StatisticInListing> {
+  const releases: Array<StatisticInListing> = []
+  for (let i: number = 0; releases.length < numberOfReleases; i++) {
     const day: Date = new Date()
-    day.setDate(day.getDate() + i)
+    day.setDate(day.getDate() - i)
     const releasesOnThisDay: Array<StatisticInListing> = stats.filter((stat: StatisticInListing) => {
       return Array.isArray(stat.variants) ?
         stat.variants.find((variant: VariantInListing) => checkReleaseDate(variant, day)) :
         checkReleaseDate(stat.variants, day)
     })
-    const trimmed: Array<StatisticInListing> = checkLimitAndTrim(nextReleases, releasesOnThisDay, numberOfReleases)
-    nextReleases.push(...trimmed)
+    const trimmed: Array<StatisticInListing> = checkLimitAndTrim(releases, releasesOnThisDay, numberOfReleases)
+    releases.push(...trimmed)
   }
-  return nextReleases
+  return releases
 }
 
-function checkLimitAndTrim(nextReleases: Array<StatisticInListing>, releasesOnThisDay: Array<StatisticInListing>, count: number): Array<StatisticInListing> {
-  if (nextReleases.length + releasesOnThisDay.length > count) {
-    const whereToSlice: number = (count - nextReleases.length)
+function checkLimitAndTrim(releases: Array<StatisticInListing>, releasesOnThisDay: Array<StatisticInListing>, count: number): Array<StatisticInListing> {
+  if (releases.length + releasesOnThisDay.length > count) {
+    const whereToSlice: number = (count - releases.length)
     return releasesOnThisDay.slice(0, whereToSlice)
   }
   return releasesOnThisDay
 }
 
 function checkReleaseDate(variant: VariantInListing, day: Date): boolean {
-  return sameDay(new Date(variant.nextRelease), day)
+  return sameDay(new Date(variant.previousRelease), day)
 }
 
 function sameDay(d1: Date, d2: Date): boolean {
@@ -167,6 +163,10 @@ interface PreparedVariant {
   monthNumber: number;
   year: number;
   frequency: string;
+}
+
+interface GroupedBy<T> {
+  [key: string]: Array<T> | T;
 }
 
 
