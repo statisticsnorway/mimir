@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, Table } from 'react-bootstrap'
-import { selectStatisticsWithRelease,
+import { selectStatistics,
   selectLoading,
   selectOpenModal } from './selectors'
 import { RefreshCw } from 'react-feather'
@@ -14,7 +14,7 @@ import { RefreshStatisticsModal } from '../../components/RefreshStatisticsModal'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 
 export function Statistics() {
-  const statistics = useSelector(selectStatisticsWithRelease)
+  const statistics = useSelector(selectStatistics)
   const loading = useSelector(selectLoading)
   const contentStudioBaseUrl = useSelector(selectContentStudioBaseUrl)
   const internalBaseUrl = useSelector(selectInternalBaseUrl)
