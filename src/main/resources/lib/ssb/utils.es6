@@ -249,8 +249,16 @@ export const getAttachmentContent = (contentId) => {
 }
 
 export const getRowValue = (value) => {
+  if (typeof value === 'string' && isNumber(value)) {
+    return Number(value)
+  }
   if (typeof value === 'object' && value.content != undefined) {
-    return value.content
+    return getRowValue(value.content)
   }
   return value
 }
+
+export const isNumber = (str) => {
+  return ((str != null) && (str !== '') && !isNaN(str))
+}
+
