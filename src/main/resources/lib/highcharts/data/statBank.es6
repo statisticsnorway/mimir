@@ -24,28 +24,36 @@ export function seriesAndCategoriesFromJsonStat(req, highchart, dataset, dataset
     const filterTargetIndex = dataset && dataset.id.indexOf(filterTarget)
     dimensionFilter[filterTargetIndex] = parseDataWithMunicipality(dataset, filterTarget, municipality, xAxisLabel)
   }
+  log.info('dimensionFilter: ' + JSON.stringify(dimensionFilter, null, 4))
 
   if (highchart.data.graphType === 'barNegative') {
     return barNegativeFormat(dataset, dimensionFilter, xAxisLabel, yAxisLabel)
   } else if (highchart.data.graphType === 'pie') {
     return pieFormat(dataset, dimensionFilter, xAxisLabel)
   } else {
-    return defaultFormat(dataset, dimensionFilter, xAxisLabel)
+    return defaultFormat(dataset, dimensionFilter, xAxisLabel, yAxisLabel)
   }
 }
 
 
-const defaultFormat = (ds, dimensionFilter, xAxis) => {
+const defaultFormat = (ds, dimensionFilter, xAxis, yAxis) => {
   const xAxisIndex = ds.id.indexOf(xAxis)
   const xCategories = ds.Dimension(xAxis).Category()
+  const yAxisIndex = ds.id.indexOf(yAxis)
+  const yCategories = ds.Dimension(yAxis).Category()
 
-  const series = xCategories.map( (xCategory) => {
-    dimensionFilter[xAxisIndex] = xCategory.index
-    const data = ds.Data(dimensionFilter, false)
+  log.info('xCategories: ' + JSON.stringify(xCategories, null, 4))
+  log.info('yCategories: ' + JSON.stringify(yCategories, null, 4))
+
+  const series = yCategories.map( (yCategory) => {
+    dimensionFilter[yAxisIndex] = yCategory.index
     return {
-      name: xCategory.label,
-      y: data,
-      data: [data]
+      name: yCategory.label,
+      data: xCategories.map( (xCategory) => {
+        dimensionFilter[yAxisIndex] = yCategory.index
+        dimensionFilter[xAxisIndex] = xCategory.index
+        return ds.Data(dimensionFilter, false)
+      })
     }
   })
 
