@@ -32,12 +32,14 @@ export function prepareHighchartsGraphConfig(
   highchartContent: Content<Highchart>,
   dataFormat: DataSource['dataSource'],
   categories: Array<string> | undefined = undefined): HighchartsGraphConfig {
-  const isJsonStat: boolean = dataFormat !== undefined && dataFormat._selected !== undefined &&
-    dataFormat._selected === DataSourceType.STATBANK_API
+  // const isJsonStat: boolean = dataFormat !== undefined && dataFormat._selected !== undefined &&
+  //   dataFormat._selected === DataSourceType.STATBANK_API
+
+  const isJsonStat: boolean = false
 
   const options: GetGraphOptions = {
     isJsonStat,
-    xAxisLabel: isJsonStat && dataFormat && dataFormat['statbankApi'] ? dataFormat['statbankApi'].xAxisLabel : undefined,
+    xAxisLabel: undefined,// isJsonStat && dataFormat && dataFormat['statbankApi'] ? dataFormat['statbankApi'].xAxisLabel : undefined,
     categories
   }
   return getGraphConfig(highchartContent, options)
