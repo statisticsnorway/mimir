@@ -11,10 +11,20 @@
 				true
 			</expanded>
 			<occurrences minimum="0" maximum="1" />
-			<help-text>
-				You can select up to 2 options
-			</help-text>
 			<options minimum="1" maximum="1">
+				<option name="tbprocessor">
+					<label>
+						Tall fra tabellbygger
+					</label>
+					<items>
+						<input name="urlOrId" type="TextLine">
+							<label>
+								URL eller TBML-id
+							</label>
+							<occurrences minimum="0" maximum="1" />
+						</input>
+					</items>
+				</option>
 				<option name="statbankApi">
 					<label>
 						Api-spørring mot statistikkbanken
@@ -71,19 +81,6 @@
 								</option>
 							</options>
 						</option-set>
-					</items>
-				</option>
-				<option name="tbprocessor">
-					<label>
-						Tall fra tabellbygger
-					</label>
-					<items>
-						<input name="urlOrId" type="TextLine">
-							<label>
-								URL eller TBML-id
-							</label>
-							<occurrences minimum="0" maximum="1" />
-						</input>
 					</items>
 				</option>
 				<option name="statbankSaved">

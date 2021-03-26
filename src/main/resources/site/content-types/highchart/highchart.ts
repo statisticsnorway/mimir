@@ -32,6 +32,20 @@ export interface Highchart {
 
     /**
      * 
+     * 						Tall fra tabellbygger
+     * 					
+     */
+    tbprocessor?: {
+      /**
+       * 
+       * 								URL eller TBML-id
+       * 							
+       */
+      urlOrId?: string;
+    };
+
+    /**
+     * 
      * 						Api-spørring mot statistikkbanken
      * 					
      */
@@ -89,20 +103,6 @@ export interface Highchart {
           municipalityDimension: string;
         };
       };
-    };
-
-    /**
-     * 
-     * 						Tall fra tabellbygger
-     * 					
-     */
-    tbprocessor?: {
-      /**
-       * 
-       * 								URL eller TBML-id
-       * 							
-       */
-      urlOrId?: string;
     };
 
     /**
