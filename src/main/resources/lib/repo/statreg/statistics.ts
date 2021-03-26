@@ -183,6 +183,9 @@ export function getReleaseDatesByVariants(variants: Array<VariantInListing>): Re
   if (nextReleaseFiltered.length > 0 && nextReleaseIndex > 0) {
     previousReleases.push(nextReleasesSorted[nextReleaseIndex - 1])
   }
+  if (nextReleasesSorted.length === 1 && nextReleaseFiltered.length === 0) {
+    previousReleases.push(nextReleasesSorted[0])
+  }
   previousReleases.sort( (a: string, b: string) => new Date(a).getTime() - new Date(b).getTime()).reverse()
 
   releaseDatesStatistic.nextRelease = nextReleaseFiltered
