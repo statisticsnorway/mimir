@@ -224,27 +224,56 @@ function createTask(jobId: string, statistic: Content<Statistics>, releaseDate: 
         dataset
       } = publication
       if (dataset && dataSource.data.dataSource) {
+        let ts: number = Date.now()
+        const start: number = Date.now()
+        const timings: PublishTimings = {
+          preSleepPrep: null,
+          postSleepPrep: null,
+          publish: null,
+          log: null,
+          sendClearCache: null,
+          delete: null,
+          completeJob: null,
+          total: null
+        }
         const key: string | null = extractKey(dataSource)
         const serverOffsetInMs: number = app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
         const now: Date = new Date(new Date().getTime() + serverOffsetInMs)
         const sleepFor: number = releaseDate.getTime() - now.getTime()
+
         log.info(`Publish dataset (${key}) for statistic ${statistic.data.statistic} in ${sleepFor}ms (${releaseDate.toISOString()})`)
+        timings.preSleepPrep = Date.now() - ts
+
         sleep(sleepFor)
+
+        ts = Date.now()
 
         const job: JobInfoNode = jobs[jobId] as JobInfoNode
         const jobRefreshResult: Array<StatisticsPublishResult> = forceArray(job.data.refreshDataResult) as Array<StatisticsPublishResult>
         const statRefreshResult: StatisticsPublishResult | undefined = jobRefreshResult.find((s) => {
           return s.statistic === statistic._id
         })
+
+        timings.postSleepPrep = Date.now() - ts
+        ts = Date.now()
+
         if (key) {
           log.info(`publishing dataset ${dataSource.data.dataSource?._selected} - ${key} for ${statistic.data.statistic}`)
           createOrUpdateDataset(dataSource.data.dataSource?._selected, DATASET_BRANCH, key, dataset.data)
           log.info(`finished publish of dataset ${dataSource.data.dataSource?._selected} - ${key} for ${statistic.data.statistic}`)
+
+          timings.publish = Date.now() - ts
+          ts = Date.now()
+
           logUserDataQuery(dataSource._id, {
             file: '/lib/ssb/dataset/publish.ts',
             function: 'createTask',
             message: Events.DATASET_PUBLISHED
           })
+
+          timings.log = Date.now() - ts
+          ts = Date.now()
+
           send({
             type: 'clearDatasetCache',
             distributed: true,
@@ -252,7 +281,15 @@ function createTask(jobId: string, statistic: Content<Statistics>, releaseDate: 
               path: dataset._path
             }
           })
+
+          timings.sendClearCache = Date.now() - ts
+          ts = Date.now()
+
           deleteDataset(dataSource, UNPUBLISHED_DATASET_BRANCH)
+
+          timings.delete = Date.now() - ts
+          ts = Date.now()
+
           if (statRefreshResult) {
             const dataSourceRefreshResult: DataSourceStatisticsPublishResult | undefined = forceArray(statRefreshResult.dataSources).find((ds) => {
               return ds.id === dataSource._id
@@ -295,6 +332,10 @@ function createTask(jobId: string, statistic: Content<Statistics>, releaseDate: 
             }
           }
         }
+
+        timings.completeJob = Date.now() - ts
+        timings.total = Date.now() - start - sleepFor
+        log.info(`PUBLISH TIMING :: ${key} :: ${JSON.stringify(timings, null, 2)}`)
       }
     }
   })
@@ -330,4 +371,15 @@ export interface PublishDatasetLib {
 interface PublicationItem {
   dataset: DatasetRepoNode<object> | null;
   dataSource: Content<DataSource>;
+}
+
+interface PublishTimings {
+  preSleepPrep: null | number;
+  postSleepPrep: null | number;
+  publish: null | number;
+  log: null | number;
+  sendClearCache: null | number;
+  delete: null | number;
+  completeJob: null | number;
+  total: null | number;
 }
