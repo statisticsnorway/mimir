@@ -176,12 +176,17 @@ export function getReleaseDatesByVariants(variants: Array<VariantInListing>): Re
   })
 
   const nextReleasesSorted: Array<string> = nextReleases.sort( (a: string, b: string) => new Date(a).getTime() - new Date(b).getTime())
-  const nextReleaseFiltered: Array<string> = nextReleasesSorted.filter((release) => moment(release).isAfter(new Date(), 'minute'))
+  const serverOffsetInMs: number = app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+  const serverTime: Date = new Date(new Date().getTime() + serverOffsetInMs)
+  const nextReleaseFiltered: Array<string> = nextReleasesSorted.filter((release) => moment(release).isAfter(serverTime, 'minute'))
   const nextReleaseIndex: number = nextReleasesSorted.indexOf(nextReleaseFiltered[0])
 
   // If Statregdata is old, get date before nextRelease as previous date
   if (nextReleaseFiltered.length > 0 && nextReleaseIndex > 0) {
     previousReleases.push(nextReleasesSorted[nextReleaseIndex - 1])
+  }
+  if (nextReleasesSorted.length === 1 && nextReleaseFiltered.length === 0) {
+    previousReleases.push(nextReleasesSorted[0])
   }
   previousReleases.sort( (a: string, b: string) => new Date(a).getTime() - new Date(b).getTime()).reverse()
 
