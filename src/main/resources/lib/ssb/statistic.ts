@@ -525,10 +525,12 @@ function getStatregInfo(statisticStatreg: StatisticInListing | undefined): Statr
     }
   }
   const variants: Array<VariantInListing> = forceArray(statisticStatreg.variants)
-  if (variants.length > 1) {
-    variants.sort((a: VariantInListing, b: VariantInListing) => new Date(a.nextRelease).getTime() - new Date(b.nextRelease).getTime())
-  }
-  const variant: VariantInListing = variants[0] // TODO: Multiple variants
+    .sort((a: VariantInListing, b: VariantInListing) => {
+      const aDate: Date = a.nextRelease ? new Date(a.nextRelease) : new Date('01.01.3000')
+      const bDate: Date = b.nextRelease ? new Date(b.nextRelease) : new Date('01.01.3000')
+      return aDate.getTime() - bDate.getTime()
+    })
+  const variant: VariantInListing = variants[0]
   const result: StatregData = {
     statisticId: statisticStatreg.id,
     shortName: statisticStatreg.shortName,
