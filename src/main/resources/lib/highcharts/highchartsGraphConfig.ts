@@ -24,13 +24,19 @@ const {
 const {
   lineConfig
 } = __non_webpack_require__( '/lib/highcharts/graph/graphLineConfig')
+const {
+  DataSource: DataSourceType
+} = __non_webpack_require__( '../repo/dataset')
 
 export function prepareHighchartsGraphConfig(
   highchartContent: Content<Highchart>,
   dataFormat: DataSource['dataSource'],
   categories: Array<string> | undefined = undefined): HighchartsGraphConfig {
+  const isJsonStat: boolean = dataFormat !== undefined && dataFormat._selected !== undefined &&
+      dataFormat._selected === DataSourceType.STATBANK_API
   const options: GetGraphOptions = {
-    xAxisLabel: dataFormat && dataFormat['statbankApi'] ? dataFormat['statbankApi'].xAxisLabel : undefined,
+    isJsonStat,
+    xAxisLabel: isJsonStat && dataFormat && dataFormat['statbankApi'] ? dataFormat['statbankApi'].xAxisLabel : undefined,
     categories
   }
   return getGraphConfig(highchartContent, options)
@@ -60,6 +66,7 @@ function defaultConfig(highchartsContent: Content<Highchart>): HighchartsGraphCo
 }
 
 interface GetGraphOptions {
+  isJsonStat: boolean;
   xAxisLabel: string | undefined;
   categories: object | undefined;
 }
