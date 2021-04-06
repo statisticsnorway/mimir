@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/statisticsnorway/mimir#readme",
   "devDependencies": {
-    "@babel/cli": "^7.12.16",
+    "@babel/cli": "^7.13.14",
     "@babel/core": "^7.13.10",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.13",
@@ -91,7 +91,7 @@
     "react-helmet-async": "^1.0.9",
     "react-mathjax": "^1.0.1",
     "react-moment": "^1.1.1",
-    "react-number-format": "^4.5.1",
+    "react-number-format": "^4.5.3",
     "react-redux": "^7.2.2",
     "react-responsive": "^8.2.0",
     "react-router-dom": "^5.2.0",
