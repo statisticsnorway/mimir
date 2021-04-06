@@ -62,6 +62,8 @@ export interface VariantInListing {
     id: string;
     frekvens: string;
     previousRelease: string;
+    previousFrom: string;
+    previousTo: string;
     nextRelease: string;
     nextReleaseId: string;
     upcomingReleases?: Array<ReleasesInListing>;

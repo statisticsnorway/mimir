@@ -11,10 +11,11 @@
   article {
     display: flex;
 
-    &.first .releaseList {
-        border-top: 1px solid $ssb-dark-5;
+    &:nth-child(2) ol{
+      border-top: 1px solid $ssb-dark-5;
     }
   }
+
   .releaseList {
     list-style: none;
     border-bottom: solid 1px #c3dcdc;

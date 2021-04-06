@@ -254,3 +254,10 @@ export const getRowValue = (value) => {
   }
   return value
 }
+
+export const getWeek = (date) => {
+  const onejan = new Date(date.getFullYear(), 0, 1)
+  const today = new Date(date.getFullYear(), date.getMonth(), date.getDate())
+  const dayOfYear = ((today - onejan + 86400000) / 86400000)
+  return Math.ceil(dayOfYear / 7)
+}

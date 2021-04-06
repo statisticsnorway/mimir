@@ -1,4 +1,4 @@
-export interface NextStatisticReleasesPartConfig {
+export interface ReleasedStatisticsPartConfig {
   /**
    * Antall statistikker i liste
    */

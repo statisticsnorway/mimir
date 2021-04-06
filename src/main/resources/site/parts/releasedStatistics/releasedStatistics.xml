@@ -1,6 +1,6 @@
 <part>
-    <display-name>Neste statistikkpubliseringer</display-name>
-    <description>Liste over de neste statistikkpubliseringene</description>
+    <display-name>Siste statistikkpubliseringer</display-name>
+    <description>Liste over de siste statistikkpubliseringene</description>
     <form>
         <input type="TextLine" name="numberOfStatistics">
             <label>Antall statistikker i liste</label>

@@ -77,6 +77,8 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
             id: '0',
             frekvens: 'Dag',
             previousRelease: previousRelease.format('YYYY-MM-DD HH:mm:ss.S'),
+            previousFrom: previousRelease.format('YYYY-MM-DD HH:mm:ss.S'),
+            previousTo: previousRelease.format('YYYY-MM-DD HH:mm:ss.S'),
             nextRelease: nextRelease.format('YYYY-MM-DD HH:mm:ss.S'),
             nextReleaseId: '0',
             upcomingReleases: [

@@ -1,10 +1,21 @@
+
+__non_webpack_require__('/lib/polyfills/nashorn')
 import { Request, Response } from 'enonic-types/controller'
 import { StatisticInListing, VariantInListing } from '../../../lib/ssb/statreg/types'
 import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
 import { groupBy } from 'ramda'
 import { Component, PortalLibrary } from 'enonic-types/portal'
-import { NextStatisticReleasesPartConfig } from './nextStatisticReleases-part-config'
+import { ReleasedStatisticsPartConfig } from './releasedStatistics-part-config'
+import { I18nLibrary } from 'enonic-types/i18n'
+// eslint-disable-next-line @typescript-eslint/typedef
+const moment = require('moment/min/moment-with-locales')
+moment.locale('nb')
+
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
+const {
+  localize
+}: I18nLibrary = __non_webpack_require__( '/lib/xp/i18n')
 
 const {
   getAllStatisticsFromRepo
@@ -15,7 +26,9 @@ const {
 const {
   getComponent
 }: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
-
+const {
+  getWeek
+} = __non_webpack_require__('/lib/ssb/utils')
 const {
   data: {
     forceArray
@@ -46,7 +59,7 @@ exports.get = function(req: Request): Response {
 exports.preview = (): Response => renderPart()
 
 export function renderPart(): Response {
-  const part: Component<NextStatisticReleasesPartConfig> = getComponent()
+  const part: Component<ReleasedStatisticsPartConfig> = getComponent()
   const numberOfReleases: number = part.config.numberOfStatistics ? parseInt(part.config.numberOfStatistics) : 8
   // Get statistics
   const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
@@ -70,7 +83,7 @@ export function renderPart(): Response {
   })
 
   // render component
-  const reactComponent: React4xpObject = new React4xp('NextStatisticReleases')
+  const reactComponent: React4xpObject = new React4xp('ReleasedStatistics')
     .setProps({
       releases: groupedByYearMonthAndDay
     })
@@ -98,10 +111,9 @@ function prepareRelease(release: StatisticInListing): PreparedStatistics {
 function closestReleaseDate(variants: Array<VariantInListing>): PreparedVariant {
   const variantWithClosestPreviousRelease: VariantInListing = variants.reduce((earliestVariant, variant) => {
     const newDate: Date = new Date(variant.previousRelease)
-    if (!variant || newDate < new Date(earliestVariant.previousRelease) ) return variant
+    if (!variant || newDate > new Date(earliestVariant.previousRelease) ) return variant
     return earliestVariant
   })
-
   return formatVariant(variantWithClosestPreviousRelease)
 }
 
@@ -112,7 +124,8 @@ function formatVariant(variant: VariantInListing): PreparedVariant {
     day: date.getDate(),
     monthNumber: date.getMonth(),
     year: date.getFullYear(),
-    frequency: variant.frekvens
+    frequency: variant.frekvens,
+    period: calculatePeriode(variant)
   }
 }
 
@@ -150,6 +163,121 @@ function sameDay(d1: Date, d2: Date): boolean {
       d1.getFullYear() === d2.getFullYear()
 }
 
+function calculatePeriode(variant: VariantInListing): string {
+  switch (variant.frekvens) {
+  case 'År':
+    return calculateYear(variant)
+  case 'Halvår':
+    return calcualteHalfYear(variant)
+  case 'Termin':
+    return calculateTerm(variant)
+  case 'Kvartal':
+    return calculateQuarter(variant)
+  case 'Måned':
+    return calculateMonth(variant)
+  case 'Uke':
+    return calculateWeek(variant)
+  default:
+    return calculateEveryXYear(variant)
+  }
+}
+
+function calculateEveryXYear(variant: VariantInListing) {
+  const dateFrom: Date = new Date(variant.previousFrom)
+  const dateTo: Date = new Date(variant.previousTo)
+  const yearFrom: number = dateFrom.getFullYear()
+  const yearTo: number = dateTo.getFullYear()
+
+  if (yearFrom !== yearTo) {
+    return localize({
+      key: 'period.generic',
+      values: [`${yearFrom.toString()}-${yearTo.toString()}`]
+    })
+  } else {
+    // spesialtilfelle hvis periode-fra og periode-til er i samme år
+    return localize({
+      key: 'period.generic',
+      values: [yearTo.toString()]
+    })
+  }
+}
+
+function calculateYear(variant: VariantInListing) {
+  const dateFrom: Date = new Date(variant.previousFrom)
+  const dateTo: Date = new Date(variant.previousTo)
+  const yearFrom: number = dateFrom.getFullYear()
+  const yearTo: number = dateTo.getFullYear()
+  if ( (yearFrom + 1) === yearTo &&
+      dateFrom.getDate() !== 1 &&
+      dateFrom.getMonth() !== 0 &&
+      dateTo.getDate() !== 31 &&
+      dateTo.getMonth() !== 11) {
+    // spesialtilfelle hvis periode-fra og periode-til er kun ett år mellom og startdato ikke er 01.01
+    return localize({
+      key: 'period.generic',
+      values: [`${yearFrom.toString()}/${yearTo.toString()}`]
+    })
+  } else if (yearFrom !== yearTo ) {
+    // spesialtilfelle hvis periode-fra og periode-til er i ulike år
+    return localize({
+      key: 'period.generic',
+      values: [`${yearFrom.toString()}-${yearTo.toString()}`]
+    })
+  } else {
+    return localize({
+      key: 'period.generic',
+      values: [yearTo.toString()]
+    })
+  }
+}
+
+function calcualteHalfYear(variant: VariantInListing) {
+  const date: Date = new Date(variant.previousFrom)
+  const fromMonth: number = new Date(variant.previousFrom).getMonth() + 1
+  const halfyear: number = Math.ceil(fromMonth / 6)
+  return localize({
+    key: 'period.halfyear',
+    values: [halfyear.toString(), date.getFullYear().toString()]
+  })
+}
+
+function calculateTerm(variant: VariantInListing): string {
+  const date: Date = new Date(variant.previousFrom)
+  const fromMonth: number = date.getMonth() + 1
+  const termin: number = Math.ceil(fromMonth / 6)
+  return localize({
+    key: 'period.termin',
+    values: [termin.toString(), date.getFullYear().toString()]
+  })
+}
+
+function calculateQuarter(variant: VariantInListing) {
+  const date: Date = new Date(variant.previousFrom)
+  const fromMonth: number = date.getMonth() + 1
+  const quarter: number = Math.ceil(fromMonth / 3)
+  return localize({
+    key: 'period.quarter',
+    values: [quarter.toString(), date.getFullYear().toString()]
+  })
+}
+
+function calculateMonth(variant: VariantInListing) {
+  const monthName: string = moment(variant.previousFrom).format('MMMM')
+  const year: string = moment(variant.previousFrom).format('YYYY')
+  return localize({
+    key: 'period.month',
+    values: [monthName, year]
+  })
+}
+
+function calculateWeek(variant: VariantInListing) {
+  const date: Date = new Date(variant.previousFrom)
+  return localize({
+    key: 'period.week',
+    values: [getWeek(date).toString(), date.getFullYear().toString()]
+  })
+}
+
 interface PreparedStatistics {
   id: number;
   name: string;
@@ -163,6 +291,7 @@ interface PreparedVariant {
   monthNumber: number;
   year: number;
   frequency: string;
+  period: string;
 }
 
 interface GroupedBy<T> {
