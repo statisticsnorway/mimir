@@ -30,7 +30,7 @@ export function lineConfig(highchartsContent, options) {
       labels: {
         enabled: true
       },
-      categories: highchartsContent.data.switchRowsAndColumns || !options.isJsonStat ? options.categories : [highchartsContent.displayName],
+      categories: highchartsContent.data.switchRowsAndColumns ? options.categories : [highchartsContent.displayName],
       gridLineWidth: 0
     }
   }

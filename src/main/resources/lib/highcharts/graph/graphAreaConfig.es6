@@ -23,7 +23,7 @@ export function areaConfig(highchartContent, options) {
       }
     },
     xAxis: {
-      categories: highchartContent.data.switchRowsAndColumns || !options.isJsonStat ? options.categories : [highchartContent.displayName]
+      categories: highchartContent.data.switchRowsAndColumns ? options.categories : [highchartContent.displayName]
     }
   }
 

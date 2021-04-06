@@ -28,9 +28,9 @@ export function barConfig(highchartContent, options) {
     xAxis: {
       reversed: (highchartContent.data.xAxisFlip == true ? true : false),
       labels: {
-        enable: highchartContent.data.switchRowsAndColumns || !options.isJsonStat
+        enable: highchartContent.data.switchRowsAndColumns
       },
-      categories: highchartContent.data.switchRowsAndColumns || !options.isJsonStat ? options.categories : [highchartContent.displayName],
+      categories: highchartContent.data.switchRowsAndColumns ? options.categories : [highchartContent.displayName],
       tickmarkPlacement: 'between'
     }
   }
