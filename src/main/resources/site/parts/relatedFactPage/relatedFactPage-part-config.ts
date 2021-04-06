@@ -5,12 +5,7 @@ export interface RelatedFactPagePartConfig {
   title?: string;
 
   /**
-   * Stikktittel
+   * Faktasider
    */
-  type?: string;
-
-  /**
-   * Innholdsliste
-   */
-  itemList?: string;
+  relatedFactPages?: Array<string>;
 }

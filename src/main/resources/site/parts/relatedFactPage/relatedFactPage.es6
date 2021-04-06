@@ -28,8 +28,8 @@ exports.get = function(req, portal) {
     const page = getContent()
     const part = getComponent()
     let itemList = []
-    if (part.config.itemList) {
-      itemList = itemList.concat(util.data.forceArray(part.config.itemList))
+    if (part.config.relatedFactPages) {
+      itemList = itemList.concat(util.data.forceArray(part.config.relatedFactPages))
     }
     if (page.data.relatedFactPages) {
       itemList = itemList.concat(util.data.forceArray(page.data.relatedFactPages))
@@ -68,7 +68,7 @@ function renderPart(req, itemList) {
   const type = part && part.config && part.config.type ? part.config.type : undefined
   const showAll = phrases.showAll
   const showLess = phrases.showLess
-  let relatedContentLists = []
+  let relatedContents = []
 
   itemList.forEach((key) => {
     const relatedPage = fromRelatedFactPageCache(req, key, () => {
@@ -77,30 +77,20 @@ function renderPart(req, itemList) {
       })
 
       if (relatedContent) {
-        if (relatedContent.type === `${app.name}:contentList` && relatedContent.data.contentList) {
-          // handles content list for part-config
-          const contentList = util.data.forceArray(relatedContent.data.contentList)
-          return contentList.map((c) => {
-            const contentListItem = content.get({
-              key: c
-            })
-            return contentListItem ? parseRelatedContent(contentListItem, type) : null
-          })
-        } else { // handles content selector from content-types (articles, statistics etc)
-          return parseRelatedContent(relatedContent, type)
-        }
+        // handles content selector from content-types (articles, statistics etc)
+        return parseRelatedContent(relatedContent, type)
       }
     })
 
     if (Array.isArray(relatedPage)) { // might get an array from contentList
-      relatedContentLists = relatedContentLists.concat(relatedPage)
+      relatedContents = relatedContents.concat(relatedPage)
     } else {
-      relatedContentLists.push(relatedPage)
+      relatedContents.push(relatedPage)
     }
   })
-  relatedContentLists = relatedContentLists.filter((r) => !!r)
+  relatedContents = relatedContents.filter((r) => !!r)
 
-  if (relatedContentLists.length === 0) {
+  if (relatedContents.length === 0) {
     if (req.mode === 'edit') {
       return {
         body: render(view)
@@ -113,7 +103,7 @@ function renderPart(req, itemList) {
   }
 
   const props = {
-    relatedContentLists,
+    relatedContents,
     mainTitle,
     showAll,
     showLess
