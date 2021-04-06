@@ -33,7 +33,7 @@ export function prepareHighchartsGraphConfig(
   dataFormat: DataSource['dataSource'],
   categories: Array<string> | undefined = undefined): HighchartsGraphConfig {
   const isJsonStat: boolean = dataFormat !== undefined && dataFormat._selected !== undefined &&
-      dataFormat._selected === DataSourceType.STATBANK_API
+    dataFormat._selected === DataSourceType.STATBANK_API
 
   const options: GetGraphOptions = {
     isJsonStat,
