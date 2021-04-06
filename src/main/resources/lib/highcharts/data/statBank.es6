@@ -38,24 +38,21 @@ const defaultFormat = (ds, dimensionFilter, xAxis, yAxisLabel) => {
   const xAxisIndex = ds.id.indexOf(xAxis)
   const xCategories = ds.Dimension(xAxis).Category()
   const yAxis = !yAxisLabel || yAxisLabel === 'Region' ? 'ContentsCode' : yAxisLabel
-  const yAxisIndex = ds.id.indexOf(yAxis)
   const yCategories = ds.Dimension(yAxis).Category()
 
-  const series = yCategories.map( (yCategory) => {
-    dimensionFilter[yAxisIndex] = yCategory.index
+  const series = xCategories.map( (xCategory) => {
+    dimensionFilter[xAxisIndex] = xCategory.index
+    const data = ds.Data(dimensionFilter, false)
     return {
-      name: yCategory.label,
-      data: xCategories.map( (xCategory) => {
-        dimensionFilter[yAxisIndex] = yCategory.index
-        dimensionFilter[xAxisIndex] = xCategory.index
-        return ds.Data(dimensionFilter, false)
-      })
+      name: xCategory.label,
+      y: data,
+      data: [data]
     }
   })
 
   return {
     series,
-    categories: xCategories.map((category) => category.label)
+    categories: yCategories.map((category) => category.label)
   }
 }
 
