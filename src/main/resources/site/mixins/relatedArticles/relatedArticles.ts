@@ -1,7 +1,7 @@
 export interface RelatedArticles {
   /**
    * 
-   * 						Relatert artikkel
+   * 						Relaterte artikler
    * 					
    */
   relatedArticles?: {

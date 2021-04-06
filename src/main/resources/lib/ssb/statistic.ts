@@ -240,14 +240,14 @@ function processXmlFromOwners(owners: Array<OwnerObject>): Array<ProcessXml> {
     // if the fetchPublished is set to on, do not create process xml
     // Only requests with xml will try to fetch unpublished data
     !ownerObj.fetchPublished && ownerObj.tbmlList && ownerObj.tbmlList.forEach( (tbmlIdObj: Tbml) => {
-      const tbmlProcess: SourceNodeRender | undefined = acc.find((process: SourceNodeRender) => process.tbmlId === tbmlIdObj.tbmlId)
+      const tbmlProcess: SourceNodeRender | undefined = acc.find((process: SourceNodeRender) => process.tbmlId.toString() === tbmlIdObj.tbmlId.toString())
       if (tbmlProcess) {
         tbmlIdObj.sourceTableIds.forEach((sourceTable) => {
           tbmlProcess.sourceNodeStrings.push(`<source user="${ownerObj.username}" password="${encrypt(ownerObj.password)}" id="${sourceTable}"/>`)
         })
       } else {
         acc.push({
-          tbmlId: tbmlIdObj.tbmlId,
+          tbmlId: tbmlIdObj.tbmlId.toString(),
           sourceNodeStrings: tbmlIdObj.sourceTableIds.map( (sourceTable) => {
             return `<source user="${ownerObj.username}" password="${encrypt(ownerObj.password)}" id="${sourceTable}"/>`
           })
@@ -258,7 +258,7 @@ function processXmlFromOwners(owners: Array<OwnerObject>): Array<ProcessXml> {
   }, [])
 
   return preRender.map((sourceNode) => ({
-    tbmlId: sourceNode.tbmlId,
+    tbmlId: sourceNode.tbmlId.toString(),
     processXml: `<process>${sourceNode.sourceNodeStrings.join('')}</process>`
   }))
 }
@@ -280,7 +280,7 @@ function getSourcesForUserFromStatistic(sources: Array<SourceList>): Array<Owner
       typeof(dataset.data) !== 'string' &&
       dataset.data.tbml.metadata &&
       dataset.data.tbml.metadata.sourceList) {
-      const tbmlId: number = dataset.data.tbml.metadata.instance.definitionId
+      const tbmlId: string = dataset.data.tbml.metadata.instance.definitionId.toString()
       forceArray(dataset.data.tbml.metadata.sourceList).forEach((source: Source) => {
         const userIndex: number = acc.findIndex((it) => it.ownerId == source.owner)
         if (userIndex != -1) {
@@ -297,7 +297,7 @@ function getSourcesForUserFromStatistic(sources: Array<SourceList>): Array<Owner
           }
         } else {
           acc.push({
-            ownerId: source.owner,
+            ownerId: source.owner.toString(),
             tbmlList: [{
               tbmlId: tbmlId,
               sourceTableIds: [source.id.toString()],
@@ -525,10 +525,12 @@ function getStatregInfo(statisticStatreg: StatisticInListing | undefined): Statr
     }
   }
   const variants: Array<VariantInListing> = forceArray(statisticStatreg.variants)
-  if (variants.length > 1) {
-    variants.sort((a: VariantInListing, b: VariantInListing) => new Date(a.nextRelease).getTime() - new Date(b.nextRelease).getTime())
-  }
-  const variant: VariantInListing = variants[0] // TODO: Multiple variants
+    .sort((a: VariantInListing, b: VariantInListing) => {
+      const aDate: Date = a.nextRelease ? new Date(a.nextRelease) : new Date('01.01.3000')
+      const bDate: Date = b.nextRelease ? new Date(b.nextRelease) : new Date('01.01.3000')
+      return aDate.getTime() - bDate.getTime()
+    })
+  const variant: VariantInListing = variants[0]
   const result: StatregData = {
     statisticId: statisticStatreg.id,
     shortName: statisticStatreg.shortName,
@@ -568,7 +570,7 @@ export function getStatisticsContent(): Array<Content<Statistics>> {
 }
 
 interface SourceNodeRender {
-  tbmlId: number;
+  tbmlId: string;
   sourceNodeStrings: Array<string>;
 }
 
@@ -599,8 +601,8 @@ interface OwnerObject {
   username: string;
   password: string;
   tbmlList?: Array<Tbml>;
-  ownerId: number;
-  tbmlId: number;
+  ownerId: string;
+  tbmlId: string;
   fetchPublished: true | undefined;
 };
 
@@ -644,12 +646,12 @@ interface RelatedTbml {
 }
 
 interface OwnerWithSources {
-  ownerId: number;
+  ownerId: string;
   tbmlList: Array<Tbml>;
 }
 
 interface Tbml {
-  tbmlId: number;
+  tbmlId: string;
   sourceTableIds: Array<string>;
   statbankTableIds: Array<string>;
 }

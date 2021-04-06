@@ -109,13 +109,16 @@ class Table extends React.Component {
     const language = this.props.table.language
     const decimalSeparator = (language === 'en') ? '.' : ','
     if (value) {
-      if (typeof value === 'number') {
+      if (typeof value === 'number' || typeof value === 'string' && !isNaN(value)) {
+        const decimals = value.toString().indexOf('.') > -1 ? value.toString().split('.')[1].length : 0
         return (
           <NumberFormat
-            value={value}
+            value={ Number(value) }
             displayType={'text'}
             thousandSeparator={' '}
             decimalSeparator={decimalSeparator}
+            decimalScale={decimals}
+            fixedDecimalScale={true}
           />
         )
       } else {
@@ -277,6 +280,7 @@ class Table extends React.Component {
       footnotes, correctionNotice
     } = this.state.table.tfoot
     const noteRefsList = this.state.table.noteRefs
+
     if (footnotes && footnotes.length > 0 && noteRefsList.length > 0 || correctionNotice) {
       return (
         <tfoot>

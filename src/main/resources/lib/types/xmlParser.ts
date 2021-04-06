@@ -101,7 +101,7 @@ export interface MetadataUniform {
     publicRelatedTableIds: Array<string>;
     language: string;
     relatedTableIds: Array<string>;
-    definitionId: number;
+    definitionId: number | string;
   };
   tablesource: string;
   title: Title;
@@ -119,7 +119,7 @@ export interface NotesUniform {
 export interface TbmlSourceListUniform {
   sourceList: {
     tbml: {
-      id: number;
+      id: number | string;
       source: Array<Source>;
     };
   };
@@ -139,7 +139,7 @@ export interface Metadata {
     publicRelatedTableIds?: string | number;
     'xml:lang': string;
     relatedTableIds: string;
-    definitionId: number;
+    definitionId: number | string;
   };
   tablesource: string;
   title: Title;
@@ -152,14 +152,14 @@ export interface Metadata {
 export interface TbmlSourceList {
   sourceList: {
     tbml: {
-      id: number;
+      id: number | string;
       source: Source | Array<Source>;
     };
   };
 }
 
 export interface Source {
-  owner: number;
+  owner: number | string;
   tableApproved: string;
   tableId: string;
   id: string;
@@ -199,6 +199,6 @@ export interface TableRow {
 
 export interface PreliminaryData {
   class: string;
-  content: number;
+  content: number | string;
   noterefs: string;
 }

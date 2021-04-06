@@ -110,7 +110,11 @@ export function fetchStatisticsWithRelease(before: Date): Array<StatisticInListi
   const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
   return statistics.reduce((statsWithRelease: Array<StatisticInListing>, stat) => {
     const variants: Array<VariantInListing> = ensureArray(stat.variants)
-    variants.sort((a: VariantInListing, b: VariantInListing) => new Date(a.nextRelease).getTime() - new Date(b.nextRelease).getTime())
+      .sort((a: VariantInListing, b: VariantInListing) => {
+        const aDate: Date = a.nextRelease ? new Date(a.nextRelease) : new Date('01.01.3000')
+        const bDate: Date = b.nextRelease ? new Date(b.nextRelease) : new Date('01.01.3000')
+        return aDate.getTime() - bDate.getTime()
+      })
     if (variants[0] && moment(variants[0].nextRelease).isBetween(new Date(), before, 'day', '[]')) {
       statsWithRelease.push(stat)
     }
@@ -178,12 +182,17 @@ export function getReleaseDatesByVariants(variants: Array<VariantInListing>): Re
   })
 
   const nextReleasesSorted: Array<string> = nextReleases.sort( (a: string, b: string) => new Date(a).getTime() - new Date(b).getTime())
-  const nextReleaseFiltered: Array<string> = nextReleasesSorted.filter((release) => moment(release).isAfter(new Date(), 'minute'))
+  const serverOffsetInMs: number = app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+  const serverTime: Date = new Date(new Date().getTime() + serverOffsetInMs)
+  const nextReleaseFiltered: Array<string> = nextReleasesSorted.filter((release) => moment(release).isAfter(serverTime, 'minute'))
   const nextReleaseIndex: number = nextReleasesSorted.indexOf(nextReleaseFiltered[0])
 
   // If Statregdata is old, get date before nextRelease as previous date
   if (nextReleaseFiltered.length > 0 && nextReleaseIndex > 0) {
     previousReleases.push(nextReleasesSorted[nextReleaseIndex - 1])
+  }
+  if (nextReleasesSorted.length === 1 && nextReleaseFiltered.length === 0) {
+    previousReleases.push(nextReleasesSorted[0])
   }
   previousReleases.sort( (a: string, b: string) => new Date(a).getTime() - new Date(b).getTime()).reverse()
 

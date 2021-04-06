@@ -12,6 +12,20 @@ export interface GenericDataImport {
 
     /**
      * 
+     * 						Tall fra tabellbygger
+     * 					
+     */
+    tbprocessor?: {
+      /**
+       * 
+       * 								URL eller TBML-id
+       * 							
+       */
+      urlOrId?: string;
+    };
+
+    /**
+     * 
      * 						Api-spørring mot statistikkbanken
      * 					
      */
@@ -69,20 +83,6 @@ export interface GenericDataImport {
           municipalityDimension: string;
         };
       };
-    };
-
-    /**
-     * 
-     * 						Tall fra tabellbygger
-     * 					
-     */
-    tbprocessor?: {
-      /**
-       * 
-       * 								URL eller TBML-id
-       * 							
-       */
-      urlOrId?: string;
     };
 
     /**

@@ -63,7 +63,7 @@ function determineSeries(
     })
   } else {
     const series: Array<Series> = headers.map((name) => ({
-      name,
+      name: typeof name === 'number' ? name.toString() : name,
       data: []
     }))
     rows.forEach((row: TableCellUniform) => {

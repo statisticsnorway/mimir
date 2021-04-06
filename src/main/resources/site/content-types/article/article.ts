@@ -48,13 +48,6 @@ export interface Article {
 
   /**
    * 
-   * 						Løpenummer
-   * 					
-   */
-  serialNumber?: string;
-
-  /**
-   * 
    * 						Forfattere
    * 					
    */
@@ -142,6 +135,13 @@ export interface Article {
    */
   articleArchive?: Array<string>;
 
+  /**
+   * 
+   * 						Løpenummer
+   * 					
+   */
+  serialNumber?: string;
+
   relatedStatisticsOptions?: {
     /**
      * Selected
@@ -202,7 +202,7 @@ export interface Article {
 
   /**
    * 
-   * 						Relatert artikkel
+   * 						Relaterte artikler
    * 					
    */
   relatedArticles?: {

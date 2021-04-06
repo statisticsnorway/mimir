@@ -17,6 +17,20 @@ export interface Table {
 
     /**
      * 
+     * 						Tall fra tabellbygger
+     * 					
+     */
+    tbprocessor?: {
+      /**
+       * 
+       * 								URL eller TBML-id
+       * 							
+       */
+      urlOrId?: string;
+    };
+
+    /**
+     * 
      * 						Api-spørring mot statistikkbanken
      * 					
      */
@@ -74,20 +88,6 @@ export interface Table {
           municipalityDimension: string;
         };
       };
-    };
-
-    /**
-     * 
-     * 						Tall fra tabellbygger
-     * 					
-     */
-    tbprocessor?: {
-      /**
-       * 
-       * 								URL eller TBML-id
-       * 							
-       */
-      urlOrId?: string;
     };
 
     /**

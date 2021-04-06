@@ -1,60 +1,84 @@
 export interface KeyFigure {
   /**
-   * Ikon
-   */
-  icon?: string;
-
-  /**
-   * Benevning
-   */
-  denomination?: string;
-
-  /**
-   * Standardverdi
-   */
-  default?: string;
-
-  /**
-   * Størrelse
-   */
-  size?: "small" | "medium" | "large";
-
-  /**
-   * Vis som grønn boks
-   */
-  greenBox: boolean;
-
-  /**
-   * Forklaring til nøkkeltallet
-   */
-  glossaryText?: string;
-
-  /**
-   * Manuell kilde
+   * 
+   * 				Manuelt tall
+   * 			
    */
   manualSource?: string;
 
   /**
-   * Endringstall
+   * 
+   * 				Benevning
+   * 			
+   */
+  denomination?: string;
+
+  /**
+   * 
+   * 				Størrelse
+   * 			
+   */
+  size?: "small" | "medium" | "large";
+
+  /**
+   * 
+   * 				Vis som grønn boks
+   * 			
+   */
+  greenBox: boolean;
+
+  /**
+   * 
+   * 				Ordforklaring
+   * 			
+   */
+  glossaryText?: string;
+
+  /**
+   * 
+   * 				Ikon
+   * 			
+   */
+  icon?: string;
+
+  /**
+   * 
+   * 				Standardverdi
+   * 			
+   */
+  default?: string;
+
+  /**
+   * 
+   * 				Endringstall
+   * 			
    */
   changes?: Array<{
     /**
-     * Benevning på endringstall
+     * 
+     * 						Benevning på endringstall
+     * 					
      */
     denomination?: string;
   }>;
 
   /**
-   * Kilde
+   * 
+   * 				Kilde
+   * 			
    */
   source?: Array<{
     /**
-     * Tittel
+     * 
+     * 						Tittel
+     * 					
      */
     title?: string;
 
     /**
-     * URL
+     * 
+     * 						URL
+     * 					
      */
     url?: string;
   }>;
@@ -69,6 +93,20 @@ export interface KeyFigure {
      * Selected
      */
     _selected: string;
+
+    /**
+     * 
+     * 						Tall fra tabellbygger
+     * 					
+     */
+    tbprocessor?: {
+      /**
+       * 
+       * 								URL eller TBML-id
+       * 							
+       */
+      urlOrId?: string;
+    };
 
     /**
      * 
@@ -129,20 +167,6 @@ export interface KeyFigure {
           municipalityDimension: string;
         };
       };
-    };
-
-    /**
-     * 
-     * 						Tall fra tabellbygger
-     * 					
-     */
-    tbprocessor?: {
-      /**
-       * 
-       * 								URL eller TBML-id
-       * 							
-       */
-      urlOrId?: string;
     };
 
     /**
