@@ -34,6 +34,7 @@ export function prepareHighchartsGraphConfig(
   categories: Array<string> | undefined = undefined): HighchartsGraphConfig {
   const isJsonStat: boolean = dataFormat !== undefined && dataFormat._selected !== undefined &&
       dataFormat._selected === DataSourceType.STATBANK_API
+
   const options: GetGraphOptions = {
     isJsonStat,
     xAxisLabel: isJsonStat && dataFormat && dataFormat['statbankApi'] ? dataFormat['statbankApi'].xAxisLabel : undefined,
