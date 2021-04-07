@@ -28,6 +28,9 @@ exports.get = function(req, portal) {
     const page = getContent()
     const part = getComponent()
     let itemList = []
+    if (part.config.itemList) {
+      itemList = itemList.concat(util.data.forceArray(part.config.itemList))
+    }
     if (part.config.relatedFactPages) {
       itemList = itemList.concat(util.data.forceArray(part.config.relatedFactPages))
     }
@@ -77,8 +80,19 @@ function renderPart(req, itemList) {
       })
 
       if (relatedContent) {
+        if (relatedContent.type === `${app.name}:contentList` && relatedContent.data.contentList) {
+          // handles content list for part-config
+          const contentList = util.data.forceArray(relatedContent.data.contentList)
+          return contentList.map((c) => {
+            const contentListItem = content.get({
+              key: c
+            })
+            return contentListItem ? parseRelatedContent(contentListItem, type) : null
+          })
+        } else { // handles content selector from content-types (articles, statistics etc)
         // handles content selector from content-types (articles, statistics etc)
-        return parseRelatedContent(relatedContent, type)
+          return parseRelatedContent(relatedContent, type)
+        }
       }
     })
 

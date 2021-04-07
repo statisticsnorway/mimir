@@ -5,6 +5,11 @@ export interface RelatedFactPagePartConfig {
   title?: string;
 
   /**
+   * Innholdsliste
+   */
+  itemList?: string;
+
+  /**
    * Faktasider
    */
   relatedFactPages?: Array<string>;
