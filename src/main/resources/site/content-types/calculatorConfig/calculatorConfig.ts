@@ -2,10 +2,10 @@ export interface CalculatorConfig {
   /**
    * Kilde Årstall
    */
-  kpiSourceYear: string;
+  kpiSourceYear?: string;
 
   /**
    * Kilde Måned
    */
-  kpiSourceMonth: string;
+  kpiSourceMonth?: string;
 }
