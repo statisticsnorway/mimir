@@ -134,11 +134,21 @@ function filterOnPreviousReleases(stats: Array<StatisticInListing>, numberOfRele
   for (let i: number = 0; releases.length < numberOfReleases; i++) {
     const day: Date = new Date()
     day.setDate(day.getDate() - i)
-    const releasesOnThisDay: Array<StatisticInListing> = stats.filter((stat: StatisticInListing) => {
-      return Array.isArray(stat.variants) ?
+    const releasesOnThisDay: Array<StatisticInListing> = stats.reduce((acc: Array<StatisticInListing>, stat: StatisticInListing) => {
+      const a: VariantInListing | undefined = Array.isArray(stat.variants) ?
         stat.variants.find((variant: VariantInListing) => checkReleaseDate(variant, day)) :
-        checkReleaseDate(stat.variants, day)
-    })
+        checkReleaseDate(stat.variants, day) ? stat.variants : undefined
+
+      if (a) {
+        acc.push(
+          {
+            ...stat,
+            variants: [a]
+          }
+        )
+      }
+      return acc
+    }, [])
     const trimmed: Array<StatisticInListing> = checkLimitAndTrim(releases, releasesOnThisDay, numberOfReleases)
     releases.push(...trimmed)
   }
@@ -278,6 +288,9 @@ function calculateWeek(variant: VariantInListing) {
   })
 }
 
+/*
+*  Interfaces
+*/
 interface PreparedStatistics {
   id: number;
   name: string;
