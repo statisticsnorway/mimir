@@ -86,7 +86,10 @@ export function renderPart(): Response {
   // render component
   const reactComponent: React4xpObject = new React4xp('ReleasedStatistics')
     .setProps({
-      releases: groupedByYearMonthAndDay
+      releases: groupedByYearMonthAndDay,
+      title: localize({
+        key: 'newStatistics'
+      })
     })
     .setId('nextStatisticsReleases')
     .uniqueId()
