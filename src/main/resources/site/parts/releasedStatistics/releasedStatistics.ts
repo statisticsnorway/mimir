@@ -72,11 +72,12 @@ export function renderPart(): Response {
 
   // group by year, then month, then day
   const groupedByYear: GroupedBy<PreparedStatistics> = groupStatisticsByYear(releasesPrepped)
-  const groupedByMonthAndDay: GroupedBy<GroupedBy<PreparedStatistics>> = {}
+
   const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> = {}
   Object.keys(groupedByYear).forEach((year) => {
+    const groupedByMonthAndDay: GroupedBy<GroupedBy<PreparedStatistics>> = {}
     const tmpMonth: GroupedBy<PreparedStatistics> = groupStatisticsByMonth(forceArray(groupedByYear[year]))
-    Object.keys(tmpMonth).forEach((month) => {
+    Object.keys(tmpMonth).map((month) => {
       groupedByMonthAndDay[month] = groupStatisticsByDay(forceArray(tmpMonth[month]))
     })
     groupedByYearMonthAndDay[year] = groupedByMonthAndDay
