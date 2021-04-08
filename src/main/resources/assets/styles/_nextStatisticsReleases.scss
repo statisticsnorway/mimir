@@ -25,6 +25,9 @@
     &:first-child {
       background: orange
     }
+    .ssb-paragraph:first-letter{
+      text-transform: capitalize;
+    }
   }
   time {
     border: 2px solid $ssb-dark-5;

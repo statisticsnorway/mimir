@@ -99,7 +99,7 @@ export function renderPart(): Response {
 }
 
 function prepareRelease(release: StatisticInListing): PreparedStatistics {
-  const preparedVariant: PreparedVariant = Array.isArray(release.variants) ? closestReleaseDate(release.variants) : formatVariant(release.variants)
+  const preparedVariant: PreparedVariant = Array.isArray(release.variants) ? concatReleaseTimes(release.variants) : formatVariant(release.variants)
   return {
     id: release.id,
     name: release.name,
@@ -108,13 +108,14 @@ function prepareRelease(release: StatisticInListing): PreparedStatistics {
   }
 }
 
-function closestReleaseDate(variants: Array<VariantInListing>): PreparedVariant {
-  const variantWithClosestPreviousRelease: VariantInListing = variants.reduce((earliestVariant, variant) => {
-    const newDate: Date = new Date(variant.previousRelease)
-    if (!variant || newDate > new Date(earliestVariant.previousRelease) ) return variant
-    return earliestVariant
-  })
-  return formatVariant(variantWithClosestPreviousRelease)
+function concatReleaseTimes(variants: Array<VariantInListing>): PreparedVariant {
+  const defaultVariant: PreparedVariant = formatVariant(variants[0])
+  const timePeriodes: Array<string> = variants.map((variant: VariantInListing) => calculatePeriode(variant))
+  const formatedTimePeriodes: string = timePeriodes.join(' og ')
+  return {
+    ...defaultVariant,
+    period: formatedTimePeriodes
+  }
 }
 
 function formatVariant(variant: VariantInListing): PreparedVariant {
@@ -134,16 +135,26 @@ function filterOnPreviousReleases(stats: Array<StatisticInListing>, numberOfRele
   for (let i: number = 0; releases.length < numberOfReleases; i++) {
     const day: Date = new Date()
     day.setDate(day.getDate() - i)
+    log.info('New day ' + day)
     const releasesOnThisDay: Array<StatisticInListing> = stats.reduce((acc: Array<StatisticInListing>, stat: StatisticInListing) => {
-      const a: VariantInListing | undefined = Array.isArray(stat.variants) ?
-        stat.variants.find((variant: VariantInListing) => checkReleaseDate(variant, day)) :
-        checkReleaseDate(stat.variants, day) ? stat.variants : undefined
-
-      if (a) {
+      if (stat.shortName === 'carina') {
+        log.info(JSON.stringify(stat, null, 2))
+      }
+      const a: Array<VariantInListing> | undefined = Array.isArray(stat.variants) ?
+        stat.variants.filter((variant: VariantInListing) => {
+          if (stat.shortName === 'carina') log.info('is variant trye ' + checkReleaseDate(variant, day))
+          return checkReleaseDate(variant, day)
+        }) :
+        checkReleaseDate(stat.variants, day) ? [stat.variants] : undefined
+      if (stat.shortName === 'carina') {
+        log.info(JSON.stringify('a', null, 2))
+        log.info(JSON.stringify(a, null, 2))
+      }
+      if (a && a.length > 0) {
         acc.push(
           {
             ...stat,
-            variants: [a]
+            variants: a
           }
         )
       }
