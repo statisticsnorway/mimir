@@ -142,6 +142,13 @@ export interface Article {
    */
   serialNumber?: string;
 
+  /**
+   * 
+   * 						ISBN nummer
+   * 					
+   */
+  isbnNumber?: string;
+
   relatedStatisticsOptions?: {
     /**
      * Selected

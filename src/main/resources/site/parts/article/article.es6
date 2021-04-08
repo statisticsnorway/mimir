@@ -59,7 +59,8 @@ function renderPart(req) {
     modifiedDate,
     authors,
     serialNumber: page.data.serialNumber,
-    introTitle: page.data.introTitle
+    introTitle: page.data.introTitle,
+    isbn: page.data.isbnNumber
   }
 
   const body = render(view, model)
