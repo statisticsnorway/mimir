@@ -135,28 +135,17 @@ function filterOnPreviousReleases(stats: Array<StatisticInListing>, numberOfRele
   for (let i: number = 0; releases.length < numberOfReleases; i++) {
     const day: Date = new Date()
     day.setDate(day.getDate() - i)
-    log.info('New day ' + day)
     const releasesOnThisDay: Array<StatisticInListing> = stats.reduce((acc: Array<StatisticInListing>, stat: StatisticInListing) => {
-      if (stat.shortName === 'carina') {
-        log.info(JSON.stringify(stat, null, 2))
-      }
-      const a: Array<VariantInListing> | undefined = Array.isArray(stat.variants) ?
+      const thisDayReleasedVariants: Array<VariantInListing> | undefined = Array.isArray(stat.variants) ?
         stat.variants.filter((variant: VariantInListing) => {
-          if (stat.shortName === 'carina') log.info('is variant trye ' + checkReleaseDate(variant, day))
           return checkReleaseDate(variant, day)
         }) :
         checkReleaseDate(stat.variants, day) ? [stat.variants] : undefined
-      if (stat.shortName === 'carina') {
-        log.info(JSON.stringify('a', null, 2))
-        log.info(JSON.stringify(a, null, 2))
-      }
-      if (a && a.length > 0) {
-        acc.push(
-          {
-            ...stat,
-            variants: a
-          }
-        )
+      if (thisDayReleasedVariants && thisDayReleasedVariants.length > 0) {
+        acc.push({
+          ...stat,
+          variants: thisDayReleasedVariants
+        })
       }
       return acc
     }, [])
