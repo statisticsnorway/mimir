@@ -10,6 +10,9 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
+const {
+  isEnabled
+} = __non_webpack_require__('/lib/featureToggle')
 
 const languageLib = __non_webpack_require__( '/lib/language')
 const moment = require('moment/min/moment-with-locales')
@@ -60,7 +63,7 @@ function renderPart(req) {
     authors,
     serialNumber: page.data.serialNumber,
     introTitle: page.data.introTitle,
-    isbn: page.data.isbnNumber
+    isbn: isEnabled('article-isbn', true) && page.data.isbnNumber
   }
 
   const body = render(view, model)
