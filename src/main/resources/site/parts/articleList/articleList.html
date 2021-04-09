@@ -1,0 +1,10 @@
+<section class="xp-part article-list container-fluid">
+    <h3 data-th-text="${title}"></h3>
+    <div data-th-each="article: ${articles}" class="mb-2">
+        <a data-th-href="${article.url}" class="ssb-link header">
+            <span data-th-text="${article.title}" class="link-text"></span>
+        </a>
+        <p data-th-text="${article.preface}" class="article-list-ingress">HER; EN INGRESS</p>
+        <time data-th-attr="datetime=${article.publishDate}" data-th-text="${article.publishDateHuman}"></time>
+    </div>
+</section>

@@ -15,6 +15,13 @@ export interface Article {
 
   /**
    * 
+   * 						Vis på forside
+   * 					
+   */
+  showOnFrontPage: boolean;
+
+  /**
+   * 
    * 						Endringsdato
    * 					
    */
