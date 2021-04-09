@@ -14,7 +14,7 @@ const {
 }: ContentLibrary = __non_webpack_require__('/lib/xp/content')
 
 const {
-  pageUrl
+  pageUrl, getContent
 }: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
 const {
   render
@@ -29,7 +29,9 @@ exports.get = (req: Request): Response => {
 exports.preview = (req: Request): Response => renderPart(req)
 
 function renderPart(req: Request): Response {
-  const articles: QueryResponse<Article> = getArticles()
+  const content: Content = getContent()
+  const language: string = content.language ? content.language : 'nb'
+  const articles: QueryResponse<Article> = getArticles(language)
   const preparedArticles: Array<PreparedArticles> = prepareArticles(articles)
   const props: PartProperties = {
     title: 'Nye artikler, analyser og publikasjoner',
@@ -44,13 +46,41 @@ function renderPart(req: Request): Response {
 // TODO: Url til artikkelarkiv nederst
 // TOOD: query:`data.showOnFrontPage`
 
-function getArticles(): QueryResponse<Article> {
+function getArticles(language: string): QueryResponse<Article> {
   const q: QueryResponse<Article> = query({
     count: 4,
     query: ``,
-    contentTypes: [`${app.name}:article`]
+    contentTypes: [`${app.name}:article`],
+    sort: 'publish.from DESC',
+    filters: {
+      boolean: {
+        must: [
+          {
+            exists: {
+              field: 'data.showOnFrontPage'
+            }
+          },
+          {
+            hasValue: {
+              field: 'data.showOnFrontPage',
+              values: [
+                true
+              ]
+            }
+          },
+          {
+            hasValue: {
+              field: 'language',
+              values: [
+                language
+              ]
+            }
+          }
+        ]
+      }
+    }
   })
-  // log.info(JSON.stringify(q, null, 2))
+  log.info(JSON.stringify(q, null, 2))
   return q
 }
 
