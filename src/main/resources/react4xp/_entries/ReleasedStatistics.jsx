@@ -33,7 +33,7 @@ class ReleasedStatistics extends React.Component {
 
   render() {
     return (<section className='nextStatisticsReleases'>
-      <Title size={3}>this.props.title</Title>
+      <Title size={3}>{this.props.title}</Title>
       {
         Object.keys(this.props.releases).reverse().map((year, yearIndex) => {
           const currentYear = this.props.releases[year]
