@@ -31,6 +31,10 @@
   border-top: solid 1px $ssb-dark-2;
   border-bottom: solid 1px $ssb-dark-2;
 
+  @include media-breakpoint-down(md) {
+    border: none;
+  }
+
   .links-wrapper {
     margin-top: 36px;
     margin-bottom: 36px;

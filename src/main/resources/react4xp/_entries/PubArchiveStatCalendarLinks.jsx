@@ -7,12 +7,12 @@ const PubArchiveStatCalendarLinks = (props) => {
   return (
     <React.Fragment>
       <div className="container">
-        <div className="row justify-content-center">
+        <div className="row justify-content-md-center justify-content-start">
           <div className="col-12 col-md-6 links-wrapper">
             {props.PublicationLink ? <Link
               href={props.PublicationLink}
               linkType="profiled"
-              className='publication-link mr-5'
+              className='publication-link mr-5 mb-md-0 mb-4'
               icon={<ArrowRight size="18" />}
             >
               <span
