@@ -1,5 +1,5 @@
 <part>
-    <display-name>Publication archive and statistics calendar links</display-name>
+    <display-name>Publikasjonsarkiv og statistikkalender lenker</display-name>
     <form>
         <input type="TextLine" name="pubArchiveUrl">
             <label>Lenke til Publikasjonsarkiv</label>

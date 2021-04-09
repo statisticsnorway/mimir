@@ -1,9 +1,6 @@
 const {
-  data
-} = __non_webpack_require__( '/lib/util')
-const {
   getComponent,
-  pageUrl
+  getContent
 } = __non_webpack_require__( '/lib/xp/portal')
 const {
   render
@@ -12,6 +9,9 @@ const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
 const React4xp = require('/lib/enonic/react4xp')
+const {
+  getPhrases
+} = __non_webpack_require__( '/lib/language')
 
 const view = resolve('./pubArchiveCalendarLinks.html')
 
@@ -32,25 +32,32 @@ const NO_LINKS_FOUND = {
 
 const renderPart = (req) => {
   const part = getComponent()
+  const page = getContent()
+  const phrases = getPhrases(page)
 
-  if (part.config.pubArchiveUrl && part.config.statCalendarUrl) {
-    const categoryLinksComponent = new React4xp('PubArchiveStatCalendar')
+  const PublicationText = phrases.publicationLinkText
+  const CalendarText = phrases.statCalendarText
+
+  if (part.config.pubArchiveUrl || part.config.statCalendarUrl) {
+    const pubArchiveStatCalendarLinksComponent = new React4xp('PubArchiveStatCalendarLinks')
       .setProps({
         PublicationLink: part.config.pubArchiveUrl,
-        CalendarLink: part.config.statCalendarUrl
+        PublicationText: PublicationText,
+        CalendarLink: part.config.statCalendarUrl,
+        CalendarText: CalendarText
       })
       .setId('CalendarLinks')
       .uniqueId()
 
     const body = render(view, {
-      categoryId: categoryLinksComponent.react4xpId
+      categoryId: pubArchiveStatCalendarLinksComponent.react4xpId
     })
 
     return {
-      body: categoryLinksComponent.renderBody({
+      body: pubArchiveStatCalendarLinksComponent.renderBody({
         body
       }),
-      pageContributions: categoryLinksComponent.renderPageContributions()
+      pageContributions: pubArchiveStatCalendarLinksComponent.renderPageContributions()
     }
   }
   return NO_LINKS_FOUND
