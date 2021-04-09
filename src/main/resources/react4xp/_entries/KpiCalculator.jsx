@@ -2,7 +2,61 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Form, Row } from 'react-bootstrap'
 
-const months = ['jan', 'feb', 'mar', 'apr', 'mai', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'des']
+const months = [
+  {
+    code: 90,
+    name: 'Gjennomsnitt'
+  },
+  {
+    code: 1,
+    name: 'Januar'
+  },
+  {
+    code: 2,
+    name: 'Februar'
+  },
+  {
+    code: 3,
+    name: 'Mars'
+  },
+  {
+    code: 4,
+    name: 'April'
+  },
+  {
+    code: 5,
+    name: 'Mai'
+  },
+  {
+    code: 6,
+    name: 'Juni'
+  },,
+  {
+    code: 7,
+    name: 'Juli'
+  },
+  {
+    code: 8,
+    name: 'August'
+  },
+  {
+    code: 9,
+    name: 'September'
+  },
+  {
+    code: 10,
+    name: 'Oktober'
+  },
+  {
+    code: 11,
+    name: 'November'
+  },
+  {
+    code: 12,
+    name: 'Desember'
+  }
+]
+
 class KpiCalculator extends React.Component {
   constructor(props) {
     super(props)
@@ -42,9 +96,7 @@ class KpiCalculator extends React.Component {
           </Form.Group>
         </Row>
         <Row>
-          <Button variant="primary" type="submit">
-                        Beregn prisendring
-          </Button>
+          <Button variant="primary" type="submit">Beregn prisendring</Button>
         </Row>
       </Form>
     </div>
@@ -53,19 +105,11 @@ class KpiCalculator extends React.Component {
   addDropdownMonth() {
     return (
       <Form.Control as="select">
-        <option>Gjennomsnitt</option>
-        <option>Januar</option>
-        <option>Februar</option>
-        <option>Mars</option>
-        <option>April</option>
-        <option>Mai</option>
-        <option>Juni</option>
-        <option>Juli</option>
-        <option>August</option>
-        <option>September</option>
-        <option>Oktober</option>
-        <option>November</option>
-        <option>Desember</option>
+        {months.map((month, index) => {
+          return (
+            <option key={month.code}>{month.name}</option>
+          )
+        })}
       </Form.Control>
     )
   }
