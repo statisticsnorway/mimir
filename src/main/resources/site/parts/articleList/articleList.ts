@@ -44,7 +44,6 @@ function renderPart(req: Request): Response {
   }
 }
 // TODO: Url til artikkelarkiv nederst
-// TOOD: query:`data.showOnFrontPage`
 
 function getArticles(language: string): QueryResponse<Article> {
   const q: QueryResponse<Article> = query({
