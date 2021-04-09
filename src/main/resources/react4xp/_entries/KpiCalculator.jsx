@@ -1,123 +1,136 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Form, Row } from 'react-bootstrap'
+import { Form, Container, Row, Col } from 'react-bootstrap'
+import { Input, Button, Dropdown } from '@statisticsnorway/ssb-component-library'
 
-const months = [
-  {
-    code: 90,
-    name: 'Gjennomsnitt'
-  },
-  {
-    code: 1,
-    name: 'Januar'
-  },
-  {
-    code: 2,
-    name: 'Februar'
-  },
-  {
-    code: 3,
-    name: 'Mars'
-  },
-  {
-    code: 4,
-    name: 'April'
-  },
-  {
-    code: 5,
-    name: 'Mai'
-  },
-  {
-    code: 6,
-    name: 'Juni'
-  },,
-  {
-    code: 7,
-    name: 'Juli'
-  },
-  {
-    code: 8,
-    name: 'August'
-  },
-  {
-    code: 9,
-    name: 'September'
-  },
-  {
-    code: 10,
-    name: 'Oktober'
-  },
-  {
-    code: 11,
-    name: 'November'
-  },
-  {
-    code: 12,
-    name: 'Desember'
-  }
-]
+function KpiCalculator() {
+  const [validated] = useState(false)
 
-class KpiCalculator extends React.Component {
-  constructor(props) {
-    super(props)
+  function onSubmit(e) {
+    e.preventDefault()
   }
 
-  render() {
-    return <div className="container">
-      <Form>
-        <Row>
-          <Form.Group controlId="startValue">
-            <Form.Label>Skriv inn beløp</Form.Label>
-            <Form.Control type="text" />
-          </Form.Group>
-        </Row>
 
-        <p>Beregn prisendring fra</p>
-        <Row>
-          <Form.Group controlId="startMonth">
-            <Form.Label>Velg måned</Form.Label>
-            {this.addDropdownMonth()}
-          </Form.Group>
-          <Form.Group controlId="startYear">
-            <Form.Label>Skriv inn år(åååå)</Form.Label>
-            <Form.Control type="text" />
-          </Form.Group>
-        </Row>
-
-        <p>Beregn prisendring til</p>
-        <Row>
-          <Form.Group controlId="endMonth">
-            <Form.Label>Velg måned</Form.Label>
-            {this.addDropdownMonth()}
-          </Form.Group>
-          <Form.Group controlId="endYear">
-            <Form.Label>Skriv inn år(åååå)</Form.Label>
-            <Form.Control type="text" />
-          </Form.Group>
-        </Row>
-        <Row>
-          <Button variant="primary" type="submit">Beregn prisendring</Button>
-        </Row>
-      </Form>
-    </div>
-  }
-
-  addDropdownMonth() {
+  function addDropdownMonth() {
     return (
-      <Form.Control as="select">
-        {months.map((month, index) => {
-          return (
-            <option key={month.code}>{month.name}</option>
-          )
-        })}
-      </Form.Control>
+      <Dropdown
+        header="Velg måned"
+        selectedItem={{
+          title: 'Gjennomsnitt',
+          id: '90'
+        }}
+        items={months}
+      />
     )
   }
+
+  return (<Container>
+    <h2>Beregn prisendring</h2>
+    <p>Siste tilgjengelige tall er for januar 2021. Tall for februar kommer ca 10. mars.</p>
+    <Form onSubmit={onSubmit} validated={validated}>
+      <Container>
+        <Row>
+          <Col>
+            <h3>Skriv inn beløp</h3>
+            <Input handleChange={() => undefined}/>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <h3>Beregn prisendring fra</h3>
+            <Container>
+              <Row>
+                <Col className="col-8">
+                  {addDropdownMonth()}
+                </Col>
+                <Col className="col-4">
+                  <Input label={`Skriv inn år(åååå)`} handleChange={() => undefined} />
+                </Col>
+              </Row>
+            </Container>
+          </Col>
+          <Col>
+            <h3>Beregn prisendring til</h3>
+            <Container>
+              <Row>
+                <Col className="col-8">
+                  {addDropdownMonth()}
+                </Col>
+                <Col className="col-4">
+                  <Input label={`Skriv inn år(åååå)`} handleChange={() => undefined} />
+                </Col>
+              </Row>
+            </Container>
+          </Col>
+        </Row>
+        <Row className="my-4">
+          <Col>
+            <Button primary type="submit">Beregn prisendring</Button>
+          </Col>
+        </Row>
+      </Container>
+    </Form>
+  </Container>)
 }
 
 KpiCalculator.propTypes = {
   kpiServiceUrl: PropTypes.string
 }
 
+
+const months = [
+  {
+    id: '90',
+    title: 'Gjennomsnitt'
+  },
+  {
+    id: '01',
+    title: 'Januar'
+  },
+  {
+    id: '02',
+    title: 'Februar'
+  },
+  {
+    id: '03',
+    title: 'Mars'
+  },
+  {
+    id: '04',
+    title: 'April'
+  },
+  {
+    id: '05',
+    title: 'Mai'
+  },
+  {
+    id: '06',
+    title: 'Juni'
+  },,
+  {
+    id: '07',
+    title: 'Juli'
+  },
+  {
+    id: '08',
+    title: 'August'
+  },
+  {
+    id: '09',
+    title: 'September'
+  },
+  {
+    id: '10',
+    title: 'Oktober'
+  },
+  {
+    id: '11',
+    title: 'November'
+  },
+  {
+    id: '12',
+    title: 'Desember'
+  }
+]
 
 export default (props) => <KpiCalculator {...props} />
