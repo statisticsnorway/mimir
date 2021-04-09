@@ -39,38 +39,33 @@ function get(req: HttpRequestParams): Response {
     query: ''
   }).hits[0] as Content<CalculatorConfig> | undefined
   if (config && config.data.kpiSourceMonth && config.data.kpiSourceYear) {
-    // TODO fetch after checking year < 1920
-    const kpiSourceMonth: Content<GenericDataImport> | null = getContent({
+    const kpiSourceMonth: Content<GenericDataImport> | null = parseInt(startYear) >= 1920 || parseInt(endYear) >= 1920 ? getContent({
       key: config.data.kpiSourceMonth
-    })
-    const kpiSourceYear: Content<GenericDataImport> | null = getContent({
+    }) : null
+    const kpiSourceYear: Content<GenericDataImport> | null = parseInt(startYear) < 1920 || parseInt(endYear) < 1920 ? getContent({
       key: config.data.kpiSourceYear
-    })
-    if (kpiSourceMonth && kpiSourceYear) {
-      const kpiDatasetMonthRepo: DatasetRepoNode<JSONstatType> | undefined = datasetOrUndefined(kpiSourceMonth) as DatasetRepoNode<JSONstatType> | undefined
-      if (kpiDatasetMonthRepo) {
-        const kpiDatasetMonth: Dataset | null = JSONstat(kpiDatasetMonthRepo.data).Dataset('dataset')
-        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-        // @ts-ignore
-        const startIndex: number = kpiDatasetMonth?.Data({
-          Tid: startYear,
-          Maaned: startMonth
-        }).value
-        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-        // @ts-ignore
-        const endIndex: number = kpiDatasetMonth?.Data({
-          Tid: endYear,
-          Maaned: endMonth
-        }).value
-        const chronological: boolean = isChronological(startYear, startMonth, endYear, endMonth)
-        const changeValue: number = getChangeValue(startIndex, endIndex, chronological)
-        return {
-          body: {
-            endValue: parseInt(startValue) * (endIndex / startIndex),
-            change: changeValue
-          },
-          contentType: 'application/json'
-        }
+    }) : null
+
+    const kpiDatasetMonthRepo: DatasetRepoNode<JSONstatType> | null = kpiSourceMonth ?
+        datasetOrUndefined(kpiSourceMonth) as DatasetRepoNode<JSONstatType> | null : null
+    const kpiDatasetYearRepo: DatasetRepoNode<JSONstatType> | null = kpiSourceYear ?
+        datasetOrUndefined(kpiSourceYear) as DatasetRepoNode<JSONstatType> | null : null
+
+    const kpiData: KpiData = {
+      month: kpiDatasetMonthRepo ? JSONstat(kpiDatasetMonthRepo.data).Dataset('dataset') : null,
+      year: kpiDatasetYearRepo ? JSONstat(kpiDatasetYearRepo.data).Dataset('dataset') : null
+    }
+
+    const indexResult: IndexResult = getIndexes(startYear, startMonth, endYear, endMonth, kpiData)
+    const chronological: boolean = isChronological(startYear, startMonth, endYear, endMonth)
+    if (indexResult.startIndex !== null && indexResult.endIndex !== null) {
+      const changeValue: number = getChangeValue(indexResult.startIndex, indexResult.endIndex, chronological)
+      return {
+        body: {
+          endValue: parseInt(startValue) * (indexResult.endIndex / indexResult.startIndex),
+          change: changeValue
+        },
+        contentType: 'application/json'
       }
     }
   }
@@ -84,24 +79,39 @@ function get(req: HttpRequestParams): Response {
 }
 exports.get = get
 
-function getIndexes(startYear: string, startMonth: string, endYear: string, endMonth: string): IndexResult {
-  const startIndex: null | number = null
+function getIndexes(startYear: string, startMonth: string, endYear: string, endMonth: string, kpiData: KpiData): IndexResult {
+  let startIndex: null | number = null
+  let endIndex: null | number = null
+
   if (parseInt(startYear) < 1920) {
-
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
+    startIndex = kpiData.year?.Data({
+      Tid: startYear
+    }).value
   } else {
-
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
+    startIndex = kpiData.month?.Data({
+      Tid: startYear,
+      Maaned: startMonth
+    }).value
   }
-  const endIndex: null | number = null
-  // const endIndexDataset =
+
   if (parseInt(endYear) < 1920) {
-
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
+    endIndex = kpiData.year?.Data({
+      Tid: endYear
+    }).value
   } else {
-
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
+    endIndex = kpiData.month?.Data({
+      Tid: endYear,
+      Maaned: endMonth
+    }).value
   }
-  // endIndex = endIndexDataset?.Data({
-  //   Tid: endYear,
-  //   Maaned: endMonth
-  // }).value
   return {
     startIndex,
     endIndex
@@ -111,6 +121,11 @@ function getIndexes(startYear: string, startMonth: string, endYear: string, endM
 interface IndexResult {
   startIndex: number | null;
   endIndex: number | null;
+}
+
+interface KpiData {
+  month: Dataset | null;
+  year: Dataset | null;
 }
 
 function getChangeValue(startIndex: number, endIndex: number, chronological: boolean): number {
