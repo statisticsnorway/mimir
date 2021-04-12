@@ -142,6 +142,11 @@ export interface Article {
    */
   serialNumber?: string;
 
+  /**
+   * Delemner
+   */
+  subtopic?: string;
+
   relatedStatisticsOptions?: {
     /**
      * Selected

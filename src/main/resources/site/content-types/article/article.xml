@@ -223,5 +223,11 @@
 				</input>
 			</items>
 		</field-set>
+		<field-set>
+			<label>Sekundærplassering</label>
+			<items>
+				<mixin name="subtopic" />
+			</items>
+		</field-set>
 	</form>
 </content-type>
