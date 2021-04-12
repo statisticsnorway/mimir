@@ -148,17 +148,23 @@ function KpiCalculator(props) {
     return (
       <Dropdown
         id={id}
-        header="Velg måned"
+        header={getPhrase('chooseMonth')}
         onSelect={(value) => {
           onChange(id, value)
         }}
         selectedItem={{
-          title: 'Gjennomsnitt',
+          title: getPhrase('calculatorMonthAverage'),
           id: '90'
         }}
-        items={months}
+        items={props.months}
       />
     )
+  }
+
+  function getPhrase(id) {
+    const phrases = props.phrasesKpi
+    const phrase = phrases.find((p) => p.id === id)
+    return phrase ? phrase.title : id
   }
 
   function renderResult() {
@@ -246,19 +252,19 @@ function KpiCalculator(props) {
   }
 
   return (<Container>
-    <h2>Beregn prisendring</h2>
-    <p>Siste tilgjengelige tall er for januar 2021. Tall for februar kommer ca 10. mars.</p>
+    <h2>{getPhrase('calculatePriceChange')}</h2>
+    <p>{getPhrase('kpiNextPublishText')}</p>
     <Form onSubmit={onSubmit} validated={validated}>
       <Container>
         <Row>
           <Col>
-            <h3>Skriv inn beløp</h3>
+            <h3>{getPhrase('enterAmount')}</h3>
             <Input handleChange={(value) => onChange('start-value', value)} error={startValue.error} errorMessage={startValue.errorMsg}/>
           </Col>
         </Row>
         <Row>
           <Col>
-            <h3>Beregn prisendring fra</h3>
+            <h3>{getPhrase('calculatePriceChangeFrom')}</h3>
             <Container>
               <Row>
                 <Col className="col-8">
@@ -266,7 +272,7 @@ function KpiCalculator(props) {
                 </Col>
                 <Col className="col-4">
                   <Input
-                    label={`Skriv inn år(åååå)`}
+                    label={getPhrase('enterYear')}
                     handleChange={(value) => onChange('start-year', value)}
                     error={startYear.error}
                     errorMessage={startYear.errorMsg}/>
@@ -275,7 +281,7 @@ function KpiCalculator(props) {
             </Container>
           </Col>
           <Col>
-            <h3>Beregn prisendring til</h3>
+            <h3>{getPhrase('calculatePriceChangeTo')}</h3>
             <Container>
               <Row>
                 <Col className="col-8">
@@ -283,7 +289,7 @@ function KpiCalculator(props) {
                 </Col>
                 <Col className="col-4">
                   <Input
-                    label={`Skriv inn år(åååå)`}
+                    label={getPhrase('enterYear')}
                     handleChange={(value) => onChange('end-year', value)}
                     error={endYear.error}
                     errorMessage={endYear.errorMsg}/>
@@ -294,7 +300,7 @@ function KpiCalculator(props) {
         </Row>
         <Row className="my-4">
           <Col>
-            <Button primary type="submit" disabled={!validated || loading}>Beregn prisendring</Button>
+            <Button primary type="submit" disabled={!validated || loading}>{getPhrase('calculatePriceChange')}</Button>
           </Col>
         </Row>
       </Container>
@@ -307,67 +313,25 @@ function KpiCalculator(props) {
 
 KpiCalculator.defaultValue = {
   kpiServiceUrl: null,
-  language: 'no'
+  language: 'no',
+  months: []
 }
 
 KpiCalculator.propTypes = {
   kpiServiceUrl: PropTypes.string,
-  language: PropTypes.string
+  language: PropTypes.string,
+  months: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      title: PropTypes.string
+    })
+  ),
+  phrasesKpi: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      title: PropTypes.string
+    })
+  )
 }
-
-const months = [
-  {
-    id: '90',
-    title: 'Gjennomsnitt'
-  },
-  {
-    id: '01',
-    title: 'Januar'
-  },
-  {
-    id: '02',
-    title: 'Februar'
-  },
-  {
-    id: '03',
-    title: 'Mars'
-  },
-  {
-    id: '04',
-    title: 'April'
-  },
-  {
-    id: '05',
-    title: 'Mai'
-  },
-  {
-    id: '06',
-    title: 'Juni'
-  },,
-  {
-    id: '07',
-    title: 'Juli'
-  },
-  {
-    id: '08',
-    title: 'August'
-  },
-  {
-    id: '09',
-    title: 'September'
-  },
-  {
-    id: '10',
-    title: 'Oktober'
-  },
-  {
-    id: '11',
-    title: 'November'
-  },
-  {
-    id: '12',
-    title: 'Desember'
-  }
-]
 
 export default (props) => <KpiCalculator {...props} />
