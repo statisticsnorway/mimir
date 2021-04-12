@@ -5,7 +5,7 @@ import { CalculatorConfig } from '../../site/content-types/calculatorConfig/calc
 import { GenericDataImport } from '../../site/content-types/genericDataImport/genericDataImport'
 import { SSBCacheLibrary } from '../../lib/ssb/cache'
 import { DatasetRepoNode } from '../../lib/repo/dataset'
-import { Category, Dataset, Dimension, JSONstat as JSONstatType } from '../../lib/types/jsonstat-toolkit'
+import { Dataset, JSONstat as JSONstatType } from '../../lib/types/jsonstat-toolkit'
 /* eslint-disable new-cap */
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
@@ -62,10 +62,18 @@ function get(req: HttpRequestParams): Response {
       const changeValue: number = getChangeValue(indexResult.startIndex, indexResult.endIndex, chronological)
       return {
         body: {
-          endValue: parseInt(startValue) * (indexResult.endIndex / indexResult.startIndex),
+          endValue: parseFloat(startValue) * (indexResult.endIndex / indexResult.startIndex),
           change: changeValue
         },
         contentType: 'application/json'
+      }
+    } else {
+      return {
+        status: 500,
+        body: {
+          error: indexResult.startIndex === null ? 'Startmåned er ikke gyldig for denne utregningen' : 'Sluttmåned er ikke gyldig for denne utregningen'
+        },
+        contentType: 'applcation/json'
       }
     }
   }
