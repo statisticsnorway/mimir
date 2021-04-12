@@ -1,9 +1,11 @@
 import { Request, Response } from 'enonic-types/controller'
 import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
 import { Article } from '../../content-types/article/article'
+import { ArticleListPartConfig } from './articleList-part-config'
 import { PortalLibrary, Component } from 'enonic-types/portal'
-import { ThymeleafLibrary, ResourceKey } from 'enonic-types/thymeleaf'
+import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
 
+const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 // eslint-disable-next-line @typescript-eslint/typedef
 const moment = require('moment/min/moment-with-locales')
 moment.locale('nb')
@@ -18,11 +20,6 @@ const {
 const {
   pageUrl, getContent, getComponent
 }: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
-const {
-  render
-}: ThymeleafLibrary = __non_webpack_require__('/lib/thymeleaf')
-
-const view: ResourceKey = resolve('./articleList.html')
 
 exports.get = (req: Request): Response => {
   return renderPart(req)
@@ -32,24 +29,35 @@ exports.preview = (req: Request): Response => renderPart(req)
 
 function renderPart(req: Request): Response {
   const content: Content = getContent()
-  const config: Component<Article> = getComponent()
+  const component: Component<ArticleListPartConfig> = getComponent()
   const language: string = content.language ? content.language : 'nb'
   const articles: QueryResponse<Article> = getArticles(language)
   const preparedArticles: Array<PreparedArticles> = prepareArticles(articles)
+
+  //  Must be set to nb instead of no for localization
   const archiveLinkText: string = localize({
     key: 'publicationLinkText',
-    locale: 'language',
-    values: ['Publikasjonsarkiv']
+    locale: language === 'nb' ? 'no' : language
   })
   log.info('glnrbn språk: ' + archiveLinkText)
 
   const props: PartProperties = {
     title: 'Nye artikler, analyser og publikasjoner',
-    articles: preparedArticles
+    articles: preparedArticles,
+    archiveLinkText: archiveLinkText,
+    archiveLinkUrl: component.config.pubArchiveUrl
   }
   log.info(JSON.stringify(props, null, 2))
+
+  const reactComponent: React4xpObject = new React4xp('ArticleList')
+    .setProps(props)
+    .setId('articleList')
+    .uniqueId()
+
   return {
-    body: render(view, props)
+    body: reactComponent.renderBody({
+      body: `<div data-th-id="${reactComponent.react4xpId}"></div>`
+    })
 
   }
 }
@@ -118,4 +126,6 @@ interface PreparedArticles {
 interface PartProperties {
   title: string;
   articles: Array<PreparedArticles>;
+  archiveLinkText: string;
+  archiveLinkUrl: string;
 }
