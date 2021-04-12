@@ -1,20 +1,22 @@
 import { Request, Response } from 'enonic-types/controller'
 import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
 import { Article } from '../../content-types/article/article'
-import { PortalLibrary } from 'enonic-types/portal'
+import { PortalLibrary, Component } from 'enonic-types/portal'
 import { ThymeleafLibrary, ResourceKey } from 'enonic-types/thymeleaf'
 
 // eslint-disable-next-line @typescript-eslint/typedef
 const moment = require('moment/min/moment-with-locales')
 moment.locale('nb')
-
+const {
+  localize
+} = __non_webpack_require__('/lib/xp/i18n')
 
 const {
   query
 }: ContentLibrary = __non_webpack_require__('/lib/xp/content')
 
 const {
-  pageUrl, getContent
+  pageUrl, getContent, getComponent
 }: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
 const {
   render
@@ -30,9 +32,17 @@ exports.preview = (req: Request): Response => renderPart(req)
 
 function renderPart(req: Request): Response {
   const content: Content = getContent()
+  const config: Component<Article> = getComponent()
   const language: string = content.language ? content.language : 'nb'
   const articles: QueryResponse<Article> = getArticles(language)
   const preparedArticles: Array<PreparedArticles> = prepareArticles(articles)
+  const archiveLinkText: string = localize({
+    key: 'publicationLinkText',
+    locale: 'language',
+    values: ['Publikasjonsarkiv']
+  })
+  log.info('glnrbn språk: ' + archiveLinkText)
+
   const props: PartProperties = {
     title: 'Nye artikler, analyser og publikasjoner',
     articles: preparedArticles
