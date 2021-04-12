@@ -1,3 +1,4 @@
+import { Content } from 'enonic-types/content'
 
 __non_webpack_require__('/lib/polyfills/nashorn')
 import { Request, Response } from 'enonic-types/controller'
@@ -60,7 +61,8 @@ exports.get = function(req: Request): Response {
 exports.preview = (): Response => renderPart()
 
 export function renderPart(): Response {
-  const language: string | undefined = getContent().language
+  const content: Content = getContent()
+  const language: string = content.language ? content.language : 'nb'
   const part: Component<ReleasedStatisticsPartConfig> = getComponent()
   const numberOfReleases: number = part.config.numberOfStatistics ? parseInt(part.config.numberOfStatistics) : 8
   // Get statistics
@@ -119,7 +121,7 @@ function prepareRelease(release: StatisticInListing, language: string): Prepared
 
 function concatReleaseTimes(variants: Array<VariantInListing>, language: string): PreparedVariant {
   const defaultVariant: PreparedVariant = formatVariant(variants[0], language)
-  const timePeriodes: Array<string> = variants.map((variant: VariantInListing) => calculatePeriode(variant))
+  const timePeriodes: Array<string> = variants.map((variant: VariantInListing) => calculatePeriode(variant, language))
   const formatedTimePeriodes: string = timePeriodes.join(' og ')
   return {
     ...defaultVariant,
