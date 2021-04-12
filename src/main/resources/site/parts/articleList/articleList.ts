@@ -1,33 +1,33 @@
-import { Request, Response } from 'enonic-types/controller'
-import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
+import { Request } from 'enonic-types/controller'
 import { Article } from '../../content-types/article/article'
-import { ArticleListPartConfig } from './articleList-part-config'
+import { I18nLibrary } from 'enonic-types/i18n'
 import { PortalLibrary, Component } from 'enonic-types/portal'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
+import { ArticleListPartConfig } from './articleList-part-config'
+import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-// eslint-disable-next-line @typescript-eslint/typedef
-const moment = require('moment/min/moment-with-locales')
-moment.locale('nb')
 const {
   localize
-} = __non_webpack_require__('/lib/xp/i18n')
-
+}: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
 const {
   query
 }: ContentLibrary = __non_webpack_require__('/lib/xp/content')
-
 const {
   pageUrl, getContent, getComponent
 }: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
+const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-exports.get = (req: Request): Response => {
+// eslint-disable-next-line @typescript-eslint/typedef
+const moment = require('moment/min/moment-with-locales')
+moment.locale('nb')
+
+exports.get = (req: Request): React4xpResponse => {
   return renderPart(req)
 }
 
-exports.preview = (req: Request): Response => renderPart(req)
+exports.preview = (req: Request): React4xpResponse => renderPart(req)
 
-function renderPart(req: Request): Response {
+function renderPart(req: Request): React4xpResponse {
   const content: Content = getContent()
   const component: Component<ArticleListPartConfig> = getComponent()
   const language: string = content.language ? content.language : 'nb'
@@ -45,26 +45,14 @@ function renderPart(req: Request): Response {
     title: 'Nye artikler, analyser og publikasjoner',
     articles: preparedArticles,
     archiveLinkText: archiveLinkText,
-    archiveLinkUrl: component.config.pubArchiveUrl
+    archiveLinkUrl: component.config.pubArchiveUrl ? component.config.pubArchiveUrl : '#'
   }
-  log.info(JSON.stringify(props, null, 2))
 
-  const reactComponent: React4xpObject = new React4xp('ArticleList')
-    .setProps(props)
-    .setId('articleList')
-    .uniqueId()
-
-  return {
-    body: reactComponent.renderBody({
-      body: `<div data-th-id="${reactComponent.react4xpId}"></div>`
-    })
-
-  }
+  return React4xp.render('site/parts/articleList/articleList', props, req)
 }
-// TODO: Url til artikkelarkiv nederst
 
 function getArticles(language: string): QueryResponse<Article> {
-  const q: QueryResponse<Article> = query({
+  return query({
     count: 4,
     query: ``,
     contentTypes: [`${app.name}:article`],
@@ -97,8 +85,6 @@ function getArticles(language: string): QueryResponse<Article> {
       }
     }
   })
-  log.info(JSON.stringify(q, null, 2))
-  return q
 }
 
 function prepareArticles(articles: QueryResponse<Article>): Array<PreparedArticles> {
@@ -114,7 +100,6 @@ function prepareArticles(articles: QueryResponse<Article>): Array<PreparedArticl
     }
   })
 }
-
 
 interface PreparedArticles {
   title: string;

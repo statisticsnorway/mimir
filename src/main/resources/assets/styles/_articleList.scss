@@ -1,11 +1,14 @@
-.article-list-ingress {
-    --lh: 1.7rem;
-    line-height: var(--lh);
+.article-list-ingress span {
+    white-space: nowrap;
+}
 
-    --max-lines: 2;
-    position: relative;
-    max-height: calc(var(--lh) * var(--max-lines));
-    padding-right: 1rem; /* space for ellipsis */
-    overflow: hidden;
-    text-overflow: ellipsis;
+.article-list {
+    margin-top: 80px;
+  
+    h3 {
+      font-size: 28px;
+      margin-bottom: 30px;
+      font-family: $font-roboto-condensed-bold;
+      font-weight: 700;
+    }
 }
