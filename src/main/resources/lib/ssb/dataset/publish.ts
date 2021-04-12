@@ -312,6 +312,7 @@ function createTask(jobId: string, statistic: Content<Statistics>, releaseDate: 
             }).length === jobRefreshResult.length
             if (allComplete) {
               log.info('finished publish job')
+              sleep(100)
               completeJobLog(jobId, `Successfully updated ${jobRefreshResult.length} statistics`, jobRefreshResult)
               delete jobs[jobId]
               send({
