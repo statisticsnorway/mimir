@@ -36,6 +36,7 @@ function KpiCalculator(props) {
   const [loading, setLoading] = useState(false)
   const [endValue, setEndValue] = useState(null)
   const [change, setChange] = useState(null)
+  const language = props.language ? props.language : 'nb'
 
   useEffect(() => {
     setValidated(
@@ -60,7 +61,8 @@ function KpiCalculator(props) {
         startYear: startYear.value,
         startMonth: startMonth.value,
         endYear: endYear.value,
-        endMonth: endMonth.value
+        endMonth: endMonth.value,
+        language: language
       }
     })
       .then((res) => {
@@ -171,16 +173,16 @@ function KpiCalculator(props) {
       return (
         <Row>
           <Col>
-            <Dialog type='warning' title="Beregning feilet">
-              {errorMessage || 'Ukjent feil, prøv igjen'}
+            <Dialog type='warning' title={props.phrases.kpiErrorCalculationFailed}>
+              {errorMessage || props.phrases.kpiErrorUnknownError}
             </Dialog>
           </Col>
         </Row>
       )
     }
     if (endValue && change) {
-      const decimalSeparator = (props.language === 'en') ? '.' : ','
-      const valute = (props.language === 'en') ? 'NOK' : 'kr'
+      const decimalSeparator = (language === 'en') ? '.' : ','
+      const valute = (language === 'en') ? 'NOK' : 'kr'
       return (
         <React.Fragment>
           <Row>
@@ -306,7 +308,7 @@ function KpiCalculator(props) {
 
 KpiCalculator.defaultValue = {
   kpiServiceUrl: null,
-  language: 'no'
+  language: 'nb'
 }
 
 KpiCalculator.propTypes = {

@@ -10,6 +10,8 @@ import { Dataset, JSONstat as JSONstatType } from '../../lib/types/jsonstat-tool
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
+import { I18nLibrary } from 'enonic-types/i18n'
+const i18nLib: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
 const {
   query, get: getContent
 }: ContentLibrary = __non_webpack_require__('/lib/xp/content')
@@ -23,6 +25,16 @@ function get(req: HttpRequestParams): Response {
   const startYear: string | undefined = req.params?.startYear
   const endMonth: string | undefined = req.params?.endMonth || '90'
   const endYear: string | undefined = req.params?.endYear
+  const language: string | undefined = req.params?.language ? req.params.language : 'nb'
+  const errorValidateStartMonth: string = i18nLib.localize({
+    key: 'kpiServiceValidateStartMonth',
+    locale: language
+  })
+  const errorValidateEndMonth: string = i18nLib.localize({
+    key: 'kpiServiceValidateEndMonth',
+    locale: language
+  })
+
   if (!startValue || !startMonth || !startYear || !endMonth || !endYear) {
     return {
       status: 400,
@@ -71,7 +83,7 @@ function get(req: HttpRequestParams): Response {
       return {
         status: 500,
         body: {
-          error: indexResult.startIndex === null ? 'Startmåned er ikke gyldig for denne utregningen' : 'Sluttmåned er ikke gyldig for denne utregningen'
+          error: indexResult.startIndex === null ? errorValidateStartMonth : errorValidateEndMonth
         },
         contentType: 'applcation/json'
       }
