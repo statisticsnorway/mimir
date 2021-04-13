@@ -15,10 +15,7 @@ const PubArchiveStatCalendarLinks = (props) => {
               className='publication-link mr-5 mb-md-0 mb-4'
               icon={<ArrowRight size="18" />}
             >
-              <span
-                dangerouslySetInnerHTML={{
-                  __html: props.PublicationText
-                }} />
+              { props.PublicationText }
             </Link> : ''}
 
             { props.CalendarLink ? <Link
@@ -26,10 +23,7 @@ const PubArchiveStatCalendarLinks = (props) => {
               className='calendar-link'
               icon={<Calendar size="16" />}
             >
-              <span
-                dangerouslySetInnerHTML={{
-                  __html: props.CalendarText
-                }} />
+              { props.CalendarText }
             </Link> : ''}
           </div>
         </div>
@@ -40,9 +34,9 @@ const PubArchiveStatCalendarLinks = (props) => {
 
 PubArchiveStatCalendarLinks.propTypes = {
   PublicationLink: PropTypes.string.isRequired,
-  PublicationText: PropTypes.node,
+  PublicationText: PropTypes.string,
   CalendarLink: PropTypes.string.isRequired,
-  CalendarText: PropTypes.node
+  CalendarText: PropTypes.string
 }
 
 export default PubArchiveStatCalendarLinks
