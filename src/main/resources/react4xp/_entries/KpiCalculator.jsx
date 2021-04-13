@@ -148,23 +148,17 @@ function KpiCalculator(props) {
     return (
       <Dropdown
         id={id}
-        header={getPhrase('chooseMonth')}
+        header={props.phrases.chooseMonth}
         onSelect={(value) => {
           onChange(id, value)
         }}
         selectedItem={{
-          title: getPhrase('calculatorMonthAverage'),
+          title: props.phrases.calculatorMonthAverage,
           id: '90'
         }}
         items={props.months}
       />
     )
-  }
-
-  function getPhrase(id) {
-    const phrases = props.phrasesKpi
-    const phrase = phrases.find((p) => p.id === id)
-    return phrase ? phrase.title : id
   }
 
   function renderResult() {
@@ -208,7 +202,7 @@ function KpiCalculator(props) {
           </Row>
           <Row>
             <Col>
-              Prisstigningen er på <NumberFormat
+              {props.phrases.priceIncrease} <NumberFormat
                 value={ Number(change) }
                 displayType={'text'}
                 thousandSeparator={' '}
@@ -218,7 +212,7 @@ function KpiCalculator(props) {
               /> %
             </Col>
             <Col>
-              Startverdi <NumberFormat
+              {props.phrases.startValue} <NumberFormat
                 value={ Number(startValue.value) }
                 displayType={'text'}
                 thousandSeparator={' '}
@@ -228,7 +222,7 @@ function KpiCalculator(props) {
               /> kr
             </Col>
             <Col>
-              Beløp <NumberFormat
+              {props.phrases.amount} <NumberFormat
                 value={ Number(endValue) }
                 displayType={'text'}
                 thousandSeparator={' '}
@@ -252,19 +246,19 @@ function KpiCalculator(props) {
   }
 
   return (<Container>
-    <h2>{getPhrase('calculatePriceChange')}</h2>
-    <p>{getPhrase('kpiNextPublishText')}</p>
+    <h2>{props.phrases.calculatePriceChange}</h2>
+    <p>{props.phrases.kpiNextPublishText}</p>
     <Form onSubmit={onSubmit} validated={validated}>
       <Container>
         <Row>
           <Col>
-            <h3>{getPhrase('enterAmount')}</h3>
+            <h3>{props.phrases.enterAmount}</h3>
             <Input handleChange={(value) => onChange('start-value', value)} error={startValue.error} errorMessage={startValue.errorMsg}/>
           </Col>
         </Row>
         <Row>
           <Col>
-            <h3>{getPhrase('calculatePriceChangeFrom')}</h3>
+            <h3>{props.phrases.calculatePriceChangeFrom}</h3>
             <Container>
               <Row>
                 <Col className="col-8">
@@ -272,7 +266,7 @@ function KpiCalculator(props) {
                 </Col>
                 <Col className="col-4">
                   <Input
-                    label={getPhrase('enterYear')}
+                    label={props.phrases.enterYear}
                     handleChange={(value) => onChange('start-year', value)}
                     error={startYear.error}
                     errorMessage={startYear.errorMsg}/>
@@ -281,7 +275,7 @@ function KpiCalculator(props) {
             </Container>
           </Col>
           <Col>
-            <h3>{getPhrase('calculatePriceChangeTo')}</h3>
+            <h3>{props.phrases.calculatePriceChangeTo}</h3>
             <Container>
               <Row>
                 <Col className="col-8">
@@ -289,7 +283,7 @@ function KpiCalculator(props) {
                 </Col>
                 <Col className="col-4">
                   <Input
-                    label={getPhrase('enterYear')}
+                    label={props.phrases.enterYear}
                     handleChange={(value) => onChange('end-year', value)}
                     error={endYear.error}
                     errorMessage={endYear.errorMsg}/>
@@ -300,7 +294,7 @@ function KpiCalculator(props) {
         </Row>
         <Row className="my-4">
           <Col>
-            <Button primary type="submit" disabled={!validated || loading}>{getPhrase('calculatePriceChange')}</Button>
+            <Button primary type="submit" disabled={!validated || loading}>{props.phrases.calculatePriceChange}</Button>
           </Col>
         </Row>
       </Container>
@@ -326,12 +320,7 @@ KpiCalculator.propTypes = {
       title: PropTypes.string
     })
   ),
-  phrasesKpi: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      title: PropTypes.string
-    })
-  )
+  phrases: PropTypes.arrayOf(PropTypes.string)
 }
 
 export default (props) => <KpiCalculator {...props} />

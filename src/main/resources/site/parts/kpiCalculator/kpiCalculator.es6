@@ -1,5 +1,3 @@
-import { hasPath } from 'ramda'
-
 const {
   getContent,
   serviceUrl
@@ -43,9 +41,9 @@ function renderPart(req) {
       kpiServiceUrl: serviceUrl({
         service: 'kpi'
       }),
-      language: language,
+      language: language.code,
       months: getMonths(phrases),
-      phrasesKpi: getPhrasesKpi(phrases)
+      phrases: phrases
     })
     .setId('kpiCalculatorId')
     .uniqueId()
@@ -59,45 +57,6 @@ function renderPart(req) {
     }),
     pageContributions: kpiCalculator.renderPageContributions()
   }
-}
-
-const getPhrasesKpi = (phrases) => {
-  return [
-    {
-      id: 'calculatorMonthAverage',
-      title: phrases.calculatorMonthAverage
-    },
-    {
-      id: 'calculatePriceChange',
-      title: phrases.calculatePriceChange
-    },
-    {
-      id: 'enterAmount',
-      title: phrases.enterAmount
-    },
-    {
-      id: 'calculatePriceChangeFrom',
-      title: phrases.calculatePriceChangeFrom
-    },
-    {
-      id: 'calculatePriceChangeTo',
-      title: phrases.calculatePriceChangeTo
-    },
-    {
-      id: 'chooseMonth',
-      title: phrases.chooseMonth
-    },
-    {
-      id: 'enterYear',
-      title: phrases.enterYear
-    },
-    {
-      id: 'kpiNextPublishText',
-      title: phrases.kpiNextPublishText
-    }
-
-
-  ]
 }
 
 const getMonths = (phrases) => {
@@ -156,4 +115,3 @@ const getMonths = (phrases) => {
     }
   ]
 }
-
