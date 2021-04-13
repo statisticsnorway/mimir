@@ -59,10 +59,12 @@ exports.get = function(req: Request): Response {
 }
 
 exports.preview = (): Response => renderPart()
-
+let currentLanguage: string = ''
 export function renderPart(): Response {
   const content: Content = getContent()
-  const language: string = content.language ? content.language : 'nb'
+  currentLanguage = content.language ? content.language : 'nb'
+
+
   const part: Component<ReleasedStatisticsPartConfig> = getComponent()
   const numberOfReleases: number = part.config.numberOfStatistics ? parseInt(part.config.numberOfStatistics) : 8
   // Get statistics
@@ -72,11 +74,10 @@ export function renderPart(): Response {
   const releasesFiltered: Array<StatisticInListing> = filterOnPreviousReleases(releases, numberOfReleases)
 
   // Choose the right variant and prepare the date in a way it works with the groupBy function
-  const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: StatisticInListing) => prepareRelease(release, language))
-  log.info(JSON.stringify(releasesPrepped, null, 2))
+  const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: StatisticInListing) => prepareRelease(release))
+
   // group by year, then month, then day
   const groupedByYear: GroupedBy<PreparedStatistics> = groupStatisticsByYear(releasesPrepped)
-
   const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> = {}
   Object.keys(groupedByYear).forEach((year) => {
     const groupedByMonthAndDay: GroupedBy<GroupedBy<PreparedStatistics>> = {}
@@ -87,13 +88,15 @@ export function renderPart(): Response {
     groupedByYearMonthAndDay[year] = groupedByMonthAndDay
   })
 
+  const groupedWithMonthNames: Array<YearReleases> = addMonthNames(groupedByYearMonthAndDay, currentLanguage)
+
   // render component
   const reactComponent: React4xpObject = new React4xp('ReleasedStatistics')
     .setProps({
-      releases: groupedByYearMonthAndDay,
+      releases: groupedWithMonthNames,
       title: localize({
         key: 'newStatistics',
-        locale: language
+        locale: currentLanguage
       })
     })
     .setId('nextStatisticsReleases')
@@ -102,15 +105,67 @@ export function renderPart(): Response {
   // get config with number of statistics to show and title
   return {
     body: reactComponent.renderBody({
-      body: `<div data-th-id="${reactComponent.react4xpId}"></div>`
+      body: `<div id="${reactComponent.react4xpId}"></div>`
     })
   }
 }
 
-function prepareRelease(release: StatisticInListing, language: string): PreparedStatistics {
+function addMonthNames(groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>>, language: string): Array<YearReleases> {
+  moment.locale(language)
+  return Object.keys(groupedByYearMonthAndDay).map((year) => {
+    const tmpYear: GroupedBy<GroupedBy<PreparedStatistics>> = groupedByYearMonthAndDay[year] as GroupedBy<GroupedBy<PreparedStatistics>>
+    const monthReleases: Array<MonthReleases> = Object.keys(tmpYear).map((monthNumber) => {
+      const tmpMonth: GroupedBy<PreparedStatistics> = tmpYear[monthNumber] as GroupedBy<PreparedStatistics>
+      const dayReleases: Array<DayReleases> = Object.keys(tmpYear[monthNumber]).map((day) => {
+        return {
+          day,
+          releases: forceArray(tmpMonth[day])
+        }
+      })
+      log.info(JSON.stringify('monthNumber', null, 2))
+      log.info(JSON.stringify(monthNumber, null, 2))
+
+      const a: MonthReleases = {
+        month: monthNumber,
+        monthName: moment().set({
+          year: year,
+          month: monthNumber,
+          date: 2
+        }).format('MMM'),
+        releases: dayReleases
+      }
+      log.info(JSON.stringify(a, null, 2))
+      return a
+    })
+
+    return {
+      year,
+      releases: monthReleases
+    }
+  })
+}
+
+interface DayReleases {
+  day: string;
+  releases: Array<PreparedStatistics>;
+}
+
+interface MonthReleases {
+  month: string;
+  monthName: string;
+  releases: Array<DayReleases>;
+}
+
+interface YearReleases {
+  year: string;
+  releases: Array<MonthReleases>;
+}
+
+
+function prepareRelease(release: StatisticInListing): PreparedStatistics {
   const preparedVariant: PreparedVariant = Array.isArray(release.variants) ?
-    concatReleaseTimes(release.variants, language) :
-    formatVariant(release.variants, language)
+    concatReleaseTimes(release.variants) :
+    formatVariant(release.variants)
   return {
     id: release.id,
     name: release.name,
@@ -119,9 +174,9 @@ function prepareRelease(release: StatisticInListing, language: string): Prepared
   }
 }
 
-function concatReleaseTimes(variants: Array<VariantInListing>, language: string): PreparedVariant {
-  const defaultVariant: PreparedVariant = formatVariant(variants[0], language)
-  const timePeriodes: Array<string> = variants.map((variant: VariantInListing) => calculatePeriode(variant, language))
+function concatReleaseTimes(variants: Array<VariantInListing>): PreparedVariant {
+  const defaultVariant: PreparedVariant = formatVariant(variants[0])
+  const timePeriodes: Array<string> = variants.map((variant: VariantInListing) => calculatePeriode(variant))
   const formatedTimePeriodes: string = timePeriodes.join(' og ')
   return {
     ...defaultVariant,
@@ -129,7 +184,7 @@ function concatReleaseTimes(variants: Array<VariantInListing>, language: string)
   }
 }
 
-function formatVariant(variant: VariantInListing, language: string): PreparedVariant {
+function formatVariant(variant: VariantInListing): PreparedVariant {
   const date: Date = new Date(variant.previousRelease)
   return {
     id: variant.id,
@@ -137,7 +192,7 @@ function formatVariant(variant: VariantInListing, language: string): PreparedVar
     monthNumber: date.getMonth(),
     year: date.getFullYear(),
     frequency: variant.frekvens,
-    period: calculatePeriode(variant, language)
+    period: calculatePeriode(variant)
   }
 }
 
@@ -184,26 +239,26 @@ function sameDay(d1: Date, d2: Date): boolean {
       d1.getFullYear() === d2.getFullYear()
 }
 
-function calculatePeriode(variant: VariantInListing, language: string): string {
+function calculatePeriode(variant: VariantInListing): string {
   switch (variant.frekvens) {
   case 'År':
-    return calculateYear(variant, language)
+    return calculateYear(variant)
   case 'Halvår':
-    return calcualteHalfYear(variant, language)
+    return calcualteHalfYear(variant)
   case 'Termin':
-    return calculateTerm(variant, language)
+    return calculateTerm(variant)
   case 'Kvartal':
-    return calculateQuarter(variant, language)
+    return calculateQuarter(variant)
   case 'Måned':
-    return calculateMonth(variant, language)
+    return calculateMonth(variant)
   case 'Uke':
-    return calculateWeek(variant, language)
+    return calculateWeek(variant)
   default:
-    return calculateEveryXYear(variant, language)
+    return calculateEveryXYear(variant)
   }
 }
 
-function calculateEveryXYear(variant: VariantInListing, language: string) {
+function calculateEveryXYear(variant: VariantInListing) {
   const dateFrom: Date = new Date(variant.previousFrom)
   const dateTo: Date = new Date(variant.previousTo)
   const yearFrom: number = dateFrom.getFullYear()
@@ -212,20 +267,20 @@ function calculateEveryXYear(variant: VariantInListing, language: string) {
   if (yearFrom !== yearTo) {
     return localize({
       key: 'period.generic',
-      locale: language,
+      locale: currentLanguage,
       values: [`${yearFrom.toString()}-${yearTo.toString()}`]
     })
   } else {
     // spesialtilfelle hvis periode-fra og periode-til er i samme år
     return localize({
       key: 'period.generic',
-      locale: language,
+      locale: currentLanguage,
       values: [yearTo.toString()]
     })
   }
 }
 
-function calculateYear(variant: VariantInListing, language: string) {
+function calculateYear(variant: VariantInListing) {
   const dateFrom: Date = new Date(variant.previousFrom)
   const dateTo: Date = new Date(variant.previousTo)
   const yearFrom: number = dateFrom.getFullYear()
@@ -238,72 +293,73 @@ function calculateYear(variant: VariantInListing, language: string) {
     // spesialtilfelle hvis periode-fra og periode-til er kun ett år mellom og startdato ikke er 01.01
     return localize({
       key: 'period.generic',
-      locale: language,
+      locale: currentLanguage,
       values: [`${yearFrom.toString()}/${yearTo.toString()}`]
     })
   } else if (yearFrom !== yearTo ) {
     // spesialtilfelle hvis periode-fra og periode-til er i ulike år
     return localize({
       key: 'period.generic',
-      locale: language,
+      locale: currentLanguage,
       values: [`${yearFrom.toString()}-${yearTo.toString()}`]
     })
   } else {
     return localize({
       key: 'period.generic',
-      locale: language,
+      locale: currentLanguage,
       values: [yearTo.toString()]
     })
   }
 }
 
-function calcualteHalfYear(variant: VariantInListing, language: string) {
+function calcualteHalfYear(variant: VariantInListing) {
   const date: Date = new Date(variant.previousFrom)
   const fromMonth: number = new Date(variant.previousFrom).getMonth() + 1
   const halfyear: number = Math.ceil(fromMonth / 6)
   return localize({
     key: 'period.halfyear',
-    locale: language,
+    locale: currentLanguage,
     values: [halfyear.toString(), date.getFullYear().toString()]
   })
 }
 
-function calculateTerm(variant: VariantInListing, language: string): string {
+function calculateTerm(variant: VariantInListing): string {
   const date: Date = new Date(variant.previousFrom)
   const fromMonth: number = date.getMonth() + 1
   const termin: number = Math.ceil(fromMonth / 6)
   return localize({
     key: 'period.termin',
+    locale: currentLanguage,
     values: [termin.toString(), date.getFullYear().toString()]
   })
 }
 
-function calculateQuarter(variant: VariantInListing, language: string) {
+function calculateQuarter(variant: VariantInListing) {
   const date: Date = new Date(variant.previousFrom)
   const fromMonth: number = date.getMonth() + 1
   const quarter: number = Math.ceil(fromMonth / 3)
   return localize({
     key: 'period.quarter',
-    locale: language,
+    locale: currentLanguage,
     values: [quarter.toString(), date.getFullYear().toString()]
   })
 }
 
-function calculateMonth(variant: VariantInListing, language: string) {
+function calculateMonth(variant: VariantInListing) {
   const monthName: string = moment(variant.previousFrom).format('MMMM')
   const year: string = moment(variant.previousFrom).format('YYYY')
   return localize({
     key: 'period.month',
-    locale: language,
+    locale: currentLanguage,
     values: [monthName, year]
   })
 }
 
-function calculateWeek(variant: VariantInListing, language: string) {
+function calculateWeek(variant: VariantInListing) {
   const date: Date = new Date(variant.previousFrom)
   return localize({
     key: 'period.week',
-    locale: language,
+    locale: currentLanguage,
     values: [getWeek(date).toString(), date.getFullYear().toString()]
   })
 }
