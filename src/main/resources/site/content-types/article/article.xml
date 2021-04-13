@@ -71,19 +71,6 @@
 			</items>
 		</field-set>
 		<field-set>
-			<label>
-				Løpenummer
-			</label>
-			<items>
-				<input name="serialNumber" type="TextLine">
-					<label>
-						Løpenummer
-					</label>
-					<occurrences minimum="0" maximum="1" />
-				</input>
-			</items>
-		</field-set>
-		<field-set>
 			<items>
 				<item-set name="authorItemSet">
 					<label>
@@ -223,5 +210,24 @@
 		<mixin name="relatedArticles" />
 		<mixin name="relatedFactPage" />
 		<mixin name="contacts" />
+		<field-set>
+			<label>
+				Løpenummer og ISBN
+			</label>
+			<items>
+				<input name="serialNumber" type="TextLine">
+					<label>
+						Løpenummer
+					</label>
+					<occurrences minimum="0" maximum="1" />
+				</input>
+				<input name="isbnNumber" type="TextLine">
+					<label>
+						ISBN nummer
+					</label>
+					<occurrences minimum="0" maximum="1" />
+				</input>
+			</items>
+		</field-set>
 	</form>
 </content-type>

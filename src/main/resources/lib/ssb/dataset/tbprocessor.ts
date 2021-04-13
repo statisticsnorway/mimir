@@ -90,8 +90,15 @@ function getDataAndMetaData(content: Content<DataSource>, processXml?: string ):
     tbmlParsedResponse.body.includes('code: 401') &&
     tbmlParsedResponse.body.includes('StatbankService.svc')
   )
-  if (tbmlParsedResponse && (tbmlParsedResponse.status === 200 || isInternal)) {
-    if (isInternal) {
+  const isNewPublic: boolean = !!(
+    tbmlParsedResponse &&
+    tbmlParsedResponse.status === 400 &&
+    tbmlParsedResponse.body &&
+    tbmlParsedResponse.body.includes('<error>') &&
+    tbmlParsedResponse.body.includes('inneholder ikke data')
+  )
+  if (tbmlParsedResponse && (tbmlParsedResponse.status === 200 || isInternal || isNewPublic)) {
+    if (isInternal || isNewPublic) {
       tbmlParsedResponse.status = 200
       tbmlParsedResponse.parsedBody = {
         tbml: {

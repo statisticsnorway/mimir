@@ -2,28 +2,44 @@
   background: $ssb-dark-5;
   padding: 60px 160px 60px 160px;
 
-  .keyfigure {
-    background: $ssb-white;
-    padding: 20px;
-    min-height: 176px;
+  .keyfigure-wrapper {
+    color: $ssb-dark-6;
 
-    .number-section {
-      @include roboto;
-      margin-top: 8px;
+    &:hover, &:focus {
+      text-decoration: none;
+      color: $ssb-dark-6;
 
-      .number-description {
-        font-size: 16px;
-      }
+      .ssb-link {
+        background-size: 100% 100%;
+        outline: 0;
 
-      .no-number {
-        color: $ssb-dark-3;
-        font-size: 20px;
-        font-weight: bold;
+        .link-text {
+          color: $ssb-white;
+        }
       }
     }
+  
+    .keyfigure {
+      background: $ssb-white;
+      padding: 20px;
+      min-height: 176px;
 
+      .number-section {
+        @include roboto;
+        margin-top: 8px;
+
+        .number-description {
+          font-size: 16px;
+        }
+
+        .no-number {
+          color: $ssb-dark-3;
+          font-size: 20px;
+          font-weight: bold;
+        }
+      }
+    }
   }
-
 }
 
 .part-pubarchive-link {

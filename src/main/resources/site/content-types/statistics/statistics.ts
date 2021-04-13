@@ -167,7 +167,7 @@ export interface Statistics {
 
   /**
    * 
-   * 						Relatert artikkel
+   * 						Relaterte artikler
    * 					
    */
   relatedArticles?: {

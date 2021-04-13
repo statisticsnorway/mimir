@@ -5,7 +5,7 @@ import org.json.XML;
 
 public class XmlParser {
   public Object parse(final String xml) throws Exception {
-    final JSONObject jsonObject = XML.toJSONObject(xml);
+    final JSONObject jsonObject = XML.toJSONObject(xml, true);
 
     return jsonObject.toString();
   }

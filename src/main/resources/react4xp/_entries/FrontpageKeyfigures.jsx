@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Link } from '@statisticsnorway/ssb-component-library'
 
 class FrontpageKeyfigures extends React.Component {
   createRows() {
@@ -9,13 +8,17 @@ class FrontpageKeyfigures extends React.Component {
     return keyFigures.map((keyFigure, i) => {
       return (
         <React.Fragment key={`figure-${i}`}>
-          <div className="col-lg-3">
-            <div className="keyfigure">
-              <Link href={keyFigure.url} linkType="header">{keyFigure.urlText}</Link>
-              <div className="number-section">
-                {this.addKeyfigure(keyFigure)}
+          <div className="col-12 col-lg-3">
+            <a href={keyFigure.url} className="keyfigure-wrapper">
+              <div className="keyfigure">
+                <div className="ssb-link header">
+                  <span className="link-text">{keyFigure.urlText}</span>
+                </div>
+                <div className="number-section">
+                  {this.addKeyfigure(keyFigure)}
+                </div>
               </div>
-            </div>
+            </a>
           </div>
         </React.Fragment>
       )

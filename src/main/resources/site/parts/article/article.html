@@ -35,5 +35,11 @@
         <div class="col-12 p-0">
             <div class="article-body" data-th-utext="${bodyText}" />
         </div>
+        <div data-th-if="${isbn}" class="col-12 p-0 mt-4">
+            <p class="text-center">
+                <span class="font-weight-bold">ISBN (elektronisk): </span>
+                <span data-th-text="${isbn}" />
+            </p>
+        </div>
     </div>
 </section>
