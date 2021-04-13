@@ -1,4 +1,4 @@
-import { OldStatRegContent, StatRegNode } from '../statreg'
+import { StatRegNode } from '../statreg'
 import { Contact, Kontakt, KontaktNavn, KontaktNavnType, KontaktXML } from '../../ssb/statreg/types'
 import { XmlParser } from '../../types/xmlParser'
 import { find } from 'ramda'
@@ -31,12 +31,9 @@ export const STATREG_REPO_CONTACTS_KEY: string = 'contacts'
 export function getContactsFromRepo(): Array<Contact> {
   const node: StatRegNode[] = getNode(STATREG_REPO, STATREG_BRANCH, `/${STATREG_REPO_CONTACTS_KEY}`) as StatRegNode[]
   const contactsNode: StatRegNode | null = Array.isArray(node) ? node[0] : node
-  let {
+  const {
     data
   } = contactsNode
-  if (!data && (contactsNode as unknown as OldStatRegContent).content) {
-    data = (contactsNode as unknown as OldStatRegContent).content as Array<Contact>
-  }
   return contactsNode ? data as Array<Contact> : []
 }
 
