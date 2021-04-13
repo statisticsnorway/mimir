@@ -134,7 +134,6 @@ function addMonthNames(groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<P
         }).format('MMM'),
         releases: dayReleases
       }
-      log.info(JSON.stringify(a, null, 2))
       return a
     })
 
