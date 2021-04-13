@@ -39,7 +39,6 @@ function renderPart(req: Request): React4xpResponse {
     key: 'publicationLinkText',
     locale: language === 'nb' ? 'no' : language
   })
-  log.info('glnrbn språk: ' + archiveLinkText)
 
   const props: PartProperties = {
     title: 'Nye artikler, analyser og publikasjoner',
