@@ -1,0 +1,30 @@
+<content-type>
+    <display-name>Kalkulator Konfigurasjon</display-name>
+    <super-type>base:structured</super-type>
+    <allow-child-content>true</allow-child-content>
+    <form>
+        <field-set>
+            <label>
+				KPI Kalkulator
+            </label>
+            <items>
+                <input name="kpiSourceYear" type="ContentSelector">
+                    <label>Kilde Årstall</label>
+                    <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <allowPath>${site}</allowPath>
+                        <allowContentType>genericDataImport</allowContentType>
+                    </config>
+                </input>
+                <input name="kpiSourceMonth" type="ContentSelector">
+                    <label>Kilde Måned</label>
+                    <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <allowPath>${site}</allowPath>
+                        <allowContentType>genericDataImport</allowContentType>
+                    </config>
+                </input>
+            </items>
+        </field-set>
+    </form>
+</content-type>
