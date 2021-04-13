@@ -22,12 +22,20 @@
 		</field-set>
 		<field-set>
 			<label>
-				Vis publiseringsdato
+				Publisering
 			</label>
 			<items>
 				<input name="showPublishDate" type="CheckBox">
 					<label>
 						Vis publiseringsdato
+					</label>
+					<default>
+						checked
+					</default>
+				</input>
+				<input name="showOnFrontPage" type="CheckBox">
+					<label>
+						Vis på forside
 					</label>
 					<default>
 						checked
