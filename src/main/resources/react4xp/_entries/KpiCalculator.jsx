@@ -9,27 +9,27 @@ function KpiCalculator(props) {
   const [validated, setValidated] = useState(false)
   const [startValue, setStartValue] = useState({
     error: false,
-    errorMsg: 'Kronebeløp må være et tall',
+    errorMsg: props.phrases.kpiValidateAmountNumber,
     value: ''
   })
   const [startMonth, setStartMonth] = useState({
     error: false,
-    errorMsg: 'Dette er en test string',
+    errorMsg: props.phrases.kpiValidateMonth,
     value: '90'
   })
   const [startYear, setStartYear] = useState({
     error: false,
-    errorMsg: 'Kun årstall mellom 1865 og 2021 er gyldig',
+    errorMsg: props.phrases.kpiValidateYear,
     value: ''
   })
   const [endMonth, setEndMonth] = useState({
     error: false,
-    errorMsg: 'Dette er en test string',
+    errorMsg: props.phrases.kpiValidateMonth,
     value: '90'
   })
   const [endYear, setEndYear] = useState({
     error: false,
-    errorMsg: 'Kun årstall mellom 1865 og 2021 er gyldig',
+    errorMsg: props.phrases.kpiValidateYear,
     value: ''
   })
   const [errorMessage, setErrorMessage] = useState(null)
@@ -180,11 +180,12 @@ function KpiCalculator(props) {
     }
     if (endValue && change) {
       const decimalSeparator = (props.language === 'en') ? '.' : ','
+      const valute = (props.language === 'en') ? 'NOK' : 'kr'
       return (
         <React.Fragment>
           <Row>
             <Col className="col-10">
-              <h3>Beløpet tilsvarer</h3>
+              <h3>{props.phrases.kpiAmountEqualled}</h3>
             </Col>
             <Col className="col-2">
               <NumberFormat
@@ -194,7 +195,7 @@ function KpiCalculator(props) {
                 decimalSeparator={decimalSeparator}
                 decimalScale={2}
                 fixedDecimalScale={true}
-              /> kr
+              /> {valute}
             </Col>
             <Col className="col-12">
               <Divider dark/>
@@ -219,7 +220,7 @@ function KpiCalculator(props) {
                 decimalSeparator={decimalSeparator}
                 decimalScale={2}
                 fixedDecimalScale={true}
-              /> kr
+              /> {valute}
             </Col>
             <Col>
               {props.phrases.amount} <NumberFormat
@@ -229,15 +230,13 @@ function KpiCalculator(props) {
                 decimalSeparator={decimalSeparator}
                 decimalScale={2}
                 fixedDecimalScale={true}
-              /> kr
+              /> {valute}
             </Col>
           </Row>
           <Row className="my-4">
             <Col className="col-6">
-              <span>Merk!</span>
-              <p>Beregningene viser utviklingen i kroneverdi når en tar utgangspunkt i konsumprisindeksen.
-                Kalkulatoren viser ikke hva enkeltvarer bør eller skal koste når prisen reguleres med konsumprisindeksen.
-              </p>
+              <span>{props.phrases.kpiCalculatorInfoTitle}</span>
+              <p>{props.phrases.kpiCalculatorInfoText}</p>
             </Col>
           </Row>
         </React.Fragment>
@@ -307,8 +306,7 @@ function KpiCalculator(props) {
 
 KpiCalculator.defaultValue = {
   kpiServiceUrl: null,
-  language: 'no',
-  months: []
+  language: 'no'
 }
 
 KpiCalculator.propTypes = {
