@@ -122,8 +122,6 @@ function addMonthNames(groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<P
           releases: forceArray(tmpMonth[day])
         }
       })
-      log.info(JSON.stringify('monthNumber', null, 2))
-      log.info(JSON.stringify(monthNumber, null, 2))
 
       const a: MonthReleases = {
         month: monthNumber,
