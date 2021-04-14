@@ -96,7 +96,7 @@ export function renderPart(): Response {
       releases: groupedWithMonthNames,
       title: localize({
         key: 'newStatistics',
-        locale: currentLanguage
+        locale: currentLanguage === 'nb' ? 'no' : currentLanguage
       }),
       language: currentLanguage
     })
@@ -166,7 +166,7 @@ function prepareRelease(release: StatisticInListing, locale: string): PreparedSt
     formatVariant(release.variants)
   return {
     id: release.id,
-    name: release.name,
+    name: locale === 'en' ? release.nameEN : release.name,
     shortName: release.shortName,
     variant: preparedVariant
   }
