@@ -163,7 +163,7 @@ export const createDefaultConfig = (highchartData, displayName) => ({
       fontWeight: 'bold'
     },
     margin: 40,
-    text: highchartData.hideTitle ? ' ' : displayName,
+    text: displayName,
     x: 0,
     y: 18,
     widthAdjust: -150 - (highchartData.titleCenter == 'center' ? 90 : 0)
