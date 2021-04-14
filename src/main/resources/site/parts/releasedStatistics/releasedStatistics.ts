@@ -97,7 +97,8 @@ export function renderPart(): Response {
       title: localize({
         key: 'newStatistics',
         locale: currentLanguage
-      })
+      }),
+      language: currentLanguage
     })
     .setId('nextStatisticsReleases')
     .uniqueId()
