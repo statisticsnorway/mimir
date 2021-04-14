@@ -74,7 +74,7 @@ export function renderPart(): Response {
   const releasesFiltered: Array<StatisticInListing> = filterOnPreviousReleases(releases, numberOfReleases)
 
   // Choose the right variant and prepare the date in a way it works with the groupBy function
-  const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: StatisticInListing) => prepareRelease(release))
+  const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: StatisticInListing) => prepareRelease(release, currentLanguage))
 
   // group by year, then month, then day
   const groupedByYear: GroupedBy<PreparedStatistics> = groupStatisticsByYear(releasesPrepped)
@@ -159,9 +159,9 @@ interface YearReleases {
 }
 
 
-function prepareRelease(release: StatisticInListing): PreparedStatistics {
+function prepareRelease(release: StatisticInListing, locale: string): PreparedStatistics {
   const preparedVariant: PreparedVariant = Array.isArray(release.variants) ?
-    concatReleaseTimes(release.variants) :
+    concatReleaseTimes(release.variants, locale) :
     formatVariant(release.variants)
   return {
     id: release.id,
@@ -171,10 +171,13 @@ function prepareRelease(release: StatisticInListing): PreparedStatistics {
   }
 }
 
-function concatReleaseTimes(variants: Array<VariantInListing>): PreparedVariant {
+function concatReleaseTimes(variants: Array<VariantInListing>, locale: string): PreparedVariant {
   const defaultVariant: PreparedVariant = formatVariant(variants[0])
   const timePeriodes: Array<string> = variants.map((variant: VariantInListing) => calculatePeriode(variant))
-  const formatedTimePeriodes: string = timePeriodes.join(' og ')
+  const formatedTimePeriodes: string = timePeriodes.join(` ${localize({
+    key: 'and',
+    locale
+  })} `)
   return {
     ...defaultVariant,
     period: formatedTimePeriodes

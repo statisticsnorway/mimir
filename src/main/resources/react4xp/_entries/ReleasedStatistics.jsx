@@ -8,7 +8,6 @@ class ReleasedStatistics extends React.Component {
   }
 
   renderRelease(release, index) {
-    console.log(JSON.stringify(release, null, 2))
     return (
       <li key={index}>
         <Link href={`/${release.shortName}`} linkType='header'>{release.name}</Link>
