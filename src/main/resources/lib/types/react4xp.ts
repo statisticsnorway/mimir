@@ -20,7 +20,7 @@ export interface React4xpObject {
     uniqueId: () => React4xpObject;
 }
 
-interface React4xpResponse {
+export interface React4xpResponse {
     body: string;
     pageContributions: string;
 }

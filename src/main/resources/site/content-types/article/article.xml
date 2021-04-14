@@ -22,12 +22,20 @@
 		</field-set>
 		<field-set>
 			<label>
-				Vis publiseringsdato
+				Publisering
 			</label>
 			<items>
 				<input name="showPublishDate" type="CheckBox">
 					<label>
 						Vis publiseringsdato
+					</label>
+					<default>
+						checked
+					</default>
+				</input>
+				<input name="showOnFrontPage" type="CheckBox">
+					<label>
+						Vis på forside
 					</label>
 					<default>
 						checked
@@ -212,12 +220,18 @@
 		<mixin name="contacts" />
 		<field-set>
 			<label>
-				Løpenummer
+				Løpenummer og ISBN
 			</label>
 			<items>
 				<input name="serialNumber" type="TextLine">
 					<label>
 						Løpenummer
+					</label>
+					<occurrences minimum="0" maximum="1" />
+				</input>
+				<input name="isbnNumber" type="TextLine">
+					<label>
+						ISBN nummer
 					</label>
 					<occurrences minimum="0" maximum="1" />
 				</input>

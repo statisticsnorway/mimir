@@ -19,13 +19,13 @@ class RelatedBoxes extends React.Component {
 
   render() {
     const {
-      relatedContentLists, mainTitle, showAll, showLess
+      relatedContents, mainTitle, showAll, showLess
     } = this.props
     return (
       <div className="container">
         <h2>{mainTitle}</h2>
         <div className="row image-box-wrapper">
-          {relatedContentLists.map((relatedRelatedContent, index) =>
+          {relatedContents.map((relatedRelatedContent, index) =>
             <PictureCard
               className={`mb-3 ${index > 3 && this.state.isHidden ? 'd-none' : ''}`}
               imageSrc={relatedRelatedContent.image}
@@ -37,7 +37,7 @@ class RelatedBoxes extends React.Component {
             />
           )}
         </div>
-        <div className={`row hide-show-btn ${relatedContentLists.length < 5 ? 'd-none' : ''}`}>
+        <div className={`row hide-show-btn ${relatedContents.length < 5 ? 'd-none' : ''}`}>
           <div className="col-auto">
             <Button onClick={this.toggleBox}>{this.state.isHidden ? showAll : showLess}</Button>
           </div>
@@ -48,7 +48,7 @@ class RelatedBoxes extends React.Component {
 }
 
 RelatedBoxes.propTypes = {
-  relatedContentLists: PropTypes.arrayOf(
+  relatedContents: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string.isRequired,
       link: PropTypes.string.isRequired,

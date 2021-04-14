@@ -3,6 +3,7 @@ import { UtilLibrary } from '../../types/util'
 import { XmlParser, PreliminaryData, TableRowUniform, TableCellUniform } from '../../types/xmlParser'
 import { Content } from 'enonic-types/content'
 import { Highchart } from '../../../site/content-types/highchart/highchart'
+import { toString } from 'ramda'
 const util: UtilLibrary = __non_webpack_require__('/lib/util')
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 const {
@@ -24,8 +25,9 @@ export function seriesAndCategoriesFromHtmlTable(highChartsContent: Content<High
     acc: Array<Series>,
     current: number | string | PreliminaryData,
     tdIndex: number) => {
+    const nameRow: number | string = getRowValue(current)
     acc.push({
-      name: getRowValue(current),
+      name: typeof nameRow === 'number' ? toString(nameRow) : nameRow,
       data: rows.reduce( (
         dataAcc: Array<number | string>,
         tr: TableCellUniform,
@@ -93,7 +95,7 @@ export function dataFormatDefault(seriesAndCategories: SeriesAndCategoriesRaw): 
 }
 
 function dataFormatAreaLineLinear(seriesAndCategories: SeriesAndCategoriesRaw): Array<SerieArealLine> {
-  return seriesAndCategories.categories.map((cat: number | string, index: number): SerieArealLine => {
+  return seriesAndCategories.categories.map((cat: string, index: number): SerieArealLine => {
     return {
       name: cat,
       data: seriesAndCategories.series.map((row): AreaLineLinearData => {
@@ -139,7 +141,7 @@ interface RowData {
 }
 
 export interface Series {
-  name: string ;
+  name: string;
   data: Array<number | string>;
 }
 
@@ -159,11 +161,11 @@ interface PieData {
 }
 
 interface SeriesPie {
-  name: number | string;
+  name: string;
   data: Array<PieData>;
 }
 
 interface SerieArealLine {
-  name: number | string;
+  name: string;
   data: Array<AreaLineLinearData>;
 }

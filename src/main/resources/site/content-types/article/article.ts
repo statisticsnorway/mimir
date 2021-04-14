@@ -15,6 +15,13 @@ export interface Article {
 
   /**
    * 
+   * 						Vis på forside
+   * 					
+   */
+  showOnFrontPage: boolean;
+
+  /**
+   * 
    * 						Endringsdato
    * 					
    */
@@ -141,6 +148,13 @@ export interface Article {
    * 					
    */
   serialNumber?: string;
+
+  /**
+   * 
+   * 						ISBN nummer
+   * 					
+   */
+  isbnNumber?: string;
 
   relatedStatisticsOptions?: {
     /**

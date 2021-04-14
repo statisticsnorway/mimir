@@ -113,7 +113,7 @@ export function refreshDataset(
     let oldDataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null = getDataset(content, branch)
 
     // Check if data is of type TbprocessorParsedResponse
-    if (determineIfTbprocessorParsedResponse(newDataset) ) {
+    if (determineIfTbprocessorParsedResponse(newDataset) && content.data.dataSource._selected === DataSourceType.TBPROCESSOR) {
       // pass error msg from tbprocessor: e.g: bad username/password combo, wrong tbml id.
       if (newDataset.status && newDataset.status === 500) {
         return {
