@@ -173,25 +173,40 @@ export function Statistics() {
     )
   }
 
-  function getShortNameLink(statistic) {
-    if (statistic.nextRelease) {
+  function renderEditLink(statistic) {
+    if (statistic.id) {
       return (
-        <>
-          <Link
-            isExternal
-            href={contentStudioBaseUrl + statistic.id}>
-            {statistic.language === 'en' ? 'Eng. ' + statistic.shortName : statistic.shortName}
-          </Link>
-          <Link
-            isExternal
-            title="Forhåndsvisning" href={statistic.previewUrl} className="ml-2">
-            [Forhåndsvisning]
-          </Link>
-        </>
+        <Link
+          isExternal
+          href={contentStudioBaseUrl + statistic.id}>
+          {statistic.language === 'en' ? 'Eng. ' + statistic.shortName : statistic.shortName}
+        </Link>
+      )
+    } else {
+      return (
+        <span>{statistic.language === 'en' ? 'Eng. ' + statistic.shortName : statistic.shortName}</span>
       )
     }
+  }
+
+  function renderPreviewLink(statistic) {
+    if (statistic.previewUrl) {
+      return (
+        <Link
+          isExternal
+          title="Forhåndsvisning" href={statistic.previewUrl} className="ml-2">
+        [Forhåndsvisning]
+        </Link>
+      )
+    }
+  }
+
+  function getShortNameLink(statistic) {
     return (
-      <span>{statistic.language === 'en' ? 'Eng. ' + statistic.shortName : statistic.shortName}</span>
+      <>
+        {renderEditLink(statistic)}
+        {renderPreviewLink(statistic)}
+      </>
     )
   }
 
