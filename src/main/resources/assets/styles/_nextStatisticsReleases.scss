@@ -1,0 +1,48 @@
+.nextStatisticsReleases {
+  margin-top: 80px;
+
+  h3 {
+    font-size: 28px;
+    margin-bottom: 30px;
+    font-family: $font-roboto-condensed-bold;
+    font-weight: 700;
+  }
+
+  article {
+    display: flex;
+
+    &:nth-child(2) ol{
+      border-top: 1px solid $ssb-dark-5;
+    }
+  }
+
+  .releaseList {
+    list-style: none;
+    border-bottom: solid 1px #c3dcdc;
+    padding: 0;
+    width: 100%;
+
+    &:first-child {
+      background: orange
+    }
+    .ssb-paragraph:first-letter{
+      text-transform: capitalize;
+    }
+  }
+  time {
+    border: 2px solid $ssb-dark-5;
+    width: 97px;
+    height: 80px;
+    margin: 3.5px 20px 3px 0;
+    text-align: center;
+
+    .day {
+      font-size: 40px;
+      font-family: $font-roboto-condensed-bold;
+      line-height: 1;
+      display: block;
+      margin-top: 7px;
+    }
+
+  }
+}
