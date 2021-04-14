@@ -134,34 +134,42 @@ export function Statistics() {
   }
 
   function getNextRelease(statistic) {
-    if (statistic.nextRelease) {
-      return (
-        <span>
-          <Moment format="DD.MM.YYYY HH:mm">{statistic.nextRelease}</Moment>
-          {getStatregLinks(statistic)}
-        </span>
-      )
-    }
     return (
-      <span/>
+      <span>
+        {statistic.nextRelease ? <Moment format="DD.MM.YYYY HH:mm">{statistic.nextRelease}</Moment> : null}
+        {getStatregLinks(statistic)}
+      </span>
     )
   }
 
-  function getStatregLinks(statistic) {
-    if (statistic.nextReleaseId && statistic.statisticId && statistic.variantId) {
+  function editLink(statistic) {
+    if (statistic.nextReleaseId) {
       const editUrl = internalBaseUrl + '/statistikkregisteret/publisering/edit/' + statistic.nextReleaseId
+      return (
+        <Link isExternal href={editUrl} title="Endre publisering i statistikkregisteret" className="ml-2">[Endre]</Link>
+      )
+    }
+    return null
+  }
+
+  function createLink(statistic) {
+    if (statistic.statisticId && statistic.variantId) {
       const createUrl = statistic.activeVariants > 1 ?
         internalBaseUrl + '/statistikkregisteret/statistikk/show/' + statistic.statisticId :
         internalBaseUrl + '/statistikkregisteret/publisering/create?statistikk.id=' + statistic.statisticId + '&variant.id=' + statistic.variantId
       return (
-        <React.Fragment>
-          <Link isExternal href={editUrl} title="Endre publisering i statistikkregisteret" className="ml-2">[Endre]</Link>
-          <Link isExternal href={createUrl} title="Melde ny publisering i statistikkregisteret" className="ml-2">[Meld]</Link>
-        </React.Fragment>
+        <Link isExternal href={createUrl} title="Melde ny publisering i statistikkregisteret" className="ml-2">[Meld]</Link>
       )
     }
+    return null
+  }
+
+  function getStatregLinks(statistic) {
     return (
-      <span/>
+      <React.Fragment>
+        {editLink(statistic)}
+        {createLink(statistic)}
+      </React.Fragment>
     )
   }
 
