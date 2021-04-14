@@ -42,6 +42,6 @@
     width: 100%;
   }
 }
-.highcharts-figure.hide-title .highcharts-title>tspan {
-  fill: transparent;
+.highcharts-figure.hide-title .highcharts-title {
+  fill: transparent !important;
 }
