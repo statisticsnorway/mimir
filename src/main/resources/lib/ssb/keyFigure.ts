@@ -130,7 +130,7 @@ export function parseKeyFigure(
     }
     return keyFigureViewData
   } else if (keyFigure.data.manualSource) {
-    keyFigureViewData.number = parseValue(keyFigure.data.manualSource.replace(/,/g, '.'))
+    keyFigureViewData.number = keyFigure.data.manualSource
     return keyFigureViewData
   }
   return keyFigureViewData

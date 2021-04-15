@@ -1,7 +1,7 @@
 export interface KeyFigure {
   /**
    * 
-   * 				Manuelt tall
+   * 				Manuell verdi
    * 			
    */
   manualSource?: string;
