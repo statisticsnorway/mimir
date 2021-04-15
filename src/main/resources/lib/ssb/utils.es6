@@ -34,9 +34,9 @@ const numberWithSpaces = (x) => {
 
 export const createHumanReadableFormat = (value) => {
   if (getContent().language != 'en') {
-    return value > 999 ? numberWithSpaces(value).toString().replace(/\./, ',') : value.toString().replace(/\./, ',')
+    return value > 999 || value < -999 ? numberWithSpaces(value).toString().replace(/\./, ',') : value.toString().replace(/\./, ',')
   } else {
-    return value > 999 ? numberWithSpaces(value) : value.toString()
+    return value > 999 || value < -999 ? numberWithSpaces(value) : value.toString()
   }
 }
 
