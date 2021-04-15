@@ -2,11 +2,11 @@ const {
   query
 } = __non_webpack_require__('/lib/xp/content')
 
-exports.get = (req) => {
+exports.get = () => {
   const subtopics = query({
     count: 1000,
     contentType: `${app.name}:page`,
-    query: `components.page.config.mimir.default.subjectInfo.subjectType LIKE "subSubject"`
+    query: `components.page.config.mimir.default.subjectType LIKE "subSubject"`
   })
 
   return {
