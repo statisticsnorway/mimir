@@ -15,6 +15,13 @@ export interface Article {
 
   /**
    * 
+   * 						Vis på forside
+   * 					
+   */
+  showOnFrontPage: boolean;
+
+  /**
+   * 
    * 						Endringsdato
    * 					
    */
@@ -146,6 +153,11 @@ export interface Article {
    * Delemner
    */
   subtopic?: string;
+
+  /* 
+   * ISBN nummer 					
+   */
+  isbnNumber?: string;
 
   relatedStatisticsOptions?: {
     /**

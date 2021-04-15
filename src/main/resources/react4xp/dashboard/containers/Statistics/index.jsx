@@ -134,56 +134,79 @@ export function Statistics() {
   }
 
   function getNextRelease(statistic) {
-    if (statistic.nextRelease) {
-      return (
-        <span>
-          <Moment format="DD.MM.YYYY HH:mm">{statistic.nextRelease}</Moment>
-          {getStatregLinks(statistic)}
-        </span>
-      )
-    }
     return (
-      <span/>
+      <span>
+        {statistic.nextRelease ? <Moment format="DD.MM.YYYY HH:mm">{statistic.nextRelease}</Moment> : null}
+        {getStatregLinks(statistic)}
+      </span>
     )
   }
 
-  function getStatregLinks(statistic) {
-    if (statistic.nextReleaseId && statistic.statisticId && statistic.variantId) {
+  function editLink(statistic) {
+    if (statistic.nextReleaseId) {
       const editUrl = internalBaseUrl + '/statistikkregisteret/publisering/edit/' + statistic.nextReleaseId
+      return (
+        <Link isExternal href={editUrl} title="Endre publisering i statistikkregisteret" className="ml-2">[Endre]</Link>
+      )
+    }
+    return null
+  }
+
+  function createLink(statistic) {
+    if (statistic.statisticId && statistic.variantId) {
       const createUrl = statistic.activeVariants > 1 ?
         internalBaseUrl + '/statistikkregisteret/statistikk/show/' + statistic.statisticId :
         internalBaseUrl + '/statistikkregisteret/publisering/create?statistikk.id=' + statistic.statisticId + '&variant.id=' + statistic.variantId
       return (
-        <React.Fragment>
-          <Link isExternal href={editUrl} title="Endre publisering i statistikkregisteret" className="ml-2">[Endre]</Link>
-          <Link isExternal href={createUrl} title="Melde ny publisering i statistikkregisteret" className="ml-2">[Meld]</Link>
-        </React.Fragment>
+        <Link isExternal href={createUrl} title="Melde ny publisering i statistikkregisteret" className="ml-2">[Meld]</Link>
       )
     }
+    return null
+  }
+
+  function getStatregLinks(statistic) {
     return (
-      <span/>
+      <React.Fragment>
+        {editLink(statistic)}
+        {createLink(statistic)}
+      </React.Fragment>
     )
   }
 
-  function getShortNameLink(statistic) {
-    if (statistic.nextRelease) {
+  function renderEditLink(statistic) {
+    if (statistic.id) {
       return (
-        <>
-          <Link
-            isExternal
-            href={contentStudioBaseUrl + statistic.id}>
-            {statistic.language === 'en' ? 'Eng. ' + statistic.shortName : statistic.shortName}
-          </Link>
-          <Link
-            isExternal
-            title="Forhåndsvisning" href={statistic.previewUrl} className="ml-2">
-            [Forhåndsvisning]
-          </Link>
-        </>
+        <Link
+          isExternal
+          href={contentStudioBaseUrl + statistic.id}>
+          {statistic.language === 'en' ? 'Eng. ' + statistic.shortName : statistic.shortName}
+        </Link>
+      )
+    } else {
+      return (
+        <span>{statistic.language === 'en' ? 'Eng. ' + statistic.shortName : statistic.shortName}</span>
       )
     }
+  }
+
+  function renderPreviewLink(statistic) {
+    if (statistic.previewUrl) {
+      return (
+        <Link
+          isExternal
+          title="Forhåndsvisning" href={statistic.previewUrl} className="ml-2">
+        [Forhåndsvisning]
+        </Link>
+      )
+    }
+  }
+
+  function getShortNameLink(statistic) {
     return (
-      <span>{statistic.language === 'en' ? 'Eng. ' + statistic.shortName : statistic.shortName}</span>
+      <>
+        {renderEditLink(statistic)}
+        {renderPreviewLink(statistic)}
+      </>
     )
   }
 

@@ -1,5 +1,5 @@
 __non_webpack_require__('/lib/polyfills/nashorn')
-import { StatRegNode, OldStatRegContent } from '../statreg'
+import { StatRegNode } from '../statreg'
 import { StatisticInListing, VariantInListing, ReleasesInListing, ReleaseDatesVariant } from '../../ssb/statreg/types'
 import { ArrayUtilsLib } from '../../ssb/arrayUtils'
 import { StatRegConfigLib } from '../../ssb/statreg/config'
@@ -77,6 +77,8 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
             id: '0',
             frekvens: 'Dag',
             previousRelease: previousRelease.format('YYYY-MM-DD HH:mm:ss.S'),
+            previousFrom: previousRelease.format('YYYY-MM-DD HH:mm:ss.S'),
+            previousTo: previousRelease.format('YYYY-MM-DD HH:mm:ss.S'),
             nextRelease: nextRelease.format('YYYY-MM-DD HH:mm:ss.S'),
             nextReleaseId: '0',
             upcomingReleases: [
@@ -139,12 +141,9 @@ function extractStatistics(payload: string): Array<StatisticInListing> {
 export function getAllStatisticsFromRepo(): Array<StatisticInListing> {
   const node: StatRegNode[] = getNode(STATREG_REPO, STATREG_BRANCH, `/${STATREG_REPO_STATISTICS_KEY}`) as StatRegNode[]
   const statisticsNode: StatRegNode = Array.isArray(node) ? node[0] : node
-  let {
+  const {
     data
   } = statisticsNode
-  if (!data && (statisticsNode as unknown as OldStatRegContent).content) {
-    data = (statisticsNode as unknown as OldStatRegContent).content as Array<StatisticInListing>
-  }
   return statisticsNode ? (data as Array<StatisticInListing>) : []
 }
 
