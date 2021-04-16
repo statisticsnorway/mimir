@@ -54,7 +54,5 @@ SubjectArticleList.propTypes = {
             publishDate: PropTypes.string
           },
       ),
-  ),
-  archiveLinkText: PropTypes.string,
-  archiveLinkUrl: PropTypes.string
+  )
 }

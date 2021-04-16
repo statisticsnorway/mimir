@@ -6,6 +6,7 @@ import { SubjectArticleListPartConfig } from './subjectArticleList-part-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
 import { ArticleListPartConfig } from '../articleList/articleList-part-config'
+import { current } from '@reduxjs/toolkit'
 
 const {
   localize
@@ -30,18 +31,12 @@ exports.preview = (req: Request): React4xpResponse => renderPart(req)
 
 function renderPart(req: Request): React4xpResponse {
   const content: Content = getContent()
-  const component: Component<SubjectArticleListPartConfig> = getComponent()
   const language: string = content.language ? content.language : 'nb'
-  const articles: QueryResponse<Article> = getArticles(language)
-  const preparedArticles: Array<PreparedArticles> = prepareArticles(articles)
 
   const currentPath: string = content._path
 
-  const articlesSelected: QueryResponse<Article> {
-    return query( {
 
-    })
-  }
+  const preparedArticles: Array<PreparedArticles> = prepareArticles(getChildArticles(currentPath))
 
 
   //  Must be set to nb instead of no for localization
@@ -57,44 +52,18 @@ function renderPart(req: Request): React4xpResponse {
 
   return React4xp.render('site/parts/articleList/articleList', props, req)
 }
-
-function getArticles(language: string): QueryResponse<Article> {
-  return query({
+function getChildArticles(currentPath: string): QueryResponse<Article> {
+  return query( {
     count: 4,
-    query: ``,
+    query: `_path LIKE "${currentPath}*"`,
     contentTypes: [`${app.name}:article`],
-    sort: 'publish.from DESC',
-    filters: {
-      boolean: {
-        must: [
-          {
-            exists: {
-              field: 'data.showOnFrontPage'
-            }
-          },
-          {
-            hasValue: {
-              field: 'data.showOnFrontPage',
-              values: [
-                true
-              ]
-            }
-          },
-          {
-            hasValue: {
-              field: 'language',
-              values: [
-                language
-              ]
-            }
-          }
-        ]
-      }
-    }
+    sort: 'publish.from DESC'
   })
 }
 
 function prepareArticles(articles: QueryResponse<Article>): Array<PreparedArticles> {
+  log.info('glnrbn: ' + JSON.stringify(articles, null, 2))
+
   return articles.hits.map( (article: Content<Article>) => {
     return {
       title: article.displayName,
@@ -118,6 +87,4 @@ interface PreparedArticles {
 interface PartProperties {
     title: string;
     articles: Array<PreparedArticles>;
-    archiveLinkText: string;
-    archiveLinkUrl: string;
 }
