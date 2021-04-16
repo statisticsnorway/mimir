@@ -1,0 +1,40 @@
+.part-kpi-calculator {
+
+  .kpi-calculator {
+    border: solid 1px $ssb-dark-5;
+    border-top: 4px solid $green3;
+
+    .calculator-form {
+      padding: 60px 100px;
+
+      .choose-month, .start-value {
+        width: 280px;
+      }
+
+      .input-year {
+        width: 140px;
+      }
+    }
+
+    .calculator-result {
+      padding: 60px 100px;
+      border-top: solid 1px $ssb-dark-5;
+      background-color: $ssb-dark-1;
+
+      .amount-equal {
+        @include roboto;
+        font-size: 20px;
+      }
+
+      .end-value {
+        @include roboto-condenced ;
+        font-size: 56px;
+      }
+
+      .info-title {
+        @include roboto;
+        font-weight: bold;
+      }
+    }
+  }
+}

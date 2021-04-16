@@ -188,6 +188,7 @@ function KpiCalculator(props) {
   function addDropdownMonth(id) {
     return (
       <Dropdown
+        className="choose-month"
         id={id}
         header={props.phrases.chooseMonth}
         onSelect={(value) => {
@@ -205,150 +206,171 @@ function KpiCalculator(props) {
   function renderResult() {
     if (loading) {
       return (
-        <span className="spinner-border spinner-border" />
+        <Container>
+          <span className="spinner-border spinner-border" />
+        </Container>
       )
     }
     if (errorMessage !== null) {
       return (
-        <Row>
-          <Col>
-            <FormError errorMessages={[errorMessage || props.phrases.kpiErrorUnknownError]} title={props.phrases.kpiErrorCalculationFailed} />
-          </Col>
-        </Row>
+        <Container>
+          <Row>
+            <Col>
+              <FormError errorMessages={[errorMessage || props.phrases.kpiErrorUnknownError]} title={props.phrases.kpiErrorCalculationFailed} />
+            </Col>
+          </Row>
+        </Container>
       )
     }
     if (endValue && change) {
       const decimalSeparator = (language === 'en') ? '.' : ','
       const valute = (language === 'en') ? 'NOK' : 'kr'
       return (
-        <React.Fragment>
-          <Row>
-            <Col className="col-10">
+        <Container className="calculator-result">
+          <Row className="mb-5">
+            <Col className="amount-equal align-self-end col-4">
               <h3>{props.phrases.kpiAmountEqualled}</h3>
             </Col>
-            <Col className="col-2">
-              <NumberFormat
-                value={ Number(endValue) }
-                displayType={'text'}
-                thousandSeparator={' '}
-                decimalSeparator={decimalSeparator}
-                decimalScale={2}
-                fixedDecimalScale={true}
-              /> {valute}
+            <Col className="end-value col-8">
+              <span className="float-right">
+                <NumberFormat
+                  value={ Number(endValue) }
+                  displayType={'text'}
+                  thousandSeparator={' '}
+                  decimalSeparator={decimalSeparator}
+                  decimalScale={2}
+                  fixedDecimalScale={true}
+                /> {valute}
+              </span>
             </Col>
             <Col className="col-12">
               <Divider dark/>
             </Col>
           </Row>
-          <Row>
-            <Col>
-              {props.phrases.priceIncrease} <NumberFormat
-                value={ Number(change) }
-                displayType={'text'}
-                thousandSeparator={' '}
-                decimalSeparator={decimalSeparator}
-                decimalScale={1}
-                fixedDecimalScale={true}
-              /> %
+          <Row className="mb-5">
+            <Col className="price-increase mr-2">
+              <span>{props.phrases.priceIncrease}</span>
+              <span className="float-right">
+                <NumberFormat
+                  value={ Number(change) }
+                  displayType={'text'}
+                  thousandSeparator={' '}
+                  decimalSeparator={decimalSeparator}
+                  decimalScale={1}
+                  fixedDecimalScale={true}
+                /> %
+              </span>
+              <Divider dark/>
             </Col>
-            <Col>
-              {props.phrases.startValue} <NumberFormat
-                value={ Number(startValue.value) }
-                displayType={'text'}
-                thousandSeparator={' '}
-                decimalSeparator={decimalSeparator}
-                decimalScale={2}
-                fixedDecimalScale={true}
-              /> {valute}
+            <Col className="start-value mr-2">
+              <span>{props.phrases.startValue} </span>
+              <span className="float-right">
+                <NumberFormat
+                  value={ Number(startValue.value) }
+                  displayType={'text'}
+                  thousandSeparator={' '}
+                  decimalSeparator={decimalSeparator}
+                  decimalScale={2}
+                  fixedDecimalScale={true}
+                /> {valute}
+              </span>
+              <Divider dark/>
             </Col>
-            <Col>
-              {props.phrases.amount} <NumberFormat
-                value={ Number(endValue) }
-                displayType={'text'}
-                thousandSeparator={' '}
-                decimalSeparator={decimalSeparator}
-                decimalScale={2}
-                fixedDecimalScale={true}
-              /> {valute}
+            <Col className="amount">
+              <span>{props.phrases.amount} </span>
+              <span className="float-right">
+                <NumberFormat
+                  value={ Number(endValue) }
+                  displayType={'text'}
+                  thousandSeparator={' '}
+                  decimalSeparator={decimalSeparator}
+                  decimalScale={2}
+                  fixedDecimalScale={true}
+                /> {valute}
+              </span>
+              <Divider dark/>
             </Col>
           </Row>
           <Row className="my-4">
-            <Col className="col-6">
-              <span>{props.phrases.kpiCalculatorInfoTitle}</span>
-              <p>{props.phrases.kpiCalculatorInfoText}</p>
+            <Col className="col-8">
+              <span className="info-title">{props.phrases.kpiCalculatorInfoTitle}</span>
+              <p className="info-text">{props.phrases.kpiCalculatorInfoText}</p>
             </Col>
           </Row>
-        </React.Fragment>
+        </Container>
       )
     }
   }
 
-  return (<Container>
-    <h2>{props.phrases.calculatePriceChange}</h2>
-    <p>{props.phrases.kpiNextPublishText}</p>
-    <Form onSubmit={onSubmit}>
-      <Container>
-        <Row>
-          <Col>
-            <h3>{props.phrases.enterAmount}</h3>
-            <Input
-              handleChange={(value) => onChange('start-value', value)}
-              error={startValue.error}
-              errorMessage={startValue.errorMsg}
-              onBlur={() => onBlur('start-value')}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <h3>{props.phrases.calculatePriceChangeFrom}</h3>
-            <Container>
-              <Row>
-                <Col className="col-8">
-                  {addDropdownMonth('start-month')}
-                </Col>
-                <Col className="col-4">
-                  <Input
-                    label={props.phrases.enterYear}
-                    handleChange={(value) => onChange('start-year', value)}
-                    error={startYear.error}
-                    errorMessage={startYear.errorMsg}
-                    onBlur={() => onBlur('start-year')}
-                  />
-                </Col>
-              </Row>
-            </Container>
-          </Col>
-          <Col>
-            <h3>{props.phrases.calculatePriceChangeTo}</h3>
-            <Container>
-              <Row>
-                <Col className="col-8">
-                  {addDropdownMonth('end-month')}
-                </Col>
-                <Col className="col-4">
-                  <Input
-                    label={props.phrases.enterYear}
-                    handleChange={(value) => onChange('end-year', value)}
-                    error={endYear.error}
-                    errorMessage={endYear.errorMsg}
-                    onBlur={() => onBlur('end-year')}
-                  />
-                </Col>
-              </Row>
-            </Container>
-          </Col>
-        </Row>
-        <Row className="my-4">
-          <Col>
-            <Button primary type="submit" disabled={loading}>{props.phrases.calculatePriceChange}</Button>
-          </Col>
-        </Row>
-      </Container>
-    </Form>
-    <Container>
-      {renderResult()}
+  return (<Container className='kpi-calculator'>
+    <Container className="calculator-form">
+      <h2>{props.phrases.calculatePriceChange}</h2>
+      <p>{props.phrases.kpiNextPublishText}</p>
+      <Form onSubmit={onSubmit}>
+        <Container>
+          <Row className="mb-4">
+            <Col>
+              <h3>{props.phrases.enterAmount}</h3>
+              <Input
+                className="start-value"
+                handleChange={(value) => onChange('start-value', value)}
+                error={startValue.error}
+                errorMessage={startValue.errorMsg}
+                onBlur={() => onBlur('start-value')}
+              />
+            </Col>
+          </Row>
+          <Row className="mb-4">
+            <Col>
+              <h3>{props.phrases.calculatePriceChangeFrom}</h3>
+              <Container>
+                <Row>
+                  <Col className="col-8">
+                    {addDropdownMonth('start-month')}
+                  </Col>
+                  <Col className="col-4">
+                    <Input
+                      className="input-year"
+                      label={props.phrases.enterYear}
+                      handleChange={(value) => onChange('start-year', value)}
+                      error={startYear.error}
+                      errorMessage={startYear.errorMsg}
+                      onBlur={() => onBlur('start-year')}
+                    />
+                  </Col>
+                </Row>
+              </Container>
+            </Col>
+            <Col>
+              <h3>{props.phrases.calculatePriceChangeTo}</h3>
+              <Container>
+                <Row>
+                  <Col className="col-8">
+                    {addDropdownMonth('end-month')}
+                  </Col>
+                  <Col className="col-4">
+                    <Input
+                      className="input-year"
+                      label={props.phrases.enterYear}
+                      handleChange={(value) => onChange('end-year', value)}
+                      error={endYear.error}
+                      errorMessage={endYear.errorMsg}
+                      onBlur={() => onBlur('end-year')}
+                    />
+                  </Col>
+                </Row>
+              </Container>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Button primary type="submit" disabled={loading}>{props.phrases.calculatePriceChange}</Button>
+            </Col>
+          </Row>
+        </Container>
+      </Form>
     </Container>
+    {renderResult()}
   </Container>)
 }
 
