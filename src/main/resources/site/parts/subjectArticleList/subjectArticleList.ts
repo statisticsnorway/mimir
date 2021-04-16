@@ -6,7 +6,6 @@ import { SubjectArticleListPartConfig } from './subjectArticleList-part-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
 import { ArticleListPartConfig } from '../articleList/articleList-part-config'
-import { current } from '@reduxjs/toolkit'
 
 const {
   localize
