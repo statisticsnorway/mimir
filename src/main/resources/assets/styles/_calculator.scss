@@ -7,7 +7,7 @@
     .calculator-form {
       padding: 60px 100px;
 
-      .choose-month, .start-value {
+      .month, .start-value {
         width: 280px;
       }
 
@@ -34,6 +34,38 @@
       .info-title {
         @include roboto;
         font-weight: bold;
+      }
+    }
+
+    @include media-breakpoint-down(sm) {
+
+      .calculator-form {
+
+        .month, .start-value {
+          width: 100%;
+        }
+
+      }
+    }
+
+    @include media-breakpoint-down(md) {
+
+      .calculator-form {
+        padding: 20px;
+
+        .select-month {
+          padding: 0;
+          margin-bottom: 10px;
+        }
+
+        .select-year {
+          padding: 0;
+        }
+  
+        .calculate-from, .calculate-from {
+          margin-bottom: 20px;
+        }
+
       }
     }
   }

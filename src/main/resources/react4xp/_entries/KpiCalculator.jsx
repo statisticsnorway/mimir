@@ -188,7 +188,7 @@ function KpiCalculator(props) {
   function addDropdownMonth(id) {
     return (
       <Dropdown
-        className="choose-month"
+        className="month"
         id={id}
         header={props.phrases.chooseMonth}
         onSelect={(value) => {
@@ -303,7 +303,7 @@ function KpiCalculator(props) {
   }
 
   return (<Container className='kpi-calculator'>
-    <Container className="calculator-form">
+    <div className="calculator-form">
       <h2>{props.phrases.calculatePriceChange}</h2>
       <p>{props.phrases.kpiNextPublishText}</p>
       <Form onSubmit={onSubmit}>
@@ -323,12 +323,12 @@ function KpiCalculator(props) {
           <Row className="mb-4">
             <Col>
               <h3>{props.phrases.calculatePriceChangeFrom}</h3>
-              <Container>
+              <Container className="calculate-from">
                 <Row>
-                  <Col className="col-8">
+                  <Col className="select-month">
                     {addDropdownMonth('start-month')}
                   </Col>
-                  <Col className="col-4">
+                  <Col className="select-year align-self-end">
                     <Input
                       className="input-year"
                       label={props.phrases.enterYear}
@@ -343,12 +343,12 @@ function KpiCalculator(props) {
             </Col>
             <Col>
               <h3>{props.phrases.calculatePriceChangeTo}</h3>
-              <Container>
+              <Container className="calculate-to">
                 <Row>
-                  <Col className="col-8">
+                  <Col className="select-month">
                     {addDropdownMonth('end-month')}
                   </Col>
-                  <Col className="col-4">
+                  <Col className="select-year align-self-end">
                     <Input
                       className="input-year"
                       label={props.phrases.enterYear}
@@ -369,7 +369,7 @@ function KpiCalculator(props) {
           </Row>
         </Container>
       </Form>
-    </Container>
+    </div>
     {renderResult()}
   </Container>)
 }
