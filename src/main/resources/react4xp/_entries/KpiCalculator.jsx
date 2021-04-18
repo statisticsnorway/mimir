@@ -213,7 +213,7 @@ function KpiCalculator(props) {
     }
     if (errorMessage !== null) {
       return (
-        <Container>
+        <Container className="calculator-error" >
           <Row>
             <Col>
               <FormError errorMessages={[errorMessage || props.phrases.kpiErrorUnknownError]} title={props.phrases.kpiErrorCalculationFailed} />
