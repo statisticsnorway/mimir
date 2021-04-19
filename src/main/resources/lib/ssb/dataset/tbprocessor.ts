@@ -42,11 +42,16 @@ function hasTBProcessorDatasource(content: Content<DataSource>): string | undefi
 function tryRequestTbmlData<T extends TbmlDataUniform | TbmlSourceListUniform>(
   url: string,
   contentId?: string,
-  processXml?: string ): TbprocessorParsedResponse<T> | null {
+  processXml?: string,
+  type?: string ): TbprocessorParsedResponse<T> | null {
+  log.info('processXml')
+  log.info(processXml)
+  log.info('type')
+  log.info(type)
   try {
     return getTbmlData(url, contentId, processXml)
   } catch (e) {
-    const message: string = `Failed to fetch data from tbprocessor: ${contentId} (${e})`
+    const message: string = `Failed to fetch ${type ? type : 'data'} from tbprocessor: ${contentId} (${e})`
     if (contentId) {
       logUserDataQuery(contentId, {
         file: '/lib/ssb/dataset/tbprocessor.ts',
@@ -78,7 +83,8 @@ function getDataAndMetaData(content: Content<DataSource>, processXml?: string ):
     sourceListUrl = `${dataSource.tbprocessor.urlOrId as string}`.replace(dataPath, sourceListPath)
   }
 
-  const tbmlParsedResponse: TbprocessorParsedResponse<TbmlDataUniform> | null = tryRequestTbmlData<TbmlDataUniform>(tbmlDataUrl, content._id, processXml)
+  const tbmlParsedResponse: TbprocessorParsedResponse<TbmlDataUniform> | null =
+      tryRequestTbmlData<TbmlDataUniform>(tbmlDataUrl, content._id, processXml, 'dataset')
 
   // If this is true, it's most likely an internal table (unpublised data only)
   // We pass this as a status 200, add an empty table to presentation,
@@ -142,7 +148,8 @@ function getDataAndMetaData(content: Content<DataSource>, processXml?: string ):
 }
 
 function addSourceList(sourceListUrl: string, tbmlParsedResponse: TbprocessorParsedResponse<TbmlDataUniform>, contentId: string): TbmlDataUniform | null {
-  const sourceListParsedResponse: TbprocessorParsedResponse<TbmlSourceListUniform> | null = tryRequestTbmlData<TbmlSourceListUniform>(sourceListUrl, contentId)
+  const sourceListParsedResponse: TbprocessorParsedResponse<TbmlSourceListUniform> | null =
+      tryRequestTbmlData<TbmlSourceListUniform>(sourceListUrl, contentId, undefined, 'source list')
 
   const sourceListObject: object | undefined = sourceListParsedResponse && sourceListParsedResponse.parsedBody ? {
     tbml: {
@@ -183,7 +190,7 @@ export function getTableIdFromTbprocessor(data: TbmlDataUniform): Array<string> 
 
 export interface TbprocessorLib {
   getTbprocessor: (content: Content<DataSource>, branch: string) => DatasetRepoNode<TbmlDataUniform> | null;
-  fetchTbprocessorData: (content: Content<DataSource>, processXml?: string) => FetchTbProcessorData | null;
+  fetchTbprocessorData: (content: Content<DataSource>, processXml?: string) => TbprocessorParsedResponse<TbmlDataUniform> | null;
   getTbprocessorKey: (content: Content<DataSource>) => string;
   getTableIdFromTbprocessor: (dataset: TbmlDataUniform) => Array<string>;
 }

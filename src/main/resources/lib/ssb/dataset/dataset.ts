@@ -4,7 +4,7 @@ import { DataSource as DataSourceType, DatasetRepoNode, RepoDatasetLib } from '.
 import { StatbankApiLib } from './statbankApi'
 import { JSONstat } from '../../types/jsonstat-toolkit'
 import { RepoQueryLib } from '../../repo/query'
-import { TbmlDataUniform } from '../../types/xmlParser'
+import { StatbankSavedRaw, TbmlDataUniform } from '../../types/xmlParser'
 import { TbprocessorLib } from './tbprocessor'
 import { KlassLib } from './klass'
 import { ContextLibrary, RunContext } from 'enonic-types/context'
@@ -85,16 +85,16 @@ export function extractKey(content: Content<DataSource>): string | null {
   }
 }
 
-function fetchData(content: Content<DataSource>, processXml?: string): JSONstat | TbmlDataUniform | TbprocessorParsedResponse<TbmlDataUniform> | object | null {
+function fetchData(content: Content<DataSource>, processXml?: string): JSONstat | TbprocessorParsedResponse<TbmlDataUniform> | StatbankSavedRaw | object | null {
   switch (content.data.dataSource?._selected) {
   case DataSourceType.STATBANK_API:
-    return fetchStatbankApiData(content)
+    return fetchStatbankApiData(content) // JSONstat | null;
   case DataSourceType.TBPROCESSOR:
-    return fetchTbprocessorData(content, processXml)
+    return fetchTbprocessorData(content, processXml) // TbprocessorParsedResponse<TbmlDataUniform> | null;
   case DataSourceType.STATBANK_SAVED:
-    return fetchStatbankSavedData(content)
+    return fetchStatbankSavedData(content) // StatbankSavedRaw | null;
   case DataSourceType.KLASS:
-    return fetchKlassData(content)
+    return fetchKlassData(content) // object | null
   default:
     return null
   }
@@ -121,12 +121,14 @@ export function refreshDataset(
           status: newDataset.body ? newDataset.body : '',
           dataset: null,
           hasNewData: false,
+          hasNewSourceList: false,
           newDataset,
           branch,
           user
         }
       } else {
         const hasNewData: boolean = newDataset.parsedBody ? isDataNew(newDataset.parsedBody, oldDataset) : false
+        const hasNewSourceList: boolean = !!(newDataset.parsedBody && newDataset.parsedBody.tbml.metadata.sourceList)
         if ((!oldDataset || hasNewData) && newDataset.parsedBody) {
           oldDataset = createOrUpdateDataset(content.data.dataSource?._selected, branch, key, newDataset.parsedBody)
         }
@@ -134,6 +136,7 @@ export function refreshDataset(
           dataquery: content,
           status: hasNewData ? Events.GET_DATA_COMPLETE : Events.NO_NEW_DATA,
           hasNewData: hasNewData,
+          hasNewSourceList,
           dataset: oldDataset,
           newDataset,
           branch,
@@ -227,6 +230,7 @@ export interface CreateOrUpdateStatus {
   dataquery: Content<DataSource>;
   dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null;
   hasNewData: boolean;
+  hasNewSourceList?: boolean;
   status: string;
   user: User | null;
   newDataset?: object;
