@@ -143,6 +143,11 @@ export interface Article {
   articleArchive?: Array<string>;
 
   /**
+   * Innholdstype
+   */
+  articleType?: "report" | "note" | "analysis" | "economicTrends" | "discussionPaper";
+
+  /**
    * 
    * 						Løpenummer
    * 					
