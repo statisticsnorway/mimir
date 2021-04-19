@@ -143,6 +143,11 @@ export interface Article {
   articleArchive?: Array<string>;
 
   /**
+   * Innholdstype
+   */
+  articleType?: "report" | "note" | "analysis" | "economicTrends" | "discussionPaper";
+
+  /**
    * 
    * 						Løpenummer
    * 					
@@ -155,6 +160,11 @@ export interface Article {
    * 					
    */
   isbnNumber?: string;
+
+  /**
+   * Delemner
+   */
+  subtopic?: string;
 
   relatedStatisticsOptions?: {
     /**

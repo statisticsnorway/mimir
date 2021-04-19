@@ -64,6 +64,18 @@ exports.testHumanReadableNumber2 = function() {
   test.assertEquals('1\u00a0249\u00a0554', result, 'Assertion that a 7 figure number is divided in a group of 1, then two groups of 3 with nbsp separator')
 }
 
+exports.testHumanReadableNumber3 = function() {
+  const result = utils.createHumanReadableFormat(-1249554)
+  test.assertEquals('-1\u00a0249\u00a0554', result,
+    'Assertion that a 7 figure negative number is divided in a group of 1, then two groups of 3 with nbsp separator')
+}
+
+exports.testHumanReadableNumber4 = function() {
+  const result = utils.createHumanReadableFormat(-1249.554)
+  test.assertEquals('-1\u00a0249,554', result,
+    'Assertion that a negative figure with decimals is divided in a group of 1 with decimals')
+}
+
 exports.testKeyFigureImageCaption1 = function() {
   const result = utils.getImageCaption( '201c4f2f-ff5e-4298-8a3f-b07d515795de' )
   test.assertEquals('ikon av mennesker og hus', result, 'Testing extraction of mocked image caption from json')

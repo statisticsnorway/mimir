@@ -1,10 +1,11 @@
 import React from 'react'
 import { Dialog } from '@statisticsnorway/ssb-component-library'
+import { Container } from 'react-bootstrap'
 import PropTypes from 'prop-types'
 
 const Alerts = (props) => {
   return (
-    <React.Fragment>
+    <Container>
       {props.alerts.map((alert, index) => {
         return (
           <Dialog
@@ -21,7 +22,7 @@ const Alerts = (props) => {
           </Dialog>
         )
       })}
-    </React.Fragment>
+    </Container>
   )
 }
 

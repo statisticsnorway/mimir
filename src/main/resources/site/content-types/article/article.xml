@@ -220,9 +220,20 @@
 		<mixin name="contacts" />
 		<field-set>
 			<label>
-				Løpenummer og ISBN
+				Metainformasjon
 			</label>
 			<items>
+				<input name="articleType" type="ComboBox">
+					<label>Innholdstype</label>
+					<occurrences minimum="0" maximum="1"/>
+					<config>
+						<option value="report">Rapport</option>
+						<option value="note">Notat</option>
+						<option value="analysis">Analyse</option>
+						<option value="economicTrends">Konjunkturtendensene</option>
+						<option value="discussionPaper">Discussion paper</option>
+					</config>
+				</input>
 				<input name="serialNumber" type="TextLine">
 					<label>
 						Løpenummer
@@ -235,6 +246,12 @@
 					</label>
 					<occurrences minimum="0" maximum="1" />
 				</input>
+			</items>
+		</field-set>
+		<field-set>
+			<label>Sekundærplassering</label>
+			<items>
+				<mixin name="subtopic" />
 			</items>
 		</field-set>
 	</form>

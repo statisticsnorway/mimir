@@ -5,6 +5,7 @@ import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { Component, PortalLibrary } from 'enonic-types/portal'
 import { HighchartPartConfig } from './highchart-part-config'
 import { Content, ContentLibrary } from 'enonic-types/content'
+import { I18nLibrary } from 'enonic-types/i18n'
 import { UtilLibrary } from '../../../lib/types/util'
 import { Request, Response } from 'enonic-types/controller'
 import { Highchart } from '../../content-types/highchart/highchart'
@@ -19,8 +20,12 @@ const {
 } = __non_webpack_require__( '/lib/repo/dataset')
 const util: UtilLibrary = __non_webpack_require__( '/lib/util')
 const {
-  getComponent
+  getComponent,
+  getContent
 }: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
+const {
+  localize
+}: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
 const {
   render
 } = __non_webpack_require__( '/lib/thymeleaf')
@@ -62,6 +67,19 @@ exports.preview = (req: Request, id: string): Response => {
 
 
 function renderPart(req: Request, highchartIds: Array<string>): Response {
+  const page: Content = getContent()
+  const language: string = page.language ? page.language : 'nb'
+
+  //  Must be set to nb instead of no for localization
+  const sourceText: string = localize({
+    key: 'highcharts.source',
+    locale: language === 'nb' ? 'no' : language
+  })
+  const downloadText: string = localize({
+    key: 'highcharts.download',
+    locale: language === 'nb' ? 'no' : language
+  })
+
   const highcharts: Array<HighchartsRectProps> = highchartIds.map((key) => {
     const highchart: Content<Highchart> | null = content.get({
       key
@@ -76,7 +94,9 @@ function renderPart(req: Request, highchartIds: Array<string>): Response {
 
   return {
     body: render(view, {
-      highcharts
+      highcharts,
+      downloadText,
+      sourceText
     }),
     pageContributions: {
       bodyEnd: inlineScript

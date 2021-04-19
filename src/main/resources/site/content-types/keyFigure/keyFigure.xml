@@ -12,14 +12,10 @@
 		<mixin name="dataSource" />
 		<input name="manualSource" type="TextLine">
 			<label>
-				Manuelt tall
+				Manuell verdi
 			</label>
 			<occurrences minimum="0" maximum="1" />
-			<config>
-				<regexp>
-					^-?[0-9]+[.,]?[0-9]*$
-				</regexp>
-			</config>
+			<config/>
 		</input>
 		<input name="denomination" type="TextLine">
 			<label>

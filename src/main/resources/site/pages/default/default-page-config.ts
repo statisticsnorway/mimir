@@ -15,19 +15,14 @@ export interface DefaultPageConfig {
   bkg_color: "white" | "grey";
 
   /**
-   * Emneinformasjon
+   * Hovedemne eller Delemne
    */
-  subjectInfo?: Array<{
-    /**
-     * Hovedemne eller Delemne
-     */
-    subjectType: "mainSubject" | "subSubject";
+  subjectType?: "mainSubject" | "subSubject";
 
-    /**
-     * Emnekode
-     */
-    subjectCode: string;
-  }>;
+  /**
+   * Emnekode
+   */
+  subjectCode?: string;
 
   /**
    * Region

@@ -39,9 +39,9 @@ function get(req: HttpRequestParams): Response {
     return {
       status: 400,
       body: {
-        error: 'missing paramter'
+        error: 'missing parameter'
       },
-      contentType: 'applcation/json'
+      contentType: 'application/json'
     }
   }
   const config: Content<CalculatorConfig> | undefined = query({
@@ -85,7 +85,7 @@ function get(req: HttpRequestParams): Response {
         body: {
           error: indexResult.startIndex === null ? errorValidateStartMonth : errorValidateEndMonth
         },
-        contentType: 'applcation/json'
+        contentType: 'application/json'
       }
     }
   }
@@ -94,7 +94,7 @@ function get(req: HttpRequestParams): Response {
     body: {
       error: 'missing calculator config or kpi sources'
     },
-    contentType: 'applcation/json'
+    contentType: 'application/json'
   }
 }
 exports.get = get

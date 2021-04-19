@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Container, Row, Col } from 'react-bootstrap'
-import { Input, Button, Dropdown, Divider, Dialog } from '@statisticsnorway/ssb-component-library'
+import { Input, Button, Dropdown, Divider, FormError } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
 import NumberFormat from 'react-number-format'
 
 function KpiCalculator(props) {
-  const [validated, setValidated] = useState(false)
   const [startValue, setStartValue] = useState({
     error: false,
     errorMsg: props.phrases.kpiValidateAmountNumber,
@@ -38,21 +37,21 @@ function KpiCalculator(props) {
   const [change, setChange] = useState(null)
   const language = props.language ? props.language : 'nb'
 
-  useEffect(() => {
-    setValidated(
-      !startValue.error && startValue.value &&
-      !startYear.error && startYear.value &&
-      !startMonth.error && startMonth.value &&
-      !endYear.error && endYear.value &&
-      !endMonth.error && endMonth.value
-    )
-  }, [startValue, startYear, startMonth, endYear, endMonth])
+  const validMaxYear = new Date().getFullYear()
+  const validMinYear = 1865
+  const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
 
   function onSubmit(e) {
     e.preventDefault()
-    if (!validated || loading) return
+    if (loading) return
     setChange(null)
     setEndValue(null)
+    if (!isFormValid()) {
+      onBlur('start-value')
+      onBlur('start-year')
+      onBlur('end-year')
+      return
+    }
     setErrorMessage(null)
     setLoading(true)
     axios.get(props.kpiServiceUrl, {
@@ -72,7 +71,6 @@ function KpiCalculator(props) {
         setEndValue(endVal)
       })
       .catch((err) => {
-        // TODO better errorhandling
         if (err && err.response && err.response.data && err.response.data.error) {
           setErrorMessage(err.response.data.error)
         } else {
@@ -84,17 +82,70 @@ function KpiCalculator(props) {
       })
   }
 
+  function isFormValid() {
+    return isStartValueValid() && isStartYearValid() && isEndYearValid()
+  }
+
+  function isStartValueValid(value) {
+    const startVal = value || startValue.value
+    const testStartValue = startVal.match(/^-?[0-9]+[.,]?[0-9]*$/g)
+    const isNumber = testStartValue && testStartValue.length === 1
+    return !(!isNumber || isNaN(parseFloat(startVal)))
+  }
+
+  function isStartYearValid(value) {
+    const startYearValue = value || startYear.value
+    const testStartYear = startYearValue.match(yearRegexp)
+    const isStartYearValid = testStartYear && testStartYear.length === 1
+    const intStartYear = parseInt(startYearValue)
+    return !(!isStartYearValid || isNaN(intStartYear) || intStartYear < validMinYear || intStartYear > validMaxYear)
+  }
+
+  function isEndYearValid(value) {
+    const endYearValue = value || endYear.value
+    const testEndYear = endYearValue.match(yearRegexp)
+    const isEndYearValid = testEndYear && testEndYear.length === 1
+    const intEndYear = parseInt(endYearValue)
+    return !(!isEndYearValid || isNaN(intEndYear) || intEndYear < validMinYear || intEndYear > validMaxYear)
+  }
+
+  function onBlur(id) {
+    switch (id) {
+    case 'start-value': {
+      setStartValue({
+        ...startValue,
+        error: !isStartValueValid()
+      })
+      break
+    }
+    case 'start-year': {
+      setStartYear({
+        ...startYear,
+        error: !isStartYearValid()
+      })
+      break
+    }
+    case 'end-year': {
+      setEndYear({
+        ...endYear,
+        error: !isEndYearValid()
+      })
+      break
+    }
+    default: {
+      break
+    }
+    }
+  }
+
   function onChange(id, value) {
     switch (id) {
     case 'start-value': {
-      const test = value.match(/^-?[0-9]+[.,]?[0-9]*$/g)
-      const isNumber = test && test.length === 1
       value = value.replace(/,/g, '.')
-      const error = !isNumber || isNaN(parseFloat(value))
       setStartValue({
         ...startValue,
         value,
-        error
+        error: startValue.error ? !isStartValueValid(value) : startValue.error
       })
       break
     }
@@ -106,16 +157,10 @@ function KpiCalculator(props) {
       break
     }
     case 'start-year': {
-      const validMaxYear = new Date().getFullYear()
-      const validMinYear = 1865
-      const test = value.match(/^[1-9]{1}[0-9]{3}$/g)
-      const isYear = test && test.length === 1
-      const intVal = parseInt(value)
-      const error = !isYear || isNaN(intVal) || intVal < validMinYear || intVal > validMaxYear
       setStartYear({
         ...startYear,
         value,
-        error
+        error: startYear.error ? !isStartYearValid(value) : startYear.error
       })
       break
     }
@@ -127,16 +172,10 @@ function KpiCalculator(props) {
       break
     }
     case 'end-year': {
-      const validMaxYear = new Date().getFullYear()
-      const validMinYear = 1865
-      const test = value.match(/^[1-9]{1}[0-9]{3}$/g)
-      const isYear = test && test.length === 1
-      const intVal = parseInt(value)
-      const error = !isYear || isNaN(intVal) || intVal < validMinYear || intVal > validMaxYear
       setEndYear({
         ...endYear,
         value,
-        error
+        error: endYear.error ? !isEndYearValid(value) : endYear.error
       })
       break
     }
@@ -173,9 +212,7 @@ function KpiCalculator(props) {
       return (
         <Row>
           <Col>
-            <Dialog type='warning' title={props.phrases.kpiErrorCalculationFailed}>
-              {errorMessage || props.phrases.kpiErrorUnknownError}
-            </Dialog>
+            <FormError errorMessages={[errorMessage || props.phrases.kpiErrorUnknownError]} title={props.phrases.kpiErrorCalculationFailed} />
           </Col>
         </Row>
       )
@@ -249,12 +286,17 @@ function KpiCalculator(props) {
   return (<Container>
     <h2>{props.phrases.calculatePriceChange}</h2>
     <p>{props.phrases.kpiNextPublishText}</p>
-    <Form onSubmit={onSubmit} validated={validated}>
+    <Form onSubmit={onSubmit}>
       <Container>
         <Row>
           <Col>
             <h3>{props.phrases.enterAmount}</h3>
-            <Input handleChange={(value) => onChange('start-value', value)} error={startValue.error} errorMessage={startValue.errorMsg}/>
+            <Input
+              handleChange={(value) => onChange('start-value', value)}
+              error={startValue.error}
+              errorMessage={startValue.errorMsg}
+              onBlur={() => onBlur('start-value')}
+            />
           </Col>
         </Row>
         <Row>
@@ -270,7 +312,9 @@ function KpiCalculator(props) {
                     label={props.phrases.enterYear}
                     handleChange={(value) => onChange('start-year', value)}
                     error={startYear.error}
-                    errorMessage={startYear.errorMsg}/>
+                    errorMessage={startYear.errorMsg}
+                    onBlur={() => onBlur('start-year')}
+                  />
                 </Col>
               </Row>
             </Container>
@@ -287,7 +331,9 @@ function KpiCalculator(props) {
                     label={props.phrases.enterYear}
                     handleChange={(value) => onChange('end-year', value)}
                     error={endYear.error}
-                    errorMessage={endYear.errorMsg}/>
+                    errorMessage={endYear.errorMsg}
+                    onBlur={() => onBlur('end-year')}
+                  />
                 </Col>
               </Row>
             </Container>
@@ -295,7 +341,7 @@ function KpiCalculator(props) {
         </Row>
         <Row className="my-4">
           <Col>
-            <Button primary type="submit" disabled={!validated || loading}>{props.phrases.calculatePriceChange}</Button>
+            <Button primary type="submit" disabled={loading}>{props.phrases.calculatePriceChange}</Button>
           </Col>
         </Row>
       </Container>
