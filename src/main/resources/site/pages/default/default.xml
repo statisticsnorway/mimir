@@ -11,14 +11,12 @@
       </config>
       <default>default</default>
     </input>
-    <item-set name="subjectInfo">
+    <field-set>
       <label>Emneinformasjon</label>
-      <expanded>false</expanded>
-      <occurrences minimum="0" maximum="1"/>
       <items>
         <input name="subjectType" type="RadioButton">
           <label>Hovedemne eller Delemne</label>
-          <occurrences minimum="1" maximum="1"/>
+          <occurrences minimum="0" maximum="1"/>
           <config>
             <option value="mainSubject">Hovedemne</option>
             <option value="subSubject">Delemne</option>
@@ -27,10 +25,10 @@
         <input type="TextLine" name="subjectCode">
           <label>Emnekode</label>
           <help-text>Hvert hovedemne og delemne har en kode, finner det i emnestrukturen i 4.7</help-text>
-          <occurrences minimum="1" maximum="1"/>
+          <occurrences minimum="0" maximum="1"/>
         </input>
       </items>
-    </item-set>
+    </field-set>
     <input name="hide_breadcrumb" type="CheckBox">
       <label>Skjul Brødsmulesti</label>
     </input>
