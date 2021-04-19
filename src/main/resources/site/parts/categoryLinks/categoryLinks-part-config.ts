@@ -1,5 +1,10 @@
 export interface CategoryLinksPartConfig {
   /**
+   * Lenke Metode og Documentasjon
+   */
+  urlMethodDocumentation?: string;
+
+  /**
    * Category link
    */
   CategoryLinkItemSet?: Array<{

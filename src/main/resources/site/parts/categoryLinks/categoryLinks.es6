@@ -3,6 +3,7 @@ const {
 } = __non_webpack_require__( '/lib/util')
 const {
   getComponent,
+  getContent,
   pageUrl
 } = __non_webpack_require__( '/lib/xp/portal')
 const {
@@ -12,6 +13,9 @@ const {
   renderError
 } = __non_webpack_require__('/lib/error/error')
 const React4xp = require('/lib/enonic/react4xp')
+const {
+  getLanguage
+} = __non_webpack_require__( '/lib/language')
 
 const view = resolve('./categoryLinks.html')
 
@@ -32,11 +36,12 @@ const NO_LINKS_FOUND = {
 
 const renderPart = (req) => {
   const part = getComponent()
+  const page = getContent()
+  const language = getLanguage(page)
+  const phrases = language.phrases
+  const links = part.config.CategoryLinkItemSet ? data.forceArray(part.config.CategoryLinkItemSet) : []
+  const methodsAndDocumentationUrl = part.config.urlMethodDocumentation ? part.config.urlMethodDocumentation : null
 
-  return renderCategoryLinks(part.config.CategoryLinkItemSet ? data.forceArray(part.config.CategoryLinkItemSet) : [])
-}
-
-const renderCategoryLinks = (links) => {
   if (links && links.length) {
     const categoryLinksComponent = new React4xp('CategoryLinks')
       .setProps({
@@ -48,7 +53,9 @@ const renderCategoryLinks = (links) => {
             titleText: link.titleText,
             subText: link.subText
           }
-        })
+        }),
+        methodsAndDocumentationUrl,
+        methodsAndDocumentationLabel: phrases.methodsAndDocumentation
       })
       .setId('categoryLink')
       .uniqueId()

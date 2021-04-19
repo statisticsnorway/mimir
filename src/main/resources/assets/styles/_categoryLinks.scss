@@ -1,0 +1,13 @@
+.part-category-link {
+  .method-and-documentation {
+    background-color: transparent !important;
+    border: solid 1px $ssb-blue-3 !important;
+    border-bottom: 3px solid $ssb-blue-3 !important;
+    color: $ssb-blue-3 !important;
+    background-image: linear-gradient(120deg, $ssb-blue-3 0%, $ssb-blue-3 100%) !important;
+
+    &:hover, &:focus {
+      color: $ssb-white !important;
+    }
+  }
+}

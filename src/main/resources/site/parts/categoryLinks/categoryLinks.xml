@@ -1,5 +1,5 @@
 <part>
-    <display-name>Category Link</display-name>
+    <display-name>Category Link Delemneside</display-name>
     <form>
         <item-set name="CategoryLinkItemSet">
             <label>Category link</label>
@@ -22,5 +22,9 @@
                 </input>
             </items>
         </item-set>
+        <input name="urlMethodDocumentation" type="TextLine">
+            <label>Lenke Metode og Documentasjon</label>
+            <occurrences minimum="0" maximum="1"/>
+        </input>
     </form>
 </part>
