@@ -33,10 +33,10 @@
         </svg>
 
       </i>
-      Last ned som …
+      <span data-th-text="${downloadText}"></span>
     </button>
     <div data-th-if="${highchart.creditsEnabled}" class="col-12">
-      <h5 class="mb-0">Kilde:</h5>
+      <h5 class="mb-0" data-th-text="${sourceText}">Kilde:</h5>
       <a class="ssb-link" data-th-href="${highchart.creditsHref}" data-th-text="${highchart.creditsText}"></a>
     </div>
   </div>
