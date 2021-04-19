@@ -29,15 +29,17 @@ function renderPart(req: Request): React4xpResponse {
   })
   log.info('GLNRBN serviceURL: ' + articleServiceUrl)
 
-  //  Must be set to nb instead of no for localization
-  // const archiveLinkText: string = localize({
-  //   key: 'publicationLinkText',
-  //   locale: language === 'nb' ? 'no' : language
-  // })
+  const headerText: string = localize({
+    key: 'relatedArticlesHeading',
+    locale: language === 'nb' ? 'no' : language
+  })
 
   const props: PartProperties = {
-    title: 'Nye artikler, analyser og publikasjoner',
-    articles: preparedArticles
+    title: headerText,
+    articleServiceUrl: articleServiceUrl,
+    currentPath: currentPath,
+    start: 0,
+    count: 10
   }
 
   return React4xp.render('site/parts/articleList/articleList', props, req)
