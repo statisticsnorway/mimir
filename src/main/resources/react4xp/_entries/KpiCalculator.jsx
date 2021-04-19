@@ -228,10 +228,10 @@ function KpiCalculator(props) {
       return (
         <Container className="calculator-result">
           <Row className="mb-5">
-            <Col className="amount-equal align-self-end col-4">
+            <Col className="amount-equal align-self-end col-12 col-md-4">
               <h3>{props.phrases.kpiAmountEqualled}</h3>
             </Col>
-            <Col className="end-value col-8">
+            <Col className="end-value col-12 col-md-8">
               <span className="float-right">
                 <NumberFormat
                   value={ Number(endValue) }
@@ -248,7 +248,7 @@ function KpiCalculator(props) {
             </Col>
           </Row>
           <Row className="mb-5">
-            <Col className="price-increase mr-2">
+            <Col className="price-increase col-12 col-md-4">
               <span>{props.phrases.priceIncrease}</span>
               <span className="float-right">
                 <NumberFormat
@@ -262,7 +262,7 @@ function KpiCalculator(props) {
               </span>
               <Divider dark/>
             </Col>
-            <Col className="start-value mr-2">
+            <Col className="start-value col-12 col-md-4">
               <span>{props.phrases.startValue} </span>
               <span className="float-right">
                 <NumberFormat
@@ -276,7 +276,7 @@ function KpiCalculator(props) {
               </span>
               <Divider dark/>
             </Col>
-            <Col className="amount">
+            <Col className="amount col-12 col-md-4">
               <span>{props.phrases.amount} </span>
               <span className="float-right">
                 <NumberFormat
@@ -292,7 +292,7 @@ function KpiCalculator(props) {
             </Col>
           </Row>
           <Row className="my-4">
-            <Col className="col-8">
+            <Col className="col-12 col-md-8">
               <span className="info-title">{props.phrases.kpiCalculatorInfoTitle}</span>
               <p className="info-text">{props.phrases.kpiCalculatorInfoText}</p>
             </Col>
