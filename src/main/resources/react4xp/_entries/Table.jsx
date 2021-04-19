@@ -279,7 +279,15 @@ class Table extends React.Component {
     const {
       footnotes, correctionNotice
     } = this.state.table.tfoot
-    const noteRefsList = this.state.table.noteRefs
+
+    const noteRefs = this.state.table.noteRefs
+    // TODO: The solution for multiple noteRefs is a temporary quick fix.
+    // As of now, when a single element, e.g. the table header, has multiple note refs the structure is such:
+    // "noterefs": ["local:dictionary:note6 local:dictionary:note8 local:dictionary:note7", "local:dictionary:note1", "local:dictionary:note2"]
+    // When preferably the structure should be e.g.:
+    // "noterefs": [["local:dictionary:note6", "local:dictionary:note8", "local:dictionary:note7"], "local:dictionary:note1", "local:dictionary:note2"]
+    const multipleNoteRefs = noteRefs && noteRefs.toString().split(' ')
+    const noteRefsList = multipleNoteRefs.length > 1 ? multipleNoteRefs : noteRefs
 
     if (footnotes && footnotes.length > 0 && noteRefsList.length > 0 || correctionNotice) {
       return (
@@ -427,9 +435,23 @@ class Table extends React.Component {
   }
 
   addNoteRefs(noteRefId) {
-    const noteRefsList = noteRefId ? this.state.table.noteRefs : undefined
-    if (noteRefsList) {
-      const noteRefIndex = noteRefsList.indexOf(noteRefId)
+    const noteRefs = noteRefId ? this.state.table.noteRefs : undefined
+    // TODO: The solution for multiple noteRefs is a temporary quick fix.
+    // As of now, when a single element, e.g. the table header, has multiple note refs the structure is such:
+    // "noterefs": ["local:dictionary:note6 local:dictionary:note8 local:dictionary:note7", "local:dictionary:note1", "local:dictionary:note2"]
+    // When preferably the structure should be e.g.:
+    // "noterefs": [["local:dictionary:note6", "local:dictionary:note8", "local:dictionary:note7"], "local:dictionary:note1", "local:dictionary:note2"]
+    const noteRefsList = noteRefs && noteRefs.toString().split(' ')
+
+    if (noteRefsList && noteRefsList.length > 1) {
+      return (
+        <sup>
+          {noteRefsList.map((noteRef, index) => `${index + 1} `)}
+        </sup>
+      )
+    }
+    if (noteRefs) {
+      const noteRefIndex = noteRefs && noteRefs.indexOf(noteRefId)
       if (noteRefIndex > -1) {
         return (
           <sup>{noteRefIndex + 1}</sup>
