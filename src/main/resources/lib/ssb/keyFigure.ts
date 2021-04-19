@@ -130,7 +130,11 @@ export function parseKeyFigure(
     }
     return keyFigureViewData
   } else if (keyFigure.data.manualSource) {
-    keyFigureViewData.number = parseValue(keyFigure.data.manualSource.replace(/,/g, '.'))
+    if (isNaN(parseFloat(keyFigure.data.manualSource))) {
+      keyFigureViewData.number = keyFigure.data.manualSource
+    } else {
+      keyFigureViewData.number = parseValue(keyFigure.data.manualSource.replace(/,/g, '.'))
+    }
     return keyFigureViewData
   }
   return keyFigureViewData
