@@ -156,6 +156,11 @@ export interface Article {
    */
   isbnNumber?: string;
 
+  /**
+   * Delemner
+   */
+  subtopic?: string;
+
   relatedStatisticsOptions?: {
     /**
      * Selected
