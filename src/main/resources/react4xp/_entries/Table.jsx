@@ -281,6 +281,11 @@ class Table extends React.Component {
     } = this.state.table.tfoot
 
     const noteRefs = this.state.table.noteRefs
+    // TODO: The solution for multiple noteRefs is a temporary quick fix.
+    // As of now, when a single element, e.g. the table header, has multiple note refs the structure is such:
+    // "noterefs": ["local:dictionary:note6 local:dictionary:note8 local:dictionary:note7", "local:dictionary:note1", "local:dictionary:note2"]
+    // When preferably the structure should be e.g.:
+    // "noterefs": [["local:dictionary:note6", "local:dictionary:note8", "local:dictionary:note7"], "local:dictionary:note1", "local:dictionary:note2"]
     const multipleNoteRefs = noteRefs && noteRefs.toString().split(' ')
     const noteRefsList = multipleNoteRefs.length > 1 ? multipleNoteRefs : noteRefs
 
@@ -431,6 +436,11 @@ class Table extends React.Component {
 
   addNoteRefs(noteRefId) {
     const noteRefs = noteRefId ? this.state.table.noteRefs : undefined
+    // TODO: The solution for multiple noteRefs is a temporary quick fix.
+    // As of now, when a single element, e.g. the table header, has multiple note refs the structure is such:
+    // "noterefs": ["local:dictionary:note6 local:dictionary:note8 local:dictionary:note7", "local:dictionary:note1", "local:dictionary:note2"]
+    // When preferably the structure should be e.g.:
+    // "noterefs": [["local:dictionary:note6", "local:dictionary:note8", "local:dictionary:note7"], "local:dictionary:note1", "local:dictionary:note2"]
     const noteRefsList = noteRefs && noteRefs.toString().split(' ')
 
     if (noteRefsList && noteRefsList.length > 1) {
