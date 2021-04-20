@@ -42,7 +42,7 @@ function renderPart(req: Request): React4xpResponse {
     count: 10
   }
 
-  return React4xp.render('site/parts/articleList/articleList', props, req)
+  return React4xp.render('site/parts/subjectArticleList/subjectArticleList', props, req)
 }
 
 interface PartProperties {
