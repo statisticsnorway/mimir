@@ -40,7 +40,19 @@ const renderPart = (req) => {
   const language = getLanguage(page)
   const phrases = language.phrases
   const links = part.config.CategoryLinkItemSet ? data.forceArray(part.config.CategoryLinkItemSet) : []
-  const methodsAndDocumentationUrl = part.config.urlMethodDocumentation ? part.config.urlMethodDocumentation : null
+  const methodsAndDocumentation = part.config.methodsDocumentation
+  let methodsAndDocumentationUrl
+  if (methodsAndDocumentation) {
+    if (methodsAndDocumentation._selected == 'urlSource') {
+      methodsAndDocumentationUrl = methodsAndDocumentation.urlSource.url
+    }
+
+    if (methodsAndDocumentation._selected == 'relatedSource') {
+      methodsAndDocumentationUrl = pageUrl({
+        id: methodsAndDocumentation.relatedSource.content
+      })
+    }
+  }
 
   if (links && links.length) {
     const categoryLinksComponent = new React4xp('CategoryLinks')

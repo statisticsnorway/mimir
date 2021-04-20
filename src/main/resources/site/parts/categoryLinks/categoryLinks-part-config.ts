@@ -1,10 +1,5 @@
 export interface CategoryLinksPartConfig {
   /**
-   * Lenke Metode og Documentasjon
-   */
-  urlMethodDocumentation?: string;
-
-  /**
    * Category link
    */
   CategoryLinkItemSet?: Array<{
@@ -23,4 +18,34 @@ export interface CategoryLinksPartConfig {
      */
     href: string;
   }>;
+
+  /**
+   * Metode og Dokumentasjon
+   */
+  methodsDocumentation?: {
+    /**
+     * Selected
+     */
+    _selected?: string;
+
+    /**
+     * Url
+     */
+    urlSource?: {
+      /**
+       * Url
+       */
+      url: string;
+    };
+
+    /**
+     * Innhold XP
+     */
+    relatedSource?: {
+      /**
+       * Lenkemål
+       */
+      content?: string;
+    };
+  };
 }
