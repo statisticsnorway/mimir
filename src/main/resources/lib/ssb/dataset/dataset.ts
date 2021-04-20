@@ -124,14 +124,12 @@ export function refreshDataset(
           sourceListStatus: Events.FAILED_TO_GET_SOURCE_LIST,
           dataset: null,
           hasNewData: false,
-          hasNewSourceList: false,
           newDataset,
           branch,
           user
         }
       } else {
         const hasNewData: boolean = newDataset.parsedBody ? isDataNew(newDataset.parsedBody, oldDataset) : false
-        const hasNewSourceList: boolean = !!(newDataset.parsedBody && newDataset.parsedBody.tbml.metadata.sourceList)
         if ((!oldDataset || hasNewData) && newDataset.parsedBody) {
           oldDataset = createOrUpdateDataset(content.data.dataSource?._selected, branch, key, newDataset.parsedBody)
         }
@@ -140,7 +138,6 @@ export function refreshDataset(
           status: hasNewData ? Events.GET_DATA_COMPLETE : Events.NO_NEW_DATA,
           sourceListStatus: getSourceListStatua(newDataset),
           hasNewData: hasNewData,
-          hasNewSourceList,
           dataset: oldDataset,
           newDataset,
           branch,
@@ -242,7 +239,6 @@ export interface CreateOrUpdateStatus {
   dataquery: Content<DataSource>;
   dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null;
   hasNewData: boolean;
-  hasNewSourceList?: boolean;
   status: string;
   sourceListStatus?: string;
   user: User | null;
