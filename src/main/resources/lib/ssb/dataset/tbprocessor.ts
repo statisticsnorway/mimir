@@ -82,8 +82,7 @@ function getDataAndMetaData(content: Content<DataSource>, processXml?: string ):
 
   const tbmlKey: string = getTbprocessorKey(content)
   let tbmlDataUrl: string = `${baseUrl}${dataPath}${tbmlKey}${language === 'en' ? `?lang=${language}` : ''}`
-  // let sourceListUrl: string = `${baseUrl}${sourceListPath}${tbmlKey}`
-  let sourceListUrl: string = `https://i.ssb.no/${sourceListPath}${tbmlKey}`
+  let sourceListUrl: string = `${baseUrl}${sourceListPath}${tbmlKey}`
 
   const dataSource: DataSource['dataSource'] = content.data.dataSource
   if (dataSource && dataSource.tbprocessor && isUrl(dataSource.tbprocessor.urlOrId)) {

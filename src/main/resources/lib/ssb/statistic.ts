@@ -178,6 +178,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
 
   socket.on('refresh-statistic', (data: RefreshInfo) => {
     log.info('at least here?')
+    log.info(JSON.stringify(data, null, 2))
     submitTask({
       description: 'refresh-statistic',
       task: () => {
@@ -189,10 +190,16 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
         })
 
         if (statistic) {
+          log.info('found statistics')
+          log.info(JSON.stringify(statistic, null, 2))
           const datasetIdsToUpdate: Array<string> = getDataSourceIdsFromStatistics(statistic)
+          log.info('datasetIdsToUpdate')
+          log.info(JSON.stringify(datasetIdsToUpdate, null, 2))
           const processXmls: Array<ProcessXml> | undefined = data.owners ? processXmlFromOwners(data.owners) : undefined
           log.info('what about here?')
+
           if (datasetIdsToUpdate.length > 0) {
+            log.info('datasetIds to update')
             const context: RunContext = {
               branch: 'master',
               repository: ENONIC_CMS_DEFAULT_REPO,
