@@ -27,19 +27,23 @@ function renderPart(req: Request): React4xpResponse {
   const articleServiceUrl: string = serviceUrl({
     service: 'articles'
   })
-  log.info('GLNRBN serviceURL: ' + articleServiceUrl)
 
   const headerText: string = localize({
     key: 'relatedArticlesHeading',
     locale: language === 'nb' ? 'no' : language
   })
+  const buttonText: string = localize({
+    key: 'button.showMore',
+    locale: language === 'nb' ? 'no' : language
+  })
 
   const props: PartProperties = {
     title: headerText,
+    buttonTitle: buttonText,
     articleServiceUrl: articleServiceUrl,
     currentPath: currentPath,
     start: 0,
-    count: 10
+    count: 3
   }
 
   return React4xp.render('site/parts/subjectArticleList/subjectArticleList', props, req)
@@ -47,6 +51,7 @@ function renderPart(req: Request): React4xpResponse {
 
 interface PartProperties {
     title: string;
+    buttonTitle: string;
     articleServiceUrl: string;
     currentPath: string;
     start: number;

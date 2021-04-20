@@ -14,6 +14,8 @@ const {
 const moment = require('moment/min/moment-with-locales')
 moment.locale('nb')
 
+let totalCount: number = 0
+
 exports.get = (req: Request): Response => {
   const currentPath: string = req.params.currentPath ? req.params.currentPath : '/'
   const start: number = Number(req.params.start) ? Number(req.params.start) : 0
@@ -22,17 +24,19 @@ exports.get = (req: Request): Response => {
 
   const preparedArticles: Array<PreparedArticles> = prepareArticles(getChildArticles(currentPath, start, count))
 
-  log.info('glnrbn prepArticles: ' + JSON.stringify(preparedArticles, null, 2))
-
   return {
     status: 200,
     contentType: 'application/json',
-    body: preparedArticles
+    body: {
+      articles: preparedArticles,
+      totalCount: totalCount
+    }
   }
 }
 
+
 function getChildArticles(currentPath: string, start: number, count: number): QueryResponse<Article> {
-  return query( {
+  return query({
     start: start,
     count: count,
     query: `_path LIKE "/content${currentPath}*"`,
@@ -42,7 +46,8 @@ function getChildArticles(currentPath: string, start: number, count: number): Qu
 }
 
 function prepareArticles(articles: QueryResponse<Article>): Array<PreparedArticles> {
-  return articles.hits.map( (article: Content<Article>) => {
+  totalCount = articles.total
+  return articles.hits.map((article: Content<Article>) => {
     return {
       title: article.displayName,
       preface: article.data.ingress ? article.data.ingress : '',
