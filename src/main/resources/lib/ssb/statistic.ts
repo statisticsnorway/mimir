@@ -177,8 +177,6 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   })
 
   socket.on('refresh-statistic', (data: RefreshInfo) => {
-    log.info('at least here?')
-    log.info(JSON.stringify(data, null, 2))
     submitTask({
       description: 'refresh-statistic',
       task: () => {
@@ -190,16 +188,9 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
         })
 
         if (statistic) {
-          log.info('found statistics')
-          log.info(JSON.stringify(statistic, null, 2))
           const datasetIdsToUpdate: Array<string> = getDataSourceIdsFromStatistics(statistic)
-          log.info('datasetIdsToUpdate')
-          log.info(JSON.stringify(datasetIdsToUpdate, null, 2))
           const processXmls: Array<ProcessXml> | undefined = data.owners ? processXmlFromOwners(data.owners) : undefined
-          log.info('what about here?')
-
           if (datasetIdsToUpdate.length > 0) {
-            log.info('datasetIds to update')
             const context: RunContext = {
               branch: 'master',
               repository: ENONIC_CMS_DEFAULT_REPO,
@@ -210,7 +201,6 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
               }
             }
             run(context, () => {
-              log.info('in context')
               const jobLogNode: JobEventNode = startJobLog(JobNames.STATISTICS_REFRESH_JOB)
               updateJobLog(jobLogNode._id, (node: JobInfoNode) => {
                 node.data.queryIds = [data.id]
@@ -218,7 +208,6 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
               })
               const feedbackEventName: string = 'statistics-activity-refresh-feedback'
               const relatedStatisticsId: string = data.id
-              log.info('last point before refresh DatasetHandler')
               const refreshDataResult: Array<RefreshDatasetResult> = refreshDatasetHandler(
                 datasetIdsToUpdate,
                 socketEmitter,

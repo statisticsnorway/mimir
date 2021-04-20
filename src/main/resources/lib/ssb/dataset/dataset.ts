@@ -116,8 +116,6 @@ export function refreshDataset(
 
     // Check if data is of type TbprocessorParsedResponse
     if (determineIfTbprocessorParsedResponse(newDataset) && content.data.dataSource._selected === DataSourceType.TBPROCESSOR) {
-      log.info('new data')
-      log.info(JSON.stringify(newDataset, null, 2))
       // pass error msg from tbprocessor: e.g: bad username/password combo, wrong tbml id.
       if (newDataset.status && newDataset.status === 500) {
         return {

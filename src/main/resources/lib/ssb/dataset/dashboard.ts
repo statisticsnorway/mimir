@@ -553,9 +553,6 @@ export function refreshDatasetHandler(
         ownerCredentialsForTbml ? UNPUBLISHED_DATASET_BRANCH : DATASET_BRANCH,
         ownerCredentialsForTbml ? ownerCredentialsForTbml.processXml : undefined)
 
-      log.info('refreshDatasetResult')
-      log.info(JSON.stringify(refreshDatasetResult, null, 2))
-
       refreshDatasetResult.sourceListStatus && logUserDataQuery(dataSource._id, {
         file: '/lib/ssb/dataset/dashboard.ts',
         function: 'refreshDatasetHandler',
@@ -569,9 +566,6 @@ export function refreshDatasetHandler(
         message: refreshDatasetResult.status,
         branch: ownerCredentialsForTbml ? UNPUBLISHED_DATASET_BRANCH : DATASET_BRANCH
       })
-
-      log.info('refreshDatasetResult.status: ' + refreshDatasetResult.status)
-      log.info(JSON.stringify(refreshDatasetResult, null, 2))
 
       feedbackEventName && socketEmitter.broadcast(feedbackEventName, {
         name: dataSource.displayName,

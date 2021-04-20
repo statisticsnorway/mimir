@@ -46,9 +46,6 @@ export function getTbmlData<T extends TbmlDataUniform | TbmlSourceListUniform>(
   type?: string): TbprocessorParsedResponse<TbmlDataUniform | TbmlSourceListUniform> {
   //
   const response: HttpResponse = fetch(url, queryId, processXml, type)
-  log.info('url: ' + url)
-  log.info('type: ' + type)
-  log.info(JSON.stringify(response, null, 2))
   return {
     body: response.body,
     status: response.status,
