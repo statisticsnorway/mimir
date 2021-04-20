@@ -20,9 +20,9 @@ exports.get = (req: Request): Response => {
   const currentPath: string = req.params.currentPath ? req.params.currentPath : '/'
   const start: number = Number(req.params.start) ? Number(req.params.start) : 0
   const count: number = Number(req.params.count) ? Number(req.params.count) : 10
-  log.info('glnrbn req: ' + JSON.stringify(req, null, 2))
+  const sort: string = req.params.sort ? req.params.sort : 'DESC'
 
-  const preparedArticles: Array<PreparedArticles> = prepareArticles(getChildArticles(currentPath, start, count))
+  const preparedArticles: Array<PreparedArticles> = prepareArticles(getChildArticles(currentPath, start, count, sort))
 
   return {
     status: 200,
@@ -35,13 +35,13 @@ exports.get = (req: Request): Response => {
 }
 
 
-function getChildArticles(currentPath: string, start: number, count: number): QueryResponse<Article> {
+function getChildArticles(currentPath: string, start: number, count: number, sort: string): QueryResponse<Article> {
   return query({
     start: start,
     count: count,
     query: `_path LIKE "/content${currentPath}*"`,
     contentTypes: [`${app.name}:article`],
-    sort: 'publish.from DESC'
+    sort: `publish.from ${sort}`
   })
 }
 

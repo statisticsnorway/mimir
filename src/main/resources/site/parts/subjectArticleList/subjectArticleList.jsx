@@ -1,14 +1,19 @@
 import React, {useEffect, useState} from 'react';
-import {Link, Button} from '@statisticsnorway/ssb-component-library';
+import {
+  Link,
+  Button,
+  Divider,
+  Dropdown,
+} from '@statisticsnorway/ssb-component-library';
 import PropTypes from 'prop-types';
 import {ArrowRight, ChevronDown} from 'react-feather';
 import Truncate from 'react-truncate';
 import axios from 'axios';
 
 /* TODO:
-- vise antall, litt penere takk
-- sette antall retur til 10
-- Vise noe fornuftig når vi ikke har fler artikler å liste. Deactivated knapp?
+- Fikse sortering (?)
+- Hva og hvordan skal vi sortere/filtrere etter innholdstype??
+- Returere aggregert liste over funnede metadata-parametre fra service, så kan man velge en av dem og filtrere listen på denne??
 - ???
 - profit
 
@@ -20,6 +25,7 @@ function SubjectArticleList(props) {
   const [articleStart, setArticleStart] = useState(props.start);
   const [loadedFirst, setLoadedFirst] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
+  const [sort, setSort] = useState('DESC');
 
   useEffect(
       () => {
@@ -37,6 +43,7 @@ function SubjectArticleList(props) {
         currentPath: props.currentPath,
         start: articleStart,
         count: props.count,
+        sort: sort,
       },
     }).then((res) => {
       setArticles(articles.concat(res.data.articles));
@@ -49,50 +56,85 @@ function SubjectArticleList(props) {
   }
 
   function renderArticles() {
-    return (
-        articles.map((article, i) => {
-              return (
-                  <div key={i} className="mt-5">
-                    <Link href={article.url} className="ssb-link header">
-                      {article.title}
-                    </Link>
-                    <p>
-                      <Truncate lines={2}
-                                className="article-list-ingress">{article.preface}</Truncate>
-                    </p>
-                    <time dateTime={article.publishDate}>
-                      {article.publishDateHuman}
-                    </time>
-                  </div>
-              );
-            },
-        ));
+    if (loading) {
+      return (
+          <span className="spinner-border spinner-border"/>
+      );
+    }
+    if (!loading && loadedFirst) {
+      return (
+          articles.map((article, i) => {
+                return (
+                    <div key={i} className="mt-5">
+                      <Link href={article.url} className="ssb-link header">
+                        {article.title}
+                      </Link>
+                      <p>
+                        <Truncate lines={2}
+                                  className="article-list-ingress">{article.preface}</Truncate>
+                      </p>
+                      <time dateTime={article.publishDate}>
+                        {article.publishDateHuman}
+                      </time>
+                    </div>
+                );
+              },
+          ));
+    }
 
   }
 
   return (
-
       <section className="subject-article-list container-fluid">
-        <h3>{props.title}</h3>
+        <div className="container pt-5 pb-5">
+          <h3 className="mb-5">{props.title}</h3>
 
-        <div className={'total-count'}>Viser {articleStart} av {totalCount}</div>
+          <div className="row">
 
-        {
-          renderArticles()
-        }
-        <Link href={props.archiveLinkUrl ?
-            props.archiveLinkUrl :
-            '#'} linkType="profiled" icon={<ArrowRight size="20"/>}
-              className="mt-5 d-md-none">
-          {props.archiveLinkText ?
-              props.archiveLinkText :
-              'empty'}
-        </Link>
+            <div className="col-md-6 col-12">
+              <span className="mb-3">Sorter innholdet</span>
+              <Dropdown header="sorter etter dato" items={[
+                {title: 'Nyeste', id: 'DESC'},
+                {title: 'Eldste', id: 'ASC'}]}
+                        selectedItem={{title: 'Nyeste', id: 'DESC'}}
+                        onSelect={(selected) => {
+                          setArticles([]);
+                          setSort(selected.id);
+                          setArticleStart(props.start);
+                          setTotalCount(0);
+                          fetchArticles();
+                        }
+                        }/>
+            </div>
 
-        <div>
-          <Button className={'button-more mt-5'}
-                  onClick={fetchArticles}><ChevronDown size="18"/>{props.buttonTitle}
-          </Button>
+            <div className="col-md-6 col-12">
+              <div
+                  className="total-count mb-2">Viser {articles.length} av {totalCount}
+              </div>
+
+              <Divider dark={true}/>
+
+              {
+                renderArticles()
+              }
+              <Link href={props.archiveLinkUrl ?
+                  props.archiveLinkUrl :
+                  '#'} linkType="profiled" icon={<ArrowRight size="20"/>}
+                    className="mt-5 d-md-none">
+                {props.archiveLinkText ?
+                    props.archiveLinkText :
+                    'empty'}
+              </Link>
+
+              <div>
+                <Button disabled={(totalCount > 0) &&
+                (totalCount <= articles.length)} className="button-more mt-5"
+                        onClick={fetchArticles}><ChevronDown
+                    size="18"/>{props.buttonTitle}
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
   );

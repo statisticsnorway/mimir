@@ -43,7 +43,7 @@ function renderPart(req: Request): React4xpResponse {
     articleServiceUrl: articleServiceUrl,
     currentPath: currentPath,
     start: 0,
-    count: 3
+    count: 10
   }
 
   return React4xp.render('site/parts/subjectArticleList/subjectArticleList', props, req)
