@@ -4,7 +4,7 @@ import { Content } from 'enonic-types/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { RepoQueryLib } from '../../repo/query'
 import { TbmlDataUniform, TbmlSourceListUniform } from '../../types/xmlParser'
-import { TbmlLib, TbprocessorParsedResponse } from '../../tbml/tbml'
+import { TbmlLib, TbprocessorParsedResponse, TbProcessorTypes } from '../../tbml/tbml'
 import { mergeDeepLeft } from 'ramda'
 
 const {
@@ -44,14 +44,10 @@ function tryRequestTbmlData<T extends TbmlDataUniform | TbmlSourceListUniform>(
   contentId?: string,
   processXml?: string,
   type?: string ): TbprocessorParsedResponse<T> | null {
-  log.info('processXml')
-  log.info(processXml)
-  log.info('type')
-  log.info(type)
   try {
-    return getTbmlData(url, contentId, processXml)
+    return getTbmlData(url, contentId, processXml, type)
   } catch (e) {
-    const message: string = `Failed to fetch ${type ? type : 'data'} from tbprocessor: ${contentId} (${e})`
+    const message: string = `Failed to fetch ${type ? formatTbProcessorType(type) : 'data'} from tbprocessor: ${contentId} (${e})`
     if (contentId) {
       logUserDataQuery(contentId, {
         file: '/lib/ssb/dataset/tbprocessor.ts',
@@ -66,6 +62,17 @@ function tryRequestTbmlData<T extends TbmlDataUniform | TbmlSourceListUniform>(
   return null
 }
 
+function formatTbProcessorType(type: string): string {
+  switch (type) {
+  case TbProcessorTypes.SOURCE_LIST:
+    return 'source list'
+  case TbProcessorTypes.DATA_SET:
+    return 'data set'
+  default:
+    return 'data'
+  }
+}
+
 function getDataAndMetaData(content: Content<DataSource>, processXml?: string ): TbprocessorParsedResponse<TbmlDataUniform> | null {
   const baseUrl: string = app.config && app.config['ssb.tbprocessor.baseUrl'] ?
     app.config['ssb.tbprocessor.baseUrl'] : 'https://i.ssb.no/tbprocessor'
@@ -75,7 +82,8 @@ function getDataAndMetaData(content: Content<DataSource>, processXml?: string ):
 
   const tbmlKey: string = getTbprocessorKey(content)
   let tbmlDataUrl: string = `${baseUrl}${dataPath}${tbmlKey}${language === 'en' ? `?lang=${language}` : ''}`
-  let sourceListUrl: string = `${baseUrl}${sourceListPath}${tbmlKey}`
+  // let sourceListUrl: string = `${baseUrl}${sourceListPath}${tbmlKey}`
+  let sourceListUrl: string = `https://i.ssb.no/${sourceListPath}${tbmlKey}`
 
   const dataSource: DataSource['dataSource'] = content.data.dataSource
   if (dataSource && dataSource.tbprocessor && isUrl(dataSource.tbprocessor.urlOrId)) {
@@ -84,8 +92,7 @@ function getDataAndMetaData(content: Content<DataSource>, processXml?: string ):
   }
 
   const tbmlParsedResponse: TbprocessorParsedResponse<TbmlDataUniform> | null =
-      tryRequestTbmlData<TbmlDataUniform>(tbmlDataUrl, content._id, processXml, 'dataset')
-
+      tryRequestTbmlData<TbmlDataUniform>(tbmlDataUrl, content._id, processXml, TbProcessorTypes.DATA_SET)
   // If this is true, it's most likely an internal table (unpublised data only)
   // We pass this as a status 200, add an empty table to presentation,
   // and fetch source list, so it's possible to import unpublished data from dashboard
@@ -149,15 +156,22 @@ function getDataAndMetaData(content: Content<DataSource>, processXml?: string ):
 
 function addSourceList(sourceListUrl: string, tbmlParsedResponse: TbprocessorParsedResponse<TbmlDataUniform>, contentId: string): TbmlDataUniform | null {
   const sourceListParsedResponse: TbprocessorParsedResponse<TbmlSourceListUniform> | null =
-      tryRequestTbmlData<TbmlSourceListUniform>(sourceListUrl, contentId, undefined, 'source list')
+      tryRequestTbmlData<TbmlSourceListUniform>(sourceListUrl, contentId, undefined, TbProcessorTypes.SOURCE_LIST)
 
   const sourceListObject: object | undefined = sourceListParsedResponse && sourceListParsedResponse.parsedBody ? {
     tbml: {
       metadata: {
-        sourceList: sourceListParsedResponse.parsedBody.sourceList.tbml.source
+        sourceList: sourceListParsedResponse.parsedBody.sourceList.tbml.source,
+        sourceListStatus: sourceListParsedResponse.status
       }
     }
-  } : undefined
+  } : {
+    tbml: {
+      metadata: {
+        sourceListStatus: sourceListParsedResponse?.status
+      }
+    }
+  }
 
   return tbmlParsedResponse && tbmlParsedResponse.parsedBody && sourceListObject ?
     mergeDeepLeft(tbmlParsedResponse.parsedBody, sourceListObject) : null

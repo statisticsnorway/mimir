@@ -85,7 +85,9 @@ export function extractKey(content: Content<DataSource>): string | null {
   }
 }
 
-function fetchData(content: Content<DataSource>, processXml?: string): JSONstat | TbprocessorParsedResponse<TbmlDataUniform> | StatbankSavedRaw | object | null {
+function fetchData(
+  content: Content<DataSource>,
+  processXml?: string): JSONstat | TbprocessorParsedResponse<TbmlDataUniform> | StatbankSavedRaw | object | null {
   switch (content.data.dataSource?._selected) {
   case DataSourceType.STATBANK_API:
     return fetchStatbankApiData(content) // JSONstat | null;
@@ -114,11 +116,14 @@ export function refreshDataset(
 
     // Check if data is of type TbprocessorParsedResponse
     if (determineIfTbprocessorParsedResponse(newDataset) && content.data.dataSource._selected === DataSourceType.TBPROCESSOR) {
+      log.info('new data')
+      log.info(JSON.stringify(newDataset, null, 2))
       // pass error msg from tbprocessor: e.g: bad username/password combo, wrong tbml id.
       if (newDataset.status && newDataset.status === 500) {
         return {
           dataquery: content,
           status: newDataset.body ? newDataset.body : '',
+          sourceListStatus: Events.FAILED_TO_GET_SOURCE_LIST,
           dataset: null,
           hasNewData: false,
           hasNewSourceList: false,
@@ -135,6 +140,7 @@ export function refreshDataset(
         return {
           dataquery: content,
           status: hasNewData ? Events.GET_DATA_COMPLETE : Events.NO_NEW_DATA,
+          sourceListStatus: getSourceListStatua(newDataset),
           hasNewData: hasNewData,
           hasNewSourceList,
           dataset: oldDataset,
@@ -164,6 +170,14 @@ export function refreshDataset(
       hasNewData: false,
       user
     }
+  }
+}
+
+function getSourceListStatua(newData: TbprocessorParsedResponse<TbmlDataUniform>): string {
+  if (newData.parsedBody?.tbml.metadata.sourceListStatus === 200) {
+    return Events.GET_SOURCE_LIST_COMPLETE
+  } else {
+    return Events.FAILED_TO_GET_SOURCE_LIST
   }
 }
 
@@ -232,6 +246,7 @@ export interface CreateOrUpdateStatus {
   hasNewData: boolean;
   hasNewSourceList?: boolean;
   status: string;
+  sourceListStatus?: string;
   user: User | null;
   newDataset?: object;
   branch?: string;

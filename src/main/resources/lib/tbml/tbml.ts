@@ -14,6 +14,7 @@ import { TbmlDataRaw,
   Note } from '../types/xmlParser'
 import { RepoQueryLib } from '../repo/query'
 import { TbmlMockLib } from './tbmlMock'
+// import { TbProcessorTypes } from '../ssb/dataset/tbprocessor'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 const http: HttpLibrary = __non_webpack_require__( '/lib/http-client')
@@ -32,11 +33,22 @@ const {
 } = __non_webpack_require__( '/lib/util')
 
 
+export enum TbProcessorTypes {
+  DATA_SET = 'DATA_SET',
+  SOURCE_LIST = 'SOURCE_LIST'
+}
+
+
 export function getTbmlData<T extends TbmlDataUniform | TbmlSourceListUniform>(
   url: string,
-  queryId?: string, processXml?: string): TbprocessorParsedResponse<TbmlDataUniform | TbmlSourceListUniform> {
+  queryId?: string,
+  processXml?: string,
+  type?: string): TbprocessorParsedResponse<TbmlDataUniform | TbmlSourceListUniform> {
   //
-  const response: HttpResponse = fetch(url, queryId, processXml)
+  const response: HttpResponse = fetch(url, queryId, processXml, type)
+  log.info('url: ' + url)
+  log.info('type: ' + type)
+  log.info(JSON.stringify(response, null, 2))
   return {
     body: response.body,
     status: response.status,
@@ -56,7 +68,11 @@ function processBody<T extends TbmlDataUniform | TbmlSourceListUniform>(
   }
 }
 
-export function fetch(url: string, queryId?: string, processXml?: string): HttpResponse {
+export function fetch(
+  url: string,
+  queryId?: string,
+  processXml?: string,
+  type?: string): HttpResponse {
   const mock: HttpResponse | null = getTbmlMock(url)
   const requestParams: HttpRequestParams = {
     url,
@@ -70,7 +86,7 @@ export function fetch(url: string, queryId?: string, processXml?: string): HttpR
     logUserDataQuery(queryId, {
       file: '/lib/tbml/tbml.ts',
       function: 'fetch',
-      message: Events.REQUEST_DATA,
+      message: type ? getRequestType(type) : Events.REQUEST_DATA,
       status: `${response.status}`,
       request: requestParams,
       response
@@ -92,6 +108,17 @@ export function fetch(url: string, queryId?: string, processXml?: string): HttpR
   }
 
   return response
+}
+
+function getRequestType(type: string): string {
+  switch (type) {
+  case TbProcessorTypes.DATA_SET:
+    return Events.REQUEST_DATASET
+  case TbProcessorTypes.SOURCE_LIST:
+    return Events.REQUEST_SOURCELIST
+  default:
+    return Events.REQUEST_DATA
+  }
 }
 
 function getTbmlSourceListUniform(tbmlSourceList: TbmlSourceListRaw ): TbmlSourceListUniform {
@@ -203,7 +230,11 @@ function xmlToJson<T>(xml: string, queryId?: string): T {
 }
 
 export interface TbmlLib {
-  getTbmlData: <T extends TbmlDataUniform | TbmlSourceListUniform>(url: string, queryId?: string, processXml?: string) => TbprocessorParsedResponse<T>;
+  getTbmlData: <T extends TbmlDataUniform | TbmlSourceListUniform>(
+      url: string,
+      queryId?: string,
+      processXml?: string,
+      type?: string) => TbprocessorParsedResponse<T>;
 }
 
 export interface TbprocessorParsedResponse<T extends TbmlDataUniform | TbmlSourceListUniform> {
@@ -215,3 +246,4 @@ export interface TbprocessorParsedResponse<T extends TbmlDataUniform | TbmlSourc
 export interface Authorization {
   Authorization: string;
 }
+

@@ -22,7 +22,14 @@ export function RefreshStatisticsStatus(props) {
               <Col>
                 {msg.status}
                 <br />
-                {msg.result}
+                { msg.result && msg.result.map((rst, t) => {
+                  return (
+                    <>
+                      { rst }
+                      <br />
+                    </>
+                  )
+                })}
               </Col>
             </Row>
           )
