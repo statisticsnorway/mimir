@@ -1,5 +1,5 @@
 <part>
-    <display-name>Category Link</display-name>
+    <display-name>Category Link Delemneside</display-name>
     <form>
         <item-set name="CategoryLinkItemSet">
             <label>Category link</label>
@@ -22,5 +22,35 @@
                 </input>
             </items>
         </item-set>
+
+        <option-set name="methodsDocumentation">
+            <label>Metode og Dokumentasjon</label>
+            <help-text>Velg lenke eller innhold XP</help-text>
+            <expanded>true</expanded>
+            <occurrences minimum="0" maximum="1"/>
+            <options minimum="0" maximum="1">
+                <option name="urlSource">
+                    <label>Url</label>
+                    <items>
+                        <input type="TextLine" name="url">
+                            <label>Url</label>
+                            <occurrences minimum="1" maximum="1"/>
+                        </input>
+                    </items>
+                </option>
+                <option name="relatedSource">
+                    <label>Innhold XP</label>
+                    <items>
+                        <input name="content" type="ContentSelector">
+                            <label>Lenkemål</label>
+                            <occurrences minimum="0" maximum="1"/>
+                            <config>
+                                <allowPath>${site}</allowPath>
+                            </config>
+                        </input>
+                    </items>
+                </option>
+            </options>
+        </option-set>
     </form>
 </part>
