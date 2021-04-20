@@ -305,11 +305,11 @@ function KpiCalculator(props) {
   return (<Container className='kpi-calculator'>
     <div className="calculator-form">
       <h2>{props.phrases.calculatePriceChange}</h2>
-      <p>{props.phrases.kpiNextPublishText}</p>
+      <p className="publish-text col-12 col-md-8">{props.phrases.kpiNextPublishText}</p>
       <Form onSubmit={onSubmit}>
         <Container>
-          <Row className="mb-4">
-            <Col>
+          <Row>
+            <Col className="input-amount">
               <h3>{props.phrases.enterAmount}</h3>
               <Input
                 className="start-value"
@@ -320,7 +320,7 @@ function KpiCalculator(props) {
               />
             </Col>
           </Row>
-          <Row className="mb-4">
+          <Row>
             <Col>
               <h3>{props.phrases.calculatePriceChangeFrom}</h3>
               <Container className="calculate-from">
@@ -362,7 +362,7 @@ function KpiCalculator(props) {
               </Container>
             </Col>
           </Row>
-          <Row>
+          <Row className="submit">
             <Col>
               <Button primary type="submit" disabled={loading}>{props.phrases.calculatePriceChange}</Button>
             </Col>

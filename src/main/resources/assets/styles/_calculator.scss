@@ -7,12 +7,26 @@
     .calculator-form {
       padding: 60px 100px;
 
+      .publish-text {
+        margin-bottom: 0;
+        padding: 0;
+      }
+
       .month, .start-value {
         width: 280px;
       }
 
+      .input-amount {
+        padding-top: 32px;
+        padding-bottom: 32px;
+      }
+
       .input-year {
         width: 140px;
+      }
+
+      .submit {
+        padding-top: 32px;
       }
     }
 
@@ -56,7 +70,7 @@
 
       .calculator-form {
         padding: 20px;
-
+        
         .select-month {
           padding: 0;
           margin-bottom: 10px;
