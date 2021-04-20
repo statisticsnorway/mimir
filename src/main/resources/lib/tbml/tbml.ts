@@ -14,7 +14,6 @@ import { TbmlDataRaw,
   Note } from '../types/xmlParser'
 import { RepoQueryLib } from '../repo/query'
 import { TbmlMockLib } from './tbmlMock'
-// import { TbProcessorTypes } from '../ssb/dataset/tbprocessor'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 const http: HttpLibrary = __non_webpack_require__( '/lib/http-client')
@@ -31,7 +30,6 @@ const {
     forceArray
   }
 } = __non_webpack_require__( '/lib/util')
-
 
 export enum TbProcessorTypes {
   DATA_SET = 'DATA_SET',
@@ -232,6 +230,7 @@ export interface TbmlLib {
       queryId?: string,
       processXml?: string,
       type?: string) => TbprocessorParsedResponse<T>;
+  TbProcessorTypes: typeof TbProcessorTypes;
 }
 
 export interface TbprocessorParsedResponse<T extends TbmlDataUniform | TbmlSourceListUniform> {

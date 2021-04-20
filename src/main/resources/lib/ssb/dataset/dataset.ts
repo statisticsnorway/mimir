@@ -136,7 +136,7 @@ export function refreshDataset(
         return {
           dataquery: content,
           status: hasNewData ? Events.GET_DATA_COMPLETE : Events.NO_NEW_DATA,
-          sourceListStatus: getSourceListStatua(newDataset),
+          sourceListStatus: getSourceListStatus(newDataset),
           hasNewData: hasNewData,
           dataset: oldDataset,
           newDataset,
@@ -168,7 +168,7 @@ export function refreshDataset(
   }
 }
 
-function getSourceListStatua(newData: TbprocessorParsedResponse<TbmlDataUniform>): string {
+function getSourceListStatus(newData: TbprocessorParsedResponse<TbmlDataUniform>): string {
   if (newData.parsedBody?.tbml.metadata.sourceListStatus === 200) {
     return Events.GET_SOURCE_LIST_COMPLETE
   } else {

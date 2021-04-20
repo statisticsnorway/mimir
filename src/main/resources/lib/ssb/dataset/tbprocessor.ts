@@ -4,14 +4,15 @@ import { Content } from 'enonic-types/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { RepoQueryLib } from '../../repo/query'
 import { TbmlDataUniform, TbmlSourceListUniform } from '../../types/xmlParser'
-import { TbmlLib, TbprocessorParsedResponse, TbProcessorTypes } from '../../tbml/tbml'
+import { TbmlLib, TbprocessorParsedResponse } from '../../tbml/tbml'
 import { mergeDeepLeft } from 'ramda'
 
 const {
   getDataset
 }: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
 const {
-  getTbmlData
+  getTbmlData,
+  TbProcessorTypes
 }: TbmlLib = __non_webpack_require__('/lib/tbml/tbml')
 const {
   logUserDataQuery,
