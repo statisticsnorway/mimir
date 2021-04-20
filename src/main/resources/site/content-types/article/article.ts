@@ -15,13 +15,6 @@ export interface Article {
 
   /**
    * 
-   * 						Vis på forside
-   * 					
-   */
-  showOnFrontPage: boolean;
-
-  /**
-   * 
    * 						Endringsdato
    * 					
    */
@@ -160,6 +153,13 @@ export interface Article {
    * 					
    */
   isbnNumber?: string;
+
+  /**
+   * 
+   * 						Vis på forside
+   * 					
+   */
+  showOnFrontPage: boolean;
 
   /**
    * Delemner
