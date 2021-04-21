@@ -10,6 +10,7 @@ import axios from 'axios'
 
 /* TODO:
 - Fikse sortering (?)
+- Sørge for at listen laster i edit mode
 - Hva og hvordan skal vi sortere/filtrere etter innholdstype??
 - Idé: Returere aggregert liste over funnede metadata-parametre fra service, så kan man velge en av dem og filtrere listen på denne??
 - ???
