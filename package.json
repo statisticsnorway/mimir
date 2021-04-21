@@ -15,7 +15,7 @@
     "install:prod": "npm install",
     "lint": "eslint --fix ./src --ext .es6 --ext .ts --ext .jsx",
     "lint-dry": "eslint ./src --ext .es6 --ext .ts --ext .jsx",
-    "gradlew-dev-mode": "./gradlew clientJsWebpack clientTsWebpack stylesWebpack serverWebpack -t"
+    "gradlew-dev-mode": "./gradlew clientJsWebpack stylesWebpack serverWebpack -t"
   },
   "repository": {
     "type": "git",
@@ -33,7 +33,7 @@
     "@babel/preset-env": "^7.13.15",
     "@babel/preset-react": "^7.12.13",
     "@babel/preset-stage-0": "^7.0.0",
-    "@babel/register": "^7.13.8",
+    "@babel/register": "^7.13.14",
     "@types/ramda": "github:types/npm-ramda#dist",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
@@ -71,7 +71,7 @@
     "jquery-ui-dist": "^1.12.1",
     "jsonstat-toolkit": "^1.2.5",
     "lodash": "^4.17.21",
-    "mini-css-extract-plugin": "^1.4.1",
+    "mini-css-extract-plugin": "^1.5.0",
     "moment": "^2.27.0",
     "node-sass": "^5.0.0",
     "npm-run-all": "^4.1.5",
@@ -91,7 +91,7 @@
     "react-helmet-async": "^1.0.9",
     "react-mathjax": "^1.0.1",
     "react-moment": "^1.1.1",
-    "react-number-format": "^4.5.3",
+    "react-number-format": "^4.5.5",
     "react-redux": "^7.2.3",
     "react-responsive": "^8.2.0",
     "react-router-dom": "^5.2.0",

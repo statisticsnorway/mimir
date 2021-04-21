@@ -33,14 +33,6 @@
 						checked
 					</default>
 				</input>
-				<input name="showOnFrontPage" type="CheckBox">
-					<label>
-						Vis på forside
-					</label>
-					<default>
-						checked
-					</default>
-				</input>
 			</items>
 		</field-set>
 		<field-set>
@@ -245,6 +237,11 @@
 						ISBN nummer
 					</label>
 					<occurrences minimum="0" maximum="1" />
+				</input>
+				<input name="showOnFrontPage" type="CheckBox">
+					<label>
+						Vis på forside
+					</label>
 				</input>
 			</items>
 		</field-set>
