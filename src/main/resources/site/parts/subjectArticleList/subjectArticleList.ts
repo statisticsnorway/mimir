@@ -8,7 +8,7 @@ const {
   localize
 }: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
 const {
-  getContent, getComponent, serviceUrl
+  getContent, serviceUrl
 }: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
