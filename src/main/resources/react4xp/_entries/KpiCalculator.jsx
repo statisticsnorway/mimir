@@ -35,6 +35,8 @@ function KpiCalculator(props) {
   const [loading, setLoading] = useState(false)
   const [endValue, setEndValue] = useState(null)
   const [change, setChange] = useState(null)
+  const [startPeriod, setStartPeriod] = useState(null)
+  const [endPeriod, setEndPeriod] = useState(null)
   const language = props.language ? props.language : 'nb'
 
   const validMaxYear = new Date().getFullYear()
@@ -67,8 +69,12 @@ function KpiCalculator(props) {
       .then((res) => {
         const changeVal = (res.data.change * 100).toFixed(1)
         const endVal = (res.data.endValue).toFixed(2)
+        const startPeriod = getPeriod(startYear.value, startMonth.value)
+        const endPeriod = getPeriod(endYear.value, endMonth.value)
         setChange(changeVal)
         setEndValue(endVal)
+        setStartPeriod(startPeriod)
+        setEndPeriod(endPeriod)
       })
       .catch((err) => {
         if (err && err.response && err.response.data && err.response.data.error) {
@@ -203,6 +209,15 @@ function KpiCalculator(props) {
     )
   }
 
+  function getPeriod(year, month) {
+    if (month === '90') {
+      return year
+    } else {
+      const monthLabel = props.months.find((m) => m.id === month)
+      return `${monthLabel.title} ${year}`
+    }
+  }
+
   function renderResult() {
     if (loading) {
       return (
@@ -225,6 +240,8 @@ function KpiCalculator(props) {
     if (endValue && change) {
       const decimalSeparator = (language === 'en') ? '.' : ','
       const valute = (language === 'en') ? 'NOK' : 'kr'
+      const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
+      const changeValue = change.charAt(0) === '-' ? change.replace('-', '') : change
       return (
         <Container className="calculator-result">
           <Row className="mb-5">
@@ -249,10 +266,10 @@ function KpiCalculator(props) {
           </Row>
           <Row className="mb-5">
             <Col className="price-increase col-12 col-md-4">
-              <span>{props.phrases.priceIncrease}</span>
+              <span>{priceChangeLabel}</span>
               <span className="float-right">
                 <NumberFormat
-                  value={ Number(change) }
+                  value={ Number(changeValue) }
                   displayType={'text'}
                   thousandSeparator={' '}
                   decimalSeparator={decimalSeparator}
@@ -263,7 +280,7 @@ function KpiCalculator(props) {
               <Divider dark/>
             </Col>
             <Col className="start-value col-12 col-md-4">
-              <span>{props.phrases.startValue} </span>
+              <span>{props.phrases.amount} {startPeriod}</span>
               <span className="float-right">
                 <NumberFormat
                   value={ Number(startValue.value) }
@@ -277,7 +294,7 @@ function KpiCalculator(props) {
               <Divider dark/>
             </Col>
             <Col className="amount col-12 col-md-4">
-              <span>{props.phrases.amount} </span>
+              <span>{props.phrases.amount} {endPeriod}</span>
               <span className="float-right">
                 <NumberFormat
                   value={ Number(endValue) }
