@@ -61,7 +61,11 @@ const statisticsSlice = createSlice({
         if (action.data.step === 1) {
           modal.updateMessages[action.data.tableIndex] = action.data
         } else {
-          modal.updateMessages[action.data.tableIndex].result = action.data.status
+          if (!modal.updateMessages[action.data.tableIndex].result) {
+            modal.updateMessages[action.data.tableIndex].result = [action.data.status]
+          } else {
+            modal.updateMessages[action.data.tableIndex].result.push(action.data.status)
+          }
         }
       }
     },

@@ -11,7 +11,8 @@ const {
   getDataset
 }: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
 const {
-  getTbmlData
+  getTbmlData,
+  TbProcessorTypes
 }: TbmlLib = __non_webpack_require__('/lib/tbml/tbml')
 const {
   logUserDataQuery,
@@ -42,11 +43,12 @@ function hasTBProcessorDatasource(content: Content<DataSource>): string | undefi
 function tryRequestTbmlData<T extends TbmlDataUniform | TbmlSourceListUniform>(
   url: string,
   contentId?: string,
-  processXml?: string ): TbprocessorParsedResponse<T> | null {
+  processXml?: string,
+  type?: string ): TbprocessorParsedResponse<T> | null {
   try {
-    return getTbmlData(url, contentId, processXml)
+    return getTbmlData(url, contentId, processXml, type)
   } catch (e) {
-    const message: string = `Failed to fetch data from tbprocessor: ${contentId} (${e})`
+    const message: string = `Failed to fetch ${type ? formatTbProcessorType(type) : 'data'} from tbprocessor: ${contentId} (${e})`
     if (contentId) {
       logUserDataQuery(contentId, {
         file: '/lib/ssb/dataset/tbprocessor.ts',
@@ -59,6 +61,17 @@ function tryRequestTbmlData<T extends TbmlDataUniform | TbmlSourceListUniform>(
     log.error(message)
   }
   return null
+}
+
+function formatTbProcessorType(type: string): string {
+  switch (type) {
+  case TbProcessorTypes.SOURCE_LIST:
+    return 'source list'
+  case TbProcessorTypes.DATA_SET:
+    return 'data set'
+  default:
+    return 'data'
+  }
 }
 
 function getDataAndMetaData(content: Content<DataSource>, processXml?: string ): TbprocessorParsedResponse<TbmlDataUniform> | null {
@@ -78,8 +91,8 @@ function getDataAndMetaData(content: Content<DataSource>, processXml?: string ):
     sourceListUrl = `${dataSource.tbprocessor.urlOrId as string}`.replace(dataPath, sourceListPath)
   }
 
-  const tbmlParsedResponse: TbprocessorParsedResponse<TbmlDataUniform> | null = tryRequestTbmlData<TbmlDataUniform>(tbmlDataUrl, content._id, processXml)
-
+  const tbmlParsedResponse: TbprocessorParsedResponse<TbmlDataUniform> | null =
+      tryRequestTbmlData<TbmlDataUniform>(tbmlDataUrl, content._id, processXml, TbProcessorTypes.DATA_SET)
   // If this is true, it's most likely an internal table (unpublised data only)
   // We pass this as a status 200, add an empty table to presentation,
   // and fetch source list, so it's possible to import unpublished data from dashboard
@@ -142,15 +155,23 @@ function getDataAndMetaData(content: Content<DataSource>, processXml?: string ):
 }
 
 function addSourceList(sourceListUrl: string, tbmlParsedResponse: TbprocessorParsedResponse<TbmlDataUniform>, contentId: string): TbmlDataUniform | null {
-  const sourceListParsedResponse: TbprocessorParsedResponse<TbmlSourceListUniform> | null = tryRequestTbmlData<TbmlSourceListUniform>(sourceListUrl, contentId)
+  const sourceListParsedResponse: TbprocessorParsedResponse<TbmlSourceListUniform> | null =
+      tryRequestTbmlData<TbmlSourceListUniform>(sourceListUrl, contentId, undefined, TbProcessorTypes.SOURCE_LIST)
 
   const sourceListObject: object | undefined = sourceListParsedResponse && sourceListParsedResponse.parsedBody ? {
     tbml: {
       metadata: {
-        sourceList: sourceListParsedResponse.parsedBody.sourceList.tbml.source
+        sourceList: sourceListParsedResponse.parsedBody.sourceList.tbml.source,
+        sourceListStatus: sourceListParsedResponse.status
       }
     }
-  } : undefined
+  } : {
+    tbml: {
+      metadata: {
+        sourceListStatus: sourceListParsedResponse?.status
+      }
+    }
+  }
 
   return tbmlParsedResponse && tbmlParsedResponse.parsedBody && sourceListObject ?
     mergeDeepLeft(tbmlParsedResponse.parsedBody, sourceListObject) : null
@@ -183,7 +204,7 @@ export function getTableIdFromTbprocessor(data: TbmlDataUniform): Array<string> 
 
 export interface TbprocessorLib {
   getTbprocessor: (content: Content<DataSource>, branch: string) => DatasetRepoNode<TbmlDataUniform> | null;
-  fetchTbprocessorData: (content: Content<DataSource>, processXml?: string) => FetchTbProcessorData | null;
+  fetchTbprocessorData: (content: Content<DataSource>, processXml?: string) => TbprocessorParsedResponse<TbmlDataUniform> | null;
   getTbprocessorKey: (content: Content<DataSource>) => string;
   getTableIdFromTbprocessor: (dataset: TbmlDataUniform) => Array<string>;
 }

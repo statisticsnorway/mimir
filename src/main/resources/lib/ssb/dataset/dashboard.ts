@@ -519,6 +519,7 @@ export function refreshDatasetHandler(
   relatedStatisticsId?: string,
 ): Array<RefreshDatasetResult> {
   // tell all dashboard instances that these are going to be loaded
+
   ids.forEach((id) => {
     socketEmitter.broadcast('dashboard-activity-refreshDataset', {
       id
@@ -552,6 +553,13 @@ export function refreshDatasetHandler(
         ownerCredentialsForTbml ? UNPUBLISHED_DATASET_BRANCH : DATASET_BRANCH,
         ownerCredentialsForTbml ? ownerCredentialsForTbml.processXml : undefined)
 
+      refreshDatasetResult.sourceListStatus && logUserDataQuery(dataSource._id, {
+        file: '/lib/ssb/dataset/dashboard.ts',
+        function: 'refreshDatasetHandler',
+        message: refreshDatasetResult.sourceListStatus,
+        branch: ownerCredentialsForTbml ? UNPUBLISHED_DATASET_BRANCH : DATASET_BRANCH
+      })
+
       logUserDataQuery(dataSource._id, {
         file: '/lib/ssb/dataset/dashboard.ts',
         function: 'refreshDatasetHandler',
@@ -564,10 +572,18 @@ export function refreshDatasetHandler(
         datasourceKey: dataSourceKey,
         status: i18n.localize({
           key: refreshDatasetResult.status
-        }) === 'NOT_TRANSLATED' ?
-          refreshDatasetResult.status : i18n.localize({
-            key: refreshDatasetResult.status
-          }),
+        }),
+        step: 2,
+        tableIndex: index,
+        relatedStatisticsId: relatedStatisticsId ? relatedStatisticsId : undefined
+      })
+
+      feedbackEventName && refreshDatasetResult.sourceListStatus && socketEmitter.broadcast(feedbackEventName, {
+        name: dataSource.displayName,
+        datasourceKey: dataSourceKey,
+        status: i18n.localize({
+          key: refreshDatasetResult.sourceListStatus
+        }),
         step: 2,
         tableIndex: index,
         relatedStatisticsId: relatedStatisticsId ? relatedStatisticsId : undefined

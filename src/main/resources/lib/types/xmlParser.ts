@@ -110,6 +110,7 @@ export interface MetadataUniform {
   tags: string;
   notes: NotesUniform;
   sourceList?: Array<Source>;
+  sourceListStatus?: number;
 }
 
 export interface NotesUniform {

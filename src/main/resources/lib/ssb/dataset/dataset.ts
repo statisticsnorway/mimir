@@ -4,7 +4,7 @@ import { DataSource as DataSourceType, DatasetRepoNode, RepoDatasetLib } from '.
 import { StatbankApiLib } from './statbankApi'
 import { JSONstat } from '../../types/jsonstat-toolkit'
 import { RepoQueryLib } from '../../repo/query'
-import { TbmlDataUniform } from '../../types/xmlParser'
+import { StatbankSavedRaw, TbmlDataUniform } from '../../types/xmlParser'
 import { TbprocessorLib } from './tbprocessor'
 import { KlassLib } from './klass'
 import { ContextLibrary, RunContext } from 'enonic-types/context'
@@ -85,16 +85,18 @@ export function extractKey(content: Content<DataSource>): string | null {
   }
 }
 
-function fetchData(content: Content<DataSource>, processXml?: string): JSONstat | TbmlDataUniform | TbprocessorParsedResponse<TbmlDataUniform> | object | null {
+function fetchData(
+  content: Content<DataSource>,
+  processXml?: string): JSONstat | TbprocessorParsedResponse<TbmlDataUniform> | StatbankSavedRaw | object | null {
   switch (content.data.dataSource?._selected) {
   case DataSourceType.STATBANK_API:
-    return fetchStatbankApiData(content)
+    return fetchStatbankApiData(content) // JSONstat | null;
   case DataSourceType.TBPROCESSOR:
-    return fetchTbprocessorData(content, processXml)
+    return fetchTbprocessorData(content, processXml) // TbprocessorParsedResponse<TbmlDataUniform> | null;
   case DataSourceType.STATBANK_SAVED:
-    return fetchStatbankSavedData(content)
+    return fetchStatbankSavedData(content) // StatbankSavedRaw | null;
   case DataSourceType.KLASS:
-    return fetchKlassData(content)
+    return fetchKlassData(content) // object | null
   default:
     return null
   }
@@ -119,6 +121,7 @@ export function refreshDataset(
         return {
           dataquery: content,
           status: newDataset.body ? newDataset.body : '',
+          sourceListStatus: Events.FAILED_TO_GET_SOURCE_LIST,
           dataset: null,
           hasNewData: false,
           newDataset,
@@ -133,6 +136,7 @@ export function refreshDataset(
         return {
           dataquery: content,
           status: hasNewData ? Events.GET_DATA_COMPLETE : Events.NO_NEW_DATA,
+          sourceListStatus: getSourceListStatus(newDataset),
           hasNewData: hasNewData,
           dataset: oldDataset,
           newDataset,
@@ -161,6 +165,14 @@ export function refreshDataset(
       hasNewData: false,
       user
     }
+  }
+}
+
+function getSourceListStatus(newData: TbprocessorParsedResponse<TbmlDataUniform>): string {
+  if (newData.parsedBody?.tbml.metadata.sourceListStatus === 200) {
+    return Events.GET_SOURCE_LIST_COMPLETE
+  } else {
+    return Events.FAILED_TO_GET_SOURCE_LIST
   }
 }
 
@@ -228,6 +240,7 @@ export interface CreateOrUpdateStatus {
   dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null;
   hasNewData: boolean;
   status: string;
+  sourceListStatus?: string;
   user: User | null;
   newDataset?: object;
   branch?: string;
