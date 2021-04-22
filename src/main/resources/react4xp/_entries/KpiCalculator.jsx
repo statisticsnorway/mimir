@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Container, Row, Col } from 'react-bootstrap'
-import { Input, Button, Dropdown, Divider, FormError } from '@statisticsnorway/ssb-component-library'
+import { Input, Button, Dropdown, Divider, FormError, Link } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
 import NumberFormat from 'react-number-format'
 
@@ -319,9 +319,24 @@ function KpiCalculator(props) {
     }
   }
 
+  function renderLinkArticle() {
+    if (props.calculatorArticleUrl) {
+      return (
+        <Col>
+          <Link className="float-right" href={props.calculatorArticleUrl}>Les om kalkulatoren</Link>
+        </Col>
+      )
+    }
+  }
+
   return (<Container className='kpi-calculator'>
     <div className="calculator-form">
-      <h2>{props.phrases.calculatePriceChange}</h2>
+      <Row>
+        <Col>
+          <h2>{props.phrases.calculatePriceChange}</h2>
+        </Col>
+        {renderLinkArticle()}
+      </Row>
       <p>{props.phrases.kpiNextPublishText}</p>
       <Form onSubmit={onSubmit}>
         <Container>
@@ -405,7 +420,8 @@ KpiCalculator.propTypes = {
       title: PropTypes.string
     })
   ),
-  phrases: PropTypes.arrayOf(PropTypes.string)
+  phrases: PropTypes.arrayOf(PropTypes.string),
+  calculatorArticleUrl: PropTypes.string
 }
 
 export default (props) => <KpiCalculator {...props} />

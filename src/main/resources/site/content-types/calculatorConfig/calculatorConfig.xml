@@ -24,6 +24,17 @@
                         <allowContentType>genericDataImport</allowContentType>
                     </config>
                 </input>
+                <input name="kpiCalculatorArticle" type="ContentSelector">
+                    <label>
+                        Artikkel Les mer Kpi kalkulator
+                    </label>
+                    <occurrences minimum="0" maximum="1" />
+                    <config>
+                        <allowContentType>
+                            article
+                        </allowContentType>
+                    </config>
+                </input>
             </items>
         </field-set>
     </form>
