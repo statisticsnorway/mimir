@@ -12,6 +12,9 @@ const React4xp = require('/lib/enonic/react4xp')
 const {
   getLanguage
 } = __non_webpack_require__( '/lib/language')
+const {
+  getCalculatorConfig, getKpiCalculatorDataMonth
+} = __non_webpack_require__('/lib/ssb/dataset/calculator')
 
 const view = resolve('./kpiCalculator.html')
 
@@ -35,6 +38,10 @@ function renderPart(req) {
   const page = getContent()
   const language = getLanguage(page)
   const phrases = language.phrases
+  const config = getCalculatorConfig()
+  const kpiDataMonth = getKpiCalculatorDataMonth(config)
+  const lastUpdated = getLastPeriod(kpiDataMonth)
+  const nextUpdated = getNextPeriod(lastUpdated.month, lastUpdated.year)
 
   const kpiCalculator = new React4xp('KpiCalculator')
     .setProps({
@@ -43,7 +50,9 @@ function renderPart(req) {
       }),
       language: language.code,
       months: getMonths(phrases),
-      phrases: phrases
+      phrases: phrases,
+      lastUpdated,
+      nextUpdated
     })
     .setId('kpiCalculatorId')
     .uniqueId()
@@ -56,6 +65,47 @@ function renderPart(req) {
       body
     }),
     pageContributions: kpiCalculator.renderPageContributions()
+  }
+}
+
+function getLastPeriod(kpiDataMonth) {
+  // eslint-disable-next-line new-cap
+  const dataYear = kpiDataMonth ? kpiDataMonth.Dimension('Tid').id : null
+  // eslint-disable-next-line new-cap
+  const dataMonth = kpiDataMonth ? kpiDataMonth.Dimension('Maaned').id : null
+  const lastYear = dataYear[dataYear.length - 1]
+  const dataLastYearMnd = []
+
+  dataMonth.forEach(function(month) {
+    // eslint-disable-next-line new-cap
+    const verdi = kpiDataMonth.Data( {
+      'Tid': lastYear,
+      'Maaned': month
+    } ).value
+    if (verdi != null) {
+      dataLastYearMnd.push(month)
+    }
+  })
+  const lastMonth = dataLastYearMnd[dataLastYearMnd.length - 1]
+
+  return {
+    month: lastMonth,
+    year: lastYear
+  }
+}
+
+function getNextPeriod(month, year) {
+  let nextPeriodMonth = parseInt(month) + 1
+  let nextPeriodYear = parseInt(year)
+
+  if (month == 12) {
+    nextPeriodMonth = 1
+    nextPeriodYear = nextPeriodYear + 1
+  }
+
+  return {
+    month: nextPeriodMonth,
+    year: nextPeriodYear
   }
 }
 
