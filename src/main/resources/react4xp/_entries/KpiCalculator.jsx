@@ -39,6 +39,7 @@ function KpiCalculator(props) {
   const [change, setChange] = useState(null)
   const [startPeriod, setStartPeriod] = useState(null)
   const [endPeriod, setEndPeriod] = useState(null)
+  const [startValueResult, setStartValueResult] = useState(null)
   const language = props.language ? props.language : 'nb'
 
   const validMaxYear = new Date().getFullYear()
@@ -77,6 +78,7 @@ function KpiCalculator(props) {
         setEndValue(endVal)
         setStartPeriod(startPeriod)
         setEndPeriod(endPeriod)
+        setStartValueResult(startValue.value)
       })
       .catch((err) => {
         if (err && err.response && err.response.data && err.response.data.error) {
@@ -285,7 +287,7 @@ function KpiCalculator(props) {
               <span>{props.phrases.amount} {startPeriod}</span>
               <span className="float-right">
                 <NumberFormat
-                  value={ Number(startValue.value) }
+                  value={ Number(startValueResult) }
                   displayType={'text'}
                   thousandSeparator={' '}
                   decimalSeparator={decimalSeparator}
