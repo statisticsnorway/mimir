@@ -11,7 +11,7 @@ export interface CalculatorConfig {
 
   /**
    * 
-   *                         Artikkel Les mer Kpi kalkulator
+   *                         Artikkel Kpi kalkulator
    *                     
    */
   kpiCalculatorArticle?: string;

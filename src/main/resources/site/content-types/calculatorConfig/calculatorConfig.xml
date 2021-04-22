@@ -26,7 +26,7 @@
                 </input>
                 <input name="kpiCalculatorArticle" type="ContentSelector">
                     <label>
-                        Artikkel Les mer Kpi kalkulator
+                        Artikkel Kpi kalkulator
                     </label>
                     <occurrences minimum="0" maximum="1" />
                     <config>
