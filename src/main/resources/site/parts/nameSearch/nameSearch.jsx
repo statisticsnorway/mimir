@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Button, Link } from '@statisticsnorway/ssb-component-library'
-import PropTypes, { func } from 'prop-types'
+import { Button } from '@statisticsnorway/ssb-component-library'
+import PropTypes from 'prop-types'
 import { Col, Container, Row, Form } from 'react-bootstrap'
 import axios from 'axios'
 
@@ -12,7 +12,17 @@ function NameSearch(props) {
   function renderResult() {
     return (<div>
       <h3>Noe react kode</h3>
-      <pre>{result}</pre>
+      <div>{
+        result && result.response.docs.map( (doc, i) => {
+          return (
+            <Row key={i}>
+              <h3>{doc.name}</h3>
+              <span>Antall: {doc.count}</span>
+              <span>type: {doc.type}</span>
+            </Row>
+          )
+        })
+      }</div>
     </div>
     )
   }
