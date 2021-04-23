@@ -6,8 +6,7 @@ import axios from 'axios'
 import NumberFormat from 'react-number-format'
 
 function KpiCalculator(props) {
-  // TODO maxYear hente fra datasett
-  const maxYear = '2021'
+  const maxYear = props.lastUpdated.year
   const [startValue, setStartValue] = useState({
     error: false,
     errorMsg: props.phrases.kpiValidateAmountNumber,
@@ -30,7 +29,7 @@ function KpiCalculator(props) {
   })
   const [endYear, setEndYear] = useState({
     error: false,
-    errorMsg: props.phrases.kpiValidateYear,
+    errorMsg: `${props.phrases.kpiValidateYear} ${maxYear}`,
     value: ''
   })
   const [errorMessage, setErrorMessage] = useState(null)
