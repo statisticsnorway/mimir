@@ -16,16 +16,16 @@ const {
   datasetOrUndefined
 }: SSBCacheLibrary = __non_webpack_require__('/lib/ssb/cache')
 
-function getKpiCalculatorData(): KpiData {
-  const config: Content<CalculatorConfig> | undefined = getCalculatorConfig()
-
-  return {
-    month: config ? getKpiCalculatorDataMonth(config) : null,
-    year: config ? getKpiCalculatorDataYear(config) : null
-  }
+export function getCalculatorConfig(): Content<CalculatorConfig> | undefined {
+  return query({
+    contentTypes: [`${app.name}:calculatorConfig`],
+    count: 1,
+    start: 0,
+    query: ''
+  }).hits[0] as Content<CalculatorConfig> | undefined
 }
 
-function getKpiCalculatorDataYear(config: Content<CalculatorConfig>): Dataset | null {
+export function getKpiDatasetYear(config: Content<CalculatorConfig>): Dataset | null {
   const kpiSourceYear: Content<GenericDataImport> | null = config?.data.kpiSourceYear ? getContent({
     key: config.data.kpiSourceYear
   }) : null
@@ -36,7 +36,7 @@ function getKpiCalculatorDataYear(config: Content<CalculatorConfig>): Dataset | 
   return kpiDatasetYearRepo ? JSONstat(kpiDatasetYearRepo.data).Dataset('dataset') : null
 }
 
-export function getKpiCalculatorDataMonth(config: Content<CalculatorConfig>): Dataset | null {
+export function getKpiDatasetMonth(config: Content<CalculatorConfig>): Dataset | null {
   const kpiSourceMonth: Content<GenericDataImport> | null = config?.data.kpiSourceMonth ? getContent({
     key: config.data.kpiSourceMonth
   }) : null
@@ -47,16 +47,8 @@ export function getKpiCalculatorDataMonth(config: Content<CalculatorConfig>): Da
   return kpiDatasetMonthRepo ? JSONstat(kpiDatasetMonthRepo.data).Dataset('dataset') : null
 }
 
-export function getCalculatorConfig(): Content<CalculatorConfig> | undefined {
-  return query({
-    contentTypes: [`${app.name}:calculatorConfig`],
-    count: 1,
-    start: 0,
-    query: ''
-  }).hits[0] as Content<CalculatorConfig> | undefined
-}
-
-interface KpiData {
-    month: Dataset | null;
-    year: Dataset | null;
+export interface CalculatorLib {
+  getCalculatorConfig: () => Content<CalculatorConfig> | undefined;
+  getKpiDatasetYear: (config: Content<CalculatorConfig>) => Dataset | null;
+  getKpiDatasetMonth: (config: Content<CalculatorConfig>) => Dataset | null;
 }

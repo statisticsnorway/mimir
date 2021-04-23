@@ -13,7 +13,7 @@ const {
   getLanguage
 } = __non_webpack_require__( '/lib/language')
 const {
-  getCalculatorConfig, getKpiCalculatorDataMonth
+  getCalculatorConfig, getKpiDatasetMonth
 } = __non_webpack_require__('/lib/ssb/dataset/calculator')
 
 const view = resolve('./kpiCalculator.html')
@@ -39,7 +39,7 @@ function renderPart(req) {
   const language = getLanguage(page)
   const phrases = language.phrases
   const config = getCalculatorConfig()
-  const kpiDataMonth = getKpiCalculatorDataMonth(config)
+  const kpiDataMonth = getKpiDatasetMonth(config)
   const lastUpdated = getLastPeriod(kpiDataMonth)
   const nextUpdated = getNextPeriod(lastUpdated.month, lastUpdated.year)
 

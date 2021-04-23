@@ -44,6 +44,9 @@ function KpiCalculator(props) {
   const validMaxYear = new Date().getFullYear()
   const validMinYear = 1865
   const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
+  const nextReleaseMonth = props.nextUpdated.month == 12 ? 1 : props.nextUpdated.month + 1
+  const latestAvailableFigures = `Siste tilgjengelige tall er for ${getMonthLabel(props.lastUpdated.month)} ${props.lastUpdated.year}. `
+  const nextAvailableFigures = `Tall for ${getMonthLabel(props.nextUpdated.month)} kommer ca 10. ${getMonthLabel(nextReleaseMonth)}`
 
   function onSubmit(e) {
     e.preventDefault()
@@ -212,12 +215,12 @@ function KpiCalculator(props) {
   }
 
   function getPeriod(year, month) {
-    if (month === '90') {
-      return year
-    } else {
-      const monthLabel = props.months.find((m) => m.id === month)
-      return `${monthLabel.title} ${year}`
-    }
+    return month === '90' ? year : `${getMonthLabel(month)} ${year}`
+  }
+
+  function getMonthLabel(month) {
+    const monthLabel = props.months.find((m) => parseInt(m.id) === parseInt(month))
+    return monthLabel ? monthLabel.title.toLowerCase() : ''
   }
 
   function renderResult() {
@@ -324,7 +327,7 @@ function KpiCalculator(props) {
   return (<Container className='kpi-calculator'>
     <div className="calculator-form">
       <h2>{props.phrases.calculatePriceChange}</h2>
-      <p className="publish-text col-12 col-md-8">{props.phrases.kpiNextPublishText}</p>
+      <p className="publish-text col-12 col-md-8">{latestAvailableFigures} {nextAvailableFigures}</p>
       <Form onSubmit={onSubmit}>
         <Container>
           <Row>
@@ -407,7 +410,15 @@ KpiCalculator.propTypes = {
       title: PropTypes.string
     })
   ),
-  phrases: PropTypes.arrayOf(PropTypes.string)
+  phrases: PropTypes.arrayOf(PropTypes.string),
+  lastUpdated: PropTypes.shape({
+    month: PropTypes.string,
+    year: PropTypes.string
+  }),
+  nextUpdated: PropTypes.shape({
+    month: PropTypes.string,
+    year: PropTypes.string
+  })
 }
 
 export default (props) => <KpiCalculator {...props} />
