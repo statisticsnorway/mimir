@@ -15,6 +15,7 @@ const {
 const {
   getCalculatorConfig, getKpiDatasetMonth
 } = __non_webpack_require__('/lib/ssb/dataset/calculator')
+const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 
 const view = resolve('./kpiCalculator.html')
 
@@ -40,8 +41,19 @@ function renderPart(req) {
   const phrases = language.phrases
   const config = getCalculatorConfig()
   const kpiDataMonth = getKpiDatasetMonth(config)
-  const lastUpdated = getLastPeriod(kpiDataMonth)
-  const nextUpdated = getNextPeriod(lastUpdated.month, lastUpdated.year)
+  const months = allMonths(phrases)
+  const lastUpdated = lastPeriod(kpiDataMonth)
+  const nextUpdate = nextPeriod(lastUpdated.month, lastUpdated.year)
+  const nextReleaseMonth = nextUpdate.month == 12 ? 1 : nextUpdate.month + 1
+  const nextPublishText = i18nLib.localize({
+    key: 'kpiNextPublishText',
+    values: [
+      monthLabel(months, lastUpdated.month),
+      lastUpdated.year,
+      monthLabel(months, nextUpdate.month),
+      monthLabel(months, nextReleaseMonth)
+    ]
+  })
 
   const kpiCalculator = new React4xp('KpiCalculator')
     .setProps({
@@ -49,10 +61,10 @@ function renderPart(req) {
         service: 'kpi'
       }),
       language: language.code,
-      months: getMonths(phrases),
+      months: months,
       phrases: phrases,
-      lastUpdated,
-      nextUpdated
+      nextPublishText: nextPublishText,
+      lastUpdated: lastUpdated
     })
     .setId('kpiCalculatorId')
     .uniqueId()
@@ -68,7 +80,7 @@ function renderPart(req) {
   }
 }
 
-function getLastPeriod(kpiDataMonth) {
+const lastPeriod = (kpiDataMonth) => {
   // eslint-disable-next-line new-cap
   const dataYear = kpiDataMonth ? kpiDataMonth.Dimension('Tid').id : null
   // eslint-disable-next-line new-cap
@@ -94,7 +106,7 @@ function getLastPeriod(kpiDataMonth) {
   }
 }
 
-function getNextPeriod(month, year) {
+const nextPeriod = (month, year) => {
   let nextPeriodMonth = parseInt(month) + 1
   let nextPeriodYear = parseInt(year)
 
@@ -109,7 +121,7 @@ function getNextPeriod(month, year) {
   }
 }
 
-const getMonths = (phrases) => {
+const allMonths = (phrases) => {
   return [
     {
       id: '90',
@@ -164,4 +176,9 @@ const getMonths = (phrases) => {
       title: phrases.december
     }
   ]
+}
+
+const monthLabel = (months, month) => {
+  const monthLabel = months.find((m) => parseInt(m.id) === parseInt(month))
+  return monthLabel ? monthLabel.title.toLowerCase() : ''
 }

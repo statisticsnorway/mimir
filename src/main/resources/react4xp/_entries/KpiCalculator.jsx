@@ -44,9 +44,6 @@ function KpiCalculator(props) {
   const validMaxYear = new Date().getFullYear()
   const validMinYear = 1865
   const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
-  const nextReleaseMonth = props.nextUpdated.month == 12 ? 1 : props.nextUpdated.month + 1
-  const latestAvailableFigures = `Siste tilgjengelige tall er for ${getMonthLabel(props.lastUpdated.month)} ${props.lastUpdated.year}. `
-  const nextAvailableFigures = `Tall for ${getMonthLabel(props.nextUpdated.month)} kommer ca 10. ${getMonthLabel(nextReleaseMonth)}`
 
   function onSubmit(e) {
     e.preventDefault()
@@ -327,7 +324,7 @@ function KpiCalculator(props) {
   return (<Container className='kpi-calculator'>
     <div className="calculator-form">
       <h2>{props.phrases.calculatePriceChange}</h2>
-      <p className="publish-text col-12 col-md-8">{latestAvailableFigures} {nextAvailableFigures}</p>
+      <p className="publish-text col-12 col-md-8">{props.nextPublishText}</p>
       <Form onSubmit={onSubmit}>
         <Container>
           <Row>
@@ -411,11 +408,8 @@ KpiCalculator.propTypes = {
     })
   ),
   phrases: PropTypes.arrayOf(PropTypes.string),
+  nextPublishText: PropTypes.string,
   lastUpdated: PropTypes.shape({
-    month: PropTypes.string,
-    year: PropTypes.string
-  }),
-  nextUpdated: PropTypes.shape({
     month: PropTypes.string,
     year: PropTypes.string
   })
