@@ -4,6 +4,18 @@ import PropTypes from 'prop-types'
 import { Col, Container, Row, Form } from 'react-bootstrap'
 import axios from 'axios'
 
+/* TODO
+- Validere inputs på frontend
+- Sanitize inputs på backend
+- Oversette navnetyper (firstandonlygiven -> første og eneste fornavn, etc)
+- Styling og presentasjon
+- Tekst for "Det er 0-3 personer som heter... "
+- Hente korrekte fraser for ulike situasjoner
+- Backend som søker på både kombinasjonen av alle navn som er skrevet inn "Ole Henrik Vangen", og alle enkeltnavnene separat. "Ole"+"Henrik"+"Vangen"
+- + vurdere om vi skal gjøre som før at alle kombinasjoner av alle navn skal søkes.... Antagelig ikke.
+- Skjule mindre interessante resultater - må sikkert diskuteres noen runder med Siv og Ina
+- ?? Vise bilde med historisk utvikling ??
+*/
 
 function NameSearch(props) {
   const [name, setName] = useState('')
@@ -16,15 +28,25 @@ function NameSearch(props) {
         result && result.response.docs.map( (doc, i) => {
           return (
             <Row key={i}>
-              <h3>{doc.name}</h3>
-              <span>Antall: {doc.count}</span>
-              <span>type: {doc.type}</span>
+              <span>Det er {doc.count} som har {doc.name} som sitt {translateName(doc.type)}.</span>
             </Row>
           )
         })
       }</div>
     </div>
     )
+  }
+
+  function translateName(nameCode) {
+    const type = {
+      firstgivenandfamily: 'eneste fornavn og etternavn',
+      middleandfamily: 'mellomnavn/etternavn',
+      family: 'etternavn',
+      onlygiven: 'eneste fornavn',
+      onlygivenandfamily: 'eneste fornavn og etternavn',
+      firstgiven: 'første fornavn'
+    }
+    return type[nameCode]
   }
 
   function handleSubmit(form) {
@@ -42,7 +64,6 @@ function NameSearch(props) {
     }
     ).catch((e) =>
       console.log(e)
-      // setResult({message: e})
     )
   }
 
