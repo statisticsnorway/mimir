@@ -10,19 +10,25 @@ function NameSearch(props) {
   const [result, setResult] = useState(null)
 
   function renderResult() {
-    return (<div>
-      <h3>Noe react kode</h3>
-      <div>{
-        result && result.response.docs.map( (doc, i) => {
-          return (
-            <Row key={i}>
-              <h3>{doc.name}</h3>
-              <span>Antall: {doc.count}</span>
-              <span>type: {doc.type}</span>
-            </Row>
-          )
-        })
-      }</div>
+    return (result && <div>
+      <Container className="nameSearch-result">
+        <Row>
+          <h3>Resultat</h3>
+        </Row>
+        <Row>
+          {
+            result.response.docs.map( (doc, i) => {
+              return (
+                <Row key={i}>
+                  <h3>{doc.name}</h3>
+                  <span>Antall: {doc.count}</span>
+                  <span>type: {doc.type}</span>
+                </Row>
+              )
+            })
+          }
+        </Row>
+      </Container>
     </div>
     )
   }
