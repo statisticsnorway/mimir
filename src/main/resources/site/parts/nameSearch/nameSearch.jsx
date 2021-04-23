@@ -1,52 +1,59 @@
 import React, { useState } from 'react'
 import { Button, Link } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
-import { ArrowRight } from 'react-feather'
-import Truncate from 'react-truncate'
-import { Col, Container, Row } from 'react-bootstrap'
+import PropTypes, { func } from 'prop-types'
+import { Col, Container, Row, Form } from 'react-bootstrap'
 import axios from 'axios'
 
 
 function NameSearch(props) {
   const [name, setName] = useState('')
-  const [result, setResult] = useState([])
-
+  const [result, setResult] = useState(null)
 
   function renderResult() {
-    return (<>
-      <div>Noe react kode</div>
+    return (<div>
+      <h3>Noe react kode</h3>
       <pre>{result}</pre>
-    </>
+    </div>
     )
   }
 
-  function submitForm(form) {
-    console.log(JSON.stringify(form, null, 2))
+  function handleSubmit(form) {
+    form.preventDefault()
+    console.log(form)
+
     axios.get(
       props.urlToService, {
         params: {
-          name: form.navn
+          name: name
         }
       }
     ).then((res) =>{
       setResult(res.data)
     }
+    ).catch((e) =>
+      console.log(e)
+      // setResult({message: e})
     )
   }
+
+  function handleChange(event) {
+    setName(event.target.value)
+  }
+
   return (
     <section className="article-list container-fluid">
       <h3>Navnesøk</h3>
-      <form onSubmit={submitForm}>
+      <Form onSubmit={handleSubmit}>
         <Container>
           <Row>
             <Col>
-              <input name="navn"></input>
+              <input name="navn" value={name} onChange={handleChange}></input>
             </Col>
             <Button type="submit">Søk</Button>
           </Row>
         </Container>
-      </form>
-      {renderResult}
+      </Form>
+      {renderResult()}
     </section>
   )
 }
