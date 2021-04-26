@@ -1,6 +1,7 @@
 const {
   getContent,
-  serviceUrl
+  serviceUrl,
+  pageUrl
 } = __non_webpack_require__( '/lib/xp/portal')
 const {
   render
@@ -16,7 +17,6 @@ const {
   getCalculatorConfig, getKpiDatasetMonth
 } = __non_webpack_require__('/lib/ssb/dataset/calculator')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
-
 const view = resolve('./kpiCalculator.html')
 
 exports.get = function(req) {
@@ -54,6 +54,9 @@ function renderPart(req) {
       monthLabel(months, nextReleaseMonth)
     ]
   })
+  const calculatorArticleUrl = config && config.data.kpiCalculatorArticle ? pageUrl({
+    id: config.data.kpiCalculatorArticle
+  }) : null
 
   const kpiCalculator = new React4xp('KpiCalculator')
     .setProps({
@@ -63,6 +66,7 @@ function renderPart(req) {
       language: language.code,
       months: months,
       phrases: phrases,
+      calculatorArticleUrl,
       nextPublishText: nextPublishText,
       lastUpdated: lastUpdated
     })

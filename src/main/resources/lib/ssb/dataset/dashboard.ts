@@ -273,7 +273,7 @@ function getFactPageDataSources(factPageId: string): Array<DashboardDataSource> 
   if (factPage) {
     const hits: Array<Content<DataSource>> = query({
       query: `_path LIKE "/content${factPage._path}/*" AND data.dataSource._selected LIKE "*"`,
-      count: 100
+      count: 1000
     }).hits as unknown as Array<Content<DataSource>>
     return prepDataSources(hits)
   }

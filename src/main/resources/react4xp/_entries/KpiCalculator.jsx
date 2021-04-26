@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Container, Row, Col } from 'react-bootstrap'
-import { Input, Button, Dropdown, Divider, FormError } from '@statisticsnorway/ssb-component-library'
+import { Input, Button, Dropdown, Divider, FormError, Link } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
 import NumberFormat from 'react-number-format'
 
@@ -38,6 +38,7 @@ function KpiCalculator(props) {
   const [change, setChange] = useState(null)
   const [startPeriod, setStartPeriod] = useState(null)
   const [endPeriod, setEndPeriod] = useState(null)
+  const [startValueResult, setStartValueResult] = useState(null)
   const language = props.language ? props.language : 'nb'
 
   const validMaxYear = new Date().getFullYear()
@@ -76,6 +77,7 @@ function KpiCalculator(props) {
         setEndValue(endVal)
         setStartPeriod(startPeriod)
         setEndPeriod(endPeriod)
+        setStartValueResult(startValue.value)
       })
       .catch((err) => {
         if (err && err.response && err.response.data && err.response.data.error) {
@@ -284,7 +286,7 @@ function KpiCalculator(props) {
               <span>{props.phrases.amount} {startPeriod}</span>
               <span className="float-right">
                 <NumberFormat
-                  value={ Number(startValue.value) }
+                  value={ Number(startValueResult) }
                   displayType={'text'}
                   thousandSeparator={' '}
                   decimalSeparator={decimalSeparator}
@@ -320,9 +322,24 @@ function KpiCalculator(props) {
     }
   }
 
+  function renderLinkArticle() {
+    if (props.calculatorArticleUrl) {
+      return (
+        <Col>
+          <Link className="float-right" href={props.calculatorArticleUrl}>Les om kalkulatoren</Link>
+        </Col>
+      )
+    }
+  }
+
   return (<Container className='kpi-calculator'>
     <div className="calculator-form">
-      <h2>{props.phrases.calculatePriceChange}</h2>
+      <Row>
+        <Col>
+          <h2>{props.phrases.calculatePriceChange}</h2>
+        </Col>
+        {renderLinkArticle()}
+      </Row>
       <p className="publish-text col-12 col-md-8">{props.nextPublishText}</p>
       <Form onSubmit={onSubmit}>
         <Container>
@@ -407,6 +424,7 @@ KpiCalculator.propTypes = {
     })
   ),
   phrases: PropTypes.arrayOf(PropTypes.string),
+  calculatorArticleUrl: PropTypes.string,
   nextPublishText: PropTypes.string,
   lastUpdated: PropTypes.shape({
     month: PropTypes.string,
