@@ -23,12 +23,12 @@ exports.get = get
 function parseRules(varnish: Content<RewriteVarnish>): string {
   if (varnish && varnish.data && varnish.data.requests) {
     const requests: RewriteVarnish['requests'] = Array.isArray(varnish.data.requests) ? varnish.data.requests : [varnish.data.requests]
-    return requests.reduce((requestList: string, request) => {
+    return requests.reduce((list: string, request) => {
       if (request.enableRule && request.requestUrl) {
         const requestUrl: string = request.requestUrl.startsWith('/') ? request.requestUrl.replace('/', '') : request.requestUrl
-        requestList = requestList + requestUrl + '\t 1' + '\n'
+        list = list + requestUrl + '\t 1' + '\n'
       }
-      return requestList
+      return list
     }, '')
   }
   return ''
