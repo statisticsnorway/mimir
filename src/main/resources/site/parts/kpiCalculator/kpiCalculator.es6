@@ -80,7 +80,9 @@ function renderPart(req) {
     body: kpiCalculator.renderBody({
       body
     }),
-    pageContributions: kpiCalculator.renderPageContributions()
+    pageContributions: kpiCalculator.renderPageContributions({
+      clientRender: req.mode !== 'edit'
+    })
   }
 }
 
