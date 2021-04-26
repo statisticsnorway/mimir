@@ -1,6 +1,7 @@
 const {
   getContent,
-  serviceUrl
+  serviceUrl,
+  pageUrl
 } = __non_webpack_require__( '/lib/xp/portal')
 const {
   render
@@ -12,6 +13,9 @@ const React4xp = require('/lib/enonic/react4xp')
 const {
   getLanguage
 } = __non_webpack_require__( '/lib/language')
+const {
+  query
+} = __non_webpack_require__('/lib/xp/content')
 
 const view = resolve('./kpiCalculator.html')
 
@@ -35,6 +39,15 @@ function renderPart(req) {
   const page = getContent()
   const language = getLanguage(page)
   const phrases = language.phrases
+  const config = query({
+    contentTypes: [`${app.name}:calculatorConfig`],
+    count: 1,
+    start: 0,
+    query: ''
+  }).hits[0]
+  const calculatorArticleUrl = config && config.data.kpiCalculatorArticle ? pageUrl({
+    id: config.data.kpiCalculatorArticle
+  }): null
 
   const kpiCalculator = new React4xp('KpiCalculator')
     .setProps({
@@ -43,7 +56,8 @@ function renderPart(req) {
       }),
       language: language.code,
       months: getMonths(phrases),
-      phrases: phrases
+      phrases: phrases,
+      calculatorArticleUrl
     })
     .setId('kpiCalculatorId')
     .uniqueId()
