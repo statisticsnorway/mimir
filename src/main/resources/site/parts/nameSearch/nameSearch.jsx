@@ -102,7 +102,7 @@ function NameSearch(props) {
   function handleChange(event) {
     setName({
       ...name,
-      value: event.value
+      value: event
     })
   }
 
