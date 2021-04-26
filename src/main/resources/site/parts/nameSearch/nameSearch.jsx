@@ -5,9 +5,8 @@ import { Col, Container, Row, Form } from 'react-bootstrap'
 import axios from 'axios'
 
 /* TODO
-- Validere inputs på frontend
-- Sanitize inputs på backend
-- Oversette navnetyper (firstandonlygiven -> første og eneste fornavn, etc)
+- tillate bokstaver med diakritisk tegn (é, ú etc)
+- Etternavn må få rett visning av beste-treff
 - Styling og presentasjon
 - Tekst for "Det er 0-3 personer som heter... "
 - Hente korrekte fraser for ulike situasjoner
