@@ -13,7 +13,8 @@
           <occurrences minimum="0" maximum="1"/>
           <config>
             <allowPath>${site}</allowPath>
-            <allowType>menuBox</allowType>
+            <allowType>page</allowType>
+            <allowType>article</allowType>
           </config>
         </input>
       </items>

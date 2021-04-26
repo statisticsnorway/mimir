@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Divider, Input } from '@statisticsnorway/ssb-component-library'
+import { Button, Divider, Input, Link } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import { Col, Container, Row, Form } from 'react-bootstrap'
 import axios from 'axios'
@@ -18,6 +18,7 @@ import axios from 'axios'
 */
 
 function NameSearch(props) {
+  console.log(props)
   const [name, setName] = useState({
     error: false,
     errorMessage: 'Bare bokstaver, mellomrom og bindestrek er tillat',
@@ -116,6 +117,10 @@ function NameSearch(props) {
       <Container className="name-search-input p-5">
         <Row>
           <Col>
+            {
+              props.aboutLink && props.aboutLink.url &&
+              <Link className="float-right" href={props.aboutLink.url}>{props.aboutLink.title}</Link>
+            }
             <h3>Navnesøk</h3>
           </Col>
         </Row>
@@ -145,7 +150,11 @@ function NameSearch(props) {
 }
 
 NameSearch.propTypes = {
-  urlToService: PropTypes.string
+  urlToService: PropTypes.string,
+  aboutLink: PropTypes.shape({
+    title: PropTypes.string,
+    url: PropTypes.string
+  })
 }
 
 export default (props) => <NameSearch {...props} />

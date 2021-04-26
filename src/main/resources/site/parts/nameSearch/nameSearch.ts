@@ -4,7 +4,7 @@ import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { NameSearchPartConfig } from './nameSearch-part-config'
 
 const {
-  getComponent
+  getComponent, pageUrl
 }: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
 
 const {
@@ -22,23 +22,39 @@ exports.preview = (req: Request): React4xpResponse => renderPart(req)
 function renderPart(req: Request): React4xpResponse {
   const component: Component<NameSearchPartConfig> = getComponent()
 
-  /* if (component.config.aboutLinkTitle && component.config.aboutLinkTarget) {
+  if (component.config.aboutLinkTitle && component.config.aboutLinkTarget) {
 
-  }*/
+  }
 
   const urlToService: string = serviceUrl({
     service: 'nameSearch'
-
   })
 
   const props: PartProperties = {
-    urlToService: urlToService
+    urlToService: urlToService,
+    aboutLink: aboutLinkResources(component.config)
   }
 
   return React4xp.render('site/parts/nameSearch/nameSearch', props, req)
 }
 
+function aboutLinkResources(config: Component<NameSearchPartConfig>['config']): PartProperties['aboutLink'] | undefined {
+  if (config.aboutLinkTitle && config.aboutLinkTarget) {
+    return {
+      title: config.aboutLinkTitle,
+      url: pageUrl({
+        id: config.aboutLinkTarget
+      })
+    }
+  }
+  return undefined
+}
+
 
 interface PartProperties {
   urlToService: string;
+  aboutLink?: {
+    title: string;
+    url: string;
+  };
 }
