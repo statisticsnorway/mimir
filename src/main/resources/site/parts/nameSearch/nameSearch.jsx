@@ -20,7 +20,7 @@ import axios from 'axios'
 function NameSearch(props) {
   const [name, setName] = useState({
     error: false,
-    errorMessage: 'Feil i input',
+    errorMessage: 'Bare bokstaver, mellomrom og bindestrek er tillat',
     value: ''
   })
   const [result, setResult] = useState(null)
@@ -83,7 +83,6 @@ function NameSearch(props) {
 
   function handleSubmit(form) {
     form.preventDefault()
-    console.log(form)
 
     axios.get(
       props.urlToService, {
@@ -101,9 +100,15 @@ function NameSearch(props) {
 
   function handleChange(event) {
     setName({
-      ...name,
-      value: event.value
+      errorMessage: name.errorMessage,
+      value: event,
+      error: !isNameValid(event)
     })
+  }
+
+  function isNameValid(nameToCheck) {
+    const invalidCharacters = nameToCheck && nameToCheck.match(/[^a-øA-Ø\-\s]/gm)
+    return !invalidCharacters
   }
 
   return (
@@ -124,7 +129,7 @@ function NameSearch(props) {
                 value={name.value}
                 handleChange={handleChange}
                 error={name.error}
-                errorMessage={name.errorMsg}></Input>
+                errorMessage={name.errorMessage}></Input>
             </Col>
           </Row>
           <Row>

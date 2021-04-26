@@ -1,5 +1,10 @@
 .name-search {
-
+  h3 {
+    font-size: 28px;
+    margin-bottom: 30px;
+    font-family: $font-roboto-condensed-bold;
+    font-weight: 700;
+  }
   .name-search-input {
     border: 1px solid $ssb-green-5;
   }
