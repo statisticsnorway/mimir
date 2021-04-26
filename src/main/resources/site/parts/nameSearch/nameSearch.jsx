@@ -13,7 +13,6 @@ import axios from 'axios'
 - Backend som søker på både kombinasjonen av alle navn som er skrevet inn "Ole Henrik Vangen", og alle enkeltnavnene separat. "Ole"+"Henrik"+"Vangen"
 - + vurdere om vi skal gjøre som før at alle kombinasjoner av alle navn skal søkes.... Antagelig ikke.
 - Skjule mindre interessante resultater - må sikkert diskuteres noen runder med Siv og Ina
-- ?? Vise bilde med historisk utvikling ??
 */
 
 function NameSearch(props) {
