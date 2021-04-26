@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button } from '@statisticsnorway/ssb-component-library'
+import { Button, Divider, Input } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import { Col, Container, Row, Form } from 'react-bootstrap'
 import axios from 'axios'
@@ -18,26 +18,53 @@ import axios from 'axios'
 */
 
 function NameSearch(props) {
-  const [name, setName] = useState('')
+  const [name, setName] = useState({
+    error: false,
+    errorMessage: 'Feil i input',
+    value: ''
+  })
   const [result, setResult] = useState(null)
 
   function renderResult() {
     return (result && <div>
-      <Container className="nameSearch-result">
+      <Container className="name-search-result p-5">
         <Row>
-          <h3>Resultat</h3>
+          <Col>
+            <h3>Resultat</h3>
+            <Divider dark/>
+          </Col>
         </Row>
+        {
+          result.response.docs.filter((doc) => doc.type === 'onlygiven').map((doc, i) =>{
+            return (
+              <Row key={i}>
+                <Col>
+                  <p className="result-highlight my-4">
+                    Det er<strong>{doc.count}</strong> som har <strong>{doc.name}</strong>
+                    som sitt {translateName(doc.type)}.
+                  </p>
+                </Col>
+              </Row>
+            )
+          })
+        }
         <Row>
-          {
-            result.response.docs.map( (doc, i) => {
-              return (
-                <Row key={i}>
-                  <span>Det er {doc.count} som har {doc.name} som sitt {translateName(doc.type)}.</span>
-                </Row>
-              )
-            })
-          }
+          <Col>
+            <strong>Du synes kanskje også at det er interessant at...</strong>
+            <ul className="interesting-facts p-0">
+              {
+                result.response.docs.map( (doc, i) => {
+                  return (
+                    <li key={i}>
+                      Det er {doc.count} som har {doc.name} som sitt {translateName(doc.type)}.
+                    </li>
+                  )
+                })
+              }
+            </ul>
+          </Col>
         </Row>
+
       </Container>
     </div>
     )
@@ -78,18 +105,33 @@ function NameSearch(props) {
   }
 
   return (
-    <section className="article-list container-fluid">
-      <h3>Navnesøk</h3>
-      <Form onSubmit={handleSubmit}>
-        <Container>
+    <section className="name-search container-fluid">
+      <Container className="name-search-input p-5">
+        <Row>
+          <Col>
+            <h3>Navnesøk</h3>
+          </Col>
+        </Row>
+        <Form onSubmit={handleSubmit}>
           <Row>
             <Col>
-              <input name="navn" value={name} onChange={handleChange}></input>
+              <Input
+                className="my-4"
+                name="navn"
+                label="Sett inn navn"
+                value={name.value}
+                onChange={handleChange}
+                error={name.error}
+                errorMessage={name.errorMsg}></Input>
             </Col>
-            <Button type="submit">Søk</Button>
           </Row>
-        </Container>
-      </Form>
+          <Row>
+            <Col>
+              <Button type="submit">Se resultatet</Button>
+            </Col>
+          </Row>
+        </Form>
+      </Container>
       {renderResult()}
     </section>
   )

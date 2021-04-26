@@ -1,5 +1,18 @@
-.nameSearch {
-  .nameSearch-result {
-     
+.name-search {
+
+  .name-search-input {
+    border: 1px solid $ssb-green-5;
+  }
+
+  .name-search-result {
+    border: 1px solid $ssb-green-5;
+    background-color: $ssb-dark-1;
+  }
+  .result-highlight {
+    font-size: 20px;
+  }
+
+  .interesting-facts {
+    list-style: none;
   }
 }
