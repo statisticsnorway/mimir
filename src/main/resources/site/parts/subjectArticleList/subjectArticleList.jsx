@@ -53,22 +53,20 @@ function SubjectArticleList(props) {
     );
   }
 
-  function fetchArticlesStartOver() {
+  function fetchArticlesStartOver(order) {
     setArticleStart(props.start);
     axios.get(props.articleServiceUrl, {
       params: {
         currentPath: props.currentPath,
-        start: articleStart,
+        start: props.start,
         count: props.count,
-        sort: sort,
+        sort: order,
       },
     }).then((res) => {
       setArticles(res.data.articles);
       setTotalCount(res.data.totalCount);
-    }).finally(() => {
-          setLoadedFirst(true);
-        },
-    );
+      setLoadedFirst(true);
+    });
   }
 
   function renderArticles() {
@@ -115,9 +113,8 @@ function SubjectArticleList(props) {
                           id: 'DESC',
                         }}
                         onSelect={(selected) => {
-                          // TODO: This does not work as intended, articles is not being cleared correctly - or concurrently - by this. Rethink!
                           setSort(selected.id);
-                          fetchArticlesStartOver();
+                          fetchArticlesStartOver(selected.id);
                         }
                         }/>
             </div>
@@ -154,7 +151,7 @@ SubjectArticleList.propTypes =
       articleServiceUrl: PropTypes.string,
       currentPath: PropTypes.string,
       start: PropTypes.number,
-      count: PropTypes.number
+      count: PropTypes.number,
     };
 
 export default (props) => <SubjectArticleList {...props} />

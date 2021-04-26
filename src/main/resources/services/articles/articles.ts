@@ -40,6 +40,17 @@ function getChildArticles(currentPath: string, start: number, count: number, sor
     start: start,
     count: count,
     query: `_path LIKE "/content${currentPath}*"`,
+    filters: {
+      boolean: {
+        must: [
+          {
+            exists: {
+              field: 'publish.from'
+            }
+          }
+        ]
+      }
+    },
     contentTypes: [`${app.name}:article`],
     sort: `publish.from ${sort}`
   })
