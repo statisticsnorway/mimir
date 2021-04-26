@@ -1,6 +1,7 @@
 import { HttpLibrary, HttpRequestParams, HttpResponse } from 'enonic-types/http'
 import { Request, Response } from 'enonic-types/controller'
 
+import validator from 'validator'
 const http: HttpLibrary = __non_webpack_require__('/lib/http-client')
 
 export function get(req: Request): Response {
@@ -26,7 +27,7 @@ export function get(req: Request): Response {
     connectionTimeout: 20000,
     readTimeout: 5000,
     params: {
-      q: replaceCharacters(req.params.name),
+      q: sanitizeInput(replaceCharacters(req.params.name)),
       wt: 'json'
     }
   }
@@ -38,6 +39,11 @@ export function get(req: Request): Response {
     status: result.status,
     contentType: 'application/json'
   }
+}
+
+function sanitizeInput(name: string): string {
+  const approved: string = 'abcdefghijklmnopqrstuvwxyzæøå'
+  return validator.whitelist(name.toLowerCase(), approved )
 }
 
 function replaceCharacters(name: string): string {
