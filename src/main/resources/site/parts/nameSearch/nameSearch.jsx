@@ -40,8 +40,7 @@ function NameSearch(props) {
               <Row key={i}>
                 <Col>
                   <p className="result-highlight my-4">
-                    Det er<strong>{doc.count}</strong> som har <strong>{doc.name}</strong>
-                    som sitt {translateName(doc.type)}.
+                    Det er <strong>{doc.count}</strong> som har <strong>{doc.name}</strong> som sitt {translateName(doc.type)}.
                   </p>
                 </Col>
               </Row>
@@ -55,7 +54,7 @@ function NameSearch(props) {
               {
                 result.response.docs.map( (doc, i) => {
                   return (
-                    <li key={i}>
+                    <li key={i} className="my-1">
                       Det er {doc.count} som har {doc.name} som sitt {translateName(doc.type)}.
                     </li>
                   )
@@ -89,7 +88,7 @@ function NameSearch(props) {
     axios.get(
       props.urlToService, {
         params: {
-          name: name
+          name: name.value
         }
       }
     ).then((res) =>{
@@ -101,7 +100,10 @@ function NameSearch(props) {
   }
 
   function handleChange(event) {
-    setName(event.target.value)
+    setName({
+      ...name,
+      value: event.value
+    })
   }
 
   return (
@@ -120,7 +122,7 @@ function NameSearch(props) {
                 name="navn"
                 label="Sett inn navn"
                 value={name.value}
-                onChange={handleChange}
+                handleChange={handleChange}
                 error={name.error}
                 errorMessage={name.errorMsg}></Input>
             </Col>

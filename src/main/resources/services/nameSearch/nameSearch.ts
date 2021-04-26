@@ -31,10 +31,8 @@ export function get(req: Request): Response {
     }
   }
 
-  log.info('requestParams %s', JSON.stringify(requestParams, null, 2))
-
   const result: HttpResponse = http.request(requestParams)
-  log.info(JSON.stringify(result, null, 2))
+
   return {
     body: result.body ? result.body : '',
     status: result.status,
