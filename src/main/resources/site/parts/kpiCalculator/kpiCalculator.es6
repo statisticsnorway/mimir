@@ -47,6 +47,7 @@ function renderPart(req) {
   const nextReleaseMonth = nextUpdate.month == 12 ? 1 : nextUpdate.month + 1
   const nextPublishText = i18nLib.localize({
     key: 'kpiNextPublishText',
+    locale: language.code,
     values: [
       monthLabel(months, lastUpdated.month),
       lastUpdated.year,

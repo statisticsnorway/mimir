@@ -326,7 +326,7 @@ function KpiCalculator(props) {
     if (props.calculatorArticleUrl) {
       return (
         <Col>
-          <Link className="float-right" href={props.calculatorArticleUrl}>Les om kalkulatoren</Link>
+          <Link className="float-right" href={props.calculatorArticleUrl}>{props.phrases.readAboutCalculator}</Link>
         </Col>
       )
     }
