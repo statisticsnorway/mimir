@@ -55,21 +55,13 @@ function getArticles(language: string): QueryResponse<Article> {
     count: 4,
     query: ``,
     contentTypes: [`${app.name}:article`],
-    sort: 'publish.from DESC',
+    sort: 'publish.from DESC, data.frontPagePriority DESC',
     filters: {
       boolean: {
         must: [
           {
             exists: {
-              field: 'data.showOnFrontPage'
-            }
-          },
-          {
-            hasValue: {
-              field: 'data.showOnFrontPage',
-              values: [
-                true
-              ]
+              field: 'data.subtopic'
             }
           },
           {

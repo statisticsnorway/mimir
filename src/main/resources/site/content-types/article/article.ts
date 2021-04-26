@@ -155,11 +155,9 @@ export interface Article {
   isbnNumber?: string;
 
   /**
-   * 
-   * 						Vis på forside
-   * 					
+   * Prioritert visning på forside
    */
-  showOnFrontPage: boolean;
+  frontPagePriority: "0" | "1";
 
   /**
    * Delemner
