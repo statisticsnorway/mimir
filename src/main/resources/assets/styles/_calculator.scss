@@ -56,14 +56,25 @@
     }
 
     .calculator-form-frontpage {
-      padding: 60px;
+      padding: 50px;
 
       .input-year {
         width: 80px;
         float: left;
+        margin-right: 4px;
       }
+
       .ssb-dropdown.month {
         width: 100px;
+      }
+
+      .submit {
+        padding-top: 32px;
+      }
+
+      .calculate-from, .calculate-to {
+        display: flex;
+        align-items: flex-end;
       }
     }
 
@@ -75,6 +86,13 @@
           width: 100%;
         }
 
+      }
+
+      .calculator-form-frontpage {
+        .input-amount {
+          width: 100%;
+          margin-bottom: 20px;
+        }
       }
     }
 
@@ -96,6 +114,18 @@
           margin-bottom: 20px;
         }
 
+      }
+
+      .calculator-form-frontpage {
+        padding: 20px;
+
+        .calculate-from, .calculate-from {
+          margin-bottom: 20px;
+        }
+
+        .input-year, .month {
+          width: 100%;
+        }
       }
 
       .calculator-error, .calculator-result {

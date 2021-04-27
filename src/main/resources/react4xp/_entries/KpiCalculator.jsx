@@ -204,7 +204,7 @@ function KpiCalculator(props) {
           onChange(id, value)
         }}
         selectedItem={{
-          title: props.phrases.calculatorMonthAverage,
+          title: props.frontPage ? props.phrases.calculatorMonthAverageFrontpage : props.phrases.calculatorMonthAverage,
           id: '90'
         }}
         items={props.months}
@@ -435,11 +435,15 @@ function KpiCalculator(props) {
             <h2>{props.phrases.calculatePriceChange}</h2>
           </Col>
         </Row>
-        <p className="publish-text col-12 col-md-8">Regn ut hvor mye prisene har endret seg. Kalkulatoren er basert på konsumprisindeksen.</p>
+        <Row>
+          <Col>
+            <p>Regn ut hvor mye prisene har endret seg. Kalkulatoren er basert på konsumprisindeksen.</p>
+          </Col>
+        </Row>
         <Form onSubmit={onSubmit}>
           <Container>
-            <Row>
-              <Col className="input-amount col-3">
+            <Row className="calculator-input">
+              <Col className="input-amount col-12 col-md-3 align-self-end">
                 <Input
                   className="start-value"
                   label={props.phrases.enterAmount}
