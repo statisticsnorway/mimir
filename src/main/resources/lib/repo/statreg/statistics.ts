@@ -134,6 +134,22 @@ export function fetchStatisticsWithReleaseToday(): Array<StatisticInListing> {
   }, [])
 }
 
+export function fetchStatisticsWithReleaseBetween(from: Date, to: Date): Array<StatisticInListing> {
+  const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
+  return statistics.reduce((statsWithRelease: Array<StatisticInListing>, stat) => {
+    const variants: Array<VariantInListing> = ensureArray(stat.variants)
+      .sort((a: VariantInListing, b: VariantInListing) => {
+        const aDate: Date = a.nextRelease ? new Date(a.nextRelease) : new Date('01.01.3000')
+        const bDate: Date = b.nextRelease ? new Date(b.nextRelease) : new Date('01.01.3000')
+        return aDate.getTime() - bDate.getTime()
+      })
+    if (variants[0] && moment(variants[0].nextRelease).isBetween(from, to, undefined, '[]')) {
+      statsWithRelease.push(stat)
+    }
+    return statsWithRelease
+  }, [])
+}
+
 function extractStatistics(payload: string): Array<StatisticInListing> {
   return JSON.parse(payload).statistics
 }
@@ -204,6 +220,7 @@ export interface StatRegStatisticsLib {
   fetchStatistics: () => Array<StatisticInListing> | null;
   fetchStatisticsWithRelease: (before: Date) => Array<StatisticInListing>;
   fetchStatisticsWithReleaseToday: () => Array<StatisticInListing>;
+  fetchStatisticsWithReleaseBetween: (from: Date, to: Date) => Array<StatisticInListing>;
   getAllStatisticsFromRepo: () => Array<StatisticInListing>;
   getStatisticByIdFromRepo: (statId: string) => StatisticInListing | undefined;
   getStatisticByShortNameFromRepo: (shortName: string) => StatisticInListing | undefined;
