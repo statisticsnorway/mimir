@@ -29,7 +29,7 @@ function NameSearch(props) {
       <Container className="name-search-result p-5">
         <Row>
           <Col>
-            <h3>Resultat</h3>
+            <h3>{props.nameSearchResultTitle}</h3>
             <Divider dark/>
           </Col>
         </Row>
@@ -39,7 +39,11 @@ function NameSearch(props) {
               <Row key={i}>
                 <Col>
                   <p className="result-highlight my-4">
-                    Det er <strong>{doc.count}</strong> som har <strong>{doc.name}</strong> som sitt {translateName(doc.type)}.
+                    {
+                      `${props.nameSearchResultText
+                        .replace('{0}', doc.count)
+                        .replace('{1}', doc.name)} ${translateName(doc.type)}.`
+                    }
                   </p>
                 </Col>
               </Row>
@@ -119,7 +123,7 @@ function NameSearch(props) {
               props.aboutLink && props.aboutLink.url &&
               <Link className="float-right" href={props.aboutLink.url}>{props.aboutLink.title}</Link>
             }
-            <h3>Navnesøk</h3>
+            <h3>{props.nameSearchTitle}</h3>
           </Col>
         </Row>
         <Form onSubmit={handleSubmit}>
@@ -128,7 +132,7 @@ function NameSearch(props) {
               <Input
                 className="my-4"
                 name="navn"
-                label="Sett inn navn"
+                label={props.nameSearchInputLabel}
                 value={name.value}
                 handleChange={handleChange}
                 error={name.error}
@@ -137,7 +141,7 @@ function NameSearch(props) {
           </Row>
           <Row>
             <Col>
-              <Button type="submit">Se resultatet</Button>
+              <Button type="submit">{props.nameSearchButtonText}</Button>
             </Col>
           </Row>
         </Form>
@@ -148,6 +152,12 @@ function NameSearch(props) {
 }
 
 NameSearch.propTypes = {
+  nameSearchTitle: PropTypes.string,
+  nameSearchInputLabel: PropTypes.string,
+  nameSearchButtonText: PropTypes.string,
+  interestingFacts: PropTypes.string,
+  nameSearchResultTitle: PropTypes.string,
+  nameSearchResultText: PropTypes.string,
   urlToService: PropTypes.string,
   aboutLink: PropTypes.shape({
     title: PropTypes.string,

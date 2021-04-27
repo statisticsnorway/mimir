@@ -142,4 +142,11 @@ function parseTimeInterval(time) {
   return parsedTime
 }
 
+export function getLanguageShortName(content) {
+  if (!content || !content.language) {
+    return 'no'
+  } else {
+    return content.language
+  }
+}
 
