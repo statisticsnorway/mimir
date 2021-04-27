@@ -1,23 +1,14 @@
-import { Content, ContentLibrary } from 'enonic-types/content'
+import { Content } from 'enonic-types/content'
 import { Response } from 'enonic-types/controller'
 import { HttpRequestParams } from 'enonic-types/http'
 import { CalculatorConfig } from '../../site/content-types/calculatorConfig/calculatorConfig'
-import { GenericDataImport } from '../../site/content-types/genericDataImport/genericDataImport'
-import { SSBCacheLibrary } from '../../lib/ssb/cache'
-import { DatasetRepoNode } from '../../lib/repo/dataset'
-import { Dataset, JSONstat as JSONstatType } from '../../lib/types/jsonstat-toolkit'
-/* eslint-disable new-cap */
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
-import JSONstat from 'jsonstat-toolkit/import.mjs'
+import { Dataset } from '../../lib/types/jsonstat-toolkit'
+import { CalculatorLib } from '../../lib/ssb/dataset/calculator'
 import { I18nLibrary } from 'enonic-types/i18n'
 const i18nLib: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
 const {
-  query, get: getContent
-}: ContentLibrary = __non_webpack_require__('/lib/xp/content')
-const {
-  datasetOrUndefined
-}: SSBCacheLibrary = __non_webpack_require__('/lib/ssb/cache')
+  getCalculatorConfig, getKpiDatasetYear, getKpiDatasetMonth
+}: CalculatorLib = __non_webpack_require__('/lib/ssb/dataset/calculator')
 
 function get(req: HttpRequestParams): Response {
   const startValue: string | undefined = req.params?.startValue
@@ -44,28 +35,18 @@ function get(req: HttpRequestParams): Response {
       contentType: 'application/json'
     }
   }
-  const config: Content<CalculatorConfig> | undefined = query({
-    contentTypes: [`${app.name}:calculatorConfig`],
-    count: 1,
-    start: 0,
-    query: ''
-  }).hits[0] as Content<CalculatorConfig> | undefined
-  if (config && config.data.kpiSourceMonth && config.data.kpiSourceYear) {
-    const kpiSourceMonth: Content<GenericDataImport> | null = parseInt(startYear) >= 1920 || parseInt(endYear) >= 1920 ? getContent({
-      key: config.data.kpiSourceMonth
-    }) : null
-    const kpiSourceYear: Content<GenericDataImport> | null = parseInt(startYear) < 1920 || parseInt(endYear) < 1920 ? getContent({
-      key: config.data.kpiSourceYear
-    }) : null
 
-    const kpiDatasetMonthRepo: DatasetRepoNode<JSONstatType> | null = kpiSourceMonth ?
-        datasetOrUndefined(kpiSourceMonth) as DatasetRepoNode<JSONstatType> | null : null
-    const kpiDatasetYearRepo: DatasetRepoNode<JSONstatType> | null = kpiSourceYear ?
-        datasetOrUndefined(kpiSourceYear) as DatasetRepoNode<JSONstatType> | null : null
+  const config: Content<CalculatorConfig> | undefined = getCalculatorConfig()
+
+  if (config && config.data.kpiSourceMonth && config.data.kpiSourceYear) {
+    const kpiDatasetYear: Dataset | null = parseInt(startYear) < 1920 || parseInt(endYear) < 1920 ?
+      getKpiDatasetYear(config) : null
+    const kpiDatasetMonth: Dataset | null = parseInt(startYear) >= 1920 || parseInt(endYear) >= 1920 ?
+      getKpiDatasetMonth(config) : null
 
     const kpiData: KpiData = {
-      month: kpiDatasetMonthRepo ? JSONstat(kpiDatasetMonthRepo.data).Dataset('dataset') : null,
-      year: kpiDatasetYearRepo ? JSONstat(kpiDatasetYearRepo.data).Dataset('dataset') : null
+      month: kpiDatasetMonth,
+      year: kpiDatasetYear
     }
 
     const indexResult: IndexResult = getIndexes(startYear, startMonth, endYear, endMonth, kpiData)
