@@ -5,13 +5,9 @@ import { Col, Container, Row, Form } from 'react-bootstrap'
 import axios from 'axios'
 
 /* TODO
-- tillate bokstaver med diakritisk tegn (é, ú etc)
 - Etternavn må få rett visning av beste-treff
 - Styling og presentasjon
 - Tekst for "Det er 0-3 personer som heter... "
-- Hente korrekte fraser for ulike situasjoner
-- Backend som søker på både kombinasjonen av alle navn som er skrevet inn "Ole Henrik Vangen", og alle enkeltnavnene separat. "Ole"+"Henrik"+"Vangen"
-- + vurdere om vi skal gjøre som før at alle kombinasjoner av alle navn skal søkes.... Antagelig ikke.
 - Skjule mindre interessante resultater - må sikkert diskuteres noen runder med Siv og Ina
 */
 
