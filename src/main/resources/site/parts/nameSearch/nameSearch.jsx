@@ -19,7 +19,7 @@ function NameSearch(props) {
   console.log(props)
   const [name, setName] = useState({
     error: false,
-    errorMessage: 'Bare bokstaver, mellomrom og bindestrek er tillat',
+    errorMessage: props.phrases.errorMessage,
     value: ''
   })
   const [result, setResult] = useState(null)
@@ -29,7 +29,7 @@ function NameSearch(props) {
       <Container className="name-search-result p-5">
         <Row>
           <Col>
-            <h3>{props.nameSearchResultTitle}</h3>
+            <h3>{props.phrases.nameSearchResultTitle}</h3>
             <Divider dark/>
           </Col>
         </Row>
@@ -39,11 +39,7 @@ function NameSearch(props) {
               <Row key={i}>
                 <Col>
                   <p className="result-highlight my-4">
-                    {
-                      `${props.nameSearchResultText
-                        .replace('{0}', doc.count)
-                        .replace('{1}', doc.name)} ${translateName(doc.type)}.`
-                    }
+                    { parseResultText(doc.count, doc.name, doc.type) }
                   </p>
                 </Col>
               </Row>
@@ -52,13 +48,13 @@ function NameSearch(props) {
         }
         <Row>
           <Col>
-            <strong>Du synes kanskje også at det er interessant at...</strong>
+            <strong>{props.phrases.interestingFacts}</strong>
             <ul className="interesting-facts p-0">
               {
                 result.response.docs.map( (doc, i) => {
                   return (
                     <li key={i} className="my-1">
-                      Det er {doc.count} som har {doc.name} som sitt {translateName(doc.type)}.
+                      {parseResultText(doc.count, doc.name, doc.type)}
                     </li>
                   )
                 })
@@ -71,17 +67,14 @@ function NameSearch(props) {
     </div>
     )
   }
+  function parseResultText(count, name, nameCode) {
+    return `${props.phrases.nameSearchResultText
+      .replace('{0}', count)
+      .replace('{1}', name)} ${translateName(nameCode)}.`
+  }
 
   function translateName(nameCode) {
-    const type = {
-      firstgivenandfamily: 'eneste fornavn og etternavn',
-      middleandfamily: 'mellomnavn/etternavn',
-      family: 'etternavn',
-      onlygiven: 'eneste fornavn',
-      onlygivenandfamily: 'eneste fornavn og etternavn',
-      firstgiven: 'første fornavn'
-    }
-    return type[nameCode]
+    return props.phrases.types[nameCode]
   }
 
   function handleSubmit(form) {
@@ -123,7 +116,7 @@ function NameSearch(props) {
               props.aboutLink && props.aboutLink.url &&
               <Link className="float-right" href={props.aboutLink.url}>{props.aboutLink.title}</Link>
             }
-            <h3>{props.nameSearchTitle}</h3>
+            <h3>{props.phrases.nameSearchTitle}</h3>
           </Col>
         </Row>
         <Form onSubmit={handleSubmit}>
@@ -132,7 +125,7 @@ function NameSearch(props) {
               <Input
                 className="my-4"
                 name="navn"
-                label={props.nameSearchInputLabel}
+                label={props.phrases.nameSearchInputLabel}
                 value={name.value}
                 handleChange={handleChange}
                 error={name.error}
@@ -141,7 +134,7 @@ function NameSearch(props) {
           </Row>
           <Row>
             <Col>
-              <Button type="submit">{props.nameSearchButtonText}</Button>
+              <Button type="submit">{props.phrases.nameSearchButtonText}</Button>
             </Col>
           </Row>
         </Form>
@@ -152,16 +145,27 @@ function NameSearch(props) {
 }
 
 NameSearch.propTypes = {
-  nameSearchTitle: PropTypes.string,
-  nameSearchInputLabel: PropTypes.string,
-  nameSearchButtonText: PropTypes.string,
-  interestingFacts: PropTypes.string,
-  nameSearchResultTitle: PropTypes.string,
-  nameSearchResultText: PropTypes.string,
   urlToService: PropTypes.string,
   aboutLink: PropTypes.shape({
     title: PropTypes.string,
     url: PropTypes.string
+  }),
+  phrases: PropTypes.shape({
+    nameSearchTitle: PropTypes.string,
+    nameSearchInputLabel: PropTypes.string,
+    nameSearchButtonText: PropTypes.string,
+    interestingFacts: PropTypes.string,
+    nameSearchResultTitle: PropTypes.string,
+    nameSearchResultText: PropTypes.string,
+    errorMessage: PropTypes.string,
+    types: PropTypes.shape({
+      firstgivenandfamily: PropTypes.string,
+      middleandfamily: PropTypes.string,
+      family: PropTypes.string,
+      onlygiven: PropTypes.string,
+      onlygivenandfamily: PropTypes.string,
+      firstgiven: PropTypes.string
+    })
   })
 }
 

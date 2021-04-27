@@ -38,34 +38,12 @@ function renderPart(req: Request): React4xpResponse {
   const props: PartProperties = {
     urlToService: urlToService,
     aboutLink: aboutLinkResources(component.config),
-    nameSearchTitle: localize({
-      key: 'nameSearchTitle',
-      locale
-    }),
-    nameSearchInputLabel: localize({
-      key: 'nameSearchInputLabel',
-      locale
-    }),
-    nameSearchButtonText: localize({
-      key: 'nameSearchButtonText',
-      locale
-    }),
-    interestingFacts: localize({
-      key: 'interestingFacts',
-      locale
-    }),
-    nameSearchResultTitle: localize({
-      key: 'nameSearchResultTitle',
-      locale
-    }),
-    nameSearchResultText: localize({
-      key: 'nameSearchResultText',
-      locale
-    })
+    phrases: partsPhrases(locale)
   }
 
   return React4xp.render('site/parts/nameSearch/nameSearch', props, req)
 }
+
 
 function aboutLinkResources(config: Component<NameSearchPartConfig>['config']): PartProperties['aboutLink'] | undefined {
   if (config.aboutLinkTitle && config.aboutLinkTarget) {
@@ -79,6 +57,64 @@ function aboutLinkResources(config: Component<NameSearchPartConfig>['config']): 
   return undefined
 }
 
+function partsPhrases(locale: string): PartProperties['phrases'] {
+  return {
+    nameSearchTitle: localize({
+      key: 'nameSearch.title',
+      locale
+    }),
+    nameSearchInputLabel: localize({
+      key: 'nameSearch.inputLabel',
+      locale
+    }),
+    nameSearchButtonText: localize({
+      key: 'nameSearch.buttonText',
+      locale
+    }),
+    interestingFacts: localize({
+      key: 'nameSearch.interestingFacts',
+      locale
+    }),
+    nameSearchResultTitle: localize({
+      key: 'nameSearch.resultTitle',
+      locale
+    }),
+    nameSearchResultText: localize({
+      key: 'nameSearch.resultText',
+      locale
+    }),
+    errorMessage: localize({
+      key: 'nameSearch.errorMessage',
+      locale
+    }),
+    types: {
+      firstgivenandfamily: localize({
+        key: 'nameSearch.types.firstgivenandfamily',
+        locale
+      }),
+      middleandfamily: localize({
+        key: 'nameSearch.types.middleandfamily',
+        locale
+      }),
+      family: localize({
+        key: 'nameSearch.types.family',
+        locale
+      }),
+      onlygiven: localize({
+        key: 'nameSearch.types.onlygiven',
+        locale
+      }),
+      onlygivenandfamily: localize({
+        key: 'nameSearch.types.onlygivenandfamily',
+        locale
+      }),
+      firstgiven: localize({
+        key: 'nameSearch.types.firstgiven',
+        locale
+      })
+    }
+  }
+}
 
 interface PartProperties {
   urlToService: string;
@@ -86,10 +122,21 @@ interface PartProperties {
     title: string;
     url: string;
   };
-  nameSearchTitle: string;
-  nameSearchInputLabel: string;
-  nameSearchButtonText: string;
-  interestingFacts: string;
-  nameSearchResultTitle: string;
-  nameSearchResultText: string;
+  phrases: {
+    nameSearchTitle: string;
+    nameSearchInputLabel: string;
+    nameSearchButtonText: string;
+    interestingFacts: string;
+    nameSearchResultTitle: string;
+    nameSearchResultText: string;
+    errorMessage: string;
+    types: {
+      firstgivenandfamily: string;
+      middleandfamily: string;
+      family: string;
+      onlygiven: string;
+      onlygivenandfamily: string;
+      firstgiven: string;
+    };
+  };
 }
