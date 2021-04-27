@@ -18,36 +18,38 @@ function NameSearch(props) {
     value: ''
   })
   const [result, setResult] = useState(null)
-  const [typeUsedInMainResult, setTypeUsedInMainResult] = useState(undefined)
+  const [mainResult, setMainResult] = useState(undefined)
 
-  function renderMainResult(docs) {
-    return docs.filter((doc) => doc.name === name.value.toUpperCase()) // only get result with same name as the input
-      .reduce((acc, current) => {
-        if (acc.length === 0 || current.count > acc.count) {
-          console.log()
-          acc = [current] // get the hit with the highest count
-        }
-        return acc
-      }, [])
-      .map((doc, i) => { // render
-        setTypeUsedInMainResult(doc.type)
-        return (
-          <Row key={i}>
-            <Col>
-              <p className="result-highlight my-4">
-                { parseResultText(doc.count, doc.name, doc.type) }
-              </p>
-            </Col>
-          </Row>
-        )
-      })
+  function findMainResult(docs, originalName) {
+    // only get result with same name as the input
+    const filteredResult = docs.filter((doc) => doc.name === originalName.toUpperCase())
+    const mainRes = filteredResult && filteredResult.reduce((acc, current) => {
+      if (!acc || acc.count < current.count ) {
+        acc = current // get the hit with the highest count
+      }
+      return acc
+    })
+    setMainResult(mainRes)
   }
 
+  function renderMainResult() {
+    return (
+      <Row>
+        <Col>
+          <p className="result-highlight my-4">
+            { mainResult && parseResultText(mainResult) }
+          </p>
+        </Col>
+      </Row>
+    )
+  }
+
+
   function renderSubResult(docs) {
-    docs.filter((doc) => doc.type !== typeUsedInMainResult).map( (doc, i) => {
+    return docs.map( (doc, i) => {
       return (
         <li key={i} className="my-1">
-          { name.value && parseResultText(doc.count, doc.name, doc.type)}
+          { parseResultText(doc) }
         </li>
       )
     })
@@ -76,10 +78,10 @@ function NameSearch(props) {
     </div>
     )
   }
-  function parseResultText(count, name, nameCode) {
+  function parseResultText(doc) {
     return `${props.phrases.nameSearchResultText
-      .replace('{0}', count)
-      .replace('{1}', name)} ${translateName(nameCode)}.`
+      .replace('{0}', doc.count)
+      .replace('{1}', doc.name)} ${translateName(doc.type)}.`
   }
 
   function translateName(nameCode) {
@@ -88,15 +90,15 @@ function NameSearch(props) {
 
   function handleSubmit(form) {
     form.preventDefault()
-
     axios.get(
       props.urlToService, {
         params: {
           name: name.value
         }
       }
-    ).then((res) =>{
+    ).then((res) => {
       setResult(res.data)
+      findMainResult(res.data.response.docs, res.data.originalName)
     }
     ).catch((e) =>
       console.log(e)
