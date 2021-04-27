@@ -27,23 +27,41 @@ export function get(req: Request): Response {
     connectionTimeout: 20000,
     readTimeout: 5000,
     params: {
-      q: sanitizeInput(replaceCharacters(req.params.name)),
+      q: prepareQuery(sanitizeQuery(req.params.name)),
       wt: 'json'
     }
   }
 
   const result: HttpResponse = http.request(requestParams)
 
+  const preparedBody: string = result.body ? prepareResult(result.body, sanitizeQuery(req.params.name)) : ''
+
   return {
-    body: result.body ? result.body : '',
+    body: preparedBody,
     status: result.status,
     contentType: 'application/json'
   }
 }
 
-function sanitizeInput(name: string): string {
-  const approved: string = 'abcdefghijklmnopqrstuvwxyzæøå'
-  return validator.whitelist(name.toLowerCase(), approved )
+function prepareResult(result: string, name: string): string {
+  const obj: {originalName: string} = JSON.parse(result)
+  obj.originalName = name
+  return JSON.stringify(obj)
+}
+
+
+function prepareQuery(input: string): string {
+  if (input.split(' ').length == 1) return input
+  else return pad(input) + '+' + input.split(' ').map((word) => pad(word)).join('+')
+}
+
+function pad(word: string): string {
+  return '"' + word + '"'
+}
+
+function sanitizeQuery(name: string): string {
+  const approved: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ '
+  return validator.whitelist(replaceCharacters(name.toUpperCase()), approved )
 }
 
 function replaceCharacters(name: string): string {
