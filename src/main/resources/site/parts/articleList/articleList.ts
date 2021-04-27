@@ -39,9 +39,13 @@ function renderPart(req: Request): React4xpResponse {
     key: 'publicationLinkText',
     locale: language === 'nb' ? 'no' : language
   })
+  const headerText: string = localize( {
+    key: 'articleList.heading',
+    locale: language === 'nb' ? 'no' : language
+  })
 
   const props: PartProperties = {
-    title: 'Nye artikler, analyser og publikasjoner',
+    title: headerText,
     articles: preparedArticles,
     archiveLinkText: archiveLinkText,
     archiveLinkUrl: component.config.pubArchiveUrl ? component.config.pubArchiveUrl : '#'
