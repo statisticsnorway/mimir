@@ -16,7 +16,6 @@ import axios from 'axios'
 */
 
 function NameSearch(props) {
-  console.log(props)
   const [name, setName] = useState({
     error: false,
     errorMessage: props.phrases.errorMessage,
