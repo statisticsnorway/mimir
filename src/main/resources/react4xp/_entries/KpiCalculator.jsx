@@ -6,8 +6,7 @@ import axios from 'axios'
 import NumberFormat from 'react-number-format'
 
 function KpiCalculator(props) {
-  // TODO maxYear hente fra datasett
-  const maxYear = '2021'
+  const maxYear = props.lastUpdated.year
   const [startValue, setStartValue] = useState({
     error: false,
     errorMsg: props.phrases.kpiValidateAmountNumber,
@@ -30,7 +29,7 @@ function KpiCalculator(props) {
   })
   const [endYear, setEndYear] = useState({
     error: false,
-    errorMsg: props.phrases.kpiValidateYear,
+    errorMsg: `${props.phrases.kpiValidateYear} ${maxYear}`,
     value: ''
   })
   const [errorMessage, setErrorMessage] = useState(null)
@@ -214,12 +213,12 @@ function KpiCalculator(props) {
   }
 
   function getPeriod(year, month) {
-    if (month === '90') {
-      return year
-    } else {
-      const monthLabel = props.months.find((m) => m.id === month)
-      return `${monthLabel.title} ${year}`
-    }
+    return month === '90' ? year : `${getMonthLabel(month)} ${year}`
+  }
+
+  function getMonthLabel(month) {
+    const monthLabel = props.months.find((m) => parseInt(m.id) === parseInt(month))
+    return monthLabel ? monthLabel.title.toLowerCase() : ''
   }
 
   function renderResult() {
@@ -327,7 +326,7 @@ function KpiCalculator(props) {
     if (props.calculatorArticleUrl) {
       return (
         <Col>
-          <Link className="float-right" href={props.calculatorArticleUrl}>Les om kalkulatoren</Link>
+          <Link className="float-right" href={props.calculatorArticleUrl}>{props.phrases.readAboutCalculator}</Link>
         </Col>
       )
     }
@@ -341,7 +340,7 @@ function KpiCalculator(props) {
         </Col>
         {renderLinkArticle()}
       </Row>
-      <p className="publish-text col-12 col-md-8">{props.phrases.kpiNextPublishText}</p>
+      <p className="publish-text col-12 col-md-8">{props.nextPublishText}</p>
       <Form onSubmit={onSubmit}>
         <Container>
           <Row>
@@ -425,7 +424,12 @@ KpiCalculator.propTypes = {
     })
   ),
   phrases: PropTypes.arrayOf(PropTypes.string),
-  calculatorArticleUrl: PropTypes.string
+  calculatorArticleUrl: PropTypes.string,
+  nextPublishText: PropTypes.string,
+  lastUpdated: PropTypes.shape({
+    month: PropTypes.string,
+    year: PropTypes.string
+  })
 }
 
 export default (props) => <KpiCalculator {...props} />
