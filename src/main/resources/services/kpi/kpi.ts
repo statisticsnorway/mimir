@@ -4,10 +4,6 @@ import { HttpRequestParams } from 'enonic-types/http'
 import { CalculatorConfig } from '../../site/content-types/calculatorConfig/calculatorConfig'
 import { Dataset } from '../../lib/types/jsonstat-toolkit'
 import { CalculatorLib } from '../../lib/ssb/dataset/calculator'
-/* eslint-disable new-cap */
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
-import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { I18nLibrary } from 'enonic-types/i18n'
 const i18nLib: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
 const {
