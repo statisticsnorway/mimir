@@ -1,4 +1,5 @@
 const {
+  getComponent,
   getContent,
   serviceUrl,
   pageUrl
@@ -37,6 +38,7 @@ exports.preview = function(req, id) {
 
 function renderPart(req) {
   const page = getContent()
+  const part = getComponent()
   const language = getLanguage(page)
   const phrases = language.phrases
   const config = getCalculatorConfig()
@@ -59,6 +61,8 @@ function renderPart(req) {
     id: config.data.kpiCalculatorArticle
   }) : null
 
+  const frontPage = part.config.frontPage ? part.config.frontPage : false
+
   const kpiCalculator = new React4xp('KpiCalculator')
     .setProps({
       kpiServiceUrl: serviceUrl({
@@ -69,7 +73,8 @@ function renderPart(req) {
       phrases: phrases,
       calculatorArticleUrl,
       nextPublishText: nextPublishText,
-      lastUpdated: lastUpdated
+      lastUpdated: lastUpdated,
+      frontPage: frontPage
     })
     .setId('kpiCalculatorId')
     .uniqueId()

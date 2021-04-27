@@ -1,3 +1,10 @@
 <part>
     <display-name>Kpi kalkulator</display-name>
+    <form>
+        <input name="frontPage" type="CheckBox">
+            <label>
+                Forside
+            </label>
+        </input>
+    </form>
 </part>
