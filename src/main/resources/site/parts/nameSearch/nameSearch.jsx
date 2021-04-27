@@ -50,7 +50,7 @@ function NameSearch(props) {
             <strong>{props.phrases.interestingFacts}</strong>
             <ul className="interesting-facts p-0">
               {
-                result.response.docs.map( (doc, i) => {
+                result.response.docs.filter((doc) => doc.type !== 'onlygiven').map( (doc, i) => {
                   return (
                     <li key={i} className="my-1">
                       {parseResultText(doc.count, doc.name, doc.type)}
