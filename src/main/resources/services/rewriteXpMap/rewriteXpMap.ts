@@ -13,30 +13,25 @@ function get(): Response {
     query: ''
   }).hits[0]
   return {
-    body: {
-      rewriteRules: parseRules(varnishContent)
-    },
-    contentType: 'application/json'
+    body: parseRules(varnishContent),
+    contentType: 'text/plain'
   }
 }
 
 exports.get = get
 
-function parseRules(varnish: Content<RewriteVarnish>): Array<RewriteRule> {
+function parseRules(varnish: Content<RewriteVarnish>): string {
   if (varnish && varnish.data && varnish.data.requests) {
     const requests: RewriteVarnish['requests'] = Array.isArray(varnish.data.requests) ? varnish.data.requests : [varnish.data.requests]
-    return requests.reduce((list: Array<RewriteRule>, request) => {
+    return requests.reduce((list: string, request) => {
       if (request.enableRule && request.requestUrl) {
-        list.push({
-          requestUrl: request.requestUrl
-        })
+        const requestUrl: string = request.requestUrl.startsWith('/') ? request.requestUrl.replace('/', '') : request.requestUrl
+        list = list + requestUrl + '\t 1' + '\n'
       }
       return list
-    }, [])
+    }, '')
   }
-  return []
+  return ''
 }
 
-interface RewriteRule {
-  requestUrl: string;
-}
+
