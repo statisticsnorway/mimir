@@ -134,16 +134,17 @@ export function fetchStatisticsWithReleaseToday(): Array<StatisticInListing> {
   }, [])
 }
 
-export function fetchStatisticsWithReleaseBetween(from: Date, to: Date): Array<StatisticInListing> {
+export function fetchStatisticsWithPreviousReleaseBetween(from: Date, to: Date): Array<StatisticInListing> {
   const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
   return statistics.reduce((statsWithRelease: Array<StatisticInListing>, stat) => {
     const variants: Array<VariantInListing> = ensureArray(stat.variants)
       .sort((a: VariantInListing, b: VariantInListing) => {
-        const aDate: Date = a.nextRelease ? new Date(a.nextRelease) : new Date('01.01.3000')
-        const bDate: Date = b.nextRelease ? new Date(b.nextRelease) : new Date('01.01.3000')
-        return aDate.getTime() - bDate.getTime()
+        const aDate: Date = a.previousRelease ? new Date(a.previousRelease) : new Date('01.01.1970')
+        const bDate: Date = b.previousRelease ? new Date(b.previousRelease) : new Date('01.01.1970')
+        return bDate.getTime() - aDate.getTime()
       })
-    if (variants[0] && moment(variants[0].nextRelease).isBetween(from, to, undefined, '[]')) {
+    if (variants[0] && moment(variants[0].previousRelease).isBetween(from, to, undefined, '[]')) {
+      stat.variants = variants
       statsWithRelease.push(stat)
     }
     return statsWithRelease
@@ -220,7 +221,7 @@ export interface StatRegStatisticsLib {
   fetchStatistics: () => Array<StatisticInListing> | null;
   fetchStatisticsWithRelease: (before: Date) => Array<StatisticInListing>;
   fetchStatisticsWithReleaseToday: () => Array<StatisticInListing>;
-  fetchStatisticsWithReleaseBetween: (from: Date, to: Date) => Array<StatisticInListing>;
+  fetchStatisticsWithPreviousReleaseBetween: (from: Date, to: Date) => Array<StatisticInListing>;
   getAllStatisticsFromRepo: () => Array<StatisticInListing>;
   getStatisticByIdFromRepo: (statId: string) => StatisticInListing | undefined;
   getStatisticByShortNameFromRepo: (shortName: string) => StatisticInListing | undefined;

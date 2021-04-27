@@ -12,7 +12,7 @@ const {
   query
 }: ContentLibrary = __non_webpack_require__('/lib/xp/content')
 const {
-  fetchStatisticsWithReleaseBetween
+  fetchStatisticsWithPreviousReleaseBetween
 }: StatRegStatisticsLib = __non_webpack_require__('/lib/repo/statreg/statistics')
 const {
   pageUrl
@@ -91,40 +91,42 @@ function getNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<N
 function getStatisticsNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<News> {
   const from: string = moment().subtract(3, 'days').toISOString()
   const to: string = moment().toISOString()
-  const statregStatistics: Array<StatisticInListing> = fetchStatisticsWithReleaseBetween(new Date(from), new Date(to))
+  const statregStatistics: Array<StatisticInListing> = fetchStatisticsWithPreviousReleaseBetween(new Date(from), new Date(to))
 
   const statisticsNews: Array<News> = []
-  mainSubjects.forEach((mainSubject) => {
-    const statistics: Array<Content<Statistics, object, SEO>> = query({
-      start: 0,
-      count: 100,
-      query: `_path LIKE "/content${mainSubject._path}/*" AND data.statistic IN(${statregStatistics.map((s) => `"${s.id}"`).join(',')})`
-    }).hits as unknown as Array<Content<Statistics, object, SEO>>
+  if (statregStatistics.length > 0) {
+    mainSubjects.forEach((mainSubject) => {
+      const statistics: Array<Content<Statistics, object, SEO>> = query({
+        start: 0,
+        count: 100,
+        query: `_path LIKE "/content${mainSubject._path}/*" AND data.statistic IN(${statregStatistics.map((s) => `"${s.id}"`).join(',')})`
+      }).hits as unknown as Array<Content<Statistics, object, SEO>>
 
-    const baseUrl: string = app.config && app.config['ssb.baseUrl'] || ''
-    const serverOffsetInMinutes: number = app.config && app.config['serverOffsetInMs'] || 0
-    statistics.forEach((statistic) => {
-      const statreg: StatisticInListing | undefined = statregStatistics.find((s) => s.id.toString() === statistic.data.statistic)
-      const pubDate: string | undefined = statistic.publish?.first ?
-        moment(statistic.publish?.first).utcOffset(serverOffsetInMinutes / 1000 / 60).format() :
-        undefined
-      if (pubDate) {
-        statisticsNews.push({
-          guid: statistic._id,
-          title: statistic.displayName, // tittel, måleperiode
-          link: baseUrl + pageUrl({
-            id: statistic._id
-          }),
-          description: statistic.x['com-enonic-app-metafields']['meta-data'].seoDescription || '',
-          category: mainSubject.displayName,
-          subject: mainSubject._name,
-          language: statistic.language === 'en' ? 'en' : 'no',
-          pubDate: pubDate,
-          shortname: statreg ? statreg.shortName : ''
-        })
-      }
+      const baseUrl: string = app.config && app.config['ssb.baseUrl'] || ''
+      const serverOffsetInMS: number = app.config && app.config['serverOffsetInMs'] || 0
+      statistics.forEach((statistic) => {
+        const statreg: StatisticInListing | undefined = statregStatistics.find((s) => s.id.toString() === statistic.data.statistic)
+        const pubDate: string | undefined = statistic.publish?.first ?
+          moment(statreg?.variants[0].previousRelease).utcOffset(serverOffsetInMS / 1000 / 60, true).format() :
+          undefined
+        if (pubDate) {
+          statisticsNews.push({
+            guid: statistic._id,
+            title: statistic.displayName, // displayName, frequency
+            link: baseUrl + pageUrl({
+              id: statistic._id
+            }),
+            description: statistic.x['com-enonic-app-metafields']['meta-data'].seoDescription || '',
+            category: mainSubject.displayName,
+            subject: mainSubject._name,
+            language: statistic.language === 'en' ? 'en' : 'no',
+            pubDate: pubDate,
+            shortname: statreg ? statreg.shortName : ''
+          })
+        }
+      })
     })
-  })
+  }
 
   return statisticsNews
 }
@@ -137,7 +139,7 @@ interface News {
   guid: string; // _id
   title: string; // displayName
   link: string; // url
-  description: string; // seo desc
+  description: string; // ingress
   category: string; // parent displayName
   subject: string; // parent _name
   language: string; // language
