@@ -22,6 +22,40 @@ function NameSearch(props) {
     value: ''
   })
   const [result, setResult] = useState(null)
+  const [typeUsedInMainResult, setTypeUsedInMainResult] = useState(undefined)
+
+  function renderMainResult(docs) {
+    return docs.filter((doc) => doc.name === name.value.toUpperCase()) // only get result with same name as the input
+      .reduce((acc, current) => {
+        if (acc.length === 0 || current.count > acc.count) {
+          console.log()
+          acc = [current] // get the hit with the highest count
+        }
+        return acc
+      }, [])
+      .map((doc, i) => { // render
+        setTypeUsedInMainResult(doc.type)
+        return (
+          <Row key={i}>
+            <Col>
+              <p className="result-highlight my-4">
+                { parseResultText(doc.count, doc.name, doc.type) }
+              </p>
+            </Col>
+          </Row>
+        )
+      })
+  }
+
+  function renderSubResult(docs) {
+    docs.filter((doc) => doc.type !== typeUsedInMainResult).map( (doc, i) => {
+      return (
+        <li key={i} className="my-1">
+          { name.value && parseResultText(doc.count, doc.name, doc.type)}
+        </li>
+      )
+    })
+  }
 
   function renderResult() {
     return (result && <div>
@@ -32,32 +66,12 @@ function NameSearch(props) {
             <Divider dark/>
           </Col>
         </Row>
-        {
-          result.response.docs.filter((doc) => doc.type === 'onlygiven').map((doc, i) =>{
-            return (
-              <Row key={i}>
-                <Col>
-                  <p className="result-highlight my-4">
-                    { parseResultText(doc.count, doc.name, doc.type) }
-                  </p>
-                </Col>
-              </Row>
-            )
-          })
-        }
+        { result.response && renderMainResult(result.response.docs) }
         <Row>
           <Col>
             <strong>{props.phrases.interestingFacts}</strong>
             <ul className="interesting-facts p-0">
-              {
-                result.response.docs.filter((doc) => doc.type !== 'onlygiven').map( (doc, i) => {
-                  return (
-                    <li key={i} className="my-1">
-                      {parseResultText(doc.count, doc.name, doc.type)}
-                    </li>
-                  )
-                })
-              }
+              { result.response && renderSubResult(result.response.docs) }
             </ul>
           </Col>
         </Row>
