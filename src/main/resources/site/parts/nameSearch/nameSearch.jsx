@@ -19,6 +19,7 @@ function NameSearch(props) {
   })
   const [result, setResult] = useState(null)
   const [mainResult, setMainResult] = useState(undefined)
+  const [searchedTerm, setSearchedTerm] = useState('')
 
   function findMainResult(docs, originalName) {
     // only get result with same name as the input
@@ -37,7 +38,7 @@ function NameSearch(props) {
       <Row>
         <Col>
           <p className="result-highlight my-4">
-            { mainResult && mainResult.count <= 3 ? parseThreeOrLessText(mainResult) : parseResultText(mainResult) }
+            { !mainResult || mainResult.count <= 3 ? parseThreeOrLessText() : parseResultText(mainResult) }
           </p>
         </Col>
       </Row>
@@ -83,8 +84,8 @@ function NameSearch(props) {
       .replace('{1}', doc.name)} ${translateName(doc.type)}.`
   }
 
-  function parseThreeOrLessText(doc) {
-    return props.phrases.threeOrLessText.replace('{0}', doc.name)
+  function parseThreeOrLessText() {
+    return props.phrases.threeOrLessText.replace('{0}', searchedTerm.toUpperCase())
   }
 
   function translateName(nameCode) {
@@ -93,6 +94,7 @@ function NameSearch(props) {
 
   function handleSubmit(form) {
     form.preventDefault()
+    setSearchedTerm(name.value)
     axios.get(
       props.urlToService, {
         params: {
@@ -100,6 +102,7 @@ function NameSearch(props) {
         }
       }
     ).then((res) => {
+      console.log(res)
       findMainResult(res.data.response.docs, res.data.originalName)
       setResult(res.data)
     }
