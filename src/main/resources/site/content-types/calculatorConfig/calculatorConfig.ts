@@ -8,4 +8,11 @@ export interface CalculatorConfig {
    * Kilde Måned
    */
   kpiSourceMonth?: string;
+
+  /**
+   * 
+   *                         Artikkel Kpi kalkulator
+   *                     
+   */
+  kpiCalculatorArticle?: string;
 }

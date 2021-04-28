@@ -39,9 +39,13 @@ function renderPart(req: Request): React4xpResponse {
     key: 'publicationLinkText',
     locale: language === 'nb' ? 'no' : language
   })
+  const headerText: string = localize( {
+    key: 'articleList.heading',
+    locale: language === 'nb' ? 'no' : language
+  })
 
   const props: PartProperties = {
-    title: 'Nye artikler, analyser og publikasjoner',
+    title: headerText,
     articles: preparedArticles,
     archiveLinkText: archiveLinkText,
     archiveLinkUrl: component.config.pubArchiveUrl ? component.config.pubArchiveUrl : '#'
@@ -55,21 +59,13 @@ function getArticles(language: string): QueryResponse<Article> {
     count: 4,
     query: ``,
     contentTypes: [`${app.name}:article`],
-    sort: 'publish.from DESC',
+    sort: 'publish.from DESC, data.frontPagePriority DESC',
     filters: {
       boolean: {
         must: [
           {
             exists: {
-              field: 'data.showOnFrontPage'
-            }
-          },
-          {
-            hasValue: {
-              field: 'data.showOnFrontPage',
-              values: [
-                true
-              ]
+              field: 'data.subtopic'
             }
           },
           {
