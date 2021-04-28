@@ -33,20 +33,32 @@ function NameSearch(props) {
   }
 
   function renderMainResult() {
-    return (
-      <Row>
-        <Col>
-          <p className="result-highlight my-4">
-            { mainResult && parseResultText(mainResult) }
-          </p>
-        </Col>
-      </Row>
-    )
+    if (mainResult && mainResult.count <= 3) {
+      return (
+        <Row>
+          <Col>
+            <p className="result-highlight my-4">
+              { parseResultText(mainResult) }
+            </p>
+          </Col>
+        </Row>
+      )
+    } else {
+      return (
+        <Row>
+          <Col>
+            <p className="result-highlight my-4">
+              { mainResult && parseResultText(mainResult) }
+            </p>
+          </Col>
+        </Row>
+      )
+    }
   }
 
 
   function renderSubResult(docs) {
-    return docs.map( (doc, i) => {
+    return docs.filter((doc) => doc.type !== mainResult.type).map( (doc, i) => {
       return (
         <li key={i} className="my-1">
           { parseResultText(doc) }
@@ -82,6 +94,10 @@ function NameSearch(props) {
     return `${props.phrases.nameSearchResultText
       .replace('{0}', doc.count)
       .replace('{1}', doc.name)} ${translateName(doc.type)}.`
+  }
+
+  function parseThreeOrLessText(doc) {
+    return `${props.phrases.threeOrLessText}`
   }
 
   function translateName(nameCode) {
@@ -169,6 +185,7 @@ NameSearch.propTypes = {
     nameSearchResultTitle: PropTypes.string,
     nameSearchResultText: PropTypes.string,
     errorMessage: PropTypes.string,
+    threeOrLessText: PropTypes.string,
     types: PropTypes.shape({
       firstgivenandfamily: PropTypes.string,
       middleandfamily: PropTypes.string,
