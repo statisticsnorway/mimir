@@ -87,6 +87,10 @@ function partsPhrases(locale: string): PartProperties['phrases'] {
       key: 'nameSearch.errorMessage',
       locale
     }),
+    threeOrLessText: localize({
+      key: 'nameSearch.threeOrLessText',
+      locale
+    }),
     types: {
       firstgivenandfamily: localize({
         key: 'nameSearch.types.firstgivenandfamily',
@@ -110,10 +114,6 @@ function partsPhrases(locale: string): PartProperties['phrases'] {
       }),
       firstgiven: localize({
         key: 'nameSearch.types.firstgiven',
-        locale
-      }),
-      threeOrLessText: localize({
-        key: 'nameSearch.threeOrLessText',
         locale
       })
     }

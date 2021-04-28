@@ -33,29 +33,16 @@ function NameSearch(props) {
   }
 
   function renderMainResult() {
-    if (mainResult && mainResult.count <= 3) {
-      return (
-        <Row>
-          <Col>
-            <p className="result-highlight my-4">
-              { parseResultText(mainResult) }
-            </p>
-          </Col>
-        </Row>
-      )
-    } else {
-      return (
-        <Row>
-          <Col>
-            <p className="result-highlight my-4">
-              { mainResult && parseResultText(mainResult) }
-            </p>
-          </Col>
-        </Row>
-      )
-    }
+    return (
+      <Row>
+        <Col>
+          <p className="result-highlight my-4">
+            { mainResult && mainResult.count <= 3 ? parseThreeOrLessText(mainResult) : parseResultText(mainResult) }
+          </p>
+        </Col>
+      </Row>
+    )
   }
-
 
   function renderSubResult(docs) {
     return docs.filter((doc) => doc.type !== mainResult.type).map( (doc, i) => {
@@ -97,7 +84,7 @@ function NameSearch(props) {
   }
 
   function parseThreeOrLessText(doc) {
-    return `${props.phrases.threeOrLessText}`
+    return props.phrases.threeOrLessText.replace('{0}', doc.name)
   }
 
   function translateName(nameCode) {
@@ -113,8 +100,8 @@ function NameSearch(props) {
         }
       }
     ).then((res) => {
-      setResult(res.data)
       findMainResult(res.data.response.docs, res.data.originalName)
+      setResult(res.data)
     }
     ).catch((e) =>
       console.log(e)
