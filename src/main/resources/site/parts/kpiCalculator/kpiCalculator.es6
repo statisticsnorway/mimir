@@ -52,10 +52,10 @@ function renderPart(req) {
     key: 'kpiNextPublishText',
     locale: language.code,
     values: [
-      monthLabel(months, lastUpdated.month),
+      monthLabel(months, language.code, lastUpdated.month),
       lastUpdated.year,
-      monthLabel(months, nextUpdate.month),
-      monthLabel(months, nextReleaseMonth)
+      monthLabel(months, language.code, nextUpdate.month),
+      monthLabel(months, language.code, nextReleaseMonth)
     ]
   })
   const calculatorArticleUrl = config && config.data.kpiCalculatorArticle ? pageUrl({
@@ -189,7 +189,10 @@ const allMonths = (phrases, frontPage) => {
   ]
 }
 
-const monthLabel = (months, month) => {
+const monthLabel = (months, language, month) => {
   const monthLabel = months.find((m) => parseInt(m.id) === parseInt(month))
-  return monthLabel ? monthLabel.title.toLowerCase() : ''
+  if (monthLabel) {
+    return language === 'en' ? monthLabel.title : monthLabel.title.toLowerCase()
+  }
+  return ''
 }

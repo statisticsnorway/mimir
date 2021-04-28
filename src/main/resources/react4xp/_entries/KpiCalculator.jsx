@@ -322,6 +322,72 @@ function KpiCalculator(props) {
     }
   }
 
+  function renderResultFrontpage() {
+    if (loading) {
+      return (
+        <Container>
+          <span className="spinner-border spinner-border" />
+        </Container>
+      )
+    }
+    if (errorMessage !== null) {
+      return (
+        <Container className="calculator-error frontpage" >
+          <Row>
+            <Col>
+              <FormError errorMessages={[errorMessage || props.phrases.kpiErrorUnknownError]} title={props.phrases.kpiErrorCalculationFailed} />
+            </Col>
+          </Row>
+        </Container>
+      )
+    }
+    if (endValue && change) {
+      const decimalSeparator = (language === 'en') ? '.' : ','
+      const valute = (language === 'en') ? 'NOK' : 'kr'
+      const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
+      const changeValue = change.charAt(0) === '-' ? change.replace('-', '') : change
+      return (
+        <Container className="calculator-result-frontpage">
+          <Row className="mb-3">
+            <Col className="amount-equal align-self-end col-12 col-md-4">
+              <h3>{props.phrases.kpiAmountEqualled}</h3>
+            </Col>
+            <Col className="end-value col-12 col-md-8">
+              <span className="float-right">
+                <NumberFormat
+                  value={ Number(endValue) }
+                  displayType={'text'}
+                  thousandSeparator={' '}
+                  decimalSeparator={decimalSeparator}
+                  decimalScale={2}
+                  fixedDecimalScale={true}
+                /> {valute}
+              </span>
+            </Col>
+            <Col className="col-12">
+              <Divider dark/>
+            </Col>
+          </Row>
+          <Row>
+            <Col className="price-increase col-12 col-md-4">
+              <span>{priceChangeLabel}</span>
+              <span className="float-right">
+                <NumberFormat
+                  value={ Number(changeValue) }
+                  displayType={'text'}
+                  thousandSeparator={' '}
+                  decimalSeparator={decimalSeparator}
+                  decimalScale={1}
+                  fixedDecimalScale={true}
+                /> %
+              </span>
+            </Col>
+          </Row>
+        </Container>
+      )
+    }
+  }
+
   function renderLinkArticle() {
     if (props.calculatorArticleUrl) {
       return (
@@ -337,7 +403,7 @@ function KpiCalculator(props) {
       return (
         <Container className='kpi-calculator frontpage'>
           {renderFormFrontpage()}
-          {renderResult()}
+          {renderResultFrontpage()}
         </Container>
       )
     } else {

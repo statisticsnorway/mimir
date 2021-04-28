@@ -53,10 +53,14 @@
 
     .calculator-error {
       padding: 0 100px 60px 100px;
+
+      &.frontpage {
+        padding: 0 60px 55px 60px;
+      }
     }
 
     .calculator-form-frontpage {
-      padding: 50px;
+      padding: 60px 55px;
 
       .input-year {
         width: 80px;
@@ -75,6 +79,22 @@
       .calculate-from, .calculate-to {
         display: flex;
         align-items: flex-end;
+      }
+    }
+
+    .calculator-result-frontpage {
+      padding: 40px 55px;
+      border-top: solid 1px $ssb-dark-5;
+      background-color: $ssb-dark-1;
+
+      .amount-equal {
+        @include roboto;
+        font-size: 20px;
+      }
+
+      .end-value {
+        @include roboto-condenced ;
+        font-size: 28px;
       }
     }
 
