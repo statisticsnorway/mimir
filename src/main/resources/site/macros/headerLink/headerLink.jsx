@@ -1,19 +1,19 @@
-import React from 'react';
-import { Link } from '@statisticsnorway/ssb-component-library';
-import PropTypes from 'prop-types';
+import React from 'react'
+import { Link } from '@statisticsnorway/ssb-component-library'
+import PropTypes from 'prop-types'
 
 class HeaderLink extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
 
   render() {
     return (
-        <section className="headerLinkDownload container-fluid">
-          <Link href={this.props.linkedContent} isExternal={true} className="ssb-link header">
-            {this.props.linkText}
-          </Link>
-        </section>
+      <section className="headerLinkDownload">
+        <Link href={this.props.linkedContent} isExternal={true} className="ssb-link header">
+          {this.props.linkText}
+        </Link>
+      </section>
     )
   }
 }
@@ -22,5 +22,5 @@ export default (props) => <HeaderLink {...props} />
 
 HeaderLink.propTypes = {
   linkText: PropTypes.string,
-  linkedContent: PropTypes.string,
-};
+  linkedContent: PropTypes.string
+}

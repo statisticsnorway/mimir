@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Container, Row, Col } from 'react-bootstrap'
-import { Input, Button, Dropdown, Divider, FormError } from '@statisticsnorway/ssb-component-library'
+import { Input, Button, Dropdown, Divider, FormError, Link } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
 import NumberFormat from 'react-number-format'
 
 function KpiCalculator(props) {
-  // TODO maxYear hente fra datasett
-  const maxYear = '2021'
+  const maxYear = props.lastUpdated.year
   const [startValue, setStartValue] = useState({
     error: false,
     errorMsg: props.phrases.kpiValidateAmountNumber,
@@ -30,7 +29,7 @@ function KpiCalculator(props) {
   })
   const [endYear, setEndYear] = useState({
     error: false,
-    errorMsg: props.phrases.kpiValidateYear,
+    errorMsg: `${props.phrases.kpiValidateYear} ${maxYear}`,
     value: ''
   })
   const [errorMessage, setErrorMessage] = useState(null)
@@ -39,6 +38,7 @@ function KpiCalculator(props) {
   const [change, setChange] = useState(null)
   const [startPeriod, setStartPeriod] = useState(null)
   const [endPeriod, setEndPeriod] = useState(null)
+  const [startValueResult, setStartValueResult] = useState(null)
   const language = props.language ? props.language : 'nb'
 
   const validMaxYear = new Date().getFullYear()
@@ -77,6 +77,7 @@ function KpiCalculator(props) {
         setEndValue(endVal)
         setStartPeriod(startPeriod)
         setEndPeriod(endPeriod)
+        setStartValueResult(startValue.value)
       })
       .catch((err) => {
         if (err && err.response && err.response.data && err.response.data.error) {
@@ -212,12 +213,12 @@ function KpiCalculator(props) {
   }
 
   function getPeriod(year, month) {
-    if (month === '90') {
-      return year
-    } else {
-      const monthLabel = props.months.find((m) => m.id === month)
-      return `${monthLabel.title} ${year}`
-    }
+    return month === '90' ? year : `${getMonthLabel(month)} ${year}`
+  }
+
+  function getMonthLabel(month) {
+    const monthLabel = props.months.find((m) => parseInt(m.id) === parseInt(month))
+    return monthLabel ? monthLabel.title.toLowerCase() : ''
   }
 
   function renderResult() {
@@ -285,7 +286,7 @@ function KpiCalculator(props) {
               <span>{props.phrases.amount} {startPeriod}</span>
               <span className="float-right">
                 <NumberFormat
-                  value={ Number(startValue.value) }
+                  value={ Number(startValueResult) }
                   displayType={'text'}
                   thousandSeparator={' '}
                   decimalSeparator={decimalSeparator}
@@ -321,10 +322,25 @@ function KpiCalculator(props) {
     }
   }
 
+  function renderLinkArticle() {
+    if (props.calculatorArticleUrl) {
+      return (
+        <Col>
+          <Link className="float-right" href={props.calculatorArticleUrl}>{props.phrases.readAboutCalculator}</Link>
+        </Col>
+      )
+    }
+  }
+
   return (<Container className='kpi-calculator'>
     <div className="calculator-form">
-      <h2>{props.phrases.calculatePriceChange}</h2>
-      <p className="publish-text col-12 col-md-8">{props.phrases.kpiNextPublishText}</p>
+      <Row>
+        <Col>
+          <h2>{props.phrases.calculatePriceChange}</h2>
+        </Col>
+        {renderLinkArticle()}
+      </Row>
+      <p className="publish-text col-12 col-md-8">{props.nextPublishText}</p>
       <Form onSubmit={onSubmit}>
         <Container>
           <Row>
@@ -407,7 +423,13 @@ KpiCalculator.propTypes = {
       title: PropTypes.string
     })
   ),
-  phrases: PropTypes.arrayOf(PropTypes.string)
+  phrases: PropTypes.arrayOf(PropTypes.string),
+  calculatorArticleUrl: PropTypes.string,
+  nextPublishText: PropTypes.string,
+  lastUpdated: PropTypes.shape({
+    month: PropTypes.string,
+    year: PropTypes.string
+  })
 }
 
 export default (props) => <KpiCalculator {...props} />

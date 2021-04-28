@@ -1,6 +1,7 @@
 const {
   getContent,
-  serviceUrl
+  serviceUrl,
+  pageUrl
 } = __non_webpack_require__( '/lib/xp/portal')
 const {
   render
@@ -12,7 +13,10 @@ const React4xp = require('/lib/enonic/react4xp')
 const {
   getLanguage
 } = __non_webpack_require__( '/lib/language')
-
+const {
+  getCalculatorConfig, getKpiDatasetMonth
+} = __non_webpack_require__('/lib/ssb/dataset/calculator')
+const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 const view = resolve('./kpiCalculator.html')
 
 exports.get = function(req) {
@@ -35,6 +39,25 @@ function renderPart(req) {
   const page = getContent()
   const language = getLanguage(page)
   const phrases = language.phrases
+  const config = getCalculatorConfig()
+  const kpiDataMonth = getKpiDatasetMonth(config)
+  const months = allMonths(phrases)
+  const lastUpdated = lastPeriod(kpiDataMonth)
+  const nextUpdate = nextPeriod(lastUpdated.month, lastUpdated.year)
+  const nextReleaseMonth = nextUpdate.month == 12 ? 1 : nextUpdate.month + 1
+  const nextPublishText = i18nLib.localize({
+    key: 'kpiNextPublishText',
+    locale: language.code,
+    values: [
+      monthLabel(months, lastUpdated.month),
+      lastUpdated.year,
+      monthLabel(months, nextUpdate.month),
+      monthLabel(months, nextReleaseMonth)
+    ]
+  })
+  const calculatorArticleUrl = config && config.data.kpiCalculatorArticle ? pageUrl({
+    id: config.data.kpiCalculatorArticle
+  }) : null
 
   const kpiCalculator = new React4xp('KpiCalculator')
     .setProps({
@@ -42,8 +65,11 @@ function renderPart(req) {
         service: 'kpi'
       }),
       language: language.code,
-      months: getMonths(phrases),
-      phrases: phrases
+      months: months,
+      phrases: phrases,
+      calculatorArticleUrl,
+      nextPublishText: nextPublishText,
+      lastUpdated: lastUpdated
     })
     .setId('kpiCalculatorId')
     .uniqueId()
@@ -55,11 +81,54 @@ function renderPart(req) {
     body: kpiCalculator.renderBody({
       body
     }),
-    pageContributions: kpiCalculator.renderPageContributions()
+    pageContributions: kpiCalculator.renderPageContributions({
+      clientRender: req.mode !== 'edit'
+    })
   }
 }
 
-const getMonths = (phrases) => {
+const lastPeriod = (kpiDataMonth) => {
+  // eslint-disable-next-line new-cap
+  const dataYear = kpiDataMonth ? kpiDataMonth.Dimension('Tid').id : null
+  // eslint-disable-next-line new-cap
+  const dataMonth = kpiDataMonth ? kpiDataMonth.Dimension('Maaned').id : null
+  const lastYear = dataYear[dataYear.length - 1]
+  const dataLastYearMnd = []
+
+  dataMonth.forEach(function(month) {
+    // eslint-disable-next-line new-cap
+    const verdi = kpiDataMonth.Data( {
+      'Tid': lastYear,
+      'Maaned': month
+    } ).value
+    if (verdi != null) {
+      dataLastYearMnd.push(month)
+    }
+  })
+  const lastMonth = dataLastYearMnd[dataLastYearMnd.length - 1]
+
+  return {
+    month: lastMonth,
+    year: lastYear
+  }
+}
+
+const nextPeriod = (month, year) => {
+  let nextPeriodMonth = parseInt(month) + 1
+  let nextPeriodYear = parseInt(year)
+
+  if (month == 12) {
+    nextPeriodMonth = 1
+    nextPeriodYear = nextPeriodYear + 1
+  }
+
+  return {
+    month: nextPeriodMonth,
+    year: nextPeriodYear
+  }
+}
+
+const allMonths = (phrases) => {
   return [
     {
       id: '90',
@@ -114,4 +183,9 @@ const getMonths = (phrases) => {
       title: phrases.december
     }
   ]
+}
+
+const monthLabel = (months, month) => {
+  const monthLabel = months.find((m) => parseInt(m.id) === parseInt(month))
+  return monthLabel ? monthLabel.title.toLowerCase() : ''
 }
