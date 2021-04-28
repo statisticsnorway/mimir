@@ -23,7 +23,7 @@ function NameSearch(props) {
   function findMainResult(docs, originalName) {
     // only get result with same name as the input
     const filteredResult = docs.filter((doc) => doc.name === originalName.toUpperCase())
-    const mainRes = filteredResult && filteredResult.reduce((acc, current) => {
+    const mainRes = filteredResult.length && filteredResult.reduce((acc, current) => {
       if (!acc || acc.count < current.count ) {
         acc = current // get the hit with the highest count
       }
