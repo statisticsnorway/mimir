@@ -99,7 +99,11 @@ function NameSearch(props) {
   }
 
   function parseThreeOrLessText() {
-    return props.phrases.threeOrLessText.replace('{0}', searchedTerm.toUpperCase())
+    return <span>
+      {` ${props.phrases.threeOrLessText} `}
+      <strong className="name-search-name">{searchedTerm}</strong>
+      {`${props.phrases.asTheir} ${translateName(doc.type)}`}
+    </span>
   }
 
   function translateName(nameCode) {
