@@ -22,7 +22,7 @@ const {
   isUrl
 } = __non_webpack_require__('/lib/ssb/utils')
 const {
-  UNPUBLISHED_DATASET_BRANCH
+  DATASET_BRANCH
 }: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
 
 export function getTbprocessor(content: Content<DataSource>, branch: string): DatasetRepoNode<TbmlDataUniform> | null {
@@ -118,7 +118,7 @@ function getDataAndMetaData(content: Content<DataSource>, processXml?: string ):
     if (isInternal || isNewPublic) {
       tbmlParsedResponse.status = 200
 
-      const datasetRepo: DatasetRepoNode<TbmlDataUniform> | null = getDataset(dataSourceType.TBPROCESSOR, UNPUBLISHED_DATASET_BRANCH, tbmlKey)
+      const datasetRepo: DatasetRepoNode<TbmlDataUniform> | null = getDataset(dataSourceType.TBPROCESSOR, DATASET_BRANCH, tbmlKey)
       if (datasetRepo && datasetRepo.data) {
         const data: TbmlDataUniform = datasetRepo.data as TbmlDataUniform
         tbmlParsedResponse.parsedBody = {
