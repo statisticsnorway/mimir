@@ -523,7 +523,7 @@ function KpiCalculator(props) {
         <Form onSubmit={onSubmit}>
           <Container>
             <Row className="calculator-input">
-              <Col className="input-amount col-12 col-md-4">
+              <Col className="input-amount col-12 col-xl-4">
                 <Input
                   className="start-value"
                   label={props.phrases.enterAmount}
@@ -533,10 +533,10 @@ function KpiCalculator(props) {
                   onBlur={() => onBlur('start-value')}
                 />
               </Col>
-              <Col className="calculate-from col-12 col-md-4">
+              <Col className="calculate-from col-12 col-md-6 col-xl-4">
                 <Container>
-                  <Row className="mr-3">
-                    <Col className="select-year align-self-end p-0">
+                  <Row>
+                    <Col className="select-year align-self-end col-5">
                       <Input
                         className="input-year"
                         label='Fra år(åååå)'
@@ -546,16 +546,16 @@ function KpiCalculator(props) {
                         onBlur={() => onBlur('start-year')}
                       />
                     </Col>
-                    <Col className="select-month p-0">
+                    <Col className="select-month p-0 col-7">
                       {addDropdownMonth('start-month')}
                     </Col>
                   </Row>
                 </Container>
               </Col>
-              <Col className="calculate-to col-12 col-md-4">
+              <Col className="calculate-to col-12 col-md-6 col-xl-4">
                 <Container>
-                  <Row>
-                    <Col className="select-year align-self-end p-0">
+                  <Row className="ml-0 ml-xl-1">
+                    <Col className="select-year align-self-end col-5">
                       <Input
                         className="input-year"
                         label='Til år(åååå)'
@@ -565,7 +565,7 @@ function KpiCalculator(props) {
                         onBlur={() => onBlur('end-year')}
                       />
                     </Col>
-                    <Col className="select-month  p-0">
+                    <Col className="select-month  p-0 col-7">
                       {addDropdownMonth('end-month')}
                     </Col>
                   </Row>
@@ -574,7 +574,7 @@ function KpiCalculator(props) {
             </Row>
             <Row className="submit">
               <Col>
-                <Button primary type="submit" disabled={loading}>{props.phrases.seePriceChange}</Button>
+                <Button className="submit-button" primary type="submit" disabled={loading}>{props.phrases.seePriceChange}</Button>
               </Col>
               {renderLinkArticle()}
             </Row>

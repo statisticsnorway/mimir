@@ -64,25 +64,24 @@
       padding: 60px;
 
       .select-year {
-        max-width: 90px;
+        max-width: 80px;
+        min-width: 80px;
         margin-right: 4px;
+        padding-left: 0;
+        padding-right: 0;
       }
 
       .select-month {
-        max-width: 100px;
+        width: 100%;
       }
 
       .start-value {
-        max-width: 160px;
-      }
-
-      .input-year {
-        max-width: 90px;
+        width: 160px;
       }
 
       .ssb-dropdown.month {
-        max-width: 100px;
-        min-width: 100px;
+        max-width: 125px;
+        min-width: 125px;
       }
 
       .submit {
@@ -120,17 +119,6 @@
         }
 
       }
-
-      .calculator-form-frontpage {
-        .input-amount {
-          width: 100%;
-          margin-bottom: 20px;
-        }
-
-        .article-link {
-          margin-top: 20px;
-        }
-      }
     }
 
     @include media-breakpoint-down(md) {
@@ -149,6 +137,7 @@
   
         .calculate-from, .calculate-from {
           margin-bottom: 20px;
+          width: 100%
         }
 
       }
@@ -156,16 +145,39 @@
       .calculator-form-frontpage {
         padding: 20px;
 
-        .calculate-from, .calculate-from {
+        .input-amount {
+          width: 100%;
           margin-bottom: 20px;
         }
 
-        .input-year, .month {
+        .start-value {
+          width: 100%;
+        }
+
+        .article-link {
+          margin-top: 20px;
+        }
+
+        .calculate-from, .calculate-from {
+          margin-bottom: 20px;
+          width: 100%;
+        }
+
+        .ssb-dropdown.month {
+          max-width: 150px;
+          min-width: 150px;
+        }
+
+        .select-year {
+          max-width: 100px;
+        }
+
+        .submit-button {
           width: 100%;
         }
       }
 
-      .calculator-error, .calculator-error.frontpage, .calculator-result {
+      .calculator-error, .calculator-error.frontpage, .calculator-result , .calculator-result-frontpage {
         padding: 20px;
       }
 
