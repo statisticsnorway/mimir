@@ -78,11 +78,14 @@ function NameSearch(props) {
     )
   }
   function parseResultText(doc) {
-    return `${props.phrases.nameSearchResultText
-      .replace('{0}', doc.count)
-      .replace('{1}', formatGender(doc.gender))
-      .replace('{2}', doc.name)
-      .replace('{3}', translateName(doc.type))}.`
+    return (
+      <span>
+        {`${props.phrases.thereAre} `}
+        <strong>{doc.count}</strong>
+        {` ${formatGender(doc.gender)} ${props.phrases.with} `}
+        <strong className="name-search-name">{doc.name.toLowerCase()} </strong>
+        {` ${props.phrases.asTheir} ${translateName(doc.type)} `}
+      </span> )
   }
 
   function formatGender(gender) {
@@ -184,7 +187,9 @@ NameSearch.propTypes = {
     nameSearchButtonText: PropTypes.string,
     interestingFacts: PropTypes.string,
     nameSearchResultTitle: PropTypes.string,
-    nameSearchResultText: PropTypes.string,
+    thereAre: PropTypes.string,
+    with: PropTypes.string,
+    asTheir: PropTypes.string,
     errorMessage: PropTypes.string,
     threeOrLessText: PropTypes.string,
     women: PropTypes.string,
