@@ -3,6 +3,7 @@
   .kpi-calculator {
     border: solid 1px $ssb-dark-5;
     border-top: 4px solid $green3;
+    background: $ssb-white;
 
     .calculator-form {
       padding: 60px 100px;
@@ -60,30 +61,37 @@
     }
 
     .calculator-form-frontpage {
-      padding: 60px 55px;
+      padding: 60px;
 
-      .input-year {
-        width: 80px;
-        float: left;
+      .select-year {
+        max-width: 90px;
         margin-right: 4px;
       }
 
+      .select-month {
+        max-width: 100px;
+      }
+
+      .start-value {
+        max-width: 160px;
+      }
+
+      .input-year {
+        max-width: 90px;
+      }
+
       .ssb-dropdown.month {
-        width: 100px;
+        max-width: 100px;
+        min-width: 100px;
       }
 
       .submit {
         padding-top: 32px;
       }
-
-      .calculate-from, .calculate-to {
-        display: flex;
-        align-items: flex-end;
-      }
     }
 
     .calculator-result-frontpage {
-      padding: 40px 55px;
+      padding: 40px 60px;
       border-top: solid 1px $ssb-dark-5;
       background-color: $ssb-dark-1;
 
@@ -106,12 +114,21 @@
           width: 100%;
         }
 
+        .article-link {
+          margin-top: 10px;
+          margin-bottom: 10px;
+        }
+
       }
 
       .calculator-form-frontpage {
         .input-amount {
           width: 100%;
           margin-bottom: 20px;
+        }
+
+        .article-link {
+          margin-top: 20px;
         }
       }
     }
@@ -148,7 +165,7 @@
         }
       }
 
-      .calculator-error, .calculator-result {
+      .calculator-error, .calculator-error.frontpage, .calculator-result {
         padding: 20px;
       }
 

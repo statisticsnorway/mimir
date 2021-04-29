@@ -40,6 +40,7 @@ function renderPart(req) {
   const page = getContent()
   const part = getComponent()
   const frontPage = part.config.frontPage ? part.config.frontPage : false
+  const frontPageIngress = part.config.ingressFrontpage ? part.config.ingressFrontpage : null
   const language = getLanguage(page)
   const phrases = language.phrases
   const config = getCalculatorConfig()
@@ -58,8 +59,8 @@ function renderPart(req) {
       monthLabel(months, language.code, nextReleaseMonth)
     ]
   })
-  const calculatorArticleUrl = config && config.data.kpiCalculatorArticle ? pageUrl({
-    id: config.data.kpiCalculatorArticle
+  const calculatorArticleUrl = part.config.kpiCalculatorArticle ? pageUrl({
+    id: part.config.kpiCalculatorArticle
   }) : null
 
   const kpiCalculator = new React4xp('KpiCalculator')
@@ -73,7 +74,8 @@ function renderPart(req) {
       calculatorArticleUrl,
       nextPublishText: nextPublishText,
       lastUpdated: lastUpdated,
-      frontPage: frontPage
+      frontPage: frontPage,
+      frontPageIngress: frontPageIngress
     })
     .setId('kpiCalculatorId')
     .uniqueId()

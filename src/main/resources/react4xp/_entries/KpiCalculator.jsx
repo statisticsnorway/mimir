@@ -391,9 +391,23 @@ function KpiCalculator(props) {
   function renderLinkArticle() {
     if (props.calculatorArticleUrl) {
       return (
-        <Col>
-          <Link className="float-right" href={props.calculatorArticleUrl}>{props.phrases.readAboutCalculator}</Link>
+        <Col className="article-link align-self-center col-12 col-md-6">
+          <Link className="float-md-right" href={props.calculatorArticleUrl}>{props.phrases.readAboutCalculator}</Link>
         </Col>
+      )
+    }
+  }
+
+  function renderIngressFrontpage() {
+    if (props.frontPageIngress) {
+      return (
+        <Row>
+          <Col className="publish-text pb-2"
+            dangerouslySetInnerHTML={{
+              __html: props.frontPageIngress
+            }}
+          />
+        </Row>
       )
     }
   }
@@ -425,7 +439,11 @@ function KpiCalculator(props) {
           </Col>
           {renderLinkArticle()}
         </Row>
-        <p className="publish-text col-12 col-md-8">{props.nextPublishText}</p>
+        <Row>
+          <Col className="col-12 col-md-8">
+            <p className="publish-text">{props.nextPublishText}</p>
+          </Col>
+        </Row>
         <Form onSubmit={onSubmit}>
           <Container>
             <Row>
@@ -484,7 +502,7 @@ function KpiCalculator(props) {
             </Row>
             <Row className="submit">
               <Col>
-                <Button primary type="submit" disabled={loading}>{props.phrases.calculatePriceChange}</Button>
+                <Button primary type="submit" disabled={loading}>{props.phrases.seePriceChange}</Button>
               </Col>
             </Row>
           </Container>
@@ -501,15 +519,11 @@ function KpiCalculator(props) {
             <h2>{props.phrases.calculatePriceChange}</h2>
           </Col>
         </Row>
-        <Row>
-          <Col>
-            <p>Regn ut hvor mye prisene har endret seg. Kalkulatoren er basert på konsumprisindeksen.</p>
-          </Col>
-        </Row>
+        {renderIngressFrontpage()}
         <Form onSubmit={onSubmit}>
           <Container>
             <Row className="calculator-input">
-              <Col className="input-amount col-12 col-md-3 align-self-end">
+              <Col className="input-amount col-12 col-md-4">
                 <Input
                   className="start-value"
                   label={props.phrases.enterAmount}
@@ -519,37 +533,50 @@ function KpiCalculator(props) {
                   onBlur={() => onBlur('start-value')}
                 />
               </Col>
-              <Col>
-                <Container className="calculate-from">
-                  <Input
-                    className="input-year"
-                    label='Fra år(åååå)'
-                    handleChange={(value) => onChange('start-year', value)}
-                    error={startYear.error}
-                    errorMessage={startYear.errorMsg}
-                    onBlur={() => onBlur('start-year')}
-                  />
-                  {addDropdownMonth('start-month')}
+              <Col className="calculate-from col-12 col-md-4">
+                <Container>
+                  <Row className="mr-3">
+                    <Col className="select-year align-self-end p-0">
+                      <Input
+                        className="input-year"
+                        label='Fra år(åååå)'
+                        handleChange={(value) => onChange('start-year', value)}
+                        error={startYear.error}
+                        errorMessage={startYear.errorMsg}
+                        onBlur={() => onBlur('start-year')}
+                      />
+                    </Col>
+                    <Col className="select-month p-0">
+                      {addDropdownMonth('start-month')}
+                    </Col>
+                  </Row>
                 </Container>
               </Col>
-              <Col>
-                <Container className="calculate-to">
-                  <Input
-                    className="input-year"
-                    label='Til år(åååå)'
-                    handleChange={(value) => onChange('end-year', value)}
-                    error={endYear.error}
-                    errorMessage={endYear.errorMsg}
-                    onBlur={() => onBlur('end-year')}
-                  />
-                  {addDropdownMonth('end-month')}
+              <Col className="calculate-to col-12 col-md-4">
+                <Container>
+                  <Row>
+                    <Col className="select-year align-self-end p-0">
+                      <Input
+                        className="input-year"
+                        label='Til år(åååå)'
+                        handleChange={(value) => onChange('end-year', value)}
+                        error={endYear.error}
+                        errorMessage={endYear.errorMsg}
+                        onBlur={() => onBlur('end-year')}
+                      />
+                    </Col>
+                    <Col className="select-month  p-0">
+                      {addDropdownMonth('end-month')}
+                    </Col>
+                  </Row>
                 </Container>
               </Col>
             </Row>
             <Row className="submit">
               <Col>
-                <Button primary type="submit" disabled={loading}>{props.phrases.calculatePriceChange}</Button>
+                <Button primary type="submit" disabled={loading}>{props.phrases.seePriceChange}</Button>
               </Col>
+              {renderLinkArticle()}
             </Row>
           </Container>
         </Form>
@@ -585,7 +612,8 @@ KpiCalculator.propTypes = {
     month: PropTypes.string,
     year: PropTypes.string
   }),
-  frontPage: PropTypes.bool
+  frontPage: PropTypes.bool,
+  frontPageIngress: PropTypes.string
 }
 
 export default (props) => <KpiCalculator {...props} />
