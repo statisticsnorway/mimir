@@ -91,6 +91,14 @@ function partsPhrases(locale: string): PartProperties['phrases'] {
       key: 'nameSearch.threeOrLessText',
       locale
     }),
+    women: localize({
+      key: 'women',
+      locale
+    }),
+    men: localize({
+      key: 'men',
+      locale
+    }),
     types: {
       firstgivenandfamily: localize({
         key: 'nameSearch.types.firstgivenandfamily',
@@ -135,6 +143,8 @@ interface PartProperties {
     nameSearchResultText: string;
     errorMessage: string;
     threeOrLessText: string;
+    women: string;
+    men: string;
     types: {
       firstgivenandfamily: string;
       middleandfamily: string;

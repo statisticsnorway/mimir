@@ -80,7 +80,19 @@ function NameSearch(props) {
   function parseResultText(doc) {
     return `${props.phrases.nameSearchResultText
       .replace('{0}', doc.count)
-      .replace('{1}', doc.name)} ${translateName(doc.type)}.`
+      .replace('{1}', formatGender(doc.gender))
+      .replace('{2}', doc.name)
+      .replace('{3}', translateName(doc.type))}.`
+  }
+
+  function formatGender(gender) {
+    switch (gender) {
+    case 'F':
+      return props.phrases.women
+    case 'M':
+      return props.phrases.men
+    default: return ''
+    }
   }
 
   function parseThreeOrLessText() {
@@ -175,6 +187,8 @@ NameSearch.propTypes = {
     nameSearchResultText: PropTypes.string,
     errorMessage: PropTypes.string,
     threeOrLessText: PropTypes.string,
+    women: PropTypes.string,
+    men: PropTypes.string,
     types: PropTypes.shape({
       firstgivenandfamily: PropTypes.string,
       middleandfamily: PropTypes.string,
