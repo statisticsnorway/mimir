@@ -7,7 +7,6 @@ import axios from 'axios'
 /* TODO
 - Etternavn må få rett visning av beste-treff
 - Styling og presentasjon
-- Tekst for "Det er 0-3 personer som heter... "
 - Skjule mindre interessante resultater - må sikkert diskuteres noen runder med Siv og Ina
 */
 
