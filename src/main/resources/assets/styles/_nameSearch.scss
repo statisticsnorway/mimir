@@ -4,7 +4,12 @@
     margin-bottom: 30px;
     font-family: $font-roboto-condensed-bold;
     font-weight: 700;
+
+    &.result-title {
+      font-size: 20px;
+    }
   }
+
   .name-search-input {
     border: 1px solid $ssb-green-5;
   }
@@ -13,8 +18,14 @@
     border: 1px solid $ssb-green-5;
     background-color: $ssb-dark-1;
   }
+
   .result-highlight {
     font-size: 20px;
+    font-family: $font-roboto-bold;
+
+    .details {
+      font-weight: 700;
+    }
   }
 
   .interesting-facts {

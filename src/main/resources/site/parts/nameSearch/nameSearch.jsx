@@ -59,7 +59,7 @@ function NameSearch(props) {
       <Container className="name-search-result p-5">
         <Row>
           <Col>
-            <h3>{props.phrases.nameSearchResultTitle}</h3>
+            <h3 className="result-title mb-1">{props.phrases.nameSearchResultTitle}</h3>
             <Divider dark/>
           </Col>
         </Row>
@@ -81,9 +81,9 @@ function NameSearch(props) {
     return (
       <span>
         {`${props.phrases.thereAre} `}
-        <strong>{doc.count}</strong>
+        <span className="details">{doc.count}</span>
         {` ${formatGender(doc.gender)} ${props.phrases.with} `}
-        <strong className="name-search-name">{doc.name.toLowerCase()} </strong>
+        <span className="details name-search-name">{doc.name.toLowerCase()} </span>
         {` ${props.phrases.asTheir} ${translateName(doc.type)} `}
       </span> )
   }
