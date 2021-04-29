@@ -2,6 +2,14 @@
   background: $ssb-dark-5;
   padding: 60px 160px 60px 160px;
 
+  @include media-breakpoint-down(lg) {
+    padding: 40px 20px;
+  }
+  @include media-breakpoint-down(md) {
+    padding: 20px 10px;
+  }
+
+
   .keyfigure-wrapper {
     color: $ssb-dark-6;
 

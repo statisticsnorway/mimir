@@ -8,7 +8,7 @@ class FrontpageKeyfigures extends React.Component {
     return keyFigures.map((keyFigure, i) => {
       return (
         <React.Fragment key={`figure-${i}`}>
-          <div className="col-12 col-lg-3">
+          <div className="col-12 col-lg-3 mb-3 mb-md-0">
             <a href={keyFigure.url} className="keyfigure-wrapper">
               <div className="keyfigure">
                 <div className="ssb-link header">
