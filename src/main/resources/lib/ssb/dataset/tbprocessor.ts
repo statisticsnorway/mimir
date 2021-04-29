@@ -1,5 +1,5 @@
 __non_webpack_require__('/lib/polyfills/nashorn')
-import { DatasetRepoNode, RepoDatasetLib } from '../../repo/dataset'
+import { DatasetRepoNode, DataSource as dataSourceType, RepoDatasetLib } from '../../repo/dataset'
 import { Content } from 'enonic-types/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { RepoQueryLib } from '../../repo/query'
@@ -21,13 +21,16 @@ const {
 const {
   isUrl
 } = __non_webpack_require__('/lib/ssb/utils')
+const {
+  UNPUBLISHED_DATASET_BRANCH
+}: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
 
 export function getTbprocessor(content: Content<DataSource>, branch: string): DatasetRepoNode<TbmlDataUniform> | null {
   if (content.data.dataSource && content.data.dataSource._selected) {
     const dataSource: DataSource['dataSource'] = content.data.dataSource
     if (dataSource.tbprocessor && dataSource.tbprocessor.urlOrId) {
-      const langauge: string = content.language || ''
-      return getDataset(content.data.dataSource?._selected, branch, `${getTbprocessorKey(content)}${langauge === 'en' ? langauge : ''}`)
+      const language: string = content.language || ''
+      return getDataset(content.data.dataSource?._selected, branch, `${getTbprocessorKey(content)}${language === 'en' ? language : ''}`)
     }
   }
   return null
@@ -110,35 +113,56 @@ function getDataAndMetaData(content: Content<DataSource>, processXml?: string ):
     tbmlParsedResponse.body.includes('<error>') &&
     tbmlParsedResponse.body.includes('inneholder ikke data')
   )
+
   if (tbmlParsedResponse && (tbmlParsedResponse.status === 200 || isInternal || isNewPublic)) {
     if (isInternal || isNewPublic) {
       tbmlParsedResponse.status = 200
-      tbmlParsedResponse.parsedBody = {
-        tbml: {
-          presentation: {
-            table: {
-              thead: [],
-              tbody: [],
-              class: 'statistics'
+
+      const datasetRepo: DatasetRepoNode<TbmlDataUniform> | null = getDataset(dataSourceType.TBPROCESSOR, UNPUBLISHED_DATASET_BRANCH, tbmlKey)
+      if (datasetRepo && datasetRepo.data) {
+        const data: TbmlDataUniform = datasetRepo.data as TbmlDataUniform
+        tbmlParsedResponse.parsedBody = {
+          tbml: {
+            presentation: data.tbml.presentation,
+            metadata: {
+              instance: data.tbml.metadata.instance,
+              tablesource: data.tbml.metadata.tablesource,
+              title: data.tbml.metadata.title,
+              category: data.tbml.metadata.category,
+              shortnameweb: data.tbml.metadata.shortnameweb,
+              tags: data.tbml.metadata.tags,
+              notes: data.tbml.metadata.notes
             }
-          },
-          metadata: {
-            instance: {
-              publicRelatedTableIds: [],
-              language: 'no',
-              relatedTableIds: [],
-              definitionId: parseInt(tbmlKey)
+          }
+        }
+      } else {
+        tbmlParsedResponse.parsedBody = {
+          tbml: {
+            presentation: {
+              table: {
+                thead: [],
+                tbody: [],
+                class: 'statistics'
+              }
             },
-            tablesource: '',
-            title: {
-              noterefs: '',
-              content: ''
-            },
-            category: '',
-            shortnameweb: '',
-            tags: '',
-            notes: {
-              note: []
+            metadata: {
+              instance: {
+                publicRelatedTableIds: [],
+                language: 'no',
+                relatedTableIds: [],
+                definitionId: parseInt(tbmlKey)
+              },
+              tablesource: '',
+              title: {
+                noterefs: '',
+                content: ''
+              },
+              category: '',
+              shortnameweb: '',
+              tags: '',
+              notes: {
+                note: []
+              }
             }
           }
         }
