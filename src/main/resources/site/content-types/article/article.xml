@@ -238,10 +238,14 @@
 					</label>
 					<occurrences minimum="0" maximum="1" />
 				</input>
-				<input name="showOnFrontPage" type="CheckBox">
-					<label>
-						Vis på forside
-					</label>
+				<input name="frontPagePriority" type="RadioButton">
+					<label>Prioritert visning på forside</label>
+					<occurrences minimum="1" maximum="1"/>
+					<config>
+						<option value="0">Ikke prioritert</option>
+						<option value="1">Prioritert</option>
+					</config>
+					<default>0</default>
 				</input>
 			</items>
 		</field-set>
