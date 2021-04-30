@@ -1,9 +1,9 @@
 import { Dataset, JSONstat as JSONstatType } from '../../types/jsonstat-toolkit'
 import { Content, ContentLibrary } from 'enonic-types/content'
 import { CalculatorConfig } from '../../../site/content-types/calculatorConfig/calculatorConfig'
-import { SSBCacheLibrary } from '../cache'
+import { SSBCacheLibrary } from '../cache/cache'
 import { GenericDataImport } from '../../../site/content-types/genericDataImport/genericDataImport'
-import { DatasetRepoNode } from '../../../lib/repo/dataset'
+import { DatasetRepoNode } from '../repo/dataset'
 /* eslint-disable new-cap */
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore

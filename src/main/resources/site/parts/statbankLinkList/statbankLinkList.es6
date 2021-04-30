@@ -1,4 +1,4 @@
-import { getStatisticByIdFromRepo } from '../../../lib/repo/statreg/statistics'
+import { getStatisticByIdFromRepo } from '../../../lib/ssb/statreg/statistics'
 
 const {
   getContent

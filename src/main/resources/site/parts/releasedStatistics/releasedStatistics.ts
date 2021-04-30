@@ -2,7 +2,7 @@ import { Content } from 'enonic-types/content'
 
 __non_webpack_require__('/lib/polyfills/nashorn')
 import { Request, Response } from 'enonic-types/controller'
-import { StatisticInListing, VariantInListing } from '../../../lib/ssb/statreg/types'
+import { StatisticInListing, VariantInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
 import { groupBy } from 'ramda'
 import { Component, PortalLibrary } from 'enonic-types/portal'

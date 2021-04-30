@@ -1,8 +1,8 @@
 import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
-import { UNPUBLISHED_DATASET_BRANCH } from '../../repo/dataset'
-import { StatisticLib } from '../statistic'
+import { UNPUBLISHED_DATASET_BRANCH } from '../repo/dataset'
+import { StatisticLib } from '../dashboard/statistic'
 import { DatasetLib } from './dataset'
 
 const {
