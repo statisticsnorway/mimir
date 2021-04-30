@@ -349,11 +349,11 @@ function KpiCalculator(props) {
       return (
         <Container className="calculator-result-frontpage">
           <Row className="mb-3">
-            <Col className="amount-equal align-self-end col-12 col-md-4">
+            <Col className="amount-equal align-self-end col-12 col-lg-4">
               <h3>{props.phrases.kpiAmountEqualled}</h3>
             </Col>
-            <Col className="end-value col-12 col-md-8">
-              <span className="float-right">
+            <Col className="end-value col-12 col-lg-8">
+              <span className="float-lg-right">
                 <NumberFormat
                   value={ Number(endValue) }
                   displayType={'text'}
@@ -369,9 +369,9 @@ function KpiCalculator(props) {
             </Col>
           </Row>
           <Row>
-            <Col className="price-increase col-12 col-md-4">
-              <span>{priceChangeLabel}</span>
-              <span className="float-right">
+            <Col className="price-increase col-12">
+              <span>{priceChangeLabel} </span>
+              <span>
                 <NumberFormat
                   value={ Number(changeValue) }
                   displayType={'text'}
@@ -391,8 +391,8 @@ function KpiCalculator(props) {
   function renderLinkArticle() {
     if (props.calculatorArticleUrl) {
       return (
-        <Col className="article-link align-self-center col-12 col-md-6">
-          <Link className="float-md-right" href={props.calculatorArticleUrl}>{props.phrases.readAboutCalculator}</Link>
+        <Col className="article-link align-self-center col-12 col-lg-6">
+          <Link className="float-lg-right" href={props.calculatorArticleUrl}>{props.phrases.readAboutCalculator}</Link>
         </Col>
       )
     }
@@ -533,7 +533,7 @@ function KpiCalculator(props) {
                   onBlur={() => onBlur('start-value')}
                 />
               </Col>
-              <Col className="calculate-from col-12 col-md-6 col-xl-4">
+              <Col className="calculate-from col-12 col-lg-6 col-xl-4">
                 <Container>
                   <Row>
                     <Col className="select-year align-self-end col-5">
@@ -546,13 +546,13 @@ function KpiCalculator(props) {
                         onBlur={() => onBlur('start-year')}
                       />
                     </Col>
-                    <Col className="select-month p-0 col-7">
+                    <Col className="select-month col-7">
                       {addDropdownMonth('start-month')}
                     </Col>
                   </Row>
                 </Container>
               </Col>
-              <Col className="calculate-to col-12 col-md-6 col-xl-4">
+              <Col className="calculate-to col-12 col-lg-6 col-xl-4">
                 <Container>
                   <Row className="ml-0 ml-xl-1">
                     <Col className="select-year align-self-end col-5">
@@ -565,7 +565,7 @@ function KpiCalculator(props) {
                         onBlur={() => onBlur('end-year')}
                       />
                     </Col>
-                    <Col className="select-month  p-0 col-7">
+                    <Col className="select-month col-7">
                       {addDropdownMonth('end-month')}
                     </Col>
                   </Row>
