@@ -259,6 +259,85 @@ function KpiCalculator(props) {
     }
   }
 
+  function calculatorResult() {
+    const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
+    return (
+      <Container className="calculator-result">
+        <Row className="mb-5">
+          <Col className="amount-equal align-self-end col-12 col-md-4">
+            <h3>{props.phrases.kpiAmountEqualled}</h3>
+          </Col>
+          <Col className="end-value col-12 col-md-8">
+            <span className="float-right">
+              {renderNumberValute(endValue)}
+            </span>
+          </Col>
+          <Col className="col-12">
+            <Divider dark/>
+          </Col>
+        </Row>
+        <Row className="mb-5">
+          <Col className="price-increase col-12 col-md-4">
+            <span>{priceChangeLabel}</span>
+            <span className="float-right">
+              {renderNumberChangeValue()}
+            </span>
+            <Divider dark/>
+          </Col>
+          <Col className="start-value col-12 col-md-4">
+            <span>{props.phrases.amount} {startPeriod}</span>
+            <span className="float-right">
+              {renderNumberValute(startValueResult)}
+            </span>
+            <Divider dark/>
+          </Col>
+          <Col className="amount col-12 col-md-4">
+            <span>{props.phrases.amount} {endPeriod}</span>
+            <span className="float-right">
+              {renderNumberValute(endValue)}
+            </span>
+            <Divider dark/>
+          </Col>
+        </Row>
+        <Row className="my-4">
+          <Col className="col-12 col-md-8">
+            <span className="info-title">{props.phrases.kpiCalculatorInfoTitle}</span>
+            <p className="info-text">{props.phrases.kpiCalculatorInfoText}</p>
+          </Col>
+        </Row>
+      </Container>
+    )
+  }
+
+  function calculatorResultFrontpage() {
+    const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
+    return (
+      <Container className="calculator-result-frontpage">
+        <Row className="mb-3">
+          <Col className="amount-equal align-self-end col-12 col-lg-4">
+            <h3>{props.phrases.kpiAmountEqualled}</h3>
+          </Col>
+          <Col className="end-value col-12 col-lg-8">
+            <span className="float-lg-right">
+              {renderNumberValute(endValue)}
+            </span>
+          </Col>
+          <Col className="col-12">
+            <Divider dark/>
+          </Col>
+        </Row>
+        <Row>
+          <Col className="price-increase col-12">
+            <span>{priceChangeLabel} </span>
+            <span>
+              {renderNumberChangeValue()}
+            </span>
+          </Col>
+        </Row>
+      </Container>
+    )
+  }
+
   function renderResult() {
     if (loading) {
       return (
@@ -279,101 +358,8 @@ function KpiCalculator(props) {
       )
     }
     if (endValue && change) {
-      const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
       return (
-        <Container className="calculator-result">
-          <Row className="mb-5">
-            <Col className="amount-equal align-self-end col-12 col-md-4">
-              <h3>{props.phrases.kpiAmountEqualled}</h3>
-            </Col>
-            <Col className="end-value col-12 col-md-8">
-              <span className="float-right">
-                {renderNumberValute(endValue)}
-              </span>
-            </Col>
-            <Col className="col-12">
-              <Divider dark/>
-            </Col>
-          </Row>
-          <Row className="mb-5">
-            <Col className="price-increase col-12 col-md-4">
-              <span>{priceChangeLabel}</span>
-              <span className="float-right">
-                {renderNumberChangeValue()}
-              </span>
-              <Divider dark/>
-            </Col>
-            <Col className="start-value col-12 col-md-4">
-              <span>{props.phrases.amount} {startPeriod}</span>
-              <span className="float-right">
-                {renderNumberValute(startValueResult)}
-              </span>
-              <Divider dark/>
-            </Col>
-            <Col className="amount col-12 col-md-4">
-              <span>{props.phrases.amount} {endPeriod}</span>
-              <span className="float-right">
-                {renderNumberValute(endValue)}
-              </span>
-              <Divider dark/>
-            </Col>
-          </Row>
-          <Row className="my-4">
-            <Col className="col-12 col-md-8">
-              <span className="info-title">{props.phrases.kpiCalculatorInfoTitle}</span>
-              <p className="info-text">{props.phrases.kpiCalculatorInfoText}</p>
-            </Col>
-          </Row>
-        </Container>
-      )
-    }
-  }
-
-  function renderResultFrontpage() {
-    if (loading) {
-      return (
-        <Container>
-          <span className="spinner-border spinner-border" />
-        </Container>
-      )
-    }
-    if (errorMessage !== null) {
-      return (
-        <Container className="calculator-error frontpage" >
-          <Row>
-            <Col>
-              <FormError errorMessages={[errorMessage || props.phrases.kpiErrorUnknownError]} title={props.phrases.kpiErrorCalculationFailed} />
-            </Col>
-          </Row>
-        </Container>
-      )
-    }
-    if (endValue && change) {
-      const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
-      return (
-        <Container className="calculator-result-frontpage">
-          <Row className="mb-3">
-            <Col className="amount-equal align-self-end col-12 col-lg-4">
-              <h3>{props.phrases.kpiAmountEqualled}</h3>
-            </Col>
-            <Col className="end-value col-12 col-lg-8">
-              <span className="float-lg-right">
-                {renderNumberValute(endValue)}
-              </span>
-            </Col>
-            <Col className="col-12">
-              <Divider dark/>
-            </Col>
-          </Row>
-          <Row>
-            <Col className="price-increase col-12">
-              <span>{priceChangeLabel} </span>
-              <span>
-                {renderNumberChangeValue()}
-              </span>
-            </Col>
-          </Row>
-        </Container>
+        props.frontPage ? calculatorResultFrontpage() : calculatorResult()
       )
     }
   }
@@ -407,7 +393,7 @@ function KpiCalculator(props) {
       return (
         <Container className='kpi-calculator frontpage'>
           {renderFormFrontpage()}
-          {renderResultFrontpage()}
+          {renderResult()}
         </Container>
       )
     } else {
