@@ -221,6 +221,44 @@ function KpiCalculator(props) {
     return monthLabel ? monthLabel.title.toLowerCase() : ''
   }
 
+  function renderNumberValute(value) {
+    if (endValue && change) {
+      const valute = (language === 'en') ? 'NOK' : 'kr'
+      const decimalSeparator = (language === 'en') ? '.' : ','
+      return (
+        <React.Fragment>
+          <NumberFormat
+            value={ Number(value) }
+            displayType={'text'}
+            thousandSeparator={' '}
+            decimalSeparator={decimalSeparator}
+            decimalScale={2}
+            fixedDecimalScale={true}
+          /> {valute}
+        </React.Fragment>
+      )
+    }
+  }
+
+  function renderNumberChangeValue() {
+    if (endValue && change) {
+      const changeValue = change.charAt(0) === '-' ? change.replace('-', '') : change
+      const decimalSeparator = (language === 'en') ? '.' : ','
+      return (
+        <React.Fragment>
+          <NumberFormat
+            value={ Number(changeValue) }
+            displayType={'text'}
+            thousandSeparator={' '}
+            decimalSeparator={decimalSeparator}
+            decimalScale={1}
+            fixedDecimalScale={true}
+          /> %
+        </React.Fragment>
+      )
+    }
+  }
+
   function renderResult() {
     if (loading) {
       return (
@@ -241,10 +279,7 @@ function KpiCalculator(props) {
       )
     }
     if (endValue && change) {
-      const decimalSeparator = (language === 'en') ? '.' : ','
-      const valute = (language === 'en') ? 'NOK' : 'kr'
       const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
-      const changeValue = change.charAt(0) === '-' ? change.replace('-', '') : change
       return (
         <Container className="calculator-result">
           <Row className="mb-5">
@@ -253,14 +288,7 @@ function KpiCalculator(props) {
             </Col>
             <Col className="end-value col-12 col-md-8">
               <span className="float-right">
-                <NumberFormat
-                  value={ Number(endValue) }
-                  displayType={'text'}
-                  thousandSeparator={' '}
-                  decimalSeparator={decimalSeparator}
-                  decimalScale={2}
-                  fixedDecimalScale={true}
-                /> {valute}
+                {renderNumberValute(endValue)}
               </span>
             </Col>
             <Col className="col-12">
@@ -271,42 +299,21 @@ function KpiCalculator(props) {
             <Col className="price-increase col-12 col-md-4">
               <span>{priceChangeLabel}</span>
               <span className="float-right">
-                <NumberFormat
-                  value={ Number(changeValue) }
-                  displayType={'text'}
-                  thousandSeparator={' '}
-                  decimalSeparator={decimalSeparator}
-                  decimalScale={1}
-                  fixedDecimalScale={true}
-                /> %
+                {renderNumberChangeValue()}
               </span>
               <Divider dark/>
             </Col>
             <Col className="start-value col-12 col-md-4">
               <span>{props.phrases.amount} {startPeriod}</span>
               <span className="float-right">
-                <NumberFormat
-                  value={ Number(startValueResult) }
-                  displayType={'text'}
-                  thousandSeparator={' '}
-                  decimalSeparator={decimalSeparator}
-                  decimalScale={2}
-                  fixedDecimalScale={true}
-                /> {valute}
+                {renderNumberValute(startValueResult)}
               </span>
               <Divider dark/>
             </Col>
             <Col className="amount col-12 col-md-4">
               <span>{props.phrases.amount} {endPeriod}</span>
               <span className="float-right">
-                <NumberFormat
-                  value={ Number(endValue) }
-                  displayType={'text'}
-                  thousandSeparator={' '}
-                  decimalSeparator={decimalSeparator}
-                  decimalScale={2}
-                  fixedDecimalScale={true}
-                /> {valute}
+                {renderNumberValute(endValue)}
               </span>
               <Divider dark/>
             </Col>
@@ -342,10 +349,7 @@ function KpiCalculator(props) {
       )
     }
     if (endValue && change) {
-      const decimalSeparator = (language === 'en') ? '.' : ','
-      const valute = (language === 'en') ? 'NOK' : 'kr'
       const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
-      const changeValue = change.charAt(0) === '-' ? change.replace('-', '') : change
       return (
         <Container className="calculator-result-frontpage">
           <Row className="mb-3">
@@ -354,14 +358,7 @@ function KpiCalculator(props) {
             </Col>
             <Col className="end-value col-12 col-lg-8">
               <span className="float-lg-right">
-                <NumberFormat
-                  value={ Number(endValue) }
-                  displayType={'text'}
-                  thousandSeparator={' '}
-                  decimalSeparator={decimalSeparator}
-                  decimalScale={2}
-                  fixedDecimalScale={true}
-                /> {valute}
+                {renderNumberValute(endValue)}
               </span>
             </Col>
             <Col className="col-12">
@@ -372,14 +369,7 @@ function KpiCalculator(props) {
             <Col className="price-increase col-12">
               <span>{priceChangeLabel} </span>
               <span>
-                <NumberFormat
-                  value={ Number(changeValue) }
-                  displayType={'text'}
-                  thousandSeparator={' '}
-                  decimalSeparator={decimalSeparator}
-                  decimalScale={1}
-                  fixedDecimalScale={true}
-                /> %
+                {renderNumberChangeValue()}
               </span>
             </Col>
           </Row>
