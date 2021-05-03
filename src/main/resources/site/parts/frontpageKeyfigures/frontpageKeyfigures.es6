@@ -16,7 +16,7 @@ const {
 } = __non_webpack_require__( '/lib/util')
 const {
   parseKeyFigure
-} = __non_webpack_require__( '/lib/ssb/keyFigure')
+} = __non_webpack_require__( '/lib/ssb/parts/keyFigure')
 const {
   DATASET_BRANCH
 } = __non_webpack_require__('/lib/ssb/repo/dataset')
