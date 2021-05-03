@@ -59,7 +59,7 @@ function NameSearch(props) {
       <Container className="name-search-result p-5">
         <Row>
           <Col>
-            <h3>{props.phrases.nameSearchResultTitle}</h3>
+            <h3 className="result-title mb-1">{props.phrases.nameSearchResultTitle}</h3>
             <Divider dark/>
           </Col>
         </Row>
@@ -78,13 +78,32 @@ function NameSearch(props) {
     )
   }
   function parseResultText(doc) {
-    return `${props.phrases.nameSearchResultText
-      .replace('{0}', doc.count)
-      .replace('{1}', doc.name)} ${translateName(doc.type)}.`
+    return (
+      <span>
+        {`${props.phrases.thereAre} `}
+        <span className="details">{doc.count}</span>
+        {` ${formatGender(doc.gender)} ${props.phrases.with} `}
+        <span className="details name-search-name">{doc.name.toLowerCase()} </span>
+        {` ${props.phrases.asTheir} ${translateName(doc.type)} `}
+      </span> )
+  }
+
+  function formatGender(gender) {
+    switch (gender) {
+    case 'F':
+      return props.phrases.women
+    case 'M':
+      return props.phrases.men
+    default: return ''
+    }
   }
 
   function parseThreeOrLessText() {
-    return props.phrases.threeOrLessText.replace('{0}', searchedTerm.toUpperCase())
+    return <span>
+      {` ${props.phrases.threeOrLessText} `}
+      <strong className="name-search-name">{searchedTerm}</strong>
+      {`${props.phrases.asTheir} ${translateName(doc.type)}`}
+    </span>
   }
 
   function translateName(nameCode) {
@@ -172,9 +191,13 @@ NameSearch.propTypes = {
     nameSearchButtonText: PropTypes.string,
     interestingFacts: PropTypes.string,
     nameSearchResultTitle: PropTypes.string,
-    nameSearchResultText: PropTypes.string,
+    thereAre: PropTypes.string,
+    with: PropTypes.string,
+    asTheir: PropTypes.string,
     errorMessage: PropTypes.string,
     threeOrLessText: PropTypes.string,
+    women: PropTypes.string,
+    men: PropTypes.string,
     types: PropTypes.shape({
       firstgivenandfamily: PropTypes.string,
       middleandfamily: PropTypes.string,

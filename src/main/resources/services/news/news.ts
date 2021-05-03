@@ -17,16 +17,21 @@ const {
 const {
   pageUrl
 }: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
+const {
+  isEnabled
+} = __non_webpack_require__('/lib/featureToggle')
 
 function get(): Response {
-  const mainSubjects: Array<Content<Page, DefaultPageConfig>> = query({
+  const rssNewsEnabled: boolean = isEnabled('rss-news', true)
+  const rssStatisticsEnabled: boolean = isEnabled('rss-news-statistics', false)
+  const mainSubjects: Array<Content<Page, DefaultPageConfig>> = rssNewsEnabled ? query({
     start: 0,
     count: 100,
     query: 'components.page.config.mimir.default.subjectType LIKE "mainSubject"'
-  }).hits as unknown as Array<Content<Page, DefaultPageConfig>>
+  }).hits as unknown as Array<Content<Page, DefaultPageConfig>> : []
 
-  const news: Array<News> = getNews(mainSubjects)
-  const statistics: Array<News> = getStatisticsNews(mainSubjects)
+  const news: Array<News> = rssNewsEnabled ? getNews(mainSubjects) : []
+  const statistics: Array<News> = rssNewsEnabled && rssStatisticsEnabled ? getStatisticsNews(mainSubjects) : []
   const xml: string =
   `<?xml version="1.0" encoding="utf-8"?>
   <rssitems count="${news.length + statistics.length}">
@@ -50,7 +55,7 @@ function get(): Response {
 exports.get = get
 
 function getNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<News> {
-  const from: string = moment().subtract(3, 'days').toISOString()
+  const from: string = moment().subtract(1, 'days').toISOString()
   const to: string = moment().toISOString()
   const baseUrl: string = app.config && app.config['ssb.baseUrl'] || ''
   const serverOffsetInMinutes: number = app.config && app.config['serverOffsetInMs'] || 0
@@ -89,7 +94,7 @@ function getNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<N
 }
 
 function getStatisticsNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<News> {
-  const from: string = moment().subtract(3, 'days').toISOString()
+  const from: string = moment().subtract(1, 'days').toISOString()
   const to: string = moment().toISOString()
   const statregStatistics: Array<StatisticInListing> = fetchStatisticsWithPreviousReleaseBetween(new Date(from), new Date(to))
 

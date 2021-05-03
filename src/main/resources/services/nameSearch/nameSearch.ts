@@ -14,7 +14,7 @@ export function get(req: Request): Response {
     }
   }
   const solrBaseUrl: string = app.config && app.config['ssb.solrNameSearch.baseUrl'] ?
-    app.config['ssb.solrNameSearch.baseUrl'] : 'https://i.qa.ssb.no/solrmaster/navnesok/select'
+    app.config['ssb.solrNameSearch.baseUrl'] : 'https://i.ssb.no/solrmaster/navnesok/select'
 
   const requestParams: HttpRequestParams = {
     url: solrBaseUrl,

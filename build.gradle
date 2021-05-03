@@ -36,8 +36,8 @@ dependencies {
     include "com.enonic.xp:lib-websocket:${xpVersion}"
     include "com.enonic.xp:lib-cluster:${xpVersion}"
     include 'commons-codec:commons-codec:1.15'
-    include "no.item.xp.wsUtil:wsUtil:2.0.0"
-    include "com.gravitondigital:featuretogglelib:0.1.0"
+    include "no.item:wsutil-server:2.0.0"
+    include "com.gravitondigital:featuretogglelib:0.2.0"
     testCompile "com.enonic.xp:testing:${xpVersion}"
 }
 
@@ -51,6 +51,7 @@ repositories {
     maven {
         url "https://repo1.maven.org/maven2/"
     }
+    maven { url 'https://jitpack.io' }
 }
 
 task clientJsWebpack( type: NodeTask, dependsOn: npmInstall ) {
