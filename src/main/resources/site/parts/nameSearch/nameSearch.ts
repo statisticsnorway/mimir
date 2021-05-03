@@ -79,8 +79,16 @@ function partsPhrases(locale: string): PartProperties['phrases'] {
       key: 'nameSearch.resultTitle',
       locale
     }),
-    nameSearchResultText: localize({
-      key: 'nameSearch.resultText',
+    thereAre: localize({
+      key: 'nameSearch.thereAre',
+      locale
+    }),
+    with: localize({
+      key: 'nameSearch.with',
+      locale
+    }),
+    asTheir: localize({
+      key: 'nameSearch.asTheir',
       locale
     }),
     errorMessage: localize({
@@ -89,6 +97,14 @@ function partsPhrases(locale: string): PartProperties['phrases'] {
     }),
     threeOrLessText: localize({
       key: 'nameSearch.threeOrLessText',
+      locale
+    }),
+    women: localize({
+      key: 'women',
+      locale
+    }),
+    men: localize({
+      key: 'men',
       locale
     }),
     types: {
@@ -132,9 +148,13 @@ interface PartProperties {
     nameSearchButtonText: string;
     interestingFacts: string;
     nameSearchResultTitle: string;
-    nameSearchResultText: string;
+    thereAre: string;
+    with: string;
+    asTheir: string;
     errorMessage: string;
     threeOrLessText: string;
+    women: string;
+    men: string;
     types: {
       firstgivenandfamily: string;
       middleandfamily: string;
