@@ -10,23 +10,23 @@ import { HttpResponse } from 'enonic-types/http'
 
 const {
   ensureArray
-}: ArrayUtilsLib = __non_webpack_require__('/lib/ssb/arrayUtils')
+}: ArrayUtilsLib = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
 const {
   getNode
-}: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
+}: RepoCommonLib = __non_webpack_require__('/lib/ssb/repo/common')
 const {
   STATREG_BRANCH,
   STATREG_REPO,
   getStatRegBaseUrl,
   PUBLICATIONS_URL
-}: StatRegConfigLib = __non_webpack_require__('/lib/ssb/statreg/config')
+}: StatRegConfigLib = __non_webpack_require__('/lib/ssb/dashboard/statreg/config')
 const {
   fetchStatRegData
-}: StatRegCommonLib = __non_webpack_require__('/lib/ssb/statreg/common')
+}: StatRegCommonLib = __non_webpack_require__('/lib/ssb/dashboard/statreg/common')
 const {
   Events,
   logUserDataQuery
-}: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
+}: RepoQueryLib = __non_webpack_require__('/lib/ssb/repo/query')
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
 export const STATREG_REPO_PUBLICATIONS_KEY: string = 'publications'

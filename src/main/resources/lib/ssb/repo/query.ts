@@ -6,19 +6,19 @@ import { HttpRequestParams, HttpResponse } from 'enonic-types/http'
 import { TbmlDataUniform } from '../../types/xmlParser'
 const {
   dateToFormat
-} = __non_webpack_require__('/lib/ssb/utils')
+} = __non_webpack_require__('/lib/ssb/utils/utils')
 const {
   getNode,
   withConnection,
   withLoggedInUserContext,
   withSuperUserContext
-}: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
+}: RepoCommonLib = __non_webpack_require__('/lib/ssb/repo/common')
 const {
   EVENT_LOG_BRANCH,
   EVENT_LOG_REPO,
   createEventLog,
   updateEventLog
-}: RepoEventLogLib = __non_webpack_require__('/lib/repo/eventLog')
+}: RepoEventLogLib = __non_webpack_require__('/lib/ssb/repo/eventLog')
 export type QueryInfoNode = QueryInfo & RepoNode
 
 export interface QueryInfo {

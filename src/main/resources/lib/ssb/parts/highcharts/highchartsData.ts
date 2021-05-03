@@ -7,16 +7,16 @@ import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
 
 const {
   seriesAndCategoriesFromHtmlTable
-} = __non_webpack_require__( '/lib/highcharts/data/htmlTable')
+} = __non_webpack_require__( '/lib/ssb/parts/highcharts/data/htmlTable')
 const {
   seriesAndCategoriesFromJsonStat
-} = __non_webpack_require__( '/lib/highcharts/data/statBank')
+} = __non_webpack_require__( '/lib/ssb/parts/highcharts/data/statBank')
 const {
   seriesAndCategoriesFromTbml
-} = __non_webpack_require__( '/lib/highcharts/data/tbProcessor')
+} = __non_webpack_require__( '/lib/ssb/parts/highcharts/data/tbProcessor')
 const {
   DataSource: DataSourceType
-} = __non_webpack_require__( '/lib/repo/dataset')
+} = __non_webpack_require__( '/lib/ssb/repo/dataset')
 const {
   data: {
     forceArray
@@ -24,7 +24,7 @@ const {
 } = __non_webpack_require__( '/lib/util')
 const {
   getRowValue
-} = __non_webpack_require__('/lib/ssb/utils')
+} = __non_webpack_require__('/lib/ssb/utils/utils')
 
 export function prepareHighchartsData(
   req: Request,

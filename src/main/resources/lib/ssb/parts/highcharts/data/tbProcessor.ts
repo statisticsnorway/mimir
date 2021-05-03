@@ -8,7 +8,7 @@ import { PreliminaryData,
 const util: UtilLibrary = __non_webpack_require__('/lib/util')
 const {
   getRowValue
-} = __non_webpack_require__('/lib/ssb/utils')
+} = __non_webpack_require__('/lib/ssb/utils/utils')
 
 export function seriesAndCategoriesFromTbml(
   data: TbmlDataUniform,

@@ -3,7 +3,7 @@ import { ArrayUtilsLib } from '../../utils/arrayUtils'
 
 const {
   ensureArray
-}: ArrayUtilsLib = __non_webpack_require__('/lib/ssb/arrayUtils')
+}: ArrayUtilsLib = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
 const contentType: string = 'application/json'
 
 function toOptions<T, A>(content: Array<T>, transform: (item: T) => A): Array<A> {

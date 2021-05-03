@@ -5,7 +5,7 @@ import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
 
 const {
   createDefaultConfig
-} = __non_webpack_require__('/lib/highcharts/graph/config')
+} = __non_webpack_require__('/lib/ssb/parts/highcharts/graph/config')
 const {
   areaConfig
 } = __non_webpack_require__( '/lib/highcharts/graph/graphAreaConfig')
@@ -26,7 +26,7 @@ const {
 } = __non_webpack_require__( '/lib/highcharts/graph/graphLineConfig')
 const {
   DataSource: DataSourceType
-} = __non_webpack_require__( '../repo/dataset')
+} = __non_webpack_require__( '/lib/ssb/repo/dataset')
 
 export function prepareHighchartsGraphConfig(
   highchartContent: Content<Highchart>,

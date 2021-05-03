@@ -16,7 +16,7 @@ const {
 const {
   getAttachmentContent,
   getImageCaption
-} = __non_webpack_require__('/lib/ssb/utils')
+} = __non_webpack_require__('/lib/ssb/utils/utils')
 
 export function createMenuTree(menuItemId: string): Array<MenuItemParsed> {
   const menuContent: Content<MenuItem> | null = get({

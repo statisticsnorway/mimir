@@ -12,7 +12,7 @@ const {
 }: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
 const {
   createMenuTree, parseGlobalLinks
-} = __non_webpack_require__( '/lib/ssb/menu')
+} = __non_webpack_require__( '/lib/ssb/parts/menu')
 const {
   localize
 } = __non_webpack_require__( '/lib/xp/i18n')

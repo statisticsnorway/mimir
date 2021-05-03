@@ -10,7 +10,7 @@ const {
 } = __non_webpack_require__( '/lib/thymeleaf')
 const {
   renderError
-} = __non_webpack_require__('/lib/error/error')
+} = __non_webpack_require__('/lib/ssb/error/error')
 const {
   data
 } = __non_webpack_require__( '/lib/util')
@@ -19,7 +19,7 @@ const {
 } = __non_webpack_require__( '/lib/ssb/keyFigure')
 const {
   DATASET_BRANCH
-} = __non_webpack_require__('/lib/repo/dataset')
+} = __non_webpack_require__('/lib/ssb/repo/dataset')
 
 const view = resolve('./frontpageKeyfigures.html')
 

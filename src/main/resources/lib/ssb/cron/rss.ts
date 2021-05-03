@@ -1,5 +1,5 @@
 import { StatisticInListing } from '../dashboard/statreg/types'
-__non_webpack_require__('/lib/polyfills/nashorn')
+__non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { Content } from 'enonic-types/content'
 import { HttpLibrary, HttpResponse } from 'enonic-types/http'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
@@ -18,23 +18,23 @@ const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 const http: HttpLibrary = __non_webpack_require__( '/lib/http-client')
 const {
   getTableIdFromTbprocessor
-}: TbprocessorLib = __non_webpack_require__( '/lib/ssb/dataset/tbprocessor')
+}: TbprocessorLib = __non_webpack_require__( '/lib/ssb/dataset/tbprocessor/tbprocessor')
 const {
   getTableIdFromStatbankApi
-}: StatbankApiLib = __non_webpack_require__( '/lib/ssb/dataset/statbankApi')
+}: StatbankApiLib = __non_webpack_require__( '/lib/ssb/dataset/statbankApi/statbankApi')
 const {
   getDataset
 }: DatasetLib = __non_webpack_require__( '/lib/ssb/dataset/dataset')
 const {
   cronJobLog
-}: ServerLogLib = __non_webpack_require__( '/lib/ssb/serverLog')
+}: ServerLogLib = __non_webpack_require__( '/lib/ssb/utils/serverLog')
 const {
   getParentType, getParentContent
-} = __non_webpack_require__('/lib/ssb/parent')
+} = __non_webpack_require__('/lib/ssb/utils/parentUtils')
 
 const {
   fetchStatisticsWithReleaseToday
-} = __non_webpack_require__('/lib/repo/statreg/statistics')
+} = __non_webpack_require__('/lib/ssb/statreg/statistics')
 
 function fetchRSS(): Array<RSSItem> {
   const statbankRssUrl: string | undefined = app.config && app.config['ssb.rss.statbank'] ? app.config['ssb.rss.statbank'] : 'https://www.ssb.no/rss/statbank'

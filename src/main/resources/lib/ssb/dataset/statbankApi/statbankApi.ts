@@ -6,17 +6,17 @@ import { RepoQueryLib } from '../../repo/query'
 
 const {
   getDataset
-}: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
+}: RepoDatasetLib = __non_webpack_require__('/lib/ssb/repo/dataset')
 const {
   get: fetchData
-} = __non_webpack_require__('/lib/dataquery')
+} = __non_webpack_require__('/lib/ssb/dataset/statbankApi/statbankApiRequest')
 const {
   logUserDataQuery,
   Events
-}: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
+}: RepoQueryLib = __non_webpack_require__('/lib/ssb/repo/query')
 const {
   isUrl
-} = __non_webpack_require__('/lib/ssb/utils')
+} = __non_webpack_require__('/lib/ssb/utils/utils')
 
 export function getStatbankApi(content: Content<DataSource>, branch: string): DatasetRepoNode<JSONstat> | null {
   if (content.data.dataSource && content.data.dataSource._selected) {
@@ -26,7 +26,7 @@ export function getStatbankApi(content: Content<DataSource>, branch: string): Da
     }
   }
   logUserDataQuery(content._id, {
-    file: '/lib/ssb/dataset/statbankApi.ts',
+    file: '/lib/ssb/dataset/statbankApi/statbankApi.ts',
     function: 'getStatbankApi',
     message: Events.DATASOURCE_MISSING,
     info: 'content.data.datasource is undefined.'
@@ -50,7 +50,7 @@ export function fetchStatbankApiData(content: Content<DataSource>): JSONstat | n
     } catch (e) {
       const message: string = `Failed to fetch data from statregApi: ${content._id} (${e})`
       logUserDataQuery(content._id, {
-        file: '/lib/ssb/dataset/statbankApi.ts',
+        file: '/lib/ssb/dataset/statbankApi/statbankApi.ts',
         function: 'fetchStatbankApiData',
         message: Events.REQUEST_COULD_NOT_CONNECT,
         info: message,

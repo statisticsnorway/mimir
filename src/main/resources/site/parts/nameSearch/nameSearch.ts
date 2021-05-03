@@ -14,7 +14,7 @@ const {
 }: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
 const {
   getLanguageShortName
-} = __non_webpack_require__('/lib/language')
+} = __non_webpack_require__('/lib/ssb/utils/language')
 const {
   localize
 }: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')

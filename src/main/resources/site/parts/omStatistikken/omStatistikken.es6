@@ -6,20 +6,20 @@ const {
 } = __non_webpack_require__( '/lib/xp/portal')
 const {
   renderError
-} = __non_webpack_require__('/lib/error/error')
+} = __non_webpack_require__('/lib/ssb/error/error')
 const {
   getStatisticByIdFromRepo
-} = __non_webpack_require__('/lib/repo/statreg/statistics')
+} = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
 const {
   getPhrases
-} = __non_webpack_require__( '/lib/language')
+} = __non_webpack_require__( '/lib/ssb/utils/language')
 const util = __non_webpack_require__('/lib/util')
 const {
   getReleaseDatesByVariants
-} = __non_webpack_require__('/lib/repo/statreg/statistics')
+} = __non_webpack_require__('/lib/ssb/statreg/statistics')
 
 const view = resolve('./omStatistikken.html')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')

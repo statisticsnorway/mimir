@@ -1,4 +1,4 @@
-__non_webpack_require__('/lib/polyfills/nashorn')
+__non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { DatasetLib, CreateOrUpdateStatus } from '../dataset/dataset'
 import { ContentLibrary, Content } from 'enonic-types/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
@@ -29,14 +29,14 @@ const {
   users,
   showWarningIcon,
   WARNING_ICON_EVENTS
-}: DashboardUtilsLib = __non_webpack_require__('/lib/ssb/dataset/dashboardUtils')
+}: DashboardUtilsLib = __non_webpack_require__('/lib/ssb/dashboard/dashboardUtils')
 const {
   logUserDataQuery
-}: RepoQueryLib = __non_webpack_require__( '/lib/repo/query')
+}: RepoQueryLib = __non_webpack_require__( '/lib/ssb/repo/query')
 const {
   getNode,
   ENONIC_CMS_DEFAULT_REPO
-}: RepoCommonLib = __non_webpack_require__( '/lib/repo/common')
+}: RepoCommonLib = __non_webpack_require__( '/lib/ssb/repo/common')
 const {
   refreshDataset,
   extractKey,
@@ -45,7 +45,7 @@ const {
 const {
   DATASET_BRANCH,
   UNPUBLISHED_DATASET_BRANCH
-}: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
+}: RepoDatasetLib = __non_webpack_require__('/lib/ssb/repo/dataset')
 const {
   get: getContent,
   query
@@ -54,20 +54,20 @@ const {
   dateToFormat,
   dateToReadable,
   isPublished
-} = __non_webpack_require__( '/lib/ssb/utils')
+} = __non_webpack_require__( '/lib/ssb/utils/utils')
 const {
   getParentType
-} = __non_webpack_require__('/lib/ssb/parent')
+} = __non_webpack_require__('/lib/ssb/utils/parentUtils')
 const i18n: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
 const {
   run
 }: ContextLibrary = __non_webpack_require__('/lib/xp/context')
 const {
   fromDatasetRepoCache
-}: SSBCacheLibrary = __non_webpack_require__('/lib/ssb/cache')
+}: SSBCacheLibrary = __non_webpack_require__('/lib/ssb/cache/cache')
 const {
   getQueryChildNodesStatus
-}: RepoEventLogLib = __non_webpack_require__('/lib/repo/eventLog')
+}: RepoEventLogLib = __non_webpack_require__('/lib/ssb/repo/eventLog')
 const {
   submit: submitTask
 }: TaskLib = __non_webpack_require__('/lib/xp/task')
@@ -75,7 +75,7 @@ const {
   queryJobLogs,
   getJobLog,
   JobNames
-}: RepoJobLib = __non_webpack_require__('/lib/repo/job')
+}: RepoJobLib = __non_webpack_require__('/lib/ssb/repo/job')
 const {
   data: {
     forceArray
@@ -83,10 +83,10 @@ const {
 }: UtilLibrary = __non_webpack_require__( '/lib/util')
 const {
   getStatisticByIdFromRepo
-}: StatRegStatisticsLib = __non_webpack_require__('/lib/repo/statreg/statistics')
+}: StatRegStatisticsLib = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   parseStatRegJobInfo
-}: SSBStatRegLib = __non_webpack_require__('/lib/ssb/statreg')
+}: SSBStatRegLib = __non_webpack_require__('/lib/ssb/dashboard/statreg')
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-error-data-sources', () => {

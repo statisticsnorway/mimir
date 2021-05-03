@@ -1,7 +1,7 @@
 import { HttpResponse, HttpLibrary, HttpRequestParams } from 'enonic-types/http'
 const {
   Events, logUserDataQuery
-} = __non_webpack_require__('/lib/repo/query')
+} = __non_webpack_require__('/lib/ssb/repo/query')
 const http: HttpLibrary = __non_webpack_require__('/lib/http-client')
 const {
   sleep

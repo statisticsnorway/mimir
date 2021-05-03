@@ -14,13 +14,13 @@ const {
 } = __non_webpack_require__('/lib/xp/content')
 const {
   DataSource
-} = __non_webpack_require__('/lib/repo/dataset')
+} = __non_webpack_require__('/lib/ssb/repo/dataset')
 const {
   refreshDataset
 } = __non_webpack_require__( '/lib/ssb/dataset/dataset')
 const {
   runOnMasterOnly
-}: SSBCronLib = __non_webpack_require__('/lib/ssb/cron')
+}: SSBCronLib = __non_webpack_require__('/lib/ssb/cron/cron')
 
 export function setupFetchDataOnCreateListener(): void {
   listener({

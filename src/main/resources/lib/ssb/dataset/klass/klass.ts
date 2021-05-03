@@ -5,17 +5,17 @@ import { RepoQueryLib } from '../../repo/query'
 
 const {
   getDataset
-}: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
+}: RepoDatasetLib = __non_webpack_require__('/lib/ssb/repo/dataset')
 const {
   get: fetchData
-} = __non_webpack_require__('/lib/dataquery')
+} = __non_webpack_require__('/lib/ssb/dataset/klass/klassRequest')
 const {
   logUserDataQuery,
   Events
-}: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
+}: RepoQueryLib = __non_webpack_require__('/lib/ssb/repo/query')
 const {
   isUrl
-} = __non_webpack_require__('/lib/ssb/utils')
+} = __non_webpack_require__('/lib/ssb/utils/utils')
 
 export function getKlass(content: Content<DataSource>, branch: string): DatasetRepoNode<object> | null {
   if (content.data.dataSource && content.data.dataSource._selected) {

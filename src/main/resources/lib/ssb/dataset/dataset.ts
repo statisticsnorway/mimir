@@ -9,13 +9,13 @@ import { TbprocessorLib } from './tbprocessor/tbprocessor'
 import { KlassLib } from './klass/klass'
 import { ContextLibrary, RunContext } from 'enonic-types/context'
 import { AuthLibrary, User } from 'enonic-types/auth'
-import { StatbankSavedLib } from './statBankSaved/statbankSaved'
+import { StatbankSavedLib } from './statbankSaved/statbankSaved'
 import { TbprocessorParsedResponse } from './tbprocessor/tbml'
 import { RepoCommonLib } from '../repo/common'
 
 const {
   Events
-}: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
+}: RepoQueryLib = __non_webpack_require__('/lib/ssb/repo/query')
 const {
   query
 }: ContentLibrary = __non_webpack_require__('/lib/xp/content')
@@ -29,28 +29,28 @@ const {
   getStatbankApi,
   fetchStatbankApiData,
   getStatbankApiKey
-}: StatbankApiLib = __non_webpack_require__('/lib/ssb/dataset/statbankApi')
+}: StatbankApiLib = __non_webpack_require__('/lib/ssb/dataset/statbankApi/statbankApi')
 const {
   fetchStatbankSavedData
-}: StatbankSavedLib = __non_webpack_require__('/lib/ssb/dataset/statbankSaved')
+}: StatbankSavedLib = __non_webpack_require__('/lib/ssb/dataset/statbankSaved/statbankSaved')
 const {
   getTbprocessor,
   getTbprocessorKey,
   fetchTbprocessorData
-}: TbprocessorLib = __non_webpack_require__('/lib/ssb/dataset/tbprocessor')
+}: TbprocessorLib = __non_webpack_require__('/lib/ssb/dataset/tbprocessor/tbprocessor')
 const {
   getKlass,
   getKlassKey,
   fetchKlassData
-}: KlassLib = __non_webpack_require__('/lib/ssb/dataset/klass')
+}: KlassLib = __non_webpack_require__('/lib/ssb/dataset/klass/klass')
 const {
   createOrUpdateDataset,
   deleteDataset: deleteDatasetFromRepo,
   DATASET_BRANCH
-}: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
+}: RepoDatasetLib = __non_webpack_require__('/lib/ssb/repo/dataset')
 const {
   ENONIC_CMS_DEFAULT_REPO
-}: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
+}: RepoCommonLib = __non_webpack_require__('/lib/ssb/repo/common')
 
 export function getDataset(content: Content<DataSource>, branch: string = DATASET_BRANCH): DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null {
   switch (content.data.dataSource?._selected) {

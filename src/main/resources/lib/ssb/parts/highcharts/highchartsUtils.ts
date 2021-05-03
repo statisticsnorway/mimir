@@ -9,13 +9,13 @@ import { HighchartsData } from './highchartsData'
 
 const {
   prepareHighchartsGraphConfig
-} = __non_webpack_require__( '/lib/highcharts/highchartsGraphConfig')
+} = __non_webpack_require__( '/lib/ssb/parts/highcharts/highchartsGraphConfig')
 const {
   mergeDeepRight
 } = require('ramda')
 const {
   prepareHighchartsData
-} = __non_webpack_require__('/lib/highcharts/highchartsData')
+} = __non_webpack_require__('/lib/ssb/parts/highcharts/highchartsData')
 
 
 export function createHighchartObject(

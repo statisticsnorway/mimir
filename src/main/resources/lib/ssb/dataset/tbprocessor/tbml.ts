@@ -20,10 +20,10 @@ const http: HttpLibrary = __non_webpack_require__( '/lib/http-client')
 const {
   logUserDataQuery,
   Events
-}: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
+}: RepoQueryLib = __non_webpack_require__('/lib/ssb/repo/query')
 const {
   getTbmlMock
-}: TbmlMockLib = __non_webpack_require__('/lib/tbml/tbmlMock')
+}: TbmlMockLib = __non_webpack_require__('/lib/ssb/dataset/tbprocessor/tbmlMock')
 
 const {
   data: {

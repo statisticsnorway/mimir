@@ -1,4 +1,4 @@
-__non_webpack_require__('/lib/polyfills/nashorn')
+__non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { StatRegNode } from '../repo/statreg'
 import { StatisticInListing, VariantInListing, ReleasesInListing, ReleaseDatesVariant } from '../dashboard/statreg/types'
 import { ArrayUtilsLib } from '../utils/arrayUtils'
@@ -11,23 +11,23 @@ import moment = require('moment')
 
 const {
   ensureArray
-}: ArrayUtilsLib = __non_webpack_require__('/lib/ssb/arrayUtils')
+}: ArrayUtilsLib = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
 const {
   fetchStatRegData
-}: StatRegCommonLib = __non_webpack_require__('/lib/ssb/statreg/common')
+}: StatRegCommonLib = __non_webpack_require__('/lib/ssb/dashboard/statreg/common')
 const {
   getStatRegBaseUrl,
   STATISTICS_URL,
   STATREG_BRANCH,
   STATREG_REPO
-}: StatRegConfigLib = __non_webpack_require__('/lib/ssb/statreg/config')
+}: StatRegConfigLib = __non_webpack_require__('/lib/ssb/dashboard/statreg/config')
 const {
   getNode
-}: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
+}: RepoCommonLib = __non_webpack_require__('/lib/ssb/repo/common')
 const {
   Events,
   logUserDataQuery
-}: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
+}: RepoQueryLib = __non_webpack_require__('/lib/ssb/repo/query')
 
 export const STATREG_REPO_STATISTICS_KEY: string = 'statistics'
 
@@ -225,5 +225,5 @@ export interface StatRegStatisticsLib {
   getAllStatisticsFromRepo: () => Array<StatisticInListing>;
   getStatisticByIdFromRepo: (statId: string) => StatisticInListing | undefined;
   getStatisticByShortNameFromRepo: (shortName: string) => StatisticInListing | undefined;
-  getReleaseDatesByVariants: (variants: Array<VariantInListing>) => Array<string>;
+  getReleaseDatesByVariants: (variants: Array<VariantInListing>) => ReleaseDatesVariant;
 }

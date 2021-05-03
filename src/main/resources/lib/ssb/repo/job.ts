@@ -7,12 +7,12 @@ const {
   modifyNode,
   getNode,
   queryNodes
-}: RepoCommonLib = __non_webpack_require__( '/lib/repo/common')
+}: RepoCommonLib = __non_webpack_require__( '/lib/ssb/repo/common')
 const {
   EVENT_LOG_REPO,
   EVENT_LOG_BRANCH,
   createEventLog
-}: RepoEventLogLib = __non_webpack_require__('/lib/repo/eventLog')
+}: RepoEventLogLib = __non_webpack_require__('/lib/ssb/repo/eventLog')
 const auth: AuthLibrary = __non_webpack_require__( '/lib/xp/auth')
 
 export enum JobStatus {

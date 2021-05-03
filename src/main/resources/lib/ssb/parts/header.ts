@@ -12,10 +12,10 @@ const {
 }: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
 const {
   createMenuTree, parseTopLinks
-} = __non_webpack_require__( '/lib/ssb/menu')
+} = __non_webpack_require__( '/lib/ssb/parts/menu')
 const {
   pathFromStringOrContent
-} = __non_webpack_require__( '/lib/ssb/utils')
+} = __non_webpack_require__( '/lib/ssb/utils/utils')
 const {
   localize
 } = __non_webpack_require__( '/lib/xp/i18n')

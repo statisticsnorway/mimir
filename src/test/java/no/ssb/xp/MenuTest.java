@@ -6,6 +6,6 @@ public class MenuTest extends ScriptRunnerSupport {
     @Override
     public String getScriptTestFile()
     {
-        return "/lib/ssb/menu-test.js";
+        return "/lib/ssb/parts/menu-test.js";
     }
 }

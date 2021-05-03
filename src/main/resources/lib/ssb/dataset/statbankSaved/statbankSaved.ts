@@ -7,17 +7,17 @@ import { StatbankSavedRaw } from '../../../types/xmlParser'
 
 const {
   getDataset
-}: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
+}: RepoDatasetLib = __non_webpack_require__('/lib/ssb/repo/dataset')
 const {
   get: fetchData
-} = __non_webpack_require__('/lib/statBankSaved/statBankSaved')
+} = __non_webpack_require__('/lib/ssb/dataset/statbankSaved/statbankSavedRequest')
 const {
   logUserDataQuery,
   Events
-}: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
+}: RepoQueryLib = __non_webpack_require__('/lib/ssb/repo/query')
 const {
   isUrl
-} = __non_webpack_require__('/lib/ssb/utils')
+} = __non_webpack_require__('/lib/ssb/utils/utils')
 
 export function getStatbankApi(content: Content<DataSource>, branch: string): DatasetRepoNode<JSONstat> | null {
   if (content.data.dataSource && content.data.dataSource._selected) {

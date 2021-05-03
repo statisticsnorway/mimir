@@ -10,7 +10,7 @@ import { RepoJobLib } from '../repo/job'
 
 const {
   DATASET_BRANCH
-}: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
+}: RepoDatasetLib = __non_webpack_require__('/lib/ssb/repo/dataset')
 const {
   refreshDataset
 }: DatasetLib = __non_webpack_require__('/lib/ssb/dataset/dataset')
@@ -21,11 +21,11 @@ const {
 const {
   logUserDataQuery,
   Events
-}: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
+}: RepoQueryLib = __non_webpack_require__('/lib/ssb/repo/query')
 const {
   completeJobLog,
   JOB_STATUS_COMPLETE
-}: RepoJobLib = __non_webpack_require__('/lib/repo/job')
+}: RepoJobLib = __non_webpack_require__('/lib/ssb/repo/job')
 
 export function refreshQueriesAsync(
   httpQueries: Array<Content<DataSource>>,

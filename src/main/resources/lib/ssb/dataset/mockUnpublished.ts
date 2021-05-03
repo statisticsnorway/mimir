@@ -11,7 +11,7 @@ const {
 }: ContentLibrary = __non_webpack_require__('/lib/xp/content')
 const {
   getDataSourceIdsFromStatistics
-}: StatisticLib = __non_webpack_require__('/lib/ssb/statistic')
+}: StatisticLib = __non_webpack_require__('/lib/ssb/dashboard/statistic')
 const {
   refreshDataset
 }: DatasetLib = __non_webpack_require__('/lib/ssb/dataset/dataset')

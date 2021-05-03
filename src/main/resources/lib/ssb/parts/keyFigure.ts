@@ -1,4 +1,4 @@
-__non_webpack_require__('/lib/polyfills/nashorn')
+__non_webpack_require__('/lib/ssb/polyfills/nashorn')
 /* eslint-disable new-cap */
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
@@ -22,7 +22,7 @@ const {
 }: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
 const {
   datasetOrUndefined
-}: SSBCacheLibrary = __non_webpack_require__('/lib/ssb/cache')
+}: SSBCacheLibrary = __non_webpack_require__('/lib/ssb/cache/cache')
 const {
   data: {
     forceArray
@@ -31,21 +31,21 @@ const {
 const {
   DATASET_BRANCH,
   UNPUBLISHED_DATASET_BRANCH
-}: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
+}: RepoDatasetLib = __non_webpack_require__('/lib/ssb/repo/dataset')
 const {
   getDataset
 }: DatasetLib = __non_webpack_require__('/lib/ssb/dataset/dataset')
 
 const {
   localizeTimePeriod
-} = __non_webpack_require__( '/lib/language')
+} = __non_webpack_require__( '/lib/ssb/utils/language')
 const {
   localize
 } = __non_webpack_require__( '/lib/xp/i18n')
 const {
   createHumanReadableFormat,
   getImageCaption
-} = __non_webpack_require__( '/lib/ssb/utils')
+} = __non_webpack_require__( '/lib/ssb/utils/utils')
 
 const contentTypeName: string = `${app.name}:keyFigure`
 

@@ -20,7 +20,7 @@ const {
 }: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
 const {
   list: countyList
-}: CountiesLib = __non_webpack_require__( '/lib/klass/counties')
+}: CountiesLib = __non_webpack_require__( '/lib/ssb/dataset/klass/counties')
 const {
   getDataset,
   extractKey
@@ -30,7 +30,7 @@ const {
   fromParsedMunicipalityCache,
   fromMunicipalityWithCodeCache,
   fromMunicipalityWithNameCache
-}: SSBCacheLibrary = __non_webpack_require__( '/lib/ssb/cache')
+}: SSBCacheLibrary = __non_webpack_require__( '/lib/ssb/cache/cache')
 
 /**
  * @return {array} Returns everything in the "code" node from ssb api

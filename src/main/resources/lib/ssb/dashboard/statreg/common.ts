@@ -5,7 +5,7 @@ const http: HttpLibrary = __non_webpack_require__('/lib/http-client')
 const {
   Events,
   logUserDataQuery
-}: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
+}: RepoQueryLib = __non_webpack_require__('/lib/ssb/repo/query')
 
 export function fetchStatRegData(dataKey: string, serviceUrl: string): HttpResponse {
   const requestParams: HttpRequestParams = {

@@ -11,11 +11,11 @@ const {
   getNode,
   getChildNodes,
   withConnection
-}: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
+}: RepoCommonLib = __non_webpack_require__('/lib/ssb/repo/common')
 const {
   repoExists,
   createRepo
-}: RepoLib = __non_webpack_require__('/lib/repo/repo')
+}: RepoLib = __non_webpack_require__('/lib/ssb/repo/repo')
 
 
 export const EVENT_LOG_REPO: string = 'no.ssb.eventlog'

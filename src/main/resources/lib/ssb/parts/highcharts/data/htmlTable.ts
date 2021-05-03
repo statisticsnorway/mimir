@@ -8,7 +8,7 @@ const util: UtilLibrary = __non_webpack_require__('/lib/util')
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 const {
   getRowValue
-} = __non_webpack_require__('/lib/ssb/utils')
+} = __non_webpack_require__('/lib/ssb/utils/utils')
 
 export function seriesAndCategoriesFromHtmlTable(highChartsContent: Content<Highchart>): SeriesAndCategories {
   const stringJson: string | undefined = highChartsContent.data.htmlTable ? __.toNativeObject(xmlParser.parse(highChartsContent.data.htmlTable)) : undefined

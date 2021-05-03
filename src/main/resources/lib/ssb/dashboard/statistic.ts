@@ -1,4 +1,4 @@
-__non_webpack_require__('/lib/polyfills/nashorn')
+__non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { EventInfo } from '../repo/query'
 import { Socket, SocketEmitter } from '../../types/socket'
 import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
@@ -27,7 +27,7 @@ import { PermissionsLib } from '../parts/permissions'
 
 const {
   hasWritePermissions
-}: PermissionsLib = __non_webpack_require__( '/lib/ssb/permissions')
+}: PermissionsLib = __non_webpack_require__( '/lib/ssb/parts/permissions')
 const {
   query,
   get: getContent
@@ -36,7 +36,7 @@ const {
   fetchStatisticsWithRelease,
   getAllStatisticsFromRepo,
   getStatisticByIdFromRepo
-}: StatRegStatisticsLib = __non_webpack_require__('/lib/repo/statreg/statistics')
+}: StatRegStatisticsLib = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   data: {
     forceArray
@@ -44,10 +44,10 @@ const {
 }: UtilLibrary = __non_webpack_require__( '/lib/util')
 const {
   refreshDatasetHandler
-}: DashboardDatasetLib = __non_webpack_require__('/lib/ssb/dataset/dashboard')
+}: DashboardDatasetLib = __non_webpack_require__('/lib/ssb/dashboard/dashboard')
 const {
   users
-}: DashboardUtilsLib = __non_webpack_require__('/lib/ssb/dataset/dashboardUtils')
+}: DashboardUtilsLib = __non_webpack_require__('/lib/ssb/dashboard/dashboardUtils')
 
 const {
   run
@@ -55,7 +55,7 @@ const {
 const {
   getTbprocessor,
   getTbprocessorKey
-}: TbprocessorLib = __non_webpack_require__('/lib/ssb/dataset/tbprocessor')
+}: TbprocessorLib = __non_webpack_require__('/lib/ssb/dataset/tbprocessor/tbprocessor')
 const {
   encrypt
 } = __non_webpack_require__('/lib/cipher/cipher')
@@ -63,17 +63,17 @@ const {
   completeJobLog,
   updateJobLog,
   startJobLog
-}: RepoJobLib = __non_webpack_require__('/lib/repo/job')
+}: RepoJobLib = __non_webpack_require__('/lib/ssb/repo/job')
 const {
   withConnection,
   ENONIC_CMS_DEFAULT_REPO,
   getNode,
   queryNodes
-}: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
+}: RepoCommonLib = __non_webpack_require__('/lib/ssb/repo/common')
 const {
   EVENT_LOG_BRANCH,
   EVENT_LOG_REPO
-}: RepoEventLogLib = __non_webpack_require__('/lib/repo/eventLog')
+}: RepoEventLogLib = __non_webpack_require__('/lib/ssb/repo/eventLog')
 const i18n: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
 const {
   submit: submitTask

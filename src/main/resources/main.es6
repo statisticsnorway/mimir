@@ -1,19 +1,19 @@
 const {
   setupEventLog
-} = __non_webpack_require__( '/lib/repo/eventLog')
+} = __non_webpack_require__( '/lib/ssb/repo/eventLog')
 const {
   setupStatRegRepo
-} = __non_webpack_require__( '/lib/repo/statreg')
+} = __non_webpack_require__( '/lib/ssb/repo/statreg')
 const {
   setupDatasetRepo
-} = __non_webpack_require__( '/lib/repo/dataset')
-const cache = __non_webpack_require__('/lib/ssb/cache')
+} = __non_webpack_require__( '/lib/ssb/repo/dataset')
+const cache = __non_webpack_require__('/lib/ssb/cache/cache')
 const {
   setupFetchDataOnCreateListener
-} = __non_webpack_require__('/lib/listeners')
+} = __non_webpack_require__('/lib/ssb/dataset/listeners')
 const {
   setupCronJobs
-} = __non_webpack_require__('/lib/ssb/cron')
+} = __non_webpack_require__('/lib/ssb/cron/cron')
 
 log.info('Application ' + app.name + ' started') // Log application started
 __.disposer(() => log.info('Application ' + app.name + ' stopped')) // Log application stoppped

@@ -4,7 +4,7 @@ const {
 
 const {
   createDefaultConfig
-} = __non_webpack_require__('/lib/highcharts/graph/config')
+} = __non_webpack_require__('/lib/ssb/parts/highcharts/graph/config')
 
 export function pieConfig(highchartsContent, options) {
   const defaultConfig = createDefaultConfig(highchartsContent.data, highchartsContent.displayName)

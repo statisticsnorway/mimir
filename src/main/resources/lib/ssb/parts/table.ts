@@ -1,4 +1,4 @@
-__non_webpack_require__('/lib/polyfills/nashorn')
+__non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { Content } from 'enonic-types/content'
 import { Table } from '../../../site/content-types/table/table'
 import { TbmlDataUniform,
@@ -12,7 +12,7 @@ import { TbmlDataUniform,
 import { Request } from 'enonic-types/controller'
 import { DatasetRepoNode, RepoDatasetLib } from '../repo/dataset'
 import { DataSource as DataSourceType } from '../repo/dataset'
-import { StatbankSavedLib } from '../dataset/statBankSaved/statbankSaved'
+import { StatbankSavedLib } from '../dataset/statbankSaved/statbankSaved'
 import { SSBCacheLibrary } from '../cache/cache'
 
 const {
@@ -27,15 +27,15 @@ const {
 
 const {
   datasetOrUndefined
-}: SSBCacheLibrary = __non_webpack_require__('/lib/ssb/cache')
+}: SSBCacheLibrary = __non_webpack_require__('/lib/ssb/cache/cache')
 const {
   fetchStatbankSavedData
-}: StatbankSavedLib = __non_webpack_require__('/lib/ssb/dataset/statbankSaved')
+}: StatbankSavedLib = __non_webpack_require__('/lib/ssb/dataset/statbankSaved/statbankSaved')
 
 const {
   DATASET_BRANCH,
   UNPUBLISHED_DATASET_BRANCH
-}: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
+}: RepoDatasetLib = __non_webpack_require__('/lib/ssb/repo/dataset')
 
 export function parseTable(req: Request, table: Content<Table>, branch: string = DATASET_BRANCH): TableView {
   let tableViewData: TableView = {

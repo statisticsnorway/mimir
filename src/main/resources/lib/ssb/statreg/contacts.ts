@@ -11,20 +11,20 @@ const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
 const {
   fetchStatRegData
-}: StatRegCommonLib = __non_webpack_require__('/lib/ssb/statreg/common')
+}: StatRegCommonLib = __non_webpack_require__('/lib/ssb/dashboard/statreg/common')
 const {
   CONTACTS_URL,
   STATREG_BRANCH,
   STATREG_REPO,
   getStatRegBaseUrl
-}: StatRegConfigLib = __non_webpack_require__('/lib/ssb/statreg/config')
+}: StatRegConfigLib = __non_webpack_require__('/lib/ssb/dashboard/statreg/config')
 const {
   getNode
-}: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
+}: RepoCommonLib = __non_webpack_require__('/lib/ssb/repo/common')
 const {
   Events,
   logUserDataQuery
-}: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
+}: RepoQueryLib = __non_webpack_require__('/lib/ssb/repo/query')
 
 export const STATREG_REPO_CONTACTS_KEY: string = 'contacts'
 

@@ -4,7 +4,7 @@ const {
 const {
   X_AXIS_TITLE_POSITION,
   createDefaultConfig
-} = __non_webpack_require__('/lib/highcharts/graph/config')
+} = __non_webpack_require__('/lib/ssb/parts/highcharts/graph/config')
 
 export function barConfig(highchartContent, options) {
   const defaultConfig = createDefaultConfig(highchartContent.data, highchartContent.displayName)

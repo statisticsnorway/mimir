@@ -15,37 +15,37 @@ const {
   createNode,
   getNode,
   modifyNode
-}: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
+}: RepoCommonLib = __non_webpack_require__('/lib/ssb/repo/common')
 const {
   repoExists,
   createRepo
-}: RepoLib = __non_webpack_require__('/lib/repo/repo')
+}: RepoLib = __non_webpack_require__('/lib/ssb/repo/repo')
 const {
   STATREG_REPO_CONTACTS_KEY,
   fetchContacts
-}: StatRegContactsLib = __non_webpack_require__('/lib/repo/statreg/contacts')
+}: StatRegContactsLib = __non_webpack_require__('/lib/ssb/statreg/contacts')
 const {
   STATREG_REPO_STATISTICS_KEY,
   fetchStatistics
-}: StatRegStatisticsLib = __non_webpack_require__('/lib/repo/statreg/statistics')
+}: StatRegStatisticsLib = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   STATREG_REPO_PUBLICATIONS_KEY,
   fetchPublications
-}: StatRegPublicationsLib = __non_webpack_require__('/lib/repo/statreg/publications')
+}: StatRegPublicationsLib = __non_webpack_require__('/lib/ssb/statreg/publications')
 const {
   STATREG_BRANCH,
   STATREG_REPO
-}: StatRegConfigLib = __non_webpack_require__('/lib/ssb/statreg/config')
+}: StatRegConfigLib = __non_webpack_require__('/lib/ssb/dashboard/statreg/config')
 const {
   Events,
   logUserDataQuery
-}: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
+}: RepoQueryLib = __non_webpack_require__('/lib/ssb/repo/query')
 const {
   ensureArray
-}: ArrayUtilsLib = __non_webpack_require__('/lib/ssb/arrayUtils')
+}: ArrayUtilsLib = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
 const {
   cronJobLog
-}: ServerLogLib = __non_webpack_require__( '/lib/ssb/serverLog')
+}: ServerLogLib = __non_webpack_require__( '/lib/ssb/utils/serverLog')
 
 const STATREG_CONTACTS_NODE: StatRegNodeConfig = configureNode(STATREG_REPO_CONTACTS_KEY, fetchContacts)
 const STATREG_STATISTICS_NODE: StatRegNodeConfig = configureNode(STATREG_REPO_STATISTICS_KEY, fetchStatistics)

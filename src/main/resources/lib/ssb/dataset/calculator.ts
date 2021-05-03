@@ -14,7 +14,7 @@ const {
 }: ContentLibrary = __non_webpack_require__('/lib/xp/content')
 const {
   datasetOrUndefined
-}: SSBCacheLibrary = __non_webpack_require__('/lib/ssb/cache')
+}: SSBCacheLibrary = __non_webpack_require__('/lib/ssb/cache/cache')
 
 export function getCalculatorConfig(): Content<CalculatorConfig> | undefined {
   return query({

@@ -21,11 +21,11 @@ const {
 const {
   refreshStatRegData,
   STATREG_NODES
-}: StatRegRepoLib = __non_webpack_require__( '/lib/repo/statreg')
-const cron: CronLib = __non_webpack_require__('/lib/cron')
+}: StatRegRepoLib = __non_webpack_require__( '/lib/ssb/repo/statreg')
+const cron: CronLib = __non_webpack_require__('/lib/ssb/cron/cron')
 const {
   refreshQueriesAsync
-}: SSBTaskLib = __non_webpack_require__('/lib/task')
+}: SSBTaskLib = __non_webpack_require__('/lib/ssb/cron/task')
 const {
   getContentWithDataSource
 }: DatasetLib = __non_webpack_require__( '/lib/ssb/dataset/dataset')
@@ -35,10 +35,10 @@ const {
   updateJobLog,
   JOB_STATUS_COMPLETE,
   JobNames
-}: RepoJobLib = __non_webpack_require__('/lib/repo/job')
+}: RepoJobLib = __non_webpack_require__('/lib/ssb/repo/job')
 const {
   dataSourceRSSFilter
-}: DatasetRSSLib = __non_webpack_require__('/lib/ssb/dataset/rss')
+}: DatasetRSSLib = __non_webpack_require__('/lib/ssb/cron/rss')
 const {
   findUsers,
   createUser
@@ -48,16 +48,16 @@ const {
 }: ContextLibrary = __non_webpack_require__('/lib/xp/context')
 const {
   deleteExpiredEventLogs
-}: EventLogLib = __non_webpack_require__('/lib/ssb/eventLog')
+}: EventLogLib = __non_webpack_require__('/lib/ssb/cron/eventLog')
 const {
   isMaster
 }: ClusterLib = __non_webpack_require__('/lib/xp/cluster')
 const {
   cronJobLog
-}: ServerLogLib = __non_webpack_require__('/lib/ssb/serverLog')
+}: ServerLogLib = __non_webpack_require__('/lib/ssb/utils/serverLog')
 const {
   ENONIC_CMS_DEFAULT_REPO
-}: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
+}: RepoCommonLib = __non_webpack_require__('/lib/ssb/repo/common')
 const {
   updateUnpublishedMockTbml
 }: MockUnpublishedLib = __non_webpack_require__('/lib/ssb/dataset/mockUnpublished')

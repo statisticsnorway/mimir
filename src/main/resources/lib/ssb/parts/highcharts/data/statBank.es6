@@ -1,11 +1,11 @@
 /* eslint-disable new-cap */
 const {
   getMunicipality
-} = __non_webpack_require__( '/lib/klass/municipalities')
+} = __non_webpack_require__( '/lib/ssb/dataset/klass/municipalities')
 
 const {
   DataSource: DataSourceType
-} = __non_webpack_require__( '/lib/repo/dataset')
+} = __non_webpack_require__( '/lib/ssb/repo/dataset')
 
 
 export function seriesAndCategoriesFromJsonStat(req, highchart, dataset, datasetFormat) {

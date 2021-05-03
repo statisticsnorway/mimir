@@ -17,7 +17,7 @@ const {
   DataSource: DataSourceType,
   getDataset,
   UNPUBLISHED_DATASET_BRANCH
-} = __non_webpack_require__( '/lib/repo/dataset')
+} = __non_webpack_require__( '/lib/ssb/repo/dataset')
 const util: UtilLibrary = __non_webpack_require__( '/lib/util')
 const {
   getComponent,
@@ -31,17 +31,17 @@ const {
 } = __non_webpack_require__( '/lib/thymeleaf')
 const {
   createHighchartObject
-} = __non_webpack_require__('/lib/highcharts/highchartsUtils')
+} = __non_webpack_require__('/lib/ssb/parts/highcharts/highchartsUtils')
 
 const {
   renderError
-} = __non_webpack_require__('/lib/error/error')
+} = __non_webpack_require__('/lib/ssb/error/error')
 const {
   datasetOrUndefined
-} = __non_webpack_require__('/lib/ssb/cache')
+} = __non_webpack_require__('/lib/ssb/cache/cache')
 const {
   hasWritePermissionsAndPreview
-} = __non_webpack_require__('/lib/ssb/permissions')
+} = __non_webpack_require__('/lib/ssb/parts/permissions')
 
 
 const content: ContentLibrary = __non_webpack_require__( '/lib/xp/content')

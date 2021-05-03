@@ -1,15 +1,15 @@
 const {
   getPhrases
-} = __non_webpack_require__( '/lib/language')
+} = __non_webpack_require__( '/lib/ssb/utils/language')
 const {
   list: listOperationsAlerts
-} = __non_webpack_require__( '/lib/ssb/operationsAlert')
+} = __non_webpack_require__( '/lib/ssb/parts/operationsAlert')
 const {
   list: listMunicipalityAlerts
-} = __non_webpack_require__( '/lib/ssb/municipalityAlert')
+} = __non_webpack_require__( '/lib/ssb/parts/municipalityAlert')
 const {
   list: listStatisticAlerts
-} = __non_webpack_require__( '/lib/ssb/statisticAlert')
+} = __non_webpack_require__( '/lib/ssb/parts/statisticAlert')
 const {
   processHtml,
   pageUrl,

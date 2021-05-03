@@ -4,7 +4,7 @@ const {
 
 const {
   createDefaultConfig
-} = __non_webpack_require__('/lib/highcharts/graph/config')
+} = __non_webpack_require__('/lib/ssb/parts/highcharts/graph/config')
 
 export function columnConfig(highchartContent, options) {
   const defaultConfig = createDefaultConfig(highchartContent.data, highchartContent.displayName)

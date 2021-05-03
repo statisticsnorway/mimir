@@ -1,6 +1,6 @@
 import { Content } from 'enonic-types/content'
 
-__non_webpack_require__('/lib/polyfills/nashorn')
+__non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { Request, Response } from 'enonic-types/controller'
 import { StatisticInListing, VariantInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
@@ -20,17 +20,17 @@ const {
 
 const {
   getAllStatisticsFromRepo
-} = __non_webpack_require__( '../../../lib/repo/statreg/statistics')
+} = __non_webpack_require__( '/lib/ssb/statreg/statistics')
 const {
   renderError
-} = __non_webpack_require__( '/lib/error/error')
+} = __non_webpack_require__( '/lib/ssb/error/error')
 const {
   getComponent,
   getContent
 }: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
 const {
   getWeek
-} = __non_webpack_require__('/lib/ssb/utils')
+} = __non_webpack_require__('/lib/ssb/utils/utils')
 const {
   data: {
     forceArray

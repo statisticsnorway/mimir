@@ -17,7 +17,7 @@ const {
 }: DatasetLib = __non_webpack_require__( '/lib/ssb/dataset/dataset')
 const {
   fromDatasetRepoCache
-}: SSBCacheLibrary = __non_webpack_require__( '/lib/ssb/cache')
+}: SSBCacheLibrary = __non_webpack_require__( '/lib/ssb/cache/cache')
 
 /**
  *

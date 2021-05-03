@@ -1,4 +1,4 @@
-__non_webpack_require__('/lib/polyfills/nashorn')
+__non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { TaskLib } from '../../types/task'
 import { CacheLibrary, Cache } from 'enonic-types/cache'
 import { Request, Response } from 'enonic-types/controller'
@@ -39,10 +39,10 @@ const {
 }: DatasetLib = __non_webpack_require__('/lib/ssb/dataset/dataset')
 const {
   cacheLog
-}: ServerLogLib = __non_webpack_require__('/lib/ssb/serverLog')
+}: ServerLogLib = __non_webpack_require__('/lib/ssb/utils/serverLog')
 const {
   ENONIC_CMS_DEFAULT_REPO
-}: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
+}: RepoCommonLib = __non_webpack_require__('/lib/ssb/repo/common')
 
 const masterFilterCaches: Map<string, Cache> = new Map()
 const draftFilterCaches: Map<string, Cache> = new Map()

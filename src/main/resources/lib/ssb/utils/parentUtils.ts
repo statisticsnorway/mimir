@@ -6,7 +6,7 @@ const {
 } = __non_webpack_require__('/lib/xp/content')
 const {
   fromParentTypeCache
-} = __non_webpack_require__('/lib/ssb/cache')
+} = __non_webpack_require__('/lib/ssb/cache/cache')
 
 export function getParentType(path: string): string | undefined {
   return fromParentTypeCache(path, () => parentType(path))

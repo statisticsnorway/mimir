@@ -9,22 +9,22 @@ const {
   queryNodes,
   withConnection,
   getNode
-}: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
+}: RepoCommonLib = __non_webpack_require__('/lib/ssb/repo/common')
 
 const {
   EVENT_LOG_BRANCH,
   EVENT_LOG_REPO
-}: RepoEventLogLib = __non_webpack_require__('/lib/repo/eventLog')
+}: RepoEventLogLib = __non_webpack_require__('/lib/ssb/repo/eventLog')
 
 const {
   startJobLog,
   updateJobLog,
   JOB_STATUS_COMPLETE
-}: RepoJobLib = __non_webpack_require__('/lib/repo/job')
+}: RepoJobLib = __non_webpack_require__('/lib/ssb/repo/job')
 
 const {
   cronJobLog
-}: ServerLogLib = __non_webpack_require__( '/lib/ssb/serverLog')
+}: ServerLogLib = __non_webpack_require__( '/lib/ssb/utils/serverLog')
 
 interface RepoNodeExtended extends RepoNode {
   _path: string;

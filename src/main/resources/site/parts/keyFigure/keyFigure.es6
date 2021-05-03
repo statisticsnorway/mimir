@@ -5,7 +5,7 @@ const {
 } = __non_webpack_require__( '/lib/ssb/keyFigure')
 const {
   getMunicipality
-} = __non_webpack_require__( '/lib/klass/municipalities')
+} = __non_webpack_require__( '/lib/ssb/dataset/klass/municipalities')
 const {
   getContent,
   getComponent,
@@ -19,14 +19,14 @@ const {
 } = __non_webpack_require__( '/lib/util')
 const {
   renderError
-} = __non_webpack_require__( '/lib/error/error')
+} = __non_webpack_require__( '/lib/ssb/error/error')
 const {
   DATASET_BRANCH,
   UNPUBLISHED_DATASET_BRANCH
-} = __non_webpack_require__('/lib/repo/dataset')
+} = __non_webpack_require__('/lib/ssb/repo/dataset')
 const {
   hasWritePermissionsAndPreview
-} = __non_webpack_require__('/lib/ssb/permissions')
+} = __non_webpack_require__('/lib/ssb/parts/permissions')
 
 const view = resolve('./keyFigure.html')
 

@@ -16,33 +16,33 @@ const {
   STATREG_NODES,
   refreshStatRegData,
   getStatRegNode
-}: StatRegRepoLib = __non_webpack_require__('/lib/repo/statreg')
+}: StatRegRepoLib = __non_webpack_require__('/lib/ssb/repo/statreg')
 const {
   STATREG_REPO_CONTACTS_KEY
-}: StatRegContactsLib = __non_webpack_require__('/lib/repo/statreg/contacts')
+}: StatRegContactsLib = __non_webpack_require__('/lib/ssb/statreg/contacts')
 const {
   STATREG_REPO_STATISTICS_KEY
-}: StatRegStatisticsLib = __non_webpack_require__('/lib/repo/statreg/statistics')
+}: StatRegStatisticsLib = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   STATREG_REPO_PUBLICATIONS_KEY
-}: StatRegPublicationsLib = __non_webpack_require__('/lib/repo/statreg/publications')
+}: StatRegPublicationsLib = __non_webpack_require__('/lib/ssb/statreg/publications')
 const {
   showWarningIcon,
   users
-}: DashboardUtilsLib = __non_webpack_require__('/lib/ssb/dataset/dashboardUtils')
+}: DashboardUtilsLib = __non_webpack_require__('/lib/ssb/dashboard/dashboardUtils')
 const {
   getNode,
   ENONIC_CMS_DEFAULT_REPO
-}: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
+}: RepoCommonLib = __non_webpack_require__('/lib/ssb/repo/common')
 const {
   EVENT_LOG_BRANCH,
   EVENT_LOG_REPO,
   getQueryChildNodesStatus
-}: RepoEventLogLib = __non_webpack_require__('/lib/repo/eventLog')
+}: RepoEventLogLib = __non_webpack_require__('/lib/ssb/repo/eventLog')
 const {
   dateToReadable,
   dateToFormat
-} = __non_webpack_require__( '/lib/ssb/utils')
+} = __non_webpack_require__( '/lib/ssb/utils/utils')
 const i18n: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
 const {
   run

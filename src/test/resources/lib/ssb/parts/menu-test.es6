@@ -111,7 +111,7 @@ test.mock('/lib/xp/content', {
   }
 })
 
-const menuLib = __non_webpack_require__( '/lib/ssb/menu')
+const menuLib = __non_webpack_require__( '/lib/ssb/parts/menu')
 const {
   query
 } = __non_webpack_require__( '/lib/xp/content')

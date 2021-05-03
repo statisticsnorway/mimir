@@ -11,13 +11,13 @@ const {
 } = __non_webpack_require__('/lib/xp/portal')
 const {
   getPhrases
-} = __non_webpack_require__( '/lib/language')
+} = __non_webpack_require__( '/lib/ssb/utils/language')
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
 const {
   renderError
-} = __non_webpack_require__('/lib/error/error')
+} = __non_webpack_require__('/lib/ssb/error/error')
 
 const moment = require('moment/min/moment-with-locales')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')

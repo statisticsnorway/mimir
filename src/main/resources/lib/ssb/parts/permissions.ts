@@ -1,4 +1,4 @@
-__non_webpack_require__('/lib/polyfills/nashorn')
+__non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { ContentLibrary, GetPermissionsResult, PermissionsParams } from 'enonic-types/content'
 import { AuthInfo, ContextLibrary } from 'enonic-types/context'
 import { Request } from 'enonic-types/controller'

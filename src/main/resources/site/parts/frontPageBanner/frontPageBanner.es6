@@ -4,13 +4,13 @@ const {
 } = __non_webpack_require__('/lib/xp/portal')
 const {
   renderError
-} = __non_webpack_require__('/lib/error/error')
+} = __non_webpack_require__('/lib/ssb/error/error')
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
 const {
   getImageAlt
-} = __non_webpack_require__( '/lib/ssb/utils')
+} = __non_webpack_require__( '/lib/ssb/utils/utils')
 
 const view = resolve('./frontPageBanner.html')
 

@@ -13,7 +13,7 @@ const {
 }: ContentLibrary = __non_webpack_require__('/lib/xp/content')
 const {
   fetchStatisticsWithPreviousReleaseBetween
-}: StatRegStatisticsLib = __non_webpack_require__('/lib/repo/statreg/statistics')
+}: StatRegStatisticsLib = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   pageUrl
 }: PortalLibrary = __non_webpack_require__('/lib/xp/portal')

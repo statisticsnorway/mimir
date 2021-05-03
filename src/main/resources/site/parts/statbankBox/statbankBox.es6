@@ -1,6 +1,6 @@
 const {
   getStatisticByIdFromRepo
-} = __non_webpack_require__('/lib/repo/statreg/statistics')
+} = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   getContent,
   getComponent,
@@ -8,10 +8,10 @@ const {
 } = __non_webpack_require__('/lib/xp/portal')
 const {
   getPhrases
-} = __non_webpack_require__( '/lib/language')
+} = __non_webpack_require__( '/lib/ssb/utils/language')
 const {
   renderError
-} = __non_webpack_require__('/lib/error/error')
+} = __non_webpack_require__('/lib/ssb/error/error')
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
