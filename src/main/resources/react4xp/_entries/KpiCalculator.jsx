@@ -367,8 +367,8 @@ function KpiCalculator(props) {
   function renderLinkArticle() {
     if (props.calculatorArticleUrl) {
       return (
-        <Col className="article-link align-self-center col-12 col-lg-6">
-          <Link className="float-lg-right" href={props.calculatorArticleUrl}>{props.phrases.readAboutCalculator}</Link>
+        <Col className="article-link align-self-center col-12 col-md-6">
+          <Link className="float-md-right" href={props.calculatorArticleUrl}>{props.phrases.readAboutCalculator}</Link>
         </Col>
       )
     }
@@ -435,42 +435,42 @@ function KpiCalculator(props) {
               </Col>
             </Row>
             <Row>
-              <Col>
+              <Col className="calculate-from col-12 col-md-6">
                 <h3>{props.phrases.calculatePriceChangeFrom}</h3>
-                <Container className="calculate-from">
+                <Container>
                   <Row>
-                    <Col className="select-month">
-                      {addDropdownMonth('start-month')}
-                    </Col>
-                    <Col className="select-year align-self-end">
+                    <Col className="select-year align-self-end col-sm-4">
                       <Input
                         className="input-year"
-                        label={props.phrases.enterYear}
+                        label={props.phrases.fromYear}
                         handleChange={(value) => onChange('start-year', value)}
                         error={startYear.error}
                         errorMessage={startYear.errorMsg}
                         onBlur={() => onBlur('start-year')}
                       />
                     </Col>
+                    <Col className="select-month col-sm-8">
+                      {addDropdownMonth('start-month')}
+                    </Col>
                   </Row>
                 </Container>
               </Col>
-              <Col>
+              <Col className="calculate-to col-12 col-md-6">
                 <h3>{props.phrases.calculatePriceChangeTo}</h3>
-                <Container className="calculate-to">
+                <Container>
                   <Row>
-                    <Col className="select-month">
-                      {addDropdownMonth('end-month')}
-                    </Col>
-                    <Col className="select-year align-self-end">
+                    <Col className="select-year align-self-end col-sm-4">
                       <Input
                         className="input-year"
-                        label={props.phrases.enterYear}
+                        label={props.phrases.toYear}
                         handleChange={(value) => onChange('end-year', value)}
                         error={endYear.error}
                         errorMessage={endYear.errorMsg}
                         onBlur={() => onBlur('end-year')}
                       />
+                    </Col>
+                    <Col className="select-month col-sm-8">
+                      {addDropdownMonth('end-month')}
                     </Col>
                   </Row>
                 </Container>
@@ -478,7 +478,7 @@ function KpiCalculator(props) {
             </Row>
             <Row className="submit">
               <Col>
-                <Button primary type="submit" disabled={loading}>{props.phrases.seePriceChange}</Button>
+                <Button className="submit-button" primary type="submit" disabled={loading}>{props.phrases.seePriceChange}</Button>
               </Col>
             </Row>
           </Container>
@@ -512,17 +512,17 @@ function KpiCalculator(props) {
               <Col className="calculate-from col-12 col-lg-6 col-xl-4">
                 <Container>
                   <Row>
-                    <Col className="select-year align-self-end col-5">
+                    <Col className="select-year align-self-end">
                       <Input
                         className="input-year"
-                        label='Fra år(åååå)'
+                        label={props.phrases.fromYear}
                         handleChange={(value) => onChange('start-year', value)}
                         error={startYear.error}
                         errorMessage={startYear.errorMsg}
                         onBlur={() => onBlur('start-year')}
                       />
                     </Col>
-                    <Col className="select-month col-7">
+                    <Col className="select-month">
                       {addDropdownMonth('start-month')}
                     </Col>
                   </Row>
@@ -531,17 +531,17 @@ function KpiCalculator(props) {
               <Col className="calculate-to col-12 col-lg-6 col-xl-4">
                 <Container>
                   <Row className="ml-0 ml-xl-1">
-                    <Col className="select-year align-self-end col-5">
+                    <Col className="select-year align-self-end">
                       <Input
                         className="input-year"
-                        label='Til år(åååå)'
+                        label={props.phrases.toYear}
                         handleChange={(value) => onChange('end-year', value)}
                         error={endYear.error}
                         errorMessage={endYear.errorMsg}
                         onBlur={() => onBlur('end-year')}
                       />
                     </Col>
-                    <Col className="select-month col-7">
+                    <Col className="select-month">
                       {addDropdownMonth('end-month')}
                     </Col>
                   </Row>

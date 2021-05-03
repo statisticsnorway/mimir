@@ -13,8 +13,8 @@
         padding: 0;
       }
 
-      .month, .start-value {
-        width: 280px;
+      .start-value {
+        width: 180px;
       }
 
       .input-amount {
@@ -22,8 +22,17 @@
         padding-bottom: 32px;
       }
 
-      .input-year {
-        width: 140px;
+      .calculate-from {
+        padding-right: 30px;
+      }
+
+      .calculate-to {
+        padding-left: 30px;
+      }
+
+      .select-month, .ssb-dropdown.month{
+        max-width: 300px;
+        min-width: 220px;
       }
 
       .submit {
@@ -140,18 +149,25 @@
       .calculator-form {
         padding: 20px;
 
-        .select-month {
-          padding: 0;
-          margin-bottom: 10px;
-        }
-
         .select-year {
-          padding: 0;
+          padding-right: 5px;
+          padding-left: 0;
         }
 
-        .calculate-from, .calculate-from {
-          margin-bottom: 20px;
-          width: 100%
+        .select-month {
+          padding-left: 5px;
+        }
+
+        .calculate-from {
+          padding-right: 10px;
+        }
+  
+        .calculate-to {
+          padding-left: 10px;
+        }
+
+        .select-month, .ssb-dropdown.month{
+          min-width: 200px;
         }
 
       }
@@ -179,22 +195,43 @@
     }
 
     @include media-breakpoint-down(sm) {
-
       .calculator-form {
 
-        .month, .start-value {
-          width: 100%;
-        }
-
         .article-link {
-          margin-top: 10px;
-          margin-bottom: 10px;
+          margin-bottom: 20px;
         }
 
+        .calculate-from {
+          margin-bottom: 20px;
+        }
       }
     }
 
     @include media-breakpoint-down(xs) {
+      .calculator-form {
+
+        .input-amount, .start-value {
+          width: 100%;
+        }
+
+        .select-year, .input-year {
+          max-width: 90px;
+          min-width: 80px;
+        }
+
+        .select-month {
+          padding-right: 0;
+        }
+
+        .select-month, .ssb-dropdown.month {
+          min-width: 118px;
+        }
+
+        .submit-button {
+          width: 100%;
+        }
+
+      }
 
       .calculator-form-frontpage {
         padding: 20px;
@@ -203,14 +240,15 @@
           width: 100%;
         }
 
-        .select-year {
+        .select-year, .input-year {
           max-width: 90px;
-          min-width: 90px;
+          min-width: 80px;
         }
 
         .select-month, .ssb-dropdown.month {
-          max-width: 110px;
+          max-width: 310px;
           min-width: 110px;
+          padding: 0;
         }
 
         .submit-button {
