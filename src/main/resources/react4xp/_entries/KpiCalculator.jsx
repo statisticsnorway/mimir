@@ -268,7 +268,7 @@ function KpiCalculator(props) {
             <h3>{props.phrases.kpiAmountEqualled}</h3>
           </Col>
           <Col className="end-value col-12 col-md-8">
-            <span className="float-right">
+            <span className="float-left float-md-right">
               {renderNumberValute(endValue)}
             </span>
           </Col>
@@ -277,21 +277,21 @@ function KpiCalculator(props) {
           </Col>
         </Row>
         <Row className="mb-5">
-          <Col className="price-increase col-12 col-md-4">
+          <Col className="price-increase col-12 col-lg-4">
             <span>{priceChangeLabel}</span>
             <span className="float-right">
               {renderNumberChangeValue()}
             </span>
             <Divider dark/>
           </Col>
-          <Col className="start-value col-12 col-md-4">
+          <Col className="start-value col-12 col-lg-4">
             <span>{props.phrases.amount} {startPeriod}</span>
             <span className="float-right">
               {renderNumberValute(startValueResult)}
             </span>
             <Divider dark/>
           </Col>
-          <Col className="amount col-12 col-md-4">
+          <Col className="amount col-12 col-lg-4">
             <span>{props.phrases.amount} {endPeriod}</span>
             <span className="float-right">
               {renderNumberValute(endValue)}
@@ -314,10 +314,10 @@ function KpiCalculator(props) {
     return (
       <Container className="calculator-result-frontpage">
         <Row className="mb-3">
-          <Col className="amount-equal align-self-end col-12 col-lg-4">
+          <Col className="amount-equal align-self-end col-12 col-lg-5">
             <h3>{props.phrases.kpiAmountEqualled}</h3>
           </Col>
-          <Col className="end-value col-12 col-lg-8">
+          <Col className="end-value col-12 col-lg-7">
             <span className="float-lg-right">
               {renderNumberValute(endValue)}
             </span>
@@ -369,6 +369,16 @@ function KpiCalculator(props) {
       return (
         <Col className="article-link align-self-center col-12 col-md-6">
           <Link className="float-md-right" href={props.calculatorArticleUrl}>{props.phrases.readAboutCalculator}</Link>
+        </Col>
+      )
+    }
+  }
+
+  function renderLinkArticleFrontpage() {
+    if (props.calculatorArticleUrl) {
+      return (
+        <Col className="article-link align-self-center col-12 col-lg-6">
+          <Link className="float-lg-right" href={props.calculatorArticleUrl}>{props.phrases.readAboutCalculator}</Link>
         </Col>
       )
     }
@@ -439,7 +449,7 @@ function KpiCalculator(props) {
                 <h3>{props.phrases.calculatePriceChangeFrom}</h3>
                 <Container>
                   <Row>
-                    <Col className="select-year align-self-end col-sm-4">
+                    <Col className="select-year align-self-end col-sm-5">
                       <Input
                         className="input-year"
                         label={props.phrases.fromYear}
@@ -449,7 +459,7 @@ function KpiCalculator(props) {
                         onBlur={() => onBlur('start-year')}
                       />
                     </Col>
-                    <Col className="select-month col-sm-8">
+                    <Col className="select-month col-sm-7">
                       {addDropdownMonth('start-month')}
                     </Col>
                   </Row>
@@ -459,7 +469,7 @@ function KpiCalculator(props) {
                 <h3>{props.phrases.calculatePriceChangeTo}</h3>
                 <Container>
                   <Row>
-                    <Col className="select-year align-self-end col-sm-4">
+                    <Col className="select-year align-self-end col-sm-5">
                       <Input
                         className="input-year"
                         label={props.phrases.toYear}
@@ -469,7 +479,7 @@ function KpiCalculator(props) {
                         onBlur={() => onBlur('end-year')}
                       />
                     </Col>
-                    <Col className="select-month col-sm-8">
+                    <Col className="select-month col-sm-7">
                       {addDropdownMonth('end-month')}
                     </Col>
                   </Row>
@@ -530,7 +540,7 @@ function KpiCalculator(props) {
               </Col>
               <Col className="calculate-to col-12 col-lg-6 col-xl-4">
                 <Container>
-                  <Row className="ml-0 ml-xl-1">
+                  <Row>
                     <Col className="select-year align-self-end">
                       <Input
                         className="input-year"
@@ -552,7 +562,7 @@ function KpiCalculator(props) {
               <Col>
                 <Button className="submit-button" primary type="submit" disabled={loading}>{props.phrases.seePriceChange}</Button>
               </Col>
-              {renderLinkArticle()}
+              {renderLinkArticleFrontpage()}
             </Row>
           </Container>
         </Form>
