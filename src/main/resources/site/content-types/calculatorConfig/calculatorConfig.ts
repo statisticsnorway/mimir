@@ -10,9 +10,7 @@ export interface CalculatorConfig {
   kpiSourceMonth?: string;
 
   /**
-   * 
-   *                         Artikkel Kpi kalkulator
-   *                     
+   * Kilde
    */
-  kpiCalculatorArticle?: string;
+  pifSource?: string;
 }
