@@ -154,8 +154,18 @@
           padding-left: 0;
         }
 
+        .select-year, .input-year {
+          max-width: 110px;
+          min-width: 105px;
+        }
+
         .select-month {
           padding-left: 5px;
+        }
+
+        .select-month, .ssb-dropdown.month {
+          min-width: 100px;
+          max-width: 195px;
         }
 
         .calculate-from {
@@ -164,10 +174,6 @@
   
         .calculate-to {
           padding-left: 10px;
-        }
-
-        .select-month, .ssb-dropdown.month{
-          min-width: 200px;
         }
 
       }
@@ -215,8 +221,8 @@
         }
 
         .select-year, .input-year {
-          max-width: 90px;
-          min-width: 80px;
+          max-width: 105px;
+          min-width: 105px;
         }
 
         .select-month {
@@ -224,7 +230,8 @@
         }
 
         .select-month, .ssb-dropdown.month {
-          min-width: 118px;
+          max-width: 200px;
+          min-width: 95px;
         }
 
         .submit-button {
