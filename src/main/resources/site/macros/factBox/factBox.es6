@@ -2,7 +2,7 @@ const factBoxController = __non_webpack_require__(`../../parts/factBox/factBox`)
 
 const {
   renderError
-} = __non_webpack_require__('/lib/error/error')
+} = __non_webpack_require__('/lib/ssb/error/error')
 
 exports.macro = function(context) {
   try {

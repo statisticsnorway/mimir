@@ -6,16 +6,16 @@ const {
 } = __non_webpack_require__( '/lib/thymeleaf')
 const {
   renderError
-} = __non_webpack_require__( '/lib/error/error')
+} = __non_webpack_require__( '/lib/ssb/error/error')
 const {
   getContactsFromRepo
-} = __non_webpack_require__('/lib/repo/statreg/contacts')
+} = __non_webpack_require__('/lib/ssb/statreg/contacts')
 const {
   ensureArray, chunkArray
-} = __non_webpack_require__('/lib/ssb/arrayUtils')
+} = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
 const {
   getPhrases
-} = __non_webpack_require__( '/lib/language')
+} = __non_webpack_require__( '/lib/ssb/utils/language')
 
 import { find } from 'ramda'
 

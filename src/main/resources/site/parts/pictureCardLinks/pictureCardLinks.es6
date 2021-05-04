@@ -1,12 +1,12 @@
 const {
   getImageAlt
-} = __non_webpack_require__('/lib/ssb/utils')
+} = __non_webpack_require__('/lib/ssb/utils/utils')
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
 const {
   renderError
-} = __non_webpack_require__('/lib/error/error')
+} = __non_webpack_require__('/lib/ssb/error/error')
 const {
   getComponent,
   imageUrl,

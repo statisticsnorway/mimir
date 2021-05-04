@@ -9,12 +9,12 @@ const {
 } = __non_webpack_require__('/lib/thymeleaf')
 const {
   renderError
-} = __non_webpack_require__('/lib/error/error')
+} = __non_webpack_require__('/lib/ssb/error/error')
 const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
 
-const languageLib = __non_webpack_require__( '/lib/language')
+const languageLib = __non_webpack_require__( '/lib/ssb/utils/language')
 const moment = require('moment/min/moment-with-locales')
 const view = resolve('./article.html')
 

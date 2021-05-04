@@ -8,7 +8,7 @@ const {
 } = __non_webpack_require__('/lib/thymeleaf')
 const {
   renderError
-} = __non_webpack_require__('/lib/error/error')
+} = __non_webpack_require__('/lib/ssb/error/error')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getUser,
@@ -27,14 +27,6 @@ const INTERNAL_STATBANK_URL = app.config && app.config['ssb.statbankintern.baseU
 const ENONIC_PROJECT_ID = app.config && app.config['ssb.project.id'] ? app.config['ssb.project.id'] : 'default'
 
 const DASHBOARD_FAG = 'dashboard.fag'
-
-const dashboardOptions = {
-  dashboardTool: false,
-  statistics: false,
-  jobLog: false,
-  dataSources: false,
-  statisticRegister: false
-}
 
 exports.get = function(req) {
   try {

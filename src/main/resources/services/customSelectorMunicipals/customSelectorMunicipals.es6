@@ -1,6 +1,6 @@
 const {
   list, query
-} = __non_webpack_require__('/lib/klass/municipalities')
+} = __non_webpack_require__('/lib/ssb/dataset/klass/municipalities')
 
 /**
  * @param {object} req: Enonics request object

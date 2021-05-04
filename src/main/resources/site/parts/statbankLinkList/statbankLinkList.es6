@@ -1,11 +1,12 @@
-import { getStatisticByIdFromRepo } from '../../../lib/repo/statreg/statistics'
-
+const {
+  getStatisticByIdFromRepo
+} = __non_webpack_require__( '/lib/ssb/statreg/statistics')
 const {
   getContent
 } = __non_webpack_require__('/lib/xp/portal')
 const {
   renderError
-} = __non_webpack_require__('/lib/error/error')
+} = __non_webpack_require__('/lib/ssb/error/error')
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
@@ -17,7 +18,7 @@ const STATBANKWEB_URL = app.config && app.config['ssb.statbankweb.baseUrl'] ? ap
 const moment = require('moment/min/moment-with-locales')
 const {
   getPhrases
-} = __non_webpack_require__( '/lib/language')
+} = __non_webpack_require__( '/lib/ssb/utils/language')
 
 exports.get = function(req) {
   try {

@@ -1,10 +1,10 @@
-__non_webpack_require__('/lib/polyfills/nashorn')
+__non_webpack_require__('/lib/ssb/polyfills/nashorn')
 const {
   handleRepoGet
 } = __non_webpack_require__('/lib/ssb/statreg/repoUtils')
 const {
   getContactsFromRepo
-} = __non_webpack_require__('/lib/repo/statreg/contacts')
+} = __non_webpack_require__('/lib/ssb/statreg/contacts')
 
 const toOption = ({
   id, name, email, mobile, telephone

@@ -3,22 +3,22 @@ const {
 } = __non_webpack_require__('/lib/xp/portal')
 const {
   getStatisticByIdFromRepo, getReleaseDatesByVariants
-} = __non_webpack_require__('/lib/repo/statreg/statistics')
+} = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   getPhrases
-} = __non_webpack_require__( '/lib/language')
+} = __non_webpack_require__( '/lib/ssb/utils/language')
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
 const {
   renderError
-} = __non_webpack_require__('/lib/error/error')
+} = __non_webpack_require__('/lib/ssb/error/error')
 const {
   preview: keyFigurePreview
 } = __non_webpack_require__('../keyFigure/keyFigure')
 const {
   hasWritePermissionsAndPreview
-} = __non_webpack_require__('/lib/ssb/permissions')
+} = __non_webpack_require__('/lib/ssb/parts/permissions')
 const {
   sleep
 } = __non_webpack_require__('/lib/xp/task')

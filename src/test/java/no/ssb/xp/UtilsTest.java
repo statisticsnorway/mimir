@@ -6,6 +6,6 @@ public class UtilsTest extends ScriptRunnerSupport {
     @Override
     public String getScriptTestFile()
     {
-        return "/lib/ssb/utils-test.js";
+        return "/lib/ssb/utils/utils-test.js";
     }
 }

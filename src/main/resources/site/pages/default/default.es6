@@ -6,31 +6,31 @@ const {
 const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
 const {
   getLanguage
-} = __non_webpack_require__( '/lib/language')
+} = __non_webpack_require__( '/lib/ssb/utils/language')
 const {
   alertsForContext,
   getBreadcrumbs
-} = __non_webpack_require__( '/lib/ssb/utils')
+} = __non_webpack_require__( '/lib/ssb/utils/utils')
 const {
   getReleaseDatesByVariants
-} = __non_webpack_require__('/lib/repo/statreg/statistics')
+} = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   getMunicipality
-} = __non_webpack_require__( '/lib/klass/municipalities')
+} = __non_webpack_require__( '/lib/ssb/dataset/klass/municipalities')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const util = __non_webpack_require__( '/lib/util')
 const {
   getHeaderContent
-} = __non_webpack_require__( '/lib/ssb/header')
+} = __non_webpack_require__( '/lib/ssb/parts/header')
 const {
   getFooterContent
-} = __non_webpack_require__( '/lib/ssb/footer')
+} = __non_webpack_require__( '/lib/ssb/parts/footer')
 const {
   fromMenuCache
-} = __non_webpack_require__('/lib/ssb/cache')
+} = __non_webpack_require__('/lib/ssb/cache/cache')
 const {
   getStatisticByIdFromRepo
-} = __non_webpack_require__('/lib/repo/statreg/statistics')
+} = __non_webpack_require__('/lib/ssb/statreg/statistics')
 
 const partsWithPreview = [ // Parts that has preview
   `${app.name}:map`,

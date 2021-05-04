@@ -1,6 +1,6 @@
 const {
   getMunicipality
-} = __non_webpack_require__( '/lib/klass/municipalities')
+} = __non_webpack_require__( '/lib/ssb/dataset/klass/municipalities')
 
 const contentType = 'application/json'
 

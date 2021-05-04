@@ -6,13 +6,13 @@ const {
 } = __non_webpack_require__( '/lib/xp/portal')
 const {
   getMunicipality
-} = __non_webpack_require__( '/lib/klass/municipalities')
+} = __non_webpack_require__( '/lib/ssb/dataset/klass/municipalities')
 const {
   pageMode
-} = __non_webpack_require__( '/lib/ssb/utils')
+} = __non_webpack_require__( '/lib/ssb/utils/utils')
 const {
   renderError
-} = __non_webpack_require__('/lib/error/error')
+} = __non_webpack_require__('/lib/ssb/error/error')
 
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 

@@ -9,14 +9,14 @@ const {
 } = __non_webpack_require__( '/lib/thymeleaf')
 const {
   renderError
-} = __non_webpack_require__('/lib/error/error')
+} = __non_webpack_require__('/lib/ssb/error/error')
 const content = __non_webpack_require__( '/lib/xp/content')
 const {
   getSources
-} = __non_webpack_require__( '/lib/ssb/utils')
+} = __non_webpack_require__( '/lib/ssb/utils/utils')
 const {
   getPhrases
-} = __non_webpack_require__( '/lib/language')
+} = __non_webpack_require__( '/lib/ssb/utils/language')
 
 import { Base64 } from 'js-base64'
 

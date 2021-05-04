@@ -6,11 +6,11 @@ const {
 } = __non_webpack_require__('/lib/thymeleaf')
 const {
   renderError
-} = __non_webpack_require__('/lib/error/error')
+} = __non_webpack_require__('/lib/ssb/error/error')
 // NOTE reimplement divider cache after SSR works again
 // const {
 //   fromDividerCache
-// } = __non_webpack_require__('/lib/ssb/cache')
+// } = __non_webpack_require__('/lib/ssb/cache/cache')
 
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view = resolve('./divider.html')

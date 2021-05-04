@@ -1,8 +1,8 @@
 import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
-import { UNPUBLISHED_DATASET_BRANCH } from '../../repo/dataset'
-import { StatisticLib } from '../statistic'
+import { UNPUBLISHED_DATASET_BRANCH } from '../repo/dataset'
+import { StatisticLib } from '../dashboard/statistic'
 import { DatasetLib } from './dataset'
 
 const {
@@ -11,7 +11,7 @@ const {
 }: ContentLibrary = __non_webpack_require__('/lib/xp/content')
 const {
   getDataSourceIdsFromStatistics
-}: StatisticLib = __non_webpack_require__('/lib/ssb/statistic')
+}: StatisticLib = __non_webpack_require__('/lib/ssb/dashboard/statistic')
 const {
   refreshDataset
 }: DatasetLib = __non_webpack_require__('/lib/ssb/dataset/dataset')

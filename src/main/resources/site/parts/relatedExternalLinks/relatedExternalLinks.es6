@@ -3,7 +3,7 @@ const {
 } = __non_webpack_require__('/lib/thymeleaf')
 const {
   renderError
-} = __non_webpack_require__('/lib/error/error')
+} = __non_webpack_require__('/lib/ssb/error/error')
 const React4xp = require('/lib/enonic/react4xp')
 const {
   getContent
@@ -11,7 +11,7 @@ const {
 const util = __non_webpack_require__('/lib/util')
 const {
   getPhrases
-} = __non_webpack_require__( '/lib/language')
+} = __non_webpack_require__( '/lib/ssb/utils/language')
 
 const view = resolve('./relatedExternalLinks.html')
 

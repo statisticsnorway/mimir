@@ -3,9 +3,9 @@ import { Content, ContentLibrary } from 'enonic-types/content'
 import { Page } from '../../site/content-types/page/page'
 import { DefaultPageConfig } from '../../site/pages/default/default-page-config'
 import { Article } from '../../site/content-types/article/article'
-import { StatRegStatisticsLib } from '../../lib/repo/statreg/statistics'
+import { StatRegStatisticsLib } from '../../lib/ssb/statreg/statistics'
 import moment = require('moment')
-import { StatisticInListing } from '../../lib/ssb/statreg/types'
+import { StatisticInListing } from '../../lib/ssb/dashboard/statreg/types'
 import { Statistics } from '../../site/content-types/statistics/statistics'
 import { PortalLibrary } from 'enonic-types/portal'
 const {
@@ -13,7 +13,7 @@ const {
 }: ContentLibrary = __non_webpack_require__('/lib/xp/content')
 const {
   fetchStatisticsWithPreviousReleaseBetween
-}: StatRegStatisticsLib = __non_webpack_require__('/lib/repo/statreg/statistics')
+}: StatRegStatisticsLib = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   pageUrl
 }: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
