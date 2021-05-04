@@ -114,6 +114,7 @@ export interface DatasetRepoNode<T> extends RepoNode {
 }
 
 export interface RepoDatasetLib {
+  DataSource: typeof DataSource;
   DATASET_REPO: string;
   DATASET_BRANCH: string;
   UNPUBLISHED_DATASET_BRANCH: string;
