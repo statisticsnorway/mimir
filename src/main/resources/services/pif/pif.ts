@@ -45,11 +45,13 @@ function get(req: HttpRequestParams): Response {
     const indexResult: IndexResult = getIndexes(scopeCode, productGroup, startMonth, startYear, endMonth, endYear, pifDataset)
     const chronological: boolean = isChronological(startYear, startMonth, endYear, endMonth)
     if (indexResult.startIndex !== null && indexResult.endIndex !== null) {
-      // const changeValue: number = getChangeValue(indexResult.startIndex, indexResult.endIndex, chronological)
+      const changeValue: number = getChangeValue(indexResult.startIndex, indexResult.endIndex, chronological)
       return {
         body: {
           startIndex: indexResult.startIndex,
-          endIndex: indexResult.endIndex
+          endIndex: indexResult.endIndex,
+          change: changeValue,
+          endValue: parseFloat(startValue) * (indexResult.endIndex / indexResult.startIndex)
         },
         contentType: 'application/json'
       }
@@ -145,4 +147,12 @@ function getIndexTime(pifData: Dataset | null, time: string, scopeCode: string, 
   }).value
 
   return index
+}
+
+function getChangeValue(startIndex: number, endIndex: number, chronological: boolean): number {
+  if (chronological) {
+    return ((endIndex - startIndex) / startIndex)
+  } else {
+    return ((startIndex - endIndex) / endIndex)
+  }
 }
