@@ -571,9 +571,7 @@ function KpiCalculator(props) {
   }
 
   return (
-    <Container className='kpi-calculator'>
-      {renderCalculator()}
-    </Container>
+    renderCalculator()
   )
 }
 

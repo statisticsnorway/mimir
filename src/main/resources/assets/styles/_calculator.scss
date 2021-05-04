@@ -58,8 +58,11 @@
 
     .calculator-error {
       padding: 0 100px 60px 100px;
+    }
 
-      &.frontpage {
+    &.frontpage {
+
+      .calculator-error {
         padding: 0 60px 55px 60px;
       }
     }
@@ -248,8 +251,14 @@
         }
       }
 
-      .calculator-error.frontpage, .calculator-result-frontpage {
+      .calculator-result-frontpage {
         padding: 20px;
+      }
+
+      &.frontpage {
+        .calculator-error {
+          padding: 20px;
+        }
       }
     }
 
