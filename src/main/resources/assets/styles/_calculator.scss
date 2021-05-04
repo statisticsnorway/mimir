@@ -3,6 +3,7 @@
   .kpi-calculator {
     border: solid 1px $ssb-dark-5;
     border-top: 4px solid $green3;
+    background: $ssb-white;
 
     .calculator-form {
       padding: 60px 100px;
@@ -12,8 +13,8 @@
         padding: 0;
       }
 
-      .month, .start-value {
-        width: 280px;
+      .start-value {
+        width: 180px;
       }
 
       .input-amount {
@@ -21,8 +22,12 @@
         padding-bottom: 32px;
       }
 
-      .input-year {
-        width: 140px;
+      .calculate-from {
+        padding-right: 30px;
+      }
+
+      .calculate-to {
+        padding-left: 30px;
       }
 
       .submit {
@@ -55,12 +60,82 @@
       padding: 0 100px 60px 100px;
     }
 
-    @include media-breakpoint-down(sm) {
+    &.frontpage {
 
-      .calculator-form {
+      .calculator-error {
+        padding: 0 60px 55px 60px;
+      }
+    }
 
-        .month, .start-value {
-          width: 100%;
+    .calculator-form-frontpage {
+      padding: 60px;
+
+      .input-amount {
+        width: 100%;
+        padding-right: 20px;
+      }
+
+      .select-year {
+        max-width: 110px;
+        min-width: 100px;
+        padding-right: 4px;
+      }
+
+      .select-month {
+        padding-left: 0;
+      }
+
+      .calculate-from {
+        .select-year {
+          padding-left: 0;
+        }
+      }
+
+      .select-month, .ssb-dropdown.month, .list-of-options {
+        min-width: 100px;
+      }
+
+      .submit {
+        padding-top: 32px;
+      }
+    }
+
+    .calculator-result-frontpage {
+      padding: 40px 60px;
+      border-top: solid 1px $ssb-dark-5;
+      background-color: $ssb-dark-1;
+
+      .amount-equal {
+        @include roboto;
+        font-size: 20px;
+      }
+
+      .end-value {
+        @include roboto-condenced ;
+        font-size: 28px;
+      }
+    }
+
+    @include media-breakpoint-down(lg) {
+
+      .calculator-form-frontpage {
+
+        .input-amount, .start-value {
+          width: 160px;
+        }
+
+        .select-year {
+          max-width: 120px;
+        }
+
+        .calculate-from {
+          .select-year {
+            padding-left: 10px;
+          }
+        }
+
+        .start-value {
+          margin-bottom: 20px;
         }
 
       }
@@ -70,26 +145,122 @@
 
       .calculator-form {
         padding: 20px;
-        
-        .select-month {
-          padding: 0;
-          margin-bottom: 10px;
-        }
 
         .select-year {
-          padding: 0;
+          padding-right: 5px;
+          padding-left: 0;
         }
-  
-        .calculate-from, .calculate-from {
-          margin-bottom: 20px;
+
+        .select-year, .input-year {
+          max-width: 110px;
+          min-width: 105px;
+        }
+
+        .select-month {
+          padding-left: 5px;
+        }
+
+        .calculate-from {
+          padding-right: 10px;
+        }
+
+        .calculate-to {
+          padding-left: 10px;
         }
 
       }
 
-      .calculator-error, .calculator-result {
+      .calculator-form-frontpage {
+
+        .calculate-from, .calculate-to {
+          .select-year {
+            padding-left: 0;
+          }
+        }
+
+        .article-link {
+          margin-top: 20px;
+        }
+
+        .calculate-from, .calculate-from {
+          margin-bottom: 20px;
+          width: 100%;
+        }
+      }
+
+      .calculator-result {
+        .end-value {
+          font-size: 28px;
+        }
+      }
+
+      .calculator-error, .calculator-result  {
         padding: 20px;
       }
 
     }
+
+    @include media-breakpoint-down(sm) {
+      .calculator-form {
+
+        .article-link {
+          margin-bottom: 20px;
+        }
+
+        .calculate-from {
+          margin-bottom: 20px;
+        }
+      }
+    }
+
+    @include media-breakpoint-down(xs) {
+      .calculator-form {
+
+        .input-amount, .start-value {
+          width: 100%;
+        }
+
+        .select-year, .input-year {
+          max-width: 105px;
+          min-width: 105px;
+        }
+
+        .select-month {
+          padding-right: 0;
+        }
+
+        .select-month, .ssb-dropdown.month, .list-of-options {
+          min-width: 95px;
+        }
+
+        .submit-button {
+          width: 100%;
+        }
+
+      }
+
+      .calculator-form-frontpage {
+        padding: 20px;
+
+        .input-amount, .start-value {
+          width: 100%;
+        }
+
+        .submit-button {
+          width: 100%;
+        }
+      }
+
+      .calculator-result-frontpage {
+        padding: 20px;
+      }
+
+      &.frontpage {
+        .calculator-error {
+          padding: 20px;
+        }
+      }
+    }
+
   }
 }
