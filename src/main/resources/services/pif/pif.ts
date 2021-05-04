@@ -28,7 +28,7 @@ function get(req: HttpRequestParams): Response {
     locale: language
   })
 
-  if (!scopeCode || !startValue || !productGroup || !startMonth || !startYear || !endMonth || !endYear) {
+  if (!scopeCode || !startValue || !productGroup || !startYear || !endYear) {
     return {
       status: 400,
       body: {
@@ -42,11 +42,8 @@ function get(req: HttpRequestParams): Response {
 
   if (config && config.data.pifSource) {
     const pifDataset: Dataset | null = getPifDataset(config)
-    const start: string = startMonth !== '' ? startYear + 'M' + startMonth : startYear
-    const end: string = endMonth !== '' ? endYear + 'M' + endMonth : endYear
-
-    const indexResult: IndexResult = getIndexes(scopeCode, productGroup, start, end, pifDataset)
-    // const chronological: boolean = isChronological(startYear, startMonth, endYear, endMonth)
+    const indexResult: IndexResult = getIndexes(scopeCode, productGroup, startMonth, startYear, endMonth, endYear, pifDataset)
+    const chronological: boolean = isChronological(startYear, startMonth, endYear, endMonth)
     if (indexResult.startIndex !== null && indexResult.endIndex !== null) {
       // const changeValue: number = getChangeValue(indexResult.startIndex, indexResult.endIndex, chronological)
       return {
@@ -76,22 +73,22 @@ function get(req: HttpRequestParams): Response {
 }
 exports.get = get
 
-function getIndexes(scopeCode: string, productGroup: string, start: string, end: string, pifData: Dataset | null): IndexResult {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-  // @ts-ignore
-  const startIndex: null | number = pifData?.Data({
-    Tid: start,
-    Marked: scopeCode,
-    SITC: productGroup
-  }).value
+function getIndexes(scopeCode: string,
+  productGroup: string,
+  startMonth: string,
+  startYear: string,
+  endMonth: string,
+  endYear: string,
+  pifData: Dataset | null
+): IndexResult {
+  const start: string = startMonth !== '' ? startYear + 'M' + startMonth : startYear
+  const end: string = endMonth !== '' ? endYear + 'M' + endMonth : endYear
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-  // @ts-ignore
-  const endIndex: null | number = pifData?.Data({
-    Tid: end,
-    Marked: scopeCode,
-    SITC: productGroup
-  }).value
+  const startIndex: null | number = start.length == 4 ? getAverageYear(pifData, startYear, scopeCode, productGroup) :
+    getIndexTime(pifData, start, scopeCode, productGroup)
+
+  const endIndex: null | number = end.length == 4 ? getAverageYear(pifData, endYear, scopeCode, productGroup) :
+    getIndexTime(pifData, end, scopeCode, productGroup)
 
   return {
     startIndex,
@@ -102,4 +99,50 @@ function getIndexes(scopeCode: string, productGroup: string, start: string, end:
 interface IndexResult {
     startIndex: number | null;
     endIndex: number | null;
+}
+
+function isChronological(startYear: string, startMonth: string, endYear: string, endMonth: string): boolean {
+  if (parseInt(startYear) < parseInt(endYear)) return true
+  if (parseInt(endYear) < parseInt(startYear)) return false
+
+  if (startMonth != '' && endMonth != '') {
+    if (parseInt(startMonth) < parseInt(endMonth)) return true
+    if (parseInt(startMonth) > parseInt(endMonth)) return false
+  }
+  return true
+}
+
+function getAverageYear(dataPif: Dataset | null, year: string, scopeCode: string, productGroup: string ): null | number {
+  let totalValue: number = 0
+  let countMonth: number = 0
+
+  for (let m: number = 1; m <= 12; m++) {
+    // TODO: Finne en bedre måte
+    const month: string = m.toString().length < 2 ? '0' + m.toString() : m.toString()
+    const time: string = year + 'M' + month
+    const indeks: null | number = getIndexTime(dataPif, time, scopeCode, productGroup)
+
+    if (indeks != null) {
+      totalValue = totalValue + indeks
+      countMonth++
+    }
+  }
+
+  if (countMonth != 12) {
+    return null
+  }
+
+  return totalValue / countMonth
+}
+
+function getIndexTime(pifData: Dataset | null, time: string, scopeCode: string, productGroup: string ): number | null {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // @ts-ignore
+  const index: null | number = pifData?.Data({
+    Tid: time,
+    Marked: scopeCode,
+    SITC: productGroup
+  }).value
+
+  return index
 }
