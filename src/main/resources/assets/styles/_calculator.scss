@@ -1,6 +1,6 @@
-.part-kpi-calculator {
+.part-kpi-calculator, .part-pif-calculator {
 
-  .kpi-calculator {
+  .kpi-calculator, .pif-calculator {
     border: solid 1px $ssb-dark-5;
     border-top: 4px solid $green3;
     background: $ssb-white;
@@ -32,6 +32,11 @@
 
       .submit {
         padding-top: 32px;
+      }
+
+      .choose-scope {
+        padding-top: 32px;
+        padding-bottom: 32px;
       }
     }
 

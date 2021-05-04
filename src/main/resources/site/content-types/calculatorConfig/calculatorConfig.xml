@@ -24,15 +24,19 @@
                         <allowContentType>genericDataImport</allowContentType>
                     </config>
                 </input>
-                <input name="kpiCalculatorArticle" type="ContentSelector">
-                    <label>
-                        Artikkel Kpi kalkulator
-                    </label>
-                    <occurrences minimum="0" maximum="1" />
+            </items>
+        </field-set>
+        <field-set>
+            <label>
+                PIF Kalkulator
+            </label>
+            <items>
+                <input name="pifSource" type="ContentSelector">
+                    <label>Kilde</label>
+                    <occurrences minimum="0" maximum="1"/>
                     <config>
-                        <allowContentType>
-                            article
-                        </allowContentType>
+                        <allowPath>${site}</allowPath>
+                        <allowContentType>genericDataImport</allowContentType>
                     </config>
                 </input>
             </items>

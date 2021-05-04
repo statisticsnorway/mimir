@@ -47,8 +47,20 @@ export function getKpiDatasetMonth(config: Content<CalculatorConfig>): Dataset |
   return kpiDatasetMonthRepo ? JSONstat(kpiDatasetMonthRepo.data).Dataset('dataset') : null
 }
 
+export function getPifDataset(config: Content<CalculatorConfig>): Dataset | null {
+  const pifSource: Content<GenericDataImport> | null = config?.data.pifSource ? getContent({
+    key: config.data.pifSource
+  }) : null
+
+  const pifDatasetRepo: DatasetRepoNode<JSONstatType> | null = pifSource ?
+      datasetOrUndefined(pifSource) as DatasetRepoNode<JSONstatType> | null : null
+
+  return pifDatasetRepo ? JSONstat(pifDatasetRepo.data).Dataset('dataset') : null
+}
+
 export interface CalculatorLib {
   getCalculatorConfig: () => Content<CalculatorConfig> | undefined;
   getKpiDatasetYear: (config: Content<CalculatorConfig>) => Dataset | null;
   getKpiDatasetMonth: (config: Content<CalculatorConfig>) => Dataset | null;
+  getPifDataset: (config: Content<CalculatorConfig>) => Dataset | null;
 }
