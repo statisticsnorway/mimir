@@ -2,13 +2,6 @@
   background: $ssb-dark-5;
   padding: 60px 160px 60px 160px;
 
-  @include media-breakpoint-down(lg) {
-    padding: 40px 20px;
-  }
-  @include media-breakpoint-down(md) {
-    padding: 20px 10px;
-  }
-
 
   .keyfigure-wrapper {
     color: $ssb-dark-6;
@@ -46,6 +39,46 @@
           font-weight: bold;
         }
       }
+    }
+  }
+
+  @include media-breakpoint-down(lg) {
+    padding: 40px 20px;
+  }
+  @include media-breakpoint-down(md) {
+    padding: 20px 10px;
+  }
+  @include media-breakpoint-down(sm) {
+
+    .hide-mobile {
+      display: none;
+    }
+    .frontpage-keyfigure-mobile {
+      display: grid;
+      grid-template-columns: auto 24px;
+      grid-template-rows: auto auto;
+
+      .ssb-number {
+        font-size: 20px;
+        margin-bottom: 8px;
+        grid-column: 1;
+        grid-row: 1;
+      }
+      .subtitle {
+        grid-column: 1;
+        grid-row: 2;
+      }
+      .icon-wrapper {
+        color: $ssb-green-4;
+        grid-column: 2;
+        grid-row-start: 1;
+        grid-row-end: 3;
+        align-content: center;
+        align-self: center;
+      }
+    }
+    .keyfigure.others {
+      min-height: 104px;
     }
   }
 }
