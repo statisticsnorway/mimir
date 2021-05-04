@@ -1,8 +1,8 @@
 
-__non_webpack_require__('/lib/polyfills/nashorn')
+__non_webpack_require__('/lib/ssb/polyfills/nashorn')
 const {
   getAllStatisticsFromRepo
-} = __non_webpack_require__('/lib/repo/statreg/statistics')
+} = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   handleRepoGet
 } = __non_webpack_require__('/lib/ssb/statreg/repoUtils')
@@ -13,7 +13,7 @@ const {
 
 const {
   cronContext
-} = __non_webpack_require__('/lib/ssb/cron')
+} = __non_webpack_require__('/lib/ssb/cron/cron')
 
 const {
   run

@@ -10,7 +10,7 @@ const {
 } = __non_webpack_require__( '/lib/thymeleaf')
 const {
   renderError
-} = __non_webpack_require__('/lib/error/error')
+} = __non_webpack_require__('/lib/ssb/error/error')
 
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view = resolve('./profiledLinkIcon.html')

@@ -4,7 +4,7 @@ const {
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   renderError
-} = __non_webpack_require__('/lib/error/error')
+} = __non_webpack_require__('/lib/ssb/error/error')
 
 exports.get = function(req) {
   try {

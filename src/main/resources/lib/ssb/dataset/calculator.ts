@@ -1,9 +1,9 @@
 import { Dataset, JSONstat as JSONstatType } from '../../types/jsonstat-toolkit'
 import { Content, ContentLibrary } from 'enonic-types/content'
 import { CalculatorConfig } from '../../../site/content-types/calculatorConfig/calculatorConfig'
-import { SSBCacheLibrary } from '../cache'
+import { SSBCacheLibrary } from '../cache/cache'
 import { GenericDataImport } from '../../../site/content-types/genericDataImport/genericDataImport'
-import { DatasetRepoNode } from '../../../lib/repo/dataset'
+import { DatasetRepoNode } from '../repo/dataset'
 /* eslint-disable new-cap */
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
@@ -14,7 +14,7 @@ const {
 }: ContentLibrary = __non_webpack_require__('/lib/xp/content')
 const {
   datasetOrUndefined
-}: SSBCacheLibrary = __non_webpack_require__('/lib/ssb/cache')
+}: SSBCacheLibrary = __non_webpack_require__('/lib/ssb/cache/cache')
 
 export function getCalculatorConfig(): Content<CalculatorConfig> | undefined {
   return query({

@@ -7,13 +7,13 @@ const {
 } = __non_webpack_require__('/lib/thymeleaf')
 const {
   renderError
-} = __non_webpack_require__('/lib/error/error')
+} = __non_webpack_require__('/lib/ssb/error/error')
 const {
   parseTable
-} = __non_webpack_require__( '/lib/ssb/table')
+} = __non_webpack_require__( '/lib/ssb/parts/table')
 const {
   getSources
-} = __non_webpack_require__( '/lib/ssb/utils')
+} = __non_webpack_require__( '/lib/ssb/utils/utils')
 const {
   data: {
     forceArray
@@ -24,14 +24,14 @@ const {
 } = __non_webpack_require__( '/lib/xp/content')
 const {
   getLanguage
-} = __non_webpack_require__( '/lib/language')
+} = __non_webpack_require__( '/lib/ssb/utils/language')
 const {
   DATASET_BRANCH,
   UNPUBLISHED_DATASET_BRANCH
-} = __non_webpack_require__('/lib/repo/dataset')
+} = __non_webpack_require__('/lib/ssb/repo/dataset')
 const {
   hasWritePermissionsAndPreview
-} = __non_webpack_require__('/lib/ssb/permissions')
+} = __non_webpack_require__('/lib/ssb/parts/permissions')
 
 const moment = require('moment/min/moment-with-locales')
 const view = resolve('./table.html')

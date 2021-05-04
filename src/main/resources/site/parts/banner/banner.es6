@@ -8,13 +8,13 @@ const {
 } = __non_webpack_require__( '/lib/thymeleaf')
 const {
   getMunicipality, removeCountyFromMunicipalityName
-} = __non_webpack_require__( '/lib/klass/municipalities')
+} = __non_webpack_require__( '/lib/ssb/dataset/klass/municipalities')
 const {
   getImageAlt
-} = __non_webpack_require__( '/lib/ssb/utils')
+} = __non_webpack_require__( '/lib/ssb/utils/utils')
 const {
   renderError
-} = __non_webpack_require__('/lib/error/error')
+} = __non_webpack_require__('/lib/ssb/error/error')
 
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 const view = resolve('./banner.html')

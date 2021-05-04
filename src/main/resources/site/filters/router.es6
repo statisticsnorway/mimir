@@ -10,11 +10,11 @@ const {
 } = __non_webpack_require__( '/lib/http-client')
 const {
   fromFilterCache
-} = __non_webpack_require__('/lib/ssb/cache')
+} = __non_webpack_require__('/lib/ssb/cache/cache')
 const {
   getMunicipalityByName,
   municipalsWithCounties
-} = __non_webpack_require__('/lib/klass/municipalities')
+} = __non_webpack_require__('/lib/ssb/dataset/klass/municipalities')
 
 
 exports.filter = function(req, next) {

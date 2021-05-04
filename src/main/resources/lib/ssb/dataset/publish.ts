@@ -1,34 +1,35 @@
-__non_webpack_require__('/lib/polyfills/nashorn')
+__non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { Content, ContentLibrary } from 'enonic-types/content'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
-import { RepoDatasetLib, DatasetRepoNode } from '../../repo/dataset'
-import { StatRegStatisticsLib } from '../../repo/statreg/statistics'
+import { RepoDatasetLib, DatasetRepoNode } from '../repo/dataset'
+import { StatRegStatisticsLib } from '../statreg/statistics'
 import { TaskLib } from '../../types/task'
 import { UtilLibrary } from '../../types/util'
-import { StatisticLib } from '../statistic'
-import { StatisticInListing, ReleaseDatesVariant } from '../statreg/types'
+import { StatisticLib } from '../dashboard/statistic'
+import { StatisticInListing, ReleaseDatesVariant } from '../dashboard/statreg/types'
 import { DatasetLib } from './dataset'
-import { RepoJobLib, JobEventNode, JobInfoNode, StatisticsPublishResult, DataSourceStatisticsPublishResult } from '../../repo/job'
-import { RepoQueryLib } from '../../repo/query'
-import { ServerLogLib } from '../serverLog'
+import { RepoJobLib, JobEventNode, JobInfoNode, StatisticsPublishResult, DataSourceStatisticsPublishResult } from '../repo/job'
+import { RepoQueryLib } from '../repo/query'
+import { ServerLogLib } from '../utils/serverLog'
 import { EventLibrary } from 'enonic-types/event'
 import moment = require('moment')
 import { NodeQueryHit } from 'enonic-types/node'
 const {
   Events,
   logUserDataQuery
-}: RepoQueryLib = __non_webpack_require__('/lib/repo/query')
+}: RepoQueryLib = __non_webpack_require__('/lib/ssb/repo/query')
 const {
   getDataSourceIdsFromStatistics,
   getStatisticsContent
-}: StatisticLib = __non_webpack_require__('/lib/ssb/statistic')
+}: StatisticLib = __non_webpack_require__('/lib/ssb/dashboard/statistic')
 const {
   get: getContent
 }: ContentLibrary = __non_webpack_require__('/lib/xp/content')
 const {
-  getStatisticByIdFromRepo
-}: StatRegStatisticsLib = __non_webpack_require__('/lib/repo/statreg/statistics')
+  getStatisticByIdFromRepo,
+  getReleaseDatesByVariants
+}: StatRegStatisticsLib = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   data: {
     forceArray
@@ -47,7 +48,7 @@ const {
   createOrUpdateDataset,
   DATASET_BRANCH,
   UNPUBLISHED_DATASET_BRANCH
-}: RepoDatasetLib = __non_webpack_require__('/lib/repo/dataset')
+}: RepoDatasetLib = __non_webpack_require__('/lib/ssb/repo/dataset')
 const {
   completeJobLog,
   startJobLog,
@@ -56,16 +57,14 @@ const {
   JobStatus,
   queryJobLogs,
   getJobLog
-}: RepoJobLib = __non_webpack_require__('/lib/repo/job')
+}: RepoJobLib = __non_webpack_require__('/lib/ssb/repo/job')
 const {
   cronJobLog
-}: ServerLogLib = __non_webpack_require__( '/lib/ssb/serverLog')
+}: ServerLogLib = __non_webpack_require__( '/lib/ssb/utils/serverLog')
 const {
   send
 }: EventLibrary = __non_webpack_require__('/lib/xp/event')
-const {
-  getReleaseDatesByVariants
-} = __non_webpack_require__('/lib/repo/statreg/statistics')
+
 
 const jobs: {[key: string]: JobEventNode | JobInfoNode} = {}
 

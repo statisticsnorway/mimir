@@ -3,7 +3,7 @@ const dividerController = __non_webpack_require__('../../parts/divider/divider')
 
 const {
   renderError
-} = __non_webpack_require__('/lib/error/error')
+} = __non_webpack_require__('/lib/ssb/error/error')
 
 exports.macro = function(context) {
   try {

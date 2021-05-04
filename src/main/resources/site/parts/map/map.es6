@@ -8,7 +8,7 @@ const {
 } = __non_webpack_require__('/lib/thymeleaf')
 const {
   renderError
-} = __non_webpack_require__('/lib/error/error')
+} = __non_webpack_require__('/lib/ssb/error/error')
 
 const view = resolve('./map.html')
 
