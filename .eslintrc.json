@@ -4,9 +4,10 @@
         "es6": true
     },
     "ignorePatterns": [
-      "**/content-types/**/*.ts", 
-      "**/mixins/**/*.ts", 
-      "**/*-config.ts"
+      "**/content-types/**/*.ts",
+      "**/mixins/**/*.ts",
+      "**/*-config.ts",
+      "**/assets/js/app/tableExport.es6"
     ],
     "extends": [
         "google",

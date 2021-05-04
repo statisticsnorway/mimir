@@ -28,14 +28,6 @@ const ENONIC_PROJECT_ID = app.config && app.config['ssb.project.id'] ? app.confi
 
 const DASHBOARD_FAG = 'dashboard.fag'
 
-const dashboardOptions = {
-  dashboardTool: false,
-  statistics: false,
-  jobLog: false,
-  dataSources: false,
-  statisticRegister: false
-}
-
 exports.get = function(req) {
   try {
     return renderPart(req)
