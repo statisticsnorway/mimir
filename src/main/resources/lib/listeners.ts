@@ -57,7 +57,6 @@ export function setupFetchDataOnCreateListener(): void {
               }
             }
           })
-          log.info('\n\n## contentWithDataSource\n--------------\n%s\n', JSON.stringify(contentWithDataSource, null, 4))
           contentWithDataSource.hits.forEach((content: Content<DataSource>) => refreshDataset(content))
         }
       })
