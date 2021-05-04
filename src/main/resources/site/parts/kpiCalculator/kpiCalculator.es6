@@ -1,4 +1,5 @@
 const {
+  getComponent,
   getContent,
   serviceUrl,
   pageUrl
@@ -37,11 +38,14 @@ exports.preview = function(req, id) {
 
 function renderPart(req) {
   const page = getContent()
+  const part = getComponent()
+  const frontPage = part.config.frontPage ? part.config.frontPage : false
+  const frontPageIngress = part.config.ingressFrontpage ? part.config.ingressFrontpage : null
   const language = getLanguage(page)
   const phrases = language.phrases
   const config = getCalculatorConfig()
   const kpiDataMonth = getKpiDatasetMonth(config)
-  const months = allMonths(phrases)
+  const months = allMonths(phrases, frontPage)
   const lastUpdated = lastPeriod(kpiDataMonth)
   const nextUpdate = nextPeriod(lastUpdated.month, lastUpdated.year)
   const nextReleaseMonth = nextUpdate.month == 12 ? 1 : nextUpdate.month + 1
@@ -49,14 +53,14 @@ function renderPart(req) {
     key: 'kpiNextPublishText',
     locale: language.code,
     values: [
-      monthLabel(months, lastUpdated.month),
+      monthLabel(months, language.code, lastUpdated.month),
       lastUpdated.year,
-      monthLabel(months, nextUpdate.month),
-      monthLabel(months, nextReleaseMonth)
+      monthLabel(months, language.code, nextUpdate.month),
+      monthLabel(months, language.code, nextReleaseMonth)
     ]
   })
-  const calculatorArticleUrl = config && config.data.kpiCalculatorArticle ? pageUrl({
-    id: config.data.kpiCalculatorArticle
+  const calculatorArticleUrl = part.config.kpiCalculatorArticle ? pageUrl({
+    id: part.config.kpiCalculatorArticle
   }) : null
 
   const kpiCalculator = new React4xp('KpiCalculator')
@@ -69,7 +73,9 @@ function renderPart(req) {
       phrases: phrases,
       calculatorArticleUrl,
       nextPublishText: nextPublishText,
-      lastUpdated: lastUpdated
+      lastUpdated: lastUpdated,
+      frontPage: frontPage,
+      frontPageIngress: frontPageIngress
     })
     .setId('kpiCalculatorId')
     .uniqueId()
@@ -128,11 +134,11 @@ const nextPeriod = (month, year) => {
   }
 }
 
-const allMonths = (phrases) => {
+const allMonths = (phrases, frontPage) => {
   return [
     {
       id: '90',
-      title: phrases.calculatorMonthAverage
+      title: frontPage ? phrases.calculatorMonthAverageFrontpage : phrases.calculatorMonthAverage
     },
     {
       id: '01',
@@ -185,7 +191,10 @@ const allMonths = (phrases) => {
   ]
 }
 
-const monthLabel = (months, month) => {
+const monthLabel = (months, language, month) => {
   const monthLabel = months.find((m) => parseInt(m.id) === parseInt(month))
-  return monthLabel ? monthLabel.title.toLowerCase() : ''
+  if (monthLabel) {
+    return language === 'en' ? monthLabel.title : monthLabel.title.toLowerCase()
+  }
+  return ''
 }

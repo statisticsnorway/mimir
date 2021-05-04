@@ -25,41 +25,38 @@ const {
   DataSource: DataSourceType
 }: RepoDatasetLib = __non_webpack_require__( '/lib/ssb/repo/dataset')
 const {
-  ENONIC_CMS_DEFAULT_REPO,
-  withSuperUserContext
-}: RepoCommonLib = __non_webpack_require__('/lib/ssb/repo/common')
+  ENONIC_CMS_DEFAULT_REPO
+}: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
 
 export function setupFetchDataOnCreateListener(): void {
   listener({
-    type: 'node.pushed',
+    type: 'node.updated',
     callback: function(event: EnonicEvent) {
       runOnMasterOnly(() => {
-        const nodes: EnonicEventData['nodes'] = event.data.nodes.filter((n) => n.repo === ENONIC_CMS_DEFAULT_REPO && n.branch === 'master')
+        const nodes: EnonicEventData['nodes'] = event.data.nodes.filter((n) => n.repo === ENONIC_CMS_DEFAULT_REPO )
         if (nodes.length > 0) {
-          withSuperUserContext(ENONIC_CMS_DEFAULT_REPO, 'master', () => {
-            const contentWithDataSource: QueryResponse<HighchartConfig | KeyFigure | Table> = query({
-              count: nodes.length,
-              query: `_id IN(${nodes.map((n) => `'${n.id}'`).join(',')}) AND 
+          const contentWithDataSource: QueryResponse<HighchartConfig | KeyFigure | Table> = query({
+            count: nodes.length,
+            query: `_id IN(${nodes.map((n) => `'${n.id}'`).join(',')}) AND 
                 (
                   data.dataSource._selected = '${DataSourceType.STATBANK_API}' OR 
                   data.dataSource._selected = '${DataSourceType.TBPROCESSOR}' OR 
                   data.dataSource._selected = '${DataSourceType.STATBANK_SAVED}' OR 
                   data.dataSource._selected = '${DataSourceType.KLASS}'
                 )`,
-              contentTypes: [
-                `${app.name}:highchart`,
-                `${app.name}:keyFigure`,
-                `${app.name}:table`,
-                `${app.name}:genericDataImport`
-              ],
-              filters: {
-                exists: {
-                  field: `data.dataSource.*.urlOrId`
-                }
+            contentTypes: [
+              `${app.name}:highchart`,
+              `${app.name}:keyFigure`,
+              `${app.name}:table`,
+              `${app.name}:genericDataImport`
+            ],
+            filters: {
+              exists: {
+                field: `data.dataSource.*.urlOrId`
               }
-            })
-            contentWithDataSource.hits.forEach((content: Content<DataSource>) => refreshDataset(content))
+            }
           })
+          contentWithDataSource.hits.forEach((content: Content<DataSource>) => refreshDataset(content))
         }
       })
     }
