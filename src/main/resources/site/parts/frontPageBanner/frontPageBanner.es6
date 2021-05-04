@@ -8,9 +8,6 @@ const {
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
-const {
-  getImageAlt
-} = __non_webpack_require__( '/lib/ssb/utils/utils')
 
 const view = resolve('./frontPageBanner.html')
 

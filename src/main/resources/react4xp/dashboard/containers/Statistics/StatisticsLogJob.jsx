@@ -6,7 +6,6 @@ import moment from 'moment/min/moment-with-locales'
 import { requestJobLogDetails } from './actions'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { selectJobLog, selectJobLogDetailsLoaded } from './selectors'
-import { AlertTriangle } from 'react-feather'
 
 export function StatisticsLogJob(props) {
   const io = useContext(WebSocketContext)

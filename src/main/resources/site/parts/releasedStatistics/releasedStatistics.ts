@@ -259,7 +259,7 @@ function calculatePeriode(variant: VariantInListing): string {
   }
 }
 
-function calculateEveryXYear(variant: VariantInListing) {
+function calculateEveryXYear(variant: VariantInListing): string {
   const dateFrom: Date = new Date(variant.previousFrom)
   const dateTo: Date = new Date(variant.previousTo)
   const yearFrom: number = dateFrom.getFullYear()
@@ -281,7 +281,7 @@ function calculateEveryXYear(variant: VariantInListing) {
   }
 }
 
-function calculateYear(variant: VariantInListing) {
+function calculateYear(variant: VariantInListing): string {
   const dateFrom: Date = new Date(variant.previousFrom)
   const dateTo: Date = new Date(variant.previousTo)
   const yearFrom: number = dateFrom.getFullYear()
@@ -313,7 +313,7 @@ function calculateYear(variant: VariantInListing) {
   }
 }
 
-function calcualteHalfYear(variant: VariantInListing) {
+function calcualteHalfYear(variant: VariantInListing): string {
   const date: Date = new Date(variant.previousFrom)
   const fromMonth: number = new Date(variant.previousFrom).getMonth() + 1
   const halfyear: number = Math.ceil(fromMonth / 6)
@@ -335,7 +335,7 @@ function calculateTerm(variant: VariantInListing): string {
   })
 }
 
-function calculateQuarter(variant: VariantInListing) {
+function calculateQuarter(variant: VariantInListing): string {
   const date: Date = new Date(variant.previousFrom)
   const fromMonth: number = date.getMonth() + 1
   const quarter: number = Math.ceil(fromMonth / 3)
@@ -346,7 +346,7 @@ function calculateQuarter(variant: VariantInListing) {
   })
 }
 
-function calculateMonth(variant: VariantInListing) {
+function calculateMonth(variant: VariantInListing): string {
   const monthName: string = moment(variant.previousFrom).format('MMMM')
   const year: string = moment(variant.previousFrom).format('YYYY')
   return localize({
@@ -356,7 +356,7 @@ function calculateMonth(variant: VariantInListing) {
   })
 }
 
-function calculateWeek(variant: VariantInListing) {
+function calculateWeek(variant: VariantInListing): string {
   const date: Date = new Date(variant.previousFrom)
   return localize({
     key: 'period.week',
