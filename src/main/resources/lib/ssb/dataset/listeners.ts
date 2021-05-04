@@ -4,10 +4,10 @@ import { KeyFigure } from '../../../site/content-types/keyFigure/keyFigure'
 import { Table } from '../../../site/content-types/table/table'
 import { EnonicEvent, EnonicEventData, EventLibrary } from 'enonic-types/event'
 import { SSBCronLib } from '../cron/cron'
-import { RepoDatasetLib } from './repo/dataset'
-import { DatasetLib } from './ssb/dataset/dataset'
-import { DataSource } from '../site/mixins/dataSource/dataSource'
-import { RepoCommonLib } from './repo/common'
+import { RepoDatasetLib } from '../repo/dataset'
+import { DatasetLib } from './dataset'
+import { DataSource } from '../../../site/mixins/dataSource/dataSource'
+import { RepoCommonLib } from '../repo/common'
 
 const {
   listener
