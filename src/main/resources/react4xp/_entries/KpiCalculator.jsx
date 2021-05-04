@@ -204,7 +204,7 @@ function KpiCalculator(props) {
           onChange(id, value)
         }}
         selectedItem={{
-          title: props.phrases.calculatorMonthAverage,
+          title: props.frontPage ? props.phrases.calculatorMonthAverageFrontpage : props.phrases.calculatorMonthAverage,
           id: '90'
         }}
         items={props.months}
@@ -219,6 +219,123 @@ function KpiCalculator(props) {
   function getMonthLabel(month) {
     const monthLabel = props.months.find((m) => parseInt(m.id) === parseInt(month))
     return monthLabel ? monthLabel.title.toLowerCase() : ''
+  }
+
+  function renderNumberValute(value) {
+    if (endValue && change) {
+      const valute = (language === 'en') ? 'NOK' : 'kr'
+      const decimalSeparator = (language === 'en') ? '.' : ','
+      return (
+        <React.Fragment>
+          <NumberFormat
+            value={ Number(value) }
+            displayType={'text'}
+            thousandSeparator={' '}
+            decimalSeparator={decimalSeparator}
+            decimalScale={2}
+            fixedDecimalScale={true}
+          /> {valute}
+        </React.Fragment>
+      )
+    }
+  }
+
+  function renderNumberChangeValue() {
+    if (endValue && change) {
+      const changeValue = change.charAt(0) === '-' ? change.replace('-', '') : change
+      const decimalSeparator = (language === 'en') ? '.' : ','
+      return (
+        <React.Fragment>
+          <NumberFormat
+            value={ Number(changeValue) }
+            displayType={'text'}
+            thousandSeparator={' '}
+            decimalSeparator={decimalSeparator}
+            decimalScale={1}
+            fixedDecimalScale={true}
+          /> %
+        </React.Fragment>
+      )
+    }
+  }
+
+  function calculatorResult() {
+    const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
+    return (
+      <Container className="calculator-result">
+        <Row className="mb-5">
+          <Col className="amount-equal align-self-end col-12 col-md-4">
+            <h3>{props.phrases.kpiAmountEqualled}</h3>
+          </Col>
+          <Col className="end-value col-12 col-md-8">
+            <span className="float-left float-md-right">
+              {renderNumberValute(endValue)}
+            </span>
+          </Col>
+          <Col className="col-12">
+            <Divider dark/>
+          </Col>
+        </Row>
+        <Row className="mb-5">
+          <Col className="price-increase col-12 col-lg-4">
+            <span>{priceChangeLabel}</span>
+            <span className="float-right">
+              {renderNumberChangeValue()}
+            </span>
+            <Divider dark/>
+          </Col>
+          <Col className="start-value col-12 col-lg-4">
+            <span>{props.phrases.amount} {startPeriod}</span>
+            <span className="float-right">
+              {renderNumberValute(startValueResult)}
+            </span>
+            <Divider dark/>
+          </Col>
+          <Col className="amount col-12 col-lg-4">
+            <span>{props.phrases.amount} {endPeriod}</span>
+            <span className="float-right">
+              {renderNumberValute(endValue)}
+            </span>
+            <Divider dark/>
+          </Col>
+        </Row>
+        <Row className="my-4">
+          <Col className="col-12 col-md-8">
+            <span className="info-title">{props.phrases.kpiCalculatorInfoTitle}</span>
+            <p className="info-text">{props.phrases.kpiCalculatorInfoText}</p>
+          </Col>
+        </Row>
+      </Container>
+    )
+  }
+
+  function calculatorResultFrontpage() {
+    const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
+    return (
+      <Container className="calculator-result-frontpage">
+        <Row className="mb-3">
+          <Col className="amount-equal align-self-end col-12 col-lg-5">
+            <h3>{props.phrases.kpiAmountEqualled}</h3>
+          </Col>
+          <Col className="end-value col-12 col-lg-7">
+            <span className="float-lg-right">
+              {renderNumberValute(endValue)}
+            </span>
+          </Col>
+          <Col className="col-12">
+            <Divider dark/>
+          </Col>
+        </Row>
+        <Row>
+          <Col className="price-increase col-12">
+            <span>{priceChangeLabel} </span>
+            <span>
+              {renderNumberChangeValue()}
+            </span>
+          </Col>
+        </Row>
+      </Container>
+    )
   }
 
   function renderResult() {
@@ -241,83 +358,8 @@ function KpiCalculator(props) {
       )
     }
     if (endValue && change) {
-      const decimalSeparator = (language === 'en') ? '.' : ','
-      const valute = (language === 'en') ? 'NOK' : 'kr'
-      const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
-      const changeValue = change.charAt(0) === '-' ? change.replace('-', '') : change
       return (
-        <Container className="calculator-result">
-          <Row className="mb-5">
-            <Col className="amount-equal align-self-end col-12 col-md-4">
-              <h3>{props.phrases.kpiAmountEqualled}</h3>
-            </Col>
-            <Col className="end-value col-12 col-md-8">
-              <span className="float-right">
-                <NumberFormat
-                  value={ Number(endValue) }
-                  displayType={'text'}
-                  thousandSeparator={' '}
-                  decimalSeparator={decimalSeparator}
-                  decimalScale={2}
-                  fixedDecimalScale={true}
-                /> {valute}
-              </span>
-            </Col>
-            <Col className="col-12">
-              <Divider dark/>
-            </Col>
-          </Row>
-          <Row className="mb-5">
-            <Col className="price-increase col-12 col-md-4">
-              <span>{priceChangeLabel}</span>
-              <span className="float-right">
-                <NumberFormat
-                  value={ Number(changeValue) }
-                  displayType={'text'}
-                  thousandSeparator={' '}
-                  decimalSeparator={decimalSeparator}
-                  decimalScale={1}
-                  fixedDecimalScale={true}
-                /> %
-              </span>
-              <Divider dark/>
-            </Col>
-            <Col className="start-value col-12 col-md-4">
-              <span>{props.phrases.amount} {startPeriod}</span>
-              <span className="float-right">
-                <NumberFormat
-                  value={ Number(startValueResult) }
-                  displayType={'text'}
-                  thousandSeparator={' '}
-                  decimalSeparator={decimalSeparator}
-                  decimalScale={2}
-                  fixedDecimalScale={true}
-                /> {valute}
-              </span>
-              <Divider dark/>
-            </Col>
-            <Col className="amount col-12 col-md-4">
-              <span>{props.phrases.amount} {endPeriod}</span>
-              <span className="float-right">
-                <NumberFormat
-                  value={ Number(endValue) }
-                  displayType={'text'}
-                  thousandSeparator={' '}
-                  decimalSeparator={decimalSeparator}
-                  decimalScale={2}
-                  fixedDecimalScale={true}
-                /> {valute}
-              </span>
-              <Divider dark/>
-            </Col>
-          </Row>
-          <Row className="my-4">
-            <Col className="col-12 col-md-8">
-              <span className="info-title">{props.phrases.kpiCalculatorInfoTitle}</span>
-              <p className="info-text">{props.phrases.kpiCalculatorInfoText}</p>
-            </Col>
-          </Row>
-        </Container>
+        props.frontPage ? calculatorResultFrontpage() : calculatorResult()
       )
     }
   }
@@ -325,88 +367,212 @@ function KpiCalculator(props) {
   function renderLinkArticle() {
     if (props.calculatorArticleUrl) {
       return (
-        <Col>
-          <Link className="float-right" href={props.calculatorArticleUrl}>{props.phrases.readAboutCalculator}</Link>
+        <Col className="article-link align-self-center col-12 col-md-6">
+          <Link className="float-md-right" href={props.calculatorArticleUrl}>{props.phrases.readAboutCalculator}</Link>
         </Col>
       )
     }
   }
 
-  return (<Container className='kpi-calculator'>
-    <div className="calculator-form">
-      <Row>
-        <Col>
-          <h2>{props.phrases.calculatePriceChange}</h2>
+  function renderLinkArticleFrontpage() {
+    if (props.calculatorArticleUrl) {
+      return (
+        <Col className="article-link align-self-center col-12 col-lg-6">
+          <Link className="float-lg-right" href={props.calculatorArticleUrl}>{props.phrases.readAboutCalculator}</Link>
         </Col>
-        {renderLinkArticle()}
-      </Row>
-      <p className="publish-text col-12 col-md-8">{props.nextPublishText}</p>
-      <Form onSubmit={onSubmit}>
-        <Container>
-          <Row>
-            <Col className="input-amount">
-              <h3>{props.phrases.enterAmount}</h3>
-              <Input
-                className="start-value"
-                handleChange={(value) => onChange('start-value', value)}
-                error={startValue.error}
-                errorMessage={startValue.errorMsg}
-                onBlur={() => onBlur('start-value')}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <h3>{props.phrases.calculatePriceChangeFrom}</h3>
-              <Container className="calculate-from">
-                <Row>
-                  <Col className="select-month">
-                    {addDropdownMonth('start-month')}
-                  </Col>
-                  <Col className="select-year align-self-end">
-                    <Input
-                      className="input-year"
-                      label={props.phrases.enterYear}
-                      handleChange={(value) => onChange('start-year', value)}
-                      error={startYear.error}
-                      errorMessage={startYear.errorMsg}
-                      onBlur={() => onBlur('start-year')}
-                    />
-                  </Col>
-                </Row>
-              </Container>
-            </Col>
-            <Col>
-              <h3>{props.phrases.calculatePriceChangeTo}</h3>
-              <Container className="calculate-to">
-                <Row>
-                  <Col className="select-month">
-                    {addDropdownMonth('end-month')}
-                  </Col>
-                  <Col className="select-year align-self-end">
-                    <Input
-                      className="input-year"
-                      label={props.phrases.enterYear}
-                      handleChange={(value) => onChange('end-year', value)}
-                      error={endYear.error}
-                      errorMessage={endYear.errorMsg}
-                      onBlur={() => onBlur('end-year')}
-                    />
-                  </Col>
-                </Row>
-              </Container>
-            </Col>
-          </Row>
-          <Row className="submit">
-            <Col>
-              <Button primary type="submit" disabled={loading}>{props.phrases.calculatePriceChange}</Button>
-            </Col>
-          </Row>
+      )
+    }
+  }
+
+  function renderIngressFrontpage() {
+    if (props.frontPageIngress) {
+      return (
+        <Row>
+          <Col className="publish-text pb-2"
+            dangerouslySetInnerHTML={{
+              __html: props.frontPageIngress
+            }}
+          />
+        </Row>
+      )
+    }
+  }
+
+  function renderCalculator() {
+    if (props.frontPage) {
+      return (
+        <Container className='kpi-calculator frontpage'>
+          {renderFormFrontpage()}
+          {renderResult()}
         </Container>
-      </Form>
-    </div>
-    {renderResult()}
-  </Container>)
+      )
+    } else {
+      return (
+        <Container className='kpi-calculator'>
+          {renderForm()}
+          {renderResult()}
+        </Container>
+      )
+    }
+  }
+
+  function renderForm() {
+    return (
+      <div className="calculator-form">
+        <Row>
+          <Col>
+            <h2>{props.phrases.calculatePriceChange}</h2>
+          </Col>
+          {renderLinkArticle()}
+        </Row>
+        <Row>
+          <Col className="col-12 col-md-8">
+            <p className="publish-text">{props.nextPublishText}</p>
+          </Col>
+        </Row>
+        <Form onSubmit={onSubmit}>
+          <Container>
+            <Row>
+              <Col className="input-amount">
+                <h3>{props.phrases.enterAmount}</h3>
+                <Input
+                  className="start-value"
+                  handleChange={(value) => onChange('start-value', value)}
+                  error={startValue.error}
+                  errorMessage={startValue.errorMsg}
+                  onBlur={() => onBlur('start-value')}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col className="calculate-from col-12 col-md-6">
+                <h3>{props.phrases.calculatePriceChangeFrom}</h3>
+                <Container>
+                  <Row>
+                    <Col className="select-year align-self-end col-sm-5">
+                      <Input
+                        className="input-year"
+                        label={props.phrases.fromYear}
+                        handleChange={(value) => onChange('start-year', value)}
+                        error={startYear.error}
+                        errorMessage={startYear.errorMsg}
+                        onBlur={() => onBlur('start-year')}
+                      />
+                    </Col>
+                    <Col className="select-month col-sm-7">
+                      {addDropdownMonth('start-month')}
+                    </Col>
+                  </Row>
+                </Container>
+              </Col>
+              <Col className="calculate-to col-12 col-md-6">
+                <h3>{props.phrases.calculatePriceChangeTo}</h3>
+                <Container>
+                  <Row>
+                    <Col className="select-year align-self-end col-sm-5">
+                      <Input
+                        className="input-year"
+                        label={props.phrases.toYear}
+                        handleChange={(value) => onChange('end-year', value)}
+                        error={endYear.error}
+                        errorMessage={endYear.errorMsg}
+                        onBlur={() => onBlur('end-year')}
+                      />
+                    </Col>
+                    <Col className="select-month col-sm-7">
+                      {addDropdownMonth('end-month')}
+                    </Col>
+                  </Row>
+                </Container>
+              </Col>
+            </Row>
+            <Row className="submit">
+              <Col>
+                <Button className="submit-button" primary type="submit" disabled={loading}>{props.phrases.seePriceChange}</Button>
+              </Col>
+            </Row>
+          </Container>
+        </Form>
+      </div>
+    )
+  }
+
+  function renderFormFrontpage() {
+    return (
+      <div className="calculator-form-frontpage">
+        <Row>
+          <Col>
+            <h2>{props.phrases.calculatePriceChange}</h2>
+          </Col>
+        </Row>
+        {renderIngressFrontpage()}
+        <Form onSubmit={onSubmit}>
+          <Container>
+            <Row className="calculator-input">
+              <Col className="input-amount col-12 col-xl-4">
+                <Input
+                  className="start-value"
+                  label={props.phrases.enterAmount}
+                  handleChange={(value) => onChange('start-value', value)}
+                  error={startValue.error}
+                  errorMessage={startValue.errorMsg}
+                  onBlur={() => onBlur('start-value')}
+                />
+              </Col>
+              <Col className="calculate-from col-12 col-lg-6 col-xl-4">
+                <Container>
+                  <Row>
+                    <Col className="select-year align-self-end">
+                      <Input
+                        className="input-year"
+                        label={props.phrases.fromYear}
+                        handleChange={(value) => onChange('start-year', value)}
+                        error={startYear.error}
+                        errorMessage={startYear.errorMsg}
+                        onBlur={() => onBlur('start-year')}
+                      />
+                    </Col>
+                    <Col className="select-month">
+                      {addDropdownMonth('start-month')}
+                    </Col>
+                  </Row>
+                </Container>
+              </Col>
+              <Col className="calculate-to col-12 col-lg-6 col-xl-4">
+                <Container>
+                  <Row>
+                    <Col className="select-year align-self-end">
+                      <Input
+                        className="input-year"
+                        label={props.phrases.toYear}
+                        handleChange={(value) => onChange('end-year', value)}
+                        error={endYear.error}
+                        errorMessage={endYear.errorMsg}
+                        onBlur={() => onBlur('end-year')}
+                      />
+                    </Col>
+                    <Col className="select-month">
+                      {addDropdownMonth('end-month')}
+                    </Col>
+                  </Row>
+                </Container>
+              </Col>
+            </Row>
+            <Row className="submit">
+              <Col>
+                <Button className="submit-button" primary type="submit" disabled={loading}>{props.phrases.seePriceChange}</Button>
+              </Col>
+              {renderLinkArticleFrontpage()}
+            </Row>
+          </Container>
+        </Form>
+      </div>
+    )
+  }
+
+  return (
+    renderCalculator()
+  )
 }
 
 KpiCalculator.defaultValue = {
@@ -429,7 +595,9 @@ KpiCalculator.propTypes = {
   lastUpdated: PropTypes.shape({
     month: PropTypes.string,
     year: PropTypes.string
-  })
+  }),
+  frontPage: PropTypes.bool,
+  frontPageIngress: PropTypes.string
 }
 
 export default (props) => <KpiCalculator {...props} />
