@@ -58,9 +58,9 @@ PictureLink.propTypes = {
 
 const PictureCardLinks = (props) => {
   function getColSize(length, index) {
-    if (length === 2 || (length === 3 && index === 0)) return 'col-6'
-    if (length === 3 && index > 0) return 'col-3'
-    return 'col-3'
+    if (length === 2 || (length === 3 && index === 0)) return 'col-md-6'
+    if (length === 3 && index > 0) return 'col-md-3'
+    return 'col-md-3'
   }
 
   return (
@@ -68,7 +68,7 @@ const PictureCardLinks = (props) => {
       {props.pictureCardLinks.map((pictureCard, index) => {
         return <div
           key={`picture-card-link-${props.react4xpId}-${index}`}
-          className={getColSize(props.pictureCardLinks.length, index)}
+          className={getColSize(props.pictureCardLinks.length, index) + ' col-12 mb-4 mb-md-0'}
         >
           <PictureLink
             className="w-100"
