@@ -8,22 +8,22 @@ const {
 } = __non_webpack_require__('/lib/ssb/parts/highcharts/graph/config')
 const {
   areaConfig
-} = __non_webpack_require__( '/lib/highcharts/graph/graphAreaConfig')
+} = __non_webpack_require__( '/lib/ssb/parts/highcharts/graph/graphAreaConfig')
 const {
   pieConfig
-} = __non_webpack_require__( '/lib/highcharts/graph/graphPieConfig')
+} = __non_webpack_require__( '/lib/ssb/parts/highcharts/graph/graphPieConfig')
 const {
   barConfig
-} = __non_webpack_require__( '/lib/highcharts/graph/graphBarConfig')
+} = __non_webpack_require__( '/lib/ssb/parts/highcharts/graph/graphBarConfig')
 const {
   barNegativeConfig
-} = __non_webpack_require__( '/lib/highcharts/graph/graphBarNegativeConfig')
+} = __non_webpack_require__( '/lib/ssb/parts/highcharts/graph/graphBarNegativeConfig')
 const {
   columnConfig
-} = __non_webpack_require__( '/lib/highcharts/graph/graphColumnConfig')
+} = __non_webpack_require__( '/lib/ssb/parts/highcharts/graph/graphColumnConfig')
 const {
   lineConfig
-} = __non_webpack_require__( '/lib/highcharts/graph/graphLineConfig')
+} = __non_webpack_require__( '/lib/ssb/parts/highcharts/graph/graphLineConfig')
 const {
   DataSource: DataSourceType
 } = __non_webpack_require__( '/lib/ssb/repo/dataset')
