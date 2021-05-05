@@ -5,6 +5,7 @@ import { PortalLibrary, Component } from 'enonic-types/portal'
 import { ArticleListPartConfig } from './articleList-part-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
+import { DefaultPageConfig } from '../../pages/default/default-page-config'
 
 const {
   localize
@@ -55,9 +56,21 @@ function renderPart(req: Request): React4xpResponse {
 }
 
 function getArticles(language: string): QueryResponse<Article> {
+  const pages: QueryResponse<DefaultPageConfig> = query({
+    count: 200,
+    contentTypes: [`${app.name}:page`],
+    query: `components.page.config.mimir.default.subjectType LIKE "mainSubject"`
+  })
+  log.info('pages')
+  log.info(JSON.stringify(pages, null, 2))
+  const pagePaths: Array<string> = pages.hits.map((page) => page._path)
+
+  log.info('pagePaths')
+  log.info(JSON.stringify(pagePaths, null, 2))
+
   return query({
     count: 4,
-    query: ``,
+    query: `_parentPath IN [${pagePaths.join('*,')}]`,
     contentTypes: [`${app.name}:article`],
     sort: 'publish.from DESC, data.frontPagePriority DESC',
     filters: {
