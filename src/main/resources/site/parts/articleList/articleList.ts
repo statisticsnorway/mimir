@@ -70,10 +70,10 @@ function getArticles(language: string): QueryResponse<Article> {
 
   return query({
     count: 4,
-    query: `_parentPath IN [${pagePaths.join('*,')}]`,
+    query: `_parentPath IN [${pagePaths.join('/*,')}]`,
     contentTypes: [`${app.name}:article`],
-    sort: 'publish.from DESC, data.frontPagePriority DESC',
-    filters: {
+    sort: 'publish.from DESC, data.frontPagePriority DESC'
+    /* filters: {
       boolean: {
         must: [
           {
@@ -91,7 +91,7 @@ function getArticles(language: string): QueryResponse<Article> {
           }
         ]
       }
-    }
+    }*/
   })
 }
 
