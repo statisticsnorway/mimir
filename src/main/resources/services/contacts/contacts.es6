@@ -1,7 +1,7 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 const {
   handleRepoGet
-} = __non_webpack_require__('/lib/ssb/statreg/repoUtils')
+} = __non_webpack_require__('/lib/ssb/dashboard/statreg/repoUtils')
 const {
   getContactsFromRepo
 } = __non_webpack_require__('/lib/ssb/statreg/contacts')
