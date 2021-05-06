@@ -67,7 +67,7 @@ function getArticles(language: string): Array<Content<Article>> {
     count: 4,
     query: `(${pagePaths.join(' OR ')}) ${languageQuery}`,
     contentTypes: [`${app.name}:article`],
-    sort: 'publish.first DESC, data.frontPagePriority DESC'
+    sort: 'publish.from DESC, data.frontPagePriority DESC'
   }).hits as unknown as Array<Content<Article>>
   return articles
 }
@@ -80,8 +80,8 @@ function prepareArticles(articles: Array<Content<Article>>): Array<PreparedArtic
       url: pageUrl({
         id: article._id
       }),
-      publishDate: article.publish && article.publish.first ? article.publish.first : '',
-      publishDateHuman: article.publish && article.publish.first ? moment(article.publish.first).format('Do MMMM YYYY') : ''
+      publishDate: article.publish && article.publish.from ? article.publish.from : '',
+      publishDateHuman: article.publish && article.publish.from ? moment(article.publish.from).format('Do MMMM YYYY') : ''
     }
   })
 }
