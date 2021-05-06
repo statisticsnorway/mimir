@@ -141,30 +141,36 @@ function addClearTask(): void {
   clearTaskId = submit({
     description: 'check cache clearing in mimir',
     task: () => {
-      sleep(250)
-      if (changeQueueLength === changeQueue.length) {
-        cacheLog(`cache :: clear queue ${changeQueue.length}`)
-        const changedNodes: EnonicEventData['nodes'] = changeQueue
-        changeQueue = [] // reset queue
-        if (changeQueueLength >= 200) { // just clear everything if there is too many changes
-          completelyClearCache({
-            clearFilterCache: true,
-            clearMenuCache: true,
-            clearDividerCache: true,
-            clearRelatedArticlesCache: true,
-            clearRelatedFactPageCache: true,
-            clearDatasetRepoCache: true,
-            clearParsedMunicipalityCache: true,
-            clearMunicipalityWithCodeCache: true,
-            clearMunicipalityWithNameCache: true,
-            clearParentTypeCache: true
-          })
+      try {
+        sleep(250)
+        if (changeQueueLength === changeQueue.length) {
+          cacheLog(`cache :: clear queue ${changeQueue.length}`)
+          const changedNodes: EnonicEventData['nodes'] = changeQueue
+          changeQueue = [] // reset queue
+          if (changeQueueLength >= 200) { // just clear everything if there is too many changes
+            completelyClearCache({
+              clearFilterCache: true,
+              clearMenuCache: true,
+              clearDividerCache: true,
+              clearRelatedArticlesCache: true,
+              clearRelatedFactPageCache: true,
+              clearDatasetRepoCache: true,
+              clearParsedMunicipalityCache: true,
+              clearMunicipalityWithCodeCache: true,
+              clearMunicipalityWithNameCache: true,
+              clearParentTypeCache: true
+            })
+          } else {
+            onNodeChange(changedNodes)
+          }
+          clearTaskId = undefined
         } else {
-          onNodeChange(changedNodes)
+          cacheLog(`cache :: queue changed try again in 250ms`)
+          clearTaskId = undefined
+          addClearTask()
         }
-        clearTaskId = undefined
-      } else {
-        cacheLog(`cache :: queue changed try again in 250ms`)
+      } catch (error) {
+        cacheLog(`cacheError :: ${error.toString()}`)
         clearTaskId = undefined
         addClearTask()
       }
