@@ -3,11 +3,13 @@ import { Content } from 'enonic-types/content'
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { Request, Response } from 'enonic-types/controller'
 import { StatisticInListing, VariantInListing } from '../../../lib/ssb/dashboard/statreg/types'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
-import { groupBy } from 'ramda'
+import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
 import { Component, PortalLibrary } from 'enonic-types/portal'
 import { ReleasedStatisticsPartConfig } from './releasedStatistics-part-config'
 import { I18nLibrary } from 'enonic-types/i18n'
+import { DateUtilsLib } from '../../../lib/ssb/utils/dateUtils'
+import { VariantUtilsLib, YearReleases } from '../../../lib/ssb/utils/variantUtils'
+import { ArrayUtilsLib } from '../../../lib/ssb/utils/arrayUtils'
 // eslint-disable-next-line @typescript-eslint/typedef
 const moment = require('moment/min/moment-with-locales')
 moment.locale('nb')
@@ -36,34 +38,31 @@ const {
     forceArray
   }
 } = __non_webpack_require__( '/lib/util')
+const {
+  checkLimitAndTrim
+}: ArrayUtilsLib = __non_webpack_require__( '/lib/ssb/utils/arrayUtils')
+const {
+  checkVariantReleaseDate
+}: DateUtilsLib = __non_webpack_require__( '/lib/ssb/utils/dateUtils')
+const {
+  calculatePeriode,
+  addMonthNames,
+  groupStatisticsByYearMonthAndDay
+}: VariantUtilsLib = __non_webpack_require__( '/lib/ssb/utils/variantUtils')
 
-
-const groupStatisticsByYear: (statistics: Array<PreparedStatistics>) => GroupedBy<PreparedStatistics> = groupBy((statistic: PreparedStatistics): string => {
-  return statistic.variant.year.toString()
-})
-
-const groupStatisticsByMonth: (statistics: Array<PreparedStatistics>) => GroupedBy<PreparedStatistics> = groupBy((statistic: PreparedStatistics): string => {
-  return statistic.variant.monthNumber.toString()
-})
-
-const groupStatisticsByDay: (statistics: Array<PreparedStatistics>) => GroupedBy<PreparedStatistics> = groupBy((statistic: PreparedStatistics): string => {
-  return statistic.variant.day.toString()
-})
-
-exports.get = function(req: Request): Response {
+exports.get = function(req: Request): React4xpResponse {
   try {
-    return renderPart()
+    return renderPart(req)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-exports.preview = (): Response => renderPart()
-let currentLanguage: string = ''
-export function renderPart(): Response {
-  const content: Content = getContent()
-  currentLanguage = content.language ? content.language : 'nb'
+exports.preview = (req: Request): React4xpResponse => renderPart(req)
 
+export function renderPart(req: Request): React4xpResponse {
+  const content: Content = getContent()
+  const currentLanguage: string = content.language ? content.language : 'nb'
 
   const part: Component<ReleasedStatisticsPartConfig> = getComponent()
   const numberOfReleases: number = part.config.numberOfStatistics ? parseInt(part.config.numberOfStatistics) : 8
@@ -77,107 +76,39 @@ export function renderPart(): Response {
   const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: StatisticInListing) => prepareRelease(release, currentLanguage))
 
   // group by year, then month, then day
-  const groupedByYear: GroupedBy<PreparedStatistics> = groupStatisticsByYear(releasesPrepped)
-  const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> = {}
-  Object.keys(groupedByYear).forEach((year) => {
-    const groupedByMonthAndDay: GroupedBy<GroupedBy<PreparedStatistics>> = {}
-    const tmpMonth: GroupedBy<PreparedStatistics> = groupStatisticsByMonth(forceArray(groupedByYear[year]))
-    Object.keys(tmpMonth).map((month) => {
-      groupedByMonthAndDay[month] = groupStatisticsByDay(forceArray(tmpMonth[month]))
-    })
-    groupedByYearMonthAndDay[year] = groupedByMonthAndDay
-  })
-
+  const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> = groupStatisticsByYearMonthAndDay(releasesPrepped)
+  // iterate and format month names
   const groupedWithMonthNames: Array<YearReleases> = addMonthNames(groupedByYearMonthAndDay, currentLanguage)
 
-  // render component
-  const reactComponent: React4xpObject = new React4xp('ReleasedStatistics')
-    .setProps({
-      releases: groupedWithMonthNames,
-      title: localize({
-        key: 'newStatistics',
-        locale: currentLanguage === 'nb' ? 'no' : currentLanguage
-      }),
-      language: currentLanguage
-    })
-    .setId('nextStatisticsReleases')
-    .uniqueId()
-
-  // get config with number of statistics to show and title
-  return {
-    body: reactComponent.renderBody({
-      body: `<div id="${reactComponent.react4xpId}"></div>`
-    })
+  const props: PartProps = {
+    releases: groupedWithMonthNames,
+    title: localize({
+      key: 'newStatistics',
+      locale: currentLanguage
+    }),
+    language: currentLanguage
   }
+  return React4xp.render('ReleasedStatistics', props, req)
 }
 
-function addMonthNames(groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>>, language: string): Array<YearReleases> {
-  moment.locale(language)
-  return Object.keys(groupedByYearMonthAndDay).map((year) => {
-    const tmpYear: GroupedBy<GroupedBy<PreparedStatistics>> = groupedByYearMonthAndDay[year] as GroupedBy<GroupedBy<PreparedStatistics>>
-    const monthReleases: Array<MonthReleases> = Object.keys(tmpYear).map((monthNumber) => {
-      const tmpMonth: GroupedBy<PreparedStatistics> = tmpYear[monthNumber] as GroupedBy<PreparedStatistics>
-      const dayReleases: Array<DayReleases> = Object.keys(tmpYear[monthNumber]).map((day) => {
-        return {
-          day,
-          releases: forceArray(tmpMonth[day])
-        }
-      })
-
-      const a: MonthReleases = {
-        month: monthNumber,
-        monthName: moment().set({
-          year: year,
-          month: monthNumber,
-          date: 2
-        }).format('MMM'),
-        releases: dayReleases
-      }
-      return a
-    })
-
-    return {
-      year,
-      releases: monthReleases
-    }
-  })
-}
-
-interface DayReleases {
-  day: string;
-  releases: Array<PreparedStatistics>;
-}
-
-interface MonthReleases {
-  month: string;
-  monthName: string;
-  releases: Array<DayReleases>;
-}
-
-interface YearReleases {
-  year: string;
-  releases: Array<MonthReleases>;
-}
-
-
-function prepareRelease(release: StatisticInListing, locale: string): PreparedStatistics {
+function prepareRelease(release: StatisticInListing, language: string): PreparedStatistics {
   const preparedVariant: PreparedVariant = Array.isArray(release.variants) ?
-    concatReleaseTimes(release.variants, locale) :
-    formatVariant(release.variants)
+    concatReleaseTimes(release.variants, language) :
+    formatVariant(release.variants, language)
   return {
     id: release.id,
-    name: locale === 'en' ? release.nameEN : release.name,
+    name: language === 'en' ? release.nameEN : release.name,
     shortName: release.shortName,
     variant: preparedVariant
   }
 }
 
-function concatReleaseTimes(variants: Array<VariantInListing>, locale: string): PreparedVariant {
-  const defaultVariant: PreparedVariant = formatVariant(variants[0])
-  const timePeriodes: Array<string> = variants.map((variant: VariantInListing) => calculatePeriode(variant))
+function concatReleaseTimes(variants: Array<VariantInListing>, language: string): PreparedVariant {
+  const defaultVariant: PreparedVariant = formatVariant(variants[0], language)
+  const timePeriodes: Array<string> = variants.map((variant: VariantInListing) => calculatePeriode(variant, language))
   const formatedTimePeriodes: string = timePeriodes.join(` ${localize({
     key: 'and',
-    locale
+    locale: language
   })} `)
   return {
     ...defaultVariant,
@@ -185,7 +116,7 @@ function concatReleaseTimes(variants: Array<VariantInListing>, locale: string): 
   }
 }
 
-function formatVariant(variant: VariantInListing): PreparedVariant {
+function formatVariant(variant: VariantInListing, language: string): PreparedVariant {
   const date: Date = new Date(variant.previousRelease)
   return {
     id: variant.id,
@@ -193,7 +124,7 @@ function formatVariant(variant: VariantInListing): PreparedVariant {
     monthNumber: date.getMonth(),
     year: date.getFullYear(),
     frequency: variant.frekvens,
-    period: calculatePeriode(variant)
+    period: calculatePeriode(variant, language)
   }
 }
 
@@ -205,9 +136,9 @@ function filterOnPreviousReleases(stats: Array<StatisticInListing>, numberOfRele
     const releasesOnThisDay: Array<StatisticInListing> = stats.reduce((acc: Array<StatisticInListing>, stat: StatisticInListing) => {
       const thisDayReleasedVariants: Array<VariantInListing> | undefined = Array.isArray(stat.variants) ?
         stat.variants.filter((variant: VariantInListing) => {
-          return checkReleaseDate(variant, day)
+          return checkVariantReleaseDate(variant, day)
         }) :
-        checkReleaseDate(stat.variants, day) ? [stat.variants] : undefined
+        checkVariantReleaseDate(stat.variants, day) ? [stat.variants] : undefined
       if (thisDayReleasedVariants && thisDayReleasedVariants.length > 0) {
         acc.push({
           ...stat,
@@ -222,152 +153,16 @@ function filterOnPreviousReleases(stats: Array<StatisticInListing>, numberOfRele
   return releases
 }
 
-function checkLimitAndTrim(releases: Array<StatisticInListing>, releasesOnThisDay: Array<StatisticInListing>, count: number): Array<StatisticInListing> {
-  if (releases.length + releasesOnThisDay.length > count) {
-    const whereToSlice: number = (count - releases.length)
-    return releasesOnThisDay.slice(0, whereToSlice)
-  }
-  return releasesOnThisDay
-}
-
-function checkReleaseDate(variant: VariantInListing, day: Date): boolean {
-  return sameDay(new Date(variant.previousRelease), day)
-}
-
-function sameDay(d1: Date, d2: Date): boolean {
-  return d1.getDate() === d2.getDate() &&
-      d1.getMonth() === d2.getMonth() &&
-      d1.getFullYear() === d2.getFullYear()
-}
-
-function calculatePeriode(variant: VariantInListing): string {
-  switch (variant.frekvens) {
-  case 'År':
-    return calculateYear(variant)
-  case 'Halvår':
-    return calcualteHalfYear(variant)
-  case 'Termin':
-    return calculateTerm(variant)
-  case 'Kvartal':
-    return calculateQuarter(variant)
-  case 'Måned':
-    return calculateMonth(variant)
-  case 'Uke':
-    return calculateWeek(variant)
-  default:
-    return calculateEveryXYear(variant)
-  }
-}
-
-function calculateEveryXYear(variant: VariantInListing): string {
-  const dateFrom: Date = new Date(variant.previousFrom)
-  const dateTo: Date = new Date(variant.previousTo)
-  const yearFrom: number = dateFrom.getFullYear()
-  const yearTo: number = dateTo.getFullYear()
-
-  if (yearFrom !== yearTo) {
-    return localize({
-      key: 'period.generic',
-      locale: currentLanguage,
-      values: [`${yearFrom.toString()}-${yearTo.toString()}`]
-    })
-  } else {
-    // spesialtilfelle hvis periode-fra og periode-til er i samme år
-    return localize({
-      key: 'period.generic',
-      locale: currentLanguage,
-      values: [yearTo.toString()]
-    })
-  }
-}
-
-function calculateYear(variant: VariantInListing): string {
-  const dateFrom: Date = new Date(variant.previousFrom)
-  const dateTo: Date = new Date(variant.previousTo)
-  const yearFrom: number = dateFrom.getFullYear()
-  const yearTo: number = dateTo.getFullYear()
-  if ( (yearFrom + 1) === yearTo &&
-      dateFrom.getDate() !== 1 &&
-      dateFrom.getMonth() !== 0 &&
-      dateTo.getDate() !== 31 &&
-      dateTo.getMonth() !== 11) {
-    // spesialtilfelle hvis periode-fra og periode-til er kun ett år mellom og startdato ikke er 01.01
-    return localize({
-      key: 'period.generic',
-      locale: currentLanguage,
-      values: [`${yearFrom.toString()}/${yearTo.toString()}`]
-    })
-  } else if (yearFrom !== yearTo ) {
-    // spesialtilfelle hvis periode-fra og periode-til er i ulike år
-    return localize({
-      key: 'period.generic',
-      locale: currentLanguage,
-      values: [`${yearFrom.toString()}-${yearTo.toString()}`]
-    })
-  } else {
-    return localize({
-      key: 'period.generic',
-      locale: currentLanguage,
-      values: [yearTo.toString()]
-    })
-  }
-}
-
-function calcualteHalfYear(variant: VariantInListing): string {
-  const date: Date = new Date(variant.previousFrom)
-  const fromMonth: number = new Date(variant.previousFrom).getMonth() + 1
-  const halfyear: number = Math.ceil(fromMonth / 6)
-  return localize({
-    key: 'period.halfyear',
-    locale: currentLanguage,
-    values: [halfyear.toString(), date.getFullYear().toString()]
-  })
-}
-
-function calculateTerm(variant: VariantInListing): string {
-  const date: Date = new Date(variant.previousFrom)
-  const fromMonth: number = date.getMonth() + 1
-  const termin: number = Math.ceil(fromMonth / 6)
-  return localize({
-    key: 'period.termin',
-    locale: currentLanguage,
-    values: [termin.toString(), date.getFullYear().toString()]
-  })
-}
-
-function calculateQuarter(variant: VariantInListing): string {
-  const date: Date = new Date(variant.previousFrom)
-  const fromMonth: number = date.getMonth() + 1
-  const quarter: number = Math.ceil(fromMonth / 3)
-  return localize({
-    key: 'period.quarter',
-    locale: currentLanguage,
-    values: [quarter.toString(), date.getFullYear().toString()]
-  })
-}
-
-function calculateMonth(variant: VariantInListing): string {
-  const monthName: string = moment(variant.previousFrom).format('MMMM')
-  const year: string = moment(variant.previousFrom).format('YYYY')
-  return localize({
-    key: 'period.month',
-    locale: currentLanguage,
-    values: [monthName, year]
-  })
-}
-
-function calculateWeek(variant: VariantInListing): string {
-  const date: Date = new Date(variant.previousFrom)
-  return localize({
-    key: 'period.week',
-    locale: currentLanguage,
-    values: [getWeek(date).toString(), date.getFullYear().toString()]
-  })
-}
-
 /*
 *  Interfaces
 */
+
+interface PartProps {
+  releases: Array<YearReleases>;
+  title: string;
+  language: string;
+}
+
 interface PreparedStatistics {
   id: number;
   name: string;
