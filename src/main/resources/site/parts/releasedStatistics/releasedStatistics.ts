@@ -1,18 +1,14 @@
-import { Content } from 'enonic-types/content'
-
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { Request, Response } from 'enonic-types/controller'
-import { StatisticInListing, VariantInListing } from '../../../lib/ssb/dashboard/statreg/types'
-import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
+
+import { Content } from 'enonic-types/content'
+import { Request } from 'enonic-types/controller'
+import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
+import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Component, PortalLibrary } from 'enonic-types/portal'
 import { ReleasedStatisticsPartConfig } from './releasedStatistics-part-config'
 import { I18nLibrary } from 'enonic-types/i18n'
-import { DateUtilsLib } from '../../../lib/ssb/utils/dateUtils'
 import { VariantUtilsLib, YearReleases } from '../../../lib/ssb/utils/variantUtils'
 import { ArrayUtilsLib } from '../../../lib/ssb/utils/arrayUtils'
-// eslint-disable-next-line @typescript-eslint/typedef
-const moment = require('moment/min/moment-with-locales')
-moment.locale('nb')
 
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
@@ -30,24 +26,16 @@ const {
   getComponent,
   getContent
 }: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
-const {
-  getWeek
-} = __non_webpack_require__('/lib/ssb/utils/utils')
-const {
-  data: {
-    forceArray
-  }
-} = __non_webpack_require__( '/lib/util')
+
 const {
   checkLimitAndTrim
 }: ArrayUtilsLib = __non_webpack_require__( '/lib/ssb/utils/arrayUtils')
+
 const {
-  checkVariantReleaseDate
-}: DateUtilsLib = __non_webpack_require__( '/lib/ssb/utils/dateUtils')
-const {
-  calculatePeriode,
   addMonthNames,
-  groupStatisticsByYearMonthAndDay
+  getReleasesForDay,
+  groupStatisticsByYearMonthAndDay,
+  prepareRelease
 }: VariantUtilsLib = __non_webpack_require__( '/lib/ssb/utils/variantUtils')
 
 exports.get = function(req: Request): React4xpResponse {
@@ -66,6 +54,7 @@ export function renderPart(req: Request): React4xpResponse {
 
   const part: Component<ReleasedStatisticsPartConfig> = getComponent()
   const numberOfReleases: number = part.config.numberOfStatistics ? parseInt(part.config.numberOfStatistics) : 8
+
   // Get statistics
   const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
 
@@ -77,6 +66,7 @@ export function renderPart(req: Request): React4xpResponse {
 
   // group by year, then month, then day
   const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> = groupStatisticsByYearMonthAndDay(releasesPrepped)
+
   // iterate and format month names
   const groupedWithMonthNames: Array<YearReleases> = addMonthNames(groupedByYearMonthAndDay, currentLanguage)
 
@@ -91,62 +81,12 @@ export function renderPart(req: Request): React4xpResponse {
   return React4xp.render('ReleasedStatistics', props, req)
 }
 
-function prepareRelease(release: StatisticInListing, language: string): PreparedStatistics {
-  const preparedVariant: PreparedVariant = Array.isArray(release.variants) ?
-    concatReleaseTimes(release.variants, language) :
-    formatVariant(release.variants, language)
-  return {
-    id: release.id,
-    name: language === 'en' ? release.nameEN : release.name,
-    shortName: release.shortName,
-    variant: preparedVariant
-  }
-}
-
-function concatReleaseTimes(variants: Array<VariantInListing>, language: string): PreparedVariant {
-  const defaultVariant: PreparedVariant = formatVariant(variants[0], language)
-  const timePeriodes: Array<string> = variants.map((variant: VariantInListing) => calculatePeriode(variant, language))
-  const formatedTimePeriodes: string = timePeriodes.join(` ${localize({
-    key: 'and',
-    locale: language
-  })} `)
-  return {
-    ...defaultVariant,
-    period: formatedTimePeriodes
-  }
-}
-
-function formatVariant(variant: VariantInListing, language: string): PreparedVariant {
-  const date: Date = new Date(variant.previousRelease)
-  return {
-    id: variant.id,
-    day: date.getDate(),
-    monthNumber: date.getMonth(),
-    year: date.getFullYear(),
-    frequency: variant.frekvens,
-    period: calculatePeriode(variant, language)
-  }
-}
-
 function filterOnPreviousReleases(stats: Array<StatisticInListing>, numberOfReleases: number): Array<StatisticInListing> {
   const releases: Array<StatisticInListing> = []
   for (let i: number = 0; releases.length < numberOfReleases; i++) {
     const day: Date = new Date()
     day.setDate(day.getDate() - i)
-    const releasesOnThisDay: Array<StatisticInListing> = stats.reduce((acc: Array<StatisticInListing>, stat: StatisticInListing) => {
-      const thisDayReleasedVariants: Array<VariantInListing> | undefined = Array.isArray(stat.variants) ?
-        stat.variants.filter((variant: VariantInListing) => {
-          return checkVariantReleaseDate(variant, day)
-        }) :
-        checkVariantReleaseDate(stat.variants, day) ? [stat.variants] : undefined
-      if (thisDayReleasedVariants && thisDayReleasedVariants.length > 0) {
-        acc.push({
-          ...stat,
-          variants: thisDayReleasedVariants
-        })
-      }
-      return acc
-    }, [])
+    const releasesOnThisDay: Array<StatisticInListing> = getReleasesForDay(stats, day)
     const trimmed: Array<StatisticInListing> = checkLimitAndTrim(releases, releasesOnThisDay, numberOfReleases)
     releases.push(...trimmed)
   }

@@ -1,6 +1,7 @@
-import { VariantInListing } from '../dashboard/statreg/types'
+import { StatisticInListing, VariantInListing } from '../dashboard/statreg/types'
 import { I18nLibrary } from 'enonic-types/i18n'
 import { groupBy } from 'ramda'
+import { sameDay } from './dateUtils'
 
 const {
   localize
@@ -19,7 +20,7 @@ const moment = require('moment/min/moment-with-locales')
 moment.locale('nb')
 
 
-export function calculatePeriode(variant: VariantInListing, language: string): string {
+export function calculatePeriod(variant: VariantInListing, language: string): string {
   switch (variant.frekvens) {
   case 'År':
     return calculateYear(variant, language)
@@ -215,20 +216,85 @@ export function groupStatisticsByYearMonthAndDay(releasesPrepped: Array<Prepared
 }
 
 
+export function getReleasesForDay(statisticList: Array<StatisticInListing>, day: Date): Array<StatisticInListing> {
+  return statisticList.reduce((acc: Array<StatisticInListing>, stat: StatisticInListing) => {
+    const thisDayReleasedVariants: Array<VariantInListing> | undefined = Array.isArray(stat.variants) ?
+      stat.variants.filter((variant: VariantInListing) => {
+        return checkVariantReleaseDate(variant, day)
+      }) :
+      checkVariantReleaseDate(stat.variants, day) ? [stat.variants] : undefined
+    if (thisDayReleasedVariants && thisDayReleasedVariants.length > 0) {
+      acc.push({
+        ...stat,
+        variants: thisDayReleasedVariants
+      })
+    }
+    return acc
+  }, [])
+}
+
+export function checkVariantReleaseDate(variant: VariantInListing, day: Date): boolean {
+  return sameDay(new Date(variant.previousRelease), day)
+}
+
+export function prepareRelease(release: StatisticInListing, language: string): PreparedStatistics {
+  const preparedVariant: PreparedVariant = Array.isArray(release.variants) ?
+    concatReleaseTimes(release.variants, language) :
+    formatVariant(release.variants, language)
+  return {
+    id: release.id,
+    name: language === 'en' ? release.nameEN : release.name,
+    shortName: release.shortName,
+    variant: preparedVariant
+  }
+}
+
+function concatReleaseTimes(variants: Array<VariantInListing>, language: string): PreparedVariant {
+  const defaultVariant: PreparedVariant = formatVariant(variants[0], language)
+  const timePeriodes: Array<string> = variants.map((variant: VariantInListing) => calculatePeriod(variant, language))
+  const formatedTimePeriodes: string = timePeriodes.join(` ${localize({
+    key: 'and',
+    locale: language
+  })} `)
+  return {
+    ...defaultVariant,
+    period: formatedTimePeriodes
+  }
+}
+
+function formatVariant(variant: VariantInListing, language: string): PreparedVariant {
+  const date: Date = new Date(variant.previousRelease)
+  return {
+    id: variant.id,
+    day: date.getDate(),
+    monthNumber: date.getMonth(),
+    year: date.getFullYear(),
+    frequency: variant.frekvens,
+    period: calculatePeriod(variant, language)
+  }
+}
+
+
 export interface VariantUtilsLib {
-  calculatePeriode: (variant: VariantInListing, language: string) => string;
+  calculatePeriod: (variant: VariantInListing, language: string) => string;
   addMonthNames: (groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>>, language: string) => Array<YearReleases>;
   groupStatisticsByYear: (statistics: Array<PreparedStatistics>) => GroupedBy<PreparedStatistics>;
   groupStatisticsByMonth: (statistics: Array<PreparedStatistics>) => GroupedBy<PreparedStatistics>;
   groupStatisticsByDay: (statistics: Array<PreparedStatistics>) => GroupedBy<PreparedStatistics>;
   groupStatisticsByYearMonthAndDay: (releasesPrepped: Array<PreparedStatistics>) => GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>>;
+  getReleasesForDay: (statisticList: Array<StatisticInListing>, day: Date) => Array<StatisticInListing>;
+  prepareRelease: (release: StatisticInListing, locale: string) => PreparedStatistics;
 }
+
 
 export interface PreparedStatistics {
   id: number;
   name: string;
   shortName: string;
   variant: PreparedVariant;
+  type?: string;
+  date?: string;
+  mainSubject?: string;
 }
 
 export interface PreparedVariant {
