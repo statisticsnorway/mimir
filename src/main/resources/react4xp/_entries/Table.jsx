@@ -297,7 +297,7 @@ class Table extends React.Component {
               return (
                 <tr key={index} className="footnote">
                   <td colSpan="100%">
-                    <sup>{index + 1}</sup>id: {note.noteid} fotnote: {note.content}
+                    <sup>{index + 1}</sup>{note.content}
                   </td>
                 </tr>
               )
@@ -442,12 +442,8 @@ class Table extends React.Component {
       const noteIDs = noteRefId.split(' ')
       const notesToReturn = footnotes.reduce((acc, current, index) => {
         // Lag et array av indeksen til alle id-enene i footer
-        return noteIDs.some((element) => element === current.noteid) ? acc.concat(index) : null
+        return noteIDs.some((element) => element === current.noteid) ? acc.concat(index) : acc
       }, [])
-
-      console.log(notesToReturn)
-      console.log(noteIDs)
-      console.log(footnotes)
 
       if (notesToReturn) {
         return (
