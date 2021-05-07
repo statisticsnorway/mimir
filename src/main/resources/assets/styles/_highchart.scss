@@ -40,10 +40,15 @@
   height: auto;
   width: 100%;
 
+  //TODO: remove min-heights for mobile when responsive configs are implemented
   @include media-breakpoint-down(sm) {
-    min-height: 400px;
+    min-height: 300px;
     height: auto;
     width: 100%;
+
+    .highcharts-container, .highcharts-root, .highcharts-background {
+      min-height: 300px !important;
+    }
   }
 }
 .highcharts-figure.hide-title .highcharts-title {
