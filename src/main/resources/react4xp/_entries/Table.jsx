@@ -280,28 +280,22 @@ class Table extends React.Component {
       footnotes, correctionNotice
     } = this.state.table.tfoot
 
-    // const noteRefs = this.state.table.noteRefs
-    // TODO: The solution for multiple noteRefs is a temporary quick fix.
-    // As of now, when a single element, e.g. the table header, has multiple note refs the structure is such:
-    // "noterefs": ["local:dictionary:note6 local:dictionary:note8 local:dictionary:note7", "local:dictionary:note1", "local:dictionary:note2"]
-    // When preferably the structure should be e.g.:
-    // "noterefs": [["local:dictionary:note6", "local:dictionary:note8", "local:dictionary:note7"], "local:dictionary:note1", "local:dictionary:note2"]
-    // const multipleNoteRefs = noteRefs && noteRefs.toString().split(' ')
-    // const noteRefsList = multipleNoteRefs.length > 1 ? multipleNoteRefs : noteRefs
+    const noteRefs = this.state.table.noteRefs
 
-    if (footnotes && footnotes.length > 0 || correctionNotice) {
+    if (noteRefs && noteRefs.length > 0 || correctionNotice) {
       return (
         <tfoot>
-          {
-            footnotes.map((note, index) => {
-              return (
-                <tr key={index} className="footnote">
-                  <td colSpan="100%">
-                    <sup>{index + 1}</sup>{note.content}
-                  </td>
-                </tr>
-              )
-            })
+          {noteRefs.map((note, index) => {
+            const current = footnotes.find(
+              (footnote) => footnote.noteid === note)
+            return (
+              <tr key={index} className="footnote">
+                <td colSpan="100%">
+                  <sup>{index + 1}</sup>{current.content}
+                </td>
+              </tr>
+            )
+          })
           }
           {this.renderCorrectionNotice()}
         </tfoot>
@@ -439,10 +433,11 @@ class Table extends React.Component {
       const {
         footnotes
       } = this.state.table.tfoot
+      const noteRefs = this.state.table.noteRefs
       const noteIDs = noteRefId.split(' ')
-      const notesToReturn = footnotes.reduce((acc, current, index) => {
+      const notesToReturn = noteRefs.reduce((acc, current, index) => {
         // Lag et array av indeksen til alle id-enene i footer
-        return noteIDs.some((element) => element === current.noteid) ? acc.concat(index) : acc
+        return noteIDs.some((element) => element === current) ? acc.concat(index) : acc
       }, [])
 
       if (notesToReturn) {
