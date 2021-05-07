@@ -430,9 +430,6 @@ class Table extends React.Component {
 
   addNoteRefs(noteRefId) {
     if (noteRefId) {
-      const {
-        footnotes
-      } = this.state.table.tfoot
       const noteRefs = this.state.table.noteRefs
       const noteIDs = noteRefId.split(' ')
       const notesToReturn = noteRefs.reduce((acc, current, index) => {
