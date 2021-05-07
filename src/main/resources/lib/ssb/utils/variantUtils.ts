@@ -216,13 +216,13 @@ export function groupStatisticsByYearMonthAndDay(releasesPrepped: Array<Prepared
 }
 
 
-export function getReleasesForDay(statisticList: Array<StatisticInListing>, day: Date): Array<StatisticInListing> {
+export function getReleasesForDay(statisticList: Array<StatisticInListing>, day: Date, property: keyof VariantInListing = 'previousRelease'): Array<StatisticInListing> {
   return statisticList.reduce((acc: Array<StatisticInListing>, stat: StatisticInListing) => {
     const thisDayReleasedVariants: Array<VariantInListing> | undefined = Array.isArray(stat.variants) ?
       stat.variants.filter((variant: VariantInListing) => {
-        return checkVariantReleaseDate(variant, day)
+        return checkVariantReleaseDate(variant, day, property)
       }) :
-      checkVariantReleaseDate(stat.variants, day) ? [stat.variants] : undefined
+      checkVariantReleaseDate(stat.variants, day, property) ? [stat.variants] : undefined
     if (thisDayReleasedVariants && thisDayReleasedVariants.length > 0) {
       acc.push({
         ...stat,
@@ -233,8 +233,9 @@ export function getReleasesForDay(statisticList: Array<StatisticInListing>, day:
   }, [])
 }
 
-export function checkVariantReleaseDate(variant: VariantInListing, day: Date): boolean {
-  return sameDay(new Date(variant.previousRelease), day)
+export function checkVariantReleaseDate(variant: VariantInListing, day: Date, property: keyof VariantInListing): boolean {
+  const dayFromVariant: string = variant[property] as string
+  return sameDay(new Date(dayFromVariant), day)
 }
 
 export function prepareRelease(release: StatisticInListing, language: string): PreparedStatistics {
@@ -282,7 +283,7 @@ export interface VariantUtilsLib {
   groupStatisticsByMonth: (statistics: Array<PreparedStatistics>) => GroupedBy<PreparedStatistics>;
   groupStatisticsByDay: (statistics: Array<PreparedStatistics>) => GroupedBy<PreparedStatistics>;
   groupStatisticsByYearMonthAndDay: (releasesPrepped: Array<PreparedStatistics>) => GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>>;
-  getReleasesForDay: (statisticList: Array<StatisticInListing>, day: Date) => Array<StatisticInListing>;
+  getReleasesForDay: (statisticList: Array<StatisticInListing>, day: Date, property?: keyof VariantInListing) => Array<StatisticInListing>;
   prepareRelease: (release: StatisticInListing, locale: string) => PreparedStatistics;
 }
 

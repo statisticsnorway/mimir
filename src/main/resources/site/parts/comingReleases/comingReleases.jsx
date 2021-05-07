@@ -48,7 +48,7 @@ class ComingReleases extends React.Component {
   }
 }
 
-ReleasedStatistics.propTypes = {
+ComingReleases.propTypes = {
   title: PropTypes.string,
   releases: PropTypes.arrayOf(PropTypes.shape({
     year: PropTypes.string,

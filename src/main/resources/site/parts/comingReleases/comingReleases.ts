@@ -52,7 +52,7 @@ function renderPart(req: Request): React4xpResponse {
 
   // iterate and format month names
   const groupedWithMonthNames: Array<YearReleases> = addMonthNames(groupedByYearMonthAndDay, currentLanguage)
-
+  log.info(JSON.stringify(groupedByYearMonthAndDay, null, 2))
   const props: PartProps = {
     releases: groupedWithMonthNames,
     title: 'Title',
@@ -68,7 +68,7 @@ function filterOnComingReleases(stats: Array<StatisticInListing>, daysInTheFutur
   for (let i: number = 0; i < daysInTheFuture; i++) {
     const day: Date = new Date()
     day.setDate(day.getDate() + i)
-    const releasesOnThisDay: Array<StatisticInListing> = getReleasesForDay(stats, day)
+    const releasesOnThisDay: Array<StatisticInListing> = getReleasesForDay(stats, day, 'nextRelease')
     releases.push(...releasesOnThisDay)
   }
   return releases
