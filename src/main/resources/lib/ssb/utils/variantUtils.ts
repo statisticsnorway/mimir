@@ -238,10 +238,10 @@ export function checkVariantReleaseDate(variant: VariantInListing, day: Date, pr
   return sameDay(new Date(dayFromVariant), day)
 }
 
-export function prepareRelease(release: StatisticInListing, language: string): PreparedStatistics {
+export function prepareRelease(release: StatisticInListing, language: string, property: keyof VariantInListing = 'previousRelease' ): PreparedStatistics {
   const preparedVariant: PreparedVariant = Array.isArray(release.variants) ?
-    concatReleaseTimes(release.variants, language) :
-    formatVariant(release.variants, language)
+    concatReleaseTimes(release.variants, language, property) :
+    formatVariant(release.variants, language, property)
   return {
     id: release.id,
     name: language === 'en' ? release.nameEN : release.name,
@@ -250,8 +250,8 @@ export function prepareRelease(release: StatisticInListing, language: string): P
   }
 }
 
-function concatReleaseTimes(variants: Array<VariantInListing>, language: string): PreparedVariant {
-  const defaultVariant: PreparedVariant = formatVariant(variants[0], language)
+function concatReleaseTimes(variants: Array<VariantInListing>, language: string, property: keyof VariantInListing): PreparedVariant {
+  const defaultVariant: PreparedVariant = formatVariant(variants[0], language, property)
   const timePeriodes: Array<string> = variants.map((variant: VariantInListing) => calculatePeriod(variant, language))
   const formatedTimePeriodes: string = timePeriodes.join(` ${localize({
     key: 'and',
@@ -263,8 +263,9 @@ function concatReleaseTimes(variants: Array<VariantInListing>, language: string)
   }
 }
 
-function formatVariant(variant: VariantInListing, language: string): PreparedVariant {
-  const date: Date = new Date(variant.previousRelease)
+function formatVariant(variant: VariantInListing, language: string, property: keyof VariantInListing): PreparedVariant {
+  const variantProperty: string = variant[property] as string
+  const date: Date = new Date(variantProperty)
   return {
     id: variant.id,
     day: date.getDate(),
@@ -284,7 +285,7 @@ export interface VariantUtilsLib {
   groupStatisticsByDay: (statistics: Array<PreparedStatistics>) => GroupedBy<PreparedStatistics>;
   groupStatisticsByYearMonthAndDay: (releasesPrepped: Array<PreparedStatistics>) => GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>>;
   getReleasesForDay: (statisticList: Array<StatisticInListing>, day: Date, property?: keyof VariantInListing) => Array<StatisticInListing>;
-  prepareRelease: (release: StatisticInListing, locale: string) => PreparedStatistics;
+  prepareRelease: (release: StatisticInListing, locale: string, property?: keyof VariantInListing) => PreparedStatistics;
 }
 
 

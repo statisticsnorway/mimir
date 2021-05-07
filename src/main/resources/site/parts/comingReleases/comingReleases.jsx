@@ -38,8 +38,8 @@ class ComingReleases extends React.Component {
         <Title size={3}>{this.props.title}</Title>
         {
           this.props.releases.map((year) => {
-            return year.releases.reverse().map((month) => {
-              return month.releases.reverse().map((day, index) => this.renderDay(day, month, year, index))
+            return year.releases.map((month) => {
+              return month.releases.map((day, index) => this.renderDay(day, month, year, index))
             })
           })
         }

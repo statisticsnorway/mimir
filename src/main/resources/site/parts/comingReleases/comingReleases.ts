@@ -36,7 +36,7 @@ function renderPart(req: Request): React4xpResponse {
   const content: Content = getContent()
   currentLanguage = content.language ? content.language : 'nb'
 
-  const daysInTheFuture: number = 100
+  const daysInTheFuture: number = 20
 
   // Get statistics
   const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
@@ -45,14 +45,15 @@ function renderPart(req: Request): React4xpResponse {
   const releasesFiltered: Array<StatisticInListing> = filterOnComingReleases(releases, daysInTheFuture)
 
   // Choose the right variant and prepare the date in a way it works with the groupBy function
-  const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: StatisticInListing) => prepareRelease(release, currentLanguage))
+  const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map(
+    (release: StatisticInListing) => prepareRelease(release, currentLanguage, 'nextRelease')
+  )
 
   // group by year, then month, then day
   const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> = groupStatisticsByYearMonthAndDay(releasesPrepped)
 
   // iterate and format month names
   const groupedWithMonthNames: Array<YearReleases> = addMonthNames(groupedByYearMonthAndDay, currentLanguage)
-  log.info(JSON.stringify(groupedByYearMonthAndDay, null, 2))
   const props: PartProps = {
     releases: groupedWithMonthNames,
     title: 'Title',
@@ -68,6 +69,7 @@ function filterOnComingReleases(stats: Array<StatisticInListing>, daysInTheFutur
   for (let i: number = 0; i < daysInTheFuture; i++) {
     const day: Date = new Date()
     day.setDate(day.getDate() + i)
+    log.info('get releases for date: ' + day)
     const releasesOnThisDay: Array<StatisticInListing> = getReleasesForDay(stats, day, 'nextRelease')
     releases.push(...releasesOnThisDay)
   }
