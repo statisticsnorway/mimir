@@ -5,7 +5,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   handleRepoGet
-} = __non_webpack_require__('/lib/ssb/statreg/repoUtils')
+} = __non_webpack_require__('/lib/ssb/dashboard/statreg/repoUtils')
 
 const {
   publishDataset

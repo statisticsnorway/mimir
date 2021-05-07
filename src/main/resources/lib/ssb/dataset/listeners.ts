@@ -26,7 +26,7 @@ const {
 }: RepoDatasetLib = __non_webpack_require__( '/lib/ssb/repo/dataset')
 const {
   ENONIC_CMS_DEFAULT_REPO
-}: RepoCommonLib = __non_webpack_require__('/lib/repo/common')
+}: RepoCommonLib = __non_webpack_require__('/lib/ssb/repo/common')
 
 export function setupFetchDataOnCreateListener(): void {
   listener({

@@ -22,7 +22,7 @@ const {
   refreshStatRegData,
   STATREG_NODES
 }: StatRegRepoLib = __non_webpack_require__( '/lib/ssb/repo/statreg')
-const cron: CronLib = __non_webpack_require__('/lib/ssb/cron/cron')
+const cron: CronLib = __non_webpack_require__('/lib/cron')
 const {
   refreshQueriesAsync
 }: SSBTaskLib = __non_webpack_require__('/lib/ssb/cron/task')

@@ -133,34 +133,44 @@ function addToChangeQueue(event: EnonicEvent<EnonicEventData>): void {
 
 function addClearTask(): void {
   if (clearTaskId) {
+    cacheLog(`cache :: task already running`)
     return
   }
+  cacheLog(`cache :: start new task`)
   const changeQueueLength: number = changeQueue.length
   clearTaskId = submit({
     description: 'check cache clearing in mimir',
     task: () => {
-      sleep(250)
-      if (changeQueueLength === changeQueue.length) {
-        const changedNodes: EnonicEventData['nodes'] = changeQueue
-        changeQueue = [] // reset queue
-        if (changeQueueLength >= 200) { // just clear everything if there is too many changes
-          completelyClearCache({
-            clearFilterCache: true,
-            clearMenuCache: true,
-            clearDividerCache: true,
-            clearRelatedArticlesCache: true,
-            clearRelatedFactPageCache: true,
-            clearDatasetRepoCache: true,
-            clearParsedMunicipalityCache: true,
-            clearMunicipalityWithCodeCache: true,
-            clearMunicipalityWithNameCache: true,
-            clearParentTypeCache: true
-          })
+      try {
+        sleep(250)
+        if (changeQueueLength === changeQueue.length) {
+          cacheLog(`cache :: clear queue ${changeQueue.length}`)
+          const changedNodes: EnonicEventData['nodes'] = changeQueue
+          changeQueue = [] // reset queue
+          if (changeQueueLength >= 200) { // just clear everything if there is too many changes
+            completelyClearCache({
+              clearFilterCache: true,
+              clearMenuCache: true,
+              clearDividerCache: true,
+              clearRelatedArticlesCache: true,
+              clearRelatedFactPageCache: true,
+              clearDatasetRepoCache: true,
+              clearParsedMunicipalityCache: true,
+              clearMunicipalityWithCodeCache: true,
+              clearMunicipalityWithNameCache: true,
+              clearParentTypeCache: true
+            })
+          } else {
+            onNodeChange(changedNodes)
+          }
+          clearTaskId = undefined
         } else {
-          onNodeChange(changedNodes)
+          cacheLog(`cache :: queue changed try again in 250ms`)
+          clearTaskId = undefined
+          addClearTask()
         }
-        clearTaskId = undefined
-      } else {
+      } catch (error) {
+        cacheLog(`cacheError :: ${error.toString()}`)
         clearTaskId = undefined
         addClearTask()
       }
@@ -175,6 +185,7 @@ function onNodeChange(validNodes: EnonicEventData['nodes']): void {
   }
   const masterNodes: EnonicEventData['nodes'] = validNodes.filter((n) => n.branch === 'master')
   if (masterNodes.length > 0) {
+    cacheLog(`cache :: master nodes to clear :: ${JSON.stringify(masterNodes, null, 2)}`)
     clearForBranch(masterNodes, 'master')
   }
 }
@@ -192,6 +203,7 @@ function clearForBranch(nodes: EnonicEventData['nodes'], branch: string): void {
   },
   () => {
     const cleared: Array<string> = []
+    cacheLog(`cache :: nodes to clear for branch ${branch} :: ${JSON.stringify(nodes, null, 2)}`)
     nodes.forEach((n) => {
       if (n.repo === ENONIC_CMS_DEFAULT_REPO) {
         // clear id and all references to id from cache
@@ -216,6 +228,7 @@ function clearForBranch(nodes: EnonicEventData['nodes'], branch: string): void {
           }
         }
       } else if (n.repo === DATASET_REPO) {
+        cacheLog(`cache :: try to clear in dataset repo :: ${JSON.stringify(n, null, 2)}`)
         clearCacheRepo(n.path)
       }
     })
