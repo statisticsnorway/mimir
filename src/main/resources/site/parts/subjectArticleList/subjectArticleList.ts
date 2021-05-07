@@ -11,6 +11,9 @@ const {
   getContent, serviceUrl
 }: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+const {
+  isEnabled
+} = __non_webpack_require__('/lib/featureToggle')
 
 exports.get = (req: Request): React4xpResponse => {
   return renderPart(req)
@@ -21,6 +24,7 @@ exports.preview = (req: Request): React4xpResponse => renderPart(req)
 function renderPart(req: Request): React4xpResponse {
   const content: Content = getContent()
   const language: string = content.language ? content.language : 'nb'
+  const filterAndSortEnabled: boolean = isEnabled('articlelist-sorting', false)
 
   const currentPath: string = content._path
 
@@ -43,7 +47,9 @@ function renderPart(req: Request): React4xpResponse {
     articleServiceUrl: articleServiceUrl,
     currentPath: currentPath,
     start: 0,
-    count: 10
+    count: 10,
+    showSortAndFilter: filterAndSortEnabled,
+    language: language
   }
 
   return React4xp.render('site/parts/subjectArticleList/subjectArticleList', props, req)
@@ -56,4 +62,6 @@ interface PartProperties {
     currentPath: string;
     start: number;
     count: number;
+    showSortAndFilter: boolean;
+    language: string;
 }
