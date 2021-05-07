@@ -5,6 +5,7 @@ import { PortalLibrary, Component } from 'enonic-types/portal'
 import { ArticleListPartConfig } from './articleList-part-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
+import { DefaultPageConfig } from '../../pages/default/default-page-config'
 
 const {
   localize
@@ -31,7 +32,7 @@ function renderPart(req: Request): React4xpResponse {
   const content: Content = getContent()
   const component: Component<ArticleListPartConfig> = getComponent()
   const language: string = content.language ? content.language : 'nb'
-  const articles: QueryResponse<Article> = getArticles(language)
+  const articles: Array<Content<Article>> = getArticles(language)
   const preparedArticles: Array<PreparedArticles> = prepareArticles(articles)
 
   //  Must be set to nb instead of no for localization
@@ -54,36 +55,25 @@ function renderPart(req: Request): React4xpResponse {
   return React4xp.render('site/parts/articleList/articleList', props, req)
 }
 
-function getArticles(language: string): QueryResponse<Article> {
-  return query({
-    count: 4,
-    query: ``,
-    contentTypes: [`${app.name}:article`],
-    sort: 'publish.from DESC, data.frontPagePriority DESC',
-    filters: {
-      boolean: {
-        must: [
-          {
-            exists: {
-              field: 'data.subtopic'
-            }
-          },
-          {
-            hasValue: {
-              field: 'language',
-              values: [
-                language
-              ]
-            }
-          }
-        ]
-      }
-    }
+function getArticles(language: string): Array<Content<Article>> {
+  const pages: QueryResponse<DefaultPageConfig> = query({
+    count: 500,
+    contentTypes: [`${app.name}:page`],
+    query: `components.page.config.mimir.default.subjectType LIKE "subSubject"`
   })
+  const pagePaths: Array<string> = pages.hits.map((page) => `_parentPath LIKE "/content${page._path}/*"`)
+  const languageQuery: string = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'
+  const articles: Array<Content<Article>> = query({
+    count: 4,
+    query: `(${pagePaths.join(' OR ')}) ${languageQuery}`,
+    contentTypes: [`${app.name}:article`],
+    sort: 'publish.from DESC, data.frontPagePriority DESC'
+  }).hits as unknown as Array<Content<Article>>
+  return articles
 }
 
-function prepareArticles(articles: QueryResponse<Article>): Array<PreparedArticles> {
-  return articles.hits.map( (article: Content<Article>) => {
+function prepareArticles(articles: Array<Content<Article>>): Array<PreparedArticles> {
+  return articles.map( (article: Content<Article>) => {
     return {
       title: article.displayName,
       preface: article.data.ingress ? article.data.ingress : '',
