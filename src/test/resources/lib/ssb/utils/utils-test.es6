@@ -106,7 +106,6 @@ test.mock('/lib/xp/content', {
 const utils = __non_webpack_require__( '/lib/ssb/utils/utils')
 
 exports.testHumanReadableNumber1 = function() {
-  log.info('testing testhumanreadable number 1')
   const result = utils.createHumanReadableFormat(123456789)
   test.assertEquals('123\u00a0456\u00a0789', result, 'Assertion that a 9 figure number is represented by groups of three, with nbsp separator')
 }
