@@ -1,6 +1,57 @@
 const test = __non_webpack_require__('/lib/xp/testing')
 
 // Mocking must be done *before* including the utils library - or else the actual content lib is loaded.
+test.mock('/lib/xp/portal', {
+  getContent: function() {
+    return {
+      '_id': '201c4f2f-ff5e-4298-8a3f-b07d515795de',
+      '_name': 'komfakta-icon4-nettoflytting.svg',
+      '_path': '/ssb/kommunefakta/nokkeltall-kommunefakta/nettoflytting/komfakta-icon4-nettoflytting.svg',
+      'creator': 'user:system:trine',
+      'modifier': 'user:adfs:s-1-5-21-2125401682-1754076223-1620198925-9146',
+      'createdTime': '2019-12-12T13:43:31.293Z',
+      'modifiedTime': '2020-02-27T14:33:41.445079Z',
+      'owner': 'user:system:trine',
+      'type': 'media:vector',
+      'displayName': 'komfakta-icon4-nettoflytting',
+      'hasChildren': false,
+      'language': 'nb',
+      'valid': true,
+      'childOrder': 'modifiedtime DESC',
+      'data': {
+        'media': {
+          'attachment': 'komfakta-icon4-nettoflytting.svg'
+        },
+        'caption': 'ikon av mennesker og hus'
+      },
+      'x': {
+        'com-enonic-app-metafields': {
+          'meta-data': {
+            'blockRobots': false
+          }
+        }
+      },
+      'page': {},
+      'attachments': {
+        'komfakta-icon4-nettoflytting.svg': {
+          'name': 'komfakta-icon4-nettoflytting.svg',
+          'label': 'source',
+          'size': 1760,
+          'mimeType': 'image/svg+xml'
+        }
+      },
+      'publish': {
+        'from': '2019-12-12T13:47:37.520Z',
+        'first': '2019-12-12T13:47:37.520Z'
+      },
+      'workflow': {
+        'state': 'READY',
+        'checks': {}
+      }
+    }
+  }
+})
+
 test.mock('/lib/xp/content', {
   get: function() {
     return {
@@ -80,3 +131,4 @@ exports.testKeyFigureImageCaption1 = function() {
   const result = utils.getImageCaption( '201c4f2f-ff5e-4298-8a3f-b07d515795de' )
   test.assertEquals('ikon av mennesker og hus', result, 'Testing extraction of mocked image caption from json')
 }
+

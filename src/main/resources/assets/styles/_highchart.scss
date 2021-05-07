@@ -11,10 +11,14 @@
   top: 0px;
   right: 10px;
   background-color: transparent;
+  font-size: 14px;
   i {
     color: $ssb-green-4;
+    pointer-events: none;
   }
-  font-size: 14px;
+  span {
+    pointer-events: none;
+  }
 }
 .hc-container {
   .footnote {
@@ -37,7 +41,7 @@
   width: 100%;
 
   @include media-breakpoint-down(sm) {
-    min-height: unset;
+    min-height: 400px;
     height: auto;
     width: 100%;
   }
