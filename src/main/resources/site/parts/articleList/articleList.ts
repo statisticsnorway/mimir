@@ -52,7 +52,7 @@ function renderPart(req: Request): React4xpResponse {
     archiveLinkUrl: component.config.pubArchiveUrl ? component.config.pubArchiveUrl : '#'
   }
 
-  return React4xp.render('site/parts/articleList/articleList', props, req)
+  return React4xp.render(component, props, req)
 }
 
 function getArticles(language: string): Array<Content<Article>> {

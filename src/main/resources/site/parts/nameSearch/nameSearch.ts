@@ -41,7 +41,7 @@ function renderPart(req: Request): React4xpResponse {
     phrases: partsPhrases(locale)
   }
 
-  return React4xp.render('site/parts/nameSearch/nameSearch', props, req)
+  return React4xp.render(component, props, req)
 }
 
 

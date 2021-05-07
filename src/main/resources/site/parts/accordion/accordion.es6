@@ -35,7 +35,7 @@ exports.preview = (req, accordionIds) => {
 
 function renderPart(req, accordionIds) {
   const accordions = []
-
+  const component = getComponent()
   accordionIds.map((key) => {
     const accordion = content.get({
       key
@@ -72,5 +72,5 @@ function renderPart(req, accordionIds) {
     accordions
   }
 
-  return React4xp.render('site/parts/accordion/accordion', props, req)
+  return React4xp.render(component, props, req)
 }

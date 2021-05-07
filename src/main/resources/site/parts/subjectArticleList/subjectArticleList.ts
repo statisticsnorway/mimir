@@ -52,7 +52,7 @@ function renderPart(req: Request): React4xpResponse {
     language: language
   }
 
-  return React4xp.render('site/parts/subjectArticleList/subjectArticleList', props, req)
+  return React4xp.render('/site/parts/subjectArticleList/subjectArticleList', props, req)
 }
 
 interface PartProperties {

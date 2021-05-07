@@ -38,7 +38,7 @@ function renderPart(context: MacroContext): React4xpResponse {
     linkedContent: contentUrl
   }
 
-  return React4xp.render('site/macros/headerLink/headerLink', props)
+  return '/lib/ssb/dashboard/statreg/repoUtils'('/site/macros/headerLink/headerLink', props)
 }
 
 function prepareText(content: Content, linkText: string): string {

@@ -22,5 +22,5 @@ function renderPart(req, part) {
     mathsFormula: part.config.mathsFormula
   }
 
-  return React4xp.render('site/parts/maths/maths', props, req)
+  return React4xp.render('/site/parts/maths/maths', props, req)
 }

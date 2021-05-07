@@ -1,9 +1,10 @@
 import { Request } from 'enonic-types/controller'
+import { Component } from 'enonic-types/portal'
 
 export interface React4xp {
     new (entry: string): React4xpObject;
     render: (
-        entry: string,
+        entry: string | Component<any>,
         props?: object,
         request?: Request,
         options?: object
