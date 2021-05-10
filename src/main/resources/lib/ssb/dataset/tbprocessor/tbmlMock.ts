@@ -299,10 +299,13 @@ function getTbmlMock3(): HttpResponse {
           <note noteid="local:dictionary:note0">
             Korrigert for at ukedager har ulik arbeidsintensitet og for offentlige fri- og helligdager i Norge.
           </note>
+          <note noteid="local:dictionary:note333">
+            Denne fotnotes skal ikke vises frem i den endelige teksten. Jabberwocky.
+          </note>
           <note noteid="local:dictionary:note6">
             Vektgrunnlaget er tilverkingssverdi til faktorpris.</note>
           <note noteid="local:dictionary:note7">
-            Korrigert for at vekedagar har ulik arbeidsintensitet og for offentlege fri- og heilagdagar i Noreg.
+            Korrigert for at vekedagar har ulik arbeidsintensitet og for offentlege fri- og heilagdagar i Noreg. Ramenfredag.
           </note>
           <note noteid="local:dictionary:note8">
             Nivå for aggregering er knytt til standard for næringsgruppering (SN2007). Sjå NOS D383 for nærare om dette.
