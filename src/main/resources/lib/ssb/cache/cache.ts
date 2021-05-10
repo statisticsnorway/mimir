@@ -170,7 +170,7 @@ function addClearTask(): void {
           addClearTask()
         }
       } catch (error) {
-        cacheLog(`cacheError :: ${error.toString()}`)
+        cacheLog(`cacheError :: ${error.toString()} :: ${error.printStackTrace()}`)
         clearTaskId = undefined
         addClearTask()
       }
