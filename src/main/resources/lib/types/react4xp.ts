@@ -31,7 +31,6 @@ interface React4xpRenderBodyOptions {
 }
 
 interface React4xpPageContributionOptions {
-    pageContributions: React4xpPageContributionOptions;
+    pageContributions?: React4xpPageContributionOptions;
     clientRender: boolean;
 }
-

@@ -34,6 +34,7 @@ const renderPart = (req) => {
   const part = getComponent()
   const page = getContent()
   const phrases = getPhrases(page)
+  const isNotInEditMode = req.mode !== 'edit'
 
   const PublicationText = phrases.publicationLinkText
   const CalendarText = phrases.statCalendarText
@@ -55,9 +56,12 @@ const renderPart = (req) => {
 
     return {
       body: pubArchiveStatCalendarLinksComponent.renderBody({
-        body
+        body,
+        clientRender: isNotInEditMode
       }),
-      pageContributions: pubArchiveStatCalendarLinksComponent.renderPageContributions()
+      pageContributions: pubArchiveStatCalendarLinksComponent.renderPageContributions({
+        clientRender: isNotInEditMode
+      })
     }
   }
   return NO_LINKS_FOUND
