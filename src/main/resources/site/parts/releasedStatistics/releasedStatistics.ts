@@ -1,7 +1,7 @@
 import { Content } from 'enonic-types/content'
 
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { Request, Response } from 'enonic-types/controller'
+import { PageContributions, Request, Response } from 'enonic-types/controller'
 import { StatisticInListing, VariantInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
 import { groupBy } from 'ramda'
@@ -52,15 +52,16 @@ const groupStatisticsByDay: (statistics: Array<PreparedStatistics>) => GroupedBy
 
 exports.get = function(req: Request): Response {
   try {
-    return renderPart()
+    return renderPart(req)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-exports.preview = (): Response => renderPart()
+exports.preview = (req: Request): Response => renderPart(req)
 let currentLanguage: string = ''
-export function renderPart(): Response {
+export function renderPart(req: Request): Response {
+  const isNotInEditMode: boolean = req.mode !== 'edit'
   const content: Content = getContent()
   currentLanguage = content.language ? content.language : 'nb'
 
@@ -103,11 +104,14 @@ export function renderPart(): Response {
     .setId('nextStatisticsReleases')
     .uniqueId()
 
-  // get config with number of statistics to show and title
   return {
     body: reactComponent.renderBody({
-      body: `<div id="${reactComponent.react4xpId}"></div>`
-    })
+      body: `<div id="${reactComponent.react4xpId}"></div>`,
+      clientRender: isNotInEditMode
+    }),
+    pageContributions: reactComponent.renderPageContributions({
+      clientRender: isNotInEditMode
+    }) as PageContributions
   }
 }
 
