@@ -51,7 +51,7 @@ exports.preview = (req: Request): React4xpResponse => renderPart(req)
 export function renderPart(req: Request): React4xpResponse {
   const content: Content = getContent()
   const currentLanguage: string = content.language ? content.language : 'nb'
-
+  const isNotInEditMode: boolean = req.mode !== 'edit'
   const part: Component<ReleasedStatisticsPartConfig> = getComponent()
   const numberOfReleases: number = part.config.numberOfStatistics ? parseInt(part.config.numberOfStatistics) : 8
 
@@ -78,7 +78,7 @@ export function renderPart(req: Request): React4xpResponse {
     }),
     language: currentLanguage
   }
-  return React4xp.render('ReleasedStatistics', props, req)
+  return React4xp.render('ReleasedStatistics', props, req, {clientRender: isNotInEditMode})
 }
 
 function filterOnPreviousReleases(stats: Array<StatisticInListing>, numberOfReleases: number): Array<StatisticInListing> {
