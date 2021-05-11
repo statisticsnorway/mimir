@@ -35,8 +35,8 @@ let currentLanguage: string = ''
 function renderPart(req: Request): React4xpResponse {
   const content: Content = getContent()
   currentLanguage = content.language ? content.language : 'nb'
-
   const daysInTheFuture: number = 20
+  const isNotInEditMode: boolean = req.mode !== 'edit'
 
   // Get statistics
   const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
@@ -60,7 +60,9 @@ function renderPart(req: Request): React4xpResponse {
     language: currentLanguage
   }
 
-  return React4xp.render('site/parts/comingReleases/comingReleases', props, req)
+  return React4xp.render('site/parts/comingReleases/comingReleases', props, req, {
+    clientRender: isNotInEditMode
+  })
 }
 
 
@@ -69,7 +71,6 @@ function filterOnComingReleases(stats: Array<StatisticInListing>, daysInTheFutur
   for (let i: number = 0; i < daysInTheFuture; i++) {
     const day: Date = new Date()
     day.setDate(day.getDate() + i)
-    log.info('get releases for date: ' + day)
     const releasesOnThisDay: Array<StatisticInListing> = getReleasesForDay(stats, day, 'nextRelease')
     releases.push(...releasesOnThisDay)
   }
