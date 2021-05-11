@@ -105,7 +105,7 @@ function getTableViewData(table: Content<Table>, dataContent: TbmlDataUniform ):
   }, [])
 
   const noteRefs: Array<string> = title && title.noterefs ?
-    [title.noterefs, ...headNoteRefs, ...bodyNoteRefs] :
+    [...title.noterefs.split(' '), ...headNoteRefs, ...bodyNoteRefs] :
     [...headNoteRefs, ...bodyNoteRefs]
 
   const uniqueNoteRefs: Array<string> = noteRefs.filter((v, i, a) => a.indexOf(v) === i)
