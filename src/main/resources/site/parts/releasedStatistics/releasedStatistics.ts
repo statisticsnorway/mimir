@@ -78,7 +78,9 @@ export function renderPart(req: Request): React4xpResponse {
     }),
     language: currentLanguage
   }
-  return React4xp.render('ReleasedStatistics', props, req, {clientRender: isNotInEditMode})
+  return React4xp.render('ReleasedStatistics', props, req, {
+    clientRender: isNotInEditMode
+  })
 }
 
 function filterOnPreviousReleases(stats: Array<StatisticInListing>, numberOfReleases: number): Array<StatisticInListing> {
