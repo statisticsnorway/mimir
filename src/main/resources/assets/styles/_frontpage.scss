@@ -49,6 +49,7 @@
     padding: 20px 10px;
   }
   @include media-breakpoint-down(sm) {
+    padding: 40px 10px;
 
     .hide-mobile {
       display: none;
@@ -99,4 +100,9 @@
   .ssb-link.profiled.publication-link {
     font-size: 16px;
   }
+}
+
+.picture-card-links {
+  margin-top: 60px;
+  margin-bottom: 60px;
 }
