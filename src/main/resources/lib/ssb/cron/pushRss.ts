@@ -1,16 +1,15 @@
 import { HttpLibrary, HttpRequestParams, HttpResponse } from 'enonic-types/http'
 const http: HttpLibrary = __non_webpack_require__( '/lib/http-client')
 const {
-  encrypt
-} = __non_webpack_require__('/lib/cipher/cipher')
+  encryptRssNews
+} = __non_webpack_require__('/lib/cipher/cipherRss')
 
 export function pushRssNews(): string {
   const newsServiceUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] + '/_/service/mimir/news' :
     'https:www.utv.ssb.no/_/service/mimir/news'
-
   const rssNews: RssNews = getRssNews(newsServiceUrl)
   if (rssNews.body !== null) {
-    const encryptedBody: string = encrypt(rssNews.body)
+    const encryptedBody: string = encryptRssNews(rssNews.body)
     return postRssNews(encryptedBody)
   } else {
     return rssNews.message
@@ -47,16 +46,19 @@ function getRssNews(url: string): RssNews {
   return status
 }
 
-function postRssNews(body: string): string {
-  log.info('Starter posting')
-  const rssNewsUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] + '/rss' : 'https:www.utv.ssb.no/rss'
-  log.info('URL: ' + rssNewsUrl)
+function postRssNews(encryptedRss: string): string {
+  const rssNewsBaseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] + '/rss/populate/news' :
+    'https:www.utv.ssb.no/rss/populate/news'
+
+  // Måtte legge på body i param da den ikke funket ved å legge til i requestParams
+  const rssNewsUrl: string = rssNewsBaseUrl + '?body=' + encryptedRss.toString()
+
   const requestParams: HttpRequestParams = {
     url: rssNewsUrl,
-    method: 'POST',
-    body: body,
-    readTimeout: 40000
+    method: 'POST'
+    // body: encryptedRss, Funker ikke
   }
+
   try {
     const pushRssNewsResponse: HttpResponse = http.request(requestParams)
     if (pushRssNewsResponse.status === 200) {
