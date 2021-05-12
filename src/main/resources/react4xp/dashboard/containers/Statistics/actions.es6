@@ -34,17 +34,11 @@ export function setOpenStatistic(dispatch, io, statistic) {
     id: statistic ? statistic.id : null
   })
 
-  // from search dropdown, fetch both
-  if (statistic && statistic.relatedTables === undefined) {
+  // always fetch related tables and owners with sources every time the modal is opened, just in case it changed
+  if (statistic) {
     if (!statistic.loadingRelatedTablesAndOwnersWithSources) {
       fetchRelatedTablesAndOwnersWithSources(dispatch, io, statistic.id)
     }
-    return
-  }
-
-  // from statistics window, fetch only owners with sources
-  if (statistic && !statistic.loadingOwnersWithSources && !statistic.ownersWithSources) {
-    fetchOwnersWithSources(dispatch, io, statistic.id, statistic.relatedTables.map((t) => t.queryId))
   }
 }
 
