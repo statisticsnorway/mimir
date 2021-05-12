@@ -74,3 +74,14 @@
   margin-top: 60px;
   margin-bottom: -40px;
 }
+
+.border-columns {
+  border-top: 1px solid $ssb-dark-2;
+
+  [data-portal-region="left"] {
+    padding-right: 100px;
+  }
+  [data-portal-region="right"] {
+    padding-left: 100px;
+  }
+}
