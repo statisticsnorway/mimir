@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Link } from '@statisticsnorway/ssb-component-library'
+import { Link, Title } from '@statisticsnorway/ssb-component-library'
 
 class EntryLinks extends React.Component {
   renderIcon(icon) {
@@ -55,7 +55,7 @@ class EntryLinks extends React.Component {
       <div className="container mt-4 mb-5">
         <div className="row">
           <div className="col-12">
-            <h2>{headerTitle}</h2>
+            <Title size={2}>{headerTitle}</Title>
           </div>
           {this.renderEntryLinks()}
         </div>

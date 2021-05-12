@@ -35,7 +35,7 @@ class ComingReleases extends React.Component {
   render() {
     return (
       <section className='nextStatisticsReleases'>
-        <Title size={3}>{this.props.title}</Title>
+        <Title size={2}>{this.props.title}</Title>
         {
           this.props.releases.map((year) => {
             return year.releases.map((month) => {
