@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Container, Row, Col } from 'react-bootstrap'
-import { Input, Button, Dropdown, Divider, FormError, Link } from '@statisticsnorway/ssb-component-library'
+import { Input, Button, Dropdown, Divider, FormError, Link, Title } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
 import NumberFormat from 'react-number-format'
 
@@ -265,7 +265,7 @@ function KpiCalculator(props) {
       <Container className="calculator-result">
         <Row className="mb-5">
           <Col className="amount-equal align-self-end col-12 col-md-4">
-            <h4>{props.phrases.kpiAmountEqualled}</h4>
+            <Title size={3}>{props.phrases.kpiAmountEqualled}</Title>
           </Col>
           <Col className="end-value col-12 col-md-8">
             <span className="float-left float-md-right">
@@ -315,7 +315,7 @@ function KpiCalculator(props) {
       <Container className="calculator-result-frontpage">
         <Row className="mb-3">
           <Col className="amount-equal align-self-end col-12 col-lg-5">
-            <h4>{props.phrases.kpiAmountEqualled}</h4>
+            <Title size={3}>{props.phrases.kpiAmountEqualled}</Title>
           </Col>
           <Col className="end-value col-12 col-lg-7">
             <span className="float-lg-right">
@@ -421,7 +421,7 @@ function KpiCalculator(props) {
       <div className="calculator-form">
         <Row>
           <Col>
-            <h3>{props.phrases.calculatePriceChange}</h3>
+            <Title size={2}>{props.phrases.calculatePriceChange}</Title>
           </Col>
           {renderLinkArticle()}
         </Row>
@@ -434,7 +434,7 @@ function KpiCalculator(props) {
           <Container>
             <Row>
               <Col className="input-amount">
-                <h4>{props.phrases.enterAmount}</h4>
+                <Title size={3}>{props.phrases.enterAmount}</Title>
                 <Input
                   className="start-value"
                   handleChange={(value) => onChange('start-value', value)}
@@ -446,7 +446,7 @@ function KpiCalculator(props) {
             </Row>
             <Row>
               <Col className="calculate-from col-12 col-md-6">
-                <h4>{props.phrases.calculatePriceChangeFrom}</h4>
+                <Title size={3}>{props.phrases.calculatePriceChangeFrom}</Title>
                 <Container>
                   <Row>
                     <Col className="select-year align-self-end col-sm-5">
@@ -466,7 +466,7 @@ function KpiCalculator(props) {
                 </Container>
               </Col>
               <Col className="calculate-to col-12 col-md-6">
-                <h4>{props.phrases.calculatePriceChangeTo}</h4>
+                <Title size={3}>{props.phrases.calculatePriceChangeTo}</Title>
                 <Container>
                   <Row>
                     <Col className="select-year align-self-end col-sm-5">
@@ -502,7 +502,7 @@ function KpiCalculator(props) {
       <div className="calculator-form-frontpage">
         <Row>
           <Col>
-            <h3>{props.phrases.calculatePriceChange}</h3>
+            <Title size={2}>{props.phrases.calculatePriceChange}</Title>
           </Col>
         </Row>
         {renderIngressFrontpage()}
