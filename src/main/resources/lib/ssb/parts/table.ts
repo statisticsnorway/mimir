@@ -170,8 +170,13 @@ function getNoterefsHeader(row: TableCellUniform): Array<string> {
   const values: Array<number | string | PreliminaryData> = forceArray(row.th)
   const noteRefs: Array<string> = values.reduce((acc: Array<string>, cell: number | string | PreliminaryData) => {
     if (typeof cell === 'object') {
-      if (cell.noterefs && !acc.includes(cell.noterefs)) {
-        acc.push(cell.noterefs)
+      if (cell.noterefs) {
+        const noteRefs: Array<string> = cell.noterefs.split(' ')
+        noteRefs.forEach((noteRef) => {
+          if (!acc.includes(noteRef)) {
+            acc.push(noteRef)
+          }
+        })
       }
     }
     return acc
