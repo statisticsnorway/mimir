@@ -49,6 +49,11 @@ export interface DefaultPageConfig {
     showGreyBackground: boolean;
 
     /**
+     * Fullbredde topp og bunn ramme
+     */
+    showTopAndBottomBorder: boolean;
+
+    /**
      * Tittel
      */
     title?: string;
