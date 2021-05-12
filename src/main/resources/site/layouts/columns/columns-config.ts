@@ -10,6 +10,11 @@ export interface ColumnsConfig {
   size: "a" | "b" | "c";
 
   /**
+   * Vis vertikal kant
+   */
+  verticalBorder: boolean;
+
+  /**
    * Tittel
    */
   title?: string;
