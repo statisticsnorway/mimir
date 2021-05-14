@@ -9,7 +9,7 @@
   </div>
   <div class="row row-cols-1 row-cols-md-2">
     <div data-th-if="${!isGrid}" data-th-remove="tag">
-      <div data-portal-region="left" class="xp-region" data-th-classappend="${verticalBorder ? 'leftSize border-right' : 'leftSize'}">
+      <div data-portal-region="left" class="xp-region" data-th-classappend="${leftSize}">
         <div data-th-each="component : ${leftRegion}" data-th-remove="tag">
           <div data-portal-component="${component.path}" data-th-remove="tag" />
         </div>

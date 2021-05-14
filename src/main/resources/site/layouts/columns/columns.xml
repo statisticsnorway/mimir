@@ -16,10 +16,6 @@
       </config>
       <default>b</default>
     </input>
-    <input name="verticalBorder" type="CheckBox">
-      <label>Vis vertikal kant</label>
-      <help-text>Vis en grå vertikal kant mellom kolonnene</help-text>
-    </input>
   </form>
   <regions>
     <region name="left"/>
