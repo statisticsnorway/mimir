@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Divider, Input, Link } from '@statisticsnorway/ssb-component-library'
+import { Button, Divider, Input, Link, Title } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import { Col, Container, Row, Form } from 'react-bootstrap'
 import axios from 'axios'
@@ -151,7 +151,7 @@ function NameSearch(props) {
               props.aboutLink && props.aboutLink.url &&
               <Link className="float-right" href={props.aboutLink.url}>{props.aboutLink.title}</Link>
             }
-            <h3>{props.phrases.nameSearchTitle}</h3>
+            <Title size={2}>{props.phrases.nameSearchTitle}</Title>
           </Col>
         </Row>
         <Form onSubmit={handleSubmit}>

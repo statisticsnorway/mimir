@@ -286,15 +286,18 @@ class Table extends React.Component {
       return (
         <tfoot>
           {noteRefs.map((note, index) => {
-            const current = footnotes.find(
-              (footnote) => footnote.noteid === note)
-            return (
-              <tr key={index} className="footnote">
-                <td colSpan="100%">
-                  <sup>{index + 1}</sup>{current.content}
-                </td>
-              </tr>
-            )
+            const current = footnotes.find((footnote) => footnote.noteid === note)
+            if (current) {
+              return (
+                <tr key={index} className="footnote">
+                  <td colSpan="100%">
+                    <sup>{index + 1}</sup>{current.content}
+                  </td>
+                </tr>
+              )
+            } else {
+              return null
+            }
           })
           }
           {this.renderCorrectionNotice()}
