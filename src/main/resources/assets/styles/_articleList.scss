@@ -3,5 +3,9 @@
 }
 
 .article-list {
-    margin-top: 80px;
+    padding-top: 59px;
+
+    @include media-breakpoint-up(md) {
+        padding-top: 80px;
+    }
 }

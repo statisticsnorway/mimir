@@ -11,7 +11,7 @@ class ReleasedStatistics extends React.Component {
     return (
       <li key={index}>
         <Link href={`/${release.shortName}`} linkType='header'>{release.name}</Link>
-        <Paragraph>{release.variant.period}</Paragraph>
+        <Paragraph className="my-2">{release.variant.period}</Paragraph>
       </li>
     )
   }
@@ -35,7 +35,7 @@ class ReleasedStatistics extends React.Component {
   render() {
     return (
       <section className='nextStatisticsReleases'>
-        <Title size={2}>{this.props.title}</Title>
+        <Title size={2} className="mb-4">{this.props.title}</Title>
         {
           this.props.releases.map((year) => {
             return year.releases.reverse().map((month) => {
