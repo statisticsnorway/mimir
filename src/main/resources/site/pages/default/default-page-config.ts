@@ -49,7 +49,7 @@ export interface DefaultPageConfig {
     showGreyBackground: boolean;
 
     /**
-     * Topp ramme
+     * Toppramme
      */
     topBorder: boolean;
 

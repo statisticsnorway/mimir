@@ -78,19 +78,14 @@
 .border-columns {
   border-top: 1px solid $ssb-dark-2;
 
-  [data-portal-region="left"], [data-portal-region="right"] {
-    padding-top: 59px;
-  }
   @include media-breakpoint-up(md) {
     [data-portal-region="left"] {
       padding-right: 100px;
       border-right: 1px solid $ssb-dark-2;
-      padding-top: 80px;
     }
 
     [data-portal-region="right"] {
       padding-left: 100px;
-      padding-top: 80px;
     }
   }
 }
