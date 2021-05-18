@@ -19,7 +19,7 @@
         }
       }
     }
-  
+
     .keyfigure {
       background: $ssb-white;
       padding: 20px;
@@ -85,8 +85,6 @@
 
 .part-pubarchive-link {
   background: $ssb-white;
-  border-top: solid 1px $ssb-dark-2;
-  border-bottom: solid 1px $ssb-dark-2;
 
   @include media-breakpoint-down(md) {
     border: none;

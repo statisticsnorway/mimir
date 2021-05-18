@@ -66,7 +66,7 @@
       data-th-remove="tag"
     >
       <div data-th-if="${region.showGreyTriangle}" class="grey-triangle"></div>
-      <div data-th-classappend="${region.showGreyBackground ? 'region-grey' : (region.showTopAndBottomBorder ? 'border-columns' : '')}">
+      <div data-th-classappend="${region.showGreyBackground ? 'region-grey' : (region.topBorder ? 'border-columns' : '')}">
         <div
           data-th-classappend="${region.view == 'full' ? 'container-fluid p-0' : region.view == 'card' ? 'border-top-green container' : 'container'}"
         >

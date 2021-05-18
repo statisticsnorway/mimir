@@ -93,8 +93,8 @@
         <input name="showGreyBackground" type="CheckBox">
           <label>Grå bakgrunn på region</label>
         </input>
-        <input name="showTopAndBottomBorder" type="CheckBox">
-          <label>Fullbredde topp og bunn ramme</label>
+        <input name="topBorder" type="CheckBox">
+          <label>Toppramme</label>
         </input>
       </items>
     </item-set>
