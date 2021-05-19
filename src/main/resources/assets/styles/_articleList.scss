@@ -3,7 +3,11 @@
 }
 
 .article-list {
-    padding-top: 59px;
+  padding-top: 59px;
+    
+    h2 {
+      margin-bottom: 30px;
+    }
 
     @include media-breakpoint-up(md) {
         padding-top: 80px;
