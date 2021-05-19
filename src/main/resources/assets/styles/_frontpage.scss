@@ -99,6 +99,10 @@
     margin-top: 36px;
     margin-bottom: 36px;
 
+    @include media-breakpoint-down(sm) {
+     display: initial;
+    }
+
     .publication-link {
       padding-top: $spacer * .25;
     }

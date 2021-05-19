@@ -8,7 +8,7 @@ const PubArchiveStatCalendarLinks = (props) => {
     <React.Fragment>
       <div className="container">
         <div className="row justify-content-md-center justify-content-start">
-          <div className="col-12 col-md-6 links-wrapper">
+          <div className="col-12 col-lg-6 links-wrapper">
             {props.PublicationLink ? <Link
               href={props.PublicationLink}
               linkType="profiled"
