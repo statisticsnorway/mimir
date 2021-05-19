@@ -8,7 +8,13 @@
     h2 {
       margin-bottom: 30px;
     }
-
+    p {
+      margin-top: 16px;
+      margin-bottom: 5px;
+    }
+    time {
+      font-size: 14px;
+    }
     @include media-breakpoint-up(md) {
         padding-top: 80px;
     }
