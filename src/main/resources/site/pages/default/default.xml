@@ -93,6 +93,9 @@
         <input name="showGreyBackground" type="CheckBox">
           <label>Grå bakgrunn på region</label>
         </input>
+        <input name="topBorder" type="CheckBox">
+          <label>Toppramme</label>
+        </input>
       </items>
     </item-set>
   </form>

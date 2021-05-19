@@ -15,7 +15,7 @@ class ArticleList extends React.Component {
     } = this.props
     return (
       <section className="article-list container-fluid">
-        <Title size={2}>{this.props.title}</Title>
+        <Title size={2} className="mb-4">{this.props.title}</Title>
         {
           articles.map((article, i) => {
             return (

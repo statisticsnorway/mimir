@@ -1,5 +1,9 @@
 .nextStatisticsReleases {
-  margin-top: 80px;
+  padding-top: 8px;
+
+  @include media-breakpoint-up(md) {
+    padding-top: 80px;
+  }
 
   h3 {
     font-size: 28px;
@@ -13,6 +17,10 @@
 
     &:nth-child(2) ol{
       border-top: 1px solid $ssb-dark-5;
+    }
+
+    &:last-child .releaseList {
+      border-bottom: 0 none;
     }
   }
 

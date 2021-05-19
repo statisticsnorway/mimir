@@ -3,12 +3,13 @@
 }
 
 .article-list {
-  
-    h3 {
-      font-size: 28px;
+  padding-top: 59px;
+    
+    h2 {
       margin-bottom: 30px;
-      font-family: $font-roboto-condensed-bold;
-      font-weight: 700;
     }
-    margin-top: 80px;
+
+    @include media-breakpoint-up(md) {
+        padding-top: 80px;
+    }
 }
