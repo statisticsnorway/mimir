@@ -273,10 +273,11 @@ exports.get = function(req) {
     municipalPageType
   }
   const alerts = alertsForContext(page.type, alertOptions)
+  const body = bodyWithBreadCrumbs ? bodyWithBreadCrumbs : thymeleafRenderBody
   const bodyWithAlerts = alerts.length ?
-    addAlerts(alerts, bodyWithBreadCrumbs, pageContributions) :
+    addAlerts(alerts, body, pageContributions) :
     {
-      body: bodyWithBreadCrumbs ? bodyWithBreadCrumbs : thymeleafRenderBody,
+      body,
       pageContributions
     }
 
