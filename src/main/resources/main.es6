@@ -44,6 +44,10 @@ try {
         {
           feature: 'article-isbn',
           enabled: true
+        },
+        {
+          feature: 'articlelist-sorting',
+          enabled: false
         }
       ]
     }

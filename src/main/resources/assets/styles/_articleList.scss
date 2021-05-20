@@ -3,12 +3,28 @@
 }
 
 .article-list {
-    margin-top: 80px;
-  
-    h3 {
-      font-size: 28px;
+  padding-top: 59px;
+    
+    h2 {
       margin-bottom: 30px;
-      font-family: $font-roboto-condensed-bold;
-      font-weight: 700;
+    }
+    p {
+      margin-top: 16px;
+      margin-bottom: 5px;
+    }
+    time {
+      font-size: 14px;
+    }
+    @include media-breakpoint-down(md) {
+        padding-top: 80px;
+
+        & > .ssb-link.profiled {
+          font-size: 16px;
+
+          svg {
+            width: 18px;
+            height: 18px; 
+          }
+        }
     }
 }

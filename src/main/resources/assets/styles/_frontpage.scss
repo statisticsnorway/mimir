@@ -19,7 +19,7 @@
         }
       }
     }
-  
+
     .keyfigure {
       background: $ssb-white;
       padding: 20px;
@@ -49,6 +49,7 @@
     padding: 20px 10px;
   }
   @include media-breakpoint-down(sm) {
+    padding: 40px 10px;
 
     .hide-mobile {
       display: none;
@@ -85,18 +86,33 @@
 
 .part-pubarchive-link {
   background: $ssb-white;
-  border-top: solid 1px $ssb-dark-2;
-  border-bottom: solid 1px $ssb-dark-2;
 
   @include media-breakpoint-down(md) {
     border: none;
   }
 
   .links-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
     margin-top: 36px;
     margin-bottom: 36px;
+
+    @include media-breakpoint-down(sm) {
+     display: initial;
+    }
+
+    .publication-link {
+      padding-top: $spacer * .25;
+    }
   }
   .ssb-link.profiled.publication-link {
     font-size: 16px;
   }
+}
+
+.picture-card-links {
+  margin-top: 60px;
+  margin-bottom: 60px;
 }

@@ -123,7 +123,7 @@ export function setup(): void {
 const validRepos: Array<string> = [ENONIC_CMS_DEFAULT_REPO, DATASET_REPO]
 function addToChangeQueue(event: EnonicEvent<EnonicEventData>): void {
   cacheLog(`cacheEvent :: ${JSON.stringify(event, null, 2)}`)
-  const validNodes: EnonicEventData['nodes'] = event.data.nodes.filter((n) => validRepos.includes(n.repo))
+  const validNodes: EnonicEventData['nodes'] = event.data.nodes.filter((n) => validRepos.includes(n.repo) && !n.path.includes('/issues/'))
   if (validNodes.length > 0) {
     cacheLog(`cacheValidNodes :: ${JSON.stringify(validNodes, null, 2)}`)
     changeQueue = changeQueue.concat(validNodes)
@@ -170,7 +170,7 @@ function addClearTask(): void {
           addClearTask()
         }
       } catch (error) {
-        cacheLog(`cacheError :: ${error.toString()}`)
+        cacheLog(`cacheError :: ${error.toString()} :: ${error.printStackTrace()}`)
         clearTaskId = undefined
         addClearTask()
       }

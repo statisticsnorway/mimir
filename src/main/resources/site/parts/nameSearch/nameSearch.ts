@@ -30,6 +30,7 @@ exports.preview = (req: Request): React4xpResponse => renderPart(req)
 function renderPart(req: Request): React4xpResponse {
   const component: Component<NameSearchPartConfig> = getComponent()
   const locale: string = getLanguageShortName(getContent())
+  const isNotInEditMode: boolean = req.mode !== 'edit'
 
   const urlToService: string = serviceUrl({
     service: 'nameSearch'
@@ -41,7 +42,9 @@ function renderPart(req: Request): React4xpResponse {
     phrases: partsPhrases(locale)
   }
 
-  return React4xp.render('site/parts/nameSearch/nameSearch', props, req)
+  return React4xp.render('site/parts/nameSearch/nameSearch', props, req, {
+    clientRender: isNotInEditMode
+  })
 }
 
 

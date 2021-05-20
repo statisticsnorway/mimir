@@ -49,6 +49,11 @@ export interface DefaultPageConfig {
     showGreyBackground: boolean;
 
     /**
+     * Toppramme
+     */
+    topBorder: boolean;
+
+    /**
      * Tittel
      */
     title?: string;

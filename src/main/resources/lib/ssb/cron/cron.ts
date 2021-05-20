@@ -224,4 +224,5 @@ export function setupCronJobs(): void {
 export interface SSBCronLib {
     setupCronJobs: () => void;
     runOnMasterOnly: (task: () => void) => void;
+    cronContext: RunContext;
 }

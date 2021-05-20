@@ -15,14 +15,16 @@
         </div>
       </div>
       <div data-th-id="${dividerId}" data-th-if="${!#lists.isEmpty(rightRegion)}" class="d-md-none w-100 pt-5 pb-4 col-12 col-md-6"></div>
-      <div data-portal-region="right" class="xp-region mt-3 mt-md-0" data-th-classappend="${rightSize}">
+      <div data-portal-region="right" class="xp-region mt-3 mt-md-0" data-th-classappend="${rightSize}" >
         <div data-th-each="component : ${rightRegion}" data-th-remove="tag">
           <div data-portal-component="${component.path}" data-th-remove="tag" />
         </div>
       </div>
     </div>
     <div data-th-if="${isGrid}" data-th-remove="tag" data-th-each="component, i: ${gridComponents}">
-      <div data-th-id="${dividerId}" data-th-if="${component.regionSide == 'right' && component.order % 2 != 0}" class="d-md-none w-100 py-5 col-12 col-md-6 grid-divider"></div>
+      <div data-th-id="${dividerId}"
+           data-th-if="${component.regionSide == 'right' && component.order % 2 != 0}"
+           class="d-md-none w-100 py-5 col-12 col-md-6 grid-divider"></div>
       <div data-th-classappend="${component.classes}">
         <div data-portal-component="${component.path}" data-th-remove="tag" />
       </div>

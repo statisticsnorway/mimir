@@ -2,7 +2,7 @@ import React from 'react'
 import { Link, Paragraph, Title } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 
-class ReleasedStatistics extends React.Component {
+class ComingReleases extends React.Component {
   constructor(props) {
     super(props)
   }
@@ -11,7 +11,7 @@ class ReleasedStatistics extends React.Component {
     return (
       <li key={index}>
         <Link href={`/${release.shortName}`} linkType='header'>{release.name}</Link>
-        <Paragraph className="my-2">{release.variant.period}</Paragraph>
+        <Paragraph>{release.variant.period}</Paragraph>
       </li>
     )
   }
@@ -35,11 +35,11 @@ class ReleasedStatistics extends React.Component {
   render() {
     return (
       <section className='nextStatisticsReleases'>
-        <Title size={2} className="mb-4">{this.props.title}</Title>
+        <Title size={2}>{this.props.title}</Title>
         {
           this.props.releases.map((year) => {
-            return year.releases.reverse().map((month) => {
-              return month.releases.reverse().map((day, index) => this.renderDay(day, month, year, index))
+            return year.releases.map((month) => {
+              return month.releases.map((day, index) => this.renderDay(day, month, year, index))
             })
           })
         }
@@ -48,7 +48,7 @@ class ReleasedStatistics extends React.Component {
   }
 }
 
-ReleasedStatistics.propTypes = {
+ComingReleases.propTypes = {
   title: PropTypes.string,
   releases: PropTypes.arrayOf(PropTypes.shape({
     year: PropTypes.string,
@@ -83,4 +83,4 @@ ReleasedStatistics.propTypes = {
   }))
 }
 
-export default (props) => <ReleasedStatistics {...props}/>
+export default (props) => <ComingReleases {...props}/>

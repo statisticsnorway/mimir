@@ -8,13 +8,13 @@
     </input>
     <input name="size" type="RadioButton">
       <label>Kolonnestørrelse</label>
-      <occurrences minimum="1" maximum="1"/> 
+      <occurrences minimum="1" maximum="1"/>
       <config>
-        <option value="a">33/66</option> 
+        <option value="a">33/66</option>
         <option value="b">50/50</option>
         <option value="c">66/33</option>
       </config>
-      <default>b</default> 
+      <default>b</default>
     </input>
   </form>
   <regions>

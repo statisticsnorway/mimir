@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from '@statisticsnorway/ssb-component-library'
+import { Link, Title } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import { ArrowRight } from 'react-feather'
 import Truncate from 'react-truncate'
@@ -15,7 +15,7 @@ class ArticleList extends React.Component {
     } = this.props
     return (
       <section className="article-list container-fluid">
-        <h3>{this.props.title}</h3>
+        <Title size={2} className="mb-4">{this.props.title}</Title>
         {
           articles.map((article, i) => {
             return (
