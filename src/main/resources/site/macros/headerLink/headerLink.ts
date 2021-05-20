@@ -5,7 +5,7 @@ import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Content } from 'enonic-types/content'
 
 const {
-  attachmentUrl
+  attachmentUrl, pageUrl
 }: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
 
 const {
@@ -28,10 +28,16 @@ function renderPart(context: MacroContext): React4xpResponse {
     key: linkedContent
   })
 
-
-  const contentUrl: string = attachmentUrl({
-    id: linkedContent
-  })
+  let contentUrl: string
+  if (Object.keys(content.attachments).length > 0) {
+    contentUrl = attachmentUrl({
+      id: linkedContent
+    })
+  } else {
+    contentUrl = pageUrl({
+      id: linkedContent
+    })
+  }
 
   const props: HeaderLinkConfig = {
     linkText: prepareText(content, linkText),
@@ -44,20 +50,23 @@ function renderPart(context: MacroContext): React4xpResponse {
 function prepareText(content: Content, linkText: string): string {
   // This kludge has to happen because Enonic uses the name of the attachment as a key. Sorry.
   const attachmentName: string = Object.keys(content.attachments)[0]
-  const attachmentSize: number = content.attachments[attachmentName].size
+  const attachmentSize: number = content.attachments[attachmentName] && content.attachments[attachmentName].size
 
   let notation: string
   let finalText: string
 
-  if (attachmentSize > 1.049e+6) {
-    notation = 'MB'
-    finalText = (attachmentSize / 1.049e+6).toFixed(1)
-  } else {
-    notation = 'KB'
-    finalText = (attachmentSize / 1024 ).toFixed(1)
+  if (attachmentSize) {
+    if (attachmentSize > 1.049e+6) {
+      notation = 'MB'
+      finalText = (attachmentSize / 1.049e+6).toFixed(1)
+    } else {
+      notation = 'KB'
+      finalText = (attachmentSize / 1024 ).toFixed(1)
+    }
+    return `${linkText} (${finalText } ${notation})`
   }
 
-  return `${linkText} (${finalText } ${notation})`
+  return linkText
 }
 
 interface PartProperties {

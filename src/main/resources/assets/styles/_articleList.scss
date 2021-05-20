@@ -15,7 +15,16 @@
     time {
       font-size: 14px;
     }
-    @include media-breakpoint-up(md) {
+    @include media-breakpoint-down(md) {
         padding-top: 80px;
+
+        & > .ssb-link.profiled {
+          font-size: 16px;
+
+          svg {
+            width: 18px;
+            height: 18px; 
+          }
+        }
     }
 }
