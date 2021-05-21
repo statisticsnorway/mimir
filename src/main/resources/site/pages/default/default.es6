@@ -226,7 +226,7 @@ exports.get = function(req) {
     .setId('breadcrumbs')
     .uniqueId()
 
-  const hideBreadcrumb = page.page.config.hide_breadcrumb && page.page.config.hide_breadcrumb
+  const hideBreadcrumb = !!page.page.config.hide_breadcrumb
 
   const model = {
     pageTitle: 'SSB', // not really used on normal pages because of SEO app (404 still uses this)
