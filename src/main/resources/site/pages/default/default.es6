@@ -226,7 +226,7 @@ exports.get = function(req) {
     .setId('breadcrumbs')
     .uniqueId()
 
-  const hideBreadcrumb = page.page.config.hide_breadcrumb ? page.page.config.hide_breadcrumb : false
+  const hideBreadcrumb = !!page.page.config.hide_breadcrumb
 
   const model = {
     pageTitle: 'SSB', // not really used on normal pages because of SEO app (404 still uses this)
@@ -256,14 +256,15 @@ exports.get = function(req) {
 
   const thymeleafRenderBody = thymeleaf.render(view, model)
 
-  const bodyWithBreadCrumbs = breadcrumbComponent.renderBody({
+  const bodyWithBreadCrumbs = !hideBreadcrumb && breadcrumbComponent.renderBody({
     body: thymeleafRenderBody
   })
 
-  pageContributions = breadcrumbComponent.renderPageContributions({
-    pageContributions
-  })
-
+  if (!hideBreadcrumb) {
+    pageContributions = breadcrumbComponent.renderPageContributions({
+      pageContributions
+    })
+  }
 
   const alertOptions = page.type === `${app.name}:statistics` ? {
     statisticPageId: page._id
@@ -272,10 +273,11 @@ exports.get = function(req) {
     municipalPageType
   }
   const alerts = alertsForContext(page.type, alertOptions)
+  const body = bodyWithBreadCrumbs ? bodyWithBreadCrumbs : thymeleafRenderBody
   const bodyWithAlerts = alerts.length ?
-    addAlerts(alerts, bodyWithBreadCrumbs, pageContributions) :
+    addAlerts(alerts, body, pageContributions) :
     {
-      body: bodyWithBreadCrumbs,
+      body,
       pageContributions
     }
 
