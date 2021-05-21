@@ -13,7 +13,8 @@ exports.get = function(req) {
   const {
     size,
     title,
-    hideTitle
+    hideTitle,
+    verticalBorder
   } = component.config
   const isGrid = component.config.isGrid && req.mode !== 'edit'
 
@@ -84,7 +85,8 @@ exports.get = function(req) {
     leftSize,
     rightSize,
     isGrid,
-    gridComponents
+    gridComponents,
+    verticalBorder
   }
 
   const body = rightRegion.length == 0 ? render(view, model) : divider.renderBody({

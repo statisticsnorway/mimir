@@ -30,10 +30,10 @@
       </div>
     </div>
   </div>
-  
+
   <!-- Metainfo to make the page searchable -->
   <div id="metainfo-container" data-th-if="${addMetaInfoSearch}" data-th-include="mimir:/site/includes/metainfoSearch.html" data-th-remove="tag"></div>
-  
+
   <!-- MAIN -->
   <main class="xp-region"  id="content" data-th-if="${!isFragment}">
     <div class="container premain">
@@ -66,7 +66,7 @@
       data-th-remove="tag"
     >
       <div data-th-if="${region.showGreyTriangle}" class="grey-triangle"></div>
-      <div data-th-classappend="${region.showGreyBackground ? 'region-grey' : ''}">
+      <div data-th-classappend="${region.showGreyBackground ? 'region-grey' : (region.topBorder ? 'border-columns' : '')}">
         <div
           data-th-classappend="${region.view == 'full' ? 'container-fluid p-0' : region.view == 'card' ? 'border-top-green container' : 'container'}"
         >
