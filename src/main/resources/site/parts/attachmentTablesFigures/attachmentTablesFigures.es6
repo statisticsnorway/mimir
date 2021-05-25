@@ -4,9 +4,6 @@ const {
   }
 } = __non_webpack_require__( '/lib/util')
 const {
-  concat
-} = require('ramda')
-const {
   get
 } = __non_webpack_require__( '/lib/xp/content')
 const {
@@ -25,8 +22,6 @@ const {
   datasetOrUndefined
 } = __non_webpack_require__('/lib/ssb/cache/cache')
 
-
-const moment = require('moment/min/moment-with-locales')
 const tableController = __non_webpack_require__('../table/table')
 const highchartController = __non_webpack_require__('../highchart/highchart')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
@@ -45,7 +40,6 @@ exports.preview = (req) => renderPart(req)
 const renderPart = (req) => {
   const page = getContent()
 
-  moment.locale(page.language ? page.language : 'nb')
   const phrases = getPhrases(page)
 
   const title = phrases.attachmentTablesFigures
@@ -167,7 +161,7 @@ const getFinalPageContributions = (accordionPageContributions, attachmentTableAn
     }, [])
 
     return {
-      bodyEnd: concat(accordionPageContributions.bodyEnd, combinedTablesPageContributions)
+      bodyEnd: [].concat(accordionPageContributions.bodyEnd, combinedTablesPageContributions)
     }
   }
   return accordionPageContributions
