@@ -5,7 +5,6 @@ import { isEmpty } from 'ramda'
 import NumberFormat from 'react-number-format'
 import { Alert, Button } from 'react-bootstrap'
 import { ChevronLeft, ChevronRight } from 'react-feather'
-import { downloadTableFile } from '../../assets/js/app/tableExport'
 
 class Table extends Component {
   constructor(props) {
@@ -164,31 +163,35 @@ class Table extends Component {
   }
 
   downloadTableAsCSV() {
-    downloadTableFile(this.tableRef.current, {
-      type: 'csv',
-      fileName: 'tabell',
-      csvSeparator: ';',
-      csvEnclosure: '',
-      tfootSelector: ''
-    })
+    if (window && window.downloadTableFile) {
+      window.downloadTableFile(this.tableRef.current, {
+        type: 'csv',
+        fileName: 'tabell',
+        csvSeparator: ';',
+        csvEnclosure: '',
+        tfootSelector: ''
+      })
+    }
   }
 
   downloadTableAsExcel() {
-    downloadTableFile(this.tableRef.current, {
-      type: 'xlsx',
-      fileName: 'tabell',
-      numbers: {
-        html: {
-          decimalMark: ',',
-          thousandsSeparator: ' '
-        },
-        output:
+    if (window && window.downloadTableFile) {
+      window.downloadTableFile(this.tableRef.current, {
+        type: 'xlsx',
+        fileName: 'tabell',
+        numbers: {
+          html: {
+            decimalMark: ',',
+            thousandsSeparator: ' '
+          },
+          output:
           {
             decimalMark: '.',
             thousandsSeparator: ''
           }
-      }
-    })
+        }
+      })
+    }
   }
 
   createTable() {
