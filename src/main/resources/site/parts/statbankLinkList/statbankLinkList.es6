@@ -10,7 +10,7 @@ const {
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
-const React4xp = require('/lib/enonic/react4xp')
+const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const util = __non_webpack_require__('/lib/util')
 const view = resolve('./statbankLinkList.html')
 const STATBANKWEB_URL = app.config && app.config['ssb.statbankweb.baseUrl'] ? app.config['ssb.statbankweb.baseUrl'] : 'https://www.ssb.no/statbank'

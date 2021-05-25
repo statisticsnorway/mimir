@@ -27,7 +27,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/dataset/publish')
 const util = __non_webpack_require__('/lib/util')
 
-const React4xp = require('/lib/enonic/react4xp')
+const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const moment = require('moment/min/moment-with-locales')
 const view = resolve('./statistics.html')
 
