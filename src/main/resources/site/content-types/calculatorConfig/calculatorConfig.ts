@@ -13,4 +13,14 @@ export interface CalculatorConfig {
    * Kilde
    */
   pifSource?: string;
+
+  /**
+   * Kilde enebolig
+   */
+  bkibolSourceEnebolig?: string;
+
+  /**
+   * Kilde boligblokk
+   */
+  bkibolSourceBoligblokk?: string;
 }

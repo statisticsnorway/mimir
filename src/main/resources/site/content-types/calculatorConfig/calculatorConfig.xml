@@ -41,5 +41,28 @@
                 </input>
             </items>
         </field-set>
+        <field-set>
+            <label>
+                BKIBOL Kalkulator
+            </label>
+            <items>
+                <input name="bkibolSourceEnebolig" type="ContentSelector">
+                    <label>Kilde enebolig</label>
+                    <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <allowPath>${site}</allowPath>
+                        <allowContentType>genericDataImport</allowContentType>
+                    </config>
+                </input>
+                <input name="bkibolSourceBoligblokk" type="ContentSelector">
+                    <label>Kilde boligblokk</label>
+                    <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <allowPath>${site}</allowPath>
+                        <allowContentType>genericDataImport</allowContentType>
+                    </config>
+                </input>
+            </items>
+        </field-set>
     </form>
 </content-type>
