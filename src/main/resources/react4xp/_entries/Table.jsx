@@ -1,13 +1,12 @@
-import React from 'react'
+import React, { Component, createRef, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { Dropdown, Link } from '@statisticsnorway/ssb-component-library'
 import { isEmpty } from 'ramda'
 import NumberFormat from 'react-number-format'
 import { Alert, Button } from 'react-bootstrap'
 import { ChevronLeft, ChevronRight } from 'react-feather'
-import { downloadTableFile } from '../../assets/js/app/tableExport'
 
-class Table extends React.Component {
+class Table extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -17,11 +16,11 @@ class Table extends React.Component {
       table: this.props.paramShowDraft && this.props.draftExist ? this.props.tableDraft : this.props.table
     }
 
-    this.captionRef = React.createRef()
-    this.tableControlsDesktopRef = React.createRef()
-    this.tableControlsMobileRef = React.createRef()
-    this.tableRef = React.createRef()
-    this.tableWrapperRef = React.createRef()
+    this.captionRef = createRef()
+    this.tableControlsDesktopRef = createRef()
+    this.tableControlsMobileRef = createRef()
+    this.tableRef = createRef()
+    this.tableWrapperRef = createRef()
 
     this.widthCheckInterval = undefined
     this.toggleDraft = this.toggleDraft.bind(this)
@@ -164,31 +163,35 @@ class Table extends React.Component {
   }
 
   downloadTableAsCSV() {
-    downloadTableFile(this.tableRef.current, {
-      type: 'csv',
-      fileName: 'tabell',
-      csvSeparator: ';',
-      csvEnclosure: '',
-      tfootSelector: ''
-    })
+    if (window && window.downloadTableFile) {
+      window.downloadTableFile(this.tableRef.current, {
+        type: 'csv',
+        fileName: 'tabell',
+        csvSeparator: ';',
+        csvEnclosure: '',
+        tfootSelector: ''
+      })
+    }
   }
 
   downloadTableAsExcel() {
-    downloadTableFile(this.tableRef.current, {
-      type: 'xlsx',
-      fileName: 'tabell',
-      numbers: {
-        html: {
-          decimalMark: ',',
-          thousandsSeparator: ' '
-        },
-        output:
+    if (window && window.downloadTableFile) {
+      window.downloadTableFile(this.tableRef.current, {
+        type: 'xlsx',
+        fileName: 'tabell',
+        numbers: {
+          html: {
+            decimalMark: ',',
+            thousandsSeparator: ' '
+          },
+          output:
           {
             decimalMark: '.',
             thousandsSeparator: ''
           }
-      }
-    })
+        }
+      })
+    }
   }
 
   createTable() {
@@ -201,10 +204,10 @@ class Table extends React.Component {
         {this.addCaption()}
         {this.state.table.thead.map( (t, index) => {
           return (
-            <React.Fragment key={index}>
+            <Fragment key={index}>
               {this.addThead(index)}
               {this.addTbody(index)}
-            </React.Fragment>
+            </Fragment>
           )
         })}
         {this.addTFoot()}
@@ -286,7 +289,7 @@ class Table extends React.Component {
       return (
         <tfoot>
           {noteRefs.map((note, index) => {
-            const current = footnotes.find((footnote) => footnote.noteid === note)
+            const current = footnotes && footnotes.find((footnote) => footnote.noteid === note)
             if (current) {
               return (
                 <tr key={index} className="footnote">

@@ -2212,6 +2212,6 @@ export function init() {
   })(jQuery)
 }
 
-export function downloadTableFile(table, options) {
+window.downloadTableFile = (table, options) => {
   $(table).tableExport(options)
 }
