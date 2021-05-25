@@ -12,8 +12,8 @@ const {
 
 function get(req: HttpRequestParams): Response {
   const domene: string | undefined = req.params?.domene || 'ENEBOLIG'
-  const scope: string | undefined = req.params?.scope || 'ALL'
-  const serie: string | undefined = req.params?.serie || 'ALL'
+  const scope: string | undefined = req.params?.scope || 'IALT'
+  const serie: string | undefined = req.params?.serie || '04'
   const startValue: string | undefined = req.params?.startValue
   const startMonth: string | undefined = req.params?.startMonth || ''
   const startYear: string | undefined = req.params?.startYear
@@ -90,13 +90,13 @@ function getIndexes(domene: string,
   const start: string = startMonth !== '' ? startYear + 'M' + startMonth : startYear
   const end: string = endMonth !== '' ? endYear + 'M' + endMonth : endYear
 
-  const workTypeCode: string = domene === 'ENEBOLIG' ? getEneboligWorkType(scope, serie): getBoligblokkWorkType(scope, serie)
+  const workTypeCode: string = domene === 'ENEBOLIG' ? getEneboligWorkType(scope, serie) : getBoligblokkWorkType(scope, serie)
 
   const startIndex: null | number = domene === 'ENEBOLIG' ? getIndexTime(eneboligData, start, workTypeCode) :
     getIndexTime(boligblokkData, start, workTypeCode)
 
   const endIndex: null | number = domene === 'ENEBOLIG' ? getIndexTime(eneboligData, end, workTypeCode) :
-    getIndexTime(boligblokkData, start, workTypeCode)
+    getIndexTime(boligblokkData, end, workTypeCode)
 
   return {
     startIndex,
@@ -121,99 +121,79 @@ function getIndexTime(bkibolData: Dataset | null, time: string, workTypeCode: st
 }
 
 function getEneboligWorkType(scope: string, serie: string): string {
-  if (scope == 'IALT') {
-    if (serie == '') {
-      return '04'
-    }
-    if (serie == 'STEIN') {
-      return '06'
-    }
-    if (serie == 'GRUNNARBEID') {
-      return '08'
-    }
-    if (serie == 'BYGGEARBEIDER') {
-      return '10'
-    }
-    if (serie == 'TOMRING') {
-      return '12'
-    }
-    if (serie == 'MALING') {
-      return '14'
-    }
-    if (serie == 'RORLEGGERARBEID') {
-      return '16'
-    }
-    if (serie == 'ELEKTRIKERARBEID') {
-      return '18'
-    }
-  } else if (scope == 'MATERIALER') {
-    if (serie == '') {
+  switch (scope) {
+  case 'MATERIALER':
+    switch (serie) {
+    case 'STEIN':
+      return '07'
+    case 'GRUNNARBEID':
+      return '09'
+    case 'BYGGEARBEIDER':
+      return '11'
+    case 'TOMRING':
+      return '13'
+    case 'MALING':
+      return '15'
+    case 'RORLEGGERARBEID':
+      return '17'
+    case 'ELEKTRIKERARBEID':
+      return '19'
+    default:
       return '05'
     }
-    if (serie == 'STEIN') {
-      return '07'
-    }
-    if (serie == 'GRUNNARBEID') {
-      return '09'
-    }
-    if (serie == 'BYGGEARBEIDER') {
-      return '11'
-    }
-    if (serie == 'TOMRING') {
-      return '13'
-    }
-    if (serie == 'MALING') {
-      return '15'
-    }
-    if (serie == 'RORLEGGERARBEID') {
-      return '17'
-    }
-    if (serie == 'ELEKTRIKERARBEID') {
-      return '19'
+  default:
+    switch (serie) {
+    case 'STEIN':
+      return '06'
+    case 'GRUNNARBEID':
+      return '08'
+    case 'BYGGEARBEIDER':
+      return '10'
+    case 'TOMRING':
+      return '12'
+    case 'MALING':
+      return '14'
+    case 'RORLEGGERARBEID':
+      return '16'
+    case 'ELEKTRIKERARBEID':
+      return '18'
+    default:
+      return '04'
     }
   }
-  return ''
 }
 
 function getBoligblokkWorkType(scope: string, serie: string): string {
-  if (scope == 'IALT') {
-    if (serie == '') {
-      return '20'
-    }
-    if (serie == 'GRUNNARBEID') {
-      return '22'
-    }
-    if (serie == 'TOMRING') {
-      return '24'
-    }
-    if (serie == 'MALING') {
-      return '26'
-    }
-    if (serie == 'RORLEGGERARBEID') {
-      return '28'
-    }
-    if (serie == 'ELEKTRIKERARBEID') {
-      return '30'
-    }
-  } else if (scope == 'MATERIALER') {
-    if (serie == '') {
+  switch (scope) {
+  case 'MATERIALER':
+    switch (serie) {
+    case 'GRUNNARBEID':
+      return '23'
+    case 'TOMRING':
+      return '25'
+    case 'MALING':
+      return '27'
+    case 'RORLEGGERARBEID':
+      return '29'
+    case 'ELEKTRIKERARBEID':
+      return '31'
+    default:
       return '21'
     }
-    if (serie == 'GRUNNARBEID') {
-      return '23'
-    }
-    if (serie == 'TOMRING') {
-      return '25'
-    }
-    if (serie == 'MALING') {
-      return '27'
-    }
-    if (serie == 'RORLEGGERARBEID') {
-      return '29'
-    }
-    if (serie == 'ELEKTRIKERARBEID') {
-      return '31'
+  default:
+    switch (serie) {
+    case 'GRUNNARBEID':
+      return '22'
+    case 'TOMRING':
+      return '24'
+    case 'MALING':
+      return '26'
+    case 'RORLEGGERARBEID':
+      return '28'
+    case 'ELEKTRIKERARBEID':
+      return '30'
+    default:
+      return '20'
     }
   }
-  return ''
 }
