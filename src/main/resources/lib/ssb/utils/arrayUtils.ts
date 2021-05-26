@@ -1,7 +1,5 @@
 import { UtilLibrary } from '../../types/util'
 import { StatisticInListing } from '../dashboard/statreg/types'
-import { groupBy } from 'ramda'
-import { PreparedStatistics } from './variantUtils'
 const {
   data: {
     forceArray

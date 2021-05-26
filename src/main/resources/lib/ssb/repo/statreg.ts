@@ -7,10 +7,12 @@ import { RepoLib } from './repo'
 import { StatRegConfigLib } from '../dashboard/statreg/config'
 import { RepoQueryLib } from './query'
 import { StatisticInListing, StatRegBase } from '../dashboard/statreg/types'
-import { equals } from 'ramda'
 import { ArrayUtilsLib } from '../utils/arrayUtils'
 import { ServerLogLib } from '../utils/serverLog'
 
+const {
+  equals
+} = __non_webpack_require__('/lib/vendor/ramda')
 const {
   createNode,
   getNode,

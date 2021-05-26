@@ -16,10 +16,10 @@ const {
 const {
   getPhrases
 } = __non_webpack_require__( '/lib/ssb/utils/language')
+const {
+  find
+} = __non_webpack_require__('/lib/vendor/ramda')
 
-import { find } from 'ramda'
-
-const moment = require('moment/min/moment-with-locales')
 const view = resolve('./contact.html')
 
 exports.get = function(req) {
@@ -50,7 +50,6 @@ function renderPart(req) {
   const page = getContent()
   const part = getComponent()
 
-  moment.locale(page.language ? page.language : 'nb')
   const phrases = getPhrases(page)
 
   const statRegContacts = getContactsFromRepo()

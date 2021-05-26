@@ -6,6 +6,7 @@ import { ArticleListPartConfig } from './articleList-part-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
 import { DefaultPageConfig } from '../../pages/default/default-page-config'
+import { Moment } from '../../../lib/vendor/moment'
 
 const {
   localize
@@ -17,10 +18,9 @@ const {
   pageUrl, getContent, getComponent
 }: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-
-// eslint-disable-next-line @typescript-eslint/typedef
-const moment = require('moment/min/moment-with-locales')
-moment.locale('nb')
+const {
+  moment
+}: Moment = __non_webpack_require__('/lib/vendor/moment')
 
 exports.get = (req: Request): React4xpResponse => {
   return renderPart(req)
@@ -33,7 +33,7 @@ function renderPart(req: Request): React4xpResponse {
   const component: Component<ArticleListPartConfig> = getComponent()
   const language: string = content.language ? content.language : 'nb'
   const articles: Array<Content<Article>> = getArticles(language)
-  const preparedArticles: Array<PreparedArticles> = prepareArticles(articles)
+  const preparedArticles: Array<PreparedArticles> = prepareArticles(articles, language)
   const isNotInEditMode: boolean = req.mode !== 'edit'
 
   //  Must be set to nb instead of no for localization
@@ -75,7 +75,7 @@ function getArticles(language: string): Array<Content<Article>> {
   return articles
 }
 
-function prepareArticles(articles: Array<Content<Article>>): Array<PreparedArticles> {
+function prepareArticles(articles: Array<Content<Article>>, language: string): Array<PreparedArticles> {
   return articles.map( (article: Content<Article>) => {
     return {
       title: article.displayName,
@@ -84,7 +84,7 @@ function prepareArticles(articles: Array<Content<Article>>): Array<PreparedArtic
         id: article._id
       }),
       publishDate: article.publish && article.publish.from ? article.publish.from : '',
-      publishDateHuman: article.publish && article.publish.from ? moment(article.publish.from).format('Do MMMM YYYY') : ''
+      publishDateHuman: article.publish && article.publish.from ? moment(article.publish.from).locale(language).format('Do MMMM YYYY') : ''
     }
   })
 }

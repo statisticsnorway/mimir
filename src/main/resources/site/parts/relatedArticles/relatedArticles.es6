@@ -4,7 +4,7 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const React4xp = require('/lib/enonic/react4xp')
+const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getContent,
   pageUrl,
@@ -33,7 +33,9 @@ const {
 const {
   hasRole
 } = __non_webpack_require__('/lib/xp/auth')
-const moment = require('moment/min/moment-with-locales')
+const {
+  moment
+} = __non_webpack_require__('/lib/vendor/moment')
 const contentLib = __non_webpack_require__('/lib/xp/content')
 
 const view = resolve('./relatedArticles.html')
@@ -58,7 +60,6 @@ function renderPart(req, relatedArticles) {
   const page = getContent()
   const phrases = getPhrases(page)
   const showPreview = req.params.showDraft && hasRole('system.admin') && req.mode === 'preview'
-
   if (page.type === `${app.name}:statistics`) {
     addDsArticle(page, relatedArticles, showPreview)
   }
@@ -75,8 +76,6 @@ function renderPart(req, relatedArticles) {
       body: null
     }
   }
-
-  moment.locale(page.language ? page.language : 'nb')
 
   relatedArticles = relatedArticles.map((article) => {
     if (article._selected === 'article') {
@@ -112,7 +111,7 @@ function renderPart(req, relatedArticles) {
 
         return {
           title: articleContent.displayName,
-          subTitle: getSubTitle(articleContent, phrases),
+          subTitle: getSubTitle(articleContent, phrases, page.language),
           preface: articleContent.data.ingress,
           href: pageUrl({
             id: articleContent._id
@@ -132,7 +131,7 @@ function renderPart(req, relatedArticles) {
         subTitle = article.externalArticle.type
       }
       if (article.externalArticle.date) {
-        const prettyDate = moment(article.externalArticle.date).format('D. MMMM YYYY')
+        const prettyDate = moment(article.externalArticle.date).locale(page.language ? page.language : 'nb').format('D. MMMM YYYY')
         subTitle += `${subTitle ? ' / ' : ''}${prettyDate}`
       }
 
@@ -171,16 +170,16 @@ function renderPart(req, relatedArticles) {
 }
 
 
-const getSubTitle = (articleContent, phrases) => {
+const getSubTitle = (articleContent, phrases, language = 'nb') => {
   let type = ''
   if (articleContent.type === `${app.name}:article`) {
     type = phrases.articleName
   }
   let prettyDate = ''
   if (articleContent.publish && articleContent.publish.from) {
-    prettyDate = moment(articleContent.publish.from).format('D. MMMM YYYY')
+    prettyDate = moment(articleContent.publish.from).locale(language).format('D. MMMM YYYY')
   } else {
-    prettyDate = moment(articleContent.createdTime).format('D. MMMM YYYY')
+    prettyDate = moment(articleContent.createdTime).locale(language).format('D. MMMM YYYY')
   }
   return `${type ? `${type} / ` : ''}${prettyDate}`
 }

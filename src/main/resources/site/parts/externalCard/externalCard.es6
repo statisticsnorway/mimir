@@ -8,7 +8,7 @@ const {
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
-const React4xp = require('/lib/enonic/react4xp')
+const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   data
 } = __non_webpack_require__( '/lib/util')

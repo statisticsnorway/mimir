@@ -33,7 +33,6 @@ const {
   hasWritePermissionsAndPreview
 } = __non_webpack_require__('/lib/ssb/parts/permissions')
 
-const moment = require('moment/min/moment-with-locales')
 const view = resolve('./table.html')
 
 exports.get = function(req) {
@@ -46,27 +45,13 @@ exports.get = function(req) {
 }
 
 exports.preview = (req, id) => {
-  return renderPart(req, [id])
+  return renderPart(req, id)
 }
 
-function renderPart(req, tableId) {
+function getProps(req, tableId) {
   const page = getContent()
   const language = getLanguage(page)
   const phrases = language.phrases
-
-  if (!tableId) {
-    if (req.mode === 'edit' && page.type !== `${app.name}:statistics`) {
-      return {
-        body: render(view, {
-          label: phrases.table
-        })
-      }
-    } else {
-      return {
-        body: null
-      }
-    }
-  }
 
   const tableContent = get({
     key: tableId
@@ -80,8 +65,6 @@ function renderPart(req, tableId) {
   }
   const draftExist = tableDraft && tableDraft.thead.length > 0
   const pageTypeStatistic = page.type === `${app.name}:statistics`
-
-  moment.locale(tableContent.language ? tableContent.language : 'nb')
 
   // sources
   const sourceConfig = tableContent.data.sources ? forceArray(tableContent.data.sources) : []
@@ -100,7 +83,7 @@ function renderPart(req, tableId) {
   const uniqueTableIds = sourceListExternal.length > 0 ? sourceListExternal.map((item) => item.tableId.toString())
     .filter((value, index, self) => self.indexOf(value) === index) : []
 
-  const props = {
+  return {
     downloadTableLabel: phrases.tableDownloadAs,
     downloadTableTitle: {
       title: phrases.tableDownloadAs
@@ -133,25 +116,38 @@ function renderPart(req, tableId) {
     pageTypeStatistic,
     sourceListTables: uniqueTableIds,
     sourceTableLabel,
-    statBankWebUrl
+    statBankWebUrl,
+    hiddenTitle: table.caption.content
+  }
+}
+exports.getProps = getProps
+
+function renderPart(req, tableId) {
+  const page = getContent()
+  const language = getLanguage(page)
+  const phrases = language.phrases
+
+  if (!tableId) {
+    if (req.mode === 'edit' && page.type !== `${app.name}:statistics`) {
+      return {
+        body: render(view, {
+          label: phrases.table
+        })
+      }
+    } else {
+      return {
+        body: null
+      }
+    }
   }
 
   const tableReact = new React4xp('Table')
-    .setProps(props)
+    .setProps(getProps(req, tableId))
     .setId('table')
     .uniqueId()
 
-
-  const hiddenTitle = table.caption.content
-
-  const body = render(view, {
-    tableId: tableReact.react4xpId,
-    hiddenTitle: hiddenTitle
-  })
-
   return {
     body: tableReact.renderBody({
-      body,
       clientRender: req.mode !== 'edit'
     }),
     pageContributions: tableReact.renderPageContributions({

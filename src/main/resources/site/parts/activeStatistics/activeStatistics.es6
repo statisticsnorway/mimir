@@ -1,4 +1,3 @@
-import { hasPath } from 'ramda'
 const {
   data: {
     forceArray
@@ -21,8 +20,10 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
+const {
+  hasPath
+} = __non_webpack_require__('/lib/vendor/ramda')
 
-const moment = require('moment/min/moment-with-locales')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view = resolve('./activeStatistics.html')
 
@@ -40,8 +41,6 @@ const renderPart = (req) => {
   const page = getContent()
   const part = getComponent()
   const activeStatistics = part.config.relatedStatisticsOptions
-
-  moment.locale(page.language ? page.language : 'nb')
   const phrases = getPhrases(page)
 
   const statisticsTitle = phrases.menuStatistics

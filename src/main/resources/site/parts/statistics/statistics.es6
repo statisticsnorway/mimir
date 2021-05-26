@@ -27,8 +27,10 @@ const {
 } = __non_webpack_require__('/lib/ssb/dataset/publish')
 const util = __non_webpack_require__('/lib/util')
 
-const React4xp = require('/lib/enonic/react4xp')
-const moment = require('moment/min/moment-with-locales')
+const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+const {
+  moment
+} = __non_webpack_require__('/lib/vendor/moment')
 const view = resolve('./statistics.html')
 
 exports.get = (req) => {
@@ -44,7 +46,6 @@ exports.preview = (req) => renderPart(req)
 const renderPart = (req) => {
   const page = getContent()
   const phrases = getPhrases(page)
-  moment.locale(page.language ? page.language : 'nb')
   const statistic = page.data.statistic && getStatisticByIdFromRepo(page.data.statistic)
   const wait = app.config && app.config['ssb.statistics.publishWait'] ? parseInt(app.config['ssb.statistics.publishWait']) : 100
   const maxWait = app.config && app.config['ssb.statistics.publishMaxWait'] ? parseInt(app.config['ssb.statistics.publishMaxWait']) : 10000
@@ -77,6 +78,7 @@ const renderPart = (req) => {
     }
   })
   const draftButtonText = paramShowDraft ? 'Vis publiserte tall' : 'Vis upubliserte tall'
+  const language = page.language ? page.language : 'nb'
 
   if (statistic) {
     title = page.language === 'en' && statistic.nameEN && statistic.nameEN !== null ? statistic.nameEN : statistic.name
@@ -86,15 +88,15 @@ const renderPart = (req) => {
     previousReleaseDate = releaseDates.previousRelease[0]
 
     if (releaseDates.nextRelease.length > 1 && releaseDates.nextRelease[1] !== '') {
-      previewNextRelease = moment(releaseDates.nextRelease[1]).format('D. MMMM YYYY')
+      previewNextRelease = moment(releaseDates.nextRelease[1]).locale(language).format('D. MMMM YYYY')
     }
 
     if (previousReleaseDate && previousReleaseDate !== '') {
-      previousRelease = moment(previousReleaseDate).format('D. MMMM YYYY')
+      previousRelease = moment(previousReleaseDate).locale(language).format('D. MMMM YYYY')
     }
 
     if (nextReleaseDate && nextReleaseDate !== '') {
-      nextRelease = moment(nextReleaseDate).format('D. MMMM YYYY')
+      nextRelease = moment(nextReleaseDate).locale(language).format('D. MMMM YYYY')
     }
   }
 
@@ -104,7 +106,7 @@ const renderPart = (req) => {
 
   if (page.data.showModifiedDate && previousReleaseDate) {
     if (moment(modifiedDate).isAfter(previousReleaseDate)) {
-      changeDate = moment(modifiedDate).format('D. MMMM YYYY, HH:mm')
+      changeDate = moment(modifiedDate).locale(language).format('D. MMMM YYYY, HH:mm')
     }
   }
 
