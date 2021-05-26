@@ -1,6 +1,6 @@
 const {
   mergeDeepRight
-} = require('ramda')
+} = __non_webpack_require__('/lib/vendor/ramda')
 const {
   X_AXIS_TITLE_POSITION,
   createDefaultConfig

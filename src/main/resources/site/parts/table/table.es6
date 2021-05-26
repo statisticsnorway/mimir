@@ -33,7 +33,6 @@ const {
   hasWritePermissionsAndPreview
 } = __non_webpack_require__('/lib/ssb/parts/permissions')
 
-const moment = require('moment/min/moment-with-locales')
 const view = resolve('./table.html')
 
 exports.get = function(req) {
@@ -80,8 +79,6 @@ function renderPart(req, tableId) {
   }
   const draftExist = tableDraft && tableDraft.thead.length > 0
   const pageTypeStatistic = page.type === `${app.name}:statistics`
-
-  moment.locale(tableContent.language ? tableContent.language : 'nb')
 
   // sources
   const sourceConfig = tableContent.data.sources ? forceArray(tableContent.data.sources) : []
