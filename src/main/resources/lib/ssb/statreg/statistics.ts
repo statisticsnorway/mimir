@@ -190,7 +190,9 @@ export function getReleaseDatesByVariants(variants: Array<VariantInListing>): Re
   variants.forEach((variant) => {
     const upcomingReleases: Array<ReleasesInListing> = variant.upcomingReleases ? ensureArray(variant.upcomingReleases) : []
     upcomingReleases.map((release) => nextReleases.push(release.publishTime))
-    previousReleases.push(variant.previousRelease)
+    if (variant.previousRelease !== '') {
+      previousReleases.push(variant.previousRelease)
+    }
     // TODO:Remove next line when upcomingReleases exist in all enviroments
     if (upcomingReleases.length === 0 && variant.nextRelease !== '') nextReleases.push(variant.nextRelease)
   })
