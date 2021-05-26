@@ -589,7 +589,7 @@ KpiCalculator.propTypes = {
       title: PropTypes.string
     })
   ),
-  phrases: PropTypes.arrayOf(PropTypes.string),
+  phrases: PropTypes.object,
   calculatorArticleUrl: PropTypes.string,
   nextPublishText: PropTypes.string,
   lastUpdated: PropTypes.shape({
