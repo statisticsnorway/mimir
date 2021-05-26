@@ -64,13 +64,15 @@ const renderPart = (req) => {
   const accordionComponent = new React4xp('AttachmentTablesFigures')
     .setProps({
       accordions: attachmentTableAndFigureView.map(({
-        id, open, subHeader, body
+        id, open, subHeader, body, contentType, props
       }) => {
         return {
           id,
+          contentType,
           open,
           subHeader,
-          body
+          body,
+          props
         }
       }),
       freeText: page.data.freeTextAttachmentTablesFigures,
@@ -113,7 +115,7 @@ const getTablesAndFigures = (attachmentTablesAndFigures, req, phrases) => {
         })
         if (content && content.type === `${app.name}:table`) {
           ++tableIndex
-          return getTableReturnObject(content, tableController.preview(req, id), `${phrases.table} ${tableIndex}`, index)
+          return getTableReturnObject(content, tableController.getProps(req, id), `${phrases.table} ${tableIndex}`, index)
         } else if (content && content.type === `${app.name}:highchart`) {
           ++figureIndex
           return getFigureReturnObject(content, highchartController.preview(req, id), `${phrases.figure} ${figureIndex}`, index)
@@ -122,15 +124,15 @@ const getTablesAndFigures = (attachmentTablesAndFigures, req, phrases) => {
 }
 
 
-function getTableReturnObject(content, preview, subHeader, index) {
+function getTableReturnObject(content, props, subHeader, index) {
   const datasetFromRepo = datasetOrUndefined(content)
   const title = datasetFromRepo && datasetFromRepo.data.tbml.metadata ? datasetFromRepo.data.tbml.metadata.title : content.displayName
   return {
     id: `attachment-table-figure-${index + 1}`,
+    contentType: content.type,
     open: typeof(title) === 'string' ? title : title.content,
     subHeader,
-    body: preview.body,
-    pageContributions: preview.pageContributions
+    props
   }
 }
 
@@ -139,6 +141,7 @@ function getFigureReturnObject(content, preview, subHeader, index) {
   const title = datasetFromRepo && datasetFromRepo.data.tbml.metadata ? datasetFromRepo.data.tbml.metadata.title : content.displayName
   return {
     id: `attachment-table-figure-${index + 1}`,
+    contentType: content.type,
     open: typeof(title) === 'string' ? title : title.content,
     subHeader,
     body: preview.body,
@@ -147,21 +150,16 @@ function getFigureReturnObject(content, preview, subHeader, index) {
 }
 
 const getFinalPageContributions = (accordionPageContributions, attachmentTableAndFigure) => {
-  const tablesPageContributions = attachmentTableAndFigure.length > 0 ? attachmentTableAndFigure.map(({
-    pageContributions
-  }) => {
-    return {
-      pageContributions
+  const pageContributions = attachmentTableAndFigure.reduce((acc, attachment) => {
+    if (attachment.pageContributions && attachment.pageContributions.bodyEnd) {
+      acc = acc.concat(attachment.pageContributions.bodyEnd)
     }
-  }) : []
+    return acc
+  }, [])
 
-  if (tablesPageContributions.length > 0) {
-    const combinedTablesPageContributions = tablesPageContributions.reduce((acc, nextItem) => {
-      return acc.concat(acc, nextItem.pageContributions.bodyEnd)
-    }, [])
-
+  if (pageContributions.length > 0) {
     return {
-      bodyEnd: [].concat(accordionPageContributions.bodyEnd, combinedTablesPageContributions)
+      bodyEnd: [].concat(accordionPageContributions.bodyEnd, pageContributions)
     }
   }
   return accordionPageContributions
