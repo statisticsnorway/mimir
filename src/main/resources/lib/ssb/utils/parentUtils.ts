@@ -56,9 +56,8 @@ export function parentPath(path: string): string {
 
 export function getMainSubject(shortName: string, language: string): string {
   const statisticFromRepo: StatisticInListing | undefined = getStatisticByShortNameFromRepo(shortName)
-
   const statisticResult: QueryResponse<Statistics> = statisticFromRepo && query({
-    query: `data.statistic = '${statisticFromRepo.id}' AND language IN (${language === 'no' ? 'no, nn' : 'en'})`,
+    query: `data.statistic = '${statisticFromRepo.id}' AND language IN (${language === 'nb' ? '"nb", "nn"' : '"en"'})`,
     contentTypes: [`${app.name}:statistics`],
     count: 1
   })
