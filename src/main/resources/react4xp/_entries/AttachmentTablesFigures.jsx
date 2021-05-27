@@ -3,6 +3,7 @@ import { Accordion, Button } from '@statisticsnorway/ssb-component-library'
 import { ChevronDown, ChevronUp } from 'react-feather'
 
 import PropTypes from 'prop-types'
+import Table from './Table'
 
 class AttachmentTableFigures extends React.Component {
   constructor(props) {
@@ -89,6 +90,14 @@ class AttachmentTableFigures extends React.Component {
     return 'mt-5'
   }
 
+  renderAccordionBody(accordion) {
+    if (accordion.contentType === 'mimir:table') {
+      return (<Table {...accordion.props}/>)
+    } else {
+      return (<div dangerouslySetInnerHTML={this.createMarkup(accordion.body)}></div>)
+    }
+  }
+
   render() {
     const location = window.location
     const anchor = location && location.hash !== '' ? location.hash.substr(1) : undefined
@@ -111,7 +120,7 @@ class AttachmentTableFigures extends React.Component {
                   subHeader={accordion.subHeader}
                   openByDefault={anchor && accordion.id && accordion.id === anchor}
                 >
-                  <div dangerouslySetInnerHTML={this.createMarkup(accordion.body)}></div>
+                  {this.renderAccordionBody(accordion)}
                 </Accordion>
               </React.Fragment>
             )}
@@ -129,9 +138,11 @@ AttachmentTableFigures.propTypes = {
   accordions: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string,
+      contentType: PropTypes.string,
       open: PropTypes.string.isRequired,
       subHeader: PropTypes.string,
-      body: PropTypes.string.isRequired
+      body: PropTypes.string,
+      props: PropTypes.object
     })
   ),
   freeText: PropTypes.string,

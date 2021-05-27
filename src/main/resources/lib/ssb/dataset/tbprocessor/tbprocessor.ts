@@ -5,8 +5,10 @@ import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
 import { RepoQueryLib } from '../../repo/query'
 import { TbmlDataUniform, TbmlSourceListUniform } from '../../../types/xmlParser'
 import { TbmlLib, TbprocessorParsedResponse } from './tbml'
-import { mergeDeepLeft } from 'ramda'
 
+const {
+  mergeDeepLeft
+} = __non_webpack_require__('/lib/vendor/ramda')
 const {
   getDataset
 }: RepoDatasetLib = __non_webpack_require__('/lib/ssb/repo/dataset')

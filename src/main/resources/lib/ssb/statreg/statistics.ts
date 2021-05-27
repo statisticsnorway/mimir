@@ -7,8 +7,11 @@ import { StatRegCommonLib } from '../dashboard/statreg/common'
 import { RepoCommonLib } from '../repo/common'
 import { RepoQueryLib } from '../repo/query'
 import { HttpResponse } from 'enonic-types/http'
-import moment = require('moment')
+import { Moment } from '../../vendor/moment'
 
+const {
+  moment
+}: Moment = __non_webpack_require__('/lib/vendor/moment')
 const {
   ensureArray
 }: ArrayUtilsLib = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
@@ -190,7 +193,9 @@ export function getReleaseDatesByVariants(variants: Array<VariantInListing>): Re
   variants.forEach((variant) => {
     const upcomingReleases: Array<ReleasesInListing> = variant.upcomingReleases ? ensureArray(variant.upcomingReleases) : []
     upcomingReleases.map((release) => nextReleases.push(release.publishTime))
-    previousReleases.push(variant.previousRelease)
+    if (variant.previousRelease !== '') {
+      previousReleases.push(variant.previousRelease)
+    }
     // TODO:Remove next line when upcomingReleases exist in all enviroments
     if (upcomingReleases.length === 0 && variant.nextRelease !== '') nextReleases.push(variant.nextRelease)
   })

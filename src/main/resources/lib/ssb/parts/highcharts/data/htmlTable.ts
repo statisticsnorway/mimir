@@ -3,7 +3,10 @@ import { UtilLibrary } from '../../../../types/util'
 import { XmlParser, PreliminaryData, TableRowUniform, TableCellUniform } from '../../../../types/xmlParser'
 import { Content } from 'enonic-types/content'
 import { Highchart } from '../../../../../site/content-types/highchart/highchart'
-import { toString } from 'ramda'
+
+const {
+  toString
+} = __non_webpack_require__('/lib/vendor/ramda')
 const util: UtilLibrary = __non_webpack_require__('/lib/util')
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 const {

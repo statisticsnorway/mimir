@@ -15,7 +15,9 @@ const {
 } = __non_webpack_require__('/lib/featureToggle')
 
 const languageLib = __non_webpack_require__( '/lib/ssb/utils/language')
-const moment = require('moment/min/moment-with-locales')
+const {
+  moment
+} = __non_webpack_require__('/lib/vendor/moment')
 const view = resolve('./article.html')
 
 exports.get = (req) => {
@@ -28,19 +30,19 @@ exports.get = (req) => {
 
 function renderPart(req) {
   const page = getContent()
-  moment.locale(page.language ? page.language : 'nb')
+  const locale = page.language ? page.language : 'nb'
 
   const bodyText = processHtml({
     value: page.data.articleText ? page.data.articleText.replace(/&nbsp;/g, ' ') : undefined
   })
 
-  const pubDate = moment(page.publish.from).format('D. MMMM YYYY')
+  const pubDate = moment(page.publish.from).locale(locale).format('D. MMMM YYYY')
   const showModifiedDate = page.data.showModifiedDate
   let modifiedDate
   if (showModifiedDate) {
-    modifiedDate = moment(showModifiedDate.dateOption.modifiedDate).format('D. MMMM YYYY')
+    modifiedDate = moment(showModifiedDate.dateOption.modifiedDate).locale(locale).format('D. MMMM YYYY')
     if (showModifiedDate.dateOption.showModifiedTime) {
-      modifiedDate = moment(page.data.showModifiedDate.dateOption.modifiedDate).format('D. MMMM YYYY hh:mm')
+      modifiedDate = moment(page.data.showModifiedDate.dateOption.modifiedDate).locale(locale).format('D. MMMM YYYY hh:mm')
     }
   }
 

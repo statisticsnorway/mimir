@@ -12,10 +12,8 @@ const {
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
-const moment = require('moment/min/moment-with-locales')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-moment.locale('nb')
 const view = resolve('./profiledBox.html')
 
 exports.get = function(req) {
@@ -29,6 +27,7 @@ exports.get = function(req) {
 exports.preview = (req) => renderPart(req)
 
 function renderPart(request) {
+  const page = getContent()
   const part = getComponent()
   const urlContentSelector = part.config.urlContentSelector
   const titleSize = getTitleSize(part.config.title)
@@ -41,7 +40,7 @@ function renderPart(request) {
     imageAltText: getImageAlt(part.config.image) ? getImageAlt(part.config.image) : ' ',
     imagePlacement: (part.config.cardOrientation == 'horizontal') ? 'left' : 'top',
     href: getLink(urlContentSelector),
-    subTitle: getSubtitle(part.config.content, part.config.date),
+    subTitle: getSubtitle(part.config.content, part.config.date, page.language),
     title: part.config.title,
     preambleText: part.config.preamble,
     linkType: 'header',
@@ -91,13 +90,15 @@ function getLink(urlContentSelector) {
  * @return {string}
  */
 
-function getSubtitle(content, date) {
+function getSubtitle(content, date, language = 'nb') {
   if (content && date) {
-    return content + ' / ' + moment(date).format('D. MMMM YYYY').toLowerCase()
+    return content + ' / ' + moment(date).locale(language).format('D. MMMM YYYY')
+      .toLowerCase()
   } else if (content) {
     return content
   } else if (date) {
-    return moment(date).format('D. MMMM YYYY').toLowerCase()
+    return moment(date).locale(language).format('D. MMMM YYYY')
+      .toLowerCase()
   } else {
     return ''
   }

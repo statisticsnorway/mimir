@@ -15,7 +15,9 @@ const {
 } = __non_webpack_require__('/lib/ssb/error/error')
 
 const contentLib = __non_webpack_require__('/lib/xp/content')
-const moment = require('moment/min/moment-with-locales')
+const {
+  moment
+} = __non_webpack_require__('/lib/vendor/moment')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view = resolve('./articleArchive.html')
 
@@ -31,10 +33,7 @@ exports.preview = (req) => renderPart(req)
 
 const renderPart = (req) => {
   const page = getContent()
-
-  moment.locale(page.language ? page.language : 'nb')
   const phrases = getPhrases(page)
-
   const title = page.displayName ? page.displayName : undefined
 
   const preambleText = page.data.preamble ? page.data.preamble : undefined
@@ -51,7 +50,7 @@ const renderPart = (req) => {
   }) : undefined
 
   const imageAltText = page.data.image ? getImageAlt(page.data.image) : ' '
-  const listOfArticles = parseArticleData(page._id, phrases)
+  const listOfArticles = parseArticleData(page._id, phrases, page.language)
   const listOfArticlesObj = new React4xp('ListOfArticles')
     .setProps({
       listOfArticlesSectionTitle: phrases.articleAnalysisPublications,
@@ -100,7 +99,7 @@ const renderPart = (req) => {
   }
 }
 
-const parseArticleData = (pageId, phrases) => {
+const parseArticleData = (pageId, phrases, language = 'nb') => {
   const articlesWithArticleArchivesSelected = contentLib.query({
     count: 9999,
     sort: 'publish.from DESC',
@@ -116,8 +115,8 @@ const parseArticleData = (pageId, phrases) => {
 
   return articlesWithArticleArchivesSelected.hits.map((articleContent) => {
     return {
-      year: getYear(articleContent.publish, articleContent.createdTime),
-      subtitle: getSubTitle(articleContent, phrases),
+      year: getYear(articleContent.publish, articleContent.createdTime, language),
+      subtitle: getSubTitle(articleContent, phrases, language),
       href: pageUrl({
         id: articleContent._id
       }),
@@ -127,11 +126,11 @@ const parseArticleData = (pageId, phrases) => {
   })
 }
 
-const getYear = (publish, createdTime) => {
-  return publish && createdTime ? moment(publish.from).format('YYYY') : moment(createdTime).format('YYYY')
+const getYear = (publish, createdTime, language = 'nb') => {
+  return publish && createdTime ? moment(publish.from).locale(language).format('YYYY') : moment(createdTime).locale(language).format('YYYY')
 }
 
-const getSubTitle = (articleContent, phrases) => {
+const getSubTitle = (articleContent, phrases, language = 'nb') => {
   let type = ''
   if (articleContent.type === `${app.name}:article`) {
     type = phrases.articleName
@@ -139,9 +138,9 @@ const getSubTitle = (articleContent, phrases) => {
 
   let prettyDate = ''
   if (articleContent.publish && articleContent.publish.from) {
-    prettyDate = moment(articleContent.publish.from).format('D. MMMM YYYY')
+    prettyDate = moment(articleContent.publish.from).locale(language).format('D. MMMM YYYY')
   } else {
-    prettyDate = moment(articleContent.createdTime).format('D. MMMM YYYY')
+    prettyDate = moment(articleContent.createdTime).locale(language).format('D. MMMM YYYY')
   }
 
   return `${type ? `${type} / ` : ''}${prettyDate}`

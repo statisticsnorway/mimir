@@ -22,7 +22,9 @@ const {
 const {
   readLines
 } = __non_webpack_require__('/lib/xp/io')
-const moment = require('moment/min/moment-with-locales')
+const {
+  moment
+} = __non_webpack_require__('/lib/vendor/moment')
 
 const errorView = resolve('../error/error.html')
 

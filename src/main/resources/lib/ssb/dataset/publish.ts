@@ -13,8 +13,12 @@ import { RepoJobLib, JobEventNode, JobInfoNode, StatisticsPublishResult, DataSou
 import { RepoQueryLib } from '../repo/query'
 import { ServerLogLib } from '../utils/serverLog'
 import { EventLibrary } from 'enonic-types/event'
-import moment = require('moment')
 import { NodeQueryHit } from 'enonic-types/node'
+import { Moment } from '../../vendor/moment'
+
+const {
+  moment
+}: Moment = __non_webpack_require__('/lib/vendor/moment')
 const {
   Events,
   logUserDataQuery

@@ -544,20 +544,28 @@ class Table extends Component {
 
   render() {
     if (!isEmpty(this.state.table)) {
+      const {
+        hiddenTitle
+      } = this.props
       return (
-        <div className="container">
-          {this.addPreviewButton()}
-          {this.addDownloadTableDropdown(false)}
-          {this.addPreviewInfo()}
-          {this.createScrollControlsDesktop()}
-          {this.createScrollControlsMobile()}
-          <div className="table-wrapper searchabletext" onScroll={() => this.updateTableControlsDesktop()} ref={this.tableWrapperRef}>
-            {this.createTable()}
+        <section className="xp-part table">
+          <div className="d-none searchabletext">
+            <span>{hiddenTitle}</span>
           </div>
-          {this.addDownloadTableDropdown(true)}
-          {this.addStandardSymbols()}
-          {this.renderSources()}
-        </div>
+          <div className="container">
+            {this.addPreviewButton()}
+            {this.addDownloadTableDropdown(false)}
+            {this.addPreviewInfo()}
+            {this.createScrollControlsDesktop()}
+            {this.createScrollControlsMobile()}
+            <div className="table-wrapper searchabletext" onScroll={() => this.updateTableControlsDesktop()} ref={this.tableWrapperRef}>
+              {this.createTable()}
+            </div>
+            {this.addDownloadTableDropdown(true)}
+            {this.addStandardSymbols()}
+            {this.renderSources()}
+          </div>
+        </section>
       )
     } else {
       return <div>
@@ -686,7 +694,8 @@ Table.propTypes = {
   pageTypeStatistic: PropTypes.bool,
   sourceListTables: PropTypes.arrayOf(PropTypes.string),
   sourceTableLabel: PropTypes.string,
-  statBankWebUrl: PropTypes.string
+  statBankWebUrl: PropTypes.string,
+  hiddenTitle: PropTypes.string
 }
 
 export default (props) => <Table {...props}/>

@@ -6,7 +6,7 @@ import { Header } from '../../../site/content-types/header/header'
 
 const {
   hasPath
-} = require('ramda')
+} = __non_webpack_require__('/lib/vendor/ramda')
 const {
   getContent, imageUrl, pageUrl
 }: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')

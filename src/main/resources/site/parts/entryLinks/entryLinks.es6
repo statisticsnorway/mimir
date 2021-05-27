@@ -24,7 +24,6 @@ const {
   getAttachmentContent
 } = __non_webpack_require__( '/lib/ssb/utils/utils')
 
-const moment = require('moment/min/moment-with-locales')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view = resolve('./entryLinks.html')
 
@@ -41,8 +40,6 @@ exports.preview = (req) => renderPart(req)
 const renderPart = (req) => {
   const page = getContent()
   const part = getComponent()
-
-  moment.locale(page.language ? page.language : 'nb')
   const phrases = getPhrases(page)
 
   const entryLinksContent = part.config.entryLinks ? forceArray(part.config.entryLinks) : []

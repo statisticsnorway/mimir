@@ -16,7 +16,9 @@ const {
 
 const contentLib = __non_webpack_require__('/lib/xp/content')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
-const moment = require('moment/min/moment-with-locales')
+const {
+  moment
+} = __non_webpack_require__('/lib/vendor/moment')
 
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
@@ -39,14 +41,14 @@ const NO_VARIABLES_FOUND = {
 }
 
 const renderPart = (req) => {
-  moment.locale('nb')
+  const page = getContent()
 
   const children = contentLib.getChildren({
-    key: getContent()._path,
+    key: page._path,
     count: MAX_VARIABLES
   })
 
-  return renderVariables(contentArrayToVariables(children.hits ? data.forceArray(children.hits) : []))
+  return renderVariables(contentArrayToVariables(children.hits ? data.forceArray(children.hits) : [], page.language))
 }
 
 /**
@@ -95,9 +97,10 @@ const renderVariables = (variables) => {
 /**
  *
  * @param {Array} content
+ * @param {String} language
  * @return {array}
  */
-const contentArrayToVariables = (content) => {
+const contentArrayToVariables = (content, language = 'nb') => {
   return content.map((variable) => {
     const files = contentLib.query({
       count: 1,
@@ -114,7 +117,7 @@ const contentArrayToVariables = (content) => {
       fileHref: attachmentUrl({
         id: files.hits[0]._id
       }),
-      fileModifiedDate: moment(files.hits[0].modifiedTime).format('DD.MM.YY')
+      fileModifiedDate: moment(files.hits[0].modifiedTime).locale(language).format('DD.MM.YY')
     } : {}
 
     return {
