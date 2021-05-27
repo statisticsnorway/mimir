@@ -1,14 +1,16 @@
 import { Request } from 'enonic-types/controller'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Content } from 'enonic-types/content'
-import { PortalLibrary } from 'enonic-types/portal'
+import { Component, PortalLibrary } from 'enonic-types/portal'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { GroupedBy, PreparedStatistics, VariantUtilsLib, YearReleases } from '../../../lib/ssb/utils/variantUtils'
 import { ArrayUtilsLib } from '../../../lib/ssb/utils/arrayUtils'
+import { ComingReleasesPartConfig } from './comingReleases-part-config'
 
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
-  getContent
+  getContent,
+  getComponent
 }: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
 const {
   checkLimitAndTrim
@@ -34,8 +36,9 @@ let currentLanguage: string = ''
 
 function renderPart(req: Request): React4xpResponse {
   const content: Content = getContent()
+  const component: Component<ComingReleasesPartConfig> = getComponent()
   currentLanguage = content.language ? content.language : 'nb'
-  const daysInTheFuture: number = 3
+  const daysInTheFuture: number = parseInt(component.config.numberOfDays)
   const isNotInEditMode: boolean = req.mode !== 'edit'
 
   // Get statistics

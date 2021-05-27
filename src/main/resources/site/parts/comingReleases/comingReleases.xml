@@ -1,5 +1,14 @@
 <part>
     <display-name>Kommende publiseringer</display-name>
     <description>Liste over kommende statistikk publiseringer</description>
-    <form></form>
+    <form>
+        <input type="TextLine" name="numberOfDays">
+            <label>Dager fremover i liste (før "vis mer")</label>
+            <occurrences minimum="1" maximum="1"/>
+            <default>7</default>
+            <config>
+                <regexp>\d</regexp>
+            </config>
+        </input>
+    </form>
 </part>
