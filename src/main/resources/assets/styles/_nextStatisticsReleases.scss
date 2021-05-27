@@ -41,6 +41,7 @@
       text-transform: capitalize;
     }
   }
+
   time {
     border: 2px solid $ssb-dark-5;
     width: 97px;
@@ -55,6 +56,13 @@
       display: block;
       margin-top: 7px;
     }
-
   }
+
+  .metadata {
+    font-size: 14px;
+  }
+  .type {
+    text-transform: capitalize;
+  }
+
 }

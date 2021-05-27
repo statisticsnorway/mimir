@@ -7,16 +7,24 @@ class ComingReleases extends React.Component {
     super(props)
   }
 
-  renderRelease(release, index) {
+  renderRelease(release, index, date) {
     return (
       <li key={index}>
         <Link href={`/${release.shortName}`} linkType='header'>{release.name}</Link>
-        <Paragraph>{release.variant.period}</Paragraph>
+        <Paragraph className="mb-0">{release.variant.period}</Paragraph>
+        <Paragraph className="metadata">
+          {date.day}. {date.monthName} {date.year} / <span className="type">{release.type}</span> / {release.mainSubject}
+        </Paragraph>
       </li>
     )
   }
 
   renderDay(day, month, year, index) {
+    const date = {
+      day: day.day,
+      monthName: month.monthName,
+      year: year.year
+    }
     return (
       <article className={index === 0 && 'first'} key={index}>
         <time dateTime={`${year}-${month.month}`}>
@@ -25,7 +33,7 @@ class ComingReleases extends React.Component {
         </time>
         <ol className='releaseList'>
           {
-            day.releases.map((release, releaseIndex) => this.renderRelease(release, releaseIndex))
+            day.releases.map((release, releaseIndex) => this.renderRelease(release, releaseIndex, date))
           }
         </ol>
       </article>
@@ -70,6 +78,8 @@ ComingReleases.propTypes = {
                 name: PropTypes.string,
                 nameEN: PropTypes.string,
                 modifiedTime: PropTypes.string,
+                type: PropTypes.string,
+                mainSubject: PropTypes.string,
                 variants: {
                   frekvens: PropTypes.string,
                   nextRelease: PropTypes.string

@@ -35,7 +35,7 @@ let currentLanguage: string = ''
 function renderPart(req: Request): React4xpResponse {
   const content: Content = getContent()
   currentLanguage = content.language ? content.language : 'nb'
-  const daysInTheFuture: number = 20
+  const daysInTheFuture: number = 3
   const isNotInEditMode: boolean = req.mode !== 'edit'
 
   // Get statistics

@@ -4,6 +4,9 @@ import { groupBy } from 'ramda'
 import { sameDay } from './dateUtils'
 
 const {
+  getMainSubject
+} = __non_webpack_require__( './parentUtils')
+const {
   localize
 }: I18nLibrary = __non_webpack_require__( '/lib/xp/i18n')
 
@@ -246,6 +249,11 @@ export function prepareRelease(release: StatisticInListing, language: string, pr
     id: release.id,
     name: language === 'en' ? release.nameEN : release.name,
     shortName: release.shortName,
+    type: localize({
+      key: 'statistic',
+      locale: language
+    }),
+    mainSubject: getMainSubject(release.shortName, language),
     variant: preparedVariant
   }
 }

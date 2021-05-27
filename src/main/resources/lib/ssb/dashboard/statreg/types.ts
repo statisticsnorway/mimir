@@ -70,6 +70,7 @@ export interface VariantInListing {
 }
 
 export interface StatisticInListing extends StatRegBase {
+    id: number;
     shortName: string;
     name: string;
     nameEN: string;
