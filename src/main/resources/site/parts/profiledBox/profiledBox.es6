@@ -1,4 +1,5 @@
 const {
+  getContent,
   getComponent,
   pageUrl,
   imageUrl
