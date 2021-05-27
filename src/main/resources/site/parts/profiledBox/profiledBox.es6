@@ -14,6 +14,9 @@ const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+const {
+  moment
+} = __non_webpack_require__('/lib/vendor/moment')
 
 const view = resolve('./profiledBox.html')
 
