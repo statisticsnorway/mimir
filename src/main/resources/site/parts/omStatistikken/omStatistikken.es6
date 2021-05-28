@@ -109,9 +109,9 @@ function renderPart(req, aboutTheStatisticsId) {
 
   const relevantDocumentation = {
     id: 'om-statistikken-relevant-dokumentasjon',
-    body: processHtml({
-      value: content.relevantDocumentation
-    }),
+    body: content.relevantDocumentation ? processHtml({
+      value: content.relevantDocumentation.replace(/&nbsp;/g, ' ')
+    }) : undefined,
     open: phrases.relevantDocumentation,
     items: []
   }
