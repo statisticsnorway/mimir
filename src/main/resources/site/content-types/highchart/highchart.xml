@@ -2,7 +2,7 @@
 <content-type>
   <display-name>Highchart</display-name>
   <super-type>base:structured</super-type>  <!-- The most common super-type. You rarely need to know anything else about this than to remember to add it. Read the docs for more info. -->
-  
+
   <form>
     <input name="subtitle" type="TextLine">
       <label>Undertittel</label>
@@ -31,13 +31,9 @@
           <label>Kildetabell limt inn fra Excel</label>
           <occurrences minimum="0" maximum="1"/>
           <config>
-            <exclude>*</exclude>
-            <include>Styles Bold Italic Underline Strike Cut Copy
-              JustifyBlock JustifyLeft JustifyCenter JustifyRight
-              BulletedList NumberedList Outdent Indent
-              SpecialChar Anchor Image Macro Link Unlink
-              Table TableBlockquote
-              Subscript Superscript</include>
+            <include>
+              Strike Subscript Superscript Cut Copy Blockquote
+            </include>
           </config>
           <help-text>Lim inn (Ctrl-V) en tabell rett fra Excel. Tabeller bør være så enkle som mulig (Overskrifter i første rad/kolonne og ellers bare tall, ingen spesialformatering, manglende tall må være tomme celler)</help-text>
         </input>
@@ -118,7 +114,7 @@
             <option value="center">Midtstilt, under</option>
           </config>
           <default>center</default>
-        </input>        
+        </input>
         <input name="noLegend" type="CheckBox">
           <label>Skjul tegnforklaringen (gjelder ikke for kakediagram).</label>
         </input>
@@ -174,7 +170,7 @@
     </field-set>
 
     <field-set>
-    <label>Y-akse, tilpasning</label>
+      <label>Y-akse, tilpasning</label>
       <items>
         <input name="yAxisTitle" type="TextLine">
           <label>Y-akse, tittel</label>
@@ -235,6 +231,6 @@
         </input>
       </items>
     </field-set>
-    
+
   </form>
 </content-type>
