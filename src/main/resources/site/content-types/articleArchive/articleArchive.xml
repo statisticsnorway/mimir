@@ -13,13 +13,9 @@
         <input name="freeText" type="HtmlArea">
             <label>Fritekst</label>
             <config>
-                <exclude>*</exclude>
-                <include>Styles Bold Italic Underline Strike Cut Copy
-                    JustifyBlock JustifyLeft JustifyCenter JustifyRight
-                    BulletedList NumberedList Outdent Indent
-                    SpecialChar Anchor Image Macro Link Unlink
-                    Table TableBlockquote
-                    Subscript Superscript</include>
+                <include>
+                    Strike Subscript Superscript Cut Copy Blockquote
+                </include>
             </config>
             <occurrences minimum="0" maximum="1" />
         </input>
