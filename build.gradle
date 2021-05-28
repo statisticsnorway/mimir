@@ -38,7 +38,7 @@ dependencies {
     include "com.gravitondigital:featuretogglelib:0.2.0"
     testCompile "com.enonic.xp:testing:${xpVersion}"
     compile group: 'org.json', name: 'json', version: '20210307'
-    include 'com.enonic.lib:lib-react4xp:1.5.0' // (or -SNAPSHOT, etc: your chosen/built lib version)
+    include 'com.enonic.lib:lib-react4xp:1.6.0-RC1' // (or -SNAPSHOT, etc: your chosen/built lib version)
 }
 
 repositories {
