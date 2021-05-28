@@ -7,7 +7,7 @@ import { CalculatorLib } from '../../lib/ssb/dataset/calculator'
 import { I18nLibrary } from 'enonic-types/i18n'
 const i18nLib: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
 const {
-  getCalculatorConfig, getPifDataset
+  getCalculatorConfig, getPifDataset, isChronological, getChangeValue
 }: CalculatorLib = __non_webpack_require__('/lib/ssb/dataset/calculator')
 
 function get(req: HttpRequestParams): Response {
@@ -103,17 +103,6 @@ interface IndexResult {
     endIndex: number | null;
 }
 
-function isChronological(startYear: string, startMonth: string, endYear: string, endMonth: string): boolean {
-  if (parseInt(startYear) < parseInt(endYear)) return true
-  if (parseInt(endYear) < parseInt(startYear)) return false
-
-  if (startMonth != '' && endMonth != '') {
-    if (parseInt(startMonth) < parseInt(endMonth)) return true
-    if (parseInt(startMonth) > parseInt(endMonth)) return false
-  }
-  return true
-}
-
 function getAverageYear(dataPif: Dataset | null, year: string, scopeCode: string, productGroup: string ): null | number {
   let totalValue: number = 0
   let countMonth: number = 0
@@ -147,12 +136,4 @@ function getIndexTime(pifData: Dataset | null, time: string, scopeCode: string, 
   }).value
 
   return index
-}
-
-function getChangeValue(startIndex: number, endIndex: number, chronological: boolean): number {
-  if (chronological) {
-    return ((endIndex - startIndex) / startIndex)
-  } else {
-    return ((startIndex - endIndex) / endIndex)
-  }
 }
