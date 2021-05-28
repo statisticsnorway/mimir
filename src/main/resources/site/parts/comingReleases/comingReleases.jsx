@@ -3,10 +3,44 @@ import { Button, Link, Paragraph, Title } from '@statisticsnorway/ssb-component-
 import PropTypes from 'prop-types'
 import axios from 'axios'
 import { ChevronDown } from 'react-feather'
+import { mergeDeepWithKey } from 'ramda'
 
 function ComingReleases(props) {
   const [start, setStart] = useState(props.start)
   const [releases, setReleases] = useState(props.releases)
+
+
+  function concatReleases(k, l, r) {
+    return k == 'releases' ? [].concat(l, r) : r
+  }
+
+  function mergeReleases(moreReleases) {
+    moreReleases.forEach((y) => {
+      if (releases[y.year]) {
+        console.log('found year ' + y.year)
+        const currentYearReleases = releases[y.year]
+        y.releases.forEach( (m) => {
+          console.log('found month ' + m.month)
+          if (currentYearReleases[m.month]) {
+            const currentMonthlyReleases = currentYearReleases[m.month]
+            m.releases.forEach((d) => {
+              console.log('found day ' + d.day)
+              if (currentMonthlyReleases[d.day]) {
+                currentMonthlyReleases[d.day].concat(d.releases)
+              } else {
+                currentMonthlyReleases.concat(d)
+              }
+            })
+            currentYearReleases[m.month].concat(m.releases)
+          } else {
+            currentYearReleases.concat(m)
+          }
+        })
+      } else {
+        releases.concat(y)
+      }
+    })
+  }
 
   function fetchMoreReleases() {
     console.log('fetch more releases')
@@ -17,8 +51,11 @@ function ComingReleases(props) {
         language: props.language
       }
     }).then((res) => {
-      console.log(res)
-      // setArticles(articles.concat(res.data.articles))
+      console.log('res.data')
+      console.log(res.data)
+      mergeReleases(res.data.releases) // mergeDeepRight(concatReleases, releases, res.data.releases)
+
+      // setReleases(something)
       setStart(start + props.count)
     }).finally(() => {
       // setLoadedFirst(true)
