@@ -58,9 +58,54 @@ export function getPifDataset(config: Content<CalculatorConfig>): Dataset | null
   return pifDatasetRepo ? JSONstat(pifDatasetRepo.data).Dataset('dataset') : null
 }
 
+export function getBkibolDatasetEnebolig(config: Content<CalculatorConfig>): Dataset | null {
+  const bkibolSourceEnebolig: Content<GenericDataImport> | null = config?.data.bkibolSourceEnebolig ? getContent({
+    key: config.data.bkibolSourceEnebolig
+  }) : null
+
+  const bkibolDatasetEneboligRepo: DatasetRepoNode<JSONstatType> | null = bkibolSourceEnebolig ?
+      datasetOrUndefined(bkibolSourceEnebolig) as DatasetRepoNode<JSONstatType> | null : null
+
+  return bkibolDatasetEneboligRepo ? JSONstat(bkibolDatasetEneboligRepo.data).Dataset('dataset') : null
+}
+
+export function getBkibolDatasetBoligblokk(config: Content<CalculatorConfig>): Dataset | null {
+  const bkibolSourceBoligblokk: Content<GenericDataImport> | null = config?.data.bkibolSourceBoligblokk ? getContent({
+    key: config.data.bkibolSourceBoligblokk
+  }) : null
+
+  const bkibolDatasetBoligblokkRepo: DatasetRepoNode<JSONstatType> | null = bkibolSourceBoligblokk ?
+      datasetOrUndefined(bkibolSourceBoligblokk) as DatasetRepoNode<JSONstatType> | null : null
+
+  return bkibolDatasetBoligblokkRepo ? JSONstat(bkibolDatasetBoligblokkRepo.data).Dataset('dataset') : null
+}
+
+export function isChronological(startYear: string, startMonth: string, endYear: string, endMonth: string): boolean {
+  if (parseInt(startYear) < parseInt(endYear)) return true
+  if (parseInt(endYear) < parseInt(startYear)) return false
+
+  if (startMonth != ('' || '90') && endMonth != ('' || '90') ) {
+    if (parseInt(startMonth) < parseInt(endMonth)) return true
+    if (parseInt(startMonth) > parseInt(endMonth)) return false
+  }
+  return true
+}
+
+export function getChangeValue(startIndex: number, endIndex: number, chronological: boolean): number {
+  if (chronological) {
+    return ((endIndex - startIndex) / startIndex)
+  } else {
+    return ((startIndex - endIndex) / endIndex)
+  }
+}
+
 export interface CalculatorLib {
   getCalculatorConfig: () => Content<CalculatorConfig> | undefined;
   getKpiDatasetYear: (config: Content<CalculatorConfig>) => Dataset | null;
   getKpiDatasetMonth: (config: Content<CalculatorConfig>) => Dataset | null;
   getPifDataset: (config: Content<CalculatorConfig>) => Dataset | null;
+  getBkibolDatasetEnebolig: (config: Content<CalculatorConfig>) => Dataset | null;
+  getBkibolDatasetBoligblokk: (config: Content<CalculatorConfig>) => Dataset | null;
+  isChronological: (startYear: string, startMonth: string, endYear: string, endMonth: string) => boolean;
+  getChangeValue: (startIndex: number, endIndex: number, chronological: boolean) => number;
 }
