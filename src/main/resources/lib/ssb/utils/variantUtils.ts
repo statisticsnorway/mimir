@@ -243,6 +243,25 @@ export function getReleasesForDay(
   }, [])
 }
 
+export function filterOnComingReleases(stats: Array<StatisticInListing>, count: number, startDay: number = 0): Array<StatisticInListing> {
+  log.info('filterOnComingReleases')
+  log.info(JSON.stringify(stats, null, 2))
+  log.info(JSON.stringify(count, null, 2))
+  log.info(JSON.stringify(startDay, null, 2))
+  const releases: Array<StatisticInListing> = []
+  for (let i: number = startDay; i < startDay + count; i++) {
+    const day: Date = new Date()
+    day.setDate(day.getDate() + i)
+    log.info(JSON.stringify(day, null, 2))
+    const releasesOnThisDay: Array<StatisticInListing> = getReleasesForDay(stats, day, 'nextRelease')
+    releases.push(...releasesOnThisDay)
+  }
+  log.info(JSON.stringify('done: returning :releases', null, 2))
+  log.info(JSON.stringify(releases, null, 2))
+
+  return releases
+}
+
 export function checkVariantReleaseDate(variant: VariantInListing, day: Date, property: keyof VariantInListing): boolean {
   const dayFromVariant: string = variant[property] as string
   return sameDay(new Date(dayFromVariant), day)
@@ -301,6 +320,7 @@ export interface VariantUtilsLib {
   groupStatisticsByYearMonthAndDay: (releasesPrepped: Array<PreparedStatistics>) => GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>>;
   getReleasesForDay: (statisticList: Array<StatisticInListing>, day: Date, property?: keyof VariantInListing) => Array<StatisticInListing>;
   prepareRelease: (release: StatisticInListing, locale: string, property?: keyof VariantInListing) => PreparedStatistics;
+  filterOnComingReleases: (stats: Array<StatisticInListing>, daysInTheFuture: number, startDay?: number) => Array<StatisticInListing>;
 }
 
 

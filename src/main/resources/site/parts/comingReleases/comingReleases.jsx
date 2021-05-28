@@ -1,13 +1,33 @@
-import React from 'react'
-import { Link, Paragraph, Title } from '@statisticsnorway/ssb-component-library'
+import React, { useState } from 'react'
+import { Button, Link, Paragraph, Title } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
+import axios from 'axios'
+import { ChevronDown } from 'react-feather'
 
-class ComingReleases extends React.Component {
-  constructor(props) {
-    super(props)
+function ComingReleases(props) {
+  const [start, setStart] = useState(props.start)
+  const [releases, setReleases] = useState(props.releases)
+
+  function fetchMoreReleases() {
+    console.log('fetch more releases')
+    axios.get(props.upcomingReleasesServiceUrl, {
+      params: {
+        start,
+        count: props.count,
+        language: props.language
+      }
+    }).then((res) => {
+      console.log(res)
+      // setArticles(articles.concat(res.data.articles))
+      setStart(start + props.count)
+    }).finally(() => {
+      // setLoadedFirst(true)
+      // setArticleStart((prevState) => prevState + props.count)
+    }
+    )
   }
 
-  renderRelease(release, index, date) {
+  function renderRelease(release, index, date) {
     return (
       <li key={index}>
         <Link href={`/${release.shortName}`} linkType='header'>{release.name}</Link>
@@ -19,7 +39,7 @@ class ComingReleases extends React.Component {
     )
   }
 
-  renderDay(day, month, year, index) {
+  function renderDay(day, month, year, index) {
     const date = {
       day: day.day,
       monthName: month.monthName,
@@ -33,31 +53,41 @@ class ComingReleases extends React.Component {
         </time>
         <ol className='releaseList'>
           {
-            day.releases.map((release, releaseIndex) => this.renderRelease(release, releaseIndex, date))
+            day.releases.map((release, releaseIndex) => renderRelease(release, releaseIndex, date))
           }
         </ol>
       </article>
     )
   }
 
-  render() {
-    return (
-      <section className='nextStatisticsReleases'>
-        <Title size={2}>{this.props.title}</Title>
-        {
-          this.props.releases.map((year) => {
-            return year.releases.map((month) => {
-              return month.releases.map((day, index) => this.renderDay(day, month, year, index))
-            })
+
+  return (
+    <section className='nextStatisticsReleases'>
+      <Title size={2}>{props.title}</Title>
+      {
+        releases.map((year) => {
+          return year.releases.map((month) => {
+            return month.releases.map((day, index) => renderDay(day, month, year, index))
           })
-        }
-      </section>
-    )
-  }
+        })
+      }
+      <div>
+        <Button className="button-more mt-5"
+          onClick={fetchMoreReleases}><ChevronDown
+            size="18"/>{props.buttonTitle}
+        </Button>
+      </div>
+    </section>
+  )
 }
 
 ComingReleases.propTypes = {
   title: PropTypes.string,
+  language: PropTypes.string,
+  upcomingReleasesServiceUrl: PropTypes.string,
+  start: PropTypes.number,
+  count: PropTypes.number,
+  buttonTitle: PropTypes.string,
   releases: PropTypes.arrayOf(PropTypes.shape({
     year: PropTypes.string,
     releases: PropTypes.arrayOf(PropTypes.shape({

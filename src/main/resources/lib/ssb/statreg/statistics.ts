@@ -1,3 +1,5 @@
+import { VariantUtilsLib } from '../utils/variantUtils'
+
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { StatRegNode } from '../repo/statreg'
 import { StatisticInListing, VariantInListing, ReleasesInListing, ReleaseDatesVariant } from '../dashboard/statreg/types'
@@ -31,6 +33,7 @@ const {
   Events,
   logUserDataQuery
 }: RepoQueryLib = __non_webpack_require__('/lib/ssb/repo/query')
+
 
 export const STATREG_REPO_STATISTICS_KEY: string = 'statistics'
 
@@ -221,6 +224,7 @@ export function getReleaseDatesByVariants(variants: Array<VariantInListing>): Re
   return releaseDatesStatistic
 }
 
+
 export interface StatRegStatisticsLib {
   STATREG_REPO_STATISTICS_KEY: string;
   fetchStatistics: () => Array<StatisticInListing> | null;
@@ -231,4 +235,5 @@ export interface StatRegStatisticsLib {
   getStatisticByIdFromRepo: (statId: string) => StatisticInListing | undefined;
   getStatisticByShortNameFromRepo: (shortName: string) => StatisticInListing | undefined;
   getReleaseDatesByVariants: (variants: Array<VariantInListing>) => ReleaseDatesVariant;
+
 }

@@ -4,27 +4,28 @@ import { Content } from 'enonic-types/content'
 import { Component, PortalLibrary } from 'enonic-types/portal'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { GroupedBy, PreparedStatistics, VariantUtilsLib, YearReleases } from '../../../lib/ssb/utils/variantUtils'
-import { ArrayUtilsLib } from '../../../lib/ssb/utils/arrayUtils'
 import { ComingReleasesPartConfig } from './comingReleases-part-config'
+import { I18nLibrary } from 'enonic-types/i18n'
 
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getContent,
-  getComponent
+  getComponent,
+  serviceUrl
 }: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
-const {
-  checkLimitAndTrim
-}: ArrayUtilsLib = __non_webpack_require__( '/lib/ssb/utils/arrayUtils')
+
 const {
   addMonthNames,
-  getReleasesForDay,
   groupStatisticsByYearMonthAndDay,
-  prepareRelease
+  prepareRelease,
+  filterOnComingReleases
 }: VariantUtilsLib = __non_webpack_require__( '/lib/ssb/utils/variantUtils')
 const {
   getAllStatisticsFromRepo
 } = __non_webpack_require__( '/lib/ssb/statreg/statistics')
-
+const {
+  localize
+}: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
 
 exports.get = (req: Request): React4xpResponse => {
   return renderPart(req)
@@ -38,14 +39,20 @@ function renderPart(req: Request): React4xpResponse {
   const content: Content = getContent()
   const component: Component<ComingReleasesPartConfig> = getComponent()
   currentLanguage = content.language ? content.language : 'nb'
-  const daysInTheFuture: number = parseInt(component.config.numberOfDays)
+  const count: number = parseInt(component.config.numberOfDays)
   const isNotInEditMode: boolean = req.mode !== 'edit'
-
+  const buttonTitle: string = localize({
+    key: 'button.showMore',
+    locale: currentLanguage
+  })
+  const upcomingReleasesServiceUrl: string = serviceUrl({
+    service: 'upcomingReleases'
+  })
   // Get statistics
   const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
 
   // All statistics published today, and fill up with previous releases.
-  const releasesFiltered: Array<StatisticInListing> = filterOnComingReleases(releases, daysInTheFuture)
+  const releasesFiltered: Array<StatisticInListing> = filterOnComingReleases(releases, count)
 
   // Choose the right variant and prepare the date in a way it works with the groupBy function
   const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map(
@@ -60,24 +67,16 @@ function renderPart(req: Request): React4xpResponse {
   const props: PartProps = {
     releases: groupedWithMonthNames,
     title: 'Title',
-    language: currentLanguage
+    language: currentLanguage,
+    start: count,
+    count,
+    upcomingReleasesServiceUrl,
+    buttonTitle
   }
 
   return React4xp.render('site/parts/comingReleases/comingReleases', props, req, {
     clientRender: isNotInEditMode
   })
-}
-
-
-function filterOnComingReleases(stats: Array<StatisticInListing>, daysInTheFuture: number): Array<StatisticInListing> {
-  const releases: Array<StatisticInListing> = []
-  for (let i: number = 0; i < daysInTheFuture; i++) {
-    const day: Date = new Date()
-    day.setDate(day.getDate() + i)
-    const releasesOnThisDay: Array<StatisticInListing> = getReleasesForDay(stats, day, 'nextRelease')
-    releases.push(...releasesOnThisDay)
-  }
-  return releases
 }
 
 
@@ -88,4 +87,8 @@ interface PartProps {
   releases: Array<YearReleases>;
   title: string;
   language: string;
+  start: number;
+  count: number;
+  upcomingReleasesServiceUrl: string;
+  buttonTitle: string;
 }
