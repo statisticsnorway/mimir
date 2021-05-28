@@ -114,6 +114,9 @@ exports.get = function(req) {
     if (page._path.indexOf('/kommuneareal/') > -1) {
       municipalPageType = 'kommuneareal'
     }
+    if (page._path.indexOf('/barn-og-unge/') > -1) {
+      municipalPageType = 'barn-og-unge'
+    }
     metaInfoSearchContentType = 'kommunefakta'
     metaInfoSearchKeywords = 'kommune, kommuneprofil',
     metaInfoDescription = page.x['com-enonic-app-metafields']['meta-data'].seoDescription
