@@ -5,8 +5,9 @@ const {
 } = __non_webpack_require__('/lib/cipher/cipherRss')
 
 export function pushRssNews(): string {
-  const newsServiceUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] + '/_/service/mimir/news' :
-    'https:www.utv.ssb.no/_/service/mimir/news'
+  const newsServiceUrl: string = 'http://localhost:8080/xp/_/service/mimir/news'
+  // const newsServiceUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] + '/_/service/mimir/news' :
+  //   'https:www.utv.ssb.no/_/service/mimir/news'
   const rssNews: RssNews = getRssNews(newsServiceUrl)
   if (rssNews.body !== null) {
     const encryptedBody: string = encryptRssNews(rssNews.body)
@@ -50,13 +51,10 @@ function postRssNews(encryptedRss: string): string {
   const rssNewsBaseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] + '/rss/populate/news' :
     'https:www.utv.ssb.no/rss/populate/news'
 
-  // Måtte legge på body i param da den ikke funket ved å legge til i requestParams
-  const rssNewsUrl: string = rssNewsBaseUrl + '?body=' + encryptedRss.toString()
-
   const requestParams: HttpRequestParams = {
-    url: rssNewsUrl,
-    method: 'POST'
-    // body: encryptedRss, Funker ikke
+    url: rssNewsBaseUrl,
+    method: 'POST',
+    body: encryptedRss
   }
 
   try {
