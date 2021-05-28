@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Container, Row, Col } from 'react-bootstrap'
 import { Input,
@@ -22,7 +22,7 @@ function BkibolCalculator(props) {
   const [domene, setDomene] = useState({
     error: false,
     errorMsg: 'Feil domene',
-    value: ''
+    value: 'ENEBOLIG'
   })
   const [serie, setSerie] = useState({
     error: false,
@@ -66,6 +66,51 @@ function BkibolCalculator(props) {
   const validMaxYear = new Date().getFullYear()
   const validMinYear = 1865
   const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
+
+
+  // useEffect(() => {
+  //   console.log('use effekt')
+  //   addDropdownSerie('serie')
+  // });
+
+  function serieItemsDomene(domene) {
+    return [
+      {
+        id: 'ALT',
+        title: props.phrases.bkibolWorkTypeAll
+      },
+      {
+        id: 'GRUNNARBEID',
+        title: props.phrases.bkibolWorkTypeGroundwork
+      },
+      {
+        id: 'STEIN',
+        title: props.phrases.bkibolWorkTypeStone,
+        disabled: domene === 'BOLIGBLOKK' ? true : false
+      },
+      {
+        id: 'BYGGEARBEIDER',
+        title: props.phrases.bkibolWorkTypeWithoutStone,
+        disabled: domene === 'BOLIGBLOKK' ? true : false
+      },
+      {
+        id: 'TOMRING',
+        title: props.phrases.bkibolWorkTypeCarpentry
+      },
+      {
+        id: 'MALING',
+        title: props.phrases.bkibolWorkTypePainting
+      },
+      {
+        id: 'RORLEGGERARBEID',
+        title: props.phrases.bkibolWorkTypePlumbing
+      },
+      {
+        id: 'ELEKTRIKERARBEID',
+        title: props.phrases.bkibolWorkTypeElectric
+      }
+    ]
+  }
 
   function onSubmit(e) {
     e.preventDefault()
@@ -259,7 +304,9 @@ function BkibolCalculator(props) {
     )
   }
 
-  function addDropdownSerie(id) {
+  function addDropdownSerieDomene(id, domene) {
+    // console.log('addDropdownSerieDomene: ' + domene)
+    // console.log('ITEMS: ' + JSON.stringify(serieItemsDomene(domene), null, 4))
     return (
       <Dropdown
         className="serie"
@@ -271,7 +318,7 @@ function BkibolCalculator(props) {
           title: props.phrases.bkibolChooseWork,
           id: ''
         }}
-        items={props.workTypes}
+        items={serieItemsDomene(domene)}
       />
     )
   }
@@ -428,7 +475,8 @@ function BkibolCalculator(props) {
             <Row className="mt-4">
               <Col className="select-serie">
                 <Title size={3}>{props.phrases.bkibolWorkTypeDone}</Title>
-                {addDropdownSerie('serie')}
+                { addDropdownSerieDomene('serie', domene.value) }
+                {/* {addDropdownSerie('serie', serieItemsDomene(domene))}*/}
               </Col>
               <Col className="choose-domene">
                 <Title size={3}>{props.phrases.bkibolChooseDwellingType}</Title>
@@ -555,12 +603,6 @@ BkibolCalculator.propTypes = {
   bkibolServiceUrl: PropTypes.string,
   language: PropTypes.string,
   months: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      title: PropTypes.string
-    })
-  ),
-  workTypes: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string,
       title: PropTypes.string

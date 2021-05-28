@@ -42,7 +42,6 @@ function renderPart(req) {
   const language = getLanguage(page)
   const phrases = language.phrases
   const months = allMonths(phrases)
-  const workTypes = allWorkTypes(phrases)
   const config = getCalculatorConfig()
   const bkibolDataEnebolig = getBkibolDatasetEnebolig(config)
   const lastUpdated = lastPeriod(bkibolDataEnebolig)
@@ -70,7 +69,6 @@ function renderPart(req) {
       language: language.code,
       months: months,
       phrases: phrases,
-      workTypes: workTypes,
       calculatorArticleUrl,
       nextPublishText: nextPublishText
     })
@@ -168,39 +166,6 @@ const allMonths = (phrases) => {
     {
       id: '12',
       title: phrases.december
-    }
-  ]
-}
-
-const allWorkTypes = (phrases) => {
-  return [
-    {
-      id: 'GRUNNARBEID',
-      title: phrases.bkibolWorkTypeGroundwork
-    },
-    {
-      id: 'STEIN',
-      title: phrases.bkibolWorkTypeStone
-    },
-    {
-      id: 'BYGGEARBEIDER',
-      title: phrases.bkibolWorkTypeWithoutStone
-    },
-    {
-      id: 'TOMRING',
-      title: phrases.bkibolWorkTypeCarpentry
-    },
-    {
-      id: 'MALING',
-      title: phrases.bkibolWorkTypePainting
-    },
-    {
-      id: 'RORLEGGERARBEID',
-      title: phrases.bkibolWorkTypePlumbing
-    },
-    {
-      id: 'ELEKTRIKERARBEID',
-      title: phrases.bkibolWorkTypeElectric
     }
   ]
 }
