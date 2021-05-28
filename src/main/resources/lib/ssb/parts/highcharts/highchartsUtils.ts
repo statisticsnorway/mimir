@@ -12,7 +12,7 @@ const {
 } = __non_webpack_require__( '/lib/ssb/parts/highcharts/highchartsGraphConfig')
 const {
   mergeDeepRight
-} = require('ramda')
+} = __non_webpack_require__('/lib/vendor/ramda')
 const {
   prepareHighchartsData
 } = __non_webpack_require__('/lib/ssb/parts/highcharts/highchartsData')

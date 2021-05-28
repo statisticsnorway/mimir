@@ -19,7 +19,6 @@ const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 
-const moment = require('moment/min/moment-with-locales')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view = resolve('./associatedStatistics.html')
 
@@ -35,7 +34,6 @@ exports.preview = (req) => renderPart(req)
 
 function renderPart(req) {
   const page = getContent()
-  moment.locale(page.language ? page.language : 'nb')
   const phrases = getPhrases(page)
 
   const associatedStatisticsHeader = phrases.associatedStatisticsHeader

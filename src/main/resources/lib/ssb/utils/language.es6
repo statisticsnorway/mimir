@@ -1,4 +1,3 @@
-const moment = require('moment/min/moment-with-locales')
 const i18n = __non_webpack_require__( '/lib/xp/i18n')
 const {
   getSite, getSiteConfig, pageUrl
@@ -22,9 +21,6 @@ try {
 exports.getLanguage = function(page) {
   const site = getSite()
   const siteConfig = getSiteConfig()
-
-  moment.locale(page.language ? page.language : 'nb')
-
   const currentLanguageConfig = siteConfig.language.filter( (language) => language.code === page.language)[0]
 
   const alternativeLanguagesConfig = siteConfig.language.filter( (language) => language.code !== page.language)

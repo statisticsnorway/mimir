@@ -4,7 +4,7 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const React4xp = require('/lib/enonic/react4xp')
+const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getContent
 } = __non_webpack_require__( '/lib/xp/portal')
@@ -49,21 +49,17 @@ function renderPart(req, externalLinks) {
     }
   }
 
-  externalLinks = externalLinks.map((externalLink) => {
-    return {
-      href: externalLink.url,
-      children: externalLink.urlText,
-      iconType: 'externalLink',
-      isExternal: true
-    }
-  })
-
   const relatedExternalLinksComponent = new React4xp('Links')
     .setProps({
-      links: externalLinks,
-      heading: phrases.relatedArticlesHeading
+      links: externalLinks.map((externalLink) => {
+        return {
+          href: externalLink.url,
+          children: externalLink.urlText,
+          iconType: 'externalLink',
+          isExternal: true
+        }
+      })
     })
-    .setId('related-external-links')
     .uniqueId()
 
   const body = render(view, {

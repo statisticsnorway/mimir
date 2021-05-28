@@ -1,6 +1,6 @@
 const {
   mergeDeepRight
-} = require('ramda')
+} = __non_webpack_require__('/lib/vendor/ramda')
 const {
   createDefaultConfig
 } = __non_webpack_require__('/lib/ssb/parts/highcharts/graph/config')

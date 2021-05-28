@@ -1,12 +1,17 @@
 import { StatisticInListing, VariantInListing } from '../dashboard/statreg/types'
 import { I18nLibrary } from 'enonic-types/i18n'
-import { groupBy } from 'ramda'
-import { sameDay } from './dateUtils'
+import { DateUtilsLib } from './dateUtils'
+import { Moment } from '../../vendor/moment'
 
+const {
+  sameDay
+}: DateUtilsLib = __non_webpack_require__( '/lib/ssb/utils/dateUtils')
 const {
   localize
 }: I18nLibrary = __non_webpack_require__( '/lib/xp/i18n')
-
+const {
+  groupBy
+} = __non_webpack_require__('/lib/vendor/ramda')
 const {
   getWeek
 } = __non_webpack_require__('/lib/ssb/utils/utils')
@@ -15,10 +20,9 @@ const {
     forceArray
   }
 } = __non_webpack_require__( '/lib/util')
-// eslint-disable-next-line @typescript-eslint/typedef
-const moment = require('moment/min/moment-with-locales')
-moment.locale('nb')
-
+const {
+  moment
+}: Moment = __non_webpack_require__('/lib/vendor/moment')
 
 export function calculatePeriod(variant: VariantInListing, language: string): string {
   switch (variant.frekvens) {
@@ -127,9 +131,8 @@ function calculateQuarter(variant: VariantInListing, language: string): string {
 }
 
 function calculateMonth(variant: VariantInListing, language: string): string {
-  moment.locale(language)
-  const monthName: string = moment(variant.previousFrom).format('MMMM')
-  const year: string = moment(variant.previousFrom).format('YYYY')
+  const monthName: string = moment(variant.previousFrom).locale(language).format('MMMM')
+  const year: string = moment(variant.previousFrom).locale(language).format('YYYY')
   return localize({
     key: 'period.month',
     locale: language,
@@ -148,7 +151,6 @@ function calculateWeek(variant: VariantInListing, language: string): string {
 
 
 export function addMonthNames(groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>>, language: string): Array<YearReleases> {
-  moment.locale(language)
   return Object.keys(groupedByYearMonthAndDay).map((year) => {
     const tmpYear: GroupedBy<GroupedBy<PreparedStatistics>> = groupedByYearMonthAndDay[year] as GroupedBy<GroupedBy<PreparedStatistics>>
     const monthReleases: Array<MonthReleases> = Object.keys(tmpYear).map((monthNumber) => {
@@ -162,11 +164,12 @@ export function addMonthNames(groupedByYearMonthAndDay: GroupedBy<GroupedBy<Grou
 
       const a: MonthReleases = {
         month: monthNumber,
-        monthName: moment().set({
-          year: year,
-          month: monthNumber,
+        monthName: moment().locale(language).set({
+          year: parseInt(year),
+          month: parseInt(monthNumber),
           date: 2
-        }).format('MMM'),
+        })
+          .format('MMM'),
         releases: dayReleases
       }
       return a
@@ -216,7 +219,11 @@ export function groupStatisticsByYearMonthAndDay(releasesPrepped: Array<Prepared
 }
 
 
-export function getReleasesForDay(statisticList: Array<StatisticInListing>, day: Date, property: keyof VariantInListing = 'previousRelease'): Array<StatisticInListing> {
+export function getReleasesForDay(
+  statisticList: Array<StatisticInListing>,
+  day: Date,
+  property: keyof VariantInListing = 'previousRelease'
+): Array<StatisticInListing> {
   return statisticList.reduce((acc: Array<StatisticInListing>, stat: StatisticInListing) => {
     const thisDayReleasedVariants: Array<VariantInListing> | undefined = Array.isArray(stat.variants) ?
       stat.variants.filter((variant: VariantInListing) => {

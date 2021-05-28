@@ -1,7 +1,6 @@
 import { StatRegNode } from '../repo/statreg'
 import { Contact, Kontakt, KontaktNavn, KontaktNavnType, KontaktXML } from '../dashboard/statreg/types'
 import { XmlParser } from '../../types/xmlParser'
-import { find } from 'ramda'
 import { StatRegCommonLib } from '../dashboard/statreg/common'
 import { StatRegConfigLib } from '../dashboard/statreg/config'
 import { RepoCommonLib } from '../repo/common'
@@ -9,6 +8,9 @@ import { HttpResponse } from 'enonic-types/http'
 import { RepoQueryLib } from '../repo/query'
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
+const {
+  find
+} = __non_webpack_require__('/lib/vendor/ramda')
 const {
   fetchStatRegData
 }: StatRegCommonLib = __non_webpack_require__('/lib/ssb/dashboard/statreg/common')

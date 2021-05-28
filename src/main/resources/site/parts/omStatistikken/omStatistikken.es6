@@ -23,7 +23,9 @@ const {
 
 const view = resolve('./omStatistikken.html')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const moment = require('moment/min/moment-with-locales')
+const {
+  moment
+} = __non_webpack_require__('/lib/vendor/moment')
 
 exports.get = function(req) {
   try {
@@ -38,8 +40,6 @@ exports.preview = (req, id) => renderPart(req, [id])
 
 function renderPart(req, aboutTheStatisticsId) {
   const page = getContent()
-
-  moment.locale(page.language ? page.language : 'nb')
   const phrases = getPhrases(page)
 
   let nextRelease = phrases.notYetDetermined
@@ -52,7 +52,7 @@ function renderPart(req, aboutTheStatisticsId) {
     const nextReleaseDate = releaseDates.nextRelease[0]
 
     if (nextReleaseDate && nextReleaseDate !== '') {
-      nextRelease = moment(nextReleaseDate).format('D. MMMM YYYY')
+      nextRelease = moment(nextReleaseDate).locale(page.language ? page.language : 'nb').format('D. MMMM YYYY')
     }
   }
   if (page.type === `${app.name}:omStatistikken` && (req.mode === 'edit' || req.mode === 'preview')) {
@@ -109,9 +109,9 @@ function renderPart(req, aboutTheStatisticsId) {
 
   const relevantDocumentation = {
     id: 'om-statistikken-relevant-dokumentasjon',
-    body: processHtml({
-      value: content.relevantDocumentation
-    }),
+    body: content.relevantDocumentation ? processHtml({
+      value: content.relevantDocumentation.replace(/&nbsp;/g, ' ')
+    }) : undefined,
     open: phrases.relevantDocumentation,
     items: []
   }

@@ -17,10 +17,7 @@ const {
 const {
   getPhrases
 } = __non_webpack_require__( '/lib/ssb/utils/language')
-
 import { Base64 } from 'js-base64'
-
-const moment = require('moment/min/moment-with-locales')
 const view = resolve('./infoGraphics.html')
 
 exports.get = function(req) {
@@ -38,7 +35,6 @@ function renderPart(req) {
   const part = getComponent()
   const sourceConfig = part.config.sources ? data.forceArray(part.config.sources) : []
 
-  moment.locale(page.language ? page.language : 'nb')
   const phrases = getPhrases(page)
 
   const source = phrases.source

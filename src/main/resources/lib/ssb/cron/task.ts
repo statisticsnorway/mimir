@@ -1,5 +1,4 @@
 import { Content } from 'enonic-types/content'
-import { splitEvery } from 'ramda'
 import { DatasetLib, CreateOrUpdateStatus } from '../dataset/dataset'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { RepoQueryLib } from '../repo/query'
@@ -8,6 +7,9 @@ import { TaskLib } from '../../types/task'
 import { RSSFilterLogData } from './rss'
 import { RepoJobLib } from '../repo/job'
 
+const {
+  splitEvery
+} = __non_webpack_require__('/lib/vendor/ramda')
 const {
   DATASET_BRANCH
 }: RepoDatasetLib = __non_webpack_require__('/lib/ssb/repo/dataset')

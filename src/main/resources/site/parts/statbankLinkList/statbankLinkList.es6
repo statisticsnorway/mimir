@@ -10,12 +10,10 @@ const {
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
-const React4xp = require('/lib/enonic/react4xp')
+const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const util = __non_webpack_require__('/lib/util')
 const view = resolve('./statbankLinkList.html')
 const STATBANKWEB_URL = app.config && app.config['ssb.statbankweb.baseUrl'] ? app.config['ssb.statbankweb.baseUrl'] : 'https://www.ssb.no/statbank'
-
-const moment = require('moment/min/moment-with-locales')
 const {
   getPhrases
 } = __non_webpack_require__( '/lib/ssb/utils/language')
@@ -34,8 +32,6 @@ function renderPart(req) {
   const page = getContent()
   const statistic = page.data.statistic && getStatisticByIdFromRepo(page.data.statistic)
   const shortName = statistic && statistic.shortName ? statistic.shortName : undefined
-
-  moment.locale(page.language ? page.language : 'nb')
   const phrases = getPhrases(page)
 
   const title = phrases['statbankList.title']
