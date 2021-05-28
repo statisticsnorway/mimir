@@ -16,7 +16,7 @@ const Alerts = (props) => {
           >
             <div
               dangerouslySetInnerHTML={{
-                __html: alert.message
+                __html: alert.message.replace(/&nbsp;/g, ' ')
               }}
             />
           </Dialog>

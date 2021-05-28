@@ -100,7 +100,7 @@ RelatedArticles.propTypes = {
       preface: PropTypes.string,
       href: PropTypes.string.isRequired,
       imageSrc: PropTypes.string.isRequired,
-      imageAlt: PropTypes.string.isRequired
+      imageAlt: PropTypes.string
     })
   ).isRequired,
   showAll: PropTypes.string.isRequired,
