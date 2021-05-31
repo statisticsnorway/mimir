@@ -31,27 +31,27 @@ function BkibolCalculator(props) {
   })
   const [startValue, setStartValue] = useState({
     error: false,
-    errorMsg: props.phrases.pifValidateAmountNumber,
+    errorMsg: props.phrases.bkibolValidateAmountNumber,
     value: ''
   })
   const [startMonth, setStartMonth] = useState({
     error: false,
-    errorMsg: props.phrases.pifValidateMonth,
+    errorMsg: props.phrases.bkibolValidateMonth,
     value: ''
   })
   const [startYear, setStartYear] = useState({
     error: false,
-    errorMsg: `${props.phrases.pifValidateYear} ${maxYear}`,
+    errorMsg: `${props.phrases.bkibolValidateYear} ${maxYear}`,
     value: ''
   })
   const [endMonth, setEndMonth] = useState({
     error: false,
-    errorMsg: props.phrases.pifValidateMonth,
+    errorMsg: props.phrases.bkibolValidateMonth,
     value: ''
   })
   const [endYear, setEndYear] = useState({
     error: false,
-    errorMsg: `${props.phrases.pifValidateYear} ${maxYear}`,
+    errorMsg: `${props.phrases.bkibolValidateYear} ${maxYear}`,
     value: ''
   })
   const [errorMessage, setErrorMessage] = useState(null)
@@ -411,7 +411,7 @@ function BkibolCalculator(props) {
       <Container className="calculator-result">
         <Row className="mb-5">
           <Col className="amount-equal align-self-end col-12 col-md-4">
-            <h3>{props.phrases.pifAmountEqualled}</h3>
+            <h3>{props.phrases.amountEqualled}</h3>
           </Col>
           <Col className="end-value col-12 col-md-8">
             <span className="float-left float-md-right">
@@ -422,7 +422,7 @@ function BkibolCalculator(props) {
             <Divider dark/>
           </Col>
         </Row>
-        <Row className="mb-5">
+        <Row className="mb-0 mb-lg-5">
           <Col className="price-increase col-12 col-lg-4">
             <span>{priceChangeLabel}</span>
             <span className="float-right">
@@ -445,7 +445,7 @@ function BkibolCalculator(props) {
             <Divider dark/>
           </Col>
         </Row>
-        <Row className="mb-5">
+        <Row>
           <Col className="start-value col-12 col-lg-4 offset-lg-4">
             <span>{props.phrases.index} {startPeriod}</span>
             <span className="float-right">
@@ -459,12 +459,6 @@ function BkibolCalculator(props) {
               {renderNumber(endIndex)}
             </span>
             <Divider dark/>
-          </Col>
-        </Row>
-        <Row className="my-4">
-          <Col className="col-12 col-md-8">
-            <span className="info-title">{props.phrases.pifCalculatorInfoTitle}</span>
-            <p className="info-text">{props.phrases.pifCalculatorInfoText}</p>
           </Col>
         </Row>
       </Container>
@@ -523,13 +517,13 @@ function BkibolCalculator(props) {
         </Row>
         <Form onSubmit={onSubmit}>
           <Container>
-            <Row className="mt-4">
-              <Col className="select-serie">
+            <Row className="my-4">
+              <Col className="select-serie col-12 col-md-6 col-xl-5 mb-3 mb-md-0">
                 <Title size={3}>{props.phrases.bkibolWorkTypeDone}</Title>
                 { addDropdownSerieEnebolig() }
                 { addDropdownSerieBoligblokk() }
               </Col>
-              <Col className="choose-domene">
+              <Col className="choose-domene col-12 col-md-6 col-xl-7">
                 <Title size={3}>{props.phrases.bkibolChooseDwellingType}</Title>
                 <RadioGroup
                   onChange={(value) => {
@@ -550,9 +544,9 @@ function BkibolCalculator(props) {
                 />
               </Col>
             </Row>
-            <Divider className="my-5"/>
-            <Row className="my-5">
-              <Col className="amount">
+            <Divider/>
+            <Row className="my-4">
+              <Col className="input-amount col-12 col-md-6 col-xl-5 mb-3 mb-md-0">
                 <Title size={3}>{props.phrases.bkibolAmount}</Title>
                 <Input
                   className="start-value"
@@ -562,7 +556,7 @@ function BkibolCalculator(props) {
                   onBlur={() => onBlur('start-value')}
                 />
               </Col>
-              <Col className="choose-scope">
+              <Col className="choose-scope col-12 col-md-6 col-xl-7">
                 <Title size={3}>{props.phrases.bkibolAmountInclude}</Title>
                 <RadioGroup
                   onChange={(value) => {
@@ -583,8 +577,8 @@ function BkibolCalculator(props) {
                 />
               </Col>
             </Row>
-            <Divider className="my-5" />
-            <Row>
+            <Divider/>
+            <Row className="mt-4">
               <Col className="calculate-from col-12 col-md-6">
                 <h3>{props.phrases.calculatePriceChangeFrom}</h3>
                 <Container>

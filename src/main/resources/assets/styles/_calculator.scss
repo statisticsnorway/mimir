@@ -268,4 +268,26 @@
     }
 
   }
+
+  .bkibol-calculator .calculator-form {
+
+    .serie-enebolig, .serie-boligblokk {
+      max-width: 280px;
+      min-width: 270px;
+    }
+
+    .start-value {
+      width: 280px;
+    }
+
+    .input-amount {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .choose-scope {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  }
 }
