@@ -2,8 +2,12 @@
   <display-name>Navnesøk forside</display-name>
   <form>
     <field-set>
-      <label>Lenke til "om navnsøk"</label>
+      <label>Navnesøk</label>
       <items>
+      <input name="nameSearchDescription" type="HtmlArea">
+          <label>Tekst</label>
+          <occurrences minimum="0" maximum="1"/>
+        </input>
         <input name="aboutLinkTitle" type="TextLine">
           <label>Lenke tittel</label>
           <occurrences minimum="1" maximum="1"/>

@@ -145,15 +145,23 @@ function NameSearch(props) {
     <section className="name-search container-fluid p-0">
       <Container className="name-search-input">
         <Row>
-          <Col>
+          <Col lg="12">
             <Title size={2}>{props.phrases.nameSearchTitle}</Title>
           </Col>
+          {props.nameSearchDescription &&
+            <Col lg="12">
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: props.nameSearchDescription.replace(/&nbsp;/g, ' ')
+                }}></div>
+            </Col>
+          }
         </Row>
         <Form onSubmit={handleSubmit}>
           <Row>
             <Col>
               <Input
-                className="my-4"
+                className="mt-2 mb-4"
                 name="navn"
                 label={props.phrases.nameSearchInputLabel}
                 value={name.value}
@@ -186,6 +194,7 @@ NameSearch.propTypes = {
     title: PropTypes.string,
     url: PropTypes.string
   }),
+  nameSearchDescription: PropTypes.string,
   phrases: PropTypes.shape({
     nameSearchTitle: PropTypes.string,
     nameSearchInputLabel: PropTypes.string,
