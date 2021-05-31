@@ -166,7 +166,7 @@ function NameSearch(props) {
             <Col lg md="12">
               <Button primary type="submit">{props.phrases.nameSearchButtonText}</Button>
             </Col>
-            <Col lg md="12" className="d-lg-flex align-items-center justify-content-end">
+            <Col lg md="12" className="name-search-about-link">
               {
                 props.aboutLink && props.aboutLink.url &&
               <Link href={props.aboutLink.url}>{props.aboutLink.title}</Link>
