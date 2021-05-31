@@ -36,16 +36,8 @@
 								Definisjoner av viktige begrep og variabler
 							</label>
 							<config>
-								<exclude>
-									*
-								</exclude>
 								<include>
-									Styles Bold Italic Underline Strike Cut Copy
-									JustifyBlock JustifyLeft JustifyCenter JustifyRight
-									BulletedList NumberedList Outdent Indent
-									SpecialChar Anchor Image Macro Link Unlink
-									Table TableBlockquote
-									Subscript Superscript
+									Strike Subscript Superscript Cut Copy Blockquote
 								</include>
 								<allowHeadings>
 									h3 h4
@@ -58,16 +50,8 @@
 								Standard klassifikasjoner
 							</label>
 							<config>
-								<exclude>
-									*
-								</exclude>
 								<include>
-									Styles Bold Italic Underline Strike Cut Copy
-									JustifyBlock JustifyLeft JustifyCenter JustifyRight
-									BulletedList NumberedList Outdent Indent
-									SpecialChar Anchor Image Macro Link Unlink
-									Table TableBlockquote
-									Subscript Superscript
+									Strike Subscript Superscript Cut Copy Blockquote
 								</include>
 								<allowHeadings>
 									h3 h4
@@ -92,6 +76,9 @@
 								Navn og emne
 							</label>
 							<config>
+								<include>
+									Strike Subscript Superscript Cut Copy Blockquote
+								</include>
 								<allowHeadings>
 									h3 h4
 								</allowHeadings>
@@ -103,6 +90,9 @@
 								Ansvarlig Seksjon
 							</label>
 							<config>
+								<include>
+									Strike Subscript Superscript Cut Copy Blockquote
+								</include>
 								<allowHeadings>
 									h3 h4
 								</allowHeadings>
@@ -114,6 +104,9 @@
 								Regionalt nivå
 							</label>
 							<config>
+								<include>
+									Strike Subscript Superscript Cut Copy Blockquote
+								</include>
 								<allowHeadings>
 									h3 h4
 								</allowHeadings>
@@ -125,6 +118,9 @@
 								Hyppighet og aktualitet
 							</label>
 							<config>
+								<include>
+									Strike Subscript Superscript Cut Copy Blockquote
+								</include>
 								<allowHeadings>
 									h3 h4
 								</allowHeadings>
@@ -136,6 +132,9 @@
 								Internasjonal rapportering
 							</label>
 							<config>
+								<include>
+									Strike Subscript Superscript Cut Copy Blockquote
+								</include>
 								<allowHeadings>
 									h3 h4
 								</allowHeadings>
@@ -147,6 +146,9 @@
 								Lagring og anvendelse av grunnlagsmaterialet
 							</label>
 							<config>
+								<include>
+									Strike Subscript Superscript Cut Copy Blockquote
+								</include>
 								<allowHeadings>
 									h3 h4
 								</allowHeadings>
@@ -170,6 +172,9 @@
 								Formål og historie
 							</label>
 							<config>
+								<include>
+									Strike Subscript Superscript Cut Copy Blockquote
+								</include>
 								<allowHeadings>
 									h3 h4
 								</allowHeadings>
@@ -181,6 +186,9 @@
 								Brukere og bruksområder
 							</label>
 							<config>
+								<include>
+									Strike Subscript Superscript Cut Copy Blockquote
+								</include>
 								<allowHeadings>
 									h3 h4
 								</allowHeadings>
@@ -192,6 +200,9 @@
 								Likebehandling av brukere
 							</label>
 							<config>
+								<include>
+									Strike Subscript Superscript Cut Copy Blockquote
+								</include>
 								<allowHeadings>
 									h3 h4
 								</allowHeadings>
@@ -203,6 +214,9 @@
 								Sammenheng med annen statistikk
 							</label>
 							<config>
+								<include>
+									Strike Subscript Superscript Cut Copy Blockquote
+								</include>
 								<allowHeadings>
 									h3 h4
 								</allowHeadings>
@@ -214,6 +228,9 @@
 								Lovhjemmel
 							</label>
 							<config>
+								<include>
+									Strike Subscript Superscript Cut Copy Blockquote
+								</include>
 								<allowHeadings>
 									h3 h4
 								</allowHeadings>
@@ -225,6 +242,9 @@
 								EØS-referanse
 							</label>
 							<config>
+								<include>
+									Strike Subscript Superscript Cut Copy Blockquote
+								</include>
 								<allowHeadings>
 									h3 h4
 								</allowHeadings>
@@ -248,6 +268,9 @@
 								Omfang
 							</label>
 							<config>
+								<include>
+									Strike Subscript Superscript Cut Copy Blockquote
+								</include>
 								<allowHeadings>
 									h3 h4
 								</allowHeadings>
@@ -259,6 +282,9 @@
 								Datakilder og utvalg
 							</label>
 							<config>
+								<include>
+									Strike Subscript Superscript Cut Copy Blockquote
+								</include>
 								<allowHeadings>
 									h3 h4
 								</allowHeadings>
@@ -270,6 +296,9 @@
 								Datainnsamling, editering og beregninger
 							</label>
 							<config>
+								<include>
+									Strike Subscript Superscript Cut Copy Blockquote
+								</include>
 								<allowHeadings>
 									h3 h4
 								</allowHeadings>
@@ -281,6 +310,9 @@
 								Sesongjustering
 							</label>
 							<config>
+								<include>
+									Strike Subscript Superscript Cut Copy Blockquote
+								</include>
 								<allowHeadings>
 									h3 h4
 								</allowHeadings>
@@ -292,6 +324,9 @@
 								Konfidensialitet
 							</label>
 							<config>
+								<include>
+									Strike Subscript Superscript Cut Copy Blockquote
+								</include>
 								<allowHeadings>
 									h3 h4
 								</allowHeadings>
@@ -303,6 +338,9 @@
 								Sammenlignbarhet over tid og sted
 							</label>
 							<config>
+								<include>
+									Strike Subscript Superscript Cut Copy Blockquote
+								</include>
 								<allowHeadings>
 									h3 h4
 								</allowHeadings>
@@ -326,6 +364,9 @@
 								Feilkilder og usikkerhet
 							</label>
 							<config>
+								<include>
+									Strike Subscript Superscript Cut Copy Blockquote
+								</include>
 								<allowHeadings>
 									h3 h4
 								</allowHeadings>
@@ -337,6 +378,9 @@
 								Revisjon
 							</label>
 							<config>
+								<include>
+									Strike Subscript Superscript Cut Copy Blockquote
+								</include>
 								<allowHeadings>
 									h3 h4
 								</allowHeadings>
@@ -356,6 +400,11 @@
 					<label>
 						Relevant dokumentasjon
 					</label>
+					<config>
+						<include>
+									Strike Subscript Superscript Cut Copy Blockquote
+						</include>
+					</config>
 				</input>
 			</items>
 		</field-set>
@@ -373,6 +422,9 @@
 								Generelt om sesongjustering
 							</label>
 							<config>
+								<include>
+									Strike Subscript Superscript Cut Copy Blockquote
+								</include>
 								<allowHeadings>
 									h3
 								</allowHeadings>
@@ -384,6 +436,9 @@
 								Hvorfor sesongjusteres denne statistikken?
 							</label>
 							<config>
+								<include>
+									Strike Subscript Superscript Cut Copy Blockquote
+								</include>
 								<allowHeadings>
 									h3 h4
 								</allowHeadings>
@@ -395,6 +450,9 @@
 								Prekorrigering
 							</label>
 							<config>
+								<include>
+									Strike Subscript Superscript Cut Copy Blockquote
+								</include>
 								<allowHeadings>
 									h3 h4
 								</allowHeadings>
@@ -406,6 +464,9 @@
 								Sesongjustering
 							</label>
 							<config>
+								<include>
+									Strike Subscript Superscript Cut Copy Blockquote
+								</include>
 								<allowHeadings>
 									h3 h4
 								</allowHeadings>
@@ -417,6 +478,9 @@
 								Revisjonsrutiner
 							</label>
 							<config>
+								<include>
+									Strike Subscript Superscript Cut Copy Blockquote
+								</include>
 								<allowHeadings>
 									h3 h4
 								</allowHeadings>
@@ -428,6 +492,9 @@
 								Kvalitet på sesongjustering
 							</label>
 							<config>
+								<include>
+									Strike Subscript Superscript Cut Copy Blockquote
+								</include>
 								<allowHeadings>
 									h3 h4
 								</allowHeadings>
@@ -439,6 +506,9 @@
 								Spesielle tilfeller
 							</label>
 							<config>
+								<include>
+									Strike Subscript Superscript Cut Copy Blockquote
+								</include>
 								<allowHeadings>
 									h3 h4
 								</allowHeadings>
@@ -450,6 +520,9 @@
 								Publiseringsrutiner
 							</label>
 							<config>
+								<include>
+									Strike Subscript Superscript Cut Copy Blockquote
+								</include>
 								<allowHeadings>
 									h3 h4
 								</allowHeadings>
@@ -460,6 +533,11 @@
 							<label>
 								Relevant dokumentasjon
 							</label>
+							<config>
+								<include>
+									Strike Subscript Superscript Cut Copy Blockquote
+								</include>
+							</config>
 						</input>
 					</items>
 				</item-set>
