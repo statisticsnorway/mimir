@@ -121,14 +121,8 @@
       }
     }
 
-    @include media-breakpoint-down(lg) {
-
+    @include media-breakpoint-up(lg) {
       .calculator-form-frontpage {
-
-        .input-amount, .start-value {
-          width: 160px;
-        }
-
         .select-year {
           max-width: 120px;
         }
