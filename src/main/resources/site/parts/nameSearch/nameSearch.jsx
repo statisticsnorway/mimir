@@ -6,7 +6,6 @@ import axios from 'axios'
 
 /* TODO
 - Etternavn må få rett visning av beste-treff
-- Styling og presentasjon
 - Skjule mindre interessante resultater - må sikkert diskuteres noen runder med Siv og Ina
 */
 
@@ -56,10 +55,10 @@ function NameSearch(props) {
 
   function renderResult() {
     return (result && <div>
-      <Container className="name-search-result p-5">
+      <Container className="name-search-result">
         <Row>
           <Col>
-            <h3 className="result-title mb-1">{props.phrases.nameSearchResultTitle}</h3>
+            <Title size={3} className="result-title mb-1">{props.phrases.nameSearchResultTitle}</Title>
             <Divider dark/>
           </Col>
         </Row>
@@ -143,14 +142,10 @@ function NameSearch(props) {
   }
 
   return (
-    <section className="name-search container-fluid">
-      <Container className="name-search-input p-5">
+    <section className="name-search container-fluid p-0">
+      <Container className="name-search-input">
         <Row>
           <Col>
-            {
-              props.aboutLink && props.aboutLink.url &&
-              <Link className="float-right" href={props.aboutLink.url}>{props.aboutLink.title}</Link>
-            }
             <Title size={2}>{props.phrases.nameSearchTitle}</Title>
           </Col>
         </Row>
@@ -168,8 +163,14 @@ function NameSearch(props) {
             </Col>
           </Row>
           <Row>
-            <Col>
-              <Button type="submit">{props.phrases.nameSearchButtonText}</Button>
+            <Col lg md="12">
+              <Button primary type="submit">{props.phrases.nameSearchButtonText}</Button>
+            </Col>
+            <Col lg md="12" className="d-lg-flex align-items-center justify-content-end">
+              {
+                props.aboutLink && props.aboutLink.url &&
+              <Link href={props.aboutLink.url}>{props.aboutLink.title}</Link>
+              }
             </Col>
           </Row>
         </Form>
