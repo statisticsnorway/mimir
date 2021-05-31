@@ -61,17 +61,13 @@ function BkibolCalculator(props) {
   const [startPeriod, setStartPeriod] = useState(null)
   const [endPeriod, setEndPeriod] = useState(null)
   const [startValueResult, setStartValueResult] = useState(null)
+  const [startIndex, setStartIndex] = useState(null)
+  const [endIndex, setEndIndex] = useState(null)
   const language = props.language ? props.language : 'nb'
 
   const validMaxYear = new Date().getFullYear()
   const validMinYear = 1865
   const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
-
-
-  // useEffect(() => {
-  //   console.log('use effekt')
-  //   addDropdownSerie('serie')
-  // });
 
   function serieItemsDomene(domene) {
     return [
@@ -80,13 +76,13 @@ function BkibolCalculator(props) {
         title: props.phrases.bkibolWorkTypeAll
       },
       {
-        id: 'GRUNNARBEID',
-        title: props.phrases.bkibolWorkTypeGroundwork
-      },
-      {
         id: 'STEIN',
         title: props.phrases.bkibolWorkTypeStone,
         disabled: domene === 'BOLIGBLOKK' ? true : false
+      },
+      {
+        id: 'GRUNNARBEID',
+        title: props.phrases.bkibolWorkTypeGroundwork
       },
       {
         id: 'BYGGEARBEIDER',
@@ -149,6 +145,8 @@ function BkibolCalculator(props) {
         setStartPeriod(startPeriod)
         setEndPeriod(endPeriod)
         setStartValueResult(startValue.value)
+        setStartIndex(res.data.startIndex)
+        setEndIndex(res.data.endIndex)
       })
       .catch((err) => {
         if (err && err.response && err.response.data && err.response.data.error) {
@@ -304,23 +302,42 @@ function BkibolCalculator(props) {
     )
   }
 
-  function addDropdownSerieDomene(id, domene) {
-    // console.log('addDropdownSerieDomene: ' + domene)
-    // console.log('ITEMS: ' + JSON.stringify(serieItemsDomene(domene), null, 4))
-    return (
-      <Dropdown
-        className="serie"
-        id={id}
-        onSelect={(value) => {
-          onChange(id, value)
-        }}
-        selectedItem={{
-          title: props.phrases.bkibolChooseWork,
-          id: ''
-        }}
-        items={serieItemsDomene(domene)}
-      />
-    )
+  function addDropdownSerieEnebolig() {
+    if (domene.value === 'ENEBOLIG') {
+      return (
+        <Dropdown
+          className="serie-enebolig"
+          id='serie'
+          onSelect={(value) => {
+            onChange('serie', value)
+          }}
+          selectedItem={{
+            title: props.phrases.bkibolChooseWork,
+            id: ''
+          }}
+          items={serieItemsDomene('ENEBOLIG')}
+        />
+      )
+    }
+  }
+
+  function addDropdownSerieBoligblokk() {
+    if (domene.value === 'BOLIGBLOKK') {
+      return (
+        <Dropdown
+          className="serie-boligblokk"
+          id='serie'
+          onSelect={(value) => {
+            onChange('serie', value)
+          }}
+          selectedItem={{
+            title: props.phrases.bkibolChooseWork,
+            id: ''
+          }}
+          items={serieItemsDomene('BOLIGBLOKK')}
+        />
+      )
+    }
   }
 
   function getPeriod(year, month) {
@@ -330,6 +347,24 @@ function BkibolCalculator(props) {
   function getMonthLabel(month) {
     const monthLabel = props.months.find((m) => parseInt(m.id) === parseInt(month))
     return monthLabel ? monthLabel.title.toLowerCase() : ''
+  }
+
+  function renderNumber(value) {
+    if (endValue && change) {
+      const decimalSeparator = (language === 'en') ? '.' : ','
+      return (
+        <React.Fragment>
+          <NumberFormat
+            value={ Number(value) }
+            displayType={'text'}
+            thousandSeparator={' '}
+            decimalSeparator={decimalSeparator}
+            decimalScale={1}
+            fixedDecimalScale={true}
+          />
+        </React.Fragment>
+      )
+    }
   }
 
   function renderNumberValute(value) {
@@ -410,6 +445,22 @@ function BkibolCalculator(props) {
             <Divider dark/>
           </Col>
         </Row>
+        <Row className="mb-5">
+          <Col className="start-value col-12 col-lg-4 offset-lg-4">
+            <span>{props.phrases.index} {startPeriod}</span>
+            <span className="float-right">
+              {renderNumber(startIndex)}
+            </span>
+            <Divider dark/>
+          </Col>
+          <Col className="amount col-12 col-lg-4">
+            <span>{props.phrases.index} {endPeriod}</span>
+            <span className="float-right">
+              {renderNumber(endIndex)}
+            </span>
+            <Divider dark/>
+          </Col>
+        </Row>
         <Row className="my-4">
           <Col className="col-12 col-md-8">
             <span className="info-title">{props.phrases.pifCalculatorInfoTitle}</span>
@@ -475,8 +526,8 @@ function BkibolCalculator(props) {
             <Row className="mt-4">
               <Col className="select-serie">
                 <Title size={3}>{props.phrases.bkibolWorkTypeDone}</Title>
-                { addDropdownSerieDomene('serie', domene.value) }
-                {/* {addDropdownSerie('serie', serieItemsDomene(domene))}*/}
+                { addDropdownSerieEnebolig() }
+                { addDropdownSerieBoligblokk() }
               </Col>
               <Col className="choose-domene">
                 <Title size={3}>{props.phrases.bkibolChooseDwellingType}</Title>
@@ -517,16 +568,16 @@ function BkibolCalculator(props) {
                   onChange={(value) => {
                     onChange('scope', value)
                   }}
-                  selectedValue='ALL'
+                  selectedValue='ALT'
                   orientation='column'
                   items={[
                     {
                       label: props.phrases.bkibolExpenditureAll,
-                      value: 'ALL'
+                      value: 'ALT'
                     },
                     {
                       label: props.phrases.bkibolExpenditureMatrials,
-                      value: 'MATRIALE'
+                      value: 'MATERIALER'
                     }
                   ]}
                 />
