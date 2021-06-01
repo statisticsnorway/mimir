@@ -5,7 +5,7 @@
       <label>Navnesøk</label>
       <items>
       <input name="nameSearchDescription" type="HtmlArea">
-          <label>Tekst</label>
+          <label>Ingress</label>
           <occurrences minimum="0" maximum="1"/>
         </input>
         <input name="aboutLinkTitle" type="TextLine">

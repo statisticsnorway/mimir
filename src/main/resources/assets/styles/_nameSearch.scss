@@ -32,10 +32,17 @@
   }
 
   @include media-breakpoint-up(lg) {
-    .name-search-about-link {
-      display: inline-flex;
-      align-items: center;
-      justify-content: flex-end;
+    .name-search-input {
+      height: 410px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .name-search-about-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: flex-end;
+      }
     }
   }
 

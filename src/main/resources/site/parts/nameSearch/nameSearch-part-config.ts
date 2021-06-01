@@ -1,6 +1,6 @@
 export interface NameSearchPartConfig {
   /**
-   * Tekst
+   * Ingress
    */
   nameSearchDescription?: string;
 

@@ -123,6 +123,15 @@
 
     @include media-breakpoint-up(lg) {
       .calculator-form-frontpage {
+        height: 410px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .submit {
+          padding-top: 0;
+        }
+
         .select-year {
           max-width: 120px;
         }
@@ -136,12 +145,10 @@
         .start-value {
           margin-bottom: 20px;
         }
-
       }
     }
 
     @include media-breakpoint-down(md) {
-
       .calculator-form {
         padding: 20px;
 
@@ -196,7 +203,6 @@
       .calculator-error, .calculator-result  {
         padding: 20px;
       }
-
     }
 
     @include media-breakpoint-down(sm) {
