@@ -15,7 +15,7 @@ const {
   getLanguage
 } = __non_webpack_require__( '/lib/ssb/utils/language')
 const {
-  getCalculatorConfig, getKpiDatasetMonth
+  getCalculatorConfig, getPifDataset
 } = __non_webpack_require__('/lib/ssb/dataset/calculator')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 const view = resolve('./pifCalculator.html')
@@ -43,8 +43,8 @@ function renderPart(req) {
   const phrases = language.phrases
   const months = allMonths(phrases)
   const config = getCalculatorConfig()
-  const kpiDataMonth = getKpiDatasetMonth(config)
-  const lastUpdated = lastPeriod(kpiDataMonth)
+  const pifData = getPifDataset(config)
+  const lastUpdated = lastPeriod(pifData)
   const nextUpdate = nextPeriod(lastUpdated.month, lastUpdated.year)
   const nextReleaseMonth = nextUpdate.month == 12 ? 1 : nextUpdate.month + 1
   const nextPublishText = i18nLib.localize({
@@ -60,6 +60,8 @@ function renderPart(req) {
   const calculatorArticleUrl = part.config.pifCalculatorArticle ? pageUrl({
     id: part.config.pifCalculatorArticle
   }) : null
+
+  log.info('pif data', JSON.stringify(pifData, null, ''))
 
   const pifCalculator = new React4xp('PifCalculator')
     .setProps({
@@ -89,25 +91,15 @@ function renderPart(req) {
   }
 }
 
-const lastPeriod = (kpiDataMonth) => {
+const lastPeriod = (pifData) => {
   // eslint-disable-next-line new-cap
-  const dataYear = kpiDataMonth ? kpiDataMonth.Dimension('Tid').id : null
-  // eslint-disable-next-line new-cap
-  const dataMonth = kpiDataMonth ? kpiDataMonth.Dimension('Maaned').id : null
-  const lastYear = dataYear[dataYear.length - 1]
-  const dataLastYearMnd = []
+  const dataTime = pifData ? pifData.Dimension('Tid').id : null
 
-  dataMonth.forEach(function(month) {
-    // eslint-disable-next-line new-cap
-    const verdi = kpiDataMonth.Data( {
-      'Tid': lastYear,
-      'Maaned': month
-    } ).value
-    if (verdi != null) {
-      dataLastYearMnd.push(month)
-    }
-  })
-  const lastMonth = dataLastYearMnd[dataLastYearMnd.length - 1]
+  const lastTimeItem = dataTime[dataTime.length -1]
+  const splitTime = lastTimeItem.split('M')
+  
+  const lastYear = splitTime[0]
+  const lastMonth = splitTime[1]
 
   return {
     month: lastMonth,
