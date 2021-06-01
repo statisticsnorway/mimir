@@ -1,13 +1,12 @@
 import { Request } from 'enonic-types/controller'
-import { I18nLibrary } from 'enonic-types/i18n'
 import { Component, PortalLibrary } from 'enonic-types/portal'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Content } from 'enonic-types/content'
 import { PublicationArchivePartConfig } from './publicationArchive-part-config'
 
 const {
-  localize
-}: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
+  getPhrases
+} = __non_webpack_require__('/lib/ssb/utils/language')
 const {
   getContent, serviceUrl, getComponent
 }: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
@@ -22,23 +21,28 @@ exports.preview = (req: Request): React4xpResponse => renderPart(req)
 function renderPart(req: Request): React4xpResponse {
   const content: Content = getContent()
   const part: Component<PublicationArchivePartConfig> = getComponent()
+  const phrases: {[key: string]: string} = getPhrases(content)
   const language: string = content.language ? content.language : 'nb'
   const isNotInEditMode: boolean = req.mode !== 'edit'
   const publicationArchiveServiceUrl: string = serviceUrl({
     service: 'publicationArchive'
   })
 
-  const buttonTitle: string = localize({
-    key: 'button.showMore',
-    locale: language === 'nb' ? 'no' : language
-  })
-
   const props: PartProperties = {
-    title: 'Publikasjonsarkiv',
+    title: content.displayName,
     ingress: part.config.ingress || '',
-    buttonTitle,
+    buttonTitle: phrases['button.showMore'],
+    showingPhrase: phrases['publicationArchive.showing'],
     language,
-    publicationArchiveServiceUrl
+    publicationArchiveServiceUrl,
+    articleTypePhrases: {
+      default: phrases['articleType.default'],
+      report: phrases['articleType.report'],
+      note: phrases['articleType.note'],
+      analysis: phrases['articleType.analysis'],
+      economicTrends: phrases['articleType.economicTrends'],
+      discussionPaper: phrases['articleType.discussionPaper']
+    }
   }
 
   return React4xp.render('site/parts/publicationArchive/publicationArchive', props, req, {
@@ -50,6 +54,10 @@ interface PartProperties {
   title: string;
   ingress: string;
   buttonTitle: string;
+  showingPhrase: string;
   language: string;
   publicationArchiveServiceUrl: string;
+  articleTypePhrases: {
+    [key: string]: string;
+  };
 }

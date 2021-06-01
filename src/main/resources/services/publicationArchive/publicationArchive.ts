@@ -30,14 +30,14 @@ exports.get = (req: Request): Response => {
 }
 
 function getPublications(start: number = 0, count: number = 10, language: string): PublicationResult {
+  const languageQuery: string = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'
   const mainSubjects: Array<Content<Page>> = query({
     count: 500,
     contentTypes: [`${app.name}:page`],
-    query: `components.page.config.mimir.default.subjectType LIKE "mainSubject"`
+    query: `components.page.config.mimir.default.subjectType LIKE "mainSubject" ${languageQuery}`
   }).hits as unknown as Array<Content<Page>>
 
   const pagePaths: Array<string> = mainSubjects.map((mainSubject) => `_parentPath LIKE "/content${mainSubject._path}/*"`)
-  const languageQuery: string = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'
 
   const res: QueryResponse<Article> = query({
     start,
@@ -70,6 +70,7 @@ function prepareArticle(article: Content<Article>, mainSubject: Content<Page> | 
     publishDate: article.publish && article.publish.from ? article.publish.from : '',
     publishDateHuman: article.publish && article.publish.from ? moment(article.publish.from).locale(language).format('Do MMMM YYYY') : '',
     contentType: article.type,
+    articleType: article.data.articleType ? article.data.articleType : 'default',
     mainSubject: mainSubject ? mainSubject.displayName : ''
   }
 }
@@ -86,5 +87,6 @@ interface PublicationItem {
   publishDate: string;
   publishDateHuman: string;
   contentType: string;
+  articleType: string;
   mainSubject: string;
 }

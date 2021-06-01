@@ -12,7 +12,9 @@ function PublicationArchive(props) {
     ingress,
     buttonTitle,
     publicationArchiveServiceUrl,
-    language
+    language,
+    articleTypePhrases,
+    showingPhrase
   } = props
   const [publications, setPublications] = useState([])
   const [total, setTotal] = useState(0)
@@ -55,11 +57,18 @@ function PublicationArchive(props) {
                 {publication.preface}
               </Truncate>
             </p>
-            <span>{publication.contentType} / <time dateTime={publication.publishDate}>{publication.publishDateHuman}</time> / {publication.mainSubject} </span>
+            <span>
+              {getArticleType(publication)} /&nbsp;
+              <time dateTime={publication.publishDate}>{publication.publishDateHuman}</time> /&nbsp;
+              {publication.mainSubject}</span>
           </div>
         </div>
       )
     })
+  }
+
+  function getArticleType(publication) {
+    return articleTypePhrases[publication.articleType]
   }
 
   function renderLoading() {
@@ -86,7 +95,7 @@ function PublicationArchive(props) {
       <div className="container">
         <div className="row mb-5">
           <div className="col">
-            Viser {publications.length} av&nbsp;<NumberFormat
+            {showingPhrase.replace('{0}', publications.length)}&nbsp;<NumberFormat
               value={ Number(total) }
               displayType={'text'}
               thousandSeparator={' '}/>
@@ -115,6 +124,8 @@ PublicationArchive.propTypes = {
   title: PropTypes.string,
   ingress: PropTypes.string,
   buttonTitle: PropTypes.string,
+  showingPhrase: PropTypes.string,
   language: PropTypes.string,
-  publicationArchiveServiceUrl: PropTypes.string
+  publicationArchiveServiceUrl: PropTypes.string,
+  articleTypePhrases: PropTypes.objectOf(PropTypes.string)
 }
