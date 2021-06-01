@@ -116,10 +116,6 @@ const nextPeriod = (month, year) => {
 const allMonths = (phrases) => {
   return [
     {
-      id: '',
-      title: 'Velg måned'
-    },
-    {
       id: '01',
       title: phrases.january
     },

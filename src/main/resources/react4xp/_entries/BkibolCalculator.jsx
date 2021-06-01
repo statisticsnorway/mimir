@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Container, Row, Col } from 'react-bootstrap'
 import { Input,
@@ -26,7 +26,7 @@ function BkibolCalculator(props) {
   })
   const [serie, setSerie] = useState({
     error: false,
-    errorMsg: 'Feil serie',
+    errorMsg: props.phrases.bkibolValidateSerie,
     value: ''
   })
   const [startValue, setStartValue] = useState({
@@ -36,7 +36,7 @@ function BkibolCalculator(props) {
   })
   const [startMonth, setStartMonth] = useState({
     error: false,
-    errorMsg: props.phrases.bkibolValidateMonth,
+    errorMsg: props.phrases.bkibolValidateDropdownMonth,
     value: ''
   })
   const [startYear, setStartYear] = useState({
@@ -46,7 +46,7 @@ function BkibolCalculator(props) {
   })
   const [endMonth, setEndMonth] = useState({
     error: false,
-    errorMsg: props.phrases.bkibolValidateMonth,
+    errorMsg: props.phrases.bkibolValidateDropdownMonth,
     value: ''
   })
   const [endYear, setEndYear] = useState({
@@ -66,7 +66,7 @@ function BkibolCalculator(props) {
   const language = props.language ? props.language : 'nb'
 
   const validMaxYear = new Date().getFullYear()
-  const validMinYear = 1865
+  const validMinYear = 1979
   const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
 
   function serieItemsDomene(domene) {
@@ -161,7 +161,7 @@ function BkibolCalculator(props) {
   }
 
   function isFormValid() {
-    return isStartValueValid() && isStartYearValid() && isEndYearValid()
+    return isSerieValid() && isStartValueValid() && isStartYearValid() && isStartMonthValid() && isEndYearValid() && isEndMonthValid()
   }
 
   function isStartValueValid(value) {
@@ -185,6 +185,42 @@ function BkibolCalculator(props) {
     const isEndYearValid = testEndYear && testEndYear.length === 1
     const intEndYear = parseInt(endYearValue)
     return !(!isEndYearValid || isNaN(intEndYear) || intEndYear < validMinYear || intEndYear > validMaxYear)
+  }
+
+  function isSerieValid(value) {
+    const serieValue = value || serie.value
+    const serieValid = serieValue !== ''
+    if (!serieValid) {
+      setSerie({
+        ...serie,
+        error: true
+      })
+    }
+    return serieValid
+  }
+
+  function isStartMonthValid(value) {
+    const startMonthValue = value || startMonth.value
+    const startMonthValid = startMonthValue !== ''
+    if (!startMonthValid) {
+      setStartMonth({
+        ...startMonth,
+        error: true
+      })
+    }
+    return startMonthValid
+  }
+
+  function isEndMonthValid(value) {
+    const endMonthValue = value || endMonth.value
+    const endMonthValid = endMonthValue !== ''
+    if (!endMonthValid) {
+      setEndMonth({
+        ...endMonth,
+        error: true
+      })
+    }
+    return endMonthValid
   }
 
   function onBlur(id) {
@@ -235,7 +271,8 @@ function BkibolCalculator(props) {
     case 'serie': {
       setSerie({
         ...serie,
-        value: value.id
+        value: value.id,
+        error: serie.error ? !isSerieValid(value.id) : serie.error
       })
       break
     }
@@ -251,7 +288,8 @@ function BkibolCalculator(props) {
     case 'start-month': {
       setStartMonth({
         ...startMonth,
-        value: value.id
+        value: value.id,
+        error: startMonth.error ? !isStartMonthValid(value.id) : startMonth.error
       })
       break
     }
@@ -266,7 +304,8 @@ function BkibolCalculator(props) {
     case 'end-month': {
       setEndMonth({
         ...endMonth,
-        value: value.id
+        value: value.id,
+        error: endMonth.error ? !isEndMonthValid(value.id) : endMonth.error
       })
       break
     }
@@ -284,7 +323,7 @@ function BkibolCalculator(props) {
     }
   }
 
-  function addDropdownMonth(id) {
+  function addDropdownStartMonth(id) {
     return (
       <Dropdown
         className="month"
@@ -293,6 +332,28 @@ function BkibolCalculator(props) {
         onSelect={(value) => {
           onChange(id, value)
         }}
+        error={startMonth.error}
+        errorMessage={startMonth.errorMsg}
+        selectedItem={{
+          title: props.phrases.chooseMonth,
+          id: ''
+        }}
+        items={props.months}
+      />
+    )
+  }
+
+  function addDropdownEndMonth(id) {
+    return (
+      <Dropdown
+        className="month"
+        id={id}
+        header={props.phrases.chooseMonth}
+        onSelect={(value) => {
+          onChange(id, value)
+        }}
+        error={endMonth.error}
+        errorMessage={endMonth.errorMsg}
         selectedItem={{
           title: props.phrases.chooseMonth,
           id: ''
@@ -311,6 +372,8 @@ function BkibolCalculator(props) {
           onSelect={(value) => {
             onChange('serie', value)
           }}
+          error={serie.error}
+          errorMessage={serie.errorMsg}
           selectedItem={{
             title: props.phrases.bkibolChooseWork,
             id: ''
@@ -330,6 +393,8 @@ function BkibolCalculator(props) {
           onSelect={(value) => {
             onChange('serie', value)
           }}
+          error={serie.error}
+          errorMessage={serie.errorMsg}
           selectedItem={{
             title: props.phrases.bkibolChooseWork,
             id: ''
@@ -517,7 +582,7 @@ function BkibolCalculator(props) {
         </Row>
         <Form onSubmit={onSubmit}>
           <Container>
-            <Row className="my-4">
+            <Row className="my-5">
               <Col className="select-serie col-12 col-md-6 col-xl-5 mb-3 mb-md-0">
                 <Title size={3}>{props.phrases.bkibolWorkTypeDone}</Title>
                 { addDropdownSerieEnebolig() }
@@ -545,7 +610,7 @@ function BkibolCalculator(props) {
               </Col>
             </Row>
             <Divider/>
-            <Row className="my-4">
+            <Row className="my-5">
               <Col className="input-amount col-12 col-md-6 col-xl-5 mb-3 mb-md-0">
                 <Title size={3}>{props.phrases.bkibolAmount}</Title>
                 <Input
@@ -578,7 +643,7 @@ function BkibolCalculator(props) {
               </Col>
             </Row>
             <Divider/>
-            <Row className="mt-4">
+            <Row className="mt-5">
               <Col className="calculate-from col-12 col-md-6">
                 <h3>{props.phrases.calculatePriceChangeFrom}</h3>
                 <Container>
@@ -594,7 +659,7 @@ function BkibolCalculator(props) {
                       />
                     </Col>
                     <Col className="select-month col-sm-7">
-                      {addDropdownMonth('start-month')}
+                      {addDropdownStartMonth('start-month')}
                     </Col>
                   </Row>
                 </Container>
@@ -614,7 +679,7 @@ function BkibolCalculator(props) {
                       />
                     </Col>
                     <Col className="select-month col-sm-7">
-                      {addDropdownMonth('end-month')}
+                      {addDropdownEndMonth('end-month' )}
                     </Col>
                   </Row>
                 </Container>
