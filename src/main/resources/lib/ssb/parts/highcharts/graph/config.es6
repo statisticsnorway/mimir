@@ -230,5 +230,49 @@ export const createDefaultConfig = (highchartData, displayName) => ({
       fontSize: '20px',
       fontWeight: '700'
     }
+  },
+  responsive: {
+    rules: [{
+      condition: {
+        maxWidth: 750
+      },
+      chartOptions: {
+        chart: {
+          height: null
+        },
+        legend: {
+          align: 'center',
+          verticalAlign: 'bottom'
+        },
+        exporting: {
+          buttons: {
+            contextButton: {
+              verticalAlign: 'bottom',
+              y: -10
+            }
+          }
+        },
+        xAxis: {
+          labels: {
+            formatter: function () {
+              return this.value.charAt(0);
+            }
+          },
+          title: {
+            text: ''
+          }
+        },
+        yAxis: {
+          labels: {
+            align: 'left',
+            x: 0,
+            y: -2
+          },
+          title: {
+            text: ''
+          }
+        }
+      }
+    }]
   }
 })
