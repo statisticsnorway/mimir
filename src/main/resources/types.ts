@@ -1,5 +1,9 @@
 /* eslint-disable */
-declare function __non_webpack_require__<T>(path: string): T
+type LibMap = import("enonic-types/libs").EnonicLibraryMap;
+
+declare const __non_webpack_require__: <K extends keyof LibMap | string = string>(path: K) => K extends keyof LibMap
+  ? LibMap[K]
+  : any;
 
 declare const resolve: (path: string) => any
 
