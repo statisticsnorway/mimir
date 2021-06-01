@@ -25,6 +25,7 @@ export function createMenuTree(menuItemId: string): Array<MenuItemParsed> {
 
   if (menuContent !== null) {
     const menuContentChildren: QueryResponse<MenuItem> = getChildren({
+      count: 100,
       key: menuContent._id
     })
     return menuContentChildren.hits.map( (menuItem) => createMenuBranch(menuItem) )
@@ -43,7 +44,7 @@ function createMenuBranch(menuItem: Content<MenuItem>): MenuItemParsed {
   const isActive: boolean = isMenuItemActive(children, content)
   const iconPath: string | undefined = menuItem.data.icon ? imageUrl({
     id: menuItem.data.icon,
-    scale: 'block(12px,12px)'
+    scale: 'block(12,12)'
   }) : undefined
   const iconAltText: string | undefined = menuItem.data.icon ? getImageCaption(menuItem.data.icon) : undefined
   const iconSvgTag: string | undefined = menuItem.data.icon ? getAttachmentContent( menuItem.data.icon) : undefined
