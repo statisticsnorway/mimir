@@ -387,13 +387,11 @@ function KpiCalculator(props) {
   function renderIngressFrontpage() {
     if (props.frontPageIngress) {
       return (
-        <Row>
-          <Col className="publish-text pb-2"
-            dangerouslySetInnerHTML={{
-              __html: props.frontPageIngress
-            }}
-          />
-        </Row>
+        <Col lg="12" className="publish-text pb-2"
+          dangerouslySetInnerHTML={{
+            __html: props.frontPageIngress
+          }}
+        />
       )
     }
   }
@@ -420,7 +418,7 @@ function KpiCalculator(props) {
     return (
       <div className="calculator-form">
         <Row>
-          <Col>
+          <Col lg="12">
             <Title size={2}>{props.phrases.calculatePriceChange}</Title>
           </Col>
           {renderLinkArticle()}
@@ -504,8 +502,8 @@ function KpiCalculator(props) {
           <Col>
             <Title size={2}>{props.phrases.calculatePriceChange}</Title>
           </Col>
+          {renderIngressFrontpage()}
         </Row>
-        {renderIngressFrontpage()}
         <Form onSubmit={onSubmit}>
           <Container>
             <Row className="calculator-input">

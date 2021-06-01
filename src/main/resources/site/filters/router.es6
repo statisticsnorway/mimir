@@ -38,6 +38,11 @@ exports.filter = function(req, next) {
       key: '/ssb/kommuneareal/kommune'
     })._id
     pageTitle = `Kommuneareal ${municipality ? municipality.displayName : ''}`
+  } else if (req.path.indexOf('/barn-og-unge/') > -1) {
+    targetId = get({
+      key: '/ssb/barn-og-unge/kommune'
+    })._id
+    pageTitle = `Barn og unge ${municipality ? municipality.displayName : ''}`
   }
 
   if (!targetId) {
