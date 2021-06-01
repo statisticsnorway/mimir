@@ -85,14 +85,14 @@ function PublicationArchive(props) {
 
   return (
     <section className="publication-archive container">
-      <div>
+      <div className="publication-archive-head py-5 px-2">
         <Title>{title}</Title>
-        <div dangerouslySetInnerHTML={{
+        <div className="publication-archive-ingress" dangerouslySetInnerHTML={{
           __html: ingress.replace(/&nbsp;/g, ' ')
         }}>
         </div>
       </div>
-      <div className="container">
+      <div className="container publication-archive-body mt-5">
         <div className="row mb-5">
           <div className="col">
             {showingPhrase.replace('{0}', publications.length)}&nbsp;<NumberFormat
