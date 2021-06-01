@@ -1,5 +1,5 @@
-.part-kpi-calculator, .part-pif-calculator {
-  .kpi-calculator, .pif-calculator {
+.part-kpi-calculator, .part-pif-calculator, .part-bkibol-calculator {
+  .kpi-calculator, .pif-calculator, .bkibol-calculator {
     border: solid 1px $ssb-dark-5;
     border-top: 4px solid $green3;
     background: $ssb-white;
@@ -267,5 +267,27 @@
       }
     }
 
+  }
+
+  .bkibol-calculator .calculator-form {
+
+    .serie-enebolig, .serie-boligblokk {
+      max-width: 280px;
+      min-width: 270px;
+    }
+
+    .start-value {
+      width: 280px;
+    }
+
+    .input-amount {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .choose-scope {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
   }
 }
