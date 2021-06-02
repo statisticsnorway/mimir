@@ -9,41 +9,47 @@ function ComingReleases(props) {
   const [start, setStart] = useState(props.start)
   const [releases, setReleases] = useState(props.releases)
 
-
-  function concatReleases(k, l, r) {
-    return k == 'releases' ? [].concat(l, r) : r
-  }
-
-  function mergeReleases(moreReleases) {
-    moreReleases.forEach((y) => {
-      if (releases[y.year]) {
-        console.log('found year ' + y.year)
-        const currentYearReleases = releases[y.year]
-        y.releases.forEach( (m) => {
-          console.log('found month ' + m.month)
-          if (currentYearReleases[m.month]) {
-            const currentMonthlyReleases = currentYearReleases[m.month]
-            m.releases.forEach((d) => {
-              console.log('found day ' + d.day)
-              if (currentMonthlyReleases[d.day]) {
-                currentMonthlyReleases[d.day].concat(d.releases)
-              } else {
-                currentMonthlyReleases.concat(d)
-              }
-            })
-            currentYearReleases[m.month].concat(m.releases)
-          } else {
-            currentYearReleases.concat(m)
-          }
-        })
-      } else {
-        releases.concat(y)
+  const unitProps = ['year', 'month', 'day']
+  function mergeReleases2(array1, array2, level) {
+    let array1Index = 0
+    let array2Index = 0
+    const mergedArrays = []
+    console.log('start. level: ' + level )
+    console.log('mergedArryas')
+    console.log(mergedArrays)
+    while (!(array1Index == array1.length && array2Index == array2.length)) {
+      console.log(' array1Index ' + array1Index + ' array2Index: ' + array2Index)
+      console.log(array1[array1Index])
+      console.log(array2[array2Index])
+      console.log('mergedArryas :')
+      console.log(mergedArrays)
+      const value1 = array1[array1Index] ? parseInt(array1[array1Index][unitProps[level]]) : undefined
+      const value2 = array2[array2Index] ? parseInt(array2[array2Index][unitProps[level]]) : undefined
+      if (value1 === value2) {
+        console.log(value1 + ' === ' + value2 + ' = ' + (value1 === value2))
+        const nextMergedArray = mergeReleases2(array1[array1Index].releases, array2[array2Index].releases, level + 1)
+        console.log('nextMergedArray pretends to push this: ')
+        console.log(nextMergedArray)
+        // mergedArrays.push()
+        array1Index++
+        array2Index++
+      } else if ((!value2 && value1) || (array1[array1Index] && (value1 < value2))) {
+        console.log(value1 + ' < ' + value2 + ' = ' + (value1 < value2))
+        mergedArrays.push(array1)
+        array1Index++
+      } else if ((!value1 && value2) || (array2[array2Index] && (value1 > value2))) {
+        console.log(value1 + ' > ' + value2 + ' = ' + (value1 > value2))
+        mergedArrays.push(array2)
+        array2Index++
       }
-    })
+      console.log('mergedArryas :')
+      console.log(mergedArrays)
+    }
+    console.log('-- end recursive')
+    return mergedArrays
   }
 
   function fetchMoreReleases() {
-    console.log('fetch more releases')
     axios.get(props.upcomingReleasesServiceUrl, {
       params: {
         start,
@@ -51,11 +57,14 @@ function ComingReleases(props) {
         language: props.language
       }
     }).then((res) => {
-      console.log('res.data')
-      console.log(res.data)
-      mergeReleases(res.data.releases) // mergeDeepRight(concatReleases, releases, res.data.releases)
+      console.log('releases')
+      console.log(releases)
+      console.log('res.data.releases')
+      console.log(res.data.releases)
 
-      // setReleases(something)
+      const totalReleases = mergeReleases2(releases, res.data.releases, 0)
+      console.log('totalReleases')
+      console.log(totalReleases)
       setStart(start + props.count)
     }).finally(() => {
       // setLoadedFirst(true)
@@ -83,7 +92,7 @@ function ComingReleases(props) {
       year: year.year
     }
     return (
-      <article className={index === 0 && 'first'} key={index}>
+      <article className={index === 0 ? 'first' : ''} key={index}>
         <time dateTime={`${year}-${month.month}`}>
           <span className='day'>{day.day}</span>
           <span className='month'>{month.monthName}</span>
