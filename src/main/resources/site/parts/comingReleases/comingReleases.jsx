@@ -3,51 +3,96 @@ import { Button, Link, Paragraph, Title } from '@statisticsnorway/ssb-component-
 import PropTypes from 'prop-types'
 import axios from 'axios'
 import { ChevronDown } from 'react-feather'
-import { mergeDeepWithKey } from 'ramda'
 
 function ComingReleases(props) {
   const [start, setStart] = useState(props.start)
   const [releases, setReleases] = useState(props.releases)
 
   const unitProps = ['year', 'month', 'day']
-  function mergeReleases2(array1, array2, level) {
+  function mergeAnnualReleases(array1, array2) {
     let array1Index = 0
     let array2Index = 0
     const mergedArrays = []
-    console.log('start. level: ' + level )
-    console.log('mergedArryas')
-    console.log(mergedArrays)
-    while (!(array1Index == array1.length && array2Index == array2.length)) {
-      console.log(' array1Index ' + array1Index + ' array2Index: ' + array2Index)
-      console.log(array1[array1Index])
-      console.log(array2[array2Index])
-      console.log('mergedArryas :')
-      console.log(mergedArrays)
-      const value1 = array1[array1Index] ? parseInt(array1[array1Index][unitProps[level]]) : undefined
-      const value2 = array2[array2Index] ? parseInt(array2[array2Index][unitProps[level]]) : undefined
+    while (array1Index < array1.length || array2Index < array2.length) {
+      const value1 = array1[array1Index] ? parseInt(array1[array1Index].year) : undefined
+      const value2 = array2[array2Index] ? parseInt(array2[array2Index].year) : undefined
       if (value1 === value2) {
-        console.log(value1 + ' === ' + value2 + ' = ' + (value1 === value2))
-        const nextMergedArray = mergeReleases2(array1[array1Index].releases, array2[array2Index].releases, level + 1)
-        console.log('nextMergedArray pretends to push this: ')
-        console.log(nextMergedArray)
-        // mergedArrays.push()
+        const allMonthlyReleases = mergeMonthlyReleases(array1[array1Index].releases, array2[array2Index].releases)
+        mergedArrays.push({
+          ...array1[array1Index],
+          releases: allMonthlyReleases
+        })
+        array1Index++
+        array2Index++
+      } else if ((!value2 && value1) || array1[array1Index] && (value1 < value2)) {
+        mergedArrays.push(array1[array1Index])
+        array1Index++
+      } else if ((!value1 && value2) || array2[array2Index] && (value2 < value1)) {
+        mergedArrays.push(array2[array2Index])
+        array2Index++
+      } else {
+        array1Index++
+        array2Index++
+      }
+    }
+    return mergedArrays
+  }
+
+  function mergeMonthlyReleases(array1, array2) {
+    let array1Index = 0
+    let array2Index = 0
+    const mergedArrays = []
+    while (array1Index < array1.length || array2Index < array2.length) {
+      const value1 = array1[array1Index] ? parseInt(array1[array1Index].month) : undefined
+      const value2 = array2[array2Index] ? parseInt(array2[array2Index].month) : undefined
+      if (value1 === value2) {
+        const allDailyReleases = mergeDailyReleases(array1[array1Index].releases, array2[array2Index].releases)
+        mergedArrays.push({
+          ...array1[array1Index],
+          releases: allDailyReleases
+        })
         array1Index++
         array2Index++
       } else if ((!value2 && value1) || (array1[array1Index] && (value1 < value2))) {
-        console.log(value1 + ' < ' + value2 + ' = ' + (value1 < value2))
-        mergedArrays.push(array1)
+        mergedArrays.push(array1[array1Index])
         array1Index++
-      } else if ((!value1 && value2) || (array2[array2Index] && (value1 > value2))) {
-        console.log(value1 + ' > ' + value2 + ' = ' + (value1 > value2))
-        mergedArrays.push(array2)
+      } else if ((!value1 && value2) || (array2[array2Index] && (value2 < value1))) {
+        mergedArrays.push(array2[array2Index])
+        array2Index++
+      } else {
+        array1Index++
         array2Index++
       }
-      console.log('mergedArryas :')
-      console.log(mergedArrays)
     }
-    console.log('-- end recursive')
     return mergedArrays
   }
+
+  function mergeDailyReleases(array1, array2) {
+    let array1Index = 0
+    let array2Index = 0
+    const mergedArrays = []
+    while (array1Index < array1.length || array2Index < array2.length) {
+      const value1 = array1[array1Index] ? parseInt(array1[array1Index].day) : undefined
+      const value2 = array2[array2Index] ? parseInt(array2[array2Index].day) : undefined
+      if (value1 === value2) {
+        const nextMergedArray = array1[array1Index].releases.concat( array2[array2Index].releases)
+        mergedArrays.push(nextMergedArray)
+        array1Index++
+        array2Index++
+      } else if ((!value2 && value1) || (array1[array1Index] && (value1 < value2))) {
+        mergedArrays.push(array1[array1Index])
+        array1Index++
+      } else if ((!value1 && value2) || (array2[array2Index] && (value2 < value1))) {
+        mergedArrays.push(array2[array2Index])
+        array2Index++
+      } else {
+        array1Index++
+        array2Index++
+      }
+    }
+    return mergedArrays
+  }
+
 
   function fetchMoreReleases() {
     axios.get(props.upcomingReleasesServiceUrl, {
@@ -57,14 +102,10 @@ function ComingReleases(props) {
         language: props.language
       }
     }).then((res) => {
-      console.log('releases')
-      console.log(releases)
-      console.log('res.data.releases')
-      console.log(res.data.releases)
-
-      const totalReleases = mergeReleases2(releases, res.data.releases, 0)
+      const totalReleases = mergeAnnualReleases(releases, res.data.releases)
       console.log('totalReleases')
       console.log(totalReleases)
+      setReleases(totalReleases)
       setStart(start + props.count)
     }).finally(() => {
       // setLoadedFirst(true)
