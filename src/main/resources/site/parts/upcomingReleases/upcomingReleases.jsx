@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import axios from 'axios'
 import { ChevronDown } from 'react-feather'
 
-function ComingReleases(props) {
+function UpcomingReleases(props) {
   const [start, setStart] = useState(props.start)
   const [releases, setReleases] = useState(props.releases)
 
@@ -91,7 +91,7 @@ function ComingReleases(props) {
 
   return (
     <section className='nextStatisticsReleases'>
-      <Title size={2}>{props.title}</Title>
+      {props.title && <Title size={2}>{props.title}</Title>}
       {
         releases.map((year) => {
           return year.releases.map((month) => {
@@ -109,7 +109,7 @@ function ComingReleases(props) {
   )
 }
 
-ComingReleases.propTypes = {
+UpcomingReleases.propTypes = {
   title: PropTypes.string,
   language: PropTypes.string,
   upcomingReleasesServiceUrl: PropTypes.string,
@@ -151,4 +151,4 @@ ComingReleases.propTypes = {
   }))
 }
 
-export default (props) => <ComingReleases {...props}/>
+export default (props) => <UpcomingReleases {...props}/>

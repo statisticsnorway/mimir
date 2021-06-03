@@ -1,9 +1,13 @@
 <part>
-    <display-name>Kommende publiseringer</display-name>
+    <display-name>Publiseringskalender</display-name>
     <description>Liste over kommende statistikk publiseringer</description>
     <form>
+        <input type="TextLine" name="title">
+            <label>Tittel</label>
+            <occurrences minimum="1" maximum="1"/>
+        </input>
         <input type="TextLine" name="numberOfDays">
-            <label>Dager fremover i liste (før "vis mer")</label>
+            <label>Antall dager pr "side"</label>
             <occurrences minimum="1" maximum="1"/>
             <default>7</default>
             <config>
