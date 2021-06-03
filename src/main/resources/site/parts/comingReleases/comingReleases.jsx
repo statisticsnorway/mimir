@@ -18,16 +18,13 @@ function ComingReleases(props) {
       const value1 = array1[array1Index] ? parseInt(array1[array1Index][unitProp]) : undefined
       const value2 = array2[array2Index] ? parseInt(array2[array2Index][unitProp]) : undefined
       if (value1 === value2) {
-        if (unitProp === 'day') {
-          const nextMergedArray = array1[array1Index].releases.concat( array2[array2Index].releases)
-          mergedArrays.push(nextMergedArray)
-        } else {
-          const allMonthlyReleases = mergeReleases(array1[array1Index].releases, array2[array2Index].releases, lvl + 1)
-          mergedArrays.push({
-            ...array1[array1Index],
-            releases: allMonthlyReleases
-          })
-        }
+        const mergedReleases = unitProp === 'day' ?
+          array1[array1Index].releases.concat( array2[array2Index].releases) :
+          mergeReleases(array1[array1Index].releases, array2[array2Index].releases, lvl + 1)
+        mergedArrays.push({
+          ...array1[array1Index],
+          releases: mergedReleases
+        })
         array1Index++
         array2Index++
       } else if ((!value2 && value1) || array1[array1Index] && (value1 < value2)) {
@@ -44,62 +41,6 @@ function ComingReleases(props) {
     return mergedArrays
   }
 
-  /* function mergeMonthlyReleases(array1, array2) {
-    let array1Index = 0
-    let array2Index = 0
-    const mergedArrays = []
-    while (array1Index < array1.length || array2Index < array2.length) {
-      const value1 = array1[array1Index] ? parseInt(array1[array1Index].month) : undefined
-      const value2 = array2[array2Index] ? parseInt(array2[array2Index].month) : undefined
-      if (value1 === value2) {
-        const allDailyReleases = mergeDailyReleases(array1[array1Index].releases, array2[array2Index].releases)
-        mergedArrays.push({
-          ...array1[array1Index],
-          releases: allDailyReleases
-        })
-        array1Index++
-        array2Index++
-      } else if ((!value2 && value1) || (array1[array1Index] && (value1 < value2))) {
-        mergedArrays.push(array1[array1Index])
-        array1Index++
-      } else if ((!value1 && value2) || (array2[array2Index] && (value2 < value1))) {
-        mergedArrays.push(array2[array2Index])
-        array2Index++
-      } else {
-        array1Index++
-        array2Index++
-      }
-    }
-    return mergedArrays
-  }
-
-  function mergeDailyReleases(array1, array2) {
-    let array1Index = 0
-    let array2Index = 0
-    const mergedArrays = []
-    while (array1Index < array1.length || array2Index < array2.length) {
-      const value1 = array1[array1Index] ? parseInt(array1[array1Index].day) : undefined
-      const value2 = array2[array2Index] ? parseInt(array2[array2Index].day) : undefined
-      if (value1 === value2) {
-        const nextMergedArray = array1[array1Index].releases.concat( array2[array2Index].releases)
-        mergedArrays.push(nextMergedArray)
-        array1Index++
-        array2Index++
-      } else if ((!value2 && value1) || (array1[array1Index] && (value1 < value2))) {
-        mergedArrays.push(array1[array1Index])
-        array1Index++
-      } else if ((!value1 && value2) || (array2[array2Index] && (value2 < value1))) {
-        mergedArrays.push(array2[array2Index])
-        array2Index++
-      } else {
-        array1Index++
-        array2Index++
-      }
-    }
-    return mergedArrays
-  }*/
-
-
   function fetchMoreReleases() {
     axios.get(props.upcomingReleasesServiceUrl, {
       params: {
@@ -109,15 +50,9 @@ function ComingReleases(props) {
       }
     }).then((res) => {
       const totalReleases = mergeReleases(releases, res.data.releases, 0)
-      console.log('totalReleases')
-      console.log(totalReleases)
       setReleases(totalReleases)
       setStart(start + props.count)
-    }).finally(() => {
-      // setLoadedFirst(true)
-      // setArticleStart((prevState) => prevState + props.count)
-    }
-    )
+    })
   }
 
   function renderRelease(release, index, date) {
