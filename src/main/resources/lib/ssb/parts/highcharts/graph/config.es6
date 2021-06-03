@@ -238,7 +238,7 @@ export const createDefaultConfig = (highchartData, displayName) => ({
       },
       chartOptions: {
         chart: {
-          height: null
+          height: 420
         },
         legend: {
           align: 'center',
@@ -254,9 +254,7 @@ export const createDefaultConfig = (highchartData, displayName) => ({
         },
         xAxis: {
           labels: {
-            formatter: function () {
-              return this.value.charAt(0);
-            }
+            y: 25
           },
           title: {
             text: ''
@@ -266,7 +264,7 @@ export const createDefaultConfig = (highchartData, displayName) => ({
           labels: {
             align: 'left',
             x: 0,
-            y: -2
+            y: 0
           },
           title: {
             text: ''
