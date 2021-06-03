@@ -1,5 +1,3 @@
-import { VariantUtilsLib } from '../utils/variantUtils'
-
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { StatRegNode } from '../repo/statreg'
 import { StatisticInListing, VariantInListing, ReleasesInListing, ReleaseDatesVariant } from '../dashboard/statreg/types'

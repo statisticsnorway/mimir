@@ -6,7 +6,7 @@ function FrontpageKeyfigures(props) {
   function createRows() {
     const keyFigures = props.keyFigures
     const {
-      height, width
+      width
     } = useWindowDimensions()
 
     return keyFigures.map((keyFigure, i) => {
