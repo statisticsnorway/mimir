@@ -247,7 +247,6 @@ function PifCalculator(props) {
       <Dropdown
         className="productGroup"
         id={id}
-        header={props.phrases.chooseMonth}
         onSelect={(value) => {
           onChange(id, value)
         }}
