@@ -1,45 +1,57 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Container, Row, Col } from 'react-bootstrap'
-import { Input, Button, Dropdown, Divider, FormError, Link, RadioGroup } from '@statisticsnorway/ssb-component-library'
+import { Input,
+  Button,
+  Dropdown,
+  Divider,
+  FormError,
+  Link,
+  RadioGroup,
+  Title } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
 import NumberFormat from 'react-number-format'
 
-function PifCalculator(props) {
+function BkibolCalculator(props) {
   const maxYear = '2021' // TODO get from data
-  const [scopeCode, setScopeCode] = useState({
+  const [scope, setScope] = useState({
     error: false,
     errorMsg: 'Feil markedskode',
     value: ''
   })
-  const [productGroup, setProductGroup] = useState({
+  const [domene, setDomene] = useState({
     error: false,
-    errorMsg: 'Feil produktgruppe',
+    errorMsg: 'Feil domene',
+    value: 'ENEBOLIG'
+  })
+  const [serie, setSerie] = useState({
+    error: false,
+    errorMsg: props.phrases.bkibolValidateSerie,
     value: ''
   })
   const [startValue, setStartValue] = useState({
     error: false,
-    errorMsg: props.phrases.pifValidateAmountNumber,
+    errorMsg: props.phrases.bkibolValidateAmountNumber,
     value: ''
   })
   const [startMonth, setStartMonth] = useState({
     error: false,
-    errorMsg: props.phrases.pifValidateMonth,
+    errorMsg: props.phrases.bkibolValidateDropdownMonth,
     value: ''
   })
   const [startYear, setStartYear] = useState({
     error: false,
-    errorMsg: `${props.phrases.pifValidateYear} ${maxYear}`,
+    errorMsg: `${props.phrases.bkibolValidateYear} ${maxYear}`,
     value: ''
   })
   const [endMonth, setEndMonth] = useState({
     error: false,
-    errorMsg: props.phrases.pifValidateMonth,
+    errorMsg: props.phrases.bkibolValidateDropdownMonth,
     value: ''
   })
   const [endYear, setEndYear] = useState({
     error: false,
-    errorMsg: `${props.phrases.pifValidateYear} ${maxYear}`,
+    errorMsg: `${props.phrases.bkibolValidateYear} ${maxYear}`,
     value: ''
   })
   const [errorMessage, setErrorMessage] = useState(null)
@@ -54,8 +66,47 @@ function PifCalculator(props) {
   const language = props.language ? props.language : 'nb'
 
   const validMaxYear = new Date().getFullYear()
-  const validMinYear = 1865
+  const validMinYear = 1979
   const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
+
+  function serieItemsDomene(domene) {
+    return [
+      {
+        id: 'ALT',
+        title: props.phrases.bkibolWorkTypeAll
+      },
+      {
+        id: 'STEIN',
+        title: props.phrases.bkibolWorkTypeStone,
+        disabled: domene === 'BOLIGBLOKK' ? true : false
+      },
+      {
+        id: 'GRUNNARBEID',
+        title: props.phrases.bkibolWorkTypeGroundwork
+      },
+      {
+        id: 'BYGGEARBEIDER',
+        title: props.phrases.bkibolWorkTypeWithoutStone,
+        disabled: domene === 'BOLIGBLOKK' ? true : false
+      },
+      {
+        id: 'TOMRING',
+        title: props.phrases.bkibolWorkTypeCarpentry
+      },
+      {
+        id: 'MALING',
+        title: props.phrases.bkibolWorkTypePainting
+      },
+      {
+        id: 'RORLEGGERARBEID',
+        title: props.phrases.bkibolWorkTypePlumbing
+      },
+      {
+        id: 'ELEKTRIKERARBEID',
+        title: props.phrases.bkibolWorkTypeElectric
+      }
+    ]
+  }
 
   function onSubmit(e) {
     e.preventDefault()
@@ -68,12 +119,14 @@ function PifCalculator(props) {
       onBlur('end-year')
       return
     }
+
     setErrorMessage(null)
     setLoading(true)
-    axios.get(props.pifServiceUrl, {
+    axios.get(props.bkibolServiceUrl, {
       params: {
-        scopeCode: scopeCode.value,
-        productGroup: productGroup.value,
+        scope: scope.value,
+        domene: domene.value,
+        serie: serie.value,
         startValue: startValue.value,
         startYear: startYear.value,
         startMonth: startMonth.value,
@@ -108,7 +161,7 @@ function PifCalculator(props) {
   }
 
   function isFormValid() {
-    return isStartValueValid() && isStartYearValid() && isEndYearValid()
+    return isSerieValid() && isStartValueValid() && isStartYearValid() && isStartMonthValid() && isEndYearValid() && isEndMonthValid()
   }
 
   function isStartValueValid(value) {
@@ -132,6 +185,42 @@ function PifCalculator(props) {
     const isEndYearValid = testEndYear && testEndYear.length === 1
     const intEndYear = parseInt(endYearValue)
     return !(!isEndYearValid || isNaN(intEndYear) || intEndYear < validMinYear || intEndYear > validMaxYear)
+  }
+
+  function isSerieValid(value) {
+    const serieValue = value || serie.value
+    const serieValid = serieValue !== ''
+    if (!serieValid) {
+      setSerie({
+        ...serie,
+        error: true
+      })
+    }
+    return serieValid
+  }
+
+  function isStartMonthValid(value) {
+    const startMonthValue = value || startMonth.value
+    const startMonthValid = startMonthValue !== ''
+    if (!startMonthValid) {
+      setStartMonth({
+        ...startMonth,
+        error: true
+      })
+    }
+    return startMonthValid
+  }
+
+  function isEndMonthValid(value) {
+    const endMonthValue = value || endMonth.value
+    const endMonthValid = endMonthValue !== ''
+    if (!endMonthValid) {
+      setEndMonth({
+        ...endMonth,
+        error: true
+      })
+    }
+    return endMonthValid
   }
 
   function onBlur(id) {
@@ -165,17 +254,25 @@ function PifCalculator(props) {
 
   function onChange(id, value) {
     switch (id) {
-    case 'scope-code': {
-      setScopeCode({
-        ...scopeCode,
+    case 'scope': {
+      setScope({
+        ...scope,
         value: value
       })
       break
     }
-    case 'product-group': {
-      setProductGroup({
-        ...productGroup,
-        value: value.id
+    case 'domene': {
+      setDomene({
+        ...domene,
+        value: value
+      })
+      break
+    }
+    case 'serie': {
+      setSerie({
+        ...serie,
+        value: value.id,
+        error: serie.error ? !isSerieValid(value.id) : serie.error
       })
       break
     }
@@ -191,7 +288,8 @@ function PifCalculator(props) {
     case 'start-month': {
       setStartMonth({
         ...startMonth,
-        value: value.id
+        value: value.id,
+        error: startMonth.error ? !isStartMonthValid(value.id) : startMonth.error
       })
       break
     }
@@ -206,7 +304,8 @@ function PifCalculator(props) {
     case 'end-month': {
       setEndMonth({
         ...endMonth,
-        value: value.id
+        value: value.id,
+        error: endMonth.error ? !isEndMonthValid(value.id) : endMonth.error
       })
       break
     }
@@ -224,7 +323,7 @@ function PifCalculator(props) {
     }
   }
 
-  function addDropdownMonth(id) {
+  function addDropdownStartMonth(id) {
     return (
       <Dropdown
         className="month"
@@ -233,8 +332,10 @@ function PifCalculator(props) {
         onSelect={(value) => {
           onChange(id, value)
         }}
+        error={startMonth.error}
+        errorMessage={startMonth.errorMsg}
         selectedItem={{
-          title: props.phrases.calculatorMonthAverage,
+          title: props.phrases.chooseMonth,
           id: ''
         }}
         items={props.months}
@@ -242,21 +343,66 @@ function PifCalculator(props) {
     )
   }
 
-  function addDropdownProduct(id) {
+  function addDropdownEndMonth(id) {
     return (
       <Dropdown
-        className="productGroup"
+        className="month"
         id={id}
+        header={props.phrases.chooseMonth}
         onSelect={(value) => {
           onChange(id, value)
         }}
+        error={endMonth.error}
+        errorMessage={endMonth.errorMsg}
         selectedItem={{
-          title: 'Alle varegruppene',
-          id: 'SITCT'
+          title: props.phrases.chooseMonth,
+          id: ''
         }}
-        items={props.productGroups}
+        items={props.months}
       />
     )
+  }
+
+  function addDropdownSerieEnebolig() {
+    if (domene.value === 'ENEBOLIG') {
+      return (
+        <Dropdown
+          className="serie-enebolig"
+          id='serie'
+          onSelect={(value) => {
+            onChange('serie', value)
+          }}
+          error={serie.error}
+          errorMessage={serie.errorMsg}
+          selectedItem={{
+            title: props.phrases.bkibolChooseWork,
+            id: ''
+          }}
+          items={serieItemsDomene('ENEBOLIG')}
+        />
+      )
+    }
+  }
+
+  function addDropdownSerieBoligblokk() {
+    if (domene.value === 'BOLIGBLOKK') {
+      return (
+        <Dropdown
+          className="serie-boligblokk"
+          id='serie'
+          onSelect={(value) => {
+            onChange('serie', value)
+          }}
+          error={serie.error}
+          errorMessage={serie.errorMsg}
+          selectedItem={{
+            title: props.phrases.bkibolChooseWork,
+            id: ''
+          }}
+          items={serieItemsDomene('BOLIGBLOKK')}
+        />
+      )
+    }
   }
 
   function getPeriod(year, month) {
@@ -266,6 +412,24 @@ function PifCalculator(props) {
   function getMonthLabel(month) {
     const monthLabel = props.months.find((m) => parseInt(m.id) === parseInt(month))
     return monthLabel ? monthLabel.title.toLowerCase() : ''
+  }
+
+  function renderNumber(value) {
+    if (endValue && change) {
+      const decimalSeparator = (language === 'en') ? '.' : ','
+      return (
+        <React.Fragment>
+          <NumberFormat
+            value={ Number(value) }
+            displayType={'text'}
+            thousandSeparator={' '}
+            decimalSeparator={decimalSeparator}
+            decimalScale={1}
+            fixedDecimalScale={true}
+          />
+        </React.Fragment>
+      )
+    }
   }
 
   function renderNumberValute(value) {
@@ -306,31 +470,13 @@ function PifCalculator(props) {
     }
   }
 
-  function renderNumber(value) {
-    if (endValue && change) {
-      const decimalSeparator = (language === 'en') ? '.' : ','
-      return (
-        <React.Fragment>
-          <NumberFormat
-            value={ Number(value) }
-            displayType={'text'}
-            thousandSeparator={' '}
-            decimalSeparator={decimalSeparator}
-            decimalScale={1}
-            fixedDecimalScale={true}
-          />
-        </React.Fragment>
-      )
-    }
-  }
-
   function calculatorResult() {
     const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
     return (
       <Container className="calculator-result">
         <Row className="mb-5">
           <Col className="amount-equal align-self-end col-12 col-md-4">
-            <h3>{props.phrases.pifAmountEqualled}</h3>
+            <h3>{props.phrases.amountEqualled}</h3>
           </Col>
           <Col className="end-value col-12 col-md-8">
             <span className="float-left float-md-right">
@@ -341,7 +487,7 @@ function PifCalculator(props) {
             <Divider dark/>
           </Col>
         </Row>
-        <Row className="mb-5">
+        <Row className="mb-0 mb-lg-5">
           <Col className="price-increase col-12 col-lg-4">
             <span>{priceChangeLabel}</span>
             <span className="float-right">
@@ -364,18 +510,16 @@ function PifCalculator(props) {
             <Divider dark/>
           </Col>
         </Row>
-        <Row className="mb-5">
-          <Col className="price-increase col-12 col-lg-4">
-          </Col>
-          <Col className="start-value col-12 col-lg-4">
-            <span>{props.phrases.pifIndex} {startPeriod}</span>
+        <Row>
+          <Col className="start-value col-12 col-lg-4 offset-lg-4">
+            <span>{props.phrases.index} {startPeriod}</span>
             <span className="float-right">
               {renderNumber(startIndex)}
             </span>
             <Divider dark/>
           </Col>
           <Col className="amount col-12 col-lg-4">
-            <span>{props.phrases.pifIndex} {endPeriod}</span>
+            <span>{props.phrases.index} {endPeriod}</span>
             <span className="float-right">
               {renderNumber(endIndex)}
             </span>
@@ -427,7 +571,7 @@ function PifCalculator(props) {
       <div className="calculator-form">
         <Row>
           <Col>
-            <h2>Priskalkulator for førstegangsomsetning</h2>
+            <Title size={2}>{props.phrases.bkibolTitle}</Title>
           </Col>
           {renderLinkArticle()}
         </Row>
@@ -438,37 +582,37 @@ function PifCalculator(props) {
         </Row>
         <Form onSubmit={onSubmit}>
           <Container>
-            <Row>
-              <Col className="choose-scope">
+            <Row className="my-5">
+              <Col className="select-serie col-12 col-md-6 col-xl-5 mb-3 mb-md-0">
+                <Title size={3}>{props.phrases.bkibolWorkTypeDone}</Title>
+                { addDropdownSerieEnebolig() }
+                { addDropdownSerieBoligblokk() }
+              </Col>
+              <Col className="choose-domene col-12 col-md-6 col-xl-7">
+                <Title size={3}>{props.phrases.bkibolChooseDwellingType}</Title>
                 <RadioGroup
-                  header="Velg marked"
                   onChange={(value) => {
-                    onChange('scope-code', value)
+                    onChange('domene', value)
                   }}
-                  selectedValue="3"
-                  orientation="column"
+                  selectedValue='ENEBOLIG'
+                  orientation='column'
                   items={[
                     {
-                      label: 'Hjemme- og importmarked',
-                      value: '3'
+                      label: props.phrases.bkibolDetachedHouse,
+                      value: 'ENEBOLIG'
                     },
                     {
-                      label: 'Kun hjemmemarked',
-                      value: '2'
+                      label: props.phrases.bkibolMultiDwellingHouse,
+                      value: 'BOLIGBLOKK'
                     }
                   ]}
                 />
               </Col>
             </Row>
-            <Row>
-              <Col className="select-product-group">
-                <h3>Hvilken type vare er det?</h3>
-                {addDropdownProduct('product-group')}
-              </Col>
-            </Row>
-            <Row>
-              <Col className="input-amount">
-                <h3>Hva var prisen på varen?</h3>
+            <Divider/>
+            <Row className="my-5">
+              <Col className="input-amount col-12 col-md-6 col-xl-5 mb-3 mb-md-0">
+                <Title size={3}>{props.phrases.bkibolAmount}</Title>
                 <Input
                   className="start-value"
                   handleChange={(value) => onChange('start-value', value)}
@@ -477,8 +621,29 @@ function PifCalculator(props) {
                   onBlur={() => onBlur('start-value')}
                 />
               </Col>
+              <Col className="choose-scope col-12 col-md-6 col-xl-7">
+                <Title size={3}>{props.phrases.bkibolAmountInclude}</Title>
+                <RadioGroup
+                  onChange={(value) => {
+                    onChange('scope', value)
+                  }}
+                  selectedValue='ALT'
+                  orientation='column'
+                  items={[
+                    {
+                      label: props.phrases.bkibolExpenditureAll,
+                      value: 'ALT'
+                    },
+                    {
+                      label: props.phrases.bkibolExpenditureMatrials,
+                      value: 'MATERIALER'
+                    }
+                  ]}
+                />
+              </Col>
             </Row>
-            <Row>
+            <Divider/>
+            <Row className="mt-5">
               <Col className="calculate-from col-12 col-md-6">
                 <h3>{props.phrases.calculatePriceChangeFrom}</h3>
                 <Container>
@@ -494,7 +659,7 @@ function PifCalculator(props) {
                       />
                     </Col>
                     <Col className="select-month col-sm-7">
-                      {addDropdownMonth('start-month')}
+                      {addDropdownStartMonth('start-month')}
                     </Col>
                   </Row>
                 </Container>
@@ -514,7 +679,7 @@ function PifCalculator(props) {
                       />
                     </Col>
                     <Col className="select-month col-sm-7">
-                      {addDropdownMonth('end-month')}
+                      {addDropdownEndMonth('end-month' )}
                     </Col>
                   </Row>
                 </Container>
@@ -532,20 +697,20 @@ function PifCalculator(props) {
   }
 
   return (
-    <Container className='pif-calculator'>
+    <Container className='bkibol-calculator'>
       {renderForm()}
       {renderResult()}
     </Container>
   )
 }
 
-PifCalculator.defaultValue = {
-  pifServiceUrl: null,
+BkibolCalculator.defaultValue = {
+  bkibolServiceUrl: null,
   language: 'nb'
 }
 
-PifCalculator.propTypes = {
-  pifServiceUrl: PropTypes.string,
+BkibolCalculator.propTypes = {
+  bkibolServiceUrl: PropTypes.string,
   language: PropTypes.string,
   months: PropTypes.arrayOf(
     PropTypes.shape({
@@ -553,15 +718,9 @@ PifCalculator.propTypes = {
       title: PropTypes.string
     })
   ),
-  productGroups: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      title: PropTypes.string
-    })
-  ),
   phrases: PropTypes.arrayOf(PropTypes.string),
-  nextPublishText: PropTypes.string,
-  calculatorArticleUrl: PropTypes.string
+  calculatorArticleUrl: PropTypes.string,
+  nextPublishText: PropTypes.string
 }
 
-export default (props) => <PifCalculator {...props} />
+export default (props) => <BkibolCalculator {...props} />

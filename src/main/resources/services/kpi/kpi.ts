@@ -7,7 +7,7 @@ import { CalculatorLib } from '../../lib/ssb/dataset/calculator'
 import { I18nLibrary } from 'enonic-types/i18n'
 const i18nLib: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
 const {
-  getCalculatorConfig, getKpiDatasetYear, getKpiDatasetMonth
+  getCalculatorConfig, getKpiDatasetYear, getKpiDatasetMonth, isChronological, getChangeValue
 }: CalculatorLib = __non_webpack_require__('/lib/ssb/dataset/calculator')
 
 function get(req: HttpRequestParams): Response {
@@ -127,23 +127,4 @@ interface IndexResult {
 interface KpiData {
   month: Dataset | null;
   year: Dataset | null;
-}
-
-function getChangeValue(startIndex: number, endIndex: number, chronological: boolean): number {
-  if (chronological) {
-    return ((endIndex - startIndex) / startIndex)
-  } else {
-    return ((startIndex - endIndex) / endIndex)
-  }
-}
-
-function isChronological(startYear: string, startMonth: string, endYear: string, endMonth: string): boolean {
-  if (parseInt(startYear) < parseInt(endYear)) return true
-  if (parseInt(endYear) < parseInt(startYear)) return false
-
-  if (startMonth != '90' && endMonth != '90') {
-    if (parseInt(startMonth) < parseInt(endMonth)) return true
-    if (parseInt(startMonth) > parseInt(endMonth)) return false
-  }
-  return true
 }

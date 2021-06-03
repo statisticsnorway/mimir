@@ -1,0 +1,19 @@
+<part>
+    <display-name>Publikasjonsarkiv</display-name>
+    <form>
+        <field-set>
+            <label>Publikasjonsarkiv</label>
+            <items>
+                <input name="ingress" type="HtmlArea">
+                    <label>Ingress</label>
+                    <occurrences minimum="0" maximum="1" />
+                    <config>
+                        <include>
+                            Strike Subscript Superscript Cut Copy Blockquote
+                        </include>
+                    </config>
+                </input>
+            </items>
+        </field-set>
+    </form>
+</part>

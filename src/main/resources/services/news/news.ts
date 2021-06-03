@@ -69,7 +69,7 @@ function getNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<N
       start: 0,
       count: 1000,
       contentTypes: [`${app.name}:article`],
-      query: `_path LIKE "/content${mainSubject._path}/*" AND range("publish.first", instant("${from}"), instant("${to}"))`
+      query: `_path LIKE "/content${mainSubject._path}/*" AND range("publish.from", instant("${from}"), instant("${to}"))`
     }).hits as unknown as Array<Content<Article, object, SEO>>
     articles.forEach((article) => {
       const pubDate: string | undefined = article.publish?.first ?
