@@ -307,6 +307,24 @@ function PifCalculator(props) {
     }
   }
 
+  function renderNumber(value) {
+    if (endValue && change) {
+      const decimalSeparator = (language === 'en') ? '.' : ','
+      return (
+        <React.Fragment>
+          <NumberFormat
+            value={ Number(value) }
+            displayType={'text'}
+            thousandSeparator={' '}
+            decimalSeparator={decimalSeparator}
+            decimalScale={1}
+            fixedDecimalScale={true}
+          />
+        </React.Fragment>
+      )
+    }
+  }
+
   function calculatorResult() {
     const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
     return (
@@ -353,14 +371,14 @@ function PifCalculator(props) {
           <Col className="start-value col-12 col-lg-4">
             <span>{props.phrases.pifIndex} {startPeriod}</span>
             <span className="float-right">
-              {startIndex}
+              {renderNumber(startIndex)}
             </span>
             <Divider dark/>
           </Col>
           <Col className="amount col-12 col-lg-4">
             <span>{props.phrases.pifIndex} {endPeriod}</span>
             <span className="float-right">
-              {endIndex}
+              {renderNumber(endIndex)}
             </span>
             <Divider dark/>
           </Col>

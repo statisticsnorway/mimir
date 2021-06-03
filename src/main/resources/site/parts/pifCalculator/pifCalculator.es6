@@ -61,8 +61,6 @@ function renderPart(req) {
     id: part.config.pifCalculatorArticle
   }) : null
 
-  log.info('pif data', JSON.stringify(pifData, null, ''))
-
   const pifCalculator = new React4xp('PifCalculator')
     .setProps({
       pifServiceUrl: serviceUrl({
@@ -97,7 +95,7 @@ const lastPeriod = (pifData) => {
 
   const lastTimeItem = dataTime[dataTime.length -1]
   const splitTime = lastTimeItem.split('M')
-  
+
   const lastYear = splitTime[0]
   const lastMonth = splitTime[1]
 
