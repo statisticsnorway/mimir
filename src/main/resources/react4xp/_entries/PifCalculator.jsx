@@ -49,6 +49,8 @@ function PifCalculator(props) {
   const [startPeriod, setStartPeriod] = useState(null)
   const [endPeriod, setEndPeriod] = useState(null)
   const [startValueResult, setStartValueResult] = useState(null)
+  const [startIndex, setStartIndex] = useState(null)
+  const [endIndex, setEndIndex] = useState(null)
   const language = props.language ? props.language : 'nb'
 
   const validMaxYear = new Date().getFullYear()
@@ -90,6 +92,8 @@ function PifCalculator(props) {
         setStartPeriod(startPeriod)
         setEndPeriod(endPeriod)
         setStartValueResult(startValue.value)
+        setStartIndex(res.data.startIndex)
+        setEndIndex(res.data.endIndex)
       })
       .catch((err) => {
         if (err && err.response && err.response.data && err.response.data.error) {
@@ -243,7 +247,6 @@ function PifCalculator(props) {
       <Dropdown
         className="productGroup"
         id={id}
-        header={props.phrases.chooseMonth}
         onSelect={(value) => {
           onChange(id, value)
         }}
@@ -303,6 +306,24 @@ function PifCalculator(props) {
     }
   }
 
+  function renderNumber(value) {
+    if (endValue && change) {
+      const decimalSeparator = (language === 'en') ? '.' : ','
+      return (
+        <React.Fragment>
+          <NumberFormat
+            value={ Number(value) }
+            displayType={'text'}
+            thousandSeparator={' '}
+            decimalSeparator={decimalSeparator}
+            decimalScale={1}
+            fixedDecimalScale={true}
+          />
+        </React.Fragment>
+      )
+    }
+  }
+
   function calculatorResult() {
     const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
     return (
@@ -343,10 +364,22 @@ function PifCalculator(props) {
             <Divider dark/>
           </Col>
         </Row>
-        <Row className="my-4">
-          <Col className="col-12 col-md-8">
-            <span className="info-title">{props.phrases.pifCalculatorInfoTitle}</span>
-            <p className="info-text">{props.phrases.pifCalculatorInfoText}</p>
+        <Row className="mb-5">
+          <Col className="price-increase col-12 col-lg-4">
+          </Col>
+          <Col className="start-value col-12 col-lg-4">
+            <span>{props.phrases.pifIndex} {startPeriod}</span>
+            <span className="float-right">
+              {renderNumber(startIndex)}
+            </span>
+            <Divider dark/>
+          </Col>
+          <Col className="amount col-12 col-lg-4">
+            <span>{props.phrases.pifIndex} {endPeriod}</span>
+            <span className="float-right">
+              {renderNumber(endIndex)}
+            </span>
+            <Divider dark/>
           </Col>
         </Row>
       </Container>
@@ -400,7 +433,7 @@ function PifCalculator(props) {
         </Row>
         <Row>
           <Col className="col-12 col-md-8">
-            <p className="publish-text">Siste tilgjengelige tall er for januar 2021. Tall for februar kommer ca 10. mars.</p>
+            <p className="publish-text">{props.nextPublishText}</p>
           </Col>
         </Row>
         <Form onSubmit={onSubmit}>
@@ -527,6 +560,7 @@ PifCalculator.propTypes = {
     })
   ),
   phrases: PropTypes.arrayOf(PropTypes.string),
+  nextPublishText: PropTypes.string,
   calculatorArticleUrl: PropTypes.string
 }
 
