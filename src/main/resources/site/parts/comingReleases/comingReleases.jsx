@@ -9,19 +9,25 @@ function ComingReleases(props) {
   const [releases, setReleases] = useState(props.releases)
 
   const unitProps = ['year', 'month', 'day']
-  function mergeAnnualReleases(array1, array2) {
+  function mergeReleases(array1, array2, lvl) {
     let array1Index = 0
     let array2Index = 0
+    const unitProp = unitProps[lvl]
     const mergedArrays = []
     while (array1Index < array1.length || array2Index < array2.length) {
-      const value1 = array1[array1Index] ? parseInt(array1[array1Index].year) : undefined
-      const value2 = array2[array2Index] ? parseInt(array2[array2Index].year) : undefined
+      const value1 = array1[array1Index] ? parseInt(array1[array1Index][unitProp]) : undefined
+      const value2 = array2[array2Index] ? parseInt(array2[array2Index][unitProp]) : undefined
       if (value1 === value2) {
-        const allMonthlyReleases = mergeMonthlyReleases(array1[array1Index].releases, array2[array2Index].releases)
-        mergedArrays.push({
-          ...array1[array1Index],
-          releases: allMonthlyReleases
-        })
+        if (unitProp === 'day') {
+          const nextMergedArray = array1[array1Index].releases.concat( array2[array2Index].releases)
+          mergedArrays.push(nextMergedArray)
+        } else {
+          const allMonthlyReleases = mergeReleases(array1[array1Index].releases, array2[array2Index].releases, lvl + 1)
+          mergedArrays.push({
+            ...array1[array1Index],
+            releases: allMonthlyReleases
+          })
+        }
         array1Index++
         array2Index++
       } else if ((!value2 && value1) || array1[array1Index] && (value1 < value2)) {
@@ -38,7 +44,7 @@ function ComingReleases(props) {
     return mergedArrays
   }
 
-  function mergeMonthlyReleases(array1, array2) {
+  /* function mergeMonthlyReleases(array1, array2) {
     let array1Index = 0
     let array2Index = 0
     const mergedArrays = []
@@ -91,7 +97,7 @@ function ComingReleases(props) {
       }
     }
     return mergedArrays
-  }
+  }*/
 
 
   function fetchMoreReleases() {
@@ -102,7 +108,7 @@ function ComingReleases(props) {
         language: props.language
       }
     }).then((res) => {
-      const totalReleases = mergeAnnualReleases(releases, res.data.releases)
+      const totalReleases = mergeReleases(releases, res.data.releases, 0)
       console.log('totalReleases')
       console.log(totalReleases)
       setReleases(totalReleases)
