@@ -1,0 +1,21 @@
+<part>
+    <display-name>Mailchimp skjema</display-name>
+    <form>
+        <input type="TextLine" name="title">
+            <label>Tittel</label>
+            <occurrences minimum="0" maximum="1"/>
+        </input>
+        <input type="TextArea" name="text">
+            <label>Mailchimp endepunkt</label>
+            <occurrences minimum="0" maximum="1"/>
+        </input>
+        <input type="TextLine" name="mailchimpEndpoint">
+            <label>Mailchimp endepunkt</label>
+            <occurrences minimum="0" maximum="1"/>
+        </input>
+        <input type="TextLine" name="mailchimpId">
+            <label>Mailchimp ID</label>
+            <occurrences minimum="0" maximum="1"/>
+        </input>
+    </form>
+</part>
