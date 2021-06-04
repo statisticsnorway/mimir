@@ -271,9 +271,14 @@
 
   .bkibol-calculator .calculator-form {
 
-    .serie-enebolig, .serie-boligblokk {
-      max-width: 280px;
-      min-width: 270px;
+    .select-serie, .ssb-dropdown.serie-enebolig, .ssb-dropdown.serie-boligblokk, .list-of-options {
+      max-width: 300px;
+    }
+
+    .input-year {
+      label {
+        margin-bottom: 5px;
+      }
     }
 
     .start-value {
@@ -289,5 +294,16 @@
       padding-top: 0;
       padding-bottom: 0;
     }
+
+    @include media-breakpoint-down(xs) {
+      .input-amount, .start-value {
+        width: 100%;
+      }
+
+      .select-serie, .ssb-dropdown.serie-enebolig, .ssb-dropdown.serie-boligblokk .list-of-options {
+        min-width: 95px;
+      }
+    }
+
   }
 }
