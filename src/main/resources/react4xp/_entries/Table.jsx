@@ -107,6 +107,7 @@ class Table extends Component {
   formatNumber(value) {
     const language = this.props.table.language
     const decimalSeparator = (language === 'en') ? '.' : ','
+    value = this.trimValue(value)
     if (value) {
       if (typeof value === 'number' || typeof value === 'string' && !isNaN(value)) {
         const decimals = value.toString().indexOf('.') > -1 ? value.toString().split('.')[1].length : 0
@@ -120,8 +121,6 @@ class Table extends Component {
             fixedDecimalScale={true}
           />
         )
-      } else {
-        return value.trim()
       }
     }
     return value
