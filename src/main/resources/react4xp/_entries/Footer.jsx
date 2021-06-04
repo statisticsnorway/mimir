@@ -88,15 +88,13 @@ class Footer extends React.Component {
   }
 
   renderCopyRight() {
-    const year = new Date().getFullYear()
     const {
       copyrightUrl, copyrightText
     } = this.props
     if (copyrightUrl && copyrightText) {
-      const text = copyrightText + ', ' + year
       return (
         <div className="copyright">
-          <Link href={copyrightUrl} isExternal negative>{text}</Link>
+          <Link href={copyrightUrl} isExternal negative>{copyrightText}</Link>
         </div>
       )
     }
