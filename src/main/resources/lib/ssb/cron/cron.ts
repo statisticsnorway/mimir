@@ -56,6 +56,9 @@ const {
 const {
   updateUnpublishedMockTbml
 } = __non_webpack_require__('/lib/ssb/dataset/mockUnpublished')
+const {
+  pushRssNews
+} = __non_webpack_require__('/lib/ssb/cron/pushRss')
 
 const createUserContext: RunContext = { // Master context (XP)
   repository: ENONIC_CMS_DEFAULT_REPO,
@@ -129,6 +132,14 @@ export function statRegJob(): void {
   completeJobLog(jobLogNode._id, JOB_STATUS_COMPLETE, result)
 }
 
+function pushRssNewsJob(): void {
+  const jobLogNode: JobEventNode = startJobLog(JobNames.PUSH_RSS_NEWS)
+  const result: string = pushRssNews()
+  completeJobLog(jobLogNode._id, result, {
+    result
+  })
+}
+
 export function runOnMasterOnly(task: () => void): void {
   if (isMaster()) {
     task()
@@ -188,6 +199,16 @@ export function setupCronJobs(): void {
       context: cronContext
     })
   }
+
+  // publish dataset cron job
+  const pushRssNewsCron: string = app.config && app.config['ssb.cron.pushRssNews'] ? app.config['ssb.cron.pushRssNews'] : '02 06 * * *'
+  schedule({
+    name: 'Push RSS news',
+    cron: pushRssNewsCron,
+    times: 365 * 10,
+    callback: () => runOnMasterOnly(pushRssNewsJob),
+    context: cronContext
+  })
 
   const cronList: Array<TaskMapper> = list() as Array<TaskMapper>
   cronJobLog('All cron jobs registered')

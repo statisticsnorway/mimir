@@ -3,22 +3,22 @@ const {
   getContent,
   serviceUrl,
   pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
+} = __non_webpack_require__( '/lib/xp/portal')
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+const React4xp = require('/lib/enonic/react4xp')
 const {
   getLanguage
 } = __non_webpack_require__( '/lib/ssb/utils/language')
 const {
-  getCalculatorConfig, getPifDataset
+  getCalculatorConfig, getBkibolDatasetEnebolig
 } = __non_webpack_require__('/lib/ssb/dataset/calculator')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
-const view = resolve('./pifCalculator.html')
+const view = resolve('./bkibolCalculator.html')
 
 exports.get = function(req) {
   try {
@@ -43,12 +43,12 @@ function renderPart(req) {
   const phrases = language.phrases
   const months = allMonths(phrases)
   const config = getCalculatorConfig()
-  const pifData = getPifDataset(config)
-  const lastUpdated = lastPeriod(pifData)
+  const bkibolDataEnebolig = getBkibolDatasetEnebolig(config)
+  const lastUpdated = lastPeriod(bkibolDataEnebolig)
   const nextUpdate = nextPeriod(lastUpdated.month, lastUpdated.year)
   const nextReleaseMonth = nextUpdate.month == 12 ? 1 : nextUpdate.month + 1
   const nextPublishText = i18nLib.localize({
-    key: 'kpiNextPublishText',
+    key: 'bkibolNextPublishText',
     locale: language.code,
     values: [
       monthLabel(months, language.code, lastUpdated.month),
@@ -57,51 +57,44 @@ function renderPart(req) {
       monthLabel(months, language.code, nextReleaseMonth)
     ]
   })
-  const calculatorArticleUrl = part.config.pifCalculatorArticle ? pageUrl({
-    id: part.config.pifCalculatorArticle
+  const calculatorArticleUrl = part.config.bkibolCalculatorArticle ? pageUrl({
+    id: part.config.bkibolCalculatorArticle
   }) : null
 
-  const pifCalculator = new React4xp('PifCalculator')
+  const bkibolCalculator = new React4xp('BkibolCalculator')
     .setProps({
-      pifServiceUrl: serviceUrl({
-        service: 'pif'
+      bkibolServiceUrl: serviceUrl({
+        service: 'bkibol'
       }),
       language: language.code,
       months: months,
       phrases: phrases,
-      nextPublishText: nextPublishText,
-      productGroups: productGroups(),
-      calculatorArticleUrl
+      calculatorArticleUrl,
+      nextPublishText: nextPublishText
     })
-    .setId('pifCalculatorId')
+    .setId('bkibolCalculatorId')
     .uniqueId()
 
   const body = render(view, {
-    pifCalculatorId: pifCalculator.react4xpId
+    bkibolCalculatorId: bkibolCalculator.react4xpId
   })
   return {
-    body: pifCalculator.renderBody({
+    body: bkibolCalculator.renderBody({
       body
     }),
-    pageContributions: pifCalculator.renderPageContributions({
+    pageContributions: bkibolCalculator.renderPageContributions({
       clientRender: req.mode !== 'edit'
     })
   }
 }
 
-const lastPeriod = (pifData) => {
+const lastPeriod = (bkibolData) => {
   // eslint-disable-next-line new-cap
-  const dataTime = pifData ? pifData.Dimension('Tid').id : null
-
-  const lastTimeItem = dataTime[dataTime.length - 1]
-  const splitTime = lastTimeItem.split('M')
-
-  const lastYear = splitTime[0]
-  const lastMonth = splitTime[1]
-
+  const dataYear = bkibolData ? bkibolData.Dimension('Tid').id : null
+  const lastYear = dataYear[dataYear.length - 1]
   return {
-    month: lastMonth,
-    year: lastYear
+    month: lastYear.substr(5, 2),
+    year: lastYear.substr(0, 4)
   }
 }
 
@@ -120,20 +113,8 @@ const nextPeriod = (month, year) => {
   }
 }
 
-const monthLabel = (months, language, month) => {
-  const monthLabel = months.find((m) => parseInt(m.id) === parseInt(month))
-  if (monthLabel) {
-    return language === 'en' ? monthLabel.title : monthLabel.title.toLowerCase()
-  }
-  return ''
-}
-
 const allMonths = (phrases) => {
   return [
-    {
-      id: '',
-      title: phrases.calculatorMonthAverage
-    },
     {
       id: '01',
       title: phrases.january
@@ -185,47 +166,10 @@ const allMonths = (phrases) => {
   ]
 }
 
-const productGroups = (phrases) => {
-  return [
-    {
-      id: 'SITCT',
-      title: 'Alle varegruppene'
-    },
-    {
-      id: 'SITC0',
-      title: 'Matvarer og levende dyr'
-    },
-    {
-      id: 'SITC1',
-      title: 'Drikkevarer og tobakk'
-    },
-    {
-      id: 'SITC2',
-      title: 'Råvarer (ikke spiselige) ekskl. brenselstoffer'
-    },
-    {
-      id: 'SITC3',
-      title: 'Brenselstoffer, smøreoljer, elektrisk strøm'
-    },
-    {
-      id: 'SITC4',
-      title: 'Animalske og vegetabilske oljer, fett og voks'
-    },
-    {
-      id: 'SITC5',
-      title: 'Kjemiske produkter'
-    },
-    {
-      id: 'SITC6',
-      title: 'Bearbeidde varer gruppert etter materiale'
-    },
-    {
-      id: 'SITC7',
-      title: 'Maskiner og transportmidler'
-    },
-    {
-      id: 'SITC8',
-      title: 'Forskjellige ferdige varer'
-    }
-  ]
+const monthLabel = (months, language, month) => {
+  const monthLabel = months.find((m) => parseInt(m.id) === parseInt(month))
+  if (monthLabel) {
+    return language === 'en' ? monthLabel.title : monthLabel.title.toLowerCase()
+  }
+  return ''
 }

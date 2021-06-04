@@ -1,5 +1,5 @@
-.part-kpi-calculator, .part-pif-calculator {
-  .kpi-calculator, .pif-calculator {
+.part-kpi-calculator, .part-pif-calculator, .part-bkibol-calculator {
+  .kpi-calculator, .pif-calculator, .bkibol-calculator {
     border: solid 1px $ssb-dark-5;
     border-top: 4px solid $green3;
     background: $ssb-white;
@@ -121,12 +121,15 @@
       }
     }
 
-    @include media-breakpoint-down(lg) {
-
+    @include media-breakpoint-up(lg) {
       .calculator-form-frontpage {
+        height: 410px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
 
-        .input-amount, .start-value {
-          width: 160px;
+        .submit {
+          padding-top: 0;
         }
 
         .select-year {
@@ -142,12 +145,10 @@
         .start-value {
           margin-bottom: 20px;
         }
-
       }
     }
 
     @include media-breakpoint-down(md) {
-
       .calculator-form {
         padding: 20px;
 
@@ -202,7 +203,6 @@
       .calculator-error, .calculator-result  {
         padding: 20px;
       }
-
     }
 
     @include media-breakpoint-down(sm) {
@@ -264,6 +264,44 @@
         .calculator-error {
           padding: 20px;
         }
+      }
+    }
+
+  }
+
+  .bkibol-calculator .calculator-form {
+
+    .select-serie, .ssb-dropdown.serie-enebolig, .ssb-dropdown.serie-boligblokk, .list-of-options {
+      max-width: 300px;
+    }
+
+    .input-year {
+      label {
+        margin-bottom: 5px;
+      }
+    }
+
+    .start-value {
+      width: 280px;
+    }
+
+    .input-amount {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .choose-scope {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    @include media-breakpoint-down(xs) {
+      .input-amount, .start-value {
+        width: 100%;
+      }
+
+      .select-serie, .ssb-dropdown.serie-enebolig, .ssb-dropdown.serie-boligblokk .list-of-options {
+        min-width: 95px;
       }
     }
 

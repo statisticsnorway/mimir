@@ -12,6 +12,7 @@ interface LibMap extends EnonicLibraryMap {
     '/lib/ssb/cron/eventLog': import('./lib/ssb/cron/eventLog').EventLogLib;
     '/lib/ssb/cron/rss': import('./lib/ssb/cron/rss').DatasetRSSLib;
     '/lib/ssb/cron/task': import('./lib/ssb/cron/task').SSBTaskLib;
+    '/lib/ssb/cron/pushRss': import('./lib/ssb/cron/pushRss').PushRSSLib;
 
     // dashboard
     '/lib/ssb/dashboard/dashboard': import('./lib/ssb/dashboard/dashboard').DashboardDatasetLib;
