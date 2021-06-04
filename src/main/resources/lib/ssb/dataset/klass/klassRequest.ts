@@ -1,8 +1,10 @@
-import { HttpResponse, HttpLibrary, HttpRequestParams } from 'enonic-types/http'
+import { HttpResponse, HttpRequestParams } from 'enonic-types/http'
 const {
   Events, logUserDataQuery
 } = __non_webpack_require__('/lib/ssb/repo/query')
-const http: HttpLibrary = __non_webpack_require__('/lib/http-client')
+const {
+  request
+} = __non_webpack_require__('/lib/http-client')
 const {
   sleep
 } = __non_webpack_require__('/lib/xp/task')
@@ -44,7 +46,7 @@ export function get(url: string, json: DataqueryRequestData | undefined,
     })
   }
 
-  const result: HttpResponse = http.request(requestParams)
+  const result: HttpResponse = request(requestParams)
 
   if (result.status !== 200) {
     log.error(`HTTP ${url} (${result.status} ${result.message})`)
@@ -90,4 +92,8 @@ export interface Dimension {
 /* interface ModifyContent<A extends object> extends Content<A> {
   displayName: string;
 }*/
+
+export interface KlassRequestLib {
+  get: (url: string, json: DataqueryRequestData | undefined, selection?: SelectionFilter, queryId?: string ) => object | null;
+}
 

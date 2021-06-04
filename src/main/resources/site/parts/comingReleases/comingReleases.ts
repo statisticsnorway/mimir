@@ -1,27 +1,22 @@
 import { Request } from 'enonic-types/controller'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Content } from 'enonic-types/content'
-import { PortalLibrary } from 'enonic-types/portal'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
-import { GroupedBy, PreparedStatistics, VariantUtilsLib, YearReleases } from '../../../lib/ssb/utils/variantUtils'
-import { ArrayUtilsLib } from '../../../lib/ssb/utils/arrayUtils'
+import { GroupedBy, PreparedStatistics, YearReleases } from '../../../lib/ssb/utils/variantUtils'
 
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getContent
-}: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
-const {
-  checkLimitAndTrim
-}: ArrayUtilsLib = __non_webpack_require__( '/lib/ssb/utils/arrayUtils')
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   addMonthNames,
   getReleasesForDay,
   groupStatisticsByYearMonthAndDay,
   prepareRelease
-}: VariantUtilsLib = __non_webpack_require__( '/lib/ssb/utils/variantUtils')
+} = __non_webpack_require__('/lib/ssb/utils/variantUtils')
 const {
   getAllStatisticsFromRepo
-} = __non_webpack_require__( '/lib/ssb/statreg/statistics')
+} = __non_webpack_require__('/lib/ssb/statreg/statistics')
 
 
 exports.get = (req: Request): React4xpResponse => {
@@ -65,7 +60,6 @@ function renderPart(req: Request): React4xpResponse {
   })
 }
 
-
 function filterOnComingReleases(stats: Array<StatisticInListing>, daysInTheFuture: number): Array<StatisticInListing> {
   const releases: Array<StatisticInListing> = []
   for (let i: number = 0; i < daysInTheFuture; i++) {
@@ -76,7 +70,6 @@ function filterOnComingReleases(stats: Array<StatisticInListing>, daysInTheFutur
   }
   return releases
 }
-
 
 /*
 *  Interfaces

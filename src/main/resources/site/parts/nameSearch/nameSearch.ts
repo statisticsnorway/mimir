@@ -1,23 +1,21 @@
 import { Request } from 'enonic-types/controller'
-import { Component, PortalLibrary } from 'enonic-types/portal'
+import { Component } from 'enonic-types/portal'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { NameSearchPartConfig } from './nameSearch-part-config'
-import { I18nLibrary } from 'enonic-types/i18n'
 
 
 const {
-  getComponent, getContent, pageUrl
-}: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
-
-const {
+  getComponent,
+  getContent,
+  pageUrl,
   serviceUrl
-}: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   getLanguageShortName
 } = __non_webpack_require__('/lib/ssb/utils/language')
 const {
   localize
-}: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
+} = __non_webpack_require__('/lib/xp/i18n')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 

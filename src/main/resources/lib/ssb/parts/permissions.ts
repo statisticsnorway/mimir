@@ -1,14 +1,14 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { ContentLibrary, GetPermissionsResult, PermissionsParams } from 'enonic-types/content'
-import { AuthInfo, ContextLibrary } from 'enonic-types/context'
+import { GetPermissionsResult, PermissionsParams } from 'enonic-types/content'
+import { AuthInfo } from 'enonic-types/context'
 import { Request } from 'enonic-types/controller'
 
 const {
   getPermissions
-}: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
+} = __non_webpack_require__('/lib/xp/content')
 const {
   get: getContext
-}: ContextLibrary = __non_webpack_require__( '/lib/xp/context')
+} = __non_webpack_require__('/lib/xp/context')
 
 export function hasWritePermissionsAndPreview(req: Request, key: string): boolean {
   if (req.mode === 'preview') {

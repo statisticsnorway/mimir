@@ -1,21 +1,19 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { RepoCommonLib } from './common'
 import { RepoNode } from 'enonic-types/node'
-import { RepoLib } from './repo'
 import { RepositoryConfig } from 'enonic-types/repo'
 
 const {
   getRepo,
   createRepo,
   createBranch
-}: RepoLib = __non_webpack_require__('/lib/ssb/repo/repo')
+} = __non_webpack_require__('/lib/ssb/repo/repo')
 const {
   nodeExists,
   createNode,
   getNode,
   modifyNode,
   deleteNode
-}: RepoCommonLib = __non_webpack_require__('/lib/ssb/repo/common')
+} = __non_webpack_require__('/lib/ssb/repo/common')
 
 export const DATASET_REPO: string = 'no.ssb.dataset'
 export const DATASET_BRANCH: string = 'master'

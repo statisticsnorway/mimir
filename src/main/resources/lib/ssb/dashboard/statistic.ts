@@ -1,61 +1,51 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { EventInfo } from '../repo/query'
 import { Socket, SocketEmitter } from '../../types/socket'
-import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
+import { Content, QueryResponse } from 'enonic-types/content'
 import { StatisticInListing, VariantInListing } from './statreg/types'
-import { UtilLibrary } from '../../types/util'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
-import { DashboardDatasetLib, ProcessXml, RefreshDatasetResult, DashboardJobInfo } from './dashboard'
-import { ContextLibrary, RunContext } from 'enonic-types/context'
+import { ProcessXml, RefreshDatasetResult, DashboardJobInfo } from './dashboard'
+import { RunContext } from 'enonic-types/context'
 import { DatasetRepoNode } from '../repo/dataset'
-import { DashboardUtilsLib } from './dashboardUtils'
-import { I18nLibrary } from 'enonic-types/i18n'
 import { Highchart } from '../../../site/content-types/highchart/highchart'
 import { Table } from '../../../site/content-types/table/table'
 import { KeyFigure } from '../../../site/content-types/keyFigure/keyFigure'
-import { TbprocessorLib } from '../dataset/tbprocessor/tbprocessor'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { Source, TbmlDataUniform } from '../../types/xmlParser'
-import { JobEventNode, JobInfoNode, JobNames, JobStatus, RepoJobLib } from '../repo/job'
+import { JobEventNode, JobInfoNode, JobNames, JobStatus } from '../repo/job'
 import { NodeQueryResponse } from 'enonic-types/node'
-import { RepoEventLogLib } from '../repo/eventLog'
-import { RepoCommonLib } from '../repo/common'
-import { StatRegStatisticsLib } from '../statreg/statistics'
-import { TaskLib } from '../../types/task'
-import { AuthLibrary, User } from 'enonic-types/auth'
-import { PermissionsLib } from '../parts/permissions'
+import { User } from 'enonic-types/auth'
 
 const {
   hasWritePermissions
-}: PermissionsLib = __non_webpack_require__( '/lib/ssb/parts/permissions')
+} = __non_webpack_require__('/lib/ssb/parts/permissions')
 const {
   query,
   get: getContent
-}: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
+} = __non_webpack_require__('/lib/xp/content')
 const {
   fetchStatisticsWithRelease,
   getAllStatisticsFromRepo,
   getStatisticByIdFromRepo
-}: StatRegStatisticsLib = __non_webpack_require__('/lib/ssb/statreg/statistics')
+} = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   data: {
     forceArray
   }
-}: UtilLibrary = __non_webpack_require__( '/lib/util')
+} = __non_webpack_require__('/lib/util')
 const {
   refreshDatasetHandler
-}: DashboardDatasetLib = __non_webpack_require__('/lib/ssb/dashboard/dashboard')
+} = __non_webpack_require__('/lib/ssb/dashboard/dashboard')
 const {
   users
-}: DashboardUtilsLib = __non_webpack_require__('/lib/ssb/dashboard/dashboardUtils')
-
+} = __non_webpack_require__('/lib/ssb/dashboard/dashboardUtils')
 const {
   run
-}: ContextLibrary = __non_webpack_require__('/lib/xp/context')
+} = __non_webpack_require__('/lib/xp/context')
 const {
   getTbprocessor,
   getTbprocessorKey
-}: TbprocessorLib = __non_webpack_require__('/lib/ssb/dataset/tbprocessor/tbprocessor')
+} = __non_webpack_require__('/lib/ssb/dataset/tbprocessor/tbprocessor')
 const {
   encrypt
 } = __non_webpack_require__('/lib/cipher/cipher')
@@ -63,24 +53,26 @@ const {
   completeJobLog,
   updateJobLog,
   startJobLog
-}: RepoJobLib = __non_webpack_require__('/lib/ssb/repo/job')
+} = __non_webpack_require__('/lib/ssb/repo/job')
 const {
   withConnection,
   ENONIC_CMS_DEFAULT_REPO,
   getNode,
   queryNodes
-}: RepoCommonLib = __non_webpack_require__('/lib/ssb/repo/common')
+} = __non_webpack_require__('/lib/ssb/repo/common')
 const {
   EVENT_LOG_BRANCH,
   EVENT_LOG_REPO
-}: RepoEventLogLib = __non_webpack_require__('/lib/ssb/repo/eventLog')
-const i18n: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
+} = __non_webpack_require__('/lib/ssb/repo/eventLog')
+const {
+  localize
+} = __non_webpack_require__('/lib/xp/i18n')
 const {
   submit: submitTask
-}: TaskLib = __non_webpack_require__('/lib/xp/task')
+} = __non_webpack_require__('/lib/xp/task')
 const {
   hasRole
-}: AuthLibrary = __non_webpack_require__('/lib/xp/auth')
+} = __non_webpack_require__('/lib/xp/auth')
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-statistics', () => {
@@ -360,7 +352,7 @@ function getStatisticsJobLogInfo(id: string, count: number = 1): Array<Dashboard
 function prepStatisticsJobLogInfo(jobNode: JobInfoNode): DashboardJobInfo {
   const jobResult: Array<RefreshDatasetResult> = forceArray(jobNode.data.refreshDataResult || []) as Array<RefreshDatasetResult>
   jobResult.forEach((datasetResult: RefreshDatasetResult) => {
-    datasetResult.status = i18n.localize({
+    datasetResult.status = localize({
       key: datasetResult.status
     })
   })
@@ -409,7 +401,7 @@ function getEventLogsFromStatisticsJobLog(jobLogId: string): {user: User; datase
         branch: dataset.branch === 'master' ? 'publisert' : 'ubpulisert',
         eventLogResult: eventLogResult.hits.map((hit) => {
           const node: EventInfo | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataset.id}/${hit.id}`) as EventInfo
-          const resultMessage: string = i18n.localize({
+          const resultMessage: string = localize({
             key: node.data.status.message,
             values: node.data.status.status ? [`(${node.data.status.status})`] : ['']
           })

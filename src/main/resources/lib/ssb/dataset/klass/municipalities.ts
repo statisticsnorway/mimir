@@ -1,36 +1,32 @@
 import { SiteConfig } from '../../../../site/site-config'
-import { ContentLibrary, Content } from 'enonic-types/content'
+import { Content } from 'enonic-types/content'
 import { Request } from 'enonic-types/controller'
-import { PortalLibrary } from 'enonic-types/portal'
-import { County, CountiesLib } from './counties'
-import { DatasetLib } from '../dataset'
+import { County } from './counties'
 import { DatasetRepoNode } from '../../repo/dataset'
 import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
-import { SSBCacheLibrary } from '../../cache/cache'
-import { CommonLibrary } from 'enonic-types/common'
 
 const {
   sanitize
-}: CommonLibrary = __non_webpack_require__( '/lib/xp/common')
+} = __non_webpack_require__('/lib/xp/common')
 const {
   get: getContent
-}: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
+} = __non_webpack_require__('/lib/xp/content')
 const {
   getSiteConfig
-}: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   list: countyList
-}: CountiesLib = __non_webpack_require__( '/lib/ssb/dataset/klass/counties')
+} = __non_webpack_require__('/lib/ssb/dataset/klass/counties')
 const {
   getDataset,
   extractKey
-}: DatasetLib = __non_webpack_require__( '/lib/ssb/dataset/dataset')
+} = __non_webpack_require__('/lib/ssb/dataset/dataset')
 const {
   fromDatasetRepoCache,
   fromParsedMunicipalityCache,
   fromMunicipalityWithCodeCache,
   fromMunicipalityWithNameCache
-}: SSBCacheLibrary = __non_webpack_require__( '/lib/ssb/cache/cache')
+} = __non_webpack_require__('/lib/ssb/cache/cache')
 
 /**
  * @return {array} Returns everything in the "code" node from ssb api

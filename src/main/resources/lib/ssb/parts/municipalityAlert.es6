@@ -1,6 +1,6 @@
 const {
   query
-} = __non_webpack_require__( '/lib/xp/content')
+} = __non_webpack_require__('/lib/xp/content')
 
 const contentTypeName = `${app.name}:municipalityAlert`
 

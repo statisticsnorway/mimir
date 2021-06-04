@@ -1,21 +1,21 @@
-import { PortalLibrary } from 'enonic-types/portal'
 import { MenuItem } from '../../../site/content-types/menuItem/menuItem'
 import { Language } from '../../types/language'
 import { Link } from './menu'
-import { Content, ContentLibrary } from 'enonic-types/content'
+import { Content } from 'enonic-types/content'
 import { Footer } from '../../../site/content-types/footer/footer'
 const {
   assetUrl
-}: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   get
-}: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
+} = __non_webpack_require__('/lib/xp/content')
 const {
-  createMenuTree, parseGlobalLinks
-} = __non_webpack_require__( '/lib/ssb/parts/menu')
+  createMenuTree,
+  parseGlobalLinks
+} = __non_webpack_require__('/lib/ssb/parts/menu')
 const {
   localize
-} = __non_webpack_require__( '/lib/xp/i18n')
+} = __non_webpack_require__('/lib/xp/i18n')
 
 export function getFooterContent(language: Language): FooterContent | undefined {
   if (language.footerId === undefined || language.footerId === null) {
@@ -50,15 +50,19 @@ export function getFooterContent(language: Language): FooterContent | undefined 
   }
 }
 
-export interface FooterContent{
-    logoUrl: string;
-    copyrightUrl: string;
-    copyrightText: string;
-    facebookUrl: string;
-    twitterUrl: string;
-    linkedinUrl: string;
-    rssUrl: string;
-    globalLinks: Array<Link>;
-    footerNavigation?: Array<MenuItem>;
-    topButtonText?: string;
+export interface FooterContent {
+  logoUrl: string;
+  copyrightUrl: string;
+  copyrightText: string;
+  facebookUrl: string;
+  twitterUrl: string;
+  linkedinUrl: string;
+  rssUrl: string;
+  globalLinks: Array<Link>;
+  footerNavigation?: Array<MenuItem>;
+  topButtonText?: string;
+}
+
+export interface FooterLib {
+  getFooterContent: (language: Language) => FooterContent | undefined;
 }

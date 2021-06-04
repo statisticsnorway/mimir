@@ -1,18 +1,14 @@
-import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
-import { PortalLibrary } from 'enonic-types/portal'
+import { Content, QueryResponse } from 'enonic-types/content'
 import { MenuItem } from '../../../site/content-types/menuItem/menuItem'
 import { Footer } from '../../../site/content-types/footer/footer'
 import { Header } from '../../../site/content-types/header/header'
 
 const {
-  hasPath
-} = __non_webpack_require__('/lib/vendor/ramda')
-const {
   getContent, imageUrl, pageUrl
-}: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   get, getChildren, query
-}: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
+} = __non_webpack_require__('/lib/xp/content')
 const {
   getAttachmentContent,
   getImageCaption
@@ -62,9 +58,9 @@ function createMenuBranch(menuItem: Content<MenuItem>): MenuItemParsed {
 
 export function isMenuItemActive(children: QueryResponse<MenuItem>, content: Content | null): boolean {
   return children.total > 0 && content && content._path ? children.hits.reduce( (hasActiveChildren: boolean, child: Content<MenuItem>) => {
-    if (hasPath(['data', 'urlSrc', 'content', 'contentId'], child) && child.data.urlSrc!.content!.contentId === content._id) {
+    if (child.data.urlSrc?.content?.contentId && child.data.urlSrc.content.contentId === content._id) {
       hasActiveChildren = true
-    } else if (hasPath(['data', 'urlSrc', 'manual', 'url'], child) && content._path.indexOf(child.data.urlSrc!.manual!.url!) > 0) {
+    } else if (child.data.urlSrc?.manual?.url && content._path.indexOf(child.data.urlSrc.manual.url) > 0) {
       hasActiveChildren = true
     }
     return hasActiveChildren
@@ -72,19 +68,19 @@ export function isMenuItemActive(children: QueryResponse<MenuItem>, content: Con
 }
 
 type TopLinks = Header['globalLinks']
-export function parseTopLinks(topLinks: TopLinks): Array<Link> | undefined {
+export function parseTopLinks(topLinks: TopLinks): Array<Link> {
   return topLinks ? topLinks.map((link) => ({
     title: link.linkTitle,
     path: parseUrl(link.urlSrc)
-  })) : undefined
+  })) : []
 }
 
 type GlobalLinks = Footer['globalLinks']
-export function parseGlobalLinks(globalLinks: GlobalLinks): Array<Link> | undefined {
+export function parseGlobalLinks(globalLinks: GlobalLinks): Array<Link> {
   return globalLinks ? globalLinks.map((link) => ({
     title: link.linkTitle,
     path: parseUrl(link.urlSrc)
-  })) : undefined
+  })) : []
 }
 
 function parseUrl(urlSrc: MenuItem['urlSrc']): string | undefined {
@@ -122,4 +118,11 @@ export interface MenuItemParsed extends MenuItem {
 export interface Link {
   title: string;
   path?: string;
+}
+
+export interface MenuLib {
+  createMenuTree: (menuItemId: string) => Array<MenuItemParsed>;
+  isMenuItemActive: (children: QueryResponse<MenuItem>, content: Content | null) => boolean;
+  parseTopLinks: (topLinks: TopLinks) => Array<Link>;
+  parseGlobalLinks: (globalLinks: GlobalLinks) => Array<Link>;
 }

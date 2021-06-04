@@ -1,4 +1,5 @@
 import { HttpResponse, HttpLibrary, HttpRequestParams } from 'enonic-types/http'
+import { JSONstat } from '../../../types/jsonstat-toolkit'
 const {
   Events, logUserDataQuery
 } = __non_webpack_require__('/lib/ssb/repo/query')
@@ -13,7 +14,7 @@ const defaultSelectionFilter: SelectionFilter = {
 }
 
 export function get(url: string, json: DataqueryRequestData | undefined,
-  selection: SelectionFilter = defaultSelectionFilter, queryId?: string ): object | null {
+  selection: SelectionFilter = defaultSelectionFilter, queryId?: string ): JSONstat | null {
   if (json && json.query) {
     for (const query of json.query) {
       if (query.code === 'KOKkommuneregion0000' || query.code === 'Region') {
@@ -91,3 +92,7 @@ export interface Dimension {
   displayName: string;
 }*/
 
+export interface StatbankApiRequestLib {
+  get: (url: string, json: DataqueryRequestData | undefined,
+    selection?: SelectionFilter, queryId?: string ) => JSONstat | null;
+}

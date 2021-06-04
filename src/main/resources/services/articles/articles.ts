@@ -1,18 +1,16 @@
 import { Request, Response } from 'enonic-types/controller'
 import { Article } from '../../site/content-types/article/article'
-import { PortalLibrary } from 'enonic-types/portal'
-import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
-import { Moment } from '../../lib/vendor/moment'
+import { Content, QueryResponse } from 'enonic-types/content'
 
 const {
   query
-}: ContentLibrary = __non_webpack_require__('/lib/xp/content')
+} = __non_webpack_require__('/lib/xp/content')
 const {
   pageUrl
-}: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   moment
-}: Moment = __non_webpack_require__('/lib/vendor/moment')
+} = __non_webpack_require__('/lib/vendor/moment')
 
 let totalCount: number = 0
 

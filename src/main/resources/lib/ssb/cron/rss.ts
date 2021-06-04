@@ -1,33 +1,31 @@
 import { StatisticInListing } from '../dashboard/statreg/types'
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { Content } from 'enonic-types/content'
-import { HttpLibrary, HttpResponse } from 'enonic-types/http'
+import { HttpResponse } from 'enonic-types/http'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { TbmlDataUniform, XmlParser } from '../../types/xmlParser'
 import { DatasetRepoNode, DataSource as DataSourceType } from '../repo/dataset'
-import { TbprocessorLib } from '../dataset/tbprocessor/tbprocessor'
-import { StatbankApiLib } from '../dataset/statbankApi/statbankApi'
-import { DatasetLib } from '../dataset/dataset'
 import { JSONstat } from '../../types/jsonstat-toolkit'
-import { ServerLogLib } from '../utils/serverLog'
 import { JobStatus } from '../repo/job'
 import { DefaultPageConfig } from '../../../site/pages/default/default-page-config'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
-const http: HttpLibrary = __non_webpack_require__( '/lib/http-client')
+const {
+  request
+} = __non_webpack_require__('/lib/http-client')
 const {
   getTableIdFromTbprocessor
-}: TbprocessorLib = __non_webpack_require__( '/lib/ssb/dataset/tbprocessor/tbprocessor')
+} = __non_webpack_require__('/lib/ssb/dataset/tbprocessor/tbprocessor')
 const {
   getTableIdFromStatbankApi
-}: StatbankApiLib = __non_webpack_require__( '/lib/ssb/dataset/statbankApi/statbankApi')
+} = __non_webpack_require__('/lib/ssb/dataset/statbankApi/statbankApi')
 const {
   getDataset
-}: DatasetLib = __non_webpack_require__( '/lib/ssb/dataset/dataset')
+} = __non_webpack_require__('/lib/ssb/dataset/dataset')
 const {
   cronJobLog
-}: ServerLogLib = __non_webpack_require__( '/lib/ssb/utils/serverLog')
+} = __non_webpack_require__('/lib/ssb/utils/serverLog')
 const {
   getParentType, getParentContent
 } = __non_webpack_require__('/lib/ssb/utils/parentUtils')
@@ -39,7 +37,7 @@ const {
 function fetchRSS(): Array<RSSItem> {
   const statbankRssUrl: string | undefined = app.config && app.config['ssb.rss.statbank'] ? app.config['ssb.rss.statbank'] : 'https://www.ssb.no/rss/statbank'
   if (statbankRssUrl) {
-    const response: HttpResponse = http.request({
+    const response: HttpResponse = request({
       url: statbankRssUrl
     })
     if (response && response.body) {

@@ -4,10 +4,10 @@ const {
 const {
   getSite,
   assetUrl
-} = __non_webpack_require__( '/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   getLanguage
-} = __non_webpack_require__( '/lib/ssb/utils/language')
+} = __non_webpack_require__('/lib/ssb/utils/language')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 

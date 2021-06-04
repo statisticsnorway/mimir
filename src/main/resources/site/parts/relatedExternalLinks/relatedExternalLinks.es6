@@ -7,11 +7,11 @@ const {
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getContent
-} = __non_webpack_require__( '/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const util = __non_webpack_require__('/lib/util')
 const {
   getPhrases
-} = __non_webpack_require__( '/lib/ssb/utils/language')
+} = __non_webpack_require__('/lib/ssb/utils/language')
 
 const view = resolve('./relatedExternalLinks.html')
 

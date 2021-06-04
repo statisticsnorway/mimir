@@ -1,10 +1,7 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { TaskLib } from '../../types/task'
-import { CacheLibrary, Cache } from 'enonic-types/cache'
 import { Request, Response } from 'enonic-types/controller'
-import { EventLibrary, EnonicEvent, EnonicEventData } from 'enonic-types/event'
-import { ContextLibrary } from 'enonic-types/context'
-import { ContentLibrary, QueryResponse, Content } from 'enonic-types/content'
+import { EnonicEvent, EnonicEventData } from 'enonic-types/event'
+import { QueryResponse, Content } from 'enonic-types/content'
 import { JSONstat } from '../../types/jsonstat-toolkit'
 import { TbmlDataUniform } from '../../types/xmlParser'
 import { DATASET_REPO, DatasetRepoNode } from '../repo/dataset'
@@ -12,37 +9,35 @@ import { Socket } from '../../types/socket'
 import { Table } from '../../../site/content-types/table/table'
 import { Highchart } from '../../../site/content-types/highchart/highchart'
 import { MunicipalityWithCounty } from '../dataset/klass/municipalities'
-import { ServerLogLib } from '../utils/serverLog'
-import { DatasetLib } from '../dataset/dataset'
-import { RepoCommonLib } from '../repo/common'
+import { Cache } from 'enonic-types/cache'
 
 const {
   newCache
-}: CacheLibrary = __non_webpack_require__( '/lib/cache')
+} = __non_webpack_require__('/lib/cache')
 const {
   listener,
   send
-}: EventLibrary = __non_webpack_require__('/lib/xp/event')
+} = __non_webpack_require__('/lib/xp/event')
 const {
   run
-}: ContextLibrary = __non_webpack_require__('/lib/xp/context')
+} = __non_webpack_require__('/lib/xp/context')
 const {
   submit, sleep
-}: TaskLib = __non_webpack_require__('/lib/xp/task')
+} = __non_webpack_require__('/lib/xp/task')
 const {
   query,
   get
-}: ContentLibrary = __non_webpack_require__('/lib/xp/content')
+} = __non_webpack_require__('/lib/xp/content')
 const {
   getDataset,
   extractKey
-}: DatasetLib = __non_webpack_require__('/lib/ssb/dataset/dataset')
+} = __non_webpack_require__('/lib/ssb/dataset/dataset')
 const {
   cacheLog
-}: ServerLogLib = __non_webpack_require__('/lib/ssb/utils/serverLog')
+} = __non_webpack_require__('/lib/ssb/utils/serverLog')
 const {
   ENONIC_CMS_DEFAULT_REPO
-}: RepoCommonLib = __non_webpack_require__('/lib/ssb/repo/common')
+} = __non_webpack_require__('/lib/ssb/repo/common')
 
 const masterFilterCaches: Map<string, Cache> = new Map()
 const draftFilterCaches: Map<string, Cache> = new Map()
@@ -409,7 +404,7 @@ export function fromMunicipalityWithNameCache(key: string, fallback: () => Munic
 
 export function fromParentTypeCache(
   key: string,
-  fallback: () => string): string {
+  fallback: () => string | undefined): string | undefined {
   return parentTypeCache.get(key, () => {
     return fallback()
   })
@@ -566,7 +561,7 @@ export interface SSBCacheLibrary {
   fromParsedMunicipalityCache: (key: string, fallback: () => Array<MunicipalityWithCounty>) => Array<MunicipalityWithCounty>;
   fromMunicipalityWithCodeCache: (key: string, fallback: () => MunicipalityWithCounty | undefined) => MunicipalityWithCounty | undefined;
   fromMunicipalityWithNameCache: (key: string, fallback: () => MunicipalityWithCounty | undefined) => MunicipalityWithCounty | undefined;
-  fromParentTypeCache: (path: string, fallback: () => string) => string;
+  fromParentTypeCache: (path: string, fallback: () => string | undefined) => string | undefined;
   datasetOrUndefined: (content: Content<Highchart | Table>) => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined;
   setupHandlers: (socket: Socket) => void;
 }

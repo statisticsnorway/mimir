@@ -1,25 +1,22 @@
 import { Response } from 'enonic-types/controller'
-import { Content, ContentLibrary } from 'enonic-types/content'
+import { Content } from 'enonic-types/content'
 import { Page } from '../../site/content-types/page/page'
 import { DefaultPageConfig } from '../../site/pages/default/default-page-config'
 import { Article } from '../../site/content-types/article/article'
-import { StatRegStatisticsLib } from '../../lib/ssb/statreg/statistics'
 import { StatisticInListing } from '../../lib/ssb/dashboard/statreg/types'
 import { Statistics } from '../../site/content-types/statistics/statistics'
-import { PortalLibrary } from 'enonic-types/portal'
-import { Moment } from '../../lib/vendor/moment'
 const {
   moment
-}: Moment = __non_webpack_require__('/lib/vendor/moment')
+} = __non_webpack_require__('/lib/vendor/moment')
 const {
   query
-}: ContentLibrary = __non_webpack_require__('/lib/xp/content')
+} = __non_webpack_require__('/lib/xp/content')
 const {
   fetchStatisticsWithPreviousReleaseBetween
-}: StatRegStatisticsLib = __non_webpack_require__('/lib/ssb/statreg/statistics')
+} = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   pageUrl
-}: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')

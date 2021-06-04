@@ -1,30 +1,27 @@
 import { NodeQueryHit, NodeQueryResponse, RepoNode } from 'enonic-types/node'
-import { RepoEventLogLib } from '../repo/eventLog'
-import { RepoJobLib, JobEventNode } from '../repo/job'
-import { RepoCommonLib } from '../repo/common'
-import { ServerLogLib } from '../utils/serverLog'
+import { JobEventNode } from '../repo/job'
 
 const {
   getChildNodes,
   queryNodes,
   withConnection,
   getNode
-}: RepoCommonLib = __non_webpack_require__('/lib/ssb/repo/common')
+} = __non_webpack_require__('/lib/ssb/repo/common')
 
 const {
   EVENT_LOG_BRANCH,
   EVENT_LOG_REPO
-}: RepoEventLogLib = __non_webpack_require__('/lib/ssb/repo/eventLog')
+} = __non_webpack_require__('/lib/ssb/repo/eventLog')
 
 const {
   startJobLog,
   updateJobLog,
   JOB_STATUS_COMPLETE
-}: RepoJobLib = __non_webpack_require__('/lib/ssb/repo/job')
+} = __non_webpack_require__('/lib/ssb/repo/job')
 
 const {
   cronJobLog
-}: ServerLogLib = __non_webpack_require__( '/lib/ssb/utils/serverLog')
+} = __non_webpack_require__('/lib/ssb/utils/serverLog')
 
 interface RepoNodeExtended extends RepoNode {
   _path: string;

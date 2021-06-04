@@ -1,14 +1,11 @@
 import { StatisticInListing, VariantInListing } from '../dashboard/statreg/types'
-import { I18nLibrary } from 'enonic-types/i18n'
-import { DateUtilsLib } from './dateUtils'
-import { Moment } from '../../vendor/moment'
 
 const {
   sameDay
-}: DateUtilsLib = __non_webpack_require__( '/lib/ssb/utils/dateUtils')
+} = __non_webpack_require__('/lib/ssb/utils/dateUtils')
 const {
   localize
-}: I18nLibrary = __non_webpack_require__( '/lib/xp/i18n')
+} = __non_webpack_require__('/lib/xp/i18n')
 const {
   groupBy
 } = __non_webpack_require__('/lib/vendor/ramda')
@@ -19,10 +16,10 @@ const {
   data: {
     forceArray
   }
-} = __non_webpack_require__( '/lib/util')
+} = __non_webpack_require__('/lib/util')
 const {
   moment
-}: Moment = __non_webpack_require__('/lib/vendor/moment')
+} = __non_webpack_require__('/lib/vendor/moment')
 
 export function calculatePeriod(variant: VariantInListing, language: string): string {
   switch (variant.frekvens) {

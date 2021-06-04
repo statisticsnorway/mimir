@@ -3,7 +3,7 @@ const {
   getContent,
   serviceUrl,
   pageUrl
-} = __non_webpack_require__( '/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
@@ -13,7 +13,7 @@ const {
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getLanguage
-} = __non_webpack_require__( '/lib/ssb/utils/language')
+} = __non_webpack_require__('/lib/ssb/utils/language')
 const view = resolve('./pifCalculator.html')
 
 exports.get = function(req) {

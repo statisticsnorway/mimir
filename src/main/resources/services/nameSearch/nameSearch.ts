@@ -1,8 +1,10 @@
-import { HttpLibrary, HttpRequestParams, HttpResponse } from 'enonic-types/http'
+import { HttpRequestParams, HttpResponse } from 'enonic-types/http'
 import { Request, Response } from 'enonic-types/controller'
 
 import validator from 'validator'
-const http: HttpLibrary = __non_webpack_require__('/lib/http-client')
+const {
+  request
+} = __non_webpack_require__('/lib/http-client')
 
 export function get(req: Request): Response {
   if (!req.params.name) {
@@ -32,7 +34,7 @@ export function get(req: Request): Response {
     }
   }
 
-  const result: HttpResponse = http.request(requestParams)
+  const result: HttpResponse = request(requestParams)
 
   const preparedBody: string = result.body ? prepareResult(result.body, sanitizeQuery(req.params.name)) : ''
 

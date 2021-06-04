@@ -1,9 +1,9 @@
 const {
   getComponent
-} = __non_webpack_require__( '/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   render
-} = __non_webpack_require__( '/lib/thymeleaf')
+} = __non_webpack_require__('/lib/thymeleaf')
 
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view = resolve('columns.html')

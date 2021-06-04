@@ -2,36 +2,37 @@ import { HighchartsGraphConfig } from '../../../types/highcharts'
 import { Highchart } from '../../../../site/content-types/highchart/highchart'
 import { Content } from 'enonic-types/content'
 import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
+import { PreliminaryData } from '../../../types/xmlParser'
 
 const {
   createDefaultConfig
 } = __non_webpack_require__('/lib/ssb/parts/highcharts/graph/config')
 const {
   areaConfig
-} = __non_webpack_require__( '/lib/ssb/parts/highcharts/graph/graphAreaConfig')
+} = __non_webpack_require__('/lib/ssb/parts/highcharts/graph/graphAreaConfig')
 const {
   pieConfig
-} = __non_webpack_require__( '/lib/ssb/parts/highcharts/graph/graphPieConfig')
+} = __non_webpack_require__('/lib/ssb/parts/highcharts/graph/graphPieConfig')
 const {
   barConfig
-} = __non_webpack_require__( '/lib/ssb/parts/highcharts/graph/graphBarConfig')
+} = __non_webpack_require__('/lib/ssb/parts/highcharts/graph/graphBarConfig')
 const {
   barNegativeConfig
-} = __non_webpack_require__( '/lib/ssb/parts/highcharts/graph/graphBarNegativeConfig')
+} = __non_webpack_require__('/lib/ssb/parts/highcharts/graph/graphBarNegativeConfig')
 const {
   columnConfig
-} = __non_webpack_require__( '/lib/ssb/parts/highcharts/graph/graphColumnConfig')
+} = __non_webpack_require__('/lib/ssb/parts/highcharts/graph/graphColumnConfig')
 const {
   lineConfig
-} = __non_webpack_require__( '/lib/ssb/parts/highcharts/graph/graphLineConfig')
+} = __non_webpack_require__('/lib/ssb/parts/highcharts/graph/graphLineConfig')
 const {
   DataSource: DataSourceType
-} = __non_webpack_require__( '/lib/ssb/repo/dataset')
+} = __non_webpack_require__('/lib/ssb/repo/dataset')
 
 export function prepareHighchartsGraphConfig(
   highchartContent: Content<Highchart>,
   dataFormat: DataSource['dataSource'],
-  categories: Array<string> | undefined = undefined): HighchartsGraphConfig {
+  categories: Array<string | number | PreliminaryData> | undefined = undefined): HighchartsGraphConfig {
   const isJsonStat: boolean = dataFormat !== undefined && dataFormat._selected !== undefined &&
     dataFormat._selected === DataSourceType.STATBANK_API
 
@@ -70,4 +71,11 @@ interface GetGraphOptions {
   isJsonStat: boolean;
   xAxisLabel: string | undefined;
   categories: object | undefined;
+}
+
+export interface HighchartsGraphConfigLib {
+  prepareHighchartsGraphConfig: (
+    highchartContent: Content<Highchart>,
+    dataFormat: DataSource['dataSource'],
+    categories?: Array<string | number | PreliminaryData>) => HighchartsGraphConfig;
 }

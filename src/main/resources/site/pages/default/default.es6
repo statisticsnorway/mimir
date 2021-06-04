@@ -2,29 +2,29 @@ const {
   getContent,
   processHtml,
   assetUrl
-} = __non_webpack_require__( '/lib/xp/portal')
-const thymeleaf = __non_webpack_require__( '/lib/thymeleaf')
+} = __non_webpack_require__('/lib/xp/portal')
+const thymeleaf = __non_webpack_require__('/lib/thymeleaf')
 const {
   getLanguage
-} = __non_webpack_require__( '/lib/ssb/utils/language')
+} = __non_webpack_require__('/lib/ssb/utils/language')
 const {
   alertsForContext,
   getBreadcrumbs
-} = __non_webpack_require__( '/lib/ssb/utils/utils')
+} = __non_webpack_require__('/lib/ssb/utils/utils')
 const {
   getReleaseDatesByVariants
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   getMunicipality
-} = __non_webpack_require__( '/lib/ssb/dataset/klass/municipalities')
+} = __non_webpack_require__('/lib/ssb/dataset/klass/municipalities')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const util = __non_webpack_require__( '/lib/util')
+const util = __non_webpack_require__('/lib/util')
 const {
   getHeaderContent
-} = __non_webpack_require__( '/lib/ssb/parts/header')
+} = __non_webpack_require__('/lib/ssb/parts/header')
 const {
   getFooterContent
-} = __non_webpack_require__( '/lib/ssb/parts/footer')
+} = __non_webpack_require__('/lib/ssb/parts/footer')
 const {
   fromMenuCache
 } = __non_webpack_require__('/lib/ssb/cache/cache')

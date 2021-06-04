@@ -16,7 +16,7 @@ export function getParentContent(path: string): Content<object, DefaultPageConfi
   const parentPathKey: string = parentPath(path)
   return getContent({
     key: parentPathKey
-  })
+  }) as Content<object, DefaultPageConfig> | null
 }
 
 function parentType(path: string): string | undefined {
@@ -24,7 +24,7 @@ function parentType(path: string): string | undefined {
 
   const parentContent: Content<object, DefaultPageConfig> | null = getContent({
     key: parentPathKey
-  })
+  }) as Content<object, DefaultPageConfig> | null
 
   if (parentContent) {
     if (parentContent.type === `${app.name}:statistics`) {
@@ -45,4 +45,10 @@ export function parentPath(path: string): string {
   const pathElements: Array<string> = path.split('/')
   pathElements.pop()
   return pathElements.join('/')
+}
+
+export interface ParentUtilsLib {
+  getParentType: (path: string) => string | undefined;
+  getParentContent: (path: string) => Content<object, DefaultPageConfig> | null;
+  parentPath: (path: string) => string;
 }

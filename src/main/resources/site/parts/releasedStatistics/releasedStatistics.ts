@@ -1,44 +1,42 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 
 import { Content } from 'enonic-types/content'
-import { Request } from 'enonic-types/controller'
+import { Request, Response } from 'enonic-types/controller'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { Component, PortalLibrary } from 'enonic-types/portal'
+import { Component } from 'enonic-types/portal'
 import { ReleasedStatisticsPartConfig } from './releasedStatistics-part-config'
-import { I18nLibrary } from 'enonic-types/i18n'
-import { VariantUtilsLib, YearReleases } from '../../../lib/ssb/utils/variantUtils'
-import { ArrayUtilsLib } from '../../../lib/ssb/utils/arrayUtils'
+import { YearReleases } from '../../../lib/ssb/utils/variantUtils'
 
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 const {
   localize
-}: I18nLibrary = __non_webpack_require__( '/lib/xp/i18n')
+} = __non_webpack_require__('/lib/xp/i18n')
 
 const {
   getAllStatisticsFromRepo
-} = __non_webpack_require__( '/lib/ssb/statreg/statistics')
+} = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   renderError
-} = __non_webpack_require__( '/lib/ssb/error/error')
+} = __non_webpack_require__('/lib/ssb/error/error')
 const {
   getComponent,
   getContent
-}: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 
 const {
   checkLimitAndTrim
-}: ArrayUtilsLib = __non_webpack_require__( '/lib/ssb/utils/arrayUtils')
+} = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
 
 const {
   addMonthNames,
   getReleasesForDay,
   groupStatisticsByYearMonthAndDay,
   prepareRelease
-}: VariantUtilsLib = __non_webpack_require__( '/lib/ssb/utils/variantUtils')
+} = __non_webpack_require__('/lib/ssb/utils/variantUtils')
 
-exports.get = function(req: Request): React4xpResponse {
+exports.get = function(req: Request): React4xpResponse | Response {
   try {
     return renderPart(req)
   } catch (e) {

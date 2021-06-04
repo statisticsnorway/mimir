@@ -1,13 +1,16 @@
-import { RepoLibrary, RepositoryConfig } from 'enonic-types/repo'
-import { RepoCommonLib } from './common'
-const repo: RepoLibrary = __non_webpack_require__('/lib/xp/repo')
+import { RepositoryConfig } from 'enonic-types/repo'
+const {
+  get,
+  create,
+  createBranch: createRepoBranch
+} = __non_webpack_require__('/lib/xp/repo')
 const {
   withSuperUserContext
-}: RepoCommonLib = __non_webpack_require__('/lib/ssb/repo/common')
+} = __non_webpack_require__('/lib/ssb/repo/common')
 
 export function getRepo(repoId: string, branch: string): RepositoryConfig | null {
   return withSuperUserContext<RepositoryConfig | null>(repoId, branch, () => {
-    return repo.get(repoId)
+    return get(repoId)
   })
 }
 
@@ -17,7 +20,7 @@ export function repoExists(repoId: string, branch: string): boolean {
 
 export function createRepo(repoId: string, branch: string): RepositoryConfig {
   return withSuperUserContext<RepositoryConfig>(repoId, branch, () => {
-    return repo.create({
+    return create({
       id: repoId
     })
   })
@@ -25,7 +28,7 @@ export function createRepo(repoId: string, branch: string): RepositoryConfig {
 
 export function createBranch(repoId: string, branchId: string): RepositoryConfig {
   return withSuperUserContext<RepositoryConfig>(repoId, branchId, () => {
-    return repo.createBranch({
+    return createRepoBranch({
       branchId,
       repoId
     })

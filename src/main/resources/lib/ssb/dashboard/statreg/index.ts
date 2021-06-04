@@ -1,52 +1,48 @@
-import { StatRegRefreshResult, StatRegRepoLib, StatRegNode } from '../../repo/statreg'
+import { StatRegRefreshResult, StatRegNode } from '../../repo/statreg'
 import { Socket, SocketEmitter } from '../../../types/socket'
-import { StatRegContactsLib } from '../../statreg/contacts'
-import { StatRegStatisticsLib } from '../../statreg/statistics'
-import { StatRegPublicationsLib } from '../../statreg/publications'
 import { StatRegLatestFetchInfoNode } from '../../statreg/eventLog'
-import { RepoCommonLib } from '../../repo/common'
-import { LogSummary, RepoEventLogLib } from '../../repo/eventLog'
+import { LogSummary } from '../../repo/eventLog'
 import { Events, QueryInfo } from '../../repo/query'
-import { DashboardUtilsLib } from '../dashboardUtils'
-import { I18nLibrary } from 'enonic-types/i18n'
-import { ContextLibrary, RunContext } from 'enonic-types/context'
+import { RunContext } from 'enonic-types/context'
 import { DashboardRefreshResultLogData } from '../dashboard'
 
 const {
   STATREG_NODES,
   refreshStatRegData,
   getStatRegNode
-}: StatRegRepoLib = __non_webpack_require__('/lib/ssb/repo/statreg')
+} = __non_webpack_require__('/lib/ssb/repo/statreg')
 const {
   STATREG_REPO_CONTACTS_KEY
-}: StatRegContactsLib = __non_webpack_require__('/lib/ssb/statreg/contacts')
+} = __non_webpack_require__('/lib/ssb/statreg/contacts')
 const {
   STATREG_REPO_STATISTICS_KEY
-}: StatRegStatisticsLib = __non_webpack_require__('/lib/ssb/statreg/statistics')
+} = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   STATREG_REPO_PUBLICATIONS_KEY
-}: StatRegPublicationsLib = __non_webpack_require__('/lib/ssb/statreg/publications')
+} = __non_webpack_require__('/lib/ssb/statreg/publications')
 const {
   showWarningIcon,
   users
-}: DashboardUtilsLib = __non_webpack_require__('/lib/ssb/dashboard/dashboardUtils')
+} = __non_webpack_require__('/lib/ssb/dashboard/dashboardUtils')
 const {
   getNode,
   ENONIC_CMS_DEFAULT_REPO
-}: RepoCommonLib = __non_webpack_require__('/lib/ssb/repo/common')
+} = __non_webpack_require__('/lib/ssb/repo/common')
 const {
   EVENT_LOG_BRANCH,
   EVENT_LOG_REPO,
   getQueryChildNodesStatus
-}: RepoEventLogLib = __non_webpack_require__('/lib/ssb/repo/eventLog')
+} = __non_webpack_require__('/lib/ssb/repo/eventLog')
 const {
   dateToReadable,
   dateToFormat
-} = __non_webpack_require__( '/lib/ssb/utils/utils')
-const i18n: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
+} = __non_webpack_require__('/lib/ssb/utils/utils')
+const {
+  localize
+} = __non_webpack_require__('/lib/xp/i18n')
 const {
   run
-}: ContextLibrary = __non_webpack_require__('/lib/xp/context')
+} = __non_webpack_require__('/lib/xp/context')
 
 export type StatRegLatestFetchInfoNodeType = StatRegLatestFetchInfoNode | readonly StatRegLatestFetchInfoNode[] | null;
 export function getStatRegFetchStatuses(): Array<StatRegStatus> {
@@ -70,7 +66,7 @@ function getStatRegStatus(key: string): StatRegStatus {
   const logNode: QueryInfo | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${key}`) as QueryInfo | null
   const statRegNode: StatRegNode | null = getStatRegNode(key)
   const modifiedResult: string = logNode && logNode.data.modifiedResult || ''
-  const logMessage: string = i18n.localize({
+  const logMessage: string = localize({
     key: modifiedResult || '',
     values: [modifiedResult || '']
   })
@@ -138,7 +134,7 @@ function runRefresh(socketEmitter: SocketEmitter, statRegKeys: Array<string>): v
 export function parseStatRegJobInfo(refreshDataResult: Array<StatRegRefreshResult>): Array<StatRegJobInfo> {
   return refreshDataResult.map((result) => {
     const displayName: string = toDisplayString(result.key)
-    const status: string = i18n.localize({
+    const status: string = localize({
       key: result.status,
       values: [result.status]
     })

@@ -1,42 +1,35 @@
-import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
-import { EnonicEvent, EnonicEventData, EventLibrary } from 'enonic-types/event'
-import { SSBCronLib } from '../cron/cron'
-import { RepoDatasetLib } from '../repo/dataset'
-import { DatasetLib } from './dataset'
+import { Content, QueryResponse } from 'enonic-types/content'
+import { EnonicEvent, EnonicEventData } from 'enonic-types/event'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
-import { RepoCommonLib } from '../repo/common'
-import { TaskLib } from '../../types/task'
-import { ContextLibrary } from 'enonic-types/context'
-import { ServerLogLib } from '../utils/serverLog'
 
 const {
   listener
-}: EventLibrary = __non_webpack_require__('/lib/xp/event')
+} = __non_webpack_require__('/lib/xp/event')
 const {
   query
-}: ContentLibrary = __non_webpack_require__('/lib/xp/content')
+} = __non_webpack_require__('/lib/xp/content')
 const {
   run
-}: ContextLibrary = __non_webpack_require__('/lib/xp/context')
+} = __non_webpack_require__('/lib/xp/context')
 const {
   refreshDataset
-}: DatasetLib = __non_webpack_require__( '/lib/ssb/dataset/dataset')
+} = __non_webpack_require__('/lib/ssb/dataset/dataset')
 const {
   runOnMasterOnly,
   cronContext
-}: SSBCronLib = __non_webpack_require__('/lib/ssb/cron/cron')
+} = __non_webpack_require__('/lib/ssb/cron/cron')
 const {
   DataSource: DataSourceType
-}: RepoDatasetLib = __non_webpack_require__( '/lib/ssb/repo/dataset')
+} = __non_webpack_require__('/lib/ssb/repo/dataset')
 const {
   ENONIC_CMS_DEFAULT_REPO
-}: RepoCommonLib = __non_webpack_require__('/lib/ssb/repo/common')
+} = __non_webpack_require__('/lib/ssb/repo/common')
 const {
   submit, sleep, isRunning
-}: TaskLib = __non_webpack_require__('/lib/xp/task')
+} = __non_webpack_require__('/lib/xp/task')
 const {
   autoRefreshLog
-}: ServerLogLib = __non_webpack_require__('/lib/ssb/utils/serverLog')
+} = __non_webpack_require__('/lib/ssb/utils/serverLog')
 
 let refreshQueue: Array<Content<DataSource>> = []
 let refreshTask: string | null = null
@@ -118,4 +111,8 @@ function startRefreshTask(): void {
     autoRefreshLog('task already running')
     // do nothing
   }
+}
+
+export interface DatasetListenersLib {
+  setupFetchDataOnCreateListener: () => void;
 }
