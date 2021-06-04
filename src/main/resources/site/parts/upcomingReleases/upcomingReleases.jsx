@@ -7,6 +7,7 @@ import { ChevronDown } from 'react-feather'
 function UpcomingReleases(props) {
   const [start, setStart] = useState(props.start)
   const [releases, setReleases] = useState(props.releases)
+  const [loading, setLoading] = useState(false)
 
   const unitProps = ['year', 'month', 'day']
   function mergeReleases(array1, array2, lvl) {
@@ -42,6 +43,7 @@ function UpcomingReleases(props) {
   }
 
   function fetchMoreReleases() {
+    setLoading(true)
     axios.get(props.upcomingReleasesServiceUrl, {
       params: {
         start,
@@ -52,6 +54,8 @@ function UpcomingReleases(props) {
       const totalReleases = mergeReleases(releases, res.data.releases, 0)
       setReleases(totalReleases)
       setStart(start + props.count)
+    }).finally(() => {
+      setLoading(false)
     })
   }
 
@@ -88,6 +92,19 @@ function UpcomingReleases(props) {
     )
   }
 
+  function renderButton(){
+    if(loading){
+      return (<div class="text-center mt-5">
+        <span className="spinner-border spinner-border" />
+      </div>)
+    } else {
+      return (<Button className="button-more mt-5 mx-auto"
+              disabled={loading}
+              onClick={fetchMoreReleases}>
+        <ChevronDown size="18"/>{props.buttonTitle}
+      </Button>)
+    }
+  }
 
   return (
     <section className='nextStatisticsReleases'>
@@ -100,10 +117,7 @@ function UpcomingReleases(props) {
         })
       }
       <div>
-        <Button className="button-more mt-5"
-          onClick={fetchMoreReleases}><ChevronDown
-            size="18"/>{props.buttonTitle}
-        </Button>
+        { renderButton() }
       </div>
     </section>
   )
