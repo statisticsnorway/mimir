@@ -1,8 +1,15 @@
-import { Content } from 'enonic-types/content'
+import { Content, QueryResponse } from 'enonic-types/content'
 import { DefaultPageConfig } from '../../../site/pages/default/default-page-config'
+import { Statistics } from '../../../site/content-types/statistics/statistics'
+import { StatisticInListing } from '../dashboard/statreg/types'
+import { Page } from '../../../site/content-types/page/page'
 
 const {
-  get: getContent
+  getStatisticByShortNameFromRepo
+} = __non_webpack_require__('../statreg/statistics')
+const {
+  get: getContent,
+  query
 } = __non_webpack_require__('/lib/xp/content')
 const {
   fromParentTypeCache
@@ -45,4 +52,30 @@ export function parentPath(path: string): string {
   const pathElements: Array<string> = path.split('/')
   pathElements.pop()
   return pathElements.join('/')
+}
+
+export function getMainSubject(shortName: string, language: string): string {
+  const statisticFromRepo: StatisticInListing | undefined = getStatisticByShortNameFromRepo(shortName)
+  const statisticResult: QueryResponse<Statistics> = statisticFromRepo && query({
+    query: `data.statistic = '${statisticFromRepo.id}' AND language IN (${language === 'nb' ? '"nb", "nn"' : '"en"'})`,
+    contentTypes: [`${app.name}:statistics`],
+    count: 1
+  })
+  const statisticContent: Content<Statistics> | undefined = statisticResult.total === 1 ? statisticResult.hits[0] : undefined
+
+  const parentPath: string | undefined = statisticContent && statisticContent._path.split('/').splice(1, 3).join('/')
+
+  const parentContent: Content<Page> = parentPath ? getContent({
+    key: `/${parentPath}`
+  }) : undefined
+
+  return parentContent ? parentContent.displayName : ''
+}
+
+export interface ParentUtils {
+  getParentType: (path: string) => string | undefined;
+  getParentContent: (path: string) => Content<object, DefaultPageConfig> | null;
+  parentType: (path: string) => string | undefined;
+  parentPath: (path: string) => string;
+  getMainSubject: (shortName: string) => string;
 }

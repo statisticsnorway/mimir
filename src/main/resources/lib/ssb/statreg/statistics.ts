@@ -32,6 +32,7 @@ const {
   logUserDataQuery
 }: RepoQueryLib = __non_webpack_require__('/lib/ssb/repo/query')
 
+
 export const STATREG_REPO_STATISTICS_KEY: string = 'statistics'
 
 export function fetchStatistics(): Array<StatisticInListing> | null {
@@ -221,6 +222,7 @@ export function getReleaseDatesByVariants(variants: Array<VariantInListing>): Re
   return releaseDatesStatistic
 }
 
+
 export interface StatRegStatisticsLib {
   STATREG_REPO_STATISTICS_KEY: string;
   fetchStatistics: () => Array<StatisticInListing> | null;
@@ -231,4 +233,5 @@ export interface StatRegStatisticsLib {
   getStatisticByIdFromRepo: (statId: string) => StatisticInListing | undefined;
   getStatisticByShortNameFromRepo: (shortName: string) => StatisticInListing | undefined;
   getReleaseDatesByVariants: (variants: Array<VariantInListing>) => ReleaseDatesVariant;
+
 }
