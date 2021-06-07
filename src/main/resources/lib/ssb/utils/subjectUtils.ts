@@ -1,11 +1,11 @@
-import { Content, ContentLibrary } from 'enonic-types/content'
+import { Content } from 'enonic-types/content'
 import { Page } from '../../../site/content-types/page/page'
 import { DefaultPageConfig } from '../../../site/pages/default/default-page-config'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { StatisticInListing } from '../dashboard/statreg/types'
 const {
   query
-}: ContentLibrary = __non_webpack_require__('/lib/xp/content')
+} = __non_webpack_require__('/lib/xp/content')
 const {
   fetchStatistics
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')
@@ -123,9 +123,9 @@ export function getStatistics(): Array<StatisticItem> {
     query: `data.statistic LIKE '*'`
   }).hits as unknown as Array<Content<Statistics>>
 
-  const statregStatistics: Array<StatisticInListing> = fetchStatistics()
+  const statregStatistics: Array<StatisticInListing> | null = fetchStatistics()
 
-  const statistics: Array<StatisticItem> = statregStatistics.length > 0 ? statisticContent.map((statistic: Content<Statistics>) => {
+  const statistics: Array<StatisticItem> = statregStatistics && statregStatistics.length > 0 ? statisticContent.map((statistic: Content<Statistics>) => {
     const statreg: StatisticInListing | undefined = statregStatistics.find((s) => s.id.toString() === statistic.data.statistic)
 
     const titles: Array<Title> = [{

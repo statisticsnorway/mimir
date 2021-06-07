@@ -1,6 +1,5 @@
 import { Response } from 'enonic-types/controller'
-import { SubjectUtilsLib,
-  MainSubject,
+import { MainSubject,
   SubjectItem,
   SubSubject,
   Title,
@@ -11,7 +10,7 @@ const {
   getMainSubjectsByLanguage,
   getTitlesSubjectByName,
   getSubSubjectsByMainSubjectPath
-}: SubjectUtilsLib = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
+} = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
 
 function get(): Response {
   const mainSubjectsAll: Array<SubjectItem> = getMainSubjects()

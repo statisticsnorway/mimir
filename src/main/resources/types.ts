@@ -82,6 +82,7 @@ interface LibMap extends EnonicLibraryMap {
     '/lib/ssb/utils/parentUtils': import('./lib/ssb/utils/parentUtils').ParentUtilsLib;
     '/lib/ssb/utils/serverLog': import('./lib/ssb/utils/serverLog').ServerLogLib;
     '/lib/ssb/utils/variantUtils': import('./lib/ssb/utils/variantUtils').VariantUtilsLib;
+    '/lib/ssb/utils/subjectUtils': import('./lib/ssb/utils/subjectUtils').SubjectUtilsLib;
 
     // vendor
     '/lib/vendor/moment': import('./lib/vendor/moment').Moment;
