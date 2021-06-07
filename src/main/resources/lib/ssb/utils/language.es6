@@ -121,7 +121,7 @@ function parseTimeInterval(time) {
     break
   case 'M':
     parsedTime = `${i18n.localize({
-      key: 'interval.M' + interval[2]
+      key: 'interval.M.' + interval[3]
     })} ${interval[1]}`
     break
   case 'T':

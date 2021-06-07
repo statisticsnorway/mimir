@@ -1,7 +1,6 @@
 import { HttpRequestParams, HttpResponse } from 'enonic-types/http'
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 import { XmlParser } from '../../../types/xmlParser'
-import { RepoQueryLib } from '../../repo/query'
 
 const {
   sleep
@@ -9,11 +8,10 @@ const {
 const {
   request
 } = __non_webpack_require__('/lib/http-client')
-
 const {
   logUserDataQuery,
   Events
-}: RepoQueryLib = __non_webpack_require__('/lib/ssb/repo/query')
+} = __non_webpack_require__('/lib/ssb/repo/query')
 
 export function get(url: string, queryId?: string): object | null {
   const requestParams: HttpRequestParams = {
