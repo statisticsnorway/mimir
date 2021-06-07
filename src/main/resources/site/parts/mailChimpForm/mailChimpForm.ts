@@ -1,30 +1,68 @@
 import { Request } from 'enonic-types/controller'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
 import { ResourceKey, ThymeleafLibrary } from 'enonic-types/thymeleaf'
 import { Component, PortalLibrary } from 'enonic-types/portal'
 import { MailChimpFormPartConfig } from './mailChimpForm-part-config'
+import { Content } from 'enonic-types/content'
+import { I18nLibrary } from 'enonic-types/i18n'
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   render
 }: ThymeleafLibrary = __non_webpack_require__('/lib/thymeleaf')
 const {
-  getComponent
+  getComponent,
+  getContent
 }: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
+const {
+  localize
+}: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
+
 const view: ResourceKey = resolve('./mailChimpForm.html')
 
 exports.get = function(req: Request): React4xpResponse {
   const component: Component<MailChimpFormPartConfig> = getComponent()
-  const thProps: {title: string; bodyText: string; reactId: string} = {
-    title: component.config.title ? component.config.title : '',
-    bodyText: component.config.text ? component.config.text : '',
-    reactId: ''
+  const content: Content = getContent()
+
+  const reactProps: ReactProps = {
+    endpoint: component.config.mailchimpEndpoint ? component.config.mailchimpEndpoint : '',
+    id: component.config.mailchimpId ? component.config.mailchimpId : '',
+    validateEmail: localize({
+      key: 'newsletter.emailVerificationError',
+      locale: content.language ? content.language : 'nb'
+    })
   }
 
-  const reactProps: {endpoint: string; id: string} = {
-    endpoint: '',
-    id: ''
+  const mailChimpFormComponent: React4xpObject = new React4xp('site/parts/mailChimpForm/mailChimpForm')
+    .setProps(reactProps)
+    .setId('newsletterForm')
+    .uniqueId()
+
+  const thProps: ThymeleafProps = {
+    title: component.config.title ? component.config.title : '',
+    text: component.config.text ? component.config.text : '',
+    reactId: mailChimpFormComponent.react4xpId
   }
 
   const thRender: string = render(view, thProps)
-  return React4xp.render('site/parts/mailChimpForm/mailChimpForm', reactProps, req)
+  return {
+    body: mailChimpFormComponent.renderBody({
+      body: thRender,
+      clientRender: req.mode !== 'edit'
+    }),
+    pageContributions: mailChimpFormComponent.renderPageContributions({
+      clientRender: req.mode !== 'edit'
+    })
+  }
+}
+
+interface ReactProps {
+  endpoint: string;
+  id: string;
+  validateEmail: string;
+}
+
+interface ThymeleafProps {
+  title: string;
+  text: string;
+  reactId: string;
 }
