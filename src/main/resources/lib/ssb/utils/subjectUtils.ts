@@ -1,9 +1,15 @@
 import { Content, ContentLibrary } from 'enonic-types/content'
 import { Page } from '../../../site/content-types/page/page'
 import { DefaultPageConfig } from '../../../site/pages/default/default-page-config'
+import { Statistics } from '../../../site/content-types/statistics/statistics'
+import { StatisticInListing } from '../dashboard/statreg/types'
 const {
   query
 }: ContentLibrary = __non_webpack_require__('/lib/xp/content')
+const {
+  fetchStatistics
+} = __non_webpack_require__('/lib/ssb/statreg/statistics')
+
 
 export function getMainSubjects(): Array<SubjectItem> {
   const mainSubjectsContent: Array<Content<Page, DefaultPageConfig>> = query({
@@ -107,6 +113,47 @@ export function getSubSubjectsByMainSubjectPath(subjects: Array<SubjectItem>, pa
   return subSubjects
 }
 
+export function getStatistics(): Array<StatisticItem> {
+  const statisticContent: Array<Content<Statistics>> = query({
+    start: 0,
+    count: 2000,
+    contentTypes: [`${app.name}:statistics`],
+    query: `data.statistic LIKE '*'`
+  }).hits as unknown as Array<Content<Statistics>>
+
+  const statregStatistics: Array<StatisticInListing> = fetchStatistics()
+
+  const statistics: Array<StatisticItem> = statregStatistics.length > 0 ? statisticContent.map((statistic: Content<Statistics>) => {
+    const statreg: StatisticInListing | undefined = statregStatistics.find((s) => s.id.toString() === statistic.data.statistic)
+
+    const titles: Array<Title> = [{
+      title: statreg ? statreg.name : '',
+      language: 'no'
+    },
+    {
+      title: statreg ? statreg.nameEN : '',
+      language: 'en'
+    }]
+
+    return (
+      {
+        name: statistic.displayName,
+        path: statistic._path,
+        language: statistic.language === 'en' ? 'en' : 'no',
+        shortName: statreg ? statreg.shortName : '',
+        isPrimaryLocated: true,
+        titles: titles
+      }
+    )
+  }) : []
+
+  return statistics
+}
+
+export function getStatisticsByPath(statistics: Array<StatisticItem>, path: string): Array<StatisticItem> {
+  return statistics.filter((s: StatisticItem) => s.path.startsWith(path))
+}
+
 export interface SubjectItem {
   title: string;
   subjectCode?: string;
@@ -121,6 +168,7 @@ export interface MainSubject {
     titles: Array<Title>;
     subSubjects: Array<SubSubject>;
 }
+
 export interface SubSubject {
     code: string;
     titles: Array<Title>;
@@ -132,7 +180,10 @@ export interface Title {
     language: string;
 }
 
-interface Statistics {
+export interface StatisticItem {
+    name: string;
+    path: string;
+    language: string;
     shortName: string;
     isPrimaryLocated: boolean;
     titles: Array<Title>;
@@ -146,5 +197,7 @@ export interface SubjectUtilsLib {
     getTitlesSubjectByName: (subjects: Array<SubjectItem>, name: string) => Array<Title> | null;
     getSubjectByNameAndLanguage: (subsubjects: Array<SubjectItem>, language: string, name: string) => SubjectItem;
     getSubSubjectsByMainSubjectPath: (subjects: Array<SubjectItem>, path: string) => Array<SubSubject>;
+    getStatistics: () => Array<StatisticItem>;
+    getStatisticsByPath: (statistics: Array<StatisticItem>, path: string) => Array<StatisticItem>;
   }
 
