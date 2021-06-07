@@ -3,12 +3,12 @@ import { Response } from 'enonic-types/controller'
 import { HttpRequestParams } from 'enonic-types/http'
 import { CalculatorConfig } from '../../site/content-types/calculatorConfig/calculatorConfig'
 import { Dataset } from '../../lib/types/jsonstat-toolkit'
-import { CalculatorLib } from '../../lib/ssb/dataset/calculator'
-import { I18nLibrary } from 'enonic-types/i18n'
-const i18nLib: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
+const {
+  localize
+} = __non_webpack_require__('/lib/xp/i18n')
 const {
   getCalculatorConfig, getBkibolDatasetEnebolig, getBkibolDatasetBoligblokk, isChronological, getChangeValue
-}: CalculatorLib = __non_webpack_require__('/lib/ssb/dataset/calculator')
+} = __non_webpack_require__('/lib/ssb/dataset/calculator')
 
 function get(req: HttpRequestParams): Response {
   const domene: string | undefined = req.params?.domene || 'ENEBOLIG'
@@ -20,11 +20,11 @@ function get(req: HttpRequestParams): Response {
   const endMonth: string | undefined = req.params?.endMonth || ''
   const endYear: string | undefined = req.params?.endYear
   const language: string | undefined = req.params?.language ? req.params.language : 'nb'
-  const errorValidateStartMonth: string = i18nLib.localize({
+  const errorValidateStartMonth: string = localize({
     key: 'bkibolServiceValidateStartMonth',
     locale: language
   })
-  const errorValidateEndMonth: string = i18nLib.localize({
+  const errorValidateEndMonth: string = localize({
     key: 'bkibolServiceValidateEndMonth',
     locale: language
   })

@@ -1,7 +1,7 @@
 const {
   imagePlaceholder,
   getComponent, getContent, imageUrl, pageUrl
-} = __non_webpack_require__( '/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
@@ -10,15 +10,15 @@ const {
 } = __non_webpack_require__('/lib/thymeleaf')
 const {
   getPhrases
-} = __non_webpack_require__( '/lib/ssb/utils/language')
+} = __non_webpack_require__('/lib/ssb/utils/language')
 const {
   getImageAlt
 } = __non_webpack_require__('/lib/ssb/utils/utils')
 const {
   fromRelatedFactPageCache
 } = __non_webpack_require__('/lib/ssb/cache/cache')
-const content = __non_webpack_require__( '/lib/xp/content')
-const util = __non_webpack_require__( '/lib/util')
+const content = __non_webpack_require__('/lib/xp/content')
+const util = __non_webpack_require__('/lib/util')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 const view = resolve('./relatedFactPage.html')

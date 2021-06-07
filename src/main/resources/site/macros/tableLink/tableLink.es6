@@ -1,7 +1,7 @@
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   pageUrl
-} = __non_webpack_require__( '/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')

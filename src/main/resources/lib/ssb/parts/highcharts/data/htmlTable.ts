@@ -1,5 +1,4 @@
-import { AreaLineLinearData } from '../highchartsData'
-import { UtilLibrary } from '../../../../types/util'
+import { AreaLineLinearData, PieData, Series, SeriesAndCategories } from '../highchartsData'
 import { XmlParser, PreliminaryData, TableRowUniform, TableCellUniform } from '../../../../types/xmlParser'
 import { Content } from 'enonic-types/content'
 import { Highchart } from '../../../../../site/content-types/highchart/highchart'
@@ -7,7 +6,11 @@ import { Highchart } from '../../../../../site/content-types/highchart/highchart
 const {
   toString
 } = __non_webpack_require__('/lib/vendor/ramda')
-const util: UtilLibrary = __non_webpack_require__('/lib/util')
+const {
+  data: {
+    forceArray
+  }
+} = __non_webpack_require__('/lib/util')
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 const {
   getRowValue
@@ -16,7 +19,7 @@ const {
 export function seriesAndCategoriesFromHtmlTable(highChartsContent: Content<Highchart>): SeriesAndCategories {
   const stringJson: string | undefined = highChartsContent.data.htmlTable ? __.toNativeObject(xmlParser.parse(highChartsContent.data.htmlTable)) : undefined
   const result: Table | undefined = stringJson ? JSON.parse(stringJson) : undefined
-  const tbody: Array<TableRowUniform> = result ? util.data.forceArray(result.table.tbody) : []
+  const tbody: Array<TableRowUniform> = result ? forceArray(result.table.tbody) : []
   const rows: TableRowUniform['tr'] = tbody[0].tr
   const categories: Array<number | string> = rows.reduce((previous: Array<number | string>, tr: RowData, index: number) => {
     const categoryValue: number | string = getRowValue(tr.td[0])
@@ -24,8 +27,8 @@ export function seriesAndCategoriesFromHtmlTable(highChartsContent: Content<High
     return previous
   }, [])
 
-  const dataInSeries: Array<Series> = rows[0].td.reduce( (
-    acc: Array<Series>,
+  const dataInSeries: Array<SeriesRaw> = rows[0].td.reduce( (
+    acc: Array<SeriesRaw>,
     current: number | string | PreliminaryData,
     tdIndex: number) => {
     const nameRow: number | string = getRowValue(current)
@@ -71,7 +74,7 @@ function convertToCorrectGraphFormat(
   if (graphType === 'pie') {
     return {
       categories: seriesAndCategories.categories,
-      series: util.data.forceArray(dataFormatPie(seriesAndCategories))
+      series: forceArray(dataFormatPie(seriesAndCategories))
     }
   } else if ((graphType === 'area' || graphType === 'line') && xAxisType === 'linear') {
     return {
@@ -84,7 +87,7 @@ function convertToCorrectGraphFormat(
   } else {
     return {
       categories: seriesAndCategories.categories,
-      series: util.data.forceArray(dataFormatDefault(seriesAndCategories)
+      series: forceArray(dataFormatDefault(seriesAndCategories)
       )
     }
   }
@@ -93,25 +96,25 @@ function convertToCorrectGraphFormat(
 export function dataFormatDefault(seriesAndCategories: SeriesAndCategoriesRaw): Series {
   return {
     name: 'something',
-    data: util.data.forceArray(seriesAndCategories.series[0].data[0])
+    data: forceArray(seriesAndCategories.series[0].data[0])
   }
 }
 
-function dataFormatAreaLineLinear(seriesAndCategories: SeriesAndCategoriesRaw): Array<SerieArealLine> {
-  return seriesAndCategories.categories.map((cat: string, index: number): SerieArealLine => {
+function dataFormatAreaLineLinear(seriesAndCategories: SeriesAndCategoriesRaw): Array<Series> {
+  return seriesAndCategories.categories.map((cat: string, index: number): Series => {
     return {
       name: cat,
       data: seriesAndCategories.series.map((row): AreaLineLinearData => {
         return [
           row.name,
-          getRowValue(util.data.forceArray(row.data)[index])
+          getRowValue(forceArray(row.data)[index])
         ]
       })
     }
   })
 }
 
-function dataFormatPie(seriesAndCategories: SeriesAndCategoriesRaw): SeriesPie {
+function dataFormatPie(seriesAndCategories: SeriesAndCategoriesRaw): Series {
   if (seriesAndCategories.categories.length === 1) {
     return {
       name: 'Antall',
@@ -143,32 +146,37 @@ interface RowData {
   td: Array<number | string | PreliminaryData>;
 }
 
-export interface Series {
+export interface SeriesRaw {
   name: string;
   data: Array<number | string>;
 }
 
 interface SeriesAndCategoriesRaw {
   categories: Array<number | string>;
-  series: Array<Series>;
+  series: Array<SeriesRaw>;
 }
 
-interface SeriesAndCategories {
-  categories?: Array<number | string>;
-  series: Array<Series> | Array<SerieArealLine> | Array<SeriesPie>;
-}
+// interface SeriesAndCategories {
+//   categories: Array<number | string | PreliminaryData>;
+//   series: Array<Series> | Array<SerieArealLine> | Array<SeriesPie>;
+// }
 
-interface PieData {
-  name: number | string;
-  y: number | string;
-}
+// export interface PieData {
+//   name: number | string;
+//   y: number | string;
+// }
 
-interface SeriesPie {
-  name: string;
-  data: Array<PieData>;
-}
+// export interface SeriesPie {
+//   name: string;
+//   data: Array<PieData>;
+// }
 
-interface SerieArealLine {
-  name: string;
-  data: Array<AreaLineLinearData>;
+// export interface SerieArealLine {
+//   name: string;
+//   data: Array<AreaLineLinearData>;
+// }
+
+export interface HighchartsHtmlTableLib {
+  seriesAndCategoriesFromHtmlTable: (highChartsContent: Content<Highchart>) => SeriesAndCategories;
+  dataFormatDefault: (seriesAndCategories: SeriesAndCategoriesRaw) => Series;
 }

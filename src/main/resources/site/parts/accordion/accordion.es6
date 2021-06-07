@@ -2,16 +2,16 @@ const {
   getComponent,
   getContent,
   processHtml
-} = __non_webpack_require__( '/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   sanitize
-} = __non_webpack_require__( '/lib/xp/common')
+} = __non_webpack_require__('/lib/xp/common')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 
-const content = __non_webpack_require__( '/lib/xp/content')
-const util = __non_webpack_require__( '/lib/util')
+const content = __non_webpack_require__('/lib/xp/content')
+const util = __non_webpack_require__('/lib/util')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 exports.get = function(req) {

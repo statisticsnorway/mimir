@@ -1,10 +1,10 @@
 const {
   getComponent,
   attachmentUrl
-} = __non_webpack_require__( '/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   render
-} = __non_webpack_require__( '/lib/thymeleaf')
+} = __non_webpack_require__('/lib/thymeleaf')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')

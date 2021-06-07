@@ -1,22 +1,22 @@
 const {
   data
-} = __non_webpack_require__( '/lib/util')
+} = __non_webpack_require__('/lib/util')
 const {
   getContent, getComponent, imageUrl
-} = __non_webpack_require__( '/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   render
-} = __non_webpack_require__( '/lib/thymeleaf')
+} = __non_webpack_require__('/lib/thymeleaf')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const content = __non_webpack_require__( '/lib/xp/content')
+const content = __non_webpack_require__('/lib/xp/content')
 const {
   getSources
-} = __non_webpack_require__( '/lib/ssb/utils/utils')
+} = __non_webpack_require__('/lib/ssb/utils/utils')
 const {
   getPhrases
-} = __non_webpack_require__( '/lib/ssb/utils/language')
+} = __non_webpack_require__('/lib/ssb/utils/language')
 import { Base64 } from 'js-base64'
 const view = resolve('./infoGraphics.html')
 

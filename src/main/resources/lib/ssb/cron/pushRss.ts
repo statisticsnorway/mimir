@@ -1,5 +1,7 @@
-import { HttpLibrary, HttpRequestParams, HttpResponse } from 'enonic-types/http'
-const http: HttpLibrary = __non_webpack_require__( '/lib/http-client')
+import { HttpRequestParams, HttpResponse } from 'enonic-types/http'
+const {
+  request
+} = __non_webpack_require__( '/lib/http-client')
 const {
   encryptRssNews
 } = __non_webpack_require__('/lib/cipher/cipherRss')
@@ -29,7 +31,7 @@ function getRssNews(url: string): RssNews {
   }
 
   try {
-    const rssNewsResponse: HttpResponse = http.request(requestParams)
+    const rssNewsResponse: HttpResponse = request(requestParams)
     if (rssNewsResponse.status === 200) {
       if (rssNewsResponse.body) {
         status.body = rssNewsResponse.body
@@ -57,7 +59,7 @@ function postRssNews(encryptedRss: string): string {
   }
 
   try {
-    const pushRssNewsResponse: HttpResponse = http.request(requestParams)
+    const pushRssNewsResponse: HttpResponse = request(requestParams)
     if (pushRssNewsResponse.status === 200) {
       return 'Push av RSS nyheter OK'
     } else {

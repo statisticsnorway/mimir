@@ -1,22 +1,22 @@
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getComponent
-} = __non_webpack_require__( '/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   get
-} = __non_webpack_require__( '/lib/xp/content')
+} = __non_webpack_require__('/lib/xp/content')
 const {
   render
-} = __non_webpack_require__( '/lib/thymeleaf')
+} = __non_webpack_require__('/lib/thymeleaf')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 const {
   data
-} = __non_webpack_require__( '/lib/util')
+} = __non_webpack_require__('/lib/util')
 const {
   parseKeyFigure
-} = __non_webpack_require__( '/lib/ssb/parts/keyFigure')
+} = __non_webpack_require__('/lib/ssb/parts/keyFigure')
 const {
   DATASET_BRANCH
 } = __non_webpack_require__('/lib/ssb/repo/dataset')

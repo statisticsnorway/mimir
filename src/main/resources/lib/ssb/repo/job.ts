@@ -1,19 +1,20 @@
 import { NodeQueryParams, NodeQueryResponse, RepoNode } from 'enonic-types/node'
-import { EditorCallback, RepoEventLogLib } from './eventLog'
-import { AuthLibrary, User } from 'enonic-types/auth'
-import { RepoCommonLib } from './common'
+import { EditorCallback } from './eventLog'
+import { User } from 'enonic-types/auth'
 import { DataSourceInfo, RSSFilterLogData } from '../cron/rss'
 const {
   modifyNode,
   getNode,
   queryNodes
-}: RepoCommonLib = __non_webpack_require__( '/lib/ssb/repo/common')
+} = __non_webpack_require__('/lib/ssb/repo/common')
 const {
   EVENT_LOG_REPO,
   EVENT_LOG_BRANCH,
   createEventLog
-}: RepoEventLogLib = __non_webpack_require__('/lib/ssb/repo/eventLog')
-const auth: AuthLibrary = __non_webpack_require__( '/lib/xp/auth')
+} = __non_webpack_require__('/lib/ssb/repo/eventLog')
+const {
+  getUser
+} = __non_webpack_require__('/lib/xp/auth')
 
 export enum JobStatus {
   STARTED = 'STARTED',
@@ -77,7 +78,7 @@ export interface JobEvent {
 }
 
 export function startJobLog(task?: string): JobEventNode {
-  const user: User | null = auth.getUser()
+  const user: User | null = getUser()
   const now: Date = new Date()
   return createEventLog({
     _parentPath: '/jobs',

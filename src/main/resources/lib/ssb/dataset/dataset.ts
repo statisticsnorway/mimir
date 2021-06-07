@@ -1,56 +1,50 @@
-import { ContentLibrary, Content, QueryResponse } from 'enonic-types/content'
+import { Content, QueryResponse } from 'enonic-types/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
-import { DataSource as DataSourceType, DatasetRepoNode, RepoDatasetLib } from '../repo/dataset'
-import { StatbankApiLib } from './statbankApi/statbankApi'
+import { DataSource as DataSourceType, DatasetRepoNode } from '../repo/dataset'
 import { JSONstat } from '../../types/jsonstat-toolkit'
-import { RepoQueryLib } from '../repo/query'
 import { StatbankSavedRaw, TbmlDataUniform } from '../../types/xmlParser'
-import { TbprocessorLib } from './tbprocessor/tbprocessor'
-import { KlassLib } from './klass/klass'
-import { ContextLibrary, RunContext } from 'enonic-types/context'
-import { AuthLibrary, User } from 'enonic-types/auth'
-import { StatbankSavedLib } from './statbankSaved/statbankSaved'
+import { RunContext } from 'enonic-types/context'
+import { User } from 'enonic-types/auth'
 import { TbprocessorParsedResponse } from './tbprocessor/tbml'
-import { RepoCommonLib } from '../repo/common'
 
 const {
   Events
-}: RepoQueryLib = __non_webpack_require__('/lib/ssb/repo/query')
+} = __non_webpack_require__('/lib/ssb/repo/query')
 const {
   query
-}: ContentLibrary = __non_webpack_require__('/lib/xp/content')
+} = __non_webpack_require__('/lib/xp/content')
 const {
   run
-}: ContextLibrary = __non_webpack_require__('/lib/xp/context')
+} = __non_webpack_require__('/lib/xp/context')
 const {
   getUser
-}: AuthLibrary = __non_webpack_require__('/lib/xp/auth')
+} = __non_webpack_require__('/lib/xp/auth')
 const {
   getStatbankApi,
   fetchStatbankApiData,
   getStatbankApiKey
-}: StatbankApiLib = __non_webpack_require__('/lib/ssb/dataset/statbankApi/statbankApi')
+} = __non_webpack_require__('/lib/ssb/dataset/statbankApi/statbankApi')
 const {
   fetchStatbankSavedData
-}: StatbankSavedLib = __non_webpack_require__('/lib/ssb/dataset/statbankSaved/statbankSaved')
+} = __non_webpack_require__('/lib/ssb/dataset/statbankSaved/statbankSaved')
 const {
   getTbprocessor,
   getTbprocessorKey,
   fetchTbprocessorData
-}: TbprocessorLib = __non_webpack_require__('/lib/ssb/dataset/tbprocessor/tbprocessor')
+} = __non_webpack_require__('/lib/ssb/dataset/tbprocessor/tbprocessor')
 const {
   getKlass,
   getKlassKey,
   fetchKlassData
-}: KlassLib = __non_webpack_require__('/lib/ssb/dataset/klass/klass')
+} = __non_webpack_require__('/lib/ssb/dataset/klass/klass')
 const {
   createOrUpdateDataset,
   deleteDataset: deleteDatasetFromRepo,
   DATASET_BRANCH
-}: RepoDatasetLib = __non_webpack_require__('/lib/ssb/repo/dataset')
+} = __non_webpack_require__('/lib/ssb/repo/dataset')
 const {
   ENONIC_CMS_DEFAULT_REPO
-}: RepoCommonLib = __non_webpack_require__('/lib/ssb/repo/common')
+} = __non_webpack_require__('/lib/ssb/repo/common')
 
 export function getDataset(content: Content<DataSource>, branch: string = DATASET_BRANCH): DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null {
   switch (content.data.dataSource?._selected) {

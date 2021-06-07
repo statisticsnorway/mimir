@@ -1,14 +1,5 @@
 import { RepoNode } from 'enonic-types/node'
-import { RepoCommonLib } from './common'
-import { StatRegContactsLib } from '../statreg/contacts'
-import { StatRegStatisticsLib } from '../statreg/statistics'
-import { StatRegPublicationsLib } from '../statreg/publications'
-import { RepoLib } from './repo'
-import { StatRegConfigLib } from '../dashboard/statreg/config'
-import { RepoQueryLib } from './query'
 import { StatisticInListing, StatRegBase } from '../dashboard/statreg/types'
-import { ArrayUtilsLib } from '../utils/arrayUtils'
-import { ServerLogLib } from '../utils/serverLog'
 
 const {
   equals
@@ -17,37 +8,37 @@ const {
   createNode,
   getNode,
   modifyNode
-}: RepoCommonLib = __non_webpack_require__('/lib/ssb/repo/common')
+} = __non_webpack_require__('/lib/ssb/repo/common')
 const {
   repoExists,
   createRepo
-}: RepoLib = __non_webpack_require__('/lib/ssb/repo/repo')
+} = __non_webpack_require__('/lib/ssb/repo/repo')
 const {
   STATREG_REPO_CONTACTS_KEY,
   fetchContacts
-}: StatRegContactsLib = __non_webpack_require__('/lib/ssb/statreg/contacts')
+} = __non_webpack_require__('/lib/ssb/statreg/contacts')
 const {
   STATREG_REPO_STATISTICS_KEY,
   fetchStatistics
-}: StatRegStatisticsLib = __non_webpack_require__('/lib/ssb/statreg/statistics')
+} = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   STATREG_REPO_PUBLICATIONS_KEY,
   fetchPublications
-}: StatRegPublicationsLib = __non_webpack_require__('/lib/ssb/statreg/publications')
+} = __non_webpack_require__('/lib/ssb/statreg/publications')
 const {
   STATREG_BRANCH,
   STATREG_REPO
-}: StatRegConfigLib = __non_webpack_require__('/lib/ssb/dashboard/statreg/config')
+} = __non_webpack_require__('/lib/ssb/dashboard/statreg/config')
 const {
   Events,
   logUserDataQuery
-}: RepoQueryLib = __non_webpack_require__('/lib/ssb/repo/query')
+} = __non_webpack_require__('/lib/ssb/repo/query')
 const {
   ensureArray
-}: ArrayUtilsLib = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
+} = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
 const {
   cronJobLog
-}: ServerLogLib = __non_webpack_require__( '/lib/ssb/utils/serverLog')
+} = __non_webpack_require__('/lib/ssb/utils/serverLog')
 
 const STATREG_CONTACTS_NODE: StatRegNodeConfig = configureNode(STATREG_REPO_CONTACTS_KEY, fetchContacts)
 const STATREG_STATISTICS_NODE: StatRegNodeConfig = configureNode(STATREG_REPO_STATISTICS_KEY, fetchStatistics)

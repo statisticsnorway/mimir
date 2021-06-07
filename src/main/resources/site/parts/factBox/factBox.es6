@@ -1,7 +1,7 @@
 const {
   getComponent,
   processHtml
-} = __non_webpack_require__( '/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
@@ -9,7 +9,7 @@ const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const content = __non_webpack_require__( '/lib/xp/content')
+const content = __non_webpack_require__('/lib/xp/content')
 
 const view = resolve('./factBox.html')
 

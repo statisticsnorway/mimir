@@ -1,15 +1,13 @@
 import { Request, Response } from 'enonic-types/controller'
 import { StatisticInListing } from '../../lib/ssb/dashboard/statreg/types'
-import { GroupedBy, PreparedStatistics, VariantUtilsLib, YearReleases } from '../../lib/ssb/utils/variantUtils'
-
+import { GroupedBy, PreparedStatistics, YearReleases } from '../../lib/ssb/utils/variantUtils'
 
 const {
   addMonthNames,
   groupStatisticsByYearMonthAndDay,
   prepareRelease,
   filterOnComingReleases
-}: VariantUtilsLib = __non_webpack_require__( '/lib/ssb/utils/variantUtils')
-
+} = __non_webpack_require__( '/lib/ssb/utils/variantUtils')
 const {
   getAllStatisticsFromRepo
 } = __non_webpack_require__( '../../lib/ssb/statreg/statistics')

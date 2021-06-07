@@ -6,7 +6,7 @@ import { Page } from '../../../site/content-types/page/page'
 
 const {
   getStatisticByShortNameFromRepo
-} = __non_webpack_require__('../statreg/statistics')
+} = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   get: getContent,
   query
@@ -23,7 +23,7 @@ export function getParentContent(path: string): Content<object, DefaultPageConfi
   const parentPathKey: string = parentPath(path)
   return getContent({
     key: parentPathKey
-  })
+  }) as Content<object, DefaultPageConfig> | null
 }
 
 function parentType(path: string): string | undefined {
@@ -31,7 +31,7 @@ function parentType(path: string): string | undefined {
 
   const parentContent: Content<object, DefaultPageConfig> | null = getContent({
     key: parentPathKey
-  })
+  }) as Content<object, DefaultPageConfig> | null
 
   if (parentContent) {
     if (parentContent.type === `${app.name}:statistics`) {
@@ -56,26 +56,28 @@ export function parentPath(path: string): string {
 
 export function getMainSubject(shortName: string, language: string): string {
   const statisticFromRepo: StatisticInListing | undefined = getStatisticByShortNameFromRepo(shortName)
-  const statisticResult: QueryResponse<Statistics> = statisticFromRepo && query({
-    query: `data.statistic = '${statisticFromRepo.id}' AND language IN (${language === 'nb' ? '"nb", "nn"' : '"en"'})`,
-    contentTypes: [`${app.name}:statistics`],
-    count: 1
-  })
-  const statisticContent: Content<Statistics> | undefined = statisticResult.total === 1 ? statisticResult.hits[0] : undefined
+  if (statisticFromRepo) {
+    const statisticResult: QueryResponse<Statistics> = statisticFromRepo && query({
+      query: `data.statistic = '${statisticFromRepo.id}' AND language IN (${language === 'nb' ? '"nb", "nn"' : '"en"'})`,
+      contentTypes: [`${app.name}:statistics`],
+      count: 1
+    })
+    const statisticContent: Content<Statistics> | undefined = statisticResult.total === 1 ? statisticResult.hits[0] : undefined
 
-  const parentPath: string | undefined = statisticContent && statisticContent._path.split('/').splice(1, 3).join('/')
+    const parentPath: string | undefined = statisticContent && statisticContent._path.split('/').splice(1, 3).join('/')
 
-  const parentContent: Content<Page> = parentPath ? getContent({
-    key: `/${parentPath}`
-  }) : undefined
-
-  return parentContent ? parentContent.displayName : ''
+    const parentContent: Content<Page> | null = parentPath ? getContent({
+      key: `/${parentPath}`
+    }) : null
+    return parentContent ? parentContent.displayName : ''
+  }
+  return ''
 }
 
-export interface ParentUtils {
+export interface ParentUtilsLib {
   getParentType: (path: string) => string | undefined;
   getParentContent: (path: string) => Content<object, DefaultPageConfig> | null;
   parentType: (path: string) => string | undefined;
   parentPath: (path: string) => string;
-  getMainSubject: (shortName: string) => string;
+  getMainSubject: (shortName: string, language: string) => string;
 }

@@ -10,32 +10,27 @@ import { TbmlDataUniform,
   Title,
   Source, Thead, StatbankSavedRaw, StatbankSavedUniform, TableCellRaw } from '../../types/xmlParser'
 import { Request } from 'enonic-types/controller'
-import { DatasetRepoNode, RepoDatasetLib } from '../repo/dataset'
+import { DatasetRepoNode } from '../repo/dataset'
 import { DataSource as DataSourceType } from '../repo/dataset'
-import { StatbankSavedLib } from '../dataset/statbankSaved/statbankSaved'
-import { SSBCacheLibrary } from '../cache/cache'
 
 const {
   data: {
     forceArray
   }
-} = __non_webpack_require__( '/lib/util')
-
+} = __non_webpack_require__('/lib/util')
 const {
   getDataset
-} = __non_webpack_require__( '/lib/ssb/dataset/dataset')
-
+} = __non_webpack_require__('/lib/ssb/dataset/dataset')
 const {
   datasetOrUndefined
-}: SSBCacheLibrary = __non_webpack_require__('/lib/ssb/cache/cache')
+} = __non_webpack_require__('/lib/ssb/cache/cache')
 const {
   fetchStatbankSavedData
-}: StatbankSavedLib = __non_webpack_require__('/lib/ssb/dataset/statbankSaved/statbankSaved')
-
+} = __non_webpack_require__('/lib/ssb/dataset/statbankSaved/statbankSaved')
 const {
   DATASET_BRANCH,
   UNPUBLISHED_DATASET_BRANCH
-}: RepoDatasetLib = __non_webpack_require__('/lib/ssb/repo/dataset')
+} = __non_webpack_require__('/lib/ssb/repo/dataset')
 
 export function parseTable(req: Request, table: Content<Table>, branch: string = DATASET_BRANCH): TableView {
   let tableViewData: TableView = {
@@ -51,7 +46,7 @@ export function parseTable(req: Request, table: Content<Table>, branch: string =
     sourceList: []
   }
 
-  let datasetRepo: DatasetRepoNode<TbmlDataUniform | StatbankSavedRaw | object> | undefined
+  let datasetRepo: DatasetRepoNode<TbmlDataUniform | StatbankSavedRaw | object> | undefined | null
   if (branch === UNPUBLISHED_DATASET_BRANCH) {
     datasetRepo = getDataset(table, UNPUBLISHED_DATASET_BRANCH)
   } else {
@@ -152,17 +147,17 @@ function getTableViewDataStatbankSaved(table: Content<Table>, dataContent: Statb
 
 function getTableCellHeader(tableCell: Array<TableCellRaw>): Array<TableCellUniform> {
   return forceArray(tableCell)
-    .map( (cell: TableCellUniform) => ({
-      td: typeof cell.td != 'undefined' ? forceArray(cell.td) : undefined,
-      th: typeof cell.th != 'undefined' ? forceArray(cell.th) : undefined
+    .map( (cell) => ({
+      td: typeof cell.td != 'undefined' ? forceArray(cell.td) : [],
+      th: typeof cell.th != 'undefined' ? forceArray(cell.th) : []
     }))
 }
 
 function getTableCellBody(tableCell: Array<TableCellRaw>): Array<TableCellUniform> {
   return forceArray(tableCell)
-    .map( (cell: TableCellUniform) => ({
-      th: typeof cell.th != 'undefined' ? forceArray(cell.th) : undefined,
-      td: typeof cell.td != 'undefined' ? forceArray(cell.td) : undefined
+    .map( (cell) => ({
+      th: typeof cell.th != 'undefined' ? forceArray(cell.th) : [],
+      td: typeof cell.td != 'undefined' ? forceArray(cell.td) : []
     }))
 }
 
@@ -184,7 +179,7 @@ function getNoterefsHeader(row: TableCellUniform): Array<string> {
   return noteRefs
 }
 
-interface TableView {
+export interface TableView {
   caption?: Title;
   thead: Array<TableRowUniform>;
   tbody: Array<TableRowUniform>;
@@ -195,4 +190,8 @@ interface TableView {
   tableClass: string;
   noteRefs: Array<string>;
   sourceList: Source | Array<Source> | undefined;
+}
+
+export interface TableLib {
+  parseTable: (req: Request, table: Content<Table>, branch?: string) => TableView;
 }

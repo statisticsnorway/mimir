@@ -1,9 +1,9 @@
 const {
   get
-} = __non_webpack_require__( '/lib/xp/content')
+} = __non_webpack_require__('/lib/xp/content')
 const {
   getContent, processHtml
-} = __non_webpack_require__( '/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
@@ -15,7 +15,7 @@ const {
 } = __non_webpack_require__('/lib/thymeleaf')
 const {
   getPhrases
-} = __non_webpack_require__( '/lib/ssb/utils/language')
+} = __non_webpack_require__('/lib/ssb/utils/language')
 const util = __non_webpack_require__('/lib/util')
 const {
   getReleaseDatesByVariants

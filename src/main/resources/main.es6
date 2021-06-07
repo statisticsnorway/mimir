@@ -1,13 +1,13 @@
 try {
   const {
     setupEventLog
-  } = __non_webpack_require__( '/lib/ssb/repo/eventLog')
+  } = __non_webpack_require__('/lib/ssb/repo/eventLog')
   const {
     setupStatRegRepo
-  } = __non_webpack_require__( '/lib/ssb/repo/statreg')
+  } = __non_webpack_require__('/lib/ssb/repo/statreg')
   const {
     setupDatasetRepo
-  } = __non_webpack_require__( '/lib/ssb/repo/dataset')
+  } = __non_webpack_require__('/lib/ssb/repo/dataset')
   const cache = __non_webpack_require__('/lib/ssb/cache/cache')
   const {
     setupFetchDataOnCreateListener

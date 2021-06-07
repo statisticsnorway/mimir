@@ -1,12 +1,11 @@
 
 import { ByteSource } from 'enonic-types/content'
 import { HttpResponse } from 'enonic-types/http'
-import { Moment } from '../../../vendor/moment'
 
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 const {
   moment
-}: Moment = __non_webpack_require__('/lib/vendor/moment')
+} = __non_webpack_require__('/lib/vendor/moment')
 
 export function getTbmlMock(url: string): HttpResponse | null {
   if (app.config && app.config['ssb.mock.enable'] === 'true') {

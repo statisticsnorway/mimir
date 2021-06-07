@@ -1,6 +1,6 @@
 const {
   getComponent
-} = __non_webpack_require__( '/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   renderError

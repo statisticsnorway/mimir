@@ -5,11 +5,11 @@ import { JSONstat } from '../../../types/jsonstat-toolkit'
 import { TbmlDataUniform } from '../../../types/xmlParser'
 import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
 import { HighchartsGraphConfig } from '../../../types/highcharts'
-import { HighchartsData } from './highchartsData'
+import { SeriesAndCategories } from './highchartsData'
 
 const {
   prepareHighchartsGraphConfig
-} = __non_webpack_require__( '/lib/ssb/parts/highcharts/highchartsGraphConfig')
+} = __non_webpack_require__('/lib/ssb/parts/highcharts/highchartsGraphConfig')
 const {
   mergeDeepRight
 } = __non_webpack_require__('/lib/vendor/ramda')
@@ -23,8 +23,15 @@ export function createHighchartObject(
   highchart: Content<Highchart>,
   data: JSONstat | TbmlDataUniform | object | string | undefined,
   dataSource: DataSource['dataSource']): HighchartsGraphConfig {
-  const highchartsData: HighchartsData = prepareHighchartsData(req, highchart, data, dataSource)
+  const highchartsData: SeriesAndCategories | undefined = prepareHighchartsData(req, highchart, data, dataSource)
   const highchartsGraphConfig: HighchartsGraphConfig = prepareHighchartsGraphConfig(highchart, dataSource, highchartsData && highchartsData.categories)
-  return mergeDeepRight(highchartsData, highchartsGraphConfig)
+  return mergeDeepRight(highchartsData || {}, highchartsGraphConfig) as unknown as HighchartsGraphConfig
 }
 
+export interface HighchartsUtilsLib {
+  createHighchartObject: (
+    req: Request,
+    highchart: Content<Highchart>,
+    data: JSONstat | TbmlDataUniform | object | string | undefined,
+    dataSource: DataSource['dataSource']) => HighchartsGraphConfig;
+}

@@ -11,7 +11,7 @@ const {
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   data
-} = __non_webpack_require__( '/lib/util')
+} = __non_webpack_require__('/lib/util')
 
 const view = resolve('./externalCard.html')
 

@@ -1,31 +1,30 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { DatasetRepoNode, DataSource as dataSourceType, RepoDatasetLib } from '../../repo/dataset'
+import { DatasetRepoNode, DataSource as dataSourceType } from '../../repo/dataset'
 import { Content } from 'enonic-types/content'
 import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
-import { RepoQueryLib } from '../../repo/query'
 import { TbmlDataUniform, TbmlSourceListUniform } from '../../../types/xmlParser'
-import { TbmlLib, TbprocessorParsedResponse } from './tbml'
+import { TbprocessorParsedResponse } from './tbml'
 
 const {
   mergeDeepLeft
 } = __non_webpack_require__('/lib/vendor/ramda')
 const {
   getDataset
-}: RepoDatasetLib = __non_webpack_require__('/lib/ssb/repo/dataset')
+} = __non_webpack_require__('/lib/ssb/repo/dataset')
 const {
   getTbmlData,
   TbProcessorTypes
-}: TbmlLib = __non_webpack_require__('/lib/ssb/dataset/tbprocessor/tbml')
+} = __non_webpack_require__('/lib/ssb/dataset/tbprocessor/tbml')
 const {
   logUserDataQuery,
   Events
-}: RepoQueryLib = __non_webpack_require__('/lib/ssb/repo/query')
+} = __non_webpack_require__('/lib/ssb/repo/query')
 const {
   isUrl
 } = __non_webpack_require__('/lib/ssb/utils/utils')
 const {
   DATASET_BRANCH
-}: RepoDatasetLib = __non_webpack_require__('/lib/ssb/repo/dataset')
+} = __non_webpack_require__('/lib/ssb/repo/dataset')
 
 export function getTbprocessor(content: Content<DataSource>, branch: string): DatasetRepoNode<TbmlDataUniform> | null {
   if (content.data.dataSource && content.data.dataSource._selected) {

@@ -1,58 +1,49 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { Content, ContentLibrary } from 'enonic-types/content'
+import { Content } from 'enonic-types/content'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
-import { RepoDatasetLib, DatasetRepoNode } from '../repo/dataset'
-import { StatRegStatisticsLib } from '../statreg/statistics'
-import { TaskLib } from '../../types/task'
-import { UtilLibrary } from '../../types/util'
-import { StatisticLib } from '../dashboard/statistic'
+import { DatasetRepoNode } from '../repo/dataset'
 import { StatisticInListing, ReleaseDatesVariant } from '../dashboard/statreg/types'
-import { DatasetLib } from './dataset'
-import { RepoJobLib, JobEventNode, JobInfoNode, StatisticsPublishResult, DataSourceStatisticsPublishResult } from '../repo/job'
-import { RepoQueryLib } from '../repo/query'
-import { ServerLogLib } from '../utils/serverLog'
-import { EventLibrary } from 'enonic-types/event'
+import { JobEventNode, JobInfoNode, StatisticsPublishResult, DataSourceStatisticsPublishResult } from '../repo/job'
 import { NodeQueryHit } from 'enonic-types/node'
-import { Moment } from '../../vendor/moment'
 
 const {
   moment
-}: Moment = __non_webpack_require__('/lib/vendor/moment')
+} = __non_webpack_require__('/lib/vendor/moment')
 const {
   Events,
   logUserDataQuery
-}: RepoQueryLib = __non_webpack_require__('/lib/ssb/repo/query')
+} = __non_webpack_require__('/lib/ssb/repo/query')
 const {
   getDataSourceIdsFromStatistics,
   getStatisticsContent
-}: StatisticLib = __non_webpack_require__('/lib/ssb/dashboard/statistic')
+} = __non_webpack_require__('/lib/ssb/dashboard/statistic')
 const {
   get: getContent
-}: ContentLibrary = __non_webpack_require__('/lib/xp/content')
+} = __non_webpack_require__('/lib/xp/content')
 const {
   getStatisticByIdFromRepo,
   getReleaseDatesByVariants
-}: StatRegStatisticsLib = __non_webpack_require__('/lib/ssb/statreg/statistics')
+} = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   data: {
     forceArray
   }
-}: UtilLibrary = __non_webpack_require__( '/lib/util')
+} = __non_webpack_require__('/lib/util')
 const {
   submit,
   sleep
-}: TaskLib = __non_webpack_require__('/lib/xp/task')
+} = __non_webpack_require__('/lib/xp/task')
 const {
   deleteDataset,
   extractKey,
   getDataset
-}: DatasetLib = __non_webpack_require__('/lib/ssb/dataset/dataset')
+} = __non_webpack_require__('/lib/ssb/dataset/dataset')
 const {
   createOrUpdateDataset,
   DATASET_BRANCH,
   UNPUBLISHED_DATASET_BRANCH
-}: RepoDatasetLib = __non_webpack_require__('/lib/ssb/repo/dataset')
+} = __non_webpack_require__('/lib/ssb/repo/dataset')
 const {
   completeJobLog,
   startJobLog,
@@ -61,13 +52,13 @@ const {
   JobStatus,
   queryJobLogs,
   getJobLog
-}: RepoJobLib = __non_webpack_require__('/lib/ssb/repo/job')
+} = __non_webpack_require__('/lib/ssb/repo/job')
 const {
   cronJobLog
-}: ServerLogLib = __non_webpack_require__( '/lib/ssb/utils/serverLog')
+} = __non_webpack_require__('/lib/ssb/utils/serverLog')
 const {
   send
-}: EventLibrary = __non_webpack_require__('/lib/xp/event')
+} = __non_webpack_require__('/lib/xp/event')
 
 
 const jobs: {[key: string]: JobEventNode | JobInfoNode} = {}

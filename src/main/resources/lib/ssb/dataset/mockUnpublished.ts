@@ -1,20 +1,18 @@
-import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
+import { Content, QueryResponse } from 'enonic-types/content'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { UNPUBLISHED_DATASET_BRANCH } from '../repo/dataset'
-import { StatisticLib } from '../dashboard/statistic'
-import { DatasetLib } from './dataset'
 
 const {
   query,
   get: getContent
-}: ContentLibrary = __non_webpack_require__('/lib/xp/content')
+} = __non_webpack_require__('/lib/xp/content')
 const {
   getDataSourceIdsFromStatistics
-}: StatisticLib = __non_webpack_require__('/lib/ssb/dashboard/statistic')
+} = __non_webpack_require__('/lib/ssb/dashboard/statistic')
 const {
   refreshDataset
-}: DatasetLib = __non_webpack_require__('/lib/ssb/dataset/dataset')
+} = __non_webpack_require__('/lib/ssb/dataset/dataset')
 
 export function updateUnpublishedMockTbml(): void {
   const res: QueryResponse<Statistics> = query({

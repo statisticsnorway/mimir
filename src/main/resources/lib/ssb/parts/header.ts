@@ -1,24 +1,23 @@
-import { PortalLibrary } from 'enonic-types/portal'
 import { Language } from '../../types/language'
-import { Content, ContentLibrary } from 'enonic-types/content'
+import { Content } from 'enonic-types/content'
 import { Header } from '../../../site/content-types/header/header'
 import { Link } from './menu'
 import { MenuItem } from '../../../site/content-types/menuItem/menuItem'
 const {
   get
-}: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
+} = __non_webpack_require__('/lib/xp/content')
 const {
   assetUrl
-}: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   createMenuTree, parseTopLinks
-} = __non_webpack_require__( '/lib/ssb/parts/menu')
+} = __non_webpack_require__('/lib/ssb/parts/menu')
 const {
   pathFromStringOrContent
-} = __non_webpack_require__( '/lib/ssb/utils/utils')
+} = __non_webpack_require__('/lib/ssb/utils/utils')
 const {
   localize
-} = __non_webpack_require__( '/lib/xp/i18n')
+} = __non_webpack_require__('/lib/xp/i18n')
 
 export function getHeaderContent(language: Language): HeaderContent | undefined {
   if (language.headerId === undefined || language.headerId === null) {
@@ -65,3 +64,6 @@ export interface HeaderContent {
     skipToContentText: string;
 }
 
+export interface HeaderLib {
+  getHeaderContent: (language: Language) => HeaderContent | undefined;
+}

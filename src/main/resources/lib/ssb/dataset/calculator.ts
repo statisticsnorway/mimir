@@ -1,7 +1,6 @@
 import { Dataset, JSONstat as JSONstatType } from '../../types/jsonstat-toolkit'
-import { Content, ContentLibrary } from 'enonic-types/content'
+import { Content } from 'enonic-types/content'
 import { CalculatorConfig } from '../../../site/content-types/calculatorConfig/calculatorConfig'
-import { SSBCacheLibrary } from '../cache/cache'
 import { GenericDataImport } from '../../../site/content-types/genericDataImport/genericDataImport'
 import { DatasetRepoNode } from '../repo/dataset'
 /* eslint-disable new-cap */
@@ -11,10 +10,10 @@ import JSONstat from 'jsonstat-toolkit/import.mjs'
 
 const {
   query, get: getContent
-}: ContentLibrary = __non_webpack_require__('/lib/xp/content')
+} = __non_webpack_require__('/lib/xp/content')
 const {
   datasetOrUndefined
-}: SSBCacheLibrary = __non_webpack_require__('/lib/ssb/cache/cache')
+} = __non_webpack_require__('/lib/ssb/cache/cache')
 
 export function getCalculatorConfig(): Content<CalculatorConfig> | undefined {
   return query({

@@ -3,7 +3,7 @@ const {
   data: {
     forceArray
   }
-} = __non_webpack_require__( '/lib/util')
+} = __non_webpack_require__('/lib/util')
 
 exports.macro = function(context) {
   const accordionIds = context.params.accordion ? forceArray(context.params.accordion) : []

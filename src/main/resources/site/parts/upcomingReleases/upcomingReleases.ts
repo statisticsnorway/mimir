@@ -1,31 +1,29 @@
 import { Request } from 'enonic-types/controller'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Content } from 'enonic-types/content'
-import { Component, PortalLibrary } from 'enonic-types/portal'
+import { Component } from 'enonic-types/portal'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
-import { GroupedBy, PreparedStatistics, VariantUtilsLib, YearReleases } from '../../../lib/ssb/utils/variantUtils'
+import { GroupedBy, PreparedStatistics, YearReleases } from '../../../lib/ssb/utils/variantUtils'
 import { UpcomingReleasesPartConfig } from './upcomingReleases-part-config'
-import { I18nLibrary } from 'enonic-types/i18n'
 
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getContent,
   getComponent,
   serviceUrl
-}: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
-
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   addMonthNames,
   groupStatisticsByYearMonthAndDay,
   prepareRelease,
   filterOnComingReleases
-}: VariantUtilsLib = __non_webpack_require__( '/lib/ssb/utils/variantUtils')
+} = __non_webpack_require__( '/lib/ssb/utils/variantUtils')
 const {
   getAllStatisticsFromRepo
 } = __non_webpack_require__( '/lib/ssb/statreg/statistics')
 const {
   localize
-}: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
+} = __non_webpack_require__('/lib/xp/i18n')
 
 exports.get = (req: Request): React4xpResponse => {
   return renderPart(req)
@@ -78,7 +76,6 @@ function renderPart(req: Request): React4xpResponse {
     clientRender: isNotInEditMode
   })
 }
-
 
 /*
 *  Interfaces
