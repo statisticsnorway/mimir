@@ -10,21 +10,21 @@ const {
 } = __non_webpack_require__('/lib/ssb/error/error')
 const {
   parseTable
-} = __non_webpack_require__( '/lib/ssb/parts/table')
+} = __non_webpack_require__('/lib/ssb/parts/table')
 const {
   getSources
-} = __non_webpack_require__( '/lib/ssb/utils/utils')
+} = __non_webpack_require__('/lib/ssb/utils/utils')
 const {
   data: {
     forceArray
   }
-} = __non_webpack_require__( '/lib/util')
+} = __non_webpack_require__('/lib/util')
 const {
   get
-} = __non_webpack_require__( '/lib/xp/content')
+} = __non_webpack_require__('/lib/xp/content')
 const {
   getLanguage
-} = __non_webpack_require__( '/lib/ssb/utils/language')
+} = __non_webpack_require__('/lib/ssb/utils/language')
 const {
   DATASET_BRANCH,
   UNPUBLISHED_DATASET_BRANCH

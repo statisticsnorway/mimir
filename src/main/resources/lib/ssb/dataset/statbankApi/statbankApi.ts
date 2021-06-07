@@ -1,19 +1,18 @@
-import { DatasetRepoNode, RepoDatasetLib } from '../../repo/dataset'
+import { DatasetRepoNode } from '../../repo/dataset'
 import { Content } from 'enonic-types/content'
 import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
 import { JSONstat } from '../../../types/jsonstat-toolkit'
-import { RepoQueryLib } from '../../repo/query'
 
 const {
   getDataset
-}: RepoDatasetLib = __non_webpack_require__('/lib/ssb/repo/dataset')
+} = __non_webpack_require__('/lib/ssb/repo/dataset')
 const {
   get: fetchData
 } = __non_webpack_require__('/lib/ssb/dataset/statbankApi/statbankApiRequest')
 const {
   logUserDataQuery,
   Events
-}: RepoQueryLib = __non_webpack_require__('/lib/ssb/repo/query')
+} = __non_webpack_require__('/lib/ssb/repo/query')
 const {
   isUrl
 } = __non_webpack_require__('/lib/ssb/utils/utils')

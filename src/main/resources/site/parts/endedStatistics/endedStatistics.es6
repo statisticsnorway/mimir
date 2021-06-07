@@ -5,7 +5,7 @@ const {
 } = __non_webpack_require__('/lib/util')
 const {
   get
-} = __non_webpack_require__( '/lib/xp/content')
+} = __non_webpack_require__('/lib/xp/content')
 const {
   getContent,
   getComponent,
@@ -13,7 +13,7 @@ const {
 } = __non_webpack_require__('/lib/xp/portal')
 const {
   getPhrases
-} = __non_webpack_require__( '/lib/ssb/utils/language')
+} = __non_webpack_require__('/lib/ssb/utils/language')
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')

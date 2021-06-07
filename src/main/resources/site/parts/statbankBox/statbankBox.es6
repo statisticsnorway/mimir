@@ -8,7 +8,7 @@ const {
 } = __non_webpack_require__('/lib/xp/portal')
 const {
   getPhrases
-} = __non_webpack_require__( '/lib/ssb/utils/language')
+} = __non_webpack_require__('/lib/ssb/utils/language')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')

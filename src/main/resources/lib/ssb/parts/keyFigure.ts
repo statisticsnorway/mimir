@@ -3,49 +3,44 @@ __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
-import { ContentLibrary, QueryResponse, Content } from 'enonic-types/content'
-import { PortalLibrary } from 'enonic-types/portal'
+import { QueryResponse, Content } from 'enonic-types/content'
 import { KeyFigure } from '../../../site/content-types/keyFigure/keyFigure'
 import { MunicipalityWithCounty } from '../dataset/klass/municipalities'
 import { TbmlDataUniform, TableRowUniform, TableCellUniform, PreliminaryData } from '../../types/xmlParser'
 import { Category, Dimension, JSONstat as JSONstatType } from '../../types/jsonstat-toolkit'
-import { UtilLibrary } from '../../types/util'
-import { DatasetRepoNode, RepoDatasetLib, DataSource as DataSourceType } from '../repo/dataset'
-import { DatasetLib } from '../dataset/dataset'
-import { SSBCacheLibrary } from '../cache/cache'
+import { DatasetRepoNode, DataSource as DataSourceType } from '../repo/dataset'
 
 const {
   query
-}: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
+} = __non_webpack_require__('/lib/xp/content')
 const {
   imageUrl
-}: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   datasetOrUndefined
-}: SSBCacheLibrary = __non_webpack_require__('/lib/ssb/cache/cache')
+} = __non_webpack_require__('/lib/ssb/cache/cache')
 const {
   data: {
     forceArray
   }
-}: UtilLibrary = __non_webpack_require__( '/lib/util')
+} = __non_webpack_require__('/lib/util')
 const {
   DATASET_BRANCH,
   UNPUBLISHED_DATASET_BRANCH
-}: RepoDatasetLib = __non_webpack_require__('/lib/ssb/repo/dataset')
+} = __non_webpack_require__('/lib/ssb/repo/dataset')
 const {
   getDataset
-}: DatasetLib = __non_webpack_require__('/lib/ssb/dataset/dataset')
-
+} = __non_webpack_require__('/lib/ssb/dataset/dataset')
 const {
   localizeTimePeriod
-} = __non_webpack_require__( '/lib/ssb/utils/language')
+} = __non_webpack_require__('/lib/ssb/utils/language')
 const {
   localize
-} = __non_webpack_require__( '/lib/xp/i18n')
+} = __non_webpack_require__('/lib/xp/i18n')
 const {
   createHumanReadableFormat,
   getImageCaption
-} = __non_webpack_require__( '/lib/ssb/utils/utils')
+} = __non_webpack_require__('/lib/ssb/utils/utils')
 
 const contentTypeName: string = `${app.name}:keyFigure`
 
@@ -311,4 +306,12 @@ interface KeyFigureChanges {
   changeDirection: 'up' | 'down' | 'same';
   changeText?: string;
   changePeriod: string;
+}
+
+export interface KeyFigureLib {
+  get: (keys: string | Array<string>) => Array<Content<KeyFigure>>;
+  parseKeyFigure: (
+    keyFigure: Content<KeyFigure>,
+    municipality?: MunicipalityWithCounty,
+    branch?: string) => KeyFigureView;
 }

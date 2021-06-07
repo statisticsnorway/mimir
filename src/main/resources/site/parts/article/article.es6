@@ -14,7 +14,7 @@ const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
 
-const languageLib = __non_webpack_require__( '/lib/ssb/utils/language')
+const languageLib = __non_webpack_require__('/lib/ssb/utils/language')
 const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')

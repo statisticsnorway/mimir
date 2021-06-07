@@ -103,7 +103,7 @@ test.mock('/lib/xp/content', {
   }
 })
 
-const utils = __non_webpack_require__( '/lib/ssb/utils/utils')
+const utils = __non_webpack_require__('/lib/ssb/utils/utils')
 
 exports.testHumanReadableNumber1 = function() {
   const result = utils.createHumanReadableFormat(123456789)

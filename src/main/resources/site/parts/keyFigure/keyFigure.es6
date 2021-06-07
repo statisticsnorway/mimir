@@ -2,24 +2,24 @@ const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   get: getKeyFigures,
   parseKeyFigure
-} = __non_webpack_require__( '/lib/ssb/parts/keyFigure')
+} = __non_webpack_require__('/lib/ssb/parts/keyFigure')
 const {
   getMunicipality
-} = __non_webpack_require__( '/lib/ssb/dataset/klass/municipalities')
+} = __non_webpack_require__('/lib/ssb/dataset/klass/municipalities')
 const {
   getContent,
   getComponent,
   getSiteConfig
-} = __non_webpack_require__( '/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
 const {
   data
-} = __non_webpack_require__( '/lib/util')
+} = __non_webpack_require__('/lib/util')
 const {
   renderError
-} = __non_webpack_require__( '/lib/ssb/error/error')
+} = __non_webpack_require__('/lib/ssb/error/error')
 const {
   DATASET_BRANCH,
   UNPUBLISHED_DATASET_BRANCH

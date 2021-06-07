@@ -1,6 +1,6 @@
 const {
   getStatisticByIdFromRepo
-} = __non_webpack_require__( '/lib/ssb/statreg/statistics')
+} = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   getContent
 } = __non_webpack_require__('/lib/xp/portal')
@@ -16,7 +16,7 @@ const view = resolve('./statbankLinkList.html')
 const STATBANKWEB_URL = app.config && app.config['ssb.statbankweb.baseUrl'] ? app.config['ssb.statbankweb.baseUrl'] : 'https://www.ssb.no/statbank'
 const {
   getPhrases
-} = __non_webpack_require__( '/lib/ssb/utils/language')
+} = __non_webpack_require__('/lib/ssb/utils/language')
 
 exports.get = function(req) {
   try {

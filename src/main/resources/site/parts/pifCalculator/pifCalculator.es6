@@ -3,7 +3,7 @@ const {
   getContent,
   serviceUrl,
   pageUrl
-} = __non_webpack_require__( '/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
@@ -93,7 +93,7 @@ const lastPeriod = (pifData) => {
   // eslint-disable-next-line new-cap
   const dataTime = pifData ? pifData.Dimension('Tid').id : null
 
-  const lastTimeItem = dataTime[dataTime.length -1]
+  const lastTimeItem = dataTime[dataTime.length - 1]
   const splitTime = lastTimeItem.split('M')
 
   const lastYear = splitTime[0]

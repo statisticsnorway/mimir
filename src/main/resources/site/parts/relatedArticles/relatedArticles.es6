@@ -10,10 +10,10 @@ const {
   pageUrl,
   imageUrl,
   imagePlaceholder
-} = __non_webpack_require__( '/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   get
-} = __non_webpack_require__( '/lib/xp/content')
+} = __non_webpack_require__('/lib/xp/content')
 const util = __non_webpack_require__('/lib/util')
 const {
   getImageAlt
@@ -23,7 +23,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   getPhrases
-} = __non_webpack_require__( '/lib/ssb/utils/language')
+} = __non_webpack_require__('/lib/ssb/utils/language')
 const {
   fromRelatedArticlesCache
 } = __non_webpack_require__('/lib/ssb/cache/cache')

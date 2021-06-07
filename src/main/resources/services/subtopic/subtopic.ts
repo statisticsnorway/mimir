@@ -1,9 +1,9 @@
-import { ContentLibrary, QueryResponse } from 'enonic-types/content'
+import { QueryResponse } from 'enonic-types/content'
 import { Response } from 'enonic-types/controller'
 
 const {
   query
-}: ContentLibrary = __non_webpack_require__('/lib/xp/content')
+} = __non_webpack_require__('/lib/xp/content')
 
 exports.get = (): Response => {
   const subtopics: QueryResponse<Subtopics> = query({

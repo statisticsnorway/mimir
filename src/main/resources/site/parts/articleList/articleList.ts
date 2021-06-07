@@ -1,26 +1,24 @@
 import { Request } from 'enonic-types/controller'
 import { Article } from '../../content-types/article/article'
-import { I18nLibrary } from 'enonic-types/i18n'
-import { PortalLibrary, Component } from 'enonic-types/portal'
+import { Component } from 'enonic-types/portal'
 import { ArticleListPartConfig } from './articleList-part-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { Content, ContentLibrary, QueryResponse } from 'enonic-types/content'
+import { Content, QueryResponse } from 'enonic-types/content'
 import { DefaultPageConfig } from '../../pages/default/default-page-config'
-import { Moment } from '../../../lib/vendor/moment'
 
 const {
   localize
-}: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
+} = __non_webpack_require__('/lib/xp/i18n')
 const {
   query
-}: ContentLibrary = __non_webpack_require__('/lib/xp/content')
+} = __non_webpack_require__('/lib/xp/content')
 const {
   pageUrl, getContent, getComponent
-}: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   moment
-}: Moment = __non_webpack_require__('/lib/vendor/moment')
+} = __non_webpack_require__('/lib/vendor/moment')
 
 exports.get = (req: Request): React4xpResponse => {
   return renderPart(req)

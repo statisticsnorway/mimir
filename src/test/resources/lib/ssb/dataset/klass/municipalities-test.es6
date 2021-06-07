@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 const test = __non_webpack_require__('/lib/xp/testing')
-const municipalities = __non_webpack_require__( '/lib/ssb/dataset/klass/municipalities')
+const municipalities = __non_webpack_require__('/lib/ssb/dataset/klass/municipalities')
 
 const requestWithCode = {
   'method': 'GET',

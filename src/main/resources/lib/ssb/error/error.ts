@@ -2,7 +2,7 @@ import { ResourceKey } from 'enonic-types/thymeleaf'
 import { Response, Request } from 'enonic-types/controller'
 const {
   render
-} = __non_webpack_require__( '/lib/thymeleaf')
+} = __non_webpack_require__('/lib/thymeleaf')
 
 export interface Error {
     errorTitle: string;
@@ -23,11 +23,15 @@ export function renderError(req: Request, title: string, exception: Exception): 
     errorLog: log.error(exception)
   }
 
-  const body: string = (req.mode === 'edit' || req.mode === 'preview' || req.mode === 'inline') ? render(errorView, model) : undefined
+  const body: string | undefined = (req.mode === 'edit' || req.mode === 'preview' || req.mode === 'inline') ? render(errorView, model) : undefined
 
   return {
     body,
     contentType: 'text/html',
     status: 400
   }
+}
+
+export interface ErrorLib {
+  renderError: (req: Request, title: string, exception: Exception) => Response;
 }

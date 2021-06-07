@@ -7,21 +7,21 @@ import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
 
 const {
   seriesAndCategoriesFromHtmlTable
-} = __non_webpack_require__( '/lib/ssb/parts/highcharts/data/htmlTable')
+} = __non_webpack_require__('/lib/ssb/parts/highcharts/data/htmlTable')
 const {
   seriesAndCategoriesFromJsonStat
-} = __non_webpack_require__( '/lib/ssb/parts/highcharts/data/statBank')
+} = __non_webpack_require__('/lib/ssb/parts/highcharts/data/statBank')
 const {
   seriesAndCategoriesFromTbml
-} = __non_webpack_require__( '/lib/ssb/parts/highcharts/data/tbProcessor')
+} = __non_webpack_require__('/lib/ssb/parts/highcharts/data/tbProcessor')
 const {
   DataSource: DataSourceType
-} = __non_webpack_require__( '/lib/ssb/repo/dataset')
+} = __non_webpack_require__('/lib/ssb/repo/dataset')
 const {
   data: {
     forceArray
   }
-} = __non_webpack_require__( '/lib/util')
+} = __non_webpack_require__('/lib/util')
 const {
   getRowValue
 } = __non_webpack_require__('/lib/ssb/utils/utils')
@@ -51,7 +51,7 @@ export function getSeriesAndCategories(
   if (dataSource && dataSource._selected === DataSourceType.STATBANK_API) {
     return seriesAndCategoriesFromJsonStat(req, highchart, data, dataSource)
   } else if (dataSource && (dataSource._selected === 'tbml' || dataSource._selected === DataSourceType.TBPROCESSOR)) {
-    return seriesAndCategoriesFromTbml(data, highchart.data.graphType, highchart.data.xAxisType)
+    return seriesAndCategoriesFromTbml(data as TbmlDataUniform, highchart.data.graphType, highchart.data.xAxisType || 'linear')
   } else if (dataSource && dataSource._selected === DataSourceType.HTMLTABLE) {
     return seriesAndCategoriesFromHtmlTable(highchart)
   }
@@ -63,14 +63,14 @@ export function switchRowsAndColumnsCheck(
   seriesAndCategories: SeriesAndCategories,
   dataSource: DataSource['dataSource']): SeriesAndCategories {
   //
-  return (dataSource && !dataSource._selected === DataSourceType.STATBANK_API && highchartContent.data.graphType === 'pie' ||
+  return (dataSource && dataSource._selected !== DataSourceType.STATBANK_API && highchartContent.data.graphType === 'pie' ||
     highchartContent.data.switchRowsAndColumns) ?
     switchRowsAndColumns(seriesAndCategories) : seriesAndCategories
 }
 
 
 function switchRowsAndColumns(seriesAndCategories: SeriesAndCategories ): SeriesAndCategories {
-  const categories: Array<string | number | PreliminaryData > = forceArray(getRowValue(seriesAndCategories.categories))
+  const categories: Array<string | number | PreliminaryData> = forceArray(getRowValue(seriesAndCategories.categories))
   const series: Array<Series> = categories.reduce((series: Array<Series>, category, index: number) => {
     const serie: Series = {
       name: category,
@@ -111,7 +111,7 @@ export interface HighchartsData {
 }
 
 export interface SeriesAndCategories {
-  categories: object;
+  categories: Array<string | number | PreliminaryData>;
   series: Array<Series>;
   title?: string | object | undefined;
   data?: {
@@ -122,14 +122,32 @@ export interface SeriesAndCategories {
 }
 export interface Series {
   name: string | number | PreliminaryData;
-  data: Array<AreaLineLinearData | PieData>;
+  data: Array<AreaLineLinearData | PieData | string | number>;
 }
 
 export type AreaLineLinearData = Array<[ number| string, Array<number> ]>
 
 export interface PieData {
-  name: Array<string | number | PreliminaryData>;
-  y: Array<number>;
+  name: Array<string | number | PreliminaryData> | number | string;
+  y: Array<number> | number | string;
 }
 
-
+export interface HighchartsDataLib {
+  prepareHighchartsData: (
+    req: Request,
+    highchartsContent: Content<Highchart>,
+    data: JSONstat | TbmlDataUniform | object | string | undefined,
+    dataSource: DataSource['dataSource']) => SeriesAndCategories | undefined;
+  getSeriesAndCategories: (
+    req: Request,
+    highchart: Content<Highchart>,
+    data: JSONstat | TbmlDataUniform | object | string | undefined,
+    dataSource: DataSource['dataSource']) => SeriesAndCategories | undefined;
+  switchRowsAndColumnsCheck: (
+    highchartContent: Content<Highchart>,
+    seriesAndCategories: SeriesAndCategories,
+    dataSource: DataSource['dataSource']) => SeriesAndCategories;
+  addDataProperties: (
+    highchartContent: Content<Highchart>,
+    seriesAndCategories: SeriesAndCategories) => SeriesAndCategories;
+}

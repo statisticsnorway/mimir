@@ -1,14 +1,14 @@
 import { StatisticInListing, VariantInListing } from '../dashboard/statreg/types'
-import { I18nLibrary } from 'enonic-types/i18n'
-import { DateUtilsLib } from './dateUtils'
-import { Moment } from '../../vendor/moment'
 
 const {
+  getMainSubject
+} = __non_webpack_require__( '/lib/ssb/utils/parentUtils')
+const {
   sameDay
-}: DateUtilsLib = __non_webpack_require__( '/lib/ssb/utils/dateUtils')
+} = __non_webpack_require__('/lib/ssb/utils/dateUtils')
 const {
   localize
-}: I18nLibrary = __non_webpack_require__( '/lib/xp/i18n')
+} = __non_webpack_require__('/lib/xp/i18n')
 const {
   groupBy
 } = __non_webpack_require__('/lib/vendor/ramda')
@@ -19,10 +19,10 @@ const {
   data: {
     forceArray
   }
-} = __non_webpack_require__( '/lib/util')
+} = __non_webpack_require__('/lib/util')
 const {
   moment
-}: Moment = __non_webpack_require__('/lib/vendor/moment')
+} = __non_webpack_require__('/lib/vendor/moment')
 
 export function calculatePeriod(variant: VariantInListing, language: string): string {
   switch (variant.frekvens) {
@@ -240,6 +240,19 @@ export function getReleasesForDay(
   }, [])
 }
 
+export function filterOnComingReleases(stats: Array<StatisticInListing>, count: number, startDay: number = 0): Array<StatisticInListing> {
+  const releases: Array<StatisticInListing> = []
+  for (let i: number = startDay; i < startDay + count; i++) {
+    const day: Date = new Date()
+    day.setDate(day.getDate() + i)
+    const releasesOnThisDay: Array<StatisticInListing> = getReleasesForDay(stats, day, 'nextRelease')
+    if (releasesOnThisDay.length === 0) startDay++ // dont count days with 0 hits
+    releases.push(...releasesOnThisDay)
+  }
+
+  return releases
+}
+
 export function checkVariantReleaseDate(variant: VariantInListing, day: Date, property: keyof VariantInListing): boolean {
   const dayFromVariant: string = variant[property] as string
   return sameDay(new Date(dayFromVariant), day)
@@ -253,6 +266,11 @@ export function prepareRelease(release: StatisticInListing, language: string, pr
     id: release.id,
     name: language === 'en' ? release.nameEN : release.name,
     shortName: release.shortName,
+    type: localize({
+      key: 'statistic',
+      locale: language
+    }),
+    mainSubject: getMainSubject(release.shortName, language),
     variant: preparedVariant
   }
 }
@@ -293,6 +311,7 @@ export interface VariantUtilsLib {
   groupStatisticsByYearMonthAndDay: (releasesPrepped: Array<PreparedStatistics>) => GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>>;
   getReleasesForDay: (statisticList: Array<StatisticInListing>, day: Date, property?: keyof VariantInListing) => Array<StatisticInListing>;
   prepareRelease: (release: StatisticInListing, locale: string, property?: keyof VariantInListing) => PreparedStatistics;
+  filterOnComingReleases: (stats: Array<StatisticInListing>, daysInTheFuture: number, startDay?: number) => Array<StatisticInListing>;
 }
 
 

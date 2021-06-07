@@ -1,13 +1,11 @@
 import { MacroContext } from 'enonic-types/controller'
-import { PortalLibrary } from 'enonic-types/portal'
 import { HeaderLinkConfig } from './headerLink-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Content } from 'enonic-types/content'
 
 const {
   attachmentUrl, pageUrl
-}: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
-
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   get
 } = __non_webpack_require__('/lib/xp/content')
@@ -24,12 +22,12 @@ function renderPart(context: MacroContext): React4xpResponse {
     linkedContent, linkText
   } = context.params
 
-  const content: Content = get({
+  const content: Content | null = get({
     key: linkedContent
   })
 
   let contentUrl: string
-  if (Object.keys(content.attachments).length > 0) {
+  if (content && Object.keys(content.attachments).length > 0) {
     contentUrl = attachmentUrl({
       id: linkedContent
     })
@@ -40,7 +38,7 @@ function renderPart(context: MacroContext): React4xpResponse {
   }
 
   const props: HeaderLinkConfig = {
-    linkText: prepareText(content, linkText),
+    linkText: content ? prepareText(content, linkText) : '',
     linkedContent: contentUrl
   }
 

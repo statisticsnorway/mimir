@@ -1,9 +1,8 @@
 import { Request, Response } from 'enonic-types/controller'
-import { ArrayUtilsLib } from '../../utils/arrayUtils'
 
 const {
   ensureArray
-}: ArrayUtilsLib = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
+} = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
 const contentType: string = 'application/json'
 
 function toOptions<T, A>(content: Array<T>, transform: (item: T) => A): Array<A> {
@@ -51,3 +50,12 @@ export function handleRepoGet<T, A>(
   }
 }
 
+export interface StatRegRepoUtilsLib {
+  handleRepoGet: <T, A>(
+    req: Request,
+    repoName: string,
+    contentFetcher: () => Array<T>,
+    optionTransform: (o: T) => A,
+    applyFilters: (o: Array<T>, f: Request['params']) => Array<T>
+  ) => Response;
+}

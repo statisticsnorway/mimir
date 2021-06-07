@@ -1,11 +1,7 @@
 import { StatRegNode } from '../repo/statreg'
 import { Contact, Kontakt, KontaktNavn, KontaktNavnType, KontaktXML } from '../dashboard/statreg/types'
 import { XmlParser } from '../../types/xmlParser'
-import { StatRegCommonLib } from '../dashboard/statreg/common'
-import { StatRegConfigLib } from '../dashboard/statreg/config'
-import { RepoCommonLib } from '../repo/common'
 import { HttpResponse } from 'enonic-types/http'
-import { RepoQueryLib } from '../repo/query'
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
 const {
@@ -13,20 +9,20 @@ const {
 } = __non_webpack_require__('/lib/vendor/ramda')
 const {
   fetchStatRegData
-}: StatRegCommonLib = __non_webpack_require__('/lib/ssb/dashboard/statreg/common')
+} = __non_webpack_require__('/lib/ssb/dashboard/statreg/common')
 const {
   CONTACTS_URL,
   STATREG_BRANCH,
   STATREG_REPO,
   getStatRegBaseUrl
-}: StatRegConfigLib = __non_webpack_require__('/lib/ssb/dashboard/statreg/config')
+} = __non_webpack_require__('/lib/ssb/dashboard/statreg/config')
 const {
   getNode
-}: RepoCommonLib = __non_webpack_require__('/lib/ssb/repo/common')
+} = __non_webpack_require__('/lib/ssb/repo/common')
 const {
   Events,
   logUserDataQuery
-}: RepoQueryLib = __non_webpack_require__('/lib/ssb/repo/query')
+} = __non_webpack_require__('/lib/ssb/repo/query')
 
 export const STATREG_REPO_CONTACTS_KEY: string = 'contacts'
 

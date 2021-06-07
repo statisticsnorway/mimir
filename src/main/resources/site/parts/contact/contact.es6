@@ -1,12 +1,12 @@
 const {
   getContent, getComponent
-} = __non_webpack_require__( '/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   render
-} = __non_webpack_require__( '/lib/thymeleaf')
+} = __non_webpack_require__('/lib/thymeleaf')
 const {
   renderError
-} = __non_webpack_require__( '/lib/ssb/error/error')
+} = __non_webpack_require__('/lib/ssb/error/error')
 const {
   getContactsFromRepo
 } = __non_webpack_require__('/lib/ssb/statreg/contacts')
@@ -15,7 +15,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
 const {
   getPhrases
-} = __non_webpack_require__( '/lib/ssb/utils/language')
+} = __non_webpack_require__('/lib/ssb/utils/language')
 const {
   find
 } = __non_webpack_require__('/lib/vendor/ramda')

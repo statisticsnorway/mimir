@@ -1,70 +1,64 @@
-import { AuthLibrary, UserQueryResult } from 'enonic-types/auth'
+import { UserQueryResult } from 'enonic-types/auth'
 import { Content } from 'enonic-types/content'
-import { ContextLibrary, RunContext } from 'enonic-types/context'
+import { RunContext } from 'enonic-types/context'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
-import { RepoJobLib, JobEventNode, JobInfoNode } from '../repo/job'
-import { StatRegRefreshResult, StatRegRepoLib } from '../repo/statreg'
-import { SSBTaskLib } from './task'
-import { CronLib, GetCronResult } from '../../types/cron'
-import { DatasetLib } from '../dataset/dataset'
-import { PublishDatasetLib } from '../dataset/publish'
-import { EventLogLib } from './eventLog'
-import { ClusterLib } from '../../types/cluster'
-import { ServerLogLib } from '../utils/serverLog'
-import { DatasetRSSLib, RSSFilter } from './rss'
-import { RepoCommonLib } from '../repo/common'
-import { MockUnpublishedLib } from '../dataset/mockUnpublished'
-import { PushRSSLib } from './pushRss'
+import { JobEventNode, JobInfoNode } from '../repo/job'
+import { StatRegRefreshResult } from '../repo/statreg'
+import { TaskMapper } from 'enonic-types/cron'
+import { RSSFilter } from './rss'
 
 const {
   publishDataset
-}: PublishDatasetLib = __non_webpack_require__( '/lib/ssb/dataset/publish')
+} = __non_webpack_require__('/lib/ssb/dataset/publish')
 const {
   refreshStatRegData,
   STATREG_NODES
-}: StatRegRepoLib = __non_webpack_require__( '/lib/ssb/repo/statreg')
-const cron: CronLib = __non_webpack_require__('/lib/cron')
+} = __non_webpack_require__('/lib/ssb/repo/statreg')
+const {
+  schedule,
+  list
+} = __non_webpack_require__('/lib/cron')
 const {
   refreshQueriesAsync
-}: SSBTaskLib = __non_webpack_require__('/lib/ssb/cron/task')
+} = __non_webpack_require__('/lib/ssb/cron/task')
 const {
   getContentWithDataSource
-}: DatasetLib = __non_webpack_require__( '/lib/ssb/dataset/dataset')
+} = __non_webpack_require__('/lib/ssb/dataset/dataset')
 const {
   completeJobLog,
   startJobLog,
   updateJobLog,
   JOB_STATUS_COMPLETE,
   JobNames
-}: RepoJobLib = __non_webpack_require__('/lib/ssb/repo/job')
+} = __non_webpack_require__('/lib/ssb/repo/job')
 const {
   dataSourceRSSFilter
-}: DatasetRSSLib = __non_webpack_require__('/lib/ssb/cron/rss')
+} = __non_webpack_require__('/lib/ssb/cron/rss')
 const {
   findUsers,
   createUser
-}: AuthLibrary = __non_webpack_require__('/lib/xp/auth')
+} = __non_webpack_require__('/lib/xp/auth')
 const {
   run
-}: ContextLibrary = __non_webpack_require__('/lib/xp/context')
+} = __non_webpack_require__('/lib/xp/context')
 const {
   deleteExpiredEventLogs
-}: EventLogLib = __non_webpack_require__('/lib/ssb/cron/eventLog')
+} = __non_webpack_require__('/lib/ssb/cron/eventLog')
 const {
   isMaster
-}: ClusterLib = __non_webpack_require__('/lib/xp/cluster')
+} = __non_webpack_require__('/lib/xp/cluster')
 const {
   cronJobLog
-}: ServerLogLib = __non_webpack_require__('/lib/ssb/utils/serverLog')
+} = __non_webpack_require__('/lib/ssb/utils/serverLog')
 const {
   ENONIC_CMS_DEFAULT_REPO
-}: RepoCommonLib = __non_webpack_require__('/lib/ssb/repo/common')
+} = __non_webpack_require__('/lib/ssb/repo/common')
 const {
   updateUnpublishedMockTbml
-}: MockUnpublishedLib = __non_webpack_require__('/lib/ssb/dataset/mockUnpublished')
+} = __non_webpack_require__('/lib/ssb/dataset/mockUnpublished')
 const {
   pushRssNews
-}: PushRSSLib = __non_webpack_require__('/lib/ssb/cron/pushRss')
+} = __non_webpack_require__('/lib/ssb/cron/pushRss')
 
 const createUserContext: RunContext = { // Master context (XP)
   repository: ENONIC_CMS_DEFAULT_REPO,
@@ -157,7 +151,7 @@ export function setupCronJobs(): void {
 
   // setup dataquery cron job
   const dataqueryCron: string = app.config && app.config['ssb.cron.dataquery'] ? app.config['ssb.cron.dataquery'] : '0 15 * * *'
-  cron.schedule({
+  schedule({
     name: 'Data from datasource endpoints',
     cron: dataqueryCron,
     times: 365 * 10,
@@ -167,7 +161,7 @@ export function setupCronJobs(): void {
 
   // and setup a cron for periodic executions in the future
   const statregCron: string = app.config && app.config['ssb.cron.statreg'] ? app.config['ssb.cron.statreg'] : '30 14 * * *'
-  cron.schedule({
+  schedule({
     name: 'StatReg Periodic Refresh',
     cron: statregCron,
     times: 365 * 10,
@@ -177,7 +171,7 @@ export function setupCronJobs(): void {
 
   // publish dataset cron job
   const datasetPublishCron: string = app.config && app.config['ssb.cron.publishDataset'] ? app.config['ssb.cron.publishDataset'] : '50 05 * * *'
-  cron.schedule({
+  schedule({
     name: 'Dataset publish',
     cron: datasetPublishCron,
     times: 365 * 10,
@@ -186,7 +180,7 @@ export function setupCronJobs(): void {
   })
 
   const deleteExpiredEventLogCron: string = app.config && app.config['ssb.cron.deleteLogs'] ? app.config['ssb.cron.deleteLogs'] : '45 13 * * *'
-  cron.schedule({
+  schedule({
     name: 'Delete expired event logs',
     cron: deleteExpiredEventLogCron,
     times: 365 * 10,
@@ -197,7 +191,7 @@ export function setupCronJobs(): void {
   if (app.config && app.config['ssb.mock.enable'] === 'true') {
     const updateUnpublishedMockCron: string =
       app.config && app.config['ssb.cron.updateUnpublishedMock'] ? app.config['ssb.cron.updateUnpublishedMock'] : '0 04 * * *'
-    cron.schedule({
+    schedule({
       name: 'Update unpublished mock tbml',
       cron: updateUnpublishedMockCron,
       times: 365 * 10,
@@ -208,7 +202,7 @@ export function setupCronJobs(): void {
 
   // publish dataset cron job
   const pushRssNewsCron: string = app.config && app.config['ssb.cron.pushRssNews'] ? app.config['ssb.cron.pushRssNews'] : '02 06 * * *'
-  cron.schedule({
+  schedule({
     name: 'Push RSS news',
     cron: pushRssNewsCron,
     times: 365 * 10,
@@ -216,7 +210,7 @@ export function setupCronJobs(): void {
     context: cronContext
   })
 
-  const cronList: Array<GetCronResult> = cron.list()
+  const cronList: Array<TaskMapper> = list() as Array<TaskMapper>
   cronJobLog('All cron jobs registered')
   cronJobLog(JSON.stringify(cronList, null, 2))
 }

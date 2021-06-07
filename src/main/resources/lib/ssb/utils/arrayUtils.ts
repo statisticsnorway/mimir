@@ -1,10 +1,9 @@
-import { UtilLibrary } from '../../types/util'
 import { StatisticInListing } from '../dashboard/statreg/types'
 const {
   data: {
     forceArray
   }
-}: UtilLibrary = __non_webpack_require__( '/lib/util')
+} = __non_webpack_require__('/lib/util')
 
 export function ensureArray<T>(candidate: Array<T> | null | T): Array<T> {
   return candidate ? forceArray(candidate) : []

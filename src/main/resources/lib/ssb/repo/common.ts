@@ -1,16 +1,20 @@
-import { ContextLibrary } from 'enonic-types/context'
-import { AuthLibrary, User } from 'enonic-types/auth'
+import { User } from 'enonic-types/auth'
 import { NodeCreateParams,
-  NodeLibrary,
   NodeQueryParams,
   NodeQueryResponse,
   RepoConnection,
   RepoNode } from 'enonic-types/node'
 import { EditorCallback } from './eventLog'
 
-const auth: AuthLibrary = __non_webpack_require__( '/lib/xp/auth')
-const context: ContextLibrary = __non_webpack_require__('/lib/xp/context')
-const node: NodeLibrary = __non_webpack_require__('/lib/xp/node')
+const {
+  getUser
+} = __non_webpack_require__('/lib/xp/auth')
+const {
+  run
+} = __non_webpack_require__('/lib/xp/context')
+const {
+  connect
+} = __non_webpack_require__('/lib/xp/node')
 
 const ENONIC_PROJECT_ID: string = app.config && app.config['ssb.project.id'] ? app.config['ssb.project.id'] : 'default'
 export const ENONIC_CMS_DEFAULT_REPO: string = `com.enonic.cms.${ENONIC_PROJECT_ID}`
@@ -32,7 +36,7 @@ export interface LoggedInUser {
 }
 
 export function withSuperUserContext<T>(repository: string, branch: string, callback: ContextCallback<T>): T {
-  return context.run({
+  return run({
     repository,
     branch,
     user: SUPER_USER
@@ -40,12 +44,12 @@ export function withSuperUserContext<T>(repository: string, branch: string, call
 }
 
 export function withLoggedInUserContext<T>(branch: string, callback: UserContextCallback<T>): T {
-  const user: User | null = auth.getUser()
+  const user: User | null = getUser()
   const loggedInUser: LoggedInUser = {
     login: user ? user.login : '',
     idProvider: user?.idProvider
   }
-  return context.run({
+  return run({
     repository: ENONIC_CMS_DEFAULT_REPO,
     branch,
     user: loggedInUser,
@@ -55,7 +59,7 @@ export function withLoggedInUserContext<T>(branch: string, callback: UserContext
 
 function getConnection(repository: string, branch: string): RepoConnection {
   return withSuperUserContext<RepoConnection>(repository, branch, () => {
-    return node.connect({
+    return connect({
       repoId: repository,
       branch
     })

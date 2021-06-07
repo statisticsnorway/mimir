@@ -1,5 +1,5 @@
 import { Request } from 'enonic-types/controller'
-import { Component, PortalLibrary } from 'enonic-types/portal'
+import { Component } from 'enonic-types/portal'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Content } from 'enonic-types/content'
 import { PublicationArchivePartConfig } from './publicationArchive-part-config'
@@ -9,7 +9,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/utils/language')
 const {
   getContent, serviceUrl, getComponent
-}: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 exports.get = (req: Request): React4xpResponse => {

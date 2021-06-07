@@ -1,9 +1,9 @@
-import { Content, ContentLibrary } from 'enonic-types/content'
+import { Content } from 'enonic-types/content'
 import { Response } from 'enonic-types/controller'
 import { RewriteVarnish } from '../../site/content-types/rewriteVarnish/rewriteVarnish'
 const {
   query
-}: ContentLibrary = __non_webpack_require__('/lib/xp/content')
+} = __non_webpack_require__('/lib/xp/content')
 
 function get(): Response {
   const varnishContent: Content<RewriteVarnish> = query({

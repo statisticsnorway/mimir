@@ -35,9 +35,7 @@ export interface TableRowRaw {
   tr: TableCellRaw | Array<TableCellRaw>;
 }
 
-export interface TableCellRaw {
-  th: HeaderCellRaw;
-  td: DataCellRaw;
+export interface TableCellRaw extends HeaderCellRaw, DataCellRaw {
 }
 
 export interface HeaderCellRaw {

@@ -583,12 +583,7 @@ function BkibolCalculator(props) {
         <Form onSubmit={onSubmit}>
           <Container>
             <Row className="my-5">
-              <Col className="select-serie col-12 col-md-6 col-xl-5 mb-3 mb-md-0">
-                <Title size={3}>{props.phrases.bkibolWorkTypeDone}</Title>
-                { addDropdownSerieEnebolig() }
-                { addDropdownSerieBoligblokk() }
-              </Col>
-              <Col className="choose-domene col-12 col-md-6 col-xl-7">
+              <Col className="choose-domene col-12 col-md-6 col-xl-4 mb-3 mb-md-0">
                 <Title size={3}>{props.phrases.bkibolChooseDwellingType}</Title>
                 <RadioGroup
                   onChange={(value) => {
@@ -608,20 +603,15 @@ function BkibolCalculator(props) {
                   ]}
                 />
               </Col>
+              <Col className="select-serie col-12 col-md-6 col-xl-6">
+                <Title size={3}>{props.phrases.bkibolWorkTypeDone}</Title>
+                { addDropdownSerieEnebolig() }
+                { addDropdownSerieBoligblokk() }
+              </Col>
             </Row>
             <Divider/>
             <Row className="my-5">
-              <Col className="input-amount col-12 col-md-6 col-xl-5 mb-3 mb-md-0">
-                <Title size={3}>{props.phrases.bkibolAmount}</Title>
-                <Input
-                  className="start-value"
-                  handleChange={(value) => onChange('start-value', value)}
-                  error={startValue.error}
-                  errorMessage={startValue.errorMsg}
-                  onBlur={() => onBlur('start-value')}
-                />
-              </Col>
-              <Col className="choose-scope col-12 col-md-6 col-xl-7">
+              <Col className="choose-scope col-12 col-md-6 col-xl-4 mb-3 mb-md-0">
                 <Title size={3}>{props.phrases.bkibolAmountInclude}</Title>
                 <RadioGroup
                   onChange={(value) => {
@@ -641,6 +631,16 @@ function BkibolCalculator(props) {
                   ]}
                 />
               </Col>
+              <Col className="input-amount col-12 col-md-6 col-xl-8">
+                <Title size={3}>{props.phrases.bkibolAmount}</Title>
+                <Input
+                  className="start-value"
+                  handleChange={(value) => onChange('start-value', value)}
+                  error={startValue.error}
+                  errorMessage={startValue.errorMsg}
+                  onBlur={() => onBlur('start-value')}
+                />
+              </Col>
             </Row>
             <Divider/>
             <Row className="mt-5">
@@ -648,7 +648,7 @@ function BkibolCalculator(props) {
                 <h3>{props.phrases.calculatePriceChangeFrom}</h3>
                 <Container>
                   <Row>
-                    <Col className="select-year align-self-end col-sm-5">
+                    <Col className="select-year col-sm-5">
                       <Input
                         className="input-year"
                         label={props.phrases.fromYear}
@@ -668,7 +668,7 @@ function BkibolCalculator(props) {
                 <h3>{props.phrases.calculatePriceChangeTo}</h3>
                 <Container>
                   <Row>
-                    <Col className="select-year align-self-end col-sm-5">
+                    <Col className="select-year col-sm-5">
                       <Input
                         className="input-year"
                         label={props.phrases.toYear}

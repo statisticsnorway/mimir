@@ -1,23 +1,20 @@
-import { PortalLibrary } from 'enonic-types/portal'
 import { SiteConfig } from '../../../../site/site-config'
-import { Content, ContentLibrary } from 'enonic-types/content'
+import { Content } from 'enonic-types/content'
 import { DatasetRepoNode } from '../../repo/dataset'
-import { DatasetLib } from '../dataset'
-import { SSBCacheLibrary } from '../../cache/cache'
 import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
 const {
   getSiteConfig
-}: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   get: getContent
-}: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
+} = __non_webpack_require__('/lib/xp/content')
 const {
   getDataset,
   extractKey
-}: DatasetLib = __non_webpack_require__( '/lib/ssb/dataset/dataset')
+} = __non_webpack_require__('/lib/ssb/dataset/dataset')
 const {
   fromDatasetRepoCache
-}: SSBCacheLibrary = __non_webpack_require__( '/lib/ssb/cache/cache')
+} = __non_webpack_require__('/lib/ssb/cache/cache')
 
 /**
  *

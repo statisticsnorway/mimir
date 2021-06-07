@@ -2,37 +2,39 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
-import { Component, PortalLibrary } from 'enonic-types/portal'
+import { Component } from 'enonic-types/portal'
 import { HighchartPartConfig } from './highchart-part-config'
-import { Content, ContentLibrary } from 'enonic-types/content'
-import { I18nLibrary } from 'enonic-types/i18n'
-import { UtilLibrary } from '../../../lib/types/util'
+import { Content } from 'enonic-types/content'
 import { Request, Response } from 'enonic-types/controller'
 import { Highchart } from '../../content-types/highchart/highchart'
 import { DatasetRepoNode } from '../../../lib/ssb/repo/dataset'
 import { JSONstat as JSONstatType } from '../../../lib/types/jsonstat-toolkit'
 import { TbmlDataUniform } from '../../../lib/types/xmlParser'
 import { HighchartsGraphConfig } from '../../../lib/types/highcharts'
+import { ResourceKey } from 'enonic-types/thymeleaf'
 const {
   DataSource: DataSourceType,
   getDataset,
   UNPUBLISHED_DATASET_BRANCH
-} = __non_webpack_require__( '/lib/ssb/repo/dataset')
-const util: UtilLibrary = __non_webpack_require__( '/lib/util')
+} = __non_webpack_require__('/lib/ssb/repo/dataset')
+const {
+  data: {
+    forceArray
+  }
+} = __non_webpack_require__('/lib/util')
 const {
   getComponent,
   getContent
-}: PortalLibrary = __non_webpack_require__( '/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   localize
-}: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
+} = __non_webpack_require__('/lib/xp/i18n')
 const {
   render
-} = __non_webpack_require__( '/lib/thymeleaf')
+} = __non_webpack_require__('/lib/thymeleaf')
 const {
   createHighchartObject
 } = __non_webpack_require__('/lib/ssb/parts/highcharts/highchartsUtils')
-
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
@@ -42,15 +44,15 @@ const {
 const {
   hasWritePermissionsAndPreview
 } = __non_webpack_require__('/lib/ssb/parts/permissions')
-
-
-const content: ContentLibrary = __non_webpack_require__( '/lib/xp/content')
-const view: object = resolve('./highchart.html')
+const {
+  get
+} = __non_webpack_require__('/lib/xp/content')
+const view: ResourceKey = resolve('./highchart.html')
 
 exports.get = function(req: Request): Response {
   try {
     const part: Component<HighchartPartConfig> = getComponent()
-    const highchartIds: Array<string> = part.config.highchart ? util.data.forceArray(part.config.highchart) : []
+    const highchartIds: Array<string> = part.config.highchart ? forceArray(part.config.highchart) : []
     return renderPart(req, highchartIds)
   } catch (e) {
     return renderError(req, 'Error in part', e)
@@ -81,7 +83,7 @@ function renderPart(req: Request, highchartIds: Array<string>): Response {
   })
 
   const highcharts: Array<HighchartsRectProps> = highchartIds.map((key) => {
-    const highchart: Content<Highchart> | null = content.get({
+    const highchart: Content<Highchart> | null = get({
       key
     })
     const config: HighchartsExtendedProps | undefined = highchart ? determinConfigType(req, highchart) : undefined
@@ -132,18 +134,19 @@ function createDataFromDataSource(req: Request, highchart: Content<Highchart>): 
     // get draft
     const paramShowDraft: boolean = req.params.showDraft !== undefined && req.params.showDraft === 'true'
     const showPreviewDraft: boolean = hasWritePermissionsAndPreview(req, highchart._id) && type === 'tbprocessor' && paramShowDraft
-    const draftData: DatasetRepoNode<TbmlDataUniform> | null = showPreviewDraft && highchart.data.dataSource.tbprocessor ?
+    const draftData: DatasetRepoNode<TbmlDataUniform> | null = showPreviewDraft && highchart.data.dataSource.tbprocessor?.urlOrId ?
       getDataset(type, UNPUBLISHED_DATASET_BRANCH, highchart.data.dataSource.tbprocessor.urlOrId) : null
 
     // get dataset
-    const datasetFromRepo: DatasetRepoNode<JSONstatType | TbmlDataUniform | object> = draftData ? draftData : datasetOrUndefined(highchart)
+    const datasetFromRepo: DatasetRepoNode<JSONstatType | TbmlDataUniform | object> | undefined = draftData ? draftData : datasetOrUndefined(highchart)
     let parsedData: JSONstatType | TbmlDataUniform | object | string | undefined = datasetFromRepo && datasetFromRepo.data
     if (parsedData !== undefined && type === DataSourceType.STATBANK_API) {
       // eslint-disable-next-line new-cap
       parsedData = JSONstat(parsedData).Dataset(0)
     }
     // create config
-    const config: HighchartsExtendedProps = parsedData && createHighchartObject(req, highchart, parsedData, highchart.data.dataSource) || {}
+    const config: HighchartsExtendedProps =
+      parsedData && createHighchartObject(req, highchart, parsedData, highchart.data.dataSource) || ({} as HighchartsExtendedProps)
     config.draft = !!draftData
     config.noDraftAvailable = showPreviewDraft && !draftData
     return config
@@ -179,6 +182,6 @@ interface HighchartsRectProps {
 }
 
 interface HighchartsReactExtraProps {
-  draft: boolean;
-  noDraftAvailable: boolean;
+  draft?: boolean;
+  noDraftAvailable?: boolean;
 }

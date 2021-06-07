@@ -111,13 +111,13 @@ test.mock('/lib/xp/content', {
   }
 })
 
-const menuLib = __non_webpack_require__( '/lib/ssb/parts/menu')
+const menuLib = __non_webpack_require__('/lib/ssb/parts/menu')
 const {
   query
-} = __non_webpack_require__( '/lib/xp/content')
+} = __non_webpack_require__('/lib/xp/content')
 const {
   getContent
-} = __non_webpack_require__( '/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 
 exports.testActiveMenuItemFromContent = function() {
   const children = query({

@@ -1,28 +1,29 @@
 import { Request } from 'enonic-types/controller'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Content } from 'enonic-types/content'
-import { PortalLibrary } from 'enonic-types/portal'
+import { Component } from 'enonic-types/portal'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
-import { GroupedBy, PreparedStatistics, VariantUtilsLib, YearReleases } from '../../../lib/ssb/utils/variantUtils'
-import { ArrayUtilsLib } from '../../../lib/ssb/utils/arrayUtils'
+import { GroupedBy, PreparedStatistics, YearReleases } from '../../../lib/ssb/utils/variantUtils'
+import { UpcomingReleasesPartConfig } from './upcomingReleases-part-config'
 
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
-  getContent
-}: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
-const {
-  checkLimitAndTrim
-}: ArrayUtilsLib = __non_webpack_require__( '/lib/ssb/utils/arrayUtils')
+  getContent,
+  getComponent,
+  serviceUrl
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   addMonthNames,
-  getReleasesForDay,
   groupStatisticsByYearMonthAndDay,
-  prepareRelease
-}: VariantUtilsLib = __non_webpack_require__( '/lib/ssb/utils/variantUtils')
+  prepareRelease,
+  filterOnComingReleases
+} = __non_webpack_require__( '/lib/ssb/utils/variantUtils')
 const {
   getAllStatisticsFromRepo
 } = __non_webpack_require__( '/lib/ssb/statreg/statistics')
-
+const {
+  localize
+} = __non_webpack_require__('/lib/xp/i18n')
 
 exports.get = (req: Request): React4xpResponse => {
   return renderPart(req)
@@ -34,15 +35,22 @@ let currentLanguage: string = ''
 
 function renderPart(req: Request): React4xpResponse {
   const content: Content = getContent()
+  const component: Component<UpcomingReleasesPartConfig> = getComponent()
   currentLanguage = content.language ? content.language : 'nb'
-  const daysInTheFuture: number = 20
+  const count: number = parseInt(component.config.numberOfDays)
   const isNotInEditMode: boolean = req.mode !== 'edit'
-
+  const buttonTitle: string = localize({
+    key: 'button.showMore',
+    locale: currentLanguage
+  })
+  const upcomingReleasesServiceUrl: string = serviceUrl({
+    service: 'upcomingReleases'
+  })
   // Get statistics
   const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
 
   // All statistics published today, and fill up with previous releases.
-  const releasesFiltered: Array<StatisticInListing> = filterOnComingReleases(releases, daysInTheFuture)
+  const releasesFiltered: Array<StatisticInListing> = filterOnComingReleases(releases, count)
 
   // Choose the right variant and prepare the date in a way it works with the groupBy function
   const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map(
@@ -56,33 +64,28 @@ function renderPart(req: Request): React4xpResponse {
   const groupedWithMonthNames: Array<YearReleases> = addMonthNames(groupedByYearMonthAndDay, currentLanguage)
   const props: PartProps = {
     releases: groupedWithMonthNames,
-    title: 'Title',
-    language: currentLanguage
+    title: component.config.title ? component.config.title : undefined,
+    language: currentLanguage,
+    start: count,
+    count,
+    upcomingReleasesServiceUrl,
+    buttonTitle
   }
 
-  return React4xp.render('site/parts/comingReleases/comingReleases', props, req, {
+  return React4xp.render('site/parts/upcomingReleases/upcomingReleases', props, req, {
     clientRender: isNotInEditMode
   })
 }
-
-
-function filterOnComingReleases(stats: Array<StatisticInListing>, daysInTheFuture: number): Array<StatisticInListing> {
-  const releases: Array<StatisticInListing> = []
-  for (let i: number = 0; i < daysInTheFuture; i++) {
-    const day: Date = new Date()
-    day.setDate(day.getDate() + i)
-    const releasesOnThisDay: Array<StatisticInListing> = getReleasesForDay(stats, day, 'nextRelease')
-    releases.push(...releasesOnThisDay)
-  }
-  return releases
-}
-
 
 /*
 *  Interfaces
 */
 interface PartProps {
   releases: Array<YearReleases>;
-  title: string;
+  title?: string;
   language: string;
+  start: number;
+  count: number;
+  upcomingReleasesServiceUrl: string;
+  buttonTitle: string;
 }

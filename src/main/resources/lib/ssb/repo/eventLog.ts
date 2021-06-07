@@ -1,21 +1,20 @@
-import { RepoCommonLib } from './common'
 import { NodeCreateParams, NodeQueryHit, NodeQueryResponse, RepoNode } from 'enonic-types/node'
-import { RepoLib } from './repo'
 import { EventInfo, QueryInfo } from './query'
-import { I18nLibrary } from 'enonic-types/i18n'
 
-const i18n: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
+const {
+  localize
+} = __non_webpack_require__('/lib/xp/i18n')
 const {
   nodeExists,
   createNode,
   getNode,
   getChildNodes,
   withConnection
-}: RepoCommonLib = __non_webpack_require__('/lib/ssb/repo/common')
+} = __non_webpack_require__('/lib/ssb/repo/common')
 const {
   repoExists,
   createRepo
-}: RepoLib = __non_webpack_require__('/lib/ssb/repo/repo')
+} = __non_webpack_require__('/lib/ssb/repo/repo')
 
 
 export const EVENT_LOG_REPO: string = 'no.ssb.eventlog'
@@ -70,7 +69,7 @@ export function getQueryChildNodesStatus<T>(queryId: string): ReadonlyArray<LogS
       const nodes: ReadonlyArray<QueryInfo> | QueryInfo | null = getNode<QueryInfo>(EVENT_LOG_REPO, EVENT_LOG_BRANCH, hit.id)
       return Array.isArray(nodes) ? nodes[0] : nodes
     }).map( (node: EventInfo) => {
-      const resultMessage: string = i18n.localize({
+      const resultMessage: string = localize({
         key: node.data.status.message,
         values: node.data.status.status ? [`(${node.data.status.status})`] : ['']
       })

@@ -1,33 +1,29 @@
 import { Content } from 'enonic-types/content'
-import { DatasetLib, CreateOrUpdateStatus } from '../dataset/dataset'
+import { CreateOrUpdateStatus } from '../dataset/dataset'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
-import { RepoQueryLib } from '../repo/query'
-import { RepoDatasetLib } from '../repo/dataset'
-import { TaskLib } from '../../types/task'
 import { RSSFilterLogData } from './rss'
-import { RepoJobLib } from '../repo/job'
 
 const {
   splitEvery
 } = __non_webpack_require__('/lib/vendor/ramda')
 const {
   DATASET_BRANCH
-}: RepoDatasetLib = __non_webpack_require__('/lib/ssb/repo/dataset')
+} = __non_webpack_require__('/lib/ssb/repo/dataset')
 const {
   refreshDataset
-}: DatasetLib = __non_webpack_require__('/lib/ssb/dataset/dataset')
+} = __non_webpack_require__('/lib/ssb/dataset/dataset')
 const {
   progress,
   submit
-}: TaskLib = __non_webpack_require__('/lib/xp/task')
+} = __non_webpack_require__('/lib/xp/task')
 const {
   logUserDataQuery,
   Events
-}: RepoQueryLib = __non_webpack_require__('/lib/ssb/repo/query')
+} = __non_webpack_require__('/lib/ssb/repo/query')
 const {
   completeJobLog,
   JOB_STATUS_COMPLETE
-}: RepoJobLib = __non_webpack_require__('/lib/ssb/repo/job')
+} = __non_webpack_require__('/lib/ssb/repo/job')
 
 export function refreshQueriesAsync(
   httpQueries: Array<Content<DataSource>>,

@@ -6,7 +6,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/utils/utils')
 const {
   getPhrases
-} = __non_webpack_require__( '/lib/ssb/utils/language')
+} = __non_webpack_require__('/lib/ssb/utils/language')
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')

@@ -2,16 +2,16 @@ const {
   getContent,
   getComponent,
   imageUrl
-} = __non_webpack_require__( '/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   render
-} = __non_webpack_require__( '/lib/thymeleaf')
+} = __non_webpack_require__('/lib/thymeleaf')
 const {
   getMunicipality, removeCountyFromMunicipalityName
-} = __non_webpack_require__( '/lib/ssb/dataset/klass/municipalities')
+} = __non_webpack_require__('/lib/ssb/dataset/klass/municipalities')
 const {
   getImageAlt
-} = __non_webpack_require__( '/lib/ssb/utils/utils')
+} = __non_webpack_require__('/lib/ssb/utils/utils')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')

@@ -1,15 +1,13 @@
 import { Request } from 'enonic-types/controller'
-import { I18nLibrary } from 'enonic-types/i18n'
-import { PortalLibrary } from 'enonic-types/portal'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Content } from 'enonic-types/content'
 
 const {
   localize
-}: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
+} = __non_webpack_require__('/lib/xp/i18n')
 const {
   getContent, serviceUrl
-}: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   isEnabled

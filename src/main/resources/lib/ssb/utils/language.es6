@@ -1,10 +1,10 @@
-const i18n = __non_webpack_require__( '/lib/xp/i18n')
+const i18n = __non_webpack_require__('/lib/xp/i18n')
 const {
   getSite, getSiteConfig, pageUrl
-} = __non_webpack_require__( '/lib/xp/portal')
+} = __non_webpack_require__('/lib/xp/portal')
 const {
   exists
-} = __non_webpack_require__( '/lib/xp/content')
+} = __non_webpack_require__('/lib/xp/content')
 
 let english
 let norwegian
@@ -121,7 +121,7 @@ function parseTimeInterval(time) {
     break
   case 'M':
     parsedTime = `${i18n.localize({
-      key: 'interval.M' + interval[2]
+      key: 'interval.M.' + interval[3]
     })} ${interval[1]}`
     break
   case 'T':
