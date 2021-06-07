@@ -100,12 +100,14 @@ export function getSubSubjectsByPath(subSubjects: Array<SubjectItem>, path: stri
 export function getSubSubjectsByMainSubjectPath(subjects: Array<SubjectItem>, path: string): Array<SubSubject> {
   const subSubjects: Array<SubSubject> = []
   const subSubjectsPath: Array<SubjectItem> = getSubSubjectsByPath(subjects, path)
+  const statisticsItems: Array<StatisticItem> = getStatistics()
   if (subSubjectsPath.length > 0) {
     subSubjectsPath.map((s) => {
       const titles: Array<Title> | null = getTitlesSubjectByName(subjects, s.name)
       subSubjects.push({
         code: s.subjectCode ? s.subjectCode : '',
-        titles: titles ? titles : []
+        titles: titles ? titles : [],
+        statistics: getStatisticsByPath(statisticsItems, s.path)
       })
     })
   }
@@ -172,7 +174,7 @@ export interface MainSubject {
 export interface SubSubject {
     code: string;
     titles: Array<Title>;
-    // statistics: Array<Statistics>;
+    statistics: Array<StatisticItem>;
 }
 
 export interface Title {

@@ -3,7 +3,8 @@ import { SubjectUtilsLib,
   MainSubject,
   SubjectItem,
   SubSubject,
-  Title } from '../../lib/ssb/utils/subjectUtils'
+  Title,
+  StatisticItem } from '../../lib/ssb/utils/subjectUtils'
 const {
   getMainSubjects,
   getSubSubjects,
@@ -31,15 +32,13 @@ function get(): Response {
   })
 
   const xml: string =
-  `<?xml version="1.0" encoding="utf-8"?>
+`<?xml version="1.0" encoding="utf-8"?>
   <result>
     <emnestruktur>
-        ${[...mainSubjects].map((m: MainSubject) =>`<hovedemne emnekode="${m.subjectCode}">
-        <titler>
-        ${m.titles.map((t: Title) => `<tittel sprak="${t.language}">${t.title}</tittel>`)}
-        </titler>
-        ${m.subSubjects.map((s: SubSubject) => `<delemne emnekode="${s.code}">
-        ${s.titles.map((t: Title) => `<tittel sprak="${t.language}">${t.title}</tittel>`)}
+        ${[...mainSubjects].map((m: MainSubject) =>
+    `<hovedemne emnekode="${m.subjectCode}">${getXmlTitle(m.titles)}${m.subSubjects.map((s: SubSubject) =>
+      `<delemne emnekode="${s.code}">${getXmlTitle(s.titles)} ${s.statistics.map((stat: StatisticItem) =>
+        `<Statistikk kortnavn="${stat.shortName}" isPrimaerPlassering="${stat.isPrimaryLocated}">${getXmlTitle(stat.titles)}</Statistikk>`)}        
         </delemne>`)}
         </hovedemne>`).join('')}
     </emnestruktur>
@@ -50,6 +49,8 @@ function get(): Response {
     contentType: 'text/xml'
   }
 }
-
 exports.get = get
 
+function getXmlTitle(titles: Array<Title>): string {
+  return `<titler>${titles.map((st: Title) => `<tittel sprak="${st.language}">${st.title}</tittel>`)}</titler>`
+}
