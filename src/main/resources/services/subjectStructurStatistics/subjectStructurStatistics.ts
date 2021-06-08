@@ -1,35 +1,14 @@
 import { Response } from 'enonic-types/controller'
 import { MainSubject,
-  SubjectItem,
   SubSubject,
   Title,
   StatisticItem } from '../../lib/ssb/utils/subjectUtils'
 const {
-  getMainSubjects,
-  getSubSubjects,
-  getStatistics,
-  getMainSubjectsByLanguage,
-  getTitlesSubjectByName,
-  getSubSubjectsByMainSubjectPath
+  getSubjectStructur
 } = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
 
 function get(): Response {
-  const mainSubjectsAll: Array<SubjectItem> = getMainSubjects()
-  const mainSubjectsNorwegian: Array<SubjectItem> = getMainSubjectsByLanguage(mainSubjectsAll, 'no')
-  const subSubjectsAll: Array<SubjectItem> = getSubSubjects()
-  const statistics: Array<StatisticItem> = getStatistics()
-
-  const mainSubjects: Array<MainSubject> = mainSubjectsNorwegian.map((m) => {
-    const titles: Array<Title> | null = getTitlesSubjectByName(mainSubjectsAll, m.name)
-    const subSubjects: Array<SubSubject> = getSubSubjectsByMainSubjectPath(subSubjectsAll, statistics, m.path)
-
-    return {
-      subjectCode: m.subjectCode ? m.subjectCode : '',
-      name: m.name,
-      titles: titles ? titles : [],
-      subSubjects: subSubjects
-    }
-  })
+  const mainSubjects: Array<MainSubject> = getSubjectStructur('no')
 
   const xml: string =
 `<?xml version="1.0" encoding="utf-8"?>
