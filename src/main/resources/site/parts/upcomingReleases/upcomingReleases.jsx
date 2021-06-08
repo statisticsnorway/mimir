@@ -108,7 +108,13 @@ function UpcomingReleases(props) {
 
   return (
     <section className='nextStatisticsReleases'>
-      {props.title && <Title size={2}>{props.title}</Title>}
+      <div className="publication-archive-head py-5 px-2">
+        <Title>{title ? title : undefined}</Title>
+        <div className="publication-archive-ingress" dangerouslySetInnerHTML={{
+          __html: ingress.replace(/&nbsp;/g, ' ')
+        }}>
+        </div>
+      </div>
       {
         releases.map((year) => {
           return year.releases.map((month) => {
@@ -125,6 +131,7 @@ function UpcomingReleases(props) {
 
 UpcomingReleases.propTypes = {
   title: PropTypes.string,
+  ingress: PropTypes.string,
   language: PropTypes.string,
   upcomingReleasesServiceUrl: PropTypes.string,
   start: PropTypes.number,
