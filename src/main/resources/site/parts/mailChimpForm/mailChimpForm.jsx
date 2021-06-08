@@ -39,7 +39,7 @@ function MailchimpForm(props) {
   )
 }
 
-MailchimpForm.PropTypes = {
+MailchimpForm.propTypes = {
   emailLabel: PropTypes.string,
   buttonTitle: PropTypes.string,
   endpoint: PropTypes.string,
