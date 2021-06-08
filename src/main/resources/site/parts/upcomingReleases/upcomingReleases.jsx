@@ -107,21 +107,23 @@ function UpcomingReleases(props) {
   }
 
   return (
-    <section className='nextStatisticsReleases'>
-      <div className="publication-archive-head py-5 px-2">
-        <Title>{title ? title : undefined}</Title>
-        <div className="publication-archive-ingress" dangerouslySetInnerHTML={{
-          __html: ingress.replace(/&nbsp;/g, ' ')
+    <section className='upcoming-releases'>
+      <div className="upcoming-releases-head py-5 px-2">
+        <Title>{props.title ? props.title : undefined}</Title>
+        <div className="upcoming-releases-ingress" dangerouslySetInnerHTML={{
+          __html: props.preface.replace(/&nbsp;/g, ' ')
         }}>
         </div>
       </div>
-      {
-        releases.map((year) => {
-          return year.releases.map((month) => {
-            return month.releases.map((day, index) => renderDay(day, month, year, index))
+      <div className="release-list mt-5">
+        {
+          releases.map((year) => {
+            return year.releases.map((month) => {
+              return month.releases.map((day, index) => renderDay(day, month, year, index))
+            })
           })
-        })
-      }
+        }
+      </div>
       <div>
         { renderButton() }
       </div>
@@ -131,7 +133,7 @@ function UpcomingReleases(props) {
 
 UpcomingReleases.propTypes = {
   title: PropTypes.string,
-  ingress: PropTypes.string,
+  preface: PropTypes.string,
   language: PropTypes.string,
   upcomingReleasesServiceUrl: PropTypes.string,
   start: PropTypes.number,
