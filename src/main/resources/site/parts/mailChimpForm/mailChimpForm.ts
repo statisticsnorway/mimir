@@ -29,6 +29,14 @@ exports.get = function(req: Request): React4xpResponse {
     validateEmail: localize({
       key: 'newsletter.emailVerificationError',
       locale: content.language ? content.language : 'nb'
+    }),
+    emailLabel: localize({
+      key: 'newsletter.emailLabel',
+      locale: content.language ? content.language : 'nb'
+    }),
+    buttonTitle: localize({
+      key: 'newsletter.buttonTitle',
+      locale: content.language ? content.language : 'nb'
     })
   }
 
@@ -59,6 +67,8 @@ interface ReactProps {
   endpoint: string;
   id: string;
   validateEmail: string;
+  emailLabel: string;
+  buttonTitle: string;
 }
 
 interface ThymeleafProps {
