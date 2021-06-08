@@ -79,7 +79,7 @@ function UpcomingReleases(props) {
     }
     return (
       <article className={index === 0 ? 'first' : ''} key={index}>
-        <time dateTime={`${year}-${month.month}`}>
+        <time dateTime={`${year.year}-${month.month}`}>
           <span className='day'>{day.day}</span>
           <span className='month'>{month.monthName}</span>
         </time>
