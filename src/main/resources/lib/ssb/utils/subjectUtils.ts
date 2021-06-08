@@ -107,7 +107,8 @@ export function getSubSubjectsByMainSubjectPath(subjects: Array<SubjectItem>, st
     subSubjectsPath.map((s) => {
       const titles: Array<Title> | null = getTitlesBySubjectName(subjects, s.name)
       subSubjects.push({
-        code: s.subjectCode ? s.subjectCode : '',
+        subjectCode: s.subjectCode ? s.subjectCode : '',
+        name: s.name,
         titles: titles ? titles : [],
         statistics: getStatisticsByPath(statistics, s.path)
       })
@@ -162,9 +163,9 @@ export function getSubjectStructur(language: string): Array<MainSubject> {
   const mainSubjectsAll: Array<SubjectItem> = getMainSubjects()
   const subSubjectsAll: Array<SubjectItem> = getSubSubjects()
   const statistics: Array<StatisticItem> = getStatistics()
-  const mainSubjectsNorwegian: Array<SubjectItem> = getSubjectsByLanguage(getMainSubjects(), language)
+  const mainSubjectsLanguage: Array<SubjectItem> = getSubjectsByLanguage(mainSubjectsAll, language)
 
-  const mainSubjects: Array<MainSubject> = mainSubjectsNorwegian.map((m) => {
+  const mainSubjects: Array<MainSubject> = mainSubjectsLanguage.map((m) => {
     const titles: Array<Title> | null = getTitlesBySubjectName(mainSubjectsAll, m.name)
     const subSubjects: Array<SubSubject> = getSubSubjectsByMainSubjectPath(subSubjectsAll, statistics, m.path)
 
@@ -194,7 +195,8 @@ export interface MainSubject {
 }
 
 export interface SubSubject {
-    code: string;
+    subjectCode: string;
+    name: string;
     titles: Array<Title>;
     statistics: Array<StatisticItem>;
 }
