@@ -31,5 +31,5 @@ function get(): Response {
 exports.get = get
 
 function getXmlTitle(titles: Array<Title>): string {
-  return `<titler>${titles.map((st: Title) => `<tittel sprak="${st.language}">${st.title}</tittel>`)}</titler>`
+  return `<titler>${titles.map((st: Title) => `<tittel sprak="${st.language}">${st.title}</tittel>`).join('')}</titler>`
 }
