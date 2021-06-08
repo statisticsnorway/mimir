@@ -7,6 +7,7 @@ import { MainSubject,
 const {
   getMainSubjects,
   getSubSubjects,
+  getStatistics,
   getMainSubjectsByLanguage,
   getTitlesSubjectByName,
   getSubSubjectsByMainSubjectPath
@@ -15,12 +16,12 @@ const {
 function get(): Response {
   const mainSubjectsAll: Array<SubjectItem> = getMainSubjects()
   const mainSubjectsNorwegian: Array<SubjectItem> = getMainSubjectsByLanguage(mainSubjectsAll, 'no')
-
   const subSubjectsAll: Array<SubjectItem> = getSubSubjects()
+  const statistics: Array<StatisticItem> = getStatistics()
 
   const mainSubjects: Array<MainSubject> = mainSubjectsNorwegian.map((m) => {
     const titles: Array<Title> | null = getTitlesSubjectByName(mainSubjectsAll, m.name)
-    const subSubjects: Array<SubSubject> = getSubSubjectsByMainSubjectPath(subSubjectsAll, m.path)
+    const subSubjects: Array<SubSubject> = getSubSubjectsByMainSubjectPath(subSubjectsAll, statistics, m.path)
 
     return {
       subjectCode: m.subjectCode ? m.subjectCode : '',

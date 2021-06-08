@@ -7,8 +7,11 @@ const {
   query
 } = __non_webpack_require__('/lib/xp/content')
 const {
-  fetchStatistics
+  getAllStatisticsFromRepo
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')
+const {
+  ensureArray
+} = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
 
 
 export function getMainSubjects(): Array<SubjectItem> {
@@ -97,17 +100,16 @@ export function getSubSubjectsByPath(subSubjects: Array<SubjectItem>, path: stri
     subSubject.path.startsWith(path))
 }
 
-export function getSubSubjectsByMainSubjectPath(subjects: Array<SubjectItem>, path: string): Array<SubSubject> {
+export function getSubSubjectsByMainSubjectPath(subjects: Array<SubjectItem>, statistics: Array<StatisticItem>, path: string): Array<SubSubject> {
   const subSubjects: Array<SubSubject> = []
   const subSubjectsPath: Array<SubjectItem> = getSubSubjectsByPath(subjects, path)
-  const statisticsItems: Array<StatisticItem> = getStatistics()
   if (subSubjectsPath.length > 0) {
     subSubjectsPath.map((s) => {
       const titles: Array<Title> | null = getTitlesSubjectByName(subjects, s.name)
       subSubjects.push({
         code: s.subjectCode ? s.subjectCode : '',
         titles: titles ? titles : [],
-        statistics: getStatisticsByPath(statisticsItems, s.path)
+        statistics: getStatisticsByPath(statistics, s.path)
       })
     })
   }
@@ -123,9 +125,9 @@ export function getStatistics(): Array<StatisticItem> {
     query: `data.statistic LIKE '*'`
   }).hits as unknown as Array<Content<Statistics>>
 
-  const statregStatistics: Array<StatisticInListing> | null = fetchStatistics()
+  const statregStatistics: Array<StatisticInListing> = ensureArray(getAllStatisticsFromRepo())
 
-  const statistics: Array<StatisticItem> = statregStatistics && statregStatistics.length > 0 ? statisticContent.map((statistic: Content<Statistics>) => {
+  const statistics: Array<StatisticItem> = statregStatistics.length > 0 ? statisticContent.map((statistic: Content<Statistics>) => {
     const statreg: StatisticInListing | undefined = statregStatistics.find((s) => s.id.toString() === statistic.data.statistic)
 
     const titles: Array<Title> = [{
@@ -198,7 +200,7 @@ export interface SubjectUtilsLib {
     getSubSubjectsByPath: (subSubjects: Array<SubjectItem>, path: string) => Array<SubjectItem>;
     getTitlesSubjectByName: (subjects: Array<SubjectItem>, name: string) => Array<Title> | null;
     getSubjectByNameAndLanguage: (subsubjects: Array<SubjectItem>, language: string, name: string) => SubjectItem;
-    getSubSubjectsByMainSubjectPath: (subjects: Array<SubjectItem>, path: string) => Array<SubSubject>;
+    getSubSubjectsByMainSubjectPath: (subjects: Array<SubjectItem>, statistics: Array<StatisticItem>, path: string) => Array<SubSubject>;
     getStatistics: () => Array<StatisticItem>;
     getStatisticsByPath: (statistics: Array<StatisticItem>, path: string) => Array<StatisticItem>;
   }
