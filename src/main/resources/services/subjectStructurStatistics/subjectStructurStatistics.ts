@@ -17,8 +17,8 @@ function get(): Response {
         ${[...mainSubjects].map((m: MainSubject) =>
     `<hovedemne emnekode="${m.subjectCode}">${getXmlTitle(m.titles)}${m.subSubjects.map((s: SubSubject) =>
       `<delemne emnekode="${s.subjectCode}">${getXmlTitle(s.titles)} ${s.statistics.map((stat: StatisticItem) =>
-        `<Statistikk kortnavn="${stat.shortName}" isPrimaerPlassering="${stat.isPrimaryLocated}">${getXmlTitle(stat.titles)}</Statistikk>`)}        
-        </delemne>`)}
+        `<Statistikk kortnavn="${stat.shortName}" isPrimaerPlassering="${stat.isPrimaryLocated}">${getXmlTitle(stat.titles)}</Statistikk>`).join('')}        
+        </delemne>`).join('')}
         </hovedemne>`).join('')}
     </emnestruktur>
   </result>`

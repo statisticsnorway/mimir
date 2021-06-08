@@ -21,19 +21,13 @@ export function getMainSubjects(): Array<SubjectItem> {
     query: 'components.page.config.mimir.default.subjectType LIKE "mainSubject"'
   }).hits as unknown as Array<Content<Page, DefaultPageConfig>>
 
-  const mainSubjects: Array<SubjectItem> = mainSubjectsContent.map((m) => {
-    return (
-      {
-        title: m.displayName,
-        subjectCode: m.page.config.subjectCode ? m.page.config.subjectCode : '',
-        path: m._path,
-        language: m.language && m.language === 'en' ? 'en' : 'no',
-        name: m._name
-      }
-    )
-  })
-
-  return mainSubjects
+  return mainSubjectsContent.map((m) =>({
+    title: m.displayName,
+    subjectCode: m.page.config.subjectCode ? m.page.config.subjectCode : '',
+    path: m._path,
+    language: m.language && m.language === 'en' ? 'en' : 'no',
+    name: m._name
+  }))
 }
 
 export function getSubSubjects(): Array<SubjectItem> {
@@ -43,19 +37,13 @@ export function getSubSubjects(): Array<SubjectItem> {
     query: 'components.page.config.mimir.default.subjectType LIKE "subSubject"'
   }).hits as unknown as Array<Content<Page, DefaultPageConfig>>
 
-  const subSubjects: Array<SubjectItem> = subSubjectsContent.map((m) => {
-    return (
-      {
-        title: m.displayName,
-        subjectCode: m.page.config.subjectCode ? m.page.config.subjectCode : '',
-        path: m._path,
-        language: m.language && m.language === 'en' ? 'en' : 'no',
-        name: m._name
-      }
-    )
-  })
-
-  return subSubjects
+  return subSubjectsContent.map((m) => ({
+    title: m.displayName,
+    subjectCode: m.page.config.subjectCode ? m.page.config.subjectCode : '',
+    path: m._path,
+    language: m.language && m.language === 'en' ? 'en' : 'no',
+    name: m._name
+  }))
 }
 
 export function getSubjectsByLanguage(subjects: Array<SubjectItem>, language: string): Array<SubjectItem> {
@@ -63,12 +51,12 @@ export function getSubjectsByLanguage(subjects: Array<SubjectItem>, language: st
     subject.language === language)
 }
 
-export function getSubjectByNameAndLanguage(subjectsItems: Array<SubjectItem>, language: string, name: string): SubjectItem | null {
-  const subjects: Array<SubjectItem> = subjectsItems.filter((subjectsItem) =>
-    subjectsItem.language === language && subjectsItem.name === name)
+export function getSubjectByNameAndLanguage(subjects: Array<SubjectItem>, language: string, name: string): SubjectItem | null {
+  const subjectsFiltered: Array<SubjectItem> = subjects.filter((subject) =>
+    subject.language === language && subject.name === name)
 
-  if (subjects.length > 0) {
-    return subjects[0]
+  if (subjectsFiltered.length > 0) {
+    return subjectsFiltered[0]
   }
 
   return null
@@ -95,27 +83,23 @@ export function getTitlesBySubjectName(subjects: Array<SubjectItem>, name: strin
   return titles
 }
 
-export function getSubSubjectsByPath(subSubjects: Array<SubjectItem>, path: string): Array<SubjectItem> {
-  return subSubjects.filter((subSubject) =>
-    subSubject.path.startsWith(path))
+export function getSubSubjectsByPath(subjects: Array<SubjectItem>, path: string): Array<SubjectItem> {
+  return subjects.filter((subject) =>
+    subject.path.startsWith(path))
 }
 
 export function getSubSubjectsByMainSubjectPath(subjects: Array<SubjectItem>, statistics: Array<StatisticItem>, path: string): Array<SubSubject> {
-  const subSubjects: Array<SubSubject> = []
   const subSubjectsPath: Array<SubjectItem> = getSubSubjectsByPath(subjects, path)
-  if (subSubjectsPath.length > 0) {
-    subSubjectsPath.map((s) => {
-      const titles: Array<Title> | null = getTitlesBySubjectName(subjects, s.name)
-      subSubjects.push({
-        subjectCode: s.subjectCode ? s.subjectCode : '',
-        name: s.name,
-        titles: titles ? titles : [],
-        statistics: getStatisticsByPath(statistics, s.path)
-      })
-    })
-  }
 
-  return subSubjects
+  return subSubjectsPath.map((s) => {
+    const titles: Array<Title> | null = getTitlesBySubjectName(subjects, s.name)
+    return {
+      subjectCode: s.subjectCode ? s.subjectCode : '',
+      name: s.name,
+      titles: titles ? titles : [],
+      statistics: getStatisticsByPath(statistics, s.path)
+    }
+  })
 }
 
 export function getStatistics(): Array<StatisticItem> {
@@ -218,10 +202,10 @@ export interface StatisticItem {
 export interface SubjectUtilsLib {
     getMainSubjects: () => Array<SubjectItem>;
     getSubSubjects: () => Array<SubjectItem>;
-    getSubjectsByLanguage: (mainsubjects: Array<SubjectItem>, language: string) => Array<SubjectItem>;
-    getSubSubjectsByPath: (subSubjects: Array<SubjectItem>, path: string) => Array<SubjectItem>;
+    getSubjectsByLanguage: (subjects: Array<SubjectItem>, language: string) => Array<SubjectItem>;
+    getSubSubjectsByPath: (subjects: Array<SubjectItem>, path: string) => Array<SubjectItem>;
     getTitlesBySubjectName: (subjects: Array<SubjectItem>, name: string) => Array<Title> | null;
-    getSubjectByNameAndLanguage: (subsubjects: Array<SubjectItem>, language: string, name: string) => SubjectItem;
+    getSubjectByNameAndLanguage: (subjects: Array<SubjectItem>, language: string, name: string) => SubjectItem;
     getSubSubjectsByMainSubjectPath: (subjects: Array<SubjectItem>, statistics: Array<StatisticItem>, path: string) => Array<SubSubject>;
     getStatistics: () => Array<StatisticItem>;
     getStatisticsByPath: (statistics: Array<StatisticItem>, path: string) => Array<StatisticItem>;
