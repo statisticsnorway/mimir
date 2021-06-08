@@ -6,7 +6,7 @@
             <occurrences minimum="0" maximum="1"/>
         </input>
         <input type="TextArea" name="text">
-            <label>Mailchimp endepunkt</label>
+            <label>Ingress</label>
             <occurrences minimum="0" maximum="1"/>
         </input>
         <input type="TextLine" name="mailchimpEndpoint">
