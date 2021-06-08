@@ -8,8 +8,8 @@ const {
   list: listMunicipalityAlerts
 } = __non_webpack_require__('/lib/ssb/parts/municipalityAlert')
 const {
-  list: listStatisticAlerts
-} = __non_webpack_require__('/lib/ssb/parts/statisticAlert')
+  list: listInformationAlerts
+} = __non_webpack_require__('/lib/ssb/parts/informationAlert')
 const {
   processHtml,
   pageUrl,
@@ -42,12 +42,12 @@ export const createHumanReadableFormat = (value) => {
   }
 }
 
-export const alertsForContext = (context, options) => {
-  return context === `${app.name}:statistics` ? getStatisticAlerts(options) : getMunicipalityAlerts(options)
+export const alertsForContext = (pageType, options) => {
+  return pageType && pageType === 'municipality' ? getMunicipalityAlerts(options) : getInformationAlerts(options)
 }
 
-const getStatisticAlerts = (options) => {
-  const alerts = [...listOperationsAlerts().hits, ...listStatisticAlerts(options.statisticPageId).hits]
+const getInformationAlerts = (options) => {
+  const alerts = [...listOperationsAlerts().hits, ...listInformationAlerts(options.pageTypeId).hits]
   return alerts.map( (alert) => ({
     title: alert.displayName,
     messageType: alert.type === `${app.name}:operationsAlert` ? 'warning' : 'info',
