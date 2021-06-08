@@ -36,7 +36,7 @@ function NameSearch(props) {
       <Row>
         <Col>
           <p className="result-highlight my-4">
-            { !mainResult || mainResult.count <= 3 ? parseThreeOrLessText() : parseResultText(mainResult) }
+            { !mainResult || mainResult.count <= 3 ? parseThreeOrLessText(mainResult) : parseResultText(mainResult) }
           </p>
         </Col>
       </Row>
@@ -44,13 +44,27 @@ function NameSearch(props) {
   }
 
   function renderSubResult(docs) {
-    return docs.filter((doc) => doc.type !== mainResult.type).map( (doc, i) => {
+    const subResult = docs.filter((doc) => doc.type !== mainResult.type)
+    if (subResult.length > 0) {
       return (
-        <li key={i} className="my-1">
-          { parseResultText(doc) }
-        </li>
+        <Row>
+          <Col>
+            <strong>{props.phrases.interestingFacts}</strong>
+            <ul className="interesting-facts p-0">
+              {
+                subResult.map( (doc, i) => {
+                  return (
+                    <li key={i} className="my-1">
+                      { parseResultText(doc) }
+                    </li>
+                  )
+                })
+              }
+            </ul>
+          </Col>
+        </Row>
       )
-    })
+    }
   }
 
   function renderResult() {
@@ -63,15 +77,7 @@ function NameSearch(props) {
           </Col>
         </Row>
         { result.response && renderMainResult(result.response.docs) }
-        <Row>
-          <Col>
-            <strong>{props.phrases.interestingFacts}</strong>
-            <ul className="interesting-facts p-0">
-              { result.response && renderSubResult(result.response.docs) }
-            </ul>
-          </Col>
-        </Row>
-
+        { result.response && renderSubResult(result.response.docs) }
       </Container>
     </div>
     )
@@ -97,11 +103,11 @@ function NameSearch(props) {
     }
   }
 
-  function parseThreeOrLessText() {
+  function parseThreeOrLessText(doc) {
     return <span>
       {` ${props.phrases.threeOrLessText} `}
       <strong className="name-search-name">{searchedTerm}</strong>
-      {`${props.phrases.asTheir} ${translateName(doc.type)}`}
+      {` ${doc.type ? ` ${props.phrases.asTheir} ${translateName(doc.type)} ` : ''}`}
     </span>
   }
 
@@ -119,7 +125,6 @@ function NameSearch(props) {
         }
       }
     ).then((res) => {
-      console.log(res)
       findMainResult(res.data.response.docs, res.data.originalName)
       setResult(res.data)
     }
