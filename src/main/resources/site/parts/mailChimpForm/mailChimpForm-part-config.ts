@@ -5,7 +5,7 @@ export interface MailChimpFormPartConfig {
   title?: string;
 
   /**
-   * Mailchimp endepunkt
+   * Ingress
    */
   text?: string;
 
