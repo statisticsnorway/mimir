@@ -269,13 +269,13 @@ exports.get = function(req) {
     })
   }
 
-  const alertOptions = page.config && page.config.pageType === 'municipality' ? {
+  const alertOptions = page.page.config && page.page.config.pageType === 'municipality' ? {
     municipality,
     municipalPageType
   } : {
     pageTypeId: page._id
   }
-  const alerts = alertsForContext(page.config && page.config.pageType, alertOptions)
+  const alerts = alertsForContext(page.page, alertOptions)
   const body = bodyWithBreadCrumbs ? bodyWithBreadCrumbs : thymeleafRenderBody
   const bodyWithAlerts = alerts.length ?
     addAlerts(alerts, body, pageContributions) :

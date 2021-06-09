@@ -42,8 +42,8 @@ export const createHumanReadableFormat = (value) => {
   }
 }
 
-export const alertsForContext = (pageType, options) => {
-  return pageType && pageType === 'municipality' ? getMunicipalityAlerts(options) : getInformationAlerts(options)
+export const alertsForContext = (context, options) => {
+  return context.config && context.config.pageType === 'municipality' ? getMunicipalityAlerts(options) : getInformationAlerts(options)
 }
 
 const getInformationAlerts = (options) => {
