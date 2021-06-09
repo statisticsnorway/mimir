@@ -1,15 +1,16 @@
-.nextStatisticsReleases {
+.upcoming-releases {
   padding-top: 8px;
 
   @include media-breakpoint-up(md) {
     padding-top: 59px;
   }
 
-  h2 {
-    font-size: 28px;
-    margin-bottom: 30px;
-    font-family: $font-roboto-condensed-bold;
-    font-weight: 700;
+  .upcoming-releases-head {
+    background-color: $ssb-dark-1;
+
+    .upcoming-releases-preface {
+      max-width: 780px
+    }
   }
 
   article {
@@ -19,7 +20,7 @@
       padding-top: 12px;
     }
 
-    &:nth-child(2) ol{
+    &:nth-child(1) ol{
       border-top: 1px solid $ssb-dark-5;
     }
 

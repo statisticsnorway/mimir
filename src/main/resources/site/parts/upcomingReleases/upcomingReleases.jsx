@@ -79,7 +79,7 @@ function UpcomingReleases(props) {
     }
     return (
       <article className={index === 0 ? 'first' : ''} key={index}>
-        <time dateTime={`${year}-${month.month}`}>
+        <time dateTime={`${year.year}-${month.month}`}>
           <span className='day'>{day.day}</span>
           <span className='month'>{month.monthName}</span>
         </time>
@@ -92,30 +92,38 @@ function UpcomingReleases(props) {
     )
   }
 
-  function renderButton(){
-    if(loading){
-      return (<div class="text-center mt-5">
+  function renderButton() {
+    if (loading) {
+      return (<div className="text-center mt-5">
         <span className="spinner-border spinner-border" />
       </div>)
     } else {
       return (<Button className="button-more mt-5 mx-auto"
-              disabled={loading}
-              onClick={fetchMoreReleases}>
+        disabled={loading}
+        onClick={fetchMoreReleases}>
         <ChevronDown size="18"/>{props.buttonTitle}
       </Button>)
     }
   }
 
   return (
-    <section className='nextStatisticsReleases'>
-      {props.title && <Title size={2}>{props.title}</Title>}
-      {
-        releases.map((year) => {
-          return year.releases.map((month) => {
-            return month.releases.map((day, index) => renderDay(day, month, year, index))
+    <section className='upcoming-releases'>
+      <div className="upcoming-releases-head py-5 px-2">
+        <Title>{props.title ? props.title : undefined}</Title>
+        <div className="upcoming-releases-ingress" dangerouslySetInnerHTML={{
+          __html: props.preface.replace(/&nbsp;/g, ' ')
+        }}>
+        </div>
+      </div>
+      <div className="release-list mt-5">
+        {
+          releases.map((year) => {
+            return year.releases.map((month) => {
+              return month.releases.map((day, index) => renderDay(day, month, year, index))
+            })
           })
-        })
-      }
+        }
+      </div>
       <div>
         { renderButton() }
       </div>
@@ -125,6 +133,7 @@ function UpcomingReleases(props) {
 
 UpcomingReleases.propTypes = {
   title: PropTypes.string,
+  preface: PropTypes.string,
   language: PropTypes.string,
   upcomingReleasesServiceUrl: PropTypes.string,
   start: PropTypes.number,
