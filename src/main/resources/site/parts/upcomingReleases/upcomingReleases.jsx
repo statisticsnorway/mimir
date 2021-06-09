@@ -107,7 +107,7 @@ function UpcomingReleases(props) {
   }
 
   return (
-    <section className='upcoming-releases'>
+    <section className='nextStatisticsReleases'>
       <div className="upcoming-releases-head py-5 px-2">
         <Title>{props.title ? props.title : undefined}</Title>
         <div className="upcoming-releases-ingress" dangerouslySetInnerHTML={{
