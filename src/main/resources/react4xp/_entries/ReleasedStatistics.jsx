@@ -8,9 +8,10 @@ class ReleasedStatistics extends React.Component {
   }
 
   renderRelease(release, index) {
+    const hrefStatistic = this.props.language === 'en' ? `/en/${release.shortName}` : `/${release.shortName}`
     return (
       <li key={index}>
-        <Link href={`/${release.shortName}`} linkType='header'>{release.name}</Link>
+        <Link href={hrefStatistic} linkType='header'>{release.name}</Link>
         <Paragraph className="my-2">{release.variant.period}</Paragraph>
       </li>
     )
@@ -50,6 +51,7 @@ class ReleasedStatistics extends React.Component {
 
 ReleasedStatistics.propTypes = {
   title: PropTypes.string,
+  language: PropTypes.string,
   releases: PropTypes.arrayOf(PropTypes.shape({
     year: PropTypes.string,
     releases: PropTypes.arrayOf(PropTypes.shape({
