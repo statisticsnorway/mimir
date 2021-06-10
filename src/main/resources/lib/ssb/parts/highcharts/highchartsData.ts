@@ -31,14 +31,13 @@ export function prepareHighchartsData(
   highchartsContent: Content<Highchart>,
   data: JSONstat | TbmlDataUniform | object | string | undefined,
   dataSource: DataSource['dataSource']): SeriesAndCategories | undefined {
-  //
   const seriesAndCategories: SeriesAndCategories | undefined = getSeriesAndCategories(req, highchartsContent, data, dataSource)
 
   const seriesAndCategoriesOrData: SeriesAndCategories | undefined = seriesAndCategories && !seriesAndCategories.series ?
     addDataProperties(highchartsContent, seriesAndCategories) : seriesAndCategories
 
   return seriesAndCategoriesOrData !== undefined ?
-    switchRowsAndColumnsCheck(highchartsContent, seriesAndCategoriesOrData, dataSource) : seriesAndCategoriesOrData
+    switchRowsAndColumnsCheck(highchartsContent, seriesAndCategoriesOrData) : seriesAndCategoriesOrData
 }
 
 
@@ -60,11 +59,9 @@ export function getSeriesAndCategories(
 
 export function switchRowsAndColumnsCheck(
   highchartContent: Content<Highchart>,
-  seriesAndCategories: SeriesAndCategories,
-  dataSource: DataSource['dataSource']): SeriesAndCategories {
+  seriesAndCategories: SeriesAndCategories): SeriesAndCategories {
   //
-  return (dataSource && dataSource._selected !== DataSourceType.STATBANK_API && highchartContent.data.graphType === 'pie' ||
-    highchartContent.data.switchRowsAndColumns) ?
+  return (highchartContent.data.switchRowsAndColumns) ?
     switchRowsAndColumns(seriesAndCategories) : seriesAndCategories
 }
 
@@ -145,8 +142,7 @@ export interface HighchartsDataLib {
     dataSource: DataSource['dataSource']) => SeriesAndCategories | undefined;
   switchRowsAndColumnsCheck: (
     highchartContent: Content<Highchart>,
-    seriesAndCategories: SeriesAndCategories,
-    dataSource: DataSource['dataSource']) => SeriesAndCategories;
+    seriesAndCategories: SeriesAndCategories) => SeriesAndCategories;
   addDataProperties: (
     highchartContent: Content<Highchart>,
     seriesAndCategories: SeriesAndCategories) => SeriesAndCategories;
