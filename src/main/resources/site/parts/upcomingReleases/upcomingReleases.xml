@@ -2,8 +2,8 @@
     <display-name>Publiseringskalender</display-name>
     <description>Liste over kommende statistikk publiseringer</description>
     <form>
-        <input type="TextLine" name="title">
-            <label>Tittel</label>
+        <input type="HtmlArea" name="preface">
+            <label>Ingress</label>
             <occurrences minimum="1" maximum="1"/>
         </input>
         <input type="TextLine" name="numberOfDays">

@@ -26,7 +26,7 @@ exports.get = function(req: Request): React4xpResponse {
   const reactProps: ReactProps = {
     endpoint: component.config.mailchimpEndpoint ? component.config.mailchimpEndpoint : '',
     id: component.config.mailchimpId ? component.config.mailchimpId : '',
-    validateEmail: localize({
+    validateEmailMsg: localize({
       key: 'newsletter.emailVerificationError',
       locale: content.language ? content.language : 'nb'
     }),
@@ -66,7 +66,7 @@ exports.get = function(req: Request): React4xpResponse {
 interface ReactProps {
   endpoint: string;
   id: string;
-  validateEmail: string;
+  validateEmailMsg: string;
   emailLabel: string;
   buttonTitle: string;
 }

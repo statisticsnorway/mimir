@@ -10,6 +10,7 @@ const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getContent,
   getComponent,
+  processHtml,
   serviceUrl
 } = __non_webpack_require__('/lib/xp/portal')
 const {
@@ -63,8 +64,11 @@ function renderPart(req: Request): React4xpResponse {
   // iterate and format month names
   const groupedWithMonthNames: Array<YearReleases> = addMonthNames(groupedByYearMonthAndDay, currentLanguage)
   const props: PartProps = {
+    title: content.displayName,
     releases: groupedWithMonthNames,
-    title: component.config.title ? component.config.title : undefined,
+    preface: component.config.preface ? processHtml({
+      value: component.config.preface
+    }) : undefined,
     language: currentLanguage,
     start: count,
     count,
@@ -83,6 +87,7 @@ function renderPart(req: Request): React4xpResponse {
 interface PartProps {
   releases: Array<YearReleases>;
   title?: string;
+  preface?: string;
   language: string;
   start: number;
   count: number;

@@ -1,8 +1,8 @@
 export interface UpcomingReleasesPartConfig {
   /**
-   * Tittel
+   * Ingress
    */
-  title: string;
+  preface: string;
 
   /**
    * Antall dager pr "side"
