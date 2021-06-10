@@ -273,6 +273,7 @@ exports.get = function(req) {
     municipality,
     municipalPageType
   } : {
+    pageType: page.type,
     pageTypeId: page._id
   }
   const alerts = alertsForContext(page.page, alertOptions)

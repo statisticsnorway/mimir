@@ -18,14 +18,14 @@
       <options minimum="1" maximum="1">
         <option name="statistics">
           <label>Statistikk</label>
-          <help-text>Legg til en varsel på en statistikk</help-text>
+          <help-text>Legg til en varsel på en eller flere statistikker</help-text>
           <items>
             <input name="statisticsIds" type="ContentSelector">
               <label>Velg hvilken statistikk det gjelder her.</label>
               <help-text >Varselet vil bare synes på valgte statistikk</help-text>
               <occurrences minimum="0" maximum="0"/>
               <config>
-								<allowContentType>statistics</allowContentType>
+                <allowContentType>statistics</allowContentType>
               </config>
             </input>
 
@@ -38,7 +38,7 @@
 
         <option name="pages">
           <label>Side</label>
-          <help-text>Legg til en varsel på en side</help-text>
+          <help-text>Legg til en varsel på en eller flere sider</help-text>
           <items>
             <input name="pageIds" type="ContentSelector">
               <label>Velg hvilken side det gjelder her.</label>
@@ -52,7 +52,7 @@
 
         <option name="articles">
           <label>Artikkel</label>
-            <help-text>Legg til en varsel på en artikkel</help-text>
+            <help-text>Legg til en varsel på en eller flere artikkler</help-text>
           <items>
             <input name="articleIds" type="ContentSelector">
               <label>Velg hvilken artikkel det gjelder her.</label>
