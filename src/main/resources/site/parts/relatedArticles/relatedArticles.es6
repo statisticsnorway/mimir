@@ -132,7 +132,7 @@ function renderPart(req, relatedArticles) {
         subTitle = article.externalArticle.type
       }
       if (article.externalArticle.date) {
-        const prettyDate = moment(article.externalArticle.date).locale(page.language ? page.language : 'nb').format('LL')
+        const prettyDate = moment(article.externalArticle.date).locale(language).format('LL')
         subTitle += `${subTitle ? ' / ' : ''}${prettyDate}`
       }
 

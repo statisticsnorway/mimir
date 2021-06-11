@@ -29,7 +29,7 @@ exports.preview = (req: Request): React4xpResponse => renderPart(req)
 function renderPart(req: Request): React4xpResponse {
   const content: Content = getContent()
   const component: Component<ArticleListPartConfig> = getComponent()
-  const language: string = content.language ? content.language : 'nb'
+  const language: string = content.language ? content.language === 'en' ? 'en-gb' : content.language : 'nb'
   const articles: Array<Content<Article>> = getArticles(language)
   const preparedArticles: Array<PreparedArticles> = prepareArticles(articles, language)
   const isNotInEditMode: boolean = req.mode !== 'edit'
@@ -82,7 +82,7 @@ function prepareArticles(articles: Array<Content<Article>>, language: string): A
         id: article._id
       }),
       publishDate: article.publish && article.publish.from ? article.publish.from : '',
-      publishDateHuman: article.publish && article.publish.from ? moment(article.publish.from).locale(language).format('Do MMMM YYYY') : ''
+      publishDateHuman: article.publish && article.publish.from ? moment(article.publish.from).locale(language).format('LL') : ''
     }
   })
 }
