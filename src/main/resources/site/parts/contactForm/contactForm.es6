@@ -21,7 +21,7 @@ exports.preview = (req) => renderPart(req, {
 })
 
 const renderPart = (req, config) => {
-  const contactForm = new React4xp('ContactForm')
+  const contactForm = new React4xp('site/parts/contactForm/contactForm')
     .setProps({
       emailGeneral: 'ssbno_teknisk@ssb.no',
       emailStatistikk: 'ssbno_teknisk@ssb.no',
