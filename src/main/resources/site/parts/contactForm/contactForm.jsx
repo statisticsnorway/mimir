@@ -43,8 +43,7 @@ function ContactForm(props) {
   }
 
   function isReceiverValid(value) {
-    const receiverValue = value || receiver.value
-    const receiverValid = receiverValue !== ''
+    const receiverValid = !!(value || receiver.value)
     if (!receiverValid) {
       setReceiver({
         ...receiver,
@@ -55,15 +54,15 @@ function ContactForm(props) {
   }
 
   function isNameValid(value) {
-    return value !== ''
+    return !!(value || name.value)
   }
 
   function isEmailValid(value) {
-    return value !== ''
+    return !!(value || email.value)
   }
 
   function isTextValid(value) {
-    return value !== ''
+    return !!(value || text.value)
   }
 
   function onBlur(id) {
@@ -103,12 +102,13 @@ function ContactForm(props) {
   }
 
   function onChange(id, value) {
+    console.log(id, value)
     switch (id) {
     case 'receiver': {
       setReceiver({
         ...receiver,
         value: value,
-        error: receiver.error ? !isReceiverValid(value) : receiver.error
+        error: receiver.error ? !isReceiverValid(value) : false
       })
       break
     }
@@ -116,7 +116,7 @@ function ContactForm(props) {
       setName({
         ...name,
         value: value,
-        error: name.error ? !isNameValid(value) : name.error
+        error: name.error ? !isNameValid(value) : false
       })
       break
     }
@@ -124,7 +124,7 @@ function ContactForm(props) {
       setEmail({
         ...email,
         value: value,
-        error: name.error ? !isEmailValid(value) : email.error
+        error: email.error ? !isEmailValid(value) : false
       })
       break
     }
@@ -132,7 +132,7 @@ function ContactForm(props) {
       setText({
         ...text,
         value,
-        error: text.error ? !isTextValid(value) : text.error
+        error: text.error ? !isTextValid(value) : false
       })
       break
     }
@@ -159,6 +159,8 @@ function ContactForm(props) {
                         onChange('receiver', value)
                       }}
                       placeholder='Hva gjelder henvendelsen'
+                      error={receiver.error}
+                      errorMessage={receiver.errorMsg}
                       items={[
                         {
                           title: 'Generell henvendelse',
@@ -182,6 +184,8 @@ function ContactForm(props) {
                       label='Skriv inn navn'
                       handleChange={(value) => onChange('name', value)}
                       onBlur={() => onBlur('name')}
+                      error={name.error}
+                      errorMessage={name.errorMsg}
                     />
                   </Col>
                 </Row>
@@ -192,6 +196,8 @@ function ContactForm(props) {
                       label='Skriv inn e-post'
                       handleChange={(value) => onChange('email', value)}
                       onBlur={() => onBlur('email')}
+                      error={email.error}
+                      errorMessage={email.errorMsg}
                     />
                   </Col>
                 </Row>
@@ -200,6 +206,8 @@ function ContactForm(props) {
                     <TextArea
                       rows="7"
                       label='Skriv noen ord om hva vi kan hjelpe deg med?'
+                      error={text.error}
+                      errorMessage={text.errorMsg}
                     />
                   </Col>
                 </Row>
