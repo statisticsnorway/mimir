@@ -33,6 +33,7 @@ exports.preview = (req) => renderPart(req)
 
 const renderPart = (req) => {
   const page = getContent()
+  const language = page.language ? page.language === 'en' ? 'en-gb' : page.language : 'nb'
   const phrases = getPhrases(page)
   const title = page.displayName ? page.displayName : undefined
 
@@ -50,7 +51,7 @@ const renderPart = (req) => {
   }) : undefined
 
   const imageAltText = page.data.image ? getImageAlt(page.data.image) : ' '
-  const listOfArticles = parseArticleData(page._id, phrases, page.language)
+  const listOfArticles = parseArticleData(page._id, phrases, language)
   const listOfArticlesObj = new React4xp('ListOfArticles')
     .setProps({
       listOfArticlesSectionTitle: phrases.articleAnalysisPublications,
@@ -99,7 +100,7 @@ const renderPart = (req) => {
   }
 }
 
-const parseArticleData = (pageId, phrases, language = 'nb') => {
+const parseArticleData = (pageId, phrases, language) => {
   const articlesWithArticleArchivesSelected = contentLib.query({
     count: 9999,
     sort: 'publish.from DESC',
@@ -126,11 +127,11 @@ const parseArticleData = (pageId, phrases, language = 'nb') => {
   })
 }
 
-const getYear = (publish, createdTime, language = 'nb') => {
+const getYear = (publish, createdTime, language) => {
   return publish && createdTime ? moment(publish.from).locale(language).format('YYYY') : moment(createdTime).locale(language).format('YYYY')
 }
 
-const getSubTitle = (articleContent, phrases, language = 'nb') => {
+const getSubTitle = (articleContent, phrases, language) => {
   let type = ''
   if (articleContent.type === `${app.name}:article`) {
     type = phrases.articleName
@@ -138,9 +139,9 @@ const getSubTitle = (articleContent, phrases, language = 'nb') => {
 
   let prettyDate = ''
   if (articleContent.publish && articleContent.publish.from) {
-    prettyDate = moment(articleContent.publish.from).locale(language).format('D. MMMM YYYY')
+    prettyDate = moment(articleContent.publish.from).locale(language).format('LL')
   } else {
-    prettyDate = moment(articleContent.createdTime).locale(language).format('D. MMMM YYYY')
+    prettyDate = moment(articleContent.createdTime).locale(language).format('LL')
   }
 
   return `${type ? `${type} / ` : ''}${prettyDate}`
