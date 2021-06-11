@@ -2,8 +2,13 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Container, Row, Col } from 'react-bootstrap'
 import { Input, Button, Dropdown, TextArea } from '@statisticsnorway/ssb-component-library'
+import axios from 'axios'
 
 function ContactForm(props) {
+  const {
+    contactFormServiceUrl,
+    recaptchaSiteKey
+  } = props
   const [receiver, setReceiver] = useState({
     error: false,
     errorMsg: 'Mottaker er ikke valgt',
@@ -35,7 +40,21 @@ function ContactForm(props) {
       onBlur('text')
       return
     }
-    console.log('Send mail')
+    grecaptcha.ready(function() {
+      grecaptcha.execute(recaptchaSiteKey, {
+        action: 'submitContactForm'
+      }).then(function(token) {
+        axios.post(contactFormServiceUrl, {
+          receiver: receiver.value,
+          name: name.value,
+          email: email.value,
+          text: text.value,
+          token
+        })
+      }).catch((e) => {
+        console.trace(e)
+      })
+    })
   }
 
   function isFormValid() {
@@ -205,6 +224,7 @@ function ContactForm(props) {
                     <TextArea
                       rows="7"
                       handleChange={(value) => onChange('text', value)}
+                      onBlur={() => onBlur('text')}
                       label='Skriv noen ord om hva vi kan hjelpe deg med?'
                       error={text.error}
                       errorMessage={text.errorMsg}
@@ -232,7 +252,9 @@ function ContactForm(props) {
 ContactForm.propTypes = {
   emailGeneral: PropTypes.string,
   emailStatistikk: PropTypes.string,
-  emailInnrapportering: PropTypes.string
+  emailInnrapportering: PropTypes.string,
+  recaptchaSiteKey: PropTypes.string,
+  contactFormServiceUrl: PropTypes.string
 }
 
 export default (props) => <ContactForm {...props} />
