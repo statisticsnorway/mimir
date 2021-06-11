@@ -86,10 +86,7 @@ export function getTitlesBySubjectName(subjects: Array<SubjectItem>, name: strin
 }
 
 export function getSubSubjectsByPath(subjects: Array<SubjectItem>, path: string): Array<SubjectItem> {
-  return subjects.filter((subject) => {
-    if (subject.path.startsWith(path)) log.info(`${path} ${subject.path} ${subject.path.startsWith(path)}`)
-    return subject.path.startsWith(path)
-  })
+  return subjects.filter((subject) => subject.path.startsWith(path))
 }
 
 export function getSubSubjectsByMainSubjectPath(subjects: Array<SubjectItem>, statistics: Array<StatisticItem>, path: string): Array<SubSubject> {

@@ -3,6 +3,8 @@ import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { Content, QueryResponse } from 'enonic-types/content'
 import { Statistics } from '../../content-types/statistics/statistics'
+import { Component } from 'enonic-types/portal'
+import { StatbankSubjectTreePartConfig } from './statbankSubjectTree-part-config'
 const {
   getMainSubjects,
   getSubSubjects,
@@ -13,13 +15,15 @@ const {
   query
 } = __non_webpack_require__('/lib/xp/content')
 const {
-  getContent
+  getContent,
+  getComponent,
+  processHtml
 } = __non_webpack_require__('/lib/xp/portal')
 
 export function get(req: Request): React4xpResponse {
   const isNotInEditMode: boolean = req.mode !== 'edit'
   const content: Content = getContent()
-  // const component: Component<StatbankSubjectTree>
+  const component: Component<StatbankSubjectTreePartConfig> = getComponent()
   const allMainSubjects: Array<SubjectItem> = getMainSubjects(content.language)
   const allSubSubjects: Array<SubjectItem> = getSubSubjects()
   const mainSubjects: Array<MainSubjectWithSubs> = allMainSubjects.map( (subjectItem) => {
@@ -35,7 +39,9 @@ export function get(req: Request): React4xpResponse {
   const props: ReactProps = {
     mainSubjects,
     title: content.displayName,
-    preface: '<p>pewpew</p>'
+    preface: component.config.preface ? processHtml({
+      value: component.config.preface
+    }) : ''
   }
 
   return React4xp.render('site/parts/statbankSubjectTree/statbankSubjectTree', props, req, {
