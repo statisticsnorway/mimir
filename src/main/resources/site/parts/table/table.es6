@@ -1,6 +1,6 @@
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
-  getContent, pageUrl, assetUrl
+  getContent, getComponent, pageUrl, assetUrl
 } = __non_webpack_require__('/lib/xp/portal')
 const {
   render
@@ -37,7 +37,8 @@ const view = resolve('./table.html')
 
 exports.get = function(req) {
   try {
-    const tableId = getContent().data.mainTable
+    const part = getComponent()
+    const tableId = part.config.table ? part.config.table : getContent().data.mainTable
     return renderPart(req, tableId)
   } catch (e) {
     return renderError(req, 'Error in part', e)
