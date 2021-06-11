@@ -88,6 +88,12 @@ export function init() {
           return `<b>${this.series.name} ${this.point.category}:</b> ` + Highcharts.numberFormat(Math.abs(this.point.y), 0)
         } : ''
 
+        if (canvas.data('type') === 'pie') {
+          config.legend.labelFormatter = function name() {
+            return Array.isArray(this.name) ? this.name[0] : this.name
+          }
+        }
+
         config.plotOptions.series.events = {
           legendItemClick: function(e) {
             // Possible bug: untested browser support for browserEvent (but works in IE8, chrome, FF...)
