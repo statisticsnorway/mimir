@@ -102,7 +102,6 @@ function ContactForm(props) {
   }
 
   function onChange(id, value) {
-    console.log(id, value)
     switch (id) {
     case 'receiver': {
       setReceiver({
@@ -205,6 +204,7 @@ function ContactForm(props) {
                   <Col className="text">
                     <TextArea
                       rows="7"
+                      handleChange={(value) => onChange('text', value)}
                       label='Skriv noen ord om hva vi kan hjelpe deg med?'
                       error={text.error}
                       errorMessage={text.errorMsg}
