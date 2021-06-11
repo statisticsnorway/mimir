@@ -22,8 +22,9 @@ export function Statistics() {
 
   const dispatch = useDispatch()
   const io = useContext(WebSocketContext)
-  const statisticsNo = statistics ? statistics.filter((s) => s.language === 'nb' || s.language === 'nn') : []
-  const statisticsEn = statistics ? statistics.filter((s) => s.language === 'en') : []
+  const activeStatistics = statistics ? statistics.filter((s) => s.status === 'A') : []
+  const statisticsNo = activeStatistics.filter((s) => s.language === 'nb' || s.language === 'nn')
+  const statisticsEn = activeStatistics.filter((s) => s.language === 'en')
 
   const statisticsFinal = []
   if (statisticsNo.length > 0) {

@@ -471,6 +471,7 @@ function prepDashboardStatistics(statisticContent: Content<Statistics>, statregS
     statisticId: statregData.statisticId,
     shortName: statregData.shortName,
     frequency: statregData.frequency,
+    status: statregData.status,
     variantId: statregData.variantId,
     nextRelease: statregData.nextRelease,
     nextReleaseId: statregData.nextReleaseId,
@@ -509,6 +510,7 @@ function getStatregInfo(statisticStatreg: StatisticInListing | undefined): Statr
     return {
       statisticId: -1,
       shortName: '',
+      status: '',
       frequency: '',
       nextRelease: '',
       nextReleaseId: '',
@@ -526,6 +528,7 @@ function getStatregInfo(statisticStatreg: StatisticInListing | undefined): Statr
   const result: StatregData = {
     statisticId: statisticStatreg.id,
     shortName: statisticStatreg.shortName,
+    status: statisticStatreg.status ? statisticStatreg.status : 'A',
     frequency: variant.frekvens,
     nextRelease: variant.nextRelease ? variant.nextRelease : '',
     nextReleaseId: variant.nextReleaseId ? variant.nextReleaseId : '',
@@ -606,6 +609,7 @@ interface StatisticDashboard {
   statisticId: number;
   shortName: string;
   frequency: string;
+  status: string;
   variantId: string;
   nextRelease: string;
   nextReleaseId: string;
@@ -625,6 +629,7 @@ interface StatisticSearch {
 interface StatregData {
   statisticId: number;
   shortName: string;
+  status: string;
   frequency: string;
   nextRelease: string;
   nextReleaseId: string;
