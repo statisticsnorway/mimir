@@ -2,14 +2,10 @@ const {
   getComponent
 } = __non_webpack_require__('/lib/xp/portal')
 const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
-const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const view = resolve('./contactForm.html')
 
 exports.get = function(req) {
   try {
@@ -35,13 +31,8 @@ const renderPart = (req, config) => {
     .setId('contactFormId')
     .uniqueId()
 
-  const body = render(view, {
-    contactFormId: contactForm.react4xpId
-  })
   return {
-    body: contactForm.renderBody({
-      body
-    }),
+    body: contactForm.renderBody(),
     pageContributions: contactForm.renderPageContributions({
       clientRender: req.mode !== 'edit'
     })

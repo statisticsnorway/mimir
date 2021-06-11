@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Container, Row, Col } from 'react-bootstrap'
-import { Input, Button, Dropdown, TextArea, Title } from '@statisticsnorway/ssb-component-library'
+import { Input, Button, Dropdown, TextArea } from '@statisticsnorway/ssb-component-library'
 
 function ContactForm(props) {
   const [receiver, setReceiver] = useState({
@@ -145,21 +145,9 @@ function ContactForm(props) {
 
   function renderContactForm() {
     return (
-      <div className="contact-form">
+      <section className="xp-part part-contact-form container">
         <Row>
-          <Col lg="12">
-            <Title size={1}>Kontakt oss</Title>
-          </Col>
-        </Row>
-        <Row>
-          <Col className="col-12">
-            <p className="publish-text">
-                Statistisk sentralbyrå ønsker å yte god service til brukerne. Du skal få rask og riktig informasjon når du henvender deg til oss.
-            </p>
-          </Col>
-        </Row>
-        <Row>
-          <Col className='col-6'>
+          <Col>
             <Form onSubmit={onSubmit}>
               <Container>
                 <Row>
@@ -210,6 +198,7 @@ function ContactForm(props) {
                 <Row>
                   <Col className="text">
                     <TextArea
+                      rows="7"
                       label='Skriv noen ord om hva vi kan hjelpe deg med?'
                     />
                   </Col>
@@ -222,11 +211,8 @@ function ContactForm(props) {
               </Container>
             </Form>
           </Col>
-          <Col className='col-6'>
-            <p>Her kommer accordions</p>
-          </Col>
         </Row>
-      </div>
+      </section>
     )
   }
 
