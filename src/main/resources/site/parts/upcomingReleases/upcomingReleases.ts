@@ -70,11 +70,12 @@ function renderPart(req: Request): React4xpResponse {
       value: component.config.preface
     }) : undefined,
     language: currentLanguage,
-    start: count,
     count,
     upcomingReleasesServiceUrl,
     buttonTitle
   }
+
+  log.info('data OK ready to render')
 
   return React4xp.render('site/parts/upcomingReleases/upcomingReleases', props, req, {
     clientRender: isNotInEditMode
@@ -89,7 +90,6 @@ interface PartProps {
   title?: string;
   preface?: string;
   language: string;
-  start: number;
   count: number;
   upcomingReleasesServiceUrl: string;
   buttonTitle: string;

@@ -16,10 +16,11 @@ exports.get = (req: Request): Response => {
   // Get statistics
   const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
   const count: number = req.params.count ? parseInt(req.params.count) : 2
-  const start: number = req.params.start ? parseInt(req.params.start) : 0
+
+  log.info('count: ' + count + ' start ' + req.params.start )
   const language: string = req.params.language ? req.params.language : 'nb'
   // All statistics published today, and fill up with previous releases.
-  const releasesFiltered: Array<StatisticInListing> = filterOnComingReleases(releases, count, start)
+  const releasesFiltered: Array<StatisticInListing> = filterOnComingReleases(releases, count, req.params.start)
 
   // Choose the right variant and prepare the date in a way it works with the groupBy function
   const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map(
@@ -32,12 +33,13 @@ exports.get = (req: Request): Response => {
   // iterate and format month names
   const groupedWithMonthNames: Array<YearReleases> = addMonthNames(groupedByYearMonthAndDay, language)
 
+  log.info(JSON.stringify(groupedWithMonthNames, null, 2))
+
   return {
     status: 200,
     contentType: 'application/json',
     body: {
       releases: groupedWithMonthNames,
-      start,
       count
     }
   }

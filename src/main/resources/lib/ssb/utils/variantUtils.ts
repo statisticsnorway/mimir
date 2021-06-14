@@ -240,13 +240,13 @@ export function getReleasesForDay(
   }, [])
 }
 
-export function filterOnComingReleases(stats: Array<StatisticInListing>, count: number, startDay: number = 0): Array<StatisticInListing> {
+export function filterOnComingReleases(stats: Array<StatisticInListing>, count: number, startDay?: string): Array<StatisticInListing> {
   const releases: Array<StatisticInListing> = []
-  for (let i: number = startDay; i < startDay + count; i++) {
-    const day: Date = new Date()
-    day.setDate(day.getDate() + i)
+  const day: Date = startDay ? new Date(startDay) : new Date()
+  for (let i: number = 0; i < count; i++) {
+    day.setDate(day.getDate() + 1)
     const releasesOnThisDay: Array<StatisticInListing> = getReleasesForDay(stats, day, 'nextRelease')
-    if (releasesOnThisDay.length === 0) startDay++ // dont count days with 0 hits
+    if (releasesOnThisDay.length === 0) count++ // if no hits found on this day. add one day
     releases.push(...releasesOnThisDay)
   }
 
@@ -311,7 +311,7 @@ export interface VariantUtilsLib {
   groupStatisticsByYearMonthAndDay: (releasesPrepped: Array<PreparedStatistics>) => GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>>;
   getReleasesForDay: (statisticList: Array<StatisticInListing>, day: Date, property?: keyof VariantInListing) => Array<StatisticInListing>;
   prepareRelease: (release: StatisticInListing, locale: string, property?: keyof VariantInListing) => PreparedStatistics;
-  filterOnComingReleases: (stats: Array<StatisticInListing>, daysInTheFuture: number, startDay?: number) => Array<StatisticInListing>;
+  filterOnComingReleases: (stats: Array<StatisticInListing>, daysInTheFuture: number, startDay?: string) => Array<StatisticInListing>;
 }
 
 
