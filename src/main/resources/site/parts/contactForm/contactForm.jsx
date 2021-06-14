@@ -31,6 +31,7 @@ function ContactForm(props) {
   })
   const [loading, setLoading] = useState(false)
   const [emailSent, setEmailSent] = useState(false)
+  const [emailSentFailed, setEmailSentFailed] = useState(false)
 
   function onSubmit(e) {
     e.preventDefault()
@@ -54,13 +55,13 @@ function ContactForm(props) {
           token
         })
           .then((res) => {
-            console.log('MELDING sendt')
+            setEmailSent(true)
           })
           .catch((err) => {
-            console.log('FEIL: ' + err)
+            setEmailSentFailed(true)
+            console.trace(err)
           })
           .finally(()=> {
-            setEmailSent(true)
             setLoading(false)
           })
       }).catch((e) => {
@@ -188,8 +189,23 @@ function ContactForm(props) {
     }
   }
 
+  function renderEmailSentError() {
+    if (emailSentFailed) {
+      return (
+        <Row>
+          <Col>
+            <Divider light/>
+            <Container className="pt-3">
+              <Title size={3}>{props.phrases.contactFormMessageSentError}</Title>
+            </Container>
+          </Col>
+        </Row>
+      )
+    }
+  }
+
   function renderForm() {
-    if (!emailSent) {
+    if (!emailSent && !emailSentFailed) {
       return (
         <Row>
           <Col>
@@ -281,6 +297,7 @@ function ContactForm(props) {
       <section className="xp-part part-contact-form container">
         {renderForm()}
         {renderEmailSent()}
+        {renderEmailSentError()}
       </section>
     )
   }
