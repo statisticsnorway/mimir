@@ -67,9 +67,9 @@ function getSavedQuerysStatistic(dataSources: Array<Content<DataSource>>): Array
   const statisticsWithReleaseToday: Array<string> = fetchStatisticsWithReleaseToday().map((s: StatisticInListing) => s.id.toString())
 
   return savedQuerysStatistics.reduce((acc: Array<Content<DataSource>>, datasource) => {
-    const parentContent: Content<object, DefaultPageConfig> | null = getParentContent(datasource._path)
+    const parentContent: Content<object, DefaultPageConfig| Statistics> | null = getParentContent(datasource._path)
     if (parentContent && parentContent.type === 'mimir:statistics') {
-      const statisticContent: Content<Statistics> = parentContent
+      const statisticContent: Content<Statistics> = parentContent as Content<Statistics>
       if (statisticContent.data.statistic && statisticsWithReleaseToday.includes(statisticContent.data.statistic.toString())) {
         acc.push(datasource)
       }

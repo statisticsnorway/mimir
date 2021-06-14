@@ -19,11 +19,11 @@ export function getParentType(path: string): string | undefined {
   return fromParentTypeCache(path, () => parentType(path))
 }
 
-export function getParentContent(path: string): Content<object, DefaultPageConfig> | null {
+export function getParentContent(path: string): Content<object, DefaultPageConfig | Statistics> | null {
   const parentPathKey: string = parentPath(path)
   return getContent({
     key: parentPathKey
-  }) as Content<object, DefaultPageConfig> | null
+  }) as Content<object, DefaultPageConfig | Statistics> | null
 }
 
 function parentType(path: string): string | undefined {
@@ -76,7 +76,7 @@ export function getMainSubject(shortName: string, language: string): string {
 
 export interface ParentUtilsLib {
   getParentType: (path: string) => string | undefined;
-  getParentContent: (path: string) => Content<object, DefaultPageConfig> | null;
+  getParentContent: (path: string) => Content<object, DefaultPageConfig | Statistics> | null;
   parentType: (path: string) => string | undefined;
   parentPath: (path: string) => string;
   getMainSubject: (shortName: string, language: string) => string;

@@ -52,7 +52,7 @@ export function get(req: Request): React4xpResponse {
 function prepareSubSubjects(subSubject: SubjectItem): SubSubjectsWithStatistics {
   const content: QueryResponse<Statistics> = query({
     count: 20,
-    query: `_path LIKE '/content${subSubject.path}/*' AND data.hideFromList = 'true'`,
+    query: `_path LIKE '/content${subSubject.path}/*' AND data.hideFromList != 'true'`,
     contentTypes: [`${app.name}:statistics`]
   })
 
