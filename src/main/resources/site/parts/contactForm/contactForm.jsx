@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Container, Row, Col } from 'react-bootstrap'
-import { Input, Button, Dropdown, TextArea } from '@statisticsnorway/ssb-component-library'
+import { Input, Button, Dropdown, TextArea, Divider, Title } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
 
 function ContactForm(props) {
@@ -30,6 +30,7 @@ function ContactForm(props) {
     value: ''
   })
   const [loading, setLoading] = useState(false)
+  const [emailSent, setEmailSent] = useState(false)
 
   function onSubmit(e) {
     e.preventDefault()
@@ -40,6 +41,7 @@ function ContactForm(props) {
       onBlur('text')
       return
     }
+    setLoading(true)
     grecaptcha.ready(function() {
       grecaptcha.execute(recaptchaSiteKey, {
         action: 'submitContactForm'
@@ -51,6 +53,16 @@ function ContactForm(props) {
           text: text.value,
           token
         })
+          .then((res) => {
+            console.log('MELDING sendt')
+          })
+          .catch((err) => {
+            console.log('FEIL: ' + err)
+          })
+          .finally(()=> {
+            setEmailSent(true)
+            setLoading(false)
+          })
       }).catch((e) => {
         console.trace(e)
       })
@@ -160,46 +172,66 @@ function ContactForm(props) {
     }
   }
 
-
-  function renderContactForm() {
-    return (
-      <section className="xp-part part-contact-form container">
+  function renderEmailSent() {
+    if (emailSent) {
+      return (
         <Row>
           <Col>
+            <Divider light/>
+            <Container className="pt-3">
+              <Title size={3}>{props.phrases.contactFormMessageSentOk}</Title>
+              <p>{props.phrases.contactFormMessageSentText}</p>
+            </Container>
+          </Col>
+        </Row>
+      )
+    }
+  }
+
+  function renderForm() {
+    if (!emailSent) {
+      return (
+        <Row>
+          <Col>
+            <Divider light/>
+            <Container className="pt-3">
+              <Title size={3}>{props.phrases.contactFormTitle}</Title>
+              <p>{props.phrases.contactFormText}</p>
+            </Container>
             <Form onSubmit={onSubmit}>
               <Container>
                 <Row>
-                  <Col className="input-amount">
+                  <Col className="input-amount py-2">
                     <Dropdown
                       className="receiver"
                       id='receiver'
                       onSelect={(value) => {
                         onChange('receiver', value)
                       }}
-                      placeholder='Hva gjelder henvendelsen'
+                      placeholder = {props.phrases.contactFormChooseReceiver}
                       error={receiver.error}
                       errorMessage={receiver.errorMsg}
                       items={[
                         {
-                          title: 'Generell henvendelse',
+                          title: props.phrases.contactFormReceiverGenerell,
                           id: 'generell'
                         },
                         {
-                          title: 'Statistikk og forskning',
+                          title: props.phrases.contactFormReceiverStatistikk,
                           id: 'statistikk'
                         },
                         {
-                          title: 'Spørreundersøkelser og innrapportering',
+                          title: props.phrases.contactFormReceiverInnrapportering,
                           id: 'innrapportering'
                         }]}
                     />
                   </Col>
                 </Row>
                 <Row>
-                  <Col className="name">
+                  <Col className="name py-2">
                     <Input
                       className="input-name"
-                      label='Skriv inn navn'
+                      label={props.phrases.contactFormLabelName}
                       handleChange={(value) => onChange('name', value)}
                       onBlur={() => onBlur('name')}
                       error={name.error}
@@ -208,10 +240,10 @@ function ContactForm(props) {
                   </Col>
                 </Row>
                 <Row>
-                  <Col className="email">
+                  <Col className="email py-2">
                     <Input
                       className="email"
-                      label='Skriv inn e-post'
+                      label={props.phrases.contactFormLabelEmail}
                       handleChange={(value) => onChange('email', value)}
                       onBlur={() => onBlur('email')}
                       error={email.error}
@@ -220,26 +252,35 @@ function ContactForm(props) {
                   </Col>
                 </Row>
                 <Row>
-                  <Col className="text">
+                  <Col className="text py-2">
                     <TextArea
-                      rows="7"
+                      rows={7}
                       handleChange={(value) => onChange('text', value)}
                       onBlur={() => onBlur('text')}
-                      label='Skriv noen ord om hva vi kan hjelpe deg med?'
+                      label={props.phrases.contactFormLabelText}
                       error={text.error}
                       errorMessage={text.errorMsg}
                     />
                   </Col>
                 </Row>
-                <Row className="submit">
+                <Row className="submit pt-2 pb-4">
                   <Col>
-                    <Button className="submit-button" primary type="submit" disabled={loading}>Send inn skjema</Button>
+                    <Button className="submit-button" primary type="submit" disabled={loading}>{props.phrases.contactFormSubmitText}</Button>
                   </Col>
                 </Row>
               </Container>
             </Form>
           </Col>
         </Row>
+      )
+    }
+  }
+
+  function renderContactForm() {
+    return (
+      <section className="xp-part part-contact-form container">
+        {renderForm()}
+        {renderEmailSent()}
       </section>
     )
   }
@@ -250,11 +291,9 @@ function ContactForm(props) {
 }
 
 ContactForm.propTypes = {
-  emailGeneral: PropTypes.string,
-  emailStatistikk: PropTypes.string,
-  emailInnrapportering: PropTypes.string,
   recaptchaSiteKey: PropTypes.string,
-  contactFormServiceUrl: PropTypes.string
+  contactFormServiceUrl: PropTypes.string,
+  phrases: PropTypes.object
 }
 
 export default (props) => <ContactForm {...props} />

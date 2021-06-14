@@ -6,6 +6,8 @@ const {
 
 exports.post = (req: Request): Response => {
   const formData: ContactFormData = JSON.parse(req.body)
+  const receiver: string | undefined = req.params?.receiver || ''
+
   log.info('\n\n## data\n--------------\n%s\n', JSON.stringify(formData, null, 4))
 
   const secret: string | null = app.config && app.config['RECAPTCHA_SECRET_KEY'] ? app.config['RECAPTCHA_SECRET_KEY'] : null
@@ -22,6 +24,7 @@ exports.post = (req: Request): Response => {
     const recaptchaInfo: RecaptchaResponse | null = response.body ? JSON.parse(response.body) : null
 
     if (recaptchaInfo && recaptchaInfo.success && recaptchaInfo.score > 0.5 && recaptchaInfo.action === 'submitContactForm') {
+      log.info('SEND MAIL: ' + getReceiverEmail(receiver))
       return {
         status: 200,
         contentType: 'application/json',
@@ -54,4 +57,17 @@ interface RecaptchaResponse {
   hostname: string;
   score: number;
   action: string;
+}
+
+function getReceiverEmail(receiver: string): string {
+  switch (receiver) {
+  case 'generell':
+    return app.config && app.config['ssb.contactform.tomail.generell'] ? app.config['ssb.contactform.tomail.generell'] : 'mimir@ssb.no'
+  case 'statistikk':
+    return app.config && app.config['ssb.contactform.tomail.statistikk'] ? app.config['ssb.contactform.tomail.statistikk'] : 'mimir@ssb.no'
+  case 'innrapportering':
+    return app.config && app.config['ssb.contactform.tomail.innrapportering'] ? app.config['ssb.contactform.tomail.innrapportering'] : 'mimir@ssb.no'
+  default:
+    return app.config && app.config['ssb.contactform.tomail.generell'] ? app.config['ssb.contactform.tomail.generell'] : 'mimir@ssb.no'
+  }
 }

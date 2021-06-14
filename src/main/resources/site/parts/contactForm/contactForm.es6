@@ -1,5 +1,6 @@
 const {
   getComponent,
+  getContent,
   serviceUrl
 } = __non_webpack_require__('/lib/xp/portal')
 const {
@@ -7,6 +8,10 @@ const {
 } = __non_webpack_require__('/lib/ssb/error/error')
 
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+const {
+  getLanguage
+} = __non_webpack_require__('/lib/ssb/utils/language')
+const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 
 exports.get = function(req) {
   try {
@@ -22,16 +27,17 @@ exports.preview = (req) => renderPart(req, {
 })
 
 const renderPart = (req, config) => {
+  const page = getContent()
+  const language = getLanguage(page)
+  const phrases = language.phrases
   const recaptchaSiteKey = app.config && app.config['RECAPTCHA_SITE_KEY'] ? app.config['RECAPTCHA_SITE_KEY'] : ''
   const contactForm = new React4xp('site/parts/contactForm/contactForm')
     .setProps({
-      emailGeneral: 'ssbno_teknisk@ssb.no',
-      emailStatistikk: 'ssbno_teknisk@ssb.no',
-      emailInnrapportering: 'ssbno_teknisk@ssb.no',
       recaptchaSiteKey: recaptchaSiteKey,
       contactFormServiceUrl: serviceUrl({
         service: 'contactForm'
-      })
+      }),
+      phrases: phrases
     }
     )
     .setId('contactFormId')
