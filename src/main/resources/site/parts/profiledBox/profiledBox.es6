@@ -33,6 +33,7 @@ exports.preview = (req) => renderPart(req)
 function renderPart(request) {
   const page = getContent()
   const part = getComponent()
+  const language = page.language ? page.language === 'en' ? 'en-gb' : page.language : 'nb'
   const urlContentSelector = part.config.urlContentSelector
   const titleSize = getTitleSize(part.config.title)
 
@@ -44,7 +45,7 @@ function renderPart(request) {
     imageAltText: getImageAlt(part.config.image) ? getImageAlt(part.config.image) : ' ',
     imagePlacement: (part.config.cardOrientation == 'horizontal') ? 'left' : 'top',
     href: getLink(urlContentSelector),
-    subTitle: getSubtitle(part.config.content, part.config.date, page.language),
+    subTitle: getSubtitle(part.config.content, part.config.date, language),
     title: part.config.title,
     preambleText: part.config.preamble,
     linkType: 'header',
@@ -94,14 +95,14 @@ function getLink(urlContentSelector) {
  * @return {string}
  */
 
-function getSubtitle(content, date, language = 'nb') {
+function getSubtitle(content, date, language) {
   if (content && date) {
-    return content + ' / ' + moment(date).locale(language).format('D. MMMM YYYY')
+    return content + ' / ' + moment(date).locale(language).format('LL')
       .toLowerCase()
   } else if (content) {
     return content
   } else if (date) {
-    return moment(date).locale(language).format('D. MMMM YYYY')
+    return moment(date).locale(language).format('LL')
       .toLowerCase()
   } else {
     return ''

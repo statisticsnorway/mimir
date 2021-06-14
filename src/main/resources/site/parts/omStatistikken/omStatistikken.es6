@@ -41,6 +41,7 @@ exports.preview = (req, id) => renderPart(req, [id])
 function renderPart(req, aboutTheStatisticsId) {
   const page = getContent()
   const phrases = getPhrases(page)
+  const language = page.language ? page.language === 'en' ? 'en-gb' : page.language : 'nb'
 
   let nextRelease = phrases.notYetDetermined
   const aboutStatisticLabel = phrases.aboutTheStatistics
@@ -52,7 +53,7 @@ function renderPart(req, aboutTheStatisticsId) {
     const nextReleaseDate = releaseDates.nextRelease[0]
 
     if (nextReleaseDate && nextReleaseDate !== '') {
-      nextRelease = moment(nextReleaseDate).locale(page.language ? page.language : 'nb').format('D. MMMM YYYY')
+      nextRelease = moment(nextReleaseDate).locale(language ).format('LL')
     }
   }
   if (page.type === `${app.name}:omStatistikken` && (req.mode === 'edit' || req.mode === 'preview')) {
