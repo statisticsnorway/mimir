@@ -156,26 +156,6 @@ interface SeriesAndCategoriesRaw {
   series: Array<SeriesRaw>;
 }
 
-// interface SeriesAndCategories {
-//   categories: Array<number | string | PreliminaryData>;
-//   series: Array<Series> | Array<SerieArealLine> | Array<SeriesPie>;
-// }
-
-// export interface PieData {
-//   name: number | string;
-//   y: number | string;
-// }
-
-// export interface SeriesPie {
-//   name: string;
-//   data: Array<PieData>;
-// }
-
-// export interface SerieArealLine {
-//   name: string;
-//   data: Array<AreaLineLinearData>;
-// }
-
 export interface HighchartsHtmlTableLib {
   seriesAndCategoriesFromHtmlTable: (highChartsContent: Content<Highchart>) => SeriesAndCategories;
   dataFormatDefault: (seriesAndCategories: SeriesAndCategoriesRaw) => Series;
