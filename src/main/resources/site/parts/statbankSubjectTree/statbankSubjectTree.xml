@@ -1,5 +1,5 @@
 <part>
-    <display-name>Statbank emneytree</display-name>
+    <display-name>Statbank emnetre</display-name>
     <form>
         <input type="HtmlArea" name="preface">
             <label>Ingress</label>
