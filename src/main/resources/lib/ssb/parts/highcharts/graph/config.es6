@@ -234,27 +234,40 @@ export const createDefaultConfig = (highchartData, displayName) => ({
   responsive: {
     rules: [{
       condition: {
-        maxWidth: 750
+        maxWidth: 450
       },
       chartOptions: {
         chart: {
-          height: 420
+          height: '120%'
+        },
+        style: {
+          fontSize: '10px'
+        },
+        title: {
+          style: {
+            fontSize: '12px'
+          }
+        },
+        subTitle: {
+          style: {
+            fontSize: '10px'
+          }
+        },
+        credits: {
+          style: {
+            fontSize: '12px'
+          }
         },
         legend: {
           align: 'center',
           verticalAlign: 'bottom'
         },
-        exporting: {
-          buttons: {
-            contextButton: {
-              verticalAlign: 'bottom',
-              y: -10
-            }
-          }
-        },
         xAxis: {
           labels: {
-            y: 25
+            y: 25,
+            style: {
+              fontSize: '10px'
+            }
           },
           title: {
             text: ''
@@ -263,8 +276,11 @@ export const createDefaultConfig = (highchartData, displayName) => ({
         yAxis: {
           labels: {
             align: 'left',
-            x: 0,
-            y: 0
+            x: -10,
+            y: 0,
+            style: {
+              fontSize: '10px'
+            }
           },
           title: {
             text: ''
