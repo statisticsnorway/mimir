@@ -231,6 +231,8 @@ exports.get = function(req) {
 
   const hideBreadcrumb = !!page.page.config.hide_breadcrumb
 
+  const statbankFane = (req.params.fane === 'statbank-web')
+
   const model = {
     pageTitle: 'SSB', // not really used on normal pages because of SEO app (404 still uses this)
     page,
@@ -243,6 +245,7 @@ exports.get = function(req) {
     stylesUrl,
     jsLibsUrl,
     language,
+    statbankWeb: statbankFane,
     GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null,
     headerBody: header ? header.body : undefined,
     footerBody: footer ? footer.body : undefined,
