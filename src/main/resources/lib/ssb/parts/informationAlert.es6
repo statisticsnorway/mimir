@@ -3,34 +3,40 @@ const {
 } = __non_webpack_require__('/lib/xp/content')
 
 const contentTypeName = `${app.name}:informationAlert`
+const oldContentTypeName = `${app.name}:statisticAlert` // remove when this content type is not in use anymore
 
 export const get = (key) => {
   const content = query({
-    contentTypes: [contentTypeName],
+    contentTypes: [contentTypeName, oldContentTypeName],
     query: `_id = '${key.key}'`
   })
   return content.count === 1 ? content.hits[0] : {
-    error: `Could not find ${contentTypeName} with id ${key.key}`
+    error: `Could not find ${contentTypeName} or ${oldContentTypeName} with id ${key.key}`
   }
 }
 
 export const list = ( pageType, pageTypeId ) => {
   const now = new Date()
 
+  /* todo: when the content type 'statisticAlert' is removed, this line in both queries under can
+  *  safeley be removed too: 'OR (data.selectAllStatistics = 'true' OR data.statisticIds IN ('${pageTypeId}'))'
+  */
   if (pageType == `${app.name}:statistics`) {
     return query({
-      query: `(data.informationAlertVariations.statistics.selectAllStatistics = 'true'
-      OR data.informationAlertVariations.statistics.statisticsIds IN ('${pageTypeId}'))
+      query: `((data.informationAlertVariations.statistics.selectAllStatistics = 'true'
+      OR data.informationAlertVariations.statistics.statisticsIds IN ('${pageTypeId}')) 
+      OR (data.selectAllStatistics = 'true' OR data.statisticIds IN ('${pageTypeId}')) ) 
       AND (publish.from LIKE '*' AND publish.from < '${now.toISOString()}')
       AND (publish.to NOT LIKE '*' OR publish.to > '${now.toISOString()}')`,
-      contentType: contentTypeName
+      contentTypes: [contentTypeName, oldContentTypeName]
     })
   }
   return query({
-    query: `((data.informationAlertVariations.pages.pageIds IN ('${pageTypeId}'))
-    OR (data.informationAlertVariations.articles.articleIds IN ('${pageTypeId}')))
+    query: `(( data.informationAlertVariations.pages.pageIds IN ('${pageTypeId}')
+    OR data.informationAlertVariations.articles.articleIds IN ('${pageTypeId}')  
+    OR (data.selectAllStatistics = 'true' OR data.statisticIds IN ('${pageTypeId}')) ) 
     AND (publish.from LIKE '*' AND publish.from < '${now.toISOString()}')
     AND (publish.to NOT LIKE '*' OR publish.to > '${now.toISOString()}')`,
-    contentType: contentTypeName
+    contentTypes: [contentTypeName, oldContentTypeName]
   })
 }

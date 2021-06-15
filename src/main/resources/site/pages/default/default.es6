@@ -277,6 +277,8 @@ exports.get = function(req) {
     pageTypeId: page._id
   }
   const alerts = alertsForContext(page.page, alertOptions)
+  log.info('alerts')
+  log.info(JSON.stringify(alerts, null, 2))
   const body = bodyWithBreadCrumbs ? bodyWithBreadCrumbs : thymeleafRenderBody
   const bodyWithAlerts = alerts.length ?
     addAlerts(alerts, body, pageContributions) :
