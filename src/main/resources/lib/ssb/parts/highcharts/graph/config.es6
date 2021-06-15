@@ -75,6 +75,8 @@ export const createDefaultConfig = (highchartData, displayName) => ({
         height: 26,
         symbolX: 14.5,
         symbolY: 12.5,
+        verticalAlign: 'bottom',
+        y: 40,
         theme: {
           'fill': '#fff',
           'r': 3,
@@ -239,6 +241,13 @@ export const createDefaultConfig = (highchartData, displayName) => ({
       chartOptions: {
         chart: {
           height: '120%'
+        },
+        exporting: {
+          buttons: {
+            contextButton: {
+              y: 25
+            }
+          }
         },
         style: {
           fontSize: '10px'

@@ -17,10 +17,15 @@
 }
 .btn-highchart-export {
   z-index: 200;
-  bottom: 32px;
+  bottom: 30px;
   right: 10px;
   background-color: transparent;
   font-size: 14px;
+
+  @include media-breakpoint-down(sm) {
+    bottom: 55px;
+  }
+
   i {
     color: $ssb-green-4;
     pointer-events: none;
@@ -51,7 +56,7 @@
 
   //TODO: remove min-heights for mobile when responsive configs are implemented
   @include media-breakpoint-down(sm) {
-    min-height: 300px;
+    min-height: auto;
     height: auto;
     width: 100%;
 
