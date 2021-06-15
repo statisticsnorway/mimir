@@ -52,6 +52,7 @@ function ContactForm(props) {
           name: name.value,
           email: email.value,
           text: text.value,
+          language: props.language === 'en' ? 'en' : 'no',
           token
         })
           .then((res) => {
@@ -314,7 +315,8 @@ function ContactForm(props) {
 ContactForm.propTypes = {
   recaptchaSiteKey: PropTypes.string,
   contactFormServiceUrl: PropTypes.string,
-  phrases: PropTypes.object
+  phrases: PropTypes.object,
+  language: PropTypes.string
 }
 
 export default (props) => <ContactForm {...props} />

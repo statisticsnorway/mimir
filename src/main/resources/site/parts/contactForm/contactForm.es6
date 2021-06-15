@@ -36,7 +36,8 @@ const renderPart = (req, config) => {
       contactFormServiceUrl: serviceUrl({
         service: 'contactForm'
       }),
-      phrases: phrases
+      phrases: phrases,
+      language: language.code
     }
     )
     .setId('contactFormId')

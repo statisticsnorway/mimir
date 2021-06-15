@@ -67,14 +67,12 @@ function postMail(formData: ContactFormData): Response {
     from: 'noreply@ssb.no',
     to: getReceiverEmail(formData.receiver.id),
     subject: 'Forespørsel SSB - ' + formData.receiver.title,
-    body: `Språk: ${formData.language ? formData.language : 'nb'}
+    body: `Språk: ${formData.language ? formData.language : 'no'}
 Navn: ${formData.name}
 Epost: ${formData.email}
 
 Spørsmål: ${formData.text}`
   }
-
-  log.info('SEND MAIL: ' + JSON.stringify(emailParams, null, 4))
 
   const isSent: boolean = send(emailParams)
 
@@ -102,12 +100,12 @@ Spørsmål: ${formData.text}`
 function getReceiverEmail(receiver: string): string {
   switch (receiver) {
   case 'generell':
-    return app.config && app.config['ssb.contactform.tomail.generell'] ? app.config['ssb.contactform.tomail.generell'] : 'ssbno_teknisk@ssb.no'
+    return app.config && app.config['ssb.contactform.tomail.generell'] ? app.config['ssb.contactform.tomail.generell'] : 'mimir@ssb.no'
   case 'statistikk':
-    return app.config && app.config['ssb.contactform.tomail.statistikk'] ? app.config['ssb.contactform.tomail.statistikk'] : 'ssbno_teknisk@ssb.no'
+    return app.config && app.config['ssb.contactform.tomail.statistikk'] ? app.config['ssb.contactform.tomail.statistikk'] : 'mimir@ssb.no'
   case 'innrapportering':
-    return app.config && app.config['ssb.contactform.tomail.innrapportering'] ? app.config['ssb.contactform.tomail.innrapportering'] : 'ssbno_teknisk@ssb.no'
+    return app.config && app.config['ssb.contactform.tomail.innrapportering'] ? app.config['ssb.contactform.tomail.innrapportering'] : 'mimir@ssb.no'
   default:
-    return app.config && app.config['ssb.contactform.tomail.generell'] ? app.config['ssb.contactform.tomail.generell'] : 'ssbno_teknisk@ssb.no'
+    return app.config && app.config['ssb.contactform.tomail.generell'] ? app.config['ssb.contactform.tomail.generell'] : 'mimir@ssb.no'
   }
 }
