@@ -90,7 +90,11 @@ function ContactForm(props) {
   }
 
   function isEmailValid(value) {
-    return !!(value || email.value)
+    // eslint-disable-next-line max-len
+    const regEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    const emailVal = value || email.value
+    const testEmail = emailVal.match(regEx)
+    return !!(testEmail)
   }
 
   function isTextValid(value) {
