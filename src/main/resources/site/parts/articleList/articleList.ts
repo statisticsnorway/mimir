@@ -82,7 +82,7 @@ function prepareArticles(articles: Array<Content<Article>>, language: string): A
         id: article._id
       }),
       publishDate: article.publish && article.publish.from ? article.publish.from : '',
-      publishDateHuman: article.publish && article.publish.from ? moment(article.publish.from).locale(language).format('Do MMMM YYYY') : ''
+      publishDateHuman: article.publish && article.publish.from ? moment(article.publish.from).locale(language === 'en' ? 'en-gb' : language).format('LL') : ''
     }
   })
 }

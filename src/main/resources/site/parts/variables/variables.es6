@@ -42,13 +42,14 @@ const NO_VARIABLES_FOUND = {
 
 const renderPart = (req) => {
   const page = getContent()
+  const language = page.language ? page.language === 'en' ? 'en-gb' : page.language : 'nb'
 
   const children = contentLib.getChildren({
     key: page._path,
     count: MAX_VARIABLES
   })
 
-  return renderVariables(contentArrayToVariables(children.hits ? data.forceArray(children.hits) : [], page.language))
+  return renderVariables(contentArrayToVariables(children.hits ? data.forceArray(children.hits) : [], language))
 }
 
 /**
@@ -100,7 +101,7 @@ const renderVariables = (variables) => {
  * @param {String} language
  * @return {array}
  */
-const contentArrayToVariables = (content, language = 'nb') => {
+const contentArrayToVariables = (content, language) => {
   return content.map((variable) => {
     const files = contentLib.query({
       count: 1,

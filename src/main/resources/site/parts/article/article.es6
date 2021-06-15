@@ -30,19 +30,19 @@ exports.get = (req) => {
 
 function renderPart(req) {
   const page = getContent()
-  const locale = page.language ? page.language : 'nb'
+  const language = page.language ? page.language === 'en' ? 'en-gb' : page.language : 'nb'
 
   const bodyText = processHtml({
     value: page.data.articleText ? page.data.articleText.replace(/&nbsp;/g, ' ') : undefined
   })
 
-  const pubDate = moment(page.publish.from).locale(locale).format('D. MMMM YYYY')
+  const pubDate = moment(page.publish.from).locale(language).format('LL')
   const showModifiedDate = page.data.showModifiedDate
   let modifiedDate
   if (showModifiedDate) {
-    modifiedDate = moment(showModifiedDate.dateOption.modifiedDate).locale(locale).format('D. MMMM YYYY')
+    modifiedDate = moment(showModifiedDate.dateOption.modifiedDate).locale(language).format('LL')
     if (showModifiedDate.dateOption.showModifiedTime) {
-      modifiedDate = moment(page.data.showModifiedDate.dateOption.modifiedDate).locale(locale).format('D. MMMM YYYY hh:mm')
+      modifiedDate = moment(page.data.showModifiedDate.dateOption.modifiedDate).locale(language).format('LLL')
     }
   }
 

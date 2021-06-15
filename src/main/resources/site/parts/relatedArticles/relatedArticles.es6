@@ -58,6 +58,7 @@ exports.preview = (req, id) => renderPart(req, [id])
 
 function renderPart(req, relatedArticles) {
   const page = getContent()
+  const language = page.language ? page.language === 'en' ? 'en-gb' : page.language : 'nb'
   const phrases = getPhrases(page)
   const showPreview = req.params.showDraft && hasRole('system.admin') && req.mode === 'preview'
   if (page.type === `${app.name}:statistics`) {
@@ -111,7 +112,7 @@ function renderPart(req, relatedArticles) {
 
         return {
           title: articleContent.displayName,
-          subTitle: getSubTitle(articleContent, phrases, page.language),
+          subTitle: getSubTitle(articleContent, phrases, language),
           preface: articleContent.data.ingress,
           href: pageUrl({
             id: articleContent._id
@@ -131,7 +132,7 @@ function renderPart(req, relatedArticles) {
         subTitle = article.externalArticle.type
       }
       if (article.externalArticle.date) {
-        const prettyDate = moment(article.externalArticle.date).locale(page.language ? page.language : 'nb').format('D. MMMM YYYY')
+        const prettyDate = moment(article.externalArticle.date).locale(language).format('LL')
         subTitle += `${subTitle ? ' / ' : ''}${prettyDate}`
       }
 
@@ -170,16 +171,16 @@ function renderPart(req, relatedArticles) {
 }
 
 
-const getSubTitle = (articleContent, phrases, language = 'nb') => {
+const getSubTitle = (articleContent, phrases, language) => {
   let type = ''
   if (articleContent.type === `${app.name}:article`) {
     type = phrases.articleName
   }
   let prettyDate = ''
   if (articleContent.publish && articleContent.publish.from) {
-    prettyDate = moment(articleContent.publish.from).locale(language).format('D. MMMM YYYY')
+    prettyDate = moment(articleContent.publish.from).locale(language).format('LL')
   } else {
-    prettyDate = moment(articleContent.createdTime).locale(language).format('D. MMMM YYYY')
+    prettyDate = moment(articleContent.createdTime).locale(language).format('LL')
   }
   return `${type ? `${type} / ` : ''}${prettyDate}`
 }

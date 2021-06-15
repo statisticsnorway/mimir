@@ -19,7 +19,7 @@ exports.get = (req: Request): Response => {
   const start: number = Number(req.params.start) ? Number(req.params.start) : 0
   const count: number = Number(req.params.count) ? Number(req.params.count) : 10
   const sort: string = req.params.sort ? req.params.sort : 'DESC'
-  const language: string = req.params?.language ? req.params.language : 'nb'
+  const language: string = req.params?.language ? req.params.language === 'en' ? 'en-gb' : req.params.language : 'nb'
 
   const preparedArticles: Array<PreparedArticles> = prepareArticles(getChildArticles(currentPath, start, count, sort), language)
 
@@ -55,7 +55,7 @@ function prepareArticles(articles: QueryResponse<Article>, language: string): Ar
         id: article._id
       }),
       publishDate: article.publish && article.publish.from ? article.publish.from : '',
-      publishDateHuman: article.publish && article.publish.from ? moment(article.publish.from).locale(language).format('D. MMMM YYYY') : ''
+      publishDateHuman: article.publish && article.publish.from ? moment(article.publish.from).locale(language).format('LL') : ''
     }
   })
 }

@@ -52,7 +52,7 @@ function getTbmlMock1(): HttpResponse {
                 </thead>
                 <tbody>
                     <tr>
-                        <td>${moment().format('D. MMMM YYYY')}</td>
+                        <td>${moment().format('LL')}</td>
                     </tr>
                 </tbody>
             </table>
