@@ -11,22 +11,22 @@ function ContactForm(props) {
   } = props
   const [receiver, setReceiver] = useState({
     error: false,
-    errorMsg: 'Mottaker er ikke valgt',
+    errorMsg: props.phrases.contactFormValidateReveicer,
     value: ''
   })
   const [name, setName] = useState({
     error: false,
-    errorMsg: 'Navn er ikke fylt ut',
+    errorMsg: props.phrases.contactFormValidateName,
     value: ''
   })
   const [email, setEmail] = useState({
     error: false,
-    errorMsg: 'Epost er ikke fylt ut',
+    errorMsg: props.phrases.contactFormValidateEmail,
     value: ''
   })
   const [text, setText] = useState({
     error: false,
-    errorMsg: 'Tekst er ikke fylt ut',
+    errorMsg: props.phrases.contactFormValidateText,
     value: ''
   })
   const [loading, setLoading] = useState(false)
