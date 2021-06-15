@@ -30,7 +30,7 @@ export function get(req: Request): React4xpResponse {
   const component: Component<StatbankSubjectTreePartConfig> = getComponent()
   const allMainSubjects: Array<SubjectItem> = getMainSubjects(content.language)
   const allSubSubjects: Array<SubjectItem> = getSubSubjects()
-  const statbankBaseUrl: string = content.language && content.language === 'en' ? '/en/statbank/list' : '/statbank/list'
+  const statbankBaseUrl: string = content.language && content.language === 'en' ? '/en/statbank/list/' : '/statbank/list/'
   const mainSubjects: Array<MainSubjectWithSubs> = allMainSubjects.map( (subjectItem) => {
     const subSubjectsFromPath: Array<SubjectItem> = getSubSubjectsByPath(allSubSubjects, subjectItem.path)
     const preparedSubSubjects: Array<SubSubjectsWithStatistics> = subSubjectsFromPath.map((subSubject) =>
@@ -49,7 +49,6 @@ export function get(req: Request): React4xpResponse {
       value: component.config.preface
     }) : ''
   }
-  log.info('render statbanksubject tree')
   return React4xp.render('site/parts/statbankSubjectTree/statbankSubjectTree', props, req, {
     clientRender: isNotInEditMode
   })
@@ -63,16 +62,12 @@ function prepareSubSubjects(subSubject: SubjectItem): SubSubjectsWithStatistics 
   })
 
   const preparedStatistics: PreparedSubs['statistics'] = content.hits.map((c) => {
-    log.info('c.data.statistic')
-    log.info(c.data.statistic)
     const stat: StatisticInListing | undefined = c.data.statistic ? getStatisticByIdFromRepo(c.data.statistic) : undefined
     return {
       title: c.displayName,
       url: stat ? stat.shortName : ''
     }
   })
-  log.info('prepared this')
-  log.info(JSON.stringify(preparedStatistics, null, 2))
   return {
     ...subSubject,
     statistics: preparedStatistics
