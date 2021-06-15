@@ -63,7 +63,7 @@ interface RecaptchaResponse {
 
 function postMail(formData: ContactFormData): Response {
   const emailParams: EmailParams = {
-    from: formData.email,
+    from: 'noreply@ssb.no',
     to: getReceiverEmail(formData.receiver.id),
     subject: 'Forespørsel SSB - ' + formData.receiver.title,
     body: formData.text
