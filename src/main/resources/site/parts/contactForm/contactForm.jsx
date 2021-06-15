@@ -98,7 +98,8 @@ function ContactForm(props) {
   }
 
   function isTextValid(value) {
-    return !!(value || text.value)
+    const textValue = value || text.value
+    return !!(textValue && textValue.length > 10)
   }
 
   function onBlur(id) {
