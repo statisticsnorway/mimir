@@ -19,6 +19,7 @@ export function getMainSubjects(language?: string): Array<SubjectItem> {
   const mainSubjectsContent: Array<Content<Page, DefaultPageConfig>> = query({
     start: 0,
     count: 200,
+    sort: 'displayName ASC',
     query: `components.page.config.mimir.default.subjectType LIKE "mainSubject" ${lang}`
   }).hits as unknown as Array<Content<Page, DefaultPageConfig>>
 
@@ -36,6 +37,7 @@ export function getSubSubjects(language?: string): Array<SubjectItem> {
   const subSubjectsContent: Array<Content<Page, DefaultPageConfig>> = query({
     start: 0,
     count: 1000,
+    sort: 'displayName ASC',
     query: `components.page.config.mimir.default.subjectType LIKE "subSubject" ${lang}`
   }).hits as unknown as Array<Content<Page, DefaultPageConfig>>
 
