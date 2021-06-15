@@ -5,11 +5,15 @@ import { Content, QueryResponse } from 'enonic-types/content'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { Component } from 'enonic-types/portal'
 import { StatbankSubjectTreePartConfig } from './statbankSubjectTree-part-config'
+import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
 const {
   getMainSubjects,
   getSubSubjects,
   getSubSubjectsByPath
 } = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
+const {
+  getStatisticByIdFromRepo
+} = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   query
@@ -26,6 +30,7 @@ export function get(req: Request): React4xpResponse {
   const component: Component<StatbankSubjectTreePartConfig> = getComponent()
   const allMainSubjects: Array<SubjectItem> = getMainSubjects(content.language)
   const allSubSubjects: Array<SubjectItem> = getSubSubjects()
+  const statbankBaseUrl: string = content.language && content.language === 'en' ? '/en/statbank/list' : '/statbank/list'
   const mainSubjects: Array<MainSubjectWithSubs> = allMainSubjects.map( (subjectItem) => {
     const subSubjectsFromPath: Array<SubjectItem> = getSubSubjectsByPath(allSubSubjects, subjectItem.path)
     const preparedSubSubjects: Array<SubSubjectsWithStatistics> = subSubjectsFromPath.map((subSubject) =>
@@ -37,13 +42,14 @@ export function get(req: Request): React4xpResponse {
   })
 
   const props: ReactProps = {
+    statbankBaseUrl,
     mainSubjects,
     title: content.displayName,
     preface: component.config.preface ? processHtml({
       value: component.config.preface
     }) : ''
   }
-
+  log.info('render statbanksubject tree')
   return React4xp.render('site/parts/statbankSubjectTree/statbankSubjectTree', props, req, {
     clientRender: isNotInEditMode
   })
@@ -56,11 +62,17 @@ function prepareSubSubjects(subSubject: SubjectItem): SubSubjectsWithStatistics 
     contentTypes: [`${app.name}:statistics`]
   })
 
-  const preparedStatistics: PreparedSubs['statistics'] = content.hits.map((c) => ({
-    title: c.displayName,
-    url: c.data.statistic ? c.data.statistic : ''
-  }))
-
+  const preparedStatistics: PreparedSubs['statistics'] = content.hits.map((c) => {
+    log.info('c.data.statistic')
+    log.info(c.data.statistic)
+    const stat: StatisticInListing | undefined = c.data.statistic ? getStatisticByIdFromRepo(c.data.statistic) : undefined
+    return {
+      title: c.displayName,
+      url: stat ? stat.shortName : ''
+    }
+  })
+  log.info('prepared this')
+  log.info(JSON.stringify(preparedStatistics, null, 2))
   return {
     ...subSubject,
     statistics: preparedStatistics
@@ -80,6 +92,7 @@ interface PreparedSubs {
 }
 
 interface ReactProps {
+  statbankBaseUrl: string;
   mainSubjects: Array<MainSubjectWithSubs>;
   title: string;
   preface: string;
