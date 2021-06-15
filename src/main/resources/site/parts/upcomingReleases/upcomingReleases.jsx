@@ -5,10 +5,11 @@ import axios from 'axios'
 import { ChevronDown } from 'react-feather'
 
 function UpcomingReleases(props) {
+  console.log("RENDER UPCOMING RELEASES")
   console.log(props)
   const [releases, setReleases] = useState(props.releases)
   const [loading, setLoading] = useState(false)
-  const [lastCountedDay, setLastCountedDay] = useState({})
+  let lastCountedDay = undefined
 
   const unitProps = ['year', 'month', 'day']
 
@@ -48,6 +49,9 @@ function UpcomingReleases(props) {
     setLoading(true)
     console.log('lastCoundedDay')
     console.log(lastCoundedDay)
+    if(!lastCountedDay){
+      return
+    }
     axios.get(props.upcomingReleasesServiceUrl, {
       params: {
         start: `${lastCountedDay.day}-${lastCountedDay.month}-${lastCountedDay.year}`,
@@ -69,7 +73,7 @@ function UpcomingReleases(props) {
         <Paragraph className="mb-0">{release.variant.period}</Paragraph>
         <Paragraph className="metadata">
           {date.day}. {date.monthName} {date.year} / <span
-            className="type">{release.type}</span> / {release.mainSubject}
+          className="type">{release.type}</span> / {release.mainSubject}
         </Paragraph>
       </li>
     )
@@ -79,11 +83,9 @@ function UpcomingReleases(props) {
     const date = {
       day: day.day,
       monthName: month.monthName,
+      month: month.month,
       year: year.year
     }
-    console.log('set lastOvunde s nda')
-    setLastCountedDay(date)
-    console.log('set')
     return (
       <article className={index === 0 ? 'first' : ''} key={index}>
         <time dateTime={`${year.year}-${month.month}`}>
@@ -113,6 +115,23 @@ function UpcomingReleases(props) {
     }
   }
 
+  function renderList(){
+    let lastDay = {}
+    const list  = releases.map((year) => {
+      return year.releases.map((month) => {
+        return month.releases.map((day, index) => {
+          lastDay = {year: year.year, month: month.month, day: day.day}
+          //console.log(lastDay)
+          return renderDay(day, month, year, index)
+        })
+      })
+    })
+    console.log('lastDay')
+    console.log(lastDay)
+    lastCountedDay = lastDay
+    return list
+  }
+
   return (
     <section className='nextStatisticsReleases'>
       <div className="upcoming-releases-head py-5 px-2">
@@ -123,16 +142,10 @@ function UpcomingReleases(props) {
         </div>
       </div>
       <div className="release-list mt-5">
-        {
-          releases.map((year) => {
-            return year.releases.map((month) => {
-              return month.releases.map((day, index) => renderDay(day, month, year, index))
-            })
-          })
-        }
+        { renderList() }
       </div>
       <div>
-        {renderButton()}
+        { renderButton() }
       </div>
     </section>
   )
