@@ -8,7 +8,7 @@ function UpcomingReleases(props) {
   console.log(props)
   const [releases, setReleases] = useState(props.releases)
   const [loading, setLoading] = useState(false)
-  const [lastCountedDay, setLastCountedDay] = useState(undefined)
+  const [lastCountedDay, setLastCountedDay] = useState({})
 
   const unitProps = ['year', 'month', 'day']
 
@@ -46,6 +46,8 @@ function UpcomingReleases(props) {
 
   function fetchMoreReleases() {
     setLoading(true)
+    console.log('lastCoundedDay')
+    console.log(lastCoundedDay)
     axios.get(props.upcomingReleasesServiceUrl, {
       params: {
         start: `${lastCountedDay.day}-${lastCountedDay.month}-${lastCountedDay.year}`,
@@ -79,7 +81,9 @@ function UpcomingReleases(props) {
       monthName: month.monthName,
       year: year.year
     }
-    //setLastCountedDay(date)
+    console.log('set lastOvunde s nda')
+    setLastCountedDay(date)
+    console.log('set')
     return (
       <article className={index === 0 ? 'first' : ''} key={index}>
         <time dateTime={`${year.year}-${month.month}`}>
