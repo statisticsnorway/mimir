@@ -11,7 +11,6 @@ const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getLanguage
 } = __non_webpack_require__('/lib/ssb/utils/language')
-const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 
 exports.get = function(req) {
   try {

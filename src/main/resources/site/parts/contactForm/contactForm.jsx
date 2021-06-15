@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Container, Row, Col } from 'react-bootstrap'
-import { Input, Button, Dropdown, TextArea, Divider, Title } from '@statisticsnorway/ssb-component-library'
+import { Input, Button, Dropdown, TextArea, Divider, Title, FormError } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
 
 function ContactForm(props) {
@@ -199,9 +199,8 @@ function ContactForm(props) {
       return (
         <Row>
           <Col>
-            <Divider light/>
-            <Container className="pt-3">
-              <Title size={3}>{props.phrases.contactFormMessageSentError}</Title>
+            <Container className="py-3">
+              <FormError title={props.phrases.contactFormMessageSentError} errorMessages={[]}></FormError>
             </Container>
           </Col>
         </Row>
@@ -210,7 +209,7 @@ function ContactForm(props) {
   }
 
   function renderForm() {
-    if (!emailSent && !emailSentFailed) {
+    if (!emailSent) {
       return (
         <Row>
           <Col>
