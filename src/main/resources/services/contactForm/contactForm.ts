@@ -46,6 +46,7 @@ interface ContactFormData {
   email: string;
   name: string;
   text: string;
+  language?: string;
   receiver: {
     id: string;
     title: string;
@@ -66,7 +67,11 @@ function postMail(formData: ContactFormData): Response {
     from: 'noreply@ssb.no',
     to: getReceiverEmail(formData.receiver.id),
     subject: 'Forespørsel SSB - ' + formData.receiver.title,
-    body: formData.text
+    body: `Språk: ${formData.language ? formData.language : 'nb'}
+Navn: ${formData.name}
+Epost: ${formData.email}
+
+Spørsmål: ${formData.text}`
   }
 
   log.info('SEND MAIL: ' + JSON.stringify(emailParams, null, 4))
