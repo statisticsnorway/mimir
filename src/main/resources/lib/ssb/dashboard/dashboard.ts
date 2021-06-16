@@ -416,6 +416,7 @@ function parseResult(jobLog: JobInfoNode): Array<DashboardPublishJobResult> | Ar
           inRSSOrNoKey: [],
           noData: [],
           otherDataType: [],
+          statistics: [],
           skipped: []
         },
         result: []
@@ -427,6 +428,7 @@ function parseResult(jobLog: JobInfoNode): Array<DashboardPublishJobResult> | Ar
     result.filterInfo.otherDataType = forceArray(result.filterInfo.otherDataType) || []
     result.filterInfo.skipped = forceArray(result.filterInfo.skipped || [])
     result.filterInfo.end = forceArray(result.filterInfo.end || [])
+    result.filterInfo.statistics = forceArray(result.filterInfo.statistics || [])
     result.result = forceArray(result.result || []).map((ds) => {
       ds.hasError = showWarningIcon(ds.status as Events)
       ds.status = localize({

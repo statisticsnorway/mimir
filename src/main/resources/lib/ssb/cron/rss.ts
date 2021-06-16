@@ -41,6 +41,7 @@ function fetchRSS(): Array<RSSItem> {
       url: statbankRssUrl
     })
     if (response && response.body) {
+      cronJobLog(`STATBANK RSS :: ${response.body}`)
       const data: string = xmlParser.parse(response.body)
       const rss: RSS = JSON.parse(data)
       return rss.rss.channel.item
@@ -60,26 +61,20 @@ function isValidType(dataSource: Content<DataSource>): boolean {
   return false
 }
 
-function getSavedQuerysStatistic(dataSources: Array<Content<DataSource>>): Array<Content<DataSource>> {
-  const savedQuerysStatistics: Array<Content<DataSource>> = dataSources.filter((datasource) =>
-      datasource.data.dataSource?._selected === 'statbankSaved' && getParentType(datasource._path) === 'mimir:statistics')
-
-  const statisticsWithReleaseToday: Array<string> = fetchStatisticsWithReleaseToday().map((s: StatisticInListing) => s.id.toString())
-
-  return savedQuerysStatistics.reduce((acc: Array<Content<DataSource>>, datasource) => {
-    const parentContent: Content<object, DefaultPageConfig| Statistics> | null = getParentContent(datasource._path)
-    if (parentContent && parentContent.type === 'mimir:statistics') {
+function isSavedQuerysStatistic(statisticsWithReleaseToday: Array<string>, dataSource: Content<DataSource>): boolean {
+  const isSavedQuery: boolean = dataSource.data.dataSource?._selected === 'statbankSaved'
+  if (isSavedQuery) {
+    const parentContent: Content<object, DefaultPageConfig | Statistics> | null = getParentContent(dataSource._path)
+    if (parentContent && parentContent.type === `${app.name}:statistics`) {
       const statisticContent: Content<Statistics> = parentContent as Content<Statistics>
       if (statisticContent.data.statistic && statisticsWithReleaseToday.includes(statisticContent.data.statistic.toString())) {
-        acc.push(datasource)
+        return true
       }
     }
-    return acc
-  }, [])
-}
+  }
 
-function parentTypeFilter(dataSources: Array<Content<DataSource>>): Array<Content<DataSource>> {
-  return dataSources.filter((datasource) => getParentType(datasource._path) !== 'mimir:statistics')
+
+  return false
 }
 
 function inRSSItems(dataSource: Content<DataSource>, dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object>, RSSItems: Array<RSSItem>): boolean {
@@ -104,27 +99,27 @@ function inRSSItems(dataSource: Content<DataSource>, dataset: DatasetRepoNode<JS
 }
 
 export function dataSourceRSSFilter(dataSources: Array<Content<DataSource>>): RSSFilter {
-  let filteredDatasources: Array<Content<DataSource>> = parentTypeFilter(dataSources)
-  const savedQuerysStatisticsToday: Array<Content<DataSource>> = getSavedQuerysStatistic(dataSources)
-  if (savedQuerysStatisticsToday.length > 0) {
-    filteredDatasources = filteredDatasources.concat(savedQuerysStatisticsToday)
-  }
-
-  const today: number = new Date().getDate()
-  const RSSItems: Array<RSSItem> = fetchRSS()
-    .filter((item) => new Date(item.pubDate).getDate() === today) // only keep those with updates today
-
   const logData: RSSFilterLogData = {
-    start: filteredDatasources.map((ds) => ds._id),
+    start: dataSources.map((ds) => ds._id),
     noData: [],
     otherDataType: [],
     inRSSOrNoKey: [],
     skipped: [],
+    statistics: [],
     end: []
   }
 
-  const filteredDatasourcesRSS: Array<Content<DataSource>> = filteredDatasources.reduce((t: Array<Content<DataSource>>, dataSource) => {
-    if (isValidType(dataSource)) {
+  const RSSItems: Array<RSSItem> = fetchRSS()
+  const statisticsWithReleaseToday: Array<string> = fetchStatisticsWithReleaseToday().map((s: StatisticInListing) => s.id.toString())
+
+  const filteredDatasourcesRSS: Array<Content<DataSource>> = dataSources.reduce((t: Array<Content<DataSource>>, dataSource) => {
+    const parentType: string | undefined = getParentType(dataSource._path)
+    if (parentType === `${app.name}:statistics`) { // only keep datasources from statistics if they are saved queries with release today
+      logData.statistics.push(dataSource._id)
+      if (isSavedQuerysStatistic(statisticsWithReleaseToday, dataSource)) {
+        t.push(dataSource)
+      }
+    } else if (isValidType(dataSource)) {
       const dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null = getDataset(dataSource)
       if (!dataset) {
         logData.noData.push(dataSource._id)
@@ -162,6 +157,7 @@ export interface RSSFilterLogData {
   noData: Array<string>;
   otherDataType: Array<string>;
   inRSSOrNoKey: Array<string>;
+  statistics: Array<string>;
   skipped: Array<DataSourceInfo>;
   end: Array<string>;
 }
