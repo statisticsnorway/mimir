@@ -5,8 +5,6 @@ import axios from 'axios'
 import { ChevronDown } from 'react-feather'
 
 function UpcomingReleases(props) {
-  console.log("RENDER UPCOMING RELEASES")
-  console.log(props)
   const [releases, setReleases] = useState(props.releases)
   const [loading, setLoading] = useState(false)
   let lastCountedDay = undefined
@@ -47,8 +45,6 @@ function UpcomingReleases(props) {
 
   function fetchMoreReleases() {
     setLoading(true)
-    console.log('lastCoundedDay')
-    console.log(lastCountedDay)
     if(!lastCountedDay){
       return
     }
@@ -125,13 +121,10 @@ function UpcomingReleases(props) {
       return year.releases.map((month) => {
         return month.releases.map((day, index) => {
           lastDay = {year: year.year, month: month.month, day: day.day}
-          //console.log(lastDay)
           return renderDay(day, month, year, index)
         })
       })
     })
-    console.log('lastDay')
-    console.log(lastDay)
     lastCountedDay = lastDay
     return list
   }
