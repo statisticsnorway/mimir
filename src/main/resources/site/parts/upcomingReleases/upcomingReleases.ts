@@ -75,8 +75,6 @@ function renderPart(req: Request): React4xpResponse {
     buttonTitle
   }
 
-  log.info('data OK ready to render')
-
   return React4xp.render('site/parts/upcomingReleases/upcomingReleases', props, req, {
     clientRender: isNotInEditMode
   })

@@ -17,7 +17,6 @@ exports.get = (req: Request): Response => {
   const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
   const count: number = req.params.count ? parseInt(req.params.count) : 2
 
-  log.info('count: ' + count + ' start ' + req.params.start )
   const language: string = req.params.language ? req.params.language : 'nb'
   // All statistics published today, and fill up with previous releases.
   const releasesFiltered: Array<StatisticInListing> = filterOnComingReleases(releases, count, req.params.start)
@@ -32,8 +31,6 @@ exports.get = (req: Request): Response => {
 
   // iterate and format month names
   const groupedWithMonthNames: Array<YearReleases> = addMonthNames(groupedByYearMonthAndDay, language)
-
-  log.info(JSON.stringify(groupedWithMonthNames, null, 2))
 
   return {
     status: 200,

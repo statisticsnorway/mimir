@@ -59,7 +59,7 @@ function UpcomingReleases(props) {
         language: props.language
       }
     }).then((res) => {
-      if(res.data.releases) {
+      if(res.data.releases.length) {
         setReleases(mergeReleases(releases, res.data.releases, 0))
       } else {
         setLoading(true)
