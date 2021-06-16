@@ -5,11 +5,12 @@ import axios from 'axios'
 import { ChevronDown } from 'react-feather'
 
 function UpcomingReleases(props) {
-  const [start, setStart] = useState(props.start)
   const [releases, setReleases] = useState(props.releases)
   const [loading, setLoading] = useState(false)
+  let lastCountedDay = undefined
 
   const unitProps = ['year', 'month', 'day']
+
   function mergeReleases(array1, array2, lvl) {
     let array1Index = 0
     let array2Index = 0
@@ -20,7 +21,7 @@ function UpcomingReleases(props) {
       const value2 = array2[array2Index] ? parseInt(array2[array2Index][unitProp]) : undefined
       if (value1 === value2) {
         const mergedReleases = unitProp === 'day' ?
-          array1[array1Index].releases.concat( array2[array2Index].releases) :
+          array1[array1Index].releases.concat(array2[array2Index].releases) :
           mergeReleases(array1[array1Index].releases, array2[array2Index].releases, lvl + 1)
         mergedArrays.push({
           ...array1[array1Index],
@@ -44,16 +45,22 @@ function UpcomingReleases(props) {
 
   function fetchMoreReleases() {
     setLoading(true)
+    if(!lastCountedDay){
+      return
+    }
     axios.get(props.upcomingReleasesServiceUrl, {
       params: {
-        start,
+        start: `${lastCountedDay.year}-${(parseInt(lastCountedDay.month) + 1)}-${lastCountedDay.day}`,
         count: props.count,
         language: props.language
       }
     }).then((res) => {
-      const totalReleases = mergeReleases(releases, res.data.releases, 0)
-      setReleases(totalReleases)
-      setStart(start + props.count)
+      if(res.data.releases.length) {
+        setReleases(mergeReleases(releases, res.data.releases, 0))
+      } else {
+        setLoading(true)
+      }
+
     }).finally(() => {
       setLoading(false)
     })
@@ -65,7 +72,8 @@ function UpcomingReleases(props) {
         <Link href={`/${release.shortName}`} linkType='header'>{release.name}</Link>
         <Paragraph className="mb-0">{release.variant.period}</Paragraph>
         <Paragraph className="metadata">
-          {date.day}. {date.monthName} {date.year} / <span className="type">{release.type}</span> / {release.mainSubject}
+          {date.day}. {date.monthName} {date.year} / <span
+          className="type">{release.type}</span> / {release.mainSubject}
         </Paragraph>
       </li>
     )
@@ -75,6 +83,7 @@ function UpcomingReleases(props) {
     const date = {
       day: day.day,
       monthName: month.monthName,
+      month: month.month,
       year: year.year
     }
     return (
@@ -95,7 +104,7 @@ function UpcomingReleases(props) {
   function renderButton() {
     if (loading) {
       return (<div className="text-center mt-5">
-        <span className="spinner-border spinner-border" />
+        <span className="spinner-border spinner-border"/>
       </div>)
     } else {
       return (<Button className="button-more mt-5 mx-auto"
@@ -104,6 +113,20 @@ function UpcomingReleases(props) {
         <ChevronDown size="18"/>{props.buttonTitle}
       </Button>)
     }
+  }
+
+  function renderList(){
+    let lastDay = {}
+    const list  = releases.map((year) => {
+      return year.releases.map((month) => {
+        return month.releases.map((day, index) => {
+          lastDay = {year: year.year, month: month.month, day: day.day}
+          return renderDay(day, month, year, index)
+        })
+      })
+    })
+    lastCountedDay = lastDay
+    return list
   }
 
   return (
@@ -116,13 +139,7 @@ function UpcomingReleases(props) {
         </div>
       </div>
       <div className="release-list mt-5">
-        {
-          releases.map((year) => {
-            return year.releases.map((month) => {
-              return month.releases.map((day, index) => renderDay(day, month, year, index))
-            })
-          })
-        }
+        { renderList() }
       </div>
       <div>
         { renderButton() }
@@ -136,7 +153,6 @@ UpcomingReleases.propTypes = {
   preface: PropTypes.string,
   language: PropTypes.string,
   upcomingReleasesServiceUrl: PropTypes.string,
-  start: PropTypes.number,
   count: PropTypes.number,
   buttonTitle: PropTypes.string,
   releases: PropTypes.arrayOf(PropTypes.shape({
@@ -174,4 +190,4 @@ UpcomingReleases.propTypes = {
   }))
 }
 
-export default (props) => <UpcomingReleases {...props}/>
+export default (props) => <UpcomingReleases {...props} />
