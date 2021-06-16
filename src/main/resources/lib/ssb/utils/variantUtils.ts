@@ -242,11 +242,22 @@ export function getReleasesForDay(
 
 export function filterOnComingReleases(stats: Array<StatisticInListing>, count: number, startDay?: string): Array<StatisticInListing> {
   const releases: Array<StatisticInListing> = []
+  log.info('any start date')
+  log.info(JSON.stringify(startDay, null, 2))
+  const aa: Date = new Date('2021-5-24')
+  log.info(JSON.stringify(aa, null, 2))
   const day: Date = startDay ? new Date(startDay) : new Date()
-  for (let i: number = 0; i < count; i++) {
+  log.info('starting from ')
+  log.info(JSON.stringify(day, null,2))
+  let daysWithHits = 0
+  for (let i: number = 0; i < count && i < 20; i++) {
+    log.info(i)
     day.setDate(day.getDate() + 1)
+    log.info(JSON.stringify(day, null, 2))
     const releasesOnThisDay: Array<StatisticInListing> = getReleasesForDay(stats, day, 'nextRelease')
-    if (releasesOnThisDay.length === 0) count++ // if no hits found on this day. add one day
+    log.info('releases on this day')
+    log.info(JSON.stringify(releasesOnThisDay, null, 2))
+    if (releasesOnThisDay.length === 0) daysWithHits++ // if no hits found on this day. add one day
     releases.push(...releasesOnThisDay)
   }
 

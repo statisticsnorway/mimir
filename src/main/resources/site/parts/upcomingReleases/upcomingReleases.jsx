@@ -48,19 +48,23 @@ function UpcomingReleases(props) {
   function fetchMoreReleases() {
     setLoading(true)
     console.log('lastCoundedDay')
-    console.log(lastCoundedDay)
+    console.log(lastCountedDay)
     if(!lastCountedDay){
       return
     }
     axios.get(props.upcomingReleasesServiceUrl, {
       params: {
-        start: `${lastCountedDay.day}-${lastCountedDay.month}-${lastCountedDay.year}`,
+        start: `${lastCountedDay.year}-${(parseInt(lastCountedDay.month) + 1)}-${lastCountedDay.day}`,
         count: props.count,
         language: props.language
       }
     }).then((res) => {
-      const totalReleases = mergeReleases(releases, res.data.releases, 0)
-      setReleases(totalReleases)
+      if(res.data.releases) {
+        setReleases(mergeReleases(releases, res.data.releases, 0))
+      } else {
+        setLoading(true)
+      }
+
     }).finally(() => {
       setLoading(false)
     })
