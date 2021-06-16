@@ -228,8 +228,7 @@ export function getReleasesForDay(
     const thisDayReleasedVariants: Array<VariantInListing> | undefined = Array.isArray(stat.variants) ?
       stat.variants.filter((variant: VariantInListing) => {
         return checkVariantReleaseDate(variant, day, property)
-      }) :
-      checkVariantReleaseDate(stat.variants, day, property) ? [stat.variants] : undefined
+      }) : stat.variants && checkVariantReleaseDate(stat.variants, day, property) ? [stat.variants] : undefined
     if (thisDayReleasedVariants && thisDayReleasedVariants.length > 0) {
       acc.push({
         ...stat,
