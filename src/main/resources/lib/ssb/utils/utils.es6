@@ -47,11 +47,7 @@ export const alertsForContext = (context, options) => {
 }
 
 const getInformationAlerts = (options) => {
-  log.info('getInformations alerts')
-  log.info(JSON.stringify(options, null, 2))
   const alerts = [...listOperationsAlerts().hits, ...listInformationAlerts(options.pageType, options.pageTypeId).hits]
-  log.info('alerts1')
-  log.info(JSON.stringify(alerts, null, 2))
   return alerts.map( (alert) => ({
     title: alert.displayName,
     messageType: alert.type === `${app.name}:operationsAlert` ? 'warning' : 'info',
