@@ -64,9 +64,9 @@ function isValidType(dataSource: Content<DataSource>): boolean {
 function isSavedQuerysStatistic(statisticsWithReleaseToday: Array<string>, dataSource: Content<DataSource>): boolean {
   const isSavedQuery: boolean = dataSource.data.dataSource?._selected === 'statbankSaved'
   if (isSavedQuery) {
-    const parentContent: Content<object, DefaultPageConfig> | null = getParentContent(dataSource._path)
+    const parentContent: Content<object, DefaultPageConfig | Statistics> | null = getParentContent(dataSource._path)
     if (parentContent && parentContent.type === `${app.name}:statistics`) {
-      const statisticContent: Content<Statistics> = parentContent
+      const statisticContent: Content<Statistics> = parentContent as Content<Statistics>
       if (statisticContent.data.statistic && statisticsWithReleaseToday.includes(statisticContent.data.statistic.toString())) {
         return true
       }
