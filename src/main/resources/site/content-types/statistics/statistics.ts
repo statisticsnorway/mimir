@@ -1,5 +1,10 @@
 export interface Statistics {
   /**
+   * Skjul statistikk fra statbank emnetre
+   */
+  hideFromList: boolean;
+
+  /**
    * 
    * 						Endringsdato
    * 					

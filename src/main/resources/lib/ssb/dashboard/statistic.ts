@@ -441,12 +441,13 @@ function getAdminStatistics(): Array<StatisticDashboard> {
 }
 
 function getUserStatistics(): Array<StatisticDashboard> {
-  const userStatisticContent: Array<Content<Statistics>> = query({
+  const userStatisticsResult: QueryResponse<Statistics> = query({
     query: `data.statistic LIKE '*'`,
     contentTypes: [`${app.name}:statistics`],
     count: 1000
-  }).hits.filter((statistic: Content<Statistics>) => hasWritePermissions(statistic._id)) as unknown as Array<Content<Statistics>>
-
+  })
+  const userStatisticContent: Array<Content<Statistics>> = userStatisticsResult.hits.filter(
+    (statistic: Content<Statistics>) => hasWritePermissions(statistic._id))
   const userStatistic: Array<StatisticInListing> = userStatisticContent.reduce((acc: Array<StatisticInListing>, statistic) => {
     if (statistic.data.statistic) {
       const resultFromRepo: StatisticInListing | undefined = getStatisticByIdFromRepo(statistic.data.statistic)
