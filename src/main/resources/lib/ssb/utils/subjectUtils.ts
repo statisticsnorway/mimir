@@ -2,6 +2,7 @@ import { Content } from 'enonic-types/content'
 import { Page } from '../../../site/content-types/page/page'
 import { DefaultPageConfig } from '../../../site/pages/default/default-page-config'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
+import { StatisticList } from '../../../site/content-types/statisticList/statisticList'
 import { StatisticInListing } from '../dashboard/statreg/types'
 const {
   query
@@ -95,6 +96,13 @@ export function getSubSubjectsByMainSubjectPath(subjects: Array<SubjectItem>, st
   const subSubjectsPath: Array<SubjectItem> = getSubSubjectsByPath(subjects, path)
 
   return subSubjectsPath.map((s) => {
+    const endedStatistic: Content<StatisticList> = query({
+      start: 0,
+      count: 1,
+      query: `_path LIKE "/content${s.path}*"`,
+      contentTypes: [`${app.name}:statisticList`]
+    }).hits[0]
+    log.info('Avslutta Statistikker: ' + ' Delemne: ' + s.name + ' ' + JSON.stringify(endedStatistic, null, 4))
     const titles: Array<Title> | null = getTitlesBySubjectName(subjects, s.name)
     return {
       subjectCode: s.subjectCode ? s.subjectCode : '',
