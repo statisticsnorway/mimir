@@ -167,6 +167,10 @@ exports.get = function(req) {
     path: 'js/bundle.js'
   })
 
+  const ieUrl = assetUrl({
+    path: '/js/ie.js'
+  })
+
   let pageContributions
   if (preview && preview.pageContributions) {
     pageContributions = preview.pageContributions
@@ -242,6 +246,7 @@ exports.get = function(req) {
     bodyClasses: bodyClasses.join(' '),
     stylesUrl,
     jsLibsUrl,
+    ieUrl,
     language,
     GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null,
     headerBody: header ? header.body : undefined,
