@@ -38,6 +38,12 @@
           font-size: 20px;
           font-weight: bold;
         }
+
+        .ssb-number.small {
+          @include media-breakpoint-up(lg) {
+            font-size: 3vw;
+          }
+        }
       }
     }
   }
