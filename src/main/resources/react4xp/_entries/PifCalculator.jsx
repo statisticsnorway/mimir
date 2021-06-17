@@ -243,6 +243,8 @@ function PifCalculator(props) {
   }
 
   function addDropdownProduct(id) {
+    const productGroupAll = props.phrases.pifProductTypeAll
+
     return (
       <Dropdown
         className="productGroup"
@@ -251,7 +253,7 @@ function PifCalculator(props) {
           onChange(id, value)
         }}
         selectedItem={{
-          title: 'Alle varegruppene',
+          title: productGroupAll,
           id: 'SITCT'
         }}
         items={props.productGroups}
@@ -427,7 +429,7 @@ function PifCalculator(props) {
       <div className="calculator-form">
         <Row>
           <Col>
-            <h2>Priskalkulator for førstegangsomsetning</h2>
+            <h2>{props.phrases.pifTitle}</h2>
           </Col>
           {renderLinkArticle()}
         </Row>
@@ -441,7 +443,7 @@ function PifCalculator(props) {
             <Row>
               <Col className="choose-scope">
                 <RadioGroup
-                  header="Velg marked"
+                  header={props.phrases.pifChooseHeader}
                   onChange={(value) => {
                     onChange('scope-code', value)
                   }}
@@ -449,11 +451,11 @@ function PifCalculator(props) {
                   orientation="column"
                   items={[
                     {
-                      label: 'Hjemme- og importmarked',
+                      label: props.phrases.pifChooseHomeImport,
                       value: '3'
                     },
                     {
-                      label: 'Kun hjemmemarked',
+                      label: props.phrases.pifChooseHome,
                       value: '2'
                     }
                   ]}
@@ -462,13 +464,13 @@ function PifCalculator(props) {
             </Row>
             <Row>
               <Col className="select-product-group">
-                <h3>Hvilken type vare er det?</h3>
+                <h3>{props.phrases.pifProductTypeHeader}</h3>
                 {addDropdownProduct('product-group')}
               </Col>
             </Row>
             <Row>
               <Col className="input-amount">
-                <h3>Hva var prisen på varen?</h3>
+                <h3>{props.phrases.pifProductPriceHeader}</h3>
                 <Input
                   className="start-value"
                   handleChange={(value) => onChange('start-value', value)}
