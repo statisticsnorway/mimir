@@ -1,7 +1,10 @@
 const {
-  getContent,
-  getComponent
+  getComponent,
+  pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
+const {
+  getChildren
+} = __non_webpack_require__('/lib/xp/content')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
@@ -24,12 +27,25 @@ exports.preview = (req) => renderPart(req)
 
 function renderPart(request) {
   const part = getComponent()
-  const parentItem = part.config.searchFolder
-  const 
+  const items = getChildren({
+    key: part.config.searchFolder,
+    start: 0,
+    count: 1000,
+    sort: 'displayName ASC'
+  }).hits.map((item) => {
+    return {
+      title: item.displayName,
+      id: item._id,
+      url: pageUrl({
+        id: item._id
+      })
+    }
+  })
 
   const props = {
     title: part.config.title,
-    placeholder: part.config.searchPlaceholder
+    placeholder: part.config.searchPlaceholder,
+    items: items
   }
 
   const localSearch = new React4xp('site/parts/localSearch/localSearch')

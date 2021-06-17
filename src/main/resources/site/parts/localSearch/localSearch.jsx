@@ -7,13 +7,17 @@ class LocalSearch extends React.Component {
     super(props)
   }
 
+  onSelect(selectedItem) {
+    window.location.href = selectedItem.url
+  }
+
   render() {
     return (
       <div className="container">
         <div className="row">
           <div className="col-12">
             <h2>{this.props.title}</h2>
-            <Dropdown placeholder={this.props.placeholder} searchable items={} />
+            <Dropdown placeholder={this.props.placeholder} searchable onSelect={(selectedItem)=> this.onSelect(selectedItem)} items={this.props.items} />
           </div>
         </div>
       </div>
@@ -23,7 +27,12 @@ class LocalSearch extends React.Component {
 
 LocalSearch.propTypes = {
   title: PropTypes.string,
-  placeholder: PropTypes.string
+  placeholder: PropTypes.string,
+  items: PropTypes.arrayOf({
+    title: PropTypes.string,
+    id: PropTypes.string,
+    url: PropTypes.string
+  })
 }
 
 export default (props) => <LocalSearch {...props} />
