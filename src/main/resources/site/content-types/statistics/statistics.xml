@@ -192,5 +192,8 @@
 				</input>
 			</items>
 		</field-set>
+		<input name="hideFromList" type="CheckBox">
+			<label>Skjul statistikk fra statbank emnetre</label>
+		</input>
 	</form>
 </content-type>

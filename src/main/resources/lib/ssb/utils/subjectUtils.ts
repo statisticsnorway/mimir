@@ -14,11 +14,13 @@ const {
 } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
 
 
-export function getMainSubjects(): Array<SubjectItem> {
+export function getMainSubjects(language?: string): Array<SubjectItem> {
+  const lang: string = language ? `AND language = "${language}"` : ''
   const mainSubjectsContent: Array<Content<Page, DefaultPageConfig>> = query({
     start: 0,
     count: 200,
-    query: 'components.page.config.mimir.default.subjectType LIKE "mainSubject"'
+    sort: 'displayName ASC',
+    query: `components.page.config.mimir.default.subjectType LIKE "mainSubject" ${lang}`
   }).hits as unknown as Array<Content<Page, DefaultPageConfig>>
 
   return mainSubjectsContent.map((m) =>({
@@ -30,11 +32,13 @@ export function getMainSubjects(): Array<SubjectItem> {
   }))
 }
 
-export function getSubSubjects(): Array<SubjectItem> {
+export function getSubSubjects(language?: string): Array<SubjectItem> {
+  const lang: string = language ? `AND language = "${language}"` : ''
   const subSubjectsContent: Array<Content<Page, DefaultPageConfig>> = query({
     start: 0,
     count: 1000,
-    query: 'components.page.config.mimir.default.subjectType LIKE "subSubject"'
+    sort: 'displayName ASC',
+    query: `components.page.config.mimir.default.subjectType LIKE "subSubject" ${lang}`
   }).hits as unknown as Array<Content<Page, DefaultPageConfig>>
 
   return subSubjectsContent.map((m) => ({
@@ -84,8 +88,7 @@ export function getTitlesBySubjectName(subjects: Array<SubjectItem>, name: strin
 }
 
 export function getSubSubjectsByPath(subjects: Array<SubjectItem>, path: string): Array<SubjectItem> {
-  return subjects.filter((subject) =>
-    subject.path.startsWith(path))
+  return subjects.filter((subject) => subject.path.startsWith(path))
 }
 
 export function getSubSubjectsByMainSubjectPath(subjects: Array<SubjectItem>, statistics: Array<StatisticItem>, path: string): Array<SubSubject> {
@@ -200,8 +203,8 @@ export interface StatisticItem {
 }
 
 export interface SubjectUtilsLib {
-    getMainSubjects: () => Array<SubjectItem>;
-    getSubSubjects: () => Array<SubjectItem>;
+    getMainSubjects: (language?: string) => Array<SubjectItem>;
+    getSubSubjects: (language?: string) => Array<SubjectItem>;
     getSubjectsByLanguage: (subjects: Array<SubjectItem>, language: string) => Array<SubjectItem>;
     getSubSubjectsByPath: (subjects: Array<SubjectItem>, path: string) => Array<SubjectItem>;
     getTitlesBySubjectName: (subjects: Array<SubjectItem>, name: string) => Array<Title> | null;
