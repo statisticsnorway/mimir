@@ -101,7 +101,6 @@ export function getSubSubjectsByMainSubjectPath(
 
   return subSubjectsPath.map((s) => {
     const endedStatistics: Array<StatisticItem> = getEndedStatisticsByPath(s.path, statregStatistics)
-
     const titles: Array<Title> | null = getTitlesBySubjectName(subjects, s.name)
     return {
       subjectCode: s.subjectCode ? s.subjectCode : '',
@@ -113,43 +112,47 @@ export function getSubSubjectsByMainSubjectPath(
 }
 
 export function getEndedStatisticsByPath(path: string, statregStatistics: Array<StatisticInListing>): Array<StatisticItem> {
+  const statistics: Array<StatisticItem> = []
   const statisticList: Content<StatisticList> = query({
     start: 0,
     count: 1,
     query: `_path LIKE "/content${path}*"`,
     contentTypes: [`${app.name}:statisticList`]
   }).hits[0]
+  const endedStatistic: Array<string | undefined> = statisticList ? ensureArray(statisticList.data.statistic) : []
 
-  const endedStatistic: Array<string| undefined> = statisticList ? ensureArray(statisticList.data.statistic) : []
+  if (endedStatistic.length > 0 && statregStatistics.length > 0 ) {
+    endedStatistic.forEach((statistic: string) => {
+      const statreg: StatisticInListing | undefined = statregStatistics.find((s) => s.id.toString() === statistic)
+      if (statreg) {
+        const titles: Array<Title> = [{
+          title: statreg.name,
+          language: 'no'
+        },
+        {
+          title: statreg.nameEN,
+          language: 'en'
+        }]
 
-  const statistics: Array<StatisticItem> = endedStatistic.length > 0 && statregStatistics.length > 0 ? endedStatistic.map((statistic: string) => {
-    const statreg: StatisticInListing | undefined = statregStatistics.find((s) => s.id.toString() === statistic)
-
-    const titles: Array<Title> = [{
-      title: statreg ? statreg.name : '',
-      language: 'no'
-    },
-    {
-      title: statreg ? statreg.nameEN : '',
-      language: 'en'
-    }]
-
-    return (
-      {
-        name: statreg ? statreg.name : '',
-        path: path,
-        language: 'no',
-        shortName: statreg ? statreg.shortName : '',
-        isPrimaryLocated: true,
-        titles: titles
+        statistics.push(
+          {
+            name: statreg.name,
+            path: path,
+            language: 'no',
+            shortName: statreg.shortName,
+            isPrimaryLocated: true,
+            titles: titles
+          }
+        )
       }
-    )
-  }) : []
+    })
+  }
 
   return statistics
 }
 
 export function getStatistics(): Array<StatisticItem> {
+  const statistics: Array<StatisticItem> = []
   const statisticContent: Array<Content<Statistics>> = query({
     start: 0,
     count: 2000,
@@ -159,29 +162,32 @@ export function getStatistics(): Array<StatisticItem> {
 
   const statregStatistics: Array<StatisticInListing> = ensureArray(getAllStatisticsFromRepo())
 
-  const statistics: Array<StatisticItem> = statregStatistics.length > 0 ? statisticContent.map((statistic: Content<Statistics>) => {
-    const statreg: StatisticInListing | undefined = statregStatistics.find((s) => s.id.toString() === statistic.data.statistic)
+  if (statregStatistics.length > 0) {
+    statisticContent.forEach((statistic: Content<Statistics>) => {
+      const statreg: StatisticInListing | undefined = statregStatistics.find((s) => s.id.toString() === statistic.data.statistic)
+      if (statreg) {
+        const titles: Array<Title> = [{
+          title: statreg.name,
+          language: 'no'
+        },
+        {
+          title: statreg.nameEN,
+          language: 'en'
+        }]
 
-    const titles: Array<Title> = [{
-      title: statreg ? statreg.name : '',
-      language: 'no'
-    },
-    {
-      title: statreg ? statreg.nameEN : '',
-      language: 'en'
-    }]
-
-    return (
-      {
-        name: statistic.displayName,
-        path: statistic._path,
-        language: statistic.language === 'en' ? 'en' : 'no',
-        shortName: statreg ? statreg.shortName : '',
-        isPrimaryLocated: true,
-        titles: titles
+        statistics.push(
+          {
+            name: statistic.displayName,
+            path: statistic._path,
+            language: statistic.language === 'en' ? 'en' : 'no',
+            shortName: statreg ? statreg.shortName : '',
+            isPrimaryLocated: true,
+            titles: titles
+          }
+        )
       }
-    )
-  }) : []
+    })
+  }
 
   return statistics
 }
