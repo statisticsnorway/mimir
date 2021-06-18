@@ -31,6 +31,10 @@ const {
 const {
   getStatisticByIdFromRepo
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')
+const {
+  localize
+} = __non_webpack_require__('/lib/xp/i18n')
+
 
 const partsWithPreview = [ // Parts that has preview
   `${app.name}:map`,
@@ -232,6 +236,12 @@ exports.get = function(req) {
   const hideBreadcrumb = !!page.page.config.hide_breadcrumb
 
   const statbankFane = (req.params.fane === 'statbank-web')
+  const pageLanguage = page.language ? page.language : 'nb'
+
+  const statbankHelpText = localize({
+    key: 'statbankHelpText',
+    locale: pageLanguage === 'nb' ? 'no' : pageLanguage
+  })
 
   const model = {
     pageTitle: 'SSB', // not really used on normal pages because of SEO app (404 still uses this)
@@ -246,6 +256,7 @@ exports.get = function(req) {
     jsLibsUrl,
     language,
     statbankWeb: statbankFane,
+    statbankHelpText,
     GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null,
     headerBody: header ? header.body : undefined,
     footerBody: footer ? footer.body : undefined,
