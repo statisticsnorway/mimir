@@ -104,7 +104,7 @@ window.docReady(function() {
       'We recommend you use the latest version of a more secure web browser like Chrome, Firefox, Edge or Safari.'
     }
     browserWarning.innerHTML =
-    '<div class="ssb-dialog info">' +
+    '<div class="ssb-dialog info my-5">' +
         '<div class="icon-panel">' +
             '<i class="icon">' +
                 '<svg ' +
