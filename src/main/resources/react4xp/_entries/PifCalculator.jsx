@@ -6,15 +6,19 @@ import axios from 'axios'
 import NumberFormat from 'react-number-format'
 
 function PifCalculator(props) {
+  const {
+    pifErrorMarket, pifErrorProduct
+  } = props.phrases
+
   const maxYear = '2021' // TODO get from data
   const [scopeCode, setScopeCode] = useState({
     error: false,
-    errorMsg: 'Feil markedskode',
+    errorMsg: pifErrorMarket,
     value: ''
   })
   const [productGroup, setProductGroup] = useState({
     error: false,
-    errorMsg: 'Feil produktgruppe',
+    errorMsg: pifErrorProduct,
     value: ''
   })
   const [startValue, setStartValue] = useState({
