@@ -16,6 +16,7 @@ const {
 
 
 export function getMainSubjects(language?: string): Array<SubjectItem> {
+  // Todo: Må sjekke om noen hovedemner kan være på nynorsk
   const lang: string = language ? `AND language = "${language}"` : ''
   const mainSubjectsContent: Array<Content<Page, DefaultPageConfig>> = query({
     start: 0,
@@ -51,12 +52,12 @@ export function getSubSubjects(language?: string): Array<SubjectItem> {
   }))
 }
 
-export function getSubjectsByLanguage(subjects: Array<SubjectItem>, language: string): Array<SubjectItem> {
+function getSubjectsByLanguage(subjects: Array<SubjectItem>, language: string): Array<SubjectItem> {
   return subjects.filter((subject) =>
     subject.language === language)
 }
 
-export function getSubjectByNameAndLanguage(subjects: Array<SubjectItem>, language: string, name: string): SubjectItem | null {
+function getSubjectByNameAndLanguage(subjects: Array<SubjectItem>, language: string, name: string): SubjectItem | null {
   const subjectsFiltered: Array<SubjectItem> = subjects.filter((subject) =>
     subject.language === language && subject.name === name)
 
@@ -67,7 +68,7 @@ export function getSubjectByNameAndLanguage(subjects: Array<SubjectItem>, langua
   return null
 }
 
-export function getTitlesBySubjectName(subjects: Array<SubjectItem>, name: string): Array<Title> | null {
+function getTitlesBySubjectName(subjects: Array<SubjectItem>, name: string): Array<Title> | null {
   const subjectNorwegian: SubjectItem | null = getSubjectByNameAndLanguage(subjects, 'no', name)
   const subjectEnglish: SubjectItem | null = getSubjectByNameAndLanguage(subjects, 'en', name)
   const titles: Array<Title> = []
@@ -92,7 +93,7 @@ export function getSubSubjectsByPath(subjects: Array<SubjectItem>, path: string)
   return subjects.filter((subject) => subject.path.startsWith(path))
 }
 
-export function getSubSubjectsByMainSubjectPath(
+function getSubSubjectsByMainSubjectPath(
   subjects: Array<SubjectItem>,
   statistics: Array<StatisticItem>,
   statregStatistics: Array<StatisticInListing>,
@@ -111,7 +112,7 @@ export function getSubSubjectsByMainSubjectPath(
   })
 }
 
-export function getStatistics(statregStatistics: Array<StatisticInListing>): Array<StatisticItem> {
+function getStatistics(statregStatistics: Array<StatisticInListing>): Array<StatisticItem> {
   const statistics: Array<StatisticItem> = []
   const statisticContent: Array<Content<Statistics>> = query({
     start: 0,
@@ -135,10 +136,9 @@ export function getStatistics(statregStatistics: Array<StatisticInListing>): Arr
 
         statistics.push(
           {
-            name: statistic.displayName,
             path: statistic._path,
             language: statistic.language === 'en' ? 'en' : 'no',
-            shortName: statreg ? statreg.shortName : '',
+            shortName: statreg.shortName,
             isPrimaryLocated: true,
             titles: titles
           }
@@ -175,7 +175,6 @@ export function getEndedStatisticsByPath(path: string, statregStatistics: Array<
 
         statistics.push(
           {
-            name: statreg.name,
             path: path,
             language: 'no',
             shortName: statreg.shortName,
@@ -190,7 +189,7 @@ export function getEndedStatisticsByPath(path: string, statregStatistics: Array<
   return statistics
 }
 
-export function getStatisticsByPath(statistics: Array<StatisticItem>, path: string): Array<StatisticItem> {
+function getStatisticsByPath(statistics: Array<StatisticItem>, path: string): Array<StatisticItem> {
   return statistics.filter((s: StatisticItem) => s.path.startsWith(path))
 }
 
@@ -243,7 +242,6 @@ export interface Title {
 }
 
 export interface StatisticItem {
-    name: string;
     path: string;
     language: string;
     shortName: string;
@@ -254,13 +252,7 @@ export interface StatisticItem {
 export interface SubjectUtilsLib {
     getMainSubjects: (language?: string) => Array<SubjectItem>;
     getSubSubjects: (language?: string) => Array<SubjectItem>;
-    getSubjectsByLanguage: (subjects: Array<SubjectItem>, language: string) => Array<SubjectItem>;
     getSubSubjectsByPath: (subjects: Array<SubjectItem>, path: string) => Array<SubjectItem>;
-    getTitlesBySubjectName: (subjects: Array<SubjectItem>, name: string) => Array<Title> | null;
-    getSubjectByNameAndLanguage: (subjects: Array<SubjectItem>, language: string, name: string) => SubjectItem;
-    getSubSubjectsByMainSubjectPath: (subjects: Array<SubjectItem>, statistics: Array<StatisticItem>, statregStatistics: Array<StatisticInListing>, path: string) => Array<SubSubject>;
-    getStatistics: (statregStatistics: Array<StatisticInListing>) => Array<StatisticItem>;
-    getStatisticsByPath: (statistics: Array<StatisticItem>, path: string) => Array<StatisticItem>;
     getSubjectStructur: (language: string) => Array<MainSubject>;
     getEndedStatisticsByPath: (path: string, statregStatistics: Array<StatisticInListing>) => Array<StatisticItem>;
   }
