@@ -89,7 +89,7 @@ class Header extends React.Component {
 
   render() {
     const {
-      searchText, logoUrl, logoAltText, mainNavigation, skipToContentText
+      searchText, logoUrl, logoSrc, logoAltText, mainNavigation, skipToContentText
     } = this.props
     return (
       <header className="ssb-header-wrapper">
@@ -99,8 +99,8 @@ class Header extends React.Component {
           {this.languageLinks()}
         </nav>
         <div className="misc top-row flex-row justify-space-between flex-wrap">
-          <a id="header-logo" className="plainLink" href="/">
-            <img src={logoUrl} alt={logoAltText ? logoAltText : ' '} className="logo" />
+          <a id="header-logo" className="plainLink" href={logoUrl}>
+            <img src={logoSrc} alt={logoAltText ? logoAltText : ' '} className="logo" />
           </a>
 
           <button className="hamburger" onClick={this.toggleMainMenu}>
@@ -178,6 +178,7 @@ Header.propTypes = {
     })
   ),
   logoUrl: PropTypes.string,
+  logoSrc: PropTypes.string,
   logoAltText: PropTypes.string,
   language: PropTypes.shape({
     menuContentId: PropTypes.string,
