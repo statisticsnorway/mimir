@@ -2,7 +2,7 @@ import { Content } from 'enonic-types/content'
 import { Page } from '../../../site/content-types/page/page'
 import { DefaultPageConfig } from '../../../site/pages/default/default-page-config'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
-import { StatisticList } from '../../../site/content-types/statisticList/statisticList'
+import { EndedStatisticList } from '../../../site/content-types/endedStatisticList/endedStatisticList'
 import { StatisticInListing } from '../dashboard/statreg/types'
 const {
   query
@@ -101,7 +101,7 @@ function getSubSubjectsByMainSubjectPath(
   const subSubjectsPath: Array<SubjectItem> = getSubSubjectsByPath(subjects, path)
 
   return subSubjectsPath.map((s) => {
-    const endedStatistics: Array<StatisticItem> = getEndedStatisticsByPath(s.path, statregStatistics)
+    const endedStatistics: Array<StatisticItem> = getEndedStatisticsByPath(s.path, statregStatistics, false)
     const titles: Array<Title> | null = getTitlesBySubjectName(subjects, s.name)
     return {
       subjectCode: s.subjectCode ? s.subjectCode : '',
@@ -150,19 +150,22 @@ function getStatistics(statregStatistics: Array<StatisticInListing>): Array<Stat
   return statistics
 }
 
-export function getEndedStatisticsByPath(path: string, statregStatistics: Array<StatisticInListing>): Array<StatisticItem> {
+export function getEndedStatisticsByPath(path: string, statregStatistics: Array<StatisticInListing>, hideStatistics: boolean): Array<StatisticItem> {
   const statistics: Array<StatisticItem> = []
-  const statisticList: Content<StatisticList> = query({
+  const statisticList: Content<EndedStatisticList> = query({
     start: 0,
     count: 1,
     query: `_path LIKE "/content${path}*"`,
-    contentTypes: [`${app.name}:statisticList`]
+    contentTypes: [`${app.name}:endedStatisticList`]
   }).hits[0]
-  const endedStatistic: Array<string | undefined> = statisticList ? ensureArray(statisticList.data.statistic) : []
+  const endedStatistics: Array<EndedStatistic> = statisticList && statisticList.data.endedStatistics ?
+    ensureArray(statisticList.data.endedStatistics) : []
+  const endedStatisticsFiltered: Array<EndedStatistic> = hideStatistics ?
+    endedStatistics.filter((e) => e.hideFromList === false) : endedStatistics
 
-  if (endedStatistic.length > 0 && statregStatistics.length > 0 ) {
-    endedStatistic.forEach((statistic: string) => {
-      const statreg: StatisticInListing | undefined = statregStatistics.find((s) => s.id.toString() === statistic)
+  if (endedStatisticsFiltered.length > 0 && statregStatistics.length > 0 ) {
+    endedStatisticsFiltered.forEach((endedStatistic: EndedStatistic) => {
+      const statreg: StatisticInListing | undefined = statregStatistics.find((s) => s.id.toString() === endedStatistic.statistic)
       if (statreg) {
         const titles: Array<Title> = [{
           title: statreg.name,
@@ -249,11 +252,16 @@ export interface StatisticItem {
     titles: Array<Title>;
 }
 
+interface EndedStatistic {
+  statistic?: string;
+  hideFromList: boolean;
+}
+
 export interface SubjectUtilsLib {
     getMainSubjects: (language?: string) => Array<SubjectItem>;
     getSubSubjects: (language?: string) => Array<SubjectItem>;
     getSubSubjectsByPath: (subjects: Array<SubjectItem>, path: string) => Array<SubjectItem>;
     getSubjectStructur: (language: string) => Array<MainSubject>;
-    getEndedStatisticsByPath: (path: string, statregStatistics: Array<StatisticInListing>) => Array<StatisticItem>;
+    getEndedStatisticsByPath: (path: string, statregStatistics: Array<StatisticInListing>, hideStatistics: boolean) => Array<StatisticItem>;
   }
 
