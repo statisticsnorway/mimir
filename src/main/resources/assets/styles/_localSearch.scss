@@ -1,0 +1,29 @@
+.part-local-search {
+  background-color: $ssb-dark-2;
+  width: 100%;
+  max-width: none;
+
+  h1 {
+    margin-top: 60px;
+    margin-bottom: 30px;
+  }
+  .search-field {
+    margin-bottom: 60px;
+    max-width: none;
+    width: 100%;
+
+    input {
+      height: 80px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .list-of-options {
+      top: 78px;
+    }
+
+    //TODO: fjernes når mulighet for å erstatte ikon er lagt til i komponenten
+    svg {
+      display: none;
+    }
+  }
+}
