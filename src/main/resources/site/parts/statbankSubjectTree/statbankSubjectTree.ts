@@ -36,7 +36,8 @@ export function get(req: Request): React4xpResponse {
   const allMainSubjects: Array<SubjectItem> = getMainSubjects(content.language)
   const allSubSubjects: Array<SubjectItem> = getSubSubjects()
   const statregStatistics: Array<StatisticInListing> = ensureArray(getAllStatisticsFromRepo())
-  const statbankBaseUrl: string = content.language && content.language === 'en' ? '/en/statbank/list/' : '/statbank/list/'
+  const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
+  const statbankBaseUrl: string = content.language && content.language === 'en' ? baseUrl + '/en/statbank/list/' : baseUrl + '/statbank/list/'
   const mainSubjects: Array<MainSubjectWithSubs> = allMainSubjects.map( (subjectItem) => {
     const subSubjectsFromPath: Array<SubjectItem> = getSubSubjectsByPath(allSubSubjects, subjectItem.path)
     const preparedSubSubjects: Array<SubSubjectsWithStatistics> = subSubjectsFromPath.map((subSubject) =>
@@ -84,8 +85,8 @@ function prepareSubSubjects(subSubject: SubjectItem,
     }
   })
 
-  // TODO:Add ended statistics to english site
-  const endedStatistics: Array<StatisticItem> = getEndedStatisticsByPath(subSubject.path, statregStatistics, true)
+  const pathEndedStatisticNo: string = subSubject.path.replace('/ssb/en/', '/ssb/')
+  const endedStatistics: Array<StatisticItem> = getEndedStatisticsByPath(pathEndedStatisticNo, statregStatistics, true)
   const preparedEndedStatistics: PreparedSubs['statistics'] = endedStatistics.length > 0 ? endedStatistics.map((e) => {
     const lang: string = language === 'en' ? 'en' : 'no'
     const title: string = e.titles.filter((t)=> t.language === lang)[0].title
