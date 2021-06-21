@@ -51,14 +51,21 @@
               <div class="col-md-6">
                 <span class="h2 statbank-title roboto-bold">Statistikkbanken</span>
               </div>
-              <div class="col text-right">
-                <a data-th-href="${statbankHelpLink}" class="ssb-link" >
-                  <span class="link-text" data-th-text="${statbankHelpText}">tom boks</span>
-                </a>
+              <div class="col-md-6 text-right">
+                <div class="col-md-12">
+                  <a data-th-href="${statbankHelpLink}" class="ssb-link mb-0 roboto-bold">
+                    <span class="link-text" data-th-text="${statbankHelpText}">tom boks</span>
+                  </a>
+                </div>
+                <div class="col-md-12">
+                  <a href="/statbank" class="ssb-link">
+                    <span class="link-text">Statistikkbankens forside</span>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
-          <!-- Statbank title sometimes maybe -->
+          <!-- Statbank title -->
           <div data-th-if="${statbankWeb}" class="container mb-5">
             <div class="row">
               <div class="col">
