@@ -12,6 +12,9 @@ import { Statistics } from '../../../site/content-types/statistics/statistics'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 const {
+  moment
+} = __non_webpack_require__('/lib/vendor/moment')
+const {
   request
 } = __non_webpack_require__('/lib/http-client')
 const {
@@ -110,6 +113,7 @@ export function dataSourceRSSFilter(dataSources: Array<Content<DataSource>>): RS
   }
 
   const RSSItems: Array<RSSItem> = fetchRSS()
+    .filter((item) => moment(item.pubDate).isBetween(moment().subtract(1, 'day'), moment(), 'day', '[]')) // only keep those with updates for the last 2 days
   const statisticsWithReleaseToday: Array<string> = fetchStatisticsWithReleaseToday().map((s: StatisticInListing) => s.id.toString())
 
   const filteredDatasourcesRSS: Array<Content<DataSource>> = dataSources.reduce((t: Array<Content<DataSource>>, dataSource) => {
