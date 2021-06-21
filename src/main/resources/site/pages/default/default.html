@@ -49,7 +49,7 @@
           <div class="statbank-header container mb-2" data-th-if="${statbankWeb}">
             <div class="row">
               <div class="col">
-                <span class="h3">Statistikkbanken</span>
+                <span class="h4 statbank-title">Statistikkbanken</span>
               </div>
               <div class="col text-right">
                 <a data-th-href="${statbankHelpLink}" class="ssb-link" >
@@ -58,8 +58,16 @@
               </div>
             </div>
           </div>
+          <!-- Statbank title sometimes maybe -->
+          <div data-th-if="${statbankWeb}" class="container mb-5">
+            <div class="row">
+              <div class="col">
+                <h1 data-th-text="${page.displayName}"></h1>
+              </div>
+            </div>
+          </div>
           <!-- Page Title -->
-          <div data-th-if="${page.data.title}" class="container mb-5">
+          <div data-th-if="${page.data.title}" data-th-unless="${statbankWeb}" class="container mb-5">
             <div class="row">
               <div class="col">
                 <h1 data-th-text="${page.data.title}"></h1>
