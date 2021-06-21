@@ -96,10 +96,11 @@ function prepareSubSubjects(subSubject: SubjectItem,
     }
   }) : []
 
-
+  const allStatistics: PreparedSubs['statistics'] = [...preparedStatistics, ...preparedEndedStatistics]
+    .sort((a, b) => (a.title > b.title) ? 1 : -1)
   return {
     ...subSubject,
-    statistics: [...preparedStatistics, ...preparedEndedStatistics]
+    statistics: allStatistics
   }
 }
 
