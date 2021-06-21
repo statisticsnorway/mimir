@@ -42,7 +42,7 @@
     "enonic-types": "^0.2.3",
     "eslint": "^6.8.0",
     "eslint-config-google": "^0.14.0",
-    "eslint-plugin-react": "^7.23.2",
+    "eslint-plugin-react": "^7.24.0",
     "webpack": "^4.46.0",
     "webpack-cli": "^3.3.12"
   },
@@ -79,7 +79,7 @@
     "numeral": "^2.0.6",
     "popper.js": "^1.16.1",
     "postcss": "^8.2.13",
-    "postcss-loader": "^4.2.0",
+    "postcss-loader": "^4.3.0",
     "postcss-normalize": "^9.0.0",
     "prop-types": "^15.7.2",
     "ramda": "^0.27.1",
