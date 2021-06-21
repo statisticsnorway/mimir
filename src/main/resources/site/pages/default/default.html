@@ -54,12 +54,17 @@
               <div class="col-md-6 text-right">
                 <div class="col-md-12">
                   <a data-th-href="${statbankHelpLink}" class="ssb-link mb-0 roboto-bold">
-                    <span class="link-text" data-th-text="${statbankHelpText}">tom boks</span>
+                    <span class="link-text" data-th-text="${statbankHelpText}">tom boks statbank-hjelp</span>
                   </a>
                 </div>
                 <div class="col-md-12">
-                  <a href="/statbank" class="ssb-link">
-                    <span class="link-text">Statistikkbankens forside</span>
+                  <a data-th-href="${pageUrl}" class="ssb-link roboto-plain">
+                    <span class="link-text" data-th-text="${statbankMainFigures}" >tom boks hovedtall</span>
+                  </a>
+                </div>
+                <div class="col-md-12">
+                  <a href="/statbank" class="ssb-link roboto-plain">
+                    <span class="link-text" data-th-text="${statbankFrontPage}">tom boks statbank-forside</span>
                   </a>
                 </div>
               </div>

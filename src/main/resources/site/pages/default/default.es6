@@ -236,10 +236,20 @@ exports.get = function(req) {
   const hideBreadcrumb = !!page.page.config.hide_breadcrumb
 
   const statbankFane = (req.params.fane === 'statbank-web')
+  //Fjerner /ssb fra starten av path
+  const pageUrl = page._path.substr(4)
   const pageLanguage = page.language ? page.language : 'nb'
 
   const statbankHelpText = localize({
     key: 'statbankHelpText',
+    locale: pageLanguage === 'nb' ? 'no' : pageLanguage
+  })
+  const statbankMainFigures = localize({
+    key: 'statbankMainFigures',
+    locale: pageLanguage === 'nb' ? 'no' : pageLanguage
+  })
+  const statbankFrontPage = localize({
+    key: 'statbankFrontPage',
     locale: pageLanguage === 'nb' ? 'no' : pageLanguage
   })
 
@@ -257,6 +267,9 @@ exports.get = function(req) {
     language,
     statbankWeb: statbankFane,
     statbankHelpText,
+    statbankFrontPage,
+    statbankMainFigures,
+    pageUrl,
     GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null,
     headerBody: header ? header.body : undefined,
     footerBody: footer ? footer.body : undefined,
