@@ -16,23 +16,24 @@ export function solrSearch(term: string): Response {
   const searchResult: SolrResult | undefined = querySolr({
     query: createQuery(term)
   })
-  const preparedSearchResult: Array<PreparedSearchResult> = searchResult ? prepareSearchResult(searchResult) : []
+  const preparedSearchResult: Array<PreparedSearchResult> = searchResult ? nerfSearchResult(searchResult) : []
   log.info(JSON.stringify(preparedSearchResult, null, 2))
   return {
     body: preparedSearchResult
   }
 }
 
-function prepareSearchResult(solrResult: SolrResult): Array<PreparedSearchResult> {
-  log.info('Nerf this')
-  log.info(JSON.stringify(solrResult, null, 2))
+function nerfSearchResult(solrResult: SolrResult): Array<PreparedSearchResult> {
   return solrResult.grouped.gruppering.groups.reduce((acc: Array<PreparedSearchResult>, group) => {
     group.doclist.docs.forEach((doc: SolrDoc) => {
+      const highlight: SolrHighlighting | undefined = solrResult.highlighting[doc.id]
       acc.push({
-        title: doc.tittel,
+        title: highlight.tittel ? highlight.tittel[0] : doc.tittel,
+        preface: highlight.innhold ? highlight.innhold[0] : doc.tittel,
         contentType: doc.innholdstype,
         url: doc.url,
         mainSubject: doc.hovedemner
+
       })
     })
     return acc
@@ -99,6 +100,7 @@ interface SolrResponse {
 
 interface PreparedSearchResult {
   title: string;
+  preface: string;
   contentType: string;
   url: string;
   mainSubject: string;
@@ -133,15 +135,13 @@ interface SolrResult {
     };
   };
   highlighting: {
-    [key: string]: {
-      tittel: Array<string>;
-      innhold: Array<string>;
-    };
+    [key: string]: SolrHighlighting;
   };
 }
 
-interface Duly {
-  pewpew: string;
+interface SolrHighlighting {
+  tittel: Array<string>;
+  innhold: Array<string>;
 }
 
 interface SolrGroup {
