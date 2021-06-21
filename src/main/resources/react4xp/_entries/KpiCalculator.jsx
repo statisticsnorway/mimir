@@ -24,7 +24,7 @@ function KpiCalculator(props) {
   })
   const [endMonth, setEndMonth] = useState({
     error: false,
-    errorMsg: props.phrases.kpiValidateMonth,
+    errorMsg: props.nextPublishText,
     value: '90'
   })
   const [endYear, setEndYear] = useState({
@@ -41,7 +41,8 @@ function KpiCalculator(props) {
   const [startValueResult, setStartValueResult] = useState(null)
   const language = props.language ? props.language : 'nb'
 
-  const validMaxYear = new Date().getFullYear()
+  const validMaxYear = props.lastUpdated.year
+  const validMaxMonth = props.lastUpdated.month
   const validMinYear = 1865
   const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
 
@@ -92,7 +93,7 @@ function KpiCalculator(props) {
   }
 
   function isFormValid() {
-    return isStartValueValid() && isStartYearValid() && isEndYearValid()
+    return isStartValueValid() && isStartYearValid() && isEndYearValid() && isEndMonthValid()
   }
 
   function isStartValueValid(value) {
@@ -116,6 +117,18 @@ function KpiCalculator(props) {
     const isEndYearValid = testEndYear && testEndYear.length === 1
     const intEndYear = parseInt(endYearValue)
     return !(!isEndYearValid || isNaN(intEndYear) || intEndYear < validMinYear || intEndYear > validMaxYear)
+  }
+
+  function isEndMonthValid(value) {
+    const endMonthValue = value || endMonth.value
+    const endMonthValid = (endYear.value === maxYear) && (endMonthValue > validMaxMonth) ? false : true
+    if (!endMonthValid) {
+      setEndMonth({
+        ...endMonth,
+        error: true
+      })
+    }
+    return endMonthValid
   }
 
   function onBlur(id) {
@@ -176,7 +189,8 @@ function KpiCalculator(props) {
     case 'end-month': {
       setEndMonth({
         ...endMonth,
-        value: value.id
+        value: value.id,
+        error: endMonth.error ? !isEndMonthValid(value.id) : endMonth.error
       })
       break
     }
@@ -203,6 +217,26 @@ function KpiCalculator(props) {
         onSelect={(value) => {
           onChange(id, value)
         }}
+        selectedItem={{
+          title: props.frontPage ? props.phrases.calculatorMonthAverageFrontpage : props.phrases.calculatorMonthAverage,
+          id: '90'
+        }}
+        items={props.months}
+      />
+    )
+  }
+
+  function addDropdownEndMonth(id) {
+    return (
+      <Dropdown
+        className="month"
+        id={id}
+        header={props.phrases.chooseMonth}
+        onSelect={(value) => {
+          onChange(id, value)
+        }}
+        error={endMonth.error}
+        errorMessage={endMonth.errorMsg}
         selectedItem={{
           title: props.frontPage ? props.phrases.calculatorMonthAverageFrontpage : props.phrases.calculatorMonthAverage,
           id: '90'
@@ -467,7 +501,7 @@ function KpiCalculator(props) {
                 <Title size={3}>{props.phrases.calculatePriceChangeTo}</Title>
                 <Container>
                   <Row>
-                    <Col className="select-year align-self-end col-sm-5">
+                    <Col className="select-year col-sm-5">
                       <Input
                         className="input-year"
                         label={props.phrases.toYear}
@@ -478,7 +512,7 @@ function KpiCalculator(props) {
                       />
                     </Col>
                     <Col className="select-month col-sm-7">
-                      {addDropdownMonth('end-month')}
+                      {addDropdownEndMonth('end-month')}
                     </Col>
                   </Row>
                 </Container>
@@ -539,7 +573,7 @@ function KpiCalculator(props) {
               <Col className="calculate-to col-12 col-lg-6 col-xl-4">
                 <Container>
                   <Row>
-                    <Col className="select-year align-self-end">
+                    <Col className="select-year">
                       <Input
                         className="input-year"
                         label={props.phrases.toYear}
@@ -550,7 +584,7 @@ function KpiCalculator(props) {
                       />
                     </Col>
                     <Col className="select-month">
-                      {addDropdownMonth('end-month')}
+                      {addDropdownEndMonth('end-month')}
                     </Col>
                   </Row>
                 </Container>
