@@ -2,7 +2,9 @@ import { Request, Response } from 'enonic-types/controller'
 import { Component } from 'enonic-types/portal'
 import { Content } from 'enonic-types/content'
 import { SearchResultPartConfig } from './searchResult-part-config'
-
+import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import { PreparedSearchResult } from '../../../lib/ssb/utils/solrUtils'
+const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   solrSearch
 } = __non_webpack_require__('/lib/ssb/utils/solrUtils')
@@ -16,7 +18,7 @@ const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 
-exports.get = function(req: Request): Response {
+exports.get = function(req: Request): React4xpResponse | Response {
   try {
     const part: Component<SearchResultPartConfig> = getComponent()
     return renderPart(req)
@@ -25,7 +27,7 @@ exports.get = function(req: Request): Response {
   }
 }
 
-exports.preview = (req: Request): Response => {
+exports.preview = (req: Request): React4xpResponse | Response => {
   try {
     const page: Content = getContent()
     return renderPart(req)
@@ -34,11 +36,17 @@ exports.preview = (req: Request): Response => {
   }
 }
 
-export function renderPart(req: Request): Response {
+export function renderPart(req: Request): React4xpResponse {
   log.info('Welcome to the search results')
   log.info(JSON.stringify(req, null, 2))
   if (req.params.sok) log.info(JSON.stringify(encodeURI(req.params.sok)))
-  return req.params.sok ? solrSearch(sanitize(req.params.sok)) : emptySearch()
+  const props: ReactProps = {
+    hits: req.params.sok ? solrSearch(sanitize(req.params.sok)) : [],
+    title: 'Søk',
+    buttonTitle: 'Flere treff',
+    total: 1234
+  }
+  return React4xp.render('site/parts/searchResult/searchResultView', props, req)
 }
 
 
@@ -47,10 +55,10 @@ function sanitize(term: string): string {
 }
 
 
-function emptySearch(): Response {
-  return {
-    body: 'search parameters empty'
-  }
+interface ReactProps {
+  hits: Array<PreparedSearchResult>;
+  title: string;
+  total: number;
+  buttonTitle: string;
 }
-
 

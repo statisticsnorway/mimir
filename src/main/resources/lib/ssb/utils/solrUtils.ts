@@ -12,15 +12,11 @@ const {
   request
 } = __non_webpack_require__('/lib/http-client')
 
-export function solrSearch(term: string): Response {
+export function solrSearch(term: string): Array<PreparedSearchResult> {
   const searchResult: SolrResult | undefined = querySolr({
     query: createQuery(term)
   })
-  const preparedSearchResult: Array<PreparedSearchResult> = searchResult ? nerfSearchResult(searchResult) : []
-  log.info(JSON.stringify(preparedSearchResult, null, 2))
-  return {
-    body: preparedSearchResult
-  }
+  return searchResult ? nerfSearchResult(searchResult) : []
 }
 
 function nerfSearchResult(solrResult: SolrResult): Array<PreparedSearchResult> {
@@ -33,7 +29,6 @@ function nerfSearchResult(solrResult: SolrResult): Array<PreparedSearchResult> {
         contentType: doc.innholdstype,
         url: doc.url,
         mainSubject: doc.hovedemner
-
       })
     })
     return acc
@@ -41,7 +36,6 @@ function nerfSearchResult(solrResult: SolrResult): Array<PreparedSearchResult> {
 }
 
 function querySolr(queryParams: SolrQueryParams): SolrResult | undefined {
-  log.info(JSON.stringify(queryParams, null, 2))
   const solrResponse: SolrResponse = requestSolr(queryParams)
   if (solrResponse.status === 200) {
     return JSON.parse(solrResponse.body)
@@ -86,7 +80,7 @@ function sanitizeTermForSolrSearch(rawText: string): string {
 export interface SolrUtilsLib {
     prepareSearchResult: (solrResult: SolrResponse) => PreparedSearchResult;
     querySolr: (query: SolrQueryParams) => SolrResponse;
-    solrSearch: (term: string) => Response;
+    solrSearch: (term: string) => Array<PreparedSearchResult>;
 }
 
 interface SolrQueryParams {
@@ -98,7 +92,7 @@ interface SolrResponse {
   body: string;
 }
 
-interface PreparedSearchResult {
+export interface PreparedSearchResult {
   title: string;
   preface: string;
   contentType: string;
