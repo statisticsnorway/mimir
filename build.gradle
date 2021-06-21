@@ -40,6 +40,7 @@ dependencies {
     testCompile "com.enonic.xp:testing:${xpVersion}"
     compile group: 'org.json', name: 'json', version: '20210307'
     include 'com.enonic.lib:lib-react4xp:1.7.0'
+    include 'com.enonic.lib:lib-text-encoding:2.0.0'
 }
 
 repositories {
@@ -52,7 +53,9 @@ repositories {
     maven {
         url "https://repo1.maven.org/maven2/"
     }
-    maven { url 'https://jitpack.io' }
+    maven { 
+        url 'https://jitpack.io' 
+    }
 }
 
 
