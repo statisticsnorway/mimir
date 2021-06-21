@@ -339,7 +339,7 @@ function createTask(jobId: string, statistic: Content<Statistics>, releaseDate: 
 function getNextRelease(statistic: Content<Statistics>): string | null{
   if (statistic.data.statistic) {
     const statisticStatreg: StatisticInListing | undefined = getStatisticByIdFromRepo(statistic.data.statistic)
-    if (statisticStatreg) {
+    if (statisticStatreg && statisticStatreg.variants) {
       const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(forceArray(statisticStatreg.variants))
       return releaseDates.nextRelease[0]
     }
@@ -350,7 +350,7 @@ function getNextRelease(statistic: Content<Statistics>): string | null{
 function getPreviousRelease(statistic: Content<Statistics>): string | null {
   if (statistic.data.statistic) {
     const statisticStatreg: StatisticInListing | undefined = getStatisticByIdFromRepo(statistic.data.statistic)
-    if (statisticStatreg) {
+    if (statisticStatreg && statisticStatreg.variants) {
       const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(forceArray(statisticStatreg.variants))
       return releaseDates.previousRelease[0]
     }
