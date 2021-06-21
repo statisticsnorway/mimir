@@ -45,7 +45,7 @@ function UpcomingReleases(props) {
 
   function fetchMoreReleases() {
     setLoading(true)
-    if(!lastCountedDay){
+    if (!lastCountedDay) {
       return
     }
     axios.get(props.upcomingReleasesServiceUrl, {
@@ -55,12 +55,11 @@ function UpcomingReleases(props) {
         language: props.language
       }
     }).then((res) => {
-      if(res.data.releases.length) {
+      if (res.data.releases.length) {
         setReleases(mergeReleases(releases, res.data.releases, 0))
       } else {
         setLoading(true)
       }
-
     }).finally(() => {
       setLoading(false)
     })
@@ -73,7 +72,7 @@ function UpcomingReleases(props) {
         <Paragraph className="mb-0">{release.variant.period}</Paragraph>
         <Paragraph className="metadata">
           {date.day}. {date.monthName} {date.year} / <span
-          className="type">{release.type}</span> / {release.mainSubject}
+            className="type">{release.type}</span> / {release.mainSubject}
         </Paragraph>
       </li>
     )
@@ -115,12 +114,16 @@ function UpcomingReleases(props) {
     }
   }
 
-  function renderList(){
+  function renderList() {
     let lastDay = {}
-    const list  = releases.map((year) => {
+    const list = releases.map((year) => {
       return year.releases.map((month) => {
         return month.releases.map((day, index) => {
-          lastDay = {year: year.year, month: month.month, day: day.day}
+          lastDay = {
+            year: year.year,
+            month: month.month,
+            day: day.day
+          }
           return renderDay(day, month, year, index)
         })
       })
