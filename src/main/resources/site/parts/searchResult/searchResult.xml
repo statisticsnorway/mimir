@@ -1,0 +1,14 @@
+<part>
+    <display-name>Søkeresultat</display-name>
+    <form>
+        <field-set>
+            <label>Inngang til Statbank</label>
+            <items>
+                <input name="title" type="TextLine">
+                    <label>Overstyr tittel</label>
+                    <occurrences minimum="0" maximum="1" />
+                </input>
+            </items>
+        </field-set>
+    </form>
+</part>
