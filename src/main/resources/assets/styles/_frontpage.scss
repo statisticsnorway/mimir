@@ -84,6 +84,15 @@
         align-self: center;
       }
     }
+
+    .keyfigure.first {
+      .ssb-number.small {
+        @include media-breakpoint-down(sm) {
+          font-size: 12vw;
+        }
+      }
+    }
+
     .keyfigure.others {
       min-height: 104px;
     }
