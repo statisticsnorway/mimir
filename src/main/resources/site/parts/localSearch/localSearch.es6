@@ -34,7 +34,7 @@ function renderPart(request) {
     sort: 'displayName ASC'
   }).hits.map((item) => {
     return {
-      title: item.displayName,
+      title: item.data.serialNumber ? item.displayName + ' (' + item.data.serialNumber + ')' : item.displayName,
       id: item._id,
       url: pageUrl({
         id: item._id
