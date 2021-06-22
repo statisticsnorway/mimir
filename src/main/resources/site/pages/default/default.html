@@ -48,10 +48,10 @@
           <!-- Statbank title and links -->
           <div class="statbank-header container mb-2" data-th-if="${statbankWeb}">
             <div class="row">
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <span class="h2 statbank-title roboto-bold">Statistikkbanken</span>
               </div>
-              <div class="col-md-6 text-right">
+              <div class="col-md-8 text-right">
                 <div class="col-md-12">
                   <a data-th-href="${statbankHelpLink}" class="ssb-link mb-0 roboto-bold">
                     <span class="link-text" data-th-text="${statbankHelpText}">tom boks statbank-hjelp</span>
@@ -70,13 +70,14 @@
               </div>
             </div>
           </div>
-          <!-- Statbank title -->
+          <!-- Statbank title and placeholder -->
           <div data-th-if="${statbankWeb}" class="container mb-5">
             <div class="row">
               <div class="col">
                 <h1 data-th-text="${page.displayName}"></h1>
               </div>
             </div>
+            <div id="statbank-placeholder"></div>
           </div>
           <!-- Page Title -->
           <div data-th-if="${page.data.title}" data-th-unless="${statbankWeb}" class="container mb-5">
@@ -139,8 +140,6 @@
       </div>
     </div>
   </main>
-
-  <div data-th-if="${statbankWeb}" id="statbank-placeholder"></div>
 
   <!-- FOOTER -->
   <footer data-th-if="${footerBody}" id="footer" data-th-utext="${footerBody}" data-th-remove="tag">

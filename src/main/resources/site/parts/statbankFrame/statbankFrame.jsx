@@ -13,15 +13,13 @@ function StatbankFrame(props) {
     );
   }
 
-  const bread = [
-  ];
-
   return (
       <>
         {breadcrumb(props.breadcrumb)}
-        <div className={'statbank-overskrift'}>
-          {props.title}
+        <div className='statbank-overskrift pt-4 pb-4'>
+          <span className='h2 statbank-title roboto-bold'>{props.title}</span>
         </div>
+        <div id="statbank-placeholder"></div>
       </>
   );
 }

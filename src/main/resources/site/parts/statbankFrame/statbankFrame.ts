@@ -19,7 +19,7 @@ function renderPart(req: Request): React4xpResponse {
   }]
 
   const props: PartProperties = {
-    title: 'title is here yes',
+    title: 'Statistikkbanken',
     breadcrumb: testCrumbs
   }
 
