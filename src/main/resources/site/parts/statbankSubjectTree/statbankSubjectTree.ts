@@ -3,8 +3,6 @@ import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { Content, QueryResponse } from 'enonic-types/content'
 import { Statistics } from '../../content-types/statistics/statistics'
-import { Component } from 'enonic-types/portal'
-import { StatbankSubjectTreePartConfig } from './statbankSubjectTree-part-config'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
 const {
   getMainSubjects,
@@ -19,15 +17,12 @@ const {
   query
 } = __non_webpack_require__('/lib/xp/content')
 const {
-  getContent,
-  getComponent,
-  processHtml
+  getContent
 } = __non_webpack_require__('/lib/xp/portal')
 
 export function get(req: Request): React4xpResponse {
   const isNotInEditMode: boolean = req.mode !== 'edit'
   const content: Content = getContent()
-  const component: Component<StatbankSubjectTreePartConfig> = getComponent()
   const allMainSubjects: Array<SubjectItem> = getMainSubjects(content.language)
   const allSubSubjects: Array<SubjectItem> = getSubSubjects()
   const statbankBaseUrl: string = content.language && content.language === 'en' ? '/en/statbank/list/' : '/statbank/list/'
@@ -43,11 +38,7 @@ export function get(req: Request): React4xpResponse {
 
   const props: ReactProps = {
     statbankBaseUrl,
-    mainSubjects,
-    title: content.displayName,
-    preface: component.config.preface ? processHtml({
-      value: component.config.preface
-    }) : ''
+    mainSubjects
   }
   return React4xp.render('site/parts/statbankSubjectTree/statbankSubjectTree', props, req, {
     clientRender: isNotInEditMode
@@ -89,6 +80,4 @@ interface PreparedSubs {
 interface ReactProps {
   statbankBaseUrl: string;
   mainSubjects: Array<MainSubjectWithSubs>;
-  title: string;
-  preface: string;
 }
