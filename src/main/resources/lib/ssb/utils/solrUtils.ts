@@ -62,13 +62,9 @@ function requestSolr(queryParams: SolrQueryParams) {
     const result: HttpResponse = request({
       url: queryParams.query
     })
-    const {
-      status,
-      body
-    } = result
     return {
-      status,
-      body
+      status: result.status,
+      body: result.body
     }
   } catch (e) {
     return {

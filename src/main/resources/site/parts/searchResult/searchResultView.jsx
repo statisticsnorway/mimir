@@ -84,7 +84,7 @@ function SearchResult(props) {
       <div className="container search-result-body mt-5">
         <div className="row mb-4">
           <div className="col">
-            {props.showingPhrase.replace('{0}', hits.length.toString())}<NumberFormat
+            {props.showingPhrase.replace('{0}', hits.length.toString())}&nbsp;<NumberFormat
               value={ Number(total) }
               displayType={'text'}
               thousandSeparator={' '}/>

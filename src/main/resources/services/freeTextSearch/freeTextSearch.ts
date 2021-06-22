@@ -5,9 +5,13 @@ const {
   solrSearch
 } = __non_webpack_require__('/lib/ssb/utils/solrUtils')
 
+const {
+  sanitizeForSolr
+} = __non_webpack_require__('/lib/ssb/utils/textUtils')
+
 export function get(req: Request): Response {
   const result: SolrPrepResultAndTotal = req.params.sok ?
-    solrSearch(req.params.sok,
+    solrSearch(sanitizeForSolr(req.params.sok),
       req.params.language ? req.params.language : 'nb',
       req.params.count ? parseInt(req.params.count) : 15,
       req.params.start ? parseInt(req.params.start) : 0 ) : {
