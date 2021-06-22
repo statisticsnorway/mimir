@@ -1,9 +1,3 @@
 <part>
     <display-name>Statbank emnetre</display-name>
-    <form>
-        <input type="HtmlArea" name="preface">
-            <label>Ingress</label>
-            <occurrences minimum="1" maximum="1"/>
-        </input>
-    </form>
 </part>

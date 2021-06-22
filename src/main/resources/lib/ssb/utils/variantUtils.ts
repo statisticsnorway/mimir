@@ -256,21 +256,27 @@ export function checkVariantReleaseDate(variant: VariantInListing, day: Date, pr
   return sameDay(new Date(dayFromVariant), day)
 }
 
-export function prepareRelease(release: StatisticInListing, language: string, property: keyof VariantInListing = 'previousRelease' ): PreparedStatistics {
-  const preparedVariant: PreparedVariant = Array.isArray(release.variants) ?
-    concatReleaseTimes(release.variants, language, property) :
-    formatVariant(release.variants, language, property)
-  return {
-    id: release.id,
-    name: language === 'en' ? release.nameEN : release.name,
-    shortName: release.shortName,
-    type: localize({
-      key: 'statistic',
-      locale: language
-    }),
-    mainSubject: getMainSubject(release.shortName, language),
-    variant: preparedVariant
+export function prepareRelease(
+  release: StatisticInListing,
+  language: string,
+  property: keyof VariantInListing = 'previousRelease' ): PreparedStatistics | null {
+  if (release.variants) {
+    const preparedVariant: PreparedVariant = Array.isArray(release.variants) ?
+      concatReleaseTimes(release.variants, language, property) :
+      formatVariant(release.variants, language, property)
+    return {
+      id: release.id,
+      name: language === 'en' ? release.nameEN : release.name,
+      shortName: release.shortName,
+      type: localize({
+        key: 'statistic',
+        locale: language
+      }),
+      mainSubject: getMainSubject(release.shortName, language),
+      variant: preparedVariant
+    }
   }
+  return null
 }
 
 function concatReleaseTimes(variants: Array<VariantInListing>, language: string, property: keyof VariantInListing): PreparedVariant {
