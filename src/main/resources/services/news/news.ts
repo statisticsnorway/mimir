@@ -20,6 +20,9 @@ const {
 const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
+const {
+  xmlEscape
+} = __non_webpack_require__('/lib/text-encoding')
 
 function get(): Response {
   const rssNewsEnabled: boolean = isEnabled('rss-news', true)
@@ -37,10 +40,10 @@ function get(): Response {
   <rssitems count="${news.length + statistics.length}">
     ${[...news, ...statistics].map((n: News) =>`<rssitem>
       <guid isPermalink="false">${n.guid}</guid>
-      <title>${n.title}</title>
+      <title>${xmlEscape(n.title)}</title>
       <link>${n.link}</link>
-      <description>${n.description}</description>
-      <category>${n.category}</category>
+      <description>${xmlEscape(n.description)}</description>
+      <category>${xmlEscape(n.category)}</category>
       <subject>${n.subject}</subject>
       <language>${n.language}</language>
       <pubDate>${n.pubDate}</pubDate>
@@ -111,7 +114,7 @@ function getStatisticsNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>
       const serverOffsetInMS: number = app.config && app.config['serverOffsetInMs'] || 0
       statistics.forEach((statistic) => {
         const statreg: StatisticInListing | undefined = statregStatistics.find((s) => s.id.toString() === statistic.data.statistic)
-        const pubDate: string | undefined = statistic.publish?.first ?
+        const pubDate: string | undefined = statistic.publish?.first && statreg?.variants ?
           moment(statreg?.variants[0].previousRelease).utcOffset(serverOffsetInMS / 1000 / 60, true).format() :
           undefined
         if (pubDate) {

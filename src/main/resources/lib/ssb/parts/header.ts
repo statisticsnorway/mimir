@@ -30,7 +30,8 @@ export function getHeaderContent(language: Language): HeaderContent | undefined 
     if (!headerContent) throw new Error(`Could not get header content with id ${language.headerId}`)
 
     return {
-      logoUrl: assetUrl({
+      logoUrl: language.link,
+      logoSrc: assetUrl({
         path: 'SSB_logo_black.svg'
       }),
       logoAltText: localize({
@@ -55,6 +56,7 @@ export function getHeaderContent(language: Language): HeaderContent | undefined 
 
 export interface HeaderContent {
     logoUrl: string;
+    logoSrc: string;
     logoAltText: string;
     searchResultPageUrl?: string;
     searchText: string;

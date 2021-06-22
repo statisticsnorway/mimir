@@ -107,12 +107,12 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
 export function fetchStatisticsWithRelease(before: Date): Array<StatisticInListing> {
   const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
   return statistics.reduce((statsWithRelease: Array<StatisticInListing>, stat) => {
-    const variants: Array<VariantInListing> = ensureArray(stat.variants)
+    const variants: Array<VariantInListing> = stat.variants ? ensureArray(stat.variants)
       .sort((a: VariantInListing, b: VariantInListing) => {
         const aDate: Date = a.nextRelease ? new Date(a.nextRelease) : new Date('01.01.3000')
         const bDate: Date = b.nextRelease ? new Date(b.nextRelease) : new Date('01.01.3000')
         return aDate.getTime() - bDate.getTime()
-      })
+      }) : []
     if (variants[0] && moment(variants[0].nextRelease).isBetween(new Date(), before, 'day', '[]')) {
       statsWithRelease.push(stat)
     }
@@ -123,8 +123,8 @@ export function fetchStatisticsWithRelease(before: Date): Array<StatisticInListi
 export function fetchStatisticsWithReleaseToday(): Array<StatisticInListing> {
   const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
   return statistics.reduce((statsWithRelease: Array<StatisticInListing>, stat) => {
-    const variants: Array<VariantInListing> = ensureArray(stat.variants).filter((variant) =>
-      moment(variant.nextRelease).isSame(new Date(), 'day') || moment(variant.previousRelease).isSame(new Date(), 'day'))
+    const variants: Array<VariantInListing> = stat.variants ? ensureArray(stat.variants).filter((variant) =>
+      moment(variant.nextRelease).isSame(new Date(), 'day') || moment(variant.previousRelease).isSame(new Date(), 'day')) : []
     if (variants.length > 0) {
       statsWithRelease.push(stat)
     }
@@ -135,12 +135,12 @@ export function fetchStatisticsWithReleaseToday(): Array<StatisticInListing> {
 export function fetchStatisticsWithPreviousReleaseBetween(from: Date, to: Date): Array<StatisticInListing> {
   const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
   return statistics.reduce((statsWithRelease: Array<StatisticInListing>, stat) => {
-    const variants: Array<VariantInListing> = ensureArray(stat.variants)
+    const variants: Array<VariantInListing> = stat.variants ? ensureArray(stat.variants)
       .sort((a: VariantInListing, b: VariantInListing) => {
         const aDate: Date = a.previousRelease ? new Date(a.previousRelease) : new Date('01.01.1970')
         const bDate: Date = b.previousRelease ? new Date(b.previousRelease) : new Date('01.01.1970')
         return bDate.getTime() - aDate.getTime()
-      })
+      }) : []
     if (variants[0] && moment(variants[0].previousRelease).isBetween(from, to, undefined, '[]')) {
       stat.variants = variants
       statsWithRelease.push(stat)

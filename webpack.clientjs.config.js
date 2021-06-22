@@ -71,6 +71,7 @@ function addBabelSupport(cfg) {
 
   return R.pipe(
     setEntry('bundle', './main.es6'),
+    setEntry('ie', './ie.es6'),
     addRule(rule),
     prependExtensions(['es6', '.js', '.json'])
   )(cfg)
