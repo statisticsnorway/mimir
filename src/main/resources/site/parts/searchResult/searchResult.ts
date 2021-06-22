@@ -3,7 +3,7 @@ import { Component } from 'enonic-types/portal'
 import { Content } from 'enonic-types/content'
 import { SearchResultPartConfig } from './searchResult-part-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { PreparedSearchResult } from '../../../lib/ssb/utils/solrUtils'
+import { PreparedSearchResult, SolrPrepResultAndTotal } from '../../../lib/ssb/utils/solrUtils'
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   solrSearch
@@ -11,16 +11,22 @@ const {
 
 const {
   getComponent,
-  getContent
+  getContent,
+  pageUrl,
+  serviceUrl
 } = __non_webpack_require__('/lib/xp/portal')
 
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 
+// todo
+// gjør om til engelsk
+// legg til muligheten for å configurere antall treff
+// legg til sanitizing
+
 exports.get = function(req: Request): React4xpResponse | Response {
   try {
-    const part: Component<SearchResultPartConfig> = getComponent()
     return renderPart(req)
   } catch (e) {
     return renderError(req, 'Error in part', e)
@@ -29,7 +35,6 @@ exports.get = function(req: Request): React4xpResponse | Response {
 
 exports.preview = (req: Request): React4xpResponse | Response => {
   try {
-    const page: Content = getContent()
     return renderPart(req)
   } catch (e) {
     return renderError(req, 'Error in part', e)
@@ -37,14 +42,30 @@ exports.preview = (req: Request): React4xpResponse | Response => {
 }
 
 export function renderPart(req: Request): React4xpResponse {
-  log.info('Welcome to the search results')
-  log.info(JSON.stringify(req, null, 2))
-  if (req.params.sok) log.info(JSON.stringify(encodeURI(req.params.sok)))
+  const content: Content = getContent()
+  const part: Component<SearchResultPartConfig> = getComponent()
+  const sanitizedTerm: string | undefined = req.params.sok ? sanitize(req.params.sok) : undefined
+  const searchPageUrl: string = part.config.searchResultPage ? pageUrl({
+    id: part.config.searchResultPage
+  }) : content._path
+  const count: number = part.config.numberOfHits ? parseInt(part.config.numberOfHits) : 15
+  const solrResult: SolrPrepResultAndTotal = sanitizedTerm ?
+    solrSearch( sanitizedTerm, (content.language ? content.language : 'nb'), parseInt(part.config.numberOfHits)) : {
+      total: 0,
+      hits: []
+    }
   const props: ReactProps = {
-    hits: req.params.sok ? solrSearch(sanitize(req.params.sok)) : [],
+    hits: solrResult.hits,
+    total: solrResult.total,
+    term: sanitizedTerm ? sanitizedTerm : '',
+    count,
     title: 'Søk',
     buttonTitle: 'Flere treff',
-    total: 1234
+    showingPhrase: 'Viser {0} av ',
+    searchServiceUrl: serviceUrl({
+      service: 'freeTextSearch'
+    }),
+    searchPageUrl
   }
   return React4xp.render('site/parts/searchResult/searchResultView', props, req)
 }
@@ -59,6 +80,11 @@ interface ReactProps {
   hits: Array<PreparedSearchResult>;
   title: string;
   total: number;
+  count: number;
+  term: string;
   buttonTitle: string;
+  showingPhrase: string;
+  searchServiceUrl: string;
+  searchPageUrl: string;
 }
 

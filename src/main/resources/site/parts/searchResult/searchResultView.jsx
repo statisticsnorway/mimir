@@ -1,30 +1,38 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Input, Title } from '@statisticsnorway/ssb-component-library'
+import { Button, Divider, Input, Link, Paragraph, Title } from '@statisticsnorway/ssb-component-library'
 import { ChevronDown } from 'react-feather'
 import axios from 'axios'
+import NumberFormat from 'react-number-format'
 
 
 function SearchResult(props) {
   const [hits, setHits] = useState(props.hits)
+  const [searchTerm, setSearchTerm] = useState(props.term)
   const [loading, setLoading] = useState(false)
+  const [total, setTotal] = useState(props.total)
 
 
   function renderList() {
     return (
-      <ol>
+      <ol className="list-unstyled ">
         {hits.map( (hit, i) => {
           return (
-            <li key={i}>
-              <h3 className="search-result-ingress" dangerouslySetInnerHTML={{
-                __html: hit.title.replace(/&nbsp;/g, ' ')
-              }}>
-              </h3>
-              <div className="search-result-ingress" dangerouslySetInnerHTML={{
+            <li key={i} className="mb-4">
+              <Link href={hit.url} className="ssb-link header" >
+                <span dangerouslySetInnerHTML={{
+                  __html: hit.title.replace(/&nbsp;/g, ' ')
+                }}></span>
+              </Link>
+              <Paragraph className="search-result-ingress my-1" ><span dangerouslySetInnerHTML={{
                 __html: hit.preface.replace(/&nbsp;/g, ' ')
-              }}>
-              </div>
-
+              }}></span>
+              </Paragraph>
+              <Paragraph className="metadata">
+                <span className="type">{hit.contentType}</span> /&nbsp;
+                <time dateTime={hit.publishDate}>{hit.publishDateHuman}</time> /&nbsp;
+                {hit.mainSubject}
+              </Paragraph>
             </li>
           )
         })}
@@ -48,33 +56,46 @@ function SearchResult(props) {
     setLoading(true)
     axios.get(props.searchServiceUrl, {
       params: {
-        sok: props.term,
+        sok: searchTerm,
         start: hits.length,
-        count: 10,
+        count: props.count,
         language: props.language
       }
     }).then((res) => {
-      console.log('hi')
-      // setHits(hits.concat(res.data.hits))
-      // setTotal(res.data.total)
+      setHits(hits.concat(res.data.hits))
+      setTotal(res.data.total)
     }).finally(() => {
       setLoading(false)
     })
   }
 
+  function goToSearchResultPage() {
+    window.location = `${props.searchPageUrl}?sok=${searchTerm}`
+  }
+
   return (
-    <section>
+    <section className="search-result">
       <div className="search-result-head py-5 px-2">
         <Title>{props.title}</Title>
-        <Input></Input>
+        <Input className="search-input"
+          value={searchTerm} handleChange={setSearchTerm} searchField
+          submitCallback={goToSearchResultPage}></Input>
       </div>
       <div className="container search-result-body mt-5">
-
+        <div className="row mb-4">
+          <div className="col">
+            {props.showingPhrase.replace('{0}', hits.length.toString())}<NumberFormat
+              value={ Number(total) }
+              displayType={'text'}
+              thousandSeparator={' '}/>
+            <Divider dark></Divider>
+          </div>
+        </div>
         {renderList()}
         {renderLoading()}
         <div>
           <Button
-            disabled={loading || props.total === hits.length}
+            disabled={loading || total === hits.length}
             className="button-more mt-5"
             onClick={fetchSearchResult}
           >
@@ -92,14 +113,19 @@ SearchResult.propTypes = {
   total: PropTypes.number,
   buttonTitle: PropTypes.string,
   searchServiceUrl: PropTypes.string,
+  searchPageUrl: PropTypes.stirng,
   language: PropTypes.string,
   term: PropTypes.string,
+  showingPhrase: PropTypes.string,
+  count: PropTypes.number,
   hits: PropTypes.arrayOf({
     title: PropTypes.string,
     url: PropTypes.string,
     preface: PropTypes.string,
     mainSubject: PropTypes.string,
-    contentType: PropTypes.string
+    contentType: PropTypes.string,
+    publishDate: PropTypes.string,
+    publishDateHuman: PropTypes.string
   })
 }
 

@@ -1,10 +1,7 @@
-import { Response } from 'enonic-types/controller'
-import { HttpLibrary, HttpResponse } from 'enonic-types/http'
+import { HttpResponse } from 'enonic-types/http'
 
-const CHARACTER_SET: string = 'UTF-8'
 const SOLR_PARAM_QUERY: string = 'q'
 const SOLR_FORMAT: string = 'json'
-const SOLR_PARAM_START: string = 'start'
 const SOLR_ENV_URL: string = 'https://65f66ea6-f8d0-407e-9211-e917ec4a3846.mock.pstmn.io'
 const SOLR_FREETEXT_BASE: string = '/solr/fritekstsok/select'
 
@@ -12,14 +9,26 @@ const {
   request
 } = __non_webpack_require__('/lib/http-client')
 
-export function solrSearch(term: string): Array<PreparedSearchResult> {
+const {
+  moment
+} = __non_webpack_require__('/lib/vendor/moment')
+
+
+export function solrSearch(term: string, language: string, numberOfHits: number, start: number = 0): SolrPrepResultAndTotal {
   const searchResult: SolrResult | undefined = querySolr({
-    query: createQuery(term)
+    query: createQuery(term, language, numberOfHits, start)
   })
-  return searchResult ? nerfSearchResult(searchResult) : []
+  return searchResult ? {
+    hits: nerfSearchResult(searchResult, language),
+    total: searchResult.grouped.gruppering.matches
+  } : {
+    hits: [],
+    total: 0
+  }
 }
 
-function nerfSearchResult(solrResult: SolrResult): Array<PreparedSearchResult> {
+
+function nerfSearchResult(solrResult: SolrResult, language: string): Array<PreparedSearchResult> {
   return solrResult.grouped.gruppering.groups.reduce((acc: Array<PreparedSearchResult>, group) => {
     group.doclist.docs.forEach((doc: SolrDoc) => {
       const highlight: SolrHighlighting | undefined = solrResult.highlighting[doc.id]
@@ -28,12 +37,15 @@ function nerfSearchResult(solrResult: SolrResult): Array<PreparedSearchResult> {
         preface: highlight.innhold ? highlight.innhold[0] : doc.tittel,
         contentType: doc.innholdstype,
         url: doc.url,
-        mainSubject: doc.hovedemner
+        mainSubject: doc.hovedemner.split(';')[0],
+        publishDate: doc.publiseringsdato,
+        publishDateHuman: doc.publiseringsdato ? moment(doc.publiseringsdato).locale(language).format('Do MMMM YYYY') : ''
       })
     })
     return acc
   }, [])
 }
+
 
 function querySolr(queryParams: SolrQueryParams): SolrResult | undefined {
   const solrResponse: SolrResponse = requestSolr(queryParams)
@@ -43,6 +55,7 @@ function querySolr(queryParams: SolrQueryParams): SolrResult | undefined {
     return undefined
   }
 }
+
 
 function requestSolr(queryParams: SolrQueryParams) {
   try {
@@ -58,7 +71,6 @@ function requestSolr(queryParams: SolrQueryParams) {
       body
     }
   } catch (e) {
-    log.info(JSON.stringify(e, null, 2))
     return {
       status: e.status ? e.status : 500,
       body: e.body ? e.body : 'Internal error trying to request solr'
@@ -66,21 +78,17 @@ function requestSolr(queryParams: SolrQueryParams) {
   }
 }
 
-function createQuery(term: string): string {
-  return `${SOLR_ENV_URL}${SOLR_FREETEXT_BASE}?${SOLR_PARAM_QUERY}=${term}&wt=${SOLR_FORMAT}`
+
+function createQuery(term: string, language: string, numberOfHits: number, start: number): string {
+  return `${SOLR_ENV_URL}${SOLR_FREETEXT_BASE}?${SOLR_PARAM_QUERY}=${term}&wt=${SOLR_FORMAT}&start=${start}&rows=${numberOfHits}`
 }
 
-function sanitizeTermForSolrSearch(rawText: string): string {
-  return ''
-}
 
 /*
 * Interfaces
 */
 export interface SolrUtilsLib {
-    prepareSearchResult: (solrResult: SolrResponse) => PreparedSearchResult;
-    querySolr: (query: SolrQueryParams) => SolrResponse;
-    solrSearch: (term: string) => Array<PreparedSearchResult>;
+    solrSearch: (term: string, language: string, numberOfHits: number, start?: number) => SolrPrepResultAndTotal;
 }
 
 interface SolrQueryParams {
@@ -98,8 +106,14 @@ export interface PreparedSearchResult {
   contentType: string;
   url: string;
   mainSubject: string;
+  publishDate: string;
+  publishDateHuman: string;
 }
 
+export interface SolrPrepResultAndTotal {
+  total: number;
+  hits: Array<PreparedSearchResult>;
+}
 
 interface SolrResult {
   responseHeader: {

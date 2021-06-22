@@ -1,6 +1,11 @@
 export interface SearchResultPartConfig {
   /**
-   * Overstyr tittel
+   * Side for søkeresultat
    */
-  title?: string;
+  searchResultPage?: string;
+
+  /**
+   * Antall treff pr side
+   */
+  numberOfHits: string;
 }
