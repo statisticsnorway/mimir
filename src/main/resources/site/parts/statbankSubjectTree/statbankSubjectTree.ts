@@ -27,6 +27,8 @@ const {
 export function get(req: Request): React4xpResponse {
   const isNotInEditMode: boolean = req.mode !== 'edit'
   const content: Content = getContent()
+  const component: Component<StatbankSubjectTreePartConfig> = getComponent()
+  const language: string = content.language === 'en' ? 'en' : 'no'
   const allMainSubjects: Array<SubjectItem> = getMainSubjects(content.language)
   const allSubSubjects: Array<SubjectItem> = getSubSubjects()
   const statregStatistics: Array<StatisticInListing> = ensureArray(getAllStatisticsFromRepo())
