@@ -1,7 +1,8 @@
 const {
   getContent,
   processHtml,
-  assetUrl
+  assetUrl,
+  getSiteConfig
 } = __non_webpack_require__('/lib/xp/portal')
 const thymeleaf = __non_webpack_require__('/lib/thymeleaf')
 const {
@@ -239,6 +240,7 @@ exports.get = function(req) {
   //Fjerner /ssb fra starten av path
   const pageUrl = page._path.substr(4)
   const pageLanguage = page.language ? page.language : 'nb'
+  const statbankHelpLink = getSiteConfig().statbankHelpLink
 
   const statbankHelpText = localize({
     key: 'statbankHelpText',
@@ -267,6 +269,7 @@ exports.get = function(req) {
     language,
     statbankWeb: statbankFane,
     statbankHelpText,
+    statbankHelpLink,
     statbankFrontPage,
     statbankMainFigures,
     pageUrl,
