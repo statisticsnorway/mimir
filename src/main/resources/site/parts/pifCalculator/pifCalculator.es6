@@ -70,7 +70,7 @@ function renderPart(req) {
       months: months,
       phrases: phrases,
       nextPublishText: nextPublishText,
-      productGroups: productGroups(),
+      productGroups: productGroups(phrases),
       calculatorArticleUrl
     })
     .setId('pifCalculatorId')
@@ -189,43 +189,43 @@ const productGroups = (phrases) => {
   return [
     {
       id: 'SITCT',
-      title: 'Alle varegruppene'
+      title: phrases.pifProductTypeAll
     },
     {
       id: 'SITC0',
-      title: 'Matvarer og levende dyr'
+      title: phrases.pifProductFood
     },
     {
       id: 'SITC1',
-      title: 'Drikkevarer og tobakk'
+      title: phrases.pifProductBeverage
     },
     {
       id: 'SITC2',
-      title: 'Råvarer (ikke spiselige) ekskl. brenselstoffer'
+      title: phrases.pifProductRaw
     },
     {
       id: 'SITC3',
-      title: 'Brenselstoffer, smøreoljer, elektrisk strøm'
+      title: phrases.pifProductFuel
     },
     {
       id: 'SITC4',
-      title: 'Animalske og vegetabilske oljer, fett og voks'
+      title: phrases.pifProductOil
     },
     {
       id: 'SITC5',
-      title: 'Kjemiske produkter'
+      title: phrases.pifProductChemical
     },
     {
       id: 'SITC6',
-      title: 'Bearbeidde varer gruppert etter materiale'
+      title: phrases.pifProductManufactured
     },
     {
       id: 'SITC7',
-      title: 'Maskiner og transportmidler'
+      title: phrases.pifProductMachine
     },
     {
       id: 'SITC8',
-      title: 'Forskjellige ferdige varer'
+      title: phrases.pifProductOther
     }
   ]
 }
