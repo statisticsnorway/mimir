@@ -2,7 +2,7 @@ import { HttpResponse } from 'enonic-types/http'
 
 const SOLR_PARAM_QUERY: string = 'q'
 const SOLR_FORMAT: string = 'json'
-const SOLR_ENV_URL: string = 'https://65f66ea6-f8d0-407e-9211-e917ec4a3846.mock.pstmn.io'
+const SOLR_ENV_URL: string = 'https://i.ssb.no/solrmaster/fritekstsok/select'
 const SOLR_FREETEXT_BASE: string = '/solr/fritekstsok/select'
 
 const {
