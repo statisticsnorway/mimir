@@ -1,6 +1,8 @@
 import React from 'react';
-import {Breadcrumb} from '@statisticsnorway/ssb-component-library';
+import {Breadcrumb, Link} from '@statisticsnorway/ssb-component-library';
 import PropTypes, {object} from 'prop-types';
+import {Col, Container, Row} from 'react-bootstrap';
+
 
 function StatbankFrame(props) {
   function breadcrumb(bread) {
@@ -17,35 +19,21 @@ function StatbankFrame(props) {
       <>
         {breadcrumb(props.breadcrumb)}
         <div className='statbank-overskrift pt-4 pb-4'>
-          <div className="statbank-header container mb-2">
-            <div className="row">
-              <div className="col-md-4">
+          <Container className="statbank-header container mb-2">
+            <Row className="row">
+              <Col className="md-4">
                 <span className='h2 statbank-title roboto-bold'>{props.title}</span>
-              </div>
-              <div className="col-md-8 text-right">
+              </Col>
+              <Col className="md-8 text-right">
+                <Col className="col-md-12 roboto-bold">
+                  <Link href={props.statbankHelpLink}>{props.statbankHelpText}</Link>
+                </Col>
                 <div className="col-md-12">
-                  <a href={props.statbankHelpLink}
-                     className="ssb-link mb-0 roboto-bold">
-                    <span className="link-text">{props.statbankHelpText}</span>
-                  </a>
+                  <Link href={"/statbank"}>{props.statbankFrontPage}</Link>
                 </div>
-{/*
-                <div className="col-md-12">
-                  <a href={props.pageUrl}
-                     className="ssb-link roboto-plain">
-                    <span className="link-text"
-                          >{props.statbankMainFigures}</span>
-                  </a>
-                </div>
-*/}
-                <div className="col-md-12">
-                  <a href={"/statbank"} className="ssb-link roboto-plain">
-                    <span className="link-text">{props.statbankFrontPage}</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
+              </Col>
+            </Row>
+          </Container>
         </div>
         <div id="statbank-placeholder"></div>
       </>
