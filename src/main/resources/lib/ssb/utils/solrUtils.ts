@@ -2,7 +2,8 @@ import { HttpResponse } from 'enonic-types/http'
 
 const SOLR_PARAM_QUERY: string = 'q'
 const SOLR_FORMAT: string = 'json'
-const SOLR_ENV_URL: string = 'https://i.ssb.no/solrmaster/fritekstsok/select'
+const SOLR_ENV_URL: string = app.config && app.config['ssb.solrFriTekstSok.baseUrl'] ? app.config['ssb.solrFriTekstSok.baseUrl'] :
+  'https://i.ssb.no/solrmaster/fritekstsok/select'
 const SOLR_FREETEXT_BASE: string = '/solr/fritekstsok/select'
 
 const {
