@@ -59,6 +59,8 @@ function querySolr(queryParams: SolrQueryParams): SolrResult | undefined {
 
 
 function requestSolr(queryParams: SolrQueryParams) {
+  log.info('request solr with params:')
+  log.info(JSON.stringify(queryParams, null, 2))
   try {
     const result: HttpResponse = request({
       url: queryParams.query
@@ -68,6 +70,7 @@ function requestSolr(queryParams: SolrQueryParams) {
       body: result.body
     }
   } catch (e) {
+    log.info(JSON.stringify(e, null, 2))
     return {
       status: e.status ? e.status : 500,
       body: e.body ? e.body : 'Internal error trying to request solr'
