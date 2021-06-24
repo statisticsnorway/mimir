@@ -13,7 +13,6 @@ import axios from 'axios'
 import NumberFormat from 'react-number-format'
 
 function BkibolCalculator(props) {
-  // const maxYear = '2021' // TODO get from data
   const maxYear = props.lastUpdated.year
   const [scope, setScope] = useState({
     error: false,
@@ -215,15 +214,23 @@ function BkibolCalculator(props) {
 
   function isEndMonthValid(value) {
     const endMonthValue = value || endMonth.value
-    const endMonthValid = endMonthValue !== ''
-    // const endMonthValid = !(endYear.value === maxYear) && (endMonthValue > validMaxMonth)
+    const endMonthEmpty = endMonthValue === ''
+    if (endMonthEmpty) {
+      setEndMonth({
+        ...endMonth,
+        error: true,
+        errorMsg: props.phrases.bkibolValidateDropdownMonth
+      })
+    }
+    const endMonthValid = !((endYear.value === maxYear) && (endMonthValue > validMaxMonth))
     if (!endMonthValid) {
       setEndMonth({
         ...endMonth,
-        error: true
+        error: true,
+        errorMsg: props.nextPublishText
       })
     }
-    return endMonthValid
+    return endMonthEmpty ? endMonthEmpty : endMonthValid
   }
 
   function onBlur(id) {
