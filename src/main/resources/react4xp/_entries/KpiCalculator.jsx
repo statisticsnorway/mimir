@@ -467,7 +467,7 @@ function KpiCalculator(props) {
     return (
       <div className="calculator-form">
         <Row>
-          <Col lg="12">
+          <Col className="col-12 col-md-6">
             <Title size={2}>{props.phrases.calculatePriceChange}</Title>
           </Col>
           {renderLinkArticle()}

@@ -38,6 +38,12 @@
           font-size: 20px;
           font-weight: bold;
         }
+
+        .ssb-number.small {
+          @include media-breakpoint-up(lg) {
+            font-size: 3vw;
+          }
+        }
       }
     }
   }
@@ -78,6 +84,15 @@
         align-self: center;
       }
     }
+
+    .keyfigure.first {
+      .ssb-number.small {
+        @include media-breakpoint-down(sm) {
+          font-size: 12vw;
+        }
+      }
+    }
+
     .keyfigure.others {
       min-height: 104px;
     }

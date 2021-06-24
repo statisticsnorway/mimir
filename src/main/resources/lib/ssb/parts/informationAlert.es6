@@ -24,7 +24,8 @@ export const list = ( pageType, pageTypeId ) => {
   if (pageType == `${app.name}:statistics`) {
     return query({
       query: `(
-        (data.informationAlertVariations.statistics.selectAllStatistics = 'true' OR data.informationAlertVariations.statistics.statisticsIds IN ('${pageTypeId}')) 
+        (data.informationAlertVariations.statistics.selectAllStatistics = 'true' 
+        OR data.informationAlertVariations.statistics.statisticsIds IN ('${pageTypeId}')) 
         OR (data.selectAllStatistics = 'true' OR data.statisticIds IN ('${pageTypeId}') ) 
       ) 
       AND (publish.from LIKE '*' AND publish.from < '${now.toISOString()}')

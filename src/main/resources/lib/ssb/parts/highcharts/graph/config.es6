@@ -54,7 +54,8 @@ export const createDefaultConfig = (highchartData, displayName) => ({
   credits: {
     position: {
       align: 'left',
-      x: 10
+      x: 10,
+      y: -25
     },
     text: highchartData.creditsText,
     href: highchartData.creditsHref,
@@ -286,7 +287,7 @@ export const createDefaultConfig = (highchartData, displayName) => ({
           labels: {
             align: 'left',
             x: -10,
-            y: 0,
+            y: -1,
             style: {
               fontSize: '10px'
             }
