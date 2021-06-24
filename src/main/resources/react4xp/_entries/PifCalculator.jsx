@@ -24,7 +24,7 @@ function PifCalculator(props) {
   })
   const [startMonth, setStartMonth] = useState({
     error: false,
-    errorMsg: props.phrases.pifValidateMonth,
+    errorMsg: props.nextPublishText,
     value: ''
   })
   const [startYear, setStartYear] = useState({
@@ -109,7 +109,7 @@ function PifCalculator(props) {
   }
 
   function isFormValid() {
-    return isStartValueValid() && isStartYearValid() && isEndYearValid() && isEndMonthValid()
+    return isStartValueValid() && isStartYearValid() && isStartMonthValid() && isEndYearValid() && isEndMonthValid()
   }
 
   function isStartValueValid(value) {
@@ -133,6 +133,18 @@ function PifCalculator(props) {
     const isEndYearValid = testEndYear && testEndYear.length === 1
     const intEndYear = parseInt(endYearValue)
     return !(!isEndYearValid || isNaN(intEndYear) || intEndYear < validMinYear || intEndYear > validMaxYear)
+  }
+
+  function isStartMonthValid(value) {
+    const startMonthValue = value || startMonth.value
+    const startMonthValid = !((startYear.value === maxYear) && (startMonthValue > validMaxMonth))
+    if (!startMonthValid) {
+      setStartMonth({
+        ...startMonth,
+        error: true
+      })
+    }
+    return startMonthValid
   }
 
   function isEndMonthValid(value) {
@@ -204,7 +216,8 @@ function PifCalculator(props) {
     case 'start-month': {
       setStartMonth({
         ...startMonth,
-        value: value.id
+        value: value.id,
+        error: startMonth.error ? !isStartMonthValid(value.id) : startMonth.error
       })
       break
     }
@@ -247,6 +260,8 @@ function PifCalculator(props) {
         onSelect={(value) => {
           onChange(id, value)
         }}
+        error={startMonth.error}
+        errorMessage={startMonth.errorMsg}
         selectedItem={{
           title: props.phrases.calculatorMonthAverage,
           id: ''
@@ -363,7 +378,7 @@ function PifCalculator(props) {
     return (
       <Container className="calculator-result">
         <Row className="mb-5">
-          <Col className="amount-equal align-self-end col-12 col-md-4">
+          <Col className="amount-equal col-12 col-md-4">
             <h3>{props.phrases.pifAmountEqualled}</h3>
           </Col>
           <Col className="end-value col-12 col-md-8">

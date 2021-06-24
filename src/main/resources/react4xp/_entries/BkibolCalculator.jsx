@@ -202,14 +202,22 @@ function BkibolCalculator(props) {
 
   function isStartMonthValid(value) {
     const startMonthValue = value || startMonth.value
-    const startMonthValid = startMonthValue !== ''
-    if (!startMonthValid) {
+    const startMonthEmpty = startMonthValue === ''
+    if (startMonthEmpty) {
       setStartMonth({
         ...startMonth,
         error: true
       })
     }
-    return startMonthValid
+    const startMonthValid = !((startYear.value === maxYear) && (startMonthValue > validMaxMonth))
+    if (!startMonthValid) {
+      setStartMonth({
+        ...startMonth,
+        error: true,
+        errorMsg: props.nextPublishText
+      })
+    }
+    return startMonthEmpty ? startMonthEmpty : startMonthValid
   }
 
   function isEndMonthValid(value) {
@@ -218,8 +226,7 @@ function BkibolCalculator(props) {
     if (endMonthEmpty) {
       setEndMonth({
         ...endMonth,
-        error: true,
-        errorMsg: props.phrases.bkibolValidateDropdownMonth
+        error: true
       })
     }
     const endMonthValid = !((endYear.value === maxYear) && (endMonthValue > validMaxMonth))
@@ -485,7 +492,7 @@ function BkibolCalculator(props) {
     return (
       <Container className="calculator-result">
         <Row className="mb-5">
-          <Col className="amount-equal align-self-end col-12 col-md-4">
+          <Col className="amount-equal col-12 col-md-4">
             <h3>{props.phrases.amountEqualled}</h3>
           </Col>
           <Col className="end-value col-12 col-md-8">

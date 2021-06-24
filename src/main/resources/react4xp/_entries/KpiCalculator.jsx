@@ -14,7 +14,7 @@ function KpiCalculator(props) {
   })
   const [startMonth, setStartMonth] = useState({
     error: false,
-    errorMsg: props.phrases.kpiValidateMonth,
+    errorMsg: props.nextPublishText,
     value: '90'
   })
   const [startYear, setStartYear] = useState({
@@ -93,7 +93,7 @@ function KpiCalculator(props) {
   }
 
   function isFormValid() {
-    return isStartValueValid() && isStartYearValid() && isEndYearValid() && isEndMonthValid()
+    return isStartValueValid() && isStartYearValid() && isStartMonthValid() && isEndYearValid() && isEndMonthValid()
   }
 
   function isStartValueValid(value) {
@@ -117,6 +117,18 @@ function KpiCalculator(props) {
     const isEndYearValid = testEndYear && testEndYear.length === 1
     const intEndYear = parseInt(endYearValue)
     return !(!isEndYearValid || isNaN(intEndYear) || intEndYear < validMinYear || intEndYear > validMaxYear)
+  }
+
+  function isStartMonthValid(value) {
+    const startMonthValue = value || startMonth.value
+    const startMonthValid = !((startYear.value === maxYear) && (startMonthValue > validMaxMonth))
+    if (!startMonthValid) {
+      setStartMonth({
+        ...startMonth,
+        error: true
+      })
+    }
+    return startMonthValid
   }
 
   function isEndMonthValid(value) {
@@ -174,7 +186,8 @@ function KpiCalculator(props) {
     case 'start-month': {
       setStartMonth({
         ...startMonth,
-        value: value.id
+        value: value.id,
+        error: startMonth.error ? !isStartMonthValid(value.id) : startMonth.error
       })
       break
     }
@@ -217,6 +230,8 @@ function KpiCalculator(props) {
         onSelect={(value) => {
           onChange(id, value)
         }}
+        error={startMonth.error}
+        errorMessage={startMonth.errorMsg}
         selectedItem={{
           title: props.frontPage ? props.phrases.calculatorMonthAverageFrontpage : props.phrases.calculatorMonthAverage,
           id: '90'
@@ -481,7 +496,7 @@ function KpiCalculator(props) {
                 <Title size={3}>{props.phrases.calculatePriceChangeFrom}</Title>
                 <Container>
                   <Row>
-                    <Col className="select-year align-self-end col-sm-5">
+                    <Col className="select-year col-sm-5">
                       <Input
                         className="input-year"
                         label={props.phrases.fromYear}
@@ -554,7 +569,7 @@ function KpiCalculator(props) {
               <Col className="calculate-from col-12 col-lg-6 col-xl-4">
                 <Container>
                   <Row>
-                    <Col className="select-year align-self-end">
+                    <Col className="select-year">
                       <Input
                         className="input-year"
                         label={props.phrases.fromYear}
