@@ -70,6 +70,7 @@ function renderPart(req) {
       months: months,
       phrases: phrases,
       nextPublishText: nextPublishText,
+      lastUpdated,
       productGroups: productGroups(),
       calculatorArticleUrl
     })

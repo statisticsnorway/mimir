@@ -13,7 +13,8 @@ import axios from 'axios'
 import NumberFormat from 'react-number-format'
 
 function BkibolCalculator(props) {
-  const maxYear = '2021' // TODO get from data
+  // const maxYear = '2021' // TODO get from data
+  const maxYear = props.lastUpdated.year
   const [scope, setScope] = useState({
     error: false,
     errorMsg: 'Feil markedskode',
@@ -65,7 +66,8 @@ function BkibolCalculator(props) {
   const [endIndex, setEndIndex] = useState(null)
   const language = props.language ? props.language : 'nb'
 
-  const validMaxYear = new Date().getFullYear()
+  const validMaxYear = props.lastUpdated.year
+  const validMaxMonth = props.lastUpdated.month
   const validMinYear = 1979
   const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
 
@@ -78,7 +80,7 @@ function BkibolCalculator(props) {
       {
         id: 'STEIN',
         title: props.phrases.bkibolWorkTypeStone,
-        disabled: domene === 'BOLIGBLOKK' ? true : false
+        disabled: domene === 'BOLIGBLOKK'
       },
       {
         id: 'GRUNNARBEID',
@@ -87,7 +89,7 @@ function BkibolCalculator(props) {
       {
         id: 'BYGGEARBEIDER',
         title: props.phrases.bkibolWorkTypeWithoutStone,
-        disabled: domene === 'BOLIGBLOKK' ? true : false
+        disabled: domene === 'BOLIGBLOKK'
       },
       {
         id: 'TOMRING',
@@ -214,6 +216,7 @@ function BkibolCalculator(props) {
   function isEndMonthValid(value) {
     const endMonthValue = value || endMonth.value
     const endMonthValid = endMonthValue !== ''
+    // const endMonthValid = !(endYear.value === maxYear) && (endMonthValue > validMaxMonth)
     if (!endMonthValid) {
       setEndMonth({
         ...endMonth,
@@ -720,7 +723,11 @@ BkibolCalculator.propTypes = {
   ),
   phrases: PropTypes.arrayOf(PropTypes.string),
   calculatorArticleUrl: PropTypes.string,
-  nextPublishText: PropTypes.string
+  nextPublishText: PropTypes.string,
+  lastUpdated: PropTypes.shape({
+    month: PropTypes.string,
+    year: PropTypes.string
+  })
 }
 
 export default (props) => <BkibolCalculator {...props} />

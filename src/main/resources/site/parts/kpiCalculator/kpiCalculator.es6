@@ -73,7 +73,7 @@ function renderPart(req) {
       phrases: phrases,
       calculatorArticleUrl,
       nextPublishText: nextPublishText,
-      lastUpdated: lastUpdated,
+      lastUpdated,
       frontPage: frontPage,
       frontPageIngress: frontPageIngress
     })

@@ -70,7 +70,8 @@ function renderPart(req) {
       months: months,
       phrases: phrases,
       calculatorArticleUrl,
-      nextPublishText: nextPublishText
+      nextPublishText: nextPublishText,
+      lastUpdated
     })
     .setId('bkibolCalculatorId')
     .uniqueId()
