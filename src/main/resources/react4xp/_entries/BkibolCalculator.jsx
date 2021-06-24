@@ -214,7 +214,7 @@ function BkibolCalculator(props) {
       setStartMonth({
         ...startMonth,
         error: true,
-        errorMsg: props.nextPublishText
+        errorMsg: props.lastNumberText
       })
     }
     return startMonthEmpty ? startMonthEmpty : startMonthValid
@@ -234,7 +234,7 @@ function BkibolCalculator(props) {
       setEndMonth({
         ...endMonth,
         error: true,
-        errorMsg: props.nextPublishText
+        errorMsg: props.lastNumberText
       })
     }
     return endMonthEmpty ? endMonthEmpty : endMonthValid
@@ -738,6 +738,7 @@ BkibolCalculator.propTypes = {
   phrases: PropTypes.arrayOf(PropTypes.string),
   calculatorArticleUrl: PropTypes.string,
   nextPublishText: PropTypes.string,
+  lastNumberText: PropTypes.string,
   lastUpdated: PropTypes.shape({
     month: PropTypes.string,
     year: PropTypes.string

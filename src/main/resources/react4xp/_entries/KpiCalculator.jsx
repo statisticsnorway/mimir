@@ -14,7 +14,7 @@ function KpiCalculator(props) {
   })
   const [startMonth, setStartMonth] = useState({
     error: false,
-    errorMsg: props.nextPublishText,
+    errorMsg: props.lastNumberText,
     value: '90'
   })
   const [startYear, setStartYear] = useState({
@@ -24,7 +24,7 @@ function KpiCalculator(props) {
   })
   const [endMonth, setEndMonth] = useState({
     error: false,
-    errorMsg: props.nextPublishText,
+    errorMsg: props.lastNumberText,
     value: '90'
   })
   const [endYear, setEndYear] = useState({
@@ -639,6 +639,7 @@ KpiCalculator.propTypes = {
   phrases: PropTypes.object,
   calculatorArticleUrl: PropTypes.string,
   nextPublishText: PropTypes.string,
+  lastNumberText: PropTypes.string,
   lastUpdated: PropTypes.shape({
     month: PropTypes.string,
     year: PropTypes.string

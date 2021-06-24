@@ -27,7 +27,7 @@ function PifCalculator(props) {
   })
   const [startMonth, setStartMonth] = useState({
     error: false,
-    errorMsg: props.nextPublishText,
+    errorMsg: props.lastNumberText,
     value: ''
   })
   const [startYear, setStartYear] = useState({
@@ -37,7 +37,7 @@ function PifCalculator(props) {
   })
   const [endMonth, setEndMonth] = useState({
     error: false,
-    errorMsg: props.nextPublishText,
+    errorMsg: props.lastNumberText,
     value: ''
   })
   const [endYear, setEndYear] = useState({
@@ -615,6 +615,7 @@ PifCalculator.propTypes = {
   ),
   phrases: PropTypes.arrayOf(PropTypes.string),
   nextPublishText: PropTypes.string,
+  lastNumberText: PropTypes.string,
   lastUpdated: PropTypes.shape({
     month: PropTypes.string,
     year: PropTypes.string

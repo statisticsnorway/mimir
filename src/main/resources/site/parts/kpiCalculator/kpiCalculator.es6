@@ -39,8 +39,8 @@ exports.preview = function(req, id) {
 function renderPart(req) {
   const page = getContent()
   const part = getComponent()
-  const frontPage = part.config.frontPage ? part.config.frontPage : false
-  const frontPageIngress = part.config.ingressFrontpage ? part.config.ingressFrontpage : null
+  const frontPage = !!part.config.frontPage
+  const frontPageIngress = part.config.ingressFrontpage && part.config.ingressFrontpage
   const language = getLanguage(page)
   const phrases = language.phrases
   const config = getCalculatorConfig()
@@ -48,9 +48,9 @@ function renderPart(req) {
   const months = allMonths(phrases, frontPage)
   const lastUpdated = lastPeriod(kpiDataMonth)
   const nextUpdate = nextPeriod(lastUpdated.month, lastUpdated.year)
-  const nextReleaseMonth = nextUpdate.month == 12 ? 1 : nextUpdate.month + 1
+  const nextReleaseMonth = nextUpdate.month === 12 ? 1 : nextUpdate.month + 1
   const nextPublishText = i18nLib.localize({
-    key: 'kpiNextPublishText',
+    key: 'calculatorNextPublishText',
     locale: language.code,
     values: [
       monthLabel(months, language.code, lastUpdated.month),
@@ -59,9 +59,17 @@ function renderPart(req) {
       monthLabel(months, language.code, nextReleaseMonth)
     ]
   })
-  const calculatorArticleUrl = part.config.kpiCalculatorArticle ? pageUrl({
+  const lastNumberText = i18nLib.localize({
+    key: 'calculatorLastNumber',
+    locale: language.code,
+    values: [
+      monthLabel(months, language.code, lastUpdated.month),
+      lastUpdated.year
+    ]
+  })
+  const calculatorArticleUrl = part.config.kpiCalculatorArticle && pageUrl({
     id: part.config.kpiCalculatorArticle
-  }) : null
+  })
 
   const kpiCalculator = new React4xp('KpiCalculator')
     .setProps({
@@ -69,13 +77,14 @@ function renderPart(req) {
         service: 'kpi'
       }),
       language: language.code,
-      months: months,
-      phrases: phrases,
+      months,
+      phrases,
       calculatorArticleUrl,
-      nextPublishText: nextPublishText,
+      nextPublishText,
+      lastNumberText,
       lastUpdated,
-      frontPage: frontPage,
-      frontPageIngress: frontPageIngress
+      frontPage,
+      frontPageIngress
     })
     .setId('kpiCalculatorId')
     .uniqueId()
@@ -95,9 +104,9 @@ function renderPart(req) {
 
 const lastPeriod = (kpiDataMonth) => {
   // eslint-disable-next-line new-cap
-  const dataYear = kpiDataMonth ? kpiDataMonth.Dimension('Tid').id : null
+  const dataYear = kpiDataMonth && kpiDataMonth.Dimension('Tid').id
   // eslint-disable-next-line new-cap
-  const dataMonth = kpiDataMonth ? kpiDataMonth.Dimension('Maaned').id : null
+  const dataMonth = kpiDataMonth && kpiDataMonth.Dimension('Maaned').id
   const lastYear = dataYear[dataYear.length - 1]
   const dataLastYearMnd = []
 
@@ -123,7 +132,7 @@ const nextPeriod = (month, year) => {
   let nextPeriodMonth = parseInt(month) + 1
   let nextPeriodYear = parseInt(year)
 
-  if (month == 12) {
+  if (month === 12) {
     nextPeriodMonth = 1
     nextPeriodYear = nextPeriodYear + 1
   }
