@@ -72,7 +72,6 @@ function renderPart(req: Request): React4xpResponse {
   const contentReleases: Array<PreparedUpcomingRelease> = query<UpcomingRelease>({
     start: 0,
     count: 500,
-    // query: `type = "${app.name}:upcomingRelease" AND language = "${currentLanguage}"`
     query: `type = "${app.name}:upcomingRelease" AND language = "${currentLanguage}" AND data.date >= "${moment().format('YYYY-MM-DD')}"`
   }).hits.map((r) => {
     const date: moment.Moment = moment(r.data.date).locale(currentLanguage)
