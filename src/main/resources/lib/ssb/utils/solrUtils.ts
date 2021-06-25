@@ -50,7 +50,7 @@ function nerfSearchResult(solrResult: SolrResult, language: string): Array<Prepa
 
 function querySolr(queryParams: SolrQueryParams): SolrResult | undefined {
   const solrResponse: SolrResponse = requestSolr(queryParams)
-  if (solrResponse.status === 200) {
+  if (solrResponse.status === 200 && solrResponse.body) {
     return JSON.parse(solrResponse.body)
   } else {
     return undefined
@@ -58,7 +58,7 @@ function querySolr(queryParams: SolrQueryParams): SolrResult | undefined {
 }
 
 
-function requestSolr(queryParams: SolrQueryParams): {body: object; status: number} {
+function requestSolr(queryParams: SolrQueryParams): SolrResponse {
   try {
     const result: HttpResponse = request({
       url: queryParams.query
@@ -73,9 +73,7 @@ function requestSolr(queryParams: SolrQueryParams): {body: object; status: numbe
     log.error(JSON.stringify(e, null, 2))
     return {
       status: e.status ? e.status : 500,
-      body: e.body ? e.body : {
-        message: 'Internal error trying to request solr'
-      }
+      body: e.body ? e.body : '{message: Internal error trying to request solr}'
     }
   }
 }
@@ -99,7 +97,7 @@ interface SolrQueryParams {
 
 interface SolrResponse {
   status: number;
-  body: string;
+  body: string | null;
 }
 
 export interface PreparedSearchResult {
