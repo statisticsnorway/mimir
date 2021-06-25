@@ -26,6 +26,7 @@ export function getMainSubjects(language?: string): Array<SubjectItem> {
   }).hits as unknown as Array<Content<Page, DefaultPageConfig>>
 
   return mainSubjectsContent.map((m) =>({
+    id: m._id,
     title: m.displayName,
     subjectCode: m.page.config.subjectCode ? m.page.config.subjectCode : '',
     path: m._path,
@@ -44,6 +45,7 @@ export function getSubSubjects(language?: string): Array<SubjectItem> {
   }).hits as unknown as Array<Content<Page, DefaultPageConfig>>
 
   return subSubjectsContent.map((m) => ({
+    id: m._id,
     title: m.displayName,
     subjectCode: m.page.config.subjectCode ? m.page.config.subjectCode : '',
     path: m._path,
@@ -102,12 +104,21 @@ function getSubSubjectsByMainSubjectPath(
 
   return subSubjectsPath.map((s) => {
     const endedStatistics: Array<StatisticItem> = getEndedStatisticsByPath(s.path, statregStatistics, false)
+    const secondaryStatistics: Array<StatisticItem> = statistics.filter((statistic) => statistic.secondarySubject.includes(s.id)).map((s) => {
+      return {
+        ...s,
+        isPrimaryLocated: false
+      }
+    })
+    const allStatistics: Array<StatisticItem> = [...getStatisticsByPath(statistics, s.path), ...endedStatistics, ...secondaryStatistics]
+
     const titles: Array<Title> | null = getTitlesBySubjectName(subjects, s.name)
     return {
+      id: s.id,
       subjectCode: s.subjectCode ? s.subjectCode : '',
       name: s.name,
       titles: titles ? titles : [],
-      statistics: [...getStatisticsByPath(statistics, s.path), ...endedStatistics]
+      statistics: allStatistics
     }
   })
 }
@@ -140,7 +151,8 @@ function getStatistics(statregStatistics: Array<StatisticInListing>): Array<Stat
             language: statistic.language === 'en' ? 'en' : 'no',
             shortName: statreg.shortName,
             isPrimaryLocated: true,
-            titles: titles
+            titles: titles,
+            secondarySubject: statistic.data.subtopic ? ensureArray(statistic.data.subtopic) : []
           }
         )
       }
@@ -182,7 +194,8 @@ export function getEndedStatisticsByPath(path: string, statregStatistics: Array<
             language: 'no',
             shortName: statreg.shortName,
             isPrimaryLocated: true,
-            titles: titles
+            titles: titles,
+            secondarySubject: []
           }
         )
       }
@@ -218,6 +231,7 @@ export function getSubjectStructur(language: string): Array<MainSubject> {
 }
 
 export interface SubjectItem {
+  id: string;
   title: string;
   subjectCode?: string;
   path: string;
@@ -233,6 +247,7 @@ export interface MainSubject {
 }
 
 export interface SubSubject {
+    id: string;
     subjectCode: string;
     name: string;
     titles: Array<Title>;
@@ -250,6 +265,7 @@ export interface StatisticItem {
     shortName: string;
     isPrimaryLocated: boolean;
     titles: Array<Title>;
+    secondarySubject: Array<string>;
 }
 
 interface EndedStatistic {
