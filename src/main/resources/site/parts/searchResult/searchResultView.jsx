@@ -69,6 +69,12 @@ function SearchResult(props) {
     })
   }
 
+  function renderNoHitMessage() {
+    return (
+      <p>{props.noHitMessage.replace('{0}', `"${props.term}"`)}</p>
+    )
+  }
+
   function goToSearchResultPage() {
     window.location = `${props.searchPageUrl}?sok=${searchTerm}`
   }
@@ -91,7 +97,7 @@ function SearchResult(props) {
             <Divider dark></Divider>
           </div>
         </div>
-        {renderList()}
+        {hits.length > 0 ? renderList() : renderNoHitMessage()}
         {renderLoading()}
         <div>
           <Button
@@ -118,6 +124,7 @@ SearchResult.propTypes = {
   term: PropTypes.string,
   showingPhrase: PropTypes.string,
   count: PropTypes.number,
+  noHitMessage: PropTypes.string,
   hits: PropTypes.arrayOf({
     title: PropTypes.string,
     url: PropTypes.string,

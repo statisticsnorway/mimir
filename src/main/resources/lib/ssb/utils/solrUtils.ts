@@ -2,9 +2,9 @@ import { HttpResponse } from 'enonic-types/http'
 
 const SOLR_PARAM_QUERY: string = 'q'
 const SOLR_FORMAT: string = 'json'
-const SOLR_ENV_URL: string = app.config && app.config['ssb.solrFriTekstSok.baseUrl'] ? app.config['ssb.solrFriTekstSok.baseUrl'] :
-  'https://i.ssb.no'
-const SOLR_FREETEXT_BASE: string = '/solrmaster/fritekstsok/select'
+const SOLR_BASE_URL: string = app.config && app.config['ssb.solrFriTekstSok.baseUrl'] ? app.config['ssb.solrFriTekstSok.baseUrl'] :
+  'https://i.ssb.no/solrmaster/fritekstsok/select'
+
 
 const {
   request
@@ -59,8 +59,6 @@ function querySolr(queryParams: SolrQueryParams): SolrResult | undefined {
 
 
 function requestSolr(queryParams: SolrQueryParams) {
-  log.info('request solr with params:')
-  log.info(JSON.stringify(queryParams, null, 2))
   try {
     const result: HttpResponse = request({
       url: queryParams.query
@@ -70,17 +68,21 @@ function requestSolr(queryParams: SolrQueryParams) {
       body: result.body
     }
   } catch (e) {
-    log.info(JSON.stringify(e, null, 2))
+    log.error('Could not request solr with parameters: ')
+    log.error(JSON.stringify(queryParams, null, 2))
+    log.error(JSON.stringify(e, null, 2))
     return {
       status: e.status ? e.status : 500,
-      body: e.body ? e.body : 'Internal error trying to request solr'
+      body: e.body ? e.body : {
+        message: 'Internal error trying to request solr'
+      }
     }
   }
 }
 
 
 function createQuery(term: string, language: string, numberOfHits: number, start: number): string {
-  return `${SOLR_ENV_URL}${SOLR_FREETEXT_BASE}?${SOLR_PARAM_QUERY}=${term}&wt=${SOLR_FORMAT}&start=${start}&rows=${numberOfHits}`
+  return `${SOLR_BASE_URL}?${SOLR_PARAM_QUERY}=${term}&wt=${SOLR_FORMAT}&start=${start}&rows=${numberOfHits}`
 }
 
 

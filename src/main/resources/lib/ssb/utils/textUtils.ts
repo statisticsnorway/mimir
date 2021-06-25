@@ -9,6 +9,7 @@ export function sanitizeForSolr(term: string): string {
     .replace('´', '')
     .replace('`', '')
     .replace('"', '')
+    .replace('\\+', '&2B')
 }
 
 export interface TextUtilsLib {

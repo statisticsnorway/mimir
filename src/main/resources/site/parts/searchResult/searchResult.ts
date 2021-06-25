@@ -68,6 +68,10 @@ export function renderPart(req: Request): React4xpResponse {
     term: sanitizedTerm ? sanitizedTerm : '',
     count,
     title: content.displayName,
+    noHitMessage: localize({
+      key: 'searchResult.noHitMessage',
+      locale: language
+    }),
     buttonTitle: localize({
       key: 'button.showMore',
       locale: language
@@ -93,6 +97,7 @@ interface ReactProps {
   count: number;
   term: string;
   buttonTitle: string;
+  noHitMessage: string;
   showingPhrase: string;
   searchServiceUrl: string;
   searchPageUrl: string;
