@@ -14,7 +14,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/dataset/dataset')
 const {
   progress,
-  submit
+  executeFunction
 } = __non_webpack_require__('/lib/xp/task')
 const {
   logUserDataQuery,
@@ -36,9 +36,9 @@ export function refreshQueriesAsync(
   let a: number = 0
   return httpQueriesBatches.map((httpQueriesbatch: Array<Content<DataSource>>) => {
     a++
-    return submit({
+    return executeFunction({
       description: `RefreshRows_${a}`,
-      task: function() {
+      func: function() {
         progress({
           current: 0,
           total: httpQueriesbatch.length,
