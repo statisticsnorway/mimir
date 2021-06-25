@@ -1,7 +1,8 @@
 const {
   getContent,
   processHtml,
-  assetUrl
+  assetUrl,
+  getSiteConfig
 } = __non_webpack_require__('/lib/xp/portal')
 const thymeleaf = __non_webpack_require__('/lib/thymeleaf')
 const {
@@ -31,6 +32,10 @@ const {
 const {
   getStatisticByIdFromRepo
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')
+const {
+  localize
+} = __non_webpack_require__('/lib/xp/i18n')
+
 
 const partsWithPreview = [ // Parts that has preview
   `${app.name}:map`,
@@ -235,6 +240,25 @@ exports.get = function(req) {
 
   const hideBreadcrumb = !!page.page.config.hide_breadcrumb
 
+  const statbankFane = (req.params.xpframe === 'statbank')
+  //Fjerner /ssb fra starten av path
+  const pageUrl = page._path.substr(4)
+  const pageLanguage = page.language ? page.language : 'nb'
+  const statbankHelpLink = getSiteConfig().statbankHelpLink
+
+  const statbankHelpText = localize({
+    key: 'statbankHelpText',
+    locale: pageLanguage === 'nb' ? 'no' : pageLanguage
+  })
+  const statbankMainFigures = localize({
+    key: 'statbankMainFigures',
+    locale: pageLanguage === 'nb' ? 'no' : pageLanguage
+  })
+  const statbankFrontPage = localize({
+    key: 'statbankFrontPage',
+    locale: pageLanguage === 'nb' ? 'no' : pageLanguage
+  })
+
   const model = {
     pageTitle: 'SSB', // not really used on normal pages because of SEO app (404 still uses this)
     page,
@@ -248,6 +272,12 @@ exports.get = function(req) {
     jsLibsUrl,
     ieUrl,
     language,
+    statbankWeb: statbankFane,
+    statbankHelpText,
+    statbankHelpLink,
+    statbankFrontPage,
+    statbankMainFigures,
+    pageUrl,
     GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null,
     headerBody: header ? header.body : undefined,
     footerBody: footer ? footer.body : undefined,

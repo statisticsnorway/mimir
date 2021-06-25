@@ -1,5 +1,10 @@
 export interface SiteConfig {
   /**
+   * URL til hjelpeside for statistikkbanken.
+   */
+  statbankHelpLink: string;
+
+  /**
    * Kommunedata innhold fra api
    */
   municipalDataContentId?: string;

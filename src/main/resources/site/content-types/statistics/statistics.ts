@@ -108,6 +108,11 @@ export interface Statistics {
   keywords?: string;
 
   /**
+   * Delemner
+   */
+  subtopic?: string;
+
+  /**
    * Statistikk
    */
   statistic?: string;
