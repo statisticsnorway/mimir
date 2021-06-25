@@ -58,7 +58,7 @@ function querySolr(queryParams: SolrQueryParams): SolrResult | undefined {
 }
 
 
-function requestSolr(queryParams: SolrQueryParams) {
+function requestSolr(queryParams: SolrQueryParams): {body: object; status: number} {
   try {
     const result: HttpResponse = request({
       url: queryParams.query
@@ -132,7 +132,9 @@ interface SolrResult {
       groups: Array<SolrGroup>;
     };
   };
+  // eslint-disable-next-line camelcase
   facet_counts: {
+    // eslint-disable-next-line camelcase
     facet_queries: {
       uke: number;
       maned: number;
@@ -140,6 +142,7 @@ interface SolrResult {
       '5ar': number;
       udatert: number;
     };
+    // eslint-disable-next-line camelcase
     facet_fields: {
       innholdstype: Array<string | number>;
     };
