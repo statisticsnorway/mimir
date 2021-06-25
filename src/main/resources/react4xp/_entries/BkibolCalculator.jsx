@@ -13,7 +13,7 @@ import axios from 'axios'
 import NumberFormat from 'react-number-format'
 
 function BkibolCalculator(props) {
-  const maxYear = props.lastUpdated.year
+  const validMaxYear = props.lastUpdated.year
   const [scope, setScope] = useState({
     error: false,
     errorMsg: 'Feil markedskode',
@@ -41,7 +41,7 @@ function BkibolCalculator(props) {
   })
   const [startYear, setStartYear] = useState({
     error: false,
-    errorMsg: `${props.phrases.bkibolValidateYear} ${maxYear}`,
+    errorMsg: `${props.phrases.bkibolValidateYear} ${validMaxYear}`,
     value: ''
   })
   const [endMonth, setEndMonth] = useState({
@@ -51,7 +51,7 @@ function BkibolCalculator(props) {
   })
   const [endYear, setEndYear] = useState({
     error: false,
-    errorMsg: `${props.phrases.bkibolValidateYear} ${maxYear}`,
+    errorMsg: `${props.phrases.bkibolValidateYear} ${validMaxYear}`,
     value: ''
   })
   const [errorMessage, setErrorMessage] = useState(null)
@@ -65,7 +65,7 @@ function BkibolCalculator(props) {
   const [endIndex, setEndIndex] = useState(null)
   const language = props.language ? props.language : 'nb'
 
-  const validMaxYear = props.lastUpdated.year
+  // const validMaxYear = props.lastUpdated.year
   const validMaxMonth = props.lastUpdated.month
   const validMinYear = 1979
   const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
@@ -209,7 +209,7 @@ function BkibolCalculator(props) {
         error: true
       })
     }
-    const startMonthValid = !((startYear.value === maxYear) && (startMonthValue > validMaxMonth))
+    const startMonthValid = !((startYear.value === validMaxYear) && (startMonthValue > validMaxMonth))
     if (!startMonthValid) {
       setStartMonth({
         ...startMonth,
@@ -229,7 +229,7 @@ function BkibolCalculator(props) {
         error: true
       })
     }
-    const endMonthValid = !((endYear.value === maxYear) && (endMonthValue > validMaxMonth))
+    const endMonthValid = !((endYear.value === validMaxYear) && (endMonthValue > validMaxMonth))
     if (!endMonthValid) {
       setEndMonth({
         ...endMonth,

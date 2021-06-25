@@ -6,7 +6,7 @@ import axios from 'axios'
 import NumberFormat from 'react-number-format'
 
 function KpiCalculator(props) {
-  const maxYear = props.lastUpdated.year
+  const validMaxYear = props.lastUpdated.year
   const [startValue, setStartValue] = useState({
     error: false,
     errorMsg: props.phrases.kpiValidateAmountNumber,
@@ -19,7 +19,7 @@ function KpiCalculator(props) {
   })
   const [startYear, setStartYear] = useState({
     error: false,
-    errorMsg: `${props.phrases.kpiValidateYear} ${maxYear}`,
+    errorMsg: `${props.phrases.kpiValidateYear} ${validMaxYear}`,
     value: ''
   })
   const [endMonth, setEndMonth] = useState({
@@ -29,7 +29,7 @@ function KpiCalculator(props) {
   })
   const [endYear, setEndYear] = useState({
     error: false,
-    errorMsg: `${props.phrases.kpiValidateYear} ${maxYear}`,
+    errorMsg: `${props.phrases.kpiValidateYear} ${validMaxYear}`,
     value: ''
   })
   const [errorMessage, setErrorMessage] = useState(null)
@@ -41,7 +41,6 @@ function KpiCalculator(props) {
   const [startValueResult, setStartValueResult] = useState(null)
   const language = props.language ? props.language : 'nb'
 
-  const validMaxYear = props.lastUpdated.year
   const validMaxMonth = props.lastUpdated.month
   const validMinYear = 1865
   const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
@@ -121,7 +120,7 @@ function KpiCalculator(props) {
 
   function isStartMonthValid(value) {
     const startMonthValue = value || startMonth.value
-    const startMonthValid = !((startYear.value === maxYear) && (startMonthValue > validMaxMonth))
+    const startMonthValid = !((startYear.value === validMaxYear) && (startMonthValue > validMaxMonth))
     if (!startMonthValid) {
       setStartMonth({
         ...startMonth,
@@ -133,7 +132,7 @@ function KpiCalculator(props) {
 
   function isEndMonthValid(value) {
     const endMonthValue = value || endMonth.value
-    const endMonthValid = !((endYear.value === maxYear) && (endMonthValue > validMaxMonth))
+    const endMonthValid = !((endYear.value === validMaxYear) && (endMonthValue > validMaxMonth))
     if (!endMonthValid) {
       setEndMonth({
         ...endMonth,
