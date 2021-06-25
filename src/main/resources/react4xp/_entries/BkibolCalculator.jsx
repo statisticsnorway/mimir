@@ -13,7 +13,7 @@ import axios from 'axios'
 import NumberFormat from 'react-number-format'
 
 function BkibolCalculator(props) {
-  const maxYear = '2021' // TODO get from data
+  const validMaxYear = props.lastUpdated.year
   const [scope, setScope] = useState({
     error: false,
     errorMsg: 'Feil markedskode',
@@ -41,7 +41,7 @@ function BkibolCalculator(props) {
   })
   const [startYear, setStartYear] = useState({
     error: false,
-    errorMsg: `${props.phrases.bkibolValidateYear} ${maxYear}`,
+    errorMsg: `${props.phrases.bkibolValidateYear} ${validMaxYear}`,
     value: ''
   })
   const [endMonth, setEndMonth] = useState({
@@ -51,7 +51,7 @@ function BkibolCalculator(props) {
   })
   const [endYear, setEndYear] = useState({
     error: false,
-    errorMsg: `${props.phrases.bkibolValidateYear} ${maxYear}`,
+    errorMsg: `${props.phrases.bkibolValidateYear} ${validMaxYear}`,
     value: ''
   })
   const [errorMessage, setErrorMessage] = useState(null)
@@ -65,7 +65,8 @@ function BkibolCalculator(props) {
   const [endIndex, setEndIndex] = useState(null)
   const language = props.language ? props.language : 'nb'
 
-  const validMaxYear = new Date().getFullYear()
+  // const validMaxYear = props.lastUpdated.year
+  const validMaxMonth = props.lastUpdated.month
   const validMinYear = 1979
   const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
 
@@ -78,7 +79,7 @@ function BkibolCalculator(props) {
       {
         id: 'STEIN',
         title: props.phrases.bkibolWorkTypeStone,
-        disabled: domene === 'BOLIGBLOKK' ? true : false
+        disabled: domene === 'BOLIGBLOKK'
       },
       {
         id: 'GRUNNARBEID',
@@ -87,7 +88,7 @@ function BkibolCalculator(props) {
       {
         id: 'BYGGEARBEIDER',
         title: props.phrases.bkibolWorkTypeWithoutStone,
-        disabled: domene === 'BOLIGBLOKK' ? true : false
+        disabled: domene === 'BOLIGBLOKK'
       },
       {
         id: 'TOMRING',
@@ -201,26 +202,42 @@ function BkibolCalculator(props) {
 
   function isStartMonthValid(value) {
     const startMonthValue = value || startMonth.value
-    const startMonthValid = startMonthValue !== ''
-    if (!startMonthValid) {
+    const startMonthEmpty = startMonthValue === ''
+    if (startMonthEmpty) {
       setStartMonth({
         ...startMonth,
         error: true
       })
     }
-    return startMonthValid
+    const startMonthValid = !((startYear.value === validMaxYear) && (startMonthValue > validMaxMonth))
+    if (!startMonthValid) {
+      setStartMonth({
+        ...startMonth,
+        error: true,
+        errorMsg: props.lastNumberText
+      })
+    }
+    return startMonthEmpty ? startMonthEmpty : startMonthValid
   }
 
   function isEndMonthValid(value) {
     const endMonthValue = value || endMonth.value
-    const endMonthValid = endMonthValue !== ''
-    if (!endMonthValid) {
+    const endMonthEmpty = endMonthValue === ''
+    if (endMonthEmpty) {
       setEndMonth({
         ...endMonth,
         error: true
       })
     }
-    return endMonthValid
+    const endMonthValid = !((endYear.value === validMaxYear) && (endMonthValue > validMaxMonth))
+    if (!endMonthValid) {
+      setEndMonth({
+        ...endMonth,
+        error: true,
+        errorMsg: props.lastNumberText
+      })
+    }
+    return endMonthEmpty ? endMonthEmpty : endMonthValid
   }
 
   function onBlur(id) {
@@ -294,6 +311,12 @@ function BkibolCalculator(props) {
       break
     }
     case 'start-year': {
+      if (startMonth.error) {
+        setStartMonth({
+          ...startMonth,
+          error: false
+        })
+      }
       setStartYear({
         ...startYear,
         value,
@@ -310,6 +333,12 @@ function BkibolCalculator(props) {
       break
     }
     case 'end-year': {
+      if (endMonth.error) {
+        setEndMonth({
+          ...endMonth,
+          error: false
+        })
+      }
       setEndYear({
         ...endYear,
         value,
@@ -475,7 +504,7 @@ function BkibolCalculator(props) {
     return (
       <Container className="calculator-result">
         <Row className="mb-5">
-          <Col className="amount-equal align-self-end col-12 col-md-4">
+          <Col className="amount-equal col-12 col-md-4">
             <h3>{props.phrases.amountEqualled}</h3>
           </Col>
           <Col className="end-value col-12 col-md-8">
@@ -720,7 +749,12 @@ BkibolCalculator.propTypes = {
   ),
   phrases: PropTypes.arrayOf(PropTypes.string),
   calculatorArticleUrl: PropTypes.string,
-  nextPublishText: PropTypes.string
+  nextPublishText: PropTypes.string,
+  lastNumberText: PropTypes.string,
+  lastUpdated: PropTypes.shape({
+    month: PropTypes.string,
+    year: PropTypes.string
+  })
 }
 
 export default (props) => <BkibolCalculator {...props} />

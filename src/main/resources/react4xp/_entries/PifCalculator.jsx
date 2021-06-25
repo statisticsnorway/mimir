@@ -6,11 +6,10 @@ import axios from 'axios'
 import NumberFormat from 'react-number-format'
 
 function PifCalculator(props) {
+  const validMaxYear = props.lastUpdated.year
   const {
-    pifErrorMarket, pifErrorProduct
+    pifErrorMarket, pifErrorProduct, pifValidateAmountNumber, pifValidateYear
   } = props.phrases
-
-  const maxYear = '2021' // TODO get from data
   const [scopeCode, setScopeCode] = useState({
     error: false,
     errorMsg: pifErrorMarket,
@@ -23,27 +22,27 @@ function PifCalculator(props) {
   })
   const [startValue, setStartValue] = useState({
     error: false,
-    errorMsg: props.phrases.pifValidateAmountNumber,
+    errorMsg: pifValidateAmountNumber,
     value: ''
   })
   const [startMonth, setStartMonth] = useState({
     error: false,
-    errorMsg: props.phrases.pifValidateMonth,
+    errorMsg: props.lastNumberText,
     value: ''
   })
   const [startYear, setStartYear] = useState({
     error: false,
-    errorMsg: `${props.phrases.pifValidateYear} ${maxYear}`,
+    errorMsg: `${pifValidateYear} ${validMaxYear}`,
     value: ''
   })
   const [endMonth, setEndMonth] = useState({
     error: false,
-    errorMsg: props.phrases.pifValidateMonth,
+    errorMsg: props.lastNumberText,
     value: ''
   })
   const [endYear, setEndYear] = useState({
     error: false,
-    errorMsg: `${props.phrases.pifValidateYear} ${maxYear}`,
+    errorMsg: `${pifValidateYear} ${validMaxYear}`,
     value: ''
   })
   const [errorMessage, setErrorMessage] = useState(null)
@@ -57,7 +56,7 @@ function PifCalculator(props) {
   const [endIndex, setEndIndex] = useState(null)
   const language = props.language ? props.language : 'nb'
 
-  const validMaxYear = new Date().getFullYear()
+  const validMaxMonth = props.lastUpdated.month
   const validMinYear = 1865
   const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
 
@@ -112,7 +111,7 @@ function PifCalculator(props) {
   }
 
   function isFormValid() {
-    return isStartValueValid() && isStartYearValid() && isEndYearValid()
+    return isStartValueValid() && isStartYearValid() && isStartMonthValid() && isEndYearValid() && isEndMonthValid()
   }
 
   function isStartValueValid(value) {
@@ -136,6 +135,30 @@ function PifCalculator(props) {
     const isEndYearValid = testEndYear && testEndYear.length === 1
     const intEndYear = parseInt(endYearValue)
     return !(!isEndYearValid || isNaN(intEndYear) || intEndYear < validMinYear || intEndYear > validMaxYear)
+  }
+
+  function isStartMonthValid(value) {
+    const startMonthValue = value || startMonth.value
+    const startMonthValid = !((startYear.value === validMaxYear) && (startMonthValue === '' || startMonthValue > validMaxMonth))
+    if (!startMonthValid) {
+      setStartMonth({
+        ...startMonth,
+        error: true
+      })
+    }
+    return startMonthValid
+  }
+
+  function isEndMonthValid(value) {
+    const endMonthValue = value || endMonth.value
+    const endMonthValid = !((endYear.value === validMaxYear) && (endMonthValue === '' || endMonthValue > validMaxMonth))
+    if (!endMonthValid) {
+      setEndMonth({
+        ...endMonth,
+        error: true
+      })
+    }
+    return endMonthValid
   }
 
   function onBlur(id) {
@@ -195,11 +218,18 @@ function PifCalculator(props) {
     case 'start-month': {
       setStartMonth({
         ...startMonth,
-        value: value.id
+        value: value.id,
+        error: startMonth.error ? !isStartMonthValid(value.id) : startMonth.error
       })
       break
     }
     case 'start-year': {
+      if (startMonth.error) {
+        setStartMonth({
+          ...startMonth,
+          error: false
+        })
+      }
       setStartYear({
         ...startYear,
         value,
@@ -210,11 +240,18 @@ function PifCalculator(props) {
     case 'end-month': {
       setEndMonth({
         ...endMonth,
-        value: value.id
+        value: value.id,
+        error: endMonth.error ? !isEndMonthValid(value.id) : endMonth.error
       })
       break
     }
     case 'end-year': {
+      if (endMonth.error) {
+        setEndMonth({
+          ...endMonth,
+          error: false
+        })
+      }
       setEndYear({
         ...endYear,
         value,
@@ -237,6 +274,28 @@ function PifCalculator(props) {
         onSelect={(value) => {
           onChange(id, value)
         }}
+        error={startMonth.error}
+        errorMessage={startMonth.errorMsg}
+        selectedItem={{
+          title: props.phrases.calculatorMonthAverage,
+          id: ''
+        }}
+        items={props.months}
+      />
+    )
+  }
+
+  function addDropdownEndMonth(id) {
+    return (
+      <Dropdown
+        className="month"
+        id={id}
+        header={props.phrases.chooseMonth}
+        onSelect={(value) => {
+          onChange(id, value)
+        }}
+        error={endMonth.error}
+        errorMessage={endMonth.errorMsg}
         selectedItem={{
           title: props.phrases.calculatorMonthAverage,
           id: ''
@@ -335,7 +394,7 @@ function PifCalculator(props) {
     return (
       <Container className="calculator-result">
         <Row className="mb-5">
-          <Col className="amount-equal align-self-end col-12 col-md-4">
+          <Col className="amount-equal col-12 col-md-4">
             <h3>{props.phrases.pifAmountEqualled}</h3>
           </Col>
           <Col className="end-value col-12 col-md-8">
@@ -489,7 +548,7 @@ function PifCalculator(props) {
                 <h3>{props.phrases.calculatePriceChangeFrom}</h3>
                 <Container>
                   <Row>
-                    <Col className="select-year align-self-end col-sm-5">
+                    <Col className="select-year col-sm-5">
                       <Input
                         className="input-year"
                         label={props.phrases.fromYear}
@@ -509,7 +568,7 @@ function PifCalculator(props) {
                 <h3>{props.phrases.calculatePriceChangeTo}</h3>
                 <Container>
                   <Row>
-                    <Col className="select-year align-self-end col-sm-5">
+                    <Col className="select-year col-sm-5">
                       <Input
                         className="input-year"
                         label={props.phrases.toYear}
@@ -520,7 +579,7 @@ function PifCalculator(props) {
                       />
                     </Col>
                     <Col className="select-month col-sm-7">
-                      {addDropdownMonth('end-month')}
+                      {addDropdownEndMonth('end-month')}
                     </Col>
                   </Row>
                 </Container>
@@ -567,6 +626,11 @@ PifCalculator.propTypes = {
   ),
   phrases: PropTypes.arrayOf(PropTypes.string),
   nextPublishText: PropTypes.string,
+  lastNumberText: PropTypes.string,
+  lastUpdated: PropTypes.shape({
+    month: PropTypes.string,
+    year: PropTypes.string
+  }),
   calculatorArticleUrl: PropTypes.string
 }
 

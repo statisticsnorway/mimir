@@ -46,9 +46,9 @@ function renderPart(req) {
   const bkibolDataEnebolig = getBkibolDatasetEnebolig(config)
   const lastUpdated = lastPeriod(bkibolDataEnebolig)
   const nextUpdate = nextPeriod(lastUpdated.month, lastUpdated.year)
-  const nextReleaseMonth = nextUpdate.month == 12 ? 1 : nextUpdate.month + 1
+  const nextReleaseMonth = nextUpdate.month === 12 ? 1 : nextUpdate.month + 1
   const nextPublishText = i18nLib.localize({
-    key: 'bkibolNextPublishText',
+    key: 'calculatorNextPublishText',
     locale: language.code,
     values: [
       monthLabel(months, language.code, lastUpdated.month),
@@ -57,9 +57,17 @@ function renderPart(req) {
       monthLabel(months, language.code, nextReleaseMonth)
     ]
   })
-  const calculatorArticleUrl = part.config.bkibolCalculatorArticle ? pageUrl({
+  const lastNumberText = i18nLib.localize({
+    key: 'calculatorLastNumber',
+    locale: language.code,
+    values: [
+      monthLabel(months, language.code, lastUpdated.month),
+      lastUpdated.year
+    ]
+  })
+  const calculatorArticleUrl = part.config.bkibolCalculatorArticle && pageUrl({
     id: part.config.bkibolCalculatorArticle
-  }) : null
+  })
 
   const bkibolCalculator = new React4xp('BkibolCalculator')
     .setProps({
@@ -67,10 +75,12 @@ function renderPart(req) {
         service: 'bkibol'
       }),
       language: language.code,
-      months: months,
-      phrases: phrases,
+      months,
+      phrases,
       calculatorArticleUrl,
-      nextPublishText: nextPublishText
+      nextPublishText,
+      lastNumberText,
+      lastUpdated
     })
     .setId('bkibolCalculatorId')
     .uniqueId()
@@ -90,7 +100,7 @@ function renderPart(req) {
 
 const lastPeriod = (bkibolData) => {
   // eslint-disable-next-line new-cap
-  const dataYear = bkibolData ? bkibolData.Dimension('Tid').id : null
+  const dataYear = bkibolData && bkibolData.Dimension('Tid').id
   const lastYear = dataYear[dataYear.length - 1]
   return {
     month: lastYear.substr(5, 2),
@@ -102,7 +112,7 @@ const nextPeriod = (month, year) => {
   let nextPeriodMonth = parseInt(month) + 1
   let nextPeriodYear = parseInt(year)
 
-  if (month == 12) {
+  if (month === 12) {
     nextPeriodMonth = 1
     nextPeriodYear = nextPeriodYear + 1
   }

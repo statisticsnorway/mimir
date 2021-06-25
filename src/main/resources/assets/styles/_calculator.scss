@@ -37,6 +37,12 @@
         padding-top: 32px;
         padding-bottom: 32px;
       }
+
+      .input-year {
+        label {
+          margin-bottom: 5px;
+        }
+      }
     }
 
     .calculator-result {
@@ -273,12 +279,6 @@
 
     .select-serie, .ssb-dropdown.serie-enebolig, .ssb-dropdown.serie-boligblokk, .list-of-options {
       max-width: 300px;
-    }
-
-    .input-year {
-      label {
-        margin-bottom: 5px;
-      }
     }
 
     .start-value {

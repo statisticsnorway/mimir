@@ -6,7 +6,7 @@ import axios from 'axios'
 import NumberFormat from 'react-number-format'
 
 function KpiCalculator(props) {
-  const maxYear = props.lastUpdated.year
+  const validMaxYear = props.lastUpdated.year
   const [startValue, setStartValue] = useState({
     error: false,
     errorMsg: props.phrases.kpiValidateAmountNumber,
@@ -14,22 +14,22 @@ function KpiCalculator(props) {
   })
   const [startMonth, setStartMonth] = useState({
     error: false,
-    errorMsg: props.phrases.kpiValidateMonth,
+    errorMsg: props.lastNumberText,
     value: '90'
   })
   const [startYear, setStartYear] = useState({
     error: false,
-    errorMsg: `${props.phrases.kpiValidateYear} ${maxYear}`,
+    errorMsg: `${props.phrases.kpiValidateYear} ${validMaxYear}`,
     value: ''
   })
   const [endMonth, setEndMonth] = useState({
     error: false,
-    errorMsg: props.phrases.kpiValidateMonth,
+    errorMsg: props.lastNumberText,
     value: '90'
   })
   const [endYear, setEndYear] = useState({
     error: false,
-    errorMsg: `${props.phrases.kpiValidateYear} ${maxYear}`,
+    errorMsg: `${props.phrases.kpiValidateYear} ${validMaxYear}`,
     value: ''
   })
   const [errorMessage, setErrorMessage] = useState(null)
@@ -41,7 +41,7 @@ function KpiCalculator(props) {
   const [startValueResult, setStartValueResult] = useState(null)
   const language = props.language ? props.language : 'nb'
 
-  const validMaxYear = new Date().getFullYear()
+  const validMaxMonth = props.lastUpdated.month
   const validMinYear = 1865
   const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
 
@@ -92,7 +92,7 @@ function KpiCalculator(props) {
   }
 
   function isFormValid() {
-    return isStartValueValid() && isStartYearValid() && isEndYearValid()
+    return isStartValueValid() && isStartYearValid() && isStartMonthValid() && isEndYearValid() && isEndMonthValid()
   }
 
   function isStartValueValid(value) {
@@ -116,6 +116,30 @@ function KpiCalculator(props) {
     const isEndYearValid = testEndYear && testEndYear.length === 1
     const intEndYear = parseInt(endYearValue)
     return !(!isEndYearValid || isNaN(intEndYear) || intEndYear < validMinYear || intEndYear > validMaxYear)
+  }
+
+  function isStartMonthValid(value) {
+    const startMonthValue = value || startMonth.value
+    const startMonthValid = !((startYear.value === validMaxYear) && (startMonthValue > validMaxMonth))
+    if (!startMonthValid) {
+      setStartMonth({
+        ...startMonth,
+        error: true
+      })
+    }
+    return startMonthValid
+  }
+
+  function isEndMonthValid(value) {
+    const endMonthValue = value || endMonth.value
+    const endMonthValid = !((endYear.value === validMaxYear) && (endMonthValue > validMaxMonth))
+    if (!endMonthValid) {
+      setEndMonth({
+        ...endMonth,
+        error: true
+      })
+    }
+    return endMonthValid
   }
 
   function onBlur(id) {
@@ -161,11 +185,18 @@ function KpiCalculator(props) {
     case 'start-month': {
       setStartMonth({
         ...startMonth,
-        value: value.id
+        value: value.id,
+        error: startMonth.error ? !isStartMonthValid(value.id) : startMonth.error
       })
       break
     }
     case 'start-year': {
+      if (startMonth.error) {
+        setStartMonth({
+          ...startMonth,
+          error: false
+        })
+      }
       setStartYear({
         ...startYear,
         value,
@@ -176,11 +207,18 @@ function KpiCalculator(props) {
     case 'end-month': {
       setEndMonth({
         ...endMonth,
-        value: value.id
+        value: value.id,
+        error: endMonth.error ? !isEndMonthValid(value.id) : endMonth.error
       })
       break
     }
     case 'end-year': {
+      if (endMonth.error) {
+        setEndMonth({
+          ...endMonth,
+          error: false
+        })
+      }
       setEndYear({
         ...endYear,
         value,
@@ -203,6 +241,28 @@ function KpiCalculator(props) {
         onSelect={(value) => {
           onChange(id, value)
         }}
+        error={startMonth.error}
+        errorMessage={startMonth.errorMsg}
+        selectedItem={{
+          title: props.frontPage ? props.phrases.calculatorMonthAverageFrontpage : props.phrases.calculatorMonthAverage,
+          id: '90'
+        }}
+        items={props.months}
+      />
+    )
+  }
+
+  function addDropdownEndMonth(id) {
+    return (
+      <Dropdown
+        className="month"
+        id={id}
+        header={props.phrases.chooseMonth}
+        onSelect={(value) => {
+          onChange(id, value)
+        }}
+        error={endMonth.error}
+        errorMessage={endMonth.errorMsg}
         selectedItem={{
           title: props.frontPage ? props.phrases.calculatorMonthAverageFrontpage : props.phrases.calculatorMonthAverage,
           id: '90'
@@ -447,7 +507,7 @@ function KpiCalculator(props) {
                 <Title size={3}>{props.phrases.calculatePriceChangeFrom}</Title>
                 <Container>
                   <Row>
-                    <Col className="select-year align-self-end col-sm-5">
+                    <Col className="select-year col-sm-5">
                       <Input
                         className="input-year"
                         label={props.phrases.fromYear}
@@ -467,7 +527,7 @@ function KpiCalculator(props) {
                 <Title size={3}>{props.phrases.calculatePriceChangeTo}</Title>
                 <Container>
                   <Row>
-                    <Col className="select-year align-self-end col-sm-5">
+                    <Col className="select-year col-sm-5">
                       <Input
                         className="input-year"
                         label={props.phrases.toYear}
@@ -478,7 +538,7 @@ function KpiCalculator(props) {
                       />
                     </Col>
                     <Col className="select-month col-sm-7">
-                      {addDropdownMonth('end-month')}
+                      {addDropdownEndMonth('end-month')}
                     </Col>
                   </Row>
                 </Container>
@@ -520,7 +580,7 @@ function KpiCalculator(props) {
               <Col className="calculate-from col-12 col-lg-6 col-xl-4">
                 <Container>
                   <Row>
-                    <Col className="select-year align-self-end">
+                    <Col className="select-year">
                       <Input
                         className="input-year"
                         label={props.phrases.fromYear}
@@ -539,7 +599,7 @@ function KpiCalculator(props) {
               <Col className="calculate-to col-12 col-lg-6 col-xl-4">
                 <Container>
                   <Row>
-                    <Col className="select-year align-self-end">
+                    <Col className="select-year">
                       <Input
                         className="input-year"
                         label={props.phrases.toYear}
@@ -550,7 +610,7 @@ function KpiCalculator(props) {
                       />
                     </Col>
                     <Col className="select-month">
-                      {addDropdownMonth('end-month')}
+                      {addDropdownEndMonth('end-month')}
                     </Col>
                   </Row>
                 </Container>
@@ -590,6 +650,7 @@ KpiCalculator.propTypes = {
   phrases: PropTypes.object,
   calculatorArticleUrl: PropTypes.string,
   nextPublishText: PropTypes.string,
+  lastNumberText: PropTypes.string,
   lastUpdated: PropTypes.shape({
     month: PropTypes.string,
     year: PropTypes.string
