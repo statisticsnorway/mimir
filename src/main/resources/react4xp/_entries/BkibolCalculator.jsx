@@ -311,6 +311,12 @@ function BkibolCalculator(props) {
       break
     }
     case 'start-year': {
+      if (startMonth.error) {
+        setStartMonth({
+          ...startMonth,
+          error: false
+        })
+      }
       setStartYear({
         ...startYear,
         value,
@@ -327,6 +333,12 @@ function BkibolCalculator(props) {
       break
     }
     case 'end-year': {
+      if (endMonth.error) {
+        setEndMonth({
+          ...endMonth,
+          error: false
+        })
+      }
       setEndYear({
         ...endYear,
         value,

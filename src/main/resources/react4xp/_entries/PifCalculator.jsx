@@ -140,7 +140,7 @@ function PifCalculator(props) {
 
   function isStartMonthValid(value) {
     const startMonthValue = value || startMonth.value
-    const startMonthValid = !((startYear.value === maxYear) && (startMonthValue > validMaxMonth))
+    const startMonthValid = !((startYear.value === maxYear) && (startMonthValue === '' || startMonthValue > validMaxMonth))
     if (!startMonthValid) {
       setStartMonth({
         ...startMonth,
@@ -225,6 +225,12 @@ function PifCalculator(props) {
       break
     }
     case 'start-year': {
+      if (startMonth.error) {
+        setStartMonth({
+          ...startMonth,
+          error: false
+        })
+      }
       setStartYear({
         ...startYear,
         value,
@@ -241,6 +247,12 @@ function PifCalculator(props) {
       break
     }
     case 'end-year': {
+      if (endMonth.error) {
+        setEndMonth({
+          ...endMonth,
+          error: false
+        })
+      }
       setEndYear({
         ...endYear,
         value,
