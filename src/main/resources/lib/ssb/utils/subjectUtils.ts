@@ -104,12 +104,7 @@ function getSubSubjectsByMainSubjectPath(
 
   return subSubjectsPath.map((s) => {
     const endedStatistics: Array<StatisticItem> = getEndedStatisticsByPath(s.path, statregStatistics, false)
-    const secondaryStatistics: Array<StatisticItem> = statistics.filter((statistic) => statistic.secondarySubject.includes(s.id)).map((s) => {
-      return {
-        ...s,
-        isPrimaryLocated: false
-      }
-    })
+    const secondaryStatistics: Array<StatisticItem> = getSecondaryStatisticsBySubject(statistics, s)
     const allStatistics: Array<StatisticItem> = [...getStatisticsByPath(statistics, s.path), ...endedStatistics, ...secondaryStatistics]
     const titles: Array<Title> = ensureArray(getTitlesBySubjectName(subjects, s.name))
 
@@ -212,6 +207,15 @@ export function getStatisticsByPath(statistics: Array<StatisticItem>, path: stri
   return statistics.filter((s: StatisticItem) => s.path.startsWith(path))
 }
 
+export function getSecondaryStatisticsBySubject(statistics: Array<StatisticItem>, subject: SubjectItem): Array<StatisticItem> {
+  return statistics.filter((statistic) => statistic.secondarySubject.includes(subject.id)).map((s) => {
+    return {
+      ...s,
+      isPrimaryLocated: false
+    }
+  })
+}
+
 export function getSubjectStructur(language: string): Array<MainSubject> {
   const mainSubjectsAll: Array<SubjectItem> = getMainSubjects()
   const subSubjectsAll: Array<SubjectItem> = getSubSubjects()
@@ -285,5 +289,6 @@ export interface SubjectUtilsLib {
     getStatistics: (statregStatistics: Array<StatisticInListing>) => Array<StatisticItem>;
     getStatisticsByPath: (statistics: Array<StatisticItem>, path: string) => Array<StatisticItem>;
     getEndedStatisticsByPath: (path: string, statregStatistics: Array<StatisticInListing>, hideStatistics: boolean) => Array<StatisticItem>;
+    getSecondaryStatisticsBySubject: (statistics: Array<StatisticItem>, subject: SubjectItem) => Array<StatisticItem>;
   }
 

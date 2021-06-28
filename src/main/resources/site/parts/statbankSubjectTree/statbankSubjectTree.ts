@@ -9,7 +9,8 @@ const {
   getSubSubjectsByPath,
   getStatistics,
   getStatisticsByPath,
-  getEndedStatisticsByPath
+  getEndedStatisticsByPath,
+  getSecondaryStatisticsBySubject
 } = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
 const {
   getAllStatisticsFromRepo
@@ -80,14 +81,7 @@ function prepareSubSubjects(subSubject: SubjectItem,
     }
   }) : []
 
-
-  const secondaryStatistics: Array<StatisticItem> = statistics.filter((statistic) =>
-    statistic.secondarySubject.includes(subSubject.id) && statistic.hideFromList !== true).map((s) => {
-    return {
-      ...s,
-      isPrimaryLocated: false
-    }
-  })
+  const secondaryStatistics: Array<StatisticItem> = getSecondaryStatisticsBySubject(statistics, subSubject)
 
   const preparedSecondaryStatistics: PreparedSubs['statistics'] = secondaryStatistics.length > 0 ? secondaryStatistics.map((e) => {
     const lang: string = language === 'en' ? 'en' : 'no'
