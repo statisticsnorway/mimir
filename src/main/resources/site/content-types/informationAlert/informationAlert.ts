@@ -53,7 +53,7 @@ export interface InformationAlert {
      */
     statbank?: {
       /**
-       * Velg for å gjelde alle statistikkbank sider
+       * Velg for å gjelde hele Statistikkbanken
        */
       selectAllStatbankPages: boolean;
     };
