@@ -309,7 +309,8 @@ exports.get = function(req) {
     municipalPageType
   } : {
     pageType: page.type,
-    pageTypeId: page._id
+    pageTypeId: page._id,
+    statbankWeb: statbankFane
   }
   const alerts = alertsForContext(page.page, alertOptions)
   const body = bodyWithBreadCrumbs ? bodyWithBreadCrumbs : thymeleafRenderBody

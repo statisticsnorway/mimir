@@ -15,7 +15,7 @@ export const get = (key) => {
   }
 }
 
-export const list = ( pageType, pageTypeId ) => {
+export const list = ( pageType, pageTypeId, statbankWeb ) => {
   const now = new Date()
   let queryString = `((data.informationAlertVariations.pages.pageIds IN ('${pageTypeId}') 
   OR data.informationAlertVariations.articles.articleIds IN ('${pageTypeId}'))  
@@ -32,7 +32,7 @@ export const list = ( pageType, pageTypeId ) => {
       )`
   }
 
-  if (pageType == `${app.name}:statbankFrame`) {
+  if (statbankWeb) {
     queryString = `(data.informationAlertVariations.statbank.selectAllStatbankPages = 'true')`
   }
 
