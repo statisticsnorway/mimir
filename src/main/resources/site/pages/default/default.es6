@@ -241,7 +241,7 @@ exports.get = function(req) {
   const hideBreadcrumb = !!page.page.config.hide_breadcrumb
 
   const statbankFane = (req.params.xpframe === 'statbank')
-  //Fjerner /ssb fra starten av path
+  // Fjerner /ssb fra starten av path
   const pageUrl = page._path.substr(4)
   const pageLanguage = page.language ? page.language : 'nb'
   const statbankHelpLink = getSiteConfig().statbankHelpLink

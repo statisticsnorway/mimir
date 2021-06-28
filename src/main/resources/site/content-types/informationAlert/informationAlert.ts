@@ -47,5 +47,15 @@ export interface InformationAlert {
        */
       articleIds: Array<string>;
     };
+
+    /**
+     * Statistikkbanken
+     */
+    statbank?: {
+      /**
+       * Velg for å gjelde alle statistikkbank sider
+       */
+      selectAllStatbankPages: boolean;
+    };
   };
 }
