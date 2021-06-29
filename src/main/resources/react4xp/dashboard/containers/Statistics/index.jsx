@@ -125,7 +125,7 @@ export function Statistics() {
           {getNextRelease(statistic)}
         </td>
         <td className="text-center">
-          {statistic.nextRelease ? makeRefreshButton(statistic) : ''}
+          {makeRefreshButton(statistic)}
         </td>
         <td>
           {statistic.logData ? <StatisticsLog statisticId={statistic.id}/> : null}
