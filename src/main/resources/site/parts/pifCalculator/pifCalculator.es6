@@ -46,9 +46,9 @@ function renderPart(req) {
   const pifData = getPifDataset(config)
   const lastUpdated = lastPeriod(pifData)
   const nextUpdate = nextPeriod(lastUpdated.month, lastUpdated.year)
-  const nextReleaseMonth = nextUpdate.month == 12 ? 1 : nextUpdate.month + 1
+  const nextReleaseMonth = nextUpdate.month === 12 ? 1 : nextUpdate.month + 1
   const nextPublishText = i18nLib.localize({
-    key: 'kpiNextPublishText',
+    key: 'calculatorNextPublishText',
     locale: language.code,
     values: [
       monthLabel(months, language.code, lastUpdated.month),
@@ -57,9 +57,17 @@ function renderPart(req) {
       monthLabel(months, language.code, nextReleaseMonth)
     ]
   })
-  const calculatorArticleUrl = part.config.pifCalculatorArticle ? pageUrl({
+  const lastNumberText = i18nLib.localize({
+    key: 'calculatorLastNumber',
+    locale: language.code,
+    values: [
+      monthLabel(months, language.code, lastUpdated.month),
+      lastUpdated.year
+    ]
+  })
+  const calculatorArticleUrl = part.config.pifCalculatorArticle && pageUrl({
     id: part.config.pifCalculatorArticle
-  }) : null
+  })
 
   const pifCalculator = new React4xp('PifCalculator')
     .setProps({
@@ -67,9 +75,11 @@ function renderPart(req) {
         service: 'pif'
       }),
       language: language.code,
-      months: months,
-      phrases: phrases,
-      nextPublishText: nextPublishText,
+      months,
+      phrases,
+      nextPublishText,
+      lastNumberText,
+      lastUpdated,
       productGroups: productGroups(phrases),
       calculatorArticleUrl
     })
@@ -91,7 +101,7 @@ function renderPart(req) {
 
 const lastPeriod = (pifData) => {
   // eslint-disable-next-line new-cap
-  const dataTime = pifData ? pifData.Dimension('Tid').id : null
+  const dataTime = pifData && pifData.Dimension('Tid').id
 
   const lastTimeItem = dataTime[dataTime.length - 1]
   const splitTime = lastTimeItem.split('M')
@@ -109,7 +119,7 @@ const nextPeriod = (month, year) => {
   let nextPeriodMonth = parseInt(month) + 1
   let nextPeriodYear = parseInt(year)
 
-  if (month == 12) {
+  if (month === 12) {
     nextPeriodMonth = 1
     nextPeriodYear = nextPeriodYear + 1
   }

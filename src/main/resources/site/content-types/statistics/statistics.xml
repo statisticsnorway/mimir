@@ -178,7 +178,7 @@
 		<mixin name="contacts" />
 		<field-set>
 			<label>
-				Stikkord
+				Metainformasjon
 			</label>
 			<items>
 				<input name="keywords" type="TextArea">
@@ -190,6 +190,12 @@
 						Stikkordene brukes av søket, men vises ikke på ssb.no. Komma brukes for å skille stikkord
 					</help-text>
 				</input>
+			</items>
+		</field-set>
+		<field-set>
+			<label>Sekundærplassering</label>
+			<items>
+				<mixin name="subtopic" />
 			</items>
 		</field-set>
 		<input name="hideFromList" type="CheckBox">
