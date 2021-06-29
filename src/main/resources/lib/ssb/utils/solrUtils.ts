@@ -30,7 +30,7 @@ export function solrSearch(term: string, language: string, numberOfHits: number,
 
 
 function nerfSearchResult(solrResult: SolrResult, language: string): Array<PreparedSearchResult> {
-  const momentLanguage: string = language === 'en' ? 'en-gb' : 'nb-no'
+  const momentLanguage: string = language === 'en' ? 'en-gb' : language
   return solrResult.grouped.gruppering.groups.reduce((acc: Array<PreparedSearchResult>, group) => {
     group.doclist.docs.forEach((doc: SolrDoc) => {
       const highlight: SolrHighlighting | undefined = solrResult.highlighting[doc.id]
