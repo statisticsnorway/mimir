@@ -83,7 +83,8 @@ function SearchResult(props) {
     <section className="search-result">
       <div className="search-result-head py-5 px-2">
         <Title>{props.title}</Title>
-        <Input className="search-input"
+        <Input className="xsearch-input"
+          size="lg"
           value={searchTerm} handleChange={setSearchTerm} searchField
           submitCallback={goToSearchResultPage}></Input>
       </div>
