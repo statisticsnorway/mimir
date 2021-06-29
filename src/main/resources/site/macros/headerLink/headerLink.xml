@@ -1,5 +1,5 @@
 <macro>
-    <display-name>Uthevet lenke</display-name>
+    <display-name>Uthevet lenke (IKKE BRUK)</display-name>
     <description></description>
     <form>
         <input name="linkedContent" type="ContentSelector">

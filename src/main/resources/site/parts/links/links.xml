@@ -1,0 +1,7 @@
+<part>
+    <display-name>Lenker</display-name>
+    <description></description>
+    <form>
+        <mixin name="links" />
+    </form>
+</part>

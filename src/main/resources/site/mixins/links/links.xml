@@ -1,0 +1,101 @@
+<mixin>
+    <display-name>Lenker</display-name>
+    <form>
+        <option-set name="linkTypes">
+            <label>Lenke type</label>
+            <occurrences minimum="0" maximum="1" />
+            <options minimum="1" maximum="1">
+                <option name="tableLink">
+                    <label>Tabell lenke</label>
+                    <description>Tabell-lenker brukes for å kunne lenke til et lagret søk eller til en vedleggstabell</description>
+                    <items>
+                        <input name="title" type="TextLine">
+                            <label>Tittel</label>
+                            <occurrences minimum="1" maximum="1"/>
+                        </input>
+
+                        <input name="description" type="TextLine">
+                            <label>Lenketekst</label>
+                            <occurrences minimum="1" maximum="1"/>
+                        </input>
+
+                        <field-set>
+                            <label>Velg url eller innhold som mål</label>
+                            <items>
+                                <input name="href" type="TextLine">
+                                    <label>Url</label>
+                                    <occurrences minimum="0" maximum="1"/>
+                                </input>
+
+                                <input name="relatedContent" type="ContentSelector">
+                                    <label>Relatert innhold</label>
+                                    <occurrences minimum="0" maximum="1"/>
+                                    <help-text>Hvis både Url og Relatert innhold er fylt ut blir relatert innhold valgt</help-text>
+                                    <config>
+                                        <allowContentType>${app}:*</allowContentType>
+                                        <treeMode>true</treeMode>
+                                    </config>
+                                </input>
+                            </items>
+                        </field-set>
+                    </items>
+                </option>
+
+                <option name="headerLink">
+                    <label>Uthevet lenke</label>
+                    <items>
+                        <input name="linkedContent" type="ContentSelector">
+                            <label>Innhold</label>
+                            <occurrences minimum="1" maximum="1"/>
+                            <config>
+                                <treeMode>false</treeMode>
+                                <showStatus>true</showStatus>
+                            </config>
+                        </input>
+                        <input name="linkText" type="TextLine">
+                            <label>Lenketekst</label>
+                            <occurrences minimum="1" maximum="1"/>
+                        </input>
+                    </items>
+                </option>
+
+                <option name="downloadLink">
+                    <label>Nedlastningslenke som knapp</label>
+                    <items>
+                        <input name="text" type="TextLine">
+                            <label>Tekst</label>
+                            <occurrences minimum="0" maximum="1"/>
+                        </input>
+                        <input name="file" type="ContentSelector">
+                            <label>Innhold</label>
+                            <occurrences minimum="0" maximum="1"/>
+                            <config>
+                                <allowPath>${site}</allowPath>
+                            </config>
+                        </input>
+                    </items>
+                </option>
+
+                <option name="profiledLink">
+                    <label>Profilert lenke</label>
+                    <items>
+                        <input name="text" type="TextLine">
+                            <label>Lenketekst</label>
+                            <occurrences minimum="0" maximum="1"/>
+                        </input>
+                        <input name="href" type="ContentSelector">
+                            <label>Innhold</label>
+                            <occurrences minimum="0" maximum="1"/>
+                            <config>
+                                <allowPath>${site}</allowPath>
+                            </config>
+                        </input>
+                        <input name="withIcon" type="CheckBox">
+                            <label>Profilert lenke med ikon</label>
+                        </input>
+                    </items>
+                </option>
+            </options>
+        </option-set>
+    </form>
+</mixin>

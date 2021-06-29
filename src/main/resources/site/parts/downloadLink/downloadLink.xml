@@ -1,5 +1,5 @@
 <part>
-    <display-name>Nedlastingslenke som knapp</display-name>
+    <display-name>Nedlastingslenke som knapp (IKKE BRUK)</display-name>
     <form>
         <input name="text" type="TextLine">
             <label>Tekst</label>

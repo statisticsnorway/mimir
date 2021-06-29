@@ -1,5 +1,5 @@
 <macro>
-    <display-name>Tabell lenke</display-name>
+    <display-name>Tabell lenke (IKKE BRUK)</display-name>
     <description>Tabell-lenker brukes for å kunne lenke til et lagret søk eller til en vedleggstabell</description>
     <form>
         <input name="title" type="TextLine">

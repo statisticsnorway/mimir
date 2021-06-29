@@ -1,5 +1,5 @@
 <part>
-    <display-name>Profilerte lenker med ikoner</display-name>
+    <display-name>Profilerte lenker med ikoner (IKKE BRUK)</display-name>
     <form>
         <item-set name="profiledLinkItemSet">
             <label>Lenker</label>
