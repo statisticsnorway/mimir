@@ -47,7 +47,7 @@
     "webpack-cli": "^3.3.12"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "^1.5.0",
+    "@reduxjs/toolkit": "^1.6.0",
     "@statisticsnorway/ssb-component-library": "^2.0.47",
     "@types/react": "^17.0.5",
     "@types/validator": "^13.1.3",
