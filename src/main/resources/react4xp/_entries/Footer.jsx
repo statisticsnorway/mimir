@@ -112,12 +112,13 @@ class Footer extends React.Component {
 
   render() {
     const {
-      logoUrl, footerNavigation, topButtonText
+      logoUrl, footerNavigation, topButtonText, hiddenFooterText
     } = this.props
     if (logoUrl && footerNavigation && topButtonText) {
       return (
         <div className="ssb-footer-wrapper">
           <div className="container">
+            <h2 className="sr-only">{hiddenFooterText}</h2>
             <div className="footer-top-row">
               <img src={logoUrl} alt="ssb-logo"/>
               <Button negative onClick={() => this.goToTop()
@@ -183,7 +184,8 @@ Footer.propTypes = {
   twitterUrl: PropTypes.string,
   linkedinUrl: PropTypes.string,
   rssUrl: PropTypes.string,
-  topButtonText: PropTypes.string
+  topButtonText: PropTypes.string,
+  hiddenFooterText: PropTypes.string
 }
 
 export default (props) => <Footer {...props} />
