@@ -1,0 +1,17 @@
+<mixin>
+    <display-name>Uthevet lenke</display-name>
+    <form>
+        <input name="linkedContent" type="ContentSelector">
+            <label>Innhold</label>
+            <occurrences minimum="0" maximum="1"/>
+            <config>
+                <treeMode>false</treeMode>
+                <showStatus>true</showStatus>
+            </config>
+        </input>
+        <input name="linkText" type="TextLine">
+            <label>Lenketekst</label>
+            <occurrences minimum="0" maximum="1"/>
+        </input>
+    </form>
+</mixin>

@@ -15,17 +15,17 @@ export interface LinksPartConfig {
       /**
        * Tittel
        */
-      title: string;
+      title?: string;
 
       /**
        * Lenketekst
        */
-      description: string;
+      description?: string;
 
       /**
        * Url
        */
-      href?: string;
+      url?: string;
 
       /**
        * Relatert innhold
@@ -40,12 +40,12 @@ export interface LinksPartConfig {
       /**
        * Innhold
        */
-      linkedContent: string;
+      linkedContent?: string;
 
       /**
        * Lenketekst
        */
-      linkText: string;
+      linkText?: string;
     };
 
     /**
@@ -53,14 +53,14 @@ export interface LinksPartConfig {
      */
     profiledLink?: {
       /**
+       * Innhold
+       */
+      contentUrl?: string;
+
+      /**
        * Lenketekst
        */
       text?: string;
-
-      /**
-       * Innhold
-       */
-      href?: string;
 
       /**
        * Med ikon

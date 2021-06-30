@@ -41,7 +41,7 @@ function renderPart(req: Request, config: LinksPartConfig): React4xpResponse {
     if (linkType === 'tableLink') {
       const href: string | undefined = config.linkTypes?.tableLink?.relatedContent ? pageUrl({
         id: config.linkTypes?.tableLink?.relatedContent
-      }) : config.linkTypes?.tableLink?.href
+      }) : config.linkTypes?.tableLink?.url
 
       props = {
         href,
@@ -79,8 +79,8 @@ function renderPart(req: Request, config: LinksPartConfig): React4xpResponse {
     if (linkType === 'profiledLink') {
       props = {
         children: config.linkTypes?.profiledLink?.text,
-        href: config.linkTypes?.profiledLink?.href && pageUrl({
-          id: config.linkTypes?.profiledLink?.href
+        href: config.linkTypes?.profiledLink?.contentUrl && pageUrl({
+          id: config.linkTypes?.profiledLink?.contentUrl
         }),
         withIcon: config.linkTypes?.profiledLink?.withIcon,
         linkType: 'profiled'
