@@ -241,7 +241,7 @@ exports.get = function(req) {
   const hideBreadcrumb = !!page.page.config.hide_breadcrumb
 
   const statbankFane = (req.params.xpframe === 'statbank')
-  //Fjerner /ssb fra starten av path
+  // Fjerner /ssb fra starten av path
   const pageUrl = page._path.substr(4)
   const pageLanguage = page.language ? page.language : 'nb'
   const statbankHelpLink = getSiteConfig().statbankHelpLink
@@ -309,7 +309,8 @@ exports.get = function(req) {
     municipalPageType
   } : {
     pageType: page.type,
-    pageTypeId: page._id
+    pageTypeId: page._id,
+    statbankWeb: statbankFane
   }
   const alerts = alertsForContext(page.page, alertOptions)
   const body = bodyWithBreadCrumbs ? bodyWithBreadCrumbs : thymeleafRenderBody
