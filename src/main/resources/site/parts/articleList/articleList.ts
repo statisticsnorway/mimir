@@ -34,14 +34,13 @@ function renderPart(req: Request): React4xpResponse {
   const preparedArticles: Array<PreparedArticles> = prepareArticles(articles, language)
   const isNotInEditMode: boolean = req.mode !== 'edit'
 
-  //  Must be set to nb instead of no for localization
   const archiveLinkText: string = localize({
     key: 'publicationLinkText',
-    locale: language === 'nb' ? 'no' : language
+    locale: language
   })
   const headerText: string = localize( {
     key: 'articleList.heading',
-    locale: language === 'nb' ? 'no' : language
+    locale: language
   })
 
   const props: PartProperties = {
@@ -82,7 +81,7 @@ function prepareArticles(articles: Array<Content<Article>>, language: string): A
         id: article._id
       }),
       publishDate: article.publish && article.publish.from ? article.publish.from : '',
-      publishDateHuman: article.publish && article.publish.from ? moment(article.publish.from).locale(language === 'en' ? 'en-gb' : language).format('LL') : ''
+      publishDateHuman: article.publish && article.publish.from ? moment(article.publish.from).locale(language === 'en' ? 'en-gb' : 'nb').format('LL') : ''
     }
   })
 }
