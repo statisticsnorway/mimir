@@ -49,21 +49,6 @@ export interface Links {
     };
 
     /**
-     * Nedlastningslenke som knapp
-     */
-    downloadLink?: {
-      /**
-       * Tekst
-       */
-      text?: string;
-
-      /**
-       * Innhold
-       */
-      file?: string;
-    };
-
-    /**
      * Profilert lenke
      */
     profiledLink?: {

@@ -59,23 +59,6 @@
                     </items>
                 </option>
 
-                <option name="downloadLink">
-                    <label>Nedlastningslenke som knapp</label>
-                    <items>
-                        <input name="text" type="TextLine">
-                            <label>Tekst</label>
-                            <occurrences minimum="0" maximum="1"/>
-                        </input>
-                        <input name="file" type="ContentSelector">
-                            <label>Innhold</label>
-                            <occurrences minimum="0" maximum="1"/>
-                            <config>
-                                <allowPath>${site}</allowPath>
-                            </config>
-                        </input>
-                    </items>
-                </option>
-
                 <option name="profiledLink">
                     <label>Profilert lenke</label>
                     <items>

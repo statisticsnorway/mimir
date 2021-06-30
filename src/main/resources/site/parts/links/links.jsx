@@ -1,41 +1,60 @@
 import React from 'react'
-import { Link } from '@statisticsnorway/ssb-component-library'
-import { ArrowRight, ExternalLink } from 'react-feather'
+import { Link, TableLink } from '@statisticsnorway/ssb-component-library'
+import { ArrowRight } from 'react-feather'
 import PropTypes from 'prop-types'
 
 const Links = (props) => {
-  return (
-    <React.Fragment>
+  const {
+    children,
+    href,
+    withIcon,
+    linkType,
+    text,
+    description
+  } = props
+
+  const renderLinks = () => {
+    return (
       <Link
-        className={props.className}
-        href={props.href}
-        icon={props.iconType ? (props.iconType == 'arrowRight' ? <ArrowRight size="20"/> : <ExternalLink size="18"/>) : undefined}
-        isExternal={props.isExternal}
-        linkType={props.linkType}
-        negative={props.negative}
+        href={href}
+        icon={withIcon && <ArrowRight size="20"/>}
+        linkType={linkType}
       >
-        <span
-          dangerouslySetInnerHTML={{
-            __html: props.children
-          }} />
+        {children}
       </Link>
-    </React.Fragment>
+    )
+  }
+
+  const renderTableLink = () => {
+    return (
+      <TableLink
+        href={href}
+        description={description}
+        text={text}
+      />
+    )
+  }
+
+  const tableLinkProps = text && description
+  return (
+    <section className="xp-part part-links">
+      {tableLinkProps ? renderTableLink() : renderLinks()}
+    </section>
   )
 }
 
 Links.propTypes = {
   children: PropTypes.node,
-  className: PropTypes.string,
   href: PropTypes.string.isRequired,
-  icon: PropTypes.node,
-  iconType: PropTypes.string,
-  isExternal: PropTypes.bool,
+  isExternal: PropTypes.boolean,
+  withIcon: PropTypes.boolean,
   linkType: PropTypes.oneOf([
     'regular',
     'profiled',
     'header'
   ]),
-  negative: PropTypes.bool
+  text: PropTypes.string,
+  description: PropTypes.string
 }
 
 export default Links

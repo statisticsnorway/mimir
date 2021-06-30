@@ -49,21 +49,6 @@ export interface LinksPartConfig {
     };
 
     /**
-     * Nedlastningslenke som knapp
-     */
-    downloadLink?: {
-      /**
-       * Tekst
-       */
-      text?: string;
-
-      /**
-       * Innhold
-       */
-      file?: string;
-    };
-
-    /**
      * Profilert lenke
      */
     profiledLink?: {

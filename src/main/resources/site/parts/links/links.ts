@@ -1,8 +1,9 @@
 import { Content } from 'enonic-types/content'
 import { Component } from 'enonic-types/portal'
 import { LinksPartConfig } from './links-part-config'
-import { Request } from 'enonic-types/controller'
+import { Request, Response, ResponseType } from 'enonic-types/controller'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import { renderError } from '../../../lib/ssb/error/error'
 
 const {
   get
@@ -14,14 +15,23 @@ const {
 } = __non_webpack_require__('/lib/xp/portal')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-exports.get = (req: Request): React4xpResponse => {
-  const part: Component<LinksPartConfig> = getComponent()
-  const config: LinksPartConfig = part.config
-  return renderPart(req, config)
+exports.get = (req: Request): React4xpResponse | Response<ResponseType> => {
+  try {
+    const part: Component<LinksPartConfig> = getComponent()
+    const config: LinksPartConfig = part.config
+    return renderPart(req, config)
+  } catch (e) {
+    return renderError(req, 'Error in part', e)
+  }
 }
 
-exports.preview = (req: Request, config: LinksPartConfig): React4xpResponse => renderPart(req, config)
-
+exports.preview = (req: Request, config: LinksPartConfig): React4xpResponse | Response<ResponseType> => {
+  try {
+    return renderPart(req, config)
+  } catch (e) {
+    return renderError(req, 'Error in part', e)
+  }
+}
 function renderPart(req: Request, config: LinksPartConfig): React4xpResponse {
   const linkType: string | undefined = config.linkTypes?._selected
   const isNotInEditMode: boolean = req.mode !== 'edit'
@@ -36,7 +46,7 @@ function renderPart(req: Request, config: LinksPartConfig): React4xpResponse {
       props = {
         href,
         description: config.linkTypes?.tableLink?.description,
-        title: config.linkTypes?.tableLink?.title
+        text: config.linkTypes?.tableLink?.title
       }
     }
 
@@ -63,15 +73,6 @@ function renderPart(req: Request, config: LinksPartConfig): React4xpResponse {
         children: content ? prepareText(content, linkText) : '',
         href: contentUrl,
         linkType: 'header'
-      }
-    }
-
-    if (linkType === 'downloadLink') {
-      props = {
-        children: config.linkTypes?.downloadLink?.text,
-        href: config.linkTypes?.downloadLink?.file && attachmentUrl({
-          id: config.linkTypes?.downloadLink?.file
-        })
       }
     }
 
