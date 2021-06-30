@@ -21,7 +21,6 @@ class LocalSearch extends React.Component {
               searchable onSelect={(selectedItem)=> this.onSelect(selectedItem)}
               items={this.props.items}
               className="search-field"
-              header={this.props.placeholder}
             />
           </div>
         </div>
