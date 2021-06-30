@@ -32,6 +32,29 @@ export function barConfig(highchartContent, options) {
       },
       categories: highchartContent.data.switchRowsAndColumns || !options.isJsonStat ? options.categories : [highchartContent.displayName],
       tickmarkPlacement: 'between'
+    },
+    responsive: {
+      rules: [{
+        chartOptions: {
+          chart: {
+            height: '120%'
+          },
+          //NOTE: on bar chart, xAxis is vertical and yAxis is horizontal, don't ask why.
+          yAxis: {
+            labels: {
+              y: 20
+            }
+          },
+          xAxis: {
+            labels: {
+              y: 7
+            }
+          }
+        },
+        condition: {
+          maxWidth: 450
+        }
+      }]
     }
   }
   return mergeDeepRight(defaultConfig, customConfig)
