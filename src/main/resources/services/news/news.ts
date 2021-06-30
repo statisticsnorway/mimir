@@ -25,8 +25,8 @@ const {
 } = __non_webpack_require__('/lib/text-encoding')
 
 function get(): Response {
-  const rssNewsEnabled: boolean = isEnabled('rss-news', true)
-  const rssStatisticsEnabled: boolean = isEnabled('rss-news-statistics', false)
+  const rssNewsEnabled: boolean = isEnabled('rss-news', true, 'ssb')
+  const rssStatisticsEnabled: boolean = isEnabled('rss-news-statistics', false, 'ssb')
   const mainSubjects: Array<Content<Page, DefaultPageConfig>> = rssNewsEnabled ? query({
     start: 0,
     count: 100,
