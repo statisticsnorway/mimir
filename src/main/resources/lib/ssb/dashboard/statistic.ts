@@ -530,10 +530,10 @@ function getStatregInfo(statisticStatreg: StatisticInListing | undefined): Statr
     statisticId: statisticStatreg.id,
     shortName: statisticStatreg.shortName,
     status: statisticStatreg.status ? statisticStatreg.status : 'A',
-    frequency: variant.frekvens,
-    nextRelease: variant.nextRelease ? variant.nextRelease : '',
-    nextReleaseId: variant.nextReleaseId ? variant.nextReleaseId : '',
-    variantId: variant.id,
+    frequency: variant && variant.frekvens ? variant.frekvens : '',
+    nextRelease: variant && variant.nextRelease ? variant.nextRelease : '',
+    nextReleaseId: variant && variant.nextReleaseId ? variant.nextReleaseId : '',
+    variantId: variant ? variant.id : '',
     activeVariants: variants.length
   }
   return result
