@@ -7,7 +7,7 @@
             <options minimum="1" maximum="1">
                 <option name="tableLink">
                     <label>Tabell lenke</label>
-                    <description>Tabell-lenker brukes for å kunne lenke til et lagret søk eller til en vedleggstabell</description>
+                    <help-text>Tabell-lenker brukes for å kunne lenke til et lagret søk eller til en vedleggstabell</help-text>
                     <items>
                         <input name="title" type="TextLine">
                             <label>Tittel</label>
@@ -91,7 +91,7 @@
                             </config>
                         </input>
                         <input name="withIcon" type="CheckBox">
-                            <label>Profilert lenke med ikon</label>
+                            <label>Med ikon</label>
                         </input>
                     </items>
                 </option>

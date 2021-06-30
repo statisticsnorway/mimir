@@ -76,6 +76,11 @@ export interface Links {
        * Innhold
        */
       href?: string;
+
+      /**
+       * Med ikon
+       */
+      withIcon: boolean;
     };
   };
 }

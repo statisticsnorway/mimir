@@ -76,6 +76,11 @@ export interface LinksPartConfig {
        * Innhold
        */
       href?: string;
+
+      /**
+       * Med ikon
+       */
+      withIcon: boolean;
     };
   };
 }
