@@ -22,7 +22,7 @@
                 <input name="relatedContent" type="ContentSelector">
                     <label>Relatert innhold</label>
                     <occurrences minimum="0" maximum="1"/>
-                    <help-text>Hvis både Url og Relatert innhold er fylt ut blir relatert innhold valgt</help-text>
+                    <help-text>NB! Hvis både Url og Relatert innhold er fylt ut blir relatert innhold valgt</help-text>
                     <config>
                         <allowContentType>${app}:*</allowContentType>
                         <treeMode>true</treeMode>

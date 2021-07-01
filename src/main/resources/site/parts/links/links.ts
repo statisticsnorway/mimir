@@ -93,7 +93,7 @@ function renderPart(req: Request, config: LinksPartConfig): React4xpResponse {
   })
 }
 
-function prepareText(content: Content, linkText: string | undefined): string | undefined {
+export function prepareText(content: Content, linkText: string | undefined): string | undefined {
   // This kludge has to happen because Enonic uses the name of the attachment as a key. Sorry.
   const attachmentName: string = Object.keys(content.attachments)[0]
   const attachmentSize: number = content.attachments[attachmentName] && content.attachments[attachmentName].size
@@ -115,7 +115,7 @@ function prepareText(content: Content, linkText: string | undefined): string | u
   return linkText && linkText
 }
 
-interface LinksProps {
+export interface LinksProps {
   children: string;
   href: string;
   withIcon: boolean;

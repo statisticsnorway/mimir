@@ -17,7 +17,7 @@ const Links = (props) => {
     return (
       <Link
         href={href}
-        icon={withIcon && <ArrowRight size="20"/>}
+        icon={!!withIcon && <ArrowRight size="20"/>}
         linkType={linkType}
       >
         {children}
@@ -45,9 +45,8 @@ const Links = (props) => {
 
 Links.propTypes = {
   children: PropTypes.node,
-  href: PropTypes.string.isRequired,
-  isExternal: PropTypes.boolean,
-  withIcon: PropTypes.boolean,
+  href: PropTypes.string,
+  withIcon: PropTypes.bool,
   linkType: PropTypes.oneOf([
     'regular',
     'profiled',

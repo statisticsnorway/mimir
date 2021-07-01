@@ -2,7 +2,7 @@
     <display-name>Lenker</display-name>
     <form>
         <field-set>
-            <label>Lenke type</label>
+            <label>Lenker</label>
             <items>
                 <input name="linkTypes" type="RadioButton">
                 <label>Velg lenketype</label>
