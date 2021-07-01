@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans%7COpen+Sans:700%7CRoboto:700%7CRoboto+Condensed:700"/>
   <link rel="stylesheet" data-th-href="${stylesUrl}"/>
   <link rel="alternate" data-th-if="${alternateLanguageVersionUrl}" data-th-href="${alternateLanguageVersionUrl}" data-th-hreflang="${language.alternate}"/>
+  <link data-th-unless="${statbankWeb}" rel="canonical" data-th-href="${pageUrl}" />
 
 </head>
 <body class="xp-page" data-th-classappend="${bodyClasses}">
@@ -46,8 +47,42 @@
           <div id="browser-warning" class="container"></div>
           <!-- Alerts Info and error -->
           <section class="xp-part" id="alerts"></section>
+          <!-- Statbank title and links -->
+          <div class="statbank-header container mb-2" data-th-if="${statbankWeb}">
+            <div class="row">
+              <div class="col-md-4">
+                <span class="h2 statbank-title roboto-bold">Statistikkbanken</span>
+              </div>
+              <div class="col-md-8 text-right">
+                <div class="col-md-12">
+                  <a data-th-href="${statbankHelpLink}" class="ssb-link mb-0 roboto-bold">
+                    <span class="link-text" data-th-text="${statbankHelpText}">tom boks statbank-hjelp</span>
+                  </a>
+                </div>
+                <div class="col-md-12">
+                  <a data-th-href="${pageUrl}" class="ssb-link roboto-plain">
+                    <span class="link-text" data-th-text="${statbankMainFigures}" >tom boks hovedtall</span>
+                  </a>
+                </div>
+                <div class="col-md-12">
+                  <a href="/statbank" class="ssb-link roboto-plain">
+                    <span class="link-text" data-th-text="${statbankFrontPage}">tom boks statbank-forside</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Statbank title and placeholder -->
+          <div data-th-if="${statbankWeb}" class="container mb-5">
+            <div class="row">
+              <div class="col">
+                <h1 data-th-text="${page.displayName}"></h1>
+              </div>
+            </div>
+            <div id="statbank-placeholder"></div>
+          </div>
           <!-- Page Title -->
-          <div data-th-if="${page.data.title}" class="container mb-5">
+          <div data-th-if="${page.data.title}" data-th-unless="${statbankWeb}" class="container mb-5">
             <div class="row">
               <div class="col">
                 <h1 data-th-text="${page.data.title}"></h1>
@@ -65,6 +100,7 @@
     <div
       data-th-each="region : ${configRegions}"
       data-th-remove="tag"
+      data-th-unless="${statbankWeb}"
     >
       <div data-th-if="${region.showGreyTriangle}" class="grey-triangle"></div>
       <div data-th-classappend="${region.showGreyBackground ? 'region-grey' : (region.topBorder ? 'border-columns' : '')}">
@@ -100,7 +136,7 @@
         </div>
       </div>
     </div>
-    <div data-th-if="${mainRegionComponents}" data-portal-region="main">
+    <div data-th-if="${mainRegionComponents}" data-portal-region="main" data-th-unless="${statbankWeb}">
       <div data-th-each="component : ${mainRegionComponents}" data-th-remove="tag">
         <div data-portal-component="${component.path}" data-th-remove="tag" ></div>
       </div>

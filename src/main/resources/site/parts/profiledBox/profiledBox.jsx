@@ -9,7 +9,7 @@ class ProfiledBox extends React.Component {
 
   render() {
     return (
-      <Card {...this.props} image={<img src={this.props.imgUrl} alt={this.props.imageAltText} />}>
+      <Card {...this.props} image={<img src={this.props.imgUrl} alt={this.props.imageAltText} aria-hidden="true" />}>
         <Paragraph
           className={`preambleText${this.props.titleSize ? ` title-size-${this.props.titleSize}` : ''}`}
           {...this.props}

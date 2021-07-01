@@ -5,7 +5,7 @@ import axios from 'axios'
 import { ChevronDown } from 'react-feather'
 
 function UpcomingReleases(props) {
-  const [releases, setReleases] = useState(props.releases)
+  const [releases, setReleases] = useState(mergeContentReleases(props.releases))
   const [loading, setLoading] = useState(false)
   let lastCountedDay = undefined
 
@@ -43,6 +43,94 @@ function UpcomingReleases(props) {
     return mergedArrays
   }
 
+  function mergeContentReleases(newReleases) {
+    const lastYearIndex = newReleases.length - 1
+    const lastYear = newReleases[lastYearIndex]
+    const lastMonthIndex = lastYear.releases.length - 1
+    const lastMonth = lastYear.releases[lastMonthIndex]
+    const lastDayIndex = lastMonth.releases.length - 1
+    const lastDay = lastMonth.releases[lastDayIndex]
+    const last = new Date().setFullYear(lastYear.year, lastMonth.month, lastDay.day)
+    const contentReleases = props.contentReleases.filter((r) => {
+      if (new Date(r.date) <= last) {
+        return true
+      }
+      return false
+    })
+    contentReleases.forEach((release, i) => {
+      const releaseDate = new Date(release.date)
+      let yearReleases
+      for (let i = 0; i < newReleases.length; i += 1) {
+        if (newReleases[i].year < releaseDate.getFullYear() && i !== newReleases.length - 1) {
+          continue
+        } else if (newReleases[i].year == releaseDate.getFullYear()) {
+          yearReleases = newReleases[i]
+          break
+        } else if (newReleases[i].year > releaseDate.getFullYear() || i === newReleases.length - 1) {
+          yearReleases = {
+            year: releaseDate.getFullYear(),
+            releases: [
+              {
+                month: releaseDate.getMonth(),
+                monthName: release.monthName,
+                releases: [
+                  {
+                    day: releaseDate.getDate(),
+                    releases: []
+                  }
+                ]
+              }
+            ]
+          }
+          newReleases.splice(i + (newReleases[i].year > releaseDate.getFullYear() ? 0 : 1), 0, yearReleases)
+          break
+        }
+      }
+      let monthReleases
+      for (let i = 0; i < yearReleases.releases.length; i += 1) {
+        if (yearReleases.releases[i].month < releaseDate.getMonth() && i !== yearReleases.releases.length - 1) {
+          continue
+        } else if (yearReleases.releases[i].month == releaseDate.getMonth()) {
+          monthReleases = yearReleases.releases[i]
+          break
+        } else if (yearReleases.releases[i].month > releaseDate.getMonth() || i === yearReleases.releases.length - 1) {
+          monthReleases = {
+            month: releaseDate.getMonth(),
+            monthName: release.monthName,
+            releases: [
+              {
+                day: releaseDate.getDate(),
+                releases: []
+              }
+            ]
+          }
+          yearReleases.releases.splice(i + (yearReleases.releases[i].month > releaseDate.getMonth() ? 0 : 1), 0, monthReleases)
+          break
+        }
+      }
+      let dayReleases
+      for (let i = 0; i < monthReleases.releases.length; i += 1) {
+        if (monthReleases.releases[i].day < releaseDate.getDate() && i !== monthReleases.releases.length - 1) {
+          continue
+        } else if (monthReleases.releases[i].day == releaseDate.getDate()) {
+          dayReleases = monthReleases.releases[i]
+          break
+        } else if (monthReleases.releases[i].day > releaseDate.getDate() || i === monthReleases.releases.length - 1) {
+          dayReleases = {
+            day: releaseDate.getDate(),
+            releases: []
+          }
+          monthReleases.releases.splice(i + (monthReleases.releases[i].day > releaseDate.getDate() ? 0 : 1), 0, dayReleases)
+          break
+        }
+      }
+      if (dayReleases && !dayReleases.releases.find((r) => r.id === release.id)) {
+        dayReleases.releases.push(release)
+      }
+    })
+    return newReleases
+  }
+
   function fetchMoreReleases() {
     setLoading(true)
     if (!lastCountedDay) {
@@ -56,7 +144,9 @@ function UpcomingReleases(props) {
       }
     }).then((res) => {
       if (res.data.releases.length) {
-        setReleases(mergeReleases(releases, res.data.releases, 0))
+        let newReleases = mergeReleases(releases, res.data.releases, 0)
+        newReleases = mergeContentReleases(newReleases)
+        setReleases(newReleases)
       } else {
         setLoading(true)
       }
@@ -66,16 +156,28 @@ function UpcomingReleases(props) {
   }
 
   function renderRelease(release, index, date) {
-    return (
-      <li key={index}>
-        <Link href={`/${release.shortName}`} linkType='header'>{release.name}</Link>
-        <Paragraph className="mb-0">{release.variant.period}</Paragraph>
-        <Paragraph className="metadata">
-          {date.day}. {date.monthName} {date.year} / <span
-            className="type">{release.type}</span> / {release.mainSubject}
-        </Paragraph>
-      </li>
-    )
+    if (release.type === 'statistic') {
+      return (
+        <li key={index}>
+          <Link href={`/${release.shortName}`} linkType='header'>{release.name}</Link>
+          <Paragraph className="mb-0">{release.variant.period}</Paragraph>
+          <Paragraph className="metadata">
+            {date.day}. {date.monthName} {date.year} / <span
+              className="type">{release.type}</span> / {release.mainSubject}
+          </Paragraph>
+        </li>
+      )
+    } else {
+      return (
+        <li key={index}>
+          <h3>{release.name}</h3>
+          <Paragraph className="metadata">
+            {date.day}. {date.monthName} {date.year} / <span
+              className="type">{release.type}</span> / {release.mainSubject}
+          </Paragraph>
+        </li>
+      )
+    }
   }
 
   function renderDay(day, month, year, index) {
@@ -190,7 +292,20 @@ UpcomingReleases.propTypes = {
         )
       }))
     }))
-  }))
+  })),
+  contentReleases: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string,
+      date: PropTypes.string,
+      type: PropTypes.string,
+      mainSubject: PropTypes.string,
+      day: PropTypes.string,
+      month: PropTypes.string,
+      monthName: PropTypes.string,
+      year: PropTypes.string
+    })
+  )
 }
 
 export default (props) => <UpcomingReleases {...props} />

@@ -52,7 +52,7 @@
 
         <option name="articles">
           <label>Artikkel</label>
-            <help-text>Legg til en varsel på en eller flere artikkler</help-text>
+            <help-text>Legg til en varsel på en eller flere artikler</help-text>
           <items>
             <input name="articleIds" type="ContentSelector">
               <label>Velg hvilken artikkel det gjelder her.</label>
@@ -60,6 +60,17 @@
               <config>
                 <allowContentType>article</allowContentType>
               </config>
+            </input>
+          </items>
+        </option>
+
+        <option name="statbank">
+          <label>Statistikkbanken</label>
+          <help-text>Legg til en varsel på statistikkbank rammen</help-text>
+          <items>
+            <input name="selectAllStatbankPages" type="CheckBox">
+              <label>Velg for å gjelde hele Statistikkbanken</label>
+              <default>unchecked</default>
             </input>
           </items>
         </option>

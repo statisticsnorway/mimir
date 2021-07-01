@@ -10,7 +10,9 @@ $grid-breakpoints: (
   // Large screen / desktop
   lg: 992px,
   // Extra large screen / wide desktop
-  xl: 1260px
+  xl: 1260px,
+  // Extra Extra large / 1440p and up
+  xxl: 2000px
 );
 
 $container-max-widths: (
@@ -76,6 +78,7 @@ $container-max-widths: (
 @import "./publicationArchive";
 @import "./statbankSubjectTree";
 @import "./contactForm";
+@import "./searchResult";
 @import "./localSearch";
 
 body {

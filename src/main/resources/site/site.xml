@@ -55,6 +55,11 @@
         </item-set>
       </items>
     </field-set>
+    <input name="statbankHelpLink" type="TextLine">
+      <label>URL til hjelpeside for statistikkbanken.</label>
+      <occurrences minimum="1" maximum="1"/>
+      <default>/informasjon/om-statistikkbanken/hvordan-bruke-statistikkbanken</default>
+    </input>
     <item-set name="language">
       <label>Språk instillinger</label>
       <expanded>false</expanded>

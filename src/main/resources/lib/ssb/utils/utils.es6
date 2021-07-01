@@ -47,7 +47,7 @@ export const alertsForContext = (context, options) => {
 }
 
 const getInformationAlerts = (options) => {
-  const alerts = [...listOperationsAlerts().hits, ...listInformationAlerts(options.pageType, options.pageTypeId).hits]
+  const alerts = [...listOperationsAlerts().hits, ...listInformationAlerts(options.pageType, options.pageTypeId, options.statbankWeb).hits]
   return alerts.map( (alert) => ({
     title: alert.displayName,
     messageType: alert.type === `${app.name}:operationsAlert` ? 'warning' : 'info',
