@@ -46,6 +46,7 @@ function getChildArticles(currentPath: string, start: number, count: number, sor
 }
 
 function prepareArticles(articles: QueryResponse<Article>, language: string): Array<PreparedArticles> {
+  const momentLanguage: string = language === 'en' ? 'en-gb' : 'nb'
   totalCount = articles.total
   return articles.hits.map((article: Content<Article>) => {
     return {
@@ -55,7 +56,7 @@ function prepareArticles(articles: QueryResponse<Article>, language: string): Ar
         id: article._id
       }),
       publishDate: article.publish && article.publish.from ? article.publish.from : '',
-      publishDateHuman: article.publish && article.publish.from ? moment(article.publish.from).locale(language).format('LL') : ''
+      publishDateHuman: article.publish && article.publish.from ? moment(article.publish.from).locale(momentLanguage).format('LL') : ''
     }
   })
 }
