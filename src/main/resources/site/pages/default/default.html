@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans%7COpen+Sans:700%7CRoboto:700%7CRoboto+Condensed:700"/>
   <link rel="stylesheet" data-th-href="${stylesUrl}"/>
   <link rel="alternate" data-th-if="${alternateLanguageVersionUrl}" data-th-href="${alternateLanguageVersionUrl}" data-th-hreflang="${language.alternate}"/>
+  <link data-th-unless="${statbankWeb}" rel="canonical" data-th-href="${pageUrl}" />
 
 </head>
 <body class="xp-page" data-th-classappend="${bodyClasses}">

@@ -5,7 +5,11 @@ import { Component } from 'enonic-types/portal'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { GroupedBy, PreparedStatistics, YearReleases } from '../../../lib/ssb/utils/variantUtils'
 import { UpcomingReleasesPartConfig } from './upcomingReleases-part-config'
+import { UpcomingRelease } from '../../content-types/upcomingRelease/upcomingRelease'
 
+const {
+  moment
+} = __non_webpack_require__('/lib/vendor/moment')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getContent,
@@ -13,6 +17,9 @@ const {
   processHtml,
   serviceUrl
 } = __non_webpack_require__('/lib/xp/portal')
+const {
+  query
+} = __non_webpack_require__('/lib/xp/content')
 const {
   addMonthNames,
   groupStatisticsByYearMonthAndDay,
@@ -32,12 +39,10 @@ exports.get = (req: Request): React4xpResponse => {
 
 exports.preview = (req: Request): React4xpResponse => renderPart(req)
 
-let currentLanguage: string = ''
-
 function renderPart(req: Request): React4xpResponse {
   const content: Content = getContent()
   const component: Component<UpcomingReleasesPartConfig> = getComponent()
-  currentLanguage = content.language ? content.language : 'nb'
+  const currentLanguage: string = content.language ? content.language : 'nb'
   const count: number = parseInt(component.config.numberOfDays)
   const isNotInEditMode: boolean = req.mode !== 'edit'
   const buttonTitle: string = localize({
@@ -63,6 +68,26 @@ function renderPart(req: Request): React4xpResponse {
 
   // iterate and format month names
   const groupedWithMonthNames: Array<YearReleases> = addMonthNames(groupedByYearMonthAndDay, currentLanguage)
+
+  const contentReleases: Array<PreparedUpcomingRelease> = query<UpcomingRelease>({
+    start: 0,
+    count: 500,
+    query: `type = "${app.name}:upcomingRelease" AND language = "${currentLanguage}" AND data.date >= "${moment().format('YYYY-MM-DD')}"`
+  }).hits.map((r) => {
+    const date: moment.Moment = moment(r.data.date).locale(currentLanguage)
+    return {
+      id: r._id,
+      name: r.displayName,
+      type: r.data.type,
+      date: date.format(),
+      mainSubject: r.data.mainSubject,
+      day: date.format('D'),
+      month: date.format('M'),
+      monthName: date.format('MMM'),
+      year: date.format('YYYY')
+    }
+  })
+
   const props: PartProps = {
     title: content.displayName,
     releases: groupedWithMonthNames,
@@ -72,7 +97,8 @@ function renderPart(req: Request): React4xpResponse {
     language: currentLanguage,
     count,
     upcomingReleasesServiceUrl,
-    buttonTitle
+    buttonTitle,
+    contentReleases
   }
 
   return React4xp.render('site/parts/upcomingReleases/upcomingReleases', props, req, {
@@ -91,4 +117,14 @@ interface PartProps {
   count: number;
   upcomingReleasesServiceUrl: string;
   buttonTitle: string;
+  contentReleases: Array<PreparedUpcomingRelease>;
+}
+
+interface PreparedUpcomingRelease extends UpcomingRelease {
+  id: string;
+  name: string;
+  day: string;
+  month: string;
+  monthName: string;
+  year: string;
 }

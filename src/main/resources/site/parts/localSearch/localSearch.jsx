@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dropdown } from '@statisticsnorway/ssb-component-library'
+import { Title, Dropdown } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 
 class LocalSearch extends React.Component {
@@ -16,7 +16,7 @@ class LocalSearch extends React.Component {
       <div className="container">
         <div className="row">
           <div className="col-12">
-            <h1>{this.props.title}</h1>
+            <Title size={2}>{this.props.title}</Title>
             <Dropdown placeholder={this.props.placeholder}
               searchable onSelect={(selectedItem)=> this.onSelect(selectedItem)}
               items={this.props.items}

@@ -1,0 +1,19 @@
+<content-type>
+    <display-name>Innhold til publiseringskalender</display-name>
+    <super-type>base:structured</super-type>
+    <form>
+        <input type="Date" name="date">
+            <label>Publisering</label>
+            <default>now</default>
+            <occurrences minimum="1" maximum="1" />
+        </input>
+        <input type="TextLine" name="type">
+            <label>Innholdstype</label>
+            <occurrences minimum="1" maximum="1" />
+        </input>
+        <input type="TextLine" name="mainSubject">
+            <label>Hovedemne</label>
+            <occurrences minimum="1" maximum="1" />
+        </input>
+    </form>
+</content-type>

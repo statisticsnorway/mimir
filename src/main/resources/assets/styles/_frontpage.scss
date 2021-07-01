@@ -1,6 +1,6 @@
 .part-frontpage-keyfigures {
   background: $ssb-dark-5;
-  padding: 60px 160px 60px 160px;
+  padding: 60px 0px 60px 0px;
 
 
   .keyfigure-wrapper {
@@ -42,6 +42,9 @@
         .ssb-number.small {
           @include media-breakpoint-up(lg) {
             font-size: 3vw;
+          }
+          @include media-breakpoint-up(xxl) {
+            font-size: 56px;
           }
         }
       }
