@@ -73,6 +73,7 @@ function getArticles(language: string): Array<Content<Article>> {
 }
 
 function prepareArticles(articles: Array<Content<Article>>, language: string): Array<PreparedArticles> {
+  const momentLanguage: string = language === 'en' ? 'en-gb' : 'nb'
   return articles.map( (article: Content<Article>) => {
     return {
       title: article.displayName,
@@ -81,7 +82,7 @@ function prepareArticles(articles: Array<Content<Article>>, language: string): A
         id: article._id
       }),
       publishDate: article.publish && article.publish.from ? article.publish.from : '',
-      publishDateHuman: article.publish && article.publish.from ? moment(article.publish.from).locale(language === 'en' ? 'en-gb' : 'nb').format('LL') : ''
+      publishDateHuman: article.publish && article.publish.from ? moment(article.publish.from).locale(momentLanguage).format('LL') : ''
     }
   })
 }
