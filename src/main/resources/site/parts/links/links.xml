@@ -1,0 +1,33 @@
+<part>
+    <display-name>Lenker</display-name>
+    <description></description>
+    <form>
+        <option-set name="linkTypes">
+            <label>Lenke type</label>
+            <occurrences minimum="0" maximum="1" />
+            <options minimum="1" maximum="1">
+                <option name="tableLink">
+                    <label>Tabell lenke</label>
+                    <help-text>Tabell-lenker brukes for å kunne lenke til et lagret søk eller til en vedleggstabell</help-text>
+                    <items>
+                        <mixin name="tableLink" />
+                    </items>
+                </option>
+
+                <option name="headerLink">
+                    <label>Uthevet lenke</label>
+                    <items>
+                        <mixin name="headerLink" />
+                    </items>
+                </option>
+
+                <option name="profiledLink">
+                    <label>Profilert lenke</label>
+                    <items>
+                        <mixin name="profiledLink" />
+                    </items>
+                </option>
+            </options>
+        </option-set>
+    </form>
+</part>

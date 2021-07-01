@@ -1,21 +1,20 @@
-<macro>
-    <display-name>Tabell lenke (IKKE BRUK)</display-name>
-    <description>Tabell-lenker brukes for å kunne lenke til et lagret søk eller til en vedleggstabell</description>
+<mixin>
+    <display-name>Tabell lenke</display-name>
     <form>
         <input name="title" type="TextLine">
             <label>Tittel</label>
-            <occurrences minimum="1" maximum="1"/>
+            <occurrences minimum="0" maximum="1"/>
         </input>
 
         <input name="description" type="TextLine">
             <label>Lenketekst</label>
-            <occurrences minimum="1" maximum="1"/>
+            <occurrences minimum="0" maximum="1"/>
         </input>
 
         <field-set>
             <label>Velg url eller innhold som mål</label>
             <items>
-                <input name="href" type="TextLine">
+                <input name="url" type="TextLine">
                     <label>Url</label>
                     <occurrences minimum="0" maximum="1"/>
                 </input>
@@ -23,7 +22,7 @@
                 <input name="relatedContent" type="ContentSelector">
                     <label>Relatert innhold</label>
                     <occurrences minimum="0" maximum="1"/>
-                    <help-text>Hvis både Url og Relatert innhold er fylt ut blir relatert innhold valgt</help-text>
+                    <help-text>NB! Hvis både Url og Relatert innhold er fylt ut blir relatert innhold valgt</help-text>
                     <config>
                         <allowContentType>${app}:*</allowContentType>
                         <treeMode>true</treeMode>
@@ -31,6 +30,5 @@
                 </input>
             </items>
         </field-set>
-
     </form>
-</macro>
+</mixin>
