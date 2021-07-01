@@ -1,7 +1,7 @@
 import { Content } from 'enonic-types/content'
 import { Component } from 'enonic-types/portal'
 import { LinksPartConfig } from './links-part-config'
-import { Request, Response, ResponseType } from 'enonic-types/controller'
+import { Request, Response } from 'enonic-types/controller'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { renderError } from '../../../lib/ssb/error/error'
 
@@ -15,7 +15,7 @@ const {
 } = __non_webpack_require__('/lib/xp/portal')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-exports.get = (req: Request): React4xpResponse | Response<ResponseType> => {
+exports.get = (req: Request): React4xpResponse | Response => {
   try {
     const part: Component<LinksPartConfig> = getComponent()
     const config: LinksPartConfig = part.config
@@ -25,7 +25,7 @@ exports.get = (req: Request): React4xpResponse | Response<ResponseType> => {
   }
 }
 
-exports.preview = (req: Request, config: LinksPartConfig): React4xpResponse | Response<ResponseType> => {
+exports.preview = (req: Request, config: LinksPartConfig): React4xpResponse | Response => {
   try {
     return renderPart(req, config)
   } catch (e) {
@@ -82,7 +82,7 @@ function renderPart(req: Request, config: LinksPartConfig): React4xpResponse {
         href: config.linkTypes?.profiledLink?.contentUrl && pageUrl({
           id: config.linkTypes?.profiledLink?.contentUrl
         }),
-        withIcon: config.linkTypes?.profiledLink?.withIcon,
+        withIcon: !!config.linkTypes?.profiledLink?.withIcon,
         linkType: 'profiled'
       }
     }
@@ -118,7 +118,7 @@ export function prepareText(content: Content, linkText: string | undefined): str
 export interface LinksProps {
   children: string;
   href: string;
-  withIcon: boolean;
+  withIcon: boolean | string;
   linkType: string;
   description: string;
   title: string;

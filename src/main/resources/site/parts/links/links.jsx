@@ -14,10 +14,11 @@ const Links = (props) => {
   } = props
 
   const renderLinks = () => {
+    const renderIcon = typeof withIcon === 'boolean' ? withIcon : withIcon === 'true' // Macro config returns string. This is a workaround.
     return (
       <Link
         href={href}
-        icon={!!withIcon && <ArrowRight size="20"/>}
+        icon={renderIcon && <ArrowRight size="20"/>}
         linkType={linkType}
       >
         {children}
@@ -46,7 +47,7 @@ const Links = (props) => {
 Links.propTypes = {
   children: PropTypes.node,
   href: PropTypes.string,
-  withIcon: PropTypes.bool,
+  withIcon: PropTypes.bool | PropTypes.string,
   linkType: PropTypes.oneOf([
     'regular',
     'profiled',
