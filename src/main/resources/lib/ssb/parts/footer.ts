@@ -45,6 +45,10 @@ export function getFooterContent(language: Language): FooterContent | undefined 
       topButtonText: localize({
         key: 'toTheTop',
         locale: language.code
+      }),
+      hiddenFooterText: localize({
+        key: 'footerHiddenTitle',
+        locale: language.code
       })
     }
   }
@@ -61,6 +65,7 @@ export interface FooterContent {
   globalLinks: Array<Link>;
   footerNavigation?: Array<MenuItem>;
   topButtonText?: string;
+  hiddenFooterText?: string;
 }
 
 export interface FooterLib {
