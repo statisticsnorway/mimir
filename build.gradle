@@ -37,7 +37,6 @@ dependencies {
     include 'commons-codec:commons-codec:1.15'
     include "no.item:wsutil-server:2.0.0"
     include "com.gravitondigital:featuretogglelib:0.3.0"
-    testCompile "com.enonic.xp:testing:${xpVersion}"
     compile group: 'org.json', name: 'json', version: '20210307'
     include 'com.enonic.lib:lib-react4xp:1.7.1'
     include 'com.enonic.lib:lib-text-encoding:2.0.0'
@@ -122,13 +121,6 @@ task serverWebpack( type: NodeTask, dependsOn: npmInstall ) {
     script = file( 'node_modules/webpack-cli/bin/cli.js' )
 }
 
-task testWebpack( type: NodeTask, dependsOn: npmInstall) {
-    environment = [ 'NODE_ENV': nodeEnvironment() ]
-    args = [ '--config', 'webpack.test.config.js', '--color', '--hide-modules' ]
-    description = 'Build test JS.'
-    script = file( 'node_modules/webpack-cli/bin/cli.js' )
-}
-
 task generateTypeScriptInterfaces( type: NodeTask, dependsOn: npmInstall ) {
     description = 'Generate TypeScript interfaces'
     environment = [ 'NODE_ENV': nodeEnvironment() ]
@@ -165,7 +157,6 @@ jar {
     dependsOn += clientTsWebpack
     dependsOn += stylesWebpack
     dependsOn += serverWebpack
-    dependsOn += testWebpack
 }
 
 def nodeEnvironment() {
