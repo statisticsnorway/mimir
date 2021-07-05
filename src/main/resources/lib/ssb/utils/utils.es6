@@ -2,16 +2,6 @@ const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
 const {
-  list: listOperationsAlerts
-} = __non_webpack_require__('/lib/ssb/parts/operationsAlert')
-const {
-  list: listMunicipalityAlerts
-} = __non_webpack_require__('/lib/ssb/parts/municipalityAlert')
-const {
-  list: listInformationAlerts
-} = __non_webpack_require__('/lib/ssb/parts/informationAlert')
-const {
-  processHtml,
   pageUrl,
   getContent
 } = __non_webpack_require__('/lib/xp/portal')
@@ -40,39 +30,6 @@ export const createHumanReadableFormat = (value) => {
   } else {
     return value > 999 || value < -999 ? numberWithSpaces(value) : value.toString()
   }
-}
-
-export const alertsForContext = (context, options) => {
-  return context.config && context.config.pageType === 'municipality' ? getMunicipalityAlerts(options) : getInformationAlerts(options)
-}
-
-const getInformationAlerts = (options) => {
-  const alerts = [...listOperationsAlerts().hits, ...listInformationAlerts(options.pageType, options.pageTypeId, options.statbankWeb).hits]
-  return alerts.map( (alert) => ({
-    title: alert.displayName,
-    messageType: alert.type === `${app.name}:operationsAlert` ? 'warning' : 'info',
-    message: processHtml({
-      value: alert.data.message
-    })
-  }))
-}
-
-
-const getMunicipalityAlerts = (options) => {
-  const municipality = options.municipality
-  const municipalPageType = options.municipalPageType
-  const currentMunicipalityAlerts = options.municipality ? listMunicipalityAlerts( municipality.code, municipalPageType ) : {
-    hits: []
-  }
-  const alerts = [...listOperationsAlerts().hits, ...currentMunicipalityAlerts.hits]
-  return alerts.map( (alert) => ({
-    title: alert.displayName,
-    messageType: alert.type === `${app.name}:operationsAlert` ? 'warning' : 'info',
-    municipalCodes: alert.data.municipalCodes,
-    message: processHtml({
-      value: alert.data.message
-    })
-  }))
 }
 
 // Returns page mode for Kommunefakta page based on request mode or request path
