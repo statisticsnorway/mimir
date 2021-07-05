@@ -1,7 +1,4 @@
 const {
-  getPhrases
-} = __non_webpack_require__('/lib/ssb/utils/language')
-const {
   pageUrl,
   getContent
 } = __non_webpack_require__('/lib/xp/portal')
@@ -35,50 +32,6 @@ export const createHumanReadableFormat = (value) => {
 // Returns page mode for Kommunefakta page based on request mode or request path
 export const pageMode = (req) => {
   return req.params.municipality ? 'municipality' : 'map'
-}
-
-const addBreadcrumbs = (page, visitedPage, breadcrumbs = []) => {
-  if (page.type === 'portal:site') {
-    breadcrumbs.unshift({
-      text: getPhrases(visitedPage) ? getPhrases(visitedPage).home : 'Hjem',
-      link: '/'
-    })
-  } else {
-    if (page.type !== 'base:folder') {
-      breadcrumbs.unshift({
-        text: page.displayName,
-        link: pageUrl({
-          path: page._path
-        })
-      })
-    }
-    const parent = content.get({
-      key: page._path.substring(0, page._path.lastIndexOf('/'))
-    })
-
-    if (parent) {
-      return addBreadcrumbs(parent, visitedPage, breadcrumbs)
-    }
-  }
-  return breadcrumbs
-}
-
-export const getBreadcrumbs = (page, municipality) => {
-  const breadcrumbs = addBreadcrumbs(page, page)
-  if (getContent().language == 'en') {
-    breadcrumbs.shift()
-    breadcrumbs[0].text = 'Home'
-  }
-  if (municipality) {
-    breadcrumbs.pop()
-    breadcrumbs.push({
-      text: municipality.displayName
-    })
-  } else if (breadcrumbs.length > 0) {
-    // remove link of last element in the breadcrumbs list, because its the page we're on
-    delete breadcrumbs[breadcrumbs.length - 1].link
-  }
-  return breadcrumbs
 }
 
 export function safeRender(view, model) {

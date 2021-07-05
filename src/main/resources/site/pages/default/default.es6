@@ -13,7 +13,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/utils/alertUtils')
 const {
   getBreadcrumbs
-} = __non_webpack_require__('/lib/ssb/utils/utils')
+} = __non_webpack_require__('/lib/ssb/utils/breadcrumbUtils')
 const {
   getReleaseDatesByVariants
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')
