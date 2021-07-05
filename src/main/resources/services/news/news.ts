@@ -12,7 +12,7 @@ const {
   query
 } = __non_webpack_require__('/lib/xp/content')
 const {
-  fetchStatisticsWithPreviousReleaseBetween
+  fetchStatisticsWithReleaseToday
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   pageUrl
@@ -97,9 +97,7 @@ function getNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<N
 }
 
 function getStatisticsNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<News> {
-  const from: string = moment().subtract(1, 'days').toISOString()
-  const to: string = moment().toISOString()
-  const statregStatistics: Array<StatisticInListing> = fetchStatisticsWithPreviousReleaseBetween(new Date(from), new Date(to))
+  const statregStatistics: Array<StatisticInListing> = fetchStatisticsWithReleaseToday()
 
   const statisticsNews: Array<News> = []
   if (statregStatistics.length > 0) {
@@ -115,7 +113,7 @@ function getStatisticsNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>
       statistics.forEach((statistic) => {
         const statreg: StatisticInListing | undefined = statregStatistics.find((s) => s.id.toString() === statistic.data.statistic)
         const pubDate: string | undefined = statistic.publish?.first && statreg?.variants ?
-          moment(statreg?.variants[0].previousRelease).utcOffset(serverOffsetInMS / 1000 / 60, true).format() :
+          moment(statreg?.variants[0]?.previousRelease).utcOffset(serverOffsetInMS / 1000 / 60, true).format() :
           undefined
         if (pubDate) {
           statisticsNews.push({
