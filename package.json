@@ -104,7 +104,7 @@
     "style-loader": "^2.0.0",
     "terser-webpack-plugin": "^4.2.3",
     "ts-loader": "^8.1.0",
-    "typescript": "^3.9.9",
+    "typescript": "^3.9.10",
     "validator": "^13.6.0",
     "xlsx": "^0.17.0"
   },
