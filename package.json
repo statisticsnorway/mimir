@@ -63,7 +63,7 @@
     "cssnano": "^5.0.2",
     "feather-icons": "^4.28.0",
     "file-loader": "^6.2.0",
-    "glob": "^7.1.6",
+    "glob": "^7.1.7",
     "highcharts": "^9.0.1",
     "imagesloaded": "^4.1.4",
     "jquery": "^3.6.0",
