@@ -8,8 +8,7 @@ import moment from 'moment/min/moment-with-locales'
 
 function HusleieCalculator(props) {
   const validMaxYear = props.lastUpdated.year
-  const todayMonth = moment(new Date()).format('DD')// new Date().getMonth()
-  const todayYear = new Date().getFullYear()
+  const validMaxMonth = props.lastUpdated.month
 
   const [startValue, setStartValue] = useState({
     error: false,
@@ -29,12 +28,12 @@ function HusleieCalculator(props) {
   const [endMonth, setEndMonth] = useState({
     error: false,
     errorMsg: props.lastNumberText,
-    value: todayMonth
+    value: validMaxMonth
   })
   const [endYear, setEndYear] = useState({
     error: false,
     errorMsg: `${props.phrases.husleieValidateYear} ${validMaxYear}`,
-    value: todayYear
+    value: validMaxYear
   })
   const [errorMessage, setErrorMessage] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -44,7 +43,6 @@ function HusleieCalculator(props) {
   const [choosenPeriod, setChoosenPeriod] = useState(false)
   const language = props.language ? props.language : 'nb'
 
-  const validMaxMonth = props.lastUpdated.month
   const validMinYear = 1865
   const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
 
@@ -64,14 +62,21 @@ function HusleieCalculator(props) {
 
     setErrorMessage(null)
     setLoading(true)
+    getServiceData(endMonth.value, endYear.value)
+  }
 
+  function isFormValid() {
+    return isStartValueValid() && isStartYearValid() && isStartMonthValid() && isEndPeriodValid()
+  }
+
+  function getServiceData(endMonth, endYear) {
     axios.get(props.husleieServiceUrl, {
       params: {
         startValue: startValue.value,
         startYear: startYear.value,
         startMonth: startMonth.value,
-        endYear: endYear.value,
-        endMonth: endMonth.value,
+        endYear: endYear,
+        endMonth: endMonth,
         language: language
       }
     })
@@ -93,22 +98,19 @@ function HusleieCalculator(props) {
       })
   }
 
-  function isFormValid() {
-    return isStartValueValid() && isStartYearValid() && isStartMonthValid() && isEndPeriodValid()
-  }
-
   function submitOneYearLater() {
+    const yearAfter = Number(startYear.value) + 1
     setChoosenPeriod(true)
     setEndMonth({
       ...endMonth,
-      value: todayMonth
+      value: startMonth.value
     })
 
     setEndYear({
       ...endYear,
-      value: Number(startYear.value) + 1
+      value: yearAfter.toString()
     })
-    console.log('Ett år senere')
+    getServiceData(startMonth.value, yearAfter.toString())
   }
 
   function submitLastPeriod() {
@@ -122,12 +124,13 @@ function HusleieCalculator(props) {
       ...endYear,
       value: validMaxYear
     })
-    console.log('Siste tall')
+    getServiceData(validMaxMonth, validMaxYear)
   }
 
   function monthSinceLastAdjusted() {
     const from = '01/' + startMonth.value + '/' + startYear.value
-    const monthDifference = moment(new Date()).diff(new Date(from), 'months', true)
+    const to = '01/' + validMaxMonth + '/' + validMaxYear
+    const monthDifference = moment(new Date(to)).diff(new Date(from), 'months', true)
     return monthDifference
   }
 
@@ -275,13 +278,9 @@ function HusleieCalculator(props) {
     }
   }
 
-  function getPeriod(year, month) {
-    return month === '90' ? year : `${getMonthLabel(month)} ${year}`
-  }
-
   function getMonthLabel(month) {
     const monthLabel = props.months.find((m) => parseInt(m.id) === parseInt(month))
-    return monthLabel ? monthLabel.title.toLowerCase() : ''
+    return monthLabel ? monthLabel.title : ''
   }
 
   function renderNumberValute(value) {
@@ -323,12 +322,14 @@ function HusleieCalculator(props) {
   }
 
   function calculatorResult() {
-    const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
+    const phraseTo = language === 'en' ? 'to' : 'til'
+    const phraseResultText = `${props.phrases.husleieAppliesFor} ${getMonthLabel(startMonth.value).toLowerCase()}
+     ${startYear.value} ${phraseTo} ${getMonthLabel(endMonth.value).toLowerCase()} ${endYear.value}`
     return (
       <Container className="calculator-result">
         <Row className="mb-5">
           <Col className="amount-equal align-self-end col-12 col-md-4">
-            <Title size={3}>Ny husleie</Title>
+            <Title size={3}>{props.phrases.husleieNewRent}</Title>
           </Col>
           <Col className="end-value col-12 col-md-8">
             <span className="float-left float-md-right">
@@ -341,16 +342,14 @@ function HusleieCalculator(props) {
         </Row>
         <Row className="mb-5">
           <Col className="price-increase col-12 col-lg-4">
-            <span>{priceChangeLabel}</span>
+            <span>{props.phrases.calculatorChange}</span>
             <span className="float-right">
               {renderNumberChangeValue()}
             </span>
             <Divider dark/>
           </Col>
-        </Row>
-        <Row className="my-4">
-          <Col className="col-12 col-md-8">
-            <span className="info-title">{props.phrases.kpiCalculatorInfoTitle}</span>
+          <Col className="price-increase col-12 col-lg-4">
+            <span>{phraseResultText}</span>
           </Col>
         </Row>
       </Container>
@@ -395,20 +394,18 @@ function HusleieCalculator(props) {
 
   function renderChooseHusleiePeriode() {
     if (monthsLastAdjusted > 12) {
+      const phraseOneYearLater = getMonthLabel(startMonth.value) + ' ' + (Number(startYear.value) + 1).toString()
+      const newestNumbers = getMonthLabel(validMaxMonth) + ' ' + validMaxYear + ' (' + props.phrases.husleieLatestFigures + ' )'
       return (
         <Container>
+          <Divider className="my-5"/>
           <Row>
-            <Divider/>
-            <Title size={3}>Det er mer enn ett år siden du endret husleie.</Title>
-            <p>Du kan velge hvilke tall som skal brukes til å beregne ny husleie:</p>
+            <Title size={3} className="col-12 mb-2">{props.phrases.husleieValidateOver1Year}</Title>
+            <p className="col-12 mb-2">{props.phrases.husleieChooseFiguresToCalculateRent}</p>
           </Row>
-          <Row>
-            <Col>
-              <Button className="submit-button" onClick={submitOneYearLater}>Ett år etter</Button>
-            </Col>
-            <Col>
-              <Button className="submit-button" onClick={submitLastPeriod}>Nyeste tall</Button>
-            </Col>
+          <Row className="ml-1">
+            <Button className="submit-button mr-3" onClick={submitOneYearLater}>{phraseOneYearLater}</Button>
+            <Button className="submit-button" onClick={submitLastPeriod}>{newestNumbers}</Button>
           </Row>
         </Container>
       )
@@ -442,10 +439,10 @@ function HusleieCalculator(props) {
           <Container>
             <Row>
               <Col className="input-amount">
-                <Title size={3}>Hva er husleien idag?</Title>
+                <Title size={3}>{props.phrases.husleieRentToday}</Title>
                 <Input
                   className="start-value"
-                  label="Skriv inn beløp"
+                  label={props.phrases.enterAmount}
                   handleChange={(value) => onChange('start-value', value)}
                   error={startValue.error}
                   errorMessage={startValue.errorMsg}
@@ -454,10 +451,10 @@ function HusleieCalculator(props) {
               </Col>
             </Row>
             <Row>
-              <Col className="calculate-from col-12">
-                <Title size={3}>Når justerte du husleien sist</Title>
+              <Col className="calculate-from col-12 col-sm-6">
+                <Title size={3}>{props.phrases.husleieLastAdjust}</Title>
                 <Container>
-                  <Row className="col-12 col-sm-6">
+                  <Row>
                     <Col className="select-month col-sm-8">
                       <Dropdown
                         className="month"
@@ -466,7 +463,7 @@ function HusleieCalculator(props) {
                         onSelect={(value) => {
                           onChange('start-month', value)
                         }}
-                        placeholder='Velg måned'
+                        placeholder={props.phrases.chooseMonth}
                         error={startMonth.error}
                         errorMessage={startMonth.errorMsg}
                         items={props.months}
@@ -488,7 +485,7 @@ function HusleieCalculator(props) {
             </Row>
             <Row className="submit">
               <Col>
-                <Button className="submit-button" primary type="submit" disabled={loading}>Se ny husleie</Button>
+                <Button className="submit-button" primary type="submit" disabled={loading}>{props.phrases.husleieSubmit}</Button>
               </Col>
             </Row>
             {renderChooseHusleiePeriode()}
