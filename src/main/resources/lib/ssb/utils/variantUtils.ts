@@ -13,9 +13,6 @@ const {
   groupBy
 } = __non_webpack_require__('/lib/vendor/ramda')
 const {
-  getWeek
-} = __non_webpack_require__('/lib/ssb/utils/utils')
-const {
   data: {
     forceArray
   }
@@ -140,6 +137,14 @@ function calculateMonth(variant: VariantInListing, language: string): string {
   })
 }
 
+function getWeek(date: Date): number {
+  const onejan: number = new Date(date.getFullYear(), 0, 1).getTime()
+  const today: number = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime()
+  const diff: number = today - onejan
+  const dayOfYear: number = ((diff + 86400000) / 86400000)
+  return Math.ceil(dayOfYear / 7)
+}
+
 function calculateWeek(variant: VariantInListing, language: string): string {
   const date: Date = new Date(variant.previousFrom)
   return localize({
@@ -148,7 +153,6 @@ function calculateWeek(variant: VariantInListing, language: string): string {
     values: [getWeek(date).toString(), date.getFullYear().toString()]
   })
 }
-
 
 export function addMonthNames(groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>>, language: string): Array<YearReleases> {
   return Object.keys(groupedByYearMonthAndDay).map((year) => {

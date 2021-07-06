@@ -1,8 +1,14 @@
+import { ByteSource, Content } from 'enonic-types/content'
+import { Request, Response } from 'enonic-types/controller'
+import { ResourceKey } from 'enonic-types/thymeleaf'
+
 const {
-  pageUrl,
-  getContent
+  get, getAttachmentStream
+} = __non_webpack_require__('/lib/xp/content')
+const {
+  getContent,
+  pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const content = __non_webpack_require__('/lib/xp/content')
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
@@ -13,15 +19,15 @@ const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
 
-const errorView = resolve('../error/error.html')
+const errorView: ResourceKey = resolve('../error/error.html')
 
-const numberWithSpaces = (x) => {
-  const parts = x.toString().split('.')
+function numberWithSpaces(x: number | string): string {
+  const parts: Array<string> = x.toString().split('.')
   parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0')
   return parts.join('.')
 }
 
-export const createHumanReadableFormat = (value) => {
+export function createHumanReadableFormat(value: number | string): string {
   if (getContent().language != 'en') {
     return value > 999 || value < -999 ? numberWithSpaces(value).toString().replace(/\./, ',') : value.toString().replace(/\./, ',')
   } else {
@@ -30,12 +36,12 @@ export const createHumanReadableFormat = (value) => {
 }
 
 // Returns page mode for Kommunefakta page based on request mode or request path
-export const pageMode = (req) => {
+export function pageMode(req: Request): string {
   return req.params.municipality ? 'municipality' : 'map'
 }
 
-export function safeRender(view, model) {
-  let response
+export function safeRender(view: ResourceKey, model: ErrorModel): Response {
+  let response: Response
   try {
     response = {
       body: render(view, model),
@@ -43,7 +49,7 @@ export function safeRender(view, model) {
       contentType: 'text/html'
     }
   } catch (e) {
-    const errorModel = {
+    const errorModel: ErrorModel = {
       errorTitle: 'Noe gikk galt',
       errorBody: e
     }
@@ -57,17 +63,17 @@ export function safeRender(view, model) {
   return response
 }
 
-export function pathFromStringOrContent(urlSrc) {
+export function pathFromStringOrContent(urlSrc: StringOrContent): string | undefined {
   if (urlSrc !== undefined) {
     if (urlSrc._selected === 'content') {
-      const selected = urlSrc[urlSrc._selected]
+      const selected: SelectedStringOrContent = urlSrc[urlSrc._selected]
       return selected && selected.contentId ? pageUrl({
         id: selected.contentId
       }) : undefined
     }
 
     if (urlSrc._selected === 'manual') {
-      const selected = urlSrc[urlSrc._selected]
+      const selected: SelectedStringOrContent = urlSrc[urlSrc._selected]
       return selected && selected.url ? selected.url : undefined
     }
   }
@@ -76,22 +82,22 @@ export function pathFromStringOrContent(urlSrc) {
 }
 
 
-export function getImageCaption(imageId) {
-  const imageContent = content.get({
+export function getImageCaption(imageId: string): string {
+  const imageContent: ImageContent | null = get({
     key: imageId
   })
   return imageContent && imageContent !== undefined ? imageContent.data.caption : ' '
 }
 
-export function getImageAlt(imageId) {
-  const imageContent = content.get({
+export function getImageAlt(imageId: string): string {
+  const imageContent: ImageContent | null = get({
     key: imageId
   })
   return imageContent && imageContent !== undefined ? imageContent.data.altText : ' '
 }
 
-export function isPublished(content) {
-  return content.publish.from ? (new Date(removeLast3Digits(content.publish.from))) < (new Date()) : false
+export function isPublished(content: Content): boolean {
+  return content.publish && content.publish.from ? (new Date(removeLast3Digits(content.publish.from))) < (new Date()) : false
 }
 
 /**
@@ -101,29 +107,33 @@ export function isPublished(content) {
  * @param {string} timestamp in iso format: 2020-10-14T08:15:24.307260Z
  * @return {string} timestamp in iso format: 2020-10-14T08:15:24.307Z
  */
-function removeLast3Digits(timestamp) {
-  const groupRegexp = /([0-9\-]{8,10}T[0-9\:]{6,8}.[0-9]{3})(?:[0-9])*(Z)/gm
-  const matched = groupRegexp.exec(timestamp)
+function removeLast3Digits(timestamp: string): string {
+  const groupRegexp: RegExp = /([0-9\-]{8,10}T[0-9\:]{6,8}.[0-9]{3})(?:[0-9])*(Z)/gm
+  const matched: Array<string> | null = groupRegexp.exec(timestamp)
   return matched && matched.length > 1 ? `${matched[1]}${matched[2]}` : timestamp
 }
 
 
-export function isUrl(urlOrId) {
-  return urlOrId.indexOf('http') > -1
+export function isUrl(urlOrId: string): boolean {
+  return urlOrId.includes('http')
 }
 
-export const dateToFormat = (ds) => moment(ds).locale('nb').format('DD.MM.YYYY HH:mm')
-export const dateToReadable = (ds) => moment(ds).locale('nb').fromNow()
+export function dateToFormat(ds: string): string {
+  return moment(ds).locale('nb').format('DD.MM.YYYY HH:mm')
+}
+export function dateToReadable(ds: string): string {
+  return moment(ds).locale('nb').fromNow()
+}
 
 /**
  *
  * @param {Object} sourceConfig
  * @return {array} a list of sources, text and url
  */
-export const getSources = (sourceConfig) => {
+export function getSources(sourceConfig: Array<Sources>): object {
   return sourceConfig.map((selectedSource) => {
-    let sourceText
-    let sourceUrl
+    let sourceText: string = ''
+    let sourceUrl: string = ''
 
     if (selectedSource._selected == 'urlSource') {
       sourceText = selectedSource.urlSource.urlText
@@ -143,24 +153,24 @@ export const getSources = (sourceConfig) => {
   })
 }
 
-export const getAttachmentContent = (contentId) => {
+export function getAttachmentContent(contentId: string | undefined): string | undefined {
   if (!contentId) return undefined
-  const attachmentContent = content.get({
+  const attachmentContent: Content | null = get({
     key: contentId
   })
 
   if (!attachmentContent) return undefined
-  const stream = content.getAttachmentStream({
+  const stream: ByteSource | null = getAttachmentStream({
     key: attachmentContent._id,
     name: attachmentContent._name
   })
 
   if (!stream) return undefined
-  const lines = readLines(stream)
+  const lines: Array<string> = readLines(stream)
   return lines[0]
 }
 
-export const getRowValue = (value) => {
+export function getRowValue(value: number | string | RowValueObject): number | string | RowValueObject {
   if (typeof value === 'string' && isNumber(value)) {
     return Number(value)
   }
@@ -170,14 +180,49 @@ export const getRowValue = (value) => {
   return value
 }
 
-export const isNumber = (str) => {
-  return ((str != null) && (str !== '') && !isNaN(str))
+export function isNumber(str: number | string | undefined): boolean {
+  return ((str != null) && (str !== '') && !isNaN(str as number))
 }
 
+interface ErrorModel {
+  errorTitle: string;
+  errorBody: string;
+}
 
-export const getWeek = (date) => {
-  const onejan = new Date(date.getFullYear(), 0, 1)
-  const today = new Date(date.getFullYear(), date.getMonth(), date.getDate())
-  const dayOfYear = ((today - onejan + 86400000) / 86400000)
-  return Math.ceil(dayOfYear / 7)
+interface ImageContent {
+  data: {
+    caption: string;
+    altText: string;
+  };
+}
+
+interface Sources {
+  _selected: string;
+  urlSource: {
+    urlText: string;
+    url: string;
+  };
+  relatedSource: {
+    urlText: string;
+    sourceSelector: string;
+  };
+}
+
+interface StringOrContent {
+  _selected: string;
+  manual: {
+      url?: string | undefined;
+  };
+  content: {
+      contentId?: string | undefined;
+  };
+}
+
+interface SelectedStringOrContent {
+  url?: string;
+  contentId?: string;
+}
+
+interface RowValueObject {
+  content: string;
 }
