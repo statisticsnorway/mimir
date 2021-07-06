@@ -1,17 +1,14 @@
 import { ByteSource, Content } from 'enonic-types/content'
-import { Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { Request } from 'enonic-types/controller'
 
 const {
-  get, getAttachmentStream
+  get,
+  getAttachmentStream
 } = __non_webpack_require__('/lib/xp/content')
 const {
   getContent,
   pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
 const {
   readLines
 } = __non_webpack_require__('/lib/xp/io')
@@ -19,12 +16,27 @@ const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
 
-const errorView: ResourceKey = resolve('../error/error.html')
+/**
+ * The timestamp from enonic contains 6 millisecond decimals. This is not supported in
+ * today's nashorn and therefor it cannot create new date object with it. This function
+ * removes the last 3 digits.
+ * @param {string} timestamp in iso format: 2020-10-14T08:15:24.307260Z
+ * @return {string} timestamp in iso format: 2020-10-14T08:15:24.307Z
+ */
+function removeLast3Digits(timestamp: string): string {
+  const groupRegexp: RegExp = /([0-9\-]{8,10}T[0-9\:]{6,8}.[0-9]{3})(?:[0-9])*(Z)/gm
+  const matched: Array<string> | null = groupRegexp.exec(timestamp)
+  return matched && matched.length > 1 ? `${matched[1]}${matched[2]}` : timestamp
+}
 
 function numberWithSpaces(x: number | string): string {
   const parts: Array<string> = x.toString().split('.')
   parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0')
   return parts.join('.')
+}
+
+export function isPublished(content: Content): boolean {
+  return content.publish && content.publish.from ? (new Date(removeLast3Digits(content.publish.from))) < (new Date()) : false
 }
 
 export function createHumanReadableFormat(value: number | string): string {
@@ -38,29 +50,6 @@ export function createHumanReadableFormat(value: number | string): string {
 // Returns page mode for Kommunefakta page based on request mode or request path
 export function pageMode(req: Request): string {
   return req.params.municipality ? 'municipality' : 'map'
-}
-
-export function safeRender(view: ResourceKey, model: ErrorModel): Response {
-  let response: Response
-  try {
-    response = {
-      body: render(view, model),
-      status: 200,
-      contentType: 'text/html'
-    }
-  } catch (e) {
-    const errorModel: ErrorModel = {
-      errorTitle: 'Noe gikk galt',
-      errorBody: e
-    }
-    response = {
-      body: render(errorView, errorModel),
-      status: 400,
-      contentType: 'text/html'
-    }
-  }
-
-  return response
 }
 
 export function pathFromStringOrContent(urlSrc: StringOrContent): string | undefined {
@@ -81,7 +70,6 @@ export function pathFromStringOrContent(urlSrc: StringOrContent): string | undef
   return undefined
 }
 
-
 export function getImageCaption(imageId: string): string {
   const imageContent: ImageContent | null = get({
     key: imageId
@@ -95,24 +83,6 @@ export function getImageAlt(imageId: string): string {
   })
   return imageContent && imageContent !== undefined ? imageContent.data.altText : ' '
 }
-
-export function isPublished(content: Content): boolean {
-  return content.publish && content.publish.from ? (new Date(removeLast3Digits(content.publish.from))) < (new Date()) : false
-}
-
-/**
- * The timestamp from enonic contains 6 millisecond decimals. This is not supported in
- * today's nashorn and therefor it cannot create new date object with it. This function
- * removes the last 3 digits.
- * @param {string} timestamp in iso format: 2020-10-14T08:15:24.307260Z
- * @return {string} timestamp in iso format: 2020-10-14T08:15:24.307Z
- */
-function removeLast3Digits(timestamp: string): string {
-  const groupRegexp: RegExp = /([0-9\-]{8,10}T[0-9\:]{6,8}.[0-9]{3})(?:[0-9])*(Z)/gm
-  const matched: Array<string> | null = groupRegexp.exec(timestamp)
-  return matched && matched.length > 1 ? `${matched[1]}${matched[2]}` : timestamp
-}
-
 
 export function isUrl(urlOrId: string): boolean {
   return urlOrId.includes('http')
@@ -183,19 +153,12 @@ export function getRowValue(value: number | string | RowValueObject): number | s
 export function isNumber(str: number | string | undefined): boolean {
   return ((str != null) && (str !== '') && !isNaN(str as number))
 }
-
-interface ErrorModel {
-  errorTitle: string;
-  errorBody: string;
-}
-
 interface ImageContent {
   data: {
     caption: string;
     altText: string;
   };
 }
-
 interface Sources {
   _selected: string;
   urlSource: {
@@ -207,7 +170,6 @@ interface Sources {
     sourceSelector: string;
   };
 }
-
 interface StringOrContent {
   _selected: string;
   manual: {
@@ -222,7 +184,6 @@ interface SelectedStringOrContent {
   url?: string;
   contentId?: string;
 }
-
 interface RowValueObject {
-  content: string;
+  content: string | number;
 }
