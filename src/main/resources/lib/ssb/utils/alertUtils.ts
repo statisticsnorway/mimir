@@ -88,3 +88,8 @@ interface MunicipalityAlert {
     municipalCodes: string;
     message: string;
 }
+
+export interface AlertLib {
+  alertsForContext: (config: DefaultPageConfig, options: InformationAlertOptions | MunicipalityOptions) =>
+  Array<InformationAlert> | Array<MunicipalityAlert>;
+}

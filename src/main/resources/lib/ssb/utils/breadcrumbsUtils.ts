@@ -60,3 +60,7 @@ interface Breadcrumbs {
     text: string;
     link?: string;
 }
+
+export interface BreadcrumbsLib {
+  getBreadcrumbs: (page: Content, municipality: MunicipalityWithCounty | undefined) => Array<Breadcrumbs>;
+}
