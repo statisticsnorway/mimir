@@ -10,9 +10,11 @@ const {
   get, getChildren, query
 } = __non_webpack_require__('/lib/xp/content')
 const {
-  getAttachmentContent,
-  getImageCaption
+  getAttachmentContent
 } = __non_webpack_require__('/lib/ssb/utils/utils')
+const {
+  getImageCaption
+} = __non_webpack_require__('/lib/ssb/utils/imageUtils')
 
 export function createMenuTree(menuItemId: string): Array<MenuItemParsed> {
   const menuContent: Content<MenuItem> | null = get({

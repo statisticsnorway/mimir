@@ -104,6 +104,9 @@ test.mock('/lib/xp/content', {
 })
 
 const utils = __non_webpack_require__('/lib/ssb/utils/utils')
+const {
+  getImageCaption
+} = __non_webpack_require__('/lib/ssb/utils/imageUtils')
 
 exports.testHumanReadableNumber1 = function() {
   const result = utils.createHumanReadableFormat(123456789)
@@ -128,7 +131,7 @@ exports.testHumanReadableNumber4 = function() {
 }
 
 exports.testKeyFigureImageCaption1 = function() {
-  const result = utils.getImageCaption( '201c4f2f-ff5e-4298-8a3f-b07d515795de' )
+  const result = getImageCaption( '201c4f2f-ff5e-4298-8a3f-b07d515795de' )
   test.assertEquals('ikon av mennesker og hus', result, 'Testing extraction of mocked image caption from json')
 }
 

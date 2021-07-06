@@ -70,20 +70,6 @@ export function pathFromStringOrContent(urlSrc: StringOrContent): string | undef
   return undefined
 }
 
-export function getImageCaption(imageId: string): string {
-  const imageContent: ImageContent | null = get({
-    key: imageId
-  })
-  return imageContent && imageContent !== undefined ? imageContent.data.caption : ' '
-}
-
-export function getImageAlt(imageId: string): string {
-  const imageContent: ImageContent | null = get({
-    key: imageId
-  })
-  return imageContent && imageContent !== undefined ? imageContent.data.altText : ' '
-}
-
 export function isUrl(urlOrId: string): boolean {
   return urlOrId.includes('http')
 }
@@ -153,12 +139,7 @@ export function getRowValue(value: number | string | RowValueObject): number | s
 export function isNumber(str: number | string | undefined): boolean {
   return ((str != null) && (str !== '') && !isNaN(str as number))
 }
-interface ImageContent {
-  data: {
-    caption: string;
-    altText: string;
-  };
-}
+
 interface Sources {
   _selected: string;
   urlSource: {

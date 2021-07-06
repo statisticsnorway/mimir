@@ -89,7 +89,7 @@ interface MunicipalityAlert {
     message: string;
 }
 
-export interface AlertLib {
+export interface AlertUtilsLib {
   alertsForContext: (config: DefaultPageConfig, options: InformationAlertOptions | MunicipalityOptions) =>
   Array<InformationAlert> | Array<MunicipalityAlert>;
 }

@@ -77,8 +77,11 @@ interface LibMap extends EnonicLibraryMap {
     '/lib/ssb/statreg/statistics': import('./lib/ssb/statreg/statistics').StatRegStatisticsLib;
 
     // utils
+    '/lib/ssb/utils/alertUtils': import('./lib/ssb/utils/alertUtils').AlertUtilsLib;
     '/lib/ssb/utils/arrayUtils': import('./lib/ssb/utils/arrayUtils').ArrayUtilsLib;
+    '/lib/ssb/utils/breadcrumbsUtils': import('./lib/ssb/utils/breadcrumbsUtils').BreadcrumbsUtilsLib;
     '/lib/ssb/utils/dateUtils': import('./lib/ssb/utils/dateUtils').DateUtilsLib;
+    '/lib/ssb/utils/imageUtils': import('./lib/ssb/utils/imageUtils').ImageUtilsLib;
     '/lib/ssb/utils/parentUtils': import('./lib/ssb/utils/parentUtils').ParentUtilsLib;
     '/lib/ssb/utils/serverLog': import('./lib/ssb/utils/serverLog').ServerLogLib;
     '/lib/ssb/utils/variantUtils': import('./lib/ssb/utils/variantUtils').VariantUtilsLib;

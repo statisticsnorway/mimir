@@ -61,6 +61,6 @@ interface Breadcrumbs {
     link?: string;
 }
 
-export interface BreadcrumbsLib {
+export interface BreadcrumbsUtilsLib {
   getBreadcrumbs: (page: Content, municipality: MunicipalityWithCounty | undefined) => Array<Breadcrumbs>;
 }
