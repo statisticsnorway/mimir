@@ -103,29 +103,31 @@ test.mock('/lib/xp/content', {
   }
 })
 
-const utils = __non_webpack_require__('/lib/ssb/utils/utils')
+const {
+  createHumanReadableFormat
+} = __non_webpack_require__('/lib/ssb/utils/utils')
 const {
   getImageCaption
 } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
 
 exports.testHumanReadableNumber1 = function() {
-  const result = utils.createHumanReadableFormat(123456789)
+  const result = createHumanReadableFormat(123456789)
   test.assertEquals('123\u00a0456\u00a0789', result, 'Assertion that a 9 figure number is represented by groups of three, with nbsp separator')
 }
 
 exports.testHumanReadableNumber2 = function() {
-  const result = utils.createHumanReadableFormat(1249554)
+  const result = createHumanReadableFormat(1249554)
   test.assertEquals('1\u00a0249\u00a0554', result, 'Assertion that a 7 figure number is divided in a group of 1, then two groups of 3 with nbsp separator')
 }
 
 exports.testHumanReadableNumber3 = function() {
-  const result = utils.createHumanReadableFormat(-1249554)
+  const result = createHumanReadableFormat(-1249554)
   test.assertEquals('-1\u00a0249\u00a0554', result,
     'Assertion that a 7 figure negative number is divided in a group of 1, then two groups of 3 with nbsp separator')
 }
 
 exports.testHumanReadableNumber4 = function() {
-  const result = utils.createHumanReadableFormat(-1249.554)
+  const result = createHumanReadableFormat(-1249.554)
   test.assertEquals('-1\u00a0249,554', result,
     'Assertion that a negative figure with decimals is divided in a group of 1 with decimals')
 }

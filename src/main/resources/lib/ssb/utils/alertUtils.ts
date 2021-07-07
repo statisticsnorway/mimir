@@ -53,40 +53,40 @@ export function alertsForContext(config: DefaultPageConfig, options: Information
 }
 
 interface Alerts {
-    displayName: string;
-    type: string;
-    data: {
-        message: string;
-        municipalCodes: string;
-    };
+  displayName: string;
+  type: string;
+  data: {
+      message: string;
+      municipalCodes: string;
+  };
 }
 
 interface InformationAlertOptions {
-    pageType: string;
-    pageTypeId: string;
-    statbankWeb: boolean;
+  pageType: string;
+  pageTypeId: string;
+  statbankWeb: boolean;
 }
 
 interface InformationAlert {
-    title: string;
-    messageType: string;
-    message: string;
+  title: string;
+  messageType: string;
+  message: string;
 }
 
 interface MunicipalityOptions {
-    municipality: MunicipalityWithCounty | undefined;
-    municipalPageType: string;
+  municipality: MunicipalityWithCounty | undefined;
+  municipalPageType: string;
 }
 
 interface CurrentMunicipalityAlerts {
-    hits: Array<MunicipalityAlert>;
+  hits: Array<MunicipalityAlert>;
 }
 
 interface MunicipalityAlert {
-    title: string;
-    messageType: string;
-    municipalCodes: string;
-    message: string;
+  title: string;
+  messageType: string;
+  municipalCodes: string;
+  message: string;
 }
 
 export interface AlertUtilsLib {

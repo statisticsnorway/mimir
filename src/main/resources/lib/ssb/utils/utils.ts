@@ -1,17 +1,19 @@
 import { ByteSource, Content } from 'enonic-types/content'
 import { Request } from 'enonic-types/controller'
+import { Header } from '../../../site/content-types/header/header'
+import { PreliminaryData } from '../../types/xmlParser'
 
 const {
   get,
   getAttachmentStream
 } = __non_webpack_require__('/lib/xp/content')
 const {
-  getContent,
-  pageUrl
+  getContent, pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
 const {
   readLines
 } = __non_webpack_require__('/lib/xp/io')
+
 const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
@@ -29,40 +31,73 @@ function removeLast3Digits(timestamp: string): string {
   return matched && matched.length > 1 ? `${matched[1]}${matched[2]}` : timestamp
 }
 
+export function isPublished(content: Content): boolean {
+  return content.publish && content.publish.from ? (new Date(removeLast3Digits(content.publish.from))) < (new Date()) : false
+}
+
+export function dateToFormat(dateString: string | undefined): string {
+  if (dateString) return moment(dateString).locale('nb').format('DD.MM.YYYY HH:mm')
+  return ''
+}
+export function dateToReadable(dateString: string | undefined): string {
+  if (dateString) return moment(dateString).locale('nb').fromNow()
+  return ''
+}
+
 function numberWithSpaces(x: number | string): string {
   const parts: Array<string> = x.toString().split('.')
   parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0')
   return parts.join('.')
 }
 
-export function isPublished(content: Content): boolean {
-  return content.publish && content.publish.from ? (new Date(removeLast3Digits(content.publish.from))) < (new Date()) : false
+export function createHumanReadableFormat(value: number | string | null): string {
+  if (getContent().language != 'en' && value) {
+    return value > 999 || value < -999 ? numberWithSpaces(value).toString().replace(/\./, ',') : value.toString().replace(/\./, ',')
+  }
+  return value ? value > 999 || value < -999 ? numberWithSpaces(value) : value.toString() : ''
 }
 
-export function createHumanReadableFormat(value: number | string): string {
-  if (getContent().language != 'en') {
-    return value > 999 || value < -999 ? numberWithSpaces(value).toString().replace(/\./, ',') : value.toString().replace(/\./, ',')
-  } else {
-    return value > 999 || value < -999 ? numberWithSpaces(value) : value.toString()
-  }
+export function isUrl(urlOrId: string | undefined): boolean | undefined {
+  if (urlOrId) return urlOrId.includes('http')
+  return
 }
+
+export function isNumber(str: number | string | undefined): boolean {
+  return ((str != null) && (str !== '') && !isNaN(str as number))
+}
+
+export function getRowValue(value: number | string | PreliminaryData| Array<number | string | PreliminaryData>): RowValue {
+  if (typeof value === 'string' && isNumber(value)) {
+    return Number(value)
+  }
+  if (typeof value === 'object') {
+    const valueObject: PreliminaryData = value as PreliminaryData
+    const content: number | string = valueObject.content
+    if (content) {
+      return getRowValue(content)
+    }
+  }
+  return value as RowValue
+}
+
+export type RowValue = number | string
 
 // Returns page mode for Kommunefakta page based on request mode or request path
 export function pageMode(req: Request): string {
   return req.params.municipality ? 'municipality' : 'map'
 }
 
-export function pathFromStringOrContent(urlSrc: StringOrContent): string | undefined {
+export function pathFromStringOrContent(urlSrc: Header['searchResultPage']): string | undefined {
   if (urlSrc !== undefined) {
     if (urlSrc._selected === 'content') {
-      const selected: SelectedStringOrContent = urlSrc[urlSrc._selected]
+      const selected: ContentSearchPageResult | undefined = urlSrc[urlSrc._selected]
       return selected && selected.contentId ? pageUrl({
         id: selected.contentId
       }) : undefined
     }
 
     if (urlSrc._selected === 'manual') {
-      const selected: SelectedStringOrContent = urlSrc[urlSrc._selected]
+      const selected: ManualSearchPageResult | undefined = urlSrc[urlSrc._selected]
       return selected && selected.url ? selected.url : undefined
     }
   }
@@ -70,23 +105,12 @@ export function pathFromStringOrContent(urlSrc: StringOrContent): string | undef
   return undefined
 }
 
-export function isUrl(urlOrId: string): boolean {
-  return urlOrId.includes('http')
-}
-
-export function dateToFormat(ds: string): string {
-  return moment(ds).locale('nb').format('DD.MM.YYYY HH:mm')
-}
-export function dateToReadable(ds: string): string {
-  return moment(ds).locale('nb').fromNow()
-}
-
 /**
  *
  * @param {Object} sourceConfig
  * @return {array} a list of sources, text and url
  */
-export function getSources(sourceConfig: Array<Sources>): object {
+export function getSources(sourceConfig: Array<SourcesConfig>): Array<Sources> {
   return sourceConfig.map((selectedSource) => {
     let sourceText: string = ''
     let sourceUrl: string = ''
@@ -126,21 +150,7 @@ export function getAttachmentContent(contentId: string | undefined): string | un
   return lines[0]
 }
 
-export function getRowValue(value: number | string | RowValueObject): number | string | RowValueObject {
-  if (typeof value === 'string' && isNumber(value)) {
-    return Number(value)
-  }
-  if (typeof value === 'object' && value.content != undefined) {
-    return getRowValue(value.content)
-  }
-  return value
-}
-
-export function isNumber(str: number | string | undefined): boolean {
-  return ((str != null) && (str !== '') && !isNaN(str as number))
-}
-
-interface Sources {
+interface SourcesConfig {
   _selected: string;
   urlSource: {
     urlText: string;
@@ -151,20 +161,28 @@ interface Sources {
     sourceSelector: string;
   };
 }
-interface StringOrContent {
-  _selected: string;
-  manual: {
-      url?: string | undefined;
-  };
-  content: {
-      contentId?: string | undefined;
-  };
-}
 
-interface SelectedStringOrContent {
-  url?: string;
+interface Sources {
+  urlText: string;
+  url: string;
+}
+interface ContentSearchPageResult {
   contentId?: string;
 }
-interface RowValueObject {
-  content: string | number;
+
+interface ManualSearchPageResult {
+  url?: string;
+}
+export interface UtilsLib {
+  isPublished: (content: Content) => boolean;
+  dateToFormat: (dateString: string | undefined) => string;
+  dateToReadable: (dateString: string| undefined) => string;
+  createHumanReadableFormat: (value: number | string | null) => string;
+  isUrl: (urlOrId: string | undefined) => boolean | undefined;
+  isNumber: (str: number | string | undefined) => boolean;
+  getRowValue: (value: number | string | PreliminaryData | Array<number | string | PreliminaryData>) => RowValue;
+  pageMode: (req: Request) => string;
+  pathFromStringOrContent: (urlSrc: Header['searchResultPage']) => string | undefined;
+  getSources: (sourceConfig: Array<SourcesConfig>) => Array<Sources>;
+  getAttachmentContent: (contentId: string | undefined) => string | undefined;
 }

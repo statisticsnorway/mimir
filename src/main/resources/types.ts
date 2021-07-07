@@ -88,6 +88,8 @@ interface LibMap extends EnonicLibraryMap {
     '/lib/ssb/utils/subjectUtils': import('./lib/ssb/utils/subjectUtils').SubjectUtilsLib;
     '/lib/ssb/utils/solrUtils': import('./lib/ssb/utils/solrUtils').SolrUtilsLib;
     '/lib/ssb/utils/textUtils': import('./lib/ssb/utils/textUtils').TextUtilsLib;
+    '/lib/ssb/utils/utils': import('./lib/ssb/utils/utils').UtilsLib;
+    '/lib/ssb/utils': import('./lib/ssb/utils').SSBUtilsLib;
 
     // vendor
     '/lib/vendor/moment': import('./lib/vendor/moment').Moment;
