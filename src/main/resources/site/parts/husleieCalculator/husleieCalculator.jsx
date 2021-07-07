@@ -25,22 +25,12 @@ function HusleieCalculator(props) {
     errorMsg: `${props.phrases.husleieValidateYear} ${validMaxYear}`,
     value: ''
   })
-  const [endMonth, setEndMonth] = useState({
-    error: false,
-    errorMsg: props.lastNumberText,
-    value: validMaxMonth
-  })
-  const [endYear, setEndYear] = useState({
-    error: false,
-    errorMsg: `${props.phrases.husleieValidateYear} ${validMaxYear}`,
-    value: validMaxYear
-  })
+  const [endMonth, setEndMonth] = useState(validMaxMonth)
+  const [endYear, setEndYear] = useState(validMaxYear)
   const [errorMessage, setErrorMessage] = useState(null)
   const [loading, setLoading] = useState(false)
   const [endValue, setEndValue] = useState(null)
   const [change, setChange] = useState(null)
-  // const [monthsLastAdjusted, setMonthsLastAdjusted] = useState(null)
-  const [choosenPeriod, setChoosenPeriod] = useState(false)
   const language = props.language ? props.language : 'nb'
   const [rentAdjustedOverAYearAgo, setRentAdjustedOverAYearAgo] = useState(false)
   const [rentAdjustedUnderAYearAgo, setRentAdjustedUnderAYearAgo] = useState(false)
@@ -64,7 +54,7 @@ function HusleieCalculator(props) {
 
     setErrorMessage(null)
     setLoading(true)
-    getServiceData(endMonth.value, endYear.value)
+    getServiceData(endMonth, endYear)
   }
 
   function isFormValid() {
@@ -102,30 +92,14 @@ function HusleieCalculator(props) {
 
   function submitOneYearLater() {
     const yearAfter = Number(startYear.value) + 1
-    setChoosenPeriod(true)
-    setEndMonth({
-      ...endMonth,
-      value: startMonth.value
-    })
-
-    setEndYear({
-      ...endYear,
-      value: yearAfter.toString()
-    })
+    setEndMonth(startMonth.value)
+    setEndYear(yearAfter.toString())
     getServiceData(startMonth.value, yearAfter.toString())
   }
 
   function submitLastPeriod() {
-    setChoosenPeriod(true)
-    setEndMonth({
-      ...endMonth,
-      value: validMaxMonth
-    })
-
-    setEndYear({
-      ...endYear,
-      value: validMaxYear
-    })
+    setEndMonth(validMaxMonth)
+    setEndYear(validMaxYear)
     getServiceData(validMaxMonth, validMaxYear)
   }
 
@@ -283,7 +257,7 @@ function HusleieCalculator(props) {
   function calculatorResult() {
     const phraseTo = language === 'en' ? 'to' : 'til'
     const phraseResultText = `${props.phrases.husleieAppliesFor} ${getMonthLabel(startMonth.value).toLowerCase()}
-     ${startYear.value} ${phraseTo} ${getMonthLabel(endMonth.value).toLowerCase()} ${endYear.value}`
+     ${startYear.value} ${phraseTo} ${getMonthLabel(endMonth).toLowerCase()} ${endYear}`
     return (
       <Container className="calculator-result">
         <Row className="mb-5">
