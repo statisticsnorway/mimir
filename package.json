@@ -106,7 +106,7 @@
     "ts-loader": "^8.1.0",
     "typescript": "^3.9.9",
     "validator": "^13.6.0",
-    "xlsx": "^0.16.9"
+    "xlsx": "^0.17.0"
   },
   "browserslist": [
     "last 2 version",

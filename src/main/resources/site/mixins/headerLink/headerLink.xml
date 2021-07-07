@@ -1,10 +1,9 @@
-<macro>
-    <display-name>Uthevet lenke (IKKE BRUK)</display-name>
-    <description></description>
+<mixin>
+    <display-name>Uthevet lenke</display-name>
     <form>
         <input name="linkedContent" type="ContentSelector">
             <label>Innhold</label>
-            <occurrences minimum="1" maximum="1"/>
+            <occurrences minimum="0" maximum="1"/>
             <config>
                 <treeMode>false</treeMode>
                 <showStatus>true</showStatus>
@@ -12,7 +11,7 @@
         </input>
         <input name="linkText" type="TextLine">
             <label>Lenketekst</label>
-            <occurrences minimum="1" maximum="1"/>
+            <occurrences minimum="0" maximum="1"/>
         </input>
     </form>
-</macro>
+</mixin>

@@ -78,7 +78,7 @@ const renderPart = (req) => {
     }
   })
   const draftButtonText = paramShowDraft ? 'Vis publiserte tall' : 'Vis upubliserte tall'
-  const language = page.language ? page.language === 'en' ? 'en-gb' : page.language : 'nb'
+  const momentLanguage = page.language && page.language === 'en' ? 'en-gb' : 'nb'
 
   if (statistic) {
     title = page.language === 'en' && statistic.nameEN && statistic.nameEN !== null ? statistic.nameEN : statistic.name
@@ -88,15 +88,15 @@ const renderPart = (req) => {
     previousReleaseDate = releaseDates.previousRelease[0]
 
     if (releaseDates.nextRelease.length > 1 && releaseDates.nextRelease[1] !== '') {
-      previewNextRelease = moment(releaseDates.nextRelease[1]).locale(language).format('LL')
+      previewNextRelease = moment(releaseDates.nextRelease[1]).locale(momentLanguage).format('LL')
     }
 
     if (previousReleaseDate && previousReleaseDate !== '') {
-      previousRelease = moment(previousReleaseDate).locale(language).format('LL')
+      previousRelease = moment(previousReleaseDate).locale(momentLanguage).format('LL')
     }
 
     if (nextReleaseDate && nextReleaseDate !== '') {
-      nextRelease = moment(nextReleaseDate).locale(language).format('LL')
+      nextRelease = moment(nextReleaseDate).locale(momentLanguage).format('LL')
     }
   }
 
@@ -106,7 +106,7 @@ const renderPart = (req) => {
 
   if (page.data.showModifiedDate && previousReleaseDate) {
     if (moment(modifiedDate).isAfter(previousReleaseDate)) {
-      changeDate = moment(modifiedDate).locale(language).format('LLL')
+      changeDate = moment(modifiedDate).locale(momentLanguage).format('LLL')
     }
   }
 
