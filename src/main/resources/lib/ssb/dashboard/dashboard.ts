@@ -22,12 +22,12 @@ import { Statistics } from '../../../site/content-types/statistics/statistics'
 const {
   users,
   showWarningIcon,
-  WARNING_ICON_EVENTS
+  WARNING_ICON_EVENTS,
+  isPublished
 } = __non_webpack_require__('/lib/ssb/dashboard/dashboardUtils')
 const {
   dateToFormat,
-  dateToReadable,
-  isPublished
+  dateToReadable
 } = __non_webpack_require__('/lib/ssb/utils')
 const {
   logUserDataQuery

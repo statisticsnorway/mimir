@@ -11,38 +11,11 @@ const {
   getContent, pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
 const {
-  readLines
-} = __non_webpack_require__('/lib/xp/io')
-
-const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
-
-/**
- * The timestamp from enonic contains 6 millisecond decimals. This is not supported in
- * today's nashorn and therefor it cannot create new date object with it. This function
- * removes the last 3 digits.
- * @param {string} timestamp in iso format: 2020-10-14T08:15:24.307260Z
- * @return {string} timestamp in iso format: 2020-10-14T08:15:24.307Z
- */
-function removeLast3Digits(timestamp: string): string {
-  const groupRegexp: RegExp = /([0-9\-]{8,10}T[0-9\:]{6,8}.[0-9]{3})(?:[0-9])*(Z)/gm
-  const matched: Array<string> | null = groupRegexp.exec(timestamp)
-  return matched && matched.length > 1 ? `${matched[1]}${matched[2]}` : timestamp
-}
-
-export function isPublished(content: Content): boolean {
-  return content.publish && content.publish.from ? (new Date(removeLast3Digits(content.publish.from))) < (new Date()) : false
-}
-
-export function dateToFormat(dateString: string | undefined): string {
-  if (dateString) return moment(dateString).locale('nb').format('DD.MM.YYYY HH:mm')
-  return ''
-}
-export function dateToReadable(dateString: string | undefined): string {
-  if (dateString) return moment(dateString).locale('nb').fromNow()
-  return ''
-}
+const {
+  readLines
+} = __non_webpack_require__('/lib/xp/io')
 
 function numberWithSpaces(x: number | string): string {
   const parts: Array<string> = x.toString().split('.')
@@ -55,6 +28,15 @@ export function createHumanReadableFormat(value: number | string | null): string
     return value > 999 || value < -999 ? numberWithSpaces(value).toString().replace(/\./, ',') : value.toString().replace(/\./, ',')
   }
   return value ? value > 999 || value < -999 ? numberWithSpaces(value) : value.toString() : ''
+}
+
+export function dateToFormat(dateString: string | undefined): string {
+  if (dateString) return moment(dateString).locale('nb').format('DD.MM.YYYY HH:mm')
+  return ''
+}
+export function dateToReadable(dateString: string | undefined): string {
+  if (dateString) return moment(dateString).locale('nb').fromNow()
+  return ''
 }
 
 export function isUrl(urlOrId: string | undefined): boolean | undefined {
@@ -174,10 +156,9 @@ interface ManualSearchPageResult {
   url?: string;
 }
 export interface UtilsLib {
-  isPublished: (content: Content) => boolean;
-  dateToFormat: (dateString: string | undefined) => string;
-  dateToReadable: (dateString: string| undefined) => string;
   createHumanReadableFormat: (value: number | string | null) => string;
+  dateToFormat: (dateString: string | undefined) => string;
+  dateToReadable: (dateString: string | undefined) => string;
   isUrl: (urlOrId: string | undefined) => boolean | undefined;
   isNumber: (str: number | string | undefined) => boolean;
   getRowValue: (value: number | string | PreliminaryData | Array<number | string | PreliminaryData>) => RowValue;
