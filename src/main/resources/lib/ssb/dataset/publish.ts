@@ -31,7 +31,7 @@ const {
   }
 } = __non_webpack_require__('/lib/util')
 const {
-  submit,
+  executeFunction,
   sleep
 } = __non_webpack_require__('/lib/xp/task')
 const {
@@ -205,9 +205,9 @@ function allJobsAreSkipped(jobResult: Array<StatisticsPublishResult>): boolean {
 }
 
 function createTask(jobId: string, statistic: Content<Statistics>, releaseDate: Date, publication: PublicationItem): void {
-  submit({
+  executeFunction({
     description: `Publish statistic (${statistic.data.statistic})`,
-    task: () => {
+    func: () => {
       /*
       * Iterate this statistics related datasources, and check if they have unpublished data
       * If they do, create or update the dataset on master branch
