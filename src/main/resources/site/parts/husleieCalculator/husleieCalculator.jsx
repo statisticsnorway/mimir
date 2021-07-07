@@ -12,12 +12,12 @@ function HusleieCalculator(props) {
 
   const [startValue, setStartValue] = useState({
     error: false,
-    errorMsg: props.phrases.husleieValidateAmountNumber,
+    errorMsg: props.phrases.calculatorValidateAmountNumber,
     value: ''
   })
   const [startMonth, setStartMonth] = useState({
     error: false,
-    errorMsg: props.lastNumberText,
+    errorMsg: props.phrases.calculatorValidateDropdownMonth,
     value: ''
   })
   const [startYear, setStartYear] = useState({
@@ -25,16 +25,19 @@ function HusleieCalculator(props) {
     errorMsg: `${props.phrases.husleieValidateYear} ${validMaxYear}`,
     value: ''
   })
-  const [endMonth, setEndMonth] = useState(validMaxMonth)
-  const [endYear, setEndYear] = useState(validMaxYear)
+  const [adjustRentWarning, setAdjustRentWarning] = useState({
+    warning: false,
+    warningTitle: '',
+    warningMsg: ''
+  })
+
   const [errorMessage, setErrorMessage] = useState(null)
   const [loading, setLoading] = useState(false)
   const [endValue, setEndValue] = useState(null)
   const [change, setChange] = useState(null)
   const language = props.language ? props.language : 'nb'
-  const [rentAdjustedOverAYearAgo, setRentAdjustedOverAYearAgo] = useState(false)
-  const [rentAdjustedUnderAYearAgo, setRentAdjustedUnderAYearAgo] = useState(false)
-
+  const [choosePeriod, setChoosePeriod] = useState(false)
+  const [resultText, setResultText] = useState(null)
   const validMinYear = 1865
   const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
 
@@ -43,8 +46,12 @@ function HusleieCalculator(props) {
     if (loading) return
     setChange(null)
     setEndValue(null)
-    setRentAdjustedUnderAYearAgo(false)
-    setRentAdjustedOverAYearAgo(false)
+    setAdjustRentWarning({
+      warning: false,
+      warningTitle: '',
+      warningMsg: ''
+    })
+    setChoosePeriod(false)
 
     if (!isFormValid()) {
       onBlur('start-value')
@@ -54,7 +61,7 @@ function HusleieCalculator(props) {
 
     setErrorMessage(null)
     setLoading(true)
-    getServiceData(endMonth, endYear)
+    getServiceData(validMaxMonth, validMaxYear)
   }
 
   function isFormValid() {
@@ -75,6 +82,10 @@ function HusleieCalculator(props) {
       .then((res) => {
         const changeVal = (res.data.change * 100).toFixed(1)
         const endVal = (res.data.endValue).toFixed(2)
+        const phraseTo = language === 'en' ? 'to' : 'til'
+        const phraseResultText = `${props.phrases.husleieAppliesFor} ${getMonthLabel(startMonth.value).toLowerCase()}
+     ${startYear.value} ${phraseTo} ${getMonthLabel(endMonth).toLowerCase()} ${endYear}`
+        setResultText(phraseResultText)
         setChange(changeVal)
         setEndValue(endVal)
       })
@@ -92,14 +103,10 @@ function HusleieCalculator(props) {
 
   function submitOneYearLater() {
     const yearAfter = Number(startYear.value) + 1
-    setEndMonth(startMonth.value)
-    setEndYear(yearAfter.toString())
     getServiceData(startMonth.value, yearAfter.toString())
   }
 
   function submitLastPeriod() {
-    setEndMonth(validMaxMonth)
-    setEndYear(validMaxYear)
     getServiceData(validMaxMonth, validMaxYear)
   }
 
@@ -120,32 +127,68 @@ function HusleieCalculator(props) {
 
   function isStartMonthValid(value) {
     const startMonthValue = value || startMonth.value
-    const startMonthValid = !((startYear.value === validMaxYear) && (startMonthValue > validMaxMonth))
-    if (!startMonthValid) {
+    const startMonthEmpty = startMonthValue === ''
+    if (startMonthEmpty) {
       setStartMonth({
         ...startMonth,
         error: true
       })
     }
-    return startMonthValid
+    const startMonthValid = !((startYear.value === validMaxYear) && (startMonthValue > validMaxMonth))
+    if (!startMonthValid) {
+      setStartMonth({
+        ...startMonth,
+        error: true,
+        errorMsg: props.lastNumberText
+      })
+    }
+    return startMonthEmpty ? startMonthEmpty : startMonthValid
   }
 
   function isRentPeriodValid() {
-    const from = '01/' + startMonth.value + '/' + startYear.value
-    const to = '01/' + validMaxMonth + '/' + validMaxYear
-    const monthDifference = moment(new Date(to)).diff(new Date(from), 'months', true)
+    moment.locale(language === 'en' ? 'en' : 'nb')
+    const startDate = new Date(startYear.value, Number(startMonth.value) - 1, 1)
+    const lastPublishDate = new Date(validMaxYear, Number(validMaxMonth) - 1, 1)
+    const today = new Date()
+    const monthsSinceLastPublished = moment(lastPublishDate).diff(startDate, 'months')
+    const monthsSinceLastAdjusted = moment(today).diff(startDate, 'months')
+    const periodValid = monthsSinceLastPublished === 12 && monthsSinceLastPublished === 12
 
-    const periodUnderValid = !(monthDifference < 12)
-    const periodOverValid = !(monthDifference > 12)
-    const periodValid = monthDifference === 12
+    const nextAdjust = getNextPeriod(startMonth.value, Number(startYear.value) + 1)
+    const rentDate = moment.months(Number(startMonth.value) - 1)
+    const rentDatePublish = moment.months(nextAdjust.month - 1)
+    const warningFiguresNextMonth = language === 'en' ?
+      `Figures for ${rentDate.toLowerCase()} will be available about 10th of ${rentDatePublish.toLowerCase()}` :
+      `Tall for ${rentDate.toLowerCase()} kommer ca 10. ${rentDatePublish.toLowerCase()}`
 
-    if (!periodUnderValid) {
-      setRentAdjustedUnderAYearAgo(true)
+    const warningLessThanAYear = language === 'en' ?
+      `According to The Tenancy Act, you can at the earliest adjust rent in ${rentDate.toLowerCase()} ${Number(startYear.value) + 1}.
+       Figures for ${rentDate.toLowerCase()} ${Number(startYear.value) + 1} will be available about the 10th 
+       of ${rentDatePublish.toLowerCase()} ${nextAdjust.year}` :
+      `I følge Husleieloven kan du tidligst endre husleie i ${rentDate.toLowerCase()} ${Number(startYear.value) + 1}. 
+      Tall for ${rentDate.toLowerCase()} ${Number(startYear.value) + 1} kommer ca 10. ${rentDatePublish.toLowerCase()} ${nextAdjust.year}`
+
+    if (monthsSinceLastAdjusted >= 12 && monthsSinceLastPublished === 11) {
+      setAdjustRentWarning({
+        ...adjustRentWarning,
+        warning: true,
+        warningTitle: warningFiguresNextMonth
+      })
     }
 
-    if (!periodOverValid) {
-      setRentAdjustedOverAYearAgo(true)
+    if (monthsSinceLastPublished < 11) {
+      setAdjustRentWarning({
+        ...adjustRentWarning,
+        warning: true,
+        warningTitle: props.phrases.husleieUnder12MonthTitle,
+        warningMsg: warningLessThanAYear
+      })
     }
+
+    if (monthsSinceLastPublished > 12) {
+      setChoosePeriod(true)
+    }
+
     return periodValid
   }
 
@@ -216,6 +259,21 @@ function HusleieCalculator(props) {
     return monthLabel ? monthLabel.title : ''
   }
 
+  function getNextPeriod(month, year) {
+    let nextPeriodMonth = parseInt(month) + 1
+    let nextPeriodYear = parseInt(year)
+
+    if (parseInt(month) === 12) {
+      nextPeriodMonth = 1
+      nextPeriodYear = nextPeriodYear + 1
+    }
+
+    return {
+      month: nextPeriodMonth,
+      year: nextPeriodYear
+    }
+  }
+
   function renderNumberValute(value) {
     if (endValue && change) {
       const valute = (language === 'en') ? 'NOK' : 'kr'
@@ -255,9 +313,6 @@ function HusleieCalculator(props) {
   }
 
   function calculatorResult() {
-    const phraseTo = language === 'en' ? 'to' : 'til'
-    const phraseResultText = `${props.phrases.husleieAppliesFor} ${getMonthLabel(startMonth.value).toLowerCase()}
-     ${startYear.value} ${phraseTo} ${getMonthLabel(endMonth).toLowerCase()} ${endYear}`
     return (
       <Container className="calculator-result">
         <Row className="mb-5">
@@ -281,8 +336,8 @@ function HusleieCalculator(props) {
             </span>
             <Divider dark/>
           </Col>
-          <Col className="price-increase col-12 col-lg-4">
-            <span>{phraseResultText}</span>
+          <Col className="price-increase col-12 col-lg-6">
+            <span>{resultText}</span>
           </Col>
         </Row>
       </Container>
@@ -326,7 +381,7 @@ function HusleieCalculator(props) {
   }
 
   function renderChooseHusleiePeriode() {
-    if (rentAdjustedOverAYearAgo) {
+    if (choosePeriod) {
       const phraseOneYearLater = getMonthLabel(startMonth.value) + ' ' + (Number(startYear.value) + 1).toString()
       const newestNumbers = getMonthLabel(validMaxMonth) + ' ' + validMaxYear + ' (' + props.phrases.husleieLatestFigures + ' )'
       return (
@@ -346,11 +401,11 @@ function HusleieCalculator(props) {
   }
 
   function renderAlertUnderAYearAgo() {
-    if (rentAdjustedUnderAYearAgo) {
+    if (adjustRentWarning.warning) {
       return (
         <Col className="col-12 col-md-9 pl-0 mt-4">
-          <Dialog type='info' title='Det er mindre enn 12 måneder siden du endret husleien'>
-          I følge Husleieloven kan du tidligst endre husleie i mars 2021. Tall for mars 2021 kommer ca 10. april 2021.
+          <Dialog type='info' title={adjustRentWarning.warningTitle}>
+            {adjustRentWarning.warningMsg}
           </Dialog>
         </Col>
       )
