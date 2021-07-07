@@ -42,8 +42,8 @@ function HusleieCalculator(props) {
   // const [monthsLastAdjusted, setMonthsLastAdjusted] = useState(null)
   const [choosenPeriod, setChoosenPeriod] = useState(false)
   const language = props.language ? props.language : 'nb'
-  const [rentAdjustedOverAYearAgo, setRentAdjustedOverAYearAgo] = useState(null)
-  const [rentAdjustedUnderAYearAgo, setRentAdjustedUnderAYearAgo] = useState(null)
+  const [rentAdjustedOverAYearAgo, setRentAdjustedOverAYearAgo] = useState(false)
+  const [rentAdjustedUnderAYearAgo, setRentAdjustedUnderAYearAgo] = useState(false)
 
   const validMinYear = 1865
   const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
@@ -53,18 +53,12 @@ function HusleieCalculator(props) {
     if (loading) return
     setChange(null)
     setEndValue(null)
-    monthSinceLastAdjusted()
-    // setMonthsLastAdjusted(monthSinceLastAdjusted())
+    setRentAdjustedUnderAYearAgo(false)
+    setRentAdjustedOverAYearAgo(false)
 
     if (!isFormValid()) {
       onBlur('start-value')
       onBlur('start-year')
-      return
-    }
-    console.log('rentAdjustedOverAYearAgo: ' + rentAdjustedOverAYearAgo)
-    console.log('rentAdjustedUnderAYearAgo: ' + rentAdjustedUnderAYearAgo)
-
-    if (rentAdjustedOverAYearAgo || rentAdjustedUnderAYearAgo) {
       return
     }
 
@@ -74,7 +68,7 @@ function HusleieCalculator(props) {
   }
 
   function isFormValid() {
-    return isStartValueValid() && isStartYearValid() && isStartMonthValid()// && isEndPeriodValid()
+    return isStartValueValid() && isStartYearValid() && isStartMonthValid() && isRentPeriodValid()
   }
 
   function getServiceData(endMonth, endYear) {
@@ -135,16 +129,6 @@ function HusleieCalculator(props) {
     getServiceData(validMaxMonth, validMaxYear)
   }
 
-  function monthSinceLastAdjusted() {
-    const from = '01/' + startMonth.value + '/' + startYear.value
-    const to = '01/' + validMaxMonth + '/' + validMaxYear
-    const monthDifference = moment(new Date(to)).diff(new Date(from), 'months', true)
-    console.log('monthDifference: ' + monthDifference < 12)
-    setRentAdjustedOverAYearAgo(monthDifference > 12)
-    setRentAdjustedUnderAYearAgo(monthDifference < 12)
-    // return monthDifference
-  }
-
   function isStartValueValid(value) {
     const startVal = value || startValue.value
     const testStartValue = startVal.match(/^-?[0-9]+[.,]?[0-9]*$/g)
@@ -171,6 +155,26 @@ function HusleieCalculator(props) {
     }
     return startMonthValid
   }
+
+  function isRentPeriodValid() {
+    const from = '01/' + startMonth.value + '/' + startYear.value
+    const to = '01/' + validMaxMonth + '/' + validMaxYear
+    const monthDifference = moment(new Date(to)).diff(new Date(from), 'months', true)
+
+    const periodUnderValid = !(monthDifference < 12)
+    const periodOverValid = !(monthDifference > 12)
+    const periodValid = monthDifference === 12
+
+    if (!periodUnderValid) {
+      setRentAdjustedUnderAYearAgo(true)
+    }
+
+    if (!periodOverValid) {
+      setRentAdjustedOverAYearAgo(true)
+    }
+    return periodValid
+  }
+
 
   function onBlur(id) {
     switch (id) {
