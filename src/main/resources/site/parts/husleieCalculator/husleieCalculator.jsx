@@ -315,7 +315,7 @@ function HusleieCalculator(props) {
   function calculatorResult() {
     return (
       <Container className="calculator-result">
-        <Row className="mb-5">
+        <Row className="mb-3 mb-sm-5">
           <Col className="amount-equal align-self-end col-12 col-md-4">
             <Title size={3}>{props.phrases.husleieNewRent}</Title>
           </Col>
@@ -328,15 +328,15 @@ function HusleieCalculator(props) {
             <Divider dark/>
           </Col>
         </Row>
-        <Row className="mb-5">
-          <Col className="price-increase col-12 col-lg-4">
+        <Row>
+          <Col className="price-change col-12 col-md-5 col-lg-4">
             <span>{props.phrases.calculatorChange}</span>
             <span className="float-right">
               {renderNumberChangeValue()}
             </span>
             <Divider dark/>
           </Col>
-          <Col className="price-increase col-12 col-lg-6">
+          <Col className="price-change-text col-12 col-md-7 col-lg-6">
             <span>{resultText}</span>
           </Col>
         </Row>
@@ -389,11 +389,11 @@ function HusleieCalculator(props) {
           <Divider className="my-5"/>
           <Row>
             <Title size={3} className="col-12 mb-2">{props.phrases.husleieValidateOver1Year}</Title>
-            <p className="col-12 mb-2">{props.phrases.husleieChooseFiguresToCalculateRent}</p>
+            <p className="col-12 mb-4">{props.phrases.husleieChooseFiguresToCalculateRent}</p>
           </Row>
           <Row className="ml-0">
-            <Button className="submit-button mr-4" onClick={submitOneYearLater}>{phraseOneYearLater}</Button>
-            <Button className="submit-button" onClick={submitLastPeriod}>{newestNumbers}</Button>
+            <Button className="submit-one-year" onClick={submitOneYearLater}>{phraseOneYearLater}</Button>
+            <Button className="submit-last-period" onClick={submitLastPeriod}>{newestNumbers}</Button>
           </Row>
         </Container>
       )
@@ -452,7 +452,7 @@ function HusleieCalculator(props) {
               </Col>
             </Row>
             <Row>
-              <Col className="calculate-from col-12 col-sm-6">
+              <Col className="calculate-from col-12 col-sm-7">
                 <Title size={3}>{props.phrases.husleieLastAdjust}</Title>
                 <Container>
                   <Row>
