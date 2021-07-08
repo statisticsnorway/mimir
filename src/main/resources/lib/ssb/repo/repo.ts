@@ -1,4 +1,4 @@
-import { RepositoryConfig } from 'enonic-types/repo'
+import { BranchConfig, RepositoryConfig } from 'enonic-types/repo'
 const {
   get,
   create,
@@ -26,8 +26,8 @@ export function createRepo(repoId: string, branch: string): RepositoryConfig {
   })
 }
 
-export function createBranch(repoId: string, branchId: string): RepositoryConfig {
-  return withSuperUserContext<RepositoryConfig>(repoId, branchId, () => {
+export function createBranch(repoId: string, branchId: string): BranchConfig {
+  return withSuperUserContext(repoId, branchId, () => {
     return createRepoBranch({
       branchId,
       repoId
@@ -39,5 +39,5 @@ export interface RepoLib {
   getRepo: (repoId: string, branch: string) => RepositoryConfig | null;
   repoExists: (repoId: string, branch: string) => boolean;
   createRepo: (repoId: string, branch: string) => RepositoryConfig;
-  createBranch: (repoId: string, branchId: string) => RepositoryConfig;
+  createBranch: (repoId: string, branchId: string) => BranchConfig;
 }

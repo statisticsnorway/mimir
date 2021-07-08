@@ -10,6 +10,7 @@ import { Table } from '../../../site/content-types/table/table'
 import { Highchart } from '../../../site/content-types/highchart/highchart'
 import { MunicipalityWithCounty } from '../dataset/klass/municipalities'
 import { Cache } from 'enonic-types/cache'
+import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 
 const {
   newCache
@@ -374,7 +375,7 @@ export function fromDatasetRepoCache(
   })
 }
 
-export function datasetOrUndefined(content: Content<Highchart | Table>): DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined {
+export function datasetOrUndefined(content: Content<DataSource>): DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined {
   return content.data.dataSource && content.data.dataSource._selected ?
     fromDatasetRepoCache(`/${content.data.dataSource._selected}/${extractKey(content)}`,
       () => getDataset(content)) :
@@ -562,6 +563,6 @@ export interface SSBCacheLibrary {
   fromMunicipalityWithCodeCache: (key: string, fallback: () => MunicipalityWithCounty | undefined) => MunicipalityWithCounty | undefined;
   fromMunicipalityWithNameCache: (key: string, fallback: () => MunicipalityWithCounty | undefined) => MunicipalityWithCounty | undefined;
   fromParentTypeCache: (path: string, fallback: () => string | undefined) => string | undefined;
-  datasetOrUndefined: (content: Content<Highchart | Table>) => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined;
+  datasetOrUndefined: (content: Content<DataSource>) => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined;
   setupHandlers: (socket: Socket) => void;
 }

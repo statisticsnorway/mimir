@@ -33,26 +33,26 @@ exports.preview = (req: Request, config: LinksPartConfig): React4xpResponse | Re
   }
 }
 function renderPart(req: Request, config: LinksPartConfig): React4xpResponse {
-  const linkType: string | undefined = config.linkTypes?._selected
+  const linkTypes: LinksPartConfig['linkTypes'] = config.linkTypes
   const isNotInEditMode: boolean = req.mode !== 'edit'
 
   let props: LinksProps | {} = {}
-  if (linkType) {
-    if (linkType === 'tableLink') {
-      const href: string | undefined = config.linkTypes?.tableLink?.relatedContent ? pageUrl({
-        id: config.linkTypes?.tableLink?.relatedContent
-      }) : config.linkTypes?.tableLink?.url
+  if (linkTypes) {
+    if (linkTypes._selected === 'tableLink') {
+      const href: string | undefined = linkTypes.tableLink.relatedContent ? pageUrl({
+        id: linkTypes.tableLink.relatedContent as string
+      }) : linkTypes.tableLink.url as string | undefined
 
       props = {
         href,
-        description: config.linkTypes?.tableLink?.description,
-        text: config.linkTypes?.tableLink?.title
+        description: linkTypes.tableLink.description,
+        text: linkTypes.tableLink.title
       }
     }
 
-    if (linkType === 'headerLink') {
-      const linkedContent: string | undefined = config.linkTypes?.headerLink?.linkedContent
-      const linkText: string | undefined = config.linkTypes?.headerLink?.linkText
+    if (linkTypes._selected === 'headerLink') {
+      const linkedContent: string | undefined = linkTypes.headerLink.linkedContent as string | undefined
+      const linkText: string | undefined = linkTypes.headerLink.linkText as string | undefined
 
       const content: Content | null = linkedContent ? get({
         key: linkedContent
@@ -76,13 +76,13 @@ function renderPart(req: Request, config: LinksPartConfig): React4xpResponse {
       }
     }
 
-    if (linkType === 'profiledLink') {
+    if (linkTypes._selected === 'profiledLink') {
       props = {
-        children: config.linkTypes?.profiledLink?.text,
-        href: config.linkTypes?.profiledLink?.contentUrl && pageUrl({
-          id: config.linkTypes?.profiledLink?.contentUrl
+        children: linkTypes.profiledLink.text,
+        href: linkTypes.profiledLink.contentUrl && pageUrl({
+          id: linkTypes.profiledLink.contentUrl as string
         }),
-        withIcon: !!config.linkTypes?.profiledLink?.withIcon,
+        withIcon: !!linkTypes.profiledLink.withIcon,
         linkType: 'profiled'
       }
     }

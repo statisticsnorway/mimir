@@ -1,4 +1,4 @@
-import { DatasetRepoNode } from '../../repo/dataset'
+import { DatasetRepoNode, DataSource as DataSourceType } from '../../repo/dataset'
 import { Content } from 'enonic-types/content'
 import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
 import { JSONstat } from '../../../types/jsonstat-toolkit'
@@ -20,7 +20,7 @@ const {
 export function getStatbankApi(content: Content<DataSource>, branch: string): DatasetRepoNode<JSONstat> | null {
   if (content.data.dataSource && content.data.dataSource._selected) {
     const dataSource: DataSource['dataSource'] = content.data.dataSource
-    if (dataSource.statbankApi && dataSource.statbankApi.json && dataSource.statbankApi.urlOrId) {
+    if (dataSource._selected === DataSourceType.STATBANK_API && dataSource.statbankApi && dataSource.statbankApi.json && dataSource.statbankApi.urlOrId) {
       return getDataset(content.data.dataSource?._selected, branch, content._id)
     }
   }
@@ -39,7 +39,7 @@ export function fetchStatbankApiData(content: Content<DataSource>): JSONstat | n
   if (content.data.dataSource) {
     try {
       const dataSource: DataSource['dataSource'] = content.data.dataSource
-      if (dataSource._selected && dataSource.statbankApi && dataSource.statbankApi.json) {
+      if (dataSource._selected === DataSourceType.STATBANK_API && dataSource.statbankApi && dataSource.statbankApi.json) {
         let url: string = `${baseUrl}/table/${dataSource.statbankApi.urlOrId}`
         if (isUrl(dataSource.statbankApi.urlOrId)) {
           url = dataSource.statbankApi.urlOrId as string
@@ -67,7 +67,7 @@ export function getStatbankApiKey(content: Content<DataSource>): string {
 }
 
 export function getTableIdFromStatbankApi(content: Content<DataSource>): string | undefined {
-  if (content.data.dataSource?.statbankApi?.urlOrId) {
+  if (content.data.dataSource?._selected === DataSourceType.STATBANK_API && content.data.dataSource?.statbankApi?.urlOrId) {
     return content.data.dataSource?.statbankApi?.urlOrId.split('?').shift()?.replace(/\/$/, '').split('/').pop()
   }
   return

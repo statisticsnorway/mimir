@@ -1,53 +1,12 @@
 const path = require('path')
 const R = require('ramda')
+const webpack = require('webpack')
 const TerserPlugin = require('terser-webpack-plugin')
 const {
   setEntry,
   addRule,
   prependExtensions
 } = require('./util/compose')
-const env = require('./util/env')
-
-const isProd = env.prod
-
-// ----------------------------------------------------------------------------
-// Base config
-// ----------------------------------------------------------------------------
-
-const config = {
-  context: path.join(__dirname, '/src/main/resources/assets/js'),
-  entry: {},
-  output: {
-    path: path.join(__dirname, '/build/resources/main/assets/js'),
-    filename: '[name].js'
-  },
-  resolve: {
-    extensions: []
-  },
-  optimization: {
-    minimizer: [
-      new TerserPlugin({
-        sourceMap: true,
-        terserOptions: {
-          compress: {
-            drop_console: false
-          }
-        }
-      })
-    ],
-    splitChunks: {
-      minSize: 30000
-    }
-  },
-  plugins: [],
-  mode: env.type,
-  devtool: isProd ? false : 'inline-source-map'
-}
-
-// ----------------------------------------------------------------------------
-// JavaScript loaders
-// ----------------------------------------------------------------------------
-
 // BABEL
 function addBabelSupport(cfg) {
   const rule = {
@@ -81,6 +40,45 @@ function addBabelSupport(cfg) {
 // Result config
 // ----------------------------------------------------------------------------
 
-module.exports = R.pipe(
-  addBabelSupport,
-)(config)
+module.exports = (env) => {
+  const cfg = R.pipe(
+    addBabelSupport,
+  )({
+    context: path.join(__dirname, '/src/main/resources/assets/js'),
+    entry: {},
+    output: {
+      path: path.join(__dirname, '/build/resources/main/assets/js'),
+      filename: '[name].js'
+    },
+    resolve: {
+      extensions: []
+    },
+    optimization: {
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            compress: {
+              drop_console: false
+            }
+          }
+        })
+      ],
+      splitChunks: {
+        minSize: 30000
+      }
+    },
+    plugins: [
+      // new webpack.DefinePlugin({
+      //   'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+      //   'process.env.TEST': process.env.TEST
+      // })
+      new webpack.EnvironmentPlugin({
+        NODE_ENV: 'development' // use 'development' unless process.env.NODE_ENV is defined
+        // TEST: false
+      })
+    ],
+    mode: env.type
+    // devtool: isProd ? false : 'inline-source-map'
+  })
+  return cfg
+}

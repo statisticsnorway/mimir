@@ -12,6 +12,7 @@ import { JSONstat as JSONstatType } from '../../../lib/types/jsonstat-toolkit'
 import { TbmlDataUniform } from '../../../lib/types/xmlParser'
 import { HighchartsGraphConfig } from '../../../lib/types/highcharts'
 import { ResourceKey } from 'enonic-types/thymeleaf'
+import { DataSource } from '../../mixins/dataSource/dataSource'
 const {
   DataSource: DataSourceType,
   getDataset,
@@ -108,7 +109,7 @@ function renderPart(req: Request, highchartIds: Array<string>): Response {
 }
 
 
-function determinConfigType(req: Request, highchart: Content<Highchart>): HighchartsExtendedProps | undefined {
+function determinConfigType(req: Request, highchart: Content<Highchart & DataSource>): HighchartsExtendedProps | undefined {
   if (highchart && highchart.data.dataSource) {
     return createDataFromDataSource(req, highchart)
   } else if (highchart && highchart.data.htmlTable) {
@@ -118,24 +119,25 @@ function determinConfigType(req: Request, highchart: Content<Highchart>): Highch
 }
 
 
-function createDataFromHtmlTable(req: Request, highchart: Content<Highchart>): HighchartsExtendedProps {
+function createDataFromHtmlTable(req: Request, highchart: Content<Highchart & DataSource>): HighchartsExtendedProps {
   return {
-    ...createHighchartObject(req, highchart, highchart.data, {
-      _selected: 'htmlTable'
-    })
+    ...createHighchartObject(req, highchart, highchart.data, undefined)
   }
 }
 
 
-function createDataFromDataSource(req: Request, highchart: Content<Highchart>): HighchartsExtendedProps | undefined {
+function createDataFromDataSource(req: Request, highchart: Content<Highchart & DataSource>): HighchartsExtendedProps | undefined {
   if ( highchart && highchart.data && highchart.data.dataSource) {
     const type: string = highchart.data.dataSource._selected
 
     // get draft
     const paramShowDraft: boolean = req.params.showDraft !== undefined && req.params.showDraft === 'true'
     const showPreviewDraft: boolean = hasWritePermissionsAndPreview(req, highchart._id) && type === 'tbprocessor' && paramShowDraft
-    const draftData: DatasetRepoNode<TbmlDataUniform> | null = showPreviewDraft && highchart.data.dataSource.tbprocessor?.urlOrId ?
-      getDataset(type, UNPUBLISHED_DATASET_BRANCH, highchart.data.dataSource.tbprocessor.urlOrId) : null
+    const draftData: DatasetRepoNode<TbmlDataUniform> | null =
+      showPreviewDraft &&
+      highchart.data.dataSource._selected === DataSourceType.TBPROCESSOR &&
+      highchart.data.dataSource.tbprocessor?.urlOrId ?
+        getDataset(type, UNPUBLISHED_DATASET_BRANCH, highchart.data.dataSource.tbprocessor.urlOrId) : null
 
     // get dataset
     const datasetFromRepo: DatasetRepoNode<JSONstatType | TbmlDataUniform | object> | undefined = draftData ? draftData : datasetOrUndefined(highchart)

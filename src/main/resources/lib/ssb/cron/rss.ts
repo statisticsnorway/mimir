@@ -9,6 +9,7 @@ import { JSONstat } from '../../types/jsonstat-toolkit'
 import { JobStatus } from '../repo/job'
 import { DefaultPageConfig } from '../../../site/pages/default/default-page-config'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
+import { Statistic } from '../../../site/mixins/statistic/statistic'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 const {
@@ -69,7 +70,7 @@ function isSavedQuerysStatistic(statisticsWithReleaseToday: Array<string>, dataS
   if (isSavedQuery) {
     const parentContent: Content<object, DefaultPageConfig | Statistics> | null = getParentContent(dataSource._path)
     if (parentContent && parentContent.type === `${app.name}:statistics`) {
-      const statisticContent: Content<Statistics> = parentContent as Content<Statistics>
+      const statisticContent: Content<Statistics & Statistic> = parentContent as Content<Statistics>
       if (statisticContent.data.statistic && statisticsWithReleaseToday.includes(statisticContent.data.statistic.toString())) {
         return true
       }
@@ -82,13 +83,15 @@ function isSavedQuerysStatistic(statisticsWithReleaseToday: Array<string>, dataS
 
 function inRSSItems(dataSource: Content<DataSource>, dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object>, RSSItems: Array<RSSItem>): boolean {
   let keys: Array<string> = []
-  if (dataSource.data.dataSource?.tbprocessor?.urlOrId) {
-    keys = keys.concat(getTableIdFromTbprocessor(dataset.data as TbmlDataUniform))
-  }
-  if (dataSource.data.dataSource?.statbankApi?.urlOrId) {
-    const statbankApiTableId: string | undefined = getTableIdFromStatbankApi(dataSource)
-    if (statbankApiTableId) {
-      keys.push(statbankApiTableId)
+  if (dataSource.data.dataSource) {
+    if (dataSource.data.dataSource._selected === DataSourceType.TBPROCESSOR && dataSource.data.dataSource.tbprocessor.urlOrId) {
+      keys = keys.concat(getTableIdFromTbprocessor(dataset.data as TbmlDataUniform))
+    }
+    if (dataSource.data.dataSource._selected === DataSourceType.STATBANK_API && dataSource.data.dataSource?.statbankApi?.urlOrId) {
+      const statbankApiTableId: string | undefined = getTableIdFromStatbankApi(dataSource)
+      if (statbankApiTableId) {
+        keys.push(statbankApiTableId)
+      }
     }
   }
   return RSSItems.filter((item) => {

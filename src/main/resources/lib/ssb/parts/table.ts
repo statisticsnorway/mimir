@@ -12,6 +12,7 @@ import { TbmlDataUniform,
 import { Request } from 'enonic-types/controller'
 import { DatasetRepoNode } from '../repo/dataset'
 import { DataSource as DataSourceType } from '../repo/dataset'
+import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 
 const {
   data: {
@@ -32,7 +33,7 @@ const {
   UNPUBLISHED_DATASET_BRANCH
 } = __non_webpack_require__('/lib/ssb/repo/dataset')
 
-export function parseTable(req: Request, table: Content<Table>, branch: string = DATASET_BRANCH): TableView {
+export function parseTable(req: Request, table: Content<Table & DataSource>, branch: string = DATASET_BRANCH): TableView {
   let tableViewData: TableView = {
     caption: undefined,
     thead: [],
@@ -53,7 +54,7 @@ export function parseTable(req: Request, table: Content<Table>, branch: string =
     datasetRepo = datasetOrUndefined(table)
   }
 
-  const dataSource: Table['dataSource'] | undefined = table.data.dataSource
+  const dataSource: DataSource['dataSource'] | undefined = table.data.dataSource
 
   if (datasetRepo) {
     const data: string | TbmlDataUniform | StatbankSavedRaw | object | undefined = datasetRepo.data

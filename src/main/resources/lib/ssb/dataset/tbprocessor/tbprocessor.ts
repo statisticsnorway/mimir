@@ -27,7 +27,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/repo/dataset')
 
 export function getTbprocessor(content: Content<DataSource>, branch: string): DatasetRepoNode<TbmlDataUniform> | null {
-  if (content.data.dataSource && content.data.dataSource._selected) {
+  if (content.data.dataSource && content.data.dataSource._selected === dataSourceType.TBPROCESSOR) {
     const dataSource: DataSource['dataSource'] = content.data.dataSource
     if (dataSource.tbprocessor && dataSource.tbprocessor.urlOrId) {
       const language: string = content.language || ''
@@ -39,9 +39,9 @@ export function getTbprocessor(content: Content<DataSource>, branch: string): Da
 
 function hasTBProcessorDatasource(content: Content<DataSource>): string | undefined {
   return content.data.dataSource &&
-    content.data.dataSource._selected &&
+    content.data.dataSource._selected === dataSourceType.TBPROCESSOR &&
     content.data.dataSource.tbprocessor &&
-    content.data.dataSource.tbprocessor.urlOrId
+    content.data.dataSource.tbprocessor.urlOrId ? content.data.dataSource.tbprocessor.urlOrId : undefined
 }
 
 function tryRequestTbmlData<T extends TbmlDataUniform | TbmlSourceListUniform>(
@@ -90,7 +90,7 @@ function getDataAndMetaData(content: Content<DataSource>, processXml?: string ):
   let sourceListUrl: string = `${baseUrl}${sourceListPath}${tbmlKey}`
 
   const dataSource: DataSource['dataSource'] = content.data.dataSource
-  if (dataSource && dataSource.tbprocessor && isUrl(dataSource.tbprocessor.urlOrId)) {
+  if (dataSource && dataSource._selected === dataSourceType.TBPROCESSOR && dataSource.tbprocessor && isUrl(dataSource.tbprocessor.urlOrId)) {
     tbmlDataUrl = `${dataSource.tbprocessor.urlOrId as string}${language === 'en' ? `?lang=${language}` : ''}`
     sourceListUrl = `${dataSource.tbprocessor.urlOrId as string}`.replace(dataPath, sourceListPath)
   }
@@ -208,7 +208,11 @@ export function fetchTbprocessorData(content: Content<DataSource>, processXml?: 
 }
 
 export function getTbprocessorKey(content: Content<DataSource>): string {
-  if (content.data.dataSource && content.data.dataSource.tbprocessor && content.data.dataSource.tbprocessor.urlOrId) {
+  if (content.data.dataSource &&
+      content.data.dataSource._selected === dataSourceType.TBPROCESSOR &&
+      content.data.dataSource.tbprocessor &&
+      content.data.dataSource.tbprocessor.urlOrId
+  ) {
     let key: string = content.data.dataSource.tbprocessor.urlOrId
     if (isUrl(key)) {
       key = key.replace(/\/$/, '')

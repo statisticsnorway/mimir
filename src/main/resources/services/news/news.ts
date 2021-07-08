@@ -5,6 +5,7 @@ import { DefaultPageConfig } from '../../site/pages/default/default-page-config'
 import { Article } from '../../site/content-types/article/article'
 import { StatisticInListing, VariantInListing } from '../../lib/ssb/dashboard/statreg/types'
 import { Statistics } from '../../site/content-types/statistics/statistics'
+import { Statistic } from '../../site/mixins/statistic/statistic'
 const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
@@ -102,11 +103,11 @@ function getStatisticsNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>
   const statisticsNews: Array<News> = []
   if (statregStatistics.length > 0) {
     mainSubjects.forEach((mainSubject) => {
-      const statistics: Array<Content<Statistics, object, SEO>> = query({
+      const statistics: Array<Content<Statistics & Statistic, object, SEO>> = query({
         start: 0,
         count: 100,
         query: `_path LIKE "/content${mainSubject._path}/*" AND data.statistic IN(${statregStatistics.map((s) => `"${s.id}"`).join(',')})`
-      }).hits as unknown as Array<Content<Statistics, object, SEO>>
+      }).hits as unknown as Array<Content<Statistics & Statistic, object, SEO>>
 
       const baseUrl: string = app.config && app.config['ssb.baseUrl'] || ''
       const serverOffsetInMS: number = app.config && app.config['serverOffsetInMs'] || 0
