@@ -1,4 +1,4 @@
-import { DatasetRepoNode } from '../../repo/dataset'
+import { DatasetRepoNode, DataSource as DataSourceType } from '../../repo/dataset'
 import { Content } from 'enonic-types/content'
 import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
 import { JSONstat } from '../../../types/jsonstat-toolkit'
@@ -19,7 +19,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/utils/utils')
 
 export function getStatbankApi(content: Content<DataSource>, branch: string): DatasetRepoNode<JSONstat> | null {
-  if (content.data.dataSource && content.data.dataSource._selected) {
+  if (content.data.dataSource && content.data.dataSource._selected === DataSourceType.STATBANK_API) {
     const dataSource: DataSource['dataSource'] = content.data.dataSource
     if (dataSource.statbankApi && dataSource.statbankApi.json && dataSource.statbankApi.urlOrId) {
       return getDataset(content.data.dataSource?._selected, branch, content._id)
@@ -35,7 +35,7 @@ export function fetchStatbankSavedData(content: Content<DataSource>): object | n
     const baseUrl: string = app.config && app.config['ssb.statbankweb.baseUrl'] ? app.config['ssb.statbankweb.baseUrl'] : 'https://www.ssb.no/statbank'
     try {
       const dataSource: DataSource['dataSource'] = content.data.dataSource
-      if (dataSource._selected && dataSource.statbankSaved && dataSource.statbankSaved.urlOrId) {
+      if (dataSource._selected === DataSourceType.STATBANK_SAVED && dataSource.statbankSaved && dataSource.statbankSaved.urlOrId) {
         const url: string = isUrl(dataSource.statbankSaved.urlOrId) ?
           `${dataSource.statbankSaved.urlOrId}${format}` :
           `${baseUrl}${basePath}${dataSource.statbankSaved.urlOrId}${format}`

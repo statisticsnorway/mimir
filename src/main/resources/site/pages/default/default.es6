@@ -243,7 +243,7 @@ exports.get = function(req) {
   const statbankFane = (req.params.xpframe === 'statbank')
   const baseUrl = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
 
-  //Fjerner /ssb fra starten av path
+  // Fjerner /ssb fra starten av path
   const pageUrl = baseUrl + page._path.substr(4)
   const pageLanguage = page.language ? page.language : 'nb'
   const statbankHelpLink = getSiteConfig().statbankHelpLink

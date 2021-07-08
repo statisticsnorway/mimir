@@ -6,6 +6,7 @@ import { DatasetRepoNode } from '../repo/dataset'
 import { StatisticInListing, ReleaseDatesVariant } from '../dashboard/statreg/types'
 import { JobEventNode, JobInfoNode, StatisticsPublishResult, DataSourceStatisticsPublishResult } from '../repo/job'
 import { NodeQueryHit } from 'enonic-types/node'
+import { Statistic } from '../../../site/mixins/statistic/statistic'
 
 const {
   moment
@@ -109,7 +110,7 @@ export function publishDataset(): void {
   cronJobLog('Start publish job')
   const jobLogNode: JobEventNode = startJobLog(JobNames.PUBLISH_JOB)
   jobs[jobLogNode._id] = jobLogNode
-  const statistics: Array<Content<Statistics>> = getStatisticsContent()
+  const statistics: Array<Content<Statistics & Statistic>> = getStatisticsContent()
   const publishedDatasetIds: Array<string> = []
   const jobResult: Array<StatisticsPublishResult> = []
   statistics.forEach((stat) => {
@@ -204,7 +205,7 @@ function allJobsAreSkipped(jobResult: Array<StatisticsPublishResult>): boolean {
   return !sum.includes(false)
 }
 
-function createTask(jobId: string, statistic: Content<Statistics>, releaseDate: Date, publication: PublicationItem): void {
+function createTask(jobId: string, statistic: Content<Statistics & Statistic>, releaseDate: Date, publication: PublicationItem): void {
   submit({
     description: `Publish statistic (${statistic.data.statistic})`,
     task: () => {
@@ -336,7 +337,7 @@ function createTask(jobId: string, statistic: Content<Statistics>, releaseDate: 
   })
 }
 
-function getNextRelease(statistic: Content<Statistics>): string | null{
+function getNextRelease(statistic: Content<Statistics & Statistic>): string | null{
   if (statistic.data.statistic) {
     const statisticStatreg: StatisticInListing | undefined = getStatisticByIdFromRepo(statistic.data.statistic)
     if (statisticStatreg && statisticStatreg.variants) {
@@ -347,7 +348,7 @@ function getNextRelease(statistic: Content<Statistics>): string | null{
   return null
 }
 
-function getPreviousRelease(statistic: Content<Statistics>): string | null {
+function getPreviousRelease(statistic: Content<Statistics & Statistic>): string | null {
   if (statistic.data.statistic) {
     const statisticStatreg: StatisticInListing | undefined = getStatisticByIdFromRepo(statistic.data.statistic)
     if (statisticStatreg && statisticStatreg.variants) {

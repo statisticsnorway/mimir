@@ -4,6 +4,8 @@ import { DefaultPageConfig } from '../../../site/pages/default/default-page-conf
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { EndedStatisticList } from '../../../site/content-types/endedStatisticList/endedStatisticList'
 import { StatisticInListing } from '../dashboard/statreg/types'
+import { Statistic } from '../../../site/mixins/statistic/statistic'
+import { Subtopic } from '../../../site/mixins/subtopic/subtopic'
 const {
   query
 } = __non_webpack_require__('/lib/xp/content')
@@ -129,7 +131,7 @@ export function getStatistics(statregStatistics: Array<StatisticInListing>): Arr
   }).hits as unknown as Array<Content<Statistics>>
 
   if (statregStatistics.length > 0) {
-    statisticContent.forEach((statistic: Content<Statistics>) => {
+    statisticContent.forEach((statistic: Content<Statistics & Statistic & Subtopic>) => {
       const statreg: StatisticInListing | undefined = statregStatistics.find((s) => s.id.toString() === statistic.data.statistic)
       if (statreg) {
         const titles: Array<Title> = [{

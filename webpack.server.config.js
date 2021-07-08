@@ -2,12 +2,8 @@ const path = require('path')
 const glob = require('glob')
 const R = require('ramda')
 const {
-  CheckerPlugin
-} = require('awesome-typescript-loader')
-const {
   setEntriesForPath,
   addRule,
-  addPlugin,
   prependExtensions
 } = require('./util/compose')
 const env = require('./util/env')
@@ -78,7 +74,7 @@ function addTypeScriptSupport(cfg) {
   const rule = {
     test: /\.ts$/,
     exclude: /node_modules/,
-    loader: 'awesome-typescript-loader',
+    loader: 'ts-loader',
     options: {
       configFile: 'src/main/resources/tsconfig.server.json'
     }
@@ -86,15 +82,13 @@ function addTypeScriptSupport(cfg) {
 
   const entries = listEntries('ts', [
     // Add additional files to the ignore list.
-    // The following path will be transformed to 'src/main/resources/lib/observe/observe.ts:
+    // The following path will be transformed to 'src/main/resources/types.ts:
     'types.ts',
     '*.jsx'
-  ])
-
+  ]).filter((entry) => entry.indexOf('.d.ts') === -1)
   return R.pipe(
     setEntriesForPath(entries),
     addRule(rule),
-    addPlugin(new CheckerPlugin()),
     prependExtensions(['.ts', '.json'])
   )(cfg)
 }

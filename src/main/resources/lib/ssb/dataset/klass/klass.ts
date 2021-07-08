@@ -1,4 +1,4 @@
-import { DatasetRepoNode } from '../../repo/dataset'
+import { DatasetRepoNode, DataSource as DataSourceType } from '../../repo/dataset'
 import { Content } from 'enonic-types/content'
 import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
 
@@ -17,7 +17,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/utils/utils')
 
 export function getKlass(content: Content<DataSource>, branch: string): DatasetRepoNode<object> | null {
-  if (content.data.dataSource && content.data.dataSource._selected) {
+  if (content.data.dataSource && content.data.dataSource._selected === DataSourceType.KLASS) {
     const dataSource: DataSource['dataSource'] = content.data.dataSource
     if (dataSource.klass && dataSource.klass.urlOrId) {
       return getDataset(content.data.dataSource?._selected, branch, content._id)
@@ -32,7 +32,7 @@ export function fetchKlassData(content: Content<DataSource>): object | null {
   if (content.data.dataSource) {
     try {
       const dataSource: DataSource['dataSource'] = content.data.dataSource
-      if (dataSource._selected && dataSource.klass && dataSource.klass.urlOrId) {
+      if (dataSource._selected === DataSourceType.KLASS && dataSource.klass && dataSource.klass.urlOrId) {
         let url: string = `${baseUrl}/v1/classifications/${dataSource.klass.urlOrId}`
         if (isUrl(dataSource.klass.urlOrId)) {
           url = dataSource.klass.urlOrId
