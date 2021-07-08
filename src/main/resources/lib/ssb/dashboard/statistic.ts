@@ -68,7 +68,7 @@ const {
   localize
 } = __non_webpack_require__('/lib/xp/i18n')
 const {
-  submit: submitTask
+  executeFunction
 } = __non_webpack_require__('/lib/xp/task')
 const {
   hasRole
@@ -76,9 +76,9 @@ const {
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-statistics', () => {
-    submitTask({
+    executeFunction({
       description: 'get-statistics',
-      task: () => {
+      func: () => {
         const context: RunContext = {
           branch: 'master',
           repository: ENONIC_CMS_DEFAULT_REPO,
@@ -95,9 +95,9 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   })
 
   socket.on('get-statistics-search-list', () => {
-    submitTask({
+    executeFunction({
       description: 'get-statistics-search-list',
-      task: () => {
+      func: () => {
         const statisticsSearchData: Array<StatisticSearch> = getStatisticsSearchList()
         socket.emit('statistics-search-list-result', statisticsSearchData)
       }
@@ -105,9 +105,9 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   })
 
   socket.on('get-statistics-owners-with-sources', (options: GetSourceListOwnersOptions) => {
-    submitTask({
+    executeFunction({
       description: 'get-statistics-owners-with-sources',
-      task: () => {
+      func: () => {
         const ownersWithSources: Array<OwnerWithSources> = getOwnersWithSources(options.dataSourceIds)
         socket.emit('statistics-owners-with-sources-result', {
           id: options.id,
@@ -118,9 +118,9 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   })
 
   socket.on('get-statistics-job-log', (options: GenericIdParam) => {
-    submitTask({
+    executeFunction({
       description: 'get-statistics-job-log',
-      task: () => {
+      func: () => {
         const jobLogs: Array<object> = getStatisticsJobLogInfo(options.id, 10)
         socket.emit('get-statistics-job-log-result', {
           id: options.id,
@@ -131,9 +131,9 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   })
 
   socket.on('get-statistic-job-log-details', (options: {id: string; statisticId: string}) => {
-    submitTask({
+    executeFunction({
       description: 'get-statistic-job-log-details',
-      task: () => {
+      func: () => {
         const logDetails: {user: User; dataset: Array<object>} | undefined = getEventLogsFromStatisticsJobLog(options.id)
         socket.emit('get-statistic-job-log-details-result', {
           id: options.statisticId,
@@ -148,9 +148,9 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   })
 
   socket.on('get-statistics-related-tables-and-owners-with-sources', (options: GetRelatedTablesOptions) => {
-    submitTask({
+    executeFunction({
       description: 'get-statistics-related-tables-and-owners-with-sources',
-      task: () => {
+      func: () => {
         const statistic: Content<Statistics> | null = getContent({
           key: options.id
         })
@@ -169,9 +169,9 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   })
 
   socket.on('refresh-statistic', (data: RefreshInfo) => {
-    submitTask({
+    executeFunction({
       description: 'refresh-statistic',
-      task: () => {
+      func: () => {
         socketEmitter.broadcast('statistics-activity-refresh-started', {
           id: data.id
         })

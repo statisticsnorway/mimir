@@ -3,7 +3,7 @@ import { Content } from 'enonic-types/content'
 import { Page } from '../../site/content-types/page/page'
 import { DefaultPageConfig } from '../../site/pages/default/default-page-config'
 import { Article } from '../../site/content-types/article/article'
-import { StatisticInListing } from '../../lib/ssb/dashboard/statreg/types'
+import { StatisticInListing, VariantInListing } from '../../lib/ssb/dashboard/statreg/types'
 import { Statistics } from '../../site/content-types/statistics/statistics'
 const {
   moment
@@ -12,7 +12,7 @@ const {
   query
 } = __non_webpack_require__('/lib/xp/content')
 const {
-  fetchStatisticsWithPreviousReleaseBetween
+  fetchStatisticsWithReleaseToday
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   pageUrl
@@ -97,9 +97,7 @@ function getNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<N
 }
 
 function getStatisticsNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<News> {
-  const from: string = moment().subtract(1, 'days').toISOString()
-  const to: string = moment().toISOString()
-  const statregStatistics: Array<StatisticInListing> = fetchStatisticsWithPreviousReleaseBetween(new Date(from), new Date(to))
+  const statregStatistics: Array<StatisticInListing> = fetchStatisticsWithReleaseToday()
 
   const statisticsNews: Array<News> = []
   if (statregStatistics.length > 0) {
@@ -114,9 +112,15 @@ function getStatisticsNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>
       const serverOffsetInMS: number = app.config && app.config['serverOffsetInMs'] || 0
       statistics.forEach((statistic) => {
         const statreg: StatisticInListing | undefined = statregStatistics.find((s) => s.id.toString() === statistic.data.statistic)
-        const pubDate: string | undefined = statistic.publish?.first && statreg?.variants ?
-          moment(statreg?.variants[0].previousRelease).utcOffset(serverOffsetInMS / 1000 / 60, true).format() :
-          undefined
+        const variant: VariantInListing | undefined = statreg && statreg.variants && statreg.variants[0] ? statreg.variants[0] : undefined
+        let pubDate: string | undefined
+        if (variant) {
+          if (variant.previousRelease && moment(variant.previousRelease).isSame(new Date(), 'day')) {
+            pubDate = moment(variant.previousRelease).utcOffset(serverOffsetInMS / 1000 / 60, true).format()
+          } else if (variant.nextRelease && moment(variant.nextRelease).isSame(new Date(), 'day')) {
+            pubDate = moment(variant.nextRelease).utcOffset(serverOffsetInMS / 1000 / 60, true).format()
+          }
+        }
         if (pubDate) {
           statisticsNews.push({
             guid: statistic._id,
