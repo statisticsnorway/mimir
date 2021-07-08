@@ -5,9 +5,6 @@ const {
   pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
 const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
-const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
@@ -18,7 +15,6 @@ const {
   getCalculatorConfig, getKpiDatasetMonth
 } = __non_webpack_require__('/lib/ssb/dataset/calculator')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
-const view = resolve('./kpiCalculator.html')
 
 exports.get = function(req) {
   try {
@@ -66,8 +62,8 @@ function renderPart(req) {
 
   const husleieCalculator = new React4xp('site/parts/husleieCalculator/husleieCalculator')
     .setProps({
-      husleieServiceUrl: serviceUrl({
-        service: 'husleie'
+      kpiServiceUrl: serviceUrl({
+        service: 'kpi'
       }),
       language: language.code,
       months,

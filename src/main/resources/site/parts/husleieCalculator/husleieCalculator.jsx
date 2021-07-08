@@ -38,7 +38,7 @@ function HusleieCalculator(props) {
   const language = props.language ? props.language : 'nb'
   const [choosePeriod, setChoosePeriod] = useState(false)
   const [resultText, setResultText] = useState(null)
-  const validMinYear = 1865
+  const validMinYear = 1950
   const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
 
   function onSubmit(e) {
@@ -69,7 +69,7 @@ function HusleieCalculator(props) {
   }
 
   function getServiceData(endMonth, endYear) {
-    axios.get(props.husleieServiceUrl, {
+    axios.get(props.kpiServiceUrl, {
       params: {
         startValue: startValue.value,
         startYear: startYear.value,
@@ -152,8 +152,6 @@ function HusleieCalculator(props) {
     const today = new Date()
     const monthsSinceLastPublished = moment(lastPublishDate).diff(startDate, 'months')
     const monthsSinceLastAdjusted = moment(today).diff(startDate, 'months')
-    const periodValid = monthsSinceLastPublished === 12 && monthsSinceLastPublished === 12
-
     const nextAdjust = getNextPeriod(startMonth.value, Number(startYear.value) + 1)
     const rentDate = moment.months(Number(startMonth.value) - 1)
     const rentDatePublish = moment.months(nextAdjust.month - 1)
@@ -189,7 +187,7 @@ function HusleieCalculator(props) {
       setChoosePeriod(true)
     }
 
-    return periodValid
+    return monthsSinceLastPublished === 12 && monthsSinceLastPublished === 12
   }
 
 
