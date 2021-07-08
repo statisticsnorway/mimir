@@ -23,7 +23,7 @@ const {
   run
 } = __non_webpack_require__('/lib/xp/context')
 const {
-  submit, sleep
+  executeFunction, sleep
 } = __non_webpack_require__('/lib/xp/task')
 const {
   query,
@@ -134,9 +134,9 @@ function addClearTask(): void {
   }
   cacheLog(`cache :: start new task`)
   const changeQueueLength: number = changeQueue.length
-  clearTaskId = submit({
+  clearTaskId = executeFunction({
     description: 'check cache clearing in mimir',
-    task: () => {
+    func: () => {
       try {
         sleep(250)
         if (changeQueueLength === changeQueue.length) {

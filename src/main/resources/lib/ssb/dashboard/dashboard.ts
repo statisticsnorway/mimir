@@ -65,7 +65,7 @@ const {
   getQueryChildNodesStatus
 } = __non_webpack_require__('/lib/ssb/repo/eventLog')
 const {
-  submit: submitTask
+  executeFunction
 } = __non_webpack_require__('/lib/xp/task')
 const {
   queryJobLogs,
@@ -86,9 +86,9 @@ const {
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-error-data-sources', () => {
-    submitTask({
+    executeFunction({
       description: 'get-error-data-sources',
-      task: () => {
+      func: () => {
         const contentWithDataSource: Array<DashboardDataSource> = getDataSourcesWithError()
         socket.emit('error-data-sources-result', contentWithDataSource)
       }
@@ -96,9 +96,9 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   })
 
   socket.on('get-fact-page-groups', () => {
-    submitTask({
+    executeFunction({
       description: 'get-fact-page-groups',
-      task: () => {
+      func: () => {
         const factpages: Array<DashboardDataSourceGroups> = getFactPageGroups()
         socket.emit('fact-page-groups-result', factpages)
       }
@@ -106,9 +106,9 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   })
 
   socket.on('get-fact-page-data-sources', (id: string) => {
-    submitTask({
+    executeFunction({
       description: 'get-fact-page-data-sources',
-      task: () => {
+      func: () => {
         const dataSources: Array<DashboardDataSource> = getFactPageDataSources(id)
         socket.emit('fact-page-data-sources-result', {
           id,
@@ -119,9 +119,9 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   })
 
   socket.on('get-statistics-groups', () => {
-    submitTask({
+    executeFunction({
       description: 'get-statistics-groups',
-      task: () => {
+      func: () => {
         const statistics: Array<DashboardDataSourceGroups> = getStatisticsGroups()
         socket.emit('statistics-groups-result', statistics)
       }
@@ -129,9 +129,9 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   })
 
   socket.on('get-statistics-data-sources', (id: string) => {
-    submitTask({
+    executeFunction({
       description: 'get-statistics-data-sources',
-      task: () => {
+      func: () => {
         const dataSources: Array<DashboardDataSource> = getStatisticsDataSources(id)
         socket.emit('statistics-data-sources-result', {
           id,
@@ -142,9 +142,9 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   })
 
   socket.on('get-municipal-groups', () => {
-    submitTask({
+    executeFunction({
       description: 'get-municipal-groups',
-      task: () => {
+      func: () => {
         const municipals: Array<DashboardDataSourceGroups> = getMunicipalGroups()
         socket.emit('municipal-groups-result', municipals)
       }
@@ -152,9 +152,9 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   })
 
   socket.on('get-municipal-data-sources', (id: string) => {
-    submitTask({
+    executeFunction({
       description: 'get-municipal-data-sources',
-      task: () => {
+      func: () => {
         const dataSources: Array<DashboardDataSource> = getMunicipalDataSources(id)
         socket.emit('municipal-data-sources-result', {
           id,
@@ -165,9 +165,9 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   })
 
   socket.on('get-default-data-sources', () => {
-    submitTask({
+    executeFunction({
       description: 'get-default-data-sources',
-      task: () => {
+      func: () => {
         const dataSources: Array<DashboardDataSource> = getDefaultDataSources()
         socket.emit('default-data-sources-result', dataSources)
       }
@@ -205,9 +205,9 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   })
 
   socket.on('dashboard-jobs', () => {
-    submitTask({
+    executeFunction({
       description: 'dashboard-jobs',
-      task: () => {
+      func: () => {
         socket.emit('dashboard-jobs-result', getJobs())
       }
     })

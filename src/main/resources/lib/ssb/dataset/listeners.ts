@@ -25,7 +25,7 @@ const {
   ENONIC_CMS_DEFAULT_REPO
 } = __non_webpack_require__('/lib/ssb/repo/common')
 const {
-  submit, sleep, isRunning
+  executeFunction, sleep, isRunning
 } = __non_webpack_require__('/lib/xp/task')
 const {
   autoRefreshLog
@@ -84,9 +84,9 @@ function startRefreshTask(): void {
   if (!refreshTask || !isRunning(refreshTask)) {
     autoRefreshLog('task not running, start new')
     const refreshQueueLength: number = refreshQueue.length
-    refreshTask = submit({
+    refreshTask = executeFunction({
       description: 'refresh dataset task',
-      task: () => {
+      func: () => {
         try {
           const debounce: number = app.config && app.config['ssb.dataset.autoRefreshDebounce'] ? parseInt(app.config['ssb.dataset.autoRefreshDebounce']) : 10000
           sleep(debounce)
