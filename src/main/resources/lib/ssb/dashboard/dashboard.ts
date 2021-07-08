@@ -28,7 +28,7 @@ const {
 const {
   dateToFormat,
   dateToReadable
-} = __non_webpack_require__('/lib/ssb/utils')
+} = __non_webpack_require__('/lib/ssb/utils/utils')
 const {
   logUserDataQuery
 } = __non_webpack_require__('/lib/ssb/repo/query')

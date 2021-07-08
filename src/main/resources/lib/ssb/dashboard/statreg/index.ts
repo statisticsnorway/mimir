@@ -27,7 +27,7 @@ const {
 const {
   dateToReadable,
   dateToFormat
-} = __non_webpack_require__('/lib/ssb/utils')
+} = __non_webpack_require__('/lib/ssb/utils/utils')
 const {
   getNode,
   ENONIC_CMS_DEFAULT_REPO

@@ -5,7 +5,7 @@ import { HttpRequestParams, HttpResponse } from 'enonic-types/http'
 import { TbmlDataUniform } from '../../types/xmlParser'
 const {
   dateToFormat
-} = __non_webpack_require__('/lib/ssb/utils')
+} = __non_webpack_require__('/lib/ssb/utils/utils')
 const {
   getNode,
   withConnection,
