@@ -424,7 +424,7 @@ function HusleieCalculator(props) {
       <div className="calculator-form">
         <Row>
           <Col className="col-12 col-md-6">
-            <Title size={2}>{props.phrases.calculatePriceChange}</Title>
+            <Title size={2}>{props.phrases.husleieTitle}</Title>
           </Col>
           {renderLinkArticle()}
         </Row>
