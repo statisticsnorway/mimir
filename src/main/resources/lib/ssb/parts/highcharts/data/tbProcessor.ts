@@ -3,6 +3,7 @@ import { PreliminaryData,
   TableCellUniform,
   TableRowUniform,
   TbmlDataUniform } from '../../../../types/xmlParser'
+import { RowValue } from '../../../utils/utils'
 
 const {
   data: {
@@ -53,7 +54,7 @@ function determineSeries(
     }]
   } else if ((graphType === 'area' || graphType === 'line') && xAxisType === 'linear') {
     return categories.map((cat: number | string | PreliminaryData, index: number): Series => {
-      const name: string = getRowValue(cat) as string
+      const name: RowValue = getRowValue(cat) as string
       return {
         name,
         data: rows.map((row: TableCellUniform): AreaLineLinearData => {

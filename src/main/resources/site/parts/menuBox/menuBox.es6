@@ -11,7 +11,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/error/error')
 const {
   getImageAlt
-} = __non_webpack_require__('/lib/ssb/utils/utils')
+} = __non_webpack_require__('/lib/ssb/utils/imageUtils')
 
 const content = __non_webpack_require__('/lib/xp/content')
 const view = resolve('./menuBox.html')

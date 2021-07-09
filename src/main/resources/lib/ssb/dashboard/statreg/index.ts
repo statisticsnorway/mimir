@@ -25,6 +25,10 @@ const {
   users
 } = __non_webpack_require__('/lib/ssb/dashboard/dashboardUtils')
 const {
+  dateToReadable,
+  dateToFormat
+} = __non_webpack_require__('/lib/ssb/utils/utils')
+const {
   getNode,
   ENONIC_CMS_DEFAULT_REPO
 } = __non_webpack_require__('/lib/ssb/repo/common')
@@ -33,10 +37,6 @@ const {
   EVENT_LOG_REPO,
   getQueryChildNodesStatus
 } = __non_webpack_require__('/lib/ssb/repo/eventLog')
-const {
-  dateToReadable,
-  dateToFormat
-} = __non_webpack_require__('/lib/ssb/utils/utils')
 const {
   localize
 } = __non_webpack_require__('/lib/xp/i18n')
@@ -181,8 +181,8 @@ export function parseStatRegJobInfo(refreshDataResult: Array<StatRegRefreshResul
 export interface StatRegStatus {
   key: string;
   displayName: string;
-  modified: string;
-  modifiedReadable: string;
+  modified: string | undefined;
+  modifiedReadable: string | undefined;
   logData: DashboardRefreshResultLogData | {};
   eventLogNodes: Array<LogSummary>;
 }
