@@ -8,6 +8,8 @@
     }
 
     .publication-archive-body {
+      & > * {
         max-width: 580px;
+      }  
     }
 }
