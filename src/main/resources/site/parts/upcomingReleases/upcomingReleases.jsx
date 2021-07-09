@@ -248,7 +248,7 @@ function UpcomingReleases(props) {
         </div>
         <div className="col-12 release-list">
           <div className="container mt-5">
-            <div className="row">
+            <div className="row d-flex justify-content-center">
               <div className="col-12 col-lg-10 p-0">
                 { renderList() }
                 { renderButton() }
