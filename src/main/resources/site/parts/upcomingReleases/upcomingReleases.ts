@@ -1,11 +1,12 @@
 import { Request } from 'enonic-types/controller'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { Content } from 'enonic-types/content'
+import { Content, QueryResponse } from 'enonic-types/content'
 import { Component } from 'enonic-types/portal'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { GroupedBy, PreparedStatistics, YearReleases } from '../../../lib/ssb/utils/variantUtils'
 import { UpcomingReleasesPartConfig } from './upcomingReleases-part-config'
 import { UpcomingRelease } from '../../content-types/upcomingRelease/upcomingRelease'
+import { Statistics } from '../../content-types/statistics/statistics'
 
 const {
   moment
@@ -14,6 +15,7 @@ const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getContent,
   getComponent,
+  pageUrl,
   processHtml,
   serviceUrl
 } = __non_webpack_require__('/lib/xp/portal')
@@ -59,9 +61,18 @@ function renderPart(req: Request): React4xpResponse {
   const releasesFiltered: Array<StatisticInListing> = filterOnComingReleases(releases, count)
 
   // Choose the right variant and prepare the date in a way it works with the groupBy function
-  const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map(
-    (release: StatisticInListing) => prepareRelease(release, currentLanguage, 'nextRelease')
-  )
+  const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: StatisticInListing) => {
+    const statisticsPagesXP: Array<Content<Statistics>> = query({
+      count: 1,
+      query: `data.statistic LIKE "${release.id}"`,
+      contentTypes: [`${app.name}:statistics`]
+    }).hits as unknown as Array<Content<Statistics>>
+    const statisticsPageUrl: string | undefined = statisticsPagesXP.length ? pageUrl({
+      id: statisticsPagesXP[0]._id
+    }) : undefined
+
+    return prepareRelease(release, currentLanguage, 'nextRelease', statisticsPageUrl)
+  })
 
   // group by year, then month, then day
   const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> = groupStatisticsByYearMonthAndDay(releasesPrepped)
@@ -84,7 +95,10 @@ function renderPart(req: Request): React4xpResponse {
       day: date.format('D'),
       month: date.format('M'),
       monthName: date.format('MMM'),
-      year: date.format('YYYY')
+      year: date.format('YYYY'),
+      statisticsPageUrl: pageUrl({
+        id: r._id
+      })
     }
   })
 
@@ -127,4 +141,5 @@ interface PreparedUpcomingRelease extends UpcomingRelease {
   month: string;
   monthName: string;
   year: string;
+  statisticsPageUrl: string | undefined;
 }

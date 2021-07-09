@@ -156,25 +156,38 @@ function UpcomingReleases(props) {
   }
 
   function renderRelease(release, index, date) {
+    console.log(release.statisticsPageUrl)
     if (release.type === 'statistic') {
       return (
         <li key={index}>
-          <Link href={`/${release.shortName}`} linkType='header'>{release.name}</Link>
-          <Paragraph className="mb-0">{release.variant.period}</Paragraph>
-          <Paragraph className="metadata">
-            {date.day}. {date.monthName} {date.year} / <span
-              className="type">{release.type}</span> / {release.mainSubject}
-          </Paragraph>
+          <div>
+            <Link href={`/${release.shortName}`} linkType='header'>{release.name}</Link>
+            <Paragraph className="mb-0">{release.variant.period}</Paragraph>
+            <Paragraph className="metadata">
+              {date.day}. {date.monthName} {date.year} / <span
+                className="type">{release.type}</span> / {release.mainSubject}
+            </Paragraph>
+          </div>
+          <div className="statisticsPageLink">
+            {/* TODO: Move to phrases */}
+            {release.statisticsPageUrl && <Link href={release.statisticsPageUrl}>Se siste publiserte tall</Link>}
+          </div>
         </li>
       )
     } else {
       return (
         <li key={index}>
-          <h3>{release.name}</h3>
-          <Paragraph className="metadata">
-            {date.day}. {date.monthName} {date.year} / <span
-              className="type">{release.type}</span> / {release.mainSubject}
-          </Paragraph>
+          <div>
+            <h3>{release.name}</h3>
+            <Paragraph className="metadata">
+              {date.day}. {date.monthName} {date.year} / <span
+                className="type">{release.type}</span> / {release.mainSubject}
+            </Paragraph>
+          </div>
+          <div className="statisticsPageLink">
+            {/* TODO: Move to phrases */}
+            {release.statisticsPageUrl && <Link href={release.statisticsPageUrl}>Se siste publiserte tall</Link>}
+          </div>
         </li>
       )
     }
@@ -285,7 +298,8 @@ UpcomingReleases.propTypes = {
                 variants: {
                   frekvens: PropTypes.string,
                   nextRelease: PropTypes.string
-                }
+                },
+                statisticsPageUrl: PropTypes.string
               })
             )
           })
@@ -303,7 +317,8 @@ UpcomingReleases.propTypes = {
       day: PropTypes.string,
       month: PropTypes.string,
       monthName: PropTypes.string,
-      year: PropTypes.string
+      year: PropTypes.string,
+      statisticsPageUrl: PropTypes.string
     })
   )
 }
