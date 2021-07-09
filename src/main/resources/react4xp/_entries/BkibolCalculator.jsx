@@ -31,12 +31,12 @@ function BkibolCalculator(props) {
   })
   const [startValue, setStartValue] = useState({
     error: false,
-    errorMsg: props.phrases.bkibolValidateAmountNumber,
+    errorMsg: props.phrases.calculatorValidateAmountNumber,
     value: ''
   })
   const [startMonth, setStartMonth] = useState({
     error: false,
-    errorMsg: props.phrases.bkibolValidateDropdownMonth,
+    errorMsg: props.phrases.calculatorValidateDropdownMonth,
     value: ''
   })
   const [startYear, setStartYear] = useState({
@@ -46,7 +46,7 @@ function BkibolCalculator(props) {
   })
   const [endMonth, setEndMonth] = useState({
     error: false,
-    errorMsg: props.phrases.bkibolValidateDropdownMonth,
+    errorMsg: props.phrases.calculatorValidateDropdownMonth,
     value: ''
   })
   const [endYear, setEndYear] = useState({

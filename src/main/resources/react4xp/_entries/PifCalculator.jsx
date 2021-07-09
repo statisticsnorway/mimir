@@ -8,7 +8,7 @@ import NumberFormat from 'react-number-format'
 function PifCalculator(props) {
   const validMaxYear = props.lastUpdated.year
   const {
-    pifErrorMarket, pifErrorProduct, pifValidateAmountNumber, pifValidateYear
+    pifErrorMarket, pifErrorProduct, calculatorValidateAmountNumber, pifValidateYear
   } = props.phrases
   const [scopeCode, setScopeCode] = useState({
     error: false,
@@ -22,7 +22,7 @@ function PifCalculator(props) {
   })
   const [startValue, setStartValue] = useState({
     error: false,
-    errorMsg: pifValidateAmountNumber,
+    errorMsg: calculatorValidateAmountNumber,
     value: ''
   })
   const [startMonth, setStartMonth] = useState({
