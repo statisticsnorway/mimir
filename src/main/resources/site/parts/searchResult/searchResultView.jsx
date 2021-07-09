@@ -80,34 +80,40 @@ function SearchResult(props) {
   }
 
   return (
-    <section className="search-result">
-      <div className="search-result-head py-5 px-2">
-        <Title>{props.title}</Title>
-        <Input
-          size="lg"
-          value={searchTerm} handleChange={setSearchTerm} searchField
-          submitCallback={goToSearchResultPage}></Input>
-      </div>
-      <div className="container search-result-body mt-5">
-        <div className="row mb-4">
-          <div className="col">
-            {props.showingPhrase.replace('{0}', hits.length.toString())}&nbsp;<NumberFormat
-              value={ Number(total) }
-              displayType={'text'}
-              thousandSeparator={' '}/>
-            <Divider dark></Divider>
+    <section className="search-result container-fluid">
+      <div className="row">
+        <div className="col-12 search-result-head">
+          <div className="container py-5">
+            <Title>{props.title}</Title>
+            <Input
+              size="lg"
+              value={searchTerm} handleChange={setSearchTerm} searchField
+              submitCallback={goToSearchResultPage}></Input>
           </div>
         </div>
-        {hits.length > 0 ? renderList() : renderNoHitMessage()}
-        {renderLoading()}
-        <div>
-          <Button
-            disabled={loading || total === hits.length}
-            className="button-more mt-5"
-            onClick={fetchSearchResult}
-          >
-            <ChevronDown size="18"/> {props.buttonTitle}
-          </Button>
+        <div className="col-12 search-result-body">
+          <div className="container mt-5">
+            <div className="row mb-4">
+              <div className="col">
+                {props.showingPhrase.replace('{0}', hits.length.toString())}&nbsp;<NumberFormat
+                  value={ Number(total) }
+                  displayType={'text'}
+                  thousandSeparator={' '}/>
+                <Divider dark></Divider>
+              </div>
+            </div>
+            {hits.length > 0 ? renderList() : renderNoHitMessage()}
+            {renderLoading()}
+            <div>
+              <Button
+                disabled={loading || total === hits.length}
+                className="button-more mt-5"
+                onClick={fetchSearchResult}
+              >
+                <ChevronDown size="18"/> {props.buttonTitle}
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
