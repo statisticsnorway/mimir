@@ -40,8 +40,8 @@ function renderPart(req) {
   const associatedStatisticsConfig = page.data.associatedStatistics ? forceArray(page.data.associatedStatistics) : []
   const associatedStatisticsLinks = getAssociatedStatisticsLinks(associatedStatisticsConfig)
 
-  if (!associatedStatisticsConfig.length > 0) {
-    if (req.mode === 'edit' && page.type !== `${app.name}:article`) {
+  if (!associatedStatisticsConfig.length) {
+    if (req.mode === 'edit' && !(page.type === `${app.name}:article`)) {
       return {
         body: render(view, {
           associatedStatisticsHeader
@@ -73,8 +73,7 @@ function renderPart(req) {
     body: associatedStatisticsLinksComponent.renderBody({
       body
     }),
-    pageContributions: associatedStatisticsLinksComponent.renderPageContributions(),
-    contentType: 'text/html'
+    pageContributions: associatedStatisticsLinksComponent.renderPageContributions()
   }
 }
 
@@ -95,7 +94,6 @@ const getAssociatedStatisticsLinks = (associatedStatisticsConfig) => {
             })
           }
         }
-        return null
       } else if (option._selected === 'CMS') {
         const associatedStatisticsCMS = option.CMS
 
