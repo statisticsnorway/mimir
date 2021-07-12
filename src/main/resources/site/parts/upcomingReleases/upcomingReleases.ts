@@ -1,6 +1,6 @@
 import { Request } from 'enonic-types/controller'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { Content, QueryResponse } from 'enonic-types/content'
+import { Content } from 'enonic-types/content'
 import { Component } from 'enonic-types/portal'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { GroupedBy, PreparedStatistics, YearReleases } from '../../../lib/ssb/utils/variantUtils'
@@ -49,6 +49,10 @@ function renderPart(req: Request): React4xpResponse {
   const isNotInEditMode: boolean = req.mode !== 'edit'
   const buttonTitle: string = localize({
     key: 'button.showMore',
+    locale: currentLanguage
+  })
+  const statisticsPageUrlText: string = localize({
+    key: 'upcomingReleases.statisticsPageText',
     locale: currentLanguage
   })
   const upcomingReleasesServiceUrl: string = serviceUrl({
@@ -112,6 +116,7 @@ function renderPart(req: Request): React4xpResponse {
     count,
     upcomingReleasesServiceUrl,
     buttonTitle,
+    statisticsPageUrlText,
     contentReleases
   }
 
@@ -131,6 +136,7 @@ interface PartProps {
   count: number;
   upcomingReleasesServiceUrl: string;
   buttonTitle: string;
+  statisticsPageUrlText: string;
   contentReleases: Array<PreparedUpcomingRelease>;
 }
 

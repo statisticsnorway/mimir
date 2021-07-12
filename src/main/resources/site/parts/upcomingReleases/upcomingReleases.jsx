@@ -156,38 +156,45 @@ function UpcomingReleases(props) {
   }
 
   function renderRelease(release, index, date) {
-    console.log(release.statisticsPageUrl)
-    if (release.type === 'statistic') {
+    const {
+      type, shortName, name, variant, mainSubject, statisticsPageUrl
+    } = release
+    const {
+      day, monthName, year
+    } = date
+    const statisticsPageUrlText = props.statisticsPageUrlText
+
+    if (type === 'statistic') {
       return (
         <li key={index}>
           <div>
-            <Link href={`/${release.shortName}`} linkType='header'>{release.name}</Link>
-            <Paragraph className="mb-0">{release.variant.period}</Paragraph>
+            <Link href={`/${shortName}`} linkType='header'>{name}</Link>
+            <Paragraph className="mb-0">{variant.period}</Paragraph>
             <Paragraph className="metadata">
-              {date.day}. {date.monthName} {date.year} / <span
-                className="type">{release.type}</span> / {release.mainSubject}
+              {day}. {monthName} {year} / <span
+                className="type">{type}</span> / {mainSubject}
             </Paragraph>
           </div>
+          {statisticsPageUrl &&
           <div className="statisticsPageLink">
-            {/* TODO: Move to phrases */}
-            {release.statisticsPageUrl && <Link href={release.statisticsPageUrl}>Se siste publiserte tall</Link>}
-          </div>
+            <Link href={statisticsPageUrl}>{statisticsPageUrlText}</Link>
+          </div>}
         </li>
       )
     } else {
       return (
         <li key={index}>
           <div>
-            <h3>{release.name}</h3>
+            <h3>{name}</h3>
             <Paragraph className="metadata">
-              {date.day}. {date.monthName} {date.year} / <span
-                className="type">{release.type}</span> / {release.mainSubject}
+              {day}. {monthName} {year} / <span
+                className="type">{type}</span> / {mainSubject}
             </Paragraph>
           </div>
+          {statisticsPageUrl &&
           <div className="statisticsPageLink">
-            {/* TODO: Move to phrases */}
-            {release.statisticsPageUrl && <Link href={release.statisticsPageUrl}>Se siste publiserte tall</Link>}
-          </div>
+            <Link href={statisticsPageUrl}>{statisticsPageUrlText}</Link>
+          </div>}
         </li>
       )
     }
@@ -273,6 +280,7 @@ UpcomingReleases.propTypes = {
   upcomingReleasesServiceUrl: PropTypes.string,
   count: PropTypes.number,
   buttonTitle: PropTypes.string,
+  statisticsPageUrlText: PropTypes.string,
   releases: PropTypes.arrayOf(PropTypes.shape({
     year: PropTypes.string,
     releases: PropTypes.arrayOf(PropTypes.shape({
