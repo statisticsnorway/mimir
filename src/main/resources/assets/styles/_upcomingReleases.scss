@@ -41,6 +41,29 @@
     .ssb-paragraph:first-letter{
       text-transform: capitalize;
     }
+
+    @include media-breakpoint-up(lg) {
+      li {
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+
+    @include media-breakpoint-down(md) {
+      .statisticsPageLink {
+        margin-bottom: $spacer * 3;
+      }
+    }
+  }
+
+  .button-more, .text-center {
+    margin-top: $spacer * .5;
+    margin-left: auto;
+    margin-right: auto;
+
+    @include media-breakpoint-down(md) {
+      margin-top: none;
+    }
   }
 
   time {

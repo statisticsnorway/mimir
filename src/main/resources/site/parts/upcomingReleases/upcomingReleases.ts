@@ -14,6 +14,7 @@ const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getContent,
   getComponent,
+  pageUrl,
   processHtml,
   serviceUrl
 } = __non_webpack_require__('/lib/xp/portal')
@@ -49,6 +50,10 @@ function renderPart(req: Request): React4xpResponse {
     key: 'button.showMore',
     locale: currentLanguage
   })
+  const statisticsPageUrlText: string = localize({
+    key: 'upcomingReleases.statisticsPageText',
+    locale: currentLanguage
+  })
   const upcomingReleasesServiceUrl: string = serviceUrl({
     service: 'upcomingReleases'
   })
@@ -59,9 +64,8 @@ function renderPart(req: Request): React4xpResponse {
   const releasesFiltered: Array<StatisticInListing> = filterOnComingReleases(releases, count)
 
   // Choose the right variant and prepare the date in a way it works with the groupBy function
-  const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map(
-    (release: StatisticInListing) => prepareRelease(release, currentLanguage, 'nextRelease')
-  )
+  const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: StatisticInListing) =>
+    prepareRelease(release, currentLanguage, 'nextRelease'))
 
   // group by year, then month, then day
   const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> = groupStatisticsByYearMonthAndDay(releasesPrepped)
@@ -84,7 +88,10 @@ function renderPart(req: Request): React4xpResponse {
       day: date.format('D'),
       month: date.format('M'),
       monthName: date.format('MMM'),
-      year: date.format('YYYY')
+      year: date.format('YYYY'),
+      statisticsPageUrl: pageUrl({
+        id: r._id
+      })
     }
   })
 
@@ -98,6 +105,7 @@ function renderPart(req: Request): React4xpResponse {
     count,
     upcomingReleasesServiceUrl,
     buttonTitle,
+    statisticsPageUrlText,
     contentReleases
   }
 
@@ -117,6 +125,7 @@ interface PartProps {
   count: number;
   upcomingReleasesServiceUrl: string;
   buttonTitle: string;
+  statisticsPageUrlText: string;
   contentReleases: Array<PreparedUpcomingRelease>;
 }
 
@@ -127,4 +136,5 @@ interface PreparedUpcomingRelease extends UpcomingRelease {
   month: string;
   monthName: string;
   year: string;
+  statisticsPageUrl: string | undefined;
 }
