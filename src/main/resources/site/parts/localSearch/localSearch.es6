@@ -8,12 +8,7 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-
-const view = resolve('./localSearch.html')
 
 exports.get = function(req) {
   try {
@@ -25,14 +20,16 @@ exports.get = function(req) {
 
 exports.preview = (req) => renderPart(req)
 
-function renderPart(request) {
+function renderPart(req) {
   const part = getComponent()
-  const items = getChildren({
+  const filteredItems = getChildren({
     key: part.config.searchFolder,
     start: 0,
     count: 1000,
     sort: 'displayName ASC'
-  }).hits.map((item) => {
+  }).hits.filter((content) => content.type === `${app.name}:statistics` || content.type === `${app.name}:article` || content.type === `${app.name}:page`)
+
+  const items = filteredItems.map((item) => {
     return {
       title: item.data.serialNumber ? item.displayName + ' (' + item.data.serialNumber + ')' : item.displayName,
       id: item._id,
@@ -45,23 +42,11 @@ function renderPart(request) {
   const props = {
     title: part.config.title,
     placeholder: part.config.searchPlaceholder,
-    items: items
+    items
   }
 
-  const localSearch = new React4xp('site/parts/localSearch/localSearch')
-    .setProps(props)
-    .setId('local-search')
-    .uniqueId()
-
-  const body = render(view, {
-    localSearchId: localSearch.react4xpId
+  return React4xp.render('site/parts/localSearch/localSearch', props, req, {
+    clientRender: req.mode !== 'edit'
   })
-
-  return {
-    body: localSearch.renderBody({
-      body
-    }),
-    pageContributions: localSearch.renderPageContributions()
-  }
 }
 
