@@ -1,7 +1,15 @@
+import { Content } from 'enonic-types/content'
 import { Request, Response } from 'enonic-types/controller'
 import { StatisticInListing } from '../../lib/ssb/dashboard/statreg/types'
 import { GroupedBy, PreparedStatistics, YearReleases } from '../../lib/ssb/utils/variantUtils'
+import { Statistics } from '../../site/content-types/statistics/statistics'
 
+const {
+  pageUrl
+} = __non_webpack_require__('/lib/xp/portal')
+const {
+  query
+} = __non_webpack_require__('/lib/xp/content')
 const {
   addMonthNames,
   groupStatisticsByYearMonthAndDay,
@@ -23,7 +31,18 @@ exports.get = (req: Request): Response => {
 
   // Choose the right variant and prepare the date in a way it works with the groupBy function
   const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map(
-    (release: StatisticInListing) => prepareRelease(release, language, 'nextRelease')
+    (release: StatisticInListing) => {
+      const statisticsPagesXP: Array<Content<Statistics>> = query({
+        count: 1,
+        query: `data.statistic LIKE "${release.id}"`,
+        contentTypes: [`${app.name}:statistics`]
+      }).hits as unknown as Array<Content<Statistics>>
+      const statisticsPageUrl: string | undefined = statisticsPagesXP.length ? pageUrl({
+        id: statisticsPagesXP[0]._id
+      }) : undefined
+
+      return prepareRelease(release, language, 'nextRelease', statisticsPageUrl)
+    }
   )
 
   // group by year, then month, then day
