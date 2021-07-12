@@ -6,7 +6,6 @@ import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { GroupedBy, PreparedStatistics, YearReleases } from '../../../lib/ssb/utils/variantUtils'
 import { UpcomingReleasesPartConfig } from './upcomingReleases-part-config'
 import { UpcomingRelease } from '../../content-types/upcomingRelease/upcomingRelease'
-import { Statistics } from '../../content-types/statistics/statistics'
 
 const {
   moment
@@ -65,18 +64,8 @@ function renderPart(req: Request): React4xpResponse {
   const releasesFiltered: Array<StatisticInListing> = filterOnComingReleases(releases, count)
 
   // Choose the right variant and prepare the date in a way it works with the groupBy function
-  const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: StatisticInListing) => {
-    const statisticsPagesXP: Array<Content<Statistics>> = query({
-      count: 1,
-      query: `data.statistic LIKE "${release.id}"`,
-      contentTypes: [`${app.name}:statistics`]
-    }).hits as unknown as Array<Content<Statistics>>
-    const statisticsPageUrl: string | undefined = statisticsPagesXP.length ? pageUrl({
-      id: statisticsPagesXP[0]._id
-    }) : undefined
-
-    return prepareRelease(release, currentLanguage, 'nextRelease', statisticsPageUrl)
-  })
+  const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: StatisticInListing) =>
+    prepareRelease(release, currentLanguage, 'nextRelease'))
 
   // group by year, then month, then day
   const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> = groupStatisticsByYearMonthAndDay(releasesPrepped)
