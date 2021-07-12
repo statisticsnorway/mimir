@@ -224,11 +224,11 @@ function UpcomingReleases(props) {
 
   function renderButton() {
     if (loading) {
-      return (<div className="text-center mt-5">
+      return (<div className="text-center">
         <span className="spinner-border spinner-border"/>
       </div>)
     } else {
-      return (<Button className="button-more mt-5 mx-auto"
+      return (<Button className="button-more"
         disabled={loading}
         onClick={fetchMoreReleases}>
         <ChevronDown size="18"/>{props.buttonTitle}
