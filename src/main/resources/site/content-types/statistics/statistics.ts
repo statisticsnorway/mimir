@@ -124,7 +124,7 @@ export interface Statistics {
     _selected: string;
 
     /**
-     * Statistikk fra XP
+     * Statistikk fra XP (IKKE BRUK)
      */
     xp?: {
       /**
@@ -134,7 +134,7 @@ export interface Statistics {
     };
 
     /**
-     * Statistikk fra 4.7
+     * Statistikk fra 4.7 (IKKE BRUK)
      */
     cms?: {
       /**
@@ -153,6 +153,51 @@ export interface Statistics {
       url: string;
     };
   };
+
+  /**
+   * Tittel
+   */
+  title?: string;
+
+  /**
+   * Innhold fra XP
+   */
+  contentXP?: Array<{
+    /**
+     * Ikon
+     */
+    icon?: string;
+
+    /**
+     * Innhold
+     */
+    content?: string;
+  }>;
+
+  /**
+   * URL
+   */
+  manualUrl?: Array<{
+    /**
+     * Ikon
+     */
+    icon?: string;
+
+    /**
+     * Tittel
+     */
+    title?: string;
+
+    /**
+     * Profileringstekst
+     */
+    description?: string;
+
+    /**
+     * Lenke
+     */
+    href?: string;
+  }>;
 
   /**
    * 

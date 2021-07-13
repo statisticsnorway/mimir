@@ -2,14 +2,14 @@
     <display-name>Relaterte statistikker</display-name>
     <form>
         <field-set>
-            <label>Relaterte statistikker</label>
+            <label>Relaterte statistikker (IKKE BRUK)</label>
             <items>
                 <option-set name="relatedStatisticsOptions">
                     <expanded>false</expanded>
                     <occurrences minimum="0" maximum="0" />
                     <options minimum="1" maximum="1">
                         <option name="xp">
-                            <label>Statistikk fra XP</label>
+                            <label>Statistikk fra XP (IKKE BRUK)</label>
                             <items>
                                 <input name="contentId" type="ContentSelector">
                                     <label>Statistikk</label>
@@ -21,7 +21,7 @@
                             </items>
                         </option>
                         <option name="cms">
-                            <label>Statistikk fra 4.7</label>
+                            <label>Statistikk fra 4.7 (IKKE BRUK)</label>
                             <items>
                                 <input name="title" type="TextLine">
                                     <label>Tittel</label>
@@ -39,6 +39,55 @@
                         </option>
                     </options>
                 </option-set>
+            </items>
+        </field-set>
+        <field-set>
+            <label>Statistikker</label>
+            <description>Brukes for relaterte statistikker, avsluttende og aktive statistikker osv.</description>
+            <items>
+                <input name="title" type="TextLine">
+                    <label>Tittel</label>
+                    <occurrences minimum="0" maximum="1" />
+                </input>
+                <item-set name="contentXP">
+                    <label>Innhold fra XP</label>
+                    <occurrences minimum="0" maximum="0" />
+                    <items>
+                        <input name="icon" type="ImageSelector">
+                            <label>Ikon</label>
+                            <occurrences minimum="0" maximum="1" />
+                        </input>
+                        <input name="content" type="ContentSelector">
+                            <label>Innhold</label>
+                            <occurrences minimum="0" maximum="1" />
+                            <config>
+                                <allowContentType>statistics</allowContentType>
+                            </config>
+                        </input>
+                    </items>
+                </item-set>
+                <item-set name="manualUrl">
+                    <label>URL</label>
+                    <occurrences minimum="0" maximum="0" />
+                    <items>
+                        <input name="icon" type="ImageSelector">
+                            <label>Ikon</label>
+                            <occurrences minimum="0" maximum="1" />
+                        </input>
+                        <input name="title" type="TextLine">
+                            <label>Tittel</label>
+                            <occurrences minimum="0" maximum="1" />
+                        </input>
+                        <input name="description" type="TextLine">
+                            <label>Profileringstekst</label>
+                            <occurrences minimum="0" maximum="1" />
+                        </input>
+                        <input name="href" type="TextArea">
+                            <label>Lenke</label>
+                            <occurrences minimum="0" maximum="1" />
+                        </input>
+                    </items>
+                </item-set>
             </items>
         </field-set>
     </form>

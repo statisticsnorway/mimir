@@ -1,5 +1,5 @@
 <part>
-    <display-name>Aktiv statistikk</display-name>
+    <display-name>Liste standard kort</display-name>
     <description></description>
     <form>
         <mixin name="relatedStatistics" />
