@@ -80,14 +80,15 @@ class RelatedStatistics extends React.Component {
             <h2 className="mt-4 mb-5">{headerTitle}</h2>
           </Col>
           {statistics.map(({
-            href, title, preamble
+            icon, iconAlt, href, title, preamble
           }, index) => {
             return (
               <Card
                 key={index}
                 className={`mb-3 col-12 col-lg-4 ${hasButton && this.state.isHidden ? 'd-none' : ''} ${this.getBreakpoints(index)}`}
                 href={href}
-                title={title}>
+                title={title}
+                icon={icon && <img src={icon} alt={iconAlt} />}>
                 <Text>
                   {preamble}
                 </Text>
@@ -105,6 +106,8 @@ RelatedStatistics.propTypes = {
   headerTitle: PropTypes.string,
   statistics: PropTypes.arrayOf(
     PropTypes.shape({
+      icon: PropTypes.string,
+      iconAlt: PropTypes.string,
       title: PropTypes.string.isRequired,
       preamble: PropTypes.string.isRequired,
       href: PropTypes.string.isRequired

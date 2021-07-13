@@ -43,46 +43,39 @@
         </field-set>
         <field-set>
             <label>Statistikker</label>
-            <description>Brukes for relaterte statistikker, avsluttende og aktive statistikker osv.</description>
+            <!-- TODO: After the option-set is deleted, consider placing only the item inputs in the mixin so that every usage 
+                        can have field-sets with different labels -->
             <items>
                 <input name="title" type="TextLine">
                     <label>Tittel</label>
                     <occurrences minimum="0" maximum="1" />
                 </input>
-                <item-set name="contentXP">
-                    <label>Innhold fra XP</label>
+                <item-set name="statisticsItemSet">
+                    <label>Innhold fra XP eller lenke</label>
                     <occurrences minimum="0" maximum="0" />
                     <items>
                         <input name="icon" type="ImageSelector">
                             <label>Ikon</label>
                             <occurrences minimum="0" maximum="1" />
                         </input>
-                        <input name="content" type="ContentSelector">
-                            <label>Innhold</label>
+                        <input name="contentXP" type="ContentSelector">
+                            <label>Innhold fra XP</label>
                             <occurrences minimum="0" maximum="1" />
                             <config>
+                                <allowContentType>article</allowContentType>
                                 <allowContentType>statistics</allowContentType>
+                                <allowContentType>page</allowContentType>
                             </config>
                         </input>
-                    </items>
-                </item-set>
-                <item-set name="manualUrl">
-                    <label>URL</label>
-                    <occurrences minimum="0" maximum="0" />
-                    <items>
-                        <input name="icon" type="ImageSelector">
-                            <label>Ikon</label>
-                            <occurrences minimum="0" maximum="1" />
-                        </input>
                         <input name="title" type="TextLine">
-                            <label>Tittel</label>
+                            <label>Tittel for lenke</label>
                             <occurrences minimum="0" maximum="1" />
                         </input>
-                        <input name="description" type="TextLine">
-                            <label>Profileringstekst</label>
+                        <input name="profiledText" type="TextArea">
+                            <label>Profileringstekst for lenke</label>
                             <occurrences minimum="0" maximum="1" />
                         </input>
-                        <input name="href" type="TextArea">
+                        <input name="href" type="TextLine">
                             <label>Lenke</label>
                             <occurrences minimum="0" maximum="1" />
                         </input>

@@ -42,38 +42,28 @@ export interface ActiveStatisticsPartConfig {
   title?: string;
 
   /**
-   * Innhold fra XP
+   * Innhold fra XP eller lenke
    */
-  contentXP?: Array<{
+  statisticsItemSet?: Array<{
     /**
      * Ikon
      */
     icon?: string;
 
     /**
-     * Innhold
+     * Innhold fra XP
      */
-    content?: string;
-  }>;
-
-  /**
-   * URL
-   */
-  manualUrl?: Array<{
-    /**
-     * Ikon
-     */
-    icon?: string;
+    contentXP?: string;
 
     /**
-     * Tittel
+     * Tittel for lenke
      */
     title?: string;
 
     /**
-     * Profileringstekst
+     * Profileringstekst for lenke
      */
-    description?: string;
+    profiledText?: string;
 
     /**
      * Lenke
