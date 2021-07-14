@@ -1,41 +1,4 @@
 export interface RelatedStatistics {
-  relatedStatisticsOptions?: {
-    /**
-     * Selected
-     */
-    _selected: string;
-
-    /**
-     * Statistikk fra XP (IKKE BRUK)
-     */
-    xp?: {
-      /**
-       * Statistikk
-       */
-      contentId?: string;
-    };
-
-    /**
-     * Statistikk fra 4.7 (IKKE BRUK)
-     */
-    cms?: {
-      /**
-       * Tittel
-       */
-      title: string;
-
-      /**
-       * Profileringstekst
-       */
-      profiledText: string;
-
-      /**
-       * URL
-       */
-      url: string;
-    };
-  };
-
   /**
    * Tittel
    */

@@ -135,35 +135,6 @@ export interface Article {
    */
   articleArchive?: Array<string>;
 
-  /**
-   * Innholdstype
-   */
-  articleType?: "report" | "note" | "analysis" | "economicTrends" | "discussionPaper";
-
-  /**
-   * 
-   * 						Løpenummer
-   * 					
-   */
-  serialNumber?: string;
-
-  /**
-   * 
-   * 						ISBN nummer
-   * 					
-   */
-  isbnNumber?: string;
-
-  /**
-   * Prioritert visning på forside
-   */
-  frontPagePriority: "0" | "1";
-
-  /**
-   * Delemner
-   */
-  subtopic?: string;
-
   relatedStatisticsOptions?: {
     /**
      * Selected
@@ -235,6 +206,35 @@ export interface Article {
      */
     href?: string;
   }>;
+
+  /**
+   * Innholdstype
+   */
+  articleType?: "report" | "note" | "analysis" | "economicTrends" | "discussionPaper";
+
+  /**
+   * 
+   * 						Løpenummer
+   * 					
+   */
+  serialNumber?: string;
+
+  /**
+   * 
+   * 						ISBN nummer
+   * 					
+   */
+  isbnNumber?: string;
+
+  /**
+   * Prioritert visning på forside
+   */
+  frontPagePriority: "0" | "1";
+
+  /**
+   * Delemner
+   */
+  subtopic?: string;
 
   /**
    * 

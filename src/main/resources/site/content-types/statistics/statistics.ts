@@ -100,23 +100,6 @@ export interface Statistics {
     url: string;
   }>;
 
-  /**
-   * 
-   * 						Stikkord
-   * 					
-   */
-  keywords?: string;
-
-  /**
-   * Delemner
-   */
-  subtopic?: string;
-
-  /**
-   * Statistikk
-   */
-  statistic?: string;
-
   relatedStatisticsOptions?: {
     /**
      * Selected
@@ -188,6 +171,23 @@ export interface Statistics {
      */
     href?: string;
   }>;
+
+  /**
+   * 
+   * 						Stikkord
+   * 					
+   */
+  keywords?: string;
+
+  /**
+   * Delemner
+   */
+  subtopic?: string;
+
+  /**
+   * Statistikk
+   */
+  statistic?: string;
 
   /**
    * 

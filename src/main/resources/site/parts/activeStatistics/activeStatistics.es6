@@ -1,8 +1,4 @@
 const {
-  BlockContent
-} = require('@statisticsnorway/ssb-component-library')
-
-const {
   data: {
     forceArray
   }
