@@ -424,6 +424,9 @@ const TWO_WEEKS: number = 14 // TODO: put in config?
 function getStatistics(): Array<StatisticDashboard> {
   const userIsAdmin: boolean = checkIfUserIsAdmin()
   const statistic: Array<StatisticDashboard> = userIsAdmin ? getAdminStatistics() : getUserStatistics()
+  log.info('in getStatistics: %s', JSON.stringify(statistic.sort((a, b) => {
+    return new Date(a.nextRelease || '01.01.3000').getTime() - new Date(b.nextRelease || '01.01.3000').getTime()
+  }), null, 2))
   return statistic.sort((a, b) => {
     return new Date(a.nextRelease || '01.01.3000').getTime() - new Date(b.nextRelease || '01.01.3000').getTime()
   })
@@ -437,6 +440,8 @@ function getAdminStatistics(): Array<StatisticDashboard> {
     query: `data.statistic IN(${statregStatistics.map((s) => `"${s.id}"`).join(',')})`,
     count: 1000
   }).hits as unknown as Array<Content<Statistics>>
+  log.info('in getAdminStatistics %s',
+    JSON.stringify(statisticsContent.map( (statisticContent) => prepDashboardStatistics(statisticContent, statregStatistics)), null, 2))
   return statisticsContent.map( (statisticContent) => prepDashboardStatistics(statisticContent, statregStatistics))
 }
 
@@ -455,6 +460,8 @@ function getUserStatistics(): Array<StatisticDashboard> {
     }
     return acc
   }, [])
+  log.info('in getUserStatistics %s',
+    JSON.stringify(userStatisticContent.map( (statisticContent) => prepDashboardStatistics(statisticContent, userStatistic)), null, 2))
   return userStatisticContent.map( (statisticContent) => prepDashboardStatistics(statisticContent, userStatistic))
 }
 
@@ -536,6 +543,7 @@ function getStatregInfo(statisticStatreg: StatisticInListing | undefined): Statr
     variantId: variant ? variant.id : '',
     activeVariants: variants.length
   }
+  log.info('in getStatRegInfo, result in variants %s', JSON.stringify(result, null, 2))
   return result
 }
 
