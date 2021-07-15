@@ -1,7 +1,8 @@
-import { Content, QueryResponse } from 'enonic-types/content'
+import { Content, Image, QueryResponse } from 'enonic-types/content'
 import { MenuItem } from '../../../site/content-types/menuItem/menuItem'
 import { Footer } from '../../../site/content-types/footer/footer'
 import { Header } from '../../../site/content-types/header/header'
+import { Page } from '../../../site/content-types/page/page'
 
 const {
   getContent, imageUrl, pageUrl
@@ -38,8 +39,12 @@ function createMenuBranch(menuItem: Content<MenuItem>): MenuItemParsed {
   })
   const content: Content | null = getContent()
   const isActive: boolean = isMenuItemActive(children, content)
-  const iconPath: string | undefined = menuItem.data.icon ? imageUrl({
-    id: menuItem.data.icon,
+  const iconContent: Content<Image> | null | undefined = menuItem.data.icon ? get({
+    key: menuItem.data.icon
+  }) : undefined
+  const iconPath: string | undefined = iconContent?._path
+  const iconUrl: string | undefined = iconPath ? imageUrl({
+    path: iconPath,
     scale: 'block(12,12)'
   }) : undefined
   const iconAltText: string | undefined = menuItem.data.icon ? getImageCaption(menuItem.data.icon) : undefined
@@ -49,7 +54,7 @@ function createMenuBranch(menuItem: Content<MenuItem>): MenuItemParsed {
     shortName: menuItem.data.shortName ? menuItem.data.shortName : undefined,
     path,
     isActive,
-    icon: iconPath && iconPath.search('error') === -1 ? iconPath : undefined,
+    icon: iconUrl && iconUrl.search('error') === -1 ? iconUrl : undefined,
     iconAltText,
     iconSvgTag,
     menuItems: children.total > 0 ? children.hits.map((childMenuItem) => createMenuBranch(childMenuItem)) : undefined
@@ -87,8 +92,12 @@ function parseUrl(urlSrc: MenuItem['urlSrc']): string | undefined {
   if (urlSrc !== undefined) {
     if (urlSrc._selected === 'content') {
       const selected: UrlContent | undefined = urlSrc[urlSrc._selected]
-      return selected && selected.contentId ? pageUrl({
-        id: selected.contentId
+      const selectedContent: Content<Page> | null | undefined = selected && selected.contentId ? get({
+        key: selected?.contentId
+      }) : undefined
+      const selectedPath: string | undefined = selectedContent?._path
+      return selectedPath ? pageUrl({
+        path: selectedPath
       }) : undefined
     }
 
