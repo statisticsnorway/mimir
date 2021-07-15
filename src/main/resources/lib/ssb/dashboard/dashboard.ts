@@ -283,6 +283,16 @@ function getStatisticsGroups(): Array<DashboardDataSourceGroups> {
     count: 1000
   }).hits as unknown as Array<Content<Statistics>>
 
+  log.info('Debugging kommende publiseringer, i getStatisticsGroup %s', JSON.stringify(statistics.map((statistic) => {
+    return {
+      id: statistic._id,
+      displayName: statistic.displayName,
+      path: statistic._path,
+      loading: false,
+      dataSources: undefined
+    }
+  }), null, 2))
+
   return statistics.map((statistic) => {
     return {
       id: statistic._id,

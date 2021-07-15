@@ -424,6 +424,9 @@ const TWO_WEEKS: number = 14 // TODO: put in config?
 function getStatistics(): Array<StatisticDashboard> {
   const userIsAdmin: boolean = checkIfUserIsAdmin()
   const statistic: Array<StatisticDashboard> = userIsAdmin ? getAdminStatistics() : getUserStatistics()
+  log.info('Debugging kommende publiseringer, i getStatistics: %s', JSON.stringify(statistic.sort((a, b) => {
+    return new Date(a.nextRelease || '01.01.3000').getTime() - new Date(b.nextRelease || '01.01.3000').getTime()
+  }), null, 2))
   return statistic.sort((a, b) => {
     return new Date(a.nextRelease || '01.01.3000').getTime() - new Date(b.nextRelease || '01.01.3000').getTime()
   })
@@ -536,6 +539,7 @@ function getStatregInfo(statisticStatreg: StatisticInListing | undefined): Statr
     variantId: variant ? variant.id : '',
     activeVariants: variants.length
   }
+  log.info('Debugging kommende publiseringer, i variants: %s', JSON.stringify(result, null, 2))
   return result
 }
 
