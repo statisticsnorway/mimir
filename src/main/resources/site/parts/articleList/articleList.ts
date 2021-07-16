@@ -79,7 +79,7 @@ function prepareArticles(articles: Array<Content<Article>>, language: string): A
       title: article.displayName,
       preface: article.data.ingress ? article.data.ingress : '',
       url: pageUrl({
-        id: article._id
+        path: article._path
       }),
       publishDate: article.publish && article.publish.from ? article.publish.from : '',
       publishDateHuman: article.publish && article.publish.from ? moment(article.publish.from).locale(momentLanguage).format('LL') : ''
