@@ -18,6 +18,8 @@ function NameSearch(props) {
   const [result, setResult] = useState(null)
   const [mainResult, setMainResult] = useState(undefined)
   const [searchedTerm, setSearchedTerm] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState(undefined)
 
   function findMainResult(docs, originalName) {
     // only get result with same name as the input
@@ -68,19 +70,34 @@ function NameSearch(props) {
   }
 
   function renderResult() {
-    return (result && <div>
-      <Container className="name-search-result">
-        <Row>
-          <Col>
-            <Title size={3} className="result-title mb-1">{props.phrases.nameSearchResultTitle}</Title>
-            <Divider dark/>
-          </Col>
-        </Row>
-        { result.response && renderMainResult(result.response.docs) }
-        { result.response && renderSubResult(result.response.docs) }
-      </Container>
-    </div>
-    )
+    if (loading) {
+      return (
+        <Container className="name-search-result text-center">
+          <span className="spinner-border spinner-border" />
+        </Container>
+      )
+    }
+    if (errorMessage) {
+      return (
+        <Container className="name-search-result">
+          <div>{props.phrases.networkErrorMessage} {errorMessage}</div>
+        </Container>
+      )
+    } else {
+      return (result && <div>
+        <Container className="name-search-result">
+          <Row>
+            <Col>
+              <Title size={3} className="result-title mb-1">{props.phrases.nameSearchResultTitle}</Title>
+              <Divider dark/>
+            </Col>
+          </Row>
+          { result.response && renderMainResult(result.response.docs) }
+          { result.response && renderSubResult(result.response.docs) }
+        </Container>
+      </div>
+      )
+    }
   }
   function parseResultText(doc) {
     return (
@@ -117,19 +134,45 @@ function NameSearch(props) {
 
   function handleSubmit(form) {
     form.preventDefault()
+    setResult(null) // Clear result box
+    if (!name.value) {
+      return // Do nothing further if no name is submitted (prevents fun errors)
+    }
+    setLoading(true) // Spin the spinner!
+    setErrorMessage(undefined) // Clear network error message, if any
     setSearchedTerm(name.value)
     axios.get(
       props.urlToService, {
         params: {
           name: name.value
-        }
+        },
+        timeout: 20000
       }
     ).then((res) => {
       findMainResult(res.data.response.docs, res.data.originalName)
       setResult(res.data)
+      setLoading(false)
     }
-    ).catch((e) =>
-      console.log(e)
+    ).catch((error) =>{
+      if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+        setErrorMessage(error.message)
+        setLoading(false)
+      } else if (error.request) {
+      // The request was made but no response was received
+      // Likely to be a network error or disconnect
+        console.log('Error in REQUEST')
+        console.log(error.request)
+        setErrorMessage(error.message)
+        setLoading(false)
+      } else {
+      // Something happened in setting up the request that triggered an Error
+        console.log(error)
+        setLoading(false)
+      }
+      setLoading(false)
+    }
     )
   }
 
@@ -142,7 +185,7 @@ function NameSearch(props) {
   }
 
   function isNameValid(nameToCheck) {
-    const invalidCharacters = nameToCheck && nameToCheck.match(/[^a-øA-Ø\-\s]/gm)
+    const invalidCharacters = !!nameToCheck && nameToCheck.match(/[^a-øA-Ø\-\s]/gm)
     return !invalidCharacters
   }
 
@@ -210,6 +253,7 @@ NameSearch.propTypes = {
     with: PropTypes.string,
     asTheir: PropTypes.string,
     errorMessage: PropTypes.string,
+    networkErrorMessage: PropTypes.string,
     threeOrLessText: PropTypes.string,
     women: PropTypes.string,
     men: PropTypes.string,
