@@ -152,14 +152,6 @@ header.ssb-header-wrapper {
   .tabItem {
     flex-grow: 1;
     overflow: hidden;
-
-    // .navigation-item svg {
-    //   color: purple;
-    //   display: flex;
-    //   justify-content: center;
-    //   align-items: center;
-    // }
-
     &.activeTab {
       .subMenu li a.ssb-link.with-icon {
         .link-text {
@@ -234,7 +226,6 @@ header.ssb-header-wrapper {
       cursor: pointer;
 
       @include media-breakpoint-down(md) {
-        padding: 0 0 15px 0;
         margin: 0;
         width: 100%;
         &:hover::before,
