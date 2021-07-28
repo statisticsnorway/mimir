@@ -153,6 +153,13 @@ header.ssb-header-wrapper {
     flex-grow: 1;
     overflow: hidden;
 
+    // .navigation-item svg {
+    //   color: purple;
+    //   display: flex;
+    //   justify-content: center;
+    //   align-items: center;
+    // }
+
     &.activeTab {
       .subMenu li a.ssb-link.with-icon {
         .link-text {
@@ -220,10 +227,9 @@ header.ssb-header-wrapper {
 
     button .navigation-item {
       display: flex;
-      height: 62.5px;
-      padding: 0 0 15px 0;
+      height: 60px;
       text-align: left;
-      align-items: flex-end;
+      align-items: center;
       margin-right: 30px;
       cursor: pointer;
 
