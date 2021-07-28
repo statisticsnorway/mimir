@@ -152,6 +152,7 @@ header.ssb-header-wrapper {
   .tabItem {
     flex-grow: 1;
     overflow: hidden;
+    
     &.activeTab {
       .subMenu li a.ssb-link.with-icon {
         .link-text {
