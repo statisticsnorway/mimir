@@ -4,6 +4,7 @@ import { Highchart } from '../../../../site/content-types/highchart/highchart'
 import { Content } from 'enonic-types/content'
 import { JSONstat } from '../../../types/jsonstat-toolkit'
 import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
+import { RowValue } from '../../utils/utils'
 
 const {
   seriesAndCategoriesFromHtmlTable
@@ -67,7 +68,7 @@ export function switchRowsAndColumnsCheck(
 
 
 function switchRowsAndColumns(seriesAndCategories: SeriesAndCategories ): SeriesAndCategories {
-  const categories: Array<string | number | PreliminaryData> = forceArray(getRowValue(seriesAndCategories.categories))
+  const categories: Array<string | number> = forceArray(getRowValue(seriesAndCategories.categories))
   const series: Array<Series> = categories.reduce((series: Array<Series>, category, index: number) => {
     const serie: Series = {
       name: category,
@@ -122,7 +123,7 @@ export interface Series {
   data: Array<AreaLineLinearData | PieData | string | number>;
 }
 
-export type AreaLineLinearData = Array<[ number| string, Array<number> ]>
+export type AreaLineLinearData = [number| string | Array<string | number | PreliminaryData>, RowValue]
 
 export interface PieData {
   name: Array<string | number | PreliminaryData> | number | string;

@@ -84,34 +84,44 @@ function PublicationArchive(props) {
   }
 
   return (
-    <section className="publication-archive container">
-      <div className="publication-archive-head py-5 px-2">
-        <Title>{title}</Title>
-        <div className="publication-archive-ingress" dangerouslySetInnerHTML={{
-          __html: ingress.replace(/&nbsp;/g, ' ')
-        }}>
-        </div>
-      </div>
-      <div className="container publication-archive-body mt-5">
-        <div className="row mb-5">
-          <div className="col">
-            {showingPhrase.replace('{0}', publications.length)}&nbsp;<NumberFormat
-              value={ Number(total) }
-              displayType={'text'}
-              thousandSeparator={' '}/>
-            <Divider dark></Divider>
+    <section className="publication-archive container-fluid">
+      <div className="row">
+        <div className="col-12 publication-archive-head py-5 px-2">
+          <div className="container">
+            <div className="row">
+              <div className="col-12">
+                <Title>{title}</Title>
+                <div className="publication-archive-ingress" dangerouslySetInnerHTML={{
+                  __html: ingress.replace(/&nbsp;/g, ' ')
+                }}>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        {renderPublications()}
-        {renderLoading()}
-        <div>
-          <Button
-            disabled={loading || total === publications.length}
-            className="button-more mt-5"
-            onClick={fetchPublications}
-          >
-            <ChevronDown size="18"/> {buttonTitle}
-          </Button>
+        <div className="col-12 publication-archive-body mt-5">
+          <div className="container mb-5">
+            <div className="row">
+              <div className="col">
+                {showingPhrase.replace('{0}', publications.length)}&nbsp;<NumberFormat
+                  value={ Number(total) }
+                  displayType={'text'}
+                  thousandSeparator={' '}/>
+                <Divider dark></Divider>
+              </div>
+            </div>
+            {renderPublications()}
+            {renderLoading()}
+            <div>
+              <Button
+                disabled={loading || total === publications.length}
+                className="button-more mt-5"
+                onClick={fetchPublications}
+              >
+                <ChevronDown size="18"/> {buttonTitle}
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
