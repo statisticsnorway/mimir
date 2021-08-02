@@ -235,19 +235,27 @@ function UpcomingReleases(props) {
   }
 
   return (
-    <section className='nextStatisticsReleases'>
-      <div className="upcoming-releases-head py-5 px-2">
-        <Title>{props.title ? props.title : undefined}</Title>
-        <div className="upcoming-releases-ingress" dangerouslySetInnerHTML={{
-          __html: props.preface.replace(/&nbsp;/g, ' ')
-        }}>
+    <section className='nextStatisticsReleases container-fluid p-0'>
+      <div className="row">
+        <div className="col-12 upcoming-releases-head">
+          <div className="container py-5">
+            <Title>{props.title ? props.title : undefined}</Title>
+            <div className="upcoming-releases-ingress" dangerouslySetInnerHTML={{
+              __html: props.preface.replace(/&nbsp;/g, ' ')
+            }}>
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="release-list mt-5">
-        { renderList() }
-      </div>
-      <div>
-        { renderButton() }
+        <div className="col-12 release-list">
+          <div className="container mt-5">
+            <div className="row d-flex justify-content-center">
+              <div className="col-12 col-lg-10 p-0">
+                { renderList() }
+                { renderButton() }
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   )
