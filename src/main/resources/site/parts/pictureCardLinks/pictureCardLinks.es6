@@ -1,6 +1,6 @@
 const {
   getImageAlt
-} = __non_webpack_require__('/lib/ssb/utils/utils')
+} = __non_webpack_require__('/lib/ssb/utils/imageUtils')
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
