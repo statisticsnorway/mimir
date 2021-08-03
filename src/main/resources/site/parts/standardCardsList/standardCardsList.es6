@@ -30,34 +30,42 @@ const {
 } = __non_webpack_require__('/lib/vendor/ramda')
 
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const view = resolve('listStandardCards.html')
+const view = resolve('standardCardsList.html')
 
 exports.get = (req) => {
   try {
-    return renderPart()
+    return renderPart(req)
   } catch (e) {
     return renderError(req, 'Error in part ', e)
   }
 }
 
-exports.preview = () => renderPart()
+exports.preview = (req) => renderPart(req)
 
-function renderPart() {
+function renderPart(req) {
   const page = getContent()
   const part = getComponent()
-  const standardCardsConfig = part.config.statisticsItemSet ? forceArray(part.config.statisticsItemSet) : []
+  const standardCardsListConfig = part.config.statisticsItemSet ? forceArray(part.config.statisticsItemSet) : []
   const phrases = getPhrases(page)
   const statisticsTitle = part.config.title ? part.config.title : phrases.menuStatistics
 
-  return renderStandardCardsList(statisticsTitle, parseContent(standardCardsConfig))
+  if (!standardCardsListConfig.length && req.mode === 'edit') {
+    return {
+      body: render(view, {
+        statisticsTitle
+      })
+    }
+  }
+
+  return renderStandardCardsList(statisticsTitle, parseContent(standardCardsListConfig))
 }
 
-function renderStandardCardsList(statisticsTitle, standardCardsContent) {
-  if (standardCardsContent && standardCardsContent.length) {
-    const activeStatisticsXP = new React4xp('StatisticsCards')
+function renderStandardCardsList(statisticsTitle, standardCardsListContent) {
+  if (standardCardsListContent && standardCardsListContent.length) {
+    const standardCardsComponent = new React4xp('StatisticsCards')
       .setProps({
         headerTitle: statisticsTitle,
-        statistics: standardCardsContent.map((statisticsContent) => {
+        statistics: standardCardsListContent.map((statisticsContent) => {
           return {
             ...statisticsContent
           }
@@ -66,15 +74,15 @@ function renderStandardCardsList(statisticsTitle, standardCardsContent) {
       .uniqueId()
 
     const body = render(view, {
-      activeStatisticsId: activeStatisticsXP.react4xpId,
+      activeStatisticsId: standardCardsComponent.react4xpId,
       statisticsTitle
     })
 
     return {
-      body: activeStatisticsXP.renderBody({
+      body: standardCardsComponent.renderBody({
         body
       }),
-      pageContributions: activeStatisticsXP.renderPageContributions()
+      pageContributions: standardCardsComponent.renderPageContributions()
     }
   }
   return {
@@ -83,9 +91,9 @@ function renderStandardCardsList(statisticsTitle, standardCardsContent) {
   }
 }
 
-function parseContent(standardCardsContent) {
-  if (standardCardsContent.length) {
-    return standardCardsContent.map((standardCard) => {
+function parseContent(standardCardsListContent) {
+  if (standardCardsListContent.length) {
+    return standardCardsListContent.map((standardCard) => {
       const iconId = standardCard.icon
       const iconData = iconId ? get({
         key: iconId
@@ -96,23 +104,23 @@ function parseContent(standardCardsContent) {
       }) : undefined
 
       if (standardCard.contentXP) {
-        const statisticsContentId = standardCard.contentXP
-        const contentXPContent = get({
-          key: statisticsContentId
+        const standardCardContentId = standardCard.contentXP
+        const pageContent = get({
+          key: standardCardContentId
         })
 
         let preamble = ''
-        if (hasPath(['x', 'com-enonic-app-metafields', 'meta-data', 'seoDescription'], contentXPContent) && contentXPContent) {
-          preamble = contentXPContent.x['com-enonic-app-metafields']['meta-data'].seoDescription
+        if (hasPath(['x', 'com-enonic-app-metafields', 'meta-data', 'seoDescription'], pageContent) && pageContent) {
+          preamble = pageContent.x['com-enonic-app-metafields']['meta-data'].seoDescription
         }
 
         return {
           icon: iconPath,
           iconAlt: iconId ? iconData.data.caption ? getImageCaption(iconId) : getImageAlt(iconId) : '',
-          title: contentXPContent.displayName,
+          title: pageContent.displayName,
           preamble: preamble,
           href: pageUrl({
-            id: statisticsContentId
+            id: standardCardContentId
           })
         }
       }

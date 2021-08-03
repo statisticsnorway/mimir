@@ -43,7 +43,7 @@ const renderPart = (req) => {
   const activeStatistics = part.config.relatedStatisticsOptions ? forceArray(part.config.relatedStatisticsOptions) : []
   const phrases = getPhrases(page)
 
-  const statisticsTitle = part.config.title ? part.config.title : phrases.menuStatistics
+  const statisticsTitle = phrases.menuStatistics
   if (!activeStatistics || activeStatistics.length === 0) {
     if (req.mode === 'edit') {
       return {
