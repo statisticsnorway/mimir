@@ -70,6 +70,17 @@ function BkibolCalculator(props) {
   const validMinYear = 1979
   const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
 
+  const scrollAnchor = React.useRef(null)
+  React.useEffect(() => {
+    if (!loading && scrollAnchor.current) {
+      scrollAnchor.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+        inline: 'nearest'
+      })
+    }
+  })
+
   function serieItemsDomene(domene) {
     return [
       {
@@ -502,7 +513,7 @@ function BkibolCalculator(props) {
   function calculatorResult() {
     const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
     return (
-      <Container className="calculator-result">
+      <Container className="calculator-result" ref={scrollAnchor}>
         <Row className="mb-5">
           <Col className="amount-equal col-12 col-md-4">
             <h3>{props.phrases.amountEqualled}</h3>

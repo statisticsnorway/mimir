@@ -45,6 +45,17 @@ function KpiCalculator(props) {
   const validMinYear = 1865
   const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
 
+  const scrollAnchor = React.useRef(null)
+  React.useEffect(() => {
+    if (!loading && scrollAnchor.current) {
+      scrollAnchor.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+        inline: 'nearest'
+      })
+    }
+  })
+
   function onSubmit(e) {
     e.preventDefault()
     if (loading) return
@@ -322,7 +333,7 @@ function KpiCalculator(props) {
   function calculatorResult() {
     const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
     return (
-      <Container className="calculator-result">
+      <Container className="calculator-result" ref={scrollAnchor}>
         <Row className="mb-5">
           <Col className="amount-equal align-self-end col-12 col-md-4">
             <Title size={3}>{props.phrases.kpiAmountEqualled}</Title>
@@ -372,7 +383,7 @@ function KpiCalculator(props) {
   function calculatorResultFrontpage() {
     const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
     return (
-      <Container className="calculator-result-frontpage">
+      <Container className="calculator-result-frontpage" ref={scrollAnchor}>
         <Row className="mb-3">
           <Col className="amount-equal align-self-end col-12 col-lg-5">
             <Title size={3}>{props.phrases.kpiAmountEqualled}</Title>
