@@ -1,4 +1,4 @@
-export interface StandardCardsListPartConfig {
+export interface StandardCardsList {
   /**
    * Tittel
    */

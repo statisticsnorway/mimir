@@ -1,36 +1,38 @@
 export interface RelatedStatistics {
-  /**
-   * Tittel
-   */
-  title?: string;
-
-  /**
-   * Innhold fra XP eller lenke
-   */
-  statisticsItemSet?: Array<{
+  relatedStatisticsOptions?: {
     /**
-     * Ikon
+     * Selected
      */
-    icon?: string;
+    _selected: string;
 
     /**
-     * Innhold fra XP
+     * Statistikk fra XP
      */
-    contentXP?: string;
+    xp?: {
+      /**
+       * Statistikk
+       */
+      contentId?: string;
+    };
 
     /**
-     * Tittel for lenke
+     * Statistikk fra 4.7
      */
-    title?: string;
+    cms?: {
+      /**
+       * Tittel
+       */
+      title: string;
 
-    /**
-     * Profileringstekst for lenke
-     */
-    profiledText?: string;
+      /**
+       * Profileringstekst
+       */
+      profiledText: string;
 
-    /**
-     * Lenke
-     */
-    href?: string;
-  }>;
+      /**
+       * URL
+       */
+      url: string;
+    };
+  };
 }

@@ -4,7 +4,7 @@
 		<field-set>
             <label>Standard kort</label>
             <items>
-				<mixin name="relatedStatistics" />
+				<mixin name="standardCardsList" />
 			</items>
 		</field-set>
     </form>

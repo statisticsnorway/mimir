@@ -7,14 +7,10 @@ const {
   get
 } = __non_webpack_require__('/lib/xp/content')
 const {
-  getContent,
   getComponent,
   imageUrl,
   pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  getPhrases
-} = __non_webpack_require__('/lib/ssb/utils/language')
 const {
   getImageCaption,
   getImageAlt
@@ -43,16 +39,16 @@ exports.get = (req) => {
 exports.preview = (req) => renderPart(req)
 
 function renderPart(req) {
-  const page = getContent()
   const part = getComponent()
   const standardCardsListConfig = part.config.statisticsItemSet ? forceArray(part.config.statisticsItemSet) : []
-  const phrases = getPhrases(page)
-  const statisticsTitle = part.config.title ? part.config.title : phrases.menuStatistics
+
+  const statisticsTitle = part.config.title
 
   if (!standardCardsListConfig.length && req.mode === 'edit') {
     return {
       body: render(view, {
-        statisticsTitle
+        // Title is optional. The text is just a placeholder so that the user is aware that the part is present in cases where the config is empty.
+        label: statisticsTitle ? statisticsTitle : 'Liste standard kort'
       })
     }
   }
@@ -74,7 +70,7 @@ function renderStandardCardsList(statisticsTitle, standardCardsListContent) {
       .uniqueId()
 
     const body = render(view, {
-      activeStatisticsId: standardCardsComponent.react4xpId,
+      standardCardsListComponentId: standardCardsComponent.react4xpId,
       statisticsTitle
     })
 

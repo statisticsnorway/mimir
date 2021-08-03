@@ -6,7 +6,7 @@ export interface ActiveStatisticsPartConfig {
     _selected: string;
 
     /**
-     * Statistikk fra XP (IKKE BRUK)
+     * Statistikk fra XP
      */
     xp?: {
       /**
@@ -16,7 +16,7 @@ export interface ActiveStatisticsPartConfig {
     };
 
     /**
-     * Statistikk fra 4.7 (IKKE BRUK)
+     * Statistikk fra 4.7
      */
     cms?: {
       /**

@@ -100,6 +100,23 @@ export interface Statistics {
     url: string;
   }>;
 
+  /**
+   * 
+   * 						Stikkord
+   * 					
+   */
+  keywords?: string;
+
+  /**
+   * Delemner
+   */
+  subtopic?: string;
+
+  /**
+   * Statistikk
+   */
+  statistic?: string;
+
   relatedStatisticsOptions?: {
     /**
      * Selected
@@ -107,7 +124,7 @@ export interface Statistics {
     _selected: string;
 
     /**
-     * Statistikk fra XP (IKKE BRUK)
+     * Statistikk fra XP
      */
     xp?: {
       /**
@@ -117,7 +134,7 @@ export interface Statistics {
     };
 
     /**
-     * Statistikk fra 4.7 (IKKE BRUK)
+     * Statistikk fra 4.7
      */
     cms?: {
       /**
@@ -136,58 +153,6 @@ export interface Statistics {
       url: string;
     };
   };
-
-  /**
-   * Tittel
-   */
-  title?: string;
-
-  /**
-   * Innhold fra XP eller lenke
-   */
-  statisticsItemSet?: Array<{
-    /**
-     * Ikon
-     */
-    icon?: string;
-
-    /**
-     * Innhold fra XP
-     */
-    contentXP?: string;
-
-    /**
-     * Tittel for lenke
-     */
-    title?: string;
-
-    /**
-     * Profileringstekst for lenke
-     */
-    profiledText?: string;
-
-    /**
-     * Lenke
-     */
-    href?: string;
-  }>;
-
-  /**
-   * 
-   * 						Stikkord
-   * 					
-   */
-  keywords?: string;
-
-  /**
-   * Delemner
-   */
-  subtopic?: string;
-
-  /**
-   * Statistikk
-   */
-  statistic?: string;
 
   /**
    * 

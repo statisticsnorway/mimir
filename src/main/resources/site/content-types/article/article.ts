@@ -135,78 +135,6 @@ export interface Article {
    */
   articleArchive?: Array<string>;
 
-  relatedStatisticsOptions?: {
-    /**
-     * Selected
-     */
-    _selected: string;
-
-    /**
-     * Statistikk fra XP (IKKE BRUK)
-     */
-    xp?: {
-      /**
-       * Statistikk
-       */
-      contentId?: string;
-    };
-
-    /**
-     * Statistikk fra 4.7 (IKKE BRUK)
-     */
-    cms?: {
-      /**
-       * Tittel
-       */
-      title: string;
-
-      /**
-       * Profileringstekst
-       */
-      profiledText: string;
-
-      /**
-       * URL
-       */
-      url: string;
-    };
-  };
-
-  /**
-   * Tittel
-   */
-  title?: string;
-
-  /**
-   * Innhold fra XP eller lenke
-   */
-  statisticsItemSet?: Array<{
-    /**
-     * Ikon
-     */
-    icon?: string;
-
-    /**
-     * Innhold fra XP
-     */
-    contentXP?: string;
-
-    /**
-     * Tittel for lenke
-     */
-    title?: string;
-
-    /**
-     * Profileringstekst for lenke
-     */
-    profiledText?: string;
-
-    /**
-     * Lenke
-     */
-    href?: string;
-  }>;
-
   /**
    * Innholdstype
    */
@@ -235,6 +163,43 @@ export interface Article {
    * Delemner
    */
   subtopic?: string;
+
+  relatedStatisticsOptions?: {
+    /**
+     * Selected
+     */
+    _selected: string;
+
+    /**
+     * Statistikk fra XP
+     */
+    xp?: {
+      /**
+       * Statistikk
+       */
+      contentId?: string;
+    };
+
+    /**
+     * Statistikk fra 4.7
+     */
+    cms?: {
+      /**
+       * Tittel
+       */
+      title: string;
+
+      /**
+       * Profileringstekst
+       */
+      profiledText: string;
+
+      /**
+       * URL
+       */
+      url: string;
+    };
+  };
 
   /**
    * 

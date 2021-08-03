@@ -6,7 +6,7 @@ export interface EndedStatisticsPartConfig {
     _selected: string;
 
     /**
-     * Statistikk fra XP (IKKE BRUK)
+     * Statistikk fra XP
      */
     xp?: {
       /**
@@ -16,7 +16,7 @@ export interface EndedStatisticsPartConfig {
     };
 
     /**
-     * Statistikk fra 4.7 (IKKE BRUK)
+     * Statistikk fra 4.7
      */
     cms?: {
       /**
@@ -35,39 +35,4 @@ export interface EndedStatisticsPartConfig {
       url: string;
     };
   };
-
-  /**
-   * Tittel
-   */
-  title?: string;
-
-  /**
-   * Innhold fra XP eller lenke
-   */
-  statisticsItemSet?: Array<{
-    /**
-     * Ikon
-     */
-    icon?: string;
-
-    /**
-     * Innhold fra XP
-     */
-    contentXP?: string;
-
-    /**
-     * Tittel for lenke
-     */
-    title?: string;
-
-    /**
-     * Profileringstekst for lenke
-     */
-    profiledText?: string;
-
-    /**
-     * Lenke
-     */
-    href?: string;
-  }>;
 }
