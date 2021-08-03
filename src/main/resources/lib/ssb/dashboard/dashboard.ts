@@ -22,8 +22,13 @@ import { Statistics } from '../../../site/content-types/statistics/statistics'
 const {
   users,
   showWarningIcon,
-  WARNING_ICON_EVENTS
+  WARNING_ICON_EVENTS,
+  isPublished
 } = __non_webpack_require__('/lib/ssb/dashboard/dashboardUtils')
+const {
+  dateToFormat,
+  dateToReadable
+} = __non_webpack_require__('/lib/ssb/utils/utils')
 const {
   logUserDataQuery
 } = __non_webpack_require__('/lib/ssb/repo/query')
@@ -44,11 +49,6 @@ const {
   get: getContent,
   query
 } = __non_webpack_require__('/lib/xp/content')
-const {
-  dateToFormat,
-  dateToReadable,
-  isPublished
-} = __non_webpack_require__('/lib/ssb/utils/utils')
 const {
   getParentType
 } = __non_webpack_require__('/lib/ssb/utils/parentUtils')

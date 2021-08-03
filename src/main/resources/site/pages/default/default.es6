@@ -9,9 +9,11 @@ const {
   getLanguage
 } = __non_webpack_require__('/lib/ssb/utils/language')
 const {
-  alertsForContext,
+  alertsForContext
+} = __non_webpack_require__('/lib/ssb/utils/alertUtils')
+const {
   getBreadcrumbs
-} = __non_webpack_require__('/lib/ssb/utils/utils')
+} = __non_webpack_require__('/lib/ssb/utils/breadcrumbsUtils')
 const {
   getReleaseDatesByVariants
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')
@@ -243,7 +245,7 @@ exports.get = function(req) {
   const statbankFane = (req.params.xpframe === 'statbank')
   const baseUrl = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
 
-  //Fjerner /ssb fra starten av path
+  // Fjerner /ssb fra starten av path
   const pageUrl = baseUrl + page._path.substr(4)
   const pageLanguage = page.language ? page.language : 'nb'
   const statbankHelpLink = getSiteConfig().statbankHelpLink
@@ -314,7 +316,7 @@ exports.get = function(req) {
     pageTypeId: page._id,
     statbankWeb: statbankFane
   }
-  const alerts = alertsForContext(page.page, alertOptions)
+  const alerts = alertsForContext(page.page.config, alertOptions)
   const body = bodyWithBreadCrumbs ? bodyWithBreadCrumbs : thymeleafRenderBody
   const bodyWithAlerts = alerts.length ?
     addAlerts(alerts, body, pageContributions) :

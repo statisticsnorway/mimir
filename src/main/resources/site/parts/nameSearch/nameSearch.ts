@@ -97,6 +97,10 @@ function partsPhrases(locale: string): PartProperties['phrases'] {
       key: 'nameSearch.errorMessage',
       locale
     }),
+    networkErrorMessage: localize({
+      key: 'nameSearch.networkError',
+      locale
+    }),
     threeOrLessText: localize({
       key: 'nameSearch.threeOrLessText',
       locale
@@ -155,6 +159,7 @@ interface PartProperties {
     with: string;
     asTheir: string;
     errorMessage: string;
+    networkErrorMessage: string;
     threeOrLessText: string;
     women: string;
     men: string;

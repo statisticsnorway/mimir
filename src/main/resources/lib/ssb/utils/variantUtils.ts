@@ -1,5 +1,13 @@
+import { Content } from 'enonic-types/content'
+import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { StatisticInListing, VariantInListing } from '../dashboard/statreg/types'
 
+const {
+  pageUrl
+} = __non_webpack_require__('/lib/xp/portal')
+const {
+  query
+} = __non_webpack_require__('/lib/xp/content')
 const {
   getMainSubject
 } = __non_webpack_require__( '/lib/ssb/utils/parentUtils')
@@ -12,9 +20,6 @@ const {
 const {
   groupBy
 } = __non_webpack_require__('/lib/vendor/ramda')
-const {
-  getWeek
-} = __non_webpack_require__('/lib/ssb/utils/utils')
 const {
   data: {
     forceArray
@@ -140,6 +145,14 @@ function calculateMonth(variant: VariantInListing, language: string): string {
   })
 }
 
+function getWeek(date: Date): number {
+  const onejan: number = new Date(date.getFullYear(), 0, 1).getTime()
+  const today: number = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime()
+  const diff: number = today - onejan
+  const dayOfYear: number = ((diff + 86400000) / 86400000)
+  return Math.ceil(dayOfYear / 7)
+}
+
 function calculateWeek(variant: VariantInListing, language: string): string {
   const date: Date = new Date(variant.previousFrom)
   return localize({
@@ -148,7 +161,6 @@ function calculateWeek(variant: VariantInListing, language: string): string {
     values: [getWeek(date).toString(), date.getFullYear().toString()]
   })
 }
-
 
 export function addMonthNames(groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>>, language: string): Array<YearReleases> {
   return Object.keys(groupedByYearMonthAndDay).map((year) => {
@@ -259,11 +271,21 @@ export function checkVariantReleaseDate(variant: VariantInListing, day: Date, pr
 export function prepareRelease(
   release: StatisticInListing,
   language: string,
-  property: keyof VariantInListing = 'previousRelease' ): PreparedStatistics | null {
+  property: keyof VariantInListing = 'previousRelease'): PreparedStatistics | null {
   if (release.variants) {
     const preparedVariant: PreparedVariant = Array.isArray(release.variants) ?
       concatReleaseTimes(release.variants, language, property) :
       formatVariant(release.variants, language, property)
+
+    const statisticsPagesXP: Array<Content<Statistics>> = query({
+      count: 1,
+      query: `data.statistic LIKE "${release.id}"`,
+      contentTypes: [`${app.name}:statistics`]
+    }).hits as unknown as Array<Content<Statistics>>
+    const statisticsPageUrl: string | undefined = statisticsPagesXP.length ? pageUrl({
+      id: statisticsPagesXP[0]._id
+    }) : undefined
+
     return {
       id: release.id,
       name: language === 'en' ? release.nameEN : release.name,
@@ -273,7 +295,8 @@ export function prepareRelease(
         locale: language
       }),
       mainSubject: getMainSubject(release.shortName, language),
-      variant: preparedVariant
+      variant: preparedVariant,
+      statisticsPageUrl
     }
   }
   return null
@@ -314,7 +337,7 @@ export interface VariantUtilsLib {
   groupStatisticsByDay: (statistics: Array<PreparedStatistics>) => GroupedBy<PreparedStatistics>;
   groupStatisticsByYearMonthAndDay: (releasesPrepped: Array<PreparedStatistics>) => GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>>;
   getReleasesForDay: (statisticList: Array<StatisticInListing>, day: Date, property?: keyof VariantInListing) => Array<StatisticInListing>;
-  prepareRelease: (release: StatisticInListing, locale: string, property?: keyof VariantInListing) => PreparedStatistics;
+  prepareRelease: (release: StatisticInListing, locale: string, property?: keyof VariantInListing, statisticsPageUrl?: string) => PreparedStatistics;
   filterOnComingReleases: (stats: Array<StatisticInListing>, daysInTheFuture: number, startDay?: string) => Array<StatisticInListing>;
 }
 
@@ -327,6 +350,7 @@ export interface PreparedStatistics {
   type?: string;
   date?: string;
   mainSubject?: string;
+  statisticsPageUrl?: string;
 }
 
 export interface PreparedVariant {
