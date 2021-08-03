@@ -1,0 +1,11 @@
+<part>
+    <display-name>Liste standard kort</display-name>
+    <form>
+		<field-set>
+            <label>Standard kort</label>
+            <items>
+				<mixin name="relatedStatistics" />
+			</items>
+		</field-set>
+    </form>
+</part>

@@ -9,16 +9,11 @@ const {
 const {
   getContent,
   getComponent,
-  imageUrl,
   pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
 const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
-const {
-  getImageCaption,
-  getImageAlt
-} = __non_webpack_require__('/lib/ssb/utils/utils')
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
@@ -45,12 +40,11 @@ exports.preview = (req) => renderPart(req)
 const renderPart = (req) => {
   const page = getContent()
   const part = getComponent()
-  const oldActiveStatistics = part.config.relatedStatisticsOptions ? forceArray(part.config.relatedStatisticsOptions) : []
-  const activeStatistics = part.config.statisticsItemSet ? forceArray(part.config.statisticsItemSet) : []
+  const activeStatistics = part.config.relatedStatisticsOptions ? forceArray(part.config.relatedStatisticsOptions) : []
   const phrases = getPhrases(page)
 
   const statisticsTitle = part.config.title ? part.config.title : phrases.menuStatistics
-  if (!oldActiveStatistics || oldActiveStatistics.length === 0) {
+  if (!activeStatistics || activeStatistics.length === 0) {
     if (req.mode === 'edit') {
       return {
         body: render(view, {
@@ -60,7 +54,7 @@ const renderPart = (req) => {
     }
   }
 
-  return renderActiveStatistics(statisticsTitle, parseContent(oldActiveStatistics, activeStatistics, phrases))
+  return renderActiveStatistics(statisticsTitle, parseContent(activeStatistics, phrases))
 }
 
 const renderActiveStatistics = (statisticsTitle, activeStatisticsContent) => {
@@ -94,11 +88,11 @@ const renderActiveStatistics = (statisticsTitle, activeStatisticsContent) => {
   }
 }
 
-const parseContent = (oldActiveStatistics, activeStatisticsContent) => {
-  if (activeStatisticsContent.length) {
-    return activeStatisticsContent.map((activeStatistics) => {
-      if (activeStatistics.contentXP) {
-        const statisticsContentId = activeStatistics.contentXP
+const parseContent = (activeStatistics) => {
+  if (activeStatistics.length) {
+    return activeStatistics.map((statistics) => {
+      if (statistics._selected === 'xp') {
+        const statisticsContentId = statistics.xp.contentId
         const activeStatisticsContent = get({
           key: statisticsContentId
         })
@@ -108,58 +102,8 @@ const parseContent = (oldActiveStatistics, activeStatisticsContent) => {
           preamble = activeStatisticsContent.x['com-enonic-app-metafields']['meta-data'].seoDescription
         }
 
-        const iconId = activeStatistics.icon
-        const iconData = get({
-          key: iconId
-        })
-
         return {
-          icon: imageUrl({
-            id: iconId,
-            scale: 'block(100, 100)'
-          }),
-          iconAlt: iconData.data.caption ? getImageCaption(iconId) : getImageAlt(iconId),
           title: activeStatisticsContent.displayName,
-          preamble: preamble ? preamble : '',
-          href: pageUrl({
-            id: statisticsContentId
-          })
-        }
-      }
-
-      const iconId = activeStatistics.icon
-      const iconData = get({
-        key: iconId
-      })
-
-      return {
-        icon: imageUrl({
-          id: iconId,
-          scale: 'block(100, 100)'
-        }),
-        iconAlt: iconData.data.caption ? getImageCaption(iconId) : getImageAlt(iconId),
-        title: activeStatistics.title,
-        preamble: activeStatistics.profiledText,
-        href: activeStatistics.url
-      }
-    }).filter((statistics) => !!statistics)
-  }
-
-  if (oldActiveStatistics.length) {
-    return oldActiveStatistics.map((statistics) => {
-      if (statistics._selected === 'xp') {
-        const statisticsContentId = statistics.xp.contentId
-        const oldActiveStatisticsContent = get({
-          key: statisticsContentId
-        })
-
-        let preamble
-        if (hasPath(['x', 'com-enonic-app-metafields', 'meta-data', 'seoDescription'], oldActiveStatisticsContent)) {
-          preamble = oldActiveStatisticsContent.x['com-enonic-app-metafields']['meta-data'].seoDescription
-        }
-
-        return {
-          title: oldActiveStatisticsContent.displayName,
           preamble: preamble ? preamble : '',
           href: pageUrl({
             id: statisticsContentId
