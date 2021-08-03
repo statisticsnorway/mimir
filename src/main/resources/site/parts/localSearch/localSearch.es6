@@ -3,7 +3,9 @@ const {
   pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
 const {
-  getChildren
+  // getChildren
+  get,
+  query
 } = __non_webpack_require__('/lib/xp/content')
 const {
   renderError
@@ -22,12 +24,22 @@ exports.preview = (req) => renderPart(req)
 
 function renderPart(req) {
   const part = getComponent()
-  const filteredItems = getChildren({
-    key: part.config.searchFolder,
+
+  const searchFolderContent = get({
+    key: part.config.searchFolder
+  })
+
+  const filteredItems = query({
     start: 0,
     count: 1000,
-    sort: 'displayName ASC'
-  }).hits.filter((content) => content.type === `${app.name}:statistics` || content.type === `${app.name}:article` || content.type === `${app.name}:page`)
+    sort: 'displayName ASC',
+    query: `_parentPath LIKE "/content${searchFolderContent._path}"`,
+    contentTypes: [
+      `${app.name}:statistics`,
+      `${app.name}:article`,
+      `${app.name}:page`
+    ]
+  }).hits
 
   const items = filteredItems.map((item) => {
     return {
