@@ -19,12 +19,12 @@ export interface StandardCardsList {
     contentXP?: string;
 
     /**
-     * Tittel for lenke
+     * Tittel
      */
     title?: string;
 
     /**
-     * Profileringstekst for lenke
+     * Profileringstekst
      */
     profiledText?: string;
 

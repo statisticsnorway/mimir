@@ -16,7 +16,7 @@ export function getImageAlt(imageId: string): string {
   return imageContent && imageContent !== undefined ? imageContent.data.altText : ' '
 }
 
-export interface ImageContent {
+interface ImageContent {
     data: {
       caption: string;
       altText: string;

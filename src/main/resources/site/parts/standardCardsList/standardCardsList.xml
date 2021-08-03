@@ -1,11 +1,6 @@
 <part>
-    <display-name>Liste standard kort</display-name>
-    <form>
-		<field-set>
-            <label>Standard kort</label>
-            <items>
-				<mixin name="standardCardsList" />
-			</items>
-		</field-set>
-    </form>
+  <display-name>Liste standard kort</display-name>
+  <form>
+    <mixin name="standardCardsList" />
+  </form>
 </part>

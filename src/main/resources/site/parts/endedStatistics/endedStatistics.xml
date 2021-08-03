@@ -2,6 +2,6 @@
     <display-name>Avsluttet statistikk card</display-name>
     <description></description>
     <form>
-		<mixin name="relatedStatistics" />
+        <mixin name="relatedStatistics" />
     </form>
 </part>

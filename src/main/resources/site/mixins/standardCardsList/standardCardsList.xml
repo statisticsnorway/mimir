@@ -33,11 +33,11 @@
                 <label>Manuell lenke</label>
                     <items>
                         <input name="title" type="TextLine">
-                            <label>Tittel for lenke</label>
+                            <label>Tittel</label>
                             <occurrences minimum="0" maximum="1" />
                         </input>
                         <input name="profiledText" type="TextArea">
-                            <label>Profileringstekst for lenke</label>
+                            <label>Profileringstekst</label>
                             <occurrences minimum="0" maximum="1" />
                         </input>
                         <input name="href" type="TextLine">
