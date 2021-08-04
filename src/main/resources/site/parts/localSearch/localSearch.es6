@@ -3,7 +3,6 @@ const {
   pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
 const {
-  // getChildren
   get,
   query
 } = __non_webpack_require__('/lib/xp/content')
@@ -39,9 +38,7 @@ function renderPart(req) {
       `${app.name}:article`,
       `${app.name}:page`
     ]
-  }).hits
-
-  const items = filteredItems.map((item) => {
+  }).hits.map((item) => {
     return {
       title: item.data.serialNumber ? item.displayName + ' (' + item.data.serialNumber + ')' : item.displayName,
       id: item._id,
@@ -54,7 +51,7 @@ function renderPart(req) {
   const props = {
     title: part.config.title,
     placeholder: part.config.searchPlaceholder,
-    items
+    items: filteredItems
   }
 
   return React4xp.render('site/parts/localSearch/localSearch', props, req, {
