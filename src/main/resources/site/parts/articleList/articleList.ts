@@ -3,8 +3,8 @@ import { Article } from '../../content-types/article/article'
 import { Component } from 'enonic-types/portal'
 import { ArticleListPartConfig } from './articleList-part-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { Content, QueryResponse } from 'enonic-types/content'
-import { DefaultPageConfig } from '../../pages/default/default-page-config'
+import { Content } from 'enonic-types/content'
+import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 
 const {
   localize
@@ -19,6 +19,9 @@ const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
+const {
+  getSubSubjects
+} = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
 
 exports.get = (req: Request): React4xpResponse => {
   return renderPart(req)
@@ -30,7 +33,7 @@ function renderPart(req: Request): React4xpResponse {
   const content: Content = getContent()
   const component: Component<ArticleListPartConfig> = getComponent()
   const language: string = content.language ? content.language : 'nb'
-  const articles: Array<Content<Article>> = getArticles(language)
+  const articles: Array<Content<Article>> = getArticles(req, language)
   const preparedArticles: Array<PreparedArticles> = prepareArticles(articles, language)
   const isNotInEditMode: boolean = req.mode !== 'edit'
 
@@ -55,13 +58,9 @@ function renderPart(req: Request): React4xpResponse {
   })
 }
 
-function getArticles(language: string): Array<Content<Article>> {
-  const pages: QueryResponse<DefaultPageConfig> = query({
-    count: 500,
-    contentTypes: [`${app.name}:page`],
-    query: `components.page.config.mimir.default.subjectType LIKE "subSubject"`
-  })
-  const pagePaths: Array<string> = pages.hits.map((page) => `_parentPath LIKE "/content${page._path}/*"`)
+function getArticles(req: Request, language: string): Array<Content<Article>> {
+  const subjectItems: Array<SubjectItem> = getSubSubjects(req, language)
+  const pagePaths: Array<string> = subjectItems.map((sub) => `_parentPath LIKE "/content${sub.path}/*"`)
   const languageQuery: string = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'
   const articles: Array<Content<Article>> = query({
     count: 4,

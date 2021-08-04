@@ -36,6 +36,10 @@ const {
   cacheLog
 } = __non_webpack_require__('/lib/ssb/utils/serverLog')
 const {
+  completelyClearSubjectCache,
+  clearSubjectCache
+} = __non_webpack_require__('/lib/ssb/cache/subjectCache')
+const {
   ENONIC_CMS_DEFAULT_REPO
 } = __non_webpack_require__('/lib/ssb/repo/common')
 
@@ -85,7 +89,6 @@ const municipalityWithNameCache: Cache = newCache({
   expire: 3600,
   size: 1000
 })
-
 const parentTypeCache: Cache = newCache({
   expire: 3600,
   size: 2000
@@ -153,7 +156,8 @@ function addClearTask(): void {
               clearParsedMunicipalityCache: true,
               clearMunicipalityWithCodeCache: true,
               clearMunicipalityWithNameCache: true,
-              clearParentTypeCache: true
+              clearParentTypeCache: true,
+              clearSubjectCache: true
             })
           } else {
             onNodeChange(changedNodes)
@@ -286,6 +290,8 @@ function clearCache(content: Content, branch: string, cleared: Array<string>): A
     cacheLog(`try to clear reference ${ref._id} to ${content._id}(${branch})`)
     clearCache(ref, branch, cleared)
   })
+
+  clearSubjectCache(content, branch)
 
   return cleared
 }
@@ -511,6 +517,11 @@ function completelyClearCache(options: CompletelyClearCacheOptions): void {
   if (options.clearParentTypeCache) {
     completelyClearParentTypeCache()
   }
+
+  if (options.clearSubjectCache) {
+    completelyClearSubjectCache('draft')
+    completelyClearSubjectCache('master')
+  }
 }
 
 export function setupHandlers(socket: Socket): void {
@@ -527,7 +538,8 @@ export function setupHandlers(socket: Socket): void {
         clearDatasetRepoCache: true,
         clearParsedMunicipalityCache: true,
         clearMunicipalityWithCodeCache: true,
-        clearMunicipalityWithNameCache: true
+        clearMunicipalityWithNameCache: true,
+        clearSubjectCache: true
       }
     })
 
@@ -546,6 +558,7 @@ export interface CompletelyClearCacheOptions {
   clearMunicipalityWithCodeCache: boolean;
   clearMunicipalityWithNameCache: boolean;
   clearParentTypeCache: boolean;
+  clearSubjectCache: boolean;
 }
 
 export interface SSBCacheLibrary {
