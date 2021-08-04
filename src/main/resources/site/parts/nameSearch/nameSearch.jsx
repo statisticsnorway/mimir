@@ -3,6 +3,7 @@ import { Button, Divider, Input, Link, Title } from '@statisticsnorway/ssb-compo
 import PropTypes from 'prop-types'
 import { Col, Container, Row, Form } from 'react-bootstrap'
 import axios from 'axios'
+import { X } from 'react-feather'
 
 /* TODO
 - Etternavn må få rett visning av beste-treff
@@ -20,6 +21,21 @@ function NameSearch(props) {
   const [searchedTerm, setSearchedTerm] = useState('')
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState(undefined)
+
+  const scrollAnchor = React.useRef(null)
+  React.useEffect(() => {
+    if (!loading && scrollAnchor.current) {
+      scrollAnchor.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+        inline: 'nearest'
+      })
+    }
+  })
+
+  function closeResult() {
+    setResult(null)
+  }
 
   function findMainResult(docs, originalName) {
     // only get result with same name as the input
@@ -85,7 +101,7 @@ function NameSearch(props) {
       )
     } else {
       return (result && <div>
-        <Container className="name-search-result">
+        <Container className="name-search-result" ref={scrollAnchor}>
           <Row>
             <Col>
               <Title size={3} className="result-title mb-1">{props.phrases.nameSearchResultTitle}</Title>
@@ -94,6 +110,11 @@ function NameSearch(props) {
           </Row>
           { result.response && renderMainResult(result.response.docs) }
           { result.response && renderSubResult(result.response.docs) }
+          <Row>
+            <Col className="md-6">
+              <Button className="close-button" onClick={() => closeResult()} type="button"> <X size="18"/> Lukk</Button>
+            </Col>
+          </Row>
         </Container>
       </div>
       )
