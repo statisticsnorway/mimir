@@ -4,6 +4,7 @@ import { Form, Container, Row, Col } from 'react-bootstrap'
 import { Input, Button, Dropdown, Divider, FormError, Link, RadioGroup } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
 import NumberFormat from 'react-number-format'
+import { X } from 'react-feather'
 
 function PifCalculator(props) {
   const validMaxYear = props.lastUpdated.year
@@ -70,6 +71,10 @@ function PifCalculator(props) {
       })
     }
   })
+
+  function closeResult() {
+    setEndValue(null)
+  }
 
   function onSubmit(e) {
     e.preventDefault()
@@ -456,6 +461,11 @@ function PifCalculator(props) {
               {renderNumber(endIndex)}
             </span>
             <Divider dark/>
+          </Col>
+        </Row>
+        <Row>
+          <Col className="md-6">
+            <Button className="close-button" onClick={() => closeResult()} type="button"> <X size="18"/>{props.phrases.close}</Button>
           </Col>
         </Row>
       </Container>

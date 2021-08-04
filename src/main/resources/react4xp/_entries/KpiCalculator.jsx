@@ -4,6 +4,7 @@ import { Form, Container, Row, Col } from 'react-bootstrap'
 import { Input, Button, Dropdown, Divider, FormError, Link, Title } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
 import NumberFormat from 'react-number-format'
+import { X } from 'react-feather'
 
 function KpiCalculator(props) {
   const validMaxYear = props.lastUpdated.year
@@ -55,6 +56,10 @@ function KpiCalculator(props) {
       })
     }
   })
+
+  function closeResult() {
+    setEndValue(null)
+  }
 
   function onSubmit(e) {
     e.preventDefault()
@@ -376,6 +381,11 @@ function KpiCalculator(props) {
             <p className="info-text">{props.phrases.kpiCalculatorInfoText}</p>
           </Col>
         </Row>
+        <Row>
+          <Col className="md-6">
+            <Button className="close-button" onClick={() => closeResult()} type="button"> <X size="18"/>{props.phrases.close}</Button>
+          </Col>
+        </Row>
       </Container>
     )
   }
@@ -403,6 +413,11 @@ function KpiCalculator(props) {
             <span>
               {renderNumberChangeValue()}
             </span>
+          </Col>
+        </Row>
+        <Row>
+          <Col className="md-6">
+            <Button className="close-button" onClick={() => closeResult()} type="button"> <X size="18"/>{props.phrases.close}</Button>
           </Col>
         </Row>
       </Container>

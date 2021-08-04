@@ -11,6 +11,7 @@ import { Input,
   Title } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
 import NumberFormat from 'react-number-format'
+import { X } from 'react-feather'
 
 function BkibolCalculator(props) {
   const validMaxYear = props.lastUpdated.year
@@ -118,6 +119,10 @@ function BkibolCalculator(props) {
         title: props.phrases.bkibolWorkTypeElectric
       }
     ]
+  }
+
+  function closeResult() {
+    setEndValue(null)
   }
 
   function onSubmit(e) {
@@ -564,6 +569,11 @@ function BkibolCalculator(props) {
               {renderNumber(endIndex)}
             </span>
             <Divider dark/>
+          </Col>
+        </Row>
+        <Row>
+          <Col className="md-6">
+            <Button className="close-button" onClick={() => closeResult()} type="button"> <X size="18"/>{props.phrases.close}</Button>
           </Col>
         </Row>
       </Container>
