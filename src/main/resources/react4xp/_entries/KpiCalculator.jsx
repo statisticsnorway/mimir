@@ -48,6 +48,9 @@ function KpiCalculator(props) {
 
   const scrollAnchor = React.useRef(null)
   function scrollToResult() {
+    scrollAnchor.current.focus({
+      preventScroll: true
+    })
     scrollAnchor.current.scrollIntoView({
       behavior: 'smooth',
       block: 'end',
@@ -338,7 +341,7 @@ function KpiCalculator(props) {
   function calculatorResult() {
     const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
     return (
-      <Container className="calculator-result" ref={scrollAnchor}>
+      <Container className="calculator-result" ref={scrollAnchor} tabIndex="0">
         <Row className="mb-5">
           <Col className="amount-equal align-self-end col-12 col-md-4">
             <Title size={3}>{props.phrases.kpiAmountEqualled}</Title>
@@ -393,7 +396,7 @@ function KpiCalculator(props) {
   function calculatorResultFrontpage() {
     const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
     return (
-      <Container className="calculator-result-frontpage" ref={scrollAnchor}>
+      <Container className="calculator-result-frontpage" ref={scrollAnchor} tabIndex="0">
         <Row className="mb-3">
           <Col className="amount-equal align-self-end col-12 col-lg-5">
             <Title size={3}>{props.phrases.kpiAmountEqualled}</Title>
