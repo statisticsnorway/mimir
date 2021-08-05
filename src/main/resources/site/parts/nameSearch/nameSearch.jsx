@@ -23,15 +23,13 @@ function NameSearch(props) {
   const [errorMessage, setErrorMessage] = useState(undefined)
 
   const scrollAnchor = React.useRef(null)
-  React.useEffect(() => {
-    if (!loading && scrollAnchor.current) {
-      scrollAnchor.current.scrollIntoView({
-        behavior: 'smooth',
-        block: 'end',
-        inline: 'nearest'
-      })
-    }
-  })
+  function scrollToResult() {
+    scrollAnchor.current.scrollIntoView({
+      behavior: 'smooth',
+      block: 'end',
+      inline: 'nearest'
+    })
+  }
 
   function closeResult() {
     setResult(null)
@@ -172,29 +170,28 @@ function NameSearch(props) {
     ).then((res) => {
       findMainResult(res.data.response.docs, res.data.originalName)
       setResult(res.data)
-      setLoading(false)
     }
     ).catch((error) =>{
       if (error.response) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx
         setErrorMessage(error.message)
-        setLoading(false)
       } else if (error.request) {
       // The request was made but no response was received
       // Likely to be a network error or disconnect
         console.log('Error in REQUEST')
         console.log(error.request)
         setErrorMessage(error.message)
-        setLoading(false)
       } else {
       // Something happened in setting up the request that triggered an Error
         console.log(error)
-        setLoading(false)
       }
-      setLoading(false)
     }
     )
+      .finally(() => {
+        setLoading(false)
+        scrollToResult()
+      })
   }
 
   function handleChange(event) {

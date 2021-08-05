@@ -47,15 +47,14 @@ function KpiCalculator(props) {
   const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
 
   const scrollAnchor = React.useRef(null)
-  React.useEffect(() => {
-    if (!loading && scrollAnchor.current) {
-      scrollAnchor.current.scrollIntoView({
-        behavior: 'smooth',
-        block: 'end',
-        inline: 'nearest'
-      })
-    }
-  })
+  function scrollToResult() {
+    scrollAnchor.current.scrollIntoView({
+      behavior: 'smooth',
+      block: 'end',
+      inline: 'nearest'
+    })
+  }
+
 
   function closeResult() {
     setEndValue(null)
@@ -104,6 +103,7 @@ function KpiCalculator(props) {
       })
       .finally(()=> {
         setLoading(false)
+        scrollToResult()
       })
   }
 
