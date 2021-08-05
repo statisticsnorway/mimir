@@ -43,7 +43,7 @@
     }
 
     @include media-breakpoint-up(lg) {
-      li {
+      li:not(.front-page-released-statistic) {
         display: flex;
         justify-content: space-between;
       }

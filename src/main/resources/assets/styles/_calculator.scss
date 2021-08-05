@@ -64,6 +64,11 @@
         @include roboto;
         font-weight: bold;
       }
+
+      .close-button {
+        margin: auto;
+        margin-top: 2em;
+      }
     }
 
     .calculator-error {
@@ -124,6 +129,11 @@
       .end-value {
         @include roboto-condenced ;
         font-size: 28px;
+      }
+
+      .close-button {
+        margin: auto;
+        margin-top: 2em;
       }
     }
 
