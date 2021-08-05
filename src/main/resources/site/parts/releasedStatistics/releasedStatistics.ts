@@ -13,7 +13,9 @@ const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   localize
 } = __non_webpack_require__('/lib/xp/i18n')
-
+const {
+  fromPartCache
+} = __non_webpack_require__('/lib/ssb/cache/partCache')
 const {
   getAllStatisticsFromRepo
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')
@@ -51,22 +53,24 @@ export function renderPart(req: Request): React4xpResponse {
   const currentLanguage: string = content.language ? content.language : 'nb'
   const isNotInEditMode: boolean = req.mode !== 'edit'
   const part: Component<ReleasedStatisticsPartConfig> = getComponent()
-  const numberOfReleases: number = part.config.numberOfStatistics ? parseInt(part.config.numberOfStatistics) : 8
 
-  // Get statistics
-  const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
+  const groupedWithMonthNames: Array<YearReleases> = fromPartCache(req, `${content._id}-releasedStatistics`, () => {
+    // iterate and format month names
+    const numberOfReleases: number = part.config.numberOfStatistics ? parseInt(part.config.numberOfStatistics) : 8
 
-  // All statistics published today, and fill up with previous releases.
-  const releasesFiltered: Array<StatisticInListing> = filterOnPreviousReleases(releases, numberOfReleases)
+    // Get statistics
+    const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
 
-  // Choose the right variant and prepare the date in a way it works with the groupBy function
-  const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: StatisticInListing) => prepareRelease(release, currentLanguage))
+    // All statistics published today, and fill up with previous releases.
+    const releasesFiltered: Array<StatisticInListing> = filterOnPreviousReleases(releases, numberOfReleases)
 
-  // group by year, then month, then day
-  const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> = groupStatisticsByYearMonthAndDay(releasesPrepped)
+    // Choose the right variant and prepare the date in a way it works with the groupBy function
+    const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: StatisticInListing) => prepareRelease(release, currentLanguage))
 
-  // iterate and format month names
-  const groupedWithMonthNames: Array<YearReleases> = addMonthNames(groupedByYearMonthAndDay, currentLanguage)
+    // group by year, then month, then day
+    const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> = groupStatisticsByYearMonthAndDay(releasesPrepped)
+    return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
+  })
 
   const props: PartProps = {
     releases: groupedWithMonthNames,

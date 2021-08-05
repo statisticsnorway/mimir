@@ -22,7 +22,7 @@ const draftSubjectCache: Cache = newCache({
 export function fromSubjectCache<T>(req: Request, key: string, fallback: () => Array<T>): Array<T> {
   const subjectCache: Cache = req.branch === 'master' ? masterSubjectCache : draftSubjectCache
   return subjectCache.get(key, () => {
-    cacheLog(`added ${key} to menu cache (${req.branch})`)
+    cacheLog(`added ${key} to subject cache (${req.branch})`)
     return fallback()
   })
 }

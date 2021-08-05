@@ -38,7 +38,7 @@ export function getMainSubjects(language?: string): Array<SubjectItem> {
 }
 
 export function getSubSubjects(request: Request, language?: string): Array<SubjectItem> {
-  return fromSubjectCache<SubjectItem>(request, '', () => {
+  return fromSubjectCache<SubjectItem>(request, `subsubject-${language}`, () => {
     const lang: string = language ? `AND language = "${language}"` : ''
     const subSubjectsContent: Array<Content<Page, DefaultPageConfig>> = query({
       start: 0,
