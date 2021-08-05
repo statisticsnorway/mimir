@@ -24,6 +24,9 @@ function NameSearch(props) {
 
   const scrollAnchor = React.useRef(null)
   function scrollToResult() {
+    scrollAnchor.current.focus({
+      preventScroll: true
+    })
     scrollAnchor.current.scrollIntoView({
       behavior: 'smooth',
       block: 'end',
@@ -99,7 +102,7 @@ function NameSearch(props) {
       )
     } else {
       return (result && <div>
-        <Container className="name-search-result" ref={scrollAnchor}>
+        <Container className="name-search-result" ref={scrollAnchor} tabIndex="0">
           <Row>
             <Col>
               <Title size={3} className="result-title mb-1">{props.phrases.nameSearchResultTitle}</Title>

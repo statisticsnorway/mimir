@@ -73,6 +73,9 @@ function BkibolCalculator(props) {
 
   const scrollAnchor = React.useRef(null)
   function scrollToResult() {
+    scrollAnchor.current.focus({
+      preventScroll: true
+    })
     scrollAnchor.current.scrollIntoView({
       behavior: 'smooth',
       block: 'end',
@@ -517,7 +520,7 @@ function BkibolCalculator(props) {
   function calculatorResult() {
     const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
     return (
-      <Container className="calculator-result" ref={scrollAnchor}>
+      <Container className="calculator-result" ref={scrollAnchor} tabIndex="0">
         <Row className="mb-5">
           <Col className="amount-equal col-12 col-md-4">
             <h3>{props.phrases.amountEqualled}</h3>
