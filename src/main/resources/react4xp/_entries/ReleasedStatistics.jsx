@@ -10,7 +10,7 @@ class ReleasedStatistics extends React.Component {
   renderRelease(release, index) {
     const hrefStatistic = this.props.language === 'en' ? `/en/${release.shortName}` : `/${release.shortName}`
     return (
-      <li key={index}>
+      <li key={index} className="front-page-released-statistic">
         <Link href={hrefStatistic} linkType='header'>{release.name}</Link>
         <Paragraph className="my-2">{release.variant.period}</Paragraph>
       </li>
