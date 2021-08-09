@@ -78,7 +78,7 @@
       @include make-col-ready();
       @include make-col(12);
 
-      &:not(.part-highchart):not(.part-divider) {
+      &:not(.part-divider) {
         @include media-breakpoint-up(lg) {
           @include make-col(6);
           @include make-col-offset(1);
