@@ -29,9 +29,11 @@ export function fromPartCache<T>(req: Request, key: string, fallback: () => Arra
 
 export function clearPartCache(content: Content, branch: string): void {
   const partCache: Cache = branch === 'master' ? masterPartCache : draftPartCache
-  if (content.type === `${app.name}:page` || content.type === `portal:site`) {
+  if (content.type === `${app.name}:page` || content.type === `portal:site` || content.type === `${app.name}:statistics`) {
     cacheLog(`try to clear ${content._id}-releasedStatistics from part cache (${branch})`)
     partCache.remove(`${content._id}-releasedStatistics`)
+    cacheLog(`try to clear ${content._id}-kpiCalculator from part cache (${branch})`)
+    partCache.remove(`${content._id}-kpiCalculator`)
   }
 }
 
