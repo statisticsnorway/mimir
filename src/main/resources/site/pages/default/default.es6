@@ -183,7 +183,8 @@ exports.get = function(req) {
     pageContributions = preview.pageContributions
   }
 
-  const header = fromMenuCache(req, `header_${req.path}`, () => {
+  const menuCacheLanguage = language.code === 'en' ? 'en' : 'nb'
+  const header = fromMenuCache(req, `header_${menuCacheLanguage}`, () => {
     const headerContent = getHeaderContent(language)
     if (headerContent) {
       const headerComponent = new React4xp('Header')
@@ -207,7 +208,7 @@ exports.get = function(req) {
     })
   }
 
-  const footer = fromMenuCache(req, `footer_${language.code}`, () => {
+  const footer = fromMenuCache(req, `footer_${menuCacheLanguage}`, () => {
     const footerContent = getFooterContent(language)
     if (footerContent) {
       const footerComponent = new React4xp('Footer')
