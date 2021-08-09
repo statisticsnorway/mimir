@@ -184,23 +184,21 @@ exports.get = function(req) {
   }
 
   const menuCacheLanguage = language.code === 'en' ? 'en' : 'nb'
-  const header = fromMenuCache(req, `header_${menuCacheLanguage}`, () => {
-    const headerContent = getHeaderContent(language)
-    if (headerContent) {
-      const headerComponent = new React4xp('Header')
-        .setProps({
-          ...headerContent
-        })
-        .setId('header')
-      return {
-        body: headerComponent.renderBody({
-          body: '<div id="header"></div>'
-        }),
-        component: headerComponent
-      }
-    }
-    return undefined
+  const headerContent = fromMenuCache(req, `header_${menuCacheLanguage}`, () => {
+    return getHeaderContent(language)
   })
+  const headerComponent = new React4xp('Header')
+    .setProps({
+      ...headerContent,
+      language: language
+    })
+    .setId('header')
+  const header = {
+    body: headerComponent.renderBody({
+      body: '<div id="header"></div>'
+    }),
+    component: headerComponent
+  }
 
   if (header && header.component) {
     pageContributions = header.component.renderPageContributions({
