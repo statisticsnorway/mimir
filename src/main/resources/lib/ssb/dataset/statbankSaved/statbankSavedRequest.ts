@@ -16,7 +16,7 @@ const {
 export function get(url: string, queryId?: string): object | null {
   const requestParams: HttpRequestParams = {
     url,
-    method: 'POST',
+    method: 'GET',
     contentType: 'text/html',
     headers: {
       'Cache-Control': 'no-cache',

@@ -15,6 +15,7 @@ export function get(req: Request): Response {
       contentType: 'application/json'
     }
   }
+
   const solrBaseUrl: string = app.config && app.config['ssb.solrNameSearch.baseUrl'] ?
     app.config['ssb.solrNameSearch.baseUrl'] : 'https://i.ssb.no/solrmaster/navnesok/select'
 
