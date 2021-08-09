@@ -101,9 +101,9 @@ function parseContent(standardCardsListContent) {
 
       if (standardCard.contentXP) {
         const standardCardContentId = standardCard.contentXP
-        const pageContent = get({
+        const pageContent = standardCardContentId ? get({
           key: standardCardContentId
-        })
+        }) : null
 
         let preamble = ''
         if (hasPath(['x', 'com-enonic-app-metafields', 'meta-data', 'seoDescription'], pageContent) && pageContent) {
@@ -112,7 +112,7 @@ function parseContent(standardCardsListContent) {
 
         return {
           icon: iconPath,
-          iconAlt: iconId ? iconData.data.caption ? getImageCaption(iconId) : getImageAlt(iconId) : '',
+          iconAlt: iconId ? (iconData.data.caption ? getImageCaption(iconId) : getImageAlt(iconId)) : '',
           title: pageContent.displayName,
           preamble: preamble,
           href: pageUrl({
