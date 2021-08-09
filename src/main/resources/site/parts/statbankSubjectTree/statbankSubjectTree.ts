@@ -28,7 +28,7 @@ export function get(req: Request): React4xpResponse {
   const content: Content = getContent()
   const language: string = content.language === 'en' ? 'en' : 'no'
   const allMainSubjects: Array<SubjectItem> = getMainSubjects(content.language)
-  const allSubSubjects: Array<SubjectItem> = getSubSubjects()
+  const allSubSubjects: Array<SubjectItem> = getSubSubjects(req)
   const statregStatistics: Array<StatisticInListing> = ensureArray(getAllStatisticsFromRepo())
   const statistics: Array<StatisticItem> = getStatistics(statregStatistics)
   const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'

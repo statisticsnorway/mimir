@@ -156,25 +156,45 @@ function UpcomingReleases(props) {
   }
 
   function renderRelease(release, index, date) {
-    if (release.type === 'statistic') {
+    const {
+      type, shortName, name, variant, mainSubject, statisticsPageUrl
+    } = release
+    const {
+      day, monthName, year
+    } = date
+    const statisticsPageUrlText = props.statisticsPageUrlText
+
+    if (type === 'statistic') {
       return (
         <li key={index}>
-          <Link href={`/${release.shortName}`} linkType='header'>{release.name}</Link>
-          <Paragraph className="mb-0">{release.variant.period}</Paragraph>
-          <Paragraph className="metadata">
-            {date.day}. {date.monthName} {date.year} / <span
-              className="type">{release.type}</span> / {release.mainSubject}
-          </Paragraph>
+          <div>
+            <Link href={`/${shortName}`} linkType='header'>{name}</Link>
+            <Paragraph className="mb-0">{variant.period}</Paragraph>
+            <Paragraph className="metadata">
+              {day}. {monthName} {year} / <span
+                className="type">{type}</span> / {mainSubject}
+            </Paragraph>
+          </div>
+          {statisticsPageUrl &&
+          <div className="statisticsPageLink">
+            <Link href={statisticsPageUrl}>{statisticsPageUrlText}</Link>
+          </div>}
         </li>
       )
     } else {
       return (
         <li key={index}>
-          <h3>{release.name}</h3>
-          <Paragraph className="metadata">
-            {date.day}. {date.monthName} {date.year} / <span
-              className="type">{release.type}</span> / {release.mainSubject}
-          </Paragraph>
+          <div>
+            <h3>{name}</h3>
+            <Paragraph className="metadata">
+              {day}. {monthName} {year} / <span
+                className="type">{type}</span> / {mainSubject}
+            </Paragraph>
+          </div>
+          {statisticsPageUrl &&
+          <div className="statisticsPageLink">
+            <Link href={statisticsPageUrl}>{statisticsPageUrlText}</Link>
+          </div>}
         </li>
       )
     }
@@ -204,11 +224,11 @@ function UpcomingReleases(props) {
 
   function renderButton() {
     if (loading) {
-      return (<div className="text-center mt-5">
+      return (<div className="text-center">
         <span className="spinner-border spinner-border"/>
       </div>)
     } else {
-      return (<Button className="button-more mt-5 mx-auto"
+      return (<Button className="button-more"
         disabled={loading}
         onClick={fetchMoreReleases}>
         <ChevronDown size="18"/>{props.buttonTitle}
@@ -268,6 +288,7 @@ UpcomingReleases.propTypes = {
   upcomingReleasesServiceUrl: PropTypes.string,
   count: PropTypes.number,
   buttonTitle: PropTypes.string,
+  statisticsPageUrlText: PropTypes.string,
   releases: PropTypes.arrayOf(PropTypes.shape({
     year: PropTypes.string,
     releases: PropTypes.arrayOf(PropTypes.shape({
@@ -293,7 +314,8 @@ UpcomingReleases.propTypes = {
                 variants: {
                   frekvens: PropTypes.string,
                   nextRelease: PropTypes.string
-                }
+                },
+                statisticsPageUrl: PropTypes.string
               })
             )
           })
@@ -311,7 +333,8 @@ UpcomingReleases.propTypes = {
       day: PropTypes.string,
       month: PropTypes.string,
       monthName: PropTypes.string,
-      year: PropTypes.string
+      year: PropTypes.string,
+      statisticsPageUrl: PropTypes.string
     })
   )
 }

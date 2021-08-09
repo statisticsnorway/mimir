@@ -11,6 +11,7 @@ import { Input,
   Title } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
 import NumberFormat from 'react-number-format'
+import { X } from 'react-feather'
 
 function BkibolCalculator(props) {
   const validMaxYear = props.lastUpdated.year
@@ -70,6 +71,18 @@ function BkibolCalculator(props) {
   const validMinYear = 1979
   const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
 
+  const scrollAnchor = React.useRef(null)
+  function scrollToResult() {
+    scrollAnchor.current.focus({
+      preventScroll: true
+    })
+    scrollAnchor.current.scrollIntoView({
+      behavior: 'smooth',
+      block: 'end',
+      inline: 'nearest'
+    })
+  }
+
   function serieItemsDomene(domene) {
     return [
       {
@@ -107,6 +120,10 @@ function BkibolCalculator(props) {
         title: props.phrases.bkibolWorkTypeElectric
       }
     ]
+  }
+
+  function closeResult() {
+    setEndValue(null)
   }
 
   function onSubmit(e) {
@@ -158,6 +175,7 @@ function BkibolCalculator(props) {
       })
       .finally(()=> {
         setLoading(false)
+        scrollToResult()
       })
   }
 
@@ -502,7 +520,7 @@ function BkibolCalculator(props) {
   function calculatorResult() {
     const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
     return (
-      <Container className="calculator-result">
+      <Container className="calculator-result" ref={scrollAnchor} tabIndex="0">
         <Row className="mb-5">
           <Col className="amount-equal col-12 col-md-4">
             <h3>{props.phrases.amountEqualled}</h3>
@@ -553,6 +571,11 @@ function BkibolCalculator(props) {
               {renderNumber(endIndex)}
             </span>
             <Divider dark/>
+          </Col>
+        </Row>
+        <Row>
+          <Col className="md-6">
+            <Button className="close-button" onClick={() => closeResult()} type="button"> <X size="18"/>{props.phrases.close}</Button>
           </Col>
         </Row>
       </Container>

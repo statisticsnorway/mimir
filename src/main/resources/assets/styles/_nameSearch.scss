@@ -13,6 +13,11 @@
     padding: 60px;
     border-top: 1px solid $ssb-green-5;
     background-color: $ssb-dark-1;
+
+    .close-button {
+      margin: auto;
+      margin-top: 2em;
+    }
   }
 
   .result-highlight {
