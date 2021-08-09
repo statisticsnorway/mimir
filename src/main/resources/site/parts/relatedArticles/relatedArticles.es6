@@ -17,7 +17,7 @@ const {
 const util = __non_webpack_require__('/lib/util')
 const {
   getImageAlt
-} = __non_webpack_require__('/lib/ssb/utils/utils')
+} = __non_webpack_require__('/lib/ssb/utils/imageUtils')
 const {
   getReleaseDatesByVariants
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')

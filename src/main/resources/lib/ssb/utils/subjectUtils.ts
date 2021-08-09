@@ -6,6 +6,8 @@ import { EndedStatisticList } from '../../../site/content-types/endedStatisticLi
 import { StatisticInListing } from '../dashboard/statreg/types'
 import { Statistic } from '../../../site/mixins/statistic/statistic'
 import { Subtopic } from '../../../site/mixins/subtopic/subtopic'
+import { fromSubjectCache } from '../cache/subjectCache'
+import { Request } from 'enonic-types/controller'
 const {
   query
 } = __non_webpack_require__('/lib/xp/content')
@@ -37,23 +39,25 @@ export function getMainSubjects(language?: string): Array<SubjectItem> {
   }))
 }
 
-export function getSubSubjects(language?: string): Array<SubjectItem> {
-  const lang: string = language ? `AND language = "${language}"` : ''
-  const subSubjectsContent: Array<Content<Page, DefaultPageConfig>> = query({
-    start: 0,
-    count: 1000,
-    sort: 'displayName ASC',
-    query: `components.page.config.mimir.default.subjectType LIKE "subSubject" ${lang}`
-  }).hits as unknown as Array<Content<Page, DefaultPageConfig>>
+export function getSubSubjects(request: Request, language?: string): Array<SubjectItem> {
+  return fromSubjectCache<SubjectItem>(request, `subsubject-${language}`, () => {
+    const lang: string = language ? `AND language = "${language}"` : ''
+    const subSubjectsContent: Array<Content<Page, DefaultPageConfig>> = query({
+      start: 0,
+      count: 1000,
+      sort: 'displayName ASC',
+      query: `components.page.config.mimir.default.subjectType LIKE "subSubject" ${lang}`
+    }).hits as unknown as Array<Content<Page, DefaultPageConfig>>
 
-  return subSubjectsContent.map((m) => ({
-    id: m._id,
-    title: m.displayName,
-    subjectCode: m.page.config.subjectCode ? m.page.config.subjectCode : '',
-    path: m._path,
-    language: m.language && m.language === 'en' ? 'en' : 'no',
-    name: m._name
-  }))
+    return subSubjectsContent.map((m) => ({
+      id: m._id,
+      title: m.displayName,
+      subjectCode: m.page.config.subjectCode ? m.page.config.subjectCode : '',
+      path: m._path,
+      language: m.language && m.language === 'en' ? 'en' : 'no',
+      name: m._name
+    }))
+  })
 }
 
 function getSubjectsByLanguage(subjects: Array<SubjectItem>, language: string): Array<SubjectItem> {
@@ -218,9 +222,9 @@ export function getSecondaryStatisticsBySubject(statistics: Array<StatisticItem>
   })
 }
 
-export function getSubjectStructur(language: string): Array<MainSubject> {
+export function getSubjectStructur(request: Request, language: string): Array<MainSubject> {
   const mainSubjectsAll: Array<SubjectItem> = getMainSubjects()
-  const subSubjectsAll: Array<SubjectItem> = getSubSubjects()
+  const subSubjectsAll: Array<SubjectItem> = getSubSubjects(request)
   const statregStatistics: Array<StatisticInListing> = ensureArray(getAllStatisticsFromRepo())
   const statistics: Array<StatisticItem> = getStatistics(statregStatistics)
   const mainSubjectsLanguage: Array<SubjectItem> = getSubjectsByLanguage(mainSubjectsAll, language)
@@ -285,9 +289,9 @@ interface EndedStatistic {
 
 export interface SubjectUtilsLib {
     getMainSubjects: (language?: string) => Array<SubjectItem>;
-    getSubSubjects: (language?: string) => Array<SubjectItem>;
+    getSubSubjects: (request: Request, language?: string) => Array<SubjectItem>;
     getSubSubjectsByPath: (subjects: Array<SubjectItem>, path: string) => Array<SubjectItem>;
-    getSubjectStructur: (language: string) => Array<MainSubject>;
+    getSubjectStructur: (request: Request, language: string) => Array<MainSubject>;
     getStatistics: (statregStatistics: Array<StatisticInListing>) => Array<StatisticItem>;
     getStatisticsByPath: (statistics: Array<StatisticItem>, path: string) => Array<StatisticItem>;
     getEndedStatisticsByPath: (path: string, statregStatistics: Array<StatisticInListing>, hideStatistics: boolean) => Array<StatisticItem>;

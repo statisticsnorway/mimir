@@ -1,6 +1,6 @@
 .search-result {
   .search-result-head {
-    background-color: $ssb-dark-1;
+    background-color: $ssb-dark-2;
 
     .search-result-ingress {
       max-width: 780px
@@ -8,7 +8,9 @@
   }
 
   .search-result-body {
-    max-width: 580px;
+    & > * {
+      max-width: 580px;
+    }  
   }
   .metadata {
     font-size: 14px;

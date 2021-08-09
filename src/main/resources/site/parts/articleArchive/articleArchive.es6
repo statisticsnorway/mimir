@@ -3,7 +3,7 @@ const {
 } = __non_webpack_require__('/lib/xp/portal')
 const {
   getImageAlt
-} = __non_webpack_require__('/lib/ssb/utils/utils')
+} = __non_webpack_require__('/lib/ssb/utils/imageUtils')
 const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')

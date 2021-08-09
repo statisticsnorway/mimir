@@ -1,4 +1,4 @@
-import { Response } from 'enonic-types/controller'
+import { Request, Response } from 'enonic-types/controller'
 import { MainSubject,
   SubSubject,
   Title,
@@ -10,8 +10,8 @@ const {
   xmlEscape
 } = __non_webpack_require__('/lib/text-encoding')
 
-function get(): Response {
-  const mainSubjects: Array<MainSubject> = getSubjectStructur('no')
+function get(req: Request): Response {
+  const mainSubjects: Array<MainSubject> = getSubjectStructur(req, 'no')
 
   const xml: string =
 `<?xml version="1.0" encoding="utf-8"?>

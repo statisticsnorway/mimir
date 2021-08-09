@@ -39,9 +39,11 @@ const {
   localize
 } = __non_webpack_require__('/lib/xp/i18n')
 const {
-  createHumanReadableFormat,
-  getImageCaption
+  createHumanReadableFormat
 } = __non_webpack_require__('/lib/ssb/utils/utils')
+const {
+  getImageCaption
+} = __non_webpack_require__('/lib/ssb/utils/imageUtils')
 
 const contentTypeName: string = `${app.name}:keyFigure`
 

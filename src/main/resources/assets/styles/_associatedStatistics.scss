@@ -7,13 +7,13 @@
   & > * {
     @include make-col-ready();
     @include make-col(12);
-  }
 
-  .associated-statistics-links {
-    margin-top: $spacer * 0.5;
+    div {
+      margin-top: $spacer * 0.5;
 
-    & > * {
-      margin-bottom: $spacer * 1;
+      & > * {
+        margin-bottom: $spacer * 1;
+      }
     }
   }
 }

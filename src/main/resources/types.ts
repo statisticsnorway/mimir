@@ -6,6 +6,8 @@ interface LibMap extends EnonicLibraryMap {
 
     // cache
     '/lib/ssb/cache/cache': import('./lib/ssb/cache/cache').SSBCacheLibrary;
+    '/lib/ssb/cache/subjectCache': import('./lib/ssb/cache/subjectCache').SSBSubjectCacheLibrary;
+    '/lib/ssb/cache/partCache': import('./lib/ssb/cache/partCache').SSBPartCacheLibrary;
 
     // cron
     '/lib/ssb/cron/cron': import('./lib/ssb/cron/cron').SSBCronLib;
@@ -77,14 +79,18 @@ interface LibMap extends EnonicLibraryMap {
     '/lib/ssb/statreg/statistics': import('./lib/ssb/statreg/statistics').StatRegStatisticsLib;
 
     // utils
+    '/lib/ssb/utils/alertUtils': import('./lib/ssb/utils/alertUtils').AlertUtilsLib;
     '/lib/ssb/utils/arrayUtils': import('./lib/ssb/utils/arrayUtils').ArrayUtilsLib;
+    '/lib/ssb/utils/breadcrumbsUtils': import('./lib/ssb/utils/breadcrumbsUtils').BreadcrumbsUtilsLib;
     '/lib/ssb/utils/dateUtils': import('./lib/ssb/utils/dateUtils').DateUtilsLib;
+    '/lib/ssb/utils/imageUtils': import('./lib/ssb/utils/imageUtils').ImageUtilsLib;
     '/lib/ssb/utils/parentUtils': import('./lib/ssb/utils/parentUtils').ParentUtilsLib;
     '/lib/ssb/utils/serverLog': import('./lib/ssb/utils/serverLog').ServerLogLib;
     '/lib/ssb/utils/variantUtils': import('./lib/ssb/utils/variantUtils').VariantUtilsLib;
     '/lib/ssb/utils/subjectUtils': import('./lib/ssb/utils/subjectUtils').SubjectUtilsLib;
     '/lib/ssb/utils/solrUtils': import('./lib/ssb/utils/solrUtils').SolrUtilsLib;
     '/lib/ssb/utils/textUtils': import('./lib/ssb/utils/textUtils').TextUtilsLib;
+    '/lib/ssb/utils/utils': import('./lib/ssb/utils/utils').UtilsLib;
 
     // vendor
     '/lib/vendor/moment': import('./lib/vendor/moment').Moment;

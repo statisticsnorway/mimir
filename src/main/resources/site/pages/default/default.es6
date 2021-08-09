@@ -9,9 +9,11 @@ const {
   getLanguage
 } = __non_webpack_require__('/lib/ssb/utils/language')
 const {
-  alertsForContext,
+  alertsForContext
+} = __non_webpack_require__('/lib/ssb/utils/alertUtils')
+const {
   getBreadcrumbs
-} = __non_webpack_require__('/lib/ssb/utils/utils')
+} = __non_webpack_require__('/lib/ssb/utils/breadcrumbsUtils')
 const {
   getReleaseDatesByVariants
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')
@@ -314,7 +316,7 @@ exports.get = function(req) {
     pageTypeId: page._id,
     statbankWeb: statbankFane
   }
-  const alerts = alertsForContext(page.page, alertOptions)
+  const alerts = alertsForContext(page.page.config, alertOptions)
   const body = bodyWithBreadCrumbs ? bodyWithBreadCrumbs : thymeleafRenderBody
   const bodyWithAlerts = alerts.length ?
     addAlerts(alerts, body, pageContributions) :

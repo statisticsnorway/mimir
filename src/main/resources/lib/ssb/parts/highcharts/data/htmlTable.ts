@@ -2,6 +2,7 @@ import { AreaLineLinearData, PieData, Series, SeriesAndCategories } from '../hig
 import { XmlParser, PreliminaryData, TableRowUniform, TableCellUniform } from '../../../../types/xmlParser'
 import { Content } from 'enonic-types/content'
 import { Highchart } from '../../../../../site/content-types/highchart/highchart'
+import { RowValue } from '../../../utils/utils'
 
 const {
   toString
@@ -22,7 +23,7 @@ export function seriesAndCategoriesFromHtmlTable(highChartsContent: Content<High
   const tbody: Array<TableRowUniform> = result ? forceArray(result.table.tbody) : []
   const rows: TableRowUniform['tr'] = tbody[0].tr
   const categories: Array<number | string> = rows.reduce((previous: Array<number | string>, tr: RowData, index: number) => {
-    const categoryValue: number | string = getRowValue(tr.td[0])
+    const categoryValue: RowValue = getRowValue(tr.td[0])
     if (index > 0) previous.push(categoryValue)
     return previous
   }, [])
@@ -31,7 +32,7 @@ export function seriesAndCategoriesFromHtmlTable(highChartsContent: Content<High
     acc: Array<SeriesRaw>,
     current: number | string | PreliminaryData,
     tdIndex: number) => {
-    const nameRow: number | string = getRowValue(current)
+    const nameRow: RowValue = getRowValue(current)
     acc.push({
       name: typeof nameRow === 'number' ? toString(nameRow) : nameRow,
       data: rows.reduce( (
@@ -39,7 +40,7 @@ export function seriesAndCategoriesFromHtmlTable(highChartsContent: Content<High
         tr: TableCellUniform,
         trIndex: number
       ) => {
-        const value: number | string = getRowValue(tr.td[tdIndex])
+        const value: RowValue = getRowValue(tr.td[tdIndex])
         if (trIndex > 0) dataAcc.push(typeof(value) === 'string' ? parseValue(value) : value)
         return dataAcc
       }, [])
@@ -105,9 +106,12 @@ function dataFormatAreaLineLinear(seriesAndCategories: SeriesAndCategoriesRaw): 
     return {
       name: cat,
       data: seriesAndCategories.series.map((row): AreaLineLinearData => {
+        const name: number | string = row.name
+        const rowValue: RowValue = getRowValue(forceArray(row.data)[index])
+
         return [
-          row.name,
-          getRowValue(forceArray(row.data)[index])
+          name,
+          rowValue
         ]
       })
     }
