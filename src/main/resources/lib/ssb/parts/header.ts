@@ -48,8 +48,7 @@ export function getHeaderContent(language: Language): HeaderContent | undefined 
         locale: language.code
       }),
       mainNavigation: headerContent.data.menuContentId ? createMenuTree(headerContent.data.menuContentId) : [],
-      topLinks: headerContent.data.globalLinks && headerContent.data.globalLinks.length > 0 ? parseTopLinks(headerContent.data.globalLinks) : undefined,
-      language
+      topLinks: headerContent.data.globalLinks && headerContent.data.globalLinks.length > 0 ? parseTopLinks(headerContent.data.globalLinks) : undefined
     }
   }
 }
@@ -62,7 +61,6 @@ export interface HeaderContent {
     searchText: string;
     mainNavigation?: Array<MenuItem>;
     topLinks?: Array<Link>;
-    language: Language;
     skipToContentText: string;
 }
 
