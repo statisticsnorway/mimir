@@ -6,6 +6,8 @@ interface LibMap extends EnonicLibraryMap {
 
     // cache
     '/lib/ssb/cache/cache': import('./lib/ssb/cache/cache').SSBCacheLibrary;
+    '/lib/ssb/cache/subjectCache': import('./lib/ssb/cache/subjectCache').SSBSubjectCacheLibrary;
+    '/lib/ssb/cache/partCache': import('./lib/ssb/cache/partCache').SSBPartCacheLibrary;
 
     // cron
     '/lib/ssb/cron/cron': import('./lib/ssb/cron/cron').SSBCronLib;
