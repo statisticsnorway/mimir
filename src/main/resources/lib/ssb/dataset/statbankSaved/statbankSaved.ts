@@ -35,15 +35,16 @@ export function fetchStatbankSavedData(content: Content<DataSource>): object | n
     const baseUrl: string = app.config && app.config['ssb.statbankweb.baseUrl'] ? app.config['ssb.statbankweb.baseUrl'] : 'https://www.ssb.no/statbank'
 
     const dataSource: DataSource['dataSource'] = content.data.dataSource
-    let url: string = 'Tom url'
-    if (dataSource._selected && dataSource.statbankSaved && dataSource.statbankSaved.urlOrId) {
-      url = isUrl(dataSource.statbankSaved.urlOrId) ?
-        `${dataSource.statbankSaved.urlOrId}${format}` :
-        `${baseUrl}${basePath}${dataSource.statbankSaved.urlOrId}${format}`
+    const statBankSavedUrlOrId: string | undefined = dataSource._selected && dataSource.statbankSaved && dataSource.statbankSaved.urlOrId
+    let url: string = 'URL ikke angitt'
+    if (statBankSavedUrlOrId) {
+      url = isUrl(dataSource.statbankSaved?.urlOrId) ?
+        `${dataSource.statbankSaved?.urlOrId}${format}` :
+        `${baseUrl}${basePath}${dataSource.statbankSaved?.urlOrId}${format}`
     }
 
     try {
-      if (dataSource._selected && dataSource.statbankSaved && dataSource.statbankSaved.urlOrId) {
+      if (statBankSavedUrlOrId) {
         return fetchData(url)
       }
     } catch (e) {
