@@ -20,9 +20,11 @@ class ArticleList extends React.Component {
           articles.map((article, i) => {
             return (
               <div key={i} className="mt-5">
-                <Link href={article.url} className="ssb-link header">
-                  {article.title}
-                </Link>
+                <Title size={3}>
+                  <Link href={article.url} className="ssb-link header">
+                    {article.title}
+                  </Link>
+                </Title>
                 <p>
                   <Truncate lines={2} className="article-list-ingress" >{article.preface}</Truncate>
                 </p>
