@@ -220,15 +220,13 @@ header.ssb-header-wrapper {
 
     button .navigation-item {
       display: flex;
-      height: 62.5px;
-      padding: 0 0 15px 0;
+      height: 60px;
       text-align: left;
-      align-items: flex-end;
+      align-items: center;
       margin-right: 30px;
       cursor: pointer;
 
       @include media-breakpoint-down(md) {
-        padding: 0 0 15px 0;
         margin: 0;
         width: 100%;
         &:hover::before,

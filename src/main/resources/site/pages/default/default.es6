@@ -183,23 +183,22 @@ exports.get = function(req) {
     pageContributions = preview.pageContributions
   }
 
-  const header = fromMenuCache(req, `header_${req.path}`, () => {
-    const headerContent = getHeaderContent(language)
-    if (headerContent) {
-      const headerComponent = new React4xp('Header')
-        .setProps({
-          ...headerContent
-        })
-        .setId('header')
-      return {
-        body: headerComponent.renderBody({
-          body: '<div id="header"></div>'
-        }),
-        component: headerComponent
-      }
-    }
-    return undefined
+  const menuCacheLanguage = language.code === 'en' ? 'en' : 'nb'
+  const headerContent = fromMenuCache(req, `header_${menuCacheLanguage}`, () => {
+    return getHeaderContent(language)
   })
+  const headerComponent = new React4xp('Header')
+    .setProps({
+      ...headerContent,
+      language: language
+    })
+    .setId('header')
+  const header = {
+    body: headerComponent.renderBody({
+      body: '<div id="header"></div>'
+    }),
+    component: headerComponent
+  }
 
   if (header && header.component) {
     pageContributions = header.component.renderPageContributions({
@@ -207,7 +206,7 @@ exports.get = function(req) {
     })
   }
 
-  const footer = fromMenuCache(req, `footer_${language.code}`, () => {
+  const footer = fromMenuCache(req, `footer_${menuCacheLanguage}`, () => {
     const footerContent = getFooterContent(language)
     if (footerContent) {
       const footerComponent = new React4xp('Footer')

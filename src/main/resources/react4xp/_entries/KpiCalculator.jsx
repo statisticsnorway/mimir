@@ -10,7 +10,7 @@ function KpiCalculator(props) {
   const validMaxYear = props.lastUpdated.year
   const [startValue, setStartValue] = useState({
     error: false,
-    errorMsg: props.phrases.kpiValidateAmountNumber,
+    errorMsg: props.phrases.calculatorValidateAmountNumber,
     value: ''
   })
   const [startMonth, setStartMonth] = useState({

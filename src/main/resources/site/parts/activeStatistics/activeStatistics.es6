@@ -40,7 +40,7 @@ exports.preview = (req) => renderPart(req)
 const renderPart = (req) => {
   const page = getContent()
   const part = getComponent()
-  const activeStatistics = part.config.relatedStatisticsOptions
+  const activeStatistics = part.config.relatedStatisticsOptions ? forceArray(part.config.relatedStatisticsOptions) : []
   const phrases = getPhrases(page)
 
   const statisticsTitle = phrases.menuStatistics
@@ -54,7 +54,7 @@ const renderPart = (req) => {
     }
   }
 
-  return renderActiveStatistics(statisticsTitle, parseContent(activeStatistics ? forceArray(activeStatistics) : []), phrases)
+  return renderActiveStatistics(statisticsTitle, parseContent(activeStatistics, phrases))
 }
 
 const renderActiveStatistics = (statisticsTitle, activeStatisticsContent) => {
@@ -89,7 +89,7 @@ const renderActiveStatistics = (statisticsTitle, activeStatisticsContent) => {
 }
 
 const parseContent = (activeStatistics) => {
-  if (activeStatistics.length > 0) {
+  if (activeStatistics.length) {
     return activeStatistics.map((statistics) => {
       if (statistics._selected === 'xp') {
         const statisticsContentId = statistics.xp.contentId
