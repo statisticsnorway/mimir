@@ -44,7 +44,7 @@ export function completelyClearPartCache(branch: string): void {
 }
 
 export interface SSBPartCacheLibrary {
-  fromPartCache: <T>(req: Request, key: string, fallback: () => Array<T>) => Array<T>;
+  fromPartCache: <T>(req: Request, key: string, fallback: () => T) => T;
   clearPartCache: (content: Content, branch: string) => void;
   completelyClearPartCache: (branch: string) => void;
 }
