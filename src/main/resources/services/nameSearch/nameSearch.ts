@@ -35,14 +35,23 @@ export function get(req: Request): Response {
     }
   }
 
-  const result: HttpResponse = request(requestParams)
+  try {
+    const result: HttpResponse = request(requestParams)
+    const preparedBody: string = result.body ? prepareResult(result.body, sanitizeQuery(req.params.name)) : ''
 
-  const preparedBody: string = result.body ? prepareResult(result.body, sanitizeQuery(req.params.name)) : ''
+    return {
+      body: preparedBody,
+      status: result.status,
+      contentType: 'application/json'
+    }
+  } catch (err) {
+    log.error(`Failed to fetch data from solr name search. ${err}`)
 
-  return {
-    body: preparedBody,
-    status: result.status,
-    contentType: 'application/json'
+    return {
+      body: err,
+      status: err.status ? err.status : 500,
+      contentType: 'application/json'
+    }
   }
 }
 
