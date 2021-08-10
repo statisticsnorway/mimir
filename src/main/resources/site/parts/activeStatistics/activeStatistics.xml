@@ -1,6 +1,5 @@
 <part>
-    <display-name>Aktiv statistikk</display-name>
-    <description></description>
+    <display-name>Aktiv statistikk (IKKE BRUK)</display-name>
     <form>
         <mixin name="relatedStatistics" />
     </form>
