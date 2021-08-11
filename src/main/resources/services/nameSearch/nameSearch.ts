@@ -45,7 +45,7 @@ export function get(req: Request): Response {
       contentType: 'application/json'
     }
   } catch (err) {
-    log.error(`Failed to fetch data from solr name search. ${err}`)
+    log.error(`Failed to fetch data from solr name search: ${solrBaseUrl}. ${err}`)
 
     return {
       body: err,
