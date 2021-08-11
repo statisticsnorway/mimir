@@ -8,6 +8,9 @@ import { TaskMapper } from 'enonic-types/cron'
 import { RSSFilter } from './rss'
 
 const {
+  clearOmStatistikkenFromPartCache
+} = __non_webpack_require__('/lib/ssb/cache/partCache')
+const {
   publishDataset
 } = __non_webpack_require__('/lib/ssb/dataset/publish')
 const {
@@ -154,7 +157,6 @@ export function setupCronJobs(): void {
   schedule({
     name: 'Data from datasource endpoints',
     cron: dataqueryCron,
-    times: 365 * 10,
     callback: () => runOnMasterOnly(job),
     context: cronContext
   })
@@ -164,7 +166,6 @@ export function setupCronJobs(): void {
   schedule({
     name: 'StatReg Periodic Refresh',
     cron: statregCron,
-    times: 365 * 10,
     callback: () => runOnMasterOnly(statRegJob),
     context: cronContext
   })
@@ -174,7 +175,6 @@ export function setupCronJobs(): void {
   schedule({
     name: 'Dataset publish',
     cron: datasetPublishCron,
-    times: 365 * 10,
     callback: () => runOnMasterOnly(publishDataset),
     context: cronContext
   })
@@ -183,7 +183,6 @@ export function setupCronJobs(): void {
   schedule({
     name: 'Delete expired event logs',
     cron: deleteExpiredEventLogCron,
-    times: 365 * 10,
     callback: () => runOnMasterOnly(deleteExpiredEventLogs),
     context: cronContext
   })
@@ -194,19 +193,28 @@ export function setupCronJobs(): void {
     schedule({
       name: 'Update unpublished mock tbml',
       cron: updateUnpublishedMockCron,
-      times: 365 * 10,
       callback: () => runOnMasterOnly(updateUnpublishedMockTbml),
       context: cronContext
     })
   }
 
-  // publish dataset cron job
+  // push news to rss feed
   const pushRssNewsCron: string = app.config && app.config['ssb.cron.pushRssNews'] ? app.config['ssb.cron.pushRssNews'] : '02 06 * * *'
   schedule({
     name: 'Push RSS news',
     cron: pushRssNewsCron,
-    times: 365 * 10,
     callback: () => runOnMasterOnly(pushRssNewsJob),
+    context: cronContext
+  })
+
+  // clear specific cache once an hour
+  const clearCacheCron: string = app.config && app.config['ssb.cron.clearCacheCron'] ? app.config['ssb.cron.clearCacheCron'] : '01 * * * *'
+  schedule({
+    name: 'clear cache',
+    cron: clearCacheCron,
+    callback: () => {
+      clearOmStatistikkenFromPartCache()
+    },
     context: cronContext
   })
 
