@@ -1,6 +1,11 @@
 const {
-  data
+  data: {
+    forceArray
+  }
 } = __non_webpack_require__('/lib/util')
+const {
+  get
+} = __non_webpack_require__('/lib/xp/content')
 const {
   getContent, processHtml
 } = __non_webpack_require__('/lib/xp/portal')
@@ -46,13 +51,43 @@ function renderPart(req) {
     }
   }
 
-  const authorConfig = page.data.authorItemSet ? data.forceArray(page.data.authorItemSet) : []
+  const authorConfig = page.data.authorItemSet ? forceArray(page.data.authorItemSet) : []
   const authors = authorConfig.map((author) => {
     return {
       name: author.name,
       email: author.email
     }
   })
+
+  const phrases = languageLib.getPhrases(page)
+
+  const associatedStatisticsHeader = phrases.associatedStatisticsHeader
+  const associatedStatisticsConfig = page.data.associatedStatistics ? forceArray(page.data.associatedStatistics) : []
+  const associatedStatisticsLinks = getAssociatedStatisticsLinks(associatedStatisticsConfig)
+
+  const associatedStatisticsLinksComponent = new React4xp('Links')
+    .setProps({
+      links: associatedStatisticsLinks.map((statistics) => {
+        return {
+          ...statistics
+        }
+      })
+    })
+    .uniqueId()
+
+  const associatedArticleArchivesHeader = phrases.associatedArticleArchivesHeader
+  const associatedArticleArchivesConfig = page.data.articleArchive ? forceArray(page.data.articleArchive) : []
+  const associatedArticleArchiveLinks = getAssociatedArticleArchiveLinks(associatedArticleArchivesConfig)
+
+  const associatedArticleArchiveLinksComponent = new React4xp('Links')
+    .setProps({
+      links: associatedArticleArchiveLinks.map((articleArchiveLinks) => {
+        return {
+          ...articleArchiveLinks
+        }
+      })
+    })
+    .uniqueId()
 
   const model = {
     title: page.displayName,
@@ -65,13 +100,76 @@ function renderPart(req) {
     authors,
     serialNumber: page.data.serialNumber,
     introTitle: page.data.introTitle,
-    isbn: isEnabled('article-isbn', true) && page.data.isbnNumber
+    isbn: isEnabled('article-isbn', true) && page.data.isbnNumber,
+    associatedStatisticsHeader,
+    associatedStatisticsLinksId: associatedStatisticsLinksComponent.react4xpId,
+    associatedArticleArchivesHeader,
+    associatedArticleArchiveLinksId: associatedArticleArchiveLinksComponent.react4xpId
   }
 
-  const body = render(view, model)
+  const associatedStatisticsLinksComponentBody = associatedStatisticsLinksComponent.renderBody({
+    body: render(view, model)
+  })
+  const associatedStatisticsLinksComponentPC = associatedStatisticsLinksComponent.renderPageContributions()
 
   return {
-    body,
+    body: associatedArticleArchiveLinksComponent.renderBody({
+      associatedStatisticsLinksComponentBody
+    }),
+    pageContributions: associatedArticleArchiveLinksComponent.renderPageContributions({
+      associatedStatisticsLinksComponentPC
+    }),
     contentType: 'text/html'
   }
+}
+
+const getAssociatedStatisticsLinks = (associatedStatisticsConfig) => {
+  if (associatedStatisticsConfig.length > 0) {
+    return associatedStatisticsConfig.map((option) => {
+      if (option._selected === 'XP') {
+        const associatedStatisticsXP = option.XP.content
+        const associatedStatisticsXPContent = get({
+          key: associatedStatisticsXP
+        })
+
+        if (associatedStatisticsXPContent) {
+          return {
+            children: associatedStatisticsXPContent.displayName,
+            href: pageUrl({
+              id: associatedStatisticsXP
+            })
+          }
+        }
+      } else if (option._selected === 'CMS') {
+        const associatedStatisticsCMS = option.CMS
+
+        return {
+          children: associatedStatisticsCMS.title,
+          href: associatedStatisticsCMS.href
+        }
+      }
+    }).filter((statistics) => !!statistics)
+  }
+  return []
+}
+
+const getAssociatedArticleArchiveLinks = (associatedArticleArchivesConfig) => {
+  if (associatedArticleArchivesConfig.length > 0) {
+    return associatedArticleArchivesConfig.map((articleArchive) => {
+      const articleArchiveContent = get({
+        key: articleArchive
+      })
+
+      if (articleArchiveContent) {
+        return {
+          children: articleArchiveContent.displayName,
+          href: pageUrl({
+            id: articleArchive
+          })
+        }
+      }
+      return null
+    }).filter((articleArchive) => !!articleArchive)
+  }
+  return []
 }

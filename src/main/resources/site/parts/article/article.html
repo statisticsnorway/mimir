@@ -33,7 +33,21 @@
             </div>
         </div>
         <div class="col-12 p-0">
-            <div class="article-body" data-th-utext="${bodyText}" />
+            <div class="row">
+                <div class="col-10 col-md-12">
+                <div class="article-body" data-th-utext="${bodyText}" />
+                </div>
+                <div class="col">
+                    <div class="part-associated-statistics">
+                        <h3 data-th-if="${associatedStatisticsHeader}" data-th-text="${associatedStatisticsHeader}" />
+                        <div data-th-id="associatedStatisticsLinksId" />
+                    </div>
+                    <div class="part-associated-article-archives">
+                        <h3 data-th-if="${associatedArticleArchivesHeader}" data-th-text="${associatedArticleArchivesHeader}" />
+                        <div data-th-id="associatedArticleArchiveLinksId" />
+                    </div>
+                </div>
+            </div>
         </div>
         <div data-th-if="${isbn}" class="col-12 p-0 mt-4">
             <p class="text-center">
