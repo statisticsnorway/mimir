@@ -10,8 +10,8 @@ const {
   getContent, pageUrl, processHtml
 } = __non_webpack_require__('/lib/xp/portal')
 const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+  getPhrases
+} = __non_webpack_require__('/lib/ssb/utils/language')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
@@ -20,11 +20,9 @@ const {
 } = __non_webpack_require__('/lib/featureToggle')
 
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const languageLib = __non_webpack_require__('/lib/ssb/utils/language')
 const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
-const view = resolve('./article.html')
 
 exports.get = (req) => {
   try {
@@ -36,7 +34,8 @@ exports.get = (req) => {
 
 function renderPart(req) {
   const page = getContent()
-  const language = page.language ? page.language === 'en' ? 'en-gb' : page.language : 'nb'
+  const language = page.language ? (page.language === 'en' ? 'en-gb' : page.language) : 'nb'
+  const phrases = getPhrases(page)
 
   const bodyText = processHtml({
     value: page.data.articleText ? page.data.articleText.replace(/&nbsp;/g, ' ') : undefined
@@ -53,46 +52,20 @@ function renderPart(req) {
   }
 
   const authorConfig = page.data.authorItemSet ? forceArray(page.data.authorItemSet) : []
-  const authors = authorConfig.map((author) => {
+  const authors = authorConfig.length ? authorConfig.map((author) => {
     return {
       name: author.name,
       email: author.email
     }
-  })
+  }) : undefined
 
-  const phrases = languageLib.getPhrases(page)
-
-  const associatedStatisticsHeader = phrases.associatedStatisticsHeader
   const associatedStatisticsConfig = page.data.associatedStatistics ? forceArray(page.data.associatedStatistics) : []
-  const associatedStatisticsLinks = getAssociatedStatisticsLinks(associatedStatisticsConfig)
-
-  const associatedStatisticsLinksComponent = new React4xp('Links')
-    .setProps({
-      links: associatedStatisticsLinks.map((statistics) => {
-        return {
-          ...statistics
-        }
-      })
-    })
-    .uniqueId()
-
-  const associatedArticleArchivesHeader = phrases.associatedArticleArchivesHeader
   const associatedArticleArchivesConfig = page.data.articleArchive ? forceArray(page.data.articleArchive) : []
-  const associatedArticleArchiveLinks = getAssociatedArticleArchiveLinks(associatedArticleArchivesConfig)
 
-  const associatedArticleArchiveLinksComponent = new React4xp('Links')
-    .setProps({
-      links: associatedArticleArchiveLinks.map((articleArchiveLinks) => {
-        return {
-          ...articleArchiveLinks
-        }
-      })
-    })
-    .uniqueId()
-
-  const model = {
+  const props = {
+    phrases,
+    introTitle: page.data.introTitle,
     title: page.displayName,
-    language: languageLib.getLanguage(page),
     ingress: page.data.ingress,
     bodyText,
     showPubDate: page.data.showPublishDate,
@@ -100,39 +73,15 @@ function renderPart(req) {
     modifiedDate,
     authors,
     serialNumber: page.data.serialNumber,
-    introTitle: page.data.introTitle,
-    isbn: isEnabled('article-isbn', true) && page.data.isbnNumber,
-    associatedStatisticsHeader,
-    associatedStatisticsLinksId: associatedStatisticsLinksComponent.react4xpId,
-    associatedArticleArchivesHeader,
-    associatedArticleArchiveLinksId: associatedArticleArchiveLinksComponent.react4xpId
+    associatedStatistics: getAssociatedStatisticsLinks(associatedStatisticsConfig),
+    associatedArticleArchives: getAssociatedArticleArchiveLinks(associatedArticleArchivesConfig),
+    isbn: isEnabled('article-isbn', true) && page.data.isbnNumber
   }
 
-  const thymeLeadBody = render(view, model)
-  if (associatedStatisticsLinksComponent.length) {
-    return {
-      body: associatedArticleArchiveLinksComponent.renderBody({
-        body: thymeLeadBody
-      }),
-      pageContributions: associatedArticleArchiveLinksComponent.renderPageContributions()
-    }
-  }
-
-  if (associatedArticleArchivesConfig.length) {
-    return {
-      body: associatedStatisticsLinksComponent.renderBody({
-        body: thymeLeadBody
-      }),
-      pageContributions: associatedStatisticsLinksComponent.renderPageContributions()
-    }
-  }
-
-  return {
-
-  }
+  return React4xp.render('site/parts/article/article', props, req)
 }
 
-const getAssociatedStatisticsLinks = (associatedStatisticsConfig) => {
+function getAssociatedStatisticsLinks(associatedStatisticsConfig) {
   if (associatedStatisticsConfig.length) {
     return associatedStatisticsConfig.map((option) => {
       if (option._selected === 'XP') {
@@ -143,7 +92,7 @@ const getAssociatedStatisticsLinks = (associatedStatisticsConfig) => {
 
         if (associatedStatisticsXPContent) {
           return {
-            children: associatedStatisticsXPContent.displayName,
+            text: associatedStatisticsXPContent.displayName,
             href: associatedStatisticsXP ? pageUrl({
               id: associatedStatisticsXP
             }) : ''
@@ -153,7 +102,7 @@ const getAssociatedStatisticsLinks = (associatedStatisticsConfig) => {
         const associatedStatisticsCMS = option.CMS
 
         return {
-          children: associatedStatisticsCMS.title,
+          text: associatedStatisticsCMS.title,
           href: associatedStatisticsCMS.href
         }
       }
@@ -162,7 +111,7 @@ const getAssociatedStatisticsLinks = (associatedStatisticsConfig) => {
   return []
 }
 
-const getAssociatedArticleArchiveLinks = (associatedArticleArchivesConfig) => {
+function getAssociatedArticleArchiveLinks(associatedArticleArchivesConfig) {
   if (associatedArticleArchivesConfig.length) {
     return associatedArticleArchivesConfig.map((articleArchive) => {
       const articleArchiveContent = articleArchive ? get({
@@ -171,7 +120,7 @@ const getAssociatedArticleArchiveLinks = (associatedArticleArchivesConfig) => {
 
       if (articleArchiveContent) {
         return {
-          children: articleArchiveContent.displayName,
+          text: articleArchiveContent.displayName,
           href: articleArchive ? pageUrl({
             id: articleArchive
           }) : ''

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from '@statisticsnorway/ssb-component-library'
+import { Title, Link, Divider } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 
 function Article(props) {
@@ -11,7 +11,7 @@ function Article(props) {
     return (
       <div className="title-ingress-wrapper">
         {introTitle && <p className="introTitle">{introTitle}</p>}
-        <h1 className="col-lg-10">{title}</h1>
+        <Title size={1} className="col-lg-10">{title}</Title>
         {ingress && <p className="ingress col-lg-8">{ingress}</p>}
       </div>
     )
@@ -23,7 +23,7 @@ function Article(props) {
     } = props
 
     return (
-      <div className="row p-0">
+      <div className="snr-dates-wrapper">
         {serialNumber && <p className="font-weight-bold">{serialNumber}</p>}
         {showPubDate && <p><span className="font-weight-bold mr-1">{phrases.published}:</span>{pubDate}</p>}
         {modifiedDate && <p><span className="font-weight-bold mr-1">{phrases.modified}:</span>{modifiedDate}</p>}
@@ -36,17 +36,19 @@ function Article(props) {
       authors, phrases
     } = props
 
-    if (authors.length) {
+    if (authors) {
       return (
-        <div className="row p-0">
-          <p className="mr-1">{phrases.author}:</p>
-          {authors.map((author, index) => {
-            return (
-              <>
-                <Link key={`author-${index}`} href={author.email}>{author.name}</Link> {index < author.length - 1 ? ',' : ''}
-              </>
-            )
-          })}
+        <div className="author-wrapper">
+          <p>
+            <span className="mr-1">{phrases.author}:</span>
+            {authors.map((author, index) => {
+              return (
+                <span key={`author-${index}`}>
+                  <Link href={author.email}>{author.name}</Link> {index < authors.length - 1 ? ', ' : ''}
+                </span>
+              )
+            })}
+          </p>
         </div>
       )
     }
@@ -54,12 +56,12 @@ function Article(props) {
 
   function renderArticleBody() {
     const {
-      bodyText
+      bodyText, associatedStatistics, associatedArticleArchives
     } = props
 
     if (bodyText) {
       return (
-        <div className="col-10 col-md-12">
+        <div className={`${associatedStatistics.length || associatedArticleArchives.length ? 'col-lg-6' : 'col-12'} col-md-12 p-0`}>
           <div className="article-body"
             dangerouslySetInnerHTML={{
               __html: bodyText
@@ -78,12 +80,16 @@ function Article(props) {
     if (associatedStatistics.length) {
       return (
         <div className="part-associated-statistics">
-          <h3>{phrases.associatedStatisticsHeader}</h3>
-          {associatedStatistics.map((associatedStatistic, index) => {
-            return (
-              <Link key={`associated-statistic-${index}`} href={associatedStatistic.href}>{associatedStatistic.text}</Link>
-            )
-          })}
+          <Title size={3}>{phrases.associatedStatisticsHeader}</Title>
+          <div>
+            {associatedStatistics.map((associatedStatistic, index) => {
+              return (
+                <div key={`associated-statistic-${index}`} className="col-12 p-0">
+                  <Link href={associatedStatistic.href}>{associatedStatistic.text}</Link>
+                </div>
+              )
+            })}
+          </div>
         </div>
       )
     }
@@ -97,12 +103,16 @@ function Article(props) {
     if (associatedArticleArchives.length) {
       return (
         <div className="part-associated-article-archives">
-          <h3>{phrases.associatedArticleArchivesHeader}</h3>
-          {associatedArticleArchives.map((associatedArticleArchive, index) => {
-            return (
-              <Link key={`associated-article-archive-${index}`} href={associatedArticleArchive.href}>{associatedArticleArchive.text}</Link>
-            )
-          })}
+          <Title size={3}>{phrases.associatedArticleArchivesHeader}</Title>
+          <div>
+            {associatedArticleArchives.map((associatedArticleArchive, index) => {
+              return (
+                <div key={`associated-article-archive-${index}`} className="col-12 p-0">
+                  <Link href={associatedArticleArchive.href}>{associatedArticleArchive.text}</Link>
+                </div>
+              )
+            })}
+          </div>
         </div>
       )
     }
@@ -125,26 +135,21 @@ function Article(props) {
   }
 
   return (
-    <section className="xp-part article container-fluid">
+    <section className="xp-part article container-fluid p-0 mb-5">
       <div className="row">
         <div className="col-12 offset-lg-1 p-0">
-          {renderTitleIngress()}
-        </div>
-        <div className="col-12 p-0">
-          <div className="snr-dates-wrapper">
+          <div className="container row p-0">
+            {renderTitleIngress()}
             {renderSNRDates()}
-          </div>
-          <div className="author-wrapper">
             {renderAuthors()}
-          </div>
-        </div>
-        <div className="col-12 p-0">
-          <div className="row">
             {renderArticleBody()}
-            <div className="col associated-links-wrapper">
+            {(props.associatedStatistics || props.associatedArticleArchives) &&
+            <div className="col p-0">
+              <Divider className="col-md-12 d-md-none" />
               {renderAssociatedStatistics()}
               {renderAssociatedArticleArchives()}
             </div>
+            }
           </div>
         </div>
         {renderISBN()}
@@ -154,10 +159,10 @@ function Article(props) {
 }
 
 Article.propTypes = {
+  phrases: PropTypes.object,
   introTitle: PropTypes.string,
   title: PropTypes.string,
   ingress: PropTypes.string,
-  phrases: PropTypes.object,
   serialNumber: PropTypes.string,
   showPubDate: PropTypes.string,
   pubDate: PropTypes.string,
