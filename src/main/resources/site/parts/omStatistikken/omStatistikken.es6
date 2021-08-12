@@ -11,17 +11,15 @@ const {
   getStatisticByIdFromRepo
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
-const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
 const util = __non_webpack_require__('/lib/util')
 const {
   getReleaseDatesByVariants
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')
-
-const view = resolve('./omStatistikken.html')
+const {
+  fromPartCache
+} = __non_webpack_require__('/lib/ssb/cache/partCache')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   moment
@@ -29,17 +27,26 @@ const {
 
 exports.get = function(req) {
   try {
-    const aboutTheStatisticsId = getContent().data.aboutTheStatistics
-    return renderPart(req, aboutTheStatisticsId)
+    return renderPart(req, getContent().data.aboutTheStatistics)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-exports.preview = (req, id) => renderPart(req, [id])
+exports.preview = (req, id) => renderPart(req, id)
 
 function renderPart(req, aboutTheStatisticsId) {
   const page = getContent()
+  if (req.mode === 'edit') {
+    return getOmStatistikken(req, page, aboutTheStatisticsId)
+  } else {
+    return fromPartCache(req, `${page._id}-omStatistikken`, () => {
+      return getOmStatistikken(req, page, aboutTheStatisticsId)
+    })
+  }
+}
+
+function getOmStatistikken(req, page, aboutTheStatisticsId) {
   const phrases = getPhrases(page)
   const language = page.language ? page.language === 'en' ? 'en-gb' : page.language : 'nb'
 
@@ -63,11 +70,13 @@ function renderPart(req, aboutTheStatisticsId) {
 
   if (!aboutTheStatisticsId) {
     if (req.mode === 'edit' && page.type !== `${app.name}:statistics`) {
-      return {
-        body: render(view, {
-          aboutStatisticLabel
-        })
-      }
+      return React4xp.render('site/parts/omStatistikken/omStatistikken', {
+        accordions: [],
+        label: aboutStatisticLabel,
+        ingress: ''
+      }, req, {
+        clientRender: req.mode !== 'edit'
+      })
     } else {
       return {
         body: null
@@ -96,17 +105,17 @@ function renderPart(req, aboutTheStatisticsId) {
   }
   const accordions = []
   isNotEmpty(content.definition) ? accordions.push(
-    getAccordion('om-statistikken-definisjoner', phrases.definitions, content.definition, items.definition)) : undefined
+    getAccordion('om-statistikken-definisjoner', phrases.definitions, content.definition, items.definition, phrases)) : undefined
   isNotEmpty(content.administrativeInformation) ? accordions.push(
     getAccordion('om-statistikken-administrative_opplysninger', phrases.administrativeInformation,
-      content.administrativeInformation, items.administrativeInformation)) : undefined
+      content.administrativeInformation, items.administrativeInformation, phrases)) : undefined
   isNotEmpty(content.background) ? accordions.push(
-    getAccordion('om-statistikken-bakgrunn', phrases.background, content.background, items.background)) : undefined
+    getAccordion('om-statistikken-bakgrunn', phrases.background, content.background, items.background, phrases)) : undefined
   isNotEmpty(content.production) ? accordions.push(
-    getAccordion('om-statistikken-produksjon', phrases.production, content.production, items.production)) : undefined
+    getAccordion('om-statistikken-produksjon', phrases.production, content.production, items.production, phrases)) : undefined
   isNotEmpty(content.accuracyAndReliability) ? accordions.push(
     getAccordion('om-statistikken-feilkilder', phrases.accuracyAndReliability,
-      content.accuracyAndReliability, items.accuracyAndReliability)) : undefined
+      content.accuracyAndReliability, items.accuracyAndReliability, phrases)) : undefined
 
   const relevantDocumentation = {
     id: 'om-statistikken-relevant-dokumentasjon',
@@ -123,7 +132,7 @@ function renderPart(req, aboutTheStatisticsId) {
 
   isNotEmpty(content.aboutSeasonalAdjustment) ? accordions.push(
     getAccordion('om-sesongjustering', phrases.aboutSeasonalAdjustment, content.aboutSeasonalAdjustment,
-      items.aboutSeasonalAdjustment)) : undefined
+      items.aboutSeasonalAdjustment, phrases)) : undefined
 
   if (accordions.length === 0) {
     accordions.push({
@@ -133,60 +142,46 @@ function renderPart(req, aboutTheStatisticsId) {
     })
   }
 
-  const props = {
-    accordions: accordions
-  }
-
-  const omStatistikken = new React4xp('site/parts/accordion/accordion').setProps(props).setId('omStatistikken')
-    .uniqueId()
-
-  const model = {
-    omStatistikkenId: omStatistikken.react4xpId,
+  return React4xp.render('site/parts/omStatistikken/omStatistikken', {
+    accordions,
     label: aboutStatisticLabel,
     ingress: content.ingress
+  }, req, {
+    clientRender: req.mode !== 'edit'
+  })
+}
+
+function getAccordion(id, categoryText, category, items, phrases) {
+  const accordion = {
+    id: id,
+    body: '',
+    open: categoryText,
+    items: getItems(category, items, phrases)
   }
 
-  const body = render(view, model)
+  return accordion
+}
 
-  return {
-    body: omStatistikken.renderBody({
-      body: body
-    }),
-    pageContributions: omStatistikken.renderPageContributions()
+function getItems(category, variables, phrases) {
+  const items = []
+
+  if (category) {
+    variables.forEach((variable) => {
+      const item = {
+        title: phrases[variable],
+        body: category[variable] ? processHtml({
+          value: category[variable].replace(/&nbsp;/g, ' ')
+        }) : phrases.notRelevant
+      }
+      items.push(item)
+    })
   }
+  return items
+}
 
-  function getAccordion(id, categoryText, category, items) {
-    const accordion = {
-      id: id,
-      body: '',
-      open: categoryText,
-      items: getItems(category, items)
-    }
-
-    return accordion
+function isNotEmpty(obj) {
+  if (obj) {
+    return Object.keys(obj).length > 0
   }
-
-  function getItems(category, variables) {
-    const items = []
-
-    if (category) {
-      variables.forEach((variable) => {
-        const item = {
-          title: phrases[variable],
-          body: category[variable] ? processHtml({
-            value: category[variable].replace(/&nbsp;/g, ' ')
-          }) : phrases.notRelevant
-        }
-        items.push(item)
-      })
-    }
-    return items
-  }
-
-  function isNotEmpty(obj) {
-    if (obj) {
-      return Object.keys(obj).length > 0
-    }
-    return false
-  }
+  return false
 }
