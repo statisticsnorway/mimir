@@ -1,0 +1,21 @@
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1180px
+);
+
+@import "bootstrap";
+@import "@statisticsnorway/ssb-component-library/src/main.scss";
+@import "./header";
+@import "./footer";
+
+.container {
+    padding: 0;
+    @include media-breakpoint-down(md) {
+      .grid-divider:last-child {
+        display: none;
+      }
+    }
+  }
+
