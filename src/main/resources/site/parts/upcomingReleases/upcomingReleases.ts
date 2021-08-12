@@ -14,7 +14,6 @@ const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getContent,
   getComponent,
-  pageUrl,
   processHtml,
   serviceUrl
 } = __non_webpack_require__('/lib/xp/portal')
@@ -88,10 +87,7 @@ function renderPart(req: Request): React4xpResponse {
       day: date.format('D'),
       month: date.format('M'),
       monthName: date.format('MMM'),
-      year: date.format('YYYY'),
-      statisticsPageUrl: pageUrl({
-        id: r._id
-      })
+      year: date.format('YYYY')
     }
   })
 
@@ -136,5 +132,4 @@ interface PreparedUpcomingRelease extends UpcomingRelease {
   month: string;
   monthName: string;
   year: string;
-  statisticsPageUrl: string | undefined;
 }

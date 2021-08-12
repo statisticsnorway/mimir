@@ -1,0 +1,6 @@
+<part>
+  <display-name>Liste standard kort</display-name>
+  <form>
+    <mixin name="standardCardsList" />
+  </form>
+</part>
