@@ -7,7 +7,7 @@ const {
   get
 } = __non_webpack_require__('/lib/xp/content')
 const {
-  getContent, processHtml
+  getContent, pageUrl, processHtml
 } = __non_webpack_require__('/lib/xp/portal')
 const {
   render
@@ -19,6 +19,7 @@ const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
 
+const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const languageLib = __non_webpack_require__('/lib/ssb/utils/language')
 const {
   moment
@@ -107,37 +108,45 @@ function renderPart(req) {
     associatedArticleArchiveLinksId: associatedArticleArchiveLinksComponent.react4xpId
   }
 
-  const associatedStatisticsLinksComponentBody = associatedStatisticsLinksComponent.renderBody({
-    body: render(view, model)
-  })
-  const associatedStatisticsLinksComponentPC = associatedStatisticsLinksComponent.renderPageContributions()
+  const thymeLeadBody = render(view, model)
+  if (associatedStatisticsLinksComponent.length) {
+    return {
+      body: associatedArticleArchiveLinksComponent.renderBody({
+        body: thymeLeadBody
+      }),
+      pageContributions: associatedArticleArchiveLinksComponent.renderPageContributions()
+    }
+  }
+
+  if (associatedArticleArchivesConfig.length) {
+    return {
+      body: associatedStatisticsLinksComponent.renderBody({
+        body: thymeLeadBody
+      }),
+      pageContributions: associatedStatisticsLinksComponent.renderPageContributions()
+    }
+  }
 
   return {
-    body: associatedArticleArchiveLinksComponent.renderBody({
-      associatedStatisticsLinksComponentBody
-    }),
-    pageContributions: associatedArticleArchiveLinksComponent.renderPageContributions({
-      associatedStatisticsLinksComponentPC
-    }),
-    contentType: 'text/html'
+
   }
 }
 
 const getAssociatedStatisticsLinks = (associatedStatisticsConfig) => {
-  if (associatedStatisticsConfig.length > 0) {
+  if (associatedStatisticsConfig.length) {
     return associatedStatisticsConfig.map((option) => {
       if (option._selected === 'XP') {
         const associatedStatisticsXP = option.XP.content
-        const associatedStatisticsXPContent = get({
+        const associatedStatisticsXPContent = associatedStatisticsXP ? get({
           key: associatedStatisticsXP
-        })
+        }) : undefined
 
         if (associatedStatisticsXPContent) {
           return {
             children: associatedStatisticsXPContent.displayName,
-            href: pageUrl({
+            href: associatedStatisticsXP ? pageUrl({
               id: associatedStatisticsXP
-            })
+            }) : ''
           }
         }
       } else if (option._selected === 'CMS') {
@@ -154,21 +163,20 @@ const getAssociatedStatisticsLinks = (associatedStatisticsConfig) => {
 }
 
 const getAssociatedArticleArchiveLinks = (associatedArticleArchivesConfig) => {
-  if (associatedArticleArchivesConfig.length > 0) {
+  if (associatedArticleArchivesConfig.length) {
     return associatedArticleArchivesConfig.map((articleArchive) => {
-      const articleArchiveContent = get({
+      const articleArchiveContent = articleArchive ? get({
         key: articleArchive
-      })
+      }) : undefined
 
       if (articleArchiveContent) {
         return {
           children: articleArchiveContent.displayName,
-          href: pageUrl({
+          href: articleArchive ? pageUrl({
             id: articleArchive
-          })
+          }) : ''
         }
       }
-      return null
     }).filter((articleArchive) => !!articleArchive)
   }
   return []
