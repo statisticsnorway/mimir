@@ -8,7 +8,7 @@ import { TaskMapper } from 'enonic-types/cron'
 import { RSSFilter } from './rss'
 
 const {
-  clearOmStatistikkenFromPartCache
+  clearPartFromPartCache
 } = __non_webpack_require__('/lib/ssb/cache/partCache')
 const {
   publishDataset
@@ -213,7 +213,9 @@ export function setupCronJobs(): void {
     name: 'clear cache',
     cron: clearCacheCron,
     callback: () => {
-      clearOmStatistikkenFromPartCache()
+      clearPartFromPartCache('omStatistikken')
+      clearPartFromPartCache('releasedStatistics')
+      clearPartFromPartCache('kpiCalculator')
     },
     context: cronContext
   })

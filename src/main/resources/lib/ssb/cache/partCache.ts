@@ -45,15 +45,15 @@ export function completelyClearPartCache(branch: string): void {
   partCache.clear()
 }
 
-export function clearOmStatistikkenFromPartCache(): void {
-  cacheLog(`clear omStatistikken from part cache (draft and master)`)
-  masterPartCache.removePattern('.*omStatistikken')
-  draftPartCache.removePattern('.*omStatistikken')
+export function clearPartFromPartCache(part: string): void {
+  cacheLog(`clear ${part} from part cache (draft and master)`)
+  masterPartCache.removePattern(`.*${part}`)
+  draftPartCache.removePattern(`.*${part}`)
 }
 
 export interface SSBPartCacheLibrary {
   fromPartCache: <T>(req: Request, key: string, fallback: () => T) => T;
   clearPartCache: (content: Content, branch: string) => void;
   completelyClearPartCache: (branch: string) => void;
-  clearOmStatistikkenFromPartCache: () => void;
+  clearPartFromPartCache: (part: string) => void;
 }
