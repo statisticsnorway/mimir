@@ -3,6 +3,8 @@ import { Title, Link, Divider } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 
 function Article(props) {
+  const phrases = props.phrases
+
   function renderTitleIngress() {
     const {
       introTitle, title, ingress
@@ -19,7 +21,7 @@ function Article(props) {
 
   function renderSNRDates() {
     const {
-      serialNumber, phrases, showPubDate, pubDate, modifiedDate
+      serialNumber, showPubDate, pubDate, modifiedDate
     } = props
 
     return (
@@ -33,7 +35,7 @@ function Article(props) {
 
   function renderAuthors() {
     const {
-      authors, phrases
+      authors
     } = props
 
     if (authors) {
@@ -44,7 +46,7 @@ function Article(props) {
             {authors.map((author, index) => {
               return (
                 <span key={`author-${index}`}>
-                  <Link href={author.email}>{author.name}</Link> {index < authors.length - 1 ? ', ' : ''}
+                  <Link href={author.email}>{author.name}</Link>{index < authors.length - 1 ? ', ' : ''}
                 </span>
               )
             })}
@@ -61,7 +63,7 @@ function Article(props) {
 
     if (bodyText) {
       return (
-        <div className={`${associatedStatistics.length || associatedArticleArchives.length ? 'col-lg-6' : 'col-12'} col-md-12 p-0`}>
+        <div className={`${associatedStatistics.length || associatedArticleArchives.length ? 'col-lg-7' : 'col-lg-8'} p-0`}>
           <div className="article-body"
             dangerouslySetInnerHTML={{
               __html: bodyText
@@ -74,12 +76,12 @@ function Article(props) {
 
   function renderAssociatedStatistics() {
     const {
-      associatedStatistics, phrases
+      associatedStatistics
     } = props
 
     if (associatedStatistics.length) {
       return (
-        <div className="part-associated-statistics">
+        <div className="part-associated-statistics mt-lg-0">
           <Title size={3}>{phrases.associatedStatisticsHeader}</Title>
           <div>
             {associatedStatistics.map((associatedStatistic, index) => {
@@ -97,12 +99,12 @@ function Article(props) {
 
   function renderAssociatedArticleArchives() {
     const {
-      associatedArticleArchives, phrases
+      associatedArticleArchives, associatedStatistics
     } = props
 
     if (associatedArticleArchives.length) {
       return (
-        <div className="part-associated-article-archives">
+        <div className={`part-associated-article-archives ${!associatedStatistics.length ? 'mt-lg-0' : ''}`}>
           <Title size={3}>{phrases.associatedArticleArchivesHeader}</Title>
           <div>
             {associatedArticleArchives.map((associatedArticleArchive, index) => {
@@ -118,24 +120,22 @@ function Article(props) {
     }
   }
 
-  function renderISBN() {
+  function renderISBN(mobile) {
     const {
       isbn
     } = props
 
     if (isbn) {
       return (
-        <div className="col-12 p-0 mt-4">
-          <p className="text-center">
-            <span className="font-weight-bold">ISBN (elektronisk): </span> {isbn}
-          </p>
+        <div className={`col-12 p-0 article-isbn ${mobile ? 'd-flex d-lg-none' : 'd-none justify-content-center d-lg-flex'} `}>
+          <span className="font-weight-bold mr-1">{phrases.isbnElectronic}:</span>{isbn}
         </div>
       )
     }
   }
 
   return (
-    <section className="xp-part article container-fluid p-0 mb-5">
+    <section className="xp-part article container p-0 mb-5">
       <div className="row">
         <div className="col-12 offset-lg-1 p-0">
           <div className="container row p-0">
@@ -143,16 +143,17 @@ function Article(props) {
             {renderSNRDates()}
             {renderAuthors()}
             {renderArticleBody()}
+            {renderISBN(true)}
             {(props.associatedStatistics || props.associatedArticleArchives) &&
-            <div className="col p-0">
-              <Divider className="col-md-12 d-md-none" />
+            <div className="col-lg-3 p-0">
+              <Divider className="d-md-none" />
               {renderAssociatedStatistics()}
               {renderAssociatedArticleArchives()}
             </div>
             }
           </div>
         </div>
-        {renderISBN()}
+        {renderISBN(false)}
       </div>
     </section>
   )
