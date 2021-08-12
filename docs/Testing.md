@@ -18,7 +18,7 @@ More information on how to run Mabl locally and how to write good tests [can be 
 
 ## Performance testing with Gatling
 ### Setup
-- Download and unpack Gatling (open source package)[https://gatling.io/open-source/]. 
+- Download and unpack Gatling [open source package](https://gatling.io/open-source/). 
 - Unzip the package in a suitable location (windows users are adviced to avoid C:\Programs and similar folders due to permission restrictions)
 - Delete the example "user-files" folder from the unzipped package
 - Either do one or the other of these: 
