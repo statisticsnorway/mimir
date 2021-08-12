@@ -1,16 +1,18 @@
 .external-card {
-  border: 1px solid $ssb-dark-2;
-  background-color: $ssb-white;
 
-  &:hover {
-    border: 1px solid $ssb-green-4;
+  &.ssb-card {
+
+  .card-content {
+    border-top: 1px solid $ssb-dark-2;
   }
 
-  img {
-    padding-top: 20px;
-    padding-bottom: 20px;
+  .clickable {
+
+    &:hover {
+      .card-content {
+        border-top: 1px solid $ssb-green-4;
+      }
+    }
   }
-  a.ssb-link {
-    margin-bottom: 20px;
   }
 }
