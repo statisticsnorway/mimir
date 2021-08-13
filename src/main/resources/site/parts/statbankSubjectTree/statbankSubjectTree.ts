@@ -22,33 +22,44 @@ const {
 const {
   ensureArray
 } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
+const {
+  fromPartCache
+} = __non_webpack_require__('/lib/ssb/cache/partCache')
 
 export function get(req: Request): React4xpResponse {
   const isNotInEditMode: boolean = req.mode !== 'edit'
   const content: Content = getContent()
-  const language: string = content.language === 'en' ? 'en' : 'no'
+  if (isNotInEditMode) {
+    return fromPartCache(req, `statbankSubjectTree-${content.language}`, () => {
+      return getStatbankSubjectTree(req, content)
+    })
+  } else {
+    return getStatbankSubjectTree(req, content)
+  }
+}
+
+function getStatbankSubjectTree(req: Request, content: Content): React4xpResponse {
   const allMainSubjects: Array<SubjectItem> = getMainSubjects(content.language)
   const allSubSubjects: Array<SubjectItem> = getSubSubjects(req)
   const statregStatistics: Array<StatisticInListing> = ensureArray(getAllStatisticsFromRepo())
   const statistics: Array<StatisticItem> = getStatistics(statregStatistics)
-  const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
-  const statbankBaseUrl: string = content.language && content.language === 'en' ? baseUrl + '/en/statbank/list/' : baseUrl + '/statbank/list/'
-  const mainSubjects: Array<MainSubjectWithSubs> = allMainSubjects.map( (subjectItem) => {
+  const mainSubjects: Array<MainSubjectWithSubs> = allMainSubjects.map((subjectItem) => {
     const subSubjectsFromPath: Array<SubjectItem> = getSubSubjectsByPath(allSubSubjects, subjectItem.path)
     const preparedSubSubjects: Array<SubSubjectsWithStatistics> = subSubjectsFromPath.map((subSubject) =>
-      prepareSubSubjects(subSubject, statregStatistics, statistics, language))
+      prepareSubSubjects(subSubject, statregStatistics, statistics, content.language === 'en' ? 'en' : 'no'))
     return {
       ...subjectItem,
       subSubjects: preparedSubSubjects
     }
   })
-
+  const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
+  const statbankBaseUrl: string = content.language && content.language === 'en' ? baseUrl + '/en/statbank/list/' : baseUrl + '/statbank/list/'
   const props: ReactProps = {
     statbankBaseUrl,
     mainSubjects
   }
   return React4xp.render('site/parts/statbankSubjectTree/statbankSubjectTree', props, req, {
-    clientRender: isNotInEditMode
+    clientRender: req.mode !== 'edit'
   })
 }
 

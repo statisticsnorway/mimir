@@ -1,5 +1,5 @@
-.part-kpi-calculator, .part-pif-calculator, .part-bkibol-calculator {
-  .kpi-calculator, .pif-calculator, .bkibol-calculator {
+
+  .kpi-calculator, .pif-calculator, .bkibol-calculator, .husleie-calculator {
     border: solid 1px $ssb-dark-5;
     border-top: 4px solid $green3;
     background: $ssb-white;
@@ -315,5 +315,50 @@
       }
     }
 
+  }
+
+  .husleie-calculator{
+
+   .calculator-form {
+
+    .submit-one-year {
+      margin-right: 20px;
+    }
+
+    @include media-breakpoint-down(md) {
+      .ssb-dropdown {
+        max-width: none;
+      }
+      .ssb-input {
+        max-width: none;
+      }
+
+      .select-month {
+        padding-right: 5px;
+        padding-left:0;
+      }
+
+    }
+
+    @include media-breakpoint-down(sm) {
+      .submit-one-year{
+        margin-right: 0;
+        margin-bottom: 10px;
+      }
+
+      .submit-one-year, .submit-last-period {
+        width: 100%;
+      }
+    }
+  }
+
+  .calculator-result {
+    
+    @include media-breakpoint-down(sm) {
+      .price-change-text{
+        margin-top: 15px;
+      }
+
+    }
   }
 }

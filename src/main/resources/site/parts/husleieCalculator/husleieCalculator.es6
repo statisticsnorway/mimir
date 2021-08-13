@@ -5,9 +5,6 @@ const {
   pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
 const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
-const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
@@ -17,57 +14,27 @@ const {
 const {
   getCalculatorConfig, getKpiDatasetMonth
 } = __non_webpack_require__('/lib/ssb/dataset/calculator')
-const {
-  fromPartCache
-} = __non_webpack_require__('/lib/ssb/cache/partCache')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
-const view = resolve('./kpiCalculator.html')
 
 exports.get = function(req) {
   try {
-    return renderPart(req)
+    const component = getComponent()
+    return renderPart(req, component.config)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-exports.preview = function(req, id) {
-  try {
-    return renderPart(req, id)
-  } catch (e) {
-    return renderError(req, 'Error in part', e)
-  }
-}
+exports.preview = (req) => renderPart(req)
 
 function renderPart(req) {
   const page = getContent()
-  let kpiCalculator
-  if (req.mode === 'edit') {
-    kpiCalculator = getKpiCalculatorComponent(page)
-  } else {
-    kpiCalculator = fromPartCache(req, `${page._id}-kpiCalculator`, () => {
-      return getKpiCalculatorComponent(page)
-    })
-  }
-
-  const pageContributions = kpiCalculator.component.renderPageContributions({
-    clientRender: req.mode !== 'edit'
-  })
-  return {
-    body: kpiCalculator.body,
-    pageContributions
-  }
-}
-
-const getKpiCalculatorComponent = (page) => {
   const part = getComponent()
-  const frontPage = !!part.config.frontPage
-  const frontPageIngress = part.config.ingressFrontpage && part.config.ingressFrontpage
   const language = getLanguage(page)
   const phrases = language.phrases
   const config = getCalculatorConfig()
   const kpiDataMonth = getKpiDatasetMonth(config)
-  const months = allMonths(phrases, frontPage)
+  const months = allMonths(phrases)
   const lastUpdated = lastPeriod(kpiDataMonth)
   const nextUpdate = nextPeriod(lastUpdated.month, lastUpdated.year)
   const nextReleaseMonth = nextUpdate.month === 12 ? 1 : nextUpdate.month + 1
@@ -89,11 +56,11 @@ const getKpiCalculatorComponent = (page) => {
       lastUpdated.year
     ]
   })
-  const calculatorArticleUrl = part.config.kpiCalculatorArticle && pageUrl({
-    id: part.config.kpiCalculatorArticle
+  const calculatorArticleUrl = part.config.husleieCalculatorArticle && pageUrl({
+    id: part.config.husleieCalculatorArticle
   })
 
-  const kpiCalculatorComponent = new React4xp('KpiCalculator')
+  const husleieCalculator = new React4xp('site/parts/husleieCalculator/husleieCalculator')
     .setProps({
       kpiServiceUrl: serviceUrl({
         service: 'kpi'
@@ -104,18 +71,16 @@ const getKpiCalculatorComponent = (page) => {
       calculatorArticleUrl,
       nextPublishText,
       lastNumberText,
-      lastUpdated,
-      frontPage,
-      frontPageIngress
+      lastUpdated
     })
-    .setId('kpiCalculatorId')
+    .setId('husleieCalculatorId')
     .uniqueId()
+
+
   return {
-    component: kpiCalculatorComponent,
-    body: kpiCalculatorComponent.renderBody({
-      body: render(view, {
-        kpiCalculatorId: kpiCalculatorComponent.react4xpId
-      })
+    body: husleieCalculator.renderBody(),
+    pageContributions: husleieCalculator.renderPageContributions({
+      clientRender: req.mode !== 'edit'
     })
   }
 }
@@ -161,12 +126,8 @@ const nextPeriod = (month, year) => {
   }
 }
 
-const allMonths = (phrases, frontPage) => {
+const allMonths = (phrases) => {
   return [
-    {
-      id: '90',
-      title: frontPage ? phrases.calculatorMonthAverageFrontpage : phrases.calculatorMonthAverage
-    },
     {
       id: '01',
       title: phrases.january

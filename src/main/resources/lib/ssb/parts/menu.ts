@@ -4,7 +4,7 @@ import { Footer } from '../../../site/content-types/footer/footer'
 import { Header } from '../../../site/content-types/header/header'
 
 const {
-  getContent, imageUrl, pageUrl
+  imageUrl, pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
 const {
   get, getChildren, query
@@ -38,8 +38,8 @@ function createMenuBranch(menuItem: Content<MenuItem>): MenuItemParsed {
     query: `_parentPath = '/content${menuItem._path}'`,
     count: 99
   })
-  const content: Content | null = getContent()
-  const isActive: boolean = isMenuItemActive(children, content)
+  // const content: Content | null = getContent()
+  const isActive: boolean = false // isMenuItemActive(children, content)
   const iconPath: string | undefined = menuItem.data.icon ? imageUrl({
     id: menuItem.data.icon,
     scale: 'block(12,12)'
