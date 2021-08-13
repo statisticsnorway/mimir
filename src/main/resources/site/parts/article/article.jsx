@@ -46,7 +46,7 @@ function Article(props) {
             {authors.map((author, index) => {
               return (
                 <span key={`author-${index}`}>
-                  <Link href={author.email}>{author.name}</Link>{index < authors.length - 1 ? ', ' : ''}
+                  <Link href={`mailto:${author.email}`}>{author.name}</Link>{index < authors.length - 1 ? ', ' : ''}
                 </span>
               )
             })}
