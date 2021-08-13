@@ -11,10 +11,10 @@ function Article(props) {
     } = props
 
     return (
-      <div className="title-ingress-wrapper">
+      <div className="title-ingress-wrapper col-12 col-lg-8 p-0">
         {introTitle && <p className="introTitle">{introTitle}</p>}
-        <Title size={1} className="col-lg-10">{title}</Title>
-        {ingress && <p className="ingress col-lg-8">{ingress}</p>}
+        <Title size={1}>{title}</Title>
+        {ingress && <p className="ingress">{ingress}</p>}
       </div>
     )
   }
@@ -25,7 +25,7 @@ function Article(props) {
     } = props
 
     return (
-      <div className="snr-dates-wrapper">
+      <div className="snr-dates-wrapper col-12 col-lg-8 p-0">
         {serialNumber && <p className="font-weight-bold">{serialNumber}</p>}
         {showPubDate && <p><span className="font-weight-bold mr-1">{phrases.published}:</span>{pubDate}</p>}
         {modifiedDate && <p><span className="font-weight-bold mr-1">{phrases.modified}:</span>{modifiedDate}</p>}
@@ -40,7 +40,7 @@ function Article(props) {
 
     if (authors) {
       return (
-        <div className="author-wrapper">
+        <div className="author-wrapper col-12 col-lg-8 p-0">
           <p>
             <span className="mr-1">{phrases.author}:</span>
             {authors.map((author, index) => {
