@@ -39,7 +39,7 @@ dependencies {
     include "no.item:wsutil-server:2.0.0"
     include "com.gravitondigital:featuretogglelib:0.3.0"
     compile group: 'org.json', name: 'json', version: '20210307'
-    include 'com.enonic.lib:lib-react4xp:1.7.1'
+    include 'com.enonic.lib:lib-react4xp:2.0.0-RC2'
     include 'com.enonic.lib:lib-text-encoding:2.0.0'
 }
 
@@ -63,7 +63,7 @@ node {
     version = '16.1.0'
 }
 
-def react4xpGradlePath = 'react4xp.gradle'
+def react4xpGradlePath = 'node_modules/react4xp/react4xp.gradle'
 apply from: react4xpGradlePath
 
 task clientJsWebpack( type: NpxTask, dependsOn: npmInstall ) {

@@ -1,9 +1,11 @@
 const path = require('path')
 const R = require('ramda')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const {
   setEntry,
   addRule,
-  appendExtensions
+  appendExtensions,
+  addPlugin
 } = require('./util/compose')
 const env = require('./util/env')
 const isProd = env.prod
@@ -33,6 +35,12 @@ const config = {
 
 const createDefaultCssLoaders = () => ([
   {
+    loader: MiniCssExtractPlugin.loader,
+    options: {
+      publicPath: '../'
+    }
+  },
+  {
     loader: 'css-loader',
     options: {
       sourceMap: !isProd,
@@ -47,8 +55,17 @@ const createDefaultCssLoaders = () => ([
   }
 ])
 
+const createCssPlugin = () => (
+  new MiniCssExtractPlugin({
+    filename: './bundle.css',
+    chunkFilename: '[id].css'
+  })
+)
+
 // SASS & SCSS
 function addSassSupport(cfg) {
+  const plugin = createCssPlugin()
+
   const rule = {
     test: /\.(sass|scss)$/,
     use: [
@@ -63,8 +80,9 @@ function addSassSupport(cfg) {
   }
 
   return R.pipe(
-    setEntry('bundle', './main.scss'),
+    setEntry('main', './main.scss'),
     addRule(rule),
+    addPlugin(plugin),
     appendExtensions(['.sass', '.scss', '.css'])
   )(cfg)
 }
