@@ -1,3 +1,5 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
 plugins {
     id("com.github.node-gradle.node") version "2.2.3"
     id 'com.enonic.xp.app' version '2.0.0'
@@ -64,6 +66,20 @@ node {
 }
 
 def react4xpGradlePath = 'node_modules/react4xp/react4xp.gradle'
+def react4xpGradleFile = new File(react4xpGradlePath)
+if (!react4xpGradleFile.exists()) {
+    String npm = 'npm'
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        npm = 'npm.cmd'
+    }
+    def command = npm + " install"
+    println "\nNot found: $react4xpGradlePath - running shell command:"
+    println command
+    def proc = command.execute()
+    proc.in.eachLine { line -> println line }
+    proc.out.close()
+    proc.waitFor()
+}
 apply from: react4xpGradlePath
 
 task clientJsWebpack( type: NpxTask, dependsOn: npmInstall ) {
