@@ -67,8 +67,12 @@
       padding-left: 1em;
     }
 
-    p, blockquote {
+    & > * {
       margin-bottom: $spacer * 3;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      margin-bottom: $spacer * .5;
     }
 
     .part-fact-box .accordion-header {
