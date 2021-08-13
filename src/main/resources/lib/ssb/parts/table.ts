@@ -25,9 +25,6 @@ const {
   datasetOrUndefined
 } = __non_webpack_require__('/lib/ssb/cache/cache')
 const {
-  fetchStatbankSavedData
-} = __non_webpack_require__('/lib/ssb/dataset/statbankSaved/statbankSaved')
-const {
   DATASET_BRANCH,
   UNPUBLISHED_DATASET_BRANCH
 } = __non_webpack_require__('/lib/ssb/repo/dataset')
@@ -64,13 +61,13 @@ export function parseTable(req: Request, table: Content<Table>, branch: string =
         tableViewData = getTableViewData(table, tbmlData)
       }
     }
-  }
 
-  if (dataSource && dataSource._selected === DataSourceType.STATBANK_SAVED) {
-    const statbankSavedData: StatbankSavedRaw | null = fetchStatbankSavedData(table)
-    const parsedStatbankSavedData: StatbankSavedUniform = statbankSavedData ? JSON.parse(statbankSavedData.json) : null
-    if (parsedStatbankSavedData) {
-      tableViewData = getTableViewDataStatbankSaved(table, parsedStatbankSavedData)
+    if (dataSource && dataSource._selected === DataSourceType.STATBANK_SAVED) {
+      const statbankSavedData: StatbankSavedRaw | null = data as StatbankSavedRaw
+      const parsedStatbankSavedData: StatbankSavedUniform = statbankSavedData ? JSON.parse(statbankSavedData.json) : null
+      if (parsedStatbankSavedData) {
+        tableViewData = getTableViewDataStatbankSaved(table, parsedStatbankSavedData)
+      }
     }
   }
   return tableViewData
