@@ -58,12 +58,12 @@ function Article(props) {
 
   function renderArticleBody() {
     const {
-      bodyText, associatedStatistics, associatedArticleArchives
+      bodyText
     } = props
 
     if (bodyText) {
       return (
-        <div className={`${associatedStatistics.length || associatedArticleArchives.length ? 'col-lg-7' : 'col-lg-8'} p-0`}>
+        <div className="col-lg-8 p-0">
           <div className="article-body"
             dangerouslySetInnerHTML={{
               __html: bodyText
@@ -81,7 +81,7 @@ function Article(props) {
 
     if (associatedStatistics.length) {
       return (
-        <div className="part-associated-statistics mt-lg-0">
+        <div className="associated-statistics mt-lg-0">
           <Title size={3}>{phrases.associatedStatisticsHeader}</Title>
           <div>
             {associatedStatistics.map((associatedStatistic, index) => {
@@ -104,7 +104,7 @@ function Article(props) {
 
     if (associatedArticleArchives.length) {
       return (
-        <div className={`part-associated-article-archives ${!associatedStatistics.length ? 'mt-lg-0' : ''}`}>
+        <div className={`associated-article-archives ${!associatedStatistics.length ? 'mt-lg-0' : ''}`}>
           <Title size={3}>{phrases.associatedArticleArchivesHeader}</Title>
           <div>
             {associatedArticleArchives.map((associatedArticleArchive, index) => {

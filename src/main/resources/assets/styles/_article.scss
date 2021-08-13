@@ -67,7 +67,7 @@
       padding-left: 1em;
     }
 
-    p:not(:first-child), blockquote:not(:first-child) {
+    p, blockquote {
       margin-bottom: $spacer * 3;
     }
 
@@ -92,7 +92,20 @@
     }
   }
 
-  .part-associated-statistics, .part-associated-article-archives {
+  .associated-statistics, .associated-article-archives {
+    margin-top: $spacer * 2.5;
+    padding: 0;
+
+    & > * {
+    div {
+      margin-top: $spacer * 0.5;
+
+      & > * {
+        margin-bottom: $spacer * 1;
+      }
+    }
+  }
+
     @include media-breakpoint-up(lg) {
       border-left: 1px solid $ssb-dark-2;
       padding-left: $spacer;
