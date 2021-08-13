@@ -13,18 +13,20 @@ class LocalSearch extends React.Component {
 
   render() {
     return (
-      <div className="container">
-        <div className="row">
-          <div className="col-12">
-            <Title size={2}>{this.props.title}</Title>
-            <Dropdown placeholder={this.props.placeholder}
-              searchable onSelect={(selectedItem)=> this.onSelect(selectedItem)}
-              items={this.props.items}
-              className="search-field"
-            />
+      <section className="xp-part part-local-search container">
+        <div className="container">
+          <div className="row">
+            <div className="col-12">
+              <Title size={2}>{this.props.title}</Title>
+              <Dropdown placeholder={this.props.placeholder}
+                searchable onSelect={(selectedItem)=> this.onSelect(selectedItem)}
+                items={this.props.items}
+                className="search-field"
+              />
+            </div>
           </div>
         </div>
-      </div>
+      </section>
     )
   }
 }

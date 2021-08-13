@@ -13,6 +13,7 @@ Documentation for Mimir
    1. [Setup](./Eslint.md#setup)
    1. [Config](./Eslint.md#config)
 1. [Error Handling](./ErrorHandling.md)
+1. [Caching](./Caching.md)
 1. [Services](./Services.md)
    1. [Municipality](./Services.md#municipality)
    1. [Dashboard](./Services.md#dashboard)
