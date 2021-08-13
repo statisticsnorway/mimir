@@ -146,7 +146,7 @@ function Article(props) {
             {renderISBN(true)}
             {(props.associatedStatistics || props.associatedArticleArchives) &&
             <div className="col-lg-3 p-0">
-              <Divider className="d-md-none" />
+              <Divider className="d-flex d-lg-none" />
               {renderAssociatedStatistics()}
               {renderAssociatedArticleArchives()}
             </div>
