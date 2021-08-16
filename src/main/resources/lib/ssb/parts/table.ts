@@ -66,7 +66,7 @@ export function parseTable(req: Request, table: Content<Table>, branch: string =
       const statbankSavedData: StatbankSavedRaw | null = data as StatbankSavedRaw
       const parsedStatbankSavedData: StatbankSavedUniform = statbankSavedData ? JSON.parse(statbankSavedData.json) : null
       if (parsedStatbankSavedData) {
-        tableViewData = getTableViewDataStatbankSaved(table, parsedStatbankSavedData)
+        tableViewData = getTableViewDataStatbankSaved(parsedStatbankSavedData)
       }
     }
   }
@@ -116,7 +116,7 @@ function getTableViewData(table: Content<Table>, dataContent: TbmlDataUniform ):
   }
 }
 
-function getTableViewDataStatbankSaved(table: Content<Table>, dataContent: StatbankSavedUniform ): TableView {
+function getTableViewDataStatbankSaved(dataContent: StatbankSavedUniform ): TableView {
   const title: Title = dataContent.table.caption
   const headRows: Array<TableRowUniform> = forceArray(dataContent.table.thead)
     .map( (thead: Thead) => ({
