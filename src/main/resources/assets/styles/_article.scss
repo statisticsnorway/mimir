@@ -1,7 +1,5 @@
 .article {
   .title-ingress-wrapper {
-    @include make-row;
-
     display: block;
     margin-bottom: $spacer * 1;
     margin-top: 50px;
@@ -29,38 +27,27 @@
   }
 
   .snr-dates-wrapper {
-    @include make-row;
     margin-bottom: 8px;
-
-    & > * {
-      @include make-col-ready();
-      @include make-col(12);
-
-      @include media-breakpoint-up(lg) {
-        @include make-col(8);
-        @include make-col-offset(1);
-      }
-    }
 
     p {
       margin-bottom: 0;
       margin-right: 20px;
     }
+
+    @include media-breakpoint-down(md) {
+      p {
+        margin-bottom: $spacer * .5;
+      }
+    }
+
+    @include media-breakpoint-up(lg) {
+      display: flex;
+      flex-direction: row;
+    }
   }
 
   .author-wrapper {
-    @include make-row;
-    margin-bottom: $spacer * 2;
-
-    & > * {
-      @include make-col-ready();
-      @include make-col(12);
-
-      @include media-breakpoint-up(lg) {
-        @include make-col(6);
-        @include make-col-offset(1);
-      }
-    }
+    margin-bottom: $spacer * 3;
 
     p {
       margin-bottom: 0;
@@ -72,28 +59,32 @@
   }
 
   .article-body {
-    @include make-row;
-
-    & > * {
-      @include make-col-ready();
-      @include make-col(12);
-
-      &:not(.part-divider) {
-        @include media-breakpoint-up(lg) {
-          @include make-col(6);
-          @include make-col-offset(1);
-        }
-      }
-
-      padding: 0;
-    }
-
     & > * + section.part-divider, section.part-divider + * {
       margin-top: $spacer * 3;
     }
 
     ul, ol {
       padding-left: 1em;
+    }
+
+    & > * {
+      margin-bottom: $spacer * 3;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      margin-bottom: $spacer * .5;
+    }
+
+    .part-fact-box .accordion-header {
+      padding: 0;
+    }
+
+    @include media-breakpoint-down(md) {
+      margin-bottom: $spacer * 3;
+    }
+
+    @include media-breakpoint-up(lg) {
+      margin-right: $spacer * 3;
     }
   }
 
@@ -102,6 +93,36 @@
 
     @include media-breakpoint-down(md) {
       padding-left: 0 !important;
+    }
+  }
+
+  .associated-statistics, .associated-article-archives {
+    margin-top: $spacer * 2.5;
+    padding: 0;
+
+    & > * {
+    div {
+      margin-top: $spacer * 0.5;
+
+      & > * {
+        margin-bottom: $spacer * 1;
+      }
+    }
+  }
+
+    @include media-breakpoint-up(lg) {
+      border-left: 1px solid $ssb-dark-2;
+      padding-left: $spacer;
+
+      .mt-lg-0 {
+        margin-top: 0;
+      }
+    }  
+  }
+
+  .article-isbn {
+    @include media-breakpoint-down(md) {
+      margin-bottom: $spacer * 3;
     }
   }
 }
