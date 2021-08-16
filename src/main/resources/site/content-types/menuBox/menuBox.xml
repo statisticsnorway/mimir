@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <content-type>
-  <display-name>Boksmeny</display-name>
+  <display-name>Liste profilerte kort</display-name>
   <super-type>base:structured</super-type>
   <form>
     <item-set name="menu">
       <occurrences minimum="0" maximum="99"/>
-      <label>Boks</label>
+      <label>Kort</label>
       <items>
         <input type="TextLine" name="title">
           <label>Tittel</label>
@@ -30,9 +30,9 @@
           <occurrences minimum="1" maximum="1"/>
           <options minimum="1" maximum="1">
             <option name="manual">
-              <label>Url lenke</label>
+              <label>Url</label>
               <default>true</default>
-              <help-text>Fri url felt. Legges inn som dette eks. "http://www.ssb.no"</help-text>
+              <help-text>Fritt url-felt. Legges inn som dette eks. "http://www.ssb.no"</help-text>
               <items>
                 <input name="url" type="TextLine">
                   <label>Kildelenke</label>
