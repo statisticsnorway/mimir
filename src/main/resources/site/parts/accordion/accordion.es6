@@ -72,5 +72,5 @@ function renderPart(req, accordionIds) {
     accordions
   }
 
-  return React4xp.render('site/parts/accordion/accordion', props, req)
+  return React4xp.render('Accordion', props, req)
 }

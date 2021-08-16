@@ -17,6 +17,9 @@ const {
 const {
   getCalculatorConfig, getKpiDatasetMonth
 } = __non_webpack_require__('/lib/ssb/dataset/calculator')
+const {
+  fromPartCache
+} = __non_webpack_require__('/lib/ssb/cache/partCache')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 const view = resolve('./kpiCalculator.html')
 
@@ -38,6 +41,25 @@ exports.preview = function(req, id) {
 
 function renderPart(req) {
   const page = getContent()
+  let kpiCalculator
+  if (req.mode === 'edit') {
+    kpiCalculator = getKpiCalculatorComponent(page)
+  } else {
+    kpiCalculator = fromPartCache(req, `${page._id}-kpiCalculator`, () => {
+      return getKpiCalculatorComponent(page)
+    })
+  }
+
+  const pageContributions = kpiCalculator.component.renderPageContributions({
+    clientRender: req.mode !== 'edit'
+  })
+  return {
+    body: kpiCalculator.body,
+    pageContributions
+  }
+}
+
+const getKpiCalculatorComponent = (page) => {
   const part = getComponent()
   const frontPage = !!part.config.frontPage
   const frontPageIngress = part.config.ingressFrontpage && part.config.ingressFrontpage
@@ -71,7 +93,7 @@ function renderPart(req) {
     id: part.config.kpiCalculatorArticle
   })
 
-  const kpiCalculator = new React4xp('KpiCalculator')
+  const kpiCalculatorComponent = new React4xp('KpiCalculator')
     .setProps({
       kpiServiceUrl: serviceUrl({
         service: 'kpi'
@@ -88,16 +110,12 @@ function renderPart(req) {
     })
     .setId('kpiCalculatorId')
     .uniqueId()
-
-  const body = render(view, {
-    kpiCalculatorId: kpiCalculator.react4xpId
-  })
   return {
-    body: kpiCalculator.renderBody({
-      body
-    }),
-    pageContributions: kpiCalculator.renderPageContributions({
-      clientRender: req.mode !== 'edit'
+    component: kpiCalculatorComponent,
+    body: kpiCalculatorComponent.renderBody({
+      body: render(view, {
+        kpiCalculatorId: kpiCalculatorComponent.react4xpId
+      })
     })
   }
 }
