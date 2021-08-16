@@ -1,6 +1,6 @@
 export interface MenuBox {
   /**
-   * Boks
+   * Kort
    */
   menu?: Array<{
     /**
@@ -28,7 +28,7 @@ export interface MenuBox {
       _selected: string;
 
       /**
-       * Url lenke
+       * Url
        */
       manual?: {
         /**

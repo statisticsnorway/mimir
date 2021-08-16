@@ -1,6 +1,6 @@
 export interface MenuBoxPartConfig {
   /**
-   * Boks
+   * Kort
    */
   menu: string;
 }
