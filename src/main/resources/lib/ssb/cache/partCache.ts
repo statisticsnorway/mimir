@@ -19,7 +19,7 @@ const draftPartCache: Cache = newCache({
   size: 1000
 })
 
-export function fromPartCache<T>(req: Request, key: string, fallback: () => Array<T>): Array<T> {
+export function fromPartCache<T>(req: Request, key: string, fallback: () => T): T {
   const partCache: Cache = req.branch === 'master' ? masterPartCache : draftPartCache
   return partCache.get(key, () => {
     cacheLog(`added ${key} to part cache (${req.branch})`)
