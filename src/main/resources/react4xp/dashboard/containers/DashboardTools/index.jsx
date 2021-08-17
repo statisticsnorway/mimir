@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectInternalBaseUrl, selectInternalStatbankUrl, selectLoadingClearCache } from '../HomePage/selectors'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { requestClearCache } from '../HomePage/actions'
-import { RefreshCw, Trash } from 'react-feather'
-import { Col, Container, Row } from 'react-bootstrap'
+import { RefreshCw, Rss, Trash } from 'react-feather'
+import { Col, Container, Row, Alert } from 'react-bootstrap'
 import { Button, Dropdown, Input } from '@statisticsnorway/ssb-component-library'
 import { selectSearchList, selectLoadingSearchList, selectHasLoadingStatistic } from '../Statistics/selectors'
 import { setOpenStatistic, setOpenModal } from '../Statistics/actions'
@@ -12,9 +12,12 @@ import { startRefresh } from '../StatRegDashboard/actions'
 import { selectStatuses } from '../StatRegDashboard/selectors'
 import { selectStatistics } from '../Statistics/selectors'
 import { RefreshStatRegModal } from './RefreshStatRegModal'
+import axios from 'axios'
 
 export function DashboardTools() {
   const loadingCache = useSelector(selectLoadingClearCache)
+  const [pushingRss, setPushingRss] = useState(false)
+  const [pushRssResult, setPushRssResult] = useState('')
   const statisticsSearchList = useSelector(selectSearchList)
   const statistics = useSelector(selectStatistics)
   const loadingStatisticsSearchList = useSelector(selectLoadingSearchList)
@@ -59,6 +62,17 @@ export function DashboardTools() {
 
   function clearCache() {
     requestClearCache(dispatch, io)
+  }
+
+  function pushRss() {
+    setPushingRss(true)
+    axios.get(
+      'http://localhost:8080/arbeid-og-lonn/_/service/mimir/rssPush'
+    ).then((response) => {
+      setPushingRss(false)
+      setPushRssResult(response.data)
+    }
+    )
   }
 
   function renderIcon(loading) {
@@ -193,6 +207,24 @@ export function DashboardTools() {
                 {renderIcon(loadingCache)} <span>Tøm cache</span>
               </div>
             </Button>
+          </Col>
+        </Row>
+        <Row className="mb-1">
+          <Col>
+            <Button
+              primary
+              className="w-100 d-flex justify-content-center"
+              onClick={() => pushRss()}
+              disabled={pushingRss}>
+              <div>
+                <Rss /> <span>Push RSS</span>
+              </div>
+            </Button>
+          </Col>
+        </Row>
+        <Row className="mb-5">
+          <Col>
+            <Alert variant='success' show={!!pushRssResult}>{pushRssResult}</Alert>
           </Col>
         </Row>
         <Row className="mb-4">
