@@ -68,7 +68,7 @@ export function DashboardTools() {
   function pushRss() {
     setPushingRss(true)
     axios.get(
-      internalBaseUrl + '/xp/admin/_/service/mimir/rssPush'
+      '/xp/admin/_/service/mimir/rssPush'
     ).then((response) => {
       setRssStatus('success')
       setPushRssResult(response.data)
