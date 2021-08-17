@@ -196,37 +196,40 @@ export function DashboardTools() {
     <div className="p-4 tables-wrapper">
       <h2 className="mb-4">Verktøy</h2>
       <Container>
-        <Row className="mb-5">
-          <Col>
-            <Button
-              primary
-              className="w-100 d-flex justify-content-center"
-              onClick={() => clearCache()}
-              disabled={loadingCache}>
-              <div>
-                {renderIcon(loadingCache)} <span>Tøm cache</span>
-              </div>
-            </Button>
-          </Col>
-        </Row>
-        <Row className="mb-1">
-          <Col>
-            <Button
-              primary
-              className="w-100 d-flex justify-content-center"
-              onClick={() => pushRss()}
-              disabled={pushingRss}>
-              <div>
-                <Rss /> <span>Push RSS</span>
-              </div>
-            </Button>
-          </Col>
-        </Row>
-        <Row className="mb-5">
-          <Col>
-            <Alert variant='success' show={!!pushRssResult}>{pushRssResult}</Alert>
-          </Col>
-        </Row>
+        <fieldset className="danger-zone mb-3 p-2">
+          <legend align="center" className="danger-title justify-content-center">Danger Zone</legend>
+          <Row className="mb-1">
+            <Col>
+              <Button
+                primary
+                className="w-100 d-flex justify-content-center"
+                onClick={() => clearCache()}
+                disabled={loadingCache}>
+                <div>
+                  {renderIcon(loadingCache)} <span>Tøm cache</span>
+                </div>
+              </Button>
+            </Col>
+          </Row>
+          <Row className="mb-1">
+            <Col>
+              <Button
+                primary
+                className="w-100 d-flex justify-content-center"
+                onClick={() => pushRss()}
+                disabled={pushingRss}>
+                <div>
+                  <Rss /> <span>Push RSS</span>
+                </div>
+              </Button>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Alert variant='success' show={!!pushRssResult}>{pushRssResult}</Alert>
+            </Col>
+          </Row>
+        </fieldset>
         <Row className="mb-4">
           <Col className="col-9 pr-0">
             {renderStatisticsSearch()}
