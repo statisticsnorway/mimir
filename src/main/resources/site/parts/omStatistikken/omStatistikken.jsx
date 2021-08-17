@@ -18,15 +18,13 @@ const OmStatistikken = (props) => {
     return null
   }
   return (
-    <section className="xp-part part-om-statistikken container-fluid">
-      <div className="row">
-        <h2 className="title-wrapper col-12">{label}</h2>
-        {renderIngress()}
-        <div className="om-statistikken-accordion col-lg-7">
-          <Accordion accordions={accordions}/>
-        </div>
+    <div className="row">
+      <h2 className="title-wrapper col-12">{label}</h2>
+      {renderIngress()}
+      <div className="om-statistikken-accordion col-lg-7">
+        <Accordion accordions={accordions}/>
       </div>
-    </section>
+    </div>
   )
 }
 
