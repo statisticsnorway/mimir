@@ -18,6 +18,7 @@ export function DashboardTools() {
   const loadingCache = useSelector(selectLoadingClearCache)
   const [pushingRss, setPushingRss] = useState(false)
   const [pushRssResult, setPushRssResult] = useState('')
+  const [rssStatus, setRssStatus] = useState('success')
   const statisticsSearchList = useSelector(selectSearchList)
   const statistics = useSelector(selectStatistics)
   const loadingStatisticsSearchList = useSelector(selectLoadingSearchList)
@@ -67,12 +68,20 @@ export function DashboardTools() {
   function pushRss() {
     setPushingRss(true)
     axios.get(
-      'http://localhost:8080/arbeid-og-lonn/_/service/mimir/rssPush'
+      internalBaseUrl + '/xp/admin/_/service/mimir/rssPush'
     ).then((response) => {
-      setPushingRss(false)
+      setRssStatus('success')
       setPushRssResult(response.data)
     }
+    ).catch((error) => {
+      setRssStatus('danger')
+      setPushRssResult(error.message)
+    }
     )
+      .finally(() => {
+        setPushingRss(false)
+      }
+      )
   }
 
   function renderIcon(loading) {
@@ -226,7 +235,7 @@ export function DashboardTools() {
           </Row>
           <Row>
             <Col>
-              <Alert variant='success' show={!!pushRssResult}>{pushRssResult}</Alert>
+              <Alert variant={rssStatus} show={!!pushRssResult}>{pushRssResult}</Alert>
             </Col>
           </Row>
         </fieldset>

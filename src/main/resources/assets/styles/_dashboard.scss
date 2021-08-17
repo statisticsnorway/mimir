@@ -276,10 +276,11 @@
     
   .danger-zone {
     legend {
+      width: auto;
       color: white;
       background-color: black;
       margin: auto; 
-      padding: 0 4px;
+      padding: 2px 4px;
       font-family: 'Roboto Condensed';
       font-style: oblique;
     }
