@@ -1,12 +1,12 @@
 <part>
-    <display-name>Category Link Delemneside</display-name>
+    <display-name>Liste standard kort understreket</display-name>
     <form>
         <item-set name="CategoryLinkItemSet">
-            <label>Category link</label>
+            <label>Kort</label>
             <occurrences minimum="0" maximum="0"/>
             <items>
                 <input type="TextLine" name="titleText">
-                    <label>Lenke tittel</label>
+                    <label>Lenketittel</label>
                     <occurrences minimum="1" maximum="1"/>
                 </input>
                 <input type="TextLine" name="subText">

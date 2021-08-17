@@ -1,10 +1,10 @@
 export interface CategoryLinksPartConfig {
   /**
-   * Category link
+   * Kort
    */
   CategoryLinkItemSet?: Array<{
     /**
-     * Lenke tittel
+     * Lenketittel
      */
     titleText: string;
 
