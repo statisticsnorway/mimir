@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectInternalBaseUrl, selectInternalStatbankUrl, selectLoadingClearCache } from '../HomePage/selectors'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { requestClearCache } from '../HomePage/actions'
-import { RefreshCw, Trash } from 'react-feather'
-import { Col, Container, Row } from 'react-bootstrap'
+import { RefreshCw, Rss, Trash } from 'react-feather'
+import { Col, Container, Row, Alert } from 'react-bootstrap'
 import { Button, Dropdown, Input } from '@statisticsnorway/ssb-component-library'
 import { selectSearchList, selectLoadingSearchList, selectHasLoadingStatistic } from '../Statistics/selectors'
 import { setOpenStatistic, setOpenModal } from '../Statistics/actions'
@@ -12,9 +12,13 @@ import { startRefresh } from '../StatRegDashboard/actions'
 import { selectStatuses } from '../StatRegDashboard/selectors'
 import { selectStatistics } from '../Statistics/selectors'
 import { RefreshStatRegModal } from './RefreshStatRegModal'
+import axios from 'axios'
 
 export function DashboardTools() {
   const loadingCache = useSelector(selectLoadingClearCache)
+  const [pushingRss, setPushingRss] = useState(false)
+  const [pushRssResult, setPushRssResult] = useState('')
+  const [rssStatus, setRssStatus] = useState('success')
   const statisticsSearchList = useSelector(selectSearchList)
   const statistics = useSelector(selectStatistics)
   const loadingStatisticsSearchList = useSelector(selectLoadingSearchList)
@@ -59,6 +63,25 @@ export function DashboardTools() {
 
   function clearCache() {
     requestClearCache(dispatch, io)
+  }
+
+  function pushRss() {
+    setPushingRss(true)
+    axios.get(
+      '/xp/admin/_/service/mimir/rssPush'
+    ).then((response) => {
+      setRssStatus('success')
+      setPushRssResult(response.data)
+    }
+    ).catch((error) => {
+      setRssStatus('danger')
+      setPushRssResult(error.message)
+    }
+    )
+      .finally(() => {
+        setPushingRss(false)
+      }
+      )
   }
 
   function renderIcon(loading) {
@@ -182,19 +205,6 @@ export function DashboardTools() {
     <div className="p-4 tables-wrapper">
       <h2 className="mb-4">Verktøy</h2>
       <Container>
-        <Row className="mb-5">
-          <Col>
-            <Button
-              primary
-              className="w-100 d-flex justify-content-center"
-              onClick={() => clearCache()}
-              disabled={loadingCache}>
-              <div>
-                {renderIcon(loadingCache)} <span>Tøm cache</span>
-              </div>
-            </Button>
-          </Col>
-        </Row>
         <Row className="mb-4">
           <Col className="col-9 pr-0">
             {renderStatisticsSearch()}
@@ -225,6 +235,40 @@ export function DashboardTools() {
         <Row className="mb-5">
           {renderTbmlDefinitionsStatbankTable()}
         </Row>
+        <fieldset className="danger-zone mb-3 p-2">
+          <legend align="center" className="danger-title justify-content-center">Danger Zone</legend>
+          <Row className="mb-1">
+            <Col>
+              <Button
+                primary
+                className="w-100 d-flex justify-content-center"
+                onClick={() => clearCache()}
+                disabled={loadingCache}>
+                <div>
+                  {renderIcon(loadingCache)} <span>Tøm cache</span>
+                </div>
+              </Button>
+            </Col>
+          </Row>
+          <Row className="mb-1">
+            <Col>
+              <Button
+                primary
+                className="w-100 d-flex justify-content-center"
+                onClick={() => pushRss()}
+                disabled={pushingRss}>
+                <div>
+                  <Rss /> <span>Push RSS</span>
+                </div>
+              </Button>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Alert variant={rssStatus} show={!!pushRssResult}>{pushRssResult}</Alert>
+            </Col>
+          </Row>
+        </fieldset>
         <Row className="mb-4">
           <Col>
             {renderLinkTools()}
