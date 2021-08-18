@@ -39,7 +39,7 @@ export function barConfig(highchartContent, options) {
           chart: {
             height: '120%'
           },
-          //NOTE: on bar chart, xAxis is vertical and yAxis is horizontal, don't ask why.
+          // NOTE: on bar chart, xAxis is vertical and yAxis is horizontal, don't ask why.
           yAxis: {
             labels: {
               y: 20

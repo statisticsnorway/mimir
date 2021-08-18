@@ -1,4 +1,4 @@
-import { DatasetRepoNode } from '../../repo/dataset'
+import { DatasetRepoNode, DataSource as DataSourceType } from '../../repo/dataset'
 import { Content } from 'enonic-types/content'
 import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
 import { JSONstat } from '../../../types/jsonstat-toolkit'
@@ -19,7 +19,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/utils/utils')
 
 export function getStatbankSaved(content: Content<DataSource>, branch: string): DatasetRepoNode<JSONstat> | null {
-  if (content.data.dataSource && content.data.dataSource._selected) {
+  if (content.data.dataSource && content.data.dataSource._selected === DataSourceType.STATBANK_SAVED) {
     const dataSource: DataSource['dataSource'] = content.data.dataSource
     if (dataSource.statbankSaved && dataSource.statbankSaved.urlOrId) {
       return getDataset(content.data.dataSource?._selected, branch, content._id)
@@ -33,18 +33,15 @@ export function fetchStatbankSavedData(content: Content<DataSource>): object | n
     const format: string = '.html5_table'
     const basePath: string = '/sq/'
     const baseUrl: string = app.config && app.config['ssb.statbankweb.baseUrl'] ? app.config['ssb.statbankweb.baseUrl'] : 'https://www.ssb.no/statbank'
-
     const dataSource: DataSource['dataSource'] = content.data.dataSource
-    const statBankSavedUrlOrId: string | undefined = dataSource._selected && dataSource.statbankSaved && dataSource.statbankSaved.urlOrId
-    let url: string = 'URL ikke angitt'
-    if (statBankSavedUrlOrId) {
-      url = isUrl(dataSource.statbankSaved?.urlOrId) ?
-        `${dataSource.statbankSaved?.urlOrId}${format}` :
-        `${baseUrl}${basePath}${dataSource.statbankSaved?.urlOrId}${format}`
+    let url: string | null = null
+    if (dataSource._selected === DataSourceType.STATBANK_SAVED && dataSource.statbankSaved && dataSource.statbankSaved.urlOrId) {
+      url = isUrl(dataSource.statbankSaved.urlOrId) ?
+        `${dataSource.statbankSaved.urlOrId}${format}` :
+        `${baseUrl}${basePath}${dataSource.statbankSaved.urlOrId}${format}`
     }
-
     try {
-      if (statBankSavedUrlOrId) {
+      if (url) {
         return fetchData(url)
       }
     } catch (e) {

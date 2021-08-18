@@ -7,6 +7,7 @@ import { DatasetRepoNode } from '../repo/dataset'
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
+import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 
 const {
   query, get: getContent
@@ -25,7 +26,7 @@ export function getCalculatorConfig(): Content<CalculatorConfig> | undefined {
 }
 
 export function getKpiDatasetYear(config: Content<CalculatorConfig>): Dataset | null {
-  const kpiSourceYear: Content<GenericDataImport> | null = config?.data.kpiSourceYear ? getContent({
+  const kpiSourceYear: Content<GenericDataImport & DataSource> | null = config?.data.kpiSourceYear ? getContent({
     key: config.data.kpiSourceYear
   }) : null
 
@@ -36,7 +37,7 @@ export function getKpiDatasetYear(config: Content<CalculatorConfig>): Dataset | 
 }
 
 export function getKpiDatasetMonth(config: Content<CalculatorConfig>): Dataset | null {
-  const kpiSourceMonth: Content<GenericDataImport> | null = config?.data.kpiSourceMonth ? getContent({
+  const kpiSourceMonth: Content<GenericDataImport & DataSource> | null = config?.data.kpiSourceMonth ? getContent({
     key: config.data.kpiSourceMonth
   }) : null
 
@@ -47,7 +48,7 @@ export function getKpiDatasetMonth(config: Content<CalculatorConfig>): Dataset |
 }
 
 export function getPifDataset(config: Content<CalculatorConfig>): Dataset | null {
-  const pifSource: Content<GenericDataImport> | null = config?.data.pifSource ? getContent({
+  const pifSource: Content<GenericDataImport & DataSource> | null = config?.data.pifSource ? getContent({
     key: config.data.pifSource
   }) : null
 
@@ -58,7 +59,7 @@ export function getPifDataset(config: Content<CalculatorConfig>): Dataset | null
 }
 
 export function getBkibolDatasetEnebolig(config: Content<CalculatorConfig>): Dataset | null {
-  const bkibolSourceEnebolig: Content<GenericDataImport> | null = config?.data.bkibolSourceEnebolig ? getContent({
+  const bkibolSourceEnebolig: Content<GenericDataImport & DataSource> | null = config?.data.bkibolSourceEnebolig ? getContent({
     key: config.data.bkibolSourceEnebolig
   }) : null
 
@@ -69,7 +70,7 @@ export function getBkibolDatasetEnebolig(config: Content<CalculatorConfig>): Dat
 }
 
 export function getBkibolDatasetBoligblokk(config: Content<CalculatorConfig>): Dataset | null {
-  const bkibolSourceBoligblokk: Content<GenericDataImport> | null = config?.data.bkibolSourceBoligblokk ? getContent({
+  const bkibolSourceBoligblokk: Content<GenericDataImport & DataSource> | null = config?.data.bkibolSourceBoligblokk ? getContent({
     key: config.data.bkibolSourceBoligblokk
   }) : null
 

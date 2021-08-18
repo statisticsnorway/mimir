@@ -66,7 +66,7 @@ function renderPart(req: Request): React4xpResponse {
     }
   }) : undefined
 
-  const associatedStatisticsConfig: Array<Article['associatedStatistics']> =
+  const associatedStatisticsConfig: Article['associatedStatistics'] =
   page.data.associatedStatistics ? forceArray(page.data.associatedStatistics) : []
 
   const associatedArticleArchivesConfig: Article['articleArchive'] = page.data.articleArchive ? forceArray(page.data.articleArchive) : []
@@ -90,9 +90,9 @@ function renderPart(req: Request): React4xpResponse {
   return React4xp.render('site/parts/article/article', props, req)
 }
 
-function getAssociatedStatisticsLinks(associatedStatisticsConfig: Array<Article['associatedStatistics']>): Array<AssociatedLink> | [] {
+function getAssociatedStatisticsLinks(associatedStatisticsConfig: Article['associatedStatistics']): Array<AssociatedLink> | [] {
   if (associatedStatisticsConfig && associatedStatisticsConfig.length) {
-    return associatedStatisticsConfig.map((option: Article['associatedStatistics']) => {
+    return associatedStatisticsConfig.map((option) => {
       if (option?._selected === 'XP') {
         const associatedStatisticsXP: string | undefined = option.XP?.content
         const associatedStatisticsXPContent: Content | null = associatedStatisticsXP ? get({

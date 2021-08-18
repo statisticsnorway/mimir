@@ -50,9 +50,9 @@ export function getSeriesAndCategories(
   //
   if (dataSource && dataSource._selected === DataSourceType.STATBANK_API) {
     return seriesAndCategoriesFromJsonStat(req, highchart, data, dataSource)
-  } else if (dataSource && (dataSource._selected === 'tbml' || dataSource._selected === DataSourceType.TBPROCESSOR)) {
+  } else if (dataSource && (dataSource._selected === DataSourceType.TBPROCESSOR)) {
     return seriesAndCategoriesFromTbml(data as TbmlDataUniform, highchart.data.graphType, highchart.data.xAxisType || 'linear')
-  } else if (dataSource && dataSource._selected === DataSourceType.HTMLTABLE) {
+  } else if (highchart.data.htmlTable) {
     return seriesAndCategoriesFromHtmlTable(highchart)
   }
   return undefined

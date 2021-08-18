@@ -1,6 +1,9 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
 plugins {
-    id 'com.moowork.node' version '1.3.1'
+    id("com.github.node-gradle.node") version "2.2.3"
     id 'com.enonic.xp.app' version '2.0.0'
+    id 'no.item.xp.codegen' version '1.1.8'
 }
 
 app {
@@ -37,9 +40,8 @@ dependencies {
     include 'commons-codec:commons-codec:1.15'
     include "no.item:wsutil-server:2.0.0"
     include "com.gravitondigital:featuretogglelib:0.3.0"
-    testCompile "com.enonic.xp:testing:${xpVersion}"
     compile group: 'org.json', name: 'json', version: '20210307'
-    include 'com.enonic.lib:lib-react4xp:1.7.1'
+    include 'com.enonic.lib:lib-react4xp:2.0.0'
     include 'com.enonic.lib:lib-text-encoding:2.0.0'
 }
 
@@ -58,11 +60,19 @@ repositories {
     }
 }
 
+node {
+    download = true
+    version = '16.1.0'
+}
 
 def react4xpGradlePath = 'node_modules/react4xp/react4xp.gradle'
 def react4xpGradleFile = new File(react4xpGradlePath)
 if (!react4xpGradleFile.exists()) {
-    def command = "npm install"
+    String npm = 'npm'
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        npm = 'npm.cmd'
+    }
+    def command = npm + " install"
     println "\nNot found: $react4xpGradlePath - running shell command:"
     println command
     def proc = command.execute()
@@ -70,43 +80,42 @@ if (!react4xpGradleFile.exists()) {
     proc.out.close()
     proc.waitFor()
 }
-
 apply from: react4xpGradlePath
 
-
-task clientJsWebpack( type: NodeTask, dependsOn: npmInstall ) {
+task clientJsWebpack( type: NpxTask, dependsOn: npmInstall ) {
+    command =  'webpack' 
     environment = [ 'NODE_ENV': nodeEnvironment() ]
-    args = [ '--config', 'webpack.clientjs.config.js', '--color', '--hide-modules' ]
+    args = [ '--config', 'webpack.clientjs.config.js', '--color' ]
     description = 'Build client-side js.'
     outputs.cacheIf { true }
     inputs.dir 'src/main/resources/assets/js'
     outputs.file "${buildDir}/resources/main/assets/js/bundle.js"
-    script = file( 'node_modules/webpack-cli/bin/cli.js' )
 }
 
-task clientTsWebpack( type: NodeTask, dependsOn: npmInstall ) {
+task clientTsWebpack( type: NpxTask, dependsOn: npmInstall ) {
+    command  =  'webpack'
     environment = [ 'NODE_ENV': nodeEnvironment() ]
-    args = [ '--config', 'webpack.clientts.config.js', '--color', '--hide-modules' ]
+    args = [ '--config', 'webpack.clientts.config.js', '--color' ]
     description = 'Build client-side ts.'
     outputs.cacheIf { true }
     inputs.dir 'src/main/resources/assets/ts'
     outputs.file "${buildDir}/resources/main/assets/ts/bundle.js"
-    script = file( 'node_modules/webpack-cli/bin/cli.js' )
 }
 
-task stylesWebpack( type: NodeTask, dependsOn: npmInstall ) {
+task stylesWebpack( type: NpxTask, dependsOn: npmInstall ) {
+    command  =  'webpack'
     environment = [ 'NODE_ENV': nodeEnvironment() ]
-    args = [ '--config', 'webpack.styles.config.js', '--color', '--hide-modules' ]
+    args = [ '--config', 'webpack.styles.config.js', '--color' ]
     description = 'Build client-side css.'
     outputs.cacheIf { true }
     inputs.dir 'src/main/resources/assets/styles'
     outputs.file "${buildDir}/resources/main/assets/styles/bundle.css"
-    script = file( 'node_modules/webpack-cli/bin/cli.js' )
 }
 
-task serverWebpack( type: NodeTask, dependsOn: npmInstall ) {
+task serverWebpack( type: NpxTask, dependsOn: npmInstall ) {
+    command  =  'webpack'
     environment = [ 'NODE_ENV': nodeEnvironment() ]
-    args = [ '--config', 'webpack.server.config.js', '--color', '--hide-modules' ]
+    args = [ '--config', 'webpack.server.config.js', '--color']
     description = 'Build server JS.'
     outputs.cacheIf { true }
     inputs.dir 'src/main/resources/lib'
@@ -119,21 +128,6 @@ task serverWebpack( type: NodeTask, dependsOn: npmInstall ) {
     outputs.dir "${buildDir}/resources/main/site"
     outputs.dir "${buildDir}/resources/main/admin"
     outputs.file "${buildDir}/resources/main/main.js"
-    script = file( 'node_modules/webpack-cli/bin/cli.js' )
-}
-
-task testWebpack( type: NodeTask, dependsOn: npmInstall) {
-    environment = [ 'NODE_ENV': nodeEnvironment() ]
-    args = [ '--config', 'webpack.test.config.js', '--color', '--hide-modules' ]
-    description = 'Build test JS.'
-    script = file( 'node_modules/webpack-cli/bin/cli.js' )
-}
-
-task generateTypeScriptInterfaces( type: NodeTask, dependsOn: npmInstall ) {
-    description = 'Generate TypeScript interfaces'
-    environment = [ 'NODE_ENV': nodeEnvironment() ]
-    args = [ '--project', '.', '--write-to-file' ]
-    script = file( 'node_modules/enonic-ts-codegen/bin/index.js' )
 }
 
 processResources {
@@ -158,14 +152,13 @@ jar {
     exclude 'assets/styles/**/*.js'
 
     serverWebpack.dependsOn += 'react4xp_components' // 'webpack_react4xp'
-    serverWebpack.dependsOn += generateTypeScriptInterfaces
+    serverWebpack.dependsOn += generateTypeScript
 
     dependsOn += npmInstall
     dependsOn += clientJsWebpack
     dependsOn += clientTsWebpack
     dependsOn += stylesWebpack
     dependsOn += serverWebpack
-    dependsOn += testWebpack
 }
 
 def nodeEnvironment() {
