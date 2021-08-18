@@ -75,7 +75,8 @@ function getOmStatistikken(req, page, aboutTheStatisticsId) {
         label: aboutStatisticLabel,
         ingress: ''
       }, req, {
-        clientRender: req.mode !== 'edit'
+        body: `<section id="om-statistikken" class="xp-part part-om-statistikken container-fluid"></section>`,
+        id: 'om-statistikken'
       })
     } else {
       return {
@@ -147,7 +148,9 @@ function getOmStatistikken(req, page, aboutTheStatisticsId) {
     label: aboutStatisticLabel,
     ingress: content.ingress
   }, req, {
-    clientRender: req.mode !== 'edit'
+    // for now, this needs to be a section, so we get correct spacing between parts
+    body: `<section id="om-statistikken" class="xp-part part-om-statistikken container-fluid"></section>`,
+    id: 'om-statistikken'
   })
 }
 
