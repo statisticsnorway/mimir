@@ -205,6 +205,36 @@ export function DashboardTools() {
     <div className="p-4 tables-wrapper">
       <h2 className="mb-4">Verktøy</h2>
       <Container>
+        <Row className="mb-4">
+          <Col className="col-9 pr-0">
+            {renderStatisticsSearch()}
+          </Col>
+          <Col className="pl-4 pr-0">
+            <Button
+              onClick={() => {
+                setOpenStatistic(dispatch, io, selectedStat)
+                setOpenModal(dispatch, true)
+              }}
+              disabled={hasLoadingStatistic || loadingStatisticsSearchList || !selectedStat}
+            >
+              { hasLoadingStatistic ? <span className="spinner-border spinner-border-sm" /> : <RefreshCw size={18}/> }
+            </Button>
+          </Col>
+        </Row>
+        {statuses.map((statRegStatus, index) => {
+          const {} = statRegStatus
+          return (
+            <Row className="mb-4" key={index}>
+              <Col>
+                {makeStatRegRefreshOptions(statRegStatus)}
+              </Col>
+            </Row>
+          )
+        })}
+        {modalShow && <RefreshStatRegModal statRegKey={selectedStatRegKey} handleClose={() => setModalShow(false)} />}
+        <Row className="mb-5">
+          {renderTbmlDefinitionsStatbankTable()}
+        </Row>
         <fieldset className="danger-zone mb-3 p-2">
           <legend align="center" className="danger-title justify-content-center">Danger Zone</legend>
           <Row className="mb-1">
@@ -239,36 +269,6 @@ export function DashboardTools() {
             </Col>
           </Row>
         </fieldset>
-        <Row className="mb-4">
-          <Col className="col-9 pr-0">
-            {renderStatisticsSearch()}
-          </Col>
-          <Col className="pl-4 pr-0">
-            <Button
-              onClick={() => {
-                setOpenStatistic(dispatch, io, selectedStat)
-                setOpenModal(dispatch, true)
-              }}
-              disabled={hasLoadingStatistic || loadingStatisticsSearchList || !selectedStat}
-            >
-              { hasLoadingStatistic ? <span className="spinner-border spinner-border-sm" /> : <RefreshCw size={18}/> }
-            </Button>
-          </Col>
-        </Row>
-        {statuses.map((statRegStatus, index) => {
-          const {} = statRegStatus
-          return (
-            <Row className="mb-4" key={index}>
-              <Col>
-                {makeStatRegRefreshOptions(statRegStatus)}
-              </Col>
-            </Row>
-          )
-        })}
-        {modalShow && <RefreshStatRegModal statRegKey={selectedStatRegKey} handleClose={() => setModalShow(false)} />}
-        <Row className="mb-5">
-          {renderTbmlDefinitionsStatbankTable()}
-        </Row>
         <Row className="mb-4">
           <Col>
             {renderLinkTools()}
