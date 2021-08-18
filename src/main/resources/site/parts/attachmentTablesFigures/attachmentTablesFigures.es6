@@ -126,7 +126,8 @@ const getTablesAndFigures = (attachmentTablesAndFigures, req, phrases) => {
 
 function getTableReturnObject(content, props, subHeader, index) {
   const datasetFromRepo = datasetOrUndefined(content)
-  const title = datasetFromRepo && datasetFromRepo.data.tbml.metadata ? datasetFromRepo.data.tbml.metadata.title : content.displayName
+  const title = datasetFromRepo && datasetFromRepo.data.tbml && datasetFromRepo.data.tbml.metadata ?
+    datasetFromRepo.data.tbml.metadata.title : content.displayName
   return {
     id: `attachment-table-figure-${index + 1}`,
     contentType: content.type,
@@ -138,7 +139,8 @@ function getTableReturnObject(content, props, subHeader, index) {
 
 function getFigureReturnObject(content, preview, subHeader, index) {
   const datasetFromRepo = datasetOrUndefined(content)
-  const title = datasetFromRepo && datasetFromRepo.data.tbml.metadata ? datasetFromRepo.data.tbml.metadata.title : content.displayName
+  const title = datasetFromRepo && datasetFromRepo.data.tbml && datasetFromRepo.data.tbml.metadata ?
+    datasetFromRepo.data.tbml.metadata.title : content.displayName
   return {
     id: `attachment-table-figure-${index + 1}`,
     contentType: content.type,

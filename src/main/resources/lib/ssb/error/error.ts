@@ -4,23 +4,19 @@ const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
 
-export interface Error {
+export interface ErrorInterface {
     errorTitle: string;
     errorBody: string;
     errorLog: void;
 }
 
-export interface Exception {
-  message: string;
-}
-
 const errorView: ResourceKey = resolve('./error.html')
 
-export function renderError(req: Request, title: string, exception: Exception): Response {
-  const model: Error = {
+export function renderError(req: Request, title: string, exception: Error): Response {
+  const model: ErrorInterface = {
     errorBody: exception.message,
     errorTitle: title,
-    errorLog: log.error(exception)
+    errorLog: log.error(exception.stack)
   }
 
   const body: string | undefined = (req.mode === 'edit' || req.mode === 'preview' || req.mode === 'inline') ? render(errorView, model) : undefined
@@ -33,5 +29,5 @@ export function renderError(req: Request, title: string, exception: Exception): 
 }
 
 export interface ErrorLib {
-  renderError: (req: Request, title: string, exception: Exception) => Response;
+  renderError: (req: Request, title: string, exception: Error) => Response;
 }

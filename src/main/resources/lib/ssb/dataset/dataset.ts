@@ -25,6 +25,7 @@ const {
   getStatbankApiKey
 } = __non_webpack_require__('/lib/ssb/dataset/statbankApi/statbankApi')
 const {
+  getStatbankSaved,
   fetchStatbankSavedData
 } = __non_webpack_require__('/lib/ssb/dataset/statbankSaved/statbankSaved')
 const {
@@ -50,6 +51,9 @@ export function getDataset(content: Content<DataSource>, branch: string = DATASE
   switch (content.data.dataSource?._selected) {
   case DataSourceType.STATBANK_API: {
     return getStatbankApi(content, branch)
+  }
+  case DataSourceType.STATBANK_SAVED: {
+    return getStatbankSaved(content, branch)
   }
   case DataSourceType.TBPROCESSOR: {
     return getTbprocessor(content, branch)

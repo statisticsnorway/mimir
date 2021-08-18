@@ -58,9 +58,7 @@ function getStatbankSubjectTree(req: Request, content: Content): React4xpRespons
     statbankBaseUrl,
     mainSubjects
   }
-  return React4xp.render('site/parts/statbankSubjectTree/statbankSubjectTree', props, req, {
-    clientRender: req.mode !== 'edit'
-  })
+  return React4xp.render('site/parts/statbankSubjectTree/statbankSubjectTree', props, req)
 }
 
 function prepareSubSubjects(subSubject: SubjectItem,

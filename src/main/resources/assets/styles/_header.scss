@@ -1,5 +1,9 @@
 .header-wrapper {
   background: white;
+
+  .container {
+    padding: 0;
+  }
 }
 
 header.ssb-header-wrapper {
@@ -334,7 +338,4 @@ header.ssb-header-wrapper {
       }
     }
   }
-}
-.statbank-title {
-  color: $ssb-green-5;
 }

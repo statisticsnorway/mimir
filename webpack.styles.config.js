@@ -57,7 +57,9 @@ const createDefaultCssLoaders = () => ([
 
 const createCssPlugin = () => (
   new MiniCssExtractPlugin({
-    filename: './bundle.css',
+    filename: ({
+      chunk
+    }) => `${chunk.name.replace('main', 'bundle')}.css`,
     chunkFilename: '[id].css'
   })
 )
@@ -81,6 +83,7 @@ function addSassSupport(cfg) {
 
   return R.pipe(
     setEntry('main', './main.scss'),
+    setEntry('main_menu', './main_menu.scss'),
     addRule(rule),
     addPlugin(plugin),
     appendExtensions(['.sass', '.scss', '.css'])
