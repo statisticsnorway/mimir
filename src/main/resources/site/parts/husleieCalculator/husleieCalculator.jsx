@@ -504,12 +504,12 @@ function HusleieCalculator(props) {
 }
 
 HusleieCalculator.defaultValue = {
-  husleieServiceUrl: null,
+  kpiServiceUrl: null,
   language: 'nb'
 }
 
 HusleieCalculator.propTypes = {
-  husleieServiceUrl: PropTypes.string,
+  kpiServiceUrl: PropTypes.string,
   language: PropTypes.string,
   months: PropTypes.arrayOf(
     PropTypes.shape({
