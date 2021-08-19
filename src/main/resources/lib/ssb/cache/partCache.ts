@@ -36,6 +36,8 @@ export function clearPartCache(content: Content, branch: string): void {
     partCache.remove(`${content._id}-kpiCalculator`)
     cacheLog(`try to clear ${content._id}-omStatistikken from part cache (${branch})`)
     partCache.remove(`${content._id}-omStatistikken`)
+    cacheLog(`try to clear ${content._id}-husleieCalculator from part cache (${branch})`)
+    partCache.remove(`${content._id}-husleieCalculator`)
   }
 }
 
