@@ -121,6 +121,10 @@ export function getAttachmentContent(contentId: string | undefined): string | un
     key: contentId
   })
 
+  return getAttachment(attachmentContent)
+}
+
+export function getAttachment(attachmentContent: Content | null): string | undefined {
   if (!attachmentContent) return undefined
   const stream: ByteSource | null = getAttachmentStream({
     key: attachmentContent._id,
@@ -166,4 +170,5 @@ export interface UtilsLib {
   pathFromStringOrContent: (urlSrc: Header['searchResultPage']) => string | undefined;
   getSources: (sourceConfig: Array<SourcesConfig>) => Array<Sources>;
   getAttachmentContent: (contentId: string | undefined) => string | undefined;
+  getAttachment: (attachmentContent: Content | null) => string | undefined;
 }
