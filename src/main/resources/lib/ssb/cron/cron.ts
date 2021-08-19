@@ -216,6 +216,7 @@ export function setupCronJobs(): void {
       clearPartFromPartCache('omStatistikken')
       clearPartFromPartCache('releasedStatistics')
       clearPartFromPartCache('kpiCalculator')
+      clearPartFromPartCache('husleieCalculator')
     },
     context: cronContext
   })

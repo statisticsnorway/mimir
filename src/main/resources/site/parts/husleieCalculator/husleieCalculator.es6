@@ -15,11 +15,13 @@ const {
   getCalculatorConfig, getKpiDatasetMonth
 } = __non_webpack_require__('/lib/ssb/dataset/calculator')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
+const {
+  fromPartCache
+} = __non_webpack_require__('/lib/ssb/cache/partCache')
 
 exports.get = function(req) {
   try {
-    const component = getComponent()
-    return renderPart(req, component.config)
+    return renderPart(req)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
@@ -29,6 +31,16 @@ exports.preview = (req) => renderPart(req)
 
 function renderPart(req) {
   const page = getContent()
+  if (req.mode === 'edit') {
+    return getHusleiekalkulator(req, page)
+  } else {
+    return fromPartCache(req, `${page._id}-husleieCalculator`, () => {
+      return getHusleiekalkulator(req, page)
+    })
+  }
+}
+
+function getHusleiekalkulator(req, page) {
   const part = getComponent()
   const language = getLanguage(page)
   const phrases = language.phrases
@@ -61,20 +73,20 @@ function renderPart(req) {
   })
 
   const husleieCalculator = new React4xp('site/parts/husleieCalculator/husleieCalculator')
-    .setProps({
-      kpiServiceUrl: serviceUrl({
-        service: 'kpi'
-      }),
-      language: language.code,
-      months,
-      phrases,
-      calculatorArticleUrl,
-      nextPublishText,
-      lastNumberText,
-      lastUpdated
-    })
-    .setId('husleieCalculatorId')
-    .uniqueId()
+      .setProps({
+        kpiServiceUrl: serviceUrl({
+          service: 'kpi'
+        }),
+        language: language.code,
+        months,
+        phrases,
+        calculatorArticleUrl,
+        nextPublishText,
+        lastNumberText,
+        lastUpdated
+      })
+      .setId('husleieCalculatorId')
+      .uniqueId()
 
 
   return {

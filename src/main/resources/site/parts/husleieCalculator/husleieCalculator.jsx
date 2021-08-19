@@ -4,7 +4,6 @@ import { Form, Container, Row, Col } from 'react-bootstrap'
 import { Input, Button, Dropdown, Divider, FormError, Link, Title, Dialog } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
 import NumberFormat from 'react-number-format'
-import moment from 'moment/min/moment-with-locales'
 
 function HusleieCalculator(props) {
   const validMaxYear = props.lastUpdated.year
@@ -146,15 +145,15 @@ function HusleieCalculator(props) {
   }
 
   function isRentPeriodValid() {
-    moment.locale(language === 'en' ? 'en' : 'nb')
     const startDate = new Date(startYear.value, Number(startMonth.value) - 1, 1)
     const lastPublishDate = new Date(validMaxYear, Number(validMaxMonth) - 1, 1)
     const today = new Date()
-    const monthsSinceLastPublished = moment(lastPublishDate).diff(startDate, 'months')
-    const monthsSinceLastAdjusted = moment(today).diff(startDate, 'months')
+    const monthsSinceLastPublished = diffMonths(startDate, lastPublishDate)
+    const monthsSinceLastAdjusted = diffMonths(startDate, today)
     const nextAdjust = getNextPeriod(startMonth.value, Number(startYear.value) + 1)
-    const rentDate = moment.months(Number(startMonth.value) - 1)
-    const rentDatePublish = moment.months(nextAdjust.month - 1)
+    const rentDate = getMonthLabel(startMonth.value)
+    const rentDatePublish = getMonthLabel(nextAdjust.month)
+
     const warningFiguresNextMonth = language === 'en' ?
       `Figures for ${rentDate.toLowerCase()} will be available about 10th of ${rentDatePublish.toLowerCase()}` :
       `Tall for ${rentDate.toLowerCase()} kommer ca 10. ${rentDatePublish.toLowerCase()}`
@@ -170,7 +169,8 @@ function HusleieCalculator(props) {
       setAdjustRentWarning({
         ...adjustRentWarning,
         warning: true,
-        warningTitle: warningFiguresNextMonth
+        warningTitle: warningFiguresNextMonth,
+        warningMsg: ''
       })
     }
 
@@ -250,6 +250,10 @@ function HusleieCalculator(props) {
       break
     }
     }
+  }
+
+  function diffMonths(fromDate, toDate) {
+    return (toDate.getMonth() + 12 * toDate.getFullYear()) - (fromDate.getMonth() + 12 * fromDate.getFullYear())
   }
 
   function getMonthLabel(month) {
@@ -500,12 +504,12 @@ function HusleieCalculator(props) {
 }
 
 HusleieCalculator.defaultValue = {
-  husleieServiceUrl: null,
+  kpiServiceUrl: null,
   language: 'nb'
 }
 
 HusleieCalculator.propTypes = {
-  husleieServiceUrl: PropTypes.string,
+  kpiServiceUrl: PropTypes.string,
   language: PropTypes.string,
   months: PropTypes.arrayOf(
     PropTypes.shape({
