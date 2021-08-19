@@ -57,7 +57,7 @@
     "eslint-plugin-react": "^7.24.0",
     "feather-icons": "^4.28.0",
     "file-loader": "^6.2.0",
-    "glob": "^7.1.6",
+    "glob": "^7.1.7",
     "highcharts": "^9.2.0",
     "imagesloaded": "^4.1.4",
     "jquery": "^3.6.0",
