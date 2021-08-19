@@ -10,6 +10,7 @@ import { Table } from '../../../site/content-types/table/table'
 import { Highchart } from '../../../site/content-types/highchart/highchart'
 import { MunicipalityWithCounty } from '../dataset/klass/municipalities'
 import { Cache } from 'enonic-types/cache'
+import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 
 const {
   newCache
@@ -56,10 +57,6 @@ const masterMenuCache: Cache = newCache({
 const draftMenuCache: Cache = newCache({
   expire: 3600,
   size: 10
-})
-const dividerCache: Cache = newCache({
-  expire: 3600,
-  size: 2
 })
 const draftRelatedArticlesCache: Cache = newCache({
   expire: 3600,
@@ -153,7 +150,6 @@ function addClearTask(): void {
             completelyClearCache({
               clearFilterCache: true,
               clearMenuCache: true,
-              clearDividerCache: true,
               clearRelatedArticlesCache: true,
               clearRelatedFactPageCache: true,
               clearDatasetRepoCache: true,
@@ -344,13 +340,6 @@ export function fromMenuCache(req: Request, key: string, fallback: () => unknown
   return fallback()
 }
 
-export function fromDividerCache(dividerColor: string, fallback: () => string): string {
-  return dividerCache.get(dividerColor, () => {
-    cacheLog(`added ${dividerColor} to divider cache`)
-    return fallback()
-  })
-}
-
 export function fromRelatedArticlesCache(req: Request, key: string, fallback: () => unknown): unknown {
   if (req.mode === 'live' || req.mode === 'preview') {
     const branch: string = req.mode === 'live' ? 'master' : 'draft'
@@ -386,7 +375,7 @@ export function fromDatasetRepoCache(
   })
 }
 
-export function datasetOrUndefined(content: Content<Highchart | Table>): DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined {
+export function datasetOrUndefined(content: Content<DataSource>): DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined {
   return content.data.dataSource && content.data.dataSource._selected ?
     fromDatasetRepoCache(`/${content.data.dataSource._selected}/${extractKey(content)}`,
       () => getDataset(content)) :
@@ -437,11 +426,6 @@ function completelyClearMenuCache(branch: string): void {
   menuCache.clear()
 }
 
-function completelyClearDividerCache(): void {
-  cacheLog(`clear divider cache`)
-  dividerCache.clear()
-}
-
 function completelyClearRelatedArticleCache(branch: string): void {
   cacheLog(`clear related article cache (${branch})`)
   const relatedArticlesCache: Cache = branch === 'master' ? masterRelatedArticlesCache : draftRelatedArticlesCache
@@ -488,10 +472,6 @@ function completelyClearCache(options: CompletelyClearCacheOptions): void {
   if (options.clearMenuCache) {
     completelyClearMenuCache('master')
     completelyClearMenuCache('draft')
-  }
-
-  if (options.clearDividerCache) {
-    completelyClearDividerCache()
   }
 
   if (options.clearRelatedArticlesCache) {
@@ -543,7 +523,6 @@ export function setupHandlers(socket: Socket): void {
       data: {
         clearFilterCache: true,
         clearMenuCache: true,
-        clearDividerCache: true,
         clearRelatedArticlesCache: true,
         clearRelatedFactPageCache: true,
         clearDatasetRepoCache: true,
@@ -562,7 +541,6 @@ export function setupHandlers(socket: Socket): void {
 export interface CompletelyClearCacheOptions {
   clearFilterCache: boolean;
   clearMenuCache: boolean;
-  clearDividerCache: boolean;
   clearRelatedArticlesCache: boolean;
   clearRelatedFactPageCache: boolean;
   clearDatasetRepoCache: boolean;
@@ -578,7 +556,6 @@ export interface SSBCacheLibrary {
   setup: () => void;
   fromFilterCache: (req: Request, filterKey: string, key: string, fallback: () => Response) => Response;
   fromMenuCache: (req: Request, key: string, fallback: () => unknown) => unknown;
-  fromDividerCache: (dividerColor: string, fallback: () => string) => string;
   fromRelatedArticlesCache: (req: Request, key: string, fallback: () => unknown) => unknown;
   fromRelatedFactPageCache: (req: Request, key: string, fallback: () => unknown) => unknown;
   fromDatasetRepoCache:
@@ -588,6 +565,6 @@ export interface SSBCacheLibrary {
   fromMunicipalityWithCodeCache: (key: string, fallback: () => MunicipalityWithCounty | undefined) => MunicipalityWithCounty | undefined;
   fromMunicipalityWithNameCache: (key: string, fallback: () => MunicipalityWithCounty | undefined) => MunicipalityWithCounty | undefined;
   fromParentTypeCache: (path: string, fallback: () => string | undefined) => string | undefined;
-  datasetOrUndefined: (content: Content<Highchart | Table>) => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined;
+  datasetOrUndefined: (content: Content<DataSource>) => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined;
   setupHandlers: (socket: Socket) => void;
 }

@@ -71,9 +71,9 @@ export function createMenuTree(menuItemId: string): Array<MenuItemParsed> {
 
 export function isMenuItemActive(children: QueryResponse<MenuItem>, content: Content | null): boolean {
   return children.total > 0 && content && content._path ? children.hits.reduce( (hasActiveChildren: boolean, child: Content<MenuItem>) => {
-    if (child.data.urlSrc?.content?.contentId && child.data.urlSrc.content.contentId === content._id) {
+    if (child.data.urlSrc?._selected === 'content' && child.data.urlSrc?.content?.contentId && child.data.urlSrc.content.contentId === content._id) {
       hasActiveChildren = true
-    } else if (child.data.urlSrc?.manual?.url && content._path.indexOf(child.data.urlSrc.manual.url) > 0) {
+    } else if (child.data.urlSrc?._selected === 'manual' && child.data.urlSrc?.manual?.url && content._path.indexOf(child.data.urlSrc.manual.url) > 0) {
       hasActiveChildren = true
     }
     return hasActiveChildren

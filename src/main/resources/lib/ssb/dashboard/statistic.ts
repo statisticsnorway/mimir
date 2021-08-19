@@ -15,6 +15,7 @@ import { Source, TbmlDataUniform } from '../../types/xmlParser'
 import { JobEventNode, JobInfoNode, JobNames, JobStatus } from '../repo/job'
 import { NodeQueryResponse } from 'enonic-types/node'
 import { User } from 'enonic-types/auth'
+import { Statistic } from '../../../site/mixins/statistic/statistic'
 
 const {
   hasWritePermissions
@@ -305,7 +306,7 @@ function getSourcesForUserFromStatistic(sources: Array<SourceList>): Array<Owner
 }
 
 function getDatasetFromContentId(contentId: string): DatasetRepoNode<TbmlDataUniform> | null {
-  const queryResult: QueryResponse<Highchart | Table | KeyFigure> = query({
+  const queryResult: QueryResponse<DataSource> = query({
     query: `_id = '${contentId}'`,
     count: 1,
     filters: {
@@ -446,7 +447,7 @@ function getUserStatistics(): Array<StatisticDashboard> {
     contentTypes: [`${app.name}:statistics`],
     count: 1000
   })
-  const userStatisticContent: Array<Content<Statistics>> = userStatisticsResult.hits.filter(
+  const userStatisticContent: Array<Content<Statistics & Statistic>> = userStatisticsResult.hits.filter(
     (statistic: Content<Statistics>) => hasWritePermissions(statistic._id))
   const userStatistic: Array<StatisticInListing> = userStatisticContent.reduce((acc: Array<StatisticInListing>, statistic) => {
     if (statistic.data.statistic) {
@@ -458,7 +459,7 @@ function getUserStatistics(): Array<StatisticDashboard> {
   return userStatisticContent.map( (statisticContent) => prepDashboardStatistics(statisticContent, userStatistic))
 }
 
-function prepDashboardStatistics(statisticContent: Content<Statistics>, statregStatistics: Array<StatisticInListing>): StatisticDashboard {
+function prepDashboardStatistics(statisticContent: Content<Statistics & Statistic>, statregStatistics: Array<StatisticInListing>): StatisticDashboard {
   const prefix: string = app.config && app.config['admin-prefix'] ? app.config['admin-prefix'] : '/xp/admin'
   const statregStat: StatisticInListing | undefined = statregStatistics.find((statregStat) => {
     return `${statregStat.id}` === statisticContent.data.statistic
@@ -541,7 +542,7 @@ function getStatregInfo(statisticStatreg: StatisticInListing | undefined): Statr
 
 function getStatisticsSearchList(): Array<StatisticSearch> {
   const statregStatistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
-  const statisticsContent: Array<Content<Statistics>> = getStatisticsContent()
+  const statisticsContent: Array<Content<Statistics & Statistic>> = getStatisticsContent()
   return statisticsContent.map((statistics) => {
     const statregData: StatisticInListing | undefined = statregStatistics.find((s) => {
       return `${s.id}` === statistics.data.statistic

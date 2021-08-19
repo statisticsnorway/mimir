@@ -12,6 +12,7 @@ import { TbmlDataUniform,
 import { Request } from 'enonic-types/controller'
 import { DatasetRepoNode } from '../repo/dataset'
 import { DataSource as DataSourceType } from '../repo/dataset'
+import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 
 const {
   data: {
@@ -25,14 +26,11 @@ const {
   datasetOrUndefined
 } = __non_webpack_require__('/lib/ssb/cache/cache')
 const {
-  fetchStatbankSavedData
-} = __non_webpack_require__('/lib/ssb/dataset/statbankSaved/statbankSaved')
-const {
   DATASET_BRANCH,
   UNPUBLISHED_DATASET_BRANCH
 } = __non_webpack_require__('/lib/ssb/repo/dataset')
 
-export function parseTable(req: Request, table: Content<Table>, branch: string = DATASET_BRANCH): TableView {
+export function parseTable(req: Request, table: Content<Table & DataSource>, branch: string = DATASET_BRANCH): TableView {
   let tableViewData: TableView = {
     caption: undefined,
     thead: [],
@@ -53,7 +51,7 @@ export function parseTable(req: Request, table: Content<Table>, branch: string =
     datasetRepo = datasetOrUndefined(table)
   }
 
-  const dataSource: Table['dataSource'] | undefined = table.data.dataSource
+  const dataSource: DataSource['dataSource'] | undefined = table.data.dataSource
 
   if (datasetRepo) {
     const data: string | TbmlDataUniform | StatbankSavedRaw | object | undefined = datasetRepo.data
@@ -64,13 +62,13 @@ export function parseTable(req: Request, table: Content<Table>, branch: string =
         tableViewData = getTableViewData(table, tbmlData)
       }
     }
-  }
 
-  if (dataSource && dataSource._selected === DataSourceType.STATBANK_SAVED) {
-    const statbankSavedData: StatbankSavedRaw | null = fetchStatbankSavedData(table)
-    const parsedStatbankSavedData: StatbankSavedUniform = statbankSavedData ? JSON.parse(statbankSavedData.json) : null
-    if (parsedStatbankSavedData) {
-      tableViewData = getTableViewDataStatbankSaved(table, parsedStatbankSavedData)
+    if (dataSource && dataSource._selected === DataSourceType.STATBANK_SAVED) {
+      const statbankSavedData: StatbankSavedRaw | null = data as StatbankSavedRaw
+      const parsedStatbankSavedData: StatbankSavedUniform = statbankSavedData ? JSON.parse(statbankSavedData.json) : null
+      if (parsedStatbankSavedData) {
+        tableViewData = getTableViewDataStatbankSaved(parsedStatbankSavedData)
+      }
     }
   }
   return tableViewData
@@ -119,7 +117,7 @@ function getTableViewData(table: Content<Table>, dataContent: TbmlDataUniform ):
   }
 }
 
-function getTableViewDataStatbankSaved(table: Content<Table>, dataContent: StatbankSavedUniform ): TableView {
+function getTableViewDataStatbankSaved(dataContent: StatbankSavedUniform ): TableView {
   const title: Title = dataContent.table.caption
   const headRows: Array<TableRowUniform> = forceArray(dataContent.table.thead)
     .map( (thead: Thead) => ({

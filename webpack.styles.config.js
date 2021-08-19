@@ -1,17 +1,14 @@
 const path = require('path')
 const R = require('ramda')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const TerserPlugin = require('terser-webpack-plugin')
 const {
   setEntry,
   addRule,
-  addPlugin,
-  appendExtensions
+  appendExtensions,
+  addPlugin
 } = require('./util/compose')
 const env = require('./util/env')
-
 const isProd = env.prod
-const isDev = env.dev
 
 // ----------------------------------------------------------------------------
 // Base config
@@ -26,21 +23,6 @@ const config = {
   },
   resolve: {
     extensions: []
-  },
-  optimization: {
-    minimizer: [
-      new TerserPlugin({
-        sourceMap: true,
-        terserOptions: {
-          compress: {
-            drop_console: false
-          }
-        }
-      })
-    ],
-    splitChunks: {
-      minSize: 30000
-    }
   },
   plugins: [],
   mode: env.type,
@@ -75,13 +57,17 @@ const createDefaultCssLoaders = () => ([
 
 const createCssPlugin = () => (
   new MiniCssExtractPlugin({
-    filename: './bundle.css',
+    filename: ({
+      chunk
+    }) => `${chunk.name.replace('main', 'bundle')}.css`,
     chunkFilename: '[id].css'
   })
 )
 
 // SASS & SCSS
 function addSassSupport(cfg) {
+  const plugin = createCssPlugin()
+
   const rule = {
     test: /\.(sass|scss)$/,
     use: [
@@ -95,10 +81,9 @@ function addSassSupport(cfg) {
     ]
   }
 
-  const plugin = createCssPlugin()
-
   return R.pipe(
-    setEntry('bundle', './main.scss'),
+    setEntry('main', './main.scss'),
+    setEntry('main_menu', './main_menu.scss'),
     addRule(rule),
     addPlugin(plugin),
     appendExtensions(['.sass', '.scss', '.css'])

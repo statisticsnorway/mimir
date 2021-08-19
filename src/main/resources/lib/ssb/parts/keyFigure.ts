@@ -9,6 +9,7 @@ import { MunicipalityWithCounty } from '../dataset/klass/municipalities'
 import { TbmlDataUniform, TableRowUniform, TableCellUniform, PreliminaryData } from '../../types/xmlParser'
 import { Category, Dimension, JSONstat as JSONstatType } from '../../types/jsonstat-toolkit'
 import { DatasetRepoNode, DataSource as DataSourceType } from '../repo/dataset'
+import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 
 const {
   query
@@ -69,12 +70,15 @@ export function get(keys: string | Array<string>): Array<Content<KeyFigure>> {
   return hits
 }
 
-type KeyFigureDataSource = KeyFigure['dataSource']
-type StatBankApi = NonNullable<KeyFigureDataSource>[DataSourceType.STATBANK_API]
-type DatasetFilterOptions = NonNullable<StatBankApi>['datasetFilterOptions']
+interface DatasetFilterOptions {
+  _selected: 'municipalityFilter';
+  municipalityFilter: {
+    municipalityDimension: string;
+  };
+}
 
 export function parseKeyFigure(
-  keyFigure: Content<KeyFigure>,
+  keyFigure: Content<KeyFigure & DataSource>,
   municipality?: MunicipalityWithCounty,
   branch: string = DATASET_BRANCH): KeyFigureView {
   const keyFigureViewData: KeyFigureView = {
@@ -101,7 +105,7 @@ export function parseKeyFigure(
   }
 
   if (datasetRepo) {
-    const dataSource: KeyFigure['dataSource'] | undefined = keyFigure.data.dataSource
+    const dataSource: DataSource['dataSource'] | undefined = keyFigure.data.dataSource
     const data: string | JSONstatType | TbmlDataUniform | object | undefined = datasetRepo.data
 
     if (dataSource && dataSource._selected === DataSourceType.STATBANK_API) {

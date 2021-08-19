@@ -273,4 +273,26 @@
     max-width: 100%;
     margin-right: 0;
   }
+    
+  .danger-zone {
+    legend {
+      width: auto;
+      color: white;
+      background-color: black;
+      margin: auto; 
+      padding: 2px 4px;
+      font-family: 'Roboto Condensed';
+      font-style: oblique;
+    }
+    background: repeating-linear-gradient(
+    45deg,
+    yellow,
+    yellow 10px,
+    black 10px,
+    black 20px
+    );
+    max-width: 300px;
+    border: thick double black;
+    border-radius: 10%;
+  }
 }
