@@ -107,7 +107,7 @@ function PublicationArchive(props) {
                   value={ Number(total) }
                   displayType={'text'}
                   thousandSeparator={' '}/>
-                <Divider dark></Divider>
+                <Divider className="mb-4" dark></Divider>
               </div>
             </div>
             {renderPublications()}

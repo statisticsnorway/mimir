@@ -1,4 +1,5 @@
 import { Content } from 'enonic-types/content'
+import { SEO } from '../../../services/news/news'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { StatisticInListing, VariantInListing } from '../dashboard/statreg/types'
 
@@ -277,14 +278,15 @@ export function prepareRelease(
       concatReleaseTimes(release.variants, language, property) :
       formatVariant(release.variants, language, property)
 
-    const statisticsPagesXP: Array<Content<Statistics>> = query({
+    const statisticsPagesXP: Array<Content<Statistics, object, SEO>> = query({
       count: 1,
       query: `data.statistic LIKE "${release.id}"`,
       contentTypes: [`${app.name}:statistics`]
-    }).hits as unknown as Array<Content<Statistics>>
+    }).hits as unknown as Array<Content<Statistics, object, SEO>>
     const statisticsPageUrl: string | undefined = statisticsPagesXP.length ? pageUrl({
-      id: statisticsPagesXP[0]._id
+      path: statisticsPagesXP[0]._path
     }) : undefined
+    const seoDescription: string = statisticsPagesXP[0].x['com-enonic-app-metafields']['meta-data'].seoDescription || ''
 
     return {
       id: release.id,
@@ -296,7 +298,8 @@ export function prepareRelease(
       }),
       mainSubject: getMainSubject(release.shortName, language),
       variant: preparedVariant,
-      statisticsPageUrl
+      statisticsPageUrl,
+      seoDescription
     }
   }
   return null
@@ -351,6 +354,7 @@ export interface PreparedStatistics {
   date?: string;
   mainSubject?: string;
   statisticsPageUrl?: string;
+  seoDescription?: string;
 }
 
 export interface PreparedVariant {

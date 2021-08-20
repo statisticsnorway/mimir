@@ -78,7 +78,7 @@ interface PublicationResult {
   publications: Array<PublicationItem>;
 }
 
-interface PublicationItem {
+export interface PublicationItem {
   title: string;
   preface: string;
   url: string;
