@@ -1,61 +1,72 @@
-import { Content, QueryResponse } from 'enonic-types/content'
+import { Content, Image, QueryResponse } from 'enonic-types/content'
 import { MenuItem } from '../../../site/content-types/menuItem/menuItem'
 import { Footer } from '../../../site/content-types/footer/footer'
 import { Header } from '../../../site/content-types/header/header'
 
 const {
-  imageUrl, pageUrl
+  pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
 const {
   get, getChildren, query
 } = __non_webpack_require__('/lib/xp/content')
 const {
-  getAttachmentContent
+  getAttachment
 } = __non_webpack_require__('/lib/ssb/utils/utils')
-const {
-  getImageCaption
-} = __non_webpack_require__('/lib/ssb/utils/imageUtils')
+
+function flattenMenu(menuItems: Array<MenuItemParsed>): Array<MenuItemParsed> {
+  return menuItems.reduce((acc: Array<MenuItemParsed>, menuItem) => {
+    acc = acc.concat(menuItem)
+    if (menuItem.menuItems) {
+      acc = acc.concat(flattenMenu(menuItem.menuItems))
+    }
+    return acc
+  }, [])
+}
+
+function createMenuBranch(menuItem: Content<MenuItem>, depth: number = 0): MenuItemParsed {
+  const path: string | undefined = menuItem.data.urlSrc ? parseUrl(menuItem.data.urlSrc) : '-'
+  const children: Array<Content<MenuItem>> | [] = depth < 1 ? query({
+    contentTypes: [`${app.name}:menuItem`],
+    query: `_parentPath = '/content${menuItem._path}'`,
+    count: 99
+  }).hits as unknown as Array<Content<MenuItem>> : []
+  const isActive: boolean = false
+  return {
+    title: menuItem.displayName,
+    shortName: menuItem.data.shortName ? menuItem.data.shortName : undefined,
+    path,
+    isActive,
+    iconId: menuItem.data.icon,
+    menuItems: children.length > 0 ? children.map((childMenuItem) => createMenuBranch(childMenuItem, depth + 1)) : undefined
+  }
+}
 
 export function createMenuTree(menuItemId: string): Array<MenuItemParsed> {
   const menuContent: Content<MenuItem> | null = get({
     key: menuItemId
   })
 
-  if (menuContent !== null) {
+  if (menuContent) {
     const menuContentChildren: QueryResponse<MenuItem> = getChildren({
       count: 100,
       key: menuContent._id
     })
-    return menuContentChildren.hits.map( (menuItem) => createMenuBranch(menuItem) )
+
+    const parsedMenu: Array<MenuItemParsed> = menuContentChildren.hits.map((menuItem) => createMenuBranch(menuItem))
+    const flatMenu: Array<MenuItemParsed> = flattenMenu(parsedMenu)
+    query<Image>({
+      count: flatMenu.length,
+      query: `_id IN(${flatMenu.map((menuItem) => `"${menuItem.iconId}"`).join(',')}) AND type = "media:vector"`
+    }).hits.forEach((icon) => {
+      const menuItem: MenuItemParsed | undefined = flatMenu.find((fm) => fm.iconId === icon._id)
+      if (menuItem) {
+        menuItem.iconAltText = icon ? icon.data.caption : ' '
+        menuItem.iconSvgTag = icon ? getAttachment(icon) : undefined
+      }
+    })
+    return parsedMenu
   }
   return []
-}
-
-function createMenuBranch(menuItem: Content<MenuItem>): MenuItemParsed {
-  const path: string | undefined = menuItem.data.urlSrc ? parseUrl(menuItem.data.urlSrc) : '-'
-  const children: QueryResponse<MenuItem> = query({
-    contentTypes: [`${app.name}:menuItem`],
-    query: `_parentPath = '/content${menuItem._path}'`,
-    count: 99
-  })
-  // const content: Content | null = getContent()
-  const isActive: boolean = false // isMenuItemActive(children, content)
-  const iconPath: string | undefined = menuItem.data.icon ? imageUrl({
-    id: menuItem.data.icon,
-    scale: 'block(12,12)'
-  }) : undefined
-  const iconAltText: string | undefined = menuItem.data.icon ? getImageCaption(menuItem.data.icon) : undefined
-  const iconSvgTag: string | undefined = menuItem.data.icon ? getAttachmentContent( menuItem.data.icon) : undefined
-  return {
-    title: menuItem.displayName,
-    shortName: menuItem.data.shortName ? menuItem.data.shortName : undefined,
-    path,
-    isActive,
-    icon: iconPath && iconPath.search('error') === -1 ? iconPath : undefined,
-    iconAltText,
-    iconSvgTag,
-    menuItems: children.total > 0 ? children.hits.map((childMenuItem) => createMenuBranch(childMenuItem)) : undefined
-  }
 }
 
 export function isMenuItemActive(children: QueryResponse<MenuItem>, content: Content | null): boolean {
@@ -112,9 +123,10 @@ export interface MenuItemParsed extends MenuItem {
   title: string;
   path?: string;
   isActive: boolean;
+  iconId?: string;
   iconAltText?: string;
   iconSvgTag?: string;
-  menuItems?: Array<MenuItem> | undefined;
+  menuItems?: Array<MenuItemParsed> | undefined;
 }
 
 export interface Link {
@@ -127,4 +139,5 @@ export interface MenuLib {
   isMenuItemActive: (children: QueryResponse<MenuItem>, content: Content | null) => boolean;
   parseTopLinks: (topLinks: TopLinks) => Array<Link>;
   parseGlobalLinks: (globalLinks: GlobalLinks) => Array<Link>;
+  getMenuIcons: (menuItemId: string) => Array<object>;
 }
