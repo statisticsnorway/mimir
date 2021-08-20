@@ -3,7 +3,7 @@ import { Article } from '../../content-types/article/article'
 import { Component } from 'enonic-types/portal'
 import { ArticleListPartConfig } from './articleList-part-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { Content } from 'enonic-types/content'
+import { AggregationsResponseEntry, Content } from 'enonic-types/content'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 
 const {
@@ -62,18 +62,44 @@ function getArticles(req: Request, language: string): Array<Content<Article>> {
   const subjectItems: Array<SubjectItem> = getSubSubjects(req, language)
   const pagePaths: Array<string> = subjectItems.map((sub) => `_parentPath LIKE "/content${sub.path}/*"`)
   const languageQuery: string = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'
-  const articles: Array<Content<Article>> = query({
-    count: 4,
+  const byDay: AggregationsResponseEntry = query({
+    count: 0,
     query: `(${pagePaths.join(' OR ')}) ${languageQuery}`,
     contentTypes: [`${app.name}:article`],
-    sort: 'publish.from DESC, data.frontPagePriority DESC'
+    aggregations: {
+      'by_day': {
+        dateHistogram: {
+          field: 'publish.from',
+          interval: '1d',
+          minDocCount: -1,
+          format: 'yyyy-MM-dd'
+        }
+      }
+    }
+  }).aggregations.by_day
+  byDay.buckets.sort((a, b) => {
+    return new Date(b.key).getTime() - new Date(a.key).getTime()
+  })
+  let start: moment.Moment = moment()
+  let end: moment.Moment = moment()
+  const count: number = byDay.buckets.reduce((count, day, index) => {
+    if (index === 0) start = moment(day.key)
+    if (count <= 4) {
+      end = moment(day.key).add(1, 'day')
+    }
+    return count += day.docCount
+  }, 0)
+  const articles: Array<Content<Article>> = query({
+    count: count,
+    query: `(${pagePaths.join(' OR ')}) ${languageQuery} AND range("publish.from", instant("${start.toISOString()}"), instant("${end.toISOString()}"))`,
+    contentTypes: [`${app.name}:article`]
   }).hits as unknown as Array<Content<Article>>
   return articles
 }
 
 function prepareArticles(articles: Array<Content<Article>>, language: string): Array<PreparedArticles> {
   const momentLanguage: string = language === 'en' ? 'en-gb' : 'nb'
-  return articles.map( (article: Content<Article>) => {
+  return articles.map((article: Content<Article>) => {
     return {
       title: article.displayName,
       preface: article.data.ingress ? article.data.ingress : '',
@@ -81,7 +107,8 @@ function prepareArticles(articles: Array<Content<Article>>, language: string): A
         id: article._id
       }),
       publishDate: article.publish && article.publish.from ? article.publish.from : '',
-      publishDateHuman: article.publish && article.publish.from ? moment(article.publish.from).locale(momentLanguage).format('LL') : ''
+      publishDateHuman: article.publish && article.publish.from ? moment(article.publish.from).locale(momentLanguage).format('LL') : '',
+      frontPagePriority: article.data.frontPagePriority
     }
   })
 }
