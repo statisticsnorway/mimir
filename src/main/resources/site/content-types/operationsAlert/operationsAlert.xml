@@ -8,7 +8,7 @@
             <label>Tekst</label>
             <config>
                 <include>
-                    Strike Subscript Superscript Cut Copy Blockquote
+                    Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote
                 </include>
                 <allowHeadings>h3 h4</allowHeadings>
             </config>
