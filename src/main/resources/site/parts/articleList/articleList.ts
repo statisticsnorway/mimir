@@ -83,18 +83,28 @@ function getArticles(req: Request, language: string): Array<Content<Article>> {
   let start: moment.Moment = moment()
   let end: moment.Moment = moment()
   const count: number = byDay.buckets.reduce((count, day, index) => {
-    if (index === 0) start = moment(day.key)
+    if (index === 0) start = moment(`${day.key}T23:59:59.000Z`)
     if (count <= 4) {
-      end = moment(day.key).add(1, 'day')
+      end = moment(`${day.key}T00:00:00.000Z`)
     }
     return count += day.docCount
   }, 0)
   const articles: Array<Content<Article>> = query({
     count: count,
-    query: `(${pagePaths.join(' OR ')}) ${languageQuery} AND range("publish.from", instant("${start.toISOString()}"), instant("${end.toISOString()}"))`,
-    contentTypes: [`${app.name}:article`]
+    query: `(${pagePaths.join(' OR ')}) ${languageQuery} AND range("publish.from", instant("${end.toISOString()}"), instant("${start.toISOString()}"))`,
+    contentTypes: [`${app.name}:article`],
+    sort: `publish.from DESC`
   }).hits as unknown as Array<Content<Article>>
-  return articles
+  return articles.sort((a, b) => {
+    if (moment(a.publish?.from).isSame(moment(b.publish?.from), 'day')) {
+      if (a.data.frontPagePriority === '1' && b.data.frontPagePriority === '0') {
+        return -1
+      } else if (a.data.frontPagePriority === '0' && b.data.frontPagePriority === '1') {
+        return 1
+      }
+    }
+    return 0
+  }).slice(0, 4)
 }
 
 function prepareArticles(articles: Array<Content<Article>>, language: string): Array<PreparedArticles> {
