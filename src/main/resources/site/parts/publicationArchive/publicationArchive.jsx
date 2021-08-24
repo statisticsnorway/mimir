@@ -12,6 +12,7 @@ function PublicationArchive(props) {
     ingress,
     buttonTitle,
     publicationArchiveServiceUrl,
+    statisticsReleases,
     language,
     articleTypePhrases,
     showingPhrase
@@ -37,8 +38,9 @@ function PublicationArchive(props) {
         language: language
       }
     }).then((res) => {
-      setPublications(publications.concat(res.data.publications))
-      setTotal(res.data.total)
+      setPublications(publications.concat(res.data.publications, statisticsReleases).sort((a, b) =>
+        new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime()))
+      setTotal(res.data.total + statisticsReleases.length)
     }).finally(() => {
       setLoading(false)
     })
@@ -46,6 +48,7 @@ function PublicationArchive(props) {
 
   function renderPublications() {
     return publications.map((publication, i) => {
+      console.log(publication)
       return (
         <div key={i} className="row mb-5">
           <div className="col">
@@ -54,6 +57,7 @@ function PublicationArchive(props) {
             </Link>
             <p>
               <Truncate lines={2}>
+                {publication.period && <span>{publication.period}<br/></span>}
                 {publication.preface}
               </Truncate>
             </p>
@@ -137,5 +141,6 @@ PublicationArchive.propTypes = {
   showingPhrase: PropTypes.string,
   language: PropTypes.string,
   publicationArchiveServiceUrl: PropTypes.string,
+  statisticsReleases: PropTypes.array,
   articleTypePhrases: PropTypes.objectOf(PropTypes.string)
 }

@@ -280,13 +280,13 @@ export function prepareRelease(
 
     const statisticsPagesXP: Array<Content<Statistics, object, SEO>> = query({
       count: 1,
-      query: `data.statistic LIKE "${release.id}"`,
+      query: `data.statistic LIKE "${release.id}" AND language IN (${language === 'nb' ? '"nb", "nn"' : '"en"'})`,
       contentTypes: [`${app.name}:statistics`]
     }).hits as unknown as Array<Content<Statistics, object, SEO>>
     const statisticsPageUrl: string | undefined = statisticsPagesXP.length ? pageUrl({
       path: statisticsPagesXP[0]._path
     }) : undefined
-    const seoDescription: string = statisticsPagesXP[0].x['com-enonic-app-metafields']['meta-data'].seoDescription || ''
+    const seoDescription: string | undefined = statisticsPagesXP.length ? statisticsPagesXP[0].x['com-enonic-app-metafields']['meta-data'].seoDescription : ''
 
     return {
       id: release.id,

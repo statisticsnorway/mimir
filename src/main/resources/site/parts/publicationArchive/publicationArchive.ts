@@ -8,7 +8,6 @@ import { PreparedStatistics,prepareRelease} from '../../../lib/ssb/utils/variant
 import { getAllStatisticsFromRepo } from '../../../lib/ssb/statreg/statistics'
 import { filterOnPreviousReleases } from '../releasedStatistics/releasedStatistics'
 import { PublicationItem } from '../../../services/publicationArchive/publicationArchive'
-import { hasPath } from 'ramda'
 
 const {
   moment
@@ -40,13 +39,8 @@ function renderPart(req: Request): React4xpResponse {
     service: 'publicationArchive'
   })
 
-  // iterate and format month names
-  const numberOfReleases: number = 1 // TODO: get dynamically, use 
-  // Get statistics
   const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
-  // All statistics published today, and fill up with previous releases.
-  const releasesFiltered: Array<StatisticInListing> = filterOnPreviousReleases(releases, numberOfReleases)
-  // Choose the right variant and prepare the date in a way it works with the groupBy function
+  const releasesFiltered: Array<StatisticInListing> = filterOnPreviousReleases(releases, releases.length - 1).filter((r) => r.status === "A")
   const releasesPrepped: Array<PreparedStatistics | null> = releasesFiltered.map((release: StatisticInListing) => prepareRelease(release, language))
 
   const props: PartProperties = {
@@ -56,14 +50,15 @@ function renderPart(req: Request): React4xpResponse {
     showingPhrase: phrases['publicationArchive.showing'],
     language,
     publicationArchiveServiceUrl,
-    prepareStatisticsReleases: prepareStatisticsReleases(releasesPrepped as Array<PreparedStatistics>, language),
+    statisticsReleases: prepareStatisticsReleases(releasesPrepped as Array<PreparedStatistics>, language),
     articleTypePhrases: {
       default: phrases['articleType.default'],
       report: phrases['articleType.report'],
       note: phrases['articleType.note'],
       analysis: phrases['articleType.analysis'],
       economicTrends: phrases['articleType.economicTrends'],
-      discussionPaper: phrases['articleType.discussionPaper']
+      discussionPaper: phrases['articleType.discussionPaper'],
+      statistics: phrases['articleType.statistics']
     }
   }
 
@@ -82,13 +77,13 @@ function prepareStatisticsReleases(statistics: Array<PreparedStatistics>, langua
 
       return {
         title: statistic.name,
-        preface: `${period.charAt(0).toUpperCase() + period.slice(1)}
-        ${statistic.seoDescription}`,
+        period: period.charAt(0).toUpperCase() + period.slice(1),
+        preface: statistic.seoDescription,
         url: statistic.statisticsPageUrl,
         publishDate: variantDate,
         publishDateHuman: moment(variantDate).locale(language).format('Do MMMM YYYY'),
         contentType: `${app.name}:statistics`,
-        articleType: statistic.type,
+        articleType: 'statistics',
         mainSubject: statistic.mainSubject
       }
     }) as Array<PublicationItem>
@@ -103,7 +98,7 @@ interface PartProperties {
   showingPhrase: string;
   language: string;
   publicationArchiveServiceUrl: string;
-  prepareStatisticsReleases: Array<PublicationItem> | [];
+  statisticsReleases: Array<PublicationItem> | [];
   articleTypePhrases: {
     [key: string]: string;
   };
