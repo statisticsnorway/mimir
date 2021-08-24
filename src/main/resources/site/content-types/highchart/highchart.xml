@@ -32,7 +32,7 @@
           <occurrences minimum="0" maximum="1"/>
           <config>
             <include>
-              Strike Subscript Superscript Cut Copy Blockquote
+              Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote
             </include>
           </config>
           <help-text>Lim inn (Ctrl-V) en tabell rett fra Excel. Tabeller bør være så enkle som mulig (Overskrifter i første rad/kolonne og ellers bare tall, ingen spesialformatering, manglende tall må være tomme celler)</help-text>
