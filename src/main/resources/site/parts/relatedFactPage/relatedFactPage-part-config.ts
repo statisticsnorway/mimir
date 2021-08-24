@@ -9,9 +9,4 @@ export interface RelatedFactPagePartConfig {
    * Innholdsliste
    */
   itemList?: string;
-
-  /**
-   * Faktasider
-   */
-  relatedFactPages?: Array<string>;
 }
