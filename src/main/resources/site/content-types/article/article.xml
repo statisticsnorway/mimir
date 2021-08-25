@@ -118,7 +118,7 @@
 					</label>
 					<config>
 						<include>
-							Strike Subscript Superscript Cut Copy Blockquote
+							Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote
 						</include>
 						<allowHeadings>
 							h2 h3 h4 h5

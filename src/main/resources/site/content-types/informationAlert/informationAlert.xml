@@ -6,7 +6,7 @@
       <label>Tekst</label>
       <config>
         <include>
-          Strike Subscript Superscript Cut Copy Blockquote
+          Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote
         </include>
       </config>
       <occurrences minimum="1" maximum="1"/>

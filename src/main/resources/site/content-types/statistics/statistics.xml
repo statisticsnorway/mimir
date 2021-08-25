@@ -93,7 +93,7 @@
 					<occurences minimum="0" maximum="1" />
 					<config>
 						<include>
-							Strike Subscript Superscript Cut Copy Blockquote
+							Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote
 						</include>
 					</config>
 				</input>
