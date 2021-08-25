@@ -20,7 +20,6 @@ export const get = (key) => {
 
 export const list = ( pageType, pageTypeId, statbankWeb ) => {
   const now = new Date()
-  const language = getContent().language === 'en' ? 'en' : 'nb' // Alerts are the same for bokmål and nynorsk
   let queryString = `((data.informationAlertVariations.pages.pageIds IN ('${pageTypeId}') 
   OR data.informationAlertVariations.articles.articleIds IN ('${pageTypeId}'))  
   OR (data.selectAllStatistics = 'true' OR data.statisticIds IN ('${pageTypeId}')))`
@@ -30,19 +29,21 @@ export const list = ( pageType, pageTypeId, statbankWeb ) => {
   */
   if (pageType === `${app.name}:statistics`) {
     queryString = `(
-        (data.informationAlertVariations.statistics.selectAllStatistics = 'true' 
-        OR data.informationAlertVariations.statistics.statisticsIds IN ('${pageTypeId}')) 
-        OR (data.selectAllStatistics = 'true' OR data.statisticIds IN ('${pageTypeId}')) 
-      )`
+     (data.informationAlertVariations.statistics.selectAllStatistics = 'true' 
+     OR data.informationAlertVariations.statistics.statisticsIds IN ('${pageTypeId}')) 
+     OR (data.selectAllStatistics = 'true' OR data.statisticIds IN ('${pageTypeId}')) 
+     )`
   }
 
   if (statbankWeb) {
     queryString = `(data.informationAlertVariations.statbank.selectAllStatbankPages = 'true')`
   }
 
+  const language = getContent().language === 'en' ? 'en' : 'nb' // Alerts are the same for bokmål and nynorsk
+  const languageQuery = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'
   return query({
     query: `${queryString} 
-    AND (language = '${language}')
+    ${languageQuery} 
     AND (publish.from LIKE '*' AND publish.from < '${now.toISOString()}')
     AND (publish.to NOT LIKE '*' OR publish.to > '${now.toISOString()}')`,
     contentTypes: [contentTypeName, oldContentTypeName]
