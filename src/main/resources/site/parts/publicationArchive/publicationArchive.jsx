@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Divider, Link, Title } from '@statisticsnorway/ssb-component-library'
+import { Button, Divider, Link, Title, Text } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import Truncate from 'react-truncate'
 import NumberFormat from 'react-number-format'
@@ -12,7 +12,6 @@ function PublicationArchive(props) {
     ingress,
     buttonTitle,
     publicationArchiveServiceUrl,
-    statisticsReleases,
     language,
     articleTypePhrases,
     showingPhrase
@@ -38,9 +37,8 @@ function PublicationArchive(props) {
         language: language
       }
     }).then((res) => {
-      setPublications(publications.concat(res.data.publications, statisticsReleases).sort((a, b) =>
-        new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime()))
-      setTotal(res.data.total + statisticsReleases.length)
+      setPublications(publications.concat(res.data.publications))
+      setTotal(res.data.total)
     }).finally(() => {
       setLoading(false)
     })
@@ -48,23 +46,23 @@ function PublicationArchive(props) {
 
   function renderPublications() {
     return publications.map((publication, i) => {
-      console.log(publication)
       return (
         <div key={i} className="row mb-5">
           <div className="col">
             <Link href={publication.url} className="ssb-link header">
               {publication.title}
             </Link>
-            <p>
+            <p className="m-0">
               <Truncate lines={2}>
                 {publication.period && <span>{publication.period}<br/></span>}
                 {publication.preface}
               </Truncate>
             </p>
-            <span>
+            <Text small>
               {getArticleType(publication)} /&nbsp;
               <time dateTime={publication.publishDate}>{publication.publishDateHuman}</time> /&nbsp;
-              {publication.mainSubject}</span>
+              {publication.mainSubject}
+            </Text>
           </div>
         </div>
       )
