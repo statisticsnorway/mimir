@@ -11,8 +11,10 @@ const {
   clearPartFromPartCache
 } = __non_webpack_require__('/lib/ssb/cache/partCache')
 const {
-  publishDataset
-} = __non_webpack_require__('/lib/ssb/dataset/publish')
+  create,
+  get: getScheduledJob,
+  modify
+} = __non_webpack_require__('/lib/xp/scheduler')
 const {
   refreshStatRegData,
   STATREG_NODES
@@ -172,11 +174,35 @@ export function setupCronJobs(): void {
 
   // publish dataset cron job
   const datasetPublishCron: string = app.config && app.config['ssb.cron.publishDataset'] ? app.config['ssb.cron.publishDataset'] : '50 05 * * *'
-  schedule({
-    name: 'Dataset publish',
-    cron: datasetPublishCron,
-    callback: () => runOnMasterOnly(publishDataset),
-    context: cronContext
+  run(cronContext, () => {
+    const jobExists: boolean = !!getScheduledJob({
+      name: 'dailyPublishJob'
+    })
+    if (jobExists) {
+      modify({
+        name: 'dailyPublishJob',
+        editor: (job) => {
+          job.schedule.value = datasetPublishCron
+          return job
+        }
+      })
+    } else {
+      create({
+        name: 'dailyPublishJob',
+        descriptor: `${app.name}:publishJob`,
+        description: 'Publishing all dataset for statistics',
+        user: `user:system:cronjob`,
+        enabled: true,
+        schedule: {
+          type: 'CRON',
+          value: datasetPublishCron,
+          // TODO remove after enonic-types fix
+          // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+          // @ts-ignore
+          timeZone: 'GMT+0:00'
+        }
+      })
+    }
   })
 
   const deleteExpiredEventLogCron: string = app.config && app.config['ssb.cron.deleteLogs'] ? app.config['ssb.cron.deleteLogs'] : '45 13 * * *'

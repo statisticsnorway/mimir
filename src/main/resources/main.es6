@@ -18,6 +18,9 @@ try {
   const {
     create
   } = __non_webpack_require__('/lib/featureToggle')
+  const {
+    setupTaskListener
+  } = __non_webpack_require__('/lib/ssb/dataset/publish')
 
   log.info('Application ' + app.name + ' started') // Log application started
   __.disposer(() => log.info('Application ' + app.name + ' stopped')) // Log application stoppped
@@ -28,6 +31,7 @@ try {
   setupStatRegRepo()
   setupFetchDataOnCreateListener()
   setupCronJobs()
+  setupTaskListener()
 
   create([
     {
