@@ -40,7 +40,7 @@ function renderPart(req: Request): React4xpResponse {
   })
 
   const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
-  const releasesFiltered: Array<StatisticInListing> = filterOnPreviousReleases(releases, releases.length - 1).filter((r) => r.status === "A")
+  const releasesFiltered: Array<StatisticInListing> = filterOnPreviousReleases(releases, releases.length).filter((r) => r.status === "A")
   const releasesPrepped: Array<PreparedStatistics | null> = releasesFiltered.map((release: StatisticInListing) => prepareRelease(release, language))
 
   const props: PartProperties = {
