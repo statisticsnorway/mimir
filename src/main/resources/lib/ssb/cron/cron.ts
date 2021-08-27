@@ -196,7 +196,7 @@ export function setupCronJobs(): void {
         schedule: {
           type: 'CRON',
           value: datasetPublishCron,
-          timeZone: 'GMT+0:00'
+          timeZone: 'GMT'
         }
       })
     }
