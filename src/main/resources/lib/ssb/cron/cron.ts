@@ -6,6 +6,7 @@ import { JobEventNode, JobInfoNode } from '../repo/job'
 import { StatRegRefreshResult } from '../repo/statreg'
 import { TaskMapper } from 'enonic-types/cron'
 import { RSSFilter } from './rss'
+import { ScheduledJob } from 'enonic-types/scheduler'
 
 const {
   clearPartFromPartCache
@@ -13,7 +14,8 @@ const {
 const {
   create,
   get: getScheduledJob,
-  modify
+  modify,
+  list: listScheduledJobs
 } = __non_webpack_require__('/lib/xp/scheduler')
 const {
   refreshStatRegData,
@@ -200,6 +202,8 @@ export function setupCronJobs(): void {
         }
       })
     }
+    const schedulerList: Array<ScheduledJob<unknown>> = listScheduledJobs()
+    cronJobLog(JSON.stringify(schedulerList, null, 2))
   })
 
   const deleteExpiredEventLogCron: string = app.config && app.config['ssb.cron.deleteLogs'] ? app.config['ssb.cron.deleteLogs'] : '45 13 * * *'
