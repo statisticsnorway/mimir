@@ -12,6 +12,7 @@ function PublicationArchive(props) {
     ingress,
     buttonTitle,
     publicationArchiveServiceUrl,
+    statisticsReleases,
     language,
     articleTypePhrases,
     showingPhrase
@@ -20,6 +21,8 @@ function PublicationArchive(props) {
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
   const [first, setFirst] = useState(true)
+  const [statisticsPublications, setStatisticsPublications] = useState(statisticsReleases)
+  const [diff, setDiff] = useState([0])
 
   useEffect(() => {
     if (first) {
@@ -28,17 +31,58 @@ function PublicationArchive(props) {
     }
   })
 
+  function mergePublications(newPublications) {
+    const filteredStatisticsReleases = []
+    const filteredStatisticsReleasesRest = []
+
+    // TODO: remember to add checks for statistics newer and older than new releases results
+    statisticsPublications.forEach((statisticsRelease) => {
+      const statisticsReleaseDate = new Date(statisticsRelease.publishDate)
+
+      if (statisticsReleaseDate < new Date(newPublications[0].publishDate) &&
+          statisticsReleaseDate > new Date(newPublications[newPublications.length - 1].publishDate)) {
+        filteredStatisticsReleases.push(statisticsRelease)
+      } else {
+        filteredStatisticsReleasesRest.push(statisticsRelease)
+      }
+    })
+    setStatisticsPublications(filteredStatisticsReleasesRest)
+
+    const diffValues = []
+    const mergedPublications = filteredStatisticsReleases.concat(newPublications)
+      .sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate))
+
+    // TODO: log rests to double check values, make sure none are being left out
+    if (mergedPublications.length > 10) {
+      const restMergedPublications = mergedPublications.slice(10, mergedPublications.length)
+      const restStatistics = restMergedPublications.filter((p) => p.contentType === `${p.appName}:statistics`)
+      if (restStatistics.length) {
+        setStatisticsPublications(filteredStatisticsReleasesRest.concat(restStatistics))
+      }
+
+      diffValues.push(mergedPublications.length - (10 + restStatistics.length))
+      setDiff(diff.concat(diffValues))
+
+      return mergedPublications.slice(0, 10)
+    } else {
+      diffValues.push(0)
+      setDiff(diff.concat(diffValues))
+      return mergedPublications
+    }
+  }
+
   function fetchPublications() {
     setLoading(true)
+    const indexDiff = diff.map((d) => d).reduce((acc, curr) => acc + curr)
     axios.get(publicationArchiveServiceUrl, {
       params: {
-        start: publications.length,
+        start: publications.length - indexDiff,
         count: 10,
         language: language
       }
     }).then((res) => {
-      setPublications(publications.concat(res.data.publications))
-      setTotal(res.data.total)
+      setPublications(publications.concat(mergePublications(res.data.publications)))
+      setTotal(res.data.total + statisticsReleases.length)
     }).finally(() => {
       setLoading(false)
     })

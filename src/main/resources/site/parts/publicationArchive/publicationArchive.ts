@@ -4,7 +4,7 @@ import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Content } from 'enonic-types/content'
 import { PublicationArchivePartConfig } from './publicationArchive-part-config'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
-import { PreparedStatistics,prepareRelease} from '../../../lib/ssb/utils/variantUtils'
+import { PreparedStatistics, prepareRelease } from '../../../lib/ssb/utils/variantUtils'
 import { getAllStatisticsFromRepo } from '../../../lib/ssb/statreg/statistics'
 import { filterOnPreviousReleases } from '../releasedStatistics/releasedStatistics'
 import { PublicationItem } from '../../../services/publicationArchive/publicationArchive'
@@ -18,9 +18,6 @@ const {
 const {
   getContent, serviceUrl, getComponent
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  query
-} = __non_webpack_require__('/lib/xp/content')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 exports.get = (req: Request): React4xpResponse => {
@@ -40,7 +37,7 @@ function renderPart(req: Request): React4xpResponse {
   })
 
   const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
-  const releasesFiltered: Array<StatisticInListing> = filterOnPreviousReleases(releases, releases.length).filter((r) => r.status === "A")
+  const releasesFiltered: Array<StatisticInListing> = filterOnPreviousReleases(releases, releases.length).filter((r) => r.status === 'A')
   const releasesPrepped: Array<PreparedStatistics | null> = releasesFiltered.map((release: StatisticInListing) => prepareRelease(release, language))
 
   const props: PartProperties = {
@@ -84,7 +81,8 @@ function prepareStatisticsReleases(statistics: Array<PreparedStatistics>, langua
         publishDateHuman: moment(variantDate).locale(language).format('Do MMMM YYYY'),
         contentType: `${app.name}:statistics`,
         articleType: 'statistics',
-        mainSubject: statistic.mainSubject
+        mainSubject: statistic.mainSubject,
+        appName: app.name
       }
     }) as Array<PublicationItem>
   }
