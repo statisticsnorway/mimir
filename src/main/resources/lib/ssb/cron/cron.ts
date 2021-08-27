@@ -196,9 +196,6 @@ export function setupCronJobs(): void {
         schedule: {
           type: 'CRON',
           value: datasetPublishCron,
-          // TODO remove after enonic-types fix
-          // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-          // @ts-ignore
           timeZone: 'GMT+0:00'
         }
       })

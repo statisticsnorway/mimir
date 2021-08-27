@@ -66,9 +66,6 @@ exports.run = function(props: PublishDatasetConfig): void {
           type: 'ONE_TIME',
           value: new Date().toISOString()
         },
-        // TODO remove after enonic-types fix
-        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-        // @ts-ignore
         config: {
           jobId: jobId,
           statisticsContentId: statisticsContentId,

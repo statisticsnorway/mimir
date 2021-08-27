@@ -116,9 +116,6 @@ exports.run = function(): void {
                 type: 'ONE_TIME',
                 value: new Date(releaseDate.getTime() + serverOffsetInMs - 1000).toISOString()
               },
-              // TODO remove after enonic-types fix
-              // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-              // @ts-ignore
               config: {
                 jobId: jobLogNode._id,
                 statisticsContentId: stat._id,
