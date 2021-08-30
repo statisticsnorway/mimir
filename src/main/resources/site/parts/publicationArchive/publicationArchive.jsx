@@ -35,12 +35,22 @@ function PublicationArchive(props) {
     const filteredStatisticsReleases = []
     const filteredStatisticsReleasesRest = []
 
+    console.log(newPublications)
     statisticsPublications.forEach((statisticsRelease) => {
       const statisticsReleaseDate = new Date(statisticsRelease.publishDate)
+      const latestNewPublicationDate = newPublications.length ? new Date(newPublications[0].publishDate) : new Date()
+      const oldestNewPublicationDate = newPublications.length ? new Date(newPublications[newPublications.length - 1].publishDate) : new Date('01.01.1970')
 
-      if (statisticsReleaseDate <
-        (publications.length ? new Date(publications[publications.length - 1].publishDate) : new Date(newPublications[0].publishDate)) &&
-          statisticsReleaseDate > new Date(newPublications[newPublications.length - 1].publishDate)) {
+      let dateCheck = statisticsReleaseDate <
+      (publications.length ? new Date(publications[publications.length - 1].publishDate) : latestNewPublicationDate) &&
+        statisticsReleaseDate > oldestNewPublicationDate
+      if (statisticsReleaseDate > latestNewPublicationDate) {
+        dateCheck = statisticsReleaseDate > oldestNewPublicationDate
+      } else {
+        dateCheck = statisticsReleaseDate < publications.length ? new Date(publications[publications.length - 1].publishDate) : latestNewPublicationDate
+      }
+
+      if (dateCheck) {
         filteredStatisticsReleases.push(statisticsRelease)
       } else {
         filteredStatisticsReleasesRest.push(statisticsRelease)
@@ -49,8 +59,10 @@ function PublicationArchive(props) {
     setStatisticsPublications(filteredStatisticsReleasesRest)
 
     const diffValues = []
-    const mergedPublications = filteredStatisticsReleases.concat(newPublications)
-      .sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate))
+    const mergedPublications = newPublications.length ?
+      filteredStatisticsReleases.concat(newPublications)
+        .sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate)) :
+      filteredStatisticsReleases.sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate))
 
     if (mergedPublications.length > 10) {
       const restMergedPublications = mergedPublications.slice(10, mergedPublications.length)
@@ -72,6 +84,7 @@ function PublicationArchive(props) {
 
   function fetchPublications() {
     setLoading(true)
+    console.log(diff)
     const indexDiff = diff.map((d) => d).reduce((acc, curr) => acc + curr)
     axios.get(publicationArchiveServiceUrl, {
       params: {
@@ -95,16 +108,16 @@ function PublicationArchive(props) {
             <Link href={publication.url} className="ssb-link header">
               {publication.title}
             </Link>
-            <p className="m-0">
+            {publication.period && <p className="mt-1 mb-0">{publication.period}</p>}
+            <p className="my-1">
               <Truncate lines={2}>
-                {publication.period && <span>{publication.period}<br/></span>}
                 {publication.preface}
               </Truncate>
             </p>
             <Text small>
               {getArticleType(publication)} /&nbsp;
-              <time dateTime={publication.publishDate}>{publication.publishDateHuman}</time> /&nbsp;
-              {publication.mainSubject}
+              <time dateTime={publication.publishDate}>{publication.publishDateHuman}</time>
+              {publication.mainSubject && `/ ${publication.mainSubject}`}
             </Text>
           </div>
         </div>

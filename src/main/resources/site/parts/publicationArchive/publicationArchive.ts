@@ -8,6 +8,7 @@ import { PreparedStatistics, prepareRelease } from '../../../lib/ssb/utils/varia
 import { getAllStatisticsFromRepo } from '../../../lib/ssb/statreg/statistics'
 import { filterOnPreviousReleases } from '../releasedStatistics/releasedStatistics'
 import { PublicationItem } from '../../../services/publicationArchive/publicationArchive'
+import { fromPartCache } from '../../../lib/ssb/cache/partCache'
 
 const {
   moment
@@ -36,9 +37,11 @@ function renderPart(req: Request): React4xpResponse {
     service: 'publicationArchive'
   })
 
-  const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
-  const releasesFiltered: Array<StatisticInListing> = filterOnPreviousReleases(releases, releases.length).filter((r) => r.status === 'A')
-  const releasesPrepped: Array<PreparedStatistics | null> = releasesFiltered.map((release: StatisticInListing) => prepareRelease(release, language))
+  const releasesPrepped: Array<PreparedStatistics | null> = fromPartCache(req, `${content._id}-publicationArchive`, () => {
+    const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
+    const releasesFiltered: Array<StatisticInListing> = filterOnPreviousReleases(releases, releases.length).filter((r) => r.status === 'A')
+    return releasesFiltered.map((release: StatisticInListing) => prepareRelease(release, language))
+  })
 
   const props: PartProperties = {
     title: content.displayName,
