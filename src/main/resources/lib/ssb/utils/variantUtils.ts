@@ -1,5 +1,6 @@
 import { Content } from 'enonic-types/content'
 import { SEO } from '../../../services/news/news'
+import { OmStatistikken } from '../../../site/content-types/omStatistikken/omStatistikken'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { StatisticInListing, VariantInListing } from '../dashboard/statreg/types'
 
@@ -7,7 +8,8 @@ const {
   pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
 const {
-  query
+  query,
+  get
 } = __non_webpack_require__('/lib/xp/content')
 const {
   getMainSubject
@@ -286,6 +288,9 @@ export function prepareRelease(
     const statisticsPageUrl: string | undefined = statisticsPagesXP.length ? pageUrl({
       path: statisticsPagesXP[0]._path
     }) : undefined
+    const aboutTheStatisticsContent: Content<OmStatistikken> | null = statisticsPagesXP.length ? get({
+      key: statisticsPagesXP[0].data.aboutTheStatistics as string
+    }) : null
     const seoDescription: string | undefined = statisticsPagesXP.length ? statisticsPagesXP[0].x['com-enonic-app-metafields']['meta-data'].seoDescription : ''
 
     return {
@@ -299,7 +304,7 @@ export function prepareRelease(
       mainSubject: getMainSubject(release.shortName, language),
       variant: preparedVariant,
       statisticsPageUrl,
-      seoDescription
+      aboutTheStatisticsDescription: aboutTheStatisticsContent ? aboutTheStatisticsContent.data.ingress : seoDescription
     }
   }
   return null
@@ -354,7 +359,7 @@ export interface PreparedStatistics {
   date?: string;
   mainSubject?: string;
   statisticsPageUrl?: string;
-  seoDescription?: string;
+  aboutTheStatisticsDescription?: string;
 }
 
 export interface PreparedVariant {

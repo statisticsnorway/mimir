@@ -78,7 +78,7 @@ function prepareStatisticsReleases(statistics: Array<PreparedStatistics>, langua
       return {
         title: statistic.name,
         period: period.charAt(0).toUpperCase() + period.slice(1),
-        preface: statistic.seoDescription,
+        preface: statistic.aboutTheStatisticsDescription,
         url: statistic.statisticsPageUrl,
         publishDate: variantDate,
         publishDateHuman: moment(variantDate).locale(language).format('Do MMMM YYYY'),
