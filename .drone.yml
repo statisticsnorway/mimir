@@ -11,12 +11,12 @@ trigger:
       - pull_request
 steps:
   - name: build & test
-    image: enonic/enonic-ci:7.6-node
+    image: enonic/enonic-ci:7.4-node
     commands:
       - /setup_sandbox.sh
       - enonic project build
   - name: deploy
-    image: enonic/enonic-ci:7.6-node
+    image: enonic/enonic-ci:7.4-node
     environment:
       ENONIC_CLI_REMOTE_URL:
         from_secret: ssb-xp7t-url
@@ -27,7 +27,7 @@ steps:
     commands:
       - enonic app install --file build/libs/*.jar
   - name: mabl create and test branch - test.ssb.no
-    image: enonic/enonic-ci:7.6-node
+    image: enonic/enonic-ci:7.4-node
     environment:
       MABL_API_KEY:
         from_secret: mabl-api-key
@@ -48,12 +48,12 @@ trigger:
     - qa
 steps:
   - name: build & test
-    image: enonic/enonic-ci:7.6-node
+    image: enonic/enonic-ci:7.4-node
     commands:
       - /setup_sandbox.sh
       - enonic project build
   - name: deploy
-    image: enonic/enonic-ci:7.6-node
+    image: enonic/enonic-ci:7.4-node
     environment:
       ENONIC_CLI_REMOTE_URL:
         from_secret: ssb-xp7q-url
@@ -64,7 +64,7 @@ steps:
     commands:
       - enonic app install --file build/libs/*.jar
   - name: mabl end-to-end test
-    image: enonic/enonic-ci:7.6-node
+    image: enonic/enonic-ci:7.4-node
     environment:
       MABL_API_KEY:
         from_secret: mabl-api-key
@@ -102,12 +102,12 @@ trigger:
       - push
 steps:
   - name: build & test
-    image: enonic/enonic-ci:7.6-node
+    image: enonic/enonic-ci:7.4-node
     commands:
       - /setup_sandbox.sh
       - enonic project build
   - name: deploy
-    image: enonic/enonic-ci:7.6-node
+    image: enonic/enonic-ci:7.4-node
     environment:
       ENONIC_CLI_REMOTE_URL:
         from_secret: ssb-xp7q-url
@@ -118,7 +118,7 @@ steps:
     commands:
       - enonic app install --file build/libs/*.jar
   - name: mabl end-to-end test
-    image: enonic/enonic-ci:7.6-node
+    image: enonic/enonic-ci:7.4-node
     environment:
       MABL_API_KEY:
         from_secret: mabl-api-key
@@ -153,12 +153,12 @@ trigger:
     - prod
 steps:
   - name: build & test
-    image: enonic/enonic-ci:7.6-node
+    image: enonic/enonic-ci:7.4-node
     commands:
       - /setup_sandbox.sh
       - enonic project build
   - name: deploy
-    image: enonic/enonic-ci:7.6-node
+    image: enonic/enonic-ci:7.4-node
     environment:
       ENONIC_CLI_REMOTE_URL:
         from_secret: ssb-xp7p-url
