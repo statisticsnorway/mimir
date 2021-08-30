@@ -35,11 +35,11 @@ function PublicationArchive(props) {
     const filteredStatisticsReleases = []
     const filteredStatisticsReleasesRest = []
 
-    // TODO: remember to add checks for statistics newer and older than new releases results
     statisticsPublications.forEach((statisticsRelease) => {
       const statisticsReleaseDate = new Date(statisticsRelease.publishDate)
 
-      if (statisticsReleaseDate < new Date(newPublications[0].publishDate) &&
+      if (statisticsReleaseDate <
+        (publications.length ? new Date(publications[publications.length - 1].publishDate) : new Date(newPublications[0].publishDate)) &&
           statisticsReleaseDate > new Date(newPublications[newPublications.length - 1].publishDate)) {
         filteredStatisticsReleases.push(statisticsRelease)
       } else {
@@ -52,7 +52,6 @@ function PublicationArchive(props) {
     const mergedPublications = filteredStatisticsReleases.concat(newPublications)
       .sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate))
 
-    // TODO: log rests to double check values, make sure none are being left out
     if (mergedPublications.length > 10) {
       const restMergedPublications = mergedPublications.slice(10, mergedPublications.length)
       const restStatistics = restMergedPublications.filter((p) => p.contentType === `${p.appName}:statistics`)
