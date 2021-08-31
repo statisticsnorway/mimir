@@ -280,18 +280,18 @@ export function prepareRelease(
       concatReleaseTimes(release.variants, language, property) :
       formatVariant(release.variants, language, property)
 
-    const statisticsPagesXP: Array<Content<Statistics, object, SEO>> = query({
+    const statisticsPagesXP: Content<Statistics, object, SEO> | undefined = query({
       count: 1,
       query: `data.statistic LIKE "${release.id}" AND language IN (${language === 'nb' ? '"nb", "nn"' : '"en"'})`,
       contentTypes: [`${app.name}:statistics`]
-    }).hits as unknown as Array<Content<Statistics, object, SEO>>
-    const statisticsPageUrl: string | undefined = statisticsPagesXP.length ? pageUrl({
-      path: statisticsPagesXP[0]._path
+    }).hits[0] as unknown as Content<Statistics, object, SEO>
+    const statisticsPageUrl: string | undefined = statisticsPagesXP ? pageUrl({
+      path: statisticsPagesXP._path
     }) : undefined
-    const aboutTheStatisticsContent: Content<OmStatistikken> | null = statisticsPagesXP.length ? get({
-      key: statisticsPagesXP[0].data.aboutTheStatistics as string
+    const aboutTheStatisticsContent: Content<OmStatistikken> | null = statisticsPagesXP && statisticsPagesXP.data.aboutTheStatistics ? get({
+      key: statisticsPagesXP.data.aboutTheStatistics
     }) : null
-    const seoDescription: string | undefined = statisticsPagesXP.length ? statisticsPagesXP[0].x['com-enonic-app-metafields']['meta-data'].seoDescription : ''
+    const seoDescription: string | undefined = statisticsPagesXP ? statisticsPagesXP.x['com-enonic-app-metafields']['meta-data'].seoDescription : ''
 
     return {
       id: release.id,
