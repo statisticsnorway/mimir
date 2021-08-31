@@ -187,6 +187,7 @@ export function setupCronJobs(): void {
         name: 'dailyPublishJob',
         editor: (job) => {
           job.schedule.value = datasetPublishCron
+          job.schedule.timeZone = timezone
           return job
         }
       })
