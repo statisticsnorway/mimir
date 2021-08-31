@@ -60,7 +60,7 @@ repositories {
 
 node {
     download = true
-    version = '16.4.2'
+    version = '16.1.0'
 }
 
 def react4xpGradlePath = 'node_modules/react4xp/react4xp.gradle'
