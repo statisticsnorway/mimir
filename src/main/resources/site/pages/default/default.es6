@@ -37,6 +37,9 @@ const {
 const {
   localize
 } = __non_webpack_require__('/lib/xp/i18n')
+const {
+  getMainSubjects
+} = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
 
 
 const partsWithPreview = [ // Parts that has preview
@@ -113,6 +116,7 @@ exports.get = function(req) {
   let metaInfoSearchKeywords
   let metaInfoDescription
   let metaInfoSearchPublishFrom = page.publish.from
+  let metaInfoMainSubject
 
   if (pageType === 'municipality') {
     if (page._path.indexOf('/kommunefakta/') > -1) {
@@ -152,6 +156,22 @@ exports.get = function(req) {
     metaInfoSearchContentType = 'statistikk'
     metaInfoDescription = page.x['com-enonic-app-metafields']['meta-data'].seoDescription
     metaInfoSearchKeywords = page.data.keywords ? page.data.keywords : ''
+  }
+
+  // Metainfo artikkel
+  if (page.type === `${app.name}:article`) {
+    const allMainSubjects = getMainSubjects(language === 'en' ? 'en' : 'nb' )
+    let mainSubjectTitle = null
+    const pathArray = page._path.split('/')
+
+    allMainSubjects.forEach((mainSubject) => {
+      if (page._path.startsWith(mainSubject.path)) {
+        mainSubjectTitle = mainSubject.title
+      }
+    })
+
+    metaInfoSearchContentType = 'artikkel'
+    metaInfoMainSubject = mainSubjectTitle
   }
 
   let config
@@ -291,6 +311,7 @@ exports.get = function(req) {
     metaInfoSearchKeywords,
     metaInfoDescription,
     metaInfoSearchPublishFrom,
+    metaInfoMainSubject,
     breadcrumbsReactId: breadcrumbComponent.react4xpId,
     hideBreadcrumb
   }
