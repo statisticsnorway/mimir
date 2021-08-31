@@ -6,7 +6,6 @@ import { EndedStatisticList } from '../../../site/content-types/endedStatisticLi
 import { StatisticInListing } from '../dashboard/statreg/types'
 import { Statistic } from '../../../site/mixins/statistic/statistic'
 import { Subtopic } from '../../../site/mixins/subtopic/subtopic'
-import { fromSubjectCache } from '../cache/subjectCache'
 import { Request } from 'enonic-types/controller'
 const {
   query
@@ -17,6 +16,9 @@ const {
 const {
   ensureArray
 } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
+const {
+  fromSubjectCache
+} = __non_webpack_require__('/lib/ssb/cache/subjectCache')
 
 
 export function getMainSubjects(language?: string): Array<SubjectItem> {
