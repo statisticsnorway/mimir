@@ -160,7 +160,7 @@ exports.get = function(req) {
 
   // Metainfo artikkel
   if (page.type === `${app.name}:article`) {
-    const allMainSubjects = getMainSubjects(language.code === 'en' ? 'en' : 'nb' )
+    const allMainSubjects = getMainSubjects(req, language.code === 'en' ? 'en' : 'nb' )
 
     allMainSubjects.forEach((mainSubject) => {
       if (page._path.startsWith(mainSubject.path)) {
