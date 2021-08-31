@@ -144,7 +144,7 @@ function getStatisticsNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>
   return statisticsNews
 }
 
-interface SEO {
+export interface SEO {
   seoDescription?: string;
 }
 

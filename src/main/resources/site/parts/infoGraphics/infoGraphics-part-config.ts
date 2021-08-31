@@ -11,6 +11,59 @@ export interface InfoGraphicsPartConfig {
   image: string;
 
   /**
+   * Kilder
+   */
+  sources?: Array<
+    | {
+        /**
+         * Selected
+         */
+        _selected: "urlSource";
+
+        /**
+         * Kilde fra url
+         */
+        urlSource: {
+          /**
+           * Tekst til kildelenke
+           */
+          urlText: string;
+
+          /**
+           * Kildelenke
+           */
+          url: string;
+        };
+      }
+    | {
+        /**
+         * Selected
+         */
+        _selected: "relatedSource";
+
+        /**
+         * Kilde fra XP
+         */
+        relatedSource: {
+          /**
+           * Tekst til kildelenke
+           */
+          urlText?: string;
+
+          /**
+           * Relatert innhold
+           */
+          sourceSelector?: string;
+        };
+      }
+  >;
+
+  /**
+   * Fotnote-tekst
+   */
+  footNote?: Array<string>;
+
+  /**
    * *IKKE LENGER I BRUK* (bruk alt tekst på valgt bilde)
    */
   altText?: string;
