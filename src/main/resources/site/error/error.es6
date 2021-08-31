@@ -12,6 +12,8 @@ const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 
 const fourOFourView = resolve('./404.html')
+const mainErrorView = resolve('./error.html')
+const genericErrorView = resolve('./generic.html')
 
 exports.handle404 = function(err) {
   // getting language from site because 404 page is not connected to any content.
@@ -20,73 +22,26 @@ exports.handle404 = function(err) {
   const page = getSite()
   const language = getLanguage(page)
 
-  const stylesUrl = assetUrl({
-    path: 'styles/bundle.css'
-  })
-  const jsLibsUrl = assetUrl({
-    path: 'js/bundle.js'
-  })
-  const illustration = assetUrl({
-    path: 'SSB_404_illustration.svg'
-  })
-  const logo = assetUrl({
-    path: 'SSB_logo_black.svg'
-  })
-
-  const title = i18nLib.localize({
-    key: '404.title'
-  })
-  const text = i18nLib.localize({
-    key: '404.text'
-  })
-  const goBack = i18nLib.localize({
-    key: '404.goBack'
-  })
-  const frontPage = i18nLib.localize({
-    key: '404.frontPage'
-  })
-  const or = i18nLib.localize({
-    key: '404.or'
-  })
-  const search = i18nLib.localize({
-    key: '404.search'
-  })
-  const searchText = i18nLib.localize({
-    key: 'menuSearch'
-  })
-
   const searchComponent = new React4xp('Search')
     .setProps({
-      searchText: searchText,
+      searchText: i18nLib.localize({
+        key: 'menuSearch'
+      }),
       searchResultPageUrl: 'https://www.ssb.no/sok',
       className: 'show'
     })
     .setId('searchBox')
     .uniqueId()
 
-  const model = {
-    pageTitle: 'Side ikke funnet / Page not found - SSB',
-    language,
-    jsLibsUrl,
-    stylesUrl,
-    title,
-    text,
-    goBack,
-    frontPage,
-    or,
-    search,
-    illustration,
-    logo,
-    configRegions: [],
-    showIngress: false,
-    bodyClasses: '',
-    searchBoxId: searchComponent.react4xpId,
-    GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null
+  const fourOFourModel = {
+    ...getFourOFourAssets(),
+    ...getFourOFourLocalizations(),
+    searchBoxId: searchComponent.react4xpId
   }
+  const fourOFourBody = render(fourOFourView, fourOFourModel)
 
-  const thymeleafRender = render(fourOFourView, model)
   const body = searchComponent.renderBody({
-    body: thymeleafRender,
+    body: getMainErrorBody(err.status, fourOFourBody, language),
     clientRender: err.request.mode !== 'edit'
   })
 
@@ -100,5 +55,118 @@ exports.handle404 = function(err) {
     pageContributions,
     contentType: 'text/html',
     postProcess: true
+  }
+}
+
+exports.handleError = function(err) {
+  try {
+    const genericModel = {
+      ...getGenericAssets(),
+      ...getGenericLocalizations(err.status)
+    }
+    const genericViewBody = render(genericErrorView, genericModel)
+
+    const page = getSite()
+    const language = getLanguage(page)
+    const body = getMainErrorBody(err.status, genericViewBody, language)
+    return {
+      body,
+      contentType: 'text/html',
+      postProcess: true
+    }
+  } catch (error) {
+    // fallback in case of full derp
+    return {
+      contentType: 'text/html',
+      body: `<html><body><h1>Error code "${err.status}" </h1></body></html>`
+    }
+  }
+}
+
+function getMainErrorBody(status, contentHtml, language) {
+  const mainErrorModel = {
+    ...getAssets(),
+    language,
+    pageTitle: status === 404 ? 'Side ikke funnet / Page not found - SSB' : 'Siden feilet / Page error',
+    bodyClasses: '',
+    GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null,
+    contentHtml
+  }
+  const mainErrorBody = render(mainErrorView, mainErrorModel)
+  return mainErrorBody
+}
+
+function getFourOFourLocalizations() {
+  return {
+    title: i18nLib.localize({
+      key: '404.title'
+    }),
+    text: i18nLib.localize({
+      key: '404.text'
+    }),
+    goBack: i18nLib.localize({
+      key: '404.goBack'
+    }),
+    frontPage: i18nLib.localize({
+      key: '404.frontPage'
+    }),
+    or: i18nLib.localize({
+      key: '404.or'
+    }),
+    search: i18nLib.localize({
+      key: '404.search'
+    })
+  }
+}
+
+function getGenericLocalizations(status) {
+  return {
+    title: i18nLib.localize({
+      key: 'error.title'
+    }),
+    text: i18nLib.localize({
+      key: 'error.text1'
+    }) + ` ${status}` + i18nLib.localize({
+      key: 'error.text2'
+    }),
+    goBack: i18nLib.localize({
+      key: 'error.goBack'
+    }),
+    frontPage: i18nLib.localize({
+      key: 'error.frontPage'
+    }),
+    or: i18nLib.localize({
+      key: 'error.or'
+    })
+  }
+}
+
+function getGenericAssets() {
+  return {
+    logo: assetUrl({
+      path: 'SSB_logo_black.svg'
+    })
+  }
+}
+
+function getFourOFourAssets() {
+  return {
+    illustration: assetUrl({
+      path: 'SSB_404_illustration.svg'
+    }),
+    logo: assetUrl({
+      path: 'SSB_logo_black.svg'
+    })
+  }
+}
+
+function getAssets() {
+  return {
+    stylesUrl: assetUrl({
+      path: 'styles/bundle.css'
+    }),
+    jsLibsUrl: assetUrl({
+      path: 'js/bundle.js'
+    })
   }
 }
