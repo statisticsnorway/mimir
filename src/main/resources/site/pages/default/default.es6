@@ -160,18 +160,15 @@ exports.get = function(req) {
 
   // Metainfo artikkel
   if (page.type === `${app.name}:article`) {
-    const allMainSubjects = getMainSubjects(language === 'en' ? 'en' : 'nb' )
-    let mainSubjectTitle = null
-    const pathArray = page._path.split('/')
+    const allMainSubjects = getMainSubjects(language.code === 'en' ? 'en' : 'nb' )
 
     allMainSubjects.forEach((mainSubject) => {
       if (page._path.startsWith(mainSubject.path)) {
-        mainSubjectTitle = mainSubject.title
+        metaInfoMainSubject = mainSubject.title
       }
     })
 
     metaInfoSearchContentType = 'artikkel'
-    metaInfoMainSubject = mainSubjectTitle
   }
 
   let config
