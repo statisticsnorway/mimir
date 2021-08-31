@@ -85,7 +85,7 @@ export function renderPart(req: Request): React4xpResponse {
   })
 }
 
-function filterOnPreviousReleases(stats: Array<StatisticInListing>, numberOfReleases: number): Array<StatisticInListing> {
+export function filterOnPreviousReleases(stats: Array<StatisticInListing>, numberOfReleases: number): Array<StatisticInListing> {
   const releases: Array<StatisticInListing> = []
   for (let i: number = 0; releases.length < numberOfReleases; i++) {
     const day: Date = new Date()

@@ -1,4 +1,6 @@
 import { Content } from 'enonic-types/content'
+import { SEO } from '../../../services/news/news'
+import { OmStatistikken } from '../../../site/content-types/omStatistikken/omStatistikken'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { StatisticInListing, VariantInListing } from '../dashboard/statreg/types'
 
@@ -6,7 +8,8 @@ const {
   pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
 const {
-  query
+  query,
+  get
 } = __non_webpack_require__('/lib/xp/content')
 const {
   getMainSubject
@@ -277,14 +280,18 @@ export function prepareRelease(
       concatReleaseTimes(release.variants, language, property) :
       formatVariant(release.variants, language, property)
 
-    const statisticsPagesXP: Array<Content<Statistics>> = query({
+    const statisticsPagesXP: Content<Statistics, object, SEO> | undefined = query({
       count: 1,
-      query: `data.statistic LIKE "${release.id}"`,
+      query: `data.statistic LIKE "${release.id}" AND language IN (${language === 'nb' ? '"nb", "nn"' : '"en"'})`,
       contentTypes: [`${app.name}:statistics`]
-    }).hits as unknown as Array<Content<Statistics>>
-    const statisticsPageUrl: string | undefined = statisticsPagesXP.length ? pageUrl({
-      id: statisticsPagesXP[0]._id
+    }).hits[0] as unknown as Content<Statistics, object, SEO>
+    const statisticsPageUrl: string | undefined = statisticsPagesXP ? pageUrl({
+      path: statisticsPagesXP._path
     }) : undefined
+    const aboutTheStatisticsContent: Content<OmStatistikken> | null = statisticsPagesXP && statisticsPagesXP.data.aboutTheStatistics ? get({
+      key: statisticsPagesXP.data.aboutTheStatistics
+    }) : null
+    const seoDescription: string | undefined = statisticsPagesXP ? statisticsPagesXP.x['com-enonic-app-metafields']['meta-data'].seoDescription : ''
 
     return {
       id: release.id,
@@ -296,7 +303,8 @@ export function prepareRelease(
       }),
       mainSubject: getMainSubject(release.shortName, language),
       variant: preparedVariant,
-      statisticsPageUrl
+      statisticsPageUrl,
+      aboutTheStatisticsDescription: aboutTheStatisticsContent ? aboutTheStatisticsContent.data.ingress : seoDescription
     }
   }
   return null
@@ -351,6 +359,7 @@ export interface PreparedStatistics {
   date?: string;
   mainSubject?: string;
   statisticsPageUrl?: string;
+  aboutTheStatisticsDescription?: string;
 }
 
 export interface PreparedVariant {
