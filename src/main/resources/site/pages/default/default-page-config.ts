@@ -30,6 +30,16 @@ export interface DefaultPageConfig {
    */
   regions: Array<{
     /**
+     * Tittel
+     */
+    title?: string;
+
+    /**
+     * Skjul tittel
+     */
+    hideTitle: boolean;
+
+    /**
      * Visningstype
      */
     view: "full" | "card" | "plainSection";
