@@ -176,6 +176,8 @@ export function setupCronJobs(): void {
 
   // publish dataset cron job
   const datasetPublishCron: string = app.config && app.config['ssb.cron.publishDataset'] ? app.config['ssb.cron.publishDataset'] : '50 05 * * *'
+  const timezone: string = app.config && app.config['ssb.cron.timezone'] ? app.config['ssb.cron.timezone'] : 'UTC'
+
   run(cronContext, () => {
     const jobExists: boolean = !!getScheduledJob({
       name: 'dailyPublishJob'
@@ -198,7 +200,7 @@ export function setupCronJobs(): void {
         schedule: {
           type: 'CRON',
           value: datasetPublishCron,
-          timeZone: 'GMT'
+          timeZone: timezone
         }
       })
     }
