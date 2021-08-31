@@ -69,7 +69,8 @@ function prepareArticle(article: Content<Article>, mainSubject: Content<Page> | 
     publishDateHuman: article.publish && article.publish.from ? moment(article.publish.from).locale(language).format('Do MMMM YYYY') : '',
     contentType: article.type,
     articleType: article.data.articleType ? article.data.articleType : 'default',
-    mainSubject: mainSubject ? mainSubject.displayName : ''
+    mainSubject: mainSubject ? mainSubject.displayName : '',
+    appName: app.name
   }
 }
 
@@ -78,7 +79,7 @@ interface PublicationResult {
   publications: Array<PublicationItem>;
 }
 
-interface PublicationItem {
+export interface PublicationItem {
   title: string;
   preface: string;
   url: string;
@@ -87,4 +88,5 @@ interface PublicationItem {
   contentType: string;
   articleType: string;
   mainSubject: string;
+  appName: string;
 }

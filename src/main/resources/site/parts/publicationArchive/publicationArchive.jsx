@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Divider, Link, Title } from '@statisticsnorway/ssb-component-library'
+import { Button, Divider, Link, Title, Text } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import Truncate from 'react-truncate'
 import NumberFormat from 'react-number-format'
@@ -12,6 +12,7 @@ function PublicationArchive(props) {
     ingress,
     buttonTitle,
     publicationArchiveServiceUrl,
+    statisticsReleases,
     language,
     articleTypePhrases,
     showingPhrase
@@ -20,6 +21,8 @@ function PublicationArchive(props) {
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
   const [first, setFirst] = useState(true)
+  const [statisticsPublications, setStatisticsPublications] = useState(statisticsReleases)
+  const [diff, setDiff] = useState([0])
 
   useEffect(() => {
     if (first) {
@@ -28,17 +31,68 @@ function PublicationArchive(props) {
     }
   })
 
+  function mergePublications(newPublications) {
+    const filteredStatisticsReleases = []
+    const filteredStatisticsReleasesRest = []
+
+    statisticsPublications.forEach((statisticsRelease) => {
+      const statisticsReleaseDate = new Date(statisticsRelease.publishDate)
+      const latestNewPublicationDate = newPublications.length ? new Date(newPublications[0].publishDate) : new Date()
+      const oldestNewPublicationDate = newPublications.length ? new Date(newPublications[newPublications.length - 1].publishDate) : new Date('01.01.1970')
+
+      let dateCheck = statisticsReleaseDate <
+      (publications.length ? new Date(publications[publications.length - 1].publishDate) : latestNewPublicationDate) &&
+        statisticsReleaseDate > oldestNewPublicationDate
+      if (statisticsReleaseDate > latestNewPublicationDate) {
+        dateCheck = statisticsReleaseDate > oldestNewPublicationDate
+      } else {
+        dateCheck = statisticsReleaseDate < publications.length ? new Date(publications[publications.length - 1].publishDate) : latestNewPublicationDate
+      }
+
+      if (dateCheck) {
+        filteredStatisticsReleases.push(statisticsRelease)
+      } else {
+        filteredStatisticsReleasesRest.push(statisticsRelease)
+      }
+    })
+    setStatisticsPublications(filteredStatisticsReleasesRest)
+
+    const diffValues = []
+    const mergedPublications = newPublications.length ?
+      filteredStatisticsReleases.concat(newPublications)
+        .sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate)) :
+      filteredStatisticsReleases.sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate))
+
+    if (mergedPublications.length > 10) {
+      const restMergedPublications = mergedPublications.slice(10, mergedPublications.length)
+      const restStatistics = restMergedPublications.filter((p) => p.contentType === `${p.appName}:statistics`)
+      if (restStatistics.length) {
+        setStatisticsPublications(filteredStatisticsReleasesRest.concat(restStatistics))
+      }
+
+      diffValues.push(mergedPublications.length - (10 + restStatistics.length))
+      setDiff(diff.concat(diffValues))
+
+      return mergedPublications.slice(0, 10)
+    } else {
+      diffValues.push(0)
+      setDiff(diff.concat(diffValues))
+      return mergedPublications
+    }
+  }
+
   function fetchPublications() {
     setLoading(true)
+    const indexDiff = diff.map((d) => d).reduce((acc, curr) => acc + curr)
     axios.get(publicationArchiveServiceUrl, {
       params: {
-        start: publications.length,
+        start: publications.length - indexDiff,
         count: 10,
         language: language
       }
     }).then((res) => {
-      setPublications(publications.concat(res.data.publications))
-      setTotal(res.data.total)
+      setPublications(publications.concat(mergePublications(res.data.publications)))
+      setTotal(res.data.total + statisticsReleases.length)
     }).finally(() => {
       setLoading(false)
     })
@@ -52,15 +106,17 @@ function PublicationArchive(props) {
             <Link href={publication.url} className="ssb-link header">
               {publication.title}
             </Link>
-            <p>
+            {publication.period && <p className="mt-1 mb-0">{publication.period}</p>}
+            <p className="my-1">
               <Truncate lines={2}>
                 {publication.preface}
               </Truncate>
             </p>
-            <span>
+            <Text small>
               {getArticleType(publication)} /&nbsp;
-              <time dateTime={publication.publishDate}>{publication.publishDateHuman}</time> /&nbsp;
-              {publication.mainSubject}</span>
+              <time dateTime={publication.publishDate}>{publication.publishDateHuman}</time>
+              {publication.mainSubject && `/ ${publication.mainSubject}`}
+            </Text>
           </div>
         </div>
       )
@@ -107,7 +163,7 @@ function PublicationArchive(props) {
                   value={ Number(total) }
                   displayType={'text'}
                   thousandSeparator={' '}/>
-                <Divider dark></Divider>
+                <Divider className="mb-4" dark></Divider>
               </div>
             </div>
             {renderPublications()}
@@ -137,5 +193,6 @@ PublicationArchive.propTypes = {
   showingPhrase: PropTypes.string,
   language: PropTypes.string,
   publicationArchiveServiceUrl: PropTypes.string,
+  statisticsReleases: PropTypes.array,
   articleTypePhrases: PropTypes.objectOf(PropTypes.string)
 }

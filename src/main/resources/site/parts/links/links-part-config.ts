@@ -13,7 +13,27 @@ export interface LinksPartConfig {
         /**
          * Tabell lenke
          */
-        tableLink: Record<string, unknown>;
+        tableLink: {
+          /**
+           * Tittel
+           */
+          title?: string;
+
+          /**
+           * Lenketekst
+           */
+          description?: string;
+
+          /**
+           * Url
+           */
+          url?: string;
+
+          /**
+           * Relatert innhold
+           */
+          relatedContent?: string;
+        };
       }
     | {
         /**
@@ -24,7 +44,17 @@ export interface LinksPartConfig {
         /**
          * Uthevet lenke
          */
-        headerLink: Record<string, unknown>;
+        headerLink: {
+          /**
+           * Innhold
+           */
+          linkedContent?: string;
+
+          /**
+           * Lenketekst
+           */
+          linkText?: string;
+        };
       }
     | {
         /**
@@ -35,6 +65,21 @@ export interface LinksPartConfig {
         /**
          * Profilert lenke
          */
-        profiledLink: Record<string, unknown>;
+        profiledLink: {
+          /**
+           * Innhold
+           */
+          contentUrl?: string;
+
+          /**
+           * Lenketekst
+           */
+          text?: string;
+
+          /**
+           * Med ikon
+           */
+          withIcon: boolean;
+        };
       };
 }
