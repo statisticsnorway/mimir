@@ -35,7 +35,6 @@ function PublicationArchive(props) {
     const filteredStatisticsReleases = []
     const filteredStatisticsReleasesRest = []
 
-    console.log(newPublications)
     statisticsPublications.forEach((statisticsRelease) => {
       const statisticsReleaseDate = new Date(statisticsRelease.publishDate)
       const latestNewPublicationDate = newPublications.length ? new Date(newPublications[0].publishDate) : new Date()
@@ -84,7 +83,6 @@ function PublicationArchive(props) {
 
   function fetchPublications() {
     setLoading(true)
-    console.log(diff)
     const indexDiff = diff.map((d) => d).reduce((acc, curr) => acc + curr)
     axios.get(publicationArchiveServiceUrl, {
       params: {
