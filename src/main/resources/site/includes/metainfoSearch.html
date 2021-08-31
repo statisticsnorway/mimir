@@ -5,6 +5,7 @@
     <div class="innholdstype" data-th-text="${metaInfoSearchContentType}">innholdstype</div>
     <div class="publiseringsdato" data-th-text="${metaInfoSearchPublishFrom}">2077-05-12T10:00:00.000Z</div>
     <div class="sprak" data-th-text="${language.code == 'en'}? 'en' : 'no'">nb</div>
+    <div data-th-if=${metaInfoMainSubject} class="hovedemne" data-th-text="${metaInfoMainSubject}">Hovedemne</div>
     <div data-th-if=${metaInfoSearchKeywords}  class="stikkord" data-th-text="${metaInfoSearchKeywords}">Stikkord</div>
     <div data-th-if=${metaInfoDescription}  class="meta-description searchabletext" data-th-text="${metaInfoDescription}">Metadescrition</div>
 </div>

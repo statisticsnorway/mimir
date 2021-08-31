@@ -21,24 +21,26 @@ const {
 } = __non_webpack_require__('/lib/ssb/cache/subjectCache')
 
 
-export function getMainSubjects(language?: string): Array<SubjectItem> {
+export function getMainSubjects(request: Request, language?: string): Array<SubjectItem> {
+  return fromSubjectCache<SubjectItem>(request, `mainsubject-${language}`, () => {
   // Todo: Må sjekke om noen hovedemner kan være på nynorsk
-  const lang: string = language ? `AND language = "${language}"` : ''
-  const mainSubjectsContent: Array<Content<Page, DefaultPageConfig>> = query({
-    start: 0,
-    count: 200,
-    sort: 'displayName ASC',
-    query: `components.page.config.mimir.default.subjectType LIKE "mainSubject" ${lang}`
-  }).hits as unknown as Array<Content<Page, DefaultPageConfig>>
+    const lang: string = language ? `AND language = "${language}"` : ''
+    const mainSubjectsContent: Array<Content<Page, DefaultPageConfig>> = query({
+      start: 0,
+      count: 200,
+      sort: 'displayName ASC',
+      query: `components.page.config.mimir.default.subjectType LIKE "mainSubject" ${lang}`
+    }).hits as unknown as Array<Content<Page, DefaultPageConfig>>
 
-  return mainSubjectsContent.map((m) =>({
-    id: m._id,
-    title: m.displayName,
-    subjectCode: m.page.config.subjectCode ? m.page.config.subjectCode : '',
-    path: m._path,
-    language: m.language && m.language === 'en' ? 'en' : 'no',
-    name: m._name
-  }))
+    return mainSubjectsContent.map((m) =>({
+      id: m._id,
+      title: m.displayName,
+      subjectCode: m.page.config.subjectCode ? m.page.config.subjectCode : '',
+      path: m._path,
+      language: m.language && m.language === 'en' ? 'en' : 'no',
+      name: m._name
+    }))
+  })
 }
 
 export function getSubSubjects(request: Request, language?: string): Array<SubjectItem> {
@@ -225,7 +227,7 @@ export function getSecondaryStatisticsBySubject(statistics: Array<StatisticItem>
 }
 
 export function getSubjectStructur(request: Request, language: string): Array<MainSubject> {
-  const mainSubjectsAll: Array<SubjectItem> = getMainSubjects()
+  const mainSubjectsAll: Array<SubjectItem> = getMainSubjects(request)
   const subSubjectsAll: Array<SubjectItem> = getSubSubjects(request)
   const statregStatistics: Array<StatisticInListing> = ensureArray(getAllStatisticsFromRepo())
   const statistics: Array<StatisticItem> = getStatistics(statregStatistics)
@@ -290,7 +292,7 @@ interface EndedStatistic {
 }
 
 export interface SubjectUtilsLib {
-    getMainSubjects: (language?: string) => Array<SubjectItem>;
+    getMainSubjects: (request: Request, language?: string) => Array<SubjectItem>;
     getSubSubjects: (request: Request, language?: string) => Array<SubjectItem>;
     getSubSubjectsByPath: (subjects: Array<SubjectItem>, path: string) => Array<SubjectItem>;
     getSubjectStructur: (request: Request, language: string) => Array<MainSubject>;

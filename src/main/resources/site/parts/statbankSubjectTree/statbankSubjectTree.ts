@@ -39,7 +39,7 @@ export function get(req: Request): React4xpResponse {
 }
 
 function getStatbankSubjectTree(req: Request, content: Content): React4xpResponse {
-  const allMainSubjects: Array<SubjectItem> = getMainSubjects(content.language)
+  const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, content.language)
   const allSubSubjects: Array<SubjectItem> = getSubSubjects(req)
   const statregStatistics: Array<StatisticInListing> = ensureArray(getAllStatisticsFromRepo())
   const statistics: Array<StatisticItem> = getStatistics(statregStatistics)
