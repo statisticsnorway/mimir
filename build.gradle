@@ -37,6 +37,7 @@ dependencies {
     include "com.enonic.xp:lib-websocket:${xpVersion}"
     include "com.enonic.xp:lib-cluster:${xpVersion}"
     include "com.enonic.xp:lib-mail:${xpVersion}"
+    include "com.enonic.xp:lib-scheduler:${xpVersion}"
     include 'commons-codec:commons-codec:1.15'
     include "no.item:wsutil-server:2.0.0"
     include "com.gravitondigital:featuretogglelib:0.3.0"
@@ -115,11 +116,13 @@ task serverWebpack( type: NpxTask, dependsOn: npmInstall ) {
     args = [ '--config', 'webpack.server.config.js', '--color']
     description = 'Build server JS.'
     outputs.cacheIf { true }
+    inputs.dir 'src/main/resources/tasks'
     inputs.dir 'src/main/resources/lib'
     inputs.dir 'src/main/resources/services'
     inputs.dir 'src/main/resources/site'
     inputs.dir 'src/main/resources/admin'
     inputs.file 'src/main/resources/main.es6'
+    outputs.dir "${buildDir}/resources/main/tasks"
     outputs.dir "${buildDir}/resources/main/lib"
     outputs.dir "${buildDir}/resources/main/services"
     outputs.dir "${buildDir}/resources/main/site"
