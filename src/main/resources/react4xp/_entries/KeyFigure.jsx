@@ -85,8 +85,10 @@ class KeyFigures extends React.Component {
 
   addKeyFigureSource(keyFigure) {
     if ((!this.props.source || !this.props.source.url) && keyFigure.source && keyFigure.source.url) {
+      const source = this.props.phrases.source
+
       return (
-        <References className={`${keyFigure.size !== 'large' ? 'mt-3' : ''}`} title="Kilde" referenceList={[{
+        <References className={`${keyFigure.size !== 'large' ? 'mt-3' : ''}`} title={source} referenceList={[{
           href: keyFigure.source.url,
           label: keyFigure.source.title
         }]}/>
@@ -97,8 +99,10 @@ class KeyFigures extends React.Component {
 
   addSource() {
     if (this.props.source && this.props.source.url) {
+      const source = this.props.phrases.source
+
       return (
-        <References className="col-12 mt-3" title="Kilde" referenceList={[{
+        <References className="col-12 mt-3" title={source} referenceList={[{
           href: this.props.source.url,
           label: this.props.source.title
         }]}/>
@@ -148,6 +152,7 @@ KeyFigures.propTypes = {
       }),
       glossary: PropTypes.string,
       greenBox: PropTypes.bool,
+      phrases: PropTypes.object,
       source: PropTypes.shape({
         url: PropTypes.string,
         title: PropTypes.title
@@ -171,12 +176,14 @@ KeyFigures.propTypes = {
       }),
       glossary: PropTypes.string,
       greenBox: PropTypes.bool,
+      phrases: PropTypes.object,
       source: PropTypes.shape({
         url: PropTypes.string,
         title: PropTypes.title
       })
     })
   ),
+  phrases: PropTypes.object,
   source: PropTypes.shape({
     url: PropTypes.string,
     title: PropTypes.title

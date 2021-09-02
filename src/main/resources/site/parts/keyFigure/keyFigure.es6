@@ -28,6 +28,9 @@ const {
   hasWritePermissionsAndPreview
 } = __non_webpack_require__('/lib/ssb/parts/permissions')
 
+const {
+  getPhrases
+} = __non_webpack_require__('/lib/ssb/utils/language')
 const view = resolve('./keyFigure.html')
 
 exports.get = function(req) {
@@ -54,6 +57,8 @@ const renderPart = (req, municipality, keyFigureIds) => {
   const part = getComponent()
   const showPreviewDraft = hasWritePermissionsAndPreview(req, page._id)
 
+  const phrases = getPhrases(page)
+
   // get all keyFigures and filter out non-existing keyFigures
   const keyFigures = getKeyFigures(keyFigureIds)
     .map((keyFigure) => {
@@ -61,6 +66,7 @@ const renderPart = (req, municipality, keyFigureIds) => {
       return {
         id: keyFigure._id,
         ...keyFigureData,
+        phrases,
         source: keyFigure.data.source
       }
     })
@@ -73,26 +79,27 @@ const renderPart = (req, municipality, keyFigureIds) => {
         return {
           id: keyFigure._id,
           ...keyFigureData,
+          phrases,
           source: keyFigure.data.source
         }
       })
   }
 
-  const draftExist = !!keyFiguresDraft
-  const pageTypeKeyFigure = page.type === `${app.name}:keyFigure`
-
   // continue if we have any keyFigures
   return keyFigures && keyFigures.length > 0 || draftExist ?
-    renderKeyFigure(keyFigures, part, keyFiguresDraft, showPreviewDraft, req, draftExist, pageTypeKeyFigure) : {
+    renderKeyFigure(page, part, phrases, keyFigures, keyFiguresDraft, showPreviewDraft, req) : {
       body: '',
       contentType: 'text/html'
     }
 }
 
-function renderKeyFigure(parsedKeyFigures, part, parsedKeyFiguresDraft, showPreviewDraft, req, draftExist, pageTypeKeyFigure) {
+function renderKeyFigure(page, part, phrases, parsedKeyFigures, parsedKeyFiguresDraft, showPreviewDraft, req) {
+  const draftExist = !!parsedKeyFiguresDraft
+  const pageTypeKeyFigure = page.type === `${app.name}:keyFigure`
+
   const keyFigureReact = new React4xp('KeyFigure')
     .setProps({
-      displayName: part ? part.config.title : undefined,
+      displayName: part && part.config && part.config.title,
       keyFigures: parsedKeyFigures.map((keyFigureData) => {
         return {
           ...keyFigureData,
@@ -105,7 +112,8 @@ function renderKeyFigure(parsedKeyFigures, part, parsedKeyFiguresDraft, showPrev
           glossary: keyFigureDraftData.glossaryText
         }
       }) : undefined,
-      source: part && part.config && part.config.source || undefined,
+      phrases,
+      source: part && part.config && part.config.source,
       columns: part && part.config && part.config.columns,
       showPreviewDraft,
       paramShowDraft: req.params.showDraft,
