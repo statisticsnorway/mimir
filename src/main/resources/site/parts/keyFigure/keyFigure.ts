@@ -110,12 +110,9 @@ function renderKeyFigure(
 ): React4xpResponse | Response {
   const draftExist: boolean = !!parsedKeyFiguresDraft
   if (parsedKeyFigures && parsedKeyFigures.length > 0 || draftExist) {
-    const pageTypeKeyFigure: boolean = page.type === `${app.name}:keyFigure`
-
     const hiddenTitle: Array<string> = parsedKeyFigures.map((keyFigureData) => {
       return keyFigureData.title
     })
-    const parsedHiddenTitle: string = hiddenTitle.toString().replace(/[\[\]']+/g, '')
 
     const props: KeyFigureProps = {
       displayName: config && config.title,
@@ -137,8 +134,8 @@ function renderKeyFigure(
       showPreviewDraft,
       paramShowDraft: req.params.showDraft,
       draftExist,
-      pageTypeKeyFigure,
-      hiddenTitle: parsedHiddenTitle
+      pageTypeKeyFigure: page.type === `${app.name}:keyFigure`,
+      hiddenTitle: hiddenTitle.toString().replace(/[\[\]']+/g, '')
     }
 
     return React4xp.render('KeyFigure', props, req)
@@ -148,20 +145,6 @@ function renderKeyFigure(
     body: '',
     contentType: 'text/html'
   }
-}
-
-interface KeyFigureProps {
-  displayName: KeyFigurePartConfig['title'];
-  keyFigures: Array<KeyFigureData> | undefined;
-  keyFiguresDraft: Array<KeyFigureData> | undefined;
-  sourceLabel: string;
-  source: KeyFigurePartConfig['source'];
-  columns: KeyFigurePartConfig['columns'];
-  showPreviewDraft: boolean;
-  paramShowDraft: string | undefined;
-  draftExist: boolean;
-  pageTypeKeyFigure: boolean;
-  hiddenTitle: string;
 }
 
 interface KeyFigureData {
@@ -181,3 +164,17 @@ interface KeyFigureData {
   sourceLabel: string;
   source: object | undefined;
 }
+interface KeyFigureProps {
+  displayName: KeyFigurePartConfig['title'];
+  keyFigures: Array<KeyFigureData> | undefined;
+  keyFiguresDraft: Array<KeyFigureData> | undefined;
+  sourceLabel: string;
+  source: KeyFigurePartConfig['source'];
+  columns: KeyFigurePartConfig['columns'];
+  showPreviewDraft: boolean;
+  paramShowDraft: string | undefined;
+  draftExist: boolean;
+  pageTypeKeyFigure: boolean;
+  hiddenTitle: string;
+}
+
