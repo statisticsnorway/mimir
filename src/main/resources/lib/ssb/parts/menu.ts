@@ -25,10 +25,9 @@ function flattenMenu(menuItems: Array<MenuItemParsed>): Array<MenuItemParsed> {
 
 function createMenuBranch(menuItem: Content<MenuItem>, depth: number = 0): MenuItemParsed {
   const path: string | undefined = menuItem.data.urlSrc ? parseUrl(menuItem.data.urlSrc) : '-'
-  const children: Array<Content<MenuItem>> | [] = depth < 1 ? query({
-    contentTypes: [`${app.name}:menuItem`],
-    query: `_parentPath = '/content${menuItem._path}'`,
-    count: 99
+  const children: Array<Content<MenuItem>> | [] = depth < 1 ? getChildren({
+    count: 99,
+    key: menuItem._path
   }).hits as unknown as Array<Content<MenuItem>> : []
   const isActive: boolean = false
   return {
