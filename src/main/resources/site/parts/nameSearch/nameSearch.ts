@@ -3,7 +3,23 @@ import { Component } from 'enonic-types/portal'
 import { renderError } from '../../../lib/ssb/error/error'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { NameSearchPartConfig } from './nameSearch-part-config'
+import { Dataset } from '../../../lib/types/jsonstat-toolkit'
+import { Content } from 'enonic-types/content'
+import { DatasetRepoNode } from '../../../lib/ssb/repo/dataset'
+import { DataSource } from '../../mixins/dataSource/dataSource'
+/* eslint-disable new-cap */
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// @ts-ignore
+import JSONstat from 'jsonstat-toolkit/import.mjs'
+import { datasetOrUndefined } from '../../../lib/ssb/cache/cache'
+import { TbmlDataUniform } from '../../../lib/types/xmlParser'
 
+// import JSONstat from 'jsonstat-toolkit/import.mjs'
+
+
+// const {
+//   JSONstat
+// } = __non_webpack_require__('jsonstat-toolkit')
 const {
   getComponent,
   getContent,
@@ -17,6 +33,9 @@ const {
   localize
 } = __non_webpack_require__('/lib/xp/i18n')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+const {
+  get
+} = __non_webpack_require__('/lib/xp/content')
 
 
 exports.get = (req: Request): React4xpResponse | Response => {
@@ -34,6 +53,62 @@ function renderPart(req: Request): React4xpResponse {
   const locale: string = getLanguageShortName(getContent())
   const isNotInEditMode: boolean = req.mode !== 'edit'
 
+
+  const jsonData: Content<DataSource> | null = get({
+    // key: 'fc606ea3-17a6-4408-b277-14ac8bb78b3c'
+    key: '11af3826-30e6-4022-963f-93dde27b22d2'
+  })
+
+  let bankSaved: DatasetRepoNode<object | JSONstat | TbmlDataUniform> | undefined = undefined
+
+  if (!!jsonData) {
+    bankSaved = datasetOrUndefined(jsonData)
+  }
+
+  // const set: string | jsonstatType | undefined = bankSaved?.data
+  // const label: string = set.Data(0).label
+  // const label: string | undefined = JSONstat(bankSaved?.data).Dataset(0)
+  // let label: Dataset
+  let label: string
+  try {
+    label = JSONstat(bankSaved?.data).Dataset(0).Dice({
+      'Fornavn': ['Ann']
+      // 'ContentsCode': ['Personer'],
+      // 'Tid': ['1995', '1996', '1997', '1998']
+    },
+    {
+      stringify: true
+    })
+
+    // .toTable({
+    //   type: 'array'
+    // })[0]
+
+    // label = JSONstat(bankSaved?.data).Data(
+    //   [20, 0, 1]).value
+    // label = JSONstat(bankSaved?.data).Dimension({
+    //   'fornavn': 'Agnethe'
+    // }).label
+    // label = JSONstat(bankSaved?.data).Data({
+    //   'Fornavn': '1AGNETE'
+    // })
+    // label = JSONstat(bankSaved?.data).Dataset(0).Dimension({
+    //   'fornavn': 'anne'
+    // }).length
+  } catch (error) {
+    label = error
+  }
+
+  // log.info(bankSaved?.fornavn?.Data({
+  //   Fornavn: 'Anja'
+  // }).value)
+
+  // eslint-disable-next-line new-cap
+  // JSONstat( 'https://json-stat.org/samples/oecd-canada-col.json' ).then(
+  // log.info( JSON.stringify(bankSaved, null, 2 ))
+  // log.info( JSON.stringify(label, null, 2 ))
+  log.info( 'GLNRBN ' + label)
+  // )
   const urlToService: string = serviceUrl({
     service: 'nameSearch'
   })
@@ -177,3 +252,9 @@ interface PartProperties {
     };
   };
 }
+
+interface NameData {
+  fornavn: Dataset | null;
+  tid: Dataset | null;
+}
+
