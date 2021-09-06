@@ -64,6 +64,11 @@ function requestSolr(queryParams: SolrQueryParams): SolrResponse {
     const result: HttpResponse = request({
       url: queryParams.query
     })
+
+    if (result.status !== 200) {
+      throw new Error(`Could not request solr with body: ${JSON.stringify(result.body && JSON.parse(result.body), null, 2)}`)
+    }
+
     return {
       status: result.status,
       body: result.body
@@ -74,7 +79,7 @@ function requestSolr(queryParams: SolrQueryParams): SolrResponse {
     return {
       status: e.status ? e.status : 500,
       body: e.body ? e.body : {
-        message: e ? e : 'Internal error trying to request solr'
+        message: e ? e : 'Internal error trying to request solr.'
       }
     }
   }
