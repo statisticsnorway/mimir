@@ -47,7 +47,7 @@ exports.preview = function(req: Request, accordionIds: Array<string> | string): 
 function renderPart(req: Request, accordionIds: Array<string>): React4xpResponse {
   const accordions: Array<AccordionData> = []
 
-  accordionIds.map((key: string) => {
+  accordionIds.map((key) => {
     const accordion: Content<Accordion> | null = key ? get({
       key
     }) : null
@@ -86,7 +86,7 @@ function renderPart(req: Request, accordionIds: Array<string>): React4xpResponse
     })
   }
 
-  const props: object = {
+  const props: AccordionProp = {
     accordions
   }
 
@@ -98,4 +98,8 @@ interface AccordionData {
   body?: string | undefined;
   open: string | undefined;
   items: Accordion['accordions'] | [];
+}
+
+interface AccordionProp {
+  accordions: Array<AccordionData>
 }
