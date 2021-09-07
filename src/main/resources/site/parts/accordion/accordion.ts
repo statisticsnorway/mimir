@@ -53,7 +53,7 @@ function renderPart(req: Request, accordionIds: Array<string>): React4xpResponse
     }) : null
 
     if (accordion) {
-      const accordionContents: Accordion['accordions'] | [] = accordion.data.accordions ? forceArray(accordion.data.accordions) : []
+      const accordionContents: Accordion['accordions'] = accordion.data.accordions ? forceArray(accordion.data.accordions) : []
       accordionContents
         .filter((accordion) => !!accordion)
         .map((accordion) => {
@@ -97,9 +97,9 @@ interface AccordionData {
   id?: string;
   body?: string | undefined;
   open: string | undefined;
-  items: Accordion['accordions'] | [];
+  items: Accordion['accordions'];
 }
 
 interface AccordionProp {
-  accordions: Array<AccordionData>
+  accordions: Array<AccordionData>;
 }
