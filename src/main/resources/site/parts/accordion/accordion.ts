@@ -65,7 +65,14 @@ function renderPart(req: Request, accordionIds: Array<string>): React4xpResponse
               value: accordion.body
             }),
             open: accordion.open,
-            items
+            items: items.length ? items.map((item) => {
+              return {
+                ...item,
+                body: item.body && processHtml({
+                  value: item.body
+                })
+              }
+            }) : []
           })
         })
     }
