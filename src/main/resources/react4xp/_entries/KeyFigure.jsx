@@ -85,8 +85,10 @@ class KeyFigures extends React.Component {
 
   addKeyFigureSource(keyFigure) {
     if ((!this.props.source || !this.props.source.url) && keyFigure.source && keyFigure.source.url) {
+      const sourceLabel = this.props.sourceLabel
+
       return (
-        <References className={`${keyFigure.size !== 'large' ? 'mt-3' : ''}`} title="Kilde" referenceList={[{
+        <References className={`${keyFigure.size !== 'large' ? 'mt-3' : ''}`} title={sourceLabel} referenceList={[{
           href: keyFigure.source.url,
           label: keyFigure.source.title
         }]}/>
@@ -97,8 +99,10 @@ class KeyFigures extends React.Component {
 
   addSource() {
     if (this.props.source && this.props.source.url) {
+      const sourceLabel = this.props.sourceLabel
+
       return (
-        <References className="col-12 mt-3" title="Kilde" referenceList={[{
+        <References className="col-12 mt-3" title={sourceLabel} referenceList={[{
           href: this.props.source.url,
           label: this.props.source.title
         }]}/>
@@ -117,15 +121,22 @@ class KeyFigures extends React.Component {
   }
 
   render() {
-    return <div className="container">
-      {this.addPreviewButton()}
-      {this.addPreviewInfo()}
-      {this.addHeader()}
-      <div className="row">
-        {this.createRows()}
-        {this.addSource()}
-      </div>
-    </div>
+    return (
+      <section className="xp-part key-figures">
+        <div className="d-none searchabletext">
+          <span>{this.props.hiddenTitle}</span>
+        </div>
+        <div className="container">
+          {this.addPreviewButton()}
+          {this.addPreviewInfo()}
+          {this.addHeader()}
+          <div className="row">
+            {this.createRows()}
+            {this.addSource()}
+          </div>
+        </div>
+      </section>
+    )
   }
 }
 
@@ -177,6 +188,7 @@ KeyFigures.propTypes = {
       })
     })
   ),
+  sourceLabel: PropTypes.string,
   source: PropTypes.shape({
     url: PropTypes.string,
     title: PropTypes.title
@@ -185,7 +197,8 @@ KeyFigures.propTypes = {
   showPreviewDraft: PropTypes.bool,
   paramShowDraft: PropTypes.bool,
   draftExist: PropTypes.bool,
-  pageTypeKeyFigure: PropTypes.bool
+  pageTypeKeyFigure: PropTypes.bool,
+  hiddenTitle: PropTypes.string
 }
 
 export default (props) => <KeyFigures {...props}/>

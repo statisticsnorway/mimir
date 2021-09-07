@@ -294,7 +294,7 @@ interface MunicipalData {
   label?: string;
 }
 
-interface KeyFigureView {
+export interface KeyFigureView {
   iconUrl?: string;
   iconAltText?: string;
   number?: string;
@@ -308,7 +308,7 @@ interface KeyFigureView {
   glossaryText?: string;
 }
 
-interface KeyFigureChanges {
+export interface KeyFigureChanges {
   changeDirection: 'up' | 'down' | 'same';
   changeText?: string;
   changePeriod: string;
