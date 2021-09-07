@@ -1,9 +1,13 @@
 import React, { useState } from 'react'
 import { Button, Divider, Input, Link, Title } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
+import PropTypes, { string } from 'prop-types'
 import { Col, Container, Row, Form } from 'react-bootstrap'
 import axios from 'axios'
 import { X } from 'react-feather'
+import Highcharts from 'highcharts'
+import HighchartsReact from 'highcharts-react-official'
+import { propertyOf } from 'lodash'
+
 
 /* TODO
 - Etternavn må få rett visning av beste-treff
@@ -210,6 +214,25 @@ function NameSearch(props) {
     return !invalidCharacters
   }
 
+  function renderGraphs(nameForRender) {
+    const options = {
+      title: {
+        text: 'My chart'
+      },
+      series: [{
+        data: props.graphData ? props.graphData : [1, 2, 3]
+      }]
+    }
+    return (
+      <div>
+        <HighchartsReact
+          highcharts={Highcharts}
+          options={options}
+        />
+      </div>
+    )
+  }
+
   return (
     <section className="name-search container-fluid p-0">
       <Container className="name-search-input">
@@ -253,6 +276,7 @@ function NameSearch(props) {
         </Form>
       </Container>
       {renderResult()}
+      {renderGraphs()}
     </section>
   )
 }
@@ -286,7 +310,8 @@ NameSearch.propTypes = {
       onlygivenandfamily: PropTypes.string,
       firstgiven: PropTypes.string
     })
-  })
+  }),
+  graphData: PropTypes.arrayOf(PropTypes.string)
 }
 
 export default (props) => <NameSearch {...props} />

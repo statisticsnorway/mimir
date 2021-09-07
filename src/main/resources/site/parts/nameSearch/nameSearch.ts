@@ -3,7 +3,7 @@ import { Component } from 'enonic-types/portal'
 import { renderError } from '../../../lib/ssb/error/error'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { NameSearchPartConfig } from './nameSearch-part-config'
-import { Dataset } from '../../../lib/types/jsonstat-toolkit'
+import { Dataset, JSONstat as jsonStatObject } from '../../../lib/types/jsonstat-toolkit'
 import { Content } from 'enonic-types/content'
 import { DatasetRepoNode } from '../../../lib/ssb/repo/dataset'
 import { DataSource } from '../../mixins/dataSource/dataSource'
@@ -13,6 +13,9 @@ import { DataSource } from '../../mixins/dataSource/dataSource'
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { datasetOrUndefined } from '../../../lib/ssb/cache/cache'
 import { TbmlDataUniform } from '../../../lib/types/xmlParser'
+import { HighchartsUtilsLib } from '../../../lib/ssb/parts/highcharts/highchartsUtils'
+import { HighchartsGraphConfig } from '../../../lib/types/highcharts'
+import { prepareHighchartsData } from '../../../lib/ssb/parts/highcharts/highchartsData'
 
 // import JSONstat from 'jsonstat-toolkit/import.mjs'
 
@@ -20,6 +23,7 @@ import { TbmlDataUniform } from '../../../lib/types/xmlParser'
 // const {
 //   JSONstat
 // } = __non_webpack_require__('jsonstat-toolkit')
+
 const {
   getComponent,
   getContent,
@@ -69,46 +73,23 @@ function renderPart(req: Request): React4xpResponse {
   // const label: string = set.Data(0).label
   // const label: string | undefined = JSONstat(bankSaved?.data).Dataset(0)
   // let label: Dataset
-  let label: string
+  let dataset: Keyable
+
+
   try {
-    label = JSONstat(bankSaved?.data).Dataset(0).Dice({
-      'Fornavn': ['Ann']
-      // 'ContentsCode': ['Personer'],
-      // 'Tid': ['1995', '1996', '1997', '1998']
-    },
-    {
-      stringify: true
+    const labels: Keyable = bankSaved?.data.dimension.Fornavn.category.label
+    const nameCode: string | undefined = getKeyByValue(labels, 'Anna')
+    dataset = JSONstat(bankSaved?.data).Dataset(0).Dice({
+      'Fornavn': [nameCode]
     })
-
-    // .toTable({
-    //   type: 'array'
-    // })[0]
-
-    // label = JSONstat(bankSaved?.data).Data(
-    //   [20, 0, 1]).value
-    // label = JSONstat(bankSaved?.data).Dimension({
-    //   'fornavn': 'Agnethe'
-    // }).label
-    // label = JSONstat(bankSaved?.data).Data({
-    //   'Fornavn': '1AGNETE'
-    // })
-    // label = JSONstat(bankSaved?.data).Dataset(0).Dimension({
-    //   'fornavn': 'anne'
-    // }).length
   } catch (error) {
-    label = error
+    dataset = error
   }
 
-  // log.info(bankSaved?.fornavn?.Data({
-  //   Fornavn: 'Anja'
-  // }).value)
+  // prepareHighchartsData(req, )
 
-  // eslint-disable-next-line new-cap
-  // JSONstat( 'https://json-stat.org/samples/oecd-canada-col.json' ).then(
-  // log.info( JSON.stringify(bankSaved, null, 2 ))
-  // log.info( JSON.stringify(label, null, 2 ))
-  log.info( 'GLNRBN ' + label)
-  // )
+  log.info( 'GLNRBN dataset: ' + dataset.value )
+
   const urlToService: string = serviceUrl({
     service: 'nameSearch'
   })
@@ -117,7 +98,8 @@ function renderPart(req: Request): React4xpResponse {
     urlToService: urlToService,
     aboutLink: aboutLinkResources(component.config),
     nameSearchDescription: component.config.nameSearchDescription,
-    phrases: partsPhrases(locale)
+    phrases: partsPhrases(locale),
+    graphData: dataset.value
   }
 
   return React4xp.render('site/parts/nameSearch/nameSearch', props, req, {
@@ -125,6 +107,9 @@ function renderPart(req: Request): React4xpResponse {
   })
 }
 
+function getKeyByValue(object: Keyable, value: string): string | undefined {
+  return Object.keys(object).find((key) => object[key] === value)
+}
 
 function aboutLinkResources(config: Component<NameSearchPartConfig>['config']): PartProperties['aboutLink'] | undefined {
   if (config.aboutLinkTitle && config.aboutLinkTarget) {
@@ -251,6 +236,7 @@ interface PartProperties {
       firstgiven: string;
     };
   };
+  graphData?: string;
 }
 
 interface NameData {
@@ -258,3 +244,7 @@ interface NameData {
   tid: Dataset | null;
 }
 
+
+interface Keyable {
+  [key: string]: string;
+}
