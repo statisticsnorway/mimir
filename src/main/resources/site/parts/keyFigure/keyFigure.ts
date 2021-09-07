@@ -1,7 +1,7 @@
 import { Content } from 'enonic-types/content'
 import { Request, Response } from 'enonic-types/controller'
 import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
-import { KeyFigureChanges, KeyFigureView } from '../../../lib/ssb/parts/keyFigure'
+import { KeyFigureView } from '../../../lib/ssb/parts/keyFigure'
 import { React4xpResponse } from '../../../lib/types/react4xp'
 import { SiteConfig } from '../../../site/site-config'
 import { KeyFigurePartConfig } from './keyFigure-part-config'
@@ -68,8 +68,6 @@ function renderPart(req: Request, municipality: MunicipalityWithCounty | undefin
   const config: KeyFigurePartConfig = getComponent() && getComponent().config
   const showPreviewDraft: boolean = hasWritePermissionsAndPreview(req, page._id)
 
-  const sourceLabel: string = getPhrases(page).source
-
   // get all keyFigures and filter out non-existing keyFigures
   const keyFigures: Array<KeyFigureData> = getKeyFigures(keyFigureIds)
     .map((keyFigure) => {
@@ -77,7 +75,6 @@ function renderPart(req: Request, municipality: MunicipalityWithCounty | undefin
       return {
         id: keyFigure._id,
         ...keyFigureData,
-        sourceLabel,
         source: keyFigure.data.source
       }
     }) as Array<KeyFigureData>
@@ -90,19 +87,17 @@ function renderPart(req: Request, municipality: MunicipalityWithCounty | undefin
         return {
           id: keyFigure._id,
           ...keyFigureData,
-          sourceLabel,
           source: keyFigure.data.source
         }
       }) as Array<KeyFigureData>
   }
 
-  return renderKeyFigure(page, config, sourceLabel, keyFigures, keyFiguresDraft, showPreviewDraft, req) 
+  return renderKeyFigure(page, config, keyFigures, keyFiguresDraft, showPreviewDraft, req) 
 }
 
 function renderKeyFigure(
   page: Content,
   config: KeyFigurePartConfig,
-  sourceLabel: string,
   parsedKeyFigures: Array<KeyFigureData>,
   parsedKeyFiguresDraft: Array<KeyFigureData> | null,
   showPreviewDraft: boolean,
@@ -128,7 +123,7 @@ function renderKeyFigure(
           glossary: keyFigureDraftData.glossaryText
         }
       }) : undefined,
-      sourceLabel,
+      sourceLabel: getPhrases(page).source,
       source: config && config.source,
       columns: config && config.columns,
       showPreviewDraft,
@@ -161,7 +156,6 @@ interface KeyFigureData {
   greenBox: KeyFigureView['greenBox'];
   glossaryText?: KeyFigureView['glossaryText'];
   glossary?: string,
-  sourceLabel: string;
   source: object | undefined;
 }
 interface KeyFigureProps {

@@ -159,7 +159,6 @@ KeyFigures.propTypes = {
       }),
       glossary: PropTypes.string,
       greenBox: PropTypes.bool,
-      sourceLabel: PropTypes.string,
       source: PropTypes.shape({
         url: PropTypes.string,
         title: PropTypes.title
@@ -183,7 +182,6 @@ KeyFigures.propTypes = {
       }),
       glossary: PropTypes.string,
       greenBox: PropTypes.bool,
-      sourceLabel: PropTypes.string,
       source: PropTypes.shape({
         url: PropTypes.string,
         title: PropTypes.title
