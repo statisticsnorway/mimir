@@ -35,7 +35,6 @@ function renderPart(req: Request): React4xpResponse {
   const language: string = content.language ? content.language : 'nb'
   const articles: Array<Content<Article>> = getArticles(req, language)
   const preparedArticles: Array<PreparedArticles> = prepareArticles(articles, language)
-  const isNotInEditMode: boolean = req.mode !== 'edit'
 
   const archiveLinkText: string = localize({
     key: 'publicationLinkText',
@@ -53,9 +52,7 @@ function renderPart(req: Request): React4xpResponse {
     archiveLinkUrl: component.config.pubArchiveUrl ? component.config.pubArchiveUrl : '#'
   }
 
-  return React4xp.render('site/parts/articleList/articleList', props, req, {
-    clientRender: isNotInEditMode
-  })
+  return React4xp.render('site/parts/articleList/articleList', props, req)
 }
 
 function getArticles(req: Request, language: string): Array<Content<Article>> {
