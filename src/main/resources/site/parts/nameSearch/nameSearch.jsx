@@ -120,6 +120,7 @@ function NameSearch(props) {
               <Button className="close-button" onClick={() => closeResult()} type="button"> <X size="18"/> Lukk</Button>
             </Col>
           </Row>
+          {renderGraphs()}
         </Container>
       </div>
       )
@@ -217,10 +218,16 @@ function NameSearch(props) {
   function renderGraphs(nameForRender) {
     const options = {
       title: {
-        text: 'My chart'
+        text: 'Navnestatistikk for navnesen'
+      },
+      plotOptions: {
+        series: {
+          pointStart: 1945 // Magic number: Name data starts in the year 1945 and we try to get all the years since.
+        }
       },
       series: [{
-        data: props.graphData ? props.graphData : [1, 2, 3]
+        name: name.value,
+        data: props.graphData
       }]
     }
     return (
@@ -276,7 +283,6 @@ function NameSearch(props) {
         </Form>
       </Container>
       {renderResult()}
-      {renderGraphs()}
     </section>
   )
 }

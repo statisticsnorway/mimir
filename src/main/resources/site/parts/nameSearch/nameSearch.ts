@@ -58,38 +58,6 @@ function renderPart(req: Request): React4xpResponse {
   const isNotInEditMode: boolean = req.mode !== 'edit'
 
 
-  const jsonData: Content<DataSource> | null = get({
-    // key: 'fc606ea3-17a6-4408-b277-14ac8bb78b3c'
-    key: '11af3826-30e6-4022-963f-93dde27b22d2'
-  })
-
-  let bankSaved: DatasetRepoNode<object | JSONstat | TbmlDataUniform> | undefined = undefined
-
-  if (!!jsonData) {
-    bankSaved = datasetOrUndefined(jsonData)
-  }
-
-  // const set: string | jsonstatType | undefined = bankSaved?.data
-  // const label: string = set.Data(0).label
-  // const label: string | undefined = JSONstat(bankSaved?.data).Dataset(0)
-  // let label: Dataset
-  let dataset: Keyable
-
-
-  try {
-    const labels: Keyable = bankSaved?.data.dimension.Fornavn.category.label
-    const nameCode: string | undefined = getKeyByValue(labels, 'Anna')
-    dataset = JSONstat(bankSaved?.data).Dataset(0).Dice({
-      'Fornavn': [nameCode]
-    })
-  } catch (error) {
-    dataset = error
-  }
-
-  // prepareHighchartsData(req, )
-
-  log.info( 'GLNRBN dataset: ' + dataset.value )
-
   const urlToService: string = serviceUrl({
     service: 'nameSearch'
   })
@@ -98,17 +66,12 @@ function renderPart(req: Request): React4xpResponse {
     urlToService: urlToService,
     aboutLink: aboutLinkResources(component.config),
     nameSearchDescription: component.config.nameSearchDescription,
-    phrases: partsPhrases(locale),
-    graphData: dataset.value
+    phrases: partsPhrases(locale)
   }
 
   return React4xp.render('site/parts/nameSearch/nameSearch', props, req, {
     clientRender: isNotInEditMode
   })
-}
-
-function getKeyByValue(object: Keyable, value: string): string | undefined {
-  return Object.keys(object).find((key) => object[key] === value)
 }
 
 function aboutLinkResources(config: Component<NameSearchPartConfig>['config']): PartProperties['aboutLink'] | undefined {
@@ -236,15 +199,4 @@ interface PartProperties {
       firstgiven: string;
     };
   };
-  graphData?: string;
-}
-
-interface NameData {
-  fornavn: Dataset | null;
-  tid: Dataset | null;
-}
-
-
-interface Keyable {
-  [key: string]: string;
 }
