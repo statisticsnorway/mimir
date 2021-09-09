@@ -14,7 +14,7 @@ import { TbmlDataUniform } from '../../lib/types/xmlParser'
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 
 const {
-  get
+  get: getContent // Must be renamed because of conflict with exported function get, which XP expects.
 } = __non_webpack_require__('/lib/xp/content')
 
 import validator from 'validator'
@@ -22,7 +22,7 @@ const {
   request
 } = __non_webpack_require__('/lib/http-client')
 
-export function getName(req: Request): Response {
+export function get(req: Request): Response {
   if (!req.params.name) {
     return {
       body: {
@@ -79,10 +79,12 @@ function prepareResult(result: string, name: string): string {
 }
 
 function prepareGraph(name: string): Array<NameGraph> {
-  const jsonData: Content<DataSource> | null = get({
+  const jsonData: Content<DataSource> | null = getContent({
     // key: 'fc606ea3-17a6-4408-b277-14ac8bb78b3c'
     key: '11af3826-30e6-4022-963f-93dde27b22d2'
   })
+
+  const result: Array<NameGraph> = []
 
   let bankSaved: DatasetRepoNode<object | JSONstat | TbmlDataUniform> | undefined = undefined
 
@@ -90,32 +92,35 @@ function prepareGraph(name: string): Array<NameGraph> {
     bankSaved = datasetOrUndefined(jsonData)
   }
 
-  // const set: string | jsonstatType | undefined = bankSaved?.data
-  // const label: string = set.Data(0).label
-  // const label: string | undefined = JSONstat(bankSaved?.data).Dataset(0)
-  // let label: Dataset
-  let dataset: Keyable
+  const labels: Keyable = bankSaved?.data.dimension.Fornavn.category.label
+  // log.info('GLNRBN labels: ' + JSON.stringify(labels))
+  log.info('GLNRBN name: ' + name)
 
 
-  try {
-    const labels: Keyable = bankSaved?.data.dimension.Fornavn.category.label
-    const nameCode: string | undefined = getKeyByValue(labels, 'Anna')
-    dataset = JSONstat(bankSaved?.data).Dataset(0).Dice({
-      'Fornavn': [nameCode]
-    })
-  } catch (error) {
-    dataset = error
+  name.split(' ').forEach((n) => {
+    const preparedName: string = n.charAt(0) + n.slice(1).toLowerCase()
+    log.info('GLNRBN Prepared name: ' + preparedName)
+
+    const nameCode: string | undefined = getKeyByValue(labels, preparedName)
+    log.info('GLNRBN nameCode: ' + nameCode)
+    if (nameCode) {
+      const dataset: KeyableNumberArray = JSONstat(bankSaved?.data).Dataset(0).Dice({
+        'Fornavn': [nameCode]
+      },
+      {
+        clone: true
+      })
+      result.push(
+        {
+          name: preparedName,
+          data: dataset.value
+        }
+      )
+    }
   }
-
-  // prepareHighchartsData(req, )
-
-  log.info( 'GLNRBN dataset: ' + dataset.value )
-
-
-  return [{
-    individualName: 'Elin',
-    nameStatistics: [1, 2, 3, 4]
-  }]
+  )
+  log.info('GLNRBN: ' + JSON.stringify(result, null, 2))
+  return result
 }
 
 
@@ -135,7 +140,7 @@ function pad(word: string): string {
 
 function sanitizeQuery(name: string): string {
   const approved: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ '
-  return validator.whitelist(replaceCharacters(name.toUpperCase()), approved )
+  return validator.whitelist(replaceCharacters(name.toUpperCase()), approved)
 }
 
 function replaceCharacters(name: string): string {
@@ -154,8 +159,8 @@ interface ResultType {
 }
 
 interface NameGraph {
-  individualName: string;
-  nameStatistics: Array<number>;
+  name: string;
+  data: Array<number>;
 }
 
 
@@ -167,5 +172,9 @@ interface NameData {
 
 interface Keyable {
   [key: string]: string;
+}
+
+interface KeyableNumberArray {
+  [key: string]: Array<number>;
 }
 
