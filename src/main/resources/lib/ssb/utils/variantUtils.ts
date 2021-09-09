@@ -2,7 +2,7 @@ import { Content } from 'enonic-types/content'
 import { SEO } from '../../../services/news/news'
 import { OmStatistikken } from '../../../site/content-types/omStatistikken/omStatistikken'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
-import { StatisticInListing, VariantInListing } from '../dashboard/statreg/types'
+import { ReleasesInListing, StatisticInListing, VariantInListing } from '../dashboard/statreg/types'
 
 const {
   pageUrl
@@ -32,28 +32,41 @@ const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
 
-export function calculatePeriod(variant: VariantInListing, language: string): string {
+export function calculatePeriod(variant: VariantInListing, language: string, nextReleasePassed: boolean = false): string {
+  let previousFrom: string = variant.previousFrom
+  let previousTo: string = variant.previousTo
+  if (nextReleasePassed) {
+    const upcomingRelease: ReleasesInListing | undefined = variant.upcomingReleases ? forceArray(variant.upcomingReleases).find((r) => {
+      return r && r.id === variant.nextReleaseId
+    }) : undefined
+
+    if (upcomingRelease) {
+      previousFrom = upcomingRelease.periodFrom
+      previousTo = upcomingRelease.periodTo
+    }
+  }
+
   switch (variant.frekvens) {
   case 'År':
-    return calculateYear(variant, language)
+    return calculateYear(previousFrom, previousTo, language)
   case 'Halvår':
-    return calcualteHalfYear(variant, language)
+    return calcualteHalfYear(previousFrom, language)
   case 'Termin':
-    return calculateTerm(variant, language)
+    return calculateTerm(previousFrom, language)
   case 'Kvartal':
-    return calculateQuarter(variant, language)
+    return calculateQuarter(previousFrom, language)
   case 'Måned':
-    return calculateMonth(variant, language)
+    return calculateMonth(previousFrom, language)
   case 'Uke':
-    return calculateWeek(variant, language)
+    return calculateWeek(previousFrom, language)
   default:
-    return calculateEveryXYear(variant, language)
+    return calculateEveryXYear(previousFrom, previousTo, language)
   }
 }
 
-function calculateEveryXYear(variant: VariantInListing, language: string): string {
-  const dateFrom: Date = new Date(variant.previousFrom)
-  const dateTo: Date = new Date(variant.previousTo)
+function calculateEveryXYear(previousFrom: string, previousTo: string, language: string): string {
+  const dateFrom: Date = new Date(previousFrom)
+  const dateTo: Date = new Date(previousTo)
   const yearFrom: number = dateFrom.getFullYear()
   const yearTo: number = dateTo.getFullYear()
 
@@ -73,9 +86,9 @@ function calculateEveryXYear(variant: VariantInListing, language: string): strin
   }
 }
 
-function calculateYear(variant: VariantInListing, language: string): string {
-  const dateFrom: Date = new Date(variant.previousFrom)
-  const dateTo: Date = new Date(variant.previousTo)
+function calculateYear(previousFrom: string, previousTo: string, language: string): string {
+  const dateFrom: Date = new Date(previousFrom)
+  const dateTo: Date = new Date(previousTo)
   const yearFrom: number = dateFrom.getFullYear()
   const yearTo: number = dateTo.getFullYear()
   if ( (yearFrom + 1) === yearTo &&
@@ -105,9 +118,9 @@ function calculateYear(variant: VariantInListing, language: string): string {
   }
 }
 
-function calcualteHalfYear(variant: VariantInListing, language: string): string {
-  const date: Date = new Date(variant.previousFrom)
-  const fromMonth: number = new Date(variant.previousFrom).getMonth() + 1
+function calcualteHalfYear(previousFrom: string, language: string): string {
+  const date: Date = new Date(previousFrom)
+  const fromMonth: number = new Date(previousFrom).getMonth() + 1
   const halfyear: number = Math.ceil(fromMonth / 6)
   return localize({
     key: 'period.halfyear',
@@ -116,8 +129,8 @@ function calcualteHalfYear(variant: VariantInListing, language: string): string 
   })
 }
 
-function calculateTerm(variant: VariantInListing, language: string): string {
-  const date: Date = new Date(variant.previousFrom)
+function calculateTerm(previousFrom: string, language: string): string {
+  const date: Date = new Date(previousFrom)
   const fromMonth: number = date.getMonth() + 1
   const termin: number = Math.ceil(fromMonth / 6)
   return localize({
@@ -127,8 +140,8 @@ function calculateTerm(variant: VariantInListing, language: string): string {
   })
 }
 
-function calculateQuarter(variant: VariantInListing, language: string): string {
-  const date: Date = new Date(variant.previousFrom)
+function calculateQuarter(previousFrom: string, language: string): string {
+  const date: Date = new Date(previousFrom)
   const fromMonth: number = date.getMonth() + 1
   const quarter: number = Math.ceil(fromMonth / 3)
   return localize({
@@ -138,9 +151,9 @@ function calculateQuarter(variant: VariantInListing, language: string): string {
   })
 }
 
-function calculateMonth(variant: VariantInListing, language: string): string {
-  const monthName: string = moment(variant.previousFrom).locale(language).format('MMMM')
-  const year: string = moment(variant.previousFrom).locale(language).format('YYYY')
+function calculateMonth(previousFrom: string, language: string): string {
+  const monthName: string = moment(previousFrom).locale(language).format('MMMM')
+  const year: string = moment(previousFrom).locale(language).format('YYYY')
   return localize({
     key: 'period.month',
     locale: language,
@@ -156,8 +169,8 @@ function getWeek(date: Date): number {
   return Math.ceil(dayOfYear / 7)
 }
 
-function calculateWeek(variant: VariantInListing, language: string): string {
-  const date: Date = new Date(variant.previousFrom)
+function calculateWeek(previousFrom: string, language: string): string {
+  const date: Date = new Date(previousFrom)
   return localize({
     key: 'period.week',
     locale: language,
@@ -268,7 +281,14 @@ export function filterOnComingReleases(stats: Array<StatisticInListing>, count: 
 
 export function checkVariantReleaseDate(variant: VariantInListing, day: Date, property: keyof VariantInListing): boolean {
   const dayFromVariant: string = variant[property] as string
-  return sameDay(new Date(dayFromVariant), day)
+  if (property === 'previousRelease') {
+    const serverOffsetInMs: number = app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+    const serverTime: Date = new Date(new Date().getTime() + serverOffsetInMs)
+    const nextRelease: Date = new Date(variant.nextRelease)
+    return sameDay(new Date(dayFromVariant), day) || sameDay(nextRelease, day) && moment(serverTime).isAfter(nextRelease, 'minute')
+  } else {
+    return sameDay(new Date(dayFromVariant), day)
+  }
 }
 
 export function prepareRelease(
@@ -312,7 +332,14 @@ export function prepareRelease(
 
 function concatReleaseTimes(variants: Array<VariantInListing>, language: string, property: keyof VariantInListing): PreparedVariant {
   const defaultVariant: PreparedVariant = formatVariant(variants[0], language, property)
-  const timePeriodes: Array<string> = variants.map((variant: VariantInListing) => calculatePeriod(variant, language))
+  let timePeriodes: Array<string>
+
+  if (property === 'previousRelease') {
+    timePeriodes = variants.map((variant: VariantInListing) => calculatePeriod(variant, language, nextReleasedPassed(variant)))
+  } else {
+    timePeriodes = variants.map((variant: VariantInListing) => calculatePeriod(variant, language))
+  }
+
   const formatedTimePeriodes: string = timePeriodes.join(` ${localize({
     key: 'and',
     locale: language
@@ -323,16 +350,31 @@ function concatReleaseTimes(variants: Array<VariantInListing>, language: string,
   }
 }
 
+// If import from statreg failed use nextRelease instead of previousRelease
+function nextReleasedPassed(variant: VariantInListing): boolean {
+  const serverOffsetInMs: number = app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+  const serverTime: Date = new Date(new Date().getTime() + serverOffsetInMs)
+  const nextRelease: Date = new Date(variant.nextRelease)
+  return moment(nextRelease).isBefore(serverTime, 'minute')
+}
+
 function formatVariant(variant: VariantInListing, language: string, property: keyof VariantInListing): PreparedVariant {
   const variantProperty: string = variant[property] as string
-  const date: Date = new Date(variantProperty)
+  let date: Date = new Date(variantProperty)
+  let nextReleaseDatePassed: boolean = false
+
+  if (property === 'previousRelease') {
+    nextReleaseDatePassed = nextReleasedPassed(variant)
+    date = nextReleaseDatePassed ? new Date(variant.nextRelease) : new Date(variantProperty)
+  }
+
   return {
     id: variant.id,
     day: date.getDate(),
     monthNumber: date.getMonth(),
     year: date.getFullYear(),
     frequency: variant.frekvens,
-    period: calculatePeriod(variant, language)
+    period: calculatePeriod(variant, language, nextReleaseDatePassed)
   }
 }
 
