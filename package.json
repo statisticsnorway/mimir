@@ -85,7 +85,7 @@
     "react-helmet-async": "^1.0.9",
     "react-mathjax": "^1.0.1",
     "react-moment": "^1.1.1",
-    "react-number-format": "^4.5.5",
+    "react-number-format": "^4.7.3",
     "react-redux": "^7.2.4",
     "react-responsive": "^8.2.0",
     "react-router-dom": "^5.2.0",
