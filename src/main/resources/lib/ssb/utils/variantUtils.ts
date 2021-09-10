@@ -282,10 +282,7 @@ export function filterOnComingReleases(stats: Array<StatisticInListing>, count: 
 export function checkVariantReleaseDate(variant: VariantInListing, day: Date, property: keyof VariantInListing): boolean {
   const dayFromVariant: string = variant[property] as string
   if (property === 'previousRelease') {
-    const serverOffsetInMs: number = app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
-    const serverTime: Date = new Date(new Date().getTime() + serverOffsetInMs)
-    const nextRelease: Date = new Date(variant.nextRelease)
-    return sameDay(new Date(dayFromVariant), day) || sameDay(nextRelease, day) && moment(serverTime).isAfter(nextRelease, 'minute')
+    return sameDay(new Date(dayFromVariant), day) || nextReleasedPassed(variant)
   } else {
     return sameDay(new Date(dayFromVariant), day)
   }
@@ -378,7 +375,6 @@ function formatVariant(variant: VariantInListing, language: string, property: ke
   }
 }
 
-
 export interface VariantUtilsLib {
   calculatePeriod: (variant: VariantInListing, language: string) => string;
   addMonthNames: (groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>>, language: string) => Array<YearReleases>;
@@ -390,7 +386,6 @@ export interface VariantUtilsLib {
   prepareRelease: (release: StatisticInListing, locale: string, property?: keyof VariantInListing, statisticsPageUrl?: string) => PreparedStatistics;
   filterOnComingReleases: (stats: Array<StatisticInListing>, daysInTheFuture: number, startDay?: string) => Array<StatisticInListing>;
 }
-
 
 export interface PreparedStatistics {
   id: number;
