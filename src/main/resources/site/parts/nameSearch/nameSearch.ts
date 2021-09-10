@@ -3,26 +3,11 @@ import { Component } from 'enonic-types/portal'
 import { renderError } from '../../../lib/ssb/error/error'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { NameSearchPartConfig } from './nameSearch-part-config'
-import { Dataset, JSONstat as jsonStatObject } from '../../../lib/types/jsonstat-toolkit'
-import { Content } from 'enonic-types/content'
-import { DatasetRepoNode } from '../../../lib/ssb/repo/dataset'
-import { DataSource } from '../../mixins/dataSource/dataSource'
-/* eslint-disable new-cap */
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
-import JSONstat from 'jsonstat-toolkit/import.mjs'
-import { datasetOrUndefined } from '../../../lib/ssb/cache/cache'
-import { TbmlDataUniform } from '../../../lib/types/xmlParser'
-import { HighchartsUtilsLib } from '../../../lib/ssb/parts/highcharts/highchartsUtils'
-import { HighchartsGraphConfig } from '../../../lib/types/highcharts'
-import { prepareHighchartsData } from '../../../lib/ssb/parts/highcharts/highchartsData'
+import { SiteConfig } from '../../../site/site-config'
 
-// import JSONstat from 'jsonstat-toolkit/import.mjs'
-
-
-// const {
-//   JSONstat
-// } = __non_webpack_require__('jsonstat-toolkit')
+const {
+  getSiteConfig
+} = __non_webpack_require__('/lib/xp/portal')
 
 const {
   getComponent,
@@ -57,6 +42,9 @@ function renderPart(req: Request): React4xpResponse {
   const locale: string = getLanguageShortName(getContent())
   const isNotInEditMode: boolean = req.mode !== 'edit'
 
+  const siteConfig: SiteConfig = getSiteConfig()
+  log.info('GLNRBN key til config content: ' + siteConfig.nameSearchGraphData)
+
 
   const urlToService: string = serviceUrl({
     service: 'nameSearch'
@@ -66,6 +54,7 @@ function renderPart(req: Request): React4xpResponse {
     urlToService: urlToService,
     aboutLink: aboutLinkResources(component.config),
     nameSearchDescription: component.config.nameSearchDescription,
+    graphKey: siteConfig.nameSearchGraphData,
     phrases: partsPhrases(locale)
   }
 
@@ -175,6 +164,7 @@ interface PartProperties {
     title: string;
     url: string;
   };
+  graphKey: string;
   nameSearchDescription?: string;
   phrases: {
     nameSearchTitle: string;

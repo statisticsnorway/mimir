@@ -115,12 +115,12 @@ function NameSearch(props) {
           </Row>
           { result.response && renderMainResult(result.response.docs) }
           { result.response && renderSubResult(result.response.docs) }
+          {!!result.nameGraph.length && renderGraphs(searchedTerm)}
           <Row>
             <Col className="md-6">
               <Button className="close-button" onClick={() => closeResult()} type="button"> <X size="18"/> Lukk</Button>
             </Col>
           </Row>
-          {!!result.nameGraph.length && renderGraphs(searchedTerm)}
         </Container>
       </div>
       )
@@ -171,7 +171,8 @@ function NameSearch(props) {
     axios.get(
       props.urlToService, {
         params: {
-          name: name.value
+          name: name.value,
+          graphKey: props.graphKey
         },
         timeout: 20000
       }
@@ -228,12 +229,16 @@ function NameSearch(props) {
       series: result.nameGraph
     }
     return (
-      <div>
-        <HighchartsReact
-          highcharts={Highcharts}
-          options={options}
-        />
-      </div>
+      <Row>
+        <Col>
+          <div>
+            <HighchartsReact
+              highcharts={Highcharts}
+              options={options}
+            />
+          </div>
+        </Col>
+      </Row>
     )
   }
 
@@ -290,6 +295,7 @@ NameSearch.propTypes = {
     title: PropTypes.string,
     url: PropTypes.string
   }),
+  graphKey: PropTypes.string,
   nameSearchDescription: PropTypes.string,
   phrases: PropTypes.shape({
     nameSearchTitle: PropTypes.string,

@@ -1,12 +1,11 @@
 import { HttpRequestParams, HttpResponse } from 'enonic-types/http'
 import { Request, Response } from 'enonic-types/controller'
-import { Dataset, JSONstat as jsonStatObject } from '../../lib/types/jsonstat-toolkit'
+import { Dataset } from '../../lib/types/jsonstat-toolkit'
 import { Content } from 'enonic-types/content'
 import { DatasetRepoNode } from '../../lib/ssb/repo/dataset'
 import { DataSource } from '../../site/mixins/dataSource/dataSource'
 import { datasetOrUndefined } from '../../lib/ssb/cache/cache'
 import { TbmlDataUniform } from '../../lib/types/xmlParser'
-
 
 /* eslint-disable new-cap */
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
@@ -16,11 +15,16 @@ import JSONstat from 'jsonstat-toolkit/import.mjs'
 const {
   get: getContent // Must be renamed because of conflict with exported function get, which XP expects.
 } = __non_webpack_require__('/lib/xp/content')
+const {
+  get: getContext
+} = __non_webpack_require__('/lib/xp/context')
 
 import validator from 'validator'
+import { Context } from 'enonic-types/context'
 const {
   request
 } = __non_webpack_require__('/lib/http-client')
+
 
 export function get(req: Request): Response {
   if (!req.params.name) {
@@ -53,7 +57,7 @@ export function get(req: Request): Response {
 
   try {
     const result: HttpResponse = request(requestParams)
-    const preparedBody: string = result.body ? prepareResult(result.body, sanitizeQuery(req.params.name)) : ''
+    const preparedBody: string = result.body ? prepareResult(result.body, sanitizeQuery(req.params.name), req.params.graphKey) : ''
 
     return {
       body: preparedBody,
@@ -71,56 +75,57 @@ export function get(req: Request): Response {
   }
 }
 
-function prepareResult(result: string, name: string): string {
+function prepareResult(result: string, name: string, graphKey?: string): string {
   const obj: ResultType = JSON.parse(result)
   obj.originalName = name
-  obj.nameGraph = prepareGraph(name)
+  obj.nameGraph = graphKey ? prepareGraph(name, graphKey) : []
   return JSON.stringify(obj)
 }
 
-function prepareGraph(name: string): Array<NameGraph> {
+function prepareGraph(name: string, graphKey: string): Array<NameGraph> {
   const jsonData: Content<DataSource> | null = getContent({
-    // key: 'fc606ea3-17a6-4408-b277-14ac8bb78b3c'
-    key: '11af3826-30e6-4022-963f-93dde27b22d2'
+    key: graphKey
   })
 
+  const cont: Context = getContext()
   const result: Array<NameGraph> = []
 
-  let bankSaved: DatasetRepoNode<object | JSONstat | TbmlDataUniform> | undefined = undefined
+  try {
+    let bankSaved: DatasetRepoNode<object | JSONstat | TbmlDataUniform> | undefined = undefined
 
-  if (!!jsonData) {
-    bankSaved = datasetOrUndefined(jsonData)
-  }
-
-  const labels: Keyable = bankSaved?.data.dimension.Fornavn.category.label
-  // log.info('GLNRBN labels: ' + JSON.stringify(labels))
-  log.info('GLNRBN name: ' + name)
-
-
-  name.split(' ').forEach((n) => {
-    const preparedName: string = n.charAt(0) + n.slice(1).toLowerCase()
-    log.info('GLNRBN Prepared name: ' + preparedName)
-
-    const nameCode: string | undefined = getKeyByValue(labels, preparedName)
-    log.info('GLNRBN nameCode: ' + nameCode)
-    if (nameCode) {
-      const dataset: KeyableNumberArray = JSONstat(bankSaved?.data).Dataset(0).Dice({
-        'Fornavn': [nameCode]
-      },
-      {
-        clone: true
-      })
-      result.push(
-        {
-          name: preparedName,
-          data: dataset.value
-        }
-      )
+    if (!!jsonData) {
+      bankSaved = datasetOrUndefined(jsonData)
     }
+
+    const labels: Keyable = bankSaved?.data.dimension.Fornavn.category.label
+
+    name.split(' ').forEach((n) => {
+      const preparedName: string = n.charAt(0) + n.slice(1).toLowerCase()
+      log.info('GLNRBN Prepared name: ' + preparedName)
+
+      const nameCode: string | undefined = getKeyByValue(labels, preparedName)
+      log.info('GLNRBN nameCode: ' + nameCode)
+      if (nameCode) {
+        const dataset: KeyableNumberArray = JSONstat(bankSaved?.data).Dataset(0).Dice({
+          'Fornavn': [nameCode]
+        },
+        {
+          clone: true
+        })
+        result.push(
+          {
+            name: preparedName,
+            data: dataset.value
+          }
+        )
+      }
+    }
+    )
+    return result
+  } catch (error) {
+    log.error(JSON.stringify(error, null, 2))
+    return result
   }
-  )
-  log.info('GLNRBN: ' + JSON.stringify(result, null, 2))
-  return result
 }
 
 
@@ -163,12 +168,10 @@ interface NameGraph {
   data: Array<number>;
 }
 
-
 interface NameData {
   fornavn: Dataset | null;
   tid: Dataset | null;
 }
-
 
 interface Keyable {
   [key: string]: string;
