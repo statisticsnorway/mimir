@@ -37,7 +37,7 @@
     "@babel/runtime": "^7.15.3",
     "@reduxjs/toolkit": "^1.6.1",
     "@statisticsnorway/ssb-component-library": "^2.0.49",
-    "@types/ramda": "^0.27.42",
+    "@types/ramda": "^0.27.44",
     "@types/react": "^17.0.5",
     "@types/validator": "^13.6.3",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
