@@ -1,13 +1,20 @@
 const {
+  data: {
+    forceArray
+  }
+} = __non_webpack_require__('/lib/util')
+const {
   getContent,
   processHtml,
   assetUrl,
   getSiteConfig
 } = __non_webpack_require__('/lib/xp/portal')
-const thymeleaf = __non_webpack_require__('/lib/thymeleaf')
 const {
   getLanguage
 } = __non_webpack_require__('/lib/ssb/utils/language')
+const {
+  localize
+} = __non_webpack_require__('/lib/xp/i18n')
 const {
   alertsForContext
 } = __non_webpack_require__('/lib/ssb/utils/alertUtils')
@@ -15,13 +22,14 @@ const {
   getBreadcrumbs
 } = __non_webpack_require__('/lib/ssb/utils/breadcrumbsUtils')
 const {
-  getReleaseDatesByVariants
+  getMainSubjects
+} = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
+const {
+  getReleaseDatesByVariants, getStatisticByIdFromRepo
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   getMunicipality
 } = __non_webpack_require__('/lib/ssb/dataset/klass/municipalities')
-const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const util = __non_webpack_require__('/lib/util')
 const {
   getHeaderContent
 } = __non_webpack_require__('/lib/ssb/parts/header')
@@ -32,15 +40,8 @@ const {
   fromMenuCache
 } = __non_webpack_require__('/lib/ssb/cache/cache')
 const {
-  getStatisticByIdFromRepo
-} = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const {
-  localize
-} = __non_webpack_require__('/lib/xp/i18n')
-const {
-  getMainSubjects
-} = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
-
+  render
+} = __non_webpack_require__('/lib/thymeleaf')
 
 const partsWithPreview = [ // Parts that has preview
   `${app.name}:map`,
@@ -61,6 +62,8 @@ const partsWithPreview = [ // Parts that has preview
 const previewOverride = {
   'contentList': 'relatedFactPage'
 }
+
+const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view = resolve('default.html')
 
 exports.get = function(req) {
@@ -75,11 +78,11 @@ exports.get = function(req) {
     const pageData = page.page
     if (pageData) {
       regions = pageData.regions ? pageData.regions : {}
-      configRegions = pageData.config && pageData.config.regions ? util.data.forceArray(pageData.config.regions) : []
+      configRegions = pageData.config && pageData.config.regions ? forceArray(pageData.config.regions) : []
     }
   }
   configRegions.forEach((configRegion) => {
-    configRegion.components = regions[configRegion.region] ? util.data.forceArray(regions[configRegion.region].components) : []
+    configRegion.components = regions[configRegion.region] ? forceArray(regions[configRegion.region].components) : []
   })
 
   const mainRegionComponents = regions && regions.main && regions.main.components.length > 0 ? regions.main.components : undefined
@@ -148,7 +151,7 @@ exports.get = function(req) {
   if (page.type === `${app.name}:statistics`) {
     const statistic = getStatisticByIdFromRepo(page.data.statistic)
     if (statistic) {
-      const variants = util.data.forceArray(statistic.variants)
+      const variants = forceArray(statistic.variants)
       const releaseDates = getReleaseDatesByVariants(variants)
       const previousRelease = releaseDates.previousRelease[0]
       metaInfoSearchPublishFrom = previousRelease ? new Date(previousRelease).toISOString() : new Date().toISOString()
@@ -313,7 +316,7 @@ exports.get = function(req) {
     hideBreadcrumb
   }
 
-  const thymeleafRenderBody = thymeleaf.render(view, model)
+  const thymeleafRenderBody = render(view, model)
 
   const bodyWithBreadCrumbs = !hideBreadcrumb && breadcrumbComponent.renderBody({
     body: thymeleafRenderBody
