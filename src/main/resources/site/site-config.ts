@@ -38,7 +38,7 @@ export interface SiteConfig {
   /**
    * PX-API spørring for historiske navnedata
    */
-  nameSearchGraphData: string;
+  nameSearchGraphData?: string;
 
   /**
    * Språk instillinger

@@ -25,6 +25,9 @@ const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   get
 } = __non_webpack_require__('/lib/xp/content')
+const {
+  isEnabled
+} = __non_webpack_require__('/lib/featureToggle')
 
 
 exports.get = (req: Request): React4xpResponse | Response => {
@@ -38,23 +41,24 @@ exports.get = (req: Request): React4xpResponse | Response => {
 exports.preview = (req: Request): React4xpResponse => renderPart(req)
 
 function renderPart(req: Request): React4xpResponse {
+  const nameSearchGraphEnabled: boolean = isEnabled('name-graph', true, 'ssb')
   const component: Component<NameSearchPartConfig> = getComponent()
   const locale: string = getLanguageShortName(getContent())
   const isNotInEditMode: boolean = req.mode !== 'edit'
 
   const siteConfig: SiteConfig = getSiteConfig()
-  log.info('GLNRBN key til config content: ' + siteConfig.nameSearchGraphData)
-
 
   const urlToService: string = serviceUrl({
     service: 'nameSearch'
   })
 
+  const graphKey: string = nameSearchGraphEnabled && siteConfig.nameSearchGraphData ? siteConfig.nameSearchGraphData : ''
+
   const props: PartProperties = {
     urlToService: urlToService,
     aboutLink: aboutLinkResources(component.config),
     nameSearchDescription: component.config.nameSearchDescription,
-    graphKey: siteConfig.nameSearchGraphData,
+    graphKey: graphKey,
     phrases: partsPhrases(locale)
   }
 
@@ -121,6 +125,14 @@ function partsPhrases(locale: string): PartProperties['phrases'] {
       key: 'nameSearch.threeOrLessText',
       locale
     }),
+    xAxis: localize({
+      key: 'nameSearch.graph.xaxis',
+      locale
+    }),
+    graphHeader: localize({
+      key: 'nameSearch.graph.header',
+      locale
+    }),
     women: localize({
       key: 'women',
       locale
@@ -178,6 +190,8 @@ interface PartProperties {
     errorMessage: string;
     networkErrorMessage: string;
     threeOrLessText: string;
+    xAxis: string;
+    graphHeader: string;
     women: string;
     men: string;
     types: {

@@ -218,18 +218,31 @@ function NameSearch(props) {
 
   function renderGraphs(nameForRender) {
     const options = {
+      chart: {
+        type: 'spline'
+      },
       title: {
-        text: 'Navnestatistikk for ' + nameForRender
+        align: 'left',
+        text: props.phrases.graphHeader + ' ' + nameForRender,
+        x: 50
+      },
+      yAxis: {
+        title: {
+          text: props.phrases.xAxis
+        }
       },
       plotOptions: {
         series: {
+          marker: {
+            enabled: false
+          },
           pointStart: 1945 // Magic number: Name data starts in the year 1945 and we try to get all the years since.
         }
       },
       series: result.nameGraph
     }
     return (
-      <Row>
+      <Row className='pt-4'>
         <Col>
           <div>
             <HighchartsReact
@@ -309,6 +322,8 @@ NameSearch.propTypes = {
     errorMessage: PropTypes.string,
     networkErrorMessage: PropTypes.string,
     threeOrLessText: PropTypes.string,
+    xAxis: PropTypes.string,
+    graphHeader: PropTypes.string,
     women: PropTypes.string,
     men: PropTypes.string,
     types: PropTypes.shape({
