@@ -6,7 +6,7 @@ const {
   query
 } = __non_webpack_require__('/lib/xp/content')
 const {
-  pageUrl
+  pageUrl, getContent
 } = __non_webpack_require__('/lib/xp/portal')
 const {
   moment
@@ -20,8 +20,10 @@ exports.get = (req: Request): Response => {
   const count: number = Number(req.params.count) ? Number(req.params.count) : 10
   const sort: string = req.params.sort ? req.params.sort : 'DESC'
   const language: string = req.params?.language ? req.params.language === 'en' ? 'en-gb' : req.params.language : 'nb'
+  const content: Content = getContent()
+  const subTopicId: string = content._id
 
-  const preparedArticles: Array<PreparedArticles> = prepareArticles(getChildArticles(currentPath, start, count, sort), language)
+  const preparedArticles: Array<PreparedArticles> = prepareArticles(getChildArticles(currentPath, subTopicId, start, count, sort), language)
 
   return {
     status: 200,
@@ -33,13 +35,12 @@ exports.get = (req: Request): Response => {
   }
 }
 
-
-function getChildArticles(currentPath: string, start: number, count: number, sort: string): QueryResponse<Article> {
+function getChildArticles(currentPath: string, subTopicId: string, start: number, count: number, sort: string): QueryResponse<Article> {
   const toDay: string = moment().toISOString()
   return query({
     start: start,
     count: count,
-    query: `_path LIKE "/content${currentPath}*" AND publish.from <= instant("${toDay}")`,
+    query: `(_path LIKE "/content${currentPath}*" OR data.subtopic = "${subTopicId}") AND publish.from <= instant("${toDay}")`,
     contentTypes: [`${app.name}:article`],
     sort: `publish.from ${sort}`
   })
