@@ -60,6 +60,16 @@
       <occurrences minimum="1" maximum="1"/>
       <default>/informasjon/om-statistikkbanken/hvordan-bruke-statistikkbanken</default>
     </input>
+    <input name="nameSearchGraphData" type="ContentSelector">
+      <label>PX-API spørring for historiske navnedata</label>
+      <occurrences minimum="0" maximum="1"/>
+      <config>
+        <allowContentType>genericDataImport</allowContentType>
+        <treeMode>true</treeMode>
+        <showStatus>true</showStatus>
+        <hideToggleIcon>false</hideToggleIcon>
+      </config>
+    </input>
     <item-set name="language">
       <label>Språk instillinger</label>
       <expanded>false</expanded>

@@ -3,6 +3,11 @@ import { Component } from 'enonic-types/portal'
 import { renderError } from '../../../lib/ssb/error/error'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { NameSearchPartConfig } from './nameSearch-part-config'
+import { SiteConfig } from '../../../site/site-config'
+
+const {
+  getSiteConfig
+} = __non_webpack_require__('/lib/xp/portal')
 
 const {
   getComponent,
@@ -17,6 +22,9 @@ const {
   localize
 } = __non_webpack_require__('/lib/xp/i18n')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+const {
+  isEnabled
+} = __non_webpack_require__('/lib/featureToggle')
 
 
 exports.get = (req: Request): React4xpResponse | Response => {
@@ -30,18 +38,24 @@ exports.get = (req: Request): React4xpResponse | Response => {
 exports.preview = (req: Request): React4xpResponse => renderPart(req)
 
 function renderPart(req: Request): React4xpResponse {
+  const nameSearchGraphEnabled: boolean = isEnabled('name-graph', true, 'ssb')
   const component: Component<NameSearchPartConfig> = getComponent()
   const locale: string = getLanguageShortName(getContent())
   const isNotInEditMode: boolean = req.mode !== 'edit'
+
+  const siteConfig: SiteConfig = getSiteConfig()
 
   const urlToService: string = serviceUrl({
     service: 'nameSearch'
   })
 
+  const graphKey: string = nameSearchGraphEnabled && siteConfig.nameSearchGraphData ? siteConfig.nameSearchGraphData : ''
+
   const props: PartProperties = {
     urlToService: urlToService,
     aboutLink: aboutLinkResources(component.config),
     nameSearchDescription: component.config.nameSearchDescription,
+    graphKey: graphKey,
     phrases: partsPhrases(locale)
   }
 
@@ -49,7 +63,6 @@ function renderPart(req: Request): React4xpResponse {
     clientRender: isNotInEditMode
   })
 }
-
 
 function aboutLinkResources(config: Component<NameSearchPartConfig>['config']): PartProperties['aboutLink'] | undefined {
   if (config.aboutLinkTitle && config.aboutLinkTarget) {
@@ -109,6 +122,14 @@ function partsPhrases(locale: string): PartProperties['phrases'] {
       key: 'nameSearch.threeOrLessText',
       locale
     }),
+    xAxis: localize({
+      key: 'nameSearch.graph.xaxis',
+      locale
+    }),
+    graphHeader: localize({
+      key: 'nameSearch.graph.header',
+      locale
+    }),
     women: localize({
       key: 'women',
       locale
@@ -152,6 +173,7 @@ interface PartProperties {
     title: string;
     url: string;
   };
+  graphKey: string;
   nameSearchDescription?: string;
   phrases: {
     nameSearchTitle: string;
@@ -165,6 +187,8 @@ interface PartProperties {
     errorMessage: string;
     networkErrorMessage: string;
     threeOrLessText: string;
+    xAxis: string;
+    graphHeader: string;
     women: string;
     men: string;
     types: {

@@ -48,6 +48,10 @@ try {
         {
           feature: 'articlelist-sorting',
           enabled: false
+        },
+        {
+          feature: 'name-graph',
+          enabled: false
         }
       ]
     }
