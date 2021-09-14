@@ -83,7 +83,7 @@ function renderPart(req: Request, highchartIds: Array<string>): Response {
     locale: language === 'nb' ? 'no' : language
   })
 
-  const highcharts: Array<HighchartsRectProps> = highchartIds.map((key) => {
+  const highcharts: Array<HighchartsReactProps> = highchartIds.map((key) => {
     const highchart: Content<Highchart> | null = get({
       key
     })
@@ -158,7 +158,7 @@ function createDataFromDataSource(req: Request, highchart: Content<Highchart & D
 }
 
 
-function createHighchartsReactProps(highchart: Content<Highchart>, config: HighchartsExtendedProps): HighchartsRectProps {
+function createHighchartsReactProps(highchart: Content<Highchart>, config: HighchartsExtendedProps): HighchartsReactProps {
   return {
     config: config,
     type: highchart.data.graphType,
@@ -172,7 +172,7 @@ function createHighchartsReactProps(highchart: Content<Highchart>, config: Highc
 }
 type HighchartsExtendedProps = HighchartsGraphConfig & HighchartsReactExtraProps
 
-interface HighchartsRectProps {
+interface HighchartsReactProps {
   config?: HighchartsExtendedProps;
   type?: string;
   contentKey?: string;

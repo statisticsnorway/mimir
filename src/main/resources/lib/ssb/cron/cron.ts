@@ -229,34 +229,36 @@ export function setupCronJobs(): void {
   // Test sheduler task
   const testTaskCron: string = app.config && app.config['ssb.cron.testTask'] ? app.config['ssb.cron.testTask'] : '0 08 * * *'
   const timezone: string = app.config && app.config['ssb.cron.timezone'] ? app.config['ssb.cron.timezone'] : 'UTC'
-  run(cronContext, () => {
-    const jobExists: boolean = !!getScheduledJob({
-      name: 'testTask'
+  if (isMaster()) {
+    run(cronContext, () => {
+      const jobExists: boolean = !!getScheduledJob({
+        name: 'testTask'
+      })
+      if (jobExists) {
+        modify({
+          name: 'testTask',
+          editor: (job) => {
+            job.schedule.value = testTaskCron
+            job.schedule.timeZone = timezone
+            return job
+          }
+        })
+      } else {
+        create({
+          name: 'testTask',
+          descriptor: `${app.name}:testTask`,
+          description: 'Testing task',
+          user: `user:system:cronjob`,
+          enabled: true,
+          schedule: {
+            type: 'CRON',
+            value: testTaskCron,
+            timeZone: timezone
+          }
+        })
+      }
     })
-    if (jobExists) {
-      modify({
-        name: 'testTask',
-        editor: (job) => {
-          job.schedule.value = testTaskCron
-          job.schedule.timeZone = timezone
-          return job
-        }
-      })
-    } else {
-      create({
-        name: 'testTask',
-        descriptor: `${app.name}:testTask`,
-        description: 'Testing task',
-        user: `user:system:cronjob`,
-        enabled: true,
-        schedule: {
-          type: 'CRON',
-          value: testTaskCron,
-          timeZone: timezone
-        }
-      })
-    }
-  })
+  }
 
   const cronList: Array<TaskMapper> = list() as Array<TaskMapper>
   cronJobLog('All cron jobs registered')
