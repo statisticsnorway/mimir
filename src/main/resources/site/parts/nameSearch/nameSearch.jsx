@@ -170,8 +170,7 @@ function NameSearch(props) {
     axios.get(
       props.urlToService, {
         params: {
-          name: name.value,
-          graphKey: props.graphKey
+          name: name.value
         },
         timeout: 20000
       }
@@ -307,7 +306,6 @@ NameSearch.propTypes = {
     title: PropTypes.string,
     url: PropTypes.string
   }),
-  graphKey: PropTypes.string,
   nameSearchDescription: PropTypes.string,
   phrases: PropTypes.shape({
     nameSearchTitle: PropTypes.string,

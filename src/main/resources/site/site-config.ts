@@ -36,11 +36,6 @@ export interface SiteConfig {
   statbankHelpLink: string;
 
   /**
-   * PX-API spørring for historiske navnedata
-   */
-  nameSearchGraphData?: string;
-
-  /**
    * Språk instillinger
    */
   language: Array<{
