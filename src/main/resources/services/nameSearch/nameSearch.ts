@@ -48,7 +48,7 @@ export function get(req: Request): Response {
       'Accept': 'application/json'
     },
     connectionTimeout: 20000,
-    readTimeout: 5000,
+    readTimeout: 10000,
     params: {
       q: prepareQuery(sanitizeQuery(req.params.name)),
       wt: 'json'

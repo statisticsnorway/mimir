@@ -82,7 +82,9 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
             upcomingReleases: [
               {
                 id: '0',
-                publishTime: nextRelease.format('YYYY-MM-DD HH:mm:ss.S')
+                publishTime: nextRelease.format('YYYY-MM-DD HH:mm:ss.S'),
+                periodFrom: nextRelease.format('YYYY-MM-DD HH:mm:ss.S'),
+                periodTo: nextRelease.format('YYYY-MM-DD HH:mm:ss.S')
               }
             ]
           }]

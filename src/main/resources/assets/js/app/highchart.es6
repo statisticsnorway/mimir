@@ -56,8 +56,8 @@ export function init() {
       width: $(window).width().toFixed(0)
     }
 
-    $('.btn-highchart-export').click((e) => {
-      $(e.target).parent().find('.highcharts-button-box')
+    $('.btn-highchart-export').on('click', (e) => {
+      $(e.target).parent().find(`button[aria-label='View chart menu']`)
         .first()
         .trigger('click')
     })

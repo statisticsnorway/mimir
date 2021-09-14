@@ -64,17 +64,23 @@ function requestSolr(queryParams: SolrQueryParams): SolrResponse {
     const result: HttpResponse = request({
       url: queryParams.query
     })
+
+    if (result.status !== 200) {
+      throw new Error(`Could not request solr with body: ${JSON.stringify(result.body && JSON.parse(result.body), null, 2)}`)
+    }
+
     return {
       status: result.status,
       body: result.body
     }
   } catch (e) {
-    log.error('Could not request solr with parameters: ')
-    log.error(JSON.stringify(queryParams, null, 2))
-    log.error(JSON.stringify(e, null, 2))
+    log.error(`Could not request solr with parameters: ${JSON.stringify(queryParams, null, 2)}`)
+    log.error(e)
     return {
       status: e.status ? e.status : 500,
-      body: e.body ? e.body : '{message: Internal error trying to request solr}'
+      body: e.body ? e.body : {
+        message: e ? e : 'Internal error trying to request solr.'
+      }
     }
   }
 }
