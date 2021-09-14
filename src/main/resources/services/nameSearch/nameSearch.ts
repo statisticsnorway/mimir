@@ -87,7 +87,6 @@ function prepareGraph(name: string, graphKey: string): Array<NameGraph> {
     key: graphKey
   })
 
-  const cont: Context = getContext()
   const result: Array<NameGraph> = []
 
   try {
@@ -101,10 +100,8 @@ function prepareGraph(name: string, graphKey: string): Array<NameGraph> {
 
     name.split(' ').forEach((n) => {
       const preparedName: string = n.charAt(0) + n.slice(1).toLowerCase()
-      log.info('GLNRBN Prepared name: ' + preparedName)
-
       const nameCode: string | undefined = getKeyByValue(labels, preparedName)
-      log.info('GLNRBN nameCode: ' + nameCode)
+
       if (nameCode) {
         const dataset: KeyableNumberArray = JSONstat(bankSaved?.data).Dataset(0).Dice({
           'Fornavn': [nameCode]
@@ -123,7 +120,7 @@ function prepareGraph(name: string, graphKey: string): Array<NameGraph> {
     )
     return result
   } catch (error) {
-    log.error(JSON.stringify(error, null, 2))
+    log.error(error)
     return result
   }
 }

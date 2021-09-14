@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
 import { Button, Divider, Input, Link, Title } from '@statisticsnorway/ssb-component-library'
-import PropTypes, { string } from 'prop-types'
+import PropTypes from 'prop-types'
 import { Col, Container, Row, Form } from 'react-bootstrap'
 import axios from 'axios'
 import { X } from 'react-feather'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
-import { propertyOf } from 'lodash'
 
 
 /* TODO

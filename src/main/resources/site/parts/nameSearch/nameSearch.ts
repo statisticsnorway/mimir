@@ -23,9 +23,6 @@ const {
 } = __non_webpack_require__('/lib/xp/i18n')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
-const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
 
