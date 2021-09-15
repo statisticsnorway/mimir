@@ -3,6 +3,11 @@ import { Component } from 'enonic-types/portal'
 import { renderError } from '../../../lib/ssb/error/error'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { NameSearchPartConfig } from './nameSearch-part-config'
+import { SiteConfig } from '../../../site/site-config'
+
+const {
+  getSiteConfig
+} = __non_webpack_require__('/lib/xp/portal')
 
 const {
   getComponent,
@@ -34,6 +39,7 @@ function renderPart(req: Request): React4xpResponse {
   const locale: string = getLanguageShortName(getContent())
   const isNotInEditMode: boolean = req.mode !== 'edit'
 
+
   const urlToService: string = serviceUrl({
     service: 'nameSearch'
   })
@@ -49,7 +55,6 @@ function renderPart(req: Request): React4xpResponse {
     clientRender: isNotInEditMode
   })
 }
-
 
 function aboutLinkResources(config: Component<NameSearchPartConfig>['config']): PartProperties['aboutLink'] | undefined {
   if (config.aboutLinkTitle && config.aboutLinkTarget) {
@@ -109,6 +114,14 @@ function partsPhrases(locale: string): PartProperties['phrases'] {
       key: 'nameSearch.threeOrLessText',
       locale
     }),
+    xAxis: localize({
+      key: 'nameSearch.graph.xaxis',
+      locale
+    }),
+    graphHeader: localize({
+      key: 'nameSearch.graph.header',
+      locale
+    }),
     women: localize({
       key: 'women',
       locale
@@ -165,6 +178,8 @@ interface PartProperties {
     errorMessage: string;
     networkErrorMessage: string;
     threeOrLessText: string;
+    xAxis: string;
+    graphHeader: string;
     women: string;
     men: string;
     types: {

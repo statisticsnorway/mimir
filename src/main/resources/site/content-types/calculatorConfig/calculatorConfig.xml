@@ -64,5 +64,22 @@
                 </input>
             </items>
         </field-set>
+        <field-set>
+        <label>
+            Datakilde for graf i navnesøket
+        </label>
+            <items>
+                <input name="nameSearchGraphData" type="ContentSelector">
+                    <label>PX-API spørring for historiske navnedata</label>
+                    <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <allowContentType>genericDataImport</allowContentType>
+                        <treeMode>true</treeMode>
+                        <showStatus>true</showStatus>
+                        <hideToggleIcon>false</hideToggleIcon>
+                    </config>
+                </input>
+            </items>
+        </field-set>
     </form>
 </content-type>

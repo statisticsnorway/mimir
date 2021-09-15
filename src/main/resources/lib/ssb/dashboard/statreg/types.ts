@@ -51,6 +51,8 @@ export type KontaktNavnType = KontaktNavn | '' | undefined;
 export interface ReleasesInListing {
     id: string;
     publishTime: string;
+    periodFrom: string;
+    periodTo: string;
 }
 
 export interface ReleaseDatesVariant {

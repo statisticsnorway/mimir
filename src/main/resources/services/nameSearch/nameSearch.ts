@@ -1,10 +1,27 @@
 import { HttpRequestParams, HttpResponse } from 'enonic-types/http'
 import { Request, Response } from 'enonic-types/controller'
+import { Dataset } from '../../lib/types/jsonstat-toolkit'
+import { Content } from 'enonic-types/content'
+import { CalculatorConfig } from '../../site/content-types/calculatorConfig/calculatorConfig'
+import { DatasetRepoNode } from '../../lib/ssb/repo/dataset'
+
+const {
+  getCalculatorConfig, getNameSearchGraphData
+} = __non_webpack_require__('/lib/ssb/dataset/calculator')
+
+/* eslint-disable new-cap */
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// @ts-ignore
+import JSONstat from 'jsonstat-toolkit/import.mjs'
 
 import validator from 'validator'
 const {
   request
 } = __non_webpack_require__('/lib/http-client')
+const {
+  isEnabled
+} = __non_webpack_require__('/lib/featureToggle')
+
 
 export function get(req: Request): Response {
   if (!req.params.name) {
@@ -56,9 +73,52 @@ export function get(req: Request): Response {
 }
 
 function prepareResult(result: string, name: string): string {
-  const obj: {originalName: string} = JSON.parse(result)
+  const nameSearchGraphEnabled: boolean = isEnabled('name-graph', true, 'ssb')
+  const obj: ResultType = JSON.parse(result)
   obj.originalName = name
+  obj.nameGraph = nameSearchGraphEnabled ? prepareGraph(name) : []
   return JSON.stringify(obj)
+}
+
+function prepareGraph(name: string): Array<NameGraph> {
+  const config: Content<CalculatorConfig> | undefined = getCalculatorConfig()
+
+  const result: Array<NameGraph> = []
+  const bankSaved: DatasetRepoNode<object | JSONstat> | null = config ? getNameSearchGraphData(config) : null
+
+  try {
+    const labels: Keyable = bankSaved?.data.dimension.Fornavn.category.label
+
+    name.split(' ').forEach((n) => {
+      const preparedName: string = n.charAt(0) + n.slice(1).toLowerCase()
+      const nameCode: string | undefined = getKeyByValue(labels, preparedName)
+
+      if (nameCode) {
+        const dataset: KeyableNumberArray = JSONstat(bankSaved?.data).Dataset(0).Dice({
+          'Fornavn': [nameCode]
+        },
+        {
+          clone: true
+        })
+        result.push(
+          {
+            name: preparedName,
+            data: dataset.value
+          }
+        )
+      }
+    }
+    )
+    return result
+  } catch (error) {
+    log.error(error)
+    return result
+  }
+}
+
+
+function getKeyByValue(object: Keyable, value: string): string | undefined {
+  return Object.keys(object).find((key) => object[key] === value)
 }
 
 
@@ -73,7 +133,7 @@ function pad(word: string): string {
 
 function sanitizeQuery(name: string): string {
   const approved: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ '
-  return validator.whitelist(replaceCharacters(name.toUpperCase()), approved )
+  return validator.whitelist(replaceCharacters(name.toUpperCase()), approved)
 }
 
 function replaceCharacters(name: string): string {
@@ -85,3 +145,27 @@ function replaceCharacters(name: string): string {
     .replace('Ü', 'Y')
     .replace('Ö', 'Ø')
 }
+
+interface ResultType {
+  originalName: string;
+  nameGraph?: Array<NameGraph>;
+}
+
+interface NameGraph {
+  name: string;
+  data: Array<number>;
+}
+
+interface NameData {
+  fornavn: Dataset | null;
+  tid: Dataset | null;
+}
+
+interface Keyable {
+  [key: string]: string;
+}
+
+interface KeyableNumberArray {
+  [key: string]: Array<number>;
+}
+

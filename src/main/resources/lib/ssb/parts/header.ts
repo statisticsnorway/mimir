@@ -47,6 +47,14 @@ export function getHeaderContent(language: Language): HeaderContent | undefined 
         key: 'skipToContent',
         locale: language.code
       }),
+      closeText: localize({
+        key: 'close',
+        locale: language.code
+      }),
+      menuText: localize({
+        key: 'menu',
+        locale: language.code
+      }),
       mainNavigation: headerContent.data.menuContentId ? createMenuTree(headerContent.data.menuContentId) : [],
       topLinks: headerContent.data.globalLinks && headerContent.data.globalLinks.length > 0 ? parseTopLinks(headerContent.data.globalLinks) : undefined
     }
@@ -62,6 +70,8 @@ export interface HeaderContent {
     mainNavigation?: Array<MenuItem>;
     topLinks?: Array<Link>;
     skipToContentText: string;
+    closeText: string;
+    menuText: string;
 }
 
 export interface HeaderLib {

@@ -4,6 +4,9 @@ import PropTypes from 'prop-types'
 import { Col, Container, Row, Form } from 'react-bootstrap'
 import axios from 'axios'
 import { X } from 'react-feather'
+import Highcharts from 'highcharts'
+import HighchartsReact from 'highcharts-react-official'
+
 
 /* TODO
 - Etternavn må få rett visning av beste-treff
@@ -111,6 +114,7 @@ function NameSearch(props) {
           </Row>
           { result.response && renderMainResult(result.response.docs) }
           { result.response && renderSubResult(result.response.docs) }
+          {!!result.nameGraph.length && renderGraphs(searchedTerm)}
           <Row>
             <Col className="md-6">
               <Button className="close-button" onClick={() => closeResult()} type="button"> <X size="18"/> Lukk</Button>
@@ -210,6 +214,46 @@ function NameSearch(props) {
     return !invalidCharacters
   }
 
+  function renderGraphs(nameForRender) {
+    const options = {
+      chart: {
+        type: 'spline',
+        height: '75%'
+      },
+      title: {
+        align: 'left',
+        text: props.phrases.graphHeader + ' ' + nameForRender,
+        x: 20
+      },
+      yAxis: {
+        title: {
+          text: props.phrases.xAxis
+        }
+      },
+      plotOptions: {
+        series: {
+          marker: {
+            enabled: false
+          },
+          pointStart: 1945 // Magic number: Name data starts in the year 1945 and we try to get all the years since.
+        }
+      },
+      series: result.nameGraph
+    }
+    return (
+      <Row className='pt-4 px-0 mx-0'>
+        <Col>
+          <div>
+            <HighchartsReact
+              highcharts={Highcharts}
+              options={options}
+            />
+          </div>
+        </Col>
+      </Row>
+    )
+  }
+
   return (
     <section className="name-search container-fluid p-0">
       <Container className="name-search-input">
@@ -276,6 +320,8 @@ NameSearch.propTypes = {
     errorMessage: PropTypes.string,
     networkErrorMessage: PropTypes.string,
     threeOrLessText: PropTypes.string,
+    xAxis: PropTypes.string,
+    graphHeader: PropTypes.string,
     women: PropTypes.string,
     men: PropTypes.string,
     types: PropTypes.shape({
@@ -286,7 +332,8 @@ NameSearch.propTypes = {
       onlygivenandfamily: PropTypes.string,
       firstgiven: PropTypes.string
     })
-  })
+  }),
+  graphData: PropTypes.arrayOf(PropTypes.string)
 }
 
 export default (props) => <NameSearch {...props} />
