@@ -25,7 +25,7 @@ const {
   getMainSubjects
 } = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
 const {
-  getReleaseDatesByVariants, getStatisticByIdFromRepo
+  getReleaseDatesByVariants, getStatisticByIdFromRepo, getStatisticByShortNameFromRepo
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   getMunicipality
@@ -264,8 +264,10 @@ exports.get = function(req) {
   const statbankFane = (req.params.xpframe === 'statbank')
   const baseUrl = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
 
-  // Fjerner /ssb fra starten av path
-  const pageUrl = baseUrl + page._path.substr(4)
+  const filteredStatistics = statbankFane && req.params.shortname && getStatisticByShortNameFromRepo(req.params.shortname)
+  const statbankStatisticsUrl = filteredStatistics ? `${baseUrl}/${req.params.shortname}` : baseUrl + page._path.substr(4)
+  const statbankStatisticsTitle = filteredStatistics ? filteredStatistics.name : page.displayName
+
   const pageLanguage = page.language ? page.language : 'nb'
   const statbankHelpLink = getSiteConfig().statbankHelpLink
 
@@ -300,7 +302,8 @@ exports.get = function(req) {
     statbankHelpLink,
     statbankFrontPage,
     statbankMainFigures,
-    pageUrl,
+    statbankStatisticsUrl,
+    statbankStatisticsTitle,
     GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null,
     headerBody: header ? header.body : undefined,
     footerBody: footer ? footer.body : undefined,
