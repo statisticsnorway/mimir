@@ -22,8 +22,6 @@ const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
 
-const nameSearchGraphEnabled: boolean = isEnabled('name-graph', true, 'ssb')
-
 
 export function get(req: Request): Response {
   if (!req.params.name) {
@@ -75,6 +73,7 @@ export function get(req: Request): Response {
 }
 
 function prepareResult(result: string, name: string): string {
+  const nameSearchGraphEnabled: boolean = isEnabled('name-graph', true, 'ssb')
   const obj: ResultType = JSON.parse(result)
   obj.originalName = name
   obj.nameGraph = nameSearchGraphEnabled ? prepareGraph(name) : []

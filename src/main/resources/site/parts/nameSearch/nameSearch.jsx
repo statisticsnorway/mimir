@@ -217,12 +217,13 @@ function NameSearch(props) {
   function renderGraphs(nameForRender) {
     const options = {
       chart: {
-        type: 'spline'
+        type: 'spline',
+        height: '75%'
       },
       title: {
         align: 'left',
         text: props.phrases.graphHeader + ' ' + nameForRender,
-        x: 50
+        x: 20
       },
       yAxis: {
         title: {
@@ -240,7 +241,7 @@ function NameSearch(props) {
       series: result.nameGraph
     }
     return (
-      <Row className='pt-4'>
+      <Row className='pt-4 px-0 mx-0'>
         <Col>
           <div>
             <HighchartsReact
