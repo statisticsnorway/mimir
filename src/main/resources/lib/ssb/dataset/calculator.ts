@@ -80,15 +80,15 @@ export function getBkibolDatasetBoligblokk(config: Content<CalculatorConfig>): D
   return bkibolDatasetBoligblokkRepo ? JSONstat(bkibolDatasetBoligblokkRepo.data).Dataset('dataset') : null
 }
 
-export function getNameSearchGraphData(config: Content<CalculatorConfig>): DatasetRepoNode<JSONstatType>  | null {
+export function getNameSearchGraphData(config: Content<CalculatorConfig>): DatasetRepoNode<JSONstatType> | null {
   const nameSearchGraphData: Content<GenericDataImport & DataSource> | null = config?.data.nameSearchGraphData ? getContent({
     key: config.data.nameSearchGraphData
   }) : null
 
-  const bkibolDatasetBoligblokkRepo: DatasetRepoNode<JSONstatType> | null = nameSearchGraphData ?
+  const nameSearchGraphRepo: DatasetRepoNode<JSONstatType> | null = nameSearchGraphData ?
       datasetOrUndefined(nameSearchGraphData) as DatasetRepoNode<JSONstatType> | null : null
 
-  return bkibolDatasetBoligblokkRepo // ? JSONstat(bkibolDatasetBoligblokkRepo.data).Dataset('dataset') : null
+  return nameSearchGraphRepo
 }
 
 export function isChronological(startYear: string, startMonth: string, endYear: string, endMonth: string): boolean {
@@ -117,7 +117,7 @@ export interface CalculatorLib {
   getPifDataset: (config: Content<CalculatorConfig>) => Dataset | null;
   getBkibolDatasetEnebolig: (config: Content<CalculatorConfig>) => Dataset | null;
   getBkibolDatasetBoligblokk: (config: Content<CalculatorConfig>) => Dataset | null;
-  getNameSearchGraphData: (config: Content<CalculatorConfig>) => DatasetRepoNode<JSONstatType>  | null;
+  getNameSearchGraphData: (config: Content<CalculatorConfig>) => DatasetRepoNode<JSONstatType> | null;
   isChronological: (startYear: string, startMonth: string, endYear: string, endMonth: string) => boolean;
   getChangeValue: (startIndex: number, endIndex: number, chronological: boolean) => number;
 }
