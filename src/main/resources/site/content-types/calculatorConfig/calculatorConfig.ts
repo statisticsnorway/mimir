@@ -24,4 +24,9 @@ export interface CalculatorConfig {
    * Kilde boligblokk
    */
   bkibolSourceBoligblokk?: string;
+
+  /**
+   * PX-API spørring for historiske navnedata
+   */
+  nameSearchGraphData?: string;
 }
