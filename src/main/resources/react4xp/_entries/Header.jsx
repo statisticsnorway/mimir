@@ -46,10 +46,13 @@ class Header extends React.Component {
   }
 
   menuButtonStatus() {
+    const {
+      closeText, menuText
+    } = this.props
     if (this.state.showMainMenuOnMobile) {
-      return (<span>Lukk <X /></span> )
+      return (<span>{closeText} <X /></span> )
     } else {
-      return (<span>Meny <Menu/></span>)
+      return (<span>{menuText} <Menu/></span>)
     }
   }
   languageLinks() {
@@ -190,7 +193,9 @@ Header.propTypes = {
       })
     )
   }),
-  skipToContentText: PropTypes.string
+  skipToContentText: PropTypes.string,
+  closeText: PropTypes.string,
+  menuText: PropTypes.string
 }
 
 export default (props) => <Header {...props} />
