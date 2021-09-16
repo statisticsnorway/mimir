@@ -12,7 +12,7 @@ const {
   getContent
 } = __non_webpack_require__('/lib/xp/portal')
 
-function addBreadcrumbs(page: Content, visitedPage: Content, breadcrumbs: Array<Breadcrumbs> = []): Array<Breadcrumbs> {
+function addBreadcrumbs(page: Content, visitedPage: Content, breadcrumbs: Breadcrumbs = []): Breadcrumbs {
   if (page.type === 'portal:site') {
     breadcrumbs.unshift({
       text: getPhrases(visitedPage) ? getPhrases(visitedPage).home : 'Hjem',
@@ -38,8 +38,8 @@ function addBreadcrumbs(page: Content, visitedPage: Content, breadcrumbs: Array<
   return breadcrumbs
 }
 
-export function getBreadcrumbs(page: Content, municipality: MunicipalityWithCounty | undefined): Array<Breadcrumbs> {
-  const breadcrumbs: Array<Breadcrumbs> = addBreadcrumbs(page, page)
+export function getBreadcrumbs(page: Content, municipality: MunicipalityWithCounty | undefined): Breadcrumbs {
+  const breadcrumbs: Breadcrumbs = addBreadcrumbs(page, page)
   if (getContent().language == 'en') {
     breadcrumbs.shift()
     breadcrumbs[0].text = 'Home'
@@ -56,11 +56,12 @@ export function getBreadcrumbs(page: Content, municipality: MunicipalityWithCoun
   return breadcrumbs
 }
 
-interface Breadcrumbs {
+interface BreadcrumbsData {
     text: string;
     link?: string;
 }
 
+export type Breadcrumbs = Array<BreadcrumbsData>
 export interface BreadcrumbsUtilsLib {
-  getBreadcrumbs: (page: Content, municipality: MunicipalityWithCounty | undefined) => Array<Breadcrumbs>;
+  getBreadcrumbs: (page: Content, municipality: MunicipalityWithCounty | undefined) => Breadcrumbs;
 }

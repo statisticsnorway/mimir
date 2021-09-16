@@ -30,7 +30,7 @@ interface React4xpRenderBodyOptions {
     clientRender?: boolean;
 }
 
-interface React4xpPageContributionOptions {
+export interface React4xpPageContributionOptions {
     pageContributions?: React4xpPageContributionOptions;
-    clientRender: boolean;
+    clientRender?: boolean;
 }
