@@ -85,30 +85,10 @@ exports.get = function(req: Request): React4xpResponse | Response {
   const page: DefaultPage = getContent()
   const pageConfig: DefaultPageConfig = page.page.config
 
-  const isFragment: boolean = page.type === 'portal:fragment'
-  let regions: Regions = {}
-  let configRegions: ExtendedPage['config']['regions'] = []
-  if (isFragment) {
-    regions = page.fragment && page.fragment.regions ? page.fragment.regions : {}
-  } else {
-    const pageData: ExtendedPage = page.page
-    if (pageData) {
-      regions = pageData.regions ? pageData.regions : {}
-      configRegions = pageData.config && pageData.config.regions ? forceArray(pageData.config.regions) : []
-    }
-  }
-  configRegions.forEach((configRegion) => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-    // @ts-ignore
-    configRegion.components = regions[configRegion.region] ? forceArray(regions[configRegion.region].components) : []
-  })
-
-  const mainRegionData: Regions['components'] | undefined = regions && regions.main && regions.main.components.length > 0 ? regions.main.components : undefined
   const ingress: string | undefined = page.data.ingress ? processHtml({
     value: page.data.ingress.replace(/&nbsp;/g, ' ')
   }) : undefined
   const showIngress: string | boolean | undefined = ingress && page.type === 'mimir:page'
-  const pageType: string = (pageConfig).pageType ? (pageConfig).pageType : 'default'
 
   // Create preview if available
   let preview: React4xpResponse | Response | undefined
@@ -127,75 +107,8 @@ exports.get = function(req: Request): React4xpResponse | Response {
     }
   }
 
-  const language: Language | {code: string} = getLanguage(page)
-  let municipality: MunicipalityWithCounty | undefined
-  if (req.params.selfRequest) {
-    municipality = getMunicipality(req)
-  }
-
-  let municipalPageType: string | undefined
-  let addMetaInfoSearch: boolean = true
-  let metaInfoSearchId: string | undefined = page._id
-  let metaInfoSearchContentType: string | undefined = page._name
-  let metaInfoSearchGroup: string | undefined = page._id
-  let metaInfoSearchKeywords: string | undefined
-  let metaInfoDescription: string | undefined
-  let metaInfoSearchPublishFrom: string | undefined = page.publish && page.publish.from
-  let metaInfoMainSubject: string | undefined
-
-  if (pageType === 'municipality') {
-    if (page._path.includes('/kommunefakta/')) {
-      municipalPageType = 'kommunefakta'
-    }
-    if (page._path.includes('/kommuneareal/')) {
-      municipalPageType = 'kommuneareal'
-    }
-    if (page._path.includes('/barn-og-unge/')) {
-      municipalPageType = 'barn-og-unge'
-    }
-    metaInfoSearchContentType = 'kommunefakta'
-    metaInfoSearchKeywords = 'kommune, kommuneprofil',
-    metaInfoDescription = (getContent() as Content<Content, object, SEO>).x['com-enonic-app-metafields']['meta-data'].seoDescription
-  }
-
-  if (pageType === 'municipality' && municipality) {
-    addMetaInfoSearch = true
-    metaInfoSearchId = metaInfoSearchId + '_' + municipality.code
-    metaInfoSearchGroup = metaInfoSearchGroup + '_' + municipality.code
-    metaInfoSearchKeywords = municipality.displayName + ' kommune'
-  }
-
-  if (pageType === 'factPage') {
-    metaInfoSearchContentType = 'faktaside'
-  }
-
-  // Metainfo statistikk
-  if (page.type === `${app.name}:statistics`) {
-    const statistic: StatisticInListing | undefined = getStatisticByIdFromRepo(page.data.statistic)
-    if (statistic) {
-      const variants: Array<VariantInListing | undefined> = forceArray(statistic.variants)
-      const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(variants as Array<VariantInListing>)
-      const previousRelease: string = releaseDates.previousRelease[0]
-      metaInfoSearchPublishFrom = previousRelease ? new Date(previousRelease).toISOString() : new Date().toISOString()
-    }
-    metaInfoSearchContentType = 'statistikk'
-    metaInfoDescription = (getContent() as Content<Content, object, SEO>).x['com-enonic-app-metafields']['meta-data'].seoDescription || ''
-    metaInfoSearchKeywords = page.data.keywords ? page.data.keywords : ''
-  }
-
-  // Metainfo artikkel
-  if (page.type === `${app.name}:article`) {
-    const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, language.code === 'en' ? 'en' : 'nb' )
-
-    allMainSubjects.forEach((mainSubject) => {
-      if (page._path.startsWith(mainSubject.path)) {
-        metaInfoMainSubject = mainSubject.title
-      }
-    })
-
-    metaInfoSearchContentType = 'artikkel'
-  }
-
+  const isFragment: boolean = page.type === 'portal:fragment'
+  const regions: RegionsContent = prepareRegions(isFragment, page)
   let config: DefaultPageConfig | undefined
   if (!isFragment && pageConfig) {
     config = pageConfig
@@ -225,6 +138,7 @@ exports.get = function(req: Request): React4xpResponse | Response {
     pageContributions = preview.pageContributions
   }
 
+  const language: Language | {code: string} = getLanguage(page)
   const menuCacheLanguage: string = language.code === 'en' ? 'en' : 'nb'
   const headerContent: MenuContent | unknown = fromMenuCache(req, `header_${menuCacheLanguage}`, () => {
     return getHeaderContent(language as Language)
@@ -274,6 +188,26 @@ exports.get = function(req: Request): React4xpResponse | Response {
     })
   }
 
+  let municipality: MunicipalityWithCounty | undefined
+  if (req.params.selfRequest) {
+    municipality = getMunicipality(req)
+  }
+
+  const pageType: string = pageConfig.pageType ? pageConfig.pageType : 'default'
+  let municipalPageType: string | undefined
+  if (pageType === 'municipality') {
+    if (page._path.includes('/kommunefakta/')) {
+      municipalPageType = 'kommunefakta'
+    }
+    if (page._path.includes('/kommuneareal/')) {
+      municipalPageType = 'kommuneareal'
+    }
+    if (page._path.includes('/barn-og-unge/')) {
+      municipalPageType = 'barn-og-unge'
+    }
+  }
+
+  const metaInfo: MetaInfoData = parseMetaInfoData(municipality, pageType, page, language, req)
   const breadcrumbs: Breadcrumbs = getBreadcrumbs(page, municipality)
 
   const breadcrumbComponent: React4xpObject = new React4xp('Breadcrumb')
@@ -286,35 +220,12 @@ exports.get = function(req: Request): React4xpResponse | Response {
   const hideBreadcrumb: boolean = !!(pageConfig).hide_breadcrumb
 
   const statbankFane: boolean = (req.params.xpframe === 'statbank')
-  const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
-
-  const filteredStatistics: StatisticInListing | undefined = statbankFane && req.params.shortname ?
-    getStatisticByShortNameFromRepo(req.params.shortname) : undefined
-  const statbankStatisticsUrl: string = filteredStatistics ? `${baseUrl}/${req.params.shortname}` : baseUrl + page._path.substr(4)
-  const statbankStatisticsTitle: string = filteredStatistics ? filteredStatistics.name : page.displayName
-
-  const pageLanguage: string = page.language ? page.language : 'nb'
-  const siteConfig: SiteConfig = getSiteConfig()
-  const statbankHelpLink: string = siteConfig.statbankHelpLink
-
-  const statbankHelpText: string = localize({
-    key: 'statbankHelpText',
-    locale: pageLanguage === 'nb' ? 'no' : pageLanguage
-  })
-  const statbankMainFigures: string = localize({
-    key: 'statbankMainFigures',
-    locale: pageLanguage === 'nb' ? 'no' : pageLanguage
-  })
-  const statbankFrontPage: string = localize({
-    key: 'statbankFrontPage',
-    locale: pageLanguage === 'nb' ? 'no' : pageLanguage
-  })
+  const statBankContent: StatbankFrameData = parseStatbankFrameContent(statbankFane, req, page)
 
   const model: DefaultModel = {
     pageTitle: 'SSB', // not really used on normal pages because of SEO app (404 still uses this)
     page,
-    mainRegionData,
-    configRegions,
+    ...regions,
     ingress,
     showIngress,
     preview,
@@ -324,23 +235,11 @@ exports.get = function(req: Request): React4xpResponse | Response {
     ieUrl,
     language,
     statbankWeb: statbankFane,
-    statbankHelpText,
-    statbankHelpLink,
-    statbankFrontPage,
-    statbankMainFigures,
-    statbankStatisticsUrl,
-    statbankStatisticsTitle,
+    ...statBankContent,
     GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null,
     headerBody: header ? header.body : undefined,
     footerBody: footer ? (footer as MenuContent).body : undefined,
-    addMetaInfoSearch,
-    metaInfoSearchId,
-    metaInfoSearchGroup,
-    metaInfoSearchContentType,
-    metaInfoSearchKeywords,
-    metaInfoDescription,
-    metaInfoSearchPublishFrom,
-    metaInfoMainSubject,
+    ...metaInfo,
     breadcrumbsReactId: breadcrumbComponent.react4xpId,
     hideBreadcrumb
   }
@@ -381,6 +280,135 @@ exports.get = function(req: Request): React4xpResponse | Response {
   } as Response
 }
 
+function prepareRegions(isFragment: boolean, page: DefaultPage): RegionsContent {
+  let regions: Regions = {}
+  let configRegions: ExtendedPage['config']['regions'] = []
+  if (isFragment) {
+    regions = page.fragment && page.fragment.regions ? page.fragment.regions : {}
+  } else {
+    const pageData: ExtendedPage = page.page
+    if (pageData) {
+      regions = pageData.regions ? pageData.regions : {}
+      configRegions = pageData.config && pageData.config.regions ? forceArray(pageData.config.regions) : []
+    }
+  }
+  configRegions.forEach((configRegion) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
+    configRegion.components = regions[configRegion.region] ? forceArray(regions[configRegion.region].components) : []
+  })
+
+  const mainRegionData: Regions['components'] | undefined = regions && regions.main && regions.main.components.length > 0 ? regions.main.components : undefined
+
+  return {
+    mainRegionData,
+    configRegions
+  }
+}
+
+function parseMetaInfoData(
+  municipality: MunicipalityWithCounty | undefined,
+  pageType: string,
+  page: DefaultPage,
+  language: Language | {code: string},
+  req: Request): MetaInfoData {
+  let addMetaInfoSearch: boolean = true
+  let metaInfoSearchId: string | undefined = page._id
+  let metaInfoSearchContentType: string | undefined = page._name
+  let metaInfoSearchGroup: string | undefined = page._id
+  let metaInfoSearchKeywords: string | undefined
+  let metaInfoDescription: string | undefined
+  let metaInfoSearchPublishFrom: string | undefined = page.publish && page.publish.from
+  let metaInfoMainSubject: string | undefined
+
+  if (pageType === 'municipality') {
+    metaInfoSearchContentType = 'kommunefakta'
+    metaInfoSearchKeywords = 'kommune, kommuneprofil',
+    metaInfoDescription = (getContent() as Content<Content, object, SEO>).x['com-enonic-app-metafields']['meta-data'].seoDescription
+  }
+
+  if (pageType === 'municipality' && municipality) {
+    addMetaInfoSearch = true
+    metaInfoSearchId = metaInfoSearchId + '_' + municipality.code
+    metaInfoSearchGroup = metaInfoSearchGroup + '_' + municipality.code
+    metaInfoSearchKeywords = municipality.displayName + ' kommune'
+  }
+
+  if (pageType === 'factPage') {
+    metaInfoSearchContentType = 'faktaside'
+  }
+
+  if (page.type === `${app.name}:statistics`) {
+    const statistic: StatisticInListing | undefined = getStatisticByIdFromRepo(page.data.statistic)
+    if (statistic) {
+      const variants: Array<VariantInListing | undefined> = forceArray(statistic.variants)
+      const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(variants as Array<VariantInListing>)
+      const previousRelease: string = releaseDates.previousRelease[0]
+      metaInfoSearchPublishFrom = previousRelease ? new Date(previousRelease).toISOString() : new Date().toISOString()
+    }
+    metaInfoSearchContentType = 'statistikk'
+    metaInfoDescription = (getContent() as Content<Content, object, SEO>).x['com-enonic-app-metafields']['meta-data'].seoDescription || ''
+    metaInfoSearchKeywords = page.data.keywords ? page.data.keywords : ''
+  }
+
+  if (page.type === `${app.name}:article`) {
+    const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, language.code === 'en' ? 'en' : 'nb' )
+
+    allMainSubjects.forEach((mainSubject) => {
+      if (page._path.startsWith(mainSubject.path)) {
+        metaInfoMainSubject = mainSubject.title
+      }
+    })
+    metaInfoSearchContentType = 'artikkel'
+  }
+
+  return {
+    addMetaInfoSearch,
+    metaInfoSearchId,
+    metaInfoSearchGroup,
+    metaInfoSearchContentType,
+    metaInfoSearchKeywords,
+    metaInfoDescription,
+    metaInfoSearchPublishFrom,
+    metaInfoMainSubject
+  }
+}
+
+function parseStatbankFrameContent(statbankFane: boolean, req: Request, page: DefaultPage): StatbankFrameData {
+  const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
+
+  const filteredStatistics: StatisticInListing | undefined = statbankFane && req.params.shortname ?
+    getStatisticByShortNameFromRepo(req.params.shortname) : undefined
+  const statbankStatisticsUrl: string = filteredStatistics ? `${baseUrl}/${req.params.shortname}` : baseUrl + page._path.substr(4)
+  const statbankStatisticsTitle: string = filteredStatistics ? filteredStatistics.name : page.displayName
+
+  const pageLanguage: string = page.language ? page.language : 'nb'
+  const siteConfig: SiteConfig = getSiteConfig()
+  const statbankHelpLink: string = siteConfig.statbankHelpLink
+
+  const statbankHelpText: string = localize({
+    key: 'statbankHelpText',
+    locale: pageLanguage === 'nb' ? 'no' : pageLanguage
+  })
+  const statbankMainFigures: string = localize({
+    key: 'statbankMainFigures',
+    locale: pageLanguage === 'nb' ? 'no' : pageLanguage
+  })
+  const statbankFrontPage: string = localize({
+    key: 'statbankFrontPage',
+    locale: pageLanguage === 'nb' ? 'no' : pageLanguage
+  })
+
+  return {
+    statbankHelpText,
+    statbankHelpLink,
+    statbankFrontPage,
+    statbankMainFigures,
+    statbankStatisticsUrl,
+    statbankStatisticsTitle
+  }
+}
+
 function addAlerts(alerts: AlertType, body: string, pageContributions: React4xpPageContributionOptions | undefined): React4xpResponse {
   const alertComponent: React4xpObject = new React4xp('Alerts')
     .setProps({
@@ -393,7 +421,6 @@ function addAlerts(alerts: AlertType, body: string, pageContributions: React4xpP
     }),
     pageContributions: alertComponent.renderPageContributions({
       pageContributions
-
     })
   }
 }
@@ -415,12 +442,6 @@ interface ExtendedPage extends Page<object>{
   config: DefaultPageConfig;
 }
 
-interface RegionData {
-  path: string;
-  type: string;
-  descriptor: string;
-}
-
 interface Regions {
   components?: object;
   region?: RegionData;
@@ -428,7 +449,11 @@ interface Regions {
     components: Array<RegionData>;
   };
 }
-
+interface RegionData {
+  path: string;
+  type: string;
+  descriptor: string;
+}
 interface Controller {
   preview: (req: Request, id: string) => React4xpResponse | Response;
 }
@@ -438,11 +463,34 @@ interface MenuContent {
   component: React4xpObject;
 }
 
+interface RegionsContent {
+  mainRegionData: Regions | undefined;
+  configRegions: ExtendedPage['config']['regions'];
+}
+
+interface MetaInfoData {
+  addMetaInfoSearch: boolean;
+  metaInfoSearchId: string | undefined;
+  metaInfoSearchGroup: string | undefined;
+  metaInfoSearchContentType: string | undefined;
+  metaInfoSearchKeywords: string | undefined;
+  metaInfoDescription: string | undefined;
+  metaInfoSearchPublishFrom: string | undefined;
+  metaInfoMainSubject: string | undefined;
+}
+
+interface StatbankFrameData {
+  statbankHelpText: string;
+  statbankHelpLink: string;
+  statbankFrontPage: string;
+  statbankMainFigures: string;
+  statbankStatisticsUrl: string;
+  statbankStatisticsTitle: string;
+}
+
 interface DefaultModel {
   pageTitle: string;
   page: Content;
-  mainRegionData: Regions | undefined;
-  configRegions: ExtendedPage['config']['regions'];
   ingress: string | undefined;
   showIngress: string | boolean | undefined;
   preview: React4xpResponse | Response | undefined;
@@ -452,23 +500,9 @@ interface DefaultModel {
   ieUrl: string;
   language: Language | {code: string};
   statbankWeb: boolean;
-  statbankHelpText: string;
-  statbankHelpLink: string;
-  statbankFrontPage: string;
-  statbankMainFigures: string;
-  statbankStatisticsUrl: string;
-  statbankStatisticsTitle: string;
   GA_TRACKING_ID: string | null;
   headerBody: string | undefined;
   footerBody: string| undefined;
-  addMetaInfoSearch: boolean;
-  metaInfoSearchId: string | undefined;
-  metaInfoSearchGroup: string | undefined;
-  metaInfoSearchContentType: string | undefined;
-  metaInfoSearchKeywords: string | undefined;
-  metaInfoDescription: string | undefined;
-  metaInfoSearchPublishFrom: string | undefined;
-  metaInfoMainSubject: string | undefined;
   breadcrumbsReactId: string | undefined;
   hideBreadcrumb: boolean;
 }
