@@ -262,7 +262,7 @@ exports.get = function(req: Request): React4xpResponse | Response {
   } as MunicipalityOptions : {
     pageType: page.type,
     pageTypeId: page._id,
-    statbankWeb: statbankFane
+    statbankWeb: statbankFane || page._path === '/ssb/statbank'
   } as InformationAlertOptions
 
   const alerts: AlertType = alertsForContext(pageConfig, alertOptions)
