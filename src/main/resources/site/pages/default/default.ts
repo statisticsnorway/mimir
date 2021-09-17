@@ -8,7 +8,7 @@ import { AlertType, InformationAlertOptions, MunicipalityOptions } from '../../.
 import { Breadcrumbs } from '../../../lib/ssb/utils/breadcrumbsUtils'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { Language } from '../../../lib/types/language'
-import { React4xp, React4xpObject, React4xpPageContributionOptions, React4xpResponse } from '../../../lib/types/react4xp'
+import { React4xp, React4xpObject, React4xpPageContributionOptions } from '../../../lib/types/react4xp'
 import { SEO } from '../../../services/news/news'
 import { SiteConfig } from '../../site-config'
 import { DefaultPageConfig } from './default-page-config'
@@ -81,7 +81,7 @@ const previewOverride: object = {
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view: ResourceKey = resolve('default.html')
 
-exports.get = function(req: Request): React4xpResponse | Response {
+exports.get = function(req: Request): Response {
   const page: DefaultPage = getContent()
   const pageConfig: DefaultPageConfig = page.page.config
 
@@ -91,7 +91,7 @@ exports.get = function(req: Request): React4xpResponse | Response {
   const showIngress: string | boolean | undefined = ingress && page.type === 'mimir:page'
 
   // Create preview if available
-  let preview: React4xpResponse | Response | undefined
+  let preview: Response | undefined
   if (partsWithPreview.includes(page.type)) {
     let name: string = page.type.replace(/^.*:/, '')
     // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
@@ -246,7 +246,7 @@ exports.get = function(req: Request): React4xpResponse | Response {
 
   const thymeleafRenderBody: Response['body'] = render(view, model)
 
-  const bodyWithBreadCrumbs: React4xpResponse | string | boolean = !hideBreadcrumb && breadcrumbComponent.renderBody({
+  const bodyWithBreadCrumbs: string | boolean = !hideBreadcrumb && breadcrumbComponent.renderBody({
     body: thymeleafRenderBody
   })
 
@@ -267,7 +267,7 @@ exports.get = function(req: Request): React4xpResponse | Response {
 
   const alerts: AlertType = alertsForContext(pageConfig, alertOptions)
   const body: string = bodyWithBreadCrumbs ? bodyWithBreadCrumbs : thymeleafRenderBody
-  const bodyWithAlerts: React4xpResponse | Response = alerts.length ?
+  const bodyWithAlerts: Response = alerts.length ?
     addAlerts(alerts, body, pageContributions as React4xpPageContributionOptions) :
     {
       body,
@@ -409,7 +409,7 @@ function parseStatbankFrameContent(statbankFane: boolean, req: Request, page: De
   }
 }
 
-function addAlerts(alerts: AlertType, body: string, pageContributions: React4xpPageContributionOptions | undefined): React4xpResponse {
+function addAlerts(alerts: AlertType, body: string, pageContributions: React4xpPageContributionOptions | undefined): Response {
   const alertComponent: React4xpObject = new React4xp('Alerts')
     .setProps({
       alerts
@@ -421,7 +421,7 @@ function addAlerts(alerts: AlertType, body: string, pageContributions: React4xpP
     }),
     pageContributions: alertComponent.renderPageContributions({
       pageContributions
-    })
+    }) as PageContributions | undefined
   }
 }
 
@@ -455,7 +455,7 @@ interface RegionData {
   descriptor: string;
 }
 interface Controller {
-  preview: (req: Request, id: string) => React4xpResponse | Response;
+  preview: (req: Request, id: string) => Response;
 }
 
 interface MenuContent {
@@ -493,7 +493,7 @@ interface DefaultModel {
   page: Content;
   ingress: string | undefined;
   showIngress: string | boolean | undefined;
-  preview: React4xpResponse | Response | undefined;
+  preview: Response | undefined;
   bodyClasses: string;
   stylesUrl: string;
   jsLibsUrl: string;
