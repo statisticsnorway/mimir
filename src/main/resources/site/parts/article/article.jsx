@@ -13,8 +13,8 @@ function Article(props) {
     return (
       <div className="title-ingress-wrapper col-12 col-lg-8 p-0">
         {introTitle && <p className="introTitle">{introTitle}</p>}
-        <Title size={1}>{title}</Title>
-        {ingress && <p className="ingress">{ingress}</p>}
+        <Title size={1} className="searchabletext">{title}</Title>
+        {ingress && <p className="ingress searchabletext">{ingress}</p>}
       </div>
     )
   }
@@ -64,7 +64,7 @@ function Article(props) {
     if (bodyText) {
       return (
         <div className="col-lg-8 p-0">
-          <div className="article-body"
+          <div className="article-body searchabletext"
             dangerouslySetInnerHTML={{
               __html: bodyText
             }}
