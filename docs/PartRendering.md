@@ -2,11 +2,11 @@
 
 ## Server side and client side rendering
 
-Due to a bug in react4xp we had to render all parts on the client side in order for them to work. The bug has now been fixed, and we can properly set up serverside rendering for all parts.
+Due to a bug in react4xp we had to client side render all the parts, as they would behave unpredictably. Most if not all parts would come and go. That issue has been resolved so we can properly set up serverside rendering for all the parts now.
 
 ## Removing clientside rendering
 
-Most of our parts use clientRender when returning body and pageContributions. This needs to be deleted:
+React4xp components are serverside rendered by default, so in order to disable clientside rendering we have to remove the clientRender property in the renderBody and renderPageContributions calls from most of our parts:
 
 ```javascript
 return {
