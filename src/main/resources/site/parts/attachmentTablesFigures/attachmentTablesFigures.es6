@@ -21,6 +21,9 @@ const {
 const {
   datasetOrUndefined
 } = __non_webpack_require__('/lib/ssb/cache/cache')
+const {
+  fromPartCache
+} = __non_webpack_require__('/lib/ssb/cache/partCache')
 
 const tableController = __non_webpack_require__('../table/table')
 const highchartController = __non_webpack_require__('../highchart/highchart')
@@ -39,7 +42,15 @@ exports.preview = (req) => renderPart(req)
 
 const renderPart = (req) => {
   const page = getContent()
+  if (req.mode !== 'edit') {
+    return fromPartCache(req, `${page._id}-attachmentTablesFigures`, () => {
+      return getTablesAndFiguresComponent(page, req)
+    })
+  }
+  return getTablesAndFiguresComponent(page, req)
+}
 
+function getTablesAndFiguresComponent(page, req) {
   const phrases = getPhrases(page)
 
   const title = phrases.attachmentTablesFigures
@@ -86,14 +97,10 @@ const renderPart = (req) => {
     body: render(view, {
       title,
       accordionId: accordionComponent.react4xpId
-    }),
-    clientRender: req.mode !== 'edit'
+    })
   })
 
-  const accordionPageContributions = accordionComponent.renderPageContributions({
-    clientRender: req.mode !== 'edit'
-  })
-
+  const accordionPageContributions = accordionComponent.renderPageContributions()
   const pageContributions = getFinalPageContributions(accordionPageContributions, attachmentTableAndFigureView)
 
   return {
@@ -122,7 +129,6 @@ const getTablesAndFigures = (attachmentTablesAndFigures, req, phrases) => {
         }
       }) : []
 }
-
 
 function getTableReturnObject(content, props, subHeader, index) {
   const datasetFromRepo = datasetOrUndefined(content)
