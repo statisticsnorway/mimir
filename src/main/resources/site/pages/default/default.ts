@@ -376,13 +376,22 @@ function parseMetaInfoData(
 
 function parseStatbankFrameContent(statbankFane: boolean, req: Request, page: DefaultPage): StatbankFrameData {
   const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
+  const pageLanguage: string = page.language ? page.language : 'nb'
 
   const filteredStatistics: StatisticInListing | undefined = statbankFane && req.params.shortname ?
     getStatisticByShortNameFromRepo(req.params.shortname) : undefined
-  const statbankStatisticsUrl: string = filteredStatistics ? `${baseUrl}/${req.params.shortname}` : baseUrl + page._path.substr(4)
-  const statbankStatisticsTitle: string = filteredStatistics ? filteredStatistics.name : page.displayName
+  let statbankStatisticsUrl: string = baseUrl + page._path.substr(4)
+  let statbankStatisticsTitle: string = page.displayName
+  if (filteredStatistics) {
+    if (pageLanguage === 'en') {
+      statbankStatisticsUrl = `${baseUrl}/en/${req.params.shortname}`
+      statbankStatisticsTitle = filteredStatistics.nameEN
+    } else {
+      statbankStatisticsUrl = `${baseUrl}/${req.params.shortname}`
+      statbankStatisticsTitle = filteredStatistics.name
+    }
+  }
 
-  const pageLanguage: string = page.language ? page.language : 'nb'
   const siteConfig: SiteConfig = getSiteConfig()
   const statbankHelpLink: string = siteConfig.statbankHelpLink
 
