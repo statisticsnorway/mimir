@@ -64,6 +64,28 @@ export function calculatePeriod(variant: VariantInListing, language: string, nex
   }
 }
 
+export function calculatePeriodRelease(release: Release, language: string): string {
+  const periodFrom: string = release.periodFrom
+  const periodTo: string = release.periodTo
+
+  switch (release.frequency) {
+  case 'År':
+    return calculateYear(periodFrom, periodTo, language)
+  case 'Halvår':
+    return calcualteHalfYear(periodFrom, language)
+  case 'Termin':
+    return calculateTerm(periodFrom, language)
+  case 'Kvartal':
+    return calculateQuarter(periodFrom, language)
+  case 'Måned':
+    return calculateMonth(periodFrom, language)
+  case 'Uke':
+    return calculateWeek(periodFrom, language)
+  default:
+    return calculateEveryXYear(periodFrom, periodTo, language)
+  }
+}
+
 function calculateEveryXYear(previousFrom: string, previousTo: string, language: string): string {
   const dateFrom: Date = new Date(previousFrom)
   const dateTo: Date = new Date(previousTo)
@@ -267,28 +289,72 @@ export function getReleasesForDay(
   }, [])
 }
 
-export function filterOnComingReleases(stats: Array<StatisticInListing>, count: number, startDay?: string): Array<StatisticInListing> {
-  const releases: Array<StatisticInListing> = []
+export function filterOnComingReleases(releases: Array<Release>, count: number, startDay?: string): Array<Release> {
+  const releaseArray: Array<Release> = []
   const day: Date = startDay ? new Date(startDay) : new Date()
-  for (let i: number = 0; i < count && i < 20; i++) {
+  // log.info('Count: ' + count)
+  for (let i: number = 0; i < count + 1; i++) {
     day.setDate(day.getDate() + 1)
-    const releasesOnThisDay: Array<StatisticInListing> = getReleasesForDay(stats, day, 'nextRelease')
-    if (releasesOnThisDay.length === 0) count++ // if no hits found on this day. add one day
-    releases.push(...releasesOnThisDay)
+    // log.info('Number test: ' + i + ' Dag: ' + day)
+    const releasesOnThisDay: Array<Release> = releases.filter((release: Release) => {
+      return checkReleaseDateToday(release, day)
+    })
+    releaseArray.push(...releasesOnThisDay)
   }
-  return releases
+  return releaseArray
 }
 
 export function checkVariantReleaseDate(variant: VariantInListing, day: Date, property: keyof VariantInListing): boolean {
   const dayFromVariant: string = variant[property] as string
-  if (property === 'previousRelease') {
-    return sameDay(new Date(dayFromVariant), day) || nextReleasedPassed(variant)
+  if (property === 'previousRelease' && nextReleasedPassed(variant)) {
+    return sameDay(new Date(dayFromVariant), day) || sameDay(new Date(variant.nextRelease), day)
   } else {
     return sameDay(new Date(dayFromVariant), day)
   }
 }
 
+export function checkReleaseDateToday(release: Release, day: Date): boolean {
+  const releaseDate: string = release.publishTime
+  return sameDay(new Date(releaseDate), day)
+}
+
 export function prepareRelease(
+  release: Release,
+  language: string): PreparedStatistics | null {
+  if (release) {
+    const preparedVariant: PreparedVariant = formatRelease(release, language)
+
+    const statisticsPagesXP: Content<Statistics, object, SEO> | undefined = query({
+      count: 1,
+      query: `data.statistic LIKE "${release.statisticId}" AND language IN (${language === 'nb' ? '"nb", "nn"' : '"en"'})`,
+      contentTypes: [`${app.name}:statistics`]
+    }).hits[0] as unknown as Content<Statistics, object, SEO>
+    const statisticsPageUrl: string | undefined = statisticsPagesXP ? pageUrl({
+      path: statisticsPagesXP._path
+    }) : undefined
+    const aboutTheStatisticsContent: Content<OmStatistikken> | null = statisticsPagesXP && statisticsPagesXP.data.aboutTheStatistics ? get({
+      key: statisticsPagesXP.data.aboutTheStatistics
+    }) : null
+    const seoDescription: string | undefined = statisticsPagesXP ? statisticsPagesXP.x['com-enonic-app-metafields']['meta-data'].seoDescription : ''
+
+    return {
+      id: release.statisticId,
+      name: language === 'en' ? release.statisticNameEn : release.statisticName,
+      shortName: release.shortName,
+      type: localize({
+        key: 'statistic',
+        locale: language
+      }),
+      mainSubject: getMainSubject(release.shortName, language),
+      variant: preparedVariant,
+      statisticsPageUrl,
+      aboutTheStatisticsDescription: aboutTheStatisticsContent ? aboutTheStatisticsContent.data.ingress : seoDescription
+    }
+  }
+  return null
+}
+
+export function prepareStatisticRelease(
   release: StatisticInListing,
   language: string,
   property: keyof VariantInListing = 'previousRelease'): PreparedStatistics | null {
@@ -375,6 +441,18 @@ function formatVariant(variant: VariantInListing, language: string, property: ke
   }
 }
 
+function formatRelease(release: Release, language: string): PreparedVariant {
+  const date: Date = new Date(release.publishTime)
+  return {
+    id: release.variantId,
+    day: date.getDate(),
+    monthNumber: date.getMonth(),
+    year: date.getFullYear(),
+    frequency: release.frequency,
+    period: calculatePeriodRelease(release, language)
+  }
+}
+
 export function getAllReleases(statisticList: Array<StatisticInListing>): Array<Release> {
   const releases: Array<Release> = []
   statisticList.forEach((statistic: StatisticInListing) => {
@@ -386,7 +464,10 @@ export function getAllReleases(statisticList: Array<StatisticInListing>): Array<
         periodTo: variant.previousTo,
         frequency: variant.frekvens,
         variantId: variant.id,
-        statisticId: statistic.id
+        statisticId: statistic.id,
+        shortName: statistic.shortName,
+        statisticName: statistic.name,
+        statisticNameEn: statistic.nameEN
       })
       const upcomingRelease: Array<ReleasesInListing> = variant.upcomingReleases ? forceArray(variant.upcomingReleases) : []
       upcomingRelease.forEach((upcomingRelease: ReleasesInListing) => {
@@ -396,7 +477,10 @@ export function getAllReleases(statisticList: Array<StatisticInListing>): Array<
           periodTo: upcomingRelease.periodTo,
           frequency: variant.frekvens,
           variantId: variant.id,
-          statisticId: statistic.id
+          statisticId: statistic.id,
+          shortName: statistic.shortName,
+          statisticName: statistic.name,
+          statisticNameEn: statistic.nameEN
         })
       })
     })
@@ -428,11 +512,14 @@ export interface VariantUtilsLib {
   groupStatisticsByDay: (statistics: Array<PreparedStatistics>) => GroupedBy<PreparedStatistics>;
   groupStatisticsByYearMonthAndDay: (releasesPrepped: Array<PreparedStatistics>) => GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>>;
   getReleasesForDay: (statisticList: Array<StatisticInListing>, day: Date, property?: keyof VariantInListing) => Array<StatisticInListing>;
-  prepareRelease: (release: StatisticInListing, locale: string, property?: keyof VariantInListing, statisticsPageUrl?: string) => PreparedStatistics;
-  filterOnComingReleases: (stats: Array<StatisticInListing>, daysInTheFuture: number, startDay?: string) => Array<StatisticInListing>;
+  prepareStatisticRelease: (release: StatisticInListing, locale: string, property?: keyof VariantInListing, statisticsPageUrl?: string) => PreparedStatistics;
+  prepareRelease: (release: Release, locale: string, statisticsPageUrl?: string) => PreparedStatistics;
+  filterOnComingReleases: (stats: Array<Release>, daysInTheFuture: number, startDay?: string) => Array<Release>;
+
   getAllReleases: (statisticList: Array<StatisticInListing>) => Array<Release>;
   getUpcomingReleases: (allReleases: Array<Release>) => Array<Release>;
   getOldReleases: (allReleases: Array<Release>) => Array<Release>;
+
 }
 
 export interface PreparedStatistics {
@@ -463,6 +550,9 @@ export interface Release {
   frequency: string;
   variantId: string;
   statisticId: number;
+  shortName: string;
+  statisticName: string;
+  statisticNameEn: string;
 }
 
 export interface DayReleases {

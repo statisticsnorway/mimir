@@ -164,7 +164,7 @@ function UpcomingReleases(props) {
     } = date
     const statisticsPageUrlText = props.statisticsPageUrlText
 
-    if (type === 'statistic') {
+    if (type === 'statistikk') {
       return (
         <li key={index}>
           <div>

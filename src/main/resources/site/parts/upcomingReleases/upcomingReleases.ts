@@ -3,7 +3,7 @@ import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Content } from 'enonic-types/content'
 import { Component } from 'enonic-types/portal'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
-import { GroupedBy, PreparedStatistics, YearReleases } from '../../../lib/ssb/utils/variantUtils'
+import { GroupedBy, PreparedStatistics, YearReleases, Release } from '../../../lib/ssb/utils/variantUtils'
 import { UpcomingReleasesPartConfig } from './upcomingReleases-part-config'
 import { UpcomingRelease } from '../../content-types/upcomingRelease/upcomingRelease'
 
@@ -24,7 +24,9 @@ const {
   addMonthNames,
   groupStatisticsByYearMonthAndDay,
   prepareRelease,
-  filterOnComingReleases
+  filterOnComingReleases,
+  getAllReleases,
+  getUpcomingReleases
 } = __non_webpack_require__( '/lib/ssb/utils/variantUtils')
 const {
   getAllStatisticsFromRepo
@@ -44,7 +46,6 @@ function renderPart(req: Request): React4xpResponse {
   const component: Component<UpcomingReleasesPartConfig> = getComponent()
   const currentLanguage: string = content.language ? content.language : 'nb'
   const count: number = parseInt(component.config.numberOfDays)
-  const isNotInEditMode: boolean = req.mode !== 'edit'
   const buttonTitle: string = localize({
     key: 'button.showMore',
     locale: currentLanguage
@@ -58,13 +59,15 @@ function renderPart(req: Request): React4xpResponse {
   })
   // Get statistics
   const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
+  const allReleases: Array<Release> = getAllReleases(releases)
+  const upComingReleases: Array<Release> = getUpcomingReleases(allReleases)
 
   // All statistics published today, and fill up with previous releases.
-  const releasesFiltered: Array<StatisticInListing> = filterOnComingReleases(releases, count)
+  const releasesFiltered: Array<Release> = filterOnComingReleases(upComingReleases, count)
 
   // Choose the right variant and prepare the date in a way it works with the groupBy function
-  const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: StatisticInListing) =>
-    prepareRelease(release, currentLanguage, 'nextRelease'))
+  const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: Release) =>
+    prepareRelease(release, currentLanguage))
 
   // group by year, then month, then day
   const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> = groupStatisticsByYearMonthAndDay(releasesPrepped)
@@ -105,9 +108,7 @@ function renderPart(req: Request): React4xpResponse {
     contentReleases
   }
 
-  return React4xp.render('site/parts/upcomingReleases/upcomingReleases', props, req, {
-    clientRender: isNotInEditMode
-  })
+  return React4xp.render('site/parts/upcomingReleases/upcomingReleases', props, req)
 }
 
 /*
