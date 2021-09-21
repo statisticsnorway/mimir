@@ -34,6 +34,9 @@ const {
 const {
   localize
 } = __non_webpack_require__('/lib/xp/i18n')
+const {
+  fromPartCache
+} = __non_webpack_require__('/lib/ssb/cache/partCache')
 
 exports.get = (req: Request): React4xpResponse => {
   return renderPart(req)
@@ -57,23 +60,28 @@ function renderPart(req: Request): React4xpResponse {
   const upcomingReleasesServiceUrl: string = serviceUrl({
     service: 'upcomingReleases'
   })
-  // Get statistics
-  const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
-  const allReleases: Array<Release> = getAllReleases(releases)
-  const upComingReleases: Array<Release> = getUpcomingReleases(allReleases)
 
-  // All statistics published today, and fill up with previous releases.
-  const releasesFiltered: Array<Release> = filterOnComingReleases(upComingReleases, count)
+  const groupedWithMonthNames: Array<YearReleases> = fromPartCache(req, `${content._id}-upcomingReleases`, () => {
+    // Get statistics
+    const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
+    const allReleases: Array<Release> = getAllReleases(releases)
+    const upComingReleases: Array<Release> = getUpcomingReleases(allReleases)
 
-  // Choose the right variant and prepare the date in a way it works with the groupBy function
-  const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: Release) =>
-    prepareRelease(release, currentLanguage))
+    // All statistics published today, and fill up with previous releases.
+    const releasesFiltered: Array<Release> = filterOnComingReleases(upComingReleases, count)
 
-  // group by year, then month, then day
-  const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> = groupStatisticsByYearMonthAndDay(releasesPrepped)
+    // Choose the right variant and prepare the date in a way it works with the groupBy function
+    const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: Release) =>
+      prepareRelease(release, currentLanguage))
 
-  // iterate and format month names
-  const groupedWithMonthNames: Array<YearReleases> = addMonthNames(groupedByYearMonthAndDay, currentLanguage)
+    // group by year, then month, then day
+    const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> = groupStatisticsByYearMonthAndDay(releasesPrepped)
+
+    // iterate and format month names
+    // const groupedWithMonthNames: Array<YearReleases> = addMonthNames(groupedByYearMonthAndDay, currentLanguage)
+
+    return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
+  })
 
   const contentReleases: Array<PreparedUpcomingRelease> = query<UpcomingRelease>({
     start: 0,
