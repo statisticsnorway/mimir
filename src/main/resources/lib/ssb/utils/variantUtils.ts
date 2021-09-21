@@ -292,10 +292,8 @@ export function getReleasesForDay(
 export function filterOnComingReleases(releases: Array<Release>, count: number, startDay?: string): Array<Release> {
   const releaseArray: Array<Release> = []
   const day: Date = startDay ? new Date(startDay) : new Date()
-  // log.info('Count: ' + count)
   for (let i: number = 0; i < count + 1; i++) {
     day.setDate(day.getDate() + 1)
-    // log.info('Number test: ' + i + ' Dag: ' + day)
     const releasesOnThisDay: Array<Release> = releases.filter((release: Release) => {
       return checkReleaseDateToday(release, day)
     })
