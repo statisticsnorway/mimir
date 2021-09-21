@@ -32,21 +32,8 @@ const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
 
-export function calculatePeriod(variant: VariantInListing, language: string, nextReleasePassed: boolean = false): string {
-  let previousFrom: string = variant.previousFrom
-  let previousTo: string = variant.previousTo
-  if (nextReleasePassed) {
-    const upcomingRelease: ReleasesInListing | undefined = variant.upcomingReleases ? forceArray(variant.upcomingReleases).find((r) => {
-      return r && r.id === variant.nextReleaseId
-    }) : undefined
-
-    if (upcomingRelease) {
-      previousFrom = upcomingRelease.periodFrom
-      previousTo = upcomingRelease.periodTo
-    }
-  }
-
-  switch (variant.frekvens) {
+function calculatePeriod(frequency: string, previousFrom: string, previousTo: string, language: string): string {
+  switch (frequency) {
   case 'År':
     return calculateYear(previousFrom, previousTo, language)
   case 'Halvår':
@@ -64,26 +51,28 @@ export function calculatePeriod(variant: VariantInListing, language: string, nex
   }
 }
 
-export function calculatePeriodRelease(release: Release, language: string): string {
+function calculatePeriodVariant(variant: VariantInListing, language: string, nextReleasePassed: boolean = false): string {
+  let previousFrom: string = variant.previousFrom
+  let previousTo: string = variant.previousTo
+  if (nextReleasePassed) {
+    const upcomingRelease: ReleasesInListing | undefined = variant.upcomingReleases ? forceArray(variant.upcomingReleases).find((r) => {
+      return r && r.id === variant.nextReleaseId
+    }) : undefined
+
+    if (upcomingRelease) {
+      previousFrom = upcomingRelease.periodFrom
+      previousTo = upcomingRelease.periodTo
+    }
+  }
+
+  return calculatePeriod(variant.frekvens, previousFrom, previousTo, language)
+}
+
+function calculatePeriodRelease(release: Release, language: string): string {
   const periodFrom: string = release.periodFrom
   const periodTo: string = release.periodTo
 
-  switch (release.frequency) {
-  case 'År':
-    return calculateYear(periodFrom, periodTo, language)
-  case 'Halvår':
-    return calcualteHalfYear(periodFrom, language)
-  case 'Termin':
-    return calculateTerm(periodFrom, language)
-  case 'Kvartal':
-    return calculateQuarter(periodFrom, language)
-  case 'Måned':
-    return calculateMonth(periodFrom, language)
-  case 'Uke':
-    return calculateWeek(periodFrom, language)
-  default:
-    return calculateEveryXYear(periodFrom, periodTo, language)
-  }
+  return calculatePeriod(release.frequency, periodFrom, periodTo, language)
 }
 
 function calculateEveryXYear(previousFrom: string, previousTo: string, language: string): string {
@@ -396,9 +385,9 @@ function concatReleaseTimes(variants: Array<VariantInListing>, language: string,
   let timePeriodes: Array<string>
 
   if (property === 'previousRelease') {
-    timePeriodes = variants.map((variant: VariantInListing) => calculatePeriod(variant, language, nextReleasedPassed(variant)))
+    timePeriodes = variants.map((variant: VariantInListing) => calculatePeriodVariant(variant, language, nextReleasedPassed(variant)))
   } else {
-    timePeriodes = variants.map((variant: VariantInListing) => calculatePeriod(variant, language))
+    timePeriodes = variants.map((variant: VariantInListing) => calculatePeriodVariant(variant, language))
   }
 
   const formatedTimePeriodes: string = timePeriodes.join(` ${localize({
@@ -435,7 +424,7 @@ function formatVariant(variant: VariantInListing, language: string, property: ke
     monthNumber: date.getMonth(),
     year: date.getFullYear(),
     frequency: variant.frekvens,
-    period: calculatePeriod(variant, language, nextReleaseDatePassed)
+    period: calculatePeriodVariant(variant, language, nextReleaseDatePassed)
   }
 }
 
@@ -495,15 +484,7 @@ export function getUpcomingReleases(allReleases: Array<Release>): Array<Release>
   const serverTime: Date = new Date(new Date().getTime() + serverOffsetInMs)
   return allReleases.filter((release) => moment(release.publishTime).isAfter(serverTime, 'minute'))
 }
-
-export function getOldReleases(allReleases: Array<Release>): Array<Release> {
-  const serverOffsetInMs: number = app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
-  const serverTime: Date = new Date(new Date().getTime() + serverOffsetInMs)
-  return allReleases.filter((release) => moment(release.publishTime).isBefore(serverTime, 'minute'))
-}
-
 export interface VariantUtilsLib {
-  calculatePeriod: (variant: VariantInListing, language: string) => string;
   addMonthNames: (groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>>, language: string) => Array<YearReleases>;
   groupStatisticsByYear: (statistics: Array<PreparedStatistics>) => GroupedBy<PreparedStatistics>;
   groupStatisticsByMonth: (statistics: Array<PreparedStatistics>) => GroupedBy<PreparedStatistics>;
@@ -513,10 +494,8 @@ export interface VariantUtilsLib {
   prepareStatisticRelease: (release: StatisticInListing, locale: string, property?: keyof VariantInListing, statisticsPageUrl?: string) => PreparedStatistics;
   prepareRelease: (release: Release, locale: string, statisticsPageUrl?: string) => PreparedStatistics;
   filterOnComingReleases: (stats: Array<Release>, daysInTheFuture: number, startDay?: string) => Array<Release>;
-
   getAllReleases: (statisticList: Array<StatisticInListing>) => Array<Release>;
   getUpcomingReleases: (allReleases: Array<Release>) => Array<Release>;
-  getOldReleases: (allReleases: Array<Release>) => Array<Release>;
 
 }
 
