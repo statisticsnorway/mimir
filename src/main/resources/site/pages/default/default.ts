@@ -380,6 +380,8 @@ function parseStatbankFrameContent(statbankFane: boolean, req: Request, page: De
 
   const filteredStatistics: StatisticInListing | undefined = statbankFane && req.params.shortname ?
     getStatisticByShortNameFromRepo(req.params.shortname) : undefined
+  log.info('statbank frame short name %s', JSON.stringify(req.params.shortname, null, 2))
+
   let statbankStatisticsUrl: string = baseUrl + page._path.substr(4)
   let statbankStatisticsTitle: string = page.displayName
   if (filteredStatistics) {
