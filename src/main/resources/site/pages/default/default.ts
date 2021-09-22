@@ -381,18 +381,29 @@ function parseMetaInfoData(
 
 function parseStatbankFrameContent(statbankFane: boolean, req: Request, page: DefaultPage): StatbankFrameData {
   const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
-  const pageLanguage: string = page.language ? page.language : 'nb'
+  let pageLanguage: string | undefined = page.language ? page.language : 'nb'
 
   let filteredStatistics: StatisticInListing | undefined = undefined
+  // If req.params.shortname exists, the xp frame fallback (system/xpramme) is in use
+  // Since the fallback will only either be in bokmål or english, we will have to run two queries
   const statisticInXP: Content<Statistics> | undefined = req.params.shortname ? query({
     count: 1,
-    query: `_path LIKE "*/${req.params.shortname}"`,
+    query: `_path LIKE "*/${req.params.shortname}" AND language = "${pageLanguage}"`,
+    contentTypes: [`${app.name}:statistics`]
+  }).hits[0] as Content<Statistics> : undefined
+
+  const nynorskStatisticInXP: Content<Statistics> | undefined = req.params.shortname ? query({
+    count: 1,
+    query: `_path LIKE "*/${req.params.shortname}" AND language = "nn"`,
     contentTypes: [`${app.name}:statistics`]
   }).hits[0] as Content<Statistics> : undefined
 
   if (statbankFane) {
-    if (statisticInXP) {
-      filteredStatistics = getStatisticByIdFromRepo(statisticInXP.data.statistic)
+    if (statisticInXP || nynorskStatisticInXP) {
+      filteredStatistics = getStatisticByIdFromRepo(statisticInXP ? statisticInXP.data.statistic : nynorskStatisticInXP?.data.statistic)
+      // In order to get the correct phrases for the localized strings, we need to get the language from the content itself
+      // rather than the language from the xp frame fallback page
+      pageLanguage = statisticInXP ? statisticInXP.language : nynorskStatisticInXP?.language
     } else {
       filteredStatistics = getStatisticByShortNameFromRepo(req.params.shortname)
     }
@@ -432,7 +443,8 @@ function parseStatbankFrameContent(statbankFane: boolean, req: Request, page: De
     statbankFrontPage,
     statbankMainFigures,
     statbankStatisticsUrl,
-    statbankStatisticsTitle
+    statbankStatisticsTitle,
+    statisticsPageContent: statisticInXP ? statisticInXP : nynorskStatisticInXP
   }
 }
 
@@ -513,6 +525,7 @@ export interface StatbankFrameData {
   statbankMainFigures: string;
   statbankStatisticsUrl: string;
   statbankStatisticsTitle: string;
+  statisticsPageContent: Content<Statistics> | undefined;
 }
 
 interface DefaultModel {

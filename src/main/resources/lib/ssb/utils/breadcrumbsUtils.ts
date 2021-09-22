@@ -40,7 +40,11 @@ function addBreadcrumbs(page: Content, visitedPage: Content, breadcrumbs: Breadc
 }
 
 export function getBreadcrumbs(page: Content, municipality: MunicipalityWithCounty | undefined, statbank: StatbankFrameData | undefined): Breadcrumbs {
-  const breadcrumbs: Breadcrumbs = addBreadcrumbs(page, page)
+  const statbankStatisticsPage: Content | undefined = statbank && statbank.statisticsPageContent
+  const breadcrumbs: Breadcrumbs = statbankStatisticsPage ?
+    addBreadcrumbs(statbankStatisticsPage, statbankStatisticsPage) :
+    addBreadcrumbs(page, page)
+
   if (getContent().language == 'en') {
     breadcrumbs.shift()
     breadcrumbs[0].text = 'Home'
@@ -51,13 +55,14 @@ export function getBreadcrumbs(page: Content, municipality: MunicipalityWithCoun
       text: municipality.displayName
     })
   }
-  if (statbank) {
+  // Only display the name of the statistic for those in 4.7.
+  if (statbank && !statbankStatisticsPage) {
     breadcrumbs.pop()
     breadcrumbs.push({
       text: statbank.statbankStatisticsTitle
     })
   } else if (breadcrumbs.length > 0) {
-    // remove link of last element in the breadcrumbs list, because its the page we're on
+    // Remove link of last element in the breadcrumbs list for the page we're currently on
     delete breadcrumbs[breadcrumbs.length - 1].link
   }
   return breadcrumbs
@@ -70,5 +75,5 @@ interface BreadcrumbsData {
 
 export type Breadcrumbs = Array<BreadcrumbsData>
 export interface BreadcrumbsUtilsLib {
-  getBreadcrumbs: (page: Content, municipality: MunicipalityWithCounty | undefined, statbank: StatbankFrameData | undefined) => Breadcrumbs;
+  getBreadcrumbs: (page: Content, municipality: MunicipalityWithCounty | undefined, statbank?: StatbankFrameData | undefined) => Breadcrumbs;
 }
