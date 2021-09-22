@@ -157,47 +157,32 @@ function UpcomingReleases(props) {
 
   function renderRelease(release, index, date) {
     const {
-      type, shortName, name, variant, mainSubject, statisticsPageUrl
+      type, name, variant, mainSubject, statisticsPageUrl
     } = release
     const {
       day, monthName, year
     } = date
     const statisticsPageUrlText = props.statisticsPageUrlText
+    const showPeriod = (type === 'statistikk' || type === 'statistic')
 
-    if (type === 'statistikk' || type === 'statistic') {
-      return (
-        <li key={index}>
-          <div>
-            <Link href={`/${shortName}`} linkType='header'>{name}</Link>
+    return (
+      <li key={index}>
+        <div>
+          <h3>{name}</h3>
+          {showPeriod &&
             <Paragraph className="mb-0">{variant.period}</Paragraph>
-            <Paragraph className="metadata">
-              {day}. {monthName} {year} / <span
-                className="type">{type}</span> / {mainSubject}
-            </Paragraph>
-          </div>
-          {statisticsPageUrl &&
+          }
+          <Paragraph className="metadata">
+            {day}. {monthName} {year} / <span
+              className="type">{type}</span> / {mainSubject}
+          </Paragraph>
+        </div>
+        {statisticsPageUrl &&
           <div className="statisticsPageLink">
             <Link href={statisticsPageUrl}>{statisticsPageUrlText}</Link>
           </div>}
-        </li>
-      )
-    } else {
-      return (
-        <li key={index}>
-          <div>
-            <h3>{name}</h3>
-            <Paragraph className="metadata">
-              {day}. {monthName} {year} / <span
-                className="type">{type}</span> / {mainSubject}
-            </Paragraph>
-          </div>
-          {statisticsPageUrl &&
-          <div className="statisticsPageLink">
-            <Link href={statisticsPageUrl}>{statisticsPageUrlText}</Link>
-          </div>}
-        </li>
-      )
-    }
+      </li>
+    )
   }
 
   function renderDay(day, month, year, index) {
