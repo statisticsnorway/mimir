@@ -20,7 +20,6 @@ const {
   }
 } = __non_webpack_require__('/lib/util')
 const {
-  get,
   query
 } = __non_webpack_require__('/lib/xp/content')
 const {
@@ -401,10 +400,10 @@ function parseStatbankFrameContent(statbankFane: boolean, req: Request, page: De
   let statbankStatisticsTitle: string = page.displayName
   if (filteredStatistics) {
     if (pageLanguage === 'en') {
-      statbankStatisticsUrl = `${baseUrl}/en/${req.params.shortname}`
+      statbankStatisticsUrl = `${baseUrl}/en/${filteredStatistics.shortName}`
       statbankStatisticsTitle = filteredStatistics.nameEN
     } else {
-      statbankStatisticsUrl = `${baseUrl}/${req.params.shortname}`
+      statbankStatisticsUrl = `${baseUrl}/${filteredStatistics.shortName}`
       statbankStatisticsTitle = filteredStatistics.name
     }
   }
