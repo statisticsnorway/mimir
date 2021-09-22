@@ -166,9 +166,9 @@ function UpcomingReleases(props) {
     const showPeriod = (type === 'statistikk' || type === 'statistic')
 
     return (
-      <li key={index}>
+      <li key={index} className="mb-3">
         <div>
-          <h3>{name}</h3>
+          <h3 className="mb-0">{name}</h3>
           {showPeriod &&
             <Paragraph className="mb-0">{variant.period}</Paragraph>
           }
