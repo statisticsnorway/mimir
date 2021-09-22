@@ -10,6 +10,7 @@ import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { Language } from '../../../lib/types/language'
 import { React4xp, React4xpObject, React4xpPageContributionOptions } from '../../../lib/types/react4xp'
 import { SEO } from '../../../services/news/news'
+import { Statistics } from '../../content-types/statistics/statistics'
 import { SiteConfig } from '../../site-config'
 import { DefaultPageConfig } from './default-page-config'
 
@@ -18,6 +19,10 @@ const {
     forceArray
   }
 } = __non_webpack_require__('/lib/util')
+const {
+  get,
+  query
+} = __non_webpack_require__('/lib/xp/content')
 const {
   getContent,
   processHtml,
@@ -378,9 +383,19 @@ function parseStatbankFrameContent(statbankFane: boolean, req: Request, page: De
   const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
   const pageLanguage: string = page.language ? page.language : 'nb'
 
-  const filteredStatistics: StatisticInListing | undefined = statbankFane && req.params.shortname ?
-    getStatisticByShortNameFromRepo(req.params.shortname) : undefined
-  log.info('statbank frame short name %s', JSON.stringify(req.params.shortname, null, 2))
+  let filteredStatistics: StatisticInListing | undefined = undefined
+  if (statbankFane && req.params.shortname) {
+    if (getStatisticByShortNameFromRepo(req.params.shortname)) {
+      filteredStatistics = getStatisticByShortNameFromRepo(req.params.shortname)
+    } else {
+      const statisticInXP: Content<Statistics> = query({
+        count: 1,
+        query: `_path LIKE "*/${req.params.shortname}"`,
+        contentTypes: [`${app.name}:statistics`]
+      }).hits[0] as Content<Statistics>
+      filteredStatistics = getStatisticByIdFromRepo(statisticInXP.data.statistic as string)
+    }
+  }
 
   let statbankStatisticsUrl: string = baseUrl + page._path.substr(4)
   let statbankStatisticsTitle: string = page.displayName
