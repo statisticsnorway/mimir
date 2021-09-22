@@ -93,11 +93,11 @@ function renderPart(req: Request, accordionIds: Array<string>): React4xpResponse
   return React4xp.render('Accordion', props, req)
 }
 
-interface AccordionData {
+export interface AccordionData {
   id?: string;
   body?: string | undefined;
-  open: string | undefined;
-  items: Accordion['accordions'];
+  open?: string | undefined;
+  items?: Accordion['accordions'];
 }
 
 interface AccordionProp {

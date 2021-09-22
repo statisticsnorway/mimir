@@ -73,20 +73,20 @@ function getHusleiekalkulator(req, page) {
   })
 
   const husleieCalculator = new React4xp('site/parts/husleieCalculator/husleieCalculator')
-      .setProps({
-        kpiServiceUrl: serviceUrl({
-          service: 'kpi'
-        }),
-        language: language.code,
-        months,
-        phrases,
-        calculatorArticleUrl,
-        nextPublishText,
-        lastNumberText,
-        lastUpdated
-      })
-      .setId('husleieCalculatorId')
-      .uniqueId()
+    .setProps({
+      kpiServiceUrl: serviceUrl({
+        service: 'kpi'
+      }),
+      language: language.code,
+      months,
+      phrases,
+      calculatorArticleUrl,
+      nextPublishText,
+      lastNumberText,
+      lastUpdated
+    })
+    .setId('husleieCalculatorId')
+    .uniqueId()
 
 
   return {
