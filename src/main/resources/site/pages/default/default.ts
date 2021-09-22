@@ -212,7 +212,11 @@ exports.get = function(req: Request): Response {
   }
 
   const metaInfo: MetaInfoData = parseMetaInfoData(municipality, pageType, page, language, req)
-  const breadcrumbs: Breadcrumbs = getBreadcrumbs(page, municipality)
+
+  const statbankFane: boolean = (req.params.xpframe === 'statbank')
+  const statBankContent: StatbankFrameData = parseStatbankFrameContent(statbankFane, req, page)
+
+  const breadcrumbs: Breadcrumbs = getBreadcrumbs(page, municipality, statbankFane ? statBankContent : undefined)
 
   const breadcrumbComponent: React4xpObject = new React4xp('Breadcrumb')
   breadcrumbComponent.setProps({
@@ -222,9 +226,6 @@ exports.get = function(req: Request): Response {
     .uniqueId()
 
   const hideBreadcrumb: boolean = !!(pageConfig).hide_breadcrumb
-
-  const statbankFane: boolean = (req.params.xpframe === 'statbank')
-  const statBankContent: StatbankFrameData = parseStatbankFrameContent(statbankFane, req, page)
 
   const model: DefaultModel = {
     pageTitle: 'SSB', // not really used on normal pages because of SEO app (404 still uses this)
@@ -383,16 +384,17 @@ function parseStatbankFrameContent(statbankFane: boolean, req: Request, page: De
   const pageLanguage: string = page.language ? page.language : 'nb'
 
   let filteredStatistics: StatisticInListing | undefined = undefined
-  if (statbankFane && req.params.shortname) {
-    if (getStatisticByShortNameFromRepo(req.params.shortname)) {
-      filteredStatistics = getStatisticByShortNameFromRepo(req.params.shortname)
+  const statisticInXP: Content<Statistics> | undefined = req.params.shortname ? query({
+    count: 1,
+    query: `_path LIKE "*/${req.params.shortname}"`,
+    contentTypes: [`${app.name}:statistics`]
+  }).hits[0] as Content<Statistics> : undefined
+
+  if (statbankFane) {
+    if (statisticInXP) {
+      filteredStatistics = getStatisticByIdFromRepo(statisticInXP.data.statistic)
     } else {
-      const statisticInXP: Content<Statistics> = query({
-        count: 1,
-        query: `_path LIKE "*/${req.params.shortname}"`,
-        contentTypes: [`${app.name}:statistics`]
-      }).hits[0] as Content<Statistics>
-      filteredStatistics = getStatisticByIdFromRepo(statisticInXP.data.statistic as string)
+      filteredStatistics = getStatisticByShortNameFromRepo(req.params.shortname)
     }
   }
 
@@ -504,7 +506,7 @@ interface MetaInfoData {
   metaInfoMainSubject: string | undefined;
 }
 
-interface StatbankFrameData {
+export interface StatbankFrameData {
   statbankHelpText: string;
   statbankHelpLink: string;
   statbankFrontPage: string;

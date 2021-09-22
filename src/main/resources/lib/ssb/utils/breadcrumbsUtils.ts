@@ -1,4 +1,5 @@
 import { Content } from 'enonic-types/content'
+import { StatbankFrameData } from '../../../site/pages/default/default'
 import { MunicipalityWithCounty } from '../dataset/klass/municipalities'
 
 const {
@@ -38,7 +39,7 @@ function addBreadcrumbs(page: Content, visitedPage: Content, breadcrumbs: Breadc
   return breadcrumbs
 }
 
-export function getBreadcrumbs(page: Content, municipality: MunicipalityWithCounty | undefined): Breadcrumbs {
+export function getBreadcrumbs(page: Content, municipality: MunicipalityWithCounty | undefined, statbank: StatbankFrameData | undefined): Breadcrumbs {
   const breadcrumbs: Breadcrumbs = addBreadcrumbs(page, page)
   if (getContent().language == 'en') {
     breadcrumbs.shift()
@@ -48,6 +49,12 @@ export function getBreadcrumbs(page: Content, municipality: MunicipalityWithCoun
     breadcrumbs.pop()
     breadcrumbs.push({
       text: municipality.displayName
+    })
+  }
+  if (statbank) {
+    breadcrumbs.pop()
+    breadcrumbs.push({
+      text: statbank.statbankStatisticsTitle
     })
   } else if (breadcrumbs.length > 0) {
     // remove link of last element in the breadcrumbs list, because its the page we're on
@@ -63,5 +70,5 @@ interface BreadcrumbsData {
 
 export type Breadcrumbs = Array<BreadcrumbsData>
 export interface BreadcrumbsUtilsLib {
-  getBreadcrumbs: (page: Content, municipality: MunicipalityWithCounty | undefined) => Breadcrumbs;
+  getBreadcrumbs: (page: Content, municipality: MunicipalityWithCounty | undefined, statbank: StatbankFrameData | undefined) => Breadcrumbs;
 }
