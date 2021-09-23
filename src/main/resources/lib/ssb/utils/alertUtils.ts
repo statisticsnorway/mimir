@@ -45,7 +45,7 @@ function getMunicipalityAlerts(options: MunicipalityOptions): Array<Municipality
 }
 
 export function alertsForContext(config: DefaultPageConfig, options: InformationAlertOptions | MunicipalityOptions):
- Array<InformationAlert> | Array<MunicipalityAlert> {
+ AlertType {
   if (config && config.pageType === 'municipality') {
     return getMunicipalityAlerts(options as MunicipalityOptions)
   }
@@ -60,22 +60,10 @@ interface Alerts {
       municipalCodes: string;
   };
 }
-
-interface InformationAlertOptions {
-  pageType: string;
-  pageTypeId: string;
-  statbankWeb: boolean;
-}
-
 interface InformationAlert {
   title: string;
   messageType: string;
   message: string;
-}
-
-interface MunicipalityOptions {
-  municipality: MunicipalityWithCounty | undefined;
-  municipalPageType: string;
 }
 
 interface CurrentMunicipalityAlerts {
@@ -88,8 +76,18 @@ interface MunicipalityAlert {
   municipalCodes: string;
   message: string;
 }
+export interface InformationAlertOptions {
+  pageType: string;
+  pageTypeId: string;
+  statbankWeb: boolean;
+}
+export interface MunicipalityOptions {
+  municipality: MunicipalityWithCounty | undefined;
+  municipalPageType: string;
+}
 
+export type AlertType = Array<InformationAlert> | Array<MunicipalityAlert>
 export interface AlertUtilsLib {
   alertsForContext: (config: DefaultPageConfig, options: InformationAlertOptions | MunicipalityOptions) =>
-  Array<InformationAlert> | Array<MunicipalityAlert>;
+  AlertType;
 }

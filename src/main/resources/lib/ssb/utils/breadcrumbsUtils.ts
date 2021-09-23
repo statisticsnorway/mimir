@@ -1,4 +1,5 @@
 import { Content } from 'enonic-types/content'
+import { StatbankFrameData } from '../../../site/pages/default/default'
 import { MunicipalityWithCounty } from '../dataset/klass/municipalities'
 
 const {
@@ -12,7 +13,7 @@ const {
   getContent
 } = __non_webpack_require__('/lib/xp/portal')
 
-function addBreadcrumbs(page: Content, visitedPage: Content, breadcrumbs: Array<Breadcrumbs> = []): Array<Breadcrumbs> {
+function addBreadcrumbs(page: Content, visitedPage: Content, breadcrumbs: Breadcrumbs = []): Breadcrumbs {
   if (page.type === 'portal:site') {
     breadcrumbs.unshift({
       text: getPhrases(visitedPage) ? getPhrases(visitedPage).home : 'Hjem',
@@ -38,8 +39,12 @@ function addBreadcrumbs(page: Content, visitedPage: Content, breadcrumbs: Array<
   return breadcrumbs
 }
 
-export function getBreadcrumbs(page: Content, municipality: MunicipalityWithCounty | undefined): Array<Breadcrumbs> {
-  const breadcrumbs: Array<Breadcrumbs> = addBreadcrumbs(page, page)
+export function getBreadcrumbs(page: Content, municipality: MunicipalityWithCounty | undefined, statbank: StatbankFrameData | undefined): Breadcrumbs {
+  const statbankStatisticsPage: Content | undefined = statbank && statbank.statisticsPageContent
+  const breadcrumbs: Breadcrumbs = statbankStatisticsPage ?
+    addBreadcrumbs(statbankStatisticsPage, statbankStatisticsPage) :
+    addBreadcrumbs(page, page)
+
   if (getContent().language == 'en') {
     breadcrumbs.shift()
     breadcrumbs[0].text = 'Home'
@@ -49,18 +54,26 @@ export function getBreadcrumbs(page: Content, municipality: MunicipalityWithCoun
     breadcrumbs.push({
       text: municipality.displayName
     })
+  }
+  // Only display the name of the statistic for those in 4.7.
+  if (statbank && !statbankStatisticsPage) {
+    breadcrumbs.pop()
+    breadcrumbs.push({
+      text: statbank.statbankStatisticsTitle
+    })
   } else if (breadcrumbs.length > 0) {
-    // remove link of last element in the breadcrumbs list, because its the page we're on
+    // Remove link of last element in the breadcrumbs list for the page we're currently on
     delete breadcrumbs[breadcrumbs.length - 1].link
   }
   return breadcrumbs
 }
 
-interface Breadcrumbs {
+interface BreadcrumbsData {
     text: string;
     link?: string;
 }
 
+export type Breadcrumbs = Array<BreadcrumbsData>
 export interface BreadcrumbsUtilsLib {
-  getBreadcrumbs: (page: Content, municipality: MunicipalityWithCounty | undefined) => Array<Breadcrumbs>;
+  getBreadcrumbs: (page: Content, municipality: MunicipalityWithCounty | undefined, statbank?: StatbankFrameData | undefined) => Breadcrumbs;
 }
