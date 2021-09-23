@@ -39,14 +39,14 @@ return {
 - [ ] menuBox
 - [ ] menuDropdown
 - [ ] nameSearch
-- [ ] pictureCardLink
+- [x] pictureCardLink
 - [ ] pifCalculator
-- [ ] pubArchiveCalenderLinks
+- [x] pubArchiveCalenderLinks
 - [ ] publicationArchive
 - [ ] relatedFactPage
-- [ ] releasedStatistics
+- [x] releasedStatistics
 - [ ] statbankBox
 - [ ] statbankLinkList
-- [ ] statistics
+- [x] statistics
 - [ ] table
 - [x] upcomingReleases

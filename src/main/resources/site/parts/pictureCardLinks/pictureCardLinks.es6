@@ -41,12 +41,9 @@ function renderPart(req) {
   })
   return {
     body: pictureCardLinks.renderBody({
-      body,
-      clientRender: req.mode !== 'edit'
+      body
     }),
-    pageContributions: pictureCardLinks.renderPageContributions({
-      clientRender: req.mode !== 'edit'
-    })
+    pageContributions: pictureCardLinks.renderPageContributions()
   }
 }
 
