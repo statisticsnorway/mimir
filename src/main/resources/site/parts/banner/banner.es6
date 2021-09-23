@@ -51,7 +51,6 @@ function renderPart(req) {
     }) : undefined,
     municipalityTitle: municipality ? municipalityName + ' (' + municipality.county.name + ')' : undefined,
     pageType,
-    factsAbout,
     subTitleFactPage
   }
 
