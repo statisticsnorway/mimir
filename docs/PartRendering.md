@@ -23,7 +23,7 @@ return {
 ### List of parts that needs to be changed
 
 - [ ] dashboard
-- [ ] articleArchive
+- [x] articleArchive
 - [ ] attachmentTablesFigures
 - [ ] bkibolCalculator
 - [ ] contactForm
