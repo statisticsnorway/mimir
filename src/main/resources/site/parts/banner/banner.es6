@@ -36,6 +36,7 @@ function renderPart(req) {
   const factsAbout = i18nLib.localize({
     key: 'factsAbout'
   })
+  const subTitleFactPage = pageType.faktaside.subTitle ? pageType.faktaside.subTitle : factsAbout
   const municipality = pageType._selected === 'kommunefakta' ? getMunicipality(req) : undefined
   const municipalityName = municipality ? removeCountyFromMunicipalityName(municipality.displayName) : undefined
   const imgSrcSet = part.config.image ? imageSrcSet(part.config.image) : undefined
@@ -50,7 +51,8 @@ function renderPart(req) {
     }) : undefined,
     municipalityTitle: municipality ? municipalityName + ' (' + municipality.county.name + ')' : undefined,
     pageType,
-    factsAbout
+    factsAbout,
+    subTitleFactPage
   }
 
   const body = render(view, model)
