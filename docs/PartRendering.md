@@ -49,4 +49,4 @@ return {
 - [ ] statbankLinkList
 - [ ] statistics
 - [ ] table
-- [ ] upcomingReleases
+- [x] upcomingReleases
