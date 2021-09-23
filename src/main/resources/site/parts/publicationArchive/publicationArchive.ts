@@ -4,7 +4,7 @@ import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Content } from 'enonic-types/content'
 import { PublicationArchivePartConfig } from './publicationArchive-part-config'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
-import { PreparedStatistics, prepareRelease } from '../../../lib/ssb/utils/variantUtils'
+import { PreparedStatistics } from '../../../lib/ssb/utils/variantUtils'
 import { getAllStatisticsFromRepo } from '../../../lib/ssb/statreg/statistics'
 import { filterOnPreviousReleases } from '../releasedStatistics/releasedStatistics'
 import { PublicationItem } from '../../../services/publicationArchive/publicationArchive'
@@ -20,6 +20,9 @@ const {
   getContent, serviceUrl, getComponent
 } = __non_webpack_require__('/lib/xp/portal')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+const {
+  prepareStatisticRelease
+} = __non_webpack_require__('/lib/ssb/utils/variantUtils')
 
 exports.get = (req: Request): React4xpResponse => {
   return renderPart(req)
@@ -40,7 +43,7 @@ function renderPart(req: Request): React4xpResponse {
   const releasesPrepped: Array<PreparedStatistics | null> = fromPartCache(req, `${content._id}-publicationArchive`, () => {
     const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
     const releasesFiltered: Array<StatisticInListing> = filterOnPreviousReleases(releases, releases.length).filter((r) => r.status === 'A')
-    return releasesFiltered.map((release: StatisticInListing) => prepareRelease(release, language))
+    return releasesFiltered.map((release: StatisticInListing) => prepareStatisticRelease(release, language))
   })
 
   const props: PartProperties = {

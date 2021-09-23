@@ -31,11 +31,11 @@ if (isNotInEditMode) {
 - [ ] Move menuCache to seperate file
 ### Parts to cache
 - [x] KPI calculator
-- [ ] Upcoming releases part ~300ms  
+- [x] Upcoming releases part ~300ms  
 - [x] OmStatistikken part ~70ms  
 - [ ] RelatedArticles part ~25-100ms  
 - [ ] Default page ~10-60ms  
-- [ ] AttachmentTableFigures part ~10-80ms  
+- [x] AttachmentTableFigures part ~10-80ms  
 - [ ] Statistics part ~30ms  
 - [ ] LocalSearch part ~60ms  
 - [ ] PublicationArchive service ~100-150ms  

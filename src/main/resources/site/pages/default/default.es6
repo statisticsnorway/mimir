@@ -331,7 +331,7 @@ exports.get = function(req) {
   } : {
     pageType: page.type,
     pageTypeId: page._id,
-    statbankWeb: statbankFane
+    statbankWeb: statbankFane || page._path === '/ssb/statbank'
   }
   const alerts = alertsForContext(page.page.config, alertOptions)
   const body = bodyWithBreadCrumbs ? bodyWithBreadCrumbs : thymeleafRenderBody
