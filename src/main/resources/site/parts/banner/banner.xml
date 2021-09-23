@@ -24,8 +24,8 @@
           <help-text>Skal banner ligge på faktaside må du fylle ut litt tekst.</help-text>
           <items>
             <input name="subTitle" type="TextLine">
-              <label>Subtittel</label>
-              <help-text>Default tekst er Fakta om.</help-text>
+              <label>Stikktittel</label>
+              <help-text>Hvis ikke utfylt er default tekst :Fakta om</help-text>
             </input>
             <input name="title" type="TextLine">
               <label>Tittel på faktaside</label>
