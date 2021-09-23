@@ -35,7 +35,7 @@ const {
   addMonthNames,
   getReleasesForDay,
   groupStatisticsByYearMonthAndDay,
-  prepareRelease
+  prepareStatisticRelease
 } = __non_webpack_require__('/lib/ssb/utils/variantUtils')
 
 exports.get = function(req: Request): React4xpResponse | Response {
@@ -65,7 +65,7 @@ export function renderPart(req: Request): React4xpResponse {
     const releasesFiltered: Array<StatisticInListing> = filterOnPreviousReleases(releases, numberOfReleases)
 
     // Choose the right variant and prepare the date in a way it works with the groupBy function
-    const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: StatisticInListing) => prepareRelease(release, currentLanguage))
+    const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: StatisticInListing) => prepareStatisticRelease(release, currentLanguage))
 
     // group by year, then month, then day
     const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> = groupStatisticsByYearMonthAndDay(releasesPrepped)

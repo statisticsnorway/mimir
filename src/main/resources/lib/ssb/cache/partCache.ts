@@ -42,6 +42,8 @@ export function clearPartCache(content: Content, branch: string): void {
     partCache.remove(`${content._id}-publicationArchive`)
     cacheLog(`try to clear ${content._id}-attachmentTablesFigures from part cache (${branch})`)
     partCache.remove(`${content._id}-attachmentTablesFigures`)
+    cacheLog(`try to clear ${content._id}-upcomingReleases from part cache (${branch})`)
+    partCache.remove(`${content._id}-upcomingReleases`)
   }
 }
 
