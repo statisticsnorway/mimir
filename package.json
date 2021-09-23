@@ -55,7 +55,7 @@
     "enonic-types": "^0.2.12",
     "eslint": "^7.32.0",
     "eslint-config-google": "^0.14.0",
-    "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-react": "^7.26.0",
     "feather-icons": "^4.28.0",
     "file-loader": "^6.2.0",
     "glob": "^7.1.7",
