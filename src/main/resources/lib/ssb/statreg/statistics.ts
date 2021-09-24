@@ -165,7 +165,7 @@ export function getAllStatisticsFromRepo(): Array<StatisticInListing> {
   return statisticsNode ? (data as Array<StatisticInListing>) : []
 }
 
-export function getStatisticByIdFromRepo(statId: string): StatisticInListing | undefined {
+export function getStatisticByIdFromRepo(statId: string | undefined): StatisticInListing | undefined {
   if (!statId) {
     return undefined
   }
@@ -173,7 +173,7 @@ export function getStatisticByIdFromRepo(statId: string): StatisticInListing | u
   return allStats.find((s) => statId === `${s.id}`)
 }
 
-export function getStatisticByShortNameFromRepo(shortName: string): StatisticInListing | undefined {
+export function getStatisticByShortNameFromRepo(shortName: string | undefined): StatisticInListing | undefined {
   if (!shortName) {
     return undefined
   }
@@ -227,8 +227,8 @@ export interface StatRegStatisticsLib {
   fetchStatisticsWithReleaseToday: () => Array<StatisticInListing>;
   fetchStatisticsWithPreviousReleaseBetween: (from: Date, to: Date) => Array<StatisticInListing>;
   getAllStatisticsFromRepo: () => Array<StatisticInListing>;
-  getStatisticByIdFromRepo: (statId: string) => StatisticInListing | undefined;
-  getStatisticByShortNameFromRepo: (shortName: string) => StatisticInListing | undefined;
+  getStatisticByIdFromRepo: (statId: string | undefined) => StatisticInListing | undefined;
+  getStatisticByShortNameFromRepo: (shortName: string | undefined) => StatisticInListing | undefined;
   getReleaseDatesByVariants: (variants: Array<VariantInListing>) => ReleaseDatesVariant;
 
 }

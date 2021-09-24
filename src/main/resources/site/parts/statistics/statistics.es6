@@ -142,13 +142,11 @@ const renderPart = (req) => {
 
   if (changeDate) {
     body = modifiedDateComponent.renderBody({
-      body,
-      clientRender: req.mode !== 'edit'
+      body
     })
 
     pageContributions = modifiedDateComponent.renderPageContributions({
-      pageContributions,
-      clientRender: req.mode !== 'edit'
+      pageContributions
     })
   }
 

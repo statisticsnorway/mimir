@@ -85,12 +85,10 @@ const renderPart = (req) => {
   const preamblePageContributions = preambleObj.renderPageContributions()
 
   const finalBody = listOfArticlesObj.renderBody({
-    body: preambleBody,
-    clientRender: req.mode !== 'edit'
+    body: preambleBody
   })
   const finalPagePageContributions = listOfArticlesObj.renderPageContributions({
-    pageContributions: preamblePageContributions,
-    clientRender: req.mode !== 'edit'
+    pageContributions: preamblePageContributions
   })
 
   return {

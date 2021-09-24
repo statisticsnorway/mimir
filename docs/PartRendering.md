@@ -23,7 +23,7 @@ return {
 ### List of parts that needs to be changed
 
 - [ ] dashboard
-- [ ] articleArchive
+- [x] articleArchive
 - [ ] attachmentTablesFigures
 - [ ] bkibolCalculator
 - [ ] contactForm
@@ -39,14 +39,14 @@ return {
 - [ ] menuBox
 - [ ] menuDropdown
 - [ ] nameSearch
-- [ ] pictureCardLink
+- [x] pictureCardLink
 - [ ] pifCalculator
-- [ ] pubArchiveCalenderLinks
+- [x] pubArchiveCalenderLinks
 - [ ] publicationArchive
 - [ ] relatedFactPage
-- [ ] releasedStatistics
+- [x] releasedStatistics
 - [ ] statbankBox
 - [ ] statbankLinkList
-- [ ] statistics
+- [x] statistics
 - [ ] table
 - [x] upcomingReleases
