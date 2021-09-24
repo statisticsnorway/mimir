@@ -51,7 +51,6 @@ exports.preview = (req: Request): React4xpResponse => renderPart(req)
 export function renderPart(req: Request): React4xpResponse {
   const content: Content = getContent()
   const currentLanguage: string = content.language ? content.language : 'nb'
-  const isNotInEditMode: boolean = req.mode !== 'edit'
   const part: Component<ReleasedStatisticsPartConfig> = getComponent()
 
   const groupedWithMonthNames: Array<YearReleases> = fromPartCache(req, `${content._id}-releasedStatistics`, () => {
@@ -80,9 +79,7 @@ export function renderPart(req: Request): React4xpResponse {
     }),
     language: currentLanguage
   }
-  return React4xp.render('ReleasedStatistics', props, req, {
-    clientRender: isNotInEditMode
-  })
+  return React4xp.render('ReleasedStatistics', props, req)
 }
 
 export function filterOnPreviousReleases(stats: Array<StatisticInListing>, numberOfReleases: number): Array<StatisticInListing> {
