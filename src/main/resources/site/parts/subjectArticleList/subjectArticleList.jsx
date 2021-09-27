@@ -10,7 +10,6 @@ import axios from 'axios'
 
 /* TODO:
 - Fikse sortering (?)
-- Sørge for at listen laster i edit mode
 - Hva og hvordan skal vi sortere/filtrere etter innholdstype??
 - Idé: Returere aggregert liste over funnede metadata-parametre fra service, så kan man velge en av dem og filtrere listen på denne??
 - ???
@@ -18,17 +17,18 @@ import axios from 'axios'
 */
 
 function SubjectArticleList(props) {
-  const [articles, setArticles] = useState([])
+  const [articles, setArticles] = useState(props.articles)
   const [articleStart, setArticleStart] = useState(props.start)
-  const [loadedFirst, setLoadedFirst] = useState(false)
-  const [totalCount, setTotalCount] = useState(0)
+  const [loadedFirst, setLoadedFirst] = useState(true)
+  const [totalCount, setTotalCount] = useState(props.articles.length)
   const [sort, setSort] = useState('DESC')
-  const showCountLabel = props.language == 'en' ? `Showing ${articles.length} of ${totalCount}` : `Viser ${articles.length} av ${totalCount}`
+  const showCountLabel = props.language == 'en' ? `Showing ${articles.length} of ${props.totalArticles}` : `Viser ${articles.length} av ${props.totalArticles}`
 
   useEffect(
     () => {
-      if (!loadedFirst) {
-        fetchMoreArticles()
+      if (loadedFirst) {
+        setLoadedFirst(false)
+        setArticleStart(articleStart + props.count)
       }
     },
     [],
@@ -45,9 +45,8 @@ function SubjectArticleList(props) {
       }
     }).then((res) => {
       setArticles(articles.concat(res.data.articles))
-      setTotalCount(res.data.totalCount)
+      setTotalCount((prevState) => prevState + res.data.articles.length)
     }).finally(() => {
-      setLoadedFirst(true)
       setArticleStart((prevState) => prevState + props.count)
     },
     )
@@ -119,6 +118,20 @@ function SubjectArticleList(props) {
     }
   }
 
+  function renderShowMoreButton() {
+    if (!props.showAllArticles) {
+      return (
+        <div>
+          <Button disabled={(totalCount > 0) && (totalCount >= props.totalArticles)}
+            className="button-more mt-5"
+            onClick={fetchMoreArticles}><ChevronDown
+              size="18"/>{props.buttonTitle}
+          </Button>
+        </div>
+      )
+    }
+  }
+
   return (
     <section className="subject-article-list container-fluid">
       <div className="container pt-5 pb-5">
@@ -139,14 +152,9 @@ function SubjectArticleList(props) {
             {
               renderArticles()
             }
-
-            <div>
-              <Button disabled={(totalCount > 0) &&
-                (totalCount <= articles.length)} className="button-more mt-5"
-              onClick={fetchMoreArticles}><ChevronDown
-                  size="18"/>{props.buttonTitle}
-              </Button>
-            </div>
+            {
+              renderShowMoreButton()
+            }
           </div>
         </div>
       </div>
@@ -163,7 +171,17 @@ SubjectArticleList.propTypes =
       start: PropTypes.number,
       count: PropTypes.number,
       showSortAndFilter: PropTypes.bool,
-      language: PropTypes.string
+      language: PropTypes.string,
+      articles: PropTypes.arrayOf(
+        PropTypes.shape({
+          title: PropTypes.string,
+          preface: PropTypes.string,
+          url: PropTypes.string,
+          publishDate: PropTypes.string
+        })
+      ),
+      totalArticles: PropTypes.number,
+      showAllArticles: PropTypes.bool
     }
 
 export default (props) => <SubjectArticleList {...props} />
