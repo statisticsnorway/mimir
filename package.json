@@ -41,7 +41,7 @@
     "@types/react": "^17.0.5",
     "@types/validator": "^13.6.3",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
-    "@typescript-eslint/parser": "^2.34.0",
+    "@typescript-eslint/parser": "^4.31.2",
     "autoprefixer": "^10.3.4",
     "axios": "^0.21.2",
     "babel-cli": "^6.26.0",
