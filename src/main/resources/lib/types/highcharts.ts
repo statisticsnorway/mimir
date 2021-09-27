@@ -4,6 +4,7 @@ export interface HighchartsGraphConfig {
     keyboardNavigation?: {
       order?: Array<string>;
     };
+    description?: string;
   };
   chart?: {
     height?: string;
@@ -97,6 +98,7 @@ export interface HighchartsGraphConfig {
   series?: Array<HighchartsSeries>;
   subtitle: HighchartsConfigTitle;
   title: HighchartsConfigTitle;
+  description: string;
   yAxis: HighchartsConfigAxis;
   xAxis?: HighchartsConfigAxis;
   tooltip?: {
