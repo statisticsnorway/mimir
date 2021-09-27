@@ -35,7 +35,7 @@ if (isNotInEditMode) {
 - [x] OmStatistikken part ~70ms  
 - [ ] RelatedArticles part ~25-100ms  
 - [ ] Default page ~10-60ms  
-- [x] AttachmentTableFigures part ~10-80ms  
+- [ ] AttachmentTableFigures part ~10-80ms  
 - [ ] Statistics part ~30ms  
 - [ ] LocalSearch part ~60ms  
 - [ ] PublicationArchive service ~100-150ms  

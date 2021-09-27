@@ -51,11 +51,12 @@ exports.preview = (req: Request): Response => renderPart(req)
 
 function renderPart(req: Request): Response {
   const page: Content<Statistics> = getContent()
-  if (req.mode !== 'edit') {
-    return fromPartCache(req, `${page._id}-attachmentTablesFigures`, () => {
-      return getTablesAndFiguresComponent(page, req)
-    })
-  }
+  // TODO Fjernet caching siden den skapte problemer for forhåndsvisning av upubliserte tall
+  // if (req.mode !== 'edit') {
+  //   return fromPartCache(req, `${page._id}-attachmentTablesFigures`, () => {
+  //     return getTablesAndFiguresComponent(page, req)
+  //   })
+  // }
   return getTablesAndFiguresComponent(page, req)
 }
 
