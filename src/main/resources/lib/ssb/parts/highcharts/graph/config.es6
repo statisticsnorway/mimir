@@ -32,9 +32,8 @@ export const createDefaultConfig = (highchartData, displayName) => ({
     enabled: true,
     keyboardNavigation: {
       order: [
-        `series`,
-        `legend`,
-        'chartMenu' // TODO: Tabs to the invisible menu first, then the download button. Fix download button navigation before removal.
+        // TODO: Tabs to the invisible export menu first, then the download button. Should fix download button keyboard navigation then remove.
+        'chartMenu'
       ]
     },
     description: highchartData.description
