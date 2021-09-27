@@ -1,7 +1,8 @@
 import { Request } from 'enonic-types/controller'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { Content } from 'enonic-types/content'
+import { Content, QueryResponse } from 'enonic-types/content'
 import { PreparedArticles } from '../../../lib/ssb/utils/articleUtils'
+import { Article } from '../../content-types/article/article'
 
 const {
   localize
@@ -15,8 +16,7 @@ const {
 } = __non_webpack_require__('/lib/featureToggle')
 const {
   getChildArticles,
-  prepareArticles,
-  getAllChildArticlesTotal
+  prepareArticles
 } = __non_webpack_require__( '/lib/ssb/utils/articleUtils')
 
 exports.get = (req: Request): React4xpResponse => {
@@ -37,8 +37,9 @@ function renderPart(req: Request): React4xpResponse {
   const start: number = 0
   const count: number = showAllArticles ? 100 : 10
 
-  const preparedArticles: Array<PreparedArticles> = prepareArticles(getChildArticles(currentPath, subTopicId, start, count, sort), language)
-  const totalArticles: number = getAllChildArticlesTotal(currentPath, subTopicId)
+  const childArticles: QueryResponse<Article> = getChildArticles(currentPath, subTopicId, start, count, sort)
+  const preparedArticles: Array<PreparedArticles> = prepareArticles(childArticles, language)
+  const totalArticles: number = childArticles.total
 
   const articleServiceUrl: string = serviceUrl({
     service: 'articles'

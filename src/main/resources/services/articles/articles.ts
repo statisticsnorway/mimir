@@ -1,6 +1,7 @@
 import { Request, Response } from 'enonic-types/controller'
-import { Content } from 'enonic-types/content'
+import { Content, QueryResponse } from 'enonic-types/content'
 import { PreparedArticles } from '../../lib/ssb/utils/articleUtils'
+import { Article } from '../../site/content-types/article/article'
 
 const {
   getContent
@@ -10,7 +11,7 @@ const {
   prepareArticles
 } = __non_webpack_require__( '/lib/ssb/utils/articleUtils')
 
-const totalCount: number = 0
+let totalCount: number = 0
 
 exports.get = (req: Request): Response => {
   const currentPath: string = req.params.currentPath ? req.params.currentPath : '/'
@@ -21,7 +22,9 @@ exports.get = (req: Request): Response => {
   const content: Content = getContent()
   const subTopicId: string = content._id
 
-  const preparedArticles: Array<PreparedArticles> = prepareArticles(getChildArticles(currentPath, subTopicId, start, count, sort), language)
+  const childArticles: QueryResponse<Article> = getChildArticles(currentPath, subTopicId, start, count, sort)
+  const preparedArticles: Array<PreparedArticles> = prepareArticles(childArticles, language)
+  totalCount = childArticles.total
 
   return {
     status: 200,

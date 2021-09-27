@@ -11,15 +11,6 @@ const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
 
-export function getAllChildArticlesTotal(currentPath: string, subTopicId: string): number {
-  const toDay: string = moment().toISOString()
-  return query({
-    count: 1000,
-    query: `(_path LIKE "/content${currentPath}*" OR data.subtopic = "${subTopicId}") AND publish.from <= instant("${toDay}")`,
-    contentTypes: [`${app.name}:article`]
-  }).count
-}
-
 export function getChildArticles(currentPath: string, subTopicId: string, start: number, count: number, sort: string): QueryResponse<Article> {
   const toDay: string = moment().toISOString()
   return query({
@@ -48,7 +39,6 @@ export function prepareArticles(articles: QueryResponse<Article>, language: stri
 export interface ArticleUtilsLib {
   getChildArticles: (currentPath: string, subTopicId: string, start: number, count: number, sort: string) => QueryResponse<Article>;
   prepareArticles: (articles: QueryResponse<Article>, language: string) => Array<PreparedArticles>;
-  getAllChildArticlesTotal: (currentPath: string, subTopicId: string) => number;
 }
 
 export interface PreparedArticles {
