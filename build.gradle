@@ -44,6 +44,7 @@ dependencies {
     compile group: 'org.json', name: 'json', version: '20210307'
     include 'com.enonic.lib:lib-react4xp:2.0.2'
     include 'com.enonic.lib:lib-text-encoding:2.0.0'
+    include 'com.enonic.lib:lib-markdown:1.0.0'
 }
 
 repositories {
@@ -52,6 +53,7 @@ repositories {
     xp.enonicRepo()
     maven {
         url "https://repo1.maven.org/maven2/"
+        url "http://repo.enonic.com/public"
     }
     maven { 
         url 'https://jitpack.io' 

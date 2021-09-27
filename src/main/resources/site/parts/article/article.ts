@@ -23,6 +23,10 @@ const {
 const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
+const {
+  render
+} = __non_webpack_require__('/lib/markdown')
+
 
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
@@ -45,6 +49,12 @@ function renderPart(req: Request): React4xpResponse {
   const bodyText: string | undefined = page.data.articleText ? processHtml({
     value: page.data.articleText.replace(/&nbsp;/g, ' ')
   }) : undefined
+
+  // TODO: Markdown lib testing for hack4ssb
+  // * In need of a way to retrieve markdown file from Content Studio
+  // * Stringify, then send into render?
+  // * Potential problems: how to tackle figures?
+  const combinedBodyTextMarkdown: string | undefined = bodyText ? bodyText.concat(render('Hello *World*')) : render('Hello *World*')
 
   const pubDate: string = moment(page.publish?.from).locale(language).format('LL')
   const showModifiedDate: Article['showModifiedDate'] = page.data.showModifiedDate
@@ -76,7 +86,7 @@ function renderPart(req: Request): React4xpResponse {
     introTitle: page.data.introTitle,
     title: page.displayName,
     ingress: page.data.ingress,
-    bodyText,
+    bodyText: combinedBodyTextMarkdown,
     showPubDate: page.data.showPublishDate,
     pubDate,
     modifiedDate,
@@ -84,7 +94,7 @@ function renderPart(req: Request): React4xpResponse {
     serialNumber: page.data.serialNumber,
     associatedStatistics: getAssociatedStatisticsLinks(associatedStatisticsConfig),
     associatedArticleArchives: getAssociatedArticleArchiveLinks(associatedArticleArchivesConfig),
-    isbn: isEnabled('article-isbn', true) && page.data.isbnNumber
+    isbn: isEnabled('article-isbn', true) && page.data.isbnNumber,
   }
 
   return React4xp.render('site/parts/article/article', props, req)
