@@ -31,6 +31,11 @@ export interface BannerPartConfig {
          */
         faktaside: {
           /**
+           * Stikktittel
+           */
+          subTitle?: string;
+
+          /**
            * Tittel på faktaside
            */
           title?: string;
