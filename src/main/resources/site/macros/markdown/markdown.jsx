@@ -1,25 +1,27 @@
 import React from 'react'
-import { Link } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 
-class HeaderLink extends React.Component {
+class MarkdownTest extends React.Component {
   constructor(props) {
     super(props)
   }
 
   render() {
     return (
-      <section className="headerLinkDownload">
-        <Link href={this.props.linkedContent} isExternal={true} className="ssb-link header">
-          {this.props}
-        </Link>
+      <section className="test">
+        Vi kan sette inn feks en Highcharts her!
+        {this.props.content.displayName}
+        {this.props.content.markdown}
       </section>
     )
   }
 }
 
-export default (props) => <HeaderLink {...props} />
+export default (props) => <MarkdownTest {...props} />
 
-HeaderLink.propTypes = {
-  content: PropTypes.string
+MarkdownTest.propTypes = {
+  content: PropTypes.shape({
+    displayName: PropTypes.string,
+    markdown: PropTypes.string
+  })
 }
