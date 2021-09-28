@@ -1,0 +1,18 @@
+<part>
+    <display-name>Markdown</display-name>
+    <form>
+        <field-set>
+			<label>
+				Markdown tekst
+			</label>
+			<items>
+				<input name="markdownText" type="TextArea">
+					<occurrences minimum="0" maximum="1" />
+					<label>
+						Markdown
+					</label>
+				</input>
+			</items>
+		</field-set>
+    </form>
+</part>
