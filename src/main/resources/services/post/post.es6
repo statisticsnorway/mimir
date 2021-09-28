@@ -9,8 +9,8 @@ export function post(req) {
   log.info(req.body)
   const connected = connect()
   const result1 = connected.create({
-    _name: 'testContent' + 123,
-    // _parentPath: '/markdowns/',
+    _name: req.params.name,
+    _parentPath: req.params.path,
     displayName: 'wow it is the best markdown',
     markdown: req.body
 
