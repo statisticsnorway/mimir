@@ -12,6 +12,13 @@
 						Markdown
 					</label>
 				</input>
+				<input name="markdownFiles" type="CustomSelector">
+					<label>Markdown file</label>
+					<occurrences minimum="0" maximum="1"/>
+					<config>
+						<service>markdown</service>
+					</config>
+				</input>
 			</items>
 		</field-set>
     </form>

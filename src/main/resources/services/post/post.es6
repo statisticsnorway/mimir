@@ -1,8 +1,3 @@
-// const {
-//   getVersion
-
-
-// } = __non_webpack_require__('/lib/xp/admin')
 const nodeLib = __non_webpack_require__('/lib/xp/node')
 
 export function post(req) {
@@ -28,6 +23,12 @@ export function post(req) {
     })
     log.info(JSON.stringify(result1, null, 2))
   }
+}
+
+export function getMarkdownRepo() {
+  return connect().findChildren({
+    parentKey: '/'
+  })
 }
 
 const connect = function() {

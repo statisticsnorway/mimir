@@ -4,4 +4,9 @@ export interface MarkdownPartConfig {
    * Markdown
    */
   markdownText?: string;
+
+  /**
+   * Markdown file
+   */
+  markdownFiles?: string;
 }
