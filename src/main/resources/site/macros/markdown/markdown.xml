@@ -1,0 +1,10 @@
+<macro>
+    <display-name>Markdown (ikke manuell)</display-name>
+    <description></description>
+    <form>
+        <input name="jsconfig" type="TextLine">
+            <label>Innhold</label>
+            <occurrences minimum="1" maximum="1"/>
+        </input>
+    </form>
+</macro>
