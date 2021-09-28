@@ -84,7 +84,7 @@ function renderPart(req: Request): React4xpResponse {
     serialNumber: page.data.serialNumber,
     associatedStatistics: getAssociatedStatisticsLinks(associatedStatisticsConfig),
     associatedArticleArchives: getAssociatedArticleArchiveLinks(associatedArticleArchivesConfig),
-    isbn: isEnabled('article-isbn', true) && page.data.isbnNumber,
+    isbn: isEnabled('article-isbn', true) && page.data.isbnNumber
   }
 
   return React4xp.render('site/parts/article/article', props, req)
