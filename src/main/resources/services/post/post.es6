@@ -25,12 +25,6 @@ export function post(req) {
   }
 }
 
-export function getMarkdownRepo() {
-  return connect().findChildren({
-    parentKey: '/'
-  })
-}
-
 const connect = function() {
   return nodeLib.connect({
     repoId: 'no.ssb.pubmd',
