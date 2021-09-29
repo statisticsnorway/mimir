@@ -3,10 +3,12 @@ const nodeLib = __non_webpack_require__('/lib/xp/node')
 export function post(req) {
   log.info(req.body)
   const repo = connect()
-  const nodeExists = req.params.path && repo.exists(req.params.path + '/' + req.params.name)
+  const path = req.params.path ? req.params.path : '/'
+  const nodeKey = req.params.path ? req.params.path + '/' + req.params.name : '/' + req.params.name
+  const nodeExists = repo.exists(nodeKey)
   if (nodeExists) {
     repo.modify({
-      key: req.params.path + '/' + req.params.name,
+      key: nodeKey,
       editor: (node) => {
         node.displayName = 'pow it is the most edited markdown',
         node.markdown = req.body
@@ -16,7 +18,7 @@ export function post(req) {
   } else {
     const result1 = repo.create({
       _name: req.params.name,
-      _parentPath: req.params.path,
+      _parentPath: path,
       displayName: 'wow it is the best markdown',
       markdown: req.body
 
