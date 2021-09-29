@@ -1,31 +1,23 @@
 const {
-  query
-} = __non_webpack_require__('/lib/xp/content')
-const {
   getMarkdownRepo
 } = __non_webpack_require__('../post/post')
+const {
+  getNode
+} = __non_webpack_require__('/lib/ssb/repo/common')
 
 exports.get = () => {
-  const markdownFileIds = getMarkdownRepo().hits.map((node) => `'${node.id}'`)
-  log.info(JSON.stringify(getMarkdownRepo().hits, null, 2))
-  log.info(JSON.stringify(`_id IN(${markdownFileIds.join(',')})`, null, 2))
-
-  const markdownFiles = query({
-    count: 1000,
-    query: `_id IN(${markdownFileIds.join(',')})`
-  })
-  log.info(JSON.stringify(markdownFiles, null, 2))
+  const markdownFileIds = getMarkdownRepo().hits.map((node) => `${node.id}`)
+  const markdownContent = markdownFileIds.map((id) => getNode('no.ssb.pubmd', 'master', id))
+  const total = markdownContent.length
 
   return {
     body: {
-      count: markdownFiles.count,
-      total: markdownFiles.total,
-      hits: markdownFiles.hits.map(({
-        _id, name
-      }) => {
+      count: total,
+      total: total,
+      hits: markdownContent.map(({_id, _name}) => {
         return {
           id: _id,
-          displayName: name
+          displayName: _name
         }
       })
     },
