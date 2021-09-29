@@ -6,13 +6,16 @@ const {
 } = __non_webpack_require__('../post/post')
 
 exports.get = () => {
+  const markdownFileIds = getMarkdownRepo().hits.map((node) => `'${node.id}'`)
+  log.info(JSON.stringify(getMarkdownRepo().hits, null, 2))
+  log.info(JSON.stringify(`_id IN(${markdownFileIds.join(',')})`, null, 2))
+
   const markdownFiles = query({
     count: 1000,
-    query: `_id IN(${getMarkdownRepo().hits.map((node) => `"${node.id}"`).join(',')})`
+    query: `_id IN(${markdownFileIds.join(',')})`
   })
-  log.info(JSON.stringify(getMarkdownRepo().hits, null, 2))
-  log.info(JSON.stringify(getMarkdownRepo().hits.map((node) => `"${node.id}"`).join(','), null, 2))
   log.info(JSON.stringify(markdownFiles, null, 2))
+
   return {
     body: {
       count: markdownFiles.count,
