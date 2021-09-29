@@ -4,21 +4,12 @@ import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 
 function MarkdownCharts(props) {
-  const options = {
-    title: {
-      text: 'My chart'
-    },
-    series: [{
-      data: [1, 2, 3]
-    }]
-  }
-
   return (
     <section className="markdown-charts">
       <div>
         <HighchartsReact
           highcharts={Highcharts}
-          options={options}
+          options={props.options}
         />
       </div>
     </section>
@@ -28,5 +19,5 @@ function MarkdownCharts(props) {
 export default (props) => <MarkdownCharts {...props} />
 
 MarkdownCharts.propTypes = {
-  content: PropTypes.string
+  options: PropTypes.object
 }

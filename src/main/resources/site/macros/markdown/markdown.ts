@@ -6,6 +6,9 @@ const {
   connect
 } = __non_webpack_require__('/lib/xp/node')
 
+// eslint-disable-next-line @typescript-eslint/typedef
+const highchartController = __non_webpack_require__('../../parts/markdownCharts/markdownCharts')
+
 
 exports.macro = (context: MacroContext): React4xpResponse => {
   log.info('GLNRBN reached markdown macro!')
@@ -26,13 +29,17 @@ function renderPart(context: MacroContext): React4xpResponse {
   })
   const content: RepoNode = repo.get(jsconfig)
 
-  log.info(JSON.stringify(content, null, 2))
+  // eslint-disable-next-line @typescript-eslint/typedef
+  const highchart = highchartController.preview(context, content)
+  return highchart
 
-  const props: PartProperties = {
-    content
-  }
+  // log.info(JSON.stringify(content, null, 2))
 
-  return React4xp.render('site/macros/markdown/markdown', props)
+  // const props: PartProperties = {
+  //   content
+  // }
+
+  // return React4xp.render('site/macros/markdown/markdown', props)
 }
 
 interface PartProperties {
