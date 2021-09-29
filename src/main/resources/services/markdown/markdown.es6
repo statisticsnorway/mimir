@@ -1,13 +1,10 @@
 const {
-  getMarkdownRepo
-} = __non_webpack_require__('../post/post')
-const {
-  getNode
-} = __non_webpack_require__('/lib/ssb/repo/common')
+  getMarkdownRepo,getMarkdownNode
+} = __non_webpack_require__('/lib/ssb/utils/markdownUtils')
 
 exports.get = () => {
   const markdownFileIds = getMarkdownRepo().hits.map((node) => `${node.id}`)
-  const markdownContent = markdownFileIds.map((id) => getNode('no.ssb.pubmd', 'master', id))
+  const markdownContent = markdownFileIds.map((id) => getMarkdownNode(id))
   const total = markdownContent.length
 
   return {
