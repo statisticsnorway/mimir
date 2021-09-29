@@ -1,5 +1,5 @@
 const {
-  getMarkdownRepo,getMarkdownNode
+  getMarkdownRepo, getMarkdownNode
 } = __non_webpack_require__('/lib/ssb/utils/markdownUtils')
 
 exports.get = () => {
@@ -11,7 +11,9 @@ exports.get = () => {
     body: {
       count: total,
       total: total,
-      hits: markdownContent.map(({_id, _name}) => {
+      hits: markdownContent.map(({
+        _id, _name
+      }) => {
         return {
           id: _id,
           displayName: _name

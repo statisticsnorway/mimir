@@ -5,7 +5,9 @@ import { MarkdownPartConfig } from './markdown-part-config'
 import { Content } from 'enonic-types/content'
 
 const {
-  get,
+  getMarkdownNode
+} = __non_webpack_require__('/lib/ssb/utils/markdownUtils')
+const {
   getChildren
 } = __non_webpack_require__('/lib/xp/content')
 const {
@@ -27,14 +29,11 @@ function renderPart(req: Request): React4xpResponse {
   const component: Component<MarkdownPartConfig> = getComponent()
   const markdownText: string = component.config.markdownText ? render(component.config.markdownText) : ''
 
-  const markdownFileContent: MarkdownContent | null = component.config.markdownFile ? get({
-    key: component.config.markdownFile
-  }) : null
+  const markdownFileContent: MarkdownContent | null = component.config.markdownFile ? getMarkdownNode(component.config.markdownFile) : null
   const markdownFileChildren: Array<object> | undefined = markdownFileContent ? getChildren({
-    key: markdownFileContent._path,
+    key: markdownFileContent._id,
     count: 100
   }) as unknown as Array<object> : undefined
-  log.info('markdown children %s', JSON.stringify(markdownFileChildren, null, 2))
 
   const props: PartProperties = {
     markdownText: markdownFileContent && markdownFileContent.markdown ? markdownText.concat(render(markdownFileContent.markdown)) : markdownText
