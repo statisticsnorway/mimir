@@ -12,7 +12,7 @@
 						Markdown
 					</label>
 				</input>
-				<input name="markdownFiles" type="CustomSelector">
+				<input name="markdownFile" type="CustomSelector">
 					<label>Markdown file</label>
 					<occurrences minimum="0" maximum="1"/>
 					<config>

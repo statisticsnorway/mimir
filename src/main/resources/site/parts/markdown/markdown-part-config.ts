@@ -8,5 +8,5 @@ export interface MarkdownPartConfig {
   /**
    * Markdown file
    */
-  markdownFiles?: string;
+  markdownFile?: string;
 }
