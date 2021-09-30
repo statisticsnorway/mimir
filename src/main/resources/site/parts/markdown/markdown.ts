@@ -1,8 +1,9 @@
-import { Request } from 'enonic-types/controller'
+import { Request, Response } from 'enonic-types/controller'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Component } from 'enonic-types/portal'
 import { MarkdownPartConfig } from './markdown-part-config'
 import { Content } from 'enonic-types/content'
+import { renderError } from '../../../lib/ssb/error/error'
 
 const {
   getMarkdownNode
@@ -16,11 +17,21 @@ const {
 
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-exports.get = (req: Request): React4xpResponse => {
-  return renderPart(req)
+exports.get = (req: Request): React4xpResponse | Response => {
+  try {
+    return renderPart(req)
+  } catch (e) {
+    return renderError(req, 'Error in markdown part: ', e)
+  }
 }
 
-exports.preview = (req: Request): React4xpResponse => renderPart(req)
+exports.preview = (req: Request): React4xpResponse | Response => {
+  try {
+    return renderPart(req)
+  } catch (e) {
+    return renderError(req, 'Error in markdown part: ', e)
+  }
+}
 
 function renderPart(req: Request): React4xpResponse {
   const component: Component<MarkdownPartConfig> = getComponent()
