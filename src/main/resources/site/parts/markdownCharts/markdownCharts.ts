@@ -11,7 +11,7 @@ exports.get = (req: Request): React4xpResponse => {
 exports.preview = (req: Request, content: MarkdownRepoNode): React4xpResponse => renderPart(req, content)
 
 function renderPart(req: Request, content?: MarkdownRepoNode): React4xpResponse {
-  const options: object = content && content.markdown && content.markdown.chart ? JSON.parse(content.markdown.chart) : {}
+  const options: object = content && content.markdown ? JSON.parse(content.markdown) : {}
 
   const props: PartProperties = {
     options
@@ -21,9 +21,7 @@ function renderPart(req: Request, content?: MarkdownRepoNode): React4xpResponse 
 }
 
 interface MarkdownRepoNode extends RepoNode {
-  markdown?: {
-    chart?: string;
-  };
+  markdown?: string;
 }
 
 interface PartProperties {
