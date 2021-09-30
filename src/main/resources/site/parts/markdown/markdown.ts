@@ -8,9 +8,6 @@ const {
   getMarkdownNode
 } = __non_webpack_require__('/lib/ssb/utils/markdownUtils')
 const {
-  getChildren
-} = __non_webpack_require__('/lib/xp/content')
-const {
   getComponent, processHtml
 } = __non_webpack_require__('/lib/xp/portal')
 const {
@@ -33,11 +30,6 @@ function renderPart(req: Request): React4xpResponse {
   const markdownTextRendered: string = render(markdownTextProcessed)
 
   const markdownFileContent: MarkdownContent | null = component.config.markdownFile ? getMarkdownNode(component.config.markdownFile) : null
-  const markdownFileChildren: Array<object> | undefined = markdownFileContent ? getChildren({
-    key: markdownFileContent._id,
-    count: 100
-  }) as unknown as Array<object> : undefined
-
   const markdownFileProcessed: string = processHtml({
     value: markdownFileContent?.markdown ? markdownFileContent.markdown : ''
   })

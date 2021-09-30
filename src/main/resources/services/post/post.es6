@@ -1,7 +1,7 @@
 const nodeLib = __non_webpack_require__('/lib/xp/node')
 
 export function post(req) {
-  log.info(req.body)
+  slog.info(req.body)
   const repo = connect()
   const path = req.params.path ? req.params.path : '/'
   const nodeKey = req.params.path ? req.params.path + '/' + req.params.name : '/' + req.params.name
@@ -10,7 +10,6 @@ export function post(req) {
     repo.modify({
       key: nodeKey,
       editor: (node) => {
-        node.displayName = 'pow it is the most edited markdown',
         node.markdown = req.body
         return node
       }
@@ -19,7 +18,6 @@ export function post(req) {
     const result1 = repo.create({
       _name: req.params.name,
       _parentPath: path,
-      displayName: 'wow it is the best markdown',
       markdown: req.body
 
     })

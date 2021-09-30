@@ -15,7 +15,8 @@ export const connectMarkdownRepo = function() {
 
 export function getMarkdownRepo() {
   return connectMarkdownRepo().findChildren({
-    parentKey: '/'
+    parentKey: '/',
+    count: 1000
   })
 }
 
