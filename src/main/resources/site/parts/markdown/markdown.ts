@@ -11,7 +11,7 @@ const {
   getChildren
 } = __non_webpack_require__('/lib/xp/content')
 const {
-  getComponent
+  getComponent, processHtml
 } = __non_webpack_require__('/lib/xp/portal')
 const {
   render
@@ -27,7 +27,10 @@ exports.preview = (req: Request): React4xpResponse => renderPart(req)
 
 function renderPart(req: Request): React4xpResponse {
   const component: Component<MarkdownPartConfig> = getComponent()
-  const markdownText: string = component.config.markdownText ? render(component.config.markdownText) : ''
+  const markdownTextProcessed: string = processHtml({
+    value: component.config.markdownText ? component.config.markdownText : ''
+  })
+  const markdownTextRendered: string = render(markdownTextProcessed)
 
   const markdownFileContent: MarkdownContent | null = component.config.markdownFile ? getMarkdownNode(component.config.markdownFile) : null
   const markdownFileChildren: Array<object> | undefined = markdownFileContent ? getChildren({
@@ -35,8 +38,12 @@ function renderPart(req: Request): React4xpResponse {
     count: 100
   }) as unknown as Array<object> : undefined
 
+  const markdownFileProcessed: string = processHtml({
+    value: markdownFileContent?.markdown ? markdownFileContent.markdown : ''
+  })
+
   const props: PartProperties = {
-    markdownText: markdownFileContent && markdownFileContent.markdown ? markdownText.concat(render(markdownFileContent.markdown)) : markdownText
+    markdownText: markdownFileContent && markdownFileContent.markdown ? markdownTextRendered.concat(render(markdownFileProcessed)) : markdownTextRendered
   }
 
   return React4xp.render('site/parts/markdown/markdown', props, req)
