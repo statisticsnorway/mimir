@@ -3,7 +3,7 @@
     <description></description>
     <form>
         <input name="jsconfig" type="TextLine">
-            <label>Innhold</label>
+            <label>File path</label>
             <occurrences minimum="1" maximum="1"/>
         </input>
     </form>
