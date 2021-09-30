@@ -1,7 +1,7 @@
 const nodeLib = __non_webpack_require__('/lib/xp/node')
 
 export function post(req) {
-  slog.info(req.body)
+  log.info(req.body)
   const repo = connect()
   const path = req.params.path ? req.params.path : '/'
   const nodeKey = req.params.path ? req.params.path + '/' + req.params.name : '/' + req.params.name
