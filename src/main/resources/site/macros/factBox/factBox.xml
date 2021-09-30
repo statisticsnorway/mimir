@@ -4,11 +4,31 @@
     <form>
         <input name="factBox" type="ContentSelector">
             <label>Faktaboks</label>
-            <occurrences minimum="1" maximum="1"/>
+            <occurrences minimum="0" maximum="1"/>
+            <help-text>NB! Hvis både Text og Relatert innhold er fylt ut blir relatert innhold valgt</help-text>
             <config>
                 <allowPath>${site}</allowPath>
                 <allowType>factBox</allowType>
             </config>
         </input>
+        <field-set>
+			<label>
+				Faktaboks fritekst
+			</label>
+			<items>
+				<input name="factBoxTitle" type="TextLine">
+                    <occurrences minimum="0" maximum="1" />
+                    <label>
+                        Tittel
+                    </label>
+                </input>
+                <input name="factBoxText" type="TextArea">
+                    <occurrences minimum="0" maximum="1" />
+                    <label>
+                        Tekst
+                    </label>
+                </input>
+			</items>
+		</field-set>
     </form>
 </macro>

@@ -3,5 +3,15 @@ export interface FactBoxConfig {
   /**
    * Faktaboks
    */
-  factBox: string;
+  factBox?: string;
+
+  /**
+   * Tittel
+   */
+  factBoxTitle?: string;
+
+  /**
+   * Tekst
+   */
+  factBoxText?: string;
 }
