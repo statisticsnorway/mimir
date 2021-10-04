@@ -6,6 +6,7 @@ import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { GroupedBy, PreparedStatistics, YearReleases, Release } from '../../../lib/ssb/utils/variantUtils'
 import { UpcomingReleasesPartConfig } from './upcomingReleases-part-config'
 import { UpcomingRelease } from '../../content-types/upcomingRelease/upcomingRelease'
+import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 
 const {
   moment
@@ -37,6 +38,9 @@ const {
 const {
   fromPartCache
 } = __non_webpack_require__('/lib/ssb/cache/partCache')
+const {
+  getMainSubjects, getMainSubjectById
+} = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
 
 exports.get = (req: Request): React4xpResponse => {
   return renderPart(req)
@@ -60,6 +64,7 @@ function renderPart(req: Request): React4xpResponse {
   const upcomingReleasesServiceUrl: string = serviceUrl({
     service: 'upcomingReleases'
   })
+  const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, content.language === 'en' ? 'en' : 'nb' )
 
   const groupedWithMonthNames: Array<YearReleases> = fromPartCache(req, `${content._id}-upcomingReleases`, () => {
     // Get statistics
@@ -89,12 +94,13 @@ function renderPart(req: Request): React4xpResponse {
     query: `type = "${app.name}:upcomingRelease" AND language = "${currentLanguage}" AND data.date >= "${moment().format('YYYY-MM-DD')}"`
   }).hits.map((r) => {
     const date: moment.Moment = moment(r.data.date).locale(currentLanguage)
+    const mainSubject: SubjectItem | null = getMainSubjectById(allMainSubjects, r.data.mainSubject)
     return {
       id: r._id,
       name: r.displayName,
       type: r.data.type,
       date: date.format(),
-      mainSubject: r.data.mainSubject,
+      mainSubject: mainSubject ? mainSubject.title : '',
       day: date.format('D'),
       month: date.format('M'),
       monthName: date.format('MMM'),
