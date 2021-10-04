@@ -1,16 +1,15 @@
 import { Request, Response } from 'enonic-types/controller'
-import { Article } from '../../site/content-types/article/article'
 import { Content, QueryResponse } from 'enonic-types/content'
+import { PreparedArticles } from '../../lib/ssb/utils/articleUtils'
+import { Article } from '../../site/content-types/article/article'
 
 const {
-  query
-} = __non_webpack_require__('/lib/xp/content')
-const {
-  pageUrl, getContent
+  getContent
 } = __non_webpack_require__('/lib/xp/portal')
 const {
-  moment
-} = __non_webpack_require__('/lib/vendor/moment')
+  getChildArticles,
+  prepareArticles
+} = __non_webpack_require__( '/lib/ssb/utils/articleUtils')
 
 let totalCount: number = 0
 
@@ -23,7 +22,9 @@ exports.get = (req: Request): Response => {
   const content: Content = getContent()
   const subTopicId: string = content._id
 
-  const preparedArticles: Array<PreparedArticles> = prepareArticles(getChildArticles(currentPath, subTopicId, start, count, sort), language)
+  const childArticles: QueryResponse<Article> = getChildArticles(currentPath, subTopicId, start, count, sort)
+  const preparedArticles: Array<PreparedArticles> = prepareArticles(childArticles, language)
+  totalCount = childArticles.total
 
   return {
     status: 200,
@@ -33,38 +34,4 @@ exports.get = (req: Request): Response => {
       totalCount: totalCount
     }
   }
-}
-
-function getChildArticles(currentPath: string, subTopicId: string, start: number, count: number, sort: string): QueryResponse<Article> {
-  const toDay: string = moment().toISOString()
-  return query({
-    start: start,
-    count: count,
-    query: `(_path LIKE "/content${currentPath}*" OR data.subtopic = "${subTopicId}") AND publish.from <= instant("${toDay}")`,
-    contentTypes: [`${app.name}:article`],
-    sort: `publish.from ${sort}`
-  })
-}
-
-function prepareArticles(articles: QueryResponse<Article>, language: string): Array<PreparedArticles> {
-  const momentLanguage: string = language === 'en' ? 'en-gb' : 'nb'
-  totalCount = articles.total
-  return articles.hits.map((article: Content<Article>) => {
-    return {
-      title: article.displayName,
-      preface: article.data.ingress ? article.data.ingress : '',
-      url: pageUrl({
-        id: article._id
-      }),
-      publishDate: article.publish && article.publish.from ? article.publish.from : '',
-      publishDateHuman: article.publish && article.publish.from ? moment(article.publish.from).locale(momentLanguage).format('LL') : ''
-    }
-  })
-}
-
-interface PreparedArticles {
-    title: string;
-    preface: string;
-    url: string;
-    publishDate: string;
 }
