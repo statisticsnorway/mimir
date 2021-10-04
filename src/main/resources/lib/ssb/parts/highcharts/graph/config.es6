@@ -31,8 +31,12 @@ export const createDefaultConfig = (highchartData, displayName) => ({
   accessibility: {
     enabled: true,
     keyboardNavigation: {
-      order: ['chartMenu']
-    }
+      order: [
+        // TODO: Tabs to the invisible export menu first, then the download button. Should fix download button keyboard navigation then remove.
+        'chartMenu'
+      ]
+    },
+    description: highchartData.description
   },
   chart: {
     height: (highchartData.heightAspectRatio > 0) ? `${highchartData.heightAspectRatio}%` : null,
