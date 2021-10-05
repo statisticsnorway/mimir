@@ -17,7 +17,6 @@
                 <option value="table">Tabell</option>
                 <option value="activity">Aktivitet</option>
             </config>
-            <default>article</default>
         </input>
         <input name="mainSubject" type="CustomSelector">
             <label>Hovedemne</label>
