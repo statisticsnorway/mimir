@@ -94,13 +94,18 @@ function renderPart(req: Request): React4xpResponse {
     query: `type = "${app.name}:upcomingRelease" AND language = "${currentLanguage}" AND data.date >= "${moment().format('YYYY-MM-DD')}"`
   }).hits.map((r) => {
     const date: moment.Moment = moment(r.data.date).locale(currentLanguage)
-    const mainSubject: SubjectItem | null = getMainSubjectById(allMainSubjects, r.data.mainSubject)
+    const mainSubjectItem: SubjectItem | null = getMainSubjectById(allMainSubjects, r.data.mainSubject)
+    const mainSubject: string = mainSubjectItem ? mainSubjectItem.title : ''
+    const contentType: string = r.data.contentType ? localize({
+      key: `contentType.${r.data.contentType}`,
+      locale: currentLanguage
+    }) : ''
     return {
       id: r._id,
       name: r.displayName,
-      type: r.data.type,
+      type: contentType,
       date: date.format(),
-      mainSubject: mainSubject ? mainSubject.title : '',
+      mainSubject: mainSubject,
       day: date.format('D'),
       month: date.format('M'),
       monthName: date.format('MMM'),
@@ -139,10 +144,12 @@ interface PartProps {
   statisticsPageUrlText: string;
   contentReleases: Array<PreparedUpcomingRelease>;
 }
-
-interface PreparedUpcomingRelease extends UpcomingRelease {
+interface PreparedUpcomingRelease {
   id: string;
   name: string;
+  type: string;
+  date: string;
+  mainSubject: string;
   day: string;
   month: string;
   monthName: string;

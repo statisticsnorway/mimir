@@ -7,9 +7,17 @@
             <default>now</default>
             <occurrences minimum="1" maximum="1" />
         </input>
-        <input type="TextLine" name="type">
+        <input name="contentType" type="ComboBox">
             <label>Innholdstype</label>
-            <occurrences minimum="1" maximum="1" />
+            <occurrences minimum="1" maximum="1"/>
+            <config>
+                <option value="article">Artikkel</option>
+                <option value="report">Rapport</option>
+                <option value="analysis">SSB analyse</option>
+                <option value="table">Tabell</option>
+                <option value="activity">Aktivitet</option>
+            </config>
+            <default>article</default>
         </input>
         <input name="mainSubject" type="CustomSelector">
             <label>Hovedemne</label>
