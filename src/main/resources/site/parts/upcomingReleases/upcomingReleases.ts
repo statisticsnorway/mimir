@@ -109,7 +109,8 @@ function renderPart(req: Request): React4xpResponse {
       day: date.format('D'),
       month: date.format('M'),
       monthName: date.format('MMM'),
-      year: date.format('YYYY')
+      year: date.format('YYYY'),
+      upcomingReleaseLink: r.data.href ? r.data.href : ''
     }
   })
 
@@ -154,4 +155,5 @@ interface PreparedUpcomingRelease {
   month: string;
   monthName: string;
   year: string;
+  upcomingReleaseLink?: string;
 }

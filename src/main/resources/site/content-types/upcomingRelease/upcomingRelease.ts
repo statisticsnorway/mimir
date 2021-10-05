@@ -14,4 +14,9 @@ export interface UpcomingRelease {
    * Hovedemne
    */
   mainSubject: string;
+
+  /**
+   * Lenke
+   */
+  href?: string;
 }

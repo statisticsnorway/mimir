@@ -25,5 +25,9 @@
                 <service>mainSubject</service>
             </config>
         </input>
+        <input name="href" type="TextLine">
+            <label>Lenke</label>
+            <occurrences minimum="0" maximum="1" />
+        </input>
     </form>
 </content-type>
