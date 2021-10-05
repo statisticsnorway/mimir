@@ -7,6 +7,9 @@ import { X } from 'react-feather'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 
+require('highcharts/modules/accessibility')(Highcharts)
+require('highcharts/modules/exporting')(Highcharts)
+
 
 /* TODO
 - Etternavn må få rett visning av beste-treff
@@ -237,6 +240,22 @@ function NameSearch(props) {
           },
           pointStart: 1945 // Magic number: Name data starts in the year 1945 and we try to get all the years since.
         }
+      },
+      exporting: {
+        buttons: {
+          contextButton: {
+            // TODO: downloadCSV and downloadXLS are not available in Highcharts/HighchartsReact
+            menuItems: [
+              'printChart',
+              'separator',
+              'downloadPNG',
+              'downloadJPEG',
+              'downloadPDF',
+              'downloadSVG'
+            ]
+          }
+        },
+        enabled: true
       },
       series: result.nameGraph
     }
