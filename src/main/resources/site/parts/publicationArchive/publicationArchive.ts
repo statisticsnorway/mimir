@@ -7,7 +7,7 @@ import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { PreparedStatistics } from '../../../lib/ssb/utils/variantUtils'
 import { getAllStatisticsFromRepo } from '../../../lib/ssb/statreg/statistics'
 import { filterOnPreviousReleases } from '../releasedStatistics/releasedStatistics'
-import { PublicationItem } from '../../../services/publicationArchive/publicationArchive'
+import { PublicationItem, PublicationResult } from '../../../lib/ssb/utils/articleUtils'
 import { fromPartCache } from '../../../lib/ssb/cache/partCache'
 
 const {
@@ -23,6 +23,9 @@ const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   prepareStatisticRelease
 } = __non_webpack_require__('/lib/ssb/utils/variantUtils')
+const {
+  getPublications
+} = __non_webpack_require__( '/lib/ssb/utils/articleUtils')
 
 exports.get = (req: Request): React4xpResponse => {
   return renderPart(req)
@@ -35,13 +38,15 @@ function renderPart(req: Request): React4xpResponse {
   const part: Component<PublicationArchivePartConfig> = getComponent()
   const phrases: {[key: string]: string} = getPhrases(content)
   const language: string = content.language ? content.language : 'nb'
-  const isNotInEditMode: boolean = req.mode !== 'edit'
   const publicationArchiveServiceUrl: string = serviceUrl({
     service: 'publicationArchive'
   })
+  const start: number = 0
+  const count: number = 10
 
   const releasesPrepped: Array<PreparedStatistics | null> = fromPartCache(req, `${content._id}-publicationArchive`, () => {
     const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
+    //TODO: Look at filterOnPreviousReleases, take to long time
     const releasesFiltered: Array<StatisticInListing> = filterOnPreviousReleases(releases, releases.length).filter((r) => r.status === 'A')
     return releasesFiltered.map((release: StatisticInListing) => prepareStatisticRelease(release, language))
   })
@@ -53,6 +58,7 @@ function renderPart(req: Request): React4xpResponse {
     showingPhrase: phrases['publicationArchive.showing'],
     language,
     publicationArchiveServiceUrl,
+    articles: getPublications(start, count, language),
     statisticsReleases: prepareStatisticsReleases(releasesPrepped as Array<PreparedStatistics>, language),
     articleTypePhrases: {
       default: phrases['articleType.default'],
@@ -65,9 +71,7 @@ function renderPart(req: Request): React4xpResponse {
     }
   }
 
-  return React4xp.render('site/parts/publicationArchive/publicationArchive', props, req, {
-    clientRender: isNotInEditMode
-  })
+  return React4xp.render('site/parts/publicationArchive/publicationArchive', props, req)
 }
 
 function prepareStatisticsReleases(statistics: Array<PreparedStatistics>, language: string): Array<PublicationItem> | [] {
@@ -102,6 +106,7 @@ interface PartProperties {
   showingPhrase: string;
   language: string;
   publicationArchiveServiceUrl: string;
+  articles: PublicationResult;
   statisticsReleases: Array<PublicationItem> | [];
   articleTypePhrases: {
     [key: string]: string;

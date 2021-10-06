@@ -12,13 +12,14 @@ function PublicationArchive(props) {
     ingress,
     buttonTitle,
     publicationArchiveServiceUrl,
+    articles,
     statisticsReleases,
     language,
     articleTypePhrases,
     showingPhrase
   } = props
-  const [publications, setPublications] = useState([])
-  const [total, setTotal] = useState(0)
+  const [publications, setPublications] = useState(articles.publications)
+  const [total, setTotal] = useState(articles.total + statisticsReleases.length)
   const [loading, setLoading] = useState(false)
   const [first, setFirst] = useState(true)
   const [statisticsPublications, setStatisticsPublications] = useState(statisticsReleases)
@@ -27,7 +28,7 @@ function PublicationArchive(props) {
   useEffect(() => {
     if (first) {
       setFirst(false)
-      fetchPublications()
+      setPublications(mergePublications(publications))
     }
   })
 
@@ -193,6 +194,10 @@ PublicationArchive.propTypes = {
   showingPhrase: PropTypes.string,
   language: PropTypes.string,
   publicationArchiveServiceUrl: PropTypes.string,
+  articles: PropTypes.objectOf({
+    total: PropTypes.number,
+    publications: PropTypes.array
+  }),
   statisticsReleases: PropTypes.array,
   articleTypePhrases: PropTypes.objectOf(PropTypes.string)
 }
