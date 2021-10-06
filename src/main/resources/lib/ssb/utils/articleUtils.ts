@@ -38,7 +38,7 @@ export function prepareArticles(articles: QueryResponse<Article>, language: stri
   })
 }
 
-export function getPublications(start: number = 0, count: number = 10, language: string): PublicationResult {
+export function getPublications(start: number = 0, count: number = 10, language: string, articleType?: string, subject?: string): PublicationResult {
   const languageQuery: string = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'
   const mainSubjects: Array<Content<Page>> = query({
     count: 500,
@@ -47,7 +47,9 @@ export function getPublications(start: number = 0, count: number = 10, language:
   }).hits as unknown as Array<Content<Page>>
 
   const pagePaths: Array<string> = mainSubjects.map((mainSubject) => `_parentPath LIKE "/content${mainSubject._path}/*"`)
-  const queryString: string = `(${pagePaths.join(' OR ')}) ${languageQuery}`
+  const subjectQuery: string = subject ? `_parentPath LIKE "/content/ssb/${subject}/*"` : `(${pagePaths.join(' OR ')})`
+  const articleTypeQuery: string = articleType ? ` AND data.articleType = "${articleType}"` : ''
+  const queryString: string = `${subjectQuery} ${languageQuery} ${articleTypeQuery}`
 
   const res: QueryResponse<Article> = query({
     start,
@@ -90,7 +92,7 @@ function prepareArticle(article: Content<Article>, mainSubject: Content<Page> | 
 export interface ArticleUtilsLib {
   getChildArticles: (currentPath: string, subTopicId: string, start: number, count: number, sort: string) => QueryResponse<Article>;
   prepareArticles: (articles: QueryResponse<Article>, language: string) => Array<PreparedArticles>;
-  getPublications: (start: number, count: number, language: string) => PublicationResult;
+  getPublications: (start: number, count: number, language: string, contentType?: string, subject?: string) => PublicationResult;
 }
 
 export interface PreparedArticles {
