@@ -31,8 +31,8 @@ const {
   getStatisticByIdFromRepo
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
-  hasRole
-} = __non_webpack_require__('/lib/xp/auth')
+  hasWritePermissionsAndPreview
+} = __non_webpack_require__('/lib/ssb/parts/permissions')
 const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
@@ -60,7 +60,7 @@ function renderPart(req, relatedArticles) {
   const page = getContent()
   const language = page.language ? page.language === 'en' ? 'en-gb' : page.language : 'nb'
   const phrases = getPhrases(page)
-  const showPreview = req.params.showDraft && hasRole('system.admin') && req.mode === 'preview'
+  const showPreview = req.params.showDraft && hasWritePermissionsAndPreview(req, page._id)
   if (page.type === `${app.name}:statistics`) {
     addDsArticle(page, relatedArticles, showPreview)
   }
