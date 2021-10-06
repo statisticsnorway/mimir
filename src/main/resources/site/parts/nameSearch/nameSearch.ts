@@ -3,11 +3,6 @@ import { Component } from 'enonic-types/portal'
 import { renderError } from '../../../lib/ssb/error/error'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { NameSearchPartConfig } from './nameSearch-part-config'
-import { SiteConfig } from '../../../site/site-config'
-
-const {
-  getSiteConfig
-} = __non_webpack_require__('/lib/xp/portal')
 
 const {
   getComponent,
@@ -155,7 +150,31 @@ function partsPhrases(locale: string): PartProperties['phrases'] {
         key: 'nameSearch.types.firstgiven',
         locale
       })
-    }
+    },
+    download: localize({
+      key: 'highcharts.download',
+      locale
+    }),
+    printChart: localize({
+      key: 'highcharts.printChart',
+      locale
+    }),
+    downloadPNG: localize({
+      key: 'highcharts.downloadPNG',
+      locale
+    }),
+    downloadJPEG: localize({
+      key: 'highcharts.downloadJPEG',
+      locale
+    }),
+    downloadPDF: localize({
+      key: 'highcharts.downloadPDF',
+      locale
+    }),
+    downloadSVG: localize({
+      key: 'highcharts.downloadSVG',
+      locale
+    })
   }
 }
 
@@ -190,5 +209,11 @@ interface PartProperties {
       onlygivenandfamily: string;
       firstgiven: string;
     };
+    download: string;
+    printChart: string;
+    downloadPNG: string;
+    downloadJPEG: string;
+    downloadPDF: string;
+    downloadSVG: string;
   };
 }

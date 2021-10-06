@@ -221,7 +221,8 @@ function NameSearch(props) {
     const options = {
       chart: {
         type: 'spline',
-        height: '75%'
+        height: '75%',
+        spacingBottom: 45
       },
       title: {
         align: 'left',
@@ -244,6 +245,8 @@ function NameSearch(props) {
       exporting: {
         buttons: {
           contextButton: {
+            text: props.phrases.download,
+            symbolStroke: '#00824D', // ssb-green-4
             // TODO: downloadCSV and downloadXLS are not available in Highcharts/HighchartsReact
             menuItems: [
               'printChart',
@@ -252,10 +255,29 @@ function NameSearch(props) {
               'downloadJPEG',
               'downloadPDF',
               'downloadSVG'
-            ]
+            ],
+            verticalAlign: 'bottom',
+            y: 25
           }
         },
-        enabled: true
+        enabled: true,
+        menuItemDefinitions: {
+          printChart: {
+            text: props.phrases.printChart
+          },
+          downloadPNG: {
+            text: props.phrases.downloadPNG
+          },
+          downloadJPEG: {
+            text: props.phrases.downloadJPEG
+          },
+          downloadPDF: {
+            text: props.phrases.downloadPDF
+          },
+          downloadSVG: {
+            text: props.phrases.downloadSVG
+          }
+        }
       },
       series: result.nameGraph
     }
@@ -350,7 +372,13 @@ NameSearch.propTypes = {
       onlygiven: PropTypes.string,
       onlygivenandfamily: PropTypes.string,
       firstgiven: PropTypes.string
-    })
+    }),
+    download: PropTypes.string,
+    printChart: PropTypes.string,
+    downloadPNG: PropTypes.string,
+    downloadJPEG: PropTypes.string,
+    downloadPDF: PropTypes.string,
+    downloadSVG: PropTypes.string
   }),
   graphData: PropTypes.arrayOf(PropTypes.string)
 }
