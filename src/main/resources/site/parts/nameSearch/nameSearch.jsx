@@ -9,7 +9,7 @@ import HighchartsReact from 'highcharts-react-official'
 
 require('highcharts/modules/accessibility')(Highcharts)
 require('highcharts/modules/exporting')(Highcharts)
-
+require('highcharts/modules/export-data')(Highcharts)
 
 /* TODO
 - Etternavn må få rett visning av beste-treff
@@ -245,14 +245,16 @@ function NameSearch(props) {
       exporting: {
         buttons: {
           contextButton: {
-            // TODO: Re-implement downloadCSV and downloadXLS. Those are not available by default for HighchartsReact
             menuItems: [
               'printChart',
               'separator',
               'downloadPNG',
               'downloadJPEG',
               'downloadPDF',
-              'downloadSVG'
+              'downloadSVG',
+              'separator',
+              'downloadCSV',
+              'downloadXLS'
             ]
           }
         },
@@ -272,8 +274,17 @@ function NameSearch(props) {
           },
           downloadSVG: {
             text: props.phrases.downloadSVG
+          },
+          downloadCSV: {
+            text: props.phrases.downloadCSV
+          },
+          downloadXLS: {
+            text: props.phrases.downloadXLS
           }
         }
+      },
+      csv: {
+        itemDelimiter: ';'
       },
       credits: {
         enabled: false
@@ -375,7 +386,9 @@ NameSearch.propTypes = {
     downloadPNG: PropTypes.string,
     downloadJPEG: PropTypes.string,
     downloadPDF: PropTypes.string,
-    downloadSVG: PropTypes.string
+    downloadSVG: PropTypes.string,
+    downloadCSV: PropTypes.string,
+    downloadXLS: PropTypes.string
   }),
   graphData: PropTypes.arrayOf(PropTypes.string)
 }

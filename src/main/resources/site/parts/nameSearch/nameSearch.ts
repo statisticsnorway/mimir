@@ -170,6 +170,14 @@ function partsPhrases(locale: string): PartProperties['phrases'] {
     downloadSVG: localize({
       key: 'highcharts.downloadSVG',
       locale
+    }),
+    downloadCSV: localize({
+      key: 'highcharts.downloadCSV',
+      locale
+    }),
+    downloadXLS: localize({
+      key: 'highcharts.downloadXLS',
+      locale
     })
   }
 }
@@ -210,5 +218,7 @@ interface PartProperties {
     downloadJPEG: string;
     downloadPDF: string;
     downloadSVG: string;
+    downloadCSV: string;
+    downloadXLS: string;
   };
 }
