@@ -151,10 +151,6 @@ function partsPhrases(locale: string): PartProperties['phrases'] {
         locale
       })
     },
-    download: localize({
-      key: 'highcharts.download',
-      locale
-    }),
     printChart: localize({
       key: 'highcharts.printChart',
       locale
@@ -209,7 +205,6 @@ interface PartProperties {
       onlygivenandfamily: string;
       firstgiven: string;
     };
-    download: string;
     printChart: string;
     downloadPNG: string;
     downloadJPEG: string;

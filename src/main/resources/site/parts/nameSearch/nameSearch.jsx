@@ -371,7 +371,6 @@ NameSearch.propTypes = {
       onlygivenandfamily: PropTypes.string,
       firstgiven: PropTypes.string
     }),
-    download: PropTypes.string,
     printChart: PropTypes.string,
     downloadPNG: PropTypes.string,
     downloadJPEG: PropTypes.string,
