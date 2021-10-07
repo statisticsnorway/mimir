@@ -25,7 +25,6 @@ const {
   groupStatisticsByYearMonthAndDay,
   prepareRelease,
   filterOnComingReleases,
-  getAllReleases,
   getUpcomingReleases
 } = __non_webpack_require__( '/lib/ssb/utils/variantUtils')
 const {
@@ -63,9 +62,8 @@ function renderPart(req: Request): React4xpResponse {
 
   const groupedWithMonthNames: Array<YearReleases> = fromPartCache(req, `${content._id}-upcomingReleases`, () => {
     // Get statistics
-    const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
-    const allReleases: Array<Release> = getAllReleases(releases)
-    const upComingReleases: Array<Release> = getUpcomingReleases(allReleases)
+    const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
+    const upComingReleases: Array<Release> = getUpcomingReleases(statistics)
 
     // All statistics published today, and fill up with previous releases.
     const releasesFiltered: Array<Release> = filterOnComingReleases(upComingReleases, count)

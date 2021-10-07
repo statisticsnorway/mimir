@@ -4,15 +4,12 @@ import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Content } from 'enonic-types/content'
 import { PublicationArchivePartConfig } from './publicationArchive-part-config'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
-import { PreparedStatistics } from '../../../lib/ssb/utils/variantUtils'
 import { getAllStatisticsFromRepo } from '../../../lib/ssb/statreg/statistics'
-import { filterOnPreviousReleases } from '../releasedStatistics/releasedStatistics'
 import { PublicationItem, PublicationResult } from '../../../lib/ssb/utils/articleUtils'
+import { Release } from '../../../lib/ssb/utils/variantUtils'
 import { fromPartCache } from '../../../lib/ssb/cache/partCache'
+import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 
-const {
-  moment
-} = __non_webpack_require__('/lib/vendor/moment')
 const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
@@ -21,11 +18,15 @@ const {
 } = __non_webpack_require__('/lib/xp/portal')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
-  prepareStatisticRelease
-} = __non_webpack_require__('/lib/ssb/utils/variantUtils')
-const {
   getPublications
 } = __non_webpack_require__( '/lib/ssb/utils/articleUtils')
+const {
+  preparePublication,
+  getPreviousReleases
+} = __non_webpack_require__( '/lib/ssb/utils/variantUtils')
+const {
+  getMainSubjects
+} = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
 
 exports.get = (req: Request): React4xpResponse => {
   return renderPart(req)
@@ -41,14 +42,22 @@ function renderPart(req: Request): React4xpResponse {
   const publicationArchiveServiceUrl: string = serviceUrl({
     service: 'publicationArchive'
   })
+  const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
   const start: number = 0
   const count: number = 10
 
-  const releasesPrepped: Array<PreparedStatistics | null> = fromPartCache(req, `${content._id}-publicationArchive`, () => {
-    const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
-    //TODO: Look at filterOnPreviousReleases, take to long time
-    const releasesFiltered: Array<StatisticInListing> = filterOnPreviousReleases(releases, releases.length).filter((r) => r.status === 'A')
-    return releasesFiltered.map((release: StatisticInListing) => prepareStatisticRelease(release, language))
+  const releasesPreppedNew: Array<PublicationItem> = fromPartCache(req, `${content._id}-publicationArchive`, () => {
+    const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
+    const previousReleases: Array<Release> = getPreviousReleases(statistics)
+    const statisticsReleases: Array<PublicationItem> = []
+
+    previousReleases.map((release: Release) => {
+      const preppedRelease: PublicationItem | null = preparePublication(mainSubjects, release, language)
+      if (preppedRelease) {
+        statisticsReleases.push(preppedRelease)
+      }
+    })
+    return statisticsReleases
   })
 
   const props: PartProperties = {
@@ -59,7 +68,7 @@ function renderPart(req: Request): React4xpResponse {
     language,
     publicationArchiveServiceUrl,
     articles: getPublications(start, count, language),
-    statisticsReleases: prepareStatisticsReleases(releasesPrepped as Array<PreparedStatistics>, language),
+    statisticsReleases: releasesPreppedNew,
     articleTypePhrases: {
       default: phrases['articleType.default'],
       report: phrases['articleType.report'],
@@ -74,31 +83,6 @@ function renderPart(req: Request): React4xpResponse {
   return React4xp.render('site/parts/publicationArchive/publicationArchive', props, req)
 }
 
-function prepareStatisticsReleases(statistics: Array<PreparedStatistics>, language: string): Array<PublicationItem> | [] {
-  if (statistics.length) {
-    return statistics.map((statistic) => {
-      const {
-        period, year, monthNumber, day
-      } = statistic.variant
-      const variantDate: string = new Date(year, monthNumber, day).toISOString()
-
-      return {
-        title: statistic.name,
-        period: period.charAt(0).toUpperCase() + period.slice(1),
-        preface: statistic.aboutTheStatisticsDescription,
-        url: statistic.statisticsPageUrl,
-        publishDate: variantDate,
-        publishDateHuman: moment(variantDate).locale(language).format('Do MMMM YYYY'),
-        contentType: `${app.name}:statistics`,
-        articleType: 'statistics',
-        mainSubject: statistic.mainSubject,
-        appName: app.name
-      }
-    }) as Array<PublicationItem>
-  }
-  return []
-}
-
 interface PartProperties {
   title: string;
   ingress: string;
@@ -107,7 +91,7 @@ interface PartProperties {
   language: string;
   publicationArchiveServiceUrl: string;
   articles: PublicationResult;
-  statisticsReleases: Array<PublicationItem> | [];
+  statisticsReleases: Array<PublicationItem>;
   articleTypePhrases: {
     [key: string]: string;
   };

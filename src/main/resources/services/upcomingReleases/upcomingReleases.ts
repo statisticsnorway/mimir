@@ -7,7 +7,6 @@ const {
   groupStatisticsByYearMonthAndDay,
   prepareRelease,
   filterOnComingReleases,
-  getAllReleases,
   getUpcomingReleases
 } = __non_webpack_require__( '/lib/ssb/utils/variantUtils')
 const {
@@ -16,9 +15,8 @@ const {
 
 exports.get = (req: Request): Response => {
   // Get statistics
-  const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
-  const allReleases: Array<Release> = getAllReleases(releases)
-  const upComingReleases: Array<Release> = getUpcomingReleases(allReleases)
+  const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
+  const upComingReleases: Array<Release> = getUpcomingReleases(statistics)
   const count: number = req.params.count ? parseInt(req.params.count) : 2
 
   const language: string = req.params.language ? req.params.language : 'nb'
