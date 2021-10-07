@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { Button, Divider, Input, Link, Title } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import { Col, Container, Row, Form } from 'react-bootstrap'
@@ -28,7 +28,7 @@ function NameSearch(props) {
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState(undefined)
 
-  const scrollAnchor = React.useRef(null)
+  const scrollAnchor = useRef(null)
   function scrollToResult() {
     scrollAnchor.current.focus({
       preventScroll: true
@@ -221,8 +221,7 @@ function NameSearch(props) {
     const options = {
       chart: {
         type: 'spline',
-        height: '75%',
-        spacingBottom: 45
+        height: '75%'
       },
       title: {
         align: 'left',
@@ -242,12 +241,11 @@ function NameSearch(props) {
           pointStart: 1945 // Magic number: Name data starts in the year 1945 and we try to get all the years since.
         }
       },
+      series: result.nameGraph,
       exporting: {
         buttons: {
           contextButton: {
-            text: props.phrases.download,
-            symbolStroke: '#00824D', // ssb-green-4
-            // TODO: downloadCSV and downloadXLS are not available in Highcharts/HighchartsReact
+            // TODO: Re-implement downloadCSV and downloadXLS. Those are not available by default for HighchartsReact
             menuItems: [
               'printChart',
               'separator',
@@ -255,9 +253,7 @@ function NameSearch(props) {
               'downloadJPEG',
               'downloadPDF',
               'downloadSVG'
-            ],
-            verticalAlign: 'bottom',
-            y: 25
+            ]
           }
         },
         enabled: true,
@@ -279,7 +275,9 @@ function NameSearch(props) {
           }
         }
       },
-      series: result.nameGraph
+      credits: {
+        enabled: false
+      }
     }
     return (
       <Row className='pt-4 px-0 mx-0'>
