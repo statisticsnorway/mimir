@@ -43,6 +43,17 @@ export function getMainSubjects(request: Request, language?: string): Array<Subj
   })
 }
 
+export function getMainSubjectById(mainSubjects: Array<SubjectItem>, id: string): SubjectItem | null {
+  const mainSubjectFiltered: Array<SubjectItem> = mainSubjects.filter((mainsubject) =>
+    mainsubject.id === id)
+
+  if (mainSubjectFiltered.length > 0) {
+    return mainSubjectFiltered[0]
+  }
+
+  return null
+}
+
 export function getSubSubjects(request: Request, language?: string): Array<SubjectItem> {
   return fromSubjectCache<SubjectItem>(request, `subsubject-${language}`, () => {
     const lang: string = language ? `AND language = "${language}"` : ''
@@ -293,6 +304,7 @@ interface EndedStatistic {
 
 export interface SubjectUtilsLib {
     getMainSubjects: (request: Request, language?: string) => Array<SubjectItem>;
+    getMainSubjectById: (mainSubjects: Array<SubjectItem>, id: string) => SubjectItem;
     getSubSubjects: (request: Request, language?: string) => Array<SubjectItem>;
     getSubSubjectsByPath: (subjects: Array<SubjectItem>, path: string) => Array<SubjectItem>;
     getSubjectStructur: (request: Request, language: string) => Array<MainSubject>;
