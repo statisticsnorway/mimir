@@ -36,6 +36,10 @@
     text-transform: capitalize;
   }
 
+  .highcharts-title {
+    fill: transparent !important;
+  }
+
   @include media-breakpoint-up(lg) {
     .name-search-input {
       height: 410px;
@@ -49,10 +53,6 @@
         justify-content: flex-end;
       }
     }
-  }
-
-  .highcharts-title {
-    fill: transparent !important;
   }
 
   @include media-breakpoint-down(md) {
@@ -71,12 +71,6 @@
 
     .name-search-result {
       padding: 40px 20px 40px;
-    }
-  }
-
-  @include media-breakpoint-up(lg) {
-    .highcharts-container, .highcharts-root {
-      height: 75% !important;
     }
   }
 }

@@ -14,4 +14,9 @@ export interface NameSearchPartConfig {
    * Lenkemål
    */
   aboutLinkTarget?: string;
+
+  /**
+   * Bruk på Forside
+   */
+  frontPage: boolean;
 }

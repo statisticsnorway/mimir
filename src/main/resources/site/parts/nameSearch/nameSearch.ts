@@ -3,11 +3,6 @@ import { Component } from 'enonic-types/portal'
 import { renderError } from '../../../lib/ssb/error/error'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { NameSearchPartConfig } from './nameSearch-part-config'
-import { SiteConfig } from '../../../site/site-config'
-
-const {
-  getSiteConfig
-} = __non_webpack_require__('/lib/xp/portal')
 
 const {
   getComponent,
@@ -48,6 +43,7 @@ function renderPart(req: Request): React4xpResponse {
     urlToService: urlToService,
     aboutLink: aboutLinkResources(component.config),
     nameSearchDescription: component.config.nameSearchDescription,
+    frontPage: component.config.frontPage,
     phrases: partsPhrases(locale)
   }
 
@@ -166,6 +162,7 @@ interface PartProperties {
     url: string;
   };
   nameSearchDescription?: string;
+  frontPage: boolean;
   phrases: {
     nameSearchTitle: string;
     nameSearchInputLabel: string;

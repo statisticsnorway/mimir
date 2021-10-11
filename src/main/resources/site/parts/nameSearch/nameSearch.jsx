@@ -90,9 +90,8 @@ function NameSearch(props) {
   }
 
   function renderResult() {
-    // TODO: scales with the screen rather than the box width
     const desktop = useMediaQuery({
-      query: '(min-width: 992px)'
+      minWidth: 992
     })
 
     if (loading) {
@@ -220,20 +219,24 @@ function NameSearch(props) {
   }
 
   function renderGraphs(nameForRender, desktop) {
+    const {
+      frontPage, phrases
+    } = props
+
     const options = {
       chart: {
         type: 'spline',
-        height: desktop ? '75%' : null,
-        spacingTop: desktop ? 10 : 5
+        height: frontPage || !desktop ? '350px' : '75%',
+        spacingTop: frontPage || !desktop ? 0 : 10
       },
       title: {
         align: 'left',
-        text: props.phrases.graphHeader + ' ' + nameForRender,
+        text: phrases.graphHeader + ' ' + nameForRender,
         x: 20
       },
       yAxis: {
         title: {
-          text: props.phrases.xAxis,
+          text: phrases.xAxis,
           align: 'high',
           offset: 0,
           rotation: 0,
@@ -321,6 +324,7 @@ NameSearch.propTypes = {
     url: PropTypes.string
   }),
   nameSearchDescription: PropTypes.string,
+  frontPage: PropTypes.bool,
   phrases: PropTypes.shape({
     nameSearchTitle: PropTypes.string,
     nameSearchInputLabel: PropTypes.string,
