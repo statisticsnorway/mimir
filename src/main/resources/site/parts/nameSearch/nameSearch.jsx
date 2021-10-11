@@ -118,7 +118,7 @@ function NameSearch(props) {
           </Row>
           { result.response && renderMainResult(result.response.docs) }
           { result.response && renderSubResult(result.response.docs) }
-          {!!result.nameGraph.length && renderGraphs(searchedTerm, desktop)}
+          {!!result.nameGraph.length && renderGraphs(desktop, searchedTerm)}
           <Row>
             <Col className="md-6">
               <Button className="close-button" onClick={() => closeResult()} type="button"> <X size="18"/> Lukk</Button>
@@ -218,10 +218,11 @@ function NameSearch(props) {
     return !invalidCharacters
   }
 
-  function renderGraphs(nameForRender, desktop) {
+  function renderGraphs(desktop, nameForRender) {
     const {
       frontPage, phrases
     } = props
+    const lineColor = '#21383a'
 
     const options = {
       chart: {
@@ -234,14 +235,22 @@ function NameSearch(props) {
         text: phrases.graphHeader + ' ' + nameForRender,
         x: 20
       },
+      xAxis: {
+        lineColor,
+        tickColor: lineColor
+      },
       yAxis: {
         title: {
           text: phrases.xAxis,
           align: 'high',
           offset: 0,
           rotation: 0,
-          y: -25
-        }
+          y: -20
+        },
+        lineColor,
+        lineWidth: 1,
+        tickColor: lineColor,
+        tickWidth: 1
       },
       plotOptions: {
         series: {
