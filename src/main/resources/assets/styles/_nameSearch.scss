@@ -51,6 +51,10 @@
     }
   }
 
+  .highcharts-title {
+    fill: transparent !important;
+  }
+
   @include media-breakpoint-down(md) {
     margin-top: 0px;
 
@@ -67,6 +71,12 @@
 
     .name-search-result {
       padding: 40px 20px 40px;
+    }
+  }
+
+  @include media-breakpoint-up(lg) {
+    .highcharts-container, .highcharts-root {
+      height: 75% !important;
     }
   }
 }

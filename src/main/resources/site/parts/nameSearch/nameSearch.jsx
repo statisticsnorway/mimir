@@ -6,7 +6,7 @@ import axios from 'axios'
 import { X } from 'react-feather'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
-
+import { useMediaQuery } from 'react-responsive'
 
 /* TODO
 - Etternavn må få rett visning av beste-treff
@@ -90,6 +90,11 @@ function NameSearch(props) {
   }
 
   function renderResult() {
+    // TODO: scales with the screen rather than the box width
+    const desktop = useMediaQuery({
+      query: '(min-width: 992px)'
+    })
+
     if (loading) {
       return (
         <Container className="name-search-result text-center">
@@ -114,7 +119,7 @@ function NameSearch(props) {
           </Row>
           { result.response && renderMainResult(result.response.docs) }
           { result.response && renderSubResult(result.response.docs) }
-          {!!result.nameGraph.length && renderGraphs(searchedTerm)}
+          {!!result.nameGraph.length && renderGraphs(searchedTerm, desktop)}
           <Row>
             <Col className="md-6">
               <Button className="close-button" onClick={() => closeResult()} type="button"> <X size="18"/> Lukk</Button>
@@ -214,11 +219,12 @@ function NameSearch(props) {
     return !invalidCharacters
   }
 
-  function renderGraphs(nameForRender) {
+  function renderGraphs(nameForRender, desktop) {
     const options = {
       chart: {
         type: 'spline',
-        height: '75%'
+        height: desktop ? '75%' : null,
+        spacingTop: desktop ? 10 : 5
       },
       title: {
         align: 'left',
@@ -227,7 +233,11 @@ function NameSearch(props) {
       },
       yAxis: {
         title: {
-          text: props.phrases.xAxis
+          text: props.phrases.xAxis,
+          align: 'high',
+          offset: 0,
+          rotation: 0,
+          y: -25
         }
       },
       plotOptions: {
@@ -238,11 +248,14 @@ function NameSearch(props) {
           pointStart: 1945 // Magic number: Name data starts in the year 1945 and we try to get all the years since.
         }
       },
-      series: result.nameGraph
+      series: result.nameGraph,
+      credits: {
+        enabled: false
+      }
     }
     return (
       <Row className='pt-4 px-0 mx-0'>
-        <Col>
+        <Col className={desktop && 'p-0'}>
           <div>
             <HighchartsReact
               highcharts={Highcharts}
