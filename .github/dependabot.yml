@@ -15,12 +15,14 @@ updates:
     schedule:
       interval: "daily"
     # Config for amount of open pull requests by dependabot
-    # open-pull-requests-limit: 5
+    open-pull-requests-limit: 5
   - package-ecosystem: "gradle"
     directory: "/"
     schedule:
       interval: "daily"
+    open-pull-requests-limit: 5
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "daily"
+    open-pull-requests-limit: 5
