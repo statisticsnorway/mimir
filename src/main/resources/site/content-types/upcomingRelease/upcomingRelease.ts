@@ -8,10 +8,15 @@ export interface UpcomingRelease {
   /**
    * Innholdstype
    */
-  type: string;
+  contentType: "article" | "report" | "analysis" | "table" | "activity";
 
   /**
    * Hovedemne
    */
   mainSubject: string;
+
+  /**
+   * Lenke
+   */
+  href?: string;
 }

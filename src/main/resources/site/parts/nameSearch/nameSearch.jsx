@@ -6,8 +6,8 @@ import axios from 'axios'
 import { X } from 'react-feather'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
+import { useMediaQuery } from 'react-responsive'
 
-require('highcharts/modules/accessibility')(Highcharts)
 require('highcharts/modules/exporting')(Highcharts)
 require('highcharts/modules/export-data')(Highcharts)
 
@@ -93,6 +93,10 @@ function NameSearch(props) {
   }
 
   function renderResult() {
+    const desktop = useMediaQuery({
+      minWidth: 992
+    })
+
     if (loading) {
       return (
         <Container className="name-search-result text-center">
@@ -117,7 +121,7 @@ function NameSearch(props) {
           </Row>
           { result.response && renderMainResult(result.response.docs) }
           { result.response && renderSubResult(result.response.docs) }
-          {!!result.nameGraph.length && renderGraphs(searchedTerm)}
+          {!!result.nameGraph.length && renderGraphs(desktop, searchedTerm)}
           <Row>
             <Col className="md-6">
               <Button className="close-button" onClick={() => closeResult()} type="button"> <X size="18"/> Lukk</Button>
@@ -217,21 +221,42 @@ function NameSearch(props) {
     return !invalidCharacters
   }
 
-  function renderGraphs(nameForRender) {
+  function renderGraphs(desktop, nameForRender) {
+    const {
+      frontPage, phrases
+    } = props
+    const lineColor = '#21383a'
+
     const options = {
       chart: {
         type: 'spline',
-        height: '75%'
+        height: frontPage || !desktop ? '350px' : '75%',
+        spacingTop: frontPage || !desktop ? 0 : 10
       },
+      colors: [
+        '#1a9d49', '#274247', '#3396d2', '#f0e442', '#f26539', '#aee5c3', '#ed51c9', '#0094a3',
+        '#e9b200', '#143f90', '#075745', '#4b7272', '#6d58a4', '#83c1e9', '#b59924'],
       title: {
         align: 'left',
-        text: props.phrases.graphHeader + ' ' + nameForRender,
+        text: phrases.graphHeader + ' ' + nameForRender,
         x: 20
+      },
+      xAxis: {
+        lineColor,
+        tickColor: lineColor
       },
       yAxis: {
         title: {
-          text: props.phrases.xAxis
-        }
+          text: phrases.xAxis,
+          align: 'high',
+          offset: 0,
+          rotation: 0,
+          y: -20
+        },
+        lineColor,
+        lineWidth: 1,
+        tickColor: lineColor,
+        tickWidth: 1
       },
       plotOptions: {
         series: {
@@ -292,7 +317,7 @@ function NameSearch(props) {
     }
     return (
       <Row className='pt-4 px-0 mx-0'>
-        <Col>
+        <Col className={desktop && 'p-0'}>
           <div>
             <HighchartsReact
               highcharts={Highcharts}
@@ -358,6 +383,7 @@ NameSearch.propTypes = {
     url: PropTypes.string
   }),
   nameSearchDescription: PropTypes.string,
+  frontPage: PropTypes.bool,
   phrases: PropTypes.shape({
     nameSearchTitle: PropTypes.string,
     nameSearchInputLabel: PropTypes.string,

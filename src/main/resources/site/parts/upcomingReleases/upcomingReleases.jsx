@@ -157,7 +157,7 @@ function UpcomingReleases(props) {
 
   function renderRelease(release, index, date) {
     const {
-      type, name, variant, mainSubject, statisticsPageUrl
+      type, name, variant, mainSubject, statisticsPageUrl, upcomingReleaseLink
     } = release
     const {
       day, monthName, year
@@ -168,7 +168,10 @@ function UpcomingReleases(props) {
     return (
       <li key={index} className="mb-3">
         <div>
-          <h3 className="mb-0">{name}</h3>
+          {upcomingReleaseLink ?
+            <Link href={upcomingReleaseLink} linkType='header'>{name}</Link> :
+            <h3 className="mb-0">{name}</h3>
+          }
           {showPeriod &&
             <Paragraph className="mb-0">{variant.period}</Paragraph>
           }
@@ -319,6 +322,7 @@ UpcomingReleases.propTypes = {
       month: PropTypes.string,
       monthName: PropTypes.string,
       year: PropTypes.string,
+      upcomingReleaseLink: PropTypes.string,
       statisticsPageUrl: PropTypes.string
     })
   )

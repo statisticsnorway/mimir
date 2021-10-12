@@ -43,6 +43,7 @@ function renderPart(req: Request): React4xpResponse {
     urlToService: urlToService,
     aboutLink: aboutLinkResources(component.config),
     nameSearchDescription: component.config.nameSearchDescription,
+    frontPage: component.config.frontPage,
     phrases: partsPhrases(locale)
   }
 
@@ -189,6 +190,7 @@ interface PartProperties {
     url: string;
   };
   nameSearchDescription?: string;
+  frontPage: boolean;
   phrases: {
     nameSearchTitle: string;
     nameSearchInputLabel: string;
