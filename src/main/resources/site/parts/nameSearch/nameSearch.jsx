@@ -280,7 +280,8 @@ function NameSearch(props) {
               'separator',
               'downloadCSV',
               'downloadXLS'
-            ]
+            ],
+            y: frontPage || !desktop ? 20 : 0
           }
         },
         enabled: true,
