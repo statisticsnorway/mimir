@@ -6,7 +6,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/parts/highcharts/graph/config')
 
 export function pieConfig(highchartsContent, options) {
-  const defaultConfig = createDefaultConfig(highchartsContent.data, highchartsContent.displayName)
+  const defaultConfig = createDefaultConfig(highchartsContent.data, highchartsContent.displayName, highchartsContent.language)
   const customConfig = {
     chart: {
       type: 'pie'

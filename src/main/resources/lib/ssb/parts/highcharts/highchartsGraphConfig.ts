@@ -64,7 +64,7 @@ function getGraphConfig<T>(highchartContent: Content<Highchart>, options: GetGra
 }
 
 function defaultConfig(highchartsContent: Content<Highchart>): HighchartsGraphConfig {
-  return createDefaultConfig(highchartsContent.data, highchartsContent.displayName)
+  return createDefaultConfig(highchartsContent.data, highchartsContent.displayName, highchartsContent.language)
 }
 
 interface GetGraphOptions {
