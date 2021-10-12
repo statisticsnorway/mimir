@@ -230,6 +230,9 @@ function NameSearch(props) {
         height: frontPage || !desktop ? '350px' : '75%',
         spacingTop: frontPage || !desktop ? 0 : 10
       },
+      colors: [
+        '#1a9d49', '#274247', '#3396d2', '#f0e442', '#f26539', '#aee5c3', '#ed51c9', '#0094a3',
+        '#e9b200', '#143f90', '#075745', '#4b7272', '#6d58a4', '#83c1e9', '#b59924'],
       title: {
         align: 'left',
         text: phrases.graphHeader + ' ' + nameForRender,
