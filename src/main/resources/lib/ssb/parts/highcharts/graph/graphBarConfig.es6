@@ -7,7 +7,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/parts/highcharts/graph/config')
 
 export function barConfig(highchartContent, options) {
-  const defaultConfig = createDefaultConfig(highchartContent.data, highchartContent.displayName, highchartsContent.language)
+  const defaultConfig = createDefaultConfig(highchartContent.data, highchartContent.displayName, highchartContent.language)
   const customConfig = {
     ...defaultConfig,
     chart: {
