@@ -35,7 +35,7 @@
     "@babel/preset-stage-0": "^7.0.0",
     "@babel/register": "^7.15.3",
     "@babel/runtime": "^7.15.3",
-    "@reduxjs/toolkit": "^1.6.1",
+    "@reduxjs/toolkit": "^1.6.2",
     "@statisticsnorway/ssb-component-library": "^2.0.51",
     "@types/ramda": "^0.27.44",
     "@types/react": "^17.0.27",
