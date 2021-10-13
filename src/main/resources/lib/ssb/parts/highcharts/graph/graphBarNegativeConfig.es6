@@ -10,7 +10,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/parts/highcharts/graph/config')
 
 export function barNegativeConfig(highchartContent, options) {
-  const defaultConfig = createDefaultConfig(highchartContent.data, highchartContent.displayName)
+  const defaultConfig = createDefaultConfig(highchartContent.data, highchartContent.displayName, highchartContent.language)
   const customConfig = {
     chart: {
       type: 'bar'

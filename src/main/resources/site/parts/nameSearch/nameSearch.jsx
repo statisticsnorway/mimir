@@ -112,7 +112,7 @@ function NameSearch(props) {
       )
     } else {
       return (result && <div>
-        <Container className="name-search-result" ref={scrollAnchor} tabIndex="0">
+        <Container className={`name-search-result ${props.frontPage ? 'front-page-results' : ''}`} ref={scrollAnchor} tabIndex="0">
           <Row>
             <Col>
               <Title size={3} className="result-title mb-1">{props.phrases.nameSearchResultTitle}</Title>
@@ -317,8 +317,8 @@ function NameSearch(props) {
       }
     }
     return (
-      <Row className='pt-4 px-0 mx-0'>
-        <Col className={desktop && 'p-0'}>
+      <Row className='name-search-graph pt-4 px-0 mx-0'>
+        <Col className={desktop ? (frontPage && desktop ? 'px-4' : 'p-0') : ''}>
           <div>
             <HighchartsReact
               highcharts={Highcharts}

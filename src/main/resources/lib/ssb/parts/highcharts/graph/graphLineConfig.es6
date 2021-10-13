@@ -5,15 +5,15 @@ const {
   createDefaultConfig
 } = __non_webpack_require__('/lib/ssb/parts/highcharts/graph/config')
 
-export function lineConfig(highchartsContent, options) {
-  const defaultConfig = createDefaultConfig(highchartsContent.data, highchartsContent.displayName)
+export function lineConfig(highchartContent, options) {
+  const defaultConfig = createDefaultConfig(highchartContent.data, highchartContent.displayName, highchartContent.language)
   const customConfig = {
     chart: {
       type: 'line'
     },
     yAxis: {
       stackLabels: {
-        enabled: highchartsContent.stacking === 'normal' && highchartsContent.showStackedTotal,
+        enabled: highchartContent.stacking === 'normal' && highchartContent.showStackedTotal,
         x: 0,
         y: -5
       }
@@ -29,7 +29,7 @@ export function lineConfig(highchartsContent, options) {
       labels: {
         enabled: true
       },
-      categories: highchartsContent.data.switchRowsAndColumns || !options.isJsonStat ? options.categories : [highchartsContent.displayName],
+      categories: highchartContent.data.switchRowsAndColumns || !options.isJsonStat ? options.categories : [highchartContent.displayName],
       gridLineWidth: 0
     }
   }
