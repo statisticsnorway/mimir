@@ -281,7 +281,7 @@ function NameSearch(props) {
               'downloadCSV',
               'downloadXLS'
             ],
-            y: frontPage || !desktop ? 20 : 0
+            y: !desktop ? 20 : 0
           }
         },
         enabled: true,
