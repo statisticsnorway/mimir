@@ -1,3 +1,6 @@
+const {
+  localize
+} = __non_webpack_require__('/lib/xp/i18n')
 
 export const style = {
   color: '#21383a',
@@ -25,9 +28,10 @@ export const X_AXIS_TITLE_POSITION = {
  *
  * @param {object} highchartData
  * @param {string} displayName
+ * @param {string} language
  * @return {object} config
  */
-export const createDefaultConfig = (highchartData, displayName) => ({
+export const createDefaultConfig = (highchartData, displayName, language) => ({
   accessibility: {
     enabled: true,
     keyboardNavigation: {
@@ -71,8 +75,19 @@ export const createDefaultConfig = (highchartData, displayName) => ({
   },
   exporting: {
     chartOptions: {
+      chart: {
+        height: highchartData.creditsText || highchartData.creditsHref ? '100%' : null,
+        spacingBottom: highchartData.creditsText || highchartData.creditsHref ? 50 : 10
+      },
       credits: {
-        text: 'Kilde: ' + highchartData.creditsText
+        enabled: !!highchartData.creditsText,
+        text: `<b style="color:#274247">${localize({
+          key: 'source',
+          locale: language ? language : 'nb'
+        })}:</b></br>${highchartData.creditsText}`,
+        position: {
+          y: -30
+        }
       }
     },
     buttons: {
