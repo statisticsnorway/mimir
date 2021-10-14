@@ -46,19 +46,48 @@ function renderPart(req: Request): React4xpResponse {
   const start: number = 0
   const count: number = 10
 
-  const releasesPreppedNew: Array<PublicationItem> = fromPartCache(req, `${content._id}-publicationArchive`, () => {
+  const releasesPrepped: Array<PublicationItem> = fromPartCache(req, `${content._id}-publicationArchive`, () => {
     const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
     const previousReleases: Array<Release> = getPreviousReleases(statistics)
-    const statisticsReleases: Array<PublicationItem> = []
-
-    previousReleases.map((release: Release) => {
-      const preppedRelease: PublicationItem | null = preparePublication(mainSubjects, release, language)
-      if (preppedRelease) {
-        statisticsReleases.push(preppedRelease)
-      }
-    })
+    const statisticsReleases: Array<PublicationItem> = getStatisticReleases(previousReleases)
     return statisticsReleases
   })
+
+  function getStatisticReleases(previousReleases: Array<Release>): Array<PublicationItem> {
+    return previousReleases.reduce(function(acc: Array<PublicationItem>, release: Release) {
+      const preppedRelease: PublicationItem | null = preparePublication(mainSubjects, release, language)
+      if (preppedRelease) {
+        acc.push(preppedRelease)
+      }
+      return acc
+    }, [])
+  }
+
+  const mainSubjectDropdown: Array<Dropdown> = mainSubjects.map((subject) => {
+    return {
+      id: subject.name,
+      title: subject.title
+    }
+  })
+
+  const articleTypeDropdown: Array<Dropdown> = [
+    {
+      id: 'article',
+      title: phrases['articleType.default']
+    },
+    {
+      id: 'report',
+      title: phrases['articleType.report']
+    },
+    {
+      id: 'note',
+      title: phrases['articleType.note']
+    },
+    {
+      id: 'statistic',
+      title: phrases['articleType.statistics']
+    }
+  ]
 
   const props: PartProperties = {
     title: content.displayName,
@@ -68,7 +97,7 @@ function renderPart(req: Request): React4xpResponse {
     language,
     publicationArchiveServiceUrl,
     articles: getPublications(start, count, language),
-    statisticsReleases: releasesPreppedNew,
+    statisticsReleases: releasesPrepped,
     articleTypePhrases: {
       default: phrases['articleType.default'],
       report: phrases['articleType.report'],
@@ -77,7 +106,9 @@ function renderPart(req: Request): React4xpResponse {
       economicTrends: phrases['articleType.economicTrends'],
       discussionPaper: phrases['articleType.discussionPaper'],
       statistics: phrases['articleType.statistics']
-    }
+    },
+    mainSubjects: mainSubjectDropdown,
+    articleType: articleTypeDropdown
   }
 
   return React4xp.render('site/parts/publicationArchive/publicationArchive', props, req)
@@ -95,4 +126,11 @@ interface PartProperties {
   articleTypePhrases: {
     [key: string]: string;
   };
+  mainSubjects: Array<Dropdown>;
+  articleType: Array<Dropdown>;
+}
+
+interface Dropdown {
+  id: string;
+  title: string;
 }

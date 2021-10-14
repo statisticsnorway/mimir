@@ -401,7 +401,7 @@ export function preparePublication(mainSubjects: Array<SubjectItem>, release: Re
       statisticsPagesXP.x['com-enonic-app-metafields']['meta-data'].seoDescription : ''
 
     const mainSubject: Array<SubjectItem> = mainSubjects.filter((subject) => statisticsPagesXP._path.startsWith(subject.path))
-    const mainSubjectName: string = mainSubject.length > 0 ? mainSubject[0].name : ''
+    const mainSubjectName: string = mainSubject.length > 0 ? mainSubject[0].title : ''
     const period: string = calculatePeriodRelease(release, language)
 
     return {

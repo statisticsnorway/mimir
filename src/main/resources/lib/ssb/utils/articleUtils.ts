@@ -46,10 +46,12 @@ export function getPublications(start: number = 0, count: number = 10, language:
     query: `components.page.config.mimir.default.subjectType LIKE "mainSubject" ${languageQuery}`
   }).hits as unknown as Array<Content<Page>>
 
+  const now: string = new Date().toISOString()
+  const publishFromQuery: string = `(publish.from LIKE '*' AND publish.from < '${now}')`
   const pagePaths: Array<string> = mainSubjects.map((mainSubject) => `_parentPath LIKE "/content${mainSubject._path}/*"`)
   const subjectQuery: string = subject ? `_parentPath LIKE "/content/ssb/${subject}/*"` : `(${pagePaths.join(' OR ')})`
   const articleTypeQuery: string = articleType ? ` AND data.articleType = "${articleType}"` : ''
-  const queryString: string = `${subjectQuery} ${languageQuery} ${articleTypeQuery}`
+  const queryString: string = `${publishFromQuery} AND ${subjectQuery} ${languageQuery} ${articleTypeQuery}`
 
   const res: QueryResponse<Article> = query({
     start,
