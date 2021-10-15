@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Divider, Link, Title, Text } from '@statisticsnorway/ssb-component-library'
+import { Button, Divider, Link, Title, Text, Dropdown } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import Truncate from 'react-truncate'
 import NumberFormat from 'react-number-format'
@@ -12,38 +12,66 @@ function PublicationArchive(props) {
     ingress,
     buttonTitle,
     publicationArchiveServiceUrl,
-    articles,
-    statisticsReleases,
+    publicationAndArticles,
     language,
     articleTypePhrases,
     showingPhrase
   } = props
-  const [publications, setPublications] = useState(articles.publications)
-  const [total, setTotal] = useState(articles.total + statisticsReleases.length)
+  const [publications, setPublications] = useState(publicationAndArticles.publications)
+  const [statistics, setStatistics] = useState(publicationAndArticles.statistics)
+  const [articles, setArticles] = useState(publicationAndArticles.publications)
+  const [total, setTotal] = useState(publicationAndArticles.total)
   const [loading, setLoading] = useState(false)
   const [first, setFirst] = useState(true)
-  const [statisticsPublications, setStatisticsPublications] = useState(statisticsReleases)
+  const [statisticsPublications, setStatisticsPublications] = useState(publicationAndArticles.statistics)
   const [diff, setDiff] = useState([0])
+  const [filterChanged, setFilterChanged] = useState(false)
+  const [filter, setFilter] = useState({
+    mainSubject: '',
+    articleType: ''
+  })
+  const [start, setStart] = useState(0)
+
 
   useEffect(() => {
     if (first) {
       setFirst(false)
-      setPublications(mergePublications(publications))
+      setPublications(mergePublications(articles, statistics))
     }
-  })
+    if (filterChanged) {
+      setDiff([0])
+      fetchPublicationsFiltered()
+    }
+  }, [filter])
 
-  function mergePublications(newPublications) {
+  function onChange(id, value) {
+    setFilterChanged(true)
+    if (id === 'articleType') {
+      setFilter({
+        ...filter,
+        articleType: value.id
+      })
+    }
+    if (id === 'mainSubject') {
+      setFilter({
+        ...filter,
+        mainSubject: value.id
+      })
+    }
+  }
+
+  function mergePublications(newPublications, newStatistics) {
     const filteredStatisticsReleases = []
     const filteredStatisticsReleasesRest = []
 
-    statisticsPublications.forEach((statisticsRelease) => {
+    newStatistics.forEach((statisticsRelease) => {
       const statisticsReleaseDate = new Date(statisticsRelease.publishDate)
       const latestNewPublicationDate = newPublications.length ? new Date(newPublications[0].publishDate) : new Date()
       const oldestNewPublicationDate = newPublications.length ? new Date(newPublications[newPublications.length - 1].publishDate) : new Date('01.01.1970')
 
       let dateCheck = statisticsReleaseDate <
-      (publications.length ? new Date(publications[publications.length - 1].publishDate) : latestNewPublicationDate) &&
-        statisticsReleaseDate > oldestNewPublicationDate
+          (publications.length ? new Date(publications[publications.length - 1].publishDate) : latestNewPublicationDate) &&
+          statisticsReleaseDate > oldestNewPublicationDate
       if (statisticsReleaseDate > latestNewPublicationDate) {
         dateCheck = statisticsReleaseDate > oldestNewPublicationDate
       } else {
@@ -56,7 +84,7 @@ function PublicationArchive(props) {
         filteredStatisticsReleasesRest.push(statisticsRelease)
       }
     })
-    setStatisticsPublications(filteredStatisticsReleasesRest)
+    setStatistics(filteredStatisticsReleasesRest)
 
     const diffValues = []
     const mergedPublications = newPublications.length ?
@@ -67,8 +95,14 @@ function PublicationArchive(props) {
     if (mergedPublications.length > 10) {
       const restMergedPublications = mergedPublications.slice(10, mergedPublications.length)
       const restStatistics = restMergedPublications.filter((p) => p.contentType === `${p.appName}:statistics`)
+      const restArticles = restMergedPublications.filter((p) => p.contentType !== `${p.appName}:statistics`)
+      setStart(newPublications.length - restArticles.length)
+      /* if (restArticles.length) {
+        setArticles(restArticles)
+        // setArticles(articles.concat(restArticles))
+      } */
       if (restStatistics.length) {
-        setStatisticsPublications(filteredStatisticsReleasesRest.concat(restStatistics))
+        setStatistics(filteredStatisticsReleasesRest.concat(restStatistics))
       }
 
       diffValues.push(mergedPublications.length - (10 + restStatistics.length))
@@ -82,18 +116,40 @@ function PublicationArchive(props) {
     }
   }
 
-  function fetchPublications() {
+  function fetchPublicationsFiltered() {
     setLoading(true)
-    const indexDiff = diff.map((d) => d).reduce((acc, curr) => acc + curr)
+    setDiff([0])
     axios.get(publicationArchiveServiceUrl, {
       params: {
-        start: publications.length - indexDiff,
+        start: 0,
         count: 10,
-        language: language
+        language: language,
+        subject: filter.mainSubject,
+        type: filter.articleType
       }
     }).then((res) => {
-      setPublications(publications.concat(mergePublications(res.data.publications)))
-      setTotal(res.data.total + statisticsReleases.length)
+      setPublications(mergePublications(res.data.publications, res.data.statistics))
+      setTotal(res.data.total)
+    }).finally(() => {
+      setLoading(false)
+    })
+  }
+
+  function fetchPublications() {
+    setLoading(true)
+    console.log('Start: ' + start)
+    // const indexDiff = diff.map((d) => d).reduce((acc, curr) => acc + curr)
+    axios.get(publicationArchiveServiceUrl, {
+      params: {
+        start: start,
+        count: 5,
+        language: language,
+        subject: filter.mainSubject
+      }
+    }).then((res) => {
+      // setStatisticsPublications(res.data.statistics)
+      setPublications(publications.concat(mergePublications(res.data.publications, statistics)))
+      setTotal(res.data.total)
     }).finally(() => {
       setLoading(false)
     })
@@ -140,6 +196,54 @@ function PublicationArchive(props) {
     }
   }
 
+  function renderFilter() {
+    return (
+      <div className="row">
+        <div className="col">
+          {addDropdownSubject('mainSubject')}
+        </div>
+        <div className="col">
+          {addDropdownArticleType('articleType')}
+        </div>
+      </div>
+    )
+  }
+
+  function addDropdownSubject(id) {
+    return (
+      <Dropdown
+        className="month"
+        id={id}
+        onSelect={(value) => {
+          onChange(id, value)
+        }}
+        selectedItem={{
+          title: 'Alle hovedemner',
+          id: ''
+        }}
+        items={props.mainSubjects}
+      />
+    )
+  }
+
+  function addDropdownArticleType(id) {
+    return (
+      <Dropdown
+        className="month"
+        id={id}
+        onSelect={(value) => {
+          setMainSubject(value.title)
+          onChange(id, value)
+        }}
+        selectedItem={{
+          title: 'Alle innholdstyper',
+          id: ''
+        }}
+        items={props.articleType}
+      />
+    )
+  }
+
   return (
     <section className="publication-archive container-fluid">
       <div className="row">
@@ -152,6 +256,7 @@ function PublicationArchive(props) {
                   __html: ingress.replace(/&nbsp;/g, ' ')
                 }}>
                 </div>
+                {renderFilter()}
               </div>
             </div>
           </div>
@@ -194,10 +299,13 @@ PublicationArchive.propTypes = {
   showingPhrase: PropTypes.string,
   language: PropTypes.string,
   publicationArchiveServiceUrl: PropTypes.string,
-  articles: PropTypes.objectOf({
+  publicationAndArticles: PropTypes.objectOf({
     total: PropTypes.number,
+    statistics: PropTypes.array,
     publications: PropTypes.array
   }),
-  statisticsReleases: PropTypes.array,
-  articleTypePhrases: PropTypes.objectOf(PropTypes.string)
+  articleTypePhrases: PropTypes.objectOf(PropTypes.string),
+  mainSubjects: PropTypes.array,
+  articleType: PropTypes.array
+
 }
