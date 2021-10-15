@@ -3,11 +3,7 @@ import { Component } from 'enonic-types/portal'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Content } from 'enonic-types/content'
 import { PublicationArchivePartConfig } from './publicationArchive-part-config'
-import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
-import { getAllStatisticsFromRepo } from '../../../lib/ssb/statreg/statistics'
-import { PublicationItem, PublicationResult } from '../../../lib/ssb/utils/articleUtils'
-import { Release } from '../../../lib/ssb/utils/variantUtils'
-import { fromPartCache } from '../../../lib/ssb/cache/partCache'
+import { PublicationResult } from '../../../lib/ssb/parts/publicationArchive'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 
 const {
@@ -19,11 +15,7 @@ const {
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getPublications
-} = __non_webpack_require__( '/lib/ssb/utils/articleUtils')
-const {
-  preparePublication,
-  getPreviousReleases
-} = __non_webpack_require__( '/lib/ssb/utils/variantUtils')
+} = __non_webpack_require__( '/lib/ssb/parts/publicationArchive')
 const {
   getMainSubjects
 } = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
@@ -45,23 +37,6 @@ function renderPart(req: Request): React4xpResponse {
   const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
   const start: number = 0
   const count: number = 10
-
-  const releasesPrepped: Array<PublicationItem> = fromPartCache(req, `${content._id}-publicationArchive`, () => {
-    const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
-    const previousReleases: Array<Release> = getPreviousReleases(statistics)
-    const statisticsReleases: Array<PublicationItem> = getStatisticReleases(previousReleases)
-    return statisticsReleases
-  })
-
-  function getStatisticReleases(previousReleases: Array<Release>): Array<PublicationItem> {
-    return previousReleases.reduce(function(acc: Array<PublicationItem>, release: Release) {
-      const preppedRelease: PublicationItem | null = preparePublication(mainSubjects, release, language)
-      if (preppedRelease) {
-        acc.push(preppedRelease)
-      }
-      return acc
-    }, [])
-  }
 
   const mainSubjectDropdown: Array<Dropdown> = mainSubjects.map((subject) => {
     return {
@@ -96,8 +71,7 @@ function renderPart(req: Request): React4xpResponse {
     showingPhrase: phrases['publicationArchive.showing'],
     language,
     publicationArchiveServiceUrl,
-    articles: getPublications(start, count, language),
-    statisticsReleases: releasesPrepped,
+    publicationAndArticles: getPublications(req, start, count, language),
     articleTypePhrases: {
       default: phrases['articleType.default'],
       report: phrases['articleType.report'],
@@ -121,8 +95,7 @@ interface PartProperties {
   showingPhrase: string;
   language: string;
   publicationArchiveServiceUrl: string;
-  articles: PublicationResult;
-  statisticsReleases: Array<PublicationItem>;
+  publicationAndArticles: PublicationResult;
   articleTypePhrases: {
     [key: string]: string;
   };

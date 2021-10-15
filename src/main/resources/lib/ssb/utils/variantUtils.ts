@@ -3,8 +3,6 @@ import { SEO } from '../../../services/news/news'
 import { OmStatistikken } from '../../../site/content-types/omStatistikken/omStatistikken'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { ReleasesInListing, StatisticInListing, VariantInListing } from '../dashboard/statreg/types'
-import { SubjectItem } from './subjectUtils'
-import { PublicationItem } from './articleUtils'
 
 const {
   pageUrl
@@ -382,45 +380,6 @@ export function prepareStatisticRelease(
   return null
 }
 
-export function preparePublication(mainSubjects: Array<SubjectItem>, release: Release, language: string): PublicationItem | null {
-  const statisticsPagesXP: Content<Statistics, object, SEO> | undefined = query({
-    count: 1,
-    query: `data.statistic LIKE "${release.statisticId}" AND language IN (${language === 'nb' ? '"nb", "nn"' : '"en"'})`,
-    contentTypes: [`${app.name}:statistics`]
-  }).hits[0] as unknown as Content<Statistics, object, SEO>
-
-  if (statisticsPagesXP) {
-    const statisticsPageUrl: string = pageUrl({
-      path: statisticsPagesXP._path
-    })
-
-    const aboutTheStatisticsContent: Content<OmStatistikken> | null = statisticsPagesXP.data.aboutTheStatistics ? get({
-      key: statisticsPagesXP.data.aboutTheStatistics
-    }) : null
-    const seoDescription: string = statisticsPagesXP.x['com-enonic-app-metafields']['meta-data'].seoDescription ?
-      statisticsPagesXP.x['com-enonic-app-metafields']['meta-data'].seoDescription : ''
-
-    const mainSubject: Array<SubjectItem> = mainSubjects.filter((subject) => statisticsPagesXP._path.startsWith(subject.path))
-    const mainSubjectName: string = mainSubject.length > 0 ? mainSubject[0].title : ''
-    const period: string = calculatePeriodRelease(release, language)
-
-    return {
-      title: release.statisticName,
-      period: period.charAt(0).toUpperCase() + period.slice(1),
-      preface: aboutTheStatisticsContent ? aboutTheStatisticsContent.data.ingress : seoDescription,
-      url: statisticsPageUrl,
-      publishDate: release.publishTime,
-      publishDateHuman: moment(new Date(release.publishTime)).locale(language).format('Do MMMM YYYY'),
-      contentType: `${app.name}:statistics`,
-      articleType: 'statistics',
-      mainSubject: mainSubjectName,
-      appName: app.name
-    }
-  }
-
-  return null
-}
-
 function concatReleaseTimes(variants: Array<VariantInListing>, language: string, property: keyof VariantInListing): PreparedVariant {
   const defaultVariant: PreparedVariant = formatVariant(variants[0], language, property)
   let timePeriodes: Array<string>
@@ -543,7 +502,6 @@ export interface VariantUtilsLib {
   getReleasesForDay: (statisticList: Array<StatisticInListing>, day: Date, property?: keyof VariantInListing) => Array<StatisticInListing>;
   prepareStatisticRelease: (release: StatisticInListing, locale: string, property?: keyof VariantInListing, statisticsPageUrl?: string) => PreparedStatistics;
   prepareRelease: (release: Release, locale: string, statisticsPageUrl?: string) => PreparedStatistics;
-  preparePublication: (mainSubjects: Array<SubjectItem>, release: Release, language: string) => PublicationItem | null;
   filterOnComingReleases: (stats: Array<Release>, daysInTheFuture: number, startDay?: string) => Array<Release>;
   getAllReleases: (statisticList: Array<StatisticInListing>) => Array<Release>;
   getUpcomingReleases: (statisticList: Array<StatisticInListing>) => Array<Release>;
