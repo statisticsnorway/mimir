@@ -435,9 +435,9 @@ function checkIfUserIsAdmin(): boolean {
 
 const TWO_WEEKS: number = 14 // TODO: put in config?
 function getStatistics(): Array<StatisticDashboard> {
-  // TODO: Could also be stuck here?
   const userIsAdmin: boolean = checkIfUserIsAdmin()
   const statistic: Array<StatisticDashboard> = userIsAdmin ? getAdminStatistics() : getUserStatistics()
+  getStatisticsDashboardLogging(`in getStatistics. Length of list of statistics: ${statistic.length}`)
   return statistic.sort((a, b) => {
     return new Date(a.nextRelease || '01.01.3000').getTime() - new Date(b.nextRelease || '01.01.3000').getTime()
   })
@@ -556,6 +556,7 @@ function getStatregInfo(statisticStatreg: StatisticInListing | undefined): Statr
 function getStatisticsSearchList(): Array<StatisticSearch> {
   const statregStatistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
   const statisticsContent: Array<Content<Statistics & Statistic>> = getStatisticsContent()
+  getStatisticsDashboardLogging(`in getStatisticsSearchList. Length of list of statistics: ${statisticsContent.length}`)
   return statisticsContent.map((statistics) => {
     const statregData: StatisticInListing | undefined = statregStatistics.find((s) => {
       return `${s.id}` === statistics.data.statistic
