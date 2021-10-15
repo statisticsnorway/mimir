@@ -16,6 +16,7 @@ import { JobEventNode, JobInfoNode, JobNames, JobStatus } from '../repo/job'
 import { NodeQueryResponse } from 'enonic-types/node'
 import { User } from 'enonic-types/auth'
 import { Statistic } from '../../../site/mixins/statistic/statistic'
+import { getStatisticsDashboardLogging } from '../utils/serverLog'
 
 const {
   hasWritePermissions
@@ -77,6 +78,8 @@ const {
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-statistics', () => {
+    // TODO: Remove getStatisticsDashboardLogging functions after statistics in dashboard stuck on loading issue has been resolved
+    getStatisticsDashboardLogging('in setupHandlers, get-statistics. Before executeFunction.')
     executeFunction({
       description: 'get-statistics',
       func: () => {
@@ -89,17 +92,26 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
             idProvider: users[parseInt(socket.id)].idProvider ? users[parseInt(socket.id)].idProvider : 'system'
           }
         }
+        getStatisticsDashboardLogging(`in setupHandlers, get-statistics. In executeFunction, func object.`)
         const statisticData: Array<StatisticDashboard> = run(context, () => getStatistics())
+        getStatisticsDashboardLogging(`in setupHandlers, get-statistics. In executeFunction, func object. 
+        Before statistics-result emit. Length of statistics list: ${statisticData.length}`)
         socket.emit('statistics-result', statisticData)
       }
     })
   })
 
   socket.on('get-statistics-search-list', () => {
+    // TODO: Remove getStatisticsDashboardLogging functions after statistics in dashboard stuck on loading issue has been resolved
+    getStatisticsDashboardLogging('in setupHandlers, get-statistics. Before executeFunction.')
     executeFunction({
       description: 'get-statistics-search-list',
       func: () => {
+        getStatisticsDashboardLogging(`in setupHandlers, get-statistics-search-list. 
+        In executeFunction, func object.`)
         const statisticsSearchData: Array<StatisticSearch> = getStatisticsSearchList()
+        getStatisticsDashboardLogging(`in setupHandlers, get-statistics-search-list. In executeFunction, func object. 
+        Before emit statistics-search-list-result. Length of statistics list: ${statisticsSearchData.length}`)
         socket.emit('statistics-search-list-result', statisticsSearchData)
       }
     })
@@ -425,6 +437,7 @@ const TWO_WEEKS: number = 14 // TODO: put in config?
 function getStatistics(): Array<StatisticDashboard> {
   const userIsAdmin: boolean = checkIfUserIsAdmin()
   const statistic: Array<StatisticDashboard> = userIsAdmin ? getAdminStatistics() : getUserStatistics()
+  getStatisticsDashboardLogging(`in getStatistics. Length of list of statistics: ${statistic.length}`)
   return statistic.sort((a, b) => {
     return new Date(a.nextRelease || '01.01.3000').getTime() - new Date(b.nextRelease || '01.01.3000').getTime()
   })
@@ -543,6 +556,7 @@ function getStatregInfo(statisticStatreg: StatisticInListing | undefined): Statr
 function getStatisticsSearchList(): Array<StatisticSearch> {
   const statregStatistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
   const statisticsContent: Array<Content<Statistics & Statistic>> = getStatisticsContent()
+  getStatisticsDashboardLogging(`in getStatisticsSearchList. Length of list of statistics: ${statisticsContent.length}`)
   return statisticsContent.map((statistics) => {
     const statregData: StatisticInListing | undefined = statregStatistics.find((s) => {
       return `${s.id}` === statistics.data.statistic
