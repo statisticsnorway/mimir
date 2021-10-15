@@ -269,8 +269,8 @@ function NameSearch(props) {
     if (loadingGraph) {
       return (
         <Container className="name-search-graph text-center">
-          <p>Her kommer en snedig graf snart!</p>
           <span className="spinner-border spinner-border" />
+          <p>{props.phrases.loadingGraph}</p>
         </Container>
       )
     }
@@ -405,6 +405,7 @@ NameSearch.propTypes = {
     threeOrLessText: PropTypes.string,
     xAxis: PropTypes.string,
     graphHeader: PropTypes.string,
+    loadingGraph: PropTypes.string,
     women: PropTypes.string,
     men: PropTypes.string,
     types: PropTypes.shape({

@@ -123,6 +123,10 @@ function partsPhrases(locale: string): PartProperties['phrases'] {
       key: 'nameSearch.graph.header',
       locale
     }),
+    loadingGraph: localize({
+      key: 'nameSearch.graph.loading',
+      locale
+    }),
     women: localize({
       key: 'women',
       locale
@@ -183,6 +187,7 @@ interface PartProperties {
     threeOrLessText: string;
     xAxis: string;
     graphHeader: string;
+    loadingGraph: string;
     women: string;
     men: string;
     types: {
