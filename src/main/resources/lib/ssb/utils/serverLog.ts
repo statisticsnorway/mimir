@@ -22,7 +22,7 @@ export function autoRefreshLog(msg: string): void {
 
 // TODO: Remove after issue with statistics not loading in dashboard is fixed
 export function getStatisticsDashboardLogging(msg: string): void {
-  if (isEnabled('dashboard-statistics-debugging-logs', true, 'ssb')) log.info(`statistics dashboard debugging :: ${msg}`)
+  if (isEnabled('dashboard-statistics-debugging-logs', true, 'ssb')) log.info(`statistics-dashboard-debugging :: ${msg}`)
 }
 
 export interface ServerLogLib {
