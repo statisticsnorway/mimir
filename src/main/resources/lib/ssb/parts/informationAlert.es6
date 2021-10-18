@@ -20,19 +20,12 @@ export const get = (key) => {
 
 export const list = ( pageType, pageTypeId, statbankWeb ) => {
   const now = new Date()
-  let queryString = `((data.informationAlertVariations.pages.pageIds IN ('${pageTypeId}') 
-  OR data.informationAlertVariations.articles.articleIds IN ('${pageTypeId}'))  
-  OR (data.selectAllStatistics = 'true' OR data.statisticIds IN ('${pageTypeId}')))`
+  let queryString = `(data.informationAlertVariations.pages.pageIds IN ('${pageTypeId}') 
+  OR data.informationAlertVariations.articles.articleIds IN ('${pageTypeId}'))`
 
-  /* todo: when the content type 'statisticAlert' is removed, this line in both queries under can
-  *  safeley be removed too: 'OR (data.selectAllStatistics = 'true' OR data.statisticIds IN ('${pageTypeId}'))'
-  */
   if (pageType === `${app.name}:statistics`) {
-    queryString = `(
-     (data.informationAlertVariations.statistics.selectAllStatistics = 'true' 
-     OR data.informationAlertVariations.statistics.statisticsIds IN ('${pageTypeId}')) 
-     OR (data.selectAllStatistics = 'true' OR data.statisticIds IN ('${pageTypeId}')) 
-     )`
+    queryString = `(data.informationAlertVariations.statistics.selectAllStatistics = 'true' 
+     OR data.informationAlertVariations.statistics.statisticsIds IN ('${pageTypeId}'))`
   }
 
   if (statbankWeb) {
