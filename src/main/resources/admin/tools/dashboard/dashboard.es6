@@ -67,7 +67,7 @@ function renderPart(req) {
       dataToolBoxBaseUrl: `${DEFAULT_TOOLBOX_URL}#nodes?repo=no.ssb.eventlog&branch=master&path=%2Fqueries%2F`,
       internalBaseUrl: `${INTERNAL_BASE_URL}`,
       internalStatbankUrl: `${INTERNAL_STATBANK_URL}`,
-      toggleDebugging: isEnabled('dashboard-statistics-debugging-logs', true, 'ssb')
+      toggleDebugging: isEnabled('dashboard-redux-logging-debugging', true, 'ssb')
     })
     .setId('dashboard')
 
