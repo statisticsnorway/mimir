@@ -49,11 +49,12 @@ export function getPublications(req: Request, start: number = 0, count: number =
   })
 
   const statistics: Array<PublicationItem> = !articleType || articleType === 'statistics' ? getStatistics(req, language, articleType, subject) : []
+  const statisticsWithMainSubject: Array<PublicationItem> = statistics.filter((statistic) => statistic.mainSubject !== '')
 
   return {
     publications,
-    statistics: statistics,
-    total: articlesContent.total + statistics.length
+    statistics: statisticsWithMainSubject,
+    total: articlesContent.total + statisticsWithMainSubject.length
   }
 }
 

@@ -41,7 +41,7 @@ function renderPart(req: Request): React4xpResponse {
   const mainSubjectDropdown: Array<Dropdown> = [
     {
       id: '',
-      title: phrases['publicationArchive.allTypes']
+      title: phrases['publicationArchive.allSubjects']
     }
   ].concat(mainSubjects.map((subject) => {
     return {
@@ -53,7 +53,7 @@ function renderPart(req: Request): React4xpResponse {
   const articleTypeDropdown: Array<Dropdown> = [
     {
       id: '',
-      title: phrases['publicationArchive.allSubjects']
+      title: phrases['publicationArchive.allTypes']
     },
     {
       id: 'default',
