@@ -52,6 +52,10 @@ try {
         {
           feature: 'name-graph',
           enabled: false
+        },
+        {
+          feature: 'dashboard-statistics-debugging-logs',
+          enabled: true
         }
       ]
     }
