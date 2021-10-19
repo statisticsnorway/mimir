@@ -31,7 +31,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/cache/partCache')
 
 export function getPublications(req: Request, start: number = 0, count: number = 10, language: string, articleType?: string, subject?: string):
-    PublicationResult {
+PublicationAndStatisticResult {
   const languageQuery: string = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'
   const mainSubjects: Array<Content<Page>> = query({
     count: 500,
@@ -56,6 +56,61 @@ export function getPublications(req: Request, start: number = 0, count: number =
     statistics: statisticsWithMainSubject,
     total: articlesContent.total + statisticsWithMainSubject.length
   }
+}
+
+export function getAllPublications(req: Request, start: number = 0, count: number = 10, language: string, articleType?: string, subject?: string):
+    PublicationResult {
+  const allPublications: Array<PublicationItem> = getPublicationsAndStatistics(req, language)
+  const filteredPublication: Array<PublicationItem> = filterPublications(allPublications, articleType, subject)
+
+  return {
+    publications: filteredPublication.slice(start, count),
+    total: filteredPublication.length
+  }
+}
+
+function filterPublications(publications: Array<PublicationItem>, articleType?: string, subject?: string): Array<PublicationItem> {
+  if (articleType && subject) {
+    return publications.filter((publication) => (publication.articleType === articleType && publication.mainSubject === subject))
+  }
+  if (articleType && !subject) {
+    return publications.filter((publication) => publication.articleType === articleType)
+  }
+  if (!articleType && subject) {
+    return publications.filter((publication) => publication.mainSubject === subject)
+  }
+  return publications
+}
+
+function getPublicationsAndStatistics(req: Request, language: string):
+    Array<PublicationItem> {
+  const publicationsAndStatistics: Array<PublicationItem> = fromPartCache(req, `publicationArchivePublications-${language}`, () => {
+    const languageQuery: string = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'
+    const mainSubjects: Array<Content<Page>> = query({
+      count: 500,
+      contentTypes: [`${app.name}:page`],
+      query: `components.page.config.mimir.default.subjectType LIKE "mainSubject" ${languageQuery}`
+    }).hits as unknown as Array<Content<Page>>
+
+    const articlesContent: QueryResponse<Article> = getAllArticlesContent(language, mainSubjects, languageQuery)
+
+    const publications: Array<PublicationItem> = articlesContent.hits.map((article) => {
+      const mainSubject: Content<Page> | undefined = mainSubjects.find((mainSubject) => {
+        return article._path.startsWith(mainSubject._path)
+      })
+      return prepareArticle(article, mainSubject, language)
+    })
+
+    const statistics: Array<PublicationItem> = getStatistics(req, language)
+    const statisticsWithMainSubject: Array<PublicationItem> = statistics.filter((statistic) => statistic.mainSubject !== '')
+
+    const allPublications: Array<PublicationItem> = publications.concat(statisticsWithMainSubject)
+    const allPublicationsSorted: Array<PublicationItem> = allPublications.sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime())
+    return allPublicationsSorted
+  })
+
+
+  return publicationsAndStatistics
 }
 
 function prepareStatisticRelease(mainSubjects: Array<SubjectItem>, release: Release, language: string): PublicationItem | null {
@@ -139,6 +194,27 @@ function getArticlesContent(
   return res
 }
 
+function getAllArticlesContent(
+  language: string,
+  mainSubjects: Array<Content<Page>>,
+  languageQuery: string,
+  articleType?: string,
+  subject?: string): QueryResponse<Article> {
+  const now: string = new Date().toISOString()
+  const publishFromQuery: string = `(publish.from LIKE '*' AND publish.from < '${now}')`
+  const pagePaths: Array<string> = mainSubjects.map((mainSubject) => `_parentPath LIKE "/content${mainSubject._path}/*"`)
+  const subjectQuery: string = subject ? `_parentPath LIKE "/content/ssb/${subject}/*"` : `(${pagePaths.join(' OR ')})`
+  const queryString: string = `${publishFromQuery} AND ${subjectQuery} ${languageQuery}`
+
+  const res: QueryResponse<Article> = query({
+    count: 5000,
+    query: queryString,
+    contentTypes: [`${app.name}:article`],
+    sort: 'publish.from DESC'
+  })
+  return res
+}
+
 function getStatistics(req: Request, language: string, articleType?: string, subject?: string): Array<PublicationItem> {
   const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
   const mainSubjectTitle: SubjectItem| null = subject && subject !== '' ? mainSubjects.filter((mainSubject) => mainSubject.name === subject)[0] : null
@@ -163,14 +239,20 @@ function getStatistics(req: Request, language: string, articleType?: string, sub
 }
 
 export interface PublicationArchiveLib {
-    getPublications: (req: Request, start: number, count: number, language: string, contentType?: string, subject?: string) => PublicationResult;
+    getPublications: (req: Request, start: number, count: number, language: string, contentType?: string, subject?: string) => PublicationAndStatisticResult;
+    getAllPublications: (req: Request, start: number, count: number, language: string, contentType?: string, subject?: string) => PublicationResult;
   }
 
+
+export interface PublicationAndStatisticResult {
+    total: number;
+    publications: Array<PublicationItem>;
+    statistics: Array<PublicationItem>;
+  }
 
 export interface PublicationResult {
     total: number;
     publications: Array<PublicationItem>;
-    statistics: Array<PublicationItem>;
   }
 
 export interface PublicationItem {

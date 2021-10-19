@@ -3,7 +3,7 @@ import { Component } from 'enonic-types/portal'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Content } from 'enonic-types/content'
 import { PublicationArchivePartConfig } from './publicationArchive-part-config'
-import { PublicationResult } from '../../../lib/ssb/parts/publicationArchive'
+import { PublicationResult, PublicationAndStatisticResult } from '../../../lib/ssb/parts/publicationArchive'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 
 const {
@@ -118,7 +118,7 @@ interface PartProperties {
   defineContentPhrase: string;
   language: string;
   publicationArchiveServiceUrl: string;
-  publicationAndArticles: PublicationResult;
+  publicationAndArticles: PublicationAndStatisticResult;
   articleTypePhrases: {
     [key: string]: string;
   };
