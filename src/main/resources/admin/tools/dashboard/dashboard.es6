@@ -17,6 +17,9 @@ const {
 const {
   getToolUrl
 } = __non_webpack_require__('/lib/xp/admin')
+const {
+  isEnabled
+} = __non_webpack_require__('/lib/featureToggle')
 
 const view = resolve('./dashboard.html')
 const DEFAULT_CONTENTSTUDIO_URL = getToolUrl('com.enonic.app.contentstudio', 'main')
@@ -63,7 +66,8 @@ function renderPart(req) {
       contentStudioBaseUrl: `${DEFAULT_CONTENTSTUDIO_URL}#/${ENONIC_PROJECT_ID}/edit/`,
       dataToolBoxBaseUrl: `${DEFAULT_TOOLBOX_URL}#nodes?repo=no.ssb.eventlog&branch=master&path=%2Fqueries%2F`,
       internalBaseUrl: `${INTERNAL_BASE_URL}`,
-      internalStatbankUrl: `${INTERNAL_STATBANK_URL}`
+      internalStatbankUrl: `${INTERNAL_STATBANK_URL}`,
+      toggleDebugging: isEnabled('dashboard-statistics-debugging-logs', true, 'ssb')
     })
     .setId('dashboard')
 

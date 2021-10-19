@@ -23,7 +23,7 @@ import { requestJobs } from '../dashboard/containers/Jobs/actions'
 
 function Dashboard(props) {
   return (
-    <Provider store={configureAppStore()}>
+    <Provider store={configureAppStore(props.toggleDebugging)}>
       <WebsocketProvider>
         <HelmetProvider>
           <DashboardRouter
@@ -51,7 +51,8 @@ Dashboard.propTypes = {
   contentStudioBaseUrl: PropTypes.string,
   dataToolBoxBaseUrl: PropTypes.string,
   internalBaseUrl: PropTypes.string,
-  internalStatbankUrl: PropTypes.string
+  internalStatbankUrl: PropTypes.string,
+  toggleDebugging: PropTypes.boolean
 }
 
 function DashboardRouter(props) {

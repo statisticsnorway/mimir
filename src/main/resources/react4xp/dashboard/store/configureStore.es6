@@ -8,7 +8,9 @@ import { reducer as dataSourcesReducer } from '../containers/DataSources/slice'
 import { reducer as statisticsReducer } from '../containers/Statistics/slice'
 import { reducer as jobsReducer } from '../containers/Jobs/slice'
 
-export function configureAppStore() {
+import logger from 'redux-logger'
+
+export function configureAppStore(toggleDebugging) {
   const reduxSagaMonitorOptions = {}
   const sagaMiddleware = createSagaMiddleware(reduxSagaMonitorOptions)
   const {
@@ -17,6 +19,10 @@ export function configureAppStore() {
 
   // Create the store with saga middleware
   const middlewares = [sagaMiddleware]
+
+  if (toggleDebugging) {
+    middlewares.push(logger)
+  }
 
   const enhancers = [
     createInjectorsEnhancer({
