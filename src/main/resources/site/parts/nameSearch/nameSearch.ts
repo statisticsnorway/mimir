@@ -160,7 +160,35 @@ function partsPhrases(locale: string): PartProperties['phrases'] {
         key: 'nameSearch.types.firstgiven',
         locale
       })
-    }
+    },
+    printChart: localize({
+      key: 'highcharts.printChart',
+      locale
+    }),
+    downloadPNG: localize({
+      key: 'highcharts.downloadPNG',
+      locale
+    }),
+    downloadJPEG: localize({
+      key: 'highcharts.downloadJPEG',
+      locale
+    }),
+    downloadPDF: localize({
+      key: 'highcharts.downloadPDF',
+      locale
+    }),
+    downloadSVG: localize({
+      key: 'highcharts.downloadSVG',
+      locale
+    }),
+    downloadCSV: localize({
+      key: 'highcharts.downloadCSV',
+      locale
+    }),
+    downloadXLS: localize({
+      key: 'highcharts.downloadXLS',
+      locale
+    })
   }
 }
 
@@ -198,5 +226,12 @@ interface PartProperties {
       onlygivenandfamily: string;
       firstgiven: string;
     };
+    printChart: string;
+    downloadPNG: string;
+    downloadJPEG: string;
+    downloadPDF: string;
+    downloadSVG: string;
+    downloadCSV: string;
+    downloadXLS: string;
   };
 }

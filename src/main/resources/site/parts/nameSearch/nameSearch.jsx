@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { Button, Divider, Input, Link, Title } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import { Col, Container, Row, Form } from 'react-bootstrap'
@@ -7,6 +7,9 @@ import { X } from 'react-feather'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import { useMediaQuery } from 'react-responsive'
+
+require('highcharts/modules/exporting')(Highcharts)
+require('highcharts/modules/export-data')(Highcharts)
 
 /* TODO
 - Etternavn må få rett visning av beste-treff
@@ -27,7 +30,7 @@ function NameSearch(props) {
   const [nameGraphData, setNameGraphData] = useState(undefined)
   const [loadingGraph, setLoadingGraph] = useState(false)
 
-  const scrollAnchor = React.useRef(null)
+  const scrollAnchor = useRef(null)
   function scrollToResult() {
     scrollAnchor.current.focus({
       preventScroll: true
@@ -285,6 +288,9 @@ function NameSearch(props) {
           '#1a9d49', '#274247', '#3396d2', '#f0e442', '#f26539', '#aee5c3', '#ed51c9', '#0094a3',
           '#e9b200', '#143f90', '#075745', '#4b7272', '#6d58a4', '#83c1e9', '#b59924'],
         title: {
+          style: {
+            color: 'transparent'
+          },
           align: 'left',
           text: phrases.graphHeader + ' ' + nameForRender,
           x: 20
@@ -317,6 +323,51 @@ function NameSearch(props) {
         series: nameGraphData.nameGraph,
         credits: {
           enabled: false
+        },
+        exporting: {
+          buttons: {
+            contextButton: {
+              menuItems: [
+                'printChart',
+                'separator',
+                'downloadPNG',
+                'downloadJPEG',
+                'downloadPDF',
+                'downloadSVG',
+                'separator',
+                'downloadCSV',
+                'downloadXLS'
+              ],
+              y: !desktop ? 20 : 0
+            }
+          },
+          enabled: true,
+          menuItemDefinitions: {
+            printChart: {
+              text: props.phrases.printChart
+            },
+            downloadPNG: {
+              text: props.phrases.downloadPNG
+            },
+            downloadJPEG: {
+              text: props.phrases.downloadJPEG
+            },
+            downloadPDF: {
+              text: props.phrases.downloadPDF
+            },
+            downloadSVG: {
+              text: props.phrases.downloadSVG
+            },
+            downloadCSV: {
+              text: props.phrases.downloadCSV
+            },
+            downloadXLS: {
+              text: props.phrases.downloadXLS
+            }
+          }
+        },
+        csv: {
+          itemDelimiter: ';'
         }
       }
 
@@ -415,7 +466,14 @@ NameSearch.propTypes = {
       onlygiven: PropTypes.string,
       onlygivenandfamily: PropTypes.string,
       firstgiven: PropTypes.string
-    })
+    }),
+    printChart: PropTypes.string,
+    downloadPNG: PropTypes.string,
+    downloadJPEG: PropTypes.string,
+    downloadPDF: PropTypes.string,
+    downloadSVG: PropTypes.string,
+    downloadCSV: PropTypes.string,
+    downloadXLS: PropTypes.string
   }),
   graphData: PropTypes.bool
 }
