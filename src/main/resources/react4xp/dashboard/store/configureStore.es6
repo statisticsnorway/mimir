@@ -1,4 +1,4 @@
-import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
+import { configureStore } from '@reduxjs/toolkit'
 import { createInjectorsEnhancer } from 'redux-injectors'
 import createSagaMiddleware from 'redux-saga'
 import { createReducer } from './reducers'
@@ -39,7 +39,8 @@ export function configureAppStore(toggleDebugging) {
       statistics: statisticsReducer,
       jobs: jobsReducer
     },
-    middleware: [...getDefaultMiddleware(), ...middlewares],
+    // middleware: [...getDefaultMiddleware(), ...middlewares],
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(middlewares),
     devTools: process.env.NODE_ENV !== 'production',
     enhancers
   })
