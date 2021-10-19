@@ -41,7 +41,7 @@ function renderPart(req: Request): React4xpResponse {
   const mainSubjectDropdown: Array<Dropdown> = [
     {
       id: '',
-      title: 'Alle emner'
+      title: phrases['publicationArchive.allTypes']
     }
   ].concat(mainSubjects.map((subject) => {
     return {
@@ -53,7 +53,7 @@ function renderPart(req: Request): React4xpResponse {
   const articleTypeDropdown: Array<Dropdown> = [
     {
       id: '',
-      title: 'Alle innholdstyper'
+      title: phrases['publicationArchive.allSubjects']
     },
     {
       id: 'default',
@@ -68,6 +68,18 @@ function renderPart(req: Request): React4xpResponse {
       title: phrases['articleType.note']
     },
     {
+      id: 'analysis',
+      title: phrases['articleType.analysis']
+    },
+    {
+      id: 'economicTrends',
+      title: phrases['articleType.economicTrends']
+    },
+    {
+      id: 'discussionPaper',
+      title: phrases['articleType.discussionPaper']
+    },
+    {
       id: 'statistics',
       title: phrases['articleType.statistics']
     }
@@ -78,6 +90,7 @@ function renderPart(req: Request): React4xpResponse {
     ingress: part.config.ingress || '',
     buttonTitle: phrases['button.showMore'],
     showingPhrase: phrases['publicationArchive.showing'],
+    defineContentPhrase: phrases['publicationArchive.defineContent'],
     language,
     publicationArchiveServiceUrl,
     publicationAndArticles: getPublications(req, start, count, language),
@@ -90,8 +103,8 @@ function renderPart(req: Request): React4xpResponse {
       discussionPaper: phrases['articleType.discussionPaper'],
       statistics: phrases['articleType.statistics']
     },
-    mainSubjects: mainSubjectDropdown,
-    articleType: articleTypeDropdown
+    dropDownSubjects: mainSubjectDropdown,
+    dropDownTypes: articleTypeDropdown
   }
 
   return React4xp.render('site/parts/publicationArchive/publicationArchive', props, req)
@@ -102,14 +115,15 @@ interface PartProperties {
   ingress: string;
   buttonTitle: string;
   showingPhrase: string;
+  defineContentPhrase: string;
   language: string;
   publicationArchiveServiceUrl: string;
   publicationAndArticles: PublicationResult;
   articleTypePhrases: {
     [key: string]: string;
   };
-  mainSubjects: Array<Dropdown>;
-  articleType: Array<Dropdown>;
+  dropDownSubjects: Array<Dropdown>;
+  dropDownTypes: Array<Dropdown>;
 }
 
 interface Dropdown {

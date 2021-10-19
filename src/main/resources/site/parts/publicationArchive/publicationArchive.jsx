@@ -15,7 +15,10 @@ function PublicationArchive(props) {
     publicationAndArticles,
     language,
     articleTypePhrases,
-    showingPhrase
+    showingPhrase,
+    defineContentPhrase,
+    dropDownSubjects,
+    dropDownTypes
   } = props
   const [publications, setPublications] = useState(publicationAndArticles.publications)
   const [total, setTotal] = useState(publicationAndArticles.total)
@@ -222,14 +225,14 @@ function PublicationArchive(props) {
       <div className="mt-5">
         <div className="row">
           <div className="col">
-            <Title size={6}>Avgrens innhold</Title>
+            <Title size={6}>{defineContentPhrase}</Title>
           </div>
         </div>
         <div className="row">
-          <div className="col-4">
+          <div className="col-12 col-md-4">
             {addDropdownSubject('mainSubject')}
           </div>
-          <div className="col-4">
+          <div className="col-12 col-md-4 mt-3 mt-md-0">
             {addDropdownArticleType('articleType')}
           </div>
         </div>
@@ -246,11 +249,8 @@ function PublicationArchive(props) {
         onSelect={(value) => {
           onChange(id, value)
         }}
-        selectedItem={{
-          title: 'Alle hovedemner',
-          id: ''
-        }}
-        items={props.mainSubjects}
+        selectedItem={dropDownSubjects[0]}
+        items={dropDownSubjects}
       />
     )
   }
@@ -263,11 +263,8 @@ function PublicationArchive(props) {
         onSelect={(value) => {
           onChange(id, value)
         }}
-        selectedItem={{
-          title: 'Alle innholdstyper',
-          id: ''
-        }}
-        items={props.articleType}
+        selectedItem={dropDownTypes[0]}
+        items={dropDownTypes}
       />
     )
   }
@@ -325,6 +322,7 @@ PublicationArchive.propTypes = {
   ingress: PropTypes.string,
   buttonTitle: PropTypes.string,
   showingPhrase: PropTypes.string,
+  defineContentPhrase: PropTypes.string,
   language: PropTypes.string,
   publicationArchiveServiceUrl: PropTypes.string,
   publicationAndArticles: PropTypes.objectOf({
@@ -333,7 +331,7 @@ PublicationArchive.propTypes = {
     publications: PropTypes.array
   }),
   articleTypePhrases: PropTypes.objectOf(PropTypes.string),
-  mainSubjects: PropTypes.array,
-  articleType: PropTypes.array
+  dropDownSubjects: PropTypes.array,
+  dropDownTypes: PropTypes.array
 
 }
