@@ -39,8 +39,13 @@ function renderPart(req: Request): React4xpResponse {
     service: 'nameSearch'
   })
 
+  const urlToGraphService: string = serviceUrl({
+    service: 'nameGraph'
+  })
+
   const props: PartProperties = {
     urlToService: urlToService,
+    urlToGraphService: urlToGraphService,
     aboutLink: aboutLinkResources(component.config),
     nameSearchDescription: component.config.nameSearchDescription,
     frontPage: component.config.frontPage,
@@ -118,6 +123,10 @@ function partsPhrases(locale: string): PartProperties['phrases'] {
       key: 'nameSearch.graph.header',
       locale
     }),
+    loadingGraph: localize({
+      key: 'nameSearch.graph.loading',
+      locale
+    }),
     women: localize({
       key: 'women',
       locale
@@ -157,6 +166,7 @@ function partsPhrases(locale: string): PartProperties['phrases'] {
 
 interface PartProperties {
   urlToService: string;
+  urlToGraphService: string;
   aboutLink?: {
     title: string;
     url: string;
@@ -177,6 +187,7 @@ interface PartProperties {
     threeOrLessText: string;
     xAxis: string;
     graphHeader: string;
+    loadingGraph: string;
     women: string;
     men: string;
     types: {
