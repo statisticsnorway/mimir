@@ -26,6 +26,9 @@ const {
 const {
   getMainSubjects
 } = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
+const {
+  fromPartCache
+} = __non_webpack_require__('/lib/ssb/cache/partCache')
 
 export function getPublications(req: Request, start: number = 0, count: number = 10, language: string, articleType?: string, subject?: string):
     PublicationResult {
@@ -45,16 +48,16 @@ export function getPublications(req: Request, start: number = 0, count: number =
     return prepareArticle(article, mainSubject, language)
   })
 
-  const statistics: Array<PublicationItem> = getStatistics(req, language, articleType, subject)
+  const statistics: Array<PublicationItem> = !articleType || articleType === 'statistics' ? getStatistics(req, language, articleType, subject) : []
 
   return {
     publications,
     statistics: statistics,
-    total: articlesContent.total + Number(statistics.length)
+    total: articlesContent.total + statistics.length
   }
 }
 
-function preparePublication(mainSubjects: Array<SubjectItem>, release: Release, language: string): PublicationItem | null {
+function prepareStatisticRelease(mainSubjects: Array<SubjectItem>, release: Release, language: string): PublicationItem | null {
   const statisticsPagesXP: Content<Statistics, object, SEO> | undefined = query({
     count: 1,
     query: `data.statistic LIKE "${release.statisticId}" AND language IN (${language === 'nb' ? '"nb", "nn"' : '"en"'})`,
@@ -121,7 +124,8 @@ function getArticlesContent(
   const publishFromQuery: string = `(publish.from LIKE '*' AND publish.from < '${now}')`
   const pagePaths: Array<string> = mainSubjects.map((mainSubject) => `_parentPath LIKE "/content${mainSubject._path}/*"`)
   const subjectQuery: string = subject ? `_parentPath LIKE "/content/ssb/${subject}/*"` : `(${pagePaths.join(' OR ')})`
-  const articleTypeQuery: string = articleType ? ` AND data.articleType = "${articleType}"` : ''
+  const defaultArticleQuery: string = articleType && articleType === 'default' ? ` AND (data.articleType NOT LIKE '*')` : ''
+  const articleTypeQuery: string = articleType && articleType !== 'default' ? ` AND data.articleType = "${articleType}"` : defaultArticleQuery
   const queryString: string = `${publishFromQuery} AND ${subjectQuery} ${languageQuery} ${articleTypeQuery}`
 
   const res: QueryResponse<Article> = query({
@@ -136,22 +140,25 @@ function getArticlesContent(
 
 function getStatistics(req: Request, language: string, articleType?: string, subject?: string): Array<PublicationItem> {
   const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
-  const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
-  const previousReleases: Array<Release> = getPreviousReleases(statistics)
-  const statisticsReleases: Array<PublicationItem> = previousReleases.reduce(function(acc: Array<PublicationItem>, release: Release) {
-    const preppedRelease: PublicationItem | null = preparePublication(mainSubjects, release, language)
-    if (preppedRelease) {
-      acc.push(preppedRelease)
-    }
-    return acc
-  }, [])
-
   const mainSubjectTitle: SubjectItem| null = subject && subject !== '' ? mainSubjects.filter((mainSubject) => mainSubject.name === subject)[0] : null
+
+  const statisticsReleases: Array<PublicationItem> = fromPartCache(req, `publicationArchiveStatistics-${language}`, () => {
+    const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
+    const previousReleases: Array<Release> = getPreviousReleases(statistics)
+    const statisticsReleases: Array<PublicationItem> = previousReleases.reduce(function(acc: Array<PublicationItem>, release: Release) {
+      const preppedRelease: PublicationItem | null = prepareStatisticRelease(mainSubjects, release, language)
+      if (preppedRelease) {
+        acc.push(preppedRelease)
+      }
+      return acc
+    }, [])
+    return statisticsReleases
+  })
 
   const filteredStatistics: Array<PublicationItem> = mainSubjectTitle ? statisticsReleases.filter((statistic) =>
     statistic.mainSubject === mainSubjectTitle.title) : statisticsReleases
 
-  return filteredStatistics
+  return filteredStatistics.sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime())
 }
 
 export interface PublicationArchiveLib {

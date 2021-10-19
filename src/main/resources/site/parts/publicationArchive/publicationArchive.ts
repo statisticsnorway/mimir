@@ -38,16 +38,25 @@ function renderPart(req: Request): React4xpResponse {
   const start: number = 0
   const count: number = 10
 
-  const mainSubjectDropdown: Array<Dropdown> = mainSubjects.map((subject) => {
+  const mainSubjectDropdown: Array<Dropdown> = [
+    {
+      id: '',
+      title: 'Alle hovedemner'
+    }
+  ].concat(mainSubjects.map((subject) => {
     return {
       id: subject.name,
       title: subject.title
     }
-  })
+  }))
 
   const articleTypeDropdown: Array<Dropdown> = [
     {
-      id: 'article',
+      id: '',
+      title: 'Alle innholdstyper'
+    },
+    {
+      id: 'default',
       title: phrases['articleType.default']
     },
     {
@@ -59,7 +68,7 @@ function renderPart(req: Request): React4xpResponse {
       title: phrases['articleType.note']
     },
     {
-      id: 'statistic',
+      id: 'statistics',
       title: phrases['articleType.statistics']
     }
   ]

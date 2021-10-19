@@ -18,8 +18,6 @@ function PublicationArchive(props) {
     showingPhrase
   } = props
   const [publications, setPublications] = useState(publicationAndArticles.publications)
-  const [statistics, setStatistics] = useState(publicationAndArticles.statistics)
-  const [articles, setArticles] = useState(publicationAndArticles.publications)
   const [total, setTotal] = useState(publicationAndArticles.total)
   const [loading, setLoading] = useState(false)
   const [first, setFirst] = useState(true)
@@ -30,16 +28,13 @@ function PublicationArchive(props) {
     mainSubject: '',
     articleType: ''
   })
-  const [start, setStart] = useState(0)
-
 
   useEffect(() => {
     if (first) {
       setFirst(false)
-      setPublications(mergePublications(articles, statistics))
+      setPublications(mergePublications(publications, statisticsPublications))
     }
     if (filterChanged) {
-      setDiff([0])
       fetchPublicationsFiltered()
     }
   }, [filter])
@@ -57,6 +52,37 @@ function PublicationArchive(props) {
         ...filter,
         mainSubject: value.id
       })
+    }
+  }
+
+  function filterPublications(result) {
+    // setStatisticsPublications(result.statistics)
+    if (result.statistics.length === 0 && result.publications.length === 0) {
+      setStatisticsPublications([])
+      setPublications([])
+    }
+    if (result.statistics.length > 0 && result.publications.length > 0) {
+      console.log('Artikler: ' + result.publications.length)
+      console.log('Statistikker: ' + result.statistics.length)
+      // TODO Show more funker ikke
+      setStatisticsPublications(result.statistics)
+      setPublications(mergePublications(result.publications, result.statistics))
+    } else {
+      if (result.statistics.length === 0 && result.publications.length > 0) {
+        setStatisticsPublications([])
+        setPublications(result.publications)
+      }
+      if (result.statistics.length > 0 && result.publications.length === 0) {
+        if (result.statistics.length > 10) {
+          const restStatistics = result.statistics.slice(10, result.statistics.length)
+          if (restStatistics.length) {
+            setStatisticsPublications(restStatistics)
+          }
+          setPublications(result.statistics.slice(0, 10))
+        } else {
+          setPublications(result.statistics)
+        }
+      }
     }
   }
 
@@ -84,7 +110,7 @@ function PublicationArchive(props) {
         filteredStatisticsReleasesRest.push(statisticsRelease)
       }
     })
-    setStatistics(filteredStatisticsReleasesRest)
+    setStatisticsPublications(filteredStatisticsReleasesRest)
 
     const diffValues = []
     const mergedPublications = newPublications.length ?
@@ -95,14 +121,8 @@ function PublicationArchive(props) {
     if (mergedPublications.length > 10) {
       const restMergedPublications = mergedPublications.slice(10, mergedPublications.length)
       const restStatistics = restMergedPublications.filter((p) => p.contentType === `${p.appName}:statistics`)
-      const restArticles = restMergedPublications.filter((p) => p.contentType !== `${p.appName}:statistics`)
-      setStart(newPublications.length - restArticles.length)
-      /* if (restArticles.length) {
-        setArticles(restArticles)
-        // setArticles(articles.concat(restArticles))
-      } */
       if (restStatistics.length) {
-        setStatistics(filteredStatisticsReleasesRest.concat(restStatistics))
+        setStatisticsPublications(filteredStatisticsReleasesRest.concat(restStatistics))
       }
 
       diffValues.push(mergedPublications.length - (10 + restStatistics.length))
@@ -116,9 +136,9 @@ function PublicationArchive(props) {
     }
   }
 
+
   function fetchPublicationsFiltered() {
     setLoading(true)
-    setDiff([0])
     axios.get(publicationArchiveServiceUrl, {
       params: {
         start: 0,
@@ -128,7 +148,7 @@ function PublicationArchive(props) {
         type: filter.articleType
       }
     }).then((res) => {
-      setPublications(mergePublications(res.data.publications, res.data.statistics))
+      filterPublications(res.data)
       setTotal(res.data.total)
     }).finally(() => {
       setLoading(false)
@@ -137,18 +157,17 @@ function PublicationArchive(props) {
 
   function fetchPublications() {
     setLoading(true)
-    console.log('Start: ' + start)
-    // const indexDiff = diff.map((d) => d).reduce((acc, curr) => acc + curr)
+    const indexDiff = diff.map((d) => d).reduce((acc, curr) => acc + curr)
     axios.get(publicationArchiveServiceUrl, {
       params: {
-        start: start,
-        count: 5,
+        start: publications.length - indexDiff,
+        count: 10,
         language: language,
-        subject: filter.mainSubject
+        subject: filter.mainSubject,
+        type: filter.articleType
       }
     }).then((res) => {
-      // setStatisticsPublications(res.data.statistics)
-      setPublications(publications.concat(mergePublications(res.data.publications, statistics)))
+      setPublications(publications.concat(mergePublications(res.data.publications, res.data.statistics)))
       setTotal(res.data.total)
     }).finally(() => {
       setLoading(false)
@@ -212,7 +231,7 @@ function PublicationArchive(props) {
   function addDropdownSubject(id) {
     return (
       <Dropdown
-        className="month"
+        className="mainSubject"
         id={id}
         onSelect={(value) => {
           onChange(id, value)
@@ -229,10 +248,9 @@ function PublicationArchive(props) {
   function addDropdownArticleType(id) {
     return (
       <Dropdown
-        className="month"
+        className="contentType"
         id={id}
         onSelect={(value) => {
-          setMainSubject(value.title)
           onChange(id, value)
         }}
         selectedItem={{
