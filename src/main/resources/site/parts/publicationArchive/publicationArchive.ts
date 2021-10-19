@@ -41,7 +41,7 @@ function renderPart(req: Request): React4xpResponse {
   const mainSubjectDropdown: Array<Dropdown> = [
     {
       id: '',
-      title: 'Alle hovedemner'
+      title: 'Alle emner'
     }
   ].concat(mainSubjects.map((subject) => {
     return {

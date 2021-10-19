@@ -41,6 +41,7 @@ function PublicationArchive(props) {
 
   function onChange(id, value) {
     setFilterChanged(true)
+    setDiff([0])
     if (id === 'articleType') {
       setFilter({
         ...filter,
@@ -56,7 +57,6 @@ function PublicationArchive(props) {
   }
 
   function filterPublications(result) {
-    // setStatisticsPublications(result.statistics)
     if (result.statistics.length === 0 && result.publications.length === 0) {
       setStatisticsPublications([])
       setPublications([])
@@ -65,11 +65,10 @@ function PublicationArchive(props) {
       console.log('Artikler: ' + result.publications.length)
       console.log('Statistikker: ' + result.statistics.length)
       // TODO Show more funker ikke
-      setStatisticsPublications(result.statistics)
       setPublications(mergePublications(result.publications, result.statistics))
     } else {
       if (result.statistics.length === 0 && result.publications.length > 0) {
-        setStatisticsPublications([])
+        // setStatisticsPublications([])
         setPublications(result.publications)
       }
       if (result.statistics.length > 0 && result.publications.length === 0) {
@@ -158,6 +157,9 @@ function PublicationArchive(props) {
   function fetchPublications() {
     setLoading(true)
     const indexDiff = diff.map((d) => d).reduce((acc, curr) => acc + curr)
+    console.log('indexDiff: ' + indexDiff)
+    console.log('lengde publications: ' + publications.length)
+    console.log('Start: ' + (publications.length - indexDiff))
     axios.get(publicationArchiveServiceUrl, {
       params: {
         start: publications.length - indexDiff,
@@ -167,7 +169,7 @@ function PublicationArchive(props) {
         type: filter.articleType
       }
     }).then((res) => {
-      setPublications(publications.concat(mergePublications(res.data.publications, res.data.statistics)))
+      setPublications(publications.concat(mergePublications(res.data.publications, statisticsPublications)))
       setTotal(res.data.total)
     }).finally(() => {
       setLoading(false)
@@ -217,14 +219,22 @@ function PublicationArchive(props) {
 
   function renderFilter() {
     return (
-      <div className="row">
-        <div className="col">
-          {addDropdownSubject('mainSubject')}
+      <div className="mt-5">
+        <div className="row">
+          <div className="col">
+            <Title size={6}>Avgrens innhold</Title>
+          </div>
         </div>
-        <div className="col">
-          {addDropdownArticleType('articleType')}
+        <div className="row">
+          <div className="col-4">
+            {addDropdownSubject('mainSubject')}
+          </div>
+          <div className="col-4">
+            {addDropdownArticleType('articleType')}
+          </div>
         </div>
       </div>
+
     )
   }
 
