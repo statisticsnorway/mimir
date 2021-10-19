@@ -33,37 +33,16 @@ export function get(req: Request): Response {
     }
   }
 
-  const solrBaseUrl: string = app.config && app.config['ssb.solrNameSearch.baseUrl'] ?
-    app.config['ssb.solrNameSearch.baseUrl'] : 'https://www.ssb.no/solr/navnesok/select'
-
-  const requestParams: HttpRequestParams = {
-    url: solrBaseUrl,
-    method: 'get',
-    contentType: 'application/json',
-    headers: {
-      'Cache-Control': 'no-cache',
-      'Accept': 'application/json'
-    },
-    connectionTimeout: 20000,
-    readTimeout: 10000,
-    params: {
-      q: prepareQuery(sanitizeQuery(req.params.name)),
-      wt: 'json'
-    }
-  }
 
   try {
-    const result: HttpResponse = request(requestParams)
-    const preparedBody: string = result.body ? prepareResult(result.body, sanitizeQuery(req.params.name)) : ''
+    const preparedBody: string = prepareResult(sanitizeQuery(req.params.name))
 
     return {
       body: preparedBody,
-      status: result.status,
+      status: 200,
       contentType: 'application/json'
     }
   } catch (err) {
-    log.error(`Failed to fetch data from solr name search: ${solrBaseUrl}. ${err}`)
-
     return {
       body: err,
       status: err.status ? err.status : 500,
@@ -72,41 +51,53 @@ export function get(req: Request): Response {
   }
 }
 
-function prepareResult(result: string, name: string): string {
+function prepareResult(name: string): string {
   const nameSearchGraphEnabled: boolean = isEnabled('name-graph', true, 'ssb')
-  const obj: ResultType = JSON.parse(result)
+  const obj: ResultType = JSON.parse('{}')
   obj.originalName = name
-  obj.nameGraph = nameSearchGraphEnabled ? graphAvailable(name) : false
+  obj.nameGraph = nameSearchGraphEnabled ? prepareGraph(name) : []
   return JSON.stringify(obj)
 }
 
-// Checks if any of the searched for names have graph data available.
-// Uses cached graphData, and returns true for first possible hit.
-// 250ms on first run, 5-10 on subsequent runs.
-function graphAvailable(name: string): boolean {
+function prepareGraph(name: string): Array<NameGraph> {
   const config: Content<CalculatorConfig> | undefined = getCalculatorConfig()
 
+  const result: Array<NameGraph> = []
   const bankSaved: DatasetRepoNode<object | JSONstat> | null = config ? getNameSearchGraphData(config) : null
 
-  const labels: Keyable = bankSaved?.data.dimension.Fornavn.category.label
+  try {
+    const labels: Keyable = bankSaved?.data.dimension.Fornavn.category.label
 
-  const exists: boolean = name.split(' ').some((name) => checkKeysForValue(labels, name))
-  return exists
+    name.split(' ').forEach((n) => {
+      const preparedName: string = n.charAt(0) + n.slice(1).toLowerCase()
+      const nameCode: string | undefined = getKeyByValue(labels, preparedName)
+
+      if (nameCode) {
+        const dataset: KeyableNumberArray = JSONstat(bankSaved?.data).Dataset(0).Dice({
+          'Fornavn': [nameCode]
+        },
+        {
+          clone: true
+        })
+        result.push(
+          {
+            name: preparedName,
+            data: dataset.value
+          }
+        )
+      }
+    }
+    )
+    return result
+  } catch (error) {
+    log.error(error)
+    return result
+  }
 }
 
-function checkKeysForValue(object: Keyable, value: string): boolean {
-  const preparedName: string = value.charAt(0) + value.slice(1).toLowerCase()
-  return !!Object.keys(object).find((key) => object[key] === preparedName)
-}
 
-
-function prepareQuery(input: string): string {
-  if (input.split(' ').length == 1) return input
-  else return pad(input) + '+' + input.split(' ').map((word) => pad(word)).join('+')
-}
-
-function pad(word: string): string {
-  return '"' + word + '"'
+function getKeyByValue(object: Keyable, value: string): string | undefined {
+  return Object.keys(object).find((key) => object[key] === value)
 }
 
 function sanitizeQuery(name: string): string {
@@ -126,10 +117,19 @@ function replaceCharacters(name: string): string {
 
 interface ResultType {
   originalName: string;
-  nameGraph?: boolean;
+  nameGraph?: Array<NameGraph>;
+}
+
+interface NameGraph {
+  name: string;
+  data: Array<number>;
 }
 
 interface Keyable {
   [key: string]: string;
+}
+
+interface KeyableNumberArray {
+  [key: string]: Array<number>;
 }
 

@@ -39,8 +39,13 @@ function renderPart(req: Request): React4xpResponse {
     service: 'nameSearch'
   })
 
+  const urlToGraphService: string = serviceUrl({
+    service: 'nameGraph'
+  })
+
   const props: PartProperties = {
     urlToService: urlToService,
+    urlToGraphService: urlToGraphService,
     aboutLink: aboutLinkResources(component.config),
     nameSearchDescription: component.config.nameSearchDescription,
     frontPage: component.config.frontPage,
@@ -118,6 +123,10 @@ function partsPhrases(locale: string): PartProperties['phrases'] {
       key: 'nameSearch.graph.header',
       locale
     }),
+    loadingGraph: localize({
+      key: 'nameSearch.graph.loading',
+      locale
+    }),
     women: localize({
       key: 'women',
       locale
@@ -151,12 +160,41 @@ function partsPhrases(locale: string): PartProperties['phrases'] {
         key: 'nameSearch.types.firstgiven',
         locale
       })
-    }
+    },
+    printChart: localize({
+      key: 'highcharts.printChart',
+      locale
+    }),
+    downloadPNG: localize({
+      key: 'highcharts.downloadPNG',
+      locale
+    }),
+    downloadJPEG: localize({
+      key: 'highcharts.downloadJPEG',
+      locale
+    }),
+    downloadPDF: localize({
+      key: 'highcharts.downloadPDF',
+      locale
+    }),
+    downloadSVG: localize({
+      key: 'highcharts.downloadSVG',
+      locale
+    }),
+    downloadCSV: localize({
+      key: 'highcharts.downloadCSV',
+      locale
+    }),
+    downloadXLS: localize({
+      key: 'highcharts.downloadXLS',
+      locale
+    })
   }
 }
 
 interface PartProperties {
   urlToService: string;
+  urlToGraphService: string;
   aboutLink?: {
     title: string;
     url: string;
@@ -177,6 +215,7 @@ interface PartProperties {
     threeOrLessText: string;
     xAxis: string;
     graphHeader: string;
+    loadingGraph: string;
     women: string;
     men: string;
     types: {
@@ -187,5 +226,12 @@ interface PartProperties {
       onlygivenandfamily: string;
       firstgiven: string;
     };
+    printChart: string;
+    downloadPNG: string;
+    downloadJPEG: string;
+    downloadPDF: string;
+    downloadSVG: string;
+    downloadCSV: string;
+    downloadXLS: string;
   };
 }
