@@ -54,7 +54,7 @@ try {
           enabled: false
         },
         {
-          feature: 'dashboard-statistics-debugging-logs',
+          feature: 'dashboard-redux-logging-debugging',
           enabled: true
         }
       ]

@@ -2,8 +2,6 @@ import { actions } from './slice'
 
 export default function setupStatisticsListeners(io, dispatch) {
   io.on('statistics-result', (data) => {
-    // TODO: Remove logging after statistics in dashboard stuck on loading issue has been resolved
-    console.log(`statistics-dashboard-debugging :: in statistics listeners. statistics-result. Loaded statistics: ${data.length}`)
     dispatch({
       type: actions.statisticsLoaded.type,
       statistics: data
@@ -46,8 +44,6 @@ export default function setupStatisticsListeners(io, dispatch) {
   })
 
   io.on('statistics-search-list-result', (data) => {
-    // TODO: Remove logging after statistics in dashboard stuck on loading issue has been resolved
-    console.log(`statistics-dashboard-debugging :: in statistics listeners. statistics-search-list-result. Loaded statistics: ${data.length}`)
     dispatch({
       type: actions.statisticsSearchListLoaded.type,
       statisticsSearchList: data
