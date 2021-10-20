@@ -139,7 +139,7 @@ function prepareStatisticRelease(mainSubjects: Array<SubjectItem>, release: Rele
     const period: string = calculatePeriodRelease(release, language)
 
     return {
-      title: release.statisticName,
+      title: language === 'en' ? release.statisticNameEn : release.statisticName,
       period: period.charAt(0).toUpperCase() + period.slice(1),
       preface: aboutTheStatisticsContent ? aboutTheStatisticsContent.data.ingress : seoDescription,
       url: statisticsPageUrl,
