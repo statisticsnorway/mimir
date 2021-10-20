@@ -36,7 +36,6 @@ function PublicationArchive(props) {
       setPublications(publications)
     }
     if (filterChanged) {
-      console.log('Filter: ' + JSON.stringify(filter, null, 4))
       fetchPublicationsFiltered()
     }
   }, [filter])
@@ -52,7 +51,7 @@ function PublicationArchive(props) {
     if (id === 'mainSubject') {
       setFilter({
         ...filter,
-        mainSubject: value.title
+        mainSubject: value.id
       })
     }
   }

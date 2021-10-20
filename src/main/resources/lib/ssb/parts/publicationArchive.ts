@@ -74,13 +74,13 @@ export function getAllPublications(req: Request, start: number = 0, count: numbe
 
 function filterPublications(publications: Array<PublicationItem>, articleType: string| undefined, subject: string| undefined): Array<PublicationItem> {
   if (articleType && subject) {
-    return publications.filter((publication) => (publication.articleType === articleType && publication.mainSubject === subject))
+    return publications.filter((publication) => (publication.articleType === articleType && publication.mainSubjectId === subject))
   }
   if (articleType && !subject) {
     return publications.filter((publication) => publication.articleType === articleType)
   }
   if (!articleType && subject) {
-    return publications.filter((publication) => publication.mainSubject === subject)
+    return publications.filter((publication) => publication.mainSubjectId === subject)
   }
   return publications
 }
@@ -147,6 +147,7 @@ function prepareStatisticRelease(mainSubjects: Array<SubjectItem>, release: Rele
       publishDateHuman: moment(new Date(release.publishTime)).locale(language).format('Do MMMM YYYY'),
       contentType: `${app.name}:statistics`,
       articleType: 'statistics',
+      mainSubjectId: mainSubject.length > 0 ? mainSubject[0].name : '',
       mainSubject: mainSubjectName,
       appName: app.name
     }
@@ -166,6 +167,7 @@ function prepareArticle(article: Content<Article>, mainSubject: Content<Page> | 
     publishDateHuman: article.publish && article.publish.from ? moment(article.publish.from).locale(language).format('Do MMMM YYYY') : '',
     contentType: article.type,
     articleType: article.data.articleType ? article.data.articleType : 'default',
+    mainSubjectId: mainSubject ? mainSubject._name : '',
     mainSubject: mainSubject ? mainSubject.displayName : '',
     appName: app.name
   }
@@ -267,6 +269,7 @@ export interface PublicationItem {
   publishDateHuman: string;
   contentType: string;
   articleType: string;
+  mainSubjectId: string;
   mainSubject: string;
   appName: string;
 }
