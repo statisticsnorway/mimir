@@ -14,7 +14,7 @@ const {
 } = __non_webpack_require__('/lib/xp/portal')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
-  getAllPublications
+  getPublications
 } = __non_webpack_require__( '/lib/ssb/parts/publicationArchive')
 const {
   getMainSubjects
@@ -93,7 +93,7 @@ function renderPart(req: Request): React4xpResponse {
     defineContentPhrase: phrases['publicationArchive.defineContent'],
     language,
     publicationArchiveServiceUrl,
-    firstPublications: getAllPublications(req, start, count, language),
+    firstPublications: getPublications(req, start, count, language),
     articleTypePhrases: {
       default: phrases['articleType.default'],
       report: phrases['articleType.report'],

@@ -2,7 +2,7 @@ import { Request, Response } from 'enonic-types/controller'
 import { PublicationResult } from '../../lib/ssb/parts/publicationArchive'
 
 const {
-  getAllPublications
+  getPublications
 } = __non_webpack_require__( '/lib/ssb/parts/publicationArchive')
 
 exports.get = (req: Request): Response => {
@@ -12,7 +12,7 @@ exports.get = (req: Request): Response => {
   const type: string = req.params?.type ? req.params.type : ''
   const subject: string = req.params?.subject ? req.params.subject : ''
 
-  const result: PublicationResult = getAllPublications(req, start, count, language, type, subject)
+  const result: PublicationResult = getPublications(req, start, count, language, type, subject)
 
   return {
     status: 200,

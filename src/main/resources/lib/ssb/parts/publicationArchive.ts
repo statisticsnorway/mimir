@@ -31,36 +31,10 @@ const {
 } = __non_webpack_require__('/lib/ssb/cache/partCache')
 
 export function getPublications(req: Request, start: number = 0, count: number = 10, language: string, articleType?: string, subject?: string):
-    PublicationAndStatisticResult {
-  const languageQuery: string = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'
-  const mainSubjects: Array<Content<Page>> = query({
-    count: 500,
-    contentTypes: [`${app.name}:page`],
-    query: `components.page.config.mimir.default.subjectType LIKE "mainSubject" ${languageQuery}`
-  }).hits as unknown as Array<Content<Page>>
-
-  const articlesContent: QueryResponse<Article> = getArticlesContent(start, count, language, mainSubjects, languageQuery, articleType, subject)
-
-  const publications: Array<PublicationItem> = articlesContent.hits.map((article) => {
-    const mainSubject: Content<Page> | undefined = mainSubjects.find((mainSubject) => {
-      return article._path.startsWith(mainSubject._path)
-    })
-    return prepareArticle(article, mainSubject, language)
-  })
-
-  const statistics: Array<PublicationItem> = !articleType || articleType === 'statistics' ? getStatistics(req, language, articleType, subject) : []
-  const statisticsWithMainSubject: Array<PublicationItem> = statistics.filter((statistic) => statistic.mainSubject !== '')
-
-  return {
-    publications,
-    statistics: statisticsWithMainSubject,
-    total: articlesContent.total + statisticsWithMainSubject.length
-  }
-}
-
-export function getAllPublications(req: Request, start: number = 0, count: number = 10, language: string, articleType?: string, subject?: string):
     PublicationResult {
-  const allPublications: Array<PublicationItem> = getPublicationsAndStatistics(req, language)
+  const allPublications: Array<PublicationItem> = fromPartCache(req, `archiveAllPublications-${language}`, () => {
+    return getPublicationsAndStatistics(req, language)
+  })
 
   const type: string| undefined = articleType && articleType !== '' ? articleType : undefined
   const mainSubject: string| undefined = subject && subject !== '' ? subject : undefined
@@ -87,33 +61,29 @@ function filterPublications(publications: Array<PublicationItem>, articleType: s
 
 function getPublicationsAndStatistics(req: Request, language: string):
     Array<PublicationItem> {
-  const publicationsAndStatistics: Array<PublicationItem> = fromPartCache(req, `publicationArchivePublications-${language}`, () => {
-    const languageQuery: string = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'
-    const mainSubjects: Array<Content<Page>> = query({
-      count: 500,
-      contentTypes: [`${app.name}:page`],
-      query: `components.page.config.mimir.default.subjectType LIKE "mainSubject" ${languageQuery}`
-    }).hits as unknown as Array<Content<Page>>
+  const languageQuery: string = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'
+  const mainSubjects: Array<Content<Page>> = query({
+    count: 500,
+    contentTypes: [`${app.name}:page`],
+    query: `components.page.config.mimir.default.subjectType LIKE "mainSubject" ${languageQuery}`
+  }).hits as unknown as Array<Content<Page>>
 
-    const articlesContent: QueryResponse<Article> = getAllArticlesContent(language, mainSubjects, languageQuery)
+  const articlesContent: QueryResponse<Article> = getArticlesContent(language, mainSubjects, languageQuery)
 
-    const publications: Array<PublicationItem> = articlesContent.hits.map((article) => {
-      const mainSubject: Content<Page> | undefined = mainSubjects.find((mainSubject) => {
-        return article._path.startsWith(mainSubject._path)
-      })
-      return prepareArticle(article, mainSubject, language)
+  const publications: Array<PublicationItem> = articlesContent.hits.map((article) => {
+    const mainSubject: Content<Page> | undefined = mainSubjects.find((mainSubject) => {
+      return article._path.startsWith(mainSubject._path)
     })
-
-    const statistics: Array<PublicationItem> = getStatistics(req, language)
-    const statisticsWithMainSubject: Array<PublicationItem> = statistics.filter((statistic) => statistic.mainSubject !== '')
-
-    const allPublications: Array<PublicationItem> = publications.concat(statisticsWithMainSubject)
-    const allPublicationsSorted: Array<PublicationItem> = allPublications.sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime())
-    return allPublicationsSorted
+    return prepareArticle(article, mainSubject, language)
   })
 
+  const statistics: Array<PublicationItem> = getStatistics(req, language)
+  const statisticsWithMainSubject: Array<PublicationItem> = statistics.filter((statistic) => statistic.mainSubject !== '')
 
-  return publicationsAndStatistics
+  const allPublications: Array<PublicationItem> = publications.concat(statisticsWithMainSubject)
+  const allPublicationsSorted: Array<PublicationItem> = allPublications.sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime())
+
+  return allPublicationsSorted
 }
 
 function prepareStatisticRelease(mainSubjects: Array<SubjectItem>, release: Release, language: string): PublicationItem | null {
@@ -174,32 +144,6 @@ function prepareArticle(article: Content<Article>, mainSubject: Content<Page> | 
 }
 
 function getArticlesContent(
-  start: number,
-  count: number,
-  language: string,
-  mainSubjects: Array<Content<Page>>,
-  languageQuery: string,
-  articleType?: string,
-  subject?: string): QueryResponse<Article> {
-  const now: string = new Date().toISOString()
-  const publishFromQuery: string = `(publish.from LIKE '*' AND publish.from < '${now}')`
-  const pagePaths: Array<string> = mainSubjects.map((mainSubject) => `_parentPath LIKE "/content${mainSubject._path}/*"`)
-  const subjectQuery: string = subject ? `_parentPath LIKE "/content/ssb/${subject}/*"` : `(${pagePaths.join(' OR ')})`
-  const defaultArticleQuery: string = articleType && articleType === 'default' ? ` AND (data.articleType NOT LIKE '*')` : ''
-  const articleTypeQuery: string = articleType && articleType !== 'default' ? ` AND data.articleType = "${articleType}"` : defaultArticleQuery
-  const queryString: string = `${publishFromQuery} AND ${subjectQuery} ${languageQuery} ${articleTypeQuery}`
-
-  const res: QueryResponse<Article> = query({
-    start,
-    count,
-    query: queryString,
-    contentTypes: [`${app.name}:article`],
-    sort: 'publish.from DESC'
-  })
-  return res
-}
-
-function getAllArticlesContent(
   language: string,
   mainSubjects: Array<Content<Page>>,
   languageQuery: string,
@@ -212,7 +156,7 @@ function getAllArticlesContent(
   const queryString: string = `${publishFromQuery} AND ${subjectQuery} ${languageQuery}`
 
   const res: QueryResponse<Article> = query({
-    count: 5000,
+    count: 10000,
     query: queryString,
     contentTypes: [`${app.name}:article`],
     sort: 'publish.from DESC'
@@ -223,19 +167,15 @@ function getAllArticlesContent(
 function getStatistics(req: Request, language: string, articleType?: string, subject?: string): Array<PublicationItem> {
   const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
   const mainSubjectTitle: SubjectItem| null = subject && subject !== '' ? mainSubjects.filter((mainSubject) => mainSubject.name === subject)[0] : null
-
-  const statisticsReleases: Array<PublicationItem> = fromPartCache(req, `publicationArchiveStatistics-${language}`, () => {
-    const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
-    const previousReleases: Array<Release> = getPreviousReleases(statistics)
-    const statisticsReleases: Array<PublicationItem> = previousReleases.reduce(function(acc: Array<PublicationItem>, release: Release) {
-      const preppedRelease: PublicationItem | null = prepareStatisticRelease(mainSubjects, release, language)
-      if (preppedRelease) {
-        acc.push(preppedRelease)
-      }
-      return acc
-    }, [])
-    return statisticsReleases
-  })
+  const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
+  const previousReleases: Array<Release> = getPreviousReleases(statistics)
+  const statisticsReleases: Array<PublicationItem> = previousReleases.reduce(function(acc: Array<PublicationItem>, release: Release) {
+    const preppedRelease: PublicationItem | null = prepareStatisticRelease(mainSubjects, release, language)
+    if (preppedRelease) {
+      acc.push(preppedRelease)
+    }
+    return acc
+  }, [])
 
   const filteredStatistics: Array<PublicationItem> = mainSubjectTitle ? statisticsReleases.filter((statistic) =>
     statistic.mainSubject === mainSubjectTitle.title) : statisticsReleases
@@ -244,15 +184,7 @@ function getStatistics(req: Request, language: string, articleType?: string, sub
 }
 
 export interface PublicationArchiveLib {
-  getPublications: (req: Request, start: number, count: number, language: string, contentType?: string, subject?: string) => PublicationAndStatisticResult;
-  getAllPublications: (req: Request, start: number, count: number, language: string, contentType?: string, subject?: string) => PublicationResult;
-}
-
-
-export interface PublicationAndStatisticResult {
-  total: number;
-  publications: Array<PublicationItem>;
-  statistics: Array<PublicationItem>;
+  getPublications: (req: Request, start: number, count: number, language: string, contentType?: string, subject?: string) => PublicationResult;
 }
 
 export interface PublicationResult {
