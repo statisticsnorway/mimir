@@ -26,7 +26,7 @@ const statisticsSlice = createSlice({
       const stat = state.statistics.find((s) => s.id === action.id)
       const modal = state.modals.find((s) => s.statisticId === action.id)
       stat.loading = true
-      modal.modalDisplay = 'loading'
+      if (modal && modal.modalDisplay) modal.modalDisplay = 'loading'
     },
     resultRefreshStatistic(state, action) {
       const stat = state.statistics.find((s) => s.id === action.statistic.id)

@@ -19,6 +19,7 @@ import { StatRegJobInfo } from './statreg'
 import { DefaultPageConfig } from '../../../site/pages/default/default-page-config'
 import { Page } from '../../../site/content-types/page/page'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
+
 const {
   users,
   showWarningIcon,
@@ -282,7 +283,6 @@ function getStatisticsGroups(): Array<DashboardDataSourceGroups> {
     query: `data.statistic LIKE "*"`,
     count: 1000
   }).hits as unknown as Array<Content<Statistics>>
-
   return statistics.map((statistic) => {
     return {
       id: statistic._id,
