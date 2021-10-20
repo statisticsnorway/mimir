@@ -12,7 +12,7 @@ function PublicationArchive(props) {
     ingress,
     buttonTitle,
     publicationArchiveServiceUrl,
-    publicationAndArticles,
+    firstPublications,
     language,
     articleTypePhrases,
     showingPhrase,
@@ -20,12 +20,10 @@ function PublicationArchive(props) {
     dropDownSubjects,
     dropDownTypes
   } = props
-  const [publications, setPublications] = useState(publicationAndArticles.publications)
-  const [total, setTotal] = useState(publicationAndArticles.total)
+  const [publications, setPublications] = useState(firstPublications.publications)
+  const [total, setTotal] = useState(firstPublications.total)
   const [loading, setLoading] = useState(false)
   const [first, setFirst] = useState(true)
-  const [statisticsPublications, setStatisticsPublications] = useState(publicationAndArticles.statistics)
-  const [diff, setDiff] = useState([0])
   const [filterChanged, setFilterChanged] = useState(false)
   const [filter, setFilter] = useState({
     mainSubject: '',
@@ -35,16 +33,16 @@ function PublicationArchive(props) {
   useEffect(() => {
     if (first) {
       setFirst(false)
-      setPublications(mergePublications(publications, statisticsPublications))
+      setPublications(publications)
     }
     if (filterChanged) {
+      console.log('Filter: ' + JSON.stringify(filter, null, 4))
       fetchPublicationsFiltered()
     }
   }, [filter])
 
   function onChange(id, value) {
     setFilterChanged(true)
-    setDiff([0])
     if (id === 'articleType') {
       setFilter({
         ...filter,
@@ -54,90 +52,10 @@ function PublicationArchive(props) {
     if (id === 'mainSubject') {
       setFilter({
         ...filter,
-        mainSubject: value.id
+        mainSubject: value.title
       })
     }
   }
-
-  function filterPublications(result) {
-    if (result.statistics.length === 0 && result.publications.length === 0) {
-      setStatisticsPublications([])
-      setPublications([])
-    }
-    if (result.statistics.length > 0 && result.publications.length > 0) {
-      console.log('Artikler: ' + result.publications.length)
-      console.log('Statistikker: ' + result.statistics.length)
-      // TODO Show more funker ikke
-      setPublications(mergePublications(result.publications, result.statistics))
-    } else {
-      if (result.statistics.length === 0 && result.publications.length > 0) {
-        // setStatisticsPublications([])
-        setPublications(result.publications)
-      }
-      if (result.statistics.length > 0 && result.publications.length === 0) {
-        if (result.statistics.length > 10) {
-          const restStatistics = result.statistics.slice(10, result.statistics.length)
-          if (restStatistics.length) {
-            setStatisticsPublications(restStatistics)
-          }
-          setPublications(result.statistics.slice(0, 10))
-        } else {
-          setPublications(result.statistics)
-        }
-      }
-    }
-  }
-
-  function mergePublications(newPublications, newStatistics) {
-    const filteredStatisticsReleases = []
-    const filteredStatisticsReleasesRest = []
-
-    newStatistics.forEach((statisticsRelease) => {
-      const statisticsReleaseDate = new Date(statisticsRelease.publishDate)
-      const latestNewPublicationDate = newPublications.length ? new Date(newPublications[0].publishDate) : new Date()
-      const oldestNewPublicationDate = newPublications.length ? new Date(newPublications[newPublications.length - 1].publishDate) : new Date('01.01.1970')
-
-      let dateCheck = statisticsReleaseDate <
-          (publications.length ? new Date(publications[publications.length - 1].publishDate) : latestNewPublicationDate) &&
-          statisticsReleaseDate > oldestNewPublicationDate
-      if (statisticsReleaseDate > latestNewPublicationDate) {
-        dateCheck = statisticsReleaseDate > oldestNewPublicationDate
-      } else {
-        dateCheck = statisticsReleaseDate < publications.length ? new Date(publications[publications.length - 1].publishDate) : latestNewPublicationDate
-      }
-
-      if (dateCheck) {
-        filteredStatisticsReleases.push(statisticsRelease)
-      } else {
-        filteredStatisticsReleasesRest.push(statisticsRelease)
-      }
-    })
-    setStatisticsPublications(filteredStatisticsReleasesRest)
-
-    const diffValues = []
-    const mergedPublications = newPublications.length ?
-      filteredStatisticsReleases.concat(newPublications)
-        .sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate)) :
-      filteredStatisticsReleases.sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate))
-
-    if (mergedPublications.length > 10) {
-      const restMergedPublications = mergedPublications.slice(10, mergedPublications.length)
-      const restStatistics = restMergedPublications.filter((p) => p.contentType === `${p.appName}:statistics`)
-      if (restStatistics.length) {
-        setStatisticsPublications(filteredStatisticsReleasesRest.concat(restStatistics))
-      }
-
-      diffValues.push(mergedPublications.length - (10 + restStatistics.length))
-      setDiff(diff.concat(diffValues))
-
-      return mergedPublications.slice(0, 10)
-    } else {
-      diffValues.push(0)
-      setDiff(diff.concat(diffValues))
-      return mergedPublications
-    }
-  }
-
 
   function fetchPublicationsFiltered() {
     setLoading(true)
@@ -150,7 +68,7 @@ function PublicationArchive(props) {
         type: filter.articleType
       }
     }).then((res) => {
-      filterPublications(res.data)
+      setPublications(res.data.publications)
       setTotal(res.data.total)
     }).finally(() => {
       setLoading(false)
@@ -159,20 +77,16 @@ function PublicationArchive(props) {
 
   function fetchPublications() {
     setLoading(true)
-    const indexDiff = diff.map((d) => d).reduce((acc, curr) => acc + curr)
-    console.log('indexDiff: ' + indexDiff)
-    console.log('lengde publications: ' + publications.length)
-    console.log('Start: ' + (publications.length - indexDiff))
     axios.get(publicationArchiveServiceUrl, {
       params: {
-        start: publications.length - indexDiff,
+        start: publications.length,
         count: 10,
         language: language,
         subject: filter.mainSubject,
         type: filter.articleType
       }
     }).then((res) => {
-      setPublications(publications.concat(mergePublications(res.data.publications, statisticsPublications)))
+      setPublications(publications.concat(res.data.publications))
       setTotal(res.data.total)
     }).finally(() => {
       setLoading(false)
@@ -325,9 +239,8 @@ PublicationArchive.propTypes = {
   defineContentPhrase: PropTypes.string,
   language: PropTypes.string,
   publicationArchiveServiceUrl: PropTypes.string,
-  publicationAndArticles: PropTypes.objectOf({
+  firstPublications: PropTypes.objectOf({
     total: PropTypes.number,
-    statistics: PropTypes.array,
     publications: PropTypes.array
   }),
   articleTypePhrases: PropTypes.objectOf(PropTypes.string),

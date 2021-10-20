@@ -31,7 +31,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/cache/partCache')
 
 export function getPublications(req: Request, start: number = 0, count: number = 10, language: string, articleType?: string, subject?: string):
-PublicationAndStatisticResult {
+    PublicationAndStatisticResult {
   const languageQuery: string = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'
   const mainSubjects: Array<Content<Page>> = query({
     count: 500,
@@ -61,15 +61,18 @@ PublicationAndStatisticResult {
 export function getAllPublications(req: Request, start: number = 0, count: number = 10, language: string, articleType?: string, subject?: string):
     PublicationResult {
   const allPublications: Array<PublicationItem> = getPublicationsAndStatistics(req, language)
-  const filteredPublication: Array<PublicationItem> = filterPublications(allPublications, articleType, subject)
+
+  const type: string| undefined = articleType && articleType !== '' ? articleType : undefined
+  const mainSubject: string| undefined = subject && subject !== '' ? subject : undefined
+  const filteredPublication: Array<PublicationItem> = type || mainSubject ? filterPublications(allPublications, type, mainSubject) : allPublications
 
   return {
-    publications: filteredPublication.slice(start, count),
+    publications: filteredPublication.slice(start, start + count),
     total: filteredPublication.length
   }
 }
 
-function filterPublications(publications: Array<PublicationItem>, articleType?: string, subject?: string): Array<PublicationItem> {
+function filterPublications(publications: Array<PublicationItem>, articleType: string| undefined, subject: string| undefined): Array<PublicationItem> {
   if (articleType && subject) {
     return publications.filter((publication) => (publication.articleType === articleType && publication.mainSubject === subject))
   }
@@ -239,31 +242,31 @@ function getStatistics(req: Request, language: string, articleType?: string, sub
 }
 
 export interface PublicationArchiveLib {
-    getPublications: (req: Request, start: number, count: number, language: string, contentType?: string, subject?: string) => PublicationAndStatisticResult;
-    getAllPublications: (req: Request, start: number, count: number, language: string, contentType?: string, subject?: string) => PublicationResult;
-  }
+  getPublications: (req: Request, start: number, count: number, language: string, contentType?: string, subject?: string) => PublicationAndStatisticResult;
+  getAllPublications: (req: Request, start: number, count: number, language: string, contentType?: string, subject?: string) => PublicationResult;
+}
 
 
 export interface PublicationAndStatisticResult {
-    total: number;
-    publications: Array<PublicationItem>;
-    statistics: Array<PublicationItem>;
-  }
+  total: number;
+  publications: Array<PublicationItem>;
+  statistics: Array<PublicationItem>;
+}
 
 export interface PublicationResult {
-    total: number;
-    publications: Array<PublicationItem>;
-  }
+  total: number;
+  publications: Array<PublicationItem>;
+}
 
 export interface PublicationItem {
-    title: string;
-    period?: string;
-    preface: string;
-    url: string;
-    publishDate: string;
-    publishDateHuman: string;
-    contentType: string;
-    articleType: string;
-    mainSubject: string;
-    appName: string;
-  }
+  title: string;
+  period?: string;
+  preface: string;
+  url: string;
+  publishDate: string;
+  publishDateHuman: string;
+  contentType: string;
+  articleType: string;
+  mainSubject: string;
+  appName: string;
+}

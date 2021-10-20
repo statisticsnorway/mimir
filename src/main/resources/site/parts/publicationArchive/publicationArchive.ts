@@ -3,7 +3,7 @@ import { Component } from 'enonic-types/portal'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Content } from 'enonic-types/content'
 import { PublicationArchivePartConfig } from './publicationArchive-part-config'
-import { PublicationResult, PublicationAndStatisticResult } from '../../../lib/ssb/parts/publicationArchive'
+import { PublicationResult } from '../../../lib/ssb/parts/publicationArchive'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 
 const {
@@ -14,7 +14,7 @@ const {
 } = __non_webpack_require__('/lib/xp/portal')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
-  getPublications
+  getAllPublications
 } = __non_webpack_require__( '/lib/ssb/parts/publicationArchive')
 const {
   getMainSubjects
@@ -93,7 +93,7 @@ function renderPart(req: Request): React4xpResponse {
     defineContentPhrase: phrases['publicationArchive.defineContent'],
     language,
     publicationArchiveServiceUrl,
-    publicationAndArticles: getPublications(req, start, count, language),
+    firstPublications: getAllPublications(req, start, count, language),
     articleTypePhrases: {
       default: phrases['articleType.default'],
       report: phrases['articleType.report'],
@@ -118,7 +118,7 @@ interface PartProperties {
   defineContentPhrase: string;
   language: string;
   publicationArchiveServiceUrl: string;
-  publicationAndArticles: PublicationAndStatisticResult;
+  firstPublications: PublicationResult;
   articleTypePhrases: {
     [key: string]: string;
   };
