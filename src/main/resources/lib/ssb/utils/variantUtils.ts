@@ -68,7 +68,7 @@ function calculatePeriodVariant(variant: VariantInListing, language: string, nex
   return calculatePeriod(variant.frekvens, previousFrom, previousTo, language)
 }
 
-function calculatePeriodRelease(release: Release, language: string): string {
+export function calculatePeriodRelease(release: Release, language: string): string {
   const periodFrom: string = release.periodFrom
   const periodTo: string = release.periodTo
 
@@ -454,7 +454,8 @@ export function getAllReleases(statisticList: Array<StatisticInListing>): Array<
         statisticId: statistic.id,
         shortName: statistic.shortName,
         statisticName: statistic.name,
-        statisticNameEn: statistic.nameEN
+        statisticNameEn: statistic.nameEN,
+        status: statistic.status
       })
       const upcomingRelease: Array<ReleasesInListing> = variant.upcomingReleases ? forceArray(variant.upcomingReleases) : []
       upcomingRelease.forEach((upcomingRelease: ReleasesInListing) => {
@@ -467,7 +468,8 @@ export function getAllReleases(statisticList: Array<StatisticInListing>): Array<
           statisticId: statistic.id,
           shortName: statistic.shortName,
           statisticName: statistic.name,
-          statisticNameEn: statistic.nameEN
+          statisticNameEn: statistic.nameEN,
+          status: statistic.status
         })
       })
     })
@@ -479,11 +481,18 @@ export function getAllReleases(statisticList: Array<StatisticInListing>): Array<
   return publicationsSorted
 }
 
-export function getUpcomingReleases(allReleases: Array<Release>): Array<Release> {
+export function getUpcomingReleases(statisticList: Array<StatisticInListing>): Array<Release> {
+  const allReleases: Array<Release> = getAllReleases(statisticList)
   const serverOffsetInMs: number = app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
   const serverTime: Date = new Date(new Date().getTime() + serverOffsetInMs)
   return allReleases.filter((release) => moment(release.publishTime).isAfter(serverTime, 'minute'))
 }
+
+export function getPreviousReleases(statisticList: Array<StatisticInListing>): Array<Release> {
+  const allReleases: Array<Release> = getAllReleases(statisticList)
+  return allReleases.filter((release) => release.status === 'A' && moment(new Date(release.publishTime)).isSameOrBefore(new Date(), 'day'))
+}
+
 export interface VariantUtilsLib {
   addMonthNames: (groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>>, language: string) => Array<YearReleases>;
   groupStatisticsByYear: (statistics: Array<PreparedStatistics>) => GroupedBy<PreparedStatistics>;
@@ -495,7 +504,9 @@ export interface VariantUtilsLib {
   prepareRelease: (release: Release, locale: string, statisticsPageUrl?: string) => PreparedStatistics;
   filterOnComingReleases: (stats: Array<Release>, daysInTheFuture: number, startDay?: string) => Array<Release>;
   getAllReleases: (statisticList: Array<StatisticInListing>) => Array<Release>;
-  getUpcomingReleases: (allReleases: Array<Release>) => Array<Release>;
+  getUpcomingReleases: (statisticList: Array<StatisticInListing>) => Array<Release>;
+  getPreviousReleases: (statisticList: Array<StatisticInListing>) => Array<Release>;
+  calculatePeriodRelease: (release: Release, language: string) => string;
 
 }
 
@@ -530,6 +541,7 @@ export interface Release {
   shortName: string;
   statisticName: string;
   statisticNameEn: string;
+  status: string;
 }
 
 export interface DayReleases {

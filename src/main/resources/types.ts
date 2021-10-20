@@ -57,6 +57,7 @@ interface LibMap extends EnonicLibraryMap {
     '/lib/ssb/parts/menu': import('./lib/ssb/parts/menu').MenuLib;
     '/lib/ssb/parts/permissions': import('./lib/ssb/parts/permissions').PermissionsLib;
     '/lib/ssb/parts/table': import('./lib/ssb/parts/table').TableLib;
+    '/lib/ssb/parts/publicationArchive': import('./lib/ssb/parts/publicationArchive').PublicationArchiveLib;
     // parts - highcharts
     '/lib/ssb/parts/highcharts/highchartsData': import('./lib/ssb/parts/highcharts/highchartsData').HighchartsDataLib;
     '/lib/ssb/parts/highcharts/highchartsGraphConfig': import('./lib/ssb/parts/highcharts/highchartsGraphConfig').HighchartsGraphConfigLib;
