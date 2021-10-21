@@ -20,7 +20,7 @@
         <field-set>
             <label>Tallkilde</label>
             <items>
-                <input name="mapfile" type="AttachmentUploader">
+                <input name="mapFile" type="ContentSelector">
                     <label>Kart fil (json format)</label>
                     <help-text>Velg kartet som skal brukes</help-text>
                 </input>

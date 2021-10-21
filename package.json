@@ -59,7 +59,7 @@
     "feather-icons": "^4.28.0",
     "file-loader": "^6.2.0",
     "glob": "^7.1.7",
-    "highcharts": "^9.2.2",
+    "highcharts": "^9.3.0",
     "imagesloaded": "^4.1.4",
     "jquery": "^3.6.0",
     "jquery-bridget": "^3.0.0",
@@ -121,6 +121,8 @@
   },
   "dependencies": {
     "highcharts-react-official": "^3.0.0",
+    "react-jsx-highmaps": "^2.3.0",
+    "react-request": "^3.2.0",
     "redux-logger": "^3.0.6"
   }
 }

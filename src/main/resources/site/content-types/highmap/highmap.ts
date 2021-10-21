@@ -13,7 +13,7 @@ export interface Highmap {
   /**
    * Kart fil (json format)
    */
-  mapfile?: string;
+  mapFile?: string;
 
   /**
    * Kartdata fra tabell (tabell limt inn fra excel)
