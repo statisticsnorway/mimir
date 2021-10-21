@@ -36,6 +36,8 @@ export function get(req: Request): Response {
   const solrBaseUrl: string = app.config && app.config['ssb.solrNameSearch.baseUrl'] ?
     app.config['ssb.solrNameSearch.baseUrl'] : 'https://www.ssb.no/solr/navnesok/select'
 
+  const name: string = req.params.name.trim()
+
   const requestParams: HttpRequestParams = {
     url: solrBaseUrl,
     method: 'get',
@@ -47,14 +49,14 @@ export function get(req: Request): Response {
     connectionTimeout: 20000,
     readTimeout: 10000,
     params: {
-      q: prepareQuery(sanitizeQuery(req.params.name)),
+      q: prepareQuery(sanitizeQuery(name)),
       wt: 'json'
     }
   }
 
   try {
     const result: HttpResponse = request(requestParams)
-    const preparedBody: string = result.body ? prepareResult(result.body, sanitizeQuery(req.params.name)) : ''
+    const preparedBody: string = result.body ? prepareResult(result.body, sanitizeQuery(name)) : ''
 
     return {
       body: preparedBody,
