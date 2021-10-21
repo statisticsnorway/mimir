@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<content-type>
+    <display-name>Highmap</display-name>
+    <super-type>base:structured</super-type>
+
+    <form>
+        <field-set>
+            <label>Beskrivelse</label>
+            <items>
+                <input name="subtitle" type="TextLine">
+                    <label>Undertittel</label>
+                </input>
+                <input name="description" type="TextArea">
+                    <occurrences minimum="0" maximum="1" />
+                    <label>Forklaring datagrunnlag for skjermlesere</label>
+                </input>
+            </items>
+        </field-set>
+
+        <field-set>
+            <label>Tallkilde</label>
+            <items>
+                <input name="mapfile" type="AttachmentUploader">
+                    <label>Kart fil (json format)</label>
+                    <help-text>Velg kartet som skal brukes</help-text>
+                </input>
+                <input name="htmlTable" type="HtmlArea">
+                    <label>Kartdata fra tabell (tabell limt inn fra excel)</label>
+                    <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <include>
+                            Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote
+                        </include>
+                    </config>
+                    <help-text>Lim inn (Ctrl-V) en tabell rett fra Excel. Tabeller bør være så enkle som mulig</help-text>
+                </input>
+            </items>
+        </field-set>
+
+        <field-set>
+            <label>Terskelverdier</label>
+            <items>
+                <input name="thresholdValues" type="TextLine">
+                    <label>Terskelverdi</label>
+                    <occurrences minimum="0" maximum="4"/>
+                    <help-text>Inntil 4 terskelverdier. Denne henger sammen med klasser og ignorerer overflødige verdier</help-text>
+                </input>
+            </items>
+        </field-set>
+
+        <field-set>
+            <label>Bearbeide visning</label>
+            <items>
+                <input  name="hideTitle" type="CheckBox">
+                    <label>Skjul navn i kart</label>
+                    <help-text>Huk av denne dersom du vil skjule navn på kartet.</help-text>
+                </input>
+                <input name="colorPalette" type="RadioButton">
+                    <label>Velg fargepalett</label>
+                    <occurrences minimum="1" maximum="1"/>
+                    <config>
+                        <option value="green">Grønn</option>
+                        <option value="yellow">Gul</option>
+                    </config>
+                    <default>green</default>
+                </input>
+                <input name="numberDecimals" type="TextLine">
+                    <label>Antall desimalplasser som vises</label>
+                    <config>
+                        <max-length>1</max-length>
+                        <regexp>[0-3]</regexp>
+                    </config>
+                </input>
+                <input name="heightAspectRatio" type="TextLine">
+                    <label>Høyde i prosent av bredde</label>
+                    <config>
+                        <max-length>3</max-length>
+                    </config>
+                    <help-text>Et heltall større enn 0. Anbefalt er 133. 100 er kvadrat (1:1), 162 er det gylne snitt stående.</help-text>
+                </input>
+                <input name="seriesTitle" type="TextLine">
+                    <label>Serietittel</label>
+                    <help-text>Her skal det skrives inn tittel for serie som vises over verdier ved hover</help-text>
+                </input>
+            </items>
+        </field-set>
+
+        <field-set>
+            <label>Tegnforklaring</label>
+            <items>
+                <input name="legendTitle" type="TextLine">
+                    <label>Tegnforklaring tittel</label>
+                </input>
+                <input name="legendAlign" type="RadioButton">
+                    <label>Plassering av tegnforklaring</label>
+                    <occurrences minimum="1" maximum="1"/>
+                    <config>
+                        <option value="topLeft">Venstrestilt topp</option>
+                        <option value="topRight">Høyrestilt topp</option>
+                        <option value="bottomLeft">Venstrestilt topp</option>
+                        <option value="bottomRight">Høyrestilt topp</option>
+                    </config>
+                    <default>topLeft</default>
+                </input>
+            </items>
+        </field-set>
+
+        <field-set>
+            <label>Fotnoter</label>
+            <items>
+                <input name="footnoteText" type="TextArea">
+                    <label>Fotnote-tekst</label>
+                    <occurrences minimum="0" maximum="3"/>
+                    <help-text>Inntil 3 fotnoter. For å få opphøyd fotnotetall: 1=ALT+251, 2=ALT+253, 3=ALT+252.</help-text>
+                </input>
+            </items>
+        </field-set>
+
+    </form>
+</content-type>
