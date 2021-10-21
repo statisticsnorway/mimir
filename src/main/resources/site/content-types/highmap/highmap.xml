@@ -40,13 +40,10 @@
         <field-set>
             <label>Terskelverdier</label>
             <items>
-                <input name="thresholdValue" type="TextLine">
-                    <label>Terskelverdi (1-5)</label>
+                <input name="thresholdValues" type="TextLine">
+                    <label>Terskelverdi</label>
+                    <occurrences minimum="0" maximum="4"/>
                     <help-text>Inntil 4 terskelverdier. Denne henger sammen med klasser og ignorerer overflødige verdier</help-text>
-                    <config>
-                        <max-length>1</max-length>
-                        <regexp>[1-5]</regexp>
-                    </config>
                 </input>
             </items>
         </field-set>
@@ -54,7 +51,7 @@
         <field-set>
             <label>Bearbeide visning</label>
             <items>
-                <input  name="hideName" type="CheckBox">
+                <input  name="hideTitle" type="CheckBox">
                     <label>Skjul navn i kart</label>
                     <help-text>Huk av denne dersom du vil skjule navn på kartet.</help-text>
                 </input>
@@ -67,14 +64,14 @@
                     </config>
                     <default>green</default>
                 </input>
-                <input name="decimals" type="TextLine">
+                <input name="numberDecimals" type="TextLine">
                     <label>Antall desimalplasser som vises</label>
                     <config>
                         <max-length>1</max-length>
                         <regexp>[0-3]</regexp>
                     </config>
                 </input>
-                <input name="heightPercent" type="TextLine">
+                <input name="heightAspectRatio" type="TextLine">
                     <label>Høyde i prosent av bredde</label>
                     <config>
                         <max-length>3</max-length>
@@ -94,7 +91,7 @@
                 <input name="legendTitle" type="TextLine">
                     <label>Tegnforklaring tittel</label>
                 </input>
-                <input name="legendPlacement" type="RadioButton">
+                <input name="legendAlign" type="RadioButton">
                     <label>Plassering av tegnforklaring</label>
                     <occurrences minimum="1" maximum="1"/>
                     <config>
@@ -113,6 +110,7 @@
             <items>
                 <input name="footnoteText" type="TextArea">
                     <label>Fotnote-tekst</label>
+                    <occurrences minimum="0" maximum="3"/>
                     <help-text>Inntil 3 fotnoter. For å få opphøyd fotnotetall: 1=ALT+251, 2=ALT+253, 3=ALT+252.</help-text>
                 </input>
             </items>

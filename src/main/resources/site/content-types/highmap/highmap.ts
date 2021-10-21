@@ -21,14 +21,14 @@ export interface Highmap {
   htmlTable?: string;
 
   /**
-   * Terskelverdi (1-5)
+   * Terskelverdi
    */
-  thresholdValue?: string;
+  thresholdValues?: Array<string>;
 
   /**
    * Skjul navn i kart
    */
-  hideName: boolean;
+  hideTitle: boolean;
 
   /**
    * Velg fargepalett
@@ -38,12 +38,12 @@ export interface Highmap {
   /**
    * Antall desimalplasser som vises
    */
-  decimals?: string;
+  numberDecimals?: string;
 
   /**
    * Høyde i prosent av bredde
    */
-  heightPercent?: string;
+  heightAspectRatio?: string;
 
   /**
    * Serietittel
@@ -58,10 +58,10 @@ export interface Highmap {
   /**
    * Plassering av tegnforklaring
    */
-  legendPlacement: "topLeft" | "topRight" | "bottomLeft" | "bottomRight";
+  legendAlign: "topLeft" | "topRight" | "bottomLeft" | "bottomRight";
 
   /**
    * Fotnote-tekst
    */
-  footnoteText?: string;
+  footnoteText?: Array<string>;
 }
