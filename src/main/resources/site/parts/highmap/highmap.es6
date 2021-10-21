@@ -14,6 +14,9 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
+const {
+  getRowValue
+} = __non_webpack_require__('/lib/ssb/utils/utils')
 
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 const xmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
@@ -48,10 +51,17 @@ const renderPart = (req) => {
   if (highmapContent.data.htmlTable) {
     const stringJson = highmapContent.data.htmlTable ? __.toNativeObject(xmlParser.parse(highmapContent.data.htmlTable)) : undefined
     const result = stringJson ? JSON.parse(stringJson) : undefined
-    log.info('result %s', JSON.stringify(result, null))
+    const dataSerie = result ? result.table.tbody.tr.reduce((previous, tr, index) => {
+      const name = getRowValue(tr.td[0])
+      const value = getRowValue(tr.td[1])
+      if (index > 0) previous.push([name, value])
+      return previous
+    }, []) : []
 
-    tableData.push(result)
+    tableData.push(dataSerie)
   }
+
+  log.info('tableData %s', JSON.stringify(tableData, null, 4))
 
   // TODO: Add if check for highmapContent
   const props = {
