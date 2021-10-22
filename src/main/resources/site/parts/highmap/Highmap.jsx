@@ -93,8 +93,7 @@ function Highmap(props) {
     },
     series: [{
       mapData: props.mapFile,
-      // data: props.tableData ? props.tableData : seriesData,
-      data: seriesData,
+      data: props.tableData,
       name: props.seriesTitle ? point.seriesTitle : '',
       joinBy: 'name',
       dataLabels: {

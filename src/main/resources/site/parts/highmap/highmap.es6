@@ -17,9 +17,6 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  getRowValue
-} = __non_webpack_require__('/lib/ssb/utils/utils')
 
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 const xmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
@@ -62,14 +59,17 @@ const renderPart = (req) => {
   if (highmapContent.data.htmlTable) {
     const stringJson = highmapContent.data.htmlTable ? __.toNativeObject(xmlParser.parse(highmapContent.data.htmlTable)) : undefined
     const result = stringJson ? JSON.parse(stringJson) : undefined
-    const dataSerie = result ? result.table.tbody.tr.reduce((previous, tr, index) => {
-      const name = getRowValue(tr.td[0])
-      const value = getRowValue(tr.td[1])
-      if (index > 0) previous.push([name, value])
-      return previous
-    }, []) : []
-
-    tableData.push(dataSerie)
+    const tableRow = result ? result.table.tbody.tr : undefined
+    tableRow.map((row) => {
+      if (row) {
+        const name = getRowValue(row.td[0])
+        const value = getRowValue(row.td[1])
+        tableData.push({
+          name: name,
+          value: value
+        })
+      }
+    })
   }
 
   log.info('tableData %s', JSON.stringify(tableData, null, 4))
@@ -93,4 +93,22 @@ const renderPart = (req) => {
   }
 
   return React4xp.render('site/parts/highmap/Highmap', props, req)
+}
+
+function getRowValue(value) {
+  if (typeof value === 'string' && isNumber(value.replace(',', '.'))) {
+    return Number(value.replace(',', '.'))
+  }
+  if (typeof value === 'object') {
+    const valueObject = value
+    const content = valueObject.content
+    if (content) {
+      return getRowValue(content)
+    }
+  }
+  return value
+}
+
+function isNumber(str) {
+  return ((str != null) && (str !== '') && !isNaN(str))
 }
