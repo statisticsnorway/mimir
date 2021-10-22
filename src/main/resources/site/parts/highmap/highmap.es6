@@ -4,13 +4,16 @@ const {
   }
 } = __non_webpack_require__('/lib/util')
 const {
-  get
+  get,
+  getAttachmentStream
 } = __non_webpack_require__('/lib/xp/content')
 const {
-  attachmentUrl,
   getComponent,
   getContent
 } = __non_webpack_require__('/lib/xp/portal')
+const {
+  readText
+} = __non_webpack_require__('/lib/xp/io')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
@@ -42,10 +45,24 @@ const renderPart = (req) => {
     key: part.config.highmapId
   })
 
-  log.info('highmap attachment name %s', JSON.stringify(highmapContent.data.mapFile, null, 2))
-  log.info('highmap attachment url %s', JSON.stringify(attachmentUrl({
-    id: highmapContent.data.mapFile
-  }), null, 2))
+  const mapFile = get({
+    key: highmapContent.data.mapFile
+  })
+  log.info('highmap attachment id %s', JSON.stringify(highmapContent.data.mapFile, null, 2))
+  log.info('map file content %s', JSON.stringify(mapFile, null, 2))
+
+  const mapStream = getAttachmentStream({
+    key: mapFile._id,
+    name: mapFile._name
+  })
+
+  let mapResult
+  if (!mapStream) {
+    mapResult = 'no map!'
+  } else {
+    mapResult = JSON.parse(readText(mapStream))
+  }
+  // log.info('map result %s', mapResult)
 
   const tableData = []
   if (highmapContent.data.htmlTable) {
@@ -68,9 +85,7 @@ const renderPart = (req) => {
     title: highmapContent.displayName,
     subtitle: highmapContent.data.subtitle,
     description: highmapContent.data.description,
-    mapFile: highmapContent.data.mapFile ? attachmentUrl({
-      id: highmapContent.data.mapFile
-    }) : undefined,
+    mapFile: mapResult,
     tableData,
     thresholdValues: highmapContent.data.thresholdValues,
     hideTitle: highmapContent.data.hideTitle,

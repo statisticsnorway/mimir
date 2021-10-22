@@ -121,8 +121,6 @@
   },
   "dependencies": {
     "highcharts-react-official": "^3.0.0",
-    "react-jsx-highmaps": "^2.3.0",
-    "react-request": "^3.2.0",
     "redux-logger": "^3.0.6"
   }
 }

@@ -1,88 +1,125 @@
 import React from 'react'
-// import Highcharts from 'highcharts'
-import Highmaps from 'highcharts/highmaps'
-import { HighchartsMapChart,
-  HighmapsProvider,
-  MapNavigation,
-  MapSeries,
-  Title,
-  Subtitle,
-  Tooltip,
-  Credits,
-  ColorAxis,
-  Legend,
-  Accessibility } from 'react-jsx-highmaps'
-import { Fetch } from 'react-request'
+import Highcharts from 'highcharts'
+import HighchartsReact from 'highcharts-react-official'
 import PropTypes from 'prop-types'
 
-// require('highcharts/modules/accessibility')(Highcharts)
-// require('highcharts/modules/exporting')(Highcharts)
-// require('highcharts/modules/export-data')(Highcharts)
+require('highcharts/modules/accessibility')(Highcharts)
+require('highcharts/modules/exporting')(Highcharts)
+require('highcharts/modules/export-data')(Highcharts)
+require('highcharts/modules/map')(Highcharts)
 
 function Highmap(props) {
+  // const series = props.tableData
+  const seriesData = [
+    {
+      name: 'Nordland',
+      value: 26.2
+    },
+    {
+      name: 'Trøndelag',
+      value: 36.7
+    },
+    {
+      name: 'Hordaland',
+      value: 26.1
+    },
+    {
+      name: 'Troms',
+      value: 38.1
+    },
+    {
+      name: 'Vestfold',
+      value: 50.7
+    },
+    {
+      name: 'Hedmark',
+      value: 25.9
+    }
+  ]
+  //   const mappedSeries = series.map((element) => {
+  //     const foundProp = data.find((it) => it.name == element[0])
+  //     return [foundProp, element[1]]
+  //   })
+  //   console.log(mappedSeries)
+
+
+  const mapOptions = {
+    chart: {
+      height: props.heightAspectRatio ? `${props.heightAspectRatio}%` : '60%'
+    },
+    title: {
+      text: props.title,
+      align: 'left',
+      style: props.hideTitle ? {
+        color: 'transparent'
+      } : {
+        fontSize: '18px'
+      }
+    },
+    subtitle: {
+      text: props.subtitle && props.subtitle,
+      align: 'left'
+    },
+    mapNavigation: {
+      enabled: true
+    },
+    colors: props.colorPalette === 'green' ?
+      ['#e3f1e6', '#90cc93', '#25a23c', '#007e50', '#005245'] :
+      ['#f9f2d1', '#e8d780', '#d2bc2a', '#a67c36', '#6e4735'],
+    colorAxis: {
+      dataClasses: props.thresholdValues && props.thresholdValues,
+      dataClassColor: 'category'
+    },
+    legend: {
+      title: {
+        text: props.legendTitle && props.legendTitle,
+        style: {
+          // color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+          color: 'black'
+        }
+      },
+      // align: canvas.data('tegnfplass'),
+      // verticalAlign: (canvas.data('tegnfplass') == 'left') ? 'top' : 'bottom',
+      align: 'left',
+      verticalAlign: 'top',
+      floating: true,
+      layout: 'vertical',
+      x: 0,
+      // y: (canvas.data('tegnfplass') == 'left') ? 85 : 0,
+      y: 0,
+      valueDecimals: props.numberDecimals && props.numberDecimals,
+      // backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || 'rgba(255, 255, 255, 0.85)',
+      symbolRadius: 0,
+      symbolHeight: 14
+    },
+    series: [{
+      mapData: props.mapFile,
+      // data: seriesData,
+      // data: props.tableData ? props.tableData : seriesData,
+      data: seriesData,
+      name: props.seriesTitle ? point.seriesTitle : '',
+      joinBy: 'name',
+      dataLabels: {
+        enabled: true, // hard-coded for now
+        format: '{point.properties.name}'
+      },
+      tooltip: {
+        pointFormat: '{point.properties.name}: {point.value}',
+        valueDecimals: props.numberDecimals && props.numberDecimals
+      }
+    }],
+    credits: {
+      enabled: false
+    }
+  }
+
   return (
     <section className="part-highmap">
-      <HighmapsProvider Highcharts={Highmaps}>
-        <Fetch url={props.mapFile}>
-          {({
-            fetching, failed, data
-          }) => {
-            if (fetching) return <div>Loading…</div>
-            if (failed) return <div>Failed to load map.</div>
-
-            if (data) {
-              const series = props.tableData
-              //   const series = [
-              //     ['Hordaland', 26.1],
-              //     ['Troms', 38.1],
-              //     ['Vestfold', 50.7],
-              //     ['Oslo', 25.8],
-              //     ['Hedmark', 25.9]
-              //   ]
-              //   const mappedSeries = series.map((element) => {
-              //     const foundProp = data.find((it) => it.name == element[0])
-              //     return [foundProp, element[1]]
-              //   })
-              //   console.log(mappedSeries)
-              return (
-                <HighchartsMapChart map={data}>
-                  {props.title && <Title align="left" style={props.hideTitle ? {
-                    color: 'transparent'
-                  } : {
-                    fontSize: '18px'
-                  }}>{props.title}</Title>}
-                  {props.subtitle && <Subtitle align="left">{props.subtitle}</Subtitle>}
-                  {/* {props.description && <Accessibility description={props.description} />} */}
-
-                  <MapSeries
-                    data={series}
-                    // data={props.tableData}
-                    dataLabels={{
-                      enabled: true,
-                      color: '#FFFFFF',
-                      format: '{point.name}'
-                    }}
-                  />
-
-                  <MapNavigation>
-                    <MapNavigation.ZoomIn/>
-                    <MapNavigation.ZoomOut/>
-                  </MapNavigation>
-
-                  {/* TODO: Accomodate props.legendAlign */}
-                  {props.legendTitle && <Legend title={props.legendTitle && props.legendTitle} align={'center'} verticalAlign={'bottom'}/>}
-
-                  {/* {props.thresholdValues && <ColorAxis dataClasses={props.thresholdValues} dataClassColor="category" />}
-                  {props.numberDecimals && <Tooltip valueDecimals={props.numberDecimals}/>} */}
-                  <Credits enabled={false}/>
-                </HighchartsMapChart>
-              )
-            }
-
-            return null
-          }}
-        </Fetch>
-      </HighmapsProvider>
+      <HighchartsReact
+        highcharts={Highcharts}
+        constructorType={'mapChart'}
+        options={mapOptions}
+      />
     </section>
   )
 }
