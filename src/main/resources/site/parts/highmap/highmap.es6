@@ -40,10 +40,10 @@ const renderPart = (req) => {
   const part = getComponent()
   const language = page.language ? page.language === 'en' ? 'en-gb' : page.language : 'nb'
 
-  log.info('highmap content type id %s', JSON.stringify(part.config.highmapId, null, 2))
   const highmapContent = get({
     key: part.config.highmapId
   })
+  log.info('highmap content %s', JSON.stringify(highmapContent, null, 2))
 
   const mapFile = get({
     key: highmapContent.data.mapFile
@@ -56,13 +56,7 @@ const renderPart = (req) => {
     name: mapFile._name
   })
 
-  let mapResult
-  if (!mapStream) {
-    mapResult = 'no map!'
-  } else {
-    mapResult = JSON.parse(readText(mapStream))
-  }
-  // log.info('map result %s', mapResult)
+  const mapResult = mapStream ? JSON.parse(readText(mapStream)) : {}
 
   const tableData = []
   if (highmapContent.data.htmlTable) {
@@ -87,7 +81,7 @@ const renderPart = (req) => {
     description: highmapContent.data.description,
     mapFile: mapResult,
     tableData,
-    thresholdValues: highmapContent.data.thresholdValues,
+    thresholdValues: highmapContent.data.thresholdValues ? forceArray(highmapContent.data.thresholdValues) : [],
     hideTitle: highmapContent.data.hideTitle,
     colorPalette: highmapContent.data.colorPalette,
     numberDecimals: highmapContent.data.numberDecimals,

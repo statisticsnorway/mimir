@@ -97,8 +97,8 @@
                     <config>
                         <option value="topLeft">Venstrestilt topp</option>
                         <option value="topRight">Høyrestilt topp</option>
-                        <option value="bottomLeft">Venstrestilt topp</option>
-                        <option value="bottomRight">Høyrestilt topp</option>
+                        <option value="bottomLeft">Venstrestilt bunn</option>
+                        <option value="bottomRight">Høyrestilt bunn</option>
                     </config>
                     <default>topLeft</default>
                 </input>

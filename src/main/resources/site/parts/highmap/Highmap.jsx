@@ -42,10 +42,13 @@ function Highmap(props) {
   //   })
   //   console.log(mappedSeries)
 
-
   const mapOptions = {
     chart: {
       height: props.heightAspectRatio ? `${props.heightAspectRatio}%` : '60%'
+    },
+    accessibility: {
+      enabled: true,
+      description: props.description && props.description
     },
     title: {
       text: props.title,
@@ -67,45 +70,40 @@ function Highmap(props) {
       ['#e3f1e6', '#90cc93', '#25a23c', '#007e50', '#005245'] :
       ['#f9f2d1', '#e8d780', '#d2bc2a', '#a67c36', '#6e4735'],
     colorAxis: {
-      dataClasses: props.thresholdValues && props.thresholdValues,
+      dataClasses: props.thresholdValues && props.thresholdValues, // TODO: WIP
       dataClassColor: 'category'
     },
     legend: {
       title: {
         text: props.legendTitle && props.legendTitle,
         style: {
-          // color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
-          color: 'black'
+          color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
         }
       },
-      // align: canvas.data('tegnfplass'),
-      // verticalAlign: (canvas.data('tegnfplass') == 'left') ? 'top' : 'bottom',
-      align: 'left',
-      verticalAlign: 'top',
+      align: (props.legendAlign === ('topLeft' || 'bottomLeft')) ? 'left' : 'right', // TODO: WIP
+      verticalAlign: (props.legendAlign === ('topLeft' || 'topRight')) ? 'top' : 'bottom', // TODO: WIP
       floating: true,
       layout: 'vertical',
       x: 0,
-      // y: (canvas.data('tegnfplass') == 'left') ? 85 : 0,
-      y: 0,
-      valueDecimals: props.numberDecimals && props.numberDecimals,
-      // backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || 'rgba(255, 255, 255, 0.85)',
+      y: (props.legendAlign === 'bottomLeft') ? 85 : 0, // TODO: WIP
+      valueDecimals: props.numberDecimals && parseInt(props.numberDecimals),
+      backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || 'rgba(255, 255, 255, 0.85)',
       symbolRadius: 0,
       symbolHeight: 14
     },
     series: [{
       mapData: props.mapFile,
-      // data: seriesData,
       // data: props.tableData ? props.tableData : seriesData,
       data: seriesData,
       name: props.seriesTitle ? point.seriesTitle : '',
       joinBy: 'name',
       dataLabels: {
-        enabled: true, // hard-coded for now
+        enabled: !props.hideTitle, // TODO: WIP
         format: '{point.properties.name}'
       },
       tooltip: {
         pointFormat: '{point.properties.name}: {point.value}',
-        valueDecimals: props.numberDecimals && props.numberDecimals
+        valueDecimals: props.numberDecimals && parseInt(props.numberDecimals)
       }
     }],
     credits: {
@@ -130,7 +128,7 @@ Highmap.propTypes = {
   description: PropTypes.string,
   mapFile: PropTypes.string,
   tableData: PropTypes.array,
-  thresholdValues: PropTypes.string,
+  thresholdValues: PropTypes.array,
   hideTitle: PropTypes.boolean,
   colorPalette: PropTypes.string,
   numberDecimals: PropTypes.string,
