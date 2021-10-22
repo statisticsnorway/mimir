@@ -1,6 +1,7 @@
 import React from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
+import { Text } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 
 require('highcharts/modules/accessibility')(Highcharts)
@@ -9,7 +10,6 @@ require('highcharts/modules/export-data')(Highcharts)
 require('highcharts/modules/map')(Highcharts)
 
 function Highmap(props) {
-  // const series = props.tableData
   const seriesData = [
     {
       name: 'Nordland',
@@ -36,11 +36,6 @@ function Highmap(props) {
       value: 25.9
     }
   ]
-  //   const mappedSeries = series.map((element) => {
-  //     const foundProp = data.find((it) => it.name == element[0])
-  //     return [foundProp, element[1]]
-  //   })
-  //   console.log(mappedSeries)
 
   const mapOptions = {
     chart: {
@@ -70,7 +65,7 @@ function Highmap(props) {
       ['#e3f1e6', '#90cc93', '#25a23c', '#007e50', '#005245'] :
       ['#f9f2d1', '#e8d780', '#d2bc2a', '#a67c36', '#6e4735'],
     colorAxis: {
-      dataClasses: props.thresholdValues && props.thresholdValues, // TODO: WIP
+      dataClasses: props.thresholdValues && props.thresholdValues, // WIP
       dataClassColor: 'category'
     },
     legend: {
@@ -80,12 +75,12 @@ function Highmap(props) {
           color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
         }
       },
-      align: (props.legendAlign === ('topLeft' || 'bottomLeft')) ? 'left' : 'right', // TODO: WIP
-      verticalAlign: (props.legendAlign === ('topLeft' || 'topRight')) ? 'top' : 'bottom', // TODO: WIP
+      align: (props.legendAlign === ('topLeft' || 'bottomLeft')) ? 'left' : 'right', // WIP
+      verticalAlign: (props.legendAlign === ('topLeft' || 'topRight')) ? 'top' : 'bottom', // WIP
       floating: true,
       layout: 'vertical',
       x: 0,
-      y: (props.legendAlign === 'bottomLeft') ? 85 : 0, // TODO: WIP
+      y: (props.legendAlign === 'topLeft') ? 120 : 0,
       valueDecimals: props.numberDecimals && parseInt(props.numberDecimals),
       backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || 'rgba(255, 255, 255, 0.85)',
       symbolRadius: 0,
@@ -94,10 +89,10 @@ function Highmap(props) {
     series: [{
       mapData: props.mapFile,
       data: props.tableData,
-      name: props.seriesTitle ? point.seriesTitle : '',
+      name: props.seriesTitle ? point.seriesTitle : '', // TODO: 'point' is not defined
       joinBy: 'name',
       dataLabels: {
-        enabled: !props.hideTitle, // TODO: WIP
+        enabled: !props.hideTitle,
         format: '{point.properties.name}'
       },
       tooltip: {
@@ -107,6 +102,50 @@ function Highmap(props) {
     }],
     credits: {
       enabled: false
+    },
+    exporting: {
+      buttons: {
+        contextButton: {
+          menuItems: [
+            'printChart',
+            'separator',
+            'downloadPNG',
+            'downloadJPEG',
+            'downloadPDF',
+            'downloadSVG',
+            'separator',
+            'downloadCSV',
+            'downloadXLS'
+          ]
+        }
+      },
+      enabled: true,
+      menuItemDefinitions: {
+        printChart: {
+          text: props.phrases['highcharts.printChart']
+        },
+        downloadPNG: {
+          text: props.phrases['highcharts.downloadPNG']
+        },
+        downloadJPEG: {
+          text: props.phrases['highcharts.downloadJPEG']
+        },
+        downloadPDF: {
+          text: props.phrases['highcharts.downloadPDF']
+        },
+        downloadSVG: {
+          text: props.phrases['highcharts.downloadSVG']
+        },
+        downloadCSV: {
+          text: props.phrases['highcharts.downloadCSV']
+        },
+        downloadXLS: {
+          text: props.phrases['highcharts.downloadXLS']
+        }
+      }
+    },
+    csv: {
+      itemDelimiter: ';'
     }
   }
 
@@ -117,6 +156,7 @@ function Highmap(props) {
         constructorType={'mapChart'}
         options={mapOptions}
       />
+      {props.footnoteText.length && props.footnoteText.map((footnote, index) => <Text key={`footnote-${index}`}>{footnote}</Text>)}
     </section>
   )
 }
@@ -135,7 +175,8 @@ Highmap.propTypes = {
   seriesTitle: PropTypes.string,
   legendTitle: PropTypes.string,
   legendAlign: PropTypes.string,
-  footnoteText: PropTypes.array
+  footnoteText: PropTypes.array,
+  phrases: PropTypes.object
 }
 
 export default (props) => <Highmap {...props} />

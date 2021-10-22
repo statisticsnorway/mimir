@@ -12,13 +12,15 @@ const {
   getContent
 } = __non_webpack_require__('/lib/xp/portal')
 const {
+  getPhrases
+} = __non_webpack_require__('/lib/ssb/utils/language')
+const {
   readText
 } = __non_webpack_require__('/lib/xp/io')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 
-const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 const xmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
@@ -35,7 +37,6 @@ exports.preview = (req) => renderPart(req)
 const renderPart = (req) => {
   const page = getContent()
   const part = getComponent()
-  const language = page.language ? page.language === 'en' ? 'en-gb' : page.language : 'nb'
 
   const highmapContent = get({
     key: part.config.highmapId
@@ -45,8 +46,8 @@ const renderPart = (req) => {
   const mapFile = get({
     key: highmapContent.data.mapFile
   })
-  log.info('highmap attachment id %s', JSON.stringify(highmapContent.data.mapFile, null, 2))
-  log.info('map file content %s', JSON.stringify(mapFile, null, 2))
+  // log.info('highmap attachment id %s', JSON.stringify(highmapContent.data.mapFile, null, 2))
+  // log.info('map file content %s', JSON.stringify(mapFile, null, 2))
 
   const mapStream = getAttachmentStream({
     key: mapFile._id,
@@ -72,7 +73,9 @@ const renderPart = (req) => {
     })
   }
 
-  log.info('tableData %s', JSON.stringify(tableData, null, 4))
+  const thresholdSets = highmapContent.data.thresholdSets ? forceArray(highmapContent.data.thresholdSets) : []
+
+  // log.info('tableData %s', JSON.stringify(tableData, null, 4))
 
   // TODO: Add if check for highmapContent
   const props = {
@@ -81,7 +84,7 @@ const renderPart = (req) => {
     description: highmapContent.data.description,
     mapFile: mapResult,
     tableData,
-    thresholdValues: highmapContent.data.thresholdValues ? forceArray(highmapContent.data.thresholdValues) : [],
+    thresholdValues: thresholdSets.length ? thresholdSets.map((t) => t) : [],
     hideTitle: highmapContent.data.hideTitle,
     colorPalette: highmapContent.data.colorPalette,
     numberDecimals: highmapContent.data.numberDecimals,
@@ -89,7 +92,8 @@ const renderPart = (req) => {
     seriesTitle: highmapContent.data.seriesTitle,
     legendTitle: highmapContent.data.legendTitle,
     legendAlign: highmapContent.data.legendAlign,
-    footnoteText: highmapContent.data.footnoteText ? forceArray(highmapContent.data.footnoteText) : []
+    footnoteText: highmapContent.data.footnoteText ? forceArray(highmapContent.data.footnoteText) : [],
+    phrases: getPhrases(page)
   }
 
   return React4xp.render('site/parts/highmap/Highmap', props, req)
