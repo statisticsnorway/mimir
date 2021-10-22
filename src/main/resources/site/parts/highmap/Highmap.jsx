@@ -1,8 +1,10 @@
 import React from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
-import { Text } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
+import { Text } from '@statisticsnorway/ssb-component-library'
+import { Col, Row } from 'react-bootstrap'
+import { useMediaQuery } from 'react-responsive'
 
 require('highcharts/modules/accessibility')(Highcharts)
 require('highcharts/modules/exporting')(Highcharts)
@@ -37,9 +39,12 @@ function Highmap(props) {
     }
   ]
 
+  const desktop = useMediaQuery({
+    minWidth: 992
+  })
   const mapOptions = {
     chart: {
-      height: props.heightAspectRatio ? `${props.heightAspectRatio}%` : '60%'
+      height: props.heightAspectRatio && `${props.heightAspectRatio}%`
     },
     accessibility: {
       enabled: true,
@@ -65,7 +70,7 @@ function Highmap(props) {
       ['#e3f1e6', '#90cc93', '#25a23c', '#007e50', '#005245'] :
       ['#f9f2d1', '#e8d780', '#d2bc2a', '#a67c36', '#6e4735'],
     colorAxis: {
-      dataClasses: props.thresholdValues && props.thresholdValues, // WIP
+      dataClasses: props.thresholdValues && props.thresholdValues,
       dataClassColor: 'category'
     },
     legend: {
@@ -150,13 +155,23 @@ function Highmap(props) {
   }
 
   return (
-    <section className="part-highmap">
-      <HighchartsReact
-        highcharts={Highcharts}
-        constructorType={'mapChart'}
-        options={mapOptions}
-      />
-      {props.footnoteText.length && props.footnoteText.map((footnote, index) => <Text key={`footnote-${index}`}>{footnote}</Text>)}
+    <section className="part-highmap container">
+      <Row>
+        <Col className={`col-12 ${desktop ? 'p-0' : ''}`}>
+          <HighchartsReact
+            highcharts={Highcharts}
+            constructorType={'mapChart'}
+            options={mapOptions}
+          />
+        </Col>
+      </Row>
+      {props.footnoteText.length &&
+      <Row>
+        {props.footnoteText.map((footnote, index) =>
+          <Col className={`col-12 ${desktop ? 'p-0' : ''}`} key={`footnote-${index}`}>
+            <Text>{footnote}</Text>
+          </Col>)}
+      </Row>}
     </section>
   )
 }
