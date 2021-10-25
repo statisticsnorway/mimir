@@ -42,7 +42,7 @@
     "@types/validator": "^13.6.3",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
-    "autoprefixer": "^10.3.4",
+    "autoprefixer": "^10.3.7",
     "axios": "^0.22.0",
     "babel-cli": "^6.26.0",
     "babel-loader": "^8.2.2",
