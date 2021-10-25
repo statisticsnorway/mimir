@@ -58,7 +58,6 @@ const renderPart = (req, highmapId) => {
   })
 
   const mapResult = mapStream ? JSON.parse(readText(mapStream)) : []
-  log.info('map result ' + JSON.stringify(mapResult, null, 2))
   mapResult.features.forEach((element, index) => {
     if (element.properties.name) {
       // New property, to keep capitalization for display in map

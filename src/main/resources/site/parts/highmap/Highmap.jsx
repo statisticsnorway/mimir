@@ -17,7 +17,7 @@ function Highmap(props) {
   })
   const mapOptions = {
     chart: {
-      height: props.heightAspectRatio && `${props.heightAspectRatio}%`
+      height: desktop && props.heightAspectRatio && `${props.heightAspectRatio}%`
     },
     accessibility: {
       enabled: true,
@@ -58,7 +58,7 @@ function Highmap(props) {
       floating: true,
       layout: 'vertical',
       x: 0,
-      y: (props.legendAlign === 'topLeft') ? 120 : 0,
+      y: (props.legendAlign === 'topLeft') ? (desktop ? 120 : 165) : 0,
       valueDecimals: props.numberDecimals && parseInt(props.numberDecimals),
       backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || 'rgba(255, 255, 255, 0.85)',
       symbolRadius: 0,
