@@ -26,20 +26,26 @@ const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 exports.get = function(req) {
   try {
-    return renderPart(req)
+    const part = getComponent()
+    const highmapId = part.config.highmapId
+    return renderPart(req, highmapId)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-exports.preview = (req) => renderPart(req)
+exports.preview = (req, highmapId) => {
+  try {
+    return renderPart(req, highmapId)
+  } catch (e) {
+    return renderError(req, 'Error in part', e)
+  }
+}
 
-const renderPart = (req) => {
+const renderPart = (req, highmapId) => {
   const page = getContent()
-  const part = getComponent()
-
   const highmapContent = get({
-    key: part.config.highmapId
+    key: highmapId
   })
 
   const mapFile = get({
@@ -52,14 +58,13 @@ const renderPart = (req) => {
   })
 
   const mapResult = mapStream ? JSON.parse(readText(mapStream)) : []
-  if (mapResult.length) {
-    mapResult.features.forEach((element, index) => {
-      if (element.properties.name) {
+  log.info('map result ' + JSON.stringify(mapResult, null, 2))
+  mapResult.features.forEach((element, index) => {
+    if (element.properties.name) {
       // New property, to keep capitalization for display in map
-        mapResult.features[index].properties.capitalName = element.properties.name.toUpperCase()
-      }
-    })
-  }
+      mapResult.features[index].properties.capitalName = element.properties.name.toUpperCase()
+    }
+  })
 
   const tableData = []
   if (highmapContent.data.htmlTable) {
