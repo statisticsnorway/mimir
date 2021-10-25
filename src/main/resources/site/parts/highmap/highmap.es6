@@ -41,20 +41,25 @@ const renderPart = (req) => {
   const highmapContent = get({
     key: part.config.highmapId
   })
-  log.info('highmap content %s', JSON.stringify(highmapContent, null, 2))
 
   const mapFile = get({
     key: highmapContent.data.mapFile
   })
-  // log.info('highmap attachment id %s', JSON.stringify(highmapContent.data.mapFile, null, 2))
-  // log.info('map file content %s', JSON.stringify(mapFile, null, 2))
 
   const mapStream = getAttachmentStream({
     key: mapFile._id,
     name: mapFile._name
   })
 
-  const mapResult = mapStream ? JSON.parse(readText(mapStream)) : {}
+  const mapResult = mapStream ? JSON.parse(readText(mapStream)) : []
+  if (mapResult.length) {
+    mapResult.features.forEach((element, index) => {
+      if (element.properties.name) {
+      // New property, to keep capitalization for display in map
+        mapResult.features[index].properties.capitalName = element.properties.name.toUpperCase()
+      }
+    })
+  }
 
   const tableData = []
   if (highmapContent.data.htmlTable) {
@@ -66,7 +71,7 @@ const renderPart = (req) => {
         const name = getRowValue(row.td[0])
         const value = getRowValue(row.td[1])
         tableData.push({
-          name: name,
+          capitalName: name, // Matches map result name
           value: value
         })
       }
@@ -75,9 +80,6 @@ const renderPart = (req) => {
 
   const thresholdSets = highmapContent.data.thresholdSets ? forceArray(highmapContent.data.thresholdSets) : []
 
-  // log.info('tableData %s', JSON.stringify(tableData, null, 4))
-
-  // TODO: Add if check for highmapContent
   const props = {
     title: highmapContent.displayName,
     subtitle: highmapContent.data.subtitle,

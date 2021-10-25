@@ -12,33 +12,6 @@ require('highcharts/modules/export-data')(Highcharts)
 require('highcharts/modules/map')(Highcharts)
 
 function Highmap(props) {
-  const seriesData = [
-    {
-      name: 'Nordland',
-      value: 26.2
-    },
-    {
-      name: 'Trøndelag',
-      value: 36.7
-    },
-    {
-      name: 'Hordaland',
-      value: 26.1
-    },
-    {
-      name: 'Troms',
-      value: 38.1
-    },
-    {
-      name: 'Vestfold',
-      value: 50.7
-    },
-    {
-      name: 'Hedmark',
-      value: 25.9
-    }
-  ]
-
   const desktop = useMediaQuery({
     minWidth: 992
   })
@@ -94,8 +67,8 @@ function Highmap(props) {
     series: [{
       mapData: props.mapFile,
       data: props.tableData,
-      name: props.seriesTitle ? point.seriesTitle : '', // TODO: 'point' is not defined
-      joinBy: 'name',
+      name: props.seriesTitle ? props.seriesTitle : '',
+      joinBy: 'capitalName',
       dataLabels: {
         enabled: !props.hideTitle,
         format: '{point.properties.name}'
@@ -108,7 +81,7 @@ function Highmap(props) {
     credits: {
       enabled: false
     },
-    exporting: {
+    exporting: { // WIP: exported graph does not display map
       buttons: {
         contextButton: {
           menuItems: [
@@ -157,7 +130,7 @@ function Highmap(props) {
   return (
     <section className="part-highmap container">
       <Row>
-        <Col className={`col-12 ${desktop ? 'p-0' : ''}`}>
+        <Col className="col-12 p-lg-0">
           <HighchartsReact
             highcharts={Highcharts}
             constructorType={'mapChart'}
@@ -168,7 +141,7 @@ function Highmap(props) {
       {props.footnoteText.length &&
       <Row>
         {props.footnoteText.map((footnote, index) =>
-          <Col className={`col-12 ${desktop ? 'p-0' : ''}`} key={`footnote-${index}`}>
+          <Col className="col-12 p-lg-0" key={`footnote-${index}`}>
             <Text>{footnote}</Text>
           </Col>)}
       </Row>}
