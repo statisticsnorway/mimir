@@ -11,6 +11,20 @@ require('highcharts/modules/exporting')(Highcharts)
 require('highcharts/modules/export-data')(Highcharts)
 require('highcharts/modules/map')(Highcharts)
 
+function renderFootnotes(footnotes) {
+  if (footnotes.length) {
+    return (
+      <Row>
+        {footnotes.map((footnote, index) =>
+          <Col className="col-12 p-lg-0" key={`footnote-${index}`}>
+            {footnote && <Text>{footnote}</Text>}
+          </Col>)}
+      </Row>
+    )
+  }
+  return
+}
+
 function Highmap(props) {
   if (props.language !== 'en') {
     Highcharts.setOptions({
@@ -78,7 +92,7 @@ function Highmap(props) {
       layout: 'vertical',
       x: 0,
       y,
-      valueDecimals: props.numberDecimals && parseInt(props.numberDecimals),
+      valueDecimals: props.numberDecimals && props.numberDecimals,
       backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || 'rgba(255, 255, 255, 0.85)',
       symbolRadius: 0,
       symbolHeight: 14
@@ -94,7 +108,7 @@ function Highmap(props) {
       },
       tooltip: {
         pointFormat: '{point.properties.name}: {point.value}',
-        valueDecimals: props.numberDecimals && parseInt(props.numberDecimals)
+        valueDecimals: props.numberDecimals && props.numberDecimals
       }
     }],
     credits: {
@@ -157,13 +171,7 @@ function Highmap(props) {
           />
         </Col>
       </Row>
-      {props.footnoteText.length &&
-      <Row>
-        {props.footnoteText.map((footnote, index) =>
-          <Col className="col-12 p-lg-0" key={`footnote-${index}`}>
-            <Text>{footnote}</Text>
-          </Col>)}
-      </Row>}
+      {renderFootnotes(props.footnoteText)}
     </section>
   )
 }

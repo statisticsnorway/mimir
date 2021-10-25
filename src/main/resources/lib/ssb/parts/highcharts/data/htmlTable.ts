@@ -146,7 +146,7 @@ interface Table {
   };
 }
 
-interface RowData {
+export interface RowData {
   td: Array<number | string | PreliminaryData>;
 }
 
