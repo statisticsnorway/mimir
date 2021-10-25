@@ -24,6 +24,16 @@ function Highmap(props) {
   const desktop = useMediaQuery({
     minWidth: 992
   })
+
+  let y = 0
+  if (props.legendAlign === 'topLeft') {
+    y = desktop ? 120 : 165
+  }
+
+  if (props.legendAlign === 'topRight') {
+    y = desktop ? 40 : 95
+  }
+
   const mapOptions = {
     chart: {
       height: desktop && props.heightAspectRatio && `${props.heightAspectRatio}%`
@@ -62,12 +72,12 @@ function Highmap(props) {
           color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
         }
       },
-      align: (props.legendAlign === ('topLeft' || 'bottomLeft')) ? 'left' : 'right', // WIP
-      verticalAlign: (props.legendAlign === ('topLeft' || 'topRight')) ? 'top' : 'bottom', // WIP
+      align: props.legendAlign === 'topLeft' || props.legendAlign === 'bottomLeft' ? 'left' : 'right',
+      verticalAlign: props.legendAlign === 'topLeft' || props.legendAlign === 'topRight' ? 'top' : 'bottom',
       floating: true,
       layout: 'vertical',
       x: 0,
-      y: (props.legendAlign === 'topLeft') ? (desktop ? 120 : 165) : 0,
+      y,
       valueDecimals: props.numberDecimals && parseInt(props.numberDecimals),
       backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || 'rgba(255, 255, 255, 0.85)',
       symbolRadius: 0,
