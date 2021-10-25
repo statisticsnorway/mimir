@@ -12,6 +12,15 @@ require('highcharts/modules/export-data')(Highcharts)
 require('highcharts/modules/map')(Highcharts)
 
 function Highmap(props) {
+  if (props.language !== 'en') {
+    Highcharts.setOptions({
+      lang: {
+        decimalPoint: ',',
+        thousandsSep: ' '
+      }
+    })
+  }
+
   const desktop = useMediaQuery({
     minWidth: 992
   })
@@ -164,7 +173,8 @@ Highmap.propTypes = {
   legendTitle: PropTypes.string,
   legendAlign: PropTypes.string,
   footnoteText: PropTypes.array,
-  phrases: PropTypes.object
+  phrases: PropTypes.object,
+  language: PropTypes.string
 }
 
 export default (props) => <Highmap {...props} />

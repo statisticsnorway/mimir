@@ -99,7 +99,8 @@ const renderPart = (req, highmapId) => {
     legendTitle: highmapContent.data.legendTitle,
     legendAlign: highmapContent.data.legendAlign,
     footnoteText: highmapContent.data.footnoteText ? forceArray(highmapContent.data.footnoteText) : [],
-    phrases: getPhrases(page)
+    phrases: getPhrases(page),
+    language: page.language
   }
 
   return React4xp.render('site/parts/highmap/Highmap', props, req)
