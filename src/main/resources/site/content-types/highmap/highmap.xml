@@ -43,11 +43,11 @@
             <items>
                 <input name="from" type="Double">
                     <label>Fra</label>
-                    <occurrences minimum="1" maximum="1"/>
+                    <occurrences minimum="0" maximum="1"/>
                 </input>
                 <input name="to" type="Double">
                     <label>Til</label>
-                    <occurrences minimum="1" maximum="1"/>
+                    <occurrences minimum="0" maximum="1"/>
                 </input>
                 <input name="name" type="TextLine">
                     <label>Beskrivelse</label>

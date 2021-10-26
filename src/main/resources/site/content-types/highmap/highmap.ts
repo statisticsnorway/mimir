@@ -27,12 +27,12 @@ export interface Highmap {
     /**
      * Fra
      */
-    from: number;
+    from?: number;
 
     /**
      * Til
      */
-    to: number;
+    to?: number;
 
     /**
      * Beskrivelse
