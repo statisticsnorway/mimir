@@ -57,7 +57,7 @@ export function init() {
     }
 
     $('.btn-highchart-export').on('click', (e) => {
-      $(e.target).parent().find(`button[aria-label='View chart menu']`)
+      $(e.target).parent().find(`.highcharts-a11y-proxy-button`)
         .first()
         .trigger('click')
     })
