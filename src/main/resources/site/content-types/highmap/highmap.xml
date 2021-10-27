@@ -2,7 +2,7 @@
 <content-type>
     <display-name>Highmap</display-name>
     <super-type>base:structured</super-type>
-
+    
     <form>
         <field-set>
             <label>Beskrivelse</label>
@@ -16,11 +16,11 @@
                 </input>
             </items>
         </field-set>
-
+        
         <field-set>
             <label>Tallkilde</label>
             <items>
-                <input name="mapfile" type="AttachmentUploader">
+                <input name="mapFile" type="ContentSelector">
                     <label>Kart fil (json format)</label>
                     <help-text>Velg kartet som skal brukes</help-text>
                 </input>
@@ -36,18 +36,26 @@
                 </input>
             </items>
         </field-set>
-
-        <field-set>
-            <label>Terskelverdier</label>
+        
+        <item-set name="thresholdSets">
+            <label>Terskelverdi-sett (desimaltegn: punktum!)</label> 
+            <occurrences minimum="0" maximum="4"/> 
             <items>
-                <input name="thresholdValues" type="TextLine">
-                    <label>Terskelverdi</label>
-                    <occurrences minimum="0" maximum="4"/>
-                    <help-text>Inntil 4 terskelverdier. Denne henger sammen med klasser og ignorerer overflødige verdier</help-text>
+                <input name="from" type="Double">
+                    <label>Fra</label>
+                    <occurrences minimum="0" maximum="1"/>
+                </input>
+                <input name="to" type="Double">
+                    <label>Til</label>
+                    <occurrences minimum="0" maximum="1"/>
+                </input>
+                <input name="name" type="TextLine">
+                    <label>Beskrivelse</label>
+                    <occurrences minimum="0" maximum="1"/>
                 </input>
             </items>
-        </field-set>
-
+        </item-set>
+        
         <field-set>
             <label>Bearbeide visning</label>
             <items>
@@ -84,7 +92,7 @@
                 </input>
             </items>
         </field-set>
-
+        
         <field-set>
             <label>Tegnforklaring</label>
             <items>
@@ -97,14 +105,14 @@
                     <config>
                         <option value="topLeft">Venstrestilt topp</option>
                         <option value="topRight">Høyrestilt topp</option>
-                        <option value="bottomLeft">Venstrestilt topp</option>
-                        <option value="bottomRight">Høyrestilt topp</option>
+                        <option value="bottomLeft">Venstrestilt bunn</option>
+                        <option value="bottomRight">Høyrestilt bunn</option>
                     </config>
                     <default>topLeft</default>
                 </input>
             </items>
         </field-set>
-
+        
         <field-set>
             <label>Fotnoter</label>
             <items>
@@ -115,6 +123,6 @@
                 </input>
             </items>
         </field-set>
-
+        
     </form>
 </content-type>

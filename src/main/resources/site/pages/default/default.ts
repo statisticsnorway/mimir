@@ -68,6 +68,7 @@ const partsWithPreview: Array<string> = [ // Parts that has preview
   `${app.name}:menuBox`,
   `${app.name}:accordion`,
   `${app.name}:highchart`,
+  `${app.name}:highmap`,
   `${app.name}:keyFigure`,
   `${app.name}:menuDropdown`,
   `${app.name}:statistikkbanken`,
