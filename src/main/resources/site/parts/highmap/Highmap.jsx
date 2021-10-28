@@ -112,7 +112,7 @@ function Highmap(props) {
     exporting: {
       buttons: {
         contextButton: {
-          // Map export in formats png, jpeg, pdf and svg does not work with the newest versions of highcharts and highcharts-react
+          // Map export in formats png, jpeg, pdf and svg does not work with the newest versions of highcharts
           // Enable options again once the bug has been patched
           menuItems: [
             'printChart',
