@@ -21,24 +21,9 @@ export interface Highmap {
   htmlTable?: string;
 
   /**
-   * Terskelverdi-sett (desimaltegn: punktum!)
+   * Terskelverdi
    */
-  thresholdSets?: Array<{
-    /**
-     * Fra
-     */
-    from?: number;
-
-    /**
-     * Til
-     */
-    to?: number;
-
-    /**
-     * Beskrivelse
-     */
-    name?: string;
-  }>;
+  thresholdValues: Array<string>;
 
   /**
    * Skjul navn i kart

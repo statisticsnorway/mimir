@@ -58,12 +58,7 @@ function Highmap(props) {
     },
     title: {
       text: props.title,
-      align: 'left',
-      style: props.hideTitle ? {
-        color: 'transparent'
-      } : {
-        fontSize: '18px'
-      }
+      align: 'left'
     },
     subtitle: {
       text: props.subtitle && props.subtitle,
