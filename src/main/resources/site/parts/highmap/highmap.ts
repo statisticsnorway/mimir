@@ -67,7 +67,6 @@ interface HighmapProps {
   description: Highmap['description'];
   mapFile: object;
   tableData: Array<HighmapFormattedTableData>;
-  // thresholdValues: Highmap['thresholdValues'];
   thresholdValues: Array<ThresholdValues>;
   hideTitle: Highmap['hideTitle'];
   colorPalette: Highmap['colorPalette'];
@@ -143,9 +142,7 @@ function renderPart(req: Request, highmapId: string | undefined): React4xpRespon
       }
     }
 
-    // const thresholdSets: Highmap['thresholdSets'] = highmapContent.data.thresholdSets ? forceArray(highmapContent.data.thresholdSets) : []
     const thresholdValues: Highmap['thresholdValues'] = highmapContent.data.thresholdValues ? forceArray(highmapContent.data.thresholdValues) : []
-    log.info('sorted thresholdValues: %s', JSON.stringify(sortedThresholdValues(thresholdValues), null, 2))
 
     const props: HighmapProps = {
       title: highmapContent.displayName,
@@ -169,7 +166,8 @@ function renderPart(req: Request, highmapId: string | undefined): React4xpRespon
     return React4xp.render('site/parts/highmap/Highmap', props, req)
   }
   return {
-    body: null
+    body: '',
+    contentType: 'text/html'
   }
 }
 

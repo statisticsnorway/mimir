@@ -16,7 +16,7 @@ function renderFootnotes(footnotes) {
     return (
       <Row>
         {footnotes.map((footnote, index) =>
-          <Col className="col-12 p-lg-0" key={`footnote-${index}`}>
+          <Col className="col-12" key={`footnote-${index}`}>
             {footnote && <Text>{footnote}</Text>}
           </Col>)}
       </Row>
