@@ -1,3 +1,5 @@
+import { GA_TRACKING_ID } from '../../pages/default/default'
+
 const {
   getComponent,
   getContent,
@@ -81,7 +83,8 @@ function renderPart(req) {
       lastNumberText,
       lastUpdated,
       productGroups: productGroups(phrases),
-      calculatorArticleUrl
+      calculatorArticleUrl,
+      GA_TRACKING_ID: GA_TRACKING_ID
     })
     .setId('pifCalculatorId')
     .uniqueId()

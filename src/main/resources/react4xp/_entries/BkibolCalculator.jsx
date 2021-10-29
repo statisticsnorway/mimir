@@ -12,6 +12,7 @@ import { Input,
 import axios from 'axios'
 import NumberFormat from 'react-number-format'
 import { X } from 'react-feather'
+import { addGtagForEvent } from '../ReactGA'
 
 function BkibolCalculator(props) {
   const validMaxYear = props.lastUpdated.year
@@ -165,12 +166,21 @@ function BkibolCalculator(props) {
         setStartValueResult(startValue.value)
         setStartIndex(res.data.startIndex)
         setEndIndex(res.data.endIndex)
+        if (props.GA_TRACKING_ID) {
+          addGtagForEvent(props.GA_TRACKING_ID, 'Vellykket beregning', 'Byggekostnadskalkulator', 'OK')
+        }
       })
       .catch((err) => {
         if (err && err.response && err.response.data && err.response.data.error) {
           setErrorMessage(err.response.data.error)
+          if (props.GA_TRACKING_ID) {
+            addGtagForEvent(props.GA_TRACKING_ID, 'Feil ved beregning', 'Byggekostnadskalkulator', err.response.data.error)
+          }
         } else {
           setErrorMessage(err.toString())
+          if (props.GA_TRACKING_ID) {
+            addGtagForEvent(props.GA_TRACKING_ID, 'Feil ved beregning', 'Byggekostnadskalkulator', err.toString())
+          }
         }
       })
       .finally(()=> {
@@ -777,7 +787,8 @@ BkibolCalculator.propTypes = {
   lastUpdated: PropTypes.shape({
     month: PropTypes.string,
     year: PropTypes.string
-  })
+  }),
+  GA_TRACKING_ID: PropTypes.string
 }
 
 export default (props) => <BkibolCalculator {...props} />

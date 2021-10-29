@@ -83,6 +83,8 @@ const previewOverride: object = {
   'contentList': 'relatedFactPage'
 }
 
+export const GA_TRACKING_ID: string | null = app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null
+
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view: ResourceKey = resolve('default.html')
 
@@ -227,7 +229,6 @@ exports.get = function(req: Request): Response {
     .uniqueId()
 
   const hideBreadcrumb: boolean = !!(pageConfig).hide_breadcrumb
-
   const model: DefaultModel = {
     pageTitle: 'SSB', // not really used on normal pages because of SEO app (404 still uses this)
     page,
@@ -242,7 +243,7 @@ exports.get = function(req: Request): Response {
     language,
     statbankWeb: statbankFane,
     ...statBankContent,
-    GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null,
+    GA_TRACKING_ID,
     headerBody: header ? header.body : undefined,
     footerBody: footer ? (footer as MenuContent).body : undefined,
     ...metaInfo,

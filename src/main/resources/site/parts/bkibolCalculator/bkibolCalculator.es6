@@ -1,3 +1,6 @@
+
+import { GA_TRACKING_ID } from '../../pages/default/default'
+
 const {
   getComponent,
   getContent,
@@ -19,6 +22,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/dataset/calculator')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 const view = resolve('./bkibolCalculator.html')
+
 
 exports.get = function(req) {
   try {
@@ -80,7 +84,8 @@ function renderPart(req) {
       calculatorArticleUrl,
       nextPublishText,
       lastNumberText,
-      lastUpdated
+      lastUpdated,
+      GA_TRACKING_ID: GA_TRACKING_ID
     })
     .setId('bkibolCalculatorId')
     .uniqueId()
