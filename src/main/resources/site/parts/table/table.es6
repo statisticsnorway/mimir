@@ -1,3 +1,5 @@
+import { GA_TRACKING_ID } from '../../pages/default/default'
+
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getContent, getComponent, pageUrl, assetUrl
@@ -118,7 +120,8 @@ function getProps(req, tableId) {
     sourceListTables: uniqueTableIds,
     sourceTableLabel,
     statBankWebUrl,
-    hiddenTitle: table.caption.content
+    hiddenTitle: table.caption.content,
+    GA_TRACKING_ID: GA_TRACKING_ID
   }
 }
 exports.getProps = getProps

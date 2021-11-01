@@ -5,6 +5,7 @@ import { isEmpty } from 'ramda'
 import NumberFormat from 'react-number-format'
 import { Alert, Button } from 'react-bootstrap'
 import { ChevronLeft, ChevronRight } from 'react-feather'
+import { addGtagForEvent } from '../ReactGA'
 
 class Table extends Component {
   constructor(props) {
@@ -162,6 +163,10 @@ class Table extends Component {
   }
 
   downloadTableAsCSV() {
+    if (this.props.GA_TRACKING_ID) {
+      addGtagForEvent(this.props.GA_TRACKING_ID, 'Lastet ned csv tabell', 'Statistikkside tabeller', 'Last ned csv tabell')
+    }
+
     if (window && window.downloadTableFile) {
       window.downloadTableFile(this.tableRef.current, {
         type: 'csv',
@@ -174,6 +179,10 @@ class Table extends Component {
   }
 
   downloadTableAsExcel() {
+    if (this.props.GA_TRACKING_ID) {
+      addGtagForEvent(this.props.GA_TRACKING_ID, 'Lastet ned excell tabell', 'Statistikkside tabeller', 'Last ned excell tabell')
+    }
+
     if (window && window.downloadTableFile) {
       window.downloadTableFile(this.tableRef.current, {
         type: 'xlsx',
@@ -694,7 +703,8 @@ Table.propTypes = {
   sourceListTables: PropTypes.arrayOf(PropTypes.string),
   sourceTableLabel: PropTypes.string,
   statBankWebUrl: PropTypes.string,
-  hiddenTitle: PropTypes.string
+  hiddenTitle: PropTypes.string,
+  GA_TRACKING_ID: PropTypes.string
 }
 
 export default (props) => <Table {...props}/>

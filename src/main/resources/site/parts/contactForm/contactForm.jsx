@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Form, Container, Row, Col } from 'react-bootstrap'
 import { Input, Button, Dropdown, TextArea, Divider, Title, FormError } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
+import { addGtagForEvent } from '../../../react4xp/ReactGA'
 
 function ContactForm(props) {
   const {
@@ -57,6 +58,9 @@ function ContactForm(props) {
         })
           .then((res) => {
             setEmailSent(true)
+            if (props.GA_TRACKING_ID) {
+              addGtagForEvent(props.GA_TRACKING_ID, 'Send inn skjema', 'Kontakt oss', res.receiver)
+            }
           })
           .catch((err) => {
             setEmailSentFailed(true)
@@ -316,7 +320,8 @@ ContactForm.propTypes = {
   recaptchaSiteKey: PropTypes.string,
   contactFormServiceUrl: PropTypes.string,
   phrases: PropTypes.object,
-  language: PropTypes.string
+  language: PropTypes.string,
+  GA_TRACKING_ID: PropTypes.string
 }
 
 export default (props) => <ContactForm {...props} />
