@@ -5,7 +5,6 @@ import { Input, Button, Dropdown, Divider, FormError, Link, Title } from '@stati
 import axios from 'axios'
 import NumberFormat from 'react-number-format'
 import { X } from 'react-feather'
-import { addGtagForEvent } from '../ReactGA'
 
 function KpiCalculator(props) {
   const validMaxYear = props.lastUpdated.year
@@ -97,21 +96,12 @@ function KpiCalculator(props) {
         setStartPeriod(startPeriod)
         setEndPeriod(endPeriod)
         setStartValueResult(startValue.value)
-        if (props.GA_TRACKING_ID) {
-          addGtagForEvent(props.GA_TRACKING_ID, 'Vellykket beregning', 'KPI-kalkulator', 'OK')
-        }
       })
       .catch((err) => {
         if (err && err.response && err.response.data && err.response.data.error) {
           setErrorMessage(err.response.data.error)
-          if (props.GA_TRACKING_ID) {
-            addGtagForEvent(props.GA_TRACKING_ID, 'Feil ved beregning', 'KPI-kalkulator', err.response.data.error)
-          }
         } else {
           setErrorMessage(err.toString())
-          if (props.GA_TRACKING_ID) {
-            addGtagForEvent(props.GA_TRACKING_ID, 'Feil ved beregning', 'KPI-kalkulator', err.toString())
-          }
         }
       })
       .finally(()=> {
@@ -695,8 +685,7 @@ KpiCalculator.propTypes = {
     year: PropTypes.string
   }),
   frontPage: PropTypes.bool,
-  frontPageIngress: PropTypes.string,
-  GA_TRACKING_ID: PropTypes.string
+  frontPageIngress: PropTypes.string
 }
 
 export default (props) => <KpiCalculator {...props} />

@@ -1,5 +1,3 @@
-import { GA_TRACKING_ID } from '../../pages/default/default'
-
 const {
   getComponent,
   getContent,
@@ -39,8 +37,7 @@ const renderPart = (req, config) => {
         service: 'contactForm'
       }),
       phrases: phrases,
-      language: language.code,
-      GA_TRACKING_ID: GA_TRACKING_ID
+      language: language.code
     }
     )
     .setId('contactFormId')

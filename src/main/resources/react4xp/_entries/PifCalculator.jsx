@@ -5,7 +5,6 @@ import { Input, Button, Dropdown, Divider, FormError, Link, RadioGroup } from '@
 import axios from 'axios'
 import NumberFormat from 'react-number-format'
 import { X } from 'react-feather'
-import { addGtagForEvent } from '../ReactGa'
 
 function PifCalculator(props) {
   const validMaxYear = props.lastUpdated.year
@@ -115,21 +114,12 @@ function PifCalculator(props) {
         setStartValueResult(startValue.value)
         setStartIndex(res.data.startIndex)
         setEndIndex(res.data.endIndex)
-        if (props.GA_TRACKING_ID) {
-          addGtagForEvent(props.GA_TRACKING_ID, 'Vellykket beregning', 'PIF-kalkulator', 'OK')
-        }
       })
       .catch((err) => {
         if (err && err.response && err.response.data && err.response.data.error) {
           setErrorMessage(err.response.data.error)
-          if (props.GA_TRACKING_ID) {
-            addGtagForEvent(props.GA_TRACKING_ID, 'Feil ved beregning', 'PIF-kalkulator', err.response.data.error)
-          }
         } else {
           setErrorMessage(err.toString())
-          if (props.GA_TRACKING_ID) {
-            addGtagForEvent(props.GA_TRACKING_ID, 'Feil ved beregning', 'PIF-kalkulator', err.toString())
-          }
         }
       })
       .finally(()=> {
@@ -664,8 +654,7 @@ PifCalculator.propTypes = {
     month: PropTypes.string,
     year: PropTypes.string
   }),
-  calculatorArticleUrl: PropTypes.string,
-  GA_TRACKING_ID: PropTypes.string
+  calculatorArticleUrl: PropTypes.string
 }
 
 export default (props) => <PifCalculator {...props} />

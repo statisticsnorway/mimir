@@ -1,6 +1,4 @@
 
-import { GA_TRACKING_ID } from '../../pages/default/default'
-
 const {
   getComponent,
   getContent,
@@ -84,8 +82,7 @@ function renderPart(req) {
       calculatorArticleUrl,
       nextPublishText,
       lastNumberText,
-      lastUpdated,
-      GA_TRACKING_ID: GA_TRACKING_ID
+      lastUpdated
     })
     .setId('bkibolCalculatorId')
     .uniqueId()
