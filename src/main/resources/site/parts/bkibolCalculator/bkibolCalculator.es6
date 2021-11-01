@@ -1,4 +1,3 @@
-
 const {
   getComponent,
   getContent,
@@ -20,7 +19,6 @@ const {
 } = __non_webpack_require__('/lib/ssb/dataset/calculator')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 const view = resolve('./bkibolCalculator.html')
-
 
 exports.get = function(req) {
   try {
