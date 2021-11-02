@@ -121,7 +121,7 @@ function prepareStatisticRelease(
       period: period.charAt(0).toUpperCase() + period.slice(1),
       preface: aboutTheStatisticsContent ? aboutTheStatisticsContent.data.ingress : seoDescription,
       url: statisticsPageUrl,
-      publishDate: release.publishTime,
+      publishDate: moment(release.publishTime).locale('nb').format('YYYY.MM.DD HH:mm'),
       publishDateHuman: moment(new Date(release.publishTime)).locale(language).format('Do MMMM YYYY'),
       contentType: `${app.name}:statistics`,
       articleType: 'statistics',
@@ -144,7 +144,7 @@ function prepareArticle(article: Content<Article>, mainSubject: SubjectItem | un
     url: pageUrl({
       id: article._id
     }),
-    publishDate: article.publish && article.publish.from ? article.publish.from : '',
+    publishDate: article.publish && article.publish.from ? moment(article.publish.from).locale('nb').format('YYYY.MM.DD HH:mm') : '',
     publishDateHuman: article.publish && article.publish.from ? moment(article.publish.from).locale(language).format('Do MMMM YYYY') : '',
     contentType: article.type,
     articleType: article.data.articleType ? article.data.articleType : 'default',
