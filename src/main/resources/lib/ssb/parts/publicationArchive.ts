@@ -68,9 +68,6 @@ function getPublicationsAndStatistics(req: Request, language: string):
     Array<PublicationItem> {
   const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
   const subSubjects: Array<SubjectItem> = getSubSubjects(req, language)
-
-  log.info('Delemner: ' + JSON.stringify(subSubjects, null, 4))
-
   const articlesContent: QueryResponse<Article> = getArticlesContent(language, mainSubjects)
 
   const publications: Array<PublicationItem> = articlesContent.hits.map((article) => {
