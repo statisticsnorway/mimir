@@ -52,13 +52,14 @@ export function getPublications(req: Request, start: number = 0, count: number =
 
 function filterPublications(publications: Array<PublicationItem>, articleType: string| undefined, subject: string| undefined): Array<PublicationItem> {
   if (articleType && subject) {
-    return publications.filter((publication) => (publication.articleType === articleType && publication.mainSubjectId === subject))
+    return publications.filter((publication) =>
+      (publication.articleType === articleType && (publication.mainSubjectId === subject || publication.secondaryMainSubjects.includes(subject))))
   }
   if (articleType && !subject) {
     return publications.filter((publication) => publication.articleType === articleType)
   }
   if (!articleType && subject) {
-    return publications.filter((publication) => publication.mainSubjectId === subject)
+    return publications.filter((publication) => publication.mainSubjectId === subject || publication.secondaryMainSubjects.includes(subject))
   }
   return publications
 }
