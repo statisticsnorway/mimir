@@ -56,13 +56,18 @@ interface HighmapFormattedTableData {
   value: number;
 }
 
+interface ThresholdValues {
+  to: number | undefined;
+  from: number | undefined;
+}
+
 interface HighmapProps {
   title: string;
   subtitle: Highmap['subtitle'];
   description: Highmap['description'];
   mapFile: object;
   tableData: Array<HighmapFormattedTableData>;
-  thresholdValues: Highmap['thresholdSets'];
+  thresholdValues: Array<ThresholdValues>;
   hideTitle: Highmap['hideTitle'];
   colorPalette: Highmap['colorPalette'];
   numberDecimals: number | undefined;
@@ -136,7 +141,8 @@ function renderPart(req: Request, highmapId: string | undefined): React4xpRespon
         })
       }
     }
-    const thresholdSets: Highmap['thresholdSets'] = highmapContent.data.thresholdSets ? forceArray(highmapContent.data.thresholdSets) : []
+
+    const thresholdValues: Highmap['thresholdValues'] = highmapContent.data.thresholdValues ? forceArray(highmapContent.data.thresholdValues) : []
 
     const props: HighmapProps = {
       title: highmapContent.displayName,
@@ -144,7 +150,7 @@ function renderPart(req: Request, highmapId: string | undefined): React4xpRespon
       description: highmapContent.data.description,
       mapFile: mapResult,
       tableData,
-      thresholdValues: thresholdSets.length ? thresholdSets.map((t) => t) : [],
+      thresholdValues: sortedThresholdValues(thresholdValues),
       hideTitle: highmapContent.data.hideTitle,
       colorPalette: highmapContent.data.colorPalette,
       numberDecimals: highmapContent.data.numberDecimals ? parseInt(highmapContent.data.numberDecimals) : undefined,
@@ -160,7 +166,8 @@ function renderPart(req: Request, highmapId: string | undefined): React4xpRespon
     return React4xp.render('site/parts/highmap/Highmap', props, req)
   }
   return {
-    body: null
+    body: '',
+    contentType: 'text/html'
   }
 }
 
@@ -176,5 +183,59 @@ function getRowValue(value: number | string | PreliminaryData| Array<number | st
     }
   }
   return value as RowValue
+}
+
+function sortedThresholdValues(thresholdValues: Highmap['thresholdValues']): Array<ThresholdValues> {
+  if (thresholdValues.length) {
+    const formattedThresholdValues: Array<number> = thresholdValues.map((t) => Number(t.replace(',', '.'))).sort((a, b) => a - b)
+    const sortedDataClasses: Array<ThresholdValues> = getDataClass(formattedThresholdValues)
+
+    if (sortedDataClasses.length) {
+      return sortedDataClasses
+    }
+  }
+  return []
+}
+
+function getDataClass(formattedThresholdValues: Array<number>): Array<ThresholdValues> {
+  const dataClasses: Array<ThresholdValues> = []
+
+  let previousValue: number = formattedThresholdValues[0]
+  formattedThresholdValues.map((thresholdValue, index) => {
+    const currentValue: number = formattedThresholdValues[index]
+
+    if (previousValue == currentValue) {
+      // Displays < currentValue in the chart
+      dataClasses.push({
+        to: currentValue,
+        from: undefined
+      })
+    }
+
+    if (previousValue < currentValue) {
+      // Displays previousValue - currentValue in the chart
+      dataClasses.push({
+        to: currentValue,
+        from: previousValue
+      })
+    }
+    if (previousValue > currentValue) {
+      // Displays currentValue - previousValue in the chart
+      dataClasses.push({
+        to: previousValue,
+        from: currentValue
+      })
+    }
+
+    previousValue = formattedThresholdValues[index]
+  })
+
+  // Displays > maximum value in the chart
+  dataClasses.push({
+    to: undefined,
+    from: dataClasses[dataClasses.length - 1].to
+  })
+
+  return dataClasses
 }
 
