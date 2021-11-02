@@ -23,8 +23,7 @@ const {
 
 export function getMainSubjects(request: Request, language?: string): Array<SubjectItem> {
   return fromSubjectCache<SubjectItem>(request, `mainsubject-${language}`, () => {
-  // Todo: Må sjekke om noen hovedemner kan være på nynorsk
-    const lang: string = language ? `AND language = "${language}"` : ''
+    const lang: string = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'
     const mainSubjectsContent: Array<Content<Page, DefaultPageConfig>> = query({
       start: 0,
       count: 200,
@@ -56,7 +55,7 @@ export function getMainSubjectById(mainSubjects: Array<SubjectItem>, id: string)
 
 export function getSubSubjects(request: Request, language?: string): Array<SubjectItem> {
   return fromSubjectCache<SubjectItem>(request, `subsubject-${language}`, () => {
-    const lang: string = language ? `AND language = "${language}"` : ''
+    const lang: string = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'
     const subSubjectsContent: Array<Content<Page, DefaultPageConfig>> = query({
       start: 0,
       count: 1000,
