@@ -56,6 +56,10 @@ try {
         {
           feature: 'dashboard-redux-logging-debugging',
           enabled: true
+        },
+        {
+          feature: 'enable-enalyzer-script',
+          enabled: false
         }
       ]
     }

@@ -61,6 +61,9 @@ const {
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
+const {
+  isEnabled
+} = __non_webpack_require__('/lib/featureToggle')
 
 const partsWithPreview: Array<string> = [ // Parts that has preview
   `${app.name}:map`,
@@ -248,7 +251,8 @@ exports.get = function(req: Request): Response {
     footerBody: footer ? (footer as MenuContent).body : undefined,
     ...metaInfo,
     breadcrumbsReactId: breadcrumbComponent.react4xpId,
-    hideBreadcrumb
+    hideBreadcrumb,
+    enabledEnalyzerScript: isEnabled('enable-enalyzer-script', true, 'ssb')
   }
 
   const thymeleafRenderBody: Response['body'] = render(view, model)
@@ -547,4 +551,5 @@ interface DefaultModel {
   footerBody: string| undefined;
   breadcrumbsReactId: string | undefined;
   hideBreadcrumb: boolean;
+  enabledEnalyzerScript: boolean;
 }
