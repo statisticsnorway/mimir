@@ -19,6 +19,9 @@ const {
 const {
   fromSubjectCache
 } = __non_webpack_require__('/lib/ssb/cache/subjectCache')
+const {
+  parentPath
+} = __non_webpack_require__('/lib/ssb/utils/parentUtils')
 
 
 export function getMainSubjects(request: Request, language?: string): Array<SubjectItem> {
@@ -258,9 +261,7 @@ export function getSubjectStructur(request: Request, language: string): Array<Ma
 }
 
 export function getMainSubjectBySubSubject(subSubject: SubjectItem, mainSubjects: Array<SubjectItem>): SubjectItem | undefined {
-  const subjectPaths: Array<string> = subSubject.path.split('/')
-  const mainSubjectName: string = subjectPaths[subjectPaths.length - 2]
-  return mainSubjects.find((mainSubject) => mainSubject.name === mainSubjectName)
+  return mainSubjects.find((mainSubject) => mainSubject.path === parentPath(subSubject.path))
 }
 
 export interface SubjectItem {
