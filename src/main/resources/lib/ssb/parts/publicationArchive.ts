@@ -23,7 +23,7 @@ const {
   getPreviousReleases
 } = __non_webpack_require__( '/lib/ssb/utils/variantUtils')
 const {
-  getMainSubjects, getSubSubjects
+  getMainSubjects, getSubSubjects, getMainSubjectBySubSubject
 } = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
 const {
   fromPartCache
@@ -71,10 +71,7 @@ function getPublicationsAndStatistics(req: Request, language: string):
   const articlesContent: QueryResponse<Article> = getArticlesContent(language, mainSubjects)
 
   const publications: Array<PublicationItem> = articlesContent.hits.map((article) => {
-    const mainSubject: SubjectItem | undefined = mainSubjects.find((mainSubject) => {
-      return article._path.startsWith(mainSubject.path)
-    })
-    return prepareArticle(article, mainSubject, subSubjects, language)
+    return prepareArticle(article, mainSubjects, subSubjects, language)
   })
 
   const statistics: Array<PublicationItem> = getStatistics(language, mainSubjects, subSubjects)
@@ -111,7 +108,7 @@ function prepareStatisticRelease(
     const mainSubject: Array<SubjectItem> = mainSubjects.filter((subject) => statisticsPagesXP._path.startsWith(subject.path))
     const mainSubjectName: string = mainSubject.length > 0 ? mainSubject[0].title : ''
     const subtopics: Array<string> = statisticsPagesXP.data.subtopic ? forceArray(statisticsPagesXP.data.subtopic) : []
-    const secondaryMainSubjects: Array<string> = subtopics ? getSecondaryMainSubject(subtopics, subSubjects) : []
+    const secondaryMainSubjects: Array<string> = subtopics ? getSecondaryMainSubject(subtopics, mainSubjects, subSubjects) : []
     const period: string = calculatePeriodRelease(release, language)
 
     return {
@@ -133,9 +130,12 @@ function prepareStatisticRelease(
   return null
 }
 
-function prepareArticle(article: Content<Article>, mainSubject: SubjectItem | undefined, subSubjects: Array<SubjectItem>, language: string): PublicationItem {
+function prepareArticle(article: Content<Article>, mainSubjects: Array<SubjectItem>, subSubjects: Array<SubjectItem>, language: string): PublicationItem {
+  const mainSubject: SubjectItem | undefined = mainSubjects.find((mainSubject) => {
+    return article._path.startsWith(mainSubject.path)
+  })
   const subtopics: Array<string> = article.data.subtopic ? forceArray(article.data.subtopic) : []
-  const secondaryMainSubjects: Array<string> = subtopics ? getSecondaryMainSubject(subtopics, subSubjects) : []
+  const secondaryMainSubjects: Array<string> = subtopics ? getSecondaryMainSubject(subtopics, mainSubjects, subSubjects) : []
   return {
     title: article.displayName,
     preface: article.data.ingress ? article.data.ingress : '',
@@ -187,19 +187,18 @@ function getStatistics(language: string, mainSubjects: Array<SubjectItem>, subSu
   return statisticsReleases.sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime())
 }
 
-function getSecondaryMainSubject(subtopicsContent: Array<string>, subSubjects: Array<SubjectItem> ): Array<string> {
-  const subTopics: Array<string> = subtopicsContent.reduce((acc: Array<string>, topic: string) => {
+function getSecondaryMainSubject(subtopicsContent: Array<string>, mainSubjects: Array<SubjectItem>, subSubjects: Array<SubjectItem> ): Array<string> {
+  const secondaryMainSubjects: Array<string> = subtopicsContent.reduce((acc: Array<string>, topic: string) => {
     const subSubject: SubjectItem = subSubjects.filter((subSubject) => subSubject.id === topic)[0]
     if (subSubject) {
-      const subjectPaths: Array<string> = subSubject.path.split('/')
-      const mainSubjectPath: string = subjectPaths[subjectPaths.length - 2]
-      if (!acc.includes(mainSubjectPath)) {
-        acc.push(mainSubjectPath)
+      const mainSubject: SubjectItem| undefined = getMainSubjectBySubSubject(subSubject, mainSubjects)
+      if (mainSubject && !acc.includes(mainSubject.name)) {
+        acc.push(mainSubject.name)
       }
     }
     return acc
   }, [])
-  return subTopics
+  return secondaryMainSubjects
 }
 
 export interface PublicationArchiveLib {

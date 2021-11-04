@@ -257,6 +257,12 @@ export function getSubjectStructur(request: Request, language: string): Array<Ma
   return mainSubjects
 }
 
+export function getMainSubjectBySubSubject(subSubject: SubjectItem, mainSubjects: Array<SubjectItem>): SubjectItem | undefined {
+  const subjectPaths: Array<string> = subSubject.path.split('/')
+  const mainSubjectName: string = subjectPaths[subjectPaths.length - 2]
+  return mainSubjects.find((mainSubject) => mainSubject.name === mainSubjectName)
+}
+
 export interface SubjectItem {
   id: string;
   title: string;
@@ -311,5 +317,6 @@ export interface SubjectUtilsLib {
     getStatisticsByPath: (statistics: Array<StatisticItem>, path: string) => Array<StatisticItem>;
     getEndedStatisticsByPath: (path: string, statregStatistics: Array<StatisticInListing>, hideStatistics: boolean) => Array<StatisticItem>;
     getSecondaryStatisticsBySubject: (statistics: Array<StatisticItem>, subject: SubjectItem) => Array<StatisticItem>;
+    getMainSubjectBySubSubject: (subSubject: SubjectItem, mainSubjects: Array<SubjectItem>) => SubjectItem | undefined;
   }
 
