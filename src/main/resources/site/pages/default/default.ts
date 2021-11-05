@@ -41,7 +41,7 @@ const {
   getBreadcrumbs
 } = __non_webpack_require__('/lib/ssb/utils/breadcrumbsUtils')
 const {
-  getMainSubjects
+  getMainSubjects, getSubSubjects
 } = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
 const {
   getReleaseDatesByVariants, getStatisticByIdFromRepo, getStatisticByShortNameFromRepo
@@ -64,6 +64,9 @@ const {
 const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
+const {
+  parentPath
+} = __non_webpack_require__('/lib/ssb/utils/parentUtils')
 
 const partsWithPreview: Array<string> = [ // Parts that has preview
   `${app.name}:map`,
@@ -348,6 +351,11 @@ function parseMetaInfoData(
     metaInfoSearchContentType = 'faktaside'
   }
 
+  if (page.type === `${app.name}:article` || page.type === `${app.name}:statistics` ) {
+    const mainSubjects: string = getSubjectsPage(page, req, language.code).join(';')
+    metaInfoMainSubject = mainSubjects
+  }
+
   if (page.type === `${app.name}:statistics`) {
     const statistic: StatisticInListing | undefined = getStatisticByIdFromRepo(page.data.statistic)
     if (statistic) {
@@ -362,13 +370,6 @@ function parseMetaInfoData(
   }
 
   if (page.type === `${app.name}:article`) {
-    const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, language.code === 'en' ? 'en' : 'nb' )
-
-    allMainSubjects.forEach((mainSubject) => {
-      if (page._path.startsWith(mainSubject.path)) {
-        metaInfoMainSubject = mainSubject.title
-      }
-    })
     metaInfoSearchContentType = 'artikkel'
   }
 
@@ -382,6 +383,43 @@ function parseMetaInfoData(
     metaInfoSearchPublishFrom,
     metaInfoMainSubject
   }
+}
+
+function getSubjectsPage(page: DefaultPage, req: Request, language: string): Array<string> {
+  const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, language === 'en' ? 'en' : 'nb')
+  const allSubSubjects: Array<SubjectItem> = getSubSubjects(req, language === 'en' ? 'en' : 'nb')
+  const subjects: Array<string> = []
+  const subTopics: Array<string> = page.data.subtopic ? forceArray(page.data.subtopic) : []
+  const mainSubject: SubjectItem | undefined = allMainSubjects.find((mainSubject) => {
+    return page._path.startsWith(mainSubject.path)
+  })
+
+  if (mainSubject) {
+    subjects.push(mainSubject.title)
+  }
+
+  const secondaryMainSubjects: Array<string> = subTopics ? getSecondaryMainSubject(subTopics, allMainSubjects, allSubSubjects) : []
+  secondaryMainSubjects.map((subject) => {
+    if (!subjects.includes(subject)) {
+      subjects.push(subject)
+    }
+  })
+
+  return subjects
+}
+
+function getSecondaryMainSubject(subtopicsContent: Array<string>, mainSubjects: Array<SubjectItem>, subSubjects: Array<SubjectItem> ): Array<string> {
+  const secondaryMainSubjects: Array<string> = subtopicsContent.reduce((acc: Array<string>, topic: string) => {
+    const subSubject: SubjectItem = subSubjects.filter((subSubject) => subSubject.id === topic)[0]
+    if (subSubject) {
+      const mainSubject: SubjectItem| undefined = mainSubjects.find((mainSubject) => mainSubject.path === parentPath(subSubject.path))
+      if (mainSubject && !acc.includes(mainSubject.title)) {
+        acc.push(mainSubject.title)
+      }
+    }
+    return acc
+  }, [])
+  return secondaryMainSubjects
 }
 
 function parseStatbankFrameContent(statbankFane: boolean, req: Request, page: DefaultPage): StatbankFrameData {
@@ -478,6 +516,7 @@ interface DefaultPage extends Content {
     ingress: string;
     keywords: string;
     statistic: string;
+    subtopic: Array<string>;
   };
   page: ExtendedPage;
 }
