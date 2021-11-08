@@ -6,9 +6,14 @@ import { Title } from '@statisticsnorway/ssb-component-library'
 function Bestbet(props) {
   return (
     <Container>
-      <Row>
+      <Row className="bestbet-header">
         <Col>
-          <Title size={1}>Best-bet app</Title>
+          <img src={props.logoUrl} className="logo" />
+          <Title size={1}>Best-bet søk</Title>
+        </Col>
+      </Row>
+      <Row className="bestbet-list">
+        <Col>
           {props.value}
         </Col>
       </Row>
@@ -17,7 +22,8 @@ function Bestbet(props) {
 }
 
 Bestbet.propTypes = {
-  value: PropTypes.string
+  value: PropTypes.string,
+  logoUrl: PropTypes.string
 }
 
 export default (props) => <Bestbet {...props} />

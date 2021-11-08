@@ -1,4 +1,38 @@
 .page-bestbet {
     background-color: $ssb-dark-1;
     padding-top: $spacer * 1.5;
+
+    .bestbet-header {
+        margin-bottom: $spacer * 3;
+
+        .col {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            .logo {
+                max-width: 184px;
+            }
+
+            h1 {
+                border-left: 2px solid $ssb-green-3;
+                font-size: 36px;
+                line-height: 1;
+                margin-left: $spacer;
+                margin-bottom: 0;
+                padding-left: $spacer * .5;
+            }
+
+            @include media-breakpoint-up(lg) {
+                padding: 0;
+            }
+        }
+    }
+
+    .bestbet-list {
+        background-color: $ssb-white;
+        border: 2px solid $ssb-green-5;
+        margin-bottom: $spacer;
+        padding: $spacer * 3;
+    }
 }

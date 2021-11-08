@@ -39,6 +39,9 @@ function renderPart(req: Request): React4xpResponse | Response {
       }),
       model: serviceUrl({
         service: 'bestBetModel'
+      }),
+      logoUrl: assetUrl({
+        path: 'SSB_logo_black.svg'
       })
     })
     .setId('app-bestbet')
@@ -60,9 +63,6 @@ function getAssets(): object {
     }),
     stylesUrl: assetUrl({
       path: 'styles/bundle.css'
-    }),
-    logoUrl: assetUrl({
-      path: 'SSB_logo_black.svg'
     })
   }
 }
