@@ -1,20 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-class Bestbet extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
-  render() {
-    return (
-      <div>
-        <h1>
-              HELLO WOLRD!!
-        </h1>
-      </div>
-    )
-  }
+function Bestbet(props) {
+  return (
+    <div>
+      <h1>
+        HELLO WORLD!!
+      </h1>
+      {props.value}
+    </div>
+  )
 }
 
 Bestbet.propTypes = {
