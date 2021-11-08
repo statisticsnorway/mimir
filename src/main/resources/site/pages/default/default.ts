@@ -41,7 +41,7 @@ const {
   getBreadcrumbs
 } = __non_webpack_require__('/lib/ssb/utils/breadcrumbsUtils')
 const {
-  getMainSubjects, getSubSubjects
+  getMainSubjects, getSubSubjects, getMainSubjectBySubSubject
 } = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
 const {
   getReleaseDatesByVariants, getStatisticByIdFromRepo, getStatisticByShortNameFromRepo
@@ -64,9 +64,6 @@ const {
 const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
-const {
-  parentPath
-} = __non_webpack_require__('/lib/ssb/utils/parentUtils')
 
 const partsWithPreview: Array<string> = [ // Parts that has preview
   `${app.name}:map`,
@@ -413,7 +410,7 @@ function getSecondaryMainSubject(subtopicsContent: Array<string>, mainSubjects: 
   const secondaryMainSubjects: Array<string> = subtopicsContent.reduce((acc: Array<string>, topic: string) => {
     const subSubject: SubjectItem = subSubjects.filter((subSubject) => subSubject.id === topic)[0]
     if (subSubject) {
-      const mainSubject: SubjectItem| undefined = mainSubjects.find((mainSubject) => mainSubject.path === parentPath(subSubject.path))
+      const mainSubject: SubjectItem| undefined = getMainSubjectBySubSubject(subSubject, mainSubjects)
       if (mainSubject && !acc.includes(mainSubject.title)) {
         acc.push(mainSubject.title)
       }
