@@ -4,6 +4,7 @@ import { LinksPartConfig } from './links-part-config'
 import { Request, Response } from 'enonic-types/controller'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { renderError } from '../../../lib/ssb/error/error'
+import { GA_TRACKING_ID } from '../../pages/default/default'
 
 const {
   get
@@ -40,8 +41,8 @@ function renderPart(req: Request, config: LinksPartConfig): React4xpResponse {
   if (linkTypes) {
     if (linkTypes._selected === 'tableLink') {
       const href: string | undefined = linkTypes.tableLink.relatedContent ? pageUrl({
-        id: linkTypes.tableLink.relatedContent as string
-      }) : linkTypes.tableLink.url as string | undefined
+        id: linkTypes.tableLink.relatedContent
+      }) : linkTypes.tableLink.url
 
       props = {
         href,
@@ -51,18 +52,22 @@ function renderPart(req: Request, config: LinksPartConfig): React4xpResponse {
     }
 
     if (linkTypes._selected === 'headerLink') {
-      const linkedContent: string | undefined = linkTypes.headerLink.linkedContent as string | undefined
-      const linkText: string | undefined = linkTypes.headerLink.linkText as string | undefined
+      const linkedContent: string | undefined = linkTypes.headerLink.linkedContent
+      const linkText: string | undefined = linkTypes.headerLink.linkText
 
       const content: Content | null = linkedContent ? get({
         key: linkedContent
       }) : null
 
       let contentUrl: string | undefined
+      let isPDFAttachment: boolean = false
+      let attachmentTitle: string | undefined
       if (content && Object.keys(content.attachments).length > 0) {
         contentUrl = linkedContent && attachmentUrl({
           id: linkedContent
         })
+        isPDFAttachment = (/(.*?).pdf/).test(content._name)
+        attachmentTitle = content.displayName
       } else {
         contentUrl = linkedContent && pageUrl({
           id: linkedContent
@@ -72,7 +77,10 @@ function renderPart(req: Request, config: LinksPartConfig): React4xpResponse {
       props = {
         children: content ? prepareText(content, linkText) : '',
         href: contentUrl,
-        linkType: 'header'
+        linkType: 'header',
+        GA_TRACKING_ID: GA_TRACKING_ID,
+        isPDFAttachment,
+        attachmentTitle
       }
     }
 
@@ -80,7 +88,7 @@ function renderPart(req: Request, config: LinksPartConfig): React4xpResponse {
       props = {
         children: linkTypes.profiledLink.text,
         href: linkTypes.profiledLink.contentUrl && pageUrl({
-          id: linkTypes.profiledLink.contentUrl as string
+          id: linkTypes.profiledLink.contentUrl
         }),
         withIcon: !!linkTypes.profiledLink.withIcon,
         linkType: 'profiled'

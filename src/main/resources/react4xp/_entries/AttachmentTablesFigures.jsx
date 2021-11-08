@@ -4,6 +4,7 @@ import { ChevronDown, ChevronUp } from 'react-feather'
 
 import PropTypes from 'prop-types'
 import Table from './Table'
+import { addGtagForEvent } from '../ReactGA'
 
 class AttachmentTableFigures extends React.Component {
   constructor(props) {
@@ -20,6 +21,16 @@ class AttachmentTableFigures extends React.Component {
     this.setState((prevState) => ({
       isHidden: !prevState.isHidden
     }))
+  }
+
+  toggleAccordion(index, isOpen) {
+    const {
+      contentType, subHeader, open
+    } = this.props.accordions[index]
+
+    if (isOpen && contentType === `${this.props.appName}:table` && this.props.GA_TRACKING_ID) {
+      addGtagForEvent(this.props.GA_TRACKING_ID, 'Utvidet vedleggstabell', 'Statistikkside vedleggstabeller', `${subHeader} ${open}`)
+    }
   }
 
   getButtonBreakpoint() {
@@ -91,7 +102,7 @@ class AttachmentTableFigures extends React.Component {
   }
 
   renderAccordionBody(accordion) {
-    if (accordion.contentType === 'mimir:table') {
+    if (accordion.contentType === `${this.props.appName}:table`) {
       return (<Table {...accordion.props}/>)
     } else {
       return (<div dangerouslySetInnerHTML={this.createMarkup(accordion.body)}></div>)
@@ -111,18 +122,21 @@ class AttachmentTableFigures extends React.Component {
       <section className="xp-part part-accordion container">
         <div className="row">
           {
-            accordions.map((accordion, index) =>
-              <React.Fragment key={index}>
+            accordions.map((accordion, index) => {
+              const toggleAccordion = this.toggleAccordion.bind(this, index)
+              return ( <React.Fragment key={index}>
                 <Accordion
                   className={`col-12 ${this.getBreakpoint(index)}`}
                   id={accordion.id}
                   header={accordion.open}
                   subHeader={accordion.subHeader}
                   openByDefault={anchor && accordion.id && accordion.id === anchor}
+                  onToggle={toggleAccordion}
                 >
                   {this.renderAccordionBody(accordion)}
                 </Accordion>
-              </React.Fragment>
+              </React.Fragment>)
+            }
             )}
         </div>
         <div className={`row free-text-wrapper ${this.getFreeTextBreakpoint()}`}>
@@ -147,7 +161,9 @@ AttachmentTableFigures.propTypes = {
   ),
   freeText: PropTypes.string,
   showAll: PropTypes.string,
-  showLess: PropTypes.string
+  showLess: PropTypes.string,
+  appName: PropTypes.string,
+  GA_TRACKING_ID: PropTypes.string
 }
 
 export default (props) => <AttachmentTableFigures {...props} />

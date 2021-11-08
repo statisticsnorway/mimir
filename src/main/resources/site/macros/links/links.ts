@@ -6,6 +6,7 @@ import { LinksProps, prepareText } from '../../parts/links/links'
 import { TableLink } from '../../mixins/tableLink/tableLink'
 import { HeaderLink } from '../../mixins/headerLink/headerLink'
 import { ProfiledLink } from '../../mixins/profiledLink/profiledLink'
+import { GA_TRACKING_ID } from '../../pages/default/default'
 
 const {
   get
@@ -43,10 +44,14 @@ exports.macro = function(context: MacroContext): React4xpResponse {
       }) : null
 
       let contentUrl: string | undefined
+      let isPDFAttachment: boolean = false
+      let attachmentTitle: string | undefined
       if (content && Object.keys(content.attachments).length > 0) {
         contentUrl = linkedContent && attachmentUrl({
           id: linkedContent
         })
+        isPDFAttachment = (/(.*?).pdf/).test(content._name)
+        attachmentTitle = content.displayName
       } else {
         contentUrl = linkedContent && pageUrl({
           id: linkedContent
@@ -56,7 +61,10 @@ exports.macro = function(context: MacroContext): React4xpResponse {
       props = {
         children: content ? prepareText(content, linkText) : '',
         href: contentUrl,
-        linkType: 'header'
+        linkType: 'header',
+        GA_TRACKING_ID: GA_TRACKING_ID,
+        isPDFAttachment,
+        attachmentTitle
       }
     }
 
@@ -72,5 +80,5 @@ exports.macro = function(context: MacroContext): React4xpResponse {
     }
   }
 
-  return React4xp.render('site/parts/links/links', props)
+  return React4xp.render('site/parts/links/links', props, context)
 }
