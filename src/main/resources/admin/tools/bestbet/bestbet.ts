@@ -1,7 +1,5 @@
 import { Request, Response } from 'enonic-types/controller'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import React from 'react'
-import PropTypes from 'prop-types'
 
 
 const {
@@ -34,5 +32,6 @@ function renderPart(req: Request): React4xpResponse | Response {
   const props: BestbetProps = {
     value: 'test'
   }
-  return React4xp.render('admin/tools/bestbet/Bestbet', props, req)
+
+  return React4xp.render('bestbet/Bestbet', props, req)
 }
