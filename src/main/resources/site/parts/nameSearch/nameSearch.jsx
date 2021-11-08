@@ -7,6 +7,7 @@ import { X } from 'react-feather'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import { useMediaQuery } from 'react-responsive'
+import { addGtagForEvent } from '../../../react4xp/ReactGA'
 
 require('highcharts/modules/exporting')(Highcharts)
 require('highcharts/modules/export-data')(Highcharts)
@@ -178,6 +179,11 @@ function NameSearch(props) {
     setLoading(true) // Spin the spinner!
     setErrorMessage(undefined) // Clear network error message, if any
     setSearchedTerm(name.value)
+
+    if (props.GA_TRACKING_ID) {
+      addGtagForEvent(props.GA_TRACKING_ID, 'Navn det søkes på', 'Navnekalkulator', name.value)
+    }
+
     axios.get(
       props.urlToService, {
         params: {
@@ -475,7 +481,8 @@ NameSearch.propTypes = {
     downloadCSV: PropTypes.string,
     downloadXLS: PropTypes.string
   }),
-  graphData: PropTypes.bool
+  graphData: PropTypes.bool,
+  GA_TRACKING_ID: PropTypes.string
 }
 
 export default (props) => <NameSearch {...props} />

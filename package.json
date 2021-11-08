@@ -36,7 +36,7 @@
     "@babel/register": "^7.15.3",
     "@babel/runtime": "^7.15.3",
     "@reduxjs/toolkit": "^1.6.2",
-    "@statisticsnorway/ssb-component-library": "^2.0.52",
+    "@statisticsnorway/ssb-component-library": "^2.0.53",
     "@types/ramda": "^0.27.44",
     "@types/react": "^17.0.27",
     "@types/validator": "^13.6.3",
@@ -121,6 +121,7 @@
   },
   "dependencies": {
     "highcharts-react-official": "^3.1.0",
+    "react-ga": "^3.3.0",
     "redux-logger": "^3.0.6"
   }
 }
