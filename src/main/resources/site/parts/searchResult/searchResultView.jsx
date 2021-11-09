@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Divider, Input, Link, Paragraph, Title } from '@statisticsnorway/ssb-component-library'
+import { Button, Divider, Input, Link, Paragraph, Title, Dropdown } from '@statisticsnorway/ssb-component-library'
 import { ChevronDown } from 'react-feather'
 import axios from 'axios'
 import NumberFormat from 'react-number-format'
@@ -11,6 +11,27 @@ function SearchResult(props) {
   const [searchTerm, setSearchTerm] = useState(props.term)
   const [loading, setLoading] = useState(false)
   const [total, setTotal] = useState(props.total)
+  const [filterChanged, setFilterChanged] = useState(false)
+  const [filter, setFilter] = useState({
+    mainSubject: ''
+  })
+
+  useEffect(() => {
+    if (filterChanged) {
+      fetchFilteredSearchResult()
+    }
+  }, [filter])
+
+  function onChange(id, value) {
+    setFilterChanged(true)
+    console.log('Sett filter til : ' + value.title)
+    if (id === 'mainSubject') {
+      setFilter({
+        ...filter,
+        mainSubject: value.id === '' ? '' : value.title
+      })
+    }
+  }
 
 
   function renderList() {
@@ -52,6 +73,24 @@ function SearchResult(props) {
     }
   }
 
+  function fetchFilteredSearchResult() {
+    setLoading(true)
+    axios.get(props.searchServiceUrl, {
+      params: {
+        sok: searchTerm,
+        start: 0,
+        count: props.count,
+        language: props.language,
+        mainsubject: filter.mainSubject
+      }
+    }).then((res) => {
+      setHits(res.data.hits)
+      setTotal(res.data.total)
+    }).finally(() => {
+      setLoading(false)
+    })
+  }
+
   function fetchSearchResult() {
     setLoading(true)
     axios.get(props.searchServiceUrl, {
@@ -59,7 +98,8 @@ function SearchResult(props) {
         sok: searchTerm,
         start: hits.length,
         count: props.count,
-        language: props.language
+        language: props.language,
+        mainsubject: filter.mainSubject
       }
     }).then((res) => {
       setHits(hits.concat(res.data.hits))
@@ -79,6 +119,21 @@ function SearchResult(props) {
     window.location = `${props.searchPageUrl}?sok=${searchTerm}`
   }
 
+  function addDropdownSubject(id) {
+    const dropDownSubjects = props.dropDownSubjects
+    return (
+      <Dropdown
+        className="mainSubject"
+        id={id}
+        onSelect={(value) => {
+          onChange(id, value)
+        }}
+        selectedItem={dropDownSubjects[0]}
+        items={dropDownSubjects}
+      />
+    )
+  }
+
   return (
     <section className="search-result container-fluid">
       <div className="row">
@@ -89,6 +144,10 @@ function SearchResult(props) {
               size="lg"
               value={searchTerm} handleChange={setSearchTerm} searchField
               submitCallback={goToSearchResultPage}></Input>
+            <div className="filter mt-5">
+              <Title size={6}>Avgrens treffene</Title>
+              {addDropdownSubject('mainSubject')}
+            </div>
           </div>
         </div>
         <div className="col-12 search-result-body">
@@ -140,7 +199,8 @@ SearchResult.propTypes = {
     contentType: PropTypes.string,
     publishDate: PropTypes.string,
     publishDateHuman: PropTypes.string
-  })
+  }),
+  dropDownSubjects: PropTypes.array
 }
 
 export default (props) => <SearchResult {...props} />
