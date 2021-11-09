@@ -1,9 +1,23 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Container, Row, Col } from 'react-bootstrap'
-import { Title } from '@statisticsnorway/ssb-component-library'
+import { Title, Link } from '@statisticsnorway/ssb-component-library'
 
 function Bestbet(props) {
+  function renderBestbetList() {
+    // TODO: Return dynamically; done manually currently for testing purposes
+    return (
+      <Row className="bestbet-list">
+        <Col className="col-12">
+          <Title size={2}>Placeholder</Title>
+        </Col>
+        <Col className="col-12">
+          <Link href="/">{props.value}</Link>
+        </Col>
+      </Row>
+    )
+  }
+
   return (
     <Container>
       <Row className="bestbet-header">
@@ -12,11 +26,7 @@ function Bestbet(props) {
           <Title size={1}>Best-bet søk</Title>
         </Col>
       </Row>
-      <Row className="bestbet-list">
-        <Col>
-          {props.value}
-        </Col>
-      </Row>
+      {renderBestbetList()}
     </Container>
   )
 }
