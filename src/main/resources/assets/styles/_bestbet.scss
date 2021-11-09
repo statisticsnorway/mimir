@@ -1,31 +1,24 @@
 .page-bestbet {
     background-color: $ssb-dark-1;
     padding-top: $spacer * 1.5;
+    margin-right: $spacer * 3.5;
+    margin-left: $spacer * 3.5;
 
     .bestbet-header {
+        padding: 0;
         margin-bottom: $spacer * 3;
 
-        .col {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
+        .logo {
+            max-width: 184px;
+        }
 
-            .logo {
-                max-width: 184px;
-            }
-
-            h1 {
-                border-left: 2px solid $ssb-green-3;
-                font-size: 36px;
-                line-height: 1;
-                margin-left: $spacer;
-                margin-bottom: 0;
-                padding-left: $spacer * .5;
-            }
-
-            @include media-breakpoint-up(lg) {
-                padding: 0;
-            }
+        h1 {
+            border-left: 2px solid $ssb-green-3;
+            font-size: 36px;
+            line-height: 1;
+            margin-left: $spacer;
+            margin-bottom: 0;
+            padding-left: $spacer * .5;
         }
     }
 
@@ -37,6 +30,19 @@
 
         h2 {
             font-size: 24px;
+        }
+
+        .ssb-dropdown, .ssb-input {
+            margin: 0;
+            
+            & > * {
+                margin: 0;
+                width: 100%;
+            }
+        }
+
+        .ssb-dropdown label, .ssb-input label {
+            display: none;
         }
     }
 }
