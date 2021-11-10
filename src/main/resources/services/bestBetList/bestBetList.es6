@@ -3,6 +3,7 @@ const {
   listBestBets,
   createBestBet
 } = __non_webpack_require__('/lib/ssb/repo/bestbet')
+const {ensureArray} = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
 
 
 
@@ -17,18 +18,17 @@ const {
  *  count: number}
  * }}
  */
-exports.get = (req) => {
-  const bestbets = listBestBets()
-  log.info('GLNRBN: ' + JSON.stringify(listBestBets, null, 2))
-  if(!!bestbets){
+exports.get = () => {
+  const bestbets = ensureArray(listBestBets(100))
+  if(bestbets){
   return {
     body: {
-      total: bestbets.length,
+      // total: bestbets.total,
       count: bestbets.length,
-      bestbets: bestbets.map((bestBet) => ({
-        id: bestBet._id,
-        linkedContentId: bestBet.linkedContentId,
-        searchWords: bestBet.searchWords
+      hits: bestbets.map((bet) => ({
+        id: bet._id,
+        linkedContentId: bet.linkedContentId,
+        searchWords: bet.searchWords
       })
       )
     }
