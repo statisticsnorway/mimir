@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Button, Divider, Input, Link, Paragraph, Title, Dropdown } from '@statisticsnorway/ssb-component-library'
-import { ChevronDown } from 'react-feather'
+import { ChevronDown, X } from 'react-feather'
 import axios from 'axios'
 import NumberFormat from 'react-number-format'
 
@@ -15,6 +15,7 @@ function SearchResult(props) {
   const [filter, setFilter] = useState({
     mainSubject: ''
   })
+  const [selectedItem, setselectedItem] = useState(props.dropDownSubjects[0])
 
   useEffect(() => {
     if (filterChanged) {
@@ -24,13 +25,20 @@ function SearchResult(props) {
 
   function onChange(id, value) {
     setFilterChanged(true)
-    console.log('Sett filter til : ' + value.title)
     if (id === 'mainSubject') {
       setFilter({
         ...filter,
         mainSubject: value.id === '' ? '' : value.title
       })
     }
+  }
+
+  function removeFilter() {
+    setFilter({
+      ...filter,
+      mainSubject: ''
+    })
+    setselectedItem(props.dropDownSubjects[0])
   }
 
 
@@ -134,6 +142,19 @@ function SearchResult(props) {
     )
   }
 
+  function renderClearFilterButton() {
+    if (filter.mainSubject !== '') {
+      return (
+        <Button
+          className="button-more mt-5"
+          onClick={removeFilter}
+        >
+          <X size="18"/> Fjern alle filtervalg
+        </Button>
+      )
+    }
+  }
+
   return (
     <section className="search-result container-fluid">
       <div className="row">
@@ -147,6 +168,7 @@ function SearchResult(props) {
             <div className="filter mt-5">
               <Title size={6}>Avgrens treffene</Title>
               {addDropdownSubject('mainSubject')}
+              {renderClearFilterButton()}
             </div>
           </div>
         </div>
