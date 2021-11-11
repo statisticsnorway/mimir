@@ -58,20 +58,20 @@ function Bestbet(props) {
     )
   }
 
-  function fetchBestBetList() {
-    setLoading(true)
-    axios.get(props.bestBetListServiceUrl, {
-      // params: {
-      //   start: 0,
-      //   count: 10,
-      //   hits
-      // }
-    }).then((res) => {
-      console.log(res.data)
-    }).finally(() => {
-      setLoading(false)
-    })
-  }
+  // function fetchBestBetList() {
+  //   setLoading(true)
+  //   axios.get(props.bestBetListServiceUrl, {
+  //     // params: {
+  //     //   start: 0,
+  //     //   count: 10,
+  //     //   hits
+  //     // }
+  //   }).then((res) => {
+  //     console.log(res.data)
+  //   }).finally(() => {
+  //     setLoading(false)
+  //   })
+  // }
 
   function renderBestbetList() {
     // TODO: List dynamically; done manually currently for testing purposes
@@ -79,35 +79,41 @@ function Bestbet(props) {
     return (
       <Row className="justify-content-between">
         <Col className="col-8 bestbet-list">
-          <Row>
-            <Col className="col-6">
-              <Title size={2}>Liste med innhold</Title>
-              <ul>
-                <li>
-                  <Link href="/">Lorem ipsum dolor sit amet, consectetur adipiscing elit. {props.value}</Link>
-                </li>
-                <li>
-                  {fetchBestBetList()}
-                </li>
-              </ul>
-            </Col>
-            <Col>
-              <Title size={2}>Nøkkelord</Title>
-              <div className="d-flex flex-wrap">
-                <Tag className="m-1" onClick={handleKeywordOnClick}>Lorem <XCircle size={16} /></Tag>
-                <Tag className="m-1" onClick={handleKeywordOnClick}>ipsum <XCircle size={16} /></Tag>
-                <Tag className="m-1" onClick={handleKeywordOnClick}>dolor <XCircle size={16} /></Tag>
-                <Tag className="m-1" onClick={handleKeywordOnClick}>sit <XCircle size={16} /></Tag>
-                <Tag className="m-1" onClick={handleKeywordOnClick}>amet <XCircle size={16} /></Tag>
-                <Button className="m-1" onClick={handleEditKeywordOnClick}>Rediger</Button>
-              </div>
-            </Col>
-          </Row>
+          {props.bestBetList.body.hits.map((bet) => renderListItem(bet))}
         </Col>
         {renderForm()}
       </Row>
     )
   }
+
+  function renderListItem( item ) {
+    return (
+      <Row>
+        <Col className="col-6">
+          <Title size={2}>Liste med innhold</Title>
+          <ul>
+            <li>
+              <Link href="/">en link tekst {item.linkedContentId}</Link>
+            </li>
+            <li>
+            </li>
+          </ul>
+        </Col>
+        <Col>
+          <Title size={2}>Nøkkelord</Title>
+          <div className="d-flex flex-wrap">
+            {item.searchWords.map((word) => renderKeyword(word))}
+            <Button className="m-1" onClick={handleEditKeywordOnClick}>Rediger</Button>
+          </div>
+        </Col>
+      </Row>
+    )
+  }
+
+  function renderKeyword(word) {
+    return ( <Tag className="m-1" onClick={handleKeywordOnClick}>{word} <XCircle size={16} /></Tag>)
+  }
+
 
   return (
     <Container fluid>
@@ -125,7 +131,8 @@ function Bestbet(props) {
 Bestbet.propTypes = {
   value: PropTypes.string,
   logoUrl: PropTypes.string,
-  bestBetListServiceUrl: PropTypes.string
+  bestBetListServiceUrl: PropTypes.string,
+  bestBetList: PropTypes.array
 }
 
 export default (props) => <Bestbet {...props} />

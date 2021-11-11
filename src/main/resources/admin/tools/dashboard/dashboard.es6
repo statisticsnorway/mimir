@@ -43,6 +43,7 @@ exports.get = function(req) {
  * @param {object} req
  * @return {{pageContributions: *, body: *}}
  */
+
 function renderPart(req) {
   const assets = getAssets()
   const user = getUser()
@@ -74,6 +75,7 @@ function renderPart(req) {
   const pageContributions = parseContributions(dashboardDataset.renderPageContributions({
     clientRender: req.mode !== 'edit'
   }))
+
 
   const model = {
     ...assets,
