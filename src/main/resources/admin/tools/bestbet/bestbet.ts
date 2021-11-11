@@ -34,7 +34,7 @@ function renderPart(req: Request): React4xpResponse | Response {
   const bestbetComponent: React4xpObject = new React4xp('bestbet/Bestbet')
     .setProps({
       value: 'test',
-      list: serviceUrl({
+      bestBetListServiceUrl: serviceUrl({
         service: 'bestBetList'
       }),
       model: serviceUrl({
@@ -54,6 +54,19 @@ function renderPart(req: Request): React4xpResponse | Response {
     }),
     pageContributions: bestbetComponent.renderPageContributions()
   }
+  // return React4xp.render('bestbet/Bestbet', {
+  //   value: 'test',
+  //   bestBetListServiceUrl: serviceUrl({
+  //     service: 'bestBetList'
+  //   }),
+  //   model: serviceUrl({
+  //     service: 'bestBetModel'
+  //   }),
+  //   logoUrl: assetUrl({
+  //     path: 'SSB_logo_black.svg'
+  //   }),
+  //   req
+  // })
 }
 
 function getAssets(): object {

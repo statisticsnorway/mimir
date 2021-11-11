@@ -1,22 +1,40 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { Container, Row, Col, Form } from 'react-bootstrap'
+import { Container, Row, Col, Form, Modal } from 'react-bootstrap'
 import { Title, Link, Tag, Dropdown, Input, Button } from '@statisticsnorway/ssb-component-library'
 import { XCircle } from 'react-feather'
-
+import axios from 'axios'
 function Bestbet(props) {
+  const [showModal, setShowModal] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const handleCloseModal = () => setShowModal(false)
+
   function handleSubmit() {
-    return
   }
 
   function handleKeywordOnClick() {
-    // TODO: Popup for delete confirmation
-    return
+    setShowModal(true)
+    return (
+      <Modal
+        show={showModal}
+        onHide={handleCloseModal}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title></Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Vil du slette {/* nøkkelord */} fra {/* navn på innhold */}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button primary negative>Slett</Button>
+          <Button onClick={handleCloseModal}>Lukk</Button>
+        </Modal.Footer>
+      </Modal>
+    )
   }
 
   function handleEditKeywordOnClick() {
     // TODO: Open popup with renderForm, include already existing keywords for that content
-    return
   }
 
   function renderForm() {
@@ -28,7 +46,7 @@ function Bestbet(props) {
             header="Søk og velg innhold"
             placeholder="Søk og velg innhold"
             searchable />
-          {/* TODO: Use react tag input */}
+          {/* WIP */}
           <Input
             className="mt-3"
             label="Skriv inn nøkkelord"
@@ -38,6 +56,21 @@ function Bestbet(props) {
         </Form>
       </Col>
     )
+  }
+
+  function fetchBestBetList() {
+    setLoading(true)
+    axios.get(props.bestBetListServiceUrl, {
+      // params: {
+      //   start: 0,
+      //   count: 10,
+      //   hits
+      // }
+    }).then((res) => {
+      console.log(res.data)
+    }).finally(() => {
+      setLoading(false)
+    })
   }
 
   function renderBestbetList() {
@@ -52,6 +85,9 @@ function Bestbet(props) {
               <ul>
                 <li>
                   <Link href="/">Lorem ipsum dolor sit amet, consectetur adipiscing elit. {props.value}</Link>
+                </li>
+                <li>
+                  {fetchBestBetList()}
                 </li>
               </ul>
             </Col>
@@ -88,7 +124,8 @@ function Bestbet(props) {
 
 Bestbet.propTypes = {
   value: PropTypes.string,
-  logoUrl: PropTypes.string
+  logoUrl: PropTypes.string,
+  bestBetListServiceUrl: PropTypes.string
 }
 
 export default (props) => <Bestbet {...props} />
