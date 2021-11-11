@@ -7,6 +7,9 @@ import NumberFormat from 'react-number-format'
 
 
 function SearchResult(props) {
+  const {
+    dropDownSubjects
+  } = props
   const [hits, setHits] = useState(props.hits)
   const [searchTerm, setSearchTerm] = useState(props.term)
   const [loading, setLoading] = useState(false)
@@ -15,7 +18,7 @@ function SearchResult(props) {
   const [filter, setFilter] = useState({
     mainSubject: ''
   })
-  const [selectedItem, setselectedItem] = useState(props.dropDownSubjects[0])
+  const [selectedItem, setSelectedItem] = useState(dropDownSubjects[0])
 
   useEffect(() => {
     if (filterChanged) {
@@ -25,6 +28,7 @@ function SearchResult(props) {
 
   function onChange(id, value) {
     setFilterChanged(true)
+    setSelectedItem(value)
     if (id === 'mainSubject') {
       setFilter({
         ...filter,
@@ -38,7 +42,7 @@ function SearchResult(props) {
       ...filter,
       mainSubject: ''
     })
-    setselectedItem(props.dropDownSubjects[0])
+    setSelectedItem(dropDownSubjects[0])
   }
 
 
@@ -127,20 +131,20 @@ function SearchResult(props) {
     window.location = `${props.searchPageUrl}?sok=${searchTerm}`
   }
 
-  function addDropdownSubject(id) {
-    const dropDownSubjects = props.dropDownSubjects
-    return (
-      <Dropdown
-        className="mainSubject"
-        id={id}
-        onSelect={(value) => {
-          onChange(id, value)
-        }}
-        selectedItem={dropDownSubjects[0]}
-        items={dropDownSubjects}
-      />
-    )
-  }
+  const DropdownMainSubject = React.forwardRef((props, ref) => (
+    <Dropdown
+      ref={ref}
+      className="DropdownMainSubject"
+      id='mainSubject'
+      onSelect={(value) => {
+        onChange('mainSubject', value)
+      }}
+      selectedItem={selectedItem}
+      items={dropDownSubjects}
+    >
+      {props.children}
+    </Dropdown>
+  ))
 
   function renderClearFilterButton() {
     if (filter.mainSubject !== '') {
@@ -167,7 +171,7 @@ function SearchResult(props) {
               submitCallback={goToSearchResultPage}></Input>
             <div className="filter mt-5">
               <Title size={6}>Avgrens treffene</Title>
-              {addDropdownSubject('mainSubject')}
+              <DropdownMainSubject/>
               {renderClearFilterButton()}
             </div>
           </div>
@@ -222,7 +226,8 @@ SearchResult.propTypes = {
     publishDate: PropTypes.string,
     publishDateHuman: PropTypes.string
   }),
-  dropDownSubjects: PropTypes.array
+  dropDownSubjects: PropTypes.array,
+  children: PropTypes.node
 }
 
 export default (props) => <SearchResult {...props} />
