@@ -7,9 +7,6 @@ import NumberFormat from 'react-number-format'
 
 
 function SearchResult(props) {
-  const {
-    dropDownSubjects
-  } = props
   const [hits, setHits] = useState(props.hits)
   const [searchTerm, setSearchTerm] = useState(props.term)
   const [loading, setLoading] = useState(false)
@@ -18,7 +15,7 @@ function SearchResult(props) {
   const [filter, setFilter] = useState({
     mainSubject: ''
   })
-  const [selectedItem, setSelectedItem] = useState(dropDownSubjects[0])
+  const [selectedMainSubject, setSelectedMainSubject] = useState(props.dropDownSubjects[0])
 
   useEffect(() => {
     if (filterChanged) {
@@ -28,8 +25,9 @@ function SearchResult(props) {
 
   function onChange(id, value) {
     setFilterChanged(true)
-    setSelectedItem(value)
+
     if (id === 'mainSubject') {
+      setSelectedMainSubject(value)
       setFilter({
         ...filter,
         mainSubject: value.id === '' ? '' : value.title
@@ -42,7 +40,7 @@ function SearchResult(props) {
       ...filter,
       mainSubject: ''
     })
-    setSelectedItem(dropDownSubjects[0])
+    setSelectedMainSubject(props.dropDownSubjects[0])
   }
 
 
@@ -131,7 +129,7 @@ function SearchResult(props) {
     window.location = `${props.searchPageUrl}?sok=${searchTerm}`
   }
 
-  const DropdownMainSubject = React.forwardRef((props, ref) => (
+  const DropdownMainSubject = React.forwardRef((_props, ref) => (
     <Dropdown
       ref={ref}
       className="DropdownMainSubject"
@@ -139,11 +137,9 @@ function SearchResult(props) {
       onSelect={(value) => {
         onChange('mainSubject', value)
       }}
-      selectedItem={selectedItem}
-      items={dropDownSubjects}
-    >
-      {props.children}
-    </Dropdown>
+      selectedItem={selectedMainSubject}
+      items={props.dropDownSubjects}
+    />
   ))
 
   function renderClearFilterButton() {
@@ -228,8 +224,7 @@ SearchResult.propTypes = {
     publishDate: PropTypes.string,
     publishDateHuman: PropTypes.string
   }),
-  dropDownSubjects: PropTypes.array,
-  children: PropTypes.node
+  dropDownSubjects: PropTypes.array
 }
 
 export default (props) => <SearchResult {...props} />
