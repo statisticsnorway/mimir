@@ -2,22 +2,28 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Container, Row, Col, Form, Modal } from 'react-bootstrap'
 import { Title, Link, Tag, Dropdown, Input, Button } from '@statisticsnorway/ssb-component-library'
-import { XCircle } from 'react-feather'
-import axios from 'axios'
+import { XCircle, Edit } from 'react-feather'
+
 function Bestbet(props) {
-  const [showModal, setShowModal] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const handleCloseModal = () => setShowModal(false)
+  const [showDeleteSearchWordModal, setDeleteSearchWordModal] = useState(false)
+  const handleCloseDeleteSearchWordModal = () => setDeleteSearchWordModal(false)
+
+  const [showEditSearchWordsModal, setEditSearchWordsModal] = useState(false)
+  const handleCloseEditSearchWordModal = () => setEditSearchWordsModal(false)
+
+  const [bestBetList, setBestBetList] = useState(props.bestBetList)
+  const [displaySearchWordsForm, setDisplaySearchWordsForm] = useState([])
 
   function handleSubmit() {
+    // setBestBetList()
   }
 
-  function handleKeywordOnClick() {
-    setShowModal(true)
+  function handleSearchWordOnClick() {
+    setDeleteSearchWordModal(true)
     return (
       <Modal
-        show={showModal}
-        onHide={handleCloseModal}
+        show={showDeleteSearchWordModal}
+        onHide={handleCloseDeleteSearchWordModal}
       >
         <Modal.Header closeButton>
           <Modal.Title></Modal.Title>
@@ -27,17 +33,54 @@ function Bestbet(props) {
         </Modal.Body>
         <Modal.Footer>
           <Button primary negative>Slett</Button>
-          <Button onClick={handleCloseModal}>Lukk</Button>
+          <Button onClick={handleCloseDeleteSearchWordModal}>Lukk</Button>
         </Modal.Footer>
       </Modal>
     )
   }
 
-  function handleEditKeywordOnClick() {
-    // TODO: Open popup with renderForm, include already existing keywords for that content
+  function handleEditSearchWordOnClick() {
+    setEditSearchWordsModal(true)
+    return (
+      <Modal
+        show={showEditSearchWordsModal}
+        onHide={handleCloseEditSearchWordModal}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title></Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {renderForm()}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button primary negative>Slett</Button>
+          <Button onClick={handleCloseDeleteSearchWordModal}>Lukk</Button>
+        </Modal.Footer>
+      </Modal>
+    )
+  }
+
+  function handleDropdownOnSelect(item) {
+    const getBestBetItem = bestBetList.filter((id) => item.id === id)
+
+    if (getBestBetItem.length) {
+      setDisplaySearchWordsForm(getBestBetItem.map(({
+        searchWords
+      }) => renderSearchWord(searchWords)))
+    }
   }
 
   function renderForm() {
+    const items = []
+    if (bestBetList.body.hits.length) {
+      bestBetList.body.hits.map((bet) => {
+        items.push({
+          id: bet.id,
+          title: bet.linkedContentId
+        })
+      })
+    }
+
     return (
       <Col className="bestbet-list ml-4">
         <Title size={2}>Legg til nøkkelord</Title>
@@ -45,75 +88,66 @@ function Bestbet(props) {
           <Dropdown
             header="Søk og velg innhold"
             placeholder="Søk og velg innhold"
+            items={items}
+            onSelect={handleDropdownOnSelect}
             searchable />
-          {/* WIP */}
+          {displaySearchWordsForm.length ? displaySearchWordsForm.map((searchWord) => renderSearchWord(searchWord)) : null}
           <Input
             className="mt-3"
-            label="Skriv inn nøkkelord"
-            placeholder="Skriv inn nøkkelord"
+            label="Skriv inn ny nøkkelord"
+            placeholder="Skriv inn ny nøkkelord"
           />
-          <Button className="mt-3">Legg til</Button>
+          <Button primary className="mt-3">Legg til</Button>
+          <Button primary className="mt-3">Fullfør</Button>
         </Form>
       </Col>
     )
   }
 
-  // function fetchBestBetList() {
-  //   setLoading(true)
-  //   axios.get(props.bestBetListServiceUrl, {
-  //     // params: {
-  //     //   start: 0,
-  //     //   count: 10,
-  //     //   hits
-  //     // }
-  //   }).then((res) => {
-  //     console.log(res.data)
-  //   }).finally(() => {
-  //     setLoading(false)
-  //   })
-  // }
-
   function renderBestbetList() {
-    // TODO: List dynamically; done manually currently for testing purposes
-    //  Add spinner on loading? Load a certain amount at a time?
     return (
       <Row className="justify-content-between">
         <Col className="col-8 bestbet-list">
-          {props.bestBetList.body.hits.map((bet) => renderListItem(bet))}
+          <Row>
+            <Col className="col-6">
+              <Title size={2}>Liste med innhold</Title>
+            </Col>
+            <Col>
+              <Title size={2}>Nøkkelord</Title>
+            </Col>
+          </Row>
+          {bestBetList.body.hits.map((bet) => renderListItem(bet))}
         </Col>
         {renderForm()}
       </Row>
     )
   }
 
-  function renderListItem( item ) {
+  function renderSearchWord(searchWord) {
+    return (
+      <Tag className="m-1" onClick={handleSearchWordOnClick}>
+        {searchWord}<XCircle size={16} className="ml-1" />
+      </Tag>
+    )
+  }
+
+  function renderListItem(item) {
     return (
       <Row>
         <Col className="col-6">
-          <Title size={2}>Liste med innhold</Title>
-          <ul>
-            <li>
-              <Link href="/">en link tekst {item.linkedContentId}</Link>
-            </li>
-            <li>
-            </li>
-          </ul>
+          <li><Link href="/">en link tekst {item.linkedContentId}</Link></li>
         </Col>
         <Col>
-          <Title size={2}>Nøkkelord</Title>
           <div className="d-flex flex-wrap">
-            {item.searchWords.map((word) => renderKeyword(word))}
-            <Button className="m-1" onClick={handleEditKeywordOnClick}>Rediger</Button>
+            {item.searchWords.map((searchWord) => renderSearchWord(searchWord))}
+            <Tag className="m-1" onClick={handleEditSearchWordOnClick}>
+              Rediger <Edit size={16} className="ml-1" />
+            </Tag>
           </div>
         </Col>
       </Row>
     )
   }
-
-  function renderKeyword(word) {
-    return ( <Tag className="m-1" onClick={handleKeywordOnClick}>{word} <XCircle size={16} /></Tag>)
-  }
-
 
   return (
     <Container fluid>
