@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { Container, Row, Col, Form, Modal } from 'react-bootstrap'
+import { Container, Row, Col, Modal } from 'react-bootstrap'
 import { Title, Link, Tag, Dropdown, Input, Button } from '@statisticsnorway/ssb-component-library'
 import { XCircle, Edit } from 'react-feather'
 
@@ -12,7 +12,7 @@ function Bestbet(props) {
   const handleCloseEditSearchWordModal = () => setEditSearchWordsModal(false)
 
   const [inputTag, setInputTag] = useState('')
-  const [displaySearchWordsForm, setDisplaySearchWordsForm] = useState(['ett', 'nytt', 'ord'])
+  const [displaySearchWordsForm, setDisplaySearchWordsForm] = useState([])
 
   const [bestBetList, setBestBetList] = useState(props.bestBetList)
 
@@ -65,12 +65,12 @@ function Bestbet(props) {
   }
 
   function handleDropdownOnSelect(item) {
-    const getBestBetItem = bestBetList.filter((id) => item.id === id)
+    const getBestBetItem = bestBetList.body.hits.filter(({
+      id
+    }) => id === item.id)
 
     if (getBestBetItem.length) {
-      setDisplaySearchWordsForm(getBestBetItem.map(({
-        searchWords
-      }) => renderSearchWord(searchWords)))
+      setDisplaySearchWordsForm(getBestBetItem[0].searchWords)
     }
   }
 
@@ -93,7 +93,6 @@ function Bestbet(props) {
         })
       })
     }
-    console.log(JSON.stringify(items, null, 2))
 
     return (
       <Col className="bestbet-list ml-4">
@@ -105,7 +104,12 @@ function Bestbet(props) {
           onSelect={handleDropdownOnSelect}
           searchable
         />
-        {displaySearchWordsForm.length ? displaySearchWordsForm.map((searchWord) => renderSearchWord(searchWord)) : null}
+        {displaySearchWordsForm.length ?
+          <Row>
+            <Col className="d-flex flex-wrap mt-3">
+              {displaySearchWordsForm.map((searchWord) => renderSearchWord(searchWord))}
+            </Col>
+          </Row> : null}
         <Row>
           <Col>
             <Input
