@@ -150,10 +150,10 @@ function SearchResult(props) {
     if (filter.mainSubject !== '') {
       return (
         <Button
-          className="button-more mt-5"
+          className="mt-4"
           onClick={removeFilter}
-        >
-          <X size="18"/> Fjern alle filtervalg
+          icon={<X size={18} />}
+        >{props.removeFilterPhrase}
         </Button>
       )
     }
@@ -170,7 +170,7 @@ function SearchResult(props) {
               value={searchTerm} handleChange={setSearchTerm} searchField
               submitCallback={goToSearchResultPage}></Input>
             <div className="filter mt-5">
-              <Title size={6}>Avgrens treffene</Title>
+              <Title size={6}>{props.limitResultPhrase}</Title>
               <DropdownMainSubject/>
               {renderClearFilterButton()}
             </div>
@@ -215,6 +215,8 @@ SearchResult.propTypes = {
   language: PropTypes.string,
   term: PropTypes.string,
   showingPhrase: PropTypes.string,
+  limitResultPhrase: PropTypes.string,
+  removeFilterPhrase: PropTypes.string,
   count: PropTypes.number,
   noHitMessage: PropTypes.string,
   hits: PropTypes.arrayOf({

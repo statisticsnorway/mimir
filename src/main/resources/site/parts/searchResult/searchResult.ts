@@ -100,6 +100,14 @@ export function renderPart(req: Request): React4xpResponse {
       key: 'publicationArchive.showing',
       locale: language
     }),
+    limitResultPhrase: localize({
+      key: 'filter.limitResult',
+      locale: language
+    }),
+    removeFilterPhrase: localize({
+      key: 'filter.removeFilterSelection',
+      locale: language
+    }),
     searchServiceUrl: serviceUrl({
       service: 'freeTextSearch'
     }),
@@ -121,6 +129,8 @@ interface ReactProps {
   buttonTitle: string;
   noHitMessage: string;
   showingPhrase: string;
+  limitResultPhrase: string;
+  removeFilterPhrase: string;
   searchServiceUrl: string;
   searchPageUrl: string;
   language: string;
