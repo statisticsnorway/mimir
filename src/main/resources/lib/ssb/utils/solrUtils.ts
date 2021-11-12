@@ -16,9 +16,10 @@ const {
 
 
 export function solrSearch(term: string, language: string, numberOfHits: number, start: number = 0, mainSubject: string): SolrPrepResultAndTotal {
-  const filter: string | undefined = mainSubject ? `hovedemner:"${mainSubject}"` : undefined
+  const lang: string = language === 'en' ? 'en' : 'no'
+  const filterQuery: string = mainSubject ? `fq=sprak:"${lang}"&fq=hovedemner:"${mainSubject}"` : `fq=sprak:"${lang}"`
   const searchResult: SolrResult | undefined = querySolr({
-    query: filter ? createQueryWithFilter(term, language, numberOfHits, start, filter) : createQuery(term, language, numberOfHits, start)
+    query: createQuery(term, numberOfHits, start, filterQuery)
   })
   return searchResult ? {
     hits: nerfSearchResult(searchResult, language),
@@ -90,14 +91,9 @@ function requestSolr(queryParams: SolrQueryParams): SolrResponse {
 }
 
 
-function createQuery(term: string, language: string, numberOfHits: number, start: number): string {
-  return `${SOLR_BASE_URL}?${SOLR_PARAM_QUERY}=${term}&wt=${SOLR_FORMAT}&start=${start}&rows=${numberOfHits}`
+function createQuery(term: string, numberOfHits: number, start: number, filterQuery: string): string {
+  return `${SOLR_BASE_URL}?${SOLR_PARAM_QUERY}=${term}&${filterQuery}&wt=${SOLR_FORMAT}&start=${start}&rows=${numberOfHits}`
 }
-
-function createQueryWithFilter(term: string, language: string, numberOfHits: number, start: number, filter: string): string {
-  return `${SOLR_BASE_URL}?${SOLR_PARAM_QUERY}=${term}&fq=${filter}&wt=${SOLR_FORMAT}&start=${start}&rows=${numberOfHits}`
-}
-
 
 /*
 * Interfaces

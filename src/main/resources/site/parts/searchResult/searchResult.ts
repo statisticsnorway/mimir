@@ -104,6 +104,7 @@ export function renderPart(req: Request): React4xpResponse {
       service: 'freeTextSearch'
     }),
     searchPageUrl,
+    language,
     dropDownSubjects: mainSubjectDropdown
   }
 
@@ -122,6 +123,7 @@ interface ReactProps {
   showingPhrase: string;
   searchServiceUrl: string;
   searchPageUrl: string;
+  language: string;
   dropDownSubjects: Array<Dropdown>;
 }
 
