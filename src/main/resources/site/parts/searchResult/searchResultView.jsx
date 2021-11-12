@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Divider, Input, Link, Paragraph, Title, Dropdown } from '@statisticsnorway/ssb-component-library'
+import { Button, Divider, Input, Link, Paragraph, Title, Dropdown, Tag } from '@statisticsnorway/ssb-component-library'
 import { ChevronDown, X } from 'react-feather'
 import axios from 'axios'
 import NumberFormat from 'react-number-format'
@@ -145,12 +145,12 @@ function SearchResult(props) {
   function renderClearFilterButton() {
     if (filter.mainSubject !== '') {
       return (
-        <Button
+        <Tag
           className="mt-4"
           onClick={removeFilter}
           icon={<X size={18} />}
         >{props.removeFilterPhrase}
-        </Button>
+        </Tag>
       )
     }
   }
