@@ -5,11 +5,11 @@ import { Title, Link, Tag, Dropdown, Input, Button } from '@statisticsnorway/ssb
 import { XCircle, Edit } from 'react-feather'
 
 function Bestbet(props) {
-  const [showDeleteSearchWordModal, setDeleteSearchWordModal] = useState(false)
-  const handleCloseDeleteSearchWordModal = () => setDeleteSearchWordModal(false)
+  const [showDeleteSearchWordModal, setShowDeleteSearchWordModal] = useState(false)
+  const handleCloseDeleteSearchWordModal = () => setShowDeleteSearchWordModal(false)
 
-  const [showEditSearchWordsModal, setEditSearchWordsModal] = useState(false)
-  const handleCloseEditSearchWordModal = () => setEditSearchWordsModal(false)
+  const [showEditSearchWordsModal, setShowEditSearchWordsModal] = useState(false)
+  const handleCloseEditSearchWordModal = () => setShowEditSearchWordsModal(false)
 
   const [inputTag, setInputTag] = useState('')
   const [displaySearchWordsForm, setDisplaySearchWordsForm] = useState([])
@@ -23,42 +23,66 @@ function Bestbet(props) {
   }
 
   function handleSearchWordOnClick() {
-    setDeleteSearchWordModal(true)
+    setShowDeleteSearchWordModal(true)
+  }
+
+  const DeleteSearchWordModal = () => {
     return (
       <Modal
         show={showDeleteSearchWordModal}
         onHide={handleCloseDeleteSearchWordModal}
       >
         <Modal.Header closeButton>
-          <Modal.Title></Modal.Title>
+          <Modal.Title>Fjern nøkkelord</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Vil du slette {/* nøkkelord */} fra {/* navn på innhold */}</p>
+          <p>Vil du fjerne {/* nøkkelord */} fra innholdet {/* navn på innhold */}</p>
         </Modal.Body>
         <Modal.Footer>
-          <Button primary negative>Slett</Button>
+          <Button primary>Fjern</Button>
           <Button onClick={handleCloseDeleteSearchWordModal}>Lukk</Button>
         </Modal.Footer>
       </Modal>
     )
   }
 
-  function handleEditSearchWordOnClick() {
-    setEditSearchWordsModal(true)
+  function handleEditSearchWordOnClick(item) {
+    setShowEditSearchWordsModal(true)
+    setDisplaySearchWordsForm(item.searchWords)
+  }
+
+  const EditSearchWordsModal = () => {
     return (
       <Modal
         show={showEditSearchWordsModal}
         onHide={handleCloseEditSearchWordModal}
       >
         <Modal.Header closeButton>
-          <Modal.Title></Modal.Title>
+          <Modal.Title>Rediger nøkkelord</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {renderForm()}
+          {displaySearchWordsForm.length ?
+            <Row>
+              <Col className="d-flex flex-wrap mt-3">
+                {displaySearchWordsForm.map((searchWord) => renderSearchWord(searchWord))}
+              </Col>
+            </Row> : null}
+          <Row>
+            <Col>
+              <Input
+                handleChange={handleTagInput}
+                value={inputTag}
+                className="mt-3"
+              />
+            </Col>
+            <Col>
+              <Button primary onClick={handleTagSubmit} className="mt-3">Legg til</Button>
+            </Col>
+          </Row>
         </Modal.Body>
         <Modal.Footer>
-          <Button primary negative>Slett</Button>
-          <Button onClick={handleCloseDeleteSearchWordModal}>Lukk</Button>
+          <Button primary>Rediger</Button>
+          <Button onClick={handleCloseEditSearchWordModal}>Lukk</Button>
         </Modal.Footer>
       </Modal>
     )
@@ -167,7 +191,7 @@ function Bestbet(props) {
         <Col>
           <div className="d-flex flex-wrap">
             {item.searchWords.map((searchWord) => renderSearchWord(searchWord))}
-            <Tag className="m-1" onClick={() => handleEditSearchWordOnClick}>
+            <Tag className="m-1" onClick={() => handleEditSearchWordOnClick(item)}>
               Rediger <Edit size={16} className="ml-1" />
             </Tag>
           </div>
@@ -178,6 +202,8 @@ function Bestbet(props) {
 
   return (
     <Container fluid>
+      <DeleteSearchWordModal />
+      <EditSearchWordsModal />
       <Row className="bestbet-header">
         <Col className="flex-row align-items-center">
           <img src={props.logoUrl} className="logo" />
