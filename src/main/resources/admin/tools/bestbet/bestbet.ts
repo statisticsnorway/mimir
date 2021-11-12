@@ -1,4 +1,4 @@
-import { Request, Response } from 'enonic-types/controller'
+import { PageContributions, Request, Response } from 'enonic-types/controller'
 import { ResourceKey } from 'enonic-types/thymeleaf'
 import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
 import { RepoNode } from 'enonic-types/node'
@@ -77,27 +77,17 @@ function renderPart(req: Request): React4xpResponse | Response {
     })
     .setId('app-bestbet')
 
+  const pageContributions: PageContributions = parseContributions(bestbetComponent.renderPageContributions() as PageContributions)
+
   return {
     body: bestbetComponent.renderBody({
       body: render(view, {
-        ...getAssets()
+        ...getAssets(),
+        pageContributions
       })
     }),
-    pageContributions: bestbetComponent.renderPageContributions()
+    pageContributions
   }
-  // return React4xp.render('bestbet/Bestbet', {
-  //   value: 'test',
-  //   bestBetListServiceUrl: serviceUrl({
-  //     service: 'bestBetList'
-  //   }),
-  //   model: serviceUrl({
-  //     service: 'bestBetModel'
-  //   }),
-  //   logoUrl: assetUrl({
-  //     path: 'SSB_logo_black.svg'
-  //   }),
-  //   req
-  // })
 }
 
 function getAssets(): object {
@@ -107,9 +97,18 @@ function getAssets(): object {
     }),
     stylesUrl: assetUrl({
       path: 'styles/bundle.css'
+    }),
+    wsServiceUrl: serviceUrl({
+      service: 'websocket'
     })
   }
 }
+
+function parseContributions(contributions: PageContributions): PageContributions {
+  contributions.bodyEnd = contributions.bodyEnd && (contributions.bodyEnd as Array<string>).map((script: string) => script.replace(' defer>', ' defer="">'))
+  return contributions
+}
+
 
 interface Payload {
   body: {

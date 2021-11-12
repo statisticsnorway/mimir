@@ -80,6 +80,7 @@ function Bestbet(props) {
         })
       })
     }
+    console.log(JSON.stringify(items, null, 2))
 
     return (
       <Col className="bestbet-list ml-4">
@@ -90,15 +91,26 @@ function Bestbet(props) {
             placeholder="Søk og velg innhold"
             items={items}
             onSelect={handleDropdownOnSelect}
-            searchable />
-          {displaySearchWordsForm.length ? displaySearchWordsForm.map((searchWord) => renderSearchWord(searchWord)) : null}
-          <Input
-            className="mt-3"
-            label="Skriv inn ny nøkkelord"
-            placeholder="Skriv inn ny nøkkelord"
+            searchable
           />
-          <Button primary className="mt-3">Legg til</Button>
-          <Button primary className="mt-3">Fullfør</Button>
+          {displaySearchWordsForm.length ? displaySearchWordsForm.map((searchWord) => renderSearchWord(searchWord)) : null}
+          <Row>
+            <Col>
+              <Input
+                className="mt-3"
+                label="Skriv inn ny nøkkelord"
+                placeholder="Skriv inn ny nøkkelord"
+              />
+            </Col>
+            <Col>
+              <Button primary className="mt-3">Legg til</Button>
+            </Col>
+          </Row>
+          <Row>
+            <Col className="col-12 justify-content-center">
+              <Button primary className="mt-3 mx-0">Fullfør</Button>
+            </Col>
+          </Row>
         </Form>
       </Col>
     )
@@ -125,7 +137,7 @@ function Bestbet(props) {
 
   function renderSearchWord(searchWord) {
     return (
-      <Tag className="m-1" onClick={handleSearchWordOnClick}>
+      <Tag className="m-1" onClick={() => handleSearchWordOnClick()}>
         {searchWord}<XCircle size={16} className="ml-1" />
       </Tag>
     )
@@ -140,7 +152,7 @@ function Bestbet(props) {
         <Col>
           <div className="d-flex flex-wrap">
             {item.searchWords.map((searchWord) => renderSearchWord(searchWord))}
-            <Tag className="m-1" onClick={handleEditSearchWordOnClick}>
+            <Tag className="m-1" onClick={() => handleEditSearchWordOnClick}>
               Rediger <Edit size={16} className="ml-1" />
             </Tag>
           </div>

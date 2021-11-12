@@ -12,5 +12,9 @@
   <body class="xp-page page-bestbet">
     <div id="app-bestbet" />
     <script type="text/javascript" data-th-src="${jsLibsUrl}"></script>
+    <script type="text/javascript" data-th-src="${wsServiceUrl}"></script>
+    <span data-th-each="scr : ${pageContributions.bodyEnd}" data-th-remove="tag">
+        <span data-th-utext="${scr}" data-th-remove="tag"></span>
+    </span>
   </body>
 </html>
