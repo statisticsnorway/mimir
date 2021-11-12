@@ -11,10 +11,14 @@ function Bestbet(props) {
   const [showEditSearchWordsModal, setEditSearchWordsModal] = useState(false)
   const handleCloseEditSearchWordModal = () => setEditSearchWordsModal(false)
 
-  const [bestBetList, setBestBetList] = useState(props.bestBetList)
-  const [displaySearchWordsForm, setDisplaySearchWordsForm] = useState([])
+  const [inputTag, setInputTag] = useState('')
+  const [displaySearchWordsForm, setDisplaySearchWordsForm] = useState(['ett', 'nytt', 'ord'])
 
-  function handleSubmit() {
+  const [bestBetList, setBestBetList] = useState(props.bestBetList)
+
+  function handleSubmit(event) {
+    console.log('GLNRBN submit: ')
+    event.preventDefault()
     // setBestBetList()
   }
 
@@ -70,6 +74,15 @@ function Bestbet(props) {
     }
   }
 
+  function handleTagInput(event) {
+    setInputTag(event)
+  }
+
+  function handleTagSubmit() {
+    setDisplaySearchWordsForm([...displaySearchWordsForm, inputTag])
+    setInputTag('')
+  }
+
   function renderForm() {
     const items = []
     if (bestBetList.body.hits.length) {
@@ -85,33 +98,31 @@ function Bestbet(props) {
     return (
       <Col className="bestbet-list ml-4">
         <Title size={2}>Legg til nøkkelord</Title>
-        <Form onSubmit={handleSubmit}>
-          <Dropdown
-            header="Søk og velg innhold"
-            placeholder="Søk og velg innhold"
-            items={items}
-            onSelect={handleDropdownOnSelect}
-            searchable
-          />
-          {displaySearchWordsForm.length ? displaySearchWordsForm.map((searchWord) => renderSearchWord(searchWord)) : null}
-          <Row>
-            <Col>
-              <Input
-                className="mt-3"
-                label="Skriv inn ny nøkkelord"
-                placeholder="Skriv inn ny nøkkelord"
-              />
-            </Col>
-            <Col>
-              <Button primary className="mt-3">Legg til</Button>
-            </Col>
-          </Row>
-          <Row>
-            <Col className="col-12 justify-content-center">
-              <Button primary className="mt-3 mx-0">Fullfør</Button>
-            </Col>
-          </Row>
-        </Form>
+        <Dropdown
+          header="Søk og velg innhold"
+          placeholder="Søk og velg innhold"
+          items={items}
+          onSelect={handleDropdownOnSelect}
+          searchable
+        />
+        {displaySearchWordsForm.length ? displaySearchWordsForm.map((searchWord) => renderSearchWord(searchWord)) : null}
+        <Row>
+          <Col>
+            <Input
+              handleChange={handleTagInput}
+              value={inputTag}
+              className="mt-3"
+            />
+          </Col>
+          <Col>
+            <Button primary onClick={handleTagSubmit} className="mt-3">Legg til</Button>
+          </Col>
+        </Row>
+        <Row>
+          <Col className="col-12 justify-content-center">
+            <Button primary onClick={handleSubmit} className="mt-3 mx-0">Fullfør</Button>
+          </Col>
+        </Row>
       </Col>
     )
   }
