@@ -168,7 +168,7 @@ function SearchResult(props) {
             <div className="filter mt-5">
               <Title size={6}>{props.limitResultPhrase}</Title>
               <DropdownMainSubject/>
-              {renderClearFilterButton()}
+              {/* {renderClearFilterButton()} */}
             </div>
           </div>
         </div>
