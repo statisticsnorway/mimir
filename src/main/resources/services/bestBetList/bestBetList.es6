@@ -7,7 +7,6 @@ const {
   ensureArray
 } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
 
-
 /**
  * @param {object} req: Enonics request object
  * @return {{body:
@@ -38,6 +37,6 @@ exports.get = () => {
 }
 exports.post = (req) => {
   const body = JSON.parse(req.body)
-  const response = createBestBet(body.linkedContentId, body.searchWords)
+  const response = createBestBet(body.id, body.linkedContentId, body.searchWords)
   return response
 }

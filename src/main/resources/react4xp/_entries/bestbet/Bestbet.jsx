@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Container, Row, Col, Modal } from 'react-bootstrap'
 import { Title, Link, Tag, Dropdown, Input, Button } from '@statisticsnorway/ssb-component-library'
 import { XCircle, Edit } from 'react-feather'
+import { post } from 'axios'
 
 function Bestbet(props) {
   const [selectedSearchWord, setSelectedSearchWord] = useState('')
@@ -16,16 +17,39 @@ function Bestbet(props) {
   const [displaySearchWordsForm, setDisplaySearchWordsForm] = useState([])
 
   const [bestBetList, setBestBetList] = useState(props.bestBetList)
+  const [bestbetItem, setBestBetItem] = useState([])
 
   function handleSubmit(event) {
-    console.log('GLNRBN submit: ')
-    event.preventDefault()
-    // setBestBetList()
+    const updatedBestBetItem = bestbetItem.length ? bestbetItem.map((item) => {
+      return {
+        ...item,
+        searchWords: displaySearchWordsForm
+      }
+    }) : []
+
+    if (updatedBestBetItem.length) {
+      post(props.bestBetListServiceUrl, ...updatedBestBetItem)
+        .then((res) => {
+          console.log(res) // WIP
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+        .finally(() => {
+          console.log('Sent') // WIP
+        })
+    }
   }
 
   function handleSearchWordOnClick(searchWord) {
     setSelectedSearchWord(searchWord)
     setShowDeleteSearchWordModal(true)
+  }
+
+  function handleDeleteSearchWord(selectedSearchWord) {
+    setShowDeleteSearchWordModal(false)
+    const updateDisplaySearchWordForm = displaySearchWordsForm.filter((searchWord) => searchWord !== selectedSearchWord)
+    setDisplaySearchWordsForm(updateDisplaySearchWordForm)
   }
 
   const DeleteSearchWordModal = () => {
@@ -41,7 +65,7 @@ function Bestbet(props) {
           <p>Vil du fjerne {selectedSearchWord} fra innholdet {/* navn på innhold */}</p>
         </Modal.Body>
         <Modal.Footer>
-          <Button primary>Fjern</Button>
+          <Button primary onClick={() => handleDeleteSearchWord(selectedSearchWord)}>Fjern</Button>
           <Button onClick={handleCloseDeleteSearchWordModal}>Lukk</Button>
         </Modal.Footer>
       </Modal>
@@ -96,6 +120,7 @@ function Bestbet(props) {
     }) => id === item.id)
 
     if (getBestBetItem.length) {
+      setBestBetItem(getBestBetItem)
       setDisplaySearchWordsForm(getBestBetItem[0].searchWords)
     }
   }

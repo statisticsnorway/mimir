@@ -1,8 +1,6 @@
 import { PageContributions, Request, Response } from 'enonic-types/controller'
 import { ResourceKey } from 'enonic-types/thymeleaf'
 import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
-import { RepoNode } from 'enonic-types/node'
-
 
 const {
   assetUrl, serviceUrl
@@ -16,8 +14,7 @@ const {
 const view: ResourceKey = resolve('./bestbet.html')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
-  listBestBets,
-  createBestBet
+  listBestBets
 } = __non_webpack_require__('/lib/ssb/repo/bestbet')
 const {
   ensureArray
@@ -30,14 +27,6 @@ exports.get = function(req: Request): React4xpResponse | Response {
     return renderError(req, 'Error in part', e)
   }
 }
-exports.post = function(req: Request): React4xpResponse | Response {
-  const body: Bestbet = JSON.parse(req.body)
-  // eslint-disable-next-line @typescript-eslint/typedef
-  const response = createBestBet(body.linkedContentId, body.searchWords)
-  log.info(JSON.stringify(response, null, 2))
-  return renderPart(req)
-}
-
 
 exports.preview = (req: Request): React4xpResponse | Response => {
   try {
@@ -68,6 +57,9 @@ function renderPart(req: Request): React4xpResponse | Response {
     .setProps({
       value: 'test',
       bestBetList: payload,
+      bestBetListServiceUrl: serviceUrl({
+        service: 'bestBetList'
+      }),
       model: serviceUrl({
         service: 'bestBetModel'
       }),
