@@ -5,6 +5,7 @@ import { Title, Link, Tag, Dropdown, Input, Button } from '@statisticsnorway/ssb
 import { XCircle, Edit } from 'react-feather'
 
 function Bestbet(props) {
+  const [selectedSearchWord, setSelectedSearchWord] = useState('')
   const [showDeleteSearchWordModal, setShowDeleteSearchWordModal] = useState(false)
   const handleCloseDeleteSearchWordModal = () => setShowDeleteSearchWordModal(false)
 
@@ -22,7 +23,8 @@ function Bestbet(props) {
     // setBestBetList()
   }
 
-  function handleSearchWordOnClick() {
+  function handleSearchWordOnClick(searchWord) {
+    setSelectedSearchWord(searchWord)
     setShowDeleteSearchWordModal(true)
   }
 
@@ -36,7 +38,7 @@ function Bestbet(props) {
           <Modal.Title>Fjern nøkkelord</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Vil du fjerne {/* nøkkelord */} fra innholdet {/* navn på innhold */}</p>
+          <p>Vil du fjerne {selectedSearchWord} fra innholdet {/* navn på innhold */}</p>
         </Modal.Body>
         <Modal.Footer>
           <Button primary>Fjern</Button>
@@ -176,7 +178,7 @@ function Bestbet(props) {
 
   function renderSearchWord(searchWord) {
     return (
-      <Tag className="m-1" onClick={() => handleSearchWordOnClick()}>
+      <Tag className="m-1" onClick={() => handleSearchWordOnClick(searchWord)}>
         {searchWord}<XCircle size={16} className="ml-1" />
       </Tag>
     )
