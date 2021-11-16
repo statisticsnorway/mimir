@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Container, Row, Col, Modal } from 'react-bootstrap'
-import { Title, Link, Tag, Dropdown, Input, Button } from '@statisticsnorway/ssb-component-library'
+import { Title, Link, Tag, Dropdown, Input, Button, Divider } from '@statisticsnorway/ssb-component-library'
 import { XCircle, Edit } from 'react-feather'
 import { get, post } from 'axios'
 import EditSearchWordsModal from './EditSearchWordsModal'
@@ -200,7 +200,6 @@ function Bestbet(props) {
         <Row>
           <Col className="col-12 justify-content-center">
             <Button primary onClick={handleSubmit} className="mt-3 mx-0">Fullfør</Button>
-            {loading ? <span className="spinner-border spinner-border" /> : null}
           </Col>
         </Row>
       </Col>
@@ -221,7 +220,12 @@ function Bestbet(props) {
               <Title size={2}>Nøkkelord</Title>
             </Col>
           </Row>
-          {bestBetList.length && bestBetList.map((bet) => renderListItem(bet))}
+          <Row>
+            <Col>
+              <Divider light className="mt-2 mb-4"/>
+            </Col>
+          </Row>
+          {bestBetList.length && bestBetList.map((bet, index) => renderListItem(bet, index))}
         </>
       )
     }
@@ -246,19 +250,27 @@ function Bestbet(props) {
 
   function renderListItem(item) {
     return (
-      <Row>
-        <Col className="col-6">
-          <li><Link href="/">en link tekst {item.linkedContentId}</Link></li>
-        </Col>
-        <Col>
-          <div className="d-flex flex-wrap">
-            {item.searchWords.map((searchWord) => renderSearchWord(searchWord, false, true))}
-            <Tag className="m-1" onClick={() => handleEditSearchWordOnClick(item)}>
+      <>
+        <Row>
+          <Col className="col-6">
+            <li><Link href="/">en link tekst {item.linkedContentId}</Link></li>
+          </Col>
+
+          <Col>
+            <div className="d-flex flex-wrap">
+              {item.searchWords.map((searchWord) => renderSearchWord(searchWord, false, true))}
+              <Tag className="m-1" onClick={() => handleEditSearchWordOnClick(item)}>
               Rediger <Edit size={16} className="ml-1" />
-            </Tag>
-          </div>
-        </Col>
-      </Row>
+              </Tag>
+            </div>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Divider light className="my-4"/>
+          </Col>
+        </Row>
+      </>
     )
   }
 
