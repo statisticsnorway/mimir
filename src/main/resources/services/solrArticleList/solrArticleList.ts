@@ -7,21 +7,25 @@ const {
 
 exports.get = (req: Request): Response => {
   const start: number = Number(req.params.start) ? Number(req.params.start) : 0
-  const count: number = Number(req.params.count) ? Number(req.params.count) : 10
+  const count: number = Number(req.params.count) ? Number(req.params.count) : 50
   const language: string = req.params?.language ? req.params.language : 'nb'
   const allArticles: ArticleResult = getAllArticles(req, language, start, count)
-  const index: number = start + count
+  const articleStart: number = start + 1
+  const articleEnd: number = allArticles.total > start + count ? start + count : allArticles.total
+  const articleStartNext: number = articleStart + count
+  const articleEndNext: number = articleEnd + count < allArticles.total ? articleEnd + count : allArticles.total
 
   const articleListHtml: string =
   `<div>
-        <p>Viser fra ${start} til ${index} (Totalt antall artikler ${allArticles.total})</p>
+        <p>Artikkel ${articleStart} til ${articleEnd} (Totalt antall artikler ${allArticles.total})</p>
         <div>
             ${allArticles.articles.map((article: PreparedArticles) =>`<a href="${article.url}">${article.title}</a>`).join('</br>')}
         </div>
-        <p>
-            <a href="/_/service/mimir/solrArticleList?start=${index}&count=${count}">Flere artikler (Start: ${index} Antall: ${count})</a>
-        </p>
-    </div>`
+        ${allArticles.total > start + count ?
+    `<p>
+        <a href="/_/service/mimir/solrArticleList?start=${start + count}&count=${count}">Flere artikler (${articleStartNext}  til  ${articleEndNext})</a>
+    </p>` : ''}
+</div>`
 
 
   return {
