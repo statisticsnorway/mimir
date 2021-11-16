@@ -13,12 +13,6 @@ const {
 } = __non_webpack_require__('/lib/thymeleaf')
 const view: ResourceKey = resolve('./bestbet.html')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const {
-  listBestBets
-} = __non_webpack_require__('/lib/ssb/repo/bestbet')
-const {
-  ensureArray
-} = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
 
 exports.get = function(req: Request): React4xpResponse | Response {
   try {
@@ -37,26 +31,8 @@ exports.preview = (req: Request): React4xpResponse | Response => {
 }
 
 function renderPart(req: Request): React4xpResponse | Response {
-  const bestbets: Array<Bestbet> = ensureArray(listBestBets(100))
-  let payload: Payload | undefined
-  if (bestbets) {
-    payload = {
-      body: {
-      // total: bestbets.total,
-        count: bestbets.length,
-        hits: bestbets.map((bet) => ({
-          id: bet._id,
-          linkedContentId: bet.linkedContentId,
-          searchWords: bet.searchWords
-        })
-        )
-      }
-    }
-  }
   const bestbetComponent: React4xpObject = new React4xp('bestbet/Bestbet')
     .setProps({
-      value: 'test',
-      bestBetList: payload,
       bestBetListServiceUrl: serviceUrl({
         service: 'bestBetList'
       }),
@@ -101,13 +77,6 @@ function parseContributions(contributions: PageContributions): PageContributions
   return contributions
 }
 
-
-interface Payload {
-  body: {
-    count: number;
-    hits: Array<Bestbet>;
-  };
-}
 interface Bestbet {
   _id?: string;
   id?: string;

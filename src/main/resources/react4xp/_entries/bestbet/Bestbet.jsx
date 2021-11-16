@@ -1,13 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Container, Row, Col, Modal } from 'react-bootstrap'
 import { Title, Link, Tag, Dropdown, Input, Button } from '@statisticsnorway/ssb-component-library'
 import { XCircle, Edit } from 'react-feather'
-import { post } from 'axios'
+import { get, post } from 'axios'
 import EditSearchWordsModal from './EditSearchWordsModal'
 
 function Bestbet(props) {
-  const [bestBetList, setBestBetList] = useState(props.bestBetList) // need?
+  const [loading, setLoading] = useState(false)
+  const [bestBetList, setBestBetList] = useState([])
   const [bestbetItem, setBestBetItem] = useState([])
 
   const [showDeleteSearchWordModal, setShowDeleteSearchWordModal] = useState(false)
@@ -21,6 +22,25 @@ function Bestbet(props) {
   const [selectedSearchWord, setSelectedSearchWord] = useState('')
   const [displaySearchWordsForm, setDisplaySearchWordsForm] = useState(false)
 
+  useEffect(() => {
+    fetchBestBetList()
+  }, [])
+
+  function fetchBestBetList() {
+    setLoading(true)
+    get(props.bestBetListServiceUrl, {
+      params: {
+        start: 0,
+        count: 10
+      }
+    })
+      .then((res) => {
+        setBestBetList(res.data)
+      })
+      .catch((err) => console.log(err))
+      .finally(() => setLoading(false))
+  }
+
   function handleSubmit() {
     if (showEditSearchWordsModal) setShowEditSearchWordsModal(false)
     const updatedBestBetItem = bestbetItem.length ? bestbetItem.map((item) => {
@@ -31,15 +51,15 @@ function Bestbet(props) {
     }) : []
 
     if (updatedBestBetItem.length) {
+      setLoading(true)
       post(props.bestBetListServiceUrl, ...updatedBestBetItem)
-        .then((res) => {
-          console.log(res) // WIP
-        })
+        .then((res) => {})
         .catch((err) => {
           console.log(err)
         })
         .finally(() => {
-          console.log('Sent') // WIP
+          setLoading(false)
+          fetchBestBetList()
         })
     }
   }
@@ -119,7 +139,7 @@ function Bestbet(props) {
   }
 
   function handleDropdownOnSelect(item) {
-    const getBestBetItem = bestBetList.body.hits.filter(({
+    const getBestBetItem = bestBetList.filter(({
       id
     }) => id === item.id)
 
@@ -140,8 +160,8 @@ function Bestbet(props) {
 
   function renderForm() {
     const items = []
-    if (bestBetList.body.hits.length) {
-      bestBetList.body.hits.map((bet) => {
+    if (bestBetList.length) {
+      bestBetList.map((bet) => {
         items.push({
           id: bet.id,
           title: bet.linkedContentId
@@ -152,13 +172,13 @@ function Bestbet(props) {
     return (
       <Col className="bestbet-list ml-4">
         <Title size={2}>Legg til nøkkelord</Title>
-        <Dropdown
+        {/* <Dropdown
           header="Søk og velg innhold"
           placeholder="Søk og velg innhold"
           items={items}
           onSelect={handleDropdownOnSelect}
           searchable
-        />
+        /> */}
         {displaySearchWordsForm && searchWordsList.length ?
           <Row>
             <Col className="d-flex flex-wrap mt-3">
@@ -180,6 +200,7 @@ function Bestbet(props) {
         <Row>
           <Col className="col-12 justify-content-center">
             <Button primary onClick={handleSubmit} className="mt-3 mx-0">Fullfør</Button>
+            {loading ? <span className="spinner-border spinner-border" /> : null}
           </Col>
         </Row>
       </Col>
@@ -187,10 +208,11 @@ function Bestbet(props) {
   }
 
   function renderBestbetList() {
-    const sortedBestBetList = bestBetList.body.hits.sort((a, b) => a.linkedContentId - b.linkedContentId)
-    return (
-      <Row className="justify-content-between">
-        <Col className="col-8 bestbet-list">
+    if (loading) {
+      return <span className="spinner-border spinner-border" />
+    } else {
+      return (
+        <>
           <Row>
             <Col className="col-6">
               <Title size={2}>Liste med innhold</Title>
@@ -199,11 +221,10 @@ function Bestbet(props) {
               <Title size={2}>Nøkkelord</Title>
             </Col>
           </Row>
-          {sortedBestBetList.map((bet) => renderListItem(bet))}
-        </Col>
-        {renderForm()}
-      </Row>
-    )
+          {bestBetList.length && bestBetList.map((bet) => renderListItem(bet))}
+        </>
+      )
+    }
   }
 
   function renderSearchWord(searchWord, isInEditModal, disabled) {
@@ -251,16 +272,19 @@ function Bestbet(props) {
           <Title size={1}>Best-bet søk</Title>
         </Col>
       </Row>
-      {renderBestbetList()}
+      <Row className="justify-content-between">
+        <Col className="col-8 bestbet-list">
+          {renderBestbetList()}
+        </Col>
+        {renderForm()}
+      </Row>
     </Container>
   )
 }
 
 Bestbet.propTypes = {
-  value: PropTypes.string,
   logoUrl: PropTypes.string,
-  bestBetListServiceUrl: PropTypes.string,
-  bestBetList: PropTypes.array
+  bestBetListServiceUrl: PropTypes.string
 }
 
 export default (props) => <Bestbet {...props} />
