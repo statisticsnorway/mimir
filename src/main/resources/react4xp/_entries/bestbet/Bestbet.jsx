@@ -172,13 +172,13 @@ function Bestbet(props) {
     return (
       <Col className="bestbet-list ml-4">
         <Title size={2}>Legg til nøkkelord</Title>
-        {/* <Dropdown
+        {items.length ? <Dropdown
           header="Søk og velg innhold"
           placeholder="Søk og velg innhold"
           items={items}
           onSelect={handleDropdownOnSelect}
           searchable
-        /> */}
+        /> : null}
         {displaySearchWordsForm && searchWordsList.length ?
           <Row>
             <Col className="d-flex flex-wrap mt-3">
