@@ -44,5 +44,16 @@
         .ssb-dropdown label, .ssb-input label {
             display: none;
         }
+
+        .search-words {
+            display: flex;
+            align-items: center;
+            background: $ssb-dark-3;
+            padding: 8px 16px;
+            color: $ssb-white;
+            font-weight: 700;
+            border-color: 1px solid $ssb-dark-3;
+            border-radius: 20px;
+        }
     }
 }
