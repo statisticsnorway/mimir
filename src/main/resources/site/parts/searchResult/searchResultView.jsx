@@ -102,9 +102,9 @@ function SearchResult(props) {
       return (
         <div>
           <Title size={2}>{props.noHitMessage}</Title>
-          <p>Here you find <Link href="/en/navn">name search</Link></p>
-          <p>Here you find <Link href="/en/publiseringsarkiv">Publication archive</Link></p>
-          <p>In the tool <Link href="/en/statbank">Statbank</Link> you find all our figures and tables</p>
+          <p>Go to <Link href="/en/navn">name search</Link></p>
+          <p>Se <Link href="/en/publiseringsarkiv">list of all our published statistics, analyses and articles </Link></p>
+          <p>Go to <Link href="/en/statbank">Statbank</Link> to find all our figures and tables</p>
         </div>
       )
     } else {
@@ -112,7 +112,7 @@ function SearchResult(props) {
         <div>
           <Title size={2}>{props.noHitMessage}</Title>
           <p>Her finner du <Link href="/navn">navnesøk</Link></p>
-          <p>Her finner du <Link href="/publikasjonsarkiv">statistikk, analyser og artikler publisert siste 30 dager</Link></p>
+          <p>Her finner du <Link href="/publikasjonsarkiv">liste over alle publiserte statistikker, analyser og artikler </Link></p>
           <p>I verktøyet <Link href="/statbank">Statistikkbanken</Link> finner du alle tallene våre</p>
         </div>
       )
