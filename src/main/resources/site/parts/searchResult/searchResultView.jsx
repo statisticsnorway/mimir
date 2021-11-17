@@ -46,28 +46,39 @@ function SearchResult(props) {
 
   function renderList() {
     return (
-      <ol className="list-unstyled ">
-        {hits.map( (hit, i) => {
-          return (
-            <li key={i} className="mb-4">
-              <Link href={hit.url} className="ssb-link header" >
-                <span dangerouslySetInnerHTML={{
-                  __html: hit.title.replace(/&nbsp;/g, ' ')
+      <div>
+        <div className="row mb-4">
+          <div className="col">
+            {props.showingPhrase.replace('{0}', hits.length.toString())}&nbsp;<NumberFormat
+              value={ Number(total) }
+              displayType={'text'}
+              thousandSeparator={' '}/>
+            <Divider dark></Divider>
+          </div>
+        </div>
+        <ol className="list-unstyled ">
+          {hits.map( (hit, i) => {
+            return (
+              <li key={i} className="mb-4">
+                <Link href={hit.url} className="ssb-link header" >
+                  <span dangerouslySetInnerHTML={{
+                    __html: hit.title.replace(/&nbsp;/g, ' ')
+                  }}></span>
+                </Link>
+                <Paragraph className="search-result-ingress my-1" ><span dangerouslySetInnerHTML={{
+                  __html: hit.preface.replace(/&nbsp;/g, ' ')
                 }}></span>
-              </Link>
-              <Paragraph className="search-result-ingress my-1" ><span dangerouslySetInnerHTML={{
-                __html: hit.preface.replace(/&nbsp;/g, ' ')
-              }}></span>
-              </Paragraph>
-              <Paragraph className="metadata">
-                <span className="type">{hit.contentType}</span> /&nbsp;
-                <time dateTime={hit.publishDate}>{hit.publishDateHuman}</time> /&nbsp;
-                {hit.mainSubject}
-              </Paragraph>
-            </li>
-          )
-        })}
-      </ol>
+                </Paragraph>
+                <Paragraph className="metadata">
+                  <span className="type">{hit.contentType}</span> /&nbsp;
+                  <time dateTime={hit.publishDate}>{hit.publishDateHuman}</time> /&nbsp;
+                  {hit.mainSubject}
+                </Paragraph>
+              </li>
+            )
+          })}
+        </ol>
+      </div>
     )
   }
 
@@ -119,10 +130,43 @@ function SearchResult(props) {
     })
   }
 
+  function renderShowMoreButton() {
+    if (hits.length > 0) {
+      return (
+        <div>
+          <Button
+            disabled={loading || total === hits.length}
+            className="button-more mt-5"
+            onClick={fetchSearchResult}
+          >
+            <ChevronDown size="18"/> {props.buttonTitle}
+          </Button>
+        </div>
+      )
+    }
+  }
+
+
   function renderNoHitMessage() {
-    return (
-      <p>{props.noHitMessage.replace('{0}', `"${props.term}"`)}</p>
-    )
+    if (props.language === 'en') {
+      return (
+        <div>
+          <Title size={2}>{props.noHitMessage}</Title>
+          <p>Go to <Link href="/en/navn">name search</Link></p>
+          <p>See <Link href="/en/publiseringsarkiv">list of all our published statistics, analyses and articles </Link></p>
+          <p>Go to <Link href="/en/statbank">Statbank</Link> to find all our figures and tables</p>
+        </div>
+      )
+    } else {
+      return (
+        <div>
+          <Title size={2}>{props.noHitMessage}</Title>
+          <p>Her finner du <Link href="/navn">navnesøk</Link></p>
+          <p>Her finner du <Link href="/publikasjonsarkiv">liste over alle publiserte statistikker, analyser og artikler </Link></p>
+          <p>I verktøyet <Link href="/statbank">Statistikkbanken</Link> finner du alle tallene våre</p>
+        </div>
+      )
+    }
   }
 
   function goToSearchResultPage() {
@@ -174,26 +218,9 @@ function SearchResult(props) {
         </div>
         <div className="col-12 search-result-body">
           <div className="container mt-5">
-            <div className="row mb-4">
-              <div className="col">
-                {props.showingPhrase.replace('{0}', hits.length.toString())}&nbsp;<NumberFormat
-                  value={ Number(total) }
-                  displayType={'text'}
-                  thousandSeparator={' '}/>
-                <Divider dark></Divider>
-              </div>
-            </div>
             {hits.length > 0 ? renderList() : renderNoHitMessage()}
             {renderLoading()}
-            <div>
-              <Button
-                disabled={loading || total === hits.length}
-                className="button-more mt-5"
-                onClick={fetchSearchResult}
-              >
-                <ChevronDown size="18"/> {props.buttonTitle}
-              </Button>
-            </div>
+            {renderShowMoreButton()}
           </div>
         </div>
       </div>
