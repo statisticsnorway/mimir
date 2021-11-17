@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Divider, Input, Link, Paragraph, Title } from '@statisticsnorway/ssb-component-library'
-import { ChevronDown } from 'react-feather'
+import { Button, Divider, Input, Link, Paragraph, Title, Dropdown, Tag } from '@statisticsnorway/ssb-component-library'
+import { ChevronDown, X } from 'react-feather'
 import axios from 'axios'
 import NumberFormat from 'react-number-format'
 
@@ -11,6 +11,37 @@ function SearchResult(props) {
   const [searchTerm, setSearchTerm] = useState(props.term)
   const [loading, setLoading] = useState(false)
   const [total, setTotal] = useState(props.total)
+  const [filterChanged, setFilterChanged] = useState(false)
+  const [filter, setFilter] = useState({
+    mainSubject: ''
+  })
+  const [selectedMainSubject, setSelectedMainSubject] = useState(props.dropDownSubjects[0])
+
+  useEffect(() => {
+    if (filterChanged) {
+      fetchFilteredSearchResult()
+    }
+  }, [filter])
+
+  function onChange(id, value) {
+    setFilterChanged(true)
+
+    if (id === 'mainSubject') {
+      setSelectedMainSubject(value)
+      setFilter({
+        ...filter,
+        mainSubject: value.id === '' ? '' : value.title
+      })
+    }
+  }
+
+  function removeFilter() {
+    setFilter({
+      ...filter,
+      mainSubject: ''
+    })
+    setSelectedMainSubject(props.dropDownSubjects[0])
+  }
 
 
   function renderList() {
@@ -52,6 +83,24 @@ function SearchResult(props) {
     }
   }
 
+  function fetchFilteredSearchResult() {
+    setLoading(true)
+    axios.get(props.searchServiceUrl, {
+      params: {
+        sok: searchTerm,
+        start: 0,
+        count: props.count,
+        language: props.language,
+        mainsubject: filter.mainSubject
+      }
+    }).then((res) => {
+      setHits(res.data.hits)
+      setTotal(res.data.total)
+    }).finally(() => {
+      setLoading(false)
+    })
+  }
+
   function fetchSearchResult() {
     setLoading(true)
     axios.get(props.searchServiceUrl, {
@@ -59,7 +108,8 @@ function SearchResult(props) {
         sok: searchTerm,
         start: hits.length,
         count: props.count,
-        language: props.language
+        language: props.language,
+        mainsubject: filter.mainSubject
       }
     }).then((res) => {
       setHits(hits.concat(res.data.hits))
@@ -79,6 +129,32 @@ function SearchResult(props) {
     window.location = `${props.searchPageUrl}?sok=${searchTerm}`
   }
 
+  const DropdownMainSubject = React.forwardRef((_props, ref) => (
+    <Dropdown
+      ref={ref}
+      className="DropdownMainSubject"
+      id='mainSubject'
+      onSelect={(value) => {
+        onChange('mainSubject', value)
+      }}
+      selectedItem={selectedMainSubject}
+      items={props.dropDownSubjects}
+    />
+  ))
+
+  function renderClearFilterButton() {
+    if (filter.mainSubject !== '') {
+      return (
+        <Tag
+          className="mt-4"
+          onClick={removeFilter}
+          icon={<X size={18} />}
+        >{props.removeFilterPhrase}
+        </Tag>
+      )
+    }
+  }
+
   return (
     <section className="search-result container-fluid">
       <div className="row">
@@ -89,6 +165,11 @@ function SearchResult(props) {
               size="lg"
               value={searchTerm} handleChange={setSearchTerm} searchField
               submitCallback={goToSearchResultPage}></Input>
+            <div className="filter mt-5">
+              <Title size={6}>{props.limitResultPhrase}</Title>
+              <DropdownMainSubject/>
+              {/* {renderClearFilterButton()} */}
+            </div>
           </div>
         </div>
         <div className="col-12 search-result-body">
@@ -130,6 +211,8 @@ SearchResult.propTypes = {
   language: PropTypes.string,
   term: PropTypes.string,
   showingPhrase: PropTypes.string,
+  limitResultPhrase: PropTypes.string,
+  removeFilterPhrase: PropTypes.string,
   count: PropTypes.number,
   noHitMessage: PropTypes.string,
   hits: PropTypes.arrayOf({
@@ -140,7 +223,8 @@ SearchResult.propTypes = {
     contentType: PropTypes.string,
     publishDate: PropTypes.string,
     publishDateHuman: PropTypes.string
-  })
+  }),
+  dropDownSubjects: PropTypes.array
 }
 
 export default (props) => <SearchResult {...props} />
