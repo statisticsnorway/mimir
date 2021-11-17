@@ -153,7 +153,7 @@ function SearchResult(props) {
         <div>
           <Title size={2}>{props.noHitMessage}</Title>
           <p>Go to <Link href="/en/navn">name search</Link></p>
-          <p>Se <Link href="/en/publiseringsarkiv">list of all our published statistics, analyses and articles </Link></p>
+          <p>See <Link href="/en/publiseringsarkiv">list of all our published statistics, analyses and articles </Link></p>
           <p>Go to <Link href="/en/statbank">Statbank</Link> to find all our figures and tables</p>
         </div>
       )
