@@ -15,9 +15,11 @@ const {
 } = __non_webpack_require__('/lib/vendor/moment')
 
 
-export function solrSearch(term: string, language: string, numberOfHits: number, start: number = 0): SolrPrepResultAndTotal {
+export function solrSearch(term: string, language: string, numberOfHits: number, start: number = 0, mainSubject: string): SolrPrepResultAndTotal {
+  const lang: string = language === 'en' ? 'en' : 'no'
+  const filterQuery: string = mainSubject ? `fq=sprak:"${lang}"&fq=hovedemner:"${mainSubject}"` : `fq=sprak:"${lang}"`
   const searchResult: SolrResult | undefined = querySolr({
-    query: createQuery(term, language, numberOfHits, start)
+    query: createQuery(term, numberOfHits, start, filterQuery)
   })
   return searchResult ? {
     hits: nerfSearchResult(searchResult, language),
@@ -34,12 +36,15 @@ function nerfSearchResult(solrResult: SolrResult, language: string): Array<Prepa
   return solrResult.grouped.gruppering.groups.reduce((acc: Array<PreparedSearchResult>, group) => {
     group.doclist.docs.forEach((doc: SolrDoc) => {
       const highlight: SolrHighlighting | undefined = solrResult.highlighting[doc.id]
+      const mainSubjects: Array<string> = doc.hovedemner ? doc.hovedemner.split(';') : []
+      const secondarySubjects: Array<string> = mainSubjects.filter((subject) => subject !== mainSubjects[0])
       acc.push({
         title: highlight.tittel ? highlight.tittel[0] : doc.tittel,
         preface: highlight.innhold ? highlight.innhold[0] : doc.tittel,
         contentType: doc.innholdstype,
         url: doc.url,
-        mainSubject: doc.hovedemner.split(';')[0],
+        mainSubject: mainSubjects.length > 0 ? mainSubjects[0] : '',
+        secondaryMainSubject: secondarySubjects.join(';'),
         publishDate: doc.publiseringsdato,
         publishDateHuman: doc.publiseringsdato ? moment(doc.publiseringsdato).locale(momentLanguage).format('LL') : ''
       })
@@ -86,16 +91,15 @@ function requestSolr(queryParams: SolrQueryParams): SolrResponse {
 }
 
 
-function createQuery(term: string, language: string, numberOfHits: number, start: number): string {
-  return `${SOLR_BASE_URL}?${SOLR_PARAM_QUERY}=${term}&wt=${SOLR_FORMAT}&start=${start}&rows=${numberOfHits}`
+function createQuery(term: string, numberOfHits: number, start: number, filterQuery: string): string {
+  return `${SOLR_BASE_URL}?${SOLR_PARAM_QUERY}=${term}&${filterQuery}&wt=${SOLR_FORMAT}&start=${start}&rows=${numberOfHits}`
 }
-
 
 /*
 * Interfaces
 */
 export interface SolrUtilsLib {
-    solrSearch: (term: string, language: string, numberOfHits: number, start?: number) => SolrPrepResultAndTotal;
+    solrSearch: (term: string, language: string, numberOfHits: number, start?: number, filter?: string) => SolrPrepResultAndTotal;
 }
 
 interface SolrQueryParams {
@@ -113,6 +117,7 @@ export interface PreparedSearchResult {
   contentType: string;
   url: string;
   mainSubject: string;
+  secondaryMainSubject: string;
   publishDate: string;
   publishDateHuman: string;
 }
