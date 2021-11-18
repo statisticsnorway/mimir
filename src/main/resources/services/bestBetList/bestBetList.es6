@@ -7,19 +7,9 @@ const {
 } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
 
 exports.get = () => {
-  const bestbets = ensureArray(listBestBets(100)) // TODO: Do not forget hard coded count value
+  const bestbets = ensureArray(listBestBets(1000))
   if (bestbets) {
     return {
-      // body: {
-      // // total: bestbets.total,
-      //   count: bestbets.length,
-      //   hits: bestbets.map((bet) => ({
-      //     id: bet._id,
-      //     linkedContentId: bet.linkedContentId,
-      //     searchWords: bet.searchWords
-      //   })
-      //   )
-      // }
       body: bestbets.map((bet) => {
         return {
           id: bet._id,

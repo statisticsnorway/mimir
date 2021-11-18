@@ -14,9 +14,7 @@ exports.get = (req) => {
       `${app.name}:statistics`
     ]
   })
-  // log.info(JSON.stringify(result))
   if (result && result.hits) {
-    // log.info('GLNRBN returning hits! Query: ' + query + ' Antall: ' + result.hits.length)
     const response = {
       body: {
         hits: result.hits.map((hit) => ({
@@ -26,7 +24,6 @@ exports.get = (req) => {
         )
       }
     }
-    log.info(JSON.stringify(response, null, 2))
     return response
   } else {
     return {

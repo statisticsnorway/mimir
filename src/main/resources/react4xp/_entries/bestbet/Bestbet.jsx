@@ -27,27 +27,26 @@ function Bestbet(props) {
   const [displaySearchWordsForm, setDisplaySearchWordsForm] = useState(false)
 
   useEffect(() => {
-    fetchBestBetList()
+    fetchBestBetList(true)
   }, [])
 
-  function fetchBestBetList() {
+  function fetchBestBetList(first) {
     setLoading(true)
     get(props.bestBetListServiceUrl, {
       params: {
-        start: 0,
+        start: first ? 0 : bestBetList.length,
         count: 10
       }
     })
       .then((res) => {
-        console.log(res.data)
         setBestBetList(res.data)
       })
       .catch((err) => console.log(err))
       .finally(() => setLoading(false))
   }
 
-  function handleSubmit() {
-    if (showEditSearchWordsModal) setShowEditSearchWordsModal(false)
+  function handleUpdate() {
+    setShowEditSearchWordsModal(false)
     const updatedBestBetItem = bestbetItem.length ? bestbetItem.map((item) => {
       return {
         ...item,
@@ -58,13 +57,12 @@ function Bestbet(props) {
     if (updatedBestBetItem.length) {
       setLoading(true)
       post(props.bestBetListServiceUrl, ...updatedBestBetItem)
-        .then((res) => {})
         .catch((err) => {
           console.log(err)
         })
         .finally(() => {
           setLoading(false)
-          fetchBestBetList()
+          fetchBestBetList(false)
         })
     }
   }
@@ -85,7 +83,7 @@ function Bestbet(props) {
       })
       .finally(() => {
         setLoading(false)
-        fetchBestBetList()
+        fetchBestBetList(false)
       })
   }
 
@@ -149,7 +147,7 @@ function Bestbet(props) {
         }
         footer={
           <>
-            <Button primary onClick={handleSubmit}>Rediger</Button>
+            <Button primary onClick={handleUpdate}>Lagre</Button>
             <Button onClick={handleCloseEditSearchWordModal}>Lukk</Button>
           </>
         }
@@ -172,7 +170,6 @@ function Bestbet(props) {
   }
 
   function handleContentSelect(event) {
-    // console.log('GLNRBN handling content select! ' + JSON.stringify(event, null, 2))
     setBestBetContent(event)
   }
 
@@ -182,7 +179,6 @@ function Bestbet(props) {
         query: inputValue
       }
     })
-    // console.log('GLNRBN async result: ' + JSON.stringify(result.data.hits, null, 2))
     const hits = result.data.hits
     return hits
   }
@@ -197,7 +193,7 @@ function Bestbet(props) {
   function renderForm() {
     return (
       <Col className="bestbet-list ml-4">
-        <Title size={2}>Legg til nøkkelord</Title>
+        <Title size={2}>Lag nytt best-bet</Title>
         <AsyncSelect cacheOptions defaultOptions loadOptions={promiseOptions} onChange={handleContentSelect} />
         {searchWordsList.length ?
           <Row>
@@ -280,7 +276,7 @@ function Bestbet(props) {
             <div className="d-flex flex-wrap">
               {item.searchWords.map((searchWord) => renderSearchWord(searchWord, false, true))}
               <Tag className="m-1" onClick={() => handleEditSearchWordOnClick(item)}>
-              Rediger <Edit size={16} className="ml-1" />
+              Rediger<Edit size={16} className="ml-1" />
               </Tag>
             </div>
           </Col>
