@@ -52,7 +52,8 @@ function renderPart(req: Request): React4xpResponse | Response {
       body: render(view, {
         ...getAssets(),
         pageContributions
-      })
+      }),
+      clientRender: true
     }),
     pageContributions
   }

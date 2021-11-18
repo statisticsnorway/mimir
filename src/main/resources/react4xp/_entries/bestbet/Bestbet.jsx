@@ -5,6 +5,9 @@ import { Title, Link, Tag, Dropdown, Input, Button, Divider } from '@statisticsn
 import { XCircle, Edit } from 'react-feather'
 import { get, post } from 'axios'
 import EditSearchWordsModal from './EditSearchWordsModal'
+import axios from 'axios'
+import AsyncSelect from 'react-select/async'
+import 'regenerator-runtime'
 
 function Bestbet(props) {
   const [loading, setLoading] = useState(false)
@@ -19,6 +22,7 @@ function Bestbet(props) {
 
   const [inputTag, setInputTag] = useState('')
   const [searchWordsList, setSearchWordsList] = useState([])
+  const [bestBetContentID, setBestBetContentID] = useState('')
   const [selectedSearchWord, setSelectedSearchWord] = useState('')
   const [displaySearchWordsForm, setDisplaySearchWordsForm] = useState(false)
 
@@ -62,6 +66,23 @@ function Bestbet(props) {
           fetchBestBetList()
         })
     }
+  }
+
+  function handleCreate() {
+    const updatedBestBetItem = {
+      linkedContentId: bestBetContentID,
+      searchWords: searchWordsList
+    }
+
+    setLoading(true)
+    post(props.bestBetListServiceUrl, ...updatedBestBetItem)
+      .catch((err) => {
+        console.log(err)
+      })
+      .finally(() => {
+        setLoading(false)
+        fetchBestBetList()
+      })
   }
 
   function handleSearchWordOnClick(searchWord) {
@@ -169,17 +190,42 @@ function Bestbet(props) {
       })
     }
 
+    function handleContentSelect(event) {
+      // console.log('GLNRBN handling content select! ' + JSON.stringify(event, null, 2))
+      setBestBetContentID(event.value)
+    }
+
+    async function searchForTerm(inputValue = '') {
+      const result = await axios.get('/_/service/mimir/contentSearch', {
+        params: {
+          query: inputValue
+        }
+      })
+      // console.log('GLNRBN async result: ' + JSON.stringify(result.data.hits, null, 2))
+      const hits = result.data.hits
+      return hits
+    }
+
+    const promiseOptions = (inputValue) =>
+      new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(searchForTerm(inputValue))
+        }, 1000)
+      })
+
     return (
       <Col className="bestbet-list ml-4">
         <Title size={2}>Legg til nøkkelord</Title>
-        {items.length ? <Dropdown
+        <AsyncSelect cacheOptions defaultOptions loadOptions={promiseOptions} onChange={handleContentSelect} />
+
+        {/* {items.length ? <Dropdown
           header="Søk og velg innhold"
           placeholder="Søk og velg innhold"
           items={items}
           onSelect={handleDropdownOnSelect}
           searchable
-        /> : null}
-        {displaySearchWordsForm && searchWordsList.length ?
+        /> : null} */}
+        {searchWordsList.length ?
           <Row>
             <Col className="d-flex flex-wrap mt-3">
               {searchWordsList.map((searchWord) => renderSearchWord(searchWord))}
@@ -199,7 +245,7 @@ function Bestbet(props) {
         </Row>
         <Row>
           <Col className="col-12 justify-content-center">
-            <Button primary onClick={handleSubmit} className="mt-3 mx-0">Fullfør</Button>
+            <Button primary onClick={handleCreate} className="mt-3 mx-0">Fullfør</Button>
           </Col>
         </Row>
       </Col>
