@@ -6,6 +6,9 @@ const {
   assetUrl, serviceUrl
 } = __non_webpack_require__('/lib/xp/portal')
 const {
+  getToolUrl
+} = __non_webpack_require__('/lib/xp/admin')
+const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 const {
@@ -31,17 +34,23 @@ exports.preview = (req: Request): React4xpResponse | Response => {
 }
 
 function renderPart(req: Request): React4xpResponse | Response {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // @ts-ignore
+  const DEFAULT_CONTENTSTUDIO_URL: string = getToolUrl('com.enonic.app.contentstudio', 'main')
+  const ENONIC_PROJECT_ID: string = app.config && app.config['ssb.project.id'] ? app.config['ssb.project.id'] : 'default'
+
   const bestbetComponent: React4xpObject = new React4xp('bestbet/Bestbet')
     .setProps({
+      logoUrl: assetUrl({
+        path: 'SSB_logo_black.svg'
+      }),
       bestBetListServiceUrl: serviceUrl({
         service: 'bestBetList'
       }),
       contentSearchServiceUrl: serviceUrl({
         service: 'contentSearch'
       }),
-      logoUrl: assetUrl({
-        path: 'SSB_logo_black.svg'
-      })
+      contentStudioBaseUrl: `${DEFAULT_CONTENTSTUDIO_URL}#/${ENONIC_PROJECT_ID}/edit/`
     })
     .setId('app-bestbet')
 

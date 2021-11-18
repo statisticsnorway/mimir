@@ -1,6 +1,7 @@
 const {
   listBestBets,
-  createBestBet
+  createBestBet,
+  deleteBestBet
 } = __non_webpack_require__('/lib/ssb/repo/bestbet')
 const {
   ensureArray
@@ -26,4 +27,7 @@ exports.post = (req) => {
   const body = JSON.parse(req.body)
   const response = createBestBet(body.id, body.linkedContentId, body.linkedContentTitle, body.searchWords)
   return response
+}
+exports.delete = (req) => {
+  return deleteBestBet(req.params.key)
 }

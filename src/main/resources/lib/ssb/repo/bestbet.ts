@@ -9,7 +9,8 @@ const {
   createNode,
   getNode,
   getChildNodes,
-  modifyNode
+  modifyNode,
+  deleteNode
 } = __non_webpack_require__('/lib/ssb/repo/common')
 const {
   cronJobLog
@@ -38,6 +39,10 @@ export function listBestBets(count?: number): ReadonlyArray<RepoNode> | RepoNode
     return hit.id
   })
   return getNode(BESTBET_REPO, BESTBET_BRANCH, ids)
+}
+
+export function deleteBestBet(key: string): string {
+  return deleteNode(BESTBET_REPO, BESTBET_BRANCH, key) ? 'slettet' : 'noe gikk feil'
 }
 
 export function createBestBet(id: string, linkedContentId: string, linkedContentTitle: string, searchWords: Array<string>): void {

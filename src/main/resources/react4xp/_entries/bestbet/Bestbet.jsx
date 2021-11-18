@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Container, Row, Col, Modal } from 'react-bootstrap'
+import { Container, Row, Col } from 'react-bootstrap'
 import { Title, Link, Tag, Input, Button, Divider } from '@statisticsnorway/ssb-component-library'
-import { XCircle, Edit } from 'react-feather'
+import { XCircle, Edit, Trash } from 'react-feather'
 import { get, post } from 'axios'
 import EditSearchWordsModal from './EditSearchWordsModal'
 import axios from 'axios'
@@ -19,16 +19,12 @@ function Bestbet(props) {
     searchWords: ['']
   })
 
-  const [showDeleteSearchWordModal, setShowDeleteSearchWordModal] = useState(false)
-  const handleCloseDeleteSearchWordModal = () => setShowDeleteSearchWordModal(false)
-
   const [showEditSearchWordsModal, setShowEditSearchWordsModal] = useState(false)
   const handleCloseEditSearchWordModal = () => setShowEditSearchWordsModal(false)
 
   const [inputTag, setInputTag] = useState('')
   const [searchWordsList, setSearchWordsList] = useState([])
   const [bestBetContent, setBestBetContent] = useState({})
-  const [selectedSearchWord, setSelectedSearchWord] = useState('')
 
   useEffect(() => {
     fetchBestBetList()
@@ -70,8 +66,6 @@ function Bestbet(props) {
       searchWords: searchWordsList
     }
 
-    console.log('GLNRBN: ' + JSON.stringify(updatedBestBetItem, null, 2))
-
     setLoading(true)
     post(props.bestBetListServiceUrl, updatedBestBetItem)
       .catch((err) => {
@@ -83,35 +77,14 @@ function Bestbet(props) {
       })
   }
 
-  function handleSearchWordOnClick(searchWord) {
-    setSelectedSearchWord(searchWord)
-    setShowDeleteSearchWordModal(true)
-  }
-
-  function handleDeleteSearchWord(selectedSearchWord) {
-    setShowDeleteSearchWordModal(false)
-    const updateDisplaySearchWordForm = searchWordsList.filter((searchWord) => searchWord !== selectedSearchWord)
-    setSearchWordsList(updateDisplaySearchWordForm)
-  }
-
-  const DeleteSearchWordModal = () => {
-    return (
-      <Modal
-        show={showDeleteSearchWordModal}
-        onHide={handleCloseDeleteSearchWordModal}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Fjern nøkkelord</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>Vil du fjerne {selectedSearchWord} fra innholdet?</p>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button primary onClick={() => handleDeleteSearchWord(selectedSearchWord)}>Fjern</Button>
-          <Button onClick={handleCloseDeleteSearchWordModal}>Lukk</Button>
-        </Modal.Footer>
-      </Modal>
-    )
+  function deleteBestBet(key) {
+    axios.delete(props.bestBetListServiceUrl, {
+      params: {
+        key: key
+      }
+    }).finally(() =>{
+      fetchBestBetList()
+    })
   }
 
   function renderEditSearchWordModal() {
@@ -124,7 +97,7 @@ function Bestbet(props) {
             {bbBeingEdited.searchWords.length ?
               <Row>
                 <Col className="d-flex flex-wrap mt-3">
-                  {bbBeingEdited.searchWords.map((searchWord) => renderSearchWord(searchWord, true))}
+                  {bbBeingEdited.searchWords.map((searchWord) => renderSearchWord(searchWord))}
                 </Col>
               </Row> : null}
             <Row>
@@ -248,6 +221,9 @@ function Bestbet(props) {
             <Col>
               <Title size={2}>Nøkkelord</Title>
             </Col>
+            <Col>
+              <Title size={2}></Title>
+            </Col>
           </Row>
           <Row>
             <Col>
@@ -260,11 +236,10 @@ function Bestbet(props) {
     }
   }
 
-  function renderSearchWord(searchWord, isInEditModal, disabled) {
+  function renderSearchWord(searchWord, disabled) {
     if (!disabled) {
-      const searchWordOnClickCallback = isInEditModal ? () => handleRemoveEditTag(searchWord) : () => handleSearchWordOnClick(searchWord)
       return (
-        <Tag className="m-1" onClick={searchWordOnClickCallback}>
+        <Tag className="m-1" onClick={() => handleRemoveEditTag(searchWord)}>
           {searchWord}<XCircle size={16} className="ml-1" />
         </Tag>
       )
@@ -284,7 +259,7 @@ function Bestbet(props) {
           <Col className="col-6">
             <li>
               <Link isExternal={true}
-                href={'/admin/tool/com.enonic.app.contentstudio/main#/default/edit/' + item.linkedContentId}>
+                href={props.contentStudioBaseUrl + item.linkedContentId}>
                 {item.linkedContentTitle}
               </Link>
             </li>
@@ -292,11 +267,14 @@ function Bestbet(props) {
 
           <Col>
             <div className="d-flex flex-wrap">
-              {item.searchWords.map((searchWord) => renderSearchWord(searchWord, false, true))}
+              {item.searchWords.map((searchWord) => renderSearchWord(searchWord, true))}
               <Tag className="m-1" onClick={() => handleEditSearchWordOnClick(item)}>
               Rediger<Edit size={16} className="ml-1" />
               </Tag>
             </div>
+          </Col>
+          <Col>
+            <Button onClick={() => deleteBestBet(item.id)}>Slett<Trash size={16} className="ml-1" /></Button>
           </Col>
         </Row>
         <Row>
@@ -310,7 +288,6 @@ function Bestbet(props) {
 
   return (
     <Container fluid>
-      <DeleteSearchWordModal />
       {renderEditSearchWordModal()}
       <Row className="bestbet-header">
         <Col className="flex-row align-items-center">
@@ -331,7 +308,8 @@ function Bestbet(props) {
 Bestbet.propTypes = {
   logoUrl: PropTypes.string,
   bestBetListServiceUrl: PropTypes.string,
-  contentSearchServiceUrl: PropTypes.string
+  contentSearchServiceUrl: PropTypes.string,
+  contentStudioBaseUrl: PropTypes.string
 }
 
 export default (props) => <Bestbet {...props} />
