@@ -8,7 +8,11 @@ exports.get = (req) => {
     count: 10,
     sort: 'modifiedTime DESC',
     query: `fulltext('_alltext', '${query}', 'AND')`,
-    contentTypes: [app.name + ':page']
+    contentTypes: [
+      app.name + ':page',
+      `${app.name}:article`,
+      `${app.name}:statistics`
+    ]
   })
   // log.info(JSON.stringify(result))
   if (result && result.hits) {

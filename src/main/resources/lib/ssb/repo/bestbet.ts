@@ -16,6 +16,9 @@ const {
 const {
   cronJobLog
 } = __non_webpack_require__('/lib/ssb/utils/serverLog')
+const {
+  pageUrl
+} = __non_webpack_require__('/lib/xp/portal')
 
 export const BESTBET_REPO: string = 'no.ssb.bestbet'
 export const BESTBET_BRANCH: string = 'master'
@@ -39,11 +42,17 @@ export function listBestBets(count?: number): ReadonlyArray<RepoNode> | RepoNode
   return getNode(BESTBET_REPO, BESTBET_BRANCH, ids)
 }
 
-export function createBestBet(id: string, linkedContentId: string, searchWords: Array<string>): void {
+export function createBestBet(id: string, linkedContentId: string, linkedContentTitle: string, searchWords: Array<string>): void {
   if (!nodeExists(BESTBET_REPO, BESTBET_BRANCH, id)) {
     createNode(BESTBET_REPO, BESTBET_BRANCH, {
-      linkedContentId: linkedContentId,
-      searchWords: searchWords
+      data: {
+        linkedContentId: linkedContentId,
+        linkedContentTitle: linkedContentTitle,
+        linkedContentHref: pageUrl({
+          id: linkedContentId
+        }),
+        searchWords: searchWords
+      }
     })
   } else {
     modifyNode(BESTBET_REPO, BESTBET_BRANCH, id, (node) => {

@@ -22,7 +22,7 @@ function Bestbet(props) {
 
   const [inputTag, setInputTag] = useState('')
   const [searchWordsList, setSearchWordsList] = useState([])
-  const [bestBetContentID, setBestBetContentID] = useState('')
+  const [bestBetContent, setBestBetContent] = useState({})
   const [selectedSearchWord, setSelectedSearchWord] = useState('')
   const [displaySearchWordsForm, setDisplaySearchWordsForm] = useState(false)
 
@@ -39,6 +39,7 @@ function Bestbet(props) {
       }
     })
       .then((res) => {
+        console.log(res.data)
         setBestBetList(res.data)
       })
       .catch((err) => console.log(err))
@@ -70,12 +71,15 @@ function Bestbet(props) {
 
   function handleCreate() {
     const updatedBestBetItem = {
-      linkedContentId: bestBetContentID,
+      linkedContentId: bestBetContent.value,
+      linkedContentTitle: bestBetContent.label,
       searchWords: searchWordsList
     }
 
+    console.log('GLNRBN: ' + JSON.stringify(updatedBestBetItem, null, 2))
+
     setLoading(true)
-    post(props.bestBetListServiceUrl, ...updatedBestBetItem)
+    post(props.bestBetListServiceUrl, updatedBestBetItem)
       .catch((err) => {
         console.log(err)
       })
@@ -159,18 +163,6 @@ function Bestbet(props) {
     setSearchWordsList(item.searchWords)
   }
 
-  function handleDropdownOnSelect(item) {
-    const getBestBetItem = bestBetList.filter(({
-      id
-    }) => id === item.id)
-
-    if (getBestBetItem.length) {
-      setBestBetItem(getBestBetItem)
-      setSearchWordsList(getBestBetItem[0].searchWords)
-      setDisplaySearchWordsForm(true)
-    }
-  }
-
   function handleTagInput(event) {
     setInputTag(event)
   }
@@ -179,52 +171,34 @@ function Bestbet(props) {
     setSearchWordsList([...searchWordsList, inputTag])
   }
 
+  function handleContentSelect(event) {
+    // console.log('GLNRBN handling content select! ' + JSON.stringify(event, null, 2))
+    setBestBetContent(event)
+  }
+
+  async function searchForTerm(inputValue = '') {
+    const result = await axios.get('/_/service/mimir/contentSearch', {
+      params: {
+        query: inputValue
+      }
+    })
+    // console.log('GLNRBN async result: ' + JSON.stringify(result.data.hits, null, 2))
+    const hits = result.data.hits
+    return hits
+  }
+
+  const promiseOptions = (inputValue) =>
+    new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(searchForTerm(inputValue))
+      }, 1000)
+    })
+
   function renderForm() {
-    const items = []
-    if (bestBetList.length) {
-      bestBetList.map((bet) => {
-        items.push({
-          id: bet.id,
-          title: bet.linkedContentId
-        })
-      })
-    }
-
-    function handleContentSelect(event) {
-      // console.log('GLNRBN handling content select! ' + JSON.stringify(event, null, 2))
-      setBestBetContentID(event.value)
-    }
-
-    async function searchForTerm(inputValue = '') {
-      const result = await axios.get('/_/service/mimir/contentSearch', {
-        params: {
-          query: inputValue
-        }
-      })
-      // console.log('GLNRBN async result: ' + JSON.stringify(result.data.hits, null, 2))
-      const hits = result.data.hits
-      return hits
-    }
-
-    const promiseOptions = (inputValue) =>
-      new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(searchForTerm(inputValue))
-        }, 1000)
-      })
-
     return (
       <Col className="bestbet-list ml-4">
         <Title size={2}>Legg til nøkkelord</Title>
         <AsyncSelect cacheOptions defaultOptions loadOptions={promiseOptions} onChange={handleContentSelect} />
-
-        {/* {items.length ? <Dropdown
-          header="Søk og velg innhold"
-          placeholder="Søk og velg innhold"
-          items={items}
-          onSelect={handleDropdownOnSelect}
-          searchable
-        /> : null} */}
         {searchWordsList.length ?
           <Row>
             <Col className="d-flex flex-wrap mt-3">
@@ -271,7 +245,7 @@ function Bestbet(props) {
               <Divider light className="mt-2 mb-4"/>
             </Col>
           </Row>
-          {bestBetList.length && bestBetList.map((bet, index) => renderListItem(bet, index))}
+          {bestBetList.length ? bestBetList.map((bet, index) => renderListItem(bet, index)) : null}
         </>
       )
     }
@@ -299,7 +273,7 @@ function Bestbet(props) {
       <>
         <Row>
           <Col className="col-6">
-            <li><Link href="/">en link tekst {item.linkedContentId}</Link></li>
+            <li><Link href={item.linkedContentHref}>{item.linkedContentTitle}</Link></li>
           </Col>
 
           <Col>
