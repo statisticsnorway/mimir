@@ -36,8 +36,8 @@ function renderPart(req: Request): React4xpResponse | Response {
       bestBetListServiceUrl: serviceUrl({
         service: 'bestBetList'
       }),
-      model: serviceUrl({
-        service: 'bestBetModel'
+      contentSearchServiceUrl: serviceUrl({
+        service: 'contentSearch'
       }),
       logoUrl: assetUrl({
         path: 'SSB_logo_black.svg'

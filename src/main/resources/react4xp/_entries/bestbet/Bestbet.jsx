@@ -8,7 +8,6 @@ import EditSearchWordsModal from './EditSearchWordsModal'
 import axios from 'axios'
 import AsyncSelect from 'react-select/async'
 import 'regenerator-runtime'
-
 function Bestbet(props) {
   const [loading, setLoading] = useState(false)
   const [bestBetList, setBestBetList] = useState([])
@@ -163,11 +162,20 @@ function Bestbet(props) {
   function handleEditSearchWordOnClick(item) {
     setShowEditSearchWordsModal(true)
     setBbBeingEdited(item)
-    setSearchWordsList(item.searchWords)
   }
 
   function handleTagInput(event) {
     setInputTag(event)
+  }
+
+  function handleRemoveEditTag(tag) {
+    setBbBeingEdited({
+      id: bbBeingEdited.id,
+      linkedContentId: bbBeingEdited.linkedContentId,
+      linkedContentTitle: bbBeingEdited.linkedContentTitle,
+      linkedContentHref: bbBeingEdited.linkedContentHref,
+      searchWords: bbBeingEdited.searchWords.filter((word) => word !== tag)
+    })
   }
 
   function handleTagSubmit() {
@@ -179,7 +187,7 @@ function Bestbet(props) {
   }
 
   async function searchForTerm(inputValue = '') {
-    const result = await axios.get('/_/service/mimir/contentSearch', {
+    const result = await axios.get(props.contentSearchServiceUrl, {
       params: {
         query: inputValue
       }
@@ -254,7 +262,7 @@ function Bestbet(props) {
 
   function renderSearchWord(searchWord, isInEditModal, disabled) {
     if (!disabled) {
-      const searchWordOnClickCallback = isInEditModal ? () => handleDeleteSearchWord(searchWord) : () => handleSearchWordOnClick(searchWord)
+      const searchWordOnClickCallback = isInEditModal ? () => handleRemoveEditTag(searchWord) : () => handleSearchWordOnClick(searchWord)
       return (
         <Tag className="m-1" onClick={searchWordOnClickCallback}>
           {searchWord}<XCircle size={16} className="ml-1" />
@@ -317,7 +325,8 @@ function Bestbet(props) {
 
 Bestbet.propTypes = {
   logoUrl: PropTypes.string,
-  bestBetListServiceUrl: PropTypes.string
+  bestBetListServiceUrl: PropTypes.string,
+  contentSearchServiceUrl: PropTypes.string
 }
 
 export default (props) => <Bestbet {...props} />
