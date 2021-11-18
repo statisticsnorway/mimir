@@ -1,7 +1,6 @@
 import { NodeQueryHit, NodeQueryResponse, RepoNode } from 'enonic-types/node'
 
 const {
-  getRepo,
   createRepo,
   repoExists
 } = __non_webpack_require__('/lib/ssb/repo/repo')
@@ -10,8 +9,7 @@ const {
   createNode,
   getNode,
   getChildNodes,
-  modifyNode,
-  deleteNode
+  modifyNode
 } = __non_webpack_require__('/lib/ssb/repo/common')
 const {
   cronJobLog
@@ -58,7 +56,14 @@ export function createBestBet(id: string, linkedContentId: string, linkedContent
     modifyNode(BESTBET_REPO, BESTBET_BRANCH, id, (node) => {
       return {
         ...node,
-        searchWords: searchWords
+        data: {
+          linkedContentId: linkedContentId,
+          linkedContentTitle: linkedContentTitle,
+          linkedContentHref: pageUrl({
+            id: linkedContentId
+          }),
+          searchWords: searchWords
+        }
       }
     })
   }

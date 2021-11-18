@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Container, Row, Col, Modal } from 'react-bootstrap'
-import { Title, Link, Tag, Dropdown, Input, Button, Divider } from '@statisticsnorway/ssb-component-library'
+import { Title, Link, Tag, Input, Button, Divider } from '@statisticsnorway/ssb-component-library'
 import { XCircle, Edit } from 'react-feather'
 import { get, post } from 'axios'
 import EditSearchWordsModal from './EditSearchWordsModal'
@@ -12,7 +12,13 @@ import 'regenerator-runtime'
 function Bestbet(props) {
   const [loading, setLoading] = useState(false)
   const [bestBetList, setBestBetList] = useState([])
-  const [bestbetItem, setBestBetItem] = useState([])
+  const [bbBeingEdited, setBbBeingEdited] = useState({
+    id: '',
+    linkedContentId: '',
+    linkedContentTitle: '',
+    linkedContentHref: '',
+    searchWords: ['']
+  })
 
   const [showDeleteSearchWordModal, setShowDeleteSearchWordModal] = useState(false)
   const handleCloseDeleteSearchWordModal = () => setShowDeleteSearchWordModal(false)
@@ -24,18 +30,17 @@ function Bestbet(props) {
   const [searchWordsList, setSearchWordsList] = useState([])
   const [bestBetContent, setBestBetContent] = useState({})
   const [selectedSearchWord, setSelectedSearchWord] = useState('')
-  const [displaySearchWordsForm, setDisplaySearchWordsForm] = useState(false)
 
   useEffect(() => {
-    fetchBestBetList(true)
+    fetchBestBetList()
   }, [])
 
-  function fetchBestBetList(first) {
+  function fetchBestBetList() {
     setLoading(true)
     get(props.bestBetListServiceUrl, {
       params: {
-        start: first ? 0 : bestBetList.length,
-        count: 10
+        start: 0,
+        count: 100
       }
     })
       .then((res) => {
@@ -47,24 +52,16 @@ function Bestbet(props) {
 
   function handleUpdate() {
     setShowEditSearchWordsModal(false)
-    const updatedBestBetItem = bestbetItem.length ? bestbetItem.map((item) => {
-      return {
-        ...item,
-        searchWords: searchWordsList
-      }
-    }) : []
 
-    if (updatedBestBetItem.length) {
-      setLoading(true)
-      post(props.bestBetListServiceUrl, ...updatedBestBetItem)
-        .catch((err) => {
-          console.log(err)
-        })
-        .finally(() => {
-          setLoading(false)
-          fetchBestBetList(false)
-        })
-    }
+    setLoading(true)
+    post(props.bestBetListServiceUrl, bbBeingEdited)
+      .catch((err) => {
+        console.log(err)
+      })
+      .finally(() => {
+        setLoading(false)
+        fetchBestBetList()
+      })
   }
 
   function handleCreate() {
@@ -83,7 +80,7 @@ function Bestbet(props) {
       })
       .finally(() => {
         setLoading(false)
-        fetchBestBetList(false)
+        fetchBestBetList()
       })
   }
 
@@ -108,7 +105,7 @@ function Bestbet(props) {
           <Modal.Title>Fjern nøkkelord</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Vil du fjerne {selectedSearchWord} fra innholdet {/* navn på innhold */}</p>
+          <p>Vil du fjerne {selectedSearchWord} fra innholdet?</p>
         </Modal.Body>
         <Modal.Footer>
           <Button primary onClick={() => handleDeleteSearchWord(selectedSearchWord)}>Fjern</Button>
@@ -125,10 +122,10 @@ function Bestbet(props) {
         onHide={handleCloseEditSearchWordModal}
         body={
           <>
-            {searchWordsList.length ?
+            {bbBeingEdited.searchWords.length ?
               <Row>
                 <Col className="d-flex flex-wrap mt-3">
-                  {searchWordsList.map((searchWord) => renderSearchWord(searchWord, true))}
+                  {bbBeingEdited.searchWords.map((searchWord) => renderSearchWord(searchWord, true))}
                 </Col>
               </Row> : null}
             <Row>
@@ -140,7 +137,15 @@ function Bestbet(props) {
                 />
               </Col>
               <Col>
-                <Button primary onClick={handleTagSubmit} className="mt-3">Legg til</Button>
+                <Button primary onClick={() => {
+                  setBbBeingEdited({
+                    id: bbBeingEdited.id,
+                    linkedContentId: bbBeingEdited.linkedContentId,
+                    linkedContentTitle: bbBeingEdited.linkedContentTitle,
+                    linkedContentHref: bbBeingEdited.linkedContentHref,
+                    searchWords: [...bbBeingEdited.searchWords, inputTag]
+                  })
+                }} className="mt-3">Legg til</Button>
               </Col>
             </Row>
           </>
@@ -157,7 +162,7 @@ function Bestbet(props) {
 
   function handleEditSearchWordOnClick(item) {
     setShowEditSearchWordsModal(true)
-    setBestBetItem([item])
+    setBbBeingEdited(item)
     setSearchWordsList(item.searchWords)
   }
 
