@@ -182,6 +182,16 @@ function PublicationArchive(props) {
     )
   }
 
+  function addHiddenLinkSolrArticleList() {
+    return (
+      <div style={{
+        display: 'none'
+      }}>
+        <Link tabIndex="-1" href="/_/service/mimir/solrArticleList">Alle artikler</Link>
+      </div>
+    )
+  }
+
   return (
     <section className="publication-archive container-fluid">
       <div className="row">
@@ -224,6 +234,7 @@ function PublicationArchive(props) {
           </div>
         </div>
       </div>
+      {addHiddenLinkSolrArticleList()}
     </section>
   )
 }
