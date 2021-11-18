@@ -23,7 +23,6 @@ exports.get = () => {
   } else return {}
 }
 exports.post = (req) => {
-  log.info('GLNRBN being posted: ' + JSON.stringify(req.body, null, 2))
   const body = JSON.parse(req.body)
   const response = createBestBet(body.id, body.linkedContentId, body.linkedContentTitle, body.searchWords)
   return response

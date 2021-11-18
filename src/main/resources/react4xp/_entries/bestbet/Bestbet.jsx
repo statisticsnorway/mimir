@@ -282,7 +282,12 @@ function Bestbet(props) {
       <>
         <Row>
           <Col className="col-6">
-            <li><Link href={item.linkedContentHref}>{item.linkedContentTitle}</Link></li>
+            <li>
+              <Link isExternal={true}
+                href={'/admin/tool/com.enonic.app.contentstudio/main#/default/edit/' + item.linkedContentId}>
+                {item.linkedContentTitle}
+              </Link>
+            </li>
           </Col>
 
           <Col>
