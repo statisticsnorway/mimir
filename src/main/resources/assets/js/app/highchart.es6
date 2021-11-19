@@ -56,12 +56,6 @@ export function init() {
       width: $(window).width().toFixed(0)
     }
 
-    $('.btn-highchart-export').on('click', (e) => {
-      $(e.target).parent().find(`.highcharts-a11y-proxy-button`)
-        .first()
-        .trigger('click')
-    })
-
     $('.hc-container').each(function(i, container) {
       const height = $(container).height()
       $(container).find('svg').attr('height', height)
