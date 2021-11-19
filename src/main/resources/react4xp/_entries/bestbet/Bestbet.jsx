@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { Container, Row, Col } from 'react-bootstrap'
 import { Title, Link, Tag, Input, Button, Divider } from '@statisticsnorway/ssb-component-library'
 import { XCircle, Edit, Trash } from 'react-feather'
-import { get, post } from 'axios'
 import EditSearchWordsModal from './EditSearchWordsModal'
 import axios from 'axios'
 import AsyncSelect from 'react-select/async'
@@ -32,7 +31,7 @@ function Bestbet(props) {
 
   function fetchBestBetList() {
     setLoading(true)
-    get(props.bestBetListServiceUrl, {
+    axios.get(props.bestBetListServiceUrl, {
       params: {
         start: 0,
         count: 100
@@ -49,13 +48,15 @@ function Bestbet(props) {
     setShowEditSearchWordsModal(false)
 
     setLoading(true)
-    post(props.bestBetListServiceUrl, bbBeingEdited)
+    axios.post(props.bestBetListServiceUrl, bbBeingEdited)
+      .then(() => {
+        fetchBestBetList()
+      })
       .catch((err) => {
         console.log(err)
       })
       .finally(() => {
         setLoading(false)
-        fetchBestBetList()
       })
   }
 
@@ -67,13 +68,12 @@ function Bestbet(props) {
     }
 
     setLoading(true)
-    post(props.bestBetListServiceUrl, updatedBestBetItem)
+    axios.post(props.bestBetListServiceUrl, updatedBestBetItem)
+      .then(() => {
+        setLoading(false)
+      })
       .catch((err) => {
         console.log(err)
-      })
-      .finally(() => {
-        setLoading(false)
-        fetchBestBetList()
       })
   }
 
@@ -201,7 +201,7 @@ function Bestbet(props) {
         </Row>
         <Row>
           <Col className="col-12 justify-content-center">
-            <Button primary onClick={handleCreate} className="mt-3 mx-0">Fullfør</Button>
+            <Button primary onClick={() => handleCreate()} className="mt-3 mx-0">Fullfør</Button>
           </Col>
         </Row>
       </Col>
@@ -230,7 +230,7 @@ function Bestbet(props) {
               <Divider light className="mt-2 mb-4"/>
             </Col>
           </Row>
-          {bestBetList.length ? bestBetList.map((bet, index) => renderListItem(bet, index)) : null}
+          {bestBetList.length ? bestBetList.map((bet) => renderListItem(bet)) : null}
         </>
       )
     }
@@ -259,7 +259,7 @@ function Bestbet(props) {
           <Col className="col-6">
             <li>
               <Link isExternal={true}
-                href={props.contentStudioBaseUrl + item.linkedContentId}>
+                href={props.contentStudioBaseUrl + item.linkedContentHref}>
                 {item.linkedContentTitle}
               </Link>
             </li>
