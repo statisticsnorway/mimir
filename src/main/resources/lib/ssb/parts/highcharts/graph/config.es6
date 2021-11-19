@@ -34,12 +34,6 @@ export const X_AXIS_TITLE_POSITION = {
 export const createDefaultConfig = (highchartData, displayName, language) => ({
   accessibility: {
     enabled: true,
-    keyboardNavigation: {
-      order: [
-        // TODO: Tabs to the invisible export menu first, then the download button. Should fix download button keyboard navigation then remove.
-        'chartMenu'
-      ]
-    },
     description: highchartData.description
   },
   chart: {
