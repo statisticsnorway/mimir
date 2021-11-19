@@ -122,7 +122,8 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
       itemDelimiter: ';'
     },
     // Sett denne til false når man vil erstatte hamburgermeny med egen
-    enabled: true
+    enabled: true,
+    showTable: true
   },
   legend: {
     enabled: !highchartData.noLegend,

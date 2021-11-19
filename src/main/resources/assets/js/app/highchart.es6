@@ -100,7 +100,19 @@ export function init() {
             $(e.browserEvent.target).toggleClass('disabled')
           }
         }
+
+        $('button#show-tabledata-' + highchartsContentKey).on('click', (e) => {
+          $('#figure-' + highchartsContentKey).find('.highcharts-data-table').show()
+          $('#figure-' + highchartsContentKey).find('.highcharts-canvas').hide()
+        })
+
+        $('button#show-graph-' + highchartsContentKey).on('click', (e) => {
+          $('#figure-' + highchartsContentKey).find('.highcharts-data-table').hide()
+          $('#figure-' + highchartsContentKey).find('.highcharts-canvas').show()
+        })
+
         Highcharts.chart(chart, config)
+        $('.highcharts-data-table').hide()
       }
     })
   })
