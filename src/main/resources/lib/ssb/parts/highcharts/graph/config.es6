@@ -249,13 +249,6 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
         chart: {
           height: '120%'
         },
-        exporting: {
-          buttons: {
-            contextButton: {
-              y: 25
-            }
-          }
-        },
         style: {
           fontSize: '10px'
         },
