@@ -183,11 +183,12 @@ function PublicationArchive(props) {
   }
 
   function addHiddenLinkSolrArticleList() {
+    const solrArticleListUrl = `/_/service/mimir/solrArticleList?language=${props.language}`
     return (
       <div style={{
         display: 'none'
       }}>
-        <Link tabIndex="-1" href="/_/service/mimir/solrArticleList">Alle artikler</Link>
+        <Link tabIndex="-1" href={solrArticleListUrl}>Alle artikler</Link>
       </div>
     )
   }

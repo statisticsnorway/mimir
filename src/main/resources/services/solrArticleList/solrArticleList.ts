@@ -11,9 +11,8 @@ exports.get = (req: Request): Response => {
   const language: string = req.params.language && req.params.language === 'en' ? 'en' : 'no'
   const allArticles: ArticleResult = getAllArticles(req, language, start, count)
   const articleStart: number = start + 1
-  const articleEnd: number = allArticles.total > start + count ? start + count : allArticles.total
-  const articleStartNext: number = articleStart + count
-  const articleEndNext: number = articleEnd + count < allArticles.total ? articleEnd + count : allArticles.total
+  const articleEnd: number = start + allArticles.articles.length
+  const moreArticlesUrl: string = `/_/service/mimir/solrArticleList?language=${language}&start=${start + count}&count=${count}`
 
   const articleListHtml: string =
   `<!DOCTYPE html>
@@ -27,7 +26,7 @@ exports.get = (req: Request): Response => {
               </div>
               ${allArticles.total > start + count ?
     `<p>
-              <a href="/_/service/mimir/solrArticleList?start=${start + count}&count=${count}">Flere artikler (${articleStartNext}  til  ${articleEndNext})</a>
+              <a href="${moreArticlesUrl}">Neste ${count} artikler</a>
           </p>` : ''}
             </div>
         </body>
