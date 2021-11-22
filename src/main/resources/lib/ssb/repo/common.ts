@@ -76,7 +76,7 @@ export function createNode<T>(repository: string, branch: string, content: T & N
   })
 }
 
-export function getNode<T>(repository: string, branch: string, key: string): ReadonlyArray<T & RepoNode> | T & RepoNode | null {
+export function getNode<T>(repository: string, branch: string, key: string | Array<string>): ReadonlyArray<T & RepoNode> | T & RepoNode | null {
   return withConnection(repository, branch, (conn) => {
     return conn.get(key)
   })
@@ -125,7 +125,7 @@ export interface RepoCommonLib {
   withLoggedInUserContext: <T>(branch: string, callback: UserContextCallback<T>) => T;
   withConnection: <T>(repository: string, branch: string, callback: ConnectionCallback<T>) => T;
   createNode: <T>(repository: string, branch: string, content: T & NodeCreateParams) => T & RepoNode;
-  getNode: <T>(repository: string, branch: string, key: string) => ReadonlyArray<T & RepoNode> | T & RepoNode | null;
+  getNode: <T>(repository: string, branch: string, key: string | Array<string>) => ReadonlyArray<T & RepoNode> | T & RepoNode | null;
   deleteNode: (repository: string, branch: string, key: string) => boolean;
   modifyNode: <T>(repository: string, branch: string, key: string, editor: EditorCallback<T>) => T;
   getChildNodes: (repository: string, branch: string, key: string, count?: number, countOnly?: boolean) => NodeQueryResponse<never>;

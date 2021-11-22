@@ -8,6 +8,9 @@ try {
   const {
     setupDatasetRepo
   } = __non_webpack_require__('/lib/ssb/repo/dataset')
+  const {
+    setupBestBetRepo
+  } = __non_webpack_require__('/lib/ssb/repo/bestbet')
   const cache = __non_webpack_require__('/lib/ssb/cache/cache')
   const {
     setupFetchDataOnCreateListener
@@ -26,6 +29,7 @@ try {
   setupEventLog()
   setupDatasetRepo()
   setupStatRegRepo()
+  setupBestBetRepo()
   setupFetchDataOnCreateListener()
   setupCronJobs()
 
