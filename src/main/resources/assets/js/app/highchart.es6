@@ -102,7 +102,7 @@ export function init() {
           'printChart': {
             onclick: function() {
               const label = `${config.title.text} - Skriv ut graf`
-              window.gtag('event', action, {
+              gtag('event', action, {
                 'event_category': category,
                 'event_label': label
               })
@@ -113,7 +113,7 @@ export function init() {
           'downloadPNG': {
             onclick: function() {
               const label = `${config.title.text} - Last ned som PNG`
-              window.gtag('event', action, {
+              gtag('event', action, {
                 'event_category': category,
                 'event_label': label
               })
@@ -126,7 +126,7 @@ export function init() {
           'downloadJPEG': {
             onclick: function() {
               const label = `${config.title.text} - Last ned som JPEG`
-              window.gtag('event', action, {
+              gtag('event', action, {
                 'event_category': category,
                 'event_label': label
               })
@@ -139,7 +139,7 @@ export function init() {
           'downloadPDF': {
             onclick: function() {
               const label = `${config.title.text} - Last ned som PDF`
-              window.gtag('event', action, {
+              gtag('event', action, {
                 'event_category': category,
                 'event_label': label
               })
@@ -152,7 +152,7 @@ export function init() {
           'downloadSVG': {
             onclick: function() {
               const label = `${config.title.text} - Last ned som SVG`
-              window.gtag('event', action, {
+              gtag('event', action, {
                 'event_category': category,
                 'event_label': label
               })
@@ -165,7 +165,7 @@ export function init() {
           'downloadXLS': {
             onclick: function() {
               const label = `${config.title.text} - Last ned som XLS`
-              window.gtag('event', action, {
+              gtag('event', action, {
                 'event_category': category,
                 'event_label': label
               })
@@ -176,7 +176,7 @@ export function init() {
           'downloadCSV': {
             onclick: function() {
               const label = `${config.title.text} - Last ned som CSV`
-              window.gtag('event', action, {
+              gtag('event', action, {
                 'event_category': category,
                 'event_label': label
               })
