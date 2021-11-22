@@ -183,7 +183,8 @@ function PublicationArchive(props) {
   }
 
   function addHiddenLinkSolrArticleList() {
-    const solrArticleListUrl = `/_/service/mimir/solrArticleList?language=${props.language}`
+    const language = props.language === 'en' ? 'en' : 'no'
+    const solrArticleListUrl = `/_/service/mimir/solrArticleList?language=${language}`
     return (
       <div style={{
         display: 'none'

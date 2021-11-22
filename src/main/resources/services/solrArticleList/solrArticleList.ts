@@ -17,7 +17,10 @@ exports.get = (req: Request): Response => {
   const articleListHtml: string =
   `<!DOCTYPE html>
     <html lang="${language}">
-        <head><meta charset="UTF-8"/></head>
+        <head>
+            <meta charset="UTF-8"/>
+            <meta name="robots" content="noindex" />
+        </head>
         <body>
           <div>
               <p>Artikkel ${articleStart} til ${articleEnd} (Totalt antall artikler ${allArticles.total})</p>
