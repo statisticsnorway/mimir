@@ -143,7 +143,7 @@ function calcualteHalfYear(previousFrom: string, language: string): string {
 function calculateTerm(previousFrom: string, language: string): string {
   const date: Date = new Date(previousFrom)
   const fromMonth: number = date.getMonth() + 1
-  const termin: number = Math.ceil(fromMonth / 6)
+  const termin: number = Math.ceil(fromMonth / 2)
   return localize({
     key: 'period.termin',
     locale: language,

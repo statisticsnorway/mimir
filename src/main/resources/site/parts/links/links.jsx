@@ -2,6 +2,7 @@ import React from 'react'
 import { Link, TableLink } from '@statisticsnorway/ssb-component-library'
 import { ArrowRight } from 'react-feather'
 import PropTypes from 'prop-types'
+import { addGtagForEvent } from '../../../react4xp/ReactGA'
 
 const Links = (props) => {
   const {
@@ -10,8 +11,17 @@ const Links = (props) => {
     withIcon,
     linkType,
     text,
-    description
+    description,
+    GA_TRACKING_ID,
+    isPDFAttachment,
+    attachmentTitle
   } = props
+
+  const handleClick = () => {
+    if (linkType === 'header') {
+      if (GA_TRACKING_ID && isPDFAttachment) addGtagForEvent(GA_TRACKING_ID, 'Åpne PDF', 'Nedlasting', attachmentTitle)
+    }
+  }
 
   const renderLinks = () => {
     const renderIcon = typeof withIcon === 'boolean' ? withIcon : withIcon === 'true' // Macro config returns string. This is a workaround.
@@ -20,6 +30,7 @@ const Links = (props) => {
         href={href}
         icon={renderIcon && <ArrowRight size="20"/>}
         linkType={linkType}
+        onClick={handleClick}
       >
         {children}
       </Link>
@@ -54,7 +65,10 @@ Links.propTypes = {
     'header'
   ]),
   text: PropTypes.string,
-  description: PropTypes.string
+  description: PropTypes.string,
+  GA_TRACKING_ID: PropTypes.string,
+  isPDFAttachment: PropTypes.bool,
+  attachmentTitle: PropTypes.string
 }
 
 export default Links

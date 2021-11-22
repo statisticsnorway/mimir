@@ -2,6 +2,7 @@ import { Response, Request } from 'enonic-types/controller'
 import { Component } from 'enonic-types/portal'
 import { renderError } from '../../../lib/ssb/error/error'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import { GA_TRACKING_ID } from '../../pages/default/default'
 import { NameSearchPartConfig } from './nameSearch-part-config'
 
 const {
@@ -49,7 +50,8 @@ function renderPart(req: Request): React4xpResponse {
     aboutLink: aboutLinkResources(component.config),
     nameSearchDescription: component.config.nameSearchDescription,
     frontPage: component.config.frontPage,
-    phrases: partsPhrases(locale)
+    phrases: partsPhrases(locale),
+    GA_TRACKING_ID: GA_TRACKING_ID
   }
 
   return React4xp.render('site/parts/nameSearch/nameSearch', props, req, {
@@ -234,4 +236,5 @@ interface PartProperties {
     downloadCSV: string;
     downloadXLS: string;
   };
+  GA_TRACKING_ID: string | null;
 }

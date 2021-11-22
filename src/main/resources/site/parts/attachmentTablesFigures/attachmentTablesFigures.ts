@@ -6,6 +6,7 @@ import { JSONstat } from '../../../lib/types/jsonstat-toolkit'
 import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
 import { TbmlDataUniform } from '../../../lib/types/xmlParser'
 import { Statistics } from '../../content-types/statistics/statistics'
+import { GA_TRACKING_ID } from '../../pages/default/default'
 import { AccordionData } from '../accordion/accordion'
 const {
   data: {
@@ -30,9 +31,9 @@ const {
 const {
   datasetOrUndefined
 } = __non_webpack_require__('/lib/ssb/cache/cache')
-const {
-  fromPartCache
-} = __non_webpack_require__('/lib/ssb/cache/partCache')
+// const {
+//   fromPartCache
+// } = __non_webpack_require__('/lib/ssb/cache/partCache')
 
 const tableController: { getProps: (req: Request, tableId: string) => object } = __non_webpack_require__('../table/table')
 const highchartController: { preview: (req: Request, id: string) => Response } = __non_webpack_require__('../highchart/highchart')
@@ -98,7 +99,9 @@ function getTablesAndFiguresComponent(page: Content<Statistics>, req: Request): 
       }),
       freeText: page.data.freeTextAttachmentTablesFigures,
       showAll: phrases.showAll,
-      showLess: phrases.showLess
+      showLess: phrases.showLess,
+      appName: app.name,
+      GA_TRACKING_ID: GA_TRACKING_ID
     })
     .setId('accordion')
     .uniqueId()
