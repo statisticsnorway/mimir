@@ -102,11 +102,15 @@ export function init() {
         }
 
         $('button#show-tabledata-' + highchartsContentKey).on('click', (e) => {
+          $('button#show-graph-' + highchartsContentKey).removeClass('active')
+          $(e.target).parent().addClass('active')
           $('#figure-' + highchartsContentKey).find('.highcharts-data-table').show()
           $('#figure-' + highchartsContentKey).find('.highcharts-canvas').hide()
         })
 
         $('button#show-graph-' + highchartsContentKey).on('click', (e) => {
+          $('button#show-tabledata-' + highchartsContentKey).removeClass('active')
+          $(e.target).parent().addClass('active')
           $('#figure-' + highchartsContentKey).find('.highcharts-data-table').hide()
           $('#figure-' + highchartsContentKey).find('.highcharts-canvas').show()
         })
