@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html data-th-lang="no">
+  <head>
+    <meta charset="UTF-8"></meta>
+    <title>SSB Best bet</title>
+    <meta http-equiv="Cache-control" content="NO-CACHE"></meta>
+    <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Open+Sans|Open+Sans:700|Roboto:700|Roboto+Condensed:700"></link>
+    <link rel="stylesheet" data-th-href="${stylesUrl}"></link>
+  </head>
+  <body class="xp-page page-bestbet">
+    <div id="app-bestbet" />
+    <script type="text/javascript" data-th-src="${jsLibsUrl}"></script>
+    <script type="text/javascript" data-th-src="${wsServiceUrl}"></script>
+    <span data-th-each="scr : ${pageContributions.bodyEnd}" data-th-remove="tag">
+        <span data-th-utext="${scr}" data-th-remove="tag"></span>
+    </span>
+  </body>
+</html>

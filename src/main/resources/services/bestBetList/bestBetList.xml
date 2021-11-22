@@ -1,0 +1,7 @@
+<service>
+    <allow>
+        <principal>role:system.admin</principal>
+        <principal>role:dashboard.fag</principal>
+    </allow>
+</service>
+    
