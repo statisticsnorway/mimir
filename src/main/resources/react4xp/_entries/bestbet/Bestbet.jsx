@@ -78,12 +78,72 @@ function Bestbet(props) {
       )
   }
 
-  function deleteBestBet(key) {
+  function handleDelete(key) {
     axios.delete(props.bestBetListServiceUrl, {
       params: {
         key: key
       }
     }).then(() => fetchBestBetList())
+  }
+
+  function handleEditSearchWordOnClick(item) {
+    setShowEditSearchWordsModal(true)
+    setBbBeingEdited(item)
+  }
+
+  function handleTagInput(event) {
+    setInputTag(event)
+  }
+
+  function handleRemoveEditTag(tag) {
+    setBbBeingEdited({
+      id: bbBeingEdited.id,
+      linkedContentId: bbBeingEdited.linkedContentId,
+      linkedContentTitle: bbBeingEdited.linkedContentTitle,
+      linkedContentHref: bbBeingEdited.linkedContentHref,
+      searchWords: bbBeingEdited.searchWords.filter((word) => word !== tag)
+    })
+  }
+
+  function handleTagSubmit() {
+    setSearchWordsList([...searchWordsList, inputTag])
+  }
+
+  function handleContentSelect(event) {
+    setBestBetContent(event)
+  }
+
+  async function searchForTerm(inputValue = '') {
+    const result = await axios.get(props.contentSearchServiceUrl, {
+      params: {
+        query: inputValue
+      }
+    })
+    const hits = result.data.hits
+    return hits
+  }
+
+  const promiseOptions = (inputValue) =>
+    new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(searchForTerm(inputValue))
+      }, 1000)
+    })
+
+  function renderSearchWord(searchWord, disabled) {
+    if (!disabled) {
+      return (
+        <Tag className="m-1" onClick={() => handleRemoveEditTag(searchWord)}>
+          {searchWord}<XCircle size={16} className="ml-1" />
+        </Tag>
+      )
+    }
+
+    return (
+      <div className="search-words m-1">
+        {searchWord}
+      </div>
+    )
   }
 
   function renderEditSearchWordModal() {
@@ -131,50 +191,6 @@ function Bestbet(props) {
     )
   }
 
-  function handleEditSearchWordOnClick(item) {
-    setShowEditSearchWordsModal(true)
-    setBbBeingEdited(item)
-  }
-
-  function handleTagInput(event) {
-    setInputTag(event)
-  }
-
-  function handleRemoveEditTag(tag) {
-    setBbBeingEdited({
-      id: bbBeingEdited.id,
-      linkedContentId: bbBeingEdited.linkedContentId,
-      linkedContentTitle: bbBeingEdited.linkedContentTitle,
-      linkedContentHref: bbBeingEdited.linkedContentHref,
-      searchWords: bbBeingEdited.searchWords.filter((word) => word !== tag)
-    })
-  }
-
-  function handleTagSubmit() {
-    setSearchWordsList([...searchWordsList, inputTag])
-  }
-
-  function handleContentSelect(event) {
-    setBestBetContent(event)
-  }
-
-  async function searchForTerm(inputValue = '') {
-    const result = await axios.get(props.contentSearchServiceUrl, {
-      params: {
-        query: inputValue
-      }
-    })
-    const hits = result.data.hits
-    return hits
-  }
-
-  const promiseOptions = (inputValue) =>
-    new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(searchForTerm(inputValue))
-      }, 1000)
-    })
-
   function renderForm() {
     return (
       <Col className="bestbet-list ml-4">
@@ -207,6 +223,40 @@ function Bestbet(props) {
     )
   }
 
+  function renderListItem(item) {
+    return (
+      <>
+        <Row>
+          <Col className="col-6">
+            <li>
+              <Link isExternal={true}
+                href={props.contentStudioBaseUrl + item.linkedContentHref}>
+                {item.linkedContentTitle}
+              </Link>
+            </li>
+          </Col>
+
+          <Col>
+            <div className="d-flex flex-wrap">
+              {item.searchWords.map((searchWord) => renderSearchWord(searchWord, true))}
+              <Tag className="m-1" onClick={() => handleEditSearchWordOnClick(item)}>
+              Rediger<Edit size={16} className="ml-1" />
+              </Tag>
+            </div>
+          </Col>
+          <Col>
+            <Button onClick={() => handleDelete(item.id)}>Slett<Trash size={16} className="ml-1" /></Button>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Divider light className="my-4"/>
+          </Col>
+        </Row>
+      </>
+    )
+  }
+
   function renderBestbetList() {
     if (loading) {
       return <span className="spinner-border spinner-border" />
@@ -233,56 +283,6 @@ function Bestbet(props) {
         </>
       )
     }
-  }
-
-  function renderSearchWord(searchWord, disabled) {
-    if (!disabled) {
-      return (
-        <Tag className="m-1" onClick={() => handleRemoveEditTag(searchWord)}>
-          {searchWord}<XCircle size={16} className="ml-1" />
-        </Tag>
-      )
-    }
-
-    return (
-      <div className="search-words m-1">
-        {searchWord}
-      </div>
-    )
-  }
-
-  function renderListItem(item) {
-    return (
-      <>
-        <Row>
-          <Col className="col-6">
-            <li>
-              <Link isExternal={true}
-                href={props.contentStudioBaseUrl + item.linkedContentHref}>
-                {item.linkedContentTitle}
-              </Link>
-            </li>
-          </Col>
-
-          <Col>
-            <div className="d-flex flex-wrap">
-              {item.searchWords.map((searchWord) => renderSearchWord(searchWord, true))}
-              <Tag className="m-1" onClick={() => handleEditSearchWordOnClick(item)}>
-              Rediger<Edit size={16} className="ml-1" />
-              </Tag>
-            </div>
-          </Col>
-          <Col>
-            <Button onClick={() => deleteBestBet(item.id)}>Slett<Trash size={16} className="ml-1" /></Button>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <Divider light className="my-4"/>
-          </Col>
-        </Row>
-      </>
-    )
   }
 
   return (
