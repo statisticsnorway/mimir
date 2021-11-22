@@ -49,6 +49,9 @@ const {
   get
 } = __non_webpack_require__('/lib/xp/content')
 const view: ResourceKey = resolve('./highchart.html')
+const {
+  isEnabled
+} = __non_webpack_require__('/lib/featureToggle')
 
 exports.get = function(req: Request): Response {
   try {
@@ -83,6 +86,16 @@ function renderPart(req: Request, highchartIds: Array<string>): Response {
     locale: language === 'nb' ? 'no' : language
   })
 
+  const showAsGraphText: string = localize({
+    key: 'highcharts.showAsGraph',
+    locale: language === 'nb' ? 'no' : language
+  })
+
+  const showAsTableText: string = localize({
+    key: 'highcharts.showAsTable',
+    locale: language === 'nb' ? 'no' : language
+  })
+
   const highcharts: Array<HighchartsReactProps> = highchartIds.map((key) => {
     const highchart: Content<Highchart> | null = get({
       key
@@ -99,7 +112,10 @@ function renderPart(req: Request, highchartIds: Array<string>): Response {
     body: render(view, {
       highcharts,
       downloadText,
-      sourceText
+      sourceText,
+      showDataTableEnabled: isEnabled('highchart-show-datatable', false, 'ssb'),
+      showAsGraphText,
+      showAsTableText
     }),
     pageContributions: {
       bodyEnd: inlineScript

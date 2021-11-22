@@ -65,8 +65,21 @@
     }
   }
 }
-.highcharts-figure.hide-title .highcharts-title {
+.highcharts-figure.hide-title .highcharts-title, .highcharts-subtitle {
   fill: transparent !important;
+}
+
+.show-datatable {
+
+  .highchart-title {
+    font-size: 20px;
+    @include roboto;
+    font-weight: bold;
+  }
+
+  .highchart-subtitle {
+    font-size: 14px;
+  }
 }
 
 .highcharts-data-table {
