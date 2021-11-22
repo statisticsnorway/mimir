@@ -94,6 +94,98 @@ export function init() {
             $(e.browserEvent.target).toggleClass('disabled')
           }
         }
+
+        const category = 'Highcharts'
+        const action = 'Lastet ned highcharts'
+
+        config.exporting.menuItemDefinitions = {
+          'printChart': {
+            onclick: function() {
+              const label = `${config.title.text} - Skriv ut graf`
+              window.gtag('event', action, {
+                'event_category': category,
+                'event_label': label
+              })
+
+              this.print()
+            }
+          },
+          'downloadPNG': {
+            onclick: function() {
+              const label = `${config.title.text} - Last ned som PNG`
+              window.gtag('event', action, {
+                'event_category': category,
+                'event_label': label
+              })
+
+              this.exportChart({
+                type: 'png'
+              })
+            }
+          },
+          'downloadJPEG': {
+            onclick: function() {
+              const label = `${config.title.text} - Last ned som JPEG`
+              window.gtag('event', action, {
+                'event_category': category,
+                'event_label': label
+              })
+
+              this.exportChart({
+                type: 'jpeg'
+              })
+            }
+          },
+          'downloadPDF': {
+            onclick: function() {
+              const label = `${config.title.text} - Last ned som PDF`
+              window.gtag('event', action, {
+                'event_category': category,
+                'event_label': label
+              })
+
+              this.exportChart({
+                type: 'application/pdf'
+              })
+            }
+          },
+          'downloadSVG': {
+            onclick: function() {
+              const label = `${config.title.text} - Last ned som SVG`
+              window.gtag('event', action, {
+                'event_category': category,
+                'event_label': label
+              })
+
+              this.exportChart({
+                type: 'svg'
+              })
+            }
+          },
+          'downloadXLS': {
+            onclick: function() {
+              const label = `${config.title.text} - Last ned som XLS`
+              window.gtag('event', action, {
+                'event_category': category,
+                'event_label': label
+              })
+
+              this.downloadXLS()
+            }
+          },
+          'downloadCSV': {
+            onclick: function() {
+              const label = `${config.title.text} - Last ned som CSV`
+              window.gtag('event', action, {
+                'event_category': category,
+                'event_label': label
+              })
+
+              this.downloadCSV()
+            }
+          }
+        }
+
         Highcharts.chart(chart, config)
       }
     })

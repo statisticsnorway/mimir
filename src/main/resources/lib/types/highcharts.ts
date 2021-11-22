@@ -35,17 +35,9 @@ export interface HighchartsGraphConfig {
     };
     buttons?: {
         contextButton?: {
-          height?: number;
-          symbolX?: number;
-          symbolY?: number;
-          theme?: {
-            fill?: string;
-              r?: number;
-              'stroke-width'?: number;
-              stroke?: string;
-          };
-          x?: number;
-          width?: number;
+          symbol: string;
+          symbolStroke: string;
+          text: string;
           menuItems?: Array<string>;
         };
       };
