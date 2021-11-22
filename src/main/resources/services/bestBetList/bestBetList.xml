@@ -1,8 +1,7 @@
 <service>
     <allow>
-        <principal>role:system.everyone</principal>
-        <!-- <principal>role:system.admin</principal>
-            <principal>role:dashboard.fag</principal> -->
+            <principal>role:system.admin</principal>
+            <principal>role:dashboard.fag</principal>
         </allow>
     </service>
     

@@ -14,5 +14,6 @@
     "types"
   ],
   "include": [
-    "src/**/*.ts"  ]
+    "src/**/*.ts"
+  ]
 }

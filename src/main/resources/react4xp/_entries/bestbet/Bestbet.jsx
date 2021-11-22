@@ -10,6 +10,14 @@ import 'regenerator-runtime'
 function Bestbet(props) {
   const [loading, setLoading] = useState(false)
   const [bestBetList, setBestBetList] = useState([])
+
+  const [showEditSearchWordsModal, setShowEditSearchWordsModal] = useState(false)
+  const handleCloseEditSearchWordModal = () => setShowEditSearchWordsModal(false)
+
+  const [inputTag, setInputTag] = useState('')
+  const [bestBetContent, setBestBetContent] = useState({})
+  const [searchWordsList, setSearchWordsList] = useState([])
+
   const [bbBeingEdited, setBbBeingEdited] = useState({
     id: '',
     linkedContentId: '',
@@ -17,13 +25,6 @@ function Bestbet(props) {
     linkedContentHref: '',
     searchWords: ['']
   })
-
-  const [showEditSearchWordsModal, setShowEditSearchWordsModal] = useState(false)
-  const handleCloseEditSearchWordModal = () => setShowEditSearchWordsModal(false)
-
-  const [inputTag, setInputTag] = useState('')
-  const [searchWordsList, setSearchWordsList] = useState([])
-  const [bestBetContent, setBestBetContent] = useState({})
 
   useEffect(() => {
     fetchBestBetList()
@@ -55,9 +56,7 @@ function Bestbet(props) {
       .catch((err) => {
         console.log(err)
       })
-      .finally(() => {
-        setLoading(false)
-      })
+      .finally(() => setLoading(false))
   }
 
   function handleCreate() {
@@ -70,11 +69,13 @@ function Bestbet(props) {
     setLoading(true)
     axios.post(props.bestBetListServiceUrl, updatedBestBetItem)
       .then(() => {
-        setLoading(false)
+        fetchBestBetList()
       })
       .catch((err) => {
         console.log(err)
       })
+      .finally(() => setLoading(false)
+      )
   }
 
   function deleteBestBet(key) {
@@ -82,9 +83,7 @@ function Bestbet(props) {
       params: {
         key: key
       }
-    }).finally(() =>{
-      fetchBestBetList()
-    })
+    }).then(() => fetchBestBetList())
   }
 
   function renderEditSearchWordModal() {
