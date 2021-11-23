@@ -82,13 +82,6 @@
   }
 }
 
-.highcharts-data-table {
-
-  table {
-    width: 100%;
-
-    caption {
-      display: none
-    }
-  }
-}
+ .highcharts-data-table {
+    overflow-x: auto;
+} 

@@ -117,6 +117,7 @@ export function init() {
 
         Highcharts.chart(chart, config)
         $('.highcharts-data-table').hide()
+        $('.highcharts-data-table').find('table').addClass('statistics')
       }
     })
   })
