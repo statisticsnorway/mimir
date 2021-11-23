@@ -182,6 +182,18 @@ function PublicationArchive(props) {
     )
   }
 
+  function addHiddenLinkSolrArticleList() {
+    const language = props.language === 'en' ? 'en' : 'no'
+    const solrArticleListUrl = `/_/service/mimir/solrArticleList?language=${language}`
+    return (
+      <div style={{
+        display: 'none'
+      }}>
+        <Link tabIndex="-1" href={solrArticleListUrl}>Alle artikler</Link>
+      </div>
+    )
+  }
+
   return (
     <section className="publication-archive container-fluid">
       <div className="row">
@@ -224,6 +236,7 @@ function PublicationArchive(props) {
           </div>
         </div>
       </div>
+      {addHiddenLinkSolrArticleList()}
     </section>
   )
 }

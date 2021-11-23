@@ -34,12 +34,6 @@ export const X_AXIS_TITLE_POSITION = {
 export const createDefaultConfig = (highchartData, displayName, language) => ({
   accessibility: {
     enabled: true,
-    keyboardNavigation: {
-      order: [
-        // TODO: Tabs to the invisible export menu first, then the download button. Should fix download button keyboard navigation then remove.
-        'chartMenu'
-      ]
-    },
     description: highchartData.description
   },
   chart: {
@@ -92,19 +86,12 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
     },
     buttons: {
       contextButton: {
-        height: 26,
-        symbolX: 14.5,
-        symbolY: 12.5,
-        verticalAlign: 'bottom',
-        y: 40,
-        theme: {
-          'fill': '#fff',
-          'r': 3,
-          'stroke-width': 1,
-          'stroke': '#bbb'
-        },
-        x: 8,
-        width: 28,
+        symbol: 'menu',
+        symbolStroke: '#00824D', // ssb-green-4
+        text: localize({
+          key: 'highcharts.download',
+          locale: language ? language : 'nb'
+        }),
         menuItems: [
           'printChart',
           'separator',
@@ -262,13 +249,6 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
       chartOptions: {
         chart: {
           height: '120%'
-        },
-        exporting: {
-          buttons: {
-            contextButton: {
-              y: 25
-            }
-          }
         },
         style: {
           fontSize: '10px'
