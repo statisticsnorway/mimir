@@ -92,7 +92,7 @@ export function pathFromStringOrContent(urlSrc: Header['searchResultPage']): str
  * @param {Object} sourceConfig
  * @return {array} a list of sources, text and url
  */
-export function getSources(sourceConfig: Array<SourcesConfig>): Array<Sources> {
+export function getSources(sourceConfig: Array<SourcesConfig>): SourceList {
   return sourceConfig.map((selectedSource) => {
     let sourceText: string = ''
     let sourceUrl: string = ''
@@ -136,7 +136,7 @@ export function getAttachment(attachmentContent: Content | null): string | undef
   return lines[0]
 }
 
-interface SourcesConfig {
+export interface SourcesConfig {
   _selected: string;
   urlSource: {
     urlText: string;
@@ -159,6 +159,8 @@ interface ContentSearchPageResult {
 interface ManualSearchPageResult {
   url?: string;
 }
+
+export type SourceList = Array<Sources>
 export interface UtilsLib {
   createHumanReadableFormat: (value: number | string | null) => string;
   dateToFormat: (dateString: string | undefined) => string;
@@ -168,7 +170,7 @@ export interface UtilsLib {
   getRowValue: (value: number | string | PreliminaryData | Array<number | string | PreliminaryData>) => RowValue;
   pageMode: (req: Request) => string;
   pathFromStringOrContent: (urlSrc: Header['searchResultPage']) => string | undefined;
-  getSources: (sourceConfig: Array<SourcesConfig>) => Array<Sources>;
+  getSources: (sourceConfig: Array<SourcesConfig>) => SourceList;
   getAttachmentContent: (contentId: string | undefined) => string | undefined;
   getAttachment: (attachmentContent: Content | null) => string | undefined;
 }
