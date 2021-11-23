@@ -7,6 +7,7 @@ import highchartsModuleAccessibility from 'highcharts/modules/accessibility'
 import highchartsModuleExporting from 'highcharts/modules/exporting'
 import highchartsModuleNoDataToDisplay from 'highcharts/modules/no-data-to-display'
 import highchartsModuleExportData from 'highcharts/modules/export-data'
+import zipcelx from 'zipcelx/lib/legacy'
 
 // Initialize exporting module.
 highchartsModuleData(Highcharts)
@@ -169,8 +170,19 @@ export function init() {
                 'event_category': category,
                 'event_label': label
               })
-
-              this.downloadXLS()
+              const rows = this.getDataRows(true)
+              const xlsxRows = rows.slice(1).map(function (row) {
+                return row.map(function (column) {
+                  return {
+                    type: typeof column === 'number' ? 'number' : 'string',
+                    value: column
+                  }
+                })
+              })
+              zipcelx({
+                filename: config.title.text ? config.title.text : 'graf.xslt' ,
+                sheet: {data: xlsxRows}
+              })
             }
           },
           'downloadCSV': {
