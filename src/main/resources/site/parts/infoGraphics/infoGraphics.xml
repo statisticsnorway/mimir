@@ -1,16 +1,9 @@
 <part>
-  <display-name>Infografikk / Visualisering</display-name>
-  <description>Inforgrafikk eller visualisering med tittel og beskrivelse</description>
+  <display-name>Infografikk / Visualisering (IKKE BRUK)</display-name>
+  <description>Infografikk eller visualisering med tittel og beskrivelse</description>
   <form>
-    <input name="infoGraphicsContent" type="ContentSelector">
-      <label>Infografikk</label>
-      <occurrences minimum="0" maximum="1" />
-      <config>
-          <allowContentType>infoGraphics</allowContentType>
-      </config>
-    </input>
     <field-set>
-    <label>Gammelt (Ikke bruk)</label>
+      <label>Gammelt (Ikke bruk)</label>
       <items>
         <input name="title" type="TextLine">
           <label>Tittel på visualinseringen</label>

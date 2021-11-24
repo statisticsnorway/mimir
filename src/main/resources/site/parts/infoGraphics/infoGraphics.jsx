@@ -13,7 +13,7 @@ function InfoGraphics(props) {
 
             <div className="d-flex justify-content-center">
               <img alt={props.altText} src={props.imageSrc} />
-              <a href={props.longDesc} className="sr-only">{props.descriptionInfographics}</a>
+              <a href={props.longDesc} className="sr-only">{props.descriptionStaticVisualization}</a>
             </div>
 
             {props.footnotes.length ?
@@ -47,7 +47,7 @@ InfoGraphics.propTypes = {
   imageSrc: PropTypes.string,
   altText: PropTypes.string,
   longDesc: PropTypes.string,
-  descriptionInfographics: PropTypes.string,
+  descriptionStaticVisualization: PropTypes.string,
   footnotes: PropTypes.array,
   sourcesLabel: PropTypes.string,
   sources: PropTypes.arrayOf(
