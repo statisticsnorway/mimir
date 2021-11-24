@@ -3,11 +3,6 @@
     <description>Infografikk eller visualisering med tittel og beskrivelse</description>
     <super-type>base:structured</super-type>
     <form>
-        <input name="title" type="TextLine">
-        <label>Tittel på visualinseringen</label>
-        <occurrences minimum="1" maximum="1" />
-        </input>
-
         <input name="image" type="ImageSelector">
         <label>Infografikk eller visualisering</label>
         <occurrences minimum="1" maximum="1"/>

@@ -17,20 +17,23 @@ function InfoGraphics(props) {
             </div>
 
             {props.footnotes.length ?
-              props.footnotes.map((footnote, index) =>
-                <ul key={`footnote-${index}`} className="footnote">
-                  <li>
+              <ul className="footnote">
+                {props.footnotes.map((footnote, index) =>
+                  <li key={`footnote-${index}`}>
                     <sup>{index + 1}</sup>
                     <span>{footnote}</span>
                   </li>
-                </ul>) : null}
+                )}
+              </ul> : null}
 
-            <b className="source-title">{props.sourcesLabel}</b>
             {props.sources.length ?
-              props.sources.map((source, index) =>
-                <p key={`source-${index}`} className="sources">
-                  <Link className="mb-1" href={source.url}>{source.urlText}</Link>
-                </p>) : null}
+              <>
+                <b className="source-title">{props.sourcesLabel}</b>
+                {props.sources.map((source, index) =>
+                  <p key={`source-${index}`} className="sources">
+                    <Link className="mb-1" href={source.url}>{source.urlText}</Link>
+                  </p>)}
+              </> : null}
           </div>
         </Col>
       </Row>

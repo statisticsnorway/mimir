@@ -75,11 +75,9 @@ function renderPart(req: Request): React4xpResponse {
     const imageData: Content<MediaImage> | null = get({
       key: infoGraphicsContent.data.image
     })
-    log.info(page.page.config.pageType)
-    log.info(page.page.config && page.page.config.pageType === 'factPage')
 
     const props: InfoGraphicsProps = {
-      title: infoGraphicsContent.data.title,
+      title: infoGraphicsContent.displayName,
       altText: imageData && imageData.data.altText ? imageData.data.altText : (imageData && imageData.data.caption ? imageData.data.caption : ' '),
       imageSrc: imageSrc,
       footnotes: infoGraphicsContent.data.footNote ? forceArray(infoGraphicsContent.data.footNote) : [],
