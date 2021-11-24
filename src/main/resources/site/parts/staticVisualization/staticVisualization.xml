@@ -1,5 +1,5 @@
 <part>
-  <display-name>Statiske visualiseringer</display-name>
+  <display-name>Statisk visualisering</display-name>
   <description>Infografikk eller visualisering med tittel og beskrivelse</description>
   <form>
     <mixin name="staticVisualization" />
