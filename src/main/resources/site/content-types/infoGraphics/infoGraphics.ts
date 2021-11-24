@@ -6,6 +6,16 @@ export interface InfoGraphics {
   image: string;
 
   /**
+   * Beskrivende hjelpetekst for blinde
+   */
+  longDesc?: string;
+
+  /**
+   * Tabelldata
+   */
+  tableData?: string;
+
+  /**
    * Kilder
    */
   sources?: Array<
@@ -57,14 +67,4 @@ export interface InfoGraphics {
    * Fotnote-tekst
    */
   footNote?: Array<string>;
-
-  /**
-   * Beskrivende hjelpetekst for blinde
-   */
-  longDesc?: string;
-
-  /**
-   * Tabelldata
-   */
-  tableData?: string;
 }

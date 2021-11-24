@@ -34,29 +34,30 @@ import { DefaultPageConfig } from '../../pages/default/default-page-config'
 
 exports.get = function(req: Request): Response | React4xpResponse {
   try {
-    return renderPart(req)
+    const config: InfoGraphicsPartConfig = getComponent().config
+    const contentId: string | undefined = config.infoGraphicsContent
+    return renderPart(req, contentId)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-exports.preview = (req: Request): Response | React4xpResponse => {
+exports.preview = (req: Request, contentId: string | undefined): Response | React4xpResponse => {
   try {
-    return renderPart(req)
+    return renderPart(req, contentId)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-function renderPart(req: Request): React4xpResponse {
+function renderPart(req: Request, contentId: string | undefined): React4xpResponse {
   const page: DefaultPage = getContent() as DefaultPage
-  const config: InfoGraphicsPartConfig = getComponent().config
   const phrases: {source: string; descriptionInfographics: string} = getPhrases(page)
   const sourcesLabel: string = phrases.source
   const descriptionInfographics: string = phrases.descriptionInfographics
 
-  const infoGraphicsContent: Content<InfoGraphicsPartConfig> | null = config.infoGraphicsContent ? get({
-    key: config.infoGraphicsContent
+  const infoGraphicsContent: Content<InfoGraphicsPartConfig> | null = contentId ? get({
+    key: contentId
   }) : null
 
   if (infoGraphicsContent) {
@@ -92,6 +93,7 @@ function renderPart(req: Request): React4xpResponse {
   }
 
   // Everything past this point (with the exception of the interface) can be deleted after all the content has been moved to the content type
+  const config: InfoGraphicsPartConfig = getComponent().config
   const sourceConfig: InfoGraphics['sources'] = config.sources ? forceArray(config.sources) : []
 
   // Encodes string to base64 and turns it into a dataURI

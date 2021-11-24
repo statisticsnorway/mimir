@@ -1,0 +1,13 @@
+<macro>
+    <display-name>Infografikk / Visualisering</display-name>
+    <description>Inforgrafikk eller visualisering med tittel og beskrivelse</description>
+    <form>
+        <input name="infoGraphicsContent" type="ContentSelector">
+            <label>Infografikk</label>
+            <occurrences minimum="0" maximum="1" />
+            <config>
+                <allowContentType>infoGraphics</allowContentType>
+            </config>
+        </input>
+    </form>
+</macro>

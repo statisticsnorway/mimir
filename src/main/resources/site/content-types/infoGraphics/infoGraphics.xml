@@ -4,16 +4,12 @@
     <super-type>base:structured</super-type>
     <form>
         <input name="image" type="ImageSelector">
-        <label>Infografikk eller visualisering</label>
-        <occurrences minimum="1" maximum="1"/>
-        <config>
-            <allowPath>${site}</allowPath>
-        </config>
+            <label>Infografikk eller visualisering</label>
+            <occurrences minimum="1" maximum="1"/>
+            <config>
+                <allowPath>${site}</allowPath>
+            </config>
         </input>
-
-        <mixin name="sources" />
-
-        <mixin name="footnote" />
 
         <input name="longDesc" type="TextArea">
             <label>Beskrivende hjelpetekst for blinde</label>
@@ -24,5 +20,9 @@
             <label>Tabelldata</label>
             <occurrences minimum="0" maximum="1" />
         </input>
+
+        <mixin name="sources" />
+
+        <mixin name="footnote" />
     </form>
 </content-type>

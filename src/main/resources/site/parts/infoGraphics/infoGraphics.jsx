@@ -7,7 +7,7 @@ function InfoGraphics(props) {
   return (
     <section className="container part-infoGraphic">
       <Row className="xp-part">
-        <Col className={`xp-region col-12 ${props.oldContent || (!props.inFactPage) ? '' : 'p-0'}`}>
+        <Col className={`xp-region col-12${props.oldContent || (!props.inFactPage) ? '' : ' p-md-0'}`}>
           <div className={props.oldContent && 'border-top-green'}>
             <Title size={2} className="mt-0">{props.title}</Title>
 
