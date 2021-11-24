@@ -7,7 +7,7 @@ function InfoGraphics(props) {
   return (
     <section className="container part-infoGraphic">
       <Row className="xp-part">
-        <Col className={`xp-region col-12${props.oldContent || (!props.inFactPage) ? '' : ' p-md-0'}`}>
+        <Col className="xp-region col-12">
           <div className={props.oldContent && 'border-top-green'}>
             <Title size={2} className="mt-0">{props.title}</Title>
 
@@ -17,7 +17,7 @@ function InfoGraphics(props) {
             </div>
 
             {props.footnotes.length ?
-              <ul className="footnote">
+              <ul className={`footnote${props.inFactPage ? '' : ' pl-0'}`}>
                 {props.footnotes.map((footnote, index) =>
                   <li key={`footnote-${index}`}>
                     <sup>{index + 1}</sup>
