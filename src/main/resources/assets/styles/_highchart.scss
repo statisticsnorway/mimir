@@ -62,8 +62,10 @@
     }
   }
 }
-.highcharts-figure.hide-title .highcharts-title, .highcharts-subtitle {
-  fill: transparent !important;
+.highcharts-figure.hide-title {
+  .highcharts-title, .highcharts-subtitle {
+    display: none !important;
+  }
 }
 
 .show-datatable {
@@ -81,4 +83,5 @@
 
  .highcharts-data-table {
     overflow-x: auto;
+    margin-top: 50px;
 } 

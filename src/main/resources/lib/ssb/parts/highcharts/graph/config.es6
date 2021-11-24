@@ -47,7 +47,8 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
     },
     type: 'bar',
     spacing: [0, 10, 0, 0],
-    zoomType: highchartData.zoomType
+    zoomType: highchartData.zoomType,
+    marginTop: 40
   },
   // SSB color palette:
   colors: [
