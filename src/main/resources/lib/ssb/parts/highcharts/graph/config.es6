@@ -48,7 +48,7 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
     type: 'bar',
     spacing: [0, 10, 0, 0],
     zoomType: highchartData.zoomType,
-    marginTop: 40
+    marginTop: 50
   },
   // SSB color palette:
   colors: [
@@ -103,7 +103,8 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
           'separator',
           'downloadCSV',
           'downloadXLS'
-        ]
+        ],
+        y: 5
       }
     },
     csv: {
@@ -165,7 +166,7 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
     },
     text: highchartData.subtitle,
     x: 0,
-    y: 48
+    y: 38
   },
   title: {
     align: highchartData.titleCenter ? 'center' : 'left',
