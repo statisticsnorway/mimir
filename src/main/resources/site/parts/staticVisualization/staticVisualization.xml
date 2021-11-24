@@ -1,13 +1,7 @@
 <part>
-  <display-name>Statisk visualisering</display-name>
+  <display-name>Statiske visualiseringer</display-name>
   <description>Infografikk eller visualisering med tittel og beskrivelse</description>
   <form>
-    <input name="staticVisualizationContent" type="ContentSelector">
-      <label>Velg statisk visualisering</label>
-      <occurrences minimum="0" maximum="1" />
-      <config>
-          <allowContentType>staticVisualization</allowContentType>
-      </config>
-    </input>
+    <mixin name="staticVisualization" />
   </form>
 </part>
