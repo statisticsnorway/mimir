@@ -67,4 +67,9 @@ export interface InfoGraphics {
    * Beskrivende hjelpetekst for blinde
    */
   longDesc?: string;
+
+  /**
+   * Tabelldata
+   */
+  tableData?: string;
 }

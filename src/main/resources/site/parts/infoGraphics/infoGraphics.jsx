@@ -7,8 +7,8 @@ function InfoGraphics(props) {
   return (
     <section className="container part-infoGraphic">
       <Row className="xp-part">
-        <Col className="xp-region col-12">
-          <div className="border-top-green">
+        <Col className={`xp-region col-12 ${props.oldContent || (!props.inFactPage) ? '' : 'p-0'}`}>
+          <div className={props.oldContent && 'border-top-green'}>
             <Title size={2} className="mt-0">{props.title}</Title>
 
             <div className="d-flex justify-content-center">
@@ -20,7 +20,7 @@ function InfoGraphics(props) {
               props.footnotes.map((footnote, index) =>
                 <ul key={`footnote-${index}`} className="footnote">
                   <li>
-                    <sup>{index}</sup>
+                    <sup>{index + 1}</sup>
                     <span>{footnote}</span>
                   </li>
                 </ul>) : null}
@@ -52,7 +52,9 @@ InfoGraphics.propTypes = {
       url: PropTypes.string,
       urlText: PropTypes.string
     })
-  )
+  ),
+  inFactPage: PropTypes.bool,
+  oldContent: PropTypes.bool // TODO: Remove after content has been transferred to the content type
 }
 
 export default (props) => <InfoGraphics {...props} />

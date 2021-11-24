@@ -28,6 +28,8 @@ import { InfoGraphics } from '../../content-types/infoGraphics/infoGraphics'
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import { Base64 } from 'js-base64'
+import { InfoGraphicsPartConfig } from './infoGraphics-part-config'
+import { DefaultPageConfig } from '../../pages/default/default-page-config'
 
 
 exports.get = function(req: Request): Response | React4xpResponse {
@@ -47,19 +49,56 @@ exports.preview = (req: Request): Response | React4xpResponse => {
 }
 
 function renderPart(req: Request): React4xpResponse {
-  const page: Content<InfoGraphics> = getContent()
-  const config: InfoGraphics = getComponent().config
-  const sourceConfig: InfoGraphics['sources'] = config.sources ? forceArray(config.sources) : []
-
+  const page: DefaultPage = getContent() as DefaultPage
+  const config: InfoGraphicsPartConfig = getComponent().config
   const phrases: {source: string; descriptionInfographics: string} = getPhrases(page)
-
   const sourcesLabel: string = phrases.source
   const descriptionInfographics: string = phrases.descriptionInfographics
+
+  const infoGraphicsContent: Content<InfoGraphicsPartConfig> | null = config.infoGraphicsContent ? get({
+    key: config.infoGraphicsContent
+  }) : null
+
+  if (infoGraphicsContent) {
+    const sourceConfig: InfoGraphics['sources'] = infoGraphicsContent.data.sources ? forceArray(infoGraphicsContent.data.sources) : []
+
+    // Encodes string to base64 and turns it into a dataURI
+    const desc: string = Base64.encodeURI(infoGraphicsContent.data.longDesc)
+    const longDesc: string = 'data:text/html;charset=utf-8;base64,' + desc
+
+    const imageSrc: string | null = imageUrl({
+      id: infoGraphicsContent.data.image,
+      scale: 'max(850)'
+    })
+
+    // Retrieves image as content to get image meta data
+    const imageData: Content<MediaImage> | null = get({
+      key: infoGraphicsContent.data.image
+    })
+    log.info(page.page.config.pageType)
+    log.info(page.page.config && page.page.config.pageType === 'factPage')
+
+    const props: InfoGraphicsProps = {
+      title: infoGraphicsContent.data.title,
+      altText: imageData && imageData.data.altText ? imageData.data.altText : (imageData && imageData.data.caption ? imageData.data.caption : ' '),
+      imageSrc: imageSrc,
+      footnotes: infoGraphicsContent.data.footNote ? forceArray(infoGraphicsContent.data.footNote) : [],
+      sources: getSources(sourceConfig as Array<SourcesConfig>),
+      longDesc,
+      sourcesLabel,
+      descriptionInfographics,
+      inFactPage: page.page.config && page.page.config.pageType === 'factPage'
+    }
+
+    return React4xp.render('site/parts/infoGraphics/infoGraphics', props, req)
+  }
+
+  // Everything past this point (with the exception of the interface) can be deleted after all the content has been moved to the content type
+  const sourceConfig: InfoGraphics['sources'] = config.sources ? forceArray(config.sources) : []
 
   // Encodes string to base64 and turns it into a dataURI
   const desc: string = Base64.encodeURI(config.longDesc)
   const longDesc: string = 'data:text/html;charset=utf-8;base64,' + desc
-  log.info(JSON.stringify(longDesc, null, 2))
 
   const imageSrc: string | null = imageUrl({
     id: config.image,
@@ -73,16 +112,23 @@ function renderPart(req: Request): React4xpResponse {
 
   const props: InfoGraphicsProps = {
     title: config.title,
-    altText: imageData && imageData.data.altText ? imageData.data.altText : (imageData && imageData.data.caption ? imageData.data.caption : ' '),
+    altText: imageData && imageData.data.altText ? imageData.data.altText : (imageData && imageData.data.caption ? imageData.data.caption : ''),
     imageSrc: imageSrc,
     footnotes: config.footNote ? forceArray(config.footNote) : [],
     sources: getSources(sourceConfig as Array<SourcesConfig>),
     longDesc,
     sourcesLabel,
-    descriptionInfographics
+    descriptionInfographics,
+    oldContent: true
   }
 
   return React4xp.render('site/parts/infoGraphics/infoGraphics', props, req)
+}
+
+interface DefaultPage {
+  page: {
+    config: DefaultPageConfig;
+  };
 }
 
 interface InfoGraphicsProps {
@@ -94,4 +140,6 @@ interface InfoGraphicsProps {
   longDesc: string;
   sourcesLabel: string;
   descriptionInfographics: string;
+  inFactPage?: boolean;
+  oldContent?: boolean;
 }

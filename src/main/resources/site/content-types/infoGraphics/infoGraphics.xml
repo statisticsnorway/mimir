@@ -1,6 +1,7 @@
 <content-type>
     <display-name>Infografikk / Visualisering</display-name>
-    <description>Inforgrafikk eller visualisering med tittel og beskrivelse</description>
+    <description>Infografikk eller visualisering med tittel og beskrivelse</description>
+    <super-type>base:structured</super-type>
     <form>
         <input name="title" type="TextLine">
         <label>Tittel på visualinseringen</label>
@@ -20,11 +21,13 @@
         <mixin name="footnote" />
 
         <input name="longDesc" type="TextArea">
-        <label>Beskrivende hjelpetekst for blinde</label>
-        <default></default>
-        <config>
-            <max-length>600</max-length>
-        </config>
+            <label>Beskrivende hjelpetekst for blinde</label>
+            <default></default>
+        </input>
+
+        <input name="tableData" type="HtmlArea">
+            <label>Tabelldata</label>
+            <occurrences minimum="0" maximum="1" />
         </input>
     </form>
 </content-type>
