@@ -7,7 +7,6 @@ import highchartsModuleAccessibility from 'highcharts/modules/accessibility'
 import highchartsModuleExporting from 'highcharts/modules/exporting'
 import highchartsModuleNoDataToDisplay from 'highcharts/modules/no-data-to-display'
 import highchartsModuleExportData from 'highcharts/modules/export-data'
-import zipcelx from 'zipcelx/lib/legacy'
 
 // Initialize exporting module.
 highchartsModuleData(Highcharts)
@@ -28,6 +27,47 @@ const EMPTY_CONFIG = {
 
 const createSetOptions = {
   lang: {
+    accessibility: {
+      chartContainerLabel: '{title} Interaktiv graf',
+      exporting: {
+        chartMenuLabel: 'Last ned graf',
+        menuButtonLabel: 'Velg format for å laste ned {chartTitle}'
+      },
+      screenReaderSection: {
+        beforeRegionLabel: 'Diagram skjermleser-informasjon for {chartTitle}.',
+        endOfChartMarker: ''
+      }
+    },
+    chartTypes: {
+      barMultiple: 'Søylediagram med {numSeries} serier.',
+      barSingle: 'Søylediagram med {numPoints} {#plural(numPoints, bars, bar)}.',
+      columnMultiple: 'Liggende søylediagram med {numSeries} linjer.',
+      columnSingle: 'Søylediagram med {numPoints} {#plural(numPoints, bars, bar)}.',
+      combinationChart: 'Kombinasjonsdiagram med {numSeries} dataserier.',
+      defaultMultiple: 'Diagram med {numSeries} dataserier.',
+      defaultSingle: 'Diagram med {numPoints} datapunkter {#plural(numPoints, points, point)}.',
+      emptyChart: 'Tom datavisualisering',
+      lineMultiple: 'Linjediagram med {numSeries} linjer.',
+      lineSingle: 'Linjediagram med {numPoints} datapunkter {#plural(numPoints, points, point)}.',
+      mapTypeDescription: 'Kart over {mapTitle} med {numSeries} dataserier.',
+      pieMultiple: 'Kakediagram med {numSeries} kakestykker.',
+      pieSingle: 'kakediagram med {numPoints} {#plural(numPoints, slices, slice)}.',
+      scatterMultiple: 'Spredningsplott diagram med {numSeries} dataserier.',
+      scatterSingle: 'Spredningsplott diagram med {numPoints} {#plural(numPoints, points, point)}.',
+      splineMultiple: 'Linjediagram med {numSeries} linjer.',
+      splineSingle: 'linjediagram med {numPoints} datapunkter {#plural(numPoints, points, point)}.',
+      unknownMap: 'Kart med {numSeries} dataserier.'
+    },
+    series: {
+      xAxisDescription: 'X-akse, {name}',
+      yAxisDescription: 'Y-akse , {name}'
+    },
+    legend: {
+      legendItem: 'Vis {itemName}',
+      legendLabel: 'Forklaring av diagram: {legendTitle}',
+      legendLabelNoTitle: 'Bytt synlighet på serie, {chartTitle}'
+    },
+    defaultChartTitle: 'Graf',
     contextButtonTitle: 'Last ned/skriv ut',
     decimalPoint: ',',
     downloadJPEG: 'Last ned som JPEG',
@@ -36,7 +76,7 @@ const createSetOptions = {
     downloadSVG: 'Last ned som SVG',
     downloadCSV: 'Last ned tala som CSV',
     downloadXLS: 'Last ned tala som XLS',
-    drillUpText: 'Tilbake til',
+    drillUpText: 'Tilbake til {series.name}',
     loading: 'Tegner graf...',
     noData: 'Tall ikke tilgjengelig',
     numericSymbols: [null, ' mill.', ' mrd.'],
@@ -171,8 +211,8 @@ export function init() {
                 'event_label': label
               })
               const rows = this.getDataRows(true)
-              const xlsxRows = rows.slice(1).map(function (row) {
-                return row.map(function (column) {
+              const xlsxRows = rows.slice(1).map(function(row) {
+                return row.map(function(column) {
                   return {
                     type: typeof column === 'number' ? 'number' : 'string',
                     value: column
@@ -180,8 +220,10 @@ export function init() {
                 })
               })
               zipcelx({
-                filename: config.title.text ? config.title.text : 'graf.xslt' ,
-                sheet: {data: xlsxRows}
+                filename: config.title.text ? config.title.text : 'graf.xslt',
+                sheet: {
+                  data: xlsxRows
+                }
               })
             }
           },
