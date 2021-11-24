@@ -7,6 +7,7 @@ import highchartsModuleAccessibility from 'highcharts/modules/accessibility'
 import highchartsModuleExporting from 'highcharts/modules/exporting'
 import highchartsModuleNoDataToDisplay from 'highcharts/modules/no-data-to-display'
 import highchartsModuleExportData from 'highcharts/modules/export-data'
+import zipcelx from 'zipcelx/lib/legacy'
 
 // Initialize exporting module.
 highchartsModuleData(Highcharts)
