@@ -51,7 +51,7 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
   },
   // SSB color palette:
   colors: [
-    '#1A9D49', '#075745', '#1D9DE2', '#0F2080', '#C78800', '#471F00', '#C775A7', '#A3136C', '#909090'
+    '#1A9D49', '#274247', '#1D9DE2', '#0F2080', '#C78800', '#471F00', '#C775A7', '#A3136C', '#909090', '#000000'
   ],
   credits: {
     position: {
