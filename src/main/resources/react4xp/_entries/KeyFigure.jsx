@@ -126,7 +126,7 @@ class KeyFigures extends React.Component {
         <div className="d-none searchabletext">
           <span>{this.props.hiddenTitle}</span>
         </div>
-        <div className="container">
+        <div className={`container${this.props.isInStatisticsPage ? '' : ' mb-5'}`}>
           {this.addPreviewButton()}
           {this.addPreviewInfo()}
           {this.addHeader()}
@@ -198,7 +198,8 @@ KeyFigures.propTypes = {
   paramShowDraft: PropTypes.bool,
   draftExist: PropTypes.bool,
   pageTypeKeyFigure: PropTypes.bool,
-  hiddenTitle: PropTypes.string
+  hiddenTitle: PropTypes.string,
+  isInStatisticsPage: PropTypes.bool
 }
 
 export default (props) => <KeyFigures {...props}/>

@@ -2,11 +2,11 @@ import { Content } from 'enonic-types/content'
 import { Request, Response } from 'enonic-types/controller'
 import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
 import { KeyFigureView } from '../../../lib/ssb/parts/keyFigure'
-import { React4xpResponse } from '../../../lib/types/react4xp'
+import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { SiteConfig } from '../../../site/site-config'
 import { KeyFigurePartConfig } from './keyFigure-part-config'
 
-const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   get: getKeyFigures,
   parseKeyFigure
@@ -53,7 +53,7 @@ exports.get = function(req: Request): React4xpResponse | Response {
 exports.preview = function(req: Request, id: string): React4xpResponse | Response {
   try {
     const siteConfig: SiteConfig = getSiteConfig()
-    const defaultMunicipality = siteConfig.defaultMunicipality
+    const defaultMunicipality: SiteConfig['defaultMunicipality'] = siteConfig.defaultMunicipality
     const municipality: MunicipalityWithCounty | undefined = getMunicipality({
       code: defaultMunicipality
     } as unknown as Request)
@@ -92,7 +92,7 @@ function renderPart(req: Request, municipality: MunicipalityWithCounty | undefin
       }) as Array<KeyFigureData>
   }
 
-  return renderKeyFigure(page, config, keyFigures, keyFiguresDraft, showPreviewDraft, req) 
+  return renderKeyFigure(page, config, keyFigures, keyFiguresDraft, showPreviewDraft, req)
 }
 
 function renderKeyFigure(
@@ -130,7 +130,8 @@ function renderKeyFigure(
       paramShowDraft: req.params.showDraft,
       draftExist,
       pageTypeKeyFigure: page.type === `${app.name}:keyFigure`,
-      hiddenTitle: hiddenTitle.toString().replace(/[\[\]']+/g, '')
+      hiddenTitle: hiddenTitle.toString().replace(/[\[\]']+/g, ''),
+      isInStatisticsPage: page.type === `${app.name}:statistics`
     }
 
     return React4xp.render('KeyFigure', props, req)
@@ -155,7 +156,7 @@ interface KeyFigureData {
   changes?: KeyFigureView['changes'];
   greenBox: KeyFigureView['greenBox'];
   glossaryText?: KeyFigureView['glossaryText'];
-  glossary?: string,
+  glossary?: string;
   source: object | undefined;
 }
 interface KeyFigureProps {
@@ -170,5 +171,6 @@ interface KeyFigureProps {
   draftExist: boolean;
   pageTypeKeyFigure: boolean;
   hiddenTitle: string;
+  isInStatisticsPage: boolean;
 }
 
