@@ -84,4 +84,8 @@
  .highcharts-data-table {
     overflow-x: auto;
     margin-top: 50px;
+
+   thead th:first-child {
+     text-align: left;
+   }
 } 
