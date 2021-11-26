@@ -1,7 +1,7 @@
 import React from 'react'
-import { KeyFigures as SSBKeyFigures, References, Divider } from '@statisticsnorway/ssb-component-library'
+import { Title, KeyFigures as SSBKeyFigures, References, Divider } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
-import { Alert, Button } from 'react-bootstrap'
+import { Alert, Button, Row, Col } from 'react-bootstrap'
 
 class KeyFigures extends React.Component {
   constructor(props) {
@@ -26,13 +26,15 @@ class KeyFigures extends React.Component {
   addPreviewButton() {
     if (this.state.showPreviewToggle && this.props.pageTypeKeyFigure) {
       return (
-        <Button
-          variant="primary"
-          onClick={this.toggleDraft}
-          className="mb-4"
-        >
-          {!this.state.fetchUnPublished ? 'Vis upubliserte tall' : 'Vis publiserte tall'}
-        </Button>
+        <Col>
+          <Button
+            variant="primary"
+            onClick={this.toggleDraft}
+            className="mb-4"
+          >
+            {!this.state.fetchUnPublished ? 'Vis upubliserte tall' : 'Vis publiserte tall'}
+          </Button>
+        </Col>
       )
     }
     return
@@ -46,15 +48,19 @@ class KeyFigures extends React.Component {
         return keyFigures.map((keyFigure) => {
           if (this.props.draftExist && keyFigure.number) {
             return (
-              <Alert variant='info' className="mb-4">
+              <Col className={`col-12${this.props.isInStatisticsPage ? ' p-0' : ''}`}>
+                <Alert variant='info' className="mb-4">
                   Tallet i nøkkeltallet nedenfor er upublisert
-              </Alert>
+                </Alert>
+              </Col>
             )
           } else {
             return (
-              <Alert variant='warning' className="mb-4">
+              <Col className={`col-12${this.props.isInStatisticsPage ? ' p-0' : ''}`}>
+                <Alert variant='warning' className="mb-4">
                   Finnes ikke upubliserte tall for dette nøkkeltallet
-              </Alert>
+                </Alert>
+              </Col>
             )
           }
         })
@@ -72,11 +78,11 @@ class KeyFigures extends React.Component {
       isRight = (!columns || (columns && !isRight) || keyFigure.size === 'large')
       return (
         <React.Fragment key={`figure-${i}`}>
-          <div className={`col-12 ${columns && keyFigure.size !== 'large' ? 'col-md-6' : ''}`}>
+          <Col className={`col-12${columns && keyFigure.size !== 'large' ? ' col-md-6' : ''}${this.props.isInStatisticsPage ? ' p-0' : ''}`}>
             <SSBKeyFigures {...keyFigure} icon={keyFigure.iconUrl && <img src={keyFigure.iconUrl}
               alt={keyFigure.iconAltText ? keyFigure.iconAltText : ' '}></img>}/>
             {this.addKeyFigureSource(keyFigure)}
-          </div>
+          </Col>
           {i < keyFigures.length - 1 ? <Divider className={`my-5 d-block ${!isRight ? 'd-md-none' : ''}`} light /> : null}
         </React.Fragment>
       )
@@ -102,10 +108,12 @@ class KeyFigures extends React.Component {
       const sourceLabel = this.props.sourceLabel
 
       return (
-        <References className="col-12 mt-3" title={sourceLabel} referenceList={[{
-          href: this.props.source.url,
-          label: this.props.source.title
-        }]}/>
+        <Col className="col-12">
+          <References className="col-12 mt-3" title={sourceLabel} referenceList={[{
+            href: this.props.source.url,
+            label: this.props.source.title
+          }]}/>
+        </Col>
       )
     }
     return
@@ -114,7 +122,9 @@ class KeyFigures extends React.Component {
   addHeader() {
     if (this.props.displayName) {
       return (
-        <h3 className="mb-5">{this.props.displayName}</h3>
+        <Col>
+          <Title size={3} className="mb-5">{this.props.displayName}</Title>
+        </Col>
       )
     }
     return
@@ -122,20 +132,20 @@ class KeyFigures extends React.Component {
 
   render() {
     return (
-      <section className="xp-part key-figures">
-        <div className="d-none searchabletext">
-          <span>{this.props.hiddenTitle}</span>
-        </div>
-        <div className={`container${this.props.isInStatisticsPage ? '' : ' mb-5'}`}>
+      <React.Fragment>
+        <Row className="d-none searchabletext">
+          <Col className="col-12">{this.props.hiddenTitle}</Col>
+        </Row>
+        <Row>
           {this.addPreviewButton()}
           {this.addPreviewInfo()}
           {this.addHeader()}
-          <div className="row">
-            {this.createRows()}
-            {this.addSource()}
-          </div>
-        </div>
-      </section>
+        </Row>
+        <Row className={`${this.props.isInStatisticsPage && 'mt-1 mb-5 mt-lg-0'}`}>
+          {this.createRows()}
+          {this.addSource()}
+        </Row>
+      </React.Fragment>
     )
   }
 }
@@ -199,7 +209,7 @@ KeyFigures.propTypes = {
   draftExist: PropTypes.bool,
   pageTypeKeyFigure: PropTypes.bool,
   hiddenTitle: PropTypes.string,
-  isInStatisticsPage: PropTypes.bool
+  isInStatisticsPage: PropTypes.string
 }
 
 export default (props) => <KeyFigures {...props}/>

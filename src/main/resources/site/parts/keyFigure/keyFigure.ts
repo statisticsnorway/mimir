@@ -134,7 +134,9 @@ function renderKeyFigure(
       isInStatisticsPage: page.type === `${app.name}:statistics`
     }
 
-    return React4xp.render('KeyFigure', props, req)
+    return React4xp.render('KeyFigure', props, req, {
+      body: '<section class="xp-part key-figures container"></section>'
+    })
   }
 
   return {
