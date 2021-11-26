@@ -55,7 +55,7 @@ const renderPart = (req) => {
     sleep(wait)
   }
   if (waitedFor >= maxWait) {
-    log.warn(`waited for more than ${maxWait}ms on publish for ${page.data.statistic}`)
+    log.error(`waited for more than ${maxWait}ms on publish for ${page.data.statistic}`)
   }
   let title = page.displayName
   const updated = phrases.updated + ': '
