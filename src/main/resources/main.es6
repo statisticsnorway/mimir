@@ -64,6 +64,10 @@ try {
         {
           feature: 'enable-enalyzer-script',
           enabled: false
+        },
+        {
+          feature: 'highchart-show-datatable',
+          enabled: false
         }
       ]
     }

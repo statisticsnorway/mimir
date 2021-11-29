@@ -199,6 +199,29 @@ export function init() {
         }
 
         Highcharts.chart(chart, config)
+
+        // Hide data table when highchart is loaded
+        $('.highcharts-data-table').hide()
+        $('.highcharts-data-table').find('table').addClass('statistics')
+
+        const graph = $('#figure-' + highchartsContentKey + ' .highcharts-canvas')
+        const dataTable = $('#figure-' + highchartsContentKey + ' .highcharts-data-table')
+        const buttonShowDataTable = $('button#show-tabledata-' + highchartsContentKey)
+        const buttonShowGraph = $('button#show-graph-' + highchartsContentKey)
+
+        buttonShowDataTable.on('click', (e) => {
+          buttonShowDataTable.addClass('active')
+          buttonShowGraph.removeClass('active')
+          dataTable.show()
+          graph.hide()
+        })
+
+        buttonShowGraph.on('click', (e) => {
+          buttonShowGraph.addClass('active')
+          buttonShowDataTable.removeClass('active')
+          dataTable.hide()
+          graph.show()
+        })
       }
     })
   })

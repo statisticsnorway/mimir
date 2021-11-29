@@ -47,7 +47,8 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
     },
     type: 'bar',
     spacing: [0, 10, 0, 0],
-    zoomType: highchartData.zoomType
+    zoomType: highchartData.zoomType,
+    marginTop: 50
   },
   // SSB color palette:
   colors: [
@@ -102,14 +103,16 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
           'separator',
           'downloadCSV',
           'downloadXLS'
-        ]
+        ],
+        y: 5
       }
     },
     csv: {
       itemDelimiter: ';'
     },
     // Sett denne til false når man vil erstatte hamburgermeny med egen
-    enabled: true
+    enabled: true,
+    showTable: true
   },
   legend: {
     enabled: !highchartData.noLegend,
@@ -163,7 +166,7 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
     },
     text: highchartData.subtitle,
     x: 0,
-    y: 48
+    y: 38
   },
   title: {
     align: highchartData.titleCenter ? 'center' : 'left',
