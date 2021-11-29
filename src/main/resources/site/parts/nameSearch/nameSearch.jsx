@@ -228,7 +228,8 @@ function NameSearch(props) {
   }
 
   function isNameValid(nameToCheck) {
-    const invalidCharacters = !!nameToCheck && nameToCheck.match(/[^a-øA-Ø\-\s]/gm)
+    // Regexp: merk flagget i, som gjør den case insensitive.
+    const invalidCharacters = !!nameToCheck && nameToCheck.match(/[^a-zÐÞ∂þèéëôòóáäüöæøå\-\s]/gmi)
     return !invalidCharacters
   }
 
