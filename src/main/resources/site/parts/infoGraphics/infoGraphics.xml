@@ -1,37 +1,41 @@
 <part>
-  <display-name>Infografikk / Visualisering</display-name>
-  <description>Inforgrafikk eller visualisering med tittel og beskrivelse</description>
+  <display-name>Infografikk / Visualisering (IKKE BRUK)</display-name>
+  <description>Infografikk eller visualisering med tittel og beskrivelse</description>
   <form>
-    <input name="title" type="TextLine">
-      <label>Tittel på visualinseringen</label>
-      <occurrences minimum="1" maximum="1" />
-    </input>
+    <field-set>
+      <label>Gammelt (Ikke bruk)</label>
+      <items>
+        <input name="title" type="TextLine">
+          <label>Tittel på visualinseringen</label>
+          <occurrences minimum="1" maximum="1" />
+        </input>
 
-    <input name="image" type="ImageSelector">
-      <label>Infografikk eller visualisering</label>
-      <occurrences minimum="1" maximum="1"/>
-      <config>
-        <allowPath>${site}</allowPath>
-      </config>
-    </input>
+        <input name="image" type="ImageSelector">
+          <label>Infografikk eller visualisering</label>
+          <occurrences minimum="1" maximum="1"/>
+          <config>
+            <allowPath>${site}</allowPath>
+          </config>
+        </input>
 
-    <mixin name="sources" />
+        <mixin name="sources" />
 
-    <mixin name="footnote" />
+        <mixin name="footnote" />
 
-    <!-- TODO: remove altText when all content has been mended to use alt text on image instead -->
-    <input name="altText" type="TextLine">
-      <label>*IKKE LENGER I BRUK* (bruk alt tekst på valgt bilde)</label>
-      <occurrences minimum="0" maximum="1" />
-    </input>
+        <!-- TODO: remove altText when all content has been mended to use alt text on image instead -->
+        <input name="altText" type="TextLine">
+          <label>*IKKE LENGER I BRUK* (bruk alt tekst på valgt bilde)</label>
+          <occurrences minimum="0" maximum="1" />
+        </input>
 
-    <input name="longDesc" type="TextArea">
-      <label>Beskrivende hjelpetekst for blinde</label>
-      <default></default>
-      <config>
-        <max-length>600</max-length>
-      </config>
-    </input>
-
+        <input name="longDesc" type="TextArea">
+          <label>Beskrivende hjelpetekst for blinde</label>
+          <default></default>
+          <config>
+            <max-length>600</max-length>
+          </config>
+        </input>
+      </items>
+    </field-set>
   </form>
 </part>
