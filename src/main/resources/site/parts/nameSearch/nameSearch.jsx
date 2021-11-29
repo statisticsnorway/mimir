@@ -228,7 +228,7 @@ function NameSearch(props) {
   }
 
   function isNameValid(nameToCheck) {
-    // Regexp: merk flagget i, som gjør den case insensitive.
+    // Regexp: Note use of 'i' flag, making the match case insensitive. Also, remember regexp ranges are based on unicode character codes.
     const invalidCharacters = !!nameToCheck && nameToCheck.match(/[^a-zÐÞ∂þèéëôòóáäüöæøå\-\s]/gmi)
     return !invalidCharacters
   }
