@@ -1,6 +1,6 @@
 # Admin Tool Applications
 ## Summary
-In order to create a functionally distinct 'app' in XP, we can use [admin tools](https://developer.enonic.com/docs/xp/stable/admin#admin_tools). We have done this to make the Dashboard Best Bet applications, which offer features we do not want to create in Content Studio. These applications offer access to our tooling, utils and resources like all other XP code, but we have ran into some limitations. 
+In order to create a functionally distinct 'app' in XP, we can use [admin tools](https://developer.enonic.com/docs/xp/stable/admin#admin_tools). We have done this to make the Dashboard and Best Bet applications, which offer features we do not want to create in Content Studio. There are many situations where we need to store data, or create features that do not fit well into the Content mold, and this is one way to solve those.  These applications offer access to our tooling, utils and resources like all other XP code, but we have ran into some limitations. 
 
 ## React
 Similarly to Typescript, React turned out to not build correctly when the React components were placed in the same folder as the .es6 and .xml files under the admin directory. It seems to be an assumption in the react4xp library that all react files for parts and pages are placed under /src/main/resources/site - and we made use of the [_entries](https://developer.enonic.com/docs/react4xp/master/entries) directory in order to use React in our applications. 
