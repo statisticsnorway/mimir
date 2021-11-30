@@ -1,0 +1,7 @@
+<macro>
+    <display-name>Statisk visualisering</display-name>
+    <description>Infografikk eller visualisering med tittel og beskrivelse</description>
+    <form>
+        <mixin name="staticVisualization" />
+    </form>
+</macro>

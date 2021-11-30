@@ -117,13 +117,14 @@ function sanitizeQuery(name: string): string {
 }
 
 function replaceCharacters(name: string): string {
-  return name.replace('É', 'E')
-    .replace('È', 'E')
-    .replace('Ô', 'O')
+  return name.replace(/[ÈÉË]/, 'E')
+    .replace(/[ÔÒÓ]/, 'O')
     .replace("'", '')
     .replace('Ä', 'Æ')
     .replace('Ü', 'Y')
     .replace('Ö', 'Ø')
+    .replace(/[ÀÁ]/, 'A')
+    .replace(/[ÐÞ∂þ]/, 'D')
 }
 
 interface ResultType {

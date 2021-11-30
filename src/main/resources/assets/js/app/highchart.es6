@@ -28,6 +28,74 @@ const EMPTY_CONFIG = {
 
 const createSetOptions = {
   lang: {
+    accessibility: {
+      chartContainerLabel: '{title} Interaktiv graf',
+      exporting: {
+        chartMenuLabel: 'Last ned graf',
+        menuButtonLabel: 'Velg format for å laste ned {chartTitle}'
+      },
+      screenReaderSection: {
+        beforeRegionLabel: 'Diagram skjermleser-informasjon for {chartTitle}.',
+        endOfChartMarker: ''
+      },
+      legend: {
+        legendItem: 'Vis {itemName}',
+        legendLabel: 'Forklaring av diagram: {legendTitle}',
+        legendLabelNoTitle: 'Bytt synlighet på serie, {chartTitle}'
+      }
+    },
+    chartTypes: {
+      barMultiple: 'Søylediagram med {numSeries} serier.',
+      barSingle: 'Søylediagram med {numPoints} {#plural(numPoints, bars, bar)}.',
+      columnMultiple: 'Liggende søylediagram med {numSeries} linjer.',
+      columnSingle: 'Søylediagram med {numPoints} {#plural(numPoints, bars, bar)}.',
+      combinationChart: 'Kombinasjonsdiagram med {numSeries} dataserier.',
+      defaultMultiple: 'Diagram med {numSeries} dataserier.',
+      defaultSingle: 'Diagram med {numPoints} datapunkter {#plural(numPoints, points, point)}.',
+      emptyChart: 'Tom datavisualisering',
+      lineMultiple: 'Linjediagram med {numSeries} linjer.',
+      lineSingle: 'Linjediagram med {numPoints} datapunkter {#plural(numPoints, points, point)}.',
+      mapTypeDescription: 'Kart over {mapTitle} med {numSeries} dataserier.',
+      pieMultiple: 'Kakediagram med {numSeries} kakestykker.',
+      pieSingle: 'kakediagram med {numPoints} {#plural(numPoints, slices, slice)}.',
+      scatterMultiple: 'Spredningsplott diagram med {numSeries} dataserier.',
+      scatterSingle: 'Spredningsplott diagram med {numPoints} {#plural(numPoints, points, point)}.',
+      splineMultiple: 'Linjediagram med {numSeries} linjer.',
+      splineSingle: 'linjediagram med {numPoints} datapunkter {#plural(numPoints, points, point)}.',
+      unknownMap: 'Kart med {numSeries} dataserier.'
+    },
+    series: {
+      xAxisDescription: 'X-akse, {name}',
+      yAxisDescription: 'Y-akse , {name}',
+      summary: {
+        bar: '{name}, stolpediagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, bars, bar)}.',
+        barCombination: '{name}, serie {ix} av {numSeries}. stolpediagram med {numPoints} {#plural(numPoints, bars, bar)}.',
+        boxplot: '{name}, boksdiagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, boxes, box)}.',
+        boxplotCombination: '{name}, serie {ix} av {numSeries}. Boksdiagram med {numPoints} {#plural(numPoints, boxes, box)}.',
+        bubble: '{name}, boblediagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, bubbles, bubble)}.',
+        bubbleCombination: '{name}, serie {ix} av {numSeries}. Boblediagram serie med {numPoints} {#plural(numPoints, bubbles, bubble)}.',
+        column: '{name}, stolpediagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, bars, bar)}.',
+        columnCombination: '{name}, serie {ix} av {numSeries}. Stolpediagram med {numPoints} {#plural(numPoints, bars, bar)}.',
+        default: '{name}, serie {ix} av {numSeries} med {numPoints} data {#plural(numPoints, points, point)}.',
+        defaultCombination: '{name}, serie {ix} av {numSeries} med {numPoints} data {#plural(numPoints, points, point)}.',
+        line: '{name}, linje {ix} av {numSeries} med {numPoints} data {#plural(numPoints, points, point)}.',
+        lineCombination: '{name}, serie {ix} av {numSeries}. Linje med {numPoints} data {#plural(numPoints, points, point)}.',
+        map: '{name}, kart {ix} av {numSeries} med {numPoints} {#plural(numPoints, areas, area)}.',
+        mapbubble: '{name}, Boblediagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, bubbles, bubble)}.',
+        mapbubbleCombination: '{name}, serie {ix} av {numSeries}. Boblediagram serie med {numPoints} {#plural(numPoints, bubbles, bubble)}.',
+        mapCombination: '{name}, serie {ix} av {numSeries}. Kart med {numPoints} {#plural(numPoints, areas, area)}.',
+        mapline: '{name}, linje {ix} av {numSeries} med {numPoints} data {#plural(numPoints, points, point)}.',
+        maplineCombination: '{name}, serie {ix} av {numSeries}. Linje med {numPoints} data {#plural(numPoints, points, point)}.',
+        pie: '{name}, Kake {ix} av {numSeries} med {numPoints} {#plural(numPoints, slices, slice)}.',
+        pieCombination: '{name}, serie {ix} av {numSeries}. Kake med {numPoints} {#plural(numPoints, slices, slice)}.',
+        scatter: '{name}, spredningsplott {ix} av {numSeries} med {numPoints} {#plural(numPoints, points, point)}.',
+        scatterCombination: '{name}, serie {ix} av {numSeries}, spredningsplott med {numPoints} {#plural(numPoints, points, point)}.',
+        spline: '{name}, linje {ix} av {numSeries} med {numPoints} data {#plural(numPoints, points, point)}.',
+        splineCombination: '{name}, serie {ix} av {numSeries}. Linje med {numPoints} data {#plural(numPoints, points, point)}.'
+      }
+    },
+    svgContainerLabel: 'Interaktiv graf',
+    defaultChartTitle: 'Graf',
     contextButtonTitle: 'Last ned/skriv ut',
     decimalPoint: ',',
     downloadJPEG: 'Last ned som JPEG',
@@ -36,7 +104,7 @@ const createSetOptions = {
     downloadSVG: 'Last ned som SVG',
     downloadCSV: 'Last ned tala som CSV',
     downloadXLS: 'Last ned tala som XLS',
-    drillUpText: 'Tilbake til',
+    drillUpText: 'Tilbake til {series.name}',
     loading: 'Tegner graf...',
     noData: 'Tall ikke tilgjengelig',
     numericSymbols: [null, ' mill.', ' mrd.'],
@@ -171,8 +239,8 @@ export function init() {
                 'event_label': label
               })
               const rows = this.getDataRows(true)
-              const xlsxRows = rows.slice(1).map(function (row) {
-                return row.map(function (column) {
+              const xlsxRows = rows.slice(1).map(function(row) {
+                return row.map(function(column) {
                   return {
                     type: typeof column === 'number' ? 'number' : 'string',
                     value: column
@@ -180,8 +248,10 @@ export function init() {
                 })
               })
               zipcelx({
-                filename: config.title.text ? config.title.text : 'graf.xslt' ,
-                sheet: {data: xlsxRows}
+                filename: config.title.text ? config.title.text : 'graf.xslt',
+                sheet: {
+                  data: xlsxRows
+                }
               })
             }
           },
@@ -199,6 +269,29 @@ export function init() {
         }
 
         Highcharts.chart(chart, config)
+
+        // Hide data table when highchart is loaded
+        $('.highcharts-data-table').hide()
+        $('.highcharts-data-table').find('table').addClass('statistics')
+
+        const graph = $('#figure-' + highchartsContentKey + ' .highcharts-canvas')
+        const dataTable = $('#figure-' + highchartsContentKey + ' .highcharts-data-table')
+        const buttonShowDataTable = $('button#show-tabledata-' + highchartsContentKey)
+        const buttonShowGraph = $('button#show-graph-' + highchartsContentKey)
+
+        buttonShowDataTable.on('click', (e) => {
+          buttonShowDataTable.addClass('active')
+          buttonShowGraph.removeClass('active')
+          dataTable.show()
+          graph.hide()
+        })
+
+        buttonShowGraph.on('click', (e) => {
+          buttonShowGraph.addClass('active')
+          buttonShowDataTable.removeClass('active')
+          dataTable.hide()
+          graph.show()
+        })
       }
     })
   })
