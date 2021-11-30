@@ -19,4 +19,9 @@ export interface PublishDatasetConfig {
    * PublicationItem
    */
   publicationItem: string;
+
+  /**
+   * DatasetIndex
+   */
+  datasetIndex: string;
 }

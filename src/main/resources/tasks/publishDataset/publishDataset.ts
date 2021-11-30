@@ -29,7 +29,8 @@ exports.run = function(props: PublishDatasetConfig): void {
     jobId,
     statisticsContentId,
     publicationItem,
-    statisticsId
+    statisticsId,
+    datasetIndex
   } = props
   const {
     dataSource,
@@ -42,11 +43,13 @@ exports.run = function(props: PublishDatasetConfig): void {
     sleep(1000)
 
     const key: string | null = extractKey(dataSource)
+    const sleepFor: number = Number(datasetIndex) * 1000
+    const dateWithSleep: string = new Date(new Date().getTime() + sleepFor).toISOString()
 
     if (key) {
-      log.info(`publishing dataset ${dataSource.data.dataSource?._selected} - ${key} for ${statisticsId}`)
+      // log.info(`start publishing dataset: ${dataSource.data.dataSource?._selected} Key: ${key} for Statistikk ${statisticsId}`)
       createOrUpdateDataset(dataSource.data.dataSource?._selected, DATASET_BRANCH, key, dataset.data)
-      log.info(`finished publish of dataset ${dataSource.data.dataSource?._selected} - ${key} for ${statisticsId}`)
+      // log.info(`finished publish of dataset: ${dataSource.data.dataSource?._selected} Key: ${key} for Statistikk ${statisticsId}`)
 
       send({
         type: 'clearDatasetCache',
@@ -58,13 +61,14 @@ exports.run = function(props: PublishDatasetConfig): void {
     }
 
     run(cronContext, () => {
+      log.info(`create task: cleanupPublishDataset_${jobId}_${statisticsId}_${dataset._name} Time: ${dateWithSleep}` )
       createScheduledJob<CleanupPublishDatasetConfig>({
         name: `cleanupPublishDataset_${jobId}_${statisticsId}_${dataset._name}`,
         descriptor: 'mimir:cleanupPublishDataset',
         enabled: true,
         schedule: {
           type: 'ONE_TIME',
-          value: new Date().toISOString()
+          value: dateWithSleep
         },
         config: {
           jobId: jobId,

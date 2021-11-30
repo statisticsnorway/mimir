@@ -60,7 +60,6 @@ exports.run = function(props: CleanupPublishDatasetConfig): void {
         function: 'createTask',
         message: Events.DATASET_PUBLISHED
       })
-
       deleteDataset(dataSource, UNPUBLISHED_DATASET_BRANCH)
     }
     // Update the statistics refresh result object
@@ -71,7 +70,8 @@ exports.run = function(props: CleanupPublishDatasetConfig): void {
 }
 
 function updateLogs(jobId: string, statisticsContentId: string, statisticsId: string, dataSourceId: string): void {
-  const completed: boolean = false
+  let completed: boolean = false
+
   updateJobLog(jobId, (node: JobInfoNode) => {
     const refreshDataResult: Array<StatisticsPublishResult> = forceArray(node.data.refreshDataResult) as Array<StatisticsPublishResult>
     const statRefreshResult: StatisticsPublishResult | undefined = refreshDataResult.find((s) => {
@@ -83,25 +83,30 @@ function updateLogs(jobId: string, statisticsContentId: string, statisticsId: st
       })
       if (dataSourceRefreshResult) {
         dataSourceRefreshResult.status = JobStatus.COMPLETE
+        // log.info(`Update jobLog ${jobId} - Datasource: ${dataSourceId} Statistikk: ${statisticsId}(content: ${statisticsContentId})  - COMPLETE`)
       }
       const allDataSourcesComplete: boolean = forceArray(statRefreshResult.dataSources).filter((ds) => {
         return ds.status === JobStatus.COMPLETE || ds.status === JobStatus.ERROR || ds.status === JobStatus.SKIPPED
       }).length === forceArray(statRefreshResult.dataSources).length
       if (allDataSourcesComplete) {
         statRefreshResult.status = JobStatus.COMPLETE
+        // log.info(`Update jobLog ${jobId} - All Datasources statistikk: ${statisticsId}(content: ${statisticsContentId})  - COMPLETE`)
       }
       const allStatisticsComplete: boolean = refreshDataResult.filter((stat) => {
         return stat.status === JobStatus.COMPLETE || stat.status === JobStatus.ERROR || stat.status === JobStatus.SKIPPED
       }).length === refreshDataResult.length
       if (allStatisticsComplete) {
+        completed = true
         node.data.message = `Successfully updated ${refreshDataResult.length} statistics`
         node.data.status = JOB_STATUS_COMPLETE
         node.data.completionTime = new Date().toISOString()
+        log.info(`Update jobLog ${jobId} - All statistics - COMPLETE`)
       }
     }
     return node
   })
   if (completed) {
+    log.info('All dataset completed -  clearCache')
     send({
       type: 'clearCache',
       distributed: true,

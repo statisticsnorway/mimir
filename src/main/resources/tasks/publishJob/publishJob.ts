@@ -49,6 +49,7 @@ exports.run = function(): void {
   const statistics: Array<Content<Statistics & Statistic>> = getStatisticsContent()
   const publishedDatasetIds: Array<string> = []
   const jobResult: Array<StatisticsPublishResult> = []
+  let statisticIndex: number = 0
 
   statistics.forEach((stat) => {
     const nextRelease: string | null = getNextRelease(stat)
@@ -58,7 +59,7 @@ exports.run = function(): void {
       const now: Date = new Date(new Date().getTime() + serverOffsetInMs)
       const oneHourFromNow: Date = new Date(now.getTime() + (1000 * 60 * 60))
       if (releaseDate > now && releaseDate < oneHourFromNow) {
-        log.info(`Stat ${stat.data.statistic} releases today`)
+        log.info(`Statistic with Id ${stat.data.statistic}(${stat.language}) have releases today`)
         const statJobInfo: StatisticsPublishResult = {
           statistic: stat._id,
           shortNameId: stat.data.statistic ? stat.data.statistic : '',
@@ -106,21 +107,26 @@ exports.run = function(): void {
           return false
         }) as Array<PublicationItem>
         if (validPublications.length > 0) {
-          validPublications.forEach((validPublication) => {
-            log.info(`publishDataset_${jobLogNode._id}_${stat.data.statistic}_${validPublication.dataset?._name}`)
+          // To avoid updating jobLog at the same time statisticIndex will create diffirence time for task cleanupPublishDataset
+          statisticIndex = stat.language === 'en' ? statisticIndex + 2 : statisticIndex + 1
+          validPublications.forEach((validPublication, index: number) => {
+            const runTaskTime: string = new Date(releaseDate.getTime() + serverOffsetInMs - 1000).toISOString()
+            const datasetIndex: number = statisticIndex + index
+            log.info(`create task: publishDataset_${stat.data.statistic}_${validPublication.dataset?._name} Time: ${runTaskTime} Index: ${datasetIndex}`)
             createScheduledJob<PublishDatasetConfig>({
               name: `publishDataset_${jobLogNode._id}_${stat.data.statistic}_${validPublication.dataset?._name}`,
               descriptor: 'mimir:publishDataset',
               enabled: true,
               schedule: {
                 type: 'ONE_TIME',
-                value: new Date(releaseDate.getTime() + serverOffsetInMs - 1000).toISOString()
+                value: runTaskTime
               },
               config: {
                 jobId: jobLogNode._id,
                 statisticsContentId: stat._id,
                 statisticsId: stat.data.statistic || '',
-                publicationItem: JSON.stringify(validPublication)
+                publicationItem: JSON.stringify(validPublication),
+                datasetIndex: datasetIndex.toString()
               }
             })
           })
