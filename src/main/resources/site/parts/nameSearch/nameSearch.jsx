@@ -325,7 +325,7 @@ function NameSearch(props) {
             marker: {
               enabled: false
             },
-            pointStart: 1945 // Magic number: Name data starts in the year 1945 and we try to get all the years since.
+            pointStart: 1880 // Magic number: Name data starts in the year 1880 and we try to get all the years since.
           }
         },
         series: nameGraphData.nameGraph,
