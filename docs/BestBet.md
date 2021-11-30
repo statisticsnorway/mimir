@@ -36,7 +36,7 @@ The best-bet data is parsed and stored in nodes, which can be found in Data Tool
 
 We use [an xp service](src/main/resources/services/bestBetList/bestBetList.es6) that we send GET, POST or DELETE requests to. The service will either return a list of best bets, delete or update a node using the best bet repo lib functions.
 
-In order to get a list of xp contents to pick from when we create a best bet for first time, we use the [content search service](src/main/resources/services/contentSearch/contentSearch.ts). The service will expect an input parameter, run a query towards Data toolbox nodes to find matches, and from the query result hits, we only return the values we need.
+In order to get a list of xp contents to pick from when we create a best bet for the first time, we use the [content search service](src/main/resources/services/contentSearch/contentSearch.ts). The service will expect an input parameter, run a query towards Data toolbox nodes to find matches, and from the query result hits, we only return the values we need.
 
 ## Controller and View
 

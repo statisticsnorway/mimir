@@ -35,3 +35,5 @@ Documentation for Mimir
     1. [Jobs](./DashboardLogging.md#jobs)
 1. [Repo and node](./RepoAndNode.md)
    1. [Dataset](./RepoAndNode.md#dataset)
+1. [Admin Apps](./AdminApps.md)
+   1. [Best-bet](./BestBet.md)
