@@ -42,4 +42,4 @@ In order to get a list of xp contents to pick from when we create a best bet for
 
 For the application's interface, we use Thymeleaf and React. Thymeleaf will render the assets and page contributions provided in the [controller](src/main/resources/admin/tools/bestbet/bestbet.ts), as well as the container for the [React component](src/main/resources/react4xp/_entries/bestbet/Bestbet.jsx). While the service and Content Studio base urls are set as React props.
 
-Most of the interface's functionality is in the [React component](src/main/resources/react4xp/_entries/bestbet/Bestbet.jsx). The best bet list is displayed and handled with React. GET, POST and DELETE requests are sent with axios which are triggered by the buttons and dropdown.
+Most of the interface's functionality is in the [React component](src/main/resources/react4xp/_entries/bestbet/Bestbet.jsx). The best bet list is displayed and handled with React. We use axios to send GET, POST and DELETE requests to the service, which are triggered by interacting with the buttons and dropdown.
