@@ -39,8 +39,9 @@ export function get(req: Request): React4xpResponse {
 }
 
 function getStatbankSubjectTree(req: Request, content: Content): React4xpResponse {
-  const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, content.language)
-  const allSubSubjects: Array<SubjectItem> = getSubSubjects(req)
+  const lang: string = content.language === 'en' ? 'en' : 'no'
+  const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, lang)
+  const allSubSubjects: Array<SubjectItem> = getSubSubjects(req, lang)
   const statregStatistics: Array<StatisticInListing> = ensureArray(getAllStatisticsFromRepo())
   const statistics: Array<StatisticItem> = getStatistics(statregStatistics)
   const mainSubjects: Array<MainSubjectWithSubs> = allMainSubjects.map((subjectItem) => {

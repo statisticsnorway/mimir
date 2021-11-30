@@ -337,7 +337,7 @@ function createTask(jobId: string, statistic: Content<Statistics & Statistic>, r
   })
 }
 
-function getNextRelease(statistic: Content<Statistics & Statistic>): string | null{
+function getNextRelease(statistic: Content<Statistics & Statistic>): string | null {
   if (statistic.data.statistic) {
     const statisticStatreg: StatisticInListing | undefined = getStatisticByIdFromRepo(statistic.data.statistic)
     if (statisticStatreg && statisticStatreg.variants) {
