@@ -119,12 +119,12 @@ const createSetOptions = {
 export function init() {
   Highcharts.setOptions(createSetOptions)
 
+  const lang = $('html').attr('lang')
   Highcharts.addEvent(Highcharts.Chart, 'aftergetTableAST', function(e) {
     e.tree.children[2].children.forEach(function(row) {
       row.children.forEach(function(cell, i) {
         if (i !== 0) {
-          const cellValue = parseFloat(cell.textContent).toLocaleString('no-NO')
-          row.children[i].textContent = cellValue
+          row.children[i].textContent = lang === 'en' ? cell.textContent : cell.textContent.replace('.', ',')
         }
       })
     })
