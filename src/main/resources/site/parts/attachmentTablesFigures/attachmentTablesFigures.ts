@@ -17,7 +17,8 @@ const {
   get
 } = __non_webpack_require__('/lib/xp/content')
 const {
-  getContent
+  getContent,
+  processHtml
 } = __non_webpack_require__('/lib/xp/portal')
 const {
   getPhrases
@@ -97,7 +98,9 @@ function getTablesAndFiguresComponent(page: Content<Statistics>, req: Request): 
           props
         }
       }),
-      freeText: page.data.freeTextAttachmentTablesFigures,
+      freeText: page.data.freeTextAttachmentTablesFigures ? processHtml({
+        value: page.data.freeTextAttachmentTablesFigures.replace(/&nbsp;/g, ' ')
+      }) : undefined,
       showAll: phrases.showAll,
       showLess: phrases.showLess,
       appName: app.name,
