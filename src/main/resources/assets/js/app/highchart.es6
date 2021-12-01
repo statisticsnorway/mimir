@@ -125,7 +125,7 @@ export function init() {
       row.children.forEach(function(cell, i) {
         if (i !== 0) {
           const cellValue = parseFloat(cell.textContent).toLocaleString(lang === 'en' ? 'en-EN' : 'no-NO')
-          row.children[i].textContent = cellValue
+          row.children[i].textContent = cellValue.replace('NaN', '')
         }
       })
     })
