@@ -119,6 +119,16 @@ const createSetOptions = {
 export function init() {
   Highcharts.setOptions(createSetOptions)
 
+  Highcharts.addEvent(Highcharts.Chart, 'aftergetTableAST', function(e) {
+    e.tree.children[2].children.forEach(function(row) {
+      row.children.forEach(function(cell, i) {
+        if (i !== 0) {
+          row.children[i].textContent = (cell.textContent).replace('.', ',')
+        }
+      })
+    })
+  })
+
   $(function() {
     const w = {
       height: $(window).height().toFixed(0),

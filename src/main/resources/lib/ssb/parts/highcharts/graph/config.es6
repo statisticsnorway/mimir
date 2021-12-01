@@ -108,7 +108,8 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
       }
     },
     csv: {
-      itemDelimiter: ';'
+      itemDelimiter: ';',
+      decimalPoint: ','
     },
     // Sett denne til false når man vil erstatte hamburgermeny med egen
     enabled: true,
