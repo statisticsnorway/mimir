@@ -123,7 +123,8 @@ export function init() {
     e.tree.children[2].children.forEach(function(row) {
       row.children.forEach(function(cell, i) {
         if (i !== 0) {
-          row.children[i].textContent = (cell.textContent).replace('.', ',')
+          const cellValue = parseFloat(cell.textContent).toLocaleString('no-NO')
+          row.children[i].textContent = cellValue
         }
       })
     })
