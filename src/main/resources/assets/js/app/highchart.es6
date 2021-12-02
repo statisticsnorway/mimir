@@ -119,6 +119,20 @@ const createSetOptions = {
 export function init() {
   Highcharts.setOptions(createSetOptions)
 
+  const lang = $('html').attr('lang')
+  Highcharts.addEvent(Highcharts.Chart, 'aftergetTableAST', function(e) {
+    e.tree.children[2].children.forEach(function(row) {
+      row.children.forEach(function(cell, i) {
+        if (i !== 0) {
+          const cellValue = parseFloat(cell.textContent)
+            .toLocaleString(lang === 'en' ? 'en-EN' : 'no-NO')
+            .replace('NaN', '')
+          row.children[i].textContent = lang === 'en' ? cellValue.replace(',', ' ') : cellValue
+        }
+      })
+    })
+  })
+
   $(function() {
     const w = {
       height: $(window).height().toFixed(0),
