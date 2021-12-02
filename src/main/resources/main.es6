@@ -72,6 +72,10 @@ try {
         {
           feature: 'highchart-show-datatable',
           enabled: false
+        },
+        {
+          feature: 'publishJob-lib-sheduler',
+          enabled: false
         }
       ]
     }

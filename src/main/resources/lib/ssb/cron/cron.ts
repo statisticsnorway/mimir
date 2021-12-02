@@ -66,6 +66,12 @@ const {
   list: listScheduledJobs,
   get: getScheduledJob
 } = __non_webpack_require__('/lib/xp/scheduler')
+const {
+  publishDataset
+} = __non_webpack_require__('/lib/ssb/dataset/publishOld')
+const {
+  isEnabled
+} = __non_webpack_require__('/lib/featureToggle')
 
 const createUserContext: RunContext = { // Master context (XP)
   repository: ENONIC_CMS_DEFAULT_REPO,
@@ -76,6 +82,8 @@ const createUserContext: RunContext = { // Master context (XP)
     idProvider: 'system'
   }
 }
+
+const newPublishJobEnabled: boolean = isEnabled('publishJob-lib-sheduler', false, 'ssb')
 
 export const cronContext: RunContext = { // Master context (XP)
   repository: ENONIC_CMS_DEFAULT_REPO,
@@ -224,8 +232,22 @@ export function setupCronJobs(): void {
   const datasetPublishCron: string = app.config && app.config['ssb.cron.publishDataset'] ? app.config['ssb.cron.publishDataset'] : '50 05 * * *'
   const timezone: string = app.config && app.config['ssb.cron.timezone'] ? app.config['ssb.cron.timezone'] : 'UTC'
 
+  // Use feature-toggling to switch to lib-sheduler when testet in QA
+  if (!newPublishJobEnabled) {
+    log.info('Run old datasetPublishCron cron-library')
+    // publish dataset cron job
+    schedule({
+      name: 'Dataset publish',
+      cron: datasetPublishCron,
+      callback: () => runOnMasterOnly(publishDataset),
+      context: cronContext
+    })
+  } else {
+    log.info('Run new dailyPublishJob lib-scheduler')
+  }
+
   if (isMaster()) {
-    // publish dataset task
+    // publish dataset sheduler job
     run(cronContext, () => {
       const jobExists: boolean = !!getScheduledJob({
         name: 'dailyPublishJob'
@@ -234,6 +256,7 @@ export function setupCronJobs(): void {
         modify({
           name: 'dailyPublishJob',
           editor: (job) => {
+            job.enabled = newPublishJobEnabled
             job.schedule.value = datasetPublishCron
             job.schedule.timeZone = timezone
             return job
@@ -245,7 +268,7 @@ export function setupCronJobs(): void {
           descriptor: `${app.name}:publishJob`,
           description: 'Publishing all dataset for statistics',
           user: `user:system:cronjob`,
-          enabled: true,
+          enabled: newPublishJobEnabled,
           schedule: {
             type: 'CRON',
             value: datasetPublishCron,

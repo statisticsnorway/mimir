@@ -25,7 +25,13 @@ const {
 const {
   currentlyWaitingForPublish
 } = __non_webpack_require__('/lib/ssb/dataset/publish')
+const {
+  currentlyWaitingForPublish: currentlyWaitingForPublishOld
+} = __non_webpack_require__('/lib/ssb/dataset/publishOld')
 const util = __non_webpack_require__('/lib/util')
+const {
+  isEnabled
+} = __non_webpack_require__('/lib/featureToggle')
 
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
@@ -49,8 +55,11 @@ const renderPart = (req) => {
   const statistic = page.data.statistic && getStatisticByIdFromRepo(page.data.statistic)
   const wait = app.config && app.config['ssb.statistics.publishWait'] ? parseInt(app.config['ssb.statistics.publishWait']) : 100
   const maxWait = app.config && app.config['ssb.statistics.publishMaxWait'] ? parseInt(app.config['ssb.statistics.publishMaxWait']) : 10000
+  const newPublishJobEnabled = isEnabled('publishJob-lib-sheduler', false, 'ssb')
+  const currentlyWaiting = newPublishJobEnabled ? currentlyWaitingForPublish(page) : currentlyWaitingForPublishOld(page)
+  log.info('currentlyWaiting: ' + currentlyWaiting)
   let waitedFor = 0
-  while (currentlyWaitingForPublish(page) && waitedFor < maxWait) {
+  while (currentlyWaiting && waitedFor < maxWait) {
     waitedFor += wait
     sleep(wait)
   }
