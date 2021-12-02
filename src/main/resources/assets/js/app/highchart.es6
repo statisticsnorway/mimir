@@ -124,8 +124,10 @@ export function init() {
     e.tree.children[2].children.forEach(function(row) {
       row.children.forEach(function(cell, i) {
         if (i !== 0) {
-          const cellValue = parseFloat(cell.textContent).toLocaleString(lang === 'en' ? 'en-EN' : 'no-NO')
-          row.children[i].textContent = cellValue.replace('NaN', '')
+          const cellValue = parseFloat(cell.textContent)
+            .toLocaleString(lang === 'en' ? 'en-EN' : 'no-NO')
+            .replace('NaN', '')
+          row.children[i].textContent = lang === 'en' ? cellValue.replace(',', ' ') : cellValue
         }
       })
     })
