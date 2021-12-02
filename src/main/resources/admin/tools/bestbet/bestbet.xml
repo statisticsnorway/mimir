@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<tool xmlns="urn:enonic:xp:model:1.0">
+  <display-name>Best-bet</display-name>
+  <description>Manuelt styrte søketreff på enkelte innhold</description>
+  <allow>
+    <principal>role:system.admin</principal>
+    <principal>role:dashboard.fag</principal>
+  </allow>
+</tool>

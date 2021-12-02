@@ -38,7 +38,7 @@ if (isNotInEditMode) {
 - [ ] AttachmentTableFigures part ~10-80ms  
 - [ ] Statistics part ~30ms  
 - [ ] LocalSearch part ~60ms  
-- [ ] PublicationArchive service ~100-150ms  
+- [x] PublicationArchive service ~100-150ms  
 - [ ] Contact part ~20ms  
 - [x] StatbankSubjectTree part ~600ms  
 - [ ] RelatedStatistics part ~25-50ms  

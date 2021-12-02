@@ -4,6 +4,7 @@ import { Content } from 'enonic-types/content'
 import { SearchResultPartConfig } from './searchResult-part-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { PreparedSearchResult, SolrPrepResultAndTotal } from '../../../lib/ssb/utils/solrUtils'
+import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   solrSearch
@@ -25,6 +26,12 @@ const {
 const {
   localize
 } = __non_webpack_require__('/lib/xp/i18n')
+const {
+  getPhrases
+} = __non_webpack_require__('/lib/ssb/utils/language')
+const {
+  getMainSubjects
+} = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
 
 
 exports.get = function(req: Request): React4xpResponse | Response {
@@ -53,6 +60,19 @@ export function renderPart(req: Request): React4xpResponse {
   }) : content._path
   const count: number = part.config.numberOfHits ? parseInt(part.config.numberOfHits) : 15
   const language: string = content.language ? content.language : 'nb'
+  const phrases: {[key: string]: string} = getPhrases(content)
+  const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
+  const mainSubjectDropdown: Array<Dropdown> = [
+    {
+      id: '',
+      title: phrases['publicationArchive.allSubjects']
+    }
+  ].concat(mainSubjects.map((subject) => {
+    return {
+      id: subject.name,
+      title: subject.title
+    }
+  }))
 
   /* query solr */
   const solrResult: SolrPrepResultAndTotal = sanitizedTerm ?
@@ -80,10 +100,20 @@ export function renderPart(req: Request): React4xpResponse {
       key: 'publicationArchive.showing',
       locale: language
     }),
+    limitResultPhrase: localize({
+      key: 'filter.limitResult',
+      locale: language
+    }),
+    removeFilterPhrase: localize({
+      key: 'filter.removeFilterSelection',
+      locale: language
+    }),
     searchServiceUrl: serviceUrl({
       service: 'freeTextSearch'
     }),
-    searchPageUrl
+    searchPageUrl,
+    language,
+    dropDownSubjects: mainSubjectDropdown
   }
 
   return React4xp.render('site/parts/searchResult/searchResultView', props, req)
@@ -99,7 +129,16 @@ interface ReactProps {
   buttonTitle: string;
   noHitMessage: string;
   showingPhrase: string;
+  limitResultPhrase: string;
+  removeFilterPhrase: string;
   searchServiceUrl: string;
   searchPageUrl: string;
+  language: string;
+  dropDownSubjects: Array<Dropdown>;
+}
+
+interface Dropdown {
+  id: string;
+  title: string;
 }
 

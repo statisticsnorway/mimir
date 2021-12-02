@@ -42,7 +42,7 @@ return {
 - [x] pictureCardLink
 - [ ] pifCalculator
 - [x] pubArchiveCalenderLinks
-- [ ] publicationArchive
+- [x] publicationArchive
 - [ ] relatedFactPage
 - [x] releasedStatistics
 - [ ] statbankBox

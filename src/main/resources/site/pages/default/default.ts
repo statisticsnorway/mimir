@@ -41,7 +41,7 @@ const {
   getBreadcrumbs
 } = __non_webpack_require__('/lib/ssb/utils/breadcrumbsUtils')
 const {
-  getMainSubjects
+  getMainSubjects, getSubSubjects, getMainSubjectBySubSubject
 } = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
 const {
   getReleaseDatesByVariants, getStatisticByIdFromRepo, getStatisticByShortNameFromRepo
@@ -61,6 +61,9 @@ const {
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
+const {
+  isEnabled
+} = __non_webpack_require__('/lib/featureToggle')
 
 const partsWithPreview: Array<string> = [ // Parts that has preview
   `${app.name}:map`,
@@ -68,6 +71,7 @@ const partsWithPreview: Array<string> = [ // Parts that has preview
   `${app.name}:menuBox`,
   `${app.name}:accordion`,
   `${app.name}:highchart`,
+  `${app.name}:highmap`,
   `${app.name}:keyFigure`,
   `${app.name}:menuDropdown`,
   `${app.name}:statistikkbanken`,
@@ -81,6 +85,8 @@ const partsWithPreview: Array<string> = [ // Parts that has preview
 const previewOverride: object = {
   'contentList': 'relatedFactPage'
 }
+
+export const GA_TRACKING_ID: string | null = app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null
 
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view: ResourceKey = resolve('default.html')
@@ -226,7 +232,6 @@ exports.get = function(req: Request): Response {
     .uniqueId()
 
   const hideBreadcrumb: boolean = !!(pageConfig).hide_breadcrumb
-
   const model: DefaultModel = {
     pageTitle: 'SSB', // not really used on normal pages because of SEO app (404 still uses this)
     page,
@@ -241,12 +246,13 @@ exports.get = function(req: Request): Response {
     language,
     statbankWeb: statbankFane,
     ...statBankContent,
-    GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null,
+    GA_TRACKING_ID,
     headerBody: header ? header.body : undefined,
     footerBody: footer ? (footer as MenuContent).body : undefined,
     ...metaInfo,
     breadcrumbsReactId: breadcrumbComponent.react4xpId,
-    hideBreadcrumb
+    hideBreadcrumb,
+    enabledEnalyzerScript: isEnabled('enable-enalyzer-script', true, 'ssb')
   }
 
   const thymeleafRenderBody: Response['body'] = render(view, model)
@@ -343,6 +349,11 @@ function parseMetaInfoData(
     metaInfoSearchContentType = 'faktaside'
   }
 
+  if (page.type === `${app.name}:article` || page.type === `${app.name}:statistics` ) {
+    const mainSubjects: string = getSubjectsPage(page, req, language.code).join(';')
+    metaInfoMainSubject = mainSubjects
+  }
+
   if (page.type === `${app.name}:statistics`) {
     const statistic: StatisticInListing | undefined = getStatisticByIdFromRepo(page.data.statistic)
     if (statistic) {
@@ -357,13 +368,6 @@ function parseMetaInfoData(
   }
 
   if (page.type === `${app.name}:article`) {
-    const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, language.code === 'en' ? 'en' : 'nb' )
-
-    allMainSubjects.forEach((mainSubject) => {
-      if (page._path.startsWith(mainSubject.path)) {
-        metaInfoMainSubject = mainSubject.title
-      }
-    })
     metaInfoSearchContentType = 'artikkel'
   }
 
@@ -377,6 +381,43 @@ function parseMetaInfoData(
     metaInfoSearchPublishFrom,
     metaInfoMainSubject
   }
+}
+
+function getSubjectsPage(page: DefaultPage, req: Request, language: string): Array<string> {
+  const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, language === 'en' ? 'en' : 'nb')
+  const allSubSubjects: Array<SubjectItem> = getSubSubjects(req, language === 'en' ? 'en' : 'nb')
+  const subjects: Array<string> = []
+  const subTopics: Array<string> = page.data.subtopic ? forceArray(page.data.subtopic) : []
+  const mainSubject: SubjectItem | undefined = allMainSubjects.find((mainSubject) => {
+    return page._path.startsWith(mainSubject.path)
+  })
+
+  if (mainSubject) {
+    subjects.push(mainSubject.title)
+  }
+
+  const secondaryMainSubjects: Array<string> = subTopics ? getSecondaryMainSubject(subTopics, allMainSubjects, allSubSubjects) : []
+  secondaryMainSubjects.map((subject) => {
+    if (!subjects.includes(subject)) {
+      subjects.push(subject)
+    }
+  })
+
+  return subjects
+}
+
+function getSecondaryMainSubject(subtopicsContent: Array<string>, mainSubjects: Array<SubjectItem>, subSubjects: Array<SubjectItem> ): Array<string> {
+  const secondaryMainSubjects: Array<string> = subtopicsContent.reduce((acc: Array<string>, topic: string) => {
+    const subSubject: SubjectItem = subSubjects.filter((subSubject) => subSubject.id === topic)[0]
+    if (subSubject) {
+      const mainSubject: SubjectItem| undefined = getMainSubjectBySubSubject(subSubject, mainSubjects)
+      if (mainSubject && !acc.includes(mainSubject.title)) {
+        acc.push(mainSubject.title)
+      }
+    }
+    return acc
+  }, [])
+  return secondaryMainSubjects
 }
 
 function parseStatbankFrameContent(statbankFane: boolean, req: Request, page: DefaultPage): StatbankFrameData {
@@ -473,6 +514,7 @@ interface DefaultPage extends Content {
     ingress: string;
     keywords: string;
     statistic: string;
+    subtopic: Array<string>;
   };
   page: ExtendedPage;
 }
@@ -545,4 +587,5 @@ interface DefaultModel {
   footerBody: string| undefined;
   breadcrumbsReactId: string | undefined;
   hideBreadcrumb: boolean;
+  enabledEnalyzerScript: boolean;
 }

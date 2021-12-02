@@ -1,11 +1,11 @@
-import { Request } from 'enonic-types/controller'
+import { MacroContext, Request } from 'enonic-types/controller'
 
 export interface React4xp {
     new (entry: string): React4xpObject;
     render: (
         entry: string,
         props?: object,
-        request?: Request,
+        request?: Request | MacroContext,
         options?: object
         ) => React4xpResponse;
 }

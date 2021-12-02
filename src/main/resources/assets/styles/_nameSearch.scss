@@ -47,10 +47,6 @@
     text-transform: capitalize;
   }
 
-  .highcharts-title {
-    fill: transparent !important;
-  }
-
   @include media-breakpoint-up(lg) {
     .name-search-input {
       height: 410px;

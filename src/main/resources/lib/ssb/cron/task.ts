@@ -24,6 +24,12 @@ const {
   completeJobLog,
   JOB_STATUS_COMPLETE
 } = __non_webpack_require__('/lib/ssb/repo/job')
+const {
+  completelyClearPartCache
+} = __non_webpack_require__('/lib/ssb/cache/partCache')
+const {
+  cacheLog
+} = __non_webpack_require__('/lib/ssb/utils/serverLog')
 
 export function refreshQueriesAsync(
   httpQueries: Array<Content<DataSource>>,
@@ -69,6 +75,9 @@ export function refreshQueriesAsync(
                 status: r.status
               }))
             })
+            cacheLog('Dataset update completed, clearing parts cache')
+            completelyClearPartCache('draft')
+            completelyClearPartCache('master')
           }
         })
       }

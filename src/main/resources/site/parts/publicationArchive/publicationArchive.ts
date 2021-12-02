@@ -3,16 +3,9 @@ import { Component } from 'enonic-types/portal'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Content } from 'enonic-types/content'
 import { PublicationArchivePartConfig } from './publicationArchive-part-config'
-import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
-import { PreparedStatistics } from '../../../lib/ssb/utils/variantUtils'
-import { getAllStatisticsFromRepo } from '../../../lib/ssb/statreg/statistics'
-import { filterOnPreviousReleases } from '../releasedStatistics/releasedStatistics'
-import { PublicationItem } from '../../../services/publicationArchive/publicationArchive'
-import { fromPartCache } from '../../../lib/ssb/cache/partCache'
+import { PublicationResult } from '../../../lib/ssb/parts/publicationArchive'
+import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 
-const {
-  moment
-} = __non_webpack_require__('/lib/vendor/moment')
 const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
@@ -21,8 +14,11 @@ const {
 } = __non_webpack_require__('/lib/xp/portal')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
-  prepareStatisticRelease
-} = __non_webpack_require__('/lib/ssb/utils/variantUtils')
+  getPublications
+} = __non_webpack_require__( '/lib/ssb/parts/publicationArchive')
+const {
+  getMainSubjects
+} = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
 
 exports.get = (req: Request): React4xpResponse => {
   return renderPart(req)
@@ -35,25 +31,69 @@ function renderPart(req: Request): React4xpResponse {
   const part: Component<PublicationArchivePartConfig> = getComponent()
   const phrases: {[key: string]: string} = getPhrases(content)
   const language: string = content.language ? content.language : 'nb'
-  const isNotInEditMode: boolean = req.mode !== 'edit'
   const publicationArchiveServiceUrl: string = serviceUrl({
     service: 'publicationArchive'
   })
+  const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
+  const start: number = 0
+  const count: number = 10
 
-  const releasesPrepped: Array<PreparedStatistics | null> = fromPartCache(req, `${content._id}-publicationArchive`, () => {
-    const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
-    const releasesFiltered: Array<StatisticInListing> = filterOnPreviousReleases(releases, releases.length).filter((r) => r.status === 'A')
-    return releasesFiltered.map((release: StatisticInListing) => prepareStatisticRelease(release, language))
-  })
+  const mainSubjectDropdown: Array<Dropdown> = [
+    {
+      id: '',
+      title: phrases['publicationArchive.allSubjects']
+    }
+  ].concat(mainSubjects.map((subject) => {
+    return {
+      id: subject.name,
+      title: subject.title
+    }
+  }))
+
+  const articleTypeDropdown: Array<Dropdown> = [
+    {
+      id: '',
+      title: phrases['publicationArchive.allTypes']
+    },
+    {
+      id: 'default',
+      title: phrases['articleType.default']
+    },
+    {
+      id: 'report',
+      title: phrases['articleType.report']
+    },
+    {
+      id: 'note',
+      title: phrases['articleType.note']
+    },
+    {
+      id: 'analysis',
+      title: phrases['articleType.analysis']
+    },
+    {
+      id: 'economicTrends',
+      title: phrases['articleType.economicTrends']
+    },
+    {
+      id: 'discussionPaper',
+      title: phrases['articleType.discussionPaper']
+    },
+    {
+      id: 'statistics',
+      title: phrases['articleType.statistics']
+    }
+  ]
 
   const props: PartProperties = {
     title: content.displayName,
     ingress: part.config.ingress || '',
     buttonTitle: phrases['button.showMore'],
     showingPhrase: phrases['publicationArchive.showing'],
+    defineContentPhrase: phrases['publicationArchive.defineContent'],
     language,
     publicationArchiveServiceUrl,
-    statisticsReleases: prepareStatisticsReleases(releasesPrepped as Array<PreparedStatistics>, language),
+    firstPublications: getPublications(req, start, count, language),
     articleTypePhrases: {
       default: phrases['articleType.default'],
       report: phrases['articleType.report'],
@@ -62,37 +102,12 @@ function renderPart(req: Request): React4xpResponse {
       economicTrends: phrases['articleType.economicTrends'],
       discussionPaper: phrases['articleType.discussionPaper'],
       statistics: phrases['articleType.statistics']
-    }
+    },
+    dropDownSubjects: mainSubjectDropdown,
+    dropDownTypes: articleTypeDropdown
   }
 
-  return React4xp.render('site/parts/publicationArchive/publicationArchive', props, req, {
-    clientRender: isNotInEditMode
-  })
-}
-
-function prepareStatisticsReleases(statistics: Array<PreparedStatistics>, language: string): Array<PublicationItem> | [] {
-  if (statistics.length) {
-    return statistics.map((statistic) => {
-      const {
-        period, year, monthNumber, day
-      } = statistic.variant
-      const variantDate: string = new Date(year, monthNumber, day).toISOString()
-
-      return {
-        title: statistic.name,
-        period: period.charAt(0).toUpperCase() + period.slice(1),
-        preface: statistic.aboutTheStatisticsDescription,
-        url: statistic.statisticsPageUrl,
-        publishDate: variantDate,
-        publishDateHuman: moment(variantDate).locale(language).format('Do MMMM YYYY'),
-        contentType: `${app.name}:statistics`,
-        articleType: 'statistics',
-        mainSubject: statistic.mainSubject,
-        appName: app.name
-      }
-    }) as Array<PublicationItem>
-  }
-  return []
+  return React4xp.render('site/parts/publicationArchive/publicationArchive', props, req)
 }
 
 interface PartProperties {
@@ -100,10 +115,18 @@ interface PartProperties {
   ingress: string;
   buttonTitle: string;
   showingPhrase: string;
+  defineContentPhrase: string;
   language: string;
   publicationArchiveServiceUrl: string;
-  statisticsReleases: Array<PublicationItem> | [];
+  firstPublications: PublicationResult;
   articleTypePhrases: {
     [key: string]: string;
   };
+  dropDownSubjects: Array<Dropdown>;
+  dropDownTypes: Array<Dropdown>;
+}
+
+interface Dropdown {
+  id: string;
+  title: string;
 }

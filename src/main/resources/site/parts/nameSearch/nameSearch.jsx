@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { Button, Divider, Input, Link, Title } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import { Col, Container, Row, Form } from 'react-bootstrap'
@@ -7,6 +7,11 @@ import { X } from 'react-feather'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import { useMediaQuery } from 'react-responsive'
+import { addGtagForEvent } from '../../../react4xp/ReactGA'
+
+require('highcharts/modules/accessibility')(Highcharts)
+require('highcharts/modules/exporting')(Highcharts)
+require('highcharts/modules/export-data')(Highcharts)
 
 /* TODO
 - Etternavn må få rett visning av beste-treff
@@ -24,8 +29,10 @@ function NameSearch(props) {
   const [searchedTerm, setSearchedTerm] = useState('')
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState(undefined)
+  const [nameGraphData, setNameGraphData] = useState(undefined)
+  const [loadingGraph, setLoadingGraph] = useState(false)
 
-  const scrollAnchor = React.useRef(null)
+  const scrollAnchor = useRef(null)
   function scrollToResult() {
     scrollAnchor.current.focus({
       preventScroll: true
@@ -118,7 +125,7 @@ function NameSearch(props) {
           </Row>
           { result.response && renderMainResult(result.response.docs) }
           { result.response && renderSubResult(result.response.docs) }
-          {!!result.nameGraph.length && renderGraphs(desktop, searchedTerm)}
+          {!!result.nameGraph && renderGraphs(desktop, searchedTerm)}
           <Row>
             <Col className="md-6">
               <Button className="close-button" onClick={() => closeResult()} type="button"> <X size="18"/> Lukk</Button>
@@ -165,12 +172,19 @@ function NameSearch(props) {
   function handleSubmit(form) {
     form.preventDefault()
     setResult(null) // Clear result box
+    setNameGraphData(null) // Clear name graph data
+
     if (!name.value) {
       return // Do nothing further if no name is submitted (prevents fun errors)
     }
     setLoading(true) // Spin the spinner!
     setErrorMessage(undefined) // Clear network error message, if any
     setSearchedTerm(name.value)
+
+    if (props.GA_TRACKING_ID) {
+      addGtagForEvent(props.GA_TRACKING_ID, 'Navn det søkes på', 'Navnekalkulator', name.value)
+    }
+
     axios.get(
       props.urlToService, {
         params: {
@@ -214,72 +228,170 @@ function NameSearch(props) {
   }
 
   function isNameValid(nameToCheck) {
-    const invalidCharacters = !!nameToCheck && nameToCheck.match(/[^a-øA-Ø\-\s]/gm)
+    // Regexp: Note use of 'i' flag, making the match case insensitive. Also, remember regexp ranges are based on unicode character codes.
+    const invalidCharacters = !!nameToCheck && nameToCheck.match(/[^a-zÐÞ∂þèéëôòóáäüöæøå\-\s]/gmi)
     return !invalidCharacters
   }
 
+  function fetchGraph(name) {
+    setLoadingGraph(true)
+
+    axios.get(
+      props.urlToGraphService, {
+        params: {
+          name: name
+        },
+        timeout: 20000
+      }
+    ).then((res) => {
+      setNameGraphData(res.data)
+    }
+    ).catch((error) =>{
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        setErrorMessage(error.message)
+      } else if (error.request) {
+        // The request was made but no response was received
+        // Likely to be a network error or disconnect
+        console.log('Error in REQUEST')
+        console.log(error.request)
+        setErrorMessage(error.message)
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log(error)
+      }
+    }
+    )
+      .finally(() => {
+        setLoadingGraph(false)
+        scrollToResult()
+      })
+  }
+
   function renderGraphs(desktop, nameForRender) {
+    !nameGraphData && !loadingGraph && fetchGraph(nameForRender)
+
     const {
       frontPage, phrases
     } = props
     const lineColor = '#21383a'
 
-    const options = {
-      chart: {
-        type: 'spline',
-        height: frontPage || !desktop ? '350px' : '75%',
-        spacingTop: frontPage || !desktop ? 0 : 10
-      },
-      colors: [
-        '#1a9d49', '#274247', '#3396d2', '#f0e442', '#f26539', '#aee5c3', '#ed51c9', '#0094a3',
-        '#e9b200', '#143f90', '#075745', '#4b7272', '#6d58a4', '#83c1e9', '#b59924'],
-      title: {
-        align: 'left',
-        text: phrases.graphHeader + ' ' + nameForRender,
-        x: 20
-      },
-      xAxis: {
-        lineColor,
-        tickColor: lineColor
-      },
-      yAxis: {
-        title: {
-          text: phrases.xAxis,
-          align: 'high',
-          offset: 0,
-          rotation: 0,
-          y: -20
-        },
-        lineColor,
-        lineWidth: 1,
-        tickColor: lineColor,
-        tickWidth: 1
-      },
-      plotOptions: {
-        series: {
-          marker: {
-            enabled: false
-          },
-          pointStart: 1945 // Magic number: Name data starts in the year 1945 and we try to get all the years since.
-        }
-      },
-      series: result.nameGraph,
-      credits: {
-        enabled: false
-      }
+    if (loadingGraph) {
+      return (
+        <Container className="name-search-graph text-center">
+          <span className="spinner-border spinner-border" />
+          <p>{props.phrases.loadingGraph}</p>
+        </Container>
+      )
     }
-    return (
-      <Row className='name-search-graph pt-4 px-0 mx-0'>
-        <Col className={desktop ? (frontPage && desktop ? 'px-4' : 'p-0') : ''}>
-          <div>
-            <HighchartsReact
-              highcharts={Highcharts}
-              options={options}
-            />
-          </div>
-        </Col>
-      </Row>
-    )
+    if (nameGraphData && !loadingGraph) {
+      const options = {
+        chart: {
+          type: 'spline',
+          height: frontPage || !desktop ? '350px' : '75%',
+          spacingTop: frontPage || !desktop ? 0 : 10
+        },
+        colors: [
+          '#1a9d49', '#274247', '#3396d2', '#f0e442', '#f26539', '#aee5c3', '#ed51c9', '#0094a3',
+          '#e9b200', '#143f90', '#075745', '#4b7272', '#6d58a4', '#83c1e9', '#b59924'],
+        title: {
+          style: {
+            color: 'transparent'
+          },
+          align: 'left',
+          text: phrases.graphHeader + ' ' + nameForRender,
+          x: 20
+        },
+        xAxis: {
+          lineColor,
+          tickColor: lineColor
+        },
+        yAxis: {
+          title: {
+            text: phrases.xAxis,
+            align: 'high',
+            offset: 0,
+            rotation: 0,
+            y: -20
+          },
+          lineColor,
+          lineWidth: 1,
+          tickColor: lineColor,
+          tickWidth: 1
+        },
+        plotOptions: {
+          series: {
+            marker: {
+              enabled: false
+            },
+            pointStart: 1945 // Magic number: Name data starts in the year 1945 and we try to get all the years since.
+          }
+        },
+        series: nameGraphData.nameGraph,
+        credits: {
+          enabled: false
+        },
+        exporting: {
+          buttons: {
+            contextButton: {
+              menuItems: [
+                'printChart',
+                'separator',
+                'downloadPNG',
+                'downloadJPEG',
+                'downloadPDF',
+                'downloadSVG',
+                'separator',
+                'downloadCSV',
+                'downloadXLS'
+              ],
+              y: !desktop ? 20 : 0
+            }
+          },
+          enabled: true,
+          menuItemDefinitions: {
+            printChart: {
+              text: props.phrases.printChart
+            },
+            downloadPNG: {
+              text: props.phrases.downloadPNG
+            },
+            downloadJPEG: {
+              text: props.phrases.downloadJPEG
+            },
+            downloadPDF: {
+              text: props.phrases.downloadPDF
+            },
+            downloadSVG: {
+              text: props.phrases.downloadSVG
+            },
+            downloadCSV: {
+              text: props.phrases.downloadCSV
+            },
+            downloadXLS: {
+              text: props.phrases.downloadXLS
+            }
+          }
+        },
+        csv: {
+          itemDelimiter: ';'
+        }
+      }
+
+      return (
+        <Row className='name-search-graph pt-4 px-0 mx-0'>
+          <Col className={desktop ? (frontPage && desktop ? 'px-4' : 'p-0') : ''}>
+            <div>
+              <HighchartsReact
+                highcharts={Highcharts}
+                options={options}
+              />
+            </div>
+          </Col>
+        </Row>
+      )
+    } else return (<div></div>)
   }
 
   return (
@@ -331,6 +443,7 @@ function NameSearch(props) {
 
 NameSearch.propTypes = {
   urlToService: PropTypes.string,
+  urlToGraphService: PropTypes.string,
   aboutLink: PropTypes.shape({
     title: PropTypes.string,
     url: PropTypes.string
@@ -351,6 +464,7 @@ NameSearch.propTypes = {
     threeOrLessText: PropTypes.string,
     xAxis: PropTypes.string,
     graphHeader: PropTypes.string,
+    loadingGraph: PropTypes.string,
     women: PropTypes.string,
     men: PropTypes.string,
     types: PropTypes.shape({
@@ -360,9 +474,17 @@ NameSearch.propTypes = {
       onlygiven: PropTypes.string,
       onlygivenandfamily: PropTypes.string,
       firstgiven: PropTypes.string
-    })
+    }),
+    printChart: PropTypes.string,
+    downloadPNG: PropTypes.string,
+    downloadJPEG: PropTypes.string,
+    downloadPDF: PropTypes.string,
+    downloadSVG: PropTypes.string,
+    downloadCSV: PropTypes.string,
+    downloadXLS: PropTypes.string
   }),
-  graphData: PropTypes.arrayOf(PropTypes.string)
+  graphData: PropTypes.bool,
+  GA_TRACKING_ID: PropTypes.string
 }
 
 export default (props) => <NameSearch {...props} />

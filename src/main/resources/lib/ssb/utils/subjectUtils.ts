@@ -19,12 +19,14 @@ const {
 const {
   fromSubjectCache
 } = __non_webpack_require__('/lib/ssb/cache/subjectCache')
+const {
+  parentPath
+} = __non_webpack_require__('/lib/ssb/utils/parentUtils')
 
 
 export function getMainSubjects(request: Request, language?: string): Array<SubjectItem> {
-  return fromSubjectCache<SubjectItem>(request, `mainsubject-${language}`, () => {
-  // Todo: Må sjekke om noen hovedemner kan være på nynorsk
-    const lang: string = language ? `AND language = "${language}"` : ''
+  return fromSubjectCache<SubjectItem>(request, `mainsubject-${language ? language : 'all'}`, () => {
+    const lang: string = language ? language !== 'en' ? 'AND language != "en"' : 'AND language = "en"' : ''
     const mainSubjectsContent: Array<Content<Page, DefaultPageConfig>> = query({
       start: 0,
       count: 200,
@@ -55,8 +57,8 @@ export function getMainSubjectById(mainSubjects: Array<SubjectItem>, id: string)
 }
 
 export function getSubSubjects(request: Request, language?: string): Array<SubjectItem> {
-  return fromSubjectCache<SubjectItem>(request, `subsubject-${language}`, () => {
-    const lang: string = language ? `AND language = "${language}"` : ''
+  return fromSubjectCache<SubjectItem>(request, `subsubject-${language ? language : 'all'}`, () => {
+    const lang: string = language ? language !== 'en' ? 'AND language != "en"' : 'AND language = "en"' : ''
     const subSubjectsContent: Array<Content<Page, DefaultPageConfig>> = query({
       start: 0,
       count: 1000,
@@ -258,6 +260,10 @@ export function getSubjectStructur(request: Request, language: string): Array<Ma
   return mainSubjects
 }
 
+export function getMainSubjectBySubSubject(subSubject: SubjectItem, mainSubjects: Array<SubjectItem>): SubjectItem | undefined {
+  return mainSubjects.find((mainSubject) => mainSubject.path === parentPath(subSubject.path))
+}
+
 export interface SubjectItem {
   id: string;
   title: string;
@@ -312,5 +318,6 @@ export interface SubjectUtilsLib {
     getStatisticsByPath: (statistics: Array<StatisticItem>, path: string) => Array<StatisticItem>;
     getEndedStatisticsByPath: (path: string, statregStatistics: Array<StatisticInListing>, hideStatistics: boolean) => Array<StatisticItem>;
     getSecondaryStatisticsBySubject: (statistics: Array<StatisticItem>, subject: SubjectItem) => Array<StatisticItem>;
+    getMainSubjectBySubSubject: (subSubject: SubjectItem, mainSubjects: Array<SubjectItem>) => SubjectItem | undefined;
   }
 

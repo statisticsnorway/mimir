@@ -36,6 +36,8 @@ export function get(req: Request): Response {
   const solrBaseUrl: string = app.config && app.config['ssb.solrNameSearch.baseUrl'] ?
     app.config['ssb.solrNameSearch.baseUrl'] : 'https://www.ssb.no/solr/navnesok/select'
 
+  const name: string = req.params.name.trim()
+
   const requestParams: HttpRequestParams = {
     url: solrBaseUrl,
     method: 'get',
@@ -47,14 +49,14 @@ export function get(req: Request): Response {
     connectionTimeout: 20000,
     readTimeout: 10000,
     params: {
-      q: prepareQuery(sanitizeQuery(req.params.name)),
+      q: prepareQuery(sanitizeQuery(name)),
       wt: 'json'
     }
   }
 
   try {
     const result: HttpResponse = request(requestParams)
-    const preparedBody: string = result.body ? prepareResult(result.body, sanitizeQuery(req.params.name)) : ''
+    const preparedBody: string = result.body ? prepareResult(result.body, sanitizeQuery(name)) : ''
 
     return {
       body: preparedBody,
@@ -76,49 +78,27 @@ function prepareResult(result: string, name: string): string {
   const nameSearchGraphEnabled: boolean = isEnabled('name-graph', true, 'ssb')
   const obj: ResultType = JSON.parse(result)
   obj.originalName = name
-  obj.nameGraph = nameSearchGraphEnabled ? prepareGraph(name) : []
+  obj.nameGraph = nameSearchGraphEnabled ? graphAvailable(name) : false
   return JSON.stringify(obj)
 }
 
-function prepareGraph(name: string): Array<NameGraph> {
+// Checks if any of the searched for names have graph data available.
+// Uses cached graphData, and returns true for first possible hit.
+// 250ms on first run, 5-10 on subsequent runs.
+function graphAvailable(name: string): boolean {
   const config: Content<CalculatorConfig> | undefined = getCalculatorConfig()
 
-  const result: Array<NameGraph> = []
   const bankSaved: DatasetRepoNode<object | JSONstat> | null = config ? getNameSearchGraphData(config) : null
 
-  try {
-    const labels: Keyable = bankSaved?.data.dimension.Fornavn.category.label
+  const labels: Keyable = bankSaved?.data.dimension.Fornavn.category.label
 
-    name.split(' ').forEach((n) => {
-      const preparedName: string = n.charAt(0) + n.slice(1).toLowerCase()
-      const nameCode: string | undefined = getKeyByValue(labels, preparedName)
-
-      if (nameCode) {
-        const dataset: KeyableNumberArray = JSONstat(bankSaved?.data).Dataset(0).Dice({
-          'Fornavn': [nameCode]
-        },
-        {
-          clone: true
-        })
-        result.push(
-          {
-            name: preparedName,
-            data: dataset.value
-          }
-        )
-      }
-    }
-    )
-    return result
-  } catch (error) {
-    log.error(error)
-    return result
-  }
+  const exists: boolean = name.split(' ').some((name) => checkKeysForValue(labels, name))
+  return exists
 }
 
-
-function getKeyByValue(object: Keyable, value: string): string | undefined {
-  return Object.keys(object).find((key) => object[key] === value)
+function checkKeysForValue(object: Keyable, value: string): boolean {
+  const preparedName: string = value.charAt(0) + value.slice(1).toLowerCase()
+  return !!Object.keys(object).find((key) => object[key] === preparedName)
 }
 
 
@@ -137,35 +117,22 @@ function sanitizeQuery(name: string): string {
 }
 
 function replaceCharacters(name: string): string {
-  return name.replace('É', 'E')
-    .replace('È', 'E')
-    .replace('Ô', 'O')
+  return name.replace(/[ÈÉË]/, 'E')
+    .replace(/[ÔÒÓ]/, 'O')
     .replace("'", '')
     .replace('Ä', 'Æ')
     .replace('Ü', 'Y')
     .replace('Ö', 'Ø')
+    .replace(/[ÀÁ]/, 'A')
+    .replace(/[ÐÞ∂þ]/, 'D')
 }
 
 interface ResultType {
   originalName: string;
-  nameGraph?: Array<NameGraph>;
-}
-
-interface NameGraph {
-  name: string;
-  data: Array<number>;
-}
-
-interface NameData {
-  fornavn: Dataset | null;
-  tid: Dataset | null;
+  nameGraph?: boolean;
 }
 
 interface Keyable {
   [key: string]: string;
-}
-
-interface KeyableNumberArray {
-  [key: string]: Array<number>;
 }
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Divider, Link, Title, Text } from '@statisticsnorway/ssb-component-library'
+import { Button, Divider, Link, Title, Text, Dropdown } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import Truncate from 'react-truncate'
 import NumberFormat from 'react-number-format'
@@ -12,87 +12,81 @@ function PublicationArchive(props) {
     ingress,
     buttonTitle,
     publicationArchiveServiceUrl,
-    statisticsReleases,
+    firstPublications,
     language,
     articleTypePhrases,
-    showingPhrase
+    showingPhrase,
+    defineContentPhrase,
+    dropDownSubjects,
+    dropDownTypes
   } = props
-  const [publications, setPublications] = useState([])
-  const [total, setTotal] = useState(0)
+  const [publications, setPublications] = useState(firstPublications.publications)
+  const [total, setTotal] = useState(firstPublications.total)
   const [loading, setLoading] = useState(false)
   const [first, setFirst] = useState(true)
-  const [statisticsPublications, setStatisticsPublications] = useState(statisticsReleases)
-  const [diff, setDiff] = useState([0])
+  const [filterChanged, setFilterChanged] = useState(false)
+  const [filter, setFilter] = useState({
+    mainSubject: '',
+    articleType: ''
+  })
 
   useEffect(() => {
     if (first) {
       setFirst(false)
-      fetchPublications()
+      setPublications(publications)
     }
-  })
+    if (filterChanged) {
+      fetchPublicationsFiltered()
+    }
+  }, [filter])
 
-  function mergePublications(newPublications) {
-    const filteredStatisticsReleases = []
-    const filteredStatisticsReleasesRest = []
+  function onChange(id, value) {
+    setFilterChanged(true)
+    if (id === 'articleType') {
+      setFilter({
+        ...filter,
+        articleType: value.id
+      })
+    }
+    if (id === 'mainSubject') {
+      setFilter({
+        ...filter,
+        mainSubject: value.id
+      })
+    }
+  }
 
-    statisticsPublications.forEach((statisticsRelease) => {
-      const statisticsReleaseDate = new Date(statisticsRelease.publishDate)
-      const latestNewPublicationDate = newPublications.length ? new Date(newPublications[0].publishDate) : new Date()
-      const oldestNewPublicationDate = newPublications.length ? new Date(newPublications[newPublications.length - 1].publishDate) : new Date('01.01.1970')
-
-      let dateCheck = statisticsReleaseDate <
-      (publications.length ? new Date(publications[publications.length - 1].publishDate) : latestNewPublicationDate) &&
-        statisticsReleaseDate > oldestNewPublicationDate
-      if (statisticsReleaseDate > latestNewPublicationDate) {
-        dateCheck = statisticsReleaseDate > oldestNewPublicationDate
-      } else {
-        dateCheck = statisticsReleaseDate < publications.length ? new Date(publications[publications.length - 1].publishDate) : latestNewPublicationDate
+  function fetchPublicationsFiltered() {
+    setLoading(true)
+    axios.get(publicationArchiveServiceUrl, {
+      params: {
+        start: 0,
+        count: 10,
+        language: language,
+        subject: filter.mainSubject,
+        type: filter.articleType
       }
-
-      if (dateCheck) {
-        filteredStatisticsReleases.push(statisticsRelease)
-      } else {
-        filteredStatisticsReleasesRest.push(statisticsRelease)
-      }
+    }).then((res) => {
+      setPublications(res.data.publications)
+      setTotal(res.data.total)
+    }).finally(() => {
+      setLoading(false)
     })
-    setStatisticsPublications(filteredStatisticsReleasesRest)
-
-    const diffValues = []
-    const mergedPublications = newPublications.length ?
-      filteredStatisticsReleases.concat(newPublications)
-        .sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate)) :
-      filteredStatisticsReleases.sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate))
-
-    if (mergedPublications.length > 10) {
-      const restMergedPublications = mergedPublications.slice(10, mergedPublications.length)
-      const restStatistics = restMergedPublications.filter((p) => p.contentType === `${p.appName}:statistics`)
-      if (restStatistics.length) {
-        setStatisticsPublications(filteredStatisticsReleasesRest.concat(restStatistics))
-      }
-
-      diffValues.push(mergedPublications.length - (10 + restStatistics.length))
-      setDiff(diff.concat(diffValues))
-
-      return mergedPublications.slice(0, 10)
-    } else {
-      diffValues.push(0)
-      setDiff(diff.concat(diffValues))
-      return mergedPublications
-    }
   }
 
   function fetchPublications() {
     setLoading(true)
-    const indexDiff = diff.map((d) => d).reduce((acc, curr) => acc + curr)
     axios.get(publicationArchiveServiceUrl, {
       params: {
-        start: publications.length - indexDiff,
+        start: publications.length,
         count: 10,
-        language: language
+        language: language,
+        subject: filter.mainSubject,
+        type: filter.articleType
       }
     }).then((res) => {
-      setPublications(publications.concat(mergePublications(res.data.publications)))
-      setTotal(res.data.total + statisticsReleases.length)
+      setPublications(publications.concat(res.data.publications))
+      setTotal(res.data.total)
     }).finally(() => {
       setLoading(false)
     })
@@ -139,6 +133,67 @@ function PublicationArchive(props) {
     }
   }
 
+  function renderFilter() {
+    return (
+      <div className="mt-5">
+        <div className="row">
+          <div className="col">
+            <Title size={6}>{defineContentPhrase}</Title>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-12 col-md-4">
+            {addDropdownSubject('mainSubject')}
+          </div>
+          <div className="col-12 col-md-4 mt-3 mt-md-0">
+            {addDropdownArticleType('articleType')}
+          </div>
+        </div>
+      </div>
+
+    )
+  }
+
+  function addDropdownSubject(id) {
+    return (
+      <Dropdown
+        className="mainSubject"
+        id={id}
+        onSelect={(value) => {
+          onChange(id, value)
+        }}
+        selectedItem={dropDownSubjects[0]}
+        items={dropDownSubjects}
+      />
+    )
+  }
+
+  function addDropdownArticleType(id) {
+    return (
+      <Dropdown
+        className="contentType"
+        id={id}
+        onSelect={(value) => {
+          onChange(id, value)
+        }}
+        selectedItem={dropDownTypes[0]}
+        items={dropDownTypes}
+      />
+    )
+  }
+
+  function addHiddenLinkSolrArticleList() {
+    const language = props.language === 'en' ? 'en' : 'no'
+    const solrArticleListUrl = `/_/service/mimir/solrArticleList?language=${language}`
+    return (
+      <div style={{
+        display: 'none'
+      }}>
+        <Link tabIndex="-1" href={solrArticleListUrl}>Alle artikler</Link>
+      </div>
+    )
+  }
+
   return (
     <section className="publication-archive container-fluid">
       <div className="row">
@@ -151,6 +206,7 @@ function PublicationArchive(props) {
                   __html: ingress.replace(/&nbsp;/g, ' ')
                 }}>
                 </div>
+                {renderFilter()}
               </div>
             </div>
           </div>
@@ -180,6 +236,7 @@ function PublicationArchive(props) {
           </div>
         </div>
       </div>
+      {addHiddenLinkSolrArticleList()}
     </section>
   )
 }
@@ -191,8 +248,15 @@ PublicationArchive.propTypes = {
   ingress: PropTypes.string,
   buttonTitle: PropTypes.string,
   showingPhrase: PropTypes.string,
+  defineContentPhrase: PropTypes.string,
   language: PropTypes.string,
   publicationArchiveServiceUrl: PropTypes.string,
-  statisticsReleases: PropTypes.array,
-  articleTypePhrases: PropTypes.objectOf(PropTypes.string)
+  firstPublications: PropTypes.objectOf({
+    total: PropTypes.number,
+    publications: PropTypes.array
+  }),
+  articleTypePhrases: PropTypes.objectOf(PropTypes.string),
+  dropDownSubjects: PropTypes.array,
+  dropDownTypes: PropTypes.array
+
 }

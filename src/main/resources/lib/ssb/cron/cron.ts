@@ -223,6 +223,8 @@ export function setupCronJobs(): void {
       clearPartFromPartCache('kpiCalculator')
       clearPartFromPartCache('husleieCalculator')
       clearPartFromPartCache('upcomingReleases')
+      clearPartFromPartCache('archiveAllPublications-nb')
+      clearPartFromPartCache('archiveAllPublications-en')
     },
     context: cronContext
   })
