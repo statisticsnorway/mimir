@@ -110,7 +110,6 @@ function renderPart(req: Request, highchartIds: Array<string>): Response | React
     const config: HighchartsExtendedProps | undefined = highchart ? determinConfigType(req, highchart) : undefined
     return highchart && config ? createHighchartsReactProps(highchart, config) : {}
   }).filter((key) => !!key)
-  log.info('highcharts %s', JSON.stringify(highcharts, null, 2))
 
   const inlineScript: Array<string> = highcharts.map((highchart) => `<script inline="javascript">
    window['highchart' + '${highchart.contentKey}'] = ${JSON.stringify(highchart.config)}
@@ -120,24 +119,27 @@ function renderPart(req: Request, highchartIds: Array<string>): Response | React
     highcharts: highcharts,
     phrases: getPhrases(page)
   }
-  return React4xp.render('site/parts/highchart/Highchart', HighchartProps, req, {
-    body: '<section class="xp-part part-highchart"></section>'
-  })
 
-  // return {
-  //   body: render(view, {
-  //     highcharts,
-  //     downloadText,
-  //     sourceText,
-  //     showDataTableEnabled: isEnabled('highchart-show-datatable', false, 'ssb'),
-  //     showAsGraphText,
-  //     showAsTableText
-  //   }),
-  //   pageContributions: {
-  //     bodyEnd: inlineScript
-  //   },
-  //   contentType: 'text/html'
-  // }
+  if (isEnabled('highchart-react', true, 'ssb')) {
+    return React4xp.render('site/parts/highchart/Highchart', HighchartProps, req, {
+      body: '<section class="xp-part part-highchart"></section>'
+    })
+  } else {
+    return {
+      body: render(view, {
+        highcharts,
+        downloadText,
+        sourceText,
+        showDataTableEnabled: isEnabled('highchart-show-datatable', false, 'ssb'),
+        showAsGraphText,
+        showAsTableText
+      }),
+      pageContributions: {
+        bodyEnd: inlineScript
+      },
+      contentType: 'text/html'
+    }
+  }
 }
 
 

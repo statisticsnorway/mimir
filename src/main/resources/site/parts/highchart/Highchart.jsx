@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import PropTypes from 'prop-types'
-import { Button, Tabs } from '@statisticsnorway/ssb-component-library'
+import { Row, Col, Container } from 'react-bootstrap'
+import { Title, Button, Tabs, Link } from '@statisticsnorway/ssb-component-library'
 
 require('highcharts/modules/accessibility')(Highcharts)
 require('highcharts/modules/exporting')(Highcharts)
@@ -11,7 +12,6 @@ require('highcharts/modules/data')(Highcharts)
 require('highcharts/modules/no-data-to-display')(Highcharts)
 
 function Highchart(props) {
-  const [config, setConfig] = useState([])
   const [showTable, setShowTable] = useState(false)
 
   useEffect(() => {
@@ -105,42 +105,144 @@ function Highchart(props) {
     })
   }, [])
 
-  function renderHighcharts(highcharts) {
+  function renderHighchartsTab() {
+    return (
+      <Col className="col-12 border-bottom border-dark mb-3">
+        <Tabs
+          className="pl-4"
+          activeOnInit="highcharts-figure/"
+          items={[
+            {
+              title: props.phrases['highcharts.showAsGraph'],
+              path: 'highcharts-figure/',
+              onClick: () => setShowTable(false)
+            },
+            {
+              title: props.phrases['highcharts.showAsTable'],
+              path: 'highcharts-table/',
+              onClick: () => setShowTable(true)
+            }
+          ]}
+        />
+      </Col>
+    )
+  }
+
+  function renderHighchartsSources(highchart) {
+    return (
+      <Col className="col-12">
+        { highchart.footnoteText ?
+          <Row className="col-12 footnote">
+            {highchart.footnoteText}
+          </Row> :
+          null }
+        { highchart.creditsEnabled ?
+          <Row className="mt-4 mt-md-5 highcharts-source">
+            {/* TODO: Fix font-size */}
+            <Col className="col-12 font-weight-bold mb-0">{props.phrases.source}:</Col>
+            <Col className="col-12"><Link href={highchart.creditsHref}>{highchart.creditsText}</Link></Col>
+          </Row> : null }
+      </Col>
+    )
+  }
+
+  function renderHighcharts() {
+    const highcharts = props.highcharts
+
     if (highcharts && highcharts.length) {
-      return highcharts.map((highchart, index) =>
-        <React.Fragment
-          key={`highchart-${index}`}
-        >
-          {/* TODO: Kilder */}
-          <HighchartsReact
-            highcharts={Highcharts}
-            options={highchart.config}
-          />
-        </React.Fragment>
-      )
+      return highcharts.map((highchart, index) => {
+        const config = {
+          ...highchart.config,
+          exporting: {
+            ...highchart.config.exporting,
+            showTable: showTable,
+            menuItemDefinitions: {
+              // TODO: Reimplement GA events
+              printChart: {
+                text: props.phrases['highcharts.printChart'],
+                onclick: function() {
+                  const label = `${highchart.config.title.text} - Skriv ut graf`
+                  this.print()
+                }
+              },
+              downloadPNG: {
+                text: props.phrases['highcharts.downloadPNG'],
+                onclick: function() {
+                  const label = `${highchart.config.title.text} - Last ned som PNG`
+                  this.exportChart({
+                    type: 'png'
+                  })
+                }
+              },
+              downloadJPEG: {
+                text: props.phrases['highcharts.downloadJPEG'],
+                onclick: function() {
+                  const label = `${highchart.config.title.text} - Last ned som JPEG`
+                  this.exportChart({
+                    type: 'jpeg'
+                  })
+                }
+              },
+              downloadPDF: {
+                text: props.phrases['highcharts.downloadPDF'],
+                onclick: function() {
+                  const label = `${highchart.config.title.text} - Last ned som PDF`
+                  this.exportChart({
+                    type: 'application/pdf'
+                  })
+                }
+              },
+              downloadSVG: {
+                text: props.phrases['highcharts.downloadSVG'],
+                onclick: function() {
+                  const label = `${highchart.config.title.text} - Last ned som SVG`
+                  this.exportChart({
+                    type: 'svg'
+                  })
+                }
+              },
+              downloadXLS: {
+                text: props.phrases['highcharts.downloadXLS'],
+
+                onclick: function() {
+                  const label = `${highchart.config.title.text} - Last ned som XLS`
+                }
+              },
+              downloadCSV: {
+                text: props.phrases['highcharts.downloadCSV'],
+                onclick: function() {
+                  const label = `${highchart.config.title.text} - Last ned som CSV`
+                  this.downloadCSV()
+                }
+              }
+            }
+          }
+        }
+
+        return (
+          <Row key={`highchart-${index}`}>
+            <Col className="12">
+              <Title size={3}>{config.title.text}</Title>
+              {config.subtitle.text ? <p className="highchart-subtitle mb-1">{config.subtitle.text}</p> : null}
+            </Col>
+            {renderHighchartsTab()}
+            <Col className="col-12">
+              <HighchartsReact
+                highcharts={Highcharts}
+                options={config}
+              />
+            </Col>
+            {renderHighchartsSources(highchart)}
+          </Row>
+        )
+      })
     }
   }
 
   return (
-    <React.Fragment>
-      {/* TODO: Add border to tab */}
-      <Tabs
-        activeOnInit="highcharts-figure/"
-        items={[
-          {
-            title: props.phrases['highcharts.showAsGraph'],
-            path: 'highcharts-figure/',
-            onClick: () => setShowTable(false)
-          },
-          {
-            title: props.phrases['highcharts.showAsTable'],
-            path: 'highcharts-table/',
-            onClick: () => setShowTable(true)
-          }
-        ]}
-      />
-      {renderHighcharts(props.highcharts)}
-    </React.Fragment>
+    <Container>
+      {renderHighcharts()}
+    </Container>
   )
 }
 

@@ -68,6 +68,10 @@ try {
         {
           feature: 'highchart-show-datatable',
           enabled: false
+        },
+        {
+          feature: 'highchart-react',
+          enabled: false
         }
       ]
     }
