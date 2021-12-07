@@ -142,6 +142,11 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
       },
       showInLegend: highchartData.pieLegend
     },
+    line: {
+      marker: {
+        enabled: false
+      }
+    },
     series: {
       marker: {
         enabledThreshold: 15

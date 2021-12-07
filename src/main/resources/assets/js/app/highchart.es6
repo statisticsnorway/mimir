@@ -178,6 +178,18 @@ export function init() {
           }
         }
 
+        if (canvas.data('type') === 'line') {
+          config.series.forEach(function(series) {
+            const lastPoint = series.data[series.data.length - 1]
+            series.data[series.data.length - 1] = {
+              y: lastPoint,
+              marker: {
+                enabled: true
+              }
+            }
+          })
+        }
+
         const category = 'Highcharts'
         const action = 'Lastet ned highcharts'
 
