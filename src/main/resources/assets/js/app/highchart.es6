@@ -178,23 +178,15 @@ export function init() {
           }
         }
 
+        // Only show plotOption marker on last data element
         if (canvas.data('type') === 'line') {
-          config.series.forEach(function(series, index) {
+          config.series.forEach(function(series) {
             const lastIndex = series.data.length - 1
             series.data.forEach(function(data, index) {
-              if (index !== lastIndex) {
-                series.data[index] = {
-                  y: series.data[index],
-                  marker: {
-                    enabled: false
-                  }
-                }
-              } else {
-                series.data[index] = {
-                  y: series.data[index],
-                  marker: {
-                    enabled: true
-                  }
+              series.data[index] = {
+                y: data,
+                marker: {
+                  enabled: index === lastIndex
                 }
               }
             })
