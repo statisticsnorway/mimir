@@ -282,6 +282,15 @@ export function init() {
           }
         }
 
+        // Replace table header from Category with xAxis.title.text
+        config.exporting.csv.columnHeaderFormatter = function(item) {
+          if (!item || item instanceof Highcharts.Axis) {
+            return config.xAxis.title.text ? config.xAxis.title.text : 'Category'
+          } else {
+            return item.name
+          }
+        }
+
         Highcharts.chart(chart, config)
 
         // Hide data table when highchart is loaded
