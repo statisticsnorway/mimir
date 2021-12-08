@@ -144,7 +144,7 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
     },
     line: {
       marker: {
-        enabled: false
+        enabled: true
       }
     },
     series: {
