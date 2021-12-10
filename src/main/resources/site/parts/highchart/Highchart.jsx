@@ -161,7 +161,6 @@ function Highchart(props) {
             ...highchart.config.exporting,
             showTable: showTable,
             menuItemDefinitions: {
-
               printChart: {
                 text: props.phrases['highcharts.printChart'],
                 onclick: function() {
