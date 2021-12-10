@@ -3,7 +3,8 @@ import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import PropTypes from 'prop-types'
 import { Row, Col, Container } from 'react-bootstrap'
-import { Title, Button, Tabs, Link } from '@statisticsnorway/ssb-component-library'
+import { Title, Tabs, Link } from '@statisticsnorway/ssb-component-library'
+import { addGtagForEvent } from '../../../react4xp/ReactGA'
 
 require('highcharts/modules/accessibility')(Highcharts)
 require('highcharts/modules/exporting')(Highcharts)
@@ -151,17 +152,24 @@ function Highchart(props) {
 
     if (highcharts && highcharts.length) {
       return highcharts.map((highchart, index) => {
+        const category = 'Highcharts'
+        const action = 'Lastet ned highcharts'
+
         const config = {
           ...highchart.config,
           exporting: {
             ...highchart.config.exporting,
             showTable: showTable,
             menuItemDefinitions: {
-              // TODO: Reimplement GA events
+
               printChart: {
                 text: props.phrases['highcharts.printChart'],
                 onclick: function() {
                   const label = `${highchart.config.title.text} - Skriv ut graf`
+                  if (props.GA_TRACKING_ID) {
+                    addGtagForEvent(props.GA_TRACKING_ID, action, category, label)
+                  }
+
                   this.print()
                 }
               },
@@ -169,6 +177,10 @@ function Highchart(props) {
                 text: props.phrases['highcharts.downloadPNG'],
                 onclick: function() {
                   const label = `${highchart.config.title.text} - Last ned som PNG`
+                  if (props.GA_TRACKING_ID) {
+                    addGtagForEvent(props.GA_TRACKING_ID, action, category, label)
+                  }
+
                   this.exportChart({
                     type: 'png'
                   })
@@ -178,6 +190,10 @@ function Highchart(props) {
                 text: props.phrases['highcharts.downloadJPEG'],
                 onclick: function() {
                   const label = `${highchart.config.title.text} - Last ned som JPEG`
+                  if (props.GA_TRACKING_ID) {
+                    addGtagForEvent(props.GA_TRACKING_ID, action, category, label)
+                  }
+
                   this.exportChart({
                     type: 'jpeg'
                   })
@@ -187,6 +203,10 @@ function Highchart(props) {
                 text: props.phrases['highcharts.downloadPDF'],
                 onclick: function() {
                   const label = `${highchart.config.title.text} - Last ned som PDF`
+                  if (props.GA_TRACKING_ID) {
+                    addGtagForEvent(props.GA_TRACKING_ID, action, category, label)
+                  }
+
                   this.exportChart({
                     type: 'application/pdf'
                   })
@@ -196,6 +216,10 @@ function Highchart(props) {
                 text: props.phrases['highcharts.downloadSVG'],
                 onclick: function() {
                   const label = `${highchart.config.title.text} - Last ned som SVG`
+                  if (props.GA_TRACKING_ID) {
+                    addGtagForEvent(props.GA_TRACKING_ID, action, category, label)
+                  }
+
                   this.exportChart({
                     type: 'svg'
                   })
@@ -206,12 +230,21 @@ function Highchart(props) {
 
                 onclick: function() {
                   const label = `${highchart.config.title.text} - Last ned som XLS`
+                  if (props.GA_TRACKING_ID) {
+                    addGtagForEvent(props.GA_TRACKING_ID, action, category, label)
+                  }
+
+                  /* TODO: Reimplement export */
                 }
               },
               downloadCSV: {
                 text: props.phrases['highcharts.downloadCSV'],
                 onclick: function() {
                   const label = `${highchart.config.title.text} - Last ned som CSV`
+                  if (props.GA_TRACKING_ID) {
+                    addGtagForEvent(props.GA_TRACKING_ID, action, category, label)
+                  }
+
                   this.downloadCSV()
                 }
               }
@@ -260,7 +293,8 @@ Highchart.propTypes = {
       hideTitle: PropTypes.boolean
     })
   ),
-  phrases: PropTypes.object
+  phrases: PropTypes.object,
+  GA_TRACKING_ID: PropTypes.string
 }
 
 export default (props) => <Highchart {...props}/>

@@ -14,6 +14,7 @@ import { HighchartsGraphConfig } from '../../../lib/types/highcharts'
 import { ResourceKey } from 'enonic-types/thymeleaf'
 import { DataSource } from '../../mixins/dataSource/dataSource'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import { GA_TRACKING_ID } from '../../pages/default/default'
 
 const {
   DataSource: DataSourceType,
@@ -117,7 +118,8 @@ function renderPart(req: Request, highchartIds: Array<string>): Response | React
 
   const HighchartProps: object = {
     highcharts: highcharts,
-    phrases: getPhrases(page)
+    phrases: getPhrases(page),
+    GA_TRACKING_ID: GA_TRACKING_ID
   }
 
   if (isEnabled('highchart-react', true, 'ssb')) {
