@@ -3,7 +3,7 @@ import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import PropTypes from 'prop-types'
 import { Row, Col, Container } from 'react-bootstrap'
-import { Title, Button, Tabs, Link } from '@statisticsnorway/ssb-component-library'
+import { Title, Button, Tabs, Divider, Link } from '@statisticsnorway/ssb-component-library'
 import { addGtagForEvent } from '../../../react4xp/ReactGA'
 
 require('highcharts/modules/accessibility')(Highcharts)
@@ -147,7 +147,7 @@ function Highchart(props) {
 
   function renderHighchartsTab() {
     return (
-      <Col className="col-12 border-bottom border-dark mb-3">
+      <Col className="col-12 mb-3">
         <Tabs
           className="pl-4"
           activeOnInit="highcharts-figure/"
@@ -163,6 +163,7 @@ function Highchart(props) {
           ]}
           onClick={handleHighchartsTabOnClick}
         />
+        <Divider light={false} className="mb-3"/>
       </Col>
     )
   }
