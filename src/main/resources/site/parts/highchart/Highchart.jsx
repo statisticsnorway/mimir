@@ -3,7 +3,7 @@ import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import PropTypes from 'prop-types'
 import { Row, Col, Container } from 'react-bootstrap'
-import { Title, Tabs, Link } from '@statisticsnorway/ssb-component-library'
+import { Title, Button, Tabs, Link } from '@statisticsnorway/ssb-component-library'
 import { addGtagForEvent } from '../../../react4xp/ReactGA'
 
 require('highcharts/modules/accessibility')(Highcharts)
@@ -12,6 +12,19 @@ require('highcharts/modules/export-data')(Highcharts)
 require('highcharts/modules/data')(Highcharts)
 require('highcharts/modules/no-data-to-display')(Highcharts)
 
+/* TODO list
+* Display highcharts in edit mode
+* Show highcharts draft in content type edit mode button
+* --- UU improvements ---
+* Show figure as highchart table functionality
+* Fix open xls exported file without dangerous file popup
+* Thousand seperator and decimal point corrections to highchart table
+* Option to replace Category in highchart table row
+* Show last point symbol for line graphs
+* ...etc
+* --- Rest ---
+* Cleanup - are there any files and lines of code we can delete after full conversion?
+ */
 function Highchart(props) {
   const [showTable, setShowTable] = useState(false)
 
@@ -106,6 +119,13 @@ function Highchart(props) {
     })
   }, [])
 
+  function renderHighchartToggleDraft() {
+    // <div class="alert alert-info mb-4" role="alert">Tallet i figuren nedenfor er upublisert</div>
+    // <div class="alert alert-warning mb-4" role="alert">Det finnes ingen upubliserte tall for denne figuren</div>
+
+    return <Button>Vis upubliserte tall</Button>
+  }
+
   function renderHighchartsTab() {
     return (
       <Col className="col-12 border-bottom border-dark mb-3">
@@ -139,7 +159,6 @@ function Highchart(props) {
           null }
         { highchart.creditsEnabled ?
           <Row className="mt-4 mt-md-5 highcharts-source">
-            {/* TODO: Fix font-size */}
             <Col className="col-12 font-weight-bold mb-0">{props.phrases.source}:</Col>
             <Col className="col-12"><Link href={highchart.creditsHref}>{highchart.creditsText}</Link></Col>
           </Row> : null }
@@ -149,7 +168,6 @@ function Highchart(props) {
 
   function renderHighcharts() {
     const highcharts = props.highcharts
-
     if (highcharts && highcharts.length) {
       return highcharts.map((highchart, index) => {
         const category = 'Highcharts'
@@ -233,7 +251,8 @@ function Highchart(props) {
                     addGtagForEvent(props.GA_TRACKING_ID, action, category, label)
                   }
 
-                  /* TODO: Reimplement export */
+                  // TODO: Re-implement zipcelx fix (are there other alternatives for react?)
+                  this.downloadXLS()
                 }
               },
               downloadCSV: {
@@ -253,7 +272,7 @@ function Highchart(props) {
 
         return (
           <Row key={`highchart-${index}`}>
-            <Col className="12">
+            <Col className="col-12">
               <Title size={3}>{config.title.text}</Title>
               {config.subtitle.text ? <p className="highchart-subtitle mb-1">{config.subtitle.text}</p> : null}
             </Col>
