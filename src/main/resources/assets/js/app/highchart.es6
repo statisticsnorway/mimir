@@ -178,6 +178,21 @@ export function init() {
           }
         }
 
+        // Only show plotOption marker on last data element
+        if (canvas.data('type') === 'line') {
+          config.series.forEach(function(series) {
+            const lastIndex = series.data.length - 1
+            series.data.forEach(function(data, index) {
+              series.data[index] = {
+                y: data,
+                marker: {
+                  enabled: index === lastIndex
+                }
+              }
+            })
+          })
+        }
+
         const category = 'Highcharts'
         const action = 'Lastet ned highcharts'
 
@@ -279,6 +294,15 @@ export function init() {
 
               this.downloadCSV()
             }
+          }
+        }
+
+        // Replace table header from Category with xAxis.title.text
+        config.exporting.csv.columnHeaderFormatter = function(item) {
+          if (!item || item instanceof Highcharts.Axis) {
+            return config.xAxis.title.text ? config.xAxis.title.text : 'Category'
+          } else {
+            return item.name
           }
         }
 
