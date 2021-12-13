@@ -188,7 +188,7 @@ function Highchart(props) {
   function renderHighcharts() {
     const highcharts = props.highcharts
     if (highcharts && highcharts.length) {
-      return highcharts.map((highchart, index) => {
+      return highcharts.map((highchart) => {
         const category = 'Highcharts'
         const action = 'Lastet ned highcharts'
 
@@ -290,7 +290,7 @@ function Highchart(props) {
         }
 
         return (
-          <Row key={`highchart-${index}`}>
+          <Row key={`highchart-${highchart.contentKey}`}>
             {renderHighchartToggleDraft(highchart)}
             <Col className="col-12">
               <Title size={3}>{config.title.text}</Title>
