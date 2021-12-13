@@ -26,6 +26,7 @@ require('highcharts/modules/no-data-to-display')(Highcharts)
 * Cleanup - are there any files and lines of code we can delete after full conversion?
  */
 function Highchart(props) {
+  const [showDraft, setShowDraft] = useState(false)
   const [showTable, setShowTable] = useState(false)
 
   useEffect(() => {
@@ -119,11 +120,29 @@ function Highchart(props) {
     })
   }, [])
 
-  function renderHighchartToggleDraft() {
-    // <div class="alert alert-info mb-4" role="alert">Tallet i figuren nedenfor er upublisert</div>
-    // <div class="alert alert-warning mb-4" role="alert">Det finnes ingen upubliserte tall for denne figuren</div>
+  function renderHighchartToggleDraft(highchart) {
+    // TODO: Reimplement functionality; currently only changes name on button
+    if (props.pageType === `${props.appName}:highchart`) {
+      return (
+        <Col className="col-12 mb-3">
+          {highchart.config.draft && <div className="alert alert-info mb-4" role="alert">Tallet i figuren nedenfor er upublisert</div>}
+          {highchart.config.noDraftAvailable &&
+            <div className="alert alert-warning mb-4" role="alert">Det finnes ingen upubliserte tall for denne figuren</div>}
+          {!showDraft && <Button primary onClick={() => setShowDraft(true)}>Vis upubliserte tall</Button>}
+          {showDraft && <Button primary onClick={() => setShowDraft(false)}>Vis publiserte tall</Button>}
+        </Col>
+      )
+    }
+  }
 
-    return <Button>Vis upubliserte tall</Button>
+  function handleHighchartsTabOnClick(item) {
+    if (item === 'highcharts-table/') {
+      setShowTable(true)
+    }
+
+    if (item === 'highcharts-figure/') {
+      setShowTable(false)
+    }
   }
 
   function renderHighchartsTab() {
@@ -135,15 +154,14 @@ function Highchart(props) {
           items={[
             {
               title: props.phrases['highcharts.showAsGraph'],
-              path: 'highcharts-figure/',
-              onClick: () => setShowTable(false)
+              path: 'highcharts-figure/'
             },
             {
               title: props.phrases['highcharts.showAsTable'],
-              path: 'highcharts-table/',
-              onClick: () => setShowTable(true)
+              path: 'highcharts-table/'
             }
           ]}
+          onClick={handleHighchartsTabOnClick}
         />
       </Col>
     )
@@ -272,6 +290,7 @@ function Highchart(props) {
 
         return (
           <Row key={`highchart-${index}`}>
+            {renderHighchartToggleDraft(highchart)}
             <Col className="col-12">
               <Title size={3}>{config.title.text}</Title>
               {config.subtitle.text ? <p className="highchart-subtitle mb-1">{config.subtitle.text}</p> : null}
@@ -312,6 +331,8 @@ Highchart.propTypes = {
     })
   ),
   phrases: PropTypes.object,
+  appName: PropTypes.string,
+  pageType: PropTypes.string,
   GA_TRACKING_ID: PropTypes.string
 }
 

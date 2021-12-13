@@ -119,6 +119,8 @@ function renderPart(req: Request, highchartIds: Array<string>): Response | React
   const HighchartProps: object = {
     highcharts: highcharts,
     phrases: getPhrases(page),
+    appName: app.name,
+    pageType: page.type,
     GA_TRACKING_ID: GA_TRACKING_ID
   }
 
