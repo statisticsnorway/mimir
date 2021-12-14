@@ -39,7 +39,8 @@ function StaticVisualization(props) {
             <img alt={props.altText} src={props.imageSrc} />
           </div>
 
-          <FactBox header={props.descriptionStaticVisualization}
+          <FactBox
+            header={props.descriptionStaticVisualization}
             text={renderLongDescriptionAndSources()}
           />
 
