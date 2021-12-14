@@ -27,7 +27,6 @@ import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { StaticVisualization } from '../../content-types/staticVisualization/staticVisualization'
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
-import { Base64 } from 'js-base64'
 import { DefaultPageConfig } from '../../pages/default/default-page-config'
 import { StaticVisualizationPartConfig } from './staticVisualization-part-config'
 
