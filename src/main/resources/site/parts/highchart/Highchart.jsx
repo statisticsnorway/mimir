@@ -15,6 +15,7 @@ require('highcharts/modules/no-data-to-display')(Highcharts)
 /* TODO list
 * Display highcharts in edit mode
 * Show highcharts draft in content type edit mode button
+* Perfomance - highcharts react takes a bit longer to load
 * --- UU improvements ---
 * Show figure as highchart table functionality
 * Fix open xls exported file without dangerous file popup
@@ -30,6 +31,7 @@ function Highchart(props) {
   const [showTable, setShowTable] = useState(false)
 
   useEffect(() => {
+    // Set options before highcharts react is rendered
     Highcharts.setOptions({
       lang: {
         accessibility: {
