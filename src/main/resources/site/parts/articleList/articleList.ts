@@ -5,8 +5,6 @@ import { ArticleListPartConfig } from './articleList-part-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { AggregationsResponseEntry, Content } from 'enonic-types/content'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
-import { enGB, nb, nn } from 'date-fns/locale'
-import { parseISO, format } from 'date-fns'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 
 const {

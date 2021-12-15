@@ -1,4 +1,5 @@
 import { HttpResponse } from 'enonic-types/http'
+import { formatDate } from './dateUtils'
 
 const SOLR_PARAM_QUERY: string = 'q'
 const SOLR_FORMAT: string = 'json'
@@ -32,7 +33,6 @@ export function solrSearch(term: string, language: string, numberOfHits: number,
 
 
 function nerfSearchResult(solrResult: SolrResult, language: string): Array<PreparedSearchResult> {
-  const momentLanguage: string = language === 'en' ? 'en-gb' : 'nb'
   return solrResult.grouped.gruppering.groups.reduce((acc: Array<PreparedSearchResult>, group) => {
     group.doclist.docs.forEach((doc: SolrDoc) => {
       const highlight: SolrHighlighting | undefined = solrResult.highlighting[doc.id]
@@ -46,7 +46,7 @@ function nerfSearchResult(solrResult: SolrResult, language: string): Array<Prepa
         mainSubject: mainSubjects.length > 0 ? mainSubjects[0] : '',
         secondaryMainSubject: secondarySubjects.join(';'),
         publishDate: doc.publiseringsdato,
-        publishDateHuman: doc.publiseringsdato ? moment(doc.publiseringsdato).locale(momentLanguage).format('LL') : ''
+        publishDateHuman: doc.publiseringsdato ? formatDate(doc.publiseringsdato, 'PPP', language) : ''
       })
     })
     return acc
@@ -119,7 +119,7 @@ export interface PreparedSearchResult {
   mainSubject: string;
   secondaryMainSubject: string;
   publishDate: string;
-  publishDateHuman: string;
+  publishDateHuman: string | undefined;
 }
 
 export interface SolrPrepResultAndTotal {

@@ -2,6 +2,7 @@ import { Article } from '../../../site/content-types/article/article'
 import { Content, QueryResponse } from 'enonic-types/content'
 import { SubjectItem } from '../utils/subjectUtils'
 import { Request } from 'enonic-types/controller'
+import { formatDate } from './dateUtils'
 
 const {
   query
@@ -52,7 +53,6 @@ ArticleResult {
 }
 
 export function prepareArticles(articles: QueryResponse<Article>, language: string): Array<PreparedArticles> {
-  const momentLanguage: string = language === 'en' ? 'en-gb' : 'nb'
   return articles.hits.map((article: Content<Article>) => {
     return {
       title: article.displayName,
@@ -61,7 +61,7 @@ export function prepareArticles(articles: QueryResponse<Article>, language: stri
         id: article._id
       }),
       publishDate: article.publish && article.publish.from ? article.publish.from : '',
-      publishDateHuman: article.publish && article.publish.from ? moment(article.publish.from).locale(momentLanguage).format('LL') : ''
+      publishDateHuman: article.publish && article.publish.from ? formatDate(article.publish.from, 'PPP', language) : ''
     }
   })
 }
