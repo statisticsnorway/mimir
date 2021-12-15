@@ -74,6 +74,10 @@ try {
           enabled: false
         },
         {
+          feature: 'highchart-react',
+          enabled: false
+        },
+        {
           feature: 'publishJob-lib-sheduler',
           enabled: false
         }

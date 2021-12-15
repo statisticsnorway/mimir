@@ -119,6 +119,20 @@ const createSetOptions = {
 export function init() {
   Highcharts.setOptions(createSetOptions)
 
+  const lang = $('html').attr('lang')
+  Highcharts.addEvent(Highcharts.Chart, 'aftergetTableAST', function(e) {
+    e.tree.children[2].children.forEach(function(row) {
+      row.children.forEach(function(cell, i) {
+        if (i !== 0) {
+          const cellValue = parseFloat(cell.textContent)
+            .toLocaleString(lang === 'en' ? 'en-EN' : 'no-NO')
+            .replace('NaN', '')
+          row.children[i].textContent = lang === 'en' ? cellValue.replace(',', ' ') : cellValue
+        }
+      })
+    })
+  })
+
   $(function() {
     const w = {
       height: $(window).height().toFixed(0),
@@ -162,6 +176,21 @@ export function init() {
             // Possible bug: untested browser support for browserEvent (but works in IE8, chrome, FF...)
             $(e.browserEvent.target).toggleClass('disabled')
           }
+        }
+
+        // Only show plotOption marker on last data element
+        if (canvas.data('type') === 'line') {
+          config.series.forEach(function(series) {
+            const lastIndex = series.data.length - 1
+            series.data.forEach(function(data, index) {
+              series.data[index] = {
+                y: data,
+                marker: {
+                  enabled: index === lastIndex
+                }
+              }
+            })
+          })
         }
 
         const category = 'Highcharts'
@@ -265,6 +294,15 @@ export function init() {
 
               this.downloadCSV()
             }
+          }
+        }
+
+        // Replace table header from Category with xAxis.title.text
+        config.exporting.csv.columnHeaderFormatter = function(item) {
+          if (!item || item instanceof Highcharts.Axis) {
+            return config.xAxis.title.text ? config.xAxis.title.text : 'Category'
+          } else {
+            return item.name
           }
         }
 

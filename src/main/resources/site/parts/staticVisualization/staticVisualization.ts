@@ -27,7 +27,6 @@ import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { StaticVisualization } from '../../content-types/staticVisualization/staticVisualization'
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
-import { Base64 } from 'js-base64'
 import { DefaultPageConfig } from '../../pages/default/default-page-config'
 import { StaticVisualizationPartConfig } from './staticVisualization-part-config'
 
@@ -63,10 +62,6 @@ function renderPart(req: Request, contentId: string | undefined): React4xpRespon
   if (staticVisualizationsContent) {
     const sourceConfig: StaticVisualization['sources'] = staticVisualizationsContent.data.sources ? forceArray(staticVisualizationsContent.data.sources) : []
 
-    // Encodes string to base64 and turns it into a dataURI
-    const desc: string = Base64.encodeURI(staticVisualizationsContent.data.longDesc)
-    const longDesc: string = 'data:text/html;charset=utf-8;base64,' + desc
-
     const imageSrc: string | null = imageUrl({
       id: staticVisualizationsContent.data.image,
       scale: 'max(850)'
@@ -83,7 +78,7 @@ function renderPart(req: Request, contentId: string | undefined): React4xpRespon
       imageSrc: imageSrc,
       footnotes: staticVisualizationsContent.data.footNote ? forceArray(staticVisualizationsContent.data.footNote) : [],
       sources: getSources(sourceConfig as Array<SourcesConfig>),
-      longDesc,
+      longDesc: staticVisualizationsContent.data.longDesc,
       sourcesLabel,
       descriptionStaticVisualization,
       inFactPage: page.page.config && page.page.config.pageType === 'factPage'
@@ -108,7 +103,7 @@ function renderPart(req: Request, contentId: string | undefined): React4xpRespon
     imageSrc: string;
     footnotes: StaticVisualization['footNote'];
     sources: SourceList;
-    longDesc: string;
+    longDesc: string | undefined;
     sourcesLabel: string;
     descriptionStaticVisualization: string;
     inFactPage?: boolean;

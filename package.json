@@ -84,7 +84,7 @@
     "react-bootstrap-easy-dialog": "^0.3.3",
     "react-dom": "^16.14.0",
     "react-feather": "^2.0.9",
-    "react-helmet-async": "^1.0.9",
+    "react-helmet-async": "^1.2.0",
     "react-mathjax": "^1.0.1",
     "react-moment": "^1.1.1",
     "react-number-format": "^4.7.3",
