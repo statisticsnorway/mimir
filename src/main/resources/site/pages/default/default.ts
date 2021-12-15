@@ -79,7 +79,8 @@ const partsWithPreview: Array<string> = [ // Parts that has preview
   `${app.name}:factBox`,
   `${app.name}:contentList`,
   `${app.name}:omStatistikken`,
-  `${app.name}:table`
+  `${app.name}:table`,
+  `${app.name}:staticVisualization`
 ]
 
 const previewOverride: object = {

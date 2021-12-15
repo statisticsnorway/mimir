@@ -86,7 +86,8 @@ function renderPart(req: Request, contentId: string | undefined): React4xpRespon
       longDesc,
       sourcesLabel,
       descriptionStaticVisualization,
-      inFactPage: page.page.config && page.page.config.pageType === 'factPage'
+      inFactPage: page.page.config && page.page.config.pageType === 'factPage',
+      tableData: staticVisualizationsContent.data.tableData ? staticVisualizationsContent.data.tableData : ''
     }
 
     return React4xp.render('site/parts/staticVisualization/staticVisualization', props, req)
@@ -112,5 +113,6 @@ function renderPart(req: Request, contentId: string | undefined): React4xpRespon
     sourcesLabel: string;
     descriptionStaticVisualization: string;
     inFactPage?: boolean;
+    tableData: string;
   }
 
