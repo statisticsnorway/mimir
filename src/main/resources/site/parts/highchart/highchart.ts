@@ -13,6 +13,9 @@ import { TbmlDataUniform } from '../../../lib/types/xmlParser'
 import { HighchartsGraphConfig } from '../../../lib/types/highcharts'
 import { ResourceKey } from 'enonic-types/thymeleaf'
 import { DataSource } from '../../mixins/dataSource/dataSource'
+import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import { GA_TRACKING_ID } from '../../pages/default/default'
+
 const {
   DataSource: DataSourceType,
   getDataset,
@@ -53,7 +56,12 @@ const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
 
-exports.get = function(req: Request): Response {
+const {
+  getPhrases
+} = __non_webpack_require__('/lib/ssb/utils/language')
+const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
+exports.get = function(req: Request): Response | React4xpResponse {
   try {
     const part: Component<HighchartPartConfig> = getComponent()
     const highchartIds: Array<string> = part.config.highchart ? forceArray(part.config.highchart) : []
@@ -63,7 +71,7 @@ exports.get = function(req: Request): Response {
   }
 }
 
-exports.preview = (req: Request, id: string): Response => {
+exports.preview = (req: Request, id: string): Response | React4xpResponse => {
   try {
     return renderPart(req, [id])
   } catch (e) {
@@ -72,7 +80,7 @@ exports.preview = (req: Request, id: string): Response => {
 }
 
 
-function renderPart(req: Request, highchartIds: Array<string>): Response {
+function renderPart(req: Request, highchartIds: Array<string>): Response | React4xpResponse {
   const page: Content = getContent()
   const language: string = page.language ? page.language : 'nb'
 
@@ -108,19 +116,33 @@ function renderPart(req: Request, highchartIds: Array<string>): Response {
    window['highchart' + '${highchart.contentKey}'] = ${JSON.stringify(highchart.config)}
    </script>`)
 
-  return {
-    body: render(view, {
-      highcharts,
-      downloadText,
-      sourceText,
-      showDataTableEnabled: isEnabled('highchart-show-datatable', false, 'ssb'),
-      showAsGraphText,
-      showAsTableText
-    }),
-    pageContributions: {
-      bodyEnd: inlineScript
-    },
-    contentType: 'text/html'
+  const HighchartProps: object = {
+    highcharts: highcharts,
+    phrases: getPhrases(page),
+    appName: app.name,
+    pageType: page.type,
+    GA_TRACKING_ID: GA_TRACKING_ID
+  }
+
+  if (isEnabled('highchart-react', true, 'ssb')) {
+    return React4xp.render('site/parts/highchart/Highchart', HighchartProps, req, {
+      body: '<section class="xp-part part-highchart"></section>'
+    })
+  } else {
+    return {
+      body: render(view, {
+        highcharts,
+        downloadText,
+        sourceText,
+        showDataTableEnabled: isEnabled('highchart-show-datatable', false, 'ssb'),
+        showAsGraphText,
+        showAsTableText
+      }),
+      pageContributions: {
+        bodyEnd: inlineScript
+      },
+      contentType: 'text/html'
+    }
   }
 }
 
