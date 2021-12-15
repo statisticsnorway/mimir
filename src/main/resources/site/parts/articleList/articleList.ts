@@ -5,6 +5,8 @@ import { ArticleListPartConfig } from './articleList-part-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { AggregationsResponseEntry, Content } from 'enonic-types/content'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
+import { enGB, nb, nn } from 'date-fns/locale'
+import { parseISO, format } from 'date-fns'
 
 const {
   localize
@@ -105,8 +107,12 @@ function getArticles(req: Request, language: string): Array<Content<Article>> {
 }
 
 function prepareArticles(articles: Array<Content<Article>>, language: string): Array<PreparedArticles> {
-  const momentLanguage: string = language === 'en' ? 'en-gb' : 'nb'
+  const locale: object | undefined = {
+    locale: language === 'en' ? enGB : (language === 'nn' ? nn : nb)
+  }
   return articles.map((article: Content<Article>) => {
+    const date: Date | undefined = article.publish && article.publish.from ? parseISO(article.publish.from) : undefined
+
     return {
       title: article.displayName,
       preface: article.data.ingress ? article.data.ingress : '',
@@ -114,7 +120,7 @@ function prepareArticles(articles: Array<Content<Article>>, language: string): A
         id: article._id
       }),
       publishDate: article.publish && article.publish.from ? article.publish.from : '',
-      publishDateHuman: article.publish && article.publish.from ? moment(article.publish.from).locale(momentLanguage).format('LL') : '',
+      publishDateHuman: date ? format(date, 'PPP', locale) : '',
       frontPagePriority: article.data.frontPagePriority
     }
   })

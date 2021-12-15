@@ -7,10 +7,9 @@ import { GroupedBy, PreparedStatistics, YearReleases, Release } from '../../../l
 import { UpcomingReleasesPartConfig } from './upcomingReleases-part-config'
 import { UpcomingRelease } from '../../content-types/upcomingRelease/upcomingRelease'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
+import { enGB, nb, nn } from 'date-fns/locale'
+import { parseISO, format } from 'date-fns'
 
-const {
-  moment
-} = __non_webpack_require__('/lib/vendor/moment')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getContent,
@@ -89,25 +88,29 @@ function renderPart(req: Request): React4xpResponse {
   const contentReleases: Array<PreparedUpcomingRelease> = query<UpcomingRelease>({
     start: 0,
     count: 500,
-    query: `type = "${app.name}:upcomingRelease" AND language = "${currentLanguage}" AND data.date >= "${moment().format('YYYY-MM-DD')}"`
+    query: `type = "${app.name}:upcomingRelease" AND language = "${currentLanguage}" AND data.date >= "${format(new Date(), 'yyyy-MM-dd')}"`
   }).hits.map((r) => {
-    const date: moment.Moment = moment(r.data.date).locale(currentLanguage)
+    const date: Date = parseISO(r.data.date)
+    const locale: object | undefined = {
+      locale: currentLanguage === 'en' ? enGB : (currentLanguage === 'nn' ? nn : nb)
+    }
     const mainSubjectItem: SubjectItem | null = getMainSubjectById(allMainSubjects, r.data.mainSubject)
     const mainSubject: string = mainSubjectItem ? mainSubjectItem.title : ''
     const contentType: string = r.data.contentType ? localize({
       key: `contentType.${r.data.contentType}`,
       locale: currentLanguage
     }) : ''
+
     return {
       id: r._id,
       name: r.displayName,
       type: contentType,
-      date: date.format(),
+      date: format(date, '', locale),
       mainSubject: mainSubject,
-      day: date.format('D'),
-      month: date.format('M'),
-      monthName: date.format('MMM'),
-      year: date.format('YYYY'),
+      day: format(date, 'D', locale),
+      month: format(date, 'M', locale),
+      monthName: format(date, 'MMM', locale),
+      year: format(date, 'yyyy', locale),
       upcomingReleaseLink: r.data.href ? r.data.href : ''
     }
   })
