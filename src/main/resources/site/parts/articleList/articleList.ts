@@ -7,6 +7,7 @@ import { AggregationsResponseEntry, Content } from 'enonic-types/content'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { enGB, nb, nn } from 'date-fns/locale'
 import { parseISO, format } from 'date-fns'
+import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 
 const {
   localize
@@ -107,12 +108,7 @@ function getArticles(req: Request, language: string): Array<Content<Article>> {
 }
 
 function prepareArticles(articles: Array<Content<Article>>, language: string): Array<PreparedArticles> {
-  const locale: object | undefined = {
-    locale: language === 'en' ? enGB : (language === 'nn' ? nn : nb)
-  }
   return articles.map((article: Content<Article>) => {
-    const date: Date | undefined = article.publish && article.publish.from ? parseISO(article.publish.from) : undefined
-
     return {
       title: article.displayName,
       preface: article.data.ingress ? article.data.ingress : '',
@@ -120,7 +116,7 @@ function prepareArticles(articles: Array<Content<Article>>, language: string): A
         id: article._id
       }),
       publishDate: article.publish && article.publish.from ? article.publish.from : '',
-      publishDateHuman: date ? format(date, 'PPP', locale) : '',
+      publishDateHuman: article.publish && article.publish.from ? formatDate(article.publish.from, 'PPP', language) : '',
       frontPagePriority: article.data.frontPagePriority
     }
   })

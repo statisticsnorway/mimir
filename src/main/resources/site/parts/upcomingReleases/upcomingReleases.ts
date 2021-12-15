@@ -7,8 +7,7 @@ import { GroupedBy, PreparedStatistics, YearReleases, Release } from '../../../l
 import { UpcomingReleasesPartConfig } from './upcomingReleases-part-config'
 import { UpcomingRelease } from '../../content-types/upcomingRelease/upcomingRelease'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
-import { enGB, nb, nn } from 'date-fns/locale'
-import { parseISO, format } from 'date-fns'
+import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
@@ -88,12 +87,9 @@ function renderPart(req: Request): React4xpResponse {
   const contentReleases: Array<PreparedUpcomingRelease> = query<UpcomingRelease>({
     start: 0,
     count: 500,
-    query: `type = "${app.name}:upcomingRelease" AND language = "${currentLanguage}" AND data.date >= "${format(new Date(), 'yyyy-MM-dd')}"`
+    query: `type = "${app.name}:upcomingRelease" AND language = "${currentLanguage}" AND data.date >= "${formatDate(new Date(), 'yyyy-MM-dd')}"`
   }).hits.map((r) => {
-    const date: Date = parseISO(r.data.date)
-    const locale: object | undefined = {
-      locale: currentLanguage === 'en' ? enGB : (currentLanguage === 'nn' ? nn : nb)
-    }
+    const date: string = r.data.date
     const mainSubjectItem: SubjectItem | null = getMainSubjectById(allMainSubjects, r.data.mainSubject)
     const mainSubject: string = mainSubjectItem ? mainSubjectItem.title : ''
     const contentType: string = r.data.contentType ? localize({
@@ -105,12 +101,12 @@ function renderPart(req: Request): React4xpResponse {
       id: r._id,
       name: r.displayName,
       type: contentType,
-      date: format(date, '', locale),
+      date: formatDate(date, '', currentLanguage) as string,
       mainSubject: mainSubject,
-      day: format(date, 'D', locale),
-      month: format(date, 'M', locale),
-      monthName: format(date, 'MMM', locale),
-      year: format(date, 'yyyy', locale),
+      day: formatDate(date, 'D', currentLanguage) as string,
+      month: formatDate(date, 'M', currentLanguage) as string,
+      monthName: formatDate(date, 'MMM', currentLanguage) as string,
+      year: formatDate(date, 'yyyy', currentLanguage) as string,
       upcomingReleaseLink: r.data.href ? r.data.href : ''
     }
   })

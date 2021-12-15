@@ -8,6 +8,7 @@ import { Request } from 'enonic-types/controller'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { SEO } from '../../../services/news/news'
 import { OmStatistikken } from '../../../site/content-types/omStatistikken/omStatistikken'
+import { formatDate } from '../utils/dateUtils'
 
 const {
   query,
@@ -117,7 +118,7 @@ function prepareStatisticRelease(
       preface: aboutTheStatisticsContent ? aboutTheStatisticsContent.data.ingress : seoDescription,
       url: statisticsPageUrl,
       publishDate: moment(release.publishTime).locale('nb').format('YYYY.MM.DD HH:mm'),
-      publishDateHuman: moment(new Date(release.publishTime)).locale(language).format('Do MMMM YYYY'),
+      publishDateHuman: formatDate(release.publishTime, 'PPP', language),
       contentType: `${app.name}:statistics`,
       articleType: 'statistics',
       mainSubjectId: mainSubject.length > 0 ? mainSubject[0].name : '',
@@ -216,7 +217,7 @@ export interface PublicationItem {
   preface: string;
   url: string;
   publishDate: string;
-  publishDateHuman: string;
+  publishDateHuman: string | undefined;
   contentType: string;
   articleType: string;
   mainSubjectId: string;
