@@ -10,9 +10,9 @@ export function sameDay(d1: Date, d2: Date): boolean {
 export function formatDate(date: Date | string | undefined, formatType: string, language?: string): string | undefined {
   if (date) {
     const parsedDate: Date = date instanceof Date ? date : parseISO(date)
-    const locale: object | undefined = language ? {
+    const locale: object = language ? {
       locale: language === 'en' ? enGB : (language === 'nn' ? nn : nb)
-    } : undefined
+    } : {}
     return format(parsedDate, formatType, locale)
   }
   return

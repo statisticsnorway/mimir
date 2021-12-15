@@ -11,11 +11,6 @@ const {
   request
 } = __non_webpack_require__('/lib/http-client')
 
-const {
-  moment
-} = __non_webpack_require__('/lib/vendor/moment')
-
-
 export function solrSearch(term: string, language: string, numberOfHits: number, start: number = 0, mainSubject: string): SolrPrepResultAndTotal {
   const lang: string = language === 'en' ? 'en' : 'no'
   const filterQuery: string = mainSubject ? `fq=sprak:"${lang}"&fq=hovedemner:"${mainSubject}"` : `fq=sprak:"${lang}"`

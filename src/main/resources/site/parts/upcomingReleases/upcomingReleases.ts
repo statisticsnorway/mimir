@@ -9,6 +9,9 @@ import { UpcomingRelease } from '../../content-types/upcomingRelease/upcomingRel
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 
+const {
+  moment
+} = __non_webpack_require__('/lib/vendor/moment')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getContent,
@@ -87,7 +90,7 @@ function renderPart(req: Request): React4xpResponse {
   const contentReleases: Array<PreparedUpcomingRelease> = query<UpcomingRelease>({
     start: 0,
     count: 500,
-    query: `type = "${app.name}:upcomingRelease" AND language = "${currentLanguage}" AND data.date >= "${formatDate(new Date(), 'yyyy-MM-dd')}"`
+    query: `type = "${app.name}:upcomingRelease" AND language = "${currentLanguage}" AND data.date >= "${moment().format('YYYY-MM-DD')}"`
   }).hits.map((r) => {
     const date: string = r.data.date
     const mainSubjectItem: SubjectItem | null = getMainSubjectById(allMainSubjects, r.data.mainSubject)
