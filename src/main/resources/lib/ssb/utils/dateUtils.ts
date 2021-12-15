@@ -7,9 +7,9 @@ export function sameDay(d1: Date, d2: Date): boolean {
         d1.getFullYear() === d2.getFullYear()
 }
 
-export function formatDate(date: Date | string | undefined, formatType: string, language?: string): string | undefined {
+export function formatDate(date: string | undefined, formatType: string, language?: string): string | undefined {
   if (date) {
-    const parsedDate: Date = date instanceof Date ? date : parseISO(date)
+    const parsedDate: Date = parseISO(date)
     const locale: object = language ? {
       locale: language === 'en' ? enGB : (language === 'nn' ? nn : nb)
     } : {}
