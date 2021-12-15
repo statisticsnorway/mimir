@@ -21,6 +21,9 @@ try {
   const {
     create
   } = __non_webpack_require__('/lib/featureToggle')
+  const {
+    setupTaskListener
+  } = __non_webpack_require__('/lib/ssb/dataset/publish')
 
   log.info('Application ' + app.name + ' started') // Log application started
   __.disposer(() => log.info('Application ' + app.name + ' stopped')) // Log application stoppped
@@ -32,6 +35,7 @@ try {
   setupBestBetRepo()
   setupFetchDataOnCreateListener()
   setupCronJobs()
+  setupTaskListener()
 
   create([
     {
@@ -71,6 +75,10 @@ try {
         },
         {
           feature: 'highchart-react',
+          enabled: false
+        },
+        {
+          feature: 'publishJob-lib-sheduler',
           enabled: false
         }
       ]
