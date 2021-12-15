@@ -57,7 +57,6 @@ const renderPart = (req) => {
   const maxWait = app.config && app.config['ssb.statistics.publishMaxWait'] ? parseInt(app.config['ssb.statistics.publishMaxWait']) : 10000
   const newPublishJobEnabled = isEnabled('publishJob-lib-sheduler', false, 'ssb')
   const currentlyWaiting = newPublishJobEnabled ? currentlyWaitingForPublish(page) : currentlyWaitingForPublishOld(page)
-  log.info('currentlyWaiting: ' + currentlyWaiting)
   let waitedFor = 0
   while (currentlyWaiting && waitedFor < maxWait) {
     waitedFor += wait

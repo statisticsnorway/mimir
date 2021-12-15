@@ -18,7 +18,7 @@ exports.get = (req: Request): Response => {
   const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
   const upComingReleases: Array<Release> = getUpcomingReleases(statistics)
   const count: number = req.params.count ? parseInt(req.params.count) : 2
-  const showAll: boolean = req.params.showAll && req.params.showAll === 'true' ? true : false
+  const showAll: boolean = !!(req.params.showAll && req.params.showAll === 'true')
 
   const language: string = req.params.language ? req.params.language : 'nb'
   const numberOfDays: number = showAll ? getDaysToLatestRelease(upComingReleases) : count
@@ -50,7 +50,6 @@ function getDaysToLatestRelease(upComingReleases: Array<Release> ): number {
   const releaseDate: Date = new Date(lastUpcomingRelease.publishTime)
   const diff: number = Math.abs(today.getTime() - releaseDate.getTime())
   const diffDays: number = Math.ceil(diff / (1000 * 3600 * 24))
-  log.info('Antall dager fra: ' + today + ' og ' + releaseDate + ' ER: ' + diffDays)
   return diffDays
 }
 

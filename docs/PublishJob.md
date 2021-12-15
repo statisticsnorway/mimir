@@ -2,7 +2,7 @@
 
 
 ## Tasks
-Får å publisere tall kl 08:00 bruker vi 3 tasks, disse er:
+For å publisere tall kl 08:00 bruker vi 3 tasks, disse er:
 - dailyPublishJob(Kjøres hver dag kl 07:50)
 - publishDataset (en task pr datakilde, kjøres kun 1 gang)
 - cleanupPublishDataset (en task pr datakilde, kjøres kun 1 gang)
