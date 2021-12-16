@@ -1,12 +1,37 @@
 import React, { useState } from 'react'
 import { PropTypes } from 'prop-types'
-import { Title, Link, Tabs, Divider } from '@statisticsnorway/ssb-component-library'
+import { Title, Link, FactBox, Tabs, Divider } from '@statisticsnorway/ssb-component-library'
 import { Row, Col } from 'react-bootstrap'
 import NumberFormat from 'react-number-format'
 
 function StaticVisualization(props) {
   const [activeTab, changeTab] = useState('figure')
   const tabClicked = (e) => changeTab(e)
+
+  function renderLongDescriptionAndSources() {
+    return (
+      <React.Fragment>
+        {props.longDesc ? <p className="pt-4">{props.longDesc}</p> : null}
+        {props.footnotes.length ?
+          <ul className={`footnote${props.inFactPage ? '' : ' pl-0'}`}>
+            {props.footnotes.map((footnote, index) =>
+              <li key={`footnote-${index}`}>
+                <sup>{index + 1}</sup>
+                <span>{footnote}</span>
+              </li>
+            )}
+          </ul> : null}
+
+        {props.sources.length ?
+          <p className="pt-2">
+            {props.sources.map((source, index) =>
+              <p key={`source-${index}`} className="sources">
+                <Link className="mb-1" href={source.url}>{props.sourcesLabel}: {source.urlText}</Link>
+              </p>)}
+          </p> : null}
+      </React.Fragment>
+    )
+  }
 
   function renderTabs() {
     if (props.tableData !== '') {
@@ -105,7 +130,6 @@ function StaticVisualization(props) {
     return value
   }
 
-
   return (
     <section className="container part-static-visualization">
       <Row className="xp-part">
@@ -113,36 +137,22 @@ function StaticVisualization(props) {
           <Title size={2} className="mt-0">{props.title}</Title>
           {renderTabs()}
           {activeTab === 'figure' && (
-            <div className="d-flex justify-content-center">
+            <div className="d-flex justify-content-center mb-5">
               <img alt={props.altText} src={props.imageSrc} />
-              <a href={props.longDesc} className="sr-only">{props.descriptionStaticVisualization}</a>
             </div>
           )}
 
           {activeTab === 'table' && (
-            <div className="d-flex justify-content-center">
+            <div className="d-flex justify-content-center mb-5">
               {createTable()}
             </div>
           )}
 
-          {props.footnotes.length ?
-            <ul className={`footnote${props.inFactPage ? '' : ' pl-0'}`}>
-              {props.footnotes.map((footnote, index) =>
-                <li key={`footnote-${index}`}>
-                  <sup>{index + 1}</sup>
-                  <span>{footnote}</span>
-                </li>
-              )}
-            </ul> : null}
+          <FactBox
+            header={props.descriptionStaticVisualization}
+            text={renderLongDescriptionAndSources()}
+          />
 
-          {props.sources.length ?
-            <>
-              <b className="source-title">{props.sourcesLabel}</b>
-              {props.sources.map((source, index) =>
-                <p key={`source-${index}`} className="sources">
-                  <Link className="mb-1" href={source.url}>{source.urlText}</Link>
-                </p>)}
-            </> : null}
         </Col>
       </Row>
     </section>
