@@ -1,3 +1,5 @@
+import { formatDate } from '../../../lib/ssb/utils/dateUtils'
+
 const {
   getContent,
   getComponent,
@@ -14,10 +16,6 @@ const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const {
-  moment
-} = __non_webpack_require__('/lib/vendor/moment')
-
 const view = resolve('./profiledBox.html')
 
 exports.get = function(req) {
@@ -33,7 +31,7 @@ exports.preview = (req) => renderPart(req)
 function renderPart(request) {
   const page = getContent()
   const part = getComponent()
-  const language = page.language ? page.language === 'en' ? 'en-gb' : page.language : 'nb'
+  const language = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   const urlContentSelector = part.config.urlContentSelector
   const titleSize = getTitleSize(part.config.title)
 
@@ -97,12 +95,12 @@ function getLink(urlContentSelector) {
 
 function getSubtitle(content, date, language) {
   if (content && date) {
-    return content + ' / ' + moment(date).locale(language).format('LL')
+    return content + ' / ' + formatDate(date, 'PPP', language)
       .toLowerCase()
   } else if (content) {
     return content
   } else if (date) {
-    return moment(date).locale(language).format('LL')
+    return formatDate(date, 'PPP', language)
       .toLowerCase()
   } else {
     return ''

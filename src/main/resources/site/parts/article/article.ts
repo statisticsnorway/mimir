@@ -1,5 +1,6 @@
 import { Content } from 'enonic-types/content'
 import { Request, Response } from 'enonic-types/controller'
+import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Article } from '../../content-types/article/article'
 
@@ -25,9 +26,6 @@ const {
 } = __non_webpack_require__('/lib/featureToggle')
 
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const {
-  moment
-} = __non_webpack_require__('/lib/vendor/moment')
 
 exports.get = (req: Request): React4xpResponse | Response => {
   try {
@@ -39,20 +37,20 @@ exports.get = (req: Request): React4xpResponse | Response => {
 
 function renderPart(req: Request): React4xpResponse {
   const page: Content<Article> = getContent()
-  const language: string = page.language ? (page.language === 'en' ? 'en-gb' : page.language) : 'nb'
+  const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   const phrases: object = getPhrases(page)
 
   const bodyText: string | undefined = page.data.articleText ? processHtml({
     value: page.data.articleText.replace(/&nbsp;/g, ' ')
   }) : undefined
 
-  const pubDate: string = moment(page.publish?.from).locale(language).format('LL')
+  const pubDate: string | undefined = formatDate(page.publish?.from, 'PPP', language)
   const showModifiedDate: Article['showModifiedDate'] = page.data.showModifiedDate
   let modifiedDate: string | undefined = undefined
   if (showModifiedDate) {
-    modifiedDate = moment(showModifiedDate.dateOption?.modifiedDate).locale(language).format('LL')
+    modifiedDate = formatDate(showModifiedDate.dateOption?.modifiedDate, 'PPP', language)
     if (showModifiedDate.dateOption?.showModifiedTime) {
-      modifiedDate = moment(page.data.showModifiedDate?.dateOption?.modifiedDate).locale(language).format('LLL')
+      modifiedDate = formatDate(page.data.showModifiedDate?.dateOption?.modifiedDate, 'PPpp', language)
     }
   }
 
