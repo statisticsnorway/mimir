@@ -34,49 +34,50 @@ function StaticVisualization(props) {
   }
 
   function renderTabs() {
-    if (props.tableData !== '') {
-      return (
-        <div>
-          <Tabs
-            activeOnInit="figure"
-            onClick={tabClicked}
-            items={[
-              {
-                title: props.showAsGraphLabel,
-                path: 'figure'
-              },
-              {
-                title: props.showAsTableLabel,
-                path: 'table'
-              }
-            ]}
-          />
-          <Divider className="mb-4" />
-        </div>
-      )
-    }
+    return (
+      <React.Fragment>
+        <Tabs
+          className="pl-4"
+          activeOnInit="figure"
+          onClick={tabClicked}
+          items={[
+            {
+              title: props.showAsGraphLabel,
+              path: 'figure'
+            },
+            {
+              title: props.showAsTableLabel,
+              path: 'table'
+            }
+          ]}
+        />
+        <Divider/>
+      </React.Fragment>
+    )
   }
 
   function createTable() {
     const tableData = props.tableData
-    return (
-      <table className="statistics">
-        <thead>
-          <tr>
-            {createHeaderCell(tableData.table.thead.tr) }
-          </tr>
-        </thead>
-        <tbody>
-          {tableData.table.tbody.tr.map( (row, index) => {
-            return (
-              <tr key={index}>
-                {createBodyCells(row)}
-              </tr>
-            )
-          })}
-        </tbody>
-      </table>
-    )
+    if (tableData) {
+      return (
+        <table className="statistics">
+          <thead>
+            <tr>
+              {createHeaderCell(tableData.table.thead.tr)}
+            </tr>
+          </thead>
+          <tbody>
+            {tableData.table.tbody.tr.map((row, index) => {
+              return (
+                <tr key={index}>
+                  {createBodyCells(row)}
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      )
+    }
   }
 
   function createHeaderCell(row) {
@@ -137,13 +138,13 @@ function StaticVisualization(props) {
           <Title size={2} className="mt-0">{props.title}</Title>
           {renderTabs()}
           {activeTab === 'figure' && (
-            <div className="d-flex justify-content-center mb-5">
+            <div className="static-visualization-chart d-flex justify-content-center">
               <img alt={props.altText} src={props.imageSrc} />
             </div>
           )}
 
           {activeTab === 'table' && (
-            <div className="d-flex justify-content-center mb-5">
+            <div className="static-visualization-data d-flex justify-content-center">
               {createTable()}
             </div>
           )}
