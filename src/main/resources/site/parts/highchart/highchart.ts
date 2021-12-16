@@ -95,7 +95,7 @@ function renderPart(req: Request, highchartIds: Array<string>): Response | React
   })
 
   const showAsGraphText: string = localize({
-    key: 'highcharts.showAsGraph',
+    key: 'highcharts.showAsChart',
     locale: language === 'nb' ? 'no' : language
   })
 

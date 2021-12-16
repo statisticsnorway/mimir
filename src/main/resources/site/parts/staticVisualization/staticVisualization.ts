@@ -21,6 +21,9 @@ const {
 const {
   parseHtmlString
 } = __non_webpack_require__('/lib/ssb/parts/table')
+const {
+  localize
+} = __non_webpack_require__('/lib/xp/i18n')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 import { Content, MediaImage } from 'enonic-types/content'
@@ -66,6 +69,16 @@ function renderPart(req: Request, contentId: string | undefined): React4xpRespon
     const sourceConfig: StaticVisualization['sources'] = staticVisualizationsContent.data.sources ? forceArray(staticVisualizationsContent.data.sources) : []
     const language: string = staticVisualizationsContent.language ? staticVisualizationsContent.language : 'nb'
 
+    const showAsGraphLabel: string = localize({
+      key: 'highcharts.showAsChart',
+      locale: language === 'nb' ? 'no' : language
+    })
+
+    const showAsTableLabel: string = localize({
+      key: 'highcharts.showAsTable',
+      locale: language === 'nb' ? 'no' : language
+    })
+
     const imageSrc: string | null = imageUrl({
       id: staticVisualizationsContent.data.image,
       scale: 'max(850)'
@@ -89,6 +102,8 @@ function renderPart(req: Request, contentId: string | undefined): React4xpRespon
       sources: getSources(sourceConfig as Array<SourcesConfig>),
       longDesc: staticVisualizationsContent.data.longDesc,
       sourcesLabel,
+      showAsGraphLabel,
+      showAsTableLabel,
       descriptionStaticVisualization,
       inFactPage: page.page.config && page.page.config.pageType === 'factPage',
       language: language,
@@ -116,6 +131,8 @@ function renderPart(req: Request, contentId: string | undefined): React4xpRespon
     sources: SourceList;
     longDesc: string | undefined;
     sourcesLabel: string;
+    showAsGraphLabel: string;
+    showAsTableLabel: string;
     descriptionStaticVisualization: string;
     inFactPage?: boolean;
     language: string;

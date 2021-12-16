@@ -42,11 +42,11 @@ function StaticVisualization(props) {
             onClick={tabClicked}
             items={[
               {
-                title: 'Vis som figur',
+                title: props.showAsGraphLabel,
                 path: 'figure'
               },
               {
-                title: 'Vis som tabell',
+                title: props.showAsTableLabel,
                 path: 'table'
               }
             ]}
@@ -168,6 +168,8 @@ StaticVisualization.propTypes = {
   descriptionStaticVisualization: PropTypes.string,
   footnotes: PropTypes.array,
   sourcesLabel: PropTypes.string,
+  showAsGraphLabel: PropTypes.string,
+  showAsTableLabel: PropTypes.string,
   sources: PropTypes.arrayOf(
     PropTypes.shape({
       url: PropTypes.string,
