@@ -298,9 +298,6 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
             style: {
               fontSize: '10px'
             }
-          },
-          title: {
-            text: ''
           }
         }
       }
