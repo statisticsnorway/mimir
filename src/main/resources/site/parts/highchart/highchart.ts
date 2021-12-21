@@ -109,7 +109,7 @@ function renderPart(req: Request, highchartIds: Array<string>): Response | React
       key
     })
     const config: HighchartsExtendedProps | undefined = highchart ? determinConfigType(req, highchart) : undefined
-    return highchart && config ? createHighchartsReactProps(highchart, config) : {}
+    return highchart && config ? createHighchartsReactProps(highchart, config, sourceText) : {}
   }).filter((key) => !!key)
 
   const inlineScript: Array<string> = highcharts.map((highchart) => `<script inline="javascript">
@@ -133,7 +133,6 @@ function renderPart(req: Request, highchartIds: Array<string>): Response | React
       body: render(view, {
         highcharts,
         downloadText,
-        sourceText,
         showDataTableEnabled: isEnabled('highchart-show-datatable', false, 'ssb'),
         showAsGraphText,
         showAsTableText
@@ -196,7 +195,7 @@ function createDataFromDataSource(req: Request, highchart: Content<Highchart & D
 }
 
 
-function createHighchartsReactProps(highchart: Content<Highchart>, config: HighchartsExtendedProps): HighchartsReactProps {
+function createHighchartsReactProps(highchart: Content<Highchart>, config: HighchartsExtendedProps, sourceText: string): HighchartsReactProps {
   return {
     config: config,
     description: highchart.data.description,
@@ -205,7 +204,7 @@ function createHighchartsReactProps(highchart: Content<Highchart>, config: Highc
     footnoteText: highchart.data.footnoteText,
     creditsEnabled: (highchart.data.creditsHref || highchart.data.creditsText) ? true : false,
     creditsHref: highchart.data.creditsHref,
-    creditsText: highchart.data.creditsText,
+    creditsText: `${sourceText} ${highchart.data.creditsText}`,
     hideTitle: highchart.data.hideTitle
   }
 }
