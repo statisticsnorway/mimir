@@ -206,6 +206,7 @@ function createHighchartsReactProps(highchart: Content<Highchart>, config: Highc
     creditsEnabled: (highchart.data.creditsHref || highchart.data.creditsText) ? true : false,
     creditsHref: highchart.data.creditsHref,
     creditsText: highchart.data.creditsText,
+    sourceList: highchart.data.sourceList ? forceArray(highchart.data.sourceList) : undefined,
     hideTitle: highchart.data.hideTitle
   }
 }
@@ -220,6 +221,7 @@ interface HighchartsReactProps {
   creditsEnabled?: boolean;
   creditsHref?: string;
   creditsText?: string;
+  sourceList?: Highchart['sourceList'];
   hideTitle?: boolean;
 }
 

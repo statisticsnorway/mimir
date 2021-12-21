@@ -280,4 +280,19 @@ export interface Highchart {
    * Kilde-URL
    */
   creditsHref?: string;
+
+  /**
+   * Kilder
+   */
+  sourceList?: Array<{
+    /**
+     * Kildetekst
+     */
+    sourceText?: string;
+
+    /**
+     * Kilde-URL
+     */
+    sourceHref?: string;
+  }>;
 }
