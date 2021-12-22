@@ -1,9 +1,14 @@
 .part-static-visualization {
-  h2 {
+  h3 {
+    font-family: $font-roboto-condensed-bold !important;
     font-size: 28px;
-    padding-left: 0;
+    font-weight: bold;
+    line-height: 40px;
     padding-bottom: 40px;
-    border-style: none;
+
+    @include media-breakpoint-down(md) {
+      line-height: 36px;
+    }
   }
   .footnote {
       list-style-type: none;
