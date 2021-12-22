@@ -272,12 +272,12 @@ export interface Highchart {
   footnoteText?: string;
 
   /**
-   * Kildetekst
+   * (IKKE BRUK) Kildetekst
    */
   creditsText?: string;
 
   /**
-   * Kilde-URL
+   * (IKKE BRUK) Kilde-URL
    */
   creditsHref?: string;
 
