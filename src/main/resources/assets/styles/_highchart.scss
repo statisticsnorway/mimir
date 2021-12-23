@@ -11,6 +11,18 @@
       padding-right: 0;
     }
   }
+  .ssb-tabs {
+    font-size: 16px;
+    margin-top: 40px;
+
+    .navigation-item {
+      padding-top: 0;
+    }
+
+    .navigation-item:not(:last-of-type) {
+      margin-right: 40px;
+    }
+  }
 }
 .btn-highchart-export {
   z-index: 200;
@@ -69,7 +81,6 @@
 }
 
 .show-datatable {
-
   .highchart-title {
     font-size: 20px;
     @include roboto;
@@ -93,3 +104,4 @@
      display: none;
    }
 } 
+
