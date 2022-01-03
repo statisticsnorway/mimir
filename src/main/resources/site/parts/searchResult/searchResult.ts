@@ -5,6 +5,8 @@ import { SearchResultPartConfig } from './searchResult-part-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { PreparedSearchResult, SolrPrepResultAndTotal } from '../../../lib/ssb/utils/solrUtils'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
+import { Language } from '../../../lib/types/language'
+import { string } from 'prop-types'
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   solrSearch
@@ -74,11 +76,29 @@ export function renderPart(req: Request): React4xpResponse {
     }
   }))
 
+  function getContentTypes(solrResults: Array<string | number>): Array<Dropdown> {
+    const filters: Array<string | number> = solrResults.filter((value) => typeof value == 'string')
+    const dropdowns: Array<Dropdown> = [
+      {
+        id: '',
+        title: phrases['publicationArchive.allTypes']
+      }
+    ].concat(filters.map((subject: string) => {
+      return {
+        id: subject,
+        title: subject
+      }
+    }))
+    log.info(`GLNBRBN dropdowns her: ${JSON.stringify(dropdowns, null, 2)}`)
+    return dropdowns
+  }
+
   /* query solr */
   const solrResult: SolrPrepResultAndTotal = sanitizedTerm ?
     solrSearch( sanitizedTerm, language, parseInt(part.config.numberOfHits)) : {
       total: 0,
-      hits: []
+      hits: [],
+      contentTypes: []
     }
 
   /* prepare props */
@@ -113,7 +133,18 @@ export function renderPart(req: Request): React4xpResponse {
     }),
     searchPageUrl,
     language,
-    dropDownSubjects: mainSubjectDropdown
+    dropDownSubjects: mainSubjectDropdown,
+    dropDownContentTypes: getContentTypes(solrResult.contentTypes)
+    // [{
+    //   id: 'artikkel',
+    //   title: 'ArtikkelTittel'
+    // }, {
+    //   id: 'statistikk',
+    //   title: 'StatistikkTittel'
+    // }, {
+    //   id: 'notat',
+    //   title: 'NotatTittel'
+    // }]
   }
 
   return React4xp.render('site/parts/searchResult/searchResultView', props, req)
@@ -135,6 +166,7 @@ interface ReactProps {
   searchPageUrl: string;
   language: string;
   dropDownSubjects: Array<Dropdown>;
+  dropDownContentTypes: Array<Dropdown>;
 }
 
 interface Dropdown {
