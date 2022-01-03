@@ -147,7 +147,8 @@ export function parseHtmlString(tableData: string): HtmlTable {
 
   const bodyCells: Array<BodyCell> = tbodyRows.map((row)=> {
     const dataCellValues: Array<number | string> = row.td.map((dataCell)=> {
-      return getRowValue(dataCell)
+      const value: number | string = getRowValue(dataCell)
+      return typeof(value) === 'string' ? parseValue(value) : value
     })
 
     return {
@@ -228,6 +229,16 @@ function getNoterefsHeader(row: TableCellUniform): Array<string> {
     return acc
   }, [])
   return noteRefs
+}
+
+function parseValue(value: string): number | string {
+  const number: string = typeof(value) === 'string' ?
+    value.replace(',', '.')
+      .replace(/&nbsp;/g, '')
+      .replace(' ', '') :
+    value
+
+  return parseFloat(number)
 }
 
 export interface TableView {
