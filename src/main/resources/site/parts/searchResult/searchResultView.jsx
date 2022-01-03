@@ -105,9 +105,6 @@ function SearchResult(props) {
       )
     }
   }
-  // TODO add content type filter
-  // And add filter dropdown
-  // BUT only if there are available filtffffers from the first result
 
   function fetchFilteredSearchResult() {
     setLoading(true)

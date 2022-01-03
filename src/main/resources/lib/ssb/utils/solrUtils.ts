@@ -63,7 +63,6 @@ function nerfSearchResult(solrResult: SolrResult, language: string): Array<Prepa
 
 
 function querySolr(queryParams: SolrQueryParams): SolrResult | undefined {
-  log.info(`GLNRBN logger solrQuery: ${JSON.stringify(queryParams)}`)
   const solrResponse: SolrResponse = requestSolr(queryParams)
   if (solrResponse.status === 200 && solrResponse.body) {
     return JSON.parse(solrResponse.body)

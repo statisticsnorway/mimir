@@ -89,7 +89,6 @@ export function renderPart(req: Request): React4xpResponse {
         title: subject
       }
     }))
-    log.info(`GLNBRBN dropdowns her: ${JSON.stringify(dropdowns, null, 2)}`)
     return dropdowns
   }
 
@@ -135,16 +134,6 @@ export function renderPart(req: Request): React4xpResponse {
     language,
     dropDownSubjects: mainSubjectDropdown,
     dropDownContentTypes: getContentTypes(solrResult.contentTypes)
-    // [{
-    //   id: 'artikkel',
-    //   title: 'ArtikkelTittel'
-    // }, {
-    //   id: 'statistikk',
-    //   title: 'StatistikkTittel'
-    // }, {
-    //   id: 'notat',
-    //   title: 'NotatTittel'
-    // }]
   }
 
   return React4xp.render('site/parts/searchResult/searchResultView', props, req)
