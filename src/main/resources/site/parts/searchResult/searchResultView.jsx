@@ -136,7 +136,8 @@ function SearchResult(props) {
         start: hits.length,
         count: props.count,
         language: props.language,
-        mainsubject: filter.mainSubject
+        mainsubject: filter.mainSubject,
+        contentType: filter.contentType
       }
     }).then((res) => {
       setHits(hits.concat(res.data.hits))
