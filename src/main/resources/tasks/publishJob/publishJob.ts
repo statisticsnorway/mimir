@@ -45,6 +45,7 @@ const {
 
 exports.run = function(): void {
   cronJobLog('Start publish job')
+  log.info('PublishJob - Start publish job')
   const jobLogNode: JobEventNode = startJobLog(JobNames.PUBLISH_JOB)
   const statistics: Array<Content<Statistics & Statistic>> = getStatisticsContent()
   const publishedDatasetIds: Array<string> = []
@@ -59,7 +60,7 @@ exports.run = function(): void {
       const now: Date = new Date(new Date().getTime() + serverOffsetInMs)
       const oneHourFromNow: Date = new Date(now.getTime() + (1000 * 60 * 60))
       if (releaseDate > now && releaseDate < oneHourFromNow) {
-        log.info(`Statistic with Id ${stat.data.statistic}(${stat.language}) have releases today`)
+        log.info(`PublishJob - Statistic with Id ${stat.data.statistic}(${stat.language}) have releases today between ${now} - ${oneHourFromNow}`)
         const statJobInfo: StatisticsPublishResult = {
           statistic: stat._id,
           shortNameId: stat.data.statistic ? stat.data.statistic : '',
@@ -110,9 +111,9 @@ exports.run = function(): void {
           // To avoid updating jobLog at the same time statisticIndex will create diffirence time for task cleanupPublishDataset
           statisticIndex = stat.language === 'en' ? statisticIndex + 2 : statisticIndex + 1
           validPublications.forEach((validPublication, index: number) => {
-            const runTaskTime: string = new Date(releaseDate.getTime() + serverOffsetInMs - 1000).toISOString()
+            const runTaskTime: string = new Date(releaseDate.getTime() - serverOffsetInMs - 1000).toISOString()
             const datasetIndex: number = statisticIndex + index
-            log.info(`create task: publishDataset_${stat.data.statistic}_${validPublication.dataset?._name} Time: ${runTaskTime} Index: ${datasetIndex}`)
+            log.info(`PublishJob - create task: publishDataset_${stat.data.statistic}_${validPublication.dataset?._name} Time: ${runTaskTime}`)
             createScheduledJob<PublishDatasetConfig>({
               name: `publishDataset_${jobLogNode._id}_${stat.data.statistic}_${validPublication.dataset?._name}`,
               descriptor: 'mimir:publishDataset',
@@ -132,7 +133,7 @@ exports.run = function(): void {
           })
         } else {
           statJobInfo.status = JobStatus.SKIPPED
-          log.info(`No unpublished dataset to publish for ${stat.data.statistic}`)
+          log.info(`PublishJob - No unpublished dataset to publish for ${stat.data.statistic}`)
         }
         jobResult.push(statJobInfo)
       }
