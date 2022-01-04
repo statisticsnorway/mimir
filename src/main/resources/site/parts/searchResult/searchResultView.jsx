@@ -238,11 +238,11 @@ function SearchResult(props) {
               submitCallback={goToSearchResultPage}></Input>
             <div className="filter mt-5">
               <Title size={6}>{props.limitResultPhrase}</Title>
-              <Row>
-                <Col>
+              <Row justify-content-start>
+                <Col lg='3' className='pb-1 pr-1'>
                   <DropdownMainSubject/>
                 </Col>
-                <Col>
+                <Col lg='3' className='pr-1'>
                   <DropdownContentType/>
                 </Col>
               </Row>
