@@ -41,7 +41,7 @@ function SearchResult(props) {
       setSelectedContentType(value)
       setFilter({
         ...filter,
-        contentType: value.id === '' ? '' : value.title
+        contentType: value.id === '' ? '' : value.id
       })
     }
   }
