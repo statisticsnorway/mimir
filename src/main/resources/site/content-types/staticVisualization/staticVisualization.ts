@@ -6,7 +6,7 @@ export interface StaticVisualization {
   image: string;
 
   /**
-   * Beskrivende hjelpetekst for blinde
+   * Beskrivende hjelpetekst
    */
   longDesc?: string;
 

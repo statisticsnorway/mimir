@@ -199,7 +199,6 @@ function createDataFromDataSource(req: Request, highchart: Content<Highchart & D
 function createHighchartsReactProps(highchart: Content<Highchart>, config: HighchartsExtendedProps): HighchartsReactProps {
   return {
     config: config,
-    description: highchart.data.description,
     type: highchart.data.graphType,
     contentKey: highchart._id,
     footnoteText: highchart.data.footnoteText,
