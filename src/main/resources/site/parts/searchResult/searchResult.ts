@@ -75,7 +75,7 @@ export function renderPart(req: Request): React4xpResponse {
   }))
 
   function getContentTypes(solrResults: Array<string | number>): Array<Dropdown> {
-    const validFilters: Array<string> = ['artikkel', 'statistikk', 'faktaside', 'statistikkbanktabell']
+    const validFilters: Array<string> = ['artikkel', 'statistikk', 'faktaside', 'statistikkbanktabell', 'publikasjon']
     const filters: Array<string | number> = solrResults
       .filter((value) => typeof value == 'string')
       .filter((value) => validFilters.includes(value as string))

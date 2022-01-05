@@ -369,7 +369,11 @@ function parseMetaInfoData(
   }
 
   if (page.type === `${app.name}:article`) {
-    metaInfoSearchContentType = 'artikkel'
+    if (page.data.articleType == 'report' || page.data.articleType == 'note' ) {
+      metaInfoSearchContentType = 'publikasjon'
+    } else {
+      metaInfoSearchContentType = 'artikkel'
+    }
   }
 
   return {
@@ -516,6 +520,7 @@ interface DefaultPage extends Content {
     keywords: string;
     statistic: string;
     subtopic: Array<string>;
+    articleType: string;
   };
   page: ExtendedPage;
 }
