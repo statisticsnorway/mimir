@@ -80,6 +80,10 @@ try {
         {
           feature: 'publishJob-lib-sheduler',
           enabled: false
+        },
+        {
+          feature: 'enable-chat-script',
+          enabled: false
         }
       ]
     }

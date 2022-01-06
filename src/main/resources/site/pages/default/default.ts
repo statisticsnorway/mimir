@@ -253,7 +253,8 @@ exports.get = function(req: Request): Response {
     ...metaInfo,
     breadcrumbsReactId: breadcrumbComponent.react4xpId,
     hideBreadcrumb,
-    enabledEnalyzerScript: isEnabled('enable-enalyzer-script', true, 'ssb')
+    enabledEnalyzerScript: isEnabled('enable-enalyzer-script', true, 'ssb'),
+    enabledChatScript: isEnabled('enable-chat-script', true, 'ssb')
   }
 
   const thymeleafRenderBody: Response['body'] = render(view, model)
@@ -589,4 +590,5 @@ interface DefaultModel {
   breadcrumbsReactId: string | undefined;
   hideBreadcrumb: boolean;
   enabledEnalyzerScript: boolean;
+  enabledChatScript: boolean;
 }
