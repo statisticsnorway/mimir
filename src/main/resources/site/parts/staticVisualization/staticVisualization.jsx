@@ -135,7 +135,7 @@ function StaticVisualization(props) {
     <section className="container part-static-visualization">
       <Row className="xp-part">
         <Col className="xp-region col-12">
-          <Title size={2} className="mt-0">{props.title}</Title>
+          <Title size={3} className="mt-0">{props.title}</Title>
           {renderTabs()}
           {activeTab === 'figure' && (
             <div className="static-visualization-chart d-flex justify-content-center">
