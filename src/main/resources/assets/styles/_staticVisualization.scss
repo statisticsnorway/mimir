@@ -9,6 +9,7 @@
     }
   }
   .ssb-fact-box {
+    margin-top: 40px;
     padding: 20px 40px;
 
     .accordion-header {
@@ -26,5 +27,15 @@
   }
   img {
     width: 100%;
+  }
+  .static-visualization-data {
+    margin-top: 40px;
+    thead th:first-child {
+      text-align: left;
+    }
+  }
+
+  .static-visualization-chart {
+    margin-top: 40px;
   }
 }
