@@ -109,7 +109,7 @@ function renderPart(req: Request, highchartIds: Array<string>): Response | React
       key
     })
     const config: HighchartsExtendedProps | undefined = highchart ? determinConfigType(req, highchart) : undefined
-    return highchart && config ? createHighchartsReactProps(highchart, config, sourceText) : {}
+    return highchart && config ? createHighchartsReactProps(highchart, config) : {}
   }).filter((key) => !!key)
 
   const inlineScript: Array<string> = highcharts.map((highchart) => `<script inline="javascript">
@@ -196,7 +196,7 @@ function createDataFromDataSource(req: Request, highchart: Content<Highchart & D
 }
 
 
-function createHighchartsReactProps(highchart: Content<Highchart>, config: HighchartsExtendedProps, sourceText: string): HighchartsReactProps {
+function createHighchartsReactProps(highchart: Content<Highchart>, config: HighchartsExtendedProps): HighchartsReactProps {
   return {
     config: config,
     description: highchart.data.description,
