@@ -15,11 +15,13 @@ export function get(req: Request): Response {
   const count: number = req.params.count ? parseInt(req.params.count) : 15
   const start: number = req.params.start ? parseInt(req.params.start) : 0
   const mainSubject: string = req.params.mainsubject ? req.params.mainsubject : ''
+  const contentType: string = req.params.contentType ? req.params.contentType : ''
 
   const result: SolrPrepResultAndTotal = searchTerm ?
-    solrSearch(searchTerm, language, count, start, mainSubject) : {
+    solrSearch(searchTerm, language, count, start, mainSubject, contentType) : {
       total: 0,
-      hits: []
+      hits: [],
+      contentTypes: []
     }
   return {
     body: result,
