@@ -370,7 +370,13 @@ function parseMetaInfoData(
   }
 
   if (page.type === `${app.name}:article`) {
-    metaInfoSearchContentType = 'artikkel'
+    if (page.data.articleType == 'report' || page.data.articleType == 'note' ) {
+      // We use the old content type publikasjon for this, as we want to group these three together in the search results filter.
+      // Note and Report are the new content types that replaces Publikasjon.
+      metaInfoSearchContentType = 'publikasjon'
+    } else {
+      metaInfoSearchContentType = 'artikkel'
+    }
   }
 
   return {
@@ -517,6 +523,7 @@ interface DefaultPage extends Content {
     keywords: string;
     statistic: string;
     subtopic: Array<string>;
+    articleType: string;
   };
   page: ExtendedPage;
 }
