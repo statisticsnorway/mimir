@@ -4,6 +4,7 @@ import { Button, Divider, Input, Link, Paragraph, Title, Dropdown, Tag } from '@
 import { ChevronDown, X } from 'react-feather'
 import axios from 'axios'
 import NumberFormat from 'react-number-format'
+import { Col, Row } from 'react-bootstrap'
 
 
 function SearchResult(props) {
@@ -13,9 +14,11 @@ function SearchResult(props) {
   const [total, setTotal] = useState(props.total)
   const [filterChanged, setFilterChanged] = useState(false)
   const [filter, setFilter] = useState({
-    mainSubject: ''
+    mainSubject: '',
+    contentType: ''
   })
   const [selectedMainSubject, setSelectedMainSubject] = useState(props.dropDownSubjects[0])
+  const [selectedContentType, setSelectedContentType] = useState(props.dropDownContentTypes[0])
 
   useEffect(() => {
     if (filterChanged) {
@@ -33,13 +36,22 @@ function SearchResult(props) {
         mainSubject: value.id === '' ? '' : value.title
       })
     }
+
+    if (id === 'contentType') {
+      setSelectedContentType(value)
+      setFilter({
+        ...filter,
+        contentType: value.id === '' ? '' : value.id
+      })
+    }
   }
 
   function removeFilter() {
     setFilter({
-      ...filter,
-      mainSubject: ''
+      mainSubject: '',
+      contentType: ''
     })
+    setSelectedContentType(props.dropDownContentTypes[0])
     setSelectedMainSubject(props.dropDownSubjects[0])
   }
 
@@ -102,7 +114,8 @@ function SearchResult(props) {
         start: 0,
         count: props.count,
         language: props.language,
-        mainsubject: filter.mainSubject
+        mainsubject: filter.mainSubject,
+        contentType: filter.contentType
       }
     }).then((res) => {
       setHits(res.data.hits)
@@ -120,7 +133,8 @@ function SearchResult(props) {
         start: hits.length,
         count: props.count,
         language: props.language,
-        mainsubject: filter.mainSubject
+        mainsubject: filter.mainSubject,
+        contentType: filter.contentType
       }
     }).then((res) => {
       setHits(hits.concat(res.data.hits))
@@ -186,8 +200,21 @@ function SearchResult(props) {
     />
   ))
 
+  const DropdownContentType = React.forwardRef((_props, ref) => (
+    <Dropdown
+      ref={ref}
+      className="DropdownContentType"
+      id='contentType'
+      onSelect={(value) => {
+        onChange('contentType', value)
+      }}
+      selectedItem={selectedContentType}
+      items={props.dropDownContentTypes}
+    />
+  ))
+
   function renderClearFilterButton() {
-    if (filter.mainSubject !== '') {
+    if (filter.mainSubject || filter.contentType) {
       return (
         <Tag
           className="mt-4"
@@ -211,8 +238,15 @@ function SearchResult(props) {
               submitCallback={goToSearchResultPage}></Input>
             <div className="filter mt-5">
               <Title size={6}>{props.limitResultPhrase}</Title>
-              <DropdownMainSubject/>
-              {/* {renderClearFilterButton()} */}
+              <Row justify-content-start>
+                <Col lg='3' className='pb-1 pr-1'>
+                  <DropdownMainSubject/>
+                </Col>
+                <Col lg='3' className='pr-1'>
+                  <DropdownContentType/>
+                </Col>
+              </Row>
+              {renderClearFilterButton()}
             </div>
           </div>
         </div>
@@ -251,7 +285,8 @@ SearchResult.propTypes = {
     publishDate: PropTypes.string,
     publishDateHuman: PropTypes.string
   }),
-  dropDownSubjects: PropTypes.array
+  dropDownSubjects: PropTypes.array,
+  dropDownContentTypes: PropTypes.array
 }
 
 export default (props) => <SearchResult {...props} />

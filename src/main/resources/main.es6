@@ -80,6 +80,10 @@ try {
         {
           feature: 'publishJob-lib-sheduler',
           enabled: false
+        },
+        {
+          feature: 'highcharts-y-axix-title-mobile',
+          enabled: false
         }
       ]
     }
