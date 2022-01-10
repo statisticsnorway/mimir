@@ -254,7 +254,7 @@ exports.get = function(req: Request): Response {
     breadcrumbsReactId: breadcrumbComponent.react4xpId,
     hideBreadcrumb,
     enabledEnalyzerScript: isEnabled('enable-enalyzer-script', true, 'ssb'),
-    enabledChatScript: isEnabled('enable-chat-script', true, 'ssb')
+    enabledChatScript: isEnabled('enable-chat-script', true, 'ssb') && page._path.startsWith('/innrapportering', 4) // 4 because path starts with /ssb
   }
 
   const thymeleafRenderBody: Response['body'] = render(view, model)
