@@ -79,7 +79,8 @@ const partsWithPreview: Array<string> = [ // Parts that has preview
   `${app.name}:factBox`,
   `${app.name}:contentList`,
   `${app.name}:omStatistikken`,
-  `${app.name}:table`
+  `${app.name}:table`,
+  `${app.name}:staticVisualization`
 ]
 
 const previewOverride: object = {
@@ -325,7 +326,7 @@ function parseMetaInfoData(
   req: Request): MetaInfoData {
   let addMetaInfoSearch: boolean = true
   let metaInfoSearchId: string | undefined = page._id
-  let metaInfoSearchContentType: string | undefined = page._name
+  let metaInfoSearchContentType: string | undefined
   let metaInfoSearchGroup: string | undefined = page._id
   let metaInfoSearchKeywords: string | undefined
   let metaInfoDescription: string | undefined
