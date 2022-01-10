@@ -31,7 +31,7 @@
       <div class="d-none highcharts-table invisible" data-th-utext="${highchart.tableData}"></div>
     </div>
     <div data-th-if="${highchart.creditsEnabled}" class="col-12 highcharts-source">
-      <a class="ssb-link" data-th-href="${highchart.creditsHref}" data-th-text="${highchart.creditsText}"></a>
+      <a class="ssb-link" data-th-href="${highchart.creditsHref}" data-th-text="${sourceText + ' ' + highchart.creditsText}"></a>
     </div>
   </div>
 </section>

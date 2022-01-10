@@ -133,6 +133,7 @@ function renderPart(req: Request, highchartIds: Array<string>): Response | React
       body: render(view, {
         highcharts,
         downloadText,
+        sourceText,
         showDataTableEnabled: isEnabled('highchart-show-datatable', false, 'ssb'),
         showAsGraphText,
         showAsTableText
@@ -204,7 +205,7 @@ function createHighchartsReactProps(highchart: Content<Highchart>, config: Highc
     footnoteText: highchart.data.footnoteText,
     creditsEnabled: (highchart.data.creditsHref || highchart.data.creditsText) ? true : false,
     creditsHref: highchart.data.creditsHref,
-    creditsText: `${sourceText} ${highchart.data.creditsText}`,
+    creditsText: highchart.data.creditsText,
     hideTitle: highchart.data.hideTitle
   }
 }
