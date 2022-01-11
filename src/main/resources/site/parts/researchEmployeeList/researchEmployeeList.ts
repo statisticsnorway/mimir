@@ -13,6 +13,11 @@ const {
 const {
   groupBy
 } = __non_webpack_require__('/lib/vendor/ramda')
+const {
+  data: {
+    forceArray
+  }
+} = __non_webpack_require__('/lib/util')
 
 
 exports.get = function(req: Request): React4xpResponse | Response {
@@ -650,16 +655,21 @@ export function renderPart(req: Request): React4xpResponse {
   const employeesSorted: Array<Employee> = employees.sort((a, b) => {
     return a.surName.localeCompare(b.surName)
   })
-  log.info('employeesSorted: ' + JSON.stringify(employeesSorted, null, 4))
 
   const groupEmployees: GroupedBy<Employee> = groupEmployeeByLastName(employeesSorted)
-  // log.info('GroupEmployee: ' + JSON.stringify(groupEmployees, null, 4))
+
+  const employeesGroupedByLetter: Array<EmployeeGroup> = Object.keys(groupEmployees).map((letter) => {
+    return {
+      letter: letter,
+      employees: forceArray(groupEmployees[letter])
+    }
+  })
 
   /* prepare props */
   const props: ReactProps = {
     title: content.displayName,
     employees: employees,
-    groupedEmployees: groupEmployees
+    groupedEmployees: employeesGroupedByLetter
   }
 
   return React4xp.render('site/parts/researchEmployeeList/researchEmployeeList', props, req)
@@ -669,7 +679,7 @@ export function renderPart(req: Request): React4xpResponse {
 interface ReactProps {
     title: string;
     employees: Array<Employee>;
-    groupedEmployees: GroupedBy<Employee>;
+    groupedEmployees: Array<EmployeeGroup>;
 }
 
 interface EmployeeRaw {
@@ -683,6 +693,11 @@ interface Employee {
   id: string;
   firstName: string;
   surName: string;
+}
+
+interface EmployeeGroup {
+  letter: string;
+  employees: Array<Employee>;
 }
 
 interface GroupedBy<T> {
