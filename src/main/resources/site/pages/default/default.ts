@@ -79,7 +79,8 @@ const partsWithPreview: Array<string> = [ // Parts that has preview
   `${app.name}:factBox`,
   `${app.name}:contentList`,
   `${app.name}:omStatistikken`,
-  `${app.name}:table`
+  `${app.name}:table`,
+  `${app.name}:staticVisualization`
 ]
 
 const previewOverride: object = {
@@ -325,7 +326,7 @@ function parseMetaInfoData(
   req: Request): MetaInfoData {
   let addMetaInfoSearch: boolean = true
   let metaInfoSearchId: string | undefined = page._id
-  let metaInfoSearchContentType: string | undefined = page._name
+  let metaInfoSearchContentType: string | undefined
   let metaInfoSearchGroup: string | undefined = page._id
   let metaInfoSearchKeywords: string | undefined
   let metaInfoDescription: string | undefined
@@ -368,7 +369,13 @@ function parseMetaInfoData(
   }
 
   if (page.type === `${app.name}:article`) {
-    metaInfoSearchContentType = 'artikkel'
+    if (page.data.articleType == 'report' || page.data.articleType == 'note' ) {
+      // We use the old content type publikasjon for this, as we want to group these three together in the search results filter.
+      // Note and Report are the new content types that replaces Publikasjon.
+      metaInfoSearchContentType = 'publikasjon'
+    } else {
+      metaInfoSearchContentType = 'artikkel'
+    }
   }
 
   return {
@@ -515,6 +522,7 @@ interface DefaultPage extends Content {
     keywords: string;
     statistic: string;
     subtopic: Array<string>;
+    articleType: string;
   };
   page: ExtendedPage;
 }

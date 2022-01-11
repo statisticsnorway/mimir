@@ -30,11 +30,11 @@
       <div class="footnote" data-th-if="${highchart.footnoteText}" data-th-text="${highchart.footnoteText}"></div>
       <div class="d-none highcharts-table invisible" data-th-utext="${highchart.tableData}"></div>
     </div>
-    <div data-th-if="${highchart.creditsEnabled}" class="col-12 mt-4 mt-md-5 highcharts-source">
-      <h5 class="mb-0" data-th-text="${sourceText}">Kilde:</h5>
-      <a class="ssb-link" data-th-href="${highchart.creditsHref}" data-th-text="${highchart.creditsText}"></a>
+
+    <div data-th-if="${highchart.creditsEnabled || highchart.sourceList}" class="col-12 highcharts-source">
+      <a class="ssb-link" data-th-if="${highchart.creditsEnabled}" data-th-href="${highchart.creditsHref}" data-th-text="${sourceText + ' ' + highchart.creditsText}"></a>
       <div data-th-if="${highchart.sourceList}" data-th-each="source : ${highchart.sourceList}" class="mt-3">
-        <a class="ssb-link" data-th-href="${source.sourceHref}" data-th-text="${source.sourceText}" />
+        <a class="ssb-link" data-th-href="${source.sourceHref}" data-th-text="${sourceText + ' ' + source.sourceText}" />
       </div>
     </div>
   </div>

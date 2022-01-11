@@ -1,5 +1,5 @@
 <content-type>
-    <display-name>Statiske visualiseringer</display-name>
+    <display-name>Statisk visualisering</display-name>
     <description>Infografikk eller visualisering med tittel og beskrivelse</description>
     <super-type>base:structured</super-type>
     <form>
@@ -12,7 +12,7 @@
         </input>
 
         <input name="longDesc" type="TextArea">
-            <label>Beskrivende hjelpetekst for blinde</label>
+            <label>Beskrivende hjelpetekst</label>
             <default></default>
         </input>
 

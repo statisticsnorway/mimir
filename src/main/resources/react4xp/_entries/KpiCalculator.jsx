@@ -151,7 +151,8 @@ function KpiCalculator(props) {
 
   function isEndMonthValid(value) {
     const endMonthValue = value || endMonth.value
-    const endMonthValid = !((endYear.value === validMaxYear) && (endMonthValue > validMaxMonth))
+    const maxYearAverage = Number(validMaxMonth) === 12 ? validMaxYear : Number(validMaxYear) - 1
+    const endMonthValid = endMonthValue === '90' ? (endYear.value <= maxYearAverage) : !((endYear.value === validMaxYear) && (endMonthValue > validMaxMonth))
     if (!endMonthValid) {
       setEndMonth({
         ...endMonth,

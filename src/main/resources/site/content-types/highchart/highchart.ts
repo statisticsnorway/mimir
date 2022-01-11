@@ -6,11 +6,6 @@ export interface Highchart {
   subtitle?: string;
 
   /**
-   * Beskrivelse
-   */
-  description?: string;
-
-  /**
    * Graftype
    */
   graphType: "line" | "pie" | "column" | "bar" | "area" | "barNegative";

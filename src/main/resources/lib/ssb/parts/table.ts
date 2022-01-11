@@ -8,7 +8,12 @@ import { TbmlDataUniform,
   NotesUniform,
   PreliminaryData,
   Title,
-  Source, Thead, StatbankSavedRaw, StatbankSavedUniform, TableCellRaw } from '../../types/xmlParser'
+  Source,
+  Thead,
+  StatbankSavedRaw,
+  StatbankSavedUniform,
+  TableCellRaw,
+  XmlParser } from '../../types/xmlParser'
 import { Request } from 'enonic-types/controller'
 import { DatasetRepoNode } from '../repo/dataset'
 import { DataSource as DataSourceType } from '../repo/dataset'
@@ -29,6 +34,10 @@ const {
   DATASET_BRANCH,
   UNPUBLISHED_DATASET_BRANCH
 } = __non_webpack_require__('/lib/ssb/repo/dataset')
+const {
+  getRowValue
+} = __non_webpack_require__('/lib/ssb/utils/utils')
+const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
 export function parseTable(req: Request, table: Content<Table & DataSource>, branch: string = DATASET_BRANCH): TableView {
   let tableViewData: TableView = {
@@ -117,6 +126,52 @@ function getTableViewData(table: Content<Table>, dataContent: TbmlDataUniform ):
   }
 }
 
+export function parseHtmlString(tableData: string): HtmlTable {
+  const tableRaw: string = __.toNativeObject(xmlParser.parse(tableData))
+  const jsonTable: HtmlTableRaw | undefined = tableRaw ? JSON.parse(tableRaw) : undefined
+  const tableRows: Array<HtmlTableRowRaw> = jsonTable ? jsonTable.table.tbody.tr : []
+  const theadRows: Array<HtmlTableRowRaw> = []
+  const tbodyRows: Array<HtmlTableRowRaw> = []
+
+  tableRows.forEach((row: HtmlTableRowRaw, index: number) => {
+    if (index > 0) {
+      tbodyRows.push(row)
+    } else {
+      theadRows.push(row)
+    }
+  })
+
+  const headCell: Array<number | string> = theadRows[0].td.map((dataCell)=> {
+    const value: number | string = getRowValue(dataCell)
+    return typeof(value) === 'string' ? value.replace(/&nbsp;/g, '') : value
+  })
+
+  const bodyCells: Array<BodyCell> = tbodyRows.map((row)=> {
+    const dataCellValues: Array<number | string> = row.td.map((dataCell)=> {
+      const value: number | string = getRowValue(dataCell)
+      return typeof(value) === 'string' ? value.replace(/&nbsp;/g, '') : value
+    })
+
+    return {
+      td: dataCellValues
+    }
+  })
+
+  return {
+    table: {
+      thead: {
+        tr: {
+          th: headCell
+        }
+      },
+      tbody: {
+        tr: bodyCells
+      }
+    }
+  }
+}
+
+
 function getTableViewDataStatbankSaved(dataContent: StatbankSavedUniform ): TableView {
   const title: Title = dataContent.table.caption
   const headRows: Array<TableRowUniform> = forceArray(dataContent.table.thead)
@@ -192,4 +247,33 @@ export interface TableView {
 
 export interface TableLib {
   parseTable: (req: Request, table: Content<Table>, branch?: string) => TableView;
+  parseHtmlString: (tableData: string) => HtmlTable;
+}
+
+
+interface HtmlTableRaw {
+  table: {
+    tbody: {
+      tr: Array<HtmlTableRowRaw>;
+    };
+  };
+}
+interface HtmlTableRowRaw {
+  td: Array<number | string | PreliminaryData>;
+}
+
+export interface HtmlTable {
+  table: {
+    thead: {
+      tr: {
+        th: Array<number | string>;
+      };
+    };
+    tbody: {
+      tr: Array<BodyCell>;
+    };
+  };
+}
+interface BodyCell {
+  td: Array<number | string>;
 }
