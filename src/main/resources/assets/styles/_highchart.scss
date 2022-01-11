@@ -12,6 +12,7 @@
     }
   }
   .ssb-tabs {
+    padding-left: $spacer * 1.5;
     font-size: 16px;
     margin-top: 40px;
 
@@ -21,6 +22,12 @@
 
     .navigation-item:not(:last-of-type) {
       margin-right: 40px;
+    }
+
+    @include media-breakpoint-down(md) {
+      padding-left: 0;
+      display: flex;
+      justify-content: center;
     }
   }
 }
