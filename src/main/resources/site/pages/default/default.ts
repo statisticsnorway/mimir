@@ -233,6 +233,7 @@ exports.get = function(req: Request): Response {
     .uniqueId()
 
   const hideBreadcrumb: boolean = !!(pageConfig).hide_breadcrumb
+  const innrapporteringRegexp: RegExp = /^\/ssb(\/en)?\/innrapportering/ // Skal matche alle sider under /innrapportering på norsk og engelsk
   const model: DefaultModel = {
     pageTitle: 'SSB', // not really used on normal pages because of SEO app (404 still uses this)
     page,
@@ -254,7 +255,7 @@ exports.get = function(req: Request): Response {
     breadcrumbsReactId: breadcrumbComponent.react4xpId,
     hideBreadcrumb,
     enabledEnalyzerScript: isEnabled('enable-enalyzer-script', true, 'ssb'),
-    enabledChatScript: isEnabled('enable-chat-script', true, 'ssb') && page._path.startsWith('/innrapportering', 4) // 4 because path starts with /ssb
+    enabledChatScript: isEnabled('enable-chat-script', true, 'ssb') && innrapporteringRegexp.exec(page._path)
   }
 
   const thymeleafRenderBody: Response['body'] = render(view, model)
