@@ -647,7 +647,8 @@ export function renderPart(req: Request): React4xpResponse {
     return {
       id: e.cristin_person_id,
       firstName: e.first_name,
-      surName: e.surname
+      surName: e.surname,
+      url: e.url
 
     }
   })
@@ -693,6 +694,7 @@ interface Employee {
   id: string;
   firstName: string;
   surName: string;
+  url: string;
 }
 
 interface EmployeeGroup {

@@ -1,44 +1,42 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Title } from '@statisticsnorway/ssb-component-library'
+import { Link, Text, Title } from '@statisticsnorway/ssb-component-library'
 
 function ResearchEmployeeList(props) {
   function renderList() {
-    return (
-      <div>
-        { props.groupedEmployees.map((group, index) => {
-          return (
-            <article className={index === 0 && 'first'} key={index}>
-              <div className="letter">
-                <span>{group.letter}</span>
-              </div>
-              <ol className="list-unstyled">
-                {
-                  group.employees.map((employee, index) => renderEmployee(employee, index))
-                }
-              </ol>
-            </article>
-          )
-        }) }
-      </div>
-    )
+    return props.groupedEmployees.map((group, index) => {
+      return (
+        <article className={index === 0 && 'first'} key={index}>
+          <ol className="employeeList">
+            {
+              group.employees.map((employee, index) => renderEmployee(group.letter, employee, index))
+            }
+          </ol>
+        </article>
+      )
+    })
   }
 
-  function renderEmployee(employee, index) {
+  function renderEmployee(letter, employee, index) {
     return (
-      <li key={index} className="mb-4">
-        <span>{employee.surName}, {employee.firstName}</span>
+      <li className="research-employee" key={index}>
+        {index === 0 &&
+          <span className="letter">{letter}</span>
+        }
+        <div className="employee-info">
+          <Link href={employee.url} linkType='header'>{employee.surName}, {employee.firstName}</Link>
+          <p className="my-1">Forsker</p>
+          <Text small>Telefonnr/ Mailadresse / Forskningsområde</Text>
+        </div>
       </li>
     )
   }
 
 
   return (
-    <section className="research-employee-list container-fluid">
-      <div className="container py-5">
-        <Title>{props.title}</Title>
-        { renderList()}
-      </div>
+    <section className="research-employee-list container">
+      <Title>{props.title}</Title>
+      { renderList()}
     </section>
   )
 }
@@ -59,7 +57,8 @@ ResearchEmployeeList.propTypes = {
       PropTypes.shape({
         id: PropTypes.string,
         firstName: PropTypes.string,
-        surName: PropTypes.string
+        surName: PropTypes.string,
+        url: PropTypes.string
       }))
   }))
 }

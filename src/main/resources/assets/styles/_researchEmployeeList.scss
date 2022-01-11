@@ -1,0 +1,35 @@
+.research-employee-list {
+  article {
+    display: flex;
+  }
+
+  .letter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    font-family: $font-roboto-condensed-bold;
+    border: 2px solid $ssb-dark-5;
+    width: 80px;
+    height: 80px;
+    margin: 3.5px 20px 3px 0;
+    float:left;
+  }
+
+  .employeeList {
+    list-style: none;
+
+    padding: 0;
+    width: 100%;
+
+    li.research-employee {
+      border-bottom: solid 1px #c3dcdc;
+      padding: 20px 0 20px 0;
+
+      .employee-info {
+        padding-left: 100px;
+      }
+    }
+  }
+}
+
