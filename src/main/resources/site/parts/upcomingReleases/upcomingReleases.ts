@@ -54,7 +54,7 @@ function renderPart(req: Request): React4xpResponse {
   const currentLanguage: string = content.language ? content.language : 'nb'
   const count: number = parseInt(component.config.numberOfDays)
   const buttonTitle: string = localize({
-    key: 'button.showMore',
+    key: 'button.showAll',
     locale: currentLanguage
   })
   const statisticsPageUrlText: string = localize({

@@ -184,7 +184,7 @@ export function init() {
             const lastIndex = series.data.length - 1
             series.data.forEach(function(data, index) {
               series.data[index] = {
-                y: data,
+                y: parseFloat(data),
                 marker: {
                   enabled: index === lastIndex
                 }

@@ -13,7 +13,7 @@ const {
   get
 } = __non_webpack_require__('/lib/xp/content')
 const {
-  getMainSubject
+  getMainSubject, getMainSubjectStatistic
 } = __non_webpack_require__( '/lib/ssb/utils/parentUtils')
 const {
   sameDay
@@ -333,7 +333,7 @@ export function prepareRelease(
         key: 'statistic',
         locale: language
       }),
-      mainSubject: getMainSubject(release.shortName, language),
+      mainSubject: getMainSubjectStatistic(statisticsPagesXP),
       variant: preparedVariant,
       statisticsPageUrl,
       aboutTheStatisticsDescription: aboutTheStatisticsContent ? aboutTheStatisticsContent.data.ingress : seoDescription

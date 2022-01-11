@@ -74,10 +74,19 @@ export function getMainSubject(shortName: string, language: string): string {
   return ''
 }
 
+export function getMainSubjectStatistic(statistic: Content<Statistics>): string {
+  const parentPath: string | undefined = statistic && statistic._path.split('/').splice(1, 3).join('/')
+  const parentContent: Content<Page> | null = parentPath ? getContent({
+    key: `/${parentPath}`
+  }) : null
+  return parentContent ? parentContent.displayName : ''
+}
+
 export interface ParentUtilsLib {
   getParentType: (path: string) => string | undefined;
   getParentContent: (path: string) => Content<object, DefaultPageConfig | Statistics> | null;
   parentType: (path: string) => string | undefined;
   parentPath: (path: string) => string;
   getMainSubject: (shortName: string, language: string) => string;
+  getMainSubjectStatistic: (statistic: Content<Statistics>) => string;
 }

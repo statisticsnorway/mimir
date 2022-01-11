@@ -74,11 +74,32 @@ export function renderPart(req: Request): React4xpResponse {
     }
   }))
 
+  function getContentTypes(solrResults: Array<string | number>): Array<Dropdown> {
+    const validFilters: Array<string> = ['artikkel', 'statistikk', 'faktaside', 'statistikkbanktabell', 'publikasjon']
+    const filters: Array<string | number> = solrResults
+      .filter((value) => typeof value == 'string')
+      .filter((value) => validFilters.includes(value as string))
+
+    const dropdowns: Array<Dropdown> = [
+      {
+        id: '',
+        title: phrases['publicationArchive.allTypes']
+      }
+    ].concat(filters.map((subject: string) => {
+      return {
+        id: subject,
+        title: phrases[`contentType.search.${subject}`]
+      }
+    }))
+    return dropdowns
+  }
+
   /* query solr */
   const solrResult: SolrPrepResultAndTotal = sanitizedTerm ?
     solrSearch( sanitizedTerm, language, parseInt(part.config.numberOfHits)) : {
       total: 0,
-      hits: []
+      hits: [],
+      contentTypes: []
     }
 
   /* prepare props */
@@ -113,7 +134,8 @@ export function renderPart(req: Request): React4xpResponse {
     }),
     searchPageUrl,
     language,
-    dropDownSubjects: mainSubjectDropdown
+    dropDownSubjects: mainSubjectDropdown,
+    dropDownContentTypes: getContentTypes(solrResult.contentTypes)
   }
 
   return React4xp.render('site/parts/searchResult/searchResultView', props, req)
@@ -135,6 +157,7 @@ interface ReactProps {
   searchPageUrl: string;
   language: string;
   dropDownSubjects: Array<Dropdown>;
+  dropDownContentTypes: Array<Dropdown>;
 }
 
 interface Dropdown {

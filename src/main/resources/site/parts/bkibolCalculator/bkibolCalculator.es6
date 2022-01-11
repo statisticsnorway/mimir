@@ -112,7 +112,7 @@ const nextPeriod = (month, year) => {
   let nextPeriodMonth = parseInt(month) + 1
   let nextPeriodYear = parseInt(year)
 
-  if (month === 12) {
+  if (Number(month) === 12) {
     nextPeriodMonth = 1
     nextPeriodYear = nextPeriodYear + 1
   }

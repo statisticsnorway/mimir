@@ -7,6 +7,7 @@ import { ChevronDown } from 'react-feather'
 function UpcomingReleases(props) {
   const [releases, setReleases] = useState(mergeContentReleases(props.releases))
   const [loading, setLoading] = useState(false)
+  const [showAll, setShowAll] = useState(false)
   let lastCountedDay = undefined
 
   const unitProps = ['year', 'month', 'day']
@@ -155,6 +156,28 @@ function UpcomingReleases(props) {
     })
   }
 
+  function fetchAllReleases() {
+    setLoading(true)
+    setShowAll(true)
+    axios.get(props.upcomingReleasesServiceUrl, {
+      params: {
+        start: `${lastCountedDay.year}-${(parseInt(lastCountedDay.month) + 1)}-${lastCountedDay.day}`,
+        showAll: true,
+        language: props.language
+      }
+    }).then((res) => {
+      if (res.data.releases.length) {
+        let newReleases = mergeReleases(releases, res.data.releases, 0)
+        newReleases = mergeContentReleases(newReleases)
+        setReleases(newReleases)
+      } else {
+        setLoading(true)
+      }
+    }).finally(() => {
+      setLoading(false)
+    })
+  }
+
   function renderRelease(release, index, date) {
     const {
       type, name, variant, mainSubject, statisticsPageUrl, upcomingReleaseLink
@@ -217,8 +240,8 @@ function UpcomingReleases(props) {
       </div>)
     } else {
       return (<Button className="button-more"
-        disabled={loading}
-        onClick={fetchMoreReleases}>
+        disabled={loading || showAll}
+        onClick={fetchAllReleases}>
         <ChevronDown size="18"/>{props.buttonTitle}
       </Button>)
     }

@@ -18,6 +18,12 @@ const {
 const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
+const {
+  parseHtmlString
+} = __non_webpack_require__('/lib/ssb/parts/table')
+const {
+  localize
+} = __non_webpack_require__('/lib/xp/i18n')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 import { Content, MediaImage } from 'enonic-types/content'
@@ -27,10 +33,9 @@ import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { StaticVisualization } from '../../content-types/staticVisualization/staticVisualization'
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
-import { Base64 } from 'js-base64'
 import { DefaultPageConfig } from '../../pages/default/default-page-config'
 import { StaticVisualizationPartConfig } from './staticVisualization-part-config'
-
+import { HtmlTable } from '../../../lib/ssb/parts/table'
 
 exports.get = function(req: Request): Response | React4xpResponse {
   try {
@@ -62,10 +67,17 @@ function renderPart(req: Request, contentId: string | undefined): React4xpRespon
 
   if (staticVisualizationsContent) {
     const sourceConfig: StaticVisualization['sources'] = staticVisualizationsContent.data.sources ? forceArray(staticVisualizationsContent.data.sources) : []
+    const language: string = staticVisualizationsContent.language ? staticVisualizationsContent.language : 'nb'
 
-    // Encodes string to base64 and turns it into a dataURI
-    const desc: string = Base64.encodeURI(staticVisualizationsContent.data.longDesc)
-    const longDesc: string = 'data:text/html;charset=utf-8;base64,' + desc
+    const showAsGraphLabel: string = localize({
+      key: 'highcharts.showAsChart',
+      locale: language === 'nb' ? 'no' : language
+    })
+
+    const showAsTableLabel: string = localize({
+      key: 'highcharts.showAsTable',
+      locale: language === 'nb' ? 'no' : language
+    })
 
     const imageSrc: string | null = imageUrl({
       id: staticVisualizationsContent.data.image,
@@ -77,16 +89,25 @@ function renderPart(req: Request, contentId: string | undefined): React4xpRespon
       key: staticVisualizationsContent.data.image
     })
 
+    // Tabledata
+    const htmlTable: HtmlTable | undefined = staticVisualizationsContent.data.tableData ?
+      parseHtmlString(staticVisualizationsContent.data.tableData) : undefined
+
+
     const props: StaticVisualizationProps = {
       title: staticVisualizationsContent.displayName,
       altText: imageData && imageData.data.altText ? imageData.data.altText : (imageData && imageData.data.caption ? imageData.data.caption : ' '),
       imageSrc: imageSrc,
       footnotes: staticVisualizationsContent.data.footNote ? forceArray(staticVisualizationsContent.data.footNote) : [],
       sources: getSources(sourceConfig as Array<SourcesConfig>),
-      longDesc,
+      longDesc: staticVisualizationsContent.data.longDesc,
       sourcesLabel,
+      showAsGraphLabel,
+      showAsTableLabel,
       descriptionStaticVisualization,
-      inFactPage: page.page.config && page.page.config.pageType === 'factPage'
+      inFactPage: page.page.config && page.page.config.pageType === 'factPage',
+      language: language,
+      tableData: htmlTable
     }
 
     return React4xp.render('site/parts/staticVisualization/staticVisualization', props, req)
@@ -108,9 +129,13 @@ function renderPart(req: Request, contentId: string | undefined): React4xpRespon
     imageSrc: string;
     footnotes: StaticVisualization['footNote'];
     sources: SourceList;
-    longDesc: string;
+    longDesc: string | undefined;
     sourcesLabel: string;
+    showAsGraphLabel: string;
+    showAsTableLabel: string;
     descriptionStaticVisualization: string;
     inFactPage?: boolean;
+    language: string;
+    tableData: HtmlTable| undefined;
   }
 
