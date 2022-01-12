@@ -25,7 +25,7 @@ dependencies {
     include "com.enonic.xp:lib-task:${xpVersion}"
     include "com.enonic.xp:lib-auth:${xpVersion}"
     include "com.enonic.xp:lib-admin:${xpVersion}"
-    include "com.enonic.lib:lib-http-client:2.2.1"
+    include "com.enonic.lib:lib-http-client:2.4.0"
     include "com.enonic.xp:lib-i18n:${xpVersion}"
     include "com.enonic.lib:lib-cron:1.1.1"
     include "com.enonic.xp:lib-context:${xpVersion}"
@@ -61,23 +61,28 @@ repositories {
 
 node {
     download = true
-    version = '16.1.0'
+    version = '16.4.2'
 }
 
 def react4xpGradlePath = 'node_modules/react4xp/react4xp.gradle'
 def react4xpGradleFile = new File(react4xpGradlePath)
 if (!react4xpGradleFile.exists()) {
-    String npm = 'npm'
-    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-        npm = 'npm.cmd'
+    exec {
+        String npm = 'npm'
+        if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+            npm = 'npm.cmd'
+        }
+        commandLine npm
+        args = ['install']
+        println "\nNot found: $react4xpGradlePath - running shell command: $npm install"
+        //store the output instead of printing to the console:
+        standardOutput = new ByteArrayOutputStream()
+
+        //extension method execSomething.output() can be used to obtain the output:
+        ext.output = {
+            return standardOutput.toString()
+        }
     }
-    def command = npm + " install"
-    println "\nNot found: $react4xpGradlePath - running shell command:"
-    println command
-    def proc = command.execute()
-    proc.in.eachLine { line -> println line }
-    proc.out.close()
-    proc.waitFor()
 }
 apply from: react4xpGradlePath
 

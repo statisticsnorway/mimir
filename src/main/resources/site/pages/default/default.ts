@@ -79,7 +79,8 @@ const partsWithPreview: Array<string> = [ // Parts that has preview
   `${app.name}:factBox`,
   `${app.name}:contentList`,
   `${app.name}:omStatistikken`,
-  `${app.name}:table`
+  `${app.name}:table`,
+  `${app.name}:staticVisualization`
 ]
 
 const previewOverride: object = {
@@ -232,6 +233,7 @@ exports.get = function(req: Request): Response {
     .uniqueId()
 
   const hideBreadcrumb: boolean = !!(pageConfig).hide_breadcrumb
+  const innrapporteringRegexp: RegExp = /^\/ssb(\/en)?\/innrapportering/ // Skal matche alle sider under /innrapportering på norsk og engelsk
   const model: DefaultModel = {
     pageTitle: 'SSB', // not really used on normal pages because of SEO app (404 still uses this)
     page,
@@ -252,7 +254,8 @@ exports.get = function(req: Request): Response {
     ...metaInfo,
     breadcrumbsReactId: breadcrumbComponent.react4xpId,
     hideBreadcrumb,
-    enabledEnalyzerScript: isEnabled('enable-enalyzer-script', true, 'ssb')
+    enabledEnalyzerScript: isEnabled('enable-enalyzer-script', true, 'ssb'),
+    enabledChatScript: isEnabled('enable-chat-script', true, 'ssb') && innrapporteringRegexp.exec(page._path)
   }
 
   const thymeleafRenderBody: Response['body'] = render(view, model)
@@ -325,7 +328,7 @@ function parseMetaInfoData(
   req: Request): MetaInfoData {
   let addMetaInfoSearch: boolean = true
   let metaInfoSearchId: string | undefined = page._id
-  let metaInfoSearchContentType: string | undefined = page._name
+  let metaInfoSearchContentType: string | undefined
   let metaInfoSearchGroup: string | undefined = page._id
   let metaInfoSearchKeywords: string | undefined
   let metaInfoDescription: string | undefined
@@ -368,7 +371,13 @@ function parseMetaInfoData(
   }
 
   if (page.type === `${app.name}:article`) {
-    metaInfoSearchContentType = 'artikkel'
+    if (page.data.articleType == 'report' || page.data.articleType == 'note' ) {
+      // We use the old content type publikasjon for this, as we want to group these three together in the search results filter.
+      // Note and Report are the new content types that replaces Publikasjon.
+      metaInfoSearchContentType = 'publikasjon'
+    } else {
+      metaInfoSearchContentType = 'artikkel'
+    }
   }
 
   return {
@@ -515,6 +524,7 @@ interface DefaultPage extends Content {
     keywords: string;
     statistic: string;
     subtopic: Array<string>;
+    articleType: string;
   };
   page: ExtendedPage;
 }
@@ -588,4 +598,5 @@ interface DefaultModel {
   breadcrumbsReactId: string | undefined;
   hideBreadcrumb: boolean;
   enabledEnalyzerScript: boolean;
+  enabledChatScript: boolean;
 }

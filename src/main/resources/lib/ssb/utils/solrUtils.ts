@@ -15,18 +15,26 @@ const {
 } = __non_webpack_require__('/lib/vendor/moment')
 
 
-export function solrSearch(term: string, language: string, numberOfHits: number, start: number = 0, mainSubject: string): SolrPrepResultAndTotal {
+export function solrSearch(term: string,
+  language: string,
+  numberOfHits: number,
+  start: number = 0,
+  mainSubject: string,
+  contentType: string): SolrPrepResultAndTotal {
   const lang: string = language === 'en' ? 'en' : 'no'
   const filterQuery: string = mainSubject ? `fq=sprak:"${lang}"&fq=hovedemner:"${mainSubject}"` : `fq=sprak:"${lang}"`
+  const contentTypeQuery: string = contentType ? `&fq=innholdstype:"${contentType}"` : ''
   const searchResult: SolrResult | undefined = querySolr({
-    query: createQuery(term, numberOfHits, start, filterQuery)
+    query: createQuery(term, numberOfHits, start, filterQuery, contentTypeQuery)
   })
   return searchResult ? {
     hits: nerfSearchResult(searchResult, language),
-    total: searchResult.grouped.gruppering.matches
+    total: searchResult.grouped.gruppering.matches,
+    contentTypes: searchResult.facet_counts.facet_fields.innholdstype
   } : {
     hits: [],
-    total: 0
+    total: 0,
+    contentTypes: []
   }
 }
 
@@ -91,15 +99,15 @@ function requestSolr(queryParams: SolrQueryParams): SolrResponse {
 }
 
 
-function createQuery(term: string, numberOfHits: number, start: number, filterQuery: string): string {
-  return `${SOLR_BASE_URL}?${SOLR_PARAM_QUERY}=${term}&${filterQuery}&wt=${SOLR_FORMAT}&start=${start}&rows=${numberOfHits}`
+function createQuery(term: string, numberOfHits: number, start: number, filterQuery: string, contentTypeQuery: string): string {
+  return `${SOLR_BASE_URL}?${SOLR_PARAM_QUERY}=${term}&${filterQuery}${contentTypeQuery}&wt=${SOLR_FORMAT}&start=${start}&rows=${numberOfHits}`
 }
 
 /*
 * Interfaces
 */
 export interface SolrUtilsLib {
-    solrSearch: (term: string, language: string, numberOfHits: number, start?: number, filter?: string) => SolrPrepResultAndTotal;
+    solrSearch: (term: string, language: string, numberOfHits: number, start?: number, filter?: string, contentType?: string) => SolrPrepResultAndTotal;
 }
 
 interface SolrQueryParams {
@@ -125,6 +133,7 @@ export interface PreparedSearchResult {
 export interface SolrPrepResultAndTotal {
   total: number;
   hits: Array<PreparedSearchResult>;
+  contentTypes: Array<string|number>;
 }
 
 interface SolrResult {

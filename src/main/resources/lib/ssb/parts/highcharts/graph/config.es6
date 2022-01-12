@@ -1,6 +1,9 @@
 const {
   localize
 } = __non_webpack_require__('/lib/xp/i18n')
+const {
+  isEnabled
+} = __non_webpack_require__('/lib/featureToggle')
 
 export const style = {
   color: '#21383a',
@@ -23,7 +26,6 @@ export const X_AXIS_TITLE_POSITION = {
   offset: undefined,
   y: undefined
 }
-
 /**
  *
  * @param {object} highchartData
@@ -141,6 +143,11 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
         }
       },
       showInLegend: highchartData.pieLegend
+    },
+    line: {
+      marker: {
+        enabled: true
+      }
     },
     series: {
       marker: {
@@ -295,7 +302,7 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
             }
           },
           title: {
-            text: ''
+            text: isEnabled('highcharts-y-axix-title-mobile', true, 'ssb') ? highchartData.yAxisTitle : ''
           }
         }
       }

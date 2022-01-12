@@ -6,11 +6,6 @@ export interface Highchart {
   subtitle?: string;
 
   /**
-   * Beskrivelse
-   */
-  description?: string;
-
-  /**
    * Graftype
    */
   graphType: "line" | "pie" | "column" | "bar" | "area" | "barNegative";
@@ -272,12 +267,27 @@ export interface Highchart {
   footnoteText?: string;
 
   /**
-   * Kildetekst
+   * (IKKE BRUK) Kildetekst
    */
   creditsText?: string;
 
   /**
-   * Kilde-URL
+   * (IKKE BRUK) Kilde-URL
    */
   creditsHref?: string;
+
+  /**
+   * Kilder
+   */
+  sourceList?: Array<{
+    /**
+     * Kildetekst
+     */
+    sourceText?: string;
+
+    /**
+     * Kilde-URL
+     */
+    sourceHref?: string;
+  }>;
 }

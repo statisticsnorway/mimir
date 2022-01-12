@@ -169,7 +169,8 @@ function PifCalculator(props) {
 
   function isEndMonthValid(value) {
     const endMonthValue = value || endMonth.value
-    const endMonthValid = !((endYear.value === validMaxYear) && (endMonthValue === '' || endMonthValue > validMaxMonth))
+    const maxYearAverage = Number(validMaxMonth) === 12 ? validMaxYear : Number(validMaxYear) - 1
+    const endMonthValid = endMonthValue === '' ? (endYear.value <= maxYearAverage) : !((endYear.value === validMaxYear) && (endMonthValue > validMaxMonth))
     if (!endMonthValid) {
       setEndMonth({
         ...endMonth,
