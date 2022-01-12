@@ -43,7 +43,7 @@ dependencies {
     include "no.item:wsutil-server:2.0.0"
     include "com.gravitondigital:featuretogglelib:0.3.0"
     compile group: 'org.json', name: 'json', version: '20210307'
-    include 'com.enonic.lib:lib-react4xp:2.1.0-RC1'
+    include 'com.enonic.lib:lib-react4xp:2.1.0'
     include 'com.enonic.lib:lib-text-encoding:2.0.0'
 }
 
