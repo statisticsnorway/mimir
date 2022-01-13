@@ -1,31 +1,34 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Link, Text, Title } from '@statisticsnorway/ssb-component-library'
+import { Container } from 'react-bootstrap'
 
 function ResearchEmployeeList(props) {
   function renderList() {
-    return props.groupedEmployees.map((group, index) => {
-      return (
-        <article className={index === 0 && 'first'} key={index}>
-          <ol className="employeeList">
-            {
+    return (
+      <ol className="employeeList">
+        {
+          props.groupedEmployees.map((group, index) => {
+            return (
               group.employees.map((employee, index) => renderEmployee(group.letter, employee, index))
-            }
-          </ol>
-        </article>
-      )
-    })
+            )
+          })
+        }
+      </ol>
+    )
   }
 
   function renderEmployee(letter, employee, index) {
+    const employeeUrl = '/' + employee.id
+    const key = letter + '-' + index
     return (
-      <li className="research-employee" key={index}>
+      <li className="research-employee" key={key}>
         {index === 0 &&
           <span className="letter">{letter}</span>
         }
         <div className="employee-info">
-          <Link href={employee.url} linkType='header'>{employee.surName}, {employee.firstName}</Link>
-          <p className="my-1">Forsker</p>
+          <Link href={employeeUrl} linkType='header'>{employee.surName}, {employee.firstName}</Link>
+          <p className="my-1">Stillingstittel</p>
           <Text small>Telefonnr/ Mailadresse / Forskningsområde</Text>
         </div>
       </li>
@@ -36,7 +39,10 @@ function ResearchEmployeeList(props) {
   return (
     <section className="research-employee-list container">
       <Title>{props.title}</Title>
-      { renderList()}
+      <Container>
+        { renderList()}
+      </Container>
+
     </section>
   )
 }
