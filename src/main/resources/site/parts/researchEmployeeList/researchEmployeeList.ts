@@ -6,18 +6,12 @@ const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getContent
 } = __non_webpack_require__('/lib/xp/portal')
-
+const {
+  getPhrases
+} = __non_webpack_require__('/lib/ssb/utils/language')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  groupBy
-} = __non_webpack_require__('/lib/vendor/ramda')
-const {
-  data: {
-    forceArray
-  }
-} = __non_webpack_require__('/lib/util')
 
 
 exports.get = function(req: Request): React4xpResponse | Response {
@@ -37,8 +31,9 @@ exports.preview = (req: Request): React4xpResponse | Response => {
 }
 
 export function renderPart(req: Request): React4xpResponse {
-  /* collect data */
   const content: Content = getContent()
+  const phrases: {[key: string]: string} = getPhrases(content)
+  const count: number = 20
 
   const emloyeeRaw: Array<EmployeeRaw> = [
     {
@@ -657,20 +652,12 @@ export function renderPart(req: Request): React4xpResponse {
     return a.surName.localeCompare(b.surName)
   })
 
-  const groupEmployees: GroupedBy<Employee> = groupEmployeeByLastName(employeesSorted)
-
-  const employeesGroupedByLetter: Array<EmployeeGroup> = Object.keys(groupEmployees).map((letter) => {
-    return {
-      letter: letter,
-      employees: forceArray(groupEmployees[letter])
-    }
-  })
-
   /* prepare props */
   const props: ReactProps = {
     title: content.displayName,
-    employees: employees,
-    groupedEmployees: employeesGroupedByLetter
+    employees: employeesSorted,
+    buttonTitle: phrases['button.showMore'],
+    count
   }
 
   return React4xp.render('site/parts/researchEmployeeList/researchEmployeeList', props, req)
@@ -680,7 +667,8 @@ export function renderPart(req: Request): React4xpResponse {
 interface ReactProps {
     title: string;
     employees: Array<Employee>;
-    groupedEmployees: Array<EmployeeGroup>;
+    buttonTitle: string;
+    count: number;
 }
 
 interface EmployeeRaw {
@@ -696,19 +684,4 @@ interface Employee {
   surName: string;
   url: string;
 }
-
-interface EmployeeGroup {
-  letter: string;
-  employees: Array<Employee>;
-}
-
-interface GroupedBy<T> {
-  [key: string]: Array<T> | T;
-}
-
-const groupEmployeeByLastName: (employees: Array<Employee>) => GroupedBy<Employee> = groupBy(
-  (employee: Employee): string => {
-    return employee.surName.charAt(0)
-  }
-)
 

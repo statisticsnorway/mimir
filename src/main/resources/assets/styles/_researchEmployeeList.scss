@@ -1,7 +1,4 @@
 .research-employee-list {
-  article {
-    display: flex;
-  }
 
   .letter {
     display: flex;
@@ -30,6 +27,11 @@
         padding-left: 100px;
       }
     }
+  }
+
+  .button-more {
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
