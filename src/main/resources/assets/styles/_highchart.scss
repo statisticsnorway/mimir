@@ -11,6 +11,20 @@
       padding-right: 0;
     }
   }
+  .ssb-tabs {
+    padding-left: $spacer * 1.5;
+    margin-top: 40px;
+
+    .navigation-item {
+      padding-top: 0;
+    }
+
+    @include media-breakpoint-down(md) {
+      padding-left: 0;
+      display: flex;
+      justify-content: center;
+    }
+  }
 }
 .btn-highchart-export {
   z-index: 200;
@@ -69,7 +83,6 @@
 }
 
 .show-datatable {
-
   .highchart-title {
     font-size: 20px;
     @include roboto;
