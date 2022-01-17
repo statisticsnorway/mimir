@@ -1,5 +1,18 @@
 .research-employee-list {
 
+  .employee-list-head {
+    background-color: $ssb-dark-1;
+
+    .employee-list-ingress {
+      font-size: 20px;
+      max-width: 780px
+    }
+  }
+
+  .employee-list-body{
+    margin-top: 40px;
+  }
+
   .letter {
     display: flex;
     justify-content: center;
@@ -15,7 +28,6 @@
 
   .employeeList {
     list-style: none;
-
     padding: 0;
     width: 100%;
 

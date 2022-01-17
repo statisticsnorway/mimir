@@ -175,12 +175,6 @@ export function renderPart(req: Request): React4xpResponse {
       'cristin_person_id': '871973'
     },
     {
-      'first_name': 'Nina Eirin',
-      'surname': 'Drange',
-      'url': 'https://api.cristin.no/v2/persons/6512',
-      'cristin_person_id': '6512'
-    },
-    {
       'first_name': 'Julia',
       'surname': 'Zhulanova',
       'url': 'https://api.cristin.no/v2/persons/627204',
@@ -253,22 +247,10 @@ export function renderPart(req: Request): React4xpResponse {
       'cristin_person_id': '452015'
     },
     {
-      'first_name': 'Kevin Raj',
-      'surname': 'Kaushal',
-      'url': 'https://api.cristin.no/v2/persons/623458',
-      'cristin_person_id': '623458'
-    },
-    {
       'first_name': 'Herman',
       'surname': 'Kruse',
       'url': 'https://api.cristin.no/v2/persons/505232',
       'cristin_person_id': '505232'
-    },
-    {
-      'first_name': 'Hidemichi',
-      'surname': 'Yonezawa',
-      'url': 'https://api.cristin.no/v2/persons/1109450',
-      'cristin_person_id': '1109450'
     },
     {
       'first_name': 'Taran',
@@ -281,12 +263,6 @@ export function renderPart(req: Request): React4xpResponse {
       'surname': 'Kirkebøen',
       'url': 'https://api.cristin.no/v2/persons/6375',
       'cristin_person_id': '6375'
-    },
-    {
-      'first_name': 'Brita',
-      'surname': 'Bye',
-      'url': 'https://api.cristin.no/v2/persons/1108054',
-      'cristin_person_id': '1108054'
     },
     {
       'first_name': 'Astrid',
@@ -371,12 +347,6 @@ export function renderPart(req: Request): React4xpResponse {
       'surname': 'Hungnes',
       'url': 'https://api.cristin.no/v2/persons/597701',
       'cristin_person_id': '597701'
-    },
-    {
-      'first_name': 'Jørgen',
-      'surname': 'Modalsli',
-      'url': 'https://api.cristin.no/v2/persons/17497',
-      'cristin_person_id': '17497'
     },
     {
       'first_name': 'Kenneth Aarskaug',
@@ -535,18 +505,6 @@ export function renderPart(req: Request): React4xpResponse {
       'cristin_person_id': '521933'
     },
     {
-      'first_name': 'Manudeep Singh',
-      'surname': 'Bhuller',
-      'url': 'https://api.cristin.no/v2/persons/13253',
-      'cristin_person_id': '13253'
-    },
-    {
-      'first_name': 'Hege Marie',
-      'surname': 'Gjefsen',
-      'url': 'https://api.cristin.no/v2/persons/608707',
-      'cristin_person_id': '608707'
-    },
-    {
       'first_name': 'Bjorn',
       'surname': 'Dapi',
       'url': 'https://api.cristin.no/v2/persons/909',
@@ -559,16 +517,58 @@ export function renderPart(req: Request): React4xpResponse {
       'cristin_person_id': '47725'
     },
     {
-      'first_name': 'Anders',
-      'surname': 'Kjelsrud',
-      'url': 'https://api.cristin.no/v2/persons/335060',
-      'cristin_person_id': '335060'
+      'first_name': 'Jørgen',
+      'surname': 'Modalsli',
+      'url': 'https://api.cristin.no/v2/persons/17497',
+      'cristin_person_id': '17497'
+    },
+    {
+      'first_name': 'Kevin Raj',
+      'surname': 'Kaushal',
+      'url': 'https://api.cristin.no/v2/persons/623458',
+      'cristin_person_id': '623458'
+    },
+    {
+      'first_name': 'Brita',
+      'surname': 'Bye',
+      'url': 'https://api.cristin.no/v2/persons/1108054',
+      'cristin_person_id': '1108054'
+    },
+    {
+      'first_name': 'Hidemichi',
+      'surname': 'Yonezawa',
+      'url': 'https://api.cristin.no/v2/persons/1109450',
+      'cristin_person_id': '1109450'
+    },
+    {
+      'first_name': 'Hege Marie',
+      'surname': 'Gjefsen',
+      'url': 'https://api.cristin.no/v2/persons/608707',
+      'cristin_person_id': '608707'
+    },
+    {
+      'first_name': 'Nina Eirin',
+      'surname': 'Drange',
+      'url': 'https://api.cristin.no/v2/persons/6512',
+      'cristin_person_id': '6512'
+    },
+    {
+      'first_name': 'Marte',
+      'surname': 'Rønning',
+      'url': 'https://api.cristin.no/v2/persons/35957',
+      'cristin_person_id': '35957'
     },
     {
       'first_name': 'Magne',
       'surname': 'Mogstad',
       'url': 'https://api.cristin.no/v2/persons/12645',
       'cristin_person_id': '12645'
+    },
+    {
+      'first_name': 'Andreas',
+      'surname': 'Fagereng',
+      'url': 'https://api.cristin.no/v2/persons/15866',
+      'cristin_person_id': '15866'
     },
     {
       'first_name': 'Linda',
@@ -583,36 +583,6 @@ export function renderPart(req: Request): React4xpResponse {
       'cristin_person_id': '2164'
     },
     {
-      'first_name': 'Bente',
-      'surname': 'Halvorsen',
-      'url': 'https://api.cristin.no/v2/persons/317474',
-      'cristin_person_id': '317474'
-    },
-    {
-      'first_name': 'Marte',
-      'surname': 'Rønning',
-      'url': 'https://api.cristin.no/v2/persons/35957',
-      'cristin_person_id': '35957'
-    },
-    {
-      'first_name': 'Andreas',
-      'surname': 'Fagereng',
-      'url': 'https://api.cristin.no/v2/persons/15866',
-      'cristin_person_id': '15866'
-    },
-    {
-      'first_name': 'Gisle James',
-      'surname': 'Natvik',
-      'url': 'https://api.cristin.no/v2/persons/16539',
-      'cristin_person_id': '16539'
-    },
-    {
-      'first_name': 'Janna',
-      'surname': 'Bergsvik',
-      'url': 'https://api.cristin.no/v2/persons/506156',
-      'cristin_person_id': '506156'
-    },
-    {
       'first_name': 'Kristine',
       'surname': 'Grimsrud',
       'url': 'https://api.cristin.no/v2/persons/515091',
@@ -625,16 +595,94 @@ export function renderPart(req: Request): React4xpResponse {
       'cristin_person_id': '23669'
     },
     {
+      'first_name': 'Ådne',
+      'surname': 'Cappelen',
+      'url': 'https://api.cristin.no/v2/persons/1108081',
+      'cristin_person_id': '1108081'
+    },
+    {
+      'first_name': 'Pål',
+      'surname': 'Boug',
+      'url': 'https://api.cristin.no/v2/persons/1113409',
+      'cristin_person_id': '1113409'
+    },
+    {
+      'first_name': 'Lars',
+      'surname': 'Dommermuth',
+      'url': 'https://api.cristin.no/v2/persons/1113413',
+      'cristin_person_id': '1113413'
+    },
+    {
+      'first_name': 'Kjetil Elias',
+      'surname': 'Telle',
+      'url': 'https://api.cristin.no/v2/persons/1234',
+      'cristin_person_id': '1234'
+    },
+    {
+      'first_name': 'Knut Einar',
+      'surname': 'Rosendahl',
+      'url': 'https://api.cristin.no/v2/persons/21925',
+      'cristin_person_id': '21925'
+    },
+    {
+      'first_name': 'Halvor Briseid',
+      'surname': 'Storrøsten',
+      'url': 'https://api.cristin.no/v2/persons/12494',
+      'cristin_person_id': '12494'
+    },
+    {
+      'first_name': 'Bente',
+      'surname': 'Halvorsen',
+      'url': 'https://api.cristin.no/v2/persons/317474',
+      'cristin_person_id': '317474'
+    },
+    {
+      'first_name': 'Manudeep Singh',
+      'surname': 'Bhuller',
+      'url': 'https://api.cristin.no/v2/persons/13253',
+      'cristin_person_id': '13253'
+    },
+    {
+      'first_name': 'Iulie',
+      'surname': 'Aslaksen',
+      'url': 'https://api.cristin.no/v2/persons/1113405',
+      'cristin_person_id': '1113405'
+    },
+    {
+      'first_name': 'Janna',
+      'surname': 'Bergsvik',
+      'url': 'https://api.cristin.no/v2/persons/506156',
+      'cristin_person_id': '506156'
+    },
+    {
+      'first_name': 'Anders',
+      'surname': 'Kjelsrud',
+      'url': 'https://api.cristin.no/v2/persons/335060',
+      'cristin_person_id': '335060'
+    },
+    {
       'first_name': 'Martin Blomhoff',
       'surname': 'Holm',
       'url': 'https://api.cristin.no/v2/persons/2518',
       'cristin_person_id': '2518'
     },
     {
+      'first_name': 'Gisle James',
+      'surname': 'Natvik',
+      'url': 'https://api.cristin.no/v2/persons/16539',
+      'cristin_person_id': '16539'
+    },
+    {
       'first_name': 'Lars',
       'surname': 'Lindholt',
       'url': 'https://api.cristin.no/v2/persons/1107121',
       'cristin_person_id': '1107121'
+    },
+    {
+      'first_name': 'Per Arild',
+      'surname': 'Garnåsjordet',
+      'url': 'https://api.cristin.no/v2/persons/1113653',
+      'cristin_person_id': '1113653'
     }
   ]
 
@@ -657,6 +705,7 @@ export function renderPart(req: Request): React4xpResponse {
     title: content.displayName,
     employees: employeesSorted,
     buttonTitle: phrases['button.showMore'],
+    showingPhrase: phrases['researchEmployeeList.showing'],
     count
   }
 
@@ -668,6 +717,7 @@ interface ReactProps {
     title: string;
     employees: Array<Employee>;
     buttonTitle: string;
+    showingPhrase: string;
     count: number;
 }
 
