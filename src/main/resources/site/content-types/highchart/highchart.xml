@@ -221,22 +221,13 @@
           <label>Fotnote-tekst</label>
           <help-text>Inntil 3 fotnoter. For å få opphøyd fotnotetall: 1=ALT+251, 2=ALT+253, 3=ALT+252.</help-text>
         </input>
-        <input name="creditsText" type="TextArea">
-          <label>(IKKE BRUK) Kildetekst</label>
-          <default>Statistisk sentralbyrå.</default>
-        </input>
-        <input name="creditsHref" type="TextLine">
-          <label>(IKKE BRUK) Kilde-URL</label>
-          <default>https://www.ssb.no</default>
-        </input>
 
         <item-set name="sourceList">
           <occurrences minimum="0" maximum="0"/>
-          <label>Kilder</label>
           <items>
             <input name="sourceText" type="TextArea">
               <label>Kildetekst</label>
-              <default>Statistisk sentralbyrå.</default>
+              <default>Statistisk sentralbyrå</default>
             </input>
             <input name="sourceHref" type="TextLine">
               <label>Kilde-URL</label>
@@ -246,6 +237,13 @@
         </item-set>
       </items>
     </field-set>
+
+    <input name="creditsText" type="TextArea">
+      <label>(IKKE BRUK) Kildetekst</label>
+    </input>
+    <input name="creditsHref" type="TextLine">
+      <label>(IKKE BRUK) Kilde-URL</label>
+    </input>
 
   </form>
 </content-type>
