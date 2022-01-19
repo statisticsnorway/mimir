@@ -7,6 +7,7 @@ import { GroupedBy, PreparedStatistics, YearReleases, Release } from '../../../l
 import { UpcomingReleasesPartConfig } from './upcomingReleases-part-config'
 import { UpcomingRelease } from '../../content-types/upcomingRelease/upcomingRelease'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
+import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 
 const {
   moment
@@ -91,23 +92,24 @@ function renderPart(req: Request): React4xpResponse {
     count: 500,
     query: `type = "${app.name}:upcomingRelease" AND language = "${currentLanguage}" AND data.date >= "${moment().format('YYYY-MM-DD')}"`
   }).hits.map((r) => {
-    const date: moment.Moment = moment(r.data.date).locale(currentLanguage)
+    const date: string = r.data.date
     const mainSubjectItem: SubjectItem | null = getMainSubjectById(allMainSubjects, r.data.mainSubject)
     const mainSubject: string = mainSubjectItem ? mainSubjectItem.title : ''
     const contentType: string = r.data.contentType ? localize({
       key: `contentType.${r.data.contentType}`,
       locale: currentLanguage
     }) : ''
+
     return {
       id: r._id,
       name: r.displayName,
       type: contentType,
-      date: date.format(),
+      date: moment().locale(currentLanguage).format(),
       mainSubject: mainSubject,
-      day: date.format('D'),
-      month: date.format('M'),
-      monthName: date.format('MMM'),
-      year: date.format('YYYY'),
+      day: formatDate(date, 'd', currentLanguage) as string,
+      month: formatDate(date, 'M', currentLanguage) as string,
+      monthName: formatDate(date, 'MMM', currentLanguage) as string,
+      year: formatDate(date, 'yyyy', currentLanguage) as string,
       upcomingReleaseLink: r.data.href ? r.data.href : ''
     }
   })

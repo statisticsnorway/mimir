@@ -5,6 +5,7 @@ import { ArticleListPartConfig } from './articleList-part-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { AggregationsResponseEntry, Content } from 'enonic-types/content'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
+import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 
 const {
   localize
@@ -105,7 +106,6 @@ function getArticles(req: Request, language: string): Array<Content<Article>> {
 }
 
 function prepareArticles(articles: Array<Content<Article>>, language: string): Array<PreparedArticles> {
-  const momentLanguage: string = language === 'en' ? 'en-gb' : 'nb'
   return articles.map((article: Content<Article>) => {
     return {
       title: article.displayName,
@@ -114,7 +114,7 @@ function prepareArticles(articles: Array<Content<Article>>, language: string): A
         id: article._id
       }),
       publishDate: article.publish && article.publish.from ? article.publish.from : '',
-      publishDateHuman: article.publish && article.publish.from ? moment(article.publish.from).locale(momentLanguage).format('LL') : '',
+      publishDateHuman: article.publish && article.publish.from ? formatDate(article.publish.from, 'PPP', language) : '',
       frontPagePriority: article.data.frontPagePriority
     }
   })

@@ -1,3 +1,5 @@
+import { formatDate } from '../../../lib/ssb/utils/dateUtils'
+
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
@@ -58,7 +60,7 @@ exports.preview = (req, id) => renderPart(req, [id])
 
 function renderPart(req, relatedArticles) {
   const page = getContent()
-  const language = page.language ? page.language === 'en' ? 'en-gb' : page.language : 'nb'
+  const language = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   const phrases = getPhrases(page)
   const showPreview = req.params.showDraft && hasWritePermissionsAndPreview(req, page._id)
   if (page.type === `${app.name}:statistics`) {
@@ -132,7 +134,7 @@ function renderPart(req, relatedArticles) {
         subTitle = article.externalArticle.type
       }
       if (article.externalArticle.date) {
-        const prettyDate = moment(article.externalArticle.date).locale(language).format('LL')
+        const prettyDate = formatDate(article.externalArticle.date, 'PPP', language)
         subTitle += `${subTitle ? ' / ' : ''}${prettyDate}`
       }
 
@@ -178,9 +180,9 @@ const getSubTitle = (articleContent, phrases, language) => {
   }
   let prettyDate = ''
   if (articleContent.publish && articleContent.publish.from) {
-    prettyDate = moment(articleContent.publish.from).locale(language).format('LL')
+    prettyDate = formatDate(articleContent.publish.from, 'PPP', language)
   } else {
-    prettyDate = moment(articleContent.createdTime).locale(language).format('LL')
+    prettyDate = formatDate(articleContent.createdTime, 'PPP', language)
   }
   return `${type ? `${type} / ` : ''}${prettyDate}`
 }

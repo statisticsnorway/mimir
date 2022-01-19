@@ -1,3 +1,5 @@
+import { formatDate } from '../../../lib/ssb/utils/dateUtils'
+
 const {
   getContent, imageUrl, pageUrl, processHtml
 } = __non_webpack_require__('/lib/xp/portal')
@@ -15,9 +17,6 @@ const {
 } = __non_webpack_require__('/lib/ssb/error/error')
 
 const contentLib = __non_webpack_require__('/lib/xp/content')
-const {
-  moment
-} = __non_webpack_require__('/lib/vendor/moment')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view = resolve('./articleArchive.html')
 
@@ -33,7 +32,7 @@ exports.preview = (req) => renderPart(req)
 
 const renderPart = (req) => {
   const page = getContent()
-  const language = page.language ? page.language === 'en' ? 'en-gb' : page.language : 'nb'
+  const language = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   const phrases = getPhrases(page)
   const title = page.displayName ? page.displayName : undefined
 
@@ -126,7 +125,7 @@ const parseArticleData = (pageId, phrases, language) => {
 }
 
 const getYear = (publish, createdTime, language) => {
-  return publish && createdTime ? moment(publish.from).locale(language).format('YYYY') : moment(createdTime).locale(language).format('YYYY')
+  return publish && createdTime ? formatDate(publish.from, 'yyyy', language) : formatDate(createdTime, 'yyyy', language)
 }
 
 const getSubTitle = (articleContent, phrases, language) => {
@@ -137,9 +136,9 @@ const getSubTitle = (articleContent, phrases, language) => {
 
   let prettyDate = ''
   if (articleContent.publish && articleContent.publish.from) {
-    prettyDate = moment(articleContent.publish.from).locale(language).format('LL')
+    prettyDate = formatDate(articleContent.publish.from, 'PPP', language)
   } else {
-    prettyDate = moment(articleContent.createdTime).locale(language).format('LL')
+    prettyDate = formatDate(articleContent.createdTime, 'PPP', language)
   }
 
   return `${type ? `${type} / ` : ''}${prettyDate}`

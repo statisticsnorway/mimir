@@ -1,3 +1,5 @@
+import { formatDate } from '../../../lib/ssb/utils/dateUtils'
+
 const {
   get
 } = __non_webpack_require__('/lib/xp/content')
@@ -21,9 +23,6 @@ const {
   fromPartCache
 } = __non_webpack_require__('/lib/ssb/cache/partCache')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const {
-  moment
-} = __non_webpack_require__('/lib/vendor/moment')
 
 exports.get = function(req) {
   try {
@@ -48,7 +47,7 @@ function renderPart(req, aboutTheStatisticsId) {
 
 function getOmStatistikken(req, page, aboutTheStatisticsId) {
   const phrases = getPhrases(page)
-  const language = page.language ? page.language === 'en' ? 'en-gb' : page.language : 'nb'
+  const language = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
 
   let nextRelease = phrases.notYetDetermined
   const aboutStatisticLabel = phrases.aboutTheStatistics
@@ -60,7 +59,7 @@ function getOmStatistikken(req, page, aboutTheStatisticsId) {
     const nextReleaseDate = releaseDates.nextRelease[0]
 
     if (nextReleaseDate && nextReleaseDate !== '') {
-      nextRelease = moment(nextReleaseDate).locale(language ).format('LL')
+      nextRelease = formatDate(nextReleaseDate, 'PPP', language)
     }
   }
   if (page.type === `${app.name}:omStatistikken` && (req.mode === 'edit' || req.mode === 'preview')) {

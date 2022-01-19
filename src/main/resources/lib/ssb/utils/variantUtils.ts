@@ -3,6 +3,7 @@ import { SEO } from '../../../services/news/news'
 import { OmStatistikken } from '../../../site/content-types/omStatistikken/omStatistikken'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { ReleasesInListing, StatisticInListing, VariantInListing } from '../dashboard/statreg/types'
+import { parseISO, getDay, getMonth, getYear, getDate } from 'date-fns'
 
 const {
   pageUrl
@@ -410,31 +411,31 @@ function nextReleasedPassed(variant: VariantInListing): boolean {
 
 function formatVariant(variant: VariantInListing, language: string, property: keyof VariantInListing): PreparedVariant {
   const variantProperty: string = variant[property] as string
-  let date: Date = new Date(variantProperty)
+  let date: Date = parseISO(variantProperty)
   let nextReleaseDatePassed: boolean = false
 
   if (property === 'previousRelease') {
     nextReleaseDatePassed = nextReleasedPassed(variant)
-    date = nextReleaseDatePassed ? new Date(variant.nextRelease) : new Date(variantProperty)
+    date = nextReleaseDatePassed ? parseISO(variant.nextRelease) : parseISO(variantProperty)
   }
 
   return {
     id: variant.id,
-    day: date.getDate(),
-    monthNumber: date.getMonth(),
-    year: date.getFullYear(),
+    day: getDate(date),
+    monthNumber: getMonth(date),
+    year: getYear(date),
     frequency: variant.frekvens,
     period: calculatePeriodVariant(variant, language, nextReleaseDatePassed)
   }
 }
 
 function formatRelease(release: Release, language: string): PreparedVariant {
-  const date: Date = new Date(release.publishTime)
+  const date: Date = parseISO(release.publishTime)
   return {
     id: release.variantId,
-    day: date.getDate(),
-    monthNumber: date.getMonth(),
-    year: date.getFullYear(),
+    day: getDate(date),
+    monthNumber: getMonth(date),
+    year: getYear(date),
     frequency: release.frequency,
     period: calculatePeriodRelease(release, language)
   }

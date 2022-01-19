@@ -1,3 +1,5 @@
+import { formatDate } from '../../../lib/ssb/utils/dateUtils'
+
 const {
   getContent, pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
@@ -86,7 +88,6 @@ const renderPart = (req) => {
     }
   })
   const draftButtonText = paramShowDraft ? 'Vis publiserte tall' : 'Vis upubliserte tall'
-  const momentLanguage = page.language && page.language === 'en' ? 'en-gb' : 'nb'
 
   if (statistic) {
     title = page.language === 'en' && statistic.nameEN && statistic.nameEN !== null ? statistic.nameEN : statistic.name
@@ -95,16 +96,17 @@ const renderPart = (req) => {
     nextReleaseDate = releaseDates.nextRelease[0]
     previousReleaseDate = releaseDates.previousRelease[0]
 
+    const language = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
     if (releaseDates.nextRelease.length > 1 && releaseDates.nextRelease[1] !== '') {
-      previewNextRelease = moment(releaseDates.nextRelease[1]).locale(momentLanguage).format('LL')
+      previewNextRelease = formatDate(releaseDates.nextRelease[1], 'PPP', language)
     }
 
     if (previousReleaseDate && previousReleaseDate !== '') {
-      previousRelease = moment(previousReleaseDate).locale(momentLanguage).format('LL')
+      previousRelease = formatDate(previousReleaseDate, 'PPP', language)
     }
 
     if (nextReleaseDate && nextReleaseDate !== '') {
-      nextRelease = moment(nextReleaseDate).locale(momentLanguage).format('LL')
+      nextRelease = formatDate(nextReleaseDate, 'PPP', language)
     }
   }
 
@@ -114,7 +116,7 @@ const renderPart = (req) => {
 
   if (page.data.showModifiedDate && previousReleaseDate) {
     if (moment(modifiedDate).isAfter(previousReleaseDate)) {
-      changeDate = moment(modifiedDate).locale(momentLanguage).format('LLL')
+      changeDate = formatDate(modifiedDate, 'PPpp', language)
     }
   }
 
