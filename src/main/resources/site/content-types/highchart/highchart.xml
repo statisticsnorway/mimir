@@ -216,6 +216,7 @@
 
     <field-set>
       <label>Kilder</label>
+      <items>
         <item-set name="sourceList">
           <occurrences minimum="0" maximum="0"/>
           <items>
@@ -229,6 +230,7 @@
             </input>
           </items>
         </item-set>
+      </items>  
     </field-set>
 
     <field-set>

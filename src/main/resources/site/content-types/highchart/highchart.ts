@@ -261,6 +261,19 @@ export interface Highchart {
    */
   yAxisDecimalPlaces?: "0" | "1" | "2";
 
+
+  sourceList?: Array<{
+    /**
+     * Kildetekst
+     */
+    sourceText?: string;
+
+    /**
+     * Kilde-URL
+     */
+    sourceHref?: string;
+  }>;
+
   /**
    * Fotnote-tekst
    */
