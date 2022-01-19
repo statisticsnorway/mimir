@@ -275,19 +275,4 @@ export interface Highchart {
    * (IKKE BRUK) Kilde-URL
    */
   creditsHref?: string;
-
-  /**
-   * Kilder
-   */
-  sourceList?: Array<{
-    /**
-     * Kildetekst
-     */
-    sourceText?: string;
-
-    /**
-     * Kilde-URL
-     */
-    sourceHref?: string;
-  }>;
 }

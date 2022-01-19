@@ -215,13 +215,7 @@
     </field-set>
 
     <field-set>
-      <label>Fotnoter og kilder</label>
-      <items>
-        <input name="footnoteText" type="TextArea">
-          <label>Fotnote-tekst</label>
-          <help-text>Inntil 3 fotnoter. For å få opphøyd fotnotetall: 1=ALT+251, 2=ALT+253, 3=ALT+252.</help-text>
-        </input>
-
+      <label>Kilder</label>
         <item-set name="sourceList">
           <occurrences minimum="0" maximum="0"/>
           <items>
@@ -235,6 +229,15 @@
             </input>
           </items>
         </item-set>
+    </field-set>
+
+    <field-set>
+      <label>Fotnoter</label>
+      <items>
+        <input name="footnoteText" type="TextArea">
+          <label>Fotnote-tekst</label>
+          <help-text>Inntil 3 fotnoter. For å få opphøyd fotnotetall: 1=ALT+251, 2=ALT+253, 3=ALT+252.</help-text>
+        </input>
       </items>
     </field-set>
 
