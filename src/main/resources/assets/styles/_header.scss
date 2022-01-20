@@ -151,6 +151,16 @@ header.ssb-header-wrapper {
     @include media-breakpoint-down(md){
       flex-direction: column;
     }
+
+    .tabItems {
+      display: flex;
+      list-style: none;
+      padding:0;
+
+      @include media-breakpoint-down(md){
+        flex-direction: column;
+      }
+    }
   }
 
   .tabItem {

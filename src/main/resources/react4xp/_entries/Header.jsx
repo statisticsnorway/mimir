@@ -92,11 +92,15 @@ class Header extends React.Component {
 
   render() {
     const {
-      searchText, logoUrl, logoSrc, logoAltText, mainNavigation, skipToContentText
+      searchText, logoUrl, logoSrc, logoAltText, mainNavigation, skipToContentText, language
     } = this.props
+    const globalLinksLabel = language.code === 'en' ? 'global links' : 'globale lenker'
+    const mainMenuLabel = language.code === 'en' ? 'main menu' : 'hovedmeny'
+    const globalLinksBottomLabel = language.code === 'en' ? 'global links bottom' : 'globale lenker bunn'
+
     return (
       <header className="ssb-header-wrapper">
-        <nav className="global-links">
+        <nav className="global-links" aria-label={globalLinksLabel}>
           <Link className="skip-to-content" href="#content">{skipToContentText}</Link>
           {this.topLinks()}
           {this.languageLinks()}
@@ -110,7 +114,7 @@ class Header extends React.Component {
             {this.menuButtonStatus()}
           </button>
 
-          <div className={this.state.showMainMenuOnMobile ? 'show searchfield' : 'searchfield'}>
+          <div className={this.state.showMainMenuOnMobile ? 'show searchfield' : 'searchfield'} role="search">
             <Input
               id='search_ssb'
               ariaLabel={searchText}
@@ -123,28 +127,31 @@ class Header extends React.Component {
         </div>
         <Divider className="mobileMenuDivider" />
         <div className={this.state.showMainMenuOnMobile ? 'showOnMobile header-content' : 'header-content'}>
-          <nav id="mainMenu" className="ssb-tabs">
-            {mainNavigation.map((topMenuItem, index) => {
-              const menuItemClick = this.toggleSubMenu.bind(this, index)
-              const activeMenuItem = this.state.indexForCurrentActiveMenuItem === index ||
+          <nav id="mainMenu" className="ssb-tabs" aria-label={mainMenuLabel}>
+            <ul className="tabItems">
+              {mainNavigation.map((topMenuItem, index) => {
+                const menuItemClick = this.toggleSubMenu.bind(this, index)
+                const activeMenuItem = this.state.indexForCurrentActiveMenuItem === index ||
                 (topMenuItem.isActive && this.state.indexForCurrentActiveMenuItem === undefined)
-              return (
-                <div key={index} className={`tabItem${activeMenuItem ? ' activeTab' : ''}`}>
-                  <button onClick={menuItemClick} aria-expanded={activeMenuItem ? 'true' : 'false' }>
-                    <span className={ activeMenuItem ? 'active navigation-item' : 'navigation-item'} >
-                      {activeMenuItem && this.state.showSubMenu ? <ChevronDown size="20" /> : <ChevronRight size="20" />}
-                      <span>{topMenuItem.title}</span>
-                    </span>
-                  </button>
-                  <Divider/>
-                  <ul className={this.state.showSubMenu ? 'visible subMenu' : 'subMenu' } aria-hidden={activeMenuItem ? 'false' : 'true' }>
-                    {this.renderSubMenu(topMenuItem, activeMenuItem)}
-                  </ul>
-                </div>
-              )
-            })}
+                return (
+                  <li key={index} className={`tabItem${activeMenuItem ? ' activeTab' : ''}`}>
+                    <button onClick={menuItemClick} aria-expanded={activeMenuItem ? 'true' : 'false' }>
+                      <span className={ activeMenuItem ? 'active navigation-item' : 'navigation-item'} >
+                        {activeMenuItem && this.state.showSubMenu ? <ChevronDown size="20" /> : <ChevronRight size="20" />}
+                        <span>{topMenuItem.title}</span>
+                      </span>
+                    </button>
+                    <Divider/>
+                    <ul className={this.state.showSubMenu ? 'visible subMenu' : 'subMenu' } aria-hidden={activeMenuItem ? 'false' : 'true' }>
+                      {this.renderSubMenu(topMenuItem, activeMenuItem)}
+                    </ul>
+                  </li>
+                )
+              })}
+            </ul>
           </nav>
-          <nav className={this.state.showMainMenuOnMobile ? 'active global-bottom-links' : 'global-bottom-links'}>
+          <nav className={this.state.showMainMenuOnMobile ? 'active global-bottom-links' : 'global-bottom-links'}
+            aria-label={globalLinksBottomLabel}>
             {this.topLinks()}
             {this.languageLinks()}
           </nav>
