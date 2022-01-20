@@ -106,7 +106,7 @@ class Header extends React.Component {
             <img src={logoSrc} alt={logoAltText ? logoAltText : ' '} className="logo" />
           </a>
 
-          <button className="hamburger" onClick={this.toggleMainMenu}>
+          <button className="hamburger" aria-expanded={this.state.showMainMenuOnMobile ? 'true' : 'false'} onClick={this.toggleMainMenu}>
             {this.menuButtonStatus()}
           </button>
 
@@ -130,16 +130,16 @@ class Header extends React.Component {
                 (topMenuItem.isActive && this.state.indexForCurrentActiveMenuItem === undefined)
               return (
                 <div key={index} className={`tabItem${activeMenuItem ? ' activeTab' : ''}`}>
-                  <button onClick={menuItemClick} >
+                  <button onClick={menuItemClick} aria-expanded={activeMenuItem ? 'true' : 'false' }>
                     <span className={ activeMenuItem ? 'active navigation-item' : 'navigation-item'} >
                       {activeMenuItem && this.state.showSubMenu ? <ChevronDown size="20" /> : <ChevronRight size="20" />}
                       <span>{topMenuItem.title}</span>
                     </span>
                   </button>
                   <Divider/>
-                  <ol className={this.state.showSubMenu ? 'visible subMenu' : 'subMenu' }>
+                  <ul className={this.state.showSubMenu ? 'visible subMenu' : 'subMenu' } aria-hidden={activeMenuItem ? 'false' : 'true' }>
                     {this.renderSubMenu(topMenuItem, activeMenuItem)}
-                  </ol>
+                  </ul>
                 </div>
               )
             })}
