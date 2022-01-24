@@ -17,7 +17,7 @@
             <span data-th-text="${showAsTableText}"></span>
           </button>
         </div>
-        <hr class="ssb-divider type-dark mb-3" />
+        <hr class="ssb-divider type-dark mb-3" aria-hidden="true" />
       </div>
       <figure data-th-fragment="graph" class="highcharts-figure mb-0" data-th-classappend="${highchart.hideTitle == true || showDataTableEnabled ? 'hide-title' : ''}" data-th-id="figure- + ${highchart.contentKey}">
         <div data-th-id="highcharts- + ${highchart.contentKey}"
