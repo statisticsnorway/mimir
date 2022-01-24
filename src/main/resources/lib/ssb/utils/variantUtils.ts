@@ -486,7 +486,7 @@ export function getUpcomingReleases(statisticList: Array<StatisticInListing>): A
   const allReleases: Array<Release> = getAllReleases(statisticList)
   const serverOffsetInMs: number = app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
   const serverTime: Date = new Date(new Date().getTime() + serverOffsetInMs)
-  return allReleases.filter((release) => moment(release.publishTime).isAfter(serverTime, 'minute'))
+  return allReleases.filter((release) => moment(release.publishTime).isSameOrAfter(serverTime, 'day'))
 }
 
 export function getPreviousReleases(statisticList: Array<StatisticInListing>): Array<Release> {
