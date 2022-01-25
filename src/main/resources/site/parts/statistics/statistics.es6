@@ -88,6 +88,7 @@ const renderPart = (req) => {
     }
   })
   const draftButtonText = paramShowDraft ? 'Vis publiserte tall' : 'Vis upubliserte tall'
+  const language = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
 
   if (statistic) {
     title = page.language === 'en' && statistic.nameEN && statistic.nameEN !== null ? statistic.nameEN : statistic.name
@@ -96,7 +97,6 @@ const renderPart = (req) => {
     nextReleaseDate = releaseDates.nextRelease[0]
     previousReleaseDate = releaseDates.previousRelease[0]
 
-    const language = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
     if (releaseDates.nextRelease.length > 1 && releaseDates.nextRelease[1] !== '') {
       previewNextRelease = formatDate(releaseDates.nextRelease[1], 'PPP', language)
     }

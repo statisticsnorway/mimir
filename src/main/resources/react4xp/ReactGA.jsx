@@ -9,4 +9,7 @@ export const addGtagForEvent = (GA_TRACKING_ID, action, category, label) => {
     category,
     label
   })
+  ReactGA.set({
+    anonymizeIp: true
+  })
 }
