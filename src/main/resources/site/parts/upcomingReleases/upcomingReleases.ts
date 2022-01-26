@@ -104,7 +104,7 @@ function renderPart(req: Request): React4xpResponse {
       id: r._id,
       name: r.displayName,
       type: contentType,
-      date: moment().locale(currentLanguage).format(),
+      date: moment(date).locale(currentLanguage).format(),
       mainSubject: mainSubject,
       day: formatDate(date, 'd', currentLanguage) as string,
       month: formatDate(date, 'M', currentLanguage) as string,
