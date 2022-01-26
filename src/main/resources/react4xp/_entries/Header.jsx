@@ -96,7 +96,6 @@ class Header extends React.Component {
     } = this.props
     const globalLinksLabel = language.code === 'en' ? 'global links' : 'globale lenker'
     const mainMenuLabel = language.code === 'en' ? 'main menu' : 'hovedmeny'
-    const globalLinksBottomLabel = language.code === 'en' ? 'global links bottom' : 'globale lenker bunn'
 
     return (
       <header className="ssb-header-wrapper">
@@ -151,7 +150,7 @@ class Header extends React.Component {
             </ul>
           </nav>
           <nav className={this.state.showMainMenuOnMobile ? 'active global-bottom-links' : 'global-bottom-links'}
-            aria-label={globalLinksBottomLabel}>
+            aria-label={globalLinksLabel}>
             {this.topLinks()}
             {this.languageLinks()}
           </nav>
