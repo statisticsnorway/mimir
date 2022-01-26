@@ -261,6 +261,19 @@ export interface Highchart {
    */
   yAxisDecimalPlaces?: "0" | "1" | "2";
 
+
+  sourceList?: Array<{
+    /**
+     * Kildetekst
+     */
+    sourceText?: string;
+
+    /**
+     * Kilde-URL
+     */
+    sourceHref?: string;
+  }>;
+
   /**
    * Fotnote-tekst
    */
@@ -275,19 +288,4 @@ export interface Highchart {
    * (IKKE BRUK) Kilde-URL
    */
   creditsHref?: string;
-
-  /**
-   * Kilder
-   */
-  sourceList?: Array<{
-    /**
-     * Kildetekst
-     */
-    sourceText?: string;
-
-    /**
-     * Kilde-URL
-     */
-    sourceHref?: string;
-  }>;
 }
