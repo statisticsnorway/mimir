@@ -100,7 +100,7 @@ class Header extends React.Component {
 
     return (
       <header className="ssb-header-wrapper">
-        <nav className="global-links" aria-label={globalLinksLabel}>
+        <nav className="global-links hideOnMobile" aria-label={globalLinksLabel}>
           <Link className="skip-to-content" href="#content">{skipToContentText}</Link>
           {this.topLinks()}
           {this.languageLinks()}
@@ -114,7 +114,7 @@ class Header extends React.Component {
             {this.menuButtonStatus()}
           </button>
 
-          <div className={this.state.showMainMenuOnMobile ? 'show searchfield' : 'searchfield'} role="search">
+          <div className={this.state.showMainMenuOnMobile ? 'showOnMobile searchfield' : 'hideOnMobile searchfield'} role="search">
             <Input
               id='search_ssb'
               ariaLabel={searchText}
@@ -126,7 +126,7 @@ class Header extends React.Component {
           </div>
         </div>
         <Divider className="mobileMenuDivider" />
-        <div className={this.state.showMainMenuOnMobile ? 'showOnMobile header-content' : 'header-content'}>
+        <div className={this.state.showMainMenuOnMobile ? 'showOnMobile header-content' : 'hideOnMobile header-content'}>
           <nav id="mainMenu" className="ssb-tabs" aria-label={mainMenuLabel}>
             <ul className="tabItems">
               {mainNavigation.map((topMenuItem, index) => {

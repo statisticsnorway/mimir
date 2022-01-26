@@ -83,6 +83,10 @@ header.ssb-header-wrapper {
       max-height: 0;
       transition: max-height 0.3s ease-out;
 
+      &.hideOnMobile {
+        display:none;
+      }
+
       &.showOnMobile {
         height: auto;
         max-height: 1800px;
@@ -136,7 +140,11 @@ header.ssb-header-wrapper {
       transition: all 0.2s ease-out;
       overflow: hidden;
 
-      &.show {
+      &.hideOnMobile {
+        display:none;
+      }
+
+      &.showOnMobile {
         margin: 20px 0;
         max-height: 200px;
         transition: all 0.2s ease-in;
