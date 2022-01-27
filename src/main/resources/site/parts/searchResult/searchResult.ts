@@ -6,6 +6,8 @@ import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { PreparedSearchResult, SolrPrepResultAndTotal } from '../../../lib/ssb/utils/solrUtils'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { Data } from '../../../lib/types/jsonstat-toolkit'
+import { queryNodes } from '../../../lib/ssb/repo/common'
+import { NodeQueryResponse } from 'enonic-types/node'
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   solrSearch
@@ -17,11 +19,6 @@ const {
   pageUrl,
   serviceUrl
 } = __non_webpack_require__('/lib/xp/portal')
-
-const {
-  get,
-  query
-} = __non_webpack_require__('/lib/xp/content')
 
 const {
   renderError
@@ -101,15 +98,12 @@ export function renderPart(req: Request): React4xpResponse {
   }
 
   function bestBet(): string {
-    const result: QueryResponse<Data> = query({
+    const result: NodeQueryResponse = queryNodes('no.ssb.bestbet', 'master', {
       start: 0,
       count: 1,
-      query: "'data.linkedContentId' = '5ffcb5c7-53cb-4c2e-b807-11838eea549e'",
-      contentTypes: [
-        app.name + ':bestbet'
-      ]
-    })
-    log.info(`GLNRBN tester bestbet igjen: ${JSON.stringify(result, null, 2)}`)
+      query: "'data.linkedContentId' = '5ffcb5c7-53cb-4c2e-b807-11838eea549e'"
+    } )
+    log.info(`GLNRBN tester data igjen: ${JSON.stringify(result, null, 2)}`)
 
     return 'yes baby'
   }
