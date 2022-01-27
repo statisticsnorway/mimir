@@ -11,12 +11,13 @@ class Footer extends React.Component {
   renderFooterMenuDesktop(footerNavigation) {
     return footerNavigation.map((topMenuItem, index) => {
       if (topMenuItem && topMenuItem.title) {
+        const listTitle = `footer-link-title-${topMenuItem.title.toLowerCase()}`
         return (
           <div key={index} className="footer-link">
-            <Title size={4} negative>{topMenuItem.title}</Title>
-            <ol>
+            <h3 className="ssb-title negative" id={listTitle}>{topMenuItem.title}</h3>
+            <ul aria-labelledby={listTitle}>
               {this.renderFooterLinkMenu(topMenuItem)}
-            </ol>
+            </ul>
           </div>
         )
       }
@@ -26,11 +27,13 @@ class Footer extends React.Component {
   renderFooterMenuMobile(footerNavigation) {
     return footerNavigation.map((topMenuItem, index) => {
       if (topMenuItem && topMenuItem.title) {
+        const listTitle = `footer-link-title-${topMenuItem.title.toLowerCase()}`
         return (
           <Accordion key={index} header={topMenuItem.title}>
-            <ol>
+            <h3 className="sr-only sr-only-focusable" id={listTitle}>{topMenuItem.title}</h3>
+            <ul aria-labelledby={listTitle}>
               {this.renderFooterLinkMenu(topMenuItem)}
-            </ol>
+            </ul>
           </Accordion>
         )
       }
@@ -112,8 +115,9 @@ class Footer extends React.Component {
 
   render() {
     const {
-      logoUrl, footerNavigation, topButtonText, hiddenFooterText
+      logoUrl, footerNavigation, topButtonText, hiddenFooterText, language
     } = this.props
+    const footerNavigationLabel = language.code === 'en' ? 'footer links' : 'bunnmeny lenker'
     if (logoUrl && footerNavigation && topButtonText) {
       return (
         <div className="ssb-footer-wrapper">
@@ -128,7 +132,7 @@ class Footer extends React.Component {
               </Button>
             </div>
             <div className="footer-content">
-              <nav id="footerMenu">
+              <nav id="footerMenu" aria-label={footerNavigationLabel}>
                 <div className="footer-menu">
                   {this.renderFooterMenuDesktop(footerNavigation)}
                 </div>
@@ -185,7 +189,9 @@ Footer.propTypes = {
   linkedinUrl: PropTypes.string,
   rssUrl: PropTypes.string,
   topButtonText: PropTypes.string,
-  hiddenFooterText: PropTypes.string
+  hiddenFooterText: PropTypes.string,
+  language: PropTypes.string
+
 }
 
 export default (props) => <Footer {...props} />

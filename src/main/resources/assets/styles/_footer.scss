@@ -49,14 +49,14 @@ footer {
       margin-bottom: 10px;
     }
 
-    ol {
+    ul {
       list-style: none;
       margin-bottom: 0;
       padding-left: 0;
     }
 
     li {
-      margin-top: 15px;
+      margin-top: 6px;
     }
 
     @include media-breakpoint-down(md) {
@@ -103,6 +103,11 @@ footer {
     .footer-link {
       display: flex;
       flex-direction: column;
+
+      .ssb-link {
+        min-width: 44px;
+        padding: 9px 4px 9px 2px;
+      }
     }
 
     &.showOnMobile {
@@ -169,12 +174,16 @@ footer {
 
     .links-left {
       display: flex;
+
+      .ssb-link {
+        padding: 11px 4px 11px 2px;
+      }
     }
 
     .social-links {
 
       > * {
-        margin-left: 20px;
+        margin-left: 12px;
       }
 
       @include media-breakpoint-down(md) {
@@ -188,6 +197,10 @@ footer {
           margin-left: 0;
         }
 
+      }
+
+      .ssb-link {
+        padding: 8px;
       }
     }
 
