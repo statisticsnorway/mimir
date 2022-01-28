@@ -6,8 +6,8 @@ import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { PreparedSearchResult, SolrPrepResultAndTotal } from '../../../lib/ssb/utils/solrUtils'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { Data } from '../../../lib/types/jsonstat-toolkit'
-import { queryNodes } from '../../../lib/ssb/repo/common'
-import { NodeQueryResponse } from 'enonic-types/node'
+import { queryNodes, getNode } from '../../../lib/ssb/repo/common'
+import { NodeQueryResponse, RepoNode } from 'enonic-types/node'
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   solrSearch
@@ -101,14 +101,45 @@ export function renderPart(req: Request): React4xpResponse {
     const result: NodeQueryResponse = queryNodes('no.ssb.bestbet', 'master', {
       start: 0,
       count: 1,
-      query: "'data.linkedContentId' = '5ffcb5c7-53cb-4c2e-b807-11838eea549e'"
+      // query: "'data.linkedContentId' = '5ffcb5c7-53cb-4c2e-b807-11838eea549e'"
+      // query: "fulltext('data.searchWords', 'jul')"
+      // query: "data.searchWords LIKE '*'"
+      query: "fulltext('data.searchWords', 'fisk test jul', 'OR')"
+      // query: '*'
     } )
     log.info(`GLNRBN tester data igjen: ${JSON.stringify(result, null, 2)}`)
 
-    return 'yes baby'
+    const bet: ReadonlyArray< BestBet> | BestBet | null = getNode('no.ssb.bestbet', 'master', result.hits[0].id)
+    log.info(`GLNRBN henter ut en slik node: ${JSON.stringify(bet, null, 2)}`)
+
+    let firstBet: BestBet| null
+    if (bet && bet.constructor === Array) {
+      firstBet = bet[0]
+    } if (bet && !(bet.constructor === Array)) {
+      firstBet = bet
+    } else firstBet = null
+
+    let bestestBet: PreparedSearchResult
+    if (firstBet && (firstBet.constructor !== Array)) {
+      bestestBet = {
+        url: firstBet.data ? firstBet.data.linkedContentHref : '',
+        contentType: 'type',
+        mainSubject: 'subject',
+        preface: 'en liten ingress',
+        publishDate: '1234',
+        publishDateHuman: 'yesteray',
+        title: 'Yes indeed',
+        secondaryMainSubject: 'another subject'
+      }
+      return JSON.stringify(bestestBet, null, 2)
+    } else return ''
+  }
+  try {
+    log.info(`GLNRBN tester bestbet igjen: ${bestBet()}`)
+  } catch (error) {
+    log.info('GLNRBN error: ' + error)
   }
 
-  log.info(`GLNRBN tester bestbet igjen: ${bestBet()}`)
 
   /* query solr */
   const solrResult: SolrPrepResultAndTotal = sanitizedTerm ?
@@ -157,6 +188,14 @@ export function renderPart(req: Request): React4xpResponse {
   return React4xp.render('site/parts/searchResult/searchResultView', props, req)
 }
 
+  interface BestBet extends RepoNode {
+    data: {
+      linkedContentId: string;
+      linkedContentTitle: string;
+      linkedContentHref: string;
+      searchWords: Array<string>;
+    };
+  }
 
 interface ReactProps {
   hits: Array<PreparedSearchResult>;
