@@ -216,10 +216,12 @@ export function setupCronJobs(): void {
     name: 'clear cache',
     cron: clearCacheCron,
     callback: () => {
+      clearPartFromPartCache('kpiCalculator')
+      clearPartFromPartCache('pifCalculator')
+      clearPartFromPartCache('bkibolCalculator')
+      clearPartFromPartCache('husleieCalculator')
       clearPartFromPartCache('omStatistikken')
       clearPartFromPartCache('releasedStatistics')
-      clearPartFromPartCache('kpiCalculator')
-      clearPartFromPartCache('husleieCalculator')
       clearPartFromPartCache('upcomingReleases')
       clearPartFromPartCache('archiveAllPublications-nb')
       clearPartFromPartCache('archiveAllPublications-en')
