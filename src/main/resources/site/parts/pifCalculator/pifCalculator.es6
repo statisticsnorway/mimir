@@ -107,6 +107,7 @@ function getPifCalculatorComponent(page) {
     pifCalculatorId: pifCalculator.react4xpId
   })
   return {
+    component: pifCalculator,
     body: pifCalculator.renderBody({
       body
     })

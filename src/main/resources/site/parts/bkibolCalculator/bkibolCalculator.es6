@@ -106,6 +106,7 @@ function getBkibolCalculatorComponent(page) {
     bkibolCalculatorId: bkibolCalculator.react4xpId
   })
   return {
+    component: bkibolCalculator,
     body: bkibolCalculator.renderBody({
       body
     })
