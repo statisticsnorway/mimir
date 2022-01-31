@@ -14,7 +14,7 @@ class Footer extends React.Component {
         const listTitle = `footer-link-title-${topMenuItem.title.toLowerCase()}`
         return (
           <div key={index} className="footer-link">
-            <h4 className="ssb-title negative" id={listTitle}>{topMenuItem.title}</h4>
+            <h3 className="ssb-title negative" id={listTitle}>{topMenuItem.title}</h3>
             <ul aria-labelledby={listTitle}>
               {this.renderFooterLinkMenu(topMenuItem)}
             </ul>
@@ -30,7 +30,7 @@ class Footer extends React.Component {
         const listTitle = `footer-link-title-${topMenuItem.title.toLowerCase()}`
         return (
           <Accordion key={index} header={topMenuItem.title}>
-            <h4 className="sr-only sr-only-focusable" id={listTitle}>{topMenuItem.title}</h4>
+            <h3 className="sr-only sr-only-focusable" id={listTitle}>{topMenuItem.title}</h3>
             <ul aria-labelledby={listTitle}>
               {this.renderFooterLinkMenu(topMenuItem)}
             </ul>

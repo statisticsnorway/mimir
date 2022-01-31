@@ -113,6 +113,11 @@ footer {
         min-width: 44px;
         padding: 9px 4px 9px 2px;
       }
+
+      .ssb-title {
+        font-size: 16px;
+        font-family: Roboto;
+      }
     }
 
     &.showOnMobile {
@@ -160,6 +165,12 @@ footer {
 
       .ssb-link {
         padding: 11px 4px 11px 2px;
+        border: none;
+
+        .link-text {
+          border-bottom: 1px solid $ssb-green-2;
+          padding-bottom: 2px;
+        }
       }
     }
 
@@ -183,15 +194,25 @@ footer {
 
       .ssb-link {
         padding: 11px 4px 11px 2px;
+        border: none;
+
+        .link-text {
+          border-bottom: 1px solid $ssb-green-2;
+          padding-bottom: 2px;
+        }
       }
     }
 
     .links-left {
       display: flex;
+      padding-top: 10px;
+
+      @include media-breakpoint-down(md) {
+        padding-top: 0;
+      }
     }
 
     .social-links {
-
       > * {
         margin-left: 12px;
       }
@@ -210,7 +231,7 @@ footer {
       }
 
       .ssb-link {
-        padding: 8px;
+        padding: 11px 4px 11px 2px;
       }
     }
 
