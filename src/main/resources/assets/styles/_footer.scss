@@ -93,6 +93,10 @@ footer {
         .ssb-link {
           min-width: 44px;
           padding: 9px 4px 9px 2px;
+
+          .icon-wrapper {
+            margin-top: 3px;
+          }
         }
       }
 
@@ -108,6 +112,10 @@ footer {
     .footer-link {
       display: flex;
       flex-direction: column;
+
+      .icon-wrapper {
+        margin-top: 3px;
+      }
 
       .ssb-link {
         min-width: 44px;
