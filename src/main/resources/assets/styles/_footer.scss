@@ -213,7 +213,7 @@ footer {
 
     .links-left {
       display: flex;
-      padding-top: 10px;
+      padding-top: 5px;
 
       @include media-breakpoint-down(md) {
         padding-top: 0;
@@ -239,7 +239,7 @@ footer {
       }
 
       .ssb-link {
-        padding: 11px 4px 11px 2px;
+        padding: 8px;
       }
     }
 
