@@ -11,7 +11,8 @@ class Footer extends React.Component {
   renderFooterMenuDesktop(footerNavigation) {
     return footerNavigation.map((topMenuItem, index) => {
       if (topMenuItem && topMenuItem.title) {
-        const listTitle = `footer-link-title-${topMenuItem.title.toLowerCase()}`
+        const titleId = topMenuItem.title.replace(' ', '-').toLowerCase()
+        const listTitle = `footer-link-title-${titleId}`
         return (
           <div key={index} className="footer-link">
             <h3 className="ssb-title negative" id={listTitle}>{topMenuItem.title}</h3>
@@ -27,7 +28,8 @@ class Footer extends React.Component {
   renderFooterMenuMobile(footerNavigation) {
     return footerNavigation.map((topMenuItem, index) => {
       if (topMenuItem && topMenuItem.title) {
-        const listTitle = `footer-link-title-${topMenuItem.title.toLowerCase()}`
+        const titleId = topMenuItem.title.replace(' ', '-').toLowerCase()
+        const listTitle = `footer-link-title-${titleId}`
         return (
           <Accordion key={index} header={topMenuItem.title}>
             <h3 className="sr-only sr-only-focusable" id={listTitle}>{topMenuItem.title}</h3>
