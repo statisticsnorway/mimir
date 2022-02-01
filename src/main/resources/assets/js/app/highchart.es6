@@ -29,13 +29,13 @@ const EMPTY_CONFIG = {
 const createSetOptions = {
   lang: {
     accessibility: {
-      chartContainerLabel: '{title} Interaktiv graf',
+      chartContainerLabel: 'Interaktiv figur',
       exporting: {
         chartMenuLabel: 'Last ned graf',
         menuButtonLabel: 'Velg format for å laste ned {chartTitle}'
       },
       screenReaderSection: {
-        beforeRegionLabel: 'Skjermleser-informasjon for diagram',
+        beforeRegionLabel: 'Skjermleser-informasjon for figur',
         endOfChartMarker: ''
       },
       legend: {
