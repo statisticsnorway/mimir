@@ -35,7 +35,7 @@ const createSetOptions = {
         menuButtonLabel: 'Velg format for å laste ned {chartTitle}'
       },
       screenReaderSection: {
-        beforeRegionLabel: 'Diagram skjermleser-informasjon for {chartTitle}.',
+        beforeRegionLabel: 'Skjermleser-informasjon for diagram',
         endOfChartMarker: ''
       },
       legend: {
