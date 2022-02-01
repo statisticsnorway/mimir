@@ -180,7 +180,8 @@ exports.get = function(req: Request): Response {
     if (footerContent) {
       const footerComponent: React4xpObject = new React4xp('Footer')
         .setProps({
-          ...footerContent
+          ...footerContent,
+          language: language
         })
         .setId('footer')
       return {
