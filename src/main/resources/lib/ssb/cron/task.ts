@@ -2,7 +2,7 @@ import { Content } from 'enonic-types/content'
 import { CreateOrUpdateStatus } from '../dataset/dataset'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { RSSFilterLogData } from './rss'
-import { completelyClearCache } from '../cache/cache'
+import { completelyClearPartCache } from '../cache/partCache'
 
 const {
   splitEvery
@@ -25,9 +25,6 @@ const {
   completeJobLog,
   JOB_STATUS_COMPLETE
 } = __non_webpack_require__('/lib/ssb/repo/job')
-const {
-  cacheLog
-} = __non_webpack_require__('/lib/ssb/utils/serverLog')
 
 export function refreshQueriesAsync(
   httpQueries: Array<Content<DataSource>>,
@@ -74,20 +71,6 @@ export function refreshQueriesAsync(
               }))
             })
           }
-        })
-        cacheLog('Dataset update completed, clearing parts cache')
-        completelyClearCache({
-          clearFilterCache: false,
-          clearMenuCache: false,
-          clearRelatedArticlesCache: false,
-          clearRelatedFactPageCache: false,
-          clearDatasetRepoCache: false,
-          clearParsedMunicipalityCache: false,
-          clearMunicipalityWithCodeCache: false,
-          clearMunicipalityWithNameCache: false,
-          clearParentTypeCache: false,
-          clearSubjectCache: false,
-          clearPartCache: true
         })
       }
     })

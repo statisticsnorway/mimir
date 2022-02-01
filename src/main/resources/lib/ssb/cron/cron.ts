@@ -7,6 +7,8 @@ import { StatRegRefreshResult } from '../repo/statreg'
 import { TaskMapper } from 'enonic-types/cron'
 import { RSSFilter } from './rss'
 import { ScheduledJob } from 'enonic-types/scheduler'
+import { cacheLog } from '../utils/serverLog'
+import { completelyClearPartCache } from '../cache/partCache'
 
 const {
   clearPartFromPartCache
@@ -170,6 +172,18 @@ export function setupCronJobs(): void {
     name: 'Data from datasource endpoints',
     cron: dataqueryCron,
     callback: () => runOnMasterOnly(job),
+    context: cronContext
+  })
+
+  // clear part cache cron
+  const clearPartCacheCron: string = app.config && app.config['ssb.cron.clearPartCacheCron'] ? app.config['ssb.cron.clearPartCacheCron'] : '15 15 * * *'
+  schedule({
+    name: 'Clear part cache',
+    cron: clearPartCacheCron,
+    callback: () => {
+      completelyClearPartCache('draft')
+      completelyClearPartCache('master')
+    },
     context: cronContext
   })
 
