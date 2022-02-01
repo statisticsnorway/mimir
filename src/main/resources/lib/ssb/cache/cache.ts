@@ -461,7 +461,7 @@ function completelyClearParentTypeCache(): void {
   parentTypeCache.clear()
 }
 
-function completelyClearCache(options: CompletelyClearCacheOptions): void {
+export function completelyClearCache(options: CompletelyClearCacheOptions): void {
   if (options.clearFilterCache) {
     completelyClearFilterCache('master')
     completelyClearFilterCache('draft')
