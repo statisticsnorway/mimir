@@ -16,6 +16,11 @@ const {
 const {
   localize
 } = __non_webpack_require__('/lib/xp/i18n')
+const {
+  data: {
+    forceArray
+  }
+} = __non_webpack_require__('/lib/util')
 
 export function getFooterContent(language: Language): FooterContent | undefined {
   if (language.footerId === undefined || language.footerId === null) {
@@ -40,7 +45,8 @@ export function getFooterContent(language: Language): FooterContent | undefined 
       twitterUrl: footerContent.data.twitterUrl,
       linkedinUrl: footerContent.data.linkedinUrl,
       rssUrl: footerContent.data.rssUrl,
-      globalLinks: footerContent.data.globalLinks && footerContent.data.globalLinks.length > 0 ? parseGlobalLinks(footerContent.data.globalLinks) : [],
+      globalLinks: footerContent.data.globalLinks && forceArray(footerContent.data.globalLinks).length > 0 ?
+        parseGlobalLinks(forceArray(footerContent.data.globalLinks)) : [],
       footerNavigation: footerContent.data.footerContentId ? createMenuTree(footerContent.data.footerContentId) : [],
       topButtonText: localize({
         key: 'toTheTop',
