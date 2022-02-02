@@ -39,7 +39,7 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
     description: highchartData.description,
     screenReaderSection: {
       // eslint-disable-next-line max-len
-      beforeChartFormat: '<div>{typeDescription}</div><div>{chartLongdesc}</div><div>{playAsSoundButton}</div><div>{viewTableButton}</div><div>{xAxisDescription}</div><div>{yAxisDescription}</div><div>{annotationsTitle}{annotationsList}</div>'
+      beforeChartFormat: '<div>{chartLongdesc}</div><div>{typeDescription}</div><div>{playAsSoundButton}</div><div>{xAxisDescription}</div><div>{yAxisDescription}</div><div>{annotationsTitle}{annotationsList}</div><div>{viewTableButton}</div>'
     }
   },
   chart: {

@@ -29,7 +29,7 @@ const EMPTY_CONFIG = {
 const createSetOptions = {
   lang: {
     accessibility: {
-      chartContainerLabel: 'Interaktiv figur',
+      chartContainerLabel: 'Interaktiv figur {title}',
       exporting: {
         chartMenuLabel: 'Last ned graf',
         menuButtonLabel: 'Velg format for å laste ned {chartTitle}'
