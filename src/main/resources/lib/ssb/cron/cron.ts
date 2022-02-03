@@ -7,8 +7,6 @@ import { StatRegRefreshResult } from '../repo/statreg'
 import { TaskMapper } from 'enonic-types/cron'
 import { RSSFilter } from './rss'
 import { ScheduledJob } from 'enonic-types/scheduler'
-import { cacheLog } from '../utils/serverLog'
-import { completelyClearPartCache } from '../cache/partCache'
 
 const {
   clearPartFromPartCache
@@ -175,14 +173,18 @@ export function setupCronJobs(): void {
     context: cronContext
   })
 
-  // clear part cache cron
-  const clearPartCacheCron: string = app.config && app.config['ssb.cron.clearPartCacheCron'] ? app.config['ssb.cron.clearPartCacheCron'] : '15 15 * * *'
+  // clear calculator parts cache cron
+  const clearCalculatorPartsCacheCron: string =
+    app.config && app.config['ssb.cron.clearCalculatorCache'] ? app.config['ssb.cron.clearCalculatorCache'] : '15 07 * * *'
+
   schedule({
-    name: 'Clear part cache',
-    cron: clearPartCacheCron,
+    name: 'Clear calculator parts cache',
+    cron: clearCalculatorPartsCacheCron,
     callback: () => {
-      completelyClearPartCache('draft')
-      completelyClearPartCache('master')
+      clearPartFromPartCache('kpiCalculator')
+      clearPartFromPartCache('pifCalculator')
+      clearPartFromPartCache('bkibolCalculator')
+      clearPartFromPartCache('husleieCalculator')
     },
     context: cronContext
   })

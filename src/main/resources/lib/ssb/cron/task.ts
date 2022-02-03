@@ -2,7 +2,6 @@ import { Content } from 'enonic-types/content'
 import { CreateOrUpdateStatus } from '../dataset/dataset'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { RSSFilterLogData } from './rss'
-import { completelyClearPartCache } from '../cache/partCache'
 
 const {
   splitEvery
