@@ -283,7 +283,7 @@ export function filterOnComingReleases(releases: Array<Release>, count: number, 
   const releaseArray: Array<Release> = []
   const day: Date = startDay ? new Date(startDay) : new Date()
   for (let i: number = 0; i < count + 1; i++) {
-    day.setDate(day.getDate() + 1)
+    day.setDate(day.getDate() + i)
     const releasesOnThisDay: Array<Release> = releases.filter((release: Release) => {
       return checkReleaseDateToday(release, day)
     })
@@ -486,7 +486,7 @@ export function getUpcomingReleases(statisticList: Array<StatisticInListing>): A
   const allReleases: Array<Release> = getAllReleases(statisticList)
   const serverOffsetInMs: number = app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
   const serverTime: Date = new Date(new Date().getTime() + serverOffsetInMs)
-  return allReleases.filter((release) => moment(release.publishTime).isSameOrAfter(serverTime, 'day'))
+  return allReleases.filter((release) => moment(release.publishTime).isAfter(serverTime, 'minute'))
 }
 
 export function getPreviousReleases(statisticList: Array<StatisticInListing>): Array<Release> {
