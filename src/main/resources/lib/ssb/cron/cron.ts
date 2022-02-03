@@ -173,6 +173,22 @@ export function setupCronJobs(): void {
     context: cronContext
   })
 
+  // clear calculator parts cache cron
+  const clearCalculatorPartsCacheCron: string =
+    app.config && app.config['ssb.cron.clearCalculatorCache'] ? app.config['ssb.cron.clearCalculatorCache'] : '15 07 * * *'
+
+  schedule({
+    name: 'Clear calculator parts cache',
+    cron: clearCalculatorPartsCacheCron,
+    callback: () => {
+      clearPartFromPartCache('kpiCalculator')
+      clearPartFromPartCache('pifCalculator')
+      clearPartFromPartCache('bkibolCalculator')
+      clearPartFromPartCache('husleieCalculator')
+    },
+    context: cronContext
+  })
+
   // and setup a cron for periodic executions in the future
   const statregCron: string = app.config && app.config['ssb.cron.statreg'] ? app.config['ssb.cron.statreg'] : '30 14 * * *'
   schedule({
@@ -216,10 +232,12 @@ export function setupCronJobs(): void {
     name: 'clear cache',
     cron: clearCacheCron,
     callback: () => {
+      clearPartFromPartCache('kpiCalculator')
+      clearPartFromPartCache('pifCalculator')
+      clearPartFromPartCache('bkibolCalculator')
+      clearPartFromPartCache('husleieCalculator')
       clearPartFromPartCache('omStatistikken')
       clearPartFromPartCache('releasedStatistics')
-      clearPartFromPartCache('kpiCalculator')
-      clearPartFromPartCache('husleieCalculator')
       clearPartFromPartCache('upcomingReleases')
       clearPartFromPartCache('archiveAllPublications-nb')
       clearPartFromPartCache('archiveAllPublications-en')

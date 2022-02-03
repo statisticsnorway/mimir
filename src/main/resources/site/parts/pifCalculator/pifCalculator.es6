@@ -38,6 +38,23 @@ exports.preview = function(req, id) {
 
 function renderPart(req) {
   const page = getContent()
+  let pifCalculator
+  if (req.mode === 'edit') {
+    pifCalculator = getPifCalculatorComponent(page)
+  } else {
+    pifCalculator = fromPartCache(req, `${page._id}-pifCalculator`, () => {
+      return getPifCalculatorComponent(page)
+    })
+  }
+
+  const pageContributions = pifCalculator.component.renderPageContributions({})
+  return {
+    body: pifCalculator.body,
+    pageContributions
+  }
+}
+
+function getPifCalculatorComponent(page) {
   const part = getComponent()
   const language = getLanguage(page)
   const phrases = language.phrases
@@ -90,11 +107,9 @@ function renderPart(req) {
     pifCalculatorId: pifCalculator.react4xpId
   })
   return {
+    component: pifCalculator,
     body: pifCalculator.renderBody({
       body
-    }),
-    pageContributions: pifCalculator.renderPageContributions({
-      clientRender: req.mode !== 'edit'
     })
   }
 }
