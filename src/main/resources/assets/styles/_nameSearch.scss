@@ -43,9 +43,36 @@
   .interesting-facts {
     list-style: none;
   }
+
   .name-search-name {
     text-transform: capitalize;
   }
+
+  .name-search-link {
+    .accordion-body {
+      padding:0;
+
+      .name-search-graph {
+        padding:0;
+      }
+    }
+
+    &.desktopFrontpage {
+      padding-left: 20px;
+      padding-right: 20px;
+
+      .accordion-body {
+        padding:0;
+      }
+    }
+
+    @include media-breakpoint-down(md) {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+
+  }
+  
 
   @include media-breakpoint-up(lg) {
     .name-search-input {
@@ -66,7 +93,7 @@
     margin-top: 0px;
 
     .name-search-input {
-      padding: 65px 20px 40px;
+      padding: 65px 10px 40px;
 
       .ssb-btn.primary-btn {
         width: 100%;
@@ -77,7 +104,7 @@
     }
 
     .name-search-result {
-      padding: 40px 20px 40px;
+      padding: 40px 10px 40px;
     }
   }
 }

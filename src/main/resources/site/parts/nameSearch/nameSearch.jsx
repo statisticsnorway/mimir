@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { Button, Divider, Input, Link, Title } from '@statisticsnorway/ssb-component-library'
+import { Accordion, Button, Divider, Input, Link, Title } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import { Col, Container, Row, Form } from 'react-bootstrap'
 import axios from 'axios'
@@ -125,7 +125,8 @@ function NameSearch(props) {
           </Row>
           { result.response && renderMainResult(result.response.docs) }
           { result.response && renderSubResult(result.response.docs) }
-          {!!result.nameGraph && renderGraphs(desktop, searchedTerm)}
+          {/* {!!result.nameGraph && renderGraphs(desktop, searchedTerm)} */}
+          {!!result.nameGraph && renderGraphLink(desktop)}
           <Row>
             <Col className="md-6">
               <Button className="close-button" onClick={() => closeResult()} type="button"> <X size="18"/> Lukk</Button>
@@ -269,6 +270,14 @@ function NameSearch(props) {
       })
   }
 
+  function renderGraphLink(desktop) {
+    return (
+      <Accordion className={`name-search-link ${desktop && props.frontPage ? 'desktopFrontpage' : ''}`} header="Navnegraf">
+        {renderGraphs(desktop, searchedTerm)}
+      </Accordion>
+    )
+  }
+
   function renderGraphs(desktop, nameForRender) {
     !nameGraphData && !loadingGraph && fetchGraph(nameForRender)
 
@@ -380,8 +389,8 @@ function NameSearch(props) {
       }
 
       return (
-        <Row className='name-search-graph pt-4 px-0 mx-0'>
-          <Col className={desktop ? (frontPage && desktop ? 'px-4' : 'p-0') : ''}>
+        <Row className='name-search-graph py-3 px-0 mx-0'>
+          <Col className={desktop ? (frontPage && desktop ? 'px-2' : 'p-0') : 'p-0'}>
             <div>
               <HighchartsReact
                 highcharts={Highcharts}
