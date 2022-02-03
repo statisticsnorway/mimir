@@ -61,8 +61,7 @@ header.ssb-header-wrapper {
       align-items: center;
     }
     @include media-breakpoint-down(sm) {
-      padding: 0 20px;
-
+      padding: 0 20px 20px;
     }
   }
 
@@ -193,12 +192,15 @@ header.ssb-header-wrapper {
             stroke: $ssb-white;
           }
         }
+        &:focus {
+          outline: $ssb-purple-3 solid 2px;
+          // outline-offset: 2px;        
+        }
       }
     }
 
     @include media-breakpoint-down(md){
-      border-bottom: 1px solid $ssb-dark-2;
-      padding: 0 20px;
+      // border-bottom: 1px solid $ssb-dark-2;
       transition: max-height 0.3s ease-in;
       max-height: 70px;
 
@@ -218,17 +220,15 @@ header.ssb-header-wrapper {
     button {
       background: transparent;
       border: 0 none;
+      border-bottom: $ssb-dark-2 1px solid;
       padding: 0;
-      &:focus {
-        outline: 0 none;
-      }
 
       @include media-breakpoint-down(md) {
         width: 100%;
+        padding: 0 20px;
       }
 
       &:focus {
-
         .navigation-item:before {
           height: 4px;
           background: black;
