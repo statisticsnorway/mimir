@@ -272,7 +272,10 @@ function NameSearch(props) {
 
   function renderGraphLink(desktop) {
     return (
-      <Accordion className={`name-search-link ${desktop && props.frontPage ? 'desktopFrontpage' : ''}`} header="Navnegraf">
+      <Accordion
+        className={`name-search-link ${desktop && props.frontPage ? 'desktopFrontpage' : ''}`}
+        header={props.phrases.historicalTrend}
+        subHeader={props.phrases.chart}>
         {renderGraphs(desktop, searchedTerm)}
       </Accordion>
     )
@@ -390,7 +393,7 @@ function NameSearch(props) {
 
       return (
         <Row className='name-search-graph py-3 px-0 mx-0'>
-          <Col className={desktop ? (frontPage && desktop ? 'px-2' : 'p-0') : 'p-0'}>
+          <Col className="p-0">
             <div>
               <HighchartsReact
                 highcharts={Highcharts}
@@ -474,6 +477,8 @@ NameSearch.propTypes = {
     xAxis: PropTypes.string,
     graphHeader: PropTypes.string,
     loadingGraph: PropTypes.string,
+    historicalTrend: PropTypes.string,
+    chart: PropTypes.string,
     women: PropTypes.string,
     men: PropTypes.string,
     types: PropTypes.shape({
