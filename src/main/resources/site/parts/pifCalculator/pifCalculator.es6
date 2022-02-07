@@ -17,6 +17,9 @@ const {
 const {
   getCalculatorConfig, getPifDataset
 } = __non_webpack_require__('/lib/ssb/dataset/calculator')
+const {
+  fromPartCache
+} = __non_webpack_require__('/lib/ssb/cache/partCache')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 const view = resolve('./pifCalculator.html')
 
