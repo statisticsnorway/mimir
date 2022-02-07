@@ -125,7 +125,6 @@ function NameSearch(props) {
           </Row>
           { result.response && renderMainResult(result.response.docs) }
           { result.response && renderSubResult(result.response.docs) }
-          {/* {!!result.nameGraph && renderGraphs(desktop, searchedTerm)} */}
           {!!result.nameGraph && renderGraphLink(desktop)}
           <Row>
             <Col className="md-6">
@@ -273,7 +272,7 @@ function NameSearch(props) {
   function renderGraphLink(desktop) {
     return (
       <Accordion
-        className={`name-search-link ${desktop && props.frontPage ? 'desktopFrontpage' : ''}`}
+        className="name-search-link"
         header={props.phrases.historicalTrend}
         subHeader={props.phrases.chart}>
         {renderGraphs(desktop, searchedTerm)}

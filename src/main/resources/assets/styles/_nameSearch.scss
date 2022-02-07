@@ -51,25 +51,12 @@
   .name-search-link {
     .accordion-body {
       padding:0;
-
-      .name-search-graph {
-        padding:0;
-      }
-    }
-
-    &.desktopFrontpage {
-      padding-left: 20px;
-      padding-right: 20px;
-
-      .accordion-body {
-        padding:0;
-      }
     }
 
     @include media-breakpoint-down(md) {
       padding-left: 10px;
       padding-right: 10px;
-    }
+    } 
 
   }
   
