@@ -91,13 +91,20 @@ header.ssb-header-wrapper {
   }
 }
 
-  .logo {
-    width: 248px;
-    height: 50px;
+  #header-logo {
+      &:focus {
+        outline: $ssb-purple-3 solid 2px;
+        outline-offset: 2px;
+      }
 
-    @include media-breakpoint-down(md) {
-      width: 197px;
-      height: auto;
+    .logo {
+      width: 248px;
+      height: 50px;
+
+      @include media-breakpoint-down(md) {
+        width: 197px;
+        height: auto;
+      }
     }
   }
 
