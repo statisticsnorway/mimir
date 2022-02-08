@@ -175,7 +175,7 @@ header.ssb-header-wrapper {
       padding: 0;
       margin-bottom: 0;
 
-      @include media-breakpoint-down(md){
+      @include media-breakpoint-down(md){ 
         flex-direction: column;
       }
     }
@@ -198,7 +198,7 @@ header.ssb-header-wrapper {
         .icon-wrapper svg * {
           stroke: $ssb-green-4;
         }
-        &:hover {
+        &:hover, &:focus {
           svg * {
             stroke: $ssb-white;
           }
@@ -279,7 +279,6 @@ header.ssb-header-wrapper {
           display: inline;
           color: $ssb-green-3;
         }
-
       }
 
       span {
@@ -339,7 +338,7 @@ header.ssb-header-wrapper {
             margin: 2px 0 0;
           }
 
-          &:hover {
+          &:hover, &:focus {
             .link-text{
               color: white;
             }
