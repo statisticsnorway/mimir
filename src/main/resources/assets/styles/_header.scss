@@ -58,10 +58,8 @@ header.ssb-header-wrapper {
     width: 100%;
     padding: 0;
     @include media-breakpoint-down(md){
-      align-items: center;
-    }
-    @include media-breakpoint-down(sm) {
       padding: 0 20px 20px;
+      align-items: center;
     }
   }
 
@@ -74,7 +72,6 @@ header.ssb-header-wrapper {
 
   .header-content {
     margin-top: 14px;
-
 
     @include media-breakpoint-down(md){
       margin-top: 0;
@@ -91,8 +88,8 @@ header.ssb-header-wrapper {
         max-height: 1800px;
         transition: max-height 0.3s ease-in;
       }
-    }
   }
+}
 
   .logo {
     width: 248px;
@@ -144,7 +141,7 @@ header.ssb-header-wrapper {
       }
 
       &.showOnMobile {
-        margin: 20px 0;
+        margin-top: 20px;
         max-height: 200px;
         transition: all 0.2s ease-in;
       }
@@ -162,7 +159,8 @@ header.ssb-header-wrapper {
     .tabItems {
       display: flex;
       list-style: none;
-      padding:0;
+      padding: 0;
+      margin-bottom: 0;
 
       @include media-breakpoint-down(md){
         flex-direction: column;
@@ -175,6 +173,14 @@ header.ssb-header-wrapper {
     overflow: hidden;
 
     &.activeTab {
+      @include media-breakpoint-down(md) {
+        border-bottom: $ssb-dark-2 1px solid;
+
+        button {
+          border-bottom: 0;
+        }
+      }
+
       .subMenu li a.ssb-link.with-icon {
         .link-text {
           color: $ssb-dark-6;
@@ -192,15 +198,10 @@ header.ssb-header-wrapper {
             stroke: $ssb-white;
           }
         }
-        &:focus {
-          outline: $ssb-purple-3 solid 2px;
-          // outline-offset: 2px;        
-        }
       }
     }
 
     @include media-breakpoint-down(md){
-      // border-bottom: 1px solid $ssb-dark-2;
       transition: max-height 0.3s ease-in;
       max-height: 70px;
 
@@ -220,12 +221,20 @@ header.ssb-header-wrapper {
     button {
       background: transparent;
       border: 0 none;
-      border-bottom: $ssb-dark-2 1px solid;
       padding: 0;
+
+      &:focus {
+        outline: 0 none;
+      }
 
       @include media-breakpoint-down(md) {
         width: 100%;
         padding: 0 20px;
+        border-bottom: $ssb-dark-2 1px solid;
+        
+        &:focus {
+          outline: $ssb-purple-3 solid 2px;
+        }
       }
 
       &:focus {
@@ -242,7 +251,7 @@ header.ssb-header-wrapper {
 
     button .navigation-item {
       display: flex;
-      height: 60px;
+      height: 66px;
       text-align: left;
       align-items: center;
       margin-right: 30px;
@@ -301,7 +310,8 @@ header.ssb-header-wrapper {
         margin: 20px 0;
         padding-right: 8px;
         @include media-breakpoint-down(md) {
-          margin: 5px 0 20px;
+          margin-top: 5px;
+          padding: 0 20px;
         }
         a.ssb-link.with-icon {
           word-wrap: break-word;

@@ -140,6 +140,7 @@ class Header extends React.Component {
                         <span>{topMenuItem.title}</span>
                       </span>
                     </button>
+                    <Divider />
                     <ul className={this.state.showSubMenu ? 'visible subMenu' : 'subMenu' } aria-hidden={activeMenuItem ? 'false' : 'true' }>
                       {this.renderSubMenu(topMenuItem, activeMenuItem)}
                     </ul>
