@@ -124,7 +124,7 @@ class Header extends React.Component {
             />
           </div>
         </div>
-        <Divider className="mobileMenuDivider" />
+        <Divider className={this.state.showMainMenuOnMobile ? 'd-none' : 'mobileMenuDivider'} />
         <div className={this.state.showMainMenuOnMobile ? 'showOnMobile header-content' : 'hideOnMobile header-content'}>
           <nav id="mainMenu" className="ssb-tabs" aria-label={mainMenuLabel}>
             <ul className="tabItems">
