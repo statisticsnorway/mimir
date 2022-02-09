@@ -161,6 +161,13 @@ header.ssb-header-wrapper {
       .ssb-input {
         max-width: none;
       }
+
+      // Focus marker gets cut out in the mobile version; this is a workaround
+      .icon-wrapper:focus {
+        outline: $ssb-purple-3 solid 2px;
+        outline-offset: -2px;
+        border: white solid 3px;
+      }
     }
   }
 
@@ -285,7 +292,7 @@ header.ssb-header-wrapper {
 
     button .navigation-item {
       display: flex;
-      height: 70px;
+      height: 60px;
       text-align: left;
       align-items: center;
       margin-right: 30px;
@@ -295,9 +302,9 @@ header.ssb-header-wrapper {
         display: grid;
         grid-column-gap: 5px;
         grid-template-columns: 20px auto;
-        height: auto;
         padding: 0 20px;
         justify-content: start;
+        height: auto;
 
         &:hover::before,
         &.active::before {
