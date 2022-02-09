@@ -204,11 +204,22 @@ header.ssb-header-wrapper {
           }
         }
       }
+
+      @include media-breakpoint-down(md) {
+        .subMenu {
+          display: block;
+
+          &.visible {
+            max-height: initial;
+            max-width: none;
+            height: auto
+          }
+        }
+      }
     }
 
     @include media-breakpoint-down(md){
       transition: max-height 0.3s ease-in;
-      max-height: 71px;
       display: grid;
       width: 100%;
 
@@ -252,7 +263,8 @@ header.ssb-header-wrapper {
       }
 
       @include media-breakpoint-down(md) {
-        padding: 0px 20px;
+        padding: 20px 0px;
+        margin: 0 2px;
 
         &:focus {
           outline: $ssb-purple-3 solid 2px;
@@ -283,6 +295,9 @@ header.ssb-header-wrapper {
         display: grid;
         grid-column-gap: 5px;
         grid-template-columns: 20px auto;
+        height: auto;
+        padding: 0 20px;
+        justify-content: start;
 
         &:hover::before,
         &.active::before {
@@ -314,7 +329,7 @@ header.ssb-header-wrapper {
       max-width: 180px;
       margin-bottom: 0;
 
-      @include media-breakpoint-up(md) {
+      @include media-breakpoint-up(lg) {
         &.visible {
           height: auto;
           max-height: 800px;
@@ -323,10 +338,7 @@ header.ssb-header-wrapper {
       }
 
       @include media-breakpoint-down(md) {
-        max-height: initial;
-        max-width: none;
-        height: auto
-
+        display: none;
       }
 
       li {
@@ -372,7 +384,6 @@ header.ssb-header-wrapper {
     display: none;
 
     @include media-breakpoint-down(md) {
-
       display: flex;
       flex-direction: column;
       align-items: flex-start;
