@@ -263,8 +263,8 @@ header.ssb-header-wrapper {
       }
 
       @include media-breakpoint-down(md) {
-        padding: 20px 0px;
-        margin: 0 2px;
+        padding: 18px 0px;
+        margin: 0 2px 1px;
 
         &:focus {
           outline: $ssb-purple-3 solid 2px;
