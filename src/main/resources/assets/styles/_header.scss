@@ -209,6 +209,8 @@ header.ssb-header-wrapper {
     @include media-breakpoint-down(md){
       transition: max-height 0.3s ease-in;
       max-height: 71px;
+      display: grid;
+      width: 100%;
 
       .ssb-divider {
         display: none;
@@ -220,6 +222,19 @@ header.ssb-header-wrapper {
 
       &.activeTab{
         max-height: 300px;
+      }
+
+      &:before {
+        border-top: 1px solid $ssb-dark-2;
+        content: '';
+        height: 2px;
+      }
+  
+      &:after {
+        border-bottom: 1px solid $ssb-dark-2;
+        content: '';
+        height: 2px;
+        margin-bottom: -1px;
       }
 
       &:last-child{
@@ -237,13 +252,10 @@ header.ssb-header-wrapper {
       }
 
       @include media-breakpoint-down(md) {
-        width: 100%;
-        padding: 0 20px;
-        border-top: $ssb-dark-2 1px solid;
-        
+        padding: 0px 20px;
+
         &:focus {
           outline: $ssb-purple-3 solid 2px;
-          outline-offset: -2px;
         }
       }
 
@@ -268,8 +280,10 @@ header.ssb-header-wrapper {
       cursor: pointer;
 
       @include media-breakpoint-down(md) {
-        margin: 0;
-        width: 100%;
+        display: grid;
+        grid-column-gap: 5px;
+        grid-template-columns: 20px auto;
+
         &:hover::before,
         &.active::before {
           height: 0;
