@@ -30,14 +30,18 @@ export function fromPartCache<T>(req: Request, key: string, fallback: () => T): 
 export function clearPartCache(content: Content, branch: string): void {
   const partCache: Cache = branch === 'master' ? masterPartCache : draftPartCache
   if (content.type === `${app.name}:page` || content.type === `portal:site` || content.type === `${app.name}:statistics`) {
-    cacheLog(`try to clear ${content._id}-releasedStatistics from part cache (${branch})`)
-    partCache.remove(`${content._id}-releasedStatistics`)
     cacheLog(`try to clear ${content._id}-kpiCalculator from part cache (${branch})`)
     partCache.remove(`${content._id}-kpiCalculator`)
-    cacheLog(`try to clear ${content._id}-omStatistikken from part cache (${branch})`)
-    partCache.remove(`${content._id}-omStatistikken`)
+    cacheLog(`try to clear ${content._id}-pifCalculator from part cache (${branch})`)
+    partCache.remove(`${content._id}-pifCalculator`)
+    cacheLog(`try to clear ${content._id}-bkibolCalculator from part cache (${branch})`)
+    partCache.remove(`${content._id}-bkibolCalculator`)
     cacheLog(`try to clear ${content._id}-husleieCalculator from part cache (${branch})`)
     partCache.remove(`${content._id}-husleieCalculator`)
+    cacheLog(`try to clear ${content._id}-releasedStatistics from part cache (${branch})`)
+    partCache.remove(`${content._id}-releasedStatistics`)
+    cacheLog(`try to clear ${content._id}-omStatistikken from part cache (${branch})`)
+    partCache.remove(`${content._id}-omStatistikken`)
     cacheLog(`try to clear ${content._id}-upcomingReleases from part cache (${branch})`)
     partCache.remove(`${content._id}-upcomingReleases`)
   }

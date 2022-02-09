@@ -6,7 +6,7 @@
     <div class="col-12">
       <div class="show-datatable" data-th-if="${showDataTableEnabled}">
         <div class="highchart-title" data-th-if="${highchart && highchart.config && highchart.config.title}">
-          <h3 class="ssb-title" data-th-if="${highchart.config.title.text}" data-th-text="${highchart.config.title.text}"/>
+          <h3 class="ssb-title" data-th-if="${highchart.config.title.text}" data-th-text="${highchart.config.title.text}" aria-hidden="true"/>
           <p class="highchart-subtitle" data-th-if="${highchart.config.subtitle.text}" data-th-text="${highchart.config.subtitle.text}"/>
         </div>
         <div class="ssb-tabs">
@@ -20,6 +20,7 @@
         <hr class="ssb-divider type-dark mb-3" aria-hidden="true" />
       </div>
       <figure data-th-fragment="graph" class="highcharts-figure mb-0" data-th-classappend="${highchart.hideTitle == true || showDataTableEnabled ? 'hide-title' : ''}" data-th-id="figure- + ${highchart.contentKey}">
+        <figcaption class="ssb-title sr-only" data-th-if="${highchart.config.title.text}" data-th-text="${highchart.config.title.text}"/>
         <div data-th-id="highcharts- + ${highchart.contentKey}"
           class="highcharts-canvas"
           data-th-attr="data-contentkey=${highchart.contentKey},
