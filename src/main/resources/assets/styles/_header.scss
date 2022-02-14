@@ -58,11 +58,8 @@ header.ssb-header-wrapper {
     width: 100%;
     padding: 0;
     @include media-breakpoint-down(md){
+      padding: 0 20px 20px;
       align-items: center;
-    }
-    @include media-breakpoint-down(sm) {
-      padding: 0 20px;
-
     }
   }
 
@@ -75,7 +72,6 @@ header.ssb-header-wrapper {
 
   .header-content {
     margin-top: 14px;
-
 
     @include media-breakpoint-down(md){
       margin-top: 0;
@@ -92,15 +88,23 @@ header.ssb-header-wrapper {
         max-height: 1800px;
         transition: max-height 0.3s ease-in;
       }
-    }
   }
+}
 
-  .logo {
-    width: 248px;
-    height: 50px;
-    @include media-breakpoint-down(md) {
-      width: 197px;
-      height: auto;
+  #header-logo {
+      &:focus {
+        outline: $ssb-purple-3 solid 2px;
+        outline-offset: 2px;
+      }
+
+    .logo {
+      width: 248px;
+      height: 50px;
+
+      @include media-breakpoint-down(md) {
+        width: 197px;
+        height: auto;
+      }
     }
   }
 
@@ -121,6 +125,11 @@ header.ssb-header-wrapper {
 
     @include media-breakpoint-down(md) {
       display: block;
+
+      &:focus {
+        outline: $ssb-purple-3 solid 2px;
+        outline-offset: 2px;
+      }
     }
 
     span svg {
@@ -145,12 +154,19 @@ header.ssb-header-wrapper {
       }
 
       &.showOnMobile {
-        margin: 20px 0;
+        margin-top: 20px;
         max-height: 200px;
         transition: all 0.2s ease-in;
       }
       .ssb-input {
         max-width: none;
+      }
+
+      // Focus marker gets cut out in the mobile version; this is a workaround
+      .icon-wrapper:focus {
+        outline: $ssb-purple-3 solid 2px;
+        outline-offset: -2px;
+        border: white solid 3px;
       }
     }
   }
@@ -163,9 +179,10 @@ header.ssb-header-wrapper {
     .tabItems {
       display: flex;
       list-style: none;
-      padding:0;
+      padding: 0;
+      margin-bottom: 0;
 
-      @include media-breakpoint-down(md){
+      @include media-breakpoint-down(md){ 
         flex-direction: column;
       }
     }
@@ -188,19 +205,30 @@ header.ssb-header-wrapper {
         .icon-wrapper svg * {
           stroke: $ssb-green-4;
         }
-        &:hover {
+        &:hover, &:focus {
           svg * {
             stroke: $ssb-white;
+          }
+        }
+      }
+
+      @include media-breakpoint-down(md) {
+        .subMenu {
+          display: block;
+
+          &.visible {
+            max-height: initial;
+            max-width: none;
+            height: auto
           }
         }
       }
     }
 
     @include media-breakpoint-down(md){
-      border-bottom: 1px solid $ssb-dark-2;
-      padding: 0 20px;
       transition: max-height 0.3s ease-in;
-      max-height: 70px;
+      display: grid;
+      width: 100%;
 
       .ssb-divider {
         display: none;
@@ -213,22 +241,44 @@ header.ssb-header-wrapper {
       &.activeTab{
         max-height: 300px;
       }
+
+      &:before {
+        border-top: 1px solid $ssb-dark-2;
+        content: '';
+        height: 2px;
+      }
+  
+      &:after {
+        border-bottom: 1px solid $ssb-dark-2;
+        content: '';
+        height: 2px;
+        margin-bottom: -1px;
+      }
+
+      &:last-child{
+        border-bottom: $ssb-dark-2 1px solid;
+      }
     }
 
     button {
       background: transparent;
       border: 0 none;
       padding: 0;
+
       &:focus {
         outline: 0 none;
       }
 
       @include media-breakpoint-down(md) {
-        width: 100%;
+        padding: 18px 0px;
+        margin: 0 2px 1px;
+
+        &:focus {
+          outline: $ssb-purple-3 solid 2px;
+        }
       }
 
       &:focus {
-
         .navigation-item:before {
           height: 4px;
           background: black;
@@ -249,8 +299,13 @@ header.ssb-header-wrapper {
       cursor: pointer;
 
       @include media-breakpoint-down(md) {
-        margin: 0;
-        width: 100%;
+        display: grid;
+        grid-column-gap: 5px;
+        grid-template-columns: 20px auto;
+        padding: 0 20px;
+        justify-content: start;
+        height: auto;
+
         &:hover::before,
         &.active::before {
           height: 0;
@@ -260,7 +315,6 @@ header.ssb-header-wrapper {
           display: inline;
           color: $ssb-green-3;
         }
-
       }
 
       span {
@@ -282,7 +336,7 @@ header.ssb-header-wrapper {
       max-width: 180px;
       margin-bottom: 0;
 
-      @include media-breakpoint-up(md) {
+      @include media-breakpoint-up(lg) {
         &.visible {
           height: auto;
           max-height: 800px;
@@ -291,17 +345,15 @@ header.ssb-header-wrapper {
       }
 
       @include media-breakpoint-down(md) {
-        max-height: initial;
-        max-width: none;
-        height: auto
-
+        display: none;
       }
 
       li {
         margin: 20px 0;
         padding-right: 8px;
         @include media-breakpoint-down(md) {
-          margin: 5px 0 20px;
+          margin-top: 5px;
+          padding: 0 20px;
         }
         a.ssb-link.with-icon {
           word-wrap: break-word;
@@ -319,7 +371,7 @@ header.ssb-header-wrapper {
             margin: 2px 0 0;
           }
 
-          &:hover {
+          &:hover, &:focus {
             .link-text{
               color: white;
             }
@@ -334,11 +386,11 @@ header.ssb-header-wrapper {
       }
     }
   }
+
   .global-bottom-links {
     display: none;
 
     @include media-breakpoint-down(md) {
-
       display: flex;
       flex-direction: column;
       align-items: flex-start;

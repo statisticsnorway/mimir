@@ -35,7 +35,7 @@ class Header extends React.Component {
   toggleSubMenu(index) {
     const activeIndex = this.state.indexForCurrentActiveMenuItem === index ? undefined : index
     const mainMenu = [...this.state.mainMenu]
-    if (document.activeElement instanceof HTMLElement) document.activeElement.blur()
+    if (window && window.innerWidth >= 768 && document.activeElement instanceof HTMLElement) document.activeElement.blur()
     mainMenu[index] = !mainMenu[index]
 
     this.setState({
@@ -55,6 +55,7 @@ class Header extends React.Component {
       return (<span>{menuText} <Menu/></span>)
     }
   }
+
   languageLinks() {
     const {
       alternativeLanguages
@@ -88,7 +89,6 @@ class Header extends React.Component {
       return (<Link key={'link_' + index} href={topLink.path}>{topLink.title}</Link>)
     })
   }
-
 
   render() {
     const {
@@ -124,7 +124,7 @@ class Header extends React.Component {
             />
           </div>
         </div>
-        <Divider className="mobileMenuDivider" />
+        <Divider className={this.state.showMainMenuOnMobile ? 'd-none' : 'mobileMenuDivider'} />
         <div className={this.state.showMainMenuOnMobile ? 'showOnMobile header-content' : 'hideOnMobile header-content'}>
           <nav id="mainMenu" className="ssb-tabs" aria-label={mainMenuLabel}>
             <ul className="tabItems">
@@ -140,7 +140,7 @@ class Header extends React.Component {
                         <span>{topMenuItem.title}</span>
                       </span>
                     </button>
-                    <Divider/>
+                    <Divider />
                     <ul className={this.state.showSubMenu ? 'visible subMenu' : 'subMenu' } aria-hidden={activeMenuItem ? 'false' : 'true' }>
                       {this.renderSubMenu(topMenuItem, activeMenuItem)}
                     </ul>

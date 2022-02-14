@@ -82,14 +82,16 @@
   }
 }
 
-.show-datatable {
-  .highchart-title {
+.highcharts-figure {
+
+  .figure-title {
     font-size: 20px;
     @include roboto;
     font-weight: bold;
+    margin-bottom: 10px;
   }
 
-  .highchart-subtitle {
+  .figure-subtitle {
     font-size: 14px;
   }
 }
