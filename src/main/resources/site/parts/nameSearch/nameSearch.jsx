@@ -431,7 +431,10 @@ function NameSearch(props) {
                 value={name.value}
                 handleChange={handleChange}
                 error={name.error}
-                errorMessage={name.errorMessage}></Input>
+                errorMessage={name.errorMessage}
+                role="search"
+                ariaLabelWrapper={props.phrases.nameSearchTitle}
+              />
             </Col>
           </Row>
           <Row>
