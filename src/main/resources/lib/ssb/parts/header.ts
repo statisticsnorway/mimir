@@ -55,6 +55,10 @@ export function getHeaderContent(language: Language): HeaderContent | undefined 
         key: 'menu',
         locale: language.code
       }),
+      mainMenuText: localize({
+        key: 'mainSearch',
+        locale: language.code
+      }),
       mainNavigation: headerContent.data.menuContentId ? createMenuTree(headerContent.data.menuContentId) : [],
       topLinks: headerContent.data.globalLinks && headerContent.data.globalLinks.length > 0 ? parseTopLinks(headerContent.data.globalLinks) : undefined
     }
@@ -67,6 +71,7 @@ export interface HeaderContent {
     logoAltText: string;
     searchResultPageUrl?: string;
     searchText: string;
+    mainMenuText: string;
     mainNavigation?: Array<MenuItem>;
     topLinks?: Array<Link>;
     skipToContentText: string;

@@ -92,7 +92,7 @@ class Header extends React.Component {
 
   render() {
     const {
-      searchText, logoUrl, logoSrc, logoAltText, mainNavigation, skipToContentText, language
+      searchText, mainMenuText, logoUrl, logoSrc, logoAltText, mainNavigation, skipToContentText, language
     } = this.props
     const globalLinksLabel = language.code === 'en' ? 'global links' : 'globale lenker'
     const mainMenuLabel = language.code === 'en' ? 'main menu' : 'hovedmeny'
@@ -113,7 +113,7 @@ class Header extends React.Component {
             {this.menuButtonStatus()}
           </button>
 
-          <div className={this.state.showMainMenuOnMobile ? 'showOnMobile searchfield' : 'hideOnMobile searchfield'} role="search">
+          <div className={this.state.showMainMenuOnMobile ? 'showOnMobile searchfield' : 'hideOnMobile searchfield'}>
             <Input
               id='search_ssb'
               ariaLabel={searchText}
@@ -121,6 +121,7 @@ class Header extends React.Component {
               submitCallback={this.goToSearchResultPage}
               placeholder={searchText}
               ariaLabelSearchButton={searchText}
+              ariaLabelWrapper={mainMenuText}
             />
           </div>
         </div>
@@ -201,7 +202,8 @@ Header.propTypes = {
   }),
   skipToContentText: PropTypes.string,
   closeText: PropTypes.string,
-  menuText: PropTypes.string
+  menuText: PropTypes.string,
+  mainMenuText: PropTypes.string
 }
 
 export default (props) => <Header {...props} />
