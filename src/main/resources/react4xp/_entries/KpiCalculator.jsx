@@ -522,13 +522,14 @@ function KpiCalculator(props) {
           <Container>
             <Row>
               <Col className="input-amount">
-                <Title size={3}>{props.phrases.enterAmount}</Title>
+                <h3 id="enter-amount">{props.phrases.enterAmount}</h3>
                 <Input
                   className="start-value"
                   handleChange={(value) => onChange('start-value', value)}
                   error={startValue.error}
                   errorMessage={startValue.errorMsg}
                   onBlur={() => onBlur('start-value')}
+                  ariaLabelledBy="enter-amount"
                 />
               </Col>
             </Row>
