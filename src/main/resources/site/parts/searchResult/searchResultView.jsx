@@ -6,7 +6,6 @@ import axios from 'axios'
 import NumberFormat from 'react-number-format'
 import { Col, Row } from 'react-bootstrap'
 
-
 function SearchResult(props) {
   const [hits, setHits] = useState(props.hits)
   const [searchTerm, setSearchTerm] = useState(props.term)
@@ -82,8 +81,8 @@ function SearchResult(props) {
                 }}></span>
                 </Paragraph>
                 <Paragraph className="metadata">
-                  <span className="type">{hit.contentType}</span> /&nbsp;
-                  <time dateTime={hit.publishDate}>{hit.publishDateHuman}</time> /&nbsp;
+                  <span className="type">{hit.contentType}</span> {hit.contentType && hit.publishDateHuman && ` / `}
+                  <time dateTime={hit.publishDate}>{hit.publishDateHuman}</time> {hit.publishDateHuman && hit.mainSubject && ` / `}
                   {hit.mainSubject}
                 </Paragraph>
               </li>
@@ -276,15 +275,16 @@ SearchResult.propTypes = {
   removeFilterPhrase: PropTypes.string,
   count: PropTypes.number,
   noHitMessage: PropTypes.string,
-  hits: PropTypes.arrayOf({
-    title: PropTypes.string,
-    url: PropTypes.string,
-    preface: PropTypes.string,
-    mainSubject: PropTypes.string,
-    contentType: PropTypes.string,
-    publishDate: PropTypes.string,
-    publishDateHuman: PropTypes.string
-  }),
+  hits: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string,
+      url: PropTypes.string,
+      preface: PropTypes.string,
+      mainSubject: PropTypes.string,
+      contentType: PropTypes.string,
+      publishDate: PropTypes.string,
+      publishDateHuman: PropTypes.string
+    })),
   dropDownSubjects: PropTypes.array,
   dropDownContentTypes: PropTypes.array
 }

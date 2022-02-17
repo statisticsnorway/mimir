@@ -99,7 +99,7 @@ export function renderPart(req: Request): React4xpResponse {
     return dropdowns
   }
 
-  function bestBet(): string {
+  function bestBet(): PreparedSearchResult | undefined {
     const result: NodeQueryResponse = queryNodes('no.ssb.bestbet', 'master', {
       start: 0,
       count: 1,
@@ -122,7 +122,8 @@ export function renderPart(req: Request): React4xpResponse {
       firstBet = bet
     } else firstBet = null
 
-    let bestestBet: PreparedSearchResult | null
+    // let bestestBet: PreparedSearchResult | null
+    let bestBetResult: PreparedSearchResult | null
     if (firstBet && (firstBet.constructor !== Array)) {
       // bestestBet = {
       //   url: firstBet.data ? firstBet.data.linkedContentHref : '',
@@ -139,7 +140,7 @@ export function renderPart(req: Request): React4xpResponse {
       }) : null
 
       if (bestBetData) {
-        bestestBet = {
+        bestBetResult = {
           title: bestBetData.displayName,
           preface: '',
           contentType: '',
@@ -149,10 +150,14 @@ export function renderPart(req: Request): React4xpResponse {
           publishDate: bestBetData.publish && bestBetData.publish.from ? bestBetData.publish.from : '',
           publishDateHuman: bestBetData.publish && bestBetData.publish.from ? formatDate(bestBetData.publish.from, 'PPP', language) : ''
         }
-        return JSON.stringify(bestestBet, null, 2)
+        return bestBetResult
+        // return JSON.stringify(bestestBet, null, 2)
       }
-      return ''
-    } else return ''
+      // return ''
+      return undefined
+    }
+    // else return ''
+    return undefined
   }
 
   try {
@@ -171,9 +176,13 @@ export function renderPart(req: Request): React4xpResponse {
     }
 
   /* prepare props */
-  const props: ReactProps = {
-    hits: solrResult.hits,
-    total: solrResult.total,
+  // TODO: If there is a best bet, fetch only 14 items the FIRST time
+  const bestBetHit: PreparedSearchResult | undefined = bestBet()
+  const hits: Array<PreparedSearchResult> = bestBetHit ? [bestBetHit, ...solrResult.hits] : solrResult.hits
+  const total: number = bestBetHit ? solrResult.total + 1 : solrResult.total
+  const props: SearchResultProps = {
+    hits,
+    total,
     term: sanitizedTerm ? sanitizedTerm : '',
     count,
     title: content.displayName,
@@ -218,7 +227,7 @@ export function renderPart(req: Request): React4xpResponse {
     };
   }
 
-interface ReactProps {
+interface SearchResultProps {
   hits: Array<PreparedSearchResult>;
   title: string;
   total: number;
