@@ -1,11 +1,10 @@
 import { Request, Response } from 'enonic-types/controller'
 import { Component } from 'enonic-types/portal'
-import { Content, QueryResponse } from 'enonic-types/content'
+import { Content } from 'enonic-types/content'
 import { SearchResultPartConfig } from './searchResult-part-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { PreparedSearchResult, SolrPrepResultAndTotal } from '../../../lib/ssb/utils/solrUtils'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
-import { Data } from '../../../lib/types/jsonstat-toolkit'
 import { queryNodes, getNode } from '../../../lib/ssb/repo/common'
 import { NodeQueryResponse, RepoNode } from 'enonic-types/node'
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
@@ -103,16 +102,16 @@ export function renderPart(req: Request): React4xpResponse {
       count: 1,
       // query: "'data.linkedContentId' = '5ffcb5c7-53cb-4c2e-b807-11838eea549e'"
       // query: "fulltext('data.searchWords', 'jul')"
-      // query: "data.searchWords LIKE '*'"
-      query: "fulltext('data.searchWords', 'fisk test jul', 'OR')"
+      query: "data.searchWords LIKE '*'"
+      // query: "fulltext('data.searchWords', 'fisk test jul')"
       // query: '*'
     } )
     log.info(`GLNRBN tester data igjen: ${JSON.stringify(result, null, 2)}`)
 
-    const bet: ReadonlyArray< BestBet> | BestBet | null = getNode('no.ssb.bestbet', 'master', result.hits[0].id)
+    const bet: BestBet | null = getNode('no.ssb.bestbet', 'master', result.hits[0].id) as BestBet
     log.info(`GLNRBN henter ut en slik node: ${JSON.stringify(bet, null, 2)}`)
 
-    let firstBet: BestBet| null
+    let firstBet: BestBet | null
     if (bet && bet.constructor === Array) {
       firstBet = bet[0]
     } if (bet && !(bet.constructor === Array)) {
