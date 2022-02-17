@@ -557,13 +557,14 @@ function PifCalculator(props) {
             </Row>
             <Row>
               <Col className="input-amount">
-                <h3>{props.phrases.pifProductPriceHeader}</h3>
+                <h3 id="product-price">{props.phrases.pifProductPriceHeader}</h3>
                 <Input
                   className="start-value"
                   handleChange={(value) => onChange('start-value', value)}
                   error={startValue.error}
                   errorMessage={startValue.errorMsg}
                   onBlur={() => onBlur('start-value')}
+                  ariaLabelledBy="product-price"
                 />
               </Col>
             </Row>

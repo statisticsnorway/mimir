@@ -684,13 +684,14 @@ function BkibolCalculator(props) {
                 />
               </Col>
               <Col className="input-amount col-12 col-md-6 col-xl-8">
-                <Title size={3}>{props.phrases.bkibolAmount}</Title>
+                <h3 id="amount">{props.phrases.bkibolAmount}</h3>
                 <Input
                   className="start-value"
                   handleChange={(value) => onChange('start-value', value)}
                   error={startValue.error}
                   errorMessage={startValue.errorMsg}
                   onBlur={() => onBlur('start-value')}
+                  ariaLabelledBy="amount"
                 />
               </Col>
             </Row>

@@ -129,6 +129,14 @@ function partsPhrases(locale: string): PartProperties['phrases'] {
       key: 'nameSearch.graph.loading',
       locale
     }),
+    historicalTrend: localize({
+      key: 'nameSearch.historicalTrend',
+      locale
+    }),
+    chart: localize({
+      key: 'nameSearch.chart',
+      locale
+    }),
     women: localize({
       key: 'women',
       locale
@@ -218,6 +226,8 @@ interface PartProperties {
     xAxis: string;
     graphHeader: string;
     loadingGraph: string;
+    historicalTrend: string;
+    chart: string;
     women: string;
     men: string;
     types: {

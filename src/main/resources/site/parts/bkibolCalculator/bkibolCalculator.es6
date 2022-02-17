@@ -17,6 +17,9 @@ const {
 const {
   getCalculatorConfig, getBkibolDatasetEnebolig
 } = __non_webpack_require__('/lib/ssb/dataset/calculator')
+const {
+  fromPartCache
+} = __non_webpack_require__('/lib/ssb/cache/partCache')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 const view = resolve('./bkibolCalculator.html')
 
@@ -38,6 +41,23 @@ exports.preview = function(req, id) {
 
 function renderPart(req) {
   const page = getContent()
+  let bkibolCalculator
+  if (req.mode === 'edit') {
+    bkibolCalculator = getBkibolCalculatorComponent(page)
+  } else {
+    bkibolCalculator = fromPartCache(req, `${page._id}-bkibolCalculator`, () => {
+      return getBkibolCalculatorComponent(page)
+    })
+  }
+
+  const pageContributions = bkibolCalculator.component.renderPageContributions({})
+  return {
+    body: bkibolCalculator.body,
+    pageContributions
+  }
+}
+
+function getBkibolCalculatorComponent(page) {
   const part = getComponent()
   const language = getLanguage(page)
   const phrases = language.phrases
@@ -89,11 +109,9 @@ function renderPart(req) {
     bkibolCalculatorId: bkibolCalculator.react4xpId
   })
   return {
+    component: bkibolCalculator,
     body: bkibolCalculator.renderBody({
       body
-    }),
-    pageContributions: bkibolCalculator.renderPageContributions({
-      clientRender: req.mode !== 'edit'
     })
   }
 }

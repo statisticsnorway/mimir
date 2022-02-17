@@ -36,7 +36,11 @@ export const X_AXIS_TITLE_POSITION = {
 export const createDefaultConfig = (highchartData, displayName, language) => ({
   accessibility: {
     enabled: true,
-    description: highchartData.description
+    description: highchartData.description,
+    screenReaderSection: {
+      // eslint-disable-next-line max-len
+      beforeChartFormat: '<div>{chartLongdesc}</div><div>{typeDescription}</div><div>{playAsSoundButton}</div><div>{xAxisDescription}</div><div>{yAxisDescription}</div><div>{annotationsTitle}{annotationsList}</div>'
+    }
   },
   chart: {
     height: (highchartData.heightAspectRatio > 0) ? `${highchartData.heightAspectRatio}%` : null,
