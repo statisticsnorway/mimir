@@ -7,18 +7,21 @@ import { PreparedSearchResult, SolrPrepResultAndTotal } from '../../../lib/ssb/u
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { queryNodes, getNode } from '../../../lib/ssb/repo/common'
 import { NodeQueryResponse, RepoNode } from 'enonic-types/node'
+import { formatDate } from '../../../lib/ssb/utils/dateUtils'
+
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   solrSearch
 } = __non_webpack_require__('/lib/ssb/utils/solrUtils')
-
+const {
+  get
+} = __non_webpack_require__('/lib/xp/content')
 const {
   getComponent,
   getContent,
   pageUrl,
   serviceUrl
 } = __non_webpack_require__('/lib/xp/portal')
-
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
@@ -34,7 +37,6 @@ const {
 const {
   getMainSubjects
 } = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
-
 
 exports.get = function(req: Request): React4xpResponse | Response {
   try {
@@ -57,6 +59,7 @@ export function renderPart(req: Request): React4xpResponse {
   const content: Content = getContent()
   const part: Component<SearchResultPartConfig> = getComponent()
   const sanitizedTerm: string | undefined = req.params.sok ? sanitizeForSolr(req.params.sok) : undefined
+  log.info('sanitized term %s', JSON.stringify(sanitizedTerm))
   const searchPageUrl: string = part.config.searchResultPage ? pageUrl({
     id: part.config.searchResultPage
   }) : content._path
@@ -102,13 +105,14 @@ export function renderPart(req: Request): React4xpResponse {
       count: 1,
       // query: "'data.linkedContentId' = '5ffcb5c7-53cb-4c2e-b807-11838eea549e'"
       // query: "fulltext('data.searchWords', 'jul')"
-      query: "data.searchWords LIKE '*'"
-      // query: "fulltext('data.searchWords', 'fisk test jul')"
+      // query: "data.searchWords LIKE '*'"
+      // query: "fulltext('data.searchWords', 'fisk test jul', 'OR')"
       // query: '*'
+      query: `fulltext('data.searchWords', '${sanitizedTerm}', 'OR')`
     } )
     log.info(`GLNRBN tester data igjen: ${JSON.stringify(result, null, 2)}`)
 
-    const bet: BestBet | null = getNode('no.ssb.bestbet', 'master', result.hits[0].id) as BestBet
+    const bet: BestBet | null = result.hits.length ? getNode('no.ssb.bestbet', 'master', result.hits[0].id) as BestBet : null
     log.info(`GLNRBN henter ut en slik node: ${JSON.stringify(bet, null, 2)}`)
 
     let firstBet: BestBet | null
@@ -118,21 +122,39 @@ export function renderPart(req: Request): React4xpResponse {
       firstBet = bet
     } else firstBet = null
 
-    let bestestBet: PreparedSearchResult
+    let bestestBet: PreparedSearchResult | null
     if (firstBet && (firstBet.constructor !== Array)) {
-      bestestBet = {
-        url: firstBet.data ? firstBet.data.linkedContentHref : '',
-        contentType: 'type',
-        mainSubject: 'subject',
-        preface: 'en liten ingress',
-        publishDate: '1234',
-        publishDateHuman: 'yesteray',
-        title: 'Yes indeed',
-        secondaryMainSubject: 'another subject'
+      // bestestBet = {
+      //   url: firstBet.data ? firstBet.data.linkedContentHref : '',
+      //   contentType: 'type',
+      //   mainSubject: 'subject',
+      //   preface: 'en liten ingress',
+      //   publishDate: '1234',
+      //   publishDateHuman: 'yesteray',
+      //   title: 'Yes indeed',
+      //   secondaryMainSubject: 'another subject'
+      // }
+      const bestBetData: Content | null = firstBet.data ? get({
+        key: firstBet.data.linkedContentId
+      }) : null
+
+      if (bestBetData) {
+        bestestBet = {
+          title: bestBetData.displayName,
+          preface: '',
+          contentType: '',
+          url: bestBetData._path,
+          mainSubject: '',
+          secondaryMainSubject: '',
+          publishDate: bestBetData.publish && bestBetData.publish.from ? bestBetData.publish.from : '',
+          publishDateHuman: bestBetData.publish && bestBetData.publish.from ? formatDate(bestBetData.publish.from, 'PPP', language) : ''
+        }
+        return JSON.stringify(bestestBet, null, 2)
       }
-      return JSON.stringify(bestestBet, null, 2)
+      return ''
     } else return ''
   }
+
   try {
     log.info(`GLNRBN tester bestbet igjen: ${bestBet()}`)
   } catch (error) {
