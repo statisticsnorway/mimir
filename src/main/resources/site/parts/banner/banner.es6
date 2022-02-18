@@ -41,8 +41,6 @@ function renderPart(req) {
   const municipalityName = municipality ? removeCountyFromMunicipalityName(municipality.displayName) : undefined
   const imgSrcSet = part.config.image ? imageSrcSet(part.config.image) : undefined
 
-  // Remove uppercase for page title when accompanied by "Fakta om"
-  const factPageTitle = `${subTitleFactPage} ${page.displayName}`.toLowerCase()
   const model = {
     ...imgSrcSet,
     pageDisplayName: page.displayName,
@@ -53,8 +51,7 @@ function renderPart(req) {
     }) : undefined,
     municipalityTitle: municipality ? municipalityName + ' (' + municipality.county.name + ')' : undefined,
     pageType,
-    subTitleFactPage,
-    factPageTitle: factPageTitle.charAt(0).toUpperCase() + factPageTitle.slice(1)
+    subTitleFactPage
   }
 
   const body = render(view, model)
