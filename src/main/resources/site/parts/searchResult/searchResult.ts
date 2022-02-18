@@ -181,7 +181,10 @@ export function renderPart(req: Request): React4xpResponse {
           title: firstBet.data.linkedContentTitle ? firstBet.data.linkedContentTitle : bestBetData.displayName,
           preface: getBestBestPreface(bestBetData),
           contentType: getBestBetContentType(bestBetData),
-          url: bestBetData._path,
+          url: pageUrl({
+            path: bestBetData._path
+          }) as unknown as string,
+          // Fetch from mainSubject and secondaryMainSubject from repo after best bet app form revision
           mainSubject: '',
           secondaryMainSubject: '',
           publishDate: bestBetData.publish && bestBetData.publish.from ? bestBetData.publish.from : '',
