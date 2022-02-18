@@ -8,6 +8,8 @@ import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { queryNodes, getNode } from '../../../lib/ssb/repo/common'
 import { NodeQueryResponse, RepoNode } from 'enonic-types/node'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
+import { SEO } from '../../../services/news/news'
+import { Article } from '../../content-types/article/article'
 
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
@@ -59,7 +61,6 @@ export function renderPart(req: Request): React4xpResponse {
   const content: Content = getContent()
   const part: Component<SearchResultPartConfig> = getComponent()
   const sanitizedTerm: string | undefined = req.params.sok ? sanitizeForSolr(req.params.sok) : undefined
-  log.info('sanitized term %s', JSON.stringify(sanitizedTerm))
   const searchPageUrl: string = part.config.searchResultPage ? pageUrl({
     id: part.config.searchResultPage
   }) : content._path
@@ -99,6 +100,43 @@ export function renderPart(req: Request): React4xpResponse {
     return dropdowns
   }
 
+  function getBestBestPreface(bestBetData: Content<Article, object, SEO> | null): string {
+    const seoDescription: string | undefined = bestBetData ? bestBetData.x['com-enonic-app-metafields']['meta-data'].seoDescription : ''
+
+    if (bestBetData) {
+      if (seoDescription) {
+        return seoDescription
+      }
+      if (bestBetData.data && bestBetData.data.ingress) {
+        return bestBetData.data.ingress
+      }
+    }
+    return ''
+  }
+
+  function getBestBetContentType(bestBetData: Content<Article, object, SEO>| null): string {
+    function isFactPage(): string {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // @ts-ignore
+      if (bestBetData && bestBetData.page && bestBetData.page.config && bestBetData.page.config.pageType) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+        // @ts-ignore
+        if (bestBetData.page.config.pageType === 'factPage') return 'Faktaside'
+      }
+      return ''
+    }
+
+    if (bestBetData) {
+      switch (bestBetData.type) {
+      case `${app.name}:statistics`: return 'Statistikk'
+      case `${app.name}:article`: return 'Artikkel'
+      case `${app.name}:page`: return isFactPage()
+      default: return ''
+      }
+    }
+    return ''
+  }
+
   function bestBet(): PreparedSearchResult | undefined {
     const result: NodeQueryResponse = queryNodes('no.ssb.bestbet', 'master', {
       start: 0,
@@ -135,15 +173,15 @@ export function renderPart(req: Request): React4xpResponse {
       //   title: 'Yes indeed',
       //   secondaryMainSubject: 'another subject'
       // }
-      const bestBetData: Content | null = firstBet.data ? get({
+      const bestBetData: Content<Article, object, SEO>| null = firstBet.data ? get({
         key: firstBet.data.linkedContentId
       }) : null
 
       if (bestBetData) {
         bestBetResult = {
           title: bestBetData.displayName,
-          preface: '',
-          contentType: '',
+          preface: getBestBestPreface(bestBetData),
+          contentType: getBestBetContentType(bestBetData),
           url: bestBetData._path,
           mainSubject: '',
           secondaryMainSubject: '',
@@ -161,7 +199,7 @@ export function renderPart(req: Request): React4xpResponse {
   }
 
   try {
-    log.info(`GLNRBN tester bestbet igjen: ${bestBet()}`)
+    log.info(`GLNRBN tester bestbet igjen: ${JSON.stringify(bestBet(), null, 2)}`)
   } catch (error) {
     log.info('GLNRBN error: ' + error)
   }
@@ -179,10 +217,9 @@ export function renderPart(req: Request): React4xpResponse {
   // TODO: If there is a best bet, fetch only 14 items the FIRST time
   const bestBetHit: PreparedSearchResult | undefined = bestBet()
   const hits: Array<PreparedSearchResult> = bestBetHit ? [bestBetHit, ...solrResult.hits] : solrResult.hits
-  const total: number = bestBetHit ? solrResult.total + 1 : solrResult.total
   const props: SearchResultProps = {
     hits,
-    total,
+    total: solrResult.total,
     term: sanitizedTerm ? sanitizedTerm : '',
     count,
     title: content.displayName,
