@@ -100,9 +100,10 @@ export function renderPart(req: Request): React4xpResponse {
     return dropdowns
   }
 
+  // Will be manually set in the best bet app in another JIRA task, so we can fetch from the node data directly then
+  // Does not include support for fact- or statistics pages without override SEO descriptions
   function getBestBestPreface(bestBetData: Content<Article, object, SEO> | null): string {
     const seoDescription: string | undefined = bestBetData ? bestBetData.x['com-enonic-app-metafields']['meta-data'].seoDescription : ''
-
     if (bestBetData) {
       if (seoDescription) {
         return seoDescription
@@ -114,23 +115,38 @@ export function renderPart(req: Request): React4xpResponse {
     return ''
   }
 
-  function getBestBetContentType(bestBetData: Content<Article, object, SEO>| null): string {
-    function isFactPage(): string {
+  // Might also be manually set in the best bet app in another JIRA task, so we can fetch from the node data directly then
+  // Currently only supports statistics, article & fact page
+  function getBestBetContentType(bestBetData: Content<Article, object, SEO> | null): string {
+    function pageType(): string {
       // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
       // @ts-ignore
       if (bestBetData && bestBetData.page && bestBetData.page.config && bestBetData.page.config.pageType) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
         // @ts-ignore
-        if (bestBetData.page.config.pageType === 'factPage') return 'Faktaside'
+        if (bestBetData.page.config.pageType === 'factPage') {
+          return localize({
+            key: 'contentType.search.faktaside',
+            locale: language
+          })
+        }
       }
       return ''
     }
 
     if (bestBetData) {
       switch (bestBetData.type) {
-      case `${app.name}:statistics`: return 'Statistikk'
-      case `${app.name}:article`: return 'Artikkel'
-      case `${app.name}:page`: return isFactPage()
+      case `${app.name}:statistics`:
+        return localize({
+          key: 'contentType.search.statistikk',
+          locale: language
+        })
+      case `${app.name}:article`:
+        return localize({
+          key: 'contentType.search.artikkel',
+          locale: language
+        })
+      case `${app.name}:page`: return pageType()
       default: return ''
       }
     }
@@ -141,18 +157,10 @@ export function renderPart(req: Request): React4xpResponse {
     const result: NodeQueryResponse = queryNodes('no.ssb.bestbet', 'master', {
       start: 0,
       count: 1,
-      // query: "'data.linkedContentId' = '5ffcb5c7-53cb-4c2e-b807-11838eea549e'"
-      // query: "fulltext('data.searchWords', 'jul')"
-      // query: "data.searchWords LIKE '*'"
-      // query: "fulltext('data.searchWords', 'fisk test jul', 'OR')"
-      // query: '*'
       query: `fulltext('data.searchWords', '${sanitizedTerm}', 'OR')`
     } )
-    log.info(`GLNRBN tester data igjen: ${JSON.stringify(result, null, 2)}`)
 
     const bet: BestBet | null = result.hits.length ? getNode('no.ssb.bestbet', 'master', result.hits[0].id) as BestBet : null
-    log.info(`GLNRBN henter ut en slik node: ${JSON.stringify(bet, null, 2)}`)
-
     let firstBet: BestBet | null
     if (bet && bet.constructor === Array) {
       firstBet = bet[0]
@@ -160,19 +168,8 @@ export function renderPart(req: Request): React4xpResponse {
       firstBet = bet
     } else firstBet = null
 
-    // let bestestBet: PreparedSearchResult | null
     let bestBetResult: PreparedSearchResult | null
     if (firstBet && (firstBet.constructor !== Array)) {
-      // bestestBet = {
-      //   url: firstBet.data ? firstBet.data.linkedContentHref : '',
-      //   contentType: 'type',
-      //   mainSubject: 'subject',
-      //   preface: 'en liten ingress',
-      //   publishDate: '1234',
-      //   publishDateHuman: 'yesteray',
-      //   title: 'Yes indeed',
-      //   secondaryMainSubject: 'another subject'
-      // }
       const bestBetData: Content<Article, object, SEO>| null = firstBet.data ? get({
         key: firstBet.data.linkedContentId
       }) : null
@@ -189,21 +186,11 @@ export function renderPart(req: Request): React4xpResponse {
           publishDateHuman: bestBetData.publish && bestBetData.publish.from ? formatDate(bestBetData.publish.from, 'PPP', language) : ''
         }
         return bestBetResult
-        // return JSON.stringify(bestestBet, null, 2)
       }
-      // return ''
       return undefined
     }
-    // else return ''
     return undefined
   }
-
-  try {
-    log.info(`GLNRBN tester bestbet igjen: ${JSON.stringify(bestBet(), null, 2)}`)
-  } catch (error) {
-    log.info('GLNRBN error: ' + error)
-  }
-
 
   /* query solr */
   const solrResult: SolrPrepResultAndTotal = sanitizedTerm ?
@@ -219,7 +206,7 @@ export function renderPart(req: Request): React4xpResponse {
   const hits: Array<PreparedSearchResult> = bestBetHit ? [bestBetHit, ...solrResult.hits] : solrResult.hits
   const props: SearchResultProps = {
     hits,
-    total: solrResult.total,
+    total: bestBetHit ? solrResult.total + 1 : solrResult.total,
     term: sanitizedTerm ? sanitizedTerm : '',
     count,
     title: content.displayName,
