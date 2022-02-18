@@ -170,13 +170,15 @@ export function renderPart(req: Request): React4xpResponse {
 
     let bestBetResult: PreparedSearchResult | null
     if (firstBet && (firstBet.constructor !== Array)) {
-      const bestBetData: Content<Article, object, SEO>| null = firstBet.data ? get({
+      // Uses Content<Article, object, SEO> type for override SEO description
+      // Should be revisited when the best bet app form is revised
+      const bestBetData: Content<Article, object, SEO> | null = firstBet.data ? get({
         key: firstBet.data.linkedContentId
       }) : null
 
       if (bestBetData) {
         bestBetResult = {
-          title: bestBetData.displayName,
+          title: firstBet.data.linkedContentTitle ? firstBet.data.linkedContentTitle : bestBetData.displayName,
           preface: getBestBestPreface(bestBetData),
           contentType: getBestBetContentType(bestBetData),
           url: bestBetData._path,
