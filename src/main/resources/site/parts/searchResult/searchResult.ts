@@ -206,12 +206,10 @@ export function renderPart(req: Request): React4xpResponse {
     }
 
   /* prepare props */
-  // TODO: If there is a best bet, fetch only 14 items the FIRST time
-  const bestBetHit: PreparedSearchResult | undefined = bestBet()
-  const hits: Array<PreparedSearchResult> = bestBetHit ? [bestBetHit, ...solrResult.hits] : solrResult.hits
   const props: SearchResultProps = {
-    hits,
-    total: bestBetHit ? solrResult.total + 1 : solrResult.total,
+    bestBetHit: bestBet(),
+    hits: solrResult.hits,
+    total: solrResult.total,
     term: sanitizedTerm ? sanitizedTerm : '',
     count,
     title: content.displayName,
@@ -257,6 +255,7 @@ export function renderPart(req: Request): React4xpResponse {
   }
 
 interface SearchResultProps {
+  bestBetHit: PreparedSearchResult | undefined;
   hits: Array<PreparedSearchResult>;
   title: string;
   total: number;

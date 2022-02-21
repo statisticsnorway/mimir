@@ -54,8 +54,32 @@ function SearchResult(props) {
     setSelectedMainSubject(props.dropDownSubjects[0])
   }
 
+  function renderListItem(hit, i) {
+    if (hit) {
+      return (
+        <li key={i ? i : undefined} className="mb-4">
+          <Link href={hit.url} className="ssb-link header" >
+            <span dangerouslySetInnerHTML={{
+              __html: hit.title.replace(/&nbsp;/g, ' ')
+            }}></span>
+          </Link>
+          <Paragraph className="search-result-ingress my-1" ><span dangerouslySetInnerHTML={{
+            __html: hit.preface.replace(/&nbsp;/g, ' ')
+          }}></span>
+          </Paragraph>
+          <Paragraph className="metadata">
+            <span className="type">{hit.contentType}</span> {hit.contentType && hit.publishDateHuman && ` / `}
+            <time dateTime={hit.publishDate}>{hit.publishDateHuman}</time> {hit.publishDateHuman && hit.mainSubject && ` / `}
+            {hit.mainSubject}
+          </Paragraph>
+        </li>
+      )
+    }
+    return null
+  }
 
   function renderList() {
+    const bestbetHit = props.bestBetHit
     return (
       <div>
         <div className="row mb-4">
@@ -68,25 +92,9 @@ function SearchResult(props) {
           </div>
         </div>
         <ol className="list-unstyled ">
+          {renderListItem(bestbetHit)}
           {hits.map( (hit, i) => {
-            return (
-              <li key={i} className="mb-4">
-                <Link href={hit.url} className="ssb-link header" >
-                  <span dangerouslySetInnerHTML={{
-                    __html: hit.title.replace(/&nbsp;/g, ' ')
-                  }}></span>
-                </Link>
-                <Paragraph className="search-result-ingress my-1" ><span dangerouslySetInnerHTML={{
-                  __html: hit.preface.replace(/&nbsp;/g, ' ')
-                }}></span>
-                </Paragraph>
-                <Paragraph className="metadata">
-                  <span className="type">{hit.contentType}</span> {hit.contentType && hit.publishDateHuman && ` / `}
-                  <time dateTime={hit.publishDate}>{hit.publishDateHuman}</time> {hit.publishDateHuman && hit.mainSubject && ` / `}
-                  {hit.mainSubject}
-                </Paragraph>
-              </li>
-            )
+            return renderListItem(hit, i)
           })}
         </ol>
       </div>
@@ -275,6 +283,15 @@ SearchResult.propTypes = {
   removeFilterPhrase: PropTypes.string,
   count: PropTypes.number,
   noHitMessage: PropTypes.string,
+  bestBetHit: PropTypes.shape({
+    title: PropTypes.string,
+    url: PropTypes.string,
+    preface: PropTypes.string,
+    mainSubject: PropTypes.string,
+    contentType: PropTypes.string,
+    publishDate: PropTypes.string,
+    publishDateHuman: PropTypes.string
+  }),
   hits: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string,
