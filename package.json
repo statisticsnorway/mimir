@@ -41,7 +41,7 @@
     "@types/react": "^17.0.27",
     "@types/validator": "^13.6.3",
     "@types/zipcelx": "^1.5.0",
-    "@typescript-eslint/eslint-plugin": "^2.34.0",
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
     "@typescript-eslint/parser": "^5.4.0",
     "autoprefixer": "^10.4.0",
     "axios": "^0.22.0",
