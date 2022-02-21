@@ -5,18 +5,25 @@ import { SearchResultPartConfig } from './searchResult-part-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { PreparedSearchResult, SolrPrepResultAndTotal } from '../../../lib/ssb/utils/solrUtils'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
+import { queryNodes, getNode } from '../../../lib/ssb/repo/common'
+import { NodeQueryResponse, RepoNode } from 'enonic-types/node'
+import { formatDate } from '../../../lib/ssb/utils/dateUtils'
+import { SEO } from '../../../services/news/news'
+import { Article } from '../../content-types/article/article'
+
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   solrSearch
 } = __non_webpack_require__('/lib/ssb/utils/solrUtils')
-
+const {
+  get
+} = __non_webpack_require__('/lib/xp/content')
 const {
   getComponent,
   getContent,
   pageUrl,
   serviceUrl
 } = __non_webpack_require__('/lib/xp/portal')
-
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
@@ -32,7 +39,6 @@ const {
 const {
   getMainSubjects
 } = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
-
 
 exports.get = function(req: Request): React4xpResponse | Response {
   try {
@@ -94,6 +100,103 @@ export function renderPart(req: Request): React4xpResponse {
     return dropdowns
   }
 
+  // Will be manually set in the best bet app in another JIRA task, so we can fetch from the node data directly then
+  // Does not include support for fact- or statistics pages without override SEO descriptions
+  function getBestBestPreface(bestBetData: Content<Article, object, SEO> | null): string {
+    const seoDescription: string | undefined = bestBetData ? bestBetData.x['com-enonic-app-metafields']['meta-data'].seoDescription : ''
+    if (bestBetData) {
+      if (seoDescription) {
+        return seoDescription
+      }
+      if (bestBetData.data && bestBetData.data.ingress) {
+        return bestBetData.data.ingress
+      }
+    }
+    return ''
+  }
+
+  // Might also be manually set in the best bet app in another JIRA task, so we can fetch from the node data directly then
+  // Currently only supports statistics, article & fact page
+  function getBestBetContentType(bestBetData: Content<Article, object, SEO> | null): string {
+    function pageType(): string {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // @ts-ignore
+      if (bestBetData && bestBetData.page && bestBetData.page.config && bestBetData.page.config.pageType) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+        // @ts-ignore
+        if (bestBetData.page.config.pageType === 'factPage') {
+          return localize({
+            key: 'contentType.search.faktaside',
+            locale: language
+          })
+        }
+      }
+      return ''
+    }
+
+    if (bestBetData) {
+      switch (bestBetData.type) {
+      case `${app.name}:statistics`:
+        return localize({
+          key: 'contentType.search.statistikk',
+          locale: language
+        })
+      case `${app.name}:article`:
+        return localize({
+          key: 'contentType.search.artikkel',
+          locale: language
+        })
+      case `${app.name}:page`: return pageType()
+      default: return ''
+      }
+    }
+    return ''
+  }
+
+  function bestBet(): PreparedSearchResult | undefined {
+    const result: NodeQueryResponse = queryNodes('no.ssb.bestbet', 'master', {
+      start: 0,
+      count: 1,
+      query: `fulltext('data.searchWords', '${sanitizedTerm}', 'OR')`
+    } )
+
+    const bet: BestBet | null = result.hits.length ? getNode('no.ssb.bestbet', 'master', result.hits[0].id) as BestBet : null
+    let firstBet: BestBet | null
+    if (bet && bet.constructor === Array) {
+      firstBet = bet[0]
+    } if (bet && !(bet.constructor === Array)) {
+      firstBet = bet
+    } else firstBet = null
+
+    let bestBetResult: PreparedSearchResult | null
+    if (firstBet && (firstBet.constructor !== Array)) {
+      // Uses Content<Article, object, SEO> type for override SEO description
+      // Should be revisited when the best bet app form is revised
+      const bestBetData: Content<Article, object, SEO> | null = firstBet.data ? get({
+        key: firstBet.data.linkedContentId
+      }) : null
+
+      if (bestBetData) {
+        bestBetResult = {
+          title: firstBet.data.linkedContentTitle ? firstBet.data.linkedContentTitle : bestBetData.displayName,
+          preface: getBestBestPreface(bestBetData),
+          contentType: getBestBetContentType(bestBetData),
+          url: pageUrl({
+            path: bestBetData._path
+          }) as unknown as string,
+          // Fetch from mainSubject and secondaryMainSubject from repo after best bet app form revision
+          mainSubject: '',
+          secondaryMainSubject: '',
+          publishDate: bestBetData.publish && bestBetData.publish.from ? bestBetData.publish.from : '',
+          publishDateHuman: bestBetData.publish && bestBetData.publish.from ? formatDate(bestBetData.publish.from, 'PPP', language) : ''
+        }
+        return bestBetResult
+      }
+      return undefined
+    }
+    return undefined
+  }
+
   /* query solr */
   const solrResult: SolrPrepResultAndTotal = sanitizedTerm ?
     solrSearch( sanitizedTerm, language, parseInt(part.config.numberOfHits)) : {
@@ -103,7 +206,8 @@ export function renderPart(req: Request): React4xpResponse {
     }
 
   /* prepare props */
-  const props: ReactProps = {
+  const props: SearchResultProps = {
+    bestBetHit: bestBet(),
     hits: solrResult.hits,
     total: solrResult.total,
     term: sanitizedTerm ? sanitizedTerm : '',
@@ -141,8 +245,17 @@ export function renderPart(req: Request): React4xpResponse {
   return React4xp.render('site/parts/searchResult/searchResultView', props, req)
 }
 
+  interface BestBet extends RepoNode {
+    data: {
+      linkedContentId: string;
+      linkedContentTitle: string;
+      linkedContentHref: string;
+      searchWords: Array<string>;
+    };
+  }
 
-interface ReactProps {
+interface SearchResultProps {
+  bestBetHit: PreparedSearchResult | undefined;
   hits: Array<PreparedSearchResult>;
   title: string;
   total: number;
