@@ -45,15 +45,27 @@ export function deleteBestBet(key: string): string {
   return deleteNode(BESTBET_REPO, BESTBET_BRANCH, key) ? 'slettet' : 'noe gikk feil'
 }
 
-export function createBestBet(id: string, linkedContentId: string, linkedContentTitle: string, searchWords: Array<string>): void {
+export function createBestBet(id: string,
+  linkedContentId: string,
+  linkedContentTitle: string,
+  linkedContentHref: string,
+  linkedContentIngress: string,
+  linkedContentType: string,
+  linkedContentDate: string,
+  linkedContentSubject: string,
+  searchWords: Array<string>): void {
   if (!nodeExists(BESTBET_REPO, BESTBET_BRANCH, id)) {
     createNode(BESTBET_REPO, BESTBET_BRANCH, {
       data: {
         linkedContentId: linkedContentId,
         linkedContentTitle: linkedContentTitle,
-        linkedContentHref: pageUrl({
+        linkedContentHref: linkedContentHref ? linkedContentHref : pageUrl({
           id: linkedContentId
         }),
+        linkedContentIngress: linkedContentIngress,
+        linkedContentType: linkedContentType,
+        linkedContentDate: linkedContentDate,
+        linkedContentSubject: linkedContentSubject,
         searchWords: searchWords
       }
     })
@@ -64,9 +76,13 @@ export function createBestBet(id: string, linkedContentId: string, linkedContent
         data: {
           linkedContentId: linkedContentId,
           linkedContentTitle: linkedContentTitle,
-          linkedContentHref: pageUrl({
+          linkedContentHref: linkedContentHref ? linkedContentHref : pageUrl({
             id: linkedContentId
           }),
+          linkedContentIngress: linkedContentIngress,
+          linkedContentType: linkedContentType,
+          linkedContentDate: linkedContentDate,
+          linkedContentSubject: linkedContentSubject,
           searchWords: searchWords
         }
       }

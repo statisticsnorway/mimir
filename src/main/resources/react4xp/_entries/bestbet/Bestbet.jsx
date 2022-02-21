@@ -18,13 +18,18 @@ function Bestbet(props) {
   const [bestBetContent, setBestBetContent] = useState({})
   const [searchWordsList, setSearchWordsList] = useState([])
 
-  const [bbBeingEdited, setBbBeingEdited] = useState({
+  const emptyBet = {
     id: '',
     linkedContentId: '',
     linkedContentTitle: '',
     linkedContentHref: '',
+    linkedContentIngress: '',
+    linkedContentType: '',
+    linkedContentDate: '',
+    linkedContentSubject: '',
     searchWords: ['']
-  })
+  }
+  const [bbBeingEdited, setBbBeingEdited] = useState(emptyBet)
 
   useEffect(() => {
     fetchBestBetList()
@@ -193,33 +198,45 @@ function Bestbet(props) {
 
   function renderForm() {
     return (
-      <Col className="bestbet-list ml-4">
-        <Title size={2}>Lag nytt best-bet</Title>
-        <AsyncSelect cacheOptions defaultOptions loadOptions={promiseOptions} onChange={handleContentSelect} />
-        {searchWordsList.length ?
-          <Row>
-            <Col className="d-flex flex-wrap mt-3">
-              {searchWordsList.map((searchWord) => renderSearchWord(searchWord))}
-            </Col>
-          </Row> : null}
-        <Row>
-          <Col>
-            <Input
-              handleChange={handleTagInput}
-              value={inputTag}
-              className="mt-3"
-            />
+      <EditSearchWordsModal
+        show={showEditSearchWordsModal}
+        onHide={handleCloseEditSearchWordModal}
+        body={
+          <Col className="bestbet-list ml-4">
+            <Title size={2}>Lag nytt best-bet</Title>
+            <AsyncSelect cacheOptions defaultOptions loadOptions={promiseOptions} onChange={handleContentSelect} />
+            {searchWordsList.length ?
+              <Row>
+                <Col className="d-flex flex-wrap mt-3">
+                  {searchWordsList.map((searchWord) => renderSearchWord(searchWord))}
+                </Col>
+              </Row> : null}
+            <Row>
+              <Col>
+                <Input
+                  handleChange={handleTagInput}
+                  value={inputTag}
+                  className="mt-3"
+                />
+              </Col>
+              <Col>
+                <Button primary onClick={handleTagSubmit} className="mt-3">Legg til</Button>
+              </Col>
+            </Row>
+            <Row>
+              <Col className="col-12 justify-content-center">
+                <Button primary onClick={() => handleCreate()} className="mt-3 mx-0">Fullfør</Button>
+              </Col>
+            </Row>
           </Col>
-          <Col>
-            <Button primary onClick={handleTagSubmit} className="mt-3">Legg til</Button>
-          </Col>
-        </Row>
-        <Row>
-          <Col className="col-12 justify-content-center">
-            <Button primary onClick={() => handleCreate()} className="mt-3 mx-0">Fullfør</Button>
-          </Col>
-        </Row>
-      </Col>
+        }
+        footer={
+          <>
+            <Button primary onClick={handleUpdate}>Lagre</Button>
+            <Button onClick={handleCloseEditSearchWordModal}>Lukk</Button>
+          </>
+        }
+      />
     )
   }
 
@@ -294,11 +311,14 @@ function Bestbet(props) {
           <Title size={1}>Best-bet søk</Title>
         </Col>
       </Row>
+      <Row>
+        <Button onClick={() => renderForm()}>Ny Bestbet</Button>
+      </Row>
       <Row className="justify-content-between">
         <Col className="col-8 bestbet-list">
           {renderBestbetList()}
         </Col>
-        {renderForm()}
+        {/* {renderForm()} */}
       </Row>
     </Container>
   )
