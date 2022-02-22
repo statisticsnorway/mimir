@@ -151,7 +151,7 @@ function NameSearch(props) {
           {!!result.nameGraph && renderGraphLink(desktop)}
           <Row>
             <Col className="md-6">
-              <Button className="close-button" onClick={() => closeResult()} type="button"> <X size="18"/> Lukk</Button>
+              <Button className="close-button" onClick={() => closeResult()} type="button"> <X size="18"/> {props.phrases.close} </Button>
             </Col>
           </Row>
         </Container>
@@ -527,7 +527,8 @@ NameSearch.propTypes = {
     beforeRegionLabel: PropTypes.string,
     legendItem: PropTypes.string,
     legendLabel: PropTypes.string,
-    legendLabelNoTitle: PropTypes.string
+    legendLabelNoTitle: PropTypes.string,
+    close: PropTypes.string
   }),
   graphData: PropTypes.bool,
   GA_TRACKING_ID: PropTypes.string

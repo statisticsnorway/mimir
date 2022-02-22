@@ -226,6 +226,10 @@ function partsPhrases(locale: string): PartProperties['phrases'] {
     legendLabelNoTitle: localize({
       key: 'highcharts.legendLabelNoTitle',
       locale
+    }),
+    close: localize({
+      key: 'close',
+      locale
     })
   }
 }
@@ -280,6 +284,7 @@ interface PartProperties {
     legendItem: string;
     legendLabel: string;
     legendLabelNoTitle: string;
+    close: string;
   };
   GA_TRACKING_ID: string | null;
 }
