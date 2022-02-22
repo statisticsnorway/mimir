@@ -198,6 +198,38 @@ function partsPhrases(locale: string): PartProperties['phrases'] {
     downloadXLS: localize({
       key: 'highcharts.downloadXLS',
       locale
+    }),
+    chartContainerLabel: localize({
+      key: 'highcharts.chartContainerLabel',
+      locale
+    }),
+    chartMenuLabel: localize({
+      key: 'highcharts.chartMenuLabel',
+      locale
+    }),
+    menuButtonLabel: localize({
+      key: 'highcharts.menuButtonLabel',
+      locale
+    }),
+    beforeRegionLabel: localize({
+      key: 'highcharts.beforeRegionLabel',
+      locale
+    }),
+    legendItem: localize({
+      key: 'highcharts.legendItem',
+      locale
+    }),
+    legendLabel: localize({
+      key: 'highcharts.legendLabel',
+      locale
+    }),
+    legendLabelNoTitle: localize({
+      key: 'highcharts.legendLabelNoTitle',
+      locale
+    }),
+    close: localize({
+      key: 'close',
+      locale
     })
   }
 }
@@ -245,6 +277,14 @@ interface PartProperties {
     downloadSVG: string;
     downloadCSV: string;
     downloadXLS: string;
+    chartContainerLabel: string;
+    chartMenuLabel: string;
+    menuButtonLabel: string;
+    beforeRegionLabel: string;
+    legendItem: string;
+    legendLabel: string;
+    legendLabelNoTitle: string;
+    close: string;
   };
   GA_TRACKING_ID: string | null;
 }

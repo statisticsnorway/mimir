@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Accordion, Button, Divider, Input, Link, Title } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import { Col, Container, Row, Form } from 'react-bootstrap'
@@ -31,6 +31,29 @@ function NameSearch(props) {
   const [errorMessage, setErrorMessage] = useState(undefined)
   const [nameGraphData, setNameGraphData] = useState(undefined)
   const [loadingGraph, setLoadingGraph] = useState(false)
+
+  useEffect(() => {
+    Highcharts.setOptions({
+      lang: {
+        accessibility: {
+          chartContainerLabel: props.phrases.chartContainerLabel,
+          exporting: {
+            chartMenuLabel: props.phrases.chartMenuLabel,
+            menuButtonLabel: props.phrases.menuButtonLabel
+          },
+          screenReaderSection: {
+            beforeRegionLabel: props.phrases.beforeRegionLabel,
+            endOfChartMarker: ''
+          },
+          legend: {
+            legendItem: props.phrases.legendItem,
+            legendLabel: props.phrases.legendLabel,
+            legendLabelNoTitle: props.phrases.legendLabelNoTitle
+          }
+        }
+      }
+    })
+  })
 
   const scrollAnchor = useRef(null)
   function scrollToResult() {
@@ -128,7 +151,7 @@ function NameSearch(props) {
           {!!result.nameGraph && renderGraphLink(desktop)}
           <Row>
             <Col className="md-6">
-              <Button className="close-button" onClick={() => closeResult()} type="button"> <X size="18"/> Lukk</Button>
+              <Button className="close-button" onClick={() => closeResult()} type="button"> <X size="18"/> {props.phrases.close} </Button>
             </Col>
           </Row>
         </Container>
@@ -497,7 +520,15 @@ NameSearch.propTypes = {
     downloadPDF: PropTypes.string,
     downloadSVG: PropTypes.string,
     downloadCSV: PropTypes.string,
-    downloadXLS: PropTypes.string
+    downloadXLS: PropTypes.string,
+    chartContainerLabel: PropTypes.string,
+    chartMenuLabel: PropTypes.string,
+    menuButtonLabel: PropTypes.string,
+    beforeRegionLabel: PropTypes.string,
+    legendItem: PropTypes.string,
+    legendLabel: PropTypes.string,
+    legendLabelNoTitle: PropTypes.string,
+    close: PropTypes.string
   }),
   graphData: PropTypes.bool,
   GA_TRACKING_ID: PropTypes.string
