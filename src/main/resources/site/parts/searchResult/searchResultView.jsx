@@ -241,7 +241,9 @@ function SearchResult(props) {
             <Title>{props.title}</Title>
             <Input
               size="lg"
-              value={searchTerm} handleChange={setSearchTerm} searchField
+              value={searchTerm}
+              handleChange={setSearchTerm}
+              searchField
               submitCallback={goToSearchResultPage}
               ariaLabelWrapper={props.term ? props.mainSearchPhrase : undefined}
             />
