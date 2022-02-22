@@ -83,7 +83,7 @@ function SearchResult(props) {
     return (
       <div>
         <div className="row mb-4">
-          <div className="col">
+          <div className="col" aria-live="polite" aria-atomic="true">
             {props.showingPhrase.replace('{0}', hits.length.toString())}&nbsp;<NumberFormat
               value={ Number(total) }
               displayType={'text'}
