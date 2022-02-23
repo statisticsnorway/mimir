@@ -241,8 +241,12 @@ function SearchResult(props) {
             <Title>{props.title}</Title>
             <Input
               size="lg"
-              value={searchTerm} handleChange={setSearchTerm} searchField
-              submitCallback={goToSearchResultPage}></Input>
+              value={searchTerm}
+              handleChange={setSearchTerm}
+              searchField
+              submitCallback={goToSearchResultPage}
+              ariaLabelWrapper={props.term ? props.mainSearchPhrase : undefined}
+            />
             <div className="filter mt-5">
               <Title size={6}>{props.limitResultPhrase}</Title>
               <Row justify-content-start>
@@ -281,6 +285,7 @@ SearchResult.propTypes = {
   showingPhrase: PropTypes.string,
   limitResultPhrase: PropTypes.string,
   removeFilterPhrase: PropTypes.string,
+  mainSearchPhrase: PropTypes.string,
   count: PropTypes.number,
   noHitMessage: PropTypes.string,
   bestBetHit: PropTypes.shape({
