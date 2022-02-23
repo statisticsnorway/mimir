@@ -3,13 +3,16 @@ import PropTypes from 'prop-types'
 import { Container, Row, Col } from 'react-bootstrap'
 import { Title, Link, Tag, Input, Button, Divider } from '@statisticsnorway/ssb-component-library'
 import { XCircle, Edit, Trash } from 'react-feather'
-import EditSearchWordsModal from './EditSearchWordsModal'
+import BestBetModal from './BestBetModal'
 import axios from 'axios'
 import AsyncSelect from 'react-select/async'
 import 'regenerator-runtime'
 function Bestbet(props) {
   const [loading, setLoading] = useState(false)
   const [bestBetList, setBestBetList] = useState([])
+
+  const [showCreateBestBetModal, setShowCreateBestBetModal] = useState(false)
+  const handleCloseCreateBestBetModal = () => setShowCreateBestBetModal(false)
 
   const [showEditSearchWordsModal, setShowEditSearchWordsModal] = useState(false)
   const handleCloseEditSearchWordModal = () => setShowEditSearchWordsModal(false)
@@ -65,6 +68,8 @@ function Bestbet(props) {
   }
 
   function handleCreate() {
+    setShowCreateBestBetModal(false)
+
     const updatedBestBetItem = {
       linkedContentId: bestBetContent.value,
       linkedContentTitle: bestBetContent.label,
@@ -153,9 +158,10 @@ function Bestbet(props) {
 
   function renderEditSearchWordModal() {
     return (
-      <EditSearchWordsModal
+      <BestBetModal
         show={showEditSearchWordsModal}
         onHide={handleCloseEditSearchWordModal}
+        title="Rediger nøkkelord"
         body={
           <>
             {bbBeingEdited.searchWords.length ?
@@ -198,12 +204,39 @@ function Bestbet(props) {
 
   function renderForm() {
     return (
-      <EditSearchWordsModal
-        show={showEditSearchWordsModal}
-        onHide={handleCloseEditSearchWordModal}
+      <BestBetModal
+        show={showCreateBestBetModal}
+        onHide={handleCloseCreateBestBetModal}
+        title="Lag nytt best-bet"
         body={
-          <Col className="bestbet-list ml-4">
-            <Title size={2}>Lag nytt best-bet</Title>
+          // <Col className="bestbet-list ml-4">
+          //   <Title size={2}>Lag nytt best-bet</Title>
+          //   <AsyncSelect cacheOptions defaultOptions loadOptions={promiseOptions} onChange={handleContentSelect} />
+          //   {searchWordsList.length ?
+          //     <Row>
+          //       <Col className="d-flex flex-wrap mt-3">
+          //         {searchWordsList.map((searchWord) => renderSearchWord(searchWord))}
+          //       </Col>
+          //     </Row> : null}
+          //   <Row>
+          //     <Col>
+          //       <Input
+          //         handleChange={handleTagInput}
+          //         value={inputTag}
+          //         className="mt-3"
+          //       />
+          //     </Col>
+          //     <Col>
+          //       <Button primary onClick={handleTagSubmit} className="mt-3">Legg til</Button>
+          //     </Col>
+          //   </Row>
+          //   <Row>
+          //     <Col className="col-12 justify-content-center">
+          //       <Button primary onClick={handleCreate} className="mt-3 mx-0">Fullfør</Button>
+          //     </Col>
+          //   </Row>
+          // </Col>
+          <Col>
             <AsyncSelect cacheOptions defaultOptions loadOptions={promiseOptions} onChange={handleContentSelect} />
             {searchWordsList.length ?
               <Row>
@@ -223,17 +256,12 @@ function Bestbet(props) {
                 <Button primary onClick={handleTagSubmit} className="mt-3">Legg til</Button>
               </Col>
             </Row>
-            <Row>
-              <Col className="col-12 justify-content-center">
-                <Button primary onClick={() => handleCreate()} className="mt-3 mx-0">Fullfør</Button>
-              </Col>
-            </Row>
           </Col>
         }
         footer={
           <>
-            <Button primary onClick={handleUpdate}>Lagre</Button>
-            <Button onClick={handleCloseEditSearchWordModal}>Lukk</Button>
+            <Button primary onClick={handleCreate}>Fullfør</Button>
+            <Button onClick={handleCloseCreateBestBetModal}>Lukk</Button>
           </>
         }
       />
@@ -304,7 +332,6 @@ function Bestbet(props) {
 
   return (
     <Container fluid>
-      {renderEditSearchWordModal()}
       <Row className="bestbet-header">
         <Col className="flex-row align-items-center">
           <img src={props.logoUrl} className="logo" />
@@ -312,13 +339,14 @@ function Bestbet(props) {
         </Col>
       </Row>
       <Row>
-        <Button onClick={() => renderForm()}>Ny Bestbet</Button>
+        <Button onClick={() => setShowCreateBestBetModal(true)}>Ny Bestbet</Button>
       </Row>
       <Row className="justify-content-between">
         <Col className="col-8 bestbet-list">
           {renderBestbetList()}
         </Col>
-        {/* {renderForm()} */}
+        {renderForm()}
+        {renderEditSearchWordModal()}
       </Row>
     </Container>
   )
