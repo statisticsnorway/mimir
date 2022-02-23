@@ -236,6 +236,10 @@ export function renderPart(req: Request): React4xpResponse {
     searchServiceUrl: serviceUrl({
       service: 'freeTextSearch'
     }),
+    mainSearchPhrase: localize({
+      key: 'mainSearch',
+      locale: language
+    }),
     searchPageUrl,
     language,
     dropDownSubjects: mainSubjectDropdown,
@@ -266,6 +270,7 @@ interface SearchResultProps {
   showingPhrase: string;
   limitResultPhrase: string;
   removeFilterPhrase: string;
+  mainSearchPhrase: string;
   searchServiceUrl: string;
   searchPageUrl: string;
   language: string;
