@@ -72,14 +72,6 @@
 										Bilde
 									</label>
 									<occurrences minimum="1" maximum="1" />
-									<config>
-										<allowPath>
-											${site}/*
-										</allowPath>
-										<showStatus>
-											true
-										</showStatus>
-									</config>
 								</input>
 							</items>
 						</option>

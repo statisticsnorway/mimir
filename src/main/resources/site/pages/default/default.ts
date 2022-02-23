@@ -157,7 +157,8 @@ exports.get = function(req: Request): Response {
   const headerComponent: React4xpObject = new React4xp('Header')
     .setProps({
       ...headerContent as object,
-      language: language
+      language: language,
+      searchResult: req.params.sok
     })
     .setId('header')
 
