@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Container, Row, Col } from 'react-bootstrap'
-import { Title, Link, Tag, Input, Button, Divider } from '@statisticsnorway/ssb-component-library'
+import { Title, Link, Tag, Input, TextArea, Button, Divider } from '@statisticsnorway/ssb-component-library'
 import { XCircle, Edit, Trash } from 'react-feather'
 import BestBetModal from './BestBetModal'
 import axios from 'axios'
@@ -236,23 +236,41 @@ function Bestbet(props) {
           //     </Col>
           //   </Row>
           // </Col>
-          <Col>
-            <AsyncSelect cacheOptions defaultOptions loadOptions={promiseOptions} onChange={handleContentSelect} />
+          <Col className="best-bet-form">
+            <Row>
+              <Col>
+                <Input
+                  label="Ekstern lenke"
+                  handleChange={''}
+                  value={''}
+                />
+                <Input
+                  label="Tittel"
+                  handleChange={''}
+                  value={''}
+                />
+                <TextArea
+                  label="Ingress"
+                  handleChange={''}
+                  value={''}
+                />
+                {/* TODO: Innholdstype, emne, dato */}
+              </Col>
+            </Row>
             {searchWordsList.length ?
               <Row>
-                <Col className="d-flex flex-wrap mt-3">
+                <Col className="d-flex flex-wrap">
                   {searchWordsList.map((searchWord) => renderSearchWord(searchWord))}
                 </Col>
               </Row> : null}
             <Row>
-              <Col>
+              <Col className="d-flex align-items-center flex-row pt-3">
                 <Input
+                  className="m-0 pr-3"
+                  label="Nøkkelord"
                   handleChange={handleTagInput}
                   value={inputTag}
-                  className="mt-3"
                 />
-              </Col>
-              <Col>
                 <Button primary onClick={handleTagSubmit} className="mt-3">Legg til</Button>
               </Col>
             </Row>
@@ -339,7 +357,7 @@ function Bestbet(props) {
         </Col>
       </Row>
       <Row>
-        <Button onClick={() => setShowCreateBestBetModal(true)}>Ny Bestbet</Button>
+        <Button onClick={() => setShowCreateBestBetModal(true)} className="mb-4">Ny Bestbet</Button>
       </Row>
       <Row className="justify-content-between">
         <Col className="col-8 bestbet-list">
