@@ -79,20 +79,23 @@ function SearchResult(props) {
   }
 
   function renderList() {
-    const bestbetHit = props.bestBetHit
+    const bestBetHit = props.bestBetHit
+    // The screen reader counts how many elements are in the list, so the best bet hit count needs to be included in the view for consistency
+    const currentAmount = bestBetHit ? (hits.length + 1).toString() : hits.length.toString()
+    const totalHits = bestBetHit ? total + 1 : total
     return (
       <div>
         <div className="row mb-4">
-          <div className="col">
-            {props.showingPhrase.replace('{0}', hits.length.toString())}&nbsp;<NumberFormat
-              value={ Number(total) }
+          <div className="col" aria-live="polite" aria-atomic="true">
+            {props.showingPhrase.replace('{0}', currentAmount)}&nbsp;<NumberFormat
+              value={ Number(totalHits) }
               displayType={'text'}
               thousandSeparator={' '}/>
             <Divider dark></Divider>
           </div>
         </div>
         <ol className="list-unstyled ">
-          {renderListItem(bestbetHit)}
+          {renderListItem(bestBetHit)}
           {hits.map( (hit, i) => {
             return renderListItem(hit, i)
           })}
