@@ -164,6 +164,7 @@ function PublicationArchive(props) {
         }}
         selectedItem={dropDownSubjects[0]}
         items={dropDownSubjects}
+        ariaLabel={props.chooseSubjectPhrase}
       />
     )
   }
@@ -178,6 +179,7 @@ function PublicationArchive(props) {
         }}
         selectedItem={dropDownTypes[0]}
         items={dropDownTypes}
+        ariaLabel={props.chooseContentTypePhrase}
       />
     )
   }
@@ -249,6 +251,8 @@ PublicationArchive.propTypes = {
   buttonTitle: PropTypes.string,
   showingPhrase: PropTypes.string,
   defineContentPhrase: PropTypes.string,
+  chooseSubjectPhrase: PropTypes.string,
+  chooseContentTypePhrase: PropTypes.string,
   language: PropTypes.string,
   publicationArchiveServiceUrl: PropTypes.string,
   firstPublications: PropTypes.objectOf({

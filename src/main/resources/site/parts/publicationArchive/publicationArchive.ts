@@ -91,6 +91,8 @@ function renderPart(req: Request): React4xpResponse {
     buttonTitle: phrases['button.showMore'],
     showingPhrase: phrases['publicationArchive.showing'],
     defineContentPhrase: phrases['publicationArchive.defineContent'],
+    chooseSubjectPhrase: phrases['dropdown.chooseSubject'],
+    chooseContentTypePhrase: phrases['dropdown.chooseContenttype'],
     language,
     publicationArchiveServiceUrl,
     firstPublications: getPublications(req, start, count, language),
@@ -116,6 +118,8 @@ interface PartProperties {
   buttonTitle: string;
   showingPhrase: string;
   defineContentPhrase: string;
+  chooseSubjectPhrase: string;
+  chooseContentTypePhrase: string;
   language: string;
   publicationArchiveServiceUrl: string;
   firstPublications: PublicationResult;
