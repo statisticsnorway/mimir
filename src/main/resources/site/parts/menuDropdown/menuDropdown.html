@@ -15,18 +15,8 @@
           </div>
         </div>
         <div id="search-container" class="collapse" data-th-class="${!modeMunicipality} ? 'choose-municipality-search' : 'hide-search' ">
-          <div class="card ssb-dropdown">
-            <div data-th-if="${modeMunicipality}" class="roboto-bold text-nowrap pr-4">Bytt kommune:</div>
-            <div data-th-id="${inputStickyMenuId}"></div>
-            <div id="municipality-list" class="dropdown-menu w-100 list-of-options" aria-labelledby="input-query-municipality">
-              <a class="dropdown-item a-plain option-list-element"
-                 data-th-each="municipality: ${municipalities}"
-                 data-th-href="${baseUrl} + ${municipality.path}"
-                 data-th-text="' ' + ${municipality.displayName}"
-                 data-th-attr="data-text=${municipality.displayName} + ' ' +  ${municipality.code}">
-              </a>
-            </div>
-          </div>
+          <div data-th-if="${modeMunicipality}" class="change-municipality roboto-bold text-nowrap pr-4">Bytt kommune:</div>
+          <div class="component-dropdown" data-th-id="${dropdownId}"/>
         </div>
         <button data-th-if="${modeMunicipality}"
                 class="show-search d-inline-block d-lg-none position-absolute btn-drawer-toggler"

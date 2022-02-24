@@ -110,6 +110,11 @@
     cursor: pointer;
     outline: inherit;
   }
+
+  #search-container {
+    display: flex;
+    align-items: center;
+  }
   .card {
     @include media-breakpoint-up(lg) {
       display: flex;

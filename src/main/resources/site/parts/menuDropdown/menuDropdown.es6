@@ -64,24 +64,21 @@ function renderPart(req) {
     key: 'menuDropdown.searchBarText'
   })
 
-  const searchText = i18nLib.localize({
-    key: 'menuSearch'
-  })
+  const municipalityItems = parsedMunicipalities.map( (municipality) => ({
+    id: municipality.path,
+    title: municipality.displayName
+  }))
 
-  // Input field react object for sticky menu
-  const inputStickyMenu = new React4xp('Input')
-    .setProps({
-      id: 'input-query-municipality',
-      ariaLabel: searchBarText,
-      searchField: true,
-      placeholder: searchBarText,
-      baseUrl: baseUrl,
-      municipalities: parsedMunicipalities,
-      className: 'municipality-search',
-      ariaLabelSearchButton: searchText
-    })
-    .setId('inputStickyMenu')
-    .uniqueId()
+  // Dropdown react object for sticky menu
+  const dropdownComponent = new React4xp('site/parts/menuDropdown/DropdownMunicipality')
+      .setProps({
+        ariaLabel: searchBarText,
+        placeholder: searchBarText,
+        items: municipalityItems,
+        baseUrl: baseUrl,
+      })
+      .setId('dropdownId')
+      .uniqueId()
 
   const municipalityName = municipality ? removeCountyFromMunicipalityName(municipality.displayName) : undefined
 
@@ -94,19 +91,19 @@ function renderPart(req) {
     municipality: municipality,
     municipalities: parsedMunicipalities,
     municipalityName: municipalityName,
-    inputStickyMenuId: inputStickyMenu.react4xpId
+    dropdownId: dropdownComponent.react4xpId
   }
 
   const thymeleafRender = render(view, model)
 
-  const body = inputStickyMenu.renderBody({
+  const body = dropdownComponent.renderBody({
     body: thymeleafRender,
     clientRender: req.mode !== 'edit'
   })
 
   return {
     body,
-    pageContributions: inputStickyMenu.renderPageContributions(),
+    pageContributions: dropdownComponent.renderPageContributions(),
     contentType: 'text/html'
   }
 }
