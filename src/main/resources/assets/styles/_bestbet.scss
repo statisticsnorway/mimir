@@ -41,10 +41,6 @@
             }
         }
 
-        // .ssb-dropdown label, .ssb-input label {
-        //     display: none;
-        // }
-
         .search-words {
             display: flex;
             align-items: center;
@@ -58,7 +54,7 @@
     }
 
     .best-bet-form {
-        .ssb-input {
+        .ssb-input, .ssb-dropdown, .ssb-text-area {
             max-width: 100%;
             margin-bottom: $spacer;
         }

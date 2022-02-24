@@ -15,9 +15,6 @@ const {
 const {
   cronJobLog
 } = __non_webpack_require__('/lib/ssb/utils/serverLog')
-const {
-  pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
 
 export const BESTBET_REPO: string = 'no.ssb.bestbet'
 export const BESTBET_BRANCH: string = 'master'
@@ -45,8 +42,9 @@ export function deleteBestBet(key: string): string {
   return deleteNode(BESTBET_REPO, BESTBET_BRANCH, key) ? 'slettet' : 'noe gikk feil'
 }
 
-export function createBestBet(id: string,
-  linkedContentId: string,
+export function createBestBet(
+  id: string,
+  // linkedContentId: string,
   linkedContentTitle: string,
   linkedContentHref: string,
   linkedContentIngress: string,
@@ -57,11 +55,12 @@ export function createBestBet(id: string,
   if (!nodeExists(BESTBET_REPO, BESTBET_BRANCH, id)) {
     createNode(BESTBET_REPO, BESTBET_BRANCH, {
       data: {
-        linkedContentId: linkedContentId,
+        // linkedContentId: linkedContentId,
         linkedContentTitle: linkedContentTitle,
-        linkedContentHref: linkedContentHref ? linkedContentHref : pageUrl({
-          id: linkedContentId
-        }),
+        // linkedContentHref: linkedContentHref ? linkedContentHref : pageUrl({
+        //   id: linkedContentId
+        // }),
+        linkedContentHref: linkedContentHref,
         linkedContentIngress: linkedContentIngress,
         linkedContentType: linkedContentType,
         linkedContentDate: linkedContentDate,
@@ -74,11 +73,12 @@ export function createBestBet(id: string,
       return {
         ...node,
         data: {
-          linkedContentId: linkedContentId,
+          // linkedContentId: linkedContentId,
           linkedContentTitle: linkedContentTitle,
-          linkedContentHref: linkedContentHref ? linkedContentHref : pageUrl({
-            id: linkedContentId
-          }),
+          // linkedContentHref: linkedContentHref ? linkedContentHref : pageUrl({
+          //   id: linkedContentId
+          // }),
+          linkedContentHref: linkedContentHref,
           linkedContentIngress: linkedContentIngress,
           linkedContentType: linkedContentType,
           linkedContentDate: linkedContentDate,

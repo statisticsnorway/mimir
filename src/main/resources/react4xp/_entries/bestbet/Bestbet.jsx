@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Container, Row, Col } from 'react-bootstrap'
-import { Title, Link, Tag, Input, TextArea, Button, Divider } from '@statisticsnorway/ssb-component-library'
+import { Title, Link, Tag, Input, TextArea, Dropdown, Button, Divider } from '@statisticsnorway/ssb-component-library'
 import { XCircle, Edit, Trash } from 'react-feather'
 import BestBetModal from './BestBetModal'
 import axios from 'axios'
-import AsyncSelect from 'react-select/async'
-import 'regenerator-runtime'
+// import AsyncSelect from 'react-select/async'
+// import 'regenerator-runtime'
 function Bestbet(props) {
   const [loading, setLoading] = useState(false)
   const [bestBetList, setBestBetList] = useState([])
@@ -17,13 +17,18 @@ function Bestbet(props) {
   const [showEditSearchWordsModal, setShowEditSearchWordsModal] = useState(false)
   const handleCloseEditSearchWordModal = () => setShowEditSearchWordsModal(false)
 
-  const [inputTag, setInputTag] = useState('')
+  const [urlInputValue, setUrlInputValue] = useState('')
+  const [titleInputValue, setTitleInputValue] = useState('')
+  const [ingressInputValue, setIngressInputValue] = useState('')
+  const [contentTypeValue, setContentTypeValue] = useState('')
+  const [mainSubjectValue, setMainSubjectValue] = useState('')
+  const [searchWordTag, setSearchWordTag] = useState('')
   const [bestBetContent, setBestBetContent] = useState({})
   const [searchWordsList, setSearchWordsList] = useState([])
 
   const emptyBet = {
     id: '',
-    linkedContentId: '',
+    // linkedContentId: '',
     linkedContentTitle: '',
     linkedContentHref: '',
     linkedContentIngress: '',
@@ -70,11 +75,22 @@ function Bestbet(props) {
   function handleCreate() {
     setShowCreateBestBetModal(false)
 
+    // const updatedBestBetItem = {
+    //   linkedContentId: bestBetContent.value,
+    //   linkedContentTitle: bestBetContent.label,
+    //   searchWords: searchWordsList
+    // }
+
     const updatedBestBetItem = {
-      linkedContentId: bestBetContent.value,
-      linkedContentTitle: bestBetContent.label,
+      linkedContentTitle: titleInputValue,
+      linkedContentHref: urlInputValue,
+      linkedContentIngress: ingressInputValue,
+      linkedContentType: contentTypeValue,
+      linkedContentDate: '',
+      linkedContentSubject: mainSubjectValue,
       searchWords: searchWordsList
     }
+    console.log(updatedBestBetItem)
 
     setLoading(true)
     axios.post(props.bestBetListServiceUrl, updatedBestBetItem)
@@ -101,8 +117,11 @@ function Bestbet(props) {
     setBbBeingEdited(item)
   }
 
-  function handleTagInput(event) {
-    setInputTag(event)
+  function handleInputChange(event, type) {
+    if (type === 'url') setUrlInputValue(event)
+    if (type === 'title') setTitleInputValue(event)
+    if (type === 'ingress') setIngressInputValue(event)
+    if (type === 'searchWord') setSearchWordTag(event)
   }
 
   function handleRemoveEditTag(tag) {
@@ -116,29 +135,29 @@ function Bestbet(props) {
   }
 
   function handleTagSubmit() {
-    setSearchWordsList([...searchWordsList, inputTag])
+    setSearchWordsList([...searchWordsList, searchWordTag])
   }
 
-  function handleContentSelect(event) {
-    setBestBetContent(event)
-  }
+  // function handleContentSelect(event) {
+  //   setBestBetContent(event)
+  // }
 
-  async function searchForTerm(inputValue = '') {
-    const result = await axios.get(props.contentSearchServiceUrl, {
-      params: {
-        query: inputValue
-      }
-    })
-    const hits = result.data.hits
-    return hits
-  }
+  // async function searchForTerm(inputValue = '') {
+  //   const result = await axios.get(props.contentSearchServiceUrl, {
+  //     params: {
+  //       query: inputValue
+  //     }
+  //   })
+  //   const hits = result.data.hits
+  //   return hits
+  // }
 
-  const promiseOptions = (inputValue) =>
-    new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(searchForTerm(inputValue))
-      }, 1000)
-    })
+  // const promiseOptions = (inputValue) =>
+  //   new Promise((resolve) => {
+  //     setTimeout(() => {
+  //       resolve(searchForTerm(inputValue))
+  //     }, 1000)
+  //   })
 
   function renderSearchWord(searchWord, disabled) {
     if (!disabled) {
@@ -173,8 +192,8 @@ function Bestbet(props) {
             <Row>
               <Col>
                 <Input
-                  handleChange={handleTagInput}
-                  value={inputTag}
+                  handleChange={handleInputChange}
+                  value={searchWordTag}
                   className="mt-3"
                 />
               </Col>
@@ -185,7 +204,7 @@ function Bestbet(props) {
                     linkedContentId: bbBeingEdited.linkedContentId,
                     linkedContentTitle: bbBeingEdited.linkedContentTitle,
                     linkedContentHref: bbBeingEdited.linkedContentHref,
-                    searchWords: [...bbBeingEdited.searchWords, inputTag]
+                    searchWords: [...bbBeingEdited.searchWords, searchWordTag]
                   })
                 }} className="mt-3">Legg til</Button>
               </Col>
@@ -209,54 +228,38 @@ function Bestbet(props) {
         onHide={handleCloseCreateBestBetModal}
         title="Lag nytt best-bet"
         body={
-          // <Col className="bestbet-list ml-4">
-          //   <Title size={2}>Lag nytt best-bet</Title>
-          //   <AsyncSelect cacheOptions defaultOptions loadOptions={promiseOptions} onChange={handleContentSelect} />
-          //   {searchWordsList.length ?
-          //     <Row>
-          //       <Col className="d-flex flex-wrap mt-3">
-          //         {searchWordsList.map((searchWord) => renderSearchWord(searchWord))}
-          //       </Col>
-          //     </Row> : null}
-          //   <Row>
-          //     <Col>
-          //       <Input
-          //         handleChange={handleTagInput}
-          //         value={inputTag}
-          //         className="mt-3"
-          //       />
-          //     </Col>
-          //     <Col>
-          //       <Button primary onClick={handleTagSubmit} className="mt-3">Legg til</Button>
-          //     </Col>
-          //   </Row>
-          //   <Row>
-          //     <Col className="col-12 justify-content-center">
-          //       <Button primary onClick={handleCreate} className="mt-3 mx-0">Fullfør</Button>
-          //     </Col>
-          //   </Row>
-          // </Col>
           <Col className="best-bet-form">
             <Row>
               <Col>
                 <Input
                   label="Ekstern lenke"
-                  handleChange={''}
-                  value={''}
+                  handleChange={(e) => handleInputChange(e, 'url')}
+                  value={urlInputValue}
                 />
                 <Input
                   label="Tittel"
-                  handleChange={''}
-                  value={''}
+                  handleChange={(e) => handleInputChange(e, 'title')}
+                  value={titleInputValue}
                 />
                 <TextArea
                   label="Ingress"
-                  handleChange={''}
-                  value={''}
+                  handleChange={(e) => handleInputChange(e, 'ingress')}
+                  value={ingressInputValue}
                 />
-                {/* TODO: Innholdstype, emne, dato */}
+                <Dropdown
+                  header="Innholdstype"
+                  items={props.contentTypes}
+                  onSelect={(item) => setContentTypeValue(item.title)}
+                />
+                <Dropdown
+                  header="Emne"
+                  items={props.mainSubjects}
+                  onSelect={(item) => setMainSubjectValue(item.title)}
+                />
+                {/* TODO: dato */}
               </Col>
             </Row>
+            {/* <AsyncSelect cacheOptions defaultOptions loadOptions={promiseOptions} onChange={handleContentSelect} /> */}
             {searchWordsList.length ?
               <Row>
                 <Col className="d-flex flex-wrap">
@@ -264,12 +267,12 @@ function Bestbet(props) {
                 </Col>
               </Row> : null}
             <Row>
-              <Col className="d-flex align-items-center flex-row pt-3">
+              <Col className="d-flex align-items-center flex-row">
                 <Input
                   className="m-0 pr-3"
                   label="Nøkkelord"
-                  handleChange={handleTagInput}
-                  value={inputTag}
+                  handleChange={(e) => handleInputChange(e, 'searchWord')}
+                  value={searchWordTag}
                 />
                 <Button primary onClick={handleTagSubmit} className="mt-3">Legg til</Button>
               </Col>
@@ -374,7 +377,9 @@ Bestbet.propTypes = {
   logoUrl: PropTypes.string,
   bestBetListServiceUrl: PropTypes.string,
   contentSearchServiceUrl: PropTypes.string,
-  contentStudioBaseUrl: PropTypes.string
+  contentStudioBaseUrl: PropTypes.string,
+  contentTypes: PropTypes.array,
+  mainSubjects: PropTypes.array
 }
 
 export default (props) => <Bestbet {...props} />

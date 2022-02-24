@@ -25,7 +25,16 @@ exports.get = () => {
 }
 exports.post = (req) => {
   const body = JSON.parse(req.body)
-  const response = createBestBet(body.id, body.linkedContentId, body.linkedContentTitle, body.searchWords)
+  const response = createBestBet(
+    body.id,
+    body.linkedContentTitle,
+    body.linkedContentHref,
+    body.linkedContentIngress,
+    body.linkedContentType,
+    body.linkedContentDate,
+    body.linkedContentSubject,
+    body.searchWords
+  )
   return response
 }
 exports.delete = (req) => {
