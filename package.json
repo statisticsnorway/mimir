@@ -44,7 +44,7 @@
     "@typescript-eslint/eslint-plugin": "^5.12.1",
     "@typescript-eslint/parser": "^5.12.1",
     "autoprefixer": "^10.4.0",
-    "axios": "^0.22.0",
+    "axios": "^0.26.0",
     "babel-cli": "^6.26.0",
     "babel-loader": "^8.2.2",
     "babel-preset-env": "^1.7.0",
