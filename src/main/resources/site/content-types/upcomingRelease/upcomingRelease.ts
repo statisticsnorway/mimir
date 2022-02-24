@@ -8,7 +8,7 @@ export interface UpcomingRelease {
   /**
    * Innholdstype
    */
-  contentType: "article" | "report" | "analysis" | "table" | "activity";
+  contentType: "article" | "report" | "analysis" | "table" | "activity" | "statistics";
 
   /**
    * Hovedemne
