@@ -5,6 +5,7 @@ import { Modal } from 'react-bootstrap'
 function BestBetModal(props) {
   return (
     <Modal
+      size="lg"
       show={props.show}
       onHide={props.onHide}
     >

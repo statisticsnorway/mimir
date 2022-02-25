@@ -305,20 +305,23 @@ function Bestbet(props) {
       <>
         <Row>
           <Col className="col-6">
-            <li>
-              <Link isExternal={true}
-                href={props.contentStudioBaseUrl + item.linkedContentHref}>
-                {item.linkedContentTitle}
-              </Link>
+            <li className="d-flex flex-row align-items-center">
+              <div className="best-bet-url-wrapper pr-1">
+                <Link isExternal={true}
+                  href={props.contentStudioBaseUrl + item.linkedContentHref}>
+                  {item.linkedContentTitle}
+                </Link>
+              </div>
+              <Tag className="m-1" onClick={() => handleEditSearchWordOnClick(item)}>
+                Rediger
+                <Edit size={16} className="ml-1" />
+              </Tag>
             </li>
           </Col>
 
           <Col>
             <div className="d-flex flex-wrap">
               {item.searchWords.map((searchWord) => renderSearchWord(searchWord, true))}
-              <Tag className="m-1" onClick={() => handleEditSearchWordOnClick(item)}>
-              Rediger<Edit size={16} className="ml-1" />
-              </Tag>
             </div>
           </Col>
           <Col>
@@ -348,7 +351,7 @@ function Bestbet(props) {
               <Title size={2}>Nøkkelord</Title>
             </Col>
             <Col>
-              <Title size={2}></Title>
+              <Title size={2}>{/* Delete best bet row */}</Title>
             </Col>
           </Row>
           <Row>
@@ -370,11 +373,16 @@ function Bestbet(props) {
           <Title size={1}>Best-bet søk</Title>
         </Col>
       </Row>
-      <Row>
-        <Button onClick={() => setShowCreateBestBetModal(true)} className="mb-4">Ny Bestbet</Button>
-      </Row>
       <Row className="justify-content-between">
-        <Col className="col-8 bestbet-list">
+        <Col className="col-12 bestbet-list">
+          <Button
+            className="mb-4"
+            onClick={() => setShowCreateBestBetModal(true)}
+            primary
+          >
+            Ny Bestbet
+          </Button>
+          <Divider className="pb-3" light />
           {renderBestbetList()}
         </Col>
         {renderForm()}
