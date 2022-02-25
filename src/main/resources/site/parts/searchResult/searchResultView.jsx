@@ -68,7 +68,7 @@ function SearchResult(props) {
           }}></span>
           </Paragraph>
           <Paragraph className="metadata">
-            <span className="type">{hit.contentType}</span> {hit.contentType && hit.publishDateHuman && ` / `}
+            <span className="type">{hit.contentType}</span> {((hit.contentType && hit.publishDateHuman) || (hit.contentType && hit.mainSubject)) && ` / `}
             <time dateTime={hit.publishDate}>{hit.publishDateHuman}</time> {hit.publishDateHuman && hit.mainSubject && ` / `}
             {hit.mainSubject}
           </Paragraph>

@@ -18,28 +18,15 @@ function Bestbet(props) {
   const [showEditSearchWordsModal, setShowEditSearchWordsModal] = useState(false)
   const handleCloseEditSearchWordModal = () => setShowEditSearchWordsModal(false)
 
+  const [bestBetId, setBestBetId] = useState('')
   const [urlInputValue, setUrlInputValue] = useState('')
   const [titleInputValue, setTitleInputValue] = useState('')
   const [ingressInputValue, setIngressInputValue] = useState('')
   const [contentTypeValue, setContentTypeValue] = useState('')
   const [mainSubjectValue, setMainSubjectValue] = useState('')
-  const [startDate, setStartDate] = useState(new Date())
+  const [startDateValue, setStartDateValue] = useState(new Date())
   const [searchWordTag, setSearchWordTag] = useState('')
-  const [bestBetContent, setBestBetContent] = useState({})
   const [searchWordsList, setSearchWordsList] = useState([])
-
-  const emptyBet = {
-    id: '',
-    // linkedContentId: '',
-    linkedContentTitle: '',
-    linkedContentHref: '',
-    linkedContentIngress: '',
-    linkedContentType: '',
-    linkedContentDate: '',
-    linkedContentSubject: '',
-    searchWords: ['']
-  }
-  const [bbBeingEdited, setBbBeingEdited] = useState(emptyBet)
 
   useEffect(() => {
     fetchBestBetList()
@@ -62,48 +49,49 @@ function Bestbet(props) {
 
   function handleUpdate() {
     setShowEditSearchWordsModal(false)
-
     setLoading(true)
-    axios.post(props.bestBetListServiceUrl, bbBeingEdited)
-      .then(() => {
-        fetchBestBetList()
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-      .finally(() => setLoading(false))
-  }
-
-  function handleCreate() {
-    setShowCreateBestBetModal(false)
-
-    // const updatedBestBetItem = {
-    //   linkedContentId: bestBetContent.value,
-    //   linkedContentTitle: bestBetContent.label,
-    //   searchWords: searchWordsList
-    // }
-
-    const updatedBestBetItem = {
+    axios.post(props.bestBetListServiceUrl, {
+      id: bestBetId,
       linkedContentTitle: titleInputValue,
       linkedContentHref: urlInputValue,
       linkedContentIngress: ingressInputValue,
       linkedContentType: contentTypeValue,
-      linkedContentDate: '',
+      linkedContentDate: startDateValue,
       linkedContentSubject: mainSubjectValue,
       searchWords: searchWordsList
-    }
-    console.log(updatedBestBetItem)
-
-    setLoading(true)
-    axios.post(props.bestBetListServiceUrl, updatedBestBetItem)
+    })
       .then(() => {
         fetchBestBetList()
       })
       .catch((err) => {
         console.log(err)
       })
-      .finally(() => setLoading(false)
-      )
+      .finally(() => {
+        setLoading(false)
+      })
+  }
+
+  function handleCreate() {
+    setShowCreateBestBetModal(false)
+    setLoading(true)
+    axios.post(props.bestBetListServiceUrl, {
+      linkedContentTitle: titleInputValue,
+      linkedContentHref: urlInputValue,
+      linkedContentIngress: ingressInputValue,
+      linkedContentType: contentTypeValue,
+      linkedContentDate: startDateValue,
+      linkedContentSubject: mainSubjectValue,
+      searchWords: searchWordsList
+    })
+      .catch((err) => {
+        console.log(err)
+      })
+      .finally(() => {
+        setLoading(false)
+        setTimeout(() => {
+          fetchBestBetList()
+        }, 1000)
+      })
   }
 
   function handleDelete(key) {
@@ -114,27 +102,28 @@ function Bestbet(props) {
     }).then(() => fetchBestBetList())
   }
 
-  function handleEditSearchWordOnClick(item) {
+  function handleEditBestBetOnClick(item) {
     setShowEditSearchWordsModal(true)
-    setBbBeingEdited(item)
+    setBestBetId(item.id)
+    setTitleInputValue(item.linkedContentTitle)
+    setUrlInputValue(item.linkedContentHref)
+    setIngressInputValue(item.linkedContentIngress)
+    setStartDateValue(item.linkedContentDate)
+    setContentTypeValue(item.linkedContentType)
+    setMainSubjectValue(item.linkedContentSubject)
+    setSearchWordsList(item.searchWords)
   }
 
   function handleInputChange(event, type) {
     if (type === 'url') setUrlInputValue(event)
     if (type === 'title') setTitleInputValue(event)
     if (type === 'ingress') setIngressInputValue(event)
-    if (type === 'date') setStartDate(event)
+    if (type === 'date') setStartDateValue(event)
     if (type === 'searchWord') setSearchWordTag(event)
   }
 
   function handleRemoveEditTag(tag) {
-    setBbBeingEdited({
-      id: bbBeingEdited.id,
-      linkedContentId: bbBeingEdited.linkedContentId,
-      linkedContentTitle: bbBeingEdited.linkedContentTitle,
-      linkedContentHref: bbBeingEdited.linkedContentHref,
-      searchWords: bbBeingEdited.searchWords.filter((word) => word !== tag)
-    })
+    setSearchWordsList(searchWordsList.filter((word) => word !== tag))
   }
 
   function handleTagSubmit() {
@@ -178,117 +167,95 @@ function Bestbet(props) {
     )
   }
 
-  function renderEditSearchWordModal() {
+  function renderBestBetForm() {
+    return (
+      <div className="best-bet-form">
+        <Row>
+          <Col>
+            <Input
+              label="Ekstern lenke"
+              handleChange={(e) => handleInputChange(e, 'url')}
+              value={urlInputValue}
+            />
+            <Input
+              label="Tittel"
+              handleChange={(e) => handleInputChange(e, 'title')}
+              value={titleInputValue}
+            />
+            <TextArea
+              label="Ingress"
+              handleChange={(e) => handleInputChange(e, 'ingress')}
+              value={ingressInputValue}
+            />
+            <Dropdown
+              header="Innholdstype"
+              items={props.contentTypes}
+              // selectedItem={props.contentTypes.filter((contentType) => contentTypeValue === contentType.title)[0]}
+              onSelect={(item) => setContentTypeValue(item.title)}
+            />
+            <Dropdown
+              header="Emne"
+              items={props.mainSubjects}
+              // selectedItem={props.mainSubjects.filter((mainSubject) => mainSubjectValue === mainSubject.title)[0]}
+              onSelect={(item) => setMainSubjectValue(item.title)}
+            />
+            <Input
+              label="Dato"
+              type="date"
+              handleChange={(e) => handleInputChange(e, 'date')}
+              value={startDateValue}
+            />
+          </Col>
+        </Row>
+        {searchWordsList.length ?
+          <Row>
+            <Col className="d-flex flex-wrap mb-3">
+              {searchWordsList.map((searchWord) => renderSearchWord(searchWord))}
+            </Col>
+          </Row> : null}
+        <Row>
+          <Col className="d-flex align-items-center flex-row">
+            <Input
+              className="m-0 pr-3"
+              label="Nøkkelord"
+              handleChange={(e) => handleInputChange(e, 'searchWord')}
+              value={searchWordTag}
+            />
+            <Button primary onClick={handleTagSubmit}>Legg til</Button>
+          </Col>
+        </Row>
+      </div>
+    )
+  }
+
+  function renderEditBestBetModal() {
     return (
       <BestBetModal
         show={showEditSearchWordsModal}
         onHide={handleCloseEditSearchWordModal}
-        title="Rediger nøkkelord"
-        body={
-          <>
-            {bbBeingEdited.searchWords.length ?
-              <Row>
-                <Col className="d-flex flex-wrap mt-3">
-                  {bbBeingEdited.searchWords.map((searchWord) => renderSearchWord(searchWord))}
-                </Col>
-              </Row> : null}
-            <Row>
-              <Col>
-                <Input
-                  handleChange={handleInputChange}
-                  value={searchWordTag}
-                  className="mt-3"
-                />
-              </Col>
-              <Col>
-                <Button primary onClick={() => {
-                  setBbBeingEdited({
-                    id: bbBeingEdited.id,
-                    linkedContentId: bbBeingEdited.linkedContentId,
-                    linkedContentTitle: bbBeingEdited.linkedContentTitle,
-                    linkedContentHref: bbBeingEdited.linkedContentHref,
-                    searchWords: [...bbBeingEdited.searchWords, searchWordTag]
-                  })
-                }} className="mt-3">Legg til</Button>
-              </Col>
-            </Row>
-          </>
-        }
+        title="Rediger Bestbet"
+        body={renderBestBetForm()}
         footer={
           <>
             <Button primary onClick={handleUpdate}>Lagre</Button>
-            <Button onClick={handleCloseEditSearchWordModal}>Lukk</Button>
+            <Button onClick={handleCloseEditSearchWordModal}>
+              Lukk
+            </Button>
           </>
         }
       />
     )
   }
 
-  function renderForm() {
+  function renderCreateBestBetModal() {
     return (
       <BestBetModal
         show={showCreateBestBetModal}
         onHide={handleCloseCreateBestBetModal}
         title="Lag nytt best-bet"
         body={
-          <Col className="best-bet-form">
-            <Row>
-              <Col>
-                <Input
-                  label="Ekstern lenke"
-                  handleChange={(e) => handleInputChange(e, 'url')}
-                  value={urlInputValue}
-                />
-                <Input
-                  label="Tittel"
-                  handleChange={(e) => handleInputChange(e, 'title')}
-                  value={titleInputValue}
-                />
-                <TextArea
-                  label="Ingress"
-                  handleChange={(e) => handleInputChange(e, 'ingress')}
-                  value={ingressInputValue}
-                />
-                <Dropdown
-                  header="Innholdstype"
-                  items={props.contentTypes}
-                  onSelect={(item) => setContentTypeValue(item.title)}
-                />
-                <Dropdown
-                  header="Emne"
-                  items={props.mainSubjects}
-                  onSelect={(item) => setMainSubjectValue(item.title)}
-                />
-                <Input
-                  label="Dato"
-                  type="date"
-                  handleChange={(e) => {
-                    handleInputChange(e, 'date')
-                    console.log(startDate)
-                  }}
-                  value={startDate}
-                />
-              </Col>
-            </Row>
-            {/* <AsyncSelect cacheOptions defaultOptions loadOptions={promiseOptions} onChange={handleContentSelect} /> */}
-            {searchWordsList.length ?
-              <Row>
-                <Col className="d-flex flex-wrap">
-                  {searchWordsList.map((searchWord) => renderSearchWord(searchWord))}
-                </Col>
-              </Row> : null}
-            <Row>
-              <Col className="d-flex align-items-center flex-row">
-                <Input
-                  className="m-0 pr-3"
-                  label="Nøkkelord"
-                  handleChange={(e) => handleInputChange(e, 'searchWord')}
-                  value={searchWordTag}
-                />
-                <Button primary onClick={handleTagSubmit} className="mt-3">Legg til</Button>
-              </Col>
-            </Row>
-          </Col>
+          renderBestBetForm()
+          /* <AsyncSelect cacheOptions defaultOptions loadOptions={promiseOptions} onChange={handleContentSelect} /> */
         }
         footer={
           <>
@@ -312,7 +279,7 @@ function Bestbet(props) {
                   {item.linkedContentTitle}
                 </Link>
               </div>
-              <Tag className="m-1" onClick={() => handleEditSearchWordOnClick(item)}>
+              <Tag className="m-1" onClick={() => handleEditBestBetOnClick(item)}>
                 Rediger
                 <Edit size={16} className="ml-1" />
               </Tag>
@@ -385,8 +352,8 @@ function Bestbet(props) {
           <Divider className="pb-3" light />
           {renderBestbetList()}
         </Col>
-        {renderForm()}
-        {renderEditSearchWordModal()}
+        {renderCreateBestBetModal()}
+        {renderEditBestBetModal()}
       </Row>
     </Container>
   )

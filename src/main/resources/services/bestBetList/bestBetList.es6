@@ -17,6 +17,10 @@ exports.get = () => {
           linkedContentId: bet.data.linkedContentId,
           linkedContentTitle: bet.data.linkedContentTitle,
           linkedContentHref: bet.data.linkedContentHref,
+          linkedContentIngress: bet.data.linkedContentIngress,
+          linkedContentType: bet.data.linkedContentType,
+          linkedContentDate: bet.data.linkedContentDate,
+          linkedContentSubject: bet.data.linkedContentSubject,
           searchWords: ensureArray(bet.data.searchWords)
         }
       })
