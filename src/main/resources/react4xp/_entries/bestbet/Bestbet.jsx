@@ -7,6 +7,7 @@ import BestBetModal from './BestBetModal'
 import axios from 'axios'
 // import AsyncSelect from 'react-select/async'
 // import 'regenerator-runtime'
+
 function Bestbet(props) {
   const [loading, setLoading] = useState(false)
   const [bestBetList, setBestBetList] = useState([])
@@ -22,6 +23,7 @@ function Bestbet(props) {
   const [ingressInputValue, setIngressInputValue] = useState('')
   const [contentTypeValue, setContentTypeValue] = useState('')
   const [mainSubjectValue, setMainSubjectValue] = useState('')
+  const [startDate, setStartDate] = useState(new Date())
   const [searchWordTag, setSearchWordTag] = useState('')
   const [bestBetContent, setBestBetContent] = useState({})
   const [searchWordsList, setSearchWordsList] = useState([])
@@ -121,6 +123,7 @@ function Bestbet(props) {
     if (type === 'url') setUrlInputValue(event)
     if (type === 'title') setTitleInputValue(event)
     if (type === 'ingress') setIngressInputValue(event)
+    if (type === 'date') setStartDate(event)
     if (type === 'searchWord') setSearchWordTag(event)
   }
 
@@ -256,7 +259,15 @@ function Bestbet(props) {
                   items={props.mainSubjects}
                   onSelect={(item) => setMainSubjectValue(item.title)}
                 />
-                {/* TODO: dato */}
+                <Input
+                  label="Dato"
+                  type="date"
+                  handleChange={(e) => {
+                    handleInputChange(e, 'date')
+                    console.log(startDate)
+                  }}
+                  value={startDate}
+                />
               </Col>
             </Row>
             {/* <AsyncSelect cacheOptions defaultOptions loadOptions={promiseOptions} onChange={handleContentSelect} /> */}
