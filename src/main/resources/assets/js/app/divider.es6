@@ -5,6 +5,8 @@ export function init() {
     return window.getComputedStyle(elem).getPropertyValue('display') === 'none'
   }
 
+  $( 'p:empty' ).remove()
+
   $(function() {
     // #region hide trailing dividers in last region
     const sectionsInLastRegion = Array.from(document.querySelectorAll('.xp-region:last-child > section'))
