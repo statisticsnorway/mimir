@@ -5,6 +5,7 @@ export function init() {
     return window.getComputedStyle(elem).getPropertyValue('display') === 'none'
   }
 
+  // Removes unused empty paragraph tags. They appear to be injected before and after each macro, for some reason.
   $( 'p:empty' ).remove()
 
   $(function() {
