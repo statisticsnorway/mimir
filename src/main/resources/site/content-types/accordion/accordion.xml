@@ -14,9 +14,7 @@
         <input name="body" type="HtmlArea">
           <label>Innhold</label>
           <config>
-            <include>
-              Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote
-            </include>
+            <include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
           </config>
           <occurrences minimum="0" maximum="1"/>
         </input>
@@ -31,9 +29,7 @@
             <input type="HtmlArea" name="body">
               <label>Brødtekst</label>
               <config>
-                <include>
-									Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote
-                </include>
+                <include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
               </config>
               <occurrences minimum="0" maximum="1"/>
             </input>
