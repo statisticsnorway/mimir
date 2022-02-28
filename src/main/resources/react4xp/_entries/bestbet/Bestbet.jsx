@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Container, Row, Col } from 'react-bootstrap'
 import { Title, Link, Tag, Input, TextArea, Dropdown, Button, Divider } from '@statisticsnorway/ssb-component-library'
-import { XCircle, Edit, Trash } from 'react-feather'
+import { XCircle, Edit, Trash, Plus } from 'react-feather'
 import BestBetModal from './BestBetModal'
 import axios from 'axios'
 // import AsyncSelect from 'react-select/async'
@@ -242,7 +242,7 @@ function Bestbet(props) {
             </Col>
           </Row> : null}
         <Row>
-          <Col className="d-flex align-items-center flex-row">
+          <Col className="d-flex flex-row align-items-end">
             <Input
               className="m-0 pr-3"
               label="Nøkkelord"
@@ -320,6 +320,7 @@ function Bestbet(props) {
         <Row>
           <Col className="col-6">
             <li className="d-flex flex-row align-items-center">
+              <>
               <div className="best-bet-url-wrapper pr-1">
                 <Link isExternal={true}
                   href={props.contentStudioBaseUrl + item.linkedContentHref}>
@@ -330,6 +331,7 @@ function Bestbet(props) {
                 Rediger
                 <Edit size={16} className="ml-1" />
               </Tag>
+              </>
             </li>
           </Col>
 
@@ -398,6 +400,7 @@ function Bestbet(props) {
             primary
           >
             Ny Bestbet
+            <Plus size={16} className="ml-1" />
           </Button>
           <Divider className="pb-3" light />
           {renderBestbetList()}
