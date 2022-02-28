@@ -152,9 +152,9 @@ class Table extends Component {
       return (
         <div className={`download-table-container ${mobile ? 'd-flex d-lg-none' : 'd-none d-lg-flex'}`}>
           <Dropdown
-            header={downloadTableLabel}
             selectedItem={downloadTableTitle}
             items={downloadTableOptions}
+            ariaLabel={downloadTableLabel}
             onSelect={downloadTable}
           />
         </div>

@@ -1,68 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <content-type>
-	<display-name>
-		Artikkel
-	</display-name>
-	<super-type>
-		base:structured
-	</super-type>
+	<display-name>Artikkel</display-name>
+	<super-type>base:structured</super-type>
 	<form>
 		<field-set>
-			<label>
-				Stikktittel
-			</label>
+			<label>Stikktittel</label>
 			<items>
 				<input name="introTitle" type="TextLine">
-					<label>
-						Stikktittel
-					</label>
+					<label>Stikktittel</label>
 					<occurrences minimum="0" maximum="1" />
 				</input>
 			</items>
 		</field-set>
 		<field-set>
-			<label>
-				Publisering
-			</label>
+			<label>Publisering</label>
 			<items>
 				<input name="showPublishDate" type="CheckBox">
-					<label>
-						Vis publiseringsdato
-					</label>
-					<default>
-						checked
-					</default>
+					<label>Vis publiseringsdato</label>
+					<default>checked</default>
 				</input>
 			</items>
 		</field-set>
 		<field-set>
 			<items>
 				<option-set name="showModifiedDate">
-					<label>
-						Endringsdato
-					</label>
-					<expanded>
-						false
-					</expanded>
+					<label>Endringsdato</label>
+					<expanded>false</expanded>
 					<occurrences minimum="0" maximum="1" />
 					<options minimum="1" maximum="2">
 						<option name="dateOption">
-							<label>
-								Skal det vises dato?
-							</label>
+							<label>Skal det vises dato?</label>
 							<items>
 								<input name="showModifiedTime" type="CheckBox">
-									<label>
-										Vis klokkeslett for publisering
-									</label>
-									<default>
-										unchecked
-									</default>
+									<label>Vis klokkeslett for publisering</label>
+									<default>unchecked</default>
 								</input>
 								<input name="modifiedDate" type="DateTime">
-									<label>
-										Tidspunkt for endring
-									</label>
+									<label>Tidspunkt for endring</label>
 								</input>
 							</items>
 						</option>
@@ -73,21 +47,15 @@
 		<field-set>
 			<items>
 				<item-set name="authorItemSet">
-					<label>
-						Forfattere
-					</label>
+					<label>Forfattere</label>
 					<occurrences minimum="0" maximum="0" />
 					<items>
 						<input name="name" type="TextLine">
-							<label>
-								Navn
-							</label>
+							<label>Navn</label>
 							<occurrences minimum="0" maximum="1" />
 						</input>
 						<input name="email" type="TextLine">
-							<label>
-								E-post
-							</label>
+							<label>E-post</label>
 							<occurrences minimum="0" maximum="1" />
 						</input>
 					</items>
@@ -95,34 +63,22 @@
 			</items>
 		</field-set>
 		<field-set>
-			<label>
-				Ingress
-			</label>
+			<label>Ingress</label>
 			<items>
 				<input name="ingress" type="TextArea">
 					<occurrences minimum="0" maximum="1" />
-					<label>
-						Ingress
-					</label>
+					<label>Ingress</label>
 				</input>
 			</items>
 		</field-set>
 		<field-set>
-			<label>
-				Artikkeltekst
-			</label>
+			<label>Artikkeltekst</label>
 			<items>
 				<input name="articleText" type="HtmlArea">
-					<label>
-						Artikkeltekst
-					</label>
+					<label>Artikkeltekst</label>
 					<config>
-						<include>
-							Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote
-						</include>
-						<allowHeadings>
-							h2 h3 h4 h5
-						</allowHeadings>
+						<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+						<allowHeadings>h2 h3 h4 h5</allowHeadings>
 					</config>
 				</input>
 			</items>
@@ -130,47 +86,31 @@
 		<field-set>
 			<items>
 				<option-set name="associatedStatistics">
-					<label>
-						Tilhørende statistikk
-					</label>
-					<expanded>
-						false
-					</expanded>
+					<label>Tilhørende statistikk</label>
+					<expanded>false</expanded>
 					<occurrences minimum="0" maximum="0" />
 					<options minimum="1" maximum="1">
 						<option name="XP">
-							<label>
-								Lenke til tilhørende statistikk (XP)
-							</label>
+							<label>Lenke til tilhørende statistikk (XP)</label>
 							<items>
 								<input name="content" type="ContentSelector">
-									<label>
-										Statistikk
-									</label>
+									<label>Statistikk</label>
 									<occurrences minimum="0" maximum="1" />
 									<config>
-										<allowContentType>
-											statistics
-										</allowContentType>
+										<allowContentType>statistics</allowContentType>
 									</config>
 								</input>
 							</items>
 						</option>
 						<option name="CMS">
-							<label>
-								Lenke til tilhørende statistikk (4.7.)
-							</label>
+							<label>Lenke til tilhørende statistikk (4.7.)</label>
 							<items>
 								<input name="href" type="TextLine">
-									<label>
-										URL
-									</label>
+									<label>URL</label>
 									<occurrences minimum="0" maximum="1" />
 								</input>
 								<input name="title" type="TextLine">
-									<label>
-										Tittel
-									</label>
+									<label>Tittel</label>
 									<occurrences minimum="0" maximum="1" />
 								</input>
 							</items>
@@ -180,19 +120,13 @@
 			</items>
 		</field-set>
 		<field-set>
-			<label>
-				Artikkelarkiv
-			</label>
+			<label>Artikkelarkiv</label>
 			<items>
 				<input name="articleArchive" type="ContentSelector">
-					<label>
-						Arkiv
-					</label>
+					<label>Arkiv</label>
 					<occurrences minimum="0" maximum="0" />
 					<config>
-						<allowContentType>
-							articleArchive
-						</allowContentType>
+						<allowContentType>articleArchive</allowContentType>
 					</config>
 				</input>
 			</items>
@@ -203,9 +137,7 @@
 		<mixin name="relatedFactPage" />
 		<mixin name="contacts" />
 		<field-set>
-			<label>
-				Metainformasjon
-			</label>
+			<label>Metainformasjon</label>
 			<items>
 				<input name="articleType" type="ComboBox">
 					<label>Innholdstype</label>
@@ -219,15 +151,11 @@
 					</config>
 				</input>
 				<input name="serialNumber" type="TextLine">
-					<label>
-						Løpenummer
-					</label>
+					<label>Løpenummer</label>
 					<occurrences minimum="0" maximum="1" />
 				</input>
 				<input name="isbnNumber" type="TextLine">
-					<label>
-						ISBN nummer
-					</label>
+					<label>ISBN-nummer</label>
 					<occurrences minimum="0" maximum="1" />
 				</input>
 				<input name="frontPagePriority" type="RadioButton">

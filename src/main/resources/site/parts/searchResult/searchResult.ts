@@ -170,6 +170,14 @@ export function renderPart(req: Request): React4xpResponse {
       key: 'mainSearch',
       locale: language
     }),
+    chooseSubjectPhrase: localize({
+      key: 'dropdown.chooseSubject',
+      locale: language
+    }),
+    chooseContentTypePhrase: localize({
+      key: 'dropdown.chooseContenttype',
+      locale: language
+    }),
     searchPageUrl,
     language,
     dropDownSubjects: mainSubjectDropdown,
@@ -205,6 +213,8 @@ interface SearchResultProps {
   limitResultPhrase: string;
   removeFilterPhrase: string;
   mainSearchPhrase: string;
+  chooseSubjectPhrase: string;
+  chooseContentTypePhrase: string;
   searchServiceUrl: string;
   searchPageUrl: string;
   language: string;
