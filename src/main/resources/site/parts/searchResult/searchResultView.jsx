@@ -68,7 +68,7 @@ function SearchResult(props) {
           }}></span>
           </Paragraph>
           <Paragraph className="metadata">
-            <span className="type">{hit.contentType}</span> {hit.contentType && hit.publishDateHuman && ` / `}
+            <span className="type">{hit.contentType}</span> {((hit.contentType && hit.publishDateHuman) || (hit.contentType && hit.mainSubject)) && ` / `}
             <time dateTime={hit.publishDate}>{hit.publishDateHuman}</time> {hit.publishDateHuman && hit.mainSubject && ` / `}
             {hit.mainSubject}
           </Paragraph>
@@ -268,7 +268,7 @@ function SearchResult(props) {
         </div>
         <div className="col-12 search-result-body">
           <div className="container mt-5">
-            {hits.length > 0 ? renderList() : renderNoHitMessage()}
+            {hits.length > 0 || props.bestBetHit ? renderList() : renderNoHitMessage()}
             {renderLoading()}
             {renderShowMoreButton()}
           </div>

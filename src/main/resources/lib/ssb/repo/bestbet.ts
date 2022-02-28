@@ -15,9 +15,6 @@ const {
 const {
   cronJobLog
 } = __non_webpack_require__('/lib/ssb/utils/serverLog')
-const {
-  pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
 
 export const BESTBET_REPO: string = 'no.ssb.bestbet'
 export const BESTBET_BRANCH: string = 'master'
@@ -45,15 +42,24 @@ export function deleteBestBet(key: string): string {
   return deleteNode(BESTBET_REPO, BESTBET_BRANCH, key) ? 'slettet' : 'noe gikk feil'
 }
 
-export function createBestBet(id: string, linkedContentId: string, linkedContentTitle: string, searchWords: Array<string>): void {
+export function createBestBet(
+  id: string,
+  linkedContentTitle: string,
+  linkedContentHref: string,
+  linkedContentIngress: string,
+  linkedContentType: string,
+  linkedContentDate: string,
+  linkedContentSubject: string,
+  searchWords: Array<string>): void {
   if (!nodeExists(BESTBET_REPO, BESTBET_BRANCH, id)) {
     createNode(BESTBET_REPO, BESTBET_BRANCH, {
       data: {
-        linkedContentId: linkedContentId,
         linkedContentTitle: linkedContentTitle,
-        linkedContentHref: pageUrl({
-          id: linkedContentId
-        }),
+        linkedContentHref: linkedContentHref,
+        linkedContentIngress: linkedContentIngress,
+        linkedContentType: linkedContentType,
+        linkedContentDate: linkedContentDate,
+        linkedContentSubject: linkedContentSubject,
         searchWords: searchWords
       }
     })
@@ -62,11 +68,12 @@ export function createBestBet(id: string, linkedContentId: string, linkedContent
       return {
         ...node,
         data: {
-          linkedContentId: linkedContentId,
           linkedContentTitle: linkedContentTitle,
-          linkedContentHref: pageUrl({
-            id: linkedContentId
-          }),
+          linkedContentHref: linkedContentHref,
+          linkedContentIngress: linkedContentIngress,
+          linkedContentType: linkedContentType,
+          linkedContentDate: linkedContentDate,
+          linkedContentSubject: linkedContentSubject,
           searchWords: searchWords
         }
       }

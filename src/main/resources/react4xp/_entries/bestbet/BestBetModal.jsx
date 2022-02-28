@@ -2,14 +2,15 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Modal } from 'react-bootstrap'
 
-function EditSearchWordsModal(props) {
+function BestBetModal(props) {
   return (
     <Modal
+      size="lg"
       show={props.show}
       onHide={props.onHide}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Rediger nøkkelord</Modal.Title>
+        <Modal.Title>{props.title}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {props.body}
@@ -21,11 +22,12 @@ function EditSearchWordsModal(props) {
   )
 }
 
-EditSearchWordsModal.propTypes = {
+BestBetModal.propTypes = {
   show: PropTypes.boolean,
   onHide: PropTypes.boolean,
+  title: PropTypes.string,
   body: PropTypes.node,
   footer: PropTypes.node
 }
 
-export default (props) => <EditSearchWordsModal {...props} />
+export default (props) => <BestBetModal {...props} />
