@@ -207,6 +207,7 @@ function SearchResult(props) {
       }}
       selectedItem={selectedMainSubject}
       items={props.dropDownSubjects}
+      ariaLabel={props.chooseSubjectPhrase}
     />
   ))
 
@@ -220,6 +221,7 @@ function SearchResult(props) {
       }}
       selectedItem={selectedContentType}
       items={props.dropDownContentTypes}
+      ariaLabel={props.chooseContentTypePhrase}
     />
   ))
 
@@ -289,6 +291,8 @@ SearchResult.propTypes = {
   limitResultPhrase: PropTypes.string,
   removeFilterPhrase: PropTypes.string,
   mainSearchPhrase: PropTypes.string,
+  chooseSubjectPhrase: PropTypes.string,
+  chooseContentTypePhrase: PropTypes.string,
   count: PropTypes.number,
   noHitMessage: PropTypes.string,
   bestBetHit: PropTypes.shape({

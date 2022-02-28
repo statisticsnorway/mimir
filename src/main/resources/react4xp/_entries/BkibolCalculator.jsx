@@ -426,6 +426,7 @@ function BkibolCalculator(props) {
             id: ''
           }}
           items={serieItemsDomene('ENEBOLIG')}
+          ariaLabel={props.phrases.bkibolWorkTypeDone}
         />
       )
     }
@@ -447,6 +448,7 @@ function BkibolCalculator(props) {
             id: ''
           }}
           items={serieItemsDomene('BOLIGBLOKK')}
+          ariaLabel={props.phrases.bkibolWorkTypeDone}
         />
       )
     }

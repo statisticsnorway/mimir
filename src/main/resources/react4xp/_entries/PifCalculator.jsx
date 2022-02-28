@@ -339,6 +339,7 @@ function PifCalculator(props) {
           id: 'SITCT'
         }}
         items={props.productGroups}
+        ariaLabel={props.phrases.pifProductTypeHeader}
       />
     )
   }
