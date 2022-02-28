@@ -83,17 +83,17 @@ function Bestbet(props) {
       linkedContentSubject: mainSubjectValue,
       searchWords: searchWordsList
     })
-    .then(() => {
-      setTimeout(() => {
-        fetchBestBetList()
-      }, 1000)
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-    .finally(() => {
-      setLoading(false)
-    })
+      .then(() => {
+        setTimeout(() => {
+          fetchBestBetList()
+        }, 1000)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
   function handleDelete(key) {
@@ -114,6 +114,18 @@ function Bestbet(props) {
     setContentTypeValue(item.linkedContentType)
     setMainSubjectValue(item.linkedContentSubject)
     setSearchWordsList(item.searchWords)
+  }
+
+  function handleCreateBestBetOnClick() {
+    setShowCreateBestBetModal(true)
+    // clear edit best bet input data
+    setTitleInputValue('')
+    setUrlInputValue('')
+    setIngressInputValue('')
+    setStartDateValue('')
+    setContentTypeValue('')
+    setMainSubjectValue('')
+    setSearchWordsList('')
   }
 
   function handleInputChange(event, type) {
@@ -170,6 +182,8 @@ function Bestbet(props) {
   }
 
   function renderBestBetForm() {
+    const selectedContentType = props.contentTypes.filter((contentType) => contentTypeValue === contentType.title)[0]
+    const selectedMainSubject = props.mainSubjects.filter((mainSubject) => mainSubjectValue === mainSubject.title)[0]
     return (
       <div className="best-bet-form">
         <Row>
@@ -192,14 +206,14 @@ function Bestbet(props) {
             <Dropdown
               header="Innholdstype"
               items={props.contentTypes}
-              // selectedItem={props.contentTypes.filter((contentType) => contentTypeValue === contentType.title)[0]}
-              onSelect={(item) => setContentTypeValue(item.title)}
+              selectedItem={selectedContentType ? selectedContentType : props.contentTypes[0]}
+              onSelect={(item) => setContentTypeValue(item.id !== '' ? item.title : '')}
             />
             <Dropdown
               header="Emne"
               items={props.mainSubjects}
-              // selectedItem={props.mainSubjects.filter((mainSubject) => mainSubjectValue === mainSubject.title)[0]}
-              onSelect={(item) => setMainSubjectValue(item.title)}
+              selectedItem={selectedMainSubject ? selectedMainSubject : props.mainSubjects[0]}
+              onSelect={(item) => setMainSubjectValue(item.id !== '' ? item.title : '')}
             />
             <Input
               label="Dato"
@@ -346,7 +360,7 @@ function Bestbet(props) {
         <Col className="col-12 bestbet-list">
           <Button
             className="mb-4"
-            onClick={() => setShowCreateBestBetModal(true)}
+            onClick={handleCreateBestBetOnClick}
             primary
           >
             Ny Bestbet

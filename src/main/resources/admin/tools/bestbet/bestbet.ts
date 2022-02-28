@@ -44,16 +44,21 @@ function renderPart(req: Request): React4xpResponse | Response {
   const DEFAULT_CONTENTSTUDIO_URL: string = getToolUrl('com.enonic.app.contentstudio', 'main')
   const ENONIC_PROJECT_ID: string = app.config && app.config['ssb.project.id'] ? app.config['ssb.project.id'] : 'default'
 
+  // Main subjects and content types must be translated in frontend, since it can't be based off the app's language
   const mainSubjects: Array<SubjectItem> = getMainSubjects(req, 'nb')
-  const mainSubjectDropdownItems: Array<{id: string; title: string}> = mainSubjects.map((subject) => {
+  const mainSubjectsList: Array<{id: string; title: string}> = mainSubjects.map((subject) => {
     return {
       id: subject.name,
       title: subject.title
     }
   })
+  const mainSubjectDropdownItems: Array<{id: string; title: string}> = [{
+    id: '',
+    title: 'Velg emne'
+  }, ...mainSubjectsList]
 
   const validContentTypes: Array<string> = ['artikkel', 'statistikk', 'faktaside', 'statistikkbanktabell', 'publikasjon']
-  const contentTypesDropdownItems: Array<{id: string; title: string}> = validContentTypes.map((contentType: string) => {
+  const contentTypesList: Array<{id: string; title: string}> = validContentTypes.map((contentType: string) => {
     return {
       id: contentType,
       title: localize({
@@ -62,6 +67,10 @@ function renderPart(req: Request): React4xpResponse | Response {
       })
     }
   })
+  const contentTypesDropdownItems: Array<{id: string; title: string}> = [{
+    id: '',
+    title: 'Velg innholdstype'
+  }, ...contentTypesList]
 
   const bestbetComponent: React4xpObject = new React4xp('bestbet/Bestbet')
     .setProps({
