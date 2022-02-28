@@ -25,8 +25,7 @@ DropdownMunicipality.propTypes = {
   ariaLabel: PropTypes.string,
   items: PropTypes.arrayOf(PropTypes.shape({
     title: PropTypes.string,
-    id: PropTypes.string,
-    disabled: PropTypes.bool
+    id: PropTypes.string
   })),
   placeholder: PropTypes.string,
   baseUrl: PropTypes.string
