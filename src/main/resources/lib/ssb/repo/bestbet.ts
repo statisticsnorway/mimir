@@ -44,7 +44,6 @@ export function deleteBestBet(key: string): string {
 
 export function createBestBet(
   id: string,
-  // linkedContentId: string,
   linkedContentTitle: string,
   linkedContentHref: string,
   linkedContentIngress: string,
@@ -55,11 +54,7 @@ export function createBestBet(
   if (!nodeExists(BESTBET_REPO, BESTBET_BRANCH, id)) {
     createNode(BESTBET_REPO, BESTBET_BRANCH, {
       data: {
-        // linkedContentId: linkedContentId,
         linkedContentTitle: linkedContentTitle,
-        // linkedContentHref: linkedContentHref ? linkedContentHref : pageUrl({
-        //   id: linkedContentId
-        // }),
         linkedContentHref: linkedContentHref,
         linkedContentIngress: linkedContentIngress,
         linkedContentType: linkedContentType,
@@ -73,11 +68,7 @@ export function createBestBet(
       return {
         ...node,
         data: {
-          // linkedContentId: linkedContentId,
           linkedContentTitle: linkedContentTitle,
-          // linkedContentHref: linkedContentHref ? linkedContentHref : pageUrl({
-          //   id: linkedContentId
-          // }),
           linkedContentHref: linkedContentHref,
           linkedContentIngress: linkedContentIngress,
           linkedContentType: linkedContentType,

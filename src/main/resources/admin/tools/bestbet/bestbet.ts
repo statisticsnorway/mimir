@@ -44,7 +44,7 @@ function renderPart(req: Request): React4xpResponse | Response {
   const DEFAULT_CONTENTSTUDIO_URL: string = getToolUrl('com.enonic.app.contentstudio', 'main')
   const ENONIC_PROJECT_ID: string = app.config && app.config['ssb.project.id'] ? app.config['ssb.project.id'] : 'default'
 
-  // Main subjects and content types must be translated in frontend, since it can't be based off the app's language
+  // Main subjects and content types must be translated in frontend since it can't be based off of the app's language
   const mainSubjects: Array<SubjectItem> = getMainSubjects(req, 'nb')
   const mainSubjectsList: Array<{id: string; title: string}> = mainSubjects.map((subject) => {
     return {
