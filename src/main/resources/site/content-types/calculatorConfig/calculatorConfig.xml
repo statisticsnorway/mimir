@@ -4,9 +4,7 @@
     <allow-child-content>true</allow-child-content>
     <form>
         <field-set>
-            <label>
-				KPI Kalkulator
-            </label>
+            <label>				KPI Kalkulator            </label>
             <items>
                 <input name="kpiSourceYear" type="ContentSelector">
                     <label>Kilde Årstall</label>
@@ -27,9 +25,7 @@
             </items>
         </field-set>
         <field-set>
-            <label>
-                PIF Kalkulator
-            </label>
+            <label>PIF Kalkulator</label>
             <items>
                 <input name="pifSource" type="ContentSelector">
                     <label>Kilde</label>
@@ -42,9 +38,7 @@
             </items>
         </field-set>
         <field-set>
-            <label>
-                BKIBOL Kalkulator
-            </label>
+            <label>BKIBOL Kalkulator</label>
             <items>
                 <input name="bkibolSourceEnebolig" type="ContentSelector">
                     <label>Kilde enebolig</label>
@@ -65,9 +59,7 @@
             </items>
         </field-set>
         <field-set>
-        <label>
-            Datakilde for graf i navnesøket
-        </label>
+            <label>Datakilde for graf i navnesøket</label>
             <items>
                 <input name="nameSearchGraphData" type="ContentSelector">
                     <label>PX-API spørring for historiske navnedata</label>

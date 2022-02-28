@@ -1,80 +1,50 @@
 <mixin>
-	<display-name>
-		Datakilde
-	</display-name>
+	<display-name>Datakilde</display-name>
 	<form>
 		<option-set name="dataSource">
-			<label>
-				Datakilde
-			</label>
-			<expanded>
-				true
-			</expanded>
+			<label>Datakilde</label>
+			<expanded>true</expanded>
 			<occurrences minimum="0" maximum="1" />
 			<options minimum="1" maximum="1">
 				<option name="tbprocessor">
-					<label>
-						Tall fra tabellbygger
-					</label>
+					<label>Tall fra tabellbygger</label>
 					<items>
 						<input name="urlOrId" type="TextLine">
-							<label>
-								URL eller TBML-id
-							</label>
+							<label>URL eller TBML-id</label>
 							<occurrences minimum="0" maximum="1" />
 						</input>
 					</items>
 				</option>
 				<option name="statbankApi">
-					<label>
-						Api-spørring mot statistikkbanken
-					</label>
+					<label>Api-spørring mot statistikkbanken</label>
 					<items>
 						<input name="urlOrId" type="TextLine">
-							<label>
-								URL eller tabell-id
-							</label>
+							<label>URL eller tabell-id</label>
 							<occurrences minimum="0" maximum="1" />
 						</input>
 						<input name="json" type="TextArea">
-							<label>
-								API-spørring mot statistikkbanken (JSON-format)
-							</label>
+							<label>API-spørring mot statistikkbanken (JSON-format)</label>
 							<occurrences minimum="0" maximum="1" />
 						</input>
 						<input name="xAxisLabel" type="TextLine">
-							<label>
-								Navn på x-akse dimensjon
-							</label>
+							<label>Navn på x-akse dimensjon</label>
 							<occurrences minimum="0" maximum="1" />
 						</input>
 						<input name="yAxisLabel" type="TextLine">
-							<label>
-								Navn på y-akse dimensjon
-							</label>
+							<label>Navn på y-akse dimensjon</label>
 							<occurrences minimum="0" maximum="1" />
 						</input>
 						<option-set name="datasetFilterOptions">
-							<label>
-								Filtrering på dataset
-							</label>
-							<expanded>
-								false
-							</expanded>
+							<label>Filtrering på dataset</label>
+							<expanded>false</expanded>
 							<occurrences minimum="0" maximum="1" />
 							<options minimum="0" maximum="1">
 								<option name="municipalityFilter">
-									<label>
-										Filtrer på kommune
-									</label>
-									<help-text>
-										Hvis grafen skal vises filtrert på kommunenummer
-									</help-text>
+									<label>Filtrer på kommune</label>
+									<help-text>Hvis grafen skal vises filtrert på kommunenummer</help-text>
 									<items>
 										<input type="TextLine" name="municipalityDimension">
-											<label>
-												Hvilken dimensjon skal filtreres på kommunenummer
-											</label>
+											<label>Hvilken dimensjon skal filtreres på kommunenummer</label>
 											<occurrences minimum="1" maximum="1" />
 										</input>
 									</items>
@@ -84,57 +54,37 @@
 					</items>
 				</option>
 				<option name="statbankSaved">
-					<label>
-						Lagrede spørringer mot statistikkbanken
-					</label>
+					<label>Lagrede spørringer mot statistikkbanken</label>
 					<items>
 						<input name="urlOrId" type="TextLine">
-							<label>
-								URL eller tabell-id
-							</label>
+							<label>URL eller tabell-id</label>
 							<occurrences minimum="0" maximum="1" />
 						</input>
 					</items>
 				</option>
 				<option name="dataset">
-					<label>
-						(Ikke i bruk) Ferdige dataset
-					</label>
+					<label>(Ikke i bruk) Ferdige dataset</label>
 					<items>
 						<input name="id" type="TextLine">
-							<label>
-								ID
-							</label>
+							<label>ID</label>
 							<occurrences minimum="0" maximum="1" />
 						</input>
 						<input name="format" type="ComboBox">
-							<label>
-								Format
-							</label>
+							<label>Format</label>
 							<occurrences minimum="1" maximum="1" />
 							<config>
-								<option value="json">
-									JSON
-								</option>
-								<option value="csv">
-									CSV
-								</option>
+								<option value="json">JSON</option>
+								<option value="csv">CSV</option>
 							</config>
-							<default>
-								json
-							</default>
+							<default>json</default>
 						</input>
 					</items>
 				</option>
 				<option name="klass">
-					<label>
-						Klass
-					</label>
+					<label>Klass</label>
 					<items>
 						<input name="urlOrId" type="TextLine">
-							<label>
-								URL
-							</label>
+							<label>URL</label>
 							<occurrences minimum="0" maximum="1" />
 						</input>
 					</items>

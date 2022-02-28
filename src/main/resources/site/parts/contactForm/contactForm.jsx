@@ -245,6 +245,7 @@ function ContactForm(props) {
                           title: props.phrases.contactFormReceiverInnrapportering,
                           id: 'innrapportering'
                         }]}
+                      ariaLabel={props.phrases.contactFormChooseReceiver}
                     />
                   </Col>
                 </Row>
