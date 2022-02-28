@@ -11,12 +11,16 @@ import axios from 'axios'
 function Bestbet(props) {
   const [loading, setLoading] = useState(false)
   const [bestBetList, setBestBetList] = useState([])
+  const [selectedBestBet, setSelectedBestBet] = useState({})
 
   const [showCreateBestBetModal, setShowCreateBestBetModal] = useState(false)
   const handleCloseCreateBestBetModal = () => setShowCreateBestBetModal(false)
 
-  const [showEditSearchWordsModal, setShowEditSearchWordsModal] = useState(false)
-  const handleCloseEditSearchWordModal = () => setShowEditSearchWordsModal(false)
+  const [showEditBestBetModal, setShowEditBestBetModal] = useState(false)
+  const handleCloseEditBestBetModal = () => setShowEditBestBetModal(false)
+
+  const [showDeleteBestBetModal, setShowDeleteBestBetModal] = useState(false)
+  const handleCloseDeleteBestBetModal = () => setShowDeleteBestBetModal(false)
 
   const [bestBetId, setBestBetId] = useState('')
   const [urlInputValue, setUrlInputValue] = useState('')
@@ -48,7 +52,7 @@ function Bestbet(props) {
   }
 
   function handleUpdate() {
-    setShowEditSearchWordsModal(false)
+    setShowEditBestBetModal(false)
     setLoading(true)
     axios.post(props.bestBetListServiceUrl, {
       id: bestBetId,
@@ -96,16 +100,17 @@ function Bestbet(props) {
       })
   }
 
-  function handleDelete(key) {
+  function handleDelete() {
+    setShowDeleteBestBetModal(false)
     axios.delete(props.bestBetListServiceUrl, {
       params: {
-        key: key
+        key: selectedBestBet.id
       }
     }).then(() => fetchBestBetList())
   }
 
   function handleEditBestBetOnClick(item) {
-    setShowEditSearchWordsModal(true)
+    setShowEditBestBetModal(true)
     setBestBetId(item.id)
     setTitleInputValue(item.linkedContentTitle)
     setUrlInputValue(item.linkedContentHref)
@@ -126,6 +131,11 @@ function Bestbet(props) {
     setContentTypeValue('')
     setMainSubjectValue('')
     setSearchWordsList('')
+  }
+
+  function handleDeleteBestBetOnClick(item) {
+    setShowDeleteBestBetModal(true)
+    setSelectedBestBet(item)
   }
 
   function handleInputChange(event, type) {
@@ -247,14 +257,14 @@ function Bestbet(props) {
   function renderEditBestBetModal() {
     return (
       <BestBetModal
-        show={showEditSearchWordsModal}
-        onHide={handleCloseEditSearchWordModal}
-        title="Rediger Bestbet"
+        show={showEditBestBetModal}
+        onHide={handleCloseEditBestBetModal}
+        title="Rediger best-bet"
         body={renderBestBetForm()}
         footer={
           <>
             <Button primary onClick={handleUpdate}>Lagre</Button>
-            <Button onClick={handleCloseEditSearchWordModal}>
+            <Button onClick={handleCloseEditBestBetModal}>
               Lukk
             </Button>
           </>
@@ -277,6 +287,25 @@ function Bestbet(props) {
           <>
             <Button primary onClick={handleCreate}>Fullfør</Button>
             <Button onClick={handleCloseCreateBestBetModal}>Lukk</Button>
+          </>
+        }
+      />
+    )
+  }
+
+  function renderDeleteBestBetModal() {
+    return (
+      <BestBetModal
+        show={showDeleteBestBetModal}
+        onHide={handleCloseDeleteBestBetModal}
+        title="Slett best-bet"
+        body={
+          <p>Har du lyst til å slette {selectedBestBet.linkedContentTitle}?</p>
+        }tt
+        footer={
+          <>
+            <Button primary onClick={handleDelete}>Slett</Button>
+            <Button onClick={handleCloseDeleteBestBetModal}>Lukk</Button>
           </>
         }
       />
@@ -308,7 +337,10 @@ function Bestbet(props) {
             </div>
           </Col>
           <Col>
-            <Button onClick={() => handleDelete(item.id)}>Slett<Trash size={16} className="ml-1" /></Button>
+            <Button onClick={() => handleDeleteBestBetOnClick(item)}>
+              Slett
+              <Trash size={16} className="ml-1" />
+            </Button>
           </Col>
         </Row>
         <Row>
@@ -370,6 +402,7 @@ function Bestbet(props) {
         </Col>
         {renderCreateBestBetModal()}
         {renderEditBestBetModal()}
+        {renderDeleteBestBetModal()}
       </Row>
     </Container>
   )
