@@ -83,15 +83,17 @@ function Bestbet(props) {
       linkedContentSubject: mainSubjectValue,
       searchWords: searchWordsList
     })
-      .catch((err) => {
-        console.log(err)
-      })
-      .finally(() => {
-        setLoading(false)
-        setTimeout(() => {
-          fetchBestBetList()
-        }, 1000)
-      })
+    .then(() => {
+      setTimeout(() => {
+        fetchBestBetList()
+      }, 1000)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+    .finally(() => {
+      setLoading(false)
+    })
   }
 
   function handleDelete(key) {

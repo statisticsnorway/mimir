@@ -266,7 +266,7 @@ function SearchResult(props) {
         </div>
         <div className="col-12 search-result-body">
           <div className="container mt-5">
-            {hits.length > 0 ? renderList() : renderNoHitMessage()}
+            {hits.length > 0 || props.bestBetHit ? renderList() : renderNoHitMessage()}
             {renderLoading()}
             {renderShowMoreButton()}
           </div>
