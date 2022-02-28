@@ -118,6 +118,7 @@ function Bestbet(props) {
     setStartDateValue(item.linkedContentDate)
     setContentTypeValue(item.linkedContentType)
     setMainSubjectValue(item.linkedContentSubject)
+    setSearchWordTag('')
     setSearchWordsList(item.searchWords)
   }
 
@@ -130,6 +131,7 @@ function Bestbet(props) {
     setStartDateValue('')
     setContentTypeValue('')
     setMainSubjectValue('')
+    setSearchWordTag('')
     setSearchWordsList('')
   }
 
