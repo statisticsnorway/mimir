@@ -9,21 +9,5 @@
   }
   .search-field {
     margin-bottom: 60px;
-    max-width: none;
-    width: 100%;
-
-    input {
-      height: 80px;
-      font-size: 20px;
-      font-weight: bold;
-    }
-    .list-of-options {
-      top: 78px;
-    }
-
-    //TODO: fjernes når mulighet for å erstatte ikon er lagt til i komponenten
-    svg {
-      display: none;
-    }
   }
 }
