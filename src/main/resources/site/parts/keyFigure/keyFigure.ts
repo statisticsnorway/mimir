@@ -1,7 +1,7 @@
 import { Content } from '/lib/xp/content'
 import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
 import { KeyFigureView } from '../../../lib/ssb/parts/keyFigure'
-import { React4xp, React4xpResponse } from '/lib/enonic/react4xp'
+import { React4xp, RenderResponse } from '/lib/enonic/react4xp'
 import { SiteConfig } from '../../../site/site-config'
 import { KeyFigurePartConfig } from './keyFigure-part-config'
 
@@ -38,7 +38,7 @@ const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
 
-exports.get = function(req: XP.Request): React4xpResponse | XP.Response {
+exports.get = function(req: XP.Request): RenderResponse | XP.Response {
   try {
     const config: KeyFigurePartConfig = getComponent().config
     const keyFigureIds: Array<string> | [] = config.figure ? forceArray(config.figure) : []
@@ -49,7 +49,7 @@ exports.get = function(req: XP.Request): React4xpResponse | XP.Response {
   }
 }
 
-exports.preview = function(req: XP.Request, id: string): React4xpResponse | XP.Response {
+exports.preview = function(req: XP.Request, id: string): RenderResponse | XP.Response {
   try {
     const siteConfig: SiteConfig = getSiteConfig()
     const defaultMunicipality: SiteConfig['defaultMunicipality'] = siteConfig.defaultMunicipality
@@ -62,7 +62,7 @@ exports.preview = function(req: XP.Request, id: string): React4xpResponse | XP.R
   }
 }
 
-function renderPart(req: XP.Request, municipality: MunicipalityWithCounty | undefined, keyFigureIds: Array<string>): React4xpResponse | XP.Response {
+function renderPart(req: XP.Request, municipality: MunicipalityWithCounty | undefined, keyFigureIds: Array<string>): RenderResponse | XP.Response {
   const page: Content = getContent()
   const config: KeyFigurePartConfig = getComponent() && getComponent().config
   const showPreviewDraft: boolean = hasWritePermissionsAndPreview(req, page._id)
@@ -101,7 +101,7 @@ function renderKeyFigure(
   parsedKeyFiguresDraft: Array<KeyFigureData> | null,
   showPreviewDraft: boolean,
   req: XP.Request
-): React4xpResponse | XP.Response {
+): RenderResponse | XP.Response {
   const draftExist: boolean = !!parsedKeyFiguresDraft
   if (parsedKeyFigures && parsedKeyFigures.length > 0 || draftExist) {
     const hiddenTitle: Array<string> = parsedKeyFigures.map((keyFigureData) => {
@@ -133,7 +133,7 @@ function renderKeyFigure(
       isInStatisticsPage: page.type === `${app.name}:statistics`
     }
 
-    return React4xp.render('KeyFigure', props, req, {
+    return React4xp.renderBody('KeyFigure', props, req, {
       body: '<section class="xp-part key-figures container"></section>'
     })
   }

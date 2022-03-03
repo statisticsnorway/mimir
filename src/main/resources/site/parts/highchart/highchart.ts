@@ -12,7 +12,7 @@ import { TbmlDataUniform } from '../../../lib/types/xmlParser'
 import { HighchartsGraphConfig } from '../../../lib/types/highcharts'
 import { ResourceKey } from '/lib/thymeleaf'
 import { DataSource } from '../../mixins/dataSource/dataSource'
-import { React4xp, React4xpResponse } from '/lib/enonic/react4xp'
+import { React4xp, RenderResponse } from '/lib/enonic/react4xp'
 import { GA_TRACKING_ID } from '../../pages/default/default'
 
 const {
@@ -60,7 +60,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/utils/language')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-exports.get = function(req: XP.Request): XP.Response | React4xpResponse {
+exports.get = function(req: XP.Request): XP.Response | RenderResponse {
   try {
     const part: Component<HighchartPartConfig> = getComponent()
     const highchartIds: Array<string> = part.config.highchart ? forceArray(part.config.highchart) : []
@@ -70,7 +70,7 @@ exports.get = function(req: XP.Request): XP.Response | React4xpResponse {
   }
 }
 
-exports.preview = (req: XP.Request, id: string): XP.Response | React4xpResponse => {
+exports.preview = (req: XP.Request, id: string): XP.Response | RenderResponse => {
   try {
     return renderPart(req, [id])
   } catch (e) {
@@ -79,7 +79,7 @@ exports.preview = (req: XP.Request, id: string): XP.Response | React4xpResponse 
 }
 
 
-function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response | React4xpResponse {
+function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response | RenderResponse {
   const page: Content = getContent()
   const language: string = page.language ? page.language : 'nb'
 
@@ -124,7 +124,7 @@ function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response |
   }
 
   if (isEnabled('highchart-react', true, 'ssb')) {
-    return React4xp.render('site/parts/highchart/Highchart', HighchartProps, req, {
+    return React4xp.renderBody('site/parts/highchart/Highchart', HighchartProps, req, {
       body: '<section class="xp-part part-highchart"></section>'
     })
   } else {

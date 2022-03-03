@@ -79,5 +79,5 @@ exports.macro = function(context: XP.MacroContext): RenderResponse {
     }
   }
 
-  return React4xp.render('site/parts/links/links', props, context)
+  return React4xp.renderBody('site/parts/links/links', props, context)
 }

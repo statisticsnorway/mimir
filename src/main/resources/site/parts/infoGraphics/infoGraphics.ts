@@ -22,7 +22,7 @@ const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 import { Content, MediaImage } from '/lib/xp/content'
 import { SourceList, SourcesConfig } from '../../../lib/ssb/utils/utils'
-import { React4xp, React4xpResponse } from '/lib/enonic/react4xp'
+import { React4xp, RenderResponse } from '/lib/enonic/react4xp'
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import { Base64 } from 'js-base64'
@@ -30,7 +30,7 @@ import { InfoGraphicsPartConfig } from './infoGraphics-part-config'
 import { DefaultPageConfig } from '../../pages/default/default-page-config'
 
 
-exports.get = function(req: XP.Request): XP.Response | React4xpResponse {
+exports.get = function(req: XP.Request): XP.Response | RenderResponse {
   try {
     const config: InfoGraphicsPartConfig = getComponent().config
     return renderPart(req)
@@ -39,9 +39,9 @@ exports.get = function(req: XP.Request): XP.Response | React4xpResponse {
   }
 }
 
-exports.preview = (req: XP.Request): XP.Response | React4xpResponse => renderPart(req)
+exports.preview = (req: XP.Request): XP.Response | RenderResponse => renderPart(req)
 
-function renderPart(req: XP.Request): React4xpResponse {
+function renderPart(req: XP.Request): RenderResponse {
   const page: DefaultPage = getContent() as DefaultPage
   const phrases: {source: string; descriptionStaticVisualization: string} = getPhrases(page)
   const sourcesLabel: string = phrases.source
@@ -76,7 +76,7 @@ function renderPart(req: XP.Request): React4xpResponse {
     oldContent: true
   }
 
-  return React4xp.render('site/parts/infoGraphics/infoGraphics', props, req)
+  return React4xp.renderBody('site/parts/infoGraphics/infoGraphics', props, req)
 }
 
 interface DefaultPage {

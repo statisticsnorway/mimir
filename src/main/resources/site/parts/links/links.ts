@@ -1,7 +1,7 @@
 import { Content } from '/lib/xp/content'
 import { Component } from '/lib/xp/portal'
 import { LinksPartConfig } from './links-part-config'
-import { React4xp, React4xpResponse } from '/lib/enonic/react4xp'
+import { React4xp, RenderResponse } from '/lib/enonic/react4xp'
 import { renderError } from '../../../lib/ssb/error/error'
 import { GA_TRACKING_ID } from '../../pages/default/default'
 
@@ -15,7 +15,7 @@ const {
 } = __non_webpack_require__('/lib/xp/portal')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-exports.get = (req: XP.Request): React4xpResponse | XP.Response => {
+exports.get = (req: XP.Request): RenderResponse | XP.Response => {
   try {
     const part: Component<LinksPartConfig> = getComponent()
     const config: LinksPartConfig = part.config
@@ -25,14 +25,14 @@ exports.get = (req: XP.Request): React4xpResponse | XP.Response => {
   }
 }
 
-exports.preview = (req: XP.Request, config: LinksPartConfig): React4xpResponse | XP.Response => {
+exports.preview = (req: XP.Request, config: LinksPartConfig): RenderResponse | XP.Response => {
   try {
     return renderPart(req, config)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
-function renderPart(req: XP.Request, config: LinksPartConfig): React4xpResponse {
+function renderPart(req: XP.Request, config: LinksPartConfig): RenderResponse {
   const linkTypes: LinksPartConfig['linkTypes'] = config.linkTypes
   const isNotInEditMode: boolean = req.mode !== 'edit'
 
@@ -95,7 +95,7 @@ function renderPart(req: XP.Request, config: LinksPartConfig): React4xpResponse 
     }
   }
 
-  return React4xp.render('site/parts/links/links', props, req, {
+  return React4xp.renderBody('site/parts/links/links', props, req, {
     clientRender: isNotInEditMode
   })
 }

@@ -1,5 +1,5 @@
 import { Component } from '/lib/xp/portal'
-import { React4xp, React4xpResponse } from '/lib/enonic/react4xp'
+import { React4xp, RenderResponse } from '/lib/enonic/react4xp'
 import { Content } from '/lib/xp/content'
 import { PublicationArchivePartConfig } from './publicationArchive-part-config'
 import { PublicationResult } from '../../../lib/ssb/parts/publicationArchive'
@@ -19,13 +19,13 @@ const {
   getMainSubjects
 } = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
 
-exports.get = (req: XP.Request): React4xpResponse => {
+exports.get = (req: XP.Request): RenderResponse => {
   return renderPart(req)
 }
 
-exports.preview = (req: XP.Request): React4xpResponse => renderPart(req)
+exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
 
-function renderPart(req: XP.Request): React4xpResponse {
+function renderPart(req: XP.Request): RenderResponse {
   const content: Content = getContent()
   const part: Component<PublicationArchivePartConfig> = getComponent()
   const phrases: {[key: string]: string} = getPhrases(content)
@@ -108,7 +108,7 @@ function renderPart(req: XP.Request): React4xpResponse {
     dropDownTypes: articleTypeDropdown
   }
 
-  return React4xp.render('site/parts/publicationArchive/publicationArchive', props, req)
+  return React4xp.renderBody('site/parts/publicationArchive/publicationArchive', props, req)
 }
 
 interface PartProperties {

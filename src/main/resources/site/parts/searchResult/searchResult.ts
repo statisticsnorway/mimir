@@ -1,7 +1,7 @@
 import { Component } from '/lib/xp/portal'
 import { Content } from '/lib/xp/content'
 import { SearchResultPartConfig } from './searchResult-part-config'
-import { React4xp, React4xpResponse } from '/lib/enonic/react4xp'
+import { React4xp, RenderResponse } from '/lib/enonic/react4xp'
 import { PreparedSearchResult, SolrPrepResultAndTotal } from '../../../lib/ssb/utils/solrUtils'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { queryNodes, getNode } from '../../../lib/ssb/repo/common'
@@ -34,7 +34,7 @@ const {
   getMainSubjects
 } = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
 
-exports.get = function(req: XP.Request): React4xpResponse | XP.Response {
+exports.get = function(req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -42,7 +42,7 @@ exports.get = function(req: XP.Request): React4xpResponse | XP.Response {
   }
 }
 
-exports.preview = (req: XP.Request): React4xpResponse | XP.Response => {
+exports.preview = (req: XP.Request): RenderResponse | XP.Response => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -50,7 +50,7 @@ exports.preview = (req: XP.Request): React4xpResponse | XP.Response => {
   }
 }
 
-export function renderPart(req: XP.Request): React4xpResponse {
+export function renderPart(req: XP.Request): RenderResponse {
   /* collect data */
   const content: Content = getContent()
   const part: Component<SearchResultPartConfig> = getComponent()
@@ -183,7 +183,7 @@ export function renderPart(req: XP.Request): React4xpResponse {
     dropDownContentTypes: getContentTypes(solrResult.contentTypes)
   }
 
-  return React4xp.render('site/parts/searchResult/searchResultView', props, req)
+  return React4xp.renderBody('site/parts/searchResult/searchResultView', props, req)
 }
 
   interface BestBet extends RepoNode {

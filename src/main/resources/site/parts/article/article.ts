@@ -1,6 +1,6 @@
 import { Content } from '/lib/xp/content'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-import { React4xp, React4xpResponse } from '/lib/enonic/react4xp'
+import { React4xp, RenderResponse } from '/lib/enonic/react4xp'
 import { Article } from '../../content-types/article/article'
 
 const {
@@ -26,7 +26,7 @@ const {
 
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-exports.get = (req: XP.Request): React4xpResponse | XP.Response => {
+exports.get = (req: XP.Request): RenderResponse | XP.Response => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -34,7 +34,7 @@ exports.get = (req: XP.Request): React4xpResponse | XP.Response => {
   }
 }
 
-function renderPart(req: XP.Request): React4xpResponse {
+function renderPart(req: XP.Request): RenderResponse {
   const page: Content<Article> = getContent()
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   const phrases: object = getPhrases(page)
@@ -84,7 +84,7 @@ function renderPart(req: XP.Request): React4xpResponse {
     isbn: isEnabled('article-isbn', true) && page.data.isbnNumber
   }
 
-  return React4xp.render('site/parts/article/article', props, req)
+  return React4xp.renderBody('site/parts/article/article', props, req)
 }
 
 function getAssociatedStatisticsLinks(associatedStatisticsConfig: Article['associatedStatistics']): Array<AssociatedLink> | [] {

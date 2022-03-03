@@ -1,4 +1,4 @@
-import { React4xp, React4xpResponse } from '/lib/enonic/react4xp'
+import { React4xp, RenderResponse } from '/lib/enonic/react4xp'
 import { SubjectItem, StatisticItem } from '../../../lib/ssb/utils/subjectUtils'
 import { Content } from '/lib/xp/content'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
@@ -25,7 +25,7 @@ const {
   fromPartCache
 } = __non_webpack_require__('/lib/ssb/cache/partCache')
 
-export function get(req: XP.Request): React4xpResponse {
+export function get(req: XP.Request): RenderResponse {
   const isNotInEditMode: boolean = req.mode !== 'edit'
   const content: Content = getContent()
   if (isNotInEditMode) {
@@ -37,7 +37,7 @@ export function get(req: XP.Request): React4xpResponse {
   }
 }
 
-function getStatbankSubjectTree(req: XP.Request, content: Content): React4xpResponse {
+function getStatbankSubjectTree(req: XP.Request, content: Content): RenderResponse {
   const lang: string = content.language === 'en' ? 'en' : 'no'
   const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, lang)
   const allSubSubjects: Array<SubjectItem> = getSubSubjects(req, lang)
@@ -58,7 +58,7 @@ function getStatbankSubjectTree(req: XP.Request, content: Content): React4xpResp
     statbankBaseUrl,
     mainSubjects
   }
-  return React4xp.render('site/parts/statbankSubjectTree/statbankSubjectTree', props, req)
+  return React4xp.renderBody('site/parts/statbankSubjectTree/statbankSubjectTree', props, req)
 }
 
 function prepareSubSubjects(subSubject: SubjectItem,
