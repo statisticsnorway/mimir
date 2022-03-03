@@ -31,7 +31,7 @@ export function get(url: string, queryId?: string): object | null {
       file: '/lib/statbankSaved/statbankSaved.ts',
       function: 'fetch',
       message: Events.REQUEST_DATA,
-      request: XP.RequestParams
+      request: requestParams
     })
   }
 
@@ -55,7 +55,7 @@ export function get(url: string, queryId?: string): object | null {
 
   if (response.status === 200 && response.body) {
     return {
-      html: XP.Response.body,
+      html: response.body,
       json: xmlParser.parse(response.body.replace('&', '&amp;'))
     }
   }

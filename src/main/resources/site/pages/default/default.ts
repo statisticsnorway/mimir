@@ -170,7 +170,7 @@ exports.get = function(req: XP.Request): XP.Response {
 
   if (header && header.component) {
     pageContributions = header.component.renderPageContributions({
-      pageContributions: XP.PageContributions as React4xpPageContributionOptions
+      pageContributions: pageContributions as React4xpPageContributionOptions
 
     })
   }

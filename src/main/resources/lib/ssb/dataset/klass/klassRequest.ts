@@ -42,7 +42,7 @@ export function get(url: string, json: DataqueryRequestData | undefined,
       file: '/lib/dataquery.ts',
       function: 'get',
       message: Events.REQUEST_DATA,
-      request: XP.RequestParams
+      request: requestParams
     })
   }
 

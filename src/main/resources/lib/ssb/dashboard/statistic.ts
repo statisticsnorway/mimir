@@ -4,7 +4,7 @@ import { Socket, SocketEmitter } from '../../types/socket'
 import { StatisticInListing, VariantInListing } from './statreg/types'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { ProcessXml, RefreshDatasetResult, DashboardJobInfo } from './dashboard'
-import { RunContext } from '/lib/xp/context'
+import { RunContext, ContextAttributes } from '/lib/xp/context'
 import { DatasetRepoNode } from '../repo/dataset'
 import { Highchart } from '../../../site/content-types/highchart/highchart'
 import { Table } from '../../../site/content-types/table/table'
@@ -15,6 +15,7 @@ import { JobEventNode, JobInfoNode, JobNames, JobStatus } from '../repo/job'
 import { NodeQueryResponse } from '/lib/xp/node'
 import { User } from '/lib/xp/auth'
 import { Statistic } from '../../../site/mixins/statistic/statistic'
+import { Content, QueryResponse } from '/lib/xp/content'
 
 const {
   hasWritePermissions
@@ -79,7 +80,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     executeFunction({
       description: 'get-statistics',
       func: () => {
-        const context: RunContext = {
+        const context: RunContext<ContextAttributes> = {
           branch: 'master',
           repository: ENONIC_CMS_DEFAULT_REPO,
           // principals: ['role:system.admin'],
@@ -183,7 +184,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
           const datasetIdsToUpdate: Array<string> = getDataSourceIdsFromStatistics(statistic)
           const processXmls: Array<ProcessXml> | undefined = data.owners ? processXmlFromOwners(data.owners) : undefined
           if (datasetIdsToUpdate.length > 0) {
-            const context: RunContext = {
+            const context: RunContext<ContextAttributes> = {
               branch: 'master',
               repository: ENONIC_CMS_DEFAULT_REPO,
               principals: ['role:system.admin'],

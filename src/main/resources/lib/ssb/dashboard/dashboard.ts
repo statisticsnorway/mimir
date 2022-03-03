@@ -5,7 +5,7 @@ import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { Events, QueryInfoNode } from '../repo/query'
 import { EVENT_LOG_REPO, EVENT_LOG_BRANCH, LogSummary } from '../repo/eventLog'
 import { NodeQueryHit, RepoNode } from '/lib/xp/node'
-import { RunContext } from '/lib/xp/context'
+import { RunContext, ContextAttributes } from '/lib/xp/context'
 import { Socket, SocketEmitter } from '../../types/socket'
 import { JSONstat } from '../../types/jsonstat-toolkit'
 import { TbmlDataUniform } from '../../types/xmlParser'
@@ -193,7 +193,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   })
 
   socket.on('dashboard-refresh-dataset', (options: RefreshDatasetOptions) => {
-    const context: RunContext = {
+    const context: RunContext<ContextAttributes> = {
       branch: 'master',
       repository: ENONIC_CMS_DEFAULT_REPO,
       principals: ['role:system.admin'],

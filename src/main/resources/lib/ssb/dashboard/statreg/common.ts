@@ -27,7 +27,7 @@ export function fetchStatRegData(dataKey: string, serviceUrl: string): HttpRespo
     function: 'fetchStatRegData',
     message: Events.REQUEST_DATA,
     status: `${response.status}`,
-    request: XP.RequestParams,
+    request: requestParams,
     response
   })
 

@@ -55,5 +55,5 @@ export interface StatRegRepoUtilsLib {
     contentFetcher: () => Array<T>,
     optionTransform: (o: T) => A,
     applyFilters: (o: Array<T>, f: XP.Request['params']) => Array<T>
-  ) => Response;
+  ) => XP.Response;
 }

@@ -1,4 +1,4 @@
-import { HttpRequestParams, HttpResponse } from '/lib/xp/http-client'
+import { HttpRequestParams, HttpResponse } from '/lib/http-client'
 const {
   request
 } = __non_webpack_require__( '/lib/http-client')

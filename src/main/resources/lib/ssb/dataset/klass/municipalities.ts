@@ -91,7 +91,7 @@ export function municipalsWithCounties(): Array<MunicipalityWithCounty> {
   }))
 }
 
-export function getMunicipality(req: XP.RequestWithCode): MunicipalityWithCounty|undefined {
+export function getMunicipality(req: RequestWithCode): MunicipalityWithCounty|undefined {
   let municipality: MunicipalityWithCounty | undefined
   if (req.params && req.params.selfRequest && req.params.municipality) {
     // TODO: Figure out why municipality is duplicated in params!
