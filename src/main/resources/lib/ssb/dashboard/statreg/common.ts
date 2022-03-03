@@ -1,4 +1,4 @@
-import { HttpRequestParams, HttpResponse } from 'enonic-types/http'
+import { HttpRequestParams, HttpResponse } from '/lib/http-client' 
 
 const {
   request
@@ -27,7 +27,7 @@ export function fetchStatRegData(dataKey: string, serviceUrl: string): HttpRespo
     function: 'fetchStatRegData',
     message: Events.REQUEST_DATA,
     status: `${response.status}`,
-    request: requestParams,
+    request: XP.RequestParams,
     response
   })
 

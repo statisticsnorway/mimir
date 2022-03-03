@@ -1,18 +1,17 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { Request, Response } from 'enonic-types/controller'
-import { EnonicEvent, EnonicEventData } from 'enonic-types/event'
-import { QueryResponse, Content } from 'enonic-types/content'
+import { EnonicEvent, EnonicEventData } from '/lib/xp/event'
+import { QueryResponse, Content } from '/lib/xp/content'
 import { JSONstat } from '../../types/jsonstat-toolkit'
 import { TbmlDataUniform } from '../../types/xmlParser'
 import { DATASET_REPO, DatasetRepoNode } from '../repo/dataset'
 import { Socket } from '../../types/socket'
 import { MunicipalityWithCounty } from '../dataset/klass/municipalities'
-import { Cache } from 'enonic-types/cache'
+import { Cache, newCache } from '/lib/cache'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 
-const {
-  newCache
-} = __non_webpack_require__('/lib/cache')
+// const {
+//   newCache
+// } = __non_webpack_require__('/lib/cache')
 const {
   listener,
   send
@@ -314,7 +313,7 @@ function getFilterCache(branch: string, filterKey: string): Cache {
   return filterCache
 }
 
-export function fromFilterCache(req: Request, filterKey: string, key: string, fallback: () => Response): Response {
+export function fromFilterCache(req: XP.Request, filterKey: string, key: string, fallback: () => XP.Response): XP.Response {
   if (req.mode === 'live' || req.mode === 'preview') {
     const branch: string = req.mode === 'live' ? 'master' : 'draft'
     const filterCache: Cache = getFilterCache(branch, filterKey)
@@ -326,7 +325,7 @@ export function fromFilterCache(req: Request, filterKey: string, key: string, fa
   return fallback()
 }
 
-export function fromMenuCache(req: Request, key: string, fallback: () => unknown): unknown {
+export function fromMenuCache(req: XP.Request, key: string, fallback: () => unknown): unknown {
   if (req.mode === 'live' || req.mode === 'preview') {
     const branch: string = req.mode === 'live' ? 'master' : 'draft'
     const menuCache: Cache = branch === 'master' ? masterMenuCache : draftMenuCache
@@ -338,7 +337,7 @@ export function fromMenuCache(req: Request, key: string, fallback: () => unknown
   return fallback()
 }
 
-export function fromRelatedArticlesCache(req: Request, key: string, fallback: () => unknown): unknown {
+export function fromRelatedArticlesCache(req: XP.Request, key: string, fallback: () => unknown): unknown {
   if (req.mode === 'live' || req.mode === 'preview') {
     const branch: string = req.mode === 'live' ? 'master' : 'draft'
     const relatedArticlesCache: Cache = branch === 'master' ? masterRelatedArticlesCache : draftRelatedArticlesCache
@@ -350,7 +349,7 @@ export function fromRelatedArticlesCache(req: Request, key: string, fallback: ()
   return fallback()
 }
 
-export function fromRelatedFactPageCache(req: Request, key: string, fallback: () => unknown): unknown {
+export function fromRelatedFactPageCache(req: XP.Request, key: string, fallback: () => unknown): unknown {
   if (req.mode === 'live' || req.mode === 'preview') {
     const branch: string = req.mode === 'live' ? 'master' : 'draft'
     const relatedFactPageCache: Cache = branch === 'master' ? masterRelatedFactPageCache : draftRelatedFactPageCache
@@ -552,10 +551,10 @@ export interface CompletelyClearCacheOptions {
 
 export interface SSBCacheLibrary {
   setup: () => void;
-  fromFilterCache: (req: Request, filterKey: string, key: string, fallback: () => Response) => Response;
-  fromMenuCache: (req: Request, key: string, fallback: () => unknown) => unknown;
-  fromRelatedArticlesCache: (req: Request, key: string, fallback: () => unknown) => unknown;
-  fromRelatedFactPageCache: (req: Request, key: string, fallback: () => unknown) => unknown;
+  fromFilterCache: (req: XP.Request, filterKey: string, key: string, fallback: () => XP.Response) => XP.Response;
+  fromMenuCache: (req: XP.Request, key: string, fallback: () => unknown) => unknown;
+  fromRelatedArticlesCache: (req: XP.Request, key: string, fallback: () => unknown) => unknown;
+  fromRelatedFactPageCache: (req: XP.Request, key: string, fallback: () => unknown) => unknown;
   fromDatasetRepoCache:
     (key: string, fallback: () => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null)
       => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined;

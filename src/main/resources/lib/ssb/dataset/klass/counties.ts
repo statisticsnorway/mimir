@@ -1,5 +1,5 @@
 import { SiteConfig } from '../../../../site/site-config'
-import { Content } from 'enonic-types/content'
+import { Content } from '/lib/xp/content'
 import { DatasetRepoNode } from '../../repo/dataset'
 import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
 const {

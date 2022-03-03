@@ -1,5 +1,5 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { Content } from 'enonic-types/content'
+import { Content } from '/lib/xp/content'
 import { Table } from '../../../site/content-types/table/table'
 import { TbmlDataUniform,
   TableRowUniform,
@@ -14,7 +14,6 @@ import { TbmlDataUniform,
   StatbankSavedUniform,
   TableCellRaw,
   XmlParser } from '../../types/xmlParser'
-import { Request } from 'enonic-types/controller'
 import { DatasetRepoNode } from '../repo/dataset'
 import { DataSource as DataSourceType } from '../repo/dataset'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
@@ -39,7 +38,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/utils/utils')
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
-export function parseTable(req: Request, table: Content<Table & DataSource>, branch: string = DATASET_BRANCH): TableView {
+export function parseTable(req: XP.Request, table: Content<Table & DataSource>, branch: string = DATASET_BRANCH): TableView {
   let tableViewData: TableView = {
     caption: undefined,
     thead: [],
@@ -246,7 +245,7 @@ export interface TableView {
 }
 
 export interface TableLib {
-  parseTable: (req: Request, table: Content<Table>, branch?: string) => TableView;
+  parseTable: (req: XP.Request, table: Content<Table>, branch?: string) => TableView;
   parseHtmlString: (tableData: string) => HtmlTable;
 }
 

@@ -1,4 +1,4 @@
-import { Content, QueryResponse } from 'enonic-types/content'
+import { Content, QueryResponse } from '/lib/xp/content'
 import { DefaultPageConfig } from '../../../site/pages/default/default-page-config'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { StatisticInListing } from '../dashboard/statreg/types'

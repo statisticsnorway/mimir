@@ -1,7 +1,7 @@
 import { MenuItem } from '../../../site/content-types/menuItem/menuItem'
 import { Language } from '../../types/language'
 import { Link } from './menu'
-import { Content } from 'enonic-types/content'
+import { Content } from '/lib/xp/content'
 import { Footer } from '../../../site/content-types/footer/footer'
 const {
   assetUrl

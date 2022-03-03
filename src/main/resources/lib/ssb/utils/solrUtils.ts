@@ -1,4 +1,4 @@
-import { HttpResponse } from 'enonic-types/http'
+import { HttpResponse } from '/lib/http-client' 
 import { formatDate } from './dateUtils'
 
 const SOLR_PARAM_QUERY: string = 'q'

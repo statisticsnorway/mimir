@@ -1,4 +1,4 @@
-import { Content, MediaImage } from 'enonic-types/content'
+import { Content, MediaImage } from '/lib/xp/content'
 
 const {
   get

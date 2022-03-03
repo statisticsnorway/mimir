@@ -1,6 +1,6 @@
-import { NodeQueryParams, NodeQueryResponse, RepoNode } from 'enonic-types/node'
+import { NodeQueryParams, NodeQueryResponse, RepoNode } from '/lib/xp/node'
 import { EditorCallback } from './eventLog'
-import { User } from 'enonic-types/auth'
+import { User } from '/lib/xp/auth'
 import { DataSourceInfo, RSSFilterLogData } from '../cron/rss'
 const {
   modifyNode,

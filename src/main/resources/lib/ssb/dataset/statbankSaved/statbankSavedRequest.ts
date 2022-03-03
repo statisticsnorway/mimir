@@ -1,4 +1,4 @@
-import { HttpRequestParams, HttpResponse } from 'enonic-types/http'
+import { HttpRequestParams, HttpResponse } from '/lib/http-client' 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 import { XmlParser } from '../../../types/xmlParser'
 
@@ -31,7 +31,7 @@ export function get(url: string, queryId?: string): object | null {
       file: '/lib/statbankSaved/statbankSaved.ts',
       function: 'fetch',
       message: Events.REQUEST_DATA,
-      request: requestParams
+      request: XP.RequestParams
     })
   }
 
@@ -55,7 +55,7 @@ export function get(url: string, queryId?: string): object | null {
 
   if (response.status === 200 && response.body) {
     return {
-      html: response.body,
+      html: XP.Response.body,
       json: xmlParser.parse(response.body.replace('&', '&amp;'))
     }
   }

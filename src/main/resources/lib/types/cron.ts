@@ -1,4 +1,4 @@
-import { RunContext } from 'enonic-types/context'
+import { RunContext } from '/lib/xp/context'
 
 export interface CronLib {
     schedule: (options: ScheduleParams) => void;

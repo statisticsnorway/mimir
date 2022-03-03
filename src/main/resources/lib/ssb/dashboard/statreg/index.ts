@@ -3,7 +3,7 @@ import { Socket, SocketEmitter } from '../../../types/socket'
 import { StatRegLatestFetchInfoNode } from '../../statreg/eventLog'
 import { LogSummary } from '../../repo/eventLog'
 import { Events, QueryInfo } from '../../repo/query'
-import { RunContext } from 'enonic-types/context'
+import { RunContext, ContextAttributes } from '/lib/xp/context'
 import { DashboardRefreshResultLogData } from '../dashboard'
 
 const {
@@ -98,7 +98,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
       socketEmitter.broadcast('statreg-dashboard-refresh-start', key)
     })
     // start refreshing
-    const context: RunContext = {
+    const context: RunContext<ContextAttributes> = {
       branch: 'master',
       repository: ENONIC_CMS_DEFAULT_REPO,
       principals: ['role:system.admin'],

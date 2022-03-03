@@ -1,12 +1,11 @@
-import { Request, Response } from 'enonic-types/controller'
-import { Component } from 'enonic-types/portal'
-import { Content } from 'enonic-types/content'
+import { Component } from '/lib/xp/portal'
+import { Content } from '/lib/xp/content'
 import { SearchResultPartConfig } from './searchResult-part-config'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import { React4xp, React4xpResponse } from '/lib/enonic/react4xp'
 import { PreparedSearchResult, SolrPrepResultAndTotal } from '../../../lib/ssb/utils/solrUtils'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { queryNodes, getNode } from '../../../lib/ssb/repo/common'
-import { NodeQueryResponse, RepoNode } from 'enonic-types/node'
+import { NodeQueryResponse, RepoNode } from '/lib/xp/node'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
@@ -35,7 +34,7 @@ const {
   getMainSubjects
 } = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
 
-exports.get = function(req: Request): React4xpResponse | Response {
+exports.get = function(req: XP.Request): React4xpResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -43,7 +42,7 @@ exports.get = function(req: Request): React4xpResponse | Response {
   }
 }
 
-exports.preview = (req: Request): React4xpResponse | Response => {
+exports.preview = (req: XP.Request): React4xpResponse | XP.Response => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -51,7 +50,7 @@ exports.preview = (req: Request): React4xpResponse | Response => {
   }
 }
 
-export function renderPart(req: Request): React4xpResponse {
+export function renderPart(req: XP.Request): React4xpResponse {
   /* collect data */
   const content: Content = getContent()
   const part: Component<SearchResultPartConfig> = getComponent()

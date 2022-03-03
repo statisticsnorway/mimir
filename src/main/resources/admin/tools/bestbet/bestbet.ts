@@ -1,7 +1,6 @@
-import { PageContributions, Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { ResourceKey } from '/lib/thymeleaf'
 import { getMainSubjects, SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
-import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
+import { React4xp, RenderResponse } from '/lib/enonic/react4xp'
 
 const {
   assetUrl, serviceUrl
@@ -20,9 +19,9 @@ const {
 } = __non_webpack_require__('/lib/thymeleaf')
 
 const view: ResourceKey = resolve('./bestbet.html')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-exports.get = function(req: Request): React4xpResponse | Response {
+exports.get = function(req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -30,7 +29,7 @@ exports.get = function(req: Request): React4xpResponse | Response {
   }
 }
 
-exports.preview = (req: Request): React4xpResponse | Response => {
+exports.preview = (req: XP.Request): RenderResponse | XP.Response => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -38,7 +37,7 @@ exports.preview = (req: Request): React4xpResponse | Response => {
   }
 }
 
-function renderPart(req: Request): React4xpResponse | Response {
+function renderPart(req: XP.Request): RenderResponse | XP.Response {
   // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
   // @ts-ignore
   const DEFAULT_CONTENTSTUDIO_URL: string = getToolUrl('com.enonic.app.contentstudio', 'main')
@@ -72,7 +71,7 @@ function renderPart(req: Request): React4xpResponse | Response {
     title: 'Velg innholdstype'
   }, ...contentTypesList]
 
-  const bestbetComponent: React4xpObject = new React4xp('bestbet/Bestbet')
+  const bestbetComponent: React4xp = new React4xp('bestbet/Bestbet')
     .setProps({
       logoUrl: assetUrl({
         path: 'SSB_logo_black.svg'
@@ -89,7 +88,7 @@ function renderPart(req: Request): React4xpResponse | Response {
     })
     .setId('app-bestbet')
 
-  const pageContributions: PageContributions = parseContributions(bestbetComponent.renderPageContributions() as PageContributions)
+  const pageContributions: XP.PageContributions = parseContributions(bestbetComponent.renderPageContributions() as XP.PageContributions)
 
   return {
     body: bestbetComponent.renderBody({
@@ -117,7 +116,7 @@ function getAssets(): object {
   }
 }
 
-function parseContributions(contributions: PageContributions): PageContributions {
+function parseContributions(contributions: XP.PageContributions): XP.PageContributions {
   contributions.bodyEnd = contributions.bodyEnd && (contributions.bodyEnd as Array<string>).map((script: string) => script.replace(' defer>', ' defer="">'))
   return contributions
 }

@@ -1,11 +1,10 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { EventInfo } from '../repo/query'
 import { Socket, SocketEmitter } from '../../types/socket'
-import { Content, QueryResponse } from 'enonic-types/content'
 import { StatisticInListing, VariantInListing } from './statreg/types'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { ProcessXml, RefreshDatasetResult, DashboardJobInfo } from './dashboard'
-import { RunContext } from 'enonic-types/context'
+import { RunContext } from '/lib/xp/context'
 import { DatasetRepoNode } from '../repo/dataset'
 import { Highchart } from '../../../site/content-types/highchart/highchart'
 import { Table } from '../../../site/content-types/table/table'
@@ -13,8 +12,8 @@ import { KeyFigure } from '../../../site/content-types/keyFigure/keyFigure'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { Source, TbmlDataUniform } from '../../types/xmlParser'
 import { JobEventNode, JobInfoNode, JobNames, JobStatus } from '../repo/job'
-import { NodeQueryResponse } from 'enonic-types/node'
-import { User } from 'enonic-types/auth'
+import { NodeQueryResponse } from '/lib/xp/node'
+import { User } from '/lib/xp/auth'
 import { Statistic } from '../../../site/mixins/statistic/statistic'
 
 const {
@@ -399,7 +398,7 @@ function getEventLogsFromStatisticsJobLog(jobLogId: string): {user: User; datase
       })
       return {
         displayName: datasetContent?.displayName,
-        branch: dataset.branch === 'master' ? 'publisert' : 'ubpulisert',
+        branch: dataset.branch === 'master' ? 'publisert' : 'upubliserit',
         eventLogResult: eventLogResult.hits.map((hit) => {
           const node: EventInfo | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataset.id}/${hit.id}`) as EventInfo
           const resultMessage: string = localize({
@@ -601,7 +600,7 @@ interface OwnerObject {
   ownerId: string;
   tbmlId: string;
   fetchPublished: true | undefined;
-};
+}
 
 interface StatisticDashboard {
   id: string;

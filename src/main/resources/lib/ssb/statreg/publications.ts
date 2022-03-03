@@ -1,7 +1,7 @@
 import { StatRegNode } from '../repo/statreg'
 import { Publication, Publisering, PubliseringXML } from '../dashboard/statreg/types'
 import { XmlParser } from '../../types/xmlParser'
-import { HttpResponse } from 'enonic-types/http'
+import { HttpResponse } from '/lib/http-client' 
 
 const {
   ensureArray

@@ -1,5 +1,5 @@
 import { Language } from '../../types/language'
-import { Content } from 'enonic-types/content'
+import { Content } from '/lib/xp/content'
 import { Header } from '../../../site/content-types/header/header'
 import { Link } from './menu'
 import { MenuItem } from '../../../site/content-types/menuItem/menuItem'

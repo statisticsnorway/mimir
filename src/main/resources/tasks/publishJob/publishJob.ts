@@ -1,4 +1,4 @@
-import { Content } from 'enonic-types/content'
+import { Content } from '/lib/xp/content'
 import { Statistics } from '../../site/content-types/statistics/statistics'
 import { DataSource } from '../../site/mixins/dataSource/dataSource'
 import { JobEventNode, JobInfoNode, StatisticsPublishResult, DataSourceStatisticsPublishResult } from '../../lib/ssb/repo/job'

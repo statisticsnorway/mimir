@@ -1,5 +1,4 @@
-import { ResourceKey } from 'enonic-types/thymeleaf'
-import { Response, Request } from 'enonic-types/controller'
+import { ResourceKey } from '/lib/thymeleaf'
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
@@ -12,7 +11,7 @@ export interface ErrorInterface {
 
 const errorView: ResourceKey = resolve('./error.html')
 
-export function renderError(req: Request, title: string, exception: Error): Response {
+export function renderError(req: XP.Request, title: string, exception: Error): XP.Response {
   const model: ErrorInterface = {
     errorBody: exception.message,
     errorTitle: title,
@@ -29,5 +28,5 @@ export function renderError(req: Request, title: string, exception: Error): Resp
 }
 
 export interface ErrorLib {
-  renderError: (req: Request, title: string, exception: Error) => Response;
+  renderError: (req: XP.Request, title: string, exception: Error) => XP.Response;
 }

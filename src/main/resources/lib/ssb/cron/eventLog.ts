@@ -1,4 +1,4 @@
-import { NodeQueryHit, NodeQueryResponse, RepoNode } from 'enonic-types/node'
+import { NodeQueryHit, NodeQueryResponse, RepoNode } from '/lib/xp/node'
 import { JobEventNode } from '../repo/job'
 
 const {
@@ -83,7 +83,7 @@ function deleteLog(path: string, parent: RepoNodeExtended, expiredDate: Date, co
     count
   })
   return withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (conn) => {
-    return conn.delete(expiredLogs.hits.map((h) => h.id)).map((id) => {
+    return conn.delete(expiredLogs.hits.map((h) => h.id)).map((id:string) => {
       return `Deleted expired event log: ${parent._id}/${id}`
     })
   })

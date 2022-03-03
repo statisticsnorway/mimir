@@ -1,6 +1,5 @@
-import { Request } from 'enonic-types/controller'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { Content, QueryResponse } from 'enonic-types/content'
+import { React4xp, RenderResponse } from '/lib/enonic/react4xp'
+import { Content, QueryResponse } from '/lib/xp/content'
 import { PreparedArticles } from '../../../lib/ssb/utils/articleUtils'
 import { Article } from '../../content-types/article/article'
 
@@ -10,7 +9,10 @@ const {
 const {
   getContent, serviceUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
+const {
+  React4xp
+} = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
@@ -19,13 +21,13 @@ const {
   prepareArticles
 } = __non_webpack_require__( '/lib/ssb/utils/articleUtils')
 
-exports.get = (req: Request): React4xpResponse => {
+exports.get = (req: XP.Request): RenderResponse => {
   return renderPart(req)
 }
 
-exports.preview = (req: Request): React4xpResponse => renderPart(req)
+exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
 
-function renderPart(req: Request): React4xpResponse {
+function renderPart(req: XP.Request): RenderResponse {
   const content: Content = getContent()
   const subTopicId: string = content._id
   const sort: string = req.params.sort ? req.params.sort : 'DESC'

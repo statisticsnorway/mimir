@@ -1,4 +1,4 @@
-import { Content, QueryResponse } from 'enonic-types/content'
+import { Content, QueryResponse } from '/lib/xp/content'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { UNPUBLISHED_DATASET_BRANCH } from '../repo/dataset'

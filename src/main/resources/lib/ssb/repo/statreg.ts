@@ -1,4 +1,4 @@
-import { RepoNode } from 'enonic-types/node'
+import { RepoNode } from '/lib/xp/node'
 import { StatisticInListing, StatRegBase } from '../dashboard/statreg/types'
 
 const {

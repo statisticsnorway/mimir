@@ -1,4 +1,4 @@
-import { Content } from 'enonic-types/content'
+import { Content } from '/lib/xp/content'
 import { Page } from '../../../site/content-types/page/page'
 import { DefaultPageConfig } from '../../../site/pages/default/default-page-config'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
@@ -6,7 +6,6 @@ import { EndedStatisticList } from '../../../site/content-types/endedStatisticLi
 import { StatisticInListing } from '../dashboard/statreg/types'
 import { Statistic } from '../../../site/mixins/statistic/statistic'
 import { Subtopic } from '../../../site/mixins/subtopic/subtopic'
-import { Request } from 'enonic-types/controller'
 const {
   query
 } = __non_webpack_require__('/lib/xp/content')
@@ -24,7 +23,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/utils/parentUtils')
 
 
-export function getMainSubjects(request: Request, language?: string): Array<SubjectItem> {
+export function getMainSubjects(request: XP.Request, language?: string): Array<SubjectItem> {
   return fromSubjectCache<SubjectItem>(request, `mainsubject-${language ? language : 'all'}`, () => {
     const lang: string = language ? language !== 'en' ? 'AND language != "en"' : 'AND language = "en"' : ''
     const mainSubjectsContent: Array<Content<Page, DefaultPageConfig>> = query({
@@ -56,7 +55,7 @@ export function getMainSubjectById(mainSubjects: Array<SubjectItem>, id: string)
   return null
 }
 
-export function getSubSubjects(request: Request, language?: string): Array<SubjectItem> {
+export function getSubSubjects(request: XP.Request, language?: string): Array<SubjectItem> {
   return fromSubjectCache<SubjectItem>(request, `subsubject-${language ? language : 'all'}`, () => {
     const lang: string = language ? language !== 'en' ? 'AND language != "en"' : 'AND language = "en"' : ''
     const subSubjectsContent: Array<Content<Page, DefaultPageConfig>> = query({
@@ -239,7 +238,7 @@ export function getSecondaryStatisticsBySubject(statistics: Array<StatisticItem>
   })
 }
 
-export function getSubjectStructur(request: Request, language: string): Array<MainSubject> {
+export function getSubjectStructur(request: XP.Request, language: string): Array<MainSubject> {
   const mainSubjectsAll: Array<SubjectItem> = getMainSubjects(request)
   const subSubjectsAll: Array<SubjectItem> = getSubSubjects(request)
   const statregStatistics: Array<StatisticInListing> = ensureArray(getAllStatisticsFromRepo())
@@ -309,11 +308,11 @@ interface EndedStatistic {
 }
 
 export interface SubjectUtilsLib {
-    getMainSubjects: (request: Request, language?: string) => Array<SubjectItem>;
+    getMainSubjects: (request: XP.Request, language?: string) => Array<SubjectItem>;
     getMainSubjectById: (mainSubjects: Array<SubjectItem>, id: string) => SubjectItem;
-    getSubSubjects: (request: Request, language?: string) => Array<SubjectItem>;
+    getSubSubjects: (request: XP.Request, language?: string) => Array<SubjectItem>;
     getSubSubjectsByPath: (subjects: Array<SubjectItem>, path: string) => Array<SubjectItem>;
-    getSubjectStructur: (request: Request, language: string) => Array<MainSubject>;
+    getSubjectStructur: (request: XP.Request, language: string) => Array<MainSubject>;
     getStatistics: (statregStatistics: Array<StatisticInListing>) => Array<StatisticItem>;
     getStatisticsByPath: (statistics: Array<StatisticItem>, path: string) => Array<StatisticItem>;
     getEndedStatisticsByPath: (path: string, statregStatistics: Array<StatisticInListing>, hideStatistics: boolean) => Array<StatisticItem>;

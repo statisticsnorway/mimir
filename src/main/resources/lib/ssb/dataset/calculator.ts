@@ -1,5 +1,5 @@
 import { Dataset, JSONstat as JSONstatType } from '../../types/jsonstat-toolkit'
-import { Content } from 'enonic-types/content'
+import { Content } from '/lib/xp/content'
 import { CalculatorConfig } from '../../../site/content-types/calculatorConfig/calculatorConfig'
 import { GenericDataImport } from '../../../site/content-types/genericDataImport/genericDataImport'
 import { DatasetRepoNode } from '../repo/dataset'

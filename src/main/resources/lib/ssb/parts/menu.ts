@@ -1,4 +1,4 @@
-import { Content, Image, QueryResponse } from 'enonic-types/content'
+import { Content, Image, QueryResponse } from '/lib/xp/content'
 import { MenuItem } from '../../../site/content-types/menuItem/menuItem'
 import { Footer } from '../../../site/content-types/footer/footer'
 import { Header } from '../../../site/content-types/header/header'

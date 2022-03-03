@@ -1,6 +1,5 @@
 import { SiteConfig } from '../../../../site/site-config'
-import { Content } from 'enonic-types/content'
-import { Request } from 'enonic-types/controller'
+import { Content } from '/lib/xp/content'
 import { County } from './counties'
 import { DatasetRepoNode } from '../../repo/dataset'
 import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
@@ -92,7 +91,7 @@ export function municipalsWithCounties(): Array<MunicipalityWithCounty> {
   }))
 }
 
-export function getMunicipality(req: RequestWithCode): MunicipalityWithCounty|undefined {
+export function getMunicipality(req: XP.RequestWithCode): MunicipalityWithCounty|undefined {
   let municipality: MunicipalityWithCounty | undefined
   if (req.params && req.params.selfRequest && req.params.municipality) {
     // TODO: Figure out why municipality is duplicated in params!
@@ -214,12 +213,12 @@ export interface MunicipalitiesLib {
   query: (queryString: string) => Array<MunicipalCode>;
   createPath (municipalName: string, countyName?: string): string;
   municipalsWithCounties (): Array<MunicipalityWithCounty>;
-  getMunicipality (req: Request): MunicipalityWithCounty|undefined;
+  getMunicipality (req: XP.Request): MunicipalityWithCounty|undefined;
   getMunicipalityByName: (municipalities: Array<MunicipalityWithCounty>, municipalityName: string) => MunicipalityWithCounty|undefined;
   removeCountyFromMunicipalityName: (municipalityName: string) => string;
 }
 
-interface RequestWithCode extends Request {
+interface RequestWithCode extends XP.Request {
   code: string;
 }
 

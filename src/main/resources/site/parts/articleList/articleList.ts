@@ -1,9 +1,8 @@
-import { Request } from 'enonic-types/controller'
 import { Article } from '../../content-types/article/article'
-import { Component } from 'enonic-types/portal'
+import { Component } from '/lib/xp/portal'
 import { ArticleListPartConfig } from './articleList-part-config'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { AggregationsResponseEntry, Content } from 'enonic-types/content'
+import { React4xp, React4xpResponse } from '/lib/enonic/react4xp'
+import { AggregationsResponseEntry, Content } from '/lib/xp/content'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 
@@ -24,13 +23,13 @@ const {
   getSubSubjects
 } = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
 
-exports.get = (req: Request): React4xpResponse => {
+exports.get = (req: XP.Request): React4xpResponse => {
   return renderPart(req)
 }
 
-exports.preview = (req: Request): React4xpResponse => renderPart(req)
+exports.preview = (req: XP.Request): React4xpResponse => renderPart(req)
 
-function renderPart(req: Request): React4xpResponse {
+function renderPart(req: XP.Request): React4xpResponse {
   const content: Content = getContent()
   const component: Component<ArticleListPartConfig> = getComponent()
   const language: string = content.language ? content.language : 'nb'
@@ -56,7 +55,7 @@ function renderPart(req: Request): React4xpResponse {
   return React4xp.render('site/parts/articleList/articleList', props, req)
 }
 
-function getArticles(req: Request, language: string): Array<Content<Article>> {
+function getArticles(req: XP.Request, language: string): Array<Content<Article>> {
   const subjectItems: Array<SubjectItem> = getSubSubjects(req, language)
   const pagePaths: Array<string> = subjectItems.map((sub) => `_parentPath LIKE "/content${sub.path}/*"`)
   const languageQuery: string = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'

@@ -1,5 +1,3 @@
-import { Request, Response } from 'enonic-types/controller'
-
 const {
   ensureArray
 } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
@@ -10,12 +8,12 @@ function toOptions<T, A>(content: Array<T>, transform: (item: T) => A): Array<A>
 }
 
 export function handleRepoGet<T, A>(
-  req: Request,
+  req: XP.Request,
   repoName: string,
   contentFetcher: () => Array<T>,
   optionTransform: (o: T) => A,
-  applyFilters: (o: Array<T>, f: Request['params']) => Array<T>
-): Response {
+  applyFilters: (o: Array<T>, f: XP.Request['params']) => Array<T>
+): XP.Response {
   try {
     const content: Array<T> | T = contentFetcher()
     if (!content) {
@@ -52,10 +50,10 @@ export function handleRepoGet<T, A>(
 
 export interface StatRegRepoUtilsLib {
   handleRepoGet: <T, A>(
-    req: Request,
+    req: XP.Request,
     repoName: string,
     contentFetcher: () => Array<T>,
     optionTransform: (o: T) => A,
-    applyFilters: (o: Array<T>, f: Request['params']) => Array<T>
+    applyFilters: (o: Array<T>, f: XP.Request['params']) => Array<T>
   ) => Response;
 }

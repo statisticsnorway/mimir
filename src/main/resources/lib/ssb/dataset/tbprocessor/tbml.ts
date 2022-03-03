@@ -1,4 +1,4 @@
-import { HttpRequestParams, HttpResponse } from 'enonic-types/http'
+import { HttpRequestParams, HttpResponse } from '/lib/http-client' 
 import { TbmlDataRaw,
   TableRowRaw,
   TableCellRaw,
@@ -43,9 +43,9 @@ export function getTbmlData<T extends TbmlDataUniform | TbmlSourceListUniform>(
   //
   const response: HttpResponse = fetch(url, queryId, processXml, type)
   return {
-    body: response.body,
-    status: response.status,
-    parsedBody: response.body && response.status === 200 ? processBody<T>(response.body, queryId) : undefined
+    body: XP.Response.body,
+    status: XP.Response.status,
+    parsedBody: XP.Response.body && response.status === 200 ? processBody<T>(response.body, queryId) : undefined
   }
 }
 
@@ -73,7 +73,7 @@ export function fetch(
     method: processXml ? 'POST' : 'GET',
     readTimeout: 40000
   }
-  const response: HttpResponse = mock ? mock : request(requestParams)
+  const response: HttpResponse = mock ? mock : XP.Request(requestParams)
 
   if (queryId) {
     logUserDataQuery(queryId, {
@@ -81,7 +81,7 @@ export function fetch(
       function: 'fetch',
       message: type ? getRequestType(type) : Events.REQUEST_DATA,
       status: `${response.status}`,
-      request: requestParams,
+      request: XP.RequestParams,
       response
     })
   }

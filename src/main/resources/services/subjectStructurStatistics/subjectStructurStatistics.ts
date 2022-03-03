@@ -1,4 +1,3 @@
-import { Request, Response } from 'enonic-types/controller'
 import { MainSubject,
   SubSubject,
   Title,
@@ -10,7 +9,7 @@ const {
   xmlEscape
 } = __non_webpack_require__('/lib/text-encoding')
 
-function get(req: Request): Response {
+function get(req: XP.Request): XP.Response {
   const mainSubjects: Array<MainSubject> = getSubjectStructur(req, 'no')
 
   const xml: string =

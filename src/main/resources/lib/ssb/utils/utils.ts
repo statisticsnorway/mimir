@@ -1,5 +1,4 @@
-import { ByteSource, Content } from 'enonic-types/content'
-import { Request } from 'enonic-types/controller'
+import { ByteSource, Content } from '/lib/xp/content'
 import { Header } from '../../../site/content-types/header/header'
 import { PreliminaryData } from '../../types/xmlParser'
 
@@ -65,7 +64,7 @@ export function getRowValue(value: number | string | PreliminaryData| Array<numb
 export type RowValue = number | string
 
 // Returns page mode for Kommunefakta page based on request mode or request path
-export function pageMode(req: Request): string {
+export function pageMode(req: XP.Request): string {
   return req.params.municipality ? 'municipality' : 'map'
 }
 
@@ -168,7 +167,7 @@ export interface UtilsLib {
   isUrl: (urlOrId: string | undefined) => boolean | undefined;
   isNumber: (str: number | string | undefined) => boolean;
   getRowValue: (value: number | string | PreliminaryData | Array<number | string | PreliminaryData>) => RowValue;
-  pageMode: (req: Request) => string;
+  pageMode: (req: XP.Request) => string;
   pathFromStringOrContent: (urlSrc: Header['searchResultPage']) => string | undefined;
   getSources: (sourceConfig: Array<SourcesConfig>) => SourceList;
   getAttachmentContent: (contentId: string | undefined) => string | undefined;

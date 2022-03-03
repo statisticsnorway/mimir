@@ -1,4 +1,4 @@
-import { BranchConfig, RepositoryConfig } from 'enonic-types/repo'
+import { BranchConfig, RepositoryConfig } from '/lib/xp/repo'
 const {
   get,
   create,

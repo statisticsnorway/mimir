@@ -1,4 +1,4 @@
-import { HttpResponse, HttpRequestParams } from 'enonic-types/http'
+import { HttpResponse, HttpRequestParams } from '/lib/http-client' 
 const {
   Events, logUserDataQuery
 } = __non_webpack_require__('/lib/ssb/repo/query')
@@ -42,7 +42,7 @@ export function get(url: string, json: DataqueryRequestData | undefined,
       file: '/lib/dataquery.ts',
       function: 'get',
       message: Events.REQUEST_DATA,
-      request: requestParams
+      request: XP.RequestParams
     })
   }
 

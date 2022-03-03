@@ -1,7 +1,7 @@
 import { StatisticInListing } from '../dashboard/statreg/types'
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { Content } from 'enonic-types/content'
-import { HttpResponse } from 'enonic-types/http'
+import { Content } from '/lib/xp/content'
+import { HttpResponse } from '/lib/http-client'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { TbmlDataUniform, XmlParser } from '../../types/xmlParser'
 import { DatasetRepoNode, DataSource as DataSourceType } from '../repo/dataset'

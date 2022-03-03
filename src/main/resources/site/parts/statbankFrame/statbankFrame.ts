@@ -1,6 +1,5 @@
-import { Request } from 'enonic-types/controller'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { Content } from 'enonic-types/content'
+import { React4xp, React4xpResponse } from '/lib/enonic/react4xp'
+import { Content } from '/lib/xp/content'
 
 const {
   getContent,
@@ -12,13 +11,13 @@ const {
 
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-exports.get = (req: Request): React4xpResponse => {
+exports.get = (req: XP.Request): React4xpResponse => {
   return renderPart(req)
 }
 
-exports.preview = (req: Request): React4xpResponse => renderPart(req)
+exports.preview = (req: XP.Request): React4xpResponse => renderPart(req)
 
-function renderPart(req: Request): React4xpResponse {
+function renderPart(req: XP.Request): React4xpResponse {
   const page: Content = getContent()
 
   const pageLanguage: string = page.language ? page.language : 'nb'

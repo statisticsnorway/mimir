@@ -1,4 +1,4 @@
-import { Content } from 'enonic-types/content'
+import { Content } from '/lib/xp/content'
 import { StatbankFrameData } from '../../../site/pages/default/default'
 import { MunicipalityWithCounty } from '../dataset/klass/municipalities'
 

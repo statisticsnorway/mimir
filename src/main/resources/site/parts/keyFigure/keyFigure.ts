@@ -1,8 +1,7 @@
-import { Content } from 'enonic-types/content'
-import { Request, Response } from 'enonic-types/controller'
+import { Content } from '/lib/xp/content'
 import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
 import { KeyFigureView } from '../../../lib/ssb/parts/keyFigure'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import { React4xp, React4xpResponse } from '/lib/enonic/react4xp'
 import { SiteConfig } from '../../../site/site-config'
 import { KeyFigurePartConfig } from './keyFigure-part-config'
 
@@ -39,7 +38,7 @@ const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
 
-exports.get = function(req: Request): React4xpResponse | Response {
+exports.get = function(req: XP.Request): React4xpResponse | XP.Response {
   try {
     const config: KeyFigurePartConfig = getComponent().config
     const keyFigureIds: Array<string> | [] = config.figure ? forceArray(config.figure) : []
@@ -50,20 +49,20 @@ exports.get = function(req: Request): React4xpResponse | Response {
   }
 }
 
-exports.preview = function(req: Request, id: string): React4xpResponse | Response {
+exports.preview = function(req: XP.Request, id: string): React4xpResponse | XP.Response {
   try {
     const siteConfig: SiteConfig = getSiteConfig()
     const defaultMunicipality: SiteConfig['defaultMunicipality'] = siteConfig.defaultMunicipality
     const municipality: MunicipalityWithCounty | undefined = getMunicipality({
       code: defaultMunicipality
-    } as unknown as Request)
+    } as unknown as XP.Request)
     return renderPart(req, municipality, [id])
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-function renderPart(req: Request, municipality: MunicipalityWithCounty | undefined, keyFigureIds: Array<string>): React4xpResponse | Response {
+function renderPart(req: XP.Request, municipality: MunicipalityWithCounty | undefined, keyFigureIds: Array<string>): React4xpResponse | XP.Response {
   const page: Content = getContent()
   const config: KeyFigurePartConfig = getComponent() && getComponent().config
   const showPreviewDraft: boolean = hasWritePermissionsAndPreview(req, page._id)
@@ -101,8 +100,8 @@ function renderKeyFigure(
   parsedKeyFigures: Array<KeyFigureData>,
   parsedKeyFiguresDraft: Array<KeyFigureData> | null,
   showPreviewDraft: boolean,
-  req: Request
-): React4xpResponse | Response {
+  req: XP.Request
+): React4xpResponse | XP.Response {
   const draftExist: boolean = !!parsedKeyFiguresDraft
   if (parsedKeyFigures && parsedKeyFigures.length > 0 || draftExist) {
     const hiddenTitle: Array<string> = parsedKeyFigures.map((keyFigureData) => {

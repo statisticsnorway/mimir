@@ -1,4 +1,4 @@
-import { Content } from 'enonic-types/content'
+import { Content } from '/lib/xp/content'
 import { SEO } from '../../../services/news/news'
 import { OmStatistikken } from '../../../site/content-types/omStatistikken/omStatistikken'
 import { Statistics } from '../../../site/content-types/statistics/statistics'

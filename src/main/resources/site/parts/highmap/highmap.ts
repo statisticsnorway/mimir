@@ -1,8 +1,7 @@
-import { ByteSource, Content } from 'enonic-types/content'
-import { Request, Response } from 'enonic-types/controller'
+import { ByteSource, Content } from '/lib/xp/content'
 import { RowData } from '../../../lib/ssb/parts/highcharts/data/htmlTable'
 import { isNumber, RowValue } from '../../../lib/ssb/utils/utils'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import { React4xp, React4xpResponse } from '/lib/enonic/react4xp'
 import { PreliminaryData, XmlParser } from '../../../lib/types/xmlParser'
 import { Highmap } from '../../content-types/highmap/highmap'
 import { HighmapPartConfig } from './highmap-part-config'
@@ -80,7 +79,7 @@ interface HighmapProps {
   language: string | undefined;
 }
 
-exports.get = function(req: Request): React4xpResponse | Response {
+exports.get = function(req: XP.Request): React4xpResponse | XP.Response {
   try {
     const config: HighmapPartConfig = getComponent().config
     const highmapId: string | undefined = config.highmapId
@@ -90,7 +89,7 @@ exports.get = function(req: Request): React4xpResponse | Response {
   }
 }
 
-exports.preview = (req: Request, highmapId: string | undefined): React4xpResponse | Response => {
+exports.preview = (req: XP.Request, highmapId: string | undefined): React4xpResponse | XP.Response => {
   try {
     return renderPart(req, highmapId)
   } catch (e) {
@@ -98,7 +97,7 @@ exports.preview = (req: Request, highmapId: string | undefined): React4xpRespons
   }
 }
 
-function renderPart(req: Request, highmapId: string | undefined): React4xpResponse | Response {
+function renderPart(req: XP.Request, highmapId: string | undefined): React4xpResponse | XP.Response {
   const page: Content = getContent()
   const highmapContent: Content<Highmap> | null = highmapId ? get({
     key: highmapId

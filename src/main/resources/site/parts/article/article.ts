@@ -1,7 +1,6 @@
-import { Content } from 'enonic-types/content'
-import { Request, Response } from 'enonic-types/controller'
+import { Content } from '/lib/xp/content'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import { React4xp, React4xpResponse } from '/lib/enonic/react4xp'
 import { Article } from '../../content-types/article/article'
 
 const {
@@ -27,7 +26,7 @@ const {
 
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-exports.get = (req: Request): React4xpResponse | Response => {
+exports.get = (req: XP.Request): React4xpResponse | XP.Response => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -35,7 +34,7 @@ exports.get = (req: Request): React4xpResponse | Response => {
   }
 }
 
-function renderPart(req: Request): React4xpResponse {
+function renderPart(req: XP.Request): React4xpResponse {
   const page: Content<Article> = getContent()
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   const phrases: object = getPhrases(page)

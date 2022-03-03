@@ -1,9 +1,9 @@
-import { User } from 'enonic-types/auth'
+import { User } from '/lib/xp/auth'
 import { NodeCreateParams,
   NodeQueryParams,
   NodeQueryResponse,
   RepoConnection,
-  RepoNode } from 'enonic-types/node'
+  RepoNode } from '/lib/xp/node'
 import { EditorCallback } from './eventLog'
 
 const {

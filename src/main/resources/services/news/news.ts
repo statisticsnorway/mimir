@@ -1,5 +1,4 @@
-import { Response } from 'enonic-types/controller'
-import { Content } from 'enonic-types/content'
+import { Content } from '/lib/xp/content'
 import { Page } from '../../site/content-types/page/page'
 import { DefaultPageConfig } from '../../site/pages/default/default-page-config'
 import { Article } from '../../site/content-types/article/article'
@@ -25,7 +24,7 @@ const {
   xmlEscape
 } = __non_webpack_require__('/lib/text-encoding')
 
-function get(): Response {
+function get(): XP.Response {
   const rssNewsEnabled: boolean = isEnabled('rss-news', true, 'ssb')
   const rssStatisticsEnabled: boolean = isEnabled('rss-news-statistics', false, 'ssb')
   const mainSubjects: Array<Content<Page, DefaultPageConfig>> = rssNewsEnabled ? query({

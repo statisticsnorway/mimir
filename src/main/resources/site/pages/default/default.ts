@@ -1,6 +1,5 @@
-import { Content, Page } from 'enonic-types/content'
-import { PageContributions, Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { Content, Page } from '/lib/xp/content'
+import { ResourceKey } from '/lib/thymeleaf'
 import { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
 import { FooterContent } from '../../../lib/ssb/parts/footer'
@@ -8,7 +7,7 @@ import { AlertType, InformationAlertOptions, MunicipalityOptions } from '../../.
 import { Breadcrumbs } from '../../../lib/ssb/utils/breadcrumbsUtils'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { Language } from '../../../lib/types/language'
-import { React4xp, React4xpObject, React4xpPageContributionOptions } from '../../../lib/types/react4xp'
+import { React4xp, React4xpObject, React4xpPageContributionOptions } from '/lib/enonic/react4xp'
 import { SEO } from '../../../services/news/news'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { SiteConfig } from '../../site-config'
@@ -92,7 +91,7 @@ export const GA_TRACKING_ID: string | null = app.config && app.config.GA_TRACKIN
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view: ResourceKey = resolve('default.html')
 
-exports.get = function(req: Request): Response {
+exports.get = function(req: XP.Request): XP.Response {
   const page: DefaultPage = getContent()
   const pageConfig: DefaultPageConfig = page.page.config
 
@@ -102,7 +101,7 @@ exports.get = function(req: Request): Response {
   const showIngress: string | boolean | undefined = ingress && page.type === 'mimir:page'
 
   // Create preview if available
-  let preview: Response | undefined
+  let preview: XP.Response | undefined
   if (partsWithPreview.includes(page.type)) {
     let name: string = page.type.replace(/^.*:/, '')
     // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
@@ -144,7 +143,7 @@ exports.get = function(req: Request): Response {
     path: '/js/ie.js'
   })
 
-  let pageContributions: React4xpPageContributionOptions | PageContributions | string | undefined
+  let pageContributions: React4xpPageContributionOptions | XP.PageContributions | string | undefined
   if (preview && preview.pageContributions) {
     pageContributions = preview.pageContributions
   }
@@ -171,7 +170,7 @@ exports.get = function(req: Request): Response {
 
   if (header && header.component) {
     pageContributions = header.component.renderPageContributions({
-      pageContributions: pageContributions as React4xpPageContributionOptions
+      pageContributions: XP.PageContributions as React4xpPageContributionOptions
 
     })
   }
@@ -260,7 +259,7 @@ exports.get = function(req: Request): Response {
     enabledChatScript: isEnabled('enable-chat-script', true, 'ssb') && innrapporteringRegexp.exec(page._path)
   }
 
-  const thymeleafRenderBody: Response['body'] = render(view, model)
+  const thymeleafRenderBody: XP.Response['body'] = render(view, model)
 
   const bodyWithBreadCrumbs: string | boolean = !hideBreadcrumb && breadcrumbComponent.renderBody({
     body: thymeleafRenderBody
@@ -283,17 +282,17 @@ exports.get = function(req: Request): Response {
 
   const alerts: AlertType = alertsForContext(pageConfig, alertOptions)
   const body: string = bodyWithBreadCrumbs ? bodyWithBreadCrumbs : thymeleafRenderBody
-  const bodyWithAlerts: Response = alerts.length ?
+  const bodyWithAlerts: XP.Response = alerts.length ?
     addAlerts(alerts, body, pageContributions as React4xpPageContributionOptions) :
     {
       body,
       pageContributions
-    } as Response
+    } as XP.Response
 
   return {
     body: `<!DOCTYPE html>${bodyWithAlerts.body}`,
     pageContributions: bodyWithAlerts.pageContributions
-  } as Response
+  } as XP.Response
 }
 
 function prepareRegions(isFragment: boolean, page: DefaultPage): RegionsContent {
@@ -327,7 +326,7 @@ function parseMetaInfoData(
   pageType: string,
   page: DefaultPage,
   language: Language | {code: string},
-  req: Request): MetaInfoData {
+  req: XP.Request): MetaInfoData {
   let addMetaInfoSearch: boolean = true
   let metaInfoSearchId: string | undefined = page._id
   let metaInfoSearchContentType: string | undefined
@@ -394,7 +393,7 @@ function parseMetaInfoData(
   }
 }
 
-function getSubjectsPage(page: DefaultPage, req: Request, language: string): Array<string> {
+function getSubjectsPage(page: DefaultPage, req: XP.Request, language: string): Array<string> {
   const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, language === 'en' ? 'en' : 'nb')
   const allSubSubjects: Array<SubjectItem> = getSubSubjects(req, language === 'en' ? 'en' : 'nb')
   const subjects: Array<string> = []
@@ -431,7 +430,7 @@ function getSecondaryMainSubject(subtopicsContent: Array<string>, mainSubjects: 
   return secondaryMainSubjects
 }
 
-function parseStatbankFrameContent(statbankFane: boolean, req: Request, page: DefaultPage): StatbankFrameData {
+function parseStatbankFrameContent(statbankFane: boolean, req: XP.Request, page: DefaultPage): StatbankFrameData {
   const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
   let pageLanguage: string | undefined = page.language ? page.language : 'nb'
 
@@ -500,7 +499,7 @@ function parseStatbankFrameContent(statbankFane: boolean, req: Request, page: De
   }
 }
 
-function addAlerts(alerts: AlertType, body: string, pageContributions: React4xpPageContributionOptions | undefined): Response {
+function addAlerts(alerts: AlertType, body: string, pageContributions: React4xpPageContributionOptions | undefined): XP.Response {
   const alertComponent: React4xpObject = new React4xp('Alerts')
     .setProps({
       alerts
@@ -512,7 +511,7 @@ function addAlerts(alerts: AlertType, body: string, pageContributions: React4xpP
     }),
     pageContributions: alertComponent.renderPageContributions({
       pageContributions
-    }) as PageContributions | undefined
+    }) as XP.PageContributions | undefined
   }
 }
 
@@ -548,7 +547,7 @@ interface RegionData {
   descriptor: string;
 }
 interface Controller {
-  preview: (req: Request, id: string) => Response;
+  preview: (req: XP.Request, id: string) => XP.Response;
 }
 
 interface MenuContent {
@@ -587,7 +586,7 @@ interface DefaultModel {
   page: Content;
   ingress: string | undefined;
   showIngress: string | boolean | undefined;
-  preview: Response | undefined;
+  preview: XP.Response | undefined;
   bodyClasses: string;
   stylesUrl: string;
   jsLibsUrl: string;

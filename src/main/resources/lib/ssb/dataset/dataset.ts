@@ -1,10 +1,10 @@
-import { Content, QueryResponse } from 'enonic-types/content'
+import { Content, QueryResponse } from '/lib/xp/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { DataSource as DataSourceType, DatasetRepoNode } from '../repo/dataset'
 import { JSONstat } from '../../types/jsonstat-toolkit'
 import { StatbankSavedRaw, TbmlDataUniform } from '../../types/xmlParser'
-import { RunContext } from 'enonic-types/context'
-import { User } from 'enonic-types/auth'
+import { RunContext, ContextAttributes } from '/lib/xp/context'
+import { User } from '/lib/xp/auth'
 import { TbprocessorParsedResponse } from './tbprocessor/tbml'
 
 const {
@@ -184,7 +184,7 @@ function determineIfTbprocessorParsedResponse(toBeDetermined: TbprocessorParsedR
 
 
 export function refreshDatasetWithUserKey(content: Content<DataSource>, userLogin: string, branch: string = DATASET_BRANCH, ): CreateOrUpdateStatus {
-  const context: RunContext = {
+  const context: RunContext<ContextAttributes> = {
     branch: 'master',
     repository: ENONIC_CMS_DEFAULT_REPO,
     principals: ['role:system.admin'],

@@ -1,5 +1,4 @@
-import { Request, Response } from 'enonic-types/controller'
-import { Content, QueryResponse } from 'enonic-types/content'
+import { Content, QueryResponse } from '/lib/xp/content'
 import { PreparedArticles } from '../../lib/ssb/utils/articleUtils'
 import { Article } from '../../site/content-types/article/article'
 
@@ -13,7 +12,7 @@ const {
 
 let totalCount: number = 0
 
-exports.get = (req: Request): Response => {
+exports.get = (req: XP.Request): XP.Response => {
   const currentPath: string = req.params.currentPath ? req.params.currentPath : '/'
   const start: number = Number(req.params.start) ? Number(req.params.start) : 0
   const count: number = Number(req.params.count) ? Number(req.params.count) : 10

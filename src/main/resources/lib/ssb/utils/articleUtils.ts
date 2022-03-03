@@ -1,7 +1,6 @@
 import { Article } from '../../../site/content-types/article/article'
-import { Content, QueryResponse } from 'enonic-types/content'
+import { Content, QueryResponse } from '/lib/xp/content'
 import { SubjectItem } from '../utils/subjectUtils'
-import { Request } from 'enonic-types/controller'
 import { formatDate } from './dateUtils'
 
 const {
@@ -28,7 +27,7 @@ export function getChildArticles(currentPath: string, subTopicId: string, start:
   })
 }
 
-export function getAllArticles(req: Request, language: string, start: 0, count: 50):
+export function getAllArticles(req: XP.Request, language: string, start: 0, count: 50):
 ArticleResult {
   const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
   const languageQuery: string = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'
@@ -68,7 +67,7 @@ export function prepareArticles(articles: QueryResponse<Article>, language: stri
 export interface ArticleUtilsLib {
   getChildArticles: (currentPath: string, subTopicId: string, start: number, count: number, sort: string) => QueryResponse<Article>;
   prepareArticles: (articles: QueryResponse<Article>, language: string) => Array<PreparedArticles>;
-  getAllArticles: (req: Request, language: string, start: number, count: number) => ArticleResult;
+  getAllArticles: (req: XP.Request, language: string, start: number, count: number) => ArticleResult;
 }
 
 export interface PreparedArticles {

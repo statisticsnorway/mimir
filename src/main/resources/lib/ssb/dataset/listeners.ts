@@ -1,5 +1,5 @@
-import { Content, QueryResponse } from 'enonic-types/content'
-import { EnonicEvent, EnonicEventData } from 'enonic-types/event'
+import { Content, QueryResponse } from '/lib/xp/content'
+import { EnonicEvent, EnonicEventData } from '/lib/xp/event'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 
 const {

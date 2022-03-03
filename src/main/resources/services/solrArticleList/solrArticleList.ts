@@ -1,11 +1,10 @@
-import { Request, Response } from 'enonic-types/controller'
 import { PreparedArticles, ArticleResult } from '../../lib/ssb/utils/articleUtils'
 
 const {
   getAllArticles
 } = __non_webpack_require__( '/lib/ssb/utils/articleUtils')
 
-exports.get = (req: Request): Response => {
+exports.get = (req: XP.Request): XP.Response => {
   const start: number = Number(req.params.start) ? Number(req.params.start) : 0
   const count: number = Number(req.params.count) ? Number(req.params.count) : 50
   const language: string = req.params.language && req.params.language === 'en' ? 'en' : 'no'

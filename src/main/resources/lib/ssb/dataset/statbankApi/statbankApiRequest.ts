@@ -1,4 +1,4 @@
-import { HttpResponse, HttpRequestParams } from 'enonic-types/http'
+import { HttpResponse, HttpRequestParams } from '/lib/http-client' 
 import { JSONstat } from '../../../types/jsonstat-toolkit'
 const {
   Events, logUserDataQuery
@@ -43,7 +43,7 @@ export function get(url: string, json: DataqueryRequestData | undefined,
       file: '/lib/dataquery.ts',
       function: 'get',
       message: Events.REQUEST_DATA,
-      request: requestParams
+      request: XP.RequestParams
     })
   }
 
