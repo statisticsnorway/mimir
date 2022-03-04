@@ -1,7 +1,7 @@
 import { ByteSource, Content } from '/lib/xp/content'
 import { RowData } from '../../../lib/ssb/parts/highcharts/data/htmlTable'
 import { isNumber, RowValue } from '../../../lib/ssb/utils/utils'
-import { React4xp, RenderResponse } from '/lib/enonic/react4xp'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { PreliminaryData, XmlParser } from '../../../lib/types/xmlParser'
 import { Highmap } from '../../content-types/highmap/highmap'
 import { HighmapPartConfig } from './highmap-part-config'
@@ -30,7 +30,6 @@ const {
 } = __non_webpack_require__('/lib/ssb/error/error')
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 interface MapFeatures {
   properties: {
@@ -162,7 +161,7 @@ function renderPart(req: XP.Request, highmapId: string | undefined): RenderRespo
       language: page.language
     }
 
-    return React4xp.renderBody('site/parts/highmap/Highmap', props, req)
+    return render('site/parts/highmap/Highmap', props, req)
   }
   return {
     body: '',

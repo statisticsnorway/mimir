@@ -1,4 +1,4 @@
-import { React4xp, RenderResponse } from '/lib/enonic/react4xp'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { SubjectItem, StatisticItem } from '../../../lib/ssb/utils/subjectUtils'
 import { Content } from '/lib/xp/content'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
@@ -14,7 +14,6 @@ const {
 const {
   getAllStatisticsFromRepo
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getContent
 } = __non_webpack_require__('/lib/xp/portal')
@@ -58,7 +57,7 @@ function getStatbankSubjectTree(req: XP.Request, content: Content): RenderRespon
     statbankBaseUrl,
     mainSubjects
   }
-  return React4xp.renderBody('site/parts/statbankSubjectTree/statbankSubjectTree', props, req)
+  return render('site/parts/statbankSubjectTree/statbankSubjectTree', props, req)
 }
 
 function prepareSubSubjects(subSubject: SubjectItem,

@@ -1,4 +1,4 @@
-import { React4xp, RenderResponse } from '/lib/enonic/react4xp'
+import { RenderResponse, render } from '/lib/enonic/react4xp'
 import { Content, QueryResponse } from '/lib/xp/content'
 import { PreparedArticles } from '../../../lib/ssb/utils/articleUtils'
 import { Article } from '../../content-types/article/article'
@@ -10,9 +10,6 @@ const {
   getContent, serviceUrl
 } = __non_webpack_require__('/lib/xp/portal')
 
-const {
-  React4xp
-} = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
@@ -70,7 +67,7 @@ function renderPart(req: XP.Request): RenderResponse {
     showAllArticles: showAllArticles
   }
 
-  return React4xp.render('site/parts/subjectArticleList/subjectArticleList', props, req)
+  return render('site/parts/subjectArticleList/subjectArticleList', props, req)
 }
 
 interface PartProperties {

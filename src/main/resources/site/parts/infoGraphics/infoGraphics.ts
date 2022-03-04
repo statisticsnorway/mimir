@@ -18,11 +18,10 @@ const {
 const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 import { Content, MediaImage } from '/lib/xp/content'
 import { SourceList, SourcesConfig } from '../../../lib/ssb/utils/utils'
-import { React4xp, RenderResponse } from '/lib/enonic/react4xp'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import { Base64 } from 'js-base64'
@@ -76,7 +75,7 @@ function renderPart(req: XP.Request): RenderResponse {
     oldContent: true
   }
 
-  return React4xp.renderBody('site/parts/infoGraphics/infoGraphics', props, req)
+  return render('site/parts/infoGraphics/infoGraphics', props, req)
 }
 
 interface DefaultPage {

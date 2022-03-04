@@ -1,6 +1,6 @@
 import { Content } from '/lib/xp/content'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-import { React4xp, RenderResponse } from '/lib/enonic/react4xp'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { Article } from '../../content-types/article/article'
 
 const {
@@ -23,8 +23,6 @@ const {
 const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
-
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 exports.get = (req: XP.Request): RenderResponse | XP.Response => {
   try {
@@ -84,7 +82,7 @@ function renderPart(req: XP.Request): RenderResponse {
     isbn: isEnabled('article-isbn', true) && page.data.isbnNumber
   }
 
-  return React4xp.renderBody('site/parts/article/article', props, req)
+  return render('site/parts/article/article', props, req)
 }
 
 function getAssociatedStatisticsLinks(associatedStatisticsConfig: Article['associatedStatistics']): Array<AssociatedLink> | [] {

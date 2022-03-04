@@ -1,14 +1,13 @@
 import { Component } from '/lib/xp/portal'
 import { Content } from '/lib/xp/content'
 import { SearchResultPartConfig } from './searchResult-part-config'
-import { React4xp, RenderResponse } from '/lib/enonic/react4xp'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { PreparedSearchResult, SolrPrepResultAndTotal } from '../../../lib/ssb/utils/solrUtils'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { queryNodes, getNode } from '../../../lib/ssb/repo/common'
 import { NodeQueryResponse, RepoNode } from '/lib/xp/node'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   solrSearch
 } = __non_webpack_require__('/lib/ssb/utils/solrUtils')
@@ -183,7 +182,7 @@ export function renderPart(req: XP.Request): RenderResponse {
     dropDownContentTypes: getContentTypes(solrResult.contentTypes)
   }
 
-  return React4xp.renderBody('site/parts/searchResult/searchResultView', props, req)
+  return render('site/parts/searchResult/searchResultView', props, req)
 }
 
   interface BestBet extends RepoNode {

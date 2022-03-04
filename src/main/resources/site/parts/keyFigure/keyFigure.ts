@@ -1,11 +1,10 @@
 import { Content } from '/lib/xp/content'
 import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
 import { KeyFigureView } from '../../../lib/ssb/parts/keyFigure'
-import { React4xp, RenderResponse } from '/lib/enonic/react4xp'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { SiteConfig } from '../../../site/site-config'
 import { KeyFigurePartConfig } from './keyFigure-part-config'
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   get: getKeyFigures,
   parseKeyFigure
@@ -133,7 +132,7 @@ function renderKeyFigure(
       isInStatisticsPage: page.type === `${app.name}:statistics`
     }
 
-    return React4xp.renderBody('KeyFigure', props, req, {
+    return render('KeyFigure', props, req, {
       body: '<section class="xp-part key-figures container"></section>'
     })
   }

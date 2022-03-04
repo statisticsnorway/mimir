@@ -1,5 +1,5 @@
 import { Content } from '/lib/xp/content'
-import { React4xp, RenderResponse } from '/lib/enonic/react4xp'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { Accordion } from '../../content-types/accordion/accordion'
 import { AccordionConfig } from '../../macros/accordion/accordion-config'
 
@@ -22,7 +22,6 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 exports.get = function(req: XP.Request): RenderResponse | XP.Response {
   try {
@@ -89,7 +88,7 @@ function renderPart(req: XP.Request, accordionIds: Array<string>): RenderRespons
     accordions
   }
 
-  return React4xp.renderBody('Accordion', props, req)
+  return render('Accordion', props, req)
 }
 
 export interface AccordionData {

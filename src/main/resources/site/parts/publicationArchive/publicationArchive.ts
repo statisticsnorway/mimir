@@ -1,5 +1,5 @@
 import { Component } from '/lib/xp/portal'
-import { React4xp, RenderResponse } from '/lib/enonic/react4xp'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { Content } from '/lib/xp/content'
 import { PublicationArchivePartConfig } from './publicationArchive-part-config'
 import { PublicationResult } from '../../../lib/ssb/parts/publicationArchive'
@@ -11,7 +11,6 @@ const {
 const {
   getContent, serviceUrl, getComponent
 } = __non_webpack_require__('/lib/xp/portal')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getPublications
 } = __non_webpack_require__( '/lib/ssb/parts/publicationArchive')
@@ -108,7 +107,7 @@ function renderPart(req: XP.Request): RenderResponse {
     dropDownTypes: articleTypeDropdown
   }
 
-  return React4xp.renderBody('site/parts/publicationArchive/publicationArchive', props, req)
+  return render('site/parts/publicationArchive/publicationArchive', props, req)
 }
 
 interface PartProperties {

@@ -1,5 +1,5 @@
 import { HeaderLinkConfig } from './headerLink-config'
-import { React4xp, RenderResponse } from '/lib/enonic/react4xp'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { Content } from '/lib/xp/content'
 
 const {
@@ -8,7 +8,6 @@ const {
 const {
   get
 } = __non_webpack_require__('/lib/xp/content')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 exports.macro = (context: XP.MacroContext): RenderResponse => {
   return renderPart(context)
@@ -41,7 +40,7 @@ function renderPart(context: XP.MacroContext): RenderResponse {
     linkedContent: contentUrl
   }
 
-  return React4xp.renderBody('site/macros/headerLink/headerLink', props)
+  return render('site/macros/headerLink/headerLink', props)
 }
 
 function prepareText(content: Content, linkText: string): string {

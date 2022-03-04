@@ -24,11 +24,10 @@ const {
 const {
   localize
 } = __non_webpack_require__('/lib/xp/i18n')
-// const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 import { Content, MediaImage } from '/lib/xp/content'
 import { SourceList, SourcesConfig } from '../../../lib/ssb/utils/utils'
-import { React4xp, RenderResponse } from '/lib/enonic/react4xp'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { StaticVisualization } from '../../content-types/staticVisualization/staticVisualization'
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
@@ -109,7 +108,7 @@ function renderPart(req: XP.Request, contentId: string | undefined): RenderRespo
       tableData: htmlTable
     }
 
-    return React4xp.renderBody('site/parts/staticVisualization/staticVisualization', props, req)
+    return render('site/parts/staticVisualization/staticVisualization', props, req)
   }
   return {
     body: null

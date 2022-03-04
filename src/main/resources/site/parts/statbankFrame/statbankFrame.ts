@@ -1,4 +1,4 @@
-import { RenderResponse, render  } from '/lib/enonic/react4xp'
+import { RenderResponse, render } from '/lib/enonic/react4xp'
 import { Content } from '/lib/xp/content'
 
 const {
