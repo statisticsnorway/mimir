@@ -49,7 +49,7 @@ export function DashboardTools() {
 
     return (
       <div className="d-flex justify-content-center align-items-center">
-        <span className="font-weight-bold">Oppdater alle {statRegName}</span>
+        <span className="fw-bold">Oppdater alle {statRegName}</span>
         <Button
           className="ml-auto"
           onClick={() => refreshStatReg(statRegStatus.key)}

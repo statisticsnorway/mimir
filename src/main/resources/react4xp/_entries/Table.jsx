@@ -560,7 +560,7 @@ class Table extends Component {
           <div className="d-none searchabletext">
             <span>{hiddenTitle}</span>
           </div>
-          <div className="container">
+          <div className="container border-0">
             {this.addPreviewButton()}
             {this.addDownloadTableDropdown(false)}
             {this.addPreviewInfo()}
