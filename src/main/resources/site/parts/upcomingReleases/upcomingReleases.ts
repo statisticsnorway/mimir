@@ -1,4 +1,4 @@
-import { React4xp, RenderResponse } from '/lib/enonic/react4xp'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { Content } from '/lib/xp/content'
 import { Component } from '/lib/xp/portal'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
@@ -11,7 +11,6 @@ import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
-const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getContent,
   getComponent,
@@ -127,7 +126,7 @@ function renderPart(req: XP.Request): RenderResponse {
     contentReleases
   }
 
-  return React4xp.render ('site/parts/upcomingReleases/upcomingReleases', props, req)
+  return render ('site/parts/upcomingReleases/upcomingReleases', props, req)
 }
 
 /*

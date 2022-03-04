@@ -1,7 +1,7 @@
 import { Article } from '../../content-types/article/article'
 import { Component } from '/lib/xp/portal'
 import { ArticleListPartConfig } from './articleList-part-config'
-import { React4xp, RenderResponse } from '/lib/enonic/react4xp'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { AggregationsResponseEntry, Content } from '/lib/xp/content'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
@@ -15,7 +15,6 @@ const {
 const {
   pageUrl, getContent, getComponent
 } = __non_webpack_require__('/lib/xp/portal')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
@@ -52,7 +51,7 @@ function renderPart(req: XP.Request): RenderResponse {
     archiveLinkUrl: component.config.pubArchiveUrl ? component.config.pubArchiveUrl : '#'
   }
 
-  return React4xp.render('site/parts/articleList/articleList', props, req)
+  return render('site/parts/articleList/articleList', props, req)
 }
 
 function getArticles(req: XP.Request, language: string): Array<Content<Article>> {

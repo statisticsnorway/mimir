@@ -15,7 +15,6 @@ const {
 const {
   fromPartCache
 } = __non_webpack_require__('/lib/ssb/cache/partCache')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 const view: ResourceKey = resolve('./divider.html')
 

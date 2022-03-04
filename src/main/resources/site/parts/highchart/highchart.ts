@@ -12,7 +12,7 @@ import { TbmlDataUniform } from '../../../lib/types/xmlParser'
 import { HighchartsGraphConfig } from '../../../lib/types/highcharts'
 import { ResourceKey } from '/lib/thymeleaf'
 import { DataSource } from '../../mixins/dataSource/dataSource'
-import { render, RenderResponse } from '/lib/enonic/react4xp'
+import { render as r4XRender, RenderResponse } from '/lib/enonic/react4xp'
 import { GA_TRACKING_ID } from '../../pages/default/default'
 
 const {
@@ -123,7 +123,7 @@ function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response |
   }
 
   if (isEnabled('highchart-react', true, 'ssb')) {
-    return render('site/parts/highchart/Highchart', HighchartProps, req, {
+    return r4XRender('site/parts/highchart/Highchart', HighchartProps, req, {
       body: '<section class="xp-part part-highchart"></section>'
     })
   } else {

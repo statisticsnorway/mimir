@@ -19,7 +19,6 @@ const {
 } = __non_webpack_require__('/lib/thymeleaf')
 
 const view: ResourceKey = resolve('./bestbet.html')
-const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 exports.get = function(req: XP.Request): RenderResponse | XP.Response {
   try {

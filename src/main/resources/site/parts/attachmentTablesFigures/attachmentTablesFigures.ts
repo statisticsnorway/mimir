@@ -2,7 +2,7 @@ import { Content } from '/lib/xp/content'
 import { ResourceKey } from '/lib/thymeleaf'
 import { DatasetRepoNode } from '../../../lib/ssb/repo/dataset'
 import { JSONstat } from '../../../lib/types/jsonstat-toolkit'
-import { React4xp, React4xpObject } from '/lib/enonic/react4xp'
+import { React4xp, RenderResponse } from '/lib/enonic/react4xp'
 import { TbmlDataUniform } from '../../../lib/types/xmlParser'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { GA_TRACKING_ID } from '../../pages/default/default'
@@ -83,7 +83,7 @@ function getTablesAndFiguresComponent(page: Content<Statistics>, req: XP.Request
 
   const attachmentTableAndFigureView: Array<AttachmentTablesFiguresData> = getTablesAndFigures(attachmentTablesAndFigures, req, phrases)
 
-  const accordionComponent: React4xpObject = new React4xp('AttachmentTablesFigures')
+  const accordionComponent: RenderResponse = new React4xp('AttachmentTablesFigures')
     .setProps({
       accordions: attachmentTableAndFigureView.map(({
         id, open, subHeader, body, contentType, props
