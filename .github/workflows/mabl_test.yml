@@ -32,7 +32,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     - name: Git checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Branch name and commit hash
       run: |
             echo running on branch ${GITHUB_HEAD_REF##*/} or ${GITHUB_REF##*/}
