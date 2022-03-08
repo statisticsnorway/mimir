@@ -15,9 +15,6 @@
     "baseUrl": "./src/main/resources",
     "paths": {
       "/lib/*": ["lib/*"]
-    },
-    "include": [
-      "src/**/*.ts"
-    ]
+    }
   }
 }
