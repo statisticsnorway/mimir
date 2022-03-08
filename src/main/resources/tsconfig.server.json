@@ -3,7 +3,13 @@
   "compilerOptions": {
     "module": "commonjs",
     "moduleResolution": "node",
-    "types": ["node", "enonic-types"]
+    "sourceMap": false,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "types": [
+      "node",
+      "enonic-types"
+    ]
   },
   "exclude": [
     "assets"

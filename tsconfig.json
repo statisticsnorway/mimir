@@ -8,12 +8,16 @@
     "noImplicitThis": true,
     "strictNullChecks": true,
     "lib": ["ES5", "ES6"],
-    "skipLibCheck": true
-  },
-  "types": [
-    "types"
-  ],
-  "include": [
-    "src/**/*.ts"
-  ]
+    "types": [
+      "node",
+      "enonic-types"
+    ],
+    "baseUrl": "./src/main/resources",
+    "paths": {
+      "/lib/*": ["lib/*"]
+    },
+    "include": [
+      "src/**/*.ts"
+    ]
+  }
 }
