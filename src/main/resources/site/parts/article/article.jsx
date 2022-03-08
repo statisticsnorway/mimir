@@ -27,8 +27,8 @@ function Article(props) {
     return (
       <div className="snr-dates-wrapper col-12 col-lg-8 p-0">
         {serialNumber && <p className="fw-bold">{serialNumber}</p>}
-        {showPubDate && <p><span className="fw-bold mr-1">{phrases.published}:</span>{pubDate}</p>}
-        {modifiedDate && <p><span className="fw-bold mr-1">{phrases.modified}:</span>{modifiedDate}</p>}
+        {showPubDate && <p><span className="fw-bold">{phrases.published}:</span>{` ${pubDate}`}</p>}
+        {modifiedDate && <p><span className="fw-bold">{phrases.modified}:</span>{` ${modifiedDate}`}</p>}
       </div>
     )
   }
@@ -42,7 +42,7 @@ function Article(props) {
       return (
         <div className="author-wrapper col-12 col-lg-8 p-0">
           <p>
-            <span className="mr-1">{phrases.author}:</span>
+            <span className="mr-1">{`${phrases.author}: `}</span>
             {authors.map((author, index) => {
               return (
                 <span key={`author-${index}`}>

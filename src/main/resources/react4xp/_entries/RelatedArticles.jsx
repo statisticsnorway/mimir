@@ -70,7 +70,7 @@ class RelatedArticles extends React.Component {
     return (
       <div className="container">
         <div className="row">
-          <h2 className="col mb-5">{heading}</h2>
+          <h2 className="col mt-4 mb-5">{heading}</h2>
         </div>
         <div className="row mb-5">
           {relatedArticles.map((article, index) => {
