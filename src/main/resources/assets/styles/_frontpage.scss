@@ -111,14 +111,14 @@
 
   .links-wrapper {
     display: inline-flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
 
     margin-top: 36px;
     margin-bottom: 36px;
 
     @include media-breakpoint-down(sm) {
-     display: initial;
+      display: initial;
     }
 
     .publication-link {
