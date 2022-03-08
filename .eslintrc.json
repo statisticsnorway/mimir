@@ -51,12 +51,12 @@
           "@typescript-eslint/no-use-before-define": "off",
           "@typescript-eslint/no-var-requires": "off",
           "@typescript-eslint/no-non-null-assertion": "off",
-          // We should remove these after fixing errors. But for now: 
+          // We should remove these after fixing errors. But for now:
           "no-invalid-this": "off",
           "@typescript-eslint/no-invalid-this": ["error"],
           "@typescript-eslint/no-unsafe-assignment": "off",
           "@typescript-eslint/no-unsafe-member-access": "off",
-          "@typescript-eslint/no-unsafe-return": "off",
+          "@typescript-eslint/no-unsafe-return": "off"
         }
       },
       {
