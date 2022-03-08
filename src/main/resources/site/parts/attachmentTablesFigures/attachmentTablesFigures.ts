@@ -2,11 +2,13 @@ import { Content } from '/lib/xp/content'
 import { ResourceKey } from '/lib/thymeleaf'
 import { DatasetRepoNode } from '../../../lib/ssb/repo/dataset'
 import { JSONstat } from '../../../lib/types/jsonstat-toolkit'
-import { React4xp, RenderResponse } from '/lib/enonic/react4xp'
+import { render as r4xpRender } from '/lib/enonic/react4xp'
 import { TbmlDataUniform } from '../../../lib/types/xmlParser'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { GA_TRACKING_ID } from '../../pages/default/default'
 import { AccordionData } from '../accordion/accordion'
+import {Component, getComponent} from "/lib/xp/portal";
+import {PublicationArchivePartConfig} from "../publicationArchive/publicationArchive-part-config";
 const {
   data: {
     forceArray
@@ -31,16 +33,13 @@ const {
 const {
   datasetOrUndefined
 } = __non_webpack_require__('/lib/ssb/cache/cache')
-// const {
-//   fromPartCache
-// } = __non_webpack_require__('/lib/ssb/cache/partCache')
+
 
 const tableController: { getProps: (req: XP.Request, tableId: string) => object } = __non_webpack_require__('../table/table')
 const highchartController: { preview: (req: XP.Request, id: string) => XP.Response } = __non_webpack_require__('../highchart/highchart')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view: ResourceKey = resolve('./attachmentTablesFigures.html')
 
-exports.get = function(req: XP.Request): XP.Response {
+exports.get = function (req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -51,81 +50,44 @@ exports.get = function(req: XP.Request): XP.Response {
 exports.preview = (req: XP.Request): XP.Response => renderPart(req)
 
 function renderPart(req: XP.Request): XP.Response {
-  const page: Content<Statistics> = getContent()
-  // TODO Fjernet caching siden den skapte problemer for forhåndsvisning av upubliserte tall
-  // if (req.mode !== 'edit') {
-  //   return fromPartCache(req, `${page._id}-attachmentTablesFigures`, () => {
-  //     return getTablesAndFiguresComponent(page, req)
-  //   })
-  // }
-  return getTablesAndFiguresComponent(page, req)
-}
+  const content: Content<Statistics> = getContent()
+  const part: Component<PublicationArchivePartConfig> = getComponent()
 
-function getTablesAndFiguresComponent(page: Content<Statistics>, req: XP.Request): XP.Response {
-  const phrases: {[key: string]: string} = getPhrases(page)
-
+  const phrases: { [key: string]: string } = getPhrases(content)
   const title: string = phrases.attachmentTablesFigures
 
-  const attachmentTablesAndFigures: Array<string> = page.data.attachmentTablesFigures ? forceArray(page.data.attachmentTablesFigures) : []
-  if (attachmentTablesAndFigures.length === 0) {
-    if (req.mode === 'edit' && page.type !== `${app.name}:statistics`) {
-      return {
-        body: render(view, {
-          label: title
-        })
-      }
-    } else {
-      return {
-        body: null
-      }
-    }
-  }
-
+  const attachmentTablesAndFigures: Array<string> = content.data.attachmentTablesFigures ? forceArray(content.data.attachmentTablesFigures) : []
   const attachmentTableAndFigureView: Array<AttachmentTablesFiguresData> = getTablesAndFigures(attachmentTablesAndFigures, req, phrases)
 
-  const accordionComponent: RenderResponse = new React4xp('AttachmentTablesFigures')
-    .setProps({
-      accordions: attachmentTableAndFigureView.map(({
-        id, open, subHeader, body, contentType, props
-      }) => {
-        return {
-          id,
-          contentType,
-          open,
-          subHeader,
-          body,
-          props
-        }
-      }),
-      freeText: page.data.freeTextAttachmentTablesFigures ? processHtml({
-        value: page.data.freeTextAttachmentTablesFigures.replace(/&nbsp;/g, ' ')
-      }) : undefined,
-      showAll: phrases.showAll,
-      showLess: phrases.showLess,
-      appName: app.name,
-      GA_TRACKING_ID: GA_TRACKING_ID
-    })
-    .setId('accordion')
-    .uniqueId()
-
-  const accordionBody: string = accordionComponent.renderBody({
-    body: render(view, {
-      title,
-      accordionId: accordionComponent.react4xpId
-    })
-  })
-
-  const accordionPageContributions: string = accordionComponent.renderPageContributions()
-  const pageContributions: XP.PageContributions = getFinalPageContributions(accordionPageContributions as XP.PageContributions, attachmentTableAndFigureView)
-
-  return {
-    body: accordionBody,
-    pageContributions,
-    contentType: 'text/html'
+  const props: PartProperties = {
+    title: title,
+    accordions: attachmentTableAndFigureView.map(({
+      id, open, subHeader, body, contentType, props
+    }) => {
+      return {
+        id,
+        contentType,
+        open,
+        subHeader,
+        body,
+        props
+      }
+    }),
+    freeText: content.data.freeTextAttachmentTablesFigures ? processHtml({
+      value: content.data.freeTextAttachmentTablesFigures.replace(/&nbsp;/g, ' ')
+    }) : undefined,
+    showAll: phrases.showAll,
+    showLess: phrases.showLess,
+    appName: app.name,
+    GA_TRACKING_ID: GA_TRACKING_ID
   }
+
+  return r4xpRender('site/parts/attachmentTablesFigures/attachmentTablesFigures', props, req)
+
 }
 
-function getTablesAndFigures(attachmentTablesAndFigures: Array<string>, req: XP.Request, phrases: {[key: string]: string}): Array<AttachmentTablesFiguresData> {
+// eslint-disable-next-line max-len
+function getTablesAndFigures(attachmentTablesAndFigures: Array<string>, req: XP.Request, phrases: { [key: string]: string }): Array<AttachmentTablesFiguresData> {
   let figureIndex: number = 0
   let tableIndex: number = 0
   if (attachmentTablesAndFigures.length > 0) {
@@ -155,7 +117,7 @@ function getTableReturnObject(content: Content, props: object, subHeader: string
   return {
     id: `attachment-table-figure-${index + 1}`,
     contentType: content.type,
-    open: typeof(title) === 'string' ? title : title.content,
+    open: typeof (title) === 'string' ? title : title.content,
     subHeader,
     props
   }
@@ -168,29 +130,11 @@ function getFigureReturnObject(content: Content, preview: XP.Response, subHeader
   return {
     id: `attachment-table-figure-${index + 1}`,
     contentType: content.type,
-    open: typeof(title) === 'string' ? title : title.content,
+    open: typeof (title) === 'string' ? title : title.content,
     subHeader,
     body: preview.body as string | undefined,
     pageContributions: preview.pageContributions
   }
-}
-
-function getFinalPageContributions(
-  accordionPageContributions: XP.PageContributions,
-  attachmentTableAndFigure: Array<AttachmentTablesFiguresData>): XP.PageContributions {
-  const pageContributions: Array<XP.PageContributions> = attachmentTableAndFigure.reduce((acc, attachment) => {
-    if (attachment.pageContributions && attachment.pageContributions.bodyEnd) {
-      acc = acc.concat(attachment.pageContributions.bodyEnd as unknown as ConcatArray<never>)
-    }
-    return acc
-  }, [])
-
-  if (pageContributions.length > 0) {
-    return {
-      bodyEnd: [].concat(accordionPageContributions.bodyEnd as unknown as ConcatArray<never>, pageContributions as unknown as ConcatArray<never>)
-    }
-  }
-  return accordionPageContributions
 }
 
 interface AttachmentTablesFiguresData extends AccordionData {
@@ -198,4 +142,21 @@ interface AttachmentTablesFiguresData extends AccordionData {
   subHeader: string;
   props?: object;
   pageContributions?: XP.PageContributions;
+}
+
+interface PartProperties {
+  title: string;
+  accordions: Array<{
+    id: string | undefined;
+    contentType: string;
+    open: string | undefined;
+    subHeader: string;
+    body: string | undefined;
+    props: object | undefined;
+  }>
+  freeText: string | undefined;
+  showAll: string;
+  showLess: string;
+  appName: string;
+  GA_TRACKING_ID: string | null;
 }
