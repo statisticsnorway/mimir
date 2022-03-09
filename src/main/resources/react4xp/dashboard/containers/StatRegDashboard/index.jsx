@@ -90,7 +90,7 @@ export function StatRegDashboard() {
         <Col>
           <div className="p-4 tables-wrapper">
             <h2 className="d-inline-block w-75">Data fra Statistikkregisteret</h2>
-            <div className="d-inline-block float-right">
+            <div className="d-inline-block float-end">
               <Button
                 onClick={() => refreshAll()}
                 disabled={statuses.filter((s) => s.loading).length === statuses.length}

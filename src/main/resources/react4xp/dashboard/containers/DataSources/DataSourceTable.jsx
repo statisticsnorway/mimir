@@ -136,7 +136,7 @@ export function DataSourceTable(props) {
     return (
       <React.Fragment>
         <ReactTable columns={columns} data={data} />
-        <Button className="mb-3 float-right" onClick={() => setModalShow(true)}>
+        <Button className="mb-3 float-end" onClick={() => setModalShow(true)}>
           Oppdater liste
           {anyLoading ? <span className="spinner-border spinner-border-sm ml-2 mb-1" /> : <RefreshCw className="ml-2" />}
         </Button>

@@ -48,7 +48,7 @@ export function DashboardTools() {
     }
 
     return (
-      <div className="d-flex justify-content-center align-items-center">
+      <div className="d-flex justify-content-between align-items-center">
         <span className="fw-bold">Oppdater alle {statRegName}</span>
         <Button
           className="ml-auto"
@@ -120,7 +120,7 @@ export function DashboardTools() {
 
     return (
       <Dropdown
-        className="dropdown-update-statistics"
+        className="w-100 dropdown-update-statistics"
         header="Søk og oppdater statistikk"
         placeholder="Søk og oppdater statistikk"
         searchable
@@ -206,11 +206,10 @@ export function DashboardTools() {
       <h2 className="mb-4">Verktøy</h2>
       <Container>
         <Row className="mb-4">
-          <Col className="col-9 pr-0">
+          <Col className="d-inline-flex align-content-center justify-content-between">
             {renderStatisticsSearch()}
-          </Col>
-          <Col className="pl-4 pr-0">
             <Button
+              className="m-0"
               onClick={() => {
                 setOpenStatistic(dispatch, io, selectedStat)
                 setOpenModal(dispatch, true)
@@ -235,8 +234,8 @@ export function DashboardTools() {
         <Row className="mb-5">
           {renderTbmlDefinitionsStatbankTable()}
         </Row>
-        <fieldset className="danger-zone mb-3 p-2">
-          <legend align="center" className="danger-title justify-content-center">Danger Zone</legend>
+        <fieldset className="danger-zone d-flex flex-column justify-content-center mb-3 p-2">
+          <legend align="center" className="danger-title">Danger Zone</legend>
           <Row className="mb-1">
             <Col>
               <Button
