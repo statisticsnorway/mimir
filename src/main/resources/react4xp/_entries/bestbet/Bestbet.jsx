@@ -241,14 +241,16 @@ function Bestbet(props) {
               {searchWordsList.map((searchWord) => renderSearchWord(searchWord))}
             </Col>
           </Row> : null}
-        <Row>
-          <Col className="d-flex flex-row align-items-end">
+        <Row className="d-flex flex-row align-items-end">
+          <Col className="col-lg-10">
             <Input
-              className="m-0 pr-3"
+              className="m-0"
               label="Nøkkelord"
               handleChange={(e) => handleInputChange(e, 'searchWord')}
               value={searchWordTag}
             />
+          </Col>
+          <Col className="d-flex justify-content-end">
             <Button primary onClick={handleTagSubmit}>Legg til</Button>
           </Col>
         </Row>
@@ -321,16 +323,16 @@ function Bestbet(props) {
           <Col className="col-6">
             <li className="d-flex flex-row align-items-center">
               <>
-              <div className="best-bet-url-wrapper pr-1">
-                <Link isExternal={true}
-                  href={props.contentStudioBaseUrl + item.linkedContentHref}>
-                  {item.linkedContentTitle}
-                </Link>
-              </div>
-              <Tag className="m-1" onClick={() => handleEditBestBetOnClick(item)}>
+                <div className="best-bet-url-wrapper pr-1">
+                  <Link isExternal={true}
+                    href={props.contentStudioBaseUrl + item.linkedContentHref}>
+                    {item.linkedContentTitle}
+                  </Link>
+                </div>
+                <Tag className="m-1" onClick={() => handleEditBestBetOnClick(item)}>
                 Rediger
-                <Edit size={16} className="ml-1" />
-              </Tag>
+                  <Edit size={16} className="ml-1" />
+                </Tag>
               </>
             </li>
           </Col>
@@ -402,7 +404,7 @@ function Bestbet(props) {
             Ny Bestbet
             <Plus size={16} className="ml-1" />
           </Button>
-          <Divider className="pb-3" light />
+          <Divider className="mb-3" light />
           {renderBestbetList()}
         </Col>
         {renderCreateBestBetModal()}
