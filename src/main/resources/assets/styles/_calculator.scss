@@ -189,10 +189,13 @@
           padding-left: 10px;
         }
 
+        .ssb-btn {
+          display: flex;
+          justify-content: center;
+        }
       }
 
       .calculator-form-frontpage {
-
         .calculate-from, .calculate-to {
           .select-year {
             padding-left: 0;

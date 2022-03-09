@@ -418,7 +418,7 @@ function PifCalculator(props) {
             <h3>{props.phrases.pifAmountEqualled}</h3>
           </Col>
           <Col className="end-value col-12 col-md-8">
-            <span className="float-left float-md-right">
+            <span className="float-left float-md-end">
               {renderNumberValute(endValue)}
             </span>
           </Col>
@@ -429,21 +429,21 @@ function PifCalculator(props) {
         <Row className="mb-5">
           <Col className="price-increase col-12 col-lg-4">
             <span>{priceChangeLabel}</span>
-            <span className="float-right">
+            <span className="float-end">
               {renderNumberChangeValue()}
             </span>
             <Divider dark/>
           </Col>
           <Col className="start-value col-12 col-lg-4">
             <span>{props.phrases.amount} {startPeriod}</span>
-            <span className="float-right">
+            <span className="float-end">
               {renderNumberValute(startValueResult)}
             </span>
             <Divider dark/>
           </Col>
           <Col className="amount col-12 col-lg-4">
             <span>{props.phrases.amount} {endPeriod}</span>
-            <span className="float-right">
+            <span className="float-end">
               {renderNumberValute(endValue)}
             </span>
             <Divider dark/>
@@ -454,14 +454,14 @@ function PifCalculator(props) {
           </Col>
           <Col className="start-value col-12 col-lg-4">
             <span>{props.phrases.pifIndex} {startPeriod}</span>
-            <span className="float-right">
+            <span className="float-end">
               {renderNumber(startIndex)}
             </span>
             <Divider dark/>
           </Col>
           <Col className="amount col-12 col-lg-4">
             <span>{props.phrases.pifIndex} {endPeriod}</span>
-            <span className="float-right">
+            <span className="float-end">
               {renderNumber(endIndex)}
             </span>
             <Divider dark/>
@@ -506,7 +506,7 @@ function PifCalculator(props) {
     if (props.calculatorArticleUrl) {
       return (
         <Col className="article-link align-self-center col-12 col-md-6">
-          <Link className="float-md-right" href={props.calculatorArticleUrl}>{props.phrases.readAboutCalculator}</Link>
+          <Link className="float-md-end" href={props.calculatorArticleUrl}>{props.phrases.readAboutCalculator}</Link>
         </Col>
       )
     }
