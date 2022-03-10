@@ -44,6 +44,10 @@
           margin-bottom: $spacer * 0.5;
         }
 
+        @include media-breakpoint-up(lg) {
+          margin-left: $spacer * 1.5;
+        }
+
         @include media-breakpoint-down(md) {
           padding: 0;
         }
