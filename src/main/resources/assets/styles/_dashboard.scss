@@ -125,10 +125,6 @@
     margin-right: 1rem;
   }
 
-  nav.nav.nav-tabs > a {
-    z-index: 1;
-  }
-
   .tables-wrapper {
     border: 2px solid $ssb-green-5;
     background: white;
@@ -180,7 +176,7 @@
       border-color: $ssb-green-5 $ssb-green-5 transparent;
 
       &:hover {
-        border-color: black black transparent
+        border-color: black black transparent;
       }
       &.active {
         background: $ssb-white;

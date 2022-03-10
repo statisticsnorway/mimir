@@ -333,7 +333,7 @@ function HusleieCalculator(props) {
         <Row>
           <Col className="price-change col-12 col-md-5 col-lg-4">
             <span>{props.phrases.calculatorChange}</span>
-            <span className="float-right">
+            <span className="float-end">
               {renderNumberChangeValue()}
             </span>
             <Divider dark/>

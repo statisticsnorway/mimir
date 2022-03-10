@@ -359,21 +359,21 @@ function KpiCalculator(props) {
         <Row className="mb-5">
           <Col className="price-increase col-12 col-lg-4">
             <span>{priceChangeLabel}</span>
-            <span className="float-right">
+            <span className="float-end">
               {renderNumberChangeValue()}
             </span>
             <Divider dark/>
           </Col>
           <Col className="start-value col-12 col-lg-4">
             <span>{props.phrases.amount} {startPeriod}</span>
-            <span className="float-right">
+            <span className="float-end">
               {renderNumberValute(startValueResult)}
             </span>
             <Divider dark/>
           </Col>
           <Col className="amount col-12 col-lg-4">
             <span>{props.phrases.amount} {endPeriod}</span>
-            <span className="float-right">
+            <span className="float-end">
               {renderNumberValute(endValue)}
             </span>
             <Divider dark/>

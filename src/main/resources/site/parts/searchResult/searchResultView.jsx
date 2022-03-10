@@ -91,7 +91,7 @@ function SearchResult(props) {
               value={ Number(totalHits) }
               displayType={'text'}
               thousandSeparator={' '}/>
-            <Divider dark></Divider>
+            <Divider dark />
           </div>
         </div>
         <ol className="list-unstyled ">
@@ -239,7 +239,7 @@ function SearchResult(props) {
   }
 
   return (
-    <section className="search-result container-fluid">
+    <section className="search-result container-fluid p-0">
       <div className="row">
         <div className="col-12 search-result-head">
           <div className="container py-5">
