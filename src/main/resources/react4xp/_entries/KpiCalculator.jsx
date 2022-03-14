@@ -589,10 +589,12 @@ function KpiCalculator(props) {
   function renderFormFrontpage() {
     return (
       <Row className="calculator-form-frontpage">
-        <Col className="col-12 col-lg-10 p-0">
+        <Col className="col-12 p-0">
           <Row className="d-flex flex-column">
-            <Title size={2}>{props.phrases.calculatePriceChange}</Title>
-            {renderIngressFrontpage()}
+            <Col className="col-12 col-lg-10 p-0">
+              <Title size={2}>{props.phrases.calculatePriceChange}</Title>
+              {renderIngressFrontpage()}
+            </Col>
           </Row>
         </Col>
         <Form onSubmit={onSubmit} className="col-12 p-0">
