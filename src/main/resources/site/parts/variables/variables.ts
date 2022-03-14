@@ -1,3 +1,9 @@
+import { Content } from 'enonic-types/content'
+import { PageContributions, Request, Response } from 'enonic-types/controller'
+import { ResourceKey } from 'enonic-types/thymeleaf'
+import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
+import { Article } from '../../content-types/article/article'
+
 const {
   data
 } = __non_webpack_require__('/lib/util')
@@ -20,11 +26,11 @@ const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
 
-const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-const view = resolve('./variables.html')
+const view: ResourceKey = resolve('./variables.html')
 
-exports.get = function(req) {
+exports.get = function(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -32,24 +38,24 @@ exports.get = function(req) {
   }
 }
 
-exports.preview = (req) => renderPart(req)
+exports.preview = (req: Request): Response => renderPart(req)
 
-const MAX_VARIABLES = 9999
-const NO_VARIABLES_FOUND = {
+const MAX_VARIABLES: number = 9999
+const NO_VARIABLES_FOUND: Response = {
   body: '',
   contentType: 'text/html'
 }
 
-const renderPart = (req) => {
-  const page = getContent()
-  const language = page.language ? page.language === 'en' ? 'en-gb' : page.language : 'nb'
+function renderPart(req: Request): Response {
+  const page: Content = getContent()
+  const language: string = page.language ? page.language === 'en' ? 'en-gb' : page.language : 'nb'
 
-  const children = contentLib.getChildren({
+  const hits: Array<Content<Article>> = contentLib.getChildren({
     key: page._path,
     count: MAX_VARIABLES
-  })
+  }).hits as unknown as Array<Content<Article>>
 
-  return renderVariables(contentArrayToVariables(children.hits ? data.forceArray(children.hits) : [], language))
+  return renderVariables(contentArrayToVariables(hits ? data.forceArray(hits) : [], language))
 }
 
 /**
@@ -57,13 +63,13 @@ const renderPart = (req) => {
  * @param {Array} variables
  * @return {{ body: string, pageContributions: string, contentType: string }}
  */
-const renderVariables = (variables) => {
+function renderVariables(variables: Array<Variables>): Response {
   if (variables && variables.length) {
-    const download = i18nLib.localize({
+    const download: string = i18nLib.localize({
       key: 'variables.download'
     })
 
-    const variablesXP = new React4xp('variables/Variables')
+    const variablesXP: React4xpObject = new React4xp('variables/Variables')
       .setProps({
         variables: variables.map(({
           title, description, fileHref, fileModifiedDate, href
@@ -79,7 +85,7 @@ const renderVariables = (variables) => {
       })
       .uniqueId()
 
-    const body = render(view, {
+    const body: string = render(view, {
       variablesListId: variablesXP.react4xpId
     })
 
@@ -87,7 +93,7 @@ const renderVariables = (variables) => {
       body: variablesXP.renderBody({
         body
       }),
-      pageContributions: variablesXP.renderPageContributions(),
+      pageContributions: variablesXP.renderPageContributions() as PageContributions,
       contentType: 'text/html'
     }
   }
@@ -101,9 +107,9 @@ const renderVariables = (variables) => {
  * @param {String} language
  * @return {array}
  */
-const contentArrayToVariables = (content, language) => {
+function contentArrayToVariables(content: Array<Content<Article>>, language: string): Array<Variables> {
   return content.map((variable) => {
-    const files = contentLib.query({
+    const files: Array<Content<Article>> = contentLib.query({
       count: 1,
       sort: 'modifiedTime DESC',
       query: `_path LIKE '/content${variable._path}/*' `,
@@ -112,24 +118,32 @@ const contentArrayToVariables = (content, language) => {
         'media:document',
         'media:unknown'
       ]
-    })
+    }).hits as unknown as Array<Content<Article>>
 
-    const fileInfo = (files.hits.length > 0) ? {
+    const fileInfo: object = (files.length > 0) ? {
       fileHref: attachmentUrl({
-        id: files.hits[0]._id
+        id: files[0]._id
       }),
-      fileModifiedDate: moment(files.hits[0].modifiedTime).locale(language).format('DD.MM.YY')
+      fileModifiedDate: moment(files[0].modifiedTime).locale(language).format('DD.MM.YY')
     } : {}
 
     return {
       title: variable.displayName,
       description: processHtml({
-        value: variable.data.ingress
+        value: variable.data.ingress as string
       }),
       href: pageUrl({
         id: variable._id
       }),
       ...fileInfo
     }
-  })
+  }) as Array<Variables>
+}
+
+interface Variables {
+  title: string;
+  description: string;
+  href: string;
+  fileHref: string;
+  fileModifiedDate: string;
 }
