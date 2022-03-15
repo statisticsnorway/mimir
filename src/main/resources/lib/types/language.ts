@@ -6,6 +6,7 @@ export interface Language {
   menuContentId: string;
   headerId: string;
   footerId: string;
+  standardSymbolPage?: string;
 }
 
 interface AlternativeLanguages {
