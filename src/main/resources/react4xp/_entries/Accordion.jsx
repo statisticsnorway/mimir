@@ -16,7 +16,7 @@ class Accordion extends React.Component {
 
   createMarkup(html) {
     return {
-      __html: html
+      __html: html.replace(/&nbsp;/g, ' ')
     }
   }
 

@@ -16,11 +16,7 @@ const Links = (props) => {
               isExternal={link.isExternal}
               linkType={link.linkType}
               negative={link.negative}
-            >
-              <span
-                dangerouslySetInnerHTML={{
-                  __html: link.children
-                }} />
+            >{link.children}
             </Link>
           </div>
         )
@@ -32,7 +28,7 @@ const Links = (props) => {
 Links.propTypes = {
   links: PropTypes.arrayOf(
     PropTypes.shape({
-      children: PropTypes.node,
+      children: PropTypes.string,
       className: PropTypes.string,
       href: PropTypes.string.isRequired,
       icon: PropTypes.node,
