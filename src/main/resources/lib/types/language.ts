@@ -1,15 +1,15 @@
 export interface Language {
-  code: string;
-  link: string;
-  phrases: object;
-  alternativeLanguages: Array<AlternativeLanguages>;
-  menuContentId: string;
-  headerId: string;
-  footerId: string;
+  code: string | undefined;
+  link?: string | undefined;
+  phrases: object | string;
+  alternativeLanguages?: Array<AlternativeLanguages>;
+  menuContentId?: string | undefined;
+  headerId?: string | undefined;
+  footerId?: string | undefined;
   standardSymbolPage?: string;
 }
 
-interface AlternativeLanguages {
+export interface AlternativeLanguages {
   code: string;
   title: string;
   altVersionExists: boolean;
