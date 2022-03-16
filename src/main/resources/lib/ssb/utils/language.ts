@@ -1,6 +1,6 @@
 import { Content, Site } from 'enonic-types/content'
 import { SiteConfig } from '../../../site/site-config'
-import { Language, AlternativeLanguages } from '../../types/language'
+import { Language, AlternativeLanguages, Phrases } from '../../types/language'
 
 const i18n = __non_webpack_require__('/lib/xp/i18n')
 const {
@@ -22,7 +22,7 @@ try {
   e.toString()
 }
 
-exports.getLanguage = function(page: Content): Language {
+exports.getLanguage = function (page: Content): Language {
   const site: Site<SiteConfig> = getSite()
   const siteConfig: SiteConfig = getSiteConfig()
   const currentLanguageConfig: Language = siteConfig.language.filter((language) => language.code === page.language)[0]
@@ -115,31 +115,31 @@ function parseTimeInterval(time: string): string {
   let parsedTime: string = ''
   if (interval) {
     switch (interval[2]) {
-    case 'H':
-      parsedTime = `${i18n.localize({
-        key: 'interval.' + interval[2]
-      })} ${interval[1]} `
-      break
-    case 'K':
-      parsedTime = `${interval[3]}. ${i18n.localize({
-        key: 'interval.' + interval[2]
-      })} ${interval[1]}`
-      break
-    case 'M':
-      parsedTime = `${i18n.localize({
-        key: 'interval.M.' + interval[3]
-      })} ${interval[1]}`
-      break
-    case 'T':
-      parsedTime = `${interval[3]}. ${i18n.localize({
-        key: 'interval.' + interval[2]
-      })} ${interval[1]}`
-      break
-    case 'U':
-      parsedTime = `${i18n.localize({
-        key: 'interval.' + interval[2]
-      })} ${interval[3]} ${interval[1]}`
-      break
+      case 'H':
+        parsedTime = `${i18n.localize({
+          key: 'interval.' + interval[2]
+        })} ${interval[1]} `
+        break
+      case 'K':
+        parsedTime = `${interval[3]}. ${i18n.localize({
+          key: 'interval.' + interval[2]
+        })} ${interval[1]}`
+        break
+      case 'M':
+        parsedTime = `${i18n.localize({
+          key: 'interval.M.' + interval[3]
+        })} ${interval[1]}`
+        break
+      case 'T':
+        parsedTime = `${interval[3]}. ${i18n.localize({
+          key: 'interval.' + interval[2]
+        })} ${interval[1]}`
+        break
+      case 'U':
+        parsedTime = `${i18n.localize({
+          key: 'interval.' + interval[2]
+        })} ${interval[3]} ${interval[1]}`
+        break
     }
     return parsedTime
   }
@@ -155,6 +155,3 @@ export function getLanguageShortName(content: Content): string {
   }
 }
 
-interface Phrases {
-  [key: string]: string;
-}

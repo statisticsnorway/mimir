@@ -5,6 +5,7 @@ import { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '../..
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import { React4xp, React4xpObject, React4xpPageContributionOptions } from '../../../lib/types/react4xp'
 import { Statistics } from '../../content-types/statistics/statistics'
+import { Phrases } from '../../../lib/types/language'
 
 const {
   getContent, pageUrl
@@ -59,7 +60,9 @@ exports.preview = (req: Request): Response => renderPart(req)
 
 function renderPart(req: Request): Response {
   const page: Content<Statistics> = getContent()
-  const phrases: StatisticsPhrases = getPhrases(page)
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  const phrases: Phrases = getPhrases(page)
   const wait: number = app.config && app.config['ssb.statistics.publishWait'] ? parseInt(app.config['ssb.statistics.publishWait']) : 100
   const maxWait: number = app.config && app.config['ssb.statistics.publishMaxWait'] ? parseInt(app.config['ssb.statistics.publishMaxWait']) : 10000
   const newPublishJobEnabled: boolean = isEnabled('publishJob-lib-sheduler', false, 'ssb')
@@ -175,13 +178,6 @@ function renderPart(req: Request): Response {
   }
 }
 
-interface StatisticsPhrases {
-  updated: string;
-  nextUpdate: string;
-  modified: string;
-  notAvailable: string;
-  notYetDetermined: string;
-}
 
 interface StatisticsProps {
   title: string;

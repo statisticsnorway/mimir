@@ -15,3 +15,6 @@ export interface AlternativeLanguages {
   altVersionExists: boolean;
   path: string;
 }
+export interface Phrases {
+  [key: string]: string;
+}
