@@ -3,7 +3,7 @@ import { PageContributions, Request, Response } from 'enonic-types/controller'
 import { ResourceKey } from 'enonic-types/thymeleaf'
 import { TableSourceList, TableView } from '../../../lib/ssb/parts/table'
 import { SourceList, SourcesConfig } from '../../../lib/ssb/utils/utils'
-import { Language } from '../../../lib/types/language'
+import { Language, Phrases } from '../../../lib/types/language'
 import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { Table } from '../../content-types/table/table'
@@ -35,7 +35,7 @@ const {
   get
 } = __non_webpack_require__('/lib/xp/content')
 const {
-  getLanguage
+  getLanguage, getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
 const {
   DATASET_BRANCH,
@@ -64,8 +64,8 @@ exports.preview = (req: Request, id?: string): Response => {
 
 function getProps(req: Request, tableId?: string): TableProps {
   const page: Content<Table> = getContent()
-  const language: Language = getLanguage(page) as Language
-  const phrases: TablePhrases = language.phrases as TablePhrases
+  const language: Language = getLanguage(page)
+  const phrases: Phrases = getPhrases(page)
 
   const tableContent: Content<Table, object, object> | null = get({
     key: tableId as string
@@ -139,8 +139,8 @@ exports.getProps = getProps
 
 function renderPart(req: Request, tableId?: string): Response {
   const page: Content<Table> = getContent()
-  const language: Language = getLanguage(page) as Language
-  const phrases: TablePhrases = language.phrases as TablePhrases
+  const language: Language = getLanguage(page)
+  const phrases: Phrases = getPhrases(page)
 
   if (!tableId) {
     if (req.mode === 'edit' && page.type !== `${app.name}:statistics`) {
@@ -200,14 +200,6 @@ function getStandardSymbolPage(standardSymbolPage: Language['standardSymbolPage'
     }
   }
   return
-}
-
-interface TablePhrases {
-  source: string;
-  statbankTableSource: string;
-  table: string;
-  tableDownloadAs: string;
-  tableStandardSymbols: string;
 }
 
 interface TableStandardSymbolLink {
