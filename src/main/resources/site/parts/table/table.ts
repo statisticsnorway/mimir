@@ -139,7 +139,6 @@ exports.getProps = getProps
 
 function renderPart(req: Request, tableId?: string): Response {
   const page: Content<Table> = getContent()
-  const language: Language = getLanguage(page)
   const phrases: Phrases = getPhrases(page)
 
   if (!tableId) {
