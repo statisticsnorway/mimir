@@ -251,7 +251,7 @@ class Table extends Component {
   createScrollControlsDesktop() {
     return (
       <div className="table-controls-desktop" ref={this.tableControlsDesktopRef}>
-        <span className="mr-2" onClick={() => this.scrollLeft()}><ChevronLeft/></span>
+        <span className="me-2" onClick={() => this.scrollLeft()}><ChevronLeft/></span>
         <span onClick={() => this.scrollRight()}><ChevronRight/></span>
       </div>
     )

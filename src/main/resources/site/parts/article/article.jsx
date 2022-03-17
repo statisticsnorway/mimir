@@ -42,7 +42,7 @@ function Article(props) {
       return (
         <div className="author-wrapper col-12 col-lg-8 p-0">
           <p>
-            <span className="mr-1">{`${phrases.author}: `}</span>
+            <span className="me-1">{`${phrases.author}: `}</span>
             {authors.map((author, index) => {
               return (
                 <span key={`author-${index}`}>
@@ -128,7 +128,7 @@ function Article(props) {
     if (isbn) {
       return (
         <div className={`col-12 p-0 article-isbn ${mobile ? 'd-flex d-lg-none' : 'd-none justify-content-center d-lg-flex'} `}>
-          <span className="fw-bold mr-1">{phrases.isbnElectronic}:</span>{isbn}
+          <span className="fw-bold me-1">{phrases.isbnElectronic}:</span>{isbn}
         </div>
       )
     }

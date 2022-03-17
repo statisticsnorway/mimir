@@ -322,7 +322,7 @@ function HusleieCalculator(props) {
             <Title size={3}>{props.phrases.husleieNewRent}</Title>
           </Col>
           <Col className="end-value col-12 col-md-8">
-            <span className="float-left float-md-right">
+            <span className="float-start float-md-end">
               {renderNumberValute(endValue)}
             </span>
           </Col>
@@ -376,7 +376,7 @@ function HusleieCalculator(props) {
     if (props.calculatorArticleUrl) {
       return (
         <Col className="article-link align-self-center col-12 col-md-6">
-          <Link className="float-md-right" href={props.calculatorArticleUrl}>{props.phrases.readAboutCalculator}</Link>
+          <Link className="float-md-end" href={props.calculatorArticleUrl}>{props.phrases.readAboutCalculator}</Link>
         </Col>
       )
     }
@@ -393,7 +393,7 @@ function HusleieCalculator(props) {
             <Title size={3} className="col-12 mb-2">{props.phrases.husleieValidateOver1Year}</Title>
             <p className="col-12 mb-4">{props.phrases.husleieChooseFiguresToCalculateRent}</p>
           </Row>
-          <Row className="ml-0">
+          <Row className="ms-0">
             <Button className="submit-one-year" onClick={submitOneYearLater}>{phraseOneYearLater}</Button>
             <Button className="submit-last-period" onClick={submitLastPeriod}>{newestNumbers}</Button>
           </Row>

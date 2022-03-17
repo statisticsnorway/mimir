@@ -136,6 +136,20 @@
       border-bottom: 0 none;
       border-top: 0 none;
     }
+
+    &.joblog, &.datasources, &.statreg {
+      table {
+        thead tr th {
+          border: 2px solid #dee2e6;
+        }
+
+        tbody tr {
+          &:nth-child(odd) {
+            background-color: #f2f2f2;
+          }
+        }
+      }
+    }
   }
 
   .next-release {
@@ -143,6 +157,9 @@
     overflow: auto;
 
     table {
+      thead tr th {
+        border: 2px solid #dee2e6;
+      }
       tbody tr {
         background-color: $ssb-white;
 
@@ -240,6 +257,10 @@
   
   .haveList {
     cursor: pointer;
+  }
+
+  .small {
+    font-size: 13px;
   }
   
   .warningIcon {

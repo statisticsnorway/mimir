@@ -348,7 +348,7 @@ function KpiCalculator(props) {
             <Title size={3}>{props.phrases.kpiAmountEqualled}</Title>
           </Col>
           <Col className="end-value col-12 col-md-8">
-            <span className="float-left float-md-right">
+            <span className="float-start float-md-end">
               {renderNumberValute(endValue)}
             </span>
           </Col>
@@ -403,7 +403,7 @@ function KpiCalculator(props) {
             <Title size={3}>{props.phrases.kpiAmountEqualled}</Title>
           </Col>
           <Col className="end-value col-12 col-lg-7">
-            <span className="float-lg-right">
+            <span className="float-lg-end">
               {renderNumberValute(endValue)}
             </span>
           </Col>
@@ -458,7 +458,7 @@ function KpiCalculator(props) {
     if (props.calculatorArticleUrl) {
       return (
         <Col className="article-link align-self-center col-12 col-md-6">
-          <Link className="float-md-right" href={props.calculatorArticleUrl}>{props.phrases.readAboutCalculator}</Link>
+          <Link className="float-md-end" href={props.calculatorArticleUrl}>{props.phrases.readAboutCalculator}</Link>
         </Col>
       )
     }
@@ -468,7 +468,7 @@ function KpiCalculator(props) {
     if (props.calculatorArticleUrl) {
       return (
         <Col className="article-link col-12 col-lg-6 d-lg-flex align-self-center justify-content-end">
-          <Link className="float-lg-right" href={props.calculatorArticleUrl}>{props.phrases.readAboutCalculator}</Link>
+          <Link className="float-lg-end" href={props.calculatorArticleUrl}>{props.phrases.readAboutCalculator}</Link>
         </Col>
       )
     }
@@ -589,7 +589,7 @@ function KpiCalculator(props) {
   function renderFormFrontpage() {
     return (
       <Row className="calculator-form-frontpage">
-        <Col className="col-12 p-0">
+        <Col className="col-12">
           <Row className="d-flex flex-column">
             <Col className="col-12 col-lg-10 p-0">
               <Title size={2}>{props.phrases.calculatePriceChange}</Title>

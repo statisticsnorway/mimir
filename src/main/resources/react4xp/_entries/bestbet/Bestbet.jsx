@@ -181,7 +181,7 @@ function Bestbet(props) {
     if (!disabled) {
       return (
         <Tag className="m-1" onClick={() => handleRemoveEditTag(searchWord)}>
-          {searchWord}<XCircle size={16} className="ml-1" />
+          {searchWord}<XCircle size={16} className="ms-1" />
         </Tag>
       )
     }
@@ -331,7 +331,7 @@ function Bestbet(props) {
                 </div>
                 <Tag className="m-1" onClick={() => handleEditBestBetOnClick(item)}>
                 Rediger
-                  <Edit size={16} className="ml-1" />
+                  <Edit size={16} className="ms-1" />
                 </Tag>
               </>
             </li>
@@ -345,7 +345,7 @@ function Bestbet(props) {
           <Col>
             <Button onClick={() => handleDeleteBestBetOnClick(item)}>
               Slett
-              <Trash size={16} className="ml-1" />
+              <Trash size={16} className="ms-1" />
             </Button>
           </Col>
         </Row>
@@ -402,7 +402,7 @@ function Bestbet(props) {
             primary
           >
             Ny Bestbet
-            <Plus size={16} className="ml-1" />
+            <Plus size={16} className="ms-1" />
           </Button>
           <Divider className="mb-3" light />
           {renderBestbetList()}

@@ -528,7 +528,7 @@ function BkibolCalculator(props) {
             <h3>{props.phrases.amountEqualled}</h3>
           </Col>
           <Col className="end-value col-12 col-md-8">
-            <span className="float-left float-md-end">
+            <span className="float-start float-md-end">
               {renderNumberValute(endValue)}
             </span>
           </Col>

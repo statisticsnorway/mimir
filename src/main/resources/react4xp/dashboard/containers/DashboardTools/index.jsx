@@ -51,7 +51,7 @@ export function DashboardTools() {
       <div className="d-flex justify-content-between align-items-center">
         <span className="fw-bold">Oppdater alle {statRegName}</span>
         <Button
-          className="ml-auto"
+          className="ms-auto"
           onClick={() => refreshStatReg(statRegStatus.key)}
           disabled={statRegStatus.loading}
         >
@@ -102,7 +102,7 @@ export function DashboardTools() {
   function renderStatisticsSearch() {
     if (loadingStatisticsSearchList) {
       return (
-        <span className="spinner-border spinner-border-sm ml-2 mb-1" />
+        <span className="spinner-border spinner-border-sm ms-2 mb-1" />
       )
     }
     const items = statisticsSearchList.map((s) => {
