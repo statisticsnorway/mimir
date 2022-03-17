@@ -1,7 +1,7 @@
 import { Content } from 'enonic-types/content'
 import { Request, Response } from 'enonic-types/controller'
 import { Component } from 'enonic-types/portal'
-import {ResourceKey, ThymeleafRenderOptions} from 'enonic-types/thymeleaf'
+import {ResourceKey} from 'enonic-types/thymeleaf'
 import { Phrases } from '../../../lib/types/language'
 import { Contact } from '../../../lib/ssb/dashboard/statreg/types'
 import { ContactPartConfig } from './contact-part-config'
