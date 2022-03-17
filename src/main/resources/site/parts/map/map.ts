@@ -1,4 +1,4 @@
-import { Request, Response } from 'enonic-types/controller'
+import { Request } from 'enonic-types/controller'
 import { ResourceKey } from 'enonic-types/thymeleaf'
 import { SiteConfig } from '../../site-config'
 
