@@ -87,7 +87,6 @@
       padding: 60px;
 
       .input-amount {
-        width: 100%;
         padding-right: 20px;
       }
 
@@ -141,7 +140,7 @@
       .calculator-form-frontpage {
         height: 410px;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         justify-content: space-between;
 
         .submit {
@@ -190,10 +189,13 @@
           padding-left: 10px;
         }
 
+        .ssb-btn {
+          display: flex;
+          justify-content: center;
+        }
       }
 
       .calculator-form-frontpage {
-
         .calculate-from, .calculate-to {
           .select-year {
             padding-left: 0;
@@ -219,6 +221,10 @@
       .calculator-error, .calculator-result  {
         padding: 20px;
       }
+
+      .calculator-result-frontpage {
+        padding: 0;
+      }
     }
 
     @include media-breakpoint-down(sm) {
@@ -231,11 +237,6 @@
         .calculate-from {
           margin-bottom: 20px;
         }
-      }
-    }
-
-    @include media-breakpoint-down(xs) {
-      .calculator-form {
 
         .input-amount, .start-value {
           width: 100%;
@@ -261,19 +262,37 @@
       }
 
       .calculator-form-frontpage {
-        padding: 20px;
+        padding: 60px 20px 20px;
+
+        .input-amount {
+          margin-bottom: 20px;
+        }
 
         .input-amount, .start-value {
           width: 100%;
         }
 
+        .select-year {
+          margin-right: $spacer * .5;
+        }
+
         .submit-button {
           width: 100%;
+          display: flex;
+          justify-content: center;
+        }
+
+        h2, .publish-text, .col {
+          padding: 0;
         }
       }
 
       .calculator-result-frontpage {
-        padding: 20px;
+        padding: 40px 20px 20px;
+
+        .col {
+          padding: 0;
+        }
       }
 
       &.frontpage {
@@ -305,7 +324,7 @@
       padding-bottom: 0;
     }
 
-    @include media-breakpoint-down(xs) {
+    @include media-breakpoint-down(sm) {
       .input-amount, .start-value {
         width: 100%;
       }

@@ -9,7 +9,7 @@ export function init() {
     let animate
     const map = $('#js-show-map')
 
-    $('.show-map').click((e) => {
+    $('.show-map').on('click', (e) => {
       e.preventDefault()
       e.stopPropagation()
 
@@ -33,8 +33,6 @@ export function init() {
           animate = false
           setTimeout(onSwingTimeout, 50)
         })
-      } else {
-        map.collapse('toggle')
       }
     })
 
@@ -47,8 +45,7 @@ export function init() {
         $('.show-search').removeClass('active')
       }
 
-      $('.show-search').parent().click(() => {
-        map.collapse('hide')
+      $('.show-search').parent().on('click', () => {
         $('.show-map').removeClass('active')
       })
     })
@@ -60,7 +57,7 @@ export function init() {
     })
 
     $('.part-menu-dropdown').each((i, el) => {
-      $(window).scroll(() => {
+      $(window).on('scroll', () => {
         const {
           top
         } = el.getBoundingClientRect()
@@ -73,8 +70,7 @@ export function init() {
 
         top > 0 &&
         !animate &&
-        map.length &&
-        map.collapse('hide')
+        map.length
 
         const stickyMenu = document.getElementById('sticky-menu')
         if (stickyMenu) {
@@ -94,8 +90,6 @@ export function init() {
     $('#search-container').on('show.bs.collapse', () => {
       $('#search-container').removeClass('hide-search')
       $('.show-search').addClass('active')
-
-      map.collapse('hide')
       $('.show-map').attr('aria-expanded', 'false').removeClass('active')
     })
 

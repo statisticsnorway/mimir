@@ -68,16 +68,17 @@ class ListOfArticles extends React.Component {
   }
 
   getBreakpoints(index) {
+    const hideArticle = this.state.isHidden ? 'd-none' : ''
     if (index < 10) {
       return 'd-block'
     }
-    return ''
+    return hideArticle
   }
 
   addArticle(articles) {
     return articles.map((article, index) => {
       return (
-        <div key={`article-${index}`} className={`article-container col-12 ${this.state.isHidden ? 'd-none' : ''} ${this.getBreakpoints(index)}`}>
+        <div key={`article-${index}`} className={`article-container col-12 ${this.getBreakpoints(index)}`}>
           <Text small>{article.subtitle}</Text>
           <p><Link href={article.href} linkType='header'>{article.title}</Link></p>
           <Paragraph>{article.preamble}</Paragraph>
@@ -104,7 +105,7 @@ class ListOfArticles extends React.Component {
             <div className="col-12 col-lg-1">
               {this.addYear(year)}
             </div>
-            <div className="col-12 col-lg-8 ml-lg-4 p-0">
+            <div className="col-12 col-lg-8 p-0">
               <div className="row">
                 {this.addArticle(articles)}
               </div>

@@ -129,7 +129,7 @@ class Footer extends React.Component {
               <img src={logoUrl} alt="ssb-logo"/>
               <Button negative onClick={() => this.goToTop()
               }>
-                <ArrowUp size="22" className="mr-2"/>
+                <ArrowUp size="22" className="me-2"/>
                 {topButtonText}
               </Button>
             </div>

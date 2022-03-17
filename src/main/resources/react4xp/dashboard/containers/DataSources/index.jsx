@@ -35,7 +35,7 @@ export function DataSources() {
     <section className="xp-part part-dashboard container-fluid p-0">
       <Row>
         <Col>
-          <div className="p-4 tables-wrapper">
+          <div className="p-4 tables-wrapper datasources">
             <h2 className="mb-3">{`Spørringer mot statistikkbank og tabellbygger`}</h2>
             {renderDataSourceTables()}
           </div>

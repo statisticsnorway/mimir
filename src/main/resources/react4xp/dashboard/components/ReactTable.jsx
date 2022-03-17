@@ -18,7 +18,7 @@ export function ReactTable(props) {
   useSortBy)
 
   return (
-    <Table bordered striped {...getTableProps()}>
+    <Table bordered {...getTableProps()}>
       <thead>
         {headerGroups.map((headerGroup, index) => (
           <tr key={index} {...headerGroup.getHeaderGroupProps()}>

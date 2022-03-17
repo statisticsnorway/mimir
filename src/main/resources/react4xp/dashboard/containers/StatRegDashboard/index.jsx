@@ -48,7 +48,7 @@ export function StatRegDashboard() {
     }
 
     return (
-      <Table bordered striped>
+      <Table bordered>
         <thead>
           <tr>
             <th className="roboto-bold">Spørring</th>
@@ -88,9 +88,9 @@ export function StatRegDashboard() {
     <section className="xp-part part-dashboard container-fluid p-0 m-0">
       <Row>
         <Col>
-          <div className="p-4 tables-wrapper">
+          <div className="p-4 tables-wrapper statreg">
             <h2 className="d-inline-block w-75">Data fra Statistikkregisteret</h2>
-            <div className="d-inline-block float-right">
+            <div className="d-inline-block float-end">
               <Button
                 onClick={() => refreshAll()}
                 disabled={statuses.filter((s) => s.loading).length === statuses.length}

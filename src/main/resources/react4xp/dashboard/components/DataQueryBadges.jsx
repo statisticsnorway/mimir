@@ -21,9 +21,9 @@ export function DataQueryBadges(props) {
 
   return (
     <React.Fragment>
-      <span className={`${floatRight ? 'float-right' : ''} detail ${decideType(contentType)}`}>{contentType.split(':').pop()}</span>
-      <span className={`${floatRight ? 'float-right' : ''} detail ${format}`}>{format}</span>
-      {!isPublished ? <span className={`${floatRight ? 'float-right' : ''} detail unpublished`}>Ikke publisert</span> : null}
+      <span className={`${floatRight ? 'float-end' : ''} detail ${decideType(contentType)}`}>{contentType.split(':').pop()}</span>
+      <span className={`${floatRight ? 'float-end' : ''} detail ${format}`}>{format}</span>
+      {!isPublished ? <span className={`${floatRight ? 'float-end' : ''} detail unpublished`}>Ikke publisert</span> : null}
     </React.Fragment>
   )
 }

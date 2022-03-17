@@ -1,8 +1,8 @@
 <div id="sticky-menu" class="w-100">
   <section class="xp-part part-menu-dropdown d-print-none">
     <div class="container position-relative">
-      <div class="d-flex flex-row align-items-center">
-        <div class="d-flex align-items-center mr-auto title-container">
+      <div class="d-flex flex-row align-items-center justify-content-between">
+        <div class="d-flex align-items-center title-container">
           <div data-th-class="${modeMunicipality} ? 'opacity-zero'">
             <div class="roboto-plain subtitle d-none d-md-block"
                  data-th-if="${modeMunicipality}" data-th-text="${displayName}">
@@ -15,8 +15,8 @@
           </div>
         </div>
         <div id="search-container" class="collapse" data-th-class="${!modeMunicipality} ? 'choose-municipality-search' : 'hide-search' ">
-          <div data-th-if="${modeMunicipality}" class="change-municipality roboto-bold text-nowrap pr-4">Bytt kommune:</div>
-          <div class="component-dropdown" data-th-id="${dropdownId}"/>
+          <div data-th-if="${modeMunicipality}" class="change-municipality roboto-bold text-nowrap">Bytt kommune:</div>
+          <div class="component-dropdown w-100" data-th-id="${dropdownId}"/>
         </div>
         <button data-th-if="${modeMunicipality}"
                 class="show-search d-inline-block d-lg-none position-absolute btn-drawer-toggler"
@@ -43,6 +43,9 @@
           </i>
         </button>
         <button data-th-if="${modeMunicipality}"
+                data-bs-toggle="collapse"
+                data-bs-target="#js-show-map"
+                data-delayed-toggle="collapse"
                 class="show-map text-nowrap btn-drawer-toggler"
                 type="button"
                 aria-expanded="false"

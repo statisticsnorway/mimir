@@ -348,7 +348,7 @@ function KpiCalculator(props) {
             <Title size={3}>{props.phrases.kpiAmountEqualled}</Title>
           </Col>
           <Col className="end-value col-12 col-md-8">
-            <span className="float-left float-md-right">
+            <span className="float-start float-md-end">
               {renderNumberValute(endValue)}
             </span>
           </Col>
@@ -359,21 +359,21 @@ function KpiCalculator(props) {
         <Row className="mb-5">
           <Col className="price-increase col-12 col-lg-4">
             <span>{priceChangeLabel}</span>
-            <span className="float-right">
+            <span className="float-end">
               {renderNumberChangeValue()}
             </span>
             <Divider dark/>
           </Col>
           <Col className="start-value col-12 col-lg-4">
             <span>{props.phrases.amount} {startPeriod}</span>
-            <span className="float-right">
+            <span className="float-end">
               {renderNumberValute(startValueResult)}
             </span>
             <Divider dark/>
           </Col>
           <Col className="amount col-12 col-lg-4">
             <span>{props.phrases.amount} {endPeriod}</span>
-            <span className="float-right">
+            <span className="float-end">
               {renderNumberValute(endValue)}
             </span>
             <Divider dark/>
@@ -403,7 +403,7 @@ function KpiCalculator(props) {
             <Title size={3}>{props.phrases.kpiAmountEqualled}</Title>
           </Col>
           <Col className="end-value col-12 col-lg-7">
-            <span className="float-lg-right">
+            <span className="float-lg-end">
               {renderNumberValute(endValue)}
             </span>
           </Col>
@@ -458,7 +458,7 @@ function KpiCalculator(props) {
     if (props.calculatorArticleUrl) {
       return (
         <Col className="article-link align-self-center col-12 col-md-6">
-          <Link className="float-md-right" href={props.calculatorArticleUrl}>{props.phrases.readAboutCalculator}</Link>
+          <Link className="float-md-end" href={props.calculatorArticleUrl}>{props.phrases.readAboutCalculator}</Link>
         </Col>
       )
     }
@@ -467,8 +467,8 @@ function KpiCalculator(props) {
   function renderLinkArticleFrontpage() {
     if (props.calculatorArticleUrl) {
       return (
-        <Col className="article-link align-self-center col-12 col-lg-6">
-          <Link className="float-lg-right" href={props.calculatorArticleUrl}>{props.phrases.readAboutCalculator}</Link>
+        <Col className="article-link col-12 col-lg-6 d-lg-flex align-self-center justify-content-end">
+          <Link className="float-lg-end" href={props.calculatorArticleUrl}>{props.phrases.readAboutCalculator}</Link>
         </Col>
       )
     }
@@ -477,7 +477,7 @@ function KpiCalculator(props) {
   function renderIngressFrontpage() {
     if (props.frontPageIngress) {
       return (
-        <Col lg="12" className="publish-text pb-2"
+        <div className="publish-text pb-2"
           dangerouslySetInnerHTML={{
             __html: props.frontPageIngress
           }}
@@ -588,74 +588,70 @@ function KpiCalculator(props) {
 
   function renderFormFrontpage() {
     return (
-      <div className="calculator-form-frontpage">
-        <Row>
-          <Col>
-            <Title size={2}>{props.phrases.calculatePriceChange}</Title>
-          </Col>
-          {renderIngressFrontpage()}
-        </Row>
-        <Form onSubmit={onSubmit}>
-          <Container>
-            <Row className="calculator-input">
-              <Col className="input-amount col-12 col-xl-4">
-                <Input
-                  className="start-value"
-                  label={props.phrases.enterAmount}
-                  handleChange={(value) => onChange('start-value', value)}
-                  error={startValue.error}
-                  errorMessage={startValue.errorMsg}
-                  onBlur={() => onBlur('start-value')}
-                />
-              </Col>
-              <Col className="calculate-from col-12 col-lg-6 col-xl-4">
-                <Container>
-                  <Row>
-                    <Col className="select-year">
-                      <Input
-                        className="input-year"
-                        label={props.phrases.fromYear}
-                        handleChange={(value) => onChange('start-year', value)}
-                        error={startYear.error}
-                        errorMessage={startYear.errorMsg}
-                        onBlur={() => onBlur('start-year')}
-                      />
-                    </Col>
-                    <Col className="select-month">
-                      {addDropdownMonth('start-month')}
-                    </Col>
-                  </Row>
-                </Container>
-              </Col>
-              <Col className="calculate-to col-12 col-lg-6 col-xl-4">
-                <Container>
-                  <Row>
-                    <Col className="select-year">
-                      <Input
-                        className="input-year"
-                        label={props.phrases.toYear}
-                        handleChange={(value) => onChange('end-year', value)}
-                        error={endYear.error}
-                        errorMessage={endYear.errorMsg}
-                        onBlur={() => onBlur('end-year')}
-                      />
-                    </Col>
-                    <Col className="select-month">
-                      {addDropdownEndMonth('end-month')}
-                    </Col>
-                  </Row>
-                </Container>
-              </Col>
-            </Row>
-            <Row className="submit">
-              <Col>
-                <Button className="submit-button" primary type="submit" disabled={loading}>{props.phrases.seePriceChange}</Button>
-              </Col>
-              {renderLinkArticleFrontpage()}
-            </Row>
-          </Container>
+      <Row className="calculator-form-frontpage">
+        <Col className="col-12">
+          <Row className="d-flex flex-column">
+            <Col className="col-12 col-lg-10 p-0">
+              <Title size={2}>{props.phrases.calculatePriceChange}</Title>
+              {renderIngressFrontpage()}
+            </Col>
+          </Row>
+        </Col>
+        <Form onSubmit={onSubmit} className="col-12 p-0">
+          <Row className="calculator-input">
+            <Col className="input-amount col-12 col-lg-4">
+              <Input
+                className="start-value"
+                label={props.phrases.enterAmount}
+                handleChange={(value) => onChange('start-value', value)}
+                error={startValue.error}
+                errorMessage={startValue.errorMsg}
+                onBlur={() => onBlur('start-value')}
+              />
+            </Col>
+            <Col className="calculate-from col-12 col-lg-4">
+              <Row>
+                <Col className="select-year">
+                  <Input
+                    className="input-year"
+                    label={props.phrases.fromYear}
+                    handleChange={(value) => onChange('start-year', value)}
+                    error={startYear.error}
+                    errorMessage={startYear.errorMsg}
+                    onBlur={() => onBlur('start-year')}
+                  />
+                </Col>
+                <Col className="select-month">
+                  {addDropdownMonth('start-month')}
+                </Col>
+              </Row>
+            </Col>
+            <Col className="calculate-to col-12 col-lg-4">
+              <Row>
+                <Col className="select-year">
+                  <Input
+                    className="input-year"
+                    label={props.phrases.toYear}
+                    handleChange={(value) => onChange('end-year', value)}
+                    error={endYear.error}
+                    errorMessage={endYear.errorMsg}
+                    onBlur={() => onBlur('end-year')}
+                  />
+                </Col>
+                <Col className="select-month">
+                  {addDropdownEndMonth('end-month')}
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+          <Row className="submit">
+            <Col>
+              <Button className="submit-button" primary type="submit" disabled={loading}>{props.phrases.seePriceChange}</Button>
+            </Col>
+            {renderLinkArticleFrontpage()}
+          </Row>
         </Form>
-      </div>
+      </Row>
     )
   }
 

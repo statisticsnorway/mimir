@@ -251,7 +251,7 @@ class Table extends Component {
   createScrollControlsDesktop() {
     return (
       <div className="table-controls-desktop" ref={this.tableControlsDesktopRef}>
-        <span className="mr-2" onClick={() => this.scrollLeft()}><ChevronLeft/></span>
+        <span className="me-2" onClick={() => this.scrollLeft()}><ChevronLeft/></span>
         <span onClick={() => this.scrollRight()}><ChevronRight/></span>
       </div>
     )
@@ -560,7 +560,7 @@ class Table extends Component {
           <div className="d-none searchabletext">
             <span>{hiddenTitle}</span>
           </div>
-          <div className="container">
+          <div className="container border-0">
             {this.addPreviewButton()}
             {this.addDownloadTableDropdown(false)}
             {this.addPreviewInfo()}
