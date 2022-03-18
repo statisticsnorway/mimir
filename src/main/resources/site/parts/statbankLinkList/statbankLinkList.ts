@@ -3,7 +3,7 @@ import { PageContributions, Request, Response } from 'enonic-types/controller'
 import { ResourceKey } from 'enonic-types/thymeleaf'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { Phrases } from '../../../lib/types/language'
-import { React4xpObject } from '../../../lib/types/react4xp'
+import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
 import { Statistics } from '../../content-types/statistics/statistics'
 
 const {
@@ -18,7 +18,7 @@ const {
 const {
   render
 } = __non_webpack_require__('/lib/thymeleaf')
-const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const util = __non_webpack_require__('/lib/util')
 const view: ResourceKey = resolve('./statbankLinkList.html')
 const STATBANKWEB_URL: string = app.config && app.config['ssb.statbankweb.baseUrl'] ? app.config['ssb.statbankweb.baseUrl'] : 'https://www.ssb.no/statbank'
