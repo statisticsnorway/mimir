@@ -1,4 +1,4 @@
-import { Request } from 'enonic-types/controller'
+import { Request, Response } from 'enonic-types/controller'
 import { ResourceKey } from 'enonic-types/thymeleaf'
 import { SiteConfig } from '../../site-config'
 
@@ -16,7 +16,7 @@ const {
 
 const view: ResourceKey = resolve('./map.html')
 
-exports.get = function(req:Request) {
+exports.get = function(req:Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -24,9 +24,9 @@ exports.get = function(req:Request) {
   }
 }
 
-exports.preview = (req:Request) => renderPart(req)
+exports.preview = (req:Request): Response => renderPart(req)
 
-function renderPart(req:Request) {
+function renderPart(req:Request): Response {
   const siteConfig:SiteConfig = getSiteConfig()
   let mapFolder: string = '/mapdata'
 
