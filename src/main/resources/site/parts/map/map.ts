@@ -1,3 +1,7 @@
+import { Request, Response } from 'enonic-types/controller'
+import { ResourceKey } from 'enonic-types/thymeleaf'
+import { SiteConfig } from '../../site-config'
+
 const {
   assetUrl,
   getSiteConfig,
@@ -10,9 +14,9 @@ const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 
-const view = resolve('./map.html')
+const view: ResourceKey = resolve('./map.html')
 
-exports.get = function(req) {
+exports.get = function(req:Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -20,26 +24,27 @@ exports.get = function(req) {
   }
 }
 
-exports.preview = (req) => renderPart(req)
+exports.preview = (req:Request): Response => renderPart(req)
 
-function renderPart(req) {
-  const siteConfig = getSiteConfig()
-  let mapFolder = '/mapdata'
+function renderPart(req:Request): Response {
+  const siteConfig:SiteConfig = getSiteConfig()
+  let mapFolder: string = '/mapdata'
 
   if (typeof siteConfig.kommunefakta !== 'undefined' && siteConfig.kommunefakta.mapfolder) {
     mapFolder = siteConfig.kommunefakta.mapfolder
   }
 
-  const dataPathAssetUrl = assetUrl( {
+  const dataPathAssetUrl:string = assetUrl( {
     path: mapFolder
   })
-  const dataServiceUrl = serviceUrl({
+  const dataServiceUrl:string = serviceUrl({
     service: 'municipality'
   })
-  const body = render(view, {
+  const body:string = render(view, {
     dataPathAssetUrl,
     dataServiceUrl
   })
+
   return {
     body,
     contentType: 'text/html'

@@ -31,7 +31,6 @@ class RelatedBoxes extends React.Component {
               imageSrc={relatedRelatedContent.image}
               altText={relatedRelatedContent.imageAlt ? relatedRelatedContent.imageAlt : ' '}
               link={relatedRelatedContent.link}
-              type={relatedRelatedContent.type ? relatedRelatedContent.type : undefined}
               title={relatedRelatedContent.title}
               key={index}
             />
@@ -52,7 +51,6 @@ RelatedBoxes.propTypes = {
     PropTypes.shape({
       title: PropTypes.string.isRequired,
       link: PropTypes.string.isRequired,
-      type: PropTypes.string,
       image: PropTypes.string.isRequired,
       imageAlt: PropTypes.string
     })

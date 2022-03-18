@@ -3,7 +3,7 @@
 ## Municipality
 This service returns name, path, county and code for given municipality code.
 
-[Map](../src/main/resources/site/parts/map/map.es6) and 
+[Map](../src/main/resources/site/parts/map/map.ts) and 
 [menuDropDown](../src/main/resources/site/parts/menuDropdown/menuDropdown.es6) are currently using this.
 
 ### Methods
