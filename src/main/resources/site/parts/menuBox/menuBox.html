@@ -1,1 +1,4 @@
-<section class="xp-part menu-box container" data-th-id="${menuBoxId}"></section>
+<section class="xp-part menu-box container" data-th-id="${menuBoxId}">
+    <h2 data-th-if="${title}" data-th-text="${title}"></h2>
+    <p data-th-if="${message}" data-th-text="${message}"></p>
+</section>

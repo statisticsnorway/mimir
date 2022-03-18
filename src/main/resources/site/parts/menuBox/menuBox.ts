@@ -1,6 +1,6 @@
 import { Content, ContentLibrary } from 'enonic-types/content'
 import { Request, Response } from 'enonic-types/controller'
-import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
+import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { ResourceKey } from 'enonic-types/thymeleaf'
 import { Component } from 'enonic-types/portal'
 import { MenuBoxPartConfig } from '../menuBox/menuBox-part-config'
@@ -47,7 +47,10 @@ function renderPart(req:Request, menuBoxId: string):Response | React4xpResponse 
   if (!menuBoxId) {
     if (req.mode === 'edit') {
       return {
-        body: render(view)
+        body: render(view, {
+          title: 'Liste profilerte kort',
+          message: 'MenuBox - Missing Id'
+        })
       }
     } else {
       throw new Error('MenuBox - Missing Id')
@@ -59,24 +62,12 @@ function renderPart(req:Request, menuBoxId: string):Response | React4xpResponse 
   if (!menuBoxContent) throw new Error(`MenuBox with id ${menuBoxId} doesn't exist`)
 
   const boxes: Array<MenuItem> = buildMenu(menuBoxContent)
-  const menuBox: React4xpObject = new React4xp('MenuBox')
-    .setProps({
-      boxes
-    })
-    .uniqueId()
 
-  const body: string = render(view, {
-    menuBoxId: menuBox.react4xpId
-  })
-  return {
-    body: menuBox.renderBody({
-      body,
-      clientRender: req.mode !== 'edit'
-    }),
-    pageContributions: menuBox.renderPageContributions({
-      clientRender: req.mode !== 'edit'
-    })
+  const props: MenuBoxProps = {
+    boxes
   }
+
+  return React4xp.render('MenuBox', props, req)
 }
 
 function buildMenu(menuBoxContent: Content<MenuBox> ): Array<MenuItem> {
@@ -114,6 +105,10 @@ function getHref(menuConfig: MenuConfig): string {
     })
   }
   return ''
+}
+
+interface MenuBoxProps {
+  boxes: Array<MenuItem>;
 }
 
 interface MenuConfig {
