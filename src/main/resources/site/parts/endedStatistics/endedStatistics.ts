@@ -1,3 +1,12 @@
+import {Request, Response} from "enonic-types/controller";
+import {React4xpObject, React4xpResponse} from "../../../lib/types/react4xp";
+import {Component} from "enonic-types/portal";
+import {EndedStatisticsPartConfig} from "./endedStatistics-part-config";
+import {Content} from "enonic-types/content";
+import {Phrases} from "../../../lib/types/language";
+import {CmsStatistic, XpStatistic} from "../../../lib/types/relatedStatistics";
+import {Statistics} from "../../content-types/statistics/statistics";
+
 const {
   data: {
     forceArray
@@ -27,7 +36,7 @@ const {
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view = resolve('./endedStatistics.html')
 
-exports.get = (req) => {
+exports.get = (req: Request) => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -35,19 +44,19 @@ exports.get = (req) => {
   }
 }
 
-exports.preview = (req) => renderPart(req)
+exports.preview = (req: Request) => renderPart(req)
 
-const renderPart = (req) => {
-  const page = getContent()
-  const part = getComponent()
-  const endedStatistics = part.config.relatedStatisticsOptions
+function renderPart(req: Request): Response | React4xpResponse {
+  const page: Content = getContent()
+  const part: EndedStatisticsPartConfig = getComponent().config
+  const endedStatistics: Array<CmsStatistic|XpStatistic> = part.relatedStatisticsOptions ? forceArray(part.relatedStatisticsOptions) : []
 
   const phrases = getPhrases(page)
 
-  return renderEndedStatistics(parseContent(endedStatistics ? forceArray(endedStatistics) : []), phrases)
+  return renderEndedStatistics(parseContent(endedStatistics), phrases)
 }
 
-const renderEndedStatistics = (endedStatisticsContent, phrases) => {
+function renderEndedStatistics(endedStatisticsContent: Array<EndedStatistic | undefined>, phrases: Phrases): React4xpResponse {
   if (endedStatisticsContent && endedStatisticsContent.length) {
     const endedStatisticsXP = new React4xp('EndedStatistics')
       .setProps({
@@ -73,40 +82,50 @@ const renderEndedStatistics = (endedStatisticsContent, phrases) => {
     }
   }
   return {
-    body: null,
-    pageContributions: null
+    body: '',
+    pageContributions: ''
   }
 }
 
-const parseContent = (endedStatistics) => {
-  if (endedStatistics.length > 0) {
+function parseContent(endedStatistics: Array<CmsStatistic|XpStatistic>): Array<EndedStatistic | undefined> {
+  if (endedStatistics && endedStatistics.length) {
     return endedStatistics.map((statistics) => {
-      if (statistics._selected === 'xp') {
-        const statisticsContentId = statistics.xp.contentId
-        const endedStatisticsContent = get({
+      if (statistics._selected === 'xp' && statistics.xp.contentId) {
+        const statisticsContentId: string = statistics.xp.contentId
+        const endedStatisticsContent: Content<Statistics> | null = statisticsContentId ? get({
           key: statisticsContentId
-        })
+        }) : null
 
         let preamble
         if (hasPath(['x', 'com-enonic-app-metafields', 'meta-data', 'seoDescription'], endedStatisticsContent)) {
-          preamble = endedStatisticsContent.x['com-enonic-app-metafields']['meta-data'].seoDescription
+          // TS gets confused here, the field totally exists. Promise.
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          preamble = endedStatisticsContent?.x['com-enonic-app-metafields']['meta-data'].seoDescription
         }
 
         return {
-          title: endedStatisticsContent.displayName,
+          title: endedStatisticsContent ? endedStatisticsContent.displayName : '',
           preamble: preamble ? preamble : '',
           href: pageUrl({
             id: statisticsContentId
           })
         }
       }
-
-      return {
-        title: statistics.cms.title,
-        preamble: statistics.cms.profiledText,
-        href: statistics.cms.url
-      }
+      else if (statistics._selected === 'cms') {
+        return {
+          title: statistics.cms.title,
+          preamble: statistics.cms.profiledText,
+          href: statistics.cms.url
+        }
+      } else return undefined
     }).filter((statistics) => !!statistics)
-  }
-  return []
+  }else return []
+}
+
+
+interface EndedStatistic {
+  title: string;
+  preamble: string;
+  href: string;
 }
