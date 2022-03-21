@@ -16,7 +16,7 @@ export interface Dataset {
     readonly id: Array<string>;
     readonly class: 'collection' | 'bundle' | 'dataset' | 'dimension';
     Dimension: (dimid: string | number | undefined ) => Array<Dimension> | Dimension | null;
-    Data: (dataid: Array<number|string>, status: boolean) => Data | null;
+    Data: (dataid: Array<number|string> | object, status?: boolean) => Data | null;
 }
 
 export interface Data {
@@ -25,7 +25,7 @@ export interface Data {
 }
 
 export interface Dimension {
-    id?: string | undefined;
+    id?: string | Array<string> | undefined;
     code: string;
     selection: SelectionFilter;
     Category: (catid?: string | number ) => Array<Category> | Category | null;

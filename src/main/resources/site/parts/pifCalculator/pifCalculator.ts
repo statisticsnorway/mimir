@@ -129,8 +129,8 @@ function getPifCalculatorComponent(page: Content): React4xpResponse {
 
 function lastPeriod(pifData: Dataset | null): CalculatorPeriod | undefined {
   // eslint-disable-next-line new-cap
-  const pifDataDimension: Dimension | null = pifData && pifData.Dimension('Tid') as Dimension
-  const dataTime: string | null | undefined = pifDataDimension && pifDataDimension.id
+  const pifDataDimension: Dimension | null = pifData?.Dimension('Tid') as Dimension
+  const dataTime: string | undefined = pifDataDimension?.id as string
 
   if (dataTime) {
     const lastTimeItem: string = dataTime[dataTime.length - 1]
