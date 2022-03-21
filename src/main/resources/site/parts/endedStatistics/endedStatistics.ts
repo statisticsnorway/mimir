@@ -1,6 +1,5 @@
 import {Request, Response} from "enonic-types/controller";
-import {React4xpObject, React4xpResponse} from "../../../lib/types/react4xp";
-import {Component} from "enonic-types/portal";
+import {React4xpResponse} from "../../../lib/types/react4xp";
 import {EndedStatisticsPartConfig} from "./endedStatistics-part-config";
 import {Content} from "enonic-types/content";
 import {Phrases} from "../../../lib/types/language";
