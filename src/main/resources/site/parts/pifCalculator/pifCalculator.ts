@@ -1,7 +1,8 @@
 import { Content } from 'enonic-types/content'
 import { Request, Response } from 'enonic-types/controller'
 import { ResourceKey } from 'enonic-types/thymeleaf'
-import { CalculatorDropdownItem, CalculatorDropdownItems, CalculatorPeriod } from '../../../lib/types/calculator'
+import { CalculatorPeriod } from '../../../lib/types/calculator'
+import { DropdownItem as MonthDropdownItem, DropdownItems as MonthDropdownItems } from '../../../lib/types/components'
 import { Dataset, Dimension } from '../../../lib/types/jsonstat-toolkit'
 import { Language, Phrases } from '../../../lib/types/language'
 import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
@@ -70,7 +71,7 @@ function getPifCalculatorComponent(page: Content): React4xpResponse {
   const partConfig: PifCalculatorPartConfig = getComponent().config
   const language: Language = getLanguage(page)
   const phrases: Phrases = language.phrases as Phrases
-  const months: CalculatorDropdownItems = allMonths(phrases)
+  const months: MonthDropdownItems = allMonths(phrases)
   const config: Content<CalculatorConfig> | undefined = getCalculatorConfig()
   const pifData: Dataset | null = getPifDataset(config)
   const lastUpdated: CalculatorPeriod | undefined = lastPeriod(pifData) as CalculatorPeriod
@@ -161,15 +162,15 @@ function nextPeriod(month: string, year: string): CalculatorPeriod {
   }
 }
 
-function monthLabel(months: CalculatorDropdownItems, language: string | undefined, month: number | string): string {
-  const monthLabel: CalculatorDropdownItem | undefined = months.find((m) => parseInt(m.id) === parseInt(month as string))
+function monthLabel(months: MonthDropdownItems, language: string | undefined, month: number | string): string {
+  const monthLabel: MonthDropdownItem | undefined = months.find((m) => parseInt(m.id) === parseInt(month as string))
   if (monthLabel) {
     return language && language === 'en' ? monthLabel.title : monthLabel.title.toLowerCase()
   }
   return ''
 }
 
-function allMonths(phrases: Phrases): CalculatorDropdownItems {
+function allMonths(phrases: Phrases): MonthDropdownItems {
   return [
     {
       id: '',
@@ -226,7 +227,7 @@ function allMonths(phrases: Phrases): CalculatorDropdownItems {
   ]
 }
 
-function productGroups(phrases: Phrases): CalculatorDropdownItems {
+function productGroups(phrases: Phrases): MonthDropdownItems {
   return [
     {
       id: 'SITCT',

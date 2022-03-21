@@ -1,6 +1,7 @@
 import { PageContributions, Request, Response } from 'enonic-types/controller'
 import { ResourceKey } from 'enonic-types/thymeleaf'
 import { getMainSubjects, SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
+import { DropdownItems } from '../../../lib/types/components'
 import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
 
 const {
@@ -52,7 +53,7 @@ function renderPart(req: Request): React4xpResponse | Response {
       title: subject.title
     }
   })
-  const mainSubjectDropdownItems: Array<{id: string; title: string}> = [{
+  const mainSubjectDropdownItems: DropdownItems = [{
     id: '',
     title: 'Velg emne'
   }, ...mainSubjectsList]
@@ -67,7 +68,7 @@ function renderPart(req: Request): React4xpResponse | Response {
       })
     }
   })
-  const contentTypesDropdownItems: Array<{id: string; title: string}> = [{
+  const contentTypesDropdownItems: DropdownItems = [{
     id: '',
     title: 'Velg innholdstype'
   }, ...contentTypesList]
