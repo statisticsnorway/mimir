@@ -1,3 +1,5 @@
+import {Request} from "enonic-types/controller";
+
 const {
   data: {
     forceArray
@@ -27,7 +29,7 @@ const {
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view = resolve('./entryLinks.html')
 
-exports.get = (req) => {
+exports.get = (req: Request) => {
   try {
     return renderPart(req)
   } catch (e) {
