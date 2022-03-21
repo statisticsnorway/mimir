@@ -1,4 +1,9 @@
-import {Request} from "enonic-types/controller";
+import {Request, Response} from "enonic-types/controller";
+import {React4xpResponse} from "../../../lib/types/react4xp";
+import {Component} from "enonic-types/portal";
+import {EntryLinksPartConfig} from "./entryLinks-part-config";
+import {Content, Image} from "enonic-types/content";
+import {Phrases} from "../../../lib/types/language";
 
 const {
   data: {
@@ -37,14 +42,14 @@ exports.get = (req: Request) => {
   }
 }
 
-exports.preview = (req) => renderPart(req)
+exports.preview = (req: Request) => renderPart(req)
 
-const renderPart = (req) => {
-  const page = getContent()
-  const part = getComponent()
-  const phrases = getPhrases(page)
+function renderPart(req: Request): Response | React4xpResponse {
+  const page: Content = getContent()
+  const part: Component<EntryLinksPartConfig> = getComponent()
+  const phrases: Phrases = getPhrases(page)
 
-  const entryLinksContent = part.config.entryLinks ? forceArray(part.config.entryLinks) : []
+  const entryLinksContent: Array<LinkEntry> = part.config.entryLinks ? forceArray(part.config.entryLinks) : []
   const headerTitle = phrases.entryLinksTitle
   if (entryLinksContent.length === 0) {
     if (req.mode === 'edit') {
@@ -56,11 +61,11 @@ const renderPart = (req) => {
     }
   }
 
-  const isNotInEditMode = req.mode !== 'edit'
+  const isNotInEditMode: boolean = req.mode !== 'edit'
   return renderEntryLinks(headerTitle, entryLinksContent, isNotInEditMode)
 }
 
-const renderEntryLinks = (headerTitle, entryLinksContent, isNotInEditMode) => {
+function renderEntryLinks(headerTitle: string, entryLinksContent: Array<LinkEntry>, isNotInEditMode: boolean): React4xpResponse {
   if (entryLinksContent.length > 0) {
     const entryLinksComponent = new React4xp('EntryLinks')
       .setProps({
@@ -86,24 +91,24 @@ const renderEntryLinks = (headerTitle, entryLinksContent, isNotInEditMode) => {
   }
 
   return {
-    body: null,
-    pageContributions: null
+    body: '',
+    pageContributions: ''
   }
 }
 
-const parseEntryLinks = (entryLinksContent) => {
+const parseEntryLinks = (entryLinksContent: Array<LinkEntry>) => {
   return entryLinksContent.map(({
     title, href, icon, mobileIcon
   }) => {
-    const iconData = get({
+    const iconData: Content<Image> | null = get({
       key: icon
     })
 
-    let altText
-    if (iconData.data.altText) {
+    let altText: string
+    if (iconData && iconData.data.altText) {
       altText = iconData.data.altText
     }
-    if (iconData.data.caption) {
+    if (iconData && iconData.data.caption) {
       altText = iconData.data.caption
     }
     altText = ''
@@ -119,4 +124,11 @@ const parseEntryLinks = (entryLinksContent) => {
       altText
     }
   })
+}
+
+interface LinkEntry {
+    title: string;
+    href: string;
+    icon: string;
+    mobileIcon: string;
 }
