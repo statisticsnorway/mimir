@@ -4,6 +4,7 @@ import { ResourceKey, ThymeleafLibrary } from 'enonic-types/thymeleaf'
 import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
 import { ActiveStatisticsPartConfig } from './activeStatistics-part-config'
 import { Statistics } from '../../content-types/statistics/statistics'
+import { CmsStatistic, XpStatistic } from "../../../lib/types/relatedStatistics";
 
 const {
   data: {
@@ -139,22 +140,4 @@ interface ActiveStatistic {
   href: string;
 }
 
-interface SingleStatistic {
-  _selected: string;
-}
 
-interface CmsStatistic extends SingleStatistic {
-  _selected: 'cms';
-  cms: {
-    title: string;
-    profiledText: string;
-    url: string;
-  }
-}
-
-interface XpStatistic extends SingleStatistic {
-  _selected: 'xp';
-  xp: {
-    contentId?: string;
-  };
-}
