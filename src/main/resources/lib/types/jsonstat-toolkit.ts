@@ -25,6 +25,7 @@ export interface Data {
 }
 
 export interface Dimension {
+    id?: string | undefined;
     code: string;
     selection: SelectionFilter;
     Category: (catid?: string | number ) => Array<Category> | Category | null;

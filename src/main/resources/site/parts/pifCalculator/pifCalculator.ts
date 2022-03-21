@@ -1,3 +1,13 @@
+import { Content } from 'enonic-types/content'
+import { Request, Response } from 'enonic-types/controller'
+import { ResourceKey } from 'enonic-types/thymeleaf'
+import { CalculatorDropdownItem, CalculatorDropdownItems, CalculatorPeriod } from '../../../lib/types/calculator'
+import { Dataset, Dimension } from '../../../lib/types/jsonstat-toolkit'
+import { Language, Phrases } from '../../../lib/types/language'
+import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
+import { CalculatorConfig } from '../../content-types/calculatorConfig/calculatorConfig'
+import { PifCalculatorPartConfig } from './pifCalculator-part-config'
+
 const {
   getComponent,
   getContent,
@@ -10,7 +20,7 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getLanguage
 } = __non_webpack_require__( '/lib/ssb/utils/language')
@@ -21,9 +31,9 @@ const {
   fromPartCache
 } = __non_webpack_require__('/lib/ssb/cache/partCache')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
-const view = resolve('./pifCalculator.html')
+const view: ResourceKey = resolve('./pifCalculator.html')
 
-exports.get = function(req) {
+exports.get = function(req: Request): Response | React4xpResponse {
   try {
     return renderPart(req)
   } catch (e) {
@@ -31,17 +41,17 @@ exports.get = function(req) {
   }
 }
 
-exports.preview = function(req, id) {
+exports.preview = function(req: Request): Response | React4xpResponse {
   try {
-    return renderPart(req, id)
+    return renderPart(req)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-function renderPart(req) {
-  const page = getContent()
-  let pifCalculator
+function renderPart(req: Request): Response | React4xpResponse {
+  const page: Content = getContent()
+  let pifCalculator: React4xpResponse | undefined
   if (req.mode === 'edit') {
     pifCalculator = getPifCalculatorComponent(page)
   } else {
@@ -50,46 +60,45 @@ function renderPart(req) {
     })
   }
 
-  const pageContributions = pifCalculator.component.renderPageContributions({})
   return {
     body: pifCalculator.body,
-    pageContributions
+    pageContributions: pifCalculator.pageContributions
   }
 }
 
-function getPifCalculatorComponent(page) {
-  const part = getComponent()
-  const language = getLanguage(page)
-  const phrases = language.phrases
-  const months = allMonths(phrases)
-  const config = getCalculatorConfig()
-  const pifData = getPifDataset(config)
-  const lastUpdated = lastPeriod(pifData)
-  const nextUpdate = nextPeriod(lastUpdated.month, lastUpdated.year)
-  const nextReleaseMonth = nextUpdate.month === 12 ? 1 : nextUpdate.month + 1
-  const nextPublishText = i18nLib.localize({
+function getPifCalculatorComponent(page: Content): React4xpResponse {
+  const partConfig: PifCalculatorPartConfig = getComponent().config
+  const language: Language = getLanguage(page)
+  const phrases: Phrases = language.phrases as Phrases
+  const months: CalculatorDropdownItems = allMonths(phrases)
+  const config: Content<CalculatorConfig> | undefined = getCalculatorConfig()
+  const pifData: Dataset | null = getPifDataset(config)
+  const lastUpdated: CalculatorPeriod | undefined = lastPeriod(pifData) as CalculatorPeriod
+  const nextUpdate: CalculatorPeriod = nextPeriod(lastUpdated.month as string, lastUpdated.year as string)
+  const nextReleaseMonth: number = (nextUpdate.month as number) === 12 ? 1 : (nextUpdate.month as number) + 1
+  const nextPublishText: string = i18nLib.localize({
     key: 'calculatorNextPublishText',
     locale: language.code,
     values: [
       monthLabel(months, language.code, lastUpdated.month),
-      lastUpdated.year,
+      lastUpdated.year as string,
       monthLabel(months, language.code, nextUpdate.month),
       monthLabel(months, language.code, nextReleaseMonth)
     ]
   })
-  const lastNumberText = i18nLib.localize({
+  const lastNumberText: string = i18nLib.localize({
     key: 'calculatorLastNumber',
     locale: language.code,
     values: [
       monthLabel(months, language.code, lastUpdated.month),
-      lastUpdated.year
+      lastUpdated.year as string
     ]
   })
-  const calculatorArticleUrl = part.config.pifCalculatorArticle && pageUrl({
-    id: part.config.pifCalculatorArticle
-  })
+  const calculatorArticleUrl: string | undefined = partConfig.pifCalculatorArticle ? pageUrl({
+    id: partConfig.pifCalculatorArticle
+  }) : undefined
 
-  const pifCalculator = new React4xp('PifCalculator')
+  const pifCalculator: React4xpObject = new React4xp('PifCalculator')
     .setProps({
       pifServiceUrl: serviceUrl({
         service: 'pif'
@@ -106,36 +115,40 @@ function getPifCalculatorComponent(page) {
     .setId('pifCalculatorId')
     .uniqueId()
 
-  const body = render(view, {
+  const body: string = render(view, {
     pifCalculatorId: pifCalculator.react4xpId
   })
   return {
-    component: pifCalculator,
     body: pifCalculator.renderBody({
       body
-    })
+    }),
+    pageContributions: pifCalculator.renderPageContributions({})
   }
 }
 
-const lastPeriod = (pifData) => {
+function lastPeriod(pifData: Dataset | null): CalculatorPeriod | undefined {
   // eslint-disable-next-line new-cap
-  const dataTime = pifData && pifData.Dimension('Tid').id
+  const pifDataDimension: Dimension | null = pifData && pifData.Dimension('Tid') as Dimension
+  const dataTime: string | null | undefined = pifDataDimension && pifDataDimension.id
 
-  const lastTimeItem = dataTime[dataTime.length - 1]
-  const splitTime = lastTimeItem.split('M')
+  if (dataTime) {
+    const lastTimeItem: string = dataTime[dataTime.length - 1]
+    const splitTime: Array<string> = lastTimeItem.split('M')
 
-  const lastYear = splitTime[0]
-  const lastMonth = splitTime[1]
+    const lastYear: string = splitTime[0]
+    const lastMonth: string = splitTime[1]
 
-  return {
-    month: lastMonth,
-    year: lastYear
+    return {
+      month: lastMonth,
+      year: lastYear
+    }
   }
+  return
 }
 
-const nextPeriod = (month, year) => {
-  let nextPeriodMonth = parseInt(month) + 1
-  let nextPeriodYear = parseInt(year)
+function nextPeriod(month: string, year: string): CalculatorPeriod {
+  let nextPeriodMonth: number = parseInt(month) + 1
+  let nextPeriodYear: number = parseInt(year)
 
   if (Number(month) === 12) {
     nextPeriodMonth = 1
@@ -148,15 +161,15 @@ const nextPeriod = (month, year) => {
   }
 }
 
-const monthLabel = (months, language, month) => {
-  const monthLabel = months.find((m) => parseInt(m.id) === parseInt(month))
+function monthLabel(months: CalculatorDropdownItems, language: string | undefined, month: number | string): string {
+  const monthLabel: CalculatorDropdownItem | undefined = months.find((m) => parseInt(m.id) === parseInt(month as string))
   if (monthLabel) {
-    return language === 'en' ? monthLabel.title : monthLabel.title.toLowerCase()
+    return language && language === 'en' ? monthLabel.title : monthLabel.title.toLowerCase()
   }
   return ''
 }
 
-const allMonths = (phrases) => {
+function allMonths(phrases: Phrases): CalculatorDropdownItems {
   return [
     {
       id: '',
@@ -213,7 +226,7 @@ const allMonths = (phrases) => {
   ]
 }
 
-const productGroups = (phrases) => {
+function productGroups(phrases: Phrases): CalculatorDropdownItems {
   return [
     {
       id: 'SITCT',
