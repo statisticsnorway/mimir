@@ -22,7 +22,18 @@ export interface React4xpObject {
 
 export interface React4xpResponse {
     body: string;
-    pageContributions: string;
+    pageContributions: string | React4xpPageContributions;
+    clientRender?: boolean;
+}
+
+interface React4xpPageContributions {
+
+    headBegin?: string | Array<string>;
+    headEnd?: string | Array<string>;
+    bodyBegin?: string | Array<string>;
+    bodyEnd?: string | Array<string>;
+
+
 }
 
 interface React4xpRenderBodyOptions {

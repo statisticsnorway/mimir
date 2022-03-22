@@ -106,7 +106,7 @@ function renderPart(req: Request):React4xpResponse {
     body: preambleBody
   })
 
-  const finalPagePageContributions: string = listOfArticlesObj.renderPageContributions()
+  const finalPagePageContributions: string = listOfArticlesObj.renderPageContributions() as string
 
   return {
     body: finalBody,

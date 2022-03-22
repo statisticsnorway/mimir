@@ -3,7 +3,7 @@ import { PageContributions, Request, Response } from 'enonic-types/controller'
 import { ResourceKey } from 'enonic-types/thymeleaf'
 import { DatasetRepoNode } from '../../../lib/ssb/repo/dataset'
 import { JSONstat } from '../../../lib/types/jsonstat-toolkit'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
+import {React4xp, React4xpObject, React4xpPageContributionOptions} from '../../../lib/types/react4xp'
 import { TbmlDataUniform } from '../../../lib/types/xmlParser'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { GA_TRACKING_ID } from '../../pages/default/default'
@@ -116,7 +116,7 @@ function getTablesAndFiguresComponent(page: Content<Statistics>, req: Request): 
     })
   })
 
-  const accordionPageContributions: string = accordionComponent.renderPageContributions()
+  const accordionPageContributions: string = accordionComponent.renderPageContributions() as string
   const pageContributions: PageContributions = getFinalPageContributions(accordionPageContributions as PageContributions, attachmentTableAndFigureView)
 
   return {

@@ -22,7 +22,7 @@ try {
   e.toString()
 }
 
-exports.getLanguage = function (page: Content): Language {
+export function getLanguage(page: Content): Language {
   const site: Site<SiteConfig> = getSite()
   const siteConfig: SiteConfig = getSiteConfig()
   const currentLanguageConfig: Language = siteConfig.language.filter((language) => language.code === page.language)[0]
@@ -78,7 +78,7 @@ exports.getLanguage = function (page: Content): Language {
   return result
 }
 
-exports.getPhrases = (page: Content): Phrases | undefined => {
+export function getPhrases(page: Content): Phrases | undefined  {
   if (page.language) {
     if (page.language === 'en') {
       return english
@@ -117,7 +117,7 @@ function parseTimeInterval(time: string): string {
     switch (interval[2]) {
       case 'H':
         parsedTime = `${i18n.localize({
-          key: 'interval.' + interval[2]
+        key: 'interval.' + interval[2]
         })} ${interval[1]} `
         break
       case 'K':
