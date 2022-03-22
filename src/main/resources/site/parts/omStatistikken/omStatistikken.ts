@@ -22,67 +22,69 @@ const {
 const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
-const util = __non_webpack_require__('/lib/util')
 const {
   getReleaseDatesByVariants
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   fromPartCache
 } = __non_webpack_require__('/lib/ssb/cache/partCache')
+const {
+  data: {
+    forceArray
+  }
+} = __non_webpack_require__('/lib/util')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp') as React4xp
+
 
 exports.get = function(req:Request):Response | React4xpResponse {
   try {
-    return renderPart(req)
+    const statisticPage: Content<Statistics> = getContent()
+    return renderPart(req, statisticPage.data.aboutTheStatistics)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-exports.preview = (req:Request):Response | React4xpResponse => renderPart(req)
+exports.preview = (req: Request, id: string | undefined):Response | React4xpResponse => renderPart(req, id)
 
-function renderPart(req:Request) {
+function renderPart(req:Request, aboutTheStatisticsId: string | undefined):Response | React4xpResponse {
   const page: Content<any> = getContent()
-  if (page.type === `${app.name}:statistics`) {
-    return renderPartStatistic(req, page)
+  if (!aboutTheStatisticsId) {
+    if (req.mode === 'edit' && page.type !== `${app.name}:statistics`) {
+      return React4xp.render('site/parts/omStatistikken/omStatistikken', {
+        accordions: [],
+        label: 'Om statistikken',
+        ingress: ''
+      }, req, {
+        body: `<section id="om-statistikken" class="xp-part part-om-statistikken container-fluid"></section>`,
+        id: 'om-statistikken'
+      })
+    } else {
+      return {
+        body: null
+      }
+    }
   } else {
-    const content: Content<OmStatistikken> = getContent()
-    return getOmStatistikken(req, content)
+    if (req.mode === 'edit') {
+      return getOmStatistikken(req, page, aboutTheStatisticsId)
+    } else {
+      return fromPartCache(req, `${page._id}-omStatistikken`, () => {
+        return getOmStatistikken(req, page, aboutTheStatisticsId)
+      })
+    }
   }
 }
 
-function renderPartStatistic(req:Request, page: Content<any> ) {
-  if (req.mode === 'edit') {
-    return getOmStatistikken(req, page)
-  } else {
-    return fromPartCache(req, `${page._id}-omStatistikken`, () => {
-      return getOmStatistikken(req, page)
-    })
-  }
-}
-
-function getOmStatistikken(req:Request, page: Content<any> ) {
+function getOmStatistikken(req:Request, page: Content<any>, aboutTheStatisticsId: string | undefined ): Response | React4xpResponse {
   const phrases: Phrases = getPhrases(page)
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
-  const aboutStatisticLabel: string = phrases.aboutTheStatistics
-  let aboutTheStatisticsId: string | undefined
   let nextRelease: string = phrases.notYetDetermined
-  let aboutTheStatisticsContent: Content<OmStatistikken> | null
-  let statisticId: string | undefined = undefined
+  const statisticPage: Content<Statistics> = getContent()
+  const statisticId: string | undefined = statisticPage.data.statistic
 
-  if (page.type === `${app.name}:omStatistikken`) {
-    aboutTheStatisticsContent = getContent()
-    aboutTheStatisticsId = aboutTheStatisticsContent._id
-  } else {
-    const statisticPage: Content<Statistics> = getContent()
-    statisticId = statisticPage.data.statistic
-    aboutTheStatisticsId = statisticPage.data.aboutTheStatistics
-    aboutTheStatisticsContent = aboutTheStatisticsId ? get({
-      key: aboutTheStatisticsId
-    }) : null
-  }
-
-  const aboutTheStatisticsData: OmStatistikken | undefined = aboutTheStatisticsContent?.data
+  const aboutTheStatisticsContent: Content<OmStatistikken> | null = aboutTheStatisticsId ? get({
+    key: aboutTheStatisticsId
+  }) : null
 
   const statistic: StatisticInListing | undefined = statisticId ? getStatisticByIdFromRepo(statisticId) : undefined
 
@@ -95,39 +97,15 @@ function getOmStatistikken(req:Request, page: Content<any> ) {
     nextRelease = '<i>Kan kun vises på statistikksiden, ikke i forhåndsvisning av om-statistikken</i>'
   }
 
-  if (!aboutTheStatisticsId) {
-    if (req.mode === 'edit' && page.type !== `${app.name}:statistics`) {
-      return React4xp.render('site/parts/omStatistikken/omStatistikken', {
-        accordions: [],
-        label: aboutStatisticLabel,
-        ingress: ''
-      }, req, {
-        body: `<section id="om-statistikken" class="xp-part part-om-statistikken container-fluid"></section>`,
-        id: 'om-statistikken'
-      })
-    } else {
-      return {
-        body: null
-      }
-    }
-  }
+  const aboutTheStatisticsData: OmStatistikken | undefined = aboutTheStatisticsContent?.data
 
-  const accordions: Array<Accordion> = aboutTheStatisticsData ? getAccordionData(aboutTheStatisticsData, phrases, nextRelease) : []
-
-  if (accordions.length === 0) {
-    accordions.push({
-      id: '',
-      body: 'Feil i lasting av innhold, innhold mangler eller kunne ikke hentes.',
-      open: 'Sett inn innhold!',
-      items: []
-    })
-  }
-
-  return React4xp.render('site/parts/omStatistikken/omStatistikken', {
-    accordions,
-    label: aboutStatisticLabel,
+  const props: AboutTheStatisticProps = {
+    accordions: aboutTheStatisticsData ? getAccordionData(aboutTheStatisticsData, phrases, nextRelease) : [],
+    label: phrases.aboutTheStatistics,
     ingress: aboutTheStatisticsData && aboutTheStatisticsData.ingress ? aboutTheStatisticsData.ingress : ''
-  }, req, {
+  }
+
+  return React4xp.render('site/parts/omStatistikken/omStatistikken', props, req, {
     // for now, this needs to be a section, so we get correct spacing between parts
     body: `<section id="om-statistikken" class="xp-part part-om-statistikken container-fluid"></section>`,
     id: 'om-statistikken'
@@ -135,7 +113,7 @@ function getOmStatistikken(req:Request, page: Content<any> ) {
 }
 
 function getNextRelease(statistic: StatisticInListing, nextRelease: string, language: string) : string {
-  const variants: Array<VariantInListing> = statistic.variants ? util.data.forceArray(statistic.variants) : []
+  const variants: Array<VariantInListing> = statistic.variants ? forceArray(statistic.variants) : []
   const releaseDates:ReleaseDatesVariant = getReleaseDatesByVariants(variants)
   const nextReleaseDate: string = releaseDates.nextRelease[0]
   const nextReleaseStatistic: string | undefined = nextReleaseDate && nextReleaseDate !== '' ? formatDate(nextReleaseDate, 'PPP', language) : undefined
@@ -180,9 +158,6 @@ function getAccordionData(content: OmStatistikken, phrases: Phrases, nextUpdate:
   accuracyAndReliability && isNotEmpty(accuracyAndReliability) ? accordions.push(
     getAccordion('om-statistikken-feilkilder', phrases.accuracyAndReliability,
       accuracyAndReliability, items.accuracyAndReliability, phrases)) : undefined
-  aboutSeasonalAdjustment && isNotEmpty(aboutSeasonalAdjustment) ? accordions.push(
-    getAccordion('om-sesongjustering', phrases.aboutSeasonalAdjustment, aboutSeasonalAdjustment,
-      items.aboutSeasonalAdjustment, phrases)) : undefined
 
   const relevantDocumentationAccordion: Accordion = {
     id: 'om-statistikken-relevant-dokumentasjon',
@@ -193,9 +168,13 @@ function getAccordionData(content: OmStatistikken, phrases: Phrases, nextUpdate:
     items: []
   }
 
-  if (relevantDocumentationAccordion) {
+  if (relevantDocumentation) {
     accordions.push(relevantDocumentationAccordion)
   }
+
+  aboutSeasonalAdjustment && isNotEmpty(aboutSeasonalAdjustment) ? accordions.push(
+    getAccordion('om-sesongjustering', phrases.aboutSeasonalAdjustment, aboutSeasonalAdjustment,
+      items.aboutSeasonalAdjustment, phrases)) : undefined
 
   return accordions
 }
@@ -256,5 +235,11 @@ interface Items {
 
 interface Category {
   [key: string]: string;
+}
+
+interface AboutTheStatisticProps {
+  accordions: Array<Accordion>,
+  label: string,
+  ingress: string
 }
 
