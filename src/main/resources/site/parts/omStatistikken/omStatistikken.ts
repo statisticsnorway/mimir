@@ -112,7 +112,7 @@ function getOmStatistikken(req:Request, page: Content<any> ) {
     }
   }
 
-  const accordions: Array<AboutStatisticAccordion> = aboutTheStatisticsData ? getAccordionData(aboutTheStatisticsData, phrases, nextRelease) : []
+  const accordions: Array<Accordion> = aboutTheStatisticsData ? getAccordionData(aboutTheStatisticsData, phrases, nextRelease) : []
 
   if (accordions.length === 0) {
     accordions.push({
@@ -134,8 +134,17 @@ function getOmStatistikken(req:Request, page: Content<any> ) {
   })
 }
 
-function getAccordionData(content: OmStatistikken, phrases: Phrases, nextUpdate: string) : Array<AboutStatisticAccordion> {
-  const accordions: Array<AboutStatisticAccordion> = []
+function getNextRelease(statistic: StatisticInListing, nextRelease: string, language: string) : string {
+  const variants: Array<VariantInListing> = statistic.variants ? util.data.forceArray(statistic.variants) : []
+  const releaseDates:ReleaseDatesVariant = getReleaseDatesByVariants(variants)
+  const nextReleaseDate: string = releaseDates.nextRelease[0]
+  const nextReleaseStatistic: string | undefined = nextReleaseDate && nextReleaseDate !== '' ? formatDate(nextReleaseDate, 'PPP', language) : undefined
+
+  return nextReleaseStatistic ? nextReleaseStatistic : nextRelease
+}
+
+function getAccordionData(content: OmStatistikken, phrases: Phrases, nextUpdate: string) : Array<Accordion> {
+  const accordions: Array<Accordion> = []
 
   const items: Items = {
     definition: ['conceptsAndVariables', 'standardRatings'],
@@ -147,13 +156,13 @@ function getAccordionData(content: OmStatistikken, phrases: Phrases, nextUpdate:
       'auditProcedures', 'qualityOfSeasonalAdjustment', 'specialCases', 'postingProcedures', 'relevantDocumentation']
   }
 
-  const definition: Variable | undefined = content.definition
-  const administrativeInformation: Variable | undefined = content.administrativeInformation
-  const background: Variable | undefined = content.background
-  const production: Variable | undefined = content.production
-  const accuracyAndReliability: Variable | undefined = content.accuracyAndReliability
+  const definition: Category | undefined = content.definition
+  const administrativeInformation: Category | undefined = content.administrativeInformation
+  const background: Category | undefined = content.background
+  const production: Category | undefined = content.production
+  const accuracyAndReliability: Category | undefined = content.accuracyAndReliability
   const relevantDocumentation: string | undefined = content.relevantDocumentation
-  const aboutSeasonalAdjustment: Variable | undefined = content.aboutSeasonalAdjustment
+  const aboutSeasonalAdjustment: Category | undefined = content.aboutSeasonalAdjustment
 
   if (administrativeInformation) {
     administrativeInformation.nextUpdate = nextUpdate
@@ -175,7 +184,7 @@ function getAccordionData(content: OmStatistikken, phrases: Phrases, nextUpdate:
     getAccordion('om-sesongjustering', phrases.aboutSeasonalAdjustment, aboutSeasonalAdjustment,
       items.aboutSeasonalAdjustment, phrases)) : undefined
 
-  const relevantDocumentationAccordion: AboutStatisticAccordion = {
+  const relevantDocumentationAccordion: Accordion = {
     id: 'om-statistikken-relevant-dokumentasjon',
     body: relevantDocumentation ? processHtml({
       value: relevantDocumentation.replace(/&nbsp;/g, ' ')
@@ -188,20 +197,10 @@ function getAccordionData(content: OmStatistikken, phrases: Phrases, nextUpdate:
     accordions.push(relevantDocumentationAccordion)
   }
 
-
   return accordions
 }
 
-function getNextRelease(statistic: StatisticInListing, nextRelease: string, language: string) : string {
-  const variants: Array<VariantInListing> = statistic.variants ? util.data.forceArray(statistic.variants) : []
-  const releaseDates:ReleaseDatesVariant = getReleaseDatesByVariants(variants)
-  const nextReleaseDate: string = releaseDates.nextRelease[0]
-  const nextReleaseStatistic: string | undefined = nextReleaseDate && nextReleaseDate !== '' ? formatDate(nextReleaseDate, 'PPP', language) : undefined
-
-  return nextReleaseStatistic ? nextReleaseStatistic : nextRelease
-}
-
-function getAccordion(id: string, categoryText: string, category: Variable, items: Array<string>, phrases: Phrases): AboutStatisticAccordion {
+function getAccordion(id: string, categoryText: string, category: Category, items: Array<string>, phrases: Phrases): Accordion {
   return {
     id: id,
     body: '',
@@ -210,12 +209,12 @@ function getAccordion(id: string, categoryText: string, category: Variable, item
   }
 }
 
-function getItems(category: Variable, variables: Array<string>, phrases: Phrases): Array<AboutStatisticItem> {
-  const items: Array<AboutStatisticItem> = []
+function getItems(category: Category, variables: Array<string>, phrases: Phrases): Array<AccordionItem> {
+  const items: Array<AccordionItem> = []
 
   if (category) {
     variables.forEach((variable) => {
-      const item:AboutStatisticItem = {
+      const item:AccordionItem = {
         title: phrases[variable],
         body: category[variable] ? processHtml({
           value: category[variable].replace(/&nbsp;/g, ' ')
@@ -234,14 +233,14 @@ function isNotEmpty(obj: object | undefined): boolean {
   return false
 }
 
-interface AboutStatisticAccordion {
+interface Accordion {
   id: string,
   body: string | undefined,
   open: string,
-  items: Array<AboutStatisticItem>
+  items: Array<AccordionItem>
 }
 
-interface AboutStatisticItem {
+interface AccordionItem {
   title: string,
   body: string
 }
@@ -255,11 +254,7 @@ interface Items {
   aboutSeasonalAdjustment: Array<string>,
 }
 
-interface Variable {
-  [key: string]: string;
-}
-
-interface AboutStatisticBlock {
+interface Category {
   [key: string]: string;
 }
 
