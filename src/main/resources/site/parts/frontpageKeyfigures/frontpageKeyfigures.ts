@@ -1,3 +1,12 @@
+import {ResourceKey} from "enonic-types/thymeleaf";
+import {Request, Response} from "enonic-types/controller";
+import {React4xpObject, React4xpResponse} from "../../../lib/types/react4xp";
+import {Component} from "enonic-types/portal";
+import {FrontpageKeyfiguresPartConfig} from "./frontpageKeyfigures-part-config";
+import {Content} from "enonic-types/content";
+import {KeyFigure} from "../../content-types/keyFigure/keyFigure";
+import {KeyFigureView} from "../../../lib/ssb/parts/keyFigure";
+
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getComponent
@@ -21,9 +30,9 @@ const {
   DATASET_BRANCH
 } = __non_webpack_require__('/lib/ssb/repo/dataset')
 
-const view = resolve('./frontpageKeyfigures.html')
+const view: ResourceKey = resolve('./frontpageKeyfigures.html')
 
-exports.get = function(req) {
+exports.get = function(req: Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -31,21 +40,25 @@ exports.get = function(req) {
   }
 }
 
-exports.preview = (req) => renderPart(req)
+exports.preview = (req: Request) => renderPart(req)
 
-function renderPart(req) {
-  const part = getComponent()
-  const keyFiguresPart = part.config.keyfiguresFrontpage ? data.forceArray(part.config.keyfiguresFrontpage) : []
+const isKeyfigureData = (data: FrontPageKeyFigureData | undefined): data is FrontPageKeyFigureData => {
+  return !!data
+} // user-defined type guards <3
 
-  const frontpageKeyfigures = keyFiguresPart.length > 0 ? keyFiguresPart.map((keyFigure) => {
-    const keyFigureContent = keyFigure.keyfigure ? get({
+function renderPart(req: Request): Response | React4xpResponse {
+  const part: Component<FrontpageKeyfiguresPartConfig> = getComponent()
+  const keyFiguresPart: Array<FrontpageKeyfigure> = part.config.keyfiguresFrontpage ? data.forceArray(part.config.keyfiguresFrontpage) : []
+
+  const frontpageKeyfigures: Array<FrontPageKeyFigureData | undefined> = keyFiguresPart.map((keyFigure: FrontpageKeyfigure) => {
+    const keyFigureContent: Content<KeyFigure> | null = keyFigure.keyfigure ? get({
       key: keyFigure.keyfigure
-    }) : undefined
+    }) : null
 
     if (keyFigureContent) {
-      const keyFigureData = parseKeyFigure(keyFigureContent, undefined, DATASET_BRANCH)
+      const keyFigureData: KeyFigureView = parseKeyFigure(keyFigureContent, undefined, DATASET_BRANCH)
       return {
-        id: keyFigureData._id,
+        id: keyFigureContent._id,
         title: keyFigureData.title,
         urlText: keyFigure.urlText,
         url: keyFigure.url,
@@ -53,17 +66,19 @@ function renderPart(req) {
         numberDescription: keyFigureData.numberDescription,
         noNumberText: keyFigureData.noNumberText
       }
-    }
-  }) : []
+    } else return undefined
+  })
 
-  return frontpageKeyfigures && frontpageKeyfigures.length > 0 ? renderFrontpageKeyfigures(req, frontpageKeyfigures) : {
+  const frontPagefiguresCleaned: Array<FrontPageKeyFigureData> = frontpageKeyfigures.filter(isKeyfigureData)
+
+  return frontpageKeyfigures && frontpageKeyfigures.length > 0 ? renderFrontpageKeyfigures(req, frontPagefiguresCleaned) : {
     body: '',
     contentType: 'text/html'
   }
 }
 
-function renderFrontpageKeyfigures(req, frontpageKeyfigures) {
-  const frontpageKeyfiguresReact = new React4xp('FrontpageKeyfigures')
+function renderFrontpageKeyfigures(req: Request, frontpageKeyfigures: Array<FrontPageKeyFigureData> ): React4xpResponse {
+  const frontpageKeyfiguresReact: React4xpObject = new React4xp('FrontpageKeyfigures')
     .setProps({
       keyFigures: frontpageKeyfigures.map((frontpageKeyfigure) => {
         return {
@@ -73,7 +88,7 @@ function renderFrontpageKeyfigures(req, frontpageKeyfigures) {
     })
     .uniqueId()
 
-  const body = render(view, {
+  const body: string = render(view, {
     frontpageKeyfiguresId: frontpageKeyfiguresReact.react4xpId
   })
 
@@ -84,8 +99,22 @@ function renderFrontpageKeyfigures(req, frontpageKeyfigures) {
     }),
     pageContributions: frontpageKeyfiguresReact.renderPageContributions({
       clientRender: req.mode !== 'edit'
-    }),
-    contentType: 'text/html'
+    })
   }
 }
 
+interface FrontpageKeyfigure {
+  keyfigure?: string;
+  urlText: string;
+  url: string;
+}
+
+interface FrontPageKeyFigureData {
+  id: string;
+  title: string;
+  urlText: string;
+  url: string;
+  number?: string;
+  numberDescription?: string;
+  noNumberText:string;
+}
