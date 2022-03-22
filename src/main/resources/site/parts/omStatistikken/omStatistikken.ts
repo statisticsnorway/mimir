@@ -189,20 +189,14 @@ function getAccordion(id: string, categoryText: string, category: Category, item
 }
 
 function getItems(category: Category, variables: Array<string>, phrases: Phrases): Array<AccordionItem> {
-  const items: Array<AccordionItem> = []
-
-  if (category) {
-    variables.forEach((variable) => {
-      const item:AccordionItem = {
-        title: phrases[variable],
-        body: category[variable] ? processHtml({
-          value: category[variable].replace(/&nbsp;/g, ' ')
-        }) : phrases.notRelevant
-      }
-      items.push(item)
-    })
-  }
-  return items
+  return variables.map((variable) => {
+    return {
+      title: phrases[variable],
+      body: category[variable] ? processHtml({
+        value: category[variable].replace(/&nbsp;/g, ' ')
+      }) : phrases.notRelevant
+    }
+  })
 }
 
 function isNotEmpty(obj: object | undefined): boolean {
