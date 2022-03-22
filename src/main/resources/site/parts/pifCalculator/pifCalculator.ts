@@ -1,8 +1,9 @@
 import { Content } from 'enonic-types/content'
 import { Request, Response } from 'enonic-types/controller'
 import { ResourceKey } from 'enonic-types/thymeleaf'
+import { allMonths, monthLabel, nextPeriod } from '../../../lib/ssb/utils/calculatorUtils'
 import { CalculatorPeriod } from '../../../lib/types/calculator'
-import { DropdownItem as MonthDropdownItem, DropdownItems as MonthDropdownItems } from '../../../lib/types/components'
+import { DropdownItems as MonthDropdownItems } from '../../../lib/types/components'
 import { Dataset, Dimension } from '../../../lib/types/jsonstat-toolkit'
 import { Language, Phrases } from '../../../lib/types/language'
 import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
@@ -145,86 +146,6 @@ function lastPeriod(pifData: Dataset | null): CalculatorPeriod | undefined {
     }
   }
   return
-}
-
-function nextPeriod(month: string, year: string): CalculatorPeriod {
-  let nextPeriodMonth: number = parseInt(month) + 1
-  let nextPeriodYear: number = parseInt(year)
-
-  if (Number(month) === 12) {
-    nextPeriodMonth = 1
-    nextPeriodYear = nextPeriodYear + 1
-  }
-
-  return {
-    month: nextPeriodMonth,
-    year: nextPeriodYear
-  }
-}
-
-function monthLabel(months: MonthDropdownItems, language: string | undefined, month: number | string): string {
-  const monthLabel: MonthDropdownItem | undefined = months.find((m) => parseInt(m.id) === parseInt(month as string))
-  if (monthLabel) {
-    return language && language === 'en' ? monthLabel.title : monthLabel.title.toLowerCase()
-  }
-  return ''
-}
-
-function allMonths(phrases: Phrases): MonthDropdownItems {
-  return [
-    {
-      id: '',
-      title: phrases.calculatorMonthAverage
-    },
-    {
-      id: '01',
-      title: phrases.january
-    },
-    {
-      id: '02',
-      title: phrases.february
-    },
-    {
-      id: '03',
-      title: phrases.march
-    },
-    {
-      id: '04',
-      title: phrases.april
-    },
-    {
-      id: '05',
-      title: phrases.may
-    },
-    {
-      id: '06',
-      title: phrases.june
-    },
-    {
-      id: '07',
-      title: phrases.july
-    },
-    {
-      id: '08',
-      title: phrases.august
-    },
-    {
-      id: '09',
-      title: phrases.september
-    },
-    {
-      id: '10',
-      title: phrases.october
-    },
-    {
-      id: '11',
-      title: phrases.november
-    },
-    {
-      id: '12',
-      title: phrases.december
-    }
-  ]
 }
 
 function productGroups(phrases: Phrases): MonthDropdownItems {
