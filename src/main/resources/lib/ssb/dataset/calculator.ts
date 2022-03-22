@@ -113,8 +113,8 @@ export function getChangeValue(startIndex: number, endIndex: number, chronologic
 export interface CalculatorLib {
   getCalculatorConfig: () => Content<CalculatorConfig> | undefined;
   getKpiDatasetYear: (config: Content<CalculatorConfig>) => Dataset | null;
-  getKpiDatasetMonth: (config: Content<CalculatorConfig>) => Dataset | null;
-  getPifDataset: (config: Content<CalculatorConfig>) => Dataset | null;
+  getKpiDatasetMonth: (config: Content<CalculatorConfig> | undefined) => Dataset | null;
+  getPifDataset: (config: Content<CalculatorConfig> | undefined) => Dataset | null;
   getBkibolDatasetEnebolig: (config: Content<CalculatorConfig>) => Dataset | null;
   getBkibolDatasetBoligblokk: (config: Content<CalculatorConfig>) => Dataset | null;
   getNameSearchGraphData: (config: Content<CalculatorConfig>) => DatasetRepoNode<JSONstatType> | null;

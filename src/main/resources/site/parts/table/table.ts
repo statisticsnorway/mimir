@@ -3,6 +3,7 @@ import { PageContributions, Request, Response } from 'enonic-types/controller'
 import { ResourceKey } from 'enonic-types/thymeleaf'
 import { TableSourceList, TableView } from '../../../lib/ssb/parts/table'
 import { SourceList, SourcesConfig } from '../../../lib/ssb/utils/utils'
+import { DropdownItem as TableDownloadDropdownItem, DropdownItems as TableDownloadDropdownItems } from '../../../lib/types/components'
 import { Language, Phrases } from '../../../lib/types/language'
 import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
 import { Statistics } from '../../content-types/statistics/statistics'
@@ -172,13 +173,13 @@ function renderPart(req: Request, tableId?: string): Response {
 function getDownloadTableOptions(): TableDownloadDropdownItems {
   const downloadTable: TableDownloadDropdownItems = []
 
-  const XLS: TableDownloadDropdown = {
+  const XLS: TableDownloadDropdownItem = {
     title: '.xlsx (Excel)',
     id: 'downloadTableAsXLSX'
   }
   downloadTable.push(XLS)
 
-  const CSV: TableDownloadDropdown = {
+  const CSV: TableDownloadDropdownItem = {
     title: '.CSV',
     id: 'downloadTableAsCSV'
   }
@@ -205,14 +206,6 @@ interface TableStandardSymbolLink {
   href: string;
   text: string;
 }
-
-interface TableDownloadDropdown {
-  id: string;
-  title: string;
-}
-
-type TableDownloadDropdownItems = Array<TableDownloadDropdown>
-
 interface TableProps {
   downloadTableLabel: string;
   downloadTableTitle: object;

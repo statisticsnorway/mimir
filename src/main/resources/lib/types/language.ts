@@ -1,7 +1,7 @@
 export interface Language {
   code: string | undefined;
   link?: string | undefined;
-  phrases: object | string;
+  phrases: Phrases | string;
   alternativeLanguages?: Array<AlternativeLanguages>;
   menuContentId?: string | undefined;
   headerId?: string | undefined;

@@ -1,3 +1,11 @@
+import {PageContributions, Request, Response} from "enonic-types/controller";
+import {ResourceKey} from "enonic-types/thymeleaf";
+import {Component} from "enonic-types/portal";
+import {FactBoxPartConfig} from "./factBox-part-config";
+import {React4xpObject, React4xpResponse} from "../../../lib/types/react4xp";
+import {Content} from "enonic-types/content";
+import {FactBox} from "../../content-types/factBox/factBox";
+
 const {
   getComponent,
   processHtml
@@ -11,18 +19,18 @@ const {
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const content = __non_webpack_require__('/lib/xp/content')
 
-const view = resolve('./factBox.html')
+const view: ResourceKey = resolve('./factBox.html')
 
-exports.get = function(req) {
+exports.get = function(req: Request): Response | React4xpResponse {
   try {
-    const part = getComponent()
+    const part: Component<FactBoxPartConfig> = getComponent()
     return renderPart(req, part.config.factBox)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-exports.preview = function(req, id) {
+exports.preview = function(req: Request, id: string) {
   try {
     return renderPart(req, id)
   } catch (e) {
@@ -30,7 +38,7 @@ exports.preview = function(req, id) {
   }
 }
 
-function renderPart(req, factBoxId) {
+function renderPart(req: Request, factBoxId: string): Response | React4xpResponse {
   // throw an error if there is no selected factbox, or an empty section for edit mode
   if (!factBoxId) {
     if (req.mode === 'edit') {
@@ -41,14 +49,14 @@ function renderPart(req, factBoxId) {
       throw new Error('Factbox - Missing Id')
     }
   }
-  const factBoxContent = content.get({
+  const factBoxContent: Content<FactBox> | null = content.get({
     key: factBoxId
   })
   if (!factBoxContent) throw new Error(`FactBox with id ${factBoxId} doesn't exist`)
-  const text = processHtml({
+  const text: string = processHtml({
     value: factBoxContent.data.text.replace(/&nbsp;/g, ' ')
   })
-  const factBox = new React4xp('FactBox')
+  const factBox: React4xpObject = new React4xp('FactBox')
     .setProps({
       header: factBoxContent.displayName,
       text
@@ -56,13 +64,13 @@ function renderPart(req, factBoxId) {
     .setId('fact-box')
     .uniqueId()
 
-  const body = render(view, {
+  const body: string = render(view, {
     factBoxId: factBox.react4xpId
   })
   return {
     body: factBox.renderBody({
       body
     }),
-    pageContributions: factBox.renderPageContributions()
+    pageContributions: factBox.renderPageContributions() as PageContributions
   }
 }

@@ -1,3 +1,7 @@
+import {Request, Response} from "enonic-types/controller";
+import {Component} from "enonic-types/portal";
+import {FrontPageBannerPartConfig} from "./frontPageBanner-part-config";
+
 const {
   getComponent,
   imageUrl
@@ -12,7 +16,7 @@ const {
 const view = resolve('./frontPageBanner.html')
 
 
-exports.get = function(req) {
+exports.get = function(req: Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -20,12 +24,12 @@ exports.get = function(req) {
   }
 }
 
-exports.preview = (req) => renderPart(req)
+exports.preview = (req: Request) => renderPart(req)
 
-const renderPart = (req) => {
-  const part = getComponent()
+function renderPart(req: Request): Response {
+  const part: Component<FrontPageBannerPartConfig> = getComponent()
 
-  const model = {
+  const model: object = {
     bannerText: part.config.text,
     bannerImage: part.config.image ? imageUrl({
       id: part.config.image,
