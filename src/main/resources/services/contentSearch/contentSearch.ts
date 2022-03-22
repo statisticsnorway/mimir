@@ -23,7 +23,8 @@ exports.get = (req: Request): Response | object => {
       body: {
         hits: result.hits.map((hit) => ({
           value: hit._id,
-          label: hit.displayName
+          label:
+            `${hit.displayName} - ${hit._path}`
         })
         )
       }

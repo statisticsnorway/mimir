@@ -59,4 +59,13 @@
             margin-bottom: $spacer;
         }
     }
+
+    #content-selector-dropdown {
+        label {
+            display: inline-block;
+            font-size: 14px;
+            line-height: normal;
+            margin-bottom: 5px;
+        }
+    }
 }

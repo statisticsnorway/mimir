@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Container, Row, Col } from 'react-bootstrap'
-import { Title, Link, Tag, Input, TextArea, Dropdown, Button, Divider } from '@statisticsnorway/ssb-component-library'
+import { Title, Link, Tag, Input, TextArea, Dropdown, Button, Divider, Tabs, RadioGroup } from '@statisticsnorway/ssb-component-library'
 import { XCircle, Edit, Trash, Plus } from 'react-feather'
 import BestBetModal from './BestBetModal'
 import axios from 'axios'
-// import AsyncSelect from 'react-select/async'
-// import 'regenerator-runtime'
+import AsyncSelect from 'react-select/async'
+import 'regenerator-runtime'
 
 function Bestbet(props) {
   const [loading, setLoading] = useState(false)
@@ -23,14 +23,32 @@ function Bestbet(props) {
   const handleCloseDeleteBestBetModal = () => setShowDeleteBestBetModal(false)
 
   const [bestBetId, setBestBetId] = useState('')
+  const [selectedContentId, setSelectedContentId] = useState('')
   const [urlInputValue, setUrlInputValue] = useState('')
   const [titleInputValue, setTitleInputValue] = useState('')
   const [ingressInputValue, setIngressInputValue] = useState('')
   const [contentTypeValue, setContentTypeValue] = useState('')
   const [mainSubjectValue, setMainSubjectValue] = useState('')
-  const [startDateValue, setStartDateValue] = useState(new Date())
+  const [startDateValue, setStartDateValue] = useState('')
   const [searchWordTag, setSearchWordTag] = useState('')
   const [searchWordsList, setSearchWordsList] = useState([])
+
+  const [isXPContent, setIsXPContent] = useState(true)
+  const [showDatePicker, setShowDatePicker] = useState(false)
+
+  const initialState = {
+    bestBetId: '',
+    urlInputValue: '',
+    titleInputValue: '',
+    ingressInputValue: '',
+    contentTypeValue: '',
+    mainSubjectValue: '',
+    startDateValue: '',
+    searchWordTag: '',
+    searchWordsList: [],
+    isXPContent: true,
+    showDatePicker: false
+  }
 
   useEffect(() => {
     fetchBestBetList()
@@ -120,19 +138,30 @@ function Bestbet(props) {
     setMainSubjectValue(item.linkedContentSubject)
     setSearchWordTag('')
     setSearchWordsList(item.searchWords)
+
+    const isNotXPContent = item.linkedContentTitle && item.linkedContentHref
+    if (isNotXPContent) {
+      setIsXPContent(false)
+    } else {
+      setIsXPContent(true)
+    }
+  }
+
+  function clearInputFields() {
+    setTitleInputValue(initialState.titleInputValue)
+    setUrlInputValue(initialState.urlInputValue)
+    setIngressInputValue(initialState.ingressInputValue)
+    setStartDateValue(initialState.startDateValue)
+    setContentTypeValue(initialState.contentTypeValue)
+    setMainSubjectValue(initialState.mainSubjectValue)
+    setSearchWordTag(initialState.searchWordTag)
+    setSearchWordsList(initialState.searchWordsList)
   }
 
   function handleCreateBestBetOnClick() {
     setShowCreateBestBetModal(true)
     // clear edit best bet input data
-    setTitleInputValue('')
-    setUrlInputValue('')
-    setIngressInputValue('')
-    setStartDateValue('')
-    setContentTypeValue('')
-    setMainSubjectValue('')
-    setSearchWordTag('')
-    setSearchWordsList('')
+    clearInputFields()
   }
 
   function handleDeleteBestBetOnClick(item) {
@@ -156,26 +185,52 @@ function Bestbet(props) {
     setSearchWordsList([...searchWordsList, searchWordTag])
   }
 
-  // function handleContentSelect(event) {
-  //   setBestBetContent(event)
-  // }
+  function handleTabOnClick(item) {
+    if (item === 'xp-content') {
+      setIsXPContent(true)
+    }
 
-  // async function searchForTerm(inputValue = '') {
-  //   const result = await axios.get(props.contentSearchServiceUrl, {
-  //     params: {
-  //       query: inputValue
-  //     }
-  //   })
-  //   const hits = result.data.hits
-  //   return hits
-  // }
+    if (item === '4.7-content') {
+      setIsXPContent(false)
+    }
+  }
 
-  // const promiseOptions = (inputValue) =>
-  //   new Promise((resolve) => {
-  //     setTimeout(() => {
-  //       resolve(searchForTerm(inputValue))
-  //     }, 1000)
-  //   })
+  function handleContentSelect(event) {
+    setSelectedContentId(event)
+  }
+
+  function handleDatoTypeSelect(value) {
+    if (value === 'date-select-manual') {
+      setShowDatePicker(true)
+    }
+
+    if (value === 'date-select-xp') {
+      setShowDatePicker(false)
+      setStartDateValue('xp')
+    }
+
+    if (value === 'date-select-none') {
+      setShowDatePicker(false)
+      setStartDateValue('')
+    }
+  }
+
+  async function searchForTerm(inputValue = '') {
+    const result = await axios.get(props.contentSearchServiceUrl, {
+      params: {
+        query: inputValue
+      }
+    })
+    const hits = result.data.hits
+    return hits
+  }
+
+  const promiseOptions = (inputValue) =>
+    new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(searchForTerm(inputValue))
+      }, 1000)
+    })
 
   function renderSearchWord(searchWord, disabled) {
     if (!disabled) {
@@ -198,18 +253,45 @@ function Bestbet(props) {
     const selectedMainSubject = props.mainSubjects.filter((mainSubject) => mainSubjectValue === mainSubject.title)[0]
     return (
       <div className="best-bet-form">
+        <Row className="mb-3">
+          <Col>
+            <Tabs
+              activeOnInit={isXPContent ? 'xp-content' : '4.7-content'}
+              items={[
+                {
+                  title: 'Velg XP innhold',
+                  path: 'xp-content'
+                },
+                {
+                  title: 'Legg til 4.7. innhold',
+                  path: '4.7-content'
+                }
+              ]}
+              onClick={handleTabOnClick}
+            />
+            <Divider />
+          </Col>
+        </Row>
         <Row>
           <Col>
-            <Input
-              label="Ekstern lenke"
-              handleChange={(e) => handleInputChange(e, 'url')}
-              value={urlInputValue}
-            />
-            <Input
-              label="Tittel"
-              handleChange={(e) => handleInputChange(e, 'title')}
-              value={titleInputValue}
-            />
+            {isXPContent &&
+              <div id="content-selector-dropdown" className="mb-3">
+                <label htmlFor="react-select-3-input">Content selector</label>
+                <AsyncSelect cacheOptions defaultOptions loadOptions={promiseOptions} onChange={handleContentSelect} />
+              </div>}
+            {!isXPContent &&
+              <React.Fragment>
+                <Input
+                  label="Ekstern lenke"
+                  handleChange={(e) => handleInputChange(e, 'url')}
+                  value={urlInputValue}
+                />
+                <Input
+                  label="Tittel"
+                  handleChange={(e) => handleInputChange(e, 'title')}
+                  value={titleInputValue}
+                />
+              </React.Fragment>}
             <TextArea
               label="Ingress"
               handleChange={(e) => handleInputChange(e, 'ingress')}
@@ -227,12 +309,35 @@ function Bestbet(props) {
               selectedItem={selectedMainSubject ? selectedMainSubject : props.mainSubjects[0]}
               onSelect={(item) => setMainSubjectValue(item.id !== '' ? item.title : '')}
             />
-            <Input
-              label="Dato"
-              type="date"
-              handleChange={(e) => handleInputChange(e, 'date')}
-              value={startDateValue}
+            {isXPContent &&
+            <RadioGroup
+              header="Velg dato format"
+              onChange={handleDatoTypeSelect}
+              selectedValue="date-select-manual"
+              orientation="column"
+              items={[
+                {
+                  label: 'Manuell innføring',
+                  value: 'date-select-manual'
+                },
+                {
+                  label: 'Hent fra XP innhold',
+                  value: 'date-select-xp'
+                },
+                {
+                  label: 'Ingen dato',
+                  value: 'date-select-none'
+                }
+              ]}
             />
+            }
+            {(!isXPContent || showDatePicker) &&
+              <Input
+                label="Dato"
+                type="date"
+                handleChange={(e) => handleInputChange(e, 'date')}
+                value={startDateValue}
+              />}
           </Col>
         </Row>
         {searchWordsList.length ?
@@ -285,7 +390,6 @@ function Bestbet(props) {
         title="Lag nytt best-bet"
         body={
           renderBestBetForm()
-          /* <AsyncSelect cacheOptions defaultOptions loadOptions={promiseOptions} onChange={handleContentSelect} /> */
         }
         footer={
           <>
