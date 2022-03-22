@@ -1,3 +1,8 @@
+import {Request, Response} from "enonic-types/controller";
+import {React4xpObject, React4xpResponse} from "../../../lib/types/react4xp";
+import {Component} from "enonic-types/portal";
+import {ExternalCardPartConfig} from "./externalCard-part-config";
+
 const {
   getComponent,
   imageUrl
@@ -16,7 +21,7 @@ const {
 const view = resolve('./externalCard.html')
 
 
-exports.get = function(req) {
+exports.get = function(req: Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -24,39 +29,39 @@ exports.get = function(req) {
   }
 }
 
-exports.preview = (req) => renderPart(req)
+exports.preview = (req: Request) => renderPart(req)
 
 const NO_LINKS_FOUND = {
   body: '',
   contentType: 'text/html'
 }
 
-const renderPart = (req) => {
-  const part = getComponent()
+function renderPart(req: Request): Response | React4xpResponse {
+  const part: Component<ExternalCardPartConfig> = getComponent()
 
   return renderExternalCard(req, part.config.externalCards ? data.forceArray(part.config.externalCards) : [])
 }
 
-const renderExternalCard = (req, links) => {
+const renderExternalCard = (req: Request, links: Array<ExternalCard>) => {
   if (links && links.length) {
-    const externalCardComponent = new React4xp('ExternalCards')
-      .setProps({
-        links: links.map((link) => {
-          return {
-            href: link.linkUrl,
-            children: link.linkText,
-            content: link.content,
-            image: imageUrl({
-              id: link.image,
-              scale: 'height(70)'
-            })
-          }
+    const externalCardComponent: React4xpObject = new React4xp('ExternalCards')
+        .setProps({
+          links: links.map((link) => {
+            return {
+              href: link.linkUrl,
+              children: link.linkText,
+              content: link.content,
+              image: imageUrl({
+                id: link.image,
+                scale: 'height(70)'
+              })
+            }
+          })
         })
-      })
-      .setId('externalCard')
-      .uniqueId()
+        .setId('externalCard')
+        .uniqueId()
 
-    const body = render(view, {
+    const body: string = render(view, {
       categoryId: externalCardComponent.react4xpId
     })
 
@@ -71,4 +76,11 @@ const renderExternalCard = (req, links) => {
     }
   }
   return NO_LINKS_FOUND
+}
+
+interface ExternalCard {
+  image: string;
+  content: string;
+  linkText: string;
+  linkUrl: string;
 }
