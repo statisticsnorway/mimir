@@ -23,7 +23,7 @@ function Bestbet(props) {
   const handleCloseDeleteBestBetModal = () => setShowDeleteBestBetModal(false)
 
   const [bestBetId, setBestBetId] = useState('')
-  const [selectedContentResult, setSelectedContentResult] = useState({})
+  const [selectedContentResult, setSelectedContentResult] = useState(null)
   const [urlInputValue, setUrlInputValue] = useState('')
   const [titleInputValue, setTitleInputValue] = useState('')
   const [ingressInputValue, setIngressInputValue] = useState('')
@@ -38,7 +38,7 @@ function Bestbet(props) {
 
   const initialState = {
     bestBetId: '',
-    selectedContentResult: {},
+    selectedContentResult: null,
     urlInputValue: '',
     titleInputValue: '',
     ingressInputValue: '',
@@ -210,7 +210,7 @@ function Bestbet(props) {
 
     if (value === 'date-select-xp') {
       setShowDatePicker(false)
-      setStartDateValue('xp')
+      setStartDateValue('xp') // Converts to the correct date in search result view
     }
 
     if (value === 'date-select-none') {
@@ -439,7 +439,7 @@ function Bestbet(props) {
                 <div className="best-bet-url-wrapper pr-1">
                   <Link isExternal={true}
                     href={item.linkedSelectedContentResult ? props.contentStudioBaseUrl + item.linkedSelectedContentResult.value : item.linkedContentHref}>
-                    {item.linkedContentTitle}
+                    {item.linkedSelectedContentResult ? item.linkedSelectedContentResult.title : item.linkedContentTitle}
                   </Link>
                 </div>
                 <Tag className="m-1" onClick={() => handleEditBestBetOnClick(item)}>

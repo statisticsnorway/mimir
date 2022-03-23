@@ -15,7 +15,6 @@ exports.get = () => {
         return {
           id: bet._id,
           linkedSelectedContentResult: bet.data.linkedSelectedContentResult,
-          linkedContentId: bet.data.linkedContentId,
           linkedContentTitle: bet.data.linkedContentTitle,
           linkedContentHref: bet.data.linkedContentHref,
           linkedContentIngress: bet.data.linkedContentIngress,
