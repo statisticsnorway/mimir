@@ -279,9 +279,10 @@ function Bestbet(props) {
         <Row>
           <Col>
             {isXPContent &&
-              <div id="content-selector-dropdown" className="mb-3">
-                <label htmlFor="react-select-3-input">Content selector</label>
+              <div id="content-selector-dropdown" className="ssb-dropdown mb-3">
+                <label id="dropdown-label" htmlFor="react-select-3-input">Content selector</label>
                 <AsyncSelect
+                  className="dropdown-interactive-area"
                   defaultInputValue={selectedContentResult && selectedContentResult.label}
                   cacheOptions
                   defaultOptions
@@ -322,7 +323,7 @@ function Bestbet(props) {
             <RadioGroup
               header="Velg dato format"
               onChange={handleDatoTypeSelect}
-              selectedValue="date-select-manual"
+              selectedValue={startDateValue ? startDateValue === 'xp' ? 'date-select-xp' : 'date-select-manual' : 'date-select-none'}
               orientation="column"
               items={[
                 {
@@ -417,7 +418,11 @@ function Bestbet(props) {
         onHide={handleCloseDeleteBestBetModal}
         title="Slett best-bet"
         body={
-          <p>Har du lyst til å slette {selectedBestBet.linkedContentTitle}?</p>
+          <p>Har du lyst til å slette&nbsp;
+          &laquo;
+          {selectedBestBet.linkedSelectedContentResult ? selectedBestBet.linkedSelectedContentResult.title : selectedBestBet.linkedContentTitle}
+          &raquo;?
+          </p>
         }tt
         footer={
           <>
