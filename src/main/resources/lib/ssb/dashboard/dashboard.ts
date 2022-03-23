@@ -384,16 +384,10 @@ function parseResult(jobLog: JobInfoNode): Array<DashboardPublishJobResult> | Ar
       const statId: string = statResult.statistic
       const shortName: string = statregData ? statregData.shortName : statResult.shortNameId // get name from shortNameId
       const dataSources: DashboardPublishJobResult['dataSources'] = forceArray(statResult.dataSources || []).map((ds) => {
-        let dataSource: Content<DataSource> | null
         try {
-          dataSource = getContent({
+          const dataSource: Content<DataSource> | null = getContent({
             key: ds.id
           })
-        } catch (e) {
-          log.info('Finner ikke datakilde med ID: ' + ds.id)
-          dataSource = null
-        }
-        if (dataSource) {
           return {
             id: ds.id,
             displayName: dataSource ? dataSource.displayName : ds.id,
@@ -402,7 +396,8 @@ function parseResult(jobLog: JobInfoNode): Array<DashboardPublishJobResult> | Ar
             datasetType: dataSource?.data?.dataSource?._selected,
             datasetKey: dataSource ? extractKey(dataSource) : undefined
           }
-        } else {
+        } catch (e) {
+          log.info('Finner ikke datakilde med ID: ' + ds.id)
           return {
             id: ds.id,
             displayName: ds.id,
