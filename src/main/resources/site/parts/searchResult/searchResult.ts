@@ -8,6 +8,7 @@ import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { queryNodes, getNode } from '../../../lib/ssb/repo/common'
 import { NodeQueryResponse, RepoNode } from 'enonic-types/node'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
+import { BestBetContent } from '../../../lib/ssb/repo/bestbet'
 
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
@@ -116,7 +117,11 @@ export function renderPart(req: Request): React4xpResponse {
         title: firstBet.data.linkedContentTitle ? firstBet.data.linkedContentTitle : '',
         preface: firstBet.data.linkedContentIngress ? firstBet.data.linkedContentIngress : '',
         contentType: firstBet.data.linkedContentType ? firstBet.data.linkedContentType : '',
-        url: firstBet.data.linkedContentHref ? firstBet.data.linkedContentHref : '',
+        url: firstBet.data.linkedContentHref ?
+          firstBet.data.linkedSelectedContentResult ? pageUrl({
+            path: firstBet.data.linkedContentHref
+          }) : firstBet.data.linkedContentHref :
+          '',
         mainSubject: firstBet.data.linkedContentSubject ? firstBet.data.linkedContentSubject : '',
         secondaryMainSubject: '',
         publishDate: firstBet.data.linkedContentDate ? firstBet.data.linkedContentDate : '',
@@ -189,14 +194,14 @@ export function renderPart(req: Request): React4xpResponse {
 
   interface BestBet extends RepoNode {
     data: {
-      linkedContentId: string;
-      linkedContentTitle: string;
-      linkedContentHref: string;
-      linkedContentIngress: string;
-      linkedContentType: string;
-      linkedContentDate: string;
-      linkedContentSubject: string;
-      searchWords: Array<string>;
+      linkedSelectedContentResult: BestBetContent['linkedSelectedContentResult'];
+      linkedContentTitle: BestBetContent['linkedContentTitle'];
+      linkedContentHref: BestBetContent['linkedContentHref'];
+      linkedContentIngress: BestBetContent['linkedContentIngress'];
+      linkedContentType: BestBetContent['linkedContentType'];
+      linkedContentDate: BestBetContent['linkedContentDate'];
+      linkedContentSubject: BestBetContent['linkedContentSubject'];
+      searchWords: BestBetContent['searchWords'];
     };
   }
 

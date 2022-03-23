@@ -23,7 +23,7 @@ function Bestbet(props) {
   const handleCloseDeleteBestBetModal = () => setShowDeleteBestBetModal(false)
 
   const [bestBetId, setBestBetId] = useState('')
-  const [selectedContentId, setSelectedContentId] = useState('')
+  const [selectedContentResult, setSelectedContentResult] = useState({})
   const [urlInputValue, setUrlInputValue] = useState('')
   const [titleInputValue, setTitleInputValue] = useState('')
   const [ingressInputValue, setIngressInputValue] = useState('')
@@ -38,6 +38,7 @@ function Bestbet(props) {
 
   const initialState = {
     bestBetId: '',
+    selectedContentResult: {},
     urlInputValue: '',
     titleInputValue: '',
     ingressInputValue: '',
@@ -74,6 +75,7 @@ function Bestbet(props) {
     setLoading(true)
     axios.post(props.bestBetListServiceUrl, {
       id: bestBetId,
+      linkedSelectedContentResult: selectedContentResult,
       linkedContentTitle: titleInputValue,
       linkedContentHref: urlInputValue,
       linkedContentIngress: ingressInputValue,
@@ -97,6 +99,7 @@ function Bestbet(props) {
     setShowCreateBestBetModal(false)
     setLoading(true)
     axios.post(props.bestBetListServiceUrl, {
+      linkedSelectedContentResult: selectedContentResult,
       linkedContentTitle: titleInputValue,
       linkedContentHref: urlInputValue,
       linkedContentIngress: ingressInputValue,
@@ -130,6 +133,7 @@ function Bestbet(props) {
   function handleEditBestBetOnClick(item) {
     setShowEditBestBetModal(true)
     setBestBetId(item.id)
+    setSelectedContentResult(item.linkedSelectedContentResult)
     setTitleInputValue(item.linkedContentTitle)
     setUrlInputValue(item.linkedContentHref)
     setIngressInputValue(item.linkedContentIngress)
@@ -139,15 +143,15 @@ function Bestbet(props) {
     setSearchWordTag('')
     setSearchWordsList(item.searchWords)
 
-    const isNotXPContent = item.linkedContentTitle && item.linkedContentHref
-    if (isNotXPContent) {
-      setIsXPContent(false)
-    } else {
+    if (item.linkedSelectedContentResult) {
       setIsXPContent(true)
+    } else {
+      setIsXPContent(false)
     }
   }
 
   function clearInputFields() {
+    setSelectedContentResult(initialState.selectedContentResult)
     setTitleInputValue(initialState.titleInputValue)
     setUrlInputValue(initialState.urlInputValue)
     setIngressInputValue(initialState.ingressInputValue)
@@ -196,7 +200,7 @@ function Bestbet(props) {
   }
 
   function handleContentSelect(event) {
-    setSelectedContentId(event)
+    setSelectedContentResult(event)
   }
 
   function handleDatoTypeSelect(value) {
@@ -277,7 +281,12 @@ function Bestbet(props) {
             {isXPContent &&
               <div id="content-selector-dropdown" className="mb-3">
                 <label htmlFor="react-select-3-input">Content selector</label>
-                <AsyncSelect cacheOptions defaultOptions loadOptions={promiseOptions} onChange={handleContentSelect} />
+                <AsyncSelect
+                  defaultInputValue={selectedContentResult && selectedContentResult.label}
+                  cacheOptions
+                  defaultOptions
+                  loadOptions={promiseOptions}
+                  onChange={handleContentSelect} />
               </div>}
             {!isXPContent &&
               <React.Fragment>
@@ -429,7 +438,7 @@ function Bestbet(props) {
               <>
                 <div className="best-bet-url-wrapper pr-1">
                   <Link isExternal={true}
-                    href={props.contentStudioBaseUrl + item.linkedContentHref}>
+                    href={item.linkedSelectedContentResult ? props.contentStudioBaseUrl + item.linkedSelectedContentResult.value : item.linkedContentHref}>
                     {item.linkedContentTitle}
                   </Link>
                 </div>
