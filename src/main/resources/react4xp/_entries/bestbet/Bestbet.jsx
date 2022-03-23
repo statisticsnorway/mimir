@@ -283,6 +283,7 @@ function Bestbet(props) {
                 <label id="dropdown-label" htmlFor="react-select-3-input">Content selector</label>
                 <AsyncSelect
                   className="dropdown-interactive-area"
+                  placeholder="Søk ved å skrive..."
                   defaultInputValue={selectedContentResult && selectedContentResult.label}
                   cacheOptions
                   defaultOptions
@@ -350,12 +351,6 @@ function Bestbet(props) {
               />}
           </Col>
         </Row>
-        {searchWordsList.length ?
-          <Row>
-            <Col className="d-flex flex-wrap mb-3">
-              {searchWordsList.map((searchWord) => renderSearchWord(searchWord))}
-            </Col>
-          </Row> : null}
         <Row className="d-flex flex-row align-items-end">
           <Col className="col-lg-10">
             <Input
@@ -369,6 +364,12 @@ function Bestbet(props) {
             <Button primary onClick={handleTagSubmit}>Legg til</Button>
           </Col>
         </Row>
+        {searchWordsList.length ?
+          <Row>
+            <Col className="d-flex flex-wrap mt-3">
+              {searchWordsList.map((searchWord) => renderSearchWord(searchWord))}
+            </Col>
+          </Row> : null}
       </div>
     )
   }
