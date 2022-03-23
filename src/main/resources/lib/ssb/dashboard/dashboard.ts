@@ -397,7 +397,6 @@ function parseResult(jobLog: JobInfoNode): Array<DashboardPublishJobResult> | Ar
             datasetKey: dataSource ? extractKey(dataSource) : undefined
           }
         } catch (e) {
-          log.info('Finner ikke datakilde med ID: ' + ds.id)
           return {
             id: ds.id,
             displayName: ds.id,
