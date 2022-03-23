@@ -1,3 +1,11 @@
+import {React4xp} from "../../../lib/types/react4xp";
+import {PageContributions, Request} from "enonic-types/controller";
+import {Component} from "enonic-types/portal";
+import {Content, Page} from "enonic-types/content";
+import {Statistics} from "../../content-types/statistics/statistics";
+import {Article} from "../../content-types/article/article";
+import {Language, Phrases} from "../../../lib/types/language";
+
 const {
   getComponent,
   getContent,
@@ -7,28 +15,28 @@ const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 
-const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getLanguage
 } = __non_webpack_require__('/lib/ssb/utils/language')
 
-exports.get = function(req) {
+exports.get = function(req: Request) {
   try {
-    const component = getComponent()
+    const component: Component<any> = getComponent()
     return renderPart(req, component.config)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-exports.preview = (req) => renderPart(req, {
+exports.preview = (req: Request) => renderPart(req, {
   dark: false
 })
 
-const renderPart = (req, config) => {
-  const page = getContent()
-  const language = getLanguage(page)
-  const phrases = language.phrases
+const renderPart = (req: Request, config: object) => {
+  const page: Content = getContent()
+  const language: Language = getLanguage(page)
+  const phrases: Phrases = language.phrases as Phrases
   const recaptchaSiteKey = app.config && app.config['RECAPTCHA_SITE_KEY'] ? app.config['RECAPTCHA_SITE_KEY'] : ''
   const contactForm = new React4xp('site/parts/contactForm/contactForm')
     .setProps({
