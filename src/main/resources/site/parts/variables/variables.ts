@@ -58,11 +58,6 @@ function renderPart(req: Request): Response {
   return renderVariables(contentArrayToVariables(hits ? data.forceArray(hits) : [], language))
 }
 
-/**
- *
- * @param {Array} variables
- * @return {{ body: string, pageContributions: string, contentType: string }}
- */
 function renderVariables(variables: Array<Variables>): Response {
   if (variables && variables.length) {
     const download: string = i18nLib.localize({
@@ -101,12 +96,6 @@ function renderVariables(variables: Array<Variables>): Response {
   return NO_VARIABLES_FOUND
 }
 
-/**
- *
- * @param {Array} content
- * @param {String} language
- * @return {array}
- */
 function contentArrayToVariables(content: Array<Content<Article>>, language: string): Array<Variables> {
   return content.map((variable) => {
     const files: Array<Content<Article>> = contentLib.query({

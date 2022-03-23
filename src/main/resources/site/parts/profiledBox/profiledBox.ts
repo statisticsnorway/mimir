@@ -72,12 +72,6 @@ function renderPart(req: Request): Response {
   }
 }
 
-/**
- * get external/internal link from config
- * @param {Object} urlContentSelector
- * @return {string}
- */
-
 function getLink(urlContentSelector: ProfiledBoxPartConfig['urlContentSelector']): string | undefined {
   if (urlContentSelector._selected == 'optionLink') {
     return urlContentSelector.optionLink.link
@@ -90,13 +84,6 @@ function getLink(urlContentSelector: ProfiledBoxPartConfig['urlContentSelector']
   }
   return ''
 }
-
-/**
- * get subtitle situated on top of card (content / date)
- * @param {string} content
- * @param {string} date
- * @return {string}
- */
 
 function getSubtitle(content: string | undefined, date: string | undefined, language: string): string {
   if (content && date) {
