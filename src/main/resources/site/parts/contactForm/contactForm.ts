@@ -1,9 +1,7 @@
 import {React4xp} from "../../../lib/types/react4xp";
-import {PageContributions, Request} from "enonic-types/controller";
+import {Request} from "enonic-types/controller";
 import {Component} from "enonic-types/portal";
-import {Content, Page} from "enonic-types/content";
-import {Statistics} from "../../content-types/statistics/statistics";
-import {Article} from "../../content-types/article/article";
+import {Content} from "enonic-types/content";
 import {Language, Phrases} from "../../../lib/types/language";
 
 const {
