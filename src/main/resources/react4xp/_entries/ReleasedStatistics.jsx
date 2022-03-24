@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, Paragraph, Title } from '@statisticsnorway/ssb-component-library'
+import { Link, Paragraph } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 
 class ReleasedStatistics extends React.Component {
@@ -18,10 +18,21 @@ class ReleasedStatistics extends React.Component {
   }
 
   renderDay(day, month, year, index) {
+    const monthNumber = Number(month.month)
+    const monthPadded = monthNumber < 9 ? '0' + (monthNumber + 1) : monthNumber + 1
+    const dateTime = `${day.day}.${monthPadded}.${year.year}`
+    const monthNames = this.props.language === 'en' ?
+      ['january', 'february', 'march', 'april', 'may', 'june',
+        'july', 'august', 'september', 'october', 'november', 'december'] :
+      ['januar', 'februar', 'mars', 'april', 'mai', 'juni',
+        'juli', 'august', 'september', 'oktober', 'november', 'desember']
+    const monthNameLong = monthNames[monthNumber]
+    const releasePhrase = this.props.language === 'en' ? 'Releases' : 'Publiseringer'
+
     return (
       <li className={`calendar-day ${index === 0 && 'first'}`} key={index} aria-labelledby={`heading-released-statistics datemonth-${index}`}>
-        <span id={`datemonth-${index}`} className="sr-only">{`Publisering ${day.day} ${month.monthName}`}</span>
-        <time dateTime={`${year}-${month.month}`}>
+        <span id={`datemonth-${index}`} className="sr-only">{`${releasePhrase} ${day.day}. ${monthNameLong}`}</span>
+        <time dateTime={dateTime}>
           <span className='day' aria-hidden="true">{day.day}</span>
           <span className='month' aria-hidden="true">{month.monthName}</span>
         </time>
@@ -37,7 +48,7 @@ class ReleasedStatistics extends React.Component {
   render() {
     return (
       <section className='nextStatisticsReleases'>
-        <Title size={2} className="mb-4" id="heading-released-statistics">{this.props.title}</Title>
+        <h2 className="mb-4" id="heading-released-statistics">{this.props.title}</h2>
         <ol>
           {
             this.props.releases.reverse().map((year) => {
