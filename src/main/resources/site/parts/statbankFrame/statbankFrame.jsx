@@ -24,7 +24,7 @@ function StatbankFrame(props) {
             <Col className="md-4">
               <span className='h2 statbank-title roboto-bold'>{props.title}</span>
             </Col>
-            <Col className="md-8 text-right">
+            <Col className="md-8 text-end">
               <Col className="col-md-12 roboto-bold">
                 <Link href={props.statbankHelpLink}>{props.statbankHelpText}</Link>
               </Col>
