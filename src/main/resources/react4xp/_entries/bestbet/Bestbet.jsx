@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useReducer } from 'react'
 import PropTypes from 'prop-types'
 import { Container, Row, Col } from 'react-bootstrap'
 import { Title, Link, Tag, Input, TextArea, Dropdown, Button, Divider, Tabs, RadioGroup } from '@statisticsnorway/ssb-component-library'
@@ -22,21 +22,10 @@ function Bestbet(props) {
   const [showDeleteBestBetModal, setShowDeleteBestBetModal] = useState(false)
   const handleCloseDeleteBestBetModal = () => setShowDeleteBestBetModal(false)
 
-  const [bestBetId, setBestBetId] = useState('')
-  const [selectedContentResult, setSelectedContentResult] = useState(null)
-  const [urlInputValue, setUrlInputValue] = useState('')
-  const [titleInputValue, setTitleInputValue] = useState('')
-  const [ingressInputValue, setIngressInputValue] = useState('')
-  const [contentTypeValue, setContentTypeValue] = useState('')
-  const [mainSubjectValue, setMainSubjectValue] = useState('')
-  const [startDateValue, setStartDateValue] = useState('')
-  const [searchWordTag, setSearchWordTag] = useState('')
-  const [searchWordsList, setSearchWordsList] = useState([])
-
   const [isXPContent, setIsXPContent] = useState(true)
   const [showDatePicker, setShowDatePicker] = useState(false)
 
-  const initialState = {
+  const initialFormState = {
     bestBetId: '',
     selectedContentResult: null,
     urlInputValue: '',
@@ -46,10 +35,25 @@ function Bestbet(props) {
     mainSubjectValue: '',
     startDateValue: '',
     searchWordTag: '',
-    searchWordsList: [],
-    isXPContent: true,
-    showDatePicker: false
+    searchWordsList: []
   }
+
+  const formReducer = (state, action) => {
+    switch (action.type) {
+    case 'handle':
+      return {
+        ...state,
+        [action.inputName]: action.value
+      }
+    case 'set':
+      return action.setState
+    case 'init':
+      return initialFormState
+    default:
+      throw newError()
+    }
+  }
+  const [formState, dispatch] = useReducer(formReducer, initialFormState)
 
   useEffect(() => {
     fetchBestBetList()
@@ -74,15 +78,15 @@ function Bestbet(props) {
     setShowEditBestBetModal(false)
     setLoading(true)
     axios.post(props.bestBetListServiceUrl, {
-      id: bestBetId,
-      linkedSelectedContentResult: selectedContentResult,
-      linkedContentTitle: titleInputValue,
-      linkedContentHref: urlInputValue,
-      linkedContentIngress: ingressInputValue,
-      linkedContentType: contentTypeValue,
-      linkedContentDate: startDateValue,
-      linkedContentSubject: mainSubjectValue,
-      searchWords: searchWordsList
+      id: formState.bestBetId,
+      linkedSelectedContentResult: formState.selectedContentResult,
+      linkedContentTitle: formState.titleInputValue,
+      linkedContentHref: formState.urlInputValue,
+      linkedContentIngress: formState.ingressInputValue,
+      linkedContentType: formState.contentTypeValue,
+      linkedContentDate: formState.startDateValue,
+      linkedContentSubject: formState.mainSubjectValue,
+      searchWords: formState.searchWordsList
     })
       .then(() => {
         fetchBestBetList()
@@ -99,14 +103,14 @@ function Bestbet(props) {
     setShowCreateBestBetModal(false)
     setLoading(true)
     axios.post(props.bestBetListServiceUrl, {
-      linkedSelectedContentResult: selectedContentResult,
-      linkedContentTitle: titleInputValue,
-      linkedContentHref: urlInputValue,
-      linkedContentIngress: ingressInputValue,
-      linkedContentType: contentTypeValue,
-      linkedContentDate: startDateValue,
-      linkedContentSubject: mainSubjectValue,
-      searchWords: searchWordsList
+      linkedSelectedContentResult: formState.selectedContentResult,
+      linkedContentTitle: formState.titleInputValue,
+      linkedContentHref: formState.urlInputValue,
+      linkedContentIngress: formState.ingressInputValue,
+      linkedContentType: formState.contentTypeValue,
+      linkedContentDate: formState.startDateValue,
+      linkedContentSubject: formState.mainSubjectValue,
+      searchWords: formState.searchWordsList
     })
       .then(() => {
         setTimeout(() => {
@@ -131,18 +135,23 @@ function Bestbet(props) {
   }
 
   function handleEditBestBetOnClick(item) {
-    setShowEditBestBetModal(true)
-    setBestBetId(item.id)
-    setSelectedContentResult(item.linkedSelectedContentResult)
-    setTitleInputValue(item.linkedContentTitle)
-    setUrlInputValue(item.linkedContentHref)
-    setIngressInputValue(item.linkedContentIngress)
-    setStartDateValue(item.linkedContentDate)
-    setContentTypeValue(item.linkedContentType)
-    setMainSubjectValue(item.linkedContentSubject)
-    setSearchWordTag('')
-    setSearchWordsList(item.searchWords)
+    dispatch({
+      type: 'set',
+      setState: {
+        bestBetId: item.id,
+        selectedContentResult: item.linkedSelectedContentResult,
+        titleInputValue: item.linkedContentTitle,
+        urlInputValue: item.linkedContentHref,
+        ingressInputValue: item.linkedContentIngress,
+        startDateValue: item.linkedContentDate,
+        contentTypeValue: item.linkedContentType,
+        mainSubjectValue: item.linkedContentSubject,
+        searchWordTag: '',
+        searchWordsList: item.searchWords
+      }
+    })
 
+    setShowEditBestBetModal(true)
     if (item.linkedSelectedContentResult) {
       setIsXPContent(true)
     } else {
@@ -153,7 +162,9 @@ function Bestbet(props) {
   function handleCreateBestBetOnClick() {
     setShowCreateBestBetModal(true)
     // clear edit best bet input data
-    clearInputFields()
+    dispatch({
+      type: 'init'
+    })
   }
 
   function handleDeleteBestBetOnClick(item) {
@@ -162,19 +173,21 @@ function Bestbet(props) {
   }
 
   function handleInputChange(event, type) {
-    if (type === 'url') setUrlInputValue(event)
-    if (type === 'title') setTitleInputValue(event)
-    if (type === 'ingress') setIngressInputValue(event)
-    if (type === 'date') setStartDateValue(event)
-    if (type === 'searchWord') setSearchWordTag(event)
+    dispatch({
+      type: 'handle',
+      inputName: type,
+      value: event
+    })
   }
 
-  function handleRemoveEditTag(tag) {
-    setSearchWordsList(searchWordsList.filter((word) => word !== tag))
-  }
-
-  function handleTagSubmit() {
-    setSearchWordsList([...searchWordsList, searchWordTag])
+  function handleTag(action, tag) {
+    dispatch({
+      type: 'handle',
+      inputName: 'searchWordsList',
+      value: action === 'submit' ?
+        [...formState.searchWordsList, formState.searchWordTag] :
+        formState.searchWordsList.filter((word) => word !== tag)
+    })
   }
 
   function handleTabOnClick(item) {
@@ -188,35 +201,24 @@ function Bestbet(props) {
   }
 
   function handleContentSelect(event) {
-    setSelectedContentResult(event)
+    dispatch({
+      type: 'handle',
+      inputName: 'selectedContentResult',
+      value: event
+    })
   }
 
-  function handleDatoTypeSelect(value) {
-    if (value === 'date-select-manual') {
+  function handleDatoTypeSelect(type) {
+    if (type === 'date-select-manual') {
       setShowDatePicker(true)
-    }
-
-    if (value === 'date-select-xp') {
+    } else {
       setShowDatePicker(false)
-      setStartDateValue('xp') // Converts to the correct date in search result view
+      dispatch({
+        type: 'handle',
+        inputName: 'startDateValue',
+        value: type === 'date-select-xp' ? 'xp' : ''
+      })
     }
-
-    if (value === 'date-select-none') {
-      setShowDatePicker(false)
-      setStartDateValue('')
-    }
-  }
-
-  function clearInputFields() {
-    setSelectedContentResult(initialState.selectedContentResult)
-    setTitleInputValue(initialState.titleInputValue)
-    setUrlInputValue(initialState.urlInputValue)
-    setIngressInputValue(initialState.ingressInputValue)
-    setStartDateValue(initialState.startDateValue)
-    setContentTypeValue(initialState.contentTypeValue)
-    setMainSubjectValue(initialState.mainSubjectValue)
-    setSearchWordTag(initialState.searchWordTag)
-    setSearchWordsList(initialState.searchWordsList)
   }
 
   async function searchForTerm(inputValue = '') {
@@ -239,7 +241,7 @@ function Bestbet(props) {
   function renderSearchWord(searchWord, disabled) {
     if (!disabled) {
       return (
-        <Tag className="m-1" onClick={() => handleRemoveEditTag(searchWord)}>
+        <Tag className="m-1" onClick={() => handleTag('delete', searchWord)}>
           {searchWord}<XCircle size={16} className="ms-1" />
         </Tag>
       )
@@ -310,8 +312,8 @@ function Bestbet(props) {
   }
 
   function renderBestBetForm() {
-    const selectedContentType = props.contentTypes.filter((contentType) => contentTypeValue === contentType.title)[0]
-    const selectedMainSubject = props.mainSubjects.filter((mainSubject) => mainSubjectValue === mainSubject.title)[0]
+    const selectedContentType = props.contentTypes.filter((contentType) => formState.contentTypeValue === contentType.title)[0]
+    const selectedMainSubject = props.mainSubjects.filter((mainSubject) => formState.mainSubjectValue === mainSubject.title)[0]
     return (
       <div className="best-bet-form">
         <Row className="mb-3">
@@ -338,18 +340,18 @@ function Bestbet(props) {
             <Input
               className="m-0"
               label="Best bet"
-              handleChange={(e) => handleInputChange(e, 'searchWord')}
-              value={searchWordTag}
+              handleChange={(e) => handleInputChange(e, 'searchWordTag')}
+              value={formState.searchWordTag}
             />
           </Col>
           <Col className="d-flex justify-content-end">
-            <Button primary onClick={handleTagSubmit}>Legg til</Button>
+            <Button primary onClick={() => handleTag('submit')}>Legg til</Button>
           </Col>
         </Row>
-        {searchWordsList.length ?
+        {formState.searchWordsList.length ?
           <Row>
             <Col className="d-flex flex-wrap mb-3">
-              {searchWordsList.map((searchWord) => renderSearchWord(searchWord))}
+              {formState.searchWordsList.map((searchWord) => renderSearchWord(searchWord))}
             </Col>
           </Row> : null}
         <Row>
@@ -361,7 +363,7 @@ function Bestbet(props) {
                   className="dropdown-interactive-area"
                   placeholder="Søk ved å skrive..."
                   styles={customAsyncSelectStyles}
-                  defaultInputValue={selectedContentResult && selectedContentResult.label}
+                  defaultInputValue={formState.selectedContentResult && formState.selectedContentResult.label}
                   cacheOptions
                   defaultOptions
                   loadOptions={promiseOptions}
@@ -371,37 +373,37 @@ function Bestbet(props) {
               <React.Fragment>
                 <Input
                   label="Ekstern lenke"
-                  handleChange={(e) => handleInputChange(e, 'url')}
-                  value={urlInputValue}
+                  handleChange={(e) => handleInputChange(e, 'urlInputValue')}
+                  value={formState.urlInputValue}
                 />
                 <Input
                   label="Tittel"
-                  handleChange={(e) => handleInputChange(e, 'title')}
-                  value={titleInputValue}
+                  handleChange={(e) => handleInputChange(e, 'titleInputValue')}
+                  value={formState.titleInputValue}
                 />
               </React.Fragment>}
             <TextArea
               label="Ingress"
-              handleChange={(e) => handleInputChange(e, 'ingress')}
-              value={ingressInputValue}
+              handleChange={(e) => handleInputChange(e, 'ingressInputValue')}
+              value={formState.ingressInputValue}
             />
             <Dropdown
               header="Innholdstype"
               items={props.contentTypes}
               selectedItem={selectedContentType ? selectedContentType : props.contentTypes[0]}
-              onSelect={(item) => setContentTypeValue(item.id !== '' ? item.title : '')}
+              onSelect={(item) => handleInputChange(item.id !== '' ? item.title : '', 'contentTypeValue')}
             />
             <Dropdown
               header="Emne"
               items={props.mainSubjects}
               selectedItem={selectedMainSubject ? selectedMainSubject : props.mainSubjects[0]}
-              onSelect={(item) => setMainSubjectValue(item.id !== '' ? item.title : '')}
+              onSelect={(item) => handleInputChange(item.id !== '' ? item.title : '', 'mainSubjectValue')}
             />
             {isXPContent &&
               <RadioGroup
                 header="Velg dato format"
                 onChange={handleDatoTypeSelect}
-                selectedValue={startDateValue ? startDateValue === 'xp' ? 'date-select-xp' : 'date-select-manual' : 'date-select-none'}
+                selectedValue={formState.startDateValue ? formState.startDateValue === 'xp' ? 'date-select-xp' : 'date-select-manual' : 'date-select-none'}
                 orientation="column"
                 items={[
                   {
@@ -423,8 +425,8 @@ function Bestbet(props) {
               <Input
                 label="Dato"
                 type="date"
-                handleChange={(e) => handleInputChange(e, 'date')}
-                value={startDateValue}
+                handleChange={(e) => handleInputChange(e, 'startDateValue')}
+                value={formState.startDateValue}
               />}
           </Col>
         </Row>
@@ -602,4 +604,3 @@ Bestbet.propTypes = {
 }
 
 export default (props) => <Bestbet {...props} />
-
