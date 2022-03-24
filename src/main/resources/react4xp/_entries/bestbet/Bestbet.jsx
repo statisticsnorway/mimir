@@ -333,6 +333,25 @@ function Bestbet(props) {
             <Divider />
           </Col>
         </Row>
+        <Row className="d-flex flex-row align-items-end mb-3">
+          <Col className="col-lg-10">
+            <Input
+              className="m-0"
+              label="Best bet"
+              handleChange={(e) => handleInputChange(e, 'searchWord')}
+              value={searchWordTag}
+            />
+          </Col>
+          <Col className="d-flex justify-content-end">
+            <Button primary onClick={handleTagSubmit}>Legg til</Button>
+          </Col>
+        </Row>
+        {searchWordsList.length ?
+          <Row>
+            <Col className="d-flex flex-wrap mb-3">
+              {searchWordsList.map((searchWord) => renderSearchWord(searchWord))}
+            </Col>
+          </Row> : null}
         <Row>
           <Col>
             {isXPContent &&
@@ -380,7 +399,6 @@ function Bestbet(props) {
             />
             {isXPContent &&
               <RadioGroup
-                className="mb-3"
                 header="Velg dato format"
                 onChange={handleDatoTypeSelect}
                 selectedValue={startDateValue ? startDateValue === 'xp' ? 'date-select-xp' : 'date-select-manual' : 'date-select-none'}
@@ -410,25 +428,6 @@ function Bestbet(props) {
               />}
           </Col>
         </Row>
-        <Row className="d-flex flex-row align-items-end">
-          <Col className="col-lg-10">
-            <Input
-              className="m-0"
-              label="Nøkkelord"
-              handleChange={(e) => handleInputChange(e, 'searchWord')}
-              value={searchWordTag}
-            />
-          </Col>
-          <Col className="d-flex justify-content-end">
-            <Button primary onClick={handleTagSubmit}>Legg til</Button>
-          </Col>
-        </Row>
-        {searchWordsList.length ?
-          <Row>
-            <Col className="d-flex flex-wrap mt-3">
-              {searchWordsList.map((searchWord) => renderSearchWord(searchWord))}
-            </Col>
-          </Row> : null}
       </div>
     )
   }
@@ -438,7 +437,7 @@ function Bestbet(props) {
       <BestBetModal
         show={showEditBestBetModal}
         onHide={handleCloseEditBestBetModal}
-        title="Rediger best-bet"
+        title="Rediger best bet"
         body={renderBestBetForm()}
         footer={
           <>
@@ -457,7 +456,7 @@ function Bestbet(props) {
       <BestBetModal
         show={showCreateBestBetModal}
         onHide={handleCloseCreateBestBetModal}
-        title="Lag nytt best-bet"
+        title="Lag nytt best bet"
         body={
           renderBestBetForm()
         }
@@ -476,7 +475,7 @@ function Bestbet(props) {
       <BestBetModal
         show={showDeleteBestBetModal}
         onHide={handleCloseDeleteBestBetModal}
-        title="Slett best-bet"
+        title="Slett best bet"
         body={
           <p>Har du lyst til å slette&nbsp;
           &laquo;
