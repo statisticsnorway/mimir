@@ -1,9 +1,10 @@
-import {Request, Response} from "enonic-types/controller";
-import {ResourceKey} from "enonic-types/thymeleaf";
-import {Content} from "enonic-types/content";
-import {Component} from 'enonic-types/portal'
-import {BannerPartConfig} from "./banner-part-config";
-import {MunicipalityWithCounty} from "../../../lib/ssb/dataset/klass/municipalities";
+import { Request, Response } from 'enonic-types/controller'
+import { ResourceKey } from 'enonic-types/thymeleaf'
+import { Content } from 'enonic-types/content'
+import { Component } from 'enonic-types/portal'
+import { BannerPartConfig } from './banner-part-config'
+import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
+import { Page } from '../../content-types/page/page'
 
 const {
   getContent,
@@ -24,9 +25,9 @@ const {
 } = __non_webpack_require__('/lib/ssb/error/error')
 
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
-const view: ResourceKey = resolve('./banner.html')
+const view: ResourceKey = resolve('./banner.html') as ResourceKey
 
-exports.get = function (req: Request) {
+exports.get = function(req: Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -37,24 +38,25 @@ exports.get = function (req: Request) {
 exports.preview = (req: Request): Response => renderPart(req)
 
 function renderPart(req: Request): Response {
-  const page: Content<any> = getContent() // TODO finn content type her
+  const page: Content<Page> = getContent()
   const part: Component<BannerPartConfig> = getComponent()
-  const pageType: PageTypeGeneral | PageTypeFaktaside | PageTypeKommunefakta = part.config.pageType
-  const factsAbout = i18nLib.localize({
+  const pageType: BannerPartConfig['pageType'] = part.config.pageType
+  const factsAbout: string = i18nLib.localize({
     key: 'factsAbout'
   })
   let subTitleFactPage: string = ''
-  if ("faktaside" in pageType) {
+  if ('faktaside' in pageType) {
     subTitleFactPage = pageType.faktaside.subTitle ? pageType.faktaside.subTitle : factsAbout
   }
   const municipality: MunicipalityWithCounty | undefined = pageType._selected === 'kommunefakta' ? getMunicipality(req) : undefined
-  const municipalityName = municipality ? removeCountyFromMunicipalityName(municipality.displayName) : undefined
-  const imgSrcSet: string | ImageConf | undefined = part.config.image ? imageSrcSet(part.config.image) : undefined
+  const municipalityName: string | undefined = municipality ? removeCountyFromMunicipalityName(municipality.displayName) : undefined
+  const imgSrcSet: ImageConf | undefined = part.config.image ? imageSrcSet(part.config.image) : undefined
 
   // Remove uppercase for page title when accompanied by "Fakta om"
   const factPageTitle: string = `${subTitleFactPage} ${page.displayName}`.toLowerCase()
   const imageAlt: string | undefined = part.config.image ? getImageAlt(part.config.image) : undefined
-  const model = {
+
+  const body: string = render(view, {
     ...imgSrcSet,
     pageDisplayName: page.displayName,
     bannerImageAltText: imageAlt ? imageAlt : ' ',
@@ -66,9 +68,7 @@ function renderPart(req: Request): Response {
     pageType,
     subTitleFactPage,
     factPageTitle: factPageTitle.charAt(0).toUpperCase() + factPageTitle.slice(1)
-  }
-
-  const body = render(view, model)
+  })
 
   return {
     body,
@@ -99,28 +99,4 @@ function imageSrcSet(imageId: string): ImageConf {
 interface ImageConf {
   sizes: string;
   srcset: string;
-}
-
-interface PageType {
-  _selected: 'kommunefakta' | 'faktaside' | 'general';
-}
-
-interface PageTypeKommunefakta extends PageType {
-  _selected: "kommunefakta";
-  kommunefakta: Record<string, unknown>;
-}
-
-interface PageTypeFaktaside extends PageType {
-  _selected: "faktaside";
-  faktaside: {
-    subTitle?: string;
-    title?: string;
-  }
-}
-
-interface PageTypeGeneral extends PageType {
-  _selected: "general";
-  general: {
-    generalTitle?: string;
-  };
 }
