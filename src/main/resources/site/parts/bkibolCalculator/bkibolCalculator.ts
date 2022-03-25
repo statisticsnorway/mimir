@@ -6,7 +6,10 @@ import { Dataset } from '../../../lib/types/jsonstat-toolkit'
 import { Content } from 'enonic-types/content'
 import { CalculatorConfig } from '../../content-types/calculatorConfig/calculatorConfig'
 import { Language, Phrases } from '../../../lib/types/language'
+import { allMonths, nextPeriod } from '../../../lib/ssb/utils/calculatorUtils'
+import { CalculatorPeriod } from '../../../lib/types/calculator'
 import { ResourceKey } from 'enonic-types/thymeleaf'
+import { DropdownItem, DropdownItems } from '../../../lib/types/components'
 const {
   getComponent,
   getContent,
@@ -72,19 +75,19 @@ function getBkibolCalculatorComponent(page: Content<BkibolCalculatorPartConfig>)
   const language: Language = getLanguage(page) as Language
   const phrases: Phrases = language.phrases as Phrases
   const code: string = language.code ? language.code : 'nb'
-  const months: Array<MonthPhrase> = allMonths(phrases)
+  const months: DropdownItems = allMonths(phrases)
   const config: Content<CalculatorConfig> | undefined = getCalculatorConfig()
   const bkibolDataEnebolig: Dataset | null = config ? getBkibolDatasetEnebolig(config) : null
-  const lastUpdated: Period = lastPeriod(bkibolDataEnebolig)
-  const nextUpdate: Period = nextPeriod(lastUpdated.month, lastUpdated.year)
-  const nextReleaseMonth: number = nextUpdate.month === 12 ? 1 : nextUpdate.month + 1
+  const lastUpdated: CalculatorPeriod = lastPeriod(bkibolDataEnebolig)
+  const nextUpdate: CalculatorPeriod = nextPeriod(lastUpdated.month.toString(), lastUpdated.year.toString())
+  const nextReleaseMonth: number = +nextUpdate.month
   const nextPublishText: string = i18nLib.localize({
     key: 'calculatorNextPublishText',
     locale: language.code,
     values: [
-      monthLabel(months, code, lastUpdated.month),
+      monthLabel(months, code, +lastUpdated.month),
       lastUpdated.year.toString(),
-      monthLabel(months, code, nextUpdate.month),
+      monthLabel(months, code, +nextUpdate.month),
       monthLabel(months, code, nextReleaseMonth)
     ]
   })
@@ -92,7 +95,7 @@ function getBkibolCalculatorComponent(page: Content<BkibolCalculatorPartConfig>)
     key: 'calculatorLastNumber',
     locale: code,
     values: [
-      monthLabel(months, code, lastUpdated.month),
+      monthLabel(months, code, +lastUpdated.month),
       lastUpdated.year.toString()
     ]
   })
@@ -127,7 +130,7 @@ function getBkibolCalculatorComponent(page: Content<BkibolCalculatorPartConfig>)
   }
 }
 
-function lastPeriod(bkibolData: Dataset | null): Period {
+function lastPeriod(bkibolData: Dataset | null): CalculatorPeriod {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   // eslint-disable-next-line new-cap
@@ -139,90 +142,12 @@ function lastPeriod(bkibolData: Dataset | null): Period {
   }
 }
 
-function allMonths(phrases: Phrases): MonthPhrase[] {
-  return [
-    {
-      id: '01',
-      title: phrases.january
-    },
-    {
-      id: '02',
-      title: phrases.february
-    },
-    {
-      id: '03',
-      title: phrases.march
-    },
-    {
-      id: '04',
-      title: phrases.april
-    },
-    {
-      id: '05',
-      title: phrases.may
-    },
-    {
-      id: '06',
-      title: phrases.june
-    },
-    {
-      id: '07',
-      title: phrases.july
-    },
-    {
-      id: '08',
-      title: phrases.august
-    },
-    {
-      id: '09',
-      title: phrases.september
-    },
-    {
-      id: '10',
-      title: phrases.october
-    },
-    {
-      id: '11',
-      title: phrases.november
-    },
-    {
-      id: '12',
-      title: phrases.december
-    }
-  ]
-}
-
-function nextPeriod(month: number, year: number): Period {
-  let nextPeriodMonth: number = month + 1
-  let nextPeriodYear: number = year
-
-  if (Number(month) === 12) {
-    nextPeriodMonth = 1
-    nextPeriodYear = nextPeriodYear + 1
-  }
-
-  return {
-    month: nextPeriodMonth,
-    year: nextPeriodYear
-  }
-}
-
-function monthLabel(months: Array<MonthPhrase>, language: string, month: number): string {
-  const monthLabel: MonthPhrase | undefined = months.find((m) => parseInt(m.id) === month)
+function monthLabel(months: DropdownItems, language: string, month: number): string {
+  const monthLabel: DropdownItem | undefined = months.find((m) => parseInt(m.id) === month)
   if (monthLabel) {
     return language === 'en' ? monthLabel.title : monthLabel.title.toLowerCase()
   }
   return ''
-}
-
-interface Period {
-  month: number;
-  year: number;
-}
-
-interface MonthPhrase {
-  id: string;
-  title: string;
 }
 
 interface CalculatorComponent {
