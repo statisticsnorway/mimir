@@ -361,7 +361,7 @@ function Bestbet(props) {
         <Row className="bestbet-header">
           <Col className="flex-row align-items-center">
             <img src={props.logoUrl} className="logo" />
-            <Title size={1}>Best-bet søk</Title>
+            <Title size={1}>Best bet søk</Title>
           </Col>
         </Row>
         <Row className="justify-content-between">
@@ -371,7 +371,7 @@ function Bestbet(props) {
               onClick={handleCreateBestBetOnClick}
               primary
             >
-            Ny Bestbet
+            Ny Best bet
               <Plus size={16} className="ms-1" />
             </Button>
             <Divider className="mb-3" light />
