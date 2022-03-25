@@ -1,10 +1,9 @@
 import { Content } from 'enonic-types/content'
 import { Request, Response } from 'enonic-types/controller'
-import { ResourceKey, ThymeleafLibrary } from 'enonic-types/thymeleaf'
+import { ResourceKey } from 'enonic-types/thymeleaf'
 import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
 import { ActiveStatisticsPartConfig } from './activeStatistics-part-config'
 import { Statistics } from '../../content-types/statistics/statistics'
-import { CmsStatistic, XpStatistic } from "../../../lib/types/relatedStatistics";
 
 const {
   data: {
@@ -48,7 +47,8 @@ exports.preview = (req: Request): React4xpResponse => renderPart(req)
 function renderPart(req: Request): React4xpResponse {
   const page: Content = getContent()
   const partConfig: ActiveStatisticsPartConfig = getComponent().config
-  const activeStatistics: Array<CmsStatistic|XpStatistic> = partConfig.relatedStatisticsOptions ? forceArray(partConfig.relatedStatisticsOptions) : []
+  const activeStatistics: ActiveStatisticsPartConfig['relatedStatisticsOptions'] = partConfig.relatedStatisticsOptions ?
+    forceArray(partConfig.relatedStatisticsOptions) : []
 
   const statisticsTitle: string = localize({
     key: 'menuStatistics',
@@ -100,9 +100,9 @@ function renderActiveStatistics(statisticsTitle: string, activeStatisticsContent
   }
 }
 
-function parseContent(activeStatistics: Array<CmsStatistic|XpStatistic>): Array<ActiveStatistic | undefined> {
+function parseContent(activeStatistics: ActiveStatisticsPartConfig['relatedStatisticsOptions']): Array<ActiveStatistic | undefined> {
   if ( activeStatistics && activeStatistics.length) {
-    return activeStatistics.map((statistics:CmsStatistic | XpStatistic) => {
+    return activeStatistics.map((statistics) => {
       if (statistics._selected === 'xp' && statistics.xp.contentId) {
         const statisticsContentId: string = statistics.xp.contentId
         const activeStatisticsContent: Content<Statistics> | null = get({
@@ -139,5 +139,3 @@ interface ActiveStatistic {
   preamble: string;
   href: string;
 }
-
-
