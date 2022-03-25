@@ -5,6 +5,7 @@ import { ChevronDown, X } from 'react-feather'
 import axios from 'axios'
 import NumberFormat from 'react-number-format'
 import { Col, Row } from 'react-bootstrap'
+import { addGtagForEvent } from '../../../react4xp/ReactGA'
 
 function SearchResult(props) {
   const [hits, setHits] = useState(props.hits)
@@ -52,13 +53,16 @@ function SearchResult(props) {
     })
     setSelectedContentType(props.dropDownContentTypes[0])
     setSelectedMainSubject(props.dropDownSubjects[0])
+    addGtagForEvent(props.GA_TRACKING_ID, 'Klikk', 'Søk', 'Fjern alle filtervalg')
   }
 
   function renderListItem(hit, i) {
     if (hit) {
       return (
         <li key={i ? i : undefined} className="mb-4">
-          <Link href={hit.url} className="ssb-link header" >
+          <Link href={hit.url} className="ssb-link header" onClick={() => {
+            addGtagForEvent(props.GA_TRACKING_ID, 'Klikk på lenke', 'Søk', `${searchTerm} - Lenke nummer: ${i + 1}`)
+          }}>
             <span dangerouslySetInnerHTML={{
               __html: hit.title.replace(/&nbsp;/g, ' ')
             }}></span>
@@ -161,7 +165,10 @@ function SearchResult(props) {
           <Button
             disabled={loading || total === hits.length}
             className="button-more mt-5"
-            onClick={fetchSearchResult}
+            onClick={() => {
+              fetchSearchResult()
+              addGtagForEvent(props.GA_TRACKING_ID, 'Klikk', 'Søk', 'Vis flere')
+            }}
           >
             <ChevronDown size="18"/> {props.buttonTitle}
           </Button>
@@ -195,6 +202,12 @@ function SearchResult(props) {
 
   function goToSearchResultPage() {
     window.location = `${props.searchPageUrl}?sok=${searchTerm}`
+    // if (props.bestBetHit) {
+    //   addGtagForEvent(props.GA_TRACKING_ID, 'Best Bet', 'Søk', searchTerm)
+    // }
+    // if (hits.length === 0) {
+    //   addGtagForEvent(props.GA_TRACKING_ID, 'Null treff', 'Søk', searchTerm)
+    // }
   }
 
   const DropdownMainSubject = React.forwardRef((_props, ref) => (
@@ -204,6 +217,7 @@ function SearchResult(props) {
       id='mainSubject'
       onSelect={(value) => {
         onChange('mainSubject', value)
+        addGtagForEvent(props.GA_TRACKING_ID, 'Valgt emne', 'Søk', value.title)
       }}
       selectedItem={selectedMainSubject}
       items={props.dropDownSubjects}
@@ -218,6 +232,7 @@ function SearchResult(props) {
       id='contentType'
       onSelect={(value) => {
         onChange('contentType', value)
+        addGtagForEvent(props.GA_TRACKING_ID, 'Valgt innholdstype', 'Søk', value.title)
       }}
       selectedItem={selectedContentType}
       items={props.dropDownContentTypes}
@@ -315,7 +330,8 @@ SearchResult.propTypes = {
       publishDateHuman: PropTypes.string
     })),
   dropDownSubjects: PropTypes.array,
-  dropDownContentTypes: PropTypes.array
+  dropDownContentTypes: PropTypes.array,
+  GA_TRACKING_ID: PropTypes.string
 }
 
 export default (props) => <SearchResult {...props} />
