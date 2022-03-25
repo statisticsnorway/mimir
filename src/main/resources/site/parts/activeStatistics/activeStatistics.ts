@@ -47,8 +47,8 @@ exports.preview = (req: Request): React4xpResponse => renderPart(req)
 
 function renderPart(req: Request): React4xpResponse {
   const page: Content = getContent()
-  const part: ActiveStatisticsPartConfig = getComponent().config
-  const activeStatistics: Array<CmsStatistic|XpStatistic> = part.relatedStatisticsOptions ? forceArray(part.relatedStatisticsOptions) : []
+  const partConfig: ActiveStatisticsPartConfig = getComponent().config
+  const activeStatistics: Array<CmsStatistic|XpStatistic> = partConfig.relatedStatisticsOptions ? forceArray(partConfig.relatedStatisticsOptions) : []
 
   const statisticsTitle: string = localize({
     key: 'menuStatistics',
