@@ -15,5 +15,5 @@
   ],
   "include": [
     "src/**/*.ts"
-, "src/main/resources/react4xp/_entries/bestbet/bestBetReducer.es6"  ]
+  ]
 }

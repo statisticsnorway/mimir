@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react'
+import React, { useState, useEffect, useReducer, createContext } from 'react'
 import PropTypes from 'prop-types'
 import { Container, Row, Col } from 'react-bootstrap'
 import { Title, Link, Tag, Button, Divider } from '@statisticsnorway/ssb-component-library'
@@ -6,8 +6,8 @@ import { XCircle, Edit, Trash, Plus } from 'react-feather'
 import BestBetModal from './BestBetModal'
 import BestBetForm from './BestBetForm'
 import axios from 'axios'
-import BestBetContext from './BestBetContext'
 
+export const BestBetContext = createContext()
 function Bestbet(props) {
   const [loading, setLoading] = useState(false)
   const [bestBetList, setBestBetList] = useState([])
