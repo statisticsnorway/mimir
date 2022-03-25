@@ -1,11 +1,12 @@
-import {PageContributions, Request, Response} from "enonic-types/controller";
-import {React4xp, React4xpObject, React4xpPageContributionOptions, React4xpResponse} from "../../../lib/types/react4xp";
-import {Component} from "enonic-types/portal";
-import {BkibolCalculatorPartConfig} from "./bkibolCalculator-part-config";
+import { PageContributions, Request, Response } from 'enonic-types/controller'
+import { React4xp, React4xpObject, React4xpPageContributionOptions, React4xpResponse } from '../../../lib/types/react4xp'
+import { Component } from 'enonic-types/portal'
+import { BkibolCalculatorPartConfig } from './bkibolCalculator-part-config'
 import { Dataset } from '../../../lib/types/jsonstat-toolkit'
-import {Content} from "enonic-types/content";
-import {CalculatorConfig} from "../../content-types/calculatorConfig/calculatorConfig";
-import {Language, Phrases} from "../../../lib/types/language";
+import { Content } from 'enonic-types/content'
+import { CalculatorConfig } from '../../content-types/calculatorConfig/calculatorConfig'
+import { Language, Phrases } from '../../../lib/types/language'
+import { ResourceKey } from 'enonic-types/thymeleaf'
 const {
   getComponent,
   getContent,
@@ -29,9 +30,9 @@ const {
   fromPartCache
 } = __non_webpack_require__('/lib/ssb/cache/partCache')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
-const view = resolve('./bkibolCalculator.html')
+const view: ResourceKey = resolve('./bkibolCalculator.html') as ResourceKey
 
-exports.get = function(req: Request): React4xpResponse | Response  {
+exports.get = function(req: Request): React4xpResponse | Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -66,9 +67,9 @@ function renderPart(req: Request): React4xpResponse {
   }
 }
 
-function getBkibolCalculatorComponent(page: Content<BkibolCalculatorPartConfig>): CalculatorComponent  {
+function getBkibolCalculatorComponent(page: Content<BkibolCalculatorPartConfig>): CalculatorComponent {
   const part: Component<BkibolCalculatorPartConfig> = getComponent()
-  const language: Language = getLanguage(page)
+  const language: Language = getLanguage(page) as Language
   const phrases: Phrases = language.phrases as Phrases
   const code: string = language.code ? language.code : 'nb'
   const months: Array<MonthPhrase> = allMonths(phrases)
@@ -87,7 +88,7 @@ function getBkibolCalculatorComponent(page: Content<BkibolCalculatorPartConfig>)
       monthLabel(months, code, nextReleaseMonth)
     ]
   })
-  const lastNumberText = i18nLib.localize({
+  const lastNumberText: string = i18nLib.localize({
     key: 'calculatorLastNumber',
     locale: code,
     values: [
@@ -95,7 +96,7 @@ function getBkibolCalculatorComponent(page: Content<BkibolCalculatorPartConfig>)
       lastUpdated.year.toString()
     ]
   })
-  const calculatorArticleUrl = part.config.bkibolCalculatorArticle && pageUrl({
+  const calculatorArticleUrl: string | undefined = part.config.bkibolCalculatorArticle && pageUrl({
     id: part.config.bkibolCalculatorArticle
   })
 
@@ -115,7 +116,7 @@ function getBkibolCalculatorComponent(page: Content<BkibolCalculatorPartConfig>)
     .setId('bkibolCalculatorId')
     .uniqueId()
 
-  const body = render(view, {
+  const body: string = render(view, {
     bkibolCalculatorId: bkibolCalculator.react4xpId
   })
   return {
@@ -126,19 +127,19 @@ function getBkibolCalculatorComponent(page: Content<BkibolCalculatorPartConfig>)
   }
 }
 
-function lastPeriod(bkibolData: Dataset | null): Period{
-  // eslint-disable-next-line new-cap
-  log.info(`GLNRBN ser på dataset: ${JSON.stringify(bkibolData, null, 2)}`)
+function lastPeriod(bkibolData: Dataset | null): Period {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const dataYear = bkibolData && bkibolData.Dimension('Tid').id
-  const lastYear = dataYear[dataYear.length - 1]
+  // eslint-disable-next-line new-cap
+  const dataYear: string[] = bkibolData ? bkibolData.Dimension('Tid').id as string[] : []
+  const lastYear: string = dataYear[dataYear.length - 1]
   return {
-    month: lastYear.substr(5, 2),
-    year: lastYear.substr(0, 4)
+    month: +lastYear.substring(5, 2) || 0, // psst: the + casts it as a number. Then return 0 if not castable as number.
+    year: +lastYear.substring(0, 4) || 0
   }
 }
 
-const allMonths = (phrases: any): Array<MonthPhrase> => {
+function allMonths(phrases: Phrases): MonthPhrase[] {
   return [
     {
       id: '01',
@@ -192,8 +193,8 @@ const allMonths = (phrases: any): Array<MonthPhrase> => {
 }
 
 function nextPeriod(month: number, year: number): Period {
-  let nextPeriodMonth = month + 1
-  let nextPeriodYear = year
+  let nextPeriodMonth: number = month + 1
+  let nextPeriodYear: number = year
 
   if (Number(month) === 12) {
     nextPeriodMonth = 1
@@ -206,8 +207,8 @@ function nextPeriod(month: number, year: number): Period {
   }
 }
 
-const monthLabel = (months: Array<MonthPhrase>, language: string, month: number) => {
-  const monthLabel = months.find((m) => parseInt(m.id) === month)
+function monthLabel(months: Array<MonthPhrase>, language: string, month: number): string {
+  const monthLabel: MonthPhrase | undefined = months.find((m) => parseInt(m.id) === month)
   if (monthLabel) {
     return language === 'en' ? monthLabel.title : monthLabel.title.toLowerCase()
   }
