@@ -1,11 +1,9 @@
-import {React4xp} from "../../../lib/types/react4xp";
-import {Request} from "enonic-types/controller";
-import {Component} from "enonic-types/portal";
-import {Content} from "enonic-types/content";
-import {Language, Phrases} from "../../../lib/types/language";
+import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
+import { Request } from 'enonic-types/controller'
+import { Content } from 'enonic-types/content'
+import { Language, Phrases } from '../../../lib/types/language'
 
 const {
-  getComponent,
   getContent,
   serviceUrl
 } = __non_webpack_require__('/lib/xp/portal')
@@ -13,30 +11,30 @@ const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp') as React4xp
 const {
   getLanguage
 } = __non_webpack_require__('/lib/ssb/utils/language')
 
 exports.get = function(req: Request) {
   try {
-    const component: Component<any> = getComponent()
-    return renderPart(req, component.config)
+    return renderPart(req)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-exports.preview = (req: Request) => renderPart(req, {
-  dark: false
-})
+exports.preview = (req: Request) => renderPart(req)
 
-const renderPart = (req: Request, config: object) => {
+function renderPart(req: Request): React4xpResponse {
   const page: Content = getContent()
-  const language: Language = getLanguage(page)
+  const language: Language = getLanguage(page) as Language
   const phrases: Phrases = language.phrases as Phrases
-  const recaptchaSiteKey = app.config && app.config['RECAPTCHA_SITE_KEY'] ? app.config['RECAPTCHA_SITE_KEY'] : ''
-  const contactForm = new React4xp('site/parts/contactForm/contactForm')
+  const recaptchaSiteKey: string = app.config &&
+    app.config['RECAPTCHA_SITE_KEY'] &&
+    typeof app.config['RECAPTCHA_SITE_KEY'] == 'string' ? app.config['RECAPTCHA_SITE_KEY'] : ''
+
+  const contactForm: React4xpObject = new React4xp('site/parts/contactForm/contactForm')
     .setProps({
       recaptchaSiteKey: recaptchaSiteKey,
       contactFormServiceUrl: serviceUrl({
