@@ -24,6 +24,13 @@ function SearchResult(props) {
     if (filterChanged) {
       fetchFilteredSearchResult()
     }
+    // GA events for best bet and zero hits results
+    if (props.bestBetHit) {
+      addGtagForEvent(props.GA_TRACKING_ID, 'Best Bet', 'Søk', searchTerm)
+    }
+    if ((!props.bestBetHit) && (!hits.length)) {
+      addGtagForEvent(props.GA_TRACKING_ID, 'Null treff', 'Søk', searchTerm)
+    }
   }, [filter])
 
   function onChange(id, value) {
@@ -202,12 +209,6 @@ function SearchResult(props) {
 
   function goToSearchResultPage() {
     window.location = `${props.searchPageUrl}?sok=${searchTerm}`
-    // if (props.bestBetHit) {
-    //   addGtagForEvent(props.GA_TRACKING_ID, 'Best Bet', 'Søk', searchTerm)
-    // }
-    // if (hits.length === 0) {
-    //   addGtagForEvent(props.GA_TRACKING_ID, 'Null treff', 'Søk', searchTerm)
-    // }
   }
 
   const DropdownMainSubject = React.forwardRef((_props, ref) => (
