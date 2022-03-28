@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, Paragraph } from '@statisticsnorway/ssb-component-library'
+import { Link } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 
 class ReleasedStatistics extends React.Component {
@@ -11,8 +11,10 @@ class ReleasedStatistics extends React.Component {
     const hrefStatistic = this.props.language === 'en' ? `/en/${release.shortName}` : `/${release.shortName}`
     return (
       <li key={index} className="front-page-released-statistic">
-        <Link href={hrefStatistic} linkType='header'>{release.name}</Link>
-        <Paragraph className="my-2">{release.variant.period}</Paragraph>
+        <Link href={hrefStatistic} linkType='header' ariaLabel={`${release.name} - ${release.variant.period}`}>
+          {release.name}
+        </Link>
+        <p className="my-2" aria-hidden="true">{release.variant.period}</p>
       </li>
     )
   }
@@ -27,21 +29,20 @@ class ReleasedStatistics extends React.Component {
       ['januar', 'februar', 'mars', 'april', 'mai', 'juni',
         'juli', 'august', 'september', 'oktober', 'november', 'desember']
     const monthNameLong = monthNames[monthNumber]
-    const releasePhrase = this.props.language === 'en' ? 'Releases' : 'Publiseringer'
 
     return (
-      <li className={`calendar-day ${index === 0 && 'first'}`} key={index} aria-labelledby={`heading-released-statistics datemonth-${index}`}>
-        <span id={`datemonth-${index}`} className="sr-only">{`${releasePhrase} ${day.day}. ${monthNameLong}`}</span>
-        <time dateTime={dateTime}>
-          <span className='day' aria-hidden="true">{day.day}</span>
-          <span className='month' aria-hidden="true">{month.monthName}</span>
+      <div className={`calendar-day ${index === 0 && 'first'}`} key={index}>
+        <time aria-hidden="true" dateTime={dateTime}>
+          <span className='day'>{day.day}</span>
+          <span className='month'>{month.monthName}</span>
         </time>
-        <ol className='releaseList'>
+        <span id={`datemonth-${index}`} aria-hidden="true" className="sr-only">{`${day.day}. ${monthNameLong}`}</span>
+        <ol className='releaseList' aria-labelledby={`heading-released-statistics datemonth-${index}`}>
           {
             day.releases.map((release, releaseIndex) => this.renderRelease(release, releaseIndex))
           }
         </ol>
-      </li>
+      </div>
     )
   }
 
@@ -49,15 +50,13 @@ class ReleasedStatistics extends React.Component {
     return (
       <section className='nextStatisticsReleases'>
         <h2 className="mb-4" id="heading-released-statistics">{this.props.title}</h2>
-        <ol>
-          {
-            this.props.releases.reverse().map((year) => {
-              return year.releases.reverse().map((month) => {
-                return month.releases.reverse().map((day, index) => this.renderDay(day, month, year, index))
-              })
+        {
+          this.props.releases.reverse().map((year) => {
+            return year.releases.reverse().map((month) => {
+              return month.releases.reverse().map((day, index) => this.renderDay(day, month, year, index))
             })
-          }
-        </ol>
+          })
+        }
       </section>
     )
   }
