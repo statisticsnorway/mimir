@@ -1,8 +1,9 @@
-import {Request, Response} from "enonic-types/controller";
-import {Content} from "enonic-types/content";
-import {Button} from "../../content-types/button/button";
-import {Component} from "enonic-types/portal";
-import {ButtonPartConfig} from "./button-part-config";
+import { Request, Response } from 'enonic-types/controller'
+import { Content } from 'enonic-types/content'
+import { Button } from '../../content-types/button/button'
+import { Component } from 'enonic-types/portal'
+import { ButtonPartConfig } from './button-part-config'
+import { ResourceKey } from 'enonic-types/thymeleaf'
 
 const {
   attachmentUrl,
@@ -18,7 +19,7 @@ const {
 
 const content = __non_webpack_require__('/lib/xp/content')
 const util = __non_webpack_require__('/lib/util')
-const view = resolve('./button.html')
+const view: ResourceKey = resolve('./button.html') as ResourceKey
 
 exports.get = function(req: Request): Response {
   try {
@@ -33,7 +34,7 @@ exports.get = function(req: Request): Response {
 exports.preview = (req: Request, id: string) => renderPart(req, [id])
 
 function renderPart(req: Request, buttonIds: Array<string>): Response {
-  let buttons: Array<ButtonShape> = []
+  const buttons: Array<ButtonShape> = []
 
   buttonIds.map((key: string) => {
     const button: Content<Button> | null = content.get({
@@ -41,13 +42,13 @@ function renderPart(req: Request, buttonIds: Array<string>): Response {
     })
 
     if (button && button.data.link) {
-      const target: Content<any> | null = content.get({
+      const target: Content | null = content.get({
         key: button.data.link
       })
 
 
       if (target) {
-        const href = getHref(target)
+        const href: string = getHref(target)
         buttons.push({
           displayName: button.displayName,
           href: href
@@ -56,7 +57,7 @@ function renderPart(req: Request, buttonIds: Array<string>): Response {
     }
   })
 
-  const body = render(view, {
+  const body: string = render(view, {
     buttons
   })
 
