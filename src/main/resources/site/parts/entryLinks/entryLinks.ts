@@ -1,9 +1,10 @@
-import {Request, Response} from "enonic-types/controller";
-import {React4xpResponse} from "../../../lib/types/react4xp";
-import {Component} from "enonic-types/portal";
-import {EntryLinksPartConfig} from "./entryLinks-part-config";
-import {Content, Image} from "enonic-types/content";
-import {Phrases} from "../../../lib/types/language";
+import { Request, Response } from 'enonic-types/controller'
+import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
+import { Component } from 'enonic-types/portal'
+import { EntryLinksPartConfig } from './entryLinks-part-config'
+import { Content, Image } from 'enonic-types/content'
+import { Phrases } from '../../../lib/types/language'
+import { ResourceKey } from 'enonic-types/thymeleaf'
 
 const {
   data: {
@@ -31,8 +32,8 @@ const {
   getAttachmentContent
 } = __non_webpack_require__('/lib/ssb/utils/utils')
 
-const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const view = resolve('./entryLinks.html')
+const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+const view: ResourceKey = resolve('./entryLinks.html') as ResourceKey
 
 exports.get = (req: Request) => {
   try {
@@ -47,10 +48,10 @@ exports.preview = (req: Request) => renderPart(req)
 function renderPart(req: Request): Response | React4xpResponse {
   const page: Content = getContent()
   const part: Component<EntryLinksPartConfig> = getComponent()
-  const phrases: Phrases = getPhrases(page)
+  const phrases: Phrases = getPhrases(page) as Phrases
 
-  const entryLinksContent: Array<LinkEntry> = part.config.entryLinks ? forceArray(part.config.entryLinks) : []
-  const headerTitle = phrases.entryLinksTitle
+  const entryLinksContent: EntryLinksPartConfig['entryLinks'] = part.config.entryLinks ? forceArray(part.config.entryLinks) : []
+  const headerTitle: string = phrases.entryLinksTitle
   if (entryLinksContent.length === 0) {
     if (req.mode === 'edit') {
       return {
@@ -65,16 +66,16 @@ function renderPart(req: Request): Response | React4xpResponse {
   return renderEntryLinks(headerTitle, entryLinksContent, isNotInEditMode)
 }
 
-function renderEntryLinks(headerTitle: string, entryLinksContent: Array<LinkEntry>, isNotInEditMode: boolean): React4xpResponse {
-  if (entryLinksContent.length > 0) {
-    const entryLinksComponent = new React4xp('EntryLinks')
+function renderEntryLinks(headerTitle: string, entryLinksContent: EntryLinksPartConfig['entryLinks'], isNotInEditMode: boolean): React4xpResponse {
+  if ( entryLinksContent && entryLinksContent.length > 0) {
+    const entryLinksComponent: React4xpObject = new React4xp('EntryLinks')
       .setProps({
         headerTitle,
         entryLinks: parseEntryLinks(entryLinksContent)
       })
       .uniqueId()
 
-    const body = render(view, {
+    const body: string = render(view, {
       entryLinksId: entryLinksComponent.react4xpId,
       label: headerTitle
     })
@@ -88,16 +89,16 @@ function renderEntryLinks(headerTitle: string, entryLinksContent: Array<LinkEntr
         clientRender: isNotInEditMode
       })
     }
-  }
-
-  return {
-    body: '',
-    pageContributions: ''
+  } else {
+    return {
+      body: '',
+      pageContributions: ''
+    }
   }
 }
 
-const parseEntryLinks = (entryLinksContent: Array<LinkEntry>) => {
-  return entryLinksContent.map(({
+function parseEntryLinks(entryLinksContent: EntryLinksPartConfig['entryLinks']): Array<LinkEntry>|undefined {
+  return entryLinksContent && entryLinksContent.map(({
     title, href, icon, mobileIcon
   }) => {
     const iconData: Content<Image> | null = get({
@@ -130,5 +131,6 @@ interface LinkEntry {
     title: string;
     href: string;
     icon: string;
-    mobileIcon: string;
+    mobileIcon?: string;
+    altText: string;
 }
