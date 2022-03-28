@@ -1,5 +1,5 @@
 import { Request, Response } from 'enonic-types/controller'
-import { React4xp, React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
+import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
 import { Component } from 'enonic-types/portal'
 import { DownloadLinkPartConfig } from './downloadLink-part-config'
 import { ResourceKey } from 'enonic-types/thymeleaf'
