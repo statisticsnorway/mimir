@@ -1,7 +1,8 @@
-import {Request, Response} from "enonic-types/controller";
-import {React4xpObject, React4xpResponse} from "../../../lib/types/react4xp";
-import {Component} from "enonic-types/portal";
-import {DownloadLinkPartConfig} from "./downloadLink-part-config";
+import { Request, Response } from 'enonic-types/controller'
+import { React4xp, React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
+import { Component } from 'enonic-types/portal'
+import { DownloadLinkPartConfig } from './downloadLink-part-config'
+import { ResourceKey } from 'enonic-types/thymeleaf'
 
 const {
   getComponent,
@@ -13,9 +14,9 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
+const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp') as React4xp
 
-const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const view = resolve('./downloadLink.html')
+const view: ResourceKey = resolve('./downloadLink.html') as ResourceKey
 
 exports.get = function(req: Request) {
   try {
