@@ -36,8 +36,8 @@ class ReleasedStatistics extends React.Component {
           <span className='day'>{day.day}</span>
           <span className='month'>{month.monthName}</span>
         </time>
-        <span id={`datemonth-${index}`} aria-hidden="true" className="sr-only">{`${day.day}. ${monthNameLong}`}</span>
-        <ol className='releaseList' aria-labelledby={`heading-released-statistics datemonth-${index}`}>
+        <span id={`datemonth-${monthNumber}${index}`} aria-hidden="true" className="sr-only">{`${day.day}. ${monthNameLong}`}</span>
+        <ol className='releaseList' aria-labelledby={`heading-released-statistics datemonth-${monthNumber}${index}`}>
           {
             day.releases.map((release, releaseIndex) => this.renderRelease(release, releaseIndex))
           }
