@@ -46,7 +46,7 @@ const {
   hasWritePermissionsAndPreview
 } = __non_webpack_require__('/lib/ssb/parts/permissions')
 
-const view: ResourceKey = resolve('./table.html')
+const view: ResourceKey = resolve('./table.html') as ResourceKey
 
 exports.get = function(req: Request): Response {
   try {
@@ -65,12 +65,12 @@ exports.preview = (req: Request, id?: string): Response => {
 
 function getProps(req: Request, tableId?: string): TableProps {
   const page: Content<Table> = getContent()
-  const language: Language = getLanguage(page)
-  const phrases: Phrases = getPhrases(page)
+  const language: Language = getLanguage(page) as Language
+  const phrases: Phrases = getPhrases(page) as Phrases
 
-  const tableContent: Content<Table, object, object> | null = get({
+  const tableContent: Content<Table> | null = get({
     key: tableId as string
-  }) as Content<Table, object, object>
+  }) as Content<Table>
 
   const showPreviewDraft: boolean = hasWritePermissionsAndPreview(req, tableId as string)
   const table: TableView = parseTable(req, tableContent, DATASET_BRANCH)
@@ -91,7 +91,7 @@ function getProps(req: Request, tableId?: string): TableProps {
   })
 
   const standardSymbol: TableStandardSymbolLink | undefined = getStandardSymbolPage(language.standardSymbolPage, phrases.tableStandardSymbols)
-  const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
+  const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? `${app.config['ssb.baseUrl'] as string}` : 'https://www.ssb.no'
   const statBankWebUrl: string = tableContent.language === 'en' ? baseUrl + '/en/statbank' : baseUrl + '/statbank'
   const sourceList: TableSourceList = table.sourceList ? forceArray(table.sourceList) : []
   const sourceListExternal: TableSourceList = sourceList.length > 0 ? sourceList.filter((s) => s.tableApproved === 'internet') : []
@@ -140,7 +140,7 @@ exports.getProps = getProps
 
 function renderPart(req: Request, tableId?: string): Response {
   const page: Content<Table> = getContent()
-  const phrases: Phrases = getPhrases(page)
+  const phrases: Phrases = getPhrases(page) as Phrases
 
   if (!tableId) {
     if (req.mode === 'edit' && page.type !== `${app.name}:statistics`) {
