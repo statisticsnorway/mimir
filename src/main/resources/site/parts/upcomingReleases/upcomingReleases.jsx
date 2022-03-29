@@ -191,17 +191,22 @@ function UpcomingReleases(props) {
     return (
       <li key={index} className="mb-3">
         <div>
+          {!upcomingReleaseLink &&
+            <span className="sr-only">{`${name} - ${showPeriod ? variant.period : ''}`}</span>
+          }
+
           {upcomingReleaseLink ?
             <Link href={upcomingReleaseLink} linkType='header'>{name}</Link> :
-            <h3 className="mb-0">{name}</h3>
+            <h3 className="mb-0" aria-hidden="true">{name}</h3>
           }
+
           {showPeriod &&
-            <Paragraph className="mb-0">{variant.period}</Paragraph>
+            <p className="mb-0" aria-hidden="true">{variant.period}</p>
           }
-          <Paragraph className="metadata">
+          <p className="metadata" aria-hidden="true">
             {day}. {monthName} {year} / <span
               className="type">{type}</span> / {mainSubject}
-          </Paragraph>
+          </p>
         </div>
         {statisticsPageUrl &&
           <div className="statisticsPageLink">
@@ -218,18 +223,30 @@ function UpcomingReleases(props) {
       month: month.month,
       year: year.year
     }
+
+    const monthNumber = Number(month.month)
+    const monthPadded = monthNumber < 9 ? '0' + (monthNumber + 1) : monthNumber + 1
+    const dateTime = `${day.day}.${monthPadded}.${year.year}`
+    const monthNames = props.language === 'en' ?
+      ['january', 'february', 'march', 'april', 'may', 'june',
+        'july', 'august', 'september', 'october', 'november', 'december'] :
+      ['januar', 'februar', 'mars', 'april', 'mai', 'juni',
+        'juli', 'august', 'september', 'oktober', 'november', 'desember']
+    const monthNameLong = monthNames[monthNumber]
+
     return (
-      <article className={index === 0 ? 'first' : ''} key={index}>
-        <time dateTime={`${year.year}-${month.month}`}>
+      <div className={`calendar-day ${index === 0 ? 'first' : ''}`} key={index}>
+        <time aria-hidden="true" dateTime={dateTime}>
           <span className='day'>{day.day}</span>
           <span className='month'>{month.monthName}</span>
         </time>
-        <ol className='releaseList'>
+        <span id={`datemonth-${monthNumber}${index}`} className="sr-only" aria-hidden="true">{`${day.day}. ${monthNameLong}`}</span>
+        <ol className='releaseList' aria-labelledby={`heading-upcoming-releases datemonth-${monthNumber}${index}`}>
           {
             day.releases.map((release, releaseIndex) => renderRelease(release, releaseIndex, date))
           }
         </ol>
-      </article>
+      </div>
     )
   }
 
@@ -270,7 +287,7 @@ function UpcomingReleases(props) {
       <div className="row">
         <div className="col-12 upcoming-releases-head">
           <div className="container py-5">
-            <Title>{props.title ? props.title : undefined}</Title>
+            <h1 id="heading-upcoming-releases">{props.title ? props.title : undefined}</h1>
             <div className="upcoming-releases-ingress" dangerouslySetInnerHTML={{
               __html: props.preface.replace(/&nbsp;/g, ' ')
             }}>
