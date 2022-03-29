@@ -146,6 +146,7 @@ function getStatisticsNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>
 
 export interface SEO {
   seoDescription?: string;
+  seoImage?: string
 }
 
 interface News {

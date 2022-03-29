@@ -361,7 +361,7 @@ function getPreviousRelease(statistic: Content<Statistics & Statistic>): string 
 
 export interface PublishDatasetLib {
     publishDataset: () => void;
-    currentlyWaitingForPublish: (statistic: StatisticInListing) => boolean ;
+    currentlyWaitingForPublish: (statistic: Content<Statistic>) => boolean ;
 }
 
 interface PublicationItem {

@@ -181,7 +181,8 @@ export function renderPart(req: Request): React4xpResponse {
     searchPageUrl,
     language,
     dropDownSubjects: mainSubjectDropdown,
-    dropDownContentTypes: getContentTypes(solrResult.contentTypes)
+    dropDownContentTypes: getContentTypes(solrResult.contentTypes),
+    GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null
   }
 
   return React4xp.render('site/parts/searchResult/searchResultView', props, req)
@@ -220,6 +221,7 @@ interface SearchResultProps {
   language: string;
   dropDownSubjects: Array<Dropdown>;
   dropDownContentTypes: Array<Dropdown>;
+  GA_TRACKING_ID: string | null;
 }
 
 interface Dropdown {

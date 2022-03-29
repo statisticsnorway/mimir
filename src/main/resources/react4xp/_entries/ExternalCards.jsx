@@ -1,17 +1,18 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Card, Text } from '@statisticsnorway/ssb-component-library'
+import { Container, Row, Col } from 'react-bootstrap'
 
 const ExternalCards = (props) => {
   return (
-    <React.Fragment>
-      <div className="container">
-        <div className="row justify-content-start">
-          {props.links.map((link, index) => {
-            return (
+    <Container>
+      <Row className="justify-content-start">
+        {props.links.map((link, index) => {
+          return (
+            <Col
+              key={`external-card-${index}`}
+              className="external-card col-12 mb-4 col-md-4">
               <Card
-                className="external-card col-12 mb-4 col-md-4"
-                key={index}
                 href={link.href}
                 hrefText={link.children}
                 icon={link.image && <img src={link.image} alt=''/>}
@@ -19,12 +20,12 @@ const ExternalCards = (props) => {
               >
                 <Text>{link.content}</Text>
               </Card>
-            )
-          }
-          )}
-        </div>
-      </div>
-    </React.Fragment>
+            </Col>
+          )
+        }
+        )}
+      </Row>
+    </Container>
   )
 }
 
