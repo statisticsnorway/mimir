@@ -79,10 +79,11 @@ function renderEndedStatistics(endedStatisticsContent: Array<EndedStatistic | un
       }),
       pageContributions: endedStatisticsXP.renderPageContributions()
     }
-  }
-  return {
-    body: '',
-    pageContributions: ''
+  } else {
+    return {
+      body: '',
+      pageContributions: ''
+    }
   }
 }
 
@@ -95,12 +96,12 @@ function parseContent(endedStatistics: EndedStatisticsPartConfig['relatedStatist
           key: statisticsContentId
         }) : null
 
-        const preamble: string = ''
+        let preamble: string = ''
         if (hasPath(['x', 'com-enonic-app-metafields', 'meta-data', 'seoDescription'], endedStatisticsContent)) {
           // TS gets confused here, the field totally exists. Promise.
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
-          preamble: string = endedStatisticsContent?.x['com-enonic-app-metafields']['meta-data'].seoDescription
+          preamble = endedStatisticsContent?.x['com-enonic-app-metafields']['meta-data'].seoDescription as string
         }
 
         return {
