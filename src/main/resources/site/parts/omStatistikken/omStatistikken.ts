@@ -6,6 +6,7 @@ import { Phrases } from '../../../lib/types/language'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { OmStatistikken } from '../../content-types/omStatistikken/omStatistikken'
 import { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '../../../lib/ssb/dashboard/statreg/types'
+import { Accordion, AccordionItem } from '../../../lib/types/components'
 
 const {
   get
@@ -48,7 +49,7 @@ exports.get = function(req:Request):Response | React4xpResponse {
 exports.preview = (req: Request, id: string | undefined):Response | React4xpResponse => renderPart(req, id)
 
 function renderPart(req:Request, aboutTheStatisticsId: string | undefined):Response | React4xpResponse {
-  const page: Content<any> = getContent()
+  const page: Content = getContent()
   if (!aboutTheStatisticsId) {
     if (req.mode === 'edit' && page.type !== `${app.name}:statistics`) {
       return React4xp.render('site/parts/omStatistikken/omStatistikken', {
@@ -76,7 +77,7 @@ function renderPart(req:Request, aboutTheStatisticsId: string | undefined):Respo
 }
 
 function getOmStatistikken(req:Request, page: Content<any>, aboutTheStatisticsId: string | undefined ): Response | React4xpResponse {
-  const phrases: Phrases = getPhrases(page)
+  const phrases: Phrases = getPhrases(page) as Phrases
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   let nextRelease: string = phrases.notYetDetermined
   const statisticPage: Content<Statistics> = getContent()
@@ -204,18 +205,6 @@ function isNotEmpty(obj: object | undefined): boolean {
     return Object.keys(obj).length > 0
   }
   return false
-}
-
-interface Accordion {
-  id: string,
-  body: string | undefined,
-  open: string,
-  items: Array<AccordionItem>
-}
-
-interface AccordionItem {
-  title: string,
-  body: string
 }
 
 interface Items {
