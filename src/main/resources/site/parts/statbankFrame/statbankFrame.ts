@@ -1,6 +1,7 @@
 import { Request } from 'enonic-types/controller'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Content } from 'enonic-types/content'
+import {SiteConfig} from "../../site-config";
 
 const {
   getContent,
@@ -23,9 +24,8 @@ function renderPart(req: Request): React4xpResponse {
 
   const pageLanguage: string = page.language ? page.language : 'nb'
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-  // @ts-ignore
-  const statbankHelpLink: string = getSiteConfig().statbankHelpLink
+  const siteConfig: SiteConfig = getSiteConfig()
+  const statbankHelpLink: string = siteConfig.statbankHelpLink
 
   const statbankHelpText: string = localize({
     key: 'statbankHelpText',

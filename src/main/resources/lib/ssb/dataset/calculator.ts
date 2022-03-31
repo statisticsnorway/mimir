@@ -30,6 +30,10 @@ export function getKpiDatasetYear(config: Content<CalculatorConfig>): Dataset | 
     key: config.data.kpiSourceYear
   }) : null
 
+  if (kpiSourceYear === null) {
+    log.info('Data calculator - kpiSourceYear is Null, calculatorConfig: ' + JSON.stringify(config, null, 4))
+  }
+
   const kpiDatasetYearRepo: DatasetRepoNode<JSONstatType> | null = kpiSourceYear ?
       datasetOrUndefined(kpiSourceYear) as DatasetRepoNode<JSONstatType> | null : null
 
@@ -40,6 +44,10 @@ export function getKpiDatasetMonth(config: Content<CalculatorConfig>): Dataset |
   const kpiSourceMonth: Content<GenericDataImport & DataSource> | null = config?.data.kpiSourceMonth ? getContent({
     key: config.data.kpiSourceMonth
   }) : null
+
+  if (kpiSourceMonth === null) {
+    log.info('Data calculator - kpiSourceMonth is Null, calculatorConfig: ' + JSON.stringify(config, null, 4))
+  }
 
   const kpiDatasetMonthRepo: DatasetRepoNode<JSONstatType> | null = kpiSourceMonth ?
       datasetOrUndefined(kpiSourceMonth) as DatasetRepoNode<JSONstatType> | null : null
@@ -52,6 +60,10 @@ export function getPifDataset(config: Content<CalculatorConfig>): Dataset | null
     key: config.data.pifSource
   }) : null
 
+  if (pifSource === null) {
+    log.info('Data calculator - pifSource is Null, calculatorConfig: ' + JSON.stringify(config, null, 4))
+  }
+
   const pifDatasetRepo: DatasetRepoNode<JSONstatType> | null = pifSource ?
       datasetOrUndefined(pifSource) as DatasetRepoNode<JSONstatType> | null : null
 
@@ -62,6 +74,10 @@ export function getBkibolDatasetEnebolig(config: Content<CalculatorConfig>): Dat
   const bkibolSourceEnebolig: Content<GenericDataImport & DataSource> | null = config?.data.bkibolSourceEnebolig ? getContent({
     key: config.data.bkibolSourceEnebolig
   }) : null
+
+  if (bkibolSourceEnebolig === null) {
+    log.info('Data calculator - bkibolSourceEnebolig is Null, calculatorConfig: ' + JSON.stringify(config, null, 4))
+  }
 
   const bkibolDatasetEneboligRepo: DatasetRepoNode<JSONstatType> | null = bkibolSourceEnebolig ?
       datasetOrUndefined(bkibolSourceEnebolig) as DatasetRepoNode<JSONstatType> | null : null
@@ -74,6 +90,10 @@ export function getBkibolDatasetBoligblokk(config: Content<CalculatorConfig>): D
     key: config.data.bkibolSourceBoligblokk
   }) : null
 
+  if (bkibolSourceBoligblokk === null) {
+    log.info('Data calculator - bkibolSourceBoligblokk is Null, calculatorConfig: ' + JSON.stringify(config, null, 4))
+  }
+
   const bkibolDatasetBoligblokkRepo: DatasetRepoNode<JSONstatType> | null = bkibolSourceBoligblokk ?
       datasetOrUndefined(bkibolSourceBoligblokk) as DatasetRepoNode<JSONstatType> | null : null
 
@@ -84,6 +104,10 @@ export function getNameSearchGraphData(config: Content<CalculatorConfig>): Datas
   const nameSearchGraphData: Content<GenericDataImport & DataSource> | null = config?.data.nameSearchGraphData ? getContent({
     key: config.data.nameSearchGraphData
   }) : null
+
+  if (nameSearchGraphData === null) {
+    log.info('Data calculator - nameSearchGraphData is Null, calculatorConfig: ' + JSON.stringify(config, null, 4))
+  }
 
   const nameSearchGraphRepo: DatasetRepoNode<JSONstatType> | null = nameSearchGraphData ?
       datasetOrUndefined(nameSearchGraphData) as DatasetRepoNode<JSONstatType> | null : null
@@ -113,8 +137,8 @@ export function getChangeValue(startIndex: number, endIndex: number, chronologic
 export interface CalculatorLib {
   getCalculatorConfig: () => Content<CalculatorConfig> | undefined;
   getKpiDatasetYear: (config: Content<CalculatorConfig>) => Dataset | null;
-  getKpiDatasetMonth: (config: Content<CalculatorConfig>) => Dataset | null;
-  getPifDataset: (config: Content<CalculatorConfig>) => Dataset | null;
+  getKpiDatasetMonth: (config: Content<CalculatorConfig> | undefined) => Dataset | null;
+  getPifDataset: (config: Content<CalculatorConfig> | undefined) => Dataset | null;
   getBkibolDatasetEnebolig: (config: Content<CalculatorConfig>) => Dataset | null;
   getBkibolDatasetBoligblokk: (config: Content<CalculatorConfig>) => Dataset | null;
   getNameSearchGraphData: (config: Content<CalculatorConfig>) => DatasetRepoNode<JSONstatType> | null;
