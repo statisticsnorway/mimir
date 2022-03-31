@@ -117,8 +117,8 @@ export function renderPart(req: Request): React4xpResponse {
     let bestBetResult: PreparedSearchResult | null
     if (firstBet && (firstBet.constructor !== Array)) {
       let date: string = firstBet.data.linkedContentDate
-      let title: string | undefined = firstBet.data.linkedContentTitle
-      let href: string | undefined = firstBet.data.linkedContentHref
+      let title: string = firstBet.data.linkedContentTitle ? firstBet.data.linkedContentTitle : ''
+      let href: string = firstBet.data.linkedContentHref ? firstBet.data.linkedContentHref : ''
       const xpContentId: string | undefined = firstBet.data.linkedSelectedContentResult?.value
       if (firstBet.data.linkedSelectedContentResult) {
         const xpContent: Content | null = get({
@@ -141,10 +141,10 @@ export function renderPart(req: Request): React4xpResponse {
       }
 
       bestBetResult = {
-        title: title ? title : '',
+        title: title,
         preface: firstBet.data.linkedContentIngress ? firstBet.data.linkedContentIngress : '',
         contentType: firstBet.data.linkedContentType ? firstBet.data.linkedContentType : '',
-        url: href ? href : '',
+        url: href,
         mainSubject: firstBet.data.linkedContentSubject ? firstBet.data.linkedContentSubject : '',
         secondaryMainSubject: '',
         publishDate: firstBet.data.linkedContentDate ? firstBet.data.linkedContentDate : '',
