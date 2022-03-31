@@ -8,6 +8,7 @@ import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { queryNodes, getNode } from '../../../lib/ssb/repo/common'
 import { NodeQueryResponse, RepoNode } from 'enonic-types/node'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
+import { BestBetContent } from '../../../lib/ssb/repo/bestbet'
 
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
@@ -34,6 +35,9 @@ const {
 const {
   getMainSubjects
 } = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
+const {
+  get
+} = __non_webpack_require__('/lib/xp/content')
 
 exports.get = function(req: Request): React4xpResponse | Response {
   try {
@@ -112,15 +116,39 @@ export function renderPart(req: Request): React4xpResponse {
 
     let bestBetResult: PreparedSearchResult | null
     if (firstBet && (firstBet.constructor !== Array)) {
+      let date: string = firstBet.data.linkedContentDate
+      let title: string = firstBet.data.linkedContentTitle ? firstBet.data.linkedContentTitle : ''
+      let href: string = firstBet.data.linkedContentHref ? firstBet.data.linkedContentHref : ''
+      const xpContentId: string | undefined = firstBet.data.linkedSelectedContentResult?.value
+      if (firstBet.data.linkedSelectedContentResult) {
+        const xpContent: Content | null = get({
+          key: xpContentId
+        })
+
+        if (xpContent) {
+          title = xpContent.displayName
+          href = pageUrl({
+            path: xpContent._path
+          })
+          if (firstBet.data.linkedContentDate === 'xp') {
+            if (xpContent.publish && xpContent.publish.from) {
+              date = xpContent.publish.from
+            } else {
+              date = ''
+            }
+          }
+        }
+      }
+
       bestBetResult = {
-        title: firstBet.data.linkedContentTitle ? firstBet.data.linkedContentTitle : '',
+        title: title,
         preface: firstBet.data.linkedContentIngress ? firstBet.data.linkedContentIngress : '',
         contentType: firstBet.data.linkedContentType ? firstBet.data.linkedContentType : '',
-        url: firstBet.data.linkedContentHref ? firstBet.data.linkedContentHref : '',
+        url: href,
         mainSubject: firstBet.data.linkedContentSubject ? firstBet.data.linkedContentSubject : '',
         secondaryMainSubject: '',
         publishDate: firstBet.data.linkedContentDate ? firstBet.data.linkedContentDate : '',
-        publishDateHuman: firstBet.data.linkedContentDate ? formatDate(firstBet.data.linkedContentDate, 'PPP', language) : ''
+        publishDateHuman: date ? formatDate(date, 'PPP', language) : ''
       }
       return bestBetResult
     }
@@ -190,14 +218,14 @@ export function renderPart(req: Request): React4xpResponse {
 
   interface BestBet extends RepoNode {
     data: {
-      linkedContentId: string;
-      linkedContentTitle: string;
-      linkedContentHref: string;
-      linkedContentIngress: string;
-      linkedContentType: string;
-      linkedContentDate: string;
-      linkedContentSubject: string;
-      searchWords: Array<string>;
+      linkedSelectedContentResult: BestBetContent['linkedSelectedContentResult'];
+      linkedContentTitle: BestBetContent['linkedContentTitle'];
+      linkedContentHref: BestBetContent['linkedContentHref'];
+      linkedContentIngress: BestBetContent['linkedContentIngress'];
+      linkedContentType: BestBetContent['linkedContentType'];
+      linkedContentDate: BestBetContent['linkedContentDate'];
+      linkedContentSubject: BestBetContent['linkedContentSubject'];
+      searchWords: BestBetContent['searchWords'];
     };
   }
 
