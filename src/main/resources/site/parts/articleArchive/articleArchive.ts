@@ -114,35 +114,6 @@ function renderPart(req: Request):React4xpResponse {
   }
 }
 
-export function parseArticleData(articles: QueryResponse<Article>, language: string): Array<ParsedArticleData> | [] {
-  const articleNamePhrase: string = localize({
-    key: 'articleName',
-    locale: language
-  })
-
-  return articles.hits.map((articleContent) => {
-    return {
-      year: getYear(articleContent.publish, articleContent.createdTime, language),
-      subtitle: getSubTitle(articleContent, articleNamePhrase, language),
-      href: pageUrl({
-        id: articleContent._id
-      }),
-      title: articleContent.displayName,
-      preamble: articleContent.data.ingress,
-      date: articleContent.publish && articleContent.publish.from ? articleContent.publish.from : ''
-    }
-  })
-}
-
-function getYear(
-  publish: ScheduleParams |undefined,
-  createdTime: string,
-  language: string): string | undefined {
-  return publish && createdTime ?
-    formatDate(publish.from, 'yyyy', language) :
-    formatDate(createdTime, 'yyyy', language)
-}
-
 function getSubTitle(articleContent: Content<Article>, articleNamePhrase: string, language: string): string {
   let type: string = ''
   if (articleContent.type === `${app.name}:article`) {
@@ -159,13 +130,26 @@ function getSubTitle(articleContent: Content<Article>, articleNamePhrase: string
   return `${type ? `${type} / ` : ''}${prettyDate ? prettyDate : ''}`
 }
 
-export interface ParsedArticleData {
-  preamble: string | undefined;
-  year: string | undefined;
-  subtitle: string;
-  href: string;
-  title: string;
-  date: string;
+export function parseArticleData(articles: QueryResponse<Article>, language: string): Array<ParsedArticleData> | [] {
+  const articleNamePhrase: string = localize({
+    key: 'articleName',
+    locale: language
+  })
+
+  return articles.hits.map((articleContent) => {
+    return {
+      year: articleContent.publish && articleContent.createdTime ?
+        formatDate(articleContent.publish.from, 'yyyy', language) :
+        formatDate(articleContent.createdTime, 'yyyy', language),
+      subtitle: getSubTitle(articleContent, articleNamePhrase, language),
+      href: pageUrl({
+        id: articleContent._id
+      }),
+      title: articleContent.displayName,
+      preamble: articleContent.data.ingress,
+      date: articleContent.publish && articleContent.publish.from ? articleContent.publish.from : ''
+    }
+  })
 }
 
 interface ThymeleafModel {
@@ -174,6 +158,15 @@ interface ThymeleafModel {
   imageAltText: string | undefined;
   freeText: string | undefined;
   issnNumber: string | undefined;
+}
+
+export interface ParsedArticleData {
+  preamble: string | undefined;
+  year: string | undefined;
+  subtitle: string;
+  href: string;
+  title: string;
+  date: string;
 }
 
 

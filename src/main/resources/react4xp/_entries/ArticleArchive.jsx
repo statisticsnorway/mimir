@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react'
-import { Divider, Button, Paragraph, Text, Title } from '@statisticsnorway/ssb-component-library'
+import React, { useEffect, useState } from 'react'
+import { Divider, Button, Paragraph, Text, Title, Link } from '@statisticsnorway/ssb-component-library'
 import { Container, Row, Col } from 'react-bootstrap'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { groupBy } from 'ramda'
@@ -10,15 +10,13 @@ function ArticleArchive(props) {
   const [loading, setLoading] = useState()
   const [totalCount, setTotalCount] = useState(0)
 
-  const articleListElement = useRef(null)
-
-  const count = 5 // TODO: Change to 15, kept at 5 for testing purposes
+  const count = 15
 
   useEffect(() => {
     fetchArticles()
   }, [])
 
-  const fetchArticles = () => {
+  function fetchArticles() {
     setLoading(true)
     get(props.articleArchiveService, {
       params: {
@@ -28,9 +26,28 @@ function ArticleArchive(props) {
         pageId: props.pageId
       }
     }).then((res) => {
-      console.log(res)
       if (res.data.articles.length) {
         setArticles((prev) => [...prev, ...res.data.articles])
+        setTotalCount(res.data.totalCount)
+      }
+    })
+      .finally(() => {
+        setLoading(false)
+      })
+  }
+
+  function fetchFirstArticles() {
+    setLoading(true)
+    get(props.articleArchiveService, {
+      params: {
+        start: 0,
+        count: count,
+        language: props.language,
+        pageId: props.pageId
+      }
+    }).then((res) => {
+      if (res.data.articles.length) {
+        setArticles(res.data.articles)
         setTotalCount(res.data.totalCount)
       }
     })
@@ -42,21 +59,17 @@ function ArticleArchive(props) {
   function onShowMoreButtonOnClick() {
     if (totalCount > articles.length) {
       fetchArticles()
-      articleListElement.current.focus()
     } else {
-      // TODO: Add functionality for show less
+      fetchFirstArticles()
     }
   }
 
-  const renderShowMoreButton = () => {
+  function renderShowMoreButton() {
     if (totalCount > count) {
       return (
         <Row className="hide-show-btn justify-content-center">
           <Col className="col-auto">
-            <Button
-              onClick={onShowMoreButtonOnClick}
-              disabled={totalCount == articles.length}
-            > { /* TODO: Remove disabled prop when show less is implemented, missing implementation */}
+            <Button onClick={onShowMoreButtonOnClick}>
               {totalCount > articles.length ?
                 <React.Fragment>
                   <span className="sr-only">{`${props.showMorePagination.replace('{0}', articles.length)} ${totalCount}`}</span>
@@ -77,7 +90,7 @@ function ArticleArchive(props) {
     }
   }
 
-  const addArticles = () => {
+  function addArticles() {
     if (!loading && articles.length) {
       const groupByYear = groupBy((articles) => {
         return articles.year
@@ -93,16 +106,12 @@ function ArticleArchive(props) {
               <ul className="row">
                 {articles.map((article, index) => {
                   return (
-                    <li key={`article-${index}`} className="article-container col-12">
+                    <li key={`articles-${year}-${index}`} className="article-container col-12">
                       <p>
-                        <a
-                          className="ssb-link header"
-                          ref={index === 0 ? articleListElement : null}
-                          href={article.href}
-                        >
-                          <span className="link-text" aria-hidden="true">{article.title}</span>
-                          <span className="sr-only">{`${article.title}. ${article.subtitle.replace(' / ', '. ')}`}</span>
-                        </a>
+                        <Link linkType="header" href={article.href}>
+                          <span aria-hidden="true">{article.title}</span>
+                          <span className="sr-only">{`${(article.title + '.').replace('?.', '?')} ${article.subtitle.replace(' / ', '. ')}`}</span>
+                        </Link>
                       </p>
                       <Paragraph>{article.preamble}</Paragraph>
                       <Text small>{article.subtitle}</Text>
