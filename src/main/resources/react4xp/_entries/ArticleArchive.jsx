@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { Button, Divider, Link, Paragraph, Text, Title } from '@statisticsnorway/ssb-component-library'
+import React, { useEffect, useState, useRef } from 'react'
+import { Divider, Button, Paragraph, Text, Title } from '@statisticsnorway/ssb-component-library'
 import { Container, Row, Col } from 'react-bootstrap'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { groupBy } from 'ramda'
@@ -10,6 +10,10 @@ function ArticleArchive(props) {
   const [loading, setLoading] = useState()
   const [totalCount, setTotalCount] = useState(0)
 
+  const articleListElement = useRef(null)
+
+  const count = 5 // TODO: Change to 15, kept at 5 for testing purposes
+
   useEffect(() => {
     fetchArticles()
   }, [])
@@ -19,7 +23,7 @@ function ArticleArchive(props) {
     get(props.articleArchiveService, {
       params: {
         start: articles.length,
-        count: 10,
+        count: count,
         language: props.language,
         pageId: props.pageId
       }
@@ -38,23 +42,34 @@ function ArticleArchive(props) {
   function onShowMoreButtonOnClick() {
     if (totalCount > articles.length) {
       fetchArticles()
+      articleListElement.current.focus()
+    } else {
+      // TODO: Add functionality for show less
     }
-    // TODO: Add functionality for show less
   }
 
   const renderShowMoreButton = () => {
-    if (totalCount > 10) {
+    if (totalCount > count) {
       return (
         <Row className="hide-show-btn justify-content-center">
           <Col className="col-auto">
-            <Button onClick={onShowMoreButtonOnClick}>
+            <Button
+              onClick={onShowMoreButtonOnClick}
+              disabled={totalCount == articles.length}
+            > { /* TODO: Remove disabled prop when show less is implemented, missing implementation */}
               {totalCount > articles.length ?
-                <span>
-                  <ChevronDown size="18" className="chevron-icons" />{`${props.showAll} ${articles.length}/ ${totalCount}`}
-                </span> :
-                <span>
-                  <ChevronUp size="18" className="chevron-icons" />{`${props.showLess} ${totalCount}/ ${totalCount}`}
-                </span>}
+                <React.Fragment>
+                  <span className="sr-only">{`${props.showMorePagination.replace('{0}', articles.length)} ${totalCount}`}</span>
+                  <span aria-hidden="true">
+                    <ChevronDown size="18" className="chevron-icons" />{`${props.showMore} ${articles.length}/ ${totalCount}`}
+                  </span>
+                </React.Fragment> :
+                <React.Fragment>
+                  <span className="sr-only">{`${props.showLessPagination.replace('{0}', articles.length)} ${totalCount}`}</span>
+                  <span aria-hidden="true">
+                    <ChevronUp size="18" className="chevron-icons" />{`${props.showLess} ${articles.length}/ ${totalCount}`}
+                  </span>
+                </React.Fragment>}
             </Button>
           </Col>
         </Row>
@@ -74,18 +89,26 @@ function ArticleArchive(props) {
             <Col className="col-12 col-lg-1">
               <Title size={2}>{year}</Title>
             </Col>
-            <Col className="col-12 col-lg-8 p-0">
-              <Row className="row">
+            <Col id="article-archive-list" className="col-12 col-lg-8 p-0">
+              <ul className="row">
                 {articles.map((article, index) => {
                   return (
-                    <Col key={`article-${index}`} className="article-container col-12">
-                      <Text small>{article.subtitle}</Text>
-                      <p><Link href={article.href} linkType='header'>{article.title}</Link></p>
+                    <li key={`article-${index}`} className="article-container col-12">
+                      <p>
+                        <a
+                          className="ssb-link header"
+                          ref={articleListElement}
+                          href={article.href}
+                        >
+                          <span className="link-text">{article.title}</span>
+                        </a>
+                      </p>
                       <Paragraph>{article.preamble}</Paragraph>
-                    </Col>
+                      <Text small>{article.subtitle}</Text>
+                    </li>
                   )
                 })}
-              </Row>
+              </ul>
             </Col>
           </Row>
         )
@@ -111,8 +134,10 @@ ArticleArchive.propTypes = {
   articleArchiveService: PropTypes.string,
   pageId: PropTypes.string,
   language: PropTypes.string,
-  showAll: PropTypes.string.isRequired,
-  showLess: PropTypes.string.isRequired
+  showMore: PropTypes.string,
+  showLess: PropTypes.string,
+  showMorePagination: PropTypes.string,
+  showLessPagination: PropTypes.string
 }
 
 export default (props) => <ArticleArchive {...props} />

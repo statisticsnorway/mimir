@@ -41,14 +41,6 @@ function renderPart(req: Request):React4xpResponse {
     key: 'articleAnalysisPublications',
     locale: language
   })
-  const showAllPhrase: string = localize({
-    key: 'showAll',
-    locale: language
-  })
-  const showLessPhrase: string = localize({
-    key: 'showLess',
-    locale: language
-  })
   const title: string | undefined = page.displayName ? page.displayName : undefined
 
   const preambleText: string | undefined = page.data.preamble ? page.data.preamble : undefined
@@ -73,8 +65,22 @@ function renderPart(req: Request):React4xpResponse {
       articleArchiveService: serviceUrl({
         service: 'articleArchive'
       }),
-      showAll: showAllPhrase,
-      showLess: showLessPhrase
+      showMore: localize({
+        key: 'button.showMore',
+        locale: language
+      }),
+      showLess: localize({
+        key: 'showLess',
+        locale: language
+      }),
+      showMorePagination: localize({
+        key: 'articleArchive.showMore',
+        locale: language
+      }),
+      showLessPagination: localize({
+        key: 'articleArchive.showLess',
+        locale: language
+      })
     })
     .setId('listOfArticles')
 

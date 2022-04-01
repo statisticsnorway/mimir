@@ -35,6 +35,10 @@
         }
       }
 
+      ul {
+        list-style-type: none;
+      }
+
       .article-container {
         margin-top: $spacer * 0.25;
         margin-bottom: $spacer * 1.75;
