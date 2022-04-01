@@ -97,10 +97,11 @@ function ArticleArchive(props) {
                       <p>
                         <a
                           className="ssb-link header"
-                          ref={articleListElement}
+                          ref={index === 0 ? articleListElement : null}
                           href={article.href}
                         >
-                          <span className="link-text">{article.title}</span>
+                          <span className="link-text" aria-hidden="true">{article.title}</span>
+                          <span className="sr-only">{`${article.title}. ${article.subtitle.replace(' / ', '. ')}`}</span>
                         </a>
                       </p>
                       <Paragraph>{article.preamble}</Paragraph>
