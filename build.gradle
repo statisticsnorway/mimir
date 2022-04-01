@@ -42,7 +42,7 @@ dependencies {
     include 'commons-codec:commons-codec:1.15'
     include "no.item:wsutil-server:2.0.0"
     include "com.gravitondigital:featuretogglelib:0.3.0"
-    compile group: 'org.json', name: 'json', version: '20211205'
+    implementation group: 'org.json', name: 'json', version: '20211205'
     include 'com.enonic.lib:lib-react4xp:2.0.2'
     include 'com.enonic.lib:lib-text-encoding:2.0.0'
 }
