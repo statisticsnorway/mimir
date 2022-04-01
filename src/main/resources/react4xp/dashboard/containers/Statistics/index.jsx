@@ -50,7 +50,7 @@ export function Statistics() {
     }
     return (
       <div className="next-release">
-        <Table bordered striped>
+        <Table bordered>
           <thead>
             <tr>
               <th className="roboto-bold">
@@ -147,7 +147,7 @@ export function Statistics() {
     if (statistic.nextReleaseId) {
       const editUrl = internalBaseUrl + '/statistikkregisteret/publisering/edit/' + statistic.nextReleaseId
       return (
-        <Link isExternal href={editUrl} title="Endre publisering i statistikkregisteret" className="ml-2">[Endre]</Link>
+        <Link isExternal href={editUrl} title="Endre publisering i statistikkregisteret" className="ms-2">[Endre]</Link>
       )
     }
     return null
@@ -159,7 +159,7 @@ export function Statistics() {
         internalBaseUrl + '/statistikkregisteret/statistikk/show/' + statistic.statisticId :
         internalBaseUrl + '/statistikkregisteret/publisering/create?statistikk.id=' + statistic.statisticId + '&variant.id=' + statistic.variantId
       return (
-        <Link isExternal href={createUrl} title="Melde ny publisering i statistikkregisteret" className="ml-2">[Meld]</Link>
+        <Link isExternal href={createUrl} title="Melde ny publisering i statistikkregisteret" className="ms-2">[Meld]</Link>
       )
     }
     return null
@@ -195,7 +195,7 @@ export function Statistics() {
       return (
         <Link
           isExternal
-          title="Forhåndsvisning" href={statistic.previewUrl} className="ml-2">
+          title="Forhåndsvisning" href={statistic.previewUrl} className="ms-2">
         [Forhåndsvisning]
         </Link>
       )

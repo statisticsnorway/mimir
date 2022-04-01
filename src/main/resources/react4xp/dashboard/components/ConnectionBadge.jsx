@@ -8,12 +8,12 @@ export function ConnectionBadge(props) {
   if (isConnected) {
     return (
       <div className="connected-wrapper">
-        <Zap /><span className="ml-2">Tilkoblet</span>
+        <Zap /><span className="ms-2">Tilkoblet</span>
       </div>)
   } else {
     return (
       <div className="disconnected-wrapper">
-        <ZapOff /><span className="ml-2">Frakoblet</span>
+        <ZapOff /><span className="ms-2">Frakoblet</span>
       </div>)
   }
 }

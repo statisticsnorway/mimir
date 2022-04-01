@@ -180,7 +180,7 @@ function Highchart(props) {
           null }
         { highchart.creditsEnabled ?
           <Row className="mt-4 mt-md-5 highcharts-source">
-            <Col className="col-12 font-weight-bold mb-0">{props.phrases.source}:</Col>
+            <Col className="col-12 fw-bold mb-0">{props.phrases.source}:</Col>
             <Col className="col-12"><Link href={highchart.creditsHref}>{highchart.creditsText}</Link></Col>
           </Row> : null }
       </Col>

@@ -5,18 +5,21 @@ import { SearchResultPartConfig } from './searchResult-part-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { PreparedSearchResult, SolrPrepResultAndTotal } from '../../../lib/ssb/utils/solrUtils'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
+import { queryNodes, getNode } from '../../../lib/ssb/repo/common'
+import { NodeQueryResponse, RepoNode } from 'enonic-types/node'
+import { formatDate } from '../../../lib/ssb/utils/dateUtils'
+import { BestBetContent } from '../../../lib/ssb/repo/bestbet'
+
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   solrSearch
 } = __non_webpack_require__('/lib/ssb/utils/solrUtils')
-
 const {
   getComponent,
   getContent,
   pageUrl,
   serviceUrl
 } = __non_webpack_require__('/lib/xp/portal')
-
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
@@ -32,7 +35,9 @@ const {
 const {
   getMainSubjects
 } = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
-
+const {
+  get
+} = __non_webpack_require__('/lib/xp/content')
 
 exports.get = function(req: Request): React4xpResponse | Response {
   try {
@@ -94,6 +99,62 @@ export function renderPart(req: Request): React4xpResponse {
     return dropdowns
   }
 
+  function bestBet(): PreparedSearchResult | undefined {
+    const result: NodeQueryResponse = queryNodes('no.ssb.bestbet', 'master', {
+      start: 0,
+      count: 1,
+      query: `fulltext('data.searchWords', '${sanitizedTerm}', 'OR')`
+    } )
+
+    const bet: BestBet | null = result.hits.length ? getNode('no.ssb.bestbet', 'master', result.hits[0].id) as BestBet : null
+    let firstBet: BestBet | null
+    if (bet && bet.constructor === Array) {
+      firstBet = bet[0]
+    } if (bet && !(bet.constructor === Array)) {
+      firstBet = bet
+    } else firstBet = null
+
+    let bestBetResult: PreparedSearchResult | null
+    if (firstBet && (firstBet.constructor !== Array)) {
+      let date: string = firstBet.data.linkedContentDate
+      let title: string = firstBet.data.linkedContentTitle ? firstBet.data.linkedContentTitle : ''
+      let href: string = firstBet.data.linkedContentHref ? firstBet.data.linkedContentHref : ''
+      const xpContentId: string | undefined = firstBet.data.linkedSelectedContentResult?.value
+      if (firstBet.data.linkedSelectedContentResult) {
+        const xpContent: Content | null = get({
+          key: xpContentId
+        })
+
+        if (xpContent) {
+          title = xpContent.displayName
+          href = pageUrl({
+            path: xpContent._path
+          })
+          if (firstBet.data.linkedContentDate === 'xp') {
+            if (xpContent.publish && xpContent.publish.from) {
+              date = xpContent.publish.from
+            } else {
+              date = ''
+            }
+          }
+        }
+      }
+
+      bestBetResult = {
+        title: title,
+        preface: firstBet.data.linkedContentIngress ? firstBet.data.linkedContentIngress : '',
+        contentType: firstBet.data.linkedContentType ? firstBet.data.linkedContentType : '',
+        url: href,
+        mainSubject: firstBet.data.linkedContentSubject ? firstBet.data.linkedContentSubject : '',
+        secondaryMainSubject: '',
+        publishDate: firstBet.data.linkedContentDate ? firstBet.data.linkedContentDate : '',
+        publishDateHuman: date ? formatDate(date, 'PPP', language) : ''
+      }
+      return bestBetResult
+    }
+    return undefined
+  }
+
   /* query solr */
   const solrResult: SolrPrepResultAndTotal = sanitizedTerm ?
     solrSearch( sanitizedTerm, language, parseInt(part.config.numberOfHits)) : {
@@ -103,7 +164,8 @@ export function renderPart(req: Request): React4xpResponse {
     }
 
   /* prepare props */
-  const props: ReactProps = {
+  const props: SearchResultProps = {
+    bestBetHit: bestBet(),
     hits: solrResult.hits,
     total: solrResult.total,
     term: sanitizedTerm ? sanitizedTerm : '',
@@ -132,17 +194,43 @@ export function renderPart(req: Request): React4xpResponse {
     searchServiceUrl: serviceUrl({
       service: 'freeTextSearch'
     }),
+    mainSearchPhrase: localize({
+      key: 'mainSearch',
+      locale: language
+    }),
+    chooseSubjectPhrase: localize({
+      key: 'dropdown.chooseSubject',
+      locale: language
+    }),
+    chooseContentTypePhrase: localize({
+      key: 'dropdown.chooseContenttype',
+      locale: language
+    }),
     searchPageUrl,
     language,
     dropDownSubjects: mainSubjectDropdown,
-    dropDownContentTypes: getContentTypes(solrResult.contentTypes)
+    dropDownContentTypes: getContentTypes(solrResult.contentTypes),
+    GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null
   }
 
   return React4xp.render('site/parts/searchResult/searchResultView', props, req)
 }
 
+  interface BestBet extends RepoNode {
+    data: {
+      linkedSelectedContentResult: BestBetContent['linkedSelectedContentResult'];
+      linkedContentTitle: BestBetContent['linkedContentTitle'];
+      linkedContentHref: BestBetContent['linkedContentHref'];
+      linkedContentIngress: BestBetContent['linkedContentIngress'];
+      linkedContentType: BestBetContent['linkedContentType'];
+      linkedContentDate: BestBetContent['linkedContentDate'];
+      linkedContentSubject: BestBetContent['linkedContentSubject'];
+      searchWords: BestBetContent['searchWords'];
+    };
+  }
 
-interface ReactProps {
+interface SearchResultProps {
+  bestBetHit: PreparedSearchResult | undefined;
   hits: Array<PreparedSearchResult>;
   title: string;
   total: number;
@@ -153,11 +241,15 @@ interface ReactProps {
   showingPhrase: string;
   limitResultPhrase: string;
   removeFilterPhrase: string;
+  mainSearchPhrase: string;
+  chooseSubjectPhrase: string;
+  chooseContentTypePhrase: string;
   searchServiceUrl: string;
   searchPageUrl: string;
   language: string;
   dropDownSubjects: Array<Dropdown>;
   dropDownContentTypes: Array<Dropdown>;
+  GA_TRACKING_ID: string | null;
 }
 
 interface Dropdown {

@@ -1,30 +1,58 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useReducer, createContext } from 'react'
 import PropTypes from 'prop-types'
 import { Container, Row, Col } from 'react-bootstrap'
-import { Title, Link, Tag, Input, Button, Divider } from '@statisticsnorway/ssb-component-library'
-import { XCircle, Edit, Trash } from 'react-feather'
-import EditSearchWordsModal from './EditSearchWordsModal'
+import { Title, Link, Tag, Button, Divider } from '@statisticsnorway/ssb-component-library'
+import { XCircle, Edit, Trash, Plus } from 'react-feather'
+import BestBetModal from './BestBetModal'
+import BestBetForm from './BestBetForm'
 import axios from 'axios'
-import AsyncSelect from 'react-select/async'
-import 'regenerator-runtime'
+
+export const BestBetContext = createContext()
 function Bestbet(props) {
   const [loading, setLoading] = useState(false)
   const [bestBetList, setBestBetList] = useState([])
+  const [selectedBestBet, setSelectedBestBet] = useState({})
 
-  const [showEditSearchWordsModal, setShowEditSearchWordsModal] = useState(false)
-  const handleCloseEditSearchWordModal = () => setShowEditSearchWordsModal(false)
+  const [showCreateBestBetModal, setShowCreateBestBetModal] = useState(false)
+  const handleCloseCreateBestBetModal = () => setShowCreateBestBetModal(false)
 
-  const [inputTag, setInputTag] = useState('')
-  const [bestBetContent, setBestBetContent] = useState({})
-  const [searchWordsList, setSearchWordsList] = useState([])
+  const [showEditBestBetModal, setShowEditBestBetModal] = useState(false)
+  const handleCloseEditBestBetModal = () => setShowEditBestBetModal(false)
 
-  const [bbBeingEdited, setBbBeingEdited] = useState({
-    id: '',
-    linkedContentId: '',
-    linkedContentTitle: '',
-    linkedContentHref: '',
-    searchWords: ['']
-  })
+  const [showDeleteBestBetModal, setShowDeleteBestBetModal] = useState(false)
+  const handleCloseDeleteBestBetModal = () => setShowDeleteBestBetModal(false)
+
+  const initialFormState = {
+    bestBetId: '',
+    selectedContentResult: null,
+    urlInputValue: '',
+    titleInputValue: '',
+    ingressInputValue: '',
+    contentTypeValue: '',
+    mainSubjectValue: '',
+    startDateValue: '',
+    searchWordTag: '',
+    searchWordsList: [],
+    isXPContent: true,
+    showDatePicker: false
+  }
+
+  const formReducer = (state, action) => {
+    switch (action.type) {
+    case 'handle':
+      return {
+        ...state,
+        [action.inputName]: action.value
+      }
+    case 'set':
+      return action.setState
+    case 'init':
+      return initialFormState
+    default:
+      throw newError()
+    }
+  }
+  const [formState, dispatch] = useReducer(formReducer, initialFormState)
 
   useEffect(() => {
     fetchBestBetList()
@@ -46,95 +74,126 @@ function Bestbet(props) {
   }
 
   function handleUpdate() {
-    setShowEditSearchWordsModal(false)
-
+    setShowEditBestBetModal(false)
     setLoading(true)
-    axios.post(props.bestBetListServiceUrl, bbBeingEdited)
+    axios.post(props.bestBetListServiceUrl, {
+      id: formState.bestBetId,
+      linkedSelectedContentResult: formState.selectedContentResult,
+      linkedContentTitle: formState.titleInputValue,
+      linkedContentHref: formState.urlInputValue,
+      linkedContentIngress: formState.ingressInputValue,
+      linkedContentType: formState.contentTypeValue,
+      linkedContentDate: formState.startDateValue,
+      linkedContentSubject: formState.mainSubjectValue,
+      searchWords: formState.searchWordsList
+    })
       .then(() => {
         fetchBestBetList()
       })
       .catch((err) => {
         console.log(err)
       })
-      .finally(() => setLoading(false))
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
   function handleCreate() {
-    const updatedBestBetItem = {
-      linkedContentId: bestBetContent.value,
-      linkedContentTitle: bestBetContent.label,
-      searchWords: searchWordsList
-    }
-
+    setShowCreateBestBetModal(false)
     setLoading(true)
-    axios.post(props.bestBetListServiceUrl, updatedBestBetItem)
+    axios.post(props.bestBetListServiceUrl, {
+      linkedSelectedContentResult: formState.selectedContentResult,
+      linkedContentTitle: formState.titleInputValue,
+      linkedContentHref: formState.urlInputValue,
+      linkedContentIngress: formState.ingressInputValue,
+      linkedContentType: formState.contentTypeValue,
+      linkedContentDate: formState.startDateValue,
+      linkedContentSubject: formState.mainSubjectValue,
+      searchWords: formState.searchWordsList
+    })
       .then(() => {
-        fetchBestBetList()
+        setTimeout(() => {
+          fetchBestBetList()
+        }, 1000)
       })
       .catch((err) => {
         console.log(err)
       })
-      .finally(() => setLoading(false)
-      )
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
-  function handleDelete(key) {
+  function handleDelete() {
+    setShowDeleteBestBetModal(false)
     axios.delete(props.bestBetListServiceUrl, {
       params: {
-        key: key
+        key: selectedBestBet.id
       }
     }).then(() => fetchBestBetList())
   }
 
-  function handleEditSearchWordOnClick(item) {
-    setShowEditSearchWordsModal(true)
-    setBbBeingEdited(item)
-  }
-
-  function handleTagInput(event) {
-    setInputTag(event)
-  }
-
-  function handleRemoveEditTag(tag) {
-    setBbBeingEdited({
-      id: bbBeingEdited.id,
-      linkedContentId: bbBeingEdited.linkedContentId,
-      linkedContentTitle: bbBeingEdited.linkedContentTitle,
-      linkedContentHref: bbBeingEdited.linkedContentHref,
-      searchWords: bbBeingEdited.searchWords.filter((word) => word !== tag)
-    })
-  }
-
-  function handleTagSubmit() {
-    setSearchWordsList([...searchWordsList, inputTag])
-  }
-
-  function handleContentSelect(event) {
-    setBestBetContent(event)
-  }
-
-  async function searchForTerm(inputValue = '') {
-    const result = await axios.get(props.contentSearchServiceUrl, {
-      params: {
-        query: inputValue
+  function handleEditBestBetOnClick(item) {
+    dispatch({
+      type: 'set',
+      setState: {
+        bestBetId: item.id,
+        selectedContentResult: item.linkedSelectedContentResult,
+        titleInputValue: item.linkedContentTitle,
+        urlInputValue: item.linkedContentHref,
+        ingressInputValue: item.linkedContentIngress,
+        startDateValue: item.linkedContentDate,
+        contentTypeValue: item.linkedContentType,
+        mainSubjectValue: item.linkedContentSubject,
+        searchWordTag: '',
+        searchWordsList: item.searchWords
       }
     })
-    const hits = result.data.hits
-    return hits
+
+    setShowEditBestBetModal(true)
+    if (item.linkedSelectedContentResult) {
+      dispatch({
+        type: 'handle',
+        inputName: 'isXPContent',
+        value: true
+      })
+    } else {
+      dispatch({
+        type: 'handle',
+        inputName: 'isXPContent',
+        value: false
+      })
+    }
   }
 
-  const promiseOptions = (inputValue) =>
-    new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(searchForTerm(inputValue))
-      }, 1000)
+  function handleCreateBestBetOnClick() {
+    setShowCreateBestBetModal(true)
+    // clear edit best bet input data
+    dispatch({
+      type: 'init'
     })
+  }
+
+  function handleDeleteBestBetOnClick(item) {
+    setShowDeleteBestBetModal(true)
+    setSelectedBestBet(item)
+  }
+
+  function handleTag(action, tag) {
+    dispatch({
+      type: 'handle',
+      inputName: 'searchWordsList',
+      value: action === 'submit' ?
+        [...formState.searchWordsList, formState.searchWordTag] :
+        formState.searchWordsList.filter((word) => word !== tag)
+    })
+  }
 
   function renderSearchWord(searchWord, disabled) {
     if (!disabled) {
       return (
-        <Tag className="m-1" onClick={() => handleRemoveEditTag(searchWord)}>
-          {searchWord}<XCircle size={16} className="ml-1" />
+        <Tag className="m-1" onClick={() => handleTag('delete', searchWord)}>
+          {searchWord}<XCircle size={16} className="ms-1" />
         </Tag>
       )
     }
@@ -146,80 +205,80 @@ function Bestbet(props) {
     )
   }
 
-  function renderEditSearchWordModal() {
+  function renderEditBestBetModal() {
     return (
-      <EditSearchWordsModal
-        show={showEditSearchWordsModal}
-        onHide={handleCloseEditSearchWordModal}
+      <BestBetModal
+        show={showEditBestBetModal}
+        onHide={handleCloseEditBestBetModal}
+        title="Rediger best bet"
         body={
-          <>
-            {bbBeingEdited.searchWords.length ?
-              <Row>
-                <Col className="d-flex flex-wrap mt-3">
-                  {bbBeingEdited.searchWords.map((searchWord) => renderSearchWord(searchWord))}
-                </Col>
-              </Row> : null}
-            <Row>
-              <Col>
-                <Input
-                  handleChange={handleTagInput}
-                  value={inputTag}
-                  className="mt-3"
-                />
-              </Col>
-              <Col>
-                <Button primary onClick={() => {
-                  setBbBeingEdited({
-                    id: bbBeingEdited.id,
-                    linkedContentId: bbBeingEdited.linkedContentId,
-                    linkedContentTitle: bbBeingEdited.linkedContentTitle,
-                    linkedContentHref: bbBeingEdited.linkedContentHref,
-                    searchWords: [...bbBeingEdited.searchWords, inputTag]
-                  })
-                }} className="mt-3">Legg til</Button>
-              </Col>
-            </Row>
-          </>
+          <BestBetForm
+            bestBetListServiceUrl={props.bestBetListServiceUrl}
+            contentSearchServiceUrl={props.contentSearchServiceUrl}
+            contentTypes={props.contentTypes}
+            mainSubjects={props.mainSubjects}
+            renderSearchWord={renderSearchWord}
+            handleTag={handleTag}
+          />
         }
         footer={
           <>
             <Button primary onClick={handleUpdate}>Lagre</Button>
-            <Button onClick={handleCloseEditSearchWordModal}>Lukk</Button>
+            <Button onClick={handleCloseEditBestBetModal}>
+              Lukk
+            </Button>
           </>
         }
       />
     )
   }
 
-  function renderForm() {
+  function renderCreateBestBetModal() {
     return (
-      <Col className="bestbet-list ml-4">
-        <Title size={2}>Lag nytt best-bet</Title>
-        <AsyncSelect cacheOptions defaultOptions loadOptions={promiseOptions} onChange={handleContentSelect} />
-        {searchWordsList.length ?
-          <Row>
-            <Col className="d-flex flex-wrap mt-3">
-              {searchWordsList.map((searchWord) => renderSearchWord(searchWord))}
-            </Col>
-          </Row> : null}
-        <Row>
-          <Col>
-            <Input
-              handleChange={handleTagInput}
-              value={inputTag}
-              className="mt-3"
-            />
-          </Col>
-          <Col>
-            <Button primary onClick={handleTagSubmit} className="mt-3">Legg til</Button>
-          </Col>
-        </Row>
-        <Row>
-          <Col className="col-12 justify-content-center">
-            <Button primary onClick={() => handleCreate()} className="mt-3 mx-0">Fullfør</Button>
-          </Col>
-        </Row>
-      </Col>
+      <BestBetModal
+        show={showCreateBestBetModal}
+        onHide={handleCloseCreateBestBetModal}
+        title="Lag nytt best bet"
+        body={
+          <BestBetForm
+            bestBetListServiceUrl={props.bestBetListServiceUrl}
+            contentSearchServiceUrl={props.contentSearchServiceUrl}
+            contentTypes={props.contentTypes}
+            mainSubjects={props.mainSubjects}
+            renderSearchWord={renderSearchWord}
+            handleTag={handleTag}
+          />
+        }
+        footer={
+          <>
+            <Button primary onClick={handleCreate}>Fullfør</Button>
+            <Button onClick={handleCloseCreateBestBetModal}>Lukk</Button>
+          </>
+        }
+      />
+    )
+  }
+
+  function renderDeleteBestBetModal() {
+    return (
+      <BestBetModal
+        show={showDeleteBestBetModal}
+        onHide={handleCloseDeleteBestBetModal}
+        title="Slett best bet"
+        body={
+          <p>Har du lyst til å slette&nbsp;
+          &laquo;
+          {selectedBestBet.linkedSelectedContentResult ? selectedBestBet.linkedSelectedContentResult.title : selectedBestBet.linkedContentTitle}
+          &raquo;?
+          </p>
+        }tt
+        footer={
+          <>
+            <Button primary onClick={handleDelete}>Slett</Button>
+            <Button onClick={handleCloseDeleteBestBetModal}>Lukk</Button>
+          </>
+        }
+      />
     )
   }
 
@@ -228,24 +287,32 @@ function Bestbet(props) {
       <>
         <Row>
           <Col className="col-6">
-            <li>
-              <Link isExternal={true}
-                href={props.contentStudioBaseUrl + item.linkedContentHref}>
-                {item.linkedContentTitle}
-              </Link>
+            <li className="d-flex flex-row align-items-center">
+              <>
+                <div className="best-bet-url-wrapper pr-1">
+                  <Link isExternal={true}
+                    href={item.linkedSelectedContentResult ? props.contentStudioBaseUrl + item.linkedSelectedContentResult.value : item.linkedContentHref}>
+                    {item.linkedSelectedContentResult ? item.linkedSelectedContentResult.title : item.linkedContentTitle}
+                  </Link>
+                </div>
+                <Tag className="m-1" onClick={() => handleEditBestBetOnClick(item)}>
+                Rediger
+                  <Edit size={16} className="ms-1" />
+                </Tag>
+              </>
             </li>
           </Col>
 
           <Col>
             <div className="d-flex flex-wrap">
               {item.searchWords.map((searchWord) => renderSearchWord(searchWord, true))}
-              <Tag className="m-1" onClick={() => handleEditSearchWordOnClick(item)}>
-              Rediger<Edit size={16} className="ml-1" />
-              </Tag>
             </div>
           </Col>
           <Col>
-            <Button onClick={() => handleDelete(item.id)}>Slett<Trash size={16} className="ml-1" /></Button>
+            <Button onClick={() => handleDeleteBestBetOnClick(item)}>
+              Slett
+              <Trash size={16} className="ms-1" />
+            </Button>
           </Col>
         </Row>
         <Row>
@@ -271,7 +338,7 @@ function Bestbet(props) {
               <Title size={2}>Nøkkelord</Title>
             </Col>
             <Col>
-              <Title size={2}></Title>
+              <Title size={2}>{/* Delete best bet row */}</Title>
             </Col>
           </Row>
           <Row>
@@ -286,21 +353,36 @@ function Bestbet(props) {
   }
 
   return (
-    <Container fluid>
-      {renderEditSearchWordModal()}
-      <Row className="bestbet-header">
-        <Col className="flex-row align-items-center">
-          <img src={props.logoUrl} className="logo" />
-          <Title size={1}>Best-bet søk</Title>
-        </Col>
-      </Row>
-      <Row className="justify-content-between">
-        <Col className="col-8 bestbet-list">
-          {renderBestbetList()}
-        </Col>
-        {renderForm()}
-      </Row>
-    </Container>
+    <BestBetContext.Provider value={{
+      formState,
+      dispatch
+    }}>
+      <Container fluid>
+        <Row className="bestbet-header">
+          <Col className="flex-row align-items-center">
+            <img src={props.logoUrl} className="logo" />
+            <Title size={1}>Best bet søk</Title>
+          </Col>
+        </Row>
+        <Row className="justify-content-between">
+          <Col className="col-12 bestbet-list">
+            <Button
+              className="mb-4"
+              onClick={handleCreateBestBetOnClick}
+              primary
+            >
+            Ny Best bet
+              <Plus size={16} className="ms-1" />
+            </Button>
+            <Divider className="mb-3" light />
+            {renderBestbetList()}
+          </Col>
+          {renderCreateBestBetModal()}
+          {renderEditBestBetModal()}
+          {renderDeleteBestBetModal()}
+        </Row>
+      </Container>
+    </BestBetContext.Provider>
   )
 }
 
@@ -308,8 +390,9 @@ Bestbet.propTypes = {
   logoUrl: PropTypes.string,
   bestBetListServiceUrl: PropTypes.string,
   contentSearchServiceUrl: PropTypes.string,
-  contentStudioBaseUrl: PropTypes.string
+  contentStudioBaseUrl: PropTypes.string,
+  contentTypes: PropTypes.array,
+  mainSubjects: PropTypes.array
 }
 
 export default (props) => <Bestbet {...props} />
-

@@ -1,123 +1,73 @@
 <content-type>
-	<display-name>
-		Nøkkeltall
-	</display-name>
-	<super-type>
-		base:structured
-	</super-type>
-	<allow-child-content>
-		true
-	</allow-child-content>
+	<display-name>Nøkkeltall</display-name>
+	<super-type>base:structured</super-type>
+	<allow-child-content>true</allow-child-content>
 	<form>
 		<mixin name="dataSource" />
 		<input name="manualSource" type="TextLine">
-			<label>
-				Manuell verdi
-			</label>
+			<label>Manuell verdi</label>
 			<occurrences minimum="0" maximum="1" />
 			<config/>
 		</input>
 		<input name="denomination" type="TextLine">
-			<label>
-				Benevning
-			</label>
+			<label>Benevning</label>
 			<occurrences minimum="0" maximum="1" />
 		</input>
 		<input name="size" type="RadioButton">
-			<label>
-				Størrelse
-			</label>
+			<label>Størrelse</label>
 			<occurrences minimum="0" maximum="1" />
-			<default>
-				medium
-			</default>
+			<default>medium</default>
 			<config>
-				<option value="small">
-					Liten
-				</option>
-				<option value="medium">
-					Medium
-				</option>
-				<option value="large">
-					Stor
-				</option>
+				<option value="small">Liten</option>
+				<option value="medium">Medium</option>
+				<option value="large">Stor</option>
 			</config>
-			<default>
-				one
-			</default>
+			<default>one</default>
 		</input>
 		<item-set name="changes">
-			<label>
-				Endringstall
-			</label>
-			<help-text>
-				Endringstall må være lagt til i tabellbygger for å kunne vises
-			</help-text>
+			<label>Endringstall</label>
+			<help-text>Endringstall må være lagt til i tabellbygger for å kunne vises</help-text>
 			<occurrences minimum="0" maximum="1" />
 			<items>
 				<input name="denomination" type="TextLine">
-					<label>
-						Benevning på endringstall
-					</label>
+					<label>Benevning på endringstall</label>
 					<occurrences minimum="0" maximum="1" />
 				</input>
 			</items>
 		</item-set>
 		<input name="greenBox" type="CheckBox">
-			<label>
-				Vis som grønn boks
-			</label>
+			<label>Vis som grønn boks</label>
 		</input>
 		<input type="TextArea" name="glossaryText">
-			<label>
-				Ordforklaring
-			</label>
-			<help-text>
-				Fyll ut denne dersom tittelen på nøkkeltallet skal ha en ordforklaring
-			</help-text>
+			<label>Ordforklaring</label>
+			<help-text>Fyll ut denne dersom tittelen på nøkkeltallet skal ha en ordforklaring</help-text>
 			<occurrences minimum="0" maximum="1" />
 		</input>
 		<item-set name="source">
 			<occurrences minimum="0" maximum="1" />
-			<label>
-				Kilde
-			</label>
+			<label>Kilde</label>
 			<items>
 				<input type="TextLine" name="title">
-					<label>
-						Tittel
-					</label>
+					<label>Tittel</label>
 					<occurrences minimum="0" maximum="1" />
 				</input>
 				<input type="TextLine" name="url">
-					<label>
-						URL
-					</label>
+					<label>URL</label>
 					<occurrences minimum="0" maximum="1" />
 				</input>
 			</items>
 		</item-set>
 		<input name="icon" type="ImageSelector">
-			<label>
-				Ikon
-			</label>
+			<label>Ikon</label>
 			<occurrences minimum="0" maximum="1" />
 			<config>
-				<allowPath>
-					${site}/
-				</allowPath>
+				<allowPath>${site}/</allowPath>
 			</config>
 		</input>
 		<input name="default" type="TextLine">
-			<label>
-				Standardverdi
-			</label>
-			<help-text>
-				Her velges et kommunenummer som vil være kommunen som vises i forhåndsvisningen på sider med kart-inngang
-			</help-text>
-			<default>
-				0301
-			</default>
+			<label>Standardverdi</label>
+			<help-text>Her velges et kommunenummer som vil være kommunen som vises i forhåndsvisningen på sider med kart-inngang</help-text>
+			<default>0301</default>
 			<occurrences minimum="0" maximum="1" />
 		</input>
 	</form>

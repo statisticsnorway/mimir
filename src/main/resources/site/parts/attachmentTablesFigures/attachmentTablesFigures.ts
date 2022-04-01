@@ -3,6 +3,7 @@ import { PageContributions, Request, Response } from 'enonic-types/controller'
 import { ResourceKey } from 'enonic-types/thymeleaf'
 import { DatasetRepoNode } from '../../../lib/ssb/repo/dataset'
 import { JSONstat } from '../../../lib/types/jsonstat-toolkit'
+import { Phrases } from '../../../lib/types/language'
 import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
 import { TbmlDataUniform } from '../../../lib/types/xmlParser'
 import { Statistics } from '../../content-types/statistics/statistics'
@@ -63,7 +64,7 @@ function renderPart(req: Request): Response {
 }
 
 function getTablesAndFiguresComponent(page: Content<Statistics>, req: Request): Response {
-  const phrases: {[key: string]: string} = getPhrases(page)
+  const phrases: Phrases = getPhrases(page) as Phrases
 
   const title: string = phrases.attachmentTablesFigures
 

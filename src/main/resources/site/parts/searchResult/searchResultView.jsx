@@ -5,7 +5,7 @@ import { ChevronDown, X } from 'react-feather'
 import axios from 'axios'
 import NumberFormat from 'react-number-format'
 import { Col, Row } from 'react-bootstrap'
-
+import { addGtagForEvent } from '../../../react4xp/ReactGA'
 
 function SearchResult(props) {
   const [hits, setHits] = useState(props.hits)
@@ -23,6 +23,13 @@ function SearchResult(props) {
   useEffect(() => {
     if (filterChanged) {
       fetchFilteredSearchResult()
+    }
+    // GA events for best bet and zero hits results
+    if (props.bestBetHit) {
+      addGtagForEvent(props.GA_TRACKING_ID, 'Best Bet', 'Søk', searchTerm)
+    }
+    if ((!props.bestBetHit) && (!hits.length)) {
+      addGtagForEvent(props.GA_TRACKING_ID, 'Null treff', 'Søk', searchTerm)
     }
   }, [filter])
 
@@ -53,41 +60,55 @@ function SearchResult(props) {
     })
     setSelectedContentType(props.dropDownContentTypes[0])
     setSelectedMainSubject(props.dropDownSubjects[0])
+    addGtagForEvent(props.GA_TRACKING_ID, 'Klikk', 'Søk', 'Fjern alle filtervalg')
   }
 
+  function renderListItem(hit, i) {
+    if (hit) {
+      return (
+        <li key={i ? i : undefined} className="mb-4">
+          <Link href={hit.url} className="ssb-link header" onClick={() => {
+            addGtagForEvent(props.GA_TRACKING_ID, 'Klikk på lenke', 'Søk', `${searchTerm} - Lenke nummer: ${i + 1}`)
+          }}>
+            <span dangerouslySetInnerHTML={{
+              __html: hit.title.replace(/&nbsp;/g, ' ')
+            }}></span>
+          </Link>
+          <Paragraph className="search-result-ingress my-1" ><span dangerouslySetInnerHTML={{
+            __html: hit.preface.replace(/&nbsp;/g, ' ')
+          }}></span>
+          </Paragraph>
+          <Paragraph className="metadata">
+            <span className="type">{hit.contentType}</span> {((hit.contentType && hit.publishDateHuman) || (hit.contentType && hit.mainSubject)) && ` / `}
+            <time dateTime={hit.publishDate}>{hit.publishDateHuman}</time> {hit.publishDateHuman && hit.mainSubject && ` / `}
+            {hit.mainSubject}
+          </Paragraph>
+        </li>
+      )
+    }
+    return null
+  }
 
   function renderList() {
+    const bestBetHit = props.bestBetHit
+    // The screen reader counts how many elements are in the list, so the best bet hit count needs to be included in the view for consistency
+    const currentAmount = bestBetHit ? (hits.length + 1).toString() : hits.length.toString()
+    const totalHits = bestBetHit ? total + 1 : total
     return (
       <div>
         <div className="row mb-4">
-          <div className="col">
-            {props.showingPhrase.replace('{0}', hits.length.toString())}&nbsp;<NumberFormat
-              value={ Number(total) }
+          <div className="col" aria-live="polite" aria-atomic="true">
+            {props.showingPhrase.replace('{0}', currentAmount)}&nbsp;<NumberFormat
+              value={ Number(totalHits) }
               displayType={'text'}
               thousandSeparator={' '}/>
-            <Divider dark></Divider>
+            <Divider dark />
           </div>
         </div>
         <ol className="list-unstyled ">
+          {renderListItem(bestBetHit)}
           {hits.map( (hit, i) => {
-            return (
-              <li key={i} className="mb-4">
-                <Link href={hit.url} className="ssb-link header" >
-                  <span dangerouslySetInnerHTML={{
-                    __html: hit.title.replace(/&nbsp;/g, ' ')
-                  }}></span>
-                </Link>
-                <Paragraph className="search-result-ingress my-1" ><span dangerouslySetInnerHTML={{
-                  __html: hit.preface.replace(/&nbsp;/g, ' ')
-                }}></span>
-                </Paragraph>
-                <Paragraph className="metadata">
-                  <span className="type">{hit.contentType}</span> /&nbsp;
-                  <time dateTime={hit.publishDate}>{hit.publishDateHuman}</time> /&nbsp;
-                  {hit.mainSubject}
-                </Paragraph>
-              </li>
-            )
+            return renderListItem(hit, i)
           })}
         </ol>
       </div>
@@ -151,7 +172,10 @@ function SearchResult(props) {
           <Button
             disabled={loading || total === hits.length}
             className="button-more mt-5"
-            onClick={fetchSearchResult}
+            onClick={() => {
+              fetchSearchResult()
+              addGtagForEvent(props.GA_TRACKING_ID, 'Klikk', 'Søk', 'Vis flere')
+            }}
           >
             <ChevronDown size="18"/> {props.buttonTitle}
           </Button>
@@ -194,9 +218,11 @@ function SearchResult(props) {
       id='mainSubject'
       onSelect={(value) => {
         onChange('mainSubject', value)
+        addGtagForEvent(props.GA_TRACKING_ID, 'Valgt emne', 'Søk', value.title)
       }}
       selectedItem={selectedMainSubject}
       items={props.dropDownSubjects}
+      ariaLabel={props.chooseSubjectPhrase}
     />
   ))
 
@@ -207,9 +233,11 @@ function SearchResult(props) {
       id='contentType'
       onSelect={(value) => {
         onChange('contentType', value)
+        addGtagForEvent(props.GA_TRACKING_ID, 'Valgt innholdstype', 'Søk', value.title)
       }}
       selectedItem={selectedContentType}
       items={props.dropDownContentTypes}
+      ariaLabel={props.chooseContentTypePhrase}
     />
   ))
 
@@ -227,15 +255,19 @@ function SearchResult(props) {
   }
 
   return (
-    <section className="search-result container-fluid">
+    <section className="search-result container-fluid p-0">
       <div className="row">
         <div className="col-12 search-result-head">
           <div className="container py-5">
             <Title>{props.title}</Title>
             <Input
               size="lg"
-              value={searchTerm} handleChange={setSearchTerm} searchField
-              submitCallback={goToSearchResultPage}></Input>
+              value={searchTerm}
+              handleChange={setSearchTerm}
+              searchField
+              submitCallback={goToSearchResultPage}
+              ariaLabelWrapper={props.term ? props.mainSearchPhrase : undefined}
+            />
             <div className="filter mt-5">
               <Title size={6}>{props.limitResultPhrase}</Title>
               <Row justify-content-start>
@@ -252,7 +284,7 @@ function SearchResult(props) {
         </div>
         <div className="col-12 search-result-body">
           <div className="container mt-5">
-            {hits.length > 0 ? renderList() : renderNoHitMessage()}
+            {hits.length > 0 || props.bestBetHit ? renderList() : renderNoHitMessage()}
             {renderLoading()}
             {renderShowMoreButton()}
           </div>
@@ -274,9 +306,12 @@ SearchResult.propTypes = {
   showingPhrase: PropTypes.string,
   limitResultPhrase: PropTypes.string,
   removeFilterPhrase: PropTypes.string,
+  mainSearchPhrase: PropTypes.string,
+  chooseSubjectPhrase: PropTypes.string,
+  chooseContentTypePhrase: PropTypes.string,
   count: PropTypes.number,
   noHitMessage: PropTypes.string,
-  hits: PropTypes.arrayOf({
+  bestBetHit: PropTypes.shape({
     title: PropTypes.string,
     url: PropTypes.string,
     preface: PropTypes.string,
@@ -285,8 +320,19 @@ SearchResult.propTypes = {
     publishDate: PropTypes.string,
     publishDateHuman: PropTypes.string
   }),
+  hits: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string,
+      url: PropTypes.string,
+      preface: PropTypes.string,
+      mainSubject: PropTypes.string,
+      contentType: PropTypes.string,
+      publishDate: PropTypes.string,
+      publishDateHuman: PropTypes.string
+    })),
   dropDownSubjects: PropTypes.array,
-  dropDownContentTypes: PropTypes.array
+  dropDownContentTypes: PropTypes.array,
+  GA_TRACKING_ID: PropTypes.string
 }
 
 export default (props) => <SearchResult {...props} />

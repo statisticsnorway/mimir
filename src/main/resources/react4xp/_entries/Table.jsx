@@ -152,9 +152,9 @@ class Table extends Component {
       return (
         <div className={`download-table-container ${mobile ? 'd-flex d-lg-none' : 'd-none d-lg-flex'}`}>
           <Dropdown
-            header={downloadTableLabel}
             selectedItem={downloadTableTitle}
             items={downloadTableOptions}
+            ariaLabel={downloadTableLabel}
             onSelect={downloadTable}
           />
         </div>
@@ -251,7 +251,7 @@ class Table extends Component {
   createScrollControlsDesktop() {
     return (
       <div className="table-controls-desktop" ref={this.tableControlsDesktopRef}>
-        <span className="mr-2" onClick={() => this.scrollLeft()}><ChevronLeft/></span>
+        <span className="me-2" onClick={() => this.scrollLeft()}><ChevronLeft/></span>
         <span onClick={() => this.scrollRight()}><ChevronRight/></span>
       </div>
     )
@@ -560,7 +560,7 @@ class Table extends Component {
           <div className="d-none searchabletext">
             <span>{hiddenTitle}</span>
           </div>
-          <div className="container">
+          <div className="container border-0">
             {this.addPreviewButton()}
             {this.addDownloadTableDropdown(false)}
             {this.addPreviewInfo()}

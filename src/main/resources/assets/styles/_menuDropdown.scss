@@ -12,7 +12,12 @@
   .title-container {
     min-height: 92px;
     @include media-breakpoint-down(md) {
-      margin-left: 10px;
+      width: 100%;
+      justify-content: start;
+      
+      .title-choose-municipality {
+        padding: 0;
+      }
     }
     @include media-breakpoint-down(sm) {
       .municipality {
@@ -110,6 +115,15 @@
     cursor: pointer;
     outline: inherit;
   }
+
+  #search-container {
+    display: flex;
+    align-items: center;
+
+    .change-municipality {
+      margin-right: $spacer * 1.5;
+    }
+  }
   .card {
     @include media-breakpoint-up(lg) {
       display: flex;
@@ -138,8 +152,8 @@
 
       &.choose-municipality-search {
         border: none;
-        padding: 20px 20px 20px 40px;
       }
+      
       &.hide-search {
         display: none;
       }
@@ -147,7 +161,7 @@
   }
   @include media-breakpoint-down(sm) {
     .title-container {
-      margin-left: 20px;
+      margin-left: 40px;
     }
     #search-container {
       padding: 20px;

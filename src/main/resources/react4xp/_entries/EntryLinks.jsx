@@ -20,7 +20,7 @@ class EntryLinks extends React.Component {
       return (
         <React.Fragment key={`entry-link-${index}`}>
           <div className="col-md-3 mt-4 p-0">
-            <div className="row text-left text-md-center ">
+            <div className="row text-start text-md-center ">
               <div className="col-md-12 col-auto align-items-end d-none d-md-inline">
                 <img src={icon} alt={altText ? altText : ' '} className="desktop-icons" />
               </div>

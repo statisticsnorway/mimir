@@ -23,9 +23,9 @@ class EndedStatistics extends React.Component {
 
   renderIcon() {
     if (this.state.isHidden) {
-      return <ChevronDown size={20} className="mr-2" />
+      return <ChevronDown size={20} className="me-2" />
     }
-    return <ChevronUp size={20} className="mr-2" />
+    return <ChevronUp size={20} className="me-2" />
   }
 
   renderShowMoreButton() {

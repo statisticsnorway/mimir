@@ -149,15 +149,16 @@ exports.get = function(req: Request): Response {
     pageContributions = preview.pageContributions
   }
 
-  const language: Language | {code: string} = getLanguage(page)
+  const language: Language = getLanguage(page)
   const menuCacheLanguage: string = language.code === 'en' ? 'en' : 'nb'
   const headerContent: MenuContent | unknown = fromMenuCache(req, `header_${menuCacheLanguage}`, () => {
-    return getHeaderContent(language as Language)
+    return getHeaderContent(language)
   })
   const headerComponent: React4xpObject = new React4xp('Header')
     .setProps({
       ...headerContent as object,
-      language: language
+      language: language,
+      searchResult: req.params.sok
     })
     .setId('header')
 
@@ -176,7 +177,7 @@ exports.get = function(req: Request): Response {
   }
 
   const footer: MenuContent | unknown = fromMenuCache(req, `footer_${menuCacheLanguage}`, () => {
-    const footerContent: FooterContent | undefined = getFooterContent(language as Language)
+    const footerContent: FooterContent | undefined = getFooterContent(language )
     if (footerContent) {
       const footerComponent: React4xpObject = new React4xp('Footer')
         .setProps({
@@ -325,7 +326,7 @@ function parseMetaInfoData(
   municipality: MunicipalityWithCounty | undefined,
   pageType: string,
   page: DefaultPage,
-  language: Language | {code: string},
+  language: Language,
   req: Request): MetaInfoData {
   let addMetaInfoSearch: boolean = true
   let metaInfoSearchId: string | undefined = page._id
@@ -354,7 +355,7 @@ function parseMetaInfoData(
   }
 
   if (page.type === `${app.name}:article` || page.type === `${app.name}:statistics` ) {
-    const mainSubjects: string = getSubjectsPage(page, req, language.code).join(';')
+    const mainSubjects: string = getSubjectsPage(page, req, language.code as string).join(';')
     metaInfoMainSubject = mainSubjects
   }
 
@@ -591,7 +592,7 @@ interface DefaultModel {
   stylesUrl: string;
   jsLibsUrl: string;
   ieUrl: string;
-  language: Language | {code: string};
+  language: Language;
   statbankWeb: boolean;
   GA_TRACKING_ID: string | null;
   headerBody: string | undefined;

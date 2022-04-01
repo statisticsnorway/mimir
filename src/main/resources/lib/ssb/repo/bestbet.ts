@@ -15,9 +15,19 @@ const {
 const {
   cronJobLog
 } = __non_webpack_require__('/lib/ssb/utils/serverLog')
-const {
-  pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
+
+function getBestBetData(bestBetContent: BestBetContent): BestBetContent {
+  return {
+    linkedSelectedContentResult: bestBetContent.linkedSelectedContentResult,
+    linkedContentTitle: bestBetContent.linkedContentTitle,
+    linkedContentHref: bestBetContent.linkedContentHref,
+    linkedContentIngress: bestBetContent.linkedContentIngress,
+    linkedContentType: bestBetContent.linkedContentType,
+    linkedContentDate: bestBetContent.linkedContentDate,
+    linkedContentSubject: bestBetContent.linkedContentSubject,
+    searchWords: bestBetContent.searchWords
+  }
+}
 
 export const BESTBET_REPO: string = 'no.ssb.bestbet'
 export const BESTBET_BRANCH: string = 'master'
@@ -45,31 +55,35 @@ export function deleteBestBet(key: string): string {
   return deleteNode(BESTBET_REPO, BESTBET_BRANCH, key) ? 'slettet' : 'noe gikk feil'
 }
 
-export function createBestBet(id: string, linkedContentId: string, linkedContentTitle: string, searchWords: Array<string>): void {
-  if (!nodeExists(BESTBET_REPO, BESTBET_BRANCH, id)) {
+export function createBestBet(bestBetContent: BestBetContent): void {
+  if (!nodeExists(BESTBET_REPO, BESTBET_BRANCH, bestBetContent.id as string)) {
     createNode(BESTBET_REPO, BESTBET_BRANCH, {
-      data: {
-        linkedContentId: linkedContentId,
-        linkedContentTitle: linkedContentTitle,
-        linkedContentHref: pageUrl({
-          id: linkedContentId
-        }),
-        searchWords: searchWords
-      }
+      data: getBestBetData(bestBetContent)
     })
   } else {
-    modifyNode(BESTBET_REPO, BESTBET_BRANCH, id, (node) => {
+    modifyNode(BESTBET_REPO, BESTBET_BRANCH, bestBetContent.id as string, (node) => {
       return {
         ...node,
-        data: {
-          linkedContentId: linkedContentId,
-          linkedContentTitle: linkedContentTitle,
-          linkedContentHref: pageUrl({
-            id: linkedContentId
-          }),
-          searchWords: searchWords
-        }
+        data: getBestBetData(bestBetContent)
       }
     })
   }
+}
+
+interface SelectedContentResult {
+  value: string;
+  label: string;
+  title: string;
+}
+
+export interface BestBetContent {
+  id?: string | undefined;
+  linkedSelectedContentResult: SelectedContentResult;
+  linkedContentTitle: string | undefined;
+  linkedContentHref: string | undefined;
+  linkedContentIngress: string;
+  linkedContentType: string;
+  linkedContentDate: string;
+  linkedContentSubject: string;
+  searchWords: Array<string>;
 }

@@ -65,7 +65,7 @@ export function currentlyWaitingForPublish(statistic: Content<Statistics & Stati
 
 export interface PublishDatasetLib {
   setupTaskListener: () => void;
-  currentlyWaitingForPublish: (statistic: StatisticInListing) => boolean;
+  currentlyWaitingForPublish: (statistic: Content<Statistic>) => boolean;
 }
 
 export interface PublicationItem {

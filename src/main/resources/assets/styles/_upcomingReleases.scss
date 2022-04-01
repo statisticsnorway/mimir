@@ -13,7 +13,7 @@
     }
   }
 
-  article {
+  article, .calendar-day {
     display: flex;
 
     &.first li:first-child{

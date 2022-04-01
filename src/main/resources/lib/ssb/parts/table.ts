@@ -242,8 +242,10 @@ export interface TableView {
   };
   tableClass: string;
   noteRefs: Array<string>;
-  sourceList: Source | Array<Source> | undefined;
+  sourceList: Source | TableSourceList | undefined;
 }
+
+export type TableSourceList = Array<Source>
 
 export interface TableLib {
   parseTable: (req: Request, table: Content<Table>, branch?: string) => TableView;

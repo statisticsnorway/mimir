@@ -5,9 +5,9 @@ import { Row, Col } from 'react-bootstrap'
 
 function InfoGraphics(props) {
   return (
-    <section className="container part-infoGraphic">
-      <Row className="xp-part">
-        <Col className="xp-region col-12">
+    <section className="container xp-part part-infoGraphic">
+      <Row>
+        <Col className="col-12 p-0">
           <div className={props.oldContent && 'border-top-green'}>
             <Title size={2} className="mt-0">{props.title}</Title>
 

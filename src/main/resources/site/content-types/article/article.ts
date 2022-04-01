@@ -253,7 +253,7 @@ export interface Article {
   serialNumber?: string;
 
   /**
-   * ISBN nummer
+   * ISBN-nummer
    */
   isbnNumber?: string;
 

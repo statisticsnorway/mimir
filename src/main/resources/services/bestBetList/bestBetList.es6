@@ -14,9 +14,13 @@ exports.get = () => {
       body: bestbets.map((bet) => {
         return {
           id: bet._id,
-          linkedContentId: bet.data.linkedContentId,
+          linkedSelectedContentResult: bet.data.linkedSelectedContentResult,
           linkedContentTitle: bet.data.linkedContentTitle,
           linkedContentHref: bet.data.linkedContentHref,
+          linkedContentIngress: bet.data.linkedContentIngress,
+          linkedContentType: bet.data.linkedContentType,
+          linkedContentDate: bet.data.linkedContentDate,
+          linkedContentSubject: bet.data.linkedContentSubject,
           searchWords: ensureArray(bet.data.searchWords)
         }
       })
@@ -25,7 +29,19 @@ exports.get = () => {
 }
 exports.post = (req) => {
   const body = JSON.parse(req.body)
-  const response = createBestBet(body.id, body.linkedContentId, body.linkedContentTitle, body.searchWords)
+  const response = createBestBet(
+    {
+      id: body.id,
+      linkedSelectedContentResult: body.linkedSelectedContentResult,
+      linkedContentTitle: body.linkedContentTitle,
+      linkedContentHref: body.linkedContentHref,
+      linkedContentIngress: body.linkedContentIngress,
+      linkedContentType: body.linkedContentType,
+      linkedContentDate: body.linkedContentDate,
+      linkedContentSubject: body.linkedContentSubject,
+      searchWords: body.searchWords
+    }
+  )
   return response
 }
 exports.delete = (req) => {

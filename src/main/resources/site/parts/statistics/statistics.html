@@ -1,7 +1,7 @@
 <section class="xp-part statistics container">
     <div class="row">
         <div class="col-12" data-th-if="${showPreviewDraft}">
-            <a class="btn btn-primary float-right" data-th-text="${draftButtonText}"  data-th-href="${draftUrl}">
+            <a class="btn btn-primary float-end" data-th-text="${draftButtonText}"  data-th-href="${draftUrl}">
             </a>
         </div>
         <div class="col-12">
@@ -11,15 +11,15 @@
             <div class="titles-dates-wrapper container">
                 <div class="row">
                     <p class="col-md-6 mb-2 col-12" id="updatedDate">
-                        <span class="font-weight-bold" data-th-text="${updated}" />
+                        <span class="fw-bold" data-th-text="${updated}" />
                         <span data-th-text="${previousRelease}" />
                     </p>
                     <p class="col-md-6 col-12" data-th-if="${changeDate}" id="changedDate">
-                        <span class="font-weight-bold" data-th-text="${changed}" />
+                        <span class="fw-bold" data-th-text="${changed}" />
                         <span data-th-text="${changeDate}" data-th-id="${modifiedDateId}" />
                     </p>
                     <p class="col-12" id="nextUpdateDate">
-                        <span class="font-weight-bold" data-th-text="${nextUpdate}" />
+                        <span class="fw-bold" data-th-text="${nextUpdate}" />
                         <span data-th-text="${nextRelease}" />
                     </p>
                 </div>

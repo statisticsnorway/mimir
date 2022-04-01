@@ -16,6 +16,7 @@
                 <option value="analysis">SSB analyse</option>
                 <option value="table">Tabell</option>
                 <option value="activity">Aktivitet</option>
+                <option value="statistics">Statistikk</option>
             </config>
         </input>
         <input name="mainSubject" type="CustomSelector">

@@ -3,9 +3,9 @@
     margin-top: $spacer * 1.5;
   }
 
-  .ssb-card {
-    @include media-breakpoint-down(md) {
+  @include media-breakpoint-down(md) {
+    .col, .col-auto, .ssb-card {
       padding: 0;
-    }
+    }  
   }
 }
