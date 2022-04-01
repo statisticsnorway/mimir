@@ -59,7 +59,7 @@ export function renderPart(req: Request): React4xpResponse {
   /* collect data */
   const content: Content = getContent()
   const part: Component<SearchResultPartConfig> = getComponent()
-  const sanitizedTerm: string | undefined = req.params.sok ? sanitizeForSolr(req.params.sok) : undefined
+  const sanitizedTerm: string = req.params.sok ? sanitizeForSolr(req.params.sok) : ''
   const searchPageUrl: string = part.config.searchResultPage ? pageUrl({
     id: part.config.searchResultPage
   }) : content._path
@@ -103,7 +103,7 @@ export function renderPart(req: Request): React4xpResponse {
     const result: NodeQueryResponse = queryNodes('no.ssb.bestbet', 'master', {
       start: 0,
       count: 1,
-      query: `fulltext('data.searchWords', '${sanitizedTerm}', 'OR')`
+      query: `fulltext('data.searchWords', '${sanitizedTerm}', 'AND')`
     } )
 
     const bet: BestBet | null = result.hits.length ? getNode('no.ssb.bestbet', 'master', result.hits[0].id) as BestBet : null
@@ -168,7 +168,7 @@ export function renderPart(req: Request): React4xpResponse {
     bestBetHit: bestBet(),
     hits: solrResult.hits,
     total: solrResult.total,
-    term: sanitizedTerm ? sanitizedTerm : '',
+    term: sanitizedTerm,
     count,
     title: content.displayName,
     noHitMessage: localize({
