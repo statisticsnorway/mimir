@@ -69,16 +69,8 @@ function renderPart(req: Request):React4xpResponse {
         key: 'button.showMore',
         locale: language
       }),
-      showLess: localize({
-        key: 'showLess',
-        locale: language
-      }),
       showMorePagination: localize({
         key: 'articleArchive.showMore',
-        locale: language
-      }),
-      showLessPagination: localize({
-        key: 'articleArchive.showLess',
         locale: language
       })
     })
