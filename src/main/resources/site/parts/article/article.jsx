@@ -12,7 +12,7 @@ function Article(props) {
 
     return (
       <div className="title-ingress-wrapper col-12 col-lg-8 p-0">
-        {introTitle && <p className="introTitle">{introTitle}</p>}
+        {introTitle && <p className="introTitle searchabletext">{introTitle}</p>}
         <Title size={1} className="searchabletext">{title}</Title>
         {ingress && <p className="ingress searchabletext">{ingress}</p>}
       </div>
@@ -25,7 +25,7 @@ function Article(props) {
     } = props
 
     return (
-      <div className="snr-dates-wrapper col-12 col-lg-8 p-0">
+      <div className="snr-dates-wrapper col-12 col-lg-8 p-0 searchabletext">
         {serialNumber && <p className="fw-bold">{serialNumber}</p>}
         {showPubDate && <p><span className="fw-bold">{phrases.published}:</span>{` ${pubDate}`}</p>}
         {modifiedDate && <p><span className="fw-bold">{phrases.modified}:</span>{` ${modifiedDate}`}</p>}
