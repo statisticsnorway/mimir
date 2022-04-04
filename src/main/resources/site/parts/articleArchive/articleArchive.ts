@@ -1,7 +1,7 @@
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
 import { Request, Response } from 'enonic-types/controller'
-import { Content, QueryResponse, ScheduleParams } from 'enonic-types/content'
+import { Content, QueryResponse } from 'enonic-types/content'
 import { ResourceKey } from 'enonic-types/thymeleaf'
 import { Article } from '../../content-types/article/article'
 import { ArticleArchive } from '../../content-types/articleArchive/articleArchive'

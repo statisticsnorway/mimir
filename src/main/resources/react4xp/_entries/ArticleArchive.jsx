@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Divider, Button, Paragraph, Text, Title, Link } from '@statisticsnorway/ssb-component-library'
+import { Divider, Button, Paragraph, Text, Link } from '@statisticsnorway/ssb-component-library'
 import { Container, Row, Col } from 'react-bootstrap'
 import { ChevronDown } from 'react-feather'
 import { groupBy } from 'ramda'
@@ -62,23 +62,26 @@ function ArticleArchive(props) {
         return (
           <Row className="articles-container" key={`groupedArticles-${index}`}>
             <Col className="col-12 col-lg-1">
-              <Title size={2}>{year}</Title>
+              <h2 id={`archive-articles-${year}`}>{year}</h2>
             </Col>
             <Col id="article-archive-list" className="col-12 col-lg-8 p-0">
-              <ul className="row">
+              <ol className="row" aria-labelledby={`article-archive-heading archive-articles-${year}`}>
                 {articles.map((article, index) => {
+                  const srSubtitle = article.subtitle.replace(' / ', ' ')
                   return (
                     <li key={`articles-${year}-${index}`} className="article-container col-12">
                       <Link linkType="header" href={article.href}>
                         <span aria-hidden="true">{article.title}</span>
-                        <span className="sr-only">{`${(article.title + '.').replace('?.', '?')} ${article.subtitle.replace(' / ', '. ')}`}</span>
+                        <span className="sr-only">
+                          {`${article.title} ${srSubtitle.replace(year, '')}`}
+                        </span>
                       </Link>
                       <Paragraph>{article.preamble}</Paragraph>
                       <Text small>{article.subtitle}</Text>
                     </li>
                   )
                 })}
-              </ul>
+              </ol>
             </Col>
           </Row>
         )
@@ -90,7 +93,7 @@ function ArticleArchive(props) {
   return (
     <Container className="list-of-articles-container">
       <Row>
-        <Title size={2} className="list-of-articles-title col-12">{props.listOfArticlesSectionTitle}</Title>
+        <h2 id="article-archive-heading" className="list-of-articles-title col-12">{props.listOfArticlesSectionTitle}</h2>
         <Divider light className="col-12" />
       </Row>
       {addArticles()}
