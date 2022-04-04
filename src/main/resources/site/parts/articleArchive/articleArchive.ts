@@ -10,6 +10,9 @@ const {
   getContent, imageUrl, pageUrl, processHtml, serviceUrl
 } = __non_webpack_require__('/lib/xp/portal')
 const {
+  query
+} = __non_webpack_require__('/lib/xp/content')
+const {
   getImageAlt
 } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
 const {
@@ -62,6 +65,7 @@ function renderPart(req: Request):React4xpResponse {
       listOfArticlesSectionTitle: listOfArticlesTitle,
       language: language,
       pageId: page._id,
+      firstArticles: parseArticleData(page._id, 0, 15, language),
       articleArchiveService: serviceUrl({
         service: 'articleArchive'
       }),
@@ -122,13 +126,22 @@ function getSubTitle(articleContent: Content<Article>, articleNamePhrase: string
   return `${type ? `${type} / ` : ''}${prettyDate ? prettyDate : ''}`
 }
 
-export function parseArticleData(articles: QueryResponse<Article>, language: string): Array<ParsedArticleData> | [] {
+export function parseArticleData(pageId: string, start: number, count: number, language: string): ParsedArticles {
   const articleNamePhrase: string = localize({
     key: 'articleName',
     locale: language
   })
 
-  return articles.hits.map((articleContent) => {
+  const articles: QueryResponse<Article> = query({
+    count: 1000,
+    sort: 'publish.from DESC',
+    query: `data.articleArchive = "${pageId}"`,
+    contentTypes: [
+      `${app.name}:article`
+    ]
+  })
+
+  const parsedArticles: Array<ParsedArticleData> = articles.hits.map((articleContent) => {
     return {
       year: articleContent.publish && articleContent.createdTime ?
         formatDate(articleContent.publish.from, 'yyyy', language) :
@@ -142,6 +155,11 @@ export function parseArticleData(articles: QueryResponse<Article>, language: str
       date: articleContent.publish && articleContent.publish.from ? articleContent.publish.from : ''
     }
   })
+
+  return {
+    articles: parsedArticles.slice(start, start + count),
+    total: articles.total
+  }
 }
 
 interface ThymeleafModel {
@@ -152,13 +170,18 @@ interface ThymeleafModel {
   issnNumber: string | undefined;
 }
 
-export interface ParsedArticleData {
+interface ParsedArticleData {
   preamble: string | undefined;
   year: string | undefined;
   subtitle: string;
   href: string;
   title: string;
   date: string;
+}
+
+export interface ParsedArticles {
+  articles: Array<ParsedArticleData>;
+  total: number;
 }
 
 

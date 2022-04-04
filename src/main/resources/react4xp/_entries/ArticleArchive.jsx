@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Divider, Button, Paragraph, Text, Link } from '@statisticsnorway/ssb-component-library'
 import { Container, Row, Col } from 'react-bootstrap'
 import { ChevronDown } from 'react-feather'
@@ -6,27 +6,33 @@ import { groupBy } from 'ramda'
 import PropTypes from 'prop-types'
 import { get } from 'axios'
 function ArticleArchive(props) {
-  const [articles, setArticles] = useState([])
-  const [loading, setLoading] = useState()
-  const [totalCount, setTotalCount] = useState(0)
+  const {
+    firstArticles,
+    articleArchiveService,
+    language,
+    pageId,
+    listOfArticlesSectionTitle,
+    showMore,
+    showMorePagination
+  } = props
 
-  useEffect(() => {
-    fetchArticles()
-  }, [])
+  const [articles, setArticles] = useState(firstArticles.articles)
+  const [totalCount, setTotalCount] = useState(firstArticles.total)
+  const [loading, setLoading] = useState()
 
   function fetchArticles() {
     setLoading(true)
-    get(props.articleArchiveService, {
+    get(articleArchiveService, {
       params: {
         start: articles.length,
         count: 15,
-        language: props.language,
-        pageId: props.pageId
+        language: language,
+        pageId: pageId
       }
     }).then((res) => {
       if (res.data.articles.length) {
         setArticles((prev) => [...prev, ...res.data.articles])
-        setTotalCount(res.data.totalCount)
+        setTotalCount(res.data.total)
       }
     })
       .finally(() => {
@@ -40,10 +46,13 @@ function ArticleArchive(props) {
         <Row className="justify-content-center">
           <Col className="col-auto">
             <Button onClick={() => fetchArticles()}>
-              <span className="sr-only">{`${props.showMorePagination.replace('{0}', articles.length)} ${totalCount}`}</span>
-              <span aria-hidden="true">
-                <ChevronDown size="18" className="chevron-icons" />{`${props.showMore} ${articles.length} / ${totalCount}`}
-              </span>
+              <span className="sr-only">{`${showMorePagination.replace('{0}', articles.length)} ${totalCount}`}</span>
+              {!loading ?
+                <span aria-hidden="true">
+                  <ChevronDown size="18" className="chevron-icons" />{`${showMore} ${articles.length} / ${totalCount}`}
+                </span> :
+                <span aria-hidden="true" className="spinner-border spinner-border-sm" />
+              }
             </Button>
           </Col>
         </Row>
@@ -53,7 +62,7 @@ function ArticleArchive(props) {
   }
 
   function addArticles() {
-    if (!loading && articles.length) {
+    if (articles.length) {
       const groupByYear = groupBy((articles) => {
         return articles.year
       })
@@ -87,13 +96,13 @@ function ArticleArchive(props) {
         )
       })
     }
-    return <Row className="spinner-border spinner-border-sm" />
+    return
   }
 
   return (
     <Container className="list-of-articles-container">
       <Row>
-        <h2 id="article-archive-heading" className="list-of-articles-title col-12">{props.listOfArticlesSectionTitle}</h2>
+        <h2 id="article-archive-heading" className="list-of-articles-title col-12">{listOfArticlesSectionTitle}</h2>
         <Divider light className="col-12" />
       </Row>
       {addArticles()}
@@ -104,6 +113,7 @@ function ArticleArchive(props) {
 
 ArticleArchive.propTypes = {
   listOfArticlesSectionTitle: PropTypes.string,
+  firstArticles: PropTypes.array,
   articleArchiveService: PropTypes.string,
   pageId: PropTypes.string,
   language: PropTypes.string,
