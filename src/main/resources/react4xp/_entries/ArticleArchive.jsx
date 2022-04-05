@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Divider, Button, Paragraph, Text, Link } from '@statisticsnorway/ssb-component-library'
+import { Divider, Button, LeadParagraph, Paragraph, Text, Link } from '@statisticsnorway/ssb-component-library'
 import { Container, Row, Col } from 'react-bootstrap'
 import { ChevronDown } from 'react-feather'
 import { groupBy } from 'ramda'
@@ -7,6 +7,12 @@ import PropTypes from 'prop-types'
 import { get } from 'axios'
 function ArticleArchive(props) {
   const {
+    title,
+    preamble,
+    image,
+    imageAltText,
+    freeText,
+    issnNumber,
     firstArticles,
     articleArchiveService,
     language,
@@ -70,22 +76,22 @@ function ArticleArchive(props) {
       return groupArticlesByYearDesc.map(([year, articles], index) => {
         return (
           <Row className="articles-container" key={`groupedArticles-${index}`}>
-            <Col className="col-12 col-lg-1">
+            <Col className="col-12 col-lg-1 p-0">
               <h2 id={`archive-articles-${year}`}>{year}</h2>
             </Col>
             <Col id="article-archive-list" className="col-12 col-lg-8 p-0">
-              <ol className="row" aria-labelledby={`article-archive-heading archive-articles-${year}`}>
+              <ol className="row p-0" aria-labelledby={`article-archive-heading archive-articles-${year}`}>
                 {articles.map((article, index) => {
                   const srSubtitle = article.subtitle.replace(' / ', ' ')
                   return (
-                    <li key={`articles-${year}-${index}`} className="article-container col-12">
+                    <li key={`articles-${year}-${index}`} className="article-container col-12 p-0 mb-5">
                       <Link linkType="header" href={article.href}>
                         <span aria-hidden="true">{article.title}</span>
                         <span className="sr-only">
                           {`${article.title} ${srSubtitle.replace(year, '')}`}
                         </span>
                       </Link>
-                      <Paragraph>{article.preamble}</Paragraph>
+                      <Paragraph className="mt-2 mb-1">{article.preamble}</Paragraph>
                       <Text small>{article.subtitle}</Text>
                     </li>
                   )
@@ -100,18 +106,57 @@ function ArticleArchive(props) {
   }
 
   return (
-    <Container className="list-of-articles-container">
+    <Container fluid>
       <Row>
-        <h2 id="article-archive-heading" className="list-of-articles-title col-12">{listOfArticlesSectionTitle}</h2>
-        <Divider light className="col-12" />
+        <Col className="col-12 col-lg-8 offset-lg-1 p-0">
+          <Row className="row">
+            <Col className="col-12 p-0">
+              <h1>{title}</h1>
+              {preamble && <LeadParagraph className="preamble">{preamble}</LeadParagraph>}
+            </Col>
+          </Row>
+        </Col>
+        {image &&
+          <Col className="col-12 d-flex justify-content-center">
+            <img src={image} alt={imageAltText} />
+          </Col>}
+        <Col className="col-12 col-lg-10 offset-lg-1 p-0">
+          <Row className="list-of-articles-container">
+            <h2
+              id="article-archive-heading"
+              className="list-of-articles-title col-12 p-0"
+            >
+              {listOfArticlesSectionTitle}
+            </h2>
+            <Divider light className="col-12" />
+          </Row>
+          {addArticles()}
+          {renderShowMoreButton()}
+        </Col>
+        {freeText &&
+          <Col className="col-12 col-lg-8 offset-lg-1 p-0">
+            <div className="row">
+              <div className="free-text">{freeText}</div>
+            </div>
+          </Col>}
+        {issnNumber &&
+          <Col className="col-12 p-0">
+            <p className="issn-text d-flex justify-content-center">
+              <span>{issnNumber}</span>
+            </p>
+          </Col>}
       </Row>
-      {addArticles()}
-      {renderShowMoreButton()}
     </Container>
   )
 }
 
 ArticleArchive.propTypes = {
+  title: PropTypes.string,
+  preamble: PropTypes.string,
+  image: PropTypes.string,
+  imageAltText: PropTypes.string,
+  freeText: PropTypes.string,
+  issnNumber: PropTypes.string,
   listOfArticlesSectionTitle: PropTypes.string,
   firstArticles: PropTypes.array,
   articleArchiveService: PropTypes.string,
