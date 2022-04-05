@@ -14,7 +14,7 @@ exports.get = () => {
       body: bestbets.map((bet) => {
         return {
           id: bet._id,
-          linkedContentId: bet.data.linkedContentId,
+          linkedSelectedContentResult: bet.data.linkedSelectedContentResult,
           linkedContentTitle: bet.data.linkedContentTitle,
           linkedContentHref: bet.data.linkedContentHref,
           linkedContentIngress: bet.data.linkedContentIngress,
@@ -30,14 +30,17 @@ exports.get = () => {
 exports.post = (req) => {
   const body = JSON.parse(req.body)
   const response = createBestBet(
-    body.id,
-    body.linkedContentTitle,
-    body.linkedContentHref,
-    body.linkedContentIngress,
-    body.linkedContentType,
-    body.linkedContentDate,
-    body.linkedContentSubject,
-    body.searchWords
+    {
+      id: body.id,
+      linkedSelectedContentResult: body.linkedSelectedContentResult,
+      linkedContentTitle: body.linkedContentTitle,
+      linkedContentHref: body.linkedContentHref,
+      linkedContentIngress: body.linkedContentIngress,
+      linkedContentType: body.linkedContentType,
+      linkedContentDate: body.linkedContentDate,
+      linkedContentSubject: body.linkedContentSubject,
+      searchWords: body.searchWords
+    }
   )
   return response
 }
