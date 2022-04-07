@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Divider, Button, LeadParagraph, Paragraph, Text, Link } from '@statisticsnorway/ssb-component-library'
+import { Divider, Button, LeadParagraph, Paragraph, Link } from '@statisticsnorway/ssb-component-library'
 import { Container, Row, Col } from 'react-bootstrap'
 import { ChevronDown } from 'react-feather'
 import { groupBy } from 'ramda'
@@ -92,7 +92,7 @@ function ArticleArchive(props) {
                         </span>
                       </Link>
                       <Paragraph className="mt-2 mb-1">{article.preamble}</Paragraph>
-                      <Text small>{article.subtitle}</Text>
+                      <span className="ssb-text-wrapper small-text" aria-hidden="true">{article.subtitle}</span>
                     </li>
                   )
                 })}
@@ -136,7 +136,12 @@ function ArticleArchive(props) {
         {freeText &&
           <Col className="col-12 col-lg-8 offset-lg-1 p-0">
             <div className="row">
-              <div className="free-text">{freeText}</div>
+              <div
+                className="free-text"
+                dangerouslySetInnerHTML={{
+                  _html: freeText
+                }}
+              />
             </div>
           </Col>}
         {issnNumber &&

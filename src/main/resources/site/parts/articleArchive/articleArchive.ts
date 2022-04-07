@@ -111,7 +111,8 @@ export function parseArticleData(pageId: string, start: number, count: number, l
   })
 
   const articles: QueryResponse<Article> = query({
-    count: 1000,
+    start,
+    count,
     sort: 'publish.from DESC',
     query: `data.articleArchive = "${pageId}"`,
     contentTypes: [
@@ -135,7 +136,7 @@ export function parseArticleData(pageId: string, start: number, count: number, l
   })
 
   return {
-    articles: parsedArticles.slice(start, start + count),
+    articles: parsedArticles,
     total: articles.total
   }
 }
