@@ -139,7 +139,7 @@ function ArticleArchive(props) {
               <div
                 className="free-text"
                 dangerouslySetInnerHTML={{
-                  _html: freeText
+                  __html: freeText
                 }}
               />
             </div>
