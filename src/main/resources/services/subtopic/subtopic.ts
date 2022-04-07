@@ -11,8 +11,9 @@ exports.get = (req: Request): Response => {
     query: `components.page.config.mimir.default.subjectType LIKE "subSubject"`
   })
   const subtopicHits: Array<Content> = req.params.query ?
-    subtopicQuery.hits.filter((subtopic) => RegExp((req.params.query as string).toLowerCase()).test(`${subtopic.displayName.toLowerCase()}` )) :
-    subtopicQuery.hits as Array<Content>
+    subtopicQuery.hits.filter((subtopic) =>
+      subtopic.displayName.toLowerCase().includes((req.params.query as string).toLowerCase())
+    ) : subtopicQuery.hits as Array<Content>
 
   return {
     body: {
