@@ -1,21 +1,25 @@
-import { QueryResponse } from 'enonic-types/content'
-import { Response } from 'enonic-types/controller'
+import { Content, QueryResponse } from 'enonic-types/content'
+import { Request, Response } from 'enonic-types/controller'
 
 const {
   query
 } = __non_webpack_require__('/lib/xp/content')
 
-exports.get = (): Response => {
-  const subtopics: QueryResponse<Subtopics> = query({
+exports.get = (req: Request): Response => {
+  const subtopicQuery: QueryResponse<Subtopics> = query({
     count: 1000,
     query: `components.page.config.mimir.default.subjectType LIKE "subSubject"`
   })
+  const subtopicHits: Array<Content> = req.params.query ?
+    subtopicQuery.hits.filter((subtopic) =>
+      subtopic.displayName.toLowerCase().includes((req.params.query as string).toLowerCase())
+    ) : subtopicQuery.hits as Array<Content>
 
   return {
     body: {
-      count: subtopics.count,
-      total: subtopics.total,
-      hits: subtopics.hits.map(({
+      count: subtopicHits.length,
+      total: subtopicHits.length,
+      hits: subtopicHits.map(({
         _id, displayName, _path
       }) => {
         return {
