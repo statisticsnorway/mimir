@@ -222,7 +222,7 @@ function SearchResult(props) {
       }}
       selectedItem={selectedMainSubject}
       items={props.dropDownSubjects}
-      ariaLabel={props.chooseSubjectPhrase}
+      header={props.chooseSubjectPhrase}
     />
   ))
 
@@ -237,7 +237,7 @@ function SearchResult(props) {
       }}
       selectedItem={selectedContentType}
       items={props.dropDownContentTypes}
-      ariaLabel={props.chooseContentTypePhrase}
+      header={props.chooseContentTypePhrase}
     />
   ))
 
@@ -267,14 +267,15 @@ function SearchResult(props) {
               searchField
               submitCallback={goToSearchResultPage}
               ariaLabelWrapper={props.term ? props.mainSearchPhrase : undefined}
+              ariaLabelSearchButton={props.searchText}
             />
             <div className="filter mt-5">
-              <Title size={6}>{props.limitResultPhrase}</Title>
+              <span className="limit-result mb-3">{props.limitResultPhrase}</span>
               <Row justify-content-start>
-                <Col lg='3' className='pb-1 pr-1'>
+                <Col lg='4' className='pb-1 pr-1'>
                   <DropdownMainSubject/>
                 </Col>
-                <Col lg='3' className='pr-1'>
+                <Col lg='4' className='pr-1'>
                   <DropdownContentType/>
                 </Col>
               </Row>
@@ -309,6 +310,7 @@ SearchResult.propTypes = {
   mainSearchPhrase: PropTypes.string,
   chooseSubjectPhrase: PropTypes.string,
   chooseContentTypePhrase: PropTypes.string,
+  searchText: PropTypes.string,
   count: PropTypes.number,
   noHitMessage: PropTypes.string,
   bestBetHit: PropTypes.shape({

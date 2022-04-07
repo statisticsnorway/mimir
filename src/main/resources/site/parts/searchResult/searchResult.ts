@@ -69,7 +69,7 @@ export function renderPart(req: Request): React4xpResponse {
   const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
   const mainSubjectDropdown: Array<Dropdown> = [
     {
-      id: '',
+      id: 'allSubjects',
       title: phrases['publicationArchive.allSubjects']
     }
   ].concat(mainSubjects.map((subject) => {
@@ -87,7 +87,7 @@ export function renderPart(req: Request): React4xpResponse {
 
     const dropdowns: Array<Dropdown> = [
       {
-        id: '',
+        id: 'allTypes',
         title: phrases['publicationArchive.allTypes']
       }
     ].concat(filters.map((subject: string) => {
@@ -206,6 +206,10 @@ export function renderPart(req: Request): React4xpResponse {
       key: 'dropdown.chooseContenttype',
       locale: language
     }),
+    searchText: localize({
+      key: 'menuSearch',
+      locale: language
+    }),
     searchPageUrl,
     language,
     dropDownSubjects: mainSubjectDropdown,
@@ -244,6 +248,7 @@ interface SearchResultProps {
   mainSearchPhrase: string;
   chooseSubjectPhrase: string;
   chooseContentTypePhrase: string;
+  searchText: string;
   searchServiceUrl: string;
   searchPageUrl: string;
   language: string;

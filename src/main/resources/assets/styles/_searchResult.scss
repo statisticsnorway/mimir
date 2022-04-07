@@ -5,6 +5,17 @@
     .search-result-ingress {
       max-width: 780px
     }
+
+    .limit-result {
+      display: block;
+      font-size: 16px;
+      font-family: $font-roboto-bold;
+      font-weight: bold;
+    }
+
+    .ssb-dropdown.DropdownMainSubject, .ssb-dropdown.DropdownContentType {
+      max-width: 100%
+    }
   }
 
   .search-result-body {
