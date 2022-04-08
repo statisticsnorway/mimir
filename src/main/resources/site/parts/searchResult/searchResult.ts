@@ -36,6 +36,9 @@ const {
   getMainSubjects
 } = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
 const {
+  isEnabled
+} = __non_webpack_require__('/lib/featureToggle')
+const {
   get
 } = __non_webpack_require__('/lib/xp/content')
 
@@ -171,6 +174,7 @@ export function renderPart(req: Request): React4xpResponse {
     term: sanitizedTerm,
     count,
     title: content.displayName,
+    nameSearchToggle: isEnabled('name-search-in-freetext-search') ? true : false,
     noHitMessage: localize({
       key: 'searchResult.noHitMessage',
       locale: language
@@ -317,6 +321,7 @@ interface SearchResultProps {
   chooseContentTypePhrase: string;
   searchText: string;
   searchServiceUrl: string;
+  nameSearchToggle: boolean;
   nameSearchUrl: string;
   namePhrases: {
     readMore: string,

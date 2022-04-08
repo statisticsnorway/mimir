@@ -114,7 +114,7 @@ function SearchResult(props) {
             <Divider dark />
           </div>
         </div>
-        {renderNameResult()}
+        {props.nameSearchToggle ? renderNameResult() : undefined}
         <ol className="list-unstyled ">
           {renderListItem(bestBetHit)}
           {hits.map( (hit, i) => {
@@ -384,6 +384,7 @@ SearchResult.propTypes = {
   searchText: PropTypes.string,
   count: PropTypes.number,
   noHitMessage: PropTypes.string,
+  nameSearchToggle: PropTypes.bool,
   namePhrases: PropTypes.shape({
     readMore: PropTypes.string,
     thereAre: PropTypes.string,
