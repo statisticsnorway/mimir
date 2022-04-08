@@ -274,7 +274,8 @@ function SearchResult(props) {
   function renderNameResult() {
     if (mainNameResult && mainNameResult.count) {
       return (
-        <Card title={ mainNameResult && parseResultText(mainNameResult) } href={'/navn'} icon={<User size={32} />}>
+        //  TODO: Legge til en bedre url til navnestatistikken
+        <Card title={ mainNameResult && parseResultText(mainNameResult) } className={'pb-5'} href={'/navn'} icon={<User size={32} />}>
           {props.namePhrases.readMore}
         </Card>
       )
