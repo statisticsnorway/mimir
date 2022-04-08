@@ -39,15 +39,6 @@
         margin-top: $spacer * 0.25;
         margin-bottom: $spacer * 1.75;
 
-        p {
-          margin-top: $spacer * 0.5;
-          margin-bottom: $spacer * 0.5;
-        }
-
-        @include media-breakpoint-up(lg) {
-          margin-left: $spacer * 1.5;
-        }
-
         @include media-breakpoint-down(md) {
           padding: 0;
         }
@@ -55,15 +46,15 @@
     }
   }
 
-  .free-text {
-    @include make-col-ready();
-    @include make-col(12);
-
-    margin-top: $spacer * 2.5;
-    margin-bottom: $spacer * 1.5;
-  }
-
   .issn-text {
     margin-bottom: $spacer * 2;
+  }
+
+  ol {
+    list-style-type: none;
+
+    @include media-breakpoint-up(lg) {
+      margin-left: $spacer * 1.5;
+    }
   }
 }
