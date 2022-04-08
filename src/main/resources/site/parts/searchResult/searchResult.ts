@@ -194,6 +194,9 @@ export function renderPart(req: Request): React4xpResponse {
     searchServiceUrl: serviceUrl({
       service: 'freeTextSearch'
     }),
+    nameSearchUrl: serviceUrl({
+      service: 'nameSearch'
+    }),
     mainSearchPhrase: localize({
       key: 'mainSearch',
       locale: language
@@ -210,6 +213,70 @@ export function renderPart(req: Request): React4xpResponse {
       key: 'menuSearch',
       locale: language
     }),
+    namePhrases: {
+      readMore: localize({
+        key: 'nameSearch.readMore',
+        locale: language
+      }),
+      nameSearchResultTitle: localize({
+        key: 'nameSearch.resultTitle',
+        locale: language
+      }),
+      thereAre: localize({
+        key: 'nameSearch.thereAre',
+        locale: language
+      }),
+      with: localize({
+        key: 'nameSearch.with',
+        locale: language
+      }),
+      have: localize({
+        key: 'nameSearch.have',
+        locale: language
+      }),
+      asTheir: localize({
+        key: 'nameSearch.asTheir',
+        locale: language
+      }),
+      threeOrLessText: localize({
+        key: 'nameSearch.threeOrLessText',
+        locale: language
+      }),
+      women: localize({
+        key: 'women',
+        locale: language
+      }),
+      men: localize({
+        key: 'men',
+        locale: language
+      }),
+      types: {
+        firstgivenandfamily: localize({
+          key: 'nameSearch.types.firstgivenandfamily',
+          locale: language
+        }),
+        middleandfamily: localize({
+          key: 'nameSearch.types.middleandfamily',
+          locale: language
+        }),
+        family: localize({
+          key: 'nameSearch.types.family',
+          locale: language
+        }),
+        onlygiven: localize({
+          key: 'nameSearch.types.onlygiven',
+          locale: language
+        }),
+        onlygivenandfamily: localize({
+          key: 'nameSearch.types.onlygivenandfamily',
+          locale: language
+        }),
+        firstgiven: localize({
+          key: 'nameSearch.types.firstgiven',
+          locale: language
+        })
+      }
+    },
     searchPageUrl,
     language,
     dropDownSubjects: mainSubjectDropdown,
@@ -250,6 +317,26 @@ interface SearchResultProps {
   chooseContentTypePhrase: string;
   searchText: string;
   searchServiceUrl: string;
+  nameSearchUrl: string;
+  namePhrases: {
+    readMore: string,
+    nameSearchResultTitle: string;
+    thereAre: string;
+    with: string;
+    have: string,
+    asTheir: string;
+    threeOrLessText: string;
+    women: string;
+    men: string;
+    types: {
+      firstgivenandfamily: string;
+      middleandfamily: string;
+      family: string;
+      onlygiven: string;
+      onlygivenandfamily: string;
+      firstgiven: string;
+    };
+  }
   searchPageUrl: string;
   language: string;
   dropDownSubjects: Array<Dropdown>;

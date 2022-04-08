@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Divider, Input, Link, Paragraph, Title, Dropdown, Tag } from '@statisticsnorway/ssb-component-library'
-import { ChevronDown, X } from 'react-feather'
+import { Card, Button, Divider, Input, Link, Paragraph, Title, Dropdown, Tag } from '@statisticsnorway/ssb-component-library'
+import { ChevronDown, User, X } from 'react-feather'
 import axios from 'axios'
 import NumberFormat from 'react-number-format'
 import { Col, Row } from 'react-bootstrap'
@@ -13,6 +13,8 @@ function SearchResult(props) {
   const [loading, setLoading] = useState(false)
   const [total, setTotal] = useState(props.total)
   const [filterChanged, setFilterChanged] = useState(false)
+  const [nameSearchData, setNameSearchData] = useState(undefined)
+  const [mainNameResult, setMainNameResult] = useState(undefined)
   const [filter, setFilter] = useState({
     mainSubject: '',
     contentType: ''
@@ -21,6 +23,13 @@ function SearchResult(props) {
   const [selectedContentType, setSelectedContentType] = useState(props.dropDownContentTypes[0])
 
   useEffect(() => {
+    if (!nameSearchData) {
+      try {
+        getNameSearch(searchTerm)
+      } catch (e) {
+        console.log(e)
+      }
+    }
     if (filterChanged) {
       fetchFilteredSearchResult()
     }
@@ -105,6 +114,7 @@ function SearchResult(props) {
             <Divider dark />
           </div>
         </div>
+        {renderNameResult()}
         <ol className="list-unstyled ">
           {renderListItem(bestBetHit)}
           {hits.map( (hit, i) => {
@@ -211,6 +221,66 @@ function SearchResult(props) {
     window.location = `${props.searchPageUrl}?sok=${searchTerm}`
   }
 
+  function getNameSearch(term) {
+    axios.get(props.nameSearchUrl, {
+      params: {
+        'name': term
+      }
+    }).then((result) => {
+      setNameSearchData(result.data)
+      findMainResult(result.data.response.docs, searchTerm)
+    }).catch((e) => {
+      setNameSearchData({
+        'error': e
+      })
+    })
+  }
+
+  function findMainResult(docs, originalName) {
+    // only get result with same name as the input
+    const filteredResult = docs.filter((doc) => doc.name === originalName.toUpperCase())
+    const mainRes = filteredResult.length && filteredResult.reduce((acc, current) => {
+      if (!acc || acc.count < current.count ) {
+        acc = current // get the hit with the highest count
+      }
+      return acc
+    })
+    setMainNameResult(mainRes)
+  }
+
+  function parseResultText(doc) {
+    return (
+      <span>
+        <span className="details">{doc.count}</span>
+        {` ${formatGender(doc.gender)} ${props.namePhrases.have} `}
+        <span className="details name-search-name">{doc.name.toLowerCase()} </span>
+        {` ${props.namePhrases.asTheir} ${translateName(doc.type)} `}
+      </span> )
+  }
+  function formatGender(gender) {
+    switch (gender) {
+    case 'F':
+      return props.namePhrases.women
+    case 'M':
+      return props.namePhrases.men
+    default: return ''
+    }
+  }
+  function translateName(nameCode) {
+    return props.namePhrases.types[nameCode]
+  }
+
+
+  function renderNameResult() {
+    if (mainNameResult && mainNameResult.count) {
+      return (
+        <Card title={ mainNameResult && parseResultText(mainNameResult) } href={'/navn'} icon={<User size={32} />}>
+          {props.namePhrases.readMore}
+        </Card>
+      )
+    } else return null
+  }
+
   const DropdownMainSubject = React.forwardRef((_props, ref) => (
     <Dropdown
       ref={ref}
@@ -302,6 +372,7 @@ SearchResult.propTypes = {
   buttonTitle: PropTypes.string,
   searchServiceUrl: PropTypes.string,
   searchPageUrl: PropTypes.stirng,
+  nameSearchUrl: PropTypes.string,
   language: PropTypes.string,
   term: PropTypes.string,
   showingPhrase: PropTypes.string,
@@ -313,6 +384,24 @@ SearchResult.propTypes = {
   searchText: PropTypes.string,
   count: PropTypes.number,
   noHitMessage: PropTypes.string,
+  namePhrases: PropTypes.shape({
+    readMore: PropTypes.string,
+    thereAre: PropTypes.string,
+    with: PropTypes.string,
+    asTheir: PropTypes.string,
+    have: PropTypes.string,
+    threeOrLessText: PropTypes.string,
+    women: PropTypes.string,
+    men: PropTypes.string,
+    types: PropTypes.shape({
+      firstgivenandfamily: PropTypes.string,
+      middleandfamily: PropTypes.string,
+      family: PropTypes.string,
+      onlygiven: PropTypes.string,
+      onlygivenandfamily: PropTypes.string,
+      firstgiven: PropTypes.string
+    })
+  }),
   bestBetHit: PropTypes.shape({
     title: PropTypes.string,
     url: PropTypes.string,
