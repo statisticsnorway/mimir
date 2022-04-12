@@ -199,6 +199,7 @@ function SearchResult(props) {
     if (props.language === 'en') {
       return (
         <div>
+          { props.nameSearchToggle ? renderNameResult() : undefined }
           <Title size={2}>{props.noHitMessage}</Title>
           <p>Go to <Link href="/en/navn">name search</Link></p>
           <p>See <Link href="/en/publiseringsarkiv">list of all our published statistics, analyses and articles </Link></p>
@@ -208,6 +209,7 @@ function SearchResult(props) {
     } else {
       return (
         <div>
+          { props.nameSearchToggle ? renderNameResult() : undefined }
           <Title size={2}>{props.noHitMessage}</Title>
           <p>Her finner du <Link href="/navn">navnesøk</Link></p>
           <p>Her finner du <Link href="/publikasjonsarkiv">liste over alle publiserte statistikker, analyser og artikler </Link></p>
