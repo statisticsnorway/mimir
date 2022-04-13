@@ -6,6 +6,7 @@ import axios from 'axios'
 import NumberFormat from 'react-number-format'
 import { Col, Row } from 'react-bootstrap'
 import { addGtagForEvent } from '../../../react4xp/ReactGA'
+import _ from 'lodash'
 
 function SearchResult(props) {
   const [hits, setHits] = useState(props.hits)
@@ -250,14 +251,12 @@ function SearchResult(props) {
     setMainNameResult(mainRes)
   }
 
-  function parseResultText(doc) {
+  const parseResultText = (doc) => {
     return (
-      <span>
-        <span className="details">{doc.count}</span>
-        {` ${formatGender(doc.gender)} ${props.namePhrases.have} `}
-        <span className="details name-search-name">{doc.name.toLowerCase()} </span>
-        {` ${props.namePhrases.asTheir} ${translateName(doc.type)} `}
-      </span> )
+      `${doc.count} 
+      ${formatGender(doc.gender)} ${props.namePhrases.have}
+      ${_.startCase(_.toLower(doc.name))}
+      ${props.namePhrases.asTheir} ${translateName(doc.type)}`)
   }
   function formatGender(gender) {
     switch (gender) {
