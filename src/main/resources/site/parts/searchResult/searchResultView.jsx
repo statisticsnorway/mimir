@@ -41,7 +41,10 @@ function SearchResult(props) {
     if ((!props.bestBetHit) && (!hits.length)) {
       addGtagForEvent(props.GA_TRACKING_ID, 'Null treff', 'Søk', searchTerm)
     }
-  }, [filter])
+    if (mainNameResult && mainNameResult.count) {
+      addGtagForEvent(props.GA_TRACKING_ID, 'Navnesøket', 'Søk', searchTerm)
+    }
+  }, [filter, mainNameResult])
 
   function onChange(id, value) {
     setFilterChanged(true)
