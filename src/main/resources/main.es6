@@ -88,6 +88,10 @@ try {
         {
           feature: 'highcharts-y-axix-title-mobile',
           enabled: false
+        },
+        {
+          feature: 'name-search-in-freetext-search',
+          enabled: false
         }
       ]
     }
