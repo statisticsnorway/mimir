@@ -52,7 +52,9 @@ function renderPart(req: Request): Response {
     title: config.title,
     preambleText: config.preamble,
     linkType: 'header',
-    titleSize: titleSize
+    titleSize: titleSize,
+    ariaLabel: config.title,
+    ariaDescribedBy: 'subtitle'
   }
 
   const profiledBox: React4xpObject = new React4xp('site/parts/profiledBox/profiledBox')
@@ -124,4 +126,6 @@ interface ProfiledBoxProps {
   preambleText: string;
   linkType: string;
   titleSize: string;
+  ariaLabel: string | undefined;
+  ariaDescribedBy: string | undefined;
 }

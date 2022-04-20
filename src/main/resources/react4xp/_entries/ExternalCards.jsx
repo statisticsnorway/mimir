@@ -17,6 +17,8 @@ const ExternalCards = (props) => {
                 hrefText={link.children}
                 icon={link.image && <img src={link.image} alt=''/>}
                 profiled external
+                ariaLabel={link.children}
+                ariaDescribedBy="text"
               >
                 <Text>{link.content}</Text>
               </Card>
