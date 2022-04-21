@@ -12,6 +12,7 @@ app {
     vendorName = "${vendorName}"
     vendorUrl = "${vendorUrl}"
     systemVersion = "${xpVersion}"
+    rootProject.ext.LIB_REACT4XP_VERSION = "3.0.0" // Do we need this?
 }
 
 dependencies {
