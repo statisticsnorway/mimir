@@ -11,9 +11,7 @@ app {
     displayName = "${appDisplayName}"
     vendorName = "${vendorName}"
     vendorUrl = "${vendorUrl}"
-    systemVersion = "${xpVersion}"
-    rootProject.ext.LIB_REACT4XP_VERSION = "3.0.0" // Do we need this?
-}
+    systemVersion = "${xpVersion}"}
 
 dependencies {
     include "com.enonic.lib:lib-thymeleaf:2.0.0"
@@ -52,9 +50,6 @@ repositories {
     mavenLocal()
     mavenCentral()
     xp.enonicRepo()
-    maven { 
-        url 'http://repo.enonic.com/public'
-    }
     maven {
         url "https://repo1.maven.org/maven2/"
     }
@@ -68,31 +63,27 @@ node {
     version = '16.4.2'
 }
 
-// def react4xpGradlePath = 'node_modules/react4xp/react4xp.gradle'
-// def react4xpGradleFile = new File(react4xpGradlePath)
-// if (!react4xpGradleFile.exists()) {
-//     exec {
-//         String npm = 'npm'
-//         if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-//             npm = 'npm.cmd'
-//         }
-//         commandLine npm
-//         args = ['install']
-//         println "\nNot found: $react4xpGradlePath - running shell command: $npm install"
-//         //store the output instead of printing to the console:
-//         standardOutput = new ByteArrayOutputStream()
+def react4xpGradlePath = 'node_modules/react4xp/react4xp.gradle'
+def react4xpGradleFile = new File(react4xpGradlePath)
+if (!react4xpGradleFile.exists()) {
+    exec {
+        String npm = 'npm'
+        if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+            npm = 'npm.cmd'
+        }
+        commandLine npm
+        args = ['install']
+        println "\nNot found: $react4xpGradlePath - running shell command: $npm install"
+        //store the output instead of printing to the console:
+        standardOutput = new ByteArrayOutputStream()
 
-//         //extension method execSomething.output() can be used to obtain the output:
-//         ext.output = {
-//             return standardOutput.toString()
-//         }
-//     }
-// }
-// apply from: react4xpGradlePath
-
-def react4xpGradlePath = 'node_modules/@enonic/react4xp/react4xp.gradle'
-apply from: 'node_modules/@enonic/react4xp/npmInstall.gradle'
-apply from: 'node_modules/@enonic/react4xp/updaters.gradle'
+        //extension method execSomething.output() can be used to obtain the output:
+        ext.output = {
+            return standardOutput.toString()
+        }
+    }
+}
+apply from: react4xpGradlePath
 
 task clientJsWebpack( type: NpxTask, dependsOn: npmInstall ) {
     command =  'webpack' 
