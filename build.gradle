@@ -12,7 +12,6 @@ app {
     vendorName = "${vendorName}"
     vendorUrl = "${vendorUrl}"
     systemVersion = "${xpVersion}"
-    rootProject.ext.LIB_REACT4XP_VERSION = "3.0.0"
 }
 
 dependencies {
@@ -43,7 +42,7 @@ dependencies {
     include 'commons-codec:commons-codec:1.15'
     include "no.item:wsutil-server:2.0.0"
     include "com.gravitondigital:featuretogglelib:0.3.0"
-    compile group: 'org.json', name: 'json', version: '20211205'
+    compile group: 'org.json', name: 'json', version: '20210307'
     include 'com.enonic.lib:lib-react4xp:3.0.0-B3'
     include 'com.enonic.lib:lib-text-encoding:2.0.0'
 }
@@ -165,7 +164,7 @@ jar {
     exclude 'assets/styles/**/*.scss'
     exclude 'assets/styles/**/*.js'
 
-   //  serverWebpack.dependsOn += 'react4xp_components' // 'webpack_react4xp'
+    serverWebpack.dependsOn += 'react4xp_components' // 'webpack_react4xp'
     serverWebpack.dependsOn += generateTypeScript
 
     dependsOn += npmInstall
