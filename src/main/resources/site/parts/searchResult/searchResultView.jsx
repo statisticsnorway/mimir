@@ -242,6 +242,16 @@ function SearchResult(props) {
     })
   }
 
+  function capitalizeNames(name) {
+    const nameTokens = name.toLowerCase().split(' ')
+    const capitalizedTokens = nameTokens.map((n)=>{
+      const first = n.slice(0, 1).toUpperCase()
+      const rest = n.slice(1)
+      return first + rest
+    })
+    return capitalizedTokens.join(' ')
+  }
+
   function findMainResult(docs, originalName) {
     // only get result with same name as the input
     const filteredResult = docs.filter((doc) => doc.name === originalName.toUpperCase())
@@ -258,7 +268,7 @@ function SearchResult(props) {
     return (
       `${doc.count} 
       ${formatGender(doc.gender)} ${props.namePhrases.have}
-      ${_.startCase(_.toLower(doc.name))}
+      ${capitalizeNames(doc.name)}
       ${props.namePhrases.asTheir} ${translateName(doc.type)}`)
   }
   function formatGender(gender) {
