@@ -41,10 +41,7 @@ function SearchResult(props) {
     if ((!props.bestBetHit) && (!hits.length)) {
       addGtagForEvent(props.GA_TRACKING_ID, 'Null treff', 'Søk', searchTerm)
     }
-    if (mainNameResult && mainNameResult.count) {
-      addGtagForEvent(props.GA_TRACKING_ID, 'Navnesøket', 'Søk', searchTerm)
-    }
-  }, [filter, mainNameResult])
+  }, [filter])
 
   function onChange(id, value) {
     setFilterChanged(true)
@@ -261,6 +258,9 @@ function SearchResult(props) {
       }
       return acc
     })
+    if (mainRes && mainRes.count) {
+      addGtagForEvent(props.GA_TRACKING_ID, 'Navnesøket', 'Søk', searchTerm)
+    }
     setMainNameResult(mainRes)
   }
 
