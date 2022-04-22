@@ -6,7 +6,6 @@ import axios from 'axios'
 import NumberFormat from 'react-number-format'
 import { Col, Row } from 'react-bootstrap'
 import { addGtagForEvent } from '../../../react4xp/ReactGA'
-import _ from 'lodash'
 
 function SearchResult(props) {
   const [hits, setHits] = useState(props.hits)
