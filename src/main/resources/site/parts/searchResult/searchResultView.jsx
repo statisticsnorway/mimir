@@ -6,7 +6,6 @@ import axios from 'axios'
 import NumberFormat from 'react-number-format'
 import { Col, Row } from 'react-bootstrap'
 import { addGtagForEvent } from '../../../react4xp/ReactGA'
-import _ from 'lodash'
 
 function SearchResult(props) {
   const [hits, setHits] = useState(props.hits)
@@ -239,6 +238,16 @@ function SearchResult(props) {
     })
   }
 
+  function capitalizeNames(name) {
+    const nameTokens = name.toLowerCase().split(' ')
+    const capitalizedTokens = nameTokens.map((n)=>{
+      const first = n.slice(0, 1).toUpperCase()
+      const rest = n.slice(1)
+      return first + rest
+    })
+    return capitalizedTokens.join(' ')
+  }
+
   function findMainResult(docs, originalName) {
     // only get result with same name as the input
     const filteredResult = docs.filter((doc) => doc.name === originalName.toUpperCase())
@@ -248,6 +257,9 @@ function SearchResult(props) {
       }
       return acc
     })
+    if (mainRes && mainRes.count) {
+      addGtagForEvent(props.GA_TRACKING_ID, 'Navnesøket', 'Søk', searchTerm)
+    }
     setMainNameResult(mainRes)
   }
 
@@ -255,7 +267,7 @@ function SearchResult(props) {
     return (
       `${doc.count} 
       ${formatGender(doc.gender)} ${props.namePhrases.have}
-      ${_.startCase(_.toLower(doc.name))}
+      ${capitalizeNames(doc.name)}
       ${props.namePhrases.asTheir} ${translateName(doc.type)}`)
   }
   function formatGender(gender) {
