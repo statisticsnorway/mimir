@@ -16,12 +16,14 @@ export function solrSearch(term: string,
   numberOfHits: number,
   start: number = 0,
   mainSubject: string,
-  contentType: string): SolrPrepResultAndTotal {
+  contentType: string,
+  sortParam: string | undefined): SolrPrepResultAndTotal {
   const lang: string = language === 'en' ? 'en' : 'no'
   const filterQuery: string = mainSubject ? `fq=sprak:"${lang}"&fq=hovedemner:"${mainSubject}"` : `fq=sprak:"${lang}"`
   const contentTypeQuery: string = contentType ? `&fq=innholdstype:"${contentType}"` : ''
+  const sortQuery: string = sortParam ? `&sort=${sortParam}+desc` : ''
   const searchResult: SolrResult | undefined = querySolr({
-    query: createQuery(term, numberOfHits, start, filterQuery, contentTypeQuery)
+    query: createQuery(term, numberOfHits, start, filterQuery, contentTypeQuery, sortQuery)
   })
   return searchResult ? {
     hits: nerfSearchResult(searchResult, language),
@@ -94,15 +96,15 @@ function requestSolr(queryParams: SolrQueryParams): SolrResponse {
 }
 
 
-function createQuery(term: string, numberOfHits: number, start: number, filterQuery: string, contentTypeQuery: string): string {
-  return `${SOLR_BASE_URL}?${SOLR_PARAM_QUERY}=${term}&${filterQuery}${contentTypeQuery}&wt=${SOLR_FORMAT}&start=${start}&rows=${numberOfHits}`
+function createQuery(term: string, numberOfHits: number, start: number, filterQuery: string, contentTypeQuery: string, sortQuery: string): string {
+  return `${SOLR_BASE_URL}?${SOLR_PARAM_QUERY}=${term}&${filterQuery}${contentTypeQuery}&wt=${SOLR_FORMAT}&start=${start}&rows=${numberOfHits}${sortQuery}`
 }
 
 /*
 * Interfaces
 */
 export interface SolrUtilsLib {
-    solrSearch: (term: string, language: string, numberOfHits: number, start?: number, filter?: string, contentType?: string) => SolrPrepResultAndTotal;
+    solrSearch: (term: string, language: string, numberOfHits: number, start?: number, filter?: string, contentType?: string, sortParam?: string) => SolrPrepResultAndTotal;
 }
 
 interface SolrQueryParams {
