@@ -508,8 +508,7 @@ function completelyClearCache(options: CompletelyClearCacheOptions): void {
   }
 
   if (options.clearPartCache) {
-    completelyClearPartCache('draft')
-    completelyClearPartCache('master')
+    completelyClearPartCache()
   }
 }
 
