@@ -57,7 +57,7 @@ module.exports = {
   //
   // entryDirs: [''],
 
-  entryDirs: ['_entries'],
+  entryDirs: ['_entries']
 
   // entryExtensions are filename extensions of files (comma-separated list)
   // below the entryDirs folders that webpack should look for and turn into
@@ -78,11 +78,4 @@ module.exports = {
   /* externals: {
     lodash: '_'
   }*/
-
-  // From react4xp.properties
-  nashornPolyfillsSource: 'src/main/resources/extraNashornPolyfills.es6',
-  buildRuntimeClient: false,
-  buildExternals: true,
-  masterConfigFileName: 'build/react4xp_constants.json',
-  overwriteConstantsFile: true
 } // module.exports
