@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Card, Button, Divider, Input, Link, Paragraph, Title, Dropdown, Tag } from '@statisticsnorway/ssb-component-library'
+import { Card,
+  Button,
+  Divider,
+  Input,
+  Link,
+  Paragraph,
+  Title,
+  Dropdown,
+  Tag,
+  RadioGroup } from '@statisticsnorway/ssb-component-library'
 import { ChevronDown, User, X } from 'react-feather'
 import axios from 'axios'
 import NumberFormat from 'react-number-format'
@@ -16,6 +25,7 @@ function SearchResult(props) {
   const [filterChanged, setFilterChanged] = useState(false)
   const [nameSearchData, setNameSearchData] = useState(undefined)
   const [mainNameResult, setMainNameResult] = useState(undefined)
+  const [sortList, setSortList] = useState(undefined)
   const [filter, setFilter] = useState({
     mainSubject: '',
     contentType: ''
@@ -41,7 +51,7 @@ function SearchResult(props) {
     if ((!props.bestBetHit) && (!hits.length)) {
       addGtagForEvent(props.GA_TRACKING_ID, 'Null treff', 'Søk', searchTerm)
     }
-  }, [filter])
+  }, [filter, sortList])
 
   function onChange(id, value) {
     setFilterChanged(true)
@@ -61,6 +71,12 @@ function SearchResult(props) {
         contentType: value.id === '' ? '' : value.id
       })
     }
+  }
+
+  function onChangeSortList(value) {
+    console.log('onChangeSortList: ' + value)
+    setSortList(value)
+    fetchFilteredSearchResult()
   }
 
   function removeFilter() {
@@ -107,13 +123,32 @@ function SearchResult(props) {
     return (
       <div>
         <div className="row mb-4">
-          <div className="col" aria-live="polite" aria-atomic="true">
+          <Col className="col-6" aria-live="polite" aria-atomic="true">
             {props.showingPhrase.replace('{0}', currentAmount)}&nbsp;<NumberFormat
               value={ Number(totalHits) }
               displayType={'text'}
               thousandSeparator={' '}/>
             <Divider dark />
-          </div>
+          </Col>
+          <Col className="choose-sorting col-6">
+            <RadioGroup
+              onChange={(value) => {
+                onChangeSortList(value)
+              }}
+              selectedValue='best'
+              orientation='row'
+              items={[
+                {
+                  label: 'Beste treff',
+                  value: 'best'
+                },
+                {
+                  label: 'Dato',
+                  value: 'publiseringsdato'
+                }
+              ]}
+            />
+          </Col>
         </div>
         {props.nameSearchToggle ? renderNameResult() : undefined}
         <ol className="list-unstyled ">
@@ -139,6 +174,7 @@ function SearchResult(props) {
   }
 
   function fetchFilteredSearchResult() {
+    console.log('fetchFilteredSearchResult')
     setLoading(true)
     axios.get(props.searchServiceUrl, {
       params: {
@@ -147,7 +183,8 @@ function SearchResult(props) {
         count: props.count,
         language: props.language,
         mainsubject: filter.mainSubject,
-        contentType: filter.contentType
+        contentType: filter.contentType,
+        sortParam: sortList === 'publiseringsdato' ? sortList : undefined
       }
     }).then((res) => {
       setHits(res.data.hits)
