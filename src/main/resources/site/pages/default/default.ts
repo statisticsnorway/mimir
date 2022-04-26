@@ -477,7 +477,7 @@ function parseStatbankFrameContent(statbankFane: boolean, req: Request, page: De
 
   let statbankHelpLink: string = siteConfig.statbankHelpLink
   if ( pageLanguage === 'en') {
-    statbankHelpLink = '/en/' + siteConfig.statbankHelpLink
+    statbankHelpLink = '/en' + siteConfig.statbankHelpLink
   }
   const statbankHelpText: string = localize({
     key: 'statbankHelpText',
