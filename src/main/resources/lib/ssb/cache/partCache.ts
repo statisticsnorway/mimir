@@ -47,10 +47,10 @@ export function clearPartCache(content: Content, branch: string): void {
   }
 }
 
-export function completelyClearPartCache(): void {
-  cacheLog(`clear part cache (draft and master)`)
-  masterPartCache.clear()
-  draftPartCache.clear()
+export function completelyClearPartCache(branch: string): void {
+  cacheLog(`clear part cache (${branch})`)
+  const partCache: Cache = branch === 'master' ? masterPartCache : draftPartCache
+  partCache.clear()
 }
 
 export function clearPartFromPartCache(part: string): void {
@@ -62,6 +62,6 @@ export function clearPartFromPartCache(part: string): void {
 export interface SSBPartCacheLibrary {
   fromPartCache: <T>(req: Request, key: string, fallback: () => T) => T;
   clearPartCache: (content: Content, branch: string) => void;
-  completelyClearPartCache: () => void;
+  completelyClearPartCache: (branch: string) => void;
   clearPartFromPartCache: (part: string) => void;
 }
