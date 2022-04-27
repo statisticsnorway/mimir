@@ -1,3 +1,5 @@
+import { parseContributions } from '../../../lib/ssb/utils/utils'
+
 const {
   assetUrl,
   serviceUrl
@@ -113,9 +115,4 @@ function getAssets() {
       service: 'websocket'
     })
   }
-}
-
-function parseContributions(contributions) {
-  contributions.bodyEnd = contributions.bodyEnd.map((script) => script.replace(' defer>', ' defer="">'))
-  return contributions
 }
