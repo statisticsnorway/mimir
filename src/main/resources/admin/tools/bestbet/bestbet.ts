@@ -90,15 +90,17 @@ function renderPart(req: Request): React4xpResponse | Response {
     })
     .setId('app-bestbet')
 
-  const pageContributions: PageContributions = parseContributions(bestbetComponent.renderPageContributions() as PageContributions)
+  const pageContributions: PageContributions = parseContributions(bestbetComponent.renderPageContributions({
+    clientRender: true
+  }) as PageContributions)
 
   return {
     body: bestbetComponent.renderBody({
       body: render(view, {
         ...getAssets(),
-        pageContributions
-      }),
-      clientRender: true
+        pageContributions,
+        clientRender: true
+      })
     }),
     pageContributions
   }
