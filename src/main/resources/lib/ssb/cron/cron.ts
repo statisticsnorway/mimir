@@ -13,7 +13,8 @@ const {
 } = __non_webpack_require__('/lib/ssb/cache/partCache')
 const {
   refreshStatRegData,
-  STATREG_NODES
+  STATREG_NODES,
+  updateMimirMockRelease
 } = __non_webpack_require__('/lib/ssb/repo/statreg')
 const {
   schedule,
@@ -213,6 +214,15 @@ export function setupCronJobs(): void {
       name: 'Update unpublished mock tbml',
       cron: updateUnpublishedMockCron,
       callback: () => runOnMasterOnly(updateUnpublishedMockTbml),
+      context: cronContext
+    })
+
+    const updateMimirMockReleaseCron: string =
+        app.config && app.config['ssb.cron.updateMimirReleasedMock'] ? app.config['ssb.cron.updateMimirReleasedMock'] : '01 6 * * *'
+    schedule({
+      name: 'Update nextRelease Mimir',
+      cron: updateMimirMockReleaseCron,
+      callback: () => runOnMasterOnly(updateMimirMockRelease),
       context: cronContext
     })
   }
