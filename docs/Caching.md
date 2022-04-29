@@ -7,16 +7,21 @@ Cache instantiation and control is found in [cache.ts](/src/main/resources/lib/s
 ## Clearing Cache
 Clearing cache is primarily done on node events, which is set up in the *cache.ts* file. When content is saved or published, content nodes are placed in a queue. When the queue is stable, all the contents are individually cleared - or all cache is cleared if there are too many contents.
 ### Dashboard
-TBA
+For manual cache clearing, there is a "Tøm cache" button in the `Dashboard` admin tool XP application for internal users to interact with.
 
-In [index.jsx](src/main/resources/react4xp/dashboard/containers/DashboardTools/index.jsx)
-```javascript
-  function clearCache() {
-    requestClearCache(dispatch, io)
-  }
+The following function is called by the `Tøm cache` button `onClick` and emits the `clear-cache` event
+([actions.es6](src/main/resources/react4xp/dashboard/containers/HomePage/actions.es6)):
+ ```javascript
+ export function requestClearCache(dispatch, io) {
+  dispatch({
+    type: actions.startLoadingClearCache.type
+  })
+
+  io.emit('clear-cache')
+}
  ```
 
-[cache.ts](src/main/resources/lib/ssb/cache/cache.ts)
+There is a socket listener for the `clear-cache` event in [cache.ts](src/main/resources/lib/ssb/cache/cache.ts) that will send a `clearCache` custom event to the system when the `clear-cache` event is emitted from the Dashboard:
 ```javascript
 export function setupHandlers(socket: Socket): void {
   socket.on('clear-cache', () => {
@@ -42,10 +47,18 @@ export function setupHandlers(socket: Socket): void {
 }
   ```
 
-### Clear Cache Cron
-Every hour there is a clear cache cron job that is scheduled to run. The scheduled time can be adjusted in the `mimir.cfg` and fallbacks to every hour. Its purpose is to automatically clear part caches from draft and master so that when data is updated, the changes will display on certain parts correctly.
+The custom event listener for type `clearCache` is defined in `setup()` and will call the `completelyClearCache()` function where the `data` parameter defined in the `clearCache` custom event is passed:
+ ```javascript
+listener({
+  type: 'custom.clearCache',
+  callback: (e: EnonicEvent<CompletelyClearCacheOptions>) => completelyClearCache(e.data)
+})
+ ```
 
-A callback function is defined in the clear-cache `schedule` object, where a list of `clearCacheFromPartCache()` functions are called. Pass a key string to the function for the cached part that you wish to clear:
+### Clear Cache Cron
+Every hour, there is a clear cache cron job that is scheduled to run. The scheduled time can be adjusted in the `mimir.cfg` and fallbacks to every hour. Its purpose is to automatically clear part caches from draft and master so that when data is updated, the changes will display on certain parts correctly.
+
+A callback function is defined in the clear-cache `schedule` object, where a list of `clearCacheFromPartCache()` functions are called. Pass a key string to the function for the cached part that you wish to clear ([cache.ts](src/main/resources/lib/ssb/cache/cache.ts)):
 
 ```javascript
   // clear specific cache once an hour
@@ -68,7 +81,7 @@ A callback function is defined in the clear-cache `schedule` object, where a lis
   })
  ```
 
-`clearPartFromCache()` uses the `removePattern` function from `lib-cache` to remove a specified entry from the part cache:
+`clearPartFromCache()` uses the `removePattern` function from `lib-cache` to remove a specified entry from the part cache ([partCache.ts](src/main/resources/lib/ssb/cache/partCache.ts)):
 
  ```javascript
 export function clearPartFromPartCache(part: string): void {
