@@ -21,7 +21,17 @@
   .search-result-body {
     & > * {
       max-width: 580px;
-    }  
+    }
+
+    .choose-sorting {
+      .ssb-radio-group .flex-row {
+        gap: 20px;
+
+        .ssb-radio {
+          min-width: 0;
+        }
+      }
+    }
   }
   .metadata {
     font-size: 14px;

@@ -128,27 +128,12 @@ function SearchResult(props) {
               value={ Number(totalHits) }
               displayType={'text'}
               thousandSeparator={' '}/>
-            <Divider dark />
           </Col>
           <Col className="choose-sorting col-6">
-            <RadioGroup
-              onChange={(value) => {
-                onChangeSortList(value)
-              }}
-              selectedValue='best'
-              orientation='row'
-              items={[
-                {
-                  label: 'Beste treff',
-                  value: 'best'
-                },
-                {
-                  label: 'Dato',
-                  value: 'publiseringsdato'
-                }
-              ]}
-            />
+            <span>Sorter:</span>
+            {renderRadiobuttonSort()}
           </Col>
+          <Divider dark />
         </div>
         {props.nameSearchToggle ? renderNameResult() : undefined}
         <ol className="list-unstyled ">
@@ -350,6 +335,29 @@ function SearchResult(props) {
     />
   ))
 
+  function renderRadiobuttonSort() {
+    return (
+      <RadioGroup
+        className='float-end'
+        onChange={(value) => {
+          onChangeSortList(value)
+        }}
+        selectedValue='best'
+        orientation='row'
+        items={[
+          {
+            label: props.sortBestHitPhrase,
+            value: 'best'
+          },
+          {
+            label: props.sortDatePhrase,
+            value: 'publiseringsdato'
+          }
+        ]}
+      />
+    )
+  }
+
   function renderClearFilterButton() {
     if (filter.mainSubject || filter.contentType) {
       return (
@@ -421,6 +429,9 @@ SearchResult.propTypes = {
   chooseSubjectPhrase: PropTypes.string,
   chooseContentTypePhrase: PropTypes.string,
   searchText: PropTypes.string,
+  sortPhrase: PropTypes.string,
+  sortBestHitPhrase: PropTypes.string,
+  sortDatePhrase: PropTypes.string,
   count: PropTypes.number,
   noHitMessage: PropTypes.string,
   nameSearchToggle: PropTypes.bool,

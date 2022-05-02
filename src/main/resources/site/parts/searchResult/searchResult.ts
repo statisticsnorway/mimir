@@ -217,6 +217,18 @@ export function renderPart(req: Request): React4xpResponse {
       key: 'menuSearch',
       locale: language
     }),
+    sortPhrase: localize({
+      key: 'searchResult.sort.title',
+      locale: language
+    }),
+    sortBestHitPhrase: localize({
+      key: 'searchResult.sort.bestHit',
+      locale: language
+    }),
+    sortDatePhrase: localize({
+      key: 'searchResult.sort.date',
+      locale: language
+    }),
     namePhrases: {
       readMore: localize({
         key: 'nameSearch.readMore',
@@ -320,6 +332,9 @@ interface SearchResultProps {
   chooseSubjectPhrase: string;
   chooseContentTypePhrase: string;
   searchText: string;
+  sortPhrase: string;
+  sortBestHitPhrase: string;
+  sortDatePhrase: string;
   searchServiceUrl: string;
   nameSearchToggle: boolean;
   nameSearchUrl: string;
