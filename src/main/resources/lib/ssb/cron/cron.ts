@@ -13,8 +13,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/cache/partCache')
 const {
   refreshStatRegData,
-  STATREG_NODES,
-  updateMimirMockRelease
+  STATREG_NODES
 } = __non_webpack_require__('/lib/ssb/repo/statreg')
 const {
   schedule,
@@ -216,15 +215,6 @@ export function setupCronJobs(): void {
       callback: () => runOnMasterOnly(updateUnpublishedMockTbml),
       context: cronContext
     })
-
-    const updateMimirMockReleaseCron: string =
-        app.config && app.config['ssb.cron.updateMimirReleasedMock'] ? app.config['ssb.cron.updateMimirReleasedMock'] : '01 6 * * *'
-    schedule({
-      name: 'Update nextRelease Mimir',
-      cron: updateMimirMockReleaseCron,
-      callback: () => runOnMasterOnly(updateMimirMockRelease),
-      context: cronContext
-    })
   }
 
   // push news to rss feed
@@ -258,6 +248,8 @@ export function setupCronJobs(): void {
   // Task
   const testTaskCron: string = app.config && app.config['ssb.cron.testTask'] ? app.config['ssb.cron.testTask'] : '0 08 * * *'
   const datasetPublishCron: string = app.config && app.config['ssb.cron.publishDataset'] ? app.config['ssb.cron.publishDataset'] : '50 05 * * *'
+  const updateMimirMockReleaseCron: string = app.config && app.config['ssb.cron.updateMimirReleasedMock'] ?
+    app.config['ssb.cron.updateMimirReleasedMock'] : '01 8 * * *'
   const timezone: string = app.config && app.config['ssb.cron.timezone'] ? app.config['ssb.cron.timezone'] : 'UTC'
 
   // Use feature-toggling to switch to lib-sheduler when testet in QA
@@ -337,6 +329,37 @@ export function setupCronJobs(): void {
         })
       }
     })
+
+    // Update next release Mimir QA
+    if (app.config && app.config['ssb.mock.enable'] === 'true') {
+      run(cronContext, () => {
+        const jobExists: boolean = !!getScheduledJob({
+          name: 'updateMimirMockRelease'
+        })
+        if (jobExists) {
+          modify({
+            name: 'updateMimirMockRelease',
+            editor: (job) => {
+              job.schedule.value = updateMimirMockReleaseCron
+              return job
+            }
+          })
+        } else {
+          create({
+            name: 'updateMimirMockRelease',
+            descriptor: `${app.name}:updateMimirMockRelease`,
+            description: 'Update next release Mimir QA',
+            user: `user:system:cronjob`,
+            enabled: true,
+            schedule: {
+              type: 'CRON',
+              value: updateMimirMockReleaseCron,
+              timeZone: 'Europe/Oslo'
+            }
+          })
+        }
+      })
+    }
   }
 
   const cronList: Array<TaskMapper> = list() as Array<TaskMapper>
