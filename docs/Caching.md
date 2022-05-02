@@ -7,7 +7,7 @@ Cache instantiation and control is found in [cache.ts](/src/main/resources/lib/s
 ## Clearing Cache
 Clearing cache is primarily done on node events, which is set up in the *cache.ts* file. When content is saved or published, content nodes are placed in a queue. When the queue is stable, all the contents are individually cleared - or all cache is cleared if there are too many contents.
 ### Dashboard
-For manual cache clearing, there is a `Tøm cache` button in the `Dashboard` admin tool XP application for internal users to interact with. That button will trigger a set of events using websocket and Enonic's event library, clearing all the entries from a list of predefined cached instances. This function is often utilized after PROD deploy, or if data is not being retrieved or displayed correctly after the scheduled jobs have finished running.
+For manual cache clearing, there is a `Tøm cache` button in the `Dashboard` admin tool XP application for internal users to interact with. That button will trigger a set of events using websocket and Enonic's event library, clearing all the entries from a list of our predefined cached instances. This function is often utilized after PROD deploys, or if data is not being retrieved or displayed correctly after the scheduled jobs have finished running.
 
 When the `Tøm cache` button is pressed, the `clear-cache` event will get emitted. The following function is called at `onClick`
 ([actions.es6](src/main/resources/react4xp/dashboard/containers/HomePage/actions.es6)):
@@ -56,9 +56,9 @@ listener({
  ```
 
 ### Clear Cache Cron
-Every hour, there is a clear cache cron job that is scheduled to run. The scheduled time can be adjusted in the `mimir.cfg` and fallbacks to every hour. Its purpose is to automatically clear part caches from draft and master so that when data is updated, the changes will display on certain parts correctly.
+Every hour, there is a clear cache cron job that is scheduled to run. The scheduled time can be adjusted in the `mimir.cfg` and fallbacks to every hour. Its purpose is to automatically clear part caches from draft and master so that when data is updated from the server, the changes will display on the affected parts correctly.
 
-A callback function is defined in the clear-cache `schedule` object, where a list of `clearCacheFromPartCache()` functions are called. Pass a key string to the function for the cached part that you wish to clear ([cache.ts](src/main/resources/lib/ssb/cache/cache.ts)):
+The following parts will clear all the entries from their respective part cache instances every hour ([cron.ts](src/main/resources/lib/ssb/cron/cron.ts)):
 
 ```javascript
   // clear specific cache once an hour
@@ -80,17 +80,6 @@ A callback function is defined in the clear-cache `schedule` object, where a lis
     context: cronContext
   })
  ```
-
-`clearPartFromCache()` uses the `removePattern` function from `lib-cache` to remove a specified entry from the part cache ([partCache.ts](src/main/resources/lib/ssb/cache/partCache.ts)):
-
- ```javascript
-export function clearPartFromPartCache(part: string): void {
-  cacheLog(`clear ${part} from part cache (draft and master)`)
-  masterPartCache.removePattern(`.*${part}`)
-  draftPartCache.removePattern(`.*${part}`)
-}
- ```
-
 ## Creating cache
 Some parts are cached on first render, and always fetched from cache, while others are cached individually by language, or the page they are rendered on. For instance, in the get function of [Statbank Subject Tree controller](/src/main/resources/site/parts/statbankSubjectTree/statbankSubjectTree.ts), we check if the page is viewed in edit mode, and if not, return any existing cached version of the page, in the correct language. 
 
