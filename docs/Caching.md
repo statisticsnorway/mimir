@@ -1,15 +1,15 @@
 # Caching
 ## Cache Architecture
-Enonic XP does not automatically cache any content. We use Enonic's [cache library](https://developer.enonic.com/docs/cache-library/master) to achieve caching. 
+Enonic XP does not automatically cache any content. We use Enonic's [cache library](https://developer.enonic.com/docs/cache-library/master) to achieve caching.
 
-Cache instantiation and control is found in [cache.ts](/src/main/resources/lib/ssb/cache/cache.ts). 
+Cache instantiation and control is found in [cache.ts](/src/main/resources/lib/ssb/cache/cache.ts).
 
 ## Clearing Cache
 Clearing cache is primarily done on node events, which is set up in the *cache.ts* file. When content is saved or published, content nodes are placed in a queue. When the queue is stable, all the contents are individually cleared - or all cache is cleared if there are too many contents.
 ### Dashboard
-For manual cache clearing, there is a "Tøm cache" button in the `Dashboard` admin tool XP application for internal users to interact with.
+For manual cache clearing, there is a `Tøm cache` button in the `Dashboard` admin tool XP application for internal users to interact with. That button will trigger a set of events using websocket and Enonic's event library, clearing all the entries from a list of predefined cached instances. This function is often utilized after PROD deploy, or if data is not being retrieved or displayed correctly after the scheduled jobs have finished running.
 
-The following function is called by the `Tøm cache` button `onClick` and emits the `clear-cache` event
+When the `Tøm cache` button is pressed, the `clear-cache` event will get emitted. The following function is called at `onClick`
 ([actions.es6](src/main/resources/react4xp/dashboard/containers/HomePage/actions.es6)):
  ```javascript
  export function requestClearCache(dispatch, io) {
@@ -21,7 +21,7 @@ The following function is called by the `Tøm cache` button `onClick` and emits 
 }
  ```
 
-There is a socket listener for the `clear-cache` event in [cache.ts](src/main/resources/lib/ssb/cache/cache.ts) that will send a `clearCache` custom event to the system when the `clear-cache` event is emitted from the Dashboard:
+After the `clear-cache` event is emitted from the Dashboard, the socket listener in [cache.ts](src/main/resources/lib/ssb/cache/cache.ts) will then send a `clearCache` custom event to the cluster, passing along with it a list of booleans representing cached items to `data`:
 ```javascript
 export function setupHandlers(socket: Socket): void {
   socket.on('clear-cache', () => {
@@ -47,7 +47,7 @@ export function setupHandlers(socket: Socket): void {
 }
   ```
 
-The custom event listener for type `clearCache` is defined in `setup()` and will call the `completelyClearCache()` function where the `data` parameter defined in the `clearCache` custom event is passed:
+`clearCache`'s custom event listener will then completely clear all the entries from the cached instances defined in `data`:
  ```javascript
 listener({
   type: 'custom.clearCache',
