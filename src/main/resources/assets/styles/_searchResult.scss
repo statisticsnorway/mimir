@@ -16,6 +16,12 @@
     .ssb-dropdown.DropdownMainSubject, .ssb-dropdown.DropdownContentType {
       max-width: 100%
     }
+
+    @include media-breakpoint-down(md) {
+      .ssb-dropdown.DropdownContentType {
+        padding-top: 20px;
+      }
+    }
   }
 
   .search-result-body {
@@ -24,12 +30,29 @@
     }
 
     .choose-sorting {
+      display: flex;
+      justify-content: end;
+      .sort-title {
+        margin-right: 12px;
+      }
       .ssb-radio-group .flex-row {
         gap: 20px;
 
         .ssb-radio {
           min-width: 0;
         }
+      }
+    }
+
+    @include media-breakpoint-down(md) {
+      .choose-sorting {
+        justify-content: start;
+        padding-left: 0;
+        padding-top: 20px;
+      }
+
+      .total-hits {
+        padding-left: 0;
       }
     }
   }
