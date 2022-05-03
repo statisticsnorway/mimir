@@ -25,6 +25,7 @@ function SearchResult(props) {
   const [filterChanged, setFilterChanged] = useState(false)
   const [nameSearchData, setNameSearchData] = useState(undefined)
   const [mainNameResult, setMainNameResult] = useState(undefined)
+  const [sortChanged, setSortChanged] = useState(false)
   const [sortList, setSortList] = useState(undefined)
   const [filter, setFilter] = useState({
     mainSubject: '',
@@ -41,7 +42,7 @@ function SearchResult(props) {
         console.log(e)
       }
     }
-    if (filterChanged) {
+    if (filterChanged || sortChanged) {
       fetchFilteredSearchResult()
     }
     // GA events for best bet and zero hits results
@@ -74,9 +75,8 @@ function SearchResult(props) {
   }
 
   function onChangeSortList(value) {
-    console.log('onChangeSortList: ' + value)
+    setSortChanged(true)
     setSortList(value)
-    fetchFilteredSearchResult()
   }
 
   function removeFilter() {
@@ -159,7 +159,6 @@ function SearchResult(props) {
   }
 
   function fetchFilteredSearchResult() {
-    console.log('fetchFilteredSearchResult')
     setLoading(true)
     axios.get(props.searchServiceUrl, {
       params: {
@@ -169,7 +168,7 @@ function SearchResult(props) {
         language: props.language,
         mainsubject: filter.mainSubject,
         contentType: filter.contentType,
-        sortParam: sortList === 'publiseringsdato' ? sortList : undefined
+        sort: sortList === 'publiseringsdato' ? sortList : undefined
       }
     }).then((res) => {
       setHits(res.data.hits)
@@ -188,7 +187,8 @@ function SearchResult(props) {
         count: props.count,
         language: props.language,
         mainsubject: filter.mainSubject,
-        contentType: filter.contentType
+        contentType: filter.contentType,
+        sort: sortList === 'publiseringsdato' ? sortList : undefined
       }
     }).then((res) => {
       setHits(hits.concat(res.data.hits))
