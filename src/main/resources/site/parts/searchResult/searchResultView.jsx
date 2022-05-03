@@ -123,13 +123,13 @@ function SearchResult(props) {
     return (
       <div>
         <div className="row mb-4">
-          <Col className="total-hits col-12 col-lg-6" aria-live="polite" aria-atomic="true">
+          <Col className="total-hits col-12 col-md-4" aria-live="polite" aria-atomic="true">
             {props.showingPhrase.replace('{0}', currentAmount)}&nbsp;<NumberFormat
               value={ Number(totalHits) }
               displayType={'text'}
               thousandSeparator={' '}/>
           </Col>
-          <Col className="choose-sorting col-12 col-lg-6">
+          <Col className="choose-sorting col-12 col-md-8">
             <span className='sort-title'>{`${props.sortPhrase}:`}</span>
             {renderRadiobuttonSort()}
           </Col>
