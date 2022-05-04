@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Card, Button, Divider, Input, Link, Paragraph, Title, Dropdown, Tag } from '@statisticsnorway/ssb-component-library'
+import { Card,
+  Button,
+  Divider,
+  Input,
+  Link,
+  Paragraph,
+  Title,
+  Dropdown,
+  Tag,
+  RadioGroup } from '@statisticsnorway/ssb-component-library'
 import { ChevronDown, User, X } from 'react-feather'
 import axios from 'axios'
 import NumberFormat from 'react-number-format'
@@ -15,6 +24,8 @@ function SearchResult(props) {
   const [filterChanged, setFilterChanged] = useState(false)
   const [nameSearchData, setNameSearchData] = useState(undefined)
   const [mainNameResult, setMainNameResult] = useState(undefined)
+  const [sortChanged, setSortChanged] = useState(false)
+  const [sortList, setSortList] = useState(undefined)
   const [filter, setFilter] = useState({
     mainSubject: '',
     contentType: ''
@@ -30,7 +41,7 @@ function SearchResult(props) {
         console.log(e)
       }
     }
-    if (filterChanged) {
+    if (filterChanged || sortChanged) {
       fetchFilteredSearchResult()
     }
     // GA events for best bet and zero hits results
@@ -40,7 +51,7 @@ function SearchResult(props) {
     if ((!props.bestBetHit) && (!hits.length)) {
       addGtagForEvent(props.GA_TRACKING_ID, 'Null treff', 'Søk', searchTerm)
     }
-  }, [filter])
+  }, [filter, sortList])
 
   function onChange(id, value) {
     setFilterChanged(true)
@@ -60,6 +71,11 @@ function SearchResult(props) {
         contentType: value.id === '' ? '' : value.id
       })
     }
+  }
+
+  function onChangeSortList(value) {
+    setSortChanged(true)
+    setSortList(value)
   }
 
   function removeFilter() {
@@ -106,13 +122,17 @@ function SearchResult(props) {
     return (
       <div>
         <div className="row mb-4">
-          <div className="col" aria-live="polite" aria-atomic="true">
+          <Col className="total-hits col-12 col-md-4" aria-live="polite" aria-atomic="true">
             {props.showingPhrase.replace('{0}', currentAmount)}&nbsp;<NumberFormat
               value={ Number(totalHits) }
               displayType={'text'}
               thousandSeparator={' '}/>
-            <Divider dark />
-          </div>
+          </Col>
+          <Col className="choose-sorting col-12 col-md-8">
+            <span className='sort-title'>{`${props.sortPhrase}:`}</span>
+            {renderRadiobuttonSort()}
+          </Col>
+          <Divider dark />
         </div>
         {props.nameSearchToggle ? renderNameResult() : undefined}
         <ol className="list-unstyled ">
@@ -146,7 +166,8 @@ function SearchResult(props) {
         count: props.count,
         language: props.language,
         mainsubject: filter.mainSubject,
-        contentType: filter.contentType
+        contentType: filter.contentType,
+        sort: sortList === 'publiseringsdato' ? sortList : undefined
       }
     }).then((res) => {
       setHits(res.data.hits)
@@ -165,7 +186,8 @@ function SearchResult(props) {
         count: props.count,
         language: props.language,
         mainsubject: filter.mainSubject,
-        contentType: filter.contentType
+        contentType: filter.contentType,
+        sort: sortList === 'publiseringsdato' ? sortList : undefined
       }
     }).then((res) => {
       setHits(hits.concat(res.data.hits))
@@ -325,6 +347,29 @@ function SearchResult(props) {
     />
   ))
 
+  function renderRadiobuttonSort() {
+    return (
+      <RadioGroup
+        className='float-end'
+        onChange={(value) => {
+          onChangeSortList(value)
+        }}
+        selectedValue='best'
+        orientation='row'
+        items={[
+          {
+            label: props.sortBestHitPhrase,
+            value: 'best'
+          },
+          {
+            label: props.sortDatePhrase,
+            value: 'publiseringsdato'
+          }
+        ]}
+      />
+    )
+  }
+
   function renderClearFilterButton() {
     if (filter.mainSubject || filter.contentType) {
       return (
@@ -396,6 +441,9 @@ SearchResult.propTypes = {
   chooseSubjectPhrase: PropTypes.string,
   chooseContentTypePhrase: PropTypes.string,
   searchText: PropTypes.string,
+  sortPhrase: PropTypes.string,
+  sortBestHitPhrase: PropTypes.string,
+  sortDatePhrase: PropTypes.string,
   count: PropTypes.number,
   noHitMessage: PropTypes.string,
   nameSearchToggle: PropTypes.bool,
