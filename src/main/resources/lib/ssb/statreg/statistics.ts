@@ -35,60 +35,7 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
     if (response.status === 200 && response.body) {
       const statistics: Array<StatisticInListing> = extractStatistics(response.body)
       if (app.config && app.config['ssb.mock.enable'] === 'true') {
-        // use todays date for next release if its before 0800 in the morning
-        const serverOffsetInMs: number = app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
-        const midnight: moment.Moment = moment()
-          .hour(0)
-          .minute(0)
-          .second(0)
-          .millisecond(0)
-        const eight: moment.Moment = moment()
-          .hour(8)
-          .minute(0)
-          .second(0)
-          .millisecond(0)
-        const isBeforeEight: boolean = moment()
-          .add(serverOffsetInMs, 'milliseconds')
-          .isBetween(midnight, eight, 'hour', '[)')
-
-        const previousRelease: moment.Moment = moment()
-          .hour(8)
-          .minute(0)
-          .second(0)
-          .millisecond(0)
-          .subtract(isBeforeEight ? 1 : 0, 'days')
-        const nextRelease: moment.Moment = moment()
-          .hour(8)
-          .minute(0)
-          .second(0)
-          .millisecond(0)
-          .add(isBeforeEight ? 0 : 1, 'days')
-
-        statistics.push({
-          id: 0,
-          shortName: 'mimir',
-          name: 'Mimir',
-          nameEN: 'Mimir',
-          status: '',
-          modifiedTime: '2020-04-16 11:14:19.121',
-          variants: [{
-            id: '0',
-            frekvens: 'Dag',
-            previousRelease: previousRelease.format('YYYY-MM-DD HH:mm:ss.S'),
-            previousFrom: previousRelease.format('YYYY-MM-DD HH:mm:ss.S'),
-            previousTo: previousRelease.format('YYYY-MM-DD HH:mm:ss.S'),
-            nextRelease: nextRelease.format('YYYY-MM-DD HH:mm:ss.S'),
-            nextReleaseId: '0',
-            upcomingReleases: [
-              {
-                id: '0',
-                publishTime: nextRelease.format('YYYY-MM-DD HH:mm:ss.S'),
-                periodFrom: nextRelease.format('YYYY-MM-DD HH:mm:ss.S'),
-                periodTo: nextRelease.format('YYYY-MM-DD HH:mm:ss.S')
-              }
-            ]
-          }]
-        })
+        statistics.push(createMimirMockReleaseStatreg())
       }
 
       return statistics
@@ -104,6 +51,63 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
     })
   }
   return null
+}
+
+export function createMimirMockReleaseStatreg(): StatisticInListing {
+  // use todays date for next release if its before 0800 in the morning
+  const serverOffsetInMs: number = app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+  const midnight: moment.Moment = moment()
+    .hour(0)
+    .minute(0)
+    .second(0)
+    .millisecond(0)
+  const eight: moment.Moment = moment()
+    .hour(8)
+    .minute(0)
+    .second(0)
+    .millisecond(0)
+  const isBeforeEight: boolean = moment()
+    .add(serverOffsetInMs, 'milliseconds')
+    .isBetween(midnight, eight, 'hour', '[)')
+
+  const previousRelease: moment.Moment = moment()
+    .hour(8)
+    .minute(0)
+    .second(0)
+    .millisecond(0)
+    .subtract(isBeforeEight ? 1 : 0, 'days')
+  const nextRelease: moment.Moment = moment()
+    .hour(8)
+    .minute(0)
+    .second(0)
+    .millisecond(0)
+    .add(isBeforeEight ? 0 : 1, 'days')
+
+  return ({
+    id: 0,
+    shortName: 'mimir',
+    name: 'Mimir',
+    nameEN: 'Mimir',
+    status: '',
+    modifiedTime: moment().format('YYYY-MM-DD HH:mm:ss.S'),
+    variants: [{
+      id: '0',
+      frekvens: 'Dag',
+      previousRelease: previousRelease.format('YYYY-MM-DD HH:mm:ss.S'),
+      previousFrom: previousRelease.format('YYYY-MM-DD HH:mm:ss.S'),
+      previousTo: previousRelease.format('YYYY-MM-DD HH:mm:ss.S'),
+      nextRelease: nextRelease.format('YYYY-MM-DD HH:mm:ss.S'),
+      nextReleaseId: '0',
+      upcomingReleases: [
+        {
+          id: '0',
+          publishTime: nextRelease.format('YYYY-MM-DD HH:mm:ss.S'),
+          periodFrom: nextRelease.format('YYYY-MM-DD HH:mm:ss.S'),
+          periodTo: nextRelease.format('YYYY-MM-DD HH:mm:ss.S')
+        }
+      ]
+    }]
+  })
 }
 
 export function fetchStatisticsWithRelease(before: Date): Array<StatisticInListing> {
@@ -219,7 +223,6 @@ export function getReleaseDatesByVariants(variants: Array<VariantInListing>): Re
   return releaseDatesStatistic
 }
 
-
 export interface StatRegStatisticsLib {
   STATREG_REPO_STATISTICS_KEY: string;
   fetchStatistics: () => Array<StatisticInListing> | null;
@@ -230,5 +233,6 @@ export interface StatRegStatisticsLib {
   getStatisticByIdFromRepo: (statId: string | undefined) => StatisticInListing | undefined;
   getStatisticByShortNameFromRepo: (shortName: string | undefined) => StatisticInListing | undefined;
   getReleaseDatesByVariants: (variants: Array<VariantInListing>) => ReleaseDatesVariant;
+  createMimirMockReleaseStatreg:() => StatisticInListing;
 
 }

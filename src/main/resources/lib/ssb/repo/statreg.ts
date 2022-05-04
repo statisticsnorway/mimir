@@ -19,7 +19,8 @@ const {
 } = __non_webpack_require__('/lib/ssb/statreg/contacts')
 const {
   STATREG_REPO_STATISTICS_KEY,
-  fetchStatistics
+  fetchStatistics,
+  createMimirMockReleaseStatreg
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   STATREG_REPO_PUBLICATIONS_KEY,
@@ -210,6 +211,28 @@ function modifyStatRegNode(key: string, content: Array<StatRegBase>): StatRegNod
   })
 }
 
+export function updateMimirMockRelease(): void {
+  const statisticNode: StatRegNode | null = getStatRegNode('statistics')
+  const mockRelease: StatisticInListing = createMimirMockReleaseStatreg()
+
+  if (statisticNode) {
+    const statisticData: Array<StatisticInListing> = statisticNode.data.map((statistic: StatisticInListing) => {
+      if (statistic.id === 0) {
+        return mockRelease
+      } else {
+        return statistic
+      }
+    })
+
+    modifyNode<StatRegNode>(STATREG_REPO, STATREG_BRANCH, statisticNode._id, (node) => {
+      return {
+        ...node,
+        data: statisticData
+      }
+    })
+  }
+}
+
 export type StatRegNode = RepoNode & StatRegContent;
 export interface StatRegNodeConfig {
   key: string;
@@ -239,4 +262,5 @@ export interface StatRegRepoLib {
   refreshStatRegData(nodeConfig?: Array<StatRegNodeConfig>): Array<StatRegRefreshResult>;
   getStatRegNode: (key: string) => StatRegNode | null;
   STATREG_NODES: Array<StatRegNodeConfig>;
+  updateMimirMockRelease: () => void;
 }
