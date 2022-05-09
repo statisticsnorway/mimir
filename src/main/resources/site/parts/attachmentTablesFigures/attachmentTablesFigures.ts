@@ -114,10 +114,13 @@ function getTablesAndFiguresComponent(page: Content<Statistics>, req: Request): 
     body: render(view, {
       title,
       accordionId: accordionComponent.react4xpId
-    })
+    }),
+    clientRender: true
   })
 
-  const accordionPageContributions: string = accordionComponent.renderPageContributions()
+  const accordionPageContributions: string = accordionComponent.renderPageContributions({
+    clientRender: true
+  })
   const pageContributions: PageContributions = getFinalPageContributions(accordionPageContributions as PageContributions, attachmentTableAndFigureView)
 
   return {
@@ -189,6 +192,7 @@ function getFinalPageContributions(
 
   if (pageContributions.length > 0) {
     return {
+      headEnd: [].concat(accordionPageContributions.headEnd as unknown as ConcatArray<never>, pageContributions as unknown as ConcatArray<never>),
       bodyEnd: [].concat(accordionPageContributions.bodyEnd as unknown as ConcatArray<never>, pageContributions as unknown as ConcatArray<never>)
     }
   }
