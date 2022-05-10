@@ -19,7 +19,7 @@ function AttachmentTableFigures(props) {
     setIsHidden((prevState) => !prevState.isHidden)
   }
 
-  function toggleAccordion(index, isOpen) {
+  function toggleAccordion(isOpen, index) {
     const {
       contentType, subHeader, open
     } = accordions[index]
@@ -107,7 +107,7 @@ function AttachmentTableFigures(props) {
                 header={accordion.open}
                 subHeader={accordion.subHeader}
                 openByDefault={anchor && accordion.id && accordion.id === anchor}
-                // onToggle={toggleAccordion}
+                onToggle={(isOpen) => toggleAccordion(isOpen, index)}
               >
                 {renderAccordionBody(accordion)}
               </Accordion>
