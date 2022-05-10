@@ -16,7 +16,7 @@ function AttachmentTableFigures(props) {
   } = props
 
   function toggleBox() {
-    setIsHidden((prevState) => !prevState.isHidden)
+    setIsHidden((prevState) => !prevState)
   }
 
   function toggleAccordion(isOpen, index) {
