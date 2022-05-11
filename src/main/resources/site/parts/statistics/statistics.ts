@@ -99,7 +99,6 @@ function renderPart(req: Request): Response {
       showDraft: true
     }
   })
-  log.info(draftUrl)
   const draftButtonText: string = paramShowDraft ? 'Vis publiserte tall' : 'Vis upubliserte tall'
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
 
