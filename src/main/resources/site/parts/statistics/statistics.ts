@@ -90,7 +90,6 @@ function renderPart(req: Request): Response {
   let previousReleaseDate: string | undefined
   const showPreviewDraft: boolean = hasWritePermissionsAndPreview(req, page._id)
   const paramShowDraft: boolean = !!req.params.showDraft
-  log.info(paramShowDraft)
   const draftUrl: string = paramShowDraft ? pageUrl({
     path: page._path
   }) : pageUrl({
