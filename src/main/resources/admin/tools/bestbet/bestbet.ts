@@ -1,6 +1,7 @@
 import { PageContributions, Request, Response } from 'enonic-types/controller'
 import { ResourceKey } from 'enonic-types/thymeleaf'
 import { getMainSubjects, SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
+import { parseContributions } from '../../../lib/ssb/utils/utils'
 import { DropdownItems } from '../../../lib/types/components'
 import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
 
@@ -90,15 +91,17 @@ function renderPart(req: Request): React4xpResponse | Response {
     })
     .setId('app-bestbet')
 
-  const pageContributions: PageContributions = parseContributions(bestbetComponent.renderPageContributions() as PageContributions)
+  const pageContributions: PageContributions = parseContributions(bestbetComponent.renderPageContributions({
+    clientRender: req.mode !== 'edit'
+  }) as PageContributions)
 
   return {
     body: bestbetComponent.renderBody({
       body: render(view, {
         ...getAssets(),
-        pageContributions
-      }),
-      clientRender: true
+        pageContributions,
+        clientRender: req.mode !== 'edit'
+      })
     }),
     pageContributions
   }
@@ -116,9 +119,4 @@ function getAssets(): object {
       service: 'websocket'
     })
   }
-}
-
-function parseContributions(contributions: PageContributions): PageContributions {
-  contributions.bodyEnd = contributions.bodyEnd && (contributions.bodyEnd as Array<string>).map((script: string) => script.replace(' defer>', ' defer="">'))
-  return contributions
 }
