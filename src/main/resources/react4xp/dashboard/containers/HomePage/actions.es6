@@ -8,6 +8,13 @@ export function requestClearCache(dispatch, io) {
   io.emit('clear-cache')
 }
 
+export function requestEmptyVarnishCache(dispatch, io) {
+  dispatch({
+    type: actions.startLoadingEmptyVarnishCache.type
+  })
+  io.emit('empty-varnish')
+}
+
 export function setUserServerSide(dispatch, io, user) {
   io.emit('dashboard-register-user', user)
 }

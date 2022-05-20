@@ -9,6 +9,7 @@ import { Socket } from '../../types/socket'
 import { MunicipalityWithCounty } from '../dataset/klass/municipalities'
 import { Cache } from 'enonic-types/cache'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
+import axios from 'axios'
 
 const {
   newCache
@@ -533,6 +534,22 @@ export function setupHandlers(socket: Socket): void {
     })
 
     socket.emit('clear-cache-finished', {})
+  })
+
+  socket.on('empty-varnish', () => {
+    log.info('Varnish cache clear performed')
+    axios({
+      method: 'PURGE',
+      url: '/xp_clear'
+    })
+      .then(function(response) {
+        log.info('Response from Varnish: ')
+        log.info(JSON.stringify(response, null, 2))
+      }).catch(function(error) {
+        log.error('Response from varnish:')
+        log.error(JSON.stringify(error, null, 2))
+      })
+    socket.emit('empty-varnish-finished', {})
   })
 }
 

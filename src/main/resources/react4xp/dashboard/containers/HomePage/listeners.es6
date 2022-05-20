@@ -7,6 +7,12 @@ export default function setupHomePageListeners(io, dispatch) {
     })
   })
 
+  io.on('empty-varnish-finished', (data) => {
+    dispatch({
+      type: actions.stopLoadingEmptyVarnishCache.type
+    })
+  })
+
   io.on('dashboard-server-time-result', (data) => {
     dispatch({
       type: actions.serverTimeLoaded.type,
