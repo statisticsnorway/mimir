@@ -11,11 +11,10 @@ app {
     displayName = "${appDisplayName}"
     vendorName = "${vendorName}"
     vendorUrl = "${vendorUrl}"
-    systemVersion = "${xpVersion}"
-}
+    systemVersion = "${xpVersion}"}
 
 dependencies {
-    include "com.enonic.lib:lib-thymeleaf:2.0.0"
+    include "com.enonic.lib:lib-thymeleaf:2.0.1"
     compile "com.enonic.xp:core-api:${xpVersion}"
     compile "com.enonic.xp:portal-api:${xpVersion}"
     include "com.enonic.xp:lib-content:${xpVersion}"
@@ -42,8 +41,8 @@ dependencies {
     include 'commons-codec:commons-codec:1.15'
     include "no.item:wsutil-server:2.0.0"
     include "com.gravitondigital:featuretogglelib:0.3.0"
-    compile group: 'org.json', name: 'json', version: '20220320'
-    include 'com.enonic.lib:lib-react4xp:2.0.2'
+    compile group: 'org.json', name: 'json', version: '20210307'
+    include 'com.enonic.lib:lib-react4xp:3.0.1'
     include 'com.enonic.lib:lib-text-encoding:2.0.0'
 }
 
@@ -64,7 +63,7 @@ node {
     version = '16.4.2'
 }
 
-def react4xpGradlePath = 'node_modules/react4xp/react4xp.gradle'
+def react4xpGradlePath = 'node_modules/@enonic/react4xp/react4xp.gradle'
 def react4xpGradleFile = new File(react4xpGradlePath)
 if (!react4xpGradleFile.exists()) {
     exec {
@@ -85,6 +84,8 @@ if (!react4xpGradleFile.exists()) {
     }
 }
 apply from: react4xpGradlePath
+apply from: 'node_modules/@enonic/react4xp/npmInstall.gradle'
+apply from: 'node_modules/@enonic/react4xp/updaters.gradle'
 
 task clientJsWebpack( type: NpxTask, dependsOn: npmInstall ) {
     command =  'webpack' 
@@ -157,7 +158,7 @@ jar {
     exclude 'assets/styles/**/*.scss'
     exclude 'assets/styles/**/*.js'
 
-    serverWebpack.dependsOn += 'react4xp_components' // 'webpack_react4xp'
+    // serverWebpack.dependsOn += 'react4xp_components' // 'webpack_react4xp'
     serverWebpack.dependsOn += generateTypeScript
 
     dependsOn += npmInstall

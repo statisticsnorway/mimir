@@ -7,6 +7,9 @@
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Open+Sans|Open+Sans:700|Roboto:700|Roboto+Condensed:700"></link>
     <link rel="stylesheet" data-th-href="${stylesUrl}"></link>
+    <span data-th-each="scr : ${pageContributions.headEnd}" data-th-remove="tag">
+      <span data-th-utext="${scr}" data-th-remove="tag"></span>
+    </span>
   </head>
   <body class="xp-page page-dashboard">
     <div class="container-fluid">

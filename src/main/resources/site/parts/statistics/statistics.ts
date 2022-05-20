@@ -89,8 +89,10 @@ function renderPart(req: Request): Response {
   let nextReleaseDate: string | undefined
   let previousReleaseDate: string | undefined
   const showPreviewDraft: boolean = hasWritePermissionsAndPreview(req, page._id)
-  const paramShowDraft: string | undefined = req.params.showDraft
-  const draftUrl: string = paramShowDraft ? '' : pageUrl({
+  const paramShowDraft: boolean = !!req.params.showDraft
+  const draftUrl: string = paramShowDraft ? pageUrl({
+    path: page._path
+  }) : pageUrl({
     params: {
       // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
       // @ts-ignore

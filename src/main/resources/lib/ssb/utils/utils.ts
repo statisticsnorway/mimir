@@ -1,5 +1,5 @@
 import { ByteSource, Content } from 'enonic-types/content'
-import { Request } from 'enonic-types/controller'
+import { PageContributions, Request } from 'enonic-types/controller'
 import { Header } from '../../../site/content-types/header/header'
 import { PreliminaryData } from '../../types/xmlParser'
 
@@ -136,6 +136,13 @@ export function getAttachment(attachmentContent: Content | null): string | undef
   return lines[0]
 }
 
+// For admin tool applications
+export function parseContributions(contributions: PageContributions): PageContributions {
+  contributions.headEnd = contributions.headEnd && (contributions.headEnd as Array<string>).map((script: string) => script.replace(' defer ', ' defer="" '))
+  contributions.bodyEnd = contributions.bodyEnd && (contributions.bodyEnd as Array<string>).map((script: string) => script.replace(' defer ', ' defer="" '))
+  return contributions
+}
+
 export interface SourcesConfig {
   _selected: string;
   urlSource: {
@@ -173,4 +180,5 @@ export interface UtilsLib {
   getSources: (sourceConfig: Array<SourcesConfig>) => SourceList;
   getAttachmentContent: (contentId: string | undefined) => string | undefined;
   getAttachment: (attachmentContent: Content | null) => string | undefined;
+  parseContributions: (contributions: PageContributions) => PageContributions;
 }
