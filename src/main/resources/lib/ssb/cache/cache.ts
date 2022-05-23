@@ -9,8 +9,11 @@ import { Socket } from '../../types/socket'
 import { MunicipalityWithCounty } from '../dataset/klass/municipalities'
 import { Cache } from 'enonic-types/cache'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
-import axios from 'axios'
+import { HttpResponse } from 'enonic-types/http'
 
+const {
+  request
+} = __non_webpack_require__('/lib/http-client')
 const {
   newCache
 } = __non_webpack_require__('/lib/cache')
@@ -538,19 +541,20 @@ export function setupHandlers(socket: Socket): void {
 
   socket.on('empty-varnish', () => {
     log.info('Varnish cache clear performed')
-    axios({
-      method: 'PURGE',
-      url: '/xp_clear'
-    })
-      .then(function(response) {
-        log.info('Response from Varnish: ')
-        log.info(JSON.stringify(response, null, 2))
-      }).catch(function(error) {
-        log.error('Response from varnish:')
-        log.error(JSON.stringify(error, null, 2))
-      })
+    const resultOfClear: HttpResponse = emptyVarnishCache()
+
+    log.info(`Doing a Varnish Ban. Result code: ${resultOfClear.status} - and message: ${resultOfClear.message}`)
+
     socket.emit('empty-varnish-finished', {})
   })
+}
+
+function emptyVarnishCache(): HttpResponse {
+  const response: HttpResponse = request({
+    url: 'https://i.utv.ssb.no/xp_clear',
+    method: 'PURGE'
+  })
+  return response
 }
 
 export interface CompletelyClearCacheOptions {
