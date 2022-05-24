@@ -292,7 +292,10 @@ export function DashboardTools() {
           </Row>
           <Row>
             <Col>
-              <Alert variant={'info'} show={!!varnishPurgeResult}>{'Resultat i Vanish: ' + varnishPurgeResult}</Alert>
+              <Alert variant={'info'} show={!!varnishPurgeResult}>
+                <h5 className='alert-heading'>Varnish Purge</h5>
+                {varnishPurgeResult}
+              </Alert>
             </Col>
           </Row>
         </fieldset>
