@@ -15,9 +15,9 @@ export const selectLoadingClearCache = createSelector(
   (commonState) => commonState.loadingClearCache,
 )
 
-export const selectLoadingEmptyVarnish = createSelector(
+export const selectLoadingPurgeVarnish = createSelector(
   [selectDomain],
-  (commonState) => commonState.loadingEmptyVarnish,
+  (commonState) => commonState.loadingPurgeVarnish,
 )
 
 export const selectVarnishPurgeResult = createSelector(

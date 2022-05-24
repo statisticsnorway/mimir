@@ -75,7 +75,7 @@ function createStatusMessage(status) {
     return 'Varnish instance not found, 404 returned.'
   case 403:
     return 'Access denied. Check IP range in Varnish config'
-  case status >= 500 && status <= 599:
+  case status >= 500:
     return `Server error code: ${status}`
   default:
     return `Unknown error. No status? Status is: ( ${status} )`

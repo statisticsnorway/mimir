@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectInternalBaseUrl,
   selectInternalStatbankUrl,
   selectLoadingClearCache,
-  selectLoadingEmptyVarnish,
+  selectLoadingPurgeVarnish,
   selectVarnishPurgeResult } from '../HomePage/selectors'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
-import { requestClearCache, requestEmptyVarnishCache } from '../HomePage/actions'
+import { requestClearCache, requestPurgeVarnishCache } from '../HomePage/actions'
 import { RefreshCw, Rss, Trash } from 'react-feather'
 import { Col, Container, Row, Alert } from 'react-bootstrap'
 import { Button, Dropdown, Input } from '@statisticsnorway/ssb-component-library'
@@ -20,7 +20,7 @@ import axios from 'axios'
 
 export function DashboardTools() {
   const loadingCache = useSelector(selectLoadingClearCache)
-  const loadingVarnishClear = useSelector(selectLoadingEmptyVarnish)
+  const loadingVarnishClear = useSelector(selectLoadingPurgeVarnish)
   const varnishPurgeResult = useSelector(selectVarnishPurgeResult)
   const [pushingRss, setPushingRss] = useState(false)
   const [pushRssResult, setPushRssResult] = useState('')
@@ -71,8 +71,8 @@ export function DashboardTools() {
     requestClearCache(dispatch, io)
   }
 
-  function emptyVarnishCache() {
-    requestEmptyVarnishCache(dispatch, io)
+  function purgeVarnishCache() {
+    requestPurgeVarnishCache(dispatch, io)
   }
 
   function pushRss() {
@@ -264,7 +264,7 @@ export function DashboardTools() {
               <Button
                 primary
                 className="w-100 d-flex justify-content-center"
-                onClick={() => emptyVarnishCache()}
+                onClick={() => purgeVarnishCache()}
                 disabled={loadingVarnishClear}>
                 <div>
                   {renderIcon(loadingVarnishClear)} <span>Tøm Varnish</span>
@@ -292,7 +292,7 @@ export function DashboardTools() {
           </Row>
           <Row>
             <Col>
-              <Alert variant={varnishPurgeResult} show={!!varnishPurgeResult}>{'Resultat i Vanish: ' + varnishPurgeResult}</Alert>
+              <Alert variant={'info'} show={!!varnishPurgeResult}>{'Resultat i Vanish: ' + varnishPurgeResult}</Alert>
             </Col>
           </Row>
         </fieldset>
