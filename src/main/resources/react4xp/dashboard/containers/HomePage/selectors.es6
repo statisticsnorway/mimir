@@ -20,6 +20,11 @@ export const selectLoadingEmptyVarnish = createSelector(
   (commonState) => commonState.loadingEmptyVarnish,
 )
 
+export const selectVarnishPurgeResult = createSelector(
+  [selectDomain],
+  (commonState) => commonState.varnishPurgeResult,
+)
+
 export const selectContentStudioBaseUrl = createSelector(
   [selectDomain],
   (commonState) => commonState.contentStudioBaseUrl,

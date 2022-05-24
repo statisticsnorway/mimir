@@ -7,9 +7,10 @@ export default function setupHomePageListeners(io, dispatch) {
     })
   })
 
-  io.on('empty-varnish-finished', (data) => {
+  io.on('purge-varnish-finished', (data) => {
     dispatch({
-      type: actions.stopLoadingEmptyVarnishCache.type
+      type: actions.stopLoadingPurgeVarnishCache.type,
+      status: data.status
     })
   })
 

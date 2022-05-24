@@ -8,11 +8,11 @@ export function requestClearCache(dispatch, io) {
   io.emit('clear-cache')
 }
 
-export function requestEmptyVarnishCache(dispatch, io) {
+export function requestPurgeVarnishCache(dispatch, io) {
   dispatch({
-    type: actions.startLoadingEmptyVarnishCache.type
+    type: actions.startLoadingPurgeVarnishCache.type
   })
-  io.emit('empty-varnish')
+  io.emit('purge-varnish')
 }
 
 export function setUserServerSide(dispatch, io, user) {

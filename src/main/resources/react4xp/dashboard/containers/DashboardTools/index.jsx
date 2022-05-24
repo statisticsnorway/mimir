@@ -1,6 +1,10 @@
 import React, { useContext, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectInternalBaseUrl, selectInternalStatbankUrl, selectLoadingClearCache, selectLoadingEmptyVarnish } from '../HomePage/selectors'
+import { selectInternalBaseUrl,
+  selectInternalStatbankUrl,
+  selectLoadingClearCache,
+  selectLoadingEmptyVarnish,
+  selectVarnishPurgeResult } from '../HomePage/selectors'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { requestClearCache, requestEmptyVarnishCache } from '../HomePage/actions'
 import { RefreshCw, Rss, Trash } from 'react-feather'
@@ -17,6 +21,7 @@ import axios from 'axios'
 export function DashboardTools() {
   const loadingCache = useSelector(selectLoadingClearCache)
   const loadingVarnishClear = useSelector(selectLoadingEmptyVarnish)
+  const varnishPurgeResult = useSelector(selectVarnishPurgeResult)
   const [pushingRss, setPushingRss] = useState(false)
   const [pushRssResult, setPushRssResult] = useState('')
   const [rssStatus, setRssStatus] = useState('success')
@@ -283,6 +288,11 @@ export function DashboardTools() {
           <Row>
             <Col>
               <Alert variant={rssStatus} show={!!pushRssResult}>{pushRssResult}</Alert>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Alert variant={varnishPurgeResult} show={!!varnishPurgeResult}>{'Resultat i Vanish: ' + varnishPurgeResult}</Alert>
             </Col>
           </Row>
         </fieldset>

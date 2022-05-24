@@ -3,7 +3,8 @@ import { createSlice } from '../../utils/@reduxjs/toolkit'
 export const initialState = {
   isConnected: false,
   loadingClearCache: false,
-  loadingEmptyVarnish: false,
+  loadingPurgeVarnish: false,
+  varnishPurgeResult: '',
   user: undefined,
   dashboardOptions: {},
   contentStudioBaseUrl: '',
@@ -48,11 +49,12 @@ const commonSlice = createSlice({
     stopLoadingClearCache(state) {
       state.loadingClearCache = false
     },
-    startLoadingEmptyVarnishCache(state) {
-      state.loadingEmptyVarnish = true
+    startLoadingPurgeVarnishCache(state) {
+      state.loadingPurgeVarnish = true
     },
-    stopLoadingEmptyVarnishCache(state) {
-      state.loadingEmptyVarnish = false
+    stopLoadingPurgeVarnishCache(state, action) {
+      state.loadingPurgeVarnish = false
+      state.varnishPurgeResult = createStatusMessage(action.status)
     },
     serverTimeLoaded(state, action) {
       state.serverTime = action.serverTime
@@ -64,3 +66,18 @@ const commonSlice = createSlice({
 export const {
   actions, reducer, name: sliceKey
 } = commonSlice
+
+function createStatusMessage(status) {
+  switch (status) {
+  case 200:
+    return 'Varnish cache cleared successfully'
+  case 404:
+    return 'Varnish instance not found, 404 returned.'
+  case 403:
+    return 'Access denied. Check IP range in Varnish config'
+  case status >= 500 && status <= 599:
+    return `Server error code: ${status}`
+  default:
+    return `Unknown error. No status? Status is: ( ${status} )`
+  }
+}

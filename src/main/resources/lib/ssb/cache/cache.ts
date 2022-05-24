@@ -539,20 +539,26 @@ export function setupHandlers(socket: Socket): void {
     socket.emit('clear-cache-finished', {})
   })
 
-  socket.on('empty-varnish', () => {
+  socket.on('purge-varnish', () => {
     log.info('Varnish cache clear performed')
-    const resultOfClear: HttpResponse = emptyVarnishCache()
+    const resultOfPurge: HttpResponse = purgeVarnishCache()
 
-    log.info(`Doing a Varnish Ban. Result code: ${resultOfClear.status} - and message: ${resultOfClear.message}`)
+    log.info(`Doing a Varnish Ban. Result code: ${resultOfPurge.status} - and message: ${resultOfPurge.message}`)
 
-    socket.emit('empty-varnish-finished', {})
+    socket.emit('purge-varnish-finished', {
+      status: resultOfPurge.status
+    })
   })
 }
 
-function emptyVarnishCache(): HttpResponse {
+function purgeVarnishCache(): HttpResponse {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const baseUrl: string = app.config && app.config['ssb.internal.baseUrl'] ? app.config['ssb.internal.baseUrl'] : 'https://www.ssb.no'
   const response: HttpResponse = request({
-    url: 'https://i.utv.ssb.no/xp_clear',
-    method: 'PURGE'
+    url: `${baseUrl}/xp_clear`,
+    method: 'PURGE',
+    connectionTimeout: 5000,
+    readTimeout: 5000
   })
   return response
 }
