@@ -76,6 +76,11 @@ function SearchResult(props) {
   function onChangeSortList(value) {
     setSortChanged(true)
     setSortList(value)
+
+    if (props.GA_TRACKING_ID) {
+      const sortLabel = value === 'best' ? props.sortBestHitPhrase : props.sortDatePhrase
+      addGtagForEvent(props.GA_TRACKING_ID, 'Sorter', 'Søk', sortLabel)
+    }
   }
 
   function removeFilter() {
