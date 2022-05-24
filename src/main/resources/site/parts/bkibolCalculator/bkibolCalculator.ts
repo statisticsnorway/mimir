@@ -2,7 +2,7 @@ import { PageContributions, Request, Response } from 'enonic-types/controller'
 import { React4xp, React4xpObject, React4xpPageContributionOptions, React4xpResponse } from '../../../lib/types/react4xp'
 import { Component } from 'enonic-types/portal'
 import { BkibolCalculatorPartConfig } from './bkibolCalculator-part-config'
-import { Dataset } from '../../../lib/types/jsonstat-toolkit'
+import { Dataset, Dimension } from '../../../lib/types/jsonstat-toolkit'
 import { Content } from 'enonic-types/content'
 import { CalculatorConfig } from '../../content-types/calculatorConfig/calculatorConfig'
 import { Language, Phrases } from '../../../lib/types/language'
@@ -80,7 +80,7 @@ function getBkibolCalculatorComponent(page: Content<BkibolCalculatorPartConfig>)
   const bkibolDataEnebolig: Dataset | null = config ? getBkibolDatasetEnebolig(config) : null
   const lastUpdated: CalculatorPeriod = lastPeriod(bkibolDataEnebolig)
   const nextUpdate: CalculatorPeriod = nextPeriod(lastUpdated.month.toString(), lastUpdated.year.toString())
-  const nextReleaseMonth: number = +nextUpdate.month
+  const nextReleaseMonth: number = +nextUpdate.month === 12 ? 1 : +nextUpdate.month + 1
   const nextPublishText: string = i18nLib.localize({
     key: 'calculatorNextPublishText',
     locale: language.code,
@@ -131,14 +131,18 @@ function getBkibolCalculatorComponent(page: Content<BkibolCalculatorPartConfig>)
 }
 
 function lastPeriod(bkibolData: Dataset | null): CalculatorPeriod {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
   // eslint-disable-next-line new-cap
-  const dataYear: string[] = bkibolData ? bkibolData.Dimension('Tid').id as string[] : []
-  const lastYear: string = dataYear[dataYear.length - 1]
+  const bkiBolDataDimension: Dimension | null = bkibolData?.Dimension('Tid') as Dimension
+  const dataTime: string[] = bkiBolDataDimension ? bkiBolDataDimension.id as string[] : []
+  const lastTimeItem: string = dataTime[dataTime.length - 1]
+  const splitTime: Array<string> = lastTimeItem.split('M')
+
+  const lastYear: string = splitTime[0]
+  const lastMonth: string = splitTime[1]
+
   return {
-    month: +lastYear.substring(5, 2) || 0, // psst: the + casts it as a number. Then return 0 if not castable as number.
-    year: +lastYear.substring(0, 4) || 0
+    month: lastMonth,
+    year: lastYear
   }
 }
 
