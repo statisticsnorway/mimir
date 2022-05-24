@@ -20,7 +20,7 @@ import axios from 'axios'
 
 export function DashboardTools() {
   const loadingCache = useSelector(selectLoadingClearCache)
-  const loadingVarnishClear = useSelector(selectLoadingPurgeVarnish)
+  const loadingVarnishPurge = useSelector(selectLoadingPurgeVarnish)
   const varnishPurgeResult = useSelector(selectVarnishPurgeResult)
   const [pushingRss, setPushingRss] = useState(false)
   const [pushRssResult, setPushRssResult] = useState('')
@@ -265,9 +265,9 @@ export function DashboardTools() {
                 primary
                 className="w-100 d-flex justify-content-center"
                 onClick={() => purgeVarnishCache()}
-                disabled={loadingVarnishClear}>
+                disabled={loadingVarnishPurge}>
                 <div>
-                  {renderIcon(loadingVarnishClear)} <span>Tøm Varnish</span>
+                  {renderIcon(loadingVarnishPurge)} <span>Tøm Varnish</span>
                 </div>
               </Button>
             </Col>
