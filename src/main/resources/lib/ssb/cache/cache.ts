@@ -546,7 +546,7 @@ export function setupHandlers(socket: Socket): void {
     log.info(`Doing a Varnish Ban. Result code: ${resultOfPurge.status} - and message: ${resultOfPurge.message}`)
 
     socket.emit('purge-varnish-finished', {
-      status: resultOfPurge.status
+      status: `${resultOfPurge.status}: ${resultOfPurge.message}`
     })
   })
 }

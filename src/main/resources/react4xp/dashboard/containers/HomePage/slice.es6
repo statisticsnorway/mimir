@@ -54,7 +54,7 @@ const commonSlice = createSlice({
     },
     stopLoadingPurgeVarnishCache(state, action) {
       state.loadingPurgeVarnish = false
-      state.varnishPurgeResult = createStatusMessage(action.status)
+      state.varnishPurgeResult = action.status
     },
     serverTimeLoaded(state, action) {
       state.serverTime = action.serverTime
@@ -67,17 +67,3 @@ export const {
   actions, reducer, name: sliceKey
 } = commonSlice
 
-function createStatusMessage(status) {
-  switch (status) {
-  case 200:
-    return 'Varnish cache cleared successfully'
-  case 404:
-    return 'Varnish instance not found, 404 returned.'
-  case 403:
-    return 'Access denied. Check IP range in Varnish config'
-  case status >= 500:
-    return `Server error code: ${status}`
-  default:
-    return `Unknown error. No status? Status is: ( ${status} )`
-  }
-}
