@@ -540,10 +540,10 @@ export function setupHandlers(socket: Socket): void {
   })
 
   socket.on('purge-varnish', () => {
-    log.info('Varnish cache clear performed')
     const resultOfPurge: HttpResponse = purgeVarnishCache()
 
-    log.info(`Doing a Varnish Ban. Result code: ${resultOfPurge.status} - and message: ${resultOfPurge.message}`)
+    // Keeping log line, we want to be able to track use of this button
+    log.info(`Cleared Varnish. Result code: ${resultOfPurge.status} - and message: ${resultOfPurge.message}`)
 
     socket.emit('purge-varnish-finished', {
       status: `${resultOfPurge.status}: ${resultOfPurge.message}`
