@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { Card,
   Button,
@@ -32,6 +32,7 @@ function SearchResult(props) {
   })
   const [selectedMainSubject, setSelectedMainSubject] = useState(props.dropDownSubjects[0])
   const [selectedContentType, setSelectedContentType] = useState(props.dropDownContentTypes[0])
+  const [numberChanged, setNumberChanged] = useState(0)
 
   useEffect(() => {
     if (!nameSearchData) {
@@ -77,9 +78,13 @@ function SearchResult(props) {
     setSortChanged(true)
     setSortList(value)
 
-    if (props.GA_TRACKING_ID) {
-      const sortLabel = value === 'best' ? props.sortBestHitPhrase : props.sortDatePhrase
-      addGtagForEvent(props.GA_TRACKING_ID, 'Sorter', 'Søk', sortLabel)
+    if (sortChanged) {
+      setNumberChanged((prev) => prev + 1)
+      console.log(numberChanged)
+      if (props.GA_TRACKING_ID && numberChanged < 2) {
+        const sortLabel = value === 'best' ? props.sortBestHitPhrase : props.sortDatePhrase
+        addGtagForEvent(props.GA_TRACKING_ID, 'Sorter', 'Søk', sortLabel)
+      }
     }
   }
 
