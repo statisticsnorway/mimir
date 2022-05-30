@@ -32,6 +32,7 @@ function SearchResult(props) {
   })
   const [selectedMainSubject, setSelectedMainSubject] = useState(props.dropDownSubjects[0])
   const [selectedContentType, setSelectedContentType] = useState(props.dropDownContentTypes[0])
+  const [numberChanged, setNumberChanged] = useState(0)
 
   useEffect(() => {
     if (!nameSearchData) {
@@ -76,6 +77,14 @@ function SearchResult(props) {
   function onChangeSortList(value) {
     setSortChanged(true)
     setSortList(value)
+
+    if (sortChanged) {
+      setNumberChanged((prev) => prev + 1)
+      if (props.GA_TRACKING_ID && numberChanged < 2) {
+        const sortLabel = value === 'best' ? props.sortBestHitPhrase : props.sortDatePhrase
+        addGtagForEvent(props.GA_TRACKING_ID, 'Sorter', 'Søk', sortLabel)
+      }
+    }
   }
 
   function removeFilter() {
@@ -234,7 +243,7 @@ function SearchResult(props) {
           { props.nameSearchToggle ? renderNameResult() : undefined }
           <Title size={2}>{props.noHitMessage}</Title>
           <p>Her finner du <Link href="/navn">navnesøk</Link></p>
-          <p>Her finner du <Link href="/publikasjonsarkiv">liste over alle publiserte statistikker, analyser og artikler </Link></p>
+          <p>Her finner du <Link href="/publiseringsarkiv">liste over alle publiserte statistikker, analyser og artikler </Link></p>
           <p>I verktøyet <Link href="/statbank">Statistikkbanken</Link> finner du alle tallene våre</p>
         </div>
       )
