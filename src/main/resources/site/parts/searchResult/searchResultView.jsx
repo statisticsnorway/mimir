@@ -80,7 +80,6 @@ function SearchResult(props) {
 
     if (sortChanged) {
       setNumberChanged((prev) => prev + 1)
-      console.log(numberChanged)
       if (props.GA_TRACKING_ID && numberChanged < 2) {
         const sortLabel = value === 'best' ? props.sortBestHitPhrase : props.sortDatePhrase
         addGtagForEvent(props.GA_TRACKING_ID, 'Sorter', 'Søk', sortLabel)
