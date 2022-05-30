@@ -243,7 +243,7 @@ function SearchResult(props) {
           { props.nameSearchToggle ? renderNameResult() : undefined }
           <Title size={2}>{props.noHitMessage}</Title>
           <p>Her finner du <Link href="/navn">navnesøk</Link></p>
-          <p>Her finner du <Link href="/publikasjonsarkiv">liste over alle publiserte statistikker, analyser og artikler </Link></p>
+          <p>Her finner du <Link href="/publiseringsarkiv">liste over alle publiserte statistikker, analyser og artikler </Link></p>
           <p>I verktøyet <Link href="/statbank">Statistikkbanken</Link> finner du alle tallene våre</p>
         </div>
       )
