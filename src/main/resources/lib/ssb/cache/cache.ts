@@ -544,16 +544,17 @@ export function setupHandlers(socket: Socket): void {
 
     // Keeping log line, we want to be able to track use of this button
     log.info(`Cleared Varnish. Result code: ${resultOfPurge.status} - and message: ${resultOfPurge.message}`)
+    const statusMessage: string = resultOfPurge.status === 200 ? 'Status: OK' : `Status: Feilet ${resultOfPurge.status}: ${resultOfPurge.message}`
 
     socket.emit('purge-varnish-finished', {
-      status: `${resultOfPurge.status}: ${resultOfPurge.message}`
+      status: statusMessage
     })
   })
 }
 
 function purgeVarnishCache(): HttpResponse {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const baseUrl: string = app.config && app.config['ssb.internal.baseUrl'] ? app.config['ssb.internal.baseUrl'] : 'https://www.ssb.no'
+  const baseUrl: string = app.config && app.config['ssb.internal.baseUrl'] ? app.config['ssb.internal.baseUrl'] : 'https://i.ssb.no'
   const response: HttpResponse = request({
     url: `${baseUrl}/xp_clear`,
     method: 'PURGE',
