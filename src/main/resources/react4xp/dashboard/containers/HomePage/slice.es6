@@ -3,6 +3,8 @@ import { createSlice } from '../../utils/@reduxjs/toolkit'
 export const initialState = {
   isConnected: false,
   loadingClearCache: false,
+  loadingPurgeVarnish: false,
+  varnishPurgeResult: '',
   user: undefined,
   dashboardOptions: {},
   contentStudioBaseUrl: '',
@@ -47,6 +49,13 @@ const commonSlice = createSlice({
     stopLoadingClearCache(state) {
       state.loadingClearCache = false
     },
+    startLoadingPurgeVarnishCache(state) {
+      state.loadingPurgeVarnish = true
+    },
+    stopLoadingPurgeVarnishCache(state, action) {
+      state.loadingPurgeVarnish = false
+      state.varnishPurgeResult = action.status
+    },
     serverTimeLoaded(state, action) {
       state.serverTime = action.serverTime
       state.serverTimeReceived = Date.now()
@@ -57,3 +66,4 @@ const commonSlice = createSlice({
 export const {
   actions, reducer, name: sliceKey
 } = commonSlice
+

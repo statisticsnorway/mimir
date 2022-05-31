@@ -1,8 +1,12 @@
 import React, { useContext, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectInternalBaseUrl, selectInternalStatbankUrl, selectLoadingClearCache } from '../HomePage/selectors'
+import { selectInternalBaseUrl,
+  selectInternalStatbankUrl,
+  selectLoadingClearCache,
+  selectLoadingPurgeVarnish,
+  selectVarnishPurgeResult } from '../HomePage/selectors'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
-import { requestClearCache } from '../HomePage/actions'
+import { requestClearCache, requestPurgeVarnishCache } from '../HomePage/actions'
 import { RefreshCw, Rss, Trash } from 'react-feather'
 import { Col, Container, Row, Alert } from 'react-bootstrap'
 import { Button, Dropdown, Input } from '@statisticsnorway/ssb-component-library'
@@ -16,6 +20,8 @@ import axios from 'axios'
 
 export function DashboardTools() {
   const loadingCache = useSelector(selectLoadingClearCache)
+  const loadingVarnishPurge = useSelector(selectLoadingPurgeVarnish)
+  const varnishPurgeResult = useSelector(selectVarnishPurgeResult)
   const [pushingRss, setPushingRss] = useState(false)
   const [pushRssResult, setPushRssResult] = useState('')
   const [rssStatus, setRssStatus] = useState('success')
@@ -63,6 +69,10 @@ export function DashboardTools() {
 
   function clearCache() {
     requestClearCache(dispatch, io)
+  }
+
+  function purgeVarnishCache() {
+    requestPurgeVarnishCache(dispatch, io)
   }
 
   function pushRss() {
@@ -244,7 +254,20 @@ export function DashboardTools() {
                 onClick={() => clearCache()}
                 disabled={loadingCache}>
                 <div>
-                  {renderIcon(loadingCache)} <span>Tøm cache</span>
+                  {renderIcon(loadingCache)} <span>Tøm XP cache</span>
+                </div>
+              </Button>
+            </Col>
+          </Row>
+          <Row className="mb-1">
+            <Col>
+              <Button
+                primary
+                className="w-100 d-flex justify-content-center"
+                onClick={() => purgeVarnishCache()}
+                disabled={loadingVarnishPurge}>
+                <div>
+                  {renderIcon(loadingVarnishPurge)} <span>Tøm Varnish</span>
                 </div>
               </Button>
             </Col>
@@ -265,6 +288,14 @@ export function DashboardTools() {
           <Row>
             <Col>
               <Alert variant={rssStatus} show={!!pushRssResult}>{pushRssResult}</Alert>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Alert variant={'info'} show={!!varnishPurgeResult}>
+                <h5 className='alert-heading'>Varnish Purge</h5>
+                {varnishPurgeResult}
+              </Alert>
             </Col>
           </Row>
         </fieldset>
