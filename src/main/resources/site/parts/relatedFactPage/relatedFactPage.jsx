@@ -17,25 +17,6 @@ function RelatedBoxes(props) {
   const [total, setTotal] = useState(firstRelatedContents.total)
   const [loading, setLoading] = useState(false)
 
-  function fetchFirstRelatedFactPages() {
-    setLoading(true)
-    get(relatedFactPageServiceUrl, {
-      params: {
-        start: 0,
-        count: 4, // TODO: 3 for mobile
-        partConfig
-      }
-    }).then((res) => {
-      if (res.data.relatedFactPages.length) {
-        setRelatedFactPages(res.data.relatedFactPages)
-        setTotal(res.data.total)
-      }
-    })
-      .finally(() => {
-        setLoading(false)
-      })
-  }
-
   function fetchAllRelatedFactPages() {
     setLoading(true)
     get(relatedFactPageServiceUrl, {
@@ -55,7 +36,27 @@ function RelatedBoxes(props) {
       })
   }
 
-  function handleShowButton() {
+
+  function fetchFirstRelatedFactPages() {
+    setLoading(true)
+    get(relatedFactPageServiceUrl, {
+      params: {
+        start: 0,
+        count: 4,
+        partConfig
+      }
+    }).then((res) => {
+      if (res.data.relatedFactPages.length) {
+        setRelatedFactPages(res.data.relatedFactPages)
+        setTotal(res.data.total)
+      }
+    })
+      .finally(() => {
+        setLoading(false)
+      })
+  }
+
+  function handleButtonOnClick() {
     if (total === relatedFactPages.length) {
       fetchFirstRelatedFactPages()
     } else {
@@ -76,13 +77,19 @@ function RelatedBoxes(props) {
             title={relatedFactPageContent.title}
             key={index}
           />
-        ) : <span className="spinner-border spinner-border" />}
+        ) :
+          <div className="col">
+            <span className="spinner-border spinner-border" />
+          </div>}
       </div>
-      <div className="row">
-        <div className="col-auto">
-          <Button onClick={handleShowButton}>{total > relatedFactPages.length ? showAll : showLess}</Button>
-        </div>
-      </div>
+      {total > 3 &&
+        <div className="row">
+          <div className="col-auto">
+            <Button onClick={handleButtonOnClick}>
+              {total >= relatedFactPages.length ? showAll : showLess}
+            </Button>
+          </div>
+        </div>}
     </div>
   )
 }
