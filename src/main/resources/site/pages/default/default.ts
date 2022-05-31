@@ -298,7 +298,10 @@ exports.get = function(req: Request): Response {
 
   return {
     body: `<!DOCTYPE html>${bodyWithAlerts.body}`,
-    pageContributions: bodyWithAlerts.pageContributions
+    pageContributions: bodyWithAlerts.pageContributions,
+    headers: {
+      'x-content-key': page._id
+    }
   } as Response
 }
 
