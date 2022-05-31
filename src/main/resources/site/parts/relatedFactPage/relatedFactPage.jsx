@@ -8,28 +8,26 @@ function RelatedBoxes(props) {
     firstRelatedContents,
     relatedFactPageServiceUrl,
     partConfig,
-    language,
     showAll,
     showLess,
     mainTitle
   } = props
 
-  const [relatedContents, setRelatedContents] = useState(firstRelatedContents.relatedContents)
-  const [total, setTotal] = useState(0)
+  const [relatedFactPages, setRelatedFactPages] = useState(firstRelatedContents.relatedFactPages)
+  const [total, setTotal] = useState(firstRelatedContents.total)
   const [loading, setLoading] = useState(false)
 
-  function fetchRelatedFactPages() {
+  function fetchFirstRelatedFactPages() {
     setLoading(true)
     get(relatedFactPageServiceUrl, {
       params: {
-        start: relatedContents.length,
+        start: 0,
         count: 4, // TODO: 3 for mobile
-        language: language,
-        partConfig: partConfig
+        partConfig
       }
     }).then((res) => {
-      if (res.data.articles.length) {
-        setRelatedContents((prev) => [...prev, ...res.data.relatedContents])
+      if (res.data.relatedFactPages.length) {
+        setRelatedFactPages(res.data.relatedFactPages)
         setTotal(res.data.total)
       }
     })
@@ -38,26 +36,51 @@ function RelatedBoxes(props) {
       })
   }
 
+  function fetchAllRelatedFactPages() {
+    setLoading(true)
+    get(relatedFactPageServiceUrl, {
+      params: {
+        start: relatedFactPages.length,
+        count: total - relatedFactPages.length,
+        partConfig
+      }
+    }).then((res) => {
+      if (res.data.relatedFactPages.length) {
+        setRelatedFactPages((prev) => [...prev, ...res.data.relatedFactPages])
+        setTotal(res.data.total)
+      }
+    })
+      .finally(() => {
+        setLoading(false)
+      })
+  }
+
+  function handleShowButton() {
+    if (total === relatedFactPages.length) {
+      fetchFirstRelatedFactPages()
+    } else {
+      fetchAllRelatedFactPages()
+    }
+  }
+
   return (
     <div className="container">
       <h2>{mainTitle}</h2>
       <div className="row image-box-wrapper">
-        {!loading && relatedContents.map((relatedRelatedContent, index) =>
+        {!loading ? relatedFactPages.map((relatedFactPageContent, index) =>
           <PictureCard
-            // className={`mb-3 ${index > 3 && isHidden ? 'd-none' : ''}`}
             className="mb-3"
-            imageSrc={relatedRelatedContent.image}
-            altText={relatedRelatedContent.imageAlt ? relatedRelatedContent.imageAlt : ' '}
-            link={relatedRelatedContent.link}
-            title={relatedRelatedContent.title}
+            imageSrc={relatedFactPageContent.image}
+            altText={relatedFactPageContent.imageAlt ? relatedFactPageContent.imageAlt : ' '}
+            link={relatedFactPageContent.link}
+            title={relatedFactPageContent.title}
             key={index}
           />
-        )}
+        ) : <span className="spinner-border spinner-border" />}
       </div>
-      {/* <div className={`row hide-show-btn ${relatedContents.length < 5 ? 'd-none' : ''}`}> */}
       <div className="row">
         <div className="col-auto">
-          <Button onClick={fetchRelatedFactPages}>{total === relatedContents.length ? showAll : showLess}</Button>
+          <Button onClick={handleShowButton}>{total > relatedFactPages.length ? showAll : showLess}</Button>
         </div>
       </div>
     </div>
@@ -75,7 +98,6 @@ RelatedBoxes.propTypes = {
   ),
   relatedFactPageServiceUrl: PropTypes.string,
   partConfig: PropTypes.string,
-  language: PropTypes.string,
   showAll: PropTypes.string,
   showLess: PropTypes.string,
   mainTitle: PropTypes.string

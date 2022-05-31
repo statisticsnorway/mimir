@@ -28,8 +28,8 @@ const {
   getImageAlt
 } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
 const {
-  fromRelatedFactPageCache
-} = __non_webpack_require__('/lib/ssb/cache/cache')
+  fromPartCache
+} = __non_webpack_require__('/lib/ssb/cache/partCache')
 const {
   get
 } = __non_webpack_require__('/lib/xp/content')
@@ -46,52 +46,56 @@ exports.get = function(req: Request): Response {
   try {
     const page: Content<Article> = getContent()
     const config: RelatedFactPagePartConfig = getComponent().config
-    let contentIdList: Array<string> = []
+    let relatedFactPageConfig: RelatedFactPageConfig = {}
     if (config.itemList) {
-      contentIdList = contentIdList.concat(forceArray(config.itemList))
+      relatedFactPageConfig = {
+        inputType: 'itemList',
+        contentIdList: config.itemList
+      }
     }
-    if (config.relatedFactPages) {
-      contentIdList = contentIdList.concat(forceArray(config.relatedFactPages))
+    if (config.relatedFactPages || page.data.relatedFactPages) {
+      let contentIdList: RelatedFactPageConfig['contentIdList'] = []
+      if (config.relatedFactPages) {
+        contentIdList = forceArray(config.relatedFactPages)
+      }
+      if (page.data.relatedArticles) {
+        contentIdList = forceArray(page.data.relatedFactPages) as Array<string>
+      }
+      relatedFactPageConfig = {
+        inputType: 'relatedFactPage',
+        contentIdList
+      }
     }
-    if (page.data.relatedFactPages) {
-      contentIdList = contentIdList.concat(forceArray(page.data.relatedFactPages))
-    }
-    return renderPart(req, contentIdList)
+    return renderPart(req, relatedFactPageConfig)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-exports.preview = (req: Request, id: Array<string> | string): Response => renderPart(req, [id] as Array<string>)
+exports.preview = (req: Request, relatedFactPageConfig: RelatedFactPageConfig): Response => renderPart(req, relatedFactPageConfig)
 
-function renderPart(req: Request, itemList: Array<string>): Response {
+function renderPart(req: Request, relatedFactPageConfig: RelatedFactPageConfig): Response {
   const page: Content<Article> = getContent()
+  if (req.mode === 'edit') {
+    return renderRelatedFactPage(req, page, relatedFactPageConfig)
+  } else {
+    return fromPartCache(req, `${page._id}-relatedFactPage`, () => {
+      return renderRelatedFactPage(req, page, relatedFactPageConfig)
+    })
+  }
+}
+
+function renderRelatedFactPage(req: Request, page: Content, relatedFactPageConfig: RelatedFactPageConfig): Response {
   const phrases: Phrases = getPhrases(page)
-  const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   const config: RelatedFactPagePartConfig = getComponent().config
   const mainTitle: string = config.title ? config.title : phrases.relatedFactPagesHeading
 
-  if (itemList.length === 0) {
-    if (req.mode === 'edit' && page.type !== `${app.name}:article` && page.type !== `${app.name}:statistics`) {
-      return {
-        body: render(view, {
-          mainTitle
-        })
-      }
-    } else {
-      return {
-        body: null
-      }
-    }
-  }
-
-  const showAll: string = phrases.showAll
-  const showLess: string = phrases.showLess
-
-  // if (relatedContents.length === 0) {
-  //   if (req.mode === 'edit') {
+  // if (relatedFactPageConfig.length === 0) {
+  //   if (req.mode === 'edit' && page.type !== `${app.name}:article` && page.type !== `${app.name}:statistics`) {
   //     return {
-  //       body: render(view)
+  //       body: render(view, {
+  //         mainTitle
+  //       })
   //     }
   //   } else {
   //     return {
@@ -100,7 +104,10 @@ function renderPart(req: Request, itemList: Array<string>): Response {
   //   }
   // }
 
-  const firstRelatedContents: RelatedFactPages = parseRelatedFactPageData(itemList, 0, 4, language)
+  const showAll: string = phrases.showAll
+  const showLess: string = phrases.showLess
+
+  const firstRelatedContents: RelatedFactPages = parseRelatedFactPageData(relatedFactPageConfig, 0, 4) // TODO: 3 on mobile
 
   const relatedFactPageServiceUrl: string = serviceUrl({
     service: 'relatedFactPage'
@@ -109,8 +116,7 @@ function renderPart(req: Request, itemList: Array<string>): Response {
   const props: RelatedFactPageProps = {
     firstRelatedContents,
     relatedFactPageServiceUrl,
-    partConfig: itemList,
-    language,
+    partConfig: relatedFactPageConfig,
     mainTitle,
     showAll,
     showLess
@@ -136,78 +142,33 @@ function renderPart(req: Request, itemList: Array<string>): Response {
   }
 }
 
-export function parseRelatedFactPageData(itemList: Array<string>, start: number, count: number, language: string): RelatedFactPages {
-  const relatedContents: Array<RelatedFactPageContent> = []
+export function parseRelatedFactPageData(relatedFactPageConfig: RelatedFactPageConfig, start: number, count: number): RelatedFactPages {
+  const relatedFactPages: Array<RelatedFactPageContent> = []
+  let total: number = 0
+  if (relatedFactPageConfig.contentIdList) {
+    let contentListId: Array<string> = relatedFactPageConfig.contentIdList as Array<string>
+    if (relatedFactPageConfig.inputType === 'itemList') {
+      const relatedContent: RelatedFactPage | null = get({
+        key: relatedFactPageConfig.contentIdList as string
+      })
 
-  // itemList.map((key: string) => {
-  //   const relatedPage: unknown = fromRelatedFactPageCache(req, key, () => {
-  //     const relatedContent: RelatedFactPage | null = content ? content.get({
-  //       key
-  //     }) : null
-
-
-  //     if (relatedContent) {
-  //       if (relatedContent.type === `${app.name}:contentList` && relatedContent.data.contentList) {
-  //         // handles content list for part-config
-  //         const contentList: Array<string> = util.data.forceArray(relatedContent.data.contentList)
-  //         return contentList.map((c: string) => {
-  //           const contentListItem: Content<Article, object, SEO> | null = content ? content.get({
-  //             key: c
-  //           }) : null
-  //           return contentListItem ? parseRelatedContent(contentListItem) : null
-  //         })
-  //       } else { // handles content selector from content-types (articles, statistics etc)
-  //       // handles content selector from content-types (articles, statistics etc)
-  //         return parseRelatedContent(relatedContent)
-  //       }
-  //     }
-  //     return
-  //   })
-
-  //   if (Array.isArray(relatedPage)) { // might get an array from contentList
-  //     relatedContents = relatedContents.concat(relatedPage)
-  //   } else {
-  //     relatedContents.push(relatedPage)
-  //   }
-  // })
-  // relatedContents = relatedContents.filter((r) => !!r)
-
-  const relatedContentList: QueryResponse<RelatedFactPage> | null = itemList.length ? query({
-    start,
-    count,
-    query: `_id IN(${itemList.map((id) => `'${id}'`).join(',')})`
-  }) : null
-  log.info(JSON.stringify(itemList.map((id) => `'${id}'`).join(','), null, 2))
-
-  relatedContentList?.hits.map((relatedContent) => {
-    if (relatedContent) {
-      if (relatedContent.type === `${app.name}:contentList` && (relatedContent.data as ContentList).contentList) {
-        // handles content list for part-config
-        const contentList: Array<string> = forceArray((relatedContent.data as ContentList).contentList) as Array<string>
-        log.info(JSON.stringify(contentList, null, 2))
-        const relatedContentList: Array<RelatedFactPage> | null = contentList.length ? query({
-          start,
-          count,
-          query: `_id IN(${contentList.map((id) => `'${id}'`).join(',')})`
-        }).hits as unknown as Array<RelatedFactPage> : null
-
-        if (relatedContentList) {
-          relatedContentList.map((relatedContent) => relatedContents.push(parseRelatedContent(relatedContent)))
-        }
-      } else { // handles content selector from content-types (articles, statistics etc)
-        // handles content selector from content-types (articles, statistics etc)
-        relatedContents.push(parseRelatedContent(relatedContent as RelatedFactPage))
-      }
+      contentListId = forceArray((relatedContent?.data as ContentList).contentList) as Array<string>
     }
-    return
-  })
+    const relatedContentQueryResults: QueryResponse<RelatedFactPage> | null = contentListId.length ? query({
+      start,
+      count,
+      query: `_id IN(${(contentListId).map((id) => `'${id}'`).join(',')})`
+    }) : null
 
-  log.info(JSON.stringify(relatedContentList, null, 2))
-  log.info(JSON.stringify(relatedContents, null, 2))
+    if (relatedContentQueryResults) {
+      total = relatedContentQueryResults.total
+      relatedContentQueryResults.hits.map((relatedContent) => relatedFactPages.push(parseRelatedContent(relatedContent as RelatedFactPage)))
+    }
+  }
 
   return {
-    relatedContents: relatedContents,
-    total: relatedContentList ? relatedContentList.total : 0
+    relatedFactPages,
+    total
   }
 }
 
@@ -254,8 +215,7 @@ interface RelatedFactPageContent {
 interface RelatedFactPageProps {
   firstRelatedContents: RelatedFactPages;
   relatedFactPageServiceUrl: string;
-  partConfig: Array<string>,
-  language: string,
+  partConfig: RelatedFactPageConfig;
   mainTitle:string;
   showAll: string;
   showLess: string;
@@ -264,7 +224,11 @@ interface RelatedFactPageProps {
 type RelatedFactPage = Content<ContentList | Article, object, SEO>
 
 export interface RelatedFactPages {
-  relatedContents: Array<RelatedFactPageContent>;
+  relatedFactPages: Array<RelatedFactPageContent>;
   total: number;
 }
 
+export interface RelatedFactPageConfig {
+  inputType?: string;
+  contentIdList?: string | Array<string>;
+}
