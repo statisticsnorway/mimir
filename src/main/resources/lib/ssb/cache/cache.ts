@@ -9,7 +9,11 @@ import { Socket } from '../../types/socket'
 import { MunicipalityWithCounty } from '../dataset/klass/municipalities'
 import { Cache } from 'enonic-types/cache'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
+import { HttpResponse } from 'enonic-types/http'
 
+const {
+  request
+} = __non_webpack_require__('/lib/http-client')
 const {
   newCache
 } = __non_webpack_require__('/lib/cache')
@@ -522,6 +526,30 @@ export function setupHandlers(socket: Socket): void {
 
     socket.emit('clear-cache-finished', {})
   })
+
+  socket.on('purge-varnish', () => {
+    const resultOfPurge: HttpResponse = purgeVarnishCache()
+
+    // Keeping log line, we want to be able to track use of this button
+    log.info(`Cleared Varnish. Result code: ${resultOfPurge.status} - and message: ${resultOfPurge.message}`)
+    const statusMessage: string = resultOfPurge.status === 200 ? 'Status: OK' : `Status: Feilet ${resultOfPurge.status}: ${resultOfPurge.message}`
+
+    socket.emit('purge-varnish-finished', {
+      status: statusMessage
+    })
+  })
+}
+
+function purgeVarnishCache(): HttpResponse {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const baseUrl: string = app.config && app.config['ssb.internal.baseUrl'] ? app.config['ssb.internal.baseUrl'] : 'https://i.ssb.no'
+  const response: HttpResponse = request({
+    url: `${baseUrl}/xp_clear`,
+    method: 'PURGE',
+    connectionTimeout: 5000,
+    readTimeout: 5000
+  })
+  return response
 }
 
 export interface CompletelyClearCacheOptions {

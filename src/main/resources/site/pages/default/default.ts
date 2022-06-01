@@ -13,6 +13,7 @@ import { SEO } from '../../../services/news/news'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { SiteConfig } from '../../site-config'
 import { DefaultPageConfig } from './default-page-config'
+import { HeaderContent } from '../../../lib/ssb/parts/header'
 
 const {
   data: {
@@ -151,26 +152,31 @@ exports.get = function(req: Request): Response {
 
   const language: Language = getLanguage(page)
   const menuCacheLanguage: string = language.code === 'en' ? 'en' : 'nb'
-  const headerContent: MenuContent | unknown = fromMenuCache(req, `header_${menuCacheLanguage}`, () => {
-    return getHeaderContent(language)
+
+  const header: MenuContent | unknown = fromMenuCache(req, `header_${menuCacheLanguage}`, () => {
+    const headerContent: HeaderContent | undefined = getHeaderContent(language)
+    if (headerContent) {
+      const headerComponent: React4xpObject = new React4xp('Header')
+        .setProps({
+          ...headerContent as object,
+          language: language,
+          searchResult: req.params.sok
+        })
+        .setId('header')
+
+      return {
+        body: headerComponent.renderBody({
+          body: '<div id="header"></div>'
+        }),
+        component: headerComponent
+      }
+    }
+
+    return undefined
   })
-  const headerComponent: React4xpObject = new React4xp('Header')
-    .setProps({
-      ...headerContent as object,
-      language: language,
-      searchResult: req.params.sok
-    })
-    .setId('header')
 
-  const header: MenuContent = {
-    body: headerComponent.renderBody({
-      body: '<div id="header"></div>'
-    }),
-    component: headerComponent
-  }
-
-  if (header && header.component) {
-    pageContributions = header.component.renderPageContributions({
+  if (header && (header as MenuContent).component) {
+    pageContributions = (header as MenuContent).component.renderPageContributions({
       pageContributions: pageContributions as React4xpPageContributionOptions
 
     })
@@ -251,7 +257,7 @@ exports.get = function(req: Request): Response {
     statbankWeb: statbankFane,
     ...statBankContent,
     GA_TRACKING_ID,
-    headerBody: header ? header.body : undefined,
+    headerBody: header ? (header as MenuContent).body : undefined,
     footerBody: footer ? (footer as MenuContent).body : undefined,
     ...metaInfo,
     breadcrumbsReactId: breadcrumbComponent.react4xpId,
@@ -292,7 +298,10 @@ exports.get = function(req: Request): Response {
 
   return {
     body: `<!DOCTYPE html>${bodyWithAlerts.body}`,
-    pageContributions: bodyWithAlerts.pageContributions
+    pageContributions: bodyWithAlerts.pageContributions,
+    headers: {
+      'x-content-key': page._id
+    }
   } as Response
 }
 
