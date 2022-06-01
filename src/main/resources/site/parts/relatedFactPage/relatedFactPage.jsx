@@ -13,8 +13,8 @@ function RelatedBoxes(props) {
     mainTitle
   } = props
 
-  const [relatedFactPages, setRelatedFactPages] = useState(firstRelatedContents.relatedFactPages)
-  const [total, setTotal] = useState(firstRelatedContents.total)
+  const [relatedFactPages, setRelatedFactPages] = useState(firstRelatedContents ? firstRelatedContents.relatedFactPages : [])
+  const [total, setTotal] = useState(firstRelatedContents ? firstRelatedContents.total : 0)
   const [loading, setLoading] = useState(false)
 
   function fetchAllRelatedFactPages() {
@@ -35,7 +35,6 @@ function RelatedBoxes(props) {
         setLoading(false)
       })
   }
-
 
   function fetchFirstRelatedFactPages() {
     setLoading(true)
@@ -64,32 +63,43 @@ function RelatedBoxes(props) {
     }
   }
 
+  function renderRelatedFactPages() {
+    if (relatedFactPages.length) {
+      return (
+        <>
+          <div className="row image-box-wrapper">
+            {!loading ? relatedFactPages.map((relatedFactPageContent, index) =>
+              <PictureCard
+                className="mb-3"
+                imageSrc={relatedFactPageContent.image}
+                altText={relatedFactPageContent.imageAlt ? relatedFactPageContent.imageAlt : ' '}
+                link={relatedFactPageContent.link}
+                title={relatedFactPageContent.title}
+                key={index}
+              />
+            ) :
+              <div className="col">
+                <span className="spinner-border spinner-border" />
+              </div>}
+          </div>
+          { total > 3 &&
+            <div className="row">
+              <div className="col-auto">
+                <Button onClick={handleButtonOnClick}>
+                  {total >= relatedFactPages.length ? showAll : showLess}
+                </Button>
+              </div>
+            </div> }
+        </>
+      )
+    }
+    return
+  }
+
   return (
     <div className="container">
       <h2>{mainTitle}</h2>
-      <div className="row image-box-wrapper">
-        {!loading ? relatedFactPages.map((relatedFactPageContent, index) =>
-          <PictureCard
-            className="mb-3"
-            imageSrc={relatedFactPageContent.image}
-            altText={relatedFactPageContent.imageAlt ? relatedFactPageContent.imageAlt : ' '}
-            link={relatedFactPageContent.link}
-            title={relatedFactPageContent.title}
-            key={index}
-          />
-        ) :
-          <div className="col">
-            <span className="spinner-border spinner-border" />
-          </div>}
-      </div>
-      {total > 3 &&
-        <div className="row">
-          <div className="col-auto">
-            <Button onClick={handleButtonOnClick}>
-              {total >= relatedFactPages.length ? showAll : showLess}
-            </Button>
-          </div>
-        </div>}
+      {renderRelatedFactPages()}
     </div>
   )
 }

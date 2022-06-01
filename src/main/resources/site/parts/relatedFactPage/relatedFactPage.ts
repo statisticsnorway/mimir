@@ -1,8 +1,7 @@
 import { Content, QueryResponse } from 'enonic-types/content'
-import { PageContributions, Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { Request, Response } from 'enonic-types/controller'
 import { Phrases } from '../../../lib/types/language'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
+import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { SEO } from '../../../services/news/news'
 import { Article } from '../../content-types/article/article'
 import { ContentList } from '../../content-types/contentList/contentList'
@@ -18,9 +17,6 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
 const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
@@ -40,13 +36,11 @@ const {
 } = __non_webpack_require__('/lib/util')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-const view: ResourceKey = resolve('./relatedFactPage.html')
-
-exports.get = function(req: Request): Response {
+exports.get = function(req: Request): Response | React4xpResponse {
   try {
     const page: Content<Article> = getContent()
     const config: RelatedFactPagePartConfig = getComponent().config
-    let relatedFactPageConfig: RelatedFactPageConfig = {}
+    let relatedFactPageConfig: RelatedFactPageConfig | undefined
     if (config.itemList) {
       relatedFactPageConfig = {
         inputType: 'itemList',
@@ -72,9 +66,10 @@ exports.get = function(req: Request): Response {
   }
 }
 
-exports.preview = (req: Request, relatedFactPageConfig: RelatedFactPageConfig): Response => renderPart(req, relatedFactPageConfig)
+exports.preview = (req: Request, relatedFactPageConfig: RelatedFactPageConfig | undefined): Response | React4xpResponse =>
+  renderPart(req, relatedFactPageConfig)
 
-function renderPart(req: Request, relatedFactPageConfig: RelatedFactPageConfig): Response {
+function renderPart(req: Request, relatedFactPageConfig: RelatedFactPageConfig | undefined): Response | React4xpResponse {
   const page: Content<Article> = getContent()
   if (req.mode === 'edit') {
     return renderRelatedFactPage(req, page, relatedFactPageConfig)
@@ -85,29 +80,14 @@ function renderPart(req: Request, relatedFactPageConfig: RelatedFactPageConfig):
   }
 }
 
-function renderRelatedFactPage(req: Request, page: Content, relatedFactPageConfig: RelatedFactPageConfig): Response {
+function renderRelatedFactPage(req: Request, page: Content, relatedFactPageConfig: RelatedFactPageConfig | undefined): Response | React4xpResponse {
   const phrases: Phrases = getPhrases(page)
   const config: RelatedFactPagePartConfig = getComponent().config
   const mainTitle: string = config.title ? config.title : phrases.relatedFactPagesHeading
-
-  // if (relatedFactPageConfig.length === 0) {
-  //   if (req.mode === 'edit' && page.type !== `${app.name}:article` && page.type !== `${app.name}:statistics`) {
-  //     return {
-  //       body: render(view, {
-  //         mainTitle
-  //       })
-  //     }
-  //   } else {
-  //     return {
-  //       body: null
-  //     }
-  //   }
-  // }
-
   const showAll: string = phrases.showAll
   const showLess: string = phrases.showLess
 
-  const firstRelatedContents: RelatedFactPages = parseRelatedFactPageData(relatedFactPageConfig, 0, 4) // TODO: 3 on mobile
+  const firstRelatedContents: RelatedFactPages = parseRelatedFactPageData(relatedFactPageConfig, 0, 4)
 
   const relatedFactPageServiceUrl: string = serviceUrl({
     service: 'relatedFactPage'
@@ -122,36 +102,35 @@ function renderRelatedFactPage(req: Request, page: Content, relatedFactPageConfi
     showLess
   }
 
-  const relatedFactPage: React4xpObject = new React4xp('site/parts/relatedFactPage/relatedFactPage')
-    .setProps(props)
-    .setId('relatedFactPage')
-    .uniqueId()
-
-  const body: string = render(view, {
-    relatedId: relatedFactPage.react4xpId
-  })
-
-  return {
-    body: relatedFactPage.renderBody({
-      body,
-      clientRender: req.mode !== 'edit'
-    }),
-    pageContributions: relatedFactPage.renderPageContributions({
-      clientRender: req.mode !== 'edit'
-    }) as PageContributions
+  if (relatedFactPageConfig) {
+    return React4xp.render('site/parts/relatedFactPage/relatedFactPage', props, req, {
+      body: `<section class="xp-part part-picture-card"></section>`
+    })
+  } else {
+    // Render title only on page templates in edit mode
+    if (req.mode === 'edit' && page.type !== `${app.name}:article` && page.type !== `${app.name}:statistics`) {
+      return React4xp.render('site/parts/relatedFactPage/relatedFactPage', {
+        mainTitle
+      }, req, {
+        body: `<section class="xp-part part-picture-card"></section>`
+      })
+    } else {
+      return {
+        body: null
+      }
+    }
   }
 }
 
-export function parseRelatedFactPageData(relatedFactPageConfig: RelatedFactPageConfig, start: number, count: number): RelatedFactPages {
+export function parseRelatedFactPageData(relatedFactPageConfig: RelatedFactPageConfig | undefined, start: number, count: number): RelatedFactPages {
   const relatedFactPages: Array<RelatedFactPageContent> = []
   let total: number = 0
-  if (relatedFactPageConfig.contentIdList) {
+  if (relatedFactPageConfig && relatedFactPageConfig.contentIdList) {
     let contentListId: Array<string> = relatedFactPageConfig.contentIdList as Array<string>
     if (relatedFactPageConfig.inputType === 'itemList') {
       const relatedContent: RelatedFactPage | null = get({
         key: relatedFactPageConfig.contentIdList as string
       })
-
       contentListId = forceArray((relatedContent?.data as ContentList).contentList) as Array<string>
     }
     const relatedContentQueryResults: QueryResponse<RelatedFactPage> | null = contentListId.length ? query({
@@ -159,13 +138,11 @@ export function parseRelatedFactPageData(relatedFactPageConfig: RelatedFactPageC
       count,
       query: `_id IN(${(contentListId).map((id) => `'${id}'`).join(',')})`
     }) : null
-
     if (relatedContentQueryResults) {
       total = relatedContentQueryResults.total
       relatedContentQueryResults.hits.map((relatedContent) => relatedFactPages.push(parseRelatedContent(relatedContent as RelatedFactPage)))
     }
   }
-
   return {
     relatedFactPages,
     total
@@ -215,7 +192,7 @@ interface RelatedFactPageContent {
 interface RelatedFactPageProps {
   firstRelatedContents: RelatedFactPages;
   relatedFactPageServiceUrl: string;
-  partConfig: RelatedFactPageConfig;
+  partConfig: RelatedFactPageConfig | undefined;
   mainTitle:string;
   showAll: string;
   showLess: string;
