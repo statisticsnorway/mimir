@@ -22,8 +22,12 @@ export function get(req: Request): Response {
     solrSearch(searchTerm, language, count, start, mainSubject, contentType, sortParam) : {
       total: 0,
       hits: [],
-      contentTypes: []
+      contentTypes: [],
+      subjects: []
     }
+
+
+  // log.info('result service: ' + JSON.stringify(result, null, 4))
   return {
     body: result,
     contentType: 'application/json'

@@ -82,6 +82,25 @@ export function renderPart(req: Request): React4xpResponse {
     }
   }))
 
+  function getContentTypeFacets(solrResults: Array<string | number>): Array<Facet> {
+    const validFilters: Array<string> = ['artikkel', 'statistikk', 'faktaside', 'statistikkbanktabell', 'publikasjon']
+    const facetContentTypes: Array<Facet> = []
+    solrResults.forEach((facet, i) => {
+      if (typeof facet == 'string') {
+        const facetCount: string | number = solrResults[i + 1]
+        facetContentTypes.push({
+          title: facet,
+          count: +facetCount
+        })
+      }
+    })
+    log.info('Facets: ' + JSON.stringify(facetContentTypes, null, 4))
+    const facetsContenttype: Array<Facet> = facetContentTypes.filter((value) => validFilters.includes(value.title ))
+    log.info('filtersContenttype: ' + JSON.stringify(facetsContenttype, null, 4))
+
+    return facetContentTypes.filter((value) => validFilters.includes(value.title ))
+  }
+
   function getContentTypes(solrResults: Array<string | number>): Array<Dropdown> {
     const validFilters: Array<string> = ['artikkel', 'statistikk', 'faktaside', 'statistikkbanktabell', 'publikasjon']
     const filters: Array<string | number> = solrResults
@@ -93,10 +112,10 @@ export function renderPart(req: Request): React4xpResponse {
         id: 'allTypes',
         title: phrases['publicationArchive.allTypes']
       }
-    ].concat(filters.map((subject: string) => {
+    ].concat(filters.map((contentType: string) => {
       return {
-        id: subject,
-        title: phrases[`contentType.search.${subject}`]
+        id: contentType,
+        title: phrases[`contentType.search.${contentType}`]
       }
     }))
     return dropdowns
@@ -163,7 +182,8 @@ export function renderPart(req: Request): React4xpResponse {
     solrSearch( sanitizedTerm, language, parseInt(part.config.numberOfHits)) : {
       total: 0,
       hits: [],
-      contentTypes: []
+      contentTypes: [],
+      subjects: []
     }
 
   /* prepare props */
@@ -297,24 +317,47 @@ export function renderPart(req: Request): React4xpResponse {
     language,
     dropDownSubjects: mainSubjectDropdown,
     dropDownContentTypes: getContentTypes(solrResult.contentTypes),
+    contentTypePhrases: {
+      artikkel: localize({
+        key: 'contentType.search.artikkel',
+        locale: language
+      }),
+      statistikk: localize({
+        key: 'contentType.search.statistikk',
+        locale: language
+      }),
+      faktaside: localize({
+        key: 'contentType.search.faktaside',
+        locale: language
+      }),
+      statistikkbanktabell: localize({
+        key: 'contentType.search.statistikkbanktabell',
+        locale: language
+      }),
+      publikasjon: localize({
+        key: 'contentType.search.publikasjon',
+        locale: language
+      })
+    },
+    contentTypeFacets: getContentTypeFacets(solrResult.contentTypes),
     GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null
   }
 
   return React4xp.render('site/parts/searchResult/searchResultView', props, req)
 }
 
-  interface BestBet extends RepoNode {
-    data: {
-      linkedSelectedContentResult: BestBetContent['linkedSelectedContentResult'];
-      linkedContentTitle: BestBetContent['linkedContentTitle'];
-      linkedContentHref: BestBetContent['linkedContentHref'];
-      linkedContentIngress: BestBetContent['linkedContentIngress'];
-      linkedContentType: BestBetContent['linkedContentType'];
-      linkedContentDate: BestBetContent['linkedContentDate'];
-      linkedContentSubject: BestBetContent['linkedContentSubject'];
-      searchWords: BestBetContent['searchWords'];
-    };
-  }
+interface BestBet extends RepoNode {
+  data: {
+    linkedSelectedContentResult: BestBetContent['linkedSelectedContentResult'];
+    linkedContentTitle: BestBetContent['linkedContentTitle'];
+    linkedContentHref: BestBetContent['linkedContentHref'];
+    linkedContentIngress: BestBetContent['linkedContentIngress'];
+    linkedContentType: BestBetContent['linkedContentType'];
+    linkedContentDate: BestBetContent['linkedContentDate'];
+    linkedContentSubject: BestBetContent['linkedContentSubject'];
+    searchWords: BestBetContent['searchWords'];
+  };
+}
 
 interface SearchResultProps {
   bestBetHit: PreparedSearchResult | undefined;
@@ -361,11 +404,24 @@ interface SearchResultProps {
   language: string;
   dropDownSubjects: Array<Dropdown>;
   dropDownContentTypes: Array<Dropdown>;
+  contentTypePhrases:{
+    artikkel: string,
+    statistikk: string,
+    faktaside: string,
+    statistikkbanktabell: string,
+    publikasjon: string
+  },
+  contentTypeFacets: Array<Facet>
   GA_TRACKING_ID: string | null;
 }
 
 interface Dropdown {
   id: string;
   title: string;
+}
+
+interface Facet {
+  title: string;
+  count: number;
 }
 

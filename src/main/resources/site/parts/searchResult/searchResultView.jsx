@@ -495,6 +495,18 @@ SearchResult.propTypes = {
     })),
   dropDownSubjects: PropTypes.array,
   dropDownContentTypes: PropTypes.array,
+  contentTypePhrases: PropTypes.shape({
+    artikkel: PropTypes.string,
+    statistikk: PropTypes.string,
+    faktaside: PropTypes.string,
+    statistikkbanktabell: PropTypes.string,
+    publikasjon: PropTypes.string
+  }),
+  contentTypeFacets: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string,
+      count: PropTypes.number
+    })),
   GA_TRACKING_ID: PropTypes.string
 }
 

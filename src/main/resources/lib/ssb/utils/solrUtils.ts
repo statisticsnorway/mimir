@@ -25,14 +25,17 @@ export function solrSearch(term: string,
   const searchResult: SolrResult | undefined = querySolr({
     query: createQuery(term, numberOfHits, start, filterQuery, contentTypeQuery, sortQuery)
   })
+
   return searchResult ? {
     hits: nerfSearchResult(searchResult, language),
     total: searchResult.grouped.gruppering.matches,
-    contentTypes: searchResult.facet_counts.facet_fields.innholdstype
+    contentTypes: searchResult.facet_counts.facet_fields.innholdstype,
+    subjects: searchResult.facet_counts.facet_fields.hovedemner
   } : {
     hits: [],
     total: 0,
-    contentTypes: []
+    contentTypes: [],
+    subjects: []
   }
 }
 
@@ -131,6 +134,7 @@ export interface SolrPrepResultAndTotal {
   total: number;
   hits: Array<PreparedSearchResult>;
   contentTypes: Array<string|number>;
+  subjects: Array<string|number>;
 }
 
 interface SolrResult {
@@ -161,6 +165,7 @@ interface SolrResult {
     // eslint-disable-next-line camelcase
     facet_fields: {
       innholdstype: Array<string | number>;
+      hovedemner: Array<string | number>;
     };
   };
   highlighting: {
