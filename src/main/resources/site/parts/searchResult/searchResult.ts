@@ -94,10 +94,6 @@ export function renderPart(req: Request): React4xpResponse {
         })
       }
     })
-    log.info('Facets: ' + JSON.stringify(facetContentTypes, null, 4))
-    const facetsContenttype: Array<Facet> = facetContentTypes.filter((value) => validFilters.includes(value.title ))
-    log.info('filtersContenttype: ' + JSON.stringify(facetsContenttype, null, 4))
-
     return facetContentTypes.filter((value) => validFilters.includes(value.title ))
   }
 
@@ -120,6 +116,44 @@ export function renderPart(req: Request): React4xpResponse {
     }))
     return dropdowns
   }
+
+  const contentTypePhrases: Array<ContentTypePhrase> = [
+    {
+      id: 'artikkel',
+      title: localize({
+        key: 'contentType.search.artikkel',
+        locale: language
+      })
+    },
+    {
+      id: 'statistikk',
+      title: localize({
+        key: 'contentType.search.statistikk',
+        locale: language
+      })
+    },
+    {
+      id: 'faktaside',
+      title: localize({
+        key: 'contentType.search.faktaside',
+        locale: language
+      })
+    },
+    {
+      id: 'statistikkbanktabell',
+      title: localize({
+        key: 'contentType.search.statistikkbanktabell',
+        locale: language
+      })
+    },
+    {
+      id: 'publikasjon',
+      title: localize({
+        key: 'contentType.search.publikasjon',
+        locale: language
+      })
+    }
+  ]
 
   function bestBet(): PreparedSearchResult | undefined {
     const result: NodeQueryResponse = queryNodes('no.ssb.bestbet', 'master', {
@@ -249,6 +283,10 @@ export function renderPart(req: Request): React4xpResponse {
       key: 'searchResult.sort.date',
       locale: language
     }),
+    allContentTypesPhrase: localize({
+      key: 'publicationArchive.allTypes',
+      locale: language
+    }),
     namePhrases: {
       readMore: localize({
         key: 'nameSearch.readMore',
@@ -317,29 +355,9 @@ export function renderPart(req: Request): React4xpResponse {
     language,
     dropDownSubjects: mainSubjectDropdown,
     dropDownContentTypes: getContentTypes(solrResult.contentTypes),
-    contentTypePhrases: {
-      artikkel: localize({
-        key: 'contentType.search.artikkel',
-        locale: language
-      }),
-      statistikk: localize({
-        key: 'contentType.search.statistikk',
-        locale: language
-      }),
-      faktaside: localize({
-        key: 'contentType.search.faktaside',
-        locale: language
-      }),
-      statistikkbanktabell: localize({
-        key: 'contentType.search.statistikkbanktabell',
-        locale: language
-      }),
-      publikasjon: localize({
-        key: 'contentType.search.publikasjon',
-        locale: language
-      })
-    },
+    contentTypePhrases: contentTypePhrases,
     contentTypeFacets: getContentTypeFacets(solrResult.contentTypes),
+    contentTypes: solrResult.contentTypes,
     GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null
   }
 
@@ -378,6 +396,7 @@ interface SearchResultProps {
   sortPhrase: string;
   sortBestHitPhrase: string;
   sortDatePhrase: string;
+  allContentTypesPhrase: string;
   searchServiceUrl: string;
   nameSearchToggle: boolean;
   nameSearchUrl: string;
@@ -404,14 +423,9 @@ interface SearchResultProps {
   language: string;
   dropDownSubjects: Array<Dropdown>;
   dropDownContentTypes: Array<Dropdown>;
-  contentTypePhrases:{
-    artikkel: string,
-    statistikk: string,
-    faktaside: string,
-    statistikkbanktabell: string,
-    publikasjon: string
-  },
+  contentTypePhrases: Array<ContentTypePhrase>;
   contentTypeFacets: Array<Facet>
+  contentTypes: Array<string | number>
   GA_TRACKING_ID: string | null;
 }
 
@@ -423,5 +437,10 @@ interface Dropdown {
 interface Facet {
   title: string;
   count: number;
+}
+
+interface ContentTypePhrase {
+  id: string;
+  title: string;
 }
 

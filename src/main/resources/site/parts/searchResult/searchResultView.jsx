@@ -21,6 +21,7 @@ function SearchResult(props) {
   const [searchTerm, setSearchTerm] = useState(props.term)
   const [loading, setLoading] = useState(false)
   const [total, setTotal] = useState(props.total)
+  const [contentTypes, setContentTypes] = useState(props.contentTypes)
   const [filterChanged, setFilterChanged] = useState(false)
   const [nameSearchData, setNameSearchData] = useState(undefined)
   const [mainNameResult, setMainNameResult] = useState(undefined)
@@ -32,6 +33,7 @@ function SearchResult(props) {
   })
   const [selectedMainSubject, setSelectedMainSubject] = useState(props.dropDownSubjects[0])
   const [selectedContentType, setSelectedContentType] = useState(props.dropDownContentTypes[0])
+  const [contentTypeFacets, setContentTypeFacets] = useState(props.contentTypeFacets)
   const [numberChanged, setNumberChanged] = useState(0)
 
   useEffect(() => {
@@ -181,6 +183,7 @@ function SearchResult(props) {
     }).then((res) => {
       setHits(res.data.hits)
       setTotal(res.data.total)
+      setContentTypes(res.data.contentTypes)
     }).finally(() => {
       setLoading(false)
     })
@@ -201,6 +204,7 @@ function SearchResult(props) {
     }).then((res) => {
       setHits(hits.concat(res.data.hits))
       setTotal(res.data.total)
+      setContentTypes(res.data.contentTypes)
     }).finally(() => {
       setLoading(false)
     })
@@ -224,7 +228,6 @@ function SearchResult(props) {
       )
     }
   }
-
 
   function renderNoHitMessage() {
     if (props.language === 'en') {
@@ -326,6 +329,36 @@ function SearchResult(props) {
     } else return null
   }
 
+  // function getContentTypeFacets() {
+  //   const validFilters = ['artikkel', 'statistikk', 'faktaside', 'statistikkbanktabell', 'publikasjon']
+  //   const facetContentTypes = []
+  //   contentTypes.forEach((facet, i) => {
+  //     if (typeof facet == 'string') {
+  //       const facetCount = contentTypes[i + 1]
+  //       facetContentTypes.push({
+  //         title: facet,
+  //         count: +facetCount
+  //       })
+  //     }
+  //   })
+  //   return facetContentTypes.filter((value) => validFilters.includes(value.title ))
+  // }
+
+  const dropdownContentTypeItems = [
+    {
+      id: 'allTypes',
+      title: props.allContentTypesPhrase,
+      disabled: false
+    }
+  ].concat(contentTypeFacets.map((type) => {
+    const phrase = props.contentTypePhrases.find((phrase) => phrase.id === type.title)
+    return {
+      id: type.title,
+      title: `${phrase.title} (${type.count})`,
+      disabled: false
+    }
+  }))
+
   const DropdownMainSubject = React.forwardRef((_props, ref) => (
     <Dropdown
       ref={ref}
@@ -351,7 +384,7 @@ function SearchResult(props) {
         addGtagForEvent(props.GA_TRACKING_ID, 'Valgt innholdstype', 'Søk', value.title)
       }}
       selectedItem={selectedContentType}
-      items={props.dropDownContentTypes}
+      items={dropdownContentTypeItems}
       header={props.chooseContentTypePhrase}
     />
   ))
@@ -453,6 +486,7 @@ SearchResult.propTypes = {
   sortPhrase: PropTypes.string,
   sortBestHitPhrase: PropTypes.string,
   sortDatePhrase: PropTypes.string,
+  allContentTypesPhrase: PropTypes.string,
   count: PropTypes.number,
   noHitMessage: PropTypes.string,
   nameSearchToggle: PropTypes.bool,
@@ -495,18 +529,17 @@ SearchResult.propTypes = {
     })),
   dropDownSubjects: PropTypes.array,
   dropDownContentTypes: PropTypes.array,
-  contentTypePhrases: PropTypes.shape({
-    artikkel: PropTypes.string,
-    statistikk: PropTypes.string,
-    faktaside: PropTypes.string,
-    statistikkbanktabell: PropTypes.string,
-    publikasjon: PropTypes.string
-  }),
+  contentTypePhrases: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      title: PropTypes.string
+    })),
   contentTypeFacets: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string,
       count: PropTypes.number
     })),
+  contentTypes: PropTypes.array,
   GA_TRACKING_ID: PropTypes.string
 }
 
