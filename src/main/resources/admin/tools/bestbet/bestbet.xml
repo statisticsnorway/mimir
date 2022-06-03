@@ -4,6 +4,5 @@
   <description>Manuelt styrte søketreff på enkelte innhold</description>
   <allow>
     <principal>role:system.admin</principal>
-    <principal>role:dashboard.fag</principal>
   </allow>
 </tool>
