@@ -6,15 +6,12 @@ export function init() {
   $(function() {
     // Bind popper to language switch menu item
     $('#change-language').each((i, el) => {
-      console.log('change language')
       if ($(el).attr('data-exists') === 'false') {
-        console.log('data-exists false')
         $(el).click((e) => {
           e.preventDefault()
           e.stopPropagation()
           const tooltip = $('#language-tooltip')
           if (tooltip.hasClass('d-none')) {
-            console.log('d-none')
             tooltip.removeClass('d-none')
             new Popper(document.getElementById('change-language'),
               document.getElementById('language-tooltip'),
