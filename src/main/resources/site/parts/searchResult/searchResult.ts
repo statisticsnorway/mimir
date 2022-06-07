@@ -267,6 +267,10 @@ export function renderPart(req: Request): React4xpResponse {
       key: 'publicationArchive.allTypes',
       locale: language
     }),
+    allSubjectsPhrase: localize({
+      key: 'publicationArchive.allSubjects',
+      locale: language
+    }),
     namePhrases: {
       readMore: localize({
         key: 'nameSearch.readMore',
@@ -336,8 +340,8 @@ export function renderPart(req: Request): React4xpResponse {
     dropDownSubjects: mainSubjectDropdown,
     dropDownContentTypes: getContentTypes(solrResult.contentTypes),
     contentTypePhrases: contentTypePhrases,
-    // contentTypeFacets: solrResult.contentTypes,
     contentTypes: solrResult.contentTypes,
+    subjects: solrResult.subjects,
     GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null
   }
 
@@ -377,6 +381,7 @@ interface SearchResultProps {
   sortBestHitPhrase: string;
   sortDatePhrase: string;
   allContentTypesPhrase: string;
+  allSubjectsPhrase: string;
   searchServiceUrl: string;
   nameSearchToggle: boolean;
   nameSearchUrl: string;
@@ -404,8 +409,8 @@ interface SearchResultProps {
   dropDownSubjects: Array<Dropdown>;
   dropDownContentTypes: Array<Dropdown>;
   contentTypePhrases: Array<ContentTypePhrase>;
-  // contentTypeFacets: Array<Facet>
-  contentTypes: Array<Facet>
+  contentTypes: Array<Facet>;
+  subjects: Array<Facet>;
   GA_TRACKING_ID: string | null;
 }
 

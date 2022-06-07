@@ -19,14 +19,17 @@ export function solrSearch(term: string,
   contentType: string,
   sortParam: string | undefined): SolrPrepResultAndTotal {
   const lang: string = language === 'en' ? 'en' : 'no'
-  const filterQuery: string = mainSubject ? `fq=sprak:"${lang}"&fq=hovedemner:"${mainSubject}"` : `fq=sprak:"${lang}"`
+  const languageQuery: string = `fq=sprak:"${lang}"`
   const contentTypeQuery: string = contentType ? `&fq=innholdstype:"${contentType}"` : ''
+  const subjectQuery: string = mainSubject ? `&fq=hovedemner:"${mainSubject}"` : ''
   const sortQuery: string = sortParam ? `&sort=${sortParam}+desc` : ''
   const searchResult: SolrResult | undefined = querySolr({
-    query: createQuery(term, numberOfHits, start, filterQuery, contentTypeQuery, sortQuery)
+    query: createQuery(term, numberOfHits, start, languageQuery, contentTypeQuery, subjectQuery, sortQuery)
   })
   const validFilters: Array<string> = ['artikkel', 'statistikk', 'faktaside', 'statistikkbanktabell', 'publikasjon']
   const facetContentTypes: Array<Facet> = searchResult ? createFacetsArray(searchResult.facet_counts.facet_fields.innholdstype) : []
+  // log.info('Query: ' + createQuery(term, numberOfHits, start, languageQuery, contentTypeQuery, subjectQuery, sortQuery))
+  // log.info('Contenttypes: ' + JSON.stringify(searchResult?.facet_counts.facet_fields.innholdstype, null, 4))
 
   return searchResult ? {
     hits: nerfSearchResult(searchResult, language),
@@ -101,8 +104,8 @@ function requestSolr(queryParams: SolrQueryParams): SolrResponse {
 }
 
 
-function createQuery(term: string, numberOfHits: number, start: number, filterQuery: string, contentTypeQuery: string, sortQuery: string): string {
-  return `${SOLR_BASE_URL}?${SOLR_PARAM_QUERY}=${term}&${filterQuery}${contentTypeQuery}&wt=${SOLR_FORMAT}&start=${start}&rows=${numberOfHits}${sortQuery}`
+function createQuery(term: string, numberOfHits: number, start: number, languageQuery: string, contentTypeQuery: string, subjectQuery: string, sortQuery: string): string {
+  return `${SOLR_BASE_URL}?${SOLR_PARAM_QUERY}=${term}&${languageQuery}${contentTypeQuery}${subjectQuery}&wt=${SOLR_FORMAT}&start=${start}&rows=${numberOfHits}${sortQuery}`
 }
 
 function createFacetsArray(solrResults: Array<string | number>): Array<Facet> {

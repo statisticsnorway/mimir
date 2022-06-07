@@ -22,6 +22,7 @@ function SearchResult(props) {
   const [loading, setLoading] = useState(false)
   const [total, setTotal] = useState(props.total)
   const [contentTypes, setContentTypes] = useState(props.contentTypes)
+  const [subjects, setSubjects] = useState(props.subjects)
   const [filterChanged, setFilterChanged] = useState(false)
   const [nameSearchData, setNameSearchData] = useState(undefined)
   const [mainNameResult, setMainNameResult] = useState(undefined)
@@ -59,18 +60,29 @@ function SearchResult(props) {
     setFilterChanged(true)
 
     if (id === 'mainSubject') {
-      setSelectedMainSubject(value)
+      const selectedSubject = value.id === 'allSubjects' ? value : {
+        id: value.id,
+        title: value.id,
+        disabled: false
+      }
+      setSelectedMainSubject(selectedSubject)
       setFilter({
         ...filter,
-        mainSubject: value.id === '' ? '' : value.title
+        mainSubject: value.id === '' || value.id === 'allSubjects' ? '' : value.id
       })
     }
 
     if (id === 'contentType') {
-      setSelectedContentType(value)
+      const selectedContentType = value.id === 'allTypes' ? value : {
+        id: value.id,
+        title: props.contentTypePhrases.find((phrase) => phrase.id === value.id).title,
+        disabled: false
+      }
+
+      setSelectedContentType(selectedContentType)
       setFilter({
         ...filter,
-        contentType: value.id === '' ? '' : value.id
+        contentType: value.id === '' || value.id === 'allTypes' ? '' : value.id
       })
     }
   }
@@ -183,6 +195,7 @@ function SearchResult(props) {
       setHits(res.data.hits)
       setTotal(res.data.total)
       setContentTypes(res.data.contentTypes)
+      setSubjects(res.data.subjects)
     }).finally(() => {
       setLoading(false)
     })
@@ -204,6 +217,7 @@ function SearchResult(props) {
       setHits(hits.concat(res.data.hits))
       setTotal(res.data.total)
       setContentTypes(res.data.contentTypes)
+      setSubjects(res.data.subjects)
     }).finally(() => {
       setLoading(false)
     })
@@ -343,6 +357,20 @@ function SearchResult(props) {
     }
   }))
 
+  const dropdownSubjectsItems = [
+    {
+      id: 'allSubjects',
+      title: props.allContentTypesPhrase,
+      disabled: false
+    }
+  ].concat(subjects.map((type) => {
+    return {
+      id: type.title,
+      title: `${type.title} (${type.count})`,
+      disabled: false
+    }
+  }))
+
   const DropdownMainSubject = React.forwardRef((_props, ref) => (
     <Dropdown
       ref={ref}
@@ -353,7 +381,7 @@ function SearchResult(props) {
         addGtagForEvent(props.GA_TRACKING_ID, 'Valgt emne', 'Søk', value.title)
       }}
       selectedItem={selectedMainSubject}
-      items={props.dropDownSubjects}
+      items={dropdownSubjectsItems}
       header={props.chooseSubjectPhrase}
     />
   ))
@@ -471,6 +499,7 @@ SearchResult.propTypes = {
   sortBestHitPhrase: PropTypes.string,
   sortDatePhrase: PropTypes.string,
   allContentTypesPhrase: PropTypes.string,
+  allSubjectsPhrase: PropTypes.string,
   count: PropTypes.number,
   noHitMessage: PropTypes.string,
   nameSearchToggle: PropTypes.bool,
@@ -519,6 +548,11 @@ SearchResult.propTypes = {
       title: PropTypes.string
     })),
   contentTypes: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string,
+      count: PropTypes.number
+    })),
+  subjects: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string,
       count: PropTypes.number
