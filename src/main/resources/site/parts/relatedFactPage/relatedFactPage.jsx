@@ -68,7 +68,7 @@ function RelatedBoxes(props) {
       return (
         <>
           <div className="row image-box-wrapper">
-            {!loading ? relatedFactPages.map((relatedFactPageContent, index) =>
+            {relatedFactPages.map((relatedFactPageContent, index) =>
               <PictureCard
                 className="mb-3"
                 imageSrc={relatedFactPageContent.image}
@@ -76,17 +76,15 @@ function RelatedBoxes(props) {
                 link={relatedFactPageContent.link}
                 title={relatedFactPageContent.title}
                 key={index}
-              />
-            ) :
-              <div className="col">
-                <span className="spinner-border spinner-border" />
-              </div>}
+              />)}
           </div>
           { total > 3 &&
             <div className="row">
               <div className="col-auto">
                 <Button onClick={handleButtonOnClick}>
-                  {total >= relatedFactPages.length ? showAll : showLess}
+                  {!loading ?
+                    (total > relatedFactPages.length ? showAll : showLess) :
+                    <span className="spinner-border spinner-border-sm" />}
                 </Button>
               </div>
             </div> }
