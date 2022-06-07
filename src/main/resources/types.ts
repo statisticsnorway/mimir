@@ -115,6 +115,7 @@ declare const app: {
 }
 
 declare const log: {
+    debug: (...args: any[]) => void;
     info: (...args: any[]) => void;
     warn: (...args: any[]) => void;
     error: (...args: any[]) => void;
