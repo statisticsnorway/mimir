@@ -33,7 +33,6 @@ function SearchResult(props) {
   })
   const [selectedMainSubject, setSelectedMainSubject] = useState(props.dropDownSubjects[0])
   const [selectedContentType, setSelectedContentType] = useState(props.dropDownContentTypes[0])
-  const [contentTypeFacets, setContentTypeFacets] = useState(props.contentTypeFacets)
   const [numberChanged, setNumberChanged] = useState(0)
 
   useEffect(() => {
@@ -329,28 +328,13 @@ function SearchResult(props) {
     } else return null
   }
 
-  // function getContentTypeFacets() {
-  //   const validFilters = ['artikkel', 'statistikk', 'faktaside', 'statistikkbanktabell', 'publikasjon']
-  //   const facetContentTypes = []
-  //   contentTypes.forEach((facet, i) => {
-  //     if (typeof facet == 'string') {
-  //       const facetCount = contentTypes[i + 1]
-  //       facetContentTypes.push({
-  //         title: facet,
-  //         count: +facetCount
-  //       })
-  //     }
-  //   })
-  //   return facetContentTypes.filter((value) => validFilters.includes(value.title ))
-  // }
-
   const dropdownContentTypeItems = [
     {
       id: 'allTypes',
       title: props.allContentTypesPhrase,
       disabled: false
     }
-  ].concat(contentTypeFacets.map((type) => {
+  ].concat(contentTypes.map((type) => {
     const phrase = props.contentTypePhrases.find((phrase) => phrase.id === type.title)
     return {
       id: type.title,
@@ -534,12 +518,11 @@ SearchResult.propTypes = {
       id: PropTypes.string,
       title: PropTypes.string
     })),
-  contentTypeFacets: PropTypes.arrayOf(
+  contentTypes: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string,
       count: PropTypes.number
     })),
-  contentTypes: PropTypes.array,
   GA_TRACKING_ID: PropTypes.string
 }
 

@@ -3,7 +3,7 @@ import { Component } from 'enonic-types/portal'
 import { Content } from 'enonic-types/content'
 import { SearchResultPartConfig } from './searchResult-part-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { PreparedSearchResult, SolrPrepResultAndTotal } from '../../../lib/ssb/utils/solrUtils'
+import { PreparedSearchResult, SolrPrepResultAndTotal, Facet } from '../../../lib/ssb/utils/solrUtils'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { queryNodes, getNode } from '../../../lib/ssb/repo/common'
 import { NodeQueryResponse, RepoNode } from 'enonic-types/node'
@@ -82,36 +82,16 @@ export function renderPart(req: Request): React4xpResponse {
     }
   }))
 
-  function getContentTypeFacets(solrResults: Array<string | number>): Array<Facet> {
-    const validFilters: Array<string> = ['artikkel', 'statistikk', 'faktaside', 'statistikkbanktabell', 'publikasjon']
-    const facetContentTypes: Array<Facet> = []
-    solrResults.forEach((facet, i) => {
-      if (typeof facet == 'string') {
-        const facetCount: string | number = solrResults[i + 1]
-        facetContentTypes.push({
-          title: facet,
-          count: +facetCount
-        })
-      }
-    })
-    return facetContentTypes.filter((value) => validFilters.includes(value.title ))
-  }
-
-  function getContentTypes(solrResults: Array<string | number>): Array<Dropdown> {
-    const validFilters: Array<string> = ['artikkel', 'statistikk', 'faktaside', 'statistikkbanktabell', 'publikasjon']
-    const filters: Array<string | number> = solrResults
-      .filter((value) => typeof value == 'string')
-      .filter((value) => validFilters.includes(value as string))
-
+  function getContentTypes(solrResults: Array<Facet>): Array<Dropdown> {
     const dropdowns: Array<Dropdown> = [
       {
         id: 'allTypes',
         title: phrases['publicationArchive.allTypes']
       }
-    ].concat(filters.map((contentType: string) => {
+    ].concat(solrResults.map((contentType: Facet) => {
       return {
-        id: contentType,
-        title: phrases[`contentType.search.${contentType}`]
+        id: contentType.title,
+        title: phrases[`contentType.search.${contentType.title}`]
       }
     }))
     return dropdowns
@@ -356,7 +336,7 @@ export function renderPart(req: Request): React4xpResponse {
     dropDownSubjects: mainSubjectDropdown,
     dropDownContentTypes: getContentTypes(solrResult.contentTypes),
     contentTypePhrases: contentTypePhrases,
-    contentTypeFacets: getContentTypeFacets(solrResult.contentTypes),
+    // contentTypeFacets: solrResult.contentTypes,
     contentTypes: solrResult.contentTypes,
     GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null
   }
@@ -424,19 +404,14 @@ interface SearchResultProps {
   dropDownSubjects: Array<Dropdown>;
   dropDownContentTypes: Array<Dropdown>;
   contentTypePhrases: Array<ContentTypePhrase>;
-  contentTypeFacets: Array<Facet>
-  contentTypes: Array<string | number>
+  // contentTypeFacets: Array<Facet>
+  contentTypes: Array<Facet>
   GA_TRACKING_ID: string | null;
 }
 
 interface Dropdown {
   id: string;
   title: string;
-}
-
-interface Facet {
-  title: string;
-  count: number;
 }
 
 interface ContentTypePhrase {

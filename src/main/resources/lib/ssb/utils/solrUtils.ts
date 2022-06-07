@@ -25,12 +25,14 @@ export function solrSearch(term: string,
   const searchResult: SolrResult | undefined = querySolr({
     query: createQuery(term, numberOfHits, start, filterQuery, contentTypeQuery, sortQuery)
   })
+  const validFilters: Array<string> = ['artikkel', 'statistikk', 'faktaside', 'statistikkbanktabell', 'publikasjon']
+  const facetContentTypes: Array<Facet> = searchResult ? createFacetsArray(searchResult.facet_counts.facet_fields.innholdstype) : []
 
   return searchResult ? {
     hits: nerfSearchResult(searchResult, language),
     total: searchResult.grouped.gruppering.matches,
-    contentTypes: searchResult.facet_counts.facet_fields.innholdstype,
-    subjects: searchResult.facet_counts.facet_fields.hovedemner
+    contentTypes: facetContentTypes.filter((value) => validFilters.includes(value.title )),
+    subjects: createFacetsArray(searchResult.facet_counts.facet_fields.hovedemner)
   } : {
     hits: [],
     total: 0,
@@ -103,6 +105,20 @@ function createQuery(term: string, numberOfHits: number, start: number, filterQu
   return `${SOLR_BASE_URL}?${SOLR_PARAM_QUERY}=${term}&${filterQuery}${contentTypeQuery}&wt=${SOLR_FORMAT}&start=${start}&rows=${numberOfHits}${sortQuery}`
 }
 
+function createFacetsArray(solrResults: Array<string | number>): Array<Facet> {
+  const facets: Array<Facet> = []
+  solrResults.forEach((facet, i) => {
+    if (typeof facet == 'string') {
+      const facetCount: string | number = solrResults[i + 1]
+      facets.push({
+        title: facet,
+        count: +facetCount
+      })
+    }
+  })
+  return facets
+}
+
 /*
 * Interfaces
 */
@@ -133,8 +149,8 @@ export interface PreparedSearchResult {
 export interface SolrPrepResultAndTotal {
   total: number;
   hits: Array<PreparedSearchResult>;
-  contentTypes: Array<string|number>;
-  subjects: Array<string|number>;
+  contentTypes: Array<Facet>;
+  subjects: Array<Facet>;
 }
 
 interface SolrResult {
@@ -201,4 +217,9 @@ interface SolrDoc {
   hovedemner: string;
   sprak: string;
   rom: string;
+}
+
+export interface Facet {
+  title: string;
+  count: number;
 }
