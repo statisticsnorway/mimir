@@ -519,6 +519,7 @@ function completelyClearCache(options: CompletelyClearCacheOptions): void {
 
 export function setupHandlers(socket: Socket): void {
   socket.on('clear-cache', () => {
+    log.info(`Clear XP Cache Dashboard`)
     send({
       type: 'clearCache',
       distributed: true,
