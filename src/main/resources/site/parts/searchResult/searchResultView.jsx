@@ -32,15 +32,18 @@ function SearchResult(props) {
     mainSubject: '',
     contentType: ''
   })
-  const [selectedMainSubject, setSelectedMainSubject] = useState({
-    id: 'allSubjects',
-    title: props.allSubjectsPhrase
-  })
-  const [selectedContentType, setSelectedContentType] = useState({
+  const allContentTypeItem = {
     id: 'allTypes',
     title: props.allContentTypesPhrase
-  })
+  }
+  const allSubjectsItem = {
+    id: 'allSubjects',
+    title: props.allSubjectsPhrase
+  }
+  const [selectedMainSubject, setSelectedMainSubject] = useState(allSubjectsItem)
+  const [selectedContentType, setSelectedContentType] = useState(allContentTypeItem)
   const [numberChanged, setNumberChanged] = useState(0)
+
 
   useEffect(() => {
     if (!nameSearchData) {
@@ -109,8 +112,8 @@ function SearchResult(props) {
       mainSubject: '',
       contentType: ''
     })
-    setSelectedContentType(props.dropDownContentTypes[0])
-    setSelectedMainSubject(props.dropDownSubjects[0])
+    setSelectedContentType(allContentTypeItem)
+    setSelectedMainSubject(allSubjectsItem)
     addGtagForEvent(props.GA_TRACKING_ID, 'Klikk', 'Søk', 'Fjern alle filtervalg')
   }
 
