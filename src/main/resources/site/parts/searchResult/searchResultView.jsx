@@ -32,8 +32,14 @@ function SearchResult(props) {
     mainSubject: '',
     contentType: ''
   })
-  const [selectedMainSubject, setSelectedMainSubject] = useState(props.dropDownSubjects[0])
-  const [selectedContentType, setSelectedContentType] = useState(props.dropDownContentTypes[0])
+  const [selectedMainSubject, setSelectedMainSubject] = useState({
+    id: 'allSubjects',
+    title: props.allSubjectsPhrase
+  })
+  const [selectedContentType, setSelectedContentType] = useState({
+    id: 'allTypes',
+    title: props.allContentTypesPhrase
+  })
   const [numberChanged, setNumberChanged] = useState(0)
 
   useEffect(() => {
@@ -62,8 +68,7 @@ function SearchResult(props) {
     if (id === 'mainSubject') {
       const selectedSubject = value.id === 'allSubjects' ? value : {
         id: value.id,
-        title: value.id,
-        disabled: false
+        title: value.id
       }
       setSelectedMainSubject(selectedSubject)
       setFilter({
@@ -75,8 +80,7 @@ function SearchResult(props) {
     if (id === 'contentType') {
       const selectedContentType = value.id === 'allTypes' ? value : {
         id: value.id,
-        title: props.contentTypePhrases.find((phrase) => phrase.id === value.id).title,
-        disabled: false
+        title: props.contentTypePhrases.find((phrase) => phrase.id === value.id).title
       }
 
       setSelectedContentType(selectedContentType)
@@ -345,29 +349,25 @@ function SearchResult(props) {
   const dropdownContentTypeItems = [
     {
       id: 'allTypes',
-      title: props.allContentTypesPhrase,
-      disabled: false
+      title: props.allContentTypesPhrase
     }
   ].concat(contentTypes.map((type) => {
     const phrase = props.contentTypePhrases.find((phrase) => phrase.id === type.title)
     return {
       id: type.title,
-      title: `${phrase.title} (${type.count})`,
-      disabled: false
+      title: `${phrase.title} (${type.count})`
     }
   }))
 
   const dropdownSubjectsItems = [
     {
       id: 'allSubjects',
-      title: props.allContentTypesPhrase,
-      disabled: false
+      title: props.allContentTypesPhrase
     }
   ].concat(subjects.map((type) => {
     return {
       id: type.title,
-      title: `${type.title} (${type.count})`,
-      disabled: false
+      title: `${type.title} (${type.count})`
     }
   }))
 
@@ -540,8 +540,6 @@ SearchResult.propTypes = {
       publishDate: PropTypes.string,
       publishDateHuman: PropTypes.string
     })),
-  dropDownSubjects: PropTypes.array,
-  dropDownContentTypes: PropTypes.array,
   contentTypePhrases: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string,

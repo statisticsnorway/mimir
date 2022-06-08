@@ -4,7 +4,6 @@ import { Content } from 'enonic-types/content'
 import { SearchResultPartConfig } from './searchResult-part-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { PreparedSearchResult, SolrPrepResultAndTotal, Facet } from '../../../lib/ssb/utils/solrUtils'
-import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { queryNodes, getNode } from '../../../lib/ssb/repo/common'
 import { NodeQueryResponse, RepoNode } from 'enonic-types/node'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
@@ -29,12 +28,6 @@ const {
 const {
   localize
 } = __non_webpack_require__('/lib/xp/i18n')
-const {
-  getPhrases
-} = __non_webpack_require__('/lib/ssb/utils/language')
-const {
-  getMainSubjects
-} = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
 const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
@@ -68,34 +61,6 @@ export function renderPart(req: Request): React4xpResponse {
   }) : content._path
   const count: number = part.config.numberOfHits ? parseInt(part.config.numberOfHits) : 15
   const language: string = content.language ? content.language : 'nb'
-  const phrases: {[key: string]: string} = getPhrases(content)
-  const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
-  const mainSubjectDropdown: Array<Dropdown> = [
-    {
-      id: 'allSubjects',
-      title: phrases['publicationArchive.allSubjects']
-    }
-  ].concat(mainSubjects.map((subject) => {
-    return {
-      id: subject.name,
-      title: subject.title
-    }
-  }))
-
-  function getContentTypes(solrResults: Array<Facet>): Array<Dropdown> {
-    const dropdowns: Array<Dropdown> = [
-      {
-        id: 'allTypes',
-        title: phrases['publicationArchive.allTypes']
-      }
-    ].concat(solrResults.map((contentType: Facet) => {
-      return {
-        id: contentType.title,
-        title: phrases[`contentType.search.${contentType.title}`]
-      }
-    }))
-    return dropdowns
-  }
 
   const contentTypePhrases: Array<ContentTypePhrase> = [
     {
@@ -337,8 +302,6 @@ export function renderPart(req: Request): React4xpResponse {
     },
     searchPageUrl,
     language,
-    dropDownSubjects: mainSubjectDropdown,
-    dropDownContentTypes: getContentTypes(solrResult.contentTypes),
     contentTypePhrases: contentTypePhrases,
     contentTypes: solrResult.contentTypes,
     subjects: solrResult.subjects,
@@ -406,8 +369,6 @@ interface SearchResultProps {
   }
   searchPageUrl: string;
   language: string;
-  dropDownSubjects: Array<Dropdown>;
-  dropDownContentTypes: Array<Dropdown>;
   contentTypePhrases: Array<ContentTypePhrase>;
   contentTypes: Array<Facet>;
   subjects: Array<Facet>;

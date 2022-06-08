@@ -26,8 +26,6 @@ export function get(req: Request): Response {
       subjects: []
     }
 
-
-  // log.info('result service: ' + JSON.stringify(result, null, 4))
   return {
     body: result,
     contentType: 'application/json'
