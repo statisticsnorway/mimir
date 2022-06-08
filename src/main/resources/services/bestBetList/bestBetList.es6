@@ -43,7 +43,6 @@ exports.post = (req) => {
       linkedContentType: body.linkedContentType,
       linkedContentDate: body.linkedContentDate,
       linkedContentSubject: body.linkedContentSubject,
-      // TODO: Trenger å få inn rett verdi her. og andre steder. Søk etter andre steder å få det inn!
       linkedEnglishContentSubject: body.linkedEnglishContentSubject,
       searchWords: body.searchWords
     }
