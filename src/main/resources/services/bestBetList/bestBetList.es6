@@ -21,6 +21,7 @@ exports.get = () => {
           linkedContentType: bet.data.linkedContentType,
           linkedContentDate: bet.data.linkedContentDate,
           linkedContentSubject: bet.data.linkedContentSubject,
+          linkedEnglishContentSubject: bet.data.linkedEnglishContentSubject,
           searchWords: ensureArray(bet.data.searchWords)
         }
       })
@@ -29,6 +30,9 @@ exports.get = () => {
 }
 exports.post = (req) => {
   const body = JSON.parse(req.body)
+
+  log.info('GLNRBN logger body: ' + JSON.stringify(body, null, 2))
+
   const response = createBestBet(
     {
       id: body.id,
@@ -39,6 +43,8 @@ exports.post = (req) => {
       linkedContentType: body.linkedContentType,
       linkedContentDate: body.linkedContentDate,
       linkedContentSubject: body.linkedContentSubject,
+      // TODO: Trenger å få inn rett verdi her. og andre steder. Søk etter andre steder å få det inn!
+      linkedEnglishContentSubject: body.linkedEnglishContentSubject,
       searchWords: body.searchWords
     }
   )

@@ -148,7 +148,7 @@ export function renderPart(req: Request): React4xpResponse {
         preface: firstBet.data.linkedContentIngress ? firstBet.data.linkedContentIngress : '',
         contentType: firstBet.data.linkedContentType ? firstBet.data.linkedContentType : '',
         url: href,
-        mainSubject: firstBet.data.linkedContentSubject ? firstBet.data.linkedContentSubject : '',
+        mainSubject: firstBet.data.linkedContentSubject ? getSubjectForLanguage(firstBet) : '',
         secondaryMainSubject: '',
         publishDate: firstBet.data.linkedContentDate ? firstBet.data.linkedContentDate : '',
         publishDateHuman: date ? formatDate(date, 'PPP', language) : ''
@@ -156,6 +156,14 @@ export function renderPart(req: Request): React4xpResponse {
       return bestBetResult
     }
     return undefined
+  }
+
+  function getSubjectForLanguage(bet: BestBet): string {
+    if (language == 'en' && bet.data.linkedEnglishContentSubject) {
+      return bet.data.linkedEnglishContentSubject
+    } else {
+      return bet.data.linkedContentSubject
+    }
   }
 
   /* query solr */
@@ -312,6 +320,7 @@ export function renderPart(req: Request): React4xpResponse {
       linkedContentType: BestBetContent['linkedContentType'];
       linkedContentDate: BestBetContent['linkedContentDate'];
       linkedContentSubject: BestBetContent['linkedContentSubject'];
+      linkedEnglishContentSubject: BestBetContent['linkedEnglishContentSubject'];
       searchWords: BestBetContent['searchWords'];
     };
   }

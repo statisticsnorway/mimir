@@ -30,6 +30,7 @@ function Bestbet(props) {
     ingressInputValue: '',
     contentTypeValue: '',
     mainSubjectValue: '',
+    englishMainSubjectValue: '',
     startDateValue: '',
     searchWordTag: '',
     searchWordsList: [],
@@ -85,6 +86,7 @@ function Bestbet(props) {
       linkedContentType: formState.contentTypeValue,
       linkedContentDate: formState.startDateValue,
       linkedContentSubject: formState.mainSubjectValue,
+      linkedEnglishContentSubject: formState.englishMainSubjectValue,
       searchWords: formState.searchWordsList
     })
       .then(() => {
@@ -109,6 +111,7 @@ function Bestbet(props) {
       linkedContentType: formState.contentTypeValue,
       linkedContentDate: formState.startDateValue,
       linkedContentSubject: formState.mainSubjectValue,
+      linkedEnglishContentSubject: formState.englishMainSubjectValue,
       searchWords: formState.searchWordsList
     })
       .then(() => {
@@ -145,6 +148,7 @@ function Bestbet(props) {
         startDateValue: item.linkedContentDate,
         contentTypeValue: item.linkedContentType,
         mainSubjectValue: item.linkedContentSubject,
+        englishMainSubjectValue: item.englishMainSubjectValue,
         searchWordTag: '',
         searchWordsList: item.searchWords
       }
@@ -217,6 +221,7 @@ function Bestbet(props) {
             contentSearchServiceUrl={props.contentSearchServiceUrl}
             contentTypes={props.contentTypes}
             mainSubjects={props.mainSubjects}
+            mainSubjectsEnglish={props.mainSubjectsEnglish}
             renderSearchWord={renderSearchWord}
             handleTag={handleTag}
           />
@@ -245,6 +250,7 @@ function Bestbet(props) {
             contentSearchServiceUrl={props.contentSearchServiceUrl}
             contentTypes={props.contentTypes}
             mainSubjects={props.mainSubjects}
+            mainSubjectsEnglish={props.mainSubjectsEnglish}
             renderSearchWord={renderSearchWord}
             handleTag={handleTag}
           />
@@ -391,6 +397,7 @@ Bestbet.propTypes = {
   bestBetListServiceUrl: PropTypes.string,
   contentSearchServiceUrl: PropTypes.string,
   contentStudioBaseUrl: PropTypes.string,
+  mainSubjectsEnglish: PropTypes.array,
   contentTypes: PropTypes.array,
   mainSubjects: PropTypes.array
 }
