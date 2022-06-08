@@ -134,17 +134,21 @@ export function parseRelatedFactPageData(relatedFactPageConfig: RelatedFactPageC
       contentListId = forceArray((relatedContent?.data as ContentList).contentList) as Array<string>
     }
     const relatedContentQueryResults: QueryResponse<RelatedFactPage> | null = contentListId.length ? query({
-      start,
-      count,
+      count: 999,
       query: `_id IN(${(contentListId).map((id) => `'${id}'`).join(',')})`
     }) : null
     if (relatedContentQueryResults) {
+      const sortedRelatedContentQueryResults: Array<RelatedFactPage> =
+       (relatedContentQueryResults.hits as unknown as Array<RelatedFactPage>).sort((a, b) => {
+         if (contentListId.indexOf(a._id) > contentListId.indexOf(b._id)) return 1
+         else return -1
+       })
+      sortedRelatedContentQueryResults.map((relatedFactPage) => relatedFactPages.push(parseRelatedContent(relatedFactPage)))
       total = relatedContentQueryResults.total
-      relatedContentQueryResults.hits.map((relatedContent) => relatedFactPages.push(parseRelatedContent(relatedContent as RelatedFactPage)))
     }
   }
   return {
-    relatedFactPages,
+    relatedFactPages: relatedFactPages.slice(start, start + count),
     total
   }
 }
