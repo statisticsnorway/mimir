@@ -26,16 +26,16 @@ export function solrSearch(term: string,
   const searchResult: SolrResult | undefined = querySolr({
     query: createQuery(term, numberOfHits, start, languageQuery, contentTypeQuery, subjectQuery, sortQuery)
   })
-  const validFilters: Array<string> = ['artikkel', 'statistikk', 'faktaside', 'statistikkbanktabell', 'publikasjon']
+  const validFiltersContentType: Array<string> = ['artikkel', 'statistikk', 'faktaside', 'statistikkbanktabell', 'publikasjon']
+  const inValidFiltersMainSubject: Array<string> = ['Uten emne', 'No topic']
   const facetContentTypes: Array<Facet> = searchResult ? createFacetsArray(searchResult.facet_counts.facet_fields.innholdstype) : []
-  // log.info('Query: ' + createQuery(term, numberOfHits, start, languageQuery, contentTypeQuery, subjectQuery, sortQuery))
-  // log.info('Contenttypes: ' + JSON.stringify(searchResult?.facet_counts.facet_fields.innholdstype, null, 4))
+  const facetMainSubjects: Array<Facet> = searchResult ? createFacetsArray(searchResult.facet_counts.facet_fields.hovedemner) : []
 
   return searchResult ? {
     hits: nerfSearchResult(searchResult, language),
     total: searchResult.grouped.gruppering.matches,
-    contentTypes: facetContentTypes.filter((value) => validFilters.includes(value.title )),
-    subjects: createFacetsArray(searchResult.facet_counts.facet_fields.hovedemner)
+    contentTypes: facetContentTypes.filter((contentType) => validFiltersContentType.includes(contentType.title )),
+    subjects: facetMainSubjects.filter((mainSubject) => !inValidFiltersMainSubject.includes(mainSubject.title ))
   } : {
     hits: [],
     total: 0,
