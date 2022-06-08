@@ -146,7 +146,10 @@ export function renderPart(req: Request): React4xpResponse {
       bestBetResult = {
         title: title,
         preface: firstBet.data.linkedContentIngress ? firstBet.data.linkedContentIngress : '',
-        contentType: firstBet.data.linkedContentType ? firstBet.data.linkedContentType : '',
+        contentType: firstBet.data.linkedContentType ? localize({
+          key: `contentType.search.${firstBet.data.linkedContentType}`,
+          locale: language
+        }) : '',
         url: href,
         mainSubject: firstBet.data.linkedContentSubject ? getSubjectForLanguage(firstBet) : '',
         secondaryMainSubject: '',
