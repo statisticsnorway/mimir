@@ -378,18 +378,6 @@ export function fromRelatedArticlesCache(req: Request, key: string, fallback: ()
   return fallback()
 }
 
-export function fromRelatedFactPageCache(req: Request, key: string, fallback: () => unknown): unknown {
-  if (req.mode === 'live' || req.mode === 'preview') {
-    const branch: string = req.mode === 'live' ? 'master' : 'draft'
-    const relatedFactPageCache: Cache = branch === 'master' ? masterRelatedFactPageCache : draftRelatedFactPageCache
-    return relatedFactPageCache.get(key, () => {
-      cacheLog(`added ${key} to related fact page cache (${branch})`)
-      return fallback()
-    })
-  }
-  return fallback()
-}
-
 export function fromDatasetRepoCache(
   key: string,
   fallback: () => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null): DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined {
@@ -607,7 +595,6 @@ export interface SSBCacheLibrary {
   fromFilterCache: (req: Request, filterKey: string, key: string, fallback: () => Response) => Response;
   fromMenuCache: (req: Request, key: string, fallback: () => unknown) => unknown;
   fromRelatedArticlesCache: (req: Request, key: string, fallback: () => unknown) => unknown;
-  fromRelatedFactPageCache: (req: Request, key: string, fallback: () => unknown) => unknown;
   fromDatasetRepoCache:
     (key: string, fallback: () => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null)
       => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined;
