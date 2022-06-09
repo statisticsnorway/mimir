@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { Card,
   Button,
@@ -33,6 +33,7 @@ function SearchResult(props) {
   const [selectedMainSubject, setSelectedMainSubject] = useState(props.dropDownSubjects[0])
   const [selectedContentType, setSelectedContentType] = useState(props.dropDownContentTypes[0])
   const [numberChanged, setNumberChanged] = useState(0)
+  const currentElement = useRef(null)
 
   useEffect(() => {
     if (!nameSearchData) {
@@ -87,6 +88,11 @@ function SearchResult(props) {
     }
   }
 
+  function onShowMoreSearchResults() {
+    fetchSearchResult()
+    addGtagForEvent(props.GA_TRACKING_ID, 'Klikk', 'Søk', 'Vis flere')
+  }
+
   function removeFilter() {
     setFilter({
       mainSubject: '',
@@ -101,13 +107,30 @@ function SearchResult(props) {
     if (hit) {
       return (
         <li key={i ? i : undefined} className="mb-4">
-          <Link href={hit.url} className="ssb-link header" onClick={() => {
-            addGtagForEvent(props.GA_TRACKING_ID, 'Klikk på lenke', 'Søk', `${searchTerm} - Lenke nummer: ${i + 1}`)
-          }}>
+          {/* <Link
+            ref={i === hits.length - props.count ? currentElement : null}
+            href={hit.url}
+            className="ssb-link header"
+            onClick={() => {
+              addGtagForEvent(props.GA_TRACKING_ID, 'Klikk på lenke', 'Søk', `${searchTerm} - Lenke nummer: ${i + 1}`)
+            }}
+          >
             <span dangerouslySetInnerHTML={{
               __html: hit.title.replace(/&nbsp;/g, ' ')
             }}></span>
-          </Link>
+          </Link> */}
+          <a
+            ref={i === hits.length - props.count ? currentElement : null}
+            className="ssb-link header"
+            href={hit.url}
+            onClick={() => {
+              addGtagForEvent(props.GA_TRACKING_ID, 'Klikk på lenke', 'Søk', `${searchTerm} - Lenke nummer: ${i + 1}`)
+            }}
+          >
+            <span dangerouslySetInnerHTML={{
+              __html: hit.title.replace(/&nbsp;/g, ' ')
+            }}></span>
+          </a>
           <Paragraph className="search-result-ingress my-1" ><span dangerouslySetInnerHTML={{
             __html: hit.preface.replace(/&nbsp;/g, ' ')
           }}></span>
@@ -203,6 +226,9 @@ function SearchResult(props) {
       setTotal(res.data.total)
     }).finally(() => {
       setLoading(false)
+      if (currentElement && currentElement.current) {
+        currentElement.current.focus()
+      }
     })
   }
 
@@ -213,10 +239,7 @@ function SearchResult(props) {
           <Button
             disabled={loading || total === hits.length}
             className="button-more mt-5"
-            onClick={() => {
-              fetchSearchResult()
-              addGtagForEvent(props.GA_TRACKING_ID, 'Klikk', 'Søk', 'Vis flere')
-            }}
+            onClick={onShowMoreSearchResults}
           >
             <ChevronDown size="18"/> {props.buttonTitle}
           </Button>
