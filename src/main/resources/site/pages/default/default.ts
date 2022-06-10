@@ -152,31 +152,26 @@ exports.get = function(req: Request): Response {
 
   const language: Language = getLanguage(page)
   const menuCacheLanguage: string = language.code === 'en' ? 'en' : 'nb'
-
-  const header: MenuContent | unknown = fromMenuCache(req, `header_${menuCacheLanguage}`, () => {
-    const headerContent: HeaderContent | undefined = getHeaderContent(language)
-    if (headerContent) {
-      const headerComponent: React4xpObject = new React4xp('Header')
-        .setProps({
-          ...headerContent as object,
-          language: language,
-          searchResult: req.params.sok
-        })
-        .setId('header')
-
-      return {
-        body: headerComponent.renderBody({
-          body: '<div id="header"></div>'
-        }),
-        component: headerComponent
-      }
-    }
-
-    return undefined
+  const headerContent: MenuContent | unknown = fromMenuCache(req, `header_${menuCacheLanguage}`, () => {
+    return getHeaderContent(language)
   })
+  const headerComponent: React4xpObject = new React4xp('Header')
+    .setProps({
+      ...headerContent as object,
+      language: language,
+      searchResult: req.params.sok
+    })
+    .setId('header')
 
-  if (header && (header as MenuContent).component) {
-    pageContributions = (header as MenuContent).component.renderPageContributions({
+  const header: MenuContent = {
+    body: headerComponent.renderBody({
+      body: '<div id="header"></div>'
+    }),
+    component: headerComponent
+  }
+
+  if (header && header.component) {
+    pageContributions = header.component.renderPageContributions({
       pageContributions: pageContributions as React4xpPageContributionOptions
 
     })
@@ -257,7 +252,7 @@ exports.get = function(req: Request): Response {
     statbankWeb: statbankFane,
     ...statBankContent,
     GA_TRACKING_ID,
-    headerBody: header ? (header as MenuContent).body : undefined,
+    headerBody: header ? header.body : undefined,
     footerBody: footer ? (footer as MenuContent).body : undefined,
     ...metaInfo,
     breadcrumbsReactId: breadcrumbComponent.react4xpId,

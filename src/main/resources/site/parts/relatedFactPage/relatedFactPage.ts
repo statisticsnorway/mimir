@@ -1,8 +1,7 @@
-import { Content } from 'enonic-types/content'
-import { PageContributions, Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { Content, QueryResponse } from 'enonic-types/content'
+import { Request, Response } from 'enonic-types/controller'
 import { Phrases } from '../../../lib/types/language'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
+import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { SEO } from '../../../services/news/news'
 import { Article } from '../../content-types/article/article'
 import { ContentList } from '../../content-types/contentList/contentList'
@@ -10,14 +9,14 @@ import { RelatedFactPagePartConfig } from './relatedFactPage-part-config'
 
 const {
   imagePlaceholder,
-  getComponent, getContent, imageUrl, pageUrl
+  getComponent, getContent, imageUrl, pageUrl, serviceUrl
 } = __non_webpack_require__('/lib/xp/portal')
+const {
+  query
+} = __non_webpack_require__('/lib/xp/content')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
 const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
@@ -25,132 +24,138 @@ const {
   getImageAlt
 } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
 const {
-  fromRelatedFactPageCache
-} = __non_webpack_require__('/lib/ssb/cache/cache')
-const content = __non_webpack_require__('/lib/xp/content')
-const util = __non_webpack_require__('/lib/util')
+  fromPartCache
+} = __non_webpack_require__('/lib/ssb/cache/partCache')
+const {
+  get
+} = __non_webpack_require__('/lib/xp/content')
+const {
+  data: {
+    forceArray
+  }
+} = __non_webpack_require__('/lib/util')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-const view: ResourceKey = resolve('./relatedFactPage.html')
-
-exports.get = function(req: Request): Response {
+exports.get = function(req: Request): Response | React4xpResponse {
   try {
     const page: Content<Article> = getContent()
     const config: RelatedFactPagePartConfig = getComponent().config
-    let itemList: Array<string> = []
+    let relatedFactPageConfig: RelatedFactPageConfig | undefined
     if (config.itemList) {
-      itemList = itemList.concat(util.data.forceArray(config.itemList))
+      relatedFactPageConfig = {
+        inputType: 'itemList',
+        contentIdList: config.itemList
+      }
     }
-    if (config.relatedFactPages) {
-      itemList = itemList.concat(util.data.forceArray(config.relatedFactPages))
+    if (config.relatedFactPages || page.data.relatedFactPages) {
+      let contentIdList: RelatedFactPageConfig['contentIdList'] = []
+      if (config.relatedFactPages) {
+        contentIdList = forceArray(config.relatedFactPages)
+      }
+      if (page.data.relatedArticles) {
+        contentIdList = forceArray(page.data.relatedFactPages) as Array<string>
+      }
+      relatedFactPageConfig = {
+        inputType: 'relatedFactPage',
+        contentIdList
+      }
     }
-    if (page.data.relatedFactPages) {
-      itemList = itemList.concat(util.data.forceArray(page.data.relatedFactPages))
-    }
-    return renderPart(req, itemList)
+    return renderPart(req, relatedFactPageConfig)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-exports.preview = (req: Request, id: Array<string> | string): Response => renderPart(req, [id] as Array<string>)
+exports.preview = (req: Request, relatedFactPageConfig: RelatedFactPageConfig | undefined): Response | React4xpResponse =>
+  renderPart(req, relatedFactPageConfig)
 
-function renderPart(req: Request, itemList: Array<string>): Response {
+function renderPart(req: Request, relatedFactPageConfig: RelatedFactPageConfig | undefined): Response | React4xpResponse {
   const page: Content<Article> = getContent()
+  if (req.mode === 'edit') {
+    return renderRelatedFactPage(req, page, relatedFactPageConfig)
+  } else {
+    return fromPartCache(req, `${page._id}-relatedFactPage`, () => {
+      return renderRelatedFactPage(req, page, relatedFactPageConfig)
+    })
+  }
+}
+
+function renderRelatedFactPage(req: Request, page: Content, relatedFactPageConfig: RelatedFactPageConfig | undefined): Response | React4xpResponse {
   const phrases: Phrases = getPhrases(page)
   const config: RelatedFactPagePartConfig = getComponent().config
   const mainTitle: string = config.title ? config.title : phrases.relatedFactPagesHeading
-
-  if (itemList.length === 0) {
-    if (req.mode === 'edit' && page.type !== `${app.name}:article` && page.type !== `${app.name}:statistics`) {
-      return {
-        body: render(view, {
-          mainTitle
-        })
-      }
-    } else {
-      return {
-        body: null
-      }
-    }
-  }
-
   const showAll: string = phrases.showAll
   const showLess: string = phrases.showLess
-  let relatedContents: Array<unknown> = []
 
-  itemList.map((key: string) => {
-    const relatedPage: unknown = fromRelatedFactPageCache(req, key, () => {
-      const relatedContent: Content<ContentList, object, SEO> | null = content ? content.get({
-        key
-      }) : null
+  const firstRelatedContents: RelatedFactPages = parseRelatedFactPageData(relatedFactPageConfig, 0, 4)
 
-      if (relatedContent) {
-        if (relatedContent.type === `${app.name}:contentList` && relatedContent.data.contentList) {
-          // handles content list for part-config
-          const contentList: Array<string> = util.data.forceArray(relatedContent.data.contentList)
-          return contentList.map((c: string) => {
-            const contentListItem: Content<Article, object, SEO> | null = content ? content.get({
-              key: c
-            }) : null
-            return contentListItem ? parseRelatedContent(contentListItem) : null
-          })
-        } else { // handles content selector from content-types (articles, statistics etc)
-        // handles content selector from content-types (articles, statistics etc)
-          return parseRelatedContent(relatedContent)
-        }
-      }
-      return
-    })
-
-    if (Array.isArray(relatedPage)) { // might get an array from contentList
-      relatedContents = relatedContents.concat(relatedPage)
-    } else {
-      relatedContents.push(relatedPage)
-    }
+  const relatedFactPageServiceUrl: string = serviceUrl({
+    service: 'relatedFactPage'
   })
-  relatedContents = relatedContents.filter((r) => !!r)
-
-  if (relatedContents.length === 0) {
-    if (req.mode === 'edit') {
-      return {
-        body: render(view)
-      }
-    } else {
-      return {
-        body: null
-      }
-    }
-  }
 
   const props: RelatedFactPageProps = {
-    relatedContents,
+    firstRelatedContents,
+    relatedFactPageServiceUrl,
+    partConfig: relatedFactPageConfig,
     mainTitle,
     showAll,
     showLess
   }
 
-  const relatedFactPage: React4xpObject = new React4xp('site/parts/relatedFactPage/relatedFactPage')
-    .setProps(props)
-    .setId('relatedFactPage')
-    .uniqueId()
-
-  const body: string = render(view, {
-    relatedId: relatedFactPage.react4xpId
-  })
-
-  return {
-    body: relatedFactPage.renderBody({
-      body,
-      clientRender: req.mode !== 'edit'
-    }),
-    pageContributions: relatedFactPage.renderPageContributions({
-      clientRender: req.mode !== 'edit'
-    }) as PageContributions
+  if (relatedFactPageConfig) {
+    return React4xp.render('site/parts/relatedFactPage/relatedFactPage', props, req, {
+      body: `<section class="xp-part part-picture-card"></section>`
+    })
+  } else {
+    // Render title only on page templates in edit mode
+    if (req.mode === 'edit' && page.type !== `${app.name}:article` && page.type !== `${app.name}:statistics`) {
+      return React4xp.render('site/parts/relatedFactPage/relatedFactPage', {
+        mainTitle
+      }, req, {
+        body: `<section class="xp-part part-picture-card"></section>`
+      })
+    } else {
+      return {
+        body: null
+      }
+    }
   }
 }
 
-function parseRelatedContent(relatedContent: Content<ContentList, object, SEO> | Content<Article, object, SEO>): RelatedFactPageContent {
+export function parseRelatedFactPageData(relatedFactPageConfig: RelatedFactPageConfig | undefined, start: number, count: number): RelatedFactPages {
+  const relatedFactPages: Array<RelatedFactPageContent> = []
+  let total: number = 0
+  if (relatedFactPageConfig && relatedFactPageConfig.contentIdList) {
+    let contentListId: Array<string> = relatedFactPageConfig.contentIdList as Array<string>
+    if (relatedFactPageConfig.inputType === 'itemList') {
+      const relatedContent: RelatedFactPage | null = get({
+        key: relatedFactPageConfig.contentIdList as string
+      })
+      contentListId = forceArray((relatedContent?.data as ContentList).contentList) as Array<string>
+    }
+    const relatedContentQueryResults: QueryResponse<RelatedFactPage> | null = contentListId.length ? query({
+      count: 999,
+      query: `_id IN(${(contentListId).map((id) => `'${id}'`).join(',')})`
+    }) : null
+    if (relatedContentQueryResults) {
+      const sortedRelatedContentQueryResults: Array<RelatedFactPage> =
+       (relatedContentQueryResults.hits as unknown as Array<RelatedFactPage>)
+         .sort((a, b) => {
+           if (contentListId.indexOf(a._id) > contentListId.indexOf(b._id)) return 1
+           else return -1
+         })
+         .slice(start, start + count)
+      sortedRelatedContentQueryResults.map((relatedFactPage) => relatedFactPages.push(parseRelatedContent(relatedFactPage)))
+      total = relatedContentQueryResults.total
+    }
+  }
+  return {
+    relatedFactPages,
+    total
+  }
+}
+
+function parseRelatedContent(relatedContent: RelatedFactPage): RelatedFactPageContent {
   let imageId: string | undefined
   if (relatedContent.x &&
     relatedContent.x['com-enonic-app-metafields'] &&
@@ -191,8 +196,22 @@ interface RelatedFactPageContent {
 }
 
 interface RelatedFactPageProps {
-  relatedContents: Array<unknown>;
+  firstRelatedContents: RelatedFactPages;
+  relatedFactPageServiceUrl: string;
+  partConfig: RelatedFactPageConfig | undefined;
   mainTitle:string;
   showAll: string;
   showLess: string;
+}
+
+type RelatedFactPage = Content<ContentList | Article, object, SEO>
+
+export interface RelatedFactPages {
+  relatedFactPages: Array<RelatedFactPageContent>;
+  total: number;
+}
+
+export interface RelatedFactPageConfig {
+  inputType?: string;
+  contentIdList?: string | Array<string>;
 }

@@ -332,7 +332,7 @@ function SearchResult(props) {
 
 
   function renderNameResult() {
-    if (mainNameResult && mainNameResult.count) {
+    if (mainNameResult && mainNameResult.count && !filterChanged && numberChanged === 0) {
       return (
         //  TODO: Legge til en bedre url til navnestatistikken
         <Card title={ mainNameResult && parseResultText(mainNameResult) } className={'pb-5'} href={'/navn'} icon={<User size={32} />}>

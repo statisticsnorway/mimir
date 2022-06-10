@@ -10,6 +10,7 @@ import { MunicipalityWithCounty } from '../dataset/klass/municipalities'
 import { Cache } from 'enonic-types/cache'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { HttpResponse } from 'enonic-types/http'
+import { BanVarnishPageCacheConfig } from '../../../tasks/banVarnishPageCache/banVarnishPageCache-config'
 
 const {
   request
@@ -25,7 +26,7 @@ const {
   run
 } = __non_webpack_require__('/lib/xp/context')
 const {
-  executeFunction, sleep
+  executeFunction, sleep, submitTask
 } = __non_webpack_require__('/lib/xp/task')
 const {
   query,
@@ -109,6 +110,12 @@ export function setup(): void {
   })
 
   listener({
+    type: 'node.pushed',
+    localOnly: false,
+    callback: removePageFromVarnish
+  })
+
+  listener({
     type: 'custom.clearCache',
     callback: (e: EnonicEvent<CompletelyClearCacheOptions>) => completelyClearCache(e.data)
   })
@@ -120,6 +127,23 @@ export function setup(): void {
     }
   })
 }
+
+
+function removePageFromVarnish(event: EnonicEvent<EnonicEventData>): void {
+  if (event.data.nodes[0].repo == 'com.enonic.cms.default' && event.data.nodes[0].branch == 'master') {
+    const taskConfig: BanVarnishPageCacheConfig = {
+      pageId: event.data.nodes[0].id
+    }
+
+    const taskId: string = submitTask({
+      descriptor: `banVarnishPageCache`,
+      config: taskConfig
+    }
+    )
+    log.debug(`Page submitted for Varnish ban. Task id: ${taskId}`)
+  }
+}
+
 
 const validRepos: Array<string> = [ENONIC_CMS_DEFAULT_REPO, DATASET_REPO]
 function addToChangeQueue(event: EnonicEvent<EnonicEventData>): void {
@@ -354,18 +378,6 @@ export function fromRelatedArticlesCache(req: Request, key: string, fallback: ()
   return fallback()
 }
 
-export function fromRelatedFactPageCache(req: Request, key: string, fallback: () => unknown): unknown {
-  if (req.mode === 'live' || req.mode === 'preview') {
-    const branch: string = req.mode === 'live' ? 'master' : 'draft'
-    const relatedFactPageCache: Cache = branch === 'master' ? masterRelatedFactPageCache : draftRelatedFactPageCache
-    return relatedFactPageCache.get(key, () => {
-      cacheLog(`added ${key} to related fact page cache (${branch})`)
-      return fallback()
-    })
-  }
-  return fallback()
-}
-
 export function fromDatasetRepoCache(
   key: string,
   fallback: () => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null): DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined {
@@ -583,7 +595,6 @@ export interface SSBCacheLibrary {
   fromFilterCache: (req: Request, filterKey: string, key: string, fallback: () => Response) => Response;
   fromMenuCache: (req: Request, key: string, fallback: () => unknown) => unknown;
   fromRelatedArticlesCache: (req: Request, key: string, fallback: () => unknown) => unknown;
-  fromRelatedFactPageCache: (req: Request, key: string, fallback: () => unknown) => unknown;
   fromDatasetRepoCache:
     (key: string, fallback: () => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null)
       => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined;
