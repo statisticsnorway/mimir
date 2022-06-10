@@ -104,10 +104,11 @@ function SearchResult(props) {
 
   function renderListItem(hit, i) {
     if (hit) {
+      const last = i === hits.length - props.count
       return (
         <li key={i ? i : undefined} className="mb-4">
           <a
-            ref={i === hits.length - props.count ? currentElement : null}
+            ref={last ? currentElement : null}
             className="ssb-link header"
             href={hit.url}
             onClick={() => {
