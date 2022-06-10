@@ -87,9 +87,8 @@ function SearchResult(props) {
       }
     }
   }
-
-  function onShowMoreSearchResults() {
-    fetchSearchResult()
+  function onShowMoreSearchResults(focusElement) {
+    fetchSearchResult(focusElement)
     addGtagForEvent(props.GA_TRACKING_ID, 'Klikk', 'Søk', 'Vis flere')
   }
 
@@ -107,18 +106,6 @@ function SearchResult(props) {
     if (hit) {
       return (
         <li key={i ? i : undefined} className="mb-4">
-          {/* <Link
-            ref={i === hits.length - props.count ? currentElement : null}
-            href={hit.url}
-            className="ssb-link header"
-            onClick={() => {
-              addGtagForEvent(props.GA_TRACKING_ID, 'Klikk på lenke', 'Søk', `${searchTerm} - Lenke nummer: ${i + 1}`)
-            }}
-          >
-            <span dangerouslySetInnerHTML={{
-              __html: hit.title.replace(/&nbsp;/g, ' ')
-            }}></span>
-          </Link> */}
           <a
             ref={i === hits.length - props.count ? currentElement : null}
             className="ssb-link header"
@@ -209,7 +196,7 @@ function SearchResult(props) {
     })
   }
 
-  function fetchSearchResult() {
+  function fetchSearchResult(focusElement) {
     setLoading(true)
     axios.get(props.searchServiceUrl, {
       params: {
@@ -226,7 +213,7 @@ function SearchResult(props) {
       setTotal(res.data.total)
     }).finally(() => {
       setLoading(false)
-      if (currentElement && currentElement.current) {
+      if (focusElement) {
         currentElement.current.focus()
       }
     })
@@ -236,13 +223,18 @@ function SearchResult(props) {
     if (hits.length > 0) {
       return (
         <div>
-          <Button
+          <button
             disabled={loading || total === hits.length}
-            className="button-more mt-5"
-            onClick={onShowMoreSearchResults}
+            className="ssb-btn button-more mt-5"
+            onClick={() => onShowMoreSearchResults(false)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                onShowMoreSearchResults(true)
+              }
+            }}
           >
             <ChevronDown size="18"/> {props.buttonTitle}
-          </Button>
+          </button>
         </div>
       )
     }
