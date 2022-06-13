@@ -148,7 +148,7 @@ function Bestbet(props) {
         startDateValue: item.linkedContentDate,
         contentTypeValue: item.linkedContentType,
         mainSubjectValue: item.linkedContentSubject,
-        englishMainSubjectValue: item.englishMainSubjectValue,
+        englishMainSubjectValue: item.linkedEnglishContentSubject,
         searchWordTag: '',
         searchWordsList: item.searchWords
       }

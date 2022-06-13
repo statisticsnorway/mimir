@@ -83,9 +83,9 @@ function BestBetForm(props) {
       }, 1000)
     })
 
-  const selectedContentType = props.contentTypes.filter((contentType) => formState.contentTypeValue === contentType.title)[0]
+  const selectedContentType = props.contentTypes.filter((contentType) => formState.contentTypeValue === contentType.id)[0]
   const selectedMainSubject = props.mainSubjects.filter((mainSubject) => formState.mainSubjectValue === mainSubject.title)[0]
-  const selectedEnglishMainSubject = props.mainSubjectsEnglish.filter((mainSubjectEnglish) => formState.mainSubjectEnglishValue === mainSubjectEnglish.title)[0]
+  const selectedEnglishMainSubject = props.mainSubjectsEnglish.filter((mainSubjectEnglish) => formState.englishMainSubjectValue === mainSubjectEnglish.title)[0]
 
   return (
     <div className="best-bet-form">

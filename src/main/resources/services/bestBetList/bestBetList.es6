@@ -31,8 +31,6 @@ exports.get = () => {
 exports.post = (req) => {
   const body = JSON.parse(req.body)
 
-  log.info('GLNRBN logger body: ' + JSON.stringify(body, null, 2))
-
   const response = createBestBet(
     {
       id: body.id,
