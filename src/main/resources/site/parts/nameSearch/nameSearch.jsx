@@ -343,7 +343,7 @@ function NameSearch(props) {
         },
         yAxis: {
           title: {
-            text: phrases.xAxis,
+            text: phrases.yAxis,
             align: 'high',
             offset: 0,
             rotation: 0,
@@ -499,7 +499,7 @@ NameSearch.propTypes = {
     errorMessage: PropTypes.string,
     networkErrorMessage: PropTypes.string,
     threeOrLessText: PropTypes.string,
-    xAxis: PropTypes.string,
+    yAxis: PropTypes.string,
     graphHeader: PropTypes.string,
     loadingGraph: PropTypes.string,
     historicalTrend: PropTypes.string,

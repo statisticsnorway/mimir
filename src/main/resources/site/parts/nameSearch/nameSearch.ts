@@ -117,8 +117,8 @@ function partsPhrases(locale: string): PartProperties['phrases'] {
       key: 'nameSearch.threeOrLessText',
       locale
     }),
-    xAxis: localize({
-      key: 'nameSearch.graph.xaxis',
+    yAxis: localize({
+      key: 'nameSearch.graph.yaxis',
       locale
     }),
     graphHeader: localize({
@@ -255,7 +255,7 @@ interface PartProperties {
     errorMessage: string;
     networkErrorMessage: string;
     threeOrLessText: string;
-    xAxis: string;
+    yAxis: string;
     graphHeader: string;
     loadingGraph: string;
     historicalTrend: string;
