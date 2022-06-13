@@ -9,7 +9,7 @@ import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { requestClearCache, requestPurgeVarnishCache } from '../HomePage/actions'
 import { RefreshCw, Rss, Trash } from 'react-feather'
 import { Col, Container, Row, Alert } from 'react-bootstrap'
-import { Button, Dropdown, Input } from '@statisticsnorway/ssb-component-library'
+import { Button, Dropdown, Input, Title } from '@statisticsnorway/ssb-component-library'
 import { selectSearchList, selectLoadingSearchList, selectHasLoadingStatistic } from '../Statistics/selectors'
 import { setOpenStatistic, setOpenModal } from '../Statistics/actions'
 import { startRefresh } from '../StatRegDashboard/actions'
@@ -244,21 +244,8 @@ export function DashboardTools() {
         <Row className="mb-5">
           {renderTbmlDefinitionsStatbankTable()}
         </Row>
-        <fieldset className="danger-zone d-flex flex-column justify-content-center mb-3 p-2">
-          <legend align="center" className="danger-title">Danger Zone</legend>
-          <Row className="mb-1">
-            <Col>
-              <Button
-                primary
-                className="w-100 d-flex justify-content-center"
-                onClick={() => clearCache()}
-                disabled={loadingCache}>
-                <div>
-                  {renderIcon(loadingCache)} <span>Tøm XP cache</span>
-                </div>
-              </Button>
-            </Col>
-          </Row>
+        <fieldset className="safe-zone d-flex flex-column justify-content-center mb-3 p-2">
+          <h3 className="mb-4">Manuelle jobber</h3>
           <Row className="mb-1">
             <Col>
               <Button
@@ -268,6 +255,19 @@ export function DashboardTools() {
                 disabled={loadingVarnishPurge}>
                 <div>
                   {renderIcon(loadingVarnishPurge)} <span>Tøm Varnish</span>
+                </div>
+              </Button>
+            </Col>
+          </Row>
+          <Row className="mb-1">
+            <Col>
+              <Button
+                primary
+                className="w-100 d-flex justify-content-center"
+                onClick={() => clearCache()}
+                disabled={loadingCache}>
+                <div>
+                  {renderIcon(loadingCache)} <span>Tøm XP cache</span>
                 </div>
               </Button>
             </Col>
