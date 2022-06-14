@@ -101,6 +101,10 @@ function partsPhrases(locale: string): PartProperties['phrases'] {
       key: 'nameSearch.with',
       locale
     }),
+    have: localize({
+      key: 'nameSearch.have',
+      locale
+    }),
     asTheir: localize({
       key: 'nameSearch.asTheir',
       locale
@@ -251,6 +255,7 @@ interface PartProperties {
     nameSearchResultTitle: string;
     thereAre: string;
     with: string;
+    have: string;
     asTheir: string;
     errorMessage: string;
     networkErrorMessage: string;
