@@ -13,6 +13,8 @@ const {
 } = __non_webpack_require__('/lib/thymeleaf')
 
 const yesterday: string = moment().subtract(1, 'days').format('YYYY-MM-DD')
+const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
+
 
 exports.get = (): Response => {
   const changedContent: QueryResponse<Content> = query({
@@ -24,7 +26,7 @@ exports.get = (): Response => {
   })
 
   const urls: string[] = changedContent.hits.map((content) => {
-    return content._path.slice(4) // trim off leading '/ssb' from path
+    return baseUrl + content._path.slice(4) // trim off leading '/ssb' from path
   })
 
   const template: ResourceKey = resolve('./solrUpdater.html') as ResourceKey
@@ -38,4 +40,6 @@ exports.get = (): Response => {
   }
 }
 
-interface urlModel {urls: Array<string>}
+interface urlModel {
+    urls: Array<string>
+}
