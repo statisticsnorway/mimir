@@ -324,7 +324,7 @@ function NameSearch(props) {
         chart: {
           type: 'spline',
           height: frontPage || !desktop ? '380px' : '75%',
-          spacingTop: frontPage || !desktop ? 0 : 10
+          spacingTop: 10
         },
         colors: [
           '#1a9d49', '#274247', '#3396d2', '#f0e442', '#f26539', '#aee5c3', '#ed51c9', '#0094a3',
