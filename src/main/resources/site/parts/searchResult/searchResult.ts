@@ -151,7 +151,7 @@ export function renderPart(req: Request): React4xpResponse {
           locale: language
         }) : '',
         url: href,
-        mainSubject: firstBet.data.linkedContentSubject ? getSubjectForLanguage(firstBet) : '',
+        mainSubject: getSubjectForLanguage(firstBet),
         secondaryMainSubject: '',
         publishDate: firstBet.data.linkedContentDate ? firstBet.data.linkedContentDate : '',
         publishDateHuman: date ? formatDate(date, 'PPP', language) : ''
@@ -164,9 +164,9 @@ export function renderPart(req: Request): React4xpResponse {
   function getSubjectForLanguage(bet: BestBet): string {
     if (language == 'en' && bet.data.linkedEnglishContentSubject) {
       return bet.data.linkedEnglishContentSubject
-    } else {
+    } else if (bet.data.linkedContentSubject) {
       return bet.data.linkedContentSubject
-    }
+    } else return ''
   }
 
   /* query solr */
