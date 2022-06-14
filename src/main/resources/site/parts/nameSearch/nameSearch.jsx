@@ -323,7 +323,7 @@ function NameSearch(props) {
       const options = {
         chart: {
           type: 'spline',
-          height: frontPage || !desktop ? '350px' : '75%',
+          height: frontPage || !desktop ? '380px' : '75%',
           spacingTop: frontPage || !desktop ? 0 : 10
         },
         colors: [
@@ -347,7 +347,11 @@ function NameSearch(props) {
             align: 'high',
             offset: 0,
             rotation: 0,
-            y: -20
+            y: -30,
+            x: 10,
+            style: {
+              width: 80
+            }
           },
           lineColor,
           lineWidth: 1,
