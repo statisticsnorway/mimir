@@ -306,7 +306,7 @@ function NameSearch(props) {
     !nameGraphData && !loadingGraph && fetchGraph(nameForRender)
 
     const {
-      frontPage, phrases
+      frontPage, phrases, language
     } = props
     const lineColor = '#21383a'
 
@@ -323,7 +323,7 @@ function NameSearch(props) {
         chart: {
           type: 'spline',
           height: frontPage || !desktop ? '380px' : '75%',
-          spacingTop: !desktop ? 0 : 10
+          spacingTop: !desktop ? (language === 'en' ? 10 : 0) : 10
         },
         colors: [
           '#1a9d49', '#274247', '#3396d2', '#f0e442', '#f26539', '#aee5c3', '#ed51c9', '#0094a3',
@@ -383,7 +383,7 @@ function NameSearch(props) {
                 'downloadCSV',
                 'downloadXLS'
               ],
-              y: !desktop ? 15 : 0
+              y: !desktop ? (language === 'en' ? 0 : 15) : 0
             }
           },
           enabled: true,
@@ -534,6 +534,7 @@ NameSearch.propTypes = {
     legendLabelNoTitle: PropTypes.string,
     close: PropTypes.string
   }),
+  language: PropTypes.string,
   graphData: PropTypes.bool,
   GA_TRACKING_ID: PropTypes.string
 }

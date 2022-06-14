@@ -35,7 +35,6 @@ function renderPart(req: Request): React4xpResponse {
   const locale: string = getLanguageShortName(getContent())
   const isNotInEditMode: boolean = req.mode !== 'edit'
 
-
   const urlToService: string = serviceUrl({
     service: 'nameSearch'
   })
@@ -51,6 +50,7 @@ function renderPart(req: Request): React4xpResponse {
     nameSearchDescription: component.config.nameSearchDescription,
     frontPage: component.config.frontPage,
     phrases: partsPhrases(locale),
+    language: locale,
     GA_TRACKING_ID: GA_TRACKING_ID
   }
 
@@ -291,5 +291,6 @@ interface PartProperties {
     legendLabelNoTitle: string;
     close: string;
   };
+  language: string;
   GA_TRACKING_ID: string | null;
 }
