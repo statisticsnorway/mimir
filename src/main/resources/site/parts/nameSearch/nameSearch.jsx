@@ -324,7 +324,7 @@ function NameSearch(props) {
         chart: {
           type: 'spline',
           height: frontPage || !desktop ? '380px' : '75%',
-          spacingTop: 10
+          spacingTop: !desktop ? 0 : 10
         },
         colors: [
           '#1a9d49', '#274247', '#3396d2', '#f0e442', '#f26539', '#aee5c3', '#ed51c9', '#0094a3',
@@ -384,7 +384,7 @@ function NameSearch(props) {
                 'downloadCSV',
                 'downloadXLS'
               ],
-              y: !desktop ? 20 : 0
+              y: !desktop ? 15 : 0
             }
           },
           enabled: true,
