@@ -1,5 +1,5 @@
 import { Response } from 'enonic-types/controller'
-import { Content, QueryResponse, QueryResponseMetaDataScore, QueryContentParams } from 'enonic-types/content'
+import { Content, QueryResponse } from 'enonic-types/content'
 import { ResourceKey } from 'enonic-types/thymeleaf'
 
 const {
