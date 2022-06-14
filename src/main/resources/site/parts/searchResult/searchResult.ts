@@ -161,6 +161,8 @@ export function renderPart(req: Request): React4xpResponse {
     return undefined
   }
 
+  // if the language is english and the norwegian field exists, 
+  // but the english field does NOT exist, we default to the norwegian field. 
   function getSubjectForLanguage(bet: BestBet): string {
     if (language == 'en' && bet.data.linkedEnglishContentSubject) {
       return bet.data.linkedEnglishContentSubject
