@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { Card,
   Button,
@@ -33,6 +33,7 @@ function SearchResult(props) {
   const [selectedMainSubject, setSelectedMainSubject] = useState(props.dropDownSubjects[0])
   const [selectedContentType, setSelectedContentType] = useState(props.dropDownContentTypes[0])
   const [numberChanged, setNumberChanged] = useState(0)
+  const currentElement = useRef(null)
 
   useEffect(() => {
     if (!nameSearchData) {
@@ -86,6 +87,10 @@ function SearchResult(props) {
       }
     }
   }
+  function onShowMoreSearchResults(focusElement) {
+    fetchSearchResult(focusElement)
+    addGtagForEvent(props.GA_TRACKING_ID, 'Klikk', 'Søk', 'Vis flere')
+  }
 
   function removeFilter() {
     setFilter({
@@ -99,15 +104,21 @@ function SearchResult(props) {
 
   function renderListItem(hit, i) {
     if (hit) {
+      const last = i === hits.length - props.count
       return (
         <li key={i ? i : undefined} className="mb-4">
-          <Link href={hit.url} className="ssb-link header" onClick={() => {
-            addGtagForEvent(props.GA_TRACKING_ID, 'Klikk på lenke', 'Søk', `${searchTerm} - Lenke nummer: ${i + 1}`)
-          }}>
+          <a
+            ref={last ? currentElement : null}
+            className="ssb-link header"
+            href={hit.url}
+            onClick={() => {
+              addGtagForEvent(props.GA_TRACKING_ID, 'Klikk på lenke', 'Søk', `${searchTerm} - Lenke nummer: ${i + 1}`)
+            }}
+          >
             <span dangerouslySetInnerHTML={{
               __html: hit.title.replace(/&nbsp;/g, ' ')
             }}></span>
-          </Link>
+          </a>
           <Paragraph className="search-result-ingress my-1" ><span dangerouslySetInnerHTML={{
             __html: hit.preface.replace(/&nbsp;/g, ' ')
           }}></span>
@@ -186,7 +197,7 @@ function SearchResult(props) {
     })
   }
 
-  function fetchSearchResult() {
+  function fetchSearchResult(focusElement) {
     setLoading(true)
     axios.get(props.searchServiceUrl, {
       params: {
@@ -203,6 +214,9 @@ function SearchResult(props) {
       setTotal(res.data.total)
     }).finally(() => {
       setLoading(false)
+      if (focusElement) {
+        currentElement.current.focus()
+      }
     })
   }
 
@@ -210,16 +224,18 @@ function SearchResult(props) {
     if (hits.length > 0) {
       return (
         <div>
-          <Button
+          <button
             disabled={loading || total === hits.length}
-            className="button-more mt-5"
-            onClick={() => {
-              fetchSearchResult()
-              addGtagForEvent(props.GA_TRACKING_ID, 'Klikk', 'Søk', 'Vis flere')
+            className="ssb-btn button-more mt-5"
+            onClick={() => onShowMoreSearchResults(false)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                onShowMoreSearchResults(true)
+              }
             }}
           >
             <ChevronDown size="18"/> {props.buttonTitle}
-          </Button>
+          </button>
         </div>
       )
     }
