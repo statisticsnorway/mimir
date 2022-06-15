@@ -21,6 +21,7 @@ exports.get = () => {
           linkedContentType: bet.data.linkedContentType,
           linkedContentDate: bet.data.linkedContentDate,
           linkedContentSubject: bet.data.linkedContentSubject,
+          linkedEnglishContentSubject: bet.data.linkedEnglishContentSubject,
           searchWords: ensureArray(bet.data.searchWords)
         }
       })
@@ -29,6 +30,7 @@ exports.get = () => {
 }
 exports.post = (req) => {
   const body = JSON.parse(req.body)
+
   const response = createBestBet(
     {
       id: body.id,
@@ -39,6 +41,7 @@ exports.post = (req) => {
       linkedContentType: body.linkedContentType,
       linkedContentDate: body.linkedContentDate,
       linkedContentSubject: body.linkedContentSubject,
+      linkedEnglishContentSubject: body.linkedEnglishContentSubject,
       searchWords: body.searchWords
     }
   )

@@ -144,9 +144,12 @@ export function renderPart(req: Request): React4xpResponse {
       bestBetResult = {
         title: title,
         preface: firstBet.data.linkedContentIngress ? firstBet.data.linkedContentIngress : '',
-        contentType: firstBet.data.linkedContentType ? firstBet.data.linkedContentType : '',
+        contentType: firstBet.data.linkedContentType ? localize({
+          key: `contentType.search.${firstBet.data.linkedContentType}`,
+          locale: language
+        }) : '',
         url: href,
-        mainSubject: firstBet.data.linkedContentSubject ? firstBet.data.linkedContentSubject : '',
+        mainSubject: getSubjectForLanguage(firstBet),
         secondaryMainSubject: '',
         publishDate: firstBet.data.linkedContentDate ? firstBet.data.linkedContentDate : '',
         publishDateHuman: date ? formatDate(date, 'PPP', language) : ''
@@ -154,6 +157,16 @@ export function renderPart(req: Request): React4xpResponse {
       return bestBetResult
     }
     return undefined
+  }
+
+  // if the language is english and the norwegian field exists, 
+  // but the english field does NOT exist, we default to the norwegian field. 
+  function getSubjectForLanguage(bet: BestBet): string {
+    if (language == 'en' && bet.data.linkedEnglishContentSubject) {
+      return bet.data.linkedEnglishContentSubject
+    } else if (bet.data.linkedContentSubject) {
+      return bet.data.linkedContentSubject
+    } else return ''
   }
 
   /* query solr */
@@ -320,6 +333,7 @@ interface BestBet extends RepoNode {
     linkedContentType: BestBetContent['linkedContentType'];
     linkedContentDate: BestBetContent['linkedContentDate'];
     linkedContentSubject: BestBetContent['linkedContentSubject'];
+    linkedEnglishContentSubject: BestBetContent['linkedEnglishContentSubject'];
     searchWords: BestBetContent['searchWords'];
   };
 }

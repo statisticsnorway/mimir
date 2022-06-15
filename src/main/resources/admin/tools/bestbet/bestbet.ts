@@ -48,7 +48,16 @@ function renderPart(req: Request): React4xpResponse | Response {
 
   // Main subjects and content types must be translated in frontend since it can't be based off of the app's language
   const mainSubjects: Array<SubjectItem> = getMainSubjects(req, 'nb')
+  const mainSubjectsEnglish: Array<SubjectItem> = getMainSubjects(req, 'en')
+
   const mainSubjectsList: Array<{id: string; title: string}> = mainSubjects.map((subject) => {
+    return {
+      id: subject.name,
+      title: subject.title
+    }
+  })
+
+  const mainSubjectsListEnglish: Array<{id: string; title: string}> = mainSubjectsEnglish.map((subject) => {
     return {
       id: subject.name,
       title: subject.title
@@ -58,6 +67,11 @@ function renderPart(req: Request): React4xpResponse | Response {
     id: '',
     title: 'Velg emne'
   }, ...mainSubjectsList]
+
+  const englishMainSubjectDropdownItems: DropdownItems = [{
+    id: '',
+    title: 'Velg engelsk emne'
+  }, ...mainSubjectsListEnglish]
 
   const validContentTypes: Array<string> = ['artikkel', 'statistikk', 'faktaside', 'statistikkbanktabell', 'publikasjon']
   const contentTypesList: Array<{id: string; title: string}> = validContentTypes.map((contentType: string) => {
@@ -87,7 +101,8 @@ function renderPart(req: Request): React4xpResponse | Response {
       }),
       contentStudioBaseUrl: `${DEFAULT_CONTENTSTUDIO_URL}#/${ENONIC_PROJECT_ID}/edit/`,
       contentTypes: contentTypesDropdownItems,
-      mainSubjects: mainSubjectDropdownItems
+      mainSubjects: mainSubjectDropdownItems,
+      mainSubjectsEnglish: englishMainSubjectDropdownItems
     })
     .setId('app-bestbet')
 

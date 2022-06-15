@@ -83,8 +83,9 @@ function BestBetForm(props) {
       }, 1000)
     })
 
-  const selectedContentType = props.contentTypes.filter((contentType) => formState.contentTypeValue === contentType.title)[0]
+  const selectedContentType = props.contentTypes.filter((contentType) => formState.contentTypeValue === contentType.id)[0]
   const selectedMainSubject = props.mainSubjects.filter((mainSubject) => formState.mainSubjectValue === mainSubject.title)[0]
+  const selectedEnglishMainSubject = props.mainSubjectsEnglish.filter((mainSubjectEnglish) => formState.englishMainSubjectValue === mainSubjectEnglish.title)[0]
 
   return (
     <div className="best-bet-form">
@@ -163,13 +164,19 @@ function BestBetForm(props) {
             header="Innholdstype"
             items={props.contentTypes}
             selectedItem={selectedContentType ? selectedContentType : props.contentTypes[0]}
-            onSelect={(item) => handleInputChange(item.id !== '' ? item.title : '', 'contentTypeValue')}
+            onSelect={(item) => handleInputChange(item.id !== '' ? item.id : '', 'contentTypeValue')}
           />
           <Dropdown
             header="Emne"
             items={props.mainSubjects}
             selectedItem={selectedMainSubject ? selectedMainSubject : props.mainSubjects[0]}
             onSelect={(item) => handleInputChange(item.id !== '' ? item.title : '', 'mainSubjectValue')}
+          />
+          <Dropdown
+            header="Emne på engelsk"
+            items={props.mainSubjectsEnglish}
+            selectedItem={selectedEnglishMainSubject ? selectedEnglishMainSubject : props.mainSubjectsEnglish[0]}
+            onSelect={(item) => handleInputChange(item.id !== '' ? item.title : '', 'englishMainSubjectValue')}
           />
           {formState.isXPContent &&
                 <RadioGroup
@@ -213,6 +220,7 @@ BestBetForm.propTypes = {
   contentSearchServiceUrl: PropTypes.string,
   contentTypes: PropTypes.array,
   mainSubjects: PropTypes.array,
+  mainSubjectsEnglish: PropTypes.array,
   renderSearchWord: PropTypes.func,
   handleTag: PropTypes.func
 }

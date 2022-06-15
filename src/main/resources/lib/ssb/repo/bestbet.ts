@@ -25,6 +25,7 @@ function getBestBetData(bestBetContent: BestBetContent): BestBetContent {
     linkedContentType: bestBetContent.linkedContentType,
     linkedContentDate: bestBetContent.linkedContentDate,
     linkedContentSubject: bestBetContent.linkedContentSubject,
+    linkedEnglishContentSubject: bestBetContent.linkedEnglishContentSubject,
     searchWords: bestBetContent.searchWords
   }
 }
@@ -85,5 +86,6 @@ export interface BestBetContent {
   linkedContentType: string;
   linkedContentDate: string;
   linkedContentSubject: string;
+  linkedEnglishContentSubject: string;
   searchWords: Array<string>;
 }
