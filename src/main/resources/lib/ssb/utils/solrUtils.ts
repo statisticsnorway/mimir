@@ -19,20 +19,28 @@ export function solrSearch(term: string,
   contentType: string,
   sortParam: string | undefined): SolrPrepResultAndTotal {
   const lang: string = language === 'en' ? 'en' : 'no'
-  const filterQuery: string = mainSubject ? `fq=sprak:"${lang}"&fq=hovedemner:"${mainSubject}"` : `fq=sprak:"${lang}"`
+  const languageQuery: string = `fq=sprak:"${lang}"`
   const contentTypeQuery: string = contentType ? `&fq=innholdstype:"${contentType}"` : ''
+  const subjectQuery: string = mainSubject ? `&fq=hovedemner:"${mainSubject}"` : ''
   const sortQuery: string = sortParam ? `&sort=${sortParam}+desc` : ''
   const searchResult: SolrResult | undefined = querySolr({
-    query: createQuery(term, numberOfHits, start, filterQuery, contentTypeQuery, sortQuery)
+    query: createQuery(term, numberOfHits, start, languageQuery, contentTypeQuery, subjectQuery, sortQuery)
   })
+  const validFiltersContentType: Array<string> = ['artikkel', 'statistikk', 'faktaside', 'statistikkbanktabell', 'publikasjon']
+  const inValidFiltersMainSubject: Array<string> = ['Uten emne', 'No topic']
+  const facetContentTypes: Array<Facet> = searchResult ? createFacetsArray(searchResult.facet_counts.facet_fields.innholdstype) : []
+  const facetMainSubjects: Array<Facet> = searchResult ? createFacetsArray(searchResult.facet_counts.facet_fields.hovedemner) : []
+
   return searchResult ? {
     hits: nerfSearchResult(searchResult, language),
     total: searchResult.grouped.gruppering.matches,
-    contentTypes: searchResult.facet_counts.facet_fields.innholdstype
+    contentTypes: facetContentTypes.filter((contentType) => validFiltersContentType.includes(contentType.title )),
+    subjects: facetMainSubjects.filter((mainSubject) => !inValidFiltersMainSubject.includes(mainSubject.title ))
   } : {
     hits: [],
     total: 0,
-    contentTypes: []
+    contentTypes: [],
+    subjects: []
   }
 }
 
@@ -96,8 +104,22 @@ function requestSolr(queryParams: SolrQueryParams): SolrResponse {
 }
 
 
-function createQuery(term: string, numberOfHits: number, start: number, filterQuery: string, contentTypeQuery: string, sortQuery: string): string {
-  return `${SOLR_BASE_URL}?${SOLR_PARAM_QUERY}=${term}&${filterQuery}${contentTypeQuery}&wt=${SOLR_FORMAT}&start=${start}&rows=${numberOfHits}${sortQuery}`
+function createQuery(term: string, numberOfHits: number, start: number, languageQuery: string, contentTypeQuery: string, subjectQuery: string, sortQuery: string): string {
+  return `${SOLR_BASE_URL}?${SOLR_PARAM_QUERY}=${term}&${languageQuery}${contentTypeQuery}${subjectQuery}&wt=${SOLR_FORMAT}&start=${start}&rows=${numberOfHits}${sortQuery}`
+}
+
+function createFacetsArray(solrResults: Array<string | number>): Array<Facet> {
+  const facets: Array<Facet> = []
+  solrResults.forEach((facet, i) => {
+    if (typeof facet == 'string') {
+      const facetCount: string | number = solrResults[i + 1]
+      facets.push({
+        title: facet,
+        count: +facetCount
+      })
+    }
+  })
+  return facets
 }
 
 /*
@@ -130,7 +152,8 @@ export interface PreparedSearchResult {
 export interface SolrPrepResultAndTotal {
   total: number;
   hits: Array<PreparedSearchResult>;
-  contentTypes: Array<string|number>;
+  contentTypes: Array<Facet>;
+  subjects: Array<Facet>;
 }
 
 interface SolrResult {
@@ -161,6 +184,7 @@ interface SolrResult {
     // eslint-disable-next-line camelcase
     facet_fields: {
       innholdstype: Array<string | number>;
+      hovedemner: Array<string | number>;
     };
   };
   highlighting: {
@@ -196,4 +220,9 @@ interface SolrDoc {
   hovedemner: string;
   sprak: string;
   rom: string;
+}
+
+export interface Facet {
+  title: string;
+  count: number;
 }

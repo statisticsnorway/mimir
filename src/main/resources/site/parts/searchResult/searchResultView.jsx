@@ -21,6 +21,8 @@ function SearchResult(props) {
   const [searchTerm, setSearchTerm] = useState(props.term)
   const [loading, setLoading] = useState(false)
   const [total, setTotal] = useState(props.total)
+  const [contentTypes, setContentTypes] = useState(props.contentTypes)
+  const [subjects, setSubjects] = useState(props.subjects)
   const [filterChanged, setFilterChanged] = useState(false)
   const [nameSearchData, setNameSearchData] = useState(undefined)
   const [mainNameResult, setMainNameResult] = useState(undefined)
@@ -30,10 +32,19 @@ function SearchResult(props) {
     mainSubject: '',
     contentType: ''
   })
-  const [selectedMainSubject, setSelectedMainSubject] = useState(props.dropDownSubjects[0])
-  const [selectedContentType, setSelectedContentType] = useState(props.dropDownContentTypes[0])
+  const allContentTypeItem = {
+    id: 'allTypes',
+    title: props.allContentTypesPhrase
+  }
+  const allSubjectsItem = {
+    id: 'allSubjects',
+    title: props.allSubjectsPhrase
+  }
+  const [selectedMainSubject, setSelectedMainSubject] = useState(allSubjectsItem)
+  const [selectedContentType, setSelectedContentType] = useState(allContentTypeItem)
   const [numberChanged, setNumberChanged] = useState(0)
   const currentElement = useRef(null)
+
 
   useEffect(() => {
     if (!nameSearchData) {
@@ -59,18 +70,27 @@ function SearchResult(props) {
     setFilterChanged(true)
 
     if (id === 'mainSubject') {
-      setSelectedMainSubject(value)
+      const selectedSubject = value.id === 'allSubjects' ? value : {
+        id: value.id,
+        title: value.id
+      }
+      setSelectedMainSubject(selectedSubject)
       setFilter({
         ...filter,
-        mainSubject: value.id === '' ? '' : value.title
+        mainSubject: value.id === '' || value.id === 'allSubjects' ? '' : value.id
       })
     }
 
     if (id === 'contentType') {
-      setSelectedContentType(value)
+      const selectedContentType = value.id === 'allTypes' ? value : {
+        id: value.id,
+        title: props.contentTypePhrases.find((phrase) => phrase.id === value.id).title
+      }
+
+      setSelectedContentType(selectedContentType)
       setFilter({
         ...filter,
-        contentType: value.id === '' ? '' : value.id
+        contentType: value.id === '' || value.id === 'allTypes' ? '' : value.id
       })
     }
   }
@@ -97,8 +117,8 @@ function SearchResult(props) {
       mainSubject: '',
       contentType: ''
     })
-    setSelectedContentType(props.dropDownContentTypes[0])
-    setSelectedMainSubject(props.dropDownSubjects[0])
+    setSelectedContentType(allContentTypeItem)
+    setSelectedMainSubject(allSubjectsItem)
     addGtagForEvent(props.GA_TRACKING_ID, 'Klikk', 'Søk', 'Fjern alle filtervalg')
   }
 
@@ -192,6 +212,8 @@ function SearchResult(props) {
     }).then((res) => {
       setHits(res.data.hits)
       setTotal(res.data.total)
+      setContentTypes(res.data.contentTypes)
+      setSubjects(res.data.subjects)
     }).finally(() => {
       setLoading(false)
     })
@@ -212,6 +234,8 @@ function SearchResult(props) {
     }).then((res) => {
       setHits(hits.concat(res.data.hits))
       setTotal(res.data.total)
+      setContentTypes(res.data.contentTypes)
+      setSubjects(res.data.subjects)
     }).finally(() => {
       setLoading(false)
       if (focusElement) {
@@ -240,7 +264,6 @@ function SearchResult(props) {
       )
     }
   }
-
 
   function renderNoHitMessage() {
     if (props.language === 'en') {
@@ -342,6 +365,31 @@ function SearchResult(props) {
     } else return null
   }
 
+  const dropdownContentTypeItems = [
+    {
+      id: 'allTypes',
+      title: props.allContentTypesPhrase
+    }
+  ].concat(contentTypes.map((type) => {
+    const phrase = props.contentTypePhrases.find((phrase) => phrase.id === type.title)
+    return {
+      id: type.title,
+      title: `${phrase.title} (${type.count})`
+    }
+  }))
+
+  const dropdownSubjectsItems = [
+    {
+      id: 'allSubjects',
+      title: props.allContentTypesPhrase
+    }
+  ].concat(subjects.map((type) => {
+    return {
+      id: type.title,
+      title: `${type.title} (${type.count})`
+    }
+  }))
+
   const DropdownMainSubject = React.forwardRef((_props, ref) => (
     <Dropdown
       ref={ref}
@@ -352,7 +400,7 @@ function SearchResult(props) {
         addGtagForEvent(props.GA_TRACKING_ID, 'Valgt emne', 'Søk', value.title)
       }}
       selectedItem={selectedMainSubject}
-      items={props.dropDownSubjects}
+      items={dropdownSubjectsItems}
       header={props.chooseSubjectPhrase}
     />
   ))
@@ -367,7 +415,7 @@ function SearchResult(props) {
         addGtagForEvent(props.GA_TRACKING_ID, 'Valgt innholdstype', 'Søk', value.title)
       }}
       selectedItem={selectedContentType}
-      items={props.dropDownContentTypes}
+      items={dropdownContentTypeItems}
       header={props.chooseContentTypePhrase}
     />
   ))
@@ -469,6 +517,8 @@ SearchResult.propTypes = {
   sortPhrase: PropTypes.string,
   sortBestHitPhrase: PropTypes.string,
   sortDatePhrase: PropTypes.string,
+  allContentTypesPhrase: PropTypes.string,
+  allSubjectsPhrase: PropTypes.string,
   count: PropTypes.number,
   noHitMessage: PropTypes.string,
   nameSearchToggle: PropTypes.bool,
@@ -509,8 +559,21 @@ SearchResult.propTypes = {
       publishDate: PropTypes.string,
       publishDateHuman: PropTypes.string
     })),
-  dropDownSubjects: PropTypes.array,
-  dropDownContentTypes: PropTypes.array,
+  contentTypePhrases: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      title: PropTypes.string
+    })),
+  contentTypes: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string,
+      count: PropTypes.number
+    })),
+  subjects: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string,
+      count: PropTypes.number
+    })),
   GA_TRACKING_ID: PropTypes.string
 }
 
