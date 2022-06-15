@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { Card,
   Button,
@@ -21,6 +21,8 @@ function SearchResult(props) {
   const [searchTerm, setSearchTerm] = useState(props.term)
   const [loading, setLoading] = useState(false)
   const [total, setTotal] = useState(props.total)
+  const [contentTypes, setContentTypes] = useState(props.contentTypes)
+  const [subjects, setSubjects] = useState(props.subjects)
   const [filterChanged, setFilterChanged] = useState(false)
   const [nameSearchData, setNameSearchData] = useState(undefined)
   const [mainNameResult, setMainNameResult] = useState(undefined)
@@ -30,9 +32,19 @@ function SearchResult(props) {
     mainSubject: '',
     contentType: ''
   })
-  const [selectedMainSubject, setSelectedMainSubject] = useState(props.dropDownSubjects[0])
-  const [selectedContentType, setSelectedContentType] = useState(props.dropDownContentTypes[0])
+  const allContentTypeItem = {
+    id: 'allTypes',
+    title: props.allContentTypesPhrase
+  }
+  const allSubjectsItem = {
+    id: 'allSubjects',
+    title: props.allSubjectsPhrase
+  }
+  const [selectedMainSubject, setSelectedMainSubject] = useState(allSubjectsItem)
+  const [selectedContentType, setSelectedContentType] = useState(allContentTypeItem)
   const [numberChanged, setNumberChanged] = useState(0)
+  const currentElement = useRef(null)
+
 
   useEffect(() => {
     if (!nameSearchData) {
@@ -58,18 +70,27 @@ function SearchResult(props) {
     setFilterChanged(true)
 
     if (id === 'mainSubject') {
-      setSelectedMainSubject(value)
+      const selectedSubject = value.id === 'allSubjects' ? value : {
+        id: value.id,
+        title: value.id
+      }
+      setSelectedMainSubject(selectedSubject)
       setFilter({
         ...filter,
-        mainSubject: value.id === '' ? '' : value.title
+        mainSubject: value.id === '' || value.id === 'allSubjects' ? '' : value.id
       })
     }
 
     if (id === 'contentType') {
-      setSelectedContentType(value)
+      const selectedContentType = value.id === 'allTypes' ? value : {
+        id: value.id,
+        title: props.contentTypePhrases.find((phrase) => phrase.id === value.id).title
+      }
+
+      setSelectedContentType(selectedContentType)
       setFilter({
         ...filter,
-        contentType: value.id === '' ? '' : value.id
+        contentType: value.id === '' || value.id === 'allTypes' ? '' : value.id
       })
     }
   }
@@ -86,28 +107,38 @@ function SearchResult(props) {
       }
     }
   }
+  function onShowMoreSearchResults(focusElement) {
+    fetchSearchResult(focusElement)
+    addGtagForEvent(props.GA_TRACKING_ID, 'Klikk', 'Søk', 'Vis flere')
+  }
 
   function removeFilter() {
     setFilter({
       mainSubject: '',
       contentType: ''
     })
-    setSelectedContentType(props.dropDownContentTypes[0])
-    setSelectedMainSubject(props.dropDownSubjects[0])
+    setSelectedContentType(allContentTypeItem)
+    setSelectedMainSubject(allSubjectsItem)
     addGtagForEvent(props.GA_TRACKING_ID, 'Klikk', 'Søk', 'Fjern alle filtervalg')
   }
 
   function renderListItem(hit, i) {
     if (hit) {
+      const last = i === hits.length - props.count
       return (
         <li key={i ? i : undefined} className="mb-4">
-          <Link href={hit.url} className="ssb-link header" onClick={() => {
-            addGtagForEvent(props.GA_TRACKING_ID, 'Klikk på lenke', 'Søk', `${searchTerm} - Lenke nummer: ${i + 1}`)
-          }}>
+          <a
+            ref={last ? currentElement : null}
+            className="ssb-link header"
+            href={hit.url}
+            onClick={() => {
+              addGtagForEvent(props.GA_TRACKING_ID, 'Klikk på lenke', 'Søk', `${searchTerm} - Lenke nummer: ${i + 1}`)
+            }}
+          >
             <span dangerouslySetInnerHTML={{
               __html: hit.title.replace(/&nbsp;/g, ' ')
             }}></span>
-          </Link>
+          </a>
           <Paragraph className="search-result-ingress my-1" ><span dangerouslySetInnerHTML={{
             __html: hit.preface.replace(/&nbsp;/g, ' ')
           }}></span>
@@ -181,12 +212,14 @@ function SearchResult(props) {
     }).then((res) => {
       setHits(res.data.hits)
       setTotal(res.data.total)
+      setContentTypes(res.data.contentTypes)
+      setSubjects(res.data.subjects)
     }).finally(() => {
       setLoading(false)
     })
   }
 
-  function fetchSearchResult() {
+  function fetchSearchResult(focusElement) {
     setLoading(true)
     axios.get(props.searchServiceUrl, {
       params: {
@@ -201,8 +234,13 @@ function SearchResult(props) {
     }).then((res) => {
       setHits(hits.concat(res.data.hits))
       setTotal(res.data.total)
+      setContentTypes(res.data.contentTypes)
+      setSubjects(res.data.subjects)
     }).finally(() => {
       setLoading(false)
+      if (focusElement) {
+        currentElement.current.focus()
+      }
     })
   }
 
@@ -210,21 +248,22 @@ function SearchResult(props) {
     if (hits.length > 0) {
       return (
         <div>
-          <Button
+          <button
             disabled={loading || total === hits.length}
-            className="button-more mt-5"
-            onClick={() => {
-              fetchSearchResult()
-              addGtagForEvent(props.GA_TRACKING_ID, 'Klikk', 'Søk', 'Vis flere')
+            className="ssb-btn button-more mt-5"
+            onClick={() => onShowMoreSearchResults(false)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                onShowMoreSearchResults(true)
+              }
             }}
           >
             <ChevronDown size="18"/> {props.buttonTitle}
-          </Button>
+          </button>
         </div>
       )
     }
   }
-
 
   function renderNoHitMessage() {
     if (props.language === 'en') {
@@ -326,6 +365,31 @@ function SearchResult(props) {
     } else return null
   }
 
+  const dropdownContentTypeItems = [
+    {
+      id: 'allTypes',
+      title: props.allContentTypesPhrase
+    }
+  ].concat(contentTypes.map((type) => {
+    const phrase = props.contentTypePhrases.find((phrase) => phrase.id === type.title)
+    return {
+      id: type.title,
+      title: `${phrase.title} (${type.count})`
+    }
+  }))
+
+  const dropdownSubjectsItems = [
+    {
+      id: 'allSubjects',
+      title: props.allContentTypesPhrase
+    }
+  ].concat(subjects.map((type) => {
+    return {
+      id: type.title,
+      title: `${type.title} (${type.count})`
+    }
+  }))
+
   const DropdownMainSubject = React.forwardRef((_props, ref) => (
     <Dropdown
       ref={ref}
@@ -336,7 +400,7 @@ function SearchResult(props) {
         addGtagForEvent(props.GA_TRACKING_ID, 'Valgt emne', 'Søk', value.title)
       }}
       selectedItem={selectedMainSubject}
-      items={props.dropDownSubjects}
+      items={dropdownSubjectsItems}
       header={props.chooseSubjectPhrase}
     />
   ))
@@ -351,7 +415,7 @@ function SearchResult(props) {
         addGtagForEvent(props.GA_TRACKING_ID, 'Valgt innholdstype', 'Søk', value.title)
       }}
       selectedItem={selectedContentType}
-      items={props.dropDownContentTypes}
+      items={dropdownContentTypeItems}
       header={props.chooseContentTypePhrase}
     />
   ))
@@ -453,6 +517,8 @@ SearchResult.propTypes = {
   sortPhrase: PropTypes.string,
   sortBestHitPhrase: PropTypes.string,
   sortDatePhrase: PropTypes.string,
+  allContentTypesPhrase: PropTypes.string,
+  allSubjectsPhrase: PropTypes.string,
   count: PropTypes.number,
   noHitMessage: PropTypes.string,
   nameSearchToggle: PropTypes.bool,
@@ -493,8 +559,21 @@ SearchResult.propTypes = {
       publishDate: PropTypes.string,
       publishDateHuman: PropTypes.string
     })),
-  dropDownSubjects: PropTypes.array,
-  dropDownContentTypes: PropTypes.array,
+  contentTypePhrases: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      title: PropTypes.string
+    })),
+  contentTypes: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string,
+      count: PropTypes.number
+    })),
+  subjects: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string,
+      count: PropTypes.number
+    })),
   GA_TRACKING_ID: PropTypes.string
 }
 

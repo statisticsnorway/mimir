@@ -96,7 +96,7 @@ if (isNotInEditMode) {
 ## Future  
 ### Cache Lib
 - [ ] Increase expire for some caches
-- [ ] Merge relatedArticlesCache with partsCache
+- [x] Merge relatedArticlesCache with partsCache
 - [ ] Merge relatedFactPageCache with partsCache
 - [ ] Move datasetRepoCache to seperate file
 - [ ] Move municipalityCache to seperate file

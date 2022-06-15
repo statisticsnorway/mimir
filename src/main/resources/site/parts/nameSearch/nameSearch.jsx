@@ -162,9 +162,8 @@ function NameSearch(props) {
   function parseResultText(doc) {
     return (
       <span>
-        {`${props.phrases.thereAre} `}
         <span className="details">{doc.count}</span>
-        {` ${formatGender(doc.gender)} ${props.phrases.with} `}
+        {` ${formatGender(doc.gender)} ${props.phrases.have} `}
         <span className="details name-search-name">{doc.name.toLowerCase()} </span>
         {` ${props.phrases.asTheir} ${translateName(doc.type)} `}
       </span> )
@@ -495,6 +494,7 @@ NameSearch.propTypes = {
     nameSearchResultTitle: PropTypes.string,
     thereAre: PropTypes.string,
     with: PropTypes.string,
+    have: PropTypes.string,
     asTheir: PropTypes.string,
     errorMessage: PropTypes.string,
     networkErrorMessage: PropTypes.string,

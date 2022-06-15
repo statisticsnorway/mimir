@@ -3,8 +3,7 @@ import { Component } from 'enonic-types/portal'
 import { Content } from 'enonic-types/content'
 import { SearchResultPartConfig } from './searchResult-part-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { PreparedSearchResult, SolrPrepResultAndTotal } from '../../../lib/ssb/utils/solrUtils'
-import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
+import { PreparedSearchResult, SolrPrepResultAndTotal, Facet } from '../../../lib/ssb/utils/solrUtils'
 import { queryNodes, getNode } from '../../../lib/ssb/repo/common'
 import { NodeQueryResponse, RepoNode } from 'enonic-types/node'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
@@ -29,12 +28,6 @@ const {
 const {
   localize
 } = __non_webpack_require__('/lib/xp/i18n')
-const {
-  getPhrases
-} = __non_webpack_require__('/lib/ssb/utils/language')
-const {
-  getMainSubjects
-} = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
 const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
@@ -68,39 +61,44 @@ export function renderPart(req: Request): React4xpResponse {
   }) : content._path
   const count: number = part.config.numberOfHits ? parseInt(part.config.numberOfHits) : 15
   const language: string = content.language ? content.language : 'nb'
-  const phrases: {[key: string]: string} = getPhrases(content)
-  const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
-  const mainSubjectDropdown: Array<Dropdown> = [
+
+  const contentTypePhrases: Array<ContentTypePhrase> = [
     {
-      id: 'allSubjects',
-      title: phrases['publicationArchive.allSubjects']
+      id: 'artikkel',
+      title: localize({
+        key: 'contentType.search.artikkel',
+        locale: language
+      })
+    },
+    {
+      id: 'statistikk',
+      title: localize({
+        key: 'contentType.search.statistikk',
+        locale: language
+      })
+    },
+    {
+      id: 'faktaside',
+      title: localize({
+        key: 'contentType.search.faktaside',
+        locale: language
+      })
+    },
+    {
+      id: 'statistikkbanktabell',
+      title: localize({
+        key: 'contentType.search.statistikkbanktabell',
+        locale: language
+      })
+    },
+    {
+      id: 'publikasjon',
+      title: localize({
+        key: 'contentType.search.publikasjon',
+        locale: language
+      })
     }
-  ].concat(mainSubjects.map((subject) => {
-    return {
-      id: subject.name,
-      title: subject.title
-    }
-  }))
-
-  function getContentTypes(solrResults: Array<string | number>): Array<Dropdown> {
-    const validFilters: Array<string> = ['artikkel', 'statistikk', 'faktaside', 'statistikkbanktabell', 'publikasjon']
-    const filters: Array<string | number> = solrResults
-      .filter((value) => typeof value == 'string')
-      .filter((value) => validFilters.includes(value as string))
-
-    const dropdowns: Array<Dropdown> = [
-      {
-        id: 'allTypes',
-        title: phrases['publicationArchive.allTypes']
-      }
-    ].concat(filters.map((subject: string) => {
-      return {
-        id: subject,
-        title: phrases[`contentType.search.${subject}`]
-      }
-    }))
-    return dropdowns
-  }
+  ]
 
   function bestBet(): PreparedSearchResult | undefined {
     const result: NodeQueryResponse = queryNodes('no.ssb.bestbet', 'master', {
@@ -176,7 +174,8 @@ export function renderPart(req: Request): React4xpResponse {
     solrSearch( sanitizedTerm, language, parseInt(part.config.numberOfHits)) : {
       total: 0,
       hits: [],
-      contentTypes: []
+      contentTypes: [],
+      subjects: []
     }
 
   /* prepare props */
@@ -240,6 +239,14 @@ export function renderPart(req: Request): React4xpResponse {
     }),
     sortDatePhrase: localize({
       key: 'searchResult.sort.date',
+      locale: language
+    }),
+    allContentTypesPhrase: localize({
+      key: 'publicationArchive.allTypes',
+      locale: language
+    }),
+    allSubjectsPhrase: localize({
+      key: 'publicationArchive.allSubjects',
       locale: language
     }),
     namePhrases: {
@@ -308,27 +315,28 @@ export function renderPart(req: Request): React4xpResponse {
     },
     searchPageUrl,
     language,
-    dropDownSubjects: mainSubjectDropdown,
-    dropDownContentTypes: getContentTypes(solrResult.contentTypes),
+    contentTypePhrases: contentTypePhrases,
+    contentTypes: solrResult.contentTypes,
+    subjects: solrResult.subjects,
     GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null
   }
 
   return React4xp.render('site/parts/searchResult/searchResultView', props, req)
 }
 
-  interface BestBet extends RepoNode {
-    data: {
-      linkedSelectedContentResult: BestBetContent['linkedSelectedContentResult'];
-      linkedContentTitle: BestBetContent['linkedContentTitle'];
-      linkedContentHref: BestBetContent['linkedContentHref'];
-      linkedContentIngress: BestBetContent['linkedContentIngress'];
-      linkedContentType: BestBetContent['linkedContentType'];
-      linkedContentDate: BestBetContent['linkedContentDate'];
-      linkedContentSubject: BestBetContent['linkedContentSubject'];
-      linkedEnglishContentSubject: BestBetContent['linkedEnglishContentSubject'];
-      searchWords: BestBetContent['searchWords'];
-    };
-  }
+interface BestBet extends RepoNode {
+  data: {
+    linkedSelectedContentResult: BestBetContent['linkedSelectedContentResult'];
+    linkedContentTitle: BestBetContent['linkedContentTitle'];
+    linkedContentHref: BestBetContent['linkedContentHref'];
+    linkedContentIngress: BestBetContent['linkedContentIngress'];
+    linkedContentType: BestBetContent['linkedContentType'];
+    linkedContentDate: BestBetContent['linkedContentDate'];
+    linkedContentSubject: BestBetContent['linkedContentSubject'];
+    linkedEnglishContentSubject: BestBetContent['linkedEnglishContentSubject'];
+    searchWords: BestBetContent['searchWords'];
+  };
+}
 
 interface SearchResultProps {
   bestBetHit: PreparedSearchResult | undefined;
@@ -349,6 +357,8 @@ interface SearchResultProps {
   sortPhrase: string;
   sortBestHitPhrase: string;
   sortDatePhrase: string;
+  allContentTypesPhrase: string;
+  allSubjectsPhrase: string;
   searchServiceUrl: string;
   nameSearchToggle: boolean;
   nameSearchUrl: string;
@@ -373,12 +383,18 @@ interface SearchResultProps {
   }
   searchPageUrl: string;
   language: string;
-  dropDownSubjects: Array<Dropdown>;
-  dropDownContentTypes: Array<Dropdown>;
+  contentTypePhrases: Array<ContentTypePhrase>;
+  contentTypes: Array<Facet>;
+  subjects: Array<Facet>;
   GA_TRACKING_ID: string | null;
 }
 
 interface Dropdown {
+  id: string;
+  title: string;
+}
+
+interface ContentTypePhrase {
   id: string;
   title: string;
 }
