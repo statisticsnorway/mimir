@@ -129,7 +129,7 @@ function dataFormatPie(seriesAndCategories: SeriesAndCategoriesRaw): Series {
     }
   } else {
     return {
-      name: 'Antall',
+      name: seriesAndCategories.series[0].name,
       data: seriesAndCategories.categories.map((category, index): PieData => {
         return {
           name: category,
