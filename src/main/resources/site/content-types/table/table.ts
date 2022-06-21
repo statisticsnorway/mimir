@@ -106,7 +106,7 @@ export interface Table {
           /**
            * Fotnote-tekst
            */
-          footnoteText?: string;
+          footnoteText?: Array<string>;
         };
       }
     | {

@@ -63,7 +63,7 @@
 					</items>
 				</option>
 				<option name="htmlTable">
-					<label>HTML tabell</label>
+					<label>HTML tabell (Kun på innholdstype Tabell) </label>
 					<items>
 						<input name="html" type="HtmlArea">
 							<label>Kildetabell limt inn fra Excel</label>
@@ -78,12 +78,13 @@
 						<field-set>
 							<label>Fotnoter</label>
 							<items>
-								<input name="footnoteText" type="TextArea">
+								<input type="TextArea" name="footnoteText">
 									<label>Fotnote-tekst</label>
-									<help-text>Inntil 3 fotnoter. For å få opphøyd fotnotetall: 1=ALT+251, 2=ALT+253, 3=ALT+252.</help-text>
+									<help-text>Inntil 3 fotnoter</help-text>
+									<occurrences minimum="0" maximum="3" />
 								</input>
 							</items>
-						</field-set>
+						</field-set>						
 					</items>
 				</option>
 				<option name="dataset">

@@ -106,7 +106,7 @@ export interface GenericDataImport {
           /**
            * Fotnote-tekst
            */
-          footnoteText?: string;
+          footnoteText?: Array<string>;
         };
       }
     | {

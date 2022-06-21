@@ -106,7 +106,7 @@ export interface KeyFigure {
           /**
            * Fotnote-tekst
            */
-          footnoteText?: string;
+          footnoteText?: Array<string>;
         };
       }
     | {

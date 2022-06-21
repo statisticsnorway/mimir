@@ -37,7 +37,7 @@ const {
 const {
   getRowValue
 } = __non_webpack_require__('/lib/ssb/utils/utils')
-const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
+const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser') as XmlParser
 
 export function parseTable(req: Request, table: Content<Table & DataSource>, branch: string = DATASET_BRANCH): TableView {
   let tableViewData: TableView = {
@@ -52,6 +52,17 @@ export function parseTable(req: Request, table: Content<Table & DataSource>, bra
     noteRefs: [],
     sourceList: []
   }
+  const dataSource: DataSource['dataSource'] | undefined = table.data.dataSource
+
+  if (dataSource && dataSource._selected === DataSourceType.HTMLTABLE) {
+    const datasourceHtmlTable: DatasourceHtmlTable = dataSource.htmlTable as DatasourceHtmlTable
+    const tableData: string | undefined = datasourceHtmlTable.html ? datasourceHtmlTable.html : undefined
+    const footNotes: Array<string> = datasourceHtmlTable.footnoteText ? datasourceHtmlTable.footnoteText : []
+    const correctionText: string = table.data.correctionNotice || ''
+    if (tableData) {
+      return parseHtmlTable(tableData, table.displayName, footNotes, correctionText)
+    }
+  }
 
   let datasetRepo: DatasetRepoNode<TbmlDataUniform | StatbankSavedRaw | object> | undefined | null
   if (branch === UNPUBLISHED_DATASET_BRANCH) {
@@ -60,13 +71,6 @@ export function parseTable(req: Request, table: Content<Table & DataSource>, bra
     datasetRepo = datasetOrUndefined(table)
   }
 
-  const dataSource: DataSource['dataSource'] | undefined = table.data.dataSource
-
-  if (dataSource && dataSource._selected === DataSourceType.HTMLTABLE) {
-    if (dataSource.htmlTable.html) {
-      tableViewData = parseHtmlTable(dataSource.htmlTable.html)
-    }
-  }
 
   if (datasetRepo) {
     const data: string | TbmlDataUniform | StatbankSavedRaw | object | undefined = datasetRepo.data
@@ -89,35 +93,51 @@ export function parseTable(req: Request, table: Content<Table & DataSource>, bra
   return tableViewData
 }
 
-export function parseHtmlTable(tableData: string): TableView {
-  const tableRaw: string = __.toNativeObject(xmlParser.parse(tableData))
-  const jsonTable: HtmlTableRaw | undefined = tableRaw ? JSON.parse(tableRaw) : undefined
+export function parseHtmlTable(tableData: string, title: string, footNotes: Array<string>, correctionText: string): TableView {
+  const tableRaw: string = __.toNativeObject(xmlParser.parse(tableData)) as string
+  const jsonTable: HtmlTableRaw | undefined = tableRaw ? JSON.parse(tableRaw) as HtmlTableRaw : undefined
   const tableRows: Array<HtmlTableRowRaw> = jsonTable ? jsonTable.table.tbody.tr : []
-  const headRows: Array<TableRowUniform> = []
-  const bodyRows: Array<TableCellUniform> = []
+  const theadRows: Array<HtmlTableRowRaw> = []
+  const tbodyRows: Array<HtmlTableRowRaw> = []
+  const noteRefs: Array<string> = footNotes ? footNotes.map((_note:string, index: number) => `note:${index + 1}`) : []
+  const notes: Array<Note> = footNotes ? footNotes.map((note:string, index: number) => {
+    return {
+      noteid: `note:${index + 1}`,
+      content: note
+    }
+  }) : []
 
   tableRows.forEach((row: HtmlTableRowRaw, index: number) => {
     if (index > 0) {
-      const bodyRow: TableCellUniform = getHtmlTableBodyRow(row)
-      bodyRows.push(bodyRow)
+      tbodyRows.push(row)
     } else {
-      const headRow: TableRowUniform = getHtmlTableHeadRow(row)
-      headRows.push(headRow)
+      theadRows.push(row)
     }
   })
 
+  const headRows: Array<TableRowUniform> = theadRows.map((row)=> {
+    return getHtmlTableHeadRow(row)
+  })
+
+  const bodyRows: Array<TableCellUniform> = tbodyRows.map((row)=> {
+    return getHtmlTableBodyRow(row)
+  })
+
   return {
-    caption: undefined,
+    caption: {
+      noterefs: '',
+      content: title
+    },
     thead: headRows,
     tbody: [{
       tr: bodyRows
     }],
     tfoot: {
-      footnotes: [],
-      correctionNotice: ''
+      footnotes: notes,
+      correctionNotice: correctionText
     },
     tableClass: 'statistics',
-    noteRefs: [],
+    noteRefs: noteRefs,
     sourceList: []
   }
 }
@@ -316,6 +336,11 @@ export type TableSourceList = Array<Source>
 export interface TableLib {
   parseTable: (req: Request, table: Content<Table>, branch?: string) => TableView;
   parseHtmlString: (tableData: string) => HtmlTable;
+}
+
+interface DatasourceHtmlTable {
+  html: string | undefined;
+  footnoteText: Array<string>;
 }
 
 

@@ -95,7 +95,7 @@ export interface DataSource {
         _selected: "htmlTable";
 
         /**
-         * HTML tabell
+         * HTML tabell (Kun på innholdstype Tabell)
          */
         htmlTable: {
           /**
@@ -106,7 +106,7 @@ export interface DataSource {
           /**
            * Fotnote-tekst
            */
-          footnoteText?: string;
+          footnoteText?: Array<string>;
         };
       }
     | {

@@ -116,7 +116,7 @@ export interface Highchart {
           /**
            * Fotnote-tekst
            */
-          footnoteText?: string;
+          footnoteText?: Array<string>;
         };
       }
     | {
