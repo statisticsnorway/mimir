@@ -197,6 +197,9 @@ function SearchResult(props) {
   }
 
   function fetchFilteredSearchResult() {
+    const mainSubject = filter.mainSubject
+    const contentType = filter.contentType
+
     setLoading(true)
     axios.get(props.searchServiceUrl, {
       params: {
@@ -204,8 +207,8 @@ function SearchResult(props) {
         start: 0,
         count: props.count,
         language: props.language,
-        mainsubject: filter.mainSubject,
-        contentType: filter.contentType,
+        mainsubject: mainSubject,
+        contentType: contentType,
         sort: sortList === 'publiseringsdato' ? sortList : undefined
       }
     }).then((res) => {
@@ -215,6 +218,9 @@ function SearchResult(props) {
       setSubjects(res.data.subjects)
     }).finally(() => {
       setLoading(false)
+      const mainSubjectQueryString = mainSubject ? `&emne=${mainSubject}` : ''
+      const contentTypeQueryString = contentType ? `&innholdstype=${contentType}` : ''
+      window.history.pushState({}, '', `?sok=${searchTerm}${mainSubjectQueryString}${contentTypeQueryString}`)
     })
   }
 
