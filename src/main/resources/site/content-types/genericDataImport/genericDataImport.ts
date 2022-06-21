@@ -92,6 +92,27 @@ export interface GenericDataImport {
         /**
          * Selected
          */
+        _selected: "htmlTable";
+
+        /**
+         * HTML tabell
+         */
+        htmlTable: {
+          /**
+           * Kildetabell limt inn fra Excel
+           */
+          html?: string;
+
+          /**
+           * Fotnote-tekst
+           */
+          footnoteText?: string;
+        };
+      }
+    | {
+        /**
+         * Selected
+         */
         _selected: "dataset";
 
         /**

@@ -62,6 +62,12 @@ export function parseTable(req: Request, table: Content<Table & DataSource>, bra
 
   const dataSource: DataSource['dataSource'] | undefined = table.data.dataSource
 
+  if (dataSource && dataSource._selected === DataSourceType.HTMLTABLE) {
+    if (dataSource.htmlTable.html) {
+      tableViewData = parseHtmlTable(dataSource.htmlTable.html)
+    }
+  }
+
   if (datasetRepo) {
     const data: string | TbmlDataUniform | StatbankSavedRaw | object | undefined = datasetRepo.data
 
@@ -81,6 +87,66 @@ export function parseTable(req: Request, table: Content<Table & DataSource>, bra
     }
   }
   return tableViewData
+}
+
+export function parseHtmlTable(tableData: string): TableView {
+  const tableRaw: string = __.toNativeObject(xmlParser.parse(tableData))
+  const jsonTable: HtmlTableRaw | undefined = tableRaw ? JSON.parse(tableRaw) : undefined
+  const tableRows: Array<HtmlTableRowRaw> = jsonTable ? jsonTable.table.tbody.tr : []
+  const headRows: Array<TableRowUniform> = []
+  const bodyRows: Array<TableCellUniform> = []
+
+  tableRows.forEach((row: HtmlTableRowRaw, index: number) => {
+    if (index > 0) {
+      const bodyRow: TableCellUniform = getHtmlTableBodyRow(row)
+      bodyRows.push(bodyRow)
+    } else {
+      const headRow: TableRowUniform = getHtmlTableHeadRow(row)
+      headRows.push(headRow)
+    }
+  })
+
+  return {
+    caption: undefined,
+    thead: headRows,
+    tbody: [{
+      tr: bodyRows
+    }],
+    tfoot: {
+      footnotes: [],
+      correctionNotice: ''
+    },
+    tableClass: 'statistics',
+    noteRefs: [],
+    sourceList: []
+  }
+}
+
+function getHtmlTableHeadRow(tableRow: HtmlTableRowRaw): TableRowUniform {
+  const tableCell: Array<TableCellUniform> = [{
+    th: getHtmlTableCell(tableRow),
+    td: []
+  }]
+  const headRow: TableRowUniform = {
+    tr: tableCell
+  }
+  return headRow
+}
+
+function getHtmlTableBodyRow(tableRow: HtmlTableRowRaw): TableCellUniform {
+  const tableCell: TableCellUniform = {
+    th: [],
+    td: getHtmlTableCell(tableRow)
+  }
+  return tableCell
+}
+
+function getHtmlTableCell(tableCells: HtmlTableRowRaw): Array<number | string | PreliminaryData> {
+  const cells: Array<number | string> = tableCells.td.map((dataCell)=> {
+    const value: number | string = getRowValue(dataCell)
+    return typeof(value) === 'string' ? value.replace(/&nbsp;/g, '') : value
+  })
+  return cells
 }
 
 function getTableViewData(table: Content<Table>, dataContent: TbmlDataUniform ): TableView {
