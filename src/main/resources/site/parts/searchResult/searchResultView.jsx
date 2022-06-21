@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
+
 import PropTypes from 'prop-types'
 import { Card,
-  Button,
   Divider,
   Input,
   Link,
@@ -29,8 +29,8 @@ function SearchResult(props) {
   const [sortChanged, setSortChanged] = useState(false)
   const [sortList, setSortList] = useState(undefined)
   const [filter, setFilter] = useState({
-    mainSubject: '',
-    contentType: ''
+    mainSubject: props.subjectUrlParam ? props.subjectUrlParam : '',
+    contentType: props.contentTypeUrlParam ? props.contentTypeUrlParam : ''
   })
   const allContentTypeItem = {
     id: 'allTypes',
@@ -44,7 +44,6 @@ function SearchResult(props) {
   const [selectedContentType, setSelectedContentType] = useState(allContentTypeItem)
   const [numberChanged, setNumberChanged] = useState(0)
   const currentElement = useRef(null)
-
 
   useEffect(() => {
     if (!nameSearchData) {
@@ -574,7 +573,9 @@ SearchResult.propTypes = {
       title: PropTypes.string,
       count: PropTypes.number
     })),
-  GA_TRACKING_ID: PropTypes.string
+  GA_TRACKING_ID: PropTypes.string,
+  contentTypeUrlParam: PropTypes.string,
+  subjectUrlParam: PropTypes.string
 }
 
 export default (props) => <SearchResult {...props} />
