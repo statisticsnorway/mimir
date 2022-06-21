@@ -52,8 +52,8 @@ exports.get = function(req: Request): Response | React4xpResponse {
       if (config.relatedFactPages) {
         contentIdList = forceArray(config.relatedFactPages)
       }
-      if (page.data.relatedArticles) {
-        contentIdList = forceArray(page.data.relatedFactPages) as Array<string>
+      if (page.data.relatedFactPages) {
+        contentIdList = forceArray(page.data.relatedFactPages)
       }
       relatedFactPageConfig = {
         inputType: 'relatedFactPage',
