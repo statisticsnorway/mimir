@@ -95,7 +95,7 @@ export interface KeyFigure {
         _selected: "htmlTable";
 
         /**
-         * HTML tabell
+         * HTML tabell (Kun på innholdstype Tabell)
          */
         htmlTable: {
           /**

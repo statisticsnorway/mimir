@@ -56,8 +56,8 @@ export function parseTable(req: Request, table: Content<Table & DataSource>, bra
 
   if (dataSource && dataSource._selected === DataSourceType.HTMLTABLE) {
     const datasourceHtmlTable: DatasourceHtmlTable = dataSource.htmlTable as DatasourceHtmlTable
-    const tableData: string | undefined = datasourceHtmlTable.html ? datasourceHtmlTable.html : undefined
-    const footNotes: Array<string> = datasourceHtmlTable.footnoteText ? datasourceHtmlTable.footnoteText : []
+    const tableData: string | undefined = datasourceHtmlTable.html || undefined
+    const footNotes: Array<string> = datasourceHtmlTable.footnoteText ? forceArray(datasourceHtmlTable.footnoteText) : []
     const correctionText: string = table.data.correctionNotice || ''
     if (tableData) {
       return parseHtmlTable(tableData, table.displayName, footNotes, correctionText)
