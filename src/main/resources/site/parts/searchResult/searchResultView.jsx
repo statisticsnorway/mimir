@@ -32,41 +32,22 @@ function SearchResult(props) {
     mainSubject: props.subjectUrlParam ? props.subjectUrlParam : '',
     contentType: props.contentTypeUrlParam ? props.contentTypeUrlParam : ''
   })
-  const dropdownContentTypeItems = [
-    {
-      id: 'allTypes',
-      title: props.allContentTypesPhrase
-    }
-  ].concat(contentTypes.map((type) => {
-    const phrase = props.contentTypePhrases.find((phrase) => phrase.id === type.title)
-    return {
-      id: type.title,
-      title: `${phrase.title} (${type.count})`
-    }
-  }))
-  const preselectedContentTypeDropdownItem = props.contentTypeUrlParam ?
-    dropdownContentTypeItems.filter((item) => item.id === props.contentTypeUrlParam)[0] : {
-      id: 'allTypes',
-      title: props.allContentTypesPhrase
-    }
-  const preselectedSubjectItem = props.subjectUrlParam ? subjects.filter((item) => item.title === props.subjectUrlParam)[0] : ''
-  const dropdownSubjectsItems = [
-    {
-      id: 'allSubjects',
-      title: props.allContentTypesPhrase
-    }
-  ].concat(subjects.map((type) => {
-    return {
-      id: type.title,
-      title: `${type.title} (${type.count})`
-    }
-  }))
-  const preselectedSubjectDropdownItem = preselectedSubjectItem ?
-    dropdownSubjectsItems.filter((item) => item.title === `${preselectedSubjectItem.title} (${preselectedSubjectItem.count})`)[0] :
-    {
-      id: 'allSubjects',
-      title: props.allSubjectsPhrase
-    }
+  const allContentTypeItem = {
+    id: 'allTypes',
+    title: props.allContentTypesPhrase
+  }
+  const preselectedContentTypeDropdownItem = props.contentTypeUrlParam ? {
+    id: props.contentTypeUrlParam,
+    title: props.contentTypePhrases.find((phrase) => phrase.id === props.contentTypeUrlParam).title
+  } : allContentTypeItem
+  const allSubjectsItem = {
+    id: 'allSubjects',
+    title: props.allSubjectsPhrase
+  }
+  const preselectedSubjectDropdownItem = props.subjectUrlParam ? {
+    id: props.subjectUrlParam,
+    title: props.subjectUrlParam
+  } : allSubjectsItem
   const [selectedContentType, setSelectedContentType] = useState(preselectedContentTypeDropdownItem)
   const [selectedMainSubject, setSelectedMainSubject] = useState(preselectedSubjectDropdownItem)
   const [numberChanged, setNumberChanged] = useState(0)
@@ -93,6 +74,7 @@ function SearchResult(props) {
   }, [filter, sortList])
 
   function onChange(id, value) {
+    console.log(value)
     setFilterChanged(true)
 
     if (id === 'mainSubject') {
@@ -396,6 +378,31 @@ function SearchResult(props) {
       )
     } else return null
   }
+
+  const dropdownSubjectsItems = [
+    {
+      id: 'allSubjects',
+      title: props.allContentTypesPhrase
+    }
+  ].concat(subjects.map((type) => {
+    return {
+      id: type.title,
+      title: `${type.title} (${type.count})`
+    }
+  }))
+
+  const dropdownContentTypeItems = [
+    {
+      id: 'allTypes',
+      title: props.allContentTypesPhrase
+    }
+  ].concat(contentTypes.map((type) => {
+    const phrase = props.contentTypePhrases.find((phrase) => phrase.id === type.title)
+    return {
+      id: type.title,
+      title: `${phrase.title} (${type.count})`
+    }
+  }))
 
   const DropdownMainSubject = React.forwardRef((_props, ref) => (
     <Dropdown
