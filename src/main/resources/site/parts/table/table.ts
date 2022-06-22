@@ -10,6 +10,7 @@ import { Statistics } from '../../content-types/statistics/statistics'
 import { Table } from '../../content-types/table/table'
 import { GA_TRACKING_ID } from '../../pages/default/default'
 import { TablePartConfig } from './table-part-config'
+import { DataSource as DataSourceType } from '../../../lib/ssb/repo/dataset'
 
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
@@ -72,10 +73,12 @@ function getProps(req: Request, tableId?: string): TableProps {
     key: tableId as string
   }) as Content<Table>
 
+  const datasourceHtmlTable: boolean = tableContent.data.dataSource?._selected === DataSourceType.HTMLTABLE
+
   const showPreviewDraft: boolean = hasWritePermissionsAndPreview(req, tableId as string)
   const table: TableView = parseTable(req, tableContent, DATASET_BRANCH)
   let tableDraft: TableView | undefined
-  if (showPreviewDraft) {
+  if (!datasourceHtmlTable && showPreviewDraft) {
     tableDraft = parseTable(req, tableContent, UNPUBLISHED_DATASET_BRANCH)
   }
   const draftExist: boolean | undefined = tableDraft && tableDraft.thead.length > 0

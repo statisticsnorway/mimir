@@ -86,7 +86,7 @@ export function parseTable(req: Request, table: Content<Table & DataSource>, bra
   return tableViewData
 }
 
-export function parseHtmlTable(table: Content<Table & DataSource>): TableView {
+function parseHtmlTable(table: Content<Table & DataSource>): TableView {
   const dataSource: DataSource['dataSource'] | undefined = table.data.dataSource
   const datasourceHtmlTable: DatasourceHtmlTable | undefined = dataSource && dataSource._selected === DataSourceType.HTMLTABLE ?
       dataSource.htmlTable as DatasourceHtmlTable : undefined
