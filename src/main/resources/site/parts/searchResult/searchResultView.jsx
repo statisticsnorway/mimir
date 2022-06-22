@@ -74,7 +74,6 @@ function SearchResult(props) {
   }, [filter, sortList])
 
   function onChange(id, value) {
-    console.log(value)
     setFilterChanged(true)
 
     if (id === 'mainSubject') {
@@ -379,18 +378,6 @@ function SearchResult(props) {
     } else return null
   }
 
-  const dropdownSubjectsItems = [
-    {
-      id: 'allSubjects',
-      title: props.allContentTypesPhrase
-    }
-  ].concat(subjects.map((type) => {
-    return {
-      id: type.title,
-      title: `${type.title} (${type.count})`
-    }
-  }))
-
   const dropdownContentTypeItems = [
     {
       id: 'allTypes',
@@ -401,6 +388,18 @@ function SearchResult(props) {
     return {
       id: type.title,
       title: `${phrase.title} (${type.count})`
+    }
+  }))
+
+  const dropdownSubjectsItems = [
+    {
+      id: 'allSubjects',
+      title: props.allContentTypesPhrase
+    }
+  ].concat(subjects.map((type) => {
+    return {
+      id: type.title,
+      title: `${type.title} (${type.count})`
     }
   }))
 
