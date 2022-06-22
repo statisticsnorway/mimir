@@ -55,13 +55,7 @@ export function parseTable(req: Request, table: Content<Table & DataSource>, bra
   const dataSource: DataSource['dataSource'] | undefined = table.data.dataSource
 
   if (dataSource && dataSource._selected === DataSourceType.HTMLTABLE) {
-    const datasourceHtmlTable: DatasourceHtmlTable = dataSource.htmlTable as DatasourceHtmlTable
-    const tableData: string | undefined = datasourceHtmlTable.html || undefined
-    const footNotes: Array<string> = datasourceHtmlTable.footnoteText ? forceArray(datasourceHtmlTable.footnoteText) : []
-    const correctionText: string = table.data.correctionNotice || ''
-    if (tableData) {
-      return parseHtmlTable(tableData, table.displayName, footNotes, correctionText)
-    }
+    return parseHtmlTable(table)
   }
 
   let datasetRepo: DatasetRepoNode<TbmlDataUniform | StatbankSavedRaw | object> | undefined | null
@@ -70,7 +64,6 @@ export function parseTable(req: Request, table: Content<Table & DataSource>, bra
   } else {
     datasetRepo = datasetOrUndefined(table)
   }
-
 
   if (datasetRepo) {
     const data: string | TbmlDataUniform | StatbankSavedRaw | object | undefined = datasetRepo.data
@@ -93,8 +86,17 @@ export function parseTable(req: Request, table: Content<Table & DataSource>, bra
   return tableViewData
 }
 
-export function parseHtmlTable(tableData: string, title: string, footNotes: Array<string>, correctionText: string): TableView {
-  const jsonTable: HtmlTableRaw | undefined = parseStringToJson(tableData)
+export function parseHtmlTable(table: Content<Table & DataSource>): TableView {
+  const dataSource: DataSource['dataSource'] | undefined = table.data.dataSource
+  const datasourceHtmlTable: DatasourceHtmlTable | undefined = dataSource && dataSource._selected === DataSourceType.HTMLTABLE ?
+      dataSource.htmlTable as DatasourceHtmlTable : undefined
+  const tableData: string | undefined = datasourceHtmlTable ? datasourceHtmlTable.html : undefined
+  const footNotes: Array<string> = datasourceHtmlTable && datasourceHtmlTable.footnoteText ? forceArray(datasourceHtmlTable.footnoteText) : []
+  const correctionText: string = table.data.correctionNotice || ''
+  const title: string = table.displayName
+
+
+  const jsonTable: HtmlTableRaw | undefined = tableData ? parseStringToJson(tableData) : undefined
   const tableRows: Array<HtmlTableRowRaw> = jsonTable ? jsonTable.table.tbody.tr : []
   const theadRows: Array<HtmlTableRowRaw> = []
   const tbodyRows: Array<HtmlTableRowRaw> = []
@@ -144,7 +146,7 @@ export function parseHtmlTable(tableData: string, title: string, footNotes: Arra
 }
 
 function getHtmlTableHeadRow(tableRow: HtmlTableRowRaw): TableCellUniform {
-  const cells: Array<number | string> = tableRow.td.map((dataCell)=> {
+  const cells: Array<number | string> = forceArray(tableRow.td).map((dataCell)=> {
     const value: number | string = getRowValue(dataCell)
     return typeof(value) === 'string' ? value.replace(/&nbsp;/g, '') : value
   })
@@ -155,7 +157,7 @@ function getHtmlTableHeadRow(tableRow: HtmlTableRowRaw): TableCellUniform {
 }
 
 function getHtmlTableBodyRow(tableRow: HtmlTableRowRaw): TableCellUniform {
-  const cells: Array<number | string> = tableRow.td.map((dataCell)=> {
+  const cells: Array<number | string> = forceArray(tableRow.td).map((dataCell)=> {
     const value: number | string = getRowValue(dataCell)
     return typeof(value) === 'string' ? value.replace(/&nbsp;/g, '') : value
   })
