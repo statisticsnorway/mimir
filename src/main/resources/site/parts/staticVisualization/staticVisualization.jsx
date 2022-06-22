@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { PropTypes } from 'prop-types'
-import { Title, Link, FactBox, Tabs, Divider } from '@statisticsnorway/ssb-component-library'
+import { Link, FactBox, Tabs, Divider } from '@statisticsnorway/ssb-component-library'
 import { Row, Col } from 'react-bootstrap'
 import NumberFormat from 'react-number-format'
 
@@ -135,7 +135,7 @@ function StaticVisualization(props) {
     <section className="container part-static-visualization">
       <Row className="xp-part">
         <Col className="xp-region col-12">
-          <Title size={3} className="mt-0">{props.title}</Title>
+          <figcaption className="mt-0">{props.title}</figcaption>
           {renderTabs()}
           {activeTab === 'figure' && (
             <div className="static-visualization-chart d-flex justify-content-center">
