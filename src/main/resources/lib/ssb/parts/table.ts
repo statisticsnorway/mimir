@@ -91,15 +91,13 @@ function parseHtmlTable(table: Content<Table & DataSource>): TableView {
   const datasourceHtmlTable: DatasourceHtmlTable | undefined = dataSource && dataSource._selected === DataSourceType.HTMLTABLE ?
       dataSource.htmlTable as DatasourceHtmlTable : undefined
   const tableData: string | undefined = datasourceHtmlTable ? datasourceHtmlTable.html : undefined
+  const jsonTable: HtmlTableRaw | undefined = tableData ? parseStringToJson(tableData) : undefined
+  const tableRows: Array<HtmlTableRowRaw> = jsonTable ? forceArray(jsonTable.table.tbody.tr) : []
+  const theadRow: HtmlTableRowRaw = tableRows[0]
+  const tbodyRows: Array<HtmlTableRowRaw> = tableRows.slice(1)
+
   const footNotes: Array<string> = datasourceHtmlTable && datasourceHtmlTable.footnoteText ? forceArray(datasourceHtmlTable.footnoteText) : []
   const correctionText: string = table.data.correctionNotice || ''
-  const title: string = table.displayName
-
-
-  const jsonTable: HtmlTableRaw | undefined = tableData ? parseStringToJson(tableData) : undefined
-  const tableRows: Array<HtmlTableRowRaw> = jsonTable ? jsonTable.table.tbody.tr : []
-  const theadRows: Array<HtmlTableRowRaw> = []
-  const tbodyRows: Array<HtmlTableRowRaw> = []
   const noteRefs: Array<string> = footNotes ? footNotes.map((_note:string, index: number) => `note:${index + 1}`) : []
   const notes: Array<Note> = footNotes ? footNotes.map((note:string, index: number) => {
     return {
@@ -108,26 +106,25 @@ function parseHtmlTable(table: Content<Table & DataSource>): TableView {
     }
   }) : []
 
-  tableRows.forEach((row: HtmlTableRowRaw, index: number) => {
-    if (index > 0) {
-      tbodyRows.push(row)
-    } else {
-      theadRows.push(row)
+  const headRows: Array<TableCellUniform> = forceArray(theadRow).map((row)=> {
+    return {
+      th: getHtmlTableCells(row),
+      td: []
     }
   })
 
-  const headRows: Array<TableCellUniform> = theadRows.map((row)=> {
-    return getHtmlTableHeadRow(row)
-  })
-
   const bodyRows: Array<TableCellUniform> = tbodyRows.map((row)=> {
-    return getHtmlTableBodyRow(row)
+    const cells: Array<number | string> = getHtmlTableCells(row)
+    return {
+      th: forceArray(cells[0]),
+      td: cells.slice(1)
+    }
   })
 
   return {
     caption: {
       noterefs: '',
-      content: title
+      content: table.displayName
     },
     thead: [{
       tr: headRows
@@ -145,28 +142,11 @@ function parseHtmlTable(table: Content<Table & DataSource>): TableView {
   }
 }
 
-function getHtmlTableHeadRow(tableRow: HtmlTableRowRaw): TableCellUniform {
-  const cells: Array<number | string> = forceArray(tableRow.td).map((dataCell)=> {
-    const value: number | string = getRowValue(dataCell)
+function getHtmlTableCells(row: HtmlTableRowRaw ): Array<number | string> {
+  return forceArray(row.td).map((cell)=> {
+    const value: number | string = getRowValue(cell)
     return typeof(value) === 'string' ? value.replace(/&nbsp;/g, '') : value
   })
-  return {
-    th: cells,
-    td: []
-  }
-}
-
-function getHtmlTableBodyRow(tableRow: HtmlTableRowRaw): TableCellUniform {
-  const cells: Array<number | string> = forceArray(tableRow.td).map((dataCell)=> {
-    const value: number | string = getRowValue(dataCell)
-    return typeof(value) === 'string' ? value.replace(/&nbsp;/g, '') : value
-  })
-  const headCell: number | string = cells[0]
-  cells.shift() // First element is th
-  return {
-    th: [headCell],
-    td: cells
-  }
 }
 
 function getTableViewData(table: Content<Table>, dataContent: TbmlDataUniform ): TableView {
@@ -261,7 +241,6 @@ function parseStringToJson(tableData: string): HtmlTableRaw | undefined {
   const jsonTable: HtmlTableRaw | undefined = tableRaw ? JSON.parse(tableRaw) as HtmlTableRaw : undefined
   return jsonTable
 }
-
 
 function getTableViewDataStatbankSaved(dataContent: StatbankSavedUniform ): TableView {
   const title: Title = dataContent.table.caption
