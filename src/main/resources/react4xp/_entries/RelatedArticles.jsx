@@ -1,3 +1,4 @@
+// import React, { useRef } from 'react'
 import React from 'react'
 import { Card, Text, Button } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
@@ -36,12 +37,18 @@ class RelatedArticles extends React.Component {
   renderShowMoreButton() {
     const {
       showAll,
-      showLess
+      showLess,
+      relatedArticles
     } = this.props
     return (
       <div className={`row hide-show-btn justify-content-center justify-content-lg-start${this.getButtonBreakpoints()}`}>
         <div className="col-auto">
-          <Button onClick={this.toggleBox}>{this.state.isHidden ? showAll : showLess}</Button>
+          <Button
+            onClick={this.toggleBox}
+            ariaLabel={this.state.isHidden ? `${this.props.showAllAriaLabel} - ${relatedArticles.length} ${this.props.articlePluralName}` : ''}
+          >
+            {this.state.isHidden ? showAll + ` (${relatedArticles.length})` : showLess}
+          </Button>
         </div>
       </div>
     )
@@ -60,6 +67,8 @@ class RelatedArticles extends React.Component {
   }
 
   render() {
+    // const currentElement = useRef(null)
+
     const {
       relatedArticles,
       heading,
@@ -72,11 +81,17 @@ class RelatedArticles extends React.Component {
         <div className="row">
           <h2 className="col mt-4 mb-5">{heading}</h2>
         </div>
-        <div className="row mb-5">
+        <div role="list" className="row mb-5">
           {relatedArticles.map((article, index) => {
+            // const last = index === this.props.relatedArticles.length - relatedArticles.count
+            const last = index == 6
             return (
               <div
+                role="listitem"
                 key={index}
+                // ref={last ? currentElement : null}
+                // SETT INN REF HER!
+
                 className={`col-auto col-12 col-lg-4 mb-3${this.getBreakpoints(index, hasButton)}`}
               >
                 <Card
@@ -117,7 +132,9 @@ RelatedArticles.propTypes = {
   ).isRequired,
   showAll: PropTypes.string.isRequired,
   showLess: PropTypes.string.isRequired,
-  heading: PropTypes.string.isRequired
+  heading: PropTypes.string.isRequired,
+  articlePluralName: PropTypes.string.isRequired,
+  showAllAriaLabel: PropTypes.string.isRequired
 }
 
 export default (props) => <RelatedArticles {...props} />
