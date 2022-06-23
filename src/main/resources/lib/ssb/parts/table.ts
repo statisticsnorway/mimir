@@ -93,7 +93,7 @@ function parseHtmlTable(table: Content<Table & DataSource>): TableView {
   const tableData: string | undefined = datasourceHtmlTable ? datasourceHtmlTable.html : undefined
   const jsonTable: HtmlTableRaw | undefined = tableData ? parseStringToJson(tableData) : undefined
   const tableRows: Array<HtmlTableRowRaw> = jsonTable ? forceArray(jsonTable.table.tbody.tr) : []
-  const theadRow: HtmlTableRowRaw = tableRows[0]
+  const theadRow: Array<HtmlTableRowRaw> = forceArray(tableRows[0])
   const tbodyRows: Array<HtmlTableRowRaw> = tableRows.slice(1)
 
   const footNotes: Array<string> = datasourceHtmlTable && datasourceHtmlTable.footnoteText ? forceArray(datasourceHtmlTable.footnoteText) : []
@@ -106,32 +106,32 @@ function parseHtmlTable(table: Content<Table & DataSource>): TableView {
     }
   }) : []
 
-  const headRows: Array<TableCellUniform> = forceArray(theadRow).map((row)=> {
-    return {
-      th: getHtmlTableCells(row),
-      td: []
-    }
-  })
+  const thead: Array<TableRowUniform> = [{
+    tr: theadRow.map((row)=> {
+      return {
+        th: getHtmlTableCells(row),
+        td: []
+      }
+    })
+  }]
 
-  const bodyRows: Array<TableCellUniform> = tbodyRows.map((row)=> {
-    const cells: Array<number | string> = getHtmlTableCells(row)
-    return {
-      th: forceArray(cells[0]),
-      td: cells.slice(1)
-    }
-  })
+  const tbody: Array<TableRowUniform> = [{
+    tr: tbodyRows.map((row)=> {
+      const cells: Array<number | string> = getHtmlTableCells(row)
+      return {
+        th: forceArray(cells[0]),
+        td: cells.slice(1)
+      }
+    })
+  }]
 
   return {
     caption: {
       noterefs: '',
       content: table.displayName
     },
-    thead: [{
-      tr: headRows
-    }],
-    tbody: [{
-      tr: bodyRows
-    }],
+    thead: thead,
+    tbody: tbody,
     tfoot: {
       footnotes: notes,
       correctionNotice: correctionText
