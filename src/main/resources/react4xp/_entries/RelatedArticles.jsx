@@ -1,29 +1,25 @@
 // import React, { useRef } from 'react'
-import React from 'react'
+import React, { useState } from 'react'
 import { Card, Text, Button } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 
-class RelatedArticles extends React.Component {
-  constructor(props) {
-    super(props)
+function RelatedArticles(props) {
+  const [isHidden, setIsHidden] = useState(true)
 
-    this.state = {
-      isHidden: true
-    }
+  const {
+    relatedArticles,
+    heading,
+    showAll,
+    showLess,
+    showAllAriaLabel,
+    articlePluralName
+  } = props
 
-    this.toggleBox = this.toggleBox.bind(this)
+  function toggleBox() {
+    setIsHidden(!isHidden)
   }
 
-  toggleBox() {
-    this.setState((prevState) => ({
-      isHidden: !prevState.isHidden
-    }))
-  }
-
-  getButtonBreakpoints() {
-    const {
-      relatedArticles
-    } = this.props
+  function getButtonBreakpoints() {
     if (relatedArticles.length > 6) {
       return '' // always display if it's more than 6
     } else if (relatedArticles.length > 4) {
@@ -34,28 +30,23 @@ class RelatedArticles extends React.Component {
     return ' d-none' // always hide if there is less than 3
   }
 
-  renderShowMoreButton() {
-    const {
-      showAll,
-      showLess,
-      relatedArticles
-    } = this.props
+  function renderShowMoreButton() {
     return (
-      <div className={`row hide-show-btn justify-content-center justify-content-lg-start${this.getButtonBreakpoints()}`}>
+      <div className={`row hide-show-btn justify-content-center justify-content-lg-start${getButtonBreakpoints()}`}>
         <div className="col-auto">
           <Button
-            onClick={this.toggleBox}
-            ariaLabel={this.state.isHidden ? `${this.props.showAllAriaLabel} - ${relatedArticles.length} ${this.props.articlePluralName}` : ''}
+            onClick={toggleBox}
+            ariaLabel={isHidden ? `${showAllAriaLabel} - ${relatedArticles.length} ${articlePluralName}` : ''}
           >
-            {this.state.isHidden ? showAll + ` (${relatedArticles.length})` : showLess}
+            {isHidden ? showAll + ` (${relatedArticles.length})` : showLess}
           </Button>
         </div>
       </div>
     )
   }
 
-  getBreakpoints(index, hasButton) {
-    const hideCard = hasButton && this.state.isHidden ? ' d-none' : ''
+  function getBreakpoints(index, hasButton) {
+    const hideCard = hasButton && isHidden ? ' d-none' : ''
     if (index < 3) {
       return ' d-block'
     } else if (index < 4) {
@@ -66,56 +57,49 @@ class RelatedArticles extends React.Component {
     return hideCard
   }
 
-  render() {
-    // const currentElement = useRef(null)
+  // const currentElement = useRef(null)
 
-    const {
-      relatedArticles,
-      heading,
-      showAll,
-      showLess
-    } = this.props
-    const hasButton = showAll && showLess
-    return (
-      <div className="container">
-        <div className="row">
-          <h2 className="col mt-4 mb-5">{heading}</h2>
-        </div>
-        <div role="list" className="row mb-5">
-          {relatedArticles.map((article, index) => {
-            // const last = index === this.props.relatedArticles.length - relatedArticles.count
-            return (
-              <div
-                role="listitem"
-                key={index}
-                // ref={last ? currentElement : null}
-                // SETT INN REF HER!
+  const hasButton = showAll && showLess
 
-                className={`col-auto col-12 col-lg-4 mb-3${this.getBreakpoints(index, hasButton)}`}
-              >
-                <Card
-                  imagePlacement="top"
-                  image={
-                    <img
-                      src={article.imageSrc}
-                      alt={article.imageAlt ? article.imageAlt : ' '} aria-hidden="true" />
-                  }
-                  href={article.href}
-                  subTitle={article.subTitle}
-                  title={article.title}
-                >
-                  <Text>
-                    {article.preface}
-                  </Text>
-                </Card>
-              </div>
-            )
-          })}
-        </div>
-        {hasButton && this.renderShowMoreButton()}
+  return (
+    <div className="container">
+      <div className="row">
+        <h2 className="col mt-4 mb-5">{heading}</h2>
       </div>
-    )
-  }
+      <div role="list" className="row mb-5">
+        {relatedArticles.map((article, index) => {
+          // const last = index === this.props.relatedArticles.length - relatedArticles.count
+          return (
+            <div
+              role="listitem"
+              key={index}
+              // ref={last ? currentElement : null}
+              // SETT INN REF HER!
+
+              className={`col-auto col-12 col-lg-4 mb-3${getBreakpoints(index, hasButton)}`}
+            >
+              <Card
+                imagePlacement="top"
+                image={
+                  <img
+                    src={article.imageSrc}
+                    alt={article.imageAlt ? article.imageAlt : ' '} aria-hidden="true" />
+                }
+                href={article.href}
+                subTitle={article.subTitle}
+                title={article.title}
+              >
+                <Text>
+                  {article.preface}
+                </Text>
+              </Card>
+            </div>
+          )
+        })}
+      </div>
+      {hasButton && renderShowMoreButton()}
+    </div>
+  )
 }
 
 RelatedArticles.propTypes = {
