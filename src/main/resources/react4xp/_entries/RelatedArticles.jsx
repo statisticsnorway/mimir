@@ -1,10 +1,11 @@
 // import React, { useRef } from 'react'
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { Card, Text, Button } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 
 function RelatedArticles(props) {
   const [isHidden, setIsHidden] = useState(true)
+  const currentElement = useRef(null)
 
   const {
     relatedArticles,
@@ -57,24 +58,26 @@ function RelatedArticles(props) {
     return hideCard
   }
 
-  // const currentElement = useRef(null)
 
   const hasButton = showAll && showLess
 
   return (
     <div className="container">
-      <div className="row">
+      <div className="row" ref={currentElement}>
         <h2 className="col mt-4 mb-5">{heading}</h2>
       </div>
       <div role="list" className="row mb-5">
         {relatedArticles.map((article, index) => {
           // const last = index === this.props.relatedArticles.length - relatedArticles.count
+          // This should probably not be 6.
+          const last = index == 6
+          // console.log(`Log line debugging :: index: ${index} last: ${last} and currentElement: ${JSON.stringify(currentElement, null, 2)}`)
           return (
             <div
               role="listitem"
               key={index}
-              // ref={last ? currentElement : null}
-              // SETT INN REF HER!
+              ref={last ? currentElement : null}
+              // This somehow does nothing.
 
               className={`col-auto col-12 col-lg-4 mb-3${getBreakpoints(index, hasButton)}`}
             >
