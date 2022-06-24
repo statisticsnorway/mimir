@@ -84,7 +84,6 @@ class RelatedArticles extends React.Component {
         <div role="list" className="row mb-5">
           {relatedArticles.map((article, index) => {
             // const last = index === this.props.relatedArticles.length - relatedArticles.count
-            const last = index == 6
             return (
               <div
                 role="listitem"
