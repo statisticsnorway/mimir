@@ -10,6 +10,7 @@ const MenuBox = (props) => {
           props.boxes.map((box, index) => {
             return (
               <Card
+                className={`${box.subtitle && box.titleSize ? `preambleText title-size-${box.titleSize}` : ''}`}
                 key={ `box_${index}` }
                 title={ box.title }
                 href={ box.href }
@@ -34,7 +35,8 @@ MenuBox.propTypes = {
         src: PropTypes.string.isRequired,
         alt: PropTypes.string
       }),
-      href: PropTypes.string.isRequired
+      href: PropTypes.string.isRequired,
+      titleSize: PropTypes.string
     }))
 }
 

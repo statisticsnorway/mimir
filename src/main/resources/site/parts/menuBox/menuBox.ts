@@ -73,11 +73,14 @@ function renderPart(req:Request, menuBoxId: string):Response | React4xpResponse 
 function buildMenu(menuBoxContent: Content<MenuBox> ): Array<MenuItem> {
   const menuItems: Array<MenuConfig | undefined> = forceArray(menuBoxContent.data.menu)
   return menuItems ? menuItems.map((box: MenuConfig| undefined): MenuItem => {
+    const boxTitle: string = box?.title ? box.title : ''
+    const titleSize: string = getTitleSize(boxTitle)
     return {
-      title: box?.title ? box.title : '',
+      title: boxTitle,
       subtitle: box?.subtitle ? box.subtitle : '',
       icon: box?.image ? getIcon(box.image) : undefined,
-      href: box ? getHref(box) : ''
+      href: box ? getHref(box) : '',
+      titleSize
     }
   }) : []
 }
@@ -105,6 +108,18 @@ function getHref(menuConfig: MenuConfig): string {
     })
   }
   return ''
+}
+
+function getTitleSize(title: string): string {
+  const titleLength: number = title.length
+  let titleSize: string = 'sm'
+  if (titleLength > 25) {
+    titleSize = 'md'
+  }
+  if (titleLength > 50) {
+    titleSize = 'lg'
+  }
+  return titleSize
 }
 
 interface MenuBoxProps {
@@ -136,7 +151,8 @@ interface MenuItem {
   title: string,
   subtitle: string,
   icon: Image | undefined,
-  href: string
+  href: string,
+  titleSize: string
 }
 
 interface Image {
