@@ -102,6 +102,27 @@ export interface Highchart {
         /**
          * Selected
          */
+        _selected: "htmlTable";
+
+        /**
+         * HTML tabell (Kun på innholdstype Tabell)
+         */
+        htmlTable: {
+          /**
+           * Kildetabell limt inn fra Excel
+           */
+          html?: string;
+
+          /**
+           * Fotnote-tekst
+           */
+          footnoteText?: Array<string>;
+        };
+      }
+    | {
+        /**
+         * Selected
+         */
         _selected: "dataset";
 
         /**
