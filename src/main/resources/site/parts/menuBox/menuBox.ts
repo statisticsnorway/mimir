@@ -32,18 +32,20 @@ const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp') as Re
 
 exports.get = function(req:Request):Response | React4xpResponse | string {
   try {
-    const part:Component<MenuBoxPartConfig> = getComponent()
-    return renderPart(req, part.config.menu)
+    return renderPart(req)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-exports.preview = function(req:Request, id: string):Response | React4xpResponse | string {
-  return renderPart(req, id)
+exports.preview = function(req:Request):Response | React4xpResponse | string {
+  return renderPart(req)
 }
 
-function renderPart(req:Request, menuBoxId: string):Response | React4xpResponse | string {
+function renderPart(req:Request):Response | React4xpResponse | string {
+  const part:Component<MenuBoxPartConfig> = getComponent()
+  const menuBoxId: string = part.config.menu
+  const height: string = part.config.height ? part.config.height as string : 'default'
   if (!menuBoxId) {
     if (req.mode === 'edit') {
       return {
@@ -64,7 +66,8 @@ function renderPart(req:Request, menuBoxId: string):Response | React4xpResponse 
   const boxes: Array<MenuItem> = buildMenu(menuBoxContent)
 
   const props: MenuBoxProps = {
-    boxes
+    boxes,
+    height
   }
 
   return React4xp.render('MenuBox', props, req)
@@ -124,6 +127,7 @@ function getTitleSize(title: string): string {
 
 interface MenuBoxProps {
   boxes: Array<MenuItem>;
+  height: string;
 }
 
 interface MenuConfig {
