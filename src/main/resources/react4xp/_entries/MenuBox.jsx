@@ -10,6 +10,7 @@ const MenuBox = (props) => {
           props.boxes.map((box, index) => {
             return (
               <Card
+                className={`${props.height == 'fixed' && box.titleSize ? `fixed-height title-size-${box.titleSize}` : ''}`}
                 key={ `box_${index}` }
                 title={ box.title }
                 href={ box.href }
@@ -34,8 +35,10 @@ MenuBox.propTypes = {
         src: PropTypes.string.isRequired,
         alt: PropTypes.string
       }),
-      href: PropTypes.string.isRequired
-    }))
+      href: PropTypes.string.isRequired,
+      titleSize: PropTypes.string
+    })),
+  height: PropTypes.string
 }
 
 export default (props) => <MenuBox {...props} />
