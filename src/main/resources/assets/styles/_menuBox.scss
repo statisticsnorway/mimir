@@ -5,7 +5,7 @@
     & > .ssb-card {
       @include make-col-ready();
       @include make-col(4);
-      margin-bottom: $spacer * 3;
+      margin-bottom: 20px;
 
       @include media-breakpoint-down(md) {
         @include make-col(12);
@@ -14,6 +14,37 @@
       & > a {
         width: 100%;
       }
+
+      &.fixed-height {
+        @include media-breakpoint-up(md) {
+          height: 370px;
+  
+          & > a {
+            height: 100%;
+          }
+  
+          .card-content {
+            height: 100%;
+  
+            .card-text {
+              width: 100%;
+              display: -webkit-box;
+              -webkit-line-clamp: 3;
+              -webkit-box-orient: vertical;
+              overflow: hidden;
+            }
+          }
+  
+          &.title-size-md .card-content .card-text{
+            -webkit-line-clamp: 2;
+          }
+          &.title-size-lg .card-content .card-text{
+            -webkit-line-clamp: 1;
+          }
+  
+        }
+      }
+      
     }
   }
 }

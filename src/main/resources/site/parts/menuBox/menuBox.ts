@@ -32,18 +32,20 @@ const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp') as Re
 
 exports.get = function(req:Request):Response | React4xpResponse | string {
   try {
-    const part:Component<MenuBoxPartConfig> = getComponent()
-    return renderPart(req, part.config.menu)
+    return renderPart(req)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-exports.preview = function(req:Request, id: string):Response | React4xpResponse | string {
-  return renderPart(req, id)
+exports.preview = function(req:Request):Response | React4xpResponse | string {
+  return renderPart(req)
 }
 
-function renderPart(req:Request, menuBoxId: string):Response | React4xpResponse | string {
+function renderPart(req:Request):Response | React4xpResponse | string {
+  const part:Component<MenuBoxPartConfig> = getComponent()
+  const menuBoxId: string = part.config.menu
+  const height: string = part.config.height ? part.config.height as string : 'default'
   if (!menuBoxId) {
     if (req.mode === 'edit') {
       return {
@@ -64,7 +66,8 @@ function renderPart(req:Request, menuBoxId: string):Response | React4xpResponse 
   const boxes: Array<MenuItem> = buildMenu(menuBoxContent)
 
   const props: MenuBoxProps = {
-    boxes
+    boxes,
+    height
   }
 
   return React4xp.render('MenuBox', props, req)
@@ -73,11 +76,14 @@ function renderPart(req:Request, menuBoxId: string):Response | React4xpResponse 
 function buildMenu(menuBoxContent: Content<MenuBox> ): Array<MenuItem> {
   const menuItems: Array<MenuConfig | undefined> = forceArray(menuBoxContent.data.menu)
   return menuItems ? menuItems.map((box: MenuConfig| undefined): MenuItem => {
+    const boxTitle: string = box?.title ? box.title : ''
+    const titleSize: string = getTitleSize(boxTitle)
     return {
-      title: box?.title ? box.title : '',
+      title: boxTitle,
       subtitle: box?.subtitle ? box.subtitle : '',
       icon: box?.image ? getIcon(box.image) : undefined,
-      href: box ? getHref(box) : ''
+      href: box ? getHref(box) : '',
+      titleSize
     }
   }) : []
 }
@@ -107,8 +113,21 @@ function getHref(menuConfig: MenuConfig): string {
   return ''
 }
 
+function getTitleSize(title: string): string {
+  const titleLength: number = title.length
+  let titleSize: string = 'sm'
+  if (titleLength > 25) {
+    titleSize = 'md'
+  }
+  if (titleLength > 50) {
+    titleSize = 'lg'
+  }
+  return titleSize
+}
+
 interface MenuBoxProps {
   boxes: Array<MenuItem>;
+  height: string;
 }
 
 interface MenuConfig {
@@ -136,7 +155,8 @@ interface MenuItem {
   title: string,
   subtitle: string,
   icon: Image | undefined,
-  href: string
+  href: string,
+  titleSize: string
 }
 
 interface Image {

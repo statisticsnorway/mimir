@@ -4,4 +4,9 @@ export interface MenuBoxPartConfig {
    * Kort
    */
   menu: string;
+
+  /**
+   * Høyde på bokser
+   */
+  height: "default" | "fixed";
 }

@@ -62,6 +62,31 @@
 						</input>
 					</items>
 				</option>
+				<option name="htmlTable">
+					<label>HTML tabell (Kun på innholdstype Tabell) </label>
+					<items>
+						<input name="html" type="HtmlArea">
+							<label>Kildetabell limt inn fra Excel</label>
+							<occurrences minimum="0" maximum="1"/>
+							<config>
+								<include>
+									Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote
+								</include>
+							</config>
+							<help-text>Lim inn (Ctrl-V) en tabell rett fra Excel. Tabeller bør være så enkle som mulig (Overskrifter i første rad/kolonne og ellers bare tall, ingen spesialformatering, manglende tall må være tomme celler)</help-text>
+						</input>
+						<field-set>
+							<label>Fotnoter</label>
+							<items>
+								<input type="TextArea" name="footnoteText">
+									<label>Fotnote-tekst</label>
+									<help-text>Inntil 3 fotnoter</help-text>
+									<occurrences minimum="0" maximum="3" />
+								</input>
+							</items>
+						</field-set>						
+					</items>
+				</option>
 				<option name="dataset">
 					<label>(Ikke i bruk) Ferdige dataset</label>
 					<items>

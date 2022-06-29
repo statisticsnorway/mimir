@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
+
 import PropTypes from 'prop-types'
 import { Card,
-  Button,
   Divider,
   Input,
   Link,
@@ -29,22 +29,29 @@ function SearchResult(props) {
   const [sortChanged, setSortChanged] = useState(false)
   const [sortList, setSortList] = useState(undefined)
   const [filter, setFilter] = useState({
-    mainSubject: '',
-    contentType: ''
+    mainSubject: props.subjectUrlParam ? props.subjectUrlParam : '',
+    contentType: props.contentTypeUrlParam ? props.contentTypeUrlParam : ''
   })
   const allContentTypeItem = {
     id: 'allTypes',
     title: props.allContentTypesPhrase
   }
+  const preselectedContentTypeDropdownItem = props.contentTypeUrlParam ? {
+    id: props.contentTypeUrlParam,
+    title: props.contentTypePhrases.find((phrase) => phrase.id === props.contentTypeUrlParam).title
+  } : allContentTypeItem
   const allSubjectsItem = {
     id: 'allSubjects',
     title: props.allSubjectsPhrase
   }
-  const [selectedMainSubject, setSelectedMainSubject] = useState(allSubjectsItem)
-  const [selectedContentType, setSelectedContentType] = useState(allContentTypeItem)
+  const preselectedSubjectDropdownItem = props.subjectUrlParam ? {
+    id: props.subjectUrlParam,
+    title: props.subjectUrlParam
+  } : allSubjectsItem
+  const [selectedContentType, setSelectedContentType] = useState(preselectedContentTypeDropdownItem)
+  const [selectedMainSubject, setSelectedMainSubject] = useState(preselectedSubjectDropdownItem)
   const [numberChanged, setNumberChanged] = useState(0)
   const currentElement = useRef(null)
-
 
   useEffect(() => {
     if (!nameSearchData) {
@@ -198,6 +205,9 @@ function SearchResult(props) {
   }
 
   function fetchFilteredSearchResult() {
+    const mainSubject = filter.mainSubject
+    const contentType = filter.contentType
+
     setLoading(true)
     axios.get(props.searchServiceUrl, {
       params: {
@@ -205,8 +215,8 @@ function SearchResult(props) {
         start: 0,
         count: props.count,
         language: props.language,
-        mainsubject: filter.mainSubject,
-        contentType: filter.contentType,
+        mainsubject: mainSubject,
+        contentType: contentType,
         sort: sortList === 'publiseringsdato' ? sortList : undefined
       }
     }).then((res) => {
@@ -216,6 +226,9 @@ function SearchResult(props) {
       setSubjects(res.data.subjects)
     }).finally(() => {
       setLoading(false)
+      const mainSubjectQueryString = mainSubject ? `&emne=${mainSubject}` : ''
+      const contentTypeQueryString = contentType ? `&innholdstype=${contentType}` : ''
+      window.history.pushState({}, '', `?sok=${searchTerm}${mainSubjectQueryString}${contentTypeQueryString}`)
     })
   }
 
@@ -574,7 +587,9 @@ SearchResult.propTypes = {
       title: PropTypes.string,
       count: PropTypes.number
     })),
-  GA_TRACKING_ID: PropTypes.string
+  GA_TRACKING_ID: PropTypes.string,
+  contentTypeUrlParam: PropTypes.string,
+  subjectUrlParam: PropTypes.string
 }
 
 export default (props) => <SearchResult {...props} />

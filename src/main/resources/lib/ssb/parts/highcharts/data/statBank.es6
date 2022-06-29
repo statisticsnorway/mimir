@@ -25,7 +25,7 @@ export function seriesAndCategoriesFromJsonStat(req, highchart, dataset, dataset
   if (highchart.data.graphType === 'barNegative') {
     return barNegativeFormat(dataset, dimensionFilter, xAxisLabel, yAxisLabel)
   } else if (highchart.data.graphType === 'pie') {
-    return pieFormat(dataset, dimensionFilter, xAxisLabel)
+    return pieFormat(dataset, dimensionFilter, xAxisLabel, yAxisLabel)
   } else {
     return defaultFormat(dataset, dimensionFilter, xAxisLabel, yAxisLabel)
   }
@@ -53,12 +53,14 @@ const defaultFormat = (ds, dimensionFilter, xAxis, yAxisLabel) => {
   }
 }
 
-function pieFormat(ds, dimensionFilter, xAxis) {
+function pieFormat(ds, dimensionFilter, xAxis, yAxisLabel) {
   const xAxisIndex = ds.id.indexOf(xAxis)
   const xCategories = ds.Dimension(xAxis).Category()
+  const yAxis = !yAxisLabel || yAxisLabel === 'Region' ? 'ContentsCode' : yAxisLabel
+  const yCategories = ds.Dimension(yAxis).Category()
 
   const series = [{
-    name: 'Antall',
+    name: yCategories.length === 1 ? yCategories[0].label : 'Antall',
     data: xCategories.map((xCategory) => {
       dimensionFilter[xAxisIndex] = xCategory.index
       const data = ds.Data(dimensionFilter, false)

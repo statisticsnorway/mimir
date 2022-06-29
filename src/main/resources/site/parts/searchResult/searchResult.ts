@@ -159,8 +159,8 @@ export function renderPart(req: Request): React4xpResponse {
     return undefined
   }
 
-  // if the language is english and the norwegian field exists, 
-  // but the english field does NOT exist, we default to the norwegian field. 
+  // if the language is english and the norwegian field exists,
+  // but the english field does NOT exist, we default to the norwegian field.
   function getSubjectForLanguage(bet: BestBet): string {
     if (language == 'en' && bet.data.linkedEnglishContentSubject) {
       return bet.data.linkedEnglishContentSubject
@@ -171,7 +171,7 @@ export function renderPart(req: Request): React4xpResponse {
 
   /* query solr */
   const solrResult: SolrPrepResultAndTotal = sanitizedTerm ?
-    solrSearch( sanitizedTerm, language, parseInt(part.config.numberOfHits)) : {
+    solrSearch( sanitizedTerm, language, parseInt(part.config.numberOfHits), 0, req.params.emne, req.params.innholdstype) : {
       total: 0,
       hits: [],
       contentTypes: [],
@@ -318,7 +318,9 @@ export function renderPart(req: Request): React4xpResponse {
     contentTypePhrases: contentTypePhrases,
     contentTypes: solrResult.contentTypes,
     subjects: solrResult.subjects,
-    GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null
+    GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null,
+    contentTypeUrlParam: req.params.innholdstype,
+    subjectUrlParam: req.params.emne
   }
 
   return React4xp.render('site/parts/searchResult/searchResultView', props, req)
@@ -387,11 +389,8 @@ interface SearchResultProps {
   contentTypes: Array<Facet>;
   subjects: Array<Facet>;
   GA_TRACKING_ID: string | null;
-}
-
-interface Dropdown {
-  id: string;
-  title: string;
+  contentTypeUrlParam: string | undefined,
+  subjectUrlParam: string | undefined
 }
 
 interface ContentTypePhrase {

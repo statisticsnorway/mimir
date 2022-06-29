@@ -121,7 +121,7 @@ function dataFormatAreaLineLinear(seriesAndCategories: SeriesAndCategoriesRaw): 
 function dataFormatPie(seriesAndCategories: SeriesAndCategoriesRaw): Series {
   if (seriesAndCategories.categories.length === 1) {
     return {
-      name: 'Antall',
+      name: seriesAndCategories.categories[0],
       data: seriesAndCategories.series.map((serie): PieData => ({
         ...serie,
         y: serie.data[0]
@@ -129,7 +129,7 @@ function dataFormatPie(seriesAndCategories: SeriesAndCategoriesRaw): Series {
     }
   } else {
     return {
-      name: 'Antall',
+      name: seriesAndCategories.series[0].name,
       data: seriesAndCategories.categories.map((category, index): PieData => {
         return {
           name: category,

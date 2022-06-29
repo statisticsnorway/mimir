@@ -38,7 +38,7 @@
     "@enonic/react-components": "^3.0.1",
     "@enonic/react4xp": "^3.0.18",
     "@reduxjs/toolkit": "^1.6.2",
-    "@statisticsnorway/ssb-component-library": "^2.0.71",
+    "@statisticsnorway/ssb-component-library": "^2.0.72",
     "@types/ramda": "^0.27.44",
     "@types/react": "^17.0.27",
     "@types/validator": "^13.6.3",
