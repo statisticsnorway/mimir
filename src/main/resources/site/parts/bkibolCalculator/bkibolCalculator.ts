@@ -82,7 +82,7 @@ function getBkibolCalculatorComponent(page: Content<BkibolCalculatorPartConfig>)
   const nextUpdate: CalculatorPeriod = nextPeriod(lastUpdated.month.toString(), lastUpdated.year.toString())
   const nextReleaseMonth: number = +nextUpdate.month === 12 ? 1 : +nextUpdate.month + 1
   const nextPublishText: string = i18nLib.localize({
-    key: 'calculatorNextPublishText',
+    key: 'bkibolNextPublishText',
     locale: language.code,
     values: [
       monthLabel(months, code, +lastUpdated.month),
