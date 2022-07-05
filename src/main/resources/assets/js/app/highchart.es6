@@ -127,7 +127,7 @@ export function init() {
           const cellValue = parseFloat(cell.textContent)
             .toLocaleString(lang === 'en' ? 'en-EN' : 'no-NO')
             .replace('NaN', '')
-          row.children[i].textContent = lang === 'en' ? cellValue.replace(',', ' ') : cellValue
+          row.children[i].textContent = lang === 'en' ? cellValue.replace(/,/g, ' ') : cellValue
         }
       })
     })
