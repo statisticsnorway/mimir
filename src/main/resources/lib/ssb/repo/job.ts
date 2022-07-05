@@ -42,7 +42,7 @@ export interface JobInfo {
   data: {
     status: typeof JOB_STATUS_STARTED | typeof JOB_STATUS_COMPLETE;
     task: string;
-    refreshDataResult: object | Array<StatisticsPublishResult> | DatasetRefreshResult;
+    refreshDataResult: object | Array<StatisticsPublishResult> | DatasetRefreshResult | CalculatorRefreshResult;
     message: string;
     httpStatusCode?: number;
     jobStarted: string;
@@ -54,6 +54,10 @@ export interface JobInfo {
 
 export interface DatasetRefreshResult {
   filterInfo: RSSFilterLogData;
+  result: Array<DataSourceInfo>;
+}
+
+export interface CalculatorRefreshResult {
   result: Array<DataSourceInfo>;
 }
 
