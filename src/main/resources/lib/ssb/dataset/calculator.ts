@@ -2,12 +2,14 @@ import { Dataset, JSONstat as JSONstatType } from '../../types/jsonstat-toolkit'
 import { Content } from 'enonic-types/content'
 import { CalculatorConfig } from '../../../site/content-types/calculatorConfig/calculatorConfig'
 import { GenericDataImport } from '../../../site/content-types/genericDataImport/genericDataImport'
-import { DatasetRepoNode } from '../repo/dataset'
+import { DatasetRepoNode, DATASET_BRANCH } from '../repo/dataset'
 /* eslint-disable new-cap */
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
+import { JobEventNode, JobInfoNode } from '../repo/job'
+import { CreateOrUpdateStatus } from '../dataset/dataset'
 
 const {
   query, get: getContent
@@ -15,6 +17,19 @@ const {
 const {
   datasetOrUndefined
 } = __non_webpack_require__('/lib/ssb/cache/cache')
+const {
+  completeJobLog,
+  startJobLog,
+  updateJobLog,
+  JOB_STATUS_COMPLETE,
+  JobNames
+} = __non_webpack_require__('/lib/ssb/repo/job')
+const {
+  cronJobLog
+} = __non_webpack_require__('/lib/ssb/utils/serverLog')
+const {
+  refreshDataset
+} = __non_webpack_require__('/lib/ssb/dataset/dataset')
 
 export function getCalculatorConfig(): Content<CalculatorConfig> | undefined {
   return query({
@@ -115,6 +130,32 @@ export function getNameSearchGraphData(config: Content<CalculatorConfig>): Datas
   return nameSearchGraphRepo
 }
 
+export function getAllCalculatorDataset(config: Content<CalculatorConfig>): Array<Content<GenericDataImport>> {
+  const calculatorDatasetKeys: Array<string | undefined> = []
+  if (config && config.data) {
+    calculatorDatasetKeys.push(config.data.kpiSourceYear)
+    calculatorDatasetKeys.push(config.data.kpiSourceMonth)
+    calculatorDatasetKeys.push(config.data.pifSource)
+    calculatorDatasetKeys.push(config.data.bkibolSourceEnebolig)
+    calculatorDatasetKeys.push(config.data.bkibolSourceBoligblokk)
+  }
+
+  calculatorDatasetKeys.filter((dataset) => dataset !== undefined)
+
+  const datasources: Array<Content<GenericDataImport>> = []
+  calculatorDatasetKeys.forEach((key:string ) => {
+    const dataset:Content<GenericDataImport> | null = getContent({
+      key: key
+    })
+    if (dataset) {
+      datasources.push(dataset)
+    }
+  })
+
+  return datasources
+}
+
+
 export function isChronological(startYear: string, startMonth: string, endYear: string, endMonth: string): boolean {
   if (parseInt(startYear) < parseInt(endYear)) return true
   if (parseInt(endYear) < parseInt(startYear)) return false
@@ -134,6 +175,46 @@ export function getChangeValue(startIndex: number, endIndex: number, chronologic
   }
 }
 
+export function updateCalculator(): void {
+  const jobLogNode: JobEventNode = startJobLog(JobNames.REFRESH_DATASET_CALCULATOR_JOB)
+  const calculatorConfig: Content<CalculatorConfig> | undefined = getCalculatorConfig()
+  if (calculatorConfig) {
+    const dataSources: Array<Content<GenericDataImport>> = calculatorConfig ? getAllCalculatorDataset(calculatorConfig) : []
+
+    if (dataSources && dataSources.length > 1) {
+      updateJobLog(jobLogNode._id, (node: JobInfoNode) => {
+        node.data = {
+          ...node.data,
+          queryIds: dataSources.map((q) => q._id )
+        }
+        return node
+      })
+
+      const jobLogResult: Array<CreateOrUpdateStatus> = dataSources.map((datasource) => {
+        return refreshDataset(datasource, DATASET_BRANCH)
+      })
+
+      if (jobLogResult.length === dataSources.length) {
+        completeJobLog(jobLogNode._id, JOB_STATUS_COMPLETE, {
+          result: jobLogResult.map((r) => ({
+            id: r.dataquery._id,
+            displayName: r.dataquery.displayName,
+            contentType: r.dataquery.type,
+            dataSourceType: r.dataquery.data.dataSource?._selected,
+            status: r.status
+          }))
+        })
+      }
+    } else {
+      completeJobLog(jobLogNode._id, JOB_STATUS_COMPLETE, {
+        filterInfo: 'Finner ingen dataset',
+        result: []
+      })
+    }
+    cronJobLog(JobNames.REFRESH_DATASET_CALCULATOR_JOB)
+  }
+}
+
 export interface CalculatorLib {
   getCalculatorConfig: () => Content<CalculatorConfig> | undefined;
   getKpiDatasetYear: (config: Content<CalculatorConfig>) => Dataset | null;
@@ -142,6 +223,8 @@ export interface CalculatorLib {
   getBkibolDatasetEnebolig: (config: Content<CalculatorConfig>) => Dataset | null;
   getBkibolDatasetBoligblokk: (config: Content<CalculatorConfig>) => Dataset | null;
   getNameSearchGraphData: (config: Content<CalculatorConfig>) => DatasetRepoNode<JSONstatType> | null;
+  getAllCalculatorDataset: (config: Content<CalculatorConfig>)=> Array<Content<GenericDataImport> | null>;
   isChronological: (startYear: string, startMonth: string, endYear: string, endMonth: string) => boolean;
   getChangeValue: (startIndex: number, endIndex: number, chronological: boolean) => number;
+  updateCalculator: () => void;
 }
