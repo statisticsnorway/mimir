@@ -61,6 +61,8 @@ export function Jobs() {
       return 'Kjøre oppdaterte spørringer'
     case 'Refresh dataset':
       return 'Kjøre oppdaterte spørringer'
+    case 'Refresh dataset calculators':
+      return 'Oppdatere kalkulatorer'
     case 'Delete expired eventlogs':
       return 'Slette eventlog'
     case 'Publish statistics':
@@ -130,13 +132,13 @@ export function Jobs() {
           <span>{job.status}</span>
       )
     } else if (job.task === 'Refresh dataset calculators') {
-      const count = job.result.result.length
+      const skipped = job.result.result.filter((ds) => ds.status === 'Ingen nye data').length
+      const updated = job.result.result.filter((ds) => ds.status === 'Dataset hentet og oppdatert').length
       const errorCount = job.result.result.filter((ds) => ds.hasError).length
-      // const ignoreCount = job.result.filterInfo && job.result.filterInfo.skipped && job.result.filterInfo.skipped.length
       return (
         job.status !== 'STARTED' ?
           <span className="modal-trigger" onClick={() => openJobLogModal(job)}>
-            {job.status} - Oppdaterte {count} spørringer, {errorCount} feilet
+            {job.status} - Oppdaterte {updated} spørringer,  {errorCount} feilet og {skipped} ignorert
           </span> :
           <span>{job.status}</span>
       )

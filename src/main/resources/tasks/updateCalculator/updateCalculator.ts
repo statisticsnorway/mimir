@@ -53,7 +53,6 @@ exports.run = function(): void {
     }
   } else {
     completeJobLog(jobLogNode._id, JOB_STATUS_COMPLETE, {
-      filterInfo: 'Finner ingen dataset',
       result: []
     })
   }
