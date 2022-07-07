@@ -46,6 +46,11 @@ export interface LinksPartConfig {
          */
         headerLink: {
           /**
+           * URL
+           */
+          headerLinkHref?: string;
+
+          /**
            * Innhold
            */
           linkedContent?: string;
@@ -66,6 +71,11 @@ export interface LinksPartConfig {
          * Profilert lenke
          */
         profiledLink: {
+          /**
+           * URL
+           */
+          profiledLinkHref?: string;
+
           /**
            * Innhold
            */

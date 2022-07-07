@@ -26,6 +26,11 @@ export interface LinksConfig {
   relatedContent?: string;
 
   /**
+   * URL
+   */
+  headerLinkHref?: string;
+
+  /**
    * Innhold
    */
   linkedContent?: string;
@@ -34,6 +39,11 @@ export interface LinksConfig {
    * Lenketekst
    */
   linkText?: string;
+
+  /**
+   * URL
+   */
+  profiledLinkHref?: string;
 
   /**
    * Innhold
