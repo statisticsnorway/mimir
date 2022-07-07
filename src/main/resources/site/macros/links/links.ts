@@ -78,7 +78,6 @@ exports.macro = function(context: MacroContext): React4xpResponse {
         linkType: 'profiled'
       }
     }
-    log.info(JSON.stringify(props, null, 2))
   }
 
   return React4xp.render('site/parts/links/links', props, context)
