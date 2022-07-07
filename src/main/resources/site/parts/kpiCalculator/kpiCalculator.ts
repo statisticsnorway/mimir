@@ -54,7 +54,7 @@ exports.preview = function(req: Request): Response {
 function renderPart(req: Request): Response {
   const page: Content = getContent()
   let kpiCalculator: React4xpResponse | undefined
-  if (req.mode === 'edit') {
+  if (req.mode === 'edit' || req.mode === 'inline') {
     kpiCalculator = getKpiCalculatorComponent(page)
   } else {
     kpiCalculator = fromPartCache(req, `${page._id}-kpiCalculator`, () => {

@@ -27,14 +27,13 @@ const {
 } = __non_webpack_require__('/lib/ssb/cache/partCache')
 
 export function get(req: Request): React4xpResponse {
-  const isNotInEditMode: boolean = req.mode !== 'edit'
   const content: Content = getContent()
-  if (isNotInEditMode) {
+  if (req.mode === 'edit' || req.mode === 'inline') {
+    return getStatbankSubjectTree(req, content)
+  } else {
     return fromPartCache(req, `statbankSubjectTree-${content.language}`, () => {
       return getStatbankSubjectTree(req, content)
     })
-  } else {
-    return getStatbankSubjectTree(req, content)
   }
 }
 

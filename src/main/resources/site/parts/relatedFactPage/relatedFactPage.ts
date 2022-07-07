@@ -71,7 +71,7 @@ exports.preview = (req: Request, relatedFactPageConfig: RelatedFactPageConfig | 
 
 function renderPart(req: Request, relatedFactPageConfig: RelatedFactPageConfig | undefined): Response | React4xpResponse {
   const page: Content<Article> = getContent()
-  if (req.mode === 'edit') {
+  if (req.mode === 'edit' || req.mode === 'inline') {
     return renderRelatedFactPage(req, page, relatedFactPageConfig)
   } else {
     return fromPartCache(req, `${page._id}-relatedFactPage`, () => {
