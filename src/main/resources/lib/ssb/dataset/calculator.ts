@@ -22,7 +22,8 @@ export function getCalculatorConfig(): Content<CalculatorConfig> | undefined {
     contentTypes: [`${app.name}:calculatorConfig`],
     count: 1,
     start: 0,
-    query: ''
+    query: '',
+    sort: 'createdTime ASC'
   }).hits[0] as Content<CalculatorConfig> | undefined
 }
 
