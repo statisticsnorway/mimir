@@ -42,7 +42,7 @@ exports.preview = (req: Request): React4xpResponse => renderPart(req)
 
 function renderPart(req: Request): React4xpResponse {
   const page: Content = getContent()
-  if (req.mode === 'edit') {
+  if (req.mode === 'edit' || req.mode === 'inline') {
     return getHusleiekalkulator(req, page)
   } else {
     return fromPartCache(req, `${page._id}-husleieCalculator`, () => {
