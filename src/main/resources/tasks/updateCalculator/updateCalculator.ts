@@ -21,6 +21,9 @@ const {
 const {
   getAllCalculatorDataset
 } = __non_webpack_require__('/lib/ssb/dataset/calculator')
+const {
+  clearPartFromPartCache
+} = __non_webpack_require__('/lib/ssb/cache/partCache')
 
 exports.run = function(): void {
   log.info(`Run Task updateCalculator: ${new(Date)}`)
@@ -50,6 +53,15 @@ exports.run = function(): void {
           status: r.status
         }))
       })
+    }
+
+    const updatedDataquery: number = jobLogResult.filter((job) => job.status === 'GET_DATA_COMPLETE').length
+
+    if (updatedDataquery > 0) {
+      clearPartFromPartCache('kpiCalculator')
+      clearPartFromPartCache('pifCalculator')
+      clearPartFromPartCache('bkibolCalculator')
+      clearPartFromPartCache('husleieCalculator')
     }
   } else {
     completeJobLog(jobLogNode._id, JOB_STATUS_COMPLETE, {
