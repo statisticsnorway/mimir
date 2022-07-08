@@ -308,6 +308,12 @@
     margin-right: 0;
   }
   
+  .fetch-published-checkbox {
+    .form-check-label {
+      font-weight: bold;
+    }
+  }
+
   // Danger Zone is no more, but lives on in obscurity, ready for the day it might be needed once again.
   // .danger-zone {
   //   legend {
