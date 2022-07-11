@@ -309,8 +309,18 @@
   }
   
   .fetch-published-checkbox {
+    display: flex;
+    align-items: center;
+
+    .form-check-input {
+      width: 1.5em;
+      height: 1.5em;
+    }
+
     .form-check-label {
       font-weight: bold;
+      margin-left: $spacer * .75;
+      padding-top: 3px;
     }
   }
 
