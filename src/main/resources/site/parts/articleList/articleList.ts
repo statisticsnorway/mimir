@@ -1,4 +1,4 @@
-import { Request } from 'enonic-types/controller'
+import { Request, Response } from 'enonic-types/controller'
 import { Article } from '../../content-types/article/article'
 import { Component } from 'enonic-types/portal'
 import { ArticleListPartConfig } from './articleList-part-config'
@@ -6,6 +6,8 @@ import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { AggregationsResponseEntry, Content } from 'enonic-types/content'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
+import { fromPartCache } from '../../../lib/ssb/cache/partCache'
+import { renderError } from '../../../lib/ssb/error/error'
 
 const {
   localize
@@ -24,14 +26,26 @@ const {
   getSubSubjects
 } = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
 
-exports.get = (req: Request): React4xpResponse => {
-  return renderPart(req)
+exports.get = (req: Request): React4xpResponse | Response => {
+  try {
+    return renderPart(req)
+  } catch (e) {
+    return renderError(req, 'Error in part', e)
+  }
 }
 
 exports.preview = (req: Request): React4xpResponse => renderPart(req)
 
 function renderPart(req: Request): React4xpResponse {
   const content: Content = getContent()
+  if (req.mode === 'edit' || req.mode === 'inline') {
+    return getArticleList(req, content)
+  } else {
+    return fromPartCache(req, `${content._id}-articleList`, () => getArticleList(req, content))
+  }
+}
+
+function getArticleList(req: Request, content: Content): React4xpResponse {
   const component: Component<ArticleListPartConfig> = getComponent()
   const language: string = content.language ? content.language : 'nb'
   const articles: Array<Content<Article>> = getArticles(req, language)
