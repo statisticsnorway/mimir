@@ -63,7 +63,7 @@
 					</items>
 				</option>
 				<option name="htmlTable">
-					<label>HTML tabell (Kun på innholdstype Tabell) </label>
+					<label>Excel (Kun på innholdstype Tabell) </label>
 					<items>
 						<input name="html" type="HtmlArea">
 							<label>Kildetabell limt inn fra Excel</label>

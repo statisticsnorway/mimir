@@ -54,7 +54,7 @@ exports.preview = function(req: Request): Response | React4xpResponse {
 function renderPart(req: Request): Response | React4xpResponse {
   const page: Content = getContent()
   let pifCalculator: React4xpResponse | undefined
-  if (req.mode === 'edit') {
+  if (req.mode === 'edit' || req.mode === 'inline') {
     pifCalculator = getPifCalculatorComponent(page)
   } else {
     pifCalculator = fromPartCache(req, `${page._id}-pifCalculator`, () => {

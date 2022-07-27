@@ -38,4 +38,12 @@
   .static-visualization-chart {
     margin-top: 40px;
   }
+
+  figcaption {
+    @include roboto;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 32px;
+    margin-bottom: $spacer * 0.5;
+  }
 }

@@ -66,7 +66,7 @@ function renderPart(req:Request, aboutTheStatisticsId: string | undefined):Respo
       }
     }
   } else {
-    if (req.mode === 'edit') {
+    if (req.mode === 'edit' || req.mode === 'inline') {
       return getOmStatistikken(req, page, aboutTheStatisticsId)
     } else {
       return fromPartCache(req, `${page._id}-omStatistikken`, () => {

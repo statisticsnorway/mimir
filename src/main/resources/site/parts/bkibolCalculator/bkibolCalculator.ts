@@ -55,7 +55,7 @@ exports.preview = function( req: Request ) {
 function renderPart(req: Request): React4xpResponse {
   const page: Content<BkibolCalculatorPartConfig> = getContent()
   let bkibolCalculator: CalculatorComponent
-  if (req.mode === 'edit') {
+  if (req.mode === 'edit' || req.mode === 'inline') {
     bkibolCalculator = getBkibolCalculatorComponent(page)
   } else {
     bkibolCalculator = fromPartCache(req, `${page._id}-bkibolCalculator`, () => {
@@ -82,7 +82,7 @@ function getBkibolCalculatorComponent(page: Content<BkibolCalculatorPartConfig>)
   const nextUpdate: CalculatorPeriod = nextPeriod(lastUpdated.month.toString(), lastUpdated.year.toString())
   const nextReleaseMonth: number = +nextUpdate.month === 12 ? 1 : +nextUpdate.month + 1
   const nextPublishText: string = i18nLib.localize({
-    key: 'calculatorNextPublishText',
+    key: 'bkibolNextPublishText',
     locale: language.code,
     values: [
       monthLabel(months, code, +lastUpdated.month),

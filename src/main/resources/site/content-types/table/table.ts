@@ -95,7 +95,7 @@ export interface Table {
         _selected: "htmlTable";
 
         /**
-         * HTML tabell (Kun på innholdstype Tabell)
+         * Excel (Kun på innholdstype Tabell)
          */
         htmlTable: {
           /**

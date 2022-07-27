@@ -421,7 +421,7 @@ function checkIfUserIsAdmin(): boolean {
   return hasRole('system.admin')
 }
 
-const TWO_WEEKS: number = 14 // TODO: put in config?
+const ONE_MONTH: number = 31 // TODO: put in config?
 function getStatistics(): Array<StatisticDashboard> {
   const userIsAdmin: boolean = checkIfUserIsAdmin()
   const statistic: Array<StatisticDashboard> = userIsAdmin ? getAdminStatistics() : getUserStatistics()
@@ -432,7 +432,7 @@ function getStatistics(): Array<StatisticDashboard> {
 
 function getAdminStatistics(): Array<StatisticDashboard> {
   const statsBeforeDate: Date = new Date()
-  statsBeforeDate.setDate(statsBeforeDate.getDate() + TWO_WEEKS)
+  statsBeforeDate.setDate(statsBeforeDate.getDate() + ONE_MONTH)
   const statregStatistics: Array<StatisticInListing> = fetchStatisticsWithRelease(statsBeforeDate)
   const statisticsContent: Array<Content<Statistics>> = query({
     query: `data.statistic IN(${statregStatistics.map((s) => `"${s.id}"`).join(',')})`,
@@ -601,7 +601,7 @@ interface OwnerObject {
   ownerId: string;
   tbmlId: string;
   fetchPublished: true | undefined;
-};
+}
 
 interface StatisticDashboard {
   id: string;
