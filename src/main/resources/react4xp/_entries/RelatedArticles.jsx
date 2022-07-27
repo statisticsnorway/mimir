@@ -47,7 +47,7 @@ function RelatedArticles(props) {
   }
 
   function getBreakpoints(index, hasButton) {
-    const hideCard = hasButton && isHidden ? ' d-none' : ''
+    const hideCard = hasButton && isHidden ? 'visually-hidden-focusable' : ''
     if (index < 3) {
       return ' d-block'
     } else if (index < 4) {
