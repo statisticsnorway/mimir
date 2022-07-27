@@ -1,6 +1,6 @@
 import { Content } from 'enonic-types/content'
 import { PageContributions, Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { TableSourceList, TableView } from '../../../lib/ssb/parts/table'
 import { SourceList, SourcesConfig } from '../../../lib/ssb/utils/utils'
 import { DropdownItem as TableDownloadDropdownItem, DropdownItems as TableDownloadDropdownItems } from '../../../lib/types/components'
@@ -16,9 +16,7 @@ const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getContent, getComponent, pageUrl, assetUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')

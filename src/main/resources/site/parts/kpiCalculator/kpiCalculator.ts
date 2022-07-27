@@ -1,6 +1,6 @@
 import { Content } from 'enonic-types/content'
 import { PageContributions, Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { allMonths, lastPeriodKpi, monthLabel, nextPeriod } from '../../../lib/ssb/utils/calculatorUtils'
 import { CalculatorPeriod } from '../../../lib/types/calculator'
 import { Dataset } from '../../../lib/types/jsonstat-toolkit'
@@ -16,9 +16,7 @@ const {
   serviceUrl,
   pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')

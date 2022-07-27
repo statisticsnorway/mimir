@@ -1,6 +1,6 @@
 import { Content } from 'enonic-types/content'
 import { PageContributions, Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
 import { ProfiledBoxPartConfig } from './profiledBox-part-config'
@@ -17,9 +17,7 @@ const {
 const {
   getImageAlt
 } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view: ResourceKey = resolve('./profiledBox.html')
 

@@ -4,7 +4,7 @@ import { Component } from 'enonic-types/portal'
 import { EntryLinksPartConfig } from './entryLinks-part-config'
 import { Content, Image } from 'enonic-types/content'
 import { Phrases } from '../../../lib/types/language'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from 'enonic-types/thymeleaf'
 
 const {
   data: {
@@ -22,9 +22,7 @@ const {
 const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')

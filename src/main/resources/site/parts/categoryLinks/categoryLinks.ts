@@ -4,6 +4,7 @@ import {Component} from "enonic-types/portal";
 import {CategoryLinksPartConfig} from "./categoryLinks-part-config";
 import {Content} from "enonic-types/content";
 import {Language, Phrases} from "../../../lib/types/language";
+import { render } from "/lib/thymeleaf"
 
 const {
   data
@@ -13,9 +14,7 @@ const {
   getContent,
   pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')

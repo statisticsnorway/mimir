@@ -1,6 +1,6 @@
 import { Content } from 'enonic-types/content'
 import { PageContributions, Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import { Phrases } from '../../../lib/types/language'
@@ -10,9 +10,7 @@ import { Article } from '../../content-types/article/article'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { RelatedArticles } from '../../mixins/relatedArticles/relatedArticles'
 
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')

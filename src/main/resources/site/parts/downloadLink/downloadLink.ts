@@ -2,15 +2,13 @@ import { Request, Response } from 'enonic-types/controller'
 import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
 import { Component } from 'enonic-types/portal'
 import { DownloadLinkPartConfig } from './downloadLink-part-config'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from 'enonic-types/thymeleaf'
 
 const {
   getComponent,
   attachmentUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')

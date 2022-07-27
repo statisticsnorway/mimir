@@ -1,14 +1,12 @@
 import { PageContributions, Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
 import { PictureCardLinksPartConfig } from './pictureCardLinks-part-config'
 
 const {
   getImageAlt
 } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')

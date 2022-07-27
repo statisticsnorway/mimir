@@ -3,16 +3,14 @@ import { Content } from 'enonic-types/content'
 import { Button } from '../../content-types/button/button'
 import { Component } from 'enonic-types/portal'
 import { ButtonPartConfig } from './button-part-config'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from 'enonic-types/thymeleaf'
 
 const {
   attachmentUrl,
   getComponent,
   pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')

@@ -1,6 +1,6 @@
 import { Content, Page } from 'enonic-types/content'
 import { PageContributions, Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
 import { FooterContent } from '../../../lib/ssb/parts/footer'
@@ -59,9 +59,7 @@ const {
 const {
   fromMenuCache
 } = __non_webpack_require__('/lib/ssb/cache/cache')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')

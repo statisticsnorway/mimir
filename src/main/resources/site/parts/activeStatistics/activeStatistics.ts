@@ -1,6 +1,6 @@
 import { Content } from 'enonic-types/content'
 import { Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
 import { ActiveStatisticsPartConfig } from './activeStatistics-part-config'
 import { Statistics } from '../../content-types/statistics/statistics'
@@ -18,9 +18,7 @@ const {
   getComponent,
   pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')

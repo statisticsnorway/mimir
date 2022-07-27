@@ -1,8 +1,6 @@
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { Response, Request } from 'enonic-types/controller'
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 
 export interface ErrorInterface {
     errorTitle: string;

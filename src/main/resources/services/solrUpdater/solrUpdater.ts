@@ -1,6 +1,6 @@
 import { Response } from 'enonic-types/controller'
 import { Content, QueryResponse } from 'enonic-types/content'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from 'enonic-types/thymeleaf'
 
 const {
   query
@@ -8,9 +8,7 @@ const {
 const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 
 const yesterday: string = moment().subtract(1, 'days').format('YYYY-MM-DD')
 const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'

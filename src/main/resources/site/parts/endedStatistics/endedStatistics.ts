@@ -4,7 +4,7 @@ import { EndedStatisticsPartConfig } from './endedStatistics-part-config'
 import { Content } from 'enonic-types/content'
 import { Phrases } from '../../../lib/types/language'
 import { Statistics } from '../../content-types/statistics/statistics'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from 'enonic-types/thymeleaf'
 
 const {
   data: {
@@ -22,9 +22,7 @@ const {
 const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')

@@ -1,7 +1,7 @@
 import { Content } from 'enonic-types/content'
 import { Request, Response } from 'enonic-types/controller'
 import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { Component } from 'enonic-types/portal'
 import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
 import { MenuDropdownPartConfig } from '../menuDropdown/menuDropdown-part-config'
@@ -21,9 +21,7 @@ const {
   getMunicipality,
   removeCountyFromMunicipalityName
 } = __non_webpack_require__('/lib/ssb/dataset/klass/municipalities')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')

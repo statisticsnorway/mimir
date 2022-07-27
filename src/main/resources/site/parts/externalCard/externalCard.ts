@@ -2,6 +2,8 @@ import {Request, Response} from "enonic-types/controller";
 import {React4xpObject, React4xpResponse} from "../../../lib/types/react4xp";
 import {Component} from "enonic-types/portal";
 import {ExternalCardPartConfig} from "./externalCard-part-config";
+import { render } from 'enonic-types/thymeleaf'
+
 
 const {
   getComponent,
@@ -10,9 +12,6 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   data

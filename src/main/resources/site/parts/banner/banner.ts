@@ -1,5 +1,5 @@
 import { Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { Content } from 'enonic-types/content'
 import { Component } from 'enonic-types/portal'
 import { BannerPartConfig } from './banner-part-config'
@@ -11,9 +11,7 @@ const {
   getComponent,
   imageUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   getMunicipality, removeCountyFromMunicipalityName
 } = __non_webpack_require__('/lib/ssb/dataset/klass/municipalities')

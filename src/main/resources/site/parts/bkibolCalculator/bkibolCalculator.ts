@@ -8,7 +8,7 @@ import { CalculatorConfig } from '../../content-types/calculatorConfig/calculato
 import { Language, Phrases } from '../../../lib/types/language'
 import { allMonths, nextPeriod } from '../../../lib/ssb/utils/calculatorUtils'
 import { CalculatorPeriod } from '../../../lib/types/calculator'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { DropdownItem, DropdownItems } from '../../../lib/types/components'
 const {
   getComponent,
@@ -16,9 +16,7 @@ const {
   serviceUrl,
   pageUrl
 } = __non_webpack_require__( '/lib/xp/portal')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')

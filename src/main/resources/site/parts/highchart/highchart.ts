@@ -11,7 +11,7 @@ import { DatasetRepoNode } from '../../../lib/ssb/repo/dataset'
 import { JSONstat as JSONstatType } from '../../../lib/types/jsonstat-toolkit'
 import { TbmlDataUniform } from '../../../lib/types/xmlParser'
 import { HighchartsGraphConfig } from '../../../lib/types/highcharts'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { DataSource } from '../../mixins/dataSource/dataSource'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { GA_TRACKING_ID } from '../../pages/default/default'
@@ -33,9 +33,7 @@ const {
 const {
   localize
 } = __non_webpack_require__('/lib/xp/i18n')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   createHighchartObject
 } = __non_webpack_require__('/lib/ssb/parts/highcharts/highchartsUtils')

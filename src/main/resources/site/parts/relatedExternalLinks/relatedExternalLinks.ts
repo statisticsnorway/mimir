@@ -1,15 +1,13 @@
 import { Content } from 'enonic-types/content'
 import { PageContributions, Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { Phrases } from '../../../lib/types/language'
 import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
 import { Article } from '../../content-types/article/article'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { RelatedExternalLinks } from '../../mixins/relatedExternalLinks/relatedExternalLinks'
 
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')

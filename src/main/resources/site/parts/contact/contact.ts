@@ -1,7 +1,7 @@
 import { Content } from 'enonic-types/content'
 import { Request, Response } from 'enonic-types/controller'
 import { Component } from 'enonic-types/portal'
-import {ResourceKey} from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from '/lib/thymeleaf'
 import { Phrases } from '../../../lib/types/language'
 import { Contact } from '../../../lib/ssb/dashboard/statreg/types'
 import { ContactPartConfig } from './contact-part-config'
@@ -11,9 +11,7 @@ import {Statistics} from '../../content-types/statistics/statistics';
 const {
   getContent, getComponent
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')

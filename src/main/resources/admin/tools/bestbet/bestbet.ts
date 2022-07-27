@@ -1,5 +1,5 @@
 import { PageContributions, Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { getMainSubjects, SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { parseContributions } from '../../../lib/ssb/utils/utils'
 import { DropdownItems } from '../../../lib/types/components'
@@ -17,9 +17,7 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 
 const view: ResourceKey = resolve('./bestbet.html')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
