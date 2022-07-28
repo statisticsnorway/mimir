@@ -1,12 +1,7 @@
-import { HttpResponse } from 'enonic-types/http'
+import { request, HttpResponse } from '/lib/http-client'
 import { BanVarnishPageCacheConfig } from './banVarnishPageCache-config'
 
 const taskLib = __non_webpack_require__('/lib/xp/task')
-
-const {
-  request
-} = __non_webpack_require__('/lib/http-client')
-
 
 exports.run = function(params: BanVarnishPageCacheConfig ): void {
   const result: HttpResponse = purgePageFromVarnish(params.pageId as string)

@@ -8,12 +8,9 @@ import { Socket } from '../../types/socket'
 import { MunicipalityWithCounty } from '../dataset/klass/municipalities'
 import { Cache } from 'enonic-types/cache'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
-import { HttpResponse } from 'enonic-types/http'
+import { request, HttpResponse } from '/lib/http-client'
 import { BanVarnishPageCacheConfig } from '../../../tasks/banVarnishPageCache/banVarnishPageCache-config'
 
-const {
-  request
-} = __non_webpack_require__('/lib/http-client')
 const {
   newCache
 } = __non_webpack_require__('/lib/cache')

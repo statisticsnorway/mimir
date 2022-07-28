@@ -1,5 +1,5 @@
 import { Content } from '/lib/xp/content'
-import { HttpRequestParams } from 'enonic-types/http'
+import { HttpRequestParams } from '/lib/http-client'
 import { CalculatorConfig } from '../../site/content-types/calculatorConfig/calculatorConfig'
 import { Dataset } from '../../lib/types/jsonstat-toolkit'
 const {

@@ -1,8 +1,6 @@
 import { EmailParams } from 'enonic-types/mail'
-import { HttpRequestParams, HttpResponse } from 'enonic-types/http'
-const {
-  request
-} = __non_webpack_require__('/lib/http-client')
+import { request, HttpRequestParams, HttpResponse } from '/lib/http-client'
+
 const {
   send
 } = __non_webpack_require__('/lib/xp/mail')

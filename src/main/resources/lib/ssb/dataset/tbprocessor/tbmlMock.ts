@@ -1,6 +1,6 @@
 
 import { ByteSource } from '/lib/xp/content'
-import { HttpResponse } from 'enonic-types/http'
+import { HttpResponse } from '/lib/http-client'
 
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 const {

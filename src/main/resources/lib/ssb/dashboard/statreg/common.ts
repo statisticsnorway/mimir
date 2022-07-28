@@ -1,8 +1,5 @@
-import { HttpRequestParams, HttpResponse } from 'enonic-types/http'
+import { request, HttpRequestParams, HttpResponse } from '/lib/http-client'
 
-const {
-  request
-} = __non_webpack_require__('/lib/http-client')
 const {
   Events,
   logUserDataQuery

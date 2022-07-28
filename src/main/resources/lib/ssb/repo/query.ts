@@ -1,7 +1,7 @@
 import { RepoNode } from 'enonic-types/node'
 import { EditorCallback } from './eventLog'
 import { User } from 'enonic-types/auth'
-import { HttpRequestParams, HttpResponse } from 'enonic-types/http'
+import { HttpRequestParams, HttpResponse } from '/lib/http-client'
 import { TbmlDataUniform } from '../../types/xmlParser'
 const {
   dateToFormat

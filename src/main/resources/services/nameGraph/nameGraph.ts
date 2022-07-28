@@ -1,5 +1,3 @@
-import { HttpRequestParams, HttpResponse } from 'enonic-types/http'
-import { Dataset } from '../../lib/types/jsonstat-toolkit'
 import { Content } from '/lib/xp/content'
 import { CalculatorConfig } from '../../site/content-types/calculatorConfig/calculatorConfig'
 import { DatasetRepoNode } from '../../lib/ssb/repo/dataset'
@@ -14,9 +12,6 @@ const {
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 
 import validator from 'validator'
-const {
-  request
-} = __non_webpack_require__('/lib/http-client')
 const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
