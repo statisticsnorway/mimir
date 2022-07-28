@@ -1,10 +1,7 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { Content } from '/lib/xp/content'
-import { Cache } from 'enonic-types/cache'
+import { newCache, Cache } from '/lib/cache'
 
-const {
-  newCache
-} = __non_webpack_require__('/lib/cache')
 const {
   cacheLog
 } = __non_webpack_require__('/lib/ssb/utils/serverLog')

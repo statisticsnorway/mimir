@@ -6,14 +6,11 @@ import { TbmlDataUniform } from '../../types/xmlParser'
 import { DATASET_REPO, DatasetRepoNode } from '../repo/dataset'
 import { Socket } from '../../types/socket'
 import { MunicipalityWithCounty } from '../dataset/klass/municipalities'
-import { Cache } from 'enonic-types/cache'
+import { newCache, Cache } from '/lib/cache'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { request, HttpResponse } from '/lib/http-client'
 import { BanVarnishPageCacheConfig } from '../../../tasks/banVarnishPageCache/banVarnishPageCache-config'
 
-const {
-  newCache
-} = __non_webpack_require__('/lib/cache')
 const {
   listener,
   send
