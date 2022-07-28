@@ -1,5 +1,9 @@
 import { React4xp, React4xpObject, React4xpPageContributionOptions, React4xpResponse } from '../../../lib/types/react4xp'
-import { Component } from 'enonic-types/portal'
+import { getComponent,
+  getContent,
+  serviceUrl,
+  pageUrl,
+  Component } from '/lib/xp/portal'
 import { BkibolCalculatorPartConfig } from './bkibolCalculator-part-config'
 import { Dataset, Dimension } from '../../../lib/types/jsonstat-toolkit'
 import { Content } from 'enonic-types/content'
@@ -9,12 +13,6 @@ import { allMonths, nextPeriod } from '../../../lib/ssb/utils/calculatorUtils'
 import { CalculatorPeriod } from '../../../lib/types/calculator'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { DropdownItem, DropdownItems } from '../../../lib/types/components'
-const {
-  getComponent,
-  getContent,
-  serviceUrl,
-  pageUrl
-} = __non_webpack_require__( '/lib/xp/portal')
 
 const {
   renderError

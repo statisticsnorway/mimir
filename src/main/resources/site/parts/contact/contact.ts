@@ -1,15 +1,11 @@
 import { Content } from 'enonic-types/content'
-import { Component } from 'enonic-types/portal'
+import { getContent, getComponent, Component } from '/lib/xp/portal'
 import { ResourceKey, render } from '/lib/thymeleaf'
 import { Phrases } from '../../../lib/types/language'
 import { Contact } from '../../../lib/ssb/dashboard/statreg/types'
 import { ContactPartConfig } from './contact-part-config'
 import {Article} from '../../content-types/article/article';
 import {Statistics} from '../../content-types/statistics/statistics';
-
-const {
-  getContent, getComponent
-} = __non_webpack_require__('/lib/xp/portal')
 
 const {
   renderError

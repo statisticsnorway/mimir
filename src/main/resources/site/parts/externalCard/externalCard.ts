@@ -1,13 +1,8 @@
 import {React4xpObject, React4xpResponse} from "../../../lib/types/react4xp";
-import {Component} from "enonic-types/portal";
+import { getComponent, imageUrl, Component} from "/lib/xp/portal";
 import {ExternalCardPartConfig} from "./externalCard-part-config";
 import { render } from 'enonic-types/thymeleaf'
 
-
-const {
-  getComponent,
-  imageUrl
-} = __non_webpack_require__('/lib/xp/portal')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')

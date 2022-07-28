@@ -1,11 +1,7 @@
-import { Component } from 'enonic-types/portal'
+import { getComponent, Component } from '/lib/xp/portal'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
 import { DividerPartConfig } from './divider-part-config'
-
-const {
-  getComponent
-} = __non_webpack_require__('/lib/xp/portal')
 
 const {
   renderError

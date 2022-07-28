@@ -1,5 +1,8 @@
 import {React4xpObject, React4xpResponse} from "../../../lib/types/react4xp";
-import {Component} from "enonic-types/portal";
+import {  getComponent,
+  getContent,
+  pageUrl,
+  Component} from "/lib/xp/portal";
 import {CategoryLinksPartConfig} from "./categoryLinks-part-config";
 import {Content} from "enonic-types/content";
 import {Language, Phrases} from "../../../lib/types/language";
@@ -8,11 +11,6 @@ import { render } from "/lib/thymeleaf"
 const {
   data
 } = __non_webpack_require__('/lib/util')
-const {
-  getComponent,
-  getContent,
-  pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
 
 const {
   renderError

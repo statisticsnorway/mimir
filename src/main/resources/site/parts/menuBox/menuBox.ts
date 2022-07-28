@@ -1,7 +1,7 @@
 import { Content, ContentLibrary } from 'enonic-types/content'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
-import { Component } from 'enonic-types/portal'
+import { Component } from '/lib/xp/portal'
 import { MenuBoxPartConfig } from '../menuBox/menuBox-part-config'
 import { MenuBox } from '../../content-types/menuBox/menuBox'
 

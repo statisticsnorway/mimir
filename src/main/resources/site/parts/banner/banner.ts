@@ -1,15 +1,12 @@
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { Content } from 'enonic-types/content'
-import { Component } from 'enonic-types/portal'
+import { getContent,
+  getComponent,
+  imageUrl,
+  Component } from '/lib/xp/portal'
 import { BannerPartConfig } from './banner-part-config'
 import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
 import { Page } from '../../content-types/page/page'
-
-const {
-  getContent,
-  getComponent,
-  imageUrl
-} = __non_webpack_require__('/lib/xp/portal')
 
 const {
   getMunicipality, removeCountyFromMunicipalityName

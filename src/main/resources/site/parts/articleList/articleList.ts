@@ -1,5 +1,5 @@
 import { Article } from '../../content-types/article/article'
-import { Component } from 'enonic-types/portal'
+import { pageUrl, getContent, getComponent, Component } from '/lib/xp/portal'
 import { ArticleListPartConfig } from './articleList-part-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { AggregationsResponseEntry, Content } from 'enonic-types/content'
@@ -12,9 +12,6 @@ const {
 const {
   query
 } = __non_webpack_require__('/lib/xp/content')
-const {
-  pageUrl, getContent, getComponent
-} = __non_webpack_require__('/lib/xp/portal')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   moment

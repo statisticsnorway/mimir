@@ -1,5 +1,8 @@
 import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
-import { Component } from 'enonic-types/portal'
+import { getContent,
+  getComponent,
+  imageUrl,
+  Component } from '/lib/xp/portal'
 import { EntryLinksPartConfig } from './entryLinks-part-config'
 import { Content, Image } from 'enonic-types/content'
 import { Phrases } from '../../../lib/types/language'
@@ -13,11 +16,6 @@ const {
 const {
   get
 } = __non_webpack_require__('/lib/xp/content')
-const {
-  getContent,
-  getComponent,
-  imageUrl
-} = __non_webpack_require__('/lib/xp/portal')
 const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')

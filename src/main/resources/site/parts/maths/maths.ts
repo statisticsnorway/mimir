@@ -1,4 +1,4 @@
-import { Component } from 'enonic-types/portal'
+import { Component } from '/lib/xp/portal'
 import { MathsPartConfig } from '../maths/maths-part-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 

@@ -2,7 +2,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
-import { Component } from 'enonic-types/portal'
+import { getComponent, getContent, Component } from '/lib/xp/portal'
 import { HighchartPartConfig } from './highchart-part-config'
 import { Content } from 'enonic-types/content'
 import { Highchart } from '../../content-types/highchart/highchart'
@@ -25,10 +25,6 @@ const {
     forceArray
   }
 } = __non_webpack_require__('/lib/util')
-const {
-  getComponent,
-  getContent
-} = __non_webpack_require__('/lib/xp/portal')
 const {
   localize
 } = __non_webpack_require__('/lib/xp/i18n')

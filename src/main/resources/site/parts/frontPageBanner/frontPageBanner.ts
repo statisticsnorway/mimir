@@ -1,11 +1,7 @@
-import {Component} from "enonic-types/portal";
+import { getComponent, imageUrl, Component} from "/lib/xp/portal";
 import {FrontPageBannerPartConfig} from "./frontPageBanner-part-config";
 import { render } from 'enonic-types/thymeleaf'
 
-const {
-  getComponent,
-  imageUrl
-} = __non_webpack_require__('/lib/xp/portal')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')

@@ -1,5 +1,8 @@
 import { Content } from 'enonic-types/content'
-import { Component } from 'enonic-types/portal'
+import { getComponent,
+  attachmentUrl,
+  pageUrl,
+  Component } from '/lib/xp/portal'
 import { LinksPartConfig } from './links-part-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { renderError } from '../../../lib/ssb/error/error'
@@ -8,11 +11,7 @@ import { GA_TRACKING_ID } from '../../pages/default/default'
 const {
   get
 } = __non_webpack_require__('/lib/xp/content')
-const {
-  getComponent,
-  attachmentUrl,
-  pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
+
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 exports.get = (req: XP.Request): React4xpResponse | XP.Response => {

@@ -1,4 +1,4 @@
-import { Component } from 'enonic-types/portal'
+import { Component } from '/lib/xp/portal'
 import { renderError } from '../../../lib/ssb/error/error'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { GA_TRACKING_ID } from '../../pages/default/default'

@@ -1,14 +1,10 @@
-import {Component} from "enonic-types/portal";
+import { getComponent, processHtml, Component} from "/lib/xp/portal";
 import {FactBoxPartConfig} from "./factBox-part-config";
 import {React4xpObject, React4xpResponse} from "../../../lib/types/react4xp";
 import {Content} from "enonic-types/content";
 import {FactBox} from "../../content-types/factBox/factBox";
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 
-const {
-  getComponent,
-  processHtml
-} = __non_webpack_require__('/lib/xp/portal')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
