@@ -4,7 +4,7 @@ import { SearchResultPartConfig } from './searchResult-part-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { PreparedSearchResult, SolrPrepResultAndTotal, Facet } from '../../../lib/ssb/utils/solrUtils'
 import { queryNodes, getNode } from '../../../lib/ssb/repo/common'
-import { NodeQueryResponse, RepoNode } from 'enonic-types/node'
+import { NodeQueryResponse, RepoNode } from '/lib/xp/node'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import { BestBetContent } from '../../../lib/ssb/repo/bestbet'
 

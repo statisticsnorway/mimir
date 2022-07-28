@@ -5,7 +5,7 @@ import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { DatasetRepoNode } from '../repo/dataset'
 import { StatisticInListing, ReleaseDatesVariant } from '../dashboard/statreg/types'
 import { JobEventNode, JobInfoNode, StatisticsPublishResult, DataSourceStatisticsPublishResult } from '../repo/job'
-import { NodeQueryHit } from 'enonic-types/node'
+import { NodeQueryHit } from '/lib/xp/node'
 import { Statistic } from '../../../site/mixins/statistic/statistic'
 import { send } from '/lib/xp/event'
 

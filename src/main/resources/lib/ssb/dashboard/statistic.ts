@@ -13,7 +13,7 @@ import { KeyFigure } from '../../../site/content-types/keyFigure/keyFigure'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { Source, TbmlDataUniform } from '../../types/xmlParser'
 import { JobEventNode, JobInfoNode, JobNames, JobStatus } from '../repo/job'
-import { NodeQueryResponse } from 'enonic-types/node'
+import { NodeQueryResponse } from '/lib/xp/node'
 import { User } from 'enonic-types/auth'
 import { Statistic } from '../../../site/mixins/statistic/statistic'
 

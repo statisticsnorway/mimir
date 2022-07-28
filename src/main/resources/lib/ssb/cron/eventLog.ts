@@ -1,4 +1,4 @@
-import { NodeQueryHit, NodeQueryResponse, RepoNode } from 'enonic-types/node'
+import { NodeQueryHit, NodeQueryResponse, RepoNode } from '/lib/xp/node'
 import { JobEventNode } from '../repo/job'
 
 const {
