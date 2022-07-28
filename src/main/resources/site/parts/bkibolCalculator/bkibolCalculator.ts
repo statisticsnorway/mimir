@@ -6,7 +6,7 @@ import { getComponent,
   Component } from '/lib/xp/portal'
 import { BkibolCalculatorPartConfig } from './bkibolCalculator-part-config'
 import { Dataset, Dimension } from '../../../lib/types/jsonstat-toolkit'
-import { Content } from 'enonic-types/content'
+import { Content } from '/lib/xp/content'
 import { CalculatorConfig } from '../../content-types/calculatorConfig/calculatorConfig'
 import { Language, Phrases } from '../../../lib/types/language'
 import { allMonths, nextPeriod } from '../../../lib/ssb/utils/calculatorUtils'

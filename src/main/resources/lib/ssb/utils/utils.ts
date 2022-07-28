@@ -1,11 +1,7 @@
-import { ByteSource, Content } from 'enonic-types/content'
+import { get, getAttachmentStream, ByteSource, Content } from '/lib/xp/content'
 import { Header } from '../../../site/content-types/header/header'
 import { PreliminaryData } from '../../types/xmlParser'
 
-const {
-  get,
-  getAttachmentStream
-} = __non_webpack_require__('/lib/xp/content')
 const {
   getContent, pageUrl
 } = __non_webpack_require__('/lib/xp/portal')

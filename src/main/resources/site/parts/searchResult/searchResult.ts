@@ -1,5 +1,5 @@
 import { Component } from '/lib/xp/portal'
-import { Content } from 'enonic-types/content'
+import { get, Content } from '/lib/xp/content'
 import { SearchResultPartConfig } from './searchResult-part-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { PreparedSearchResult, SolrPrepResultAndTotal, Facet } from '../../../lib/ssb/utils/solrUtils'
@@ -30,9 +30,6 @@ const {
 const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
 
 exports.get = function(req: XP.Request): React4xpResponse | XP.Response {
   try {

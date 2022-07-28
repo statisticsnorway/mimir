@@ -1,5 +1,5 @@
 import { Article } from '../../../site/content-types/article/article'
-import { Content, QueryResponse } from 'enonic-types/content'
+import { query, get, Content, QueryResponse } from '/lib/xp/content'
 import { StatisticInListing } from '../dashboard/statreg/types'
 import { getAllStatisticsFromRepo } from '../statreg/statistics'
 import { calculatePeriodRelease, Release } from '../utils/variantUtils'
@@ -9,10 +9,6 @@ import { SEO } from '../../../services/news/news'
 import { OmStatistikken } from '../../../site/content-types/omStatistikken/omStatistikken'
 import { formatDate } from '../utils/dateUtils'
 
-const {
-  query,
-  get
-} = __non_webpack_require__('/lib/xp/content')
 const {
   pageUrl
 } = __non_webpack_require__('/lib/xp/portal')

@@ -1,4 +1,4 @@
-import { Content } from 'enonic-types/content'
+import { query, Content } from '/lib/xp/content'
 import { Page } from '../../../site/content-types/page/page'
 import { DefaultPageConfig } from '../../../site/pages/default/default-page-config'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
@@ -6,9 +6,6 @@ import { EndedStatisticList } from '../../../site/content-types/endedStatisticLi
 import { StatisticInListing } from '../dashboard/statreg/types'
 import { Statistic } from '../../../site/mixins/statistic/statistic'
 import { Subtopic } from '../../../site/mixins/subtopic/subtopic'
-const {
-  query
-} = __non_webpack_require__('/lib/xp/content')
 const {
   getAllStatisticsFromRepo
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')

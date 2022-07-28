@@ -1,5 +1,5 @@
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { Content, QueryResponse } from 'enonic-types/content'
+import { Content, QueryResponse } from '/lib/xp/content'
 import { PreparedArticles } from '../../../lib/ssb/utils/articleUtils'
 import { Article } from '../../content-types/article/article'
 

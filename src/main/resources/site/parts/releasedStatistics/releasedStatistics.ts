@@ -1,6 +1,6 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 
-import { Content } from 'enonic-types/content'
+import { Content } from '/lib/xp/content'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Component } from '/lib/xp/portal'

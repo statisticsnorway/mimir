@@ -1,4 +1,4 @@
-import { Content } from 'enonic-types/content'
+import { Content } from '/lib/xp/content'
 import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { Component } from '/lib/xp/portal'

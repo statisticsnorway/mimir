@@ -1,15 +1,12 @@
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { Content, QueryResponse } from 'enonic-types/content'
+import { query, Content, QueryResponse } from '/lib/xp/content'
 import { Article } from '../../content-types/article/article'
 import { ArticleArchive } from '../../content-types/articleArchive/articleArchive'
 
 const {
   getContent, imageUrl, pageUrl, processHtml, serviceUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  query
-} = __non_webpack_require__('/lib/xp/content')
 const {
   getImageAlt
 } = __non_webpack_require__('/lib/ssb/utils/imageUtils')

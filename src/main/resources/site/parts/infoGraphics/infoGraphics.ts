@@ -10,9 +10,6 @@ const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
-const {
   getSources
 } = __non_webpack_require__('/lib/ssb/utils/utils')
 const {
@@ -20,7 +17,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/utils/language')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-import { Content, MediaImage } from 'enonic-types/content'
+import { get, Content, MediaImage } from '/lib/xp/content'
 import { SourceList, SourcesConfig } from '../../../lib/ssb/utils/utils'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore

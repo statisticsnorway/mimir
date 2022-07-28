@@ -1,5 +1,5 @@
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-import { Content } from 'enonic-types/content'
+import { get, Content } from '/lib/xp/content'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Phrases } from '../../../lib/types/language'
 import { Statistics } from '../../content-types/statistics/statistics'
@@ -7,9 +7,6 @@ import { OmStatistikken } from '../../content-types/omStatistikken/omStatistikke
 import { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { Accordion, AccordionItem } from '../../../lib/types/components'
 
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
 const {
   getContent, processHtml
 } = __non_webpack_require__('/lib/xp/portal')

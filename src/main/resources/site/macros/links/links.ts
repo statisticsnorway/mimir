@@ -1,15 +1,12 @@
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { LinksConfig } from './links-config'
-import { Content } from 'enonic-types/content'
+import { get, Content } from '/lib/xp/content'
 import { LinksProps, prepareText } from '../../parts/links/links'
 import { TableLink } from '../../mixins/tableLink/tableLink'
 import { HeaderLink } from '../../mixins/headerLink/headerLink'
 import { ProfiledLink } from '../../mixins/profiledLink/profiledLink'
 import { GA_TRACKING_ID } from '../../pages/default/default'
 
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
 const {
   attachmentUrl,
   pageUrl

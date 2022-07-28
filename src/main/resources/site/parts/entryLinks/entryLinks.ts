@@ -4,7 +4,7 @@ import { getContent,
   imageUrl,
   Component } from '/lib/xp/portal'
 import { EntryLinksPartConfig } from './entryLinks-part-config'
-import { Content, Image } from 'enonic-types/content'
+import { get, Content, Image } from '/lib/xp/content'
 import { Phrases } from '../../../lib/types/language'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 
@@ -13,9 +13,6 @@ const {
     forceArray
   }
 } = __non_webpack_require__('/lib/util')
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
 const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')

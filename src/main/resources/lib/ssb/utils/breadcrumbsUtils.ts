@@ -1,13 +1,10 @@
-import { Content } from 'enonic-types/content'
+import { get, Content } from '/lib/xp/content'
 import { StatbankFrameData } from '../../../site/pages/default/default'
 import { MunicipalityWithCounty } from '../dataset/klass/municipalities'
 
 const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
 const {
   pageUrl,
   getContent

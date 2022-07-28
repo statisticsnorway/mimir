@@ -1,13 +1,10 @@
 import { HeaderLinkConfig } from './headerLink-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { Content } from 'enonic-types/content'
+import { get, Content } from '/lib/xp/content'
 
 const {
   attachmentUrl, pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 exports.macro = (context: XP.MacroContext): React4xpResponse => {

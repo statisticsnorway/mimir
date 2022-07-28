@@ -1,13 +1,10 @@
-import { Content, QueryResponse } from 'enonic-types/content'
+import { query, Content, QueryResponse } from '/lib/xp/content'
 import { EnonicEvent, EnonicEventData } from 'enonic-types/event'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 
 const {
   listener
 } = __non_webpack_require__('/lib/xp/event')
-const {
-  query
-} = __non_webpack_require__('/lib/xp/content')
 const {
   run
 } = __non_webpack_require__('/lib/xp/context')

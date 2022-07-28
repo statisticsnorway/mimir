@@ -1,6 +1,6 @@
 import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
 import { EndedStatisticsPartConfig } from './endedStatistics-part-config'
-import { Content } from 'enonic-types/content'
+import { get, Content } from '/lib/xp/content'
 import { Phrases } from '../../../lib/types/language'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
@@ -10,9 +10,6 @@ const {
     forceArray
   }
 } = __non_webpack_require__('/lib/util')
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
 const {
   getContent,
   getComponent,

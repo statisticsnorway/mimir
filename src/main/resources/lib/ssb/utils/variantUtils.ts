@@ -1,4 +1,4 @@
-import { Content } from 'enonic-types/content'
+import { query, get, Content } from '/lib/xp/content'
 import { SEO } from '../../../services/news/news'
 import { OmStatistikken } from '../../../site/content-types/omStatistikken/omStatistikken'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
@@ -8,10 +8,6 @@ import { parseISO, getDay, getMonth, getYear, getDate } from 'date-fns'
 const {
   pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  query,
-  get
-} = __non_webpack_require__('/lib/xp/content')
 const {
   getMainSubject, getMainSubjectStatistic
 } = __non_webpack_require__( '/lib/ssb/utils/parentUtils')

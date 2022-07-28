@@ -1,9 +1,6 @@
-import { Content, QueryResponse } from 'enonic-types/content'
+import { query, Content, QueryResponse } from '/lib/xp/content'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 
-const {
-  query
-} = __non_webpack_require__('/lib/xp/content')
 const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')

@@ -1,4 +1,4 @@
-import { Content, ContentLibrary } from 'enonic-types/content'
+import { get, Content } from '/lib/xp/content'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { Component } from '/lib/xp/portal'
@@ -23,7 +23,6 @@ const {
   }
 } = __non_webpack_require__('/lib/util')
 
-const content: ContentLibrary = __non_webpack_require__('/lib/xp/content')
 const view: ResourceKey = resolve('./menuBox.html')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp') as React4xp
 
@@ -55,7 +54,7 @@ function renderPart(req:XP.Request):XP.Response | React4xpResponse | string {
       throw new Error('MenuBox - Missing Id')
     }
   }
-  const menuBoxContent: Content<MenuBox> | null = content.get({
+  const menuBoxContent: Content<MenuBox> | null = get({
     key: menuBoxId
   })
   if (!menuBoxContent) throw new Error(`MenuBox with id ${menuBoxId} doesn't exist`)

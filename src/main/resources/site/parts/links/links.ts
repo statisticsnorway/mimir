@@ -1,4 +1,4 @@
-import { Content } from 'enonic-types/content'
+import { get, Content } from '/lib/xp/content'
 import { getComponent,
   attachmentUrl,
   pageUrl,
@@ -7,10 +7,6 @@ import { LinksPartConfig } from './links-part-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { renderError } from '../../../lib/ssb/error/error'
 import { GA_TRACKING_ID } from '../../pages/default/default'
-
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
 
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 

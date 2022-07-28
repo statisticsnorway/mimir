@@ -1,5 +1,5 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { Content } from 'enonic-types/content'
+import { get as getContent, Content } from '/lib/xp/content'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { DatasetRepoNode } from '../repo/dataset'
@@ -19,9 +19,6 @@ const {
   getDataSourceIdsFromStatistics,
   getStatisticsContent
 } = __non_webpack_require__('/lib/ssb/dashboard/statistic')
-const {
-  get: getContent
-} = __non_webpack_require__('/lib/xp/content')
 const {
   getStatisticByIdFromRepo,
   getReleaseDatesByVariants

@@ -1,6 +1,6 @@
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { SubjectItem, StatisticItem } from '../../../lib/ssb/utils/subjectUtils'
-import { Content } from 'enonic-types/content'
+import { Content } from '/lib/xp/content'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
 const {
   getMainSubjects,

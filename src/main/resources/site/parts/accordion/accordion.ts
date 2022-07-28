@@ -1,4 +1,4 @@
-import { Content } from 'enonic-types/content'
+import { get, Content } from '/lib/xp/content'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Accordion } from '../../content-types/accordion/accordion'
 import { AccordionConfig } from '../../macros/accordion/accordion-config'
@@ -8,9 +8,6 @@ const {
     forceArray
   }
 } = __non_webpack_require__('/lib/util')
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
 const {
   getComponent,
   getContent,

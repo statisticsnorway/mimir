@@ -1,4 +1,4 @@
-import { Content } from 'enonic-types/content'
+import {getChildren, query, Content } from '/lib/xp/content'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
 import { Article } from '../../content-types/article/article'
@@ -17,7 +17,6 @@ const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 
-const contentLib = __non_webpack_require__('/lib/xp/content')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 const {
   moment
@@ -47,7 +46,7 @@ function renderPart(req: XP.Request): XP.Response {
   const page: Content = getContent()
   const language: string = page.language ? page.language === 'en' ? 'en-gb' : page.language : 'nb'
 
-  const hits: Array<Content<Article>> = contentLib.getChildren({
+  const hits: Array<Content<Article>> = getChildren({
     key: page._path,
     count: MAX_VARIABLES
   }).hits as unknown as Array<Content<Article>>
@@ -95,7 +94,7 @@ function renderVariables(variables: Array<Variables>): XP.Response {
 
 function contentArrayToVariables(content: Array<Content<Article>>, language: string): Array<Variables> {
   return content.map((variable) => {
-    const files: Array<Content<Article>> = contentLib.query({
+    const files: Array<Content<Article>> = query({
       count: 1,
       sort: 'modifiedTime DESC',
       query: `_path LIKE '/content${variable._path}/*' `,

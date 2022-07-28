@@ -1,4 +1,4 @@
-import { Content, QueryResponse } from 'enonic-types/content'
+import { get as getContent, query, Content, QueryResponse } from '/lib/xp/content'
 import { DefaultPageConfig } from '../../../site/pages/default/default-page-config'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { StatisticInListing } from '../dashboard/statreg/types'
@@ -7,10 +7,6 @@ import { Page } from '../../../site/content-types/page/page'
 const {
   getStatisticByShortNameFromRepo
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const {
-  get: getContent,
-  query
-} = __non_webpack_require__('/lib/xp/content')
 const {
   fromParentTypeCache
 } = __non_webpack_require__('/lib/ssb/cache/cache')

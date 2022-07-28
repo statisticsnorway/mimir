@@ -1,6 +1,6 @@
 import { Component } from '/lib/xp/portal'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { Content } from 'enonic-types/content'
+import { Content } from '/lib/xp/content'
 import { PublicationArchivePartConfig } from './publicationArchive-part-config'
 import { PublicationResult } from '../../../lib/ssb/parts/publicationArchive'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'

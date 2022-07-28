@@ -1,5 +1,5 @@
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { Content } from 'enonic-types/content'
+import { query, Content } from '/lib/xp/content'
 import { Component } from '/lib/xp/portal'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { GroupedBy, PreparedStatistics, YearReleases, Release } from '../../../lib/ssb/utils/variantUtils'
@@ -18,9 +18,6 @@ const {
   processHtml,
   serviceUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  query
-} = __non_webpack_require__('/lib/xp/content')
 const {
   addMonthNames,
   groupStatisticsByYearMonthAndDay,

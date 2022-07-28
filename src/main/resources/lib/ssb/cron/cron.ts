@@ -1,5 +1,5 @@
 import { UserQueryResult } from 'enonic-types/auth'
-import { Content } from 'enonic-types/content'
+import { Content } from '/lib/xp/content'
 import { RunContext } from 'enonic-types/context'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { JobEventNode, JobInfoNode } from '../repo/job'

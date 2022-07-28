@@ -1,11 +1,8 @@
 import { Article } from '../../../site/content-types/article/article'
-import { Content, QueryResponse } from 'enonic-types/content'
+import { query, Content, QueryResponse } from '/lib/xp/content'
 import { SubjectItem } from '../utils/subjectUtils'
 import { formatDate } from './dateUtils'
 
-const {
-  query
-} = __non_webpack_require__('/lib/xp/content')
 const {
   pageUrl
 } = __non_webpack_require__('/lib/xp/portal')

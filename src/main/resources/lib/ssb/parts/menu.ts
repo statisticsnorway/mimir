@@ -1,4 +1,4 @@
-import { Content, Image, QueryResponse } from 'enonic-types/content'
+import { get, getChildren, query, Content, Image, QueryResponse } from '/lib/xp/content'
 import { MenuItem } from '../../../site/content-types/menuItem/menuItem'
 import { Footer } from '../../../site/content-types/footer/footer'
 import { Header } from '../../../site/content-types/header/header'
@@ -6,9 +6,6 @@ import { Header } from '../../../site/content-types/header/header'
 const {
   pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  get, getChildren, query
-} = __non_webpack_require__('/lib/xp/content')
 const {
   getAttachment
 } = __non_webpack_require__('/lib/ssb/utils/utils')

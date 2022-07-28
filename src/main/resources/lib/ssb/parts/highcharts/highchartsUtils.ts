@@ -1,5 +1,5 @@
 import { Highchart } from '../../../../site/content-types/highchart/highchart'
-import { Content } from 'enonic-types/content'
+import { Content } from '/lib/xp/content'
 import { JSONstat } from '../../../types/jsonstat-toolkit'
 import { TbmlDataUniform } from '../../../types/xmlParser'
 import { DataSource } from '../../../../site/mixins/dataSource/dataSource'

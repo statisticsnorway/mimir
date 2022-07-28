@@ -1,6 +1,6 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { CreateOrUpdateStatus } from '../dataset/dataset'
-import { Content } from 'enonic-types/content'
+import { get as getContent, query, Content } from '/lib/xp/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { Events, QueryInfoNode } from '../repo/query'
 import { EVENT_LOG_REPO, EVENT_LOG_BRANCH, LogSummary } from '../repo/eventLog'
@@ -46,10 +46,6 @@ const {
   DATASET_BRANCH,
   UNPUBLISHED_DATASET_BRANCH
 } = __non_webpack_require__('/lib/ssb/repo/dataset')
-const {
-  get: getContent,
-  query
-} = __non_webpack_require__('/lib/xp/content')
 const {
   getParentType
 } = __non_webpack_require__('/lib/ssb/utils/parentUtils')

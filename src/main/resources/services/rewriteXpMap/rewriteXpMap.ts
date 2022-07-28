@@ -1,8 +1,5 @@
-import { Content } from 'enonic-types/content'
+import { query, Content } from '/lib/xp/content'
 import { RewriteVarnish } from '../../site/content-types/rewriteVarnish/rewriteVarnish'
-const {
-  query
-} = __non_webpack_require__('/lib/xp/content')
 
 function get(): XP.Response {
   const varnishContent: Content<RewriteVarnish> = query({

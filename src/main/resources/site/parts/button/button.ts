@@ -1,4 +1,4 @@
-import { Content } from 'enonic-types/content'
+import { content, Content } from '/lib/xp/content'
 import { Button } from '../../content-types/button/button'
 import { attachmentUrl,
   getComponent,
@@ -11,7 +11,6 @@ const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 
-const content = __non_webpack_require__('/lib/xp/content')
 const util = __non_webpack_require__('/lib/util')
 const view: ResourceKey = resolve('./button.html') as ResourceKey
 

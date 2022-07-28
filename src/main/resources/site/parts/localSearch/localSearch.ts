@@ -1,13 +1,10 @@
-import { Content } from 'enonic-types/content'
+import { get, query, Content } from '/lib/xp/content'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { LocalSearchPartConfig } from './localSearch-part-config'
 
 const {
   getComponent, pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  get, query
-} = __non_webpack_require__('/lib/xp/content')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')

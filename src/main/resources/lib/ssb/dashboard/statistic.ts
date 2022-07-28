@@ -1,7 +1,7 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { EventInfo } from '../repo/query'
 import { Socket, SocketEmitter } from '../../types/socket'
-import { Content, QueryResponse } from 'enonic-types/content'
+import {   query, get as getContent, Content, QueryResponse } from '/lib/xp/content'
 import { StatisticInListing, VariantInListing } from './statreg/types'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { ProcessXml, RefreshDatasetResult, DashboardJobInfo } from './dashboard'
@@ -20,10 +20,6 @@ import { Statistic } from '../../../site/mixins/statistic/statistic'
 const {
   hasWritePermissions
 } = __non_webpack_require__('/lib/ssb/parts/permissions')
-const {
-  query,
-  get: getContent
-} = __non_webpack_require__('/lib/xp/content')
 const {
   fetchStatisticsWithRelease,
   getAllStatisticsFromRepo,

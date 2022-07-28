@@ -1,5 +1,5 @@
 import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
-import { Content } from 'enonic-types/content'
+import { Content } from '/lib/xp/content'
 import { Language, Phrases } from '../../../lib/types/language'
 
 const {

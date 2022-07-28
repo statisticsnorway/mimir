@@ -1,8 +1,5 @@
-import { Content, QueryResponse } from 'enonic-types/content'
+import { query, Content, QueryResponse } from '/lib/xp/content'
 
-const {
-  query
-} = __non_webpack_require__('/lib/xp/content')
 
 exports.get = (req: XP.Request): XP.Response => {
   const subtopicQuery: QueryResponse<Subtopics> = query({

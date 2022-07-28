@@ -1,4 +1,4 @@
-import { Content } from 'enonic-types/content'
+import { get, Content } from '/lib/xp/content'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { Phrases } from '../../../lib/types/language'
 import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
@@ -10,9 +10,6 @@ const {
     forceArray
   }
 } = __non_webpack_require__('/lib/util')
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
 const {
   getContent,
   pageUrl

@@ -1,4 +1,4 @@
-import { Content, QueryResponse } from 'enonic-types/content'
+import { Content, QueryResponse } from '/lib/xp/content'
 import { PreparedArticles } from '../../lib/ssb/utils/articleUtils'
 import { Article } from '../../site/content-types/article/article'
 

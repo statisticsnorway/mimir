@@ -1,4 +1,4 @@
-import { Content } from 'enonic-types/content'
+import { get, Content } from '/lib/xp/content'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Article } from '../../content-types/article/article'
@@ -8,9 +8,6 @@ const {
     forceArray
   }
 } = __non_webpack_require__('/lib/util')
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
 const {
   getContent, pageUrl, processHtml
 } = __non_webpack_require__('/lib/xp/portal')

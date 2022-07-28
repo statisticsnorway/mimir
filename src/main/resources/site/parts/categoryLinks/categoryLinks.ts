@@ -4,7 +4,7 @@ import {  getComponent,
   pageUrl,
   Component} from "/lib/xp/portal";
 import {CategoryLinksPartConfig} from "./categoryLinks-part-config";
-import {Content} from "enonic-types/content";
+import {Content} from "/lib/xp/content";
 import {Language, Phrases} from "../../../lib/types/language";
 import { render } from "/lib/thymeleaf"
 

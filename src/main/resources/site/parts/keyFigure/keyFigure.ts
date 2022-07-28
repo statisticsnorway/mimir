@@ -1,4 +1,4 @@
-import { Content } from 'enonic-types/content'
+import { Content } from '/lib/xp/content'
 import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
 import { KeyFigureView } from '../../../lib/ssb/parts/keyFigure'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'

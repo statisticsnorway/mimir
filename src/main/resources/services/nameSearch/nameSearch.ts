@@ -1,6 +1,6 @@
 import { HttpRequestParams, HttpResponse } from 'enonic-types/http'
 import { Dataset } from '../../lib/types/jsonstat-toolkit'
-import { Content } from 'enonic-types/content'
+import { Content } from '/lib/xp/content'
 import { CalculatorConfig } from '../../site/content-types/calculatorConfig/calculatorConfig'
 import { DatasetRepoNode } from '../../lib/ssb/repo/dataset'
 

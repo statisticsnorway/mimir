@@ -1,7 +1,7 @@
 import { getComponent, processHtml, Component} from "/lib/xp/portal";
 import {FactBoxPartConfig} from "./factBox-part-config";
 import {React4xpObject, React4xpResponse} from "../../../lib/types/react4xp";
-import {Content} from "enonic-types/content";
+import {get, Content} from "/lib/xp/content";
 import {FactBox} from "../../content-types/factBox/factBox";
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 
@@ -9,7 +9,6 @@ const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const content = __non_webpack_require__('/lib/xp/content')
 
 const view: ResourceKey = resolve('./factBox.html')
 
@@ -41,7 +40,7 @@ function renderPart(req: XP.Request, factBoxId: string): XP.Response | React4xpR
       throw new Error('Factbox - Missing Id')
     }
   }
-  const factBoxContent: Content<FactBox> | null = content.get({
+  const factBoxContent: Content<FactBox> | null = get({
     key: factBoxId
   })
   if (!factBoxContent) throw new Error(`FactBox with id ${factBoxId} doesn't exist`)

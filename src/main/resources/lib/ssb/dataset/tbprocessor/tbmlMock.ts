@@ -1,5 +1,5 @@
 
-import { ByteSource } from 'enonic-types/content'
+import { ByteSource } from '/lib/xp/content'
 import { HttpResponse } from 'enonic-types/http'
 
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')

@@ -1,4 +1,4 @@
-import { Content, QueryResponse } from 'enonic-types/content'
+import { query, Content, QueryResponse } from '/lib/xp/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { DataSource as DataSourceType, DatasetRepoNode } from '../repo/dataset'
 import { JSONstat } from '../../types/jsonstat-toolkit'
@@ -10,9 +10,6 @@ import { TbprocessorParsedResponse } from './tbprocessor/tbml'
 const {
   Events
 } = __non_webpack_require__('/lib/ssb/repo/query')
-const {
-  query
-} = __non_webpack_require__('/lib/xp/content')
 const {
   run
 } = __non_webpack_require__('/lib/xp/context')

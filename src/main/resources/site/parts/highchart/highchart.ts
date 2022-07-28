@@ -4,7 +4,7 @@
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { getComponent, getContent, Component } from '/lib/xp/portal'
 import { HighchartPartConfig } from './highchart-part-config'
-import { Content } from 'enonic-types/content'
+import { get, Content } from '/lib/xp/content'
 import { Highchart } from '../../content-types/highchart/highchart'
 import { DatasetRepoNode } from '../../../lib/ssb/repo/dataset'
 import { JSONstat as JSONstatType } from '../../../lib/types/jsonstat-toolkit'
@@ -41,9 +41,6 @@ const {
 const {
   hasWritePermissionsAndPreview
 } = __non_webpack_require__('/lib/ssb/parts/permissions')
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
 const view: ResourceKey = resolve('./highchart.html')
 const {
   isEnabled

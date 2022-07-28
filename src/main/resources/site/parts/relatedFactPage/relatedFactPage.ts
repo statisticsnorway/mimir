@@ -1,4 +1,4 @@
-import { Content, QueryResponse } from 'enonic-types/content'
+import { get, query, Content, QueryResponse } from '/lib/xp/content'
 import { Phrases } from '../../../lib/types/language'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { SEO } from '../../../services/news/news'
@@ -11,9 +11,6 @@ const {
   getComponent, getContent, imageUrl, pageUrl, serviceUrl
 } = __non_webpack_require__('/lib/xp/portal')
 const {
-  query
-} = __non_webpack_require__('/lib/xp/content')
-const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 const {
@@ -25,9 +22,6 @@ const {
 const {
   fromPartCache
 } = __non_webpack_require__('/lib/ssb/cache/partCache')
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
 const {
   data: {
     forceArray

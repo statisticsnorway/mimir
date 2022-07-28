@@ -1,4 +1,4 @@
-import { ByteSource, Content } from 'enonic-types/content'
+import { get, getAttachmentStream, ByteSource, Content } from '/lib/xp/content'
 import { RowData } from '../../../lib/ssb/parts/highcharts/data/htmlTable'
 import { isNumber, RowValue } from '../../../lib/ssb/utils/utils'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
@@ -11,10 +11,6 @@ const {
     forceArray
   }
 } = __non_webpack_require__('/lib/util')
-const {
-  get,
-  getAttachmentStream
-} = __non_webpack_require__('/lib/xp/content')
 const {
   getComponent,
   getContent

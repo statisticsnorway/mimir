@@ -1,4 +1,4 @@
-import { Content } from 'enonic-types/content'
+import { query, Content } from '/lib/xp/content'
 import { Page } from '../../site/content-types/page/page'
 import { DefaultPageConfig } from '../../site/pages/default/default-page-config'
 import { Article } from '../../site/content-types/article/article'
@@ -8,9 +8,6 @@ import { Statistic } from '../../site/mixins/statistic/statistic'
 const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
-const {
-  query
-} = __non_webpack_require__('/lib/xp/content')
 const {
   fetchStatisticsWithReleaseToday
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')

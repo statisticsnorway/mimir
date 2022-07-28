@@ -1,4 +1,4 @@
-import { Content } from 'enonic-types/content'
+import { query, get, Content } from '/lib/xp/content'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
@@ -20,9 +20,6 @@ const {
   imageUrl,
   imagePlaceholder
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
 const util = __non_webpack_require__('/lib/util')
 const {
   getImageAlt
@@ -45,7 +42,6 @@ const {
 const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
-const contentLib = __non_webpack_require__('/lib/xp/content')
 
 const view: ResourceKey = resolve('./relatedArticles.html')
 
@@ -222,7 +218,7 @@ function addDsArticle(
 
 function getDsArticle(statisticId: string, statisticPublishDate: string): RelatedArticle | undefined {
   statisticPublishDate = moment(new Date(statisticPublishDate)).format('YYYY-MM-DD')
-  const articleContent: Array<Content<Statistics | Article, object, SEO>> = contentLib.query({
+  const articleContent: Array<Content<Statistics | Article, object, SEO>> = query({
     count: 1,
     sort: 'publish.from DESC',
     query: `data.associatedStatistics.XP.content = "${statisticId}" AND publish.from LIKE "${statisticPublishDate}*" `,

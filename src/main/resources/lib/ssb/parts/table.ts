@@ -1,5 +1,5 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { Content } from 'enonic-types/content'
+import { Content } from '/lib/xp/content'
 import { Table } from '../../../site/content-types/table/table'
 import { TbmlDataUniform,
   TableRowUniform,

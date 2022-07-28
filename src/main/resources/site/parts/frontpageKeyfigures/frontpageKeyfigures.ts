@@ -2,14 +2,11 @@ import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import {React4xpObject, React4xpResponse} from "../../../lib/types/react4xp";
 import { getComponent, Component } from "/lib/xp/portal";
 import {FrontpageKeyfiguresPartConfig} from "./frontpageKeyfigures-part-config";
-import {Content} from "enonic-types/content";
+import {get, Content} from "/lib/xp/content";
 import {KeyFigure} from "../../content-types/keyFigure/keyFigure";
 import {KeyFigureView} from "../../../lib/ssb/parts/keyFigure";
 
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')

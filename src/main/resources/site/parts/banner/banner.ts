@@ -1,5 +1,5 @@
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
-import { Content } from 'enonic-types/content'
+import { Content } from '/lib/xp/content'
 import { getContent,
   getComponent,
   imageUrl,

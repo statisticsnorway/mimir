@@ -1,10 +1,7 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { GetPermissionsResult, PermissionsParams } from 'enonic-types/content'
+import { getPermissions, GetPermissionsResult, PermissionsParams } from '/lib/xp/content'
 import { AuthInfo } from 'enonic-types/context'
 
-const {
-  getPermissions
-} = __non_webpack_require__('/lib/xp/content')
 const {
   get: getContext
 } = __non_webpack_require__('/lib/xp/context')
