@@ -1,4 +1,4 @@
-import { User } from 'enonic-types/auth'
+import { getUser, User } from '/lib/xp/auth'
 import { connect,
   NodeCreateParams,
   NodeQueryParams,
@@ -8,9 +8,6 @@ import { connect,
 import { EditorCallback } from './eventLog'
 import { run } from '/lib/xp/context'
 
-const {
-  getUser
-} = __non_webpack_require__('/lib/xp/auth')
 
 const ENONIC_PROJECT_ID: string = app.config && app.config['ssb.project.id'] ? app.config['ssb.project.id'] : 'default'
 export const ENONIC_CMS_DEFAULT_REPO: string = `com.enonic.cms.${ENONIC_PROJECT_ID}`

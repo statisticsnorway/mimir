@@ -4,15 +4,12 @@ import { DataSource as DataSourceType, DatasetRepoNode } from '../repo/dataset'
 import { JSONstat } from '../../types/jsonstat-toolkit'
 import { StatbankSavedRaw, TbmlDataUniform } from '../../types/xmlParser'
 import { run, RunContext } from '/lib/xp/context'
-import { User } from 'enonic-types/auth'
+import { getUser, User } from '/lib/xp/auth'
 import { TbprocessorParsedResponse } from './tbprocessor/tbml'
 
 const {
   Events
 } = __non_webpack_require__('/lib/ssb/repo/query')
-const {
-  getUser
-} = __non_webpack_require__('/lib/xp/auth')
 const {
   getStatbankApi,
   fetchStatbankApiData,

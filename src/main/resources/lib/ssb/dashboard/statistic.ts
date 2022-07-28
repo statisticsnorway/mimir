@@ -14,7 +14,7 @@ import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { Source, TbmlDataUniform } from '../../types/xmlParser'
 import { JobEventNode, JobInfoNode, JobNames, JobStatus } from '../repo/job'
 import { NodeQueryResponse } from '/lib/xp/node'
-import { User } from 'enonic-types/auth'
+import { hasRole, User } from '/lib/xp/auth'
 import { Statistic } from '../../../site/mixins/statistic/statistic'
 
 const {
@@ -64,9 +64,6 @@ const {
 const {
   executeFunction
 } = __non_webpack_require__('/lib/xp/task')
-const {
-  hasRole
-} = __non_webpack_require__('/lib/xp/auth')
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-statistics', () => {

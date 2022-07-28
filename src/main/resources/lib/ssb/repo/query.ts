@@ -1,6 +1,6 @@
 import { RepoNode } from '/lib/xp/node'
 import { EditorCallback } from './eventLog'
-import { User } from 'enonic-types/auth'
+import { User } from '/lib/xp/auth'
 import { HttpRequestParams, HttpResponse } from '/lib/http-client'
 import { TbmlDataUniform } from '../../types/xmlParser'
 const {

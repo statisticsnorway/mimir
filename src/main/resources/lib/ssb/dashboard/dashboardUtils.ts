@@ -1,4 +1,4 @@
-import { User } from 'enonic-types/auth'
+import { User } from '/lib/xp/auth'
 import { Content } from '/lib/xp/content'
 import { Events } from '../repo/query'
 

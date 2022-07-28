@@ -1,4 +1,4 @@
-import { UserQueryResult } from 'enonic-types/auth'
+import { findUsers, createUser, UserQueryResult } from '/lib/xp/auth'
 import { Content } from '/lib/xp/content'
 import { run, RunContext } from '/lib/xp/context'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
@@ -35,10 +35,6 @@ const {
 const {
   dataSourceRSSFilter
 } = __non_webpack_require__('/lib/ssb/cron/rss')
-const {
-  findUsers,
-  createUser
-} = __non_webpack_require__('/lib/xp/auth')
 const {
   deleteExpiredEventLogs
 } = __non_webpack_require__('/lib/ssb/cron/eventLog')
