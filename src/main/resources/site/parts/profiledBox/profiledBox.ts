@@ -1,5 +1,5 @@
 import { Content } from '/lib/xp/content'
-import { ResourceKey, render } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from '/lib/thymeleaf'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
 import { ProfiledBoxPartConfig } from './profiledBox-part-config'

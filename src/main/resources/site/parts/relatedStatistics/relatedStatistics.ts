@@ -1,5 +1,5 @@
 import { get, Content } from '/lib/xp/content'
-import { ResourceKey, render } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from '/lib/thymeleaf'
 import { Phrases } from '../../../lib/types/language'
 import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
 import { SEO } from '../../../services/news/news'

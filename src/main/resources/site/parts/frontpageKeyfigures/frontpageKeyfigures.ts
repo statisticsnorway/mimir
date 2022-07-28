@@ -1,4 +1,4 @@
-import { ResourceKey, render } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from '/lib/thymeleaf'
 import {React4xpObject, React4xpResponse} from "../../../lib/types/react4xp";
 import { getComponent, Component } from "/lib/xp/portal";
 import {FrontpageKeyfiguresPartConfig} from "./frontpageKeyfigures-part-config";

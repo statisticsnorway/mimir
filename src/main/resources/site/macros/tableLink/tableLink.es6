@@ -1,3 +1,5 @@
+import { render } from '/lib/thymeleaf'
+
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   pageUrl
@@ -5,9 +7,6 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
 const view = resolve('./tableLink.html')
 
 exports.macro = function(context) {

@@ -1,5 +1,5 @@
 import {getChildren, query, Content } from '/lib/xp/content'
-import { ResourceKey, render } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from '/lib/thymeleaf'
 import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
 import { Article } from '../../content-types/article/article'
 

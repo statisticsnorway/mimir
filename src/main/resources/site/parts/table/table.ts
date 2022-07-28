@@ -1,5 +1,5 @@
 import { get, Content } from '/lib/xp/content'
-import { ResourceKey, render } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from '/lib/thymeleaf'
 import { TableSourceList, TableView } from '../../../lib/ssb/parts/table'
 import { SourceList, SourcesConfig } from '../../../lib/ssb/utils/utils'
 import { DropdownItem as TableDownloadDropdownItem, DropdownItems as TableDownloadDropdownItems } from '../../../lib/types/components'

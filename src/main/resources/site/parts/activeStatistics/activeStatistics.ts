@@ -1,5 +1,5 @@
 import { get, Content } from '/lib/xp/content'
-import { ResourceKey, render } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from '/lib/thymeleaf'
 import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
 import { ActiveStatisticsPartConfig } from './activeStatistics-part-config'
 import { Statistics } from '../../content-types/statistics/statistics'

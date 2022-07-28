@@ -1,4 +1,4 @@
-import { ResourceKey, render } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from '/lib/thymeleaf'
 import { getMainSubjects, SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { parseContributions } from '../../../lib/ssb/utils/utils'
 import { DropdownItems } from '../../../lib/types/components'

@@ -1,7 +1,7 @@
 import {React4xpObject, React4xpResponse} from "../../../lib/types/react4xp";
 import { getComponent, imageUrl, Component} from "/lib/xp/portal";
 import {ExternalCardPartConfig} from "./externalCard-part-config";
-import { render } from 'enonic-types/thymeleaf'
+import { render } from '/lib/thymeleaf'
 
 const {
   renderError

@@ -1,5 +1,5 @@
 import { get, Content } from '/lib/xp/content'
-import { ResourceKey, render } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from '/lib/thymeleaf'
 import { DatasetRepoNode } from '../../../lib/ssb/repo/dataset'
 import { JSONstat } from '../../../lib/types/jsonstat-toolkit'
 import { Phrases } from '../../../lib/types/language'

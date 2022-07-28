@@ -1,5 +1,5 @@
 import { query, Content, QueryResponse } from '/lib/xp/content'
-import { ResourceKey, render } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from '/lib/thymeleaf'
 
 const {
   moment

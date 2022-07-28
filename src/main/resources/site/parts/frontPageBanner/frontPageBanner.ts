@@ -1,6 +1,6 @@
 import { getComponent, imageUrl, Component} from "/lib/xp/portal";
 import {FrontPageBannerPartConfig} from "./frontPageBanner-part-config";
-import { render } from 'enonic-types/thymeleaf'
+import { render } from '/lib/thymeleaf'
 
 const {
   renderError

@@ -11,7 +11,7 @@ import { CalculatorConfig } from '../../content-types/calculatorConfig/calculato
 import { Language, Phrases } from '../../../lib/types/language'
 import { allMonths, nextPeriod } from '../../../lib/ssb/utils/calculatorUtils'
 import { CalculatorPeriod } from '../../../lib/types/calculator'
-import { ResourceKey, render } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from '/lib/thymeleaf'
 import { DropdownItem, DropdownItems } from '../../../lib/types/components'
 
 const {

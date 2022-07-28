@@ -1,6 +1,5 @@
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+import { render } from '/lib/thymeleaf'
+
 const {
   getSite,
   assetUrl

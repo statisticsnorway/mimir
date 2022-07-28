@@ -1,5 +1,5 @@
 import { Content } from '/lib/xp/content'
-import { ResourceKey, render } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from '/lib/thymeleaf'
 import { allMonths, monthLabel, nextPeriod } from '../../../lib/ssb/utils/calculatorUtils'
 import { CalculatorPeriod } from '../../../lib/types/calculator'
 import { DropdownItems as MonthDropdownItems } from '../../../lib/types/components'

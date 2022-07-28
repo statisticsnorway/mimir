@@ -3,7 +3,7 @@ import {FactBoxPartConfig} from "./factBox-part-config";
 import {React4xpObject, React4xpResponse} from "../../../lib/types/react4xp";
 import {get, Content} from "/lib/xp/content";
 import {FactBox} from "../../content-types/factBox/factBox";
-import { ResourceKey, render } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from '/lib/thymeleaf'
 
 const {
   renderError

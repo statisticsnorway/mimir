@@ -1,6 +1,6 @@
 import { Content } from '/lib/xp/content'
 import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
-import { ResourceKey, render } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from '/lib/thymeleaf'
 import { Component } from '/lib/xp/portal'
 import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
 import { MenuDropdownPartConfig } from '../menuDropdown/menuDropdown-part-config'

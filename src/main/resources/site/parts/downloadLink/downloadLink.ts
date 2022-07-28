@@ -1,7 +1,7 @@
 import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
 import { getComponent, attachmentUrl, Component } from '/lib/xp/portal'
 import { DownloadLinkPartConfig } from './downloadLink-part-config'
-import { ResourceKey, render } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from '/lib/thymeleaf'
 
 const {
   renderError

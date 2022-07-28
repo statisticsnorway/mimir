@@ -6,7 +6,7 @@ import { getContent,
 import { EntryLinksPartConfig } from './entryLinks-part-config'
 import { get, Content, Image } from '/lib/xp/content'
 import { Phrases } from '../../../lib/types/language'
-import { ResourceKey, render } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from '/lib/thymeleaf'
 
 const {
   data: {

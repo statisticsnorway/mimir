@@ -1,15 +1,13 @@
 import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
-import { ResourceKey, ThymeleafLibrary } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from '/lib/thymeleaf'
 import { getComponent,
         getContent,
         Component } from '/lib/xp/portal'
 import { MailChimpFormPartConfig } from './mailChimpForm-part-config'
 import { Content } from '/lib/xp/content'
 import { I18nLibrary } from 'enonic-types/i18n'
+
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const {
-  render
-}: ThymeleafLibrary = __non_webpack_require__('/lib/thymeleaf')
 
 const {
   localize

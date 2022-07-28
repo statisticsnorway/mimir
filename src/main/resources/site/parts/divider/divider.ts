@@ -1,5 +1,5 @@
 import { getComponent, Component } from '/lib/xp/portal'
-import { ResourceKey, render } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from '/lib/thymeleaf'
 import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
 import { DividerPartConfig } from './divider-part-config'
 

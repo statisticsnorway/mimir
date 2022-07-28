@@ -3,7 +3,7 @@ import { EndedStatisticsPartConfig } from './endedStatistics-part-config'
 import { get, Content } from '/lib/xp/content'
 import { Phrases } from '../../../lib/types/language'
 import { Statistics } from '../../content-types/statistics/statistics'
-import { ResourceKey, render } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from '/lib/thymeleaf'
 
 const {
   data: {

@@ -1,5 +1,5 @@
 import { query, Content, Page } from '/lib/xp/content'
-import { ResourceKey, render } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from '/lib/thymeleaf'
 import { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
 import { FooterContent } from '../../../lib/ssb/parts/footer'

@@ -1,4 +1,4 @@
-import { ResourceKey, render } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from '/lib/thymeleaf'
 
 export interface ErrorInterface {
     errorTitle: string;
