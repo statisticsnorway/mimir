@@ -1,6 +1,8 @@
 import { cronContext } from '../../lib/ssb/cron/cron'
 import { CleanupPublishDatasetConfig } from '../cleanupPublishDataset/cleanupPublishDataset-config'
 import { PublishDatasetConfig } from './publishDataset-config'
+import { send } from '/lib/xp/event'
+
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 
 const {
@@ -10,9 +12,6 @@ const {
   createOrUpdateDataset,
   DATASET_BRANCH
 } = __non_webpack_require__('/lib/ssb/repo/dataset')
-const {
-  send
-} = __non_webpack_require__('/lib/xp/event')
 const {
   progress,
   sleep

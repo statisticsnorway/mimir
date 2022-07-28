@@ -6,7 +6,7 @@ import { DatasetRepoNode } from '../repo/dataset'
 import { StatisticInListing } from '../dashboard/statreg/types'
 import { NodeQueryHit } from 'enonic-types/node'
 import { Statistic } from '../../../site/mixins/statistic/statistic'
-import { EnonicEvent } from 'enonic-types/event'
+import { listener, EnonicEvent } from '/lib/xp/event'
 import { TaskInfo } from 'enonic-types/task'
 
 const {
@@ -14,9 +14,6 @@ const {
   JobStatus,
   queryJobLogs
 } = __non_webpack_require__('/lib/ssb/repo/job')
-const {
-  listener
-} = __non_webpack_require__('/lib/xp/event')
 
 
 const publishTasks: Array<EnonicEvent<TaskInfo>> = []

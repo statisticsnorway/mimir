@@ -1,5 +1,5 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { EnonicEvent, EnonicEventData } from 'enonic-types/event'
+import { listener, send, EnonicEvent, EnonicEventData } from '/lib/xp/event'
 import { query, get, QueryResponse, Content } from '/lib/xp/content'
 import { run } from '/lib/xp/context'
 import { JSONstat } from '../../types/jsonstat-toolkit'
@@ -12,10 +12,6 @@ import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { request, HttpResponse } from '/lib/http-client'
 import { BanVarnishPageCacheConfig } from '../../../tasks/banVarnishPageCache/banVarnishPageCache-config'
 
-const {
-  listener,
-  send
-} = __non_webpack_require__('/lib/xp/event')
 const {
   executeFunction, sleep, submitTask
 } = __non_webpack_require__('/lib/xp/task')

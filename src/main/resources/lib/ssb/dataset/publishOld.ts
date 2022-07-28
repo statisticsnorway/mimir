@@ -7,6 +7,7 @@ import { StatisticInListing, ReleaseDatesVariant } from '../dashboard/statreg/ty
 import { JobEventNode, JobInfoNode, StatisticsPublishResult, DataSourceStatisticsPublishResult } from '../repo/job'
 import { NodeQueryHit } from 'enonic-types/node'
 import { Statistic } from '../../../site/mixins/statistic/statistic'
+import { send } from '/lib/xp/event'
 
 const {
   moment
@@ -54,9 +55,6 @@ const {
 const {
   cronJobLog
 } = __non_webpack_require__('/lib/ssb/utils/serverLog')
-const {
-  send
-} = __non_webpack_require__('/lib/xp/event')
 
 
 const jobs: {[key: string]: JobEventNode | JobInfoNode} = {}
