@@ -1,4 +1,3 @@
-import { MacroContext } from 'enonic-types/controller'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { LinksConfig } from './links-config'
 import { Content } from 'enonic-types/content'
@@ -17,7 +16,7 @@ const {
 } = __non_webpack_require__('/lib/xp/portal')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-exports.macro = function(context: MacroContext): React4xpResponse {
+exports.macro = function(context: XP.MacroContext): React4xpResponse {
   const config: LinksConfig & TableLink & HeaderLink & ProfiledLink = context.params
   const linkType: string | undefined = config.linkTypes
 

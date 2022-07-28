@@ -1,4 +1,3 @@
-import { PageContributions, Request, Response } from 'enonic-types/controller'
 import { React4xp, React4xpObject, React4xpPageContributionOptions, React4xpResponse } from '../../../lib/types/react4xp'
 import { Component } from 'enonic-types/portal'
 import { BkibolCalculatorPartConfig } from './bkibolCalculator-part-config'
@@ -33,7 +32,7 @@ const {
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 const view: ResourceKey = resolve('./bkibolCalculator.html') as ResourceKey
 
-exports.get = function(req: Request): React4xpResponse | Response {
+exports.get = function(req: XP.Request): React4xpResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -41,7 +40,7 @@ exports.get = function(req: Request): React4xpResponse | Response {
   }
 }
 
-exports.preview = function( req: Request ) {
+exports.preview = function( req: XP.Request ) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -50,7 +49,7 @@ exports.preview = function( req: Request ) {
 }
 
 
-function renderPart(req: Request): React4xpResponse {
+function renderPart(req: XP.Request): React4xpResponse {
   const page: Content<BkibolCalculatorPartConfig> = getContent()
   let bkibolCalculator: CalculatorComponent
   if (req.mode === 'edit' || req.mode === 'inline') {

@@ -1,5 +1,4 @@
 import { Content, QueryResponse } from 'enonic-types/content'
-import { Request, Response } from 'enonic-types/controller'
 import { Phrases } from '../../../lib/types/language'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { SEO } from '../../../services/news/news'
@@ -36,7 +35,7 @@ const {
 } = __non_webpack_require__('/lib/util')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-exports.get = function(req: Request): Response | React4xpResponse {
+exports.get = function(req: XP.Request): XP.Response | React4xpResponse {
   try {
     const page: Content<Article> = getContent()
     const config: RelatedFactPagePartConfig = getComponent().config
@@ -66,10 +65,10 @@ exports.get = function(req: Request): Response | React4xpResponse {
   }
 }
 
-exports.preview = (req: Request, relatedFactPageConfig: RelatedFactPageConfig | undefined): Response | React4xpResponse =>
+exports.preview = (req: XP.Request, relatedFactPageConfig: RelatedFactPageConfig | undefined): XP.Response | React4xpResponse =>
   renderPart(req, relatedFactPageConfig)
 
-function renderPart(req: Request, relatedFactPageConfig: RelatedFactPageConfig | undefined): Response | React4xpResponse {
+function renderPart(req: XP.Request, relatedFactPageConfig: RelatedFactPageConfig | undefined): XP.Response | React4xpResponse {
   const page: Content<Article> = getContent()
   if (req.mode === 'edit' || req.mode === 'inline') {
     return renderRelatedFactPage(req, page, relatedFactPageConfig)
@@ -80,7 +79,7 @@ function renderPart(req: Request, relatedFactPageConfig: RelatedFactPageConfig |
   }
 }
 
-function renderRelatedFactPage(req: Request, page: Content, relatedFactPageConfig: RelatedFactPageConfig | undefined): Response | React4xpResponse {
+function renderRelatedFactPage(req: XP.Request, page: Content, relatedFactPageConfig: RelatedFactPageConfig | undefined): XP.Response | React4xpResponse {
   const phrases: Phrases = getPhrases(page)
   const config: RelatedFactPagePartConfig = getComponent().config
   const mainTitle: string = config.title ? config.title : phrases.relatedFactPagesHeading

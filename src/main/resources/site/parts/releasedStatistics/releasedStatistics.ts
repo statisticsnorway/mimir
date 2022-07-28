@@ -1,7 +1,6 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 
 import { Content } from 'enonic-types/content'
-import { Request, Response } from 'enonic-types/controller'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Component } from 'enonic-types/portal'
@@ -38,7 +37,7 @@ const {
   prepareStatisticRelease
 } = __non_webpack_require__('/lib/ssb/utils/variantUtils')
 
-exports.get = function(req: Request): React4xpResponse | Response {
+exports.get = function(req: XP.Request): React4xpResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -46,9 +45,9 @@ exports.get = function(req: Request): React4xpResponse | Response {
   }
 }
 
-exports.preview = (req: Request): React4xpResponse => renderPart(req)
+exports.preview = (req: XP.Request): React4xpResponse => renderPart(req)
 
-export function renderPart(req: Request): React4xpResponse {
+export function renderPart(req: XP.Request): React4xpResponse {
   const content: Content = getContent()
   const currentLanguage: string = content.language ? content.language : 'nb'
   const part: Component<ReleasedStatisticsPartConfig> = getComponent()

@@ -1,4 +1,3 @@
-import { Request } from 'enonic-types/controller'
 import { Highchart } from '../../../../site/content-types/highchart/highchart'
 import { Content } from 'enonic-types/content'
 import { JSONstat } from '../../../types/jsonstat-toolkit'
@@ -19,7 +18,7 @@ const {
 
 
 export function createHighchartObject(
-  req: Request,
+  req: XP.Request,
   highchart: Content<Highchart>,
   data: JSONstat | TbmlDataUniform | object | string | undefined,
   dataSource: DataSource['dataSource']): HighchartsGraphConfig {
@@ -30,7 +29,7 @@ export function createHighchartObject(
 
 export interface HighchartsUtilsLib {
   createHighchartObject: (
-    req: Request,
+    req: XP.Request,
     highchart: Content<Highchart>,
     data: JSONstat | TbmlDataUniform | object | string | undefined,
     dataSource: DataSource['dataSource']) => HighchartsGraphConfig;

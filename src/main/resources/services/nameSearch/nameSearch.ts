@@ -1,5 +1,4 @@
 import { HttpRequestParams, HttpResponse } from 'enonic-types/http'
-import { Request, Response } from 'enonic-types/controller'
 import { Dataset } from '../../lib/types/jsonstat-toolkit'
 import { Content } from 'enonic-types/content'
 import { CalculatorConfig } from '../../site/content-types/calculatorConfig/calculatorConfig'
@@ -23,7 +22,7 @@ const {
 } = __non_webpack_require__('/lib/featureToggle')
 
 
-export function get(req: Request): Response {
+export function get(req: XP.Request): XP.Response {
   if (!req.params.name) {
     return {
       body: {

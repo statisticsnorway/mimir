@@ -1,5 +1,4 @@
 import { Content } from 'enonic-types/content'
-import { PageContributions, Request, Response } from 'enonic-types/controller'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { TableSourceList, TableView } from '../../../lib/ssb/parts/table'
 import { SourceList, SourcesConfig } from '../../../lib/ssb/utils/utils'
@@ -47,7 +46,7 @@ const {
 
 const view: ResourceKey = resolve('./table.html') as ResourceKey
 
-exports.get = function(req: Request): Response {
+exports.get = function(req: XP.Request): XP.Response {
   try {
     const config: TablePartConfig = getComponent().config
     const page: Content<Statistics> = getContent()
@@ -58,11 +57,11 @@ exports.get = function(req: Request): Response {
   }
 }
 
-exports.preview = (req: Request, id?: string): Response => {
+exports.preview = (req: XP.Request, id?: string): XP.Response => {
   return renderPart(req, id)
 }
 
-function getProps(req: Request, tableId?: string): TableProps {
+function getProps(req: XP.Request, tableId?: string): TableProps {
   const page: Content<Table> = getContent()
   const language: Language = getLanguage(page) as Language
   const phrases: Phrases = getPhrases(page) as Phrases
@@ -139,7 +138,7 @@ function getProps(req: Request, tableId?: string): TableProps {
 }
 exports.getProps = getProps
 
-function renderPart(req: Request, tableId?: string): Response {
+function renderPart(req: XP.Request, tableId?: string): XP.Response {
   const page: Content<Table> = getContent()
   const phrases: Phrases = getPhrases(page) as Phrases
 
@@ -166,7 +165,7 @@ function renderPart(req: Request, tableId?: string): Response {
     body: tableReact.renderBody(),
     pageContributions: tableReact.renderPageContributions({
       clientRender: req.mode !== 'edit'
-    }) as PageContributions,
+    }) as XP.PageContributions,
     contentType: 'text/html'
   }
 }

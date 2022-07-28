@@ -1,5 +1,4 @@
 import { Content, MediaImage } from 'enonic-types/content'
-import { PageContributions, Request, Response } from 'enonic-types/controller'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
 import { SEO } from '../../../services/news/news'
@@ -34,7 +33,7 @@ const {
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view: ResourceKey = resolve('standardCardsList.html')
 
-exports.get = (req: Request): Response => {
+exports.get = (req: XP.Request): XP.Response => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -42,9 +41,9 @@ exports.get = (req: Request): Response => {
   }
 }
 
-exports.preview = (req: Request): Response => renderPart(req)
+exports.preview = (req: XP.Request): XP.Response => renderPart(req)
 
-function renderPart(req: Request): Response {
+function renderPart(req: XP.Request): XP.Response {
   const config: StandardCardsListPartConfig = getComponent().config
   const standardCardsListConfig: StandardCardsListPartConfig['statisticsItemSet'] = config.statisticsItemSet ? forceArray(config.statisticsItemSet) : []
 
@@ -62,7 +61,7 @@ function renderPart(req: Request): Response {
   return renderStandardCardsList(statisticsTitle, parseContent(standardCardsListConfig))
 }
 
-function renderStandardCardsList(statisticsTitle: string | undefined, standardCardsListContent: StandardCardsListPartConfig['statisticsItemSet']): Response {
+function renderStandardCardsList(statisticsTitle: string | undefined, standardCardsListContent: StandardCardsListPartConfig['statisticsItemSet']): XP.Response {
   if (standardCardsListContent && standardCardsListContent.length) {
     const standardCardsComponent: React4xpObject = new React4xp('StatisticsCards')
       .setProps({
@@ -84,7 +83,7 @@ function renderStandardCardsList(statisticsTitle: string | undefined, standardCa
       body: standardCardsComponent.renderBody({
         body
       }),
-      pageContributions: standardCardsComponent.renderPageContributions() as PageContributions
+      pageContributions: standardCardsComponent.renderPageContributions() as XP.PageContributions
     }
   }
   return {

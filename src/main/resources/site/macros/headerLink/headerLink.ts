@@ -1,4 +1,3 @@
-import { MacroContext } from 'enonic-types/controller'
 import { HeaderLinkConfig } from './headerLink-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Content } from 'enonic-types/content'
@@ -11,13 +10,13 @@ const {
 } = __non_webpack_require__('/lib/xp/content')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-exports.macro = (context: MacroContext): React4xpResponse => {
+exports.macro = (context: XP.MacroContext): React4xpResponse => {
   return renderPart(context)
 }
 
-exports.preview = (context: MacroContext): React4xpResponse => renderPart(context)
+exports.preview = (context: XP.MacroContext): React4xpResponse => renderPart(context)
 
-function renderPart(context: MacroContext): React4xpResponse {
+function renderPart(context: XP.MacroContext): React4xpResponse {
   const {
     linkedContent, linkText
   } = context.params

@@ -1,4 +1,3 @@
-import { Request } from 'enonic-types/controller'
 import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
 import { ResourceKey, ThymeleafLibrary } from 'enonic-types/thymeleaf'
 import { Component, PortalLibrary } from 'enonic-types/portal'
@@ -19,7 +18,7 @@ const {
 
 const view: ResourceKey = resolve('./mailChimpForm.html')
 
-exports.get = function(req: Request): React4xpResponse {
+exports.get = function(req: XP.Request): React4xpResponse {
   const component: Component<MailChimpFormPartConfig> = getComponent()
   const content: Content = getContent()
 

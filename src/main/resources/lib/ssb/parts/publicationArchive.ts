@@ -4,7 +4,6 @@ import { StatisticInListing } from '../dashboard/statreg/types'
 import { getAllStatisticsFromRepo } from '../statreg/statistics'
 import { calculatePeriodRelease, Release } from '../utils/variantUtils'
 import { SubjectItem } from '../utils/subjectUtils'
-import { Request } from 'enonic-types/controller'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { SEO } from '../../../services/news/news'
 import { OmStatistikken } from '../../../site/content-types/omStatistikken/omStatistikken'
@@ -35,7 +34,7 @@ const {
   }
 } = __non_webpack_require__('/lib/util')
 
-export function getPublications(req: Request, start: number = 0, count: number = 10, language: string, articleType?: string, subject?: string):
+export function getPublications(req: XP.Request, start: number = 0, count: number = 10, language: string, articleType?: string, subject?: string):
     PublicationResult {
   const allPublications: Array<PublicationItem> = fromPartCache(req, `archiveAllPublications-${language}`, () => {
     return getPublicationsAndStatistics(req, language)
@@ -65,7 +64,7 @@ function filterPublications(publications: Array<PublicationItem>, articleType: s
   return publications
 }
 
-function getPublicationsAndStatistics(req: Request, language: string):
+function getPublicationsAndStatistics(req: XP.Request, language: string):
     Array<PublicationItem> {
   const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
   const subSubjects: Array<SubjectItem> = getSubSubjects(req, language)
@@ -203,7 +202,7 @@ function getSecondaryMainSubject(subtopicsContent: Array<string>, mainSubjects: 
 }
 
 export interface PublicationArchiveLib {
-  getPublications: (req: Request, start: number, count: number, language: string, contentType?: string, subject?: string) => PublicationResult;
+  getPublications: (req: XP.Request, start: number, count: number, language: string, contentType?: string, subject?: string) => PublicationResult;
 }
 
 export interface PublicationResult {

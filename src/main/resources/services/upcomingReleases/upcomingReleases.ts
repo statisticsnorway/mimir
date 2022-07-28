@@ -1,4 +1,3 @@
-import { Request, Response } from 'enonic-types/controller'
 import { StatisticInListing } from '../../lib/ssb/dashboard/statreg/types'
 import { GroupedBy, PreparedStatistics, YearReleases, Release } from '../../lib/ssb/utils/variantUtils'
 
@@ -13,7 +12,7 @@ const {
   getAllStatisticsFromRepo
 } = __non_webpack_require__( '../../lib/ssb/statreg/statistics')
 
-exports.get = (req: Request): Response => {
+exports.get = (req: XP.Request): XP.Response => {
   // Get statistics
   const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
   const upComingReleases: Array<Release> = getUpcomingReleases(statistics)

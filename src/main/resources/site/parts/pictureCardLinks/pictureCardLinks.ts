@@ -1,4 +1,3 @@
-import { PageContributions, Request, Response } from 'enonic-types/controller'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
 import { PictureCardLinksPartConfig } from './pictureCardLinks-part-config'
@@ -19,7 +18,7 @@ const {
 const view: ResourceKey = resolve('./pictureCardLinks.html')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-exports.get = function(req: Request): Response {
+exports.get = function(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -27,11 +26,11 @@ exports.get = function(req: Request): Response {
   }
 }
 
-exports.preview = (req: Request): Response => {
+exports.preview = (req: XP.Request): XP.Response => {
   return renderPart(req)
 }
 
-function renderPart(req: Request): Response {
+function renderPart(req: XP.Request): XP.Response {
   const config: PictureCardLinksPartConfig = getComponent().config
   const pictureCardLinks: React4xpObject = new React4xp('PictureCardLinks')
     .setProps({
@@ -46,7 +45,7 @@ function renderPart(req: Request): Response {
     body: pictureCardLinks.renderBody({
       body
     }),
-    pageContributions: pictureCardLinks.renderPageContributions() as PageContributions
+    pageContributions: pictureCardLinks.renderPageContributions() as XP.PageContributions
   }
 }
 

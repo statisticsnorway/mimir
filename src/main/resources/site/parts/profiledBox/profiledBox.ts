@@ -1,5 +1,4 @@
 import { Content } from 'enonic-types/content'
-import { PageContributions, Request, Response } from 'enonic-types/controller'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
@@ -21,7 +20,7 @@ const {
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view: ResourceKey = resolve('./profiledBox.html')
 
-exports.get = function(req: Request): Response {
+exports.get = function(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -29,9 +28,9 @@ exports.get = function(req: Request): Response {
   }
 }
 
-exports.preview = (req: Request): Response => renderPart(req)
+exports.preview = (req: XP.Request): XP.Response => renderPart(req)
 
-function renderPart(req: Request): Response {
+function renderPart(req: XP.Request): XP.Response {
   const page: Content = getContent()
   const config: ProfiledBoxPartConfig = getComponent().config
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
@@ -68,7 +67,7 @@ function renderPart(req: Request): Response {
     body: profiledBox.renderBody({
       body
     }),
-    pageContributions: profiledBox.renderPageContributions() as PageContributions
+    pageContributions: profiledBox.renderPageContributions() as XP.PageContributions
   }
 }
 

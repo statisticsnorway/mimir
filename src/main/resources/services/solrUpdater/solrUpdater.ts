@@ -1,4 +1,3 @@
-import { Response } from 'enonic-types/controller'
 import { Content, QueryResponse } from 'enonic-types/content'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 
@@ -14,7 +13,7 @@ const yesterday: string = moment().subtract(1, 'days').format('YYYY-MM-DD')
 const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
 
 
-exports.get = (): Response => {
+exports.get = (): XP.Response => {
   const changedContent: QueryResponse<Content> = query({
     start: 0,
     count: 100,

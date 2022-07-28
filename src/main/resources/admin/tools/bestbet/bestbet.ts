@@ -1,4 +1,3 @@
-import { PageContributions, Request, Response } from 'enonic-types/controller'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { getMainSubjects, SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { parseContributions } from '../../../lib/ssb/utils/utils'
@@ -22,7 +21,7 @@ const {
 const view: ResourceKey = resolve('./bestbet.html')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-exports.get = function(req: Request): React4xpResponse | Response {
+exports.get = function(req: XP.Request): React4xpResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -30,7 +29,7 @@ exports.get = function(req: Request): React4xpResponse | Response {
   }
 }
 
-exports.preview = (req: Request): React4xpResponse | Response => {
+exports.preview = (req: XP.Request): React4xpResponse | XP.Response => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -38,7 +37,7 @@ exports.preview = (req: Request): React4xpResponse | Response => {
   }
 }
 
-function renderPart(req: Request): React4xpResponse | Response {
+function renderPart(req: XP.Request): React4xpResponse | XP.Response {
   // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
   // @ts-ignore
   const DEFAULT_CONTENTSTUDIO_URL: string = getToolUrl('com.enonic.app.contentstudio', 'main')
@@ -104,9 +103,9 @@ function renderPart(req: Request): React4xpResponse | Response {
     })
     .setId('app-bestbet')
 
-  const pageContributions: PageContributions = parseContributions(bestbetComponent.renderPageContributions({
+  const pageContributions: XP.PageContributions = parseContributions(bestbetComponent.renderPageContributions({
     clientRender: req.mode !== 'edit'
-  }) as PageContributions)
+  }) as XP.PageContributions)
 
   return {
     body: bestbetComponent.renderBody({

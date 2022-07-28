@@ -1,6 +1,4 @@
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
-import { Response, Request } from 'enonic-types/controller'
-
 
 export interface ErrorInterface {
     errorTitle: string;
@@ -10,7 +8,7 @@ export interface ErrorInterface {
 
 const errorView: ResourceKey = resolve('./error.html')
 
-export function renderError(req: Request, title: string, exception: Error): Response {
+export function renderError(req: XP.Request, title: string, exception: Error): XP.Response {
   const model: ErrorInterface = {
     errorBody: exception.message,
     errorTitle: title,
@@ -27,5 +25,5 @@ export function renderError(req: Request, title: string, exception: Error): Resp
 }
 
 export interface ErrorLib {
-  renderError: (req: Request, title: string, exception: Error) => Response;
+  renderError: (req: XP.Request, title: string, exception: Error) => XP.Response;
 }

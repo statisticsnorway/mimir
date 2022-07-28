@@ -1,5 +1,4 @@
 import { Content } from 'enonic-types/content'
-import { Request, Response } from 'enonic-types/controller'
 import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { Component } from 'enonic-types/portal'
@@ -30,7 +29,7 @@ const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp') as React4xp
 const view: ResourceKey = resolve('./menuDropdown.html')
 
-exports.get = (req: Request):Response | React4xpResponse => {
+exports.get = (req: XP.Request):XP.Response | React4xpResponse => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -38,9 +37,9 @@ exports.get = (req: Request):Response | React4xpResponse => {
   }
 }
 
-exports.preview = (req:Request) => renderPart(req)
+exports.preview = (req:XP.Request) => renderPart(req)
 
-function renderPart(req:Request): Response | React4xpResponse {
+function renderPart(req:XP.Request): XP.Response | React4xpResponse {
   const parsedMunicipalities:Array<MunicipalityWithCounty> = municipalsWithCounties()
   const municipality:MunicipalityWithCounty | undefined = getMunicipality(req)
   const component: Component<MenuDropdownPartConfig> = getComponent()

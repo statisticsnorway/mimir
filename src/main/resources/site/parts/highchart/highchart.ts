@@ -5,7 +5,6 @@ import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { Component } from 'enonic-types/portal'
 import { HighchartPartConfig } from './highchart-part-config'
 import { Content } from 'enonic-types/content'
-import { Request, Response } from 'enonic-types/controller'
 import { Highchart } from '../../content-types/highchart/highchart'
 import { DatasetRepoNode } from '../../../lib/ssb/repo/dataset'
 import { JSONstat as JSONstatType } from '../../../lib/types/jsonstat-toolkit'
@@ -59,7 +58,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/utils/language')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-exports.get = function(req: Request): Response | React4xpResponse {
+exports.get = function(req: XP.Request): XP.Response | React4xpResponse {
   try {
     const part: Component<HighchartPartConfig> = getComponent()
     const highchartIds: Array<string> = part.config.highchart ? forceArray(part.config.highchart) : []
@@ -69,7 +68,7 @@ exports.get = function(req: Request): Response | React4xpResponse {
   }
 }
 
-exports.preview = (req: Request, id: string): Response | React4xpResponse => {
+exports.preview = (req: XP.Request, id: string): XP.Response | React4xpResponse => {
   try {
     return renderPart(req, [id])
   } catch (e) {
@@ -78,7 +77,7 @@ exports.preview = (req: Request, id: string): Response | React4xpResponse => {
 }
 
 
-function renderPart(req: Request, highchartIds: Array<string>): Response | React4xpResponse {
+function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response | React4xpResponse {
   const page: Content = getContent()
   const language: string = page.language ? page.language : 'nb'
 
@@ -145,7 +144,7 @@ function renderPart(req: Request, highchartIds: Array<string>): Response | React
 }
 
 
-function determinConfigType(req: Request, highchart: Content<Highchart & DataSource>): HighchartsExtendedProps | undefined {
+function determinConfigType(req: XP.Request, highchart: Content<Highchart & DataSource>): HighchartsExtendedProps | undefined {
   if (highchart && highchart.data.dataSource) {
     return createDataFromDataSource(req, highchart)
   } else if (highchart && highchart.data.htmlTable) {
@@ -155,14 +154,14 @@ function determinConfigType(req: Request, highchart: Content<Highchart & DataSou
 }
 
 
-function createDataFromHtmlTable(req: Request, highchart: Content<Highchart & DataSource>): HighchartsExtendedProps {
+function createDataFromHtmlTable(req: XP.Request, highchart: Content<Highchart & DataSource>): HighchartsExtendedProps {
   return {
     ...createHighchartObject(req, highchart, highchart.data, undefined)
   }
 }
 
 
-function createDataFromDataSource(req: Request, highchart: Content<Highchart & DataSource>): HighchartsExtendedProps | undefined {
+function createDataFromDataSource(req: XP.Request, highchart: Content<Highchart & DataSource>): HighchartsExtendedProps | undefined {
   if ( highchart && highchart.data && highchart.data.dataSource) {
     const type: string = highchart.data.dataSource._selected
 

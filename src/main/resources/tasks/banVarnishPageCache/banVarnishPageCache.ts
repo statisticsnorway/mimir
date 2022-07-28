@@ -1,4 +1,3 @@
-import { Response } from 'enonic-types/controller'
 import { HttpResponse } from 'enonic-types/http'
 import { BanVarnishPageCacheConfig } from './banVarnishPageCache-config'
 

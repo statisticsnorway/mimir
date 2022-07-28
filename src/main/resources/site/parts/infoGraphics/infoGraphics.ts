@@ -21,7 +21,6 @@ const {
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 import { Content, MediaImage } from 'enonic-types/content'
-import { Request, Response } from 'enonic-types/controller'
 import { SourceList, SourcesConfig } from '../../../lib/ssb/utils/utils'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
@@ -31,7 +30,7 @@ import { InfoGraphicsPartConfig } from './infoGraphics-part-config'
 import { DefaultPageConfig } from '../../pages/default/default-page-config'
 
 
-exports.get = function(req: Request): Response | React4xpResponse {
+exports.get = function(req: XP.Request): XP.Response | React4xpResponse {
   try {
     const config: InfoGraphicsPartConfig = getComponent().config
     return renderPart(req)
@@ -40,9 +39,9 @@ exports.get = function(req: Request): Response | React4xpResponse {
   }
 }
 
-exports.preview = (req: Request): Response | React4xpResponse => renderPart(req)
+exports.preview = (req: XP.Request): XP.Response | React4xpResponse => renderPart(req)
 
-function renderPart(req: Request): React4xpResponse {
+function renderPart(req: XP.Request): React4xpResponse {
   const page: DefaultPage = getContent() as DefaultPage
   const phrases: {source: string; descriptionStaticVisualization: string} = getPhrases(page)
   const sourcesLabel: string = phrases.source

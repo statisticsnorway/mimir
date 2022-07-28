@@ -1,5 +1,4 @@
 import { Content } from 'enonic-types/content'
-import { PageContributions, Request, Response } from 'enonic-types/controller'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { DatasetRepoNode } from '../../../lib/ssb/repo/dataset'
 import { JSONstat } from '../../../lib/types/jsonstat-toolkit'
@@ -35,12 +34,12 @@ const {
 //   fromPartCache
 // } = __non_webpack_require__('/lib/ssb/cache/partCache')
 
-const tableController: { getProps: (req: Request, tableId: string) => object } = __non_webpack_require__('../table/table')
-const highchartController: { preview: (req: Request, id: string) => Response } = __non_webpack_require__('../highchart/highchart')
+const tableController: { getProps: (req: XP.Request, tableId: string) => object } = __non_webpack_require__('../table/table')
+const highchartController: { preview: (req: XP.Request, id: string) => XP.Response } = __non_webpack_require__('../highchart/highchart')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view: ResourceKey = resolve('./attachmentTablesFigures.html')
 
-exports.get = function(req: Request): Response {
+exports.get = function(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -48,9 +47,9 @@ exports.get = function(req: Request): Response {
   }
 }
 
-exports.preview = (req: Request): Response => renderPart(req)
+exports.preview = (req: XP.Request): XP.Response => renderPart(req)
 
-function renderPart(req: Request): Response {
+function renderPart(req: XP.Request): XP.Response {
   const page: Content<Statistics> = getContent()
   // TODO Fjernet caching siden den skapte problemer for forhåndsvisning av upubliserte tall
   // if (req.mode !== 'edit') {
@@ -61,7 +60,7 @@ function renderPart(req: Request): Response {
   return getTablesAndFiguresComponent(page, req)
 }
 
-function getTablesAndFiguresComponent(page: Content<Statistics>, req: Request): Response {
+function getTablesAndFiguresComponent(page: Content<Statistics>, req: XP.Request): XP.Response {
   const phrases: Phrases = getPhrases(page) as Phrases
 
   const title: string = phrases.attachmentTablesFigures
@@ -119,7 +118,7 @@ function getTablesAndFiguresComponent(page: Content<Statistics>, req: Request): 
   const accordionPageContributions: string = accordionComponent.renderPageContributions({
     clientRender: true
   })
-  const pageContributions: PageContributions = getFinalPageContributions(accordionPageContributions as PageContributions, attachmentTableAndFigureView)
+  const pageContributions: XP.PageContributions = getFinalPageContributions(accordionPageContributions as XP.PageContributions, attachmentTableAndFigureView)
 
   return {
     body: accordionBody,
@@ -128,7 +127,7 @@ function getTablesAndFiguresComponent(page: Content<Statistics>, req: Request): 
   }
 }
 
-function getTablesAndFigures(attachmentTablesAndFigures: Array<string>, req: Request, phrases: {[key: string]: string}): Array<AttachmentTablesFiguresData> {
+function getTablesAndFigures(attachmentTablesAndFigures: Array<string>, req: XP.Request, phrases: {[key: string]: string}): Array<AttachmentTablesFiguresData> {
   let figureIndex: number = 0
   let tableIndex: number = 0
   if (attachmentTablesAndFigures.length > 0) {
@@ -164,7 +163,7 @@ function getTableReturnObject(content: Content, props: object, subHeader: string
   }
 }
 
-function getFigureReturnObject(content: Content, preview: Response, subHeader: string, index: number): AttachmentTablesFiguresData {
+function getFigureReturnObject(content: Content, preview: XP.Response, subHeader: string, index: number): AttachmentTablesFiguresData {
   const datasetFromRepo: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined = datasetOrUndefined(content)
   const data: TbmlDataUniform | undefined = datasetFromRepo && datasetFromRepo.data as TbmlDataUniform
   const title: string | TbmlDataUniform['tbml']['metadata']['title'] = data && data.tbml && data.tbml.metadata ? data.tbml.metadata.title : content.displayName
@@ -179,9 +178,9 @@ function getFigureReturnObject(content: Content, preview: Response, subHeader: s
 }
 
 function getFinalPageContributions(
-  accordionPageContributions: PageContributions,
-  attachmentTableAndFigure: Array<AttachmentTablesFiguresData>): PageContributions {
-  const pageContributions: Array<PageContributions> = attachmentTableAndFigure.reduce((acc, attachment) => {
+  accordionPageContributions: XP.PageContributions,
+  attachmentTableAndFigure: Array<AttachmentTablesFiguresData>): XP.PageContributions {
+  const pageContributions: Array<XP.PageContributions> = attachmentTableAndFigure.reduce((acc, attachment) => {
     if (attachment.pageContributions && attachment.pageContributions.bodyEnd) {
       acc = acc.concat(attachment.pageContributions.bodyEnd as unknown as ConcatArray<never>)
     }
@@ -201,5 +200,5 @@ interface AttachmentTablesFiguresData extends AccordionData {
   contentType: string;
   subHeader: string;
   props?: object;
-  pageContributions?: PageContributions;
+  pageContributions?: XP.PageContributions;
 }

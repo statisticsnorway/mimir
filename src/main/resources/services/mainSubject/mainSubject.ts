@@ -1,11 +1,10 @@
 import { QueryResponse } from 'enonic-types/content'
-import { Response } from 'enonic-types/controller'
 
 const {
   query
 } = __non_webpack_require__('/lib/xp/content')
 
-exports.get = (): Response => {
+exports.get = (): XP.Response => {
   const mainSubjects: QueryResponse<MainSubjects> = query({
     count: 500,
     query: `components.page.config.mimir.default.subjectType LIKE "mainSubject"`

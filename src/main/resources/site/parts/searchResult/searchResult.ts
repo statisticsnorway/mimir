@@ -1,4 +1,3 @@
-import { Request, Response } from 'enonic-types/controller'
 import { Component } from 'enonic-types/portal'
 import { Content } from 'enonic-types/content'
 import { SearchResultPartConfig } from './searchResult-part-config'
@@ -35,7 +34,7 @@ const {
   get
 } = __non_webpack_require__('/lib/xp/content')
 
-exports.get = function(req: Request): React4xpResponse | Response {
+exports.get = function(req: XP.Request): React4xpResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -43,7 +42,7 @@ exports.get = function(req: Request): React4xpResponse | Response {
   }
 }
 
-exports.preview = (req: Request): React4xpResponse | Response => {
+exports.preview = (req: XP.Request): React4xpResponse | XP.Response => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -51,7 +50,7 @@ exports.preview = (req: Request): React4xpResponse | Response => {
   }
 }
 
-export function renderPart(req: Request): React4xpResponse {
+export function renderPart(req: XP.Request): React4xpResponse {
   /* collect data */
   const content: Content = getContent()
   const part: Component<SearchResultPartConfig> = getComponent()

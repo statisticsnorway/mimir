@@ -1,4 +1,3 @@
-import { Request, Response } from 'enonic-types/controller'
 import { Component } from 'enonic-types/portal'
 import { MathsPartConfig } from '../maths/maths-part-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
@@ -11,7 +10,7 @@ const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 
-exports.get = function(req:Request):Response | React4xpResponse {
+exports.get = function(req:XP.Request):XP.Response | React4xpResponse {
   try {
     const part:Component<MathsPartConfig> = getComponent()
     return renderPart(req, part)
@@ -20,9 +19,9 @@ exports.get = function(req:Request):Response | React4xpResponse {
   }
 }
 
-exports.preview = (req:Request, part:Component<MathsPartConfig>): React4xpResponse => renderPart(req, part)
+exports.preview = (req:XP.Request, part:Component<MathsPartConfig>): React4xpResponse => renderPart(req, part)
 
-function renderPart(req:Request, part:Component<MathsPartConfig>): React4xpResponse {
+function renderPart(req:XP.Request, part:Component<MathsPartConfig>): React4xpResponse {
   const props: PartProperties = {
     mathsFormula: part.config.mathsFormula
   }

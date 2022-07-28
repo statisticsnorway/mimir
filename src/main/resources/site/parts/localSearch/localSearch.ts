@@ -1,5 +1,4 @@
 import { Content } from 'enonic-types/content'
-import { Request, Response } from 'enonic-types/controller'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { LocalSearchPartConfig } from './localSearch-part-config'
 
@@ -14,7 +13,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/error/error')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp') as React4xp
 
-exports.get = function(req:Request):Response | React4xpResponse {
+exports.get = function(req:XP.Request):XP.Response | React4xpResponse {
   try {
     return renderPart(req)
   } catch (e) {
@@ -22,11 +21,11 @@ exports.get = function(req:Request):Response | React4xpResponse {
   }
 }
 
-exports.preview = (req: Request): React4xpResponse => {
+exports.preview = (req: XP.Request): React4xpResponse => {
   return renderPart(req)
 }
 
-function renderPart(req: Request): React4xpResponse {
+function renderPart(req: XP.Request): React4xpResponse {
   const config: LocalSearchPartConfig = getComponent().config
   const searchFolderContent: Content<object> | null = config.searchFolder ? get({
     key: config.searchFolder

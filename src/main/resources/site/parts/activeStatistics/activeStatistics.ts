@@ -1,5 +1,4 @@
 import { Content } from 'enonic-types/content'
-import { Request, Response } from 'enonic-types/controller'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
 import { ActiveStatisticsPartConfig } from './activeStatistics-part-config'
@@ -32,7 +31,7 @@ const {
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view: ResourceKey = resolve('./activeStatistics.html')
 
-exports.get = (req: Request): React4xpResponse | Response => {
+exports.get = (req: XP.Request): React4xpResponse | XP.Response => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -40,9 +39,9 @@ exports.get = (req: Request): React4xpResponse | Response => {
   }
 }
 
-exports.preview = (req: Request): React4xpResponse => renderPart(req)
+exports.preview = (req: XP.Request): React4xpResponse => renderPart(req)
 
-function renderPart(req: Request): React4xpResponse {
+function renderPart(req: XP.Request): React4xpResponse {
   const page: Content = getContent()
   const partConfig: ActiveStatisticsPartConfig = getComponent().config
   const activeStatistics: ActiveStatisticsPartConfig['relatedStatisticsOptions'] = partConfig.relatedStatisticsOptions ?

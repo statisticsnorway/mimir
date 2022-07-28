@@ -1,5 +1,4 @@
 import { Content } from 'enonic-types/content'
-import { PageContributions, Request, Response } from 'enonic-types/controller'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { allMonths, lastPeriodKpi, monthLabel, nextPeriod } from '../../../lib/ssb/utils/calculatorUtils'
 import { CalculatorPeriod } from '../../../lib/types/calculator'
@@ -33,7 +32,7 @@ const {
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 const view: ResourceKey = resolve('./kpiCalculator.html')
 
-exports.get = function(req: Request): Response {
+exports.get = function(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -41,7 +40,7 @@ exports.get = function(req: Request): Response {
   }
 }
 
-exports.preview = function(req: Request): Response {
+exports.preview = function(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -49,7 +48,7 @@ exports.preview = function(req: Request): Response {
   }
 }
 
-function renderPart(req: Request): Response {
+function renderPart(req: XP.Request): XP.Response {
   const page: Content = getContent()
   let kpiCalculator: React4xpResponse | undefined
   if (req.mode === 'edit' || req.mode === 'inline') {
@@ -62,7 +61,7 @@ function renderPart(req: Request): Response {
 
   return {
     body: kpiCalculator.body,
-    pageContributions: kpiCalculator.pageContributions as PageContributions
+    pageContributions: kpiCalculator.pageContributions as XP.PageContributions
   }
 }
 

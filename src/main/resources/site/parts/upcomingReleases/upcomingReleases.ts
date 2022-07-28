@@ -1,4 +1,3 @@
-import { Request } from 'enonic-types/controller'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Content } from 'enonic-types/content'
 import { Component } from 'enonic-types/portal'
@@ -42,13 +41,13 @@ const {
   getMainSubjects, getMainSubjectById
 } = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
 
-exports.get = (req: Request): React4xpResponse => {
+exports.get = (req: XP.Request): React4xpResponse => {
   return renderPart(req)
 }
 
-exports.preview = (req: Request): React4xpResponse => renderPart(req)
+exports.preview = (req: XP.Request): React4xpResponse => renderPart(req)
 
-function renderPart(req: Request): React4xpResponse {
+function renderPart(req: XP.Request): React4xpResponse {
   const content: Content = getContent()
   const component: Component<UpcomingReleasesPartConfig> = getComponent()
   const currentLanguage: string = content.language ? content.language : 'nb'

@@ -1,4 +1,3 @@
-import {Request, Response} from "enonic-types/controller";
 import {React4xpObject, React4xpResponse} from "../../../lib/types/react4xp";
 import {Component} from "enonic-types/portal";
 import {ExternalCardPartConfig} from "./externalCard-part-config";
@@ -20,7 +19,7 @@ const {
 const view = resolve('./externalCard.html')
 
 
-exports.get = function(req: Request) {
+exports.get = function(req: XP.Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -28,20 +27,20 @@ exports.get = function(req: Request) {
   }
 }
 
-exports.preview = (req: Request) => renderPart(req)
+exports.preview = (req: XP.Request) => renderPart(req)
 
 const NO_LINKS_FOUND = {
   body: '',
   contentType: 'text/html'
 }
 
-function renderPart(req: Request): Response | React4xpResponse {
+function renderPart(req: XP.Request): XP.Response | React4xpResponse {
   const part: Component<ExternalCardPartConfig> = getComponent()
 
   return renderExternalCard(req, part.config.externalCards ? data.forceArray(part.config.externalCards) : [])
 }
 
-const renderExternalCard = (req: Request, links: Array<ExternalCard>) => {
+const renderExternalCard = (req: XP.Request, links: Array<ExternalCard>) => {
   if (links && links.length) {
     const externalCardComponent: React4xpObject = new React4xp('ExternalCards')
         .setProps({

@@ -1,5 +1,4 @@
 import { Content } from 'enonic-types/content'
-import { PageContributions, Request, Response } from 'enonic-types/controller'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
@@ -50,7 +49,7 @@ const contentLib = __non_webpack_require__('/lib/xp/content')
 
 const view: ResourceKey = resolve('./relatedArticles.html')
 
-exports.get = function(req: Request): Response {
+exports.get = function(req: XP.Request): XP.Response {
   try {
     const page: Content<Article> = getContent()
     let relatedArticles: RelatedArticles['relatedArticles'] = page.data.relatedArticles
@@ -65,9 +64,9 @@ exports.get = function(req: Request): Response {
   }
 }
 
-exports.preview = (req: Request, relatedArticles: RelatedArticles['relatedArticles']) => renderPart(req, relatedArticles)
+exports.preview = (req: XP.Request, relatedArticles: RelatedArticles['relatedArticles']) => renderPart(req, relatedArticles)
 
-function renderPart(req: Request, relatedArticles: RelatedArticles['relatedArticles']): Response {
+function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedArticles']): XP.Response {
   const page: Content<Article> = getContent()
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   const phrases: Phrases = getPhrases(page)
@@ -175,7 +174,7 @@ function renderPart(req: Request, relatedArticles: RelatedArticles['relatedArtic
     body: relatedArticlesComponent.renderBody({
       body
     }),
-    pageContributions: relatedArticlesComponent.renderPageContributions() as PageContributions
+    pageContributions: relatedArticlesComponent.renderPageContributions() as XP.PageContributions
   }
 }
 

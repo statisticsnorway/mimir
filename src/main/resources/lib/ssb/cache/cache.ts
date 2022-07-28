@@ -1,5 +1,4 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { Request, Response } from 'enonic-types/controller'
 import { EnonicEvent, EnonicEventData } from 'enonic-types/event'
 import { QueryResponse, Content } from 'enonic-types/content'
 import { JSONstat } from '../../types/jsonstat-toolkit'
@@ -342,7 +341,7 @@ function getFilterCache(branch: string, filterKey: string): Cache {
   return filterCache
 }
 
-export function fromFilterCache(req: Request, filterKey: string, key: string, fallback: () => Response): Response {
+export function fromFilterCache(req: XP.Request, filterKey: string, key: string, fallback: () => XP.Response): XP.Response {
   if (req.mode === 'live' || req.mode === 'preview') {
     const branch: string = req.mode === 'live' ? 'master' : 'draft'
     const filterCache: Cache = getFilterCache(branch, filterKey)
@@ -354,7 +353,7 @@ export function fromFilterCache(req: Request, filterKey: string, key: string, fa
   return fallback()
 }
 
-export function fromMenuCache(req: Request, key: string, fallback: () => unknown): unknown {
+export function fromMenuCache(req: XP.Request, key: string, fallback: () => unknown): unknown {
   if (req.mode === 'live' || req.mode === 'preview') {
     const branch: string = req.mode === 'live' ? 'master' : 'draft'
     const menuCache: Cache = branch === 'master' ? masterMenuCache : draftMenuCache
@@ -366,7 +365,7 @@ export function fromMenuCache(req: Request, key: string, fallback: () => unknown
   return fallback()
 }
 
-export function fromRelatedArticlesCache(req: Request, key: string, fallback: () => unknown): unknown {
+export function fromRelatedArticlesCache(req: XP.Request, key: string, fallback: () => unknown): unknown {
   if (req.mode === 'live' || req.mode === 'preview') {
     const branch: string = req.mode === 'live' ? 'master' : 'draft'
     const relatedArticlesCache: Cache = branch === 'master' ? masterRelatedArticlesCache : draftRelatedArticlesCache
@@ -593,9 +592,9 @@ export interface CompletelyClearCacheOptions {
 
 export interface SSBCacheLibrary {
   setup: () => void;
-  fromFilterCache: (req: Request, filterKey: string, key: string, fallback: () => Response) => Response;
-  fromMenuCache: (req: Request, key: string, fallback: () => unknown) => unknown;
-  fromRelatedArticlesCache: (req: Request, key: string, fallback: () => unknown) => unknown;
+  fromFilterCache: (req: XP.Request, filterKey: string, key: string, fallback: () => XP.Response) => XP.Response;
+  fromMenuCache: (req: XP.Request, key: string, fallback: () => unknown) => unknown;
+  fromRelatedArticlesCache: (req: XP.Request, key: string, fallback: () => unknown) => unknown;
   fromDatasetRepoCache:
     (key: string, fallback: () => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null)
       => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined;

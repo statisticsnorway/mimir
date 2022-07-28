@@ -1,5 +1,4 @@
 import { Content } from 'enonic-types/content'
-import { PageContributions, Request, Response } from 'enonic-types/controller'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
@@ -46,7 +45,7 @@ const {
 } = __non_webpack_require__('/lib/vendor/moment')
 const view: ResourceKey = resolve('./statistics.html')
 
-exports.get = (req: Request): Response => {
+exports.get = (req: XP.Request): XP.Response => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -54,9 +53,9 @@ exports.get = (req: Request): Response => {
   }
 }
 
-exports.preview = (req: Request): Response => renderPart(req)
+exports.preview = (req: XP.Request): XP.Response => renderPart(req)
 
-function renderPart(req: Request): Response {
+function renderPart(req: XP.Request): XP.Response {
   const page: Content<Statistics> = getContent()
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
@@ -82,7 +81,7 @@ function renderPart(req: Request): Response {
   let previousRelease: string | undefined = phrases.notAvailable
   let nextRelease: string | undefined = phrases.notYetDetermined
   let previewNextRelease: string | undefined = phrases.notYetDetermined
-  let statisticsKeyFigure: Response | undefined
+  let statisticsKeyFigure: XP.Response | undefined
   let changeDate: string | undefined
   let nextReleaseDate: string | undefined
   let previousReleaseDate: string | undefined
@@ -157,7 +156,7 @@ function renderPart(req: Request): Response {
   }
 
   let body: string = render(view, model)
-  let pageContributions: PageContributions = {
+  let pageContributions: XP.PageContributions = {
     bodyEnd: statisticsKeyFigure && statisticsKeyFigure.pageContributions ? statisticsKeyFigure.pageContributions.bodyEnd : []
   }
 
@@ -168,7 +167,7 @@ function renderPart(req: Request): Response {
 
     pageContributions = modifiedDateComponent.renderPageContributions({
       pageContributions: pageContributions as React4xpPageContributionOptions
-    }) as PageContributions
+    }) as XP.PageContributions
   }
 
   return {

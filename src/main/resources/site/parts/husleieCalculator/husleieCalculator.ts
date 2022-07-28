@@ -1,5 +1,4 @@
 import { Content } from 'enonic-types/content'
-import { Request, Response } from 'enonic-types/controller'
 import { allMonths, lastPeriodKpi, monthLabel, nextPeriod } from '../../../lib/ssb/utils/calculatorUtils'
 import { CalculatorPeriod } from '../../../lib/types/calculator'
 import { DropdownItems as MonthDropdownItems } from '../../../lib/types/components'
@@ -30,7 +29,7 @@ const {
   fromPartCache
 } = __non_webpack_require__('/lib/ssb/cache/partCache')
 
-exports.get = function(req: Request): React4xpResponse | Response {
+exports.get = function(req: XP.Request): React4xpResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -38,9 +37,9 @@ exports.get = function(req: Request): React4xpResponse | Response {
   }
 }
 
-exports.preview = (req: Request): React4xpResponse => renderPart(req)
+exports.preview = (req: XP.Request): React4xpResponse => renderPart(req)
 
-function renderPart(req: Request): React4xpResponse {
+function renderPart(req: XP.Request): React4xpResponse {
   const page: Content = getContent()
   if (req.mode === 'edit' || req.mode === 'inline') {
     return getHusleiekalkulator(req, page)
@@ -51,7 +50,7 @@ function renderPart(req: Request): React4xpResponse {
   }
 }
 
-function getHusleiekalkulator(req: Request, page: Content): React4xpResponse {
+function getHusleiekalkulator(req: XP.Request, page: Content): React4xpResponse {
   const config: HusleieCalculatorPartConfig = getComponent().config
   const language: Language = getLanguage(page)
   const phrases: Phrases = language.phrases as Phrases

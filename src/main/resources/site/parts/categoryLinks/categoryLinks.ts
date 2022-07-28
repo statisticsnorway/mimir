@@ -1,4 +1,3 @@
-import {Request, Response} from "enonic-types/controller";
 import {React4xpObject, React4xpResponse} from "../../../lib/types/react4xp";
 import {Component} from "enonic-types/portal";
 import {CategoryLinksPartConfig} from "./categoryLinks-part-config";
@@ -25,7 +24,7 @@ const {
 
 const view = resolve('./categoryLinks.html')
 
-exports.get = function(req: Request) {
+exports.get = function(req: XP.Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -33,14 +32,14 @@ exports.get = function(req: Request) {
   }
 }
 
-exports.preview = (req: Request) => renderPart(req)
+exports.preview = (req: XP.Request) => renderPart(req)
 
 const NO_LINKS_FOUND = {
   body: '',
   contentType: 'text/html'
 }
 
-function renderPart(req: Request): Response | React4xpResponse {
+function renderPart(req: XP.Request): XP.Response | React4xpResponse {
   const part: Component<CategoryLinksPartConfig> = getComponent()
   const page: Content = getContent()
   const language: Language = getLanguage(page)

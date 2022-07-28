@@ -1,5 +1,4 @@
 import { Content } from 'enonic-types/content'
-import { Request, Response } from 'enonic-types/controller'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { allMonths, monthLabel, nextPeriod } from '../../../lib/ssb/utils/calculatorUtils'
 import { CalculatorPeriod } from '../../../lib/types/calculator'
@@ -33,7 +32,7 @@ const {
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 const view: ResourceKey = resolve('./pifCalculator.html')
 
-exports.get = function(req: Request): Response | React4xpResponse {
+exports.get = function(req: XP.Request): XP.Response | React4xpResponse {
   try {
     return renderPart(req)
   } catch (e) {
@@ -41,7 +40,7 @@ exports.get = function(req: Request): Response | React4xpResponse {
   }
 }
 
-exports.preview = function(req: Request): Response | React4xpResponse {
+exports.preview = function(req: XP.Request): XP.Response | React4xpResponse {
   try {
     return renderPart(req)
   } catch (e) {
@@ -49,7 +48,7 @@ exports.preview = function(req: Request): Response | React4xpResponse {
   }
 }
 
-function renderPart(req: Request): Response | React4xpResponse {
+function renderPart(req: XP.Request): XP.Response | React4xpResponse {
   const page: Content = getContent()
   let pifCalculator: React4xpResponse | undefined
   if (req.mode === 'edit' || req.mode === 'inline') {

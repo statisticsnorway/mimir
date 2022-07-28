@@ -1,7 +1,6 @@
 import { Content } from 'enonic-types/content'
 import { Component } from 'enonic-types/portal'
 import { LinksPartConfig } from './links-part-config'
-import { Request, Response } from 'enonic-types/controller'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { renderError } from '../../../lib/ssb/error/error'
 import { GA_TRACKING_ID } from '../../pages/default/default'
@@ -16,7 +15,7 @@ const {
 } = __non_webpack_require__('/lib/xp/portal')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-exports.get = (req: Request): React4xpResponse | Response => {
+exports.get = (req: XP.Request): React4xpResponse | XP.Response => {
   try {
     const part: Component<LinksPartConfig> = getComponent()
     const config: LinksPartConfig = part.config
@@ -26,14 +25,14 @@ exports.get = (req: Request): React4xpResponse | Response => {
   }
 }
 
-exports.preview = (req: Request, config: LinksPartConfig): React4xpResponse | Response => {
+exports.preview = (req: XP.Request, config: LinksPartConfig): React4xpResponse | XP.Response => {
   try {
     return renderPart(req, config)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
-function renderPart(req: Request, config: LinksPartConfig): React4xpResponse {
+function renderPart(req: XP.Request, config: LinksPartConfig): React4xpResponse {
   const linkTypes: LinksPartConfig['linkTypes'] = config.linkTypes
   const isNotInEditMode: boolean = req.mode !== 'edit'
 

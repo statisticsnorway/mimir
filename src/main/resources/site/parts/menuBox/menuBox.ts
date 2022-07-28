@@ -1,5 +1,4 @@
 import { Content, ContentLibrary } from 'enonic-types/content'
-import { Request, Response } from 'enonic-types/controller'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { Component } from 'enonic-types/portal'
@@ -28,7 +27,7 @@ const content: ContentLibrary = __non_webpack_require__('/lib/xp/content')
 const view: ResourceKey = resolve('./menuBox.html')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp') as React4xp
 
-exports.get = function(req:Request):Response | React4xpResponse | string {
+exports.get = function(req:XP.Request):XP.Response | React4xpResponse | string {
   try {
     return renderPart(req)
   } catch (e) {
@@ -36,11 +35,11 @@ exports.get = function(req:Request):Response | React4xpResponse | string {
   }
 }
 
-exports.preview = function(req:Request):Response | React4xpResponse | string {
+exports.preview = function(req:XP.Request):XP.Response | React4xpResponse | string {
   return renderPart(req)
 }
 
-function renderPart(req:Request):Response | React4xpResponse | string {
+function renderPart(req:XP.Request):XP.Response | React4xpResponse | string {
   const part:Component<MenuBoxPartConfig> = getComponent()
   const menuBoxId: string = part.config.menu
   const height: string = part.config.height ? part.config.height as string : 'default'

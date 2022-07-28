@@ -1,6 +1,5 @@
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import { Content } from 'enonic-types/content'
-import { Request, Response } from 'enonic-types/controller'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Phrases } from '../../../lib/types/language'
 import { Statistics } from '../../content-types/statistics/statistics'
@@ -37,7 +36,7 @@ const {
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp') as React4xp
 
 
-exports.get = function(req:Request):Response | React4xpResponse {
+exports.get = function(req:XP.Request):XP.Response | React4xpResponse {
   try {
     const statisticPage: Content<Statistics> = getContent()
     return renderPart(req, statisticPage.data.aboutTheStatistics)
@@ -46,9 +45,9 @@ exports.get = function(req:Request):Response | React4xpResponse {
   }
 }
 
-exports.preview = (req: Request, id: string | undefined):Response | React4xpResponse => renderPart(req, id)
+exports.preview = (req: XP.Request, id: string | undefined):XP.Response | React4xpResponse => renderPart(req, id)
 
-function renderPart(req:Request, aboutTheStatisticsId: string | undefined):Response | React4xpResponse {
+function renderPart(req:XP.Request, aboutTheStatisticsId: string | undefined):XP.Response | React4xpResponse {
   const page: Content = getContent()
   if (!aboutTheStatisticsId) {
     if (req.mode === 'edit' && page.type !== `${app.name}:statistics`) {
@@ -76,7 +75,7 @@ function renderPart(req:Request, aboutTheStatisticsId: string | undefined):Respo
   }
 }
 
-function getOmStatistikken(req:Request, page: Content<any>, aboutTheStatisticsId: string | undefined ): Response | React4xpResponse {
+function getOmStatistikken(req:XP.Request, page: Content<any>, aboutTheStatisticsId: string | undefined ): XP.Response | React4xpResponse {
   const phrases: Phrases = getPhrases(page) as Phrases
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   let nextRelease: string = phrases.notYetDetermined

@@ -1,4 +1,3 @@
-import { Request, Response } from 'enonic-types/controller'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { Content } from 'enonic-types/content'
 import { Component } from 'enonic-types/portal'
@@ -25,7 +24,7 @@ const {
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 const view: ResourceKey = resolve('./banner.html') as ResourceKey
 
-exports.get = function(req: Request) {
+exports.get = function(req: XP.Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -33,9 +32,9 @@ exports.get = function(req: Request) {
   }
 }
 
-exports.preview = (req: Request): Response => renderPart(req)
+exports.preview = (req: XP.Request): XP.Response => renderPart(req)
 
-function renderPart(req: Request): Response {
+function renderPart(req: XP.Request): XP.Response {
   const page: Content<Page> = getContent()
   const part: Component<BannerPartConfig> = getComponent()
   const pageType: BannerPartConfig['pageType'] = part.config.pageType

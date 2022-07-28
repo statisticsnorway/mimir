@@ -1,5 +1,4 @@
 import { Content } from 'enonic-types/content'
-import { PageContributions, Request, Response } from 'enonic-types/controller'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { Phrases } from '../../../lib/types/language'
 import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
@@ -31,7 +30,7 @@ const {
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view: ResourceKey = resolve('./relatedStatistics.html')
 
-exports.get = (req: Request): Response => {
+exports.get = (req: XP.Request): XP.Response => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -39,9 +38,9 @@ exports.get = (req: Request): Response => {
   }
 }
 
-exports.preview = (req: Request): Response => renderPart(req)
+exports.preview = (req: XP.Request): XP.Response => renderPart(req)
 
-function renderPart(req: Request): Response {
+function renderPart(req: XP.Request): XP.Response {
   const page: Content<Statistics> = getContent()
   const relatedStatistics: Statistics['relatedStatisticsOptions'] = page.data.relatedStatisticsOptions
   const phrases: Phrases = getPhrases(page)
@@ -60,7 +59,7 @@ function renderPart(req: Request): Response {
   return renderRelatedStatistics(statisticsTitle, parseRelatedContent(relatedStatistics ? forceArray(relatedStatistics) : []), phrases)
 }
 
-function renderRelatedStatistics(statisticsTitle: string, relatedStatisticsContent: Array<RelatedStatisticsContent>, phrases: Phrases): Response {
+function renderRelatedStatistics(statisticsTitle: string, relatedStatisticsContent: Array<RelatedStatisticsContent>, phrases: Phrases): XP.Response {
   if (relatedStatisticsContent && relatedStatisticsContent.length) {
     const relatedStatisticsXP: React4xpObject = new React4xp('StatisticsCards')
       .setProps({
@@ -84,7 +83,7 @@ function renderRelatedStatistics(statisticsTitle: string, relatedStatisticsConte
       body: relatedStatisticsXP.renderBody({
         body
       }),
-      pageContributions: relatedStatisticsXP.renderPageContributions() as PageContributions
+      pageContributions: relatedStatisticsXP.renderPageContributions() as XP.PageContributions
     }
   }
   return {

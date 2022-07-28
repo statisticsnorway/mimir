@@ -1,5 +1,4 @@
 import { Content } from 'enonic-types/content'
-import { PageContributions, Request, Response } from 'enonic-types/controller'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { Phrases } from '../../../lib/types/language'
 import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
@@ -22,7 +21,7 @@ const {
 
 const view: ResourceKey = resolve('./relatedExternalLinks.html')
 
-exports.get = function(req: Request): Response {
+exports.get = function(req: XP.Request): XP.Response {
   try {
     const page: Content<Article | Statistics> = getContent()
     let externalLinks: RelatedExternalLinks['relatedExternalLinkItemSet'] = page.data.relatedExternalLinkItemSet
@@ -37,9 +36,9 @@ exports.get = function(req: Request): Response {
   }
 }
 
-exports.preview = (req: Request, externalLinks: RelatedExternalLinks['relatedExternalLinkItemSet']): Response => renderPart(req, externalLinks)
+exports.preview = (req: XP.Request, externalLinks: RelatedExternalLinks['relatedExternalLinkItemSet']): XP.Response => renderPart(req, externalLinks)
 
-function renderPart(req: Request, externalLinks: RelatedExternalLinks['relatedExternalLinkItemSet']): Response {
+function renderPart(req: XP.Request, externalLinks: RelatedExternalLinks['relatedExternalLinkItemSet']): XP.Response {
   const page: Content = getContent()
 
   const phrases: Phrases = getPhrases(page)
@@ -78,6 +77,6 @@ function renderPart(req: Request, externalLinks: RelatedExternalLinks['relatedEx
     body: relatedExternalLinksComponent.renderBody({
       body
     }),
-    pageContributions: relatedExternalLinksComponent.renderPageContributions() as PageContributions
+    pageContributions: relatedExternalLinksComponent.renderPageContributions() as XP.PageContributions
   }
 }

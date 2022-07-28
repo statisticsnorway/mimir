@@ -1,6 +1,5 @@
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { Request, Response } from 'enonic-types/controller'
 import { Content, QueryResponse } from 'enonic-types/content'
 import { Article } from '../../content-types/article/article'
 import { ArticleArchive } from '../../content-types/articleArchive/articleArchive'
@@ -23,7 +22,7 @@ const {
 } = __non_webpack_require__('/lib/xp/i18n')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-exports.get = (req: Request): Response | React4xpResponse => {
+exports.get = (req: XP.Request): XP.Response | React4xpResponse => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -31,9 +30,9 @@ exports.get = (req: Request): Response | React4xpResponse => {
   }
 }
 
-exports.preview = (req: Request) => renderPart(req)
+exports.preview = (req: XP.Request) => renderPart(req)
 
-function renderPart(req: Request):React4xpResponse {
+function renderPart(req: XP.Request):React4xpResponse {
   const page: Content<ArticleArchive> = getContent()
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   const listOfArticlesTitle: string = localize({

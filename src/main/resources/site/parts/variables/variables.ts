@@ -1,5 +1,4 @@
 import { Content } from 'enonic-types/content'
-import { PageContributions, Request, Response } from 'enonic-types/controller'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
 import { Article } from '../../content-types/article/article'
@@ -28,7 +27,7 @@ const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 const view: ResourceKey = resolve('./variables.html')
 
-exports.get = function(req: Request): Response {
+exports.get = function(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -36,15 +35,15 @@ exports.get = function(req: Request): Response {
   }
 }
 
-exports.preview = (req: Request): Response => renderPart(req)
+exports.preview = (req: XP.Request): XP.Response => renderPart(req)
 
 const MAX_VARIABLES: number = 9999
-const NO_VARIABLES_FOUND: Response = {
+const NO_VARIABLES_FOUND: XP.Response = {
   body: '',
   contentType: 'text/html'
 }
 
-function renderPart(req: Request): Response {
+function renderPart(req: XP.Request): XP.Response {
   const page: Content = getContent()
   const language: string = page.language ? page.language === 'en' ? 'en-gb' : page.language : 'nb'
 
@@ -56,7 +55,7 @@ function renderPart(req: Request): Response {
   return renderVariables(contentArrayToVariables(hits ? data.forceArray(hits) : [], language))
 }
 
-function renderVariables(variables: Array<Variables>): Response {
+function renderVariables(variables: Array<Variables>): XP.Response {
   if (variables && variables.length) {
     const download: string = i18nLib.localize({
       key: 'variables.download'
@@ -86,7 +85,7 @@ function renderVariables(variables: Array<Variables>): Response {
       body: variablesXP.renderBody({
         body
       }),
-      pageContributions: variablesXP.renderPageContributions() as PageContributions,
+      pageContributions: variablesXP.renderPageContributions() as XP.PageContributions,
       contentType: 'text/html'
     }
   }

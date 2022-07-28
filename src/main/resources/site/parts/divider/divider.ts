@@ -1,4 +1,3 @@
-import { Request, Response } from 'enonic-types/controller'
 import { Component } from 'enonic-types/portal'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
@@ -18,7 +17,7 @@ const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 const view: ResourceKey = resolve('./divider.html')
 
-exports.get = function(req: Request): Response {
+exports.get = function(req: XP.Request): XP.Response {
   try {
     const component: Component<DividerPartConfig> = getComponent()
     return renderPart(req, component.config)
@@ -27,11 +26,11 @@ exports.get = function(req: Request): Response {
   }
 }
 
-exports.preview = function(req: Request): Response {
+exports.preview = function(req: XP.Request): XP.Response {
   return renderPart(req, {})
 }
 
-function renderPart(req: Request, config: DividerPartConfig): Response {
+function renderPart(req: XP.Request, config: DividerPartConfig): XP.Response {
   const dividerColor: string = config.dividerColor || 'light'
 
   return fromPartCache(req, `divider${dividerColor}`, () => {

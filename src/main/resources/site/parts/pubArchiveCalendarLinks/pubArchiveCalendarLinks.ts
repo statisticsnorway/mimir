@@ -1,5 +1,4 @@
 import { Content } from 'enonic-types/content'
-import { PageContributions, Request, Response } from 'enonic-types/controller'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { Phrases } from '../../../lib/types/language'
 import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
@@ -20,7 +19,7 @@ const {
 
 const view: ResourceKey = resolve('./pubArchiveCalendarLinks.html')
 
-exports.get = function(req: Request): Response {
+exports.get = function(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -28,14 +27,14 @@ exports.get = function(req: Request): Response {
   }
 }
 
-exports.preview = (req: Request): Response => renderPart(req)
+exports.preview = (req: XP.Request): XP.Response => renderPart(req)
 
 const NO_LINKS_FOUND: object = {
   body: '',
   contentType: 'text/html'
 }
 
-function renderPart(req: Request): Response {
+function renderPart(req: XP.Request): XP.Response {
   const config: PubArchiveCalendarLinksPartConfig = getComponent().config
   const page: Content = getContent()
   const phrases: Phrases = getPhrases(page)
@@ -62,7 +61,7 @@ function renderPart(req: Request): Response {
       body: pubArchiveStatCalendarLinksComponent.renderBody({
         body
       }),
-      pageContributions: pubArchiveStatCalendarLinksComponent.renderPageContributions() as PageContributions
+      pageContributions: pubArchiveStatCalendarLinksComponent.renderPageContributions() as XP.PageContributions
     }
   }
   return NO_LINKS_FOUND

@@ -1,4 +1,3 @@
-import { Request, Response } from 'enonic-types/controller'
 import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
 import { Component } from 'enonic-types/portal'
 import { DownloadLinkPartConfig } from './downloadLink-part-config'
@@ -16,7 +15,7 @@ const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp') as Re
 
 const view: ResourceKey = resolve('./downloadLink.html') as ResourceKey
 
-exports.get = function(req: Request) {
+exports.get = function(req: XP.Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -24,9 +23,9 @@ exports.get = function(req: Request) {
   }
 }
 
-exports.preview = (req: Request) => renderPart(req)
+exports.preview = (req: XP.Request) => renderPart(req)
 
-function renderPart(req: Request): Response | React4xpResponse {
+function renderPart(req: XP.Request): XP.Response | React4xpResponse {
   const part: Component<DownloadLinkPartConfig> = getComponent()
 
   const downloadLinkXP: React4xpObject = new React4xp('DownloadLink')

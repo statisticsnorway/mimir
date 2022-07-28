@@ -1,4 +1,3 @@
-import {PageContributions, Request, Response} from "enonic-types/controller";
 import {Component} from "enonic-types/portal";
 import {FactBoxPartConfig} from "./factBox-part-config";
 import {React4xpObject, React4xpResponse} from "../../../lib/types/react4xp";
@@ -18,7 +17,7 @@ const content = __non_webpack_require__('/lib/xp/content')
 
 const view: ResourceKey = resolve('./factBox.html')
 
-exports.get = function(req: Request): Response | React4xpResponse {
+exports.get = function(req: XP.Request): XP.Response | React4xpResponse {
   try {
     const part: Component<FactBoxPartConfig> = getComponent()
     return renderPart(req, part.config.factBox)
@@ -27,7 +26,7 @@ exports.get = function(req: Request): Response | React4xpResponse {
   }
 }
 
-exports.preview = function(req: Request, id: string) {
+exports.preview = function(req: XP.Request, id: string) {
   try {
     return renderPart(req, id)
   } catch (e) {
@@ -35,7 +34,7 @@ exports.preview = function(req: Request, id: string) {
   }
 }
 
-function renderPart(req: Request, factBoxId: string): Response | React4xpResponse {
+function renderPart(req: XP.Request, factBoxId: string): XP.Response | React4xpResponse {
   // throw an error if there is no selected factbox, or an empty section for edit mode
   if (!factBoxId) {
     if (req.mode === 'edit') {
@@ -68,6 +67,6 @@ function renderPart(req: Request, factBoxId: string): Response | React4xpRespons
     body: factBox.renderBody({
       body
     }),
-    pageContributions: factBox.renderPageContributions() as PageContributions
+    pageContributions: factBox.renderPageContributions() as XP.PageContributions
   }
 }

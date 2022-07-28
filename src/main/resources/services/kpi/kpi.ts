@@ -1,5 +1,4 @@
 import { Content } from 'enonic-types/content'
-import { Response } from 'enonic-types/controller'
 import { HttpRequestParams } from 'enonic-types/http'
 import { CalculatorConfig } from '../../site/content-types/calculatorConfig/calculatorConfig'
 import { Dataset } from '../../lib/types/jsonstat-toolkit'
@@ -10,7 +9,7 @@ const {
   getCalculatorConfig, getKpiDatasetYear, getKpiDatasetMonth, isChronological, getChangeValue
 } = __non_webpack_require__('/lib/ssb/dataset/calculator')
 
-function get(req: HttpRequestParams): Response {
+function get(req: HttpRequestParams): XP.Response {
   const startValue: string | undefined = req.params?.startValue
   const startMonth: string | undefined = req.params?.startMonth || '90'
   const startYear: string | undefined = req.params?.startYear

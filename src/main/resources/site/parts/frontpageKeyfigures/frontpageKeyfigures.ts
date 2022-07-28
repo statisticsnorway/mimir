@@ -1,5 +1,4 @@
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
-import {Request, Response} from "enonic-types/controller";
 import {React4xpObject, React4xpResponse} from "../../../lib/types/react4xp";
 import {Component} from "enonic-types/portal";
 import {FrontpageKeyfiguresPartConfig} from "./frontpageKeyfigures-part-config";
@@ -29,7 +28,7 @@ const {
 
 const view: ResourceKey = resolve('./frontpageKeyfigures.html')
 
-exports.get = function(req: Request) {
+exports.get = function(req: XP.Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -37,13 +36,13 @@ exports.get = function(req: Request) {
   }
 }
 
-exports.preview = (req: Request) => renderPart(req)
+exports.preview = (req: XP.Request) => renderPart(req)
 
 const isKeyfigureData = (data: FrontPageKeyFigureData | undefined): data is FrontPageKeyFigureData => {
   return !!data
 } // user-defined type guards <3
 
-function renderPart(req: Request): Response | React4xpResponse {
+function renderPart(req: XP.Request): XP.Response | React4xpResponse {
   const part: Component<FrontpageKeyfiguresPartConfig> = getComponent()
   const keyFiguresPart: Array<FrontpageKeyfigure> = part.config.keyfiguresFrontpage ? data.forceArray(part.config.keyfiguresFrontpage) : []
 
@@ -74,7 +73,7 @@ function renderPart(req: Request): Response | React4xpResponse {
   }
 }
 
-function renderFrontpageKeyfigures(req: Request, frontpageKeyfigures: Array<FrontPageKeyFigureData> ): React4xpResponse {
+function renderFrontpageKeyfigures(req: XP.Request, frontpageKeyfigures: Array<FrontPageKeyFigureData> ): React4xpResponse {
   const frontpageKeyfiguresReact: React4xpObject = new React4xp('FrontpageKeyfigures')
     .setProps({
       keyFigures: frontpageKeyfigures.map((frontpageKeyfigure) => {

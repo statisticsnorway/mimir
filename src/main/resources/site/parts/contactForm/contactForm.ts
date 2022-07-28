@@ -1,5 +1,4 @@
 import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
-import { Request } from 'enonic-types/controller'
 import { Content } from 'enonic-types/content'
 import { Language, Phrases } from '../../../lib/types/language'
 
@@ -16,7 +15,7 @@ const {
   getLanguage
 } = __non_webpack_require__('/lib/ssb/utils/language')
 
-exports.get = function(req: Request) {
+exports.get = function(req: XP.Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -24,9 +23,9 @@ exports.get = function(req: Request) {
   }
 }
 
-exports.preview = (req: Request) => renderPart(req)
+exports.preview = (req: XP.Request) => renderPart(req)
 
-function renderPart(req: Request): React4xpResponse {
+function renderPart(req: XP.Request): React4xpResponse {
   const page: Content = getContent()
   const language: Language = getLanguage(page) as Language
   const phrases: Phrases = language.phrases as Phrases

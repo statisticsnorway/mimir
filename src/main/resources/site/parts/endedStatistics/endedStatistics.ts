@@ -1,4 +1,3 @@
-import { Request, Response } from 'enonic-types/controller'
 import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
 import { EndedStatisticsPartConfig } from './endedStatistics-part-config'
 import { Content } from 'enonic-types/content'
@@ -33,7 +32,7 @@ const {
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view: ResourceKey = resolve('./endedStatistics.html') as ResourceKey
 
-exports.get = (req: Request) => {
+exports.get = (req: XP.Request) => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -41,9 +40,9 @@ exports.get = (req: Request) => {
   }
 }
 
-exports.preview = (req: Request) => renderPart(req)
+exports.preview = (req: XP.Request) => renderPart(req)
 
-function renderPart(req: Request): Response | React4xpResponse {
+function renderPart(req: XP.Request): XP.Response | React4xpResponse {
   const page: Content = getContent()
   const part: EndedStatisticsPartConfig = getComponent().config
   const endedStatistics: EndedStatisticsPartConfig['relatedStatisticsOptions'] = part.relatedStatisticsOptions ? forceArray(part.relatedStatisticsOptions) : []

@@ -1,4 +1,3 @@
-import { Response, Request } from 'enonic-types/controller'
 import { Component } from 'enonic-types/portal'
 import { renderError } from '../../../lib/ssb/error/error'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
@@ -20,7 +19,7 @@ const {
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 
-exports.get = (req: Request): React4xpResponse | Response => {
+exports.get = (req: XP.Request): React4xpResponse | XP.Response => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -28,9 +27,9 @@ exports.get = (req: Request): React4xpResponse | Response => {
   }
 }
 
-exports.preview = (req: Request): React4xpResponse => renderPart(req)
+exports.preview = (req: XP.Request): React4xpResponse => renderPart(req)
 
-function renderPart(req: Request): React4xpResponse {
+function renderPart(req: XP.Request): React4xpResponse {
   const component: Component<NameSearchPartConfig> = getComponent()
   const locale: string = getLanguageShortName(getContent())
   const isNotInEditMode: boolean = req.mode !== 'edit'

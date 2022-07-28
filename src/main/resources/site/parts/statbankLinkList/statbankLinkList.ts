@@ -1,5 +1,4 @@
 import { Content } from 'enonic-types/content'
-import { PageContributions, Request, Response } from 'enonic-types/controller'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { Phrases } from '../../../lib/types/language'
@@ -24,7 +23,7 @@ const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
 
-exports.get = function(req: Request): Response {
+exports.get = function(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -32,9 +31,9 @@ exports.get = function(req: Request): Response {
   }
 }
 
-exports.preview = (req: Request): Response => renderPart(req)
+exports.preview = (req: XP.Request): XP.Response => renderPart(req)
 
-function renderPart(req: Request): Response {
+function renderPart(req: XP.Request): XP.Response {
   const page: Content<Statistics> = getContent()
   const statistic: StatisticInListing = (page.data.statistic && getStatisticByIdFromRepo(page.data.statistic)) as StatisticInListing
   const shortName: string | undefined = statistic && statistic.shortName ? statistic.shortName : undefined
@@ -87,7 +86,7 @@ function renderPart(req: Request): Response {
     }),
     pageContributions: statbankLinkComponent.renderPageContributions({
       clientRender: req.mode !== 'edit'
-    }) as PageContributions,
+    }) as XP.PageContributions,
     contentType: 'text/html'
   }
 }

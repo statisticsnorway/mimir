@@ -1,7 +1,6 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { GetPermissionsResult, PermissionsParams } from 'enonic-types/content'
 import { AuthInfo } from 'enonic-types/context'
-import { Request } from 'enonic-types/controller'
 
 const {
   getPermissions
@@ -10,7 +9,7 @@ const {
   get: getContext
 } = __non_webpack_require__('/lib/xp/context')
 
-export function hasWritePermissionsAndPreview(req: Request, key: string): boolean {
+export function hasWritePermissionsAndPreview(req: XP.Request, key: string): boolean {
   if (req.mode === 'preview') {
     return hasWritePermissions(key)
   }
@@ -32,7 +31,7 @@ export function hasWritePermissions(key: string): boolean {
 
 export interface PermissionsLib {
   hasWritePermissions: (key: string) => boolean;
-  hasWritePermissionsAndPreview: (req: Request, key: string) => boolean;
+  hasWritePermissionsAndPreview: (req: XP.Request, key: string) => boolean;
 }
 
 interface AuthInfoExtended extends AuthInfo {

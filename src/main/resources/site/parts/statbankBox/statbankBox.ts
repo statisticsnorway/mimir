@@ -1,5 +1,4 @@
 import { Content } from 'enonic-types/content'
-import { PageContributions, Request, Response } from 'enonic-types/controller'
 import { ResourceKey, render } from 'enonic-types/thymeleaf'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { Phrases } from '../../../lib/types/language'
@@ -27,7 +26,7 @@ const STATBANKWEB_URL: string = app.config && app.config['ssb.statbankweb.baseUr
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view: ResourceKey = resolve('./statbankBox.html')
 
-exports.get = function(req: Request): Response {
+exports.get = function(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -35,9 +34,9 @@ exports.get = function(req: Request): Response {
   }
 }
 
-exports.preview = (req: Request): Response => renderPart(req)
+exports.preview = (req: XP.Request): XP.Response => renderPart(req)
 
-function renderPart(req: Request): Response {
+function renderPart(req: XP.Request): XP.Response {
   const page: Content<Statistics> = getContent()
   const config: StatbankBoxPartConfig = getComponent().config
   const phrases: Phrases = getPhrases(page)
@@ -46,7 +45,7 @@ function renderPart(req: Request): Response {
   return renderStatbankBox(parseStatbankBoxContent(page, config, phrases), isNotInEditMode)
 }
 
-function renderStatbankBox(statbankBoxContent: StatbankBoxProps, isNotInEditMode: boolean): Response {
+function renderStatbankBox(statbankBoxContent: StatbankBoxProps, isNotInEditMode: boolean): XP.Response {
   const statbankBoxComponent: React4xpObject = new React4xp('StatbankBox')
     .setProps({
       ...statbankBoxContent
@@ -64,7 +63,7 @@ function renderStatbankBox(statbankBoxContent: StatbankBoxProps, isNotInEditMode
     }),
     pageContributions: statbankBoxComponent.renderPageContributions({
       clientRender: isNotInEditMode
-    }) as PageContributions
+    }) as XP.PageContributions
   }
 }
 
