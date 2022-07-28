@@ -1,9 +1,5 @@
-import { EmailParams } from 'enonic-types/mail'
+import { send, EmailParams } from '/lib/xp/mail'
 import { request, HttpRequestParams, HttpResponse } from '/lib/http-client'
-
-const {
-  send
-} = __non_webpack_require__('/lib/xp/mail')
 
 exports.post = (req: XP.Request): XP.Response => {
   const formData: ContactFormData = JSON.parse(req.body)

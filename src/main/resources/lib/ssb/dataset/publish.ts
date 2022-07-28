@@ -7,7 +7,7 @@ import { StatisticInListing } from '../dashboard/statreg/types'
 import { NodeQueryHit } from '/lib/xp/node'
 import { Statistic } from '../../../site/mixins/statistic/statistic'
 import { listener, EnonicEvent } from '/lib/xp/event'
-import { TaskInfo } from 'enonic-types/task'
+import { TaskInfo } from '/lib/xp/task'
 
 const {
   JobNames,

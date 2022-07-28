@@ -1,6 +1,6 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { RepoNode } from '/lib/xp/node'
-import { RepositoryConfig } from 'enonic-types/repo'
+import { RepositoryConfig } from '/lib/xp/repo'
 
 const {
   getRepo,
