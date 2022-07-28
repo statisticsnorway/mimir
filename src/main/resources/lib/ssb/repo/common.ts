@@ -5,13 +5,11 @@ import { NodeCreateParams,
   RepoConnection,
   RepoNode } from 'enonic-types/node'
 import { EditorCallback } from './eventLog'
+import { run } from '/lib/xp/context'
 
 const {
   getUser
 } = __non_webpack_require__('/lib/xp/auth')
-const {
-  run
-} = __non_webpack_require__('/lib/xp/context')
 const {
   connect
 } = __non_webpack_require__('/lib/xp/node')

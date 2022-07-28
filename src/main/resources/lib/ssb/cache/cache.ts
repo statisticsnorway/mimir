@@ -1,6 +1,7 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { EnonicEvent, EnonicEventData } from 'enonic-types/event'
 import { query, get, QueryResponse, Content } from '/lib/xp/content'
+import { run } from '/lib/xp/context'
 import { JSONstat } from '../../types/jsonstat-toolkit'
 import { TbmlDataUniform } from '../../types/xmlParser'
 import { DATASET_REPO, DatasetRepoNode } from '../repo/dataset'
@@ -15,9 +16,6 @@ const {
   listener,
   send
 } = __non_webpack_require__('/lib/xp/event')
-const {
-  run
-} = __non_webpack_require__('/lib/xp/context')
 const {
   executeFunction, sleep, submitTask
 } = __non_webpack_require__('/lib/xp/task')

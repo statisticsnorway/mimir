@@ -3,16 +3,13 @@ import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { DataSource as DataSourceType, DatasetRepoNode } from '../repo/dataset'
 import { JSONstat } from '../../types/jsonstat-toolkit'
 import { StatbankSavedRaw, TbmlDataUniform } from '../../types/xmlParser'
-import { RunContext } from 'enonic-types/context'
+import { run, RunContext } from '/lib/xp/context'
 import { User } from 'enonic-types/auth'
 import { TbprocessorParsedResponse } from './tbprocessor/tbml'
 
 const {
   Events
 } = __non_webpack_require__('/lib/ssb/repo/query')
-const {
-  run
-} = __non_webpack_require__('/lib/xp/context')
 const {
   getUser
 } = __non_webpack_require__('/lib/xp/auth')

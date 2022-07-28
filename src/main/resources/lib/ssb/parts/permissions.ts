@@ -1,10 +1,6 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { getPermissions, GetPermissionsResult, PermissionsParams } from '/lib/xp/content'
-import { AuthInfo } from 'enonic-types/context'
-
-const {
-  get: getContext
-} = __non_webpack_require__('/lib/xp/context')
+import { get as getContext, AuthInfo } from '/lib/xp/context'
 
 export function hasWritePermissionsAndPreview(req: XP.Request, key: string): boolean {
   if (req.mode === 'preview') {

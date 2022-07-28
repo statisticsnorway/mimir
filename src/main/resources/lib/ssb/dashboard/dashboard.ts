@@ -5,7 +5,7 @@ import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { Events, QueryInfoNode } from '../repo/query'
 import { EVENT_LOG_REPO, EVENT_LOG_BRANCH, LogSummary } from '../repo/eventLog'
 import { NodeQueryHit, RepoNode } from 'enonic-types/node'
-import { RunContext } from 'enonic-types/context'
+import { run, RunContext } from '/lib/xp/context'
 import { Socket, SocketEmitter } from '../../types/socket'
 import { JSONstat } from '../../types/jsonstat-toolkit'
 import { TbmlDataUniform } from '../../types/xmlParser'
@@ -52,9 +52,6 @@ const {
 const {
   localize
 } = __non_webpack_require__('/lib/xp/i18n')
-const {
-  run
-} = __non_webpack_require__('/lib/xp/context')
 const {
   fromDatasetRepoCache
 } = __non_webpack_require__('/lib/ssb/cache/cache')

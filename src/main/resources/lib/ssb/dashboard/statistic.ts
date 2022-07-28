@@ -5,7 +5,7 @@ import {   query, get as getContent, Content, QueryResponse } from '/lib/xp/cont
 import { StatisticInListing, VariantInListing } from './statreg/types'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { ProcessXml, RefreshDatasetResult, DashboardJobInfo } from './dashboard'
-import { RunContext } from 'enonic-types/context'
+import { run, RunContext } from '/lib/xp/context'
 import { DatasetRepoNode } from '../repo/dataset'
 import { Highchart } from '../../../site/content-types/highchart/highchart'
 import { Table } from '../../../site/content-types/table/table'
@@ -36,9 +36,6 @@ const {
 const {
   users
 } = __non_webpack_require__('/lib/ssb/dashboard/dashboardUtils')
-const {
-  run
-} = __non_webpack_require__('/lib/xp/context')
 const {
   getTbprocessor,
   getTbprocessorKey

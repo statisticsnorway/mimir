@@ -1,6 +1,6 @@
 import { UserQueryResult } from 'enonic-types/auth'
 import { Content } from '/lib/xp/content'
-import { RunContext } from 'enonic-types/context'
+import { run, RunContext } from '/lib/xp/context'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { JobEventNode, JobInfoNode } from '../repo/job'
 import { StatRegRefreshResult } from '../repo/statreg'
@@ -39,9 +39,6 @@ const {
   findUsers,
   createUser
 } = __non_webpack_require__('/lib/xp/auth')
-const {
-  run
-} = __non_webpack_require__('/lib/xp/context')
 const {
   deleteExpiredEventLogs
 } = __non_webpack_require__('/lib/ssb/cron/eventLog')

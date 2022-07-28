@@ -20,9 +20,8 @@ const {
 const {
   create: createScheduledJob
 } = __non_webpack_require__('/lib/xp/scheduler')
-const {
-  run
-} = __non_webpack_require__('/lib/xp/context')
+
+import { run } from '/lib/xp/context'
 
 exports.run = function(props: PublishDatasetConfig): void {
   const {
