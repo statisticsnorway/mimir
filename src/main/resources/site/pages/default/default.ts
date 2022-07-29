@@ -84,7 +84,7 @@ const previewOverride: object = {
 
 export const GA_TRACKING_ID: string | null = app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const view: ResourceKey = resolve('default.html')
 
 exports.get = function(req: XP.Request): XP.Response {

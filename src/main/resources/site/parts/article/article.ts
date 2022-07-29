@@ -21,7 +21,7 @@ const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 
 exports.get = (req: XP.Request): React4xpResponse | XP.Response => {
   try {

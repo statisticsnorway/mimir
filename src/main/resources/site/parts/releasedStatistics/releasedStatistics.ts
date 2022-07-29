@@ -7,7 +7,7 @@ import { Component } from '/lib/xp/portal'
 import { ReleasedStatisticsPartConfig } from './releasedStatistics-part-config'
 import { YearReleases } from '../../../lib/ssb/utils/variantUtils'
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 
 const {
   localize

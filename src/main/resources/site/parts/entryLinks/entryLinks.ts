@@ -24,7 +24,7 @@ const {
   getAttachmentContent
 } = __non_webpack_require__('/lib/ssb/utils/utils')
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const view: ResourceKey = resolve('./entryLinks.html') as ResourceKey
 
 exports.get = (req: XP.Request) => {

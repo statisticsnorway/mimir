@@ -17,7 +17,7 @@ const {
   getImageAlt
 } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const view: ResourceKey = resolve('./profiledBox.html')
 
 exports.get = function(req: XP.Request): XP.Response {

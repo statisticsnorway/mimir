@@ -17,7 +17,7 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const {
   getLanguage
 } = __non_webpack_require__('/lib/ssb/utils/language')

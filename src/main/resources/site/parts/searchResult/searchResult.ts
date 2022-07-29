@@ -8,7 +8,7 @@ import { NodeQueryResponse, RepoNode } from '/lib/xp/node'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import { BestBetContent } from '../../../lib/ssb/repo/bestbet'
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const {
   solrSearch
 } = __non_webpack_require__('/lib/ssb/utils/solrUtils')

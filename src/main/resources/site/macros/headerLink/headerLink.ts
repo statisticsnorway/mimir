@@ -5,7 +5,7 @@ import { get, Content } from '/lib/xp/content'
 const {
   attachmentUrl, pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 
 exports.macro = (context: XP.MacroContext): React4xpResponse => {
   return renderPart(context)

@@ -1,4 +1,4 @@
-import { React4xp, React4xpObject, React4xpPageContributionOptions, React4xpResponse } from '../../../lib/types/react4xp'
+import {render as r4XpRender, RenderResponse} from '/lib/enonic/react4xp'
 import { getComponent,
   getContent,
   serviceUrl,
@@ -17,7 +17,7 @@ import { DropdownItem, DropdownItems } from '../../../lib/types/components'
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const {
   getLanguage
 } = __non_webpack_require__( '/lib/ssb/utils/language')
@@ -30,7 +30,7 @@ const {
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 const view: ResourceKey = resolve('./bkibolCalculator.html') as ResourceKey
 
-exports.get = function(req: XP.Request): React4xpResponse | XP.Response {
+exports.get = function(req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -47,7 +47,7 @@ exports.preview = function( req: XP.Request ) {
 }
 
 
-function renderPart(req: XP.Request): React4xpResponse {
+function renderPart(req: XP.Request): RenderResponse {
   const page: Content<BkibolCalculatorPartConfig> = getContent()
   let bkibolCalculator: CalculatorComponent
   if (req.mode === 'edit' || req.mode === 'inline') {
@@ -98,8 +98,9 @@ function getBkibolCalculatorComponent(page: Content<BkibolCalculatorPartConfig>)
     id: part.config.bkibolCalculatorArticle
   })
 
-  const bkibolCalculator: React4xpObject = new React4xp('BkibolCalculator')
-    .setProps({
+  const bkibolCalculator: RenderResponse = r4XpRender(
+      'BkibolCalculator',
+      {
       bkibolServiceUrl: serviceUrl({
         service: 'bkibol'
       }),
@@ -111,12 +112,8 @@ function getBkibolCalculatorComponent(page: Content<BkibolCalculatorPartConfig>)
       lastNumberText,
       lastUpdated
     })
-    .setId('bkibolCalculatorId')
-    .uniqueId()
 
-  const body: string = render(view, {
-    bkibolCalculatorId: bkibolCalculator.react4xpId
-  })
+  const body: string = render(view)
   return {
     component: bkibolCalculator,
     body: bkibolCalculator.renderBody({

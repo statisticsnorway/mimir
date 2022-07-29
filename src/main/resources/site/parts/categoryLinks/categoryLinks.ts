@@ -1,4 +1,4 @@
-import {React4xpObject, React4xpResponse} from "../../../lib/types/react4xp";
+import {render as r4XpRender, RenderResponse} from '/lib/enonic/react4xp'
 import {  getComponent,
   getContent,
   pageUrl,
@@ -15,7 +15,7 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const {
   getLanguage
 } = __non_webpack_require__('/lib/ssb/utils/language')
@@ -37,7 +37,7 @@ const NO_LINKS_FOUND = {
   contentType: 'text/html'
 }
 
-function renderPart(req: XP.Request): XP.Response | React4xpResponse {
+function renderPart(req: XP.Request): XP.Response | RenderResponse {
   const part: Component<CategoryLinksPartConfig> = getComponent()
   const page: Content = getContent()
   const language: Language = getLanguage(page)
@@ -60,33 +60,50 @@ function renderPart(req: XP.Request): XP.Response | React4xpResponse {
   }
 
   if (links && links.length) {
-    const categoryLinksComponent: React4xpObject = new React4xp('CategoryLinks')
-      .setProps({
-        links: links.map((link) => {
-          return {
-            href: pageUrl({
-              id: link.href
-            }),
-            titleText: link.titleText,
-            subText: link.subText
-          }
-        }),
-        methodsAndDocumentationUrl,
-        methodsAndDocumentationLabel: phrases.methodsAndDocumentation
-      })
-      .setId('categoryLink')
-      .uniqueId()
+    // const categoryLinksComponent: React4xpObject = new React4xp('CategoryLinks')
+    //   .setProps({
+    //     links: links.map((link) => {
+    //       return {
+    //         href: pageUrl({
+    //           id: link.href
+    //         }),
+    //         titleText: link.titleText,
+    //         subText: link.subText
+    //       }
+    //     }),
+    //     methodsAndDocumentationUrl,
+    //     methodsAndDocumentationLabel: phrases.methodsAndDocumentation
+    //   })
+    //   .setId('categoryLink')
+    //   .uniqueId()
+    //
+    // const body = render(view, {
+    //   categoryId: categoryLinksComponent.react4xpId
+    // })
 
-    const body = render(view, {
-      categoryId: categoryLinksComponent.react4xpId
-    })
+    const body = render(view)
 
-    return {
-      body: categoryLinksComponent.renderBody({
-        body
-      }),
-      pageContributions: categoryLinksComponent.renderPageContributions()
-    }
+    const categoryLinksComponent: RenderResponse =r4XpRender(
+        'CategoryLinks',
+        {
+          links: links.map((link) => {
+            return {
+              href: pageUrl({
+                id: link.href
+              }),
+              titleText: link.titleText,
+              subText: link.subText
+            }
+          }),
+          methodsAndDocumentationUrl,
+          methodsAndDocumentationLabel: phrases.methodsAndDocumentation
+        },
+        req,
+        {
+          body: body
+        })
+
+    return categoryLinksComponent
   }
   return NO_LINKS_FOUND
 }

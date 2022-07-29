@@ -10,7 +10,7 @@ import { RelatedExternalLinks } from '../../mixins/relatedExternalLinks/relatedE
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const {
   getContent
 } = __non_webpack_require__('/lib/xp/portal')

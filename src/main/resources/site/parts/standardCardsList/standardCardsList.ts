@@ -27,7 +27,7 @@ const {
   hasPath
 } = __non_webpack_require__('/lib/vendor/ramda')
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const view: ResourceKey = resolve('standardCardsList.html')
 
 exports.get = (req: XP.Request): XP.Response => {

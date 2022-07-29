@@ -11,7 +11,7 @@ import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const {
   getContent,
   getComponent,

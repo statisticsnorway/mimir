@@ -39,7 +39,7 @@ const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')

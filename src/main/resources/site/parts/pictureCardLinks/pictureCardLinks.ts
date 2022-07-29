@@ -16,7 +16,7 @@ const {
 } = __non_webpack_require__('/lib/xp/portal')
 
 const view: ResourceKey = resolve('./pictureCardLinks.html')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 
 exports.get = function(req: XP.Request): XP.Response {
   try {

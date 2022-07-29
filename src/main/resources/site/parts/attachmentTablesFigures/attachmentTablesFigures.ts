@@ -3,7 +3,7 @@ import { ResourceKey, render } from '/lib/thymeleaf'
 import { DatasetRepoNode } from '../../../lib/ssb/repo/dataset'
 import { JSONstat } from '../../../lib/types/jsonstat-toolkit'
 import { Phrases } from '../../../lib/types/language'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
+import {render as r4XpRender, RenderResponse} from '/lib/enonic/react4xp'
 import { TbmlDataUniform } from '../../../lib/types/xmlParser'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { GA_TRACKING_ID } from '../../pages/default/default'
@@ -33,7 +33,7 @@ const {
 
 const tableController: { getProps: (req: XP.Request, tableId: string) => object } = __non_webpack_require__('../table/table')
 const highchartController: { preview: (req: XP.Request, id: string) => XP.Response } = __non_webpack_require__('../highchart/highchart')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const view: ResourceKey = resolve('./attachmentTablesFigures.html')
 
 exports.get = function(req: XP.Request): XP.Response {
@@ -79,8 +79,9 @@ function getTablesAndFiguresComponent(page: Content<Statistics>, req: XP.Request
 
   const attachmentTableAndFigureView: Array<AttachmentTablesFiguresData> = getTablesAndFigures(attachmentTablesAndFigures, req, phrases)
 
-  const accordionComponent: React4xpObject = new React4xp('AttachmentTablesFigures')
-    .setProps({
+  const accordionComponent: RenderResponse = r4XpRender(
+      'AttachmentTablesFigures',
+      {
       accordions: attachmentTableAndFigureView.map(({
         id, open, subHeader, body, contentType, props
       }) => {
@@ -100,22 +101,14 @@ function getTablesAndFiguresComponent(page: Content<Statistics>, req: XP.Request
       showLess: phrases.showLess,
       appName: app.name,
       GA_TRACKING_ID: GA_TRACKING_ID
-    })
-    .setId('accordion')
-    .uniqueId()
+    },
+      req,
+      {id: 'accordion'})
 
-  const accordionBody: string = accordionComponent.renderBody({
-    body: render(view, {
-      title,
-      accordionId: accordionComponent.react4xpId
-    }),
-    clientRender: true
-  })
+  const accordionBody: string = accordionComponent.body
 
-  const accordionPageContributions: string = accordionComponent.renderPageContributions({
-    clientRender: true
-  })
-  const pageContributions: XP.PageContributions = getFinalPageContributions(accordionPageContributions as XP.PageContributions, attachmentTableAndFigureView)
+  const accordionPageContributions: XP.PageContributions = accordionComponent.pageContributions
+  const pageContributions: XP.PageContributions = getFinalPageContributions(accordionPageContributions, attachmentTableAndFigureView)
 
   return {
     body: accordionBody,

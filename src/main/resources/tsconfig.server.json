@@ -1,9 +1,15 @@
 {
   "extends": "../../../tsconfig",
   "compilerOptions": {
-    "types": ["node", "enonic-types"],
     "module": "commonjs",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "sourceMap": false,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "types": [
+      "node",
+      "enonic-types"
+    ]
   },
   "exclude": [
     "assets"

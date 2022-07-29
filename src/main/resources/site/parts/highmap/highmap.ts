@@ -26,7 +26,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/error/error')
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 
 interface MapFeatures {
   properties: {

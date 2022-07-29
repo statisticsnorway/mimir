@@ -1,10 +1,12 @@
 import { render } from '/lib/thymeleaf'
 
+import {render as r4XpRender} from '/lib/enonic/react4xp'
+
 const {
   getComponent
 } = __non_webpack_require__('/lib/xp/portal')
 
-const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const view = resolve('columns.html')
 
 exports.get = function(req) {
@@ -17,11 +19,17 @@ exports.get = function(req) {
   } = component.config
   const isGrid = component.config.isGrid && req.mode !== 'edit'
 
-  const divider = new React4xp('Divider')
+/*  const divider = new React4xp('Divider')
     .setProps({
       light: true
     })
-    .uniqueId()
+    .uniqueId()*/
+
+  const divider = r4XpRender(
+      'Divider',
+      {
+        light: true
+      })
 
   // Default 50/50
   let leftSize = 'col-12 '

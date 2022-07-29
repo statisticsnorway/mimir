@@ -8,7 +8,7 @@ import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { renderError } from '../../../lib/ssb/error/error'
 import { GA_TRACKING_ID } from '../../pages/default/default'
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 
 exports.get = (req: XP.Request): React4xpResponse | XP.Response => {
   try {

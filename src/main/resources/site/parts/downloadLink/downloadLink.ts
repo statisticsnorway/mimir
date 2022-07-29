@@ -6,7 +6,7 @@ import { ResourceKey, render } from '/lib/thymeleaf'
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp') as React4xp
+
 
 const view: ResourceKey = resolve('./downloadLink.html') as ResourceKey
 

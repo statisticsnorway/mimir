@@ -5,7 +5,7 @@ import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 const {
   getComponent
 } = __non_webpack_require__('/lib/xp/portal')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp') as React4xp
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')

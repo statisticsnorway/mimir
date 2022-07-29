@@ -11,7 +11,7 @@ const {
   attachmentUrl,
   pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 
 exports.macro = function(context: XP.MacroContext): React4xpResponse {
   const config: LinksConfig & TableLink & HeaderLink & ProfiledLink = context.params

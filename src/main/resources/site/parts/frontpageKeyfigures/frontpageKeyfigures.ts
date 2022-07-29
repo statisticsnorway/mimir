@@ -6,7 +6,7 @@ import {get, Content} from "/lib/xp/content";
 import {KeyFigure} from "../../content-types/keyFigure/keyFigure";
 import {KeyFigureView} from "../../../lib/ssb/parts/keyFigure";
 
-const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')

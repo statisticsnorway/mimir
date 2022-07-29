@@ -14,7 +14,7 @@ const {
 const {
   getAllStatisticsFromRepo
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const {
   getContent
 } = __non_webpack_require__('/lib/xp/portal')

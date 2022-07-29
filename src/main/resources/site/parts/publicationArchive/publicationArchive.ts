@@ -11,7 +11,7 @@ const {
 const {
   getContent, serviceUrl, getComponent
 } = __non_webpack_require__('/lib/xp/portal')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const {
   getPublications
 } = __non_webpack_require__( '/lib/ssb/parts/publicationArchive')

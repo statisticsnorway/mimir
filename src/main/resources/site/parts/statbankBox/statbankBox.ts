@@ -23,7 +23,7 @@ const {
 
 
 const STATBANKWEB_URL: string = app.config && app.config['ssb.statbankweb.baseUrl'] ? app.config['ssb.statbankweb.baseUrl'] : 'https://www.ssb.no/statbank'
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const view: ResourceKey = resolve('./statbankBox.html')
 
 exports.get = function(req: XP.Request): XP.Response {

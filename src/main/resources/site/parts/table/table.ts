@@ -11,7 +11,7 @@ import { GA_TRACKING_ID } from '../../pages/default/default'
 import { TablePartConfig } from './table-part-config'
 import { DataSource as DataSourceType } from '../../../lib/ssb/repo/dataset'
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const {
   getContent, getComponent, pageUrl, assetUrl
 } = __non_webpack_require__('/lib/xp/portal')

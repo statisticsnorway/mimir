@@ -26,7 +26,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/error/error')
 
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp') as React4xp
+
 const view: ResourceKey = resolve('./menuDropdown.html')
 
 exports.get = (req: XP.Request):XP.Response | React4xpResponse => {

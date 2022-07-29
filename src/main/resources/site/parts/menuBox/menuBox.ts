@@ -24,7 +24,7 @@ const {
 } = __non_webpack_require__('/lib/util')
 
 const view: ResourceKey = resolve('./menuBox.html')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp') as React4xp
+
 
 exports.get = function(req:XP.Request):XP.Response | React4xpResponse | string {
   try {

@@ -9,7 +9,7 @@ const {
 const {
   getContent, serviceUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')

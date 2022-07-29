@@ -16,7 +16,7 @@ const {
 const {
   localize
 } = __non_webpack_require__('/lib/xp/i18n')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 
 
 exports.get = (req: XP.Request): React4xpResponse | XP.Response => {

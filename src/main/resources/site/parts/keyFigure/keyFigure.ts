@@ -5,7 +5,7 @@ import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { SiteConfig } from '../../../site/site-config'
 import { KeyFigurePartConfig } from './keyFigure-part-config'
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const {
   get: getKeyFigures,
   parseKeyFigure

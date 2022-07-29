@@ -9,7 +9,7 @@ import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 const {
   localize
 } = __non_webpack_require__('/lib/xp/i18n')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')

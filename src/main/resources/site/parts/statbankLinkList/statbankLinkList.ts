@@ -15,7 +15,7 @@ const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const util = __non_webpack_require__('/lib/util')
 const view: ResourceKey = resolve('./statbankLinkList.html')
 const STATBANKWEB_URL: string = app.config && app.config['ssb.statbankweb.baseUrl'] ? app.config['ssb.statbankweb.baseUrl'] : 'https://www.ssb.no/statbank'

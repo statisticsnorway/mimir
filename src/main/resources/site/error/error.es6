@@ -7,7 +7,7 @@ const {
 const {
   getLanguage
 } = __non_webpack_require__('/lib/ssb/utils/language')
-const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 
 const fourOFourView = resolve('./404.html')
