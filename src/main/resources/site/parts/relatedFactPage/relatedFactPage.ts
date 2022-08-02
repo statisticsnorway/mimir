@@ -1,6 +1,6 @@
 import { get, query, Content, QueryResponse } from '/lib/xp/content'
 import { Phrases } from '../../../lib/types/language'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { SEO } from '../../../services/news/news'
 import { Article } from '../../content-types/article/article'
 import { ContentList } from '../../content-types/contentList/contentList'
@@ -29,7 +29,7 @@ const {
 } = __non_webpack_require__('/lib/util')
 
 
-exports.get = function(req: XP.Request): XP.Response | React4xpResponse {
+exports.get = function(req: XP.Request): XP.Response | RenderResponse {
   try {
     const page: Content<Article> = getContent()
     const config: RelatedFactPagePartConfig = getComponent().config
@@ -59,10 +59,10 @@ exports.get = function(req: XP.Request): XP.Response | React4xpResponse {
   }
 }
 
-exports.preview = (req: XP.Request, relatedFactPageConfig: RelatedFactPageConfig | undefined): XP.Response | React4xpResponse =>
+exports.preview = (req: XP.Request, relatedFactPageConfig: RelatedFactPageConfig | undefined): XP.Response | RenderResponse =>
   renderPart(req, relatedFactPageConfig)
 
-function renderPart(req: XP.Request, relatedFactPageConfig: RelatedFactPageConfig | undefined): XP.Response | React4xpResponse {
+function renderPart(req: XP.Request, relatedFactPageConfig: RelatedFactPageConfig | undefined): XP.Response | RenderResponse {
   const page: Content<Article> = getContent()
   if (req.mode === 'edit' || req.mode === 'inline') {
     return renderRelatedFactPage(req, page, relatedFactPageConfig)
@@ -73,7 +73,7 @@ function renderPart(req: XP.Request, relatedFactPageConfig: RelatedFactPageConfi
   }
 }
 
-function renderRelatedFactPage(req: XP.Request, page: Content, relatedFactPageConfig: RelatedFactPageConfig | undefined): XP.Response | React4xpResponse {
+function renderRelatedFactPage(req: XP.Request, page: Content, relatedFactPageConfig: RelatedFactPageConfig | undefined): XP.Response | RenderResponse {
   const phrases: Phrases = getPhrases(page)
   const config: RelatedFactPagePartConfig = getComponent().config
   const mainTitle: string = config.title ? config.title : phrases.relatedFactPagesHeading
@@ -96,13 +96,13 @@ function renderRelatedFactPage(req: XP.Request, page: Content, relatedFactPageCo
   }
 
   if (relatedFactPageConfig) {
-    return React4xp.render('site/parts/relatedFactPage/relatedFactPage', props, req, {
+    return render('site/parts/relatedFactPage/relatedFactPage', props, req, {
       body: `<section class="xp-part part-picture-card"></section>`
     })
   } else {
     // Render title only on page templates in edit mode
     if (req.mode === 'edit' && page.type !== `${app.name}:article` && page.type !== `${app.name}:statistics`) {
-      return React4xp.render('site/parts/relatedFactPage/relatedFactPage', {
+      return render('site/parts/relatedFactPage/relatedFactPage', {
         mainTitle
       }, req, {
         body: `<section class="xp-part part-picture-card"></section>`

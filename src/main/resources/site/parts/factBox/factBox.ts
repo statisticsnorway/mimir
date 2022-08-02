@@ -1,6 +1,6 @@
 import { getComponent, processHtml, Component} from "/lib/xp/portal";
 import {FactBoxPartConfig} from "./factBox-part-config";
-import {React4xpObject, React4xpResponse} from "../../../lib/types/react4xp";
+import {render as r4XpRender, RenderResponse} from '/lib/enonic/react4xp'
 import {get, Content} from "/lib/xp/content";
 import {FactBox} from "../../content-types/factBox/factBox";
 import { ResourceKey, render } from '/lib/thymeleaf'
@@ -12,7 +12,7 @@ const {
 
 const view: ResourceKey = resolve('./factBox.html')
 
-exports.get = function(req: XP.Request): XP.Response | React4xpResponse {
+exports.get = function(req: XP.Request): XP.Response | RenderResponse {
   try {
     const part: Component<FactBoxPartConfig> = getComponent()
     return renderPart(req, part.config.factBox)
@@ -29,7 +29,7 @@ exports.preview = function(req: XP.Request, id: string) {
   }
 }
 
-function renderPart(req: XP.Request, factBoxId: string): XP.Response | React4xpResponse {
+function renderPart(req: XP.Request, factBoxId: string): XP.Response | RenderResponse {
   // throw an error if there is no selected factbox, or an empty section for edit mode
   if (!factBoxId) {
     if (req.mode === 'edit') {
@@ -47,21 +47,15 @@ function renderPart(req: XP.Request, factBoxId: string): XP.Response | React4xpR
   const text: string = processHtml({
     value: factBoxContent.data.text.replace(/&nbsp;/g, ' ')
   })
-  const factBox: React4xpObject = new React4xp('FactBox')
-    .setProps({
+  const body: string = render(view)
+  return r4XpRender(
+      'FactBox',
+      {
       header: factBoxContent.displayName,
       text
-    })
-    .setId('fact-box')
-    .uniqueId()
-
-  const body: string = render(view, {
-    factBoxId: factBox.react4xpId
-  })
-  return {
-    body: factBox.renderBody({
-      body
-    }),
-    pageContributions: factBox.renderPageContributions() as XP.PageContributions
-  }
+      },
+      req,
+      {
+        body: body
+      })
 }

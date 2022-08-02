@@ -1,7 +1,7 @@
 import { Article } from '../../content-types/article/article'
 import { pageUrl, getContent, getComponent, Component } from '/lib/xp/portal'
 import { ArticleListPartConfig } from './articleList-part-config'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import {render, RenderResponse} from '/lib/enonic/react4xp'
 import { query, AggregationsResponseEntry, Content } from '/lib/xp/content'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
@@ -17,13 +17,13 @@ const {
   getSubSubjects
 } = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
 
-exports.get = (req: XP.Request): React4xpResponse => {
+exports.get = (req: XP.Request): RenderResponse => {
   return renderPart(req)
 }
 
-exports.preview = (req: XP.Request): React4xpResponse => renderPart(req)
+exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
 
-function renderPart(req: XP.Request): React4xpResponse {
+function renderPart(req: XP.Request): RenderResponse {
   const content: Content = getContent()
   const component: Component<ArticleListPartConfig> = getComponent()
   const language: string = content.language ? content.language : 'nb'
@@ -46,7 +46,7 @@ function renderPart(req: XP.Request): React4xpResponse {
     archiveLinkUrl: component.config.pubArchiveUrl ? component.config.pubArchiveUrl : '#'
   }
 
-  return React4xp.render('site/parts/articleList/articleList', props, req)
+  return render('site/parts/articleList/articleList', props, req)
 }
 
 function getArticles(req: XP.Request, language: string): Array<Content<Article>> {

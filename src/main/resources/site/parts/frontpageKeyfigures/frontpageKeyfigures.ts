@@ -1,8 +1,8 @@
-import { ResourceKey, render } from '/lib/thymeleaf'
-import {React4xpObject, React4xpResponse} from "../../../lib/types/react4xp";
-import { getComponent, Component } from "/lib/xp/portal";
+import {render, ResourceKey} from '/lib/thymeleaf'
+import {render as r4XpRender, RenderResponse} from '/lib/enonic/react4xp'
+import {Component, getComponent} from "/lib/xp/portal";
 import {FrontpageKeyfiguresPartConfig} from "./frontpageKeyfigures-part-config";
-import {get, Content} from "/lib/xp/content";
+import {Content, get} from "/lib/xp/content";
 import {KeyFigure} from "../../content-types/keyFigure/keyFigure";
 import {KeyFigureView} from "../../../lib/ssb/parts/keyFigure";
 
@@ -36,7 +36,7 @@ const isKeyfigureData = (data: FrontPageKeyFigureData | undefined): data is Fron
   return !!data
 } // user-defined type guards <3
 
-function renderPart(req: XP.Request): XP.Response | React4xpResponse {
+function renderPart(req: XP.Request): XP.Response | RenderResponse {
   const part: Component<FrontpageKeyfiguresPartConfig> = getComponent()
   const keyFiguresPart: Array<FrontpageKeyfigure> = part.config.keyfiguresFrontpage ? data.forceArray(part.config.keyfiguresFrontpage) : []
 
@@ -67,30 +67,20 @@ function renderPart(req: XP.Request): XP.Response | React4xpResponse {
   }
 }
 
-function renderFrontpageKeyfigures(req: XP.Request, frontpageKeyfigures: Array<FrontPageKeyFigureData> ): React4xpResponse {
-  const frontpageKeyfiguresReact: React4xpObject = new React4xp('FrontpageKeyfigures')
-    .setProps({
-      keyFigures: frontpageKeyfigures.map((frontpageKeyfigure) => {
-        return {
-          ...frontpageKeyfigure
-        }
+function renderFrontpageKeyfigures(req: XP.Request, frontpageKeyfigures: Array<FrontPageKeyFigureData> ): RenderResponse {
+  return r4XpRender('FrontpageKeyfigures',
+      {
+        keyFigures: frontpageKeyfigures.map((frontpageKeyfigure) => {
+          return {
+            ...frontpageKeyfigure
+          }
+        })
+      },
+      req,
+      {
+        body: render(view),
+        clientRender: req.mode !== 'edit'
       })
-    })
-    .uniqueId()
-
-  const body: string = render(view, {
-    frontpageKeyfiguresId: frontpageKeyfiguresReact.react4xpId
-  })
-
-  return {
-    body: frontpageKeyfiguresReact.renderBody({
-      body,
-      clientRender: req.mode !== 'edit'
-    }),
-    pageContributions: frontpageKeyfiguresReact.renderPageContributions({
-      clientRender: req.mode !== 'edit'
-    })
-  }
 }
 
 interface FrontpageKeyfigure {

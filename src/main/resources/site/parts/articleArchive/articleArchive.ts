@@ -1,5 +1,5 @@
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import {render, RenderResponse} from '/lib/enonic/react4xp'
 import { query, Content, QueryResponse } from '/lib/xp/content'
 import { Article } from '../../content-types/article/article'
 import { ArticleArchive } from '../../content-types/articleArchive/articleArchive'
@@ -19,7 +19,7 @@ const {
 } = __non_webpack_require__('/lib/xp/i18n')
 
 
-exports.get = (req: XP.Request): XP.Response | React4xpResponse => {
+exports.get = (req: XP.Request): XP.Response | RenderResponse => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -29,7 +29,7 @@ exports.get = (req: XP.Request): XP.Response | React4xpResponse => {
 
 exports.preview = (req: XP.Request) => renderPart(req)
 
-function renderPart(req: XP.Request):React4xpResponse {
+function renderPart(req: XP.Request):RenderResponse {
   const page: Content<ArticleArchive> = getContent()
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   const listOfArticlesTitle: string = localize({
@@ -77,7 +77,7 @@ function renderPart(req: XP.Request):React4xpResponse {
     })
   }
 
-  return React4xp.render('ArticleArchive', props, req, {
+  return render('ArticleArchive', props, req, {
     body: '<section class="xp-part article-archive"></section>'
   })
 }

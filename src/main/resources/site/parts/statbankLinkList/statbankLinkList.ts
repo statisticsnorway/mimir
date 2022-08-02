@@ -2,7 +2,7 @@ import { Content } from '/lib/xp/content'
 import { ResourceKey, render } from '/lib/thymeleaf'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { Phrases } from '../../../lib/types/language'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
+import { render as r4xpRender, RenderResponse } from '/lib/enonic/react4xp'
 import { Statistics } from '../../content-types/statistics/statistics'
 
 const {
@@ -67,28 +67,22 @@ function renderPart(req: XP.Request): XP.Response {
     statbankLinks: util.data.forceArray(statbankLinkItemSet)
   }
 
-  const statbankLinkComponent: React4xpObject = new React4xp('StatbankLinkList')
-    .setProps({
+  const body: string = render(view, model)
+
+  return r4xpRender('StatbankLinkList',
+    {
       href: statbankLinkHref,
       iconType: 'arrowRight',
       className: 'statbank-link',
       children: linkTitleWithNumber,
       linkType: 'profiled'
+    },
+    req,
+    {
+      id: 'statbankLinkId',
+      body: body,
+      clientRender: req.mode !== 'edit'
     })
-    .setId('statbankLinkId')
-
-  const body: string = render(view, model)
-
-  return {
-    body: statbankLinkComponent.renderBody({
-      body,
-      clientRender: req.mode !== 'edit'
-    }),
-    pageContributions: statbankLinkComponent.renderPageContributions({
-      clientRender: req.mode !== 'edit'
-    }) as XP.PageContributions,
-    contentType: 'text/html'
-  }
 }
 
 interface StatbankLinkListModel {

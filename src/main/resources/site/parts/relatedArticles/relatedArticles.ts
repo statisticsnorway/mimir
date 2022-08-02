@@ -1,9 +1,9 @@
-import { query, get, Content } from '/lib/xp/content'
-import { ResourceKey, render } from '/lib/thymeleaf'
+import { Content, get, query } from '/lib/xp/content'
+import { render, ResourceKey } from '/lib/thymeleaf'
 import { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import { Phrases } from '../../../lib/types/language'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
+import { render as r4xpRender, RenderResponse } from '/lib/enonic/react4xp'
 import { SEO } from '../../../services/news/news'
 import { Article } from '../../content-types/article/article'
 import { Statistics } from '../../content-types/statistics/statistics'
@@ -84,8 +84,13 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
     }
   }
 
-  const relatedArticlesComponent: React4xpObject = new React4xp('RelatedArticles')
-    .setProps({
+  const body: string = render(view, {
+    // relatedArticlesId: relatedArticlesComponent.react4xpId,
+    heading: phrases.relatedArticlesHeading
+  })
+
+  return r4xpRender('RelatedArticles',
+    {
       relatedArticles: relatedArticles.map((article) => {
         if (article._selected === 'article') {
           return fromRelatedArticlesCache(req, article.article.article, () => {
@@ -101,9 +106,9 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
             let imageAlt: string | undefined = ' '
 
             if (!articleContent.x ||
-                !articleContent.x['com-enonic-app-metafields'] ||
-                !articleContent.x['com-enonic-app-metafields']['meta-data'] ||
-                !articleContent.x['com-enonic-app-metafields']['meta-data'].seoImage) {
+                  !articleContent.x['com-enonic-app-metafields'] ||
+                  !articleContent.x['com-enonic-app-metafields']['meta-data'] ||
+                  !articleContent.x['com-enonic-app-metafields']['meta-data'].seoImage) {
               imageSrc = imagePlaceholder({
                 width: 320,
                 height: 180
@@ -158,20 +163,12 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
       showAll: phrases.showAll,
       showLess: phrases.showLess,
       heading: phrases.relatedArticlesHeading
+    },
+    req,
+    {
+      id: 'related-articles',
+      body: body
     })
-    .setId('related-articles')
-    .uniqueId()
-
-  const body: string = render(view, {
-    relatedArticlesId: relatedArticlesComponent.react4xpId,
-    heading: phrases.relatedArticlesHeading
-  })
-  return {
-    body: relatedArticlesComponent.renderBody({
-      body
-    }),
-    pageContributions: relatedArticlesComponent.renderPageContributions() as XP.PageContributions
-  }
 }
 
 

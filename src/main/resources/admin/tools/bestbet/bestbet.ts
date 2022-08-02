@@ -2,7 +2,6 @@ import {render, ResourceKey} from '/lib/thymeleaf'
 import {getMainSubjects, SubjectItem} from '../../../lib/ssb/utils/subjectUtils'
 import {parseContributions} from '../../../lib/ssb/utils/utils'
 import {DropdownItems} from '../../../lib/types/components'
-// import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
 import {render as r4XpRender, RenderResponse} from '/lib/enonic/react4xp'
 
 const {

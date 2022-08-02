@@ -1,7 +1,6 @@
 import { Content } from '/lib/xp/content'
-import { ResourceKey, render } from '/lib/thymeleaf'
 import { Phrases } from '../../../lib/types/language'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
+import {render} from '/lib/enonic/react4xp'
 import { PubArchiveCalendarLinksPartConfig } from './pubArchiveCalendarLinks-part-config'
 
 const {
@@ -16,8 +15,6 @@ const {
 const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
-
-const view: ResourceKey = resolve('./pubArchiveCalendarLinks.html')
 
 exports.get = function(req: XP.Request): XP.Response {
   try {
@@ -43,26 +40,18 @@ function renderPart(req: XP.Request): XP.Response {
   const CalendarText: string = phrases.statCalendarText
 
   if (config.pubArchiveUrl || config.statCalendarUrl) {
-    const pubArchiveStatCalendarLinksComponent: React4xpObject = new React4xp('PubArchiveStatCalendarLinks')
-      .setProps({
+    return render('PubArchiveStatCalendarLinks',
+      {
         PublicationLink: config.pubArchiveUrl,
         PublicationText: PublicationText,
         CalendarLink: config.statCalendarUrl,
         CalendarText: CalendarText
-      })
-      .setId('CalendarLinks')
-      .uniqueId()
-
-    const body: string = render(view, {
-      categoryId: pubArchiveStatCalendarLinksComponent.react4xpId
-    })
-
-    return {
-      body: pubArchiveStatCalendarLinksComponent.renderBody({
-        body
-      }),
-      pageContributions: pubArchiveStatCalendarLinksComponent.renderPageContributions() as XP.PageContributions
-    }
+      },
+        req,
+        {
+          id: 'CalendarLinks',
+          body: '<section class="xp-part part-pubarchive-link"></section>'
+        })
   }
   return NO_LINKS_FOUND
 }

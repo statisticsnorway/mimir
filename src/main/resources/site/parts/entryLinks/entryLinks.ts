@@ -1,12 +1,9 @@
-import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
-import { getContent,
-  getComponent,
-  imageUrl,
-  Component } from '/lib/xp/portal'
-import { EntryLinksPartConfig } from './entryLinks-part-config'
-import { get, Content, Image } from '/lib/xp/content'
-import { Phrases } from '../../../lib/types/language'
-import { ResourceKey, render } from '/lib/thymeleaf'
+import {render as r4XpRender, RenderResponse} from '/lib/enonic/react4xp'
+import {Component, getComponent, getContent, imageUrl} from '/lib/xp/portal'
+import {EntryLinksPartConfig} from './entryLinks-part-config'
+import {Content, get, Image} from '/lib/xp/content'
+import {Phrases} from '../../../lib/types/language'
+import {render, ResourceKey} from '/lib/thymeleaf'
 
 const {
   data: {
@@ -37,7 +34,7 @@ exports.get = (req: XP.Request) => {
 
 exports.preview = (req: XP.Request) => renderPart(req)
 
-function renderPart(req: XP.Request): XP.Response | React4xpResponse {
+function renderPart(req: XP.Request): XP.Response | RenderResponse {
   const page: Content = getContent()
   const part: Component<EntryLinksPartConfig> = getComponent()
   const phrases: Phrases = getPhrases(page) as Phrases
@@ -54,37 +51,28 @@ function renderPart(req: XP.Request): XP.Response | React4xpResponse {
     }
   }
 
-  const isNotInEditMode: boolean = req.mode !== 'edit'
-  return renderEntryLinks(headerTitle, entryLinksContent, isNotInEditMode)
+  return renderEntryLinks(req, headerTitle, entryLinksContent)
 }
 
-function renderEntryLinks(headerTitle: string, entryLinksContent: EntryLinksPartConfig['entryLinks'], isNotInEditMode: boolean): React4xpResponse {
+function renderEntryLinks(req: XP.Request, headerTitle: string, entryLinksContent: EntryLinksPartConfig['entryLinks']): RenderResponse {
   if ( entryLinksContent && entryLinksContent.length > 0) {
-    const entryLinksComponent: React4xpObject = new React4xp('EntryLinks')
-      .setProps({
-        headerTitle,
-        entryLinks: parseEntryLinks(entryLinksContent)
-      })
-      .uniqueId()
-
-    const body: string = render(view, {
-      entryLinksId: entryLinksComponent.react4xpId,
-      label: headerTitle
-    })
-
-    return {
-      body: entryLinksComponent.renderBody({
-        body,
-        clientRender: isNotInEditMode
-      }),
-      pageContributions: entryLinksComponent.renderPageContributions({
-        clientRender: isNotInEditMode
-      })
-    }
+    return r4XpRender(
+        'EntryLinks',
+        {
+          headerTitle,
+          entryLinks: parseEntryLinks(entryLinksContent)
+        },
+        req,
+        {
+          body: render(view, {
+            label: headerTitle
+          }),
+          clientRender: req.mode !== 'edit'
+        })
   } else {
     return {
       body: '',
-      pageContributions: ''
+      pageContributions: {}
     }
   }
 }

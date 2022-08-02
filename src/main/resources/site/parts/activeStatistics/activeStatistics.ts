@@ -1,6 +1,6 @@
 import { get, Content } from '/lib/xp/content'
 import { ResourceKey, render } from '/lib/thymeleaf'
-import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
+import {render as r4XpRender, RenderResponse} from '/lib/enonic/react4xp'
 import { ActiveStatisticsPartConfig } from './activeStatistics-part-config'
 import { Statistics } from '../../content-types/statistics/statistics'
 
@@ -28,7 +28,7 @@ const {
 
 const view: ResourceKey = resolve('./activeStatistics.html')
 
-exports.get = (req: XP.Request): React4xpResponse | XP.Response => {
+exports.get = (req: XP.Request): RenderResponse | XP.Response => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -36,9 +36,9 @@ exports.get = (req: XP.Request): React4xpResponse | XP.Response => {
   }
 }
 
-exports.preview = (req: XP.Request): React4xpResponse => renderPart(req)
+exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
 
-function renderPart(req: XP.Request): React4xpResponse {
+function renderPart(req: XP.Request): RenderResponse {
   const page: Content = getContent()
   const partConfig: ActiveStatisticsPartConfig = getComponent().config
   const activeStatistics: ActiveStatisticsPartConfig['relatedStatisticsOptions'] = partConfig.relatedStatisticsOptions ?
@@ -56,7 +56,7 @@ function renderPart(req: XP.Request): React4xpResponse {
         body: render(view, {
           statisticsTitle
         }),
-        pageContributions: ''
+        pageContributions: '' as XP.PageContributions
       }
     }
   }
@@ -64,33 +64,33 @@ function renderPart(req: XP.Request): React4xpResponse {
   return renderActiveStatistics(statisticsTitle, parseContent(activeStatistics))
 }
 
-function renderActiveStatistics(statisticsTitle: string, activeStatisticsContent: Array<ActiveStatistic | undefined>): React4xpResponse {
+function renderActiveStatistics(statisticsTitle: string, activeStatisticsContent: Array<ActiveStatistic | undefined>): RenderResponse {
   if (activeStatisticsContent && activeStatisticsContent.length) {
-    const activeStatisticsXP: React4xpObject = new React4xp('StatisticsCards')
-      .setProps({
+    const body: string = render(view)
+    const activeStatisticsXP: RenderResponse = r4XpRender(
+        'StatisticsCards',
+        {
         headerTitle: statisticsTitle,
         statistics: activeStatisticsContent.map((statisticsContent) => {
           return {
             ...statisticsContent
           }
         })
-      })
-      .uniqueId()
+      },
+        null,
+        {
+          body: body
+        })
 
-    const body: string = render(view, {
-      activeStatisticsId: activeStatisticsXP.react4xpId
-    })
 
     return {
-      body: activeStatisticsXP.renderBody({
-        body
-      }),
-      pageContributions: activeStatisticsXP.renderPageContributions()
+      body: activeStatisticsXP.body,
+      pageContributions: activeStatisticsXP.pageContributions
     }
   }
   return {
     body: '',
-    pageContributions: ''
+    pageContributions: '' as XP.PageContributions
   }
 }
 

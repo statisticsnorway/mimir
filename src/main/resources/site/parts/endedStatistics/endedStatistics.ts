@@ -1,9 +1,8 @@
-import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
+import {render, RenderResponse} from '/lib/enonic/react4xp'
 import { EndedStatisticsPartConfig } from './endedStatistics-part-config'
 import { get, Content } from '/lib/xp/content'
 import { Phrases } from '../../../lib/types/language'
 import { Statistics } from '../../content-types/statistics/statistics'
-import { ResourceKey, render } from '/lib/thymeleaf'
 
 const {
   data: {
@@ -26,9 +25,6 @@ const {
   hasPath
 } = __non_webpack_require__('/lib/vendor/ramda')
 
-
-const view: ResourceKey = resolve('./endedStatistics.html') as ResourceKey
-
 exports.get = (req: XP.Request) => {
   try {
     return renderPart(req)
@@ -39,20 +35,20 @@ exports.get = (req: XP.Request) => {
 
 exports.preview = (req: XP.Request) => renderPart(req)
 
-function renderPart(req: XP.Request): XP.Response | React4xpResponse {
+function renderPart(req: XP.Request): XP.Response | RenderResponse {
   const page: Content = getContent()
   const part: EndedStatisticsPartConfig = getComponent().config
   const endedStatistics: EndedStatisticsPartConfig['relatedStatisticsOptions'] = part.relatedStatisticsOptions ? forceArray(part.relatedStatisticsOptions) : []
 
   const phrases: Phrases = getPhrases(page) as Phrases
 
-  return renderEndedStatistics(parseContent(endedStatistics), phrases)
+  return renderEndedStatistics(req, parseContent(endedStatistics), phrases)
 }
 
-function renderEndedStatistics(endedStatisticsContent: Array<EndedStatistic | undefined>, phrases: Phrases): React4xpResponse {
+function renderEndedStatistics(req: XP.Request, endedStatisticsContent: Array<EndedStatistic | undefined>, phrases: Phrases): RenderResponse {
   if (endedStatisticsContent && endedStatisticsContent.length) {
-    const endedStatisticsXP: React4xpObject = new React4xp('EndedStatistics')
-      .setProps({
+    return render('EndedStatistics',
+      {
         endedStatistics: endedStatisticsContent.map((statisticsContent) => {
           return {
             ...statisticsContent
@@ -60,23 +56,16 @@ function renderEndedStatistics(endedStatisticsContent: Array<EndedStatistic | un
         }),
         iconText: phrases.endedCardText,
         buttonText: phrases.endedStatistics
-      })
-      .uniqueId()
-
-    const body: string = render(view, {
-      endedStatisticsId: endedStatisticsXP.react4xpId
-    })
-
-    return {
-      body: endedStatisticsXP.renderBody({
-        body
-      }),
-      pageContributions: endedStatisticsXP.renderPageContributions()
-    }
+      },
+        req,
+        {
+          body: '<section class="xp-part part-ended-statistics"></section>'
+        }
+        )
   } else {
     return {
       body: '',
-      pageContributions: ''
+      pageContributions: {}
     }
   }
 }

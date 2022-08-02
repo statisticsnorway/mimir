@@ -1,5 +1,4 @@
-import { ResourceKey, render } from '/lib/thymeleaf'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
+import {render, RenderResponse} from '/lib/enonic/react4xp'
 import { PictureCardLinksPartConfig } from './pictureCardLinks-part-config'
 
 const {
@@ -15,9 +14,6 @@ const {
   imagePlaceholder
 } = __non_webpack_require__('/lib/xp/portal')
 
-const view: ResourceKey = resolve('./pictureCardLinks.html')
-
-
 exports.get = function(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
@@ -32,21 +28,14 @@ exports.preview = (req: XP.Request): XP.Response => {
 
 function renderPart(req: XP.Request): XP.Response {
   const config: PictureCardLinksPartConfig = getComponent().config
-  const pictureCardLinks: React4xpObject = new React4xp('PictureCardLinks')
-    .setProps({
-      pictureCardLinks: parsePictureCardLinks(config.pictureCardLinks)
-    })
-    .uniqueId()
-
-  const body: string = render(view, {
-    pictureCardLinksId: pictureCardLinks.react4xpId
-  })
-  return {
-    body: pictureCardLinks.renderBody({
-      body
-    }),
-    pageContributions: pictureCardLinks.renderPageContributions() as XP.PageContributions
-  }
+  return render('PictureCardLinks',
+      {
+        pictureCardLinks: parsePictureCardLinks(config.pictureCardLinks)
+      },
+      req,
+      {
+        body: '<section class="xp-part picture-card-links container my-5"></section>'
+      })
 }
 
 function parsePictureCardLinks(pictureCardLinks: PictureCardLinksPartConfig['pictureCardLinks']): Array<PictureCardLinksContent> {

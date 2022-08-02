@@ -1,6 +1,6 @@
 import { get, Content, MediaImage } from '/lib/xp/content'
 import { ResourceKey, render } from '/lib/thymeleaf'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
+import { render as r4xpRender, RenderResponse } from '/lib/enonic/react4xp'
 import { SEO } from '../../../services/news/news'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { StandardCardsListPartConfig } from './standardCardsList-part-config'
@@ -55,33 +55,27 @@ function renderPart(req: XP.Request): XP.Response {
     }
   }
 
-  return renderStandardCardsList(statisticsTitle, parseContent(standardCardsListConfig))
+  return renderStandardCardsList(req, statisticsTitle, parseContent(standardCardsListConfig))
 }
 
-function renderStandardCardsList(statisticsTitle: string | undefined, standardCardsListContent: StandardCardsListPartConfig['statisticsItemSet']): XP.Response {
+function renderStandardCardsList(req: XP.Request, statisticsTitle: string | undefined, standardCardsListContent: StandardCardsListPartConfig['statisticsItemSet']): XP.Response {
   if (standardCardsListContent && standardCardsListContent.length) {
-    const standardCardsComponent: React4xpObject = new React4xp('StatisticsCards')
-      .setProps({
+    const body: string = render(view, {
+      statisticsTitle
+    })
+    return r4xpRender('StatisticsCards',
+      {
         headerTitle: statisticsTitle,
         statistics: standardCardsListContent.map((statisticsContent) => {
           return {
             ...statisticsContent
           }
         })
+      },
+      req,
+      {
+        body: body
       })
-      .uniqueId()
-
-    const body: string = render(view, {
-      standardCardsListComponentId: standardCardsComponent.react4xpId,
-      statisticsTitle
-    })
-
-    return {
-      body: standardCardsComponent.renderBody({
-        body
-      }),
-      pageContributions: standardCardsComponent.renderPageContributions() as XP.PageContributions
-    }
   }
   return {
     body: undefined,

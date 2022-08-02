@@ -1,11 +1,10 @@
 import { Content } from '/lib/xp/content'
-import { ResourceKey, render } from '/lib/thymeleaf'
 import { allMonths, monthLabel, nextPeriod } from '../../../lib/ssb/utils/calculatorUtils'
 import { CalculatorPeriod } from '../../../lib/types/calculator'
 import { DropdownItems as MonthDropdownItems } from '../../../lib/types/components'
 import { Dataset, Dimension } from '../../../lib/types/jsonstat-toolkit'
 import { Language, Phrases } from '../../../lib/types/language'
-import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
+import {render, RenderResponse} from '/lib/enonic/react4xp'
 import { CalculatorConfig } from '../../content-types/calculatorConfig/calculatorConfig'
 import { PifCalculatorPartConfig } from './pifCalculator-part-config'
 
@@ -30,9 +29,8 @@ const {
   fromPartCache
 } = __non_webpack_require__('/lib/ssb/cache/partCache')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
-const view: ResourceKey = resolve('./pifCalculator.html')
 
-exports.get = function(req: XP.Request): XP.Response | React4xpResponse {
+exports.get = function(req: XP.Request): XP.Response | RenderResponse {
   try {
     return renderPart(req)
   } catch (e) {
@@ -40,7 +38,7 @@ exports.get = function(req: XP.Request): XP.Response | React4xpResponse {
   }
 }
 
-exports.preview = function(req: XP.Request): XP.Response | React4xpResponse {
+exports.preview = function(req: XP.Request): XP.Response | RenderResponse {
   try {
     return renderPart(req)
   } catch (e) {
@@ -48,24 +46,21 @@ exports.preview = function(req: XP.Request): XP.Response | React4xpResponse {
   }
 }
 
-function renderPart(req: XP.Request): XP.Response | React4xpResponse {
+function renderPart(req: XP.Request): XP.Response | RenderResponse {
   const page: Content = getContent()
-  let pifCalculator: React4xpResponse | undefined
+  let pifCalculator: RenderResponse | undefined
   if (req.mode === 'edit' || req.mode === 'inline') {
-    pifCalculator = getPifCalculatorComponent(page)
+    pifCalculator = getPifCalculatorComponent(req, page)
   } else {
     pifCalculator = fromPartCache(req, `${page._id}-pifCalculator`, () => {
-      return getPifCalculatorComponent(page)
+      return getPifCalculatorComponent(req, page)
     })
   }
 
-  return {
-    body: pifCalculator.body,
-    pageContributions: pifCalculator.pageContributions
-  }
+  return pifCalculator
 }
 
-function getPifCalculatorComponent(page: Content): React4xpResponse {
+function getPifCalculatorComponent(req: XP.Request, page: Content): RenderResponse {
   const partConfig: PifCalculatorPartConfig = getComponent().config
   const language: Language = getLanguage(page)
   const phrases: Phrases = language.phrases as Phrases
@@ -97,8 +92,8 @@ function getPifCalculatorComponent(page: Content): React4xpResponse {
     id: partConfig.pifCalculatorArticle
   }) : undefined
 
-  const pifCalculator: React4xpObject = new React4xp('PifCalculator')
-    .setProps({
+  return render('PifCalculator',
+    {
       pifServiceUrl: serviceUrl({
         service: 'pif'
       }),
@@ -110,19 +105,12 @@ function getPifCalculatorComponent(page: Content): React4xpResponse {
       lastUpdated,
       productGroups: productGroups(phrases),
       calculatorArticleUrl
-    })
-    .setId('pifCalculatorId')
-    .uniqueId()
-
-  const body: string = render(view, {
-    pifCalculatorId: pifCalculator.react4xpId
-  })
-  return {
-    body: pifCalculator.renderBody({
-      body
-    }),
-    pageContributions: pifCalculator.renderPageContributions({})
-  }
+    },
+      req,
+      {
+        id: 'pifCalculatorId',
+        body: '<section class="xp-part part-pif-calculator container"></section>'
+      })
 }
 
 function lastPeriod(pifData: Dataset | null): CalculatorPeriod | undefined {

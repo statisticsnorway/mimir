@@ -1,5 +1,4 @@
-import { ResourceKey, render } from '/lib/thymeleaf'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
+import {render} from '/lib/enonic/react4xp'
 import { ProfiledLinkIconPartConfig } from './profiledLinkIcon-part-config'
 
 const {
@@ -13,9 +12,6 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-
-
-const view: ResourceKey = resolve('./profiledLinkIcon.html')
 
 exports.get = function(req: XP.Request): XP.Response {
   try {
@@ -35,36 +31,29 @@ const NO_LINKS_FOUND: object = {
 function renderPart(req: XP.Request): XP.Response {
   const config: ProfiledLinkIconPartConfig = getComponent().config
 
-  return renderProfiledLinks(config.profiledLinkItemSet ? data.forceArray(config.profiledLinkItemSet) : [])
+  return renderProfiledLinks(req,config.profiledLinkItemSet ? data.forceArray(config.profiledLinkItemSet) : [])
 }
 
-function renderProfiledLinks(links: ProfiledLinkIconPartConfig['profiledLinkItemSet']): XP.Response {
+function renderProfiledLinks(req: XP.Request, links: ProfiledLinkIconPartConfig['profiledLinkItemSet']): XP.Response {
   if (links && links.length) {
-    const profiledLinkIconsXP: React4xpObject = new React4xp('Links')
-      .setProps({
-        links: links.map((link) => {
-          return {
-            children: link.text,
-            href: link.href ? pageUrl({
-              id: link.href
-            }) : '',
-            iconType: 'arrowRight',
-            linkType: 'profiled'
-          }
-        })
-      })
-      .uniqueId()
-
-    const body: string = render(view, {
-      profiledLinksId: profiledLinkIconsXP.react4xpId
-    })
-
-    return {
-      body: profiledLinkIconsXP.renderBody({
-        body
-      }),
-      pageContributions: profiledLinkIconsXP.renderPageContributions() as XP.PageContributions
-    }
+    return render('Links',
+        {
+          links: links.map((link) => {
+            return {
+              children: link.text,
+              href: link.href ? pageUrl({
+                id: link.href
+              }) : '',
+              iconType: 'arrowRight',
+              linkType: 'profiled'
+            }
+          })
+        },
+        req,
+        {
+          body: '<section class="xp-part part-profiledLinkIcon"></section>'
+        }
+    )
   }
   return NO_LINKS_FOUND
 }

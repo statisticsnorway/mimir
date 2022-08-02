@@ -25,7 +25,7 @@ const {
 
 import { get, Content, MediaImage } from '/lib/xp/content'
 import { SourceList, SourcesConfig } from '../../../lib/ssb/utils/utils'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { StaticVisualization } from '../../content-types/staticVisualization/staticVisualization'
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
@@ -33,7 +33,7 @@ import { DefaultPageConfig } from '../../pages/default/default-page-config'
 import { StaticVisualizationPartConfig } from './staticVisualization-part-config'
 import { HtmlTable } from '../../../lib/ssb/parts/table'
 
-exports.get = function(req: XP.Request): XP.Response | React4xpResponse {
+exports.get = function(req: XP.Request): XP.Response | RenderResponse {
   try {
     const config: StaticVisualizationPartConfig = getComponent().config
     const contentId: string | undefined = config.staticVisualizationContent
@@ -43,7 +43,7 @@ exports.get = function(req: XP.Request): XP.Response | React4xpResponse {
   }
 }
 
-exports.preview = (req: XP.Request, contentId: string | undefined): XP.Response | React4xpResponse => {
+exports.preview = (req: XP.Request, contentId: string | undefined): XP.Response | RenderResponse => {
   try {
     return renderPart(req, contentId)
   } catch (e) {
@@ -51,7 +51,7 @@ exports.preview = (req: XP.Request, contentId: string | undefined): XP.Response 
   }
 }
 
-function renderPart(req: XP.Request, contentId: string | undefined): React4xpResponse | XP.Response {
+function renderPart(req: XP.Request, contentId: string | undefined): RenderResponse | XP.Response {
   const page: DefaultPage = getContent() as DefaultPage
   const phrases: {source: string; descriptionStaticVisualization: string} = getPhrases(page)
   const sourcesLabel: string = phrases.source
@@ -106,7 +106,7 @@ function renderPart(req: XP.Request, contentId: string | undefined): React4xpRes
       tableData: htmlTable
     }
 
-    return React4xp.render('site/parts/staticVisualization/staticVisualization', props, req)
+    return render('site/parts/staticVisualization/staticVisualization', props, req)
   }
   return {
     body: null

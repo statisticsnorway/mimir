@@ -1,8 +1,7 @@
 import { Content } from '/lib/xp/content'
-import { ResourceKey, render } from '/lib/thymeleaf'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { Phrases } from '../../../lib/types/language'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { StatbankBoxPartConfig } from './statbankBox-part-config'
 
@@ -24,8 +23,6 @@ const {
 
 const STATBANKWEB_URL: string = app.config && app.config['ssb.statbankweb.baseUrl'] ? app.config['ssb.statbankweb.baseUrl'] : 'https://www.ssb.no/statbank'
 
-const view: ResourceKey = resolve('./statbankBox.html')
-
 exports.get = function(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
@@ -42,29 +39,19 @@ function renderPart(req: XP.Request): XP.Response {
   const phrases: Phrases = getPhrases(page)
 
   const isNotInEditMode: boolean = req.mode !== 'edit'
-  return renderStatbankBox(parseStatbankBoxContent(page, config, phrases), isNotInEditMode)
+  return renderStatbankBox(req, parseStatbankBoxContent(page, config, phrases), isNotInEditMode)
 }
 
-function renderStatbankBox(statbankBoxContent: StatbankBoxProps, isNotInEditMode: boolean): XP.Response {
-  const statbankBoxComponent: React4xpObject = new React4xp('StatbankBox')
-    .setProps({
+function renderStatbankBox(req: XP.Request, statbankBoxContent: StatbankBoxProps, isNotInEditMode: boolean): XP.Response {
+  return render('StatbankBox',
+    {
       ...statbankBoxContent
+    },
+    req,
+    {
+      body: '<section class="xp-part part-statbank-box"></section>',
+      clientRender: isNotInEditMode
     })
-    .uniqueId()
-
-  const body: string = render(view, {
-    statbankBoxId: statbankBoxComponent.react4xpId
-  })
-
-  return {
-    body: statbankBoxComponent.renderBody({
-      body,
-      clientRender: isNotInEditMode
-    }),
-    pageContributions: statbankBoxComponent.renderPageContributions({
-      clientRender: isNotInEditMode
-    }) as XP.PageContributions
-  }
 }
 
 function parseStatbankBoxContent(page: Content<Statistics>, config: StatbankBoxPartConfig, phrases: Phrases): StatbankBoxProps {

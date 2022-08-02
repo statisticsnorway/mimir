@@ -1,4 +1,4 @@
-import { query, Content, Page } from '/lib/xp/content'
+import { query, Content } from '/lib/xp/content'
 import { ResourceKey, render } from '/lib/thymeleaf'
 import { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
@@ -12,19 +12,17 @@ import { SEO } from '../../../services/news/news'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { SiteConfig } from '../../site-config'
 import { DefaultPageConfig } from './default-page-config'
-import { HeaderContent } from '../../../lib/ssb/parts/header'
+import { Component,
+  getContent,
+  processHtml,
+  assetUrl,
+  getSiteConfig } from '/lib/xp/portal'
 
 const {
   data: {
     forceArray
   }
 } = __non_webpack_require__('/lib/util')
-const {
-  getContent,
-  processHtml,
-  assetUrl,
-  getSiteConfig
-} = __non_webpack_require__('/lib/xp/portal')
 const {
   getLanguage
 } = __non_webpack_require__('/lib/ssb/utils/language')
@@ -532,7 +530,7 @@ interface DefaultPage extends Content {
   page: ExtendedPage;
 }
 
-interface ExtendedPage extends Page<object>{
+interface ExtendedPage extends Component<object>{
   config: DefaultPageConfig;
 }
 

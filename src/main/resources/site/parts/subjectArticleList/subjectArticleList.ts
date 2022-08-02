@@ -1,4 +1,4 @@
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { Content, QueryResponse } from '/lib/xp/content'
 import { PreparedArticles } from '../../../lib/ssb/utils/articleUtils'
 import { Article } from '../../content-types/article/article'
@@ -18,13 +18,13 @@ const {
   prepareArticles
 } = __non_webpack_require__( '/lib/ssb/utils/articleUtils')
 
-exports.get = (req: XP.Request): React4xpResponse => {
+exports.get = (req: XP.Request): RenderResponse => {
   return renderPart(req)
 }
 
-exports.preview = (req: XP.Request): React4xpResponse => renderPart(req)
+exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
 
-function renderPart(req: XP.Request): React4xpResponse {
+function renderPart(req: XP.Request): RenderResponse {
   const content: Content = getContent()
   const subTopicId: string = content._id
   const sort: string = req.params.sort ? req.params.sort : 'DESC'
@@ -67,7 +67,7 @@ function renderPart(req: XP.Request): React4xpResponse {
     showAllArticles: showAllArticles
   }
 
-  return React4xp.render('site/parts/subjectArticleList/subjectArticleList', props, req)
+  return render('site/parts/subjectArticleList/subjectArticleList', props, req)
 }
 
 interface PartProperties {

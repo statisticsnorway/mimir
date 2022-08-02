@@ -1,6 +1,6 @@
-import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
-import { Content } from '/lib/xp/content'
-import { Language, Phrases } from '../../../lib/types/language'
+import {render, RenderResponse} from '/lib/enonic/react4xp'
+import {Content} from '/lib/xp/content'
+import {Language, Phrases} from '../../../lib/types/language'
 
 const {
   getContent,
@@ -25,7 +25,7 @@ exports.get = function(req: XP.Request) {
 
 exports.preview = (req: XP.Request) => renderPart(req)
 
-function renderPart(req: XP.Request): React4xpResponse {
+function renderPart(req: XP.Request): RenderResponse {
   const page: Content = getContent()
   const language: Language = getLanguage(page) as Language
   const phrases: Phrases = language.phrases as Phrases
@@ -33,29 +33,25 @@ function renderPart(req: XP.Request): React4xpResponse {
     app.config['RECAPTCHA_SITE_KEY'] &&
     typeof app.config['RECAPTCHA_SITE_KEY'] == 'string' ? app.config['RECAPTCHA_SITE_KEY'] : ''
 
-  const contactForm: React4xpObject = new React4xp('site/parts/contactForm/contactForm')
-    .setProps({
-      recaptchaSiteKey: recaptchaSiteKey,
-      contactFormServiceUrl: serviceUrl({
-        service: 'contactForm'
-      }),
-      phrases: phrases,
-      language: language.code
-    }
-    )
-    .setId('contactFormId')
-    .uniqueId()
-
-  return {
-    body: contactForm.renderBody(),
-    pageContributions: contactForm.renderPageContributions({
-      pageContributions: {
-        headEnd: [
-          `<script src="https://www.google.com/recaptcha/api.js?render=${recaptchaSiteKey}"></script>`
-        ]
+  return render(
+      'site/parts/contactForm/contactForm',
+      {
+        recaptchaSiteKey: recaptchaSiteKey,
+        contactFormServiceUrl: serviceUrl({
+          service: 'contactForm'
+        }),
+        phrases: phrases,
+        language: language.code
       },
-      clientRender: req.mode !== 'edit'
-    })
-  }
+      req,
+      {
+        id: 'contactFormId',
+        pageContributions: {
+          headEnd: [
+            `<script src="https://www.google.com/recaptcha/api.js?render=${recaptchaSiteKey}"></script>`
+          ]
+        },
+        clientRender: req.mode !== 'edit'
+      })
 }
 

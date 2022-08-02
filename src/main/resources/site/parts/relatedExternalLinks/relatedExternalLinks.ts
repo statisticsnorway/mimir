@@ -1,7 +1,7 @@
 import { Content } from '/lib/xp/content'
 import { ResourceKey, render } from '/lib/thymeleaf'
 import { Phrases } from '../../../lib/types/language'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
+import { render as r4xpRender, RenderResponse } from '/lib/enonic/react4xp'
 import { Article } from '../../content-types/article/article'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { RelatedExternalLinks } from '../../mixins/relatedExternalLinks/relatedExternalLinks'
@@ -56,8 +56,12 @@ function renderPart(req: XP.Request, externalLinks: RelatedExternalLinks['relate
     }
   }
 
-  const relatedExternalLinksComponent: React4xpObject = new React4xp('Links')
-    .setProps({
+  const body: string = render(view, {
+    label: externalLinksTitle
+  })
+
+  return r4xpRender('Links',
+    {
       links: externalLinks.map((externalLink) => {
         return {
           href: externalLink.url,
@@ -66,17 +70,9 @@ function renderPart(req: XP.Request, externalLinks: RelatedExternalLinks['relate
           isExternal: true
         }
       })
+    },
+    req,
+    {
+      body: body
     })
-    .uniqueId()
-
-  const body: string = render(view, {
-    relatedExternalLinksId: relatedExternalLinksComponent.react4xpId,
-    label: externalLinksTitle
-  })
-  return {
-    body: relatedExternalLinksComponent.renderBody({
-      body
-    }),
-    pageContributions: relatedExternalLinksComponent.renderPageContributions() as XP.PageContributions
-  }
 }

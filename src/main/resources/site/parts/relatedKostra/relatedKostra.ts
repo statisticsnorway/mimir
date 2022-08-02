@@ -1,5 +1,5 @@
 import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { SiteConfig } from '../../site-config'
 import { RelatedKostraPartConfig } from './relatedKostra-part-config'
 
@@ -19,8 +19,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/error/error')
 
 
-
-exports.get = function(req: XP.Request): XP.Response | React4xpResponse {
+exports.get = function(req: XP.Request): XP.Response | RenderResponse {
   try {
     let municipality: MunicipalityWithCounty | undefined = getMunicipality(req)
     const mode: string = pageMode(req)
@@ -36,7 +35,7 @@ exports.get = function(req: XP.Request): XP.Response | React4xpResponse {
   }
 }
 
-exports.preview = function(req: XP.Request): XP.Response | React4xpResponse {
+exports.preview = function(req: XP.Request): XP.Response | RenderResponse {
   const siteConfig: SiteConfig = getSiteConfig()
   const municipality: MunicipalityWithCounty | undefined = getMunicipality({
     code: siteConfig.defaultMunicipality
@@ -44,7 +43,7 @@ exports.preview = function(req: XP.Request): XP.Response | React4xpResponse {
   return renderPart(req, municipality)
 }
 
-function renderPart(req: XP.Request, municipality: MunicipalityWithCounty | undefined): XP.Response | React4xpResponse {
+function renderPart(req: XP.Request, municipality: MunicipalityWithCounty | undefined): XP.Response | RenderResponse {
   const config: RelatedKostraPartConfig = getComponent().config
 
   const props: RelatedKostraProps = {
@@ -57,7 +56,7 @@ function renderPart(req: XP.Request, municipality: MunicipalityWithCounty | unde
     linkType: 'profiled'
   }
 
-  return React4xp.render('site/parts/relatedKostra/relatedKostra', props, req)
+  return render('site/parts/relatedKostra/relatedKostra', props, req)
 }
 
 interface RelatedKostraProps {

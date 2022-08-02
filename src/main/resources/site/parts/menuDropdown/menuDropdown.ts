@@ -1,11 +1,12 @@
 import { Content } from '/lib/xp/content'
-import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
+import {render as r4XpRender, RenderResponse} from '/lib/enonic/react4xp'
 import { ResourceKey, render } from '/lib/thymeleaf'
 import { Component } from '/lib/xp/portal'
 import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
 import { MenuDropdownPartConfig } from '../menuDropdown/menuDropdown-part-config'
 import { SiteConfig } from '../../site-config'
 import { MenuDropdown } from '../../content-types/menuDropdown/menuDropdown'
+import { v4 as uuidv4 } from 'uuid'
 
 const {
   assetUrl,
@@ -29,7 +30,7 @@ const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 
 const view: ResourceKey = resolve('./menuDropdown.html')
 
-exports.get = (req: XP.Request):XP.Response | React4xpResponse => {
+exports.get = (req: XP.Request):XP.Response | RenderResponse => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -39,7 +40,7 @@ exports.get = (req: XP.Request):XP.Response | React4xpResponse => {
 
 exports.preview = (req:XP.Request) => renderPart(req)
 
-function renderPart(req:XP.Request): XP.Response | React4xpResponse {
+function renderPart(req:XP.Request): XP.Response | RenderResponse {
   const parsedMunicipalities:Array<MunicipalityWithCounty> = municipalsWithCounties()
   const municipality:MunicipalityWithCounty | undefined = getMunicipality(req)
   const component: Component<MenuDropdownPartConfig> = getComponent()
@@ -76,18 +77,8 @@ function renderPart(req:XP.Request): XP.Response | React4xpResponse {
     title: municipality.displayName
   }))
 
-  // Dropdown react object for sticky menu
-  const dropdownComponent: React4xpObject = new React4xp('site/parts/menuDropdown/DropdownMunicipality')
-    .setProps({
-      ariaLabel: searchBarText,
-      placeholder: searchBarText,
-      items: municipalityItems,
-      baseUrl: baseUrl
-    })
-    .setId('dropdownId')
-    .uniqueId()
-
   const municipalityName: string | undefined = municipality ? removeCountyFromMunicipalityName(municipality.displayName) : undefined
+  const reactUuid: string = uuidv4()
 
   const model: ThymeleafModel = {
     modeMunicipality: component.config.modeMunicipality,
@@ -98,21 +89,26 @@ function renderPart(req:XP.Request): XP.Response | React4xpResponse {
     municipality: municipality,
     municipalities: parsedMunicipalities,
     municipalityName: municipalityName,
-    dropdownId: dropdownComponent.react4xpId
+    dropdownId: reactUuid
   }
 
   const thymeleafRender: string = render(view, model)
 
-  const body: string = dropdownComponent.renderBody({
-    body: thymeleafRender,
-    clientRender: req.mode !== 'edit'
-  })
+  // Dropdown react object for sticky menu
+  return r4XpRender('site/parts/menuDropdown/DropdownMunicipality',
+      {
+      ariaLabel: searchBarText,
+      placeholder: searchBarText,
+      items: municipalityItems,
+      baseUrl: baseUrl
+    },
+      req,
+      {
+        id: reactUuid,
+        body: thymeleafRender,
+        clientRender: req.mode !== 'edit'
+      })
 
-  return {
-    body,
-    pageContributions: dropdownComponent.renderPageContributions(),
-    contentType: 'text/html'
-  }
 }
 
 interface Municipality {

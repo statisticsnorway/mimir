@@ -1,4 +1,4 @@
-import { content, Content } from '/lib/xp/content'
+import { get, Content } from '/lib/xp/content'
 import { Button } from '../../content-types/button/button'
 import { attachmentUrl,
   getComponent,
@@ -30,12 +30,12 @@ function renderPart(req: XP.Request, buttonIds: Array<string>): XP.Response {
   const buttons: Array<ButtonShape> = []
 
   buttonIds.map((key: string) => {
-    const button: Content<Button> | null = content.get({
+    const button: Content<Button> | null = get({
       key
     })
 
     if (button && button.data.link) {
-      const target: Content | null = content.get({
+      const target: Content | null = get({
         key: button.data.link
       })
 

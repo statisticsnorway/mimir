@@ -1,4 +1,4 @@
-import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
+import {render as r4XpRender, RenderResponse} from '/lib/enonic/react4xp'
 import { ResourceKey, render } from '/lib/thymeleaf'
 import { getComponent,
         getContent,
@@ -15,7 +15,7 @@ const {
 
 const view: ResourceKey = resolve('./mailChimpForm.html')
 
-exports.get = function(req: XP.Request): React4xpResponse {
+exports.get = function(req: XP.Request): RenderResponse {
   const component: Component<MailChimpFormPartConfig> = getComponent()
   const content: Content = getContent()
 
@@ -36,27 +36,18 @@ exports.get = function(req: XP.Request): React4xpResponse {
     })
   }
 
-  const mailChimpFormComponent: React4xpObject = new React4xp('site/parts/mailChimpForm/mailChimpForm')
-    .setProps(reactProps)
-    .setId('newsletterForm')
-    .uniqueId()
-
   const thProps: ThymeleafProps = {
     title: component.config.title ? component.config.title : '',
-    text: component.config.text ? component.config.text : '',
-    reactId: mailChimpFormComponent.react4xpId
+    text: component.config.text ? component.config.text : ''
   }
 
-  const thRender: string = render(view, thProps)
-  return {
-    body: mailChimpFormComponent.renderBody({
-      body: thRender,
-      clientRender: req.mode !== 'edit'
-    }),
-    pageContributions: mailChimpFormComponent.renderPageContributions({
-      clientRender: req.mode !== 'edit'
-    })
-  }
+  return r4XpRender('site/parts/mailChimpForm/mailChimpForm',
+    reactProps,
+    req,
+      {
+        body: render(view, thProps),
+        clientRender: req.mode !== 'edit'
+      })
 }
 
 interface ReactProps {
@@ -70,5 +61,4 @@ interface ReactProps {
 interface ThymeleafProps {
   title: string;
   text: string;
-  reactId: string;
 }

@@ -1,7 +1,6 @@
 import { Content } from '/lib/xp/content'
-import { ResourceKey, render } from '/lib/thymeleaf'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
+import {render, RenderResponse} from '/lib/enonic/react4xp'
 import { ProfiledBoxPartConfig } from './profiledBox-part-config'
 
 const {
@@ -16,9 +15,6 @@ const {
 const {
   getImageAlt
 } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
-
-
-const view: ResourceKey = resolve('./profiledBox.html')
 
 exports.get = function(req: XP.Request): XP.Response {
   try {
@@ -54,21 +50,14 @@ function renderPart(req: XP.Request): XP.Response {
     ariaDescribedBy: 'subtitle'
   }
 
-  const profiledBox: React4xpObject = new React4xp('site/parts/profiledBox/profiledBox')
-    .setProps(props)
-    .setId('profiled-box')
-    .uniqueId()
-
-  const body: string = render(view, {
-    profiledBoxId: profiledBox.react4xpId
-  })
-
-  return {
-    body: profiledBox.renderBody({
-      body
-    }),
-    pageContributions: profiledBox.renderPageContributions() as XP.PageContributions
-  }
+  return render('site/parts/profiledBox/profiledBox',
+    props,
+    req,
+      {
+        id: 'profiled-box',
+        body: '<section class="xp-part part-profiled-box container"></section>'
+      }
+  )
 }
 
 function getLink(urlContentSelector: ProfiledBoxPartConfig['urlContentSelector']): string | undefined {

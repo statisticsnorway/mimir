@@ -1,5 +1,5 @@
 import { get, Content } from '/lib/xp/content'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import {render as r4XpRender, RenderResponse} from '/lib/enonic/react4xp'
 import { ResourceKey, render } from '/lib/thymeleaf'
 import { Component } from '/lib/xp/portal'
 import { MenuBoxPartConfig } from '../menuBox/menuBox-part-config'
@@ -26,7 +26,7 @@ const {
 const view: ResourceKey = resolve('./menuBox.html')
 
 
-exports.get = function(req:XP.Request):XP.Response | React4xpResponse | string {
+exports.get = function(req:XP.Request):XP.Response | RenderResponse | string {
   try {
     return renderPart(req)
   } catch (e) {
@@ -34,11 +34,11 @@ exports.get = function(req:XP.Request):XP.Response | React4xpResponse | string {
   }
 }
 
-exports.preview = function(req:XP.Request):XP.Response | React4xpResponse | string {
+exports.preview = function(req:XP.Request):XP.Response | RenderResponse | string {
   return renderPart(req)
 }
 
-function renderPart(req:XP.Request):XP.Response | React4xpResponse | string {
+function renderPart(req:XP.Request):XP.Response | RenderResponse | string {
   const part:Component<MenuBoxPartConfig> = getComponent()
   const menuBoxId: string = part.config.menu
   const height: string = part.config.height ? part.config.height as string : 'default'
@@ -66,7 +66,7 @@ function renderPart(req:XP.Request):XP.Response | React4xpResponse | string {
     height
   }
 
-  return React4xp.render('MenuBox', props, req)
+  return r4XpRender('MenuBox', props, req)
 }
 
 function buildMenu(menuBoxContent: Content<MenuBox> ): Array<MenuItem> {

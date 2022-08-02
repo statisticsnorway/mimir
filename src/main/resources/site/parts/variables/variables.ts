@@ -1,6 +1,5 @@
-import {getChildren, query, Content } from '/lib/xp/content'
-import { ResourceKey, render } from '/lib/thymeleaf'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
+import { getChildren, query, Content } from '/lib/xp/content'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { Article } from '../../content-types/article/article'
 
 const {
@@ -21,10 +20,6 @@ const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
-
-
-
-const view: ResourceKey = resolve('./variables.html')
 
 exports.get = function(req: XP.Request): XP.Response {
   try {
@@ -51,17 +46,17 @@ function renderPart(req: XP.Request): XP.Response {
     count: MAX_VARIABLES
   }).hits as unknown as Array<Content<Article>>
 
-  return renderVariables(contentArrayToVariables(hits ? data.forceArray(hits) : [], language))
+  return renderVariables(req, contentArrayToVariables(hits ? data.forceArray(hits) : [], language))
 }
 
-function renderVariables(variables: Array<Variables>): XP.Response {
+function renderVariables(req: XP.Request, variables: Array<Variables>): XP.Response {
   if (variables && variables.length) {
     const download: string = i18nLib.localize({
       key: 'variables.download'
     })
 
-    const variablesXP: React4xpObject = new React4xp('variables/Variables')
-      .setProps({
+    return render('variables/Variables',
+      {
         variables: variables.map(({
           title, description, fileHref, fileModifiedDate, href
         }) => {
@@ -73,20 +68,11 @@ function renderVariables(variables: Array<Variables>): XP.Response {
             href
           }
         })
+      },
+      req,
+      {
+        body: '<section class="xp-part part-variableCardsList container"/>'
       })
-      .uniqueId()
-
-    const body: string = render(view, {
-      variablesListId: variablesXP.react4xpId
-    })
-
-    return {
-      body: variablesXP.renderBody({
-        body
-      }),
-      pageContributions: variablesXP.renderPageContributions() as XP.PageContributions,
-      contentType: 'text/html'
-    }
   }
 
   return NO_VARIABLES_FOUND

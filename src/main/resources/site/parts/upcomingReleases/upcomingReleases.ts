@@ -1,4 +1,4 @@
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { query, Content } from '/lib/xp/content'
 import { Component } from '/lib/xp/portal'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
@@ -38,13 +38,13 @@ const {
   getMainSubjects, getMainSubjectById
 } = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
 
-exports.get = (req: XP.Request): React4xpResponse => {
+exports.get = (req: XP.Request): RenderResponse => {
   return renderPart(req)
 }
 
-exports.preview = (req: XP.Request): React4xpResponse => renderPart(req)
+exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
 
-function renderPart(req: XP.Request): React4xpResponse {
+function renderPart(req: XP.Request): RenderResponse {
   const content: Content = getContent()
   const component: Component<UpcomingReleasesPartConfig> = getComponent()
   const currentLanguage: string = content.language ? content.language : 'nb'
@@ -124,7 +124,7 @@ function renderPart(req: XP.Request): React4xpResponse {
     contentReleases
   }
 
-  return React4xp.render('site/parts/upcomingReleases/upcomingReleases', props, req)
+  return render('site/parts/upcomingReleases/upcomingReleases', props, req)
 }
 
 /*

@@ -1,5 +1,5 @@
 import { get, query, Content } from '/lib/xp/content'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import {render, RenderResponse} from '/lib/enonic/react4xp'
 import { LocalSearchPartConfig } from './localSearch-part-config'
 
 const {
@@ -10,7 +10,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/error/error')
 
 
-exports.get = function(req:XP.Request):XP.Response | React4xpResponse {
+exports.get = function(req:XP.Request):XP.Response | RenderResponse {
   try {
     return renderPart(req)
   } catch (e) {
@@ -18,11 +18,11 @@ exports.get = function(req:XP.Request):XP.Response | React4xpResponse {
   }
 }
 
-exports.preview = (req: XP.Request): React4xpResponse => {
+exports.preview = (req: XP.Request): RenderResponse => {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): React4xpResponse {
+function renderPart(req: XP.Request): RenderResponse {
   const config: LocalSearchPartConfig = getComponent().config
   const searchFolderContent: Content<object> | null = config.searchFolder ? get({
     key: config.searchFolder
@@ -54,7 +54,7 @@ function renderPart(req: XP.Request): React4xpResponse {
     items: filteredItems
   }
 
-  return React4xp.render('site/parts/localSearch/localSearch', props, req)
+  return render('site/parts/localSearch/localSearch', props, req)
 }
 
 interface PartProperties {

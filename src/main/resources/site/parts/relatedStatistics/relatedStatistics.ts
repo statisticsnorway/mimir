@@ -1,7 +1,7 @@
 import { get, Content } from '/lib/xp/content'
 import { ResourceKey, render } from '/lib/thymeleaf'
 import { Phrases } from '../../../lib/types/language'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
+import { render as r4xpRender, RenderResponse } from '/lib/enonic/react4xp'
 import { SEO } from '../../../services/news/news'
 import { Statistics } from '../../content-types/statistics/statistics'
 
@@ -53,13 +53,20 @@ function renderPart(req: XP.Request): XP.Response {
     }
   }
 
-  return renderRelatedStatistics(statisticsTitle, parseRelatedContent(relatedStatistics ? forceArray(relatedStatistics) : []), phrases)
+  return renderRelatedStatistics(req, statisticsTitle, parseRelatedContent(relatedStatistics ? forceArray(relatedStatistics) : []), phrases)
 }
 
-function renderRelatedStatistics(statisticsTitle: string, relatedStatisticsContent: Array<RelatedStatisticsContent>, phrases: Phrases): XP.Response {
+function renderRelatedStatistics(req: XP.Request,
+  statisticsTitle: string,
+  relatedStatisticsContent: Array<RelatedStatisticsContent>,
+  phrases: Phrases): XP.Response {
   if (relatedStatisticsContent && relatedStatisticsContent.length) {
-    const relatedStatisticsXP: React4xpObject = new React4xp('StatisticsCards')
-      .setProps({
+    const body: string = render(view, {
+      label: statisticsTitle
+    })
+
+    return r4xpRender('StatisticsCards',
+      {
         headerTitle: statisticsTitle,
         statistics: relatedStatisticsContent.map((statisticsContent) => {
           return {
@@ -68,20 +75,11 @@ function renderRelatedStatistics(statisticsTitle: string, relatedStatisticsConte
         }),
         showAll: phrases.showAll,
         showLess: phrases.showLess
+      },
+      req,
+      {
+        body: body
       })
-      .uniqueId()
-
-    const body: string = render(view, {
-      relatedStatisticsId: relatedStatisticsXP.react4xpId,
-      label: statisticsTitle
-    })
-
-    return {
-      body: relatedStatisticsXP.renderBody({
-        body
-      }),
-      pageContributions: relatedStatisticsXP.renderPageContributions() as XP.PageContributions
-    }
   }
   return {
     body: null,

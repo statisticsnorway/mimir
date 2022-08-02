@@ -1,7 +1,6 @@
-import {React4xpObject, React4xpResponse} from "../../../lib/types/react4xp";
+import {render, RenderResponse} from '/lib/enonic/react4xp'
 import { getComponent, imageUrl, Component} from "/lib/xp/portal";
 import {ExternalCardPartConfig} from "./externalCard-part-config";
-import { render } from '/lib/thymeleaf'
 
 const {
   renderError
@@ -11,7 +10,6 @@ const {
   data
 } = __non_webpack_require__('/lib/util')
 
-const view = resolve('./externalCard.html')
 
 
 exports.get = function(req: XP.Request) {
@@ -29,7 +27,7 @@ const NO_LINKS_FOUND = {
   contentType: 'text/html'
 }
 
-function renderPart(req: XP.Request): XP.Response | React4xpResponse {
+function renderPart(req: XP.Request): XP.Response | RenderResponse {
   const part: Component<ExternalCardPartConfig> = getComponent()
 
   return renderExternalCard(req, part.config.externalCards ? data.forceArray(part.config.externalCards) : [])
@@ -37,8 +35,9 @@ function renderPart(req: XP.Request): XP.Response | React4xpResponse {
 
 const renderExternalCard = (req: XP.Request, links: Array<ExternalCard>) => {
   if (links && links.length) {
-    const externalCardComponent: React4xpObject = new React4xp('ExternalCards')
-        .setProps({
+    return render(
+        'ExternalCards',
+        {
           links: links.map((link) => {
             return {
               href: link.linkUrl,
@@ -50,23 +49,12 @@ const renderExternalCard = (req: XP.Request, links: Array<ExternalCard>) => {
               })
             }
           })
+        },
+        req,
+        {
+          body: '<section class="xp-part part-external-card"></section>',
+          clientRender: req.mode !== 'edit'
         })
-        .setId('externalCard')
-        .uniqueId()
-
-    const body: string = render(view, {
-      categoryId: externalCardComponent.react4xpId
-    })
-
-    return {
-      body: externalCardComponent.renderBody({
-        body,
-        clientRender: req.mode !== 'edit'
-      }),
-      pageContributions: externalCardComponent.renderPageContributions({
-        clientRender: req.mode !== 'edit'
-      })
-    }
   }
   return NO_LINKS_FOUND
 }

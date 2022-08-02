@@ -1,5 +1,5 @@
 import { get, Content } from '/lib/xp/content'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import {render, RenderResponse} from '/lib/enonic/react4xp'
 import { Accordion } from '../../content-types/accordion/accordion'
 import { AccordionConfig } from '../../macros/accordion/accordion-config'
 
@@ -21,7 +21,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/error/error')
 
 
-exports.get = function(req: XP.Request): React4xpResponse | XP.Response {
+exports.get = function(req: XP.Request): RenderResponse | XP.Response {
   try {
     const config: AccordionConfig = getComponent().config
     const accordionIds: Array<string> = config ? forceArray(config.accordion) : []
@@ -31,7 +31,7 @@ exports.get = function(req: XP.Request): React4xpResponse | XP.Response {
   }
 }
 
-exports.preview = function(req: XP.Request, accordionIds: Array<string> | string): React4xpResponse | XP.Response {
+exports.preview = function(req: XP.Request, accordionIds: Array<string> | string): RenderResponse | XP.Response {
   try {
     const page: Content<Accordion> = getContent()
     return page.type === `${app.name}:accordion` ? renderPart(req, [accordionIds as string]) : renderPart(req, accordionIds as Array<string>)
@@ -40,7 +40,7 @@ exports.preview = function(req: XP.Request, accordionIds: Array<string> | string
   }
 }
 
-function renderPart(req: XP.Request, accordionIds: Array<string>): React4xpResponse {
+function renderPart(req: XP.Request, accordionIds: Array<string>): RenderResponse {
   const accordions: Array<AccordionData> = []
 
   accordionIds.map((key) => {
@@ -86,7 +86,7 @@ function renderPart(req: XP.Request, accordionIds: Array<string>): React4xpRespo
     accordions
   }
 
-  return React4xp.render('Accordion', props, req)
+  return render('Accordion', props, req)
 }
 
 export interface AccordionData {

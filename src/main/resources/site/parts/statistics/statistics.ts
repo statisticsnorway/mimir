@@ -2,7 +2,7 @@ import { Content } from '/lib/xp/content'
 import { ResourceKey, render } from '/lib/thymeleaf'
 import { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-import { React4xp, React4xpObject, React4xpPageContributionOptions } from '../../../lib/types/react4xp'
+import { render as r4xpRender } from '/lib/enonic/react4xp'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { Phrases } from '../../../lib/types/language'
 
@@ -130,15 +130,6 @@ function renderPart(req: XP.Request): XP.Response {
     }
   }
 
-  const modifiedDateComponent: React4xpObject = new React4xp('ModifiedDate')
-    .setProps({
-      explanation: modifiedText,
-      className: '',
-      children: changeDate
-    })
-    .setId('modifiedDate')
-    .uniqueId()
-
   const model: StatisticsProps = {
     title,
     updated,
@@ -155,26 +146,22 @@ function renderPart(req: XP.Request): XP.Response {
     draftButtonText
   }
 
-  let body: string = render(view, model)
-  let pageContributions: XP.PageContributions = {
-    bodyEnd: statisticsKeyFigure && statisticsKeyFigure.pageContributions ? statisticsKeyFigure.pageContributions.bodyEnd : []
-  }
+  const body: string = render(view, model)
 
-  if (changeDate) {
-    body = modifiedDateComponent.renderBody({
-      body
+  return r4xpRender('ModifiedDate',
+    {
+      explanation: modifiedText,
+      className: '',
+      children: changeDate
+    },
+    req,
+    {
+      id: 'modifiedDate',
+      body: body,
+      pageContributions: {
+        bodyEnd: statisticsKeyFigure && statisticsKeyFigure.pageContributions ? statisticsKeyFigure.pageContributions.bodyEnd : []
+      }
     })
-
-    pageContributions = modifiedDateComponent.renderPageContributions({
-      pageContributions: pageContributions as React4xpPageContributionOptions
-    }) as XP.PageContributions
-  }
-
-  return {
-    body,
-    pageContributions,
-    contentType: 'text/html'
-  }
 }
 
 

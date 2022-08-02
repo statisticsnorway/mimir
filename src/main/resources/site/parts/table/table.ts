@@ -4,7 +4,7 @@ import { TableSourceList, TableView } from '../../../lib/ssb/parts/table'
 import { SourceList, SourcesConfig } from '../../../lib/ssb/utils/utils'
 import { DropdownItem as TableDownloadDropdownItem, DropdownItems as TableDownloadDropdownItems } from '../../../lib/types/components'
 import { Language, Phrases } from '../../../lib/types/language'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
+import { render as r4xpRender, RenderResponse } from '/lib/enonic/react4xp'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { Table } from '../../content-types/table/table'
 import { GA_TRACKING_ID } from '../../pages/default/default'
@@ -153,18 +153,13 @@ function renderPart(req: XP.Request, tableId?: string): XP.Response {
     }
   }
 
-  const tableReact: React4xpObject = new React4xp('Table')
-    .setProps(getProps(req, tableId))
-    .setId('table')
-    .uniqueId()
-
-  return {
-    body: tableReact.renderBody(),
-    pageContributions: tableReact.renderPageContributions({
+  return r4xpRender('Table',
+    getProps(req, tableId),
+    req,
+    {
       clientRender: req.mode !== 'edit'
-    }) as XP.PageContributions,
-    contentType: 'text/html'
-  }
+      // id: 'table'
+    })
 }
 
 function getDownloadTableOptions(): TableDownloadDropdownItems {
