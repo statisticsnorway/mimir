@@ -1,8 +1,8 @@
-import {render, ResourceKey} from '/lib/thymeleaf'
-import {getMainSubjects, SubjectItem} from '../../../lib/ssb/utils/subjectUtils'
-import {parseContributions} from '../../../lib/ssb/utils/utils'
-import {DropdownItems} from '../../../lib/types/components'
-import {render as r4XpRender, RenderResponse} from '/lib/enonic/react4xp'
+import { render, ResourceKey } from '/lib/thymeleaf'
+import { getMainSubjects, SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
+import { parseContributions } from '../../../lib/ssb/utils/utils'
+import { DropdownItems } from '../../../lib/types/components'
+import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
 
 const {
   assetUrl, serviceUrl
@@ -85,40 +85,28 @@ function renderPart(req: XP.Request): RenderResponse | XP.Response {
     title: 'Velg innholdstype'
   }, ...contentTypesList]
 
-  const bestbetComponent: RenderResponse = r4XpRender(
-       'bestbet/Bestbet'
-      ,{
-        logoUrl: assetUrl({
-          path: 'SSB_logo_black.svg'
-        }),
-        bestBetListServiceUrl: serviceUrl({
-          service: 'bestBetList'
-        }),
-        contentSearchServiceUrl: serviceUrl({
-          service: 'contentSearch'
-        }),
-        contentStudioBaseUrl: `${DEFAULT_CONTENTSTUDIO_URL}#/${ENONIC_PROJECT_ID}/edit/`,
-        contentTypes: contentTypesDropdownItems,
-        mainSubjects: mainSubjectDropdownItems,
-        mainSubjectsEnglish: englishMainSubjectDropdownItems
-      }
+  return r4XpRender(
+    'bestbet/Bestbet'
+    , {
+      logoUrl: assetUrl({
+        path: 'SSB_logo_black.svg'
+      }),
+      bestBetListServiceUrl: serviceUrl({
+        service: 'bestBetList'
+      }),
+      contentSearchServiceUrl: serviceUrl({
+        service: 'contentSearch'
+      }),
+      contentStudioBaseUrl: `${DEFAULT_CONTENTSTUDIO_URL}#/${ENONIC_PROJECT_ID}/edit/`,
+      contentTypes: contentTypesDropdownItems,
+      mainSubjects: mainSubjectDropdownItems,
+      mainSubjectsEnglish: englishMainSubjectDropdownItems
+    },
+    req,
+    {
+      clientRender: req.mode !== 'edit'
+    }
   )
-    .setId('app-bestbet')
-
-  const pageContributions: XP.PageContributions = parseContributions(bestbetComponent.renderPageContributions({
-    clientRender: req.mode !== 'edit'
-  }) as XP.PageContributions)
-
-  return {
-    body: bestbetComponent.renderBody({
-      body: render(view, {
-        ...getAssets(),
-        pageContributions,
-        clientRender: req.mode !== 'edit'
-      })
-    }),
-    pageContributions
-  }
 }
 
 function getAssets(): object {

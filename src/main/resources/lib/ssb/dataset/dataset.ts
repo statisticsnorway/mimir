@@ -6,6 +6,7 @@ import { StatbankSavedRaw, TbmlDataUniform } from '../../types/xmlParser'
 import { run, RunContext } from '/lib/xp/context'
 import { getUser, User } from '/lib/xp/auth'
 import { TbprocessorParsedResponse } from './tbprocessor/tbml'
+import { ContextAttributes } from '*/lib/xp/context'
 
 const {
   Events
@@ -175,7 +176,7 @@ function determineIfTbprocessorParsedResponse(toBeDetermined: TbprocessorParsedR
 
 
 export function refreshDatasetWithUserKey(content: Content<DataSource>, userLogin: string, branch: string = DATASET_BRANCH, ): CreateOrUpdateStatus {
-  const context: RunContext = {
+  const context: RunContext<ContextAttributes> = {
     branch: 'master',
     repository: ENONIC_CMS_DEFAULT_REPO,
     principals: ['role:system.admin'],
@@ -201,7 +202,7 @@ export function getContentWithDataSource(): Array<Content<DataSource>> {
   let count: number = 100
   let hits: Array<Content<DataSource>> = []
   while (count === 100) {
-    const result: QueryResponse<DataSource> = query({
+    const result: QueryResponse<DataSource, object> = query({
       start,
       count,
       query: `data.dataSource._selected LIKE "*"`

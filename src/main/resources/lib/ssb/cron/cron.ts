@@ -1,12 +1,12 @@
 import { findUsers, createUser, UserQueryResult } from '/lib/xp/auth'
 import { Content } from '/lib/xp/content'
-import { run, RunContext } from '/lib/xp/context'
+import { run, RunContext, ContextAttributes } from '/lib/xp/context'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { JobEventNode, JobInfoNode } from '../repo/job'
 import { StatRegRefreshResult } from '../repo/statreg'
 import { schedule, list, TaskMapper } from '/lib/cron'
 import { RSSFilter } from './rss'
-import {  create,
+import { create,
   modify,
   list as listScheduledJobs,
   get as getScheduledJob,
@@ -60,7 +60,7 @@ const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
 
-const createUserContext: RunContext = { // Master context (XP)
+const createUserContext: RunContext<ContextAttributes> = { // Master context (XP)
   repository: ENONIC_CMS_DEFAULT_REPO,
   branch: 'master',
   principals: ['role:system.admin'],
@@ -72,7 +72,7 @@ const createUserContext: RunContext = { // Master context (XP)
 
 const newPublishJobEnabled: boolean = isEnabled('publishJob-lib-sheduler', false, 'ssb')
 
-export const cronContext: RunContext = { // Master context (XP)
+export const cronContext: RunContext<ContextAttributes> = { // Master context (XP)
   repository: ENONIC_CMS_DEFAULT_REPO,
   branch: 'master',
   principals: ['role:system.admin'],
@@ -357,5 +357,5 @@ export function setupCronJobs(): void {
 export interface SSBCronLib {
     setupCronJobs: () => void;
     runOnMasterOnly: (task: () => void) => void;
-    cronContext: RunContext;
+    cronContext: RunContext<ContextAttributes>;
 }

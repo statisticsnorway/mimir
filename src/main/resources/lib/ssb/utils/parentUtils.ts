@@ -3,6 +3,7 @@ import { DefaultPageConfig } from '../../../site/pages/default/default-page-conf
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { StatisticInListing } from '../dashboard/statreg/types'
 import { Page } from '../../../site/content-types/page/page'
+import { DefaultPage } from '/lib/types/defaultPage'
 
 const {
   getStatisticByShortNameFromRepo
@@ -19,20 +20,20 @@ export function getParentContent(path: string): Content<object, DefaultPageConfi
   const parentPathKey: string = parentPath(path)
   return getContent({
     key: parentPathKey
-  }) as Content<object, DefaultPageConfig | Statistics> | null
+  })
 }
 
 function parentType(path: string): string | undefined {
   const parentPathKey: string = parentPath(path)
 
-  const parentContent: Content<object, DefaultPageConfig> | null = getContent({
+  const parentContent: DefaultPage | null = getContent({
     key: parentPathKey
-  }) as Content<object, DefaultPageConfig> | null
+  }) as unknown as DefaultPage
 
   if (parentContent) {
     if (parentContent.type === `${app.name}:statistics`) {
       return parentContent.type
-    } else if (parentContent.page.config || parentContent.type === 'portal:site') {
+    } else if (parentContent.page.config && typeof parentContent.page.config === 'function' || parentContent.type === 'portal:site') {
       return parentContent.page.config.pageType ? parentContent.page.config.pageType : 'default'
     } else {
       return fromParentTypeCache(parentPathKey, () => parentType(parentPathKey))
@@ -53,7 +54,7 @@ export function parentPath(path: string): string {
 export function getMainSubject(shortName: string, language: string): string {
   const statisticFromRepo: StatisticInListing | undefined = getStatisticByShortNameFromRepo(shortName)
   if (statisticFromRepo) {
-    const statisticResult: QueryResponse<Statistics> = statisticFromRepo && query({
+    const statisticResult: QueryResponse<Statistics, object> = statisticFromRepo && query({
       query: `data.statistic = '${statisticFromRepo.id}' AND language IN (${language === 'nb' ? '"nb", "nn"' : '"en"'})`,
       contentTypes: [`${app.name}:statistics`],
       count: 1

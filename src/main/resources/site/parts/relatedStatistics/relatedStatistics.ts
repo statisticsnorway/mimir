@@ -4,6 +4,7 @@ import { Phrases } from '../../../lib/types/language'
 import { render as r4xpRender, RenderResponse } from '/lib/enonic/react4xp'
 import { SEO } from '../../../services/news/news'
 import { Statistics } from '../../content-types/statistics/statistics'
+import { DefaultPageConfig } from '../../pages/default/default-page-config'
 
 const {
   data: {
@@ -92,13 +93,16 @@ function parseRelatedContent(relatedStatistics: Statistics['relatedStatisticsOpt
     return relatedStatistics.map((statistics) => {
       if (statistics._selected === 'xp') {
         const statisticsContentId: string | undefined = statistics.xp.contentId
-        const relatedStatisticsContent: Content<Statistics, object, SEO> | null = statisticsContentId ? get({
+        const relatedStatisticsContent: Content<Statistics, DefaultPageConfig> | null = statisticsContentId ? get({
           key: statisticsContentId
         }) : null
 
         let preamble: string | undefined
         if (relatedStatisticsContent && hasPath(['x', 'com-enonic-app-metafields', 'meta-data', 'seoDescription'], relatedStatisticsContent)) {
-          preamble = relatedStatisticsContent.x['com-enonic-app-metafields']['meta-data'].seoDescription
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          preamble = relatedStatisticsContent.x['com-enonic-app-metafields']['meta-data'].seoDescription as string
         }
 
         return {

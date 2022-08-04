@@ -1,6 +1,6 @@
-import { render } from '/lib/thymeleaf'
+import { render } from '*/lib/thymeleaf'
 
-import {render as r4XpRender} from '/lib/enonic/react4xp'
+import {render as r4XpRender} from '*/lib/enonic/react4xp'
 
 const {
   getComponent

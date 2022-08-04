@@ -11,7 +11,7 @@ const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ss
 
 
 exports.get = (): XP.Response => {
-  const changedContent: QueryResponse<Content> = query({
+  const changedContent: QueryResponse<Content, object> = query({
     start: 0,
     count: 100,
     sort: 'modifiedTime DESC',

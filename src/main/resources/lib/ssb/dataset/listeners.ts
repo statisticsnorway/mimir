@@ -33,7 +33,7 @@ export function setupFetchDataOnCreateListener(): void {
       runOnMasterOnly(() => {
         const nodes: EnonicEventData['nodes'] = event.data.nodes.filter((n) => n.repo === ENONIC_CMS_DEFAULT_REPO )
         if (nodes.length > 0) {
-          const contentWithDataSource: QueryResponse<DataSource> = query({
+          const contentWithDataSource: QueryResponse<DataSource, object> = query({
             count: nodes.length,
             query: `_id IN(${nodes.map((n) => `'${n.id}'`).join(',')}) AND 
                 (

@@ -1,6 +1,6 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { getPermissions, GetPermissionsResult, PermissionsParams } from '/lib/xp/content'
-import { get as getContext, AuthInfo } from '/lib/xp/context'
+import { get as getContext } from '/lib/xp/context'
 
 export function hasWritePermissionsAndPreview(req: XP.Request, key: string): boolean {
   if (req.mode === 'preview') {
@@ -15,7 +15,7 @@ export function hasWritePermissions(key: string): boolean {
   }: GetPermissionsResult = getPermissions({
     key
   })
-  const userPrincipals: Array<string> = (getContext().authInfo as AuthInfoExtended).principals
+  const userPrincipals: ReadonlyArray<string> = (getContext().authInfo).principals
   const usersPermissions: Array<PermissionsParams> = permissions.filter((p) => userPrincipals.includes(p.principal))
   return !!usersPermissions.find((permission) => {
     return permission.allow.includes('WRITE_PERMISSIONS') || permission.allow.includes('MODIFY')
@@ -27,6 +27,3 @@ export interface PermissionsLib {
   hasWritePermissionsAndPreview: (req: XP.Request, key: string) => boolean;
 }
 
-interface AuthInfoExtended extends AuthInfo {
-  principals: Array<string>;
-}

@@ -63,7 +63,7 @@ exports.get = function(req: XP.Request): XP.Response {
 exports.preview = (req: XP.Request, relatedArticles: RelatedArticles['relatedArticles']) => renderPart(req, relatedArticles)
 
 function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedArticles']): XP.Response {
-  const page: Content<Article> = getContent()
+  const page: Content<Article, SEO> = getContent()
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   const phrases: Phrases = getPhrases(page)
   const showPreview: boolean = (req.params.showDraft && hasWritePermissionsAndPreview(req, page._id)) as boolean
@@ -94,7 +94,7 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
       relatedArticles: relatedArticles.map((article) => {
         if (article._selected === 'article') {
           return fromRelatedArticlesCache(req, article.article.article, () => {
-            const articleContent: Content<Article, object, SEO> | null = get({
+            const articleContent: Content<Article, SEO> | null = get({
               key: article.article.article
             })
 
@@ -172,7 +172,7 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
 }
 
 
-function getSubTitle(articleContent: Content<Article, object, SEO> | null, phrases: Phrases, language: string): string | undefined {
+function getSubTitle(articleContent: Content<Article, SEO> | null, phrases: Phrases, language: string): string | undefined {
   if (articleContent) {
     let type: string = ''
     if (articleContent.type === `${app.name}:article`) {
@@ -190,7 +190,7 @@ function getSubTitle(articleContent: Content<Article, object, SEO> | null, phras
 }
 
 function addDsArticle(
-  page: Content<Statistics | Article, object, SEO>,
+  page: Content<Statistics | Article, SEO>,
   relatedArticles: RelatedArticles['relatedArticles'],
   showPreview: boolean): RelatedArticles['relatedArticles'] {
   const statisticId: string = page._id
@@ -215,14 +215,14 @@ function addDsArticle(
 
 function getDsArticle(statisticId: string, statisticPublishDate: string): RelatedArticle | undefined {
   statisticPublishDate = moment(new Date(statisticPublishDate)).format('YYYY-MM-DD')
-  const articleContent: Array<Content<Statistics | Article, object, SEO>> = query({
+  const articleContent: Array<Content<Statistics | Article, SEO>> = query({
     count: 1,
     sort: 'publish.from DESC',
     query: `data.associatedStatistics.XP.content = "${statisticId}" AND publish.from LIKE "${statisticPublishDate}*" `,
     contentTypes: [
       `${app.name}:article`
     ]
-  }).hits as unknown as Array<Content<Statistics | Article, object, SEO>>
+  }).hits as unknown as Array<Content<Statistics | Article, SEO>>
 
   const articleObject: RelatedArticle | undefined = articleContent.length > 0 ? {
     _selected: 'article',

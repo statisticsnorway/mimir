@@ -3,7 +3,7 @@ import { SEO } from '../../../services/news/news'
 import { OmStatistikken } from '../../../site/content-types/omStatistikken/omStatistikken'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { ReleasesInListing, StatisticInListing, VariantInListing } from '../dashboard/statreg/types'
-import { parseISO, getDay, getMonth, getYear, getDate } from 'date-fns'
+import { parseISO, getMonth, getYear, getDate } from 'date-fns'
 
 const {
   pageUrl
@@ -314,11 +314,11 @@ export function prepareRelease(
   if (release) {
     const preparedVariant: PreparedVariant = formatRelease(release, language)
 
-    const statisticsPagesXP: Content<Statistics, object, SEO> | undefined = query({
+    const statisticsPagesXP: Content<Statistics, SEO> | undefined = query({
       count: 1,
       query: `data.statistic LIKE "${release.statisticId}" AND language IN (${language === 'nb' ? '"nb", "nn"' : '"en"'})`,
       contentTypes: [`${app.name}:statistics`]
-    }).hits[0] as unknown as Content<Statistics, object, SEO>
+    }).hits[0] as unknown as Content<Statistics, SEO>
     const statisticsPageUrl: string | undefined = statisticsPagesXP ? pageUrl({
       path: statisticsPagesXP._path
     }) : undefined
@@ -353,11 +353,11 @@ export function prepareStatisticRelease(
       concatReleaseTimes(release.variants, language, property) :
       formatVariant(release.variants, language, property)
 
-    const statisticsPagesXP: Content<Statistics, object, SEO> | undefined = query({
+    const statisticsPagesXP: Content<Statistics, SEO> | undefined = query({
       count: 1,
       query: `data.statistic LIKE "${release.id}" AND language IN (${language === 'nb' ? '"nb", "nn"' : '"en"'})`,
       contentTypes: [`${app.name}:statistics`]
-    }).hits[0] as unknown as Content<Statistics, object, SEO>
+    }).hits[0] as unknown as Content<Statistics, SEO>
     const statisticsPageUrl: string | undefined = statisticsPagesXP ? pageUrl({
       path: statisticsPagesXP._path
     }) : undefined
@@ -405,6 +405,7 @@ function concatReleaseTimes(variants: Array<VariantInListing>, language: string,
 
 // If import from statreg failed use nextRelease instead of previousRelease
 function nextReleasedPassed(variant: VariantInListing): boolean {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const serverOffsetInMs: number = app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
   const serverTime: Date = new Date(new Date().getTime() + serverOffsetInMs)
   const nextRelease: Date = new Date(variant.nextRelease)
@@ -486,6 +487,7 @@ export function getAllReleases(statisticList: Array<StatisticInListing>): Array<
 
 export function getUpcomingReleases(statisticList: Array<StatisticInListing>): Array<Release> {
   const allReleases: Array<Release> = getAllReleases(statisticList)
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const serverOffsetInMs: number = app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
   const serverTime: Date = new Date(new Date().getTime() + serverOffsetInMs)
   return allReleases.filter((release) => moment(release.publishTime).isAfter(serverTime, 'minute'))

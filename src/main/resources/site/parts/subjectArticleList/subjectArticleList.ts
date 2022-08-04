@@ -36,7 +36,7 @@ function renderPart(req: XP.Request): RenderResponse {
   const start: number = 0
   const count: number = showAllArticles ? 100 : 10
 
-  const childArticles: QueryResponse<Article> = getChildArticles(currentPath, subTopicId, start, count, sort)
+  const childArticles: QueryResponse<Article, object> = getChildArticles(currentPath, subTopicId, start, count, sort)
   const preparedArticles: Array<PreparedArticles> = prepareArticles(childArticles, language)
   const totalArticles: number = childArticles.total
 

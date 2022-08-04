@@ -43,14 +43,14 @@ export function createMenuTree(menuItemId: string): Array<MenuItemParsed> {
   })
 
   if (menuContent) {
-    const menuContentChildren: QueryResponse<MenuItem> = getChildren({
+    const menuContentChildren: QueryResponse<MenuItem, object> = getChildren({
       count: 100,
       key: menuContent._id
     })
 
     const parsedMenu: Array<MenuItemParsed> = menuContentChildren.hits.map((menuItem) => createMenuBranch(menuItem))
     const flatMenu: Array<MenuItemParsed> = flattenMenu(parsedMenu)
-    query<Image>({
+    query<Image, object>({
       count: flatMenu.length,
       query: `_id IN(${flatMenu.map((menuItem) => `"${menuItem.iconId}"`).join(',')}) AND type = "media:vector"`
     }).hits.forEach((icon) => {
@@ -65,7 +65,7 @@ export function createMenuTree(menuItemId: string): Array<MenuItemParsed> {
   return []
 }
 
-export function isMenuItemActive(children: QueryResponse<MenuItem>, content: Content | null): boolean {
+export function isMenuItemActive(children: QueryResponse<MenuItem, object>, content: Content | null): boolean {
   return children.total > 0 && content && content._path ? children.hits.reduce( (hasActiveChildren: boolean, child: Content<MenuItem>) => {
     if (child.data.urlSrc?._selected === 'content' && child.data.urlSrc?.content?.contentId && child.data.urlSrc.content.contentId === content._id) {
       hasActiveChildren = true
@@ -132,7 +132,7 @@ export interface Link {
 
 export interface MenuLib {
   createMenuTree: (menuItemId: string) => Array<MenuItemParsed>;
-  isMenuItemActive: (children: QueryResponse<MenuItem>, content: Content | null) => boolean;
+  isMenuItemActive: (children: QueryResponse<MenuItem, object>, content: Content | null) => boolean;
   parseTopLinks: (topLinks: TopLinks) => Array<Link>;
   parseGlobalLinks: (globalLinks: GlobalLinks) => Array<Link>;
   getMenuIcons: (menuItemId: string) => Array<object>;

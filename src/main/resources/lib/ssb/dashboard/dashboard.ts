@@ -1,3 +1,5 @@
+import { ContextAttributes } from '*/lib/xp/context'
+
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { CreateOrUpdateStatus } from '../dataset/dataset'
 import { get as getContent, query, Content } from '/lib/xp/content'
@@ -186,7 +188,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   })
 
   socket.on('dashboard-refresh-dataset', (options: RefreshDatasetOptions) => {
-    const context: RunContext = {
+    const context: RunContext<ContextAttributes> = {
       branch: 'master',
       repository: ENONIC_CMS_DEFAULT_REPO,
       principals: ['role:system.admin'],

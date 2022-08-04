@@ -1,4 +1,4 @@
-import { render } from '/lib/thymeleaf'
+const  { render } =  __non_webpack_require__('/lib/thymeleaf')
 
 const {
   getSite,

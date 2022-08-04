@@ -126,7 +126,7 @@ export function parseRelatedFactPageData(relatedFactPageConfig: RelatedFactPageC
       })
       contentListId = forceArray((relatedContent?.data as ContentList).contentList) as Array<string>
     }
-    const relatedContentQueryResults: QueryResponse<RelatedFactPage> | null = contentListId.length ? query({
+    const relatedContentQueryResults: QueryResponse<RelatedFactPage, object> | null = contentListId.length ? query({
       count: 999,
       query: `_id IN(${(contentListId).map((id) => `'${id}'`).join(',')})`
     }) : null
@@ -197,7 +197,7 @@ interface RelatedFactPageProps {
   showLess: string;
 }
 
-type RelatedFactPage = Content<ContentList | Article, object, SEO>
+type RelatedFactPage = Content<ContentList | Article, SEO>
 
 export interface RelatedFactPages {
   relatedFactPages: Array<RelatedFactPageContent>;

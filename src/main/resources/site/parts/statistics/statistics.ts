@@ -5,6 +5,8 @@ import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { Phrases } from '../../../lib/types/language'
+import { v4 as uuidv4 } from 'uuid'
+
 
 const {
   getContent, pageUrl
@@ -130,6 +132,8 @@ function renderPart(req: XP.Request): XP.Response {
     }
   }
 
+  const id: string = 'modifiedDate' + uuidv4()
+
   const model: StatisticsProps = {
     title,
     updated,
@@ -139,7 +143,7 @@ function renderPart(req: XP.Request): XP.Response {
     modifiedText,
     previousRelease: paramShowDraft && showPreviewDraft ? nextRelease : previousRelease,
     nextRelease: paramShowDraft && showPreviewDraft ? previewNextRelease : nextRelease,
-    modifiedDateId: modifiedDateComponent.react4xpId,
+    modifiedDateId: id,
     statisticsKeyFigure: statisticsKeyFigure ? statisticsKeyFigure.body : null,
     showPreviewDraft,
     draftUrl,
@@ -156,7 +160,7 @@ function renderPart(req: XP.Request): XP.Response {
     },
     req,
     {
-      id: 'modifiedDate',
+      id: id,
       body: body,
       pageContributions: {
         bodyEnd: statisticsKeyFigure && statisticsKeyFigure.pageContributions ? statisticsKeyFigure.pageContributions.bodyEnd : []

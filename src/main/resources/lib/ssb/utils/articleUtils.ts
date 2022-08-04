@@ -13,7 +13,7 @@ const {
   getMainSubjects
 } = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
 
-export function getChildArticles(currentPath: string, subTopicId: string, start: number, count: number, sort: string): QueryResponse<Article> {
+export function getChildArticles(currentPath: string, subTopicId: string, start: number, count: number, sort: string): QueryResponse<Article, object> {
   const toDay: string = moment().toISOString()
   return query({
     start: start,
@@ -34,7 +34,7 @@ ArticleResult {
   const subjectQuery: string = `(${pagePaths.join(' OR ')})`
   const queryString: string = `${publishFromQuery} AND ${subjectQuery} ${languageQuery}`
 
-  const articlesContent: QueryResponse<Article> = query({
+  const articlesContent: QueryResponse<Article, object> = query({
     start: start,
     count: count,
     query: queryString,
@@ -48,7 +48,7 @@ ArticleResult {
   }
 }
 
-export function prepareArticles(articles: QueryResponse<Article>, language: string): Array<PreparedArticles> {
+export function prepareArticles(articles: QueryResponse<Article, object>, language: string): Array<PreparedArticles> {
   return articles.hits.map((article: Content<Article>) => {
     return {
       title: article.displayName,
@@ -62,8 +62,8 @@ export function prepareArticles(articles: QueryResponse<Article>, language: stri
   })
 }
 export interface ArticleUtilsLib {
-  getChildArticles: (currentPath: string, subTopicId: string, start: number, count: number, sort: string) => QueryResponse<Article>;
-  prepareArticles: (articles: QueryResponse<Article>, language: string) => Array<PreparedArticles>;
+  getChildArticles: (currentPath: string, subTopicId: string, start: number, count: number, sort: string) => QueryResponse<Article, object>;
+  prepareArticles: (articles: QueryResponse<Article, object>, language: string) => Array<PreparedArticles>;
   getAllArticles: (req: XP.Request, language: string, start: number, count: number) => ArticleResult;
 }
 

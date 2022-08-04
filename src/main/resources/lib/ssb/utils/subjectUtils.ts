@@ -1,11 +1,10 @@
 import { query, Content } from '/lib/xp/content'
-import { Page } from '../../../site/content-types/page/page'
-import { DefaultPageConfig } from '../../../site/pages/default/default-page-config'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { EndedStatisticList } from '../../../site/content-types/endedStatisticList/endedStatisticList'
 import { StatisticInListing } from '../dashboard/statreg/types'
 import { Statistic } from '../../../site/mixins/statistic/statistic'
 import { Subtopic } from '../../../site/mixins/subtopic/subtopic'
+import { DefaultPage } from '/lib/types/defaultPage'
 const {
   getAllStatisticsFromRepo
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')
@@ -23,12 +22,12 @@ const {
 export function getMainSubjects(request: XP.Request, language?: string): Array<SubjectItem> {
   return fromSubjectCache<SubjectItem>(request, `mainsubject-${language ? language : 'all'}`, () => {
     const lang: string = language ? language !== 'en' ? 'AND language != "en"' : 'AND language = "en"' : ''
-    const mainSubjectsContent: Array<Content<Page, DefaultPageConfig>> = query({
+    const mainSubjectsContent: Array<DefaultPage> = query({
       start: 0,
       count: 200,
       sort: 'displayName ASC',
       query: `components.page.config.mimir.default.subjectType LIKE "mainSubject" ${lang}`
-    }).hits as unknown as Array<Content<Page, DefaultPageConfig>>
+    }).hits as unknown as Array<DefaultPage>
 
     return mainSubjectsContent.map((m) =>({
       id: m._id,
@@ -55,17 +54,17 @@ export function getMainSubjectById(mainSubjects: Array<SubjectItem>, id: string)
 export function getSubSubjects(request: XP.Request, language?: string): Array<SubjectItem> {
   return fromSubjectCache<SubjectItem>(request, `subsubject-${language ? language : 'all'}`, () => {
     const lang: string = language ? language !== 'en' ? 'AND language != "en"' : 'AND language = "en"' : ''
-    const subSubjectsContent: Array<Content<Page, DefaultPageConfig>> = query({
+    const subSubjectsContent: Array<DefaultPage> = query({
       start: 0,
       count: 1000,
       sort: 'displayName ASC',
       query: `components.page.config.mimir.default.subjectType LIKE "subSubject" ${lang}`
-    }).hits as unknown as Array<Content<Page, DefaultPageConfig>>
+    }).hits as unknown as Array<DefaultPage>
 
     return subSubjectsContent.map((m) => ({
       id: m._id,
       title: m.displayName,
-      subjectCode: m.page.config.subjectCode ? m.page.config.subjectCode : '',
+      subjectCode: typeof m.page.config === 'object' && m.page.config && m.page.config.subjectCode ? m.page.config.subjectCode : '',
       path: m._path,
       language: m.language && m.language === 'en' ? 'en' : 'no',
       name: m._name

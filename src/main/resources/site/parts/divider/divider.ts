@@ -1,5 +1,5 @@
 import { getComponent, Component } from '/lib/xp/portal'
-import {render} from '/lib/enonic/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import { DividerPartConfig } from './divider-part-config'
 
 const {
@@ -27,12 +27,12 @@ function renderPart(req: XP.Request, config: DividerPartConfig): XP.Response {
 
   return fromPartCache(req, `divider${dividerColor}`, () => {
     return render(
-        'Divider',
-        setColor(dividerColor),
-        req,
-        {
-          body: '<section class="xp-part part-divider"></section>'
-        }
+      'Divider',
+      setColor(dividerColor),
+      req,
+      {
+        body: '<section class="xp-part part-divider"></section>'
+      }
     )
   })
 }

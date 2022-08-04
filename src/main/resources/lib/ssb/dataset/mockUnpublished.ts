@@ -11,7 +11,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/dataset/dataset')
 
 export function updateUnpublishedMockTbml(): void {
-  const res: QueryResponse<Statistics> = query({
+  const res: QueryResponse<Statistics, object> = query({
     query: `data.statistic = "0"`,
     count: 1
   })

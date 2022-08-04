@@ -106,9 +106,6 @@ export function deleteDataset(dataSourceType: string, branch: string, key: strin
 
 export interface DatasetRepoNode<T> extends RepoNode {
   data?: string | T;
-  _ts?: string;
-  _name: string;
-  _path?: string;
 }
 
 export interface RepoDatasetLib {

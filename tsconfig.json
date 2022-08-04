@@ -7,7 +7,9 @@
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "strictNullChecks": true,
+    "lib": ["ES5", "ES6"],
     "types": [
+      "types",
       "node",
       "enonic-types"
     ],
@@ -15,5 +17,11 @@
     "paths": {
       "/lib/*": ["lib/*"]
     }
-  }
+  },
+  "types": [
+    "types"
+  ],
+  "include": [
+    "src/**/*.ts"
+  ]
 }

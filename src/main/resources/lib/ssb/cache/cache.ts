@@ -249,7 +249,7 @@ function getReferences(id: string): Array<Content> {
   let count: number = 10
   let hits: Array<Content> = []
   while (count === 10) {
-    const result: QueryResponse<Content> = query({
+    const result: QueryResponse<Content, object> = query({
       start,
       count,
       query: `_references LIKE "${id}"`

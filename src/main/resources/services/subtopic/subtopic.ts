@@ -2,7 +2,7 @@ import { query, Content, QueryResponse } from '/lib/xp/content'
 
 
 exports.get = (req: XP.Request): XP.Response => {
-  const subtopicQuery: QueryResponse<Subtopics> = query({
+  const subtopicQuery: QueryResponse<Subtopics, object> = query({
     count: 1000,
     query: `components.page.config.mimir.default.subjectType LIKE "subSubject"`
   })

@@ -83,7 +83,7 @@ function renderPart(req: XP.Request): RenderResponse {
     return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
   })
 
-  const contentReleases: Array<PreparedUpcomingRelease> = query<UpcomingRelease>({
+  const contentReleases: Array<PreparedUpcomingRelease> = query<UpcomingRelease, object>({
     start: 0,
     count: 500,
     query: `type = "${app.name}:upcomingRelease" AND language = "${currentLanguage}" AND data.date >= "${moment().format('YYYY-MM-DD')}"`

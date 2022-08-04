@@ -1,5 +1,5 @@
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-import {render, RenderResponse} from '/lib/enonic/react4xp'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { query, Content, QueryResponse } from '/lib/xp/content'
 import { Article } from '../../content-types/article/article'
 import { ArticleArchive } from '../../content-types/articleArchive/articleArchive'
@@ -104,7 +104,7 @@ export function parseArticleData(pageId: string, start: number, count: number, l
     locale: language
   })
 
-  const articles: QueryResponse<Article> = query({
+  const articles: QueryResponse<Article, object> = query({
     start,
     count,
     sort: 'publish.from DESC',

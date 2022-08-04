@@ -46,7 +46,7 @@ const contentTypeName: string = `${app.name}:keyFigure`
 
 export function get(keys: string | Array<string>): Array<Content<KeyFigure>> {
   keys = forceArray(keys)
-  const content: QueryResponse<KeyFigure> = query({
+  const content: QueryResponse<KeyFigure, object> = query({
     contentTypes: [contentTypeName],
     query: ``,
     count: keys.length,
