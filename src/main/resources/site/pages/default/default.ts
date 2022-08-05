@@ -89,7 +89,7 @@ export const GA_TRACKING_ID: string | null = app.config && app.config.GA_TRACKIN
 const view: ResourceKey = resolve('default.html')
 
 exports.get = function(req: XP.Request): XP.Response {
-  const page: DefaultPageCommonType = getContent() as DefaultPageCommonType
+  const page: DefaultPage = getContent() as DefaultPage
   const pageConfig: DefaultPageConfig = page.page.config
 
   const ingress: string | undefined = page.data.ingress ? processHtml({
@@ -145,7 +145,7 @@ exports.get = function(req: XP.Request): XP.Response {
     pageContributions = preview.pageContributions
   }
 
-  const language: Language = getLanguage(page)
+  const language: Language = getLanguage(page) as Language
   const menuCacheLanguage: string = language.code === 'en' ? 'en' : 'nb'
   const headerContent: MenuContent | unknown = fromMenuCache(req, `header_${menuCacheLanguage}`, () => {
     return getHeaderContent(language)
@@ -306,8 +306,9 @@ function prepareRegions(isFragment: boolean, page: DefaultPage): RegionsContent 
     }
   }
   configRegions.forEach((configRegion) => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     configRegion.components = regions[configRegion.region] ? forceArray(regions[configRegion.region].components) : []
   })
 
@@ -322,7 +323,7 @@ function prepareRegions(isFragment: boolean, page: DefaultPage): RegionsContent 
 function parseMetaInfoData(
   municipality: MunicipalityWithCounty | undefined,
   pageType: string,
-  page: DefaultPageCommonType,
+  page: DefaultPage,
   language: Language,
   req: XP.Request): MetaInfoData {
   let addMetaInfoSearch: boolean = true
@@ -518,6 +519,7 @@ interface DefaultPage extends Content {
     regions: Regions;
     config: DefaultPageConfig;
   };
+  x:SEO,
   data: {
     ingress: string;
     keywords: string;

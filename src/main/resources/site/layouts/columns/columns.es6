@@ -1,6 +1,6 @@
-import { render } from '*/lib/thymeleaf'
+const { render } = __non_webpack_require__('*/lib/thymeleaf')
 
-import {render as r4XpRender} from '*/lib/enonic/react4xp'
+const {render: r4XpRender} = __non_webpack_require__('*/lib/enonic/react4xp')
 
 const {
   getComponent

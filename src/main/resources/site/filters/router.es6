@@ -1,4 +1,4 @@
-import { request } from '/lib/http-client'
+const { request } = __non_webpack_require__('/lib/http-client')
 
 const {
   pageUrl,
