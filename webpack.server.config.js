@@ -18,7 +18,7 @@ const config = {
   context: path.join(__dirname, RESOURCES_PATH),
   entry: {},
   externals: [
-    /(\/lib\/(enonic|xp|mustache|thymeleaf))?\/.+/
+    /^\/lib\/(.+|\$)$/i
   ],
   output: {
     path: path.join(__dirname, '/build/resources/main'),
@@ -26,15 +26,12 @@ const config = {
     libraryTarget: 'commonjs'
   },
   resolve: {
-    extensions: []
+    extensions: ['.ts', '.js', '.json']
   },
   optimization: {
     minimize: false
   },
   plugins: [],
-  externals: [
-    /\/lib\/(enonic|xp)\/.+/
-  ],
   mode: env.type,
   // Source maps are not usable in server scripts
   devtool: false
