@@ -9,7 +9,6 @@
     "strictNullChecks": true,
     "lib": ["ES5", "ES6"],
     "types": [
-      "types",
       "node",
       "enonic-types"
     ],
