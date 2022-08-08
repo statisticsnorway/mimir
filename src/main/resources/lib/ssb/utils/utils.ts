@@ -138,6 +138,12 @@ export function parseContributions(contributions: XP.PageContributions): XP.Page
   return contributions
 }
 
+// Generates 10 character random string, useful for unique ID's for elements etc.
+// Cryptographically UNSAFE due to math.random, do NOT use for encryption or security.
+export function randomUnsafeString(): string {
+  return Math.random().toString(36).substring(2)
+}
+
 export interface SourcesConfig {
   _selected: string;
   urlSource: {

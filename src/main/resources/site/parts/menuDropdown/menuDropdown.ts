@@ -1,12 +1,12 @@
 import { Content } from '/lib/xp/content'
-import {render as r4XpRender, RenderResponse} from '/lib/enonic/react4xp'
+import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
 import { ResourceKey, render } from '/lib/thymeleaf'
 import { Component } from '/lib/xp/portal'
 import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
 import { MenuDropdownPartConfig } from '../menuDropdown/menuDropdown-part-config'
 import { SiteConfig } from '../../site-config'
 import { MenuDropdown } from '../../content-types/menuDropdown/menuDropdown'
-import { v4 as uuidv4 } from 'uuid'
+import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
 const {
   assetUrl,
@@ -78,7 +78,7 @@ function renderPart(req:XP.Request): XP.Response | RenderResponse {
   }))
 
   const municipalityName: string | undefined = municipality ? removeCountyFromMunicipalityName(municipality.displayName) : undefined
-  const reactUuid: string = uuidv4()
+  const reactUuid: string = randomUnsafeString()
 
   const model: ThymeleafModel = {
     modeMunicipality: component.config.modeMunicipality,
@@ -96,19 +96,18 @@ function renderPart(req:XP.Request): XP.Response | RenderResponse {
 
   // Dropdown react object for sticky menu
   return r4XpRender('site/parts/menuDropdown/DropdownMunicipality',
-      {
+    {
       ariaLabel: searchBarText,
       placeholder: searchBarText,
       items: municipalityItems,
       baseUrl: baseUrl
     },
-      req,
-      {
-        id: reactUuid,
-        body: thymeleafRender,
-        clientRender: req.mode !== 'edit'
-      })
-
+    req,
+    {
+      id: reactUuid,
+      body: thymeleafRender,
+      clientRender: req.mode !== 'edit'
+    })
 }
 
 interface Municipality {

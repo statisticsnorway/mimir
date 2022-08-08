@@ -5,8 +5,7 @@ import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { Phrases } from '../../../lib/types/language'
-import { v4 as uuidv4 } from 'uuid'
-
+import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
 const {
   getContent, pageUrl
@@ -132,7 +131,7 @@ function renderPart(req: XP.Request): XP.Response {
     }
   }
 
-  const id: string = 'modifiedDate' + uuidv4()
+  const id: string = 'modifiedDate' + randomUnsafeString()
 
   const model: StatisticsProps = {
     title,
