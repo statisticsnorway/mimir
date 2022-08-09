@@ -105,10 +105,7 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
             let imageSrc: string | undefined
             let imageAlt: string | undefined = ' '
 
-            if (!articleContent.x ||
-                  !articleContent.x['com-enonic-app-metafields'] ||
-                  !articleContent.x['com-enonic-app-metafields']['meta-data'] ||
-                  !articleContent.x['com-enonic-app-metafields']['meta-data'].seoImage) {
+            if (!articleContent.x['com-enonic-app-metafields']['meta-data'].seoImage) {
               imageSrc = imagePlaceholder({
                 width: 320,
                 height: 180

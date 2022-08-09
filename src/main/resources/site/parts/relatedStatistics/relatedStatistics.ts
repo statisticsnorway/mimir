@@ -93,16 +93,13 @@ function parseRelatedContent(relatedStatistics: Statistics['relatedStatisticsOpt
     return relatedStatistics.map((statistics) => {
       if (statistics._selected === 'xp') {
         const statisticsContentId: string | undefined = statistics.xp.contentId
-        const relatedStatisticsContent: Content<Statistics, DefaultPageConfig> | null = statisticsContentId ? get({
+        const relatedStatisticsContent: Content<Statistics, SEO> | null = statisticsContentId ? get({
           key: statisticsContentId
         }) : null
 
         let preamble: string | undefined
-        if (relatedStatisticsContent && hasPath(['x', 'com-enonic-app-metafields', 'meta-data', 'seoDescription'], relatedStatisticsContent)) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          preamble = relatedStatisticsContent.x['com-enonic-app-metafields']['meta-data'].seoDescription as string
+        if (relatedStatisticsContent) {
+          preamble = relatedStatisticsContent.x['com-enonic-app-metafields']['meta-data'].seoDescription
         }
 
         return {

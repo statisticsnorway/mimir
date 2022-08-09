@@ -1,8 +1,9 @@
 import { get, Content } from '/lib/xp/content'
 import { ResourceKey, render } from '/lib/thymeleaf'
-import {render as r4XpRender, RenderResponse} from '/lib/enonic/react4xp'
+import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
 import { ActiveStatisticsPartConfig } from './activeStatistics-part-config'
 import { Statistics } from '../../content-types/statistics/statistics'
+import { SEO } from 'services/news/news'
 
 const {
   data: {
@@ -68,8 +69,8 @@ function renderActiveStatistics(statisticsTitle: string, activeStatisticsContent
   if (activeStatisticsContent && activeStatisticsContent.length) {
     const body: string = render(view)
     const activeStatisticsXP: RenderResponse = r4XpRender(
-        'StatisticsCards',
-        {
+      'StatisticsCards',
+      {
         headerTitle: statisticsTitle,
         statistics: activeStatisticsContent.map((statisticsContent) => {
           return {
@@ -77,10 +78,10 @@ function renderActiveStatistics(statisticsTitle: string, activeStatisticsContent
           }
         })
       },
-        null,
-        {
-          body: body
-        })
+      null,
+      {
+        body: body
+      })
 
 
     return {
@@ -99,16 +100,11 @@ function parseContent(activeStatistics: ActiveStatisticsPartConfig['relatedStati
     return activeStatistics.map((statistics) => {
       if (statistics._selected === 'xp' && statistics.xp.contentId) {
         const statisticsContentId: string = statistics.xp.contentId
-        const activeStatisticsContent: Content<Statistics> | null = get({
+        const activeStatisticsContent: Content<Statistics, SEO> | null = get({
           key: statisticsContentId
         })
 
-        let preamble: string = ''
-        if (hasPath(['x', 'com-enonic-app-metafields', 'meta-data', 'seoDescription'], activeStatisticsContent)) {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          preamble = activeStatisticsContent?.x['com-enonic-app-metafields']['meta-data'].seoDescription as string
-        }
+        const preamble: string = activeStatisticsContent?.x['com-enonic-app-metafields']['meta-data'].seoDescription as string
 
         return {
           title: activeStatisticsContent ? activeStatisticsContent.displayName : '',

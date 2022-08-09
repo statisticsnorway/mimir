@@ -150,20 +150,15 @@ export function parseRelatedFactPageData(relatedFactPageConfig: RelatedFactPageC
 
 function parseRelatedContent(relatedContent: RelatedFactPage): RelatedFactPageContent {
   let imageId: string | undefined
-  if (relatedContent.x &&
-    relatedContent.x['com-enonic-app-metafields'] &&
-    relatedContent.x['com-enonic-app-metafields']['meta-data'] &&
-    relatedContent.x['com-enonic-app-metafields']['meta-data'].seoImage) {
-    imageId = relatedContent.x['com-enonic-app-metafields']['meta-data'].seoImage
-  }
   let image: string | undefined
   let imageAlt: string = ' '
-  if (imageId) {
+  if (relatedContent.x['com-enonic-app-metafields']['meta-data'].seoImage) {
+    imageId = relatedContent.x['com-enonic-app-metafields']['meta-data'].seoImage
+    imageAlt = getImageAlt(imageId) ? getImageAlt(imageId) as string : ' '
     image = imageUrl({
       id: imageId,
       scale: 'block(380, 400)'
     })
-    imageAlt = getImageAlt(imageId) ? getImageAlt(imageId) as string : ' '
   } else {
     image = imagePlaceholder({
       width: 380,

@@ -97,16 +97,13 @@ function parseContent(standardCardsListContent: StandardCardsListPartConfig['sta
 
       if (standardCard.contentXP) {
         const standardCardContentId: string = standardCard.contentXP
-        const pageContent: Content<Statistics> | null = standardCardContentId ? get({
+        const pageContent: Content<Statistics, SEO> | null = standardCardContentId ? get({
           key: standardCardContentId
         }) : null
 
         let preamble: string = ''
-        if (hasPath(['x', 'com-enonic-app-metafields', 'meta-data', 'seoDescription'], pageContent) && pageContent) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          preamble = pageContent.x['com-enonic-app-metafields']['meta-data'].seoDescription as string
+        if ( pageContent) {
+          preamble = pageContent.x['com-enonic-app-metafields']['meta-data'].seoDescription
         }
 
         return {

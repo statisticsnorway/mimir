@@ -1,8 +1,9 @@
-import {render, RenderResponse} from '/lib/enonic/react4xp'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { EndedStatisticsPartConfig } from './endedStatistics-part-config'
 import { get, Content } from '/lib/xp/content'
 import { Phrases } from '../../../lib/types/language'
 import { Statistics } from '../../content-types/statistics/statistics'
+import { SEO } from 'services/news/news'
 
 const {
   data: {
@@ -57,11 +58,11 @@ function renderEndedStatistics(req: XP.Request, endedStatisticsContent: Array<En
         iconText: phrases.endedCardText,
         buttonText: phrases.endedStatistics
       },
-        req,
-        {
-          body: '<section class="xp-part part-ended-statistics"></section>'
-        }
-        )
+      req,
+      {
+        body: '<section class="xp-part part-ended-statistics"></section>'
+      }
+    )
   } else {
     return {
       body: '',
@@ -75,17 +76,12 @@ function parseContent(endedStatistics: EndedStatisticsPartConfig['relatedStatist
     return endedStatistics.map((statistics) => {
       if (statistics._selected === 'xp' && statistics.xp.contentId) {
         const statisticsContentId: string = statistics.xp.contentId
-        const endedStatisticsContent: Content<Statistics> | null = statisticsContentId ? get({
+        const endedStatisticsContent: Content<Statistics, SEO> | null = statisticsContentId ? get({
           key: statisticsContentId
         }) : null
 
-        let preamble: string = ''
-        if (hasPath(['x', 'com-enonic-app-metafields', 'meta-data', 'seoDescription'], endedStatisticsContent)) {
-          // TS gets confused here, the field totally exists. Promise.
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          preamble = endedStatisticsContent?.x['com-enonic-app-metafields']['meta-data'].seoDescription as string
-        }
+        const preamble: string = endedStatisticsContent?.x['com-enonic-app-metafields']['meta-data'].seoDescription as string
+
 
         return {
           title: endedStatisticsContent ? endedStatisticsContent.displayName : '',
