@@ -13,6 +13,15 @@
     }
   }
 
+  @include media-breakpoint-down(md) {
+    .extended-banner {
+      width: 100vw;
+      position: relative;
+      left: 50%;
+      margin-left: -50vw;
+    }
+  }
+
   article, .calendar-day {
     display: flex;
 
@@ -28,7 +37,7 @@
       border-bottom: 0 none;
     }
   }
-
+  
   .releaseList {
     list-style: none;
     border-bottom: solid 1px #c3dcdc;
@@ -67,18 +76,28 @@
   }
 
   time {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 4px 6px;
+    background: $ssb-dark-5;
+    color: white;
     border: 2px solid $ssb-dark-5;
-    width: 97px;
-    height: 80px;
-    margin: 3.5px 20px 3px 0;
+    width: 72px;
+    height: 28px;
+    margin: 20px 0;
     text-align: center;
 
     .day {
-      font-size: 40px;
+      font-size: 16px;
       font-family: $font-roboto-condensed-bold;
-      line-height: 1;
-      display: block;
-      margin-top: 7px;
+      line-height: 1.75;
+    }
+
+    .month {
+      font-size: 16px;
+      font-family: $font-roboto-condensed-bold;
+      line-height: 1.75;
     }
   }
 
