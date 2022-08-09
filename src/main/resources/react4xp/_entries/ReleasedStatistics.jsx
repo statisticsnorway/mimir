@@ -32,9 +32,9 @@ class ReleasedStatistics extends React.Component {
 
     return (
       <div className={`calendar-day ${index === 0 && 'first'}`} key={index}>
-        <span id={`datemonth-${monthNumber}${index}`} aria-hidden="true" className="sr-only">{`${day.day}. ${monthNameLong}`}</span>
         <ol className='releaseList' aria-labelledby={`heading-released-statistics datemonth-${monthNumber}${index}`}>
           <time aria-hidden="true" dateTime={dateTime}>
+          <span id={`datemonth-${monthNumber}${index}`} aria-hidden="true" className="sr-only">{`${day.day}. ${monthNameLong}`}</span>
             <span className='day'>{day.day}</span>
             <span className='month'>{month.monthName}</span>
           </time>
