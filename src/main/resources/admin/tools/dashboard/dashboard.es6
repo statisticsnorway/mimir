@@ -1,15 +1,21 @@
 import { parseContributions } from '../../../lib/ssb/utils/utils'
 
-const  { getUser, hasRole } =  __non_webpack_require__('/lib/xp/auth')
-const  { render } =  __non_webpack_require__('/lib/thymeleaf')
 const {
   assetUrl,
   serviceUrl
 } = __non_webpack_require__('/lib/xp/portal')
+
+const {
+  render
+} = __non_webpack_require__('/lib/thymeleaf')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-
+const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+const {
+  getUser,
+  hasRole
+} = __non_webpack_require__('/lib/xp/auth')
 const {
   getToolUrl
 } = __non_webpack_require__('/lib/xp/admin')
