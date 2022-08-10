@@ -24,12 +24,10 @@
 
   article, .calendar-day {
     display: flex;
+    border-bottom: solid 1px #c3dcdc;
+    padding-top: 20px;
 
-    &.first li:first-child{
-      padding-top: 12px;
-    }
-
-    &:nth-child(1) ol{
+    &:nth-child(1) {
       border-top: 1px solid $ssb-dark-5;
     }
 
@@ -37,10 +35,16 @@
       border-bottom: 0 none;
     }
   }
-  
+
+  @include media-breakpoint-down(md) {
+    .calendar-day {
+      flex-direction: column;
+      padding-top: 0;
+    }
+  }
+
   .releaseList {
     list-style: none;
-    border-bottom: solid 1px #c3dcdc;
     padding: 0;
     width: 100%;
 
@@ -95,6 +99,27 @@
       font-size: 16px;
       font-family: $font-roboto-plain;
       line-height: 1.75;
+    }
+  }
+
+  @include media-breakpoint-up(md) {
+    time {
+      display: block;
+      border: 2px solid $ssb-dark-5;
+      width: 97px;
+      height: 80px;
+      margin: 8px 20px 3px 0;
+      padding: 7px;
+      text-align: center;
+      background: white;
+      color: $ssb-dark-5;
+
+      .day {
+        font-size: 40px;
+        font-family: $font-roboto-condensed-bold;
+        line-height: 1;
+        display: block;
+      }
     }
   }
 

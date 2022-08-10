@@ -236,12 +236,12 @@ function UpcomingReleases(props) {
 
     return (
       <div className={`calendar-day ${index === 0 ? 'first' : ''}`} key={index}>
+        <time aria-hidden="true" dateTime={dateTime}>
+          <span className='day'>{day.day}</span>
+          <span className='month'>{month.monthName}</span>
+        </time>
+        <span id={`datemonth-${monthNumber}${index}`} className="sr-only" aria-hidden="true">{`${day.day}. ${monthNameLong}`}</span>
         <ol className='releaseList' aria-labelledby={`heading-upcoming-releases datemonth-${monthNumber}${index}`}>
-          <time aria-hidden="true" dateTime={dateTime}>
-            <span id={`datemonth-${monthNumber}${index}`} className="sr-only" aria-hidden="true">{`${day.day}. ${monthNameLong}`}</span>
-            <span className='day'>{day.day}</span>
-            <span className='month'>{month.monthName}</span>
-          </time>
           {
             day.releases.map((release, releaseIndex) => renderRelease(release, releaseIndex, date))
           }
