@@ -3,7 +3,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
 plugins {
     id("com.github.node-gradle.node") version "2.2.3"
     id 'com.enonic.xp.app' version '3.1.0'
-    id 'no.item.xp.codegen' version '1.1.9'
+    id 'no.item.xp.codegen' version '2.0.0'
 }
 
 app {
@@ -42,7 +42,7 @@ dependencies {
     include "no.item:wsutil-server:2.0.0"
     include "com.gravitondigital:featuretogglelib:0.3.0"
     compile group: 'org.json', name: 'json', version: '20210307'
-    include 'com.enonic.lib:lib-react4xp:3.2.0'
+    include 'com.enonic.lib:lib-react4xp:3.3.0'
     include 'com.enonic.lib:lib-text-encoding:2.0.0'
 }
 
