@@ -150,21 +150,30 @@ function renderPart(req: XP.Request): XP.Response {
   }
 
   const body: string = render(view, model)
+  const pageContributions: XP.PageContributions = {
+    bodyEnd: statisticsKeyFigure && statisticsKeyFigure.pageContributions ? statisticsKeyFigure.pageContributions.bodyEnd : []
+  }
 
-  return r4xpRender('ModifiedDate',
-    {
-      explanation: modifiedText,
-      className: '',
-      children: changeDate
-    },
-    req,
-    {
-      id: id,
-      body: body,
-      pageContributions: {
-        bodyEnd: statisticsKeyFigure && statisticsKeyFigure.pageContributions ? statisticsKeyFigure.pageContributions.bodyEnd : []
-      }
-    })
+  if (changeDate) {
+    return r4xpRender('ModifiedDate',
+      {
+        explanation: modifiedText,
+        className: '',
+        children: changeDate
+      },
+      req,
+      {
+        id: id,
+        body: body,
+        pageContributions
+      })
+  }
+
+  return {
+    body,
+    pageContributions,
+    contentType: 'text/html'
+  }
 }
 
 
