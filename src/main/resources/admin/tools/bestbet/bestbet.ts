@@ -85,7 +85,7 @@ function renderPart(req: XP.Request): RenderResponse | XP.Response {
     title: 'Velg innholdstype'
   }, ...contentTypesList]
 
-  return r4XpRender(
+  const bestBetComponent: RenderResponse = r4XpRender(
     'bestbet/Bestbet'
     , {
       logoUrl: assetUrl({
@@ -104,9 +104,17 @@ function renderPart(req: XP.Request): RenderResponse | XP.Response {
     },
     req,
     {
+      id: 'app-bestbet',
       clientRender: req.mode !== 'edit'
     }
   )
+
+  return {
+    body: render(view, {
+      ...getAssets(),
+      pageContributions: parseContributions(bestBetComponent.pageContributions)
+    })
+  }
 }
 
 function getAssets(): object {
