@@ -1,9 +1,9 @@
-import {render as r4XpRender, RenderResponse} from '/lib/enonic/react4xp'
-import {Component, getComponent, getContent, imageUrl} from '/lib/xp/portal'
-import {EntryLinksPartConfig} from './entryLinks-part-config'
-import {Content, get, Image} from '/lib/xp/content'
-import {Phrases} from '../../../lib/types/language'
-import {render, ResourceKey} from '/lib/thymeleaf'
+import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
+import { Component, getComponent, getContent, imageUrl } from '/lib/xp/portal'
+import { EntryLinksPartConfig } from './entryLinks-part-config'
+import { Content, get, Image } from '/lib/xp/content'
+import { Phrases } from '../../../lib/types/language'
+import { render, ResourceKey } from '/lib/thymeleaf'
 
 const {
   data: {
@@ -57,18 +57,19 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
 function renderEntryLinks(req: XP.Request, headerTitle: string, entryLinksContent: EntryLinksPartConfig['entryLinks']): RenderResponse {
   if ( entryLinksContent && entryLinksContent.length > 0) {
     return r4XpRender(
-        'EntryLinks',
-        {
-          headerTitle,
-          entryLinks: parseEntryLinks(entryLinksContent)
-        },
-        req,
-        {
-          body: render(view, {
-            label: headerTitle
-          }),
-          clientRender: req.mode !== 'edit'
-        })
+      'EntryLinks',
+      {
+        headerTitle,
+        entryLinks: parseEntryLinks(entryLinksContent)
+      },
+      req,
+      {
+        id: 'entry-links',
+        body: render(view, {
+          entryLinksId: 'entry-links'
+        }),
+        clientRender: req.mode !== 'edit'
+      })
   } else {
     return {
       body: '',
