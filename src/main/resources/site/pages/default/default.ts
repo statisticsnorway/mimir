@@ -7,8 +7,7 @@ import { AlertType, InformationAlertOptions, MunicipalityOptions } from '../../.
 import { Breadcrumbs } from '../../../lib/ssb/utils/breadcrumbsUtils'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { Language } from '../../../lib/types/language'
-import { randomUnsafeString } from '/lib/ssb/utils/utils'
-import { render as r4xpRender, RenderResponse, React4xp } from '/lib/enonic/react4xp'
+import { render as r4xpRender, RenderResponse } from '/lib/enonic/react4xp'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { SiteConfig } from '../../site-config'
 import { DefaultPageConfig } from './default-page-config'
@@ -17,9 +16,7 @@ import { Component,
   processHtml,
   assetUrl,
   getSiteConfig } from '/lib/xp/portal'
-import { React4xpObject, React4xpPageContributionOptions } from '/lib/types/react4xp'
 import { SEO } from '../../../services/news/news'
-import { DefaultPage as DefaultPageCommonType } from '/lib/types/defaultPage'
 
 const {
   data: {
@@ -150,7 +147,6 @@ exports.get = function(req: XP.Request): XP.Response {
   const headerContent: MenuContent | unknown = fromMenuCache(req, `header_${menuCacheLanguage}`, () => {
     return getHeaderContent(language)
   })
-  const headerId: string = 'header' + randomUnsafeString()
   const header: RenderResponse = r4xpRender('Header',
     {
       ...headerContent as object,
@@ -159,19 +155,16 @@ exports.get = function(req: XP.Request): XP.Response {
     },
     req,
     {
-      id: headerId,
-      body: '<div id="header"></div>'
+      id: 'header',
+      body: '<div id="header"></div>',
+      pageContributions
     }
   )
 
-  // if (header) {
-  //   pageContributions = header.component.renderPageContributions({
-  //     pageContributions: pageContributions
-  //
-  //   })
-  // }
+  if (header) {
+    pageContributions = header.pageContributions
+  }
 
-  const footerId: string = 'footer' + randomUnsafeString()
   const footer: RenderResponse = fromMenuCache(req, `footer_${menuCacheLanguage}`, () => {
     const footerContent: FooterContent | undefined = getFooterContent(language )
     if (footerContent) {
@@ -182,18 +175,17 @@ exports.get = function(req: XP.Request): XP.Response {
         },
         req,
         {
-          id: footerId,
-          body: '<footer id="footer"></footer>'
+          id: 'footer',
+          body: '<footer id="footer"></footer>',
+          pageContributions
         })
     }
     return undefined
   }) as RenderResponse
-  //
-  // if (footer && (footer as MenuContent).component) {
-  //   pageContributions = (footer as MenuContent).component.renderPageContributions({
-  //     pageContributions: pageContributions as React4xpPageContributionOptions
-  //   })
-  // }
+
+  if (footer) {
+    pageContributions = footer.pageContributions
+  }
 
   let municipality: MunicipalityWithCounty | undefined
   if (req.params.selfRequest) {
@@ -220,8 +212,7 @@ exports.get = function(req: XP.Request): XP.Response {
   const statBankContent: StatbankFrameData = parseStatbankFrameContent(statbankFane, req, page)
 
   const breadcrumbs: Breadcrumbs = getBreadcrumbs(page, municipality, statbankFane ? statBankContent : undefined)
-  const breadcrumbId: string = 'breadcrumbs' + randomUnsafeString()
-
+  const breadcrumbId: string = 'breadcrumbs'
   const hideBreadcrumb: boolean = !!(pageConfig).hide_breadcrumb
   const innrapporteringRegexp: RegExp = /^\/ssb(\/en)?\/innrapportering/ // Skal matche alle sider under /innrapportering på norsk og engelsk
   const model: DefaultModel = {
@@ -257,7 +248,8 @@ exports.get = function(req: XP.Request): XP.Response {
     req,
     {
       id: breadcrumbId,
-      body: thymeleafRenderBody
+      body: thymeleafRenderBody,
+      pageContributions
     })
 
   const bodyWithBreadCrumbs: string | boolean = !hideBreadcrumb && breadcrumbComponent.body
