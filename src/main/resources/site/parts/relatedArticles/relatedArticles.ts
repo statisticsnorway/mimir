@@ -84,10 +84,7 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
     }
   }
 
-  const body: string = render(view, {
-    // relatedArticlesId: relatedArticlesComponent.react4xpId,
-    heading: phrases.relatedArticlesHeading
-  })
+  const body: string = render(view)
 
   return r4xpRender('RelatedArticles',
     {
