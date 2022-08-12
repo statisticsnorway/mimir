@@ -3,7 +3,7 @@ import { ResourceKey, render } from '/lib/thymeleaf'
 import { DatasetRepoNode } from '../../../lib/ssb/repo/dataset'
 import { JSONstat } from '../../../lib/types/jsonstat-toolkit'
 import { Phrases } from '../../../lib/types/language'
-import {render as r4XpRender, RenderResponse} from '/lib/enonic/react4xp'
+import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
 import { TbmlDataUniform } from '../../../lib/types/xmlParser'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { GA_TRACKING_ID } from '../../pages/default/default'
@@ -78,10 +78,12 @@ function getTablesAndFiguresComponent(page: Content<Statistics>, req: XP.Request
   }
 
   const attachmentTableAndFigureView: Array<AttachmentTablesFiguresData> = getTablesAndFigures(attachmentTablesAndFigures, req, phrases)
-
+  const body: string = render(view, {
+    title
+  })
   const accordionComponent: RenderResponse = r4XpRender(
-      'AttachmentTablesFigures',
-      {
+    'AttachmentTablesFigures',
+    {
       accordions: attachmentTableAndFigureView.map(({
         id, open, subHeader, body, contentType, props
       }) => {
@@ -102,8 +104,11 @@ function getTablesAndFiguresComponent(page: Content<Statistics>, req: XP.Request
       appName: app.name,
       GA_TRACKING_ID: GA_TRACKING_ID
     },
-      req,
-      {id: 'accordion'})
+    req,
+    {
+      id: 'accordion',
+      body: body
+    })
 
   const accordionBody: string = accordionComponent.body
 
