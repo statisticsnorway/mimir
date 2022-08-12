@@ -5,6 +5,7 @@ import { render as r4xpRender, RenderResponse } from '/lib/enonic/react4xp'
 import { SEO } from '../../../services/news/news'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { DefaultPageConfig } from '../../pages/default/default-page-config'
+import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
 const {
   data: {
@@ -62,8 +63,9 @@ function renderRelatedStatistics(req: XP.Request,
   relatedStatisticsContent: Array<RelatedStatisticsContent>,
   phrases: Phrases): XP.Response {
   if (relatedStatisticsContent && relatedStatisticsContent.length) {
+    const id: string = 'related-statistics-' + randomUnsafeString()
     const body: string = render(view, {
-      label: statisticsTitle
+      relatedStatisticsId: id
     })
 
     return r4xpRender('StatisticsCards',
@@ -79,6 +81,7 @@ function renderRelatedStatistics(req: XP.Request,
       },
       req,
       {
+        id: id,
         body: body
       })
   }
