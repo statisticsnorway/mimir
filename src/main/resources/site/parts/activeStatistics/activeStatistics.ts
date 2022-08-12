@@ -67,7 +67,10 @@ function renderPart(req: XP.Request): RenderResponse {
 
 function renderActiveStatistics(statisticsTitle: string, activeStatisticsContent: Array<ActiveStatistic | undefined>): RenderResponse {
   if (activeStatisticsContent && activeStatisticsContent.length) {
-    const body: string = render(view)
+    const id: string = 'active-statistics'
+    const body: string = render(view, {
+      activeStatisticsId: id
+    })
     const activeStatisticsXP: RenderResponse = r4XpRender(
       'StatisticsCards',
       {
@@ -80,6 +83,7 @@ function renderActiveStatistics(statisticsTitle: string, activeStatisticsContent
       },
       null,
       {
+        id,
         body: body
       })
 
