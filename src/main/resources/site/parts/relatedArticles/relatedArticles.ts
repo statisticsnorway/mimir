@@ -3,7 +3,7 @@ import { render, ResourceKey } from '/lib/thymeleaf'
 import { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import { Phrases } from '../../../lib/types/language'
-import { render as r4xpRender, RenderResponse } from '/lib/enonic/react4xp'
+import { render as r4xpRender } from '/lib/enonic/react4xp'
 import { SEO } from '../../../services/news/news'
 import { Article } from '../../content-types/article/article'
 import { Statistics } from '../../content-types/statistics/statistics'
@@ -84,7 +84,10 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
     }
   }
 
-  const body: string = render(view)
+  const id: string = 'related-articles'
+  const body: string = render(view, {
+    relatedArticlesId: id
+  })
 
   return r4xpRender('RelatedArticles',
     {
@@ -160,7 +163,7 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
     },
     req,
     {
-      id: 'related-articles',
+      id: id,
       body: body
     })
 }

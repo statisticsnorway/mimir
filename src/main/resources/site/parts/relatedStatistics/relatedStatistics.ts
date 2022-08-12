@@ -1,11 +1,9 @@
 import { get, Content } from '/lib/xp/content'
 import { ResourceKey, render } from '/lib/thymeleaf'
 import { Phrases } from '../../../lib/types/language'
-import { render as r4xpRender, RenderResponse } from '/lib/enonic/react4xp'
+import { render as r4xpRender } from '/lib/enonic/react4xp'
 import { SEO } from '../../../services/news/news'
 import { Statistics } from '../../content-types/statistics/statistics'
-import { DefaultPageConfig } from '../../pages/default/default-page-config'
-import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
 const {
   data: {
@@ -23,9 +21,6 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  hasPath
-} = __non_webpack_require__('/lib/vendor/ramda')
 
 const view: ResourceKey = resolve('./relatedStatistics.html')
 
@@ -63,7 +58,7 @@ function renderRelatedStatistics(req: XP.Request,
   relatedStatisticsContent: Array<RelatedStatisticsContent>,
   phrases: Phrases): XP.Response {
   if (relatedStatisticsContent && relatedStatisticsContent.length) {
-    const id: string = 'related-statistics-' + randomUnsafeString()
+    const id: string = 'related-statistics'
     const body: string = render(view, {
       relatedStatisticsId: id
     })
