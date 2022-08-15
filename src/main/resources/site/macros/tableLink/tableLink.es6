@@ -4,6 +4,7 @@ import { render } from '/lib/thymeleaf'
 const {
   pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
+const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
