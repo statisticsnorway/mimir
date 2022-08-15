@@ -66,7 +66,9 @@ export function RefreshStatisticsModal(props) {
             <h2>Statistikk: {openStatistic.shortName}</h2>
             <span>For å oppdatere tabeller med ennå ikke publiserte tall må brukernavn og passord for lastebrukere i Statistikkbanken brukes.</span>
             <br/>
-            <span>For andre endringer velg &quot;Hent publiserte tall&quot; uten å oppgi brukernavn og passord.</span>
+            <span>
+              For andre endringer velg &quot;Hent oppdatert tabellstruktur fra Tabellbygger med publiserte tall&quot; uten å oppgi brukernavn og passord.
+            </span>
           </Col>
         </Row>
         { renderStatisticsForm() }

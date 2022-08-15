@@ -89,9 +89,10 @@ export function RefreshStatisticsForm(props) {
           <Col>
             <Form.Group controlId={'formBasicCheckbox_' + index}>
               <Form.Check
+                className="mt-4 mb-3 fetch-published-checkbox"
                 onChange={(e) => updateFetchPublished(owner, e )}
                 type="checkbox"
-                label="Hent publiserte tall"
+                label="Hent oppdatert tabellstruktur fra Tabellbygger med publiserte tall"
               />
             </Form.Group>
           </Col>
