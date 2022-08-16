@@ -72,7 +72,7 @@ function ArticleArchive(props) {
       const groupByYear = groupBy((articles) => {
         return articles.year
       })
-      const groupArticlesByYearDesc = Object.entries(groupByYear(articles))
+      const groupArticlesByYearDesc = Object.entries(groupByYear(articles)).reverse()
       return groupArticlesByYearDesc.map(([year, articles], index) => {
         return (
           <Row className="articles-container" key={`groupedArticles-${index}`}>
