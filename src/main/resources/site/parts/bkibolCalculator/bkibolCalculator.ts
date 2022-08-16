@@ -1,4 +1,4 @@
-import { render as r4XpRender, RenderResponse, React4xp } from '/lib/enonic/react4xp'
+import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
 import { getComponent,
   getContent,
   serviceUrl,
@@ -11,7 +11,6 @@ import { CalculatorConfig } from '../../content-types/calculatorConfig/calculato
 import { Language, Phrases } from '../../../lib/types/language'
 import { allMonths, nextPeriod } from '../../../lib/ssb/utils/calculatorUtils'
 import { CalculatorPeriod } from '../../../lib/types/calculator'
-import { ResourceKey, render } from '/lib/thymeleaf'
 import { DropdownItem, DropdownItems } from '../../../lib/types/components'
 
 const {
@@ -28,7 +27,6 @@ const {
   fromPartCache
 } = __non_webpack_require__('/lib/ssb/cache/partCache')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
-const view: ResourceKey = resolve('./bkibolCalculator.html') as ResourceKey
 
 exports.get = function(req: XP.Request): RenderResponse | XP.Response {
   try {
@@ -38,7 +36,7 @@ exports.get = function(req: XP.Request): RenderResponse | XP.Response {
   }
 }
 
-exports.preview = function( req: XP.Request ) {
+exports.preview = function(req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -94,8 +92,6 @@ function getBkibolCalculatorComponent(req: XP.Request, page: Content<BkibolCalcu
     id: part.config.bkibolCalculatorArticle
   })
 
-  const body: string = render(view)
-
   return r4XpRender(
     'BkibolCalculator',
     {
@@ -112,7 +108,7 @@ function getBkibolCalculatorComponent(req: XP.Request, page: Content<BkibolCalcu
     },
     req,
     {
-      body: body
+      body: `<section class="xp-part part-bkibol-calculator container"></section>`
     })
 }
 
@@ -138,9 +134,4 @@ function monthLabel(months: DropdownItems, language: string, month: number): str
     return language === 'en' ? monthLabel.title : monthLabel.title.toLowerCase()
   }
   return ''
-}
-
-interface CalculatorComponent {
-  component: React4xp;
-  body: string;
 }
