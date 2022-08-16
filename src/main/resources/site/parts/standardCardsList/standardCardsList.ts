@@ -4,6 +4,7 @@ import { render as r4xpRender, RenderResponse } from '/lib/enonic/react4xp'
 import { SEO } from '../../../services/news/news'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { StandardCardsListPartConfig } from './standardCardsList-part-config'
+import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
 const {
   data: {
@@ -60,7 +61,9 @@ function renderPart(req: XP.Request): XP.Response {
 
 function renderStandardCardsList(req: XP.Request, statisticsTitle: string | undefined, standardCardsListContent: StandardCardsListPartConfig['statisticsItemSet']): XP.Response {
   if (standardCardsListContent && standardCardsListContent.length) {
+    const id: string = 'standard-card-list-' + randomUnsafeString()
     const body: string = render(view, {
+      standardCardsListComponentId: id,
       statisticsTitle
     })
     return r4xpRender('StatisticsCards',
@@ -74,6 +77,7 @@ function renderStandardCardsList(req: XP.Request, statisticsTitle: string | unde
       },
       req,
       {
+        id: id,
         body: body
       })
   }
