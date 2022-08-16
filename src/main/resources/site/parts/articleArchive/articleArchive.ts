@@ -1,25 +1,21 @@
-import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { query, Content, QueryResponse } from '/lib/xp/content'
+import { getContent, imageUrl, pageUrl, processHtml, serviceUrl } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
+
+import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import { Article } from '../../content-types/article/article'
 import { ArticleArchive } from '../../content-types/articleArchive/articleArchive'
 
 const {
-  getContent, imageUrl, pageUrl, processHtml, serviceUrl
-} = __non_webpack_require__('/lib/xp/portal')
-const {
   getImageAlt
 } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
-
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  localize
-} = __non_webpack_require__('/lib/xp/i18n')
 
 
-exports.get = (req: XP.Request): XP.Response | RenderResponse => {
+exports.get = function(req: XP.Request): XP.Response | RenderResponse {
   try {
     return renderPart(req)
   } catch (e) {
@@ -27,9 +23,9 @@ exports.get = (req: XP.Request): XP.Response | RenderResponse => {
   }
 }
 
-exports.preview = (req: XP.Request) => renderPart(req)
+exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
 
-function renderPart(req: XP.Request):RenderResponse {
+function renderPart(req: XP.Request): RenderResponse {
   const page: Content<ArticleArchive> = getContent()
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   const listOfArticlesTitle: string = localize({
