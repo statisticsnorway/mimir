@@ -1,5 +1,5 @@
 import { get, Content } from '/lib/xp/content'
-import { ResourceKey, render } from '/lib/thymeleaf'
+import { getContent, processHtml } from '/lib/xp/portal'
 import { DatasetRepoNode } from '../../../lib/ssb/repo/dataset'
 import { JSONstat } from '../../../lib/types/jsonstat-toolkit'
 import { Phrases } from '../../../lib/types/language'
@@ -13,10 +13,6 @@ const {
     forceArray
   }
 } = __non_webpack_require__('/lib/util')
-const {
-  getContent,
-  processHtml
-} = __non_webpack_require__('/lib/xp/portal')
 const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
@@ -33,8 +29,6 @@ const {
 
 const tableController: { getProps: (req: XP.Request, tableId: string) => object } = __non_webpack_require__('../table/table')
 const highchartController: { preview: (req: XP.Request, id: string) => XP.Response } = __non_webpack_require__('../highchart/highchart')
-
-const view: ResourceKey = resolve('./attachmentTablesFigures.html')
 
 exports.get = function(req: XP.Request): XP.Response {
   try {
@@ -63,62 +57,53 @@ function getTablesAndFiguresComponent(page: Content<Statistics>, req: XP.Request
   const title: string = phrases.attachmentTablesFigures
 
   const attachmentTablesAndFigures: Array<string> = page.data.attachmentTablesFigures ? forceArray(page.data.attachmentTablesFigures) : []
-  if (attachmentTablesAndFigures.length === 0) {
-    if (req.mode === 'edit' && page.type !== `${app.name}:statistics`) {
+  const attachmentTableAndFigureView: Array<AttachmentTablesFiguresData> = getTablesAndFigures(attachmentTablesAndFigures, req, phrases)
+  const attachmentTablesFiguresProps: object = {
+    accordions: attachmentTableAndFigureView.map(({
+      id, open, subHeader, body, contentType, props
+    }) => {
       return {
-        body: render(view, {
-          label: title
-        })
+        id,
+        contentType,
+        open,
+        subHeader,
+        body,
+        props
       }
-    } else {
-      return {
-        body: null
-      }
-    }
+    }),
+    freeText: page.data.freeTextAttachmentTablesFigures ? processHtml({
+      value: page.data.freeTextAttachmentTablesFigures.replace(/&nbsp;/g, ' ')
+    }) : undefined,
+    showAll: phrases.showAll,
+    showLess: phrases.showLess,
+    appName: app.name,
+    GA_TRACKING_ID: GA_TRACKING_ID,
+    title
   }
 
-  const attachmentTableAndFigureView: Array<AttachmentTablesFiguresData> = getTablesAndFigures(attachmentTablesAndFigures, req, phrases)
-  const body: string = render(view, {
-    title
-  })
   const accordionComponent: RenderResponse = r4XpRender(
     'AttachmentTablesFigures',
-    {
-      accordions: attachmentTableAndFigureView.map(({
-        id, open, subHeader, body, contentType, props
-      }) => {
-        return {
-          id,
-          contentType,
-          open,
-          subHeader,
-          body,
-          props
-        }
-      }),
-      freeText: page.data.freeTextAttachmentTablesFigures ? processHtml({
-        value: page.data.freeTextAttachmentTablesFigures.replace(/&nbsp;/g, ' ')
-      }) : undefined,
-      showAll: phrases.showAll,
-      showLess: phrases.showLess,
-      appName: app.name,
-      GA_TRACKING_ID: GA_TRACKING_ID
-    },
+    attachmentTablesFiguresProps,
     req,
     {
       id: 'accordion',
-      body: body
+      body: `<section class="xp-part attachment-tables-figures"></section>`
     })
 
-  const accordionBody: string = accordionComponent.body
-
+  const accordionBody: string | null = accordionComponent.body
   const accordionPageContributions: XP.PageContributions = accordionComponent.pageContributions
-  const pageContributions: XP.PageContributions = getFinalPageContributions(accordionPageContributions, attachmentTableAndFigureView)
+  const pageContributions: XP.PageContributions | null = getFinalPageContributions(accordionPageContributions, attachmentTableAndFigureView)
 
-  return {
-    body: accordionBody,
-    pageContributions,
-    contentType: 'text/html'
+  if (!attachmentTablesAndFigures.length && !(req.mode === 'edit' && page.type !== `${app.name}:statistics`)) {
+    return {
+      body: null
+    }
+  } else {
+    return {
+      body: accordionBody,
+      pageContributions,
+      contentType: 'text/html'
+    }
   }
 }
 
