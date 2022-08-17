@@ -16,12 +16,14 @@ const {
   datasetOrUndefined
 } = __non_webpack_require__('/lib/ssb/cache/cache')
 
+
 export function getCalculatorConfig(): Content<CalculatorConfig> | undefined {
   return query({
     contentTypes: [`${app.name}:calculatorConfig`],
     count: 1,
     start: 0,
-    query: ''
+    query: '',
+    sort: 'createdTime ASC'
   }).hits[0] as Content<CalculatorConfig> | undefined
 }
 
@@ -115,6 +117,32 @@ export function getNameSearchGraphData(config: Content<CalculatorConfig>): Datas
   return nameSearchGraphRepo
 }
 
+export function getAllCalculatorDataset(): Array<Content<GenericDataImport>> {
+  const calculatorConfig: Content<CalculatorConfig> | undefined = getCalculatorConfig()
+  const calculatorDatasetKeys: Array<string | undefined> = []
+  if (calculatorConfig && calculatorConfig.data) {
+    calculatorDatasetKeys.push(calculatorConfig.data.kpiSourceYear)
+    calculatorDatasetKeys.push(calculatorConfig.data.kpiSourceMonth)
+    calculatorDatasetKeys.push(calculatorConfig.data.pifSource)
+    calculatorDatasetKeys.push(calculatorConfig.data.bkibolSourceEnebolig)
+    calculatorDatasetKeys.push(calculatorConfig.data.bkibolSourceBoligblokk)
+  }
+
+  calculatorDatasetKeys.filter((dataset) => dataset !== undefined)
+
+  const datasources: Array<Content<GenericDataImport>> = []
+  calculatorDatasetKeys.forEach((key:string ) => {
+    const dataset:Content<GenericDataImport> | null = getContent({
+      key: key
+    })
+    if (dataset) {
+      datasources.push(dataset)
+    }
+  })
+
+  return datasources
+}
+
 export function isChronological(startYear: string, startMonth: string, endYear: string, endMonth: string): boolean {
   if (parseInt(startYear) < parseInt(endYear)) return true
   if (parseInt(endYear) < parseInt(startYear)) return false
@@ -133,7 +161,6 @@ export function getChangeValue(startIndex: number, endIndex: number, chronologic
     return ((startIndex - endIndex) / endIndex)
   }
 }
-
 export interface CalculatorLib {
   getCalculatorConfig: () => Content<CalculatorConfig> | undefined;
   getKpiDatasetYear: (config: Content<CalculatorConfig>) => Dataset | null;
@@ -142,6 +169,7 @@ export interface CalculatorLib {
   getBkibolDatasetEnebolig: (config: Content<CalculatorConfig>) => Dataset | null;
   getBkibolDatasetBoligblokk: (config: Content<CalculatorConfig>) => Dataset | null;
   getNameSearchGraphData: (config: Content<CalculatorConfig>) => DatasetRepoNode<JSONstatType> | null;
+  getAllCalculatorDataset:()=> Array<Content<GenericDataImport>>;
   isChronological: (startYear: string, startMonth: string, endYear: string, endMonth: string) => boolean;
   getChangeValue: (startIndex: number, endIndex: number, chronological: boolean) => number;
 }

@@ -28,7 +28,8 @@ export enum JobNames {
   STATREG_JOB = 'Refresh statreg data',
   STATISTICS_REFRESH_JOB = 'refresh statistics',
   REFRESH_DATASET_JOB = 'Refresh dataset',
-  PUSH_RSS_NEWS = 'Push RSS news'
+  PUSH_RSS_NEWS = 'Push RSS news',
+  REFRESH_DATASET_CALCULATOR_JOB = 'Refresh dataset calculators',
 }
 
 export const JOB_STATUS_STARTED: 'STARTED' = 'STARTED'
@@ -41,7 +42,7 @@ export interface JobInfo {
   data: {
     status: typeof JOB_STATUS_STARTED | typeof JOB_STATUS_COMPLETE;
     task: string;
-    refreshDataResult: object | Array<StatisticsPublishResult> | DatasetRefreshResult;
+    refreshDataResult: object | Array<StatisticsPublishResult> | DatasetRefreshResult | CalculatorRefreshResult;
     message: string;
     httpStatusCode?: number;
     jobStarted: string;
@@ -53,6 +54,10 @@ export interface JobInfo {
 
 export interface DatasetRefreshResult {
   filterInfo: RSSFilterLogData;
+  result: Array<DataSourceInfo>;
+}
+
+export interface CalculatorRefreshResult {
   result: Array<DataSourceInfo>;
 }
 
