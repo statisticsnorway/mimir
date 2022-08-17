@@ -21,7 +21,7 @@ exports.macro = function(context: MacroContext): React4xpResponse {
   const config: LinksConfig & TableLink & HeaderLink & ProfiledLink = context.params
   const linkType: string | undefined = config.linkTypes
 
-  let props: LinksProps | {} = {}
+  let props: LinksProps | object = {}
   if (linkType) {
     if (linkType === 'tableLink') {
       const href: string | undefined = config.relatedContent ? pageUrl({
@@ -53,13 +53,13 @@ exports.macro = function(context: MacroContext): React4xpResponse {
         isPDFAttachment = (/(.*?).pdf/).test(content._name)
         attachmentTitle = content.displayName
       } else {
-        contentUrl = linkedContent && pageUrl({
+        contentUrl = linkedContent ? pageUrl({
           id: linkedContent
-        })
+        }) : config.headerLinkHref
       }
 
       props = {
-        children: content ? prepareText(content, linkText) : '',
+        children: content ? prepareText(content, linkText) : linkText,
         href: contentUrl,
         linkType: 'header',
         GA_TRACKING_ID: GA_TRACKING_ID,
@@ -71,9 +71,9 @@ exports.macro = function(context: MacroContext): React4xpResponse {
     if (linkType === 'profiledLink') {
       props = {
         children: config.text,
-        href: config.contentUrl && pageUrl({
+        href: config.contentUrl ? pageUrl({
           id: config.contentUrl
-        }),
+        }) : config.profiledLinkHref,
         withIcon: config.withIcon,
         linkType: 'profiled'
       }
