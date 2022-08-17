@@ -26,6 +26,11 @@ export interface LinksConfig {
   relatedContent?: string;
 
   /**
+   * Lenketekst
+   */
+  linkText?: string;
+
+  /**
    * URL
    */
   headerLinkHref?: string;
@@ -38,7 +43,12 @@ export interface LinksConfig {
   /**
    * Lenketekst
    */
-  linkText?: string;
+  text?: string;
+
+  /**
+   * Med ikon
+   */
+  withIcon: boolean;
 
   /**
    * URL
@@ -49,14 +59,4 @@ export interface LinksConfig {
    * Innhold
    */
   contentUrl?: string;
-
-  /**
-   * Lenketekst
-   */
-  text?: string;
-
-  /**
-   * Med ikon
-   */
-  withIcon: boolean;
 }
