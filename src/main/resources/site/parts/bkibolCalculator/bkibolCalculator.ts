@@ -55,7 +55,7 @@ exports.preview = function( req: Request ) {
 function renderPart(req: Request): React4xpResponse {
   const page: Content<BkibolCalculatorPartConfig> = getContent()
   let bkibolCalculator: CalculatorComponent
-  if (req.mode === 'edit') {
+  if (req.mode === 'edit' || req.mode === 'inline') {
     bkibolCalculator = getBkibolCalculatorComponent(page)
   } else {
     bkibolCalculator = fromPartCache(req, `${page._id}-bkibolCalculator`, () => {
