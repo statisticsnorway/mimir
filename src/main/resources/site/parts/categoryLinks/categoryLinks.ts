@@ -1,12 +1,11 @@
-import {render as r4XpRender, RenderResponse} from '/lib/enonic/react4xp'
-import {  getComponent,
+import { render, RenderResponse } from '/lib/enonic/react4xp'
+import { getComponent,
   getContent,
   pageUrl,
-  Component} from "/lib/xp/portal";
-import {CategoryLinksPartConfig} from "./categoryLinks-part-config";
-import {Content} from "/lib/xp/content";
-import {Language, Phrases} from "../../../lib/types/language";
-import { render } from "/lib/thymeleaf"
+  Component } from '/lib/xp/portal'
+import { CategoryLinksPartConfig } from './categoryLinks-part-config'
+import { Content } from '/lib/xp/content'
+import { Language, Phrases } from '../../../lib/types/language'
 
 const {
   data
@@ -20,9 +19,7 @@ const {
   getLanguage
 } = __non_webpack_require__('/lib/ssb/utils/language')
 
-const view = resolve('./categoryLinks.html')
-
-exports.get = function(req: XP.Request) {
+exports.get = function(req: XP.Request): XP.Response | RenderResponse {
   try {
     return renderPart(req)
   } catch (e) {
@@ -30,7 +27,7 @@ exports.get = function(req: XP.Request) {
   }
 }
 
-exports.preview = (req: XP.Request) => renderPart(req)
+exports.preview = (req: XP.Request): XP.Response | RenderResponse => renderPart(req)
 
 const NO_LINKS_FOUND = {
   body: '',
@@ -50,9 +47,9 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
       methodsAndDocumentationUrl = methodsAndDocumentation.urlSource.url
     }
 
-    if (methodsAndDocumentation
-        && methodsAndDocumentation._selected == 'relatedSource'
-        && methodsAndDocumentation.relatedSource.content) {
+    if (methodsAndDocumentation &&
+        methodsAndDocumentation._selected == 'relatedSource' &&
+        methodsAndDocumentation.relatedSource.content) {
       methodsAndDocumentationUrl = pageUrl({
         id: methodsAndDocumentation.relatedSource.content
       })
@@ -60,48 +57,26 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
   }
 
   if (links && links.length) {
-    // const categoryLinksComponent: React4xpObject = new React4xp('CategoryLinks')
-    //   .setProps({
-    //     links: links.map((link) => {
-    //       return {
-    //         href: pageUrl({
-    //           id: link.href
-    //         }),
-    //         titleText: link.titleText,
-    //         subText: link.subText
-    //       }
-    //     }),
-    //     methodsAndDocumentationUrl,
-    //     methodsAndDocumentationLabel: phrases.methodsAndDocumentation
-    //   })
-    //   .setId('categoryLink')
-    //   .uniqueId()
-    //
-    // const body = render(view, {
-    //   categoryId: categoryLinksComponent.react4xpId
-    // })
-
-    const body = render(view)
-
-    const categoryLinksComponent: RenderResponse =r4XpRender(
-        'CategoryLinks',
-        {
-          links: links.map((link) => {
-            return {
-              href: pageUrl({
-                id: link.href
-              }),
-              titleText: link.titleText,
-              subText: link.subText
-            }
-          }),
-          methodsAndDocumentationUrl,
-          methodsAndDocumentationLabel: phrases.methodsAndDocumentation
-        },
-        req,
-        {
-          body: body
-        })
+    const categoryLinksComponent: RenderResponse = render(
+      'CategoryLinks',
+      {
+        links: links.map((link) => {
+          return {
+            href: pageUrl({
+              id: link.href
+            }),
+            titleText: link.titleText,
+            subText: link.subText
+          }
+        }),
+        methodsAndDocumentationUrl,
+        methodsAndDocumentationLabel: phrases.methodsAndDocumentation
+      },
+      req,
+      {
+        id: 'categoryLink',
+        body: `<section class="xp-part part-category-link"></section>`
+      })
 
     return categoryLinksComponent
   }
