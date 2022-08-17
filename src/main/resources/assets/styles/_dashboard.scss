@@ -308,6 +308,22 @@
     margin-right: 0;
   }
   
+  .fetch-published-checkbox {
+    display: flex;
+    align-items: center;
+
+    .form-check-input {
+      width: 1.5em;
+      height: 1.5em;
+    }
+
+    .form-check-label {
+      font-weight: bold;
+      margin-left: $spacer * .5;
+      padding-top: 3px;
+    }
+  }
+
   // Danger Zone is no more, but lives on in obscurity, ready for the day it might be needed once again.
   // .danger-zone {
   //   legend {
