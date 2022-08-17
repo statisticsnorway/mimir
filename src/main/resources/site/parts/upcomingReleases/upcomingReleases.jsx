@@ -284,8 +284,8 @@ function UpcomingReleases(props) {
 
   return (
     <section className='nextStatisticsReleases container-fluid p-0'>
-      <div className="row">
-        <div className="col-12 upcoming-releases-head">
+      <div className="row extended-banner">
+        <div className="col-12 upcoming-releases-head px-4">
           <div className="container py-5">
             <h1 id="heading-upcoming-releases">{props.title ? props.title : undefined}</h1>
             <div className="upcoming-releases-ingress" dangerouslySetInnerHTML={{
@@ -294,10 +294,10 @@ function UpcomingReleases(props) {
             </div>
           </div>
         </div>
-        <div className="col-12 release-list">
+        <div className="col-12 release-list px-4">
           <div className="container mt-5">
             <div className="row d-flex justify-content-center">
-              <div className="col-12 col-lg-10 p-0">
+              <div className="col-12 p-0">
                 { renderList() }
                 { renderButton() }
               </div>
