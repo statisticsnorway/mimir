@@ -48,7 +48,7 @@ export function Jobs() {
         ts,
         tsSort: new Date(ts),
         name,
-        nameSort: name.toLowerCase(),
+        nameSort: name ? name.toLowerCase() : job.task,
         info
       }
     })
