@@ -23,7 +23,7 @@ exports.macro = (context: MacroContext): Response | React4xpResponse => {
     const config: StaticVisualizationConfig = context.params
     const staticVisualization: Response = preview(context, config.staticVisualizationContent)
 
-    if (staticVisualization.status && staticVisualization.status !== 200) throw new Error(`StaticVisualization with id ${config.staticVisualizationContent} missing`)
+    if (staticVisualization.status && staticVisualization.status !== 200) throw new Error(`Static Visualization with id ${config.staticVisualizationContent} missing`)
     staticVisualization.body = divider.body as string + staticVisualization.body + divider.body
 
     return staticVisualization
