@@ -40,6 +40,8 @@ export function clearPartCache(content: Content, branch: string): void {
     partCache.remove(`${content._id}-omStatistikken`)
     cacheLog(`try to clear ${content._id}-upcomingReleases from part cache (${branch})`)
     partCache.remove(`${content._id}-upcomingReleases`)
+    cacheLog(`try to clear ${content._id}-articleList from part cache (${branch})`)
+    partCache.remove(`${content._id}-articleList`)
   }
 }
 

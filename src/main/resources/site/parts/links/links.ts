@@ -29,9 +29,8 @@ exports.preview = (req: XP.Request, config: LinksPartConfig): RenderResponse | X
 }
 function renderPart(req: XP.Request, config: LinksPartConfig): RenderResponse {
   const linkTypes: LinksPartConfig['linkTypes'] = config.linkTypes
-  const isNotInEditMode: boolean = req.mode !== 'edit'
 
-  let props: LinksProps | {} = {}
+  let props: LinksProps | object = {}
   if (linkTypes) {
     if (linkTypes._selected === 'tableLink') {
       const href: string | undefined = linkTypes.tableLink.relatedContent ? pageUrl({
@@ -63,13 +62,13 @@ function renderPart(req: XP.Request, config: LinksPartConfig): RenderResponse {
         isPDFAttachment = (/(.*?).pdf/).test(content._name)
         attachmentTitle = content.displayName
       } else {
-        contentUrl = linkedContent && pageUrl({
+        contentUrl = linkedContent ? pageUrl({
           id: linkedContent
-        })
+        }) : linkTypes.headerLink.headerLinkHref
       }
 
       props = {
-        children: content ? prepareText(content, linkText) : '',
+        children: content ? prepareText(content, linkText) : linkText,
         href: contentUrl,
         linkType: 'header',
         GA_TRACKING_ID: GA_TRACKING_ID,
@@ -81,18 +80,16 @@ function renderPart(req: XP.Request, config: LinksPartConfig): RenderResponse {
     if (linkTypes._selected === 'profiledLink') {
       props = {
         children: linkTypes.profiledLink.text,
-        href: linkTypes.profiledLink.contentUrl && pageUrl({
+        href: linkTypes.profiledLink.contentUrl ? pageUrl({
           id: linkTypes.profiledLink.contentUrl
-        }),
+        }) : linkTypes.profiledLink.profiledLinkHref,
         withIcon: !!linkTypes.profiledLink.withIcon,
         linkType: 'profiled'
       }
     }
   }
 
-  return render('site/parts/links/links', props, req, {
-    clientRender: isNotInEditMode
-  })
+  return render('site/parts/links/links', props, req)
 }
 
 export function prepareText(content: Content, linkText: string | undefined): string | undefined {

@@ -5,6 +5,8 @@ import {render, RenderResponse} from '/lib/enonic/react4xp'
 import { query, AggregationsResponseEntry, Content } from '/lib/xp/content'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
+import { fromPartCache } from '../../../lib/ssb/cache/partCache'
+import { renderError } from '../../../lib/ssb/error/error'
 
 const {
   localize
@@ -17,14 +19,26 @@ const {
   getSubSubjects
 } = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
 
-exports.get = (req: XP.Request): RenderResponse => {
-  return renderPart(req)
+exports.get = (req: XP.Request): RenderResponse | XP.Response => {
+  try {
+    return renderPart(req)
+  } catch (e) {
+    return renderError(req, 'Error in part', e)
+  }
 }
 
 exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
 
 function renderPart(req: XP.Request): RenderResponse {
   const content: Content = getContent()
+  if (req.mode === 'edit' || req.mode === 'inline') {
+    return getArticleList(req, content)
+  } else {
+    return fromPartCache(req, `${content._id}-articleList`, () => getArticleList(req, content))
+  }
+}
+
+function getArticleList(req: XP.Request, content: Content): RenderResponse {
   const component: Component<ArticleListPartConfig> = getComponent()
   const language: string = content.language ? content.language : 'nb'
   const articles: Array<Content<Article>> = getArticles(req, language)

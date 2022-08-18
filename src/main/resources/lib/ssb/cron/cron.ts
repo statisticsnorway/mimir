@@ -237,6 +237,8 @@ export function setupCronJobs(): void {
   const datasetPublishCron: string = app.config && app.config['ssb.cron.publishDataset'] ? app.config['ssb.cron.publishDataset'] : '50 05 * * *'
   const updateMimirMockReleaseCron: string = app.config && app.config['ssb.cron.updateMimirReleasedMock'] ?
     app.config['ssb.cron.updateMimirReleasedMock'] : '01 8 * * *'
+  const updateCalculatorCron: string = app.config && app.config['ssb.cron.updateCalculator'] ?
+    app.config['ssb.cron.updateCalculator'] : '01 8 * * *'
   const timezone: string = app.config && app.config['ssb.cron.timezone'] ? app.config['ssb.cron.timezone'] : 'UTC'
 
   // Use feature-toggling to switch to lib-sheduler when testet in QA
@@ -312,6 +314,35 @@ export function setupCronJobs(): void {
             type: 'CRON',
             value: testTaskCron,
             timeZone: timezone
+          }
+        })
+      }
+    })
+
+    // Update calculators
+    run(cronContext, () => {
+      const jobExists: boolean = !!getScheduledJob({
+        name: 'updateCalculator'
+      })
+      if (jobExists) {
+        modify({
+          name: 'updateCalculator',
+          editor: (job) => {
+            job.schedule.value = updateCalculatorCron
+            return job
+          }
+        })
+      } else {
+        create({
+          name: 'updateCalculator',
+          descriptor: `${app.name}:updateCalculator`,
+          description: 'Update data calculators',
+          user: `user:system:cronjob`,
+          enabled: true,
+          schedule: {
+            type: 'CRON',
+            value: updateCalculatorCron,
+            timeZone: 'Europe/Oslo'
           }
         })
       }

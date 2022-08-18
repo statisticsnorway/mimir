@@ -61,6 +61,8 @@ export function Jobs() {
       return 'Kjøre oppdaterte spørringer'
     case 'Refresh dataset':
       return 'Kjøre oppdaterte spørringer'
+    case 'Refresh dataset calculators':
+      return 'Oppdatere kalkulatorer'
     case 'Delete expired eventlogs':
       return 'Slette eventlog'
     case 'Publish statistics':
@@ -129,6 +131,17 @@ export function Jobs() {
           </span> :
           <span>{job.status}</span>
       )
+    } else if (job.task === 'Refresh dataset calculators') {
+      const skipped = job.result.result.filter((ds) => ds.status === 'Ingen nye data').length
+      const updated = job.result.result.filter((ds) => ds.status === 'Dataset hentet og oppdatert').length
+      const errorCount = job.result.result.filter((ds) => ds.hasError).length
+      return (
+        job.status !== 'STARTED' ?
+          <span className="modal-trigger" onClick={() => openJobLogModal(job)}>
+            {job.status} - Oppdaterte {updated} spørringer,  {errorCount} feilet og {skipped} ignorert
+          </span> :
+          <span>{job.status}</span>
+      )
     }
     return <span>{job.status} - {job.message}</span>
   }
@@ -180,6 +193,22 @@ export function Jobs() {
         )
       })
     } else if (currentModalJob.task === 'Refresh dataset') {
+      return currentModalJob.result.result.map((dataSource) => {
+        return (
+          <React.Fragment key={`refresh_dataset_log_${dataSource.id}`}>
+            <p>
+              <Link isExternal href={contentStudioBaseUrl + dataSource.id}>{dataSource.displayName}</Link>
+              <span className="small">
+                <DataQueryBadges contentType={dataSource.contentType} format={dataSource.dataSourceType} isPublished={true} floatRight={false}/>
+              </span>
+              <br />
+              {dataSource.status}
+            </p>
+            <Divider className="my-3"/>
+          </React.Fragment>
+        )
+      })
+    } else if (currentModalJob.task === 'Refresh dataset calculators') {
       return currentModalJob.result.result.map((dataSource) => {
         return (
           <React.Fragment key={`refresh_dataset_log_${dataSource.id}`}>

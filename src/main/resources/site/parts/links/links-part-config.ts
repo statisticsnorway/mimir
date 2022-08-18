@@ -46,14 +46,19 @@ export interface LinksPartConfig {
          */
         headerLink: {
           /**
-           * Innhold
-           */
-          linkedContent?: string;
-
-          /**
            * Lenketekst
            */
           linkText?: string;
+
+          /**
+           * URL
+           */
+          headerLinkHref?: string;
+
+          /**
+           * Innhold
+           */
+          linkedContent?: string;
         };
       }
     | {
@@ -67,11 +72,6 @@ export interface LinksPartConfig {
          */
         profiledLink: {
           /**
-           * Innhold
-           */
-          contentUrl?: string;
-
-          /**
            * Lenketekst
            */
           text?: string;
@@ -80,6 +80,16 @@ export interface LinksPartConfig {
            * Med ikon
            */
           withIcon: boolean;
+
+          /**
+           * URL
+           */
+          profiledLinkHref?: string;
+
+          /**
+           * Innhold
+           */
+          contentUrl?: string;
         };
       };
 }

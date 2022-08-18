@@ -82,7 +82,6 @@
     "prop-types": "^15.7.2",
     "ramda": "^0.27.1",
     "react": "^16.14.0",
-    "react-bootstrap-easy-dialog": "^0.3.3",
     "react-dom": "^16.14.0",
     "react-feather": "^2.0.9",
     "react-helmet-async": "^1.2.0",

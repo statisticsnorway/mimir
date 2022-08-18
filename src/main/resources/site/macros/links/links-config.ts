@@ -26,19 +26,19 @@ export interface LinksConfig {
   relatedContent?: string;
 
   /**
-   * Innhold
-   */
-  linkedContent?: string;
-
-  /**
    * Lenketekst
    */
   linkText?: string;
 
   /**
+   * URL
+   */
+  headerLinkHref?: string;
+
+  /**
    * Innhold
    */
-  contentUrl?: string;
+  linkedContent?: string;
 
   /**
    * Lenketekst
@@ -49,4 +49,14 @@ export interface LinksConfig {
    * Med ikon
    */
   withIcon: boolean;
+
+  /**
+   * URL
+   */
+  profiledLinkHref?: string;
+
+  /**
+   * Innhold
+   */
+  contentUrl?: string;
 }

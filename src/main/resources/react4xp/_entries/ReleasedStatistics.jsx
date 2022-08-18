@@ -38,6 +38,7 @@ class ReleasedStatistics extends React.Component {
         </time>
         <span id={`datemonth-${monthNumber}${index}`} aria-hidden="true" className="sr-only">{`${day.day}. ${monthNameLong}`}</span>
         <ol className='releaseList' aria-labelledby={`heading-released-statistics datemonth-${monthNumber}${index}`}>
+          
           {
             day.releases.map((release, releaseIndex) => this.renderRelease(release, releaseIndex))
           }
@@ -48,7 +49,7 @@ class ReleasedStatistics extends React.Component {
 
   render() {
     return (
-      <section className='nextStatisticsReleases'>
+      <section className='nextStatisticsReleases container-fluid'>
         <h2 className="mb-4" id="heading-released-statistics">{this.props.title}</h2>
         {
           this.props.releases.reverse().map((year) => {

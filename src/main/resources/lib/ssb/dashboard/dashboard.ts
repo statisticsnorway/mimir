@@ -14,7 +14,7 @@ import { TbmlDataUniform } from '../../types/xmlParser'
 import { DatasetRepoNode } from '../repo/dataset'
 import { withConnection } from '../repo/common'
 import { User } from '/lib/xp/auth'
-import { DatasetRefreshResult, JobInfoNode, JOB_STATUS_COMPLETE, JOB_STATUS_STARTED, StatisticsPublishResult } from '../repo/job'
+import { CalculatorRefreshResult, DatasetRefreshResult, JobInfoNode, JOB_STATUS_COMPLETE, JOB_STATUS_STARTED, StatisticsPublishResult } from '../repo/job'
 import { StatisticInListing } from './statreg/types'
 import { StatRegRefreshResult } from '../repo/statreg'
 import { StatRegJobInfo } from './statreg'
@@ -371,7 +371,7 @@ function getJobs(): Array<DashboardJobInfo> {
   }, [])
 }
 
-function parseResult(jobLog: JobInfoNode): Array<DashboardPublishJobResult> | Array<StatRegJobInfo> | DatasetRefreshResult {
+function parseResult(jobLog: JobInfoNode): Array<DashboardPublishJobResult> | Array<StatRegJobInfo> | DatasetRefreshResult | CalculatorRefreshResult {
   if (jobLog.data.task === JobNames.PUBLISH_JOB) {
     const refreshDataResult: Array<StatisticsPublishResult> = forceArray(jobLog.data.refreshDataResult || []) as Array<StatisticsPublishResult>
     return refreshDataResult.map((statResult) => {
@@ -435,6 +435,21 @@ function parseResult(jobLog: JobInfoNode): Array<DashboardPublishJobResult> | Ar
     result.filterInfo.skipped = forceArray(result.filterInfo.skipped || [])
     result.filterInfo.end = forceArray(result.filterInfo.end || [])
     result.filterInfo.statistics = forceArray(result.filterInfo.statistics || [])
+    result.result = forceArray(result.result || []).map((ds) => {
+      ds.hasError = showWarningIcon(ds.status as Events)
+      ds.status = localize({
+        key: ds.status
+      })
+      return ds
+    })
+    return result
+  } else if (jobLog.data.task === JobNames.REFRESH_DATASET_CALCULATOR_JOB) {
+    let result: CalculatorRefreshResult | undefined = jobLog.data.refreshDataResult as CalculatorRefreshResult | undefined
+    if (!result) {
+      result = {
+        result: []
+      }
+    }
     result.result = forceArray(result.result || []).map((ds) => {
       ds.hasError = showWarningIcon(ds.status as Events)
       ds.status = localize({
