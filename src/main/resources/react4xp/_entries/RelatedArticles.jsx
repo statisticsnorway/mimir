@@ -16,8 +16,20 @@ function RelatedArticles(props) {
     articlePluralName
   } = props
 
+  // Props must be assigned to const before we can instantiate this state.
+  const [shownArticles, setShownArticles] = useState(relatedArticles.slice(0, 3))
+
   function toggleBox() {
+    isHidden ? showMore() : showFewer()
     setIsHidden(!isHidden)
+  }
+
+  function showMore() {
+    setShownArticles(relatedArticles)
+  }
+
+  function showFewer() {
+    setShownArticles(relatedArticles.slice(0, 3))
   }
 
   function getButtonBreakpoints() {
@@ -46,19 +58,6 @@ function RelatedArticles(props) {
     )
   }
 
-  function getBreakpoints(index, hasButton) {
-    const hideCard = hasButton && isHidden ? ' visually-hidden-focusable' : ''
-    if (index < 3) {
-      return ' d-block'
-    } else if (index < 4) {
-      return ` d-lg-block${hideCard}`
-    } else if (index < 6) {
-      return ` d-lg-block${hideCard}`
-    }
-    return hideCard
-  }
-
-
   const hasButton = showAll && showLess
 
   return (
@@ -67,11 +66,11 @@ function RelatedArticles(props) {
         <h2 className="col mt-4 mb-5">{heading}</h2>
       </div>
       <ul className="row mb-5">
-        {relatedArticles.map((article, index) => {
+        {shownArticles.map((article, index) => {
           return (
             <li
               key={index}
-              className={`col-auto col-12 col-lg-4 mb-3${getBreakpoints(index, hasButton)}`}
+              className={`col-auto col-12 col-lg-4 mb-3`}
             >
               <Card
                 imagePlacement="top"
