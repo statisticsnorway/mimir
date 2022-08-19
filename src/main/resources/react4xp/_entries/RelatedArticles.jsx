@@ -47,7 +47,7 @@ function RelatedArticles(props) {
   }
 
   function getBreakpoints(index, hasButton) {
-    const hideCard = hasButton && isHidden ? 'visually-hidden-focusable' : ''
+    const hideCard = hasButton && isHidden ? ' visually-hidden-focusable' : ''
     if (index < 3) {
       return ' d-block'
     } else if (index < 4) {
@@ -66,19 +66,11 @@ function RelatedArticles(props) {
       <div className="row" ref={currentElement}>
         <h2 className="col mt-4 mb-5">{heading}</h2>
       </div>
-      <div role="list" className="row mb-5">
+      <ul className="row mb-5">
         {relatedArticles.map((article, index) => {
-          // const last = index === this.props.relatedArticles.length - relatedArticles.count
-          // This should probably not be 6.
-          const last = index == 6
-          // console.log(`Log line debugging :: index: ${index} last: ${last} and currentElement: ${JSON.stringify(currentElement, null, 2)}`)
           return (
-            <div
-              role="listitem"
+            <li
               key={index}
-              ref={last ? currentElement : null}
-              // This somehow does nothing.
-
               className={`col-auto col-12 col-lg-4 mb-3${getBreakpoints(index, hasButton)}`}
             >
               <Card
@@ -96,10 +88,10 @@ function RelatedArticles(props) {
                   {article.preface}
                 </Text>
               </Card>
-            </div>
+            </li>
           )
         })}
-      </div>
+      </ul>
       {hasButton && renderShowMoreButton()}
     </div>
   )
