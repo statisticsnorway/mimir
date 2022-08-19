@@ -1,10 +1,10 @@
-// import React, { useRef } from 'react'
-import React, { useState, useRef } from 'react'
-import { Card, Text, Button } from '@statisticsnorway/ssb-component-library'
+import React, { useState, useRef, useEffect } from 'react'
+import { Button } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 
 function RelatedArticles(props) {
   const [isHidden, setIsHidden] = useState(true)
+  const [focusElement, setFocusElement] = useState(false)
   const currentElement = useRef(null)
 
   const {
@@ -19,16 +19,24 @@ function RelatedArticles(props) {
   // Props must be assigned to const before we can instantiate this state.
   const [shownArticles, setShownArticles] = useState(relatedArticles.slice(0, 3))
 
+  useEffect(() => {
+    if (focusElement) {
+      currentElement.current.focus()
+    }
+  }, [shownArticles])
+
   function toggleBox() {
     isHidden ? showMore() : showFewer()
     setIsHidden(!isHidden)
   }
 
   function showMore() {
+    setFocusElement(true)
     setShownArticles(relatedArticles)
   }
 
   function showFewer() {
+    setFocusElement(false)
     setShownArticles(relatedArticles.slice(0, 3))
   }
 
@@ -62,7 +70,7 @@ function RelatedArticles(props) {
 
   return (
     <div className="container">
-      <div className="row" ref={currentElement}>
+      <div className="row">
         <h2 className="col mt-4 mb-5">{heading}</h2>
       </div>
       <ul className="row mb-5">
@@ -72,21 +80,24 @@ function RelatedArticles(props) {
               key={index}
               className={`col-auto col-12 col-lg-4 mb-3`}
             >
-              <Card
-                imagePlacement="top"
-                image={
-                  <img
-                    src={article.imageSrc}
-                    alt={article.imageAlt ? article.imageAlt : ' '} aria-hidden="true" />
-                }
-                href={article.href}
-                subTitle={article.subTitle}
-                title={article.title}
-              >
-                <Text>
-                  {article.preface}
-                </Text>
-              </Card>
+              <div className="ssb-card">
+                <a
+                  ref={index === 3 ? currentElement : null}
+                  href={article.href}
+                  className="clickable top-orientation"
+                >
+                  <div className="card-image">
+                    <img
+                      src={article.imageSrc}
+                      alt={article.imageAlt ? article.imageAlt : ' '} aria-hidden="true" />
+                  </div>
+                  <div className="card-content with-image">
+                    <div className="card-subtitle">{article.subTitle}</div>
+                    <div className="card-title">{article.title}</div>
+                    <span className="ssb-text-wrapper">{article.preface}</span>
+                  </div>
+                </a>
+              </div>
             </li>
           )
         })}
