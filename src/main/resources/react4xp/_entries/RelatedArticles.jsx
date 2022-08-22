@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { Button } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
+import { useMediaQuery } from 'react-responsive'
 
 function RelatedArticles(props) {
   const [isHidden, setIsHidden] = useState(true)
+  const [shownArticles, setShownArticles] = useState([])
   const [focusElement, setFocusElement] = useState(false)
   const currentElement = useRef(null)
 
@@ -16,8 +18,24 @@ function RelatedArticles(props) {
     articlePluralName
   } = props
 
+  const handleMediaQueryChange = (matches) => {
+    if (isHidden) {
+      matches ? setCount(6) : setCount(3)
+    }
+  }
+
+  const desktop = useMediaQuery({
+    minWidth: 992
+  }, undefined, handleMediaQueryChange)
+
   // Props must be assigned to const before we can instantiate this state.
-  const [shownArticles, setShownArticles] = useState(relatedArticles.slice(0, 3))
+  const [count, setCount] = useState(desktop ? 6 : 3)
+
+  const firstShownArticles = relatedArticles.slice(0, count)
+
+  useEffect(() => {
+    setShownArticles(firstShownArticles)
+  }, [count])
 
   useEffect(() => {
     if (focusElement) {
@@ -27,7 +45,7 @@ function RelatedArticles(props) {
 
   function toggleBox() {
     isHidden ? showMore() : showFewer()
-    setIsHidden(!isHidden)
+    setIsHidden((prev) => !prev)
   }
 
   function showMore() {
@@ -37,7 +55,7 @@ function RelatedArticles(props) {
 
   function showFewer() {
     setFocusElement(false)
-    setShownArticles(relatedArticles.slice(0, 3))
+    setShownArticles(firstShownArticles)
   }
 
   function getButtonBreakpoints() {
@@ -82,7 +100,7 @@ function RelatedArticles(props) {
             >
               <div className="ssb-card">
                 <a
-                  ref={index === 3 ? currentElement : null}
+                  ref={index === count ? currentElement : null}
                   href={article.href}
                   className="clickable top-orientation"
                 >
