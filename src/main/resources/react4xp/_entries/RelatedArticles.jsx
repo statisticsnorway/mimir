@@ -5,7 +5,6 @@ import { useMediaQuery } from 'react-responsive'
 
 function RelatedArticles(props) {
   const [isHidden, setIsHidden] = useState(true)
-  const [shownArticles, setShownArticles] = useState([])
   const [focusElement, setFocusElement] = useState(false)
   const currentElement = useRef(null)
 
@@ -32,6 +31,7 @@ function RelatedArticles(props) {
   const [count, setCount] = useState(desktop ? 6 : 3)
 
   const firstShownArticles = relatedArticles.slice(0, count)
+  const [shownArticles, setShownArticles] = useState(relatedArticles.slice(0, 6)) // Show articles in edit mode
 
   useEffect(() => {
     setShownArticles(firstShownArticles)
