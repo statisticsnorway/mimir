@@ -91,7 +91,8 @@ function RelatedArticles(props) {
       <div className="row">
         <h2 className="col mt-4 mb-5">{heading}</h2>
       </div>
-      <ul className="row mb-5">
+      <ul className="row mb-5"
+        aria-label={`${props.showingPhrase.replace('{0}', shownArticles.length)} ${relatedArticles.length}`}>
         {shownArticles.map((article, index) => {
           return (
             <li
@@ -140,7 +141,8 @@ RelatedArticles.propTypes = {
   showLess: PropTypes.string.isRequired,
   heading: PropTypes.string.isRequired,
   articlePluralName: PropTypes.string.isRequired,
-  showAllAriaLabel: PropTypes.string.isRequired
+  showAllAriaLabel: PropTypes.string.isRequired,
+  showingPhrase: PropTypes.string
 }
 
 export default (props) => <RelatedArticles {...props} />

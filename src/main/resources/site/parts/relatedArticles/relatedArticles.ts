@@ -166,7 +166,8 @@ function renderPart(req: Request, relatedArticles: RelatedArticles['relatedArtic
       showLess: phrases.showLess,
       heading: phrases.relatedArticlesHeading,
       showAllAriaLabel: phrases['button.showAll'],
-      articlePluralName: phrases.articlePluralName
+      articlePluralName: phrases.articlePluralName,
+      showingPhrase: phrases['publicationArchive.showing']
     })
     .setId('related-articles')
     .uniqueId()
