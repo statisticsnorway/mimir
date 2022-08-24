@@ -24,14 +24,14 @@ function RelatedArticles(props) {
   }
 
   const desktop = useMediaQuery({
-    minWidth: 992
+    minWidth: 992 // lg breakpoint from bootstrap v.5
   }, undefined, handleMediaQueryChange)
 
   // Props must be assigned to const before we can instantiate this state.
   const [count, setCount] = useState(desktop ? 6 : 3)
 
   const firstShownArticles = relatedArticles.slice(0, count)
-  const [shownArticles, setShownArticles] = useState(relatedArticles.slice(0, 6)) // Show articles in edit mode
+  const [shownArticles, setShownArticles] = useState(relatedArticles.slice(0, 6)) // Default state must be set for related articles to show in edit mode
 
   useEffect(() => {
     setShownArticles(firstShownArticles)
