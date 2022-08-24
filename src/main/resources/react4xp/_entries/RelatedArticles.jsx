@@ -92,7 +92,7 @@ function RelatedArticles(props) {
         <h2 className="col mt-4 mb-5">{heading}</h2>
       </div>
       <ul className="row mb-5"
-        aria-label={`${props.showingPhrase.replace('{0}', shownArticles.length)} ${relatedArticles.length}`}>
+        aria-label={`${props.showingPhrase.replace('{0}', shownArticles.length)} ${relatedArticles.length} ${articlePluralName}`}>
         {shownArticles.map((article, index) => {
           return (
             <li
