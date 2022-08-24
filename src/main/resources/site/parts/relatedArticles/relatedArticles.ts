@@ -164,7 +164,10 @@ function renderPart(req: Request, relatedArticles: RelatedArticles['relatedArtic
       }).filter((article) => !!article) as unknown as Array<RelatedArticlesContent>,
       showAll: phrases.showAll,
       showLess: phrases.showLess,
-      heading: phrases.relatedArticlesHeading
+      heading: phrases.relatedArticlesHeading,
+      showAllAriaLabel: phrases['button.showAll'],
+      articlePluralName: phrases.articlePluralName,
+      showingPhrase: phrases['publicationArchive.showing']
     })
     .setId('related-articles')
     .uniqueId()
