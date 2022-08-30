@@ -1,7 +1,9 @@
 import { Content } from '/lib/xp/content'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-import {render, RenderResponse} from '/lib/enonic/react4xp'
+import { render as r4xpRender, RenderResponse } from '/lib/enonic/react4xp'
 import { ProfiledBoxPartConfig } from './profiledBox-part-config'
+import { render, ResourceKey } from '/lib/thymeleaf'
+import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
 const {
   getContent,
@@ -15,6 +17,8 @@ const {
 const {
   getImageAlt
 } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
+
+const view: ResourceKey = resolve('profiledBox.html')
 
 exports.get = function(req: XP.Request): XP.Response {
   try {
@@ -32,6 +36,10 @@ function renderPart(req: XP.Request): XP.Response {
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   const urlContentSelector: ProfiledBoxPartConfig['urlContentSelector'] = config.urlContentSelector
   const titleSize: string = getTitleSize(config.title)
+  const id: string = 'profiled-box-' + randomUnsafeString()
+  const body: string = render(view, {
+    profiledBoxId: id
+  })
 
   const props: ProfiledBoxProps = {
     imgUrl: imageUrl({
@@ -50,13 +58,13 @@ function renderPart(req: XP.Request): XP.Response {
     ariaDescribedBy: 'subtitle'
   }
 
-  return render('site/parts/profiledBox/profiledBox',
+  return r4xpRender('site/parts/profiledBox/profiledBox',
     props,
     req,
-      {
-        id: 'profiled-box',
-        body: '<section class="xp-part part-profiled-box container"></section>'
-      }
+    {
+      id: id,
+      body: body
+    }
   )
 }
 
