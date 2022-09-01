@@ -165,23 +165,22 @@ exports.get = function(req: XP.Request): XP.Response {
     pageContributions = header.pageContributions
   }
 
-  const footer: RenderResponse = fromMenuCache(req, `footer_${menuCacheLanguage}`, () => {
-    const footerContent: FooterContent | undefined = getFooterContent(language )
-    if (footerContent) {
-      return r4xpRender('Footer',
-        {
-          ...footerContent,
-          language: language
-        },
-        req,
-        {
-          id: 'footer',
-          body: '<footer id="footer"></footer>',
-          pageContributions
-        })
+
+  const footerContent: FooterContent | unknown = fromMenuCache(req, `footer_${menuCacheLanguage}`, () => {
+    return getFooterContent(language )
+  })
+  const footer: RenderResponse = r4xpRender('Footer',
+    {
+      ...footerContent as object,
+      language: language
+    },
+    req,
+    {
+      id: 'footer',
+      body: '<footer id="footer"></footer>',
+      pageContributions
     }
-    return undefined
-  }) as RenderResponse
+  )
 
   if (footer) {
     pageContributions = footer.pageContributions
