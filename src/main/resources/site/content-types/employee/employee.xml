@@ -45,8 +45,8 @@
                 <input name="myCV" type="AttachmentUploader">
                     <label>Min CV</label>
                 </input>
-                <input name="publications" type="ContentSelector">
-                    <label>Publikasjoner</label>
+                <input name="projects" type="ContentSelector">
+                    <label>Prosjekter</label>
                     <occurrences minimum="0" maximum="0"/>
                     <config>
                         <treeMode>true</treeMode>

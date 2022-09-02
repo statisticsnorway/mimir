@@ -41,7 +41,7 @@ export interface Employee {
   myCV?: string;
 
   /**
-   * Publikasjoner
+   * Prosjekter
    */
-  publications?: Array<string>;
+  projects?: Array<string>;
 }
