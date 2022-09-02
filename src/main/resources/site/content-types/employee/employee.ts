@@ -26,7 +26,22 @@ export interface Employee {
   description?: string;
 
   /**
+   * Profilbilder
+   */
+  profileImages?: Array<string>;
+
+  /**
    * Ansatt id Cristin
    */
   cristinId?: string;
+
+  /**
+   * Min CV
+   */
+  myCV?: string;
+
+  /**
+   * Publikasjoner
+   */
+  publications?: Array<string>;
 }

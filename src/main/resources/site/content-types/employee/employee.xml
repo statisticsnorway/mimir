@@ -29,14 +29,28 @@
                 <input name="description" type="TextArea">
                     <label>Kort om meg</label>
                 </input>
+                <input name="profileImages" type="ImageSelector">
+                    <label>Profilbilder</label>
+                    <occurrences minimum="0" maximum="3"/>
+                </input>
             </items>
         </field-set>
         <field-set>
-            <label>Fylles ut hvis forsker</label>
+            <label>Fylles ut for forsker</label>
             <items>
                 <input type="TextLine" name="cristinId">
                     <label>Ansatt id Cristin</label>
                     <occurrences minimum="0" maximum="1"/>
+                </input>
+                <input name="myCV" type="AttachmentUploader">
+                    <label>Min CV</label>
+                </input>
+                <input name="publications" type="ContentSelector">
+                    <label>Publikasjoner</label>
+                    <occurrences minimum="0" maximum="0"/>
+                    <config>
+                        <treeMode>true</treeMode>
+                    </config>
                 </input>
             </items>
         </field-set>
