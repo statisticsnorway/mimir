@@ -21,6 +21,11 @@ export interface Employee {
   phone?: string;
 
   /**
+   * Forskningsområde eller avdeling
+   */
+  area?: string;
+
+  /**
    * Kort om meg
    */
   description?: string;

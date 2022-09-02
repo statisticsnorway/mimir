@@ -2,7 +2,7 @@
 <content-type>
     <display-name>Ansatt</display-name>
     <super-type>base:structured</super-type>
-    <description>Ansatt eller Forsker</description>
+    <description>Ansatt eller forsker</description>
     <form>
         <field-set>
             <label>Generell informasjon</label>
@@ -25,6 +25,14 @@
                 <input type="TextLine" name="phone">
                     <label>Telefonnummer</label>
                     <occurrences minimum="0" maximum="1"/>
+                </input>
+                <input name="area" type="ContentSelector">
+                    <label>Forskningsområde eller avdeling</label>
+                    <help-text>Som forsker velger du forskningsområde, som ansatt velger du avdeling</help-text>
+                    <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <treeMode>true</treeMode>
+                    </config>
                 </input>
                 <input name="description" type="TextArea">
                     <label>Kort om meg</label>
