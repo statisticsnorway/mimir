@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content-type>
+    <display-name>Ansatt</display-name>
+    <super-type>base:structured</super-type>
+    <description>Ansatt eller Forsker</description>
+    <form>
+        <field-set>
+            <label>Generell informasjon</label>
+            <items>
+                <input  name="isResearcher" type="CheckBox">
+                    <label>Er forsker</label>
+                    <default>checked</default>
+                    <config>
+                        <alignment>right</alignment>
+                    </config>
+                </input>
+                <input type="TextLine" name="position">
+                    <label>Stilling</label>
+                    <occurrences minimum="0" maximum="1"/>
+                </input>
+                <input type="TextLine" name="email">
+                    <label>Epostadresse</label>
+                    <occurrences minimum="0" maximum="1"/>
+                </input>
+                <input type="TextLine" name="phone">
+                    <label>Telefonnummer</label>
+                    <occurrences minimum="0" maximum="1"/>
+                </input>
+                <input name="description" type="TextArea">
+                    <label>Kort om meg</label>
+                </input>
+            </items>
+        </field-set>
+        <field-set>
+            <label>Fylles ut hvis forsker</label>
+            <items>
+                <input type="TextLine" name="cristinId">
+                    <label>Ansatt id Cristin</label>
+                    <occurrences minimum="0" maximum="1"/>
+                </input>
+            </items>
+        </field-set>
+    </form>
+</content-type>
