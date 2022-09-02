@@ -10,7 +10,8 @@ import { Card,
   Title,
   Dropdown,
   Tag,
-  RadioGroup } from '@statisticsnorway/ssb-component-library'
+  RadioGroup,
+  Accordion } from '@statisticsnorway/ssb-component-library'
 import { ChevronDown, User, X } from 'react-feather'
 import axios from 'axios'
 import NumberFormat from 'react-number-format'
@@ -371,7 +372,6 @@ function SearchResult(props) {
     return props.namePhrases.types[nameCode]
   }
 
-
   function renderNameResult() {
     if (mainNameResult && mainNameResult.count && !filterChanged && numberChanged === 0) {
       return (
@@ -461,11 +461,42 @@ function SearchResult(props) {
     )
   }
 
+  function renderFilterResults() {
+    const limitResultPhrase = props.limitResultPhrase
+    const filterDropdowns = (
+      <Row justify-content-start>
+        <Col lg='4' className='search-result-dropdown pb-1 pr-1'>
+          <DropdownMainSubject/>
+        </Col>
+        <Col lg='4' className='search-result-dropdown pr-1'>
+          <DropdownContentType/>
+        </Col>
+      </Row>
+    )
+
+    return (
+      <div className="filter">
+        {!mobile ?
+          <React.Fragment>
+            <span className="limit-result mb-3">{limitResultPhrase}</span>
+            {filterDropdowns}
+          </React.Fragment> :
+          <Accordion
+            id="search-result-filter-accordion"
+            header={limitResultPhrase}
+          >
+            {filterDropdowns}
+          </Accordion>
+        }
+        {renderClearFilterButton()}
+      </div>
+    )
+  }
+
   function renderClearFilterButton() {
     if (filter.mainSubject || filter.contentType) {
       return (
         <Tag
-          className="mt-4"
           onClick={removeFilter}
           icon={<X size={18} />}
         >{props.removeFilterPhrase}
@@ -478,7 +509,7 @@ function SearchResult(props) {
     <section className="search-result container-fluid p-0">
       <div className="row">
         <div className="col-12 search-result-head">
-          <div className="container py-5">
+          <div className="container">
             <Title>{props.title}</Title>
             <Input
               size={!mobile && 'lg'}
@@ -489,18 +520,7 @@ function SearchResult(props) {
               ariaLabelWrapper={props.term ? props.mainSearchPhrase : undefined}
               ariaLabelSearchButton={props.searchText}
             />
-            <div className="filter mt-5">
-              <span className="limit-result mb-3">{props.limitResultPhrase}</span>
-              <Row justify-content-start>
-                <Col lg='4' className='search-result-dropdown pb-1 pr-1'>
-                  <DropdownMainSubject/>
-                </Col>
-                <Col lg='4' className='search-result-dropdown pr-1'>
-                  <DropdownContentType/>
-                </Col>
-              </Row>
-              {renderClearFilterButton()}
-            </div>
+            {renderFilterResults()}
           </div>
         </div>
         <div className="col-12 search-result-body">
