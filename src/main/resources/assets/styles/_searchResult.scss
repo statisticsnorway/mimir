@@ -13,6 +13,10 @@
       font-weight: bold;
     }
 
+    .ssb-input {
+      max-width: 100%;
+    }
+
     .ssb-dropdown.DropdownMainSubject, .ssb-dropdown.DropdownContentType {
       max-width: 100%
     }
@@ -42,6 +46,7 @@
           min-width: 0;
         }
       }
+      
     }
 
     @include media-breakpoint-down(md) {
@@ -61,5 +66,15 @@
   }
   .type {
     text-transform: capitalize;
+  }
+
+  @include media-breakpoint-down(md) {
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .search-result-dropdown {
+      padding: 0;
+    }
   }
 }

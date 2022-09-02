@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { useMediaQuery } from 'react-responsive'
 
 import PropTypes from 'prop-types'
 import { Card,
@@ -52,6 +53,10 @@ function SearchResult(props) {
   const [selectedMainSubject, setSelectedMainSubject] = useState(preselectedSubjectDropdownItem)
   const [numberChanged, setNumberChanged] = useState(0)
   const currentElement = useRef(null)
+
+  const mobile = useMediaQuery({
+    maxWidth: 991 // lg breakpoint from bootstrap v.5
+  })
 
   useEffect(() => {
     if (!nameSearchData) {
@@ -266,7 +271,7 @@ function SearchResult(props) {
             className="ssb-btn button-more mt-5"
             onClick={() => onShowMoreSearchResults(false)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter') {
+              if (e.key === 'Enter' || e.key === ' ') {
                 onShowMoreSearchResults(true)
               }
             }}
@@ -476,7 +481,7 @@ function SearchResult(props) {
           <div className="container py-5">
             <Title>{props.title}</Title>
             <Input
-              size="lg"
+              size={!mobile && 'lg'}
               value={searchTerm}
               handleChange={setSearchTerm}
               searchField
@@ -487,10 +492,10 @@ function SearchResult(props) {
             <div className="filter mt-5">
               <span className="limit-result mb-3">{props.limitResultPhrase}</span>
               <Row justify-content-start>
-                <Col lg='4' className='pb-1 pr-1'>
+                <Col lg='4' className='search-result-dropdown pb-1 pr-1'>
                   <DropdownMainSubject/>
                 </Col>
-                <Col lg='4' className='pr-1'>
+                <Col lg='4' className='search-result-dropdown pr-1'>
                   <DropdownContentType/>
                 </Col>
               </Row>
