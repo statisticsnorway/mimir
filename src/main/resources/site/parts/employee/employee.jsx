@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 function Employee(props) {
   const {
-    title
+    title, email, position, phone, description, profileImages, myCV, projects, isResearcher, cristinId
   } = props
 
   return (
@@ -17,7 +17,16 @@ function Employee(props) {
 }
 
 Employee.propTypes = {
-  title: PropTypes.object
+  title: PropTypes.string,
+  email: PropTypes.string,
+  position: PropTypes.string,
+  phone: PropTypes.string,
+  description: PropTypes.string,
+  profileImages: PropTypes.array,
+  myCV: PropTypes.string,
+  projects: PropTypes.array,
+  isResearcher: PropTypes.bool,
+  cristinId: PropTypes.string | null
 }
 
 export default (props) => <Employee {...props} />
