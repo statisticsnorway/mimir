@@ -409,7 +409,7 @@ function nextReleasedPassed(variant: VariantInListing): boolean {
   const serverOffsetInMs: number = app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
   const serverTime: Date = new Date(new Date().getTime() + serverOffsetInMs)
   const nextRelease: Date = new Date(variant.nextRelease)
-  return moment(nextRelease).isBefore(serverTime, 'minute')
+  return moment(nextRelease).isSameOrBefore(serverTime, 'minute')
 }
 
 function formatVariant(variant: VariantInListing, language: string, property: keyof VariantInListing): PreparedVariant {
