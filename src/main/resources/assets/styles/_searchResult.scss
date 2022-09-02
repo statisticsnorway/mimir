@@ -3,7 +3,7 @@
     background-color: $ssb-dark-2;
 
     .container {
-      padding: 40px 0;
+      padding: ($spacer * 3) 0;
     }
 
     .search-result-ingress {
@@ -35,7 +35,7 @@
 
     @include media-breakpoint-down(md) {
       .container {
-        padding: 20px 0 40px;
+        padding: 40px 0;
       }
 
       h1 {
@@ -99,6 +99,10 @@
     }
 
     @include media-breakpoint-down(md) {
+      .ssb-radio .radio-label:before {
+        margin-right: 8px;
+      }
+      
       .choose-sorting {
         justify-content: start;
         padding-left: 0;
