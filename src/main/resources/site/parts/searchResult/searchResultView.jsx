@@ -464,21 +464,21 @@ function SearchResult(props) {
     )
   }
 
-  const Desktop = ({
+  const DesktopOrTablet = ({
     children
   }) => {
-    const isDesktop = useMediaQuery({
-      minWidth: 992 // lg breakpoint bootstrap 5.0
+    const isDesktopOrTablet = useMediaQuery({
+      minWidth: 768 // md breakpoint bootstrap 5.0
     })
-    return isDesktop ? children : null
+    return isDesktopOrTablet ? children : null
   }
-  const MobileOrTablet = ({
+  const Mobile = ({
     children
   }) => {
-    const isMobileOrTablet = useMediaQuery({
-      maxWidth: 992
+    const isMobile = useMediaQuery({
+      maxWidth: 767.98
     })
-    return isMobileOrTablet ? children : null
+    return isMobile ? children : null
   }
 
   function renderFilterResults() {
@@ -496,11 +496,11 @@ function SearchResult(props) {
 
     return (
       <div className="filter">
-        <Desktop>
+        <DesktopOrTablet>
           <span className="limit-result mb-3">{limitResultPhrase}</span>
           {filterDropdowns}
-        </Desktop>
-        <MobileOrTablet>
+        </DesktopOrTablet>
+        <Mobile>
           <Accordion
             id="search-result-filter-accordion"
             header={limitResultPhrase}
@@ -508,7 +508,7 @@ function SearchResult(props) {
           >
             {filterDropdowns}
           </Accordion>
-        </MobileOrTablet>
+        </Mobile>
         {renderClearFilterButton()}
       </div>
     )
@@ -532,7 +532,7 @@ function SearchResult(props) {
         <div className="col-12 search-result-head">
           <div className="container">
             <Title>{props.title}</Title>
-            <Desktop>
+            <DesktopOrTablet>
               <Input
                 size="lg"
                 value={searchTerm}
@@ -542,8 +542,8 @@ function SearchResult(props) {
                 ariaLabelWrapper={props.term ? props.mainSearchPhrase : undefined}
                 ariaLabelSearchButton={props.searchText}
               />
-            </Desktop>
-            <MobileOrTablet>
+            </DesktopOrTablet>
+            <Mobile>
               <Input
                 value={searchTerm}
                 handleChange={setSearchTerm}
@@ -552,7 +552,7 @@ function SearchResult(props) {
                 ariaLabelWrapper={props.term ? props.mainSearchPhrase : undefined}
                 ariaLabelSearchButton={props.searchText}
               />
-            </MobileOrTablet>
+            </Mobile>
             {renderFilterResults()}
           </div>
         </div>
