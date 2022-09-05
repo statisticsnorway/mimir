@@ -53,6 +53,7 @@ function SearchResult(props) {
   const [selectedContentType, setSelectedContentType] = useState(preselectedContentTypeDropdownItem)
   const [selectedMainSubject, setSelectedMainSubject] = useState(preselectedSubjectDropdownItem)
   const [numberChanged, setNumberChanged] = useState(0)
+  const [openAccordion, setOpenAccordion] = useState(false)
   const currentElement = useRef(null)
 
   useEffect(() => {
@@ -412,6 +413,9 @@ function SearchResult(props) {
       onSelect={(value) => {
         onChange('mainSubject', value)
         addGtagForEvent(props.GA_TRACKING_ID, 'Valgt emne', 'Søk', value.title)
+        if (!openAccordion) {
+          setOpenAccordion(true)
+        }
       }}
       selectedItem={selectedMainSubject}
       items={dropdownSubjectsItems}
@@ -427,6 +431,9 @@ function SearchResult(props) {
       onSelect={(value) => {
         onChange('contentType', value)
         addGtagForEvent(props.GA_TRACKING_ID, 'Valgt innholdstype', 'Søk', value.title)
+        if (!openAccordion) {
+          setOpenAccordion(true)
+        }
       }}
       selectedItem={selectedContentType}
       items={dropdownContentTypeItems}
@@ -497,6 +504,7 @@ function SearchResult(props) {
           <Accordion
             id="search-result-filter-accordion"
             header={limitResultPhrase}
+            openByDefault={openAccordion}
           >
             {filterDropdowns}
           </Accordion>
