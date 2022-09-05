@@ -1,0 +1,35 @@
+.employee {
+
+  .employee-head {
+    display: flex;
+    align-items: center;
+
+    .employee-image img {
+      width: 96%;  
+    }
+
+    .employee-title {}
+  }
+
+  .employee-details {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 1.2rem 0;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #c3dcdc;
+
+    div {
+      padding-top: .5rem;
+      border-top: 1px solid #c3dcdc;
+      width: 24%;
+      text-align: center;
+    }
+  }
+  
+  .employee-description {}
+
+  .employee-projects {}
+
+  .employee-publications {}
+}

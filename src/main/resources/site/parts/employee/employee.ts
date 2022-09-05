@@ -42,10 +42,9 @@ function renderPart(req: Request): React4xpResponse {
   const profileImageIds: Array<string> = page.data.profileImages ? forceArray(page.data.profileImages) : []
 
   const profileImages: Array<string> | void[] = profileImageIds ? profileImageIds.map((image: string) => {
-    return
-    imageUrl({
+    return imageUrl({
       id: image,
-      scale: 'block(80,80)'
+      scale: 'max(850)'
     })
   }) : []
 
