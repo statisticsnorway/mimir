@@ -28,12 +28,10 @@ const mockData = {
   ]
 }
 
-function Employee(props) {
+const Employee = (props) => {
   const {
     title, email, position, phone, description, profileImages, myCV, projects, isResearcher, cristinId
   } = props
-  
-  console.log(props)
 
   const renderProjects = () => {
     const projects = mockData.projects.map(project => {
