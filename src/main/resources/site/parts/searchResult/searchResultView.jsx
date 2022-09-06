@@ -464,22 +464,13 @@ function SearchResult(props) {
     )
   }
 
-  const DesktopOrTablet = ({
-    children
-  }) => {
-    const isDesktopOrTablet = useMediaQuery({
-      minWidth: 768 // md breakpoint bootstrap 5.0
-    })
-    return isDesktopOrTablet ? children : null
-  }
-  const Mobile = ({
-    children
-  }) => {
-    const isMobile = useMediaQuery({
-      maxWidth: 767.98
-    })
-    return isMobile ? children : null
-  }
+  const isDesktopOrTablet = useMediaQuery({
+    minWidth: 768 // md breakpoint bootstrap 5.0
+  })
+
+  const isMobile = useMediaQuery({
+    maxWidth: 767.98
+  })
 
   function renderFilterResults() {
     const limitResultPhrase = props.limitResultPhrase
@@ -496,19 +487,19 @@ function SearchResult(props) {
 
     return (
       <div className="filter">
-        <DesktopOrTablet>
-          <span className="limit-result mb-3">{limitResultPhrase}</span>
-          {filterDropdowns}
-        </DesktopOrTablet>
-        <Mobile>
+        {isDesktopOrTablet &&
+          <React.Fragment>
+            <span className="limit-result mb-3">{limitResultPhrase}</span>
+            {filterDropdowns}
+          </React.Fragment>}
+        {isMobile &&
           <Accordion
             id="search-result-filter-accordion"
             header={limitResultPhrase}
             openByDefault={openAccordion}
           >
             {filterDropdowns}
-          </Accordion>
-        </Mobile>
+          </Accordion>}
         {renderClearFilterButton()}
       </div>
     )
@@ -532,27 +523,15 @@ function SearchResult(props) {
         <div className="col-12 search-result-head">
           <div className="container">
             <Title>{props.title}</Title>
-            <DesktopOrTablet>
-              <Input
-                size="lg"
-                value={searchTerm}
-                handleChange={setSearchTerm}
-                searchField
-                submitCallback={goToSearchResultPage}
-                ariaLabelWrapper={props.term ? props.mainSearchPhrase : undefined}
-                ariaLabelSearchButton={props.searchText}
-              />
-            </DesktopOrTablet>
-            <Mobile>
-              <Input
-                value={searchTerm}
-                handleChange={setSearchTerm}
-                searchField
-                submitCallback={goToSearchResultPage}
-                ariaLabelWrapper={props.term ? props.mainSearchPhrase : undefined}
-                ariaLabelSearchButton={props.searchText}
-              />
-            </Mobile>
+            <Input
+              size={isDesktopOrTablet && 'lg'}
+              value={searchTerm}
+              handleChange={setSearchTerm}
+              searchField
+              submitCallback={goToSearchResultPage}
+              ariaLabelWrapper={props.term ? props.mainSearchPhrase : undefined}
+              ariaLabelSearchButton={props.searchText}
+            />
             {renderFilterResults()}
           </div>
         </div>
