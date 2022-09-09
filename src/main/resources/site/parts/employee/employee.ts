@@ -2,7 +2,7 @@ import { Content } from 'enonic-types/content'
 import { Request, Response } from 'enonic-types/controller'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Employee } from '../../content-types/employee/employee'
-
+import { DefaultPageConfig } from '../../pages/default/default-page-config'
 
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
@@ -12,6 +12,9 @@ const {
   getContent, pageUrl, imageUrl
 } = __non_webpack_require__('/lib/xp/portal')
 const {
+  get
+} = __non_webpack_require__('/lib/xp/content')
+const {
   data: {
     forceArray
   }
@@ -19,6 +22,9 @@ const {
 const {
   localize
 } = __non_webpack_require__('/lib/xp/i18n')
+const {
+  hasPath
+} = __non_webpack_require__('/lib/vendor/ramda')
 
 exports.get = function(req: Request): React4xpResponse | Response {
   try {
@@ -33,15 +39,9 @@ exports.preview = (req: Request): React4xpResponse | Response => renderPart(req)
 function renderPart(req: Request): React4xpResponse {
   const page: Content<Employee> = getContent()
   const language: string = page.language ? page.language : 'nb'
+  const projectIds: Employee['projects'] = page.data.projects
 
-  const projectIds: Array<string> = page.data.projects ? forceArray(page.data.projects) : []
-  const projects: Array<Project> = projectIds.map((project: string) =>{
-    return {
-      href: pageUrl({
-        id: project
-      })
-    }
-  })
+  const projects: Array<Project> = projectIds && projectIds.length > 0 ? parseProject(projectIds) : []
 
   const profileImageIds: Array<string> = page.data.profileImages ? forceArray(page.data.profileImages) : []
 
@@ -91,7 +91,7 @@ function renderPart(req: Request): React4xpResponse {
     description: page.data.description || '',
     profileImages: profileImages, // page.data.profileImages ? forceArray(page.data.profileImages) : [],
     myCV: page.data.myCV || '',
-    projects: projects,
+    projects,
     isResearcher: page.data.isResearcher,
     cristinId: page.data.cristinId || null,
     emailPhrase,
@@ -104,6 +104,29 @@ function renderPart(req: Request): React4xpResponse {
   }
 
   return React4xp.render('site/parts/employee/employee', props, req)
+}
+
+function parseProject(projects: Employee['projects']): Array<Project> {
+  if (projects && projects.length > 0) {
+    return projects.map((projectId) => {
+      const relatedProjectContent: Content<DefaultPageConfig, object, SEO> | null = projectId ? get({
+        key: projectId
+      }) : null
+      let seoDescription: string | undefined
+      if (relatedProjectContent && hasPath(['x', 'com-enonic-app-metafields', 'meta-data', 'seoDescription'], relatedProjectContent)) {
+        seoDescription = relatedProjectContent.x['com-enonic-app-metafields']['meta-data'].seoDescription
+      }
+
+      return {
+        title: relatedProjectContent ? relatedProjectContent.displayName : '',
+        href: pageUrl({
+          id: projectId
+        }),
+        description: seoDescription ? seoDescription : ''
+      }
+    })
+  }
+  return []
 }
 
 interface EmployeeProp {
@@ -127,6 +150,12 @@ interface EmployeeProp {
 
 interface Project {
     href: string;
+    title: string;
+    description: string;
   }
+
+interface SEO {
+  seoDescription?: string;
+}
 
 
