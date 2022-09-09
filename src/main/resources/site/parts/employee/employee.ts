@@ -16,6 +16,9 @@ const {
     forceArray
   }
 } = __non_webpack_require__('/lib/util')
+const {
+  localize
+} = __non_webpack_require__('/lib/xp/i18n')
 
 exports.get = function(req: Request): React4xpResponse | Response {
   try {
@@ -29,6 +32,7 @@ exports.preview = (req: Request): React4xpResponse | Response => renderPart(req)
 
 function renderPart(req: Request): React4xpResponse {
   const page: Content<Employee> = getContent()
+  const language: string = page.language ? page.language : 'nb'
 
   const projectIds: Array<string> = page.data.projects ? forceArray(page.data.projects) : []
   const projects: Array<Project> = projectIds.map((project: string) =>{
@@ -48,6 +52,36 @@ function renderPart(req: Request): React4xpResponse {
     })
   }) : []
 
+  const emailPhrase: string = localize({
+    key: 'employee.email',
+    locale: language
+  })
+
+  const phonePhrase: string = localize({
+    key: 'employee.phone',
+    locale: language
+  })
+
+  const positionPhrase: string = localize({
+    key: 'employee.position',
+    locale: language
+  })
+
+  const researchAreaPhrase: string = localize({
+    key: 'employee.researchArea',
+    locale: language
+  })
+
+  const departmentPhrase: string = localize({
+    key: 'employee.department',
+    locale: language
+  })
+
+  const briefSummaryPhrase: string = localize({
+    key: 'employee.briefSummary',
+    locale: language
+  })
+
 
   const props: EmployeeProp = {
     title: page.displayName,
@@ -59,7 +93,14 @@ function renderPart(req: Request): React4xpResponse {
     myCV: page.data.myCV || '',
     projects: projects,
     isResearcher: page.data.isResearcher,
-    cristinId: page.data.cristinId || null
+    cristinId: page.data.cristinId || null,
+    emailPhrase,
+    phonePhrase,
+    positionPhrase,
+    researchAreaPhrase,
+    departmentPhrase,
+    briefSummaryPhrase
+
   }
 
   return React4xp.render('site/parts/employee/employee', props, req)
@@ -75,7 +116,13 @@ interface EmployeeProp {
   myCV: string;
   projects: Array<Project>
   isResearcher: boolean
-  cristinId: string | null
+  cristinId: string | null,
+  emailPhrase: string,
+  phonePhrase: string,
+  positionPhrase: string,
+  researchAreaPhrase: string,
+  departmentPhrase: string,
+  briefSummaryPhrase: string
 }
 
 interface Project {
