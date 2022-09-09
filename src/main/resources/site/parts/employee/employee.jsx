@@ -1,7 +1,7 @@
 import React from 'react'
-// import { Title, Link, Divider } from '@statisticsnorway/ssb-component-library'
+import { Title, Link, Divider } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
-import { Share2, Send, Smartphone, Eye, Download } from 'react-feather'
+import { Share2, Send, Smartphone, Eye, Download, ExternalLink } from 'react-feather'
 import { Button } from '@statisticsnorway/ssb-component-library'
 
 // mock data 
@@ -31,25 +31,30 @@ const mockData = {
 
 const Employee = (props) => {
   const {
-    title, email, position, phone, description, profileImages, myCV, projects, isResearcher, cristinId
+    title, email, position, phone, description, profileImages, myCV, projects, isResearcher, cristinId, emailPhrase,
+    phonePhrase,
+    positionPhrase,
+    researchAreaPhrase,
+    departmentPhrase,
+    briefSummaryPhrase
   } = props
 
   const renderProjects = () => {
-    const projects = mockData.projects.map(project => {
+    const projectList = projects.map(project => {
       return (
         <div>
-          <h3>{project.title}</h3>
+          <Link href={project.href} linkType="header">{project.title}</Link>
           <p>{project.description}</p>
         </div>
       )
     })
-    return <div>{projects}</div>
+    return <div>{projectList}</div>
   }
 
   const renderPublications = () => {
     const publication = mockData.publications[0]
     return <div>
-      <h3>{publication.title}</h3>
+      <Link href=" " icon={<ExternalLink size="20" />}>{publication.title}</Link>
       <p>{publication.author}</p>
       <p>{publication.description}</p>
     </div>
@@ -60,7 +65,7 @@ const Employee = (props) => {
       <div className="row">
         <div class="employee-head">
           <div className="employee-image col-3"><img alt={`profilbilder av ${title}`} src={props.profileImages[0]} /></div>
-          <div className="employee-title col-6"><h1>{title}</h1></div>
+          <div className="employee-title col-6"><Title size="1">{title}</Title></div>
         </div>
       </div>
       <div className="row gx-0">
@@ -68,29 +73,29 @@ const Employee = (props) => {
           <div>
             <Share2 className="position-icon" size={30} transform='rotate(90)'/> 
             <div>
-              <div>Stilling</div>
+              <div>{positionPhrase}</div>
               <span>{position}</span>
             </div>
           </div>
           <div>
             <Send className="email-icon" size={30} />
             <div>
-              <div>E-post</div>
-              <span><a className="ssb-link">{email}</a></span>
+              <div>{emailPhrase}</div>
+              <Link href={"mailto:" + email} linkType="profiled">{email}</Link>
             </div>
           </div>
           <div>
             <Smartphone className="phone-icon" size={30} />
             <div>
-              <div>Telefon</div>
-              <span><a className="ssb-link">{phone}</a></span>
+              <div>{phonePhrase}</div>
+              <Link href=" " linkType="profiled">{phone}</Link>
             </div>
           </div>
           <div> 
             <Eye className="department-icon" size={30} />
             <div>
-              <div>{isResearcher ? "ForskningsOmråde" : "Avdeling"}</div>
-              <span><a className="ssb-link">tester</a></span>
+              <div>{isResearcher ? researchAreaPhrase : departmentPhrase}</div>
+              <Link href=" " linkType="profiled">tester</Link>
             </div>
           </div>
         </div>
@@ -98,7 +103,7 @@ const Employee = (props) => {
       <div className="row justify-content-center">
         <div className="employee-description col-6">
           <div>
-            <h2>Kort om</h2>
+            <h2>{briefSummaryPhrase}</h2>
             <p>{description}</p>
             <div>
               <Button><Download size="18" /> &nbsp; Last ned 3 portrettbilder (3,3 MB) </Button>
@@ -135,7 +140,13 @@ Employee.propTypes = {
   myCV: PropTypes.string,
   projects: PropTypes.array,
   isResearcher: PropTypes.bool,
-  cristinId: PropTypes.string | null
+  cristinId: PropTypes.string | null,
+  emailPhrase: PropTypes.string,
+  phonePhrase: PropTypes.string,
+  positionPhrase: PropTypes.string,
+  researchAreaPhrase: PropTypes.string,
+  departmentPhrase: PropTypes.string,
+  briefSummaryPhrase: PropTypes.string
 }
 
 export default (props) => <Employee {...props} />
