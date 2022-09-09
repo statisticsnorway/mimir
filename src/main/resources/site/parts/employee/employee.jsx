@@ -1,7 +1,8 @@
 import React from 'react'
 // import { Title, Link, Divider } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
-
+import { Share2, Send, Smartphone, Eye, Download } from 'react-feather'
+import { Button } from '@statisticsnorway/ssb-component-library'
 
 // mock data 
 const mockData = {
@@ -64,10 +65,34 @@ const Employee = (props) => {
       </div>
       <div className="row gx-0">
         <div className="employee-details">
-          <div> Stilling: {position} </div>
-          <div> E-post: {email} </div>
-          <div> Telefon: {phone} </div>
-          <div> {isResearcher ? "ForskningsOmråde:" : "Avdeling:"} </div>
+          <div>
+            <Share2 className="position-icon" size={30} transform='rotate(90)'/> 
+            <div>
+              <div>Stilling</div>
+              <span>{position}</span>
+            </div>
+          </div>
+          <div>
+            <Send className="email-icon" size={30} />
+            <div>
+              <div>E-post</div>
+              <span><a className="ssb-link">{email}</a></span>
+            </div>
+          </div>
+          <div>
+            <Smartphone className="phone-icon" size={30} />
+            <div>
+              <div>Telefon</div>
+              <span><a className="ssb-link">{phone}</a></span>
+            </div>
+          </div>
+          <div> 
+            <Eye className="department-icon" size={30} />
+            <div>
+              <div>{isResearcher ? "ForskningsOmråde" : "Avdeling"}</div>
+              <span><a className="ssb-link">tester</a></span>
+            </div>
+          </div>
         </div>
       </div>
       <div className="row justify-content-center">
@@ -75,6 +100,10 @@ const Employee = (props) => {
           <div>
             <h2>Kort om</h2>
             <p>{description}</p>
+            <div>
+              <Button><Download size="18" /> &nbsp; Last ned 3 portrettbilder (3,3 MB) </Button>
+              <Button><Download size="18" /> &nbsp; Last ned CV (70 KB) </Button>
+            </div>
           </div>
         </div>
       </div>

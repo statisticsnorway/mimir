@@ -8,7 +8,7 @@
       width: 96%;  
     }
 
-    .employee-title {}
+    .employee-title h1 {}
   }
 
   .employee-details {
@@ -19,16 +19,63 @@
     padding-bottom: 1.5rem;
     border-bottom: 1px solid #c3dcdc;
 
-    div {
+    > div {
+      width: 24%;
       padding-top: .5rem;
       border-top: 1px solid #c3dcdc;
-      width: 24%;
+      display: flex;
+
+      .position-icon {}
+
+      .email-icon {}
+
+      .phone-icon {}
+
+      .department-icon {}
+
+      > div {
+        margin-left: .5rem;
+        font-family: OpenSans;
+        font-size: 20px;
+        line-height: 1.6;
+
+        > span {
+          font-weight: 800;
+          a {
+            font-weight: 800;
+          }
+        }
+      }
     }
   }
   
-  .employee-description {}
+  .employee-description {
+    margin: 2rem 0;
 
-  .employee-projects {}
+    > div {
+      
+      p {
+        font-size: 20px;
+        line-height: 1.6;
+      }
+      
+      div {
+        display: flex;
+  
+        button {
+          margin: .2rem;
+        }
+      }
 
-  .employee-publications {}
+    }
+    
+  }
+
+  .employee-projects {
+    margin-top: 2rem;
+  }
+
+  .employee-publications {
+    margin-top: 2rem;
+  }
 }
