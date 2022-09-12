@@ -145,7 +145,7 @@ export function renderPart(req: Request): React4xpResponse {
         title: title,
         preface: firstBet.data && firstBet.data.linkedContentIngress ? firstBet.data.linkedContentIngress : '',
         contentType: firstBet.data && firstBet.data.linkedContentType ? localize({
-          key: `contentType.search.${firstBet.data.linkedContentType}`,
+          key: `contentType.search.${firstBet.data.linkedContentType.toLowerCase()}`,
           locale: language
         }) : '',
         url: href,
