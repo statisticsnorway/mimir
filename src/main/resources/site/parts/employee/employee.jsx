@@ -1,5 +1,5 @@
 import React from 'react'
-import { Title, Link, Divider, LeadParagraph, Paragraph } from '@statisticsnorway/ssb-component-library'
+import { Title, Link, Divider, LeadParagraph, Paragraph, Text } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import { Share2, Send, Smartphone, Eye, Download, ExternalLink } from 'react-feather'
 import { Button } from '@statisticsnorway/ssb-component-library'
@@ -40,9 +40,9 @@ const Employee = (props) => {
   const renderPublications = () => {
     const publication = mockData.publications[0]
     return <div>
-      <Link href=" " icon={<ExternalLink size="20" />}>{publication.title}</Link>
+      <Link href=" " linkType="profiled" icon={<ExternalLink size="20" />}>{publication.title}</Link>
       <Paragraph>{publication.author}</Paragraph>
-      <Paragraph>{publication.description}</Paragraph>
+      <Text small>{publication.description}</Text>
     </div>
   }
 
@@ -54,7 +54,7 @@ const Employee = (props) => {
           <div className="employee-title col-6 col-md-6"><Title size="1">{title}</Title></div>
         </div>
       </div>
-      <div className="row gx-0">
+      <div className="row">
         <div className="employee-details">
           <div>
             <Share2 className="position-icon" size={30} transform='rotate(90)'/> 
@@ -86,7 +86,6 @@ const Employee = (props) => {
           </div>
         </div>
       </div>
-      <Divider light></Divider>
       <div className="row justify-content-center">
         <div className="employee-description col-12 col-md-6">
           <div>
