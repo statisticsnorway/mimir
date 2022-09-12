@@ -1,25 +1,11 @@
 import React from 'react'
-import { Title, Link, Divider } from '@statisticsnorway/ssb-component-library'
+import { Title, Link, Divider, LeadParagraph, Paragraph } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import { Share2, Send, Smartphone, Eye, Download, ExternalLink } from 'react-feather'
 import { Button } from '@statisticsnorway/ssb-component-library'
 
 // mock data 
 const mockData = {
-  projects: [
-    {
-      title: "Konjunkturtendensene",
-      description: "I konjunkturrapportene beskrives og analyseres den siste utviklingen i norske og internasjonal økonomi og utsiktene framover (normalt 3-4 år framover). Det publiseres fire konjunkturrapporter hvert år. Prognosene utarbeides med hjelp av SSBs makroøkonometriske modell KVARTS."
-    },
-    {
-      title: "MODAG og KVARTS",
-      description: "MODAG og KVARTS er makroøkonometriske modeller for norsk økonomi og benyttes til framskrivninger og politikkanalyser på kort og mellomlang sikt. Den viktigste forskjellen mellom de to modellene er at MODAG regner på årlige data, mens KVARTS regner på kvartalsvise data."
-    },
-    {
-      title: "Etterspørselen etter ny teknologi",
-      description: "I dette prosjektet studeres årsakene til den teknologiske utviklingen, og teknologiens virkning på økonomisk vekst og sysselsetting. Investeringer i forskning og utvikling (FoU) søkes implementert i et fullstendig system for etterspørsel etter innsatsfaktorer." 
-    },
-  ],
   publications: [
     {
       title: "Efficient combinations of taxes on fuel and vehicles",
@@ -44,7 +30,7 @@ const Employee = (props) => {
       return (
         <div>
           <Link href={project.href} linkType="header">{project.title}</Link>
-          <p>{project.description}</p>
+          <Paragraph>{project.description}</Paragraph>
         </div>
       )
     })
@@ -55,8 +41,8 @@ const Employee = (props) => {
     const publication = mockData.publications[0]
     return <div>
       <Link href=" " icon={<ExternalLink size="20" />}>{publication.title}</Link>
-      <p>{publication.author}</p>
-      <p>{publication.description}</p>
+      <Paragraph>{publication.author}</Paragraph>
+      <Paragraph>{publication.description}</Paragraph>
     </div>
   }
 
@@ -64,8 +50,8 @@ const Employee = (props) => {
     <section className="xp-part employee container p-0 mb-5">
       <div className="row">
         <div class="employee-head">
-          <div className="employee-image col-3"><img alt={`profilbilder av ${title}`} src={props.profileImages[0]} /></div>
-          <div className="employee-title col-6"><Title size="1">{title}</Title></div>
+          <div className="employee-image col-6 col-md-3"><img alt={`profilbilder av ${title}`} src={props.profileImages[0]} /></div>
+          <div className="employee-title col-6 col-md-6"><Title size="1">{title}</Title></div>
         </div>
       </div>
       <div className="row gx-0">
@@ -95,16 +81,17 @@ const Employee = (props) => {
             <Eye className="department-icon" size={30} />
             <div>
               <div>{isResearcher ? researchAreaPhrase : departmentPhrase}</div>
-              <Link href=" " linkType="profiled">tester</Link>
+              <Link href=" " linkType="profiled">Makroøkonomi (test) </Link>
             </div>
           </div>
         </div>
       </div>
+      <Divider light></Divider>
       <div className="row justify-content-center">
-        <div className="employee-description col-6">
+        <div className="employee-description col-12 col-md-6">
           <div>
             <h2>{briefSummaryPhrase}</h2>
-            <p>{description}</p>
+            <LeadParagraph>{description}</LeadParagraph>
             <div>
               <Button><Download size="18" /> &nbsp; Last ned 3 portrettbilder (3,3 MB) </Button>
               <Button><Download size="18" /> &nbsp; Last ned CV (70 KB) </Button>
@@ -113,13 +100,13 @@ const Employee = (props) => {
         </div>
       </div>
       <div className="row justify-content-center">
-        <div className="employee-projects col-6">
+        <div className="employee-projects col-md-6">
           <h2>Prosjekter</h2>
           { renderProjects() }
         </div>
       </div>
       <div className="row justify-content-center">
-        <div className="employee-publications col-6">
+        <div className="employee-publications col-md-6">
           <h2>Publiseringer</h2>
           { renderPublications() }
           { renderPublications() }

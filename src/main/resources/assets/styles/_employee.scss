@@ -9,6 +9,11 @@
     }
 
     .employee-title h1 {}
+
+    @include media-breakpoint-down(md) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
   }
 
   .employee-details {
@@ -17,7 +22,6 @@
     justify-content: space-between;
     margin: 1.2rem 0;
     padding-bottom: 1.5rem;
-    border-bottom: 1px solid #c3dcdc;
 
     > div {
       width: 24%;
@@ -47,6 +51,16 @@
         }
       }
     }
+
+    @include media-breakpoint-down(md) {
+      flex-direction: column;
+      padding-bottom: 0rem;
+
+      > div {
+        width: 100%;
+        padding: 1rem 0;
+      }
+    }
   }
   
   .employee-description {
@@ -54,13 +68,9 @@
 
     > div {
       
-      p {
-        font-size: 20px;
-        line-height: 1.6;
-      }
-      
       div {
         display: flex;
+        flex-wrap: wrap;
   
         button {
           margin: .2rem;
@@ -68,7 +78,6 @@
       }
 
     }
-    
   }
 
   .employee-projects {
@@ -82,7 +91,8 @@
   .employee-publications {
     margin-top: 2rem;
 
-    div {
+    > div {
+      margin-top: 1rem;
     }
   }
 }
