@@ -524,7 +524,17 @@ function SearchResult(props) {
           <div className="container">
             <Title>{props.title}</Title>
             <Input
-              size={isDesktopOrTablet && 'lg'}
+              className="d-none d-lg-block"
+              size="lg"
+              value={searchTerm}
+              handleChange={setSearchTerm}
+              searchField
+              submitCallback={goToSearchResultPage}
+              ariaLabelWrapper={props.term ? props.mainSearchPhrase : undefined}
+              ariaLabelSearchButton={props.searchText}
+            />
+            <Input
+              className="d-block d-lg-none"
               value={searchTerm}
               handleChange={setSearchTerm}
               searchField
