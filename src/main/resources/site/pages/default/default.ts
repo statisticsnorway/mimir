@@ -269,7 +269,7 @@ exports.get = function(req: XP.Request): XP.Response {
   const alerts: AlertType = alertsForContext(pageConfig, alertOptions)
   const body: string = bodyWithBreadCrumbs ? bodyWithBreadCrumbs : thymeleafRenderBody
   const bodyWithAlerts: XP.Response = alerts.length ?
-    addAlerts(alerts, body, pageContributions) :
+    addAlerts(alerts, body, pageContributions, req) :
     {
       body,
       pageContributions
@@ -492,12 +492,12 @@ function parseStatbankFrameContent(statbankFane: boolean, req: XP.Request, page:
   }
 }
 
-function addAlerts(alerts: AlertType, body: string, pageContributions: XP.PageContributions | undefined): XP.Response {
+function addAlerts(alerts: AlertType, body: string, pageContributions: XP.PageContributions | undefined, req: XP.Request): XP.Response {
   return r4xpRender('Alerts',
     {
       alerts
     },
-    undefined,
+    req,
     {
       id: 'alerts',
       body: body,
