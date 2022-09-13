@@ -29,28 +29,28 @@ const Employee = (props) => {
     return (
       <div className="employee-details gx-0">
         <div>
-          <Share2 className="position-icon" size={30} transform='rotate(90)'/> 
+          <Share2 size={30} transform='rotate(90)'/> 
           <div>
             <div>{positionPhrase}</div>
             <span>{position}</span>
           </div>
         </div>
         <div>
-          <Send className="email-icon" size={30} />
+          <Send size={30} />
           <div>
             <div>{emailPhrase}</div>
             <Link href={"mailto:" + email} linkType="profiled">{email}</Link>
           </div>
         </div>
         <div>
-          <Smartphone className="phone-icon" size={30} />
+          <Smartphone size={30} />
           <div>
             <div>{phonePhrase}</div>
             <Link href=" " linkType="profiled">{phone}</Link>
           </div>
         </div>
         <div> 
-          <Eye className="department-icon" size={30} />
+          <Eye size={30} />
           <div>
             <div>{isResearcher ? researchAreaPhrase : departmentPhrase}</div>
             <Link href=" " linkType="profiled">Makroøkonomi (test) </Link>
@@ -86,7 +86,7 @@ const Employee = (props) => {
       <div className="row">
         <div class="employee-head gx-0">
           <div className="employee-image col-6 col-md-3"><img alt={`profilbilder av ${title}`} src={props.profileImages[0]} /></div>
-          <div className="employee-title col-6 col-md-6"><Title size="1">{title}</Title></div>
+          <div className="col-6 col-md-6"><Title size="1">{title}</Title></div>
         </div>
       </div>
       <div className="row">
@@ -98,8 +98,7 @@ const Employee = (props) => {
             <h2>{briefSummaryPhrase}</h2>
             <LeadParagraph>{description}</LeadParagraph>
             <div>
-              <Button><Download size="18" /> &nbsp; Last ned 3 portrettbilder (3,3 MB) </Button>
-              <Button><Download size="18" /> &nbsp; Last ned CV (70 KB) </Button>
+              <Button><Download size="18" /> &nbsp; Last ned CV (70 KB)</Button>
             </div>
           </div>
         </div>
