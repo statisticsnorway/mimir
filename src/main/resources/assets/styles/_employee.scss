@@ -84,7 +84,12 @@
   .employee-projects {
     margin-top: 2rem;
 
-    > div div {
+    > ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    > ul li {
       margin-top: 1rem;
     }
   }
