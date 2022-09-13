@@ -9,7 +9,7 @@ const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 const {
-  getContent, pageUrl, imageUrl
+  getContent, pageUrl, imageUrl, attachmentUrl
 } = __non_webpack_require__('/lib/xp/portal')
 const {
   get
@@ -52,6 +52,11 @@ function renderPart(req: Request): React4xpResponse {
     })
   }) : []
 
+  const cvAttachment: string = attachmentUrl({
+    id: page.data.myCV ? page.data.myCV : '',
+    download: true
+  })
+
   const emailPhrase: string = localize({
     key: 'employee.email',
     locale: language
@@ -90,7 +95,7 @@ function renderPart(req: Request): React4xpResponse {
     phone: page.data.phone || '',
     description: page.data.description || '',
     profileImages: profileImages, // page.data.profileImages ? forceArray(page.data.profileImages) : [],
-    myCV: page.data.myCV || '',
+    myCV: cvAttachment,
     projects,
     isResearcher: page.data.isResearcher,
     cristinId: page.data.cristinId || null,
