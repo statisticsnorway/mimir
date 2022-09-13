@@ -101,6 +101,7 @@ function renderPart(req:Request): Response | React4xpResponse {
     municipality: municipality,
     municipalities: parsedMunicipalities,
     municipalityName: municipalityName,
+    municipalityList: municipalityItems,
     dropdownId: dropdownComponent.react4xpId
   }
 
@@ -132,5 +133,6 @@ interface ThymeleafModel {
   municipality: MunicipalityWithCounty | undefined,
   municipalities: Array<MunicipalityWithCounty>,
   municipalityName: string | undefined,
+  municipalityList: Array<Municipality>
   dropdownId: string
 }

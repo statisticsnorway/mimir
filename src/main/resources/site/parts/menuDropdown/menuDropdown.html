@@ -96,4 +96,11 @@
       </section>
     </div>
   </div>
+  <div data-th-if="${!modeMunicipality}" class="municipality-link-list" style="display:none">
+    <ul class="municipality-link-list">
+      <li data-th-each="municipalityLink : ${municipalityList}">
+        <a class="municipality-link" data-th-href="${baseUrl} + ${municipalityLink.id}" data-th-text="${municipalityLink.title}"/>
+      </li>
+    </ul>
+  </div>
 </div>
