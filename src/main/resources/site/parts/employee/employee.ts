@@ -52,6 +52,15 @@ function renderPart(req: Request): React4xpResponse {
     })
   }) : []
 
+  const areaContent: Content<DefaultPageConfig> | null = page.data.area ? get({
+    key: page.data.area
+  }) : null
+
+  const area: Area| null = areaContent ? {
+    title: areaContent.displayName,
+    href: areaContent._path
+  } : null
+
   const cvAttachment: string = attachmentUrl({
     id: page.data.myCV ? page.data.myCV : '',
     download: true
@@ -101,6 +110,7 @@ function renderPart(req: Request): React4xpResponse {
     profileImages: profileImages, // page.data.profileImages ? forceArray(page.data.profileImages) : [],
     myCV: cvAttachment,
     projects,
+    area,
     isResearcher: page.data.isResearcher,
     cristinId: page.data.cristinId || null,
     emailPhrase,
@@ -146,7 +156,8 @@ interface EmployeeProp {
   description: string;
   profileImages: Array<string> | void[] ;
   myCV: string;
-  projects: Array<Project>
+  projects: Array<Project>,
+  area: Area | null,
   isResearcher: boolean
   cristinId: string | null,
   emailPhrase: string,
@@ -155,7 +166,7 @@ interface EmployeeProp {
   researchAreaPhrase: string,
   departmentPhrase: string,
   briefSummaryPhrase: string,
-  projectsPhrase: String
+  projectsPhrase: string
 }
 
 interface Project {
@@ -166,6 +177,11 @@ interface Project {
 
 interface SEO {
   seoDescription?: string;
+}
+
+interface Area {
+  href: string;
+  title: string;
 }
 
 
