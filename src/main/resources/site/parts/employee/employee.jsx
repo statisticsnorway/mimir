@@ -6,7 +6,8 @@ import { Button } from '@statisticsnorway/ssb-component-library'
 
 const Employee = (props) => {
   const {
-    title, email, position, phone, description, profileImages, myCV, projects, isResearcher, cristinId, emailPhrase,
+    title, email, position, phone, description, profileImages, myCV, projects, isResearcher, cristinId, area,
+    emailPhrase,
     phonePhrase,
     positionPhrase,
     researchAreaPhrase,
@@ -43,7 +44,7 @@ const Employee = (props) => {
           <Eye size={30} />
           <div>
             <div>{isResearcher ? researchAreaPhrase : departmentPhrase}</div>
-            <Link href=" " linkType="profiled">Makroøkonomi (test) </Link>
+            <Link href={area.href} linkType="profiled">{area.title}</Link>
           </div>
         </div>
       </div>
@@ -51,9 +52,9 @@ const Employee = (props) => {
   }
 
   const renderProjects = () => {
-    const projectList = projects.map(project => {
+    const projectList = projects.map((project, i) => {
       return (
-        <li>
+        <li key={i}>
           <Link href={project.href} linkType="header">{project.title}</Link>
           <Paragraph>{project.description}</Paragraph>
         </li>
@@ -99,11 +100,11 @@ const Employee = (props) => {
           { renderProjects() }
         </div>
       </div>
-      <div className="row justify-content-center">
+      {/* <div className="row justify-content-center">
         <div className="employee-publications col-md-6">
           <h2>Publiseringer</h2>
         </div>
-      </div>
+      </div> */}
     </section>
   )
 }
