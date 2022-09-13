@@ -11,7 +11,8 @@ const Employee = (props) => {
     positionPhrase,
     researchAreaPhrase,
     departmentPhrase,
-    briefSummaryPhrase
+    briefSummaryPhrase, 
+    projectsPhrase
   } = props
 
   const renderEmployeeDetails = () => {
@@ -94,7 +95,7 @@ const Employee = (props) => {
       </div>
       <div className="row justify-content-center">
         <div className="employee-projects col-md-6">
-          <h2>Prosjekter</h2>
+          <h2>{projectsPhrase}</h2>
           { renderProjects() }
         </div>
       </div>

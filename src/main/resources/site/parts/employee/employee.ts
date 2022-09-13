@@ -87,6 +87,10 @@ function renderPart(req: Request): React4xpResponse {
     locale: language
   })
 
+  const projectsPhrase: string = localize({
+    key: 'employee.projects',
+    locale: language
+  })
 
   const props: EmployeeProp = {
     title: page.displayName,
@@ -104,8 +108,8 @@ function renderPart(req: Request): React4xpResponse {
     positionPhrase,
     researchAreaPhrase,
     departmentPhrase,
-    briefSummaryPhrase
-
+    briefSummaryPhrase,
+    projectsPhrase
   }
 
   return React4xp.render('site/parts/employee/employee', props, req)
@@ -150,7 +154,8 @@ interface EmployeeProp {
   positionPhrase: string,
   researchAreaPhrase: string,
   departmentPhrase: string,
-  briefSummaryPhrase: string
+  briefSummaryPhrase: string,
+  projectsPhrase: String
 }
 
 interface Project {
