@@ -4,17 +4,6 @@ import PropTypes from 'prop-types'
 import { Share2, Send, Smartphone, Eye, Download, ExternalLink } from 'react-feather'
 import { Button } from '@statisticsnorway/ssb-component-library'
 
-// mock data 
-const mockData = {
-  publications: [
-    {
-      title: "Efficient combinations of taxes on fuel and vehicles",
-      author: "Kyle Danny",
-      description: "The Energy Journal / 2021"
-    },
-  ]
-}
-
 const Employee = (props) => {
   const {
     title, email, position, phone, description, profileImages, myCV, projects, isResearcher, cristinId, emailPhrase,
@@ -72,14 +61,14 @@ const Employee = (props) => {
     return <ul>{projectList}</ul>
   }
 
-  const renderPublications = () => {
-    const publication = mockData.publications[0]
-    return <div>
-      <Link href=" " linkType="profiled" icon={<ExternalLink size="20" />}>{publication.title}</Link>
-      <Paragraph>{publication.author}</Paragraph>
-      <Text small>{publication.description}</Text>
-    </div>
-  }
+  // const renderPublications = () => {
+  //   const publication = mockData.publications[0]
+  //   return <div>
+  //     <Link href=" " linkType="profiled" icon={<ExternalLink size="20" />}>{publication.title}</Link>
+  //     <Paragraph>{publication.author}</Paragraph>
+  //     <Text small>{publication.description}</Text>
+  //   </div>
+  // }
 
   return (
     <section className="xp-part employee container p-0 mb-5">
@@ -97,9 +86,9 @@ const Employee = (props) => {
           <div>
             <h2>{briefSummaryPhrase}</h2>
             <LeadParagraph>{description}</LeadParagraph>
-            <div>
+            {/* <div>
               <Button><Download size="18" /> &nbsp; Last ned CV (70 KB)</Button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -112,9 +101,6 @@ const Employee = (props) => {
       <div className="row justify-content-center">
         <div className="employee-publications col-md-6">
           <h2>Publiseringer</h2>
-          { renderPublications() }
-          { renderPublications() }
-          { renderPublications() }
         </div>
       </div>
     </section>
