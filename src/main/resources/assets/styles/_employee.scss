@@ -1,0 +1,98 @@
+.employee {
+
+  .employee-head {
+    display: flex;
+    align-items: center;
+
+    .employee-image img {
+      width: 96%;  
+    }
+
+    @include media-breakpoint-down(md) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  .employee-details {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 1.2rem 0;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #c3dcdc;
+
+    > div {
+      width: 24%;
+      padding-top: 1.5rem;
+      border-top: 1px solid #c3dcdc;
+      display: flex;
+
+      > div {
+        margin-left: .5rem;
+        font-family: $font-open-sans;
+        font-size: 20px;
+        line-height: 1.6;
+
+        > span {
+          font-weight: 800;
+          a {
+            font-weight: 800;
+          }
+        }
+      }
+    }
+
+    .ssb-link {
+      font-size: 20px;
+    }
+
+    @include media-breakpoint-down(md) {
+      flex-direction: column;
+      padding-bottom: 0rem;
+
+      > div {
+        width: 100%;
+        padding: 1rem 0;
+      }
+    }
+  }
+  
+  .employee-description {
+    margin: 2rem 0;
+
+    > div {
+      
+      div {
+        display: flex;
+        flex-wrap: wrap;
+  
+        button {
+          margin: .2rem;
+        }
+      }
+
+    }
+  }
+
+  .employee-projects {
+    margin-top: 2rem;
+
+    > ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    > ul li {
+      margin-top: 1rem;
+    }
+  }
+
+  .employee-publications {
+    margin-top: 2rem;
+
+    > div {
+      margin-top: 1.5rem;
+    }
+  }
+}
