@@ -1,6 +1,9 @@
 name: 'Deploy to Test'
 on:
-  pull_request
+  pull_request:
+  push:
+    branches:
+      - 'mabl-test-from-gha'
   
 jobs:
   deploy_to_test:
@@ -13,12 +16,13 @@ jobs:
           skipPublishing: true
       - id: deploy_app_to_XP
         uses: 'enonic/action-app-deploy@main'
-        with: 
-          url: 'https://ssb-xp7t-admin.enonic.cloud:4443'
+        with:
+          # Secrets from Github repository
+          url: ${{ secrets.ENONIC_TEST_URL }}
           username: ${{ secrets.ENONIC_TEST_USER }}
           password: ${{ secrets.ENONIC_TEST_PASS }}
-          client_cert: ${{ secrets.ENONIC_CERT }}
-          client_key: ${{ secrets.ENONIC_KEY }}
+          client_cert: ${{ secrets.ENONIC_TEST_CERT }}
+          client_key: ${{ secrets.ENONIC_TEST_KEY }}
           app_jar: "./build/libs/*.jar"
       - name: Send success message to Slack
         id: slack_success
@@ -104,3 +108,20 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_MIMIR_UTV }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+  mabl_test:
+    # Run this job after deploy is finished, and only run if deploy succeeded
+    needs: deploy_to_test
+    if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
+    runs-on: ubuntu-latest
+    container: node:lts
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+      - name: Branch name and commit hash
+        run: |
+              echo running on branch ${GITHUB_HEAD_REF##*/} or ${GITHUB_REF##*/}
+              echo running $(echo $GITHUB_SHA | cut -c1-8) and ${GITHUB_SHA}
+      - name: install mabl
+        run: npm install -g @mablhq/mabl-cli
+      - name: mabl end-to-end test - TEST
+        run: mabl deployments create --api-key ${{ secrets.MABLAPIKEY }} --application-id ${{ secrets.MABLAPPID }} --environment-id ${{ secrets.MABLENVTEST }} --labels MIMIR --await-completion
