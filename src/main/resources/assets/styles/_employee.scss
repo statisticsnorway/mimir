@@ -24,7 +24,7 @@
 
     > div {
       width: 24%;
-      padding-top: .5rem;
+      padding-top: 1.5rem;
       border-top: 1px solid #c3dcdc;
       display: flex;
 
@@ -41,6 +41,10 @@
           }
         }
       }
+    }
+
+    .ssb-link {
+      font-size: 20px;
     }
 
     @include media-breakpoint-down(md) {

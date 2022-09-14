@@ -1,8 +1,7 @@
 import React from 'react'
-import { Title, Link, Divider, LeadParagraph, Paragraph, Text } from '@statisticsnorway/ssb-component-library'
+import { Button, Title, Link, LeadParagraph, Paragraph, Text } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import { Share2, Send, Smartphone, Eye, Download, ExternalLink } from 'react-feather'
-import { Button } from '@statisticsnorway/ssb-component-library'
 
 const Employee = (props) => {
   const {
@@ -12,7 +11,7 @@ const Employee = (props) => {
     positionPhrase,
     researchAreaPhrase,
     departmentPhrase,
-    briefSummaryPhrase, 
+    briefSummaryPhrase,
     projectsPhrase
   } = props
 
@@ -20,7 +19,7 @@ const Employee = (props) => {
     return (
       <div className="employee-details gx-0">
         <div>
-          <Share2 size={30} transform='rotate(90)'/> 
+          <Share2 size={30} transform='rotate(90)'/>
           <div>
             <div>{positionPhrase}</div>
             <span>{position}</span>
@@ -30,7 +29,7 @@ const Employee = (props) => {
           <Send size={30} />
           <div>
             <div>{emailPhrase}</div>
-            <Link href={"mailto:" + email} linkType="profiled">{email}</Link>
+            <Link href={'mailto:' + email} linkType="profiled">{email}</Link>
           </div>
         </div>
         <div>
@@ -40,7 +39,7 @@ const Employee = (props) => {
             <Link href=" " linkType="profiled">{phone}</Link>
           </div>
         </div>
-        <div> 
+        <div>
           <Eye size={30} />
           <div>
             <div>{isResearcher ? researchAreaPhrase : departmentPhrase}</div>
@@ -75,7 +74,7 @@ const Employee = (props) => {
   return (
     <section className="xp-part employee container p-0 mb-5">
       <div className="row">
-        <div class="employee-head gx-0">
+        <div className="employee-head gx-0">
           <div className="employee-image col-6 col-md-3"><img alt={`profilbilder av ${title}`} src={props.profileImages[0]} /></div>
           <div className="col-6 col-md-6"><Title size="1">{title}</Title></div>
         </div>
@@ -118,6 +117,7 @@ Employee.propTypes = {
   profileImages: PropTypes.array,
   myCV: PropTypes.string,
   projects: PropTypes.array,
+  area: PropTypes.object,
   isResearcher: PropTypes.bool,
   cristinId: PropTypes.string | null,
   emailPhrase: PropTypes.string,
@@ -125,7 +125,8 @@ Employee.propTypes = {
   positionPhrase: PropTypes.string,
   researchAreaPhrase: PropTypes.string,
   departmentPhrase: PropTypes.string,
-  briefSummaryPhrase: PropTypes.string
+  briefSummaryPhrase: PropTypes.string,
+  projectsPhrase: PropTypes.string
 }
 
 export default (props) => <Employee {...props} />

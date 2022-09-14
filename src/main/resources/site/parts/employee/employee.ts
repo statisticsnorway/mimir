@@ -40,9 +40,7 @@ function renderPart(req: Request): React4xpResponse {
   const page: Content<Employee> = getContent()
   const language: string = page.language ? page.language : 'nb'
   const projectIds: Employee['projects'] = page.data.projects
-
   const projects: Array<Project> = projectIds && projectIds.length > 0 ? parseProject(projectIds) : []
-
   const profileImageIds: Array<string> = page.data.profileImages ? forceArray(page.data.profileImages) : []
 
   const profileImages: Array<string> | void[] = profileImageIds ? profileImageIds.map((image: string) => {
@@ -126,26 +124,24 @@ function renderPart(req: Request): React4xpResponse {
 }
 
 function parseProject(projects: Employee['projects']): Array<Project> {
-  if (projects && projects.length > 0) {
-    return projects.map((projectId) => {
-      const relatedProjectContent: Content<DefaultPageConfig, object, SEO> | null = projectId ? get({
-        key: projectId
-      }) : null
-      let seoDescription: string | undefined
-      if (relatedProjectContent && hasPath(['x', 'com-enonic-app-metafields', 'meta-data', 'seoDescription'], relatedProjectContent)) {
-        seoDescription = relatedProjectContent.x['com-enonic-app-metafields']['meta-data'].seoDescription
-      }
+  const projectsIds: Array<string> = projects ? forceArray(projects) : []
+  return projectsIds.map((projectId) => {
+    const relatedProjectContent: Content<DefaultPageConfig, object, SEO> | null = projectId ? get({
+      key: projectId
+    }) : null
+    let seoDescription: string | undefined
+    if (relatedProjectContent && hasPath(['x', 'com-enonic-app-metafields', 'meta-data', 'seoDescription'], relatedProjectContent)) {
+      seoDescription = relatedProjectContent.x['com-enonic-app-metafields']['meta-data'].seoDescription
+    }
 
-      return {
-        title: relatedProjectContent ? relatedProjectContent.displayName : '',
-        href: pageUrl({
-          id: projectId
-        }),
-        description: seoDescription ? seoDescription : ''
-      }
-    })
-  }
-  return []
+    return {
+      title: relatedProjectContent ? relatedProjectContent.displayName : '',
+      href: pageUrl({
+        id: projectId
+      }),
+      description: seoDescription ? seoDescription : ''
+    }
+  })
 }
 
 interface EmployeeProp {
