@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { useMediaQuery } from 'react-responsive'
 
 import PropTypes from 'prop-types'
 import { Card,
@@ -9,7 +10,8 @@ import { Card,
   Title,
   Dropdown,
   Tag,
-  RadioGroup } from '@statisticsnorway/ssb-component-library'
+  RadioGroup,
+  Accordion } from '@statisticsnorway/ssb-component-library'
 import { ChevronDown, User, X } from 'react-feather'
 import axios from 'axios'
 import NumberFormat from 'react-number-format'
@@ -51,6 +53,7 @@ function SearchResult(props) {
   const [selectedContentType, setSelectedContentType] = useState(preselectedContentTypeDropdownItem)
   const [selectedMainSubject, setSelectedMainSubject] = useState(preselectedSubjectDropdownItem)
   const [numberChanged, setNumberChanged] = useState(0)
+  const [openAccordion, setOpenAccordion] = useState(false)
   const currentElement = useRef(null)
 
   useEffect(() => {
@@ -266,7 +269,7 @@ function SearchResult(props) {
             className="ssb-btn button-more mt-5"
             onClick={() => onShowMoreSearchResults(false)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter') {
+              if (e.key === 'Enter' || e.key === ' ') {
                 onShowMoreSearchResults(true)
               }
             }}
@@ -366,7 +369,6 @@ function SearchResult(props) {
     return props.namePhrases.types[nameCode]
   }
 
-
   function renderNameResult() {
     if (mainNameResult && mainNameResult.count && !filterChanged && numberChanged === 0) {
       return (
@@ -411,6 +413,9 @@ function SearchResult(props) {
       onSelect={(value) => {
         onChange('mainSubject', value)
         addGtagForEvent(props.GA_TRACKING_ID, 'Valgt emne', 'Søk', value.title)
+        if (!openAccordion) {
+          setOpenAccordion(true)
+        }
       }}
       selectedItem={selectedMainSubject}
       items={dropdownSubjectsItems}
@@ -426,6 +431,9 @@ function SearchResult(props) {
       onSelect={(value) => {
         onChange('contentType', value)
         addGtagForEvent(props.GA_TRACKING_ID, 'Valgt innholdstype', 'Søk', value.title)
+        if (!openAccordion) {
+          setOpenAccordion(true)
+        }
       }}
       selectedItem={selectedContentType}
       items={dropdownContentTypeItems}
@@ -456,11 +464,51 @@ function SearchResult(props) {
     )
   }
 
+  const isDesktopOrTablet = useMediaQuery({
+    minWidth: 768 // md breakpoint bootstrap 5.0
+  })
+
+  const isMobile = useMediaQuery({
+    maxWidth: 767.98
+  })
+
+  function renderFilterResults() {
+    const limitResultPhrase = props.limitResultPhrase
+    const filterDropdowns = (
+      <Row justify-content-start>
+        <Col lg='4' className='search-result-dropdown pb-1 pr-1'>
+          <DropdownMainSubject/>
+        </Col>
+        <Col lg='4' className='search-result-dropdown pr-1'>
+          <DropdownContentType/>
+        </Col>
+      </Row>
+    )
+
+    return (
+      <div className="filter">
+        {isDesktopOrTablet &&
+          <React.Fragment>
+            <span className="limit-result mb-3">{limitResultPhrase}</span>
+            {filterDropdowns}
+          </React.Fragment>}
+        {isMobile &&
+          <Accordion
+            id="search-result-filter-accordion"
+            header={limitResultPhrase}
+            openByDefault={openAccordion}
+          >
+            {filterDropdowns}
+          </Accordion>}
+        {renderClearFilterButton()}
+      </div>
+    )
+  }
+
   function renderClearFilterButton() {
     if (filter.mainSubject || filter.contentType) {
       return (
         <Tag
-          className="mt-4"
           onClick={removeFilter}
           icon={<X size={18} />}
         >{props.removeFilterPhrase}
@@ -473,9 +521,10 @@ function SearchResult(props) {
     <section className="search-result container-fluid p-0">
       <div className="row">
         <div className="col-12 search-result-head">
-          <div className="container py-5">
+          <div className="container">
             <Title>{props.title}</Title>
             <Input
+              className="d-none d-lg-block"
               size="lg"
               value={searchTerm}
               handleChange={setSearchTerm}
@@ -484,18 +533,16 @@ function SearchResult(props) {
               ariaLabelWrapper={props.term ? props.mainSearchPhrase : undefined}
               ariaLabelSearchButton={props.searchText}
             />
-            <div className="filter mt-5">
-              <span className="limit-result mb-3">{props.limitResultPhrase}</span>
-              <Row justify-content-start>
-                <Col lg='4' className='pb-1 pr-1'>
-                  <DropdownMainSubject/>
-                </Col>
-                <Col lg='4' className='pr-1'>
-                  <DropdownContentType/>
-                </Col>
-              </Row>
-              {renderClearFilterButton()}
-            </div>
+            <Input
+              className="d-block d-lg-none"
+              value={searchTerm}
+              handleChange={setSearchTerm}
+              searchField
+              submitCallback={goToSearchResultPage}
+              ariaLabelWrapper={props.term ? props.mainSearchPhrase : undefined}
+              ariaLabelSearchButton={props.searchText}
+            />
+            {renderFilterResults()}
           </div>
         </div>
         <div className="col-12 search-result-body">
