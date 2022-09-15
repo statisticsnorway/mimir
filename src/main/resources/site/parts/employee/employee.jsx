@@ -87,9 +87,9 @@ const Employee = (props) => {
           <div>
             <h2>{briefSummaryPhrase}</h2>
             <LeadParagraph>{description}</LeadParagraph>
-            {/* <div>
-              <Button><Download size="18" /> &nbsp; Last ned CV (70 KB)</Button>
-            </div> */}
+            <div>
+              <a href={myCV} download ><Button><Download size="18" /> &nbsp; Last ned CV (70 KB)</Button></a>
+            </div> 
           </div>
         </div>
       </div>

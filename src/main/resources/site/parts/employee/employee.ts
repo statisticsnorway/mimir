@@ -59,8 +59,12 @@ function renderPart(req: Request): React4xpResponse {
     href: areaContent._path
   } : null
 
+  // log.info(JSON.stringify(page.attachments[Object.keys(page.attachments)[0]].name, null, 2))
+  // log.info(JSON.stringify(Object.keys(page.attachments).pop(), null, 2))
+  
   const cvAttachment: string = attachmentUrl({
-    id: page.data.myCV ? page.data.myCV : '',
+    id: page._id ? page._id : '',
+    name: Object.keys(page.attachments).pop(),
     download: true
   })
 

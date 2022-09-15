@@ -50,12 +50,9 @@
                     <label>Ansatt id Cristin</label>
                     <occurrences minimum="0" maximum="1"/>
                 </input>
-                <input name="myCV" type="ContentSelector">
+                <input name="myCV" type="AttachmentUploader">
                     <label>Min CV</label>
                     <occurrences minimum="0" maximum="1"/>
-                    <config>
-                        <allowPath>${site}</allowPath>
-                    </config>
                 </input>
                 <input name="projects" type="ContentSelector">
                     <label>Prosjekter</label>
