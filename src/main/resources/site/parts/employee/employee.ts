@@ -58,12 +58,12 @@ function renderPart(req: Request): React4xpResponse {
     title: areaContent.displayName,
     href: areaContent._path
   } : null
-  
-  const cvAttachment: string = attachmentUrl({
+
+  const cvAttachment: string | null = Object.keys(page.attachments).length != 0 ? attachmentUrl({
     id: page._id ? page._id : '',
     name: Object.keys(page.attachments).pop(),
     download: true
-  })
+  }) : null
 
   const emailPhrase: string = localize({
     key: 'employee.email',
@@ -152,7 +152,7 @@ interface EmployeeProp {
   phone: string;
   description: string;
   profileImages: Array<string> | void[] ;
-  myCV: string;
+  myCV: string | null;
   projects: Array<Project>,
   area: Area | null,
   isResearcher: boolean

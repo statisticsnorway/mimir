@@ -15,6 +15,8 @@ const Employee = (props) => {
     projectsPhrase
   } = props
 
+  console.log(props)
+
   const renderEmployeeDetails = () => {
     return (
       <div className="employee-details gx-0">
@@ -29,21 +31,21 @@ const Employee = (props) => {
           <Eye size={30} />
           <div>
             <div>{isResearcher ? researchAreaPhrase : departmentPhrase}</div>
-            <Link href={area.href} linkType="profiled">{area.title}</Link>
+            {area ? <Link href={area.href} linkType="profiled">{area.title}</Link> : null}
           </div>
         </div>
         <div>
           <Send size={30} />
           <div>
             <div>{emailPhrase}</div>
-            <Link href={'mailto:' + email} linkType="profiled">{email}</Link>
+            {email ? <Link href={'mailto:' + email} linkType="profiled">{email}</Link> : null}
           </div>
         </div>
         <div>
           <Smartphone size={30} />
           <div>
             <div>{phonePhrase}</div>
-            <Link href=" " linkType="profiled">{phone}</Link>
+            {phone ? <Link href={'tel:' + phone} linkType="profiled">{phone}</Link> : null}
           </div>
         </div>
       </div>
@@ -62,15 +64,6 @@ const Employee = (props) => {
     return <ul>{projectList}</ul>
   }
 
-  // const renderPublications = () => {
-  //   const publication = mockData.publications[0]
-  //   return <div>
-  //     <Link href=" " linkType="profiled" icon={<ExternalLink size="20" />}>{publication.title}</Link>
-  //     <Paragraph>{publication.author}</Paragraph>
-  //     <Text small>{publication.description}</Text>
-  //   </div>
-  // }
-
   return (
     <section className="xp-part employee container p-0 mb-5">
       <div className="row">
@@ -87,23 +80,32 @@ const Employee = (props) => {
           <div>
             <h2>{briefSummaryPhrase}</h2>
             <LeadParagraph>{description}</LeadParagraph>
-            <div>
-              <a href={myCV}><Button><Download size="18" /> &nbsp; Last ned CV (70 KB)</Button></a>
-            </div> 
+            {myCV ? 
+              <div>
+                <a href={myCV}><Button><Download size="18" /> &nbsp; Last ned CV (70 KB)</Button></a>
+              </div> 
+              : null
+            }
           </div>
         </div>
       </div>
-      <div className="row justify-content-center">
-        <div className="employee-projects col-md-6">
-          <h2>{projectsPhrase}</h2>
-          { renderProjects() }
+      {projects.length != 0 ? 
+        <div className="row justify-content-center">
+          <div className="employee-projects col-md-6">
+            <h2>{projectsPhrase}</h2>
+            { renderProjects() }
+          </div>
         </div>
-      </div>
-      {/* <div className="row justify-content-center">
-        <div className="employee-publications col-md-6">
-          <h2>Publiseringer</h2>
+        : null
+      }
+      {cristinId ?
+        <div className="row justify-content-center">
+          <div className="employee-publications col-md-6">
+            <h2>Publiseringer</h2>
+          </div>
         </div>
-      </div> */}
+        : null
+      }
     </section>
   )
 }
