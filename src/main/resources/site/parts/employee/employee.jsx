@@ -26,6 +26,13 @@ const Employee = (props) => {
           </div>
         </div>
         <div>
+          <Eye size={30} />
+          <div>
+            <div>{isResearcher ? researchAreaPhrase : departmentPhrase}</div>
+            <Link href={area.href} linkType="profiled">{area.title}</Link>
+          </div>
+        </div>
+        <div>
           <Send size={30} />
           <div>
             <div>{emailPhrase}</div>
@@ -37,13 +44,6 @@ const Employee = (props) => {
           <div>
             <div>{phonePhrase}</div>
             <Link href=" " linkType="profiled">{phone}</Link>
-          </div>
-        </div>
-        <div>
-          <Eye size={30} />
-          <div>
-            <div>{isResearcher ? researchAreaPhrase : departmentPhrase}</div>
-            <Link href={area.href} linkType="profiled">{area.title}</Link>
           </div>
         </div>
       </div>
