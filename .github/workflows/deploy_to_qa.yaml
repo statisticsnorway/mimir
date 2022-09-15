@@ -6,7 +6,7 @@ on:
   
 jobs:
   deploy_to_qa:
-    name: 'Deploy to AQ'
+    name: 'Deploy to QA'
     runs-on: 'ubuntu-latest'
     steps:
       - id: build_app
@@ -16,7 +16,7 @@ jobs:
       - id: deploy_app_to_XP
         uses: 'enonic/action-app-deploy@main'
         with: 
-          url: 'https://ssb-xp7q-admin.enonic.cloud:4443'
+          url: ${{ secrets.ENONIC_QA_URL }}
           username: ${{ secrets.ENONIC_QA_USER }}
           password: ${{ secrets.ENONIC_QA_PASS }}
           client_cert: ${{ secrets.ENONIC_QA_CERT }}
@@ -106,3 +106,20 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_MIMIR_UTV }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+  mabl_test:
+    # Run this job after deploy is finished, and only run if deploy succeeded
+    needs: deploy_to_test
+    if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
+    runs-on: ubuntu-latest
+    container: node:lts
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+      - name: Branch name and commit hash
+        run: |
+              echo running on branch ${GITHUB_HEAD_REF##*/} or ${GITHUB_REF##*/}
+              echo running $(echo $GITHUB_SHA | cut -c1-8) and ${GITHUB_SHA}
+      - name: install mabl
+        run: npm install -g @mablhq/mabl-cli
+      - name: mabl end-to-end test - TEST
+        run: mabl deployments create --api-key ${{ secrets.MABLAPIKEY }} --application-id ${{ secrets.MABLAPPID }} --environment-id ${{ secrets.MABLENVQA }} --labels MIMIR --await-completion
