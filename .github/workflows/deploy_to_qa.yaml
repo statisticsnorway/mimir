@@ -108,7 +108,7 @@ jobs:
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
   mabl_test:
     # Run this job after deploy is finished, and only run if deploy succeeded
-    needs: deploy_to_test
+    needs: deploy_to_qa
     if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
     runs-on: ubuntu-latest
     container: node:lts
