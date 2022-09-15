@@ -96,10 +96,11 @@
       </section>
     </div>
   </div>
+  <!-- List of all municipality to make the pages searchable -->
   <div data-th-if="${!modeMunicipality}" class="municipality-link-list" style="display:none">
     <ul class="municipality-link-list">
-      <li data-th-each="municipalityLink : ${municipalityList}">
-        <a class="municipality-link" data-th-href="${baseUrl} + ${municipalityLink.id}" data-th-text="${municipalityLink.title}"/>
+      <li data-th-each="municipality : ${municipalityList}">
+        <a class="municipality-link" data-th-href="${baseUrl} + ${municipality.id}" data-th-text="${municipality.title}"/>
       </li>
     </ul>
   </div>
