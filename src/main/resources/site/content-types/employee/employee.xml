@@ -39,7 +39,7 @@
                 </input>
                 <input name="profileImages" type="ImageSelector">
                     <label>Profilbilder</label>
-                    <occurrences minimum="0" maximum="3"/>
+                    <occurrences minimum="0" maximum="4"/>
                 </input>
             </items>
         </field-set>
