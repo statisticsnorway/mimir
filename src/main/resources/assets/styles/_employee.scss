@@ -65,18 +65,29 @@
       margin-top: 2rem;
     }
 
-    .profile-images-grid a div {
-      
+    .profile-images-grid a {
+      padding-top: .8rem;
     }
-    
-    .profile-images-grid div img {
-      max-width: 100%;
-      max-height: 100%;
+
+    .profile-images-grid {
+      
+      a .resized {
+        height: 120px;
+        
+        img {
+          max-width: 100%;
+          max-height: 100%;
+        }
+      }
+
+      > div .ssb-link .link-text {
+        font-size: 14px;
+      }
     }
     
     .downloadCv {
-      margin-top: 1rem;
-      
+      margin-top: 2.5rem;
+
       a {
         display: inline-block;
       }

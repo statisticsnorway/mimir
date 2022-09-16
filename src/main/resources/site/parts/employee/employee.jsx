@@ -81,14 +81,16 @@ const Employee = (props) => {
         <div className="employee-attachments col-12 col-md-3">
           <div className="instructions">
             <h3>Pressbilder</h3>
-            <p>Trykk på ønsket bilde for å åpne høyoppløselig versjon</p>
+            <p>Trykk på ønsket bilde for å åpne høyoppløselig versjon.</p>
           </div>
           <div className="row profile-images-grid">
             {profileImages.map((href, i) => {
               return (
                 <a href={href} target="_blank" type="media_type" className="col-6">
-                  <div><img alt={`profilbilder${i + 1} av ${title}`} src={href}/></div>
-                  <div>Bilde{i + 1}.jpg</div>
+                  <div className="resized"><img alt={`profilbilder${i + 1} av ${title}`} src={href}/></div>
+                  <div>
+                    <Link linkType="profiled">Bilde{i + 1}.jpg</Link>
+                  </div>
                 </a>
               )
             })}
@@ -96,9 +98,7 @@ const Employee = (props) => {
 
           {myCV ? 
             <div className="row downloadCv">
-              <div>
-                <a href={myCV}><Button><Download size="18" /> &nbsp; {downloadPdfPhrase} </Button></a>
-              </div>
+              <a href={myCV}><Button><Download size="18" /> &nbsp; {downloadPdfPhrase} </Button></a>
             </div> 
             : null
           }
