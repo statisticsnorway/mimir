@@ -12,7 +12,8 @@ const Employee = (props) => {
     researchAreaPhrase,
     departmentPhrase,
     briefSummaryPhrase,
-    projectsPhrase
+    projectsPhrase,
+    downloadPdfPhrase
   } = props
 
   console.log(props)
@@ -82,7 +83,7 @@ const Employee = (props) => {
             <LeadParagraph>{description}</LeadParagraph>
             {myCV ? 
               <div>
-                <a href={myCV}><Button><Download size="18" /> &nbsp; Last ned CV (70 KB)</Button></a>
+                <a href={myCV}><Button><Download size="18" /> &nbsp; {downloadPdfPhrase} </Button></a>
               </div> 
               : null
             }

@@ -100,6 +100,11 @@ function renderPart(req: Request): React4xpResponse {
     locale: language
   })
 
+  const downloadPdfPhrase: string = localize({
+    key: 'employee.downloadPDF',
+    locale: language
+  })
+
   const props: EmployeeProp = {
     title: page.displayName,
     email: page.data.email || '',
@@ -118,7 +123,8 @@ function renderPart(req: Request): React4xpResponse {
     researchAreaPhrase,
     departmentPhrase,
     briefSummaryPhrase,
-    projectsPhrase
+    projectsPhrase,
+    downloadPdfPhrase
   }
 
   return React4xp.render('site/parts/employee/employee', props, req)
@@ -146,13 +152,13 @@ function parseProject(projects: Employee['projects']): Array<Project> {
 }
 
 interface EmployeeProp {
-  title: string;
-  email: string;
-  position: string;
-  phone: string;
-  description: string;
-  profileImages: Array<string> | void[] ;
-  myCV: string | null;
+  title: string,
+  email: string,
+  position: string,
+  phone: string,
+  description: string,
+  profileImages: Array<string> | void[],
+  myCV: string | null,
   projects: Array<Project>,
   area: Area | null,
   isResearcher: boolean
@@ -163,7 +169,8 @@ interface EmployeeProp {
   researchAreaPhrase: string,
   departmentPhrase: string,
   briefSummaryPhrase: string,
-  projectsPhrase: string
+  projectsPhrase: string,
+  downloadPdfPhrase: string
 }
 
 interface Project {
