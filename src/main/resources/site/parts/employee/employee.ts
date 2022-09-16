@@ -59,9 +59,9 @@ function renderPart(req: Request): React4xpResponse {
     href: areaContent._path
   } : null
 
-  const cvAttachment: string | null = Object.keys(page.attachments).length != 0 ? attachmentUrl({
+  const cvAttachment: string | null = page.data.myCV ? attachmentUrl({
     id: page._id ? page._id : '',
-    name: Object.keys(page.attachments).pop(),
+    name: page.data.myCV,
     download: true
   }) : null
 
