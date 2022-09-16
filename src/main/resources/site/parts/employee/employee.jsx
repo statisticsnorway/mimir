@@ -76,37 +76,62 @@ const Employee = (props) => {
       <div className="row">
         { renderEmployeeDetails() }
       </div>
-      <div className="row justify-content-center">
-        <div className="employee-description col-12 col-md-6">
-          <div>
-            <h2>{briefSummaryPhrase}</h2>
-            <LeadParagraph>{description}</LeadParagraph>
-            {myCV ? 
+
+      <div className="row">
+        <div className="employee-attachments col-12 col-md-3">
+          <div className="instructions">
+            <h3>Pressbilder</h3>
+            <p>Trykk på ønsket bilde for å åpne høyoppløselig versjon</p>
+          </div>
+          <div className="row profile-images-grid">
+            {profileImages.map((href, i) => {
+              return (
+                <a href={href} target="_blank" type="media_type" className="col-6">
+                  <div><img alt={`profilbilder${i + 1} av ${title}`} src={href}/></div>
+                  <div>Bilde{i + 1}.jpg</div>
+                </a>
+              )
+            })}
+          </div>
+
+          {myCV ? 
+            <div className="row downloadCv">
               <div>
                 <a href={myCV}><Button><Download size="18" /> &nbsp; {downloadPdfPhrase} </Button></a>
-              </div> 
-              : null
-            }
+              </div>
+            </div> 
+            : null
+          }
+        </div>
+
+        <div className="col-12 col-md-6">
+          <div className="row">
+            <div className="employee-description">
+              <div>
+                <h2>{briefSummaryPhrase}</h2>
+                <LeadParagraph>{description}</LeadParagraph>
+              </div>
+            </div>
           </div>
+          {projects.length != 0 ? 
+            <div className="row justify-content-center">
+              <div className="employee-projects">
+                <h2>{projectsPhrase}</h2>
+                { renderProjects() }
+              </div>
+            </div>
+            : null
+          }
+          {cristinId ?
+            <div className="row justify-content-center">
+              <div className="employee-publications">
+                <h2>Publiseringer</h2>
+              </div>
+            </div>
+            : null
+          }
         </div>
       </div>
-      {projects.length != 0 ? 
-        <div className="row justify-content-center">
-          <div className="employee-projects col-md-6">
-            <h2>{projectsPhrase}</h2>
-            { renderProjects() }
-          </div>
-        </div>
-        : null
-      }
-      {cristinId ?
-        <div className="row justify-content-center">
-          <div className="employee-publications col-md-6">
-            <h2>Publiseringer</h2>
-          </div>
-        </div>
-        : null
-      }
     </section>
   )
 }
