@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - 'master'
+      - 'MIMIR-1227_test'
   
 jobs:
   deploy_to_qa:
