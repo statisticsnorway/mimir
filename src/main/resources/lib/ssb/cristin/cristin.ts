@@ -1,23 +1,19 @@
-// import { Result, ListOfResults, fetchResult, fetchPersonResults } from '/lib/cristin/service'
-import { Result, ListOfResults, FetchResponse, Project, fetchResult, fetchResults, fetchProject } from '/lib/cristin/service'
+import { ListOfResults, FetchResponse, Project, fetchResults, fetchProject } from '/lib/cristin/service'
 
-export function fetchResultCristin(id: string): Result | void {
-  // filtrering - category, contributor. per side. paginering
-  const result: Result | void = fetchResult({
-    id
-  })
-
-  return result
-}
-
-export function fetchResultsCristin(contributor?: string, category?: string, per_page: string = '10', page?: string): FetchResponse<ListOfResults> {
+export function fetchResultsCristin(
+  contributor?: string,
+  category?: string,
+  per_page: string = '10',
+  page?: string,
+  sort?: string
+): FetchResponse<ListOfResults> {
   const results: FetchResponse<ListOfResults> = fetchResults({
     institution: 'statistisk+sentralbyra',
-    contributor: contributor,
-    category: category,
-    per_page: per_page,
-    page: page
-    // sort: 'desc'
+    contributor,
+    category,
+    per_page,
+    page,
+    sort
   })
 
   return results
