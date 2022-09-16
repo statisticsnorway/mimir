@@ -1,6 +1,9 @@
 name: 'Deploy to Test'
 on:
-  pull_request
+  pull_request:
+  push:
+    branches:
+      - 'MIMIR-1227_test'
 
 jobs:
   deploy_to_test:
