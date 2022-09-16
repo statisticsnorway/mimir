@@ -8,37 +8,21 @@ export function fetchResultCristin(id: string): Result | void {
   })
 
   return result
-//   return {
-//     category: result.category,
-//     contributors: result.contributors,
-//     cristin_result_id: result.cristin_result_id,
-//     links: result.links,
-//     title: result.title,
-//     year_reported: result.year_published
-//   }
 }
 
-// TODO: Publikasjon, forside
-export function fetchResultsCristin(): FetchResponse<ListOfResults> {
+export function fetchResultsCristin(contributor?: string, category?: string, per_page: string = '10', page?: string): FetchResponse<ListOfResults> {
   const results: FetchResponse<ListOfResults> = fetchResults({
     institution: 'statistisk+sentralbyra',
-    per_page: '5',
-    sort: 'desc'
+    contributor: contributor,
+    category: category,
+    per_page: per_page,
+    page: page
+    // sort: 'desc'
   })
 
   return results
 }
 
-// TODO: Publikasjonsopplisting, ansattside
-// export function fetchPersonResultsCristin(personId: string): ListOfResults {
-//   const personResults: ListOfResults = fetchPersonResults({
-//     personId
-//   })
-
-//   return personResults
-// }
-
-// TODO: Prosjektside
 export function fetchProjectCristin(projectId: string): Project {
   const project: Project = fetchProject({
     id: projectId
