@@ -1,25 +1,22 @@
 name: 'Manual deploy to PROD'
 # Action that will download previously created artifact and deploy it to the production environment
 on:
-  push:
-    branches:
-      - 'MIMIR-1227_updates-and-manual-deploy'
-
-  # workflow_dispatch:
-  #  # We need the Github Action Run number to select which artifact to download
-  #   inputs:
-  #     gh_run_number:
-  #       description: 'The Github Action run number to deploy'
-  #       required: true
+  workflow_dispatch:
+   # We need the Github Action Run number to select which artifact to download
+    inputs:
+      gh_run_number:
+        description: 'The Github Action run number to deploy'
+        required: true
 
 jobs:
   deploy-artifact:
     name: 'Deploy artifact'
     runs-on: ubuntu-latest
     steps:
-      - name: download artifact
-        uses: actions/download-artifact@v3
+      - name: Download workflow artifact
+        uses: dawidd6/action-download-artifact@v2.23.0
         with:
-          name: mimir-test-36
+          workflow: deploy_to_test.yaml
+          run_number: ${{ github.event.input.gh_run_number }}
       - name: display downloads
         run: ls -R
