@@ -27,7 +27,7 @@ export function fetchProjectCristin(projectId: string): Project {
   return project
 }
 
-export function fetchPersonResultsCristin(personId: string): ListOfResults {
+export function fetchPersonResultsCristin(personId?: string): ListOfResults {
   const results: ListOfResults = fetchPersonResults({
     id: personId
   })
