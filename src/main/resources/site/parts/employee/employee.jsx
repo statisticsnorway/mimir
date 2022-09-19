@@ -1,7 +1,8 @@
-import React from 'react'
-import { Button, Title, Link, LeadParagraph, Paragraph, Text } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
-import { Share2, Send, Smartphone, Eye, Download, ExternalLink } from 'react-feather'
+import React from 'react';
+import { Button, Title, Link, LeadParagraph, Paragraph, Text } from '@statisticsnorway/ssb-component-library';
+import PropTypes from 'prop-types';
+import { Share2, Send, Smartphone, Eye, Download, ExternalLink } from 'react-feather';
+import { useMediaQuery } from 'react-responsive';
 
 const Employee = (props) => {
   const {
@@ -16,7 +17,11 @@ const Employee = (props) => {
     downloadPdfPhrase
   } = props
 
+  // const isDesktopOrLaptop = useMediaQuery({ minWidth: 768 });
+  const isTabletOrMobile = useMediaQuery({ maxWidth: 767.98 });
+
   console.log(props)
+  // console.log(isDesktopOrLaptop)
 
   const renderEmployeeDetails = () => {
     return (
@@ -81,7 +86,10 @@ const Employee = (props) => {
         { renderEmployeeDetails() }
       </div>
 
-      <div className="row">
+      
+      <div className={!isTabletOrMobile ? "row" : ""}>
+
+        {!isTabletOrMobile ?
         <div className="employee-attachments col-12 col-md-3">
           <div className="instructions">
             <h3>Pressbilder</h3>
@@ -107,6 +115,9 @@ const Employee = (props) => {
             : null
           }
         </div>
+        :
+        <div>hello</div>
+        }
 
         <div className="col-12 col-md-6">
           <div className="row">
