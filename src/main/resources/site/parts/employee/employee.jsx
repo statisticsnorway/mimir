@@ -87,10 +87,10 @@ const Employee = (props) => {
             <h3>Pressbilder</h3>
             <p>Trykk på ønsket bilde for å åpne høyoppløselig versjon.</p>
           </div>
-          <div className="row profile-images-grid">
+          <div className="row gx-0 profile-images-grid">
             {profileImages.map((href, i) => {
               return (
-                <a href={href} target="_blank" type="media_type" className="col-6">
+                <a href={href} target="_blank" type="media_type" className="image-column-size">
                   <div className="resized"><img alt={`profilbilder${i + 1} av ${title}`} src={href}/></div>
                   <div>
                     <Link linkType="profiled">Bilde{i + 1}.jpg</Link>
