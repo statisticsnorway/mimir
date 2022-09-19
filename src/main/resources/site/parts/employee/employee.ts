@@ -59,6 +59,8 @@ function renderPart(req: Request): React4xpResponse {
     href: areaContent._path
   } : null
 
+  const cvInformation: object = page.attachments[Object.keys(page.attachments)[0]];
+
   const cvAttachment: string | null = page.data.myCV ? attachmentUrl({
     id: page._id ? page._id : '',
     name: page.data.myCV,
@@ -117,6 +119,7 @@ function renderPart(req: Request): React4xpResponse {
     area,
     isResearcher: page.data.isResearcher,
     cristinId: page.data.cristinId || null,
+    cvInformation,
     emailPhrase,
     phonePhrase,
     positionPhrase,
@@ -163,6 +166,7 @@ interface EmployeeProp {
   area: Area | null,
   isResearcher: boolean
   cristinId: string | null,
+  cvInformation: Object,
   emailPhrase: string,
   phonePhrase: string,
   positionPhrase: string,

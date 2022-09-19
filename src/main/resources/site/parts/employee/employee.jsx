@@ -5,7 +5,7 @@ import { Share2, Send, Smartphone, Eye, Download, ExternalLink } from 'react-fea
 
 const Employee = (props) => {
   const {
-    title, email, position, phone, description, profileImages, myCV, projects, isResearcher, cristinId, area,
+    title, email, position, phone, description, profileImages, myCV, projects, isResearcher, cristinId, area, cvInformation,
     emailPhrase,
     phonePhrase,
     positionPhrase,
@@ -65,6 +65,10 @@ const Employee = (props) => {
     return <ul>{projectList}</ul>
   }
 
+  const calculateCvSize = (bytes) => {
+    return Math.round(bytes / 1000)
+  }
+
   return (
     <section className="xp-part employee container p-0 mb-5">
       <div className="row">
@@ -98,7 +102,7 @@ const Employee = (props) => {
 
           {myCV ? 
             <div className="row downloadCv">
-              <a href={myCV}><Button><Download size="18" /> &nbsp; {downloadPdfPhrase} </Button></a>
+              <a href={myCV}><Button><Download size="18" /> &nbsp; {downloadPdfPhrase} ({calculateCvSize(cvInformation.size)} kB) </Button></a>
             </div> 
             : null
           }
