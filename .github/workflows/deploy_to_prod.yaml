@@ -20,6 +20,6 @@ jobs:
       - name: download artifact
         uses: actions/download-artifact@v3
         with:
-          name: mimir-test-35
+          name: mimir-test-36
       - name: display downloads
         run: ls -R
