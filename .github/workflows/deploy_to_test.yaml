@@ -3,7 +3,7 @@ on:
   pull_request:
   push:
     branches:
-      - 'mabl-test-from-gha'
+      - 'MIMIR-1227_updates-and-manual-deploy'
   
 jobs:
   deploy_to_test:
@@ -24,6 +24,13 @@ jobs:
           client_cert: ${{ secrets.ENONIC_TEST_CERT }}
           client_key: ${{ secrets.ENONIC_TEST_KEY }}
           app_jar: "./build/libs/*.jar"
+      - name: Upload artifacts
+        id: upload_artifacts
+        if: success()
+        uses: actions/upload-artifact@v3
+        with:
+          name: SSB-XP
+          path: "./build/libs/*.jar"
       - name: Send success message to Slack
         id: slack_success
         if: success()
