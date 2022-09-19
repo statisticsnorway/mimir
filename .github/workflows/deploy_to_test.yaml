@@ -29,7 +29,7 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v3
         with:
-          name: SSB-XP
+          name: SSB-XP-${{ github.run_number }}
           path: "./build/libs/*.jar"
       - name: Send success message to Slack
         id: slack_success
