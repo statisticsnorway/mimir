@@ -101,7 +101,7 @@ const Employee = (props) => {
           </div>
 
           {myCV ? 
-            <div className="row downloadCv">
+            <div className="downloadCv">
               <a href={myCV}><Button><Download size="18" /> &nbsp; {downloadPdfPhrase} ({calculateCvSize(cvInformation.size)} kB) </Button></a>
             </div> 
             : null
