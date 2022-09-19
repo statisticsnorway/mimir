@@ -1,7 +1,7 @@
 import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
 import { Component, getComponent, getContent, imageUrl } from '/lib/xp/portal'
 import { EntryLinksPartConfig } from './entryLinks-part-config'
-import { Content, get, Image } from '/lib/xp/content'
+import { Content, get, MediaImage } from '/lib/xp/content'
 import { Phrases } from '../../../lib/types/language'
 import { render, ResourceKey } from '/lib/thymeleaf'
 
@@ -82,7 +82,7 @@ function parseEntryLinks(entryLinksContent: EntryLinksPartConfig['entryLinks']):
   return entryLinksContent && entryLinksContent.map(({
     title, href, icon, mobileIcon
   }) => {
-    const iconData: Content<Image> | null = get({
+    const iconData: Content<MediaImage> | null = get({
       key: icon
     })
 

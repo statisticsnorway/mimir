@@ -1,4 +1,4 @@
-import { ListOfResults, FetchResponse, Project, fetchResults, fetchProject } from '/lib/cristin/service'
+import { ListOfResults, FetchResponse, Project, fetchResults, fetchProject, fetchPersonResults } from '/lib/cristin/service'
 
 export function fetchResultsCristin(
   contributor?: string,
@@ -25,4 +25,12 @@ export function fetchProjectCristin(projectId: string): Project {
   })
 
   return project
+}
+
+export function fetchPersonResultsCristin(personId: string): ListOfResults {
+  const results: ListOfResults = fetchPersonResults({
+    id: personId
+  })
+
+  return results
 }

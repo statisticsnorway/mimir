@@ -97,7 +97,7 @@ export function updateJobLog<T>(jobId: string, editor: EditorCallback<JobInfoNod
   return modifyNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, jobId, editor)
 }
 
-export function queryJobLogs(params: NodeQueryParams<never>): NodeQueryResponse<never> {
+export function queryJobLogs(params: NodeQueryParams): NodeQueryResponse {
   return queryNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, params)
 }
 
@@ -126,7 +126,7 @@ export interface RepoJobLib {
   JobStatus: typeof JobStatus;
   startJobLog: (task?: string) => JobEventNode;
   updateJobLog: <T>(jobId: string, editor: EditorCallback<JobInfoNode>) => JobInfoNode;
-  queryJobLogs: <T>(params: NodeQueryParams<never>) => NodeQueryResponse<never>;
+  queryJobLogs: <T>(params: NodeQueryParams) => NodeQueryResponse;
   getJobLog: (id: string) => JobInfoNode | ReadonlyArray<JobInfoNode> | null;
   completeJobLog: (jobLogId: string, message: string, refreshDataResult: object ) => JobInfoNode;
 }
