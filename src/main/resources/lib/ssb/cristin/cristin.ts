@@ -27,9 +27,11 @@ export function fetchProjectCristin(projectId: string): Project {
   return project
 }
 
-export function fetchPersonResultsCristin(personId?: string): ListOfResults {
+export function fetchPersonResultsCristin(personId?: string, per_page: string = '10', page?: string): ListOfResults {
   const results: ListOfResults = fetchPersonResults({
-    id: personId
+    id: personId,
+    per_page,
+    page
   })
 
   return results
