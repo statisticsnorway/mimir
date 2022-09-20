@@ -124,6 +124,7 @@ const Employee = (props) => {
             <h2>{briefSummaryPhrase}</h2>
             <LeadParagraph>{description}</LeadParagraph>
           </div>
+          <div className="desktop-display-none">{renderDownloadCvButton()}</div>
         </div>
       </div>
     )
