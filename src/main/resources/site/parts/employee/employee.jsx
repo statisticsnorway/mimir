@@ -1,7 +1,7 @@
 import React from 'react';
-import { Button, Title, Link, LeadParagraph, Paragraph, Text } from '@statisticsnorway/ssb-component-library';
+import { Button, Title, Link, LeadParagraph, Paragraph, Text, Accordion } from '@statisticsnorway/ssb-component-library';
 import PropTypes from 'prop-types';
-import { Share2, Send, Smartphone, Eye, Download, ExternalLink } from 'react-feather';
+import { Share2, Send, Smartphone, Eye, Download, Image } from 'react-feather';
 import { useMediaQuery } from 'react-responsive';
 
 const Employee = (props) => {
@@ -15,13 +15,47 @@ const Employee = (props) => {
     briefSummaryPhrase,
     projectsPhrase,
     downloadPdfPhrase
-  } = props
+  } = props;
 
-  // const isDesktopOrLaptop = useMediaQuery({ minWidth: 768 });
-  const isTabletOrMobile = useMediaQuery({ maxWidth: 767.98 });
+  const calculateCvSize = (bytes) => {
+    return Math.round(bytes / 1000)
+  }
 
-  console.log(props)
-  // console.log(isDesktopOrLaptop)
+  const renderPortraitImages = () => {
+    return (
+      <div className="row gx-0 profile-images-grid">
+        {profileImages.map((href, i) => {
+          return (
+            <div key={i} className="image-column-size">
+              <a href={href} target="_blank" type="media_type" >
+                <div className="resized"><img alt={`profilbilder${i + 1} av ${title}`} src={href}/></div>
+                <div><Link linkType="profiled">Bilde{i + 1}.jpg</Link></div>
+              </a>
+            </div>
+          )
+        })}
+      </div>
+    )
+  }
+
+  const renderDownloadCvButton = () => {
+    return (
+      myCV ? 
+        <div className="downloadCv">
+          <a href={myCV}><Button><Download size="18" /> &nbsp; {downloadPdfPhrase} ({calculateCvSize(cvInformation.size)} kB) </Button></a>
+        </div> 
+        : null
+    )
+  }
+
+  const renderEmployeeHead = () => {
+    return (
+      <div className="employee-head gx-0">
+        <div className="employee-image col-6 col-md-3"><img alt={`profilbilder av ${title}`} src={props.profileImages[0]} /></div>
+        <div className="col-6 col-md-6"><Title size="1">{title}</Title></div>
+      </div>
+    )
+  }
 
   const renderEmployeeDetails = () => {
     return (
@@ -57,94 +91,91 @@ const Employee = (props) => {
       </div>
     )
   }
+  
+  const renderAttachmentsForDesktop = () => {
+    return (
+      <div className="employee-attachments mobile-display-none col-12 col-md-3">
+        <div className="instructions">
+          <h3>Pressbilder</h3>
+          <p>Trykk på ønsket bilde for å åpne høyoppløselig versjon.</p>
+        </div>
+        {renderPortraitImages()}
+        {renderDownloadCvButton()}   
+      </div>
+    )
+  }
+
+  const renderAttachmentsForMobile = () => {
+    return (
+      <Accordion header="Pressebilder" className="employee-attachments desktop-display-none">
+        <div className="instructions">
+          <p>Trykk på ønsket bilde for å åpne høyoppløselig versjon.</p>
+        </div>
+        {renderPortraitImages()}
+      </Accordion>
+    )
+  } 
+
+  const renderEmployeeDescription = () => {
+    return (
+      <div className="row">
+        <div className="employee-description">
+          <div>
+            <h2>{briefSummaryPhrase}</h2>
+            <LeadParagraph>{description}</LeadParagraph>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   const renderProjects = () => {
     const projectList = projects.map((project, i) => {
-      return (
+      return (      
         <li key={i}>
           <Link href={project.href} linkType="header">{project.title}</Link>
           <Paragraph>{project.description}</Paragraph>
-        </li>
+        </li>     
       )
     })
-    return <ul>{projectList}</ul>
+    return ( 
+      <div className="row justify-content-center">
+        <div className="employee-projects">
+          <h2>{projectsPhrase}</h2>
+          <ul>{projectList}</ul>
+        </div>
+      </div>
+    )
   }
 
-  const calculateCvSize = (bytes) => {
-    return Math.round(bytes / 1000)
+  const renderPublications = () => {
+    return (
+      <div className="row justify-content-center">
+        <div className="employee-publications">
+          <h2>Publiseringer</h2>
+        </div>
+      </div>
+    )
   }
 
   return (
     <section className="xp-part employee container p-0 mb-5">
       <div className="row">
-        <div className="employee-head gx-0">
-          <div className="employee-image col-6 col-md-3"><img alt={`profilbilder av ${title}`} src={props.profileImages[0]} /></div>
-          <div className="col-6 col-md-6"><Title size="1">{title}</Title></div>
-        </div>
+        {renderEmployeeHead()}
       </div>
+
       <div className="row">
-        { renderEmployeeDetails() }
+        {renderEmployeeDetails()}
       </div>
 
-      
-      <div className={!isTabletOrMobile ? "row" : ""}>
-
-        {!isTabletOrMobile ?
-        <div className="employee-attachments col-12 col-md-3">
-          <div className="instructions">
-            <h3>Pressbilder</h3>
-            <p>Trykk på ønsket bilde for å åpne høyoppløselig versjon.</p>
-          </div>
-          <div className="row gx-0 profile-images-grid">
-            {profileImages.map((href, i) => {
-              return (
-                <a href={href} target="_blank" type="media_type" className="image-column-size">
-                  <div className="resized"><img alt={`profilbilder${i + 1} av ${title}`} src={href}/></div>
-                  <div>
-                    <Link linkType="profiled">Bilde{i + 1}.jpg</Link>
-                  </div>
-                </a>
-              )
-            })}
-          </div>
-
-          {myCV ? 
-            <div className="downloadCv">
-              <a href={myCV}><Button><Download size="18" /> &nbsp; {downloadPdfPhrase} ({calculateCvSize(cvInformation.size)} kB) </Button></a>
-            </div> 
-            : null
-          }
-        </div>
-        :
-        <div>hello</div>
-        }
+      <div className="row">
+        {renderAttachmentsForDesktop()}
+        {renderAttachmentsForMobile()}
 
         <div className="col-12 col-md-6">
-          <div className="row">
-            <div className="employee-description">
-              <div>
-                <h2>{briefSummaryPhrase}</h2>
-                <LeadParagraph>{description}</LeadParagraph>
-              </div>
-            </div>
-          </div>
-          {projects.length != 0 ? 
-            <div className="row justify-content-center">
-              <div className="employee-projects">
-                <h2>{projectsPhrase}</h2>
-                { renderProjects() }
-              </div>
-            </div>
-            : null
-          }
-          {cristinId ?
-            <div className="row justify-content-center">
-              <div className="employee-publications">
-                <h2>Publiseringer</h2>
-              </div>
-            </div>
-            : null
-          }
+          {renderEmployeeDescription()}
+          {projects.length != 0 ? renderProjects(): null}
+          {cristinId ? renderPublications : null}
         </div>
       </div>
     </section>
