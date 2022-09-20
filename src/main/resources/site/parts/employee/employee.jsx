@@ -107,7 +107,7 @@ const Employee = (props) => {
 
   const renderAttachmentsForMobile = () => {
     return (
-      <Accordion header="Pressebilder" className="employee-attachments desktop-display-none">
+      <Accordion header={"Pressebilder"} className="employee-attachments desktop-display-none">
         <div className="instructions">
           <p>Trykk på ønsket bilde for å åpne høyoppløselig versjon.</p>
         </div>

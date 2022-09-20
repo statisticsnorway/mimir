@@ -66,9 +66,10 @@
     }
 
     .profile-images-grid {
-      
+      grid-column-gap: 2rem;
+
       .image-column-size {
-        width: 45%;
+        width: 38%;
       }
       
       a {
@@ -100,13 +101,11 @@
     }
   }
 
-  // > div > div.row.gx-0.profile-images-grid > div:nth-child(1)
-
   @include media-breakpoint-down(md) {
     
     > div .employee-details {
       border-bottom: none;
-      margin-bottom: 0;
+      margin-bottom: 0px;
     }
 
     .mobile-display-none {
@@ -122,6 +121,7 @@
 
       .profile-images-grid {
         margin-bottom: 1rem;
+        grid-column-gap: 0;
       }
 
       .profile-images-grid .image-column-size {
@@ -135,13 +135,13 @@
     }
 
   }
-  
+
   @include media-breakpoint-up(md) {
     .desktop-display-none {
       display: none;
     }
   }
-  
+
   .employee-description {
     margin: 2rem 0;
 
