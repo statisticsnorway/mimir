@@ -31,8 +31,8 @@ const Employee = (props) => {
           return (
             <div key={i} className="grid-column">
               <a href={href} target="_blank" type="media_type">
-                <div className=""><img alt={`profilbilder${i + 1} av ${title}`} src={href}/></div>
-                <div><Link linkType="profiled">{imagePhrase}{i + 1}.jpg</Link></div>
+                <div className=""><img alt={`profilbilder ${i + 1} av ${title}`} src={href}/></div>
+                <div><Link linkType="profiled">{imagePhrase} {i + 1}.jpg</Link></div>
               </a>
             </div>
           )
