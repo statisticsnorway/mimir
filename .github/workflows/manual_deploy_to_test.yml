@@ -17,6 +17,6 @@ jobs:
         uses: dawidd6/action-download-artifact@v2.23.0
         with:
           workflow: deploy_to_test.yaml
-          run_number: ${{ github.event.input.gh_run_number }}
+          run_number: ${{ github.event.inputs.gh_run_number }}
       - name: display downloads
         run: ls -R
