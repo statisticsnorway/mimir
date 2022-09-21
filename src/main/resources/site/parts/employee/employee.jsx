@@ -41,11 +41,17 @@ const Employee = (props) => {
     )
   }
 
+  const downloadPDF = (url) => {
+    const link = document.createElement("a");
+    link.href = url;
+    link.click();
+  }
+
   const renderDownloadCvButton = () => {
     return (
       myCV ? 
         <div className="downloadCv">
-          <a href={myCV}><Button><Download size="18" /> &nbsp; {downloadPdfPhrase} ({calculateCvSize(cvInformation.size)} kB) </Button></a>
+          <Button onClick={() => downloadPDF(myCV)}><Download size="18" /> &nbsp; {downloadPdfPhrase} ({calculateCvSize(cvInformation.size)} kB) </Button>
         </div> 
         : null
     )
@@ -97,14 +103,14 @@ const Employee = (props) => {
   
   const renderAttachmentsForDesktop = () => {
     return (
-      <div className="employee-attachments mobile-display-none col-12 col-md-3">
+      <aside className="employee-attachments mobile-display-none col-12 col-md-3">
         <div className="instructions">
           <h3>{pressPicturesPhrase}</h3>
           <p>{pressPicturesDescrPhrase}</p>
         </div>
         {renderPortraitImages()}
         {renderDownloadCvButton()}   
-      </div>
+      </aside>
     )
   }
 
