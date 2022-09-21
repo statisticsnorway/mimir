@@ -23,12 +23,12 @@ const Employee = (props) => {
 
   const renderPortraitImages = () => {
     return (
-      <div className="row gx-0 profile-images-grid">
+      <div className='grid-row'>
         {profileImages.map((href, i) => {
           return (
-            <div key={i} className="image-column-size">
+            <div key={i} className='grid-column'>
               <a href={href} target="_blank" type="media_type" >
-                <div className="resized"><img alt={`profilbilder${i + 1} av ${title}`} src={href}/></div>
+                <div className=""><img alt={`profilbilder${i + 1} av ${title}`} src={href}/></div>
                 <div><Link linkType="profiled">Bilde{i + 1}.jpg</Link></div>
               </a>
             </div>
@@ -50,7 +50,7 @@ const Employee = (props) => {
 
   const renderEmployeeHead = () => {
     return (
-      <div className="employee-head gx-0">
+      <div className="employee-head">
         <div className="employee-image col-6 col-md-3"><img alt={`profilbilder av ${title}`} src={props.profileImages[0]} /></div>
         <div className="col-6 col-md-6"><Title size="1">{title}</Title></div>
       </div>
@@ -59,7 +59,7 @@ const Employee = (props) => {
 
   const renderEmployeeDetails = () => {
     return (
-      <div className="employee-details gx-0">
+      <div className="employee-details">
         <div>
           <Share2 size={30} transform='rotate(90)'/>
           <div>

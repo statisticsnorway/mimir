@@ -67,33 +67,6 @@
     .instructions {
       margin-top: 2rem;
     }
-
-    .profile-images-grid {
-      grid-column-gap: 1.5rem;
-
-      .image-column-size {
-        width: 38%;
-      }
-      
-      a {
-        padding-top: .8rem;
-      }
-
-      a .resized {
-        height: 125.19px;
-        width: 100px;
-        
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-      }
-      
-      a div a .link-text {
-        font-size: 14px;
-      }
-    }
     
     .downloadCv {
       margin-top: 2.5rem;
@@ -116,12 +89,12 @@
     }
 
     .mobile-display-padding {
-      padding-left: 0;
-      padding-right: 0;
+      // padding-left: 0;
+      // padding-right: 0;
 
-      .row {
-        --bs-gutter-x: 0;
-      }
+      // .row {
+      //   --bs-gutter-x: 0;
+      // }
     }
 
     .employee-attachments {
@@ -130,20 +103,6 @@
       .instructions {
         margin-top: 0;
       }
-
-      .profile-images-grid {
-        margin-bottom: 1rem;
-        grid-column-gap: 1rem;
-      }
-
-      .profile-images-grid .image-column-size {
-        width: 23%;
-        
-        .resized {
-          width: 80px;
-          height: 100.15px;
-        }
-      }
     }
 
   }
@@ -151,11 +110,6 @@
   @include media-breakpoint-up(md) {
     .desktop-display-none {
       display: none;
-    }
-
-    .employee-attachments .profile-images-grid {
-      grid-column-gap: 1.8rem;
-      grid-row-gap: 1rem;
     }
   }
 
@@ -194,5 +148,44 @@
     > div {
       margin-top: 1.5rem;
     }
+  }
+}
+
+
+
+.grid-row {
+  display: flex;
+  flex-wrap: wrap;
+  grid-gap: 1rem;
+  padding: 0 4px;
+}
+
+.grid-column {
+  flex: 45%;
+  max-width: 45%;
+}
+
+.grid-column a div img {
+  width: 100%;
+  height: 125.19px;
+  object-fit: cover;
+}
+
+.grid-column a div a .link-text {
+  font-size: 14px;
+}
+
+@include media-breakpoint-down(md) {
+  .grid-row {
+    grid-gap: .5rem;
+  }
+
+  .grid-column {
+    flex: 22%;
+    max-width: 22%;
+  }
+
+  .grid-column a div img {
+    height: 100.15px;
   }
 }
