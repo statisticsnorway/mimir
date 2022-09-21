@@ -60,28 +60,28 @@ const Employee = (props) => {
   const renderEmployeeDetails = () => {
     return (
       <div className="employee-details">
-        <div>
+        <div className="details-block">
           <Share2 size={30} transform='rotate(90)'/>
           <div>
             <div>{positionPhrase}</div>
             <span>{position}</span>
           </div>
         </div>
-        <div>
+        <div className="details-block">
           <Eye size={30} />
           <div>
             <div>{isResearcher ? researchAreaPhrase : departmentPhrase}</div>
             {area ? <Link href={area.href} linkType="profiled">{area.title}</Link> : null}
           </div>
         </div>
-        <div>
+        <div className="details-block">
           <Send size={30} />
           <div>
             <div>{emailPhrase}</div>
             {email ? <Link href={'mailto:' + email} linkType="profiled">{email}</Link> : null}
           </div>
         </div>
-        <div>
+        <div className="details-block">
           <Smartphone size={30} />
           <div>
             <div>{phonePhrase}</div>
@@ -173,7 +173,7 @@ const Employee = (props) => {
         {renderAttachmentsForDesktop()}
         {renderAttachmentsForMobile()}
 
-        <div className="col-12 col-md-6 mobile-display-padding">
+        <div className="col-12 col-md-6">
           {renderEmployeeDescription()}
           {projects.length != 0 ? renderProjects(): null}
           {cristinId ? renderPublications : null}
