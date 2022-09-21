@@ -20,3 +20,13 @@ jobs:
           run_number: ${{ github.event.inputs.gh_run_number }}
       - name: display downloads
         run: ls -R
+      - id: deploy_app_to_XP
+        uses: 'enonic/action-app-deploy@main'
+        with:
+          # Secrets from Github repository
+          url: ${{ secrets.ENONIC_TEST_URL }}
+          username: ${{ secrets.ENONIC_TEST_USER }}
+          password: ${{ secrets.ENONIC_TEST_PASS }}
+          client_cert: ${{ secrets.ENONIC_TEST_CERT }}
+          client_key: ${{ secrets.ENONIC_TEST_KEY }}
+          app_jar: "*.jar"
