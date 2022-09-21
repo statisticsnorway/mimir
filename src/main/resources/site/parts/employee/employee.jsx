@@ -2,7 +2,6 @@ import React from 'react';
 import { Button, Title, Link, LeadParagraph, Paragraph, Text, Accordion } from '@statisticsnorway/ssb-component-library';
 import PropTypes from 'prop-types';
 import { Share2, Send, Smartphone, Eye, Download, Image } from 'react-feather';
-import { useMediaQuery } from 'react-responsive';
 
 const Employee = (props) => {
   const {
@@ -14,7 +13,11 @@ const Employee = (props) => {
     departmentPhrase,
     briefSummaryPhrase,
     projectsPhrase,
-    downloadPdfPhrase
+    downloadPdfPhrase, 
+    publicationsPhrase,
+    pressPicturesPhrase,
+    pressPicturesDescrPhrase, 
+    imagePhrase,
   } = props;
 
   const calculateCvSize = (bytes) => {
@@ -23,13 +26,13 @@ const Employee = (props) => {
 
   const renderPortraitImages = () => {
     return (
-      <div className='grid-row'>
+      <div className="grid-row">
         {profileImages.map((href, i) => {
           return (
-            <div key={i} className='grid-column'>
-              <a href={href} target="_blank" type="media_type" >
+            <div key={i} className="grid-column">
+              <a href={href} target="_blank" type="media_type">
                 <div className=""><img alt={`profilbilder${i + 1} av ${title}`} src={href}/></div>
-                <div><Link linkType="profiled">Bilde{i + 1}.jpg</Link></div>
+                <div><Link linkType="profiled">{imagePhrase}{i + 1}.jpg</Link></div>
               </a>
             </div>
           )
@@ -96,8 +99,8 @@ const Employee = (props) => {
     return (
       <div className="employee-attachments mobile-display-none col-12 col-md-3">
         <div className="instructions">
-          <h3>Pressbilder</h3>
-          <p>Trykk på ønsket bilde for å åpne høyoppløselig versjon.</p>
+          <h3>{pressPicturesPhrase}</h3>
+          <p>{pressPicturesDescrPhrase}</p>
         </div>
         {renderPortraitImages()}
         {renderDownloadCvButton()}   
@@ -107,9 +110,9 @@ const Employee = (props) => {
 
   const renderAttachmentsForMobile = () => {
     return (
-      <Accordion header={"Pressebilder"} className="employee-attachments desktop-display-none">
+      <Accordion header={pressPicturesPhrase} className="employee-attachments desktop-display-none">
         <div className="instructions">
-          <p>Trykk på ønsket bilde for å åpne høyoppløselig versjon.</p>
+          <p>{pressPicturesDescrPhrase}</p>
         </div>
         {renderPortraitImages()}
       </Accordion>
@@ -153,7 +156,7 @@ const Employee = (props) => {
     return (
       <div className="row justify-content-center">
         <div className="employee-publications">
-          <h2>Publiseringer</h2>
+          <h2>{publicationsPhrase}</h2>
         </div>
       </div>
     )

@@ -107,6 +107,26 @@ function renderPart(req: Request): React4xpResponse {
     locale: language
   })
 
+  const publicationsPhrase: string = localize({
+    key: 'employee.publications',
+    locale: language
+  })
+
+  const pressPicturesPhrase: string = localize({
+    key: 'employee.pressPictures',
+    locale: language
+  })
+
+  const pressPicturesDescrPhrase: string = localize({
+    key: 'employee.pressPicturesDescr',
+    locale: language
+  })
+
+  const imagePhrase: string = localize({
+    key: 'employee.image',
+    locale: language
+  })
+
   const props: EmployeeProp = {
     title: page.displayName,
     email: page.data.email || '',
@@ -127,7 +147,11 @@ function renderPart(req: Request): React4xpResponse {
     departmentPhrase,
     briefSummaryPhrase,
     projectsPhrase,
-    downloadPdfPhrase
+    downloadPdfPhrase,
+    publicationsPhrase,
+    pressPicturesPhrase,
+    pressPicturesDescrPhrase, 
+    imagePhrase,
   }
 
   return React4xp.render('site/parts/employee/employee', props, req)
@@ -174,7 +198,11 @@ interface EmployeeProp {
   departmentPhrase: string,
   briefSummaryPhrase: string,
   projectsPhrase: string,
-  downloadPdfPhrase: string
+  downloadPdfPhrase: string,
+  publicationsPhrase: string,
+  pressPicturesPhrase: string,
+  pressPicturesDescrPhrase: string,
+  imagePhrase: string,
 }
 
 interface Project {
