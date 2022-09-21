@@ -80,7 +80,7 @@ const Employee = (props) => {
           <Eye size={30} />
           <div>
             <div>{isResearcher ? researchAreaPhrase : departmentPhrase}</div>
-            {area ? <Link href={area.href} linkType="profiled">{area.title}</Link> : null}
+            {area ? <div><Link href={area.href} linkType="profiled">{area.title}</Link></div> : null}
           </div>
         </div>
         <div className="details-block">
