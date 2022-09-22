@@ -5,7 +5,7 @@ on:
    # We need the Github Action Run number to select which artifact to download
     inputs:
       gh_run_number:
-        description: 'The Github Action run number to deploy'
+        description: 'The Github Action run number from the "Deploy to QA" workflow to deploy'
         required: true
 
 jobs:
@@ -16,7 +16,51 @@ jobs:
       - name: Download workflow artifact
         uses: dawidd6/action-download-artifact@v2.23.0
         with:
-          workflow: deploy_to_test.yaml
+          workflow: deploy_to_qa.yaml
           run_number: ${{ github.event.input.gh_run_number }}
       - name: display downloads
         run: ls -R
+      - name: Send result message to Slack
+        id: slack_message
+        if: ${{ always() }}
+        uses: slackapi/slack-github-action@v1
+        with:
+          # Using Github block kit (https://api.slack.com/reference/block-kit/blocks) to configure the Slack message, see https://docs.github.com/en/actions/learn-github-actions/contexts
+          # for more information about context variables
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "${{ github.workflow }}"
+                  }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "image",
+                      "image_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+                      "alt_text" : "Github logo"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "Run by: *${{ github.actor }}* on: *${{ github.ref_name }}*"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Deploy of build ${{ github.event.input.gh_run_number }} is a *${{ job.status }}*, well done!\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|workflow output>""
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_MIMIR_UTV }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+      
