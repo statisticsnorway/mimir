@@ -116,12 +116,14 @@ const Employee = (props) => {
 
   const renderAttachmentsForMobile = () => {
     return (
-      <Accordion header={pressPicturesPhrase} className="employee-attachments desktop-display-none">
-        <div className="instructions">
-          <p>{pressPicturesDescrPhrase}</p>
-        </div>
-        {renderPortraitImages()}
-      </Accordion>
+      <div className="row desktop-display-none">
+        <Accordion header={pressPicturesPhrase} className="employee-attachments">
+          <div className="instructions">
+            <p>{pressPicturesDescrPhrase}</p>
+          </div>
+          {renderPortraitImages()}
+        </Accordion>
+      </div>
     )
   } 
 

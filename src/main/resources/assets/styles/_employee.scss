@@ -164,7 +164,7 @@
       display: none;
     }
 
-    .employee-attachments {
+    .row .employee-attachments {
       padding: 0;
 
       .instructions {
@@ -172,7 +172,7 @@
       }
 
       .grid-row {
-        grid-gap: .5rem;
+        grid-gap: .7rem;
         
         .grid-column {
           flex: 22%;
@@ -181,6 +181,10 @@
       
         .grid-column a div img {
           height: 100.15px;
+        }
+
+        .grid-column a div a .link-text {
+          font-size: 12px;
         }
       }
     }
