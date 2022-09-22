@@ -65,7 +65,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "Deploy of build ${{ github.event.input.gh_run_number }} is a *${{ job.status }}*, well done!\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|workflow output>""
+                    "text": "Deploy of build ${{ github.event.input.gh_run_number }} is a *${{ job.status }}*, well done!\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|workflow output>"
                   }
                 }
               ]
