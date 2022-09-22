@@ -138,6 +138,10 @@
     .desktop-display-none {
       display: none;
     }
+
+    .row-gutter-desktop {
+      --bs-gutter-x: 0;
+    }
   }
 }
 
@@ -173,6 +177,7 @@
 
       .grid-row {
         grid-gap: .7rem;
+        padding: 0;
         
         .grid-column {
           flex: 22%;
@@ -187,6 +192,10 @@
           font-size: 12px;
         }
       }
+    }
+
+    div .row-gutter-mobile {
+      --bs-gutter-x: 0;
     }
   }
 }

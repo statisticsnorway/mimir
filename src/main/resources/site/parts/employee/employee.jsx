@@ -176,15 +176,15 @@ const Employee = (props) => {
         {renderEmployeeHead()}
       </div>
 
-      <div className="row">
+      <div className="row row-gutter-desktop">
         {renderEmployeeDetails()}
       </div>
 
-      <div className="row">
+      <div className="row row-gutter-desktop">
         {renderAttachmentsForDesktop()}
         {renderAttachmentsForMobile()}
 
-        <div className="col-12 col-md-6">
+        <div className="col-12 col-md-6 row-gutter-mobile">
           {renderEmployeeDescription()}
           {projects.length != 0 ? renderProjects(): null}
           {cristinId ? renderPublications : null}
