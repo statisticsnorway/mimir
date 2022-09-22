@@ -29,9 +29,9 @@ const Employee = (props) => {
       <div className="grid-row">
         {profileImages.map((href, i) => {
           return (
-            <div key={i} className="grid-column">
+            <div key={i} className="grid-column" role="img" aria-label={`${pressPicturesPhrase} ${i + 1} av ${title}`} aria-description="Click to open image in a new tab">
               <a href={href} target="_blank" type="media_type">
-                <div className=""><img alt={`profilbilder ${i + 1} av ${title}`} src={href}/></div>
+                <div><img alt={`${pressPicturesPhrase} ${i + 1} av ${title}`} src={href}/></div>
                 <div><Link linkType="profiled">{imagePhrase} {i + 1}.jpg</Link></div>
               </a>
             </div>
@@ -80,7 +80,7 @@ const Employee = (props) => {
           <Eye size={30} />
           <div>
             <div>{isResearcher ? researchAreaPhrase : departmentPhrase}</div>
-            {area ? <div><Link href={area.href} linkType="profiled">{area.title}</Link></div> : null}
+            {area ? <Link href={area.href} linkType="profiled">{area.title}</Link> : null}
           </div>
         </div>
         <div className="details-block">
@@ -103,9 +103,9 @@ const Employee = (props) => {
   
   const renderAttachmentsForDesktop = () => {
     return (
-      <aside className="employee-attachments mobile-display-none col-12 col-md-3">
+      <aside className="employee-attachments mobile-display-none col-12 col-md-3" role="complementary">
         <div className="instructions">
-          <h3>{pressPicturesPhrase}</h3>
+          <h2>{pressPicturesPhrase}</h2>
           <p>{pressPicturesDescrPhrase}</p>
         </div>
         {renderPortraitImages()}
