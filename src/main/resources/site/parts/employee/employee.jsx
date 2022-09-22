@@ -29,7 +29,7 @@ const Employee = (props) => {
       <div className="grid-row">
         {profileImages.map((href, i) => {
           return (
-            <div key={i} className="grid-column" role="img" aria-label={`${pressPicturesPhrase} ${i + 1} av ${title}`} aria-description="Click to open image in a new tab">
+            <div key={i} className="grid-column" role="img" aria-label={`${pressPicturesPhrase} ${i + 1} av ${title}`}>
               <a href={href} target="_blank" type="media_type">
                 <div><img alt={`${pressPicturesPhrase} ${i + 1} av ${title}.`} src={href}/></div>
                 <div><Link linkType="profiled">{imagePhrase} {i + 1}.jpg</Link></div>
