@@ -31,7 +31,7 @@ const Employee = (props) => {
           return (
             <div key={i} className="grid-column" role="img" aria-label={`${pressPicturesPhrase} ${i + 1} av ${title}`} aria-description="Click to open image in a new tab">
               <a href={href} target="_blank" type="media_type">
-                <div><img alt={`${pressPicturesPhrase} ${i + 1} av ${title}`} src={href}/></div>
+                <div><img alt={`${pressPicturesPhrase} ${i + 1} av ${title}.`} src={href}/></div>
                 <div><Link linkType="profiled">{imagePhrase} {i + 1}.jpg</Link></div>
               </a>
             </div>
