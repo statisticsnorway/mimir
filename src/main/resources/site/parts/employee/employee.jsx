@@ -1,50 +1,149 @@
 import React from 'react'
-import { Button, Title, Link, LeadParagraph, Paragraph, Text } from '@statisticsnorway/ssb-component-library'
+import { Button, Title, Link, LeadParagraph, Paragraph, Accordion } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
-import { Share2, Send, Smartphone, Eye, Download, ExternalLink } from 'react-feather'
+import { Share2, Send, Smartphone, Eye, Download, Image } from 'react-feather'
 
 const Employee = (props) => {
   const {
-    title, email, position, phone, description, profileImages, myCV, projects, isResearcher, cristinId, area,
+    title, email, position, phone, description, profileImages, myCV, projects, isResearcher, cristinId, area, cvInformation,
     emailPhrase,
     phonePhrase,
     positionPhrase,
     researchAreaPhrase,
     departmentPhrase,
     briefSummaryPhrase,
-    projectsPhrase
+    projectsPhrase,
+    downloadPdfPhrase,
+    publicationsPhrase,
+    pressPicturesPhrase,
+    pressPicturesDescrPhrase,
+    imagePhrase
   } = props
+
+  const calculateCvSize = (bytes) => {
+    return Math.round(bytes / 1000)
+  }
+
+  const renderPortraitImages = () => {
+    return (
+      <div className="grid-row">
+        {profileImages.map((href, i) => {
+          return (
+            <div key={i} className="grid-column" role="img" aria-label={`${pressPicturesPhrase} ${i + 1} av ${title}`}>
+              <a href={href} target="_blank" rel="noreferrer" type="media_type">
+                <div><img alt={`${pressPicturesPhrase} ${i + 1} av ${title}.`} src={href}/></div>
+                <div><Link linkType="profiled">{imagePhrase} {i + 1}.jpg</Link></div>
+              </a>
+            </div>
+          )
+        })}
+      </div>
+    )
+  }
+
+  const downloadPDF = (url) => {
+    const link = document.createElement('a')
+    link.href = url
+    link.click()
+  }
+
+  const renderDownloadCvButton = () => {
+    return (
+      myCV ?
+        <div className="downloadCv">
+          <Button onClick={() => downloadPDF(myCV)}><Download size="18" /> &nbsp; {downloadPdfPhrase} ({calculateCvSize(cvInformation.size)} kB) </Button>
+        </div> : null
+    )
+  }
+
+  const renderEmployeeHead = () => {
+    return (
+      <div className="employee-head">
+        {profileImages.length != 0 ?
+          <div className="employee-image col-6 col-md-3">
+            <img alt={`profilbilder av ${title}`} src={props.profileImages[0]} />
+          </div> : null}
+        <div className="col-6 col-md-6"><Title size="1">{title}</Title></div>
+      </div>
+    )
+  }
 
   const renderEmployeeDetails = () => {
     return (
-      <div className="employee-details gx-0">
-        <div>
+      <div className="employee-details">
+        <div className="details-block">
           <Share2 size={30} transform='rotate(90)'/>
           <div>
             <div>{positionPhrase}</div>
             <span>{position}</span>
           </div>
         </div>
-        <div>
-          <Send size={30} />
-          <div>
-            <div>{emailPhrase}</div>
-            <Link href={'mailto:' + email} linkType="profiled">{email}</Link>
-          </div>
-        </div>
-        <div>
-          <Smartphone size={30} />
-          <div>
-            <div>{phonePhrase}</div>
-            <Link href=" " linkType="profiled">{phone}</Link>
-          </div>
-        </div>
-        <div>
+        <div className="details-block">
           <Eye size={30} />
           <div>
             <div>{isResearcher ? researchAreaPhrase : departmentPhrase}</div>
-            <Link href={area.href} linkType="profiled">{area.title}</Link>
+            {area ? <Link href={area.href} linkType="profiled">{area.title}</Link> : null}
           </div>
+        </div>
+        <div className="details-block">
+          <Send size={30} />
+          <div>
+            <div>{emailPhrase}</div>
+            {email ? <Link href={'mailto:' + email} linkType="profiled">{email}</Link> : null}
+          </div>
+        </div>
+        <div className="details-block">
+          <Smartphone size={30} />
+          <div>
+            <div>{phonePhrase}</div>
+            {phone ? <Link href={'tel:' + phone} linkType="profiled">{phone}</Link> : null}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const renderAttachmentsForDesktop = () => {
+    return (
+      <aside className="employee-attachments mobile-display-none col-12 col-md-3" role="complementary">
+        <div className="instructions">
+          <h2>{pressPicturesPhrase}</h2>
+          <p>{pressPicturesDescrPhrase}</p>
+        </div>
+        {renderPortraitImages()}
+        {renderDownloadCvButton()}
+      </aside>
+    )
+  }
+
+  const renderAttachmentsForMobile = () => {
+    const accordionHeader = (
+      <React.Fragment>
+        <Image size={30} /> {pressPicturesPhrase}
+      </React.Fragment>
+    )
+
+    return (
+      <div className="row desktop-display-none">
+        <Accordion header={accordionHeader} className="employee-attachments">
+          <div className="instructions">
+            <p>{pressPicturesDescrPhrase}</p>
+          </div>
+          {renderPortraitImages()}
+        </Accordion>
+      </div>
+    )
+  }
+
+  const renderEmployeeDescription = () => {
+    return (
+      <div className="row">
+        <div className="employee-description">
+          <div>
+            <h2>{briefSummaryPhrase}</h2>
+            <LeadParagraph>{description}</LeadParagraph>
+          </div>
+          <div className="desktop-display-none">{renderDownloadCvButton()}</div>
         </div>
       </div>
     )
@@ -59,51 +158,46 @@ const Employee = (props) => {
         </li>
       )
     })
-    return <ul>{projectList}</ul>
+    return (
+      <div className="row justify-content-center">
+        <div className="employee-projects">
+          <h2>{projectsPhrase}</h2>
+          <ul>{projectList}</ul>
+        </div>
+      </div>
+    )
   }
 
-  // const renderPublications = () => {
-  //   const publication = mockData.publications[0]
-  //   return <div>
-  //     <Link href=" " linkType="profiled" icon={<ExternalLink size="20" />}>{publication.title}</Link>
-  //     <Paragraph>{publication.author}</Paragraph>
-  //     <Text small>{publication.description}</Text>
-  //   </div>
-  // }
+  const renderPublications = () => {
+    return (
+      <div className="row justify-content-center">
+        <div className="employee-publications">
+          <h2>{publicationsPhrase}</h2>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <section className="xp-part employee container p-0 mb-5">
       <div className="row">
-        <div className="employee-head gx-0">
-          <div className="employee-image col-6 col-md-3"><img alt={`profilbilder av ${title}`} src={props.profileImages[0]} /></div>
-          <div className="col-6 col-md-6"><Title size="1">{title}</Title></div>
+        {renderEmployeeHead()}
+      </div>
+
+      <div className="row row-gutter-desktop">
+        {renderEmployeeDetails()}
+      </div>
+
+      <div className="row row-gutter-desktop">
+        {profileImages.length != 0 ? renderAttachmentsForDesktop() : null}
+        {profileImages.length != 0 ? renderAttachmentsForMobile() : null}
+
+        <div className="col-12 col-md-6 row-gutter-mobile">
+          {description ? renderEmployeeDescription() : null}
+          {projects.length != 0 ? renderProjects() : null}
+          {cristinId ? renderPublications : null}
         </div>
       </div>
-      <div className="row">
-        { renderEmployeeDetails() }
-      </div>
-      <div className="row justify-content-center">
-        <div className="employee-description col-12 col-md-6">
-          <div>
-            <h2>{briefSummaryPhrase}</h2>
-            <LeadParagraph>{description}</LeadParagraph>
-            {/* <div>
-              <Button><Download size="18" /> &nbsp; Last ned CV (70 KB)</Button>
-            </div> */}
-          </div>
-        </div>
-      </div>
-      <div className="row justify-content-center">
-        <div className="employee-projects col-md-6">
-          <h2>{projectsPhrase}</h2>
-          { renderProjects() }
-        </div>
-      </div>
-      {/* <div className="row justify-content-center">
-        <div className="employee-publications col-md-6">
-          <h2>Publiseringer</h2>
-        </div>
-      </div> */}
     </section>
   )
 }
@@ -118,6 +212,7 @@ Employee.propTypes = {
   myCV: PropTypes.string,
   projects: PropTypes.array,
   area: PropTypes.object,
+  cvInformation: PropTypes.object,
   isResearcher: PropTypes.bool,
   cristinId: PropTypes.string | null,
   emailPhrase: PropTypes.string,
@@ -126,7 +221,12 @@ Employee.propTypes = {
   researchAreaPhrase: PropTypes.string,
   departmentPhrase: PropTypes.string,
   briefSummaryPhrase: PropTypes.string,
-  projectsPhrase: PropTypes.string
+  projectsPhrase: PropTypes.string,
+  downloadPdfPhrase: PropTypes.string,
+  publicationsPhrase: PropTypes.string,
+  pressPicturesPhrase: PropTypes.string,
+  pressPicturesDescrPhrase: PropTypes.string,
+  imagePhrase: PropTypes.string
 }
 
 export default (props) => <Employee {...props} />
