@@ -59,10 +59,13 @@ function renderPart(req: Request): React4xpResponse {
     href: areaContent._path
   } : null
 
-  const cvAttachment: string = attachmentUrl({
-    id: page.data.myCV ? page.data.myCV : '',
+  const cvInformation: CVinformation = page.attachments[Object.keys(page.attachments)[0]]
+
+  const cvAttachment: string | null = page.data.myCV ? attachmentUrl({
+    id: page._id ? page._id : '',
+    name: page.data.myCV,
     download: true
-  })
+  }) : null
 
   const emailPhrase: string = localize({
     key: 'employee.email',
@@ -99,25 +102,56 @@ function renderPart(req: Request): React4xpResponse {
     locale: language
   })
 
+  const downloadPdfPhrase: string = localize({
+    key: 'employee.downloadPDF',
+    locale: language
+  })
+
+  const publicationsPhrase: string = localize({
+    key: 'employee.publications',
+    locale: language
+  })
+
+  const pressPicturesPhrase: string = localize({
+    key: 'employee.pressPictures',
+    locale: language
+  })
+
+  const pressPicturesDescrPhrase: string = localize({
+    key: 'employee.pressPicturesDescr',
+    locale: language
+  })
+
+  const imagePhrase: string = localize({
+    key: 'employee.image',
+    locale: language
+  })
+
   const props: EmployeeProp = {
     title: page.displayName,
     email: page.data.email || '',
     position: page.data.position || '',
     phone: page.data.phone || '',
     description: page.data.description || '',
-    profileImages: profileImages, // page.data.profileImages ? forceArray(page.data.profileImages) : [],
+    profileImages: profileImages,
     myCV: cvAttachment,
     projects,
     area,
     isResearcher: page.data.isResearcher,
     cristinId: page.data.cristinId || null,
+    cvInformation,
     emailPhrase,
     phonePhrase,
     positionPhrase,
     researchAreaPhrase,
     departmentPhrase,
     briefSummaryPhrase,
-    projectsPhrase
+    projectsPhrase,
+    downloadPdfPhrase,
+    publicationsPhrase,
+    pressPicturesPhrase,
+    pressPicturesDescrPhrase,
+    imagePhrase
   }
 
   return React4xp.render('site/parts/employee/employee', props, req)
@@ -145,24 +179,30 @@ function parseProject(projects: Employee['projects']): Array<Project> {
 }
 
 interface EmployeeProp {
-  title: string;
-  email: string;
-  position: string;
-  phone: string;
-  description: string;
-  profileImages: Array<string> | void[] ;
-  myCV: string;
+  title: string,
+  email: string,
+  position: string,
+  phone: string,
+  description: string,
+  profileImages: Array<string> | void[],
+  myCV: string | null,
   projects: Array<Project>,
   area: Area | null,
   isResearcher: boolean
   cristinId: string | null,
+  cvInformation: CVinformation,
   emailPhrase: string,
   phonePhrase: string,
   positionPhrase: string,
   researchAreaPhrase: string,
   departmentPhrase: string,
   briefSummaryPhrase: string,
-  projectsPhrase: string
+  projectsPhrase: string,
+  downloadPdfPhrase: string,
+  publicationsPhrase: string,
+  pressPicturesPhrase: string,
+  pressPicturesDescrPhrase: string,
+  imagePhrase: string,
 }
 
 interface Project {
@@ -180,4 +220,8 @@ interface Area {
   title: string;
 }
 
-
+interface CVinformation {
+  name: string;
+  size: number;
+  mimeType: string;
+}
