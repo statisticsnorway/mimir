@@ -3,7 +3,6 @@ import { Component } from 'enonic-types/portal'
 import { ResearcherListPartConfig } from './researcherList-part-config'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Content } from 'enonic-types/content'
-import { fromPartCache } from '../../../lib/ssb/cache/partCache'
 import { renderError } from '../../../lib/ssb/error/error'
 
 const {
@@ -23,23 +22,16 @@ exports.preview = (req: Request): React4xpResponse => renderPart(req)
 
 function renderPart(req: Request): React4xpResponse {
   const content: Content = getContent()
-  if (req.mode === 'edit' || req.mode === 'inline') {
-    return getResearcherList(req, content)
-  } else {
-    return fromPartCache(req, `${content._id}-researcherList`, () => getResearcherList(req, content))
-  }
-}
-
-function getResearcherList(req: Request, content: Content): React4xpResponse {
   const component: Component<ResearcherListPartConfig> = getComponent()
-
-  const props: PartProperties = {
-    title: "tester"
+  
+  const props: PartProps = {
+    title: content.displayName
   }
 
   return React4xp.render('site/parts/researcherList/researcherList', props, req)
 }
 
-interface PartProperties {
+
+interface PartProps {
   title: string;
 }
