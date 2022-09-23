@@ -1,7 +1,7 @@
-import React from 'react';
-import { Button, Title, Link, LeadParagraph, Paragraph, Text, Accordion } from '@statisticsnorway/ssb-component-library';
-import PropTypes from 'prop-types';
-import { Share2, Send, Smartphone, Eye, Download, Image } from 'react-feather';
+import React from 'react'
+import { Button, Title, Link, LeadParagraph, Paragraph, Accordion } from '@statisticsnorway/ssb-component-library'
+import PropTypes from 'prop-types'
+import { Share2, Send, Smartphone, Eye, Download, Image } from 'react-feather'
 
 const Employee = (props) => {
   const {
@@ -13,12 +13,12 @@ const Employee = (props) => {
     departmentPhrase,
     briefSummaryPhrase,
     projectsPhrase,
-    downloadPdfPhrase, 
+    downloadPdfPhrase,
     publicationsPhrase,
     pressPicturesPhrase,
-    pressPicturesDescrPhrase, 
-    imagePhrase,
-  } = props;
+    pressPicturesDescrPhrase,
+    imagePhrase
+  } = props
 
   const calculateCvSize = (bytes) => {
     return Math.round(bytes / 1000)
@@ -42,25 +42,27 @@ const Employee = (props) => {
   }
 
   const downloadPDF = (url) => {
-    const link = document.createElement("a");
-    link.href = url;
-    link.click();
+    const link = document.createElement('a')
+    link.href = url
+    link.click()
   }
 
   const renderDownloadCvButton = () => {
     return (
-      myCV ? 
+      myCV ?
         <div className="downloadCv">
           <Button onClick={() => downloadPDF(myCV)}><Download size="18" /> &nbsp; {downloadPdfPhrase} ({calculateCvSize(cvInformation.size)} kB) </Button>
-        </div> 
-        : null
+        </div> : null
     )
   }
 
   const renderEmployeeHead = () => {
     return (
       <div className="employee-head">
-        <div className="employee-image col-6 col-md-3"><img alt={`profilbilder av ${title}`} src={props.profileImages[0]} /></div>
+        {profileImages.length != 0 ?
+          <div className="employee-image col-6 col-md-3">
+            <img alt={`profilbilder av ${title}`} src={props.profileImages[0]} />
+          </div> : null}
         <div className="col-6 col-md-6"><Title size="1">{title}</Title></div>
       </div>
     )
@@ -100,7 +102,7 @@ const Employee = (props) => {
       </div>
     )
   }
-  
+
   const renderAttachmentsForDesktop = () => {
     return (
       <aside className="employee-attachments mobile-display-none col-12 col-md-3" role="complementary">
@@ -109,15 +111,21 @@ const Employee = (props) => {
           <p>{pressPicturesDescrPhrase}</p>
         </div>
         {renderPortraitImages()}
-        {renderDownloadCvButton()}   
+        {renderDownloadCvButton()}
       </aside>
     )
   }
 
   const renderAttachmentsForMobile = () => {
+    const accordionHeader = (
+      <React.Fragment>
+        <Image size={30} /> {pressPicturesPhrase}
+      </React.Fragment>
+    )
+
     return (
       <div className="row desktop-display-none">
-        <Accordion header={pressPicturesPhrase} className="employee-attachments">
+        <Accordion header={accordionHeader} className="employee-attachments">
           <div className="instructions">
             <p>{pressPicturesDescrPhrase}</p>
           </div>
@@ -125,7 +133,7 @@ const Employee = (props) => {
         </Accordion>
       </div>
     )
-  } 
+  }
 
   const renderEmployeeDescription = () => {
     return (
@@ -143,14 +151,14 @@ const Employee = (props) => {
 
   const renderProjects = () => {
     const projectList = projects.map((project, i) => {
-      return (      
+      return (
         <li key={i}>
           <Link href={project.href} linkType="header">{project.title}</Link>
           <Paragraph>{project.description}</Paragraph>
-        </li>     
+        </li>
       )
     })
-    return ( 
+    return (
       <div className="row justify-content-center">
         <div className="employee-projects">
           <h2>{projectsPhrase}</h2>
@@ -181,12 +189,12 @@ const Employee = (props) => {
       </div>
 
       <div className="row row-gutter-desktop">
-        {renderAttachmentsForDesktop()}
-        {renderAttachmentsForMobile()}
+        {profileImages.length != 0 ? renderAttachmentsForDesktop() : null}
+        {profileImages.length != 0 ? renderAttachmentsForMobile() : null}
 
         <div className="col-12 col-md-6 row-gutter-mobile">
-          {renderEmployeeDescription()}
-          {projects.length != 0 ? renderProjects(): null}
+          {description ? renderEmployeeDescription() : null}
+          {projects.length != 0 ? renderProjects() : null}
           {cristinId ? renderPublications : null}
         </div>
       </div>
@@ -204,6 +212,7 @@ Employee.propTypes = {
   myCV: PropTypes.string,
   projects: PropTypes.array,
   area: PropTypes.object,
+  cvInformation: PropTypes.object,
   isResearcher: PropTypes.bool,
   cristinId: PropTypes.string | null,
   emailPhrase: PropTypes.string,
@@ -212,7 +221,12 @@ Employee.propTypes = {
   researchAreaPhrase: PropTypes.string,
   departmentPhrase: PropTypes.string,
   briefSummaryPhrase: PropTypes.string,
-  projectsPhrase: PropTypes.string
+  projectsPhrase: PropTypes.string,
+  downloadPdfPhrase: PropTypes.string,
+  publicationsPhrase: PropTypes.string,
+  pressPicturesPhrase: PropTypes.string,
+  pressPicturesDescrPhrase: PropTypes.string,
+  imagePhrase: PropTypes.string
 }
 
 export default (props) => <Employee {...props} />

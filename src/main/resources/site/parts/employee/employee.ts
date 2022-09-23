@@ -59,7 +59,7 @@ function renderPart(req: Request): React4xpResponse {
     href: areaContent._path
   } : null
 
-  const cvInformation: object = page.attachments[Object.keys(page.attachments)[0]];
+  const cvInformation: CVinformation = page.attachments[Object.keys(page.attachments)[0]]
 
   const cvAttachment: string | null = page.data.myCV ? attachmentUrl({
     id: page._id ? page._id : '',
@@ -133,7 +133,7 @@ function renderPart(req: Request): React4xpResponse {
     position: page.data.position || '',
     phone: page.data.phone || '',
     description: page.data.description || '',
-    profileImages: profileImages, // page.data.profileImages ? forceArray(page.data.profileImages) : [],
+    profileImages: profileImages,
     myCV: cvAttachment,
     projects,
     area,
@@ -150,8 +150,8 @@ function renderPart(req: Request): React4xpResponse {
     downloadPdfPhrase,
     publicationsPhrase,
     pressPicturesPhrase,
-    pressPicturesDescrPhrase, 
-    imagePhrase,
+    pressPicturesDescrPhrase,
+    imagePhrase
   }
 
   return React4xp.render('site/parts/employee/employee', props, req)
@@ -190,7 +190,7 @@ interface EmployeeProp {
   area: Area | null,
   isResearcher: boolean
   cristinId: string | null,
-  cvInformation: Object,
+  cvInformation: CVinformation,
   emailPhrase: string,
   phonePhrase: string,
   positionPhrase: string,
@@ -220,4 +220,8 @@ interface Area {
   title: string;
 }
 
-
+interface CVinformation {
+  name: string;
+  size: number;
+  mimeType: string;
+}
