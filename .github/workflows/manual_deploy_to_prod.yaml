@@ -5,7 +5,7 @@ on:
    # We need the Github Action Run number to select which artifact to download
     inputs:
       gh_run_number:
-        description: 'The Github Action run number from the "Deploy to QA" workflow to deploy'
+        description: 'The Github Action run number to deploy'
         required: true
 
 jobs:
@@ -17,9 +17,19 @@ jobs:
         uses: dawidd6/action-download-artifact@v2.23.0
         with:
           workflow: deploy_to_qa.yaml
-          run_number: ${{ github.event.input.gh_run_number }}
+          run_number: ${{ github.event.inputs.gh_run_number }}
       - name: display downloads
         run: ls -R
+      - id: deploy_app_to_XP
+        uses: 'enonic/action-app-deploy@main'
+        with:
+          # Secrets from Github repository
+          url: ${{ secrets.ENONIC_PROD_URL }}
+          username: ${{ secrets.ENONIC_PROD_USER }}
+          password: ${{ secrets.ENONIC_PROD_PASS }}
+          client_cert: ${{ secrets.ENONIC_PROD_CERT }}
+          client_key: ${{ secrets.ENONIC_PROD_KEY }}
+          app_jar: "*.jar"
       - name: Send result message to Slack
         id: slack_message
         if: ${{ always() }}
@@ -55,7 +65,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "Deploy of build ${{ github.event.input.gh_run_number }} is a *${{ job.status }}*, well done!\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|workflow output>""
+                    "text": "Deploy of build ${{ github.event.input.gh_run_number }} is a *${{ job.status }}*, well done!\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|workflow output>"
                   }
                 }
               ]
@@ -63,4 +73,3 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_MIMIR_UTV }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-      
