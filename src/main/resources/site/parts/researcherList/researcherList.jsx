@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-function researcherList(props) {
+function ResearcherList(props) {
   const { title } = props
 
   return (
@@ -11,8 +11,8 @@ function researcherList(props) {
   )
 }
 
-export default (props) => <researcherList {...props} />
+export default (props) => <ResearcherList {...props} />
 
-researcherList.propTypes = {
+ResearcherList.propTypes = {
   title: PropTypes.string
 }
