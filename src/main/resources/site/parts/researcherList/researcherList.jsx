@@ -2,10 +2,10 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 function ResearcherList(props) {
-  const { title, researchersList } = props
+  const { title, researchers } = props
 
 
-  console.log(researchersList)
+  console.log(researchers)
 
   return (
     <section className="xp-part employee container p-0 mb-5">
@@ -18,5 +18,5 @@ export default (props) => <ResearcherList {...props} />
 
 ResearcherList.propTypes = {
   title: PropTypes.string,
-  researchersList: PropTypes.array
+  researchers: PropTypes.array
 }

@@ -24,11 +24,11 @@ exports.preview = (req: Request): React4xpResponse => renderPart(req)
 
 function renderPart(req: Request): React4xpResponse {
   const content: Content = getContent()
-  const researchers = getResearchers()
+  const researchers: any = getResearchers()
 
-  const props: PartProps = {
+  const props: iPartProps = {
     title: content.displayName,
-    researchersList: researchers
+    researchers
   }
 
   return React4xp.render('site/parts/researcherList/researcherList', props, req)
@@ -37,17 +37,40 @@ function renderPart(req: Request): React4xpResponse {
 function getResearchers() {
   const results: Array<Content<Employee>> = query({
     start: 0,
-    count: 2,
-    // sort: 'publish.from DESC',
+    count: 20,
+    sort: 'publish.from DESC',
     // query: `data.isResearcher`,
     contentTypes: [
       `${app.name}:employee`
     ]
   }).hits as unknown as Array<Content<Employee>>
-  return results.filter(result => result.data.isResearcher)
+  return results.map(result => {
+    if (result.data.isResearcher) {
+      return {
+        surname: result.data.surname,
+        name: result.data.name,
+        position: result.data.position,
+        path: result._path,
+        phone: result.data.phone,
+        email: result.data.email,
+        area: result.data.area,
+      }
+    }
+    return
+  })
 }
 
-interface PartProps {
+interface iPartProps {
   title: string,
-  researchersList: Array<Content<Employee>>,
+  researchers: Array<iResearcher>,
+}
+
+interface iResearcher {
+  surname: string,
+  name: string,
+  position: string,
+  path: string,
+  phone: string,
+  email: string,
+  area: string,
 }
