@@ -23,8 +23,12 @@ export function fetchProjectCristin(projectId: string | number): Project {
   const project: Project = fetchProject({
     id: projectId
   })
+  const projectResultsIds: Array<string> | undefined = project.results && project.results.map((result) => result.split('/').pop()) as Array<string> | undefined
 
-  return project
+  return {
+    ...project,
+    results: projectResultsIds
+  }
 }
 
 export function fetchPersonResultsCristin(personId?: string, per_page: string = '10', page?: string): ListOfResults {
