@@ -26,6 +26,12 @@
     }
   }
 }
+.show-element {
+  display: block!important;
+}
+.hide-element {
+  display: none!important;
+}
 .btn-highchart-export {
   z-index: 200;
   bottom: 60px;

@@ -134,6 +134,7 @@ export function init() {
   })
 
   $(function() {
+
     const w = {
       height: $(window).height().toFixed(0),
       width: $(window).width().toFixed(0)
@@ -155,6 +156,7 @@ export function init() {
       // Bare kjør script hvis tabellen det skal hentes data fra, eksisterer på siden
       if ($('table#highcharts-datatable-' + highchartsContentKey)) {
         config.title.style.fontSize = h1Size
+
 
         if (canvas.data('type') === 'barNegative') {
           config.yAxis.labels.formatter = function(a) {
@@ -309,7 +311,7 @@ export function init() {
         Highcharts.chart(chart, config)
 
         // Hide data table when highchart is loaded
-        $('.highcharts-data-table').hide()
+        $('.highcharts-data-table').css('display', 'none');
         $('.highcharts-data-table').find('table').addClass('statistics')
 
         const graph = $('#figure-' + highchartsContentKey + ' .highcharts-canvas')
@@ -317,20 +319,28 @@ export function init() {
         const buttonShowDataTable = $('button#show-tabledata-' + highchartsContentKey)
         const buttonShowGraph = $('button#show-graph-' + highchartsContentKey)
 
+
         buttonShowDataTable.on('click', (e) => {
           buttonShowDataTable.addClass('active')
           buttonShowGraph.removeClass('active')
-          dataTable.show()
-          graph.hide()
+          dataTable.css('display', 'block')
+          graph.css('display', 'none')
         })
 
         buttonShowGraph.on('click', (e) => {
           buttonShowGraph.addClass('active')
           buttonShowDataTable.removeClass('active')
-          dataTable.hide()
-          graph.show()
+          dataTable.css('display', 'none')
+          graph.css('display', 'block')
+
         })
+
       }
     })
   })
 }
+
+
+$( window ).resize(function() {
+
+});
