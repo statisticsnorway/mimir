@@ -319,7 +319,6 @@ export function init() {
         const buttonShowDataTable = $('button#show-tabledata-' + highchartsContentKey)
         const buttonShowGraph = $('button#show-graph-' + highchartsContentKey)
 
-
         buttonShowDataTable.on('click', (e) => {
           buttonShowDataTable.addClass('active')
           buttonShowGraph.removeClass('active')
@@ -334,13 +333,8 @@ export function init() {
           graph.css('display', 'block')
 
         })
-
       }
     })
   })
 }
 
-
-$( window ).resize(function() {
-
-});
