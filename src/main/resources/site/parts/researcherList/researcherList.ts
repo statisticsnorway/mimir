@@ -24,20 +24,22 @@ exports.preview = (req: Request): React4xpResponse => renderPart(req)
 
 function renderPart(req: Request): React4xpResponse {
   const content: Content = getContent()
+
   const results: any = getResearchers()
-  const preparedResults: any = preparedResearchers(results)
+  const preparedResults: any = preparedResearchers(results.hits)
   const alphabeticalResearchersList: any = createAlphabeticalResearchersList(preparedResults)
 
   const props: iPartProps = {
     title: content.displayName,
-    researchers: alphabeticalResearchersList
+    researchers: alphabeticalResearchersList, 
+    results
   }
 
   return React4xp.render('site/parts/researcherList/researcherList', props, req)
 }
 
 function getResearchers() {
-  const results: Array<Content<Employee>> = query({
+  return query({
     start: 0,
     count: 20,
     sort: 'publish.from DESC',
@@ -56,9 +58,7 @@ function getResearchers() {
     contentTypes: [
       `${app.name}:employee`
     ]
-  }).hits as unknown as Array<Content<Employee>>
-
-  return results
+  })
 }
 
 function preparedResearchers(results: any[]) {
@@ -104,6 +104,7 @@ function sortAlphabetically(obj: any) {
 interface iPartProps {
   title: string,
   researchers: any,
+  results: any,
 }
 
 interface iResearcher {

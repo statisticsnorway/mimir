@@ -5,13 +5,13 @@ import { ArrowRight } from 'react-feather'
 
 
 function ResearcherList(props) {
-  const { title, researchers } = props
+  const { title, researchers, results } = props
   console.log(researchers)
-
+  console.log(results)
 
   const renderResearchers = () => {
     let html = []
-    // const sortedGroupCollection = sortAlphabetically(groupedCollection)
+    
     for (const [letter, researchersList] of Object.entries(researchers)) {
 
       let box = researchersList.map((researcher, i) => {
@@ -61,5 +61,6 @@ export default (props) => <ResearcherList {...props} />
 
 ResearcherList.propTypes = {
   title: PropTypes.string,
-  researchers: PropTypes.object
+  researchers: PropTypes.object,
+  results: PropTypes.object,
 }
