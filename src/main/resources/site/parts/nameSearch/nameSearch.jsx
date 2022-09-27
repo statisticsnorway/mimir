@@ -126,20 +126,20 @@ function NameSearch(props) {
 
     if (loading) {
       return (
-        <Container className="name-search-result text-center">
+        <div className="name-search-result text-center">
           <span className="spinner-border spinner-border" />
-        </Container>
+        </div>
       )
     }
     if (errorMessage) {
       return (
-        <Container className="name-search-result">
+        <div className="name-search-result">
           <div>{props.phrases.networkErrorMessage} {errorMessage}</div>
-        </Container>
+        </div>
       )
     } else {
       return (result && <div>
-        <Container className={`name-search-result ${props.frontPage ? 'front-page-results' : ''}`} ref={scrollAnchor} tabIndex="0">
+        <div className={`name-search-result ${props.frontPage ? 'front-page-results' : ''}`} ref={scrollAnchor} tabIndex="0">
           <Row>
             <Col>
               <Title size={3} className="result-title mb-1">{props.phrases.nameSearchResultTitle}</Title>
@@ -154,7 +154,7 @@ function NameSearch(props) {
               <Button className="close-button" onClick={() => closeResult()} type="button"> <X size="18"/> {props.phrases.close} </Button>
             </Col>
           </Row>
-        </Container>
+        </div>
       </div>
       )
     }
@@ -433,7 +433,7 @@ function NameSearch(props) {
 
   return (
     <section className="name-search container-fluid p-0">
-      <Container className="name-search-input">
+      <div className="name-search-input">
         <Row>
           <Col lg="12">
             <Title size={2}>{props.phrases.nameSearchTitle}</Title>
@@ -475,7 +475,7 @@ function NameSearch(props) {
             </Col>
           </Row>
         </Form>
-      </Container>
+      </div>
       {renderResult()}
     </section>
   )
