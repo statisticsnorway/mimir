@@ -8,32 +8,11 @@ function ResearcherList(props) {
   const { title, researchers } = props
   console.log(researchers)
 
-  const groupedCollection = {};
-
-  const sortAlphabetically = (obj) => {
-    return Object.keys(obj)
-      .sort()
-      .reduce((accumulator, key) => {
-        accumulator[key] = obj[key];
-
-    return accumulator;
-  }, {});
-
-  }
-
-  for (let i = 0; i < researchers.length; i++) {       
-    let firstLetter = researchers[i].surname.charAt(0);
-    
-    if (groupedCollection[firstLetter] == undefined) {             
-      groupedCollection[firstLetter] = [];         
-    }         
-    groupedCollection[firstLetter].push(researchers[i]);     
-  }
 
   const renderResearchers = () => {
     let html = []
-    const sortedGroupCollection = sortAlphabetically(groupedCollection)
-    for (const [letter, researchersList] of Object.entries(sortedGroupCollection)) {
+    // const sortedGroupCollection = sortAlphabetically(groupedCollection)
+    for (const [letter, researchersList] of Object.entries(researchers)) {
 
       let box = researchersList.map((researcher, i) => {
         return (
@@ -82,5 +61,5 @@ export default (props) => <ResearcherList {...props} />
 
 ResearcherList.propTypes = {
   title: PropTypes.string,
-  researchers: PropTypes.array
+  researchers: PropTypes.object
 }

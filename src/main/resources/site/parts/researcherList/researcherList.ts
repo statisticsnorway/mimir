@@ -1,6 +1,6 @@
 import { Request, Response } from 'enonic-types/controller'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { Content, QueryResponse } from 'enonic-types/content'
+import { Content } from 'enonic-types/content'
 import { renderError } from '../../../lib/ssb/error/error'
 import { Employee } from '../../content-types/employee/employee'
 
@@ -26,10 +26,11 @@ function renderPart(req: Request): React4xpResponse {
   const content: Content = getContent()
   const results: any = getResearchers()
   const preparedResults: any = preparedResearchers(results)
+  const alphabeticalResearchersList: any = createAlphabeticalResearchersList(preparedResults)
 
   const props: iPartProps = {
     title: content.displayName,
-    researchers: preparedResults
+    researchers: alphabeticalResearchersList
   }
 
   return React4xp.render('site/parts/researcherList/researcherList', props, req)
@@ -74,9 +75,35 @@ function preparedResearchers(results: any[]) {
   })
 }
 
+function createAlphabeticalResearchersList(researchers: any[]) {
+  const groupedCollection: any = {};
+
+  for (let i = 0; i < researchers.length; i++) {       
+    let firstLetter = researchers[i].surname.charAt(0);
+    
+    if (groupedCollection[firstLetter] == undefined) {             
+      groupedCollection[firstLetter] = [];         
+    }         
+    groupedCollection[firstLetter].push(researchers[i]);     
+  }
+
+  return sortAlphabetically(groupedCollection)
+}
+
+function sortAlphabetically(obj: any) {
+  return Object.keys(obj)
+    .sort()
+    .reduce((accumulator: any, key) => {
+      accumulator[key] = obj[key];
+
+  return accumulator;
+}, {});
+
+}
+
 interface iPartProps {
   title: string,
-  researchers: Array<iResearcher>,
+  researchers: any,
 }
 
 interface iResearcher {
