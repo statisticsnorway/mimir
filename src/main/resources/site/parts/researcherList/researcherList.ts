@@ -24,11 +24,12 @@ exports.preview = (req: Request): React4xpResponse => renderPart(req)
 
 function renderPart(req: Request): React4xpResponse {
   const content: Content = getContent()
-  const researchers: any = getResearchers()
+  const results: any = getResearchers()
+  const preparedResults: any = preparedResearchers(results)
 
   const props: iPartProps = {
     title: content.displayName,
-    researchers
+    researchers: preparedResults
   }
 
   return React4xp.render('site/parts/researcherList/researcherList', props, req)
@@ -56,18 +57,20 @@ function getResearchers() {
     ]
   }).hits as unknown as Array<Content<Employee>>
 
+  return results
+}
+
+function preparedResearchers(results: any[]) {
   return results.map(result => {
-    
-      return {
-        surname: result.data.surname,
-        name: result.data.name,
-        position: result.data.position,
-        path: result._path,
-        phone: result.data.phone,
-        email: result.data.email,
-        area: result.data.area,
-      }
-    
+    return {
+      surname: result.data.surname,
+      name: result.data.name,
+      position: result.data.position,
+      path: result._path,
+      phone: result.data.phone,
+      email: result.data.email,
+      area: result.data.area,
+    }
   })
 }
 
