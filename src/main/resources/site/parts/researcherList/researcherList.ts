@@ -5,7 +5,7 @@ import { renderError } from '../../../lib/ssb/error/error'
 import { Employee } from '../../content-types/employee/employee'
 
 const {
-  getContent
+  getContent, pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
 const {
   query
@@ -39,13 +39,25 @@ function getResearchers() {
     start: 0,
     count: 20,
     sort: 'publish.from DESC',
-    // query: `data.isResearcher`,
+    filters: {
+      boolean: {
+        must: [
+          {
+            hasValue: {
+              field: "data.isResearcher",
+              values: [true],
+            },
+          },
+        ],
+      },
+    },
     contentTypes: [
       `${app.name}:employee`
     ]
   }).hits as unknown as Array<Content<Employee>>
+
   return results.map(result => {
-    if (result.data.isResearcher) {
+    
       return {
         surname: result.data.surname,
         name: result.data.name,
@@ -55,8 +67,7 @@ function getResearchers() {
         email: result.data.email,
         area: result.data.area,
       }
-    }
-    return
+    
   })
 }
 
