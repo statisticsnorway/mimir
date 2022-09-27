@@ -1,0 +1,19 @@
+.letter-list {
+	display: flex;
+}
+
+.letter {
+  width: 80px;
+  height: 80px;
+  padding-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid $ssb-dark-5;
+  background: white;
+  color: $ssb-dark-5;
+} 
+
+.list {
+  list-style: none;
+}

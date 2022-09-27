@@ -1,8 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Button, Title, Link, LeadParagraph, Paragraph, Accordion } from '@statisticsnorway/ssb-component-library'
+
 
 function ResearcherList(props) {
   const { title, researchers } = props
+  console.log(researchers)
 
   const groupedCollection = {};
 
@@ -30,33 +33,34 @@ function ResearcherList(props) {
     let html = []
     const sortedGroupCollection = sortAlphabetically(groupedCollection)
     for (const [letter, researchersList] of Object.entries(sortedGroupCollection)) {
-      html.push(<h2>letter: {letter}</h2>)
+
       let box = researchersList.map((researcher, i) => {
         return (
-          <>
-            {/* {i === 0 ? <h2>letter: {letter}</h2> : null} */}
-            <li className={`${i === 0 ? 'first' : ''}`} >
-              <p>{researcher.surname}, {researcher.name}</p>
-              {researcher.area ? <p>{researcher.area}</p> : null}
-              <p>{researcher.phone} / {researcher.email} / Forskningsområde</p> 
-            </li>
-          </>
+          <li className={`${i === 0 ? 'first' : ''}`} >
+            <Link href={researcher._path} linkType="header">{researcher.surname}, {researcher.name}</Link>
+            {researcher.position ? <p>{researcher.position}</p> : null}
+            <p>{researcher.phone} / {researcher.email} / Forskningsområde</p> 
+          </li>
         )
       })
 
-      html.push(box)
+      html.push(
+        <div className="letter-list">
+          <div className="letter"><h2>{letter}</h2></div>
+          <ul className="list">{box}</ul>
+        </div>
+      )
     }
 
     return (
-      <ul>
+      <div>
         {html}
-      </ul>
+      </div>
     ) 
   }
 
   return (
     <section className="xp-part employee container p-0 mb-5">
-      {title}
       {researchers != [] ? renderResearchers() : null}
     </section>
   )
