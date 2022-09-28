@@ -67,7 +67,7 @@ function preparedResearchers(results: any[]) {
       surname: result.data.surname,
       name: result.data.name,
       position: result.data.position,
-      path: result._path,
+      path: pageUrl({ path: result._path }),
       phone: result.data.phone,
       email: result.data.email,
       area: result.data.area,
