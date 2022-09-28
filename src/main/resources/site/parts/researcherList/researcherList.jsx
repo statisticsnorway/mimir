@@ -10,22 +10,28 @@ function ResearcherList(props) {
   console.log(results)
 
   const renderResearchers = () => {
-    let html = []
+    let ListOfResearchersJSX = []
     
-    for (const [letter, researchersList] of Object.entries(researchers)) {
+    for (const [letter, researchersListByLetter] of Object.entries(researchers)) {
+      
+      let sortedResearchersWithinLetter = researchersListByLetter.sort((a, b) => a.surname.localeCompare(b.surname))
 
-      let box = researchersList.map((researcher, i) => {
+      let researchersListItem = sortedResearchersWithinLetter.map((researcher, i) => {
         return (
           <>
           <li className="list-item" >
             {i == 0 ? <div className="letter col-md-1"><h2>{letter}</h2></div> : <div className="col-md-1"></div>}
             <div className="list col-md-11">
               <div>
-                <Link href={researcher._path} linkType="header">{researcher.surname}, {researcher.name}</Link>
+                <Link href={researcher.path} linkType="header">{researcher.surname}, {researcher.name}</Link>
                 {researcher.position ? <div><Text small>{researcher.position}</Text></div> : null}
-                <div><Text small><Link href={'tel:' + researcher.phone}>{researcher.phone}</Link>  / <Link href={'mailto:' + researcher.email}>{researcher.email}</Link> / Forskningsområde</Text></div>
+                <div>
+                  <Text small>
+                    <Link href={'tel:' + researcher.phone}>{researcher.phone}</Link> / <Link href={'mailto:' + researcher.email}>{researcher.email}</Link> / Forskningsområde
+                  </Text>
+                </div>
               </div>
-              <div className="list-arrow"><ArrowRight size={30} /></div>
+              <div className="list-arrow"><Link href={researcher.path} icon={<ArrowRight size="30" />}></Link></div>
             </div>
           </li>
           <Divider light />
@@ -33,15 +39,15 @@ function ResearcherList(props) {
         )
       })
 
-      html.push(
-        <ul className="letter-list">{box}</ul> 
+      ListOfResearchersJSX.push(
+        <ul className="letter-list">{researchersListItem}</ul> 
       )
     }
 
     return (
       <div>
         <Divider dark />
-        {html}
+        {ListOfResearchersJSX}
       </div>
     ) 
   }
@@ -52,6 +58,7 @@ function ResearcherList(props) {
         <h1>Ansatte forskning</h1>  
         <p>På denne siden finner du kontaktinformasjon til alle som jobber i Forskningsavdelingen i SSB. Klikk på navnet for å lese mer om personen.</p>
       </div>
+      <div>Det er {results.total} personer i Forskningsavdelingen</div>
       {researchers != [] ? renderResearchers() : null}
     </section>
   )

@@ -67,7 +67,7 @@ function preparedResearchers(results: any[]) {
       surname: result.data.surname,
       name: result.data.name,
       position: result.data.position,
-      path: pageUrl({ path: result._path }),
+      path: pageUrl({ id: result._id }),
       phone: result.data.phone,
       email: result.data.email,
       area: result.data.area,
@@ -87,18 +87,17 @@ function createAlphabeticalResearchersList(researchers: any[]) {
     groupedCollection[firstLetter].push(researchers[i]);     
   }
 
-  return sortAlphabetically(groupedCollection)
+  return sortAlphabeticallyAtoZ(groupedCollection)
 }
 
-function sortAlphabetically(obj: any) {
+function sortAlphabeticallyAtoZ(obj: any) {
   return Object.keys(obj)
     .sort()
     .reduce((accumulator: any, key) => {
       accumulator[key] = obj[key];
 
   return accumulator;
-}, {});
-
+  }, {});
 }
 
 interface iPartProps {

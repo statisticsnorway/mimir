@@ -1,5 +1,5 @@
 .banner {
-	background-color: #f0f8f9;
+	// background-color: #f0f8f9;
 	margin: 2rem 0;
 	padding: 2rem 0;
 }
@@ -37,10 +37,10 @@
 	display: flex;
 	justify-content: space-between;
   list-style: none;
-}
 
-.link-text {
-	font-size: 14px;
+	> div > div > span > a > .link-text {
+		font-size: 14px;
+	}
 }
 
 .list-arrow {
