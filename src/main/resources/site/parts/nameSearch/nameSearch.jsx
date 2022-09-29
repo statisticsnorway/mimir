@@ -126,16 +126,16 @@ function NameSearch(props) {
 
     if (loading) {
       return (
-        <div className="name-search-result text-center">
+        <Container className="name-search-result text-center">
           <span className="spinner-border spinner-border" />
-        </div>
+        </Container>
       )
     }
     if (errorMessage) {
       return (
-        <div className="name-search-result">
+        <Container className="name-search-result">
           <div>{props.phrases.networkErrorMessage} {errorMessage}</div>
-        </div>
+        </Container>
       )
     } else {
       return (result && <div>
