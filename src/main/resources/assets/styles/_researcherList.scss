@@ -1,8 +1,17 @@
 .researchers {
+
+	.row .container {
+		max-width: 1180px;
+
+		p {
+			inline-size: 50%;
+		}
+	}
+
 	.banner {
-		// background-color: #f0f8f9;
+		background-color: #f0f8f9;
 		margin: 2rem 0;
-		padding: 2rem 0;
+		padding: 4rem 0;
 	}
 
 	.letter-list:first-of-type {
@@ -66,6 +75,10 @@
 
 @include media-breakpoint-down(md) {
 	.researchers {
+
+		.row .container p {
+			inline-size: 100%;
+		}
 		
 		.letter-list .list-item {
 			flex-direction: column;
@@ -88,6 +101,22 @@
 			.list .list-arrow {
 				display: none;
 			}
+		}
+	}
+}
+
+@include media-breakpoint-down(xl) {
+  .researchers {
+		.row .container {
+			max-width: 960px;
+		}
+	}
+}
+
+@include media-breakpoint-down(lg) {
+  .researchers {
+		.row .container {
+			max-width: 760px;
 		}
 	}
 }

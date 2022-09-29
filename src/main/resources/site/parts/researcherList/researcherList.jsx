@@ -53,13 +53,19 @@ function ResearcherList(props) {
   }
 
   return (
-    <section className="xp-part researchers container p-0 mb-5">
+    <section className="xp-part researchers p-0 mb-5">
       <div className="row banner">
-        <h1>Ansatte forskning</h1>  
-        <p>På denne siden finner du kontaktinformasjon til alle som jobber i Forskningsavdelingen i SSB. Klikk på navnet for å lese mer om personen.</p>
+        <div className="container">
+          <h1>Ansatte forskning</h1>  
+          <p>På denne siden finner du kontaktinformasjon til alle som jobber i Forskningsavdelingen i SSB. Klikk på navnet for å lese mer om personen.</p>
+        </div>
       </div>
-      <div className="mb-3"><p>Det er {results.total} personer i Forskningsavdelingen</p></div>
-      {researchers != [] ? renderResearchers() : null}
+      <div className="row">
+        <div className="container">
+          <div className="mb-3"><p>Det er {results.total} personer i Forskningsavdelingen</p></div>
+          {researchers != [] ? renderResearchers() : null}
+        </div>
+      </div>
     </section>
   )
 }
