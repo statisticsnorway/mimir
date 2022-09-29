@@ -20,9 +20,9 @@ function ResearcherList(props) {
         return (
           <>
           <li className="list-item" >
-            {i == 0 ? <div className="letter col-md-1"><h2>{letter}</h2></div> : <div className="col-md-1"></div>}
-            <div className="list col-md-11">
-              <div>
+            {i == 0 ? <div className="letter"><h2>{letter}</h2></div> : <div className="empty-letter"></div>}
+            <div className="list">
+              <div className="">
                 <Link href={researcher.path} linkType="header">{researcher.surname}, {researcher.name}</Link>
                 {researcher.position ? <div><Text small>{researcher.position}</Text></div> : null}
                 <div>
@@ -58,7 +58,7 @@ function ResearcherList(props) {
         <h1>Ansatte forskning</h1>  
         <p>På denne siden finner du kontaktinformasjon til alle som jobber i Forskningsavdelingen i SSB. Klikk på navnet for å lese mer om personen.</p>
       </div>
-      <div>Det er {results.total} personer i Forskningsavdelingen</div>
+      <div className="mb-3"><p>Det er {results.total} personer i Forskningsavdelingen</p></div>
       {researchers != [] ? renderResearchers() : null}
     </section>
   )
