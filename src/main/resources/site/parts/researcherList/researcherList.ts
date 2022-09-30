@@ -45,9 +45,9 @@ function renderPart(req: Request): React4xpResponse {
   })
 
   const props: IPartProps = {
-    researchers: alphabeticalResearchersList, 
+    researchers: alphabeticalResearchersList,
     total: results.total,
-    pageHeadingPhrase, 
+    pageHeadingPhrase,
     pageDescriptionPhrase
   }
 
@@ -64,12 +64,12 @@ function getResearchers() {
         must: [
           {
             hasValue: {
-              field: "data.isResearcher",
-              values: [true],
-            },
-          },
-        ],
-      },
+              field: 'data.isResearcher',
+              values: [true]
+            }
+          }
+        ]
+      }
     },
     contentTypes: [
       `${app.name}:employee`
@@ -78,12 +78,11 @@ function getResearchers() {
 }
 
 function prepareResearchers(results: readonly Content<Employee>[]) {
-  return results.map(result => {
-
+  return results.map((result) => {
     const areaContent: Content<DefaultPageConfig> | null = result.data.area ? get({
       key: result.data.area
     }) : null
-  
+
     const area: Area| null = areaContent ? {
       title: areaContent.displayName,
       href: areaContent._path
@@ -92,25 +91,27 @@ function prepareResearchers(results: readonly Content<Employee>[]) {
     return {
       surname: result.data.surname,
       name: result.data.name,
-      position: result.data.position || "",
-      path: pageUrl({ id: result._id }),
-      phone: result.data.phone || "",
-      email: result.data.email || "",
-      area: area || "",
+      position: result.data.position || '',
+      path: pageUrl({
+        id: result._id
+      }),
+      phone: result.data.phone || '',
+      email: result.data.email || '',
+      area: area || ''
     }
   })
 }
 
 function createAlphabeticalResearchersList(researchers: Array<IPreparedResearcher>) {
-  const groupedCollection: IResearcherMap = {};
+  const groupedCollection: IResearcherMap = {}
 
-  for (let i = 0; i < researchers.length; i++) {       
-    let firstLetter = researchers[i].surname.charAt(0);
-    
-    if (groupedCollection[firstLetter] == undefined) {             
-      groupedCollection[firstLetter] = [];         
-    }         
-    groupedCollection[firstLetter]?.push(researchers[i]);
+  for (let i: number = 0; i < researchers.length; i++) {
+    const firstLetter: string = researchers[i].surname.charAt(0)
+
+    if (groupedCollection[firstLetter] == undefined) {
+      groupedCollection[firstLetter] = []
+    }
+    groupedCollection[firstLetter]?.push(researchers[i])
   }
 
   return sortAlphabeticallyAtoZ(groupedCollection)
@@ -120,16 +121,15 @@ function sortAlphabeticallyAtoZ(list: IResearcherMap) {
   return Object.keys(list)
     .sort()
     .reduce((accumulator: IResearcherMap, key) => {
-      accumulator[key] = list[key];
-
-  return accumulator;
-  }, {});
+      accumulator[key] = list[key]
+      return accumulator
+    }, {})
 }
 
 interface IPartProps {
-  researchers: any,
+  researchers: IResearcherMap,
   total: number,
-  pageHeadingPhrase: string, 
+  pageHeadingPhrase: string,
   pageDescriptionPhrase: string
 }
 
@@ -140,7 +140,7 @@ interface IPreparedResearcher {
   path: string,
   phone: string,
   email: string,
-  area: string | Area,
+  area: string | Area
 }
 
 interface IResearcherMap {
