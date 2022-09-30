@@ -8,12 +8,12 @@ export interface Employee {
   /**
    * Navn
    */
-  name?: string;
+  name: string;
 
   /**
    * Etternavn
    */
-  surname?: string;
+  surname: string;
 
   /**
    * Stilling

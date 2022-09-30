@@ -1,6 +1,6 @@
 import { Request, Response } from 'enonic-types/controller'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { Content } from 'enonic-types/content'
+import { Content, EmptyObject, QueryResponse } from 'enonic-types/content'
 import { renderError } from '../../../lib/ssb/error/error'
 import { Employee } from '../../content-types/employee/employee'
 
@@ -25,11 +25,11 @@ exports.preview = (req: Request): React4xpResponse => renderPart(req)
 function renderPart(req: Request): React4xpResponse {
   const content: Content = getContent()
 
-  const results: any = getResearchers()
-  const preparedResults: any = preparedResearchers(results.hits)
-  const alphabeticalResearchersList: any = createAlphabeticalResearchersList(preparedResults)
+  const results: QueryResponse<Employee> = getResearchers()
+  const preparedResults: Array<IPreparedResearcher> = prepareResearchers(results.hits)
+  const alphabeticalResearchersList: IAlphabetResearchersList = createAlphabeticalResearchersList(preparedResults)
 
-  const props: iPartProps = {
+  const props: IPartProps = {
     title: content.displayName,
     researchers: alphabeticalResearchersList, 
     results
@@ -39,7 +39,7 @@ function renderPart(req: Request): React4xpResponse {
 }
 
 function getResearchers() {
-  return query({
+  return query<Employee>({
     start: 0,
     count: 20,
     sort: 'publish.from DESC',
@@ -61,22 +61,22 @@ function getResearchers() {
   })
 }
 
-function preparedResearchers(results: any[]) {
+function prepareResearchers(results: readonly Content<Employee>[]) {
   return results.map(result => {
     return {
       surname: result.data.surname,
       name: result.data.name,
-      position: result.data.position,
+      position: result.data.position || "",
       path: pageUrl({ id: result._id }),
-      phone: result.data.phone,
-      email: result.data.email,
-      area: result.data.area,
+      phone: result.data.phone || "",
+      email: result.data.email || "",
+      area: result.data.area || "",
     }
   })
 }
 
-function createAlphabeticalResearchersList(researchers: any[]) {
-  const groupedCollection: any = {};
+function createAlphabeticalResearchersList(researchers: Array<IPreparedResearcher>) {
+  const groupedCollection: IKeyMap = {};
 
   for (let i = 0; i < researchers.length; i++) {       
     let firstLetter = researchers[i].surname.charAt(0);
@@ -84,13 +84,13 @@ function createAlphabeticalResearchersList(researchers: any[]) {
     if (groupedCollection[firstLetter] == undefined) {             
       groupedCollection[firstLetter] = [];         
     }         
-    groupedCollection[firstLetter].push(researchers[i]);     
+    groupedCollection[firstLetter]?.push(researchers[i]);
   }
 
   return sortAlphabeticallyAtoZ(groupedCollection)
 }
 
-function sortAlphabeticallyAtoZ(obj: any) {
+function sortAlphabeticallyAtoZ(obj: IKeyMap) {
   return Object.keys(obj)
     .sort()
     .reduce((accumulator: any, key) => {
@@ -100,13 +100,13 @@ function sortAlphabeticallyAtoZ(obj: any) {
   }, {});
 }
 
-interface iPartProps {
+interface IPartProps {
   title: string,
   researchers: any,
   results: any,
 }
 
-interface iResearcher {
+interface IPreparedResearcher {
   surname: string,
   name: string,
   position: string,
@@ -114,4 +114,12 @@ interface iResearcher {
   phone: string,
   email: string,
   area: string,
+}
+
+interface IAlphabetResearchersList {
+  object: IPreparedResearcher[]
+}
+
+interface IKeyMap {
+  [key: string]: IPreparedResearcher[] | undefined
 }
