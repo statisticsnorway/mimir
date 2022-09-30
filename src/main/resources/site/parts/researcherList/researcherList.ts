@@ -11,6 +11,9 @@ const {
 const {
   get, query
 } = __non_webpack_require__('/lib/xp/content')
+const {
+  localize
+} = __non_webpack_require__('/lib/xp/i18n')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 exports.get = (req: Request): React4xpResponse | Response => {
@@ -25,15 +28,27 @@ exports.preview = (req: Request): React4xpResponse => renderPart(req)
 
 function renderPart(req: Request): React4xpResponse {
   const content: Content = getContent()
+  const language: string = content.language ? content.language : 'nb'
 
   const results: QueryResponse<Employee> = getResearchers()
   const preparedResults: Array<IPreparedResearcher> = prepareResearchers(results.hits)
   const alphabeticalResearchersList: IResearcherMap = createAlphabeticalResearchersList(preparedResults)
 
+  const pageHeadingPhrase: string = localize({
+    key: 'researcherList.pageHeading',
+    locale: language
+  })
+
+  const pageDescriptionPhrase: string = localize({
+    key: 'researcherList.pageDescription',
+    locale: language
+  })
+
   const props: IPartProps = {
-    title: content.displayName,
     researchers: alphabeticalResearchersList, 
-    results
+    total: results.total,
+    pageHeadingPhrase, 
+    pageDescriptionPhrase
   }
 
   return React4xp.render('site/parts/researcherList/researcherList', props, req)
@@ -112,9 +127,10 @@ function sortAlphabeticallyAtoZ(list: IResearcherMap) {
 }
 
 interface IPartProps {
-  title: string,
   researchers: any,
-  results: any,
+  total: number,
+  pageHeadingPhrase: string, 
+  pageDescriptionPhrase: string
 }
 
 interface IPreparedResearcher {

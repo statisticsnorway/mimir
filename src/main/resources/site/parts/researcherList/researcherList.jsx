@@ -3,11 +3,8 @@ import PropTypes from 'prop-types'
 import { Link, Divider, Text } from '@statisticsnorway/ssb-component-library'
 import { ArrowRight } from 'react-feather'
 
-
 function ResearcherList(props) {
-  const { title, researchers, results } = props
-  console.log(researchers)
-  console.log(results)
+  const { researchers, total, pageHeadingPhrase, pageDescriptionPhrase } = props
 
   const renderResearchers = () => {
     let ListOfResearchersJSX = []
@@ -22,12 +19,14 @@ function ResearcherList(props) {
           <li className="list-item" >
             {i == 0 ? <div className="letter"><h2>{letter}</h2></div> : <div className="empty-letter"></div>}
             <div className="list">
-              <div className="">
+              <div>
                 <Link href={researcher.path} linkType="header">{researcher.surname}, {researcher.name}</Link>
                 {researcher.position ? <div><Text small>{researcher.position}</Text></div> : null}
                 <div>
                   <Text small>
-                    <Link href={'tel:' + researcher.phone}>{researcher.phone}</Link> / <Link href={'mailto:' + researcher.email}>{researcher.email}</Link> / {researcher.area.title}
+                    {researcher.phone != "" ? <><Link href={'tel:' + researcher.phone}>{researcher.phone}</Link><span> / </span> </> : null}
+                    {researcher.email != "" ? <><Link href={'mailto:' + researcher.email}>{researcher.email}</Link><span> / </span> </> : null}
+                    {researcher.area.title != "" ? researcher.area.title : null}
                   </Text>
                 </div>
               </div>
@@ -56,13 +55,13 @@ function ResearcherList(props) {
     <section className="xp-part researchers p-0 mb-5">
       <div className="row banner">
         <div className="container">
-          <h1>Ansatte forskning</h1>  
-          <p>På denne siden finner du kontaktinformasjon til alle som jobber i Forskningsavdelingen i SSB. Klikk på navnet for å lese mer om personen.</p>
+          <h1>{pageHeadingPhrase}</h1>  
+          <p>{pageDescriptionPhrase}</p>
         </div>
       </div>
       <div className="row">
         <div className="container">
-          <div className="mb-3"><p>Det er {results.total} personer i Forskningsavdelingen</p></div>
+          <div className="mb-3"><p>Det er {total} personer i Forskningsavdelingen</p></div>
           {researchers != [] ? renderResearchers() : null}
         </div>
       </div>
