@@ -27,7 +27,7 @@ function renderPart(req: Request): React4xpResponse {
 
   const results: QueryResponse<Employee> = getResearchers()
   const preparedResults: Array<IPreparedResearcher> = prepareResearchers(results.hits)
-  const alphabeticalResearchersList: IAlphabetResearchersList = createAlphabeticalResearchersList(preparedResults)
+  const alphabeticalResearchersList: IResearcherMap = createAlphabeticalResearchersList(preparedResults)
 
   const props: IPartProps = {
     title: content.displayName,
@@ -76,7 +76,7 @@ function prepareResearchers(results: readonly Content<Employee>[]) {
 }
 
 function createAlphabeticalResearchersList(researchers: Array<IPreparedResearcher>) {
-  const groupedCollection: IKeyMap = {};
+  const groupedCollection: IResearcherMap = {};
 
   for (let i = 0; i < researchers.length; i++) {       
     let firstLetter = researchers[i].surname.charAt(0);
@@ -90,10 +90,10 @@ function createAlphabeticalResearchersList(researchers: Array<IPreparedResearche
   return sortAlphabeticallyAtoZ(groupedCollection)
 }
 
-function sortAlphabeticallyAtoZ(list: IKeyMap) {
+function sortAlphabeticallyAtoZ(list: IResearcherMap) {
   return Object.keys(list)
     .sort()
-    .reduce((accumulator: any, key) => {
+    .reduce((accumulator: IResearcherMap, key) => {
       accumulator[key] = list[key];
 
   return accumulator;
@@ -116,10 +116,6 @@ interface IPreparedResearcher {
   area: string,
 }
 
-interface IAlphabetResearchersList {
-  researchers: IPreparedResearcher[]
-}
-
-interface IKeyMap {
+interface IResearcherMap {
   [key: string]: IPreparedResearcher[] | undefined
 }
