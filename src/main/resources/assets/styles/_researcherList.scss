@@ -9,9 +9,10 @@
 	}
 
 	.banner {
-		background-color: #f0f8f9;
+		height: 404px;
 		margin: 2rem 0;
 		padding: 4rem 0;
+		background-color: #f0f8f9;
 	}
 
 	.letter-list:first-of-type {
@@ -78,6 +79,10 @@
 
 		.row .container p {
 			inline-size: 100%;
+		}
+
+		.banner {
+			height: 388px;
 		}
 		
 		.letter-list .list-item {

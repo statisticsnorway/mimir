@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Link, Divider, Text } from '@statisticsnorway/ssb-component-library'
+import { Link, Divider, Text, LeadParagraph } from '@statisticsnorway/ssb-component-library'
 import { ArrowRight } from 'react-feather'
 
 function ResearcherList(props) {
@@ -57,7 +57,7 @@ function ResearcherList(props) {
       <div className="row banner">
         <div className="container">
           <h1>{pageHeadingPhrase}</h1>
-          <p>{pageDescriptionPhrase}</p>
+          <LeadParagraph>{pageDescriptionPhrase}</LeadParagraph>
         </div>
       </div>
       <div className="row">
