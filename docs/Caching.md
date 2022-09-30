@@ -7,7 +7,7 @@ Cache instantiation and control is found in [cache.ts](/src/main/resources/lib/s
 ## Clearing Cache
 Clearing cache is primarily done on node events, which is set up in the *cache.ts* file. When content is saved or published, content nodes are placed in a queue. When the queue is stable, all the contents are individually cleared - or all cache is cleared if there are too many contents.
 ### Dashboard
-For manual cache clearing, there is a `Tøm cache` button in the `Dashboard` admin tool XP application for internal users to interact with. That button will trigger a set of events using websocket and Enonic's event library, clearing all the entries from a list of our predefined cached instances. This function is often utilized after PROD deploys, or if data is not being retrieved or displayed correctly after the scheduled jobs have finished running.
+For manual cache clearing, there is a `Tøm XP cache` button in the `Dashboard` admin tool XP application for internal users to interact with. That button will trigger a set of events using websocket and Enonic's event library, clearing all the entries from a list of our predefined cached instances. This function is often utilized after PROD deploys, or if data is not being retrieved or displayed correctly after the scheduled jobs have finished running.
 
 When the `Tøm cache` button is pressed, the `clear-cache` event will get emitted. The following function is called at `onClick`
 ([actions.es6](src/main/resources/react4xp/dashboard/containers/HomePage/actions.es6)):
@@ -32,7 +32,6 @@ export function setupHandlers(socket: Socket): void {
         clearFilterCache: true,
         clearMenuCache: true,
         clearRelatedArticlesCache: true,
-        clearRelatedFactPageCache: true,
         clearDatasetRepoCache: true,
         clearParsedMunicipalityCache: true,
         clearMunicipalityWithCodeCache: true,
@@ -97,8 +96,8 @@ if (isNotInEditMode) {
 ## Future  
 ### Cache Lib
 - [ ] Increase expire for some caches
-- [x] Merge relatedArticlesCache with partsCache
-- [ ] Merge relatedFactPageCache with partsCache
+- [ ] Merge relatedArticlesCache with partsCache
+- [x] Merge relatedFactPageCache with partsCache
 - [ ] Move datasetRepoCache to seperate file
 - [ ] Move municipalityCache to seperate file
 - [ ] Move parentTypeCache to seperate file

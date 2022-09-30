@@ -240,6 +240,7 @@ export function setupCronJobs(): void {
       clearPartFromPartCache('releasedStatistics')
       clearPartFromPartCache('upcomingReleases')
       clearPartFromPartCache('articleList')
+      clearPartFromPartCache('relatedFactPage')
       clearPartFromPartCache('archiveAllPublications-nb')
       clearPartFromPartCache('archiveAllPublications-en')
     },
