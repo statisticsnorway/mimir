@@ -1,14 +1,15 @@
 import { Request, Response } from 'enonic-types/controller'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { Content, EmptyObject, QueryResponse } from 'enonic-types/content'
+import { Content, QueryResponse } from 'enonic-types/content'
 import { renderError } from '../../../lib/ssb/error/error'
 import { Employee } from '../../content-types/employee/employee'
+import { DefaultPageConfig } from '../../pages/default/default-page-config'
 
 const {
   getContent, pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
 const {
-  query
+  get, query
 } = __non_webpack_require__('/lib/xp/content')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
@@ -63,6 +64,16 @@ function getResearchers() {
 
 function prepareResearchers(results: readonly Content<Employee>[]) {
   return results.map(result => {
+
+    const areaContent: Content<DefaultPageConfig> | null = result.data.area ? get({
+      key: result.data.area
+    }) : null
+  
+    const area: Area| null = areaContent ? {
+      title: areaContent.displayName,
+      href: areaContent._path
+    } : null
+
     return {
       surname: result.data.surname,
       name: result.data.name,
@@ -70,7 +81,7 @@ function prepareResearchers(results: readonly Content<Employee>[]) {
       path: pageUrl({ id: result._id }),
       phone: result.data.phone || "",
       email: result.data.email || "",
-      area: result.data.area || "",
+      area: area || "",
     }
   })
 }
@@ -113,9 +124,14 @@ interface IPreparedResearcher {
   path: string,
   phone: string,
   email: string,
-  area: string,
+  area: string | Area,
 }
 
 interface IResearcherMap {
   [key: string]: IPreparedResearcher[] | undefined
+}
+
+interface Area {
+  href: string;
+  title: string;
 }

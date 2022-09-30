@@ -27,7 +27,7 @@ function ResearcherList(props) {
                 {researcher.position ? <div><Text small>{researcher.position}</Text></div> : null}
                 <div>
                   <Text small>
-                    <Link href={'tel:' + researcher.phone}>{researcher.phone}</Link> / <Link href={'mailto:' + researcher.email}>{researcher.email}</Link> / Forskningsområde
+                    <Link href={'tel:' + researcher.phone}>{researcher.phone}</Link> / <Link href={'mailto:' + researcher.email}>{researcher.email}</Link> / {researcher.area.title}
                   </Text>
                 </div>
               </div>
