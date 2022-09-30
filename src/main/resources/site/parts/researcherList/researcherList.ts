@@ -90,11 +90,11 @@ function createAlphabeticalResearchersList(researchers: Array<IPreparedResearche
   return sortAlphabeticallyAtoZ(groupedCollection)
 }
 
-function sortAlphabeticallyAtoZ(obj: IKeyMap) {
-  return Object.keys(obj)
+function sortAlphabeticallyAtoZ(list: IKeyMap) {
+  return Object.keys(list)
     .sort()
     .reduce((accumulator: any, key) => {
-      accumulator[key] = obj[key];
+      accumulator[key] = list[key];
 
   return accumulator;
   }, {});
@@ -117,7 +117,7 @@ interface IPreparedResearcher {
 }
 
 interface IAlphabetResearchersList {
-  object: IPreparedResearcher[]
+  researchers: IPreparedResearcher[]
 }
 
 interface IKeyMap {
