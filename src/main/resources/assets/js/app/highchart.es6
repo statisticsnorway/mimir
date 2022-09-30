@@ -333,8 +333,25 @@ export function init() {
           graph.css('display', 'block')
 
         })
+
+        $(window).resize(function() {
+          $(window).scroll(function (event) {
+            event.isDefaultPrevented();
+            $('html, body').animate({
+              scrollTop: $('#content').offset().top
+            }, 'fast');
+          });
+        });
+
       }
     })
   })
 }
+
+
+
+$( document ).ready(function(event) {
+  event.isDefaultPrevented();
+  $('#content').scrollTop(0);
+});
 
