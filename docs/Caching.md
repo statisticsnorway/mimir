@@ -74,6 +74,7 @@ The following parts will clear all the entries from their respective part cache 
       clearPartFromPartCache('omStatistikken')
       clearPartFromPartCache('releasedStatistics')
       clearPartFromPartCache('upcomingReleases')
+      clearPartFromPartCache('articleList')
       clearPartFromPartCache('archiveAllPublications-nb')
       clearPartFromPartCache('archiveAllPublications-en')
     },
