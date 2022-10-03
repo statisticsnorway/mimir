@@ -17,9 +17,9 @@ function ResearcherList(props) {
       const researchersListItem = sortedResearchersWithinLetter.map((researcher, i) => {
         return (
           <>
-            <li className="list-item" >
+            <li className="list-item" role="listitem">
               {i == 0 ? <div className="letter"><h2>{letter}</h2></div> : <div className="empty-letter"></div>}
-              <div className="list">
+              <div className="researcher-info">
                 <div>
                   <Link href={researcher.path} linkType="header">{researcher.surname}, {researcher.name}</Link>
                   {researcher.position ? <div><Text small>{researcher.position}</Text></div> : null}
@@ -31,7 +31,11 @@ function ResearcherList(props) {
                     </Text>
                   </div>
                 </div>
-                <div className="list-arrow"><Link href={researcher.path} icon={<ArrowRight size="30" />}></Link></div>
+                <div className="list-arrow" role="link" aria-label="link">
+                  <Link href={researcher.path} icon={<ArrowRight size="30" />} title={'link to ' + researcher.name}>
+                    {/* <span class="sr-only">link to {researcher.name} {researcher.surname}</span> */}
+                  </Link>
+                </div>
               </div>
             </li>
             <Divider light />
@@ -40,7 +44,7 @@ function ResearcherList(props) {
       })
 
       ListOfResearchersJSX.push(
-        <ul className="letter-list">{researchersListItem}</ul>
+        <ul className="letter-list" aria-label={letter}>{researchersListItem}</ul>
       )
     }
 
