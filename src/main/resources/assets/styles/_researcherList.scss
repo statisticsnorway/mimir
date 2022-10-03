@@ -77,12 +77,24 @@
 @include media-breakpoint-down(md) {
 	.researchers {
 
-		.row .container p {
-			inline-size: 100%;
-		}
-
 		.banner {
 			height: 388px;
+			width: 100vw;
+      position: relative;
+      left: 50%;
+      margin-left: -50vw;
+
+			.container {
+				padding: 0 20px;
+
+				p {
+					inline-size: 100%;
+				}
+			}
+		}
+
+		.row .container div p { 
+			inline-size: 100%;
 		}
 		
 		.letter-list .list-item {
