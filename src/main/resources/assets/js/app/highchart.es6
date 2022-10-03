@@ -134,7 +134,6 @@ export function init() {
   })
 
   $(function() {
-
     const w = {
       height: $(window).height().toFixed(0),
       width: $(window).width().toFixed(0)
@@ -311,7 +310,7 @@ export function init() {
         Highcharts.chart(chart, config)
 
         // Hide data table when highchart is loaded
-        $('.highcharts-data-table').addClass('hide-div');
+        $('.highcharts-data-table').addClass('hide-div')
         $('.highcharts-data-table').find('table').addClass('statistics')
 
         const graph = $('#figure-' + highchartsContentKey + ' .highcharts-canvas')
@@ -320,27 +319,24 @@ export function init() {
         const buttonShowGraph = $('button#show-graph-' + highchartsContentKey)
 
         buttonShowDataTable.on('click', (e) => {
-          buttonShowDataTable.addClass('active');
-          buttonShowGraph.removeClass('active');
-          dataTable.removeClass('hide-div');
-          dataTable.addClass('show-div');
-          graph.removeClass('show-div');
-          graph.addClass('hide-div');
+          buttonShowDataTable.addClass('active')
+          buttonShowGraph.removeClass('active')
+          dataTable.removeClass('hide-div')
+          dataTable.addClass('show-div')
+          graph.removeClass('show-div')
+          graph.addClass('hide-div')
         })
 
         buttonShowGraph.on('click', (e) => {
-          buttonShowGraph.addClass('active');
-          buttonShowDataTable.removeClass('active');
-          dataTable.removeClass('show-div');
-          dataTable.addClass('hide-div');
-          graph.addClass('show-div');
-
+          buttonShowGraph.addClass('active')
+          buttonShowDataTable.removeClass('active')
+          dataTable.removeClass('show-div')
+          dataTable.addClass('hide-div')
+          graph.addClass('show-div')
         })
-
       }
     })
   })
 }
-
 
 
