@@ -1,4 +1,7 @@
 .employee {
+  .container {
+    padding-top: 0!important;
+  }
 
   .employee-head {
     display: flex;
@@ -6,11 +9,6 @@
 
     .employee-image img {
       width: 96%;  
-    }
-
-    @include media-breakpoint-down(md) {
-      flex-direction: column;
-      align-items: flex-start;
     }
   }
 
@@ -22,7 +20,7 @@
     padding-bottom: 1.5rem;
     border-bottom: 1px solid #c3dcdc;
 
-    > div {
+    .details-block {
       width: 24%;
       padding-top: 1.5rem;
       border-top: 1px solid #c3dcdc;
@@ -44,20 +42,54 @@
     }
 
     .ssb-link {
+      display: inline-flex;
+      height: 44px;
       font-size: 20px;
     }
+  }
 
-    @include media-breakpoint-down(md) {
-      flex-direction: column;
-      padding-bottom: 0rem;
+  .employee-attachments {
+    padding: 0 2rem 0 0;
 
-      > div {
+    .instructions {
+      margin-top: 2rem;
+
+      h2 {
+        font-size: 22px;
+      }
+    }
+
+    .grid-row {
+      display: flex;
+      flex-wrap: wrap;
+      grid-gap: 1rem;
+      padding: 0 4px;
+      
+      .grid-column {
+        flex: 45%;
+        max-width: 45%;
+      }
+      
+      .grid-column a div img {
         width: 100%;
-        padding: 1rem 0;
+        height: 125.19px;
+        object-fit: cover;
+      }
+      
+      .grid-column a div a .link-text {
+        font-size: 14px;
+      }
+    }
+    
+    .downloadCv {
+      margin-top: 2.5rem;
+
+      a {
+        display: inline-block;
       }
     }
   }
-  
+
   .employee-description {
     margin: 2rem 0;
 
@@ -76,7 +108,6 @@
   }
 
   .employee-projects {
-    margin-top: 2rem;
 
     > ul {
       list-style: none;
@@ -85,6 +116,11 @@
 
     > ul li {
       margin-top: 1rem;
+
+      a span {
+        display: inline-block;
+        height: 44px;
+      }
     }
   }
 
@@ -93,6 +129,77 @@
 
     > div {
       margin-top: 1.5rem;
+    }
+  }
+}
+
+@include media-breakpoint-up(md) {
+  .employee {
+    .desktop-display-none {
+      display: none;
+    }
+
+    .row-gutter-desktop {
+      --bs-gutter-x: 0;
+    }
+  }
+}
+
+@include media-breakpoint-down(md) {
+  .employee {
+    .employee-head {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .employee-details {
+      flex-direction: column;
+      padding-bottom: 0rem;
+      border-bottom: none;
+      margin-bottom: 0px;
+      
+      .details-block {
+        width: 100%;
+        padding: 1rem 0;
+      }
+    }
+
+    .mobile-display-none {
+      display: none;
+    }
+
+    .row .employee-attachments {
+      padding: 0;
+
+      .instructions {
+        margin-top: 0;
+      }
+
+      .grid-row {
+        grid-gap: .7rem;
+        padding: 0;
+        
+        .grid-column {
+          flex: 22%;
+          max-width: 22%;
+        }
+      
+        .grid-column a div img {
+          height: 100.15px;
+        }
+
+        .grid-column a div a .link-text {
+          font-size: 12px;
+        }
+      }
+    }
+
+    .employee-description .desktop-display-none > div > button {
+      margin: 0;
+    }
+
+    div .row-gutter-mobile {
+      --bs-gutter-x: 0;
     }
   }
 }
