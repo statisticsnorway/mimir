@@ -31,10 +31,8 @@ function ResearcherList(props) {
                     </Text>
                   </div>
                 </div>
-                <div className="list-arrow" role="link" aria-label="link">
-                  <Link href={researcher.path} icon={<ArrowRight size="30" />} title={'link to ' + researcher.name}>
-                    {/* <span class="sr-only">link to {researcher.name} {researcher.surname}</span> */}
-                  </Link>
+                <div className="list-arrow">
+                  <Link href={researcher.path} icon={<ArrowRight size="30" />} title={'link to ' + researcher.name}></Link>
                 </div>
               </div>
             </li>
