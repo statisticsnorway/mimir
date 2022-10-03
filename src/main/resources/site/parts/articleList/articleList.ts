@@ -6,7 +6,7 @@ import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { AggregationsResponseEntry, Content } from 'enonic-types/content'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-import { fromPartCache } from '../../../lib/ssb/cache/partCache'
+// import { fromPartCache } from '../../../lib/ssb/cache/partCache'
 import { renderError } from '../../../lib/ssb/error/error'
 
 const {
@@ -38,11 +38,13 @@ exports.preview = (req: Request): React4xpResponse => renderPart(req)
 
 function renderPart(req: Request): React4xpResponse {
   const content: Content = getContent()
-  if (req.mode === 'edit' || req.mode === 'inline') {
-    return getArticleList(req, content)
-  } else {
-    return fromPartCache(req, `${content._id}-articleList`, () => getArticleList(req, content))
-  }
+  // TODO: Temporarily comment out part cache code until cache issues are resolved
+  // if (req.mode === 'edit' || req.mode === 'inline') {
+  //   return getArticleList(req, content)
+  // } else {
+  //   return fromPartCache(req, `${content._id}-articleList`, () => getArticleList(req, content))
+  // }
+  return getArticleList(req, content)
 }
 
 function getArticleList(req: Request, content: Content): React4xpResponse {

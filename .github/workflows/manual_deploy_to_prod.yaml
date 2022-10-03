@@ -1,4 +1,4 @@
-name: 'Manual deploy to TEST'
+name: 'Manual deploy to PROD'
 # Action that will download previously created artifact and deploy it to the production environment
 on:
   workflow_dispatch:
@@ -16,7 +16,7 @@ jobs:
       - name: Download workflow artifact
         uses: dawidd6/action-download-artifact@v2.23.0
         with:
-          workflow: deploy_to_test.yaml
+          workflow: deploy_to_qa.yaml
           run_number: ${{ github.event.inputs.gh_run_number }}
       - name: display downloads
         run: ls -R
@@ -24,11 +24,11 @@ jobs:
         uses: 'enonic/action-app-deploy@main'
         with:
           # Secrets from Github repository
-          url: ${{ secrets.ENONIC_TEST_URL }}
-          username: ${{ secrets.ENONIC_TEST_USER }}
-          password: ${{ secrets.ENONIC_TEST_PASS }}
-          client_cert: ${{ secrets.ENONIC_TEST_CERT }}
-          client_key: ${{ secrets.ENONIC_TEST_KEY }}
+          url: ${{ secrets.ENONIC_PROD_URL }}
+          username: ${{ secrets.ENONIC_PROD_USER }}
+          password: ${{ secrets.ENONIC_PROD_PASS }}
+          client_cert: ${{ secrets.ENONIC_PROD_CERT }}
+          client_key: ${{ secrets.ENONIC_PROD_KEY }}
           app_jar: "*.jar"
       - name: Send result message to Slack
         id: slack_message
