@@ -38,9 +38,12 @@ function SearchResult(props) {
     id: 'allTypes',
     title: props.allContentTypesPhrase
   }
-  const preselectedContentTypeDropdownItem = props.contentTypeUrlParam ? {
+
+  const preselectedContentType = props.contentTypeUrlParam ? props.contentTypePhrases.find((phrase) => phrase.id === props.contentTypeUrlParam) : undefined
+
+  const preselectedContentTypeDropdownItem = preselectedContentType ? {
     id: props.contentTypeUrlParam,
-    title: props.contentTypePhrases.find((phrase) => phrase.id === props.contentTypeUrlParam).title
+    title: preselectedContentType.title
   } : allContentTypeItem
   const allSubjectsItem = {
     id: 'allSubjects',
