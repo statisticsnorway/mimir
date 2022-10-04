@@ -14,19 +14,16 @@
 		padding: 4rem 0;
 		background-color: #f0f8f9;
 	}
-
-	.letter-list:first-of-type {
-		margin-top: 0.8rem;
-	}
 	
 	.letter-list {
 		display: flex;
 		flex-direction: column;
 		padding-left: 0;
+		margin: 0;
 
 		.list-item {
 			width: 100%;
-			margin: 0.5rem 0 1.5rem 0;
+			margin: 1.7rem 0;
 			display: flex;
 			
 			.letter {
@@ -35,7 +32,7 @@
 				min-width: 80px;
 				max-width: 80px;
 				padding-top: 10px;
-				margin: .5rem 1rem 0 0;
+				margin: .5rem 1.3rem 0 0;
 				display: flex;
 				justify-content: center;
 				align-items: center;
@@ -59,6 +56,14 @@
 				display: flex;
 				justify-content: space-between;
 				list-style: none;
+
+				> div .position {
+					margin-top: .3rem;
+				}
+
+				> div .contact-details {
+					margin-top: .3rem;
+				}
 			
 				> div > div > span > a > .link-text {
 					font-size: 14px;
@@ -101,7 +106,7 @@
 			flex-direction: column;
 
 			.letter {
-				margin-bottom: 0.5rem;
+				margin: 0 0 0.5rem;
 				width: 72px;
 				height: 28px;
 				line-height: 1.75;
@@ -113,6 +118,11 @@
 				h2 {
 					font-size: 16px;
 				}
+			}
+
+			.empty-letter {
+				margin: 0;
+				display: none;
 			}
 
 			.researcher-info .list-arrow {

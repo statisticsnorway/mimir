@@ -1,7 +1,6 @@
 import { Request, Response } from 'enonic-types/controller'
 import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { Content, QueryResponse } from 'enonic-types/content'
-import { renderError } from '../../../lib/ssb/error/error'
 import { Employee } from '../../content-types/employee/employee'
 import { DefaultPageConfig } from '../../pages/default/default-page-config'
 
@@ -14,6 +13,9 @@ const {
 const {
   localize
 } = __non_webpack_require__('/lib/xp/i18n')
+const {
+  renderError
+} = __non_webpack_require__('/lib/ssb/error/error')
 const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 exports.get = (req: Request): React4xpResponse | Response => {
@@ -106,7 +108,7 @@ function createAlphabeticalResearchersList(researchers: Array<IPreparedResearche
   const groupedCollection: IResearcherMap = {}
 
   for (let i: number = 0; i < researchers.length; i++) {
-    const firstLetter: string = researchers[i].surname.charAt(0)
+    const firstLetter: string = researchers[i].surname.charAt(0) || '...'
 
     if (groupedCollection[firstLetter] == undefined) {
       groupedCollection[firstLetter] = []
