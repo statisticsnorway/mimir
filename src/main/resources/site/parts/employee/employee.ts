@@ -43,6 +43,11 @@ function renderPart(req: Request): React4xpResponse {
   const projects: Array<Project> = projectIds && projectIds.length > 0 ? parseProject(projectIds) : []
   const profileImageIds: Array<string> = page.data.profileImages ? forceArray(page.data.profileImages) : []
 
+  const profileImage: string | null = profileImageIds.length ? imageUrl({
+    id: profileImageIds[0],
+    scale: 'block(280,350)'
+  }) : null
+
   const profileImages: Array<string> | void[] = profileImageIds ? profileImageIds.map((image: string) => {
     return imageUrl({
       id: image,
@@ -133,6 +138,7 @@ function renderPart(req: Request): React4xpResponse {
     position: page.data.position || '',
     phone: page.data.phone || '',
     description: page.data.description || '',
+    profileImage,
     profileImages: profileImages,
     myCV: cvAttachment,
     projects,
@@ -184,6 +190,7 @@ interface EmployeeProp {
   position: string,
   phone: string,
   description: string,
+  profileImage: string | null,
   profileImages: Array<string> | void[],
   myCV: string | null,
   projects: Array<Project>,

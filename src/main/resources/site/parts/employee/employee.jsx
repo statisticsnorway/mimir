@@ -61,7 +61,7 @@ const Employee = (props) => {
       <div className="employee-head">
         {profileImages.length != 0 ?
           <div className="employee-image col-6 col-md-3">
-            <img alt={`profilbilder av ${title}`} src={props.profileImages[0]} />
+            <img alt={`Profilbilde av ${title}`} src={props.profileImage} />
           </div> : null}
         <div className="col-6 col-md-6"><Title size="1">{title}</Title></div>
       </div>
@@ -208,6 +208,7 @@ Employee.propTypes = {
   position: PropTypes.string,
   phone: PropTypes.string,
   description: PropTypes.string,
+  profileImage: PropTypes.string,
   profileImages: PropTypes.array,
   myCV: PropTypes.string,
   projects: PropTypes.array,
