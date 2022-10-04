@@ -27,6 +27,9 @@ const {
 const {
   fromPartCache
 } = __non_webpack_require__('/lib/ssb/cache/partCache')
+const {
+  isEnabled
+} = __non_webpack_require__('/lib/featureToggle')
 
 exports.get = (req: Request): React4xpResponse | Response => {
   try {
@@ -40,7 +43,8 @@ exports.preview = (req: Request): React4xpResponse => renderPart(req)
 
 function renderPart(req: Request): React4xpResponse {
   const content: Content = getContent()
-  if (req.mode === 'edit' || req.mode === 'inline') {
+  const articleListCacheDisabled: boolean = isEnabled('deactivate-part-cache-article-list', true, 'ssb')
+  if (req.mode === 'edit' || req.mode === 'inline' || articleListCacheDisabled) {
     return getArticleList(req, content)
   } else {
     return fromPartCache(req, `${content._id}-articleList`, () => getArticleList(req, content))
