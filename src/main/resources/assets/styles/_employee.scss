@@ -8,7 +8,17 @@
     align-items: center;
 
     .employee-image img {
-      width: 96%;  
+      width: 280px;
+      height: 350px;
+      object-position: top;
+      object-fit: cover;
+
+      @include media-breakpoint-down(md) {
+        width: 168px;
+        height: 210px;
+        object-position: top;
+        object-fit: cover;
+      }
     }
   }
 
