@@ -114,13 +114,10 @@ function getTablesAndFiguresComponent(page: Content<Statistics>, req: Request): 
     body: render(view, {
       title,
       accordionId: accordionComponent.react4xpId
-    }),
-    clientRender: true
+    })
   })
 
-  const accordionPageContributions: string = accordionComponent.renderPageContributions({
-    clientRender: true
-  })
+  const accordionPageContributions: string = accordionComponent.renderPageContributions({})
   const pageContributions: PageContributions = getFinalPageContributions(accordionPageContributions as PageContributions, attachmentTableAndFigureView)
 
   return {
