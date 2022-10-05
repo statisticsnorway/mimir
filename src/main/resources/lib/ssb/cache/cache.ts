@@ -69,6 +69,14 @@ const masterRelatedArticlesCache: Cache = newCache({
   expire: 3600,
   size: 200
 })
+const draftRelatedFactPageCache: Cache = newCache({
+  expire: 3600,
+  size: 200
+})
+const masterRelatedFactPageCache: Cache = newCache({
+  expire: 3600,
+  size: 200
+})
 const datasetRepoCache: Cache = newCache({
   expire: 3600,
   size: 1500
@@ -169,6 +177,7 @@ function addClearTask(): void {
               clearFilterCache: true,
               clearMenuCache: true,
               clearRelatedArticlesCache: true,
+              clearRelatedFactPageCache: true,
               clearDatasetRepoCache: true,
               clearParsedMunicipalityCache: true,
               clearMunicipalityWithCodeCache: true,
@@ -289,6 +298,13 @@ function clearCache(content: Content, branch: string, cleared: Array<string>): A
     const relatedArticlesCache: Cache = branch === 'master' ? masterRelatedArticlesCache : draftRelatedArticlesCache
     cacheLog(`clear ${content._id} from related articles cache (${branch})`)
     relatedArticlesCache.remove(content._id)
+  }
+
+  // clear related fact page cache
+  if (content.type === `${app.name}:contentList` || content.type === `${app.name}:page`) {
+    const relatedFactPageCache: Cache = branch === 'master' ? masterRelatedFactPageCache : draftRelatedFactPageCache
+    cacheLog(`clear ${content._id} from related fact page cache (${branch})`)
+    relatedFactPageCache.remove(content._id)
   }
 
   // clear menu cache
@@ -430,6 +446,12 @@ function completelyClearRelatedArticleCache(branch: string): void {
   relatedArticlesCache.clear()
 }
 
+function completelyClearRelatedFactPageCache(branch: string): void {
+  cacheLog(`clear related fact page cache (${branch})`)
+  const relatedFactPageCache: Cache = branch === 'master' ? masterRelatedFactPageCache : draftRelatedFactPageCache
+  relatedFactPageCache.clear()
+}
+
 function completelyClearDatasetRepoCache(): void {
   cacheLog(`clear dataset repo cache`)
   datasetRepoCache.clear()
@@ -469,6 +491,11 @@ function completelyClearCache(options: CompletelyClearCacheOptions): void {
   if (options.clearRelatedArticlesCache) {
     completelyClearRelatedArticleCache('master')
     completelyClearRelatedArticleCache('draft')
+  }
+
+  if (options.clearRelatedFactPageCache) {
+    completelyClearRelatedFactPageCache('master')
+    completelyClearRelatedFactPageCache('draft')
   }
 
   if (options.clearDatasetRepoCache) {
@@ -553,6 +580,7 @@ export interface CompletelyClearCacheOptions {
   clearFilterCache: boolean;
   clearMenuCache: boolean;
   clearRelatedArticlesCache: boolean;
+  clearRelatedFactPageCache: boolean;
   clearDatasetRepoCache: boolean;
   clearParsedMunicipalityCache: boolean;
   clearMunicipalityWithCodeCache: boolean;
