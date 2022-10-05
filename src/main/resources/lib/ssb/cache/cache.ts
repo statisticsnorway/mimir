@@ -539,6 +539,7 @@ export function setupHandlers(socket: Socket): void {
         clearFilterCache: true,
         clearMenuCache: true,
         clearRelatedArticlesCache: true,
+        clearRelatedFactPageCache: true,
         clearDatasetRepoCache: true,
         clearParsedMunicipalityCache: true,
         clearMunicipalityWithCodeCache: true,
