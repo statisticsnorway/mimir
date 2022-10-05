@@ -6,7 +6,7 @@ export interface Employee {
   isResearcher: boolean;
 
   /**
-   * Navn
+   * Fornavn
    */
   name: string;
 

@@ -8,11 +8,15 @@ function ResearcherList(props) {
     researchers, total, pageHeadingPhrase, pageDescriptionPhrase
   } = props
 
+  const sortResearchersWithinLetter = (listByLetter) => {
+    return listByLetter.sort((a, b) => a.surname.localeCompare(b.surname))
+  }
+
   const renderResearchers = () => {
     const ListOfResearchersJSX = []
 
     for (const [letter, researchersListByLetter] of Object.entries(researchers)) {
-      const sortedResearchersWithinLetter = researchersListByLetter.sort((a, b) => a.surname.localeCompare(b.surname))
+      const sortedResearchersWithinLetter = sortResearchersWithinLetter(researchersListByLetter)
 
       const researchersListItem = sortedResearchersWithinLetter.map((researcher, i) => {
         return (
