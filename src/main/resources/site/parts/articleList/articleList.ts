@@ -6,7 +6,6 @@ import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
 import { AggregationsResponseEntry, Content } from 'enonic-types/content'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-import { renderError } from '../../../lib/ssb/error/error'
 
 const {
   localize
@@ -24,6 +23,9 @@ const {
 const {
   getSubSubjects
 } = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
+const {
+  renderError
+} = __non_webpack_require__('/lib/ssb/error/error')
 const {
   fromPartCache
 } = __non_webpack_require__('/lib/ssb/cache/partCache')
