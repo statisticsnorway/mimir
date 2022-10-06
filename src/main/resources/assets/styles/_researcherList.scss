@@ -25,6 +25,7 @@
 			width: 100%;
 			margin: 1.7rem 0;
 			display: flex;
+			list-style: none;
 			
 			.letter {
 				width: 80px;
@@ -55,7 +56,6 @@
 				width: 100%;
 				display: flex;
 				justify-content: space-between;
-				list-style: none;
 
 				> div .position {
 					margin-top: .3rem;

@@ -8,52 +8,66 @@ function ResearcherList(props) {
     researchers, total, pageHeadingPhrase, pageDescriptionPhrase
   } = props
 
-  const sortResearchersWithinLetter = (listByLetter) => {
-    return listByLetter.sort((a, b) => a.surname.localeCompare(b.surname))
+  const letterBlock = (index, alphabetLetter) => {
+    return (
+      <>
+        {index == 0 ? <div className="letter"><h2>{alphabetLetter}</h2></div> : <div className="empty-letter"></div>}
+      </>
+    )
+  }
+
+  const researcherDetails = (researcher) => {
+    return (
+      <div>
+        <Link href={researcher.path} linkType="header">{researcher.surname}, {researcher.name}</Link>
+        {researcher.position ? <div className="position"><Text small>{researcher.position}</Text></div> : null}
+        <div className="contact-details">
+          <Text small>
+            {researcher.phone != '' ? <><Link href={'tel:' + researcher.phone}>{researcher.phone}</Link><span> / </span> </> : null}
+            {researcher.email != '' ? <><Link href={'mailto:' + researcher.email}>{researcher.email}</Link><span> / </span> </> : null}
+            {researcher.area.title != '' ? researcher.area.title : null}
+          </Text>
+        </div>
+      </div>
+    )
+  }
+
+  const arrowLink = (href, name) => {
+    return (
+      <div className="list-arrow">
+        <Link href={href} icon={<ArrowRight size="30" />} title={'link to ' + name}></Link>
+      </div>
+    )
+  }
+
+  const createListItems = (list) => {
+    return list.record.map((researcher, i) => {
+      return (
+        <>
+          <li className="list-item" role="listitem">
+            {letterBlock(i, list.alphabet)}
+            <div className="researcher-info">
+              {researcherDetails(researcher)}
+              {arrowLink(researcher.path, researcher.name)}
+            </div>
+          </li>
+          <Divider light />
+        </>
+      )
+    })
   }
 
   const renderResearchers = () => {
-    const ListOfResearchersJSX = []
-
-    for (const [letter, researchersListByLetter] of Object.entries(researchers)) {
-      const sortedResearchersWithinLetter = sortResearchersWithinLetter(researchersListByLetter)
-
-      const researchersListItem = sortedResearchersWithinLetter.map((researcher, i) => {
-        return (
-          <>
-            <li className="list-item" role="listitem">
-              {i == 0 ? <div className="letter"><h2>{letter}</h2></div> : <div className="empty-letter"></div>}
-              <div className="researcher-info">
-                <div>
-                  <Link href={researcher.path} linkType="header">{researcher.surname}, {researcher.name}</Link>
-                  {researcher.position ? <div className="position"><Text small>{researcher.position}</Text></div> : null}
-                  <div className="contact-details">
-                    <Text small>
-                      {researcher.phone != '' ? <><Link href={'tel:' + researcher.phone}>{researcher.phone}</Link><span> / </span> </> : null}
-                      {researcher.email != '' ? <><Link href={'mailto:' + researcher.email}>{researcher.email}</Link><span> / </span> </> : null}
-                      {researcher.area.title != '' ? researcher.area.title : null}
-                    </Text>
-                  </div>
-                </div>
-                <div className="list-arrow">
-                  <Link href={researcher.path} icon={<ArrowRight size="30" />} title={'link to ' + researcher.name}></Link>
-                </div>
-              </div>
-            </li>
-            <Divider light />
-          </>
-        )
-      })
-
-      ListOfResearchersJSX.push(
-        <ul className="letter-list" aria-label={letter}>{researchersListItem}</ul>
-      )
-    }
+    let listItems = researchers.map(researchersByLetter => {
+      return createListItems(researchersByLetter)
+    })
 
     return (
       <div>
         <Divider dark />
-        {ListOfResearchersJSX}
+        <ul className="letter-list">
+          {listItems}
+        </ul>
       </div>
     )
   }
@@ -79,7 +93,7 @@ function ResearcherList(props) {
 export default (props) => <ResearcherList {...props} />
 
 ResearcherList.propTypes = {
-  researchers: PropTypes.object,
+  researchers: PropTypes.array,
   total: PropTypes.number,
   pageHeadingPhrase: PropTypes.string,
   pageDescriptionPhrase: PropTypes.string

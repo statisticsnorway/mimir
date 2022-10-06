@@ -32,9 +32,11 @@ function renderPart(req: Request): React4xpResponse {
   const content: Content = getContent()
   const language: string = content.language ? content.language : 'nb'
 
-  const results: QueryResponse<Employee> = getResearchers()
-  const preparedResults: Array<IPreparedResearcher> = prepareResearchers(results.hits)
-  const alphabeticalResearchersList: IResearcherMap = createAlphabeticalResearchersList(preparedResults)
+  const queryResults: QueryResponse<Employee> = getResearchers()
+  const preparedResults: Array<IPreparedResearcher> = prepareResearchers(queryResults.hits)
+  const sortedResearchers = sortResearchersbySurname(preparedResults)
+  const alphabeticalResearchersList: any = createAlphabeticalResearchersList(sortedResearchers)
+
 
   const pageHeadingPhrase: string = localize({
     key: 'researcherList.pageHeading',
@@ -48,7 +50,7 @@ function renderPart(req: Request): React4xpResponse {
 
   const props: IPartProps = {
     researchers: alphabeticalResearchersList,
-    total: results.total,
+    total: queryResults.total,
     pageHeadingPhrase,
     pageDescriptionPhrase
   }
@@ -91,8 +93,8 @@ function prepareResearchers(results: readonly Content<Employee>[]) {
     } : null
 
     return {
-      surname: result.data.surname,
-      name: result.data.name,
+      surname: result.data.surname || '',
+      name: result.data.name || '',
       position: result.data.position || '',
       path: pageUrl({
         id: result._id
@@ -104,32 +106,24 @@ function prepareResearchers(results: readonly Content<Employee>[]) {
   })
 }
 
-function createAlphabeticalResearchersList(researchers: Array<IPreparedResearcher>) {
-  const groupedCollection: IResearcherMap = {}
-
-  for (let i: number = 0; i < researchers.length; i++) {
-    const firstLetter: string = researchers[i].surname.charAt(0) || '...'
-
-    if (groupedCollection[firstLetter] == undefined) {
-      groupedCollection[firstLetter] = []
-    }
-    groupedCollection[firstLetter]?.push(researchers[i])
-  }
-
-  return sortAlphabeticallyAtoZ(groupedCollection)
+const sortResearchersbySurname = (researchers: any[]) => {
+  return researchers.sort((a, b) => a.surname.localeCompare(b.surname, 'no', { sensitivity: 'base' }))
 }
 
-function sortAlphabeticallyAtoZ(list: IResearcherMap) {
-  return Object.keys(list)
-    .sort()
-    .reduce((accumulator: IResearcherMap, key) => {
-      accumulator[key] = list[key]
-      return accumulator
-    }, {})
+const createAlphabeticalResearchersList = (sortedResearchers: any) => {
+  let data = sortedResearchers.reduce((r: any, e: any) => {
+    let alphabet = e.surname[0].toUpperCase();
+    if (!r[alphabet]) r[alphabet] = { alphabet, record: [e] }
+    else r[alphabet].record.push(e)
+    return r
+  }, {})
+  
+  let result = Object.keys(data).map(key => data[key])
+  return result
 }
 
 interface IPartProps {
-  researchers: IResearcherMap,
+  researchers: any,
   total: number,
   pageHeadingPhrase: string,
   pageDescriptionPhrase: string
