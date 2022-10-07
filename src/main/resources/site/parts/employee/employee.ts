@@ -5,7 +5,7 @@ import { localize } from '/lib/xp/i18n'
 import {
   getContent, pageUrl, imageUrl, attachmentUrl
 } from '/lib/xp/portal'
-import { render, RenderBodyOptions, RenderResponse } from '/lib/enonic/react4xp'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { Page } from 'site/content-types/page/page'
 import { SEO } from 'services/news/news'
 
