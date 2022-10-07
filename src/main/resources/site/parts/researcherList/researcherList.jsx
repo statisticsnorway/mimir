@@ -8,6 +8,8 @@ function ResearcherList(props) {
     researchers, total, pageHeadingPhrase, pageDescriptionPhrase
   } = props
 
+  console.log(researchers)
+
   const letterBlock = (index, alphabetLetter) => {
     return (
       <>
@@ -58,7 +60,7 @@ function ResearcherList(props) {
   }
 
   const renderResearchers = () => {
-    let listItems = researchers.map(researchersByLetter => {
+    const listItems = researchers.map((researchersByLetter) => {
       return createListItems(researchersByLetter)
     })
 
@@ -93,7 +95,17 @@ function ResearcherList(props) {
 export default (props) => <ResearcherList {...props} />
 
 ResearcherList.propTypes = {
-  researchers: PropTypes.array,
+  researchers: PropTypes.arrayOf(
+    PropTypes.shape({
+      surname: PropTypes.string,
+      name: PropTypes.string,
+      position: PropTypes.string,
+      path: PropTypes.string,
+      phone: PropTypes.string,
+      email: PropTypes.string,
+      area: PropTypes.string
+    }),
+  ),
   total: PropTypes.number,
   pageHeadingPhrase: PropTypes.string,
   pageDescriptionPhrase: PropTypes.string

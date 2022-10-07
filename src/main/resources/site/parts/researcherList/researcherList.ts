@@ -34,7 +34,7 @@ function renderPart(req: Request): React4xpResponse {
 
   const queryResults: QueryResponse<Employee> = getResearchers()
   const preparedResults: Array<IPreparedResearcher> = prepareResearchers(queryResults.hits)
-  const alphabeticalResearchersList: any = createAlphabeticalResearchersList(preparedResults)
+  const alphabeticalResearchersList: Array<IResearcherMap> = createAlphabeticalResearchersList(preparedResults)
 
   const pageHeadingPhrase: string = localize({
     key: 'researcherList.pageHeading',
@@ -70,7 +70,7 @@ function getResearchers() {
               values: [true]
             }
           }
-        ],
+        ]
       }
     },
     contentTypes: [
@@ -104,20 +104,27 @@ function prepareResearchers(results: readonly Content<Employee>[]) {
   })
 }
 
-const createAlphabeticalResearchersList = (sortedResearchers: IPreparedResearcher[]) => {
-  let data = sortedResearchers.reduce((r: any, e: any) => {
-    let alphabet = e.surname[0].toUpperCase();
-    if (!r[alphabet]) r[alphabet] = { alphabet, record: [e] }
-    else r[alphabet].record.push(e)
+const createAlphabeticalResearchersList = (preparedResults: IPreparedResearcher[]) => {
+  const data = preparedResults.reduce((r: IObjectKeys, e: IPreparedResearcher) => {
+    const alphabet: string = e.surname[0].toUpperCase()
+    if (!r[alphabet]) {
+      r[alphabet] = {
+        alphabet,
+        record: [e]
+      }
+    } else {
+      r[alphabet].record.push(e)
+    }
     return r
-  }, {})
-  
-  let result = Object.keys(data).map(key => data[key])
+  }, {
+  })
+
+  const result: Array<IResearcherMap> = Object.keys(data).map((key) => data[key])
   return result
 }
 
 interface IPartProps {
-  researchers: any,
+  researchers: IResearcherMap[],
   total: number,
   pageHeadingPhrase: string,
   pageDescriptionPhrase: string
@@ -138,6 +145,11 @@ interface Area {
   title: string;
 }
 
+interface IObjectKeys {
+  [key: string]: IResearcherMap;
+}
+
 interface IResearcherMap {
-  [key: string]: IPreparedResearcher[] | undefined
+  alphabet: string;
+  record: IPreparedResearcher[]
 }
