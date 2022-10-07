@@ -34,9 +34,7 @@ function renderPart(req: Request): React4xpResponse {
 
   const queryResults: QueryResponse<Employee> = getResearchers()
   const preparedResults: Array<IPreparedResearcher> = prepareResearchers(queryResults.hits)
-  const sortedResearchers = sortResearchersbySurname(preparedResults)
-  const alphabeticalResearchersList: any = createAlphabeticalResearchersList(sortedResearchers)
-
+  const alphabeticalResearchersList: any = createAlphabeticalResearchersList(preparedResults)
 
   const pageHeadingPhrase: string = localize({
     key: 'researcherList.pageHeading',
@@ -61,8 +59,8 @@ function renderPart(req: Request): React4xpResponse {
 function getResearchers() {
   return query<Employee>({
     start: 0,
-    count: 20,
-    sort: 'publish.from DESC',
+    count: 500,
+    sort: 'data.surname ASC',
     filters: {
       boolean: {
         must: [
@@ -72,7 +70,7 @@ function getResearchers() {
               values: [true]
             }
           }
-        ]
+        ],
       }
     },
     contentTypes: [
@@ -106,11 +104,7 @@ function prepareResearchers(results: readonly Content<Employee>[]) {
   })
 }
 
-const sortResearchersbySurname = (researchers: any[]) => {
-  return researchers.sort((a, b) => a.surname.localeCompare(b.surname, 'no', { sensitivity: 'base' }))
-}
-
-const createAlphabeticalResearchersList = (sortedResearchers: any) => {
+const createAlphabeticalResearchersList = (sortedResearchers: IPreparedResearcher[]) => {
   let data = sortedResearchers.reduce((r: any, e: any) => {
     let alphabet = e.surname[0].toUpperCase();
     if (!r[alphabet]) r[alphabet] = { alphabet, record: [e] }
@@ -139,11 +133,11 @@ interface IPreparedResearcher {
   area: string | Area
 }
 
-interface IResearcherMap {
-  [key: string]: IPreparedResearcher[] | undefined
-}
-
 interface Area {
   href: string;
   title: string;
+}
+
+interface IResearcherMap {
+  [key: string]: IPreparedResearcher[] | undefined
 }
