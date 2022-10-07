@@ -77,9 +77,10 @@ function getTablesAndFiguresComponent(page: Content<Statistics>, req: XP.Request
     showAll: phrases.showAll,
     showLess: phrases.showLess,
     appName: app.name,
-    GA_TRACKING_ID: GA_TRACKING_ID,
-    title
-  }
+      GA_TRACKING_ID: GA_TRACKING_ID
+    })
+    .setId('accordion')
+    .uniqueId()
 
   const accordionComponent: RenderResponse = r4XpRender(
     'AttachmentTablesFigures',

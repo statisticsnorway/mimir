@@ -5,8 +5,6 @@ import {render, RenderResponse} from '/lib/enonic/react4xp'
 import { query, AggregationsResponseEntry, Content } from '/lib/xp/content'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-import { fromPartCache } from '../../../lib/ssb/cache/partCache'
-import { renderError } from '../../../lib/ssb/error/error'
 
 const {
   localize
@@ -18,6 +16,15 @@ const {
 const {
   getSubSubjects
 } = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
+const {
+  renderError
+} = __non_webpack_require__('/lib/ssb/error/error')
+const {
+  fromPartCache
+} = __non_webpack_require__('/lib/ssb/cache/partCache')
+const {
+  isEnabled
+} = __non_webpack_require__('/lib/featureToggle')
 
 exports.get = (req: XP.Request): RenderResponse | XP.Response => {
   try {
@@ -31,7 +38,8 @@ exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
 
 function renderPart(req: XP.Request): RenderResponse {
   const content: Content = getContent()
-  if (req.mode === 'edit' || req.mode === 'inline') {
+  const articleListCacheDisabled: boolean = isEnabled('deactivate-part-cache-article-list', true, 'ssb')
+  if (req.mode === 'edit' || req.mode === 'inline' || articleListCacheDisabled) {
     return getArticleList(req, content)
   } else {
     return fromPartCache(req, `${content._id}-articleList`, () => getArticleList(req, content))

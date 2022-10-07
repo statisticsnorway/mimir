@@ -87,8 +87,8 @@ function renderPart(req:XP.Request): XP.Response | RenderResponse {
     dataPathAssetUrl,
     dataServiceUrl,
     municipality: municipality,
-    municipalities: parsedMunicipalities,
     municipalityName: municipalityName,
+    municipalityList: municipalityItems,
     dropdownId: reactUuid
   }
 
@@ -122,7 +122,7 @@ interface ThymeleafModel {
   dataPathAssetUrl: string,
   dataServiceUrl: string,
   municipality: MunicipalityWithCounty | undefined,
-  municipalities: Array<MunicipalityWithCounty>,
   municipalityName: string | undefined,
+  municipalityList: Array<Municipality>
   dropdownId: string
 }
