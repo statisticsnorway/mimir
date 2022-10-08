@@ -104,8 +104,8 @@ function prepareResearchers(results: readonly Content<Employee>[]) {
   })
 }
 
-const createAlphabeticalResearchersList = (preparedResults: IPreparedResearcher[]) => {
-  const data = preparedResults.reduce((r: IObjectKeys, e: IPreparedResearcher) => {
+const createAlphabeticalResearchersList: alphabetizeResearcherList = (preparedResults: IPreparedResearcher[]) => {
+  const data: IObjectKeys = preparedResults.reduce((r: IObjectKeys, e: IPreparedResearcher) => {
     const alphabet: string = e.surname[0].toUpperCase()
     if (!r[alphabet]) {
       r[alphabet] = {
@@ -144,6 +144,8 @@ interface Area {
   href: string;
   title: string;
 }
+
+type alphabetizeResearcherList = (preparedResults: IPreparedResearcher[]) => IResearcherMap[];
 
 interface IObjectKeys {
   [key: string]: IResearcherMap;
