@@ -8,8 +8,6 @@ function ResearcherList(props) {
     researchers, total, pageHeadingPhrase, pageDescriptionPhrase
   } = props
 
-  console.log(researchers)
-
   const letterBlock = (index, alphabetLetter) => {
     return (
       <>
@@ -26,7 +24,8 @@ function ResearcherList(props) {
         <div className="contact-details">
           <Text small>
             {researcher.phone != '' ? <><Link href={'tel:' + researcher.phone}>{researcher.phone}</Link><span> / </span> </> : null}
-            {researcher.email != '' ? <><Link href={'mailto:' + researcher.email}>{researcher.email}</Link><span> / </span> </> : null}
+            {researcher.email != '' ? <><Link href={'mailto:' + researcher.email}>{researcher.email}</Link></> : null}
+            {researcher.area.title == undefined || researcher.email == '' ? null : <span> / </span>}
             {researcher.area.title != '' ? researcher.area.title : null}
           </Text>
         </div>
