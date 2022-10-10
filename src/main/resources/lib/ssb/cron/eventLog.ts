@@ -50,7 +50,7 @@ export function deleteExpiredEventLogs(): void {
   }, [])
 
   const deleteResult: Array<object> | undefined = parentNodes.reduce( (acc: Array<object>, parent) => {
-    const eventLogs: NodeQueryResponse<never> = getChildNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `${parent._id}`, 0, true)
+    const eventLogs: NodeQueryResponse = getChildNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `${parent._id}`, 0, true)
     if (eventLogs.total > maxLogsBeforeDeleting) {
       const deleteResult: Array<string> = deleteLog(path, parent, expireDate, eventLogs.total)
       acc.push({
@@ -78,7 +78,7 @@ export function deleteExpiredEventLogs(): void {
 // it might work with using count -10 if the sorting is correct as well
 function deleteLog(path: string, parent: RepoNodeExtended, expiredDate: Date, count: number): Array<string> {
   const query: string = `_parentPath = '${parent._path}' AND _ts < dateTime('${expiredDate.toISOString()}')`
-  const expiredLogs: NodeQueryResponse<never> = queryNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, {
+  const expiredLogs: NodeQueryResponse = queryNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, {
     query,
     count
   })
