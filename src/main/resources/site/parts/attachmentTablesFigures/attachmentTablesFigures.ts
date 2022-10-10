@@ -81,6 +81,7 @@ function getTablesAndFiguresComponent(page: Content<Statistics>, req: XP.Request
     title
   }
 
+
   const accordionComponent: RenderResponse = r4XpRender(
     'AttachmentTablesFigures',
     attachmentTablesFiguresProps,

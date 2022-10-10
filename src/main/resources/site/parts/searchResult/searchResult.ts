@@ -113,11 +113,11 @@ export function renderPart(req: XP.Request): RenderResponse {
 
     let bestBetResult: PreparedSearchResult | null
     if (firstBet && (firstBet.constructor !== Array)) {
-      let date: string = firstBet.data.linkedContentDate
-      let title: string = firstBet.data.linkedContentTitle ? firstBet.data.linkedContentTitle : ''
-      let href: string = firstBet.data.linkedContentHref ? firstBet.data.linkedContentHref : ''
-      const xpContentId: string | undefined = firstBet.data.linkedSelectedContentResult?.value
-      if (firstBet.data.linkedSelectedContentResult) {
+      let date: string = firstBet.data && firstBet.data.linkedContentDate ? firstBet.data.linkedContentDate : ''
+      let title: string = firstBet.data && firstBet.data.linkedContentTitle ? firstBet.data.linkedContentTitle : ''
+      let href: string = firstBet.data && firstBet.data.linkedContentHref ? firstBet.data.linkedContentHref : ''
+      const xpContentId: string | undefined = firstBet.data && firstBet.data.linkedSelectedContentResult?.value
+      if (firstBet.data && firstBet.data.linkedSelectedContentResult) {
         const xpContent: Content | null = get({
           key: xpContentId
         })
@@ -139,15 +139,15 @@ export function renderPart(req: XP.Request): RenderResponse {
 
       bestBetResult = {
         title: title,
-        preface: firstBet.data.linkedContentIngress ? firstBet.data.linkedContentIngress : '',
-        contentType: firstBet.data.linkedContentType ? localize({
-          key: `contentType.search.${firstBet.data.linkedContentType}`,
+        preface: firstBet.data && firstBet.data.linkedContentIngress ? firstBet.data.linkedContentIngress : '',
+        contentType: firstBet.data && firstBet.data.linkedContentType ? localize({
+          key: `contentType.search.${firstBet.data.linkedContentType.toLowerCase()}`,
           locale: language
         }) : '',
         url: href,
         mainSubject: getSubjectForLanguage(firstBet),
         secondaryMainSubject: '',
-        publishDate: firstBet.data.linkedContentDate ? firstBet.data.linkedContentDate : '',
+        publishDate: firstBet.data && firstBet.data.linkedContentDate ? firstBet.data.linkedContentDate : '',
         publishDateHuman: date ? formatDate(date, 'PPP', language) : ''
       }
       return bestBetResult
@@ -158,9 +158,9 @@ export function renderPart(req: XP.Request): RenderResponse {
   // if the language is english and the norwegian field exists,
   // but the english field does NOT exist, we default to the norwegian field.
   function getSubjectForLanguage(bet: BestBet): string {
-    if (language == 'en' && bet.data.linkedEnglishContentSubject) {
+    if (language == 'en' && bet.data && bet.data.linkedEnglishContentSubject) {
       return bet.data.linkedEnglishContentSubject
-    } else if (bet.data.linkedContentSubject) {
+    } else if (bet.data && bet.data.linkedContentSubject) {
       return bet.data.linkedContentSubject
     } else return ''
   }

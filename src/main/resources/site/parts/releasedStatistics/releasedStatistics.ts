@@ -24,6 +24,9 @@ const {
   getComponent,
   getContent
 } = __non_webpack_require__('/lib/xp/portal')
+const {
+  isEnabled
+} = __non_webpack_require__('/lib/featureToggle')
 
 const {
   checkLimitAndTrim
@@ -50,24 +53,11 @@ export function renderPart(req: XP.Request): RenderResponse {
   const content: Content = getContent()
   const currentLanguage: string = content.language ? content.language : 'nb'
   const part: Component<ReleasedStatisticsPartConfig> = getComponent()
+  const deactivatePartCacheEnabled: boolean = isEnabled('deactivate-partcache-released-statistics', true, 'ssb')
 
-  const groupedWithMonthNames: Array<YearReleases> = fromPartCache(req, `${content._id}-releasedStatistics`, () => {
-    // iterate and format month names
-    const numberOfReleases: number = part.config.numberOfStatistics ? parseInt(part.config.numberOfStatistics) : 8
-
-    // Get statistics
-    const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
-
-    // All statistics published today, and fill up with previous releases.
-    const releasesFiltered: Array<StatisticInListing> = filterOnPreviousReleases(releases, numberOfReleases)
-
-    // Choose the right variant and prepare the date in a way it works with the groupBy function
-    const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: StatisticInListing) => prepareStatisticRelease(release, currentLanguage))
-
-    // group by year, then month, then day
-    const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> = groupStatisticsByYearMonthAndDay(releasesPrepped)
-    return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
-  })
+  const groupedWithMonthNames : Array<YearReleases> = !deactivatePartCacheEnabled ? fromPartCache(req, `${content._id}-releasedStatistics`, () => {
+    return getGroupedWithMonthNames(part, currentLanguage)
+  }) : getGroupedWithMonthNames(part, currentLanguage)
 
   const props: PartProps = {
     releases: groupedWithMonthNames,
@@ -78,6 +68,24 @@ export function renderPart(req: XP.Request): RenderResponse {
     language: currentLanguage
   }
   return render('ReleasedStatistics', props, req)
+}
+
+function getGroupedWithMonthNames(part: Component<ReleasedStatisticsPartConfig>, currentLanguage: string): Array<YearReleases> {
+  // iterate and format month names
+  const numberOfReleases: number = part.config.numberOfStatistics ? parseInt(part.config.numberOfStatistics) : 8
+
+  // Get statistics
+  const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
+
+  // All statistics published today, and fill up with previous releases.
+  const releasesFiltered: Array<StatisticInListing> = filterOnPreviousReleases(releases, numberOfReleases)
+
+  // Choose the right variant and prepare the date in a way it works with the groupBy function
+  const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: StatisticInListing) => prepareStatisticRelease(release, currentLanguage))
+
+  // group by year, then month, then day
+  const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> = groupStatisticsByYearMonthAndDay(releasesPrepped)
+  return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
 }
 
 export function filterOnPreviousReleases(stats: Array<StatisticInListing>, numberOfReleases: number): Array<StatisticInListing> {

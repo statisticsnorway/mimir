@@ -96,4 +96,12 @@
       </section>
     </div>
   </div>
+  <div data-th-if="${!modeMunicipality}" class="municipality-link-list" style="display:none">
+    <!-- List of all municipality pages to make the pages searchable -->
+    <ul class="municipality-link-list">
+      <li data-th-each="municipality : ${municipalityList}">
+        <a class="municipality-link" data-th-href="${baseUrl} + ${municipality.id}" data-th-text="${municipality.title}"/>
+      </li>
+    </ul>
+  </div>
 </div>
