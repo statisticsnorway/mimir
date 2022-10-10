@@ -127,6 +127,11 @@ function renderPart(req: Request): React4xpResponse {
     locale: language
   })
 
+  const profilePicturePhrase: string = localize({
+    key: 'employee.profilePicture',
+    locale: language
+  })
+
   const props: EmployeeProp = {
     title: page.displayName,
     email: page.data.email || '',
@@ -151,7 +156,8 @@ function renderPart(req: Request): React4xpResponse {
     publicationsPhrase,
     pressPicturesPhrase,
     pressPicturesDescrPhrase,
-    imagePhrase
+    imagePhrase,
+    profilePicturePhrase
   }
 
   return React4xp.render('site/parts/employee/employee', props, req)
@@ -203,6 +209,7 @@ interface EmployeeProp {
   pressPicturesPhrase: string,
   pressPicturesDescrPhrase: string,
   imagePhrase: string,
+  profilePicturePhrase: string
 }
 
 interface Project {

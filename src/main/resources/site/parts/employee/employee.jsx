@@ -17,7 +17,8 @@ const Employee = (props) => {
     publicationsPhrase,
     pressPicturesPhrase,
     pressPicturesDescrPhrase,
-    imagePhrase
+    imagePhrase,
+    profilePicturePhrase
   } = props
 
   const calculateCvSize = (bytes) => {
@@ -61,7 +62,7 @@ const Employee = (props) => {
       <div className="employee-head col-12">
         {profileImages.length != 0 ?
           <div className="employee-image">
-            <img alt={`Profilbilde av ${title}`} src={props.profileImages[0]} />
+            <img alt={`${profilePicturePhrase} ${title}`} src={props.profileImages[0]} />
           </div> : null}
         <div><Title size="1">{title}</Title></div>
       </div>
@@ -226,7 +227,8 @@ Employee.propTypes = {
   publicationsPhrase: PropTypes.string,
   pressPicturesPhrase: PropTypes.string,
   pressPicturesDescrPhrase: PropTypes.string,
-  imagePhrase: PropTypes.string
+  imagePhrase: PropTypes.string,
+  profilePicturePhrase: PropTypes.string
 }
 
 export default (props) => <Employee {...props} />
