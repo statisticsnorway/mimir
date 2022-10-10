@@ -1,19 +1,16 @@
-import { Content } from 'enonic-types/content'
-import { PageContributions, Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { Content } from '/lib/xp/content'
+import { ResourceKey, render } from '/lib/thymeleaf'
 import { Phrases } from '../../../lib/types/language'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
+import { render as r4xpRender, RenderResponse } from '/lib/enonic/react4xp'
 import { Article } from '../../content-types/article/article'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { RelatedExternalLinks } from '../../mixins/relatedExternalLinks/relatedExternalLinks'
 
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const {
   getContent
 } = __non_webpack_require__('/lib/xp/portal')
@@ -24,7 +21,7 @@ const {
 
 const view: ResourceKey = resolve('./relatedExternalLinks.html')
 
-exports.get = function(req: Request): Response {
+exports.get = function(req: XP.Request): XP.Response {
   try {
     const page: Content<Article | Statistics> = getContent()
     let externalLinks: RelatedExternalLinks['relatedExternalLinkItemSet'] = page.data.relatedExternalLinkItemSet
@@ -39,9 +36,9 @@ exports.get = function(req: Request): Response {
   }
 }
 
-exports.preview = (req: Request, externalLinks: RelatedExternalLinks['relatedExternalLinkItemSet']): Response => renderPart(req, externalLinks)
+exports.preview = (req: XP.Request, externalLinks: RelatedExternalLinks['relatedExternalLinkItemSet']): XP.Response => renderPart(req, externalLinks)
 
-function renderPart(req: Request, externalLinks: RelatedExternalLinks['relatedExternalLinkItemSet']): Response {
+function renderPart(req: XP.Request, externalLinks: RelatedExternalLinks['relatedExternalLinkItemSet']): XP.Response {
   const page: Content = getContent()
 
   const phrases: Phrases = getPhrases(page)
@@ -59,8 +56,12 @@ function renderPart(req: Request, externalLinks: RelatedExternalLinks['relatedEx
     }
   }
 
-  const relatedExternalLinksComponent: React4xpObject = new React4xp('Links')
-    .setProps({
+  const body: string = render(view, {
+    label: externalLinksTitle
+  })
+
+  return r4xpRender('Links',
+    {
       links: externalLinks.map((externalLink) => {
         return {
           href: externalLink.url,
@@ -69,17 +70,9 @@ function renderPart(req: Request, externalLinks: RelatedExternalLinks['relatedEx
           isExternal: true
         }
       })
+    },
+    req,
+    {
+      body: body
     })
-    .uniqueId()
-
-  const body: string = render(view, {
-    relatedExternalLinksId: relatedExternalLinksComponent.react4xpId,
-    label: externalLinksTitle
-  })
-  return {
-    body: relatedExternalLinksComponent.renderBody({
-      body
-    }),
-    pageContributions: relatedExternalLinksComponent.renderPageContributions() as PageContributions
-  }
 }

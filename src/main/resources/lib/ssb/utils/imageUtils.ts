@@ -1,8 +1,4 @@
-import { Content, MediaImage } from 'enonic-types/content'
-
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
+import { get, Content, MediaImage } from '/lib/xp/content'
 
 export function getImageCaption(imageId: string): string | undefined {
   const imageContent: Content<MediaImage> | null = get({

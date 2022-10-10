@@ -1,31 +1,25 @@
-import { Content } from 'enonic-types/content'
-import { PageContributions, Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { Content, get, query } from '/lib/xp/content'
+import { render, ResourceKey } from '/lib/thymeleaf'
 import { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import { Phrases } from '../../../lib/types/language'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
+import { render as r4xpRender } from '/lib/enonic/react4xp'
 import { SEO } from '../../../services/news/news'
 import { Article } from '../../content-types/article/article'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { RelatedArticles } from '../../mixins/relatedArticles/relatedArticles'
 
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const {
   getContent,
   pageUrl,
   imageUrl,
   imagePlaceholder
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
 const util = __non_webpack_require__('/lib/util')
 const {
   getImageAlt
@@ -48,11 +42,10 @@ const {
 const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
-const contentLib = __non_webpack_require__('/lib/xp/content')
 
 const view: ResourceKey = resolve('./relatedArticles.html')
 
-exports.get = function(req: Request): Response {
+exports.get = function(req: XP.Request): XP.Response {
   try {
     const page: Content<Article> = getContent()
     let relatedArticles: RelatedArticles['relatedArticles'] = page.data.relatedArticles
@@ -67,10 +60,10 @@ exports.get = function(req: Request): Response {
   }
 }
 
-exports.preview = (req: Request, relatedArticles: RelatedArticles['relatedArticles']) => renderPart(req, relatedArticles)
+exports.preview = (req: XP.Request, relatedArticles: RelatedArticles['relatedArticles']) => renderPart(req, relatedArticles)
 
-function renderPart(req: Request, relatedArticles: RelatedArticles['relatedArticles']): Response {
-  const page: Content<Article> = getContent()
+function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedArticles']): XP.Response {
+  const page: Content<Article, SEO> = getContent()
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   const phrases: Phrases = getPhrases(page)
   const showPreview: boolean = (req.params.showDraft && hasWritePermissionsAndPreview(req, page._id)) as boolean
@@ -91,12 +84,17 @@ function renderPart(req: Request, relatedArticles: RelatedArticles['relatedArtic
     }
   }
 
-  const relatedArticlesComponent: React4xpObject = new React4xp('RelatedArticles')
-    .setProps({
+  const id: string = 'related-articles'
+  const body: string = render(view, {
+    relatedArticlesId: id
+  })
+
+  return r4xpRender('RelatedArticles',
+    {
       relatedArticles: relatedArticles.map((article) => {
         if (article._selected === 'article') {
           return fromRelatedArticlesCache(req, article.article.article, () => {
-            const articleContent: Content<Article, object, SEO> | null = get({
+            const articleContent: Content<Article, SEO> | null = get({
               key: article.article.article
             })
 
@@ -107,10 +105,7 @@ function renderPart(req: Request, relatedArticles: RelatedArticles['relatedArtic
             let imageSrc: string | undefined
             let imageAlt: string | undefined = ' '
 
-            if (!articleContent.x ||
-                !articleContent.x['com-enonic-app-metafields'] ||
-                !articleContent.x['com-enonic-app-metafields']['meta-data'] ||
-                !articleContent.x['com-enonic-app-metafields']['meta-data'].seoImage) {
+            if (!articleContent.x['com-enonic-app-metafields']['meta-data'].seoImage) {
               imageSrc = imagePlaceholder({
                 width: 320,
                 height: 180
@@ -168,24 +163,16 @@ function renderPart(req: Request, relatedArticles: RelatedArticles['relatedArtic
       showAllAriaLabel: phrases['button.showAll'],
       articlePluralName: phrases.articlePluralName,
       showingPhrase: phrases['publicationArchive.showing']
+    },
+    req,
+    {
+      id: id,
+      body: body
     })
-    .setId('related-articles')
-    .uniqueId()
-
-  const body: string = render(view, {
-    relatedArticlesId: relatedArticlesComponent.react4xpId,
-    heading: phrases.relatedArticlesHeading
-  })
-  return {
-    body: relatedArticlesComponent.renderBody({
-      body
-    }),
-    pageContributions: relatedArticlesComponent.renderPageContributions() as PageContributions
-  }
 }
 
 
-function getSubTitle(articleContent: Content<Article, object, SEO> | null, phrases: Phrases, language: string): string | undefined {
+function getSubTitle(articleContent: Content<Article, SEO> | null, phrases: Phrases, language: string): string | undefined {
   if (articleContent) {
     let type: string = ''
     if (articleContent.type === `${app.name}:article`) {
@@ -203,7 +190,7 @@ function getSubTitle(articleContent: Content<Article, object, SEO> | null, phras
 }
 
 function addDsArticle(
-  page: Content<Statistics | Article, object, SEO>,
+  page: Content<Statistics | Article, SEO>,
   relatedArticles: RelatedArticles['relatedArticles'],
   showPreview: boolean): RelatedArticles['relatedArticles'] {
   const statisticId: string = page._id
@@ -228,14 +215,14 @@ function addDsArticle(
 
 function getDsArticle(statisticId: string, statisticPublishDate: string): RelatedArticle | undefined {
   statisticPublishDate = moment(new Date(statisticPublishDate)).format('YYYY-MM-DD')
-  const articleContent: Array<Content<Statistics | Article, object, SEO>> = contentLib.query({
+  const articleContent: Array<Content<Statistics | Article, SEO>> = query({
     count: 1,
     sort: 'publish.from DESC',
     query: `data.associatedStatistics.XP.content = "${statisticId}" AND publish.from LIKE "${statisticPublishDate}*" `,
     contentTypes: [
       `${app.name}:article`
     ]
-  }).hits as unknown as Array<Content<Statistics | Article, object, SEO>>
+  }).hits as unknown as Array<Content<Statistics | Article, SEO>>
 
   const articleObject: RelatedArticle | undefined = articleContent.length > 0 ? {
     _selected: 'article',

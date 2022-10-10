@@ -21,7 +21,7 @@
                 <option value="barn-og-unge">Vis på Barn og unge</option>
                 <option value="showOnAll">Vis på alle sider</option>
             </config>
-            <default>one</default>
+            <default>kommunefakta</default>
         </input>
         <input type="CustomSelector" name="municipalCodes">
             <label>Velg hvilken kommuner det gjelder her.</label>

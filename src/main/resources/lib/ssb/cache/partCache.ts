@@ -1,11 +1,7 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { Content } from 'enonic-types/content'
-import { Cache } from 'enonic-types/cache'
-import { Request } from 'enonic-types/controller'
+import { Content } from '/lib/xp/content'
+import { newCache, Cache } from '/lib/cache'
 
-const {
-  newCache
-} = __non_webpack_require__('/lib/cache')
 const {
   cacheLog
 } = __non_webpack_require__('/lib/ssb/utils/serverLog')
@@ -19,7 +15,7 @@ const draftPartCache: Cache = newCache({
   size: 1000
 })
 
-export function fromPartCache<T>(req: Request, key: string, fallback: () => T): T {
+export function fromPartCache<T>(req: XP.Request, key: string, fallback: () => T): T {
   const partCache: Cache = req.branch === 'master' ? masterPartCache : draftPartCache
   return partCache.get(key, () => {
     cacheLog(`added ${key} to part cache (${req.branch})`)
@@ -64,7 +60,7 @@ export function clearPartFromPartCache(part: string): void {
 }
 
 export interface SSBPartCacheLibrary {
-  fromPartCache: <T>(req: Request, key: string, fallback: () => T) => T;
+  fromPartCache: <T>(req: XP.Request, key: string, fallback: () => T) => T;
   clearPartCache: (content: Content, branch: string) => void;
   completelyClearPartCache: (branch: string) => void;
   clearPartFromPartCache: (part: string) => void;

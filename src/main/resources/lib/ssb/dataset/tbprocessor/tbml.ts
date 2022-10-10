@@ -1,4 +1,4 @@
-import { HttpRequestParams, HttpResponse } from 'enonic-types/http'
+import { request, HttpRequestParams, HttpResponse } from '/lib/http-client'
 import { TbmlDataRaw,
   TableRowRaw,
   TableCellRaw,
@@ -14,9 +14,6 @@ import { TbmlDataRaw,
   Note } from '../../../types/xmlParser'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
-const {
-  request
-} = __non_webpack_require__('/lib/http-client')
 const {
   logUserDataQuery,
   Events

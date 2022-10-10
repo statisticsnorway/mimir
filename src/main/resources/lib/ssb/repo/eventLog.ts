@@ -1,4 +1,4 @@
-import { NodeCreateParams, NodeQueryHit, NodeQueryResponse, RepoNode } from 'enonic-types/node'
+import { NodeCreateParams, NodeQueryHit, NodeQueryResponse, RepoNode } from '/lib/xp/node'
 import { EventInfo, QueryInfo } from './query'
 
 const {

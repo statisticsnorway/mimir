@@ -1,5 +1,5 @@
 import { Dataset, JSONstat as JSONstatType } from '../../types/jsonstat-toolkit'
-import { Content } from 'enonic-types/content'
+import { query, get as getContent, Content } from '/lib/xp/content'
 import { CalculatorConfig } from '../../../site/content-types/calculatorConfig/calculatorConfig'
 import { GenericDataImport } from '../../../site/content-types/genericDataImport/genericDataImport'
 import { DatasetRepoNode } from '../repo/dataset'
@@ -9,9 +9,6 @@ import { DatasetRepoNode } from '../repo/dataset'
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 
-const {
-  query, get: getContent
-} = __non_webpack_require__('/lib/xp/content')
 const {
   datasetOrUndefined
 } = __non_webpack_require__('/lib/ssb/cache/cache')

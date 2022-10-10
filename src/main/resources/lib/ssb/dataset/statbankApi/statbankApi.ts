@@ -1,5 +1,5 @@
 import { DatasetRepoNode, DataSource as DataSourceType } from '../../repo/dataset'
-import { Content } from 'enonic-types/content'
+import { Content } from '/lib/xp/content'
 import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
 import { JSONstat } from '../../../types/jsonstat-toolkit'
 

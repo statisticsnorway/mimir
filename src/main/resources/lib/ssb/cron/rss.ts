@@ -1,7 +1,7 @@
 import { StatisticInListing } from '../dashboard/statreg/types'
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { Content } from 'enonic-types/content'
-import { HttpResponse } from 'enonic-types/http'
+import { Content } from '/lib/xp/content'
+import { request, HttpResponse } from '/lib/http-client'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { TbmlDataUniform, XmlParser } from '../../types/xmlParser'
 import { DatasetRepoNode, DataSource as DataSourceType } from '../repo/dataset'
@@ -15,9 +15,6 @@ const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
-const {
-  request
-} = __non_webpack_require__('/lib/http-client')
 const {
   getTableIdFromTbprocessor
 } = __non_webpack_require__('/lib/ssb/dataset/tbprocessor/tbprocessor')

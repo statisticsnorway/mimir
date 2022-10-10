@@ -1,11 +1,8 @@
-import { HttpResponse, HttpRequestParams } from 'enonic-types/http'
+import { request, HttpResponse, HttpRequestParams } from '/lib/http-client'
 import { JSONstat } from '../../../types/jsonstat-toolkit'
 const {
   Events, logUserDataQuery
 } = __non_webpack_require__('/lib/ssb/repo/query')
-const {
-  request
-} = __non_webpack_require__('/lib/http-client')
 const {
   sleep
 } = __non_webpack_require__('/lib/xp/task')

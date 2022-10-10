@@ -1,11 +1,9 @@
-import { Content } from 'enonic-types/content'
-import { PageContributions, Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { Content } from '/lib/xp/content'
 import { allMonths, lastPeriodKpi, monthLabel, nextPeriod } from '../../../lib/ssb/utils/calculatorUtils'
 import { CalculatorPeriod } from '../../../lib/types/calculator'
 import { Dataset } from '../../../lib/types/jsonstat-toolkit'
 import { Language, Phrases } from '../../../lib/types/language'
-import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
+import {render, RenderResponse} from '/lib/enonic/react4xp'
 import { CalculatorConfig } from '../../content-types/calculatorConfig/calculatorConfig'
 import { KpiCalculatorPartConfig } from './kpiCalculator-part-config'
 import { DropdownItems as MonthDropdownItems } from '../../../lib/types/components'
@@ -16,13 +14,11 @@ const {
   serviceUrl,
   pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const {
   getLanguage
 } = __non_webpack_require__('/lib/ssb/utils/language')
@@ -33,9 +29,8 @@ const {
   fromPartCache
 } = __non_webpack_require__('/lib/ssb/cache/partCache')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
-const view: ResourceKey = resolve('./kpiCalculator.html')
 
-exports.get = function(req: Request): Response {
+exports.get = function(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -43,7 +38,7 @@ exports.get = function(req: Request): Response {
   }
 }
 
-exports.preview = function(req: Request): Response {
+exports.preview = function(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -51,24 +46,24 @@ exports.preview = function(req: Request): Response {
   }
 }
 
-function renderPart(req: Request): Response {
+function renderPart(req: XP.Request): XP.Response {
   const page: Content = getContent()
-  let kpiCalculator: React4xpResponse | undefined
+  let kpiCalculator: RenderResponse | undefined
   if (req.mode === 'edit' || req.mode === 'inline') {
-    kpiCalculator = getKpiCalculatorComponent(page)
+    kpiCalculator = getKpiCalculatorComponent(req, page)
   } else {
     kpiCalculator = fromPartCache(req, `${page._id}-kpiCalculator`, () => {
-      return getKpiCalculatorComponent(page)
+      return getKpiCalculatorComponent(req, page)
     })
   }
 
   return {
     body: kpiCalculator.body,
-    pageContributions: kpiCalculator.pageContributions as PageContributions
+    pageContributions: kpiCalculator.pageContributions as XP.PageContributions
   }
 }
 
-function getKpiCalculatorComponent(page: Content): React4xpResponse {
+function getKpiCalculatorComponent(req: XP.Request, page: Content): RenderResponse {
   const config: KpiCalculatorPartConfig = getComponent().config
   const frontPage: boolean = !!config.frontPage
   const frontPageIngress: string | null | undefined = config.ingressFrontpage && config.ingressFrontpage
@@ -102,8 +97,8 @@ function getKpiCalculatorComponent(page: Content): React4xpResponse {
     id: config.kpiCalculatorArticle
   })
 
-  const kpiCalculatorComponent: React4xpObject = new React4xp('KpiCalculator')
-    .setProps({
+  return render('KpiCalculator',
+      {
       kpiServiceUrl: serviceUrl({
         service: 'kpi'
       }),
@@ -116,15 +111,9 @@ function getKpiCalculatorComponent(page: Content): React4xpResponse {
       lastUpdated,
       frontPage,
       frontPageIngress
-    })
-    .setId('kpiCalculatorId')
-    .uniqueId()
-  return {
-    body: kpiCalculatorComponent.renderBody({
-      body: render(view, {
-        kpiCalculatorId: kpiCalculatorComponent.react4xpId
+    },
+      req,
+      {
+        body: '<section class="xp-part part-kpi-calculator container"></section>'
       })
-    }),
-    pageContributions: kpiCalculatorComponent.renderPageContributions({})
-  }
 }

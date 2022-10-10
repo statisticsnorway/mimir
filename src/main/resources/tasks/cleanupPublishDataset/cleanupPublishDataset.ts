@@ -23,9 +23,7 @@ const {
   JobStatus,
   getJobLog
 } = __non_webpack_require__('/lib/ssb/repo/job')
-const {
-  send
-} = __non_webpack_require__('/lib/xp/event')
+import { send } from '/lib/xp/event'
 
 exports.run = function(props: CleanupPublishDatasetConfig): void {
   const {

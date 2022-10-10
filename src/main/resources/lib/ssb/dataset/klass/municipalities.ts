@@ -1,6 +1,5 @@
 import { SiteConfig } from '../../../../site/site-config'
-import { Content } from 'enonic-types/content'
-import { Request } from 'enonic-types/controller'
+import { get as getContent, Content } from '/lib/xp/content'
 import { County } from './counties'
 import { DatasetRepoNode } from '../../repo/dataset'
 import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
@@ -8,9 +7,6 @@ import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
 const {
   sanitize
 } = __non_webpack_require__('/lib/xp/common')
-const {
-  get: getContent
-} = __non_webpack_require__('/lib/xp/content')
 const {
   getSiteConfig
 } = __non_webpack_require__('/lib/xp/portal')
@@ -214,12 +210,12 @@ export interface MunicipalitiesLib {
   query: (queryString: string) => Array<MunicipalCode>;
   createPath (municipalName: string, countyName?: string): string;
   municipalsWithCounties (): Array<MunicipalityWithCounty>;
-  getMunicipality (req: Request): MunicipalityWithCounty|undefined;
+  getMunicipality (req: XP.Request): MunicipalityWithCounty|undefined;
   getMunicipalityByName: (municipalities: Array<MunicipalityWithCounty>, municipalityName: string) => MunicipalityWithCounty|undefined;
   removeCountyFromMunicipalityName: (municipalityName: string) => string;
 }
 
-interface RequestWithCode extends Request {
+interface RequestWithCode extends XP.Request {
   code: string;
 }
 

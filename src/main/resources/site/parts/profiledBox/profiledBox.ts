@@ -1,9 +1,9 @@
-import { Content } from 'enonic-types/content'
-import { PageContributions, Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { Content } from '/lib/xp/content'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
+import { render as r4xpRender, RenderResponse } from '/lib/enonic/react4xp'
 import { ProfiledBoxPartConfig } from './profiledBox-part-config'
+import { render, ResourceKey } from '/lib/thymeleaf'
+import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
 const {
   getContent,
@@ -17,13 +17,10 @@ const {
 const {
   getImageAlt
 } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const view: ResourceKey = resolve('./profiledBox.html')
 
-exports.get = function(req: Request): Response {
+const view: ResourceKey = resolve('profiledBox.html')
+
+exports.get = function(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -31,14 +28,18 @@ exports.get = function(req: Request): Response {
   }
 }
 
-exports.preview = (req: Request): Response => renderPart(req)
+exports.preview = (req: XP.Request): XP.Response => renderPart(req)
 
-function renderPart(req: Request): Response {
+function renderPart(req: XP.Request): XP.Response {
   const page: Content = getContent()
   const config: ProfiledBoxPartConfig = getComponent().config
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   const urlContentSelector: ProfiledBoxPartConfig['urlContentSelector'] = config.urlContentSelector
   const titleSize: string = getTitleSize(config.title)
+  const id: string = 'profiled-box-' + randomUnsafeString()
+  const body: string = render(view, {
+    profiledBoxId: id
+  })
 
   const props: ProfiledBoxProps = {
     imgUrl: imageUrl({
@@ -57,21 +58,14 @@ function renderPart(req: Request): Response {
     ariaDescribedBy: 'subtitle'
   }
 
-  const profiledBox: React4xpObject = new React4xp('site/parts/profiledBox/profiledBox')
-    .setProps(props)
-    .setId('profiled-box')
-    .uniqueId()
-
-  const body: string = render(view, {
-    profiledBoxId: profiledBox.react4xpId
-  })
-
-  return {
-    body: profiledBox.renderBody({
-      body
-    }),
-    pageContributions: profiledBox.renderPageContributions() as PageContributions
-  }
+  return r4xpRender('site/parts/profiledBox/profiledBox',
+    props,
+    req,
+    {
+      id: id,
+      body: body
+    }
+  )
 }
 
 function getLink(urlContentSelector: ProfiledBoxPartConfig['urlContentSelector']): string | undefined {

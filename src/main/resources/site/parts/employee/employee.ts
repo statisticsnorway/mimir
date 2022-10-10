@@ -1,32 +1,27 @@
-import { Content } from 'enonic-types/content'
-import { Request, Response } from 'enonic-types/controller'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import { Content, get } from '/lib/xp/content'
 import { Employee } from '../../content-types/employee/employee'
 import { DefaultPageConfig } from '../../pages/default/default-page-config'
+import { localize } from '/lib/xp/i18n'
+import {
+  getContent, pageUrl, imageUrl, attachmentUrl
+} from '/lib/xp/portal'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
+import { Page } from 'site/content-types/page/page'
+import { SEO } from 'services/news/news'
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  getContent, pageUrl, imageUrl, attachmentUrl
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
 const {
   data: {
     forceArray
   }
 } = __non_webpack_require__('/lib/util')
 const {
-  localize
-} = __non_webpack_require__('/lib/xp/i18n')
-const {
   hasPath
 } = __non_webpack_require__('/lib/vendor/ramda')
 
-exports.get = function(req: Request): React4xpResponse | Response {
+exports.get = function(req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -34,9 +29,9 @@ exports.get = function(req: Request): React4xpResponse | Response {
   }
 }
 
-exports.preview = (req: Request): React4xpResponse | Response => renderPart(req)
+exports.preview = (req: XP.Request): RenderResponse | XP.Response => renderPart(req)
 
-function renderPart(req: Request): React4xpResponse {
+function renderPart(req: XP.Request): RenderResponse {
   const page: Content<Employee> = getContent()
   const language: string = page.language ? page.language : 'nb'
   const projectIds: Employee['projects'] = page.data.projects
@@ -154,19 +149,16 @@ function renderPart(req: Request): React4xpResponse {
     imagePhrase
   }
 
-  return React4xp.render('site/parts/employee/employee', props, req)
+  return render('site/parts/employee/employee', props, req)
 }
 
 function parseProject(projects: Employee['projects']): Array<Project> {
   const projectsIds: Array<string> = projects ? forceArray(projects) : []
   return projectsIds.map((projectId) => {
-    const relatedProjectContent: Content<DefaultPageConfig, object, SEO> | null = projectId ? get({
+    const relatedProjectContent: Content<Page, SEO> | null = projectId ? get({
       key: projectId
     }) : null
-    let seoDescription: string | undefined
-    if (relatedProjectContent && hasPath(['x', 'com-enonic-app-metafields', 'meta-data', 'seoDescription'], relatedProjectContent)) {
-      seoDescription = relatedProjectContent.x['com-enonic-app-metafields']['meta-data'].seoDescription
-    }
+    const seoDescription: string | undefined = relatedProjectContent?.x['com-enonic-app-metafields']['meta-data'].seoDescription as string
 
     return {
       title: relatedProjectContent ? relatedProjectContent.displayName : '',
@@ -210,11 +202,6 @@ interface Project {
     title: string;
     description: string;
   }
-
-interface SEO {
-  seoDescription?: string;
-}
-
 interface Area {
   href: string;
   title: string;

@@ -1,28 +1,22 @@
-import { PageContributions, Request, Response } from 'enonic-types/controller'
-import { React4xp, React4xpObject, React4xpPageContributionOptions, React4xpResponse } from '../../../lib/types/react4xp'
-import { Component } from 'enonic-types/portal'
+import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
+import { getComponent,
+  getContent,
+  serviceUrl,
+  pageUrl,
+  Component } from '/lib/xp/portal'
 import { BkibolCalculatorPartConfig } from './bkibolCalculator-part-config'
 import { Dataset, Dimension } from '../../../lib/types/jsonstat-toolkit'
-import { Content } from 'enonic-types/content'
+import { Content } from '/lib/xp/content'
 import { CalculatorConfig } from '../../content-types/calculatorConfig/calculatorConfig'
 import { Language, Phrases } from '../../../lib/types/language'
 import { allMonths, nextPeriod } from '../../../lib/ssb/utils/calculatorUtils'
 import { CalculatorPeriod } from '../../../lib/types/calculator'
-import { ResourceKey } from 'enonic-types/thymeleaf'
 import { DropdownItem, DropdownItems } from '../../../lib/types/components'
-const {
-  getComponent,
-  getContent,
-  serviceUrl,
-  pageUrl
-} = __non_webpack_require__( '/lib/xp/portal')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const {
   getLanguage
 } = __non_webpack_require__( '/lib/ssb/utils/language')
@@ -33,9 +27,8 @@ const {
   fromPartCache
 } = __non_webpack_require__('/lib/ssb/cache/partCache')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
-const view: ResourceKey = resolve('./bkibolCalculator.html') as ResourceKey
 
-exports.get = function(req: Request): React4xpResponse | Response {
+exports.get = function(req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -43,7 +36,7 @@ exports.get = function(req: Request): React4xpResponse | Response {
   }
 }
 
-exports.preview = function( req: Request ) {
+exports.preview = function(req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -52,25 +45,21 @@ exports.preview = function( req: Request ) {
 }
 
 
-function renderPart(req: Request): React4xpResponse {
+function renderPart(req: XP.Request): RenderResponse {
   const page: Content<BkibolCalculatorPartConfig> = getContent()
-  let bkibolCalculator: CalculatorComponent
+  let bkibolCalculator: RenderResponse
   if (req.mode === 'edit' || req.mode === 'inline') {
-    bkibolCalculator = getBkibolCalculatorComponent(page)
+    bkibolCalculator = getBkibolCalculatorComponent(req, page)
   } else {
     bkibolCalculator = fromPartCache(req, `${page._id}-bkibolCalculator`, () => {
-      return getBkibolCalculatorComponent(page)
+      return getBkibolCalculatorComponent(req, page)
     })
   }
 
-  const pageContributions: string = bkibolCalculator.component.renderPageContributions({})
-  return {
-    body: bkibolCalculator.body,
-    pageContributions
-  }
+  return bkibolCalculator
 }
 
-function getBkibolCalculatorComponent(page: Content<BkibolCalculatorPartConfig>): CalculatorComponent {
+function getBkibolCalculatorComponent(req: XP.Request, page: Content<BkibolCalculatorPartConfig>): RenderResponse {
   const part: Component<BkibolCalculatorPartConfig> = getComponent()
   const language: Language = getLanguage(page) as Language
   const phrases: Phrases = language.phrases as Phrases
@@ -103,8 +92,9 @@ function getBkibolCalculatorComponent(page: Content<BkibolCalculatorPartConfig>)
     id: part.config.bkibolCalculatorArticle
   })
 
-  const bkibolCalculator: React4xpObject = new React4xp('BkibolCalculator')
-    .setProps({
+  return r4XpRender(
+    'BkibolCalculator',
+    {
       bkibolServiceUrl: serviceUrl({
         service: 'bkibol'
       }),
@@ -115,19 +105,11 @@ function getBkibolCalculatorComponent(page: Content<BkibolCalculatorPartConfig>)
       nextPublishText,
       lastNumberText,
       lastUpdated
+    },
+    req,
+    {
+      body: `<section class="xp-part part-bkibol-calculator container"></section>`
     })
-    .setId('bkibolCalculatorId')
-    .uniqueId()
-
-  const body: string = render(view, {
-    bkibolCalculatorId: bkibolCalculator.react4xpId
-  })
-  return {
-    component: bkibolCalculator,
-    body: bkibolCalculator.renderBody({
-      body
-    })
-  }
 }
 
 function lastPeriod(bkibolData: Dataset | null): CalculatorPeriod {
@@ -152,9 +134,4 @@ function monthLabel(months: DropdownItems, language: string, month: number): str
     return language === 'en' ? monthLabel.title : monthLabel.title.toLowerCase()
   }
   return ''
-}
-
-interface CalculatorComponent {
-  component: React4xpObject;
-  body: string;
 }

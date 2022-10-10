@@ -1,6 +1,6 @@
-import { NodeQueryParams, NodeQueryResponse, RepoNode } from 'enonic-types/node'
+import { NodeQueryParams, NodeQueryResponse, RepoNode } from '/lib/xp/node'
 import { EditorCallback } from './eventLog'
-import { User } from 'enonic-types/auth'
+import { getUser, User } from '/lib/xp/auth'
 import { DataSourceInfo, RSSFilterLogData } from '../cron/rss'
 const {
   modifyNode,
@@ -12,9 +12,6 @@ const {
   EVENT_LOG_BRANCH,
   createEventLog
 } = __non_webpack_require__('/lib/ssb/repo/eventLog')
-const {
-  getUser
-} = __non_webpack_require__('/lib/xp/auth')
 
 export enum JobStatus {
   STARTED = 'STARTED',

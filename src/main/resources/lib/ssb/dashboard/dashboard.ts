@@ -1,17 +1,19 @@
+import { ContextAttributes } from '*/lib/xp/context'
+
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { CreateOrUpdateStatus } from '../dataset/dataset'
-import { Content } from 'enonic-types/content'
+import { get as getContent, query, Content } from '/lib/xp/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { Events, QueryInfoNode } from '../repo/query'
 import { EVENT_LOG_REPO, EVENT_LOG_BRANCH, LogSummary } from '../repo/eventLog'
-import { NodeQueryHit, RepoNode } from 'enonic-types/node'
-import { RunContext } from 'enonic-types/context'
+import { NodeQueryHit, RepoNode } from '/lib/xp/node'
+import { run, RunContext } from '/lib/xp/context'
 import { Socket, SocketEmitter } from '../../types/socket'
 import { JSONstat } from '../../types/jsonstat-toolkit'
 import { TbmlDataUniform } from '../../types/xmlParser'
 import { DatasetRepoNode } from '../repo/dataset'
 import { withConnection } from '../repo/common'
-import { User } from 'enonic-types/auth'
+import { User } from '/lib/xp/auth'
 import { CalculatorRefreshResult, DatasetRefreshResult, JobInfoNode, JOB_STATUS_COMPLETE, JOB_STATUS_STARTED, StatisticsPublishResult } from '../repo/job'
 import { StatisticInListing } from './statreg/types'
 import { StatRegRefreshResult } from '../repo/statreg'
@@ -47,18 +49,11 @@ const {
   UNPUBLISHED_DATASET_BRANCH
 } = __non_webpack_require__('/lib/ssb/repo/dataset')
 const {
-  get: getContent,
-  query
-} = __non_webpack_require__('/lib/xp/content')
-const {
   getParentType
 } = __non_webpack_require__('/lib/ssb/utils/parentUtils')
 const {
   localize
 } = __non_webpack_require__('/lib/xp/i18n')
-const {
-  run
-} = __non_webpack_require__('/lib/xp/context')
 const {
   fromDatasetRepoCache
 } = __non_webpack_require__('/lib/ssb/cache/cache')
@@ -193,7 +188,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   })
 
   socket.on('dashboard-refresh-dataset', (options: RefreshDatasetOptions) => {
-    const context: RunContext = {
+    const context: RunContext<ContextAttributes> = {
       branch: 'master',
       repository: ENONIC_CMS_DEFAULT_REPO,
       principals: ['role:system.admin'],

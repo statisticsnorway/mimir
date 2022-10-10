@@ -1,24 +1,18 @@
-import { User } from 'enonic-types/auth'
-import { NodeCreateParams,
+import { getUser, User } from '/lib/xp/auth'
+import { connect,
+  NodeCreateParams,
   NodeQueryParams,
   NodeQueryResponse,
   RepoConnection,
-  RepoNode } from 'enonic-types/node'
+  RepoNode } from '/lib/xp/node'
 import { EditorCallback } from './eventLog'
+import { run } from '/lib/xp/context'
+import { PrincipalKeyRole } from '*/lib/xp/auth'
 
-const {
-  getUser
-} = __non_webpack_require__('/lib/xp/auth')
-const {
-  run
-} = __non_webpack_require__('/lib/xp/context')
-const {
-  connect
-} = __non_webpack_require__('/lib/xp/node')
 
 const ENONIC_PROJECT_ID: string = app.config && app.config['ssb.project.id'] ? app.config['ssb.project.id'] : 'default'
 export const ENONIC_CMS_DEFAULT_REPO: string = `com.enonic.cms.${ENONIC_PROJECT_ID}`
-const SYSADMIN_ROLE: string = 'role:system.admin'
+const SYSADMIN_ROLE: PrincipalKeyRole = 'role:system.admin'
 
 export type ContextCallback<T> = () => T;
 export type UserContextCallback<T> = (user: User | null) => T;

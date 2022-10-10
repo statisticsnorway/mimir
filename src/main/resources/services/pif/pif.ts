@@ -1,6 +1,5 @@
-import { Content } from 'enonic-types/content'
-import { Response } from 'enonic-types/controller'
-import { HttpRequestParams } from 'enonic-types/http'
+import { Content } from '/lib/xp/content'
+import { HttpRequestParams } from '/lib/http-client'
 import { CalculatorConfig } from '../../site/content-types/calculatorConfig/calculatorConfig'
 import { Dataset } from '../../lib/types/jsonstat-toolkit'
 const {
@@ -10,7 +9,7 @@ const {
   getCalculatorConfig, getPifDataset, isChronological, getChangeValue
 } = __non_webpack_require__('/lib/ssb/dataset/calculator')
 
-function get(req: HttpRequestParams): Response {
+function get(req: HttpRequestParams): XP.Response {
   const scopeCode: string | undefined = req.params?.scopeCode || '2'
   const productGroup: string | undefined = req.params?.productGroup || 'SITCT'
   const startValue: string | undefined = req.params?.startValue

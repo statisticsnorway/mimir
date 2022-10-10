@@ -1,6 +1,8 @@
 import { cronContext } from '../../lib/ssb/cron/cron'
 import { CleanupPublishDatasetConfig } from '../cleanupPublishDataset/cleanupPublishDataset-config'
 import { PublishDatasetConfig } from './publishDataset-config'
+import { send } from '/lib/xp/event'
+
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 
 const {
@@ -11,18 +13,14 @@ const {
   DATASET_BRANCH
 } = __non_webpack_require__('/lib/ssb/repo/dataset')
 const {
-  send
-} = __non_webpack_require__('/lib/xp/event')
-const {
   progress,
   sleep
 } = __non_webpack_require__('/lib/xp/task')
 const {
   create: createScheduledJob
 } = __non_webpack_require__('/lib/xp/scheduler')
-const {
-  run
-} = __non_webpack_require__('/lib/xp/context')
+
+import { run } from '/lib/xp/context'
 
 exports.run = function(props: PublishDatasetConfig): void {
   const {

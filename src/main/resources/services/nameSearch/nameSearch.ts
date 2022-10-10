@@ -1,29 +1,23 @@
-import { HttpRequestParams, HttpResponse } from 'enonic-types/http'
-import { Request, Response } from 'enonic-types/controller'
-import { Dataset } from '../../lib/types/jsonstat-toolkit'
-import { Content } from 'enonic-types/content'
+import { request, HttpRequestParams, HttpResponse } from '/lib/http-client'
+import { Content } from '/lib/xp/content'
 import { CalculatorConfig } from '../../site/content-types/calculatorConfig/calculatorConfig'
 import { DatasetRepoNode } from '../../lib/ssb/repo/dataset'
-
-const {
-  getCalculatorConfig, getNameSearchGraphData
-} = __non_webpack_require__('/lib/ssb/dataset/calculator')
 
 /* eslint-disable new-cap */
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
-
 import validator from 'validator'
+
 const {
-  request
-} = __non_webpack_require__('/lib/http-client')
+  getCalculatorConfig, getNameSearchGraphData
+} = __non_webpack_require__('/lib/ssb/dataset/calculator')
 const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
 
 
-export function get(req: Request): Response {
+export function get(req: XP.Request): XP.Response {
   if (!req.params.name) {
     return {
       body: {

@@ -1,6 +1,5 @@
-import { Content } from 'enonic-types/content'
-import { Request, Response } from 'enonic-types/controller'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import { get, Content } from '/lib/xp/content'
+import {render, RenderResponse} from '/lib/enonic/react4xp'
 import { Accordion } from '../../content-types/accordion/accordion'
 import { AccordionConfig } from '../../macros/accordion/accordion-config'
 
@@ -9,9 +8,6 @@ const {
     forceArray
   }
 } = __non_webpack_require__('/lib/util')
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
 const {
   getComponent,
   getContent,
@@ -23,9 +19,9 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-exports.get = function(req: Request): React4xpResponse | Response {
+
+exports.get = function(req: XP.Request): RenderResponse | XP.Response {
   try {
     const config: AccordionConfig = getComponent().config
     const accordionIds: Array<string> = config ? forceArray(config.accordion) : []
@@ -35,7 +31,7 @@ exports.get = function(req: Request): React4xpResponse | Response {
   }
 }
 
-exports.preview = function(req: Request, accordionIds: Array<string> | string): React4xpResponse | Response {
+exports.preview = function(req: XP.Request, accordionIds: Array<string> | string): RenderResponse | XP.Response {
   try {
     const page: Content<Accordion> = getContent()
     return page.type === `${app.name}:accordion` ? renderPart(req, [accordionIds as string]) : renderPart(req, accordionIds as Array<string>)
@@ -44,7 +40,7 @@ exports.preview = function(req: Request, accordionIds: Array<string> | string): 
   }
 }
 
-function renderPart(req: Request, accordionIds: Array<string>): React4xpResponse {
+function renderPart(req: XP.Request, accordionIds: Array<string>): RenderResponse {
   const accordions: Array<AccordionData> = []
 
   accordionIds.map((key) => {
@@ -90,7 +86,7 @@ function renderPart(req: Request, accordionIds: Array<string>): React4xpResponse
     accordions
   }
 
-  return React4xp.render('Accordion', props, req)
+  return render('Accordion', props, req)
 }
 
 export interface AccordionData {
