@@ -1,24 +1,17 @@
-import { Request, Response } from 'enonic-types/controller'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { Content, QueryResponse } from 'enonic-types/content'
+import { Content, QueryResponse, get, query } from '/lib/xp/content'
 import { Employee } from '../../content-types/employee/employee'
 import { DefaultPageConfig } from '../../pages/default/default-page-config'
+import { getContent, pageUrl } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
+import { RenderResponse, render } from '/lib/enonic/react4xp'
+import { Page } from '../../content-types/page/page'
 
-const {
-  getContent, pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-  get, query
-} = __non_webpack_require__('/lib/xp/content')
-const {
-  localize
-} = __non_webpack_require__('/lib/xp/i18n')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-exports.get = (req: Request): React4xpResponse | Response => {
+
+exports.get = (req: XP.Request): RenderResponse | XP.Response => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -26,13 +19,13 @@ exports.get = (req: Request): React4xpResponse | Response => {
   }
 }
 
-exports.preview = (req: Request): React4xpResponse => renderPart(req)
+exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
 
-function renderPart(req: Request): React4xpResponse {
-  const content: Content = getContent()
+function renderPart(req: XP.Request): RenderResponse {
+  const content: Content<Page, object> = getContent()
   const language: string = content.language ? content.language : 'nb'
 
-  const queryResults: QueryResponse<Employee> = getResearchers()
+  const queryResults: QueryResponse<Employee, object> = getResearchers()
   const preparedResults: Array<IPreparedResearcher> = prepareResearchers(queryResults.hits)
   const alphabeticalResearchersList: Array<IResearcherMap> = createAlphabeticalResearchersList(preparedResults)
 
@@ -53,7 +46,7 @@ function renderPart(req: Request): React4xpResponse {
     pageDescriptionPhrase
   }
 
-  return React4xp.render('site/parts/researcherList/researcherList', props, req)
+  return render('site/parts/researcherList/researcherList', props, req)
 }
 
 function getResearchers() {
