@@ -145,7 +145,7 @@ interface Area {
   title: string;
 }
 
-type alphabetizeResearcherList = (preparedResults: IPreparedResearcher[]) => IResearcherMap[];
+type alphabetizeResearcherList = (preparedResults: IPreparedResearcher[]) => IResearcherMap[]
 
 interface IObjectKeys {
   [key: string]: IResearcherMap;
