@@ -1,4 +1,4 @@
-import { get, getChildren, query, Content, Image, QueryResponse } from '/lib/xp/content'
+import { get, getChildren, query, Content, QueryResponse, MediaImage } from '/lib/xp/content'
 import { MenuItem } from '../../../site/content-types/menuItem/menuItem'
 import { Footer } from '../../../site/content-types/footer/footer'
 import { Header } from '../../../site/content-types/header/header'
@@ -50,7 +50,7 @@ export function createMenuTree(menuItemId: string): Array<MenuItemParsed> {
 
     const parsedMenu: Array<MenuItemParsed> = menuContentChildren.hits.map((menuItem) => createMenuBranch(menuItem))
     const flatMenu: Array<MenuItemParsed> = flattenMenu(parsedMenu)
-    query<Image, object>({
+    query<MediaImage, object>({
       count: flatMenu.length,
       query: `_id IN(${flatMenu.map((menuItem) => `"${menuItem.iconId}"`).join(',')}) AND type = "media:vector"`
     }).hits.forEach((icon) => {

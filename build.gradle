@@ -24,7 +24,7 @@ dependencies {
     include "com.enonic.xp:lib-task:${xpVersion}"
     include "com.enonic.xp:lib-auth:${xpVersion}"
     include "com.enonic.xp:lib-admin:${xpVersion}"
-    include "com.enonic.lib:lib-http-client:2.4.0"
+    include "com.enonic.lib:lib-http-client:3.1.0"
     include "com.enonic.xp:lib-i18n:${xpVersion}"
     include "com.enonic.lib:lib-cron:1.1.1"
     include "com.enonic.xp:lib-context:${xpVersion}"
@@ -44,6 +44,8 @@ dependencies {
     compile group: 'org.json', name: 'json', version: '20210307'
     include 'com.enonic.lib:lib-react4xp:3.3.0'
     include 'com.enonic.lib:lib-text-encoding:2.0.0'
+    include "com.enonic.xp:lib-value:${xpVersion}"
+    include "no.item:lib-xp-cristin:1.0.15"
 }
 
 repositories {
