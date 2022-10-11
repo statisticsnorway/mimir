@@ -64,7 +64,7 @@ exports.preview = (req: XP.Request, relatedFactPageConfig: RelatedFactPageConfig
 
 function renderPart(req: XP.Request, relatedFactPageConfig: RelatedFactPageConfig | undefined): XP.Response | RenderResponse {
   const page: Content<Article> = getContent()
-  if (req.mode === 'edit' || req.mode === 'inline') {
+  if (req.mode === 'edit' || req.mode === 'inline' || !relatedFactPageConfig) {
     return renderRelatedFactPage(req, page, relatedFactPageConfig)
   } else {
     return fromPartCache(req, `${page._id}-relatedFactPage`, () => {
