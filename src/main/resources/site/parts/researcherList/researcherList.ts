@@ -104,18 +104,18 @@ function prepareResearchers(results: readonly Content<Employee>[]) {
   })
 }
 
-const createAlphabeticalResearchersList: alphabetizeResearcherList = (preparedResults: IPreparedResearcher[]) => {
-  const data: IObjectKeys = preparedResults.reduce((r: IObjectKeys, e: IPreparedResearcher) => {
-    const alphabet: string = e.surname[0].toUpperCase()
-    if (!r[alphabet]) {
-      r[alphabet] = {
+function createAlphabeticalResearchersList(preparedResults: IPreparedResearcher[]):Array<IResearcherMap> {
+  const data: IObjectKeys = preparedResults.reduce((result: IObjectKeys, researcher: IPreparedResearcher) => {
+    const alphabet: string = researcher.surname[0].toUpperCase()
+    if (!result[alphabet]) {
+      result[alphabet] = {
         alphabet,
-        record: [e]
+        record: [researcher]
       }
     } else {
-      r[alphabet].record.push(e)
+      result[alphabet].record.push(researcher)
     }
-    return r
+    return result
   }, {
   })
 
@@ -144,8 +144,6 @@ interface Area {
   href: string;
   title: string;
 }
-
-type alphabetizeResearcherList = (preparedResults: IPreparedResearcher[]) => IResearcherMap[]
 
 interface IObjectKeys {
   [key: string]: IResearcherMap;
