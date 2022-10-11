@@ -46,7 +46,7 @@
                     <label>Kort om meg</label>
                 </input>
                 <input name="profileImages" type="ImageSelector">
-                    <label>Profilbilder</label>
+                    <label>Pressebilder</label>
                     <occurrences minimum="0" maximum="4"/>
                 </input>
             </items>

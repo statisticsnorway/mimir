@@ -1,28 +1,22 @@
-import { Content } from 'enonic-types/content'
-import { PageContributions, Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { Content } from '/lib/xp/content'
 import { Phrases } from '../../../lib/types/language'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
+import {render} from '/lib/enonic/react4xp'
 import { PubArchiveCalendarLinksPartConfig } from './pubArchiveCalendarLinks-part-config'
 
 const {
   getComponent,
   getContent
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
 
-const view: ResourceKey = resolve('./pubArchiveCalendarLinks.html')
-
-exports.get = function(req: Request): Response {
+exports.get = function(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -30,14 +24,14 @@ exports.get = function(req: Request): Response {
   }
 }
 
-exports.preview = (req: Request): Response => renderPart(req)
+exports.preview = (req: XP.Request): XP.Response => renderPart(req)
 
 const NO_LINKS_FOUND: object = {
   body: '',
   contentType: 'text/html'
 }
 
-function renderPart(req: Request): Response {
+function renderPart(req: XP.Request): XP.Response {
   const config: PubArchiveCalendarLinksPartConfig = getComponent().config
   const page: Content = getContent()
   const phrases: Phrases = getPhrases(page)
@@ -46,26 +40,18 @@ function renderPart(req: Request): Response {
   const CalendarText: string = phrases.statCalendarText
 
   if (config.pubArchiveUrl || config.statCalendarUrl) {
-    const pubArchiveStatCalendarLinksComponent: React4xpObject = new React4xp('PubArchiveStatCalendarLinks')
-      .setProps({
+    return render('PubArchiveStatCalendarLinks',
+      {
         PublicationLink: config.pubArchiveUrl,
         PublicationText: PublicationText,
         CalendarLink: config.statCalendarUrl,
         CalendarText: CalendarText
-      })
-      .setId('CalendarLinks')
-      .uniqueId()
-
-    const body: string = render(view, {
-      categoryId: pubArchiveStatCalendarLinksComponent.react4xpId
-    })
-
-    return {
-      body: pubArchiveStatCalendarLinksComponent.renderBody({
-        body
-      }),
-      pageContributions: pubArchiveStatCalendarLinksComponent.renderPageContributions() as PageContributions
-    }
+      },
+        req,
+        {
+          id: 'CalendarLinks',
+          body: '<section class="xp-part part-pubarchive-link"></section>'
+        })
   }
   return NO_LINKS_FOUND
 }

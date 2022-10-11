@@ -1,19 +1,13 @@
-import { Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
-import { Content } from 'enonic-types/content'
-import { Component } from 'enonic-types/portal'
+import { ResourceKey, render } from '/lib/thymeleaf'
+import { Content } from '/lib/xp/content'
+import { getContent,
+  getComponent,
+  imageUrl,
+  Component } from '/lib/xp/portal'
 import { BannerPartConfig } from './banner-part-config'
 import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
 import { Page } from '../../content-types/page/page'
 
-const {
-  getContent,
-  getComponent,
-  imageUrl
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
 const {
   getMunicipality, removeCountyFromMunicipalityName
 } = __non_webpack_require__('/lib/ssb/dataset/klass/municipalities')
@@ -27,7 +21,7 @@ const {
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 const view: ResourceKey = resolve('./banner.html') as ResourceKey
 
-exports.get = function(req: Request) {
+exports.get = function(req: XP.Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -35,9 +29,9 @@ exports.get = function(req: Request) {
   }
 }
 
-exports.preview = (req: Request): Response => renderPart(req)
+exports.preview = (req: XP.Request): XP.Response => renderPart(req)
 
-function renderPart(req: Request): Response {
+function renderPart(req: XP.Request): XP.Response {
   const page: Content<Page> = getContent()
   const part: Component<BannerPartConfig> = getComponent()
   const pageType: BannerPartConfig['pageType'] = part.config.pageType

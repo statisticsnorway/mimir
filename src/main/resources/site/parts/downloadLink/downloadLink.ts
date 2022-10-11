@@ -1,24 +1,12 @@
-import { Request, Response } from 'enonic-types/controller'
-import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
-import { Component } from 'enonic-types/portal'
+import {render, RenderResponse} from '/lib/enonic/react4xp'
+import { getComponent, attachmentUrl, Component } from '/lib/xp/portal'
 import { DownloadLinkPartConfig } from './downloadLink-part-config'
-import { ResourceKey } from 'enonic-types/thymeleaf'
 
-const {
-  getComponent,
-  attachmentUrl
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp') as React4xp
 
-const view: ResourceKey = resolve('./downloadLink.html') as ResourceKey
-
-exports.get = function(req: Request) {
+exports.get = function(req: XP.Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -26,28 +14,20 @@ exports.get = function(req: Request) {
   }
 }
 
-exports.preview = (req: Request) => renderPart(req)
+exports.preview = (req: XP.Request) => renderPart(req)
 
-function renderPart(req: Request): Response | React4xpResponse {
+function renderPart(req: XP.Request): RenderResponse {
   const part: Component<DownloadLinkPartConfig> = getComponent()
 
-  const downloadLinkXP: React4xpObject = new React4xp('DownloadLink')
-    .setProps({
+  return render('DownloadLink',
+    {
       fileLocation: attachmentUrl({
         id: part.config.file ? part.config.file : ''
       }),
       downloadText: part.config.text
-    })
-    .uniqueId()
-
-  const body: string = render(view, {
-    downloadLinkId: downloadLinkXP.react4xpId
-  })
-
-  return {
-    body: downloadLinkXP.renderBody({
-      body
-    }),
-    pageContributions: downloadLinkXP.renderPageContributions()
-  }
+    },
+      req,
+      {
+        body: '<section class="xp-part part-download-link"></section>'
+      })
 }

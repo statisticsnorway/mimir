@@ -1,5 +1,5 @@
-import { User } from 'enonic-types/auth'
-import { Content } from 'enonic-types/content'
+import { User } from '/lib/xp/auth'
+import { Content } from '/lib/xp/content'
 import { Events } from '../repo/query'
 
 /**

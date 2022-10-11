@@ -1,22 +1,19 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { Content } from 'enonic-types/content'
+import { Content } from '/lib/xp/content'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { DatasetRepoNode } from '../repo/dataset'
 import { StatisticInListing } from '../dashboard/statreg/types'
-import { NodeQueryHit } from 'enonic-types/node'
+import { NodeQueryHit } from '/lib/xp/node'
 import { Statistic } from '../../../site/mixins/statistic/statistic'
-import { EnonicEvent } from 'enonic-types/event'
-import { TaskInfo } from 'enonic-types/task'
+import { listener, EnonicEvent } from '/lib/xp/event'
+import { TaskInfo } from '/lib/xp/task'
 
 const {
   JobNames,
   JobStatus,
   queryJobLogs
 } = __non_webpack_require__('/lib/ssb/repo/job')
-const {
-  listener
-} = __non_webpack_require__('/lib/xp/event')
 
 
 const publishTasks: Array<EnonicEvent<TaskInfo>> = []

@@ -1,14 +1,10 @@
-import { PageContributions, Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
+import {render, RenderResponse} from '/lib/enonic/react4xp'
 import { PictureCardLinksPartConfig } from './pictureCardLinks-part-config'
 
 const {
   getImageAlt
 } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
@@ -18,10 +14,7 @@ const {
   imagePlaceholder
 } = __non_webpack_require__('/lib/xp/portal')
 
-const view: ResourceKey = resolve('./pictureCardLinks.html')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-
-exports.get = function(req: Request): Response {
+exports.get = function(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -29,27 +22,20 @@ exports.get = function(req: Request): Response {
   }
 }
 
-exports.preview = (req: Request): Response => {
+exports.preview = (req: XP.Request): XP.Response => {
   return renderPart(req)
 }
 
-function renderPart(req: Request): Response {
+function renderPart(req: XP.Request): XP.Response {
   const config: PictureCardLinksPartConfig = getComponent().config
-  const pictureCardLinks: React4xpObject = new React4xp('PictureCardLinks')
-    .setProps({
-      pictureCardLinks: parsePictureCardLinks(config.pictureCardLinks)
-    })
-    .uniqueId()
-
-  const body: string = render(view, {
-    pictureCardLinksId: pictureCardLinks.react4xpId
-  })
-  return {
-    body: pictureCardLinks.renderBody({
-      body
-    }),
-    pageContributions: pictureCardLinks.renderPageContributions() as PageContributions
-  }
+  return render('PictureCardLinks',
+      {
+        pictureCardLinks: parsePictureCardLinks(config.pictureCardLinks)
+      },
+      req,
+      {
+        body: '<section class="xp-part picture-card-links container my-5"></section>'
+      })
 }
 
 function parsePictureCardLinks(pictureCardLinks: PictureCardLinksPartConfig['pictureCardLinks']): Array<PictureCardLinksContent> {

@@ -1,8 +1,7 @@
-import { ByteSource, Content } from 'enonic-types/content'
-import { Request, Response } from 'enonic-types/controller'
+import { get, getAttachmentStream, ByteSource, Content } from '/lib/xp/content'
 import { RowData } from '../../../lib/ssb/parts/highcharts/data/htmlTable'
 import { isNumber, RowValue } from '../../../lib/ssb/utils/utils'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import {render, RenderResponse} from '/lib/enonic/react4xp'
 import { PreliminaryData, XmlParser } from '../../../lib/types/xmlParser'
 import { Highmap } from '../../content-types/highmap/highmap'
 import { HighmapPartConfig } from './highmap-part-config'
@@ -12,10 +11,6 @@ const {
     forceArray
   }
 } = __non_webpack_require__('/lib/util')
-const {
-  get,
-  getAttachmentStream
-} = __non_webpack_require__('/lib/xp/content')
 const {
   getComponent,
   getContent
@@ -31,7 +26,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/error/error')
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 
 interface MapFeatures {
   properties: {
@@ -80,7 +75,7 @@ interface HighmapProps {
   language: string | undefined;
 }
 
-exports.get = function(req: Request): React4xpResponse | Response {
+exports.get = function(req: XP.Request): RenderResponse | XP.Response {
   try {
     const config: HighmapPartConfig = getComponent().config
     const highmapId: string | undefined = config.highmapId
@@ -90,7 +85,7 @@ exports.get = function(req: Request): React4xpResponse | Response {
   }
 }
 
-exports.preview = (req: Request, highmapId: string | undefined): React4xpResponse | Response => {
+exports.preview = (req: XP.Request, highmapId: string | undefined): RenderResponse | XP.Response => {
   try {
     return renderPart(req, highmapId)
   } catch (e) {
@@ -98,7 +93,7 @@ exports.preview = (req: Request, highmapId: string | undefined): React4xpRespons
   }
 }
 
-function renderPart(req: Request, highmapId: string | undefined): React4xpResponse | Response {
+function renderPart(req: XP.Request, highmapId: string | undefined): RenderResponse | XP.Response {
   const page: Content = getContent()
   const highmapContent: Content<Highmap> | null = highmapId ? get({
     key: highmapId
@@ -163,7 +158,7 @@ function renderPart(req: Request, highmapId: string | undefined): React4xpRespon
       language: page.language
     }
 
-    return React4xp.render('site/parts/highmap/Highmap', props, req)
+    return render('site/parts/highmap/Highmap', props, req)
   }
   return {
     body: '',

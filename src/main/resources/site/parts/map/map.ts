@@ -1,5 +1,4 @@
-import { Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { ResourceKey, render } from '/lib/thymeleaf'
 import { SiteConfig } from '../../site-config'
 
 const {
@@ -7,16 +6,14 @@ const {
   getSiteConfig,
   serviceUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 
 const view: ResourceKey = resolve('./map.html')
 
-exports.get = function(req:Request): Response {
+exports.get = function(req:XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -24,9 +21,9 @@ exports.get = function(req:Request): Response {
   }
 }
 
-exports.preview = (req:Request): Response => renderPart(req)
+exports.preview = (req:XP.Request): XP.Response => renderPart(req)
 
-function renderPart(req:Request): Response {
+function renderPart(req:XP.Request): XP.Response {
   const siteConfig:SiteConfig = getSiteConfig()
   let mapFolder: string = '/mapdata'
 

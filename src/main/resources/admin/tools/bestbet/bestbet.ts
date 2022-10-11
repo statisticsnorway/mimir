@@ -1,9 +1,8 @@
-import { PageContributions, Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { render, ResourceKey } from '/lib/thymeleaf'
 import { getMainSubjects, SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { parseContributions } from '../../../lib/ssb/utils/utils'
 import { DropdownItems } from '../../../lib/types/components'
-import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
+import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
 
 const {
   assetUrl, serviceUrl
@@ -17,14 +16,12 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 
 const view: ResourceKey = resolve('./bestbet.html')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-exports.get = function(req: Request): React4xpResponse | Response {
+
+exports.get = function(req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -32,7 +29,7 @@ exports.get = function(req: Request): React4xpResponse | Response {
   }
 }
 
-exports.preview = (req: Request): React4xpResponse | Response => {
+exports.preview = (req: XP.Request): RenderResponse | XP.Response => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -40,7 +37,7 @@ exports.preview = (req: Request): React4xpResponse | Response => {
   }
 }
 
-function renderPart(req: Request): React4xpResponse | Response {
+function renderPart(req: XP.Request): RenderResponse | XP.Response {
   // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
   // @ts-ignore
   const DEFAULT_CONTENTSTUDIO_URL: string = getToolUrl('com.enonic.app.contentstudio', 'main')
@@ -88,8 +85,9 @@ function renderPart(req: Request): React4xpResponse | Response {
     title: 'Velg innholdstype'
   }, ...contentTypesList]
 
-  const bestbetComponent: React4xpObject = new React4xp('bestbet/Bestbet')
-    .setProps({
+  const bestBetComponent: RenderResponse = r4XpRender(
+    'bestbet/Bestbet'
+    , {
       logoUrl: assetUrl({
         path: 'SSB_logo_black.svg'
       }),
@@ -103,22 +101,19 @@ function renderPart(req: Request): React4xpResponse | Response {
       contentTypes: contentTypesDropdownItems,
       mainSubjects: mainSubjectDropdownItems,
       mainSubjectsEnglish: englishMainSubjectDropdownItems
-    })
-    .setId('app-bestbet')
-
-  const pageContributions: PageContributions = parseContributions(bestbetComponent.renderPageContributions({
-    clientRender: req.mode !== 'edit'
-  }) as PageContributions)
+    },
+    req,
+    {
+      id: 'app-bestbet',
+      clientRender: req.mode !== 'edit'
+    }
+  )
 
   return {
-    body: bestbetComponent.renderBody({
-      body: render(view, {
-        ...getAssets(),
-        pageContributions,
-        clientRender: req.mode !== 'edit'
-      })
-    }),
-    pageContributions
+    body: render(view, {
+      ...getAssets(),
+      pageContributions: parseContributions(bestBetComponent.pageContributions)
+    })
   }
 }
 

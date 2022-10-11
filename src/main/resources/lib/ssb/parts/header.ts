@@ -1,11 +1,8 @@
 import { Language } from '../../types/language'
-import { Content } from 'enonic-types/content'
+import { get, Content } from '/lib/xp/content'
 import { Header } from '../../../site/content-types/header/header'
 import { Link } from './menu'
 import { MenuItem } from '../../../site/content-types/menuItem/menuItem'
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
 const {
   assetUrl
 } = __non_webpack_require__('/lib/xp/portal')

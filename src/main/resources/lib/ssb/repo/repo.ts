@@ -1,9 +1,8 @@
-import { BranchConfig, RepositoryConfig } from 'enonic-types/repo'
-const {
-  get,
+import { get,
   create,
-  createBranch: createRepoBranch
-} = __non_webpack_require__('/lib/xp/repo')
+  createBranch as createRepoBranch,
+  BranchConfig,
+  RepositoryConfig } from '/lib/xp/repo'
 const {
   withSuperUserContext
 } = __non_webpack_require__('/lib/ssb/repo/common')

@@ -1,24 +1,18 @@
-import { User } from 'enonic-types/auth'
-import { NodeCreateParams,
+import { getUser, User } from '/lib/xp/auth'
+import { connect,
+  NodeCreateParams,
   NodeQueryParams,
   NodeQueryResponse,
   RepoConnection,
-  RepoNode } from 'enonic-types/node'
+  RepoNode } from '/lib/xp/node'
 import { EditorCallback } from './eventLog'
+import { run } from '/lib/xp/context'
+import { PrincipalKeyRole } from '*/lib/xp/auth'
 
-const {
-  getUser
-} = __non_webpack_require__('/lib/xp/auth')
-const {
-  run
-} = __non_webpack_require__('/lib/xp/context')
-const {
-  connect
-} = __non_webpack_require__('/lib/xp/node')
 
 const ENONIC_PROJECT_ID: string = app.config && app.config['ssb.project.id'] ? app.config['ssb.project.id'] : 'default'
 export const ENONIC_CMS_DEFAULT_REPO: string = `com.enonic.cms.${ENONIC_PROJECT_ID}`
-const SYSADMIN_ROLE: string = 'role:system.admin'
+const SYSADMIN_ROLE: PrincipalKeyRole = 'role:system.admin'
 
 export type ContextCallback<T> = () => T;
 export type UserContextCallback<T> = (user: User | null) => T;
@@ -97,7 +91,7 @@ export function modifyNode<T>(repository: string, branch: string, key: string, e
   })
 }
 
-export function getChildNodes(repository: string, branch: string, key: string, count: number = 10, countOnly: boolean = false): NodeQueryResponse<never> {
+export function getChildNodes(repository: string, branch: string, key: string, count: number = 10, countOnly: boolean = false): NodeQueryResponse {
   return withConnection(repository, branch, (conn) => {
     return conn.findChildren({
       parentKey: key,
@@ -113,7 +107,7 @@ export function nodeExists(repository: string, branch: string, key: string): boo
   })
 }
 
-export function queryNodes(repository: string, branch: string, params: NodeQueryParams<never>): NodeQueryResponse<never> {
+export function queryNodes(repository: string, branch: string, params: NodeQueryParams): NodeQueryResponse {
   return withConnection(repository, branch, (conn) => {
     return conn.query(params)
   })
@@ -128,7 +122,7 @@ export interface RepoCommonLib {
   getNode: <T>(repository: string, branch: string, key: string | Array<string>) => ReadonlyArray<T & RepoNode> | T & RepoNode | null;
   deleteNode: (repository: string, branch: string, key: string) => boolean;
   modifyNode: <T>(repository: string, branch: string, key: string, editor: EditorCallback<T>) => T;
-  getChildNodes: (repository: string, branch: string, key: string, count?: number, countOnly?: boolean) => NodeQueryResponse<never>;
+  getChildNodes: (repository: string, branch: string, key: string, count?: number, countOnly?: boolean) => NodeQueryResponse;
   nodeExists: (repository: string, branch: string, key: string) => boolean;
-  queryNodes: (repository: string, branch: string, params: NodeQueryParams<never>) => NodeQueryResponse<never>;
+  queryNodes: (repository: string, branch: string, params: NodeQueryParams) => NodeQueryResponse;
 }

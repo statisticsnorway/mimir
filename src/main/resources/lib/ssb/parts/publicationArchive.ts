@@ -1,19 +1,14 @@
 import { Article } from '../../../site/content-types/article/article'
-import { Content, QueryResponse } from 'enonic-types/content'
+import { query, get, Content, QueryResponse } from '/lib/xp/content'
 import { StatisticInListing } from '../dashboard/statreg/types'
 import { getAllStatisticsFromRepo } from '../statreg/statistics'
 import { calculatePeriodRelease, Release } from '../utils/variantUtils'
 import { SubjectItem } from '../utils/subjectUtils'
-import { Request } from 'enonic-types/controller'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { SEO } from '../../../services/news/news'
 import { OmStatistikken } from '../../../site/content-types/omStatistikken/omStatistikken'
 import { formatDate } from '../utils/dateUtils'
 
-const {
-  query,
-  get
-} = __non_webpack_require__('/lib/xp/content')
 const {
   pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
@@ -35,7 +30,7 @@ const {
   }
 } = __non_webpack_require__('/lib/util')
 
-export function getPublications(req: Request, start: number = 0, count: number = 10, language: string, articleType?: string, subject?: string):
+export function getPublications(req: XP.Request, start: number = 0, count: number = 10, language: string, articleType?: string, subject?: string):
     PublicationResult {
   const allPublications: Array<PublicationItem> = fromPartCache(req, `archiveAllPublications-${language}`, () => {
     return getPublicationsAndStatistics(req, language)
@@ -65,11 +60,11 @@ function filterPublications(publications: Array<PublicationItem>, articleType: s
   return publications
 }
 
-function getPublicationsAndStatistics(req: Request, language: string):
+function getPublicationsAndStatistics(req: XP.Request, language: string):
     Array<PublicationItem> {
   const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
   const subSubjects: Array<SubjectItem> = getSubSubjects(req, language)
-  const articlesContent: QueryResponse<Article> = getArticlesContent(language, mainSubjects)
+  const articlesContent: QueryResponse<Article, object> = getArticlesContent(language, mainSubjects)
 
   const publications: Array<PublicationItem> = articlesContent.hits.map((article) => {
     return prepareArticle(article, mainSubjects, subSubjects, language)
@@ -89,11 +84,11 @@ function prepareStatisticRelease(
   subSubjects: Array<SubjectItem>,
   release: Release, language: string
 ): PublicationItem | null {
-  const statisticsPagesXP: Content<Statistics, object, SEO> | undefined = query({
+  const statisticsPagesXP: Content<Statistics, SEO> | undefined = query({
     count: 1,
     query: `data.statistic LIKE "${release.statisticId}" AND language IN (${language === 'nb' ? '"nb", "nn"' : '"en"'})`,
     contentTypes: [`${app.name}:statistics`]
-  }).hits[0] as unknown as Content<Statistics, object, SEO>
+  }).hits[0] as unknown as Content<Statistics, SEO>
 
   if (statisticsPagesXP) {
     const statisticsPageUrl: string = pageUrl({
@@ -157,7 +152,7 @@ function prepareArticle(article: Content<Article>, mainSubjects: Array<SubjectIt
 function getArticlesContent(
   language: string,
   mainSubjects: Array<SubjectItem>
-): QueryResponse<Article> {
+): QueryResponse<Article, object> {
   const languageQuery: string = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'
   const now: string = new Date().toISOString()
   const publishFromQuery: string = `(publish.from LIKE '*' AND publish.from < '${now}')`
@@ -165,7 +160,7 @@ function getArticlesContent(
   const subjectQuery: string = `(${pagePaths.join(' OR ')})`
   const queryString: string = `${publishFromQuery} AND ${subjectQuery} ${languageQuery}`
 
-  const res: QueryResponse<Article> = query({
+  const res: QueryResponse<Article, object> = query({
     count: 10000,
     query: queryString,
     contentTypes: [`${app.name}:article`],
@@ -203,7 +198,7 @@ function getSecondaryMainSubject(subtopicsContent: Array<string>, mainSubjects: 
 }
 
 export interface PublicationArchiveLib {
-  getPublications: (req: Request, start: number, count: number, language: string, contentType?: string, subject?: string) => PublicationResult;
+  getPublications: (req: XP.Request, start: number, count: number, language: string, contentType?: string, subject?: string) => PublicationResult;
 }
 
 export interface PublicationResult {

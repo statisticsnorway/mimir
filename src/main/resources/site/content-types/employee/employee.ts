@@ -41,7 +41,7 @@ export interface Employee {
   description?: string;
 
   /**
-   * Profilbilder
+   * Pressebilder
    */
   profileImages?: Array<string>;
 

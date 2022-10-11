@@ -1,13 +1,10 @@
 import { SiteConfig } from '../../../../site/site-config'
-import { Content } from 'enonic-types/content'
+import { get as getContent, Content } from '/lib/xp/content'
 import { DatasetRepoNode } from '../../repo/dataset'
 import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
 const {
   getSiteConfig
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  get: getContent
-} = __non_webpack_require__('/lib/xp/content')
 const {
   getDataset,
   extractKey

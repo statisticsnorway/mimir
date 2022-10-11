@@ -1,22 +1,15 @@
-import {Request, Response} from "enonic-types/controller";
-import {Component} from "enonic-types/portal";
+import { getComponent, imageUrl, Component} from "/lib/xp/portal";
 import {FrontPageBannerPartConfig} from "./frontPageBanner-part-config";
+import { render } from '/lib/thymeleaf'
 
-const {
-  getComponent,
-  imageUrl
-} = __non_webpack_require__('/lib/xp/portal')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
 
 const view = resolve('./frontPageBanner.html')
 
 
-exports.get = function(req: Request) {
+exports.get = function(req: XP.Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -24,9 +17,9 @@ exports.get = function(req: Request) {
   }
 }
 
-exports.preview = (req: Request) => renderPart(req)
+exports.preview = (req: XP.Request) => renderPart(req)
 
-function renderPart(req: Request): Response {
+function renderPart(req: XP.Request): XP.Response {
   const part: Component<FrontPageBannerPartConfig> = getComponent()
 
   const model: object = {

@@ -8,7 +8,14 @@
     "noImplicitThis": true,
     "strictNullChecks": true,
     "lib": ["ES5", "ES6"],
-    "skipLibCheck": true
+    "types": [
+      "node",
+      "enonic-types"
+    ],
+    "baseUrl": "./src/main/resources",
+    "paths": {
+      "/lib/*": ["lib/*"]
+    }
   },
   "types": [
     "types"

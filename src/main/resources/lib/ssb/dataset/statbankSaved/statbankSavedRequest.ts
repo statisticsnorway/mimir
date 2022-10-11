@@ -1,13 +1,10 @@
-import { HttpRequestParams, HttpResponse } from 'enonic-types/http'
+import { request, HttpRequestParams, HttpResponse } from '/lib/http-client'
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 import { XmlParser } from '../../../types/xmlParser'
 
 const {
   sleep
 } = __non_webpack_require__('/lib/xp/task')
-const {
-  request
-} = __non_webpack_require__('/lib/http-client')
 const {
   logUserDataQuery,
   Events

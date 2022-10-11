@@ -1,25 +1,17 @@
-import { Content, QueryResponse } from 'enonic-types/content'
+import { query, Content, QueryResponse } from '/lib/xp/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { GenericDataImport } from '../../../site/content-types/genericDataImport/genericDataImport'
 import { DataSource as DataSourceType, DatasetRepoNode } from '../repo/dataset'
 import { JSONstat } from '../../types/jsonstat-toolkit'
 import { StatbankSavedRaw, TbmlDataUniform } from '../../types/xmlParser'
-import { RunContext } from 'enonic-types/context'
-import { User } from 'enonic-types/auth'
+import { run, RunContext } from '/lib/xp/context'
+import { getUser, User } from '/lib/xp/auth'
 import { TbprocessorParsedResponse } from './tbprocessor/tbml'
+import { ContextAttributes } from '*/lib/xp/context'
 
 const {
   Events
 } = __non_webpack_require__('/lib/ssb/repo/query')
-const {
-  query
-} = __non_webpack_require__('/lib/xp/content')
-const {
-  run
-} = __non_webpack_require__('/lib/xp/context')
-const {
-  getUser
-} = __non_webpack_require__('/lib/xp/auth')
 const {
   getStatbankApi,
   fetchStatbankApiData,
@@ -185,7 +177,7 @@ function determineIfTbprocessorParsedResponse(toBeDetermined: TbprocessorParsedR
 
 
 export function refreshDatasetWithUserKey(content: Content<DataSource>, userLogin: string, branch: string = DATASET_BRANCH, ): CreateOrUpdateStatus {
-  const context: RunContext = {
+  const context: RunContext<ContextAttributes> = {
     branch: 'master',
     repository: ENONIC_CMS_DEFAULT_REPO,
     principals: ['role:system.admin'],
@@ -211,7 +203,7 @@ export function getContentWithDataSource(): Array<Content<DataSource>> {
   let count: number = 100
   let hits: Array<Content<DataSource>> = []
   while (count === 100) {
-    const result: QueryResponse<DataSource> = query({
+    const result: QueryResponse<DataSource, object> = query({
       start,
       count,
       query: `data.dataSource._selected LIKE "*"`

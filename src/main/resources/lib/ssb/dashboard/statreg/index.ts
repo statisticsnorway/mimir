@@ -3,8 +3,9 @@ import { Socket, SocketEmitter } from '../../../types/socket'
 import { StatRegLatestFetchInfoNode } from '../../statreg/eventLog'
 import { LogSummary } from '../../repo/eventLog'
 import { Events, QueryInfo } from '../../repo/query'
-import { RunContext } from 'enonic-types/context'
+import { run, RunContext } from '/lib/xp/context'
 import { DashboardRefreshResultLogData } from '../dashboard'
+import { ContextAttributes } from '*/lib/xp/context'
 
 const {
   STATREG_NODES,
@@ -40,9 +41,6 @@ const {
 const {
   localize
 } = __non_webpack_require__('/lib/xp/i18n')
-const {
-  run
-} = __non_webpack_require__('/lib/xp/context')
 
 export type StatRegLatestFetchInfoNodeType = StatRegLatestFetchInfoNode | readonly StatRegLatestFetchInfoNode[] | null;
 export function getStatRegFetchStatuses(): Array<StatRegStatus> {
@@ -98,7 +96,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
       socketEmitter.broadcast('statreg-dashboard-refresh-start', key)
     })
     // start refreshing
-    const context: RunContext = {
+    const context: RunContext<ContextAttributes> = {
       branch: 'master',
       repository: ENONIC_CMS_DEFAULT_REPO,
       principals: ['role:system.admin'],

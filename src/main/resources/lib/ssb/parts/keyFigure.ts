@@ -3,7 +3,7 @@ __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
-import { QueryResponse, Content } from 'enonic-types/content'
+import { query, QueryResponse, Content } from '/lib/xp/content'
 import { KeyFigure } from '../../../site/content-types/keyFigure/keyFigure'
 import { MunicipalityWithCounty } from '../dataset/klass/municipalities'
 import { TbmlDataUniform, TableRowUniform, TableCellUniform, PreliminaryData } from '../../types/xmlParser'
@@ -11,9 +11,6 @@ import { Category, Dimension, JSONstat as JSONstatType } from '../../types/jsons
 import { DatasetRepoNode, DataSource as DataSourceType } from '../repo/dataset'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 
-const {
-  query
-} = __non_webpack_require__('/lib/xp/content')
 const {
   imageUrl
 } = __non_webpack_require__('/lib/xp/portal')
@@ -49,7 +46,7 @@ const contentTypeName: string = `${app.name}:keyFigure`
 
 export function get(keys: string | Array<string>): Array<Content<KeyFigure>> {
   keys = forceArray(keys)
-  const content: QueryResponse<KeyFigure> = query({
+  const content: QueryResponse<KeyFigure, object> = query({
     contentTypes: [contentTypeName],
     query: ``,
     count: keys.length,

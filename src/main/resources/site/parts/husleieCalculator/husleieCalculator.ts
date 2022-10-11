@@ -1,11 +1,10 @@
-import { Content } from 'enonic-types/content'
-import { Request, Response } from 'enonic-types/controller'
+import { Content } from '/lib/xp/content'
 import { allMonths, lastPeriodKpi, monthLabel, nextPeriod } from '../../../lib/ssb/utils/calculatorUtils'
 import { CalculatorPeriod } from '../../../lib/types/calculator'
 import { DropdownItems as MonthDropdownItems } from '../../../lib/types/components'
 import { Dataset } from '../../../lib/types/jsonstat-toolkit'
 import { Language, Phrases } from '../../../lib/types/language'
-import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
+import {render, RenderResponse} from '/lib/enonic/react4xp'
 import { CalculatorConfig } from '../../content-types/calculatorConfig/calculatorConfig'
 import { HusleieCalculatorPartConfig } from './husleieCalculator-part-config'
 
@@ -18,7 +17,7 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const {
   getLanguage
 } = __non_webpack_require__('/lib/ssb/utils/language')
@@ -30,7 +29,7 @@ const {
   fromPartCache
 } = __non_webpack_require__('/lib/ssb/cache/partCache')
 
-exports.get = function(req: Request): React4xpResponse | Response {
+exports.get = function(req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -38,9 +37,9 @@ exports.get = function(req: Request): React4xpResponse | Response {
   }
 }
 
-exports.preview = (req: Request): React4xpResponse => renderPart(req)
+exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
 
-function renderPart(req: Request): React4xpResponse {
+function renderPart(req: XP.Request): RenderResponse {
   const page: Content = getContent()
   if (req.mode === 'edit' || req.mode === 'inline') {
     return getHusleiekalkulator(req, page)
@@ -51,7 +50,7 @@ function renderPart(req: Request): React4xpResponse {
   }
 }
 
-function getHusleiekalkulator(req: Request, page: Content): React4xpResponse {
+function getHusleiekalkulator(req: XP.Request, page: Content): RenderResponse {
   const config: HusleieCalculatorPartConfig = getComponent().config
   const language: Language = getLanguage(page)
   const phrases: Phrases = language.phrases as Phrases
@@ -83,8 +82,8 @@ function getHusleiekalkulator(req: Request, page: Content): React4xpResponse {
     id: config.husleieCalculatorArticle
   })
 
-  const husleieCalculator: React4xpObject = new React4xp('site/parts/husleieCalculator/husleieCalculator')
-    .setProps({
+  return render('site/parts/husleieCalculator/husleieCalculator',
+      {
       kpiServiceUrl: serviceUrl({
         service: 'kpi'
       }),
@@ -95,15 +94,9 @@ function getHusleiekalkulator(req: Request, page: Content): React4xpResponse {
       nextPublishText,
       lastNumberText,
       lastUpdated
-    })
-    .setId('husleieCalculatorId')
-    .uniqueId()
-
-
-  return {
-    body: husleieCalculator.renderBody(),
-    pageContributions: husleieCalculator.renderPageContributions({
-      clientRender: req.mode !== 'edit'
-    })
-  }
+    },
+      req,
+      {
+        clientRender: req.mode !== 'edit'
+      })
 }

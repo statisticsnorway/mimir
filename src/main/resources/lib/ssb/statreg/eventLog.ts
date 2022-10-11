@@ -1,4 +1,4 @@
-import { RepoNode } from 'enonic-types/node'
+import { RepoNode } from '/lib/xp/node'
 
 export enum StatRegFetchStatus {
     INIT = 'Init',

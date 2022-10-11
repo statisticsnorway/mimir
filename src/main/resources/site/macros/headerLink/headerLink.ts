@@ -1,23 +1,19 @@
-import { MacroContext } from 'enonic-types/controller'
 import { HeaderLinkConfig } from './headerLink-config'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { Content } from 'enonic-types/content'
+import {render, RenderResponse} from '/lib/enonic/react4xp'
+import { get, Content } from '/lib/xp/content'
 
 const {
   attachmentUrl, pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-exports.macro = (context: MacroContext): React4xpResponse => {
+
+exports.macro = (context: XP.MacroContext): RenderResponse => {
   return renderPart(context)
 }
 
-exports.preview = (context: MacroContext): React4xpResponse => renderPart(context)
+exports.preview = (context: XP.MacroContext): RenderResponse => renderPart(context)
 
-function renderPart(context: MacroContext): React4xpResponse {
+function renderPart(context: XP.MacroContext): RenderResponse {
   const {
     linkedContent, linkText
   } = context.params
@@ -42,7 +38,7 @@ function renderPart(context: MacroContext): React4xpResponse {
     linkedContent: contentUrl
   }
 
-  return React4xp.render('site/macros/headerLink/headerLink', props)
+  return render('site/macros/headerLink/headerLink', props)
 }
 
 function prepareText(content: Content, linkText: string): string {

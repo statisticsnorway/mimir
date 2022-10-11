@@ -1,7 +1,6 @@
-import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
-import { Request } from 'enonic-types/controller'
-import { Content } from 'enonic-types/content'
-import { Language, Phrases } from '../../../lib/types/language'
+import {render, RenderResponse} from '/lib/enonic/react4xp'
+import {Content} from '/lib/xp/content'
+import {Language, Phrases} from '../../../lib/types/language'
 
 const {
   getContent,
@@ -11,12 +10,12 @@ const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp') as React4xp
+
 const {
   getLanguage
 } = __non_webpack_require__('/lib/ssb/utils/language')
 
-exports.get = function(req: Request) {
+exports.get = function(req: XP.Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -24,9 +23,9 @@ exports.get = function(req: Request) {
   }
 }
 
-exports.preview = (req: Request) => renderPart(req)
+exports.preview = (req: XP.Request) => renderPart(req)
 
-function renderPart(req: Request): React4xpResponse {
+function renderPart(req: XP.Request): RenderResponse {
   const page: Content = getContent()
   const language: Language = getLanguage(page) as Language
   const phrases: Phrases = language.phrases as Phrases
@@ -34,29 +33,25 @@ function renderPart(req: Request): React4xpResponse {
     app.config['RECAPTCHA_SITE_KEY'] &&
     typeof app.config['RECAPTCHA_SITE_KEY'] == 'string' ? app.config['RECAPTCHA_SITE_KEY'] : ''
 
-  const contactForm: React4xpObject = new React4xp('site/parts/contactForm/contactForm')
-    .setProps({
-      recaptchaSiteKey: recaptchaSiteKey,
-      contactFormServiceUrl: serviceUrl({
-        service: 'contactForm'
-      }),
-      phrases: phrases,
-      language: language.code
-    }
-    )
-    .setId('contactFormId')
-    .uniqueId()
-
-  return {
-    body: contactForm.renderBody(),
-    pageContributions: contactForm.renderPageContributions({
-      pageContributions: {
-        headEnd: [
-          `<script src="https://www.google.com/recaptcha/api.js?render=${recaptchaSiteKey}"></script>`
-        ]
+  return render(
+      'site/parts/contactForm/contactForm',
+      {
+        recaptchaSiteKey: recaptchaSiteKey,
+        contactFormServiceUrl: serviceUrl({
+          service: 'contactForm'
+        }),
+        phrases: phrases,
+        language: language.code
       },
-      clientRender: req.mode !== 'edit'
-    })
-  }
+      req,
+      {
+        id: 'contactFormId',
+        pageContributions: {
+          headEnd: [
+            `<script src="https://www.google.com/recaptcha/api.js?render=${recaptchaSiteKey}"></script>`
+          ]
+        },
+        clientRender: req.mode !== 'edit'
+      })
 }
 

@@ -1,6 +1,6 @@
 import { AreaLineLinearData, PieData, Series, SeriesAndCategories } from '../highchartsData'
 import { XmlParser, PreliminaryData, TableRowUniform, TableCellUniform } from '../../../../types/xmlParser'
-import { Content } from 'enonic-types/content'
+import { Content } from '/lib/xp/content'
 import { Highchart } from '../../../../../site/content-types/highchart/highchart'
 import { RowValue } from '../../../utils/utils'
 

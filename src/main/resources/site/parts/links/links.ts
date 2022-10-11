@@ -1,22 +1,16 @@
-import { Content } from 'enonic-types/content'
-import { Component } from 'enonic-types/portal'
+import { get, Content } from '/lib/xp/content'
+import { getComponent,
+  attachmentUrl,
+  pageUrl,
+  Component } from '/lib/xp/portal'
 import { LinksPartConfig } from './links-part-config'
-import { Request, Response } from 'enonic-types/controller'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import {render, RenderResponse} from '/lib/enonic/react4xp'
 import { renderError } from '../../../lib/ssb/error/error'
 import { GA_TRACKING_ID } from '../../pages/default/default'
 
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
-const {
-  getComponent,
-  attachmentUrl,
-  pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-exports.get = (req: Request): React4xpResponse | Response => {
+
+exports.get = (req: XP.Request): RenderResponse | XP.Response => {
   try {
     const part: Component<LinksPartConfig> = getComponent()
     const config: LinksPartConfig = part.config
@@ -26,14 +20,14 @@ exports.get = (req: Request): React4xpResponse | Response => {
   }
 }
 
-exports.preview = (req: Request, config: LinksPartConfig): React4xpResponse | Response => {
+exports.preview = (req: XP.Request, config: LinksPartConfig): RenderResponse | XP.Response => {
   try {
     return renderPart(req, config)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
-function renderPart(req: Request, config: LinksPartConfig): React4xpResponse {
+function renderPart(req: XP.Request, config: LinksPartConfig): RenderResponse {
   const linkTypes: LinksPartConfig['linkTypes'] = config.linkTypes
 
   let props: LinksProps | object = {}
@@ -95,7 +89,7 @@ function renderPart(req: Request, config: LinksPartConfig): React4xpResponse {
     }
   }
 
-  return React4xp.render('site/parts/links/links', props, req)
+  return render('site/parts/links/links', props, req)
 }
 
 export function prepareText(content: Content, linkText: string | undefined): string | undefined {
